@@ -91,6 +91,153 @@
   const UPSIDE_DOWN_CENTER_CLEARANCE = CHASSIS_HEIGHT * 3;
 
   const SPEED_DISPLAY_DIVISOR = 5;
+  const MOTOCROSS_PROGRESS_KEY = 'motocross';
+  const MOTOCROSS_AUTOSAVE_VERSION = 1;
+
+  function getGlobalGameState() {
+    if (typeof globalThis !== 'undefined') {
+      if (globalThis.atom2universGameState && typeof globalThis.atom2universGameState === 'object') {
+        return globalThis.atom2universGameState;
+      }
+      if (globalThis.gameState && typeof globalThis.gameState === 'object') {
+        return globalThis.gameState;
+      }
+    }
+    if (typeof window !== 'undefined') {
+      if (window.atom2universGameState && typeof window.atom2universGameState === 'object') {
+        return window.atom2universGameState;
+      }
+      if (window.gameState && typeof window.gameState === 'object') {
+        return window.gameState;
+      }
+    }
+    return null;
+  }
+
+  function getSaveGameFunction() {
+    if (typeof saveGame === 'function') {
+      return saveGame;
+    }
+    if (typeof globalThis !== 'undefined' && typeof globalThis.saveGame === 'function') {
+      return globalThis.saveGame;
+    }
+    if (typeof window !== 'undefined' && typeof window.saveGame === 'function') {
+      return window.saveGame;
+    }
+    return null;
+  }
+
+  function getArcadeAutosaveApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const api = window.ArcadeAutosave;
+    if (!api || typeof api.get !== 'function' || typeof api.set !== 'function') {
+      return null;
+    }
+    return api;
+  }
+
+  function findMotocrossEntryKey(entries) {
+    if (!entries || typeof entries !== 'object') {
+      return null;
+    }
+    if (entries[MOTOCROSS_PROGRESS_KEY]) {
+      return MOTOCROSS_PROGRESS_KEY;
+    }
+    const fallbackKey = Object.keys(entries).find(key => (
+      typeof key === 'string' && key.toLowerCase() === MOTOCROSS_PROGRESS_KEY
+    ));
+    return fallbackKey || null;
+  }
+
+  function ensureMotocrossProgressEntry(globalState) {
+    if (!globalState || typeof globalState !== 'object') {
+      return null;
+    }
+    if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
+      globalState.arcadeProgress = { version: 1, entries: {} };
+    }
+    const progress = globalState.arcadeProgress;
+    if (!progress.entries || typeof progress.entries !== 'object') {
+      progress.entries = {};
+    }
+    const entries = progress.entries;
+    const key = findMotocrossEntryKey(entries);
+    let entry = key ? entries[key] : null;
+    if (!entry || typeof entry !== 'object') {
+      entry = { state: {}, updatedAt: Date.now() };
+    }
+    if (!entry.state || typeof entry.state !== 'object') {
+      entry.state = {};
+    }
+    entries[MOTOCROSS_PROGRESS_KEY] = entry;
+    return entry;
+  }
+
+  function readMotocrossAutosaveSnapshot() {
+    const api = getArcadeAutosaveApi();
+    if (!api) {
+      return null;
+    }
+    try {
+      const entry = api.get(MOTOCROSS_PROGRESS_KEY);
+      if (entry && typeof entry === 'object') {
+        return entry;
+      }
+    } catch (error) {
+      // Ignore autosave read errors.
+    }
+    return null;
+  }
+
+  function normalizeMotocrossRecord(record) {
+    if (!record || typeof record !== 'object') {
+      return { bestDistance: 0, bestSpeed: 0 };
+    }
+    return {
+      bestDistance: record.bestDistance ?? record.maxDistance ?? record.distance ?? 0,
+      bestSpeed: record.bestSpeed ?? record.speed ?? record.topSpeed ?? 0
+    };
+  }
+
+  function mergeMotocrossSnapshots(primary, secondary) {
+    if (!primary && !secondary) {
+      return null;
+    }
+    if (!primary) {
+      return { ...secondary };
+    }
+    if (!secondary) {
+      return { ...primary };
+    }
+    return {
+      bestDistance: Math.max(Number(primary.bestDistance) || 0, Number(secondary.bestDistance) || 0),
+      bestSpeed: Math.max(Number(primary.bestSpeed) || 0, Number(secondary.bestSpeed) || 0)
+    };
+  }
+
+  function readMotocrossRecordSnapshot() {
+    const autosaveSnapshot = normalizeMotocrossRecord(readMotocrossAutosaveSnapshot());
+    const globalState = getGlobalGameState();
+    let progressSnapshot = null;
+    if (globalState && globalState.arcadeProgress && typeof globalState.arcadeProgress === 'object') {
+      const entries = globalState.arcadeProgress.entries && typeof globalState.arcadeProgress.entries === 'object'
+        ? globalState.arcadeProgress.entries
+        : null;
+      if (entries) {
+        const key = findMotocrossEntryKey(entries);
+        if (key) {
+          const entry = entries[key];
+          if (entry && typeof entry === 'object') {
+            const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+            progressSnapshot = normalizeMotocrossRecord(state);
+          }
+        }
+      }
+    }
+    return mergeMotocrossSnapshots(autosaveSnapshot, progressSnapshot);
+  }
 
   const translate = (() => {
     if (typeof window !== 'undefined' && typeof window.t === 'function') {
@@ -159,6 +306,10 @@
       return distanceFormatter.format(numeric);
     }
     return numeric.toFixed(0);
+  }
+
+  function getEmptyRecordValue() {
+    return translate('scripts.info.progress.motocross.empty', '—');
   }
 
   function formatTicketCount(value) {
@@ -1293,12 +1444,112 @@
     trackStartX: 0,
     runStartX: 0,
     maxDistance: 0,
+    runPeakSpeed: 0,
     gachaMilestonesClaimed: 0,
+    bestRecords: { bestDistance: 0, bestSpeed: 0 },
+    recordsDirty: false,
+    runRecords: { distance: false, speed: false },
+    lastRunSummary: null,
     lastGeneratedCount: 0,
     background: createBackgroundState(),
     bikeSprite: createBikeSpriteState(),
     test: { active: false, timer: null, index: 0, resumeActive: false }
   };
+
+  function sanitizeMotocrossRecordValue(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return 0;
+    }
+    return Math.max(0, Math.round(numeric));
+  }
+
+  function hydrateMotocrossRecords() {
+    const snapshot = readMotocrossRecordSnapshot();
+    if (!snapshot) {
+      state.bestRecords.bestDistance = 0;
+      state.bestRecords.bestSpeed = 0;
+      state.recordsDirty = false;
+      updateBestRecordsDisplay();
+      return;
+    }
+    state.bestRecords.bestDistance = sanitizeMotocrossRecordValue(snapshot.bestDistance);
+    state.bestRecords.bestSpeed = sanitizeMotocrossRecordValue(snapshot.bestSpeed);
+    state.recordsDirty = false;
+    updateBestRecordsDisplay();
+  }
+
+  function updateBestDistanceRecord(distance) {
+    const sanitized = sanitizeMotocrossRecordValue(distance);
+    if (sanitized > state.bestRecords.bestDistance) {
+      state.bestRecords.bestDistance = sanitized;
+      state.recordsDirty = true;
+      if (state.runRecords) {
+        state.runRecords.distance = true;
+      }
+      updateBestRecordsDisplay();
+    }
+  }
+
+  function updateBestSpeedRecord(speed) {
+    const sanitized = sanitizeMotocrossRecordValue(speed);
+    if (sanitized > state.bestRecords.bestSpeed) {
+      state.bestRecords.bestSpeed = sanitized;
+      state.recordsDirty = true;
+      if (state.runRecords) {
+        state.runRecords.speed = true;
+      }
+      updateBestRecordsDisplay();
+    }
+  }
+
+  function persistMotocrossRecords(force = false) {
+    const hasRecord = state.bestRecords.bestDistance > 0 || state.bestRecords.bestSpeed > 0;
+    if (!force && (!state.recordsDirty || !hasRecord)) {
+      return;
+    }
+    if (!hasRecord) {
+      return;
+    }
+    const autosavePayload = {
+      version: MOTOCROSS_AUTOSAVE_VERSION,
+      bestDistance: state.bestRecords.bestDistance,
+      bestSpeed: state.bestRecords.bestSpeed
+    };
+    const autosave = getArcadeAutosaveApi();
+    if (autosave) {
+      try {
+        autosave.set(MOTOCROSS_PROGRESS_KEY, autosavePayload);
+      } catch (error) {
+        // Ignore autosave errors to avoid interrupting the run.
+      }
+    }
+    const globalState = getGlobalGameState();
+    if (globalState) {
+      const entry = ensureMotocrossProgressEntry(globalState);
+      if (entry) {
+        const nextState = entry.state && typeof entry.state === 'object' ? { ...entry.state } : {};
+        nextState.bestDistance = autosavePayload.bestDistance;
+        nextState.bestSpeed = autosavePayload.bestSpeed;
+        const payload = { state: nextState, updatedAt: Date.now() };
+        if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
+          globalState.arcadeProgress.entries = {};
+        }
+        globalState.arcadeProgress.entries[MOTOCROSS_PROGRESS_KEY] = payload;
+      }
+    }
+    state.recordsDirty = false;
+    const saveFn = getSaveGameFunction();
+    if (typeof saveFn === 'function') {
+      try {
+        saveFn();
+      } catch (error) {
+        // Ignore save errors for this optional sync
+      }
+    }
+  }
+
+  hydrateMotocrossRecords();
 
   function applyConfig(config) {
     const normalized = normalizeConfig(config);
@@ -1491,7 +1742,18 @@
       distanceValue: document.getElementById('motocrossDistanceValue'),
       status: document.getElementById('motocrossStatus'),
       restartButton: document.getElementById('motocrossRestart'),
-      testButton: document.getElementById('motocrossTest')
+      testButton: document.getElementById('motocrossTest'),
+      recordsDistanceValue: document.getElementById('motocrossRecordsDistanceValue'),
+      recordsSpeedValue: document.getElementById('motocrossRecordsSpeedValue'),
+      gameOverOverlay: document.getElementById('motocrossGameOverOverlay'),
+      gameOverDistanceValue: document.getElementById('motocrossGameOverDistanceValue'),
+      gameOverSpeedValue: document.getElementById('motocrossGameOverSpeedValue'),
+      gameOverBestDistanceValue: document.getElementById('motocrossGameOverBestDistanceValue'),
+      gameOverBestSpeedValue: document.getElementById('motocrossGameOverBestSpeedValue'),
+      gameOverDistanceBadge: document.getElementById('motocrossGameOverDistanceBadge'),
+      gameOverSpeedBadge: document.getElementById('motocrossGameOverSpeedBadge'),
+      gameOverRetryButton: document.getElementById('motocrossGameOverRetry'),
+      gameOverDismissButton: document.getElementById('motocrossGameOverDismiss')
     };
   }
 
@@ -1524,8 +1786,11 @@
       state.active = false;
       state.pendingRespawn = false;
       resetInputState();
+      persistMotocrossRecords();
+      showGameOverOverlay(state.lastRunSummary);
     } else {
       state.gameOver = false;
+      hideGameOverOverlay();
     }
     applyStatus();
   }
@@ -1577,12 +1842,115 @@
     setDisplayedSpeed(displaySpeed);
   }
 
+  function updateRunPeakSpeed() {
+    if (!state?.bike || !state.bike.velocity) {
+      return;
+    }
+    const vx = Number(state.bike.velocity.x) * UNIT_TO_METERS;
+    const vy = Number(state.bike.velocity.y) * UNIT_TO_METERS;
+    if (!Number.isFinite(vx) || !Number.isFinite(vy)) {
+      return;
+    }
+    const speedMs = Math.sqrt(vx * vx + vy * vy);
+    const speedKmh = speedMs * 3.6;
+    if (!Number.isFinite(speedKmh)) {
+      return;
+    }
+    if (speedKmh > state.runPeakSpeed) {
+      state.runPeakSpeed = speedKmh;
+      updateBestSpeedRecord(speedKmh);
+    }
+  }
+
+  function captureRunSummary() {
+    return {
+      distance: sanitizeMotocrossRecordValue(state.maxDistance),
+      speed: sanitizeMotocrossRecordValue(state.runPeakSpeed),
+      bestDistance: state.bestRecords.bestDistance,
+      bestSpeed: state.bestRecords.bestSpeed,
+      newBestDistance: Boolean(state.runRecords?.distance),
+      newBestSpeed: Boolean(state.runRecords?.speed)
+    };
+  }
+
   function updateDistanceDisplay() {
     const { elements, maxDistance } = state;
     if (!elements || !elements.distanceValue) {
       return;
     }
     elements.distanceValue.textContent = formatDistance(maxDistance);
+  }
+
+  function updateBestRecordsDisplay() {
+    const { elements, bestRecords } = state;
+    if (!elements) {
+      return;
+    }
+    const emptyValue = getEmptyRecordValue();
+    const distanceText = bestRecords.bestDistance > 0
+      ? formatDistance(bestRecords.bestDistance)
+      : emptyValue;
+    const speedText = bestRecords.bestSpeed > 0
+      ? formatDistance(bestRecords.bestSpeed)
+      : emptyValue;
+    if (elements.recordsDistanceValue) {
+      elements.recordsDistanceValue.textContent = distanceText;
+    }
+    if (elements.recordsSpeedValue) {
+      elements.recordsSpeedValue.textContent = speedText;
+    }
+    if (elements.gameOverBestDistanceValue) {
+      elements.gameOverBestDistanceValue.textContent = distanceText;
+    }
+    if (elements.gameOverBestSpeedValue) {
+      elements.gameOverBestSpeedValue.textContent = speedText;
+    }
+  }
+
+  function updateGameOverOverlay(summary) {
+    const { elements } = state;
+    if (!elements) {
+      return;
+    }
+    const emptyValue = getEmptyRecordValue();
+    const distanceValue = summary && summary.distance > 0
+      ? formatDistance(summary.distance)
+      : emptyValue;
+    const speedValue = summary && summary.speed > 0
+      ? formatDistance(summary.speed)
+      : emptyValue;
+    if (elements.gameOverDistanceValue) {
+      elements.gameOverDistanceValue.textContent = distanceValue;
+    }
+    if (elements.gameOverSpeedValue) {
+      elements.gameOverSpeedValue.textContent = speedValue;
+    }
+    if (elements.gameOverDistanceBadge) {
+      elements.gameOverDistanceBadge.hidden = !(summary && summary.newBestDistance);
+    }
+    if (elements.gameOverSpeedBadge) {
+      elements.gameOverSpeedBadge.hidden = !(summary && summary.newBestSpeed);
+    }
+    updateBestRecordsDisplay();
+  }
+
+  function showGameOverOverlay(summary) {
+    const overlay = state.elements?.gameOverOverlay;
+    if (!overlay) {
+      return;
+    }
+    updateGameOverOverlay(summary || state.lastRunSummary);
+    overlay.hidden = false;
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideGameOverOverlay() {
+    const overlay = state.elements?.gameOverOverlay;
+    if (!overlay) {
+      return;
+    }
+    overlay.hidden = true;
+    overlay.setAttribute('aria-hidden', 'true');
   }
 
   function awardDistanceGachaTickets(distanceMeters) {
@@ -2126,12 +2494,14 @@
 
     updateWheelData();
     updateAverageSpeed(dt);
+    updateRunPeakSpeed();
 
     const referenceX = Number.isFinite(state.runStartX) ? state.runStartX : 0;
     const progress = bike.position.x - referenceX;
     if (Number.isFinite(progress)) {
       const progressMeters = progress * UNIT_TO_METERS;
       state.maxDistance = Math.max(state.maxDistance, progressMeters);
+      updateBestDistanceRecord(state.maxDistance);
       awardDistanceGachaTickets(state.maxDistance);
     }
 
@@ -2147,6 +2517,7 @@
       const isUpsideDown = Math.abs(normalizedAngle) > Math.PI * 0.75;
       const falling = bike.velocity.y > 0;
       if (isUpsideDown && (!airborne || (falling && nearGroundWhileUpsideDown))) {
+        state.lastRunSummary = captureRunSummary();
         const formattedDistance = formatDistance(state.maxDistance);
         setStatus(
           'index.sections.motocross.ui.status.gameOver',
@@ -2611,6 +2982,7 @@
   function generateTrack(options = {}) {
     const silent = !!(options && options.silent);
     stopTrackTest();
+    persistMotocrossRecords();
     pickBackgroundSource(!silent);
     ensureBikeSprite(false);
     const seedValue = createEntropySeed();
@@ -2631,10 +3003,17 @@
     state.trackStartX = Array.isArray(track.points) && track.points.length ? track.points[0][0] : 0;
     state.runStartX = state.respawnData ? state.respawnData.x : state.trackStartX;
     state.maxDistance = 0;
+    state.runPeakSpeed = 0;
     state.gachaMilestonesClaimed = 0;
+    state.lastRunSummary = null;
+    if (state.runRecords) {
+      state.runRecords.distance = false;
+      state.runRecords.speed = false;
+    }
     state.gameOver = false;
     state.pendingRespawn = false;
     state.active = true;
+    hideGameOverOverlay();
     resetInputState();
     state.lastGeneratedCount = Array.isArray(track.usedIds) ? track.usedIds.length : 0;
     updateRespawnCheckpoint();
@@ -2673,6 +3052,8 @@
 
   function handleRestart() {
     stopTrackTest();
+    persistMotocrossRecords();
+    hideGameOverOverlay();
     if (!state.track) {
       generateTrack();
       return;
@@ -2681,7 +3062,13 @@
     state.active = true;
     state.pendingRespawn = false;
     state.maxDistance = 0;
+    state.runPeakSpeed = 0;
     state.gachaMilestonesClaimed = 0;
+    state.lastRunSummary = null;
+    if (state.runRecords) {
+      state.runRecords.distance = false;
+      state.runRecords.speed = false;
+    }
     state.currentCheckpoint = 0;
     const restartRespawn = computeRespawnData(0);
     if (restartRespawn) {
@@ -2703,6 +3090,20 @@
       params,
       'success'
     );
+  }
+
+  function handleGameOverRetry(event) {
+    if (event && typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
+    handleRestart();
+  }
+
+  function handleGameOverDismiss(event) {
+    if (event && typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
+    hideGameOverOverlay();
   }
 
   function handleResize() {
@@ -2783,6 +3184,8 @@
     elements.generateButton?.addEventListener('click', handleGenerate);
     elements.restartButton?.addEventListener('click', handleRestart);
     elements.testButton?.addEventListener('click', handleTest);
+    elements.gameOverRetryButton?.addEventListener('click', handleGameOverRetry);
+    elements.gameOverDismissButton?.addEventListener('click', handleGameOverDismiss);
     window.addEventListener('resize', handleResize);
     window.addEventListener('pointerdown', handlePointerDown, { passive: false });
     window.addEventListener('pointermove', handlePointerMove);
@@ -2792,7 +3195,11 @@
     window.addEventListener('pointerout', handlePointerUp);
     window.addEventListener('keydown', handleKeyDown, { passive: false });
     window.addEventListener('keyup', handleKeyUp);
-    window.addEventListener('i18n:languagechange', applyStatus);
+    window.addEventListener('i18n:languagechange', () => {
+      applyStatus();
+      updateBestRecordsDisplay();
+      updateGameOverOverlay(state.lastRunSummary);
+    });
   }
 
   function initialize() {
@@ -2810,6 +3217,8 @@
     resizeCanvas();
     updateSpeedDisplay();
     updateDistanceDisplay();
+    updateBestRecordsDisplay();
+    updateGameOverOverlay(state.lastRunSummary);
     updateTestButtonAvailability();
     applyStatus();
     ensureBikeSprite(false);
@@ -2829,8 +3238,16 @@
       stopTrackTest();
       state.active = false;
       resetInputState();
+      hideGameOverOverlay();
+      persistMotocrossRecords();
     }
   };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('beforeunload', () => {
+      persistMotocrossRecords(true);
+    });
+  }
 
   loadConfig();
   window.motocrossArcade = api;

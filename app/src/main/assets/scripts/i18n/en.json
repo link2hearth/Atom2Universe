@@ -232,6 +232,13 @@
             "top2": "Top 2",
             "top3": "Top 3"
           },
+          "motocross": {
+            "title": "Motocross",
+            "distance": "Longest distance",
+            "distanceUnit": "m",
+            "speed": "Top speed",
+            "speedUnit": "km/h"
+          },
           "frenzy": {
             "title": "Frenzy",
             "single": "Frenzy high score",
@@ -1326,7 +1333,21 @@
           "speed": "Speed",
           "speedUnit": "KM/H",
           "distance": "Distance",
-          "distanceUnit": "m"
+          "distanceUnit": "m",
+          "records": {
+            "title": "High scores",
+            "distance": "Best distance",
+            "speed": "Top speed"
+          },
+          "gameOver": {
+            "title": "Game over",
+            "subtitle": "Session complete",
+            "distanceLabel": "Distance travelled",
+            "speedLabel": "Top speed",
+            "newRecord": "New record",
+            "retry": "Ride again",
+            "dismiss": "Close"
+          }
         },
         "status": {
           "ready": "Press “Generate” to explore a random course.",
@@ -4277,6 +4298,9 @@
           "multiValue": "{count} clicks · {frenzies} frenzies"
         },
         "photon": {
+          "empty": "—"
+        },
+        "motocross": {
           "empty": "—"
         },
         "starsWar": {
