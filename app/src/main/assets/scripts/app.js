@@ -7728,6 +7728,17 @@ function ensureMotocrossGame() {
   return null;
 }
 
+function syncMotocrossRecordsFromSave() {
+  const motocross = ensureMotocrossGame();
+  if (motocross && typeof motocross.syncRecordsFromSave === 'function') {
+    try {
+      motocross.syncRecordsFromSave();
+    } catch (error) {
+      console.warn('Motocross: unable to sync records from save', error);
+    }
+  }
+}
+
 function ensureHexGame() {
   if (hexGame && typeof hexGame === 'object') {
     return hexGame;
@@ -21752,6 +21763,7 @@ function applySerializedGameState(raw) {
     gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
   }
   gameState.arcadeProgress = normalizeArcadeProgress(data.arcadeProgress);
+  syncMotocrossRecordsFromSave();
   applyDerivedFeatureUnlockFlags();
   const storedUpgrades = data.upgrades;
   if (storedUpgrades && typeof storedUpgrades === 'object') {
@@ -22218,6 +22230,7 @@ function loadGame() {
       gameState.ticketStarUnlocked = gameState.gachaTickets > 0;
     }
     gameState.arcadeProgress = normalizeArcadeProgress(data.arcadeProgress);
+    syncMotocrossRecordsFromSave();
     applyDerivedFeatureUnlockFlags();
     const storedUpgrades = data.upgrades;
     if (storedUpgrades && typeof storedUpgrades === 'object') {
