@@ -192,7 +192,6 @@
         },
         "progress": {
           "title": "Progress",
-          "subtitle": "Session & global",
           "toggle": {
             "collapse": "Collapse",
             "expand": "Expand"
@@ -251,7 +250,6 @@
         },
         "scores": {
           "title": "Scores",
-          "subtitle": "Mini-game highscores at a glance.",
           "toggle": {
             "collapse": "Collapse",
             "expand": "Expand"
@@ -268,7 +266,6 @@
         },
         "calculations": {
           "title": "Production breakdown",
-          "subtitle": "Automatic vs manual gains overview",
           "toggle": {
             "collapse": "Collapse",
             "expand": "Expand"
@@ -300,7 +297,7 @@
           "view": "View {card}"
         },
         "characters": {
-          "title": "Who are the characters?",
+          "title": "Characters",
           "subtitle": "The brilliant minds guiding your journey.",
           "toggle": {
             "collapse": "Collapse",

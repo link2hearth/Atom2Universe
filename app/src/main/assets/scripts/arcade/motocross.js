@@ -1810,6 +1810,7 @@
     }
     state.speed = normalized;
     updateSpeedDisplay();
+    updateBestSpeedRecord(normalized);
   }
 
   function resetAverageSpeed(referenceX) {
