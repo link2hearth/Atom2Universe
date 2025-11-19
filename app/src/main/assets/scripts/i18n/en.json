@@ -1330,7 +1330,21 @@
           "speed": "Speed",
           "speedUnit": "KM/H",
           "distance": "Distance",
-          "distanceUnit": "m"
+          "distanceUnit": "m",
+          "records": {
+            "title": "High scores",
+            "distance": "Best distance",
+            "speed": "Top speed"
+          },
+          "gameOver": {
+            "title": "Game over",
+            "subtitle": "Session complete",
+            "distanceLabel": "Distance travelled",
+            "speedLabel": "Top speed",
+            "newRecord": "New record",
+            "retry": "Ride again",
+            "dismiss": "Close"
+          }
         },
         "status": {
           "ready": "Press “Generate” to explore a random course.",

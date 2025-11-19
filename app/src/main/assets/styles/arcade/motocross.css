@@ -57,6 +57,51 @@
   min-width: auto;
 }
 
+.motocross__records {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 180px;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(7, 11, 22, 0.55);
+  border: 1px solid rgba(148, 176, 240, 0.2);
+}
+
+.motocross__records-title {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #bfc7e8);
+}
+
+.motocross__records-list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.motocross__records-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.motocross__records-row dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-text-muted, #c9d0ee);
+}
+
+.motocross__records-row dd {
+  margin: 0;
+}
+
 .motocross__label {
   font-size: 0.75rem;
   font-weight: 600;
@@ -173,6 +218,150 @@
   background: rgba(18, 58, 36, 0.78);
 }
 
+.motocross__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: radial-gradient(circle at 50% 20%, rgba(5, 7, 18, 0.7), rgba(4, 6, 14, 0.92));
+  backdrop-filter: blur(4px);
+  z-index: 3;
+}
+
+.motocross__overlay[hidden] {
+  display: none;
+}
+
+.motocross__overlay-card {
+  width: min(420px, 100%);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: linear-gradient(165deg, rgba(9, 12, 24, 0.95), rgba(15, 21, 38, 0.92));
+  border: 1px solid rgba(118, 154, 255, 0.2);
+  box-shadow: 0 28px 55px rgba(0, 0, 0, 0.45);
+  text-align: left;
+}
+
+.motocross__overlay-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #9eb1ff);
+}
+
+.motocross__overlay-card h3 {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+}
+
+.motocross__overlay-stats {
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.motocross__overlay-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.motocross__overlay-row dt {
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #b7c5ff);
+}
+
+.motocross__overlay-row dd {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.motocross__overlay-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.motocross__overlay-unit {
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #b3bce0);
+}
+
+.motocross__badge {
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #031627;
+  background: linear-gradient(120deg, #facc15, #f97316);
+}
+
+.motocross__badge[hidden] {
+  display: none;
+}
+
+.motocross__overlay-records {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(10, 16, 32, 0.8);
+  border: 1px solid rgba(118, 154, 255, 0.15);
+}
+
+.motocross__overlay-record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.motocross__overlay-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #aeb8df);
+}
+
+.motocross__overlay-value-group {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+.motocross__overlay-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.motocross__button--ghost {
+  background: transparent;
+  color: #f8fafc;
+  border: 1px solid rgba(248, 250, 252, 0.35);
+}
+
+.motocross__button--ghost:hover {
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.5);
+}
+
+.motocross__button--restart {
+  min-width: 8.5rem;
+}
+
 @media (max-width: 960px) {
   .motocross__ui {
     left: 1.25rem;
@@ -190,6 +379,10 @@
   .motocross__actions {
     margin: 0 1.25rem 1.25rem;
   }
+
+  .motocross__overlay {
+    padding: 1.5rem;
+  }
 }
 
 @media (max-width: 600px) {
@@ -201,5 +394,13 @@
     width: 100%;
     justify-content: flex-end;
     margin: 0 1.25rem 1.25rem;
+  }
+
+  .motocross__records {
+    min-width: 100%;
+  }
+
+  .motocross__overlay-card {
+    padding: 1.25rem;
   }
 }

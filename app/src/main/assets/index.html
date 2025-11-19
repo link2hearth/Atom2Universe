@@ -2073,6 +2073,29 @@
               <span class="motocross__unit" data-i18n="index.sections.motocross.ui.distanceUnit">m</span>
             </span>
           </div>
+          <div class="motocross__records" aria-live="polite">
+            <p class="motocross__records-title" data-i18n="index.sections.motocross.ui.records.title">Records</p>
+            <dl class="motocross__records-list">
+              <div class="motocross__records-row">
+                <dt data-i18n="index.sections.motocross.ui.records.distance">Distance maximale</dt>
+                <dd>
+                  <span class="motocross__value">
+                    <span id="motocrossRecordsDistanceValue">—</span>
+                    <span class="motocross__unit" data-i18n="index.sections.motocross.ui.distanceUnit">m</span>
+                  </span>
+                </dd>
+              </div>
+              <div class="motocross__records-row">
+                <dt data-i18n="index.sections.motocross.ui.records.speed">Vitesse de pointe</dt>
+                <dd>
+                  <span class="motocross__value">
+                    <span id="motocrossRecordsSpeedValue">—</span>
+                    <span class="motocross__unit" data-i18n="index.sections.motocross.ui.speedUnit">km/h</span>
+                  </span>
+                </dd>
+              </div>
+            </dl>
+          </div>
         </div>
         <p
           class="motocross__status"
@@ -2108,6 +2131,93 @@
           role="presentation"
           aria-hidden="true"
         ></canvas>
+        <div
+          class="motocross__overlay"
+          id="motocrossGameOverOverlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="motocrossGameOverTitle"
+          aria-hidden="true"
+          hidden
+        >
+          <div class="motocross__overlay-card">
+            <p class="motocross__overlay-kicker" data-i18n="index.sections.motocross.ui.gameOver.subtitle">
+              Partie terminée
+            </p>
+            <h3 id="motocrossGameOverTitle" data-i18n="index.sections.motocross.ui.gameOver.title">Game over</h3>
+            <dl class="motocross__overlay-stats">
+              <div class="motocross__overlay-row">
+                <dt data-i18n="index.sections.motocross.ui.gameOver.distanceLabel">Distance parcourue</dt>
+                <dd>
+                  <span class="motocross__overlay-value" id="motocrossGameOverDistanceValue">0</span>
+                  <span class="motocross__overlay-unit" data-i18n="index.sections.motocross.ui.distanceUnit">m</span>
+                  <span
+                    class="motocross__badge"
+                    id="motocrossGameOverDistanceBadge"
+                    data-i18n="index.sections.motocross.ui.gameOver.newRecord"
+                    hidden
+                  >
+                    Nouveau record
+                  </span>
+                </dd>
+              </div>
+              <div class="motocross__overlay-row">
+                <dt data-i18n="index.sections.motocross.ui.gameOver.speedLabel">Vitesse de pointe</dt>
+                <dd>
+                  <span class="motocross__overlay-value" id="motocrossGameOverSpeedValue">0</span>
+                  <span class="motocross__overlay-unit" data-i18n="index.sections.motocross.ui.speedUnit">km/h</span>
+                  <span
+                    class="motocross__badge"
+                    id="motocrossGameOverSpeedBadge"
+                    data-i18n="index.sections.motocross.ui.gameOver.newRecord"
+                    hidden
+                  >
+                    Nouveau record
+                  </span>
+                </dd>
+              </div>
+            </dl>
+            <div class="motocross__overlay-records">
+              <p class="motocross__records-title" data-i18n="index.sections.motocross.ui.records.title">Records</p>
+              <div class="motocross__overlay-record">
+                <span class="motocross__overlay-label" data-i18n="index.sections.motocross.ui.records.distance">
+                  Distance maximale
+                </span>
+                <span class="motocross__overlay-value-group">
+                  <span id="motocrossGameOverBestDistanceValue">—</span>
+                  <span class="motocross__overlay-unit" data-i18n="index.sections.motocross.ui.distanceUnit">m</span>
+                </span>
+              </div>
+              <div class="motocross__overlay-record">
+                <span class="motocross__overlay-label" data-i18n="index.sections.motocross.ui.records.speed">
+                  Vitesse de pointe
+                </span>
+                <span class="motocross__overlay-value-group">
+                  <span id="motocrossGameOverBestSpeedValue">—</span>
+                  <span class="motocross__overlay-unit" data-i18n="index.sections.motocross.ui.speedUnit">km/h</span>
+                </span>
+              </div>
+            </div>
+            <div class="motocross__overlay-actions">
+              <button
+                type="button"
+                class="motocross__button motocross__button--restart"
+                id="motocrossGameOverRetry"
+                data-i18n="index.sections.motocross.ui.gameOver.retry"
+              >
+                Rejouer
+              </button>
+              <button
+                type="button"
+                class="motocross__button motocross__button--ghost"
+                id="motocrossGameOverDismiss"
+                data-i18n="index.sections.motocross.ui.gameOver.dismiss"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

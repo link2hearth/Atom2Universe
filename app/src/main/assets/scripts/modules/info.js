@@ -2823,29 +2823,86 @@ function findMotocrossProgressEntry(entries) {
   return null;
 }
 
+function normalizeMotocrossRecordStats(record) {
+  if (!record || typeof record !== 'object') {
+    return { bestDistance: 0, bestSpeed: 0 };
+  }
+  return {
+    bestDistance: toNonNegativeInteger(record.bestDistance ?? record.maxDistance ?? record.distance ?? 0),
+    bestSpeed: toNonNegativeInteger(record.bestSpeed ?? record.topSpeed ?? record.speed ?? 0)
+  };
+}
+
+function hasMotocrossRecordData(record) {
+  return Boolean(record && (record.bestDistance > 0 || record.bestSpeed > 0));
+}
+
+function getMotocrossAutosaveStats() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const api = window.ArcadeAutosave;
+  if (!api || typeof api.get !== 'function') {
+    return null;
+  }
+  try {
+    const raw = api.get('motocross');
+    return normalizeMotocrossRecordStats(raw);
+  } catch (error) {
+    return null;
+  }
+}
+
+function syncMotocrossProgressEntry(record) {
+  if (!hasMotocrossRecordData(record) || typeof gameState !== 'object') {
+    return;
+  }
+  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+    gameState.arcadeProgress = { version: 1, entries: {} };
+  }
+  if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
+    gameState.arcadeProgress.entries = {};
+  }
+  const entry = {
+    state: {
+      bestDistance: record.bestDistance,
+      bestSpeed: record.bestSpeed
+    },
+    updatedAt: Date.now()
+  };
+  gameState.arcadeProgress.entries.motocross = entry;
+  const persistSave = typeof saveGame === 'function'
+    ? saveGame
+    : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
+      ? window.saveGame
+      : null);
+  if (typeof persistSave === 'function') {
+    persistSave();
+  }
+}
+
 function getMotocrossProgressStats() {
   const progress = gameState.arcadeProgress;
-  if (!progress || typeof progress !== 'object') {
-    return null;
-  }
-  const entries = progress.entries && typeof progress.entries === 'object'
+  const entries = progress && typeof progress === 'object' && progress.entries && typeof progress.entries === 'object'
     ? progress.entries
     : null;
-  if (!entries) {
-    return null;
+  let stats = { bestDistance: 0, bestSpeed: 0 };
+  if (entries) {
+    const entry = findMotocrossProgressEntry(entries);
+    if (entry && typeof entry === 'object') {
+      const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
+      stats = normalizeMotocrossRecordStats(state);
+    }
   }
-  const entry = findMotocrossProgressEntry(entries);
-  if (!entry || typeof entry !== 'object') {
-    return null;
+  if (hasMotocrossRecordData(stats)) {
+    return stats;
   }
-  const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
-  const bestDistance = toNonNegativeInteger(
-    state.bestDistance ?? state.maxDistance ?? state.distance ?? 0
-  );
-  const bestSpeed = toNonNegativeInteger(
-    state.bestSpeed ?? state.topSpeed ?? state.speed ?? 0
-  );
-  return { bestDistance, bestSpeed };
+  const autosaveStats = getMotocrossAutosaveStats();
+  if (hasMotocrossRecordData(autosaveStats)) {
+    syncMotocrossProgressEntry(autosaveStats);
+    return autosaveStats;
+  }
+  return stats;
 }
 
 function updateMotocrossStats() {
