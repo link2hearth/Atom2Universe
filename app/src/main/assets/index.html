@@ -2047,18 +2047,42 @@
       hidden
     >
       <div class="motocross">
+        <div class="motocross__actions">
+          <button
+            type="button"
+            class="motocross__button motocross__button--compact"
+            id="motocrossGenerate"
+            data-i18n="index.sections.motocross.ui.generate"
+          >Générer</button>
+          <div class="motocross__actions-group">
+            <button
+              type="button"
+              class="motocross__button motocross__button--restart motocross__button--compact"
+              id="motocrossRestart"
+              hidden
+              aria-hidden="true"
+              data-i18n="index.sections.motocross.ui.restart"
+            >Recommencer</button>
+            <button
+              type="button"
+              class="motocross__button motocross__button--test"
+              id="motocrossTest"
+              data-i18n="index.sections.motocross.ui.test"
+              aria-disabled="true"
+              disabled
+              hidden
+              aria-hidden="true"
+            >Tester</button>
+          </div>
+        </div>
         <div
           class="motocross__ui"
           role="group"
           aria-label="Paramètres de la piste Motocross"
           data-i18n="aria-label:index.sections.motocross.ui.controls"
+          hidden
+          aria-hidden="true"
         >
-          <button
-            type="button"
-            class="motocross__button"
-            id="motocrossGenerate"
-            data-i18n="index.sections.motocross.ui.generate"
-          >Générer</button>
           <div class="motocross__field motocross__field--inline motocross__field--compact">
             <span class="motocross__label" data-i18n="index.sections.motocross.ui.speed">Vitesse</span>
             <span class="motocross__value">
@@ -2105,26 +2129,6 @@
           data-state="idle"
           data-i18n="index.sections.motocross.ui.status.ready"
           >Appuyez sur « Générer » pour lancer une piste aléatoire.</p>
-        <div class="motocross__actions">
-          <button
-            type="button"
-            class="motocross__button motocross__button--restart"
-            id="motocrossRestart"
-            hidden
-            aria-hidden="true"
-            data-i18n="index.sections.motocross.ui.restart"
-          >Recommencer</button>
-          <button
-            type="button"
-            class="motocross__button motocross__button--test"
-            id="motocrossTest"
-            data-i18n="index.sections.motocross.ui.test"
-            aria-disabled="true"
-            disabled
-            hidden
-            aria-hidden="true"
-          >Tester</button>
-        </div>
         <canvas
           id="motocrossCanvas"
           class="motocross__canvas"
