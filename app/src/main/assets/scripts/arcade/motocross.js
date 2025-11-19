@@ -3241,6 +3241,9 @@
       resetInputState();
       hideGameOverOverlay();
       persistMotocrossRecords();
+    },
+    syncRecordsFromSave() {
+      hydrateMotocrossRecords();
     }
   };
 
