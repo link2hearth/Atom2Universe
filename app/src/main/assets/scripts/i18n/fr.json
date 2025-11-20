@@ -3730,7 +3730,7 @@
             "amplify": "Amplifie {target} : {effects}",
             "effects": "{label} : {effects}",
             "multiplierBase": "{prefix}base {value}",
-            "multiplierIncrement": "{prefix}{value} toutes les {count} {unit}",
+        "multiplierIncrement": "Ajoute {value} au multiplicateur {target} toutes les {count} {unit}",
             "multiplierCap": "{prefix}max {value}",
             "rarityMultiplierDetail": "{prefix}{value}{suffix}"
           },
