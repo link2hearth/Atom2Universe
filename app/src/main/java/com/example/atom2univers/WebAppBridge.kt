@@ -9,15 +9,21 @@ class WebAppBridge(activity: MainActivity) {
 
     @JavascriptInterface
     fun saveBackup() {
-        activityRef.get()?.runOnUiThread {
-            it.startCreateBackup()
+        // Get the activity from the WeakReference
+        val activity = activityRef.get()
+        // Run the code on the UI thread, using the 'activity' variable
+        activity?.runOnUiThread {
+            activity.startCreateBackup()
         }
     }
 
     @JavascriptInterface
     fun loadBackup() {
-        activityRef.get()?.runOnUiThread {
-            it.startOpenBackup()
+        // Get the activity from the WeakReference
+        val activity = activityRef.get()
+        // Run the code on the UI thread, using the 'activity' variable
+        activity?.runOnUiThread {
+            activity.startOpenBackup()
         }
     }
 
