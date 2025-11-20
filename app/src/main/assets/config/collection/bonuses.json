@@ -47,13 +47,18 @@
         "label": "scripts.config.elementBonuses.collectionMultiplier"
       },
       "labels": {
-        "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
+        "multiplier": "scripts.config.elementBonuses.collectionMultiplier",
+        "offlineBonus": "scripts.config.elementBonuses.singulier.offlineBonus"
+      },
+      "offlineBonus": {
+        "baseMultiplier": 0.2,
+        "perUnique": 0.01,
+        "cap": 0.5
       }
     },
     "mythique": {
       "labels": {
         "ticketBonus": "scripts.config.elementBonuses.mythique.ticketBonus",
-        "offlineBonus": "scripts.config.elementBonuses.mythique.offlineBonus",
         "duplicateOverflow": "scripts.config.elementBonuses.mythique.duplicateOverflow",
         "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
       },
@@ -69,11 +74,6 @@
       "ticketBonus": {
         "uniqueReductionSeconds": 10,
         "minIntervalSeconds": 30
-      },
-      "offlineBonus": {
-        "baseMultiplier": 0.01,
-        "perDuplicate": 0.01,
-        "cap": 0.5
       },
       "duplicateOverflow": {}
     },

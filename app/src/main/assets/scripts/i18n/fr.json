@@ -2477,12 +2477,12 @@
       },
       "singulier": {
         "perCopy": "Supernovae · résonance cristalline",
-        "multiplier": "Supernovae · densité extrême"
+        "multiplier": "Supernovae · densité extrême",
+        "offlineBonus": "Supernovae · collecte persistante"
       },
       "mythique": {
         "setBonus": "Étoiles massives · convergence ultime",
         "ticketBonus": "Étoiles massives · étoile compressée",
-        "offlineBonus": "Étoiles massives · collecte persistante",
         "multiplier": "Étoiles massives · résonance gravitationnelle",
         "duplicateOverflow": "Étoiles massives · surcharge fractale",
         "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
@@ -2868,12 +2868,12 @@
         },
         "singulier": {
           "perCopy": "Supernovae · résonance cristalline",
-          "multiplier": "Supernovae · densité extrême"
+          "multiplier": "Supernovae · densité extrême",
+          "offlineBonus": "Supernovae · collecte persistante"
         },
         "mythique": {
           "setBonus": "Étoiles massives · convergence ultime",
           "ticketBonus": "Étoiles massives · étoile compressée",
-          "offlineBonus": "Étoiles massives · collecte persistante",
           "multiplier": "Étoiles massives · résonance gravitationnelle",
           "duplicateOverflow": "Étoiles massives · surcharge fractale",
           "frenzyBonus": "Étoiles massives · catalyseur de frénésie"
@@ -3754,14 +3754,14 @@
             "ticketReduction": "Réduit l’intervalle des étoiles à tickets de {value}s par élément unique",
             "ticketMinimum": "minimum {value}s",
             "offlineBase": "base {value}",
-            "offlineIncrement": "{value} par doublon",
+            "offlineIncrement": "{value} par unique",
             "offlineCap": "max {value}",
             "offlineSummary": "Collecte hors ligne {detail}",
             "overflowFlat": "APC/APS +{value} par doublon",
             "overflowThreshold": "au-delà de {count} {unit}",
             "frenzyComplete": "Chance de frénésie {value} (collection complète requise)",
             "singularitySynergy": "Synergie Supernovae : Bonus ×2 si la collection Supernovae est complète",
-            "stellaireSynergy": "Synergie Étoiles simples : Compléter la collection double tous les bonus Étoiles simples"
+            "stellaireSynergy": "Synergie Étoiles simples"
           },
           "units": {
             "copy": {
