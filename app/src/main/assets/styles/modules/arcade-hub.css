@@ -516,10 +516,10 @@ body.theme-aurora .page--arcade-hub {
 }
 
 .arcade-hub-card[data-card-id="motocross"] {
-  --arcade-hub-card-background: linear-gradient(135deg, #75df3f, #4ab42b);
-  --arcade-hub-card-border: rgba(117, 223, 63, 0.48);
-  --arcade-hub-card-shadow: 0 22px 38px rgba(58, 130, 30, 0.32);
-  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(46, 108, 22, 0.42);
+  --arcade-hub-card-background: linear-gradient(135deg, #0d2e44, #2483a8);
+  --arcade-hub-card-border: rgba(72, 160, 196, 0.5);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(12, 52, 72, 0.6);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(18, 82, 108, 0.75);
 }
 
 .arcade-hub-card[data-card-id="link"] {
