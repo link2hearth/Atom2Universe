@@ -3703,7 +3703,7 @@
             "amplify": "Boosts {target}: {effects}",
             "effects": "{label}: {effects}",
             "multiplierBase": "{prefix}base {value}",
-            "multiplierIncrement": "{prefix}{value} every {count} {unit}",
+        "multiplierIncrement": "Adds {value} to the {target} multiplier every {count} {unit}",
             "multiplierCap": "{prefix}max {value}",
             "rarityMultiplierDetail": "{prefix}{value}{suffix}"
           },
