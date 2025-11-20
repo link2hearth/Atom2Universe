@@ -912,7 +912,7 @@ function getCollectionBonusOverview(rarityId) {
     pushOverview(
       translateCollectionOverview(
         'stellaireSynergy',
-        'Synergie Étoiles simples : Compléter la collection double tous les bonus Étoiles simples'
+        'Synergie Étoiles simples'
       )
     );
   }

@@ -2540,12 +2540,12 @@
       },
       "singulier": {
         "perCopy": "Supernovae · Crystalline resonance",
-        "multiplier": "Supernovae · Extreme density"
+        "multiplier": "Supernovae · Extreme density",
+        "offlineBonus": "Supernovae · Persistent collection"
       },
       "mythique": {
         "setBonus": "Massive Stars · Ultimate convergence",
         "ticketBonus": "Massive Stars · Compressed star",
-        "offlineBonus": "Massive Stars · Persistent collection",
         "multiplier": "Massive Stars · Gravitational resonance",
         "duplicateOverflow": "Massive Stars · Fractal overload",
         "frenzyBonus": "Massive Stars · Frenzy catalyst"
@@ -2931,12 +2931,12 @@
         },
         "singulier": {
           "perCopy": "Supernovae · Crystalline resonance",
-          "multiplier": "Supernovae · Extreme density"
+          "multiplier": "Supernovae · Extreme density",
+          "offlineBonus": "Supernovae · Persistent collection"
         },
         "mythique": {
           "setBonus": "Massive Stars · Ultimate convergence",
           "ticketBonus": "Massive Stars · Compressed star",
-          "offlineBonus": "Massive Stars · Persistent collection",
           "multiplier": "Massive Stars · Gravitational resonance",
           "duplicateOverflow": "Massive Stars · Fractal overload",
           "frenzyBonus": "Massive Stars · Frenzy catalyst"
@@ -3727,14 +3727,14 @@
             "ticketReduction": "Reduces ticket star interval by {value}s per unique element",
             "ticketMinimum": "minimum {value}s",
             "offlineBase": "base {value}",
-            "offlineIncrement": "{value} per duplicate",
+            "offlineIncrement": "{value} per unique",
             "offlineCap": "max {value}",
             "offlineSummary": "Offline collection {detail}",
             "overflowFlat": "APC/APS +{value} per duplicate",
             "overflowThreshold": "beyond {count} {unit}",
             "frenzyComplete": "Frenzy chance {value} (complete collection required)",
             "singularitySynergy": "Supernovae synergy: Bonus ×2 when the Supernovae collection is complete",
-            "stellaireSynergy": "Simple Stars synergy: Completing the collection doubles all Simple Stars bonuses"
+            "stellaireSynergy": "Simple Stars synergy"
           },
           "units": {
             "copy": {
