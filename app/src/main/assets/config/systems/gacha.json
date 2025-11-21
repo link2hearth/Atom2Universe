@@ -63,59 +63,59 @@
   ],
   "weeklyRarityWeights": {
     "monday": {
-      "commun": 80,
+      "commun": 85,
       "essentiel": 7,
       "stellaire": 7,
-      "singulier": 6,
+      "singulier": 1,
       "mythique": 0,
       "irreel": 0
     },
     "tuesday": {
-      "commun": 80,
+      "commun": 85,
       "essentiel": 7,
       "stellaire": 7,
       "singulier": 0,
-      "mythique": 6,
+      "mythique": 1,
       "irreel": 0
     },
     "wednesday": {
-      "commun": 80,
+      "commun": 85,
       "essentiel": 7,
       "stellaire": 7,
       "singulier": 0,
       "mythique": 0,
-      "irreel": 6
+      "irreel": 1
     },
     "thursday": {
-      "commun": 80,
+      "commun": 85,
       "essentiel": 7,
       "stellaire": 7,
-      "singulier": 6,
+      "singulier": 1,
       "mythique": 0,
       "irreel": 0
     },
     "friday": {
-      "commun": 80,
+      "commun": 85,
       "essentiel": 7,
       "stellaire": 7,
       "singulier": 0,
-      "mythique": 6,
+      "mythique": 1,
       "irreel": 0
     },
     "saturday": {
-      "commun": 80,
+      "commun": 85,
       "essentiel": 7,
       "stellaire": 7,
       "singulier": 0,
       "mythique": 0,
-      "irreel": 6
+      "irreel": 1
     },
     "sunday": {
-      "commun": 80,
+      "commun": 83,
       "essentiel": 7,
       "stellaire": 7,
-      "singulier": 2,
-      "mythique": 2,
+      "singulier": 1,
+      "mythique": 1,
       "irreel": 2
     }
   }
