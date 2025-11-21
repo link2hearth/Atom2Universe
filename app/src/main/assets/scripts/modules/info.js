@@ -956,11 +956,6 @@ function getCollectionBonusOverview(rarityId) {
     const rarityLabel = RARITY_LABEL_MAP.get(rarityId) || '';
     const transformed = [];
     const transformedSet = new Set();
-    const isOfflineLine = text => {
-      if (!text) return false;
-      const normalized = String(text).toLowerCase();
-      return normalized.includes('hors ligne') || normalized.includes('offline');
-    };
     overview.forEach(text => {
       if (!text) return;
       let trimmed = String(text).trim();
@@ -973,8 +968,7 @@ function getCollectionBonusOverview(rarityId) {
       }
       trimmed = trimmed.replace(/^·\s*/, '');
       const colonIndex = trimmed.indexOf(':');
-      const offlineLine = isOfflineLine(trimmed);
-      if (colonIndex !== -1 && !offlineLine) {
+      if (colonIndex !== -1) {
         trimmed = trimmed.slice(colonIndex + 1).trim();
       }
       trimmed = trimmed.replace(/^·\s*/, '');
