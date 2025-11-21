@@ -1222,42 +1222,6 @@ function normalizeRarityMultiplierBonus(raw) {
   });
 }
 
-function normalizeElementGroupOfflineBonus(raw) {
-  if (!raw || typeof raw !== 'object') {
-    return null;
-  }
-  const baseMultiplier = clampNumber(
-    pickDefined(raw.baseMultiplier, raw.base, raw.minimum, raw.min),
-    1,
-    { min: 0 }
-  );
-  const perUnique = clampNumber(
-    pickDefined(raw.perUnique, raw.increment, raw.perCopy),
-    0,
-    { min: 0 }
-  );
-  const cap = clampNumber(
-    pickDefined(raw.cap, raw.maximum, raw.max),
-    baseMultiplier,
-    { min: baseMultiplier }
-  );
-  const normalizedBase = Number.isFinite(baseMultiplier) ? baseMultiplier : 1;
-  const normalizedPerUnique = Number.isFinite(perUnique) ? Math.max(0, perUnique) : 0;
-  const normalizedCap = Number.isFinite(cap) ? Math.max(cap, normalizedBase) : normalizedBase;
-  if (
-    Math.abs(normalizedBase - 1) < 1e-9
-    && normalizedPerUnique === 0
-    && Math.abs(normalizedCap - normalizedBase) < 1e-9
-  ) {
-    return null;
-  }
-  return {
-    baseMultiplier: normalizedBase,
-    perUnique: normalizedPerUnique,
-    cap: normalizedCap
-  };
-}
-
 function normalizeElementGroupBonus(raw) {
   if (!raw || typeof raw !== 'object') {
     return null;
@@ -1273,13 +1237,6 @@ function normalizeElementGroupBonus(raw) {
   const multiplier = normalizeElementGroupMultiplier(
     raw.multiplier ?? raw.groupMultiplier ?? raw.multiplicateur ?? raw.multiplierConfig
   );
-  const offlineBonus = normalizeElementGroupOfflineBonus(
-    raw.offlineBonus
-      ?? raw.offline
-      ?? raw.specialBonuses?.offlineBonus
-      ?? raw.specials?.offlineBonus
-      ?? raw.bonusConfig?.offlineBonus
-  );
   const crit = normalizeElementGroupCritConfig(
     raw.crit ?? raw.critBonus ?? raw.critBonuses ?? raw.critics ?? raw.critical
   );
@@ -1292,7 +1249,7 @@ function normalizeElementGroupBonus(raw) {
   );
   const labels = {};
   if (raw.labels && typeof raw.labels === 'object') {
-    ['perCopy', 'setBonus', 'multiplier', 'rarityMultiplier', 'offlineBonus'].forEach(key => {
+    ['perCopy', 'setBonus', 'multiplier', 'rarityMultiplier'].forEach(key => {
       const normalized = translateElementLabel(raw.labels[key]);
       if (normalized) {
         labels[key] = normalized;
@@ -1300,14 +1257,7 @@ function normalizeElementGroupBonus(raw) {
     });
   }
   const hasLabels = Object.keys(labels).length > 0;
-  if (
-    !perCopy
-    && (!setBonuses || setBonuses.length === 0)
-    && !multiplier
-    && !offlineBonus
-    && !crit
-    && !rarityMultiplierBonus
-  ) {
+  if (!perCopy && (!setBonuses || setBonuses.length === 0) && !multiplier && !crit && !rarityMultiplierBonus) {
     return null;
   }
   return {
@@ -1315,7 +1265,6 @@ function normalizeElementGroupBonus(raw) {
     setBonus: setBonuses ? setBonuses[0] : null,
     setBonuses,
     multiplier,
-    offlineBonus,
     crit,
     rarityMultiplierBonus,
     labels: hasLabels ? labels : null
@@ -1851,15 +1800,15 @@ const MYTHIQUE_BONUS_DEFAULTS = {
     minIntervalSeconds: 5
   },
   offline: {
-    baseMultiplier: 1,
-    perDuplicate: 0,
+    baseMultiplier: 0.01,
+    perDuplicate: 0.01,
     cap: 1
   },
   overflow: {
-    flatBonus: 0
+    flatBonus: 50
   },
   frenzy: {
-    multiplier: 1
+    multiplier: 1.5
   }
 };
 

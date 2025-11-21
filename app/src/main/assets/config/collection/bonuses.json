@@ -7,7 +7,8 @@
         "targets": [
           "perClick",
           "perSecond"
-        ]
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
       }
     },
     "essentiel": {
@@ -17,7 +18,8 @@
         "targets": [
           "perClick",
           "perSecond"
-        ]
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
       }
     },
     "stellaire": {
@@ -27,9 +29,12 @@
         "targets": [
           "perClick",
           "perSecond"
-        ]
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
       },
-      "labels": {}
+      "labels": {
+        "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
+      }
     },
     "singulier": {
       "multiplier": {
@@ -38,9 +43,11 @@
         "targets": [
           "perClick",
           "perSecond"
-        ]
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
       },
       "labels": {
+        "multiplier": "scripts.config.elementBonuses.collectionMultiplier",
         "offlineBonus": "scripts.config.elementBonuses.singulier.offlineBonus"
       },
       "offlineBonus": {
@@ -52,7 +59,8 @@
     "mythique": {
       "labels": {
         "ticketBonus": "scripts.config.elementBonuses.mythique.ticketBonus",
-        "duplicateOverflow": "scripts.config.elementBonuses.mythique.duplicateOverflow"
+        "duplicateOverflow": "scripts.config.elementBonuses.mythique.duplicateOverflow",
+        "multiplier": "scripts.config.elementBonuses.collectionMultiplier"
       },
       "multiplier": {
         "every": 10,
@@ -60,7 +68,8 @@
         "targets": [
           "perClick",
           "perSecond"
-        ]
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
       },
       "ticketBonus": {
         "uniqueReductionSeconds": 15,
@@ -82,7 +91,8 @@
         "targets": [
           "perClick",
           "perSecond"
-        ]
+        ],
+        "label": "scripts.config.elementBonuses.collectionMultiplier"
       }
     }
   }
