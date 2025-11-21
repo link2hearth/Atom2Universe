@@ -13390,7 +13390,11 @@ function updateElementInfoPanel(definition) {
     elements.elementInfoOwnedCount.setAttribute('title', ownedTitle);
   }
   if (elements.elementInfoCollection) {
-    const rarityId = entry?.rarity || elementRarityIndex.get(definition.id);
+    const rarityId =
+      entry?.rarity
+      || definition.rarity
+      || definition.rarete
+      || elementRarityIndex.get(definition.id);
     const rarityDef = rarityId ? GACHA_RARITY_MAP.get(rarityId) : null;
     const rarityLabel = rarityDef?.label || rarityId || '—';
     const hasRarityLabel = Boolean(rarityLabel && rarityLabel !== '—');
@@ -13819,6 +13823,32 @@ function getMultiplierSourceValue(entry, step) {
     return LayeredNumber.one();
   }
   return toMultiplierLayered(raw);
+}
+
+function computeRarityMultiplierProduct(store) {
+  if (!store) return LayeredNumber.one();
+  const accumulate = raw => {
+    const numeric = Number(raw);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return 0;
+    }
+    return numeric - 1;
+  };
+  let bonusTotal = 0;
+  if (store instanceof Map) {
+    store.forEach(raw => {
+      bonusTotal += accumulate(raw);
+    });
+  } else if (typeof store === 'object' && store !== null) {
+    Object.values(store).forEach(raw => {
+      bonusTotal += accumulate(raw);
+    });
+  }
+  const total = 1 + bonusTotal;
+  if (!Number.isFinite(total) || total <= 0) {
+    return LayeredNumber.one();
+  }
+  return new LayeredNumber(total);
 }
 
 function formatFlatValue(value) {
