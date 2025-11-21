@@ -11,11 +11,11 @@
           "count": 4
         }
       ],
-      "successChance": 0.4,
+      "successChance": 0.3,
       "rewards": {
         "apcFlat": 1000,
         "apsFlat": 1000,
-        "growthMultiplier": 1.2,
+        "growthMultiplier": 1.15,
         "elements": [
           {
             "elementId": "element-002-helium",
@@ -35,10 +35,10 @@
           "count": 3
         }
       ],
-      "successChance": 0.2,
+      "successChance": 0.3,
       "rewards": {
         "fusionMultiplier": 1,
-        "growthMultiplier": 1.2,
+        "growthMultiplier": 1.15,
         "elements": [
           {
             "elementId": "element-006-carbone",
