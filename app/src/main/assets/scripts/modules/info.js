@@ -649,6 +649,50 @@ function describeMultiplierConfig(multiplierConfig, labelOverride = null) {
   return `${labelPrefix} : ${parts.join(' · ')}`;
 }
 
+function describeOfflineBonus(bonusConfig, labelOverride = null) {
+  if (!bonusConfig) return null;
+  const parts = [];
+  if (
+    Number.isFinite(bonusConfig.baseMultiplier)
+    && Math.abs(bonusConfig.baseMultiplier - 1) > 1e-9
+  ) {
+    const baseText = formatMultiplier(bonusConfig.baseMultiplier);
+    if (baseText && baseText !== '×—') {
+      parts.push(
+        translateCollectionOverview('offlineBase', `base ${baseText}`, { value: baseText })
+      );
+    }
+  }
+  if (Number.isFinite(bonusConfig.perUnique) && bonusConfig.perUnique !== 0) {
+    const incrementText = formatSignedBonus(bonusConfig.perUnique);
+    if (incrementText) {
+      parts.push(
+        translateCollectionOverview('offlineIncrement', `${incrementText} par unique`, { value: incrementText })
+      );
+    }
+  }
+  if (
+    Number.isFinite(bonusConfig.cap)
+    && bonusConfig.cap > 0
+    && bonusConfig.cap !== Number.POSITIVE_INFINITY
+  ) {
+    const capText = formatMultiplier(bonusConfig.cap);
+    if (capText && capText !== '×—') {
+      parts.push(
+        translateCollectionOverview('offlineCap', `max ${capText}`, { value: capText })
+      );
+    }
+  }
+  if (!parts.length) {
+    return null;
+  }
+  const defaultLabel = translateCollectionLabel('offline', 'Collecte hors ligne');
+  const resolvedLabel = resolveConfigLabel(labelOverride, defaultLabel);
+  const labelPrefix = resolvedLabel.text || defaultLabel;
+  const detail = parts.join(' · ');
+  return `${labelPrefix} : ${detail}`;
+}
+
 function describeRarityMultiplierBonus(bonusConfig, labelOverride = null) {
   if (!bonusConfig) return null;
   const targets = [];
@@ -889,6 +933,12 @@ function getCollectionBonusOverview(rarityId) {
     pushOverview(multiplierText);
   }
 
+  const offlineLabel = config.offlineBonus?.label || labelOverrides.offlineBonus || null;
+  const offlineText = describeOfflineBonus(config.offlineBonus, offlineLabel);
+  if (offlineText) {
+    pushOverview(offlineText);
+  }
+
   describeCritConfig(config.crit).forEach(text => pushOverview(text));
 
   const rarityMultiplierLabel = labelOverrides.rarityMultiplier || null;
@@ -899,22 +949,6 @@ function getCollectionBonusOverview(rarityId) {
 
   if (rarityId === MYTHIQUE_RARITY_ID) {
     describeMythiqueSpecials(config).forEach(text => pushOverview(text));
-  }
-
-  if (rarityId === 'stellaire') {
-    pushOverview(
-      translateCollectionOverview(
-        'singularitySynergy',
-        'Synergie Supernovae : Bonus ×2 si la collection Supernovae est complète'
-      )
-    );
-  } else if (rarityId === 'singulier') {
-    pushOverview(
-      translateCollectionOverview(
-        'stellaireSynergy',
-        'Synergie Étoiles simples'
-      )
-    );
   }
 
   let finalOverview = overview;
