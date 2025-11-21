@@ -1434,7 +1434,6 @@ const GAME_CONFIG = {
     productionOrder: [
       'baseFlat',
       'shopFlat',
-      'elementFlat',
       'fusionFlat',
       'collectionMultiplier',
       'frenzy',

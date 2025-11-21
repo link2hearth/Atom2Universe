@@ -1946,7 +1946,6 @@ RARITY_IDS.forEach(rarityId => {
 const DEFAULT_PRODUCTION_STEP_IDS = [
   'baseFlat',
   'shopFlat',
-  'elementFlat',
   'fusionFlat',
   'collectionMultiplier',
   'frenzy',
