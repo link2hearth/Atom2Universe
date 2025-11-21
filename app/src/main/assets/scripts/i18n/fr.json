@@ -2461,7 +2461,7 @@
       }
     },
     "elementBonuses": {
-      "collectionMultiplier": "Multiplicateur de collection",
+      "collectionMultiplier": "Bonus multiplicateur de collection",
       "essentiel": {
         "perCopy": "Spallation cosmique · récoltes essentielles",
         "setBonus": "Spallation cosmique · collection complète",
@@ -2478,7 +2478,7 @@
       "singulier": {
         "perCopy": "Supernovae · résonance cristalline",
         "multiplier": "Supernovae · densité extrême",
-        "offlineBonus": "Hors Ligne"
+        "offlineBonus": "Supernovae · collecte persistante"
       },
       "mythique": {
         "setBonus": "Étoiles massives · convergence ultime",
@@ -2852,7 +2852,7 @@
         }
       },
       "elementBonuses": {
-        "collectionMultiplier": "Multiplicateur de collection",
+        "collectionMultiplier": "Bonus multiplicateur de collection",
         "essentiel": {
           "perCopy": "Spallation cosmique · récoltes essentielles",
           "setBonus": "Spallation cosmique · collection complète",
@@ -2869,7 +2869,7 @@
         "singulier": {
           "perCopy": "Supernovae · résonance cristalline",
           "multiplier": "Supernovae · densité extrême",
-          "offlineBonus": "Hors Ligne"
+          "offlineBonus": "Supernovae · collecte persistante"
         },
         "mythique": {
           "setBonus": "Étoiles massives · convergence ultime",
