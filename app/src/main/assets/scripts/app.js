@@ -13390,7 +13390,11 @@ function updateElementInfoPanel(definition) {
     elements.elementInfoOwnedCount.setAttribute('title', ownedTitle);
   }
   if (elements.elementInfoCollection) {
-    const rarityId = entry?.rarity || elementRarityIndex.get(definition.id);
+    const rarityId =
+      entry?.rarity
+      || definition.rarity
+      || definition.rarete
+      || elementRarityIndex.get(definition.id);
     const rarityDef = rarityId ? GACHA_RARITY_MAP.get(rarityId) : null;
     const rarityLabel = rarityDef?.label || rarityId || '—';
     const hasRarityLabel = Boolean(rarityLabel && rarityLabel !== '—');
