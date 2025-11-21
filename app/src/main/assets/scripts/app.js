@@ -17,6 +17,10 @@ function isCollectionFeatureEnabled() {
   return resolveGlobalBooleanFlag('COLLECTION_SYSTEM_ENABLED', true);
 }
 
+function isCollectionVideosFeatureEnabled() {
+  return resolveGlobalBooleanFlag('COLLECTION_VIDEOS_ENABLED', isCollectionFeatureEnabled());
+}
+
 function isInfoSectionsFeatureEnabled() {
   return resolveGlobalBooleanFlag('INFO_SECTIONS_ENABLED', true);
 }
@@ -54,6 +58,20 @@ function toggleCollectionFeatureAvailability() {
   const next = !isCollectionFeatureEnabled();
   if (typeof globalThis !== 'undefined') {
     globalThis.COLLECTION_SYSTEM_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleCollectionVideosFeatureAvailability() {
+  if (
+    typeof globalThis !== 'undefined'
+    && typeof globalThis.toggleCollectionVideosFeatureEnabled === 'function'
+  ) {
+    return globalThis.toggleCollectionVideosFeatureEnabled();
+  }
+  const next = !isCollectionVideosFeatureEnabled();
+  if (typeof globalThis !== 'undefined') {
+    globalThis.COLLECTION_VIDEOS_ENABLED = next;
   }
   return next;
 }
@@ -5605,6 +5623,13 @@ const RESET_KEYWORD_ACTIONS = Object.freeze({
     disabledKey: 'collectionDisabled',
     disabledFallback: 'Collection disabled. Changes applied.'
   }),
+  VIDEOS: Object.freeze({
+    toggle: toggleCollectionVideosFeatureAvailability,
+    enabledKey: 'collectionVideosEnabled',
+    enabledFallback: 'Collection videos enabled. Changes applied.',
+    disabledKey: 'collectionVideosDisabled',
+    disabledFallback: 'Collection videos disabled. Changes applied.'
+  }),
   INFO: Object.freeze({
     toggle: toggleInfoSectionsFeatureAvailability,
     enabledKey: 'infoEnabled',
@@ -7904,7 +7929,7 @@ function updateCollectionVideosVisibility() {
     return;
   }
   const hasVideos = hasUnlockedCollectionVideos();
-  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection') && hasVideos;
+  const unlocked = isCollectionVideosFeatureEnabled() && isPageUnlocked('collection') && hasVideos;
   elements.collectionVideosCard.hidden = !unlocked;
   elements.collectionVideosCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
