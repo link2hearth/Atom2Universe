@@ -10,6 +10,7 @@ const CONFIG_OVERRIDE_STORAGE_PREFIX = 'atom2univers.config.';
 const CONFIG_OVERRIDE_KEYS = Object.freeze({
   devkit: `${CONFIG_OVERRIDE_STORAGE_PREFIX}devkitEnabled`,
   collection: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionEnabled`,
+  collectionVideos: `${CONFIG_OVERRIDE_STORAGE_PREFIX}collectionVideosEnabled`,
   info: `${CONFIG_OVERRIDE_STORAGE_PREFIX}infoSectionsEnabled`,
   music: `${CONFIG_OVERRIDE_STORAGE_PREFIX}musicEnabled`,
   atomVariant: `${CONFIG_OVERRIDE_STORAGE_PREFIX}atomVariantEnabled`,
@@ -109,6 +110,13 @@ const COLLECTION_SYSTEM_ENABLED = resolveConfigBoolean(
   DEFAULT_COLLECTION_SYSTEM_ENABLED
 );
 
+const DEFAULT_COLLECTION_VIDEOS_ENABLED = COLLECTION_SYSTEM_ENABLED;
+
+const COLLECTION_VIDEOS_ENABLED = resolveConfigBoolean(
+  CONFIG_OVERRIDE_KEYS.collectionVideos,
+  DEFAULT_COLLECTION_VIDEOS_ENABLED
+);
+
 const DEFAULT_INFO_SECTIONS_ENABLED = false;
 
 const INFO_SECTIONS_ENABLED = resolveConfigBoolean(
@@ -152,6 +160,17 @@ function toggleCollectionFeatureEnabled() {
   );
   if (typeof globalThis !== 'undefined') {
     globalThis.COLLECTION_SYSTEM_ENABLED = next;
+  }
+  return next;
+}
+
+function toggleCollectionVideosFeatureEnabled() {
+  const next = toggleConfigBoolean(
+    CONFIG_OVERRIDE_KEYS.collectionVideos,
+    DEFAULT_COLLECTION_VIDEOS_ENABLED
+  );
+  if (typeof globalThis !== 'undefined') {
+    globalThis.COLLECTION_VIDEOS_ENABLED = next;
   }
   return next;
 }
@@ -1653,12 +1672,14 @@ if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
   globalThis.DEVKIT_ENABLED = DEVKIT_ENABLED;
   globalThis.COLLECTION_SYSTEM_ENABLED = COLLECTION_SYSTEM_ENABLED;
+  globalThis.COLLECTION_VIDEOS_ENABLED = COLLECTION_VIDEOS_ENABLED;
   globalThis.INFO_SECTIONS_ENABLED = INFO_SECTIONS_ENABLED;
   globalThis.MUSIC_MODULE_ENABLED = MUSIC_MODULE_ENABLED;
   globalThis.ATOM_IMAGE_VARIANT_ENABLED = ATOM_IMAGE_VARIANT_ENABLED;
   globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = ESCAPE_ADVANCED_DIFFICULTIES_ENABLED;
   globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
+  globalThis.toggleCollectionVideosFeatureEnabled = toggleCollectionVideosFeatureEnabled;
   globalThis.toggleInfoSectionsFeatureEnabled = toggleInfoSectionsFeatureEnabled;
   globalThis.toggleMusicModuleEnabled = toggleMusicModuleEnabled;
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;

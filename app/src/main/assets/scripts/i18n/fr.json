@@ -3610,6 +3610,8 @@
         "devkitDisabled": "DevKit désactivé. Changements appliqués.",
         "collectionEnabled": "Collection activée. Changements appliqués.",
         "collectionDisabled": "Collection désactivée. Changements appliqués.",
+        "collectionVideosEnabled": "Vidéos de collection activées. Changements appliqués.",
+        "collectionVideosDisabled": "Vidéos de collection désactivées. Changements appliqués.",
         "infoEnabled": "Sections Infos activées. Changements appliqués.",
         "infoDisabled": "Sections Infos désactivées. Changements appliqués.",
         "musicEnabled": "Module musique activé. Changements appliqués.",
