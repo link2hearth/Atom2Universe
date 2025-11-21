@@ -2461,7 +2461,7 @@
       }
     },
     "elementBonuses": {
-      "collectionMultiplier": "Synergie de collection · Résonance unifiée",
+      "collectionMultiplier": "Bonus multiplicateur de collection",
       "essentiel": {
         "perCopy": "Spallation cosmique · récoltes essentielles",
         "setBonus": "Spallation cosmique · collection complète",
@@ -2852,7 +2852,7 @@
         }
       },
       "elementBonuses": {
-        "collectionMultiplier": "Synergie de collection · Résonance unifiée",
+        "collectionMultiplier": "Bonus multiplicateur de collection",
         "essentiel": {
           "perCopy": "Spallation cosmique · récoltes essentielles",
           "setBonus": "Spallation cosmique · collection complète",

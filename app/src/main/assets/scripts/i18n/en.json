@@ -2524,7 +2524,7 @@
       }
     },
     "elementBonuses": {
-      "collectionMultiplier": "Collection Synergy · Unified resonance",
+      "collectionMultiplier": "Collection multiplier bonus",
       "essentiel": {
         "perCopy": "Cosmic Spallation · Essential harvests",
         "setBonus": "Cosmic Spallation · Complete collection",
@@ -2915,7 +2915,7 @@
         }
       },
       "elementBonuses": {
-        "collectionMultiplier": "Collection Synergy · Unified resonance",
+        "collectionMultiplier": "Collection multiplier bonus",
         "essentiel": {
           "perCopy": "Cosmic Spallation · Essential harvests",
           "setBonus": "Cosmic Spallation · Complete collection",
