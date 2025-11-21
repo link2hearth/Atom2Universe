@@ -2264,6 +2264,104 @@
       ]
     },
     {
+      "id": "Satie",
+      "name": "Erik Satie",
+      "tracks": [
+        {
+          "name": "Gnossienne 1",
+          "file": "Assets/Chiptune/Satie/gnossienne_1_(c)oguri.mid"
+        },
+        {
+          "name": "Gnossienne 3",
+          "file": "Assets/Chiptune/Satie/gnossienne_3_(c)oguri.mid"
+        },
+        {
+          "name": "Gnossienne 4",
+          "file": "Assets/Chiptune/Satie/gnossienne_4_(c)dery.mid"
+        },
+        {
+          "name": "Gnossienne 5",
+          "file": "Assets/Chiptune/Satie/gnossienne_5_(c)dery.mid"
+        },
+        {
+          "name": "Gnossienne 6",
+          "file": "Assets/Chiptune/Satie/gnossienne_6_(c)dery.mid"
+        },
+        {
+          "name": "Gnossienne 1",
+          "file": "Assets/Chiptune/Satie/Cinq grimaces pour le songe d'une D'été, No.1. Préambule.mid"
+        },
+        {
+          "name": "Gnossienne 2",
+          "file": "Assets/Chiptune/Satie/Cinq grimaces pour le songe d'une D'été, No.2. Préambule.mid"
+        },
+        {
+          "name": "Gnossienne 3",
+          "file": "Assets/Chiptune/Satie/Cinq grimaces pour le songe d'une D'été, No.3. Préambule.mid"
+        },
+        {
+          "name": "Gnossienne 4",
+          "file": "Assets/Chiptune/Satie/Cinq grimaces pour le songe d'une D'été, No.4. Préambule.mid"
+        },
+        {
+          "name": "Gnossienne 5",
+          "file": "Assets/Chiptune/Satie/Cinq grimaces pour le songe d'une D'été, No.5. Préambule.mid"
+        },
+        {
+          "name": "Danse de travers No 1",
+          "file": "Assets/Chiptune/Satie/Danse de travers No 1.mid"
+        },
+        {
+          "name": "Gymnopedie No.1",
+          "file": "Assets/Chiptune/Satie/Gymnopedie No.1.mid"
+        },
+        {
+          "name": "Gymnopedie No.3",
+          "file": "Assets/Chiptune/Satie/Gymnopedie No.3.mid"
+        },
+        {
+          "name": "La Diva de l'Empire",
+          "file": "Assets/Chiptune/Satie/La Diva de l'Empire.mid"
+        },
+        {
+          "name": "Le Piccadilly.mid",
+          "file": "Assets/Chiptune/Satie/Le Piccadilly.mid"
+        },
+        {
+          "name": "Ogive No.1",
+          "file": "Assets/Chiptune/Satie/Ogive No.1.mid"
+        },
+        {
+          "name": "Ogive No.2",
+          "file": "Assets/Chiptune/Satie/Ogive No.2.mid"
+        },
+        {
+          "name": "Ogive No.3",
+          "file": "Assets/Chiptune/Satie/Ogive No.3.mid"
+        },
+        {
+          "name": "Ogive No.4",
+          "file": "Assets/Chiptune/Satie/Ogive No.4.mid"
+        },
+        {
+          "name": "Sarabande No.1",
+          "file": "Assets/Chiptune/Satie/Sarabande No.1.mid"
+        },
+        {
+          "name": "Sarabande No.2",
+          "file": "Assets/Chiptune/Satie/Sarabande No.2.mid"
+        },
+        {
+          "name": "Sarabande No.3",
+          "file": "Assets/Chiptune/Satie/Sarabande No.3.mid"
+        },
+        {
+          "name": "Gnossienne 2",
+          "file": "Assets/Chiptune/Satie/gnossienne_2_(c)oguri.mid"
+        }
+      ]
+    },
+    {
       "id": "schumann",
       "name": "Robert Schumann",
       "tracks": [

@@ -931,6 +931,18 @@
           channelData[i] = 0;
         }
       }
+      const fadeLength = Math.min(64, length);
+      if (fadeLength > 1) {
+        for (let i = 0; i < fadeLength; i += 1) {
+          const factor = i / fadeLength;
+          channelData[i] *= factor;
+        }
+        for (let i = 0; i < fadeLength; i += 1) {
+          const factor = i / fadeLength;
+          const index = length - 1 - i;
+          channelData[index] *= (1 - factor);
+        }
+      }
       this.bufferCache.set(cacheKey, buffer);
       return buffer;
     }
@@ -1480,13 +1492,13 @@
       this.lastProgramByChannel = new Map();
 
       this.masterVolume = 0.9;
-      this.maxGain = 0.28;
+      this.maxGain = 0.32;
       this.polyphonyGain = null;
       this.polyphonyWeight = 0;
       this.polyphonyVoiceCount = 0;
-      this.polyphonyHeadroom = 1.34;
-      this.polyphonyMinGain = 0.3;
-      this.polyphonyStackPenalty = 0.11;
+      this.polyphonyHeadroom = 1.48;
+      this.polyphonyMinGain = 0.36;
+      this.polyphonyStackPenalty = 0.09;
       this.polyphonyMaxContribution = 2.1;
       this.polyphonyAttackTime = 0.02;
       this.polyphonyReleaseTime = 0.45;
@@ -1495,10 +1507,10 @@
       this.noiseBuffer = null;
       this.reverbBuffer = null;
       this.reverbDefaultSend = 0.12;
-      this.soundFontGainHeadroom = 1.18;
-      this.soundFontMinGainTrim = 0.6;
-      this.soundFontVelocityCompression = 0.18;
-      this.soundFontLayerPressure = 0.45;
+      this.soundFontGainHeadroom = 1.32;
+      this.soundFontMinGainTrim = 0.72;
+      this.soundFontVelocityCompression = 0.12;
+      this.soundFontLayerPressure = 0.32;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
       this.sccEngineScriptPromise = null;
       this.engineMode = 'hifi';
