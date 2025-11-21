@@ -1395,10 +1395,12 @@ const ELEMENT_GROUP_BONUS_CONFIG = (() => {
 
 const MYTHIQUE_RARITY_ID = 'mythique';
 const COMPACT_COLLECTION_RARITIES = new Set([
+  'commun',
   'essentiel',
   'stellaire',
   'singulier',
-  MYTHIQUE_RARITY_ID
+  MYTHIQUE_RARITY_ID,
+  'irreel'
 ]);
 const RAW_MYTHIQUE_GROUP_CONFIG = (() => {
   const raw = RAW_ELEMENT_GROUP_BONUS_GROUPS[MYTHIQUE_RARITY_ID];
