@@ -63,7 +63,7 @@
         ]
       },
       "ticketBonus": {
-        "uniqueReductionSeconds": 15,
+        "uniqueReductionSeconds": 15
       },
       "duplicateOverflow": {}
     },
