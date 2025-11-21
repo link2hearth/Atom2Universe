@@ -13825,6 +13825,32 @@ function getMultiplierSourceValue(entry, step) {
   return toMultiplierLayered(raw);
 }
 
+function computeRarityMultiplierProduct(store) {
+  if (!store) return LayeredNumber.one();
+  const accumulate = raw => {
+    const numeric = Number(raw);
+    if (!Number.isFinite(numeric) || numeric <= 0) {
+      return 0;
+    }
+    return numeric - 1;
+  };
+  let bonusTotal = 0;
+  if (store instanceof Map) {
+    store.forEach(raw => {
+      bonusTotal += accumulate(raw);
+    });
+  } else if (typeof store === 'object' && store !== null) {
+    Object.values(store).forEach(raw => {
+      bonusTotal += accumulate(raw);
+    });
+  }
+  const total = 1 + bonusTotal;
+  if (!Number.isFinite(total) || total <= 0) {
+    return LayeredNumber.one();
+  }
+  return new LayeredNumber(total);
+}
+
 function formatFlatValue(value) {
   const layered = value instanceof LayeredNumber ? value : toLayeredValue(value, 0);
   const normalized = normalizeProductionUnit(layered);
