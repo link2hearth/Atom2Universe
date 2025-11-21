@@ -2524,7 +2524,7 @@
       }
     },
     "elementBonuses": {
-      "collectionMultiplier": "Collection Synergy · Unified resonance",
+      "collectionMultiplier": "Collection multiplier",
       "essentiel": {
         "perCopy": "Cosmic Spallation · Essential harvests",
         "setBonus": "Cosmic Spallation · Complete collection",
@@ -2541,7 +2541,7 @@
       "singulier": {
         "perCopy": "Supernovae · Crystalline resonance",
         "multiplier": "Supernovae · Extreme density",
-        "offlineBonus": "Supernovae · Persistent collection"
+        "offlineBonus": "Offline"
       },
       "mythique": {
         "setBonus": "Massive Stars · Ultimate convergence",
@@ -2915,7 +2915,7 @@
         }
       },
       "elementBonuses": {
-        "collectionMultiplier": "Collection Synergy · Unified resonance",
+        "collectionMultiplier": "Collection multiplier",
         "essentiel": {
           "perCopy": "Cosmic Spallation · Essential harvests",
           "setBonus": "Cosmic Spallation · Complete collection",
@@ -2932,7 +2932,7 @@
         "singulier": {
           "perCopy": "Supernovae · Crystalline resonance",
           "multiplier": "Supernovae · Extreme density",
-          "offlineBonus": "Supernovae · Persistent collection"
+          "offlineBonus": "Offline"
         },
         "mythique": {
           "setBonus": "Massive Stars · Ultimate convergence",
@@ -3703,7 +3703,7 @@
             "amplify": "Boosts {target}: {effects}",
             "effects": "{label}: {effects}",
             "multiplierBase": "{prefix}base {value}",
-            "multiplierIncrement": "{prefix}{value} every {count} {unit}",
+        "multiplierIncrement": "Adds {value} to the {target} multiplier every {count} {unit}",
             "multiplierCap": "{prefix}max {value}",
             "rarityMultiplierDetail": "{prefix}{value}{suffix}"
           },
