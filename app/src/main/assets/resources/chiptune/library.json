@@ -2264,6 +2264,20 @@
       ]
     },
     {
+      "id": "Satie",
+      "name": "Erik Satie",
+      "tracks": [
+        {
+          "name": "Gnossienne 1",
+          "file": "Assets/Chiptune/Satie/gnossienne_1_(c)oguri.mid"
+        },
+        {
+          "name": "Gnossienne 2",
+          "file": "Assets/Chiptune/Satie/gnossienne_2_(c)oguri.mid"
+        }
+      ]
+    },
+    {
       "id": "schumann",
       "name": "Robert Schumann",
       "tracks": [
