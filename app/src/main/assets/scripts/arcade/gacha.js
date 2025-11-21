@@ -4281,7 +4281,9 @@ function buildGachaDisplayData(results) {
   return { aggregated, focus, newEntries, rarityColorMap };
 }
 
-const GACHA_ANIMATION_CONFETTI_COUNT = 150;
+const GACHA_CONFETTI_BASE_COUNT = 120;
+const GACHA_CONFETTI_MIN_COUNT = 36;
+const GACHA_CONFETTI_REFERENCE_AREA = 720 * 960;
 const GACHA_ANIMATION_REVEAL_DELAY = 2500;
 const GACHA_CONFETTI_BASE_RARITY_ID = 'commun';
 const DEFAULT_GACHA_CONFETTI_COLOR = '#4f7ec2';
@@ -4721,6 +4723,39 @@ const gachaConfettiState = {
   baseColorRgb: DEFAULT_GACHA_CONFETTI_RGB
 };
 
+function getGachaConfettiParticleBudget() {
+  let budget = GACHA_CONFETTI_BASE_COUNT;
+
+  if (prefersReducedMotion()) {
+    budget *= 0.4;
+  }
+
+  const area = Math.max(0, Math.round(gachaConfettiState.width * gachaConfettiState.height));
+  if (area > 0) {
+    const normalizedArea = Math.min(1, area / GACHA_CONFETTI_REFERENCE_AREA);
+    budget *= Math.max(0.45, normalizedArea);
+  }
+
+  if (typeof matchMedia === 'function') {
+    try {
+      if (matchMedia('(pointer: coarse)').matches) {
+        budget *= 0.85;
+      }
+    } catch (error) {
+      // Ignore if pointer media query is not supported.
+    }
+  }
+
+  if (typeof navigator !== 'undefined') {
+    const cores = Number(navigator.hardwareConcurrency);
+    if (Number.isFinite(cores) && cores > 0 && cores <= 4) {
+      budget *= 0.75;
+    }
+  }
+
+  return Math.max(GACHA_CONFETTI_MIN_COUNT, Math.round(budget));
+}
+
 function normalizeHexColor(value) {
   if (typeof value !== 'string') return null;
   const trimmed = value.trim();
@@ -4926,10 +4961,10 @@ function createGachaConfettiParticle(finalColorRgb, birthTime) {
   const now = Number.isFinite(birthTime) ? birthTime : getNow();
   return {
     birth: now,
-    life: 2600 + Math.random() * 1400,
+    life: 2000 + Math.random() * 1000,
     angle: Math.random() * Math.PI * 2,
-    speed: 1.5 + Math.random() * 3.5,
-    size: 3 + Math.random() * 4,
+    speed: 1.2 + Math.random() * 3.2,
+    size: 2.6 + Math.random() * 3.4,
     spiralFactor: 0.45 + Math.random() * 0.55,
     wobbleAmplitude: 8 + Math.random() * 24,
     wobbleFrequency: 1.5 + Math.random() * 2.5,
@@ -5077,7 +5112,8 @@ function startGachaConfettiAnimation(outcome) {
     const now = getNow();
     const particles = [];
     const paletteLength = paletteRgb.length;
-    for (let i = 0; i < GACHA_ANIMATION_CONFETTI_COUNT; i += 1) {
+    const particleBudget = getGachaConfettiParticleBudget();
+    for (let i = 0; i < particleBudget; i += 1) {
       const color = paletteRgb[paletteLength > 0 ? i % paletteLength : 0] || baseColorRgb;
       particles.push(createGachaConfettiParticle(color, now));
     }
