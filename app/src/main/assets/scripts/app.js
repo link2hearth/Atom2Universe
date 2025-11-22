@@ -397,6 +397,7 @@ const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
 const ATOM_ANIMATION_PREFERENCE_STORAGE_KEY = 'atom2univers.options.atomAnimationsEnabled';
 const FRENZY_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.frenzyAutoCollectEnabled';
+const TICKET_STAR_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.ticketStarAutoCollectEnabled';
 const CRYPTO_WIDGET_STORAGE_KEY = 'atom2univers.options.cryptoWidgetEnabled';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
@@ -4254,6 +4255,7 @@ const DEFAULT_STATE = {
   },
   sudokuOfflineBonus: null,
   ticketStarAutoCollect: null,
+  ticketStarAutoCollectEnabled: false,
   ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
   ticketStarUnlocked: false,
   frenzySpawnBonus: { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 },
@@ -4818,6 +4820,7 @@ const ARCADE_TROPHY_ID = 'millionAtoms';
 const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
 const FRENZY_AUTO_COLLECT_TROPHY_ID = 'frenzyMaster';
+const TICKET_STAR_AUTO_COLLECT_TROPHY_ID = 'ticketHarvester';
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info', 'collection']);
 
 function hasOwnedGachaCards() {
@@ -5430,6 +5433,7 @@ function unlockTrophy(def) {
   refreshOptionsWelcomeContent();
   updateBrickSkinOption();
   updateFrenzyAutoCollectOptionVisibility();
+  updateTicketStarAutoCollectOptionVisibility();
   updateBrandPortalState({ animate: def.id === ARCADE_TROPHY_ID });
   updatePrimaryNavigationLocks();
   evaluatePageUnlocks({ save: false });
@@ -5455,6 +5459,8 @@ let musicModuleInitRequested = false;
 let holdemBlindListenerAttached = false;
 let frenzyAutoCollectPreference = false;
 let lastFrenzyAutoCollectUnlockedState = null;
+let ticketStarAutoCollectPreference = false;
+let lastTicketStarAutoCollectUnlockedState = null;
 const screenWakeLockState = {
   supported: false,
   enabled: false
@@ -6288,6 +6294,9 @@ function collectDomElements() {
   frenzyAutoCollectCard: document.getElementById('frenzyAutoCollectCard'),
   frenzyAutoCollectToggle: document.getElementById('frenzyAutoCollectToggle'),
   frenzyAutoCollectStatus: document.getElementById('frenzyAutoCollectStatus'),
+  ticketStarAutoCollectCard: document.getElementById('ticketStarAutoCollectCard'),
+  ticketStarAutoCollectToggle: document.getElementById('ticketStarAutoCollectToggle'),
+  ticketStarAutoCollectStatus: document.getElementById('ticketStarAutoCollectStatus'),
   cryptoWidgetToggleCard: document.getElementById('cryptoWidgetToggleCard'),
   cryptoWidgetToggle: document.getElementById('cryptoWidgetToggle'),
   cryptoWidgetToggleStatus: document.getElementById('cryptoWidgetToggleStatus'),
@@ -10268,6 +10277,113 @@ function subscribeCritAtomLanguageUpdates() {
   }
   if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
     globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function readStoredTicketStarAutoCollectEnabled() {
+  try {
+    const stored = globalThis.localStorage?.getItem(TICKET_STAR_AUTO_COLLECT_STORAGE_KEY);
+    if (stored == null) {
+      return null;
+    }
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read ticket star auto-collect preference', error);
+  }
+  return null;
+}
+
+function writeStoredTicketStarAutoCollectEnabled(enabled) {
+  try {
+    const value = enabled ? '1' : '0';
+    globalThis.localStorage?.setItem(TICKET_STAR_AUTO_COLLECT_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist ticket star auto-collect preference', error);
+  }
+}
+
+function isTicketStarAutoCollectFeatureUnlocked() {
+  return getUnlockedTrophySet().has(TICKET_STAR_AUTO_COLLECT_TROPHY_ID)
+    && !!gameState.ticketStarAutoCollect;
+}
+
+function isTicketStarAutoCollectActive() {
+  return ticketStarAutoCollectPreference && isTicketStarAutoCollectFeatureUnlocked();
+}
+
+function updateTicketStarAutoCollectStatusLabel(active) {
+  if (!elements.ticketStarAutoCollectStatus) {
+    return;
+  }
+  const key = active
+    ? 'index.sections.options.ticketStarAutoCollect.state.on'
+    : 'index.sections.options.ticketStarAutoCollect.state.off';
+  const fallback = active ? 'Enabled' : 'Disabled';
+  elements.ticketStarAutoCollectStatus.setAttribute('data-i18n', key);
+  elements.ticketStarAutoCollectStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function applyTicketStarAutoCollectEnabled(enabled, options = {}) {
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  ticketStarAutoCollectPreference = !!enabled;
+  gameState.ticketStarAutoCollectEnabled = ticketStarAutoCollectPreference
+    && isTicketStarAutoCollectFeatureUnlocked();
+  if (settings.updateControl && elements.ticketStarAutoCollectToggle) {
+    elements.ticketStarAutoCollectToggle.checked = ticketStarAutoCollectPreference;
+  }
+  const active = isTicketStarAutoCollectActive();
+  updateTicketStarAutoCollectStatusLabel(active);
+  if (settings.persist) {
+    writeStoredTicketStarAutoCollectEnabled(ticketStarAutoCollectPreference);
+  }
+}
+
+function initTicketStarAutoCollectOption() {
+  const stored = readStoredTicketStarAutoCollectEnabled();
+  const initialPreference = stored === null ? false : stored === true;
+  applyTicketStarAutoCollectEnabled(initialPreference, { persist: false, updateControl: true });
+  if (elements.ticketStarAutoCollectToggle) {
+    elements.ticketStarAutoCollectToggle.addEventListener('change', () => {
+      const enabled = elements.ticketStarAutoCollectToggle.checked;
+      applyTicketStarAutoCollectEnabled(enabled, { persist: true, updateControl: false });
+    });
+  }
+  updateTicketStarAutoCollectOptionVisibility();
+}
+
+function subscribeTicketStarAutoCollectLanguageUpdates() {
+  const handler = () => {
+    updateTicketStarAutoCollectStatusLabel(isTicketStarAutoCollectActive());
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function updateTicketStarAutoCollectOptionVisibility() {
+  const unlocked = isTicketStarAutoCollectFeatureUnlocked();
+  if (elements.ticketStarAutoCollectCard) {
+    elements.ticketStarAutoCollectCard.hidden = !unlocked;
+    elements.ticketStarAutoCollectCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+  }
+  if (elements.ticketStarAutoCollectToggle) {
+    elements.ticketStarAutoCollectToggle.disabled = !unlocked;
+  }
+  if (lastTicketStarAutoCollectUnlockedState !== unlocked) {
+    lastTicketStarAutoCollectUnlockedState = unlocked;
+    applyTicketStarAutoCollectEnabled(ticketStarAutoCollectPreference, { persist: false, updateControl: true });
+  } else {
+    updateTicketStarAutoCollectStatusLabel(isTicketStarAutoCollectActive());
   }
 }
 
@@ -21483,6 +21599,7 @@ function resetGame() {
     },
     sudokuOfflineBonus: null,
     ticketStarAutoCollect: null,
+    ticketStarAutoCollectEnabled: false,
     ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
     ticketStarUnlocked: false,
     frenzySpawnBonus: { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 },
@@ -21510,6 +21627,8 @@ function resetGame() {
   updateUI();
   applyFrenzyAutoCollectEnabled(false, { persist: false });
   updateFrenzyAutoCollectOptionVisibility();
+  applyTicketStarAutoCollectEnabled(false, { persist: false });
+  updateTicketStarAutoCollectOptionVisibility();
   setFusionLog(
     translateOrDefault(
       'scripts.app.fusion.prompt',
@@ -21945,6 +22064,7 @@ function applySerializedGameState(raw) {
   } else {
     gameState.ticketStarAutoCollect = null;
   }
+  gameState.ticketStarAutoCollectEnabled = false;
   const storedFrenzyBonus = data.frenzySpawnBonus;
   if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
     const perClick = Number(storedFrenzyBonus.perClick);
@@ -22205,6 +22325,7 @@ function applySerializedGameState(raw) {
   updateBigBangVisibility();
   updateUI();
   updateFrenzyAutoCollectOptionVisibility();
+  updateTicketStarAutoCollectOptionVisibility();
   if (data.lastSave) {
     const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
     applyOfflineProgress(diff);
@@ -22871,6 +22992,8 @@ function initializeDomBoundModules() {
   subscribeScreenWakeLockLanguageUpdates();
   initFrenzyAutoCollectOption();
   subscribeFrenzyAutoCollectLanguageUpdates();
+  initTicketStarAutoCollectOption();
+  subscribeTicketStarAutoCollectLanguageUpdates();
   initCryptoWidgetOption();
   subscribeCryptoWidgetLanguageUpdates();
   subscribeHeaderBannerLanguageUpdates();

@@ -2184,6 +2184,14 @@
             "off": "Disabled"
           }
         },
+        "ticketStarAutoCollect": {
+          "title": "Auto Loot Stars",
+          "ariaLabel": "Enable or disable automatic ticket-star pickup",
+          "state": {
+            "on": "Enabled",
+            "off": "Disabled"
+          }
+        },
         "cryptoWidget": {
           "title": "Crypto widget",
           "description": "Show BTC and ETH right under the main banner.",
@@ -4176,7 +4184,7 @@
         "ticketHarvester": {
           "name": "Star Collector",
           "description": "Complete both the Primordial Nucleosynthesis and Cosmic Spallation collections.",
-          "reward": "On the main screen, ticket stars auto-collect after 3 seconds."
+          "reward": "Unlocks the \"Auto Loot Stars\" option to enable automatic ticket-star pickup (3-second delay)."
         },
         "alloyMastery": {
           "name": "Alloy Mastery",

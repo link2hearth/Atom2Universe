@@ -5407,6 +5407,9 @@ function isTicketStarFeatureUnlocked() {
 }
 
 function getTicketStarAutoCollectDelayMs() {
+  if (!gameState.ticketStarAutoCollectEnabled) {
+    return null;
+  }
   const config = gameState.ticketStarAutoCollect;
   if (!config) {
     return null;
@@ -5683,8 +5686,7 @@ function spawnTicketStar(now = performance.now()) {
   ticketStarState.velocity.y = velocityY;
   ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
   ticketStarState.spawnTime = now;
-  const autoCollectDelayMs = getTicketStarAutoCollectDelayMs();
-  ticketStarState.expiryTime = autoCollectDelayMs == null ? now + TICKET_STAR_CONFIG.lifetimeMs : 0;
+  ticketStarState.expiryTime = 0;
 
   star.style.transform = `translate(${startX}px, ${startY}px)`;
 }
@@ -5778,24 +5780,6 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
   const width = layer.clientWidth;
   const height = layer.clientHeight;
   if (width <= 0 || height <= 0) {
-    return;
-  }
-  if (ticketStarState.expiryTime > 0 && now >= ticketStarState.expiryTime) {
-    if (star.parentNode) {
-      star.remove();
-    }
-    ticketStarState.element = null;
-    ticketStarState.active = false;
-    ticketStarState.spawnTime = 0;
-    ticketStarState.expiryTime = 0;
-    ticketStarState.velocity.x = 0;
-    ticketStarState.velocity.y = 0;
-    ticketStarState.position.x = 0;
-    ticketStarState.position.y = 0;
-    ticketStarState.width = 0;
-    ticketStarState.height = 0;
-    ticketStarDelayReductionMs = 0;
-    ticketStarState.nextSpawnTime = now + computeTicketStarDelay();
     return;
   }
   if (shouldAutoCollectTicketStar(now)) {
