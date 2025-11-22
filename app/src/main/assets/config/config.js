@@ -124,7 +124,7 @@ const INFO_SECTIONS_ENABLED = resolveConfigBoolean(
   DEFAULT_INFO_SECTIONS_ENABLED
 );
 
-const DEFAULT_MUSIC_MODULE_ENABLED = false;
+const DEFAULT_MUSIC_MODULE_ENABLED = True;
 
 const MUSIC_MODULE_ENABLED = resolveConfigBoolean(
   CONFIG_OVERRIDE_KEYS.music,
@@ -283,7 +283,7 @@ const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectio
  */
 const AUDIO_ENGINE_SETTINGS = Object.freeze({
   scc: Object.freeze({
-    masterGain: 0.18,
+    masterGain: 0.22,
     softClipperDrive: 1.05,
     chorusDelayMs: 12,
     chorusMix: 0.025
@@ -601,7 +601,7 @@ function createShopBuildingDefinitions() {
         'Production manuelle : commence à +1 APC et progresse d’environ +11 % par niveau.',
       category: 'manual',
       baseCost: 25,
-      costScale: 1.16,
+      costScale: 1.15,
       effect: (level = 0) => {
         const clickAdd = calculateProgressiveBonus(level, 1);
         return { clickAdd };
@@ -615,7 +615,7 @@ function createShopBuildingDefinitions() {
         'Production passive : commence à +1 APS et progresse d’environ +11 % par niveau.',
       category: 'auto',
       baseCost: 30,
-      costScale: 1.16,
+      costScale: 1.15,
       effect: (level = 0) => {
         const autoAdd = calculateProgressiveBonus(level, 1);
         return { autoAdd };
@@ -1273,7 +1273,7 @@ const GAME_CONFIG = {
       options: [
         { id: 'small', factor: 0.75 },
         { id: 'normal', factor: 1 },
-        { id: 'large', factor: 1.2 },
+        { id: 'large', factor: 1.25 },
         { id: 'x2', factor: 1.6 }
       ]
     }
@@ -1360,7 +1360,7 @@ const GAME_CONFIG = {
     },
     starfield: {
       starCount: 60,
-      ecoStarCount: 24
+      ecoStarCount: 45
     }
   },
 
@@ -1625,8 +1625,8 @@ const GAME_CONFIG = {
    * - horizontalSpeedMin / horizontalSpeedMax : bornes de la vitesse horizontale générée.
    */
   ticketStar: {
-    averageSpawnIntervalSeconds: 600,
-    minimumSpawnIntervalSeconds: 5,
+    averageSpawnIntervalSeconds: 480,
+    minimumSpawnIntervalSeconds: 30,
     clickReductionSeconds: 0.2,
     lifetimeSeconds: 15,
     movementMode: 'static',
