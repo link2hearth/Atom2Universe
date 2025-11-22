@@ -21414,6 +21414,7 @@ function serializeState() {
         level: bonus.level
       };
     })(),
+    ticketStarAutoCollectEnabled: gameState.ticketStarAutoCollectEnabled === true,
     ticketStarAutoCollect: gameState.ticketStarAutoCollect
       ? {
           delaySeconds: Math.max(
@@ -21428,6 +21429,7 @@ function serializeState() {
       && Number(gameState.ticketStarAverageIntervalSeconds) > 0
       ? Number(gameState.ticketStarAverageIntervalSeconds)
       : DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
+    ticketStarSpriteId: normalizeTicketStarSpritePreference(gameState.ticketStarSpriteId),
     frenzySpawnBonus: {
       perClick: Number.isFinite(Number(gameState.frenzySpawnBonus?.perClick))
         && Number(gameState.frenzySpawnBonus.perClick) > 0
@@ -22195,7 +22197,32 @@ function applySerializedGameState(raw) {
   } else {
     gameState.ticketStarAutoCollect = null;
   }
-  gameState.ticketStarAutoCollectEnabled = false;
+  const storedAutoCollectEnabledRaw =
+    data.ticketStarAutoCollectEnabled
+    ?? data.ticketStarAutoCollectEnable
+    ?? data.ticketStarAutoCollectOn;
+  const storedAutoCollectEnabled = storedAutoCollectEnabledRaw === true
+    || storedAutoCollectEnabledRaw === 'true'
+    || storedAutoCollectEnabledRaw === 1
+    || storedAutoCollectEnabledRaw === '1';
+  applyTicketStarAutoCollectEnabled(
+    storedAutoCollectEnabled || storedAutoCollectEnabledRaw === false
+      ? storedAutoCollectEnabled
+      : ticketStarAutoCollectPreference,
+    {
+      persist: storedAutoCollectEnabledRaw != null,
+      updateControl: true
+    }
+  );
+  const storedTicketStarSprite = data.ticketStarSpriteId ?? data.ticketStarSprite;
+  applyTicketStarSpritePreference(
+    storedTicketStarSprite != null ? storedTicketStarSprite : getTicketStarSpritePreference(),
+    {
+      persist: storedTicketStarSprite != null,
+      updateControl: true,
+      refresh: true
+    }
+  );
   const storedFrenzyBonus = data.frenzySpawnBonus;
   if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
     const perClick = Number(storedFrenzyBonus.perClick);
@@ -22665,6 +22692,32 @@ function loadGame() {
     } else {
       gameState.ticketStarAutoCollect = null;
     }
+    const storedAutoCollectEnabledRaw =
+      data.ticketStarAutoCollectEnabled
+      ?? data.ticketStarAutoCollectEnable
+      ?? data.ticketStarAutoCollectOn;
+    const storedAutoCollectEnabled = storedAutoCollectEnabledRaw === true
+      || storedAutoCollectEnabledRaw === 'true'
+      || storedAutoCollectEnabledRaw === 1
+      || storedAutoCollectEnabledRaw === '1';
+    applyTicketStarAutoCollectEnabled(
+      storedAutoCollectEnabled || storedAutoCollectEnabledRaw === false
+        ? storedAutoCollectEnabled
+        : ticketStarAutoCollectPreference,
+      {
+        persist: storedAutoCollectEnabledRaw != null,
+        updateControl: true
+      }
+    );
+    const storedTicketStarSprite = data.ticketStarSpriteId ?? data.ticketStarSprite;
+    applyTicketStarSpritePreference(
+      storedTicketStarSprite != null ? storedTicketStarSprite : getTicketStarSpritePreference(),
+      {
+        persist: storedTicketStarSprite != null,
+        updateControl: true,
+        refresh: true
+      }
+    );
     const storedFrenzyBonus = data.frenzySpawnBonus;
     if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
       const perClick = Number(storedFrenzyBonus.perClick);
