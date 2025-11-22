@@ -4296,6 +4296,19 @@ const ARCADE_GAME_IDS = Object.freeze([
   'echecs'
 ]);
 
+const DEFAULT_TICKET_STAR_SPRITE_ID = (() => {
+  const raw = CONFIG?.ticketStar?.sprite?.defaultSprite
+    ?? CONFIG?.ticketStar?.sprite?.defaultSpriteId
+    ?? CONFIG?.ticketStar?.defaultSprite;
+  if (typeof raw === 'string') {
+    const normalized = raw.trim().toLowerCase();
+    if (normalized === 'animated' || normalized === 'gif' || normalized === 'anim') {
+      return 'animated';
+    }
+  }
+  return 'static';
+})();
+
 function createInitialArcadeProgress() {
   const entries = {};
   ARCADE_GAME_IDS.forEach(id => {
@@ -4823,18 +4836,6 @@ const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
 const FRENZY_AUTO_COLLECT_TROPHY_ID = 'frenzyCollector';
 const TICKET_STAR_AUTO_COLLECT_TROPHY_ID = 'ticketHarvester';
-const DEFAULT_TICKET_STAR_SPRITE_ID = (() => {
-  const raw = CONFIG?.ticketStar?.sprite?.defaultSprite
-    ?? CONFIG?.ticketStar?.sprite?.defaultSpriteId
-    ?? CONFIG?.ticketStar?.defaultSprite;
-  if (typeof raw === 'string') {
-    const normalized = raw.trim().toLowerCase();
-    if (normalized === 'animated' || normalized === 'gif' || normalized === 'anim') {
-      return 'animated';
-    }
-  }
-  return 'static';
-})();
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info', 'collection']);
 
 function hasOwnedGachaCards() {
