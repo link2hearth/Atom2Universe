@@ -2121,6 +2121,14 @@
             "off": "Désactivée"
           }
         },
+        "ticketStarAutoCollect": {
+          "title": "Auto Loot Stars",
+          "ariaLabel": "Activer ou désactiver la récolte automatique des étoiles à tickets",
+          "state": {
+            "on": "Activée",
+            "off": "Désactivée"
+          }
+        },
         "cryptoWidget": {
           "title": "Widget crypto",
           "description": "Affiche BTC et ETH sous la bannière principale.",
@@ -4203,7 +4211,7 @@
         "ticketHarvester": {
           "name": "Collecteur d’étoiles",
           "description": "Complétez les collections Nucléosynthèse primordiale et Spallation cosmique.",
-          "reward": "Sur l’écran principal, les étoiles à tickets se récoltent automatiquement au bout de 3 secondes."
+          "reward": "Débloque l’option «\u202fAuto Loot Stars\u202f» pour activer la récolte automatique des étoiles (délai de 3 s)."
         },
         "alloyMastery": {
           "name": "Maîtres des alliages",

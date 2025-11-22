@@ -1570,7 +1570,7 @@ const GAME_CONFIG = {
         ticketStarAutoCollect: {
           delaySeconds: 3
         },
-        description: 'Sur l’écran principal, les étoiles à tickets se récoltent seules après 3 secondes.'
+        description: 'Débloque l’option « Auto Loot Stars » (récolte des étoiles après 3 s).'
       },
       order: 1030
     },
