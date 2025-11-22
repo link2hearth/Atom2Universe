@@ -1537,7 +1537,7 @@ const GAME_CONFIG = {
       },
       reward: {
         frenzyMaxStacks: 2,
-        description: 'Débloque la frénésie multiple : deux frénésies peuvent se cumuler.'
+        description: 'Débloque la frénésie multiple (2 cumulées) et l’option de récolte auto des frénésies.'
       },
       order: 1010
     },
@@ -1554,7 +1554,7 @@ const GAME_CONFIG = {
         multiplier: {
           global: 1.05
         },
-        description: 'Active la multi frénésie et ajoute un bonus global ×1,05.'
+        description: 'Active la frénésie triple et ajoute un bonus global ×1,05.'
       },
       order: 1020
     },
@@ -1623,6 +1623,7 @@ const GAME_CONFIG = {
    * - launchVerticalSpeed : vitesse verticale initiale (en px/s) au moment de l'apparition.
    * - minHorizontalSpeed : vitesse horizontale minimale assurant un déplacement suffisant.
    * - horizontalSpeedMin / horizontalSpeedMax : bornes de la vitesse horizontale générée.
+   * - sprite : sources d’images pour l’étoile (static/animated) et sprite par défaut.
    */
   ticketStar: {
     averageSpawnIntervalSeconds: 480,
@@ -1642,7 +1643,12 @@ const GAME_CONFIG = {
     launchVerticalSpeed: 420,
     minHorizontalSpeed: 180,
     horizontalSpeedMin: 260,
-    horizontalSpeedMax: 420
+    horizontalSpeedMax: 420,
+    sprite: {
+      static: 'Assets/Image/Star.png',
+      animated: 'Assets/Image/Star2.gif',
+      defaultSprite: 'static'
+    }
   },
 
   /**

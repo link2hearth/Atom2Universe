@@ -2129,6 +2129,14 @@
             "off": "Désactivée"
           }
         },
+        "ticketStarSprite": {
+          "title": "Visuel des étoiles à tickets",
+          "ariaLabel": "Basculer entre l’étoile PNG statique et le GIF animé sur l’écran principal",
+          "state": {
+            "animated": "Animée (GIF)",
+            "static": "Statique (PNG)"
+          }
+        },
         "cryptoWidget": {
           "title": "Widget crypto",
           "description": "Affiche BTC et ETH sous la bannière principale.",
@@ -4201,11 +4209,11 @@
         "frenzyCollector": {
           "name": "Convergence frénétique",
           "description": "Déclenchez un total de 100 frénésies (APC et APS cumulés).",
-          "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler simultanément."
+          "reward": "Débloque la frénésie multiple (2 cumulées) et l’option de récolte auto des frénésies."
         },
         "frenzyMaster": {
           "name": "Tempête tri-phasée",
-          "description": "Déclenchez un total de 1 000 frénésies.",
+          "description": "Déclenchez un total de 500 frénésies.",
           "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
         },
         "ticketHarvester": {

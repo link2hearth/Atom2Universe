@@ -398,6 +398,7 @@ const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisab
 const ATOM_ANIMATION_PREFERENCE_STORAGE_KEY = 'atom2univers.options.atomAnimationsEnabled';
 const FRENZY_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.frenzyAutoCollectEnabled';
 const TICKET_STAR_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.ticketStarAutoCollectEnabled';
+const TICKET_STAR_SPRITE_STORAGE_KEY = 'atom2univers.options.ticketStarSprite';
 const CRYPTO_WIDGET_STORAGE_KEY = 'atom2univers.options.cryptoWidgetEnabled';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
@@ -4345,6 +4346,7 @@ const gameState = {
   ticketStarAutoCollect: null,
   ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
   ticketStarUnlocked: false,
+  ticketStarSpriteId: DEFAULT_TICKET_STAR_SPRITE_ID,
   frenzySpawnBonus: { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 },
   musicTrackId: null,
   musicVolume: DEFAULT_MUSIC_VOLUME,
@@ -4819,8 +4821,20 @@ const BIG_BANG_LEVEL_BONUS_STEP = (() => {
 const ARCADE_TROPHY_ID = 'millionAtoms';
 const INFO_TROPHY_ID = 'scaleSandGrain';
 const ACHIEVEMENTS_UNLOCK_TROPHY_ID = ARCADE_TROPHY_ID;
-const FRENZY_AUTO_COLLECT_TROPHY_ID = 'frenzyMaster';
+const FRENZY_AUTO_COLLECT_TROPHY_ID = 'frenzyCollector';
 const TICKET_STAR_AUTO_COLLECT_TROPHY_ID = 'ticketHarvester';
+const DEFAULT_TICKET_STAR_SPRITE_ID = (() => {
+  const raw = CONFIG?.ticketStar?.sprite?.defaultSprite
+    ?? CONFIG?.ticketStar?.sprite?.defaultSpriteId
+    ?? CONFIG?.ticketStar?.defaultSprite;
+  if (typeof raw === 'string') {
+    const normalized = raw.trim().toLowerCase();
+    if (normalized === 'animated' || normalized === 'gif' || normalized === 'anim') {
+      return 'animated';
+    }
+  }
+  return 'static';
+})();
 const LOCKABLE_PAGE_IDS = new Set(['gacha', 'tableau', 'fusion', 'info', 'collection']);
 
 function hasOwnedGachaCards() {
@@ -5434,6 +5448,7 @@ function unlockTrophy(def) {
   updateBrickSkinOption();
   updateFrenzyAutoCollectOptionVisibility();
   updateTicketStarAutoCollectOptionVisibility();
+  updateTicketStarSpriteOptionVisibility();
   updateBrandPortalState({ animate: def.id === ARCADE_TROPHY_ID });
   updatePrimaryNavigationLocks();
   evaluatePageUnlocks({ save: false });
@@ -5461,6 +5476,7 @@ let frenzyAutoCollectPreference = false;
 let lastFrenzyAutoCollectUnlockedState = null;
 let ticketStarAutoCollectPreference = false;
 let lastTicketStarAutoCollectUnlockedState = null;
+let ticketStarSpritePreference = DEFAULT_TICKET_STAR_SPRITE_ID;
 const screenWakeLockState = {
   supported: false,
   enabled: false
@@ -6297,6 +6313,9 @@ function collectDomElements() {
   ticketStarAutoCollectCard: document.getElementById('ticketStarAutoCollectCard'),
   ticketStarAutoCollectToggle: document.getElementById('ticketStarAutoCollectToggle'),
   ticketStarAutoCollectStatus: document.getElementById('ticketStarAutoCollectStatus'),
+  ticketStarSpriteCard: document.getElementById('ticketStarSpriteCard'),
+  ticketStarSpriteToggle: document.getElementById('ticketStarSpriteToggle'),
+  ticketStarSpriteStatus: document.getElementById('ticketStarSpriteStatus'),
   cryptoWidgetToggleCard: document.getElementById('cryptoWidgetToggleCard'),
   cryptoWidgetToggle: document.getElementById('cryptoWidgetToggle'),
   cryptoWidgetToggleStatus: document.getElementById('cryptoWidgetToggleStatus'),
@@ -10385,6 +10404,115 @@ function updateTicketStarAutoCollectOptionVisibility() {
   } else {
     updateTicketStarAutoCollectStatusLabel(isTicketStarAutoCollectActive());
   }
+}
+
+function normalizeTicketStarSpritePreference(value) {
+  if (typeof value !== 'string') {
+    return DEFAULT_TICKET_STAR_SPRITE_ID;
+  }
+  const normalized = value.trim().toLowerCase();
+  if (normalized === 'animated' || normalized === 'gif' || normalized === 'anim') {
+    return 'animated';
+  }
+  return 'static';
+}
+
+function getTicketStarSpritePreference() {
+  return ticketStarSpritePreference || DEFAULT_TICKET_STAR_SPRITE_ID;
+}
+
+function readStoredTicketStarSpritePreference() {
+  try {
+    const stored = globalThis.localStorage?.getItem(TICKET_STAR_SPRITE_STORAGE_KEY);
+    if (typeof stored === 'string' && stored.length > 0) {
+      return normalizeTicketStarSpritePreference(stored);
+    }
+  } catch (error) {
+    console.warn('Unable to read ticket star sprite preference', error);
+  }
+  return null;
+}
+
+function writeStoredTicketStarSpritePreference(preferenceId) {
+  try {
+    const normalized = normalizeTicketStarSpritePreference(preferenceId);
+    globalThis.localStorage?.setItem(TICKET_STAR_SPRITE_STORAGE_KEY, normalized);
+  } catch (error) {
+    console.warn('Unable to persist ticket star sprite preference', error);
+  }
+}
+
+function updateTicketStarSpriteStatusLabel(animated) {
+  if (!elements.ticketStarSpriteStatus) {
+    return;
+  }
+  const key = animated
+    ? 'index.sections.options.ticketStarSprite.state.animated'
+    : 'index.sections.options.ticketStarSprite.state.static';
+  const fallback = animated ? 'Animated' : 'Static';
+  elements.ticketStarSpriteStatus.setAttribute('data-i18n', key);
+  elements.ticketStarSpriteStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function applyTicketStarSpritePreference(preferenceId, options = {}) {
+  const settings = Object.assign({ persist: true, updateControl: true, refresh: true }, options);
+  const normalized = normalizeTicketStarSpritePreference(preferenceId);
+  ticketStarSpritePreference = normalized;
+  gameState.ticketStarSpriteId = normalized;
+  if (settings.updateControl && elements.ticketStarSpriteToggle) {
+    elements.ticketStarSpriteToggle.checked = normalized === 'animated';
+  }
+  updateTicketStarSpriteStatusLabel(normalized === 'animated');
+  if (settings.persist) {
+    writeStoredTicketStarSpritePreference(normalized);
+  }
+  if (settings.refresh && typeof refreshTicketStarSprite === 'function') {
+    try {
+      refreshTicketStarSprite(normalized);
+    } catch (error) {
+      console.warn('Unable to refresh ticket star sprite', error);
+    }
+  }
+}
+
+function initTicketStarSpriteOption() {
+  const stored = readStoredTicketStarSpritePreference();
+  const initial = stored ?? DEFAULT_TICKET_STAR_SPRITE_ID;
+  applyTicketStarSpritePreference(initial, { persist: false, updateControl: true, refresh: true });
+  if (elements.ticketStarSpriteToggle) {
+    elements.ticketStarSpriteToggle.addEventListener('change', () => {
+      const animated = elements.ticketStarSpriteToggle.checked;
+      const preferenceId = animated ? 'animated' : 'static';
+      applyTicketStarSpritePreference(preferenceId, { persist: true, updateControl: false, refresh: true });
+    });
+  }
+  updateTicketStarSpriteOptionVisibility();
+}
+
+function subscribeTicketStarSpriteLanguageUpdates() {
+  const handler = () => {
+    updateTicketStarSpriteStatusLabel(getTicketStarSpritePreference() === 'animated');
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function updateTicketStarSpriteOptionVisibility() {
+  const unlocked = gameState.ticketStarUnlocked === true;
+  if (elements.ticketStarSpriteCard) {
+    elements.ticketStarSpriteCard.hidden = !unlocked;
+    elements.ticketStarSpriteCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+  }
+  if (elements.ticketStarSpriteToggle) {
+    elements.ticketStarSpriteToggle.disabled = !unlocked;
+  }
+  updateTicketStarSpriteStatusLabel(getTicketStarSpritePreference() === 'animated');
 }
 
 function readStoredFrenzyAutoCollectEnabled() {
@@ -17298,6 +17426,7 @@ function grantShopGachaTickets(definition, purchaseAmount) {
         console.warn('Shop: unable to reset ticket star state', error);
       }
     }
+    updateTicketStarSpriteOptionVisibility();
   }
   if (typeof evaluatePageUnlocks === 'function') {
     try {
@@ -21629,6 +21758,7 @@ function resetGame() {
   updateFrenzyAutoCollectOptionVisibility();
   applyTicketStarAutoCollectEnabled(false, { persist: false });
   updateTicketStarAutoCollectOptionVisibility();
+  updateTicketStarSpriteOptionVisibility();
   setFusionLog(
     translateOrDefault(
       'scripts.app.fusion.prompt',
@@ -22326,6 +22456,7 @@ function applySerializedGameState(raw) {
   updateUI();
   updateFrenzyAutoCollectOptionVisibility();
   updateTicketStarAutoCollectOptionVisibility();
+  updateTicketStarSpriteOptionVisibility();
   if (data.lastSave) {
     const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
     applyOfflineProgress(diff);
@@ -22994,6 +23125,8 @@ function initializeDomBoundModules() {
   subscribeFrenzyAutoCollectLanguageUpdates();
   initTicketStarAutoCollectOption();
   subscribeTicketStarAutoCollectLanguageUpdates();
+  initTicketStarSpriteOption();
+  subscribeTicketStarSpriteLanguageUpdates();
   initCryptoWidgetOption();
   subscribeCryptoWidgetLanguageUpdates();
   subscribeHeaderBannerLanguageUpdates();

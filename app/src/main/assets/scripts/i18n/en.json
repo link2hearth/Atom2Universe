@@ -2192,6 +2192,14 @@
             "off": "Disabled"
           }
         },
+        "ticketStarSprite": {
+          "title": "Ticket star visual",
+          "ariaLabel": "Switch between the static PNG and animated GIF for the home ticket star",
+          "state": {
+            "animated": "Animated (GIF)",
+            "static": "Static (PNG)"
+          }
+        },
         "cryptoWidget": {
           "title": "Crypto widget",
           "description": "Show BTC and ETH right under the main banner.",
@@ -4174,11 +4182,11 @@
         "frenzyCollector": {
           "name": "Frenetic Convergence",
           "description": "Trigger a total of 100 frenzies (APC and APS combined).",
-          "reward": "Unlocks multi-frenzy: up to two frenzies can overlap."
+          "reward": "Unlocks multi-frenzy (up to two at once) and enables the frenzy auto-collect option."
         },
         "frenzyMaster": {
           "name": "Tri-Phase Tempest",
-          "description": "Trigger a cumulative total of 1,000 frenzies.",
+          "description": "Trigger a cumulative total of 500 frenzies.",
           "reward": "Activates triple frenzy and grants a global ×{multiplier} bonus."
         },
         "ticketHarvester": {
