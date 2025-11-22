@@ -568,7 +568,17 @@
     'Assets/Image/Atom2/Atom2 (38).png',
     'Assets/Image/Atom2/Atom2 (39).png',
     'Assets/Image/Atom2/Atom2 (40).png',
-    'Assets/Image/Atom2/Atom2 (41).png'
+    'Assets/Image/Atom2/Atom2 (41).png',
+    'Assets/Image/Atom2/Atom2 (42).png',
+    'Assets/Image/Atom2/Atom2 (43).png',
+    'Assets/Image/Atom2/Atom2 (44).png',
+    'Assets/Image/Atom2/Atom2 (45).png',
+    'Assets/Image/Atom2/Atom2 (46).png',
+    'Assets/Image/Atom2/Atom2 (47).png',
+    'Assets/Image/Atom2/Atom2 (48).png',
+    'Assets/Image/Atom2/Atom2 (49).png',
+    'Assets/Image/Atom2/Atom2 (50).png',
+    'Assets/Image/Atom2/Atom2 (51).png'
   ]);
 
   const DEFAULT_CRIT_ATOM_IMAGES = Object.freeze([
