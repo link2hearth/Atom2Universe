@@ -2121,6 +2121,22 @@
             "off": "Désactivée"
           }
         },
+        "ticketStarAutoCollect": {
+          "title": "Auto Loot Stars",
+          "ariaLabel": "Activer ou désactiver la récolte automatique des étoiles à tickets",
+          "state": {
+            "on": "Activée",
+            "off": "Désactivée"
+          }
+        },
+        "ticketStarSprite": {
+          "title": "Visuel des étoiles à tickets",
+          "ariaLabel": "Basculer entre l’étoile PNG statique et le GIF animé sur l’écran principal",
+          "state": {
+            "animated": "Animée (GIF)",
+            "static": "Statique (PNG)"
+          }
+        },
         "cryptoWidget": {
           "title": "Widget crypto",
           "description": "Affiche BTC et ETH sous la bannière principale.",
@@ -4193,17 +4209,17 @@
         "frenzyCollector": {
           "name": "Convergence frénétique",
           "description": "Déclenchez un total de 100 frénésies (APC et APS cumulés).",
-          "reward": "Débloque la frénésie multiple : deux frénésies peuvent se cumuler simultanément."
+          "reward": "Débloque la frénésie multiple (2 cumulées) et l’option de récolte auto des frénésies."
         },
         "frenzyMaster": {
           "name": "Tempête tri-phasée",
-          "description": "Déclenchez un total de 1 000 frénésies.",
+          "description": "Déclenchez un total de 500 frénésies.",
           "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
         },
         "ticketHarvester": {
           "name": "Collecteur d’étoiles",
           "description": "Complétez les collections Nucléosynthèse primordiale et Spallation cosmique.",
-          "reward": "Sur l’écran principal, les étoiles à tickets se récoltent automatiquement au bout de 3 secondes."
+          "reward": "Débloque l’option «\u202fAuto Loot Stars\u202f» pour activer la récolte automatique des étoiles (délai de 3 s)."
         },
         "alloyMastery": {
           "name": "Maîtres des alliages",

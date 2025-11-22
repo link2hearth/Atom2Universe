@@ -1747,8 +1747,10 @@ const TICKET_STAR_CONFIG = {
         ?? rawTicketStarConfig.lifetime
         ?? 15
     );
-    const seconds = Number.isFinite(raw) && raw > 0 ? raw : 15;
-    return seconds * 1000;
+    if (!Number.isFinite(raw) || raw <= 0) {
+      return Number.POSITIVE_INFINITY;
+    }
+    return raw * 1000;
   })(),
   movementMode: (() => {
     const raw = rawTicketStarConfig.movementMode ?? rawTicketStarConfig.motionMode ?? rawTicketStarConfig.motion;
@@ -1805,6 +1807,37 @@ const TICKET_STAR_CONFIG = {
   rewardTickets: (() => {
     const raw = Number(rawTicketStarConfig.rewardTickets ?? rawTicketStarConfig.tickets ?? 1);
     return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 1;
+  })(),
+  spriteSources: (() => {
+    const spriteConfig = rawTicketStarConfig.sprite ?? rawTicketStarConfig.sprites ?? {};
+    const staticSprite = typeof spriteConfig.static === 'string'
+      ? spriteConfig.static
+      : typeof rawTicketStarConfig.sprite === 'string'
+        ? rawTicketStarConfig.sprite
+        : 'Assets/Image/Star.png';
+    const animatedSprite = typeof spriteConfig.animated === 'string'
+      ? spriteConfig.animated
+      : typeof rawTicketStarConfig.animatedSprite === 'string'
+        ? rawTicketStarConfig.animatedSprite
+        : null;
+    return {
+      static: staticSprite,
+      animated: animatedSprite
+    };
+  })(),
+  defaultSpriteId: (() => {
+    const spriteConfig = rawTicketStarConfig.sprite ?? rawTicketStarConfig.sprites ?? {};
+    const raw = spriteConfig.defaultSpriteId
+      ?? spriteConfig.defaultSprite
+      ?? rawTicketStarConfig.defaultSpriteId
+      ?? rawTicketStarConfig.defaultSprite;
+    if (typeof raw === 'string') {
+      const normalized = raw.trim().toLowerCase();
+      if (normalized === 'animated' || normalized === 'gif' || normalized === 'anim') {
+        return 'animated';
+      }
+    }
+    return 'static';
   })(),
   gravity: (() => {
     const raw = Number(rawTicketStarConfig.gravity ?? rawTicketStarConfig.gravityPixelsPerSecondSquared ?? 900);
@@ -5407,6 +5440,9 @@ function isTicketStarFeatureUnlocked() {
 }
 
 function getTicketStarAutoCollectDelayMs() {
+  if (!gameState.ticketStarAutoCollectEnabled) {
+    return null;
+  }
   const config = gameState.ticketStarAutoCollect;
   if (!config) {
     return null;
@@ -5443,6 +5479,59 @@ function shouldAutoCollectTicketStar(now = performance.now()) {
   return true;
 }
 
+function normalizeTicketStarSpriteId(raw) {
+  if (typeof raw !== 'string') {
+    return null;
+  }
+  const normalized = raw.trim().toLowerCase();
+  if (normalized === 'animated' || normalized === 'gif' || normalized === 'anim') {
+    return 'animated';
+  }
+  return 'static';
+}
+
+function resolveTicketStarSpriteId(preferredId) {
+  const normalized = normalizeTicketStarSpriteId(preferredId)
+    ?? normalizeTicketStarSpriteId(TICKET_STAR_CONFIG.defaultSpriteId)
+    ?? 'static';
+  const hasAnimatedSprite = typeof TICKET_STAR_CONFIG.spriteSources?.animated === 'string'
+    && TICKET_STAR_CONFIG.spriteSources.animated.length > 0;
+  if (normalized === 'animated' && hasAnimatedSprite) {
+    return 'animated';
+  }
+  return 'static';
+}
+
+function getTicketStarSpriteSource(preferredId) {
+  const resolvedId = resolveTicketStarSpriteId(preferredId);
+  const sprites = TICKET_STAR_CONFIG.spriteSources || {};
+  const source = sprites[resolvedId];
+  if (typeof source === 'string' && source.length > 0) {
+    return source;
+  }
+  if (resolvedId !== 'static' && typeof sprites.static === 'string' && sprites.static.length > 0) {
+    return sprites.static;
+  }
+  return 'Assets/Image/Star.png';
+}
+
+function refreshTicketStarSprite(preferredId) {
+  const resolvedId = resolveTicketStarSpriteId(preferredId ?? ticketStarState.spriteId);
+  ticketStarState.spriteId = resolvedId;
+  const star = ticketStarState.element;
+  if (!star) {
+    return;
+  }
+  const image = star.querySelector('img');
+  if (!image) {
+    return;
+  }
+  const nextSrc = getTicketStarSpriteSource(resolvedId);
+  if (typeof nextSrc === 'string' && nextSrc.length > 0) {
+    image.src = nextSrc;
+  }
+}
+
 const ticketStarState = {
   element: null,
   active: false,
@@ -5452,7 +5541,8 @@ const ticketStarState = {
   height: 0,
   nextSpawnTime: performance.now() + computeTicketStarDelay(),
   spawnTime: 0,
-  expiryTime: 0
+  expiryTime: 0,
+  spriteId: resolveTicketStarSpriteId(TICKET_STAR_CONFIG.defaultSpriteId)
 };
 
 function resolveTicketLayer() {
@@ -5536,6 +5626,7 @@ function collectTicketStar(event) {
   ticketStarState.position.x = 0;
   ticketStarState.position.y = 0;
   ticketStarState.expiryTime = 0;
+  ticketStarState.spriteId = resolveTicketStarSpriteId(ticketStarState.spriteId);
   ticketStarState.nextSpawnTime = performance.now() + computeTicketStarDelay();
   ticketStarDelayReductionMs = 0;
   saveGame();
@@ -5578,8 +5669,14 @@ function spawnTicketStar(now = performance.now()) {
     'Étoile bonus'
   );
 
+  const preferredSpriteId = typeof getTicketStarSpritePreference === 'function'
+    ? getTicketStarSpritePreference()
+    : ticketStarState.spriteId;
+  const spriteId = resolveTicketStarSpriteId(preferredSpriteId);
+  const spriteSource = getTicketStarSpriteSource(spriteId);
+
   const starImage = document.createElement('img');
-  starImage.src = 'Assets/Image/Star.png';
+  starImage.src = spriteSource;
   starImage.alt = ticketStarImageAlt;
   starImage.draggable = false;
   star.appendChild(starImage);
@@ -5683,8 +5780,8 @@ function spawnTicketStar(now = performance.now()) {
   ticketStarState.velocity.y = velocityY;
   ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
   ticketStarState.spawnTime = now;
-  const autoCollectDelayMs = getTicketStarAutoCollectDelayMs();
-  ticketStarState.expiryTime = autoCollectDelayMs == null ? now + TICKET_STAR_CONFIG.lifetimeMs : 0;
+  ticketStarState.expiryTime = 0;
+  ticketStarState.spriteId = spriteId;
 
   star.style.transform = `translate(${startX}px, ${startY}px)`;
 }
@@ -5724,6 +5821,7 @@ function registerTicketStarClickReduction(clickCount = 1) {
 
 if (typeof globalThis !== 'undefined') {
   globalThis.registerTicketStarClickReduction = registerTicketStarClickReduction;
+  globalThis.refreshTicketStarSprite = refreshTicketStarSprite;
 }
 
 function updateTicketStar(deltaSeconds, now = performance.now()) {
@@ -5772,30 +5870,13 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
     ticketStarState.position.y = 0;
     ticketStarState.width = 0;
     ticketStarState.height = 0;
+    ticketStarState.spriteId = resolveTicketStarSpriteId(ticketStarState.spriteId);
     ticketStarDelayReductionMs = 0;
     return;
   }
   const width = layer.clientWidth;
   const height = layer.clientHeight;
   if (width <= 0 || height <= 0) {
-    return;
-  }
-  if (ticketStarState.expiryTime > 0 && now >= ticketStarState.expiryTime) {
-    if (star.parentNode) {
-      star.remove();
-    }
-    ticketStarState.element = null;
-    ticketStarState.active = false;
-    ticketStarState.spawnTime = 0;
-    ticketStarState.expiryTime = 0;
-    ticketStarState.velocity.x = 0;
-    ticketStarState.velocity.y = 0;
-    ticketStarState.position.x = 0;
-    ticketStarState.position.y = 0;
-    ticketStarState.width = 0;
-    ticketStarState.height = 0;
-    ticketStarDelayReductionMs = 0;
-    ticketStarState.nextSpawnTime = now + computeTicketStarDelay();
     return;
   }
   if (shouldAutoCollectTicketStar(now)) {

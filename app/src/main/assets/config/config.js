@@ -124,7 +124,7 @@ const INFO_SECTIONS_ENABLED = resolveConfigBoolean(
   DEFAULT_INFO_SECTIONS_ENABLED
 );
 
-const DEFAULT_MUSIC_MODULE_ENABLED = True;
+const DEFAULT_MUSIC_MODULE_ENABLED = true;
 
 const MUSIC_MODULE_ENABLED = resolveConfigBoolean(
   CONFIG_OVERRIDE_KEYS.music,
@@ -1537,7 +1537,7 @@ const GAME_CONFIG = {
       },
       reward: {
         frenzyMaxStacks: 2,
-        description: 'Débloque la frénésie multiple : deux frénésies peuvent se cumuler.'
+        description: 'Débloque la frénésie multiple (2 cumulées) et l’option de récolte auto des frénésies.'
       },
       order: 1010
     },
@@ -1554,7 +1554,7 @@ const GAME_CONFIG = {
         multiplier: {
           global: 1.05
         },
-        description: 'Active la multi frénésie et ajoute un bonus global ×1,05.'
+        description: 'Active la frénésie triple et ajoute un bonus global ×1,05.'
       },
       order: 1020
     },
@@ -1570,7 +1570,7 @@ const GAME_CONFIG = {
         ticketStarAutoCollect: {
           delaySeconds: 3
         },
-        description: 'Sur l’écran principal, les étoiles à tickets se récoltent seules après 3 secondes.'
+        description: 'Débloque l’option « Auto Loot Stars » (récolte des étoiles après 3 s).'
       },
       order: 1030
     },
@@ -1623,12 +1623,13 @@ const GAME_CONFIG = {
    * - launchVerticalSpeed : vitesse verticale initiale (en px/s) au moment de l'apparition.
    * - minHorizontalSpeed : vitesse horizontale minimale assurant un déplacement suffisant.
    * - horizontalSpeedMin / horizontalSpeedMax : bornes de la vitesse horizontale générée.
+   * - sprite : sources d’images pour l’étoile (static/animated) et sprite par défaut.
    */
   ticketStar: {
     averageSpawnIntervalSeconds: 480,
     minimumSpawnIntervalSeconds: 30,
     clickReductionSeconds: 0.2,
-    lifetimeSeconds: 15,
+    lifetimeSeconds: 0,
     movementMode: 'static',
     speedPixelsPerSecond: 90,
     speedVariance: 0.35,
@@ -1642,7 +1643,12 @@ const GAME_CONFIG = {
     launchVerticalSpeed: 420,
     minHorizontalSpeed: 180,
     horizontalSpeedMin: 260,
-    horizontalSpeedMax: 420
+    horizontalSpeedMax: 420,
+    sprite: {
+      static: 'Assets/Image/Star.png',
+      animated: 'Assets/Image/Star2.gif',
+      defaultSprite: 'static'
+    }
   },
 
   /**
