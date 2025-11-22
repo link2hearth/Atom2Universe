@@ -124,7 +124,7 @@ const INFO_SECTIONS_ENABLED = resolveConfigBoolean(
   DEFAULT_INFO_SECTIONS_ENABLED
 );
 
-const DEFAULT_MUSIC_MODULE_ENABLED = True;
+const DEFAULT_MUSIC_MODULE_ENABLED = true;
 
 const MUSIC_MODULE_ENABLED = resolveConfigBoolean(
   CONFIG_OVERRIDE_KEYS.music,
@@ -1629,7 +1629,7 @@ const GAME_CONFIG = {
     averageSpawnIntervalSeconds: 480,
     minimumSpawnIntervalSeconds: 30,
     clickReductionSeconds: 0.2,
-    lifetimeSeconds: 15,
+    lifetimeSeconds: 0,
     movementMode: 'static',
     speedPixelsPerSecond: 90,
     speedVariance: 0.35,

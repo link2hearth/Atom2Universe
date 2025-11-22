@@ -1747,8 +1747,10 @@ const TICKET_STAR_CONFIG = {
         ?? rawTicketStarConfig.lifetime
         ?? 15
     );
-    const seconds = Number.isFinite(raw) && raw > 0 ? raw : 15;
-    return seconds * 1000;
+    if (!Number.isFinite(raw) || raw <= 0) {
+      return Number.POSITIVE_INFINITY;
+    }
+    return raw * 1000;
   })(),
   movementMode: (() => {
     const raw = rawTicketStarConfig.movementMode ?? rawTicketStarConfig.motionMode ?? rawTicketStarConfig.motion;
