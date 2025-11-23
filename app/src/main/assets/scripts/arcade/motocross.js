@@ -849,6 +849,56 @@
       [0.48, -0.58],
       [0.74, -0.24],
       [1, 0]
+    ]),
+    gentleRipples: Object.freeze([
+      [0, 0],
+      [0.1, -0.12],
+      [0.22, 0.08],
+      [0.36, -0.16],
+      [0.52, 0.14],
+      [0.68, -0.12],
+      [0.84, 0.06],
+      [0.94, -0.08],
+      [1, 0]
+    ]),
+    longDescent: Object.freeze([
+      [0, 0],
+      [0.16, 0.12],
+      [0.36, -0.4],
+      [0.56, -0.78],
+      [0.74, -0.88],
+      [0.88, -0.54],
+      [1, 0]
+    ]),
+    longClimb: Object.freeze([
+      [0, 0],
+      [0.12, -0.24],
+      [0.3, 0.24],
+      [0.5, 0.78],
+      [0.7, 0.94],
+      [0.88, 0.56],
+      [1, 0]
+    ]),
+    plateauRollers: Object.freeze([
+      [0, 0],
+      [0.14, -0.12],
+      [0.3, -0.08],
+      [0.46, 0.24],
+      [0.6, 0.2],
+      [0.74, -0.06],
+      [0.86, -0.14],
+      [1, 0]
+    ]),
+    cascadeWaves: Object.freeze([
+      [0, 0],
+      [0.08, -0.22],
+      [0.18, -0.06],
+      [0.32, 0.34],
+      [0.46, 0.58],
+      [0.6, 0.16],
+      [0.74, -0.42],
+      [0.88, -0.24],
+      [1, 0]
     ])
   });
 
@@ -891,76 +941,60 @@
     createProfileBlock('landing/flow/easy/01', ['landing_pad', 'easy'], 280, 'landingSlope', 26),
     createProfileBlock('landing/flow/normal/01', ['landing_pad', 'normal'], 320, 'landingSlope', 32),
     createProfileBlock('closing/rise/easy/01', ['flow', 'easy'], 260, 'closingRise', 26),
-    createProfileBlock('closing/rise/normal/01', ['flow', 'normal'], 300, 'closingRise', 36)
+    createProfileBlock('closing/rise/normal/01', ['flow', 'normal'], 300, 'closingRise', 36),
+    createProfileBlock('flow/double/easy/long/01', ['flow', 'easy'], 620, 'doubleHill', 36),
+    createProfileBlock('flow/double/easy/long/02', ['flow', 'easy'], 760, 'doubleHill', 42),
+    createProfileBlock('rhythm/rolling/easy/long/01', ['rhythm', 'easy'], 660, 'rolling', 34),
+    createProfileBlock('rhythm/ripples/easy/long/01', ['rhythm', 'easy'], 600, 'gentleRipples', 18),
+    createProfileBlock('rhythm/ripples/easy/long/02', ['rhythm', 'easy'], 720, 'gentleRipples', 22),
+    createProfileBlock('descent/long/easy/01', ['descent', 'easy'], 700, 'longDescent', 44, -6),
+    createProfileBlock('descent/long/easy/02', ['descent', 'easy'], 860, 'longDescent', 52, -4),
+    createProfileBlock('climb/long/easy/01', ['climb', 'easy'], 680, 'longClimb', 42, 8),
+    createProfileBlock('climb/long/easy/02', ['climb', 'easy'], 820, 'longClimb', 48, 10),
+    createProfileBlock('flow/plateau/easy/long/01', ['flow', 'easy'], 640, 'plateauRollers', 26, 6),
+    createProfileBlock('flow/cascade/easy/01', ['flow', 'easy'], 720, 'cascadeWaves', 32)
   ]);
 
   const TRACK_BLOCKS = BLOCK_LIBRARY.filter(block => block !== START_BLOCK);
   const LANDING_BLOCKS = TRACK_BLOCKS.filter(block => block.tags.includes('landing_pad'));
 
-  function matchesDifficulty(block, difficulty) {
-    if (!block || !Array.isArray(block.tags)) {
-      return false;
+  function buildBlockDeck(rng) {
+    const deck = [...TRACK_BLOCKS];
+    if (typeof rng !== 'function') {
+      return deck;
     }
-    if (difficulty === 'easy') {
-      return block.tags.includes('easy');
+    for (let i = deck.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(rng() * (i + 1)) % (i + 1);
+      const swap = deck[i];
+      deck[i] = deck[j];
+      deck[j] = swap;
     }
-    return block.tags.includes('normal') || block.tags.includes('easy');
+    return deck;
   }
 
-  function normalizeDifficulty(value) {
-    if (value === 'easy') {
-      return 'easy';
-    }
-    if (value === 'normal' || value === 'hard') {
-      return 'normal';
-    }
-    return 'normal';
-  }
-
-  function buildDifficultyOptions(baseDifficulty, blockCount) {
-    const safeCount = Math.max(0, Number.isFinite(blockCount) ? blockCount : 0);
-    const options = [];
-    const pushOption = (level, weight) => {
-      if (weight > 0) {
-        options.push({ level, weight });
-      }
-    };
-
-    if (baseDifficulty === 'normal') {
-      pushOption('normal', 4 + Math.floor(safeCount / 5));
-      pushOption('easy', 3);
-      return options;
-    }
-
-    pushOption('easy', 4);
-    if (safeCount >= 2) {
-      pushOption('normal', 3 + Math.floor((safeCount - 1) / 3));
-    }
-    return options;
-  }
-
-  function pickEffectiveDifficulty(generator) {
+  function ensureBlockDeck(generator) {
     if (!generator || typeof generator.rng !== 'function') {
-      return 'normal';
+      return;
     }
-    const base = normalizeDifficulty(generator.baseDifficulty || generator.difficulty || DEFAULT_DIFFICULTY);
-    const options = buildDifficultyOptions(base, generator.blocksGenerated);
-    if (!options.length) {
-      return base;
+    if (!Array.isArray(generator.blockDeck) || !generator.blockDeck.length) {
+      generator.blockDeck = buildBlockDeck(generator.rng);
     }
-    const totalWeight = options.reduce((sum, option) => sum + option.weight, 0);
-    if (totalWeight <= 0) {
-      return base;
-    }
-    const roll = generator.rng() * totalWeight;
-    let cumulative = 0;
-    for (let i = 0; i < options.length; i += 1) {
-      cumulative += options[i].weight;
-      if (roll <= cumulative) {
-        return options[i].level;
-      }
-    }
-    return options[options.length - 1].level;
+  }
+
+  function matchesDifficulty(block) {
+    return !!block;
+  }
+
+  function normalizeDifficulty() {
+    return 'easy';
+  }
+
+  function buildDifficultyOptions() {
+    return [];
+  }
+
+  function pickEffectiveDifficulty() {
+    return 'easy';
   }
 
   function blockWithinElevation(block, baseY) {
@@ -972,10 +1006,11 @@
     return min >= -ELEVATION_LIMIT && max <= ELEVATION_LIMIT;
   }
 
-  function pickNextBlock(prevBlock, difficulty, rng, currentY, history) {
+  function pickNextBlock(prevBlock, difficulty, rng, currentY, history, deck) {
     if (!prevBlock) {
       return null;
     }
+    const randomFn = typeof rng === 'function' ? rng : Math.random;
     const tolerances = [SLOPE_STEP, SLOPE_STEP * 1.5, SLOPE_STEP * 2.5, Infinity];
     let pool = [];
     for (let i = 0; i < tolerances.length; i += 1) {
@@ -1007,20 +1042,46 @@
     const preferred = filtered.filter(block => !recent.includes(block.id));
     const candidates = preferred.length ? preferred : filtered;
 
+    const pickFromDeck = candidatePool => {
+      if (!Array.isArray(deck) || !deck.length || !Array.isArray(candidatePool) || !candidatePool.length) {
+        return null;
+      }
+      const deckIndex = deck.findIndex(block => candidatePool.includes(block));
+      if (deckIndex === -1) {
+        return null;
+      }
+      const [selection] = deck.splice(deckIndex, 1);
+      return selection;
+    };
+
+    let tunedCandidates = candidates;
     if (currentY > ELEVATION_LIMIT * 0.5) {
       const descending = candidates.filter(block => block.y1 <= 0);
       if (descending.length) {
-        return descending[Math.floor(rng() * descending.length) % descending.length];
+        tunedCandidates = descending;
       }
     } else if (currentY < -ELEVATION_LIMIT * 0.5) {
       const ascending = candidates.filter(block => block.y1 >= 0);
       if (ascending.length) {
-        return ascending[Math.floor(rng() * ascending.length) % ascending.length];
+        tunedCandidates = ascending;
       }
     }
 
-    const index = Math.floor(rng() * candidates.length) % candidates.length;
-    return candidates[index];
+    const deckPick = pickFromDeck(tunedCandidates);
+    if (deckPick) {
+      return deckPick;
+    }
+
+    const poolForRandom = tunedCandidates.length ? tunedCandidates : candidates;
+    const index = Math.floor(randomFn() * poolForRandom.length) % poolForRandom.length;
+    const selection = poolForRandom[index];
+    if (Array.isArray(deck) && deck.length) {
+      const deckIndex = deck.indexOf(selection);
+      if (deckIndex !== -1) {
+        deck.splice(deckIndex, 1);
+      }
+    }
+    return selection;
   }
 
   function pickLandingBlock(prevBlock, difficulty, rng, currentY) {
@@ -1231,11 +1292,13 @@
   }
 
   function createTrackGenerator(seed, difficulty) {
+    const rng = mulberry32(seed || 1);
     const normalized = normalizeDifficulty(typeof difficulty === 'string' ? difficulty : DEFAULT_DIFFICULTY);
     return {
-      rng: mulberry32(seed || 1),
+      rng,
       difficulty: normalized,
       baseDifficulty: normalized,
+      blockDeck: buildBlockDeck(rng),
       prevBlock: START_BLOCK,
       currentY: 0,
       history: [START_BLOCK.id],
@@ -1251,13 +1314,20 @@
     const generator = track.generator;
     let added = 0;
     while (added < blockCount) {
+      ensureBlockDeck(generator);
       const effectiveDifficulty = pickEffectiveDifficulty(generator);
-      let nextBlock = pickNextBlock(generator.prevBlock, effectiveDifficulty, generator.rng, generator.currentY, generator.history);
+      let nextBlock = pickNextBlock(generator.prevBlock, effectiveDifficulty, generator.rng, generator.currentY, generator.history, generator.blockDeck);
       if (!nextBlock) {
         nextBlock = pickLandingBlock(generator.prevBlock, effectiveDifficulty, generator.rng, generator.currentY) || START_BLOCK;
       }
       if (!nextBlock) {
         break;
+      }
+      if (Array.isArray(generator.blockDeck)) {
+        const deckIndex = generator.blockDeck.indexOf(nextBlock);
+        if (deckIndex !== -1) {
+          generator.blockDeck.splice(deckIndex, 1);
+        }
       }
       const previousPointCount = track.points.length;
       const blockStartX = track.length;
@@ -1275,6 +1345,7 @@
       generator.prevBlock = nextBlock;
       generator.blocksGenerated += 1;
       generator.lastDifficulty = effectiveDifficulty;
+      ensureBlockDeck(generator);
       const segmentStartIndex = Math.max(previousPointCount - 1, 0);
       rebuildSegments(track, segmentStartIndex);
       updateTrackElevation(track, previousPointCount);
