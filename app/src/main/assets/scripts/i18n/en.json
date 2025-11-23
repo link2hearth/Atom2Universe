@@ -2534,7 +2534,7 @@
         "frenzyDuplicateExchange": {
           "name": "Frenzy Catalyst",
           "description": "Trade rare duplicate cards for a permanent frenzy boost.",
-          "effect": "+0.5% APC/APS frenzy spawn chance per purchase (capped at 18).",
+          "effect": "+0.5% APC/APS frenzy spawn chance per purchase (starts at 1 max purchase, +1 per Big Bang, cap 20).",
           "effectSummary": "Converts rare duplicates into additional frenzy spawn chances."
         }
       }

@@ -260,7 +260,9 @@ const SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG = Object.freeze({
     'plutonium'
   ],
   chanceIncrement: 0.005,
-  maxPurchases: 18,
+  baseMaxPurchases: 1,
+  purchasesPerBigBang: 1,
+  maxPurchasesCap: 20,
   retain: 1
 });
 
@@ -658,11 +660,15 @@ function createShopBuildingDefinitions() {
       name: 'Catalyseur de frénésie',
       description: 'Convertissez des doublons de cartes rares en chances de frénésie.',
       effectSummary:
-        'Chaque achat consomme 1 carte rare en double pour ajouter +0,5 % de chance de frénésie (APC et APS). Limité à 18 achats.',
+        'Chaque achat consomme 1 carte rare en double pour ajouter +0,5 % de chance de frénésie (APC et APS). Débute à 1 achat max, +1 par Big Bang (limite 20).',
       category: 'special',
       baseCost: 0,
       costScale: 1,
-      maxLevel: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.maxPurchases,
+      maxLevel: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.baseMaxPurchases,
+      bigBangBaseMaxLevel: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.baseMaxPurchases,
+      bigBangLevelIncrement: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.purchasesPerBigBang,
+      bigBangMaxLevelCap: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.maxPurchasesCap,
+      preserveLevelOnBigBang: true,
       maxQuantityPerPurchase: 1,
       duplicateCardCost: {
         cardIds: SHOP_FRENZY_DUPLICATE_EXCHANGE_CONFIG.cardIds,
