@@ -9186,6 +9186,38 @@ function getBigBangCompletionCount() {
   return Math.max(0, Math.floor(bonus / step));
 }
 
+function collectPreservedUpgradesForBigBang() {
+  const preserved = new Map();
+  UPGRADE_DEFS.forEach(def => {
+    if (!def?.preserveLevelOnBigBang) {
+      return;
+    }
+    const level = getUpgradeLevel(gameState.upgrades, def.id);
+    if (level > 0) {
+      preserved.set(def.id, level);
+    }
+  });
+  return preserved;
+}
+
+function restorePreservedUpgradesAfterBigBang(preserved) {
+  if (!(preserved instanceof Map) || preserved.size === 0) {
+    return;
+  }
+  preserved.forEach((level, id) => {
+    const index = UPGRADE_INDEX_MAP.get(id);
+    const def = Number.isInteger(index) ? UPGRADE_DEFS[index] : null;
+    if (!def) {
+      return;
+    }
+    const maxLevel = resolveUpgradeMaxLevel(def);
+    const clampedLevel = Number.isFinite(maxLevel) ? Math.min(level, maxLevel) : level;
+    if (clampedLevel > 0) {
+      gameState.upgrades[id] = clampedLevel;
+    }
+  });
+}
+
 const BIG_BANG_REQUIRED_SHOP_IDS = ['godFinger', 'starCore'];
 
 function getBigBangRequiredUpgrades() {
@@ -9481,6 +9513,7 @@ function handleBigBangRestart() {
 }
 
 function performBigBang() {
+  const preservedUpgrades = collectPreservedUpgradesForBigBang();
   const totalBonus = setBigBangLevelBonus(getBigBangLevelBonus() + BIG_BANG_LEVEL_BONUS_STEP);
   resetPendingProductionGains();
   gameState.atoms = LayeredNumber.zero();
@@ -9490,6 +9523,7 @@ function performBigBang() {
   gameState.basePerSecond = BASE_PER_SECOND.clone();
   gameState.upgrades = {};
   gameState.shopUnlocks = new Set();
+  restorePreservedUpgradesAfterBigBang(preservedUpgrades);
   recalcProduction();
   renderShop();
   invalidateFeatureUnlockCache();
@@ -17230,6 +17264,20 @@ function getUpgradeLevel(state, id) {
 }
 
 function resolveUpgradeMaxLevel(definition) {
+  const customBase = Number(definition?.bigBangBaseMaxLevel);
+  if (Number.isFinite(customBase)) {
+    const baseLevel = Math.max(0, Math.floor(customBase));
+    const increment = Math.max(0, Math.floor(Number(definition?.bigBangLevelIncrement ?? 0)));
+    const completions = getBigBangCompletionCount();
+    let maxLevel = baseLevel + (Number.isFinite(completions) ? completions * increment : 0);
+    const capRaw = Number(definition?.bigBangMaxLevelCap);
+    if (Number.isFinite(capRaw)) {
+      const cap = Math.max(0, Math.floor(capRaw));
+      maxLevel = Math.min(maxLevel, cap);
+    }
+    return maxLevel;
+  }
+
   const raw = definition?.maxLevel ?? definition?.maxPurchase;
   const numeric = Number(raw);
   let baseLevel;

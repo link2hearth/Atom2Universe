@@ -2471,7 +2471,7 @@
         "frenzyDuplicateExchange": {
           "name": "Catalyseur de frénésie",
           "description": "Échangez des cartes rares en double contre un bonus permanent.",
-          "effect": "+0,5 % de chance d’apparition des frénésies APC/APS par achat (limité à 18).",
+          "effect": "+0,5 % de chance d’apparition des frénésies APC/APS par achat (1 achat max au départ, +1 par Big Bang, limite 20).",
           "effectSummary": "Convertit les doublons de cartes rares en chances de frénésie supplémentaires."
         }
       }
