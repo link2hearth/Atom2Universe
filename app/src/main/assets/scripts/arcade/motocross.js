@@ -6,12 +6,12 @@
   const CONFIG_PATH = 'config/arcade/motocross.json';
   const DEFAULT_CONFIG = Object.freeze({
     steepSlopeGrip: Object.freeze({
-      angleThresholdDeg: 30,
+      angleThresholdDeg: 24,
       maxAngleDeg: 80,
-      normalForceBoost: 2800,
-      correctionBoost: 8,
-      torqueAssist: 18000,
-      angularDampingMultiplier: 0.6
+      normalForceBoost: 4200,
+      correctionBoost: 12,
+      torqueAssist: 26000,
+      angularDampingMultiplier: 1
     }),
     rewards: Object.freeze({
       gacha: Object.freeze({
@@ -928,8 +928,6 @@
     createProfileBlock('flow/wave/normal/01', ['wave', 'normal'], 300, 'softWave', 34),
     createProfileBlock('crest/launch/easy/01', ['crest', 'easy'], 280, 'ridgeDrop', 36),
     createProfileBlock('crest/launch/normal/01', ['crest', 'normal'], 320, 'ridgeDrop', 48),
-    createProfileBlock('rhythm/rolling/easy/01', ['rhythm', 'easy'], 260, 'rolling', 28),
-    createProfileBlock('rhythm/rolling/normal/01', ['rhythm', 'normal'], 300, 'rolling', 40),
     createProfileBlock('rhythm/mellow/easy/01', ['rhythm', 'easy'], 240, 'mellow', 20),
     createProfileBlock('rhythm/mellow/normal/01', ['rhythm', 'normal'], 280, 'mellow', 30),
     createProfileBlock('valley/shallow/easy/01', ['valley', 'easy'], 260, 'shallowValley', 32),

@@ -1,11 +1,11 @@
 {
   "steepSlopeGrip": {
-    "angleThresholdDeg": 30,
+    "angleThresholdDeg": 24,
     "maxAngleDeg": 80,
-    "normalForceBoost": 2800,
-    "correctionBoost": 8,
-    "torqueAssist": 18000,
-    "angularDampingMultiplier": 0.6
+    "normalForceBoost": 4200,
+    "correctionBoost": 12,
+    "torqueAssist": 26000,
+    "angularDampingMultiplier": 1
   },
   "rewards": {
     "gacha": {
