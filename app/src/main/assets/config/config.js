@@ -601,7 +601,7 @@ function createShopBuildingDefinitions() {
         'Production manuelle : commence à +1 APC et progresse d’environ +11 % par niveau.',
       category: 'manual',
       baseCost: 25,
-      costScale: 1.15,
+      costScale: 1.16,
       effect: (level = 0) => {
         const clickAdd = calculateProgressiveBonus(level, 1);
         return { clickAdd };
@@ -615,7 +615,7 @@ function createShopBuildingDefinitions() {
         'Production passive : commence à +1 APS et progresse d’environ +11 % par niveau.',
       category: 'auto',
       baseCost: 30,
-      costScale: 1.15,
+      costScale: 1.16,
       effect: (level = 0) => {
         const autoAdd = calculateProgressiveBonus(level, 1);
         return { autoAdd };
