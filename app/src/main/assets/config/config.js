@@ -526,7 +526,7 @@ function getBuildingLevel(context, id) {
 
 const SHOP_BUILDING_IDS = ['godFinger', 'starCore', 'gachaTicketBooth', 'mach3TicketBooth'];
 
-const SHOP_PROGRESSIVE_GROWTH_RATE = 1.11;
+const SHOP_PROGRESSIVE_GROWTH_RATE = 1.08;
 
 function calculateProgressiveBonus(level = 0, baseIncrement = 1, growthRate = SHOP_PROGRESSIVE_GROWTH_RATE) {
   if (!Number.isFinite(level) || level <= 0) {
@@ -603,7 +603,7 @@ function createShopBuildingDefinitions() {
         'Production manuelle : commence à +1 APC et progresse d’environ +11 % par niveau.',
       category: 'manual',
       baseCost: 25,
-      costScale: 1.16,
+      costScale: 1.18,
       effect: (level = 0) => {
         const clickAdd = calculateProgressiveBonus(level, 1);
         return { clickAdd };
@@ -617,7 +617,7 @@ function createShopBuildingDefinitions() {
         'Production passive : commence à +1 APS et progresse d’environ +11 % par niveau.',
       category: 'auto',
       baseCost: 30,
-      costScale: 1.16,
+      costScale: 1.18,
       effect: (level = 0) => {
         const autoAdd = calculateProgressiveBonus(level, 1);
         return { autoAdd };
