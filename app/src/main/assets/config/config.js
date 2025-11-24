@@ -635,7 +635,7 @@ function createShopBuildingDefinitions() {
       bigBangBaseCostMultiplier: 4000,
       // Multiplie le coût de base (et l'incrément) du magasin après chaque Big Bang.
       gachaTicketsPerPurchase: 1,
-      maxLevel: 200,
+      maxLevel: 100,
       bigBangLevelBonusMultiplier: 2,
       // Multiplie le bonus de niveaux supplémentaires accordé après chaque Big Bang.
       effect: () => ({})
