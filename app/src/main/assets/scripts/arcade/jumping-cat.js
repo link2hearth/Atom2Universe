@@ -30,7 +30,8 @@
   const CONFIG_PATH = 'config/arcade/jumping-cat.json';
   const CAT_SPRITE_PATH = 'Assets/sprites/Chat.png';
   const PYLON_SPRITE_PATH = 'Assets/sprites/Pylones.png';
-  const BIRD_SPRITE_PATH = 'Assets/sprites/StarsWar.png';
+  const BIRD_SPRITE_PATH = 'Assets/sprites/Bird.png';
+  const BACKGROUND_SPRITE_PATH = 'Assets/sprites/FondChat.png';
 
   const DEFAULT_CONFIG = Object.freeze({
     gravity: 2400,
@@ -43,7 +44,8 @@
     birdInterval: { min: 3, max: 5.5 },
     birdSpeed: { min: 150, max: 230 },
     birdWobble: 26,
-    groundHeight: 88
+    groundHeight: 88,
+    backgroundScrollSpeed: 110
   });
 
   const CAT_FRAME_WIDTH = 51;
@@ -59,9 +61,14 @@
   ];
   const PYLON_HEIGHT = 78;
   const BIRD_FRAMES = [
-    { sx: 0, sy: 512, sw: 256, sh: 256, size: 48 },
-    { sx: 256, sy: 768, sw: 256, sh: 256, size: 44 },
-    { sx: 512, sy: 768, sw: 256, sh: 256, size: 42 }
+    { sx: 0, sy: 0, sw: 256, sh: 256, size: 52 },
+    { sx: 0, sy: 256, sw: 256, sh: 256, size: 52 },
+    { sx: 256, sy: 0, sw: 256, sh: 256, size: 52 },
+    { sx: 256, sy: 256, sw: 256, sh: 256, size: 52 }
+  ];
+  const BIRD_ANIMATIONS = [
+    [BIRD_FRAMES[0], BIRD_FRAMES[1]],
+    [BIRD_FRAMES[2], BIRD_FRAMES[3]]
   ];
 
   const state = {
@@ -79,13 +86,18 @@
     elapsed: 0,
     bestTime: 0,
     floorY: CANVAS_HEIGHT - DEFAULT_CONFIG.groundHeight,
-    autosaveLoaded: false
+    autosaveLoaded: false,
+    backgroundOffset: 0
   };
 
   let ctx = null;
   let catFrames = [];
   let pylonSprite = null;
   let birdSprite = null;
+  let backgroundSprite = null;
+  let backgroundWidth = CANVAS_WIDTH;
+  let backgroundHeight = CANVAS_HEIGHT;
+  let backgroundScale = 1;
   let animationHandle = null;
 
   function translate(key, fallback, params) {
@@ -176,6 +188,20 @@
     });
   }
 
+  function configureBackground(image) {
+    if (!image) {
+      backgroundSprite = null;
+      backgroundWidth = CANVAS_WIDTH;
+      backgroundHeight = CANVAS_HEIGHT;
+      backgroundScale = 1;
+      return;
+    }
+    backgroundSprite = image;
+    backgroundScale = CANVAS_HEIGHT / image.height;
+    backgroundWidth = image.width * backgroundScale;
+    backgroundHeight = CANVAS_HEIGHT;
+  }
+
   function sliceCatFrames(sheet) {
     if (!sheet) {
       return [];
@@ -223,7 +249,8 @@
         max: clamp(Number(birdSpeed.max) || DEFAULT_CONFIG.birdSpeed.max, 120, 420)
       },
       birdWobble: clamp(Number(raw.birdWobble) || DEFAULT_CONFIG.birdWobble, 0, 80),
-      groundHeight: clamp(Number(raw.groundHeight) || DEFAULT_CONFIG.groundHeight, 48, 180)
+      groundHeight: clamp(Number(raw.groundHeight) || DEFAULT_CONFIG.groundHeight, 48, 180),
+      backgroundScrollSpeed: clamp(Number(raw.backgroundScrollSpeed) || DEFAULT_CONFIG.backgroundScrollSpeed, 20, 240)
     });
   }
 
@@ -312,6 +339,7 @@
     state.birds = [];
     state.score = 0;
     state.elapsed = 0;
+    state.backgroundOffset = 0;
     state.nextObstacle = randomInRange(state.config.obstacleSpacing.min, state.config.obstacleSpacing.max);
     state.nextBird = randomInRange(state.config.birdInterval.min, state.config.birdInterval.max);
     state.lastTimestamp = null;
@@ -397,7 +425,8 @@
   }
 
   function spawnBird() {
-    const sprite = BIRD_FRAMES[Math.floor(Math.random() * BIRD_FRAMES.length)];
+    const frames = BIRD_ANIMATIONS[Math.floor(Math.random() * BIRD_ANIMATIONS.length)];
+    const sprite = frames[0];
     const bandHeight = 180;
     const minY = 24 + sprite.size * 0.5;
     const maxY = Math.max(minY, bandHeight - sprite.size * 0.5);
@@ -407,7 +436,9 @@
       x: CANVAS_WIDTH + sprite.size,
       y,
       size: sprite.size,
-      sprite,
+      frames,
+      frameIndex: 0,
+      animationTimer: 0,
       vx: -speed,
       wobblePhase: Math.random() * Math.PI * 2,
       passed: false
@@ -481,9 +512,16 @@
       bird.x += bird.vx * deltaSeconds;
       const wobble = Math.sin(bird.wobblePhase + state.elapsed * 2) * state.config.birdWobble;
       bird.y = clamp(bird.y + wobble * deltaSeconds, bird.size * 0.5, 200);
+      bird.animationTimer += deltaSeconds;
+      if (bird.animationTimer >= 0.5) {
+        bird.frameIndex = bird.frames && bird.frames.length ? (bird.frameIndex + 1) % bird.frames.length : 0;
+        bird.animationTimer = 0;
+      }
     });
     state.obstacles = state.obstacles.filter(obstacle => obstacle.x + obstacle.width > -40);
     state.birds = state.birds.filter(bird => bird.x + bird.size > -60);
+
+    state.backgroundOffset = (state.backgroundOffset + state.config.backgroundScrollSpeed * deltaSeconds) % backgroundWidth;
 
     state.elapsed += deltaSeconds;
   }
@@ -535,16 +573,24 @@
   }
 
   function drawBackground() {
-    ctx.fillStyle = '#0b0f1a';
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    const horizon = state.floorY;
-    const gradient = ctx.createLinearGradient(0, horizon - 120, 0, CANVAS_HEIGHT);
-    gradient.addColorStop(0, 'rgba(64, 118, 255, 0.08)');
-    gradient.addColorStop(1, 'rgba(255, 171, 88, 0.18)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, horizon - 120, CANVAS_WIDTH, 160);
-    ctx.fillStyle = '#0e111c';
-    ctx.fillRect(0, horizon, CANVAS_WIDTH, CANVAS_HEIGHT - horizon);
+    if (!backgroundSprite) {
+      ctx.fillStyle = '#0b0f1a';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      const horizon = state.floorY;
+      const gradient = ctx.createLinearGradient(0, horizon - 120, 0, CANVAS_HEIGHT);
+      gradient.addColorStop(0, 'rgba(64, 118, 255, 0.08)');
+      gradient.addColorStop(1, 'rgba(255, 171, 88, 0.18)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, horizon - 120, CANVAS_WIDTH, 160);
+      ctx.fillStyle = '#0e111c';
+      ctx.fillRect(0, horizon, CANVAS_WIDTH, CANVAS_HEIGHT - horizon);
+      return;
+    }
+
+    const offset = state.backgroundOffset % backgroundWidth;
+    for (let x = -offset; x < CANVAS_WIDTH + backgroundWidth; x += backgroundWidth) {
+      ctx.drawImage(backgroundSprite, 0, 0, backgroundSprite.width, backgroundSprite.height, x, 0, backgroundWidth, backgroundHeight);
+    }
   }
 
   function drawObstacles() {
@@ -581,16 +627,21 @@
       return;
     }
     state.birds.forEach(bird => {
+      const frame = bird.frames && bird.frames.length ? bird.frames[bird.frameIndex] : null;
+      const sprite = frame || bird.sprite;
+      if (!sprite) {
+        return;
+      }
       ctx.drawImage(
         birdSprite,
-        bird.sprite.sx,
-        bird.sprite.sy,
-        bird.sprite.sw,
-        bird.sprite.sh,
-        bird.x - bird.sprite.size * 0.5,
-        bird.y - bird.sprite.size * 0.5,
-        bird.sprite.size,
-        bird.sprite.size
+        sprite.sx,
+        sprite.sy,
+        sprite.sw,
+        sprite.sh,
+        bird.x - sprite.size * 0.5,
+        bird.y - sprite.size * 0.5,
+        sprite.size,
+        sprite.size
       );
     });
   }
@@ -644,14 +695,16 @@
     state.config = await loadConfig();
     state.floorY = CANVAS_HEIGHT - state.config.groundHeight;
 
-    const [catSheet, pylons, birds] = await Promise.all([
+    const [catSheet, pylons, birds, background] = await Promise.all([
       loadImage(CAT_SPRITE_PATH),
       loadImage(PYLON_SPRITE_PATH),
-      loadImage(BIRD_SPRITE_PATH)
+      loadImage(BIRD_SPRITE_PATH),
+      loadImage(BACKGROUND_SPRITE_PATH)
     ]);
     catFrames = sliceCatFrames(catSheet);
     pylonSprite = pylons;
     birdSprite = birds;
+    configureBackground(background);
     restoreProgress();
     resetRun();
     updateHud();
