@@ -272,6 +272,7 @@ const CRYPTO_WIDGET_PLACEHOLDER = '---';
     link: 'arcade.link',
     starBridges: 'arcade.starBridges',
     starsWar: 'arcade.starsWar',
+    jumpingCat: 'arcade.jumpingCat',
     pipeTap: 'arcade.pipeTap',
     colorStack: 'arcade.colorStack',
     motocross: 'arcade.motocross',
@@ -1954,6 +1955,7 @@ function createDefaultFeatureUnlockDefinitions() {
     'arcade.echecs',
     'arcade.starBridges',
     'arcade.pipeTap',
+    'arcade.jumpingCat',
     'arcade.twins',
     'arcade.gameOfLife'
   ].forEach(id => {
@@ -4273,6 +4275,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'metaux',
   'wave',
   'starsWar',
+  'jumpingCat',
   'quantum2048',
   'bigger',
   'math',
@@ -6370,6 +6373,8 @@ function collectDomElements() {
   infoPhotonAltitudeValue: document.getElementById('infoPhotonAltitudeValue'),
   infoStarsWarHardValue: document.getElementById('infoStarsWarHardValue'),
   infoStarsWarEasyValue: document.getElementById('infoStarsWarEasyValue'),
+  infoJumpingCatScoreValue: document.getElementById('infoJumpingCatScoreValue'),
+  infoJumpingCatTimeValue: document.getElementById('infoJumpingCatTimeValue'),
   infoMotocrossDistanceValue: document.getElementById('infoMotocrossDistanceValue'),
   infoMotocrossSpeedValue: document.getElementById('infoMotocrossSpeedValue'),
   infoFrenzyHighscoreSingle: document.getElementById('infoFrenzyHighscoreSingle'),
@@ -7745,6 +7750,17 @@ function ensureStarsWarGame() {
   if (window.starsWarArcade && typeof window.starsWarArcade === 'object') {
     starsWarGame = window.starsWarArcade;
     return starsWarGame;
+  }
+  return null;
+}
+
+function ensureJumpingCatGame() {
+  if (jumpingCatGame && typeof jumpingCatGame === 'object') {
+    return jumpingCatGame;
+  }
+  if (window.jumpingCatArcade && typeof window.jumpingCatArcade === 'object') {
+    jumpingCatGame = window.jumpingCatArcade;
+    return jumpingCatGame;
   }
   return null;
 }
@@ -14213,6 +14229,7 @@ let gameOfLifeGame = null;
 let escapeGame = null;
 let starBridgesGame = null;
 let starsWarGame = null;
+let jumpingCatGame = null;
 let pipeTapGame = null;
 let colorStackGame = null;
 let motocrossGame = null;
@@ -16008,6 +16025,9 @@ function showPage(pageId) {
   if (pageId === 'starsWar') {
     ensureStarsWarGame();
   }
+  if (pageId === 'jumpingCat') {
+    ensureJumpingCatGame();
+  }
   if (pageId === 'pipeTap') {
     ensurePipeTapGame();
   }
@@ -16063,6 +16083,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
   document.body.classList.toggle('view-star-bridges', pageId === 'starBridges');
   document.body.classList.toggle('view-stars-war', pageId === 'starsWar');
+  document.body.classList.toggle('view-jumping-cat', pageId === 'jumpingCat');
   document.body.classList.toggle('view-pipe-tap', pageId === 'pipeTap');
   document.body.classList.toggle('view-color-stack', pageId === 'colorStack');
   document.body.classList.toggle('view-motocross', pageId === 'motocross');
@@ -16136,6 +16157,14 @@ function showPage(pageId) {
       starsWar.onEnter?.();
     } else {
       starsWar.onLeave?.();
+    }
+  }
+  const jumpingCat = ensureJumpingCatGame();
+  if (jumpingCat) {
+    if (pageId === 'jumpingCat') {
+      jumpingCat.onEnter?.();
+    } else {
+      jumpingCat.onLeave?.();
     }
   }
   const pipeTap = ensurePipeTapGame();
@@ -16273,6 +16302,10 @@ document.addEventListener('visibilitychange', () => {
     if (starsWarInstance && activePage === 'starsWar') {
       starsWarInstance.onLeave?.();
     }
+    const jumpingCatInstance = ensureJumpingCatGame();
+    if (jumpingCatInstance && activePage === 'jumpingCat') {
+      jumpingCatInstance.onLeave?.();
+    }
     const pipeTap = ensurePipeTapGame();
     if (pipeTap && activePage === 'pipeTap') {
       pipeTap.onLeave?.();
@@ -16344,6 +16377,10 @@ document.addEventListener('visibilitychange', () => {
   if (activePage === 'starsWar') {
     const starsWarInstance = ensureStarsWarGame();
     starsWarInstance?.onEnter?.();
+  }
+  if (activePage === 'jumpingCat') {
+    const jumpingCatInstance = ensureJumpingCatGame();
+    jumpingCatInstance?.onEnter?.();
   }
   if (activePage === 'pipeTap') {
     const pipeTap = ensurePipeTapGame();
