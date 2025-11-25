@@ -1916,8 +1916,7 @@
           "bird": "Un oiseau a percuté le chat.",
           "bestScore": "Record",
           "bestTime": "Durée"
-        },
-        "hint": "Touchez, cliquez ou utilisez la barre espace pour faire bondir le chat. Restez entre les pylônes et les oiseaux !"
+        }
       },
       "metaux": {
         "aria": "Mini-jeu Métaux Mach3",
@@ -3891,6 +3890,9 @@
         },
         "pipeTap": {
           "rewardToast": "PipeTap : +{count} ticket{suffix} gacha !"
+        },
+        "jumpingCat": {
+          "rewardToast": "Jumping Cat : +{count} ticket{suffix} gacha pour ta survie !"
         },
         "circles": {
           "rewardToast": "Circles : +{count} ticket{suffix} gacha !",

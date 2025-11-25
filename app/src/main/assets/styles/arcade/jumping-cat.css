@@ -130,6 +130,10 @@
   flex-wrap: wrap;
 }
 
+.jumping-cat__records--inline {
+  margin-top: -2px;
+}
+
 .jumping-cat__record {
   flex: 1;
   min-width: 140px;
@@ -149,11 +153,6 @@
 .jumping-cat__record-value {
   font-weight: 700;
   font-size: 1.15rem;
-}
-
-.jumping-cat__hint {
-  margin: 8px 0 0;
-  color: var(--text-secondary);
 }
 
 .jumping-cat__sr-status {

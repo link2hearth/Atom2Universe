@@ -22,8 +22,7 @@
     timeValue: document.getElementById('jumpingCatTimeValue'),
     bestTimeValue: document.getElementById('jumpingCatBestTimeValue'),
     status: document.getElementById('jumpingCatStatus'),
-    actionButton: document.getElementById('jumpingCatStart'),
-    hudHint: document.getElementById('jumpingCatHint')
+    actionButton: document.getElementById('jumpingCatStart')
   };
 
   const GAME_ID = 'jumpingCat';
@@ -45,7 +44,13 @@
     birdSpeed: { min: 150, max: 230 },
     birdWobble: 26,
     groundHeight: 60,
-    backgroundScrollSpeed: 110
+    backgroundScrollSpeed: 110,
+    rewards: {
+      gacha: {
+        survivalIntervalSeconds: 45,
+        ticketAmount: 1
+      }
+    }
   });
 
   const CAT_FRAME_WIDTH = 51;
@@ -87,7 +92,8 @@
     bestTime: 0,
     floorY: CANVAS_HEIGHT - DEFAULT_CONFIG.groundHeight,
     autosaveLoaded: false,
-    backgroundOffset: 0
+    backgroundOffset: 0,
+    nextGachaReward: DEFAULT_CONFIG.rewards.gacha.survivalIntervalSeconds
   };
 
   let ctx = null;
@@ -158,6 +164,21 @@
     }
   }
 
+  function getSurvivalRewardSettings() {
+    const rewards = state.config && typeof state.config === 'object' ? state.config.rewards : null;
+    const gacha = rewards && typeof rewards === 'object' && typeof rewards.gacha === 'object'
+      ? rewards.gacha
+      : null;
+    const interval = Number(gacha && gacha.survivalIntervalSeconds);
+    const amount = Number(gacha && gacha.ticketAmount);
+    const validInterval = Number.isFinite(interval) && interval > 0 ? interval : null;
+    const validAmount = Number.isFinite(amount) && amount > 0 ? Math.floor(amount) : null;
+    if (!validInterval || !validAmount) {
+      return null;
+    }
+    return { interval: validInterval, amount: validAmount };
+  }
+
   function updateHud() {
     if (elements.scoreValue) {
       elements.scoreValue.textContent = Math.floor(state.score);
@@ -226,6 +247,15 @@
     const pylonGap = raw.pylonGap && typeof raw.pylonGap === 'object' ? raw.pylonGap : {};
     const birdInterval = raw.birdInterval && typeof raw.birdInterval === 'object' ? raw.birdInterval : {};
     const birdSpeed = raw.birdSpeed && typeof raw.birdSpeed === 'object' ? raw.birdSpeed : {};
+    const rewards = raw.rewards && typeof raw.rewards === 'object' ? raw.rewards : {};
+    const gachaRewards = rewards.gacha && typeof rewards.gacha === 'object' ? rewards.gacha : {};
+    const survivalInterval = clamp(
+      Number(gachaRewards.survivalIntervalSeconds) || DEFAULT_CONFIG.rewards.gacha.survivalIntervalSeconds,
+      5,
+      600
+    );
+    const survivalTicketAmount = Math.max(0, Math.floor(Number(gachaRewards.ticketAmount)
+      || DEFAULT_CONFIG.rewards.gacha.ticketAmount));
     return Object.freeze({
       gravity: clamp(Number(raw.gravity) || DEFAULT_CONFIG.gravity, 600, 5000),
       jumpImpulse: clamp(Number(raw.jumpImpulse) || DEFAULT_CONFIG.jumpImpulse, 320, 1600),
@@ -250,7 +280,13 @@
       },
       birdWobble: clamp(Number(raw.birdWobble) || DEFAULT_CONFIG.birdWobble, 0, 80),
       groundHeight: clamp(Number(raw.groundHeight) || DEFAULT_CONFIG.groundHeight, 48, 180),
-      backgroundScrollSpeed: clamp(Number(raw.backgroundScrollSpeed) || DEFAULT_CONFIG.backgroundScrollSpeed, 20, 240)
+      backgroundScrollSpeed: clamp(Number(raw.backgroundScrollSpeed) || DEFAULT_CONFIG.backgroundScrollSpeed, 20, 240),
+      rewards: {
+        gacha: {
+          survivalIntervalSeconds: survivalInterval,
+          ticketAmount: survivalTicketAmount
+        }
+      }
     });
   }
 
@@ -340,6 +376,8 @@
     state.score = 0;
     state.elapsed = 0;
     state.backgroundOffset = 0;
+    const survivalRewards = getSurvivalRewardSettings();
+    state.nextGachaReward = survivalRewards ? survivalRewards.interval : Infinity;
     state.nextObstacle = randomInRange(state.config.obstacleSpacing.min, state.config.obstacleSpacing.max);
     state.nextBird = randomInRange(state.config.birdInterval.min, state.config.birdInterval.max);
     state.lastTimestamp = null;
@@ -476,6 +514,55 @@
     });
   }
 
+  function maybeAwardSurvivalTickets() {
+    const settings = getSurvivalRewardSettings();
+    if (!settings) {
+      return;
+    }
+    if (!Number.isFinite(state.nextGachaReward) || state.nextGachaReward <= 0) {
+      state.nextGachaReward = settings.interval;
+    }
+    if (state.elapsed < state.nextGachaReward) {
+      return;
+    }
+
+    let milestones = 0;
+    while (state.elapsed >= state.nextGachaReward) {
+      milestones += 1;
+      state.nextGachaReward += settings.interval;
+    }
+
+    const ticketsToGrant = milestones * settings.amount;
+    if (ticketsToGrant <= 0) {
+      return;
+    }
+    const award = typeof gainGachaTickets === 'function'
+      ? gainGachaTickets
+      : typeof window !== 'undefined' && typeof window.gainGachaTickets === 'function'
+        ? window.gainGachaTickets
+        : null;
+    if (typeof award !== 'function') {
+      return;
+    }
+    let granted = 0;
+    try {
+      granted = award(ticketsToGrant, { unlockTicketStar: true });
+    } catch (error) {
+      console.warn('Jumping Cat: unable to grant survival gacha tickets', error);
+      granted = 0;
+    }
+    if (!Number.isFinite(granted) || granted <= 0 || typeof showToast !== 'function') {
+      return;
+    }
+    const suffix = granted > 1 ? 's' : '';
+    const message = translate(
+      'scripts.app.arcade.jumpingCat.rewardToast',
+      `Bonus Jumping Cat ! +${granted} ticket${suffix} gacha.`,
+      { count: granted, suffix }
+    );
+    showToast(message);
+  }
+
   function updatePhysics(deltaSeconds) {
     state.cat.vy += state.config.gravity * deltaSeconds;
     state.cat.vy = clamp(state.cat.vy, -state.config.jumpImpulse * 1.25, state.config.maxFallSpeed);
@@ -526,6 +613,7 @@
     state.backgroundOffset = (state.backgroundOffset + state.config.backgroundScrollSpeed * deltaSeconds) % backgroundWidth;
 
     state.elapsed += deltaSeconds;
+    maybeAwardSurvivalTickets();
   }
 
   function intersectsRect(ax, ay, aw, ah, bx, by, bw, bh) {

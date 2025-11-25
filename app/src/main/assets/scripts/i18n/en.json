@@ -1979,8 +1979,7 @@
           "bird": "A bird caught the cat.",
           "bestScore": "Best",
           "bestTime": "Duration"
-        },
-        "hint": "Tap, click, or press space to make the cat jump. Stay between the pylons and the birds!"
+        }
       },
       "metaux": {
         "aria": "Metals Match-3 mini-game",
@@ -3864,6 +3863,9 @@
         },
         "pipeTap": {
           "rewardToast": "PipeTap: +{count} gacha ticket{suffix}!"
+        },
+        "jumpingCat": {
+          "rewardToast": "Jumping Cat: +{count} gacha ticket{suffix} for surviving!"
         },
         "circles": {
           "rewardToast": "Circles: +{count} gacha ticket{suffix}!",

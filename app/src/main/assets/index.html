@@ -2100,14 +2100,6 @@
               <span class="jumping-cat__label" data-i18n="index.sections.jumpingCat.hud.time">Temps</span>
               <span class="jumping-cat__value" id="jumpingCatTimeValue">0.0s</span>
             </div>
-            <div class="jumping-cat__stat">
-              <span class="jumping-cat__label" data-i18n="index.sections.jumpingCat.hud.bestScore">Record</span>
-              <span class="jumping-cat__value" id="jumpingCatBestScoreValue">—</span>
-            </div>
-            <div class="jumping-cat__stat">
-              <span class="jumping-cat__label" data-i18n="index.sections.jumpingCat.hud.bestTime">Longévité</span>
-              <span class="jumping-cat__value" id="jumpingCatBestTimeValue">—</span>
-            </div>
           </div>
           <div class="jumping-cat__actions">
             <button
@@ -2160,11 +2152,16 @@
           </div>
           <p class="jumping-cat__sr-status" id="jumpingCatStatus" role="status" aria-live="polite"></p>
         </div>
-        <p
-          class="jumping-cat__hint"
-          id="jumpingCatHint"
-          data-i18n="index.sections.jumpingCat.hint"
-        >Touchez l’écran, cliquez ou utilisez la barre espace pour faire bondir le chat. Restez entre les pylônes et les oiseaux !</p>
+        <div class="jumping-cat__records jumping-cat__records--inline" aria-live="polite">
+          <div class="jumping-cat__record">
+            <span class="jumping-cat__record-label" data-i18n="index.sections.jumpingCat.hud.bestScore">Record</span>
+            <span class="jumping-cat__record-value" id="jumpingCatBestScoreValue">—</span>
+          </div>
+          <div class="jumping-cat__record">
+            <span class="jumping-cat__record-label" data-i18n="index.sections.jumpingCat.hud.bestTime">Longévité</span>
+            <span class="jumping-cat__record-value" id="jumpingCatBestTimeValue">—</span>
+          </div>
+        </div>
       </div>
     </section>
 
