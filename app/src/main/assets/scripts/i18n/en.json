@@ -231,6 +231,12 @@
             "top2": "Top 2",
             "top3": "Top 3"
           },
+          "jumpingCat": {
+            "title": "Jumping Cat",
+            "bestScore": "Best score",
+            "bestTime": "Survival time",
+            "timeUnit": "s"
+          },
           "motocross": {
             "title": "Motocross",
             "distance": "Longest distance",
@@ -407,6 +413,12 @@
             "title": "Stars War",
             "description": "Procedural vertical shoot’em up: pilot the Sentinel, harvest power-ups and endure endless waves.",
             "cta": "Launch"
+          },
+          "jumpingCat": {
+            "aria": "Open the Jumping Cat mini-game",
+            "title": "Jumping Cat",
+            "description": "Bounce the cat between pylons, dodge huge birds, and survive as long as you can.",
+            "cta": "Jump in"
           },
           "quantum2048": {
             "aria": "Open the ObjectX mini-game",
@@ -1935,6 +1947,38 @@
           "damage": "Hit! Hull at {hp} HP.",
           "paused": "Mission paused.",
           "resumed": "Mission resumed."
+        }
+      },
+      "jumpingCat": {
+        "aria": "Jumping Cat mini-game: survive between pylons and birds.",
+        "canvas": "Jumping Cat playfield",
+        "hud": {
+          "score": "Score",
+          "time": "Time",
+          "bestScore": "Best",
+          "bestTime": "Longest"
+        },
+        "controls": {
+          "start": "Start run"
+        },
+        "status": {
+          "ready": "Ready to leap",
+          "running": "Run in progress",
+          "gameOver": "Run over"
+        },
+        "overlay": {
+          "kicker": "Ready to leap?",
+          "readyTitle": "Jumping Cat",
+          "ready": "Tap or press space to make the cat hop.",
+          "retry": "Play again",
+          "dismiss": "Close",
+          "recordTitle": "New record",
+          "gameOverTitle": "Game over",
+          "defaultMessage": "Thread the needle between pylons and birds to climb the score.",
+          "floor": "The cat hit the ground.",
+          "bird": "A bird caught the cat.",
+          "bestScore": "Best",
+          "bestTime": "Duration"
         }
       },
       "metaux": {
@@ -3820,6 +3864,9 @@
         "pipeTap": {
           "rewardToast": "PipeTap: +{count} gacha ticket{suffix}!"
         },
+        "jumpingCat": {
+          "rewardToast": "Jumping Cat: +{count} gacha ticket{suffix} for surviving!"
+        },
         "circles": {
           "rewardToast": "Circles: +{count} gacha ticket{suffix}!",
           "rewardDisabledToast": "Circles: reward disabled because Help was used for this puzzle.",
@@ -4316,6 +4363,9 @@
           "empty": "—"
         },
         "motocross": {
+          "empty": "—"
+        },
+        "jumpingCat": {
           "empty": "—"
         },
         "starsWar": {
