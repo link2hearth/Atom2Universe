@@ -9,7 +9,9 @@
   }
 
   const elements = {
+    page: document.getElementById('jumpingCat'),
     canvas: document.getElementById('jumpingCatCanvas'),
+    header: root.querySelector('.jumping-cat__header'),
     overlay: document.getElementById('jumpingCatOverlay'),
     overlayTitle: document.getElementById('jumpingCatOverlayTitle'),
     overlayMessage: document.getElementById('jumpingCatOverlayMessage'),
@@ -90,6 +92,7 @@
     bestScore: 0,
     elapsed: 0,
     bestTime: 0,
+    lastOutcome: 'ready',
     floorY: CANVAS_HEIGHT - DEFAULT_CONFIG.groundHeight,
     autosaveLoaded: false,
     backgroundOffset: 0,
@@ -382,6 +385,7 @@
     state.nextBird = randomInRange(state.config.birdInterval.min, state.config.birdInterval.max);
     state.lastTimestamp = null;
     state.floorY = CANVAS_HEIGHT - state.config.groundHeight;
+    state.lastOutcome = 'ready';
     updateHud();
     showOverlay('index.sections.jumpingCat.overlay.readyTitle', 'Jumping Cat',
       'index.sections.jumpingCat.overlay.ready', 'Touchez ou appuyez sur espace pour commencer');
@@ -394,6 +398,7 @@
     hideOverlay();
     state.running = true;
     state.started = true;
+    state.lastOutcome = 'running';
     state.lastTimestamp = performance.now();
     setStatus('index.sections.jumpingCat.status.running', 'Partie en cours');
     loop();
@@ -402,6 +407,7 @@
   function stopRun(messageKey, fallback) {
     state.running = false;
     state.started = false;
+    state.lastOutcome = 'gameOver';
     setStatus('index.sections.jumpingCat.status.gameOver', 'Partie terminée');
     const newBestScore = Math.max(state.bestScore, Math.floor(state.score));
     const newBestTime = Math.max(state.bestTime, Number(state.elapsed.toFixed(1)));
@@ -498,13 +504,38 @@
   function handlePointer(event) {
     if (event) {
       event.preventDefault();
+      event.stopPropagation();
     }
     applyInput();
+  }
+
+  function shouldIgnoreGlobalPointer(event) {
+    if (!event || !event.target) {
+      return false;
+    }
+    const target = event.target;
+    if (elements.header && target.closest('.jumping-cat__header')) {
+      return true;
+    }
+    if (target.closest('button, a, [role="button"], input, select, textarea, label')) {
+      return true;
+    }
+    return false;
+  }
+
+  function handleGlobalPointer(event) {
+    if (shouldIgnoreGlobalPointer(event)) {
+      return;
+    }
+    handlePointer(event);
   }
 
   function bindInputs() {
     if (elements.canvas) {
       elements.canvas.addEventListener('pointerdown', handlePointer);
+    }
+    if (elements.page) {
+      elements.page.addEventListener('pointerdown', handleGlobalPointer);
     }
     window.addEventListener('keydown', event => {
       if (event.code === 'Space') {
@@ -826,7 +857,13 @@
     if (!state.autosaveLoaded) {
       restoreProgress();
     }
-    setStatus('index.sections.jumpingCat.status.ready', 'Prêt à bondir');
+    if (state.running) {
+      setStatus('index.sections.jumpingCat.status.running', 'Partie en cours');
+    } else if (state.lastOutcome === 'gameOver' && elements.overlay && elements.overlay.hidden === false) {
+      setStatus('index.sections.jumpingCat.status.gameOver', 'Partie terminée');
+    } else {
+      setStatus('index.sections.jumpingCat.status.ready', 'Prêt à bondir');
+    }
     if (!animationHandle) {
       render();
     }
@@ -838,7 +875,6 @@
       cancelAnimationFrame(animationHandle);
       animationHandle = null;
     }
-    hideOverlay();
   }
 
   init();
