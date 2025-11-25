@@ -231,6 +231,12 @@
             "top2": "Top 2",
             "top3": "Top 3"
           },
+          "jumpingCat": {
+            "title": "Jumping Cat",
+            "bestScore": "Best score",
+            "bestTime": "Survival time",
+            "timeUnit": "s"
+          },
           "motocross": {
             "title": "Motocross",
             "distance": "Longest distance",
@@ -407,6 +413,12 @@
             "title": "Stars War",
             "description": "Procedural vertical shoot’em up: pilot the Sentinel, harvest power-ups and endure endless waves.",
             "cta": "Launch"
+          },
+          "jumpingCat": {
+            "aria": "Open the Jumping Cat mini-game",
+            "title": "Jumping Cat",
+            "description": "Bounce the cat between pylons, dodge huge birds, and survive as long as you can.",
+            "cta": "Jump in"
           },
           "quantum2048": {
             "aria": "Open the ObjectX mini-game",
@@ -1936,6 +1948,39 @@
           "paused": "Mission paused.",
           "resumed": "Mission resumed."
         }
+      },
+      "jumpingCat": {
+        "aria": "Jumping Cat mini-game: survive between pylons and birds.",
+        "canvas": "Jumping Cat playfield",
+        "hud": {
+          "score": "Score",
+          "time": "Time",
+          "bestScore": "Best",
+          "bestTime": "Longest"
+        },
+        "controls": {
+          "start": "Start run"
+        },
+        "status": {
+          "ready": "Ready to leap",
+          "running": "Run in progress",
+          "gameOver": "Run over"
+        },
+        "overlay": {
+          "kicker": "Ready to leap?",
+          "readyTitle": "Jumping Cat",
+          "ready": "Tap or press space to make the cat hop.",
+          "retry": "Play again",
+          "dismiss": "Close",
+          "recordTitle": "New record",
+          "gameOverTitle": "Game over",
+          "defaultMessage": "Thread the needle between pylons and birds to climb the score.",
+          "floor": "The cat hit the ground.",
+          "bird": "A bird caught the cat.",
+          "bestScore": "Best",
+          "bestTime": "Duration"
+        },
+        "hint": "Tap, click, or press space to make the cat jump. Stay between the pylons and the birds!"
       },
       "metaux": {
         "aria": "Metals Match-3 mini-game",
@@ -4316,6 +4361,9 @@
           "empty": "—"
         },
         "motocross": {
+          "empty": "—"
+        },
+        "jumpingCat": {
           "empty": "—"
         },
         "starsWar": {
