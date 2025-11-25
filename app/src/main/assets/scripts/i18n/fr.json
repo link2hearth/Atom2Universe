@@ -231,6 +231,12 @@
             "top2": "Top 2",
             "top3": "Top 3"
           },
+          "jumpingCat": {
+            "title": "Jumping Cat",
+            "bestScore": "Meilleur score",
+            "bestTime": "Temps de survie",
+            "timeUnit": "s"
+          },
           "motocross": {
             "title": "Motocross",
             "distance": "Distance maximale",
@@ -407,6 +413,12 @@
             "title": "Stars War",
             "description": "Shoot’em up vertical procédural : pilotez le Sentinel, récoltez les bonus et tenez face aux vagues infinies.",
             "cta": "Décoller"
+          },
+          "jumpingCat": {
+            "aria": "Accéder au mini-jeu Jumping Cat",
+            "title": "Jumping Cat",
+            "description": "Faites bondir le chat entre les pylônes, esquivez les oiseaux géants et survivez le plus longtemps possible.",
+            "cta": "Sauter"
           },
           "quantum2048": {
             "aria": "Accéder au mini-jeu ObjectX",
@@ -1873,6 +1885,39 @@
           "paused": "Mission en pause.",
           "resumed": "Mission reprise."
         }
+      },
+      "jumpingCat": {
+        "aria": "Mini-jeu Jumping Cat : survivez entre les pylônes et les oiseaux.",
+        "canvas": "Zone de jeu Jumping Cat",
+        "hud": {
+          "score": "Score",
+          "time": "Temps",
+          "bestScore": "Record",
+          "bestTime": "Longévité"
+        },
+        "controls": {
+          "start": "Lancer la partie"
+        },
+        "status": {
+          "ready": "Prêt à bondir",
+          "running": "Partie en cours",
+          "gameOver": "Partie terminée"
+        },
+        "overlay": {
+          "kicker": "Prêt à bondir ?",
+          "readyTitle": "Jumping Cat",
+          "ready": "Touchez ou appuyez sur la barre espace pour faire bondir le chat.",
+          "retry": "Rejouer",
+          "dismiss": "Fermer",
+          "recordTitle": "Nouveau record",
+          "gameOverTitle": "Game over",
+          "defaultMessage": "Glissez-vous entre les pylônes et les oiseaux pour progresser.",
+          "floor": "Le chat a touché le sol.",
+          "bird": "Un oiseau a percuté le chat.",
+          "bestScore": "Record",
+          "bestTime": "Durée"
+        },
+        "hint": "Touchez, cliquez ou utilisez la barre espace pour faire bondir le chat. Restez entre les pylônes et les oiseaux !"
       },
       "metaux": {
         "aria": "Mini-jeu Métaux Mach3",
@@ -4343,6 +4388,9 @@
           "empty": "—"
         },
         "motocross": {
+          "empty": "—"
+        },
+        "jumpingCat": {
           "empty": "—"
         },
         "starsWar": {

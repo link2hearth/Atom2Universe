@@ -11,6 +11,7 @@
     'pipeTap',
     'colorStack',
     'motocross',
+    'jumpingCat',
     'sokoban',
     'bigger',
     'math',
