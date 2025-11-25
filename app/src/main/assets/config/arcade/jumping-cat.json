@@ -4,7 +4,7 @@
   "maxFallSpeed": 1800,
   "forwardSpeed": 190,
   "obstacleSpacing": {
-    "min": 1.6,
+    "min": 1.4,
     "max": 2.4
   },
   "pylonGap": {
@@ -13,8 +13,8 @@
   },
   "safetyCorridor": 120,
   "birdInterval": {
-    "min": 3,
-    "max": 5.5
+    "min": 2,
+    "max": 4.5
   },
   "birdSpeed": {
     "min": 150,
