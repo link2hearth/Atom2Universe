@@ -2962,6 +2962,110 @@ function updateMotocrossStats() {
   }
 }
 
+function findJumpingCatEntry(entries) {
+  if (!entries || typeof entries !== 'object') {
+    return null;
+  }
+  if (entries.jumpingCat && typeof entries.jumpingCat === 'object') {
+    return entries.jumpingCat;
+  }
+  const key = Object.keys(entries).find(id => typeof id === 'string' && id.toLowerCase() === 'jumpingcat');
+  return key && typeof entries[key] === 'object' ? entries[key] : null;
+}
+
+function normalizeJumpingCatRecord(record) {
+  if (!record || typeof record !== 'object') {
+    return { bestScore: 0, bestTime: 0 };
+  }
+  return {
+    bestScore: toNonNegativeInteger(record.bestScore ?? record.score ?? 0),
+    bestTime: Number.isFinite(Number(record.bestTime ?? record.time))
+      ? Math.max(0, Number(record.bestTime ?? record.time))
+      : 0
+  };
+}
+
+function hasJumpingCatRecord(record) {
+  return Boolean(record && (record.bestScore > 0 || record.bestTime > 0));
+}
+
+function getJumpingCatAutosaveStats() {
+  if (typeof window === 'undefined' || !window.ArcadeAutosave || typeof window.ArcadeAutosave.get !== 'function') {
+    return null;
+  }
+  try {
+    const raw = window.ArcadeAutosave.get('jumpingCat');
+    return normalizeJumpingCatRecord(raw);
+  } catch (error) {
+    return null;
+  }
+}
+
+function syncJumpingCatProgressEntry(record) {
+  if (!hasJumpingCatRecord(record) || typeof gameState !== 'object') {
+    return;
+  }
+  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+    gameState.arcadeProgress = { version: 1, entries: {} };
+  }
+  if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
+    gameState.arcadeProgress.entries = {};
+  }
+  gameState.arcadeProgress.entries.jumpingCat = {
+    state: {
+      bestScore: record.bestScore,
+      bestTime: record.bestTime
+    },
+    updatedAt: Date.now()
+  };
+  const save = typeof saveGame === 'function'
+    ? saveGame
+    : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
+      ? window.saveGame
+      : null);
+  if (typeof save === 'function') {
+    save();
+  }
+}
+
+function getJumpingCatProgressStats() {
+  const entries = gameState.arcadeProgress && typeof gameState.arcadeProgress === 'object'
+    && gameState.arcadeProgress.entries && typeof gameState.arcadeProgress.entries === 'object'
+      ? gameState.arcadeProgress.entries
+      : null;
+  const progressEntry = findJumpingCatEntry(entries);
+  if (progressEntry && typeof progressEntry === 'object') {
+    const state = progressEntry.state && typeof progressEntry.state === 'object'
+      ? progressEntry.state
+      : progressEntry;
+    const normalized = normalizeJumpingCatRecord(state);
+    if (hasJumpingCatRecord(normalized)) {
+      return normalized;
+    }
+  }
+  const autosaveStats = getJumpingCatAutosaveStats();
+  if (hasJumpingCatRecord(autosaveStats)) {
+    syncJumpingCatProgressEntry(autosaveStats);
+    return autosaveStats;
+  }
+  return { bestScore: 0, bestTime: 0 };
+}
+
+function updateJumpingCatStats() {
+  const stats = getJumpingCatProgressStats();
+  const emptyValue = translateOrDefault('scripts.info.progress.jumpingCat.empty', '—');
+  if (elements.infoJumpingCatScoreValue) {
+    elements.infoJumpingCatScoreValue.textContent = stats.bestScore > 0
+      ? formatIntegerLocalized(stats.bestScore)
+      : emptyValue;
+  }
+  if (elements.infoJumpingCatTimeValue) {
+    elements.infoJumpingCatTimeValue.textContent = stats.bestTime > 0
+      ? formatNumberLocalized(stats.bestTime, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+      : emptyValue;
+  }
+}
+
 const STARS_WAR_DIFFICULTY_MODES = Object.freeze({ hard: 'hard', easy: 'easy' });
 const STARS_WAR_AUTOSAVE_KEY = 'starsWar';
 
@@ -3313,6 +3417,7 @@ function updateGlobalStats() {
   }
 
   updatePhotonStats();
+  updateJumpingCatStats();
   updateMotocrossStats();
   updateStarsWarStats();
   updateFrenzyHighscores(global);
@@ -3357,6 +3462,7 @@ if (typeof window !== 'undefined') {
   window.refreshStarsWarInfoStats = updateStarsWarStats;
   window.addEventListener('arcadeAutosaveSync', () => {
     updatePhotonStats();
+    updateJumpingCatStats();
     updateStarsWarStats();
     updateMotocrossStats();
   });

@@ -509,6 +509,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Jumping Cat"
+          aria-describedby="arcadeCardDescription-jumpingCat"
+          data-card-id="jumpingCat"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.jumpingCat.aria"
+          data-page-target="jumpingCat"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.jumpingCat.title"
+            >Jumping Cat</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-jumpingCat"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-jumpingCat"
+            data-i18n="index.sections.arcadeHub.cards.jumpingCat.description"
+          >
+            Sautez entre les pylônes et esquivez les oiseaux géants pour défendre le ciel.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Motocross"
           aria-describedby="arcadeCardDescription-motocross"
           data-card-id="motocross"
@@ -2034,6 +2076,91 @@
               </div>
             </dl>
           </aside>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="jumpingCat"
+      class="page page--jumping-cat"
+      data-page-group="arcade"
+      data-scroll-behavior="lock"
+      aria-label="Mini-jeu Jumping Cat : survivez entre les pylônes et les oiseaux."
+      data-i18n="aria-label:index.sections.jumpingCat.aria"
+      hidden
+    >
+      <div class="jumping-cat" data-jumping-cat-root>
+        <div class="jumping-cat__header">
+          <div class="jumping-cat__stats" role="status" aria-live="polite">
+            <div class="jumping-cat__stat">
+              <span class="jumping-cat__label" data-i18n="index.sections.jumpingCat.hud.score">Score</span>
+              <span class="jumping-cat__value" id="jumpingCatScoreValue">0</span>
+            </div>
+            <div class="jumping-cat__stat">
+              <span class="jumping-cat__label" data-i18n="index.sections.jumpingCat.hud.time">Temps</span>
+              <span class="jumping-cat__value" id="jumpingCatTimeValue">0.0s</span>
+            </div>
+          </div>
+          <div class="jumping-cat__actions">
+            <button
+              type="button"
+              class="jumping-cat__button"
+              id="jumpingCatStart"
+              data-i18n="index.sections.jumpingCat.controls.start"
+            >Lancer la partie</button>
+          </div>
+        </div>
+        <div class="jumping-cat__canvas-wrapper">
+          <canvas
+            id="jumpingCatCanvas"
+            class="jumping-cat__canvas"
+            aria-label="Zone de jeu Jumping Cat"
+            data-i18n="aria-label:index.sections.jumpingCat.canvas"
+          ></canvas>
+          <div class="jumping-cat__overlay" id="jumpingCatOverlay" role="dialog" aria-modal="true" hidden aria-hidden="true">
+            <div class="jumping-cat__panel">
+              <p class="kicker" data-i18n="index.sections.jumpingCat.overlay.kicker">Prêt à bondir ?</p>
+              <h3 id="jumpingCatOverlayTitle" data-i18n="index.sections.jumpingCat.overlay.readyTitle">Jumping Cat</h3>
+              <p id="jumpingCatOverlayMessage" data-i18n="index.sections.jumpingCat.overlay.ready">
+                Touchez ou appuyez sur la barre espace pour faire bondir le chat.
+              </p>
+              <div class="jumping-cat__records">
+                <div class="jumping-cat__record">
+                  <span class="jumping-cat__record-label" data-i18n="index.sections.jumpingCat.overlay.bestScore">Record</span>
+                  <span class="jumping-cat__record-value" id="jumpingCatOverlayBestScoreValue">—</span>
+                </div>
+                <div class="jumping-cat__record">
+                  <span class="jumping-cat__record-label" data-i18n="index.sections.jumpingCat.overlay.bestTime">Durée</span>
+                  <span class="jumping-cat__record-value" id="jumpingCatOverlayBestTimeValue">—</span>
+                </div>
+              </div>
+              <div class="jumping-cat__actions" style="margin-top: 12px;">
+                <button
+                  type="button"
+                  class="jumping-cat__button"
+                  id="jumpingCatOverlayAction"
+                  data-i18n="index.sections.jumpingCat.overlay.retry"
+                >Rejouer</button>
+                <button
+                  type="button"
+                  class="jumping-cat__button"
+                  id="jumpingCatOverlayDismiss"
+                  data-i18n="index.sections.jumpingCat.overlay.dismiss"
+                >Fermer</button>
+              </div>
+            </div>
+          </div>
+          <p class="jumping-cat__sr-status" id="jumpingCatStatus" role="status" aria-live="polite"></p>
+        </div>
+        <div class="jumping-cat__records jumping-cat__records--inline" aria-live="polite">
+          <div class="jumping-cat__record">
+            <span class="jumping-cat__record-label" data-i18n="index.sections.jumpingCat.hud.bestScore">Record</span>
+            <span class="jumping-cat__record-value" id="jumpingCatBestScoreValue">—</span>
+          </div>
+          <div class="jumping-cat__record">
+            <span class="jumping-cat__record-label" data-i18n="index.sections.jumpingCat.hud.bestTime">Longévité</span>
+            <span class="jumping-cat__record-value" id="jumpingCatBestTimeValue">—</span>
+          </div>
         </div>
       </div>
     </section>
@@ -6176,6 +6303,30 @@
                 </div>
               </dl>
             </section>
+            <section class="info-progress-block info-progress-block--jumping-cat" aria-labelledby="info-jumping-cat-title">
+              <header class="info-progress-block__header">
+                <h4 id="info-jumping-cat-title" data-i18n="index.sections.info.progress.jumpingCat.title">Jumping Cat</h4>
+              </header>
+              <dl class="info-metrics">
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.jumpingCat.bestScore">Meilleur score</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoJumpingCatScoreValue" class="info-metrics__value">—</span>
+                    </span>
+                  </dd>
+                </div>
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.jumpingCat.bestTime">Temps de survie</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoJumpingCatTimeValue" class="info-metrics__value">—</span>
+                      <span class="info-metrics__unit" data-i18n="index.sections.info.progress.jumpingCat.timeUnit">s</span>
+                    </span>
+                  </dd>
+                </div>
+              </dl>
+            </section>
             <section class="info-progress-block info-progress-block--motocross" aria-labelledby="info-motocross-title">
               <header class="info-progress-block__header">
                 <h4 id="info-motocross-title" data-i18n="index.sections.info.progress.motocross.title">Motocross</h4>
@@ -7935,6 +8086,7 @@
   <script src="scripts/arcade/color-stack.js"></script>
   <script src="scripts/arcade/circles.js"></script>
   <script src="scripts/arcade/stars-war.js"></script>
+  <script src="scripts/arcade/jumping-cat.js"></script>
   <script src="scripts/arcade/motocross.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/taquin.js"></script>
