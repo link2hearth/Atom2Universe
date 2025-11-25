@@ -21,6 +21,6 @@
     "max": 230
   },
   "birdWobble": 26,
-  "groundHeight": 88,
+  "groundHeight": 60,
   "backgroundScrollSpeed": 110
 }

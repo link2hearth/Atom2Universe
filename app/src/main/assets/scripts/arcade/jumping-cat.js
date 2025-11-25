@@ -44,7 +44,7 @@
     birdInterval: { min: 3, max: 5.5 },
     birdSpeed: { min: 150, max: 230 },
     birdWobble: 26,
-    groundHeight: 88,
+    groundHeight: 60,
     backgroundScrollSpeed: 110
   });
 
@@ -61,10 +61,10 @@
   ];
   const PYLON_HEIGHT = 78;
   const BIRD_FRAMES = [
-    { sx: 0, sy: 0, sw: 256, sh: 256, size: 52 },
-    { sx: 0, sy: 256, sw: 256, sh: 256, size: 52 },
-    { sx: 256, sy: 0, sw: 256, sh: 256, size: 52 },
-    { sx: 256, sy: 256, sw: 256, sh: 256, size: 52 }
+    { sx: 0, sy: 0, sw: 128, sh: 128, size: 72 },
+    { sx: 0, sy: 128, sw: 128, sh: 128, size: 72 },
+    { sx: 128, sy: 0, sw: 128, sh: 128, size: 72 },
+    { sx: 128, sy: 128, sw: 128, sh: 128, size: 72 }
   ];
   const BIRD_ANIMATIONS = [
     [BIRD_FRAMES[0], BIRD_FRAMES[1]],
@@ -412,7 +412,9 @@
   function spawnObstacle() {
     const gap = randomInRange(state.config.pylonGap.min, state.config.pylonGap.max);
     const maxPylonHeight = state.floorY - gap - state.config.safetyCorridor;
-    const height = clamp(randomInRange(64, maxPylonHeight), 48, maxPylonHeight);
+    const minHeight = Math.max(70, maxPylonHeight * 0.35);
+    const targetHeight = randomInRange(minHeight, Math.max(minHeight + 20, maxPylonHeight * 0.95));
+    const height = clamp(targetHeight, minHeight, maxPylonHeight);
     const slice = PYLON_SLICES[Math.floor(Math.random() * PYLON_SLICES.length)];
     state.obstacles.push({
       x: CANVAS_WIDTH + 30,
@@ -611,7 +613,7 @@
         obstacle.x,
         state.floorY - obstacle.height,
         obstacle.sprite.sw,
-        PYLON_HEIGHT
+        obstacle.height
       );
     });
   }
