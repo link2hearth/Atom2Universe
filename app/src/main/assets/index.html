@@ -7009,6 +7009,36 @@
           </p>
           <ul id="newsList" class="news-list" aria-live="polite"></ul>
         </div>
+        <section class="news-banned" aria-labelledby="newsBannedTitle">
+          <div class="news-banned__header">
+            <h3 id="newsBannedTitle" class="news-banned__title" data-i18n="index.sections.news.banned.title">
+              Filtrer des mots bannis
+            </h3>
+            <p class="news-banned__subtitle" data-i18n="index.sections.news.banned.subtitle">
+              Masquez automatiquement les titres contenant l’un des mots listés ci-dessous.
+            </p>
+          </div>
+          <label class="news-banned__label" for="newsBannedWordsInput" data-i18n="index.sections.news.banned.label">
+            Mots à bannir (séparés par des virgules)
+          </label>
+          <textarea
+            id="newsBannedWordsInput"
+            class="news-banned__input"
+            rows="3"
+            data-i18n="placeholder:index.sections.news.banned.placeholder"
+            placeholder="Ex. : football, ligue 1, PSG"
+          ></textarea>
+          <div class="news-banned__actions">
+            <button
+              type="button"
+              id="newsBannedWordsSave"
+              class="news-banned__button"
+              data-i18n="index.sections.news.banned.save"
+            >
+              Enregistrer le filtre
+            </button>
+          </div>
+        </section>
       </div>
     </section>
 

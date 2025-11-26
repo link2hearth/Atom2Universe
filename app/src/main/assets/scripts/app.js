@@ -385,7 +385,9 @@ let activeArcadeHubCardDrag = null;
 let lastBigBangUnlockedState = false;
 let collectionVideosUnlockedCache = null;
 let newsFeatureEnabled = true;
+let newsBannedWords = [];
 let newsItems = [];
+let newsRawItems = [];
 let newsHiddenIds = new Set();
 let newsCurrentQuery = '';
 let newsRefreshTimerId = null;
@@ -437,6 +439,7 @@ const CRYPTO_WIDGET_STORAGE_KEY = 'atom2univers.options.cryptoWidgetEnabled';
 const NEWS_FEATURE_ENABLED_STORAGE_KEY = 'atom2univers.options.newsEnabled';
 const NEWS_HIDDEN_ITEMS_STORAGE_KEY = 'atom2univers.news.hiddenItems.v1';
 const NEWS_LAST_QUERY_STORAGE_KEY = 'atom2univers.news.lastQuery';
+const NEWS_BANNED_WORDS_STORAGE_KEY = 'atom2univers.news.bannedWords.v1';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
@@ -6503,6 +6506,8 @@ function collectDomElements() {
   newsClearSearchButton: document.getElementById('newsClearSearchButton'),
   newsRefreshButton: document.getElementById('newsRefreshButton'),
   newsRestoreHiddenButton: document.getElementById('newsRestoreHiddenButton'),
+  newsBannedWordsInput: document.getElementById('newsBannedWordsInput'),
+  newsBannedWordsSave: document.getElementById('newsBannedWordsSave'),
   newsTicker: document.getElementById('newsTicker'),
   newsTickerItems: document.getElementById('newsTickerItems'),
   newsTickerOpenButton: document.getElementById('newsTickerOpenButton')
@@ -11238,6 +11243,57 @@ function writeStoredNewsQuery(query) {
   }
 }
 
+function normalizeNewsBannedWords(words) {
+  if (typeof words === 'string') {
+    return normalizeNewsBannedWords(words.split(','));
+  }
+  if (!Array.isArray(words)) {
+    return [];
+  }
+  const seen = new Set();
+  const normalized = [];
+  words.forEach(entry => {
+    const word = typeof entry === 'string' ? entry.trim() : '';
+    const lower = word.toLowerCase();
+    if (word && !seen.has(lower)) {
+      seen.add(lower);
+      normalized.push(word);
+    }
+  });
+  return normalized;
+}
+
+function getNormalizedNewsBannedWords() {
+  return (Array.isArray(newsBannedWords) ? newsBannedWords : [])
+    .map(word => (typeof word === 'string' ? word.trim().toLowerCase() : ''))
+    .filter(Boolean);
+}
+
+function readStoredNewsBannedWords() {
+  try {
+    const raw = globalThis.localStorage?.getItem(NEWS_BANNED_WORDS_STORAGE_KEY);
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    return normalizeNewsBannedWords(parsed);
+  } catch (error) {
+    console.warn('Unable to read banned news words', error);
+  }
+  return [];
+}
+
+function writeStoredNewsBannedWords(words) {
+  try {
+    const normalized = normalizeNewsBannedWords(words);
+    globalThis.localStorage?.setItem(NEWS_BANNED_WORDS_STORAGE_KEY, JSON.stringify(normalized));
+    return normalized;
+  } catch (error) {
+    console.warn('Unable to persist banned news words', error);
+  }
+  return normalizeNewsBannedWords(words);
+}
+
 function isAndroidNewsBridgeAvailable() {
   const bridge = getAndroidManualBackupBridge();
   return !!(bridge && typeof bridge.loadNews === 'function');
@@ -11336,6 +11392,25 @@ function buildNewsRequestUrls(query) {
   return Array.from(new Set(urls));
 }
 
+function isNewsItemBlocked(item, normalizedBannedWords = getNormalizedNewsBannedWords()) {
+  if (!item || !normalizedBannedWords.length) {
+    return false;
+  }
+  const text = `${item.title || ''} ${item.description || ''}`.toLowerCase();
+  return normalizedBannedWords.some(word => word && text.includes(word));
+}
+
+function filterNewsItems(items) {
+  if (!Array.isArray(items)) {
+    return [];
+  }
+  const normalizedBannedWords = getNormalizedNewsBannedWords();
+  if (!normalizedBannedWords.length) {
+    return items.filter(Boolean);
+  }
+  return items.filter(item => item && !isNewsItemBlocked(item, normalizedBannedWords));
+}
+
 function parseNewsFeed(xmlText) {
   if (typeof DOMParser !== 'function') {
     return [];
@@ -11347,13 +11422,14 @@ function parseNewsFeed(xmlText) {
     const title = item.querySelector('title')?.textContent?.trim() || '';
     const link = item.querySelector('link')?.textContent?.trim() || '';
     const guid = item.querySelector('guid')?.textContent?.trim();
+    const description = item.querySelector('description')?.textContent?.trim() || '';
     const pubDateText = item.querySelector('pubDate')?.textContent?.trim();
     const pubDate = pubDateText ? Date.parse(pubDateText) : 0;
     const id = guid || link || `${title}-${pubDate}`;
     if (!id || !title) {
       return;
     }
-    const story = { id, title, link, pubDate: Number.isFinite(pubDate) ? pubDate : 0 };
+    const story = { id, title, link, description, pubDate: Number.isFinite(pubDate) ? pubDate : 0 };
     items.push(story);
   });
   items.sort((first, second) => {
@@ -11368,6 +11444,15 @@ function getVisibleNewsItems() {
   const hidden = newsHiddenIds instanceof Set ? newsHiddenIds : new Set();
   return (Array.isArray(newsItems) ? newsItems : [])
     .filter(item => item && typeof item.id === 'string' && !hidden.has(item.id));
+}
+
+function applyNewsBannedWordsFilter() {
+  const baseItems = Array.isArray(newsRawItems) && newsRawItems.length ? newsRawItems : newsItems;
+  const filteredItems = filterNewsItems(baseItems);
+  const maxItems = Math.max(1, Number(getNewsSettings()?.maxItems) || DEFAULT_NEWS_SETTINGS.maxItems);
+  newsItems = filteredItems.slice(0, maxItems);
+  renderNewsList();
+  renderNewsTicker();
 }
 
 function updateNewsFeedLabel(query) {
@@ -11727,8 +11812,10 @@ async function fetchNewsFeed(query = newsCurrentQuery, options = {}) {
       throw lastError || new Error('No response received');
     }
     const parsedItems = parseNewsFeed(xmlText);
+    const filteredItems = filterNewsItems(parsedItems);
     const maxItems = Math.max(1, Number(getNewsSettings()?.maxItems) || DEFAULT_NEWS_SETTINGS.maxItems);
-    newsItems = parsedItems.slice(0, maxItems);
+    newsRawItems = parsedItems;
+    newsItems = filteredItems.slice(0, maxItems);
     newsLastError = null;
     updateNewsFeedLabel(query);
     setNewsStatus(
@@ -11852,11 +11939,29 @@ function handleNewsRefresh() {
   fetchNewsFeed(newsCurrentQuery);
 }
 
+function handleNewsBannedWordsSave() {
+  if (!elements.newsBannedWordsInput) {
+    return;
+  }
+  const inputValue = elements.newsBannedWordsInput.value || '';
+  const normalized = normalizeNewsBannedWords(inputValue.split(','));
+  newsBannedWords = writeStoredNewsBannedWords(normalized);
+  elements.newsBannedWordsInput.value = newsBannedWords.join(', ');
+  applyNewsBannedWordsFilter();
+  if (isNewsEnabled()) {
+    fetchNewsFeed(newsCurrentQuery, { silent: true });
+  }
+}
+
 function initNewsModule() {
   newsHiddenIds = readStoredNewsHiddenItems();
   newsCurrentQuery = readStoredNewsQuery();
+  newsBannedWords = readStoredNewsBannedWords();
   if (elements.newsSearchInput) {
     elements.newsSearchInput.value = newsCurrentQuery;
+  }
+  if (elements.newsBannedWordsInput) {
+    elements.newsBannedWordsInput.value = newsBannedWords.join(', ');
   }
   updateNewsFeedLabel(newsCurrentQuery);
   renderNewsHiddenSummary();
@@ -17514,6 +17619,9 @@ function bindDomEventListeners() {
   }
   if (elements.newsRestoreHiddenButton) {
     elements.newsRestoreHiddenButton.addEventListener('click', restoreHiddenNewsStories);
+  }
+  if (elements.newsBannedWordsSave) {
+    elements.newsBannedWordsSave.addEventListener('click', handleNewsBannedWordsSave);
   }
   if (elements.newsTickerOpenButton) {
     elements.newsTickerOpenButton.addEventListener('click', () => {

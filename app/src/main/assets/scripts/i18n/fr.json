@@ -354,6 +354,13 @@
           "openArticle": "Ouvrir l’article",
           "hideArticle": "Masquer cette info"
         },
+        "banned": {
+          "title": "Filtrer des mots bannis",
+          "subtitle": "Masquez les titres qui contiennent un des mots listés. Séparez chaque entrée par une virgule.",
+          "label": "Mots à bannir (séparés par des virgules)",
+          "placeholder": "Ex. : football, ligue 1, PSG",
+          "save": "Enregistrer le filtre"
+        },
         "status": {
           "loading": "Chargement des actualités…",
           "error": "Impossible de récupérer les actualités pour le moment.",

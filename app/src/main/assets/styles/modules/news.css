@@ -170,6 +170,72 @@ body.theme-light .news-page__control-button {
   color: rgba(255, 255, 255, 0.65);
 }
 
+.news-banned {
+  margin-top: 0.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(26, 32, 52, 0.75), rgba(18, 22, 36, 0.8));
+  display: grid;
+  gap: 0.65rem;
+}
+
+.news-banned__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.news-banned__title {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.news-banned__subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.4;
+}
+
+.news-banned__label {
+  font-weight: 600;
+}
+
+.news-banned__input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 12, 20, 0.7);
+  color: #f5f7ff;
+  padding: 0.7rem 0.9rem;
+  resize: vertical;
+  min-height: 3.5rem;
+}
+
+.news-banned__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.news-banned__button {
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, rgba(86, 126, 255, 0.35), rgba(46, 82, 200, 0.55));
+  color: #f7fbff;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.news-banned__button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.news-banned__button:active {
+  transform: translateY(0);
+}
+
 body.theme-light .news-page__notice {
   background: rgba(255, 76, 106, 0.08);
   border-color: rgba(255, 76, 106, 0.3);
@@ -179,6 +245,27 @@ body.theme-light .news-page__notice {
 body.theme-light .news-page__hidden,
 body.theme-light .news-page__empty {
   color: rgba(0, 0, 0, 0.66);
+}
+
+body.theme-light .news-banned {
+  background: linear-gradient(135deg, rgba(240, 244, 255, 0.9), rgba(226, 234, 255, 0.92));
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+body.theme-light .news-banned__subtitle {
+  color: rgba(0, 0, 0, 0.68);
+}
+
+body.theme-light .news-banned__input {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #0f1422;
+}
+
+body.theme-light .news-banned__button {
+  background: linear-gradient(135deg, rgba(90, 126, 255, 0.25), rgba(60, 96, 210, 0.4));
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #0f1320;
 }
 
 .news-list {
