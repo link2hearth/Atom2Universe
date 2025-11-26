@@ -244,6 +244,29 @@ const DEFAULT_NEWS_SETTINGS = Object.freeze({
   defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
   searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
   proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
+  proxyBaseUrls: [
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.isomorphic-git.org/',
+    'https://corsproxy.io/?',
+    'https://api.rss2json.com/v1/api.json?rss_url='
+  ],
+  refreshIntervalMs: 10 * 60 * 1000,
+  maxItems: 40,
+  bannerItemCount: 12,
+  requestTimeoutMs: 12000
+});
+
+const ACTIVE_NEWS_SETTINGS = typeof NEWS_SETTINGS !== 'undefined'
+  && NEWS_SETTINGS
+  && typeof NEWS_SETTINGS === 'object'
+    ? NEWS_SETTINGS
+    : DEFAULT_NEWS_SETTINGS;
+
+const DEFAULT_NEWS_SETTINGS = Object.freeze({
+  enabledByDefault: true,
+  defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
+  searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
+  proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
   refreshIntervalMs: 10 * 60 * 1000,
   maxItems: 40,
   bannerItemCount: 12,
@@ -11274,32 +11297,82 @@ function buildNewsRequestUrls(query) {
   return Array.from(new Set(urls));
 }
 
-function parseNewsFeed(xmlText) {
-  if (typeof DOMParser !== 'function') {
-    return [];
-  }
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(xmlText, 'application/xml');
-  const items = [];
-  doc.querySelectorAll('item').forEach(item => {
-    const title = item.querySelector('title')?.textContent?.trim() || '';
-    const link = item.querySelector('link')?.textContent?.trim() || '';
-    const guid = item.querySelector('guid')?.textContent?.trim();
-    const pubDateText = item.querySelector('pubDate')?.textContent?.trim();
-    const pubDate = pubDateText ? Date.parse(pubDateText) : 0;
-    const id = guid || link || `${title}-${pubDate}`;
-    if (!id || !title) {
+function normalizeNewsItems(items) {
+  const normalized = [];
+  const seen = new Set();
+  items.forEach(raw => {
+    if (!raw || typeof raw !== 'object') {
       return;
     }
-    const story = { id, title, link, pubDate: Number.isFinite(pubDate) ? pubDate : 0 };
-    items.push(story);
+    const title = typeof raw.title === 'string' ? raw.title.trim() : '';
+    const link = typeof raw.link === 'string' ? raw.link.trim() : '';
+    const id = typeof raw.id === 'string' && raw.id.trim()
+      ? raw.id.trim()
+      : link || title;
+    const pubDate = (() => {
+      const pubDateText = typeof raw.pubDate === 'string' ? raw.pubDate : raw.pub_date;
+      const parsed = pubDateText ? Date.parse(pubDateText) : NaN;
+      return Number.isFinite(parsed) ? parsed : 0;
+    })();
+
+    if (!title || !id || seen.has(id)) {
+      return;
+    }
+    seen.add(id);
+    normalized.push({ id, title, link, pubDate });
   });
-  items.sort((first, second) => {
+
+  normalized.sort((first, second) => {
     const a = Number(first?.pubDate) || 0;
     const b = Number(second?.pubDate) || 0;
     return b - a;
   });
-  return items;
+  return normalized;
+}
+
+function parseNewsFeed(xmlText) {
+  if (!xmlText || typeof xmlText !== 'string') {
+    return [];
+  }
+
+  try {
+    const asJson = JSON.parse(xmlText);
+    if (asJson && Array.isArray(asJson.items)) {
+      const mapped = asJson.items.map(item => ({
+        id: typeof item.guid === 'string' ? item.guid : item.guid?.rendered || item.guid,
+        title: item.title,
+        link: item.link,
+        pubDate: item.pubDate || item.pub_date
+      }));
+      const normalized = normalizeNewsItems(mapped);
+      if (normalized.length) {
+        return normalized;
+      }
+    }
+  } catch (error) {
+    // The response was not JSON; continue with XML parsing.
+  }
+
+  if (typeof DOMParser !== 'function') {
+    return [];
+  }
+
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlText, 'application/xml');
+    const items = [];
+    doc.querySelectorAll('item').forEach(item => {
+      items.push({
+        id: item.querySelector('guid')?.textContent?.trim(),
+        title: item.querySelector('title')?.textContent?.trim() || '',
+        link: item.querySelector('link')?.textContent?.trim() || '',
+        pubDate: item.querySelector('pubDate')?.textContent?.trim()
+      });
+    });
+    return normalizeNewsItems(items);
+  } catch (error) {
+    return [];
+  }
 }
 
 function getVisibleNewsItems() {

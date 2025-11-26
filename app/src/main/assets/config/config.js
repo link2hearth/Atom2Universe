@@ -59,7 +59,9 @@ const NEWS_SETTINGS = Object.freeze({
   proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
-    'https://cors.isomorphic-git.org/'
+    'https://cors.isomorphic-git.org/',
+    'https://corsproxy.io/?',
+    'https://api.rss2json.com/v1/api.json?rss_url='
   ],
   refreshIntervalMs: 10 * 60 * 1000,
   maxItems: 40,
