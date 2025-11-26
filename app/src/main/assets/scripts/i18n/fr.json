@@ -13,6 +13,7 @@
         "fusion": "Fusion",
         "collection": "Collection",
         "info": "Infos",
+        "news": "News",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -335,6 +336,36 @@
             "astronaut": "Grâce à eux, l’humanité touche les étoiles du bout des doigts.",
             "monkey": "Le créateur passionné qui façonne ce jeu pour vous."
           }
+        }
+      },
+      "news": {
+        "title": "Actualités",
+        "subtitle": "Découvrez les derniers titres issus de Google News et suivez les sujets qui vous intéressent.",
+        "feed": {
+          "default": "Dernières actualités",
+          "search": "Résultats pour «\u00a0{query}\u00a0»"
+        },
+        "actions": {
+          "search": "Rechercher",
+          "searchPlaceholder": "Rechercher un sujet (Bitcoin, IA…)",
+          "clearSearch": "Réinitialiser",
+          "refresh": "Actualiser",
+          "restoreHidden": "Réafficher les infos masquées",
+          "openArticle": "Ouvrir l’article",
+          "hideArticle": "Masquer cette info"
+        },
+        "status": {
+          "loading": "Chargement des actualités…",
+          "error": "Impossible de récupérer les actualités pour le moment.",
+          "timeout": "Le chargement des actus a expiré. Réessayez.",
+          "empty": "Aucune actualité à afficher.",
+          "hiddenSummary": "{count} infos masquées"
+        },
+        "published": "Publié le {date}",
+        "disabled": "Activez les actualités dans Options pour afficher ce flux.",
+        "banner": {
+          "title": "News",
+          "open": "Voir toutes les news"
         }
       },
       "bigbang": {
@@ -2189,6 +2220,12 @@
             "on": "Affiché",
             "off": "Masqué"
           }
+        },
+        "news": {
+          "title": "Actus",
+          "description": "",
+          "ariaLabel": "Activer ou désactiver l’affichage des actualités Google News",
+          "state": { "on": "Activé", "off": "Désactivé" }
         },
         "music": {
           "title": "Musique",

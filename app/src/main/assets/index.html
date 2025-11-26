@@ -94,6 +94,9 @@
         <button class="nav-button" data-target="info">
           <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
+        <button class="nav-button" data-target="news">
+          <span data-i18n="index.navigation.items.news">News</span>
+        </button>
         <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
@@ -6914,6 +6917,102 @@
     </section>
 
     <section
+      id="news"
+      class="page"
+      data-page-group="clicker"
+      aria-labelledby="news-title"
+    >
+      <div class="news-page">
+        <div class="news-page__header">
+          <div>
+            <h2 id="news-title" class="news-page__title" data-i18n="index.sections.news.title">Actualités</h2>
+            <p class="news-page__subtitle" data-i18n="index.sections.news.subtitle">
+              Découvrez les derniers titres issus de Google News et suivez les sujets qui vous intéressent.
+            </p>
+            <p
+              class="news-page__feed-label"
+              id="newsFeedLabel"
+              data-i18n="index.sections.news.feed.default"
+            >
+              Dernières actualités
+            </p>
+          </div>
+          <div class="news-page__search">
+            <label class="visually-hidden" for="newsSearchInput" data-i18n="index.sections.news.actions.search">
+              Rechercher
+            </label>
+            <input
+              id="newsSearchInput"
+              class="news-page__search-input"
+              type="search"
+              data-i18n="placeholder:index.sections.news.actions.searchPlaceholder"
+              placeholder="Rechercher un sujet"
+            />
+            <div class="news-page__search-actions">
+              <button
+                type="button"
+                id="newsSearchButton"
+                class="news-page__action-button news-page__action-button--primary"
+                data-i18n="index.sections.news.actions.search"
+              >
+                Rechercher
+              </button>
+              <button
+                type="button"
+                id="newsClearSearchButton"
+                class="news-page__action-button news-page__action-button--ghost"
+                data-i18n="index.sections.news.actions.clearSearch"
+              >
+                Réinitialiser
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="news-page__toolbar">
+          <p
+            class="news-page__status"
+            id="newsStatus"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.news.status.loading"
+          >
+            Chargement des actualités…
+          </p>
+          <div class="news-page__controls">
+            <button
+              type="button"
+              id="newsRefreshButton"
+              class="news-page__control-button news-page__control-button--primary"
+              data-i18n="index.sections.news.actions.refresh"
+            >
+              Actualiser
+            </button>
+            <button
+              type="button"
+              id="newsRestoreHiddenButton"
+              class="news-page__control-button"
+              data-i18n="index.sections.news.actions.restoreHidden"
+            >
+              Réafficher les infos masquées
+            </button>
+          </div>
+        </div>
+        <p id="newsHiddenSummary" class="news-page__hidden" hidden data-i18n="index.sections.news.status.hiddenSummary">
+          0 infos masquées
+        </p>
+        <div id="newsDisabledNotice" class="news-page__notice" hidden data-i18n="index.sections.news.disabled">
+          Activez les actualités dans Options pour afficher ce flux.
+        </div>
+        <div id="newsListContainer">
+          <p id="newsEmptyState" class="news-page__empty" hidden data-i18n="index.sections.news.status.empty">
+            Aucune actualité à afficher.
+          </p>
+          <ul id="newsList" class="news-list" aria-live="polite"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section
       id="bigbang"
       class="page page--bigbang"
       data-page-group="clicker"
@@ -7181,6 +7280,35 @@
                     data-i18n="index.sections.options.cryptoWidget.state.off"
                   >
                     Masqué
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="option-toggle-card" id="newsToggleCard">
+              <div class="option-toggle-card__content">
+                <h4
+                  class="option-toggle-card__title"
+                  data-i18n="index.sections.options.news.title"
+                >
+                  Actus
+                </h4>
+              </div>
+              <div class="option-toggle-card__control">
+                <label class="toggle-switch">
+                  <input
+                    type="checkbox"
+                    id="newsToggle"
+                    aria-label="Activer ou désactiver l’affichage des news"
+                    data-i18n="aria-label:index.sections.options.news.ariaLabel"
+                    aria-describedby="newsToggleStatus"
+                  />
+                  <span class="toggle-switch__track" aria-hidden="true"></span>
+                  <span
+                    class="toggle-switch__label"
+                    id="newsToggleStatus"
+                    data-i18n="index.sections.options.news.state.on"
+                  >
+                    Activé
                   </span>
                 </label>
               </div>
@@ -7645,6 +7773,23 @@
     </div>
   </section>
   </main>
+
+  <div class="news-ticker" id="newsTicker" hidden>
+    <div class="news-ticker__container">
+      <span class="news-ticker__label" data-i18n="index.sections.news.banner.title">News</span>
+      <div class="news-ticker__track" aria-live="polite">
+        <div class="news-ticker__items" id="newsTickerItems"></div>
+      </div>
+      <button
+        type="button"
+        class="news-ticker__action"
+        id="newsTickerOpenButton"
+        data-i18n="index.sections.news.banner.open"
+      >
+        Voir plus
+      </button>
+    </div>
+  </div>
 
   <div class="element-details-overlay" id="elementDetailsOverlay" hidden aria-hidden="true">
     <div class="element-details-overlay__backdrop" data-element-details-close></div>
