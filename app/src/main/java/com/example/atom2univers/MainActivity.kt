@@ -313,7 +313,7 @@ class MainActivity : AppCompatActivity() {
         postJavascript(script)
     }
 
-    private fun postJavascript(script: String) {
+    internal fun postJavascript(script: String) {
         if (!::webView.isInitialized) {
             return
         }
