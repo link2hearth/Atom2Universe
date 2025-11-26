@@ -13,6 +13,7 @@
         "fusion": "Fusion",
         "collection": "Collection",
         "info": "Info",
+        "news": "News",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -332,9 +333,38 @@
             "tesla": "Visionary inventor of modern electricity and alternating current.",
             "einstein": "Genius of relativity, bending spacetime to supercharge your frenzies.",
             "mendeleev": "Architect of the periodic table, organizing the elements of your progress.",
-            "astronaut": "Thanks to them, humanity can brush the stars with its fingertips.",
-            "monkey": "The passionate creator shaping this game for you."
-          }
+          "astronaut": "Thanks to them, humanity can brush the stars with its fingertips.",
+          "monkey": "The passionate creator shaping this game for you."
+        }
+      }
+    },
+      "news": {
+        "title": "News",
+        "subtitle": "Browse the latest Google News headlines and follow the topics you care about.",
+        "feed": {
+          "default": "Latest headlines",
+          "search": "Results for “{query}”"
+        },
+        "actions": {
+          "search": "Search",
+          "searchPlaceholder": "Search a topic (Bitcoin, AI…)",
+          "clearSearch": "Reset",
+          "refresh": "Refresh",
+          "restoreHidden": "Show hidden stories again",
+          "openArticle": "Open article",
+          "hideArticle": "Hide this story"
+        },
+        "status": {
+          "loading": "Loading news…",
+          "error": "Unable to fetch news right now.",
+          "empty": "No news to display.",
+          "hiddenSummary": "{count} hidden stories"
+        },
+        "published": "Published on {date}",
+        "disabled": "Enable News in Options to display this feed.",
+        "banner": {
+          "title": "News",
+          "open": "View all news"
         }
       },
       "bigbang": {
@@ -2251,6 +2281,15 @@
           "state": {
             "on": "Visible",
             "off": "Hidden"
+          }
+        },
+        "news": {
+          "title": "News banner",
+          "description": "Enable the News page and the Google News ticker.",
+          "ariaLabel": "Enable or disable Google News headlines",
+          "state": {
+            "on": "News enabled",
+            "off": "News hidden"
           }
         },
         "music": {
