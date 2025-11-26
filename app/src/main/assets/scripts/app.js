@@ -247,6 +247,7 @@ const DEFAULT_NEWS_SETTINGS = Object.freeze({
   refreshIntervalMs: 10 * 60 * 1000,
   maxItems: 40,
   bannerItemCount: 12,
+  bannerDisplayDurationMs: 15000,
   requestTimeoutMs: 12000
 });
 
@@ -393,6 +394,11 @@ let newsIsLoading = false;
 let newsLastError = null;
 let newsAndroidResponseResolver = null;
 let newsAndroidTimeoutId = null;
+let newsTickerEntries = [];
+let newsTickerCurrentIndex = 0;
+let newsTickerTimerId = null;
+let newsTickerActiveStoryId = null;
+let newsHighlightedStoryId = null;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -11415,6 +11421,7 @@ function renderNewsList() {
     elements.newsDisabledNotice.toggleAttribute('hidden', !disabled);
   }
   if (disabled) {
+    newsHighlightedStoryId = null;
     elements.newsList.replaceChildren();
     if (elements.newsEmptyState) {
       elements.newsEmptyState.setAttribute('hidden', '');
@@ -11442,6 +11449,11 @@ function renderNewsList() {
   visibleItems.forEach(item => {
     const listItem = document.createElement('li');
     listItem.className = 'news-card';
+    listItem.dataset.articleId = item.id;
+
+    if (newsHighlightedStoryId && item.id === newsHighlightedStoryId) {
+      listItem.classList.add('news-card--highlight');
+    }
 
     const content = document.createElement('div');
     const actions = document.createElement('div');
@@ -11506,16 +11518,70 @@ function renderNewsList() {
     elements.newsList.append(listItem);
   });
 
+  applyNewsHighlight();
   renderNewsTicker();
 }
 
-function restartNewsTickerAnimation() {
+function applyNewsHighlight(options = {}) {
+  if (!elements.newsList) {
+    return null;
+  }
+  let highlightedCard = null;
+  elements.newsList.querySelectorAll('.news-card').forEach(card => {
+    const isMatch = newsHighlightedStoryId && card.dataset.articleId === newsHighlightedStoryId;
+    card.classList.toggle('news-card--highlight', Boolean(isMatch));
+    if (isMatch) {
+      highlightedCard = card;
+    }
+  });
+
+  if (!highlightedCard) {
+    newsHighlightedStoryId = null;
+    return null;
+  }
+
+  if (options.scroll && typeof highlightedCard.scrollIntoView === 'function') {
+    highlightedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return highlightedCard;
+}
+
+function clearNewsTickerRotation() {
+  if (newsTickerTimerId != null) {
+    clearTimeout(newsTickerTimerId);
+    newsTickerTimerId = null;
+  }
+}
+
+function renderCurrentNewsTickerItem() {
   if (!elements.newsTickerItems) {
     return;
   }
-  elements.newsTickerItems.style.animation = 'none';
-  void elements.newsTickerItems.offsetWidth;
-  elements.newsTickerItems.style.animation = '';
+  const currentItem = newsTickerEntries[newsTickerCurrentIndex];
+  elements.newsTickerItems.replaceChildren();
+  newsTickerActiveStoryId = currentItem?.id || null;
+  if (!currentItem) {
+    return;
+  }
+  const span = document.createElement('div');
+  span.className = 'news-ticker__item';
+  span.textContent = currentItem.title;
+  span.title = currentItem.title;
+  span.dataset.articleId = currentItem.id;
+  elements.newsTickerItems.append(span);
+}
+
+function scheduleNewsTickerRotation(displayDurationMs) {
+  clearNewsTickerRotation();
+  if (!newsTickerEntries.length || newsTickerEntries.length === 1) {
+    return;
+  }
+  const duration = Math.max(1000, displayDurationMs);
+  newsTickerTimerId = setTimeout(() => {
+    newsTickerCurrentIndex = (newsTickerCurrentIndex + 1) % newsTickerEntries.length;
+    renderCurrentNewsTickerItem();
+    scheduleNewsTickerRotation(duration);
+  }, duration);
 }
 
 function renderNewsTicker() {
@@ -11525,30 +11591,32 @@ function renderNewsTicker() {
   const settings = getNewsSettings();
   const pageId = document.body?.dataset?.activePage || '';
   const visibleItems = getVisibleNewsItems();
-  const maxItems = Math.max(1, Number(settings?.bannerItemCount) || 12);
+  const maxItems = Math.max(1, Number(settings?.bannerItemCount) || DEFAULT_NEWS_SETTINGS.bannerItemCount);
   const tickerItems = visibleItems.slice(0, maxItems);
   const shouldShow = isNewsEnabled() && pageId === 'game' && tickerItems.length > 0;
+  const displayDurationMs = Math.max(
+    1000,
+    Number(settings?.bannerDisplayDurationMs) || DEFAULT_NEWS_SETTINGS.bannerDisplayDurationMs || 15000
+  );
+
   elements.newsTicker.toggleAttribute('hidden', !shouldShow);
   elements.newsTicker.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
   if (!shouldShow) {
+    newsTickerEntries = [];
+    newsTickerActiveStoryId = null;
+    newsTickerCurrentIndex = 0;
     elements.newsTickerItems.replaceChildren();
+    clearNewsTickerRotation();
     return;
   }
 
-  const fragment = document.createDocumentFragment();
-  const duplicated = [...tickerItems, ...tickerItems];
-  duplicated.forEach(item => {
-    const span = document.createElement('span');
-    span.className = 'news-ticker__item';
-    span.textContent = item.title;
-    span.title = item.title;
-    fragment.append(span);
-  });
+  newsTickerEntries = tickerItems;
+  if (newsTickerCurrentIndex >= newsTickerEntries.length) {
+    newsTickerCurrentIndex = 0;
+  }
 
-  elements.newsTickerItems.replaceChildren(fragment);
-  const durationSeconds = Math.max(18, duplicated.length * 4);
-  elements.newsTickerItems.style.setProperty('--news-ticker-duration', `${durationSeconds}s`);
-  restartNewsTickerAnimation();
+  renderCurrentNewsTickerItem();
+  scheduleNewsTickerRotation(displayDurationMs);
 }
 
 function hideNewsStory(storyId) {
@@ -17449,7 +17517,9 @@ function bindDomEventListeners() {
   }
   if (elements.newsTickerOpenButton) {
     elements.newsTickerOpenButton.addEventListener('click', () => {
+      newsHighlightedStoryId = newsTickerActiveStoryId;
       showPage('news');
+      applyNewsHighlight({ scroll: true });
     });
   }
 
