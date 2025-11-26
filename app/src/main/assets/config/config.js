@@ -44,6 +44,24 @@ const CRYPTO_WIDGET_SETTINGS = Object.freeze({
   ethEndpoint: '/api/v3/ticker/price?symbol=ETHUSDT'
 });
 
+/**
+ * Réglages des flux d’actualités Google News.
+ * - `defaultFeedUrl` : flux principal utilisé pour le bandeau et la page News.
+ * - `searchUrlTemplate` : modèle de flux appliqué lors d’une recherche ciblée.
+ * - `proxyBaseUrl` : préfixe facultatif pour contourner les restrictions CORS.
+ * - `refreshIntervalMs` : fréquence de rafraîchissement automatique du flux.
+ */
+const NEWS_SETTINGS = Object.freeze({
+  enabledByDefault: true,
+  defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
+  searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
+  proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
+  refreshIntervalMs: 10 * 60 * 1000,
+  maxItems: 40,
+  bannerItemCount: 12,
+  requestTimeoutMs: 12000
+});
+
 function getConfigStorage() {
   if (typeof globalThis === 'undefined' || typeof globalThis.localStorage === 'undefined') {
     return null;
