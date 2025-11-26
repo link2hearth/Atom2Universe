@@ -51,6 +51,7 @@ const CRYPTO_WIDGET_SETTINGS = Object.freeze({
  * - `proxyBaseUrl` : préfixe facultatif pour contourner les restrictions CORS.
  * - `proxyBaseUrls` : liste ordonnée de proxys à essayer avant de revenir au flux direct.
  * - `refreshIntervalMs` : fréquence de rafraîchissement automatique du flux.
+ * - `bannerDisplayDurationMs` : durée d’affichage de chaque titre dans le bandeau.
  */
 const NEWS_SETTINGS = Object.freeze({
   enabledByDefault: true,
@@ -64,6 +65,7 @@ const NEWS_SETTINGS = Object.freeze({
   refreshIntervalMs: 10 * 60 * 1000,
   maxItems: 40,
   bannerItemCount: 12,
+  bannerDisplayDurationMs: 15000,
   requestTimeoutMs: 12000
 });
 
