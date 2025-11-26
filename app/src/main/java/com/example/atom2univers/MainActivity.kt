@@ -1,6 +1,7 @@
 package com.example.atom2univers
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
@@ -104,6 +105,31 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+                val url = request.url
+                val urlStr = url.toString()
+
+                if (urlStr.startsWith(ASSET_URL_PREFIX)) {
+                    return false
+                }
+
+                val intent = Intent(Intent.ACTION_VIEW, url)
+                startActivity(intent)
+                return true
+            }
+
+            override fun shouldOverrideUrlLoading(view: WebView, urlStr: String): Boolean {
+                if (urlStr.startsWith(ASSET_URL_PREFIX)) {
+                    return false
+                }
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urlStr))
+                startActivity(intent)
+                return true
+            }
+
             override fun shouldInterceptRequest(
                 view: WebView,
                 request: WebResourceRequest
