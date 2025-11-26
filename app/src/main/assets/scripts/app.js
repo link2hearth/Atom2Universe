@@ -11249,16 +11249,29 @@ function buildNewsFeedUrl(query) {
   return template.replace('{query}', encodeURIComponent(trimmedQuery));
 }
 
-function buildNewsRequestUrl(query) {
+function buildNewsRequestUrls(query) {
   const feedUrl = buildNewsFeedUrl(query);
   const settings = getNewsSettings();
-  const proxy = settings && typeof settings.proxyBaseUrl === 'string'
-    ? settings.proxyBaseUrl.trim()
-    : '';
-  if (!proxy) {
-    return feedUrl;
+  const proxies = [];
+  if (Array.isArray(settings?.proxyBaseUrls)) {
+    proxies.push(...settings.proxyBaseUrls);
   }
-  return `${proxy}${encodeURIComponent(feedUrl)}`;
+  if (typeof settings?.proxyBaseUrl === 'string') {
+    proxies.push(settings.proxyBaseUrl);
+  }
+  const sanitizedProxies = proxies
+    .map(entry => (typeof entry === 'string' ? entry.trim() : ''))
+    .filter(Boolean);
+  const urls = sanitizedProxies.map(proxy => {
+    if (proxy.includes('{feed}')) {
+      return proxy.replace('{feed}', encodeURIComponent(feedUrl));
+    }
+    const needsEncoding = proxy.includes('?');
+    const target = needsEncoding ? encodeURIComponent(feedUrl) : feedUrl;
+    return `${proxy}${target}`;
+  });
+  urls.push(feedUrl);
+  return Array.from(new Set(urls));
 }
 
 function parseNewsFeed(xmlText) {
@@ -11524,28 +11537,59 @@ async function fetchNewsFeed(query = newsCurrentQuery, options = {}) {
     return [];
   }
   const settings = Object.assign({ silent: false }, options);
-  const requestUrl = buildNewsRequestUrl(query);
-  const controller = typeof AbortController === 'function' ? new AbortController() : null;
   const timeoutMs = Number(getNewsSettings()?.requestTimeoutMs) || DEFAULT_NEWS_SETTINGS.requestTimeoutMs;
-  const timeoutId = timeoutMs > 0 && typeof setTimeout === 'function'
-    ? setTimeout(() => controller?.abort?.(), timeoutMs)
-    : null;
+  const requestUrls = buildNewsRequestUrls(query);
 
-  abortNewsRequest();
-  newsFetchAbortController = controller;
+  const fetchWithTimeout = async url => {
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timeoutId = timeoutMs > 0 && typeof setTimeout === 'function'
+      ? setTimeout(() => controller?.abort?.(), timeoutMs)
+      : null;
+    abortNewsRequest();
+    newsFetchAbortController = controller;
+    try {
+      const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return await response.text();
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (newsFetchAbortController === controller) {
+        newsFetchAbortController = null;
+      }
+    }
+  };
+
   newsIsLoading = !settings.silent;
 
   if (!settings.silent) {
     setNewsStatus('index.sections.news.status.loading', 'Loading news…');
   }
 
-  try {
-    const response = await fetch(requestUrl, controller ? { signal: controller.signal } : undefined);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+  let xmlText = null;
+  let lastError = null;
+  for (const requestUrl of requestUrls) {
+    try {
+      xmlText = await fetchWithTimeout(requestUrl);
+      if (xmlText) {
+        break;
+      }
+    } catch (error) {
+      lastError = error;
+      if (error?.name === 'AbortError') {
+        break;
+      }
     }
-    const text = await response.text();
-    const parsedItems = parseNewsFeed(text);
+  }
+
+  try {
+    if (!xmlText) {
+      throw lastError || new Error('No response received');
+    }
+    const parsedItems = parseNewsFeed(xmlText);
     const maxItems = Math.max(1, Number(getNewsSettings()?.maxItems) || DEFAULT_NEWS_SETTINGS.maxItems);
     newsItems = parsedItems.slice(0, maxItems);
     newsLastError = null;
@@ -11559,22 +11603,20 @@ async function fetchNewsFeed(query = newsCurrentQuery, options = {}) {
     scheduleNewsRefresh();
     return newsItems;
   } catch (error) {
-    if (error && error.name === 'AbortError') {
-      return [];
-    }
     newsLastError = error;
     console.warn('Unable to load news feed', error);
-    setNewsStatus('index.sections.news.status.error', 'Unable to fetch news right now.');
+    const isTimeout = error?.name === 'AbortError';
+    const key = isTimeout
+      ? 'index.sections.news.status.timeout'
+      : 'index.sections.news.status.error';
+    const fallback = isTimeout
+      ? 'News request timed out. Please try again.'
+      : 'Unable to fetch news right now.';
+    setNewsStatus(key, fallback);
     renderNewsList();
     scheduleNewsRefresh();
     return [];
   } finally {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    if (newsFetchAbortController === controller) {
-      newsFetchAbortController = null;
-    }
     newsIsLoading = false;
   }
 }

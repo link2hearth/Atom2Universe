@@ -357,6 +357,7 @@
         "status": {
           "loading": "Chargement des actualités…",
           "error": "Impossible de récupérer les actualités pour le moment.",
+          "timeout": "Le chargement des actus a expiré. Réessayez.",
           "empty": "Aucune actualité à afficher.",
           "hiddenSummary": "{count} infos masquées"
         },
@@ -2221,13 +2222,10 @@
           }
         },
         "news": {
-          "title": "Bandeau d’actualités",
-          "description": "Active la page News et le bandeau déroulant Google News.",
+          "title": "Actus",
+          "description": "",
           "ariaLabel": "Activer ou désactiver l’affichage des actualités Google News",
-          "state": {
-            "on": "Actualités actives",
-            "off": "Actualités masquées"
-          }
+          "state": { "on": "Activé", "off": "Désactivé" }
         },
         "music": {
           "title": "Musique",

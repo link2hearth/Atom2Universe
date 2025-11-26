@@ -49,6 +49,7 @@ const CRYPTO_WIDGET_SETTINGS = Object.freeze({
  * - `defaultFeedUrl` : flux principal utilisé pour le bandeau et la page News.
  * - `searchUrlTemplate` : modèle de flux appliqué lors d’une recherche ciblée.
  * - `proxyBaseUrl` : préfixe facultatif pour contourner les restrictions CORS.
+ * - `proxyBaseUrls` : liste ordonnée de proxys à essayer avant de revenir au flux direct.
  * - `refreshIntervalMs` : fréquence de rafraîchissement automatique du flux.
  */
 const NEWS_SETTINGS = Object.freeze({
@@ -56,6 +57,10 @@ const NEWS_SETTINGS = Object.freeze({
   defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
   searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
   proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
+  proxyBaseUrls: [
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.isomorphic-git.org/'
+  ],
   refreshIntervalMs: 10 * 60 * 1000,
   maxItems: 40,
   bannerItemCount: 12,

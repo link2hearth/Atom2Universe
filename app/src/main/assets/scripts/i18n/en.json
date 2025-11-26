@@ -357,6 +357,7 @@
         "status": {
           "loading": "Loading news…",
           "error": "Unable to fetch news right now.",
+          "timeout": "News request timed out. Please try again.",
           "empty": "No news to display.",
           "hiddenSummary": "{count} hidden stories"
         },
@@ -2284,13 +2285,10 @@
           }
         },
         "news": {
-          "title": "News banner",
-          "description": "Enable the News page and the Google News ticker.",
+          "title": "News",
+          "description": "",
           "ariaLabel": "Enable or disable Google News headlines",
-          "state": {
-            "on": "News enabled",
-            "off": "News hidden"
-          }
+          "state": { "on": "Enabled", "off": "Disabled" }
         },
         "music": {
           "title": "Music",
