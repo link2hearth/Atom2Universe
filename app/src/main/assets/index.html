@@ -6997,9 +6997,6 @@
             </button>
           </div>
         </div>
-        <p id="newsHiddenSummary" class="news-page__hidden" hidden data-i18n="index.sections.news.status.hiddenSummary">
-          0 infos masquées
-        </p>
         <div id="newsDisabledNotice" class="news-page__notice" hidden data-i18n="index.sections.news.disabled">
           Activez les actualités dans Options pour afficher ce flux.
         </div>
@@ -7806,17 +7803,24 @@
 
   <div class="news-ticker" id="newsTicker" hidden>
     <div class="news-ticker__container">
-      <span class="news-ticker__label" data-i18n="index.sections.news.banner.title">News</span>
+      <button
+        type="button"
+        class="news-ticker__label-button"
+        id="newsTickerOpenButton"
+        data-i18n="index.sections.news.banner.title"
+      >
+        News
+      </button>
       <div class="news-ticker__track" aria-live="polite">
         <div class="news-ticker__items" id="newsTickerItems"></div>
       </div>
       <button
         type="button"
         class="news-ticker__action"
-        id="newsTickerOpenButton"
-        data-i18n="index.sections.news.banner.open"
+        id="newsTickerHideButton"
+        data-i18n="index.sections.news.banner.hide"
       >
-        Voir plus
+        Masquer cette info
       </button>
     </div>
   </div>

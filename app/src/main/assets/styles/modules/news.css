@@ -381,11 +381,24 @@ body.theme-light .news-card__button {
   backdrop-filter: blur(8px);
 }
 
-.news-ticker__label {
+.news-ticker__label-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   font-weight: 700;
   color: #cfe2ff;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.news-ticker__label-button:focus-visible {
+  outline: 2px solid #cfe2ff;
+  outline-offset: 2px;
 }
 
 .news-ticker__track {
@@ -435,7 +448,7 @@ body.theme-light .news-ticker__container {
   color: #0f1422;
 }
 
-body.theme-light .news-ticker__label,
+body.theme-light .news-ticker__label-button,
 body.theme-light .news-ticker__item,
 body.theme-light .news-ticker__action {
   color: #0f1422;
@@ -443,6 +456,11 @@ body.theme-light .news-ticker__action {
 
 body.theme-light .news-ticker__action {
   background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light .news-ticker__label-button {
+  background: rgba(0, 0, 0, 0.03);
   border-color: rgba(0, 0, 0, 0.08);
 }
 
