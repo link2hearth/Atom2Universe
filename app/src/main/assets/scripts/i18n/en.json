@@ -354,6 +354,13 @@
           "openArticle": "Open article",
           "hideArticle": "Hide this story"
         },
+        "banned": {
+          "title": "Banned words",
+          "subtitle": "Hide headlines containing any of these words. Separate entries with commas.",
+          "label": "Banned words (comma-separated)",
+          "placeholder": "e.g. football, Ligue 1, PSG",
+          "save": "Save filter"
+        },
         "status": {
           "loading": "Loading news…",
           "error": "Unable to fetch news right now.",
