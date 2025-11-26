@@ -365,14 +365,14 @@
           "loading": "Chargement des actualités…",
           "error": "Impossible de récupérer les actualités pour le moment.",
           "timeout": "Le chargement des actus a expiré. Réessayez.",
-          "empty": "Aucune actualité à afficher.",
-          "hiddenSummary": "{count} infos masquées"
+          "empty": "Aucune actualité à afficher."
         },
         "published": "Publié le {date}",
         "disabled": "Activez les actualités dans Options pour afficher ce flux.",
         "banner": {
           "title": "News",
-          "open": "Voir toutes les news"
+          "open": "Voir toutes les news",
+          "hide": "Masquer cette info"
         }
       },
       "bigbang": {

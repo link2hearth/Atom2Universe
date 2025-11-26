@@ -365,14 +365,14 @@
           "loading": "Loading news…",
           "error": "Unable to fetch news right now.",
           "timeout": "News request timed out. Please try again.",
-          "empty": "No news to display.",
-          "hiddenSummary": "{count} hidden stories"
+          "empty": "No news to display."
         },
         "published": "Published on {date}",
         "disabled": "Enable News in Options to display this feed.",
         "banner": {
           "title": "News",
-          "open": "View all news"
+          "open": "View all news",
+          "hide": "Hide this story"
         }
       },
       "bigbang": {
