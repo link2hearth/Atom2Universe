@@ -391,6 +391,8 @@ let newsRefreshTimerId = null;
 let newsFetchAbortController = null;
 let newsIsLoading = false;
 let newsLastError = null;
+let newsAndroidResponseResolver = null;
+let newsAndroidTimeoutId = null;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -11230,6 +11232,60 @@ function writeStoredNewsQuery(query) {
   }
 }
 
+function isAndroidNewsBridgeAvailable() {
+  const bridge = getAndroidManualBackupBridge();
+  return !!(bridge && typeof bridge.loadNews === 'function');
+}
+
+function resetAndroidNewsRequestState() {
+  if (newsAndroidTimeoutId != null) {
+    clearTimeout(newsAndroidTimeoutId);
+    newsAndroidTimeoutId = null;
+  }
+  newsAndroidResponseResolver = null;
+}
+
+function requestNewsViaAndroid(feedUrl, timeoutMs) {
+  const bridge = getAndroidManualBackupBridge();
+  if (!bridge || typeof bridge.loadNews !== 'function') {
+    return null;
+  }
+  resetAndroidNewsRequestState();
+  return new Promise(resolve => {
+    const safeResolve = xml => {
+      resetAndroidNewsRequestState();
+      resolve(typeof xml === 'string' ? xml : '');
+    };
+    newsAndroidResponseResolver = safeResolve;
+    const timeout = Math.max(0, Number(timeoutMs) || 0);
+    if (timeout > 0) {
+      newsAndroidTimeoutId = setTimeout(() => {
+        if (newsAndroidResponseResolver === safeResolve) {
+          newsAndroidResponseResolver = null;
+          safeResolve('');
+        }
+      }, timeout);
+    }
+    try {
+      bridge.loadNews(feedUrl || '');
+    } catch (error) {
+      newsAndroidResponseResolver = null;
+      safeResolve('');
+    }
+  });
+}
+
+if (typeof window !== 'undefined') {
+  window.onNewsLoaded = function onNewsLoaded(xmlText) {
+    if (!newsAndroidResponseResolver) {
+      return;
+    }
+    const resolver = newsAndroidResponseResolver;
+    resetAndroidNewsRequestState();
+    resolver(typeof xmlText === 'string' ? xmlText : '');
+  };
+}
+
 function isNewsEnabled() {
   return newsFeatureEnabled !== false;
 }
@@ -11526,43 +11582,25 @@ function abortNewsRequest() {
     }
   }
   newsFetchAbortController = null;
+  resetAndroidNewsRequestState();
 }
 
 async function fetchNewsFeed(query = newsCurrentQuery, options = {}) {
   if (!isNewsEnabled()) {
     return [];
   }
-  if (typeof fetch !== 'function') {
-    setNewsStatus('index.sections.news.status.error', 'Unable to fetch news right now.');
-    return [];
-  }
   const settings = Object.assign({ silent: false }, options);
   const timeoutMs = Number(getNewsSettings()?.requestTimeoutMs) || DEFAULT_NEWS_SETTINGS.requestTimeoutMs;
   const requestUrls = buildNewsRequestUrls(query);
+  const targetUrl = requestUrls.length ? requestUrls[requestUrls.length - 1] : buildNewsFeedUrl(query);
+  const useAndroidBridge = isAndroidNewsBridgeAvailable();
 
-  const fetchWithTimeout = async url => {
-    const controller = typeof AbortController === 'function' ? new AbortController() : null;
-    const timeoutId = timeoutMs > 0 && typeof setTimeout === 'function'
-      ? setTimeout(() => controller?.abort?.(), timeoutMs)
-      : null;
-    abortNewsRequest();
-    newsFetchAbortController = controller;
-    try {
-      const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      return await response.text();
-    } finally {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      if (newsFetchAbortController === controller) {
-        newsFetchAbortController = null;
-      }
-    }
-  };
+  if (!useAndroidBridge && typeof fetch !== 'function') {
+    setNewsStatus('index.sections.news.status.error', 'Unable to fetch news right now.');
+    return [];
+  }
 
+  abortNewsRequest();
   newsIsLoading = !settings.silent;
 
   if (!settings.silent) {
@@ -11571,16 +11609,47 @@ async function fetchNewsFeed(query = newsCurrentQuery, options = {}) {
 
   let xmlText = null;
   let lastError = null;
-  for (const requestUrl of requestUrls) {
+  if (useAndroidBridge) {
     try {
-      xmlText = await fetchWithTimeout(requestUrl);
-      if (xmlText) {
-        break;
-      }
+      xmlText = await requestNewsViaAndroid(targetUrl, timeoutMs);
     } catch (error) {
       lastError = error;
-      if (error?.name === 'AbortError') {
-        break;
+    }
+  } else {
+    const fetchWithTimeout = async url => {
+      const controller = typeof AbortController === 'function' ? new AbortController() : null;
+      const timeoutId = timeoutMs > 0 && typeof setTimeout === 'function'
+        ? setTimeout(() => controller?.abort?.(), timeoutMs)
+        : null;
+      abortNewsRequest();
+      newsFetchAbortController = controller;
+      try {
+        const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.text();
+      } finally {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        if (newsFetchAbortController === controller) {
+          newsFetchAbortController = null;
+        }
+      }
+    };
+
+    for (const requestUrl of requestUrls) {
+      try {
+        xmlText = await fetchWithTimeout(requestUrl);
+        if (xmlText) {
+          break;
+        }
+      } catch (error) {
+        lastError = error;
+        if (error?.name === 'AbortError') {
+          break;
+        }
       }
     }
   }
