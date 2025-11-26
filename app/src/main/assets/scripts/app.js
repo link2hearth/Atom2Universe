@@ -262,6 +262,23 @@ const ACTIVE_NEWS_SETTINGS = typeof NEWS_SETTINGS !== 'undefined'
     ? NEWS_SETTINGS
     : DEFAULT_NEWS_SETTINGS;
 
+const DEFAULT_NEWS_SETTINGS = Object.freeze({
+  enabledByDefault: true,
+  defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
+  searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
+  proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
+  refreshIntervalMs: 10 * 60 * 1000,
+  maxItems: 40,
+  bannerItemCount: 12,
+  requestTimeoutMs: 12000
+});
+
+const ACTIVE_NEWS_SETTINGS = typeof NEWS_SETTINGS !== 'undefined'
+  && NEWS_SETTINGS
+  && typeof NEWS_SETTINGS === 'object'
+    ? NEWS_SETTINGS
+    : DEFAULT_NEWS_SETTINGS;
+
 function normalizeCryptoWidgetEndpoint(endpoint, fallback) {
   if (typeof endpoint === 'string' && endpoint.trim()) {
     return endpoint.trim();
