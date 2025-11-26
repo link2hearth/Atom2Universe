@@ -318,13 +318,15 @@
 
   const updateGlobalProgress = () => {
     const entries = syncGlobalArcadeProgress();
-    dispatchAutosaveEvent(AUTOSAVE_SYNC_EVENT, () => {
-      try {
-        return { entries: JSON.parse(JSON.stringify(entries)) };
-      } catch (error) {
-        return { entries: null };
-      }
-    });
+    if (getGlobalState()) {
+      dispatchAutosaveEvent(AUTOSAVE_SYNC_EVENT, () => {
+        try {
+          return { entries: JSON.parse(JSON.stringify(entries)) };
+        } catch (error) {
+          return { entries: null };
+        }
+      });
+    }
   };
 
   updateGlobalProgress();
