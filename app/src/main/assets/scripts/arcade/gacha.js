@@ -2926,6 +2926,9 @@ let fusionModeControlInitialized = false;
 const HYDROGEN_FUSION_ID = 'hydrogen';
 const CARBON_FUSION_ID = 'carbon';
 const FUSION_MULTIPLIER_INCREMENT = 1;
+const RESTRICTED_FUSION_IDS = new Set([HYDROGEN_FUSION_ID, CARBON_FUSION_ID]);
+const GOD_FINGER_UPGRADE_ID = 'godFinger';
+const STAR_CORE_UPGRADE_ID = 'starCore';
 
 function normalizeFusionAttemptMultiplier(value) {
   const numeric = Math.max(1, Math.floor(Number(value) || 0));
@@ -3160,9 +3163,48 @@ function setFusionLog(message, status = null) {
   }
 }
 
+function getFusionFlatBonusTotal() {
+  const bonuses = getFusionBonusState();
+  const apc = Number(bonuses?.apcFlat);
+  const aps = Number(bonuses?.apsFlat);
+  const total = (Number.isFinite(apc) ? apc : 0) + (Number.isFinite(aps) ? aps : 0);
+  return Number.isFinite(total) && total > 0 ? total : 0;
+}
+
+function getShopBaselineProductionTotal() {
+  if (typeof calculateProgressiveBonus !== 'function') {
+    return 0;
+  }
+  const upgrades = gameState?.upgrades;
+  const apcFromShop = calculateProgressiveBonus(
+    typeof getUpgradeLevel === 'function' ? getUpgradeLevel(upgrades, GOD_FINGER_UPGRADE_ID) : 0,
+    1
+  );
+  const apsFromShop = calculateProgressiveBonus(
+    typeof getUpgradeLevel === 'function' ? getUpgradeLevel(upgrades, STAR_CORE_UPGRADE_ID) : 0,
+    1
+  );
+  const total = Number(apcFromShop) + Number(apsFromShop);
+  return Number.isFinite(total) && total > 0 ? total : 0;
+}
+
+function isFusionBlockedByBonus(definition) {
+  if (!definition || !RESTRICTED_FUSION_IDS.has(definition.id)) {
+    return false;
+  }
+  const productionBaseline = getShopBaselineProductionTotal();
+  if (productionBaseline <= 0) {
+    return false;
+  }
+  return getFusionFlatBonusTotal() > productionBaseline;
+}
+
 function canAttemptFusion(definition, attemptCount = getFusionAttemptMultiplier()) {
   if (!definition) return false;
   if (!Array.isArray(definition.inputs) || !definition.inputs.length) {
+    return false;
+  }
+  if (isFusionBlockedByBonus(definition)) {
     return false;
   }
   return definition.inputs.every(input => {
@@ -3835,6 +3877,7 @@ function updateFusionUI() {
       return;
     }
     const state = getFusionStateById(def.id);
+    const bonusBlocked = isFusionBlockedByBonus(def);
     card.stats.textContent = t('scripts.gacha.fusion.stats', {
       attempts: state.attempts,
       successes: state.successes
@@ -3860,9 +3903,12 @@ function updateFusionUI() {
         canAttempt = false;
       }
     });
-    card.button.disabled = !canAttempt;
-    card.button.setAttribute('aria-disabled', canAttempt ? 'false' : 'true');
-    card.status.textContent = canAttempt
+    const canClick = canAttempt && !bonusBlocked;
+    card.button.disabled = !canClick;
+    card.button.setAttribute('aria-disabled', canClick ? 'false' : 'true');
+    card.status.textContent = bonusBlocked
+      ? t('scripts.gacha.fusion.statusBonusCap')
+      : canAttempt
       ? t('scripts.gacha.fusion.statusReady')
       : t('scripts.gacha.fusion.statusMissing');
     const totalParts = [];
@@ -3959,6 +4005,11 @@ function handleFusionAttempt(fusionId, attemptCount = getFusionAttemptMultiplier
     return;
   }
   const attempts = Math.max(1, Math.floor(Number(attemptCount) || 0));
+  if (isFusionBlockedByBonus(definition)) {
+    setFusionLog(t('scripts.gacha.fusion.logBonusCap'), 'failure');
+    showToast(t('scripts.gacha.fusion.toastBonusCap'));
+    return;
+  }
   if (!canAttemptFusion(definition, attempts)) {
     setFusionLog(t('scripts.gacha.fusion.logMissingResources'), 'failure');
     showToast(t('scripts.gacha.fusion.toastMissingResources'));

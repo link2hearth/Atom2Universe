@@ -4063,6 +4063,7 @@
         "availabilityProgress": "Disponible : {available} / {required}",
         "statusReady": "Ingrédients disponibles",
         "statusMissing": "Ressources insuffisantes",
+        "statusBonusCap": "Bonus de fusion déjà supérieurs au magasin",
         "successBonus": "Bonus par réussite : {bonus}",
         "noBonus": "Aucun bonus défini",
         "totalBonus": "Bonus cumulé : {bonus}",
@@ -4090,6 +4091,8 @@
         "logSuccess": "Fusion {name} réussie ! Bonus obtenu : {reward}",
         "logBatchSuccess": "Fusions {name} ×{attempts} : {successes} réussite(s), {failures} échec(s). Bonus total : {reward}",
         "toastSuccess": "Fusion réussie !",
+        "logBonusCap": "Impossible : les bonus de fusion dépassent l’APC du Doigt créateur et l’APS du Cœur d’étoile.",
+        "toastBonusCap": "Fusions désactivées : bonus trop élevés.",
         "logFailure": "La fusion {name} a échoué. Les éléments ont été consommés.",
         "logBatchFailure": "Fusions {name} ×{attempts} : aucune réussite. Les éléments ont été consommés.",
         "toastFailure": "Fusion échouée."
