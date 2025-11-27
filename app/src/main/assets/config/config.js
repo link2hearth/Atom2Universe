@@ -1590,6 +1590,104 @@ const GAME_CONFIG = {
       order: 1020
     },
     {
+      id: 'manualClicks100k',
+      name: 'Chasseur d’étoiles I',
+      description: 'Atteignez 100 000 clics manuels cumulés.',
+      condition: {
+        type: 'manualClicks',
+        amount: 100_000
+      },
+      reward: {
+        ticketStarSpecialChance: 0.05,
+        ticketStarSpecialReward: 10
+      },
+      order: 1030
+    },
+    {
+      id: 'manualClicks250k',
+      name: 'Chasseur d’étoiles II',
+      description: 'Atteignez 250 000 clics manuels cumulés.',
+      condition: {
+        type: 'manualClicks',
+        amount: 250_000
+      },
+      reward: {
+        ticketStarSpecialChance: 0.07,
+        ticketStarSpecialReward: 10
+      },
+      order: 1040
+    },
+    {
+      id: 'manualClicks500k',
+      name: 'Chasseur d’étoiles III',
+      description: 'Atteignez 500 000 clics manuels cumulés.',
+      condition: {
+        type: 'manualClicks',
+        amount: 500_000
+      },
+      reward: {
+        ticketStarSpecialChance: 0.1,
+        ticketStarSpecialReward: 10
+      },
+      order: 1050
+    },
+    {
+      id: 'manualClicks1m',
+      name: 'Chasseur d’étoiles IV',
+      description: 'Atteignez 1 000 000 clics manuels cumulés.',
+      condition: {
+        type: 'manualClicks',
+        amount: 1_000_000
+      },
+      reward: {
+        ticketStarSpecialChance: 0.12,
+        ticketStarSpecialReward: 10
+      },
+      order: 1060
+    },
+    {
+      id: 'manualClicks2_5m',
+      name: 'Chasseur d’étoiles V',
+      description: 'Atteignez 2 500 000 clics manuels cumulés.',
+      condition: {
+        type: 'manualClicks',
+        amount: 2_500_000
+      },
+      reward: {
+        ticketStarSpecialChance: 0.15,
+        ticketStarSpecialReward: 10
+      },
+      order: 1070
+    },
+    {
+      id: 'manualClicks5m',
+      name: 'Chasseur d’étoiles VI',
+      description: 'Atteignez 5 000 000 clics manuels cumulés.',
+      condition: {
+        type: 'manualClicks',
+        amount: 5_000_000
+      },
+      reward: {
+        ticketStarSpecialChance: 0.17,
+        ticketStarSpecialReward: 10
+      },
+      order: 1080
+    },
+    {
+      id: 'manualClicks10m',
+      name: 'Chasseur d’étoiles VII',
+      description: 'Atteignez 10 000 000 clics manuels cumulés.',
+      condition: {
+        type: 'manualClicks',
+        amount: 10_000_000
+      },
+      reward: {
+        ticketStarSpecialChance: 0.2,
+        ticketStarSpecialReward: 10
+      },
+      order: 1090
+    },
+    {
       id: 'ticketHarvester',
       name: 'Collecteur d’étoiles',
       description: 'Complétez les collections Nucléosynthèse primordiale et Spallation cosmique.',
@@ -1603,7 +1701,7 @@ const GAME_CONFIG = {
         },
         description: 'Débloque l’option « Auto Loot Stars » (récolte des étoiles après 3 s).'
       },
-      order: 1030
+      order: 1100
     },
     {
       id: 'alloyMastery',
@@ -1626,7 +1724,7 @@ const GAME_CONFIG = {
         trophyMultiplierAdd: 10,
         description: 'Ajoute +10 au multiplicateur de trophées.'
       },
-      order: 1040
+      order: 1110
     }
   ],
 
@@ -1679,6 +1777,9 @@ const GAME_CONFIG = {
       static: 'Assets/Image/Star.png',
       animated: 'Assets/Image/Star2.gif',
       defaultSprite: 'static'
+    },
+    specialStar: {
+      rewardTickets: 10
     }
   },
 

@@ -4147,7 +4147,10 @@
         "single": "Draw ticket obtained!",
         "multiple": "+{count} draw tickets!",
         "collectAria": "Collect a draw ticket",
-        "imageAlt": "Bonus star"
+        "imageAlt": "Bonus star",
+        "special": "Lucky star! +{count} draw tickets!",
+        "specialCollectAria": "Collect the special star (+{tickets} draw tickets)",
+        "specialImageAlt": "Special bonus star"
       }
     },
     "collection": {
@@ -4282,6 +4285,41 @@
           "name": "Tri-Phase Tempest",
           "description": "Trigger a cumulative total of 500 frenzies.",
           "reward": "Activates triple frenzy and grants a global ×{multiplier} bonus."
+        },
+        "manualClicks100k": {
+          "name": "Star Chaser I",
+          "description": "Reach 100,000 manual clicks.",
+          "reward": "Unlocks the special ticket star: {chance}% chance to appear and {tickets} draw tickets."
+        },
+        "manualClicks250k": {
+          "name": "Star Chaser II",
+          "description": "Reach 250,000 manual clicks.",
+          "reward": "Increases the special ticket star chance to {chance}% (worth {tickets} draw tickets)."
+        },
+        "manualClicks500k": {
+          "name": "Star Chaser III",
+          "description": "Reach 500,000 manual clicks.",
+          "reward": "Increases the special ticket star chance to {chance}% (worth {tickets} draw tickets)."
+        },
+        "manualClicks1m": {
+          "name": "Star Chaser IV",
+          "description": "Reach 1,000,000 manual clicks.",
+          "reward": "Increases the special ticket star chance to {chance}% (worth {tickets} draw tickets)."
+        },
+        "manualClicks2_5m": {
+          "name": "Star Chaser V",
+          "description": "Reach 2,500,000 manual clicks.",
+          "reward": "Increases the special ticket star chance to {chance}% (worth {tickets} draw tickets)."
+        },
+        "manualClicks5m": {
+          "name": "Star Chaser VI",
+          "description": "Reach 5,000,000 manual clicks.",
+          "reward": "Increases the special ticket star chance to {chance}% (worth {tickets} draw tickets)."
+        },
+        "manualClicks10m": {
+          "name": "Star Chaser VII",
+          "description": "Reach 10,000,000 manual clicks.",
+          "reward": "Maximizes the special ticket star chance to {chance}% (worth {tickets} draw tickets)."
         },
         "ticketHarvester": {
           "name": "Star Collector",

@@ -4351,6 +4351,37 @@ const DEFAULT_TICKET_STAR_SPRITE_ID = (() => {
   return 'static';
 })();
 
+const DEFAULT_TICKET_STAR_SPECIAL_REWARD = (() => {
+  const raw = Number(CONFIG?.ticketStar?.specialStar?.rewardTickets ?? CONFIG?.ticketStar?.specialStar?.tickets ?? 10);
+  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 10;
+})();
+
+function clampTicketStarSpecialChance(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return 0;
+  }
+  if (numeric <= 0) {
+    return 0;
+  }
+  if (numeric > 1) {
+    return Math.min(1, numeric / 100);
+  }
+  return Math.min(1, numeric);
+}
+
+function normalizeTicketStarSpecialReward(value, fallback = DEFAULT_TICKET_STAR_SPECIAL_REWARD) {
+  const numeric = Number(value);
+  if (Number.isFinite(numeric) && numeric > 0) {
+    return Math.floor(numeric);
+  }
+  const fallbackNumeric = Number(fallback);
+  if (Number.isFinite(fallbackNumeric) && fallbackNumeric > 0) {
+    return Math.floor(fallbackNumeric);
+  }
+  return 1;
+}
+
 function createInitialArcadeProgress() {
   const entries = {};
   ARCADE_GAME_IDS.forEach(id => {
@@ -4402,6 +4433,8 @@ const gameState = {
   ticketStarAverageIntervalSeconds: DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
   ticketStarUnlocked: false,
   ticketStarSpriteId: DEFAULT_TICKET_STAR_SPRITE_ID,
+  ticketStarSpecialChance: 0,
+  ticketStarSpecialReward: DEFAULT_TICKET_STAR_SPECIAL_REWARD,
   frenzySpawnBonus: { perClick: 1, perSecond: 1, addPerClick: 0, addPerSecond: 0 },
   musicTrackId: null,
   musicVolume: DEFAULT_MUSIC_VOLUME,
@@ -4741,6 +4774,18 @@ function normalizeTrophyCondition(raw) {
       fusions
     };
   }
+  if (
+    type === 'manualClicks'
+    || type === 'manualClick'
+    || type === 'clicks'
+    || type === 'manual'
+  ) {
+    const amount = Number(raw.amount ?? raw.value ?? 0);
+    return {
+      type: 'manualClicks',
+      amount: Number.isFinite(amount) && amount > 0 ? Math.floor(amount) : 0
+    };
+  }
   const amount = toLayeredNumber(raw.amount ?? raw.value ?? 0, 0);
   return {
     type: 'lifetimeAtoms',
@@ -4782,7 +4827,9 @@ function normalizeTrophyReward(raw) {
       frenzyMaxStacks: null,
       description: null,
       trophyMultiplierAdd: 0,
-      ticketStarAutoCollect: null
+      ticketStarAutoCollect: null,
+      ticketStarSpecialChance: 0,
+      ticketStarSpecialReward: DEFAULT_TICKET_STAR_SPECIAL_REWARD
     };
   }
   let multiplier = null;
@@ -4826,12 +4873,28 @@ function normalizeTrophyReward(raw) {
     ?? raw.ticketAutoCollect
     ?? raw.autoCollectTickets;
   const ticketStarAutoCollect = normalizeTicketStarAutoCollectConfig(autoCollectCandidate);
+  const specialChance = clampTicketStarSpecialChance(
+    raw.ticketStarSpecialChance
+      ?? raw.specialTicketStarChance
+      ?? raw.specialTicketChance
+      ?? raw.specialChance
+  );
+  const specialReward = normalizeTicketStarSpecialReward(
+    raw.ticketStarSpecialReward
+      ?? raw.ticketStarSpecialRewardTickets
+      ?? raw.ticketStarSpecialTickets
+      ?? raw.specialTicketStarReward
+      ?? raw.specialTicketReward
+      ?? raw.specialRewardTickets
+  );
   return {
     multiplier,
     frenzyMaxStacks,
     description,
     trophyMultiplierAdd,
-    ticketStarAutoCollect
+    ticketStarAutoCollect,
+    ticketStarSpecialChance: specialChance,
+    ticketStarSpecialReward: specialReward
   };
 }
 
@@ -5273,6 +5336,13 @@ function getTotalFrenzyTriggers() {
   return Number.isFinite(total) ? total : 0;
 }
 
+function getTotalManualClicks() {
+  const stats = gameState.stats?.global;
+  if (!stats) return 0;
+  const total = Number(stats.manualClicks ?? 0);
+  return Number.isFinite(total) ? Math.max(0, Math.floor(total)) : 0;
+}
+
 function computeTrophyEffects() {
   const unlocked = getUnlockedTrophySet();
   let clickMultiplier = LayeredNumber.one();
@@ -5281,6 +5351,8 @@ function computeTrophyEffects() {
   const critAccumulator = createCritAccumulator();
   let trophyMultiplierBonus = 0;
   let ticketStarAutoCollect = null;
+  let ticketStarSpecialChance = 0;
+  let ticketStarSpecialReward = DEFAULT_TICKET_STAR_SPECIAL_REWARD;
 
   unlocked.forEach(id => {
     const def = TROPHY_MAP.get(id);
@@ -5324,6 +5396,18 @@ function computeTrophyEffects() {
         }
       }
     }
+    if (Number.isFinite(reward?.ticketStarSpecialChance)) {
+      ticketStarSpecialChance = Math.max(
+        ticketStarSpecialChance,
+        clampTicketStarSpecialChance(reward.ticketStarSpecialChance)
+      );
+    }
+    if (reward?.ticketStarSpecialReward != null) {
+      ticketStarSpecialReward = Math.max(
+        ticketStarSpecialReward,
+        normalizeTicketStarSpecialReward(reward.ticketStarSpecialReward)
+      );
+    }
   });
 
   if (trophyMultiplierBonus > 0) {
@@ -5334,7 +5418,15 @@ function computeTrophyEffects() {
 
   const critEffect = finalizeCritEffect(critAccumulator);
 
-  return { clickMultiplier, autoMultiplier, maxStacks, critEffect, ticketStarAutoCollect };
+  return {
+    clickMultiplier,
+    autoMultiplier,
+    maxStacks,
+    critEffect,
+    ticketStarAutoCollect,
+    ticketStarSpecialChance,
+    ticketStarSpecialReward
+  };
 }
 
 function getTrophyFrenzyCap() {
@@ -5418,6 +5510,18 @@ function formatTrophyProgress(def) {
       })
     };
   }
+  if (condition.type === 'manualClicks') {
+    const current = getTotalManualClicks();
+    const target = Math.max(1, Number(condition.amount ?? 0));
+    const percent = Math.max(0, Math.min(1, current / target));
+    return {
+      current,
+      target,
+      percent,
+      displayCurrent: formatIntegerLocalized(current),
+      displayTarget: formatIntegerLocalized(target)
+    };
+  }
   const current = gameState.lifetime;
   const target = condition.amount instanceof LayeredNumber
     ? condition.amount
@@ -5469,6 +5573,10 @@ function isTrophyConditionMet(def) {
       return false;
     }
     return fusionIds.every(fusionId => getFusionSuccessCount(fusionId) > 0);
+  }
+  if (condition.type === 'manualClicks') {
+    const target = Math.max(1, Number(condition.amount ?? 0));
+    return getTotalManualClicks() >= target;
   }
   const target = condition.amount instanceof LayeredNumber
     ? condition.amount
@@ -19982,6 +20090,8 @@ function recalcProduction() {
   gameState.ticketStarAutoCollect = autoCollectConfig
     ? { delaySeconds: Math.max(0, Number(autoCollectConfig.delaySeconds) || 0) }
     : null;
+  gameState.ticketStarSpecialChance = clampTicketStarSpecialChance(trophyEffects.ticketStarSpecialChance);
+  gameState.ticketStarSpecialReward = normalizeTicketStarSpecialReward(trophyEffects.ticketStarSpecialReward);
 
   UPGRADE_DEFS.forEach(def => {
     const level = getUpgradeLevel(gameState.upgrades, def.id);
@@ -20743,6 +20853,22 @@ function getTrophyRewardParams(def) {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
+  }
+  if (Number.isFinite(reward.ticketStarSpecialChance)) {
+    const percent = clampTicketStarSpecialChance(reward.ticketStarSpecialChance) * 100;
+    const formattedChance = formatNumberLocalized(percent, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 1
+    });
+    params.specialChance = formattedChance;
+    params.chance = formattedChance;
+  }
+  if (reward.ticketStarSpecialReward != null) {
+    const tickets = formatIntegerLocalized(
+      normalizeTicketStarSpecialReward(reward.ticketStarSpecialReward)
+    );
+    params.specialTickets = tickets;
+    params.tickets = tickets;
   }
   return Object.keys(params).length ? params : null;
 }
@@ -22464,6 +22590,8 @@ function serializeState() {
       ? Number(gameState.ticketStarAverageIntervalSeconds)
       : DEFAULT_TICKET_STAR_INTERVAL_SECONDS,
     ticketStarSpriteId: normalizeTicketStarSpritePreference(gameState.ticketStarSpriteId),
+    ticketStarSpecialChance: clampTicketStarSpecialChance(gameState.ticketStarSpecialChance),
+    ticketStarSpecialReward: normalizeTicketStarSpecialReward(gameState.ticketStarSpecialReward),
     frenzySpawnBonus: {
       perClick: Number.isFinite(Number(gameState.frenzySpawnBonus?.perClick))
         && Number(gameState.frenzySpawnBonus.perClick) > 0
@@ -23257,6 +23385,12 @@ function applySerializedGameState(raw) {
       refresh: true
     }
   );
+  gameState.ticketStarSpecialChance = clampTicketStarSpecialChance(
+    data.ticketStarSpecialChance ?? data.ticketStarSpecialRate
+  );
+  gameState.ticketStarSpecialReward = normalizeTicketStarSpecialReward(
+    data.ticketStarSpecialReward ?? data.ticketStarSpecialTickets
+  );
   const storedFrenzyBonus = data.frenzySpawnBonus;
   if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {
     const perClick = Number(storedFrenzyBonus.perClick);
@@ -23751,6 +23885,12 @@ function loadGame() {
         updateControl: true,
         refresh: true
       }
+    );
+    gameState.ticketStarSpecialChance = clampTicketStarSpecialChance(
+      data.ticketStarSpecialChance ?? data.ticketStarSpecialRate
+    );
+    gameState.ticketStarSpecialReward = normalizeTicketStarSpecialReward(
+      data.ticketStarSpecialReward ?? data.ticketStarSpecialTickets
     );
     const storedFrenzyBonus = data.frenzySpawnBonus;
     if (storedFrenzyBonus && typeof storedFrenzyBonus === 'object') {

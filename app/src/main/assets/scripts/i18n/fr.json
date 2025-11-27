@@ -4174,7 +4174,10 @@
         "single": "Ticket de tirage obtenu !",
         "multiple": "+{count} tickets de tirage !",
         "collectAria": "Collecter un ticket de tirage",
-        "imageAlt": "Étoile bonus"
+        "imageAlt": "Étoile bonus",
+        "special": "Étoile spéciale ! +{count} tickets de tirage !",
+        "specialCollectAria": "Collecter l’étoile spéciale (+{tickets} tickets de tirage)",
+        "specialImageAlt": "Étoile bonus spéciale"
       }
     },
     "collection": {
@@ -4309,6 +4312,41 @@
           "name": "Tempête tri-phasée",
           "description": "Déclenchez un total de 500 frénésies.",
           "reward": "Active la triple frénésie et ajoute un bonus global ×{multiplier}."
+        },
+        "manualClicks100k": {
+          "name": "Chasseur d’étoiles I",
+          "description": "Atteignez 100 000 clics manuels.",
+          "reward": "Débloque l’étoile spéciale : {chance}% de chances d’apparition et {tickets} tickets de tirage."
+        },
+        "manualClicks250k": {
+          "name": "Chasseur d’étoiles II",
+          "description": "Atteignez 250 000 clics manuels.",
+          "reward": "Augmente la probabilité de l’étoile spéciale à {chance}% (valeur de {tickets} tickets de tirage)."
+        },
+        "manualClicks500k": {
+          "name": "Chasseur d’étoiles III",
+          "description": "Atteignez 500 000 clics manuels.",
+          "reward": "Augmente la probabilité de l’étoile spéciale à {chance}% (valeur de {tickets} tickets de tirage)."
+        },
+        "manualClicks1m": {
+          "name": "Chasseur d’étoiles IV",
+          "description": "Atteignez 1 000 000 clics manuels.",
+          "reward": "Augmente la probabilité de l’étoile spéciale à {chance}% (valeur de {tickets} tickets de tirage)."
+        },
+        "manualClicks2_5m": {
+          "name": "Chasseur d’étoiles V",
+          "description": "Atteignez 2 500 000 clics manuels.",
+          "reward": "Augmente la probabilité de l’étoile spéciale à {chance}% (valeur de {tickets} tickets de tirage)."
+        },
+        "manualClicks5m": {
+          "name": "Chasseur d’étoiles VI",
+          "description": "Atteignez 5 000 000 clics manuels.",
+          "reward": "Augmente la probabilité de l’étoile spéciale à {chance}% (valeur de {tickets} tickets de tirage)."
+        },
+        "manualClicks10m": {
+          "name": "Chasseur d’étoiles VII",
+          "description": "Atteignez 10 000 000 clics manuels.",
+          "reward": "Augmente la probabilité de l’étoile spéciale à {chance}% (valeur de {tickets} tickets de tirage)."
         },
         "ticketHarvester": {
           "name": "Collecteur d’étoiles",
