@@ -4036,6 +4036,7 @@
         "availabilityProgress": "Available: {available} / {required}",
         "statusReady": "Ingredients available",
         "statusMissing": "Insufficient resources",
+        "statusBonusCap": "Fusion bonuses already exceed shop output",
         "successBonus": "Reward per success: {bonus}",
         "noBonus": "No bonus defined",
         "totalBonus": "Total bonus: {bonus}",
@@ -4063,6 +4064,8 @@
         "logSuccess": "{name} fusion succeeded! Reward earned: {reward}",
         "logBatchSuccess": "{name} fusions ×{attempts}: {successes} success(es), {failures} failure(s). Total reward: {reward}",
         "toastSuccess": "Fusion succeeded!",
+        "logBonusCap": "Unavailable: fusion bonuses already exceed the God Finger APC and Star Core APS.",
+        "toastBonusCap": "Fusions disabled: bonuses are already too high.",
         "logFailure": "{name} fusion failed. Ingredients were consumed.",
         "logBatchFailure": "{name} fusions ×{attempts}: no successes. Ingredients were consumed.",
         "toastFailure": "Fusion failed."
