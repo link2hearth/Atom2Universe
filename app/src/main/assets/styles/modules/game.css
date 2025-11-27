@@ -282,6 +282,14 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
   filter: drop-shadow(0 0 12px rgba(255, 210, 120, 0.65));
 }
 
+.ticket-star--special {
+  filter: drop-shadow(0 0 10px rgba(120, 200, 255, 0.8));
+}
+
+.ticket-star--special:hover {
+  filter: drop-shadow(0 0 14px rgba(140, 225, 255, 0.95));
+}
+
 .ticket-star:focus-visible {
   outline: 2px solid rgba(255, 230, 150, 0.9);
   outline-offset: 4px;

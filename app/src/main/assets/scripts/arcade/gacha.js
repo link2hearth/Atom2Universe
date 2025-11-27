@@ -1903,6 +1903,41 @@ const TICKET_STAR_CONFIG = {
   })()
 };
 
+const TICKET_STAR_SPECIAL_CONFIG = {
+  rewardTickets: (() => {
+    const special = rawTicketStarConfig.specialStar && typeof rawTicketStarConfig.specialStar === 'object'
+      ? rawTicketStarConfig.specialStar
+      : {};
+    const raw = Number(special.rewardTickets ?? special.tickets ?? 10);
+    return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 10;
+  })()
+};
+
+function clampTicketStarSpecialChance(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return 0;
+  }
+  if (numeric > 1) {
+    return Math.min(1, numeric / 100);
+  }
+  return Math.min(1, numeric);
+}
+
+function getTicketStarSpecialChance() {
+  const raw = gameState.ticketStarSpecialChance ?? 0;
+  return clampTicketStarSpecialChance(raw);
+}
+
+function getTicketStarSpecialRewardTickets() {
+  const raw = gameState.ticketStarSpecialReward ?? TICKET_STAR_SPECIAL_CONFIG.rewardTickets;
+  const numeric = Number(raw);
+  if (Number.isFinite(numeric) && numeric > 0) {
+    return Math.floor(numeric);
+  }
+  return TICKET_STAR_SPECIAL_CONFIG.rewardTickets;
+}
+
 const DEFAULT_TICKET_STAR_INTERVAL_SECONDS = TICKET_STAR_CONFIG.averageSpawnIntervalMs / 1000;
 
 function isTicketStarStaticMode() {
@@ -5593,7 +5628,9 @@ const ticketStarState = {
   nextSpawnTime: performance.now() + computeTicketStarDelay(),
   spawnTime: 0,
   expiryTime: 0,
-  spriteId: resolveTicketStarSpriteId(TICKET_STAR_CONFIG.defaultSpriteId)
+  spriteId: resolveTicketStarSpriteId(TICKET_STAR_CONFIG.defaultSpriteId),
+  isSpecial: false,
+  rewardTickets: TICKET_STAR_CONFIG.rewardTickets
 };
 
 function resolveTicketLayer() {
@@ -5636,6 +5673,8 @@ function resetTicketStarState(options = {}) {
   ticketStarState.height = 0;
   ticketStarState.spawnTime = 0;
   ticketStarState.expiryTime = 0;
+  ticketStarState.isSpecial = false;
+  ticketStarState.rewardTickets = TICKET_STAR_CONFIG.rewardTickets;
   const now = performance.now();
   if (!isTicketStarFeatureUnlocked()) {
     ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
@@ -5660,10 +5699,22 @@ function collectTicketStar(event) {
   if (!isTicketStarFeatureUnlocked()) {
     return;
   }
-  const gained = gainGachaTickets(TICKET_STAR_CONFIG.rewardTickets);
-  showToast(gained === 1
-    ? t('scripts.gacha.ticketStar.single')
-    : t('scripts.gacha.ticketStar.multiple', { count: gained }));
+  const rewardTickets = Math.max(
+    1,
+    Math.floor(Number(ticketStarState.rewardTickets) || TICKET_STAR_CONFIG.rewardTickets)
+  );
+  const gained = gainGachaTickets(rewardTickets);
+  const isSpecialStar = ticketStarState.isSpecial === true;
+  if (isSpecialStar) {
+    const key = 'scripts.gacha.ticketStar.special';
+    const fallback = `Étoile spéciale ! +${gained} tickets de tirage`;
+    const message = t(key, { count: gained, tickets: gained });
+    showToast(message && message !== key ? message : fallback);
+  } else {
+    showToast(gained === 1
+      ? t('scripts.gacha.ticketStar.single')
+      : t('scripts.gacha.ticketStar.multiple', { count: gained }));
+  }
   if (ticketStarState.element && ticketStarState.element.parentNode) {
     ticketStarState.element.remove();
   }
@@ -5678,6 +5729,8 @@ function collectTicketStar(event) {
   ticketStarState.position.y = 0;
   ticketStarState.expiryTime = 0;
   ticketStarState.spriteId = resolveTicketStarSpriteId(ticketStarState.spriteId);
+  ticketStarState.isSpecial = false;
+  ticketStarState.rewardTickets = TICKET_STAR_CONFIG.rewardTickets;
   ticketStarState.nextSpawnTime = performance.now() + computeTicketStarDelay();
   ticketStarDelayReductionMs = 0;
   saveGame();
@@ -5700,6 +5753,12 @@ function spawnTicketStar(now = performance.now()) {
     return;
   }
 
+  const specialChance = getTicketStarSpecialChance();
+  const isSpecialStar = specialChance > 0 && Math.random() < specialChance;
+  const rewardTickets = isSpecialStar
+    ? getTicketStarSpecialRewardTickets()
+    : TICKET_STAR_CONFIG.rewardTickets;
+
   if (ticketStarState.element && ticketStarState.element.parentNode) {
     ticketStarState.element.remove();
   }
@@ -5707,17 +5766,24 @@ function spawnTicketStar(now = performance.now()) {
   const star = document.createElement('button');
   star.type = 'button';
   star.className = 'ticket-star';
+  star.dataset.ticketStarType = isSpecialStar ? 'special' : 'standard';
   star.style.setProperty('--ticket-star-size', `${TICKET_STAR_CONFIG.size}px`);
 
   const ticketStarLabel = translateWithFallback(
-    'scripts.gacha.ticketStar.collectAria',
-    'Collecter un ticket de tirage'
+    isSpecialStar
+      ? 'scripts.gacha.ticketStar.specialCollectAria'
+      : 'scripts.gacha.ticketStar.collectAria',
+    isSpecialStar
+      ? `Collect the special star (+${rewardTickets} draw tickets)`
+      : 'Collect a draw ticket'
   );
   star.setAttribute('aria-label', ticketStarLabel);
 
   const ticketStarImageAlt = translateWithFallback(
-    'scripts.gacha.ticketStar.imageAlt',
-    'Étoile bonus'
+    isSpecialStar
+      ? 'scripts.gacha.ticketStar.specialImageAlt'
+      : 'scripts.gacha.ticketStar.imageAlt',
+    isSpecialStar ? 'Special bonus star' : 'Bonus star'
   );
 
   const preferredSpriteId = typeof getTicketStarSpritePreference === 'function'
@@ -5733,6 +5799,10 @@ function spawnTicketStar(now = performance.now()) {
   star.appendChild(starImage);
   star.addEventListener('click', collectTicketStar);
   star.addEventListener('dragstart', event => event.preventDefault());
+
+  if (isSpecialStar) {
+    star.classList.add('ticket-star--special');
+  }
 
   layer.appendChild(star);
 
@@ -5833,6 +5903,8 @@ function spawnTicketStar(now = performance.now()) {
   ticketStarState.spawnTime = now;
   ticketStarState.expiryTime = 0;
   ticketStarState.spriteId = spriteId;
+  ticketStarState.isSpecial = isSpecialStar;
+  ticketStarState.rewardTickets = rewardTickets;
 
   star.style.transform = `translate(${startX}px, ${startY}px)`;
 }
@@ -5895,6 +5967,8 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
       ticketStarState.position.y = 0;
       ticketStarState.width = 0;
       ticketStarState.height = 0;
+      ticketStarState.isSpecial = false;
+      ticketStarState.rewardTickets = TICKET_STAR_CONFIG.rewardTickets;
     }
     ticketStarState.nextSpawnTime = Number.POSITIVE_INFINITY;
     ticketStarDelayReductionMs = 0;
@@ -5922,6 +5996,8 @@ function updateTicketStar(deltaSeconds, now = performance.now()) {
     ticketStarState.width = 0;
     ticketStarState.height = 0;
     ticketStarState.spriteId = resolveTicketStarSpriteId(ticketStarState.spriteId);
+    ticketStarState.isSpecial = false;
+    ticketStarState.rewardTickets = TICKET_STAR_CONFIG.rewardTickets;
     ticketStarDelayReductionMs = 0;
     return;
   }
