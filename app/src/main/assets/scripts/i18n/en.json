@@ -2939,6 +2939,13 @@
     }
   },
   "scripts": {
+    "antiCheat": {
+      "overlay": {
+        "title": "Suspicious behavior detected",
+        "message": "The game has been blocked after detecting an abnormal clicking pattern.",
+        "action": "Reload the game"
+      }
+    },
     "config": {
       "uiText": {
         "options": {

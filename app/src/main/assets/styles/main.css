@@ -1,6 +1,7 @@
 /* Atom2Univers modular stylesheet */
 /* Order of imports mirrors the original cascade. */
 @import url('./modules/foundation.css');
+@import url('./modules/anti-cheat.css');
 @import url('./modules/arcade-hub.css');
 @import url('./modules/arcade-stage.css');
 @import url('./modules/quantum2048.css');
