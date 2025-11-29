@@ -10544,9 +10544,29 @@ function writeStoredTicketStarAutoCollectEnabled(enabled) {
   }
 }
 
+function resolveTicketStarAutoCollectConfig() {
+  if (gameState.ticketStarAutoCollect) {
+    return gameState.ticketStarAutoCollect;
+  }
+  const def = TROPHY_MAP.get(TICKET_STAR_AUTO_COLLECT_TROPHY_ID);
+  return normalizeTicketStarAutoCollectConfig(def?.reward?.ticketStarAutoCollect);
+}
+
 function isTicketStarAutoCollectFeatureUnlocked() {
-  return getUnlockedTrophySet().has(TICKET_STAR_AUTO_COLLECT_TROPHY_ID)
-    && !!gameState.ticketStarAutoCollect;
+  const unlockedTrophies = getUnlockedTrophySet();
+  const storedUnlock = gameState.ticketStarAutoCollectEnabled === true
+    || gameState.ticketStarAutoCollect != null;
+  if (!unlockedTrophies.has(TICKET_STAR_AUTO_COLLECT_TROPHY_ID) && !storedUnlock) {
+    return false;
+  }
+  const config = resolveTicketStarAutoCollectConfig();
+  if (config && !gameState.ticketStarAutoCollect) {
+    gameState.ticketStarAutoCollect = config;
+  }
+  if (config && storedUnlock && !unlockedTrophies.has(TICKET_STAR_AUTO_COLLECT_TROPHY_ID)) {
+    unlockedTrophies.add(TICKET_STAR_AUTO_COLLECT_TROPHY_ID);
+  }
+  return !!config;
 }
 
 function isTicketStarAutoCollectActive() {
@@ -10724,8 +10744,8 @@ function subscribeTicketStarSpriteLanguageUpdates() {
 function updateTicketStarSpriteOptionVisibility() {
   const unlocked = gameState.ticketStarUnlocked === true;
   if (elements.ticketStarSpriteCard) {
-    elements.ticketStarSpriteCard.hidden = !unlocked;
-    elements.ticketStarSpriteCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
+    elements.ticketStarSpriteCard.hidden = false;
+    elements.ticketStarSpriteCard.setAttribute('aria-hidden', 'false');
   }
   if (elements.ticketStarSpriteToggle) {
     elements.ticketStarSpriteToggle.disabled = !unlocked;
