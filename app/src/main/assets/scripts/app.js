@@ -11354,13 +11354,22 @@ function pruneHiddenNewsItems(validItems = []) {
   if (!(newsHiddenIds instanceof Set)) {
     newsHiddenIds = new Set();
   }
-  const validIds = new Set(
-    (Array.isArray(validItems) ? validItems : [])
-      .map(item => (item && typeof item.id === 'string' ? item.id : null))
-      .filter(Boolean)
-  );
+  const validIds = new Set();
+  const legacyToCanonicalId = new Map();
+  (Array.isArray(validItems) ? validItems : []).forEach(item => {
+    const candidates = getNewsItemCandidateIds(item);
+    candidates.forEach(id => validIds.add(id));
+    candidates.forEach(candidate => {
+      if (candidate !== item?.id && typeof item?.id === 'string' && item.id) {
+        legacyToCanonicalId.set(candidate, item.id);
+      }
+    });
+  });
   const initialSize = newsHiddenIds.size;
   for (const hiddenId of Array.from(newsHiddenIds)) {
+    if (legacyToCanonicalId.has(hiddenId)) {
+      newsHiddenIds.add(legacyToCanonicalId.get(hiddenId));
+    }
     if (!validIds.has(hiddenId)) {
       newsHiddenIds.delete(hiddenId);
     }
@@ -11563,6 +11572,86 @@ function filterNewsItems(items) {
   return items.filter(item => item && !isNewsItemBlocked(item, normalizedBannedWords));
 }
 
+function normalizeNewsTitle(title) {
+  if (typeof title !== 'string') {
+    return '';
+  }
+  let normalized = title.trim();
+  // Remove leading tags such as "[VIDÉO]" or "[LIVE]" that often get prepended to Google News titles.
+  normalized = normalized.replace(/^\s*\[[^\]]+]\s*/g, '');
+  normalized = normalized.toLowerCase();
+  normalized = normalized.replace(/\s+/g, ' ').trim();
+  return normalized;
+}
+
+function normalizeNewsUrl(url) {
+  if (typeof url !== 'string') {
+    return '';
+  }
+  const trimmed = url.trim();
+  try {
+    const parsed = new URL(trimmed);
+    parsed.hostname = parsed.hostname.toLowerCase();
+    const paramsToStrip = ['ved', 'amp', 'oc'];
+    Array.from(parsed.searchParams.keys()).forEach(name => {
+      const lower = name.toLowerCase();
+      if (lower.startsWith('utm_') || paramsToStrip.includes(lower)) {
+        parsed.searchParams.delete(name);
+      }
+    });
+    parsed.hash = '';
+    // Remove trailing "/amp" path segments often used by Google News mirrors.
+    parsed.pathname = parsed.pathname.replace(/\/amp\/?$/i, '/');
+    const normalizedSearch = parsed.searchParams.toString();
+    parsed.search = normalizedSearch ? `?${normalizedSearch}` : '';
+    return parsed.toString();
+  } catch (error) {
+    return trimmed.toLowerCase();
+  }
+}
+
+function hashCanonicalNewsKey(value) {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash << 5) - hash + value.charCodeAt(index);
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
+
+function buildCanonicalNewsId(title, url) {
+  const normalizedTitle = normalizeNewsTitle(title);
+  const normalizedUrl = normalizeNewsUrl(url);
+  const base = `${normalizedTitle}|${normalizedUrl}`;
+  const hashed = hashCanonicalNewsKey(base);
+  return hashed || base || normalizedTitle || normalizedUrl || 'news-item';
+}
+
+function buildNewsAlternateIds(title, link, guid, pubDate) {
+  const alternates = [guid, link, `${title}-${pubDate}`]
+    .filter(candidate => typeof candidate === 'string' && candidate.trim())
+    .map(candidate => candidate.trim());
+  return Array.from(new Set(alternates));
+}
+
+function getNewsItemCandidateIds(item) {
+  if (!item) {
+    return [];
+  }
+  const ids = [];
+  if (typeof item.id === 'string' && item.id) {
+    ids.push(item.id);
+  }
+  if (Array.isArray(item.alternateIds)) {
+    item.alternateIds.forEach(extraId => {
+      if (typeof extraId === 'string' && extraId) {
+        ids.push(extraId);
+      }
+    });
+  }
+  return ids;
+}
+
 function parseNewsFeed(xmlText) {
   if (typeof DOMParser !== 'function') {
     return [];
@@ -11577,11 +11666,18 @@ function parseNewsFeed(xmlText) {
     const description = item.querySelector('description')?.textContent?.trim() || '';
     const pubDateText = item.querySelector('pubDate')?.textContent?.trim();
     const pubDate = pubDateText ? Date.parse(pubDateText) : 0;
-    const id = guid || link || `${title}-${pubDate}`;
-    if (!id || !title) {
+    const canonicalId = buildCanonicalNewsId(title, link || guid || '');
+    if (!canonicalId || !title) {
       return;
     }
-    const story = { id, title, link, description, pubDate: Number.isFinite(pubDate) ? pubDate : 0 };
+    const story = {
+      id: canonicalId,
+      alternateIds: buildNewsAlternateIds(title, link, guid, pubDate),
+      title,
+      link,
+      description,
+      pubDate: Number.isFinite(pubDate) ? pubDate : 0
+    };
     items.push(story);
   });
   items.sort((first, second) => {
@@ -11592,10 +11688,15 @@ function parseNewsFeed(xmlText) {
   return items;
 }
 
+function isNewsItemHidden(item, hiddenSet = newsHiddenIds instanceof Set ? newsHiddenIds : new Set()) {
+  const candidates = getNewsItemCandidateIds(item);
+  return candidates.some(id => hiddenSet.has(id));
+}
+
 function getVisibleNewsItems() {
   const hidden = newsHiddenIds instanceof Set ? newsHiddenIds : new Set();
   return (Array.isArray(newsItems) ? newsItems : [])
-    .filter(item => item && typeof item.id === 'string' && !hidden.has(item.id));
+    .filter(item => item && typeof item.id === 'string' && !isNewsItemHidden(item, hidden));
 }
 
 function applyNewsBannedWordsFilter() {
