@@ -18,6 +18,18 @@ const CONFIG_OVERRIDE_KEYS = Object.freeze({
 });
 
 /**
+ * Paramètres du module anti-triche pour détecter les auto-clickers.
+ * - `windowMs` : durée de la fenêtre glissante pour compter les clics.
+ * - `minClicks` : nombre de clics minimum dans la fenêtre pour déclencher l'alerte.
+ * - `maxPosDelta` : rayon (en pixels) autour du premier clic où les autres doivent se situer.
+ */
+const ANTI_CHEAT_SETTINGS = Object.freeze({
+  windowMs: 1000,
+  minClicks: 20,
+  maxPosDelta: 10
+});
+
+/**
  * Paramètres globaux pour la gestion des sauvegardes.
  * `storageKey` est utilisé pour stocker les métadonnées côté web.
  * `maxEntries` limite le nombre de sauvegardes conservées.

@@ -222,6 +222,11 @@ class MainActivity : AppCompatActivity() {
         )
 
         webView.addJavascriptInterface(
+            AntiCheatBridge(this),
+            "AndroidAntiCheat"
+        )
+
+        webView.addJavascriptInterface(
             WebAppBridge(this),
             "AndroidBridge"
         )

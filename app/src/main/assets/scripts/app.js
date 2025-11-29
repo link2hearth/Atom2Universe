@@ -16580,6 +16580,8 @@ let bodyScrollTouchMoveListenerAttached = false;
 const activeTouchIdentifiers = new Map();
 const activePointerTouchIds = new Map();
 const TOUCH_TRACKING_STALE_THRESHOLD_MS = 500;
+const TOUCH_TRACKING_FORCE_RESET_THRESHOLD_MS = 5000;
+const TOUCH_TRACKING_WATCHDOG_INTERVAL_MS = 4000;
 const MAX_SCROLL_UNLOCK_FAILURES = 3;
 let pendingScrollUnlockCheckId = null;
 let consecutiveScrollUnlockFailures = 0;
@@ -16603,6 +16605,30 @@ function pruneStaleTouchTracking(now = getCurrentTimestamp()) {
       activePointerTouchIds.delete(identifier);
     }
   });
+}
+
+function forceResetStuckTouchTracking(now = getCurrentTimestamp()) {
+  const cutoff = now - TOUCH_TRACKING_FORCE_RESET_THRESHOLD_MS;
+  let hasStaleEntries = false;
+
+  activeTouchIdentifiers.forEach(timestamp => {
+    if (!Number.isFinite(timestamp) || timestamp < cutoff) {
+      hasStaleEntries = true;
+    }
+  });
+
+  activePointerTouchIds.forEach(timestamp => {
+    if (!Number.isFinite(timestamp) || timestamp < cutoff) {
+      hasStaleEntries = true;
+    }
+  });
+
+  if (!hasStaleEntries) {
+    return;
+  }
+
+  resetTouchTrackingState({ reapplyScrollBehavior: false });
+  forceUnlockScrollSafe();
 }
 
 function cancelScheduledScrollUnlockCheck() {
@@ -17018,6 +17044,15 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('pointercancel', forceUnlockScrollSafe, passiveEventListenerOptions);
   window.addEventListener('blur', forceUnlockScrollSafe);
   window.addEventListener('pagehide', forceUnlockScrollSafe);
+}
+
+if (typeof window !== 'undefined' && typeof window.setInterval === 'function') {
+  window.setInterval(() => {
+    forceResetStuckTouchTracking();
+    if (!hasRemainingActiveTouches()) {
+      applyActivePageScrollBehavior();
+    }
+  }, TOUCH_TRACKING_WATCHDOG_INTERVAL_MS);
 }
 
 function showPage(pageId) {

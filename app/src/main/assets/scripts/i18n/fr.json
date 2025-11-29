@@ -2876,6 +2876,13 @@
     }
   },
   "scripts": {
+    "antiCheat": {
+      "overlay": {
+        "title": "Comportement suspect détecté",
+        "message": "Le jeu a été bloqué après la détection d'un schéma de clics anormal.",
+        "action": "Recharger le jeu"
+      }
+    },
     "config": {
       "uiText": {
         "options": {
