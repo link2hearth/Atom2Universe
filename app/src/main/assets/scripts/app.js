@@ -10553,12 +10553,18 @@ function resolveTicketStarAutoCollectConfig() {
 }
 
 function isTicketStarAutoCollectFeatureUnlocked() {
-  if (!getUnlockedTrophySet().has(TICKET_STAR_AUTO_COLLECT_TROPHY_ID)) {
+  const unlockedTrophies = getUnlockedTrophySet();
+  const storedUnlock = gameState.ticketStarAutoCollectEnabled === true
+    || gameState.ticketStarAutoCollect != null;
+  if (!unlockedTrophies.has(TICKET_STAR_AUTO_COLLECT_TROPHY_ID) && !storedUnlock) {
     return false;
   }
   const config = resolveTicketStarAutoCollectConfig();
   if (config && !gameState.ticketStarAutoCollect) {
     gameState.ticketStarAutoCollect = config;
+  }
+  if (config && storedUnlock && !unlockedTrophies.has(TICKET_STAR_AUTO_COLLECT_TROPHY_ID)) {
+    unlockedTrophies.add(TICKET_STAR_AUTO_COLLECT_TROPHY_ID);
   }
   return !!config;
 }
