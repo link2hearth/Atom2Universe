@@ -176,10 +176,7 @@ class MainActivity : AppCompatActivity() {
                     if (!cssRecoveryAttempted) {
                         cssRecoveryAttempted = true
                         Log.w(TAG, "Stylesheets missing, clearing cache and reloading $url")
-                        view.post {
-                            view.clearCache(true)
-                            view.loadUrl(url)
-                        }
+                        resetWebViewStyles(view, url)
                     } else {
                         Log.e(TAG, "Stylesheets still unavailable after recovery attempt")
                     }
@@ -342,6 +339,17 @@ class MainActivity : AppCompatActivity() {
         val reasonArg = reason?.takeIf { it.isNotBlank() }?.let { JSONObject.quote(it) } ?: "null"
         val script = "window.onBackupSaved && window.onBackupSaved(${if (success) "true" else "false"}, $reasonArg);"
         postJavascript(script)
+    }
+
+    private fun resetWebViewStyles(view: WebView, url: String) {
+        view.post {
+            view.clearCache(true)
+            view.clearHistory()
+            view.clearFormData()
+            view.clearFocus()
+            view.requestFocus()
+            view.loadUrl(url)
+        }
     }
 
     internal fun postJavascript(script: String) {
