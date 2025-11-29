@@ -57,9 +57,9 @@ const CRYPTO_WIDGET_SETTINGS = Object.freeze({
 });
 
 /**
- * Réglages des flux d’actualités Google News.
- * - `defaultFeedUrl` : flux principal utilisé pour le bandeau et la page News.
- * - `searchUrlTemplate` : modèle de flux appliqué lors d’une recherche ciblée.
+ * Réglages des flux d’actualités.
+ * - `sources` : liste des flux RSS disponibles avec leurs clés i18n.
+ * - `defaultFeedUrl`/`searchUrlTemplate` : valeurs de repli si aucune source n’est fournie.
  * - `proxyBaseUrl` : préfixe facultatif pour contourner les restrictions CORS.
  * - `proxyBaseUrls` : liste ordonnée de proxys à essayer avant de revenir au flux direct.
  * - `refreshIntervalMs` : fréquence de rafraîchissement automatique du flux.
@@ -69,6 +69,59 @@ const NEWS_SETTINGS = Object.freeze({
   enabledByDefault: true,
   defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
   searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
+  sources: [
+    {
+      id: 'google-news-fr',
+      titleKey: 'index.sections.news.sources.google',
+      feedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
+      searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr'
+    },
+    {
+      id: 'reuters-world',
+      titleKey: 'index.sections.news.sources.reutersWorld',
+      feedUrl: 'https://www.reuters.com/world/rss'
+    },
+    {
+      id: 'reuters-world-news',
+      titleKey: 'index.sections.news.sources.reutersWorldNews',
+      feedUrl: 'https://www.reuters.com/rssFeed/worldNews'
+    },
+    {
+      id: 'gouvernement-fr',
+      titleKey: 'index.sections.news.sources.gouvernement',
+      feedUrl: 'https://www.gouvernement.fr/actualites.rss'
+    },
+    {
+      id: 'insee',
+      titleKey: 'index.sections.news.sources.insee',
+      feedUrl: 'https://www.insee.fr/fr/statistiques/serie/rss'
+    },
+    {
+      id: 'nasa',
+      titleKey: 'index.sections.news.sources.nasa',
+      feedUrl: 'https://www.nasa.gov/rss/dyn/breaking_news.rss'
+    },
+    {
+      id: 'esa',
+      titleKey: 'index.sections.news.sources.esa',
+      feedUrl: 'https://www.esa.int/rssfeed/ESA_top_news'
+    },
+    {
+      id: 'nature-science',
+      titleKey: 'index.sections.news.sources.nature',
+      feedUrl: 'https://www.nature.com/subjects/science/rss'
+    },
+    {
+      id: 'nobel-prize',
+      titleKey: 'index.sections.news.sources.nobel',
+      feedUrl: 'https://www.nobelprize.org/feed/'
+    },
+    {
+      id: 'the-verge',
+      titleKey: 'index.sections.news.sources.theVerge',
+      feedUrl: 'https://www.theverge.com/rss/index.xml'
+    }
+  ],
   proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',

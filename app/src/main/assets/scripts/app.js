@@ -243,7 +243,64 @@ const DEFAULT_NEWS_SETTINGS = Object.freeze({
   enabledByDefault: true,
   defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
   searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
+  sources: [
+    {
+      id: 'google-news-fr',
+      titleKey: 'index.sections.news.sources.google',
+      feedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
+      searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr'
+    },
+    {
+      id: 'reuters-world',
+      titleKey: 'index.sections.news.sources.reutersWorld',
+      feedUrl: 'https://www.reuters.com/world/rss'
+    },
+    {
+      id: 'reuters-world-news',
+      titleKey: 'index.sections.news.sources.reutersWorldNews',
+      feedUrl: 'https://www.reuters.com/rssFeed/worldNews'
+    },
+    {
+      id: 'gouvernement-fr',
+      titleKey: 'index.sections.news.sources.gouvernement',
+      feedUrl: 'https://www.gouvernement.fr/actualites.rss'
+    },
+    {
+      id: 'insee',
+      titleKey: 'index.sections.news.sources.insee',
+      feedUrl: 'https://www.insee.fr/fr/statistiques/serie/rss'
+    },
+    {
+      id: 'nasa',
+      titleKey: 'index.sections.news.sources.nasa',
+      feedUrl: 'https://www.nasa.gov/rss/dyn/breaking_news.rss'
+    },
+    {
+      id: 'esa',
+      titleKey: 'index.sections.news.sources.esa',
+      feedUrl: 'https://www.esa.int/rssfeed/ESA_top_news'
+    },
+    {
+      id: 'nature-science',
+      titleKey: 'index.sections.news.sources.nature',
+      feedUrl: 'https://www.nature.com/subjects/science/rss'
+    },
+    {
+      id: 'nobel-prize',
+      titleKey: 'index.sections.news.sources.nobel',
+      feedUrl: 'https://www.nobelprize.org/feed/'
+    },
+    {
+      id: 'the-verge',
+      titleKey: 'index.sections.news.sources.theVerge',
+      feedUrl: 'https://www.theverge.com/rss/index.xml'
+    }
+  ],
   proxyBaseUrl: 'https://api.allorigins.win/raw?url=',
+  proxyBaseUrls: [
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.isomorphic-git.org/'
+  ],
   refreshIntervalMs: 10 * 60 * 1000,
   maxItems: 40,
   bannerItemCount: 12,
@@ -390,6 +447,7 @@ let newsItems = [];
 let newsRawItems = [];
 let newsHiddenIds = new Set();
 let newsCurrentQuery = '';
+let newsEnabledSources = null;
 let newsRefreshTimerId = null;
 let newsFetchAbortController = null;
 let newsIsLoading = false;
@@ -440,6 +498,7 @@ const NEWS_FEATURE_ENABLED_STORAGE_KEY = 'atom2univers.options.newsEnabled';
 const NEWS_HIDDEN_ITEMS_STORAGE_KEY = 'atom2univers.news.hiddenItems.v1';
 const NEWS_LAST_QUERY_STORAGE_KEY = 'atom2univers.news.lastQuery';
 const NEWS_BANNED_WORDS_STORAGE_KEY = 'atom2univers.news.bannedWords.v1';
+const NEWS_SOURCES_STORAGE_KEY = 'atom2univers.news.sources.v1';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
@@ -6615,6 +6674,8 @@ function collectDomElements() {
   newsRestoreHiddenButton: document.getElementById('newsRestoreHiddenButton'),
   newsBannedWordsInput: document.getElementById('newsBannedWordsInput'),
   newsBannedWordsSave: document.getElementById('newsBannedWordsSave'),
+  newsSourcesList: document.getElementById('newsSourcesList'),
+  newsSourcesEmpty: document.getElementById('newsSourcesEmpty'),
   newsTicker: document.getElementById('newsTicker'),
   newsTickerItems: document.getElementById('newsTickerItems'),
   newsTickerOpenButton: document.getElementById('newsTickerOpenButton'),
@@ -11294,6 +11355,117 @@ function getNewsSettings() {
   return ACTIVE_NEWS_SETTINGS || DEFAULT_NEWS_SETTINGS;
 }
 
+function normalizeNewsSource(source, index = 0) {
+  if (!source || typeof source !== 'object') {
+    return null;
+  }
+  const id = typeof source.id === 'string' && source.id.trim()
+    ? source.id.trim()
+    : `source-${index}`;
+  const feedUrl = typeof source.feedUrl === 'string' ? source.feedUrl.trim() : '';
+  if (!feedUrl) {
+    return null;
+  }
+  const titleKey = typeof source.titleKey === 'string' ? source.titleKey : '';
+  const title = typeof source.title === 'string' ? source.title : '';
+  const searchUrlTemplate = typeof source.searchUrlTemplate === 'string'
+    ? source.searchUrlTemplate
+    : '';
+  return {
+    id,
+    titleKey,
+    title,
+    feedUrl,
+    searchUrlTemplate
+  };
+}
+
+function getAvailableNewsSources() {
+  const settings = getNewsSettings();
+  const rawSources = Array.isArray(settings?.sources) ? settings.sources : [];
+  const normalized = rawSources
+    .map((source, index) => normalizeNewsSource(source, index))
+    .filter(Boolean);
+  if (normalized.length) {
+    return normalized;
+  }
+  const fallbackFeed = typeof settings?.defaultFeedUrl === 'string'
+    ? settings.defaultFeedUrl
+    : DEFAULT_NEWS_SETTINGS.defaultFeedUrl;
+  const fallbackSearch = typeof settings?.searchUrlTemplate === 'string'
+    ? settings.searchUrlTemplate
+    : DEFAULT_NEWS_SETTINGS.searchUrlTemplate;
+  return [normalizeNewsSource({
+    id: 'default',
+    titleKey: 'index.sections.news.sources.default',
+    feedUrl: fallbackFeed,
+    searchUrlTemplate: fallbackSearch
+  })].filter(Boolean);
+}
+
+function readStoredNewsSources() {
+  try {
+    const raw = globalThis.localStorage?.getItem(NEWS_SOURCES_STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      const ids = parsed.filter(entry => typeof entry === 'string' && entry.trim());
+      return new Set(ids);
+    }
+  } catch (error) {
+    console.warn('Unable to read enabled news sources', error);
+  }
+  return null;
+}
+
+function writeStoredNewsSources(enabledSources) {
+  try {
+    const ids = Array.from(enabledSources || []).filter(id => typeof id === 'string' && id);
+    if (!ids.length) {
+      globalThis.localStorage?.setItem(NEWS_SOURCES_STORAGE_KEY, JSON.stringify([]));
+      return;
+    }
+    globalThis.localStorage?.setItem(NEWS_SOURCES_STORAGE_KEY, JSON.stringify(ids));
+  } catch (error) {
+    console.warn('Unable to persist enabled news sources', error);
+  }
+}
+
+function getNewsSourceLabel(source) {
+  if (!source) {
+    return '';
+  }
+  const fallback = source.title || source.id || 'News source';
+  if (source.titleKey) {
+    return translateOrDefault(source.titleKey, fallback);
+  }
+  return fallback;
+}
+
+function getNewsSourceLabelById(sourceId) {
+  const sources = getAvailableNewsSources();
+  const match = sources.find(source => source.id === sourceId);
+  return getNewsSourceLabel(match);
+}
+
+function getEnabledNewsSources(availableSources = getAvailableNewsSources()) {
+  if (!(newsEnabledSources instanceof Set)) {
+    newsEnabledSources = readStoredNewsSources();
+  }
+  if (!(newsEnabledSources instanceof Set)) {
+    newsEnabledSources = new Set(availableSources.map(source => source.id));
+  }
+  const validIds = new Set(availableSources.map(source => source.id));
+  const normalizedIds = Array.from(newsEnabledSources).filter(id => validIds.has(id));
+  if (normalizedIds.length !== newsEnabledSources.size) {
+    newsEnabledSources = new Set(normalizedIds);
+    writeStoredNewsSources(newsEnabledSources);
+  }
+  return availableSources.filter(source => newsEnabledSources.has(source.id));
+}
+
 function readStoredNewsEnabled() {
   try {
     const stored = globalThis.localStorage?.getItem(NEWS_FEATURE_ENABLED_STORAGE_KEY);
@@ -11513,23 +11685,18 @@ function isNewsEnabled() {
   return newsFeatureEnabled !== false;
 }
 
-function buildNewsFeedUrl(query) {
-  const settings = getNewsSettings();
-  const baseUrl = settings && typeof settings.defaultFeedUrl === 'string'
-    ? settings.defaultFeedUrl
-    : DEFAULT_NEWS_SETTINGS.defaultFeedUrl;
-  const trimmedQuery = typeof query === 'string' ? query.trim() : '';
-  if (!trimmedQuery) {
-    return baseUrl;
+function buildNewsFeedUrl(source, query) {
+  if (!source || typeof source.feedUrl !== 'string') {
+    return '';
   }
-  const template = settings && typeof settings.searchUrlTemplate === 'string'
-    ? settings.searchUrlTemplate
-    : DEFAULT_NEWS_SETTINGS.searchUrlTemplate;
-  return template.replace('{query}', encodeURIComponent(trimmedQuery));
+  const trimmedQuery = typeof query === 'string' ? query.trim() : '';
+  if (trimmedQuery && source.searchUrlTemplate) {
+    return source.searchUrlTemplate.replace('{query}', encodeURIComponent(trimmedQuery));
+  }
+  return source.feedUrl;
 }
 
-function buildNewsRequestUrls(query) {
-  const feedUrl = buildNewsFeedUrl(query);
+function buildNewsRequestUrls(feedUrl) {
   const settings = getNewsSettings();
   const proxies = [];
   if (Array.isArray(settings?.proxyBaseUrls)) {
@@ -11570,6 +11737,17 @@ function filterNewsItems(items) {
     return items.filter(Boolean);
   }
   return items.filter(item => item && !isNewsItemBlocked(item, normalizedBannedWords));
+}
+
+function filterNewsItemsByQuery(items, query) {
+  const normalizedQuery = typeof query === 'string' ? query.trim().toLowerCase() : '';
+  if (!normalizedQuery) {
+    return Array.isArray(items) ? items : [];
+  }
+  return (Array.isArray(items) ? items : []).filter(item => {
+    const text = `${item?.title || ''} ${item?.description || ''}`.toLowerCase();
+    return text.includes(normalizedQuery);
+  });
 }
 
 function normalizeNewsTitle(title) {
@@ -11752,6 +11930,18 @@ function renderNewsList() {
     return;
   }
 
+  const enabledSources = getEnabledNewsSources();
+  if (!enabledSources.length) {
+    newsHighlightedStoryId = null;
+    elements.newsList.replaceChildren();
+    if (elements.newsEmptyState) {
+      elements.newsEmptyState.setAttribute('hidden', '');
+    }
+    setNewsStatus('index.sections.news.sources.disabled', 'Enable at least one news source to display headlines.');
+    renderNewsTicker();
+    return;
+  }
+
   const visibleItems = getVisibleNewsItems();
   elements.newsList.replaceChildren();
 
@@ -11804,6 +11994,16 @@ function renderNewsList() {
       content.append(meta);
     }
 
+    const sourceLabel = item.sourceId ? getNewsSourceLabelById(item.sourceId) : '';
+    if (sourceLabel) {
+      const source = document.createElement('p');
+      source.className = 'news-card__source';
+      const sourceKey = 'index.sections.news.sources.label';
+      source.setAttribute('data-i18n', sourceKey);
+      source.textContent = translateOrDefault(sourceKey, `Source: ${sourceLabel}`, { source: sourceLabel });
+      content.append(source);
+    }
+
     const openButton = document.createElement('a');
     openButton.className = 'news-card__button news-card__button--primary';
     openButton.href = item.link || '#';
@@ -11837,6 +12037,91 @@ function renderNewsList() {
 
   applyNewsHighlight();
   renderNewsTicker();
+}
+
+function handleNewsSourceToggle(sourceId, enabled) {
+  const availableSources = getAvailableNewsSources();
+  const validIds = new Set(availableSources.map(source => source.id));
+  if (!validIds.has(sourceId)) {
+    return;
+  }
+  if (!(newsEnabledSources instanceof Set)) {
+    newsEnabledSources = new Set(validIds);
+  }
+  if (enabled) {
+    newsEnabledSources.add(sourceId);
+  } else {
+    newsEnabledSources.delete(sourceId);
+  }
+  writeStoredNewsSources(newsEnabledSources);
+  renderNewsSources();
+  if (isNewsEnabled()) {
+    fetchNewsFeed(newsCurrentQuery, { silent: true });
+  }
+}
+
+function renderNewsSources() {
+  if (!elements.newsSourcesList) {
+    return;
+  }
+  const sources = getAvailableNewsSources();
+  const enabledSources = getEnabledNewsSources(sources);
+  const enabledIds = new Set(enabledSources.map(source => source.id));
+
+  elements.newsSourcesList.replaceChildren();
+  sources.forEach(source => {
+    const listItem = document.createElement('li');
+    listItem.className = 'news-sources__item';
+
+    const label = document.createElement('label');
+    label.className = 'news-sources__toggle';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = enabledIds.has(source.id);
+    checkbox.dataset.sourceId = source.id;
+    const toggleKey = 'index.sections.news.sources.toggleLabel';
+    const sourceLabel = getNewsSourceLabel(source);
+    checkbox.setAttribute(
+      'aria-label',
+      translateOrDefault(toggleKey, `Toggle ${sourceLabel}`, { source: sourceLabel })
+    );
+    checkbox.addEventListener('change', () => {
+      handleNewsSourceToggle(source.id, checkbox.checked);
+    });
+
+    const name = document.createElement('span');
+    name.className = 'news-sources__name';
+    name.textContent = sourceLabel;
+    if (source.titleKey) {
+      name.setAttribute('data-i18n', source.titleKey);
+    }
+
+    label.append(checkbox, name);
+    listItem.append(label);
+
+    const url = document.createElement('span');
+    url.className = 'news-sources__url';
+    try {
+      const hostname = new URL(source.feedUrl).hostname.replace(/^www\./, '');
+      url.textContent = hostname;
+    } catch (error) {
+      url.textContent = source.feedUrl;
+    }
+    listItem.append(url);
+    elements.newsSourcesList.append(listItem);
+  });
+
+  if (elements.newsSourcesEmpty) {
+    const emptyKey = 'index.sections.news.sources.empty';
+    const shouldShow = sources.length > 0 && enabledIds.size === 0;
+    elements.newsSourcesEmpty.setAttribute('data-i18n', emptyKey);
+    elements.newsSourcesEmpty.textContent = translateOrDefault(
+      emptyKey,
+      'Enable at least one source to display news.'
+    );
+    elements.newsSourcesEmpty.toggleAttribute('hidden', !shouldShow);
+  }
 }
 
 function applyNewsHighlight(options = {}) {
@@ -11976,9 +12261,19 @@ async function fetchNewsFeed(query = newsCurrentQuery, options = {}) {
   }
   const settings = Object.assign({ silent: false }, options);
   const timeoutMs = Number(getNewsSettings()?.requestTimeoutMs) || DEFAULT_NEWS_SETTINGS.requestTimeoutMs;
-  const requestUrls = buildNewsRequestUrls(query);
-  const targetUrl = requestUrls.length ? requestUrls[requestUrls.length - 1] : buildNewsFeedUrl(query);
+  const availableSources = getAvailableNewsSources();
+  const enabledSources = getEnabledNewsSources(availableSources);
   const useAndroidBridge = isAndroidNewsBridgeAvailable();
+
+  if (!enabledSources.length) {
+    newsRawItems = [];
+    newsItems = [];
+    newsLastError = null;
+    setNewsStatus('index.sections.news.sources.disabled', 'Enable at least one news source to display headlines.');
+    renderNewsList();
+    renderNewsTicker();
+    return [];
+  }
 
   if (!useAndroidBridge && typeof fetch !== 'function') {
     setNewsStatus('index.sections.news.status.error', 'Unable to fetch news right now.');
@@ -11992,62 +12287,82 @@ async function fetchNewsFeed(query = newsCurrentQuery, options = {}) {
     setNewsStatus('index.sections.news.status.loading', 'Loading news…');
   }
 
-  let xmlText = null;
+  const aggregatedItems = [];
+  let successfulSources = 0;
   let lastError = null;
-  if (useAndroidBridge) {
+  const fetchWithTimeout = async url => {
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timeoutId = timeoutMs > 0 && typeof setTimeout === 'function'
+      ? setTimeout(() => controller?.abort?.(), timeoutMs)
+      : null;
+    abortNewsRequest();
+    newsFetchAbortController = controller;
     try {
-      xmlText = await requestNewsViaAndroid(targetUrl, timeoutMs);
-    } catch (error) {
-      lastError = error;
-    }
-  } else {
-    const fetchWithTimeout = async url => {
-      const controller = typeof AbortController === 'function' ? new AbortController() : null;
-      const timeoutId = timeoutMs > 0 && typeof setTimeout === 'function'
-        ? setTimeout(() => controller?.abort?.(), timeoutMs)
-        : null;
-      abortNewsRequest();
-      newsFetchAbortController = controller;
-      try {
-        const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        return await response.text();
-      } finally {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-        if (newsFetchAbortController === controller) {
-          newsFetchAbortController = null;
-        }
+      const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
       }
-    };
+      return await response.text();
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (newsFetchAbortController === controller) {
+        newsFetchAbortController = null;
+      }
+    }
+  };
 
-    for (const requestUrl of requestUrls) {
+  for (const source of enabledSources) {
+    const feedUrl = buildNewsFeedUrl(source, query);
+    if (!feedUrl) {
+      continue;
+    }
+    const requestUrls = buildNewsRequestUrls(feedUrl);
+    const targetUrl = requestUrls.length ? requestUrls[requestUrls.length - 1] : feedUrl;
+    let xmlText = null;
+    if (useAndroidBridge) {
       try {
-        xmlText = await fetchWithTimeout(requestUrl);
-        if (xmlText) {
-          break;
-        }
+        xmlText = await requestNewsViaAndroid(targetUrl, timeoutMs);
       } catch (error) {
         lastError = error;
-        if (error?.name === 'AbortError') {
-          break;
+      }
+    } else {
+      for (const requestUrl of requestUrls) {
+        try {
+          xmlText = await fetchWithTimeout(requestUrl);
+          if (xmlText) {
+            break;
+          }
+        } catch (error) {
+          lastError = error;
+          if (error?.name === 'AbortError') {
+            break;
+          }
         }
       }
     }
+
+    if (!xmlText) {
+      continue;
+    }
+    successfulSources += 1;
+    let parsedItems = parseNewsFeed(xmlText);
+    if (query && !source.searchUrlTemplate) {
+      parsedItems = filterNewsItemsByQuery(parsedItems, query);
+    }
+    const taggedItems = parsedItems.map(item => Object.assign({}, item, { sourceId: source.id }));
+    aggregatedItems.push(...taggedItems);
   }
 
   try {
-    if (!xmlText) {
+    if (!successfulSources) {
       throw lastError || new Error('No response received');
     }
-    const parsedItems = parseNewsFeed(xmlText);
-    const filteredItems = filterNewsItems(parsedItems);
+    const filteredItems = filterNewsItems(aggregatedItems);
     const maxItems = Math.max(1, Number(getNewsSettings()?.maxItems) || DEFAULT_NEWS_SETTINGS.maxItems);
-    pruneHiddenNewsItems(parsedItems);
-    newsRawItems = parsedItems;
+    pruneHiddenNewsItems(aggregatedItems);
+    newsRawItems = aggregatedItems;
     newsItems = filteredItems.slice(0, maxItems);
     newsLastError = null;
     updateNewsFeedLabel(query);
@@ -12190,12 +12505,17 @@ function initNewsModule() {
   newsHiddenIds = readStoredNewsHiddenItems();
   newsCurrentQuery = readStoredNewsQuery();
   newsBannedWords = readStoredNewsBannedWords();
+  const storedSources = readStoredNewsSources();
+  if (storedSources instanceof Set) {
+    newsEnabledSources = storedSources;
+  }
   if (elements.newsSearchInput) {
     elements.newsSearchInput.value = newsCurrentQuery;
   }
   if (elements.newsBannedWordsInput) {
     elements.newsBannedWordsInput.value = newsBannedWords.join(', ');
   }
+  renderNewsSources();
   updateNewsFeedLabel(newsCurrentQuery);
   renderNewsList();
   if (isNewsEnabled()) {
@@ -12219,6 +12539,7 @@ function subscribeNewsLanguageUpdates() {
   const handler = () => {
     updateNewsToggleStatusLabel(isNewsEnabled());
     updateNewsFeedLabel(newsCurrentQuery);
+    renderNewsSources();
     renderNewsList();
     const currentStatusKey = elements.newsStatus?.getAttribute('data-i18n');
     if (currentStatusKey) {

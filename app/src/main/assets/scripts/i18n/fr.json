@@ -340,7 +340,7 @@
       },
       "news": {
         "title": "Actualités",
-        "subtitle": "Découvrez les derniers titres issus de Google News et suivez les sujets qui vous intéressent.",
+        "subtitle": "Découvrez les derniers titres issus de plusieurs flux RSS et suivez les sujets qui vous intéressent.",
         "feed": {
           "default": "Dernières actualités",
           "search": "Résultats pour «\u00a0{query}\u00a0»"
@@ -360,6 +360,25 @@
           "label": "Mots à bannir (séparés par des virgules)",
           "placeholder": "Ex. : football, ligue 1, PSG",
           "save": "Enregistrer le filtre"
+        },
+        "sources": {
+          "title": "Sources d’actualités",
+          "subtitle": "Activez ou désactivez les flux RSS à inclure dans la page News.",
+          "empty": "Activez au moins une source pour afficher les actualités.",
+          "disabled": "Activez au moins une source pour afficher les actualités.",
+          "label": "Source : {source}",
+          "toggleLabel": "Activer ou désactiver {source}",
+          "default": "Flux principal",
+          "google": "Google News (France)",
+          "reutersWorld": "Reuters Monde",
+          "reutersWorldNews": "Reuters World News",
+          "gouvernement": "Gouvernement français",
+          "insee": "INSEE",
+          "nasa": "NASA Breaking News",
+          "esa": "ESA - Top News",
+          "nature": "Nature - Science",
+          "nobel": "Prix Nobel",
+          "theVerge": "The Verge"
         },
         "status": {
           "loading": "Chargement des actualités…",

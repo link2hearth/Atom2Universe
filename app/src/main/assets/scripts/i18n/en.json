@@ -340,7 +340,7 @@
     },
       "news": {
         "title": "News",
-        "subtitle": "Browse the latest Google News headlines and follow the topics you care about.",
+        "subtitle": "Browse the latest headlines from multiple RSS sources and follow the topics you care about.",
         "feed": {
           "default": "Latest headlines",
           "search": "Results for “{query}”"
@@ -360,6 +360,25 @@
           "label": "Banned words (comma-separated)",
           "placeholder": "e.g. football, Ligue 1, PSG",
           "save": "Save filter"
+        },
+        "sources": {
+          "title": "News sources",
+          "subtitle": "Enable or disable the RSS feeds included on the News page.",
+          "empty": "Enable at least one source to display news.",
+          "disabled": "Enable at least one source to display headlines.",
+          "label": "Source: {source}",
+          "toggleLabel": "Toggle {source}",
+          "default": "Primary feed",
+          "google": "Google News (France)",
+          "reutersWorld": "Reuters World",
+          "reutersWorldNews": "Reuters World News",
+          "gouvernement": "French Government",
+          "insee": "INSEE",
+          "nasa": "NASA Breaking News",
+          "esa": "ESA - Top News",
+          "nature": "Nature - Science",
+          "nobel": "Nobel Prize",
+          "theVerge": "The Verge"
         },
         "status": {
           "loading": "Loading news…",
