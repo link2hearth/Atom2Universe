@@ -1987,6 +1987,12 @@ defineProductionStep(
   { source: 'trophyMultiplier' }
 );
 defineProductionStep(
+  'bigBangMultiplier',
+  'multiplier',
+  translateWithFallback('scripts.app.production.bigBangMultiplier', 'Multiplicateur Big Bang'),
+  { source: 'bigBang' }
+);
+defineProductionStep(
   'collectionMultiplier',
   'multiplier',
   translateWithFallback(
@@ -2018,6 +2024,7 @@ const DEFAULT_PRODUCTION_STEP_IDS = [
   'collectionMultiplier',
   'frenzy',
   'trophyMultiplier',
+  'bigBangMultiplier',
   'total'
 ];
 
