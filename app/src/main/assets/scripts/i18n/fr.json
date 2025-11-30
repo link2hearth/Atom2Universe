@@ -3764,6 +3764,10 @@
         "notReady": "Montez {{firstShop}} et {{secondShop}} au maximum ({{remaining}} niveaux restants) pour déclencher le Big Bang.",
         "done": "Big Bang réussi ! Cap du magasin augmenté de +{bonus} (total +{total})."
       },
+      "production": {
+        "bigBangMultiplier": "Multiplicateur Big Bang",
+        "bigBangMultiplierValue": "×2^{ {count} }"
+      },
       "metaux": {
         "chronoBonus": "Chrono +{value} s",
         "multiBonus": "Multiplicateur APC/APS +{value}",
