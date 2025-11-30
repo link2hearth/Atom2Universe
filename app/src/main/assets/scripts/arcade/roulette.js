@@ -6,6 +6,7 @@
   const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
   const CONFIG_PATH = 'config/arcade/roulette.json';
   const DEFAULT_BET_AMOUNTS = Object.freeze([10, 20, 50]);
+  const DEFAULT_MAX_APC_BET_MULTIPLIER = 100;
   const DEFAULT_PAYOUTS = Object.freeze({
     suitLine: 5,
     suitDiagonal: 5,
@@ -41,6 +42,7 @@
 
   const DEFAULT_CONFIG = Object.freeze({
     betOptions: DEFAULT_BET_AMOUNTS,
+    maxBetApcMultiplier: DEFAULT_MAX_APC_BET_MULTIPLIER,
     payouts: DEFAULT_PAYOUTS,
     animation: DEFAULT_ANIMATION,
     symbolWeights: DEFAULT_SYMBOL_WEIGHTS
@@ -246,11 +248,19 @@
   function normalizeConfig(rawConfig, fallbackConfig) {
     const fallback = fallbackConfig && typeof fallbackConfig === 'object' ? fallbackConfig : DEFAULT_CONFIG;
     const betOptions = normalizeBetOptions(rawConfig?.betOptions, fallback.betOptions);
+    const rawMultiplier = Number(rawConfig?.maxBetApcMultiplier);
+    const fallbackMultiplier = Number(fallback.maxBetApcMultiplier);
+    const maxBetApcMultiplier = Number.isFinite(rawMultiplier) && rawMultiplier > 0
+      ? rawMultiplier
+      : Number.isFinite(fallbackMultiplier) && fallbackMultiplier > 0
+        ? fallbackMultiplier
+        : DEFAULT_MAX_APC_BET_MULTIPLIER;
     const payouts = normalizePayouts(rawConfig?.payouts, fallback.payouts);
     const animation = normalizeAnimation(rawConfig?.animation, fallback.animation);
     const symbolWeights = normalizeSymbolWeights(rawConfig?.symbolWeights, fallback.symbolWeights);
     return Object.freeze({
       betOptions: Object.freeze(betOptions.slice()),
+      maxBetApcMultiplier,
       payouts: Object.freeze({ ...payouts }),
       animation: Object.freeze({ ...animation }),
       symbolWeights: Object.freeze({ ...symbolWeights })
@@ -300,6 +310,26 @@
       try {
         const layered = new LayeredNumber(atoms ?? 0);
         gameState.atoms = layered;
+        return layered;
+      } catch (error) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  function getGameApc() {
+    if (typeof gameState === 'undefined' || !gameState) {
+      return null;
+    }
+    const apc = gameState.perClick;
+    if (apc instanceof LayeredNumber) {
+      return apc;
+    }
+    if (typeof LayeredNumber === 'function') {
+      try {
+        const layered = new LayeredNumber(apc ?? 0);
+        gameState.perClick = layered;
         return layered;
       } catch (error) {
         return null;
@@ -674,6 +704,74 @@
     let multiplyButton = null;
     let divideButton = null;
 
+    function getBetLimitMultiplier() {
+      const multiplier = Number(currentConfig?.maxBetApcMultiplier);
+      return Number.isFinite(multiplier) && multiplier > 0
+        ? multiplier
+        : DEFAULT_MAX_APC_BET_MULTIPLIER;
+    }
+
+    function getMaxAllowedBet() {
+      const apc = getGameApc();
+      const multiplier = getBetLimitMultiplier();
+      if (!apc || typeof apc.multiplyNumber !== 'function') {
+        return null;
+      }
+      try {
+        return apc.multiplyNumber(multiplier);
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function isBetWithinLimit(amount) {
+      const maxBet = getMaxAllowedBet();
+      if (!maxBet) {
+        return true;
+      }
+      const bet = createLayeredBet(amount);
+      if (!bet || typeof bet.compare !== 'function') {
+        return true;
+      }
+      try {
+        return bet.compare(maxBet) <= 0;
+      } catch (error) {
+        return true;
+      }
+    }
+
+    function canPlayBet(amount) {
+      return canAffordBet(amount) && isBetWithinLimit(amount);
+    }
+
+    function hasBetWithinLimitForMultiplier(multiplierValue) {
+      if (!Number.isFinite(multiplierValue) || multiplierValue <= 0) {
+        return false;
+      }
+      if (!getMaxAllowedBet()) {
+        return true;
+      }
+      for (let i = 0; i < baseBetOptions.length; i += 1) {
+        const candidate = baseBetOptions[i] * multiplierValue;
+        if (isBetWithinLimit(candidate)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function showBetLimitWarning() {
+      const limit = getMaxAllowedBet();
+      const multiplier = getBetLimitMultiplier();
+      const formattedLimit = formatBetAmount(limit || 0);
+      const formattedMultiplier = formatBetAmount(multiplier);
+      setStatus(
+        'betLimit',
+        `Mise limitée à ${formattedLimit} atomes (max ${formattedMultiplier}× APC).`,
+        { limit: formattedLimit, multiplier: formattedMultiplier }
+      );
+    }
+
     function applyConfig(nextConfig) {
       const effective = nextConfig || state.config;
       currentConfig = effective;
@@ -882,7 +980,11 @@
             { multiplier: formattedMultiplier }
           )
         );
-        multiplyButton.disabled = spinActive;
+        const nextMultiplier = betMultiplier * 10;
+        const limitReached = !hasBetWithinLimitForMultiplier(nextMultiplier);
+        const disabled = spinActive || limitReached;
+        multiplyButton.disabled = disabled;
+        multiplyButton.classList.toggle('roulette-bet__option--unavailable', disabled);
       }
       if (divideButton) {
         divideButton.textContent = translate(
@@ -931,8 +1033,8 @@
         const amount = Number(button.dataset.bet);
         const isSelected = selectedBet != null && Number.isFinite(amount) && amount === selectedBet;
         button.classList.toggle('roulette-bet__option--selected', isSelected);
-        const affordable = canAffordBet(amount);
-        const disableClass = !spinActive && !affordable;
+        const playable = canPlayBet(amount);
+        const disableClass = !spinActive && !playable;
         button.classList.toggle('roulette-bet__option--unavailable', disableClass);
         button.disabled = spinActive;
       }
@@ -970,12 +1072,12 @@
       if (spinActive) {
         return;
       }
-      if (selectedBet != null && canAffordBet(selectedBet)) {
+      if (selectedBet != null && canPlayBet(selectedBet)) {
         return;
       }
       for (let i = betOptions.length - 1; i >= 0; i -= 1) {
         const candidate = betOptions[i];
-        if (canAffordBet(candidate)) {
+        if (canPlayBet(candidate)) {
           const base = baseBetOptions[i];
           setSelectedBet(candidate, base);
           updateBetButtons();
@@ -1155,6 +1257,12 @@
         setStatus('selectBet', 'Sélectionnez une mise avant de lancer la roulette.');
         return;
       }
+      if (!isBetWithinLimit(selectedBet)) {
+        showBetLimitWarning();
+        ensureSelectedBetAffordable();
+        updateBetButtons();
+        return;
+      }
       const layeredBet = createLayeredBet(selectedBet);
       const atoms = getGameAtoms();
       if (!layeredBet || !atoms || atoms.compare(layeredBet) < 0) {
@@ -1240,6 +1348,10 @@
             return;
           }
           const amount = Number(button.dataset.bet);
+          if (!isBetWithinLimit(amount)) {
+            showBetLimitWarning();
+            return;
+          }
           if (!canAffordBet(amount)) {
             setStatus('insufficientAtoms', 'Solde insuffisant pour cette mise.');
             return;

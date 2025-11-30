@@ -1,5 +1,6 @@
 {
   "betOptions": [10, 20, 50],
+  "maxBetApcMultiplier": 100,
   "payouts": {
     "suitLine": 5,
     "suitDiagonal": 5,
