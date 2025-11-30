@@ -6,12 +6,14 @@
   const CONFIG_PATH = 'config/arcade/motocross.json';
   const DEFAULT_CONFIG = Object.freeze({
     steepSlopeGrip: Object.freeze({
-      angleThresholdDeg: 24,
+      angleThresholdDeg: 40,
       maxAngleDeg: 80,
-      normalForceBoost: 4200,
-      correctionBoost: 12,
-      torqueAssist: 26000,
-      angularDampingMultiplier: 1
+      normalForceBoost: 8800,
+      correctionBoost: 18,
+      torqueAssist: 42000,
+      angularDampingMultiplier: 1.6,
+      frictionMultiplier: 1.8,
+      downforceBoost: 2200
     }),
     rewards: Object.freeze({
       gacha: Object.freeze({
@@ -544,13 +546,17 @@
       10,
       fallback.angularDampingMultiplier
     );
+    const frictionMultiplier = clampNumber(rawConfig?.frictionMultiplier, 0, 10, fallback.frictionMultiplier);
+    const downforceBoost = clampNumber(rawConfig?.downforceBoost, 0, 50000, fallback.downforceBoost);
     return {
       angleThresholdDeg: threshold,
       maxAngleDeg: Math.max(maxAngle, maxAngleMin),
       normalForceBoost,
       correctionBoost,
       torqueAssist,
-      angularDampingMultiplier
+      angularDampingMultiplier,
+      frictionMultiplier,
+      downforceBoost
     };
   }
 
@@ -2393,6 +2399,7 @@
     }
     const steepGripSettings = state.config?.steepSlopeGrip;
     let steepGripFactor = 0;
+    let frictionScale = FRICTION_COEFFICIENT;
     if (steepGripSettings && tangent.y > 0 && normalForce > 0) {
       const thresholdRad = degreesToRadians(steepGripSettings.angleThresholdDeg);
       const maxAngleRad = Math.max(thresholdRad + 0.0001, degreesToRadians(steepGripSettings.maxAngleDeg));
@@ -2400,11 +2407,13 @@
         const normalized = clamp((slopeAngle - thresholdRad) / (maxAngleRad - thresholdRad), 0, 1);
         steepGripFactor = normalized;
         normalForce += steepGripSettings.normalForceBoost * normalized;
+        normalForce += steepGripSettings.downforceBoost * normalized;
+        frictionScale *= 1 + steepGripSettings.frictionMultiplier * normalized;
       }
     }
     const tangentVelocity = pointVelocity.x * tangent.x + pointVelocity.y * tangent.y;
     const desiredTangentForce = -tangentVelocity * FRICTION_DAMPING + driveForce;
-    const maxFriction = normalForce * FRICTION_COEFFICIENT;
+    const maxFriction = normalForce * frictionScale;
     const tangentForce = clamp(desiredTangentForce, -maxFriction, maxFriction);
     let correctionScale = penetration * NORMAL_CORRECTION_FACTOR;
     if (steepGripFactor > 0 && steepGripSettings) {
