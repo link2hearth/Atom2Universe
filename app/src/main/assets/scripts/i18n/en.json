@@ -3737,6 +3737,10 @@
         "notReady": "Max out {{firstShop}} and {{secondShop}} ({{remaining}} levels remaining) to trigger the Big Bang.",
         "done": "Big Bang complete! Shop cap increased by +{bonus} (total +{total})."
       },
+      "production": {
+        "bigBangMultiplier": "Big Bang multiplier",
+        "bigBangMultiplierValue": "×2^{ {count} }"
+      },
       "metaux": {
         "chronoBonus": "Timer +{value} s",
         "multiBonus": "APC/APS multiplier +{value}",

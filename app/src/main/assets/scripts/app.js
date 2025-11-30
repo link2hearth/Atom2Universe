@@ -3363,6 +3363,7 @@ function createEmptyProductionEntry() {
     rarityMultipliers.set(id, 1);
   });
   return {
+    bigBangCount: 0,
     base: LayeredNumber.zero(),
     totalAddition: LayeredNumber.zero(),
     totalMultiplier: LayeredNumber.one(),
@@ -3378,6 +3379,7 @@ function createEmptyProductionEntry() {
         devkitFlat: LayeredNumber.zero()
       },
       multipliers: {
+        bigBang: LayeredNumber.one(),
         trophyMultiplier: LayeredNumber.one(),
         frenzy: LayeredNumber.one(),
         apsCrit: LayeredNumber.one(),
@@ -3410,6 +3412,7 @@ function cloneProductionEntry(entry) {
     return createEmptyProductionEntry();
   }
   const clone = {
+    bigBangCount: Number.isFinite(entry.bigBangCount) ? entry.bigBangCount : 0,
     base: entry.base instanceof LayeredNumber ? entry.base.clone() : toLayeredValue(entry.base, 0),
     totalAddition: entry.totalAddition instanceof LayeredNumber
       ? entry.totalAddition.clone()
@@ -3449,6 +3452,9 @@ function cloneProductionEntry(entry) {
           : toLayeredValue(entry.sources?.flats?.devkitFlat, 0)
       },
       multipliers: {
+        bigBang: entry.sources?.multipliers?.bigBang instanceof LayeredNumber
+          ? entry.sources.multipliers.bigBang.clone()
+          : toMultiplierLayered(entry.sources?.multipliers?.bigBang ?? 1),
         trophyMultiplier: entry.sources?.multipliers?.trophyMultiplier instanceof LayeredNumber
           ? entry.sources.multipliers.trophyMultiplier.clone()
           : toMultiplierLayered(entry.sources?.multipliers?.trophyMultiplier ?? 1),
@@ -15605,6 +15611,15 @@ function formatFlatValue(value) {
   return normalized.isZero() ? '+0' : `+${normalized.toString()}`;
 }
 
+function formatBigBangMultiplierValue(count) {
+  const formattedCount = formatIntegerLocalized(Math.max(0, Number(count) || 0));
+  return translateOrDefault(
+    'scripts.app.production.bigBangMultiplierValue',
+    `×2^{${formattedCount}}`,
+    { count: formattedCount }
+  );
+}
+
 function formatProductionStepValue(step, entry) {
   if (!step) return '—';
   switch (step.type) {
@@ -15619,6 +15634,12 @@ function formatProductionStepValue(step, entry) {
       return formatFlatValue(flatValue);
     }
     case 'multiplier': {
+      if (step.id === 'bigBangMultiplier') {
+        const bigBangCount = entry && Number.isFinite(entry.bigBangCount)
+          ? entry.bigBangCount
+          : getBigBangCompletionCount();
+        return formatBigBangMultiplierValue(bigBangCount);
+      }
       const multiplier = getMultiplierSourceValue(entry, step);
       return formatMultiplier(multiplier);
     }
@@ -20751,6 +20772,36 @@ function recalcProduction() {
     autoTotalMultiplier = autoTotalMultiplier.multiply(apsCritMultiplier);
   }
 
+  const bigBangCount = getBigBangCompletionCount();
+  const bigBangMultiplier = bigBangCount > 0
+    ? new LayeredNumber(2).pow(bigBangCount)
+    : LayeredNumber.one();
+  const hasBigBangMultiplier = !isLayeredOne(bigBangMultiplier);
+  const bigBangMultiplierLabel = translateOrDefault(
+    'scripts.app.production.bigBangMultiplier',
+    'Multiplicateur Big Bang'
+  );
+  clickDetails.bigBangCount = bigBangCount;
+  autoDetails.bigBangCount = bigBangCount;
+  clickDetails.sources.multipliers.bigBang = bigBangMultiplier.clone();
+  autoDetails.sources.multipliers.bigBang = bigBangMultiplier.clone();
+  if (hasBigBangMultiplier) {
+    clickDetails.multipliers.push({
+      id: 'bigBangMultiplier',
+      label: bigBangMultiplierLabel,
+      value: bigBangMultiplier.clone(),
+      source: 'bigBang'
+    });
+    autoDetails.multipliers.push({
+      id: 'bigBangMultiplier',
+      label: bigBangMultiplierLabel,
+      value: bigBangMultiplier.clone(),
+      source: 'bigBang'
+    });
+  }
+  clickTotalMultiplier = clickTotalMultiplier.multiply(bigBangMultiplier);
+  autoTotalMultiplier = autoTotalMultiplier.multiply(bigBangMultiplier);
+
   clickDetails.totalMultiplier = clickTotalMultiplier.clone();
   autoDetails.totalMultiplier = autoTotalMultiplier.clone();
 
@@ -20777,6 +20828,7 @@ function recalcProduction() {
       source: 'metaux'
     });
   }
+  perClick = perClick.multiply(bigBangMultiplier);
   if (perClick.compare(LayeredNumber.zero()) < 0) {
     perClick = LayeredNumber.zero();
   }
@@ -20793,6 +20845,7 @@ function recalcProduction() {
       source: 'metaux'
     });
   }
+  perSecond = perSecond.multiply(bigBangMultiplier);
   clickDetails.sources.multipliers.apsCrit = hasApsCritMultiplier
     ? apsCritMultiplier.clone()
     : LayeredNumber.one();
