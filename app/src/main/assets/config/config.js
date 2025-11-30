@@ -1629,6 +1629,7 @@ const GAME_CONFIG = {
       'collectionMultiplier',
       'frenzy',
       'trophyMultiplier',
+      'bigBangMultiplier',
       'total'
     ]
   },
