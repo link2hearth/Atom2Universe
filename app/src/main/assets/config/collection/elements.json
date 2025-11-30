@@ -21,7 +21,19 @@
     "numero": 2,
     "name": "Hélium",
     "famille": "noble-gas",
-    "rarete": "commun"
+    "rarete": "commun",
+    "effects": [
+      {
+        "id": "first-acquisition",
+        "trigger": "firstAcquisition",
+        "apcFlat": 10,
+        "apsFlat": 10,
+        "label": "scripts.config.elements.helium.firstAcquisition.label",
+        "notes": [
+          "scripts.config.elements.helium.firstAcquisition.note"
+        ]
+      }
+    ]
   },
   {
     "numero": 3,
