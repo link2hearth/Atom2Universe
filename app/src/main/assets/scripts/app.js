@@ -18883,6 +18883,24 @@ function computeGlobalCostModifier() {
   return 1;
 }
 
+function calculateCompressedShopBatchCost(startLevel, quantity) {
+  const buyAmount = Math.max(1, Math.floor(Number(quantity) || 0));
+  const initialLevel = Math.max(0, Math.floor(Number(startLevel) || 0));
+  let total = LayeredNumber.zero();
+  for (let i = 1; i <= buyAmount; i += 1) {
+    const levelCost = getCompressedShopCost(initialLevel + i);
+    if (levelCost > 0) {
+      total = total.add(new LayeredNumber(levelCost));
+    }
+  }
+  return total;
+}
+
+function computeCompressedShopCost(definition, quantity = 1) {
+  const level = getUpgradeLevel(gameState.upgrades, definition.id);
+  return calculateCompressedShopBatchCost(level, quantity);
+}
+
 function getUpgradeCostBigBangMultiplier(definition) {
   const multiplierRaw = Number(definition?.bigBangBaseCostMultiplier ?? 1);
   if (!Number.isFinite(multiplierRaw) || multiplierRaw <= 0 || Math.abs(multiplierRaw - 1) < 1e-9) {
@@ -18905,6 +18923,11 @@ function computeUpgradeCost(def, quantity = 1) {
   const modifier = computeGlobalCostModifier();
   const baseCostRaw = Number(def.baseCost ?? 0);
   const buyAmount = Math.max(1, Math.floor(Number(quantity) || 0));
+
+  if (def.pricingModel === 'compressed') {
+    const compressedCost = computeCompressedShopCost(def, buyAmount);
+    return modifier !== 1 ? compressedCost.multiplyNumber(modifier) : compressedCost;
+  }
 
   const linearIncrementRaw = Number(def.costIncrement ?? 0);
   const bigBangMultiplier = getUpgradeCostBigBangMultiplier(def);
@@ -18941,6 +18964,9 @@ function computeUpgradeTotalSpent(definition, level) {
   const normalizedLevel = Number.isFinite(level) ? Math.max(0, Math.floor(level)) : 0;
   if (normalizedLevel <= 0) {
     return LayeredNumber.zero();
+  }
+  if (definition.pricingModel === 'compressed') {
+    return calculateCompressedShopBatchCost(0, normalizedLevel);
   }
   const baseCost = Number(definition.baseCost ?? 0);
   if (!Number.isFinite(baseCost) || baseCost <= 0) {

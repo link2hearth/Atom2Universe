@@ -2554,14 +2554,14 @@
         "godFinger": {
           "name": "Doigt créateur",
           "description": "Canalisez un pouvoir divin dans un seul clic.",
-          "effect": "Production manuelle.",
-          "effectSummary": "Production manuelle évolutive. Coût en hausse progressive."
+          "effect": "Production manuelle avec indices compressés : +1 APC de base avant achats et progression non linéaire partagée avec le Cœur d’étoile.",
+          "effectSummary": "Boost manuel compressé partagé avec le Cœur d’étoile. Coûts et bonus non linéaires."
         },
         "starCore": {
           "name": "Cœur d’étoile",
           "description": "Condense une étoile pour alimenter vos récoltes automatiques.",
-          "effect": "Production passive.",
-          "effectSummary": "Production passive évolutive. Coût en hausse progressive."
+          "effect": "Production passive avec indices compressés : commence à 0 APS et suit la même progression non linéaire que le Doigt créateur.",
+          "effectSummary": "Boost passif compressé partagé avec le Doigt créateur. Coûts et bonus non linéaires."
         },
         "gachaTicketBooth": {
           "name": "Guichet gacha",

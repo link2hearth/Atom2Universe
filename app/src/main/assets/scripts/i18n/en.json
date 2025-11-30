@@ -2617,14 +2617,14 @@
         "godFinger": {
           "name": "God Finger",
           "description": "Channel divine might into a single click.",
-          "effect": "Manual production: starts at +1 APC and grows by roughly +12% per level.",
-          "effectSummary": "Manual production boost. Gradually increasing cost."
+          "effect": "Manual production with compressed indices: +1 APC baseline and the same non-linear growth as Star Core.",
+          "effectSummary": "Compressed manual boost shared with Star Core. Non-linear costs and bonuses."
         },
         "starCore": {
           "name": "Star Core",
           "description": "Condense a star to power your automated harvests.",
-          "effect": "Passive production: starts at +1 APS and grows by roughly +12% per level.",
-          "effectSummary": "Passive production boost. Gradually increasing cost."
+          "effect": "Passive production with compressed indices: starts from 0 APS and follows the same non-linear growth as God Finger.",
+          "effectSummary": "Compressed passive boost shared with God Finger. Non-linear costs and bonuses."
         },
         "gachaTicketBooth": {
           "name": "Gacha Booth",

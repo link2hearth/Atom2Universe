@@ -3207,17 +3207,15 @@ function getFusionFlatBonusTotal() {
 }
 
 function getShopBaselineProductionTotal() {
-  if (typeof calculateProgressiveBonus !== 'function') {
+  if (typeof getCompressedShopBonus !== 'function') {
     return 0;
   }
   const upgrades = gameState?.upgrades;
-  const apcFromShop = calculateProgressiveBonus(
-    typeof getUpgradeLevel === 'function' ? getUpgradeLevel(upgrades, GOD_FINGER_UPGRADE_ID) : 0,
-    1
+  const apcFromShop = getCompressedShopBonus(
+    typeof getUpgradeLevel === 'function' ? getUpgradeLevel(upgrades, GOD_FINGER_UPGRADE_ID) : 0
   );
-  const apsFromShop = calculateProgressiveBonus(
-    typeof getUpgradeLevel === 'function' ? getUpgradeLevel(upgrades, STAR_CORE_UPGRADE_ID) : 0,
-    1
+  const apsFromShop = getCompressedShopBonus(
+    typeof getUpgradeLevel === 'function' ? getUpgradeLevel(upgrades, STAR_CORE_UPGRADE_ID) : 0
   );
   const total = Number(apcFromShop) + Number(apsFromShop);
   return Number.isFinite(total) && total > 0 ? total : 0;
