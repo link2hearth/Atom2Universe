@@ -10803,13 +10803,13 @@ function subscribeTicketStarSpriteLanguageUpdates() {
 }
 
 function updateTicketStarSpriteOptionVisibility() {
-  const unlocked = gameState.ticketStarUnlocked === true;
   if (elements.ticketStarSpriteCard) {
     elements.ticketStarSpriteCard.hidden = false;
     elements.ticketStarSpriteCard.setAttribute('aria-hidden', 'false');
   }
   if (elements.ticketStarSpriteToggle) {
-    elements.ticketStarSpriteToggle.disabled = !unlocked;
+    elements.ticketStarSpriteToggle.disabled = false;
+    elements.ticketStarSpriteToggle.setAttribute('aria-disabled', 'false');
   }
   updateTicketStarSpriteStatusLabel(getTicketStarSpritePreference() === 'animated');
 }
@@ -23846,22 +23846,22 @@ function applySerializedGameState(raw) {
     gameState.ticketStarAverageIntervalSeconds = DEFAULT_TICKET_STAR_INTERVAL_SECONDS;
   }
   const storedAutoCollect = data.ticketStarAutoCollect;
+  let autoCollectFromSave = null;
   if (storedAutoCollect && typeof storedAutoCollect === 'object') {
     const rawDelay = storedAutoCollect.delaySeconds
       ?? storedAutoCollect.delay
       ?? storedAutoCollect.seconds
       ?? storedAutoCollect.value;
     const delaySeconds = Number(rawDelay);
-    gameState.ticketStarAutoCollect = Number.isFinite(delaySeconds) && delaySeconds >= 0
+    autoCollectFromSave = Number.isFinite(delaySeconds) && delaySeconds >= 0
       ? { delaySeconds }
       : null;
   } else if (storedAutoCollect === true) {
-    gameState.ticketStarAutoCollect = { delaySeconds: 0 };
+    autoCollectFromSave = { delaySeconds: 0 };
   } else if (typeof storedAutoCollect === 'number' && Number.isFinite(storedAutoCollect) && storedAutoCollect >= 0) {
-    gameState.ticketStarAutoCollect = { delaySeconds: storedAutoCollect };
-  } else {
-    gameState.ticketStarAutoCollect = null;
+    autoCollectFromSave = { delaySeconds: storedAutoCollect };
   }
+  gameState.ticketStarAutoCollect = autoCollectFromSave;
   const storedAutoCollectEnabledRaw =
     data.ticketStarAutoCollectEnabled
     ?? data.ticketStarAutoCollectEnable
@@ -23870,6 +23870,9 @@ function applySerializedGameState(raw) {
     || storedAutoCollectEnabledRaw === 'true'
     || storedAutoCollectEnabledRaw === 1
     || storedAutoCollectEnabledRaw === '1';
+  if (autoCollectFromSave || storedAutoCollectEnabledRaw != null) {
+    getUnlockedTrophySet().add(TICKET_STAR_AUTO_COLLECT_TROPHY_ID);
+  }
   applyTicketStarAutoCollectEnabled(
     storedAutoCollectEnabled || storedAutoCollectEnabledRaw === false
       ? storedAutoCollectEnabled
