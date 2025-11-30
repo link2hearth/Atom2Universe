@@ -8,8 +8,8 @@
       {
         "id": "first-acquisition",
         "trigger": "firstAcquisition",
-        "apcFlat": 10,
-        "apsFlat": 10,
+        "apcFlat": 15,
+        "apsFlat": 1,
         "label": "scripts.config.elements.hydrogene.firstAcquisition.label",
         "notes": [
           "scripts.config.elements.hydrogene.firstAcquisition.note"
@@ -26,8 +26,8 @@
       {
         "id": "first-acquisition",
         "trigger": "firstAcquisition",
-        "apcFlat": 10,
-        "apsFlat": 10,
+        "apcFlat": 1,
+        "apsFlat": 100,
         "label": "scripts.config.elements.helium.firstAcquisition.label",
         "notes": [
           "scripts.config.elements.helium.firstAcquisition.note"
