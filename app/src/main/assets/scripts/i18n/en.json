@@ -3283,6 +3283,7 @@
         "status": {
           "spinning": "Reels are spinning…",
           "selectBet": "Select a bet before launching the reels.",
+          "betLimit": "Bet limited to {limit} atoms (max {multiplier}× APC).",
           "insufficientAtoms": "Not enough atoms for this bet.",
           "lose": "No win this time.",
           "winSuitLine": "Line of {suit}! Payout ×{multiplier}.",

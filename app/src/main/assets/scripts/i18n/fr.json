@@ -3220,6 +3220,7 @@
         "status": {
           "spinning": "La roulette tourne…",
           "selectBet": "Sélectionnez une mise avant de lancer la roulette.",
+          "betLimit": "Mise limitée à {limit} atomes (max {multiplier}× APC).",
           "insufficientAtoms": "Solde insuffisant pour cette mise.",
           "lose": "Pas de gain cette fois-ci.",
           "winSuitLine": "Ligne de {suit} ! Gain ×{multiplier}.",
