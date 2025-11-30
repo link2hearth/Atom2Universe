@@ -639,6 +639,84 @@ function calculateProgressiveBonus(level = 0, baseIncrement = 1, growthRate = SH
   return Number.isFinite(rounded) && rounded > 0 ? rounded : 0;
 }
 
+const COMPRESSED_SHOP_SETTINGS = Object.freeze({
+  visibleToInternalCurve: {
+    maxVisible: 20,
+    maxInternal: 120,
+    power: 0.5,
+    postCurveOffset: 100
+  },
+  bonus: {
+    exponent: 30,
+    denominator: 999
+  },
+  ratio: {
+    A: 295703 / 98901,
+    B: 9091 / 899100,
+    C: -1 / 9890100
+  }
+});
+
+function clampCompressedShopLevel(level) {
+  const normalized = Math.max(0, Math.floor(Number(level) || 0));
+  return normalized;
+}
+
+function getCompressedShopEffectiveIndex(level) {
+  const normalized = clampCompressedShopLevel(level);
+  if (normalized <= 0) {
+    return 0;
+  }
+
+  const { maxVisible, maxInternal, power, postCurveOffset } = COMPRESSED_SHOP_SETTINGS.visibleToInternalCurve;
+  if (normalized <= maxVisible) {
+    const span = Math.max(1, maxVisible - 1);
+    const t = (normalized - 1) / span;
+    const curved = Math.pow(Math.max(0, Math.min(1, t)), power);
+    return 1 + Math.round(curved * (Math.max(1, maxInternal) - 1));
+  }
+
+  return normalized + postCurveOffset;
+}
+
+function getCompressedShopLogBonus(level) {
+  const index = getCompressedShopEffectiveIndex(level);
+  if (index <= 0) {
+    return -Infinity;
+  }
+  const { exponent, denominator } = COMPRESSED_SHOP_SETTINGS.bonus;
+  return exponent * (index - 1) / denominator;
+}
+
+function getCompressedShopBonus(level) {
+  const logBonus = getCompressedShopLogBonus(level);
+  const value = Math.pow(10, logBonus);
+  if (!Number.isFinite(value) || value <= 0) {
+    return 0;
+  }
+  return Math.max(1, Math.floor(value));
+}
+
+function getCompressedShopLogCost(level) {
+  const index = getCompressedShopEffectiveIndex(level);
+  if (index <= 0) {
+    return -Infinity;
+  }
+  const { A, B, C } = COMPRESSED_SHOP_SETTINGS.ratio;
+  const logBonus = getCompressedShopLogBonus(level);
+  const logRatio = A + B * index + C * index * index;
+  return logBonus + logRatio;
+}
+
+function getCompressedShopCost(level) {
+  const logCost = getCompressedShopLogCost(level);
+  const cost = Math.pow(10, logCost);
+  if (!Number.isFinite(cost) || cost <= 0) {
+    return 0;
+  }
+  return Math.max(1, Math.floor(cost));
+}
+
 function loadConfigJson(path, fallback) {
   if (typeof path !== 'string' || !path.trim()) {
     return fallback;
@@ -690,12 +768,11 @@ function createShopBuildingDefinitions() {
       name: 'Doigt créateur',
       description: 'Le pouvoir divin canalisé dans un seul clic.',
       effectSummary:
-        'Production manuelle : commence à +1 APC et progresse d’environ +11 % par niveau.',
+        'Production manuelle compressée : +1 APC de base et progression non linéaire partagée avec le Cœur d’étoile.',
       category: 'manual',
-      baseCost: 25,
-      costScale: 1.18,
+      pricingModel: 'compressed',
       effect: (level = 0) => {
-        const clickAdd = calculateProgressiveBonus(level, 1);
+        const clickAdd = getCompressedShopBonus(level);
         return { clickAdd };
       }
     },
@@ -704,12 +781,11 @@ function createShopBuildingDefinitions() {
       name: 'Cœur d’étoile',
       description: 'Compactez une étoile pour générer des flux constants d’atomes.',
       effectSummary:
-        'Production passive : commence à +1 APS et progresse d’environ +11 % par niveau.',
+        'Production passive compressée : progression non linéaire partagée avec le Doigt créateur.',
       category: 'auto',
-      baseCost: 30,
-      costScale: 1.18,
+      pricingModel: 'compressed',
       effect: (level = 0) => {
-        const autoAdd = calculateProgressiveBonus(level, 1);
+        const autoAdd = getCompressedShopBonus(level);
         return { autoAdd };
       }
     },
