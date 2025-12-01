@@ -314,6 +314,42 @@ const ACTIVE_NEWS_SETTINGS = typeof NEWS_SETTINGS !== 'undefined'
     ? NEWS_SETTINGS
     : DEFAULT_NEWS_SETTINGS;
 
+const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
+  enabledByDefault: true,
+  maxItems: 120,
+  refreshIntervalMs: 30 * 60 * 1000,
+  requestTimeoutMs: 15000,
+  favoriteBackgroundRotationMs: 5 * 60 * 1000,
+  favoriteBackgroundEnabledByDefault: false,
+  proxyBaseUrls: [
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.isomorphic-git.org/'
+  ],
+  sources: [
+    { id: 'flickr-public', titleKey: 'index.sections.images.sources.flickr', feedUrl: 'https://www.flickr.com/services/feeds/photos_public.gne' },
+    { id: 'unsplash', titleKey: 'index.sections.images.sources.unsplash', feedUrl: 'https://unsplash.com/feeds/rss' },
+    { id: 'pexels', titleKey: 'index.sections.images.sources.pexels', feedUrl: 'https://www.pexels.com/new-free-photos/feed/' },
+    { id: 'reuters-images', titleKey: 'index.sections.images.sources.reuters', feedUrl: 'https://www.reuters.com/rssFeed/worldNews?type=images' },
+    { id: 'nasa-apod', titleKey: 'index.sections.images.sources.apod', feedUrl: 'https://apod.nasa.gov/apod.rss' },
+    { id: 'nasa-image-day', titleKey: 'index.sections.images.sources.nasaImageDay', feedUrl: 'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss' },
+    { id: 'esa-gallery', titleKey: 'index.sections.images.sources.esa', feedUrl: 'https://www.esa.int/rssfeed/ESA_Picture_Gallery' },
+    { id: 'natgeo-pod', titleKey: 'index.sections.images.sources.nationalGeographic', feedUrl: 'https://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.feed' },
+    { id: 'smithsonian', titleKey: 'index.sections.images.sources.smithsonian', feedUrl: 'https://www.smithsonianmag.com/rss/photos/' },
+    { id: 'reddit-pics', titleKey: 'index.sections.images.sources.redditPics', feedUrl: 'https://www.reddit.com/r/pics.rss' },
+    { id: 'reddit-earthporn', titleKey: 'index.sections.images.sources.redditEarth', feedUrl: 'https://www.reddit.com/r/EarthPorn.rss' },
+    { id: 'reddit-spaceporn', titleKey: 'index.sections.images.sources.redditSpace', feedUrl: 'https://www.reddit.com/r/spaceporn.rss' },
+    { id: 'wikimedia-featured', titleKey: 'index.sections.images.sources.wikimediaFeatured', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=featured&feedformat=rss' },
+    { id: 'wikimedia-potd', titleKey: 'index.sections.images.sources.wikimediaPotd', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=potd&language=fr&feedformat=rss' },
+    { id: 'wikipedia-lumiere', titleKey: 'index.sections.images.sources.wikipedia', feedUrl: 'https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Lumi%C3%A8re_sur?action=render&feed=rss' }
+  ]
+});
+
+const ACTIVE_IMAGE_FEED_SETTINGS = typeof IMAGE_FEED_SETTINGS !== 'undefined'
+  && IMAGE_FEED_SETTINGS
+  && typeof IMAGE_FEED_SETTINGS === 'object'
+    ? IMAGE_FEED_SETTINGS
+    : DEFAULT_IMAGE_FEED_SETTINGS;
+
 function normalizeCryptoWidgetEndpoint(endpoint, fallback) {
   if (typeof endpoint === 'string' && endpoint.trim()) {
     return endpoint.trim();
@@ -460,6 +496,21 @@ let newsTickerTimerId = null;
 let newsTickerActiveStoryId = null;
 let newsHighlightedStoryId = null;
 
+let imageFeedItems = [];
+let imageFeedVisibleItems = [];
+let imageFeedFavorites = new Set();
+let imageFeedEnabledSources = null;
+let imageFeedShowFavoritesOnly = false;
+let imageFeedCurrentIndex = 0;
+let imageFeedIsLoading = false;
+let imageFeedLastError = null;
+let imageFeedRefreshTimerId = null;
+let imageFeedAbortController = null;
+let imageBackgroundEnabled = false;
+let favoriteBackgroundItems = [];
+let favoriteBackgroundIndex = 0;
+let favoriteBackgroundTimerId = null;
+
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
 
@@ -499,6 +550,10 @@ const NEWS_HIDDEN_ITEMS_STORAGE_KEY = 'atom2univers.news.hiddenItems.v1';
 const NEWS_LAST_QUERY_STORAGE_KEY = 'atom2univers.news.lastQuery';
 const NEWS_BANNED_WORDS_STORAGE_KEY = 'atom2univers.news.bannedWords.v1';
 const NEWS_SOURCES_STORAGE_KEY = 'atom2univers.news.sources.v1';
+const IMAGE_FEED_FAVORITES_STORAGE_KEY = 'atom2univers.images.favorites.v1';
+const IMAGE_FEED_SOURCES_STORAGE_KEY = 'atom2univers.images.sources.v1';
+const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
+const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
@@ -6358,6 +6413,7 @@ function collectDomElements() {
     navTableButton: document.querySelector('.nav-button[data-target="tableau"]'),
     navFusionButton: document.querySelector('.nav-button[data-target="fusion"]'),
     navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
+    navImagesButton: document.querySelector('.nav-button[data-target="images"]'),
     navNewsButton: document.querySelector('.nav-button[data-target="news"]'),
     navCollectionButton: document.querySelector('.nav-button[data-target="collection"]'),
     navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
@@ -6389,6 +6445,7 @@ function collectDomElements() {
   cryptoWidgetStatus: document.getElementById('cryptoWidgetStatus'),
   cryptoWidgetBtcValue: document.getElementById('cryptoWidgetBtcValue'),
   cryptoWidgetEthValue: document.getElementById('cryptoWidgetEthValue'),
+  favoriteBackground: document.getElementById('favoriteBackground'),
   statusApcFrenzy: {
     container: document.getElementById('statusApcFrenzy'),
     multiplier: document.getElementById('statusApcFrenzyMultiplier'),
@@ -6575,6 +6632,21 @@ function collectDomElements() {
   cryptoWidgetToggleCard: document.getElementById('cryptoWidgetToggleCard'),
   cryptoWidgetToggle: document.getElementById('cryptoWidgetToggle'),
   cryptoWidgetToggleStatus: document.getElementById('cryptoWidgetToggleStatus'),
+  imagesStatus: document.getElementById('imagesStatus'),
+  imagesRefreshButton: document.getElementById('imagesRefreshButton'),
+  imagesFavoritesToggle: document.getElementById('imagesFavoritesToggle'),
+  imagesBackgroundToggle: document.getElementById('imagesBackgroundToggle'),
+  imagesOpenButton: document.getElementById('imagesOpenButton'),
+  imagesDownloadButton: document.getElementById('imagesDownloadButton'),
+  imagesSourcesList: document.getElementById('imagesSourcesList'),
+  imagesSourcesReset: document.getElementById('imagesSourcesReset'),
+  imagesGallery: document.getElementById('imagesGallery'),
+  imagesEmptyState: document.getElementById('imagesEmptyState'),
+  imagesPrevButton: document.getElementById('imagesPrevButton'),
+  imagesNextButton: document.getElementById('imagesNextButton'),
+  imagesActiveImage: document.getElementById('imagesActiveImage'),
+  imagesActiveTitle: document.getElementById('imagesActiveTitle'),
+  imagesActiveSource: document.getElementById('imagesActiveSource'),
   newsToggleCard: document.getElementById('newsToggleCard'),
   newsToggle: document.getElementById('newsToggle'),
   newsToggleStatus: document.getElementById('newsToggleStatus'),
@@ -11385,6 +11457,817 @@ function subscribeCryptoWidgetLanguageUpdates() {
     updateCryptoWidgetPriceDisplay();
     updateCryptoWidgetStatusMessage();
     updateCryptoWidgetToggleStatusLabel(cryptoWidgetState.isWidgetEnabled);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function getImageFeedSettings() {
+  return ACTIVE_IMAGE_FEED_SETTINGS || DEFAULT_IMAGE_FEED_SETTINGS;
+}
+
+function getImageBackgroundRotationMs() {
+  const settings = getImageFeedSettings();
+  const raw = Number(settings?.favoriteBackgroundRotationMs);
+  if (Number.isFinite(raw) && raw > 0) {
+    return raw;
+  }
+  return DEFAULT_IMAGE_FEED_SETTINGS.favoriteBackgroundRotationMs;
+}
+
+function normalizeImageSource(source, index = 0) {
+  if (!source || typeof source !== 'object') {
+    return null;
+  }
+  const id = typeof source.id === 'string' && source.id.trim()
+    ? source.id.trim()
+    : `image-source-${index}`;
+  const feedUrl = typeof source.feedUrl === 'string' ? source.feedUrl.trim() : '';
+  if (!feedUrl) {
+    return null;
+  }
+  const titleKey = typeof source.titleKey === 'string' ? source.titleKey : '';
+  const title = typeof source.title === 'string' ? source.title : '';
+  return { id, feedUrl, titleKey, title };
+}
+
+function getAvailableImageSources() {
+  const settings = getImageFeedSettings();
+  const rawSources = Array.isArray(settings?.sources) ? settings.sources : [];
+  return rawSources
+    .map((entry, index) => normalizeImageSource(entry, index))
+    .filter(Boolean);
+}
+
+function getImageSourceLabel(source) {
+  if (!source) {
+    return 'Source';
+  }
+  const fallback = source.title || source.id || 'Source';
+  if (source.titleKey) {
+    return translateOrDefault(source.titleKey, fallback);
+  }
+  return fallback;
+}
+
+function getImageSourceLabelById(sourceId) {
+  const sources = getAvailableImageSources();
+  const match = sources.find(entry => entry.id === sourceId);
+  return getImageSourceLabel(match);
+}
+
+function getEnabledImageSources(availableSources = getAvailableImageSources()) {
+  if (!(imageFeedEnabledSources instanceof Set)) {
+    imageFeedEnabledSources = readStoredImageSources();
+  }
+  if (!(imageFeedEnabledSources instanceof Set)) {
+    imageFeedEnabledSources = new Set(availableSources.map(source => source.id));
+  }
+  const validIds = new Set(availableSources.map(source => source.id));
+  const normalized = Array.from(imageFeedEnabledSources).filter(id => validIds.has(id));
+  if (normalized.length !== imageFeedEnabledSources.size) {
+    imageFeedEnabledSources = new Set(normalized);
+    writeStoredImageSources(imageFeedEnabledSources);
+  }
+  return availableSources.filter(source => imageFeedEnabledSources.has(source.id));
+}
+
+function readStoredImageFavorites() {
+  try {
+    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_FAVORITES_STORAGE_KEY);
+    if (!raw) {
+      return new Set();
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return new Set(parsed.filter(item => typeof item === 'string' && item));
+    }
+  } catch (error) {
+    console.warn('Unable to read image favorites', error);
+  }
+  return new Set();
+}
+
+function writeStoredImageFavorites(favorites) {
+  try {
+    const items = Array.from(favorites || []).filter(item => typeof item === 'string' && item);
+    if (!items.length) {
+      globalThis.localStorage?.removeItem(IMAGE_FEED_FAVORITES_STORAGE_KEY);
+      return;
+    }
+    globalThis.localStorage?.setItem(IMAGE_FEED_FAVORITES_STORAGE_KEY, JSON.stringify(items));
+  } catch (error) {
+    console.warn('Unable to persist image favorites', error);
+  }
+}
+
+function readStoredImageBackgroundEnabled() {
+  try {
+    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY);
+    if (raw === 'true') {
+      return true;
+    }
+    if (raw === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read background preference', error);
+  }
+  const settings = getImageFeedSettings();
+  return Boolean(settings?.favoriteBackgroundEnabledByDefault);
+}
+
+function writeStoredImageBackgroundEnabled(enabled) {
+  try {
+    globalThis.localStorage?.setItem(IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY, enabled ? 'true' : 'false');
+  } catch (error) {
+    console.warn('Unable to persist background preference', error);
+  }
+}
+
+function readStoredImageSources() {
+  try {
+    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_SOURCES_STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return new Set(parsed.filter(entry => typeof entry === 'string' && entry));
+    }
+  } catch (error) {
+    console.warn('Unable to read image sources selection', error);
+  }
+  return null;
+}
+
+function writeStoredImageSources(sourceSet) {
+  try {
+    const ids = Array.from(sourceSet || []).filter(entry => typeof entry === 'string' && entry);
+    if (!ids.length) {
+      globalThis.localStorage?.removeItem(IMAGE_FEED_SOURCES_STORAGE_KEY);
+      return;
+    }
+    globalThis.localStorage?.setItem(IMAGE_FEED_SOURCES_STORAGE_KEY, JSON.stringify(ids));
+  } catch (error) {
+    console.warn('Unable to persist image source selection', error);
+  }
+}
+
+function readStoredImageCurrentIndex() {
+  try {
+    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_LAST_INDEX_STORAGE_KEY);
+    if (raw == null) {
+      return 0;
+    }
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) && parsed >= 0 ? Math.floor(parsed) : 0;
+  } catch (error) {
+    console.warn('Unable to read image gallery index', error);
+  }
+  return 0;
+}
+
+function writeStoredImageCurrentIndex(index) {
+  try {
+    const safeIndex = Math.max(0, Math.floor(Number(index) || 0));
+    globalThis.localStorage?.setItem(IMAGE_FEED_LAST_INDEX_STORAGE_KEY, String(safeIndex));
+  } catch (error) {
+    console.warn('Unable to persist image gallery index', error);
+  }
+}
+
+function buildImageRequestUrls(feedUrl) {
+  const settings = getImageFeedSettings();
+  const proxies = [];
+  if (Array.isArray(settings?.proxyBaseUrls)) {
+    proxies.push(...settings.proxyBaseUrls);
+  }
+  if (typeof settings?.proxyBaseUrl === 'string') {
+    proxies.push(settings.proxyBaseUrl);
+  }
+  const sanitized = proxies
+    .map(entry => (typeof entry === 'string' ? entry.trim() : ''))
+    .filter(Boolean);
+  const urls = sanitized.map(proxy => {
+    if (proxy.includes('{feed}')) {
+      return proxy.replace('{feed}', encodeURIComponent(feedUrl));
+    }
+    const needsEncoding = proxy.includes('?');
+    const target = needsEncoding ? encodeURIComponent(feedUrl) : feedUrl;
+    return `${proxy}${target}`;
+  });
+  urls.push(feedUrl);
+  return Array.from(new Set(urls));
+}
+
+function setImagesStatus(key, fallback, params = {}) {
+  if (!elements.imagesStatus) {
+    return;
+  }
+  elements.imagesStatus.setAttribute('data-i18n', key);
+  elements.imagesStatus.textContent = translateOrDefault(key, fallback, params);
+}
+
+function hashImageKey(value) {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash << 5) - hash + value.charCodeAt(index);
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
+
+function buildImageItemId(sourceId, link, title) {
+  const base = `${sourceId || 'feed'}|${link || ''}|${title || ''}`;
+  return hashImageKey(base || `${Date.now()}-${Math.random()}`);
+}
+
+function normalizeImageUrl(url) {
+  if (typeof url !== 'string') {
+    return '';
+  }
+  const trimmed = url.trim();
+  if (!trimmed) {
+    return '';
+  }
+  if (trimmed.startsWith('//')) {
+    return `https:${trimmed}`;
+  }
+  return trimmed;
+}
+
+function extractImageUrlFromHtml(html) {
+  if (typeof html !== 'string') {
+    return '';
+  }
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return normalizeImageUrl(match ? match[1] : '');
+}
+
+function extractImageUrlFromNode(node) {
+  if (!node || typeof node.querySelector !== 'function') {
+    return '';
+  }
+  const mediaContent = node.querySelector('media\\:content');
+  const enclosure = node.querySelector('enclosure[url]');
+  const linkEnclosure = node.querySelector('link[rel="enclosure"]');
+  const descriptionHtml = node.querySelector('content\\:encoded')?.textContent
+    || node.querySelector('description')?.textContent
+    || '';
+  const candidates = [
+    mediaContent?.getAttribute('url'),
+    enclosure?.getAttribute('url'),
+    linkEnclosure?.getAttribute('href'),
+    extractImageUrlFromHtml(descriptionHtml)
+  ]
+    .map(url => normalizeImageUrl(url))
+    .filter(Boolean);
+  return candidates.length ? candidates[0] : '';
+}
+
+function parseImageFeed(xmlText, sourceId) {
+  if (typeof DOMParser !== 'function') {
+    return [];
+  }
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xmlText, 'application/xml');
+  const entries = Array.from(doc.querySelectorAll('item, entry'));
+  const items = entries.map(entry => {
+    const title = entry.querySelector('title')?.textContent?.trim() || '';
+    const linkElement = entry.querySelector('link');
+    const link = normalizeImageUrl(linkElement?.getAttribute('href') || linkElement?.textContent || '');
+    const pubDateText = entry.querySelector('pubDate, updated, published')?.textContent?.trim();
+    const pubDate = pubDateText ? Date.parse(pubDateText) : 0;
+    const imageUrl = extractImageUrlFromNode(entry);
+    if (!imageUrl) {
+      return null;
+    }
+    return {
+      id: buildImageItemId(sourceId, link || imageUrl, title),
+      title: title || getImageSourceLabelById(sourceId),
+      link: link || imageUrl,
+      imageUrl,
+      sourceId,
+      pubDate: Number.isFinite(pubDate) ? pubDate : 0
+    };
+  }).filter(Boolean);
+  items.sort((first, second) => {
+    const a = Number(first?.pubDate) || 0;
+    const b = Number(second?.pubDate) || 0;
+    return b - a;
+  });
+  return items;
+}
+
+function toggleImageFavorite(itemId) {
+  if (!itemId) {
+    return;
+  }
+  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+  if (favorites.has(itemId)) {
+    favorites.delete(itemId);
+  } else {
+    favorites.add(itemId);
+  }
+  imageFeedFavorites = favorites;
+  writeStoredImageFavorites(imageFeedFavorites);
+  refreshImagesDisplay();
+  refreshFavoriteBackgroundPool({ resetIndex: true });
+}
+
+function clearFavoriteBackgroundTimer() {
+  if (favoriteBackgroundTimerId != null) {
+    clearTimeout(favoriteBackgroundTimerId);
+    favoriteBackgroundTimerId = null;
+  }
+}
+
+function scheduleFavoriteBackgroundRotation() {
+  clearFavoriteBackgroundTimer();
+  if (!imageBackgroundEnabled || !favoriteBackgroundItems.length) {
+    return;
+  }
+  const delay = Math.max(1000, getImageBackgroundRotationMs() || 300000);
+  favoriteBackgroundTimerId = setTimeout(() => {
+    if (!favoriteBackgroundItems.length) {
+      clearFavoriteBackgroundTimer();
+      return;
+    }
+    favoriteBackgroundIndex = (favoriteBackgroundIndex + 1) % favoriteBackgroundItems.length;
+    applyFavoriteBackground();
+  }, delay);
+}
+
+function applyFavoriteBackground() {
+  clearFavoriteBackgroundTimer();
+  const pool = Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems : [];
+  const hasPool = pool.length > 0;
+  const canDisplay = imageBackgroundEnabled && hasPool;
+  if (!elements.favoriteBackground) {
+    if (canDisplay) {
+      scheduleFavoriteBackgroundRotation();
+    }
+    return;
+  }
+
+  if (!canDisplay) {
+    elements.favoriteBackground.style.backgroundImage = '';
+    elements.favoriteBackground.toggleAttribute('hidden', true);
+    document.body.classList.toggle('favorite-background-active', false);
+    return;
+  }
+
+  if (favoriteBackgroundIndex >= pool.length) {
+    favoriteBackgroundIndex = 0;
+  }
+  const current = pool[favoriteBackgroundIndex] || null;
+  if (current) {
+    elements.favoriteBackground.style.backgroundImage = `url("${current.imageUrl}")`;
+  } else {
+    elements.favoriteBackground.style.backgroundImage = '';
+  }
+  const isGameActive = document.body?.dataset?.activePage === 'game';
+  const shouldShow = Boolean(current) && isGameActive;
+  elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
+  document.body.classList.toggle('favorite-background-active', shouldShow);
+  scheduleFavoriteBackgroundRotation();
+}
+
+function refreshFavoriteBackgroundPool(options = {}) {
+  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+  const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
+  favoriteBackgroundItems = items.filter(item => favorites.has(item.id) && item.imageUrl);
+  if (options.resetIndex) {
+    favoriteBackgroundIndex = 0;
+  }
+  if (favoriteBackgroundIndex >= favoriteBackgroundItems.length) {
+    favoriteBackgroundIndex = 0;
+  }
+  applyFavoriteBackground();
+}
+
+function getVisibleImageItems() {
+  const enabledSources = new Set(getEnabledImageSources().map(source => source.id));
+  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+  const baseItems = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
+    .filter(item => enabledSources.has(item.sourceId));
+  const filtered = imageFeedShowFavoritesOnly
+    ? baseItems.filter(item => favorites.has(item.id))
+    : baseItems;
+  imageFeedVisibleItems = filtered;
+  if (filtered.length === 0) {
+    imageFeedCurrentIndex = 0;
+  } else if (imageFeedCurrentIndex >= filtered.length) {
+    imageFeedCurrentIndex = 0;
+  }
+  writeStoredImageCurrentIndex(imageFeedCurrentIndex);
+  return filtered;
+}
+
+function updateImagesEmptyState(visibleItems = imageFeedVisibleItems) {
+  if (!elements.imagesEmptyState) {
+    return;
+  }
+  const shouldShow = !(Array.isArray(visibleItems) && visibleItems.length);
+  elements.imagesEmptyState.toggleAttribute('hidden', !shouldShow);
+}
+
+function setImagesCurrentIndex(nextIndex) {
+  const total = Array.isArray(imageFeedVisibleItems) ? imageFeedVisibleItems.length : 0;
+  if (!total) {
+    imageFeedCurrentIndex = 0;
+    writeStoredImageCurrentIndex(imageFeedCurrentIndex);
+    return;
+  }
+  const clamped = Math.max(0, Math.min(Number(nextIndex) || 0, total - 1));
+  imageFeedCurrentIndex = clamped;
+  writeStoredImageCurrentIndex(imageFeedCurrentIndex);
+}
+
+function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
+  const items = Array.isArray(visibleItems) ? visibleItems : [];
+  const current = items[imageFeedCurrentIndex] || null;
+  if (!elements.imagesActiveImage || !elements.imagesActiveTitle || !elements.imagesActiveSource) {
+    return;
+  }
+  if (!current) {
+    elements.imagesActiveImage.src = '';
+    elements.imagesActiveImage.alt = '';
+    elements.imagesActiveTitle.textContent = '—';
+    elements.imagesActiveSource.textContent = '';
+    updateImagesEmptyState(items);
+    if (elements.imagesOpenButton) {
+      elements.imagesOpenButton.disabled = true;
+    }
+    if (elements.imagesDownloadButton) {
+      elements.imagesDownloadButton.disabled = true;
+    }
+    return;
+  }
+  elements.imagesActiveImage.src = current.imageUrl;
+  elements.imagesActiveImage.alt = current.title || getImageSourceLabelById(current.sourceId);
+  elements.imagesActiveTitle.textContent = current.title || '';
+  elements.imagesActiveSource.textContent = getImageSourceLabelById(current.sourceId);
+  updateImagesEmptyState(items);
+  if (elements.imagesOpenButton) {
+    elements.imagesOpenButton.disabled = false;
+  }
+  if (elements.imagesDownloadButton) {
+    elements.imagesDownloadButton.disabled = false;
+  }
+}
+
+function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
+  if (!elements.imagesGallery) {
+    return;
+  }
+  elements.imagesGallery.replaceChildren();
+  const items = Array.isArray(visibleItems) ? visibleItems : [];
+  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+  items.forEach((item, index) => {
+    const card = document.createElement('article');
+    card.className = 'images-card';
+    card.dataset.id = item.id;
+    if (index === imageFeedCurrentIndex) {
+      card.classList.add('is-active');
+    }
+    if (favorites.has(item.id)) {
+      card.classList.add('is-favorite');
+    }
+    const thumb = document.createElement('img');
+    thumb.className = 'images-card__thumb';
+    thumb.loading = 'lazy';
+    thumb.src = item.imageUrl;
+    thumb.alt = item.title || getImageSourceLabelById(item.sourceId);
+    const body = document.createElement('div');
+    body.className = 'images-card__body';
+    const title = document.createElement('p');
+    title.className = 'images-card__title';
+    title.textContent = item.title || '';
+    const source = document.createElement('p');
+    source.className = 'images-card__source';
+    source.textContent = getImageSourceLabelById(item.sourceId);
+    const favorite = document.createElement('span');
+    favorite.className = 'images-card__favorite';
+    favorite.textContent = '★';
+    favorite.title = translateOrDefault(
+      'index.sections.images.viewer.favorite',
+      'Toggle favorite'
+    );
+    favorite.addEventListener('click', event => {
+      event.stopPropagation();
+      toggleImageFavorite(item.id);
+    });
+    body.append(title, source);
+    card.append(thumb, body, favorite);
+    card.addEventListener('click', () => {
+      setImagesCurrentIndex(index);
+      refreshImagesDisplay({ skipStatus: true });
+    });
+    elements.imagesGallery.append(card);
+  });
+  updateImagesEmptyState(items);
+}
+
+function renderImageSources() {
+  if (!elements.imagesSourcesList) {
+    return;
+  }
+  const sources = getAvailableImageSources();
+  const enabledSources = new Set(getEnabledImageSources(sources).map(source => source.id));
+  elements.imagesSourcesList.replaceChildren();
+  sources.forEach(source => {
+    const listItem = document.createElement('li');
+    listItem.className = 'images-source';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = `images-source-${source.id}`;
+    input.checked = enabledSources.has(source.id);
+    const label = document.createElement('label');
+    label.htmlFor = input.id;
+    label.className = 'images-source__label';
+    const sourceLabel = getImageSourceLabel(source);
+    label.textContent = sourceLabel;
+    label.setAttribute(
+      'aria-label',
+      translateOrDefault('index.sections.images.sources.toggle', 'Toggle {source}', { source: sourceLabel })
+    );
+    input.addEventListener('change', () => {
+      if (!(imageFeedEnabledSources instanceof Set)) {
+        imageFeedEnabledSources = new Set(enabledSources);
+      }
+      if (input.checked) {
+        imageFeedEnabledSources.add(source.id);
+      } else {
+        imageFeedEnabledSources.delete(source.id);
+      }
+      writeStoredImageSources(imageFeedEnabledSources);
+      refreshImagesDisplay({ skipStatus: true });
+      fetchImageFeeds({ silent: true });
+    });
+    listItem.append(input, label);
+    elements.imagesSourcesList.append(listItem);
+  });
+}
+
+function updateImagesFavoritesToggleLabel() {
+  if (!elements.imagesFavoritesToggle) {
+    return;
+  }
+  const key = imageFeedShowFavoritesOnly
+    ? 'index.sections.images.actions.all'
+    : 'index.sections.images.actions.favoritesOnly';
+  const fallback = imageFeedShowFavoritesOnly ? 'Show all images' : 'Show favorites only';
+  elements.imagesFavoritesToggle.textContent = translateOrDefault(key, fallback);
+  elements.imagesFavoritesToggle.setAttribute('data-i18n', key);
+  elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'all';
+}
+
+function updateImagesBackgroundToggleLabel() {
+  if (!elements.imagesBackgroundToggle) {
+    return;
+  }
+  const key = imageBackgroundEnabled
+    ? 'index.sections.images.actions.background.disable'
+    : 'index.sections.images.actions.background.enable';
+  const fallback = imageBackgroundEnabled ? 'Hide on main page' : 'Show on main page';
+  elements.imagesBackgroundToggle.textContent = translateOrDefault(key, fallback);
+  elements.imagesBackgroundToggle.setAttribute('data-i18n', key);
+  elements.imagesBackgroundToggle.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
+}
+
+function handleImagesFavoritesToggle() {
+  imageFeedShowFavoritesOnly = !imageFeedShowFavoritesOnly;
+  updateImagesFavoritesToggleLabel();
+  refreshImagesDisplay({ skipStatus: true });
+}
+
+function handleImagesBackgroundToggle() {
+  imageBackgroundEnabled = !imageBackgroundEnabled;
+  writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
+  updateImagesBackgroundToggleLabel();
+  if (imageBackgroundEnabled && !favoriteBackgroundItems.length) {
+    setImagesStatus(
+      'index.sections.images.status.backgroundEmpty',
+      'Add favorites to show them on the main page.'
+    );
+  }
+  applyFavoriteBackground();
+}
+
+function selectImageById(itemId) {
+  const index = imageFeedVisibleItems.findIndex(item => item.id === itemId);
+  if (index >= 0) {
+    setImagesCurrentIndex(index);
+    refreshImagesDisplay({ skipStatus: true });
+  }
+}
+
+function openCurrentImage() {
+  const current = imageFeedVisibleItems[imageFeedCurrentIndex];
+  if (!current || typeof window?.open !== 'function') {
+    return;
+  }
+  const url = current.link || current.imageUrl;
+  if (url) {
+    window.open(url, '_blank', 'noopener');
+  }
+}
+
+function downloadCurrentImage() {
+  const current = imageFeedVisibleItems[imageFeedCurrentIndex];
+  if (!current) {
+    return;
+  }
+  if (window.AndroidBridge && typeof window.AndroidBridge.saveImageToDevice === 'function') {
+    window.AndroidBridge.saveImageToDevice(current.imageUrl, current.id);
+    return;
+  }
+  const link = document.createElement('a');
+  link.href = current.imageUrl;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.download = '';
+  document.body.append(link);
+  link.click();
+  link.remove();
+}
+
+function refreshImagesDisplay(options = {}) {
+  const visibleItems = getVisibleImageItems();
+  renderImagesViewer(visibleItems);
+  renderImagesGallery(visibleItems);
+  refreshFavoriteBackgroundPool();
+  if (!options.skipStatus && !imageFeedIsLoading && !imageFeedLastError) {
+    const key = visibleItems.length
+      ? 'index.sections.images.status.ready'
+      : 'index.sections.images.status.empty';
+    const fallback = visibleItems.length ? `${visibleItems.length} images loaded.` : 'No images to display with these filters.';
+    setImagesStatus(key, fallback, { count: visibleItems.length });
+  }
+  return visibleItems;
+}
+
+function clearImagesRefreshTimer() {
+  if (imageFeedRefreshTimerId != null) {
+    clearTimeout(imageFeedRefreshTimerId);
+    imageFeedRefreshTimerId = null;
+  }
+}
+
+function scheduleImagesRefresh() {
+  clearImagesRefreshTimer();
+  const delay = Math.max(60 * 1000, Number(getImageFeedSettings()?.refreshIntervalMs) || 0);
+  if (!delay) {
+    return;
+  }
+  imageFeedRefreshTimerId = setTimeout(() => {
+    fetchImageFeeds({ silent: true });
+  }, delay);
+}
+
+function abortImageFeedRequest() {
+  if (imageFeedAbortController && typeof imageFeedAbortController.abort === 'function') {
+    try {
+      imageFeedAbortController.abort();
+    } catch (error) {
+      // Ignore abort errors.
+    }
+  }
+  imageFeedAbortController = null;
+}
+
+async function fetchImageFeeds(options = {}) {
+  const settings = Object.assign({ silent: false }, options);
+  const availableSources = getAvailableImageSources();
+  const enabledSources = getEnabledImageSources(availableSources);
+  if (!enabledSources.length) {
+    imageFeedItems = [];
+    imageFeedLastError = null;
+    setImagesStatus('index.sections.images.status.sources', 'Enable at least one source to display images.');
+    refreshImagesDisplay({ skipStatus: true });
+    return [];
+  }
+  if (typeof fetch !== 'function') {
+    setImagesStatus('index.sections.images.status.error', 'Unable to load images right now.');
+    return [];
+  }
+
+  abortImageFeedRequest();
+  imageFeedIsLoading = !settings.silent;
+  if (!settings.silent) {
+    setImagesStatus('index.sections.images.status.loading', 'Loading images…');
+  }
+  const timeoutMs = Number(getImageFeedSettings()?.requestTimeoutMs) || 12000;
+  const aggregatedItems = [];
+  let lastError = null;
+
+  const fetchWithTimeout = async url => {
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timeoutId = timeoutMs > 0 && typeof setTimeout === 'function'
+      ? setTimeout(() => controller?.abort?.(), timeoutMs)
+      : null;
+    abortImageFeedRequest();
+    imageFeedAbortController = controller;
+    try {
+      const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return await response.text();
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (imageFeedAbortController === controller) {
+        imageFeedAbortController = null;
+      }
+    }
+  };
+
+  for (const source of enabledSources) {
+    const requestUrls = buildImageRequestUrls(source.feedUrl);
+    let xmlText = null;
+    for (const url of requestUrls) {
+      try {
+        xmlText = await fetchWithTimeout(url);
+        if (xmlText) {
+          break;
+        }
+      } catch (error) {
+        lastError = error;
+        if (error?.name === 'AbortError') {
+          break;
+        }
+      }
+    }
+    if (!xmlText) {
+      continue;
+    }
+    const parsed = parseImageFeed(xmlText, source.id)
+      .map(item => Object.assign({}, item, { sourceId: source.id }));
+    aggregatedItems.push(...parsed);
+  }
+
+  try {
+    const uniqueMap = new Map();
+    aggregatedItems.forEach(item => {
+      if (item && !uniqueMap.has(item.id)) {
+        uniqueMap.set(item.id, item);
+      }
+    });
+    const maxItems = Math.max(1, Number(getImageFeedSettings()?.maxItems) || DEFAULT_IMAGE_FEED_SETTINGS.maxItems);
+    const sorted = Array.from(uniqueMap.values()).sort((a, b) => {
+      const first = Number(a?.pubDate) || 0;
+      const second = Number(b?.pubDate) || 0;
+      return second - first;
+    });
+    imageFeedItems = sorted.slice(0, maxItems);
+    imageFeedLastError = null;
+    const visibleItems = refreshImagesDisplay({ skipStatus: true });
+    setImagesStatus(
+      'index.sections.images.status.ready',
+      `${visibleItems.length} images loaded.`,
+      { count: visibleItems.length }
+    );
+    scheduleImagesRefresh();
+    return visibleItems;
+  } catch (error) {
+    imageFeedLastError = error || lastError;
+    console.warn('Unable to load image feeds', error);
+    setImagesStatus('index.sections.images.status.error', 'Unable to load images right now.');
+    return [];
+  } finally {
+    imageFeedIsLoading = false;
+  }
+}
+
+function initImagesModule() {
+  imageFeedFavorites = readStoredImageFavorites();
+  imageFeedEnabledSources = readStoredImageSources();
+  imageFeedCurrentIndex = readStoredImageCurrentIndex();
+  imageBackgroundEnabled = readStoredImageBackgroundEnabled();
+  renderImageSources();
+  updateImagesFavoritesToggleLabel();
+  updateImagesBackgroundToggleLabel();
+  refreshImagesDisplay({ skipStatus: true });
+  refreshFavoriteBackgroundPool({ resetIndex: true });
+  fetchImageFeeds();
+}
+
+function subscribeImagesLanguageUpdates() {
+  const handler = () => {
+    updateImagesFavoritesToggleLabel();
+    updateImagesBackgroundToggleLabel();
+    renderImageSources();
+    refreshImagesDisplay({ skipStatus: true });
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -17644,8 +18527,13 @@ function showPage(pageId) {
   document.body.classList.toggle('view-link', pageId === 'link');
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   document.body.classList.toggle('view-news', pageId === 'news');
+  document.body.classList.toggle('view-images', pageId === 'images');
+  applyFavoriteBackground();
   if (pageId === 'game') {
     randomizeAtomButtonImage();
+  }
+  if (pageId === 'images' && !imageFeedItems.length && !imageFeedIsLoading) {
+    fetchImageFeeds({ silent: true });
   }
   if (pageId === 'metaux') {
     initMetauxGame();
@@ -18244,6 +19132,54 @@ function bindDomEventListeners() {
       showPage(target);
     });
   });
+
+  if (elements.imagesRefreshButton) {
+    elements.imagesRefreshButton.addEventListener('click', () => {
+      fetchImageFeeds();
+    });
+  }
+  if (elements.imagesFavoritesToggle) {
+    elements.imagesFavoritesToggle.addEventListener('click', handleImagesFavoritesToggle);
+  }
+  if (elements.imagesBackgroundToggle) {
+    elements.imagesBackgroundToggle.addEventListener('click', handleImagesBackgroundToggle);
+  }
+  if (elements.imagesSourcesReset) {
+    elements.imagesSourcesReset.addEventListener('click', () => {
+      const availableSources = getAvailableImageSources();
+      imageFeedEnabledSources = new Set(availableSources.map(source => source.id));
+      writeStoredImageSources(imageFeedEnabledSources);
+      renderImageSources();
+      refreshImagesDisplay({ skipStatus: true });
+      fetchImageFeeds({ silent: true });
+    });
+  }
+  if (elements.imagesPrevButton) {
+    elements.imagesPrevButton.addEventListener('click', () => {
+      const total = imageFeedVisibleItems.length;
+      if (!total) {
+        return;
+      }
+      setImagesCurrentIndex((imageFeedCurrentIndex - 1 + total) % total);
+      refreshImagesDisplay({ skipStatus: true });
+    });
+  }
+  if (elements.imagesNextButton) {
+    elements.imagesNextButton.addEventListener('click', () => {
+      const total = imageFeedVisibleItems.length;
+      if (!total) {
+        return;
+      }
+      setImagesCurrentIndex((imageFeedCurrentIndex + 1) % total);
+      refreshImagesDisplay({ skipStatus: true });
+    });
+  }
+  if (elements.imagesOpenButton) {
+    elements.imagesOpenButton.addEventListener('click', openCurrentImage);
+  }
+  if (elements.imagesDownloadButton) {
+    elements.imagesDownloadButton.addEventListener('click', downloadCurrentImage);
+  }
 
   if (elements.newsSearchButton) {
     elements.newsSearchButton.addEventListener('click', () => {
@@ -24955,6 +25891,8 @@ function initializeDomBoundModules() {
   subscribeTicketStarSpriteLanguageUpdates();
   initCryptoWidgetOption();
   subscribeCryptoWidgetLanguageUpdates();
+  initImagesModule();
+  subscribeImagesLanguageUpdates();
   initNewsOption();
   subscribeNewsLanguageUpdates();
   initNewsModule();

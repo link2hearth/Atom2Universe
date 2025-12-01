@@ -13,6 +13,7 @@
         "fusion": "Fusion",
         "collection": "Collection",
         "info": "Infos",
+        "images": "Images",
         "news": "News",
         "midi": "MIDI",
         "bigbang": "Big Bang",
@@ -336,6 +337,58 @@
             "astronaut": "Grâce à eux, l’humanité touche les étoiles du bout des doigts.",
             "monkey": "Le créateur passionné qui façonne ce jeu pour vous."
           }
+        }
+      },
+      "images": {
+        "title": "Images",
+        "subtitle": "Parcourez une sélection d’images issues de flux photo et d’actualités scientifiques.",
+        "hint": "Touchez une vignette pour l’ouvrir, marquez vos favoris et filtrez par source.",
+        "actions": {
+          "refresh": "Actualiser",
+          "favorites": "Favoris",
+          "favoritesOnly": "Afficher uniquement les favoris",
+          "all": "Afficher toutes les images",
+          "open": "Ouvrir la source",
+          "download": "Télécharger",
+          "background": {
+            "enable": "Afficher sur la page principale",
+            "disable": "Masquer sur la page principale"
+          }
+        },
+        "status": {
+          "loading": "Chargement des images…",
+          "error": "Impossible de charger les images pour le moment.",
+          "empty": "Aucune image à afficher pour ces filtres.",
+          "sources": "Activez au moins une source pour afficher les images.",
+          "ready": "{count} images chargées.",
+          "backgroundEmpty": "Ajoutez des favoris pour les afficher sur la page principale."
+        },
+        "sources": {
+          "title": "Sources",
+          "subtitle": "Choisissez les flux à afficher.",
+          "reset": "Tout sélectionner",
+          "toggle": "Activer ou désactiver {source}",
+          "flickr": "Flickr (Public)",
+          "unsplash": "Unsplash",
+          "pexels": "Pexels",
+          "reuters": "Reuters (images)",
+          "apod": "NASA Astronomy Picture of the Day",
+          "nasaImageDay": "NASA Image of the Day",
+          "esa": "ESA - Galerie d’images",
+          "nationalGeographic": "National Geographic",
+          "smithsonian": "Smithsonian Photo Essays",
+          "redditPics": "Reddit r/pics",
+          "redditEarth": "Reddit r/EarthPorn",
+          "redditSpace": "Reddit r/spaceporn",
+          "wikimediaFeatured": "Wikimedia en vedette",
+          "wikimediaPotd": "Wikimedia image du jour",
+          "wikipedia": "Wikipédia : Lumière sur"
+        },
+        "viewer": {
+          "prev": "Image précédente",
+          "next": "Image suivante",
+          "favorite": "Basculer le favori",
+          "open": "Ouvrir la page de l’image"
         }
       },
       "news": {
