@@ -11678,6 +11678,23 @@ function getImageItemPreviewUrl(item) {
   return '';
 }
 
+function getImageItemPreviewUrl(item) {
+  if (!item) {
+    return '';
+  }
+  const cachedPreview = getCachedImageThumbnail(item.id);
+  if (cachedPreview) {
+    return cachedPreview;
+  }
+  if (typeof item.thumbnail === 'string' && item.thumbnail) {
+    return item.thumbnail;
+  }
+  if (typeof item.thumbnailUrl === 'string' && item.thumbnailUrl) {
+    return normalizeImageUrl(item.thumbnailUrl);
+  }
+  return '';
+}
+
 function getEnabledImageSources(availableSources = getAvailableImageSources()) {
   if (!(imageFeedEnabledSources instanceof Set)) {
     imageFeedEnabledSources = readStoredImageSources();
