@@ -347,6 +347,7 @@
           "refresh": "Refresh",
           "favorites": "Favorites",
           "favoritesOnly": "Show favorites only",
+          "nonFavoritesOnly": "Show non-favorites only",
           "all": "Show all images",
           "open": "Open source",
           "download": "Download",
