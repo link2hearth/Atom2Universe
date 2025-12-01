@@ -139,6 +139,8 @@ const NEWS_SETTINGS = Object.freeze({
  * - `sources` : liste des flux RSS/Atom à agréger.
  * - `proxyBaseUrls` : proxys HTTP facultatifs pour contourner le CORS.
  * - `refreshIntervalMs` : fréquence de rafraîchissement automatique de la galerie.
+ * - `thumbnailMaxSize` : dimension maximale (px) de la miniature mise en cache.
+ * - `thumbnailQuality` : qualité JPEG (0-1) utilisée pour la miniature.
  */
 const IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
@@ -147,6 +149,8 @@ const IMAGE_FEED_SETTINGS = Object.freeze({
   requestTimeoutMs: 15000,
   favoriteBackgroundRotationMs: 5 * 60 * 1000,
   favoriteBackgroundEnabledByDefault: false,
+  thumbnailMaxSize: 256,
+  thumbnailQuality: 0.6,
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
