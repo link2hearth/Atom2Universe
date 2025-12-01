@@ -11665,15 +11665,13 @@ function getImageItemSourceUrl(item) {
   if (!item) {
     return '';
   }
-  const cached = typeof item.cachedImage === 'string' ? item.cachedImage : '';
-  const imageUrl = typeof item.imageUrl === 'string' ? item.imageUrl : '';
-  if (cached) {
-    return cached;
+  if (oversizedFavoriteImageIds.has(item.id)) {
+    const preview = getImageItemPreviewUrl(item);
+    if (preview) {
+      return preview;
+    }
   }
-  if (imageUrl) {
-    return imageUrl;
-  }
-  return getImageItemPreviewUrl(item) || '';
+  return item.cachedImage || item.imageUrl || '';
 }
 
 function getImageItemPreviewUrl(item) {
