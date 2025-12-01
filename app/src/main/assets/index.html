@@ -94,6 +94,9 @@
         <button class="nav-button" data-target="info">
           <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
+        <button class="nav-button" data-target="images">
+          <span data-i18n="index.navigation.items.images">Images</span>
+        </button>
         <button class="nav-button" data-target="news">
           <span data-i18n="index.navigation.items.news">News</span>
         </button>
@@ -167,6 +170,7 @@
       aria-label="Chambre de création atomique"
       data-i18n="aria-label:index.sections.game.aria"
     >
+      <div class="favorite-background" id="favoriteBackground" aria-hidden="true" hidden></div>
       <div class="starfield" aria-hidden="true"></div>
 
       <div
@@ -6912,6 +6916,150 @@
               >Crédits Mach3 restants&nbsp;: 0</p>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="images"
+      class="page"
+      data-page-group="clicker"
+      aria-labelledby="images-title"
+      hidden
+    >
+      <div class="images-page">
+        <div class="images-page__header">
+          <h2
+            id="images-title"
+            class="images-page__title visually-hidden"
+            data-i18n="index.sections.images.title"
+          >
+            Images
+          </h2>
+          <div class="images-page__actions">
+            <button
+              type="button"
+              id="imagesRefreshButton"
+              class="images-page__action images-page__action--primary"
+              data-i18n="index.sections.images.actions.refresh"
+            >
+              Actualiser
+            </button>
+            <button
+              type="button"
+              id="imagesFavoritesToggle"
+              class="images-page__action"
+              data-state="all"
+              data-i18n="index.sections.images.actions.favorites"
+            >
+              Favoris
+            </button>
+            <button
+              type="button"
+              id="imagesBackgroundToggle"
+              class="images-page__action"
+              data-state="off"
+              data-i18n="index.sections.images.actions.background.enable"
+            >
+              Afficher sur la page principale
+            </button>
+          </div>
+        </div>
+        <div class="images-page__status-bar">
+          <p
+            id="imagesStatus"
+            class="images-page__status"
+            role="status"
+            aria-live="polite"
+            data-i18n="index.sections.images.status.loading"
+          >
+            Chargement des images…
+          </p>
+          <div class="images-page__quick-actions">
+            <button
+              type="button"
+              id="imagesOpenButton"
+              class="images-page__quick-action"
+              data-i18n="index.sections.images.actions.open"
+            >
+              Ouvrir la source
+            </button>
+            <button
+              type="button"
+              id="imagesDownloadButton"
+              class="images-page__quick-action"
+              data-i18n="index.sections.images.actions.download"
+            >
+              Télécharger
+            </button>
+          </div>
+        </div>
+        <div class="images-page__layout">
+          <div class="images-page__content">
+            <div class="images-viewer" aria-live="polite">
+              <button
+                type="button"
+                id="imagesPrevButton"
+                class="images-viewer__nav images-viewer__nav--prev"
+                aria-label="Image précédente"
+                data-i18n="aria-label:index.sections.images.viewer.prev"
+              >
+                ◀
+              </button>
+              <div class="images-viewer__frame">
+                <div class="images-viewer__media" id="imagesActiveMedia">
+                  <img
+                    id="imagesActiveImage"
+                    src=""
+                    alt=""
+                    loading="lazy"
+                    class="images-viewer__image"
+                  />
+                </div>
+                <div class="images-viewer__details">
+                  <p id="imagesActiveSource" class="images-viewer__source">—</p>
+                  <p id="imagesActiveTitle" class="images-viewer__title">—</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                id="imagesNextButton"
+                class="images-viewer__nav images-viewer__nav--next"
+                aria-label="Image suivante"
+                data-i18n="aria-label:index.sections.images.viewer.next"
+              >
+                ▶
+              </button>
+            </div>
+            <p
+              id="imagesEmptyState"
+              class="images-gallery__empty"
+              hidden
+              data-i18n="index.sections.images.status.empty"
+            >
+              Aucune image à afficher pour ces filtres.
+            </p>
+            <div id="imagesGallery" class="images-gallery" role="list"></div>
+          </div>
+          <aside class="images-page__filters" aria-labelledby="imagesSourcesTitle">
+            <div class="images-page__filters-header">
+              <h3 id="imagesSourcesTitle" class="images-page__filters-title" data-i18n="index.sections.images.sources.title">
+                Sources
+              </h3>
+              <button
+                type="button"
+                id="imagesSourcesReset"
+                class="images-page__reset"
+                data-i18n="index.sections.images.sources.reset"
+              >
+                Tout sélectionner
+              </button>
+            </div>
+            <p class="images-page__filters-subtitle" data-i18n="index.sections.images.sources.subtitle">
+              Choisissez les flux à afficher.
+            </p>
+            <ul id="imagesSourcesList" class="images-sources" aria-live="polite"></ul>
+          </aside>
         </div>
       </div>
     </section>

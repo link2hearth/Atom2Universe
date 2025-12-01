@@ -13,6 +13,7 @@
         "fusion": "Fusion",
         "collection": "Collection",
         "info": "Info",
+        "images": "Images",
         "news": "News",
         "midi": "MIDI",
         "bigbang": "Big Bang",
@@ -338,6 +339,58 @@
         }
       }
     },
+      "images": {
+        "title": "Images",
+        "subtitle": "Browse curated photos from public and science feeds.",
+        "hint": "Tap a thumbnail to open it, add favorites, and filter by source.",
+        "actions": {
+          "refresh": "Refresh",
+          "favorites": "Favorites",
+          "favoritesOnly": "Show favorites only",
+          "all": "Show all images",
+          "open": "Open source",
+          "download": "Download",
+          "background": {
+            "enable": "Show on main page",
+            "disable": "Hide from main page"
+          }
+        },
+        "status": {
+          "loading": "Loading images…",
+          "error": "Unable to load images right now.",
+          "empty": "No images to display with these filters.",
+          "sources": "Enable at least one source to display images.",
+          "ready": "{count} images loaded.",
+          "backgroundEmpty": "Add favorites to show them on the main page."
+        },
+        "sources": {
+          "title": "Sources",
+          "subtitle": "Choose which feeds to display.",
+          "reset": "Select all",
+          "toggle": "Enable or disable {source}",
+          "flickr": "Flickr (Public)",
+          "unsplash": "Unsplash",
+          "pexels": "Pexels",
+          "reuters": "Reuters (images)",
+          "apod": "NASA Astronomy Picture of the Day",
+          "nasaImageDay": "NASA Image of the Day",
+          "esa": "ESA - Picture Gallery",
+          "nationalGeographic": "National Geographic",
+          "smithsonian": "Smithsonian Photo Essays",
+          "redditPics": "Reddit r/pics",
+          "redditEarth": "Reddit r/EarthPorn",
+          "redditSpace": "Reddit r/spaceporn",
+          "wikimediaFeatured": "Wikimedia featured",
+          "wikimediaPotd": "Wikimedia picture of the day",
+          "wikipedia": "Wikipedia: Today’s featured"
+        },
+        "viewer": {
+          "prev": "Previous image",
+          "next": "Next image",
+          "favorite": "Toggle favorite",
+          "open": "Open image page"
+        }
+      },
       "news": {
         "title": "News",
         "subtitle": "Browse the latest headlines from multiple RSS sources and follow the topics you care about.",
