@@ -321,44 +321,6 @@ const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   requestTimeoutMs: 15000,
   favoriteBackgroundRotationMs: 5 * 60 * 1000,
   favoriteBackgroundEnabledByDefault: false,
-  thumbnailMaxSize: 256,
-  thumbnailQuality: 0.6,
-  proxyBaseUrls: [
-    'https://api.allorigins.win/raw?url=',
-    'https://cors.isomorphic-git.org/'
-  ],
-  sources: [
-    { id: 'flickr-public', titleKey: 'index.sections.images.sources.flickr', feedUrl: 'https://www.flickr.com/services/feeds/photos_public.gne' },
-    { id: 'unsplash', titleKey: 'index.sections.images.sources.unsplash', feedUrl: 'https://unsplash.com/feeds/rss' },
-    { id: 'pexels', titleKey: 'index.sections.images.sources.pexels', feedUrl: 'https://www.pexels.com/new-free-photos/feed/' },
-    { id: 'reuters-images', titleKey: 'index.sections.images.sources.reuters', feedUrl: 'https://www.reuters.com/rssFeed/worldNews?type=images' },
-    { id: 'nasa-apod', titleKey: 'index.sections.images.sources.apod', feedUrl: 'https://apod.nasa.gov/apod.rss' },
-    { id: 'nasa-image-day', titleKey: 'index.sections.images.sources.nasaImageDay', feedUrl: 'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss' },
-    { id: 'esa-gallery', titleKey: 'index.sections.images.sources.esa', feedUrl: 'https://www.esa.int/rssfeed/ESA_Picture_Gallery' },
-    { id: 'natgeo-pod', titleKey: 'index.sections.images.sources.nationalGeographic', feedUrl: 'https://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.feed' },
-    { id: 'smithsonian', titleKey: 'index.sections.images.sources.smithsonian', feedUrl: 'https://www.smithsonianmag.com/rss/photos/' },
-    { id: 'reddit-pics', titleKey: 'index.sections.images.sources.redditPics', feedUrl: 'https://www.reddit.com/r/pics.rss' },
-    { id: 'reddit-earthporn', titleKey: 'index.sections.images.sources.redditEarth', feedUrl: 'https://www.reddit.com/r/EarthPorn.rss' },
-    { id: 'reddit-spaceporn', titleKey: 'index.sections.images.sources.redditSpace', feedUrl: 'https://www.reddit.com/r/spaceporn.rss' },
-    { id: 'wikimedia-featured', titleKey: 'index.sections.images.sources.wikimediaFeatured', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=featured&feedformat=rss' },
-    { id: 'wikimedia-potd', titleKey: 'index.sections.images.sources.wikimediaPotd', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=potd&language=fr&feedformat=rss' },
-    { id: 'wikipedia-lumiere', titleKey: 'index.sections.images.sources.wikipedia', feedUrl: 'https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Lumi%C3%A8re_sur?action=render&feed=rss' }
-  ]
-});
-
-const ACTIVE_IMAGE_FEED_SETTINGS = typeof IMAGE_FEED_SETTINGS !== 'undefined'
-  && IMAGE_FEED_SETTINGS
-  && typeof IMAGE_FEED_SETTINGS === 'object'
-    ? IMAGE_FEED_SETTINGS
-    : DEFAULT_IMAGE_FEED_SETTINGS;
-
-const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
-  enabledByDefault: true,
-  maxItems: 120,
-  refreshIntervalMs: 30 * 60 * 1000,
-  requestTimeoutMs: 15000,
-  favoriteBackgroundRotationMs: 5 * 60 * 1000,
-  favoriteBackgroundEnabledByDefault: false,
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
@@ -548,23 +510,6 @@ let imageBackgroundEnabled = false;
 let favoriteBackgroundItems = [];
 let favoriteBackgroundIndex = 0;
 let favoriteBackgroundTimerId = null;
-let imageThumbnailCache = new Map();
-let imageThumbnailTasks = new Map();
-
-let imageFeedItems = [];
-let imageFeedVisibleItems = [];
-let imageFeedFavorites = new Set();
-let imageFeedEnabledSources = null;
-let imageFeedShowFavoritesOnly = false;
-let imageFeedCurrentIndex = 0;
-let imageFeedIsLoading = false;
-let imageFeedLastError = null;
-let imageFeedRefreshTimerId = null;
-let imageFeedAbortController = null;
-let imageBackgroundEnabled = false;
-let favoriteBackgroundItems = [];
-let favoriteBackgroundIndex = 0;
-let favoriteBackgroundTimerId = null;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -610,7 +555,6 @@ const IMAGE_FEED_FAVORITES_STORAGE_KEY = 'atom2univers.images.favorites.v1';
 const IMAGE_FEED_SOURCES_STORAGE_KEY = 'atom2univers.images.sources.v1';
 const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
 const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
-const IMAGE_FEED_THUMBNAIL_STORAGE_PREFIX = 'atom2univers.images.thumbnail.v1.';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
@@ -11821,163 +11765,6 @@ function setImagesStatus(key, fallback, params = {}) {
   elements.imagesStatus.textContent = translateOrDefault(key, fallback, params);
 }
 
-function getImageThumbnailSettings() {
-  const settings = getImageFeedSettings();
-  const maxSize = Math.max(32, Math.min(2048, Number(settings?.thumbnailMaxSize) || 256));
-  const qualityRaw = Number(settings?.thumbnailQuality);
-  const quality = Number.isFinite(qualityRaw) && qualityRaw > 0 && qualityRaw <= 1 ? qualityRaw : 0.6;
-  return { maxSize, quality };
-}
-
-function readStoredImageThumbnail(itemId) {
-  if (!itemId) {
-    return null;
-  }
-  try {
-    return globalThis.localStorage?.getItem(`${IMAGE_FEED_THUMBNAIL_STORAGE_PREFIX}${itemId}`) || null;
-  } catch (error) {
-    console.warn('Unable to read cached thumbnail', error);
-  }
-  return null;
-}
-
-function writeStoredImageThumbnail(itemId, dataUrl) {
-  if (!itemId || typeof dataUrl !== 'string') {
-    return;
-  }
-  try {
-    globalThis.localStorage?.setItem(`${IMAGE_FEED_THUMBNAIL_STORAGE_PREFIX}${itemId}`, dataUrl);
-  } catch (error) {
-    console.warn('Unable to persist image thumbnail', error);
-  }
-}
-
-function getCachedImageThumbnail(itemId) {
-  if (!itemId) {
-    return null;
-  }
-  if (imageThumbnailCache.has(itemId)) {
-    return imageThumbnailCache.get(itemId) || null;
-  }
-  const stored = readStoredImageThumbnail(itemId);
-  if (stored) {
-    imageThumbnailCache.set(itemId, stored);
-    return stored;
-  }
-  return null;
-}
-
-function pruneStoredImageThumbnails(validItems = []) {
-  const validIds = new Set(
-    validItems
-      .map(item => (typeof item === 'string' ? item : item?.id))
-      .filter(Boolean)
-  );
-  imageThumbnailCache = new Map(
-    Array.from(imageThumbnailCache.entries()).filter(([id]) => validIds.has(id))
-  );
-  try {
-    const storage = globalThis.localStorage;
-    if (!storage) {
-      return;
-    }
-    const keysToDelete = [];
-    for (let index = 0; index < storage.length; index += 1) {
-      const key = storage.key(index);
-      if (typeof key === 'string' && key.startsWith(IMAGE_FEED_THUMBNAIL_STORAGE_PREFIX)) {
-        const id = key.slice(IMAGE_FEED_THUMBNAIL_STORAGE_PREFIX.length);
-        if (!validIds.has(id)) {
-          keysToDelete.push(key);
-        }
-      }
-    }
-    keysToDelete.forEach(key => storage.removeItem(key));
-  } catch (error) {
-    console.warn('Unable to prune image thumbnails', error);
-  }
-}
-
-async function createThumbnailFromUrl(url, maxSize = 256, quality = 0.6) {
-  if (!url) {
-    return null;
-  }
-  try {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.referrerPolicy = 'no-referrer';
-
-    const loadPromise = new Promise((resolve, reject) => {
-      img.onload = () => resolve();
-      img.onerror = error => reject(error || new Error('Unable to load image'));
-    });
-
-    img.src = url;
-    if (typeof img.decode === 'function') {
-      try {
-        await img.decode();
-      } catch (error) {
-        await loadPromise;
-      }
-    } else {
-      await loadPromise;
-    }
-
-    const width = img.naturalWidth || img.width;
-    const height = img.naturalHeight || img.height;
-    if (!width || !height) {
-      return null;
-    }
-
-    const scale = Math.min(1, maxSize / Math.max(width, height));
-    const canvasWidth = Math.max(1, Math.round(width * scale));
-    const canvasHeight = Math.max(1, Math.round(height * scale));
-
-    const canvas = document.createElement('canvas');
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-    const context = canvas.getContext('2d');
-    if (!context) {
-      return null;
-    }
-    context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-    const safeQuality = Math.max(0.1, Math.min(1, quality || 0.6));
-    return canvas.toDataURL('image/jpeg', safeQuality);
-  } catch (error) {
-    console.warn('Unable to build image thumbnail', error);
-    return null;
-  }
-}
-
-function ensureImageThumbnail(item) {
-  if (!item || !item.id || !item.imageUrl) {
-    return Promise.resolve(null);
-  }
-  const cached = getCachedImageThumbnail(item.id);
-  if (cached) {
-    return Promise.resolve(cached);
-  }
-  if (imageThumbnailTasks.has(item.id)) {
-    return imageThumbnailTasks.get(item.id);
-  }
-  const { maxSize, quality } = getImageThumbnailSettings();
-  const task = createThumbnailFromUrl(item.imageUrl, maxSize, quality)
-    .then(dataUrl => {
-      if (dataUrl) {
-        imageThumbnailCache.set(item.id, dataUrl);
-        writeStoredImageThumbnail(item.id, dataUrl);
-      }
-      imageThumbnailTasks.delete(item.id);
-      return dataUrl;
-    })
-    .catch(error => {
-      console.warn('Thumbnail generation failed', error);
-      imageThumbnailTasks.delete(item.id);
-      return null;
-    });
-  imageThumbnailTasks.set(item.id, task);
-  return task;
-}
-
 function hashImageKey(value) {
   let hash = 0;
   for (let index = 0; index < value.length; index += 1) {
@@ -12194,37 +11981,6 @@ function setImagesCurrentIndex(nextIndex) {
   writeStoredImageCurrentIndex(imageFeedCurrentIndex);
 }
 
-function isImagesViewerFullscreen() {
-  if (typeof document === 'undefined') {
-    return false;
-  }
-  const fullscreenElement = document.fullscreenElement;
-  return fullscreenElement
-    && (fullscreenElement === elements.imagesActiveMedia || fullscreenElement === elements.imagesActiveImage);
-}
-
-function loadActiveImageFullRes() {
-  const current = imageFeedVisibleItems[imageFeedCurrentIndex];
-  if (!current || !elements.imagesActiveImage) {
-    return;
-  }
-  elements.imagesActiveImage.src = current.imageUrl;
-}
-
-function requestImagesFullscreen() {
-  loadActiveImageFullRes();
-  const target = elements.imagesActiveMedia || elements.imagesActiveImage;
-  if (target && typeof target.requestFullscreen === 'function') {
-    target.requestFullscreen().catch(() => {});
-  }
-}
-
-function handleImagesFullscreenChange() {
-  if (isImagesViewerFullscreen()) {
-    loadActiveImageFullRes();
-  }
-}
-
 function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
   const items = Array.isArray(visibleItems) ? visibleItems : [];
   const current = items[imageFeedCurrentIndex] || null;
@@ -12245,23 +12001,8 @@ function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
     }
     return;
   }
-  const preview = getCachedImageThumbnail(current.id);
-  const shouldUseFullRes = isImagesViewerFullscreen();
-  elements.imagesActiveImage.dataset.imageId = current.id;
-  elements.imagesActiveImage.dataset.fullsrc = current.imageUrl;
-  elements.imagesActiveImage.src = shouldUseFullRes ? current.imageUrl : preview || current.imageUrl;
+  elements.imagesActiveImage.src = current.imageUrl;
   elements.imagesActiveImage.alt = current.title || getImageSourceLabelById(current.sourceId);
-  if (!preview && !shouldUseFullRes) {
-    ensureImageThumbnail(current).then(dataUrl => {
-      if (
-        dataUrl
-        && elements.imagesActiveImage?.dataset?.imageId === current.id
-        && !isImagesViewerFullscreen()
-      ) {
-        elements.imagesActiveImage.src = dataUrl;
-      }
-    });
-  }
   elements.imagesActiveTitle.textContent = current.title || '';
   elements.imagesActiveSource.textContent = getImageSourceLabelById(current.sourceId);
   updateImagesEmptyState(items);
@@ -12293,20 +12034,8 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     const thumb = document.createElement('img');
     thumb.className = 'images-card__thumb';
     thumb.loading = 'lazy';
-    const preview = getCachedImageThumbnail(item.id);
-    thumb.src = preview || item.imageUrl;
+    thumb.src = item.imageUrl;
     thumb.alt = item.title || getImageSourceLabelById(item.sourceId);
-    if (!preview) {
-      ensureImageThumbnail(item).then(dataUrl => {
-        if (
-          dataUrl
-          && thumb.isConnected
-          && thumb.closest('.images-card')?.dataset?.id === item.id
-        ) {
-          thumb.src = dataUrl;
-        }
-      });
-    }
     const body = document.createElement('div');
     body.className = 'images-card__body';
     const title = document.createElement('p');
@@ -12591,7 +12320,6 @@ async function fetchImageFeeds(options = {}) {
       return second - first;
     });
     imageFeedItems = sorted.slice(0, maxItems);
-    pruneStoredImageThumbnails(imageFeedItems);
     imageFeedLastError = null;
     const visibleItems = refreshImagesDisplay({ skipStatus: true });
     setImagesStatus(
@@ -19541,13 +19269,6 @@ function bindDomEventListeners() {
   }
   if (elements.imagesDownloadButton) {
     elements.imagesDownloadButton.addEventListener('click', downloadCurrentImage);
-  }
-  const fullscreenTarget = elements.imagesActiveMedia || elements.imagesActiveImage;
-  if (fullscreenTarget) {
-    fullscreenTarget.addEventListener('dblclick', requestImagesFullscreen);
-  }
-  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
-    document.addEventListener('fullscreenchange', handleImagesFullscreenChange);
   }
 
   if (elements.newsSearchButton) {
