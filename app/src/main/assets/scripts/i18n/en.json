@@ -390,8 +390,7 @@
           "next": "Next image",
           "favorite": "Toggle favorite",
           "hide": "Hide this image",
-          "open": "Open image page",
-          "closeFull": "Close full-screen image"
+          "open": "Open image page"
         }
       },
       "news": {
