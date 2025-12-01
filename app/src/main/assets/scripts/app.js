@@ -2253,6 +2253,46 @@ function normalizeFeatureUnlockFlags(raw) {
   return flags;
 }
 
+function normalizeUnlockedTrophies(raw) {
+  const trophies = new Set();
+  if (raw == null) {
+    return trophies;
+  }
+  const addTrophyId = (value) => {
+    if (typeof value !== 'string') {
+      return;
+    }
+    const id = value.trim();
+    if (id) {
+      trophies.add(id);
+    }
+  };
+
+  if (raw instanceof Set) {
+    raw.forEach(addTrophyId);
+    return trophies;
+  }
+
+  if (Array.isArray(raw)) {
+    raw.forEach(entry => {
+      if (typeof entry === 'string') {
+        addTrophyId(entry);
+        return;
+      }
+      if (entry && typeof entry === 'object') {
+        addTrophyId(entry.id ?? entry.trophyId);
+      }
+    });
+    return trophies;
+  }
+
+  if (raw && typeof raw === 'object') {
+    Object.keys(raw).forEach(addTrophyId);
+  }
+
+  return trophies;
+}
+
 function ensureFeatureUnlockFlagSet() {
   if (gameState.featureUnlockFlags instanceof Set) {
     return gameState.featureUnlockFlags;
@@ -5335,8 +5375,7 @@ function getUnlockedTrophySet() {
   if (gameState.trophies instanceof Set) {
     return gameState.trophies;
   }
-  const list = Array.isArray(gameState.trophies) ? gameState.trophies : [];
-  gameState.trophies = new Set(list);
+  gameState.trophies = normalizeUnlockedTrophies(gameState.trophies);
   return gameState.trophies;
 }
 
@@ -24320,7 +24359,7 @@ function loadGame() {
       gameState.shopUnlocks = new Set();
     }
     gameState.stats = parseStats(data.stats);
-    gameState.trophies = new Set(Array.isArray(data.trophies) ? data.trophies : []);
+    gameState.trophies = normalizeUnlockedTrophies(data.trophies);
     const storedPageUnlocks = data.pageUnlocks;
     if (storedPageUnlocks && typeof storedPageUnlocks === 'object') {
       const baseUnlocks = createInitialPageUnlockState();
