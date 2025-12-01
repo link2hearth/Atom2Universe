@@ -1,6 +1,5 @@
 package com.example.atom2univers
 
-import android.content.ContentUris
 import android.content.ContentValues
 import android.os.Build
 import android.os.Environment
@@ -8,7 +7,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.URLUtil
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedInputStream
 import java.io.BufferedReader
@@ -105,59 +103,6 @@ class WebAppBridge(activity: MainActivity) {
             }
             activity.postJavascript(callback)
         }.start()
-    }
-
-    @JavascriptInterface
-    fun listCachedImages(): String {
-        val activity = activityRef.get() ?: return "[]"
-        val resolver = activity.contentResolver
-        val collectionUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        } else {
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        }
-
-        val pathColumn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Images.Media.RELATIVE_PATH
-        } else {
-            MediaStore.Images.Media.DATA
-        }
-
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            pathColumn
-        )
-
-        val selection = "$pathColumn LIKE ?"
-        val selectionArgs = arrayOf("%${Environment.DIRECTORY_PICTURES}/Atom2Univers%")
-        var cursor = resolver.query(collectionUri, projection, selection, selectionArgs, null)
-        val results = JSONArray()
-
-        return try {
-            if (cursor != null) {
-                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-                val pathIdx = cursor.getColumnIndexOrThrow(pathColumn)
-                while (cursor.moveToNext()) {
-                    val id = cursor.getLong(idColumn)
-                    val displayName = cursor.getString(nameColumn) ?: ""
-                    val path = cursor.getString(pathIdx) ?: ""
-                    val uri = ContentUris.withAppendedId(collectionUri, id).toString()
-                    val payload = JSONObject()
-                    payload.put("uri", uri)
-                    payload.put("displayName", displayName)
-                    payload.put("path", path)
-                    results.put(payload)
-                }
-            }
-            results.toString()
-        } catch (error: Exception) {
-            Log.e(TAG, "Unable to list cached Atom2Univers images", error)
-            "[]"
-        } finally {
-            cursor?.close()
-        }
     }
 
     private fun fetchRss(url: String): String {

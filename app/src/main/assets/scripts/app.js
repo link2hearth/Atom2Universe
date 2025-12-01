@@ -11661,38 +11661,6 @@ function reconcileFavoritesFromStoredItems() {
   }
 }
 
-function hydrateFavoritesFromDeviceCache() {
-  const manifest = readDeviceImageManifest();
-  if (!manifest.length) {
-    return;
-  }
-  const store = getFavoriteImageStore();
-  manifest.forEach(entry => {
-    const cachedImage = typeof entry.uri === 'string' ? entry.uri : '';
-    if (!cachedImage) {
-      return;
-    }
-    const id = deriveDeviceImageId(entry.displayName);
-    if (!id) {
-      return;
-    }
-    const existing = store.get(id);
-    if (existing) {
-      persistFavoriteImageItem(Object.assign({}, existing, { cachedImage }));
-      applyCachedImageToCollections(id, cachedImage);
-      return;
-    }
-    persistFavoriteImageItem({
-      id,
-      title: entry.displayName || id,
-      imageUrl: '',
-      cachedImage,
-      link: cachedImage,
-      sourceId: 'device'
-    });
-  });
-}
-
 function getImageItemSourceUrl(item) {
   if (!item) {
     return '';
@@ -11768,42 +11736,6 @@ function getAndroidImageBridge() {
   }
   const type = typeof bridge;
   return type === 'object' || type === 'function' ? bridge : null;
-}
-
-function deriveDeviceImageId(displayName) {
-  if (typeof displayName !== 'string' || !displayName.trim()) {
-    return '';
-  }
-  const trimmed = displayName.trim();
-  const withoutExt = trimmed.includes('.')
-    ? trimmed.slice(0, trimmed.lastIndexOf('.'))
-    : trimmed;
-  const prefix = withoutExt.split('-')[0];
-  return prefix || withoutExt;
-}
-
-function readDeviceImageManifest() {
-  const bridge = getAndroidImageBridge();
-  if (!bridge || typeof bridge.listCachedImages !== 'function') {
-    return [];
-  }
-  try {
-    const raw = bridge.listCachedImages();
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      return [];
-    }
-    return parsed
-      .map(entry => ({
-        uri: typeof entry?.uri === 'string' ? entry.uri : '',
-        displayName: typeof entry?.displayName === 'string' ? entry.displayName : '',
-        path: typeof entry?.path === 'string' ? entry.path : ''
-      }))
-      .filter(entry => Boolean(entry.uri));
-  } catch (error) {
-    console.warn('Unable to read device image manifest', error);
-  }
-  return [];
 }
 
 function getFavoriteImageCacheLimit() {
@@ -13365,7 +13297,6 @@ function initImagesModule() {
   deviceCachedImageIds = readStoredDeviceCachedImages();
   storedFavoriteImageItems = readStoredFavoriteImages();
   reconcileFavoritesFromStoredItems();
-  hydrateFavoritesFromDeviceCache();
   imageFeedItems = mergeFeedWithStoredFavorites();
   renderImageSources();
   updateImagesFavoritesToggleLabel();
