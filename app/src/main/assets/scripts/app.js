@@ -12087,7 +12087,7 @@ function getVisibleImageItems() {
     .filter(item => enabledSources.has(item.sourceId) && !hiddenIds.has(item.id));
   const filtered = imageFeedShowFavoritesOnly
     ? baseItems.filter(item => favorites.has(item.id))
-    : baseItems;
+    : baseItems.filter(item => !favorites.has(item.id));
   imageFeedVisibleItems = filtered;
   if (filtered.length === 0) {
     imageFeedCurrentIndex = 0;
@@ -12320,12 +12320,12 @@ function updateImagesFavoritesToggleLabel() {
     return;
   }
   const key = imageFeedShowFavoritesOnly
-    ? 'index.sections.images.actions.all'
+    ? 'index.sections.images.actions.nonFavoritesOnly'
     : 'index.sections.images.actions.favoritesOnly';
-  const fallback = imageFeedShowFavoritesOnly ? 'Show all images' : 'Show favorites only';
+  const fallback = imageFeedShowFavoritesOnly ? 'Show non-favorites only' : 'Show favorites only';
   elements.imagesFavoritesToggle.textContent = translateOrDefault(key, fallback);
   elements.imagesFavoritesToggle.setAttribute('data-i18n', key);
-  elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'all';
+  elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'non-favorites';
 }
 
 function updateImagesBackgroundToggleLabel() {
