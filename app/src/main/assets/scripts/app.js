@@ -505,7 +505,6 @@ let imageFeedVisibleItems = [];
 let imageFeedFavorites = new Set();
 let imageFeedHidden = new Set();
 let imageFeedEnabledSources = null;
-let imageFeedShowFavoritesOnly = false;
 let imageFeedCurrentIndex = 0;
 let imageFeedIsLoading = false;
 let imageFeedLastError = null;
@@ -6683,7 +6682,6 @@ function collectDomElements() {
   cryptoWidgetToggleStatus: document.getElementById('cryptoWidgetToggleStatus'),
   imagesStatus: document.getElementById('imagesStatus'),
   imagesRefreshButton: document.getElementById('imagesRefreshButton'),
-  imagesFavoritesToggle: document.getElementById('imagesFavoritesToggle'),
   imagesBackgroundToggle: document.getElementById('imagesBackgroundToggle'),
   imagesOpenButton: document.getElementById('imagesOpenButton'),
   imagesDownloadButton: document.getElementById('imagesDownloadButton'),
@@ -11684,7 +11682,7 @@ function hydrateFavoritesFromDeviceCache() {
     }
     const existing = store.get(id);
     if (existing) {
-      persistFavoriteImageItem(Object.assign({}, existing, { cachedImage }));
+      persistFavoriteImageItem(Object.assign({}, existing, { cachedImage, storagePath: entry.path }));
       applyCachedImageToCollections(id, cachedImage);
       if (imageFeedFavorites && !imageFeedFavorites.has(id)) {
         imageFeedFavorites.add(id);
@@ -11692,18 +11690,16 @@ function hydrateFavoritesFromDeviceCache() {
       }
       return;
     }
-    persistFavoriteImageItem({
+    markImageAsDownloaded({
       id,
       title: entry.displayName || id,
       imageUrl: '',
       cachedImage,
       link: cachedImage,
-      sourceId: 'device'
-    });
-    if (imageFeedFavorites && !imageFeedFavorites.has(id)) {
-      imageFeedFavorites.add(id);
-      favoritesUpdated = true;
-    }
+      sourceId: 'device',
+      storagePath: entry.path
+    }, cachedImage);
+    favoritesUpdated = true;
   });
   if (favoritesUpdated) {
     writeStoredImageFavorites(imageFeedFavorites);
@@ -11818,6 +11814,14 @@ function isDeviceCachedUri(uri) {
     && (uri.startsWith('file:') || uri.startsWith('content:'));
 }
 
+function isAtom2UniversStoragePath(path) {
+  if (typeof path !== 'string' || !path) {
+    return false;
+  }
+  const normalized = path.toLowerCase();
+  return normalized.includes('/pictures/atom2univers') || normalized.includes('\\pictures\\atom2univers');
+}
+
 function markDeviceImageCached(itemId, cachedUri) {
   if (!itemId || !isDeviceCachedUri(cachedUri)) {
     return;
@@ -11901,8 +11905,12 @@ if (typeof window !== 'undefined') {
     resolveFavoriteImageCache(normalizedId, normalizedUri);
     if (normalizedUri) {
       const existing = getFavoriteImageStore().get(normalizedId) || { id: normalizedId };
-      persistFavoriteImageItem(Object.assign({}, existing, { id: normalizedId, cachedImage: normalizedUri }));
+      const updated = Object.assign({}, existing, { id: normalizedId, cachedImage: normalizedUri });
+      persistFavoriteImageItem(updated);
       markDeviceImageCached(normalizedId, normalizedUri);
+      markImageAsDownloaded(updated, normalizedUri);
+    } else {
+      markImageAsDownloaded(normalizedId);
     }
   };
 
@@ -11938,7 +11946,8 @@ function normalizeFavoriteImageItem(raw) {
     thumbnail: cachedThumbnail,
     thumbnailUrl: remoteThumbnail,
     sourceId,
-    pubDate: Number.isFinite(Number(raw.pubDate)) ? Number(raw.pubDate) : 0
+    pubDate: Number.isFinite(Number(raw.pubDate)) ? Number(raw.pubDate) : 0,
+    storagePath: typeof raw.storagePath === 'string' ? raw.storagePath : ''
   };
 }
 
@@ -12584,33 +12593,32 @@ function parseImageFeed(xmlText, sourceId) {
   return items;
 }
 
-function toggleImageFavorite(itemId) {
+function markImageAsDownloaded(item, cachedUri = '') {
+  const itemId = typeof item === 'string' ? item : item?.id;
   if (!itemId) {
     return;
   }
-  const currentItem = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
-    .find(entry => entry?.id === itemId)
-    || null;
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-  if (favorites.has(itemId)) {
-    favorites.delete(itemId);
-    removeFavoriteImageItem(itemId);
-  } else {
+  if (!favorites.has(itemId)) {
     favorites.add(itemId);
-    if (currentItem) {
-      persistFavoriteImageItem(currentItem);
-      ensureImageThumbnail(currentItem).then(dataUrl => {
-        if (dataUrl) {
-          persistFavoriteImageItem(Object.assign({}, currentItem, { thumbnail: dataUrl }));
-        }
-      });
-      cacheFavoriteImageData(currentItem);
-    }
+    imageFeedFavorites = favorites;
+    writeStoredImageFavorites(imageFeedFavorites);
   }
-  imageFeedFavorites = favorites;
-  writeStoredImageFavorites(imageFeedFavorites);
-  refreshImagesDisplay();
-  refreshFavoriteBackgroundPool({ resetIndex: true });
+  const existingItem = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
+    .find(entry => entry?.id === itemId)
+    || (item && typeof item === 'object' ? item : null);
+  if (existingItem) {
+    const payload = cachedUri ? Object.assign({}, existingItem, { cachedImage: cachedUri }) : existingItem;
+    persistFavoriteImageItem(payload);
+    ensureImageThumbnail(existingItem).then(dataUrl => {
+      if (dataUrl) {
+        persistFavoriteImageItem(Object.assign({}, existingItem, { thumbnail: dataUrl }));
+      }
+    });
+    cacheFavoriteImageData(payload);
+  }
+  refreshImagesDisplay({ skipStatus: true });
+  refreshFavoriteBackgroundPool({ resetIndex: false });
 }
 
 function hideImage(itemId) {
@@ -12624,13 +12632,6 @@ function hideImage(itemId) {
   hidden.add(itemId);
   imageFeedHidden = hidden;
   writeStoredHiddenImages(imageFeedHidden);
-
-  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-  if (favorites.delete(itemId)) {
-    imageFeedFavorites = favorites;
-    writeStoredImageFavorites(imageFeedFavorites);
-    removeFavoriteImageItem(itemId);
-  }
   imageFeedItems = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
     .filter(item => item.id !== itemId);
   pruneStoredImageThumbnails(imageFeedItems);
@@ -12731,6 +12732,11 @@ function refreshFavoriteBackgroundPool(options = {}) {
     if (!favorites.has(item.id)) {
       return false;
     }
+    const fromPicturesFolder = isAtom2UniversStoragePath(item.storagePath)
+      || isAtom2UniversStoragePath(item.cachedImage || '');
+    if (!fromPicturesFolder) {
+      return false;
+    }
     return Boolean(getImageItemSourceUrl(item) || getImageItemPreviewUrl(item));
   });
   favoriteBackgroundItems.forEach(item => {
@@ -12754,7 +12760,7 @@ function getStoredFavoriteItems() {
   const normalized = [];
   store.forEach((entry, id) => {
     const normalizedEntry = normalizeFavoriteImageItem(entry);
-    if (!favorites.has(id) || hidden.has(id) || !normalizedEntry) {
+    if (!favorites.has(id) || !normalizedEntry) {
       store.delete(id);
       shouldPersist = true;
       return;
@@ -12789,6 +12795,9 @@ function mergeFeedWithStoredFavorites(feedItems = []) {
       if (existing.thumbnailUrl && !item.thumbnailUrl) {
         updated.thumbnailUrl = existing.thumbnailUrl;
       }
+      if (existing.storagePath && !item.storagePath) {
+        updated.storagePath = existing.storagePath;
+      }
       merged.set(item.id, updated);
       persistFavoriteImageItem(updated);
       return;
@@ -12804,17 +12813,14 @@ function getVisibleImageItems() {
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const baseItems = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
     .filter(item => (favorites.has(item.id) || enabledSources.has(item.sourceId)) && !hiddenIds.has(item.id));
-  const filtered = imageFeedShowFavoritesOnly
-    ? baseItems.filter(item => favorites.has(item.id))
-    : baseItems.filter(item => !favorites.has(item.id));
-  imageFeedVisibleItems = filtered;
-  if (filtered.length === 0) {
+  imageFeedVisibleItems = baseItems;
+  if (baseItems.length === 0) {
     imageFeedCurrentIndex = 0;
-  } else if (imageFeedCurrentIndex >= filtered.length) {
+  } else if (imageFeedCurrentIndex >= baseItems.length) {
     imageFeedCurrentIndex = 0;
   }
   writeStoredImageCurrentIndex(imageFeedCurrentIndex);
-  return filtered;
+  return baseItems;
 }
 
 function updateImagesEmptyState(visibleItems = imageFeedVisibleItems) {
@@ -12987,7 +12993,7 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
   }
   elements.imagesGallery.replaceChildren();
   const items = Array.isArray(visibleItems) ? visibleItems : [];
-  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+  const downloaded = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   items.forEach((item, index) => {
     const card = document.createElement('article');
     card.className = 'images-card';
@@ -12995,7 +13001,7 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     if (index === imageFeedCurrentIndex) {
       card.classList.add('is-active');
     }
-    if (favorites.has(item.id)) {
+    if (downloaded.has(item.id)) {
       card.classList.add('is-favorite');
     }
     const hideLabel = translateOrDefault('index.sections.images.viewer.hide', 'Hide this image');
@@ -13049,12 +13055,11 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     favorite.textContent = '★';
     favorite.title = translateOrDefault(
       'index.sections.images.viewer.favorite',
-      'Toggle favorite'
+      'Downloaded'
     );
-    favorite.addEventListener('click', event => {
-      event.stopPropagation();
-      toggleImageFavorite(item.id);
-    });
+    favorite.setAttribute('aria-label', favorite.title);
+    favorite.setAttribute('data-i18n-title', 'index.sections.images.viewer.favorite');
+    favorite.setAttribute('data-i18n-aria-label', 'index.sections.images.viewer.favorite');
     body.append(title, source);
     card.append(hideButton, thumb, body, favorite);
     card.addEventListener('click', () => {
@@ -13107,19 +13112,6 @@ function renderImageSources() {
   });
 }
 
-function updateImagesFavoritesToggleLabel() {
-  if (!elements.imagesFavoritesToggle) {
-    return;
-  }
-  const key = imageFeedShowFavoritesOnly
-    ? 'index.sections.images.actions.nonFavoritesOnly'
-    : 'index.sections.images.actions.favoritesOnly';
-  const fallback = imageFeedShowFavoritesOnly ? 'Show non-favorites only' : 'Show favorites only';
-  elements.imagesFavoritesToggle.textContent = translateOrDefault(key, fallback);
-  elements.imagesFavoritesToggle.setAttribute('data-i18n', key);
-  elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'non-favorites';
-}
-
 function updateImagesBackgroundToggleLabel() {
   if (!elements.imagesBackgroundToggle) {
     return;
@@ -13133,20 +13125,15 @@ function updateImagesBackgroundToggleLabel() {
   elements.imagesBackgroundToggle.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
 }
 
-function handleImagesFavoritesToggle() {
-  imageFeedShowFavoritesOnly = !imageFeedShowFavoritesOnly;
-  updateImagesFavoritesToggleLabel();
-  refreshImagesDisplay({ skipStatus: true });
-}
-
 function handleImagesBackgroundToggle() {
   imageBackgroundEnabled = !imageBackgroundEnabled;
   writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
   updateImagesBackgroundToggleLabel();
+  refreshFavoriteBackgroundPool({ resetIndex: true });
   if (imageBackgroundEnabled && !favoriteBackgroundItems.length) {
     setImagesStatus(
       'index.sections.images.status.backgroundEmpty',
-      'Add favorites to show them on the main page.'
+      'Download images to show them on the main page.'
     );
   }
   applyFavoriteBackground();
@@ -13176,6 +13163,7 @@ function downloadCurrentImage() {
   if (!current) {
     return;
   }
+  markImageAsDownloaded(current);
   const imageUrl = getImageItemSourceUrl(current);
   if (window.AndroidBridge && typeof window.AndroidBridge.saveImageToDevice === 'function') {
     window.AndroidBridge.saveImageToDevice(imageUrl, current.id);
@@ -13370,7 +13358,6 @@ function initImagesModule() {
   hydrateFavoritesFromDeviceCache();
   imageFeedItems = mergeFeedWithStoredFavorites();
   renderImageSources();
-  updateImagesFavoritesToggleLabel();
   updateImagesBackgroundToggleLabel();
   refreshImagesDisplay({ skipStatus: true });
   refreshFavoriteBackgroundPool({ resetIndex: true });
@@ -13379,7 +13366,6 @@ function initImagesModule() {
 
 function subscribeImagesLanguageUpdates() {
   const handler = () => {
-    updateImagesFavoritesToggleLabel();
     updateImagesBackgroundToggleLabel();
     renderImageSources();
     refreshImagesDisplay({ skipStatus: true });
@@ -20252,9 +20238,6 @@ function bindDomEventListeners() {
     elements.imagesRefreshButton.addEventListener('click', () => {
       fetchImageFeeds();
     });
-  }
-  if (elements.imagesFavoritesToggle) {
-    elements.imagesFavoritesToggle.addEventListener('click', handleImagesFavoritesToggle);
   }
   if (elements.imagesBackgroundToggle) {
     elements.imagesBackgroundToggle.addEventListener('click', handleImagesBackgroundToggle);
