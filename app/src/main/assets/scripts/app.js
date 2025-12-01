@@ -11650,17 +11650,30 @@ function getFavoriteImageStore() {
   return storedFavoriteImageItems;
 }
 
+function reconcileFavoritesFromStoredItems() {
+  const store = getFavoriteImageStore();
+  if (!(imageFeedFavorites instanceof Set)) {
+    imageFeedFavorites = new Set();
+  }
+  if (!imageFeedFavorites.size && store.size) {
+    store.forEach((_, id) => imageFeedFavorites.add(id));
+    writeStoredImageFavorites(imageFeedFavorites);
+  }
+}
+
 function getImageItemSourceUrl(item) {
   if (!item) {
     return '';
   }
-  if (oversizedFavoriteImageIds.has(item.id)) {
-    const preview = getImageItemPreviewUrl(item);
-    if (preview) {
-      return preview;
-    }
+  const cached = typeof item.cachedImage === 'string' ? item.cachedImage : '';
+  const imageUrl = typeof item.imageUrl === 'string' ? item.imageUrl : '';
+  if (cached) {
+    return cached;
   }
-  return item.cachedImage || item.imageUrl || '';
+  if (imageUrl) {
+    return imageUrl;
+  }
+  return getImageItemPreviewUrl(item) || '';
 }
 
 function getImageItemPreviewUrl(item) {
@@ -13244,6 +13257,7 @@ function initImagesModule() {
   imageBackgroundEnabled = readStoredImageBackgroundEnabled();
   deviceCachedImageIds = readStoredDeviceCachedImages();
   storedFavoriteImageItems = readStoredFavoriteImages();
+  reconcileFavoritesFromStoredItems();
   imageFeedItems = mergeFeedWithStoredFavorites();
   renderImageSources();
   updateImagesFavoritesToggleLabel();
