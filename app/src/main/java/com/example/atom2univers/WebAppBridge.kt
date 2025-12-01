@@ -131,8 +131,7 @@ class WebAppBridge(activity: MainActivity) {
             titleColumn
         )
 
-        val selection = "$pathColumn LIKE ?"
-        val selectionArgs = arrayOf("%${Environment.DIRECTORY_PICTURES}/Atom2Univers%")
+        val (selection, selectionArgs) = buildAlbumSelection(pathColumn)
         var cursor = resolver.query(collectionUri, projection, selection, selectionArgs, null)
         val results = JSONArray()
 
@@ -155,6 +154,10 @@ class WebAppBridge(activity: MainActivity) {
                     payload.put("title", title)
                     results.put(payload)
                 }
+                Log.d(
+                    TAG,
+                    "Found ${results.length()} cached images in album using selection ${selectionArgs?.firstOrNull()}"
+                )
             }
             results.toString()
         } catch (error: Exception) {
@@ -250,6 +253,9 @@ class WebAppBridge(activity: MainActivity) {
             fileName
         }
 
+        val targetRelativePath = buildAlbumRelativePath()
+        var legacyTarget: java.io.File? = null
+
         val values = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
             put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
@@ -257,10 +263,8 @@ class WebAppBridge(activity: MainActivity) {
                 put(MediaStore.MediaColumns.TITLE, safeId)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(
-                    MediaStore.MediaColumns.RELATIVE_PATH,
-                    Environment.DIRECTORY_PICTURES + "/Atom2Univers"
-                )
+                put(MediaStore.MediaColumns.RELATIVE_PATH, targetRelativePath)
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
             } else {
                 val directory = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_PICTURES
@@ -271,9 +275,9 @@ class WebAppBridge(activity: MainActivity) {
                 if (targetFolder != null && !targetFolder.exists() && !targetFolder.mkdirs()) {
                     Log.w(TAG, "Unable to create target directory: ${targetFolder.absolutePath}")
                 }
-                val targetPath = targetFolder?.let { java.io.File(it, fileName) }
-                if (targetPath != null) {
-                    put(MediaStore.MediaColumns.DATA, targetPath.absolutePath)
+                legacyTarget = targetFolder?.let { java.io.File(it, fileName) }
+                if (legacyTarget != null) {
+                    put(MediaStore.MediaColumns.DATA, legacyTarget!!.absolutePath)
                 }
             }
         }
@@ -289,6 +293,25 @@ class WebAppBridge(activity: MainActivity) {
                 resolver.delete(imageUri, null, null)
                 return null
             }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val finalize = ContentValues().apply {
+                    put(MediaStore.MediaColumns.IS_PENDING, 0)
+                }
+                resolver.update(imageUri, finalize, null, null)
+                Log.d(
+                    TAG,
+                    "Image saved: uri=$imageUri, relativePath=$targetRelativePath, name=$displayName"
+                )
+            } else {
+                val readable = legacyTarget?.canRead()
+                val exists = legacyTarget?.exists()
+                Log.d(
+                    TAG,
+                    "Image saved: uri=$imageUri, file=${legacyTarget?.absolutePath}, exists=$exists, canRead=$readable"
+                )
+            }
+
             imageUri.toString()
         } catch (error: Exception) {
             Log.e(TAG, "Unable to persist image to device storage", error)
@@ -324,6 +347,24 @@ class WebAppBridge(activity: MainActivity) {
         }?.joinToString("")?.takeIf { it.isNotBlank() }
 
         return cleaned ?: "atom2univers_image"
+    }
+
+    private fun buildAlbumRelativePath(): String {
+        val base = Environment.DIRECTORY_PICTURES
+        val suffix = if (base.endsWith("/")) "Atom2Univers/" else "/Atom2Univers/"
+        return base + suffix
+    }
+
+    private fun buildAlbumSelection(pathColumn: String): Pair<String, Array<String>> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val relativePath = buildAlbumRelativePath()
+            "$pathColumn LIKE ?" to arrayOf("$relativePath%")
+        } else {
+            val legacyRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val legacyPath = legacyRoot?.let { java.io.File(it, "Atom2Univers") }
+            val absolutePrefix = legacyPath?.absolutePath ?: ""
+            "$pathColumn LIKE ?" to arrayOf("$absolutePrefix%")
+        }
     }
 
     private companion object {
