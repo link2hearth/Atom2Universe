@@ -342,13 +342,9 @@
       "images": {
         "title": "Images",
         "subtitle": "Parcourez une sélection d’images issues de flux photo et d’actualités scientifiques.",
-        "hint": "Touchez une vignette pour l’ouvrir, marquez vos favoris et filtrez par source.",
+        "hint": "Touchez une vignette pour l’ouvrir, téléchargez vos images et filtrez par source.",
         "actions": {
           "refresh": "Actualiser",
-          "favorites": "Favoris",
-          "favoritesOnly": "Afficher uniquement les favoris",
-          "nonFavoritesOnly": "Afficher uniquement les non favoris",
-          "all": "Afficher toutes les images",
           "open": "Ouvrir la source",
           "download": "Télécharger",
           "background": {
@@ -360,9 +356,12 @@
           "loading": "Chargement des images…",
           "error": "Impossible de charger les images pour le moment.",
           "empty": "Aucune image à afficher pour ces filtres.",
+          "downloading": "Téléchargement de l’image vers Pictures/Atom2Univers…",
+          "saved": "Image enregistrée dans Pictures/Atom2Univers.",
+          "saveFailed": "Impossible d’enregistrer cette image. Vérifiez les autorisations de stockage.",
           "sources": "Activez au moins une source pour afficher les images.",
           "ready": "{count} images chargées.",
-          "backgroundEmpty": "Ajoutez des favoris pour les afficher sur la page principale."
+          "backgroundEmpty": "Téléchargez des images dans Pictures/Atom2Univers pour les afficher sur la page principale."
         },
         "sources": {
           "title": "Sources",
@@ -388,7 +387,7 @@
         "viewer": {
           "prev": "Image précédente",
           "next": "Image suivante",
-          "favorite": "Basculer le favori",
+          "favorite": "Téléchargée",
           "hide": "Cacher cette image",
           "open": "Ouvrir la page de l’image",
           "closeFull": "Fermer l’image en plein écran"
