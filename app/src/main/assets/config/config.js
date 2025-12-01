@@ -139,12 +139,14 @@ const NEWS_SETTINGS = Object.freeze({
  * - `sources` : liste des flux RSS/Atom à agréger.
  * - `proxyBaseUrls` : proxys HTTP facultatifs pour contourner le CORS.
  * - `refreshIntervalMs` : fréquence de rafraîchissement automatique de la galerie.
+ * - `maxImageBytes` : taille maximale autorisée pour chaque image (en octets).
  */
 const IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
-  maxItems: 120,
+  maxItems: 15,
   refreshIntervalMs: 30 * 60 * 1000,
   requestTimeoutMs: 15000,
+  maxImageBytes: 10 * 1024 * 1024,
   favoriteBackgroundRotationMs: 5 * 60 * 1000,
   favoriteBackgroundEnabledByDefault: false,
   proxyBaseUrls: [

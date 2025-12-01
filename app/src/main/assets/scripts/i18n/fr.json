@@ -347,9 +347,11 @@
           "refresh": "Actualiser",
           "favorites": "Favoris",
           "favoritesOnly": "Afficher uniquement les favoris",
+          "nonFavoritesOnly": "Afficher uniquement les non favoris",
           "all": "Afficher toutes les images",
           "open": "Ouvrir la source",
           "download": "Télécharger",
+          "dismiss": "Supprimer cette image",
           "background": {
             "enable": "Afficher sur la page principale",
             "disable": "Masquer sur la page principale"
