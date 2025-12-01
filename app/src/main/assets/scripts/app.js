@@ -11650,6 +11650,17 @@ function getFavoriteImageStore() {
   return storedFavoriteImageItems;
 }
 
+function reconcileFavoritesFromStoredItems() {
+  const store = getFavoriteImageStore();
+  if (!(imageFeedFavorites instanceof Set)) {
+    imageFeedFavorites = new Set();
+  }
+  if (!imageFeedFavorites.size && store.size) {
+    store.forEach((_, id) => imageFeedFavorites.add(id));
+    writeStoredImageFavorites(imageFeedFavorites);
+  }
+}
+
 function getImageItemSourceUrl(item) {
   if (!item) {
     return '';
@@ -13244,6 +13255,7 @@ function initImagesModule() {
   imageBackgroundEnabled = readStoredImageBackgroundEnabled();
   deviceCachedImageIds = readStoredDeviceCachedImages();
   storedFavoriteImageItems = readStoredFavoriteImages();
+  reconcileFavoritesFromStoredItems();
   imageFeedItems = mergeFeedWithStoredFavorites();
   renderImageSources();
   updateImagesFavoritesToggleLabel();
