@@ -390,8 +390,7 @@
           "next": "Image suivante",
           "favorite": "Basculer le favori",
           "hide": "Cacher cette image",
-          "open": "Ouvrir la page de l’image",
-          "closeFull": "Fermer l’image en plein écran"
+          "open": "Ouvrir la page de l’image"
         }
       },
       "news": {
