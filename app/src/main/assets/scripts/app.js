@@ -324,7 +324,6 @@ const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   thumbnailMaxSize: 256,
   thumbnailQuality: 0.6,
   favoriteCacheMaxBytes: 2.5 * 1024 * 1024,
-  maxDownloadBytes: 15 * 1024 * 1024,
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
@@ -519,9 +518,6 @@ let imageThumbnailCache = new Map();
 let imageThumbnailTasks = new Map();
 let storedFavoriteImageItems = new Map();
 let favoriteImageDataTasks = new Map();
-let oversizedFavoriteImageIds = new Set();
-let deviceCachedImageIds = new Set();
-let deviceCachedImageIds = new Set();
 let favoriteImageCacheResolvers = new Map();
 let imageLightboxStateToken = null;
 let imageLightboxHistoryEnabled = false;
@@ -572,7 +568,6 @@ const IMAGE_FEED_HIDDEN_STORAGE_KEY = 'atom2univers.images.hidden.v1';
 const IMAGE_FEED_SOURCES_STORAGE_KEY = 'atom2univers.images.sources.v1';
 const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
 const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
-const IMAGE_FEED_DEVICE_CACHE_STORAGE_KEY = 'atom2univers.images.deviceCache.v1';
 const IMAGE_FEED_THUMBNAIL_STORAGE_PREFIX = 'atom2univers.images.thumbnail.v1.';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
@@ -11584,11 +11579,6 @@ function getImageFeedSettings() {
   return ACTIVE_IMAGE_FEED_SETTINGS || DEFAULT_IMAGE_FEED_SETTINGS;
 }
 
-function getImageDownloadLimitBytes() {
-  const raw = Number(getImageFeedSettings()?.maxDownloadBytes);
-  return Number.isFinite(raw) && raw > 0 ? raw : 0;
-}
-
 function getImageBackgroundRotationMs() {
   const settings = getImageFeedSettings();
   const raw = Number(settings?.favoriteBackgroundRotationMs);
@@ -11653,12 +11643,6 @@ function getImageItemSourceUrl(item) {
   if (!item) {
     return '';
   }
-  if (oversizedFavoriteImageIds.has(item.id)) {
-    const preview = getImageItemPreviewUrl(item);
-    if (preview) {
-      return preview;
-    }
-  }
   return item.cachedImage || item.imageUrl || '';
 }
 
@@ -11712,38 +11696,6 @@ function getFavoriteImageCacheLimit() {
   return Number.isFinite(raw) && raw > 0 ? raw : 0;
 }
 
-function isDeviceCachedUri(uri) {
-  return typeof uri === 'string'
-    && (uri.startsWith('file:') || uri.startsWith('content:'));
-}
-
-function markDeviceImageCached(itemId, cachedUri) {
-  if (!itemId || !isDeviceCachedUri(cachedUri)) {
-    return;
-  }
-  if (!(deviceCachedImageIds instanceof Set)) {
-    deviceCachedImageIds = new Set();
-  }
-  if (!deviceCachedImageIds.has(itemId)) {
-    deviceCachedImageIds.add(itemId);
-    writeStoredDeviceCachedImages(deviceCachedImageIds);
-  }
-}
-
-function findCachedImageBySourceUrl(sourceUrl) {
-  if (!sourceUrl) {
-    return null;
-  }
-  const normalizedSource = normalizeImageUrl(sourceUrl);
-  const store = getFavoriteImageStore();
-  for (const entry of store.values()) {
-    if (normalizeImageUrl(entry?.imageUrl) === normalizedSource && entry.cachedImage) {
-      return entry.cachedImage;
-    }
-  }
-  return null;
-}
-
 function resolveFavoriteImageCache(itemId, uri = null) {
   if (!itemId || !favoriteImageCacheResolvers.has(itemId)) {
     return;
@@ -11766,7 +11718,6 @@ if (typeof window !== 'undefined') {
     if (normalizedUri) {
       const existing = getFavoriteImageStore().get(normalizedId) || { id: normalizedId };
       persistFavoriteImageItem(Object.assign({}, existing, { id: normalizedId, cachedImage: normalizedUri }));
-      markDeviceImageCached(normalizedId, normalizedUri);
     }
   };
 
@@ -11851,9 +11802,6 @@ function persistFavoriteImageItem(item) {
     normalized.thumbnail = cachedThumb;
   }
   store.set(normalized.id, normalized);
-  if (normalized.cachedImage) {
-    markDeviceImageCached(normalized.id, normalized.cachedImage);
-  }
   writeStoredFavoriteImages(store);
   return normalized;
 }
@@ -11875,24 +11823,12 @@ async function cacheFavoriteImageData(item) {
   const store = getFavoriteImageStore();
   const existing = store.get(item.id);
   if (existing?.cachedImage) {
-    if (isDeviceCachedUri(existing.cachedImage)) {
-      markDeviceImageCached(item.id, existing.cachedImage);
-    }
     return existing.cachedImage;
-  }
-  if (oversizedFavoriteImageIds.has(item.id)) {
-    return getImageItemPreviewUrl(item) || null;
   }
   if (favoriteImageDataTasks.has(item.id)) {
     return favoriteImageDataTasks.get(item.id);
   }
   const sourceUrl = getImageItemSourceUrl(item);
-  const cachedFromSource = findCachedImageBySourceUrl(sourceUrl);
-  if (cachedFromSource) {
-    const persisted = persistFavoriteImageItem(Object.assign({}, item, { cachedImage: cachedFromSource }));
-    markDeviceImageCached(item.id, cachedFromSource);
-    return persisted?.cachedImage || cachedFromSource;
-  }
   const task = (async () => {
     if (!sourceUrl) {
       return null;
@@ -11926,30 +11862,21 @@ async function cacheFavoriteImageData(item) {
           if (!stored?.cachedImage) {
             persistFavoriteImageItem(Object.assign({}, item, { cachedImage: uri }));
           }
-          markDeviceImageCached(item.id, uri);
         }
         return uri;
       });
     }
 
     try {
-      const downloadLimit = getImageDownloadLimitBytes();
       const response = await fetch(sourceUrl);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-      const contentLength = Number(response.headers?.get?.('Content-Length'));
-      if (downloadLimit > 0 && Number.isFinite(contentLength) && contentLength > downloadLimit) {
-        console.warn('Skipping favorite cache: image exceeds download limit', contentLength);
-        oversizedFavoriteImageIds.add(item.id);
-        return getImageItemPreviewUrl(item) || null;
-      }
       const blob = await response.blob();
       const sizeLimit = getFavoriteImageCacheLimit();
-      if ((downloadLimit > 0 && blob.size > downloadLimit) || (sizeLimit > 0 && blob.size > sizeLimit)) {
+      if (sizeLimit > 0 && blob.size > sizeLimit) {
         console.warn('Skipping favorite cache: image too large', blob.size);
-        oversizedFavoriteImageIds.add(item.id);
-        return getImageItemPreviewUrl(item) || null;
+        return null;
       }
       const dataUrl = await new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -11959,7 +11886,6 @@ async function cacheFavoriteImageData(item) {
       });
       if (dataUrl) {
         persistFavoriteImageItem(Object.assign({}, item, { cachedImage: dataUrl }));
-        markDeviceImageCached(item.id, dataUrl);
       }
       return dataUrl;
     } catch (error) {
@@ -12028,35 +11954,6 @@ function writeStoredHiddenImages(hiddenSet) {
     globalThis.localStorage?.setItem(IMAGE_FEED_HIDDEN_STORAGE_KEY, JSON.stringify(ids));
   } catch (error) {
     console.warn('Unable to persist hidden images', error);
-  }
-}
-
-function readStoredDeviceCachedImages() {
-  try {
-    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_DEVICE_CACHE_STORAGE_KEY);
-    if (!raw) {
-      return new Set();
-    }
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return new Set(parsed.filter(id => typeof id === 'string' && id));
-    }
-  } catch (error) {
-    console.warn('Unable to read cached device images', error);
-  }
-  return new Set();
-}
-
-function writeStoredDeviceCachedImages(cacheIds) {
-  try {
-    const ids = Array.from(cacheIds || []).filter(id => typeof id === 'string' && id);
-    if (!ids.length) {
-      globalThis.localStorage?.removeItem(IMAGE_FEED_DEVICE_CACHE_STORAGE_KEY);
-      return;
-    }
-    globalThis.localStorage?.setItem(IMAGE_FEED_DEVICE_CACHE_STORAGE_KEY, JSON.stringify(ids));
-  } catch (error) {
-    console.warn('Unable to persist cached device images', error);
   }
 }
 
@@ -13216,7 +13113,6 @@ function initImagesModule() {
   imageFeedEnabledSources = readStoredImageSources();
   imageFeedCurrentIndex = readStoredImageCurrentIndex();
   imageBackgroundEnabled = readStoredImageBackgroundEnabled();
-  deviceCachedImageIds = readStoredDeviceCachedImages();
   storedFavoriteImageItems = readStoredFavoriteImages();
   imageFeedItems = mergeFeedWithStoredFavorites();
   renderImageSources();
