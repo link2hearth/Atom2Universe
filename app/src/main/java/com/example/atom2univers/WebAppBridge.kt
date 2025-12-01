@@ -110,31 +110,6 @@ class WebAppBridge(activity: MainActivity) {
     @JavascriptInterface
     fun listCachedImages(): String {
         val activity = activityRef.get() ?: return "[]"
-        if (!activity.hasImageReadPermission()) {
-            activity.requestImagePermission { granted ->
-                if (granted) {
-                    sendCachedImagesToJs(activity)
-                } else {
-                    activity.postJavascript(
-                        "window.onDeviceImagesPermissionDenied && window.onDeviceImagesPermissionDenied();"
-                    )
-                }
-            }
-            return "[]"
-        }
-        return loadCachedImages(activity).toString()
-    }
-
-    private fun sendCachedImagesToJs(activity: MainActivity) {
-        Thread {
-            val payload = loadCachedImages(activity).toString()
-            val script =
-                "window.onDeviceImagesLoaded && window.onDeviceImagesLoaded(${JSONObject.quote(payload)});"
-            activity.postJavascript(script)
-        }.start()
-    }
-
-    private fun loadCachedImages(activity: MainActivity): JSONArray {
         val resolver = activity.contentResolver
         val collectionUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
@@ -160,7 +135,7 @@ class WebAppBridge(activity: MainActivity) {
         var cursor = resolver.query(collectionUri, projection, selection, selectionArgs, null)
         val results = JSONArray()
 
-        try {
+        return try {
             if (cursor != null) {
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
                 val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
@@ -184,13 +159,13 @@ class WebAppBridge(activity: MainActivity) {
                     "Found ${results.length()} cached images in album using selection ${selectionArgs?.firstOrNull()}"
                 )
             }
+            results.toString()
         } catch (error: Exception) {
             Log.e(TAG, "Unable to list cached Atom2Univers images", error)
-            return JSONArray()
+            "[]"
         } finally {
             cursor?.close()
         }
-        return results
     }
 
     private fun fetchRss(url: String): String {

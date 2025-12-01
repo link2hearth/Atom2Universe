@@ -1,11 +1,8 @@
 package com.example.atom2univers
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
@@ -17,7 +14,6 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -31,14 +27,6 @@ class MainActivity : AppCompatActivity() {
     private var webViewSaveScript: String? = null
     private var cssRecoveryAttempted = false
     private var pendingBackupUri: Uri? = null
-    private var onImagePermissionResult: ((Boolean) -> Unit)? = null
-
-    private val requestImagePermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
-            val granted = results.entries.any { it.value }
-            onImagePermissionResult?.invoke(granted)
-            onImagePermissionResult = null
-        }
 
     private val openBackupFileLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
@@ -299,27 +287,6 @@ class MainActivity : AppCompatActivity() {
         createBackupFileLauncher.launch(BACKUP_FILE_NAME)
     }
 
-    fun hasImageReadPermission(): Boolean {
-        val permissions = imagePermissionTargets()
-        return permissions.all { permission ->
-            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    fun requestImagePermission(onResult: (Boolean) -> Unit) {
-        val permissions = imagePermissionTargets()
-        if (permissions.all { permission ->
-                ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-            }) {
-            onResult(true)
-            return
-        }
-        onImagePermissionResult = onResult
-        runOnUiThread {
-            requestImagePermissionLauncher.launch(permissions)
-        }
-    }
-
     fun writeBackupFromJs(base64Data: String?) {
         val destination = pendingBackupUri
         if (destination == null) {
@@ -409,14 +376,6 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.onBackPressed()
         if (!isFinishing && !isDestroyed) {
             callback.isEnabled = true
-        }
-    }
-
-    private fun imagePermissionTargets(): Array<String> {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-        } else {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
     }
 
