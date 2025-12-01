@@ -537,6 +537,7 @@ let newsHighlightedStoryId = null;
 let imageFeedItems = [];
 let imageFeedVisibleItems = [];
 let imageFeedFavorites = new Set();
+let imageFeedHidden = new Set();
 let imageFeedEnabledSources = null;
 let imageFeedShowFavoritesOnly = false;
 let imageFeedCurrentIndex = 0;
@@ -550,21 +551,6 @@ let favoriteBackgroundIndex = 0;
 let favoriteBackgroundTimerId = null;
 let imageThumbnailCache = new Map();
 let imageThumbnailTasks = new Map();
-
-let imageFeedItems = [];
-let imageFeedVisibleItems = [];
-let imageFeedFavorites = new Set();
-let imageFeedEnabledSources = null;
-let imageFeedShowFavoritesOnly = false;
-let imageFeedCurrentIndex = 0;
-let imageFeedIsLoading = false;
-let imageFeedLastError = null;
-let imageFeedRefreshTimerId = null;
-let imageFeedAbortController = null;
-let imageBackgroundEnabled = false;
-let favoriteBackgroundItems = [];
-let favoriteBackgroundIndex = 0;
-let favoriteBackgroundTimerId = null;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -606,6 +592,7 @@ const NEWS_LAST_QUERY_STORAGE_KEY = 'atom2univers.news.lastQuery';
 const NEWS_BANNED_WORDS_STORAGE_KEY = 'atom2univers.news.bannedWords.v1';
 const NEWS_SOURCES_STORAGE_KEY = 'atom2univers.news.sources.v1';
 const IMAGE_FEED_FAVORITES_STORAGE_KEY = 'atom2univers.images.favorites.v1';
+const IMAGE_FEED_HIDDEN_STORAGE_KEY = 'atom2univers.images.hidden.v1';
 const IMAGE_FEED_SOURCES_STORAGE_KEY = 'atom2univers.images.sources.v1';
 const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
 const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
@@ -11623,6 +11610,35 @@ function writeStoredImageFavorites(favorites) {
   }
 }
 
+function readStoredHiddenImages() {
+  try {
+    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_HIDDEN_STORAGE_KEY);
+    if (!raw) {
+      return new Set();
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return new Set(parsed.filter(item => typeof item === 'string' && item));
+    }
+  } catch (error) {
+    console.warn('Unable to read hidden images', error);
+  }
+  return new Set();
+}
+
+function writeStoredHiddenImages(hiddenSet) {
+  try {
+    const ids = Array.from(hiddenSet || []).filter(item => typeof item === 'string' && item);
+    if (!ids.length) {
+      globalThis.localStorage?.removeItem(IMAGE_FEED_HIDDEN_STORAGE_KEY);
+      return;
+    }
+    globalThis.localStorage?.setItem(IMAGE_FEED_HIDDEN_STORAGE_KEY, JSON.stringify(ids));
+  } catch (error) {
+    console.warn('Unable to persist hidden images', error);
+  }
+}
+
 function readStoredImageBackgroundEnabled() {
   try {
     const raw = globalThis.localStorage?.getItem(IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY);
@@ -11983,14 +11999,44 @@ function toggleImageFavorite(itemId) {
   if (!itemId) {
     return;
   }
+  const currentItem = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
+    .find(entry => entry?.id === itemId)
+    || null;
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   if (favorites.has(itemId)) {
     favorites.delete(itemId);
   } else {
     favorites.add(itemId);
+    if (currentItem) {
+      ensureImageThumbnail(currentItem);
+    }
   }
   imageFeedFavorites = favorites;
   writeStoredImageFavorites(imageFeedFavorites);
+  refreshImagesDisplay();
+  refreshFavoriteBackgroundPool({ resetIndex: true });
+}
+
+function hideImage(itemId) {
+  if (!itemId) {
+    return;
+  }
+  const hidden = imageFeedHidden instanceof Set ? imageFeedHidden : new Set();
+  if (hidden.has(itemId)) {
+    return;
+  }
+  hidden.add(itemId);
+  imageFeedHidden = hidden;
+  writeStoredHiddenImages(imageFeedHidden);
+
+  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+  if (favorites.delete(itemId)) {
+    imageFeedFavorites = favorites;
+    writeStoredImageFavorites(imageFeedFavorites);
+  }
+  imageFeedItems = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
+    .filter(item => item.id !== itemId);
+  pruneStoredImageThumbnails(imageFeedItems);
   refreshImagesDisplay();
   refreshFavoriteBackgroundPool({ resetIndex: true });
 }
@@ -12041,8 +12087,10 @@ function applyFavoriteBackground() {
     favoriteBackgroundIndex = 0;
   }
   const current = pool[favoriteBackgroundIndex] || null;
-  if (current) {
-    elements.favoriteBackground.style.backgroundImage = `url("${current.imageUrl}")`;
+  const preview = current ? getCachedImageThumbnail(current.id) : null;
+  const backgroundSource = current ? (preview || current.imageUrl) : '';
+  if (current && backgroundSource) {
+    elements.favoriteBackground.style.backgroundImage = `url("${backgroundSource}")`;
   } else {
     elements.favoriteBackground.style.backgroundImage = '';
   }
@@ -12057,6 +12105,7 @@ function refreshFavoriteBackgroundPool(options = {}) {
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
   favoriteBackgroundItems = items.filter(item => favorites.has(item.id) && item.imageUrl);
+  favoriteBackgroundItems.forEach(item => ensureImageThumbnail(item));
   if (options.resetIndex) {
     favoriteBackgroundIndex = 0;
   }
@@ -12068,9 +12117,10 @@ function refreshFavoriteBackgroundPool(options = {}) {
 
 function getVisibleImageItems() {
   const enabledSources = new Set(getEnabledImageSources().map(source => source.id));
+  const hiddenIds = imageFeedHidden instanceof Set ? imageFeedHidden : new Set();
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const baseItems = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
-    .filter(item => enabledSources.has(item.sourceId));
+    .filter(item => enabledSources.has(item.sourceId) && !hiddenIds.has(item.id));
   const filtered = imageFeedShowFavoritesOnly
     ? baseItems.filter(item => favorites.has(item.id))
     : baseItems;
@@ -12200,6 +12250,19 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     if (favorites.has(item.id)) {
       card.classList.add('is-favorite');
     }
+    const hideLabel = translateOrDefault('index.sections.images.viewer.hide', 'Hide this image');
+    const hideButton = document.createElement('button');
+    hideButton.type = 'button';
+    hideButton.className = 'images-card__hide';
+    hideButton.textContent = '✕';
+    hideButton.title = hideLabel;
+    hideButton.setAttribute('aria-label', hideLabel);
+    hideButton.setAttribute('data-i18n-aria-label', 'index.sections.images.viewer.hide');
+    hideButton.setAttribute('data-i18n-title', 'index.sections.images.viewer.hide');
+    hideButton.addEventListener('click', event => {
+      event.stopPropagation();
+      hideImage(item.id);
+    });
     const thumb = document.createElement('img');
     thumb.className = 'images-card__thumb';
     thumb.loading = 'lazy';
@@ -12237,7 +12300,7 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
       toggleImageFavorite(item.id);
     });
     body.append(title, source);
-    card.append(thumb, body, favorite);
+    card.append(hideButton, thumb, body, favorite);
     card.addEventListener('click', () => {
       setImagesCurrentIndex(index);
       refreshImagesDisplay({ skipStatus: true });
@@ -12500,7 +12563,9 @@ async function fetchImageFeeds(options = {}) {
       const second = Number(b?.pubDate) || 0;
       return second - first;
     });
-    imageFeedItems = sorted.slice(0, maxItems);
+    const hidden = imageFeedHidden instanceof Set ? imageFeedHidden : new Set();
+    const filteredItems = sorted.filter(item => !hidden.has(item.id));
+    imageFeedItems = filteredItems.slice(0, maxItems);
     pruneStoredImageThumbnails(imageFeedItems);
     imageFeedLastError = null;
     const visibleItems = refreshImagesDisplay({ skipStatus: true });
@@ -12523,6 +12588,7 @@ async function fetchImageFeeds(options = {}) {
 
 function initImagesModule() {
   imageFeedFavorites = readStoredImageFavorites();
+  imageFeedHidden = readStoredHiddenImages();
   imageFeedEnabledSources = readStoredImageSources();
   imageFeedCurrentIndex = readStoredImageCurrentIndex();
   imageBackgroundEnabled = readStoredImageBackgroundEnabled();

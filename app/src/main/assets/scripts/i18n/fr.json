@@ -388,6 +388,7 @@
           "prev": "Image précédente",
           "next": "Image suivante",
           "favorite": "Basculer le favori",
+          "hide": "Cacher cette image",
           "open": "Ouvrir la page de l’image"
         }
       },
