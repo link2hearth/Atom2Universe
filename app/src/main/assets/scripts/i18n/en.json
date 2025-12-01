@@ -342,13 +342,9 @@
       "images": {
         "title": "Images",
         "subtitle": "Browse curated photos from public and science feeds.",
-        "hint": "Tap a thumbnail to open it, add favorites, and filter by source.",
+        "hint": "Tap a thumbnail to open it, download images, and filter by source.",
         "actions": {
           "refresh": "Refresh",
-          "favorites": "Favorites",
-          "favoritesOnly": "Show favorites only",
-          "nonFavoritesOnly": "Show non-favorites only",
-          "all": "Show all images",
           "open": "Open source",
           "download": "Download",
           "background": {
@@ -362,7 +358,7 @@
           "empty": "No images to display with these filters.",
           "sources": "Enable at least one source to display images.",
           "ready": "{count} images loaded.",
-          "backgroundEmpty": "Add favorites to show them on the main page."
+          "backgroundEmpty": "Download images to Pictures/Atom2Univers to show them on the main page."
         },
         "sources": {
           "title": "Sources",
@@ -388,7 +384,7 @@
         "viewer": {
           "prev": "Previous image",
           "next": "Next image",
-          "favorite": "Toggle favorite",
+          "favorite": "Downloaded",
           "hide": "Hide this image",
           "open": "Open image page",
           "closeFull": "Close full-screen image"
