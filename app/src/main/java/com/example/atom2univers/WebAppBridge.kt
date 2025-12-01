@@ -1,20 +1,11 @@
 package com.example.atom2univers
 
-import android.content.ContentValues
-import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
 import android.webkit.JavascriptInterface
-import android.webkit.URLUtil
 import org.json.JSONObject
-import java.io.BufferedInputStream
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLConnection
 import java.lang.ref.WeakReference
 
 class WebAppBridge(activity: MainActivity) {
@@ -59,34 +50,6 @@ class WebAppBridge(activity: MainActivity) {
         }.start()
     }
 
-    @JavascriptInterface
-    fun saveImageToDevice(imageUrl: String?, imageId: String?) {
-        val activity = activityRef.get() ?: return
-        val safeUrl = imageUrl?.takeIf { it.isNotBlank() } ?: return
-
-        Thread {
-            val saved = try {
-                val image = downloadImage(safeUrl)
-                if (image != null) {
-                    persistImage(activity, image, safeUrl, imageId)
-                } else {
-                    false
-                }
-            } catch (error: Exception) {
-                Log.e(TAG, "Unable to download image from $safeUrl", error)
-                false
-            }
-
-            val safeId = imageId?.takeIf { it.isNotBlank() } ?: safeUrl
-            val callback = if (saved) {
-                "window.onImageSaved && window.onImageSaved(${JSONObject.quote(safeId)});"
-            } else {
-                "window.onImageSaveFailed && window.onImageSaveFailed(${JSONObject.quote(safeId)});"
-            }
-            activity.postJavascript(callback)
-        }.start()
-    }
-
     private fun fetchRss(url: String): String {
         var connection: HttpURLConnection? = null
         var reader: BufferedReader? = null
@@ -114,109 +77,4 @@ class WebAppBridge(activity: MainActivity) {
             connection?.disconnect()
         }
     }
-
-    private fun downloadImage(url: String): DownloadedImage? {
-        var connection: HttpURLConnection? = null
-        var input: BufferedInputStream? = null
-        return try {
-            val endpoint = URL(url)
-            connection = endpoint.openConnection() as HttpURLConnection
-            connection.instanceFollowRedirects = true
-            connection.connectTimeout = 10_000
-            connection.readTimeout = 15_000
-            val responseCode = connection.responseCode
-            if (responseCode !in 200..299) {
-                Log.w(TAG, "Unexpected response code $responseCode when downloading $url")
-                return null
-            }
-            val mimeType = connection.contentType
-                ?.substringBefore(';')
-                ?.trim()
-                ?.takeIf { it.isNotEmpty() }
-            input = BufferedInputStream(connection.inputStream)
-            DownloadedImage(input.readBytes(), mimeType)
-        } catch (error: IOException) {
-            Log.e(TAG, "Unable to download image bytes from $url", error)
-            null
-        } finally {
-            try {
-                input?.close()
-            } catch (_: IOException) {
-            }
-            connection?.disconnect()
-        }
-    }
-
-    private fun persistImage(
-        activity: MainActivity,
-        download: DownloadedImage,
-        imageUrl: String,
-        imageId: String?
-    ): Boolean {
-        val mimeType = download.mimeType
-            ?: extractMimeType(imageUrl)
-            ?: "image/jpeg"
-        val fileName = URLUtil.guessFileName(imageUrl, null, mimeType)
-        val resolver = activity.contentResolver
-        val collectionUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        } else {
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        }
-
-        val values = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(
-                    MediaStore.MediaColumns.RELATIVE_PATH,
-                    Environment.DIRECTORY_PICTURES + "/Atom2Univers"
-                )
-            } else {
-                val directory = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES
-                )
-                val targetFolder = directory?.let { parent ->
-                    java.io.File(parent, "Atom2Univers")
-                }
-                if (targetFolder != null && !targetFolder.exists() && !targetFolder.mkdirs()) {
-                    Log.w(TAG, "Unable to create target directory: ${targetFolder.absolutePath}")
-                }
-                val targetPath = targetFolder?.let { java.io.File(it, fileName) }
-                if (targetPath != null) {
-                    put(MediaStore.MediaColumns.DATA, targetPath.absolutePath)
-                }
-            }
-            if (!imageId.isNullOrBlank()) {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, "$imageId-${fileName}")
-            }
-        }
-
-        return try {
-            val imageUri = resolver.insert(collectionUri, values) ?: return false
-            resolver.openOutputStream(imageUri)?.use { stream ->
-                stream.write(download.data)
-                stream.flush()
-            } ?: return false
-            true
-        } catch (error: Exception) {
-            Log.e(TAG, "Unable to persist image to device storage", error)
-            false
-        }
-    }
-
-    private fun extractMimeType(imageUrl: String): String? {
-        return try {
-            val guess = URLConnection.guessContentTypeFromName(imageUrl)
-            guess?.substringBefore(';')?.trim()?.takeIf { it.isNotEmpty() }
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-    private companion object {
-        private const val TAG = "Atom2Univers"
-    }
-
-    private data class DownloadedImage(val data: ByteArray, val mimeType: String?)
 }
