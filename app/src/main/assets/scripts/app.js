@@ -11646,6 +11646,23 @@ function getImageItemSourceUrl(item) {
   return item.cachedImage || item.imageUrl || '';
 }
 
+function getImageItemPreviewUrl(item) {
+  if (!item) {
+    return '';
+  }
+  const cachedPreview = getCachedImageThumbnail(item.id);
+  if (cachedPreview) {
+    return cachedPreview;
+  }
+  if (typeof item.thumbnail === 'string' && item.thumbnail) {
+    return item.thumbnail;
+  }
+  if (typeof item.thumbnailUrl === 'string' && item.thumbnailUrl) {
+    return normalizeImageUrl(item.thumbnailUrl);
+  }
+  return '';
+}
+
 function getEnabledImageSources(availableSources = getAvailableImageSources()) {
   if (!(imageFeedEnabledSources instanceof Set)) {
     imageFeedEnabledSources = readStoredImageSources();
@@ -11723,6 +11740,7 @@ function normalizeFavoriteImageItem(raw) {
     return null;
   }
   const cachedThumbnail = typeof raw.thumbnail === 'string' ? raw.thumbnail : null;
+  const remoteThumbnail = typeof raw.thumbnailUrl === 'string' ? normalizeImageUrl(raw.thumbnailUrl) : '';
   const sourceId = typeof raw.sourceId === 'string' && raw.sourceId
     ? raw.sourceId
     : (typeof raw.source === 'string' ? raw.source : 'favorites');
@@ -11733,6 +11751,7 @@ function normalizeFavoriteImageItem(raw) {
     imageUrl,
     cachedImage: cachedImage || '',
     thumbnail: cachedThumbnail,
+    thumbnailUrl: remoteThumbnail,
     sourceId,
     pubDate: Number.isFinite(Number(raw.pubDate)) ? Number(raw.pubDate) : 0
   };
@@ -12174,13 +12193,24 @@ async function createThumbnailFromUrl(url, maxSize = 256, quality = 0.6) {
 }
 
 function ensureImageThumbnail(item) {
-  const sourceUrl = getImageItemSourceUrl(item);
-  if (!item || !item.id || !sourceUrl) {
+  if (!item || !item.id) {
     return Promise.resolve(null);
   }
   const cached = getCachedImageThumbnail(item.id);
   if (cached) {
     return Promise.resolve(cached);
+  }
+  const remoteThumbnail = typeof item.thumbnailUrl === 'string' && item.thumbnailUrl
+    ? normalizeImageUrl(item.thumbnailUrl)
+    : '';
+  if (remoteThumbnail) {
+    imageThumbnailCache.set(item.id, remoteThumbnail);
+    writeStoredImageThumbnail(item.id, remoteThumbnail);
+    return Promise.resolve(remoteThumbnail);
+  }
+  const sourceUrl = getImageItemSourceUrl(item);
+  if (!sourceUrl) {
+    return Promise.resolve(null);
   }
   if (imageThumbnailTasks.has(item.id)) {
     return imageThumbnailTasks.get(item.id);
@@ -12240,25 +12270,40 @@ function extractImageUrlFromHtml(html) {
   return normalizeImageUrl(match ? match[1] : '');
 }
 
-function extractImageUrlFromNode(node) {
+function extractImageMediaFromNode(node) {
   if (!node || typeof node.querySelector !== 'function') {
-    return '';
+    return { imageUrl: '', thumbnailUrl: '' };
   }
   const mediaContent = node.querySelector('media\\:content');
+  const mediaThumbnail = node.querySelector('media\\:thumbnail');
   const enclosure = node.querySelector('enclosure[url]');
   const linkEnclosure = node.querySelector('link[rel="enclosure"]');
   const descriptionHtml = node.querySelector('content\\:encoded')?.textContent
     || node.querySelector('description')?.textContent
     || '';
-  const candidates = [
+  const htmlImage = extractImageUrlFromHtml(descriptionHtml);
+
+  const imageCandidates = [
     mediaContent?.getAttribute('url'),
     enclosure?.getAttribute('url'),
     linkEnclosure?.getAttribute('href'),
-    extractImageUrlFromHtml(descriptionHtml)
+    mediaThumbnail?.getAttribute('url'),
+    htmlImage
   ]
     .map(url => normalizeImageUrl(url))
     .filter(Boolean);
-  return candidates.length ? candidates[0] : '';
+  const imageUrl = imageCandidates.length ? imageCandidates[0] : '';
+
+  const thumbnailCandidates = [
+    mediaThumbnail?.getAttribute('url'),
+    htmlImage,
+    imageUrl
+  ]
+    .map(url => normalizeImageUrl(url))
+    .filter(Boolean);
+  const thumbnailUrl = thumbnailCandidates.length ? thumbnailCandidates[0] : '';
+
+  return { imageUrl, thumbnailUrl };
 }
 
 function parseImageFeed(xmlText, sourceId) {
@@ -12274,7 +12319,7 @@ function parseImageFeed(xmlText, sourceId) {
     const link = normalizeImageUrl(linkElement?.getAttribute('href') || linkElement?.textContent || '');
     const pubDateText = entry.querySelector('pubDate, updated, published')?.textContent?.trim();
     const pubDate = pubDateText ? Date.parse(pubDateText) : 0;
-    const imageUrl = extractImageUrlFromNode(entry);
+    const { imageUrl, thumbnailUrl } = extractImageMediaFromNode(entry);
     if (!imageUrl) {
       return null;
     }
@@ -12283,6 +12328,7 @@ function parseImageFeed(xmlText, sourceId) {
       title: title || getImageSourceLabelById(sourceId),
       link: link || imageUrl,
       imageUrl,
+      thumbnailUrl,
       sourceId,
       pubDate: Number.isFinite(pubDate) ? pubDate : 0
     };
@@ -12409,8 +12455,19 @@ function applyFavoriteBackground() {
     favoriteBackgroundIndex = pickRandomFavoriteBackgroundIndex(pool.length);
   }
   const current = pool[favoriteBackgroundIndex] || null;
-  const preview = current ? getCachedImageThumbnail(current.id) : null;
-  const backgroundSource = current ? (preview || getImageItemSourceUrl(current)) : '';
+  const fullResolutionSource = current ? getImageItemSourceUrl(current) : '';
+  if (current && !current.cachedImage) {
+    const targetId = current.id;
+    cacheFavoriteImageData(current).then(uri => {
+      const isCurrent = favoriteBackgroundItems[favoriteBackgroundIndex]?.id === targetId;
+      if (uri && elements.favoriteBackground && isCurrent) {
+        elements.favoriteBackground.style.backgroundImage = `url("${uri}")`;
+      }
+    });
+  }
+  const backgroundSource = current
+    ? (fullResolutionSource || getImageItemPreviewUrl(current))
+    : '';
   if (current && backgroundSource) {
     elements.favoriteBackground.style.backgroundImage = `url("${backgroundSource}")`;
   } else {
@@ -12427,7 +12484,10 @@ function refreshFavoriteBackgroundPool(options = {}) {
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
   favoriteBackgroundItems = items.filter(item => favorites.has(item.id) && getImageItemSourceUrl(item));
-  favoriteBackgroundItems.forEach(item => ensureImageThumbnail(item));
+  favoriteBackgroundItems.forEach(item => {
+    ensureImageThumbnail(item);
+    cacheFavoriteImageData(item);
+  });
   if (options.resetIndex) {
     favoriteBackgroundIndex = -1;
   }
@@ -12470,11 +12530,18 @@ function mergeFeedWithStoredFavorites(feedItems = []) {
     }
     if (merged.has(item.id)) {
       const existing = merged.get(item.id);
-      merged.set(item.id, Object.assign({}, existing, item));
+      const updated = Object.assign({}, existing, item);
       if (existing.cachedImage && !item.cachedImage) {
-        merged.set(item.id, Object.assign({}, merged.get(item.id), { cachedImage: existing.cachedImage }));
+        updated.cachedImage = existing.cachedImage;
       }
-      persistFavoriteImageItem(merged.get(item.id));
+      if (existing.thumbnail && !item.thumbnail) {
+        updated.thumbnail = existing.thumbnail;
+      }
+      if (existing.thumbnailUrl && !item.thumbnailUrl) {
+        updated.thumbnailUrl = existing.thumbnailUrl;
+      }
+      merged.set(item.id, updated);
+      persistFavoriteImageItem(updated);
       return;
     }
     merged.set(item.id, item);
@@ -12635,7 +12702,7 @@ function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
     }
     return;
   }
-  const preview = getCachedImageThumbnail(current.id);
+  const preview = getImageItemPreviewUrl(current);
   const shouldUseFullRes = isImagesViewerFullscreen();
   const sourceUrl = getImageItemSourceUrl(current);
   elements.imagesActiveImage.dataset.imageId = current.id;
@@ -12697,7 +12764,7 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     const thumb = document.createElement('img');
     thumb.className = 'images-card__thumb';
     thumb.loading = 'lazy';
-    const preview = getCachedImageThumbnail(item.id);
+    const preview = getImageItemPreviewUrl(item);
     const sourceUrl = getImageItemSourceUrl(item);
     thumb.src = preview || sourceUrl;
     thumb.alt = item.title || getImageSourceLabelById(item.sourceId);
