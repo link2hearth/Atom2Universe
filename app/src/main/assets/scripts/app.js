@@ -520,7 +520,6 @@ let storedFavoriteImageItems = new Map();
 let favoriteImageDataTasks = new Map();
 let oversizedFavoriteImageIds = new Set();
 let deviceCachedImageIds = new Set();
-let deviceImageManifest = [];
 let favoriteImageCacheResolvers = new Map();
 let imageLightboxStateToken = null;
 let imageLightboxHistoryEnabled = false;
@@ -11780,45 +11779,29 @@ function deriveDeviceImageId(displayName) {
   return prefix || withoutExt;
 }
 
-function normalizeDeviceImageManifest(rawManifest) {
-  const parsed = Array.isArray(rawManifest) ? rawManifest : (() => {
-    try {
-      return JSON.parse(rawManifest);
-    } catch (error) {
-      return [];
-    }
-  })();
-  if (!Array.isArray(parsed)) {
-    return [];
-  }
-  return parsed
-    .map(entry => ({
-      uri: typeof entry?.uri === 'string' ? entry.uri : '',
-      displayName: typeof entry?.displayName === 'string' ? entry.displayName : '',
-      path: typeof entry?.path === 'string' ? entry.path : '',
-      title: typeof entry?.title === 'string' ? entry.title : ''
-    }))
-    .filter(entry => Boolean(entry.uri));
-}
-
-function updateDeviceImageManifest(rawManifest) {
-  deviceImageManifest = normalizeDeviceImageManifest(rawManifest);
-  return deviceImageManifest;
-}
-
-function readDeviceImageManifest(options = {}) {
-  const { refresh = false } = options;
-  if (!refresh && Array.isArray(deviceImageManifest) && deviceImageManifest.length) {
-    return deviceImageManifest;
-  }
+function readDeviceImageManifest() {
   const bridge = getAndroidImageBridge();
   if (!bridge || typeof bridge.listCachedImages !== 'function') {
-    deviceImageManifest = [];
-    return deviceImageManifest;
+    return [];
   }
-  const raw = bridge.listCachedImages();
-  deviceImageManifest = normalizeDeviceImageManifest(raw);
-  return deviceImageManifest;
+  try {
+    const raw = bridge.listCachedImages();
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed
+      .map(entry => ({
+        uri: typeof entry?.uri === 'string' ? entry.uri : '',
+        displayName: typeof entry?.displayName === 'string' ? entry.displayName : '',
+        path: typeof entry?.path === 'string' ? entry.path : '',
+        title: typeof entry?.title === 'string' ? entry.title : ''
+      }))
+      .filter(entry => Boolean(entry.uri));
+  } catch (error) {
+    console.warn('Unable to read device image manifest', error);
+  }
+  return [];
 }
 
 function getFavoriteImageCacheLimit() {
@@ -11937,21 +11920,6 @@ if (typeof window !== 'undefined') {
       return;
     }
     resolveFavoriteImageCache(normalizedId, null);
-  };
-
-  window.onDeviceImagesLoaded = function onDeviceImagesLoaded(rawManifest) {
-    updateDeviceImageManifest(rawManifest);
-    refreshFavoriteBackgroundPool({ resetIndex: true });
-  };
-
-  window.onDeviceImagesPermissionDenied = function onDeviceImagesPermissionDenied() {
-    deviceImageManifest = [];
-    if (imageBackgroundEnabled) {
-      setImagesStatus(
-        'index.sections.images.status.backgroundEmpty',
-        'Download images to show them on the main page.'
-      );
-    }
   };
 }
 
@@ -12650,7 +12618,7 @@ function markImageAsDownloaded(item, cachedUri = '') {
     cacheFavoriteImageData(payload);
   }
   refreshImagesDisplay({ skipStatus: true });
-  refreshFavoriteBackgroundPool({ resetIndex: false, refreshManifest: true });
+  refreshFavoriteBackgroundPool({ resetIndex: false });
 }
 
 function hideImage(itemId) {
@@ -12757,23 +12725,24 @@ function applyFavoriteBackground() {
 }
 
 function refreshFavoriteBackgroundPool(options = {}) {
+  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const items = mergeFeedWithStoredFavorites(Array.isArray(imageFeedItems) ? imageFeedItems : []);
   imageFeedItems = items;
-  const manifest = readDeviceImageManifest({ refresh: Boolean(options.refreshManifest) });
-  favoriteBackgroundItems = manifest
-    .map(entry => {
-      const idSource = entry.displayName || entry.title || entry.uri;
-      const derivedId = deriveDeviceImageId(idSource) || entry.uri;
-      return {
-        id: derivedId,
-        imageUrl: entry.uri,
-        cachedImage: entry.uri,
-        storagePath: entry.path || entry.uri,
-        title: entry.title || entry.displayName || '',
-        sourceId: 'device'
-      };
-    })
-    .filter(item => isAtom2UniversStoragePath(item.storagePath) || isAtom2UniversStoragePath(item.cachedImage));
+  favoriteBackgroundItems = items.filter(item => {
+    if (!favorites.has(item.id)) {
+      return false;
+    }
+    const fromPicturesFolder = isAtom2UniversStoragePath(item.storagePath)
+      || isAtom2UniversStoragePath(item.cachedImage || '');
+    if (!fromPicturesFolder) {
+      return false;
+    }
+    return Boolean(getImageItemSourceUrl(item) || getImageItemPreviewUrl(item));
+  });
+  favoriteBackgroundItems.forEach(item => {
+    ensureImageThumbnail(item);
+    cacheFavoriteImageData(item);
+  });
   if (options.resetIndex) {
     favoriteBackgroundIndex = -1;
   }
