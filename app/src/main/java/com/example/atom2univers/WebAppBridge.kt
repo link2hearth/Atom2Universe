@@ -122,11 +122,13 @@ class WebAppBridge(activity: MainActivity) {
         } else {
             MediaStore.Images.Media.DATA
         }
+        val titleColumn = MediaStore.Images.Media.TITLE
 
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
-            pathColumn
+            pathColumn,
+            titleColumn
         )
 
         val selection = "$pathColumn LIKE ?"
@@ -139,15 +141,18 @@ class WebAppBridge(activity: MainActivity) {
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
                 val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
                 val pathIdx = cursor.getColumnIndexOrThrow(pathColumn)
+                val titleIdx = cursor.getColumnIndexOrThrow(titleColumn)
                 while (cursor.moveToNext()) {
                     val id = cursor.getLong(idColumn)
                     val displayName = cursor.getString(nameColumn) ?: ""
                     val path = cursor.getString(pathIdx) ?: ""
+                    val title = cursor.getString(titleIdx) ?: ""
                     val uri = ContentUris.withAppendedId(collectionUri, id).toString()
                     val payload = JSONObject()
                     payload.put("uri", uri)
                     payload.put("displayName", displayName)
                     payload.put("path", path)
+                    payload.put("title", title)
                     results.put(payload)
                 }
             }
@@ -229,7 +234,7 @@ class WebAppBridge(activity: MainActivity) {
         val mimeType = download.mimeType
             ?: extractMimeType(imageUrl)
             ?: "image/jpeg"
-        val fileName = URLUtil.guessFileName(imageUrl, null, mimeType)
+        val fileName = sanitizeFileName(URLUtil.guessFileName(imageUrl, null, mimeType))
         val resolver = activity.contentResolver
         val collectionUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
@@ -237,9 +242,20 @@ class WebAppBridge(activity: MainActivity) {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         }
 
+        val safeId = imageId?.takeIf { it.isNotBlank() }
+        val sanitizedId = safeId?.let { sanitizeFileName(it) }
+        val displayName = if (!sanitizedId.isNullOrBlank()) {
+            "${sanitizedId}_${fileName}"
+        } else {
+            fileName
+        }
+
         val values = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
             put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+            if (!safeId.isNullOrBlank()) {
+                put(MediaStore.MediaColumns.TITLE, safeId)
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(
                     MediaStore.MediaColumns.RELATIVE_PATH,
@@ -259,9 +275,6 @@ class WebAppBridge(activity: MainActivity) {
                 if (targetPath != null) {
                     put(MediaStore.MediaColumns.DATA, targetPath.absolutePath)
                 }
-            }
-            if (!imageId.isNullOrBlank()) {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, "$imageId-${fileName}")
             }
         }
 
@@ -299,6 +312,18 @@ class WebAppBridge(activity: MainActivity) {
         } catch (_: Exception) {
             null
         }
+    }
+
+    private fun sanitizeFileName(rawName: String?): String {
+        val cleaned = rawName?.map { char ->
+            when {
+                char.isLetterOrDigit() -> char
+                char == '.' || char == '-' || char == '_' -> char
+                else -> '_'
+            }
+        }?.joinToString("")?.takeIf { it.isNotBlank() }
+
+        return cleaned ?: "atom2univers_image"
     }
 
     private companion object {
