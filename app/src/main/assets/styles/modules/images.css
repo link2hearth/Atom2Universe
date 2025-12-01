@@ -8,31 +8,14 @@
 }
 
 .images-page__header {
-  display: grid;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   gap: 0.75rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  align-items: flex-end;
 }
 
 .images-page__title {
-  margin: 0 0 0.2rem;
-  font-family: var(--font-display, var(--font-text));
-  font-size: clamp(1.4rem, 2vw, 1.7rem);
-}
-
-.images-page__subtitle,
-.images-page__hint {
   margin: 0;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.images-page__hint {
-  font-size: 0.95rem;
-}
-
-body.theme-light .images-page__subtitle,
-body.theme-light .images-page__hint {
-  color: rgba(0, 0, 0, 0.7);
 }
 
 .images-page__actions {
@@ -43,13 +26,14 @@ body.theme-light .images-page__hint {
 }
 
 .images-page__action {
-  padding: 0.6rem 1rem;
-  border-radius: 12px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #f7fbff;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  font-size: 0.9rem;
 }
 
 .images-page__action:hover {
@@ -102,12 +86,13 @@ body.theme-light .images-page__action--primary {
 }
 
 .images-page__quick-action {
-  padding: 0.55rem 0.9rem;
-  border-radius: 10px;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.06);
   color: #f7fbff;
   cursor: pointer;
+  font-size: 0.9rem;
 }
 
 body.theme-light .images-page__status {
@@ -123,15 +108,9 @@ body.theme-light .images-page__quick-action {
 }
 
 .images-page__layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
+  display: flex;
+  flex-direction: column;
   gap: clamp(0.8rem, 1.8vw, 1.4rem);
-}
-
-@media (max-width: 960px) {
-  .images-page__layout {
-    grid-template-columns: 1fr;
-  }
 }
 
 .images-page__filters {
@@ -142,6 +121,7 @@ body.theme-light .images-page__quick-action {
   display: grid;
   gap: 0.6rem;
   height: fit-content;
+  width: 100%;
 }
 
 body.theme-light .images-page__filters {

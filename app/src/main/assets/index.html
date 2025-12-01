@@ -170,6 +170,7 @@
       aria-label="Chambre de création atomique"
       data-i18n="aria-label:index.sections.game.aria"
     >
+      <div class="favorite-background" id="favoriteBackground" aria-hidden="true" hidden></div>
       <div class="starfield" aria-hidden="true"></div>
 
       <div
@@ -6928,15 +6929,13 @@
     >
       <div class="images-page">
         <div class="images-page__header">
-          <div>
-            <h2 id="images-title" class="images-page__title" data-i18n="index.sections.images.title">Images</h2>
-            <p class="images-page__subtitle" data-i18n="index.sections.images.subtitle">
-              Parcourez une sélection d’images issues de flux photo et d’actualités scientifiques.
-            </p>
-            <p class="images-page__hint" data-i18n="index.sections.images.hint">
-              Touchez une vignette pour l’ouvrir, marquez vos favoris et filtrez par source.
-            </p>
-          </div>
+          <h2
+            id="images-title"
+            class="images-page__title visually-hidden"
+            data-i18n="index.sections.images.title"
+          >
+            Images
+          </h2>
           <div class="images-page__actions">
             <button
               type="button"
@@ -6954,6 +6953,15 @@
               data-i18n="index.sections.images.actions.favorites"
             >
               Favoris
+            </button>
+            <button
+              type="button"
+              id="imagesBackgroundToggle"
+              class="images-page__action"
+              data-state="off"
+              data-i18n="index.sections.images.actions.background.enable"
+            >
+              Afficher sur la page principale
             </button>
           </div>
         </div>
@@ -6987,25 +6995,6 @@
           </div>
         </div>
         <div class="images-page__layout">
-          <aside class="images-page__filters" aria-labelledby="imagesSourcesTitle">
-            <div class="images-page__filters-header">
-              <h3 id="imagesSourcesTitle" class="images-page__filters-title" data-i18n="index.sections.images.sources.title">
-                Sources
-              </h3>
-              <button
-                type="button"
-                id="imagesSourcesReset"
-                class="images-page__reset"
-                data-i18n="index.sections.images.sources.reset"
-              >
-                Tout sélectionner
-              </button>
-            </div>
-            <p class="images-page__filters-subtitle" data-i18n="index.sections.images.sources.subtitle">
-              Choisissez les flux à afficher.
-            </p>
-            <ul id="imagesSourcesList" class="images-sources" aria-live="polite"></ul>
-          </aside>
           <div class="images-page__content">
             <div class="images-viewer" aria-live="polite">
               <button
@@ -7052,6 +7041,25 @@
             </p>
             <div id="imagesGallery" class="images-gallery" role="list"></div>
           </div>
+          <aside class="images-page__filters" aria-labelledby="imagesSourcesTitle">
+            <div class="images-page__filters-header">
+              <h3 id="imagesSourcesTitle" class="images-page__filters-title" data-i18n="index.sections.images.sources.title">
+                Sources
+              </h3>
+              <button
+                type="button"
+                id="imagesSourcesReset"
+                class="images-page__reset"
+                data-i18n="index.sections.images.sources.reset"
+              >
+                Tout sélectionner
+              </button>
+            </div>
+            <p class="images-page__filters-subtitle" data-i18n="index.sections.images.sources.subtitle">
+              Choisissez les flux à afficher.
+            </p>
+            <ul id="imagesSourcesList" class="images-sources" aria-live="polite"></ul>
+          </aside>
         </div>
       </div>
     </section>

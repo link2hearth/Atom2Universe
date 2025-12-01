@@ -319,6 +319,8 @@ const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   maxItems: 120,
   refreshIntervalMs: 30 * 60 * 1000,
   requestTimeoutMs: 15000,
+  favoriteBackgroundRotationMs: 5 * 60 * 1000,
+  favoriteBackgroundEnabledByDefault: false,
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
@@ -504,6 +506,10 @@ let imageFeedIsLoading = false;
 let imageFeedLastError = null;
 let imageFeedRefreshTimerId = null;
 let imageFeedAbortController = null;
+let imageBackgroundEnabled = false;
+let favoriteBackgroundItems = [];
+let favoriteBackgroundIndex = 0;
+let favoriteBackgroundTimerId = null;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -547,6 +553,7 @@ const NEWS_SOURCES_STORAGE_KEY = 'atom2univers.news.sources.v1';
 const IMAGE_FEED_FAVORITES_STORAGE_KEY = 'atom2univers.images.favorites.v1';
 const IMAGE_FEED_SOURCES_STORAGE_KEY = 'atom2univers.images.sources.v1';
 const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
+const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
@@ -6438,6 +6445,7 @@ function collectDomElements() {
   cryptoWidgetStatus: document.getElementById('cryptoWidgetStatus'),
   cryptoWidgetBtcValue: document.getElementById('cryptoWidgetBtcValue'),
   cryptoWidgetEthValue: document.getElementById('cryptoWidgetEthValue'),
+  favoriteBackground: document.getElementById('favoriteBackground'),
   statusApcFrenzy: {
     container: document.getElementById('statusApcFrenzy'),
     multiplier: document.getElementById('statusApcFrenzyMultiplier'),
@@ -6627,6 +6635,7 @@ function collectDomElements() {
   imagesStatus: document.getElementById('imagesStatus'),
   imagesRefreshButton: document.getElementById('imagesRefreshButton'),
   imagesFavoritesToggle: document.getElementById('imagesFavoritesToggle'),
+  imagesBackgroundToggle: document.getElementById('imagesBackgroundToggle'),
   imagesOpenButton: document.getElementById('imagesOpenButton'),
   imagesDownloadButton: document.getElementById('imagesDownloadButton'),
   imagesSourcesList: document.getElementById('imagesSourcesList'),
@@ -11463,6 +11472,15 @@ function getImageFeedSettings() {
   return ACTIVE_IMAGE_FEED_SETTINGS || DEFAULT_IMAGE_FEED_SETTINGS;
 }
 
+function getImageBackgroundRotationMs() {
+  const settings = getImageFeedSettings();
+  const raw = Number(settings?.favoriteBackgroundRotationMs);
+  if (Number.isFinite(raw) && raw > 0) {
+    return raw;
+  }
+  return DEFAULT_IMAGE_FEED_SETTINGS.favoriteBackgroundRotationMs;
+}
+
 function normalizeImageSource(source, index = 0) {
   if (!source || typeof source !== 'object') {
     return null;
@@ -11546,6 +11564,30 @@ function writeStoredImageFavorites(favorites) {
     globalThis.localStorage?.setItem(IMAGE_FEED_FAVORITES_STORAGE_KEY, JSON.stringify(items));
   } catch (error) {
     console.warn('Unable to persist image favorites', error);
+  }
+}
+
+function readStoredImageBackgroundEnabled() {
+  try {
+    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY);
+    if (raw === 'true') {
+      return true;
+    }
+    if (raw === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read background preference', error);
+  }
+  const settings = getImageFeedSettings();
+  return Boolean(settings?.favoriteBackgroundEnabledByDefault);
+}
+
+function writeStoredImageBackgroundEnabled(enabled) {
+  try {
+    globalThis.localStorage?.setItem(IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY, enabled ? 'true' : 'false');
+  } catch (error) {
+    console.warn('Unable to persist background preference', error);
   }
 }
 
@@ -11737,6 +11779,78 @@ function toggleImageFavorite(itemId) {
   imageFeedFavorites = favorites;
   writeStoredImageFavorites(imageFeedFavorites);
   refreshImagesDisplay();
+  refreshFavoriteBackgroundPool({ resetIndex: true });
+}
+
+function clearFavoriteBackgroundTimer() {
+  if (favoriteBackgroundTimerId != null) {
+    clearTimeout(favoriteBackgroundTimerId);
+    favoriteBackgroundTimerId = null;
+  }
+}
+
+function scheduleFavoriteBackgroundRotation() {
+  clearFavoriteBackgroundTimer();
+  if (!imageBackgroundEnabled || !favoriteBackgroundItems.length) {
+    return;
+  }
+  const delay = Math.max(1000, getImageBackgroundRotationMs() || 300000);
+  favoriteBackgroundTimerId = setTimeout(() => {
+    if (!favoriteBackgroundItems.length) {
+      clearFavoriteBackgroundTimer();
+      return;
+    }
+    favoriteBackgroundIndex = (favoriteBackgroundIndex + 1) % favoriteBackgroundItems.length;
+    applyFavoriteBackground();
+  }, delay);
+}
+
+function applyFavoriteBackground() {
+  clearFavoriteBackgroundTimer();
+  const pool = Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems : [];
+  const hasPool = pool.length > 0;
+  const canDisplay = imageBackgroundEnabled && hasPool;
+  if (!elements.favoriteBackground) {
+    if (canDisplay) {
+      scheduleFavoriteBackgroundRotation();
+    }
+    return;
+  }
+
+  if (!canDisplay) {
+    elements.favoriteBackground.style.backgroundImage = '';
+    elements.favoriteBackground.toggleAttribute('hidden', true);
+    document.body.classList.toggle('favorite-background-active', false);
+    return;
+  }
+
+  if (favoriteBackgroundIndex >= pool.length) {
+    favoriteBackgroundIndex = 0;
+  }
+  const current = pool[favoriteBackgroundIndex] || null;
+  if (current) {
+    elements.favoriteBackground.style.backgroundImage = `url("${current.imageUrl}")`;
+  } else {
+    elements.favoriteBackground.style.backgroundImage = '';
+  }
+  const isGameActive = document.body?.dataset?.activePage === 'game';
+  const shouldShow = Boolean(current) && isGameActive;
+  elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
+  document.body.classList.toggle('favorite-background-active', shouldShow);
+  scheduleFavoriteBackgroundRotation();
+}
+
+function refreshFavoriteBackgroundPool(options = {}) {
+  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+  const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
+  favoriteBackgroundItems = items.filter(item => favorites.has(item.id) && item.imageUrl);
+  if (options.resetIndex) {
+    favoriteBackgroundIndex = 0;
+  }
+  if (favoriteBackgroundIndex >= favoriteBackgroundItems.length) {
+    favoriteBackgroundIndex = 0;
+  }
+  applyFavoriteBackground();
 }
 
 function getVisibleImageItems() {
@@ -11916,10 +12030,36 @@ function updateImagesFavoritesToggleLabel() {
   elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'all';
 }
 
+function updateImagesBackgroundToggleLabel() {
+  if (!elements.imagesBackgroundToggle) {
+    return;
+  }
+  const key = imageBackgroundEnabled
+    ? 'index.sections.images.actions.background.disable'
+    : 'index.sections.images.actions.background.enable';
+  const fallback = imageBackgroundEnabled ? 'Hide on main page' : 'Show on main page';
+  elements.imagesBackgroundToggle.textContent = translateOrDefault(key, fallback);
+  elements.imagesBackgroundToggle.setAttribute('data-i18n', key);
+  elements.imagesBackgroundToggle.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
+}
+
 function handleImagesFavoritesToggle() {
   imageFeedShowFavoritesOnly = !imageFeedShowFavoritesOnly;
   updateImagesFavoritesToggleLabel();
   refreshImagesDisplay({ skipStatus: true });
+}
+
+function handleImagesBackgroundToggle() {
+  imageBackgroundEnabled = !imageBackgroundEnabled;
+  writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
+  updateImagesBackgroundToggleLabel();
+  if (imageBackgroundEnabled && !favoriteBackgroundItems.length) {
+    setImagesStatus(
+      'index.sections.images.status.backgroundEmpty',
+      'Add favorites to show them on the main page.'
+    );
+  }
+  applyFavoriteBackground();
 }
 
 function selectImageById(itemId) {
@@ -11964,6 +12104,7 @@ function refreshImagesDisplay(options = {}) {
   const visibleItems = getVisibleImageItems();
   renderImagesViewer(visibleItems);
   renderImagesGallery(visibleItems);
+  refreshFavoriteBackgroundPool();
   if (!options.skipStatus && !imageFeedIsLoading && !imageFeedLastError) {
     const key = visibleItems.length
       ? 'index.sections.images.status.ready'
@@ -12112,15 +12253,19 @@ function initImagesModule() {
   imageFeedFavorites = readStoredImageFavorites();
   imageFeedEnabledSources = readStoredImageSources();
   imageFeedCurrentIndex = readStoredImageCurrentIndex();
+  imageBackgroundEnabled = readStoredImageBackgroundEnabled();
   renderImageSources();
   updateImagesFavoritesToggleLabel();
+  updateImagesBackgroundToggleLabel();
   refreshImagesDisplay({ skipStatus: true });
+  refreshFavoriteBackgroundPool({ resetIndex: true });
   fetchImageFeeds();
 }
 
 function subscribeImagesLanguageUpdates() {
   const handler = () => {
     updateImagesFavoritesToggleLabel();
+    updateImagesBackgroundToggleLabel();
     renderImageSources();
     refreshImagesDisplay({ skipStatus: true });
   };
@@ -18383,6 +18528,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   document.body.classList.toggle('view-news', pageId === 'news');
   document.body.classList.toggle('view-images', pageId === 'images');
+  applyFavoriteBackground();
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
@@ -18994,6 +19140,9 @@ function bindDomEventListeners() {
   }
   if (elements.imagesFavoritesToggle) {
     elements.imagesFavoritesToggle.addEventListener('click', handleImagesFavoritesToggle);
+  }
+  if (elements.imagesBackgroundToggle) {
+    elements.imagesBackgroundToggle.addEventListener('click', handleImagesBackgroundToggle);
   }
   if (elements.imagesSourcesReset) {
     elements.imagesSourcesReset.addEventListener('click', () => {

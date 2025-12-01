@@ -349,14 +349,19 @@
           "favoritesOnly": "Show favorites only",
           "all": "Show all images",
           "open": "Open source",
-          "download": "Download"
+          "download": "Download",
+          "background": {
+            "enable": "Show on main page",
+            "disable": "Hide from main page"
+          }
         },
         "status": {
           "loading": "Loading images…",
           "error": "Unable to load images right now.",
           "empty": "No images to display with these filters.",
           "sources": "Enable at least one source to display images.",
-          "ready": "{count} images loaded."
+          "ready": "{count} images loaded.",
+          "backgroundEmpty": "Add favorites to show them on the main page."
         },
         "sources": {
           "title": "Sources",
