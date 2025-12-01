@@ -2340,6 +2340,14 @@
             "off": "Disabled"
           }
         },
+        "atomIcon": {
+          "title": "Atom icon on main button",
+          "ariaLabel": "Show or hide the Atom icon on the main button",
+          "state": {
+            "on": "Visible",
+            "off": "Hidden"
+          }
+        },
         "ticketStarAutoCollect": {
           "title": "Auto Loot Stars",
           "ariaLabel": "Enable or disable automatic ticket-star pickup",
