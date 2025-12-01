@@ -65,23 +65,41 @@ class WebAppBridge(activity: MainActivity) {
         val safeUrl = imageUrl?.takeIf { it.isNotBlank() } ?: return
 
         Thread {
-            val saved = try {
-                val image = downloadImage(safeUrl)
-                if (image != null) {
-                    persistImage(activity, image, safeUrl, imageId)
-                } else {
-                    false
-                }
+            val savedUri = try {
+                downloadAndPersistImage(activity, safeUrl, imageId)
             } catch (error: Exception) {
                 Log.e(TAG, "Unable to download image from $safeUrl", error)
-                false
+                null
             }
 
             val safeId = imageId?.takeIf { it.isNotBlank() } ?: safeUrl
-            val callback = if (saved) {
+            val callback = if (!savedUri.isNullOrBlank()) {
                 "window.onImageSaved && window.onImageSaved(${JSONObject.quote(safeId)});"
             } else {
                 "window.onImageSaveFailed && window.onImageSaveFailed(${JSONObject.quote(safeId)});"
+            }
+            activity.postJavascript(callback)
+        }.start()
+    }
+
+    @JavascriptInterface
+    fun cacheImageToDevice(imageUrl: String?, imageId: String?) {
+        val activity = activityRef.get() ?: return
+        val safeUrl = imageUrl?.takeIf { it.isNotBlank() } ?: return
+
+        Thread {
+            val savedUri = try {
+                downloadAndPersistImage(activity, safeUrl, imageId)
+            } catch (error: Exception) {
+                Log.e(TAG, "Unable to cache image from $safeUrl", error)
+                null
+            }
+
+            val safeId = imageId?.takeIf { it.isNotBlank() } ?: safeUrl
+            val callback = if (!savedUri.isNullOrBlank()) {
+                "window.onImageCached && window.onImageCached(${JSONObject.quote(safeId)}, ${JSONObject.quote(savedUri)});"
+            } else {
+                "window.onImageCacheFailed && window.onImageCacheFailed(${JSONObject.quote(safeId)});"
             }
             activity.postJavascript(callback)
         }.start()
@@ -152,7 +170,7 @@ class WebAppBridge(activity: MainActivity) {
         download: DownloadedImage,
         imageUrl: String,
         imageId: String?
-    ): Boolean {
+    ): String? {
         val mimeType = download.mimeType
             ?: extractMimeType(imageUrl)
             ?: "image/jpeg"
@@ -193,16 +211,30 @@ class WebAppBridge(activity: MainActivity) {
         }
 
         return try {
-            val imageUri = resolver.insert(collectionUri, values) ?: return false
-            resolver.openOutputStream(imageUri)?.use { stream ->
+            val imageUri = resolver.insert(collectionUri, values) ?: return null
+            val success = resolver.openOutputStream(imageUri)?.use { stream ->
                 stream.write(download.data)
                 stream.flush()
-            } ?: return false
-            true
+                true
+            } ?: false
+            if (!success) {
+                resolver.delete(imageUri, null, null)
+                return null
+            }
+            imageUri.toString()
         } catch (error: Exception) {
             Log.e(TAG, "Unable to persist image to device storage", error)
-            false
+            null
         }
+    }
+
+    private fun downloadAndPersistImage(
+        activity: MainActivity,
+        imageUrl: String,
+        imageId: String?
+    ): String? {
+        val image = downloadImage(imageUrl) ?: return null
+        return persistImage(activity, image, imageUrl, imageId)
     }
 
     private fun extractMimeType(imageUrl: String): String? {
