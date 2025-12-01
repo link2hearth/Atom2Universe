@@ -146,7 +146,7 @@ const NEWS_SETTINGS = Object.freeze({
  */
 const IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
-  maxItems: 120,
+  maxItems: 10,
   refreshIntervalMs: 30 * 60 * 1000,
   requestTimeoutMs: 15000,
   favoriteBackgroundRotationMs: 5 * 60 * 1000,
