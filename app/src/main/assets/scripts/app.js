@@ -11667,10 +11667,6 @@ function hydrateFavoritesFromDeviceCache() {
     return;
   }
   const store = getFavoriteImageStore();
-  if (!(imageFeedFavorites instanceof Set)) {
-    imageFeedFavorites = readStoredImageFavorites();
-  }
-  let favoritesUpdated = false;
   manifest.forEach(entry => {
     const cachedImage = typeof entry.uri === 'string' ? entry.uri : '';
     if (!cachedImage) {
@@ -11684,10 +11680,6 @@ function hydrateFavoritesFromDeviceCache() {
     if (existing) {
       persistFavoriteImageItem(Object.assign({}, existing, { cachedImage }));
       applyCachedImageToCollections(id, cachedImage);
-      if (imageFeedFavorites && !imageFeedFavorites.has(id)) {
-        imageFeedFavorites.add(id);
-        favoritesUpdated = true;
-      }
       return;
     }
     persistFavoriteImageItem({
@@ -11698,14 +11690,7 @@ function hydrateFavoritesFromDeviceCache() {
       link: cachedImage,
       sourceId: 'device'
     });
-    if (imageFeedFavorites && !imageFeedFavorites.has(id)) {
-      imageFeedFavorites.add(id);
-      favoritesUpdated = true;
-    }
   });
-  if (favoritesUpdated) {
-    writeStoredImageFavorites(imageFeedFavorites);
-  }
 }
 
 function getImageItemSourceUrl(item) {
@@ -11721,6 +11706,23 @@ function getImageItemSourceUrl(item) {
     return imageUrl;
   }
   return getImageItemPreviewUrl(item) || '';
+}
+
+function getImageItemPreviewUrl(item) {
+  if (!item) {
+    return '';
+  }
+  const cachedPreview = getCachedImageThumbnail(item.id);
+  if (cachedPreview) {
+    return cachedPreview;
+  }
+  if (typeof item.thumbnail === 'string' && item.thumbnail) {
+    return item.thumbnail;
+  }
+  if (typeof item.thumbnailUrl === 'string' && item.thumbnailUrl) {
+    return normalizeImageUrl(item.thumbnailUrl);
+  }
+  return '';
 }
 
 function getImageItemPreviewUrl(item) {
