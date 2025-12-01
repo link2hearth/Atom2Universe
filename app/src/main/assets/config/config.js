@@ -134,6 +134,40 @@ const NEWS_SETTINGS = Object.freeze({
   requestTimeoutMs: 12000
 });
 
+/**
+ * Paramètres des flux d’images externes.
+ * - `sources` : liste des flux RSS/Atom à agréger.
+ * - `proxyBaseUrls` : proxys HTTP facultatifs pour contourner le CORS.
+ * - `refreshIntervalMs` : fréquence de rafraîchissement automatique de la galerie.
+ */
+const IMAGE_FEED_SETTINGS = Object.freeze({
+  enabledByDefault: true,
+  maxItems: 120,
+  refreshIntervalMs: 30 * 60 * 1000,
+  requestTimeoutMs: 15000,
+  proxyBaseUrls: [
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.isomorphic-git.org/'
+  ],
+  sources: [
+    { id: 'flickr-public', titleKey: 'index.sections.images.sources.flickr', feedUrl: 'https://www.flickr.com/services/feeds/photos_public.gne' },
+    { id: 'unsplash', titleKey: 'index.sections.images.sources.unsplash', feedUrl: 'https://unsplash.com/feeds/rss' },
+    { id: 'pexels', titleKey: 'index.sections.images.sources.pexels', feedUrl: 'https://www.pexels.com/new-free-photos/feed/' },
+    { id: 'reuters-images', titleKey: 'index.sections.images.sources.reuters', feedUrl: 'https://www.reuters.com/rssFeed/worldNews?type=images' },
+    { id: 'nasa-apod', titleKey: 'index.sections.images.sources.apod', feedUrl: 'https://apod.nasa.gov/apod.rss' },
+    { id: 'nasa-image-day', titleKey: 'index.sections.images.sources.nasaImageDay', feedUrl: 'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss' },
+    { id: 'esa-gallery', titleKey: 'index.sections.images.sources.esa', feedUrl: 'https://www.esa.int/rssfeed/ESA_Picture_Gallery' },
+    { id: 'natgeo-pod', titleKey: 'index.sections.images.sources.nationalGeographic', feedUrl: 'https://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.feed' },
+    { id: 'smithsonian', titleKey: 'index.sections.images.sources.smithsonian', feedUrl: 'https://www.smithsonianmag.com/rss/photos/' },
+    { id: 'reddit-pics', titleKey: 'index.sections.images.sources.redditPics', feedUrl: 'https://www.reddit.com/r/pics.rss' },
+    { id: 'reddit-earthporn', titleKey: 'index.sections.images.sources.redditEarth', feedUrl: 'https://www.reddit.com/r/EarthPorn.rss' },
+    { id: 'reddit-spaceporn', titleKey: 'index.sections.images.sources.redditSpace', feedUrl: 'https://www.reddit.com/r/spaceporn.rss' },
+    { id: 'wikimedia-featured', titleKey: 'index.sections.images.sources.wikimediaFeatured', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=featured&feedformat=rss' },
+    { id: 'wikimedia-potd', titleKey: 'index.sections.images.sources.wikimediaPotd', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=potd&language=fr&feedformat=rss' },
+    { id: 'wikipedia-lumiere', titleKey: 'index.sections.images.sources.wikipedia', feedUrl: 'https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Lumi%C3%A8re_sur?action=render&feed=rss' }
+  ]
+});
+
 function getConfigStorage() {
   if (typeof globalThis === 'undefined' || typeof globalThis.localStorage === 'undefined') {
     return null;
