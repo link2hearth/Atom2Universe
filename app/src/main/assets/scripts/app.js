@@ -316,7 +316,7 @@ const ACTIVE_NEWS_SETTINGS = typeof NEWS_SETTINGS !== 'undefined'
 
 const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
-  maxItems: 10,
+  maxItems: 120,
   refreshIntervalMs: 30 * 60 * 1000,
   requestTimeoutMs: 15000,
   favoriteBackgroundRotationMs: 5 * 60 * 1000,
@@ -524,8 +524,6 @@ let deviceCachedImageIds = new Set();
 let favoriteImageCacheResolvers = new Map();
 let imageLightboxStateToken = null;
 let imageLightboxHistoryEnabled = false;
-
-const IMAGE_THUMBNAIL_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -12603,14 +12601,8 @@ function applyFavoriteBackground() {
 
 function refreshFavoriteBackgroundPool(options = {}) {
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-  const items = mergeFeedWithStoredFavorites(Array.isArray(imageFeedItems) ? imageFeedItems : []);
-  imageFeedItems = items;
-  favoriteBackgroundItems = items.filter(item => {
-    if (!favorites.has(item.id)) {
-      return false;
-    }
-    return Boolean(getImageItemSourceUrl(item) || getImageItemPreviewUrl(item));
-  });
+  const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
+  favoriteBackgroundItems = items.filter(item => favorites.has(item.id) && getImageItemSourceUrl(item));
   favoriteBackgroundItems.forEach(item => {
     ensureImageThumbnail(item);
     cacheFavoriteImageData(item);
@@ -12832,12 +12824,11 @@ function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
   const preview = getImageItemPreviewUrl(current);
   const shouldUseFullRes = isImagesViewerFullscreen();
   const sourceUrl = getImageItemSourceUrl(current);
-  const previewOrPlaceholder = preview || IMAGE_THUMBNAIL_PLACEHOLDER;
   elements.imagesActiveImage.dataset.imageId = current.id;
-  elements.imagesActiveImage.dataset.fullsrc = sourceUrl || '';
-  elements.imagesActiveImage.src = shouldUseFullRes && sourceUrl ? sourceUrl : previewOrPlaceholder;
+  elements.imagesActiveImage.dataset.fullsrc = sourceUrl;
+  elements.imagesActiveImage.src = shouldUseFullRes ? sourceUrl : preview || sourceUrl;
   elements.imagesActiveImage.alt = current.title || getImageSourceLabelById(current.sourceId);
-  if (!preview && !shouldUseFullRes && sourceUrl) {
+  if (!preview && !shouldUseFullRes) {
     ensureImageThumbnail(current).then(dataUrl => {
       if (
         dataUrl
@@ -12894,10 +12885,9 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     thumb.loading = 'lazy';
     const preview = getImageItemPreviewUrl(item);
     const sourceUrl = getImageItemSourceUrl(item);
-    const thumbSource = preview || IMAGE_THUMBNAIL_PLACEHOLDER;
-    thumb.src = thumbSource;
+    thumb.src = preview || sourceUrl;
     thumb.alt = item.title || getImageSourceLabelById(item.sourceId);
-    if (!preview && sourceUrl) {
+    if (!preview) {
       ensureImageThumbnail(item).then(dataUrl => {
         if (
           dataUrl
