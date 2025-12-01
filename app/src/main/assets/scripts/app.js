@@ -11676,7 +11676,9 @@ function hydrateFavoritesFromDeviceCache() {
     if (!cachedImage) {
       return;
     }
-    const id = deriveDeviceImageId(entry.displayName);
+    const id = (typeof entry.title === 'string' && entry.title.trim())
+      ? entry.title.trim()
+      : deriveDeviceImageId(entry.displayName);
     if (!id) {
       return;
     }
@@ -11776,7 +11778,8 @@ function deriveDeviceImageId(displayName) {
   const withoutExt = trimmed.includes('.')
     ? trimmed.slice(0, trimmed.lastIndexOf('.'))
     : trimmed;
-  const prefix = withoutExt.split('-')[0];
+  const separatorIdx = Math.max(withoutExt.indexOf('-'), withoutExt.indexOf('_'));
+  const prefix = separatorIdx > 0 ? withoutExt.slice(0, separatorIdx) : withoutExt;
   return prefix || withoutExt;
 }
 
@@ -11795,7 +11798,8 @@ function readDeviceImageManifest() {
       .map(entry => ({
         uri: typeof entry?.uri === 'string' ? entry.uri : '',
         displayName: typeof entry?.displayName === 'string' ? entry.displayName : '',
-        path: typeof entry?.path === 'string' ? entry.path : ''
+        path: typeof entry?.path === 'string' ? entry.path : '',
+        title: typeof entry?.title === 'string' ? entry.title : ''
       }))
       .filter(entry => Boolean(entry.uri));
   } catch (error) {
