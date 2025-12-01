@@ -356,6 +356,9 @@
           "loading": "Loading images…",
           "error": "Unable to load images right now.",
           "empty": "No images to display with these filters.",
+          "downloading": "Downloading image to Pictures/Atom2Univers…",
+          "saved": "Image saved to Pictures/Atom2Univers.",
+          "saveFailed": "Unable to save this image. Please check storage permissions.",
           "sources": "Enable at least one source to display images.",
           "ready": "{count} images loaded.",
           "backgroundEmpty": "Download images to Pictures/Atom2Univers to show them on the main page."

@@ -356,6 +356,9 @@
           "loading": "Chargement des images…",
           "error": "Impossible de charger les images pour le moment.",
           "empty": "Aucune image à afficher pour ces filtres.",
+          "downloading": "Téléchargement de l’image vers Pictures/Atom2Univers…",
+          "saved": "Image enregistrée dans Pictures/Atom2Univers.",
+          "saveFailed": "Impossible d’enregistrer cette image. Vérifiez les autorisations de stockage.",
           "sources": "Activez au moins une source pour afficher les images.",
           "ready": "{count} images chargées.",
           "backgroundEmpty": "Téléchargez des images dans Pictures/Atom2Univers pour les afficher sur la page principale."

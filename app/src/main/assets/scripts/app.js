@@ -11839,6 +11839,14 @@ function isAtom2UniversStoragePath(path) {
   return normalized.includes('/pictures/atom2univers') || normalized.includes('\\pictures\\atom2univers');
 }
 
+function isAtom2UniversStoragePath(path) {
+  if (typeof path !== 'string' || !path) {
+    return false;
+  }
+  const normalized = path.toLowerCase();
+  return normalized.includes('/pictures/atom2univers') || normalized.includes('\\pictures\\atom2univers');
+}
+
 function markDeviceImageCached(itemId, cachedUri) {
   if (!itemId || !isDeviceCachedUri(cachedUri)) {
     return;
@@ -11937,6 +11945,32 @@ if (typeof window !== 'undefined') {
       return;
     }
     resolveFavoriteImageCache(normalizedId, null);
+  };
+
+  window.onImageSaved = function onImageSaved(imageId) {
+    const normalizedId = typeof imageId === 'string' && imageId ? imageId : null;
+    if (!normalizedId) {
+      return;
+    }
+    const item = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
+      .find(entry => entry?.id === normalizedId) || normalizedId;
+    markImageAsDownloaded(item);
+    refreshFavoriteBackgroundPool({ resetIndex: false, refreshManifest: true });
+    setImagesStatus(
+      'index.sections.images.status.saved',
+      'Image saved to Pictures/Atom2Univers.'
+    );
+  };
+
+  window.onImageSaveFailed = function onImageSaveFailed(imageId) {
+    const normalizedId = typeof imageId === 'string' && imageId ? imageId : null;
+    if (!normalizedId) {
+      return;
+    }
+    setImagesStatus(
+      'index.sections.images.status.saveFailed',
+      'Unable to save this image. Please check storage permissions.'
+    );
   };
 
   window.onDeviceImagesLoaded = function onDeviceImagesLoaded(rawManifest) {
@@ -13160,7 +13194,7 @@ function handleImagesBackgroundToggle() {
   imageBackgroundEnabled = !imageBackgroundEnabled;
   writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
   updateImagesBackgroundToggleLabel();
-  refreshFavoriteBackgroundPool({ resetIndex: true });
+  refreshFavoriteBackgroundPool({ resetIndex: true, refreshManifest: true });
   if (imageBackgroundEnabled && !favoriteBackgroundItems.length) {
     setImagesStatus(
       'index.sections.images.status.backgroundEmpty',
@@ -13194,12 +13228,21 @@ function downloadCurrentImage() {
   if (!current) {
     return;
   }
-  markImageAsDownloaded(current);
   const imageUrl = getImageItemSourceUrl(current);
-  if (window.AndroidBridge && typeof window.AndroidBridge.saveImageToDevice === 'function') {
-    window.AndroidBridge.saveImageToDevice(imageUrl, current.id);
+  const bridge = getAndroidImageBridge();
+  if (bridge && typeof bridge.saveImageToDevice === 'function') {
+    setImagesStatus(
+      'index.sections.images.status.downloading',
+      'Downloading image to Pictures/Atom2Univers…'
+    );
+    try {
+      bridge.saveImageToDevice(imageUrl, current.id);
+    } catch (error) {
+      setImagesStatus('index.sections.images.status.error', 'Unable to load images right now.');
+    }
     return;
   }
+  markImageAsDownloaded(current);
   const link = document.createElement('a');
   link.href = imageUrl;
   link.target = '_blank';
@@ -13391,7 +13434,7 @@ function initImagesModule() {
   renderImageSources();
   updateImagesBackgroundToggleLabel();
   refreshImagesDisplay({ skipStatus: true });
-  refreshFavoriteBackgroundPool({ resetIndex: true });
+  refreshFavoriteBackgroundPool({ resetIndex: true, refreshManifest: true });
   fetchImageFeeds();
 }
 
