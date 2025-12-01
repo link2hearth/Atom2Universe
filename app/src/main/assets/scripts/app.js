@@ -546,6 +546,7 @@ const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
 const ATOM_ANIMATION_PREFERENCE_STORAGE_KEY = 'atom2univers.options.atomAnimationsEnabled';
+const ATOM_ICON_VISIBILITY_STORAGE_KEY = 'atom2univers.options.atomIconVisible';
 const FRENZY_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.frenzyAutoCollectEnabled';
 const TICKET_STAR_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.ticketStarAutoCollectEnabled';
 const TICKET_STAR_SPRITE_STORAGE_KEY = 'atom2univers.options.ticketStarSprite';
@@ -3230,6 +3231,30 @@ function writeStoredLanguagePreference(lang) {
   }
 }
 
+function readStoredAtomIconVisibility() {
+  try {
+    const stored = globalThis.localStorage?.getItem(ATOM_ICON_VISIBILITY_STORAGE_KEY);
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read atom icon preference', error);
+  }
+  return null;
+}
+
+function writeStoredAtomIconVisibility(visible) {
+  try {
+    const value = visible ? '1' : '0';
+    globalThis.localStorage?.setItem(ATOM_ICON_VISIBILITY_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist atom icon preference', error);
+  }
+}
+
 function detectNavigatorLanguage() {
   const nav = typeof navigator !== 'undefined' ? navigator : null;
   if (!nav) {
@@ -5789,6 +5814,7 @@ function evaluateTrophies() {
 let elements = {};
 let musicModuleInitRequested = false;
 let holdemBlindListenerAttached = false;
+let atomIconVisiblePreference = true;
 let frenzyAutoCollectPreference = false;
 let lastFrenzyAutoCollectUnlockedState = null;
 let ticketStarAutoCollectPreference = false;
@@ -6615,6 +6641,9 @@ function collectDomElements() {
     midiPage: document.getElementById('midi'),
     midiModuleCard: document.querySelector('.midi-page__module'),
     midiKeyboardArea: document.getElementById('midiKeyboardArea'),
+  atomIconToggleCard: document.getElementById('atomIconToggleCard'),
+  atomIconToggle: document.getElementById('atomIconToggle'),
+  atomIconToggleStatus: document.getElementById('atomIconToggleStatus'),
   clickSoundToggleCard: document.getElementById('clickSoundToggleCard'),
   clickSoundToggle: document.getElementById('clickSoundToggle'),
   clickSoundToggleStatus: document.getElementById('clickSoundToggleStatus'),
@@ -10344,6 +10373,67 @@ function writeStoredScreenWakeLockEnabled(enabled) {
     globalThis.localStorage?.setItem(SCREEN_WAKE_LOCK_STORAGE_KEY, value);
   } catch (error) {
     console.warn('Unable to persist screen wake lock preference', error);
+  }
+}
+
+function updateAtomIconStatusLabel(visible) {
+  if (!elements.atomIconToggleStatus) {
+    return;
+  }
+  const key = visible
+    ? 'index.sections.options.atomIcon.state.on'
+    : 'index.sections.options.atomIcon.state.off';
+  const fallback = visible ? 'Visible' : 'Hidden';
+  elements.atomIconToggleStatus.setAttribute('data-i18n', key);
+  elements.atomIconToggleStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function updateAtomIconVisibility() {
+  const image = elements.atomImage;
+  if (!image) {
+    return;
+  }
+  const visible = atomIconVisiblePreference !== false;
+  image.style.visibility = visible ? '' : 'hidden';
+  image.setAttribute('aria-hidden', visible ? 'false' : 'true');
+}
+
+function applyAtomIconVisibilityPreference(visible, options = {}) {
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  atomIconVisiblePreference = visible !== false;
+  if (settings.updateControl && elements.atomIconToggle) {
+    elements.atomIconToggle.checked = atomIconVisiblePreference;
+  }
+  updateAtomIconStatusLabel(atomIconVisiblePreference);
+  updateAtomIconVisibility();
+  if (settings.persist) {
+    writeStoredAtomIconVisibility(atomIconVisiblePreference);
+  }
+}
+
+function initAtomIconOption() {
+  const stored = readStoredAtomIconVisibility();
+  const initialVisibility = stored === null ? true : stored === true;
+  applyAtomIconVisibilityPreference(initialVisibility, { persist: false, updateControl: true });
+  if (elements.atomIconToggle) {
+    elements.atomIconToggle.addEventListener('change', () => {
+      const visible = elements.atomIconToggle.checked;
+      applyAtomIconVisibilityPreference(visible, { persist: true, updateControl: false });
+    });
+  }
+}
+
+function subscribeAtomIconLanguageUpdates() {
+  const handler = () => {
+    updateAtomIconStatusLabel(atomIconVisiblePreference);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
   }
 }
 
@@ -25219,6 +25309,7 @@ function applySerializedGameState(raw) {
       updateControl: true
     }
   );
+  updateTicketStarAutoCollectOptionVisibility();
   const storedTicketStarSprite = data.ticketStarSpriteId ?? data.ticketStarSprite;
   applyTicketStarSpritePreference(
     storedTicketStarSprite != null ? storedTicketStarSprite : getTicketStarSpritePreference(),
@@ -25228,6 +25319,7 @@ function applySerializedGameState(raw) {
       refresh: true
     }
   );
+  updateTicketStarSpriteOptionVisibility();
   gameState.ticketStarSpecialChance = clampTicketStarSpecialChance(
     data.ticketStarSpecialChance ?? data.ticketStarSpecialRate
   );
@@ -25720,6 +25812,7 @@ function loadGame() {
         updateControl: true
       }
     );
+    updateTicketStarAutoCollectOptionVisibility();
     const storedTicketStarSprite = data.ticketStarSpriteId ?? data.ticketStarSprite;
     applyTicketStarSpritePreference(
       storedTicketStarSprite != null ? storedTicketStarSprite : getTicketStarSpritePreference(),
@@ -25729,6 +25822,7 @@ function loadGame() {
         refresh: true
       }
     );
+    updateTicketStarSpriteOptionVisibility();
     gameState.ticketStarSpecialChance = clampTicketStarSpecialChance(
       data.ticketStarSpecialChance ?? data.ticketStarSpecialRate
     );
@@ -26184,6 +26278,8 @@ function initializeDomBoundModules() {
   initTextFontOption();
   initDigitFontOption();
   initPerformanceModeOption();
+  initAtomIconOption();
+  subscribeAtomIconLanguageUpdates();
   initClickSoundOption();
   subscribeClickSoundLanguageUpdates();
   initAtomAnimationOption();

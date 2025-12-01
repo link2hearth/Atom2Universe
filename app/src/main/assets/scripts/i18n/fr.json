@@ -2277,6 +2277,14 @@
             "off": "Désactivée"
           }
         },
+        "atomIcon": {
+          "title": "Icône Atom sur le bouton",
+          "ariaLabel": "Afficher ou masquer l’icône Atom sur le bouton principal",
+          "state": {
+            "on": "Visible",
+            "off": "Masquée"
+          }
+        },
         "ticketStarAutoCollect": {
           "title": "Auto Loot Stars",
           "ariaLabel": "Activer ou désactiver la récolte automatique des étoiles à tickets",
