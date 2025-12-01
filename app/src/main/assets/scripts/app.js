@@ -11761,41 +11761,6 @@ function markDeviceImageCached(itemId, cachedUri) {
   }
 }
 
-function applyCachedImageToCollections(itemId, cachedUri) {
-  if (!itemId || !cachedUri) {
-    return;
-  }
-
-  const updateItem = item => {
-    if (!item || item.id !== itemId || item.cachedImage === cachedUri) {
-      return item;
-    }
-    return Object.assign({}, item, { cachedImage: cachedUri });
-  };
-
-  if (Array.isArray(imageFeedItems)) {
-    imageFeedItems = imageFeedItems.map(updateItem);
-  }
-  if (Array.isArray(imageFeedVisibleItems)) {
-    imageFeedVisibleItems = imageFeedVisibleItems.map(updateItem);
-  }
-  if (Array.isArray(favoriteBackgroundItems)) {
-    favoriteBackgroundItems = favoriteBackgroundItems.map(updateItem);
-  }
-
-  if (elements?.imagesActiveImage?.dataset?.imageId === itemId) {
-    elements.imagesActiveImage.dataset.fullsrc = cachedUri;
-    if (isImagesViewerFullscreen()) {
-      elements.imagesActiveImage.src = cachedUri;
-    }
-  }
-
-  const currentBackground = favoriteBackgroundItems?.[favoriteBackgroundIndex];
-  if (currentBackground?.id === itemId && elements?.favoriteBackground) {
-    elements.favoriteBackground.style.backgroundImage = `url("${cachedUri}")`;
-  }
-}
-
 function findCachedImageBySourceUrl(sourceUrl) {
   if (!sourceUrl) {
     return null;
@@ -11944,7 +11909,6 @@ async function cacheFavoriteImageData(item) {
     if (isDeviceCachedUri(existing.cachedImage)) {
       markDeviceImageCached(item.id, existing.cachedImage);
     }
-    applyCachedImageToCollections(item.id, existing.cachedImage);
     return existing.cachedImage;
   }
   if (oversizedFavoriteImageIds.has(item.id)) {
@@ -11958,7 +11922,6 @@ async function cacheFavoriteImageData(item) {
   if (cachedFromSource) {
     const persisted = persistFavoriteImageItem(Object.assign({}, item, { cachedImage: cachedFromSource }));
     markDeviceImageCached(item.id, cachedFromSource);
-    applyCachedImageToCollections(item.id, cachedFromSource);
     return persisted?.cachedImage || cachedFromSource;
   }
   const task = (async () => {
@@ -11995,7 +11958,6 @@ async function cacheFavoriteImageData(item) {
             persistFavoriteImageItem(Object.assign({}, item, { cachedImage: uri }));
           }
           markDeviceImageCached(item.id, uri);
-          applyCachedImageToCollections(item.id, uri);
         }
         return uri;
       });
@@ -12029,7 +11991,6 @@ async function cacheFavoriteImageData(item) {
       if (dataUrl) {
         persistFavoriteImageItem(Object.assign({}, item, { cachedImage: dataUrl }));
         markDeviceImageCached(item.id, dataUrl);
-        applyCachedImageToCollections(item.id, dataUrl);
       }
       return dataUrl;
     } catch (error) {
