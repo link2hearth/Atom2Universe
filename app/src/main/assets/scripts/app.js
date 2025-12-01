@@ -11839,6 +11839,14 @@ function isAtom2UniversStoragePath(path) {
   return normalized.includes('/pictures/atom2univers') || normalized.includes('\\pictures\\atom2univers');
 }
 
+function isAtom2UniversStoragePath(path) {
+  if (typeof path !== 'string' || !path) {
+    return false;
+  }
+  const normalized = path.toLowerCase();
+  return normalized.includes('/pictures/atom2univers') || normalized.includes('\\pictures\\atom2univers');
+}
+
 function markDeviceImageCached(itemId, cachedUri) {
   if (!itemId || !isDeviceCachedUri(cachedUri)) {
     return;
