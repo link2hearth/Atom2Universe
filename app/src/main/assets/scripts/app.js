@@ -323,7 +323,6 @@ const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   favoriteBackgroundEnabledByDefault: false,
   thumbnailMaxSize: 256,
   thumbnailQuality: 0.6,
-  favoriteCacheMaxBytes: 2.5 * 1024 * 1024,
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
@@ -518,9 +517,7 @@ let imageThumbnailCache = new Map();
 let imageThumbnailTasks = new Map();
 let storedFavoriteImageItems = new Map();
 let favoriteImageDataTasks = new Map();
-let favoriteImageCacheResolvers = new Map();
 let imageLightboxStateToken = null;
-let imageLightboxHistoryEnabled = false;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -11662,57 +11659,6 @@ function getEnabledImageSources(availableSources = getAvailableImageSources()) {
   return availableSources.filter(source => imageFeedEnabledSources.has(source.id));
 }
 
-function getAndroidImageBridge() {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  const bridge = window.AndroidBridge;
-  if (!bridge) {
-    return null;
-  }
-  const type = typeof bridge;
-  return type === 'object' || type === 'function' ? bridge : null;
-}
-
-function getFavoriteImageCacheLimit() {
-  const raw = Number(getImageFeedSettings()?.favoriteCacheMaxBytes);
-  return Number.isFinite(raw) && raw > 0 ? raw : 0;
-}
-
-function resolveFavoriteImageCache(itemId, uri = null) {
-  if (!itemId || !favoriteImageCacheResolvers.has(itemId)) {
-    return;
-  }
-  const resolver = favoriteImageCacheResolvers.get(itemId);
-  favoriteImageCacheResolvers.delete(itemId);
-  if (typeof resolver === 'function') {
-    resolver(uri || null);
-  }
-}
-
-if (typeof window !== 'undefined') {
-  window.onImageCached = function onImageCached(imageId, uri) {
-    const normalizedId = typeof imageId === 'string' && imageId ? imageId : null;
-    if (!normalizedId) {
-      return;
-    }
-    const normalizedUri = typeof uri === 'string' && uri ? uri : null;
-    resolveFavoriteImageCache(normalizedId, normalizedUri);
-    if (normalizedUri) {
-      const existing = getFavoriteImageStore().get(normalizedId) || { id: normalizedId };
-      persistFavoriteImageItem(Object.assign({}, existing, { id: normalizedId, cachedImage: normalizedUri }));
-    }
-  };
-
-  window.onImageCacheFailed = function onImageCacheFailed(imageId) {
-    const normalizedId = typeof imageId === 'string' && imageId ? imageId : null;
-    if (!normalizedId) {
-      return;
-    }
-    resolveFavoriteImageCache(normalizedId, null);
-  };
-}
-
 function normalizeFavoriteImageItem(raw) {
   if (!raw || typeof raw !== 'object' || !raw.id) {
     return null;
@@ -11814,51 +11760,12 @@ async function cacheFavoriteImageData(item) {
     if (!sourceUrl) {
       return null;
     }
-    const bridge = getAndroidImageBridge();
-    if (bridge && typeof bridge.cacheImageToDevice === 'function') {
-      const cacheTimeoutMs = 20000;
-      return new Promise(resolve => {
-        let timeoutId = null;
-        const resolver = uri => {
-          if (timeoutId != null) {
-            clearTimeout(timeoutId);
-          }
-          resolve(typeof uri === 'string' && uri ? uri : null);
-        };
-        favoriteImageCacheResolvers.set(item.id, resolver);
-        timeoutId = setTimeout(() => {
-          resolveFavoriteImageCache(item.id, null);
-        }, cacheTimeoutMs);
-        try {
-          bridge.cacheImageToDevice(sourceUrl, item.id);
-        } catch (error) {
-          if (timeoutId != null) {
-            clearTimeout(timeoutId);
-          }
-          resolveFavoriteImageCache(item.id, null);
-        }
-      }).then(uri => {
-        if (uri) {
-          const stored = getFavoriteImageStore().get(item.id);
-          if (!stored?.cachedImage) {
-            persistFavoriteImageItem(Object.assign({}, item, { cachedImage: uri }));
-          }
-        }
-        return uri;
-      });
-    }
-
     try {
       const response = await fetch(sourceUrl);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
       const blob = await response.blob();
-      const sizeLimit = getFavoriteImageCacheLimit();
-      if (sizeLimit > 0 && blob.size > sizeLimit) {
-        console.warn('Skipping favorite cache: image too large', blob.size);
-        return null;
-      }
       const dataUrl = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(typeof reader.result === 'string' ? reader.result : null);
@@ -11872,10 +11779,10 @@ async function cacheFavoriteImageData(item) {
     } catch (error) {
       console.warn('Unable to cache favorite image data', error);
       return null;
+    } finally {
+      favoriteImageDataTasks.delete(item.id);
     }
-  })().finally(() => {
-    favoriteImageDataTasks.delete(item.id);
-  });
+  })();
   favoriteImageDataTasks.set(item.id, task);
   return task;
 }
@@ -12567,16 +12474,9 @@ function openImageLightbox(item) {
   if (elements.imageLightboxClose?.focus) {
     elements.imageLightboxClose.focus();
   }
-  imageLightboxHistoryEnabled = false;
   if (typeof history?.pushState === 'function') {
     imageLightboxStateToken = Date.now();
-    try {
-      history.pushState({ imageLightbox: imageLightboxStateToken }, '');
-      imageLightboxHistoryEnabled = true;
-    } catch (error) {
-      imageLightboxStateToken = null;
-      console.warn('Unable to register history state for lightbox', error);
-    }
+    history.pushState({ imageLightbox: imageLightboxStateToken }, '');
   }
 }
 
@@ -12589,28 +12489,17 @@ function closeImageLightbox(options = {}) {
   elements.imageLightboxImage.alt = '';
   elements.imageLightbox.toggleAttribute('hidden', true);
   const shouldGoBack = !fromPopstate
-    && imageLightboxHistoryEnabled
     && imageLightboxStateToken != null
     && typeof history?.back === 'function'
     && history.state?.imageLightbox === imageLightboxStateToken;
   imageLightboxStateToken = null;
   if (shouldGoBack) {
-    try {
-      history.back();
-    } catch (error) {
-      console.warn('Unable to navigate back after closing lightbox', error);
-    }
+    history.back();
   }
-  imageLightboxHistoryEnabled = false;
 }
 
-function handleImageLightboxPopState(event) {
-  if (
-    elements.imageLightbox
-    && !elements.imageLightbox.hidden
-    && event?.state?.imageLightbox
-    && event.state.imageLightbox === imageLightboxStateToken
-  ) {
+function handleImageLightboxPopState() {
+  if (elements.imageLightbox && !elements.imageLightbox.hidden) {
     closeImageLightbox({ fromPopstate: true });
   }
 }
