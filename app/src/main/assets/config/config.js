@@ -142,6 +142,7 @@ const NEWS_SETTINGS = Object.freeze({
  * - `thumbnailMaxSize` : dimension maximale (px) de la miniature mise en cache.
  * - `thumbnailQuality` : qualité JPEG (0-1) utilisée pour la miniature.
  * - `favoriteCacheMaxBytes` : taille maximale (octets) d'une image favorite conservée en cache local.
+ * - `maxDownloadBytes` : taille maximale (octets) autorisée pour le téléchargement d'une image HD.
  */
 const IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
@@ -153,6 +154,7 @@ const IMAGE_FEED_SETTINGS = Object.freeze({
   thumbnailMaxSize: 256,
   thumbnailQuality: 0.6,
   favoriteCacheMaxBytes: 2.5 * 1024 * 1024,
+  maxDownloadBytes: 15 * 1024 * 1024,
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
