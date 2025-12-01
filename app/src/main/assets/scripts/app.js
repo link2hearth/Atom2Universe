@@ -351,6 +351,11 @@ const ACTIVE_IMAGE_FEED_SETTINGS = typeof IMAGE_FEED_SETTINGS !== 'undefined'
     ? IMAGE_FEED_SETTINGS
     : DEFAULT_IMAGE_FEED_SETTINGS;
 
+const IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY = 'atom2univers.images.favorites.cache.v1';
+const IMAGE_FAVORITE_CACHE_MAX_DIMENSION = 1280;
+const IMAGE_THUMBNAIL_MAX_DIMENSION = 512;
+const IMAGE_THUMBNAIL_IDLE_DELAY_MS = 300;
+
 function normalizeCryptoWidgetEndpoint(endpoint, fallback) {
   if (typeof endpoint === 'string' && endpoint.trim()) {
     return endpoint.trim();
@@ -513,6 +518,10 @@ let favoriteBackgroundItems = [];
 let favoriteBackgroundIndex = 0;
 let favoriteBackgroundTimerId = null;
 const imageSizeAllowanceCache = new Map();
+let imageAssetCache = new Map();
+const imageAssetDownloads = new Map();
+let imageThumbnailQueue = [];
+let imageThumbnailWorkerActive = false;
 
 const ARCADE_HUB_CARD_COLLAPSE_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.collapse';
 const ARCADE_HUB_CARD_EXPAND_LABEL_KEY = 'index.sections.arcadeHub.cards.toggle.expand';
@@ -11715,6 +11724,77 @@ function writeStoredImageFavorites(favorites) {
   }
 }
 
+function readStoredFavoriteImageAssets() {
+  const result = new Map();
+  try {
+    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY);
+    if (!raw) {
+      return result;
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') {
+      return result;
+    }
+    Object.entries(parsed).forEach(([id, entry]) => {
+      if (typeof id !== 'string' || !id) {
+        return;
+      }
+      if (!entry || typeof entry !== 'object') {
+        return;
+      }
+      const imageUrl = typeof entry.imageUrl === 'string' && entry.imageUrl ? entry.imageUrl : '';
+      const fullDataUrl = typeof entry.fullDataUrl === 'string' && entry.fullDataUrl ? entry.fullDataUrl : '';
+      if (!imageUrl && !fullDataUrl) {
+        return;
+      }
+      result.set(id, {
+        imageUrl,
+        fullDataUrl,
+        thumbDataUrl: typeof entry.thumbDataUrl === 'string' ? entry.thumbDataUrl : '',
+        title: typeof entry.title === 'string' ? entry.title : '',
+        link: typeof entry.link === 'string' ? entry.link : '',
+        sourceId: typeof entry.sourceId === 'string' ? entry.sourceId : '',
+        pubDate: Number(entry.pubDate) || 0,
+        updatedAt: Number(entry.updatedAt) || Date.now()
+      });
+    });
+  } catch (error) {
+    console.warn('Unable to read cached favorite images', error);
+  }
+  return result;
+}
+
+function writeStoredFavoriteImageAssets(cache) {
+  try {
+    const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
+    const payload = {};
+    favorites.forEach(id => {
+      const entry = cache.get(id);
+      if (!entry || !entry.fullDataUrl) {
+        return;
+      }
+      payload[id] = {
+        imageUrl: entry.imageUrl,
+        fullDataUrl: entry.fullDataUrl,
+        thumbDataUrl: entry.thumbDataUrl || '',
+        title: entry.title || '',
+        link: entry.link || '',
+        sourceId: entry.sourceId || '',
+        pubDate: entry.pubDate || 0,
+        updatedAt: entry.updatedAt || Date.now()
+      };
+    });
+    const keys = Object.keys(payload);
+    if (!keys.length) {
+      globalThis.localStorage?.removeItem(IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY);
+      return;
+    }
+    globalThis.localStorage?.setItem(IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.warn('Unable to persist cached favorite images', error);
+  }
+}
+
 function readStoredDismissedImages() {
   try {
     const raw = globalThis.localStorage?.getItem(IMAGE_FEED_DISMISSED_STORAGE_KEY);
@@ -11818,6 +11898,227 @@ function writeStoredImageCurrentIndex(index) {
   } catch (error) {
     console.warn('Unable to persist image gallery index', error);
   }
+}
+
+function getCachedImageAsset(itemId) {
+  if (!itemId) {
+    return null;
+  }
+  return imageAssetCache.get(itemId) || null;
+}
+
+function getImageItemById(itemId) {
+  if (!itemId) {
+    return null;
+  }
+  return (Array.isArray(imageFeedItems) ? imageFeedItems : []).find(item => item.id === itemId) || null;
+}
+
+function persistFavoriteImageAssets() {
+  writeStoredFavoriteImageAssets(imageAssetCache);
+}
+
+function hydrateImageFeedFromFavoriteCache() {
+  const cachedEntries = Array.from(imageAssetCache.entries())
+    .filter(([id]) => (imageFeedFavorites instanceof Set ? imageFeedFavorites.has(id) : false))
+    .map(([id, entry]) => ({
+      id,
+      title: entry.title || '',
+      link: entry.link || entry.imageUrl,
+      imageUrl: entry.fullDataUrl || entry.imageUrl,
+      thumbnailUrl: entry.thumbDataUrl || '',
+      sourceId: entry.sourceId || '',
+      pubDate: entry.pubDate || 0
+    }));
+  if (cachedEntries.length && (!Array.isArray(imageFeedItems) || !imageFeedItems.length)) {
+    imageFeedItems = cachedEntries;
+    refreshImagesDisplay({ skipStatus: true });
+  }
+}
+
+function createDataUrlFromBlob(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Unable to read image data'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+function buildResizedDataUrl(dataUrl, maxDimension, quality = 0.85) {
+  return new Promise(resolve => {
+    const image = new Image();
+    image.onload = () => {
+      const ratio = Math.max(1, Math.max(image.width, image.height) / Math.max(1, maxDimension));
+      const targetWidth = Math.max(1, Math.round(image.width / ratio));
+      const targetHeight = Math.max(1, Math.round(image.height / ratio));
+      const canvas = document.createElement('canvas');
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(image, 0, 0, targetWidth, targetHeight);
+        const compressed = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressed || dataUrl);
+        return;
+      }
+      resolve(dataUrl);
+    };
+    image.onerror = () => resolve(dataUrl);
+    image.src = dataUrl;
+  });
+}
+
+async function warmImageAsset(item) {
+  if (!item || !item.imageUrl || imageAssetDownloads.has(item.id)) {
+    return getCachedImageAsset(item?.id) || null;
+  }
+  const cached = getCachedImageAsset(item.id);
+  if (cached?.fullDataUrl && cached.imageUrl === item.imageUrl) {
+    return cached;
+  }
+  const downloadPromise = (async () => {
+    try {
+      if (typeof fetch !== 'function') {
+        return cached || null;
+      }
+      const response = await fetch(item.imageUrl);
+      if (!response.ok) {
+        return cached || null;
+      }
+      const blob = await response.blob();
+      const dataUrl = await createDataUrlFromBlob(blob);
+      const resizedFull = await buildResizedDataUrl(dataUrl, IMAGE_FAVORITE_CACHE_MAX_DIMENSION, 0.88);
+      const asset = Object.assign({}, cached, {
+        imageUrl: item.imageUrl,
+        fullDataUrl: resizedFull,
+        thumbDataUrl: cached?.thumbDataUrl || '',
+        title: item.title || cached?.title || '',
+        link: item.link || cached?.link || item.imageUrl,
+        sourceId: item.sourceId || cached?.sourceId || '',
+        pubDate: item.pubDate || cached?.pubDate || 0,
+        updatedAt: Date.now()
+      });
+      imageAssetCache.set(item.id, asset);
+      if (imageFeedFavorites instanceof Set && imageFeedFavorites.has(item.id)) {
+        persistFavoriteImageAssets();
+      }
+      return asset;
+    } catch (error) {
+      console.warn('Unable to cache image asset', error);
+      return cached || null;
+    } finally {
+      imageAssetDownloads.delete(item.id);
+    }
+  })();
+  imageAssetDownloads.set(item.id, downloadPromise);
+  return downloadPromise;
+}
+
+async function generateThumbnailForItem(item) {
+  if (!item) {
+    return null;
+  }
+  const cached = getCachedImageAsset(item.id) || (await warmImageAsset(item));
+  if (cached?.thumbDataUrl) {
+    return cached;
+  }
+  if (!cached || !cached.fullDataUrl) {
+    return cached;
+  }
+  const thumbDataUrl = await buildResizedDataUrl(cached.fullDataUrl, IMAGE_THUMBNAIL_MAX_DIMENSION, 0.75);
+  const updated = Object.assign({}, cached, { thumbDataUrl, updatedAt: Date.now() });
+  imageAssetCache.set(item.id, updated);
+  if (imageFeedFavorites instanceof Set && imageFeedFavorites.has(item.id)) {
+    persistFavoriteImageAssets();
+  }
+  return updated;
+}
+
+function queueThumbnailGeneration(items = []) {
+  const list = Array.isArray(items) ? items : [items];
+  list.forEach(item => {
+    if (!item || !item.id) {
+      return;
+    }
+    const cached = getCachedImageAsset(item.id);
+    if (cached?.thumbDataUrl) {
+      return;
+    }
+    if (imageThumbnailQueue.some(entry => entry.id === item.id)) {
+      return;
+    }
+    imageThumbnailQueue.push(item);
+  });
+  processThumbnailQueue();
+}
+
+function processThumbnailQueue() {
+  if (imageThumbnailWorkerActive) {
+    return;
+  }
+  const next = imageThumbnailQueue.shift();
+  if (!next) {
+    return;
+  }
+  imageThumbnailWorkerActive = true;
+  const runner = async () => {
+    try {
+      await generateThumbnailForItem(next);
+    } catch (error) {
+      console.warn('Unable to create thumbnail', error);
+    } finally {
+      imageThumbnailWorkerActive = false;
+      if (imageThumbnailQueue.length) {
+        setTimeout(processThumbnailQueue, IMAGE_THUMBNAIL_IDLE_DELAY_MS);
+      }
+    }
+  };
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(runner, { timeout: 1500 });
+  } else {
+    setTimeout(runner, IMAGE_THUMBNAIL_IDLE_DELAY_MS);
+  }
+}
+
+function getThumbnailSrc(item) {
+  const cached = getCachedImageAsset(item?.id);
+  if (cached?.thumbDataUrl) {
+    return cached.thumbDataUrl;
+  }
+  if (item?.thumbnailUrl) {
+    return item.thumbnailUrl;
+  }
+  if (cached?.fullDataUrl) {
+    return cached.fullDataUrl;
+  }
+  return item?.imageUrl || '';
+}
+
+function getFullImageSrc(item) {
+  const cached = getCachedImageAsset(item?.id);
+  if (cached?.fullDataUrl) {
+    return cached.fullDataUrl;
+  }
+  return item?.imageUrl || '';
+}
+
+function applyCachedAssetToItem(item) {
+  if (!item || !item.id) {
+    return item;
+  }
+  const cached = getCachedImageAsset(item.id);
+  if (!cached) {
+    return item;
+  }
+  return Object.assign({}, item, {
+    imageUrl: cached.fullDataUrl || cached.imageUrl || item.imageUrl,
+    thumbnailUrl: cached.thumbDataUrl || item.thumbnailUrl || '',
+    title: item.title || cached.title || '',
+    link: item.link || cached.link || item.link || cached.imageUrl || item.imageUrl,
+    sourceId: item.sourceId || cached.sourceId || '',
+    pubDate: item.pubDate || cached.pubDate || 0
+  });
 }
 
 function buildImageRequestUrls(feedUrl) {
@@ -11952,9 +12253,14 @@ function toggleImageFavorite(itemId) {
     favorites.delete(itemId);
   } else {
     favorites.add(itemId);
+    const item = getImageItemById(itemId);
+    if (item) {
+      warmImageAsset(item);
+    }
   }
   imageFeedFavorites = favorites;
   writeStoredImageFavorites(imageFeedFavorites);
+  persistFavoriteImageAssets();
   refreshImagesDisplay();
   refreshFavoriteBackgroundPool({ resetIndex: true });
 }
@@ -11970,6 +12276,7 @@ function dismissImageItem(itemId) {
   favorites.delete(itemId);
   imageFeedFavorites = favorites;
   writeStoredImageFavorites(imageFeedFavorites);
+  persistFavoriteImageAssets();
   imageFeedDismissedIds.add(itemId);
   writeStoredDismissedImages(imageFeedDismissedIds);
   imageFeedItems = (Array.isArray(imageFeedItems) ? imageFeedItems : []).filter(item => item.id !== itemId);
@@ -12028,8 +12335,9 @@ function applyFavoriteBackground() {
     favoriteBackgroundIndex = 0;
   }
   const current = pool[favoriteBackgroundIndex] || null;
-  if (current) {
-    elements.favoriteBackground.style.backgroundImage = `url("${current.imageUrl}")`;
+  const backgroundUrl = current ? getFullImageSrc(current) : '';
+  if (backgroundUrl) {
+    elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
   } else {
     elements.favoriteBackground.style.backgroundImage = '';
   }
@@ -12043,7 +12351,9 @@ function applyFavoriteBackground() {
 function refreshFavoriteBackgroundPool(options = {}) {
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
-  favoriteBackgroundItems = items.filter(item => favorites.has(item.id) && item.imageUrl);
+  favoriteBackgroundItems = items
+    .filter(item => favorites.has(item.id) && item.imageUrl)
+    .map(item => applyCachedAssetToItem(item));
   if (options.resetIndex) {
     favoriteBackgroundIndex = 0;
   }
@@ -12063,14 +12373,15 @@ function getVisibleImageItems() {
   const filtered = imageFeedShowFavoritesOnly
     ? baseItems.filter(item => favorites.has(item.id))
     : baseItems.filter(item => !favorites.has(item.id));
-  imageFeedVisibleItems = filtered;
-  if (filtered.length === 0) {
+  const normalized = filtered.map(entry => applyCachedAssetToItem(entry));
+  imageFeedVisibleItems = normalized;
+  if (normalized.length === 0) {
     imageFeedCurrentIndex = 0;
   } else if (imageFeedCurrentIndex >= filtered.length) {
     imageFeedCurrentIndex = 0;
   }
   writeStoredImageCurrentIndex(imageFeedCurrentIndex);
-  return filtered;
+  return normalized;
 }
 
 function updateImagesEmptyState(visibleItems = imageFeedVisibleItems) {
@@ -12095,7 +12406,8 @@ function setImagesCurrentIndex(nextIndex) {
 
 function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
   const items = Array.isArray(visibleItems) ? visibleItems : [];
-  const current = items[imageFeedCurrentIndex] || null;
+  const normalizedItems = items.map(entry => applyCachedAssetToItem(entry));
+  const current = normalizedItems[imageFeedCurrentIndex] || null;
   if (!elements.imagesActiveImage || !elements.imagesActiveTitle || !elements.imagesActiveSource) {
     return;
   }
@@ -12104,7 +12416,7 @@ function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
     elements.imagesActiveImage.alt = '';
     elements.imagesActiveTitle.textContent = '—';
     elements.imagesActiveSource.textContent = '';
-    updateImagesEmptyState(items);
+    updateImagesEmptyState(normalizedItems);
     if (elements.imagesOpenButton) {
       elements.imagesOpenButton.disabled = true;
     }
@@ -12113,11 +12425,14 @@ function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
     }
     return;
   }
-  elements.imagesActiveImage.src = current.imageUrl;
+  const fullSrc = getFullImageSrc(current);
+  elements.imagesActiveImage.src = fullSrc;
   elements.imagesActiveImage.alt = current.title || getImageSourceLabelById(current.sourceId);
   elements.imagesActiveTitle.textContent = current.title || '';
   elements.imagesActiveSource.textContent = getImageSourceLabelById(current.sourceId);
-  updateImagesEmptyState(items);
+  updateImagesEmptyState(normalizedItems);
+  warmImageAsset(current);
+  queueThumbnailGeneration([current]);
   if (elements.imagesOpenButton) {
     elements.imagesOpenButton.disabled = false;
   }
@@ -12133,7 +12448,8 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
   elements.imagesGallery.replaceChildren();
   const items = Array.isArray(visibleItems) ? visibleItems : [];
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-  items.forEach((item, index) => {
+  const normalizedItems = items.map(entry => applyCachedAssetToItem(entry));
+  normalizedItems.forEach((item, index) => {
     const card = document.createElement('article');
     card.className = 'images-card';
     card.dataset.id = item.id;
@@ -12159,7 +12475,8 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     const thumb = document.createElement('img');
     thumb.className = 'images-card__thumb';
     thumb.loading = 'lazy';
-    thumb.src = item.imageUrl;
+    thumb.decoding = 'async';
+    thumb.src = getThumbnailSrc(item);
     thumb.alt = item.title || getImageSourceLabelById(item.sourceId);
     const body = document.createElement('div');
     body.className = 'images-card__body';
@@ -12188,7 +12505,8 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     });
     elements.imagesGallery.append(card);
   });
-  updateImagesEmptyState(items);
+  queueThumbnailGeneration(normalizedItems);
+  updateImagesEmptyState(normalizedItems);
 }
 
 function renderImageSources() {
@@ -12301,12 +12619,13 @@ function downloadCurrentImage() {
   if (!current) {
     return;
   }
+  const downloadUrl = getFullImageSrc(current) || current.imageUrl;
   if (window.AndroidBridge && typeof window.AndroidBridge.saveImageToDevice === 'function') {
-    window.AndroidBridge.saveImageToDevice(current.imageUrl, current.id);
+    window.AndroidBridge.saveImageToDevice(downloadUrl, current.id);
     return;
   }
   const link = document.createElement('a');
-  link.href = current.imageUrl;
+  link.href = downloadUrl;
   link.target = '_blank';
   link.rel = 'noopener noreferrer';
   link.download = '';
@@ -12449,7 +12768,8 @@ async function fetchImageFeeds(options = {}) {
         return second - first;
       });
     const filteredBySize = await filterImagesBySizeLimit(sorted, maxImageBytes, maxItems);
-    imageFeedItems = filteredBySize.slice(0, maxItems);
+    const mergedWithCache = filteredBySize.map(item => applyCachedAssetToItem(item));
+    imageFeedItems = mergedWithCache.slice(0, maxItems);
     imageFeedLastError = null;
     const visibleItems = refreshImagesDisplay({ skipStatus: true });
     setImagesStatus(
@@ -12471,6 +12791,7 @@ async function fetchImageFeeds(options = {}) {
 
 function initImagesModule() {
   imageFeedFavorites = readStoredImageFavorites();
+  imageAssetCache = readStoredFavoriteImageAssets();
   imageFeedEnabledSources = readStoredImageSources();
   imageFeedDismissedIds = readStoredDismissedImages();
   imageFeedCurrentIndex = readStoredImageCurrentIndex();
@@ -12478,6 +12799,7 @@ function initImagesModule() {
   renderImageSources();
   updateImagesFavoritesToggleLabel();
   updateImagesBackgroundToggleLabel();
+  hydrateImageFeedFromFavoriteCache();
   refreshImagesDisplay({ skipStatus: true });
   refreshFavoriteBackgroundPool({ resetIndex: true });
   fetchImageFeeds();
