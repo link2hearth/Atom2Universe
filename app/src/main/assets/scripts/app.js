@@ -521,6 +521,7 @@ let storedFavoriteImageItems = new Map();
 let favoriteImageDataTasks = new Map();
 let oversizedFavoriteImageIds = new Set();
 let deviceCachedImageIds = new Set();
+let deviceCachedImageIds = new Set();
 let favoriteImageCacheResolvers = new Map();
 let imageLightboxStateToken = null;
 let imageLightboxHistoryEnabled = false;
@@ -11659,23 +11660,6 @@ function getImageItemSourceUrl(item) {
     }
   }
   return item.cachedImage || item.imageUrl || '';
-}
-
-function getImageItemPreviewUrl(item) {
-  if (!item) {
-    return '';
-  }
-  const cachedPreview = getCachedImageThumbnail(item.id);
-  if (cachedPreview) {
-    return cachedPreview;
-  }
-  if (typeof item.thumbnail === 'string' && item.thumbnail) {
-    return item.thumbnail;
-  }
-  if (typeof item.thumbnailUrl === 'string' && item.thumbnailUrl) {
-    return normalizeImageUrl(item.thumbnailUrl);
-  }
-  return '';
 }
 
 function getImageItemPreviewUrl(item) {
