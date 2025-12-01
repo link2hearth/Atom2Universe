@@ -11661,6 +11661,53 @@ function reconcileFavoritesFromStoredItems() {
   }
 }
 
+function hydrateFavoritesFromDeviceCache() {
+  const manifest = readDeviceImageManifest();
+  if (!manifest.length) {
+    return;
+  }
+  const store = getFavoriteImageStore();
+  if (!(imageFeedFavorites instanceof Set)) {
+    imageFeedFavorites = readStoredImageFavorites();
+  }
+  let favoritesUpdated = false;
+  manifest.forEach(entry => {
+    const cachedImage = typeof entry.uri === 'string' ? entry.uri : '';
+    if (!cachedImage) {
+      return;
+    }
+    const id = deriveDeviceImageId(entry.displayName);
+    if (!id) {
+      return;
+    }
+    const existing = store.get(id);
+    if (existing) {
+      persistFavoriteImageItem(Object.assign({}, existing, { cachedImage }));
+      applyCachedImageToCollections(id, cachedImage);
+      if (imageFeedFavorites && !imageFeedFavorites.has(id)) {
+        imageFeedFavorites.add(id);
+        favoritesUpdated = true;
+      }
+      return;
+    }
+    persistFavoriteImageItem({
+      id,
+      title: entry.displayName || id,
+      imageUrl: '',
+      cachedImage,
+      link: cachedImage,
+      sourceId: 'device'
+    });
+    if (imageFeedFavorites && !imageFeedFavorites.has(id)) {
+      imageFeedFavorites.add(id);
+      favoritesUpdated = true;
+    }
+  });
+  if (favoritesUpdated) {
+    writeStoredImageFavorites(imageFeedFavorites);
+  }
+}
+
 function getImageItemSourceUrl(item) {
   if (!item) {
     return '';
@@ -11674,23 +11721,6 @@ function getImageItemSourceUrl(item) {
     return imageUrl;
   }
   return getImageItemPreviewUrl(item) || '';
-}
-
-function getImageItemPreviewUrl(item) {
-  if (!item) {
-    return '';
-  }
-  const cachedPreview = getCachedImageThumbnail(item.id);
-  if (cachedPreview) {
-    return cachedPreview;
-  }
-  if (typeof item.thumbnail === 'string' && item.thumbnail) {
-    return item.thumbnail;
-  }
-  if (typeof item.thumbnailUrl === 'string' && item.thumbnailUrl) {
-    return normalizeImageUrl(item.thumbnailUrl);
-  }
-  return '';
 }
 
 function getImageItemPreviewUrl(item) {
@@ -11738,6 +11768,42 @@ function getAndroidImageBridge() {
   return type === 'object' || type === 'function' ? bridge : null;
 }
 
+function deriveDeviceImageId(displayName) {
+  if (typeof displayName !== 'string' || !displayName.trim()) {
+    return '';
+  }
+  const trimmed = displayName.trim();
+  const withoutExt = trimmed.includes('.')
+    ? trimmed.slice(0, trimmed.lastIndexOf('.'))
+    : trimmed;
+  const prefix = withoutExt.split('-')[0];
+  return prefix || withoutExt;
+}
+
+function readDeviceImageManifest() {
+  const bridge = getAndroidImageBridge();
+  if (!bridge || typeof bridge.listCachedImages !== 'function') {
+    return [];
+  }
+  try {
+    const raw = bridge.listCachedImages();
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed
+      .map(entry => ({
+        uri: typeof entry?.uri === 'string' ? entry.uri : '',
+        displayName: typeof entry?.displayName === 'string' ? entry.displayName : '',
+        path: typeof entry?.path === 'string' ? entry.path : ''
+      }))
+      .filter(entry => Boolean(entry.uri));
+  } catch (error) {
+    console.warn('Unable to read device image manifest', error);
+  }
+  return [];
+}
+
 function getFavoriteImageCacheLimit() {
   const raw = Number(getImageFeedSettings()?.favoriteCacheMaxBytes);
   return Number.isFinite(raw) && raw > 0 ? raw : 0;
@@ -11758,6 +11824,41 @@ function markDeviceImageCached(itemId, cachedUri) {
   if (!deviceCachedImageIds.has(itemId)) {
     deviceCachedImageIds.add(itemId);
     writeStoredDeviceCachedImages(deviceCachedImageIds);
+  }
+}
+
+function applyCachedImageToCollections(itemId, cachedUri) {
+  if (!itemId || !cachedUri) {
+    return;
+  }
+
+  const updateItem = item => {
+    if (!item || item.id !== itemId || item.cachedImage === cachedUri) {
+      return item;
+    }
+    return Object.assign({}, item, { cachedImage: cachedUri });
+  };
+
+  if (Array.isArray(imageFeedItems)) {
+    imageFeedItems = imageFeedItems.map(updateItem);
+  }
+  if (Array.isArray(imageFeedVisibleItems)) {
+    imageFeedVisibleItems = imageFeedVisibleItems.map(updateItem);
+  }
+  if (Array.isArray(favoriteBackgroundItems)) {
+    favoriteBackgroundItems = favoriteBackgroundItems.map(updateItem);
+  }
+
+  if (elements?.imagesActiveImage?.dataset?.imageId === itemId) {
+    elements.imagesActiveImage.dataset.fullsrc = cachedUri;
+    if (isImagesViewerFullscreen()) {
+      elements.imagesActiveImage.src = cachedUri;
+    }
+  }
+
+  const currentBackground = favoriteBackgroundItems?.[favoriteBackgroundIndex];
+  if (currentBackground?.id === itemId && elements?.favoriteBackground) {
+    elements.favoriteBackground.style.backgroundImage = `url("${cachedUri}")`;
   }
 }
 
@@ -11909,6 +12010,7 @@ async function cacheFavoriteImageData(item) {
     if (isDeviceCachedUri(existing.cachedImage)) {
       markDeviceImageCached(item.id, existing.cachedImage);
     }
+    applyCachedImageToCollections(item.id, existing.cachedImage);
     return existing.cachedImage;
   }
   if (oversizedFavoriteImageIds.has(item.id)) {
@@ -11922,6 +12024,7 @@ async function cacheFavoriteImageData(item) {
   if (cachedFromSource) {
     const persisted = persistFavoriteImageItem(Object.assign({}, item, { cachedImage: cachedFromSource }));
     markDeviceImageCached(item.id, cachedFromSource);
+    applyCachedImageToCollections(item.id, cachedFromSource);
     return persisted?.cachedImage || cachedFromSource;
   }
   const task = (async () => {
@@ -11958,6 +12061,7 @@ async function cacheFavoriteImageData(item) {
             persistFavoriteImageItem(Object.assign({}, item, { cachedImage: uri }));
           }
           markDeviceImageCached(item.id, uri);
+          applyCachedImageToCollections(item.id, uri);
         }
         return uri;
       });
@@ -11991,6 +12095,7 @@ async function cacheFavoriteImageData(item) {
       if (dataUrl) {
         persistFavoriteImageItem(Object.assign({}, item, { cachedImage: dataUrl }));
         markDeviceImageCached(item.id, dataUrl);
+        applyCachedImageToCollections(item.id, dataUrl);
       }
       return dataUrl;
     } catch (error) {
@@ -13258,6 +13363,7 @@ function initImagesModule() {
   deviceCachedImageIds = readStoredDeviceCachedImages();
   storedFavoriteImageItems = readStoredFavoriteImages();
   reconcileFavoritesFromStoredItems();
+  hydrateFavoritesFromDeviceCache();
   imageFeedItems = mergeFeedWithStoredFavorites();
   renderImageSources();
   updateImagesFavoritesToggleLabel();
