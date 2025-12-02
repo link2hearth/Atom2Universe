@@ -2290,6 +2290,16 @@
             "off": "Inactif"
           }
         },
+        "androidStatusBar": {
+          "title": "Bannière Android",
+          "description": "Affiche ou masque la barre d’état Android (heure, batterie, notifications).",
+          "ariaLabel": "Afficher ou masquer la bannière système d’Android",
+          "state": {
+            "on": "Visible",
+            "off": "Masquée"
+          },
+          "unsupported": "Fonction disponible uniquement sur Android."
+        },
         "frenzyAutoCollect": {
           "title": "Récolte auto frénésie",
           "ariaLabel": "Activer ou désactiver la récolte automatique des frénésies",

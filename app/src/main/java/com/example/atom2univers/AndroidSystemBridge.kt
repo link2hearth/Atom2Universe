@@ -3,6 +3,9 @@ package com.example.atom2univers
 import android.app.Activity
 import android.view.WindowManager
 import android.webkit.JavascriptInterface
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import java.lang.ref.WeakReference
 
 class AndroidSystemBridge(activity: Activity, webView: GameWebView) {
@@ -26,5 +29,28 @@ class AndroidSystemBridge(activity: Activity, webView: GameWebView) {
             webViewRef.get()?.keepScreenOn = keepAwake
         }
         return keepAwake
+    }
+
+    @JavascriptInterface
+    fun setStatusBarVisible(visible: Boolean): Boolean {
+        val activity = activityRef.get() ?: return false
+        val shouldShow = visible
+        activity.runOnUiThread {
+            val window = activity.window ?: return@runOnUiThread
+            val controller = WindowCompat.getInsetsController(window, window.decorView)
+                ?: return@runOnUiThread
+
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+            if (shouldShow) {
+                controller.show(WindowInsetsCompat.Type.statusBars())
+            } else {
+                controller.hide(WindowInsetsCompat.Type.statusBars())
+            }
+
+            controller.hide(WindowInsetsCompat.Type.navigationBars())
+        }
+        return shouldShow
     }
 }

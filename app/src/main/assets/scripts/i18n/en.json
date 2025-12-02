@@ -2353,6 +2353,16 @@
             "off": "Disabled"
           }
         },
+        "androidStatusBar": {
+          "title": "Android status bar",
+          "description": "Show or hide the Android status bar (time, battery, notifications).",
+          "ariaLabel": "Show or hide the Android system banner",
+          "state": {
+            "on": "Shown",
+            "off": "Hidden"
+          },
+          "unsupported": "This feature is available on Android only."
+        },
         "frenzyAutoCollect": {
           "title": "Frenzy auto-collect",
           "ariaLabel": "Enable or disable automatic frenzy collection",
