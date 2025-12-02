@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ContentValues
 import android.os.Build
 import android.os.Environment
+import android.net.Uri
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
@@ -86,6 +87,24 @@ class WebAppBridge(activity: MainActivity) {
             val script = "window.onImageSaved && window.onImageSaved(${if (success) "true" else "false"});"
             activity.postJavascript(script)
         }.start()
+    }
+
+    @JavascriptInterface
+    fun resolveContentUri(uri: String?): String? {
+        val activity = activityRef.get() ?: return null
+        val source = uri?.takeIf { it.isNotBlank() } ?: return null
+        return try {
+            val target = Uri.parse(source)
+            val resolver = activity.contentResolver
+            val mimeType = resolver.getType(target) ?: guessMimeType(source)
+            val bytes = resolver.openInputStream(target)?.use { readFully(it) } ?: return null
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            val safeMime = mimeType?.takeIf { it.isNotBlank() } ?: "image/*"
+            "data:$safeMime;base64,$base64"
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to resolve content URI", error)
+            null
+        }
     }
 
     @JavascriptInterface
