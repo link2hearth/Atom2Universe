@@ -328,20 +328,8 @@ const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   ],
   sources: [
     { id: 'flickr-public', titleKey: 'index.sections.images.sources.flickr', feedUrl: 'https://www.flickr.com/services/feeds/photos_public.gne' },
-    { id: 'unsplash', titleKey: 'index.sections.images.sources.unsplash', feedUrl: 'https://unsplash.com/feeds/rss' },
-    { id: 'pexels', titleKey: 'index.sections.images.sources.pexels', feedUrl: 'https://www.pexels.com/new-free-photos/feed/' },
-    { id: 'reuters-images', titleKey: 'index.sections.images.sources.reuters', feedUrl: 'https://www.reuters.com/rssFeed/worldNews?type=images' },
-    { id: 'nasa-apod', titleKey: 'index.sections.images.sources.apod', feedUrl: 'https://apod.nasa.gov/apod.rss' },
     { id: 'nasa-image-day', titleKey: 'index.sections.images.sources.nasaImageDay', feedUrl: 'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss' },
-    { id: 'esa-gallery', titleKey: 'index.sections.images.sources.esa', feedUrl: 'https://www.esa.int/rssfeed/ESA_Picture_Gallery' },
-    { id: 'natgeo-pod', titleKey: 'index.sections.images.sources.nationalGeographic', feedUrl: 'https://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.feed' },
-    { id: 'smithsonian', titleKey: 'index.sections.images.sources.smithsonian', feedUrl: 'https://www.smithsonianmag.com/rss/photos/' },
-    { id: 'reddit-pics', titleKey: 'index.sections.images.sources.redditPics', feedUrl: 'https://www.reddit.com/r/pics.rss' },
-    { id: 'reddit-earthporn', titleKey: 'index.sections.images.sources.redditEarth', feedUrl: 'https://www.reddit.com/r/EarthPorn.rss' },
-    { id: 'reddit-spaceporn', titleKey: 'index.sections.images.sources.redditSpace', feedUrl: 'https://www.reddit.com/r/spaceporn.rss' },
-    { id: 'wikimedia-featured', titleKey: 'index.sections.images.sources.wikimediaFeatured', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=featured&feedformat=rss' },
-    { id: 'wikimedia-potd', titleKey: 'index.sections.images.sources.wikimediaPotd', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=potd&language=fr&feedformat=rss' },
-    { id: 'wikipedia-lumiere', titleKey: 'index.sections.images.sources.wikipedia', feedUrl: 'https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Lumi%C3%A8re_sur?action=render&feed=rss' }
+    { id: 'wikimedia-potd', titleKey: 'index.sections.images.sources.wikimediaPotd', feedUrl: 'https://commons.wikimedia.org/w/api.php?action=featuredfeed&feed=potd&language=fr&feedformat=rss' }
   ]
 });
 
@@ -350,6 +338,8 @@ const ACTIVE_IMAGE_FEED_SETTINGS = typeof IMAGE_FEED_SETTINGS !== 'undefined'
   && typeof IMAGE_FEED_SETTINGS === 'object'
     ? IMAGE_FEED_SETTINGS
     : DEFAULT_IMAGE_FEED_SETTINGS;
+
+const IMAGE_DOWNLOAD_TARGET_PATH = 'Pictures/Atom2Univers';
 
 const IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY = 'atom2univers.images.favorites.cache.v1';
 const IMAGE_FAVORITE_CACHE_MAX_DIMENSION = 1280;
@@ -12351,13 +12341,14 @@ function applyFavoriteBackground() {
 function refreshFavoriteBackgroundPool(options = {}) {
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
+  const previousLength = Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems.length : 0;
   favoriteBackgroundItems = items
     .filter(item => favorites.has(item.id) && item.imageUrl)
     .map(item => applyCachedAssetToItem(item));
-  if (options.resetIndex) {
-    favoriteBackgroundIndex = 0;
-  }
-  if (favoriteBackgroundIndex >= favoriteBackgroundItems.length) {
+  const shouldRandomize = options.resetIndex || favoriteBackgroundItems.length !== previousLength;
+  if (shouldRandomize && favoriteBackgroundItems.length > 0) {
+    favoriteBackgroundIndex = Math.floor(Math.random() * favoriteBackgroundItems.length);
+  } else if (favoriteBackgroundIndex >= favoriteBackgroundItems.length) {
     favoriteBackgroundIndex = 0;
   }
   applyFavoriteBackground();
@@ -12592,7 +12583,11 @@ function handleImagesBackgroundToggle() {
       'Add favorites to show them on the main page.'
     );
   }
-  applyFavoriteBackground();
+  if (imageBackgroundEnabled) {
+    refreshFavoriteBackgroundPool({ resetIndex: true });
+  } else {
+    applyFavoriteBackground();
+  }
 }
 
 function selectImageById(itemId) {
@@ -12632,6 +12627,22 @@ function downloadCurrentImage() {
   document.body.append(link);
   link.click();
   link.remove();
+}
+
+function handleImageSavedOnDevice(success) {
+  const key = success
+    ? 'index.sections.images.status.downloaded'
+    : 'index.sections.images.status.downloadError';
+  const fallback = success
+    ? 'Image saved to Pictures/Atom2Univers.'
+    : 'Unable to save image.';
+  showToast(translateOrDefault(key, fallback, { path: IMAGE_DOWNLOAD_TARGET_PATH }));
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.onImageSaved = function onImageSaved(success) {
+    handleImageSavedOnDevice(Boolean(success));
+  };
 }
 
 function refreshImagesDisplay(options = {}) {

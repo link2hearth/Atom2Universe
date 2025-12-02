@@ -1,8 +1,21 @@
 package com.example.atom2univers
 
+import android.app.Activity
+import android.content.ContentValues
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import android.webkit.JavascriptInterface
+import android.webkit.MimeTypeMap
+import android.widget.Toast
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -36,6 +49,27 @@ class WebAppBridge(activity: MainActivity) {
     @JavascriptInterface
     fun sendBackupData(base64Data: String?) {
         activityRef.get()?.writeBackupFromJs(base64Data)
+    }
+
+    @JavascriptInterface
+    fun saveImageToDevice(url: String?, itemId: String?) {
+        val activity = activityRef.get() ?: return
+        val source = url?.takeIf { it.isNotBlank() } ?: return
+        Thread {
+            val mimeType = guessMimeType(source)
+            val displayName = buildImageDisplayName(itemId, mimeType)
+            val imageBytes = decodeDataUrl(source) ?: downloadBinary(source)
+            val success = if (imageBytes != null && imageBytes.isNotEmpty()) {
+                saveImageBytes(activity, imageBytes, mimeType, displayName)
+            } else {
+                false
+            }
+            if (success) {
+                showImageSavedToast(activity)
+            }
+            val script = "window.onImageSaved && window.onImageSaved(${if (success) "true" else "false"});"
+            activity.postJavascript(script)
+        }.start()
     }
 
     @JavascriptInterface
@@ -76,5 +110,149 @@ class WebAppBridge(activity: MainActivity) {
             }
             connection?.disconnect()
         }
+    }
+
+    private fun showImageSavedToast(activity: Activity) {
+        val targetPath = Environment.DIRECTORY_PICTURES + "/Atom2Univers"
+        activity.runOnUiThread {
+            Toast.makeText(
+                activity,
+                activity.getString(R.string.image_saved_toast, targetPath),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun decodeDataUrl(source: String): ByteArray? {
+        if (!source.startsWith("data:", ignoreCase = true)) {
+            return null
+        }
+        val commaIndex = source.indexOf(',')
+        if (commaIndex <= 4 || commaIndex >= source.lastIndex) {
+            return null
+        }
+        val metadata = source.substring(5, commaIndex)
+        val payload = source.substring(commaIndex + 1)
+        return try {
+            if (metadata.contains(";base64", ignoreCase = true)) {
+                Base64.decode(payload, Base64.DEFAULT)
+            } else {
+                payload.toByteArray()
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to decode data URL", error)
+            null
+        }
+    }
+
+    private fun downloadBinary(url: String): ByteArray? {
+        var connection: HttpURLConnection? = null
+        return try {
+            connection = URL(url).openConnection() as HttpURLConnection
+            connection.connectTimeout = 12000
+            connection.readTimeout = 12000
+            connection.requestMethod = "GET"
+            connection.inputStream.use { readFully(it) }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to download image", error)
+            null
+        } finally {
+            connection?.disconnect()
+        }
+    }
+
+    private fun readFully(stream: InputStream): ByteArray {
+        val buffer = ByteArrayOutputStream()
+        stream.copyTo(buffer)
+        return buffer.toByteArray()
+    }
+
+    private fun guessMimeType(source: String): String {
+        if (source.startsWith("data:", ignoreCase = true)) {
+            val endOfMeta = source.indexOf(';').takeIf { it > 5 }
+            val endOfType = if (endOfMeta != null && endOfMeta > 5) endOfMeta else source.indexOf(',')
+            if (endOfType > 5) {
+                val type = source.substring(5, endOfType)
+                if (type.contains('/')) {
+                    return type
+                }
+            }
+        }
+        val extension = source.substringAfterLast('.', "")
+            .substringBefore('?')
+            .substringBefore('#')
+            .lowercase()
+        val mapped = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        if (!mapped.isNullOrBlank()) {
+            return mapped
+        }
+        return "image/jpeg"
+    }
+
+    private fun buildImageDisplayName(itemId: String?, mimeType: String): String {
+        val base = itemId?.takeIf { it.isNotBlank() } ?: "image_${System.currentTimeMillis()}"
+        val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+            ?.takeIf { it.isNotBlank() }
+            ?: "jpg"
+        return "$base.$extension"
+    }
+
+    private fun saveImageBytes(activity: Activity, data: ByteArray, mimeType: String, displayName: String): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveWithMediaStore(activity, data, mimeType, displayName)
+        } else {
+            saveLegacyImage(activity, data, mimeType, displayName)
+        }
+    }
+
+    private fun saveWithMediaStore(activity: Activity, data: ByteArray, mimeType: String, displayName: String): Boolean {
+        val resolver = activity.contentResolver
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Atom2Univers")
+            put(MediaStore.MediaColumns.IS_PENDING, 1)
+        }
+        val uri = resolver.insert(MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), values)
+            ?: return false
+        return try {
+            resolver.openOutputStream(uri)?.use { output ->
+                output.write(data)
+            } ?: return false
+            values.clear()
+            values.put(MediaStore.MediaColumns.IS_PENDING, 0)
+            resolver.update(uri, values, null, null)
+            true
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to persist image with MediaStore", error)
+            resolver.delete(uri, null, null)
+            false
+        }
+    }
+
+    private fun saveLegacyImage(activity: Activity, data: ByteArray, mimeType: String, displayName: String): Boolean {
+        return try {
+            val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val targetDir = File(picturesDir, "Atom2Univers")
+            if (!targetDir.exists() && !targetDir.mkdirs()) {
+                return false
+            }
+            val targetFile = File(targetDir, displayName)
+            FileOutputStream(targetFile).use { it.write(data) }
+            val values = ContentValues().apply {
+                put(MediaStore.Images.Media.DATA, targetFile.absolutePath)
+                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+                put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+            }
+            activity.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            true
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to persist image on legacy storage", error)
+            false
+        }
+    }
+
+    companion object {
+        private const val TAG = "WebAppBridge"
     }
 }

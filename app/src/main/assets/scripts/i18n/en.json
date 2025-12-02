@@ -363,7 +363,9 @@
           "empty": "No images to display with these filters.",
           "sources": "Enable at least one source to display images.",
           "ready": "{count} images loaded.",
-          "backgroundEmpty": "Add favorites to show them on the main page."
+          "backgroundEmpty": "Add favorites to show them on the main page.",
+          "downloaded": "Image saved to {path}.",
+          "downloadError": "Unable to save image."
         },
         "sources": {
           "title": "Sources",

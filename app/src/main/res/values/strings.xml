@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Atom2Univers</string>
     <string name="anti_cheat_detected_toast">Comportement suspect détecté</string>
+    <string name="image_saved_toast">Image enregistrée dans %1$s</string>
 </resources>
