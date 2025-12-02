@@ -509,6 +509,7 @@ let imageBackgroundEnabled = false;
 let backgroundIndex = 0;
 let backgroundTimerId = null;
 let backgroundLoadTimerId = null;
+let lastLoadedBackgroundUrl = '';
 let localBackgroundItems = [];
 let backgroundLibraryLabel = '';
 let backgroundLibraryStatus = 'idle';
@@ -12472,6 +12473,7 @@ function applyBackgroundImage() {
   }
 
   if (!canDisplay) {
+    lastLoadedBackgroundUrl = '';
     elements.favoriteBackground.style.backgroundImage = '';
     elements.favoriteBackground.toggleAttribute('hidden', true);
     document.body.classList.toggle('favorite-background-active', false);
@@ -12483,12 +12485,21 @@ function applyBackgroundImage() {
   }
   const current = pool[backgroundIndex] || null;
   const backgroundUrl = current ? getFullImageSrc(current) : '';
-  const isGameActive = document.body?.dataset?.activePage === 'game';
+  const activePage = document.body?.dataset?.activePage;
+  const isGameActive = !activePage || activePage === 'game';
   const shouldShow = Boolean(current) && isGameActive;
+  const fallbackShouldShow = Boolean(lastLoadedBackgroundUrl) && isGameActive;
   const handleMissingBackground = () => {
-    elements.favoriteBackground.style.backgroundImage = '';
-    elements.favoriteBackground.toggleAttribute('hidden', true);
-    document.body.classList.toggle('favorite-background-active', false);
+    if (fallbackShouldShow) {
+      elements.favoriteBackground.style.backgroundImage = `url("${lastLoadedBackgroundUrl}")`;
+      elements.favoriteBackground.toggleAttribute('hidden', !fallbackShouldShow);
+      document.body.classList.toggle('favorite-background-active', fallbackShouldShow);
+    } else {
+      lastLoadedBackgroundUrl = '';
+      elements.favoriteBackground.style.backgroundImage = '';
+      elements.favoriteBackground.toggleAttribute('hidden', true);
+      document.body.classList.toggle('favorite-background-active', false);
+    }
     if (pool.length > 1) {
       backgroundIndex = pickNextBackgroundIndex(pool.length);
       setTimeout(() => applyBackgroundImage(), 80);
@@ -12506,6 +12517,7 @@ function applyBackgroundImage() {
     elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
     elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
     document.body.classList.toggle('favorite-background-active', shouldShow);
+    lastLoadedBackgroundUrl = backgroundUrl;
     scheduleBackgroundRotation();
   };
 
