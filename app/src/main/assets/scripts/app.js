@@ -26819,6 +26819,18 @@ function initializeDomBoundModules() {
 function initializeApp() {
   applyStoredArcadeHubCardOrder();
   elements = collectDomElements();
+  if (typeof document !== 'undefined' && document.body && !document.body.dataset.activePage) {
+    const activePageElement = typeof document.querySelector === 'function'
+      ? document.querySelector('.page.active')
+      : null;
+    const initialPageId = activePageElement?.id || 'game';
+    const rawGroup = activePageElement?.dataset?.pageGroup || 'clicker';
+    const normalizedGroup = typeof rawGroup === 'string'
+      ? rawGroup.trim().toLowerCase()
+      : 'clicker';
+    document.body.dataset.activePage = initialPageId;
+    document.body.dataset.pageGroup = normalizedGroup === 'arcade' ? 'arcade' : 'clicker';
+  }
   applyAtomVariantVisualState();
   applyStartupOverlayDuration();
   scheduleStartupOverlayFailsafe();
