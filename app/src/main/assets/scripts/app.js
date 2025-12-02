@@ -12456,6 +12456,28 @@ function scheduleBackgroundRotation() {
   }, delay);
 }
 
+function resolveBackgroundUrl(rawUrl) {
+  if (typeof rawUrl !== 'string') {
+    return '';
+  }
+  const normalized = rawUrl.trim();
+  if (!normalized) {
+    return '';
+  }
+  const isContentUri = normalized.startsWith('content://');
+  if (isContentUri && window.AndroidBridge && typeof window.AndroidBridge.resolveContentUri === 'function') {
+    try {
+      const resolved = window.AndroidBridge.resolveContentUri(normalized);
+      if (typeof resolved === 'string' && resolved.trim()) {
+        return resolved.trim();
+      }
+    } catch (error) {
+      console.warn('Unable to resolve background URI', error);
+    }
+  }
+  return normalized;
+}
+
 function applyBackgroundImage() {
   clearBackgroundTimer();
   if (backgroundLoadTimerId != null) {
@@ -12484,7 +12506,7 @@ function applyBackgroundImage() {
     backgroundIndex = 0;
   }
   const current = pool[backgroundIndex] || null;
-  const backgroundUrl = current ? getFullImageSrc(current) : '';
+  const backgroundUrl = resolveBackgroundUrl(current ? getFullImageSrc(current) : '');
   const activePage = document.body?.dataset?.activePage;
   const isGameActive = !activePage || activePage === 'game';
   const shouldShow = Boolean(current) && isGameActive;
