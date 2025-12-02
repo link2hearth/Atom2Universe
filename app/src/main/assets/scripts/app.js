@@ -24789,7 +24789,36 @@ function serializeState() {
     bigBangLevelBonus: getBigBangLevelBonus(),
     upgrades: gameState.upgrades,
     shopUnlocks: Array.from(getShopUnlockSet()),
-    elements: gameState.elements,
+    elements: (() => {
+      const baseCollection = createInitialElementCollection();
+      const serializedElements = {};
+      Object.keys(baseCollection).forEach(id => {
+        const reference = baseCollection[id];
+        if (!reference) {
+          return;
+        }
+        const stored = gameState.elements?.[id];
+        const rawCount = Number(stored?.count);
+        const count = Number.isFinite(rawCount) && rawCount > 0 ? Math.floor(rawCount) : 0;
+        const rawLifetime = Number(stored?.lifetime);
+        const lifetime = Number.isFinite(rawLifetime) && rawLifetime > 0
+          ? Math.floor(rawLifetime)
+          : count > 0 || stored?.owned
+            ? Math.max(count, 1)
+            : 0;
+        serializedElements[id] = {
+          id,
+          gachaId: reference.gachaId,
+          count,
+          lifetime,
+          owned: lifetime > 0,
+          rarity: reference.rarity ?? (typeof stored?.rarity === 'string' ? stored.rarity : null),
+          effects: Array.isArray(reference.effects) ? [...reference.effects] : [],
+          bonuses: Array.isArray(reference.bonuses) ? [...reference.bonuses] : []
+        };
+      });
+      return serializedElements;
+    })(),
     gachaCards: (() => {
       const source = gameState.gachaCards && typeof gameState.gachaCards === 'object'
         ? gameState.gachaCards
