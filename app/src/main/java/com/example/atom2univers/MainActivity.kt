@@ -1,11 +1,9 @@
 package com.example.atom2univers
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,7 +19,6 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -38,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     private var webViewSaveScript: String? = null
     private var cssRecoveryAttempted = false
     private var pendingBackupUri: Uri? = null
-    private var pendingBackgroundTreeUri: Uri? = null
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
@@ -78,16 +74,6 @@ class MainActivity : AppCompatActivity() {
                 return@registerForActivityResult
             }
             handleBackgroundBankSelection(uri)
-        }
-
-    private val requestReadImagesPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted: Boolean ->
-            val targetUri = pendingBackgroundTreeUri
-            if (granted && targetUri != null) {
-                loadBackgroundBank(targetUri, true)
-            } else {
-                notifyBackgroundBankError("permission-denied")
-            }
         }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -389,7 +375,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleBackgroundBankSelection(treeUri: Uri) {
-        pendingBackgroundTreeUri = treeUri
         val relativePath = extractRelativePath(treeUri)
         try {
             val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -398,40 +383,10 @@ class MainActivity : AppCompatActivity() {
             Log.w(TAG, "Unable to persist tree permission", error)
         }
         persistBackgroundBank(treeUri, relativePath)
-        ensurePermissionAndLoadBank(treeUri)
-    }
-
-    private fun ensurePermissionAndLoadBank(treeUri: Uri) {
-        pendingBackgroundTreeUri = treeUri
-        if (requiresImagePermission() && !hasImageReadPermission()) {
-            requestReadImagesPermissionLauncher.launch(requiredImagePermission())
-            return
-        }
         loadBackgroundBank(treeUri, true)
     }
 
-    private fun requiresImagePermission(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-    }
-
-    private fun requiredImagePermission(): String {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-    }
-
-    private fun hasImageReadPermission(): Boolean {
-        if (!requiresImagePermission()) {
-            return true
-        }
-        val permission = requiredImagePermission()
-        return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-    }
-
     private fun loadBackgroundBank(treeUri: Uri, notifyWhenEmpty: Boolean) {
-        pendingBackgroundTreeUri = treeUri
         Thread {
             try {
                 val images = queryImagesForTree(treeUri)
@@ -455,6 +410,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun queryImagesForTree(treeUri: Uri, limit: Int = 250): List<String> {
+        val documentUris = queryImagesWithDocumentFile(treeUri, limit)
+        if (documentUris.isNotEmpty()) {
+            return documentUris
+        }
+
         val documentId = DocumentsContract.getTreeDocumentId(treeUri)
         val relativePath = extractRelativePath(treeUri)
         val volumeName = if (documentId.startsWith("primary", true)) {
@@ -485,7 +445,7 @@ class MainActivity : AppCompatActivity() {
             return results
         }
 
-        return queryImagesWithDocumentFile(treeUri, limit)
+        return results
     }
 
     private fun queryImagesWithDocumentFile(treeUri: Uri, limit: Int): List<String> {
