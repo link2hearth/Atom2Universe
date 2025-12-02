@@ -12548,9 +12548,6 @@ function applyBackgroundImage() {
     }
     settleWithMissingBackground();
   }, 2500);
-  elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
-  elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
-  document.body.classList.toggle('favorite-background-active', shouldShow);
   loader.src = backgroundUrl;
 }
 
