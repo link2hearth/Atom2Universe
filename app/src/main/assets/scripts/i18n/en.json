@@ -2122,6 +2122,10 @@
           "title": "Background",
           "description": "Link an image folder from your Android device to show your photos behind the main page.",
           "addButton": "Add image bank",
+          "toggle": {
+            "on": "Disable slideshow",
+            "off": "Enable slideshow"
+          },
           "durationLabel": "Display duration",
           "durations": {
             "oneMinute": "1 minute",

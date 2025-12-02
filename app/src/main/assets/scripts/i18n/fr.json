@@ -2059,6 +2059,10 @@
           "title": "Background",
           "description": "Reliez un dossier d’images depuis votre appareil Android pour afficher vos photos en arrière-plan sur la page principale.",
           "addButton": "Ajouter une banque d’images",
+          "toggle": {
+            "on": "Désactiver le diaporama",
+            "off": "Activer le diaporama"
+          },
           "durationLabel": "Durée d’affichage",
           "durations": {
             "oneMinute": "1 minute",

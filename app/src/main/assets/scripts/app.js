@@ -6640,6 +6640,7 @@ function collectDomElements() {
     backgroundLibraryButton: document.getElementById('backgroundLibraryButton'),
     backgroundLibraryStatus: document.getElementById('backgroundLibraryStatus'),
     backgroundDurationSelect: document.getElementById('backgroundDurationSelect'),
+    backgroundToggleButton: document.getElementById('backgroundToggleButton'),
     backupSaveButton: document.getElementById('backupSaveButton'),
     backupLoadButton: document.getElementById('backupLoadButton'),
     backupStatus: document.getElementById('backupStatus'),
@@ -12429,9 +12430,7 @@ function setLocalBackgroundItems(uris, options = {}) {
   }
   if (localBackgroundItems.length) {
     favoriteBackgroundIndex = Math.floor(Math.random() * localBackgroundItems.length);
-    imageBackgroundEnabled = true;
-    writeStoredImageBackgroundEnabled(true);
-    updateImagesBackgroundToggleLabel();
+    setImageBackgroundEnabled(true, { resetIndex: true, showEmptyStatus: false, force: true });
   }
   applyFavoriteBackground();
 }
@@ -12485,16 +12484,37 @@ function applyFavoriteBackground() {
   }
   const current = pool[favoriteBackgroundIndex] || null;
   const backgroundUrl = current ? getFullImageSrc(current) : '';
-  if (backgroundUrl) {
-    elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
-  } else {
-    elements.favoriteBackground.style.backgroundImage = '';
-  }
   const isGameActive = document.body?.dataset?.activePage === 'game';
-  const shouldShow = Boolean(current) && isGameActive;
-  elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
-  document.body.classList.toggle('favorite-background-active', shouldShow);
-  scheduleFavoriteBackgroundRotation();
+  const handleMissingBackground = () => {
+    elements.favoriteBackground.style.backgroundImage = '';
+    elements.favoriteBackground.toggleAttribute('hidden', true);
+    document.body.classList.toggle('favorite-background-active', false);
+    if (pool.length > 1) {
+      favoriteBackgroundIndex = pickNextBackgroundIndex(pool.length);
+      setTimeout(() => applyFavoriteBackground(), 80);
+      return;
+    }
+    scheduleFavoriteBackgroundRotation();
+  };
+
+  if (!backgroundUrl) {
+    handleMissingBackground();
+    return;
+  }
+
+  const applyLoadedBackground = () => {
+    elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
+    const shouldShow = Boolean(current) && isGameActive;
+    elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
+    document.body.classList.toggle('favorite-background-active', shouldShow);
+    scheduleFavoriteBackgroundRotation();
+  };
+
+  const loader = new Image();
+  loader.onload = applyLoadedBackground;
+  loader.onerror = handleMissingBackground;
+  loader.referrerPolicy = 'no-referrer';
+  loader.src = backgroundUrl;
 }
 
 function refreshFavoriteBackgroundPool(options = {}) {
@@ -12617,6 +12637,10 @@ function handleBackgroundDurationChange() {
   applyFavoriteBackground();
 }
 
+function handleBackgroundToggleClick() {
+  setImageBackgroundEnabled(!imageBackgroundEnabled, { resetIndex: true });
+}
+
 function initBackgroundOptions() {
   updateBackgroundDurationControl();
   if (elements.backgroundDurationSelect) {
@@ -12625,6 +12649,10 @@ function initBackgroundOptions() {
   if (elements.backgroundLibraryButton) {
     elements.backgroundLibraryButton.addEventListener('click', handleBackgroundLibraryRequest);
   }
+  if (elements.backgroundToggleButton) {
+    elements.backgroundToggleButton.addEventListener('click', handleBackgroundToggleClick);
+  }
+  updateBackgroundToggleLabel();
   applyStoredLocalBackgroundBank();
   renderBackgroundLibraryStatus();
   requestNativeBackgroundBank();
@@ -12634,6 +12662,7 @@ function subscribeBackgroundLanguageUpdates() {
   const handler = () => {
     updateBackgroundDurationControl();
     renderBackgroundLibraryStatus();
+    updateBackgroundToggleLabel();
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -12845,6 +12874,19 @@ function updateImagesFavoritesToggleLabel() {
   elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'non-favorites';
 }
 
+function updateBackgroundToggleLabel() {
+  if (!elements.backgroundToggleButton) {
+    return;
+  }
+  const key = imageBackgroundEnabled
+    ? 'index.sections.options.background.toggle.on'
+    : 'index.sections.options.background.toggle.off';
+  const fallback = imageBackgroundEnabled ? 'Disable slideshow' : 'Enable slideshow';
+  elements.backgroundToggleButton.textContent = translateOrDefault(key, fallback);
+  elements.backgroundToggleButton.setAttribute('data-i18n', key);
+  elements.backgroundToggleButton.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
+}
+
 function updateImagesBackgroundToggleLabel() {
   if (!elements.imagesBackgroundToggle) {
     return;
@@ -12858,6 +12900,34 @@ function updateImagesBackgroundToggleLabel() {
   elements.imagesBackgroundToggle.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
 }
 
+function setImageBackgroundEnabled(enabled, options = {}) {
+  const nextValue = Boolean(enabled);
+  const force = options.force === true;
+  if (imageBackgroundEnabled === nextValue && !force) {
+    updateImagesBackgroundToggleLabel();
+    updateBackgroundToggleLabel();
+    return imageBackgroundEnabled;
+  }
+  imageBackgroundEnabled = nextValue;
+  writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
+  updateImagesBackgroundToggleLabel();
+  updateBackgroundToggleLabel();
+  const pool = getActiveBackgroundItems();
+  if (imageBackgroundEnabled) {
+    if (!pool.length && options.showEmptyStatus !== false) {
+      setImagesStatus(
+        'index.sections.images.status.backgroundEmpty',
+        'Add favorites to show them on the main page.'
+      );
+    }
+    const shouldResetIndex = options.resetIndex !== false;
+    refreshFavoriteBackgroundPool({ resetIndex: shouldResetIndex });
+  } else {
+    applyFavoriteBackground();
+  }
+  return imageBackgroundEnabled;
+}
+
 function handleImagesFavoritesToggle() {
   imageFeedShowFavoritesOnly = !imageFeedShowFavoritesOnly;
   updateImagesFavoritesToggleLabel();
@@ -12865,21 +12935,7 @@ function handleImagesFavoritesToggle() {
 }
 
 function handleImagesBackgroundToggle() {
-  imageBackgroundEnabled = !imageBackgroundEnabled;
-  writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
-  updateImagesBackgroundToggleLabel();
-  const pool = getActiveBackgroundItems();
-  if (imageBackgroundEnabled && !pool.length) {
-    setImagesStatus(
-      'index.sections.images.status.backgroundEmpty',
-      'Add favorites to show them on the main page.'
-    );
-  }
-  if (imageBackgroundEnabled) {
-    refreshFavoriteBackgroundPool({ resetIndex: true });
-  } else {
-    applyFavoriteBackground();
-  }
+  setImageBackgroundEnabled(!imageBackgroundEnabled, { resetIndex: true });
 }
 
 function selectImageById(itemId) {
