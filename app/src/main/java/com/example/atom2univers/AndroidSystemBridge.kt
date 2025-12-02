@@ -1,6 +1,7 @@
 package com.example.atom2univers
 
 import android.app.Activity
+import android.graphics.Color
 import android.view.WindowManager
 import android.webkit.JavascriptInterface
 import androidx.core.view.WindowCompat
@@ -42,6 +43,9 @@ class AndroidSystemBridge(activity: Activity, webView: GameWebView) {
 
             controller.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+            window.statusBarColor = Color.BLACK
+            controller.isAppearanceLightStatusBars = false
 
             if (shouldShow) {
                 controller.show(WindowInsetsCompat.Type.statusBars())
