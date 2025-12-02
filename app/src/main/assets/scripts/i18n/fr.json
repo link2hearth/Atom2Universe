@@ -351,11 +351,7 @@
           "all": "Afficher toutes les images",
           "open": "Ouvrir la source",
           "download": "Télécharger",
-          "dismiss": "Supprimer cette image",
-          "background": {
-            "enable": "Afficher sur la page principale",
-            "disable": "Masquer sur la page principale"
-          }
+          "dismiss": "Supprimer cette image"
         },
         "status": {
           "loading": "Chargement des images…",
