@@ -6677,7 +6677,6 @@ function collectDomElements() {
   imagesStatus: document.getElementById('imagesStatus'),
   imagesRefreshButton: document.getElementById('imagesRefreshButton'),
   imagesFavoritesToggle: document.getElementById('imagesFavoritesToggle'),
-  imagesBackgroundToggle: document.getElementById('imagesBackgroundToggle'),
   imagesOpenButton: document.getElementById('imagesOpenButton'),
   imagesDownloadButton: document.getElementById('imagesDownloadButton'),
   imagesSourcesList: document.getElementById('imagesSourcesList'),
@@ -12887,30 +12886,15 @@ function updateBackgroundToggleLabel() {
   elements.backgroundToggleButton.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
 }
 
-function updateImagesBackgroundToggleLabel() {
-  if (!elements.imagesBackgroundToggle) {
-    return;
-  }
-  const key = imageBackgroundEnabled
-    ? 'index.sections.images.actions.background.disable'
-    : 'index.sections.images.actions.background.enable';
-  const fallback = imageBackgroundEnabled ? 'Hide on main page' : 'Show on main page';
-  elements.imagesBackgroundToggle.textContent = translateOrDefault(key, fallback);
-  elements.imagesBackgroundToggle.setAttribute('data-i18n', key);
-  elements.imagesBackgroundToggle.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
-}
-
 function setImageBackgroundEnabled(enabled, options = {}) {
   const nextValue = Boolean(enabled);
   const force = options.force === true;
   if (imageBackgroundEnabled === nextValue && !force) {
-    updateImagesBackgroundToggleLabel();
     updateBackgroundToggleLabel();
     return imageBackgroundEnabled;
   }
   imageBackgroundEnabled = nextValue;
   writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
-  updateImagesBackgroundToggleLabel();
   updateBackgroundToggleLabel();
   const pool = getActiveBackgroundItems();
   if (imageBackgroundEnabled) {
@@ -12932,10 +12916,6 @@ function handleImagesFavoritesToggle() {
   imageFeedShowFavoritesOnly = !imageFeedShowFavoritesOnly;
   updateImagesFavoritesToggleLabel();
   refreshImagesDisplay({ skipStatus: true });
-}
-
-function handleImagesBackgroundToggle() {
-  setImageBackgroundEnabled(!imageBackgroundEnabled, { resetIndex: true });
 }
 
 function selectImageById(itemId) {
@@ -13166,7 +13146,6 @@ function initImagesModule() {
   imageBackgroundEnabled = readStoredImageBackgroundEnabled();
   renderImageSources();
   updateImagesFavoritesToggleLabel();
-  updateImagesBackgroundToggleLabel();
   hydrateImageFeedFromFavoriteCache();
   refreshImagesDisplay({ skipStatus: true });
   refreshFavoriteBackgroundPool({ resetIndex: true });
@@ -13176,7 +13155,6 @@ function initImagesModule() {
 function subscribeImagesLanguageUpdates() {
   const handler = () => {
     updateImagesFavoritesToggleLabel();
-    updateImagesBackgroundToggleLabel();
     renderImageSources();
     refreshImagesDisplay({ skipStatus: true });
   };
@@ -20052,9 +20030,6 @@ function bindDomEventListeners() {
   if (elements.imagesFavoritesToggle) {
     elements.imagesFavoritesToggle.addEventListener('click', handleImagesFavoritesToggle);
   }
-  if (elements.imagesBackgroundToggle) {
-    elements.imagesBackgroundToggle.addEventListener('click', handleImagesBackgroundToggle);
-  }
   if (elements.imagesSourcesReset) {
     elements.imagesSourcesReset.addEventListener('click', () => {
       const availableSources = getAvailableImageSources();
@@ -26844,6 +26819,18 @@ function initializeDomBoundModules() {
 function initializeApp() {
   applyStoredArcadeHubCardOrder();
   elements = collectDomElements();
+  if (typeof document !== 'undefined' && document.body && !document.body.dataset.activePage) {
+    const activePageElement = typeof document.querySelector === 'function'
+      ? document.querySelector('.page.active')
+      : null;
+    const initialPageId = activePageElement?.id || 'game';
+    const rawGroup = activePageElement?.dataset?.pageGroup || 'clicker';
+    const normalizedGroup = typeof rawGroup === 'string'
+      ? rawGroup.trim().toLowerCase()
+      : 'clicker';
+    document.body.dataset.activePage = initialPageId;
+    document.body.dataset.pageGroup = normalizedGroup === 'arcade' ? 'arcade' : 'clicker';
+  }
   applyAtomVariantVisualState();
   applyStartupOverlayDuration();
   scheduleStartupOverlayFailsafe();

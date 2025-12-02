@@ -351,11 +351,7 @@
           "all": "Show all images",
           "open": "Open source",
           "download": "Download",
-          "dismiss": "Remove this image",
-          "background": {
-            "enable": "Show on main page",
-            "disable": "Hide from main page"
-          }
+          "dismiss": "Remove this image"
         },
         "status": {
           "loading": "Loading images…",
