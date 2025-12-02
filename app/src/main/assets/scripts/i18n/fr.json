@@ -363,7 +363,9 @@
           "empty": "Aucune image à afficher pour ces filtres.",
           "sources": "Activez au moins une source pour afficher les images.",
           "ready": "{count} images chargées.",
-          "backgroundEmpty": "Ajoutez des favoris pour les afficher sur la page principale."
+          "backgroundEmpty": "Ajoutez des favoris pour les afficher sur la page principale.",
+          "downloaded": "Image copiée dans {path}.",
+          "downloadError": "Impossible d'enregistrer l'image."
         },
         "sources": {
           "title": "Sources",

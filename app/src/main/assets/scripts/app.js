@@ -339,6 +339,8 @@ const ACTIVE_IMAGE_FEED_SETTINGS = typeof IMAGE_FEED_SETTINGS !== 'undefined'
     ? IMAGE_FEED_SETTINGS
     : DEFAULT_IMAGE_FEED_SETTINGS;
 
+const IMAGE_DOWNLOAD_TARGET_PATH = 'Pictures/Atom2Univers';
+
 const IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY = 'atom2univers.images.favorites.cache.v1';
 const IMAGE_FAVORITE_CACHE_MAX_DIMENSION = 1280;
 const IMAGE_THUMBNAIL_MAX_DIMENSION = 512;
@@ -12339,13 +12341,14 @@ function applyFavoriteBackground() {
 function refreshFavoriteBackgroundPool(options = {}) {
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
+  const previousLength = Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems.length : 0;
   favoriteBackgroundItems = items
     .filter(item => favorites.has(item.id) && item.imageUrl)
     .map(item => applyCachedAssetToItem(item));
-  if (options.resetIndex) {
-    favoriteBackgroundIndex = 0;
-  }
-  if (favoriteBackgroundIndex >= favoriteBackgroundItems.length) {
+  const shouldRandomize = options.resetIndex || favoriteBackgroundItems.length !== previousLength;
+  if (shouldRandomize && favoriteBackgroundItems.length > 0) {
+    favoriteBackgroundIndex = Math.floor(Math.random() * favoriteBackgroundItems.length);
+  } else if (favoriteBackgroundIndex >= favoriteBackgroundItems.length) {
     favoriteBackgroundIndex = 0;
   }
   applyFavoriteBackground();
@@ -12580,7 +12583,11 @@ function handleImagesBackgroundToggle() {
       'Add favorites to show them on the main page.'
     );
   }
-  applyFavoriteBackground();
+  if (imageBackgroundEnabled) {
+    refreshFavoriteBackgroundPool({ resetIndex: true });
+  } else {
+    applyFavoriteBackground();
+  }
 }
 
 function selectImageById(itemId) {
@@ -12620,6 +12627,22 @@ function downloadCurrentImage() {
   document.body.append(link);
   link.click();
   link.remove();
+}
+
+function handleImageSavedOnDevice(success) {
+  const key = success
+    ? 'index.sections.images.status.downloaded'
+    : 'index.sections.images.status.downloadError';
+  const fallback = success
+    ? 'Image saved to Pictures/Atom2Univers.'
+    : 'Unable to save image.';
+  showToast(translateOrDefault(key, fallback, { path: IMAGE_DOWNLOAD_TARGET_PATH }));
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.onImageSaved = function onImageSaved(success) {
+    handleImageSavedOnDevice(Boolean(success));
+  };
 }
 
 function refreshImagesDisplay(options = {}) {

@@ -9,6 +9,7 @@ import android.util.Base64
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.MimeTypeMap
+import android.widget.Toast
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
@@ -63,6 +64,9 @@ class WebAppBridge(activity: MainActivity) {
             } else {
                 false
             }
+            if (success) {
+                showImageSavedToast(activity)
+            }
             val script = "window.onImageSaved && window.onImageSaved(${if (success) "true" else "false"});"
             activity.postJavascript(script)
         }.start()
@@ -105,6 +109,17 @@ class WebAppBridge(activity: MainActivity) {
             } catch (_: Exception) {
             }
             connection?.disconnect()
+        }
+    }
+
+    private fun showImageSavedToast(activity: Activity) {
+        val targetPath = Environment.DIRECTORY_PICTURES + "/Atom2Univers"
+        activity.runOnUiThread {
+            Toast.makeText(
+                activity,
+                activity.getString(R.string.image_saved_toast, targetPath),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
