@@ -566,6 +566,7 @@ const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
 const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
 const IMAGE_FEED_DISMISSED_STORAGE_KEY = 'atom2univers.images.dismissed.v1';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
+const ANDROID_STATUS_BAR_STORAGE_KEY = 'atom2univers.options.androidStatusBarVisible';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsCollapsed';
@@ -5823,6 +5824,10 @@ let lastFrenzyAutoCollectUnlockedState = null;
 let ticketStarAutoCollectPreference = false;
 let lastTicketStarAutoCollectUnlockedState = null;
 let ticketStarSpritePreference = DEFAULT_TICKET_STAR_SPRITE_ID;
+const androidStatusBarState = {
+  supported: false,
+  visible: false
+};
 const screenWakeLockState = {
   supported: false,
   enabled: false
@@ -6660,6 +6665,9 @@ function collectDomElements() {
   critAtomToggleCard: document.getElementById('critAtomToggleCard'),
   critAtomToggle: document.getElementById('critAtomToggle'),
   critAtomToggleStatus: document.getElementById('critAtomToggleStatus'),
+  androidStatusBarToggleCard: document.getElementById('androidStatusBarToggleCard'),
+  androidStatusBarToggle: document.getElementById('androidStatusBarToggle'),
+  androidStatusBarToggleStatus: document.getElementById('androidStatusBarToggleStatus'),
   screenWakeLockToggleCard: document.getElementById('screenWakeLockToggleCard'),
   screenWakeLockToggle: document.getElementById('screenWakeLockToggle'),
   screenWakeLockToggleStatus: document.getElementById('screenWakeLockToggleStatus'),
@@ -10355,6 +10363,33 @@ function writeStoredCritAtomVisualsDisabled(disabled) {
   }
 }
 
+function readStoredAndroidStatusBarVisible() {
+  try {
+    const stored = globalThis.localStorage?.getItem(ANDROID_STATUS_BAR_STORAGE_KEY);
+    if (stored == null) {
+      return null;
+    }
+    if (stored === '1' || stored === 'true') {
+      return true;
+    }
+    if (stored === '0' || stored === 'false') {
+      return false;
+    }
+  } catch (error) {
+    console.warn('Unable to read Android status bar preference', error);
+  }
+  return null;
+}
+
+function writeStoredAndroidStatusBarVisible(visible) {
+  try {
+    const value = visible ? '1' : '0';
+    globalThis.localStorage?.setItem(ANDROID_STATUS_BAR_STORAGE_KEY, value);
+  } catch (error) {
+    console.warn('Unable to persist Android status bar preference', error);
+  }
+}
+
 function readStoredScreenWakeLockEnabled() {
   try {
     const stored = globalThis.localStorage?.getItem(SCREEN_WAKE_LOCK_STORAGE_KEY);
@@ -10379,6 +10414,112 @@ function writeStoredScreenWakeLockEnabled(enabled) {
     globalThis.localStorage?.setItem(SCREEN_WAKE_LOCK_STORAGE_KEY, value);
   } catch (error) {
     console.warn('Unable to persist screen wake lock preference', error);
+  }
+}
+
+function detectAndroidStatusBarSupport() {
+  const bridge = getAndroidSystemBridge();
+  const supported = !!(bridge && typeof bridge.setStatusBarVisible === 'function');
+  androidStatusBarState.supported = supported;
+  if (elements.androidStatusBarToggleCard) {
+    if (supported) {
+      elements.androidStatusBarToggleCard.removeAttribute('hidden');
+      elements.androidStatusBarToggleCard.removeAttribute('aria-hidden');
+    } else {
+      elements.androidStatusBarToggleCard.setAttribute('hidden', '');
+      elements.androidStatusBarToggleCard.setAttribute('aria-hidden', 'true');
+    }
+  }
+  if (elements.androidStatusBarToggle) {
+    elements.androidStatusBarToggle.disabled = !supported;
+  }
+  return supported;
+}
+
+function updateAndroidStatusBarStatusLabel(visible) {
+  if (!elements.androidStatusBarToggleStatus) {
+    return;
+  }
+  const key = visible
+    ? 'index.sections.options.androidStatusBar.state.on'
+    : 'index.sections.options.androidStatusBar.state.off';
+  const fallback = visible ? 'Visible' : 'Hidden';
+  elements.androidStatusBarToggleStatus.setAttribute('data-i18n', key);
+  elements.androidStatusBarToggleStatus.textContent = translateOrDefault(key, fallback);
+}
+
+function setNativeAndroidStatusBarVisible(visible) {
+  const bridge = getAndroidSystemBridge();
+  if (!bridge || typeof bridge.setStatusBarVisible !== 'function') {
+    return false;
+  }
+  try {
+    const result = bridge.setStatusBarVisible(!!visible);
+    if (typeof result === 'boolean') {
+      return result;
+    }
+    return !!visible;
+  } catch (error) {
+    console.warn('Unable to update Android status bar visibility', error);
+  }
+  return false;
+}
+
+function applyAndroidStatusBarVisible(visible, options = {}) {
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  let applied = false;
+  if (androidStatusBarState.supported) {
+    applied = setNativeAndroidStatusBarVisible(!!visible);
+  }
+  androidStatusBarState.visible = applied;
+  if (settings.updateControl && elements.androidStatusBarToggle) {
+    elements.androidStatusBarToggle.checked = applied;
+  }
+  updateAndroidStatusBarStatusLabel(applied);
+  if (settings.persist) {
+    writeStoredAndroidStatusBarVisible(applied);
+  }
+  return applied;
+}
+
+function initAndroidStatusBarOption() {
+  if (!elements.androidStatusBarToggleCard) {
+    return;
+  }
+  detectAndroidStatusBarSupport();
+  updateAndroidStatusBarStatusLabel(false);
+  if (!androidStatusBarState.supported) {
+    if (elements.androidStatusBarToggle) {
+      elements.androidStatusBarToggle.checked = false;
+    }
+    return;
+  }
+  const stored = readStoredAndroidStatusBarVisible();
+  const initialVisible = stored === true;
+  applyAndroidStatusBarVisible(initialVisible, { persist: false, updateControl: true });
+  if (!elements.androidStatusBarToggle) {
+    return;
+  }
+  elements.androidStatusBarToggle.addEventListener('change', () => {
+    const requested = elements.androidStatusBarToggle.checked;
+    const applied = applyAndroidStatusBarVisible(requested, { persist: true, updateControl: false });
+    if (requested !== applied) {
+      elements.androidStatusBarToggle.checked = applied;
+    }
+  });
+}
+
+function subscribeAndroidStatusBarLanguageUpdates() {
+  const handler = () => {
+    updateAndroidStatusBarStatusLabel(androidStatusBarState.visible);
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
   }
 }
 
@@ -26851,6 +26992,8 @@ function initializeDomBoundModules() {
   subscribeAtomAnimationLanguageUpdates();
   initCritAtomOption();
   subscribeCritAtomLanguageUpdates();
+  initAndroidStatusBarOption();
+  subscribeAndroidStatusBarLanguageUpdates();
   initScreenWakeLockOption();
   subscribeScreenWakeLockLanguageUpdates();
   initFrenzyAutoCollectOption();
