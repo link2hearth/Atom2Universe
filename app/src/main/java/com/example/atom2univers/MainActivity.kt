@@ -1,9 +1,16 @@
 package com.example.atom2univers
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentUris
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.view.MotionEvent
@@ -14,10 +21,14 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.documentfile.provider.DocumentFile
 import androidx.webkit.WebViewAssetLoader
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
@@ -27,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     private var webViewSaveScript: String? = null
     private var cssRecoveryAttempted = false
     private var pendingBackupUri: Uri? = null
+    private var pendingBackgroundTreeUri: Uri? = null
+
+    private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
     private val openBackupFileLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
@@ -55,6 +69,25 @@ class MainActivity : AppCompatActivity() {
             }
             pendingBackupUri = uri
             requestBackupDataFromJs()
+        }
+
+    private val openBackgroundBankLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri: Uri? ->
+            if (uri == null) {
+                notifyBackgroundBankError("cancelled")
+                return@registerForActivityResult
+            }
+            handleBackgroundBankSelection(uri)
+        }
+
+    private val requestReadImagesPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted: Boolean ->
+            val targetUri = pendingBackgroundTreeUri
+            if (granted && targetUri != null) {
+                loadBackgroundBank(targetUri, true)
+            } else {
+                notifyBackgroundBankError("permission-denied")
+            }
         }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -341,6 +374,175 @@ class MainActivity : AppCompatActivity() {
         postJavascript(script)
     }
 
+    internal fun startBackgroundBankPicker() {
+        openBackgroundBankLauncher.launch(null)
+    }
+
+    internal fun loadPersistedBackgroundBank() {
+        val storedUri = preferences.getString(KEY_BACKGROUND_TREE_URI, null) ?: return
+        val treeUri = Uri.parse(storedUri)
+        if (!hasPersistedPermission(treeUri)) {
+            notifyBackgroundBankError("permission-denied")
+            return
+        }
+        loadBackgroundBank(treeUri, false)
+    }
+
+    private fun handleBackgroundBankSelection(treeUri: Uri) {
+        pendingBackgroundTreeUri = treeUri
+        val relativePath = extractRelativePath(treeUri)
+        try {
+            val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            contentResolver.takePersistableUriPermission(treeUri, flags)
+        } catch (error: SecurityException) {
+            Log.w(TAG, "Unable to persist tree permission", error)
+        }
+        persistBackgroundBank(treeUri, relativePath)
+        ensurePermissionAndLoadBank(treeUri)
+    }
+
+    private fun ensurePermissionAndLoadBank(treeUri: Uri) {
+        pendingBackgroundTreeUri = treeUri
+        if (requiresImagePermission() && !hasImageReadPermission()) {
+            requestReadImagesPermissionLauncher.launch(requiredImagePermission())
+            return
+        }
+        loadBackgroundBank(treeUri, true)
+    }
+
+    private fun requiresImagePermission(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+    }
+
+    private fun requiredImagePermission(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+    }
+
+    private fun hasImageReadPermission(): Boolean {
+        if (!requiresImagePermission()) {
+            return true
+        }
+        val permission = requiredImagePermission()
+        return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun loadBackgroundBank(treeUri: Uri, notifyWhenEmpty: Boolean) {
+        pendingBackgroundTreeUri = treeUri
+        Thread {
+            try {
+                val images = queryImagesForTree(treeUri)
+                val label = preferences.getString(KEY_BACKGROUND_RELATIVE_PATH, extractRelativePath(treeUri)) ?: ""
+                if (images.isEmpty()) {
+                    notifyBackgroundBankReady(emptyList(), label)
+                    if (notifyWhenEmpty) {
+                        notifyBackgroundBankError("empty")
+                    }
+                    return@Thread
+                }
+                notifyBackgroundBankReady(images, label)
+            } catch (error: SecurityException) {
+                Log.w(TAG, "Unable to load background bank", error)
+                notifyBackgroundBankError("permission-denied")
+            } catch (error: Exception) {
+                Log.w(TAG, "Unable to load background bank", error)
+                notifyBackgroundBankError("error")
+            }
+        }.start()
+    }
+
+    private fun queryImagesForTree(treeUri: Uri, limit: Int = 250): List<String> {
+        val documentId = DocumentsContract.getTreeDocumentId(treeUri)
+        val relativePath = extractRelativePath(treeUri)
+        val volumeName = if (documentId.startsWith("primary", true)) {
+            MediaStore.VOLUME_EXTERNAL_PRIMARY
+        } else {
+            MediaStore.VOLUME_EXTERNAL
+        }
+        val collection = MediaStore.Images.Media.getContentUri(volumeName)
+        val results = mutableListOf<String>()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && relativePath.isNotBlank()) {
+            val normalized = if (relativePath.endsWith("/")) relativePath else "$relativePath/"
+            val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ?"
+            val selectionArgs = arrayOf("$normalized%")
+            val projection = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.RELATIVE_PATH)
+            val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+            contentResolver.query(collection, projection, selection, selectionArgs, sortOrder)?.use { cursor ->
+                val idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+                var count = 0
+                while (cursor.moveToNext() && count < limit) {
+                    val id = cursor.getLong(idIndex)
+                    results.add(ContentUris.withAppendedId(collection, id).toString())
+                    count += 1
+                }
+            }
+        }
+
+        if (results.isNotEmpty()) {
+            return results
+        }
+
+        return queryImagesWithDocumentFile(treeUri, limit)
+    }
+
+    private fun queryImagesWithDocumentFile(treeUri: Uri, limit: Int): List<String> {
+        val root = DocumentFile.fromTreeUri(this, treeUri) ?: return emptyList()
+        val uris = mutableListOf<String>()
+        fun collectFiles(folder: DocumentFile) {
+            if (uris.size >= limit) {
+                return
+            }
+            folder.listFiles().forEach { file ->
+                if (uris.size >= limit) {
+                    return
+                }
+                if (file.isDirectory) {
+                    collectFiles(file)
+                } else if (file.type?.startsWith("image/") == true) {
+                    uris.add(file.uri.toString())
+                }
+            }
+        }
+        collectFiles(root)
+        return uris
+    }
+
+    private fun extractRelativePath(treeUri: Uri): String {
+        val documentId = DocumentsContract.getTreeDocumentId(treeUri)
+        return documentId.substringAfter(':', "")
+    }
+
+    private fun persistBackgroundBank(treeUri: Uri, relativePath: String) {
+        preferences.edit {
+            putString(KEY_BACKGROUND_TREE_URI, treeUri.toString())
+            putString(KEY_BACKGROUND_RELATIVE_PATH, relativePath)
+        }
+    }
+
+    private fun hasPersistedPermission(treeUri: Uri): Boolean {
+        return contentResolver.persistedUriPermissions.any { permission ->
+            permission.uri == treeUri && permission.isReadPermission
+        }
+    }
+
+    private fun notifyBackgroundBankReady(uris: List<String>, label: String) {
+        val payload = JSONObject().apply {
+            put("uris", JSONArray(uris))
+            put("label", label)
+        }
+        val script = "window.onBackgroundImageBankLoaded && window.onBackgroundImageBankLoaded(${payload});"
+        postJavascript(script)
+    }
+
+    private fun notifyBackgroundBankError(reason: String) {
+        val safeReason = if (reason.isNotBlank()) reason else "error"
+        val script = "window.onBackgroundImageBankError && window.onBackgroundImageBankError(${JSONObject.quote(safeReason)});"
+        postJavascript(script)
+    }
+
     private fun resetWebViewStyles(view: WebView, url: String) {
         view.post {
             view.clearCache(true)
@@ -383,6 +585,9 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "Atom2Univers"
         private const val ASSET_URL_PREFIX = "https://appassets.androidplatform.net/assets/"
         private const val BACKUP_FILE_NAME = "atom2univers-backup.json"
+        private const val PREFERENCES_NAME = "atom2univers_prefs"
+        private const val KEY_BACKGROUND_TREE_URI = "background.tree.uri"
+        private const val KEY_BACKGROUND_RELATIVE_PATH = "background.relative.path"
         private const val CSS_PRESENCE_CHECK = """
             (function() {
               try {

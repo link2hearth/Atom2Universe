@@ -7599,6 +7599,57 @@
             </div>
           </div>
         </div>
+        <div class="option-card option-card--background">
+          <div class="option-card__header">
+            <h3 data-i18n="index.sections.options.background.title">Fond d’écran</h3>
+            <p class="option-card__description" data-i18n="index.sections.options.background.description">
+              Reliez un dossier d’images depuis votre appareil Android pour afficher vos photos en arrière-plan sur la page
+              principale.
+            </p>
+          </div>
+          <div class="option-row option-row--buttons option-row--background-actions">
+            <button
+              type="button"
+              class="option-link-button"
+              id="backgroundLibraryButton"
+              data-i18n="index.sections.options.background.addButton"
+            >
+              Ajouter une banque d’images
+            </button>
+          </div>
+          <div class="option-row option-row--status">
+            <p
+              id="backgroundLibraryStatus"
+              class="option-status"
+              role="status"
+              aria-live="polite"
+              data-i18n="index.sections.options.background.status.empty"
+            >
+              Aucune banque d’images sélectionnée pour l’instant.
+            </p>
+          </div>
+          <div class="option-row option-row--select option-row--background-duration">
+            <div class="option-field option-field--background-duration">
+              <label for="backgroundDurationSelect" data-i18n="index.sections.options.background.durationLabel">
+                Durée d’affichage
+              </label>
+              <select id="backgroundDurationSelect">
+                <option value="60000" data-i18n="index.sections.options.background.durations.oneMinute">
+                  1 minute
+                </option>
+                <option value="300000" data-i18n="index.sections.options.background.durations.fiveMinutes">
+                  5 minutes
+                </option>
+                <option value="900000" data-i18n="index.sections.options.background.durations.fifteenMinutes">
+                  15 minutes
+                </option>
+                <option value="3600000" data-i18n="index.sections.options.background.durations.oneHour">
+                  1 heure
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="option-card option-card--backups">
           <div class="option-card__header">
             <h3 data-i18n="index.sections.options.backups.title">Gérer les sauvegardes</h3>
