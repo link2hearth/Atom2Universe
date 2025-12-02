@@ -47,6 +47,22 @@ class WebAppBridge(activity: MainActivity) {
     }
 
     @JavascriptInterface
+    fun pickBackgroundImageBank() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            activity.startBackgroundBankPicker()
+        }
+    }
+
+    @JavascriptInterface
+    fun loadBackgroundImageBank() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            activity.loadPersistedBackgroundBank()
+        }
+    }
+
+    @JavascriptInterface
     fun sendBackupData(base64Data: String?) {
         activityRef.get()?.writeBackupFromJs(base64Data)
     }
