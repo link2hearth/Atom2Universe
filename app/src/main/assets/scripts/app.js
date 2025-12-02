@@ -508,6 +508,7 @@ let imageFeedAbortController = null;
 let imageBackgroundEnabled = false;
 let backgroundIndex = 0;
 let backgroundTimerId = null;
+let backgroundLoadTimerId = null;
 let localBackgroundItems = [];
 let backgroundLibraryLabel = '';
 let backgroundLibraryStatus = 'idle';
@@ -12456,6 +12457,10 @@ function scheduleBackgroundRotation() {
 
 function applyBackgroundImage() {
   clearBackgroundTimer();
+  if (backgroundLoadTimerId != null) {
+    clearTimeout(backgroundLoadTimerId);
+    backgroundLoadTimerId = null;
+  }
   const pool = getBackgroundItems();
   const hasPool = pool.length > 0;
   const canDisplay = imageBackgroundEnabled && hasPool;
@@ -12479,6 +12484,7 @@ function applyBackgroundImage() {
   const current = pool[backgroundIndex] || null;
   const backgroundUrl = current ? getFullImageSrc(current) : '';
   const isGameActive = document.body?.dataset?.activePage === 'game';
+  const shouldShow = Boolean(current) && isGameActive;
   const handleMissingBackground = () => {
     elements.favoriteBackground.style.backgroundImage = '';
     elements.favoriteBackground.toggleAttribute('hidden', true);
@@ -12498,22 +12504,41 @@ function applyBackgroundImage() {
 
   const applyLoadedBackground = () => {
     elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
-    const shouldShow = Boolean(current) && isGameActive;
     elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
     document.body.classList.toggle('favorite-background-active', shouldShow);
     scheduleBackgroundRotation();
   };
 
-  const shouldPreload = /^https?:\/\//i.test(backgroundUrl);
-  if (!shouldPreload) {
+  const settleWithMissingBackground = () => {
+    if (backgroundLoadTimerId != null) {
+      clearTimeout(backgroundLoadTimerId);
+      backgroundLoadTimerId = null;
+    }
+    handleMissingBackground();
+  };
+
+  const settleWithLoadedBackground = () => {
+    if (backgroundLoadTimerId != null) {
+      clearTimeout(backgroundLoadTimerId);
+      backgroundLoadTimerId = null;
+    }
     applyLoadedBackground();
-    return;
-  }
+  };
 
   const loader = new Image();
-  loader.onload = applyLoadedBackground;
-  loader.onerror = handleMissingBackground;
+  loader.onload = settleWithLoadedBackground;
+  loader.onerror = settleWithMissingBackground;
   loader.referrerPolicy = 'no-referrer';
+  backgroundLoadTimerId = setTimeout(() => {
+    if (loader.complete && loader.naturalWidth > 0) {
+      settleWithLoadedBackground();
+      return;
+    }
+    settleWithMissingBackground();
+  }, 2500);
+  elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
+  elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
+  document.body.classList.toggle('favorite-background-active', shouldShow);
   loader.src = backgroundUrl;
 }
 
