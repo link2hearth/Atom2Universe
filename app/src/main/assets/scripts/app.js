@@ -12504,12 +12504,6 @@ function applyBackgroundImage() {
     scheduleBackgroundRotation();
   };
 
-  const shouldPreload = /^https?:\/\//i.test(backgroundUrl);
-  if (!shouldPreload) {
-    applyLoadedBackground();
-    return;
-  }
-
   const loader = new Image();
   loader.onload = applyLoadedBackground;
   loader.onerror = handleMissingBackground;
