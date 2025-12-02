@@ -506,9 +506,8 @@ let imageFeedLastError = null;
 let imageFeedRefreshTimerId = null;
 let imageFeedAbortController = null;
 let imageBackgroundEnabled = false;
-let favoriteBackgroundItems = [];
-let favoriteBackgroundIndex = 0;
-let favoriteBackgroundTimerId = null;
+let backgroundIndex = 0;
+let backgroundTimerId = null;
 let localBackgroundItems = [];
 let backgroundLibraryLabel = '';
 let backgroundLibraryStatus = 'idle';
@@ -12333,7 +12332,6 @@ function toggleImageFavorite(itemId) {
   writeStoredImageFavorites(imageFeedFavorites);
   persistFavoriteImageAssets();
   refreshImagesDisplay();
-  refreshFavoriteBackgroundPool({ resetIndex: true });
 }
 
 function dismissImageItem(itemId) {
@@ -12357,15 +12355,10 @@ function dismissImageItem(itemId) {
     writeStoredImageCurrentIndex(imageFeedCurrentIndex);
   }
   refreshImagesDisplay();
-  refreshFavoriteBackgroundPool({ resetIndex: true });
 }
 
-function getActiveBackgroundItems() {
-  const localPool = Array.isArray(localBackgroundItems) ? localBackgroundItems : [];
-  if (localPool.length) {
-    return localPool;
-  }
-  return Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems : [];
+function getBackgroundItems() {
+  return Array.isArray(localBackgroundItems) ? localBackgroundItems : [];
 }
 
 function hasLocalBackgrounds() {
@@ -12378,7 +12371,7 @@ function pickNextBackgroundIndex(poolLength) {
     return 0;
   }
   const randomIndex = Math.floor(Math.random() * total);
-  if (randomIndex === favoriteBackgroundIndex) {
+  if (randomIndex === backgroundIndex) {
     return (randomIndex + 1) % total;
   }
   return randomIndex;
@@ -12428,45 +12421,47 @@ function setLocalBackgroundItems(uris, options = {}) {
     writeStoredLocalBackgroundBank({ uris: uniqueUris, label: backgroundLibraryLabel });
   }
   if (localBackgroundItems.length) {
-    favoriteBackgroundIndex = Math.floor(Math.random() * localBackgroundItems.length);
+    backgroundIndex = Math.floor(Math.random() * localBackgroundItems.length);
     setImageBackgroundEnabled(true, { resetIndex: true, showEmptyStatus: false, force: true });
+  } else {
+    backgroundIndex = 0;
   }
-  applyFavoriteBackground();
+  applyBackgroundImage();
 }
 
-function clearFavoriteBackgroundTimer() {
-  if (favoriteBackgroundTimerId != null) {
-    clearTimeout(favoriteBackgroundTimerId);
-    favoriteBackgroundTimerId = null;
+function clearBackgroundTimer() {
+  if (backgroundTimerId != null) {
+    clearTimeout(backgroundTimerId);
+    backgroundTimerId = null;
   }
 }
 
-function scheduleFavoriteBackgroundRotation() {
-  clearFavoriteBackgroundTimer();
-  const pool = getActiveBackgroundItems();
+function scheduleBackgroundRotation() {
+  clearBackgroundTimer();
+  const pool = getBackgroundItems();
   if (!imageBackgroundEnabled || !pool.length) {
     return;
   }
   const delay = Math.max(1000, getBackgroundRotationDuration() || 300000);
-  favoriteBackgroundTimerId = setTimeout(() => {
-    const activePool = getActiveBackgroundItems();
+  backgroundTimerId = setTimeout(() => {
+    const activePool = getBackgroundItems();
     if (!activePool.length) {
-      clearFavoriteBackgroundTimer();
+      clearBackgroundTimer();
       return;
     }
-    favoriteBackgroundIndex = pickNextBackgroundIndex(activePool.length);
-    applyFavoriteBackground();
+    backgroundIndex = pickNextBackgroundIndex(activePool.length);
+    applyBackgroundImage();
   }, delay);
 }
 
-function applyFavoriteBackground() {
-  clearFavoriteBackgroundTimer();
-  const pool = getActiveBackgroundItems();
+function applyBackgroundImage() {
+  clearBackgroundTimer();
+  const pool = getBackgroundItems();
   const hasPool = pool.length > 0;
   const canDisplay = imageBackgroundEnabled && hasPool;
   if (!elements.favoriteBackground) {
     if (canDisplay) {
-      scheduleFavoriteBackgroundRotation();
+      scheduleBackgroundRotation();
     }
     return;
   }
@@ -12478,10 +12473,10 @@ function applyFavoriteBackground() {
     return;
   }
 
-  if (favoriteBackgroundIndex >= pool.length) {
-    favoriteBackgroundIndex = 0;
+  if (backgroundIndex >= pool.length) {
+    backgroundIndex = 0;
   }
-  const current = pool[favoriteBackgroundIndex] || null;
+  const current = pool[backgroundIndex] || null;
   const backgroundUrl = current ? getFullImageSrc(current) : '';
   const isGameActive = document.body?.dataset?.activePage === 'game';
   const handleMissingBackground = () => {
@@ -12489,11 +12484,11 @@ function applyFavoriteBackground() {
     elements.favoriteBackground.toggleAttribute('hidden', true);
     document.body.classList.toggle('favorite-background-active', false);
     if (pool.length > 1) {
-      favoriteBackgroundIndex = pickNextBackgroundIndex(pool.length);
-      setTimeout(() => applyFavoriteBackground(), 80);
+      backgroundIndex = pickNextBackgroundIndex(pool.length);
+      setTimeout(() => applyBackgroundImage(), 80);
       return;
     }
-    scheduleFavoriteBackgroundRotation();
+    scheduleBackgroundRotation();
   };
 
   if (!backgroundUrl) {
@@ -12506,8 +12501,14 @@ function applyFavoriteBackground() {
     const shouldShow = Boolean(current) && isGameActive;
     elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
     document.body.classList.toggle('favorite-background-active', shouldShow);
-    scheduleFavoriteBackgroundRotation();
+    scheduleBackgroundRotation();
   };
+
+  const shouldPreload = /^https?:\/\//i.test(backgroundUrl);
+  if (!shouldPreload) {
+    applyLoadedBackground();
+    return;
+  }
 
   const loader = new Image();
   loader.onload = applyLoadedBackground;
@@ -12516,24 +12517,15 @@ function applyFavoriteBackground() {
   loader.src = backgroundUrl;
 }
 
-function refreshFavoriteBackgroundPool(options = {}) {
-  if (hasLocalBackgrounds()) {
-    applyFavoriteBackground();
-    return;
+function refreshBackgroundPool(options = {}) {
+  const pool = getBackgroundItems();
+  const shouldRandomize = options.resetIndex === true;
+  if (shouldRandomize && pool.length) {
+    backgroundIndex = Math.floor(Math.random() * pool.length);
+  } else if (backgroundIndex >= pool.length) {
+    backgroundIndex = 0;
   }
-  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-  const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
-  const previousLength = Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems.length : 0;
-  favoriteBackgroundItems = items
-    .filter(item => favorites.has(item.id) && item.imageUrl)
-    .map(item => applyCachedAssetToItem(item));
-  const shouldRandomize = options.resetIndex || favoriteBackgroundItems.length !== previousLength;
-  if (shouldRandomize && favoriteBackgroundItems.length > 0) {
-    favoriteBackgroundIndex = Math.floor(Math.random() * favoriteBackgroundItems.length);
-  } else if (favoriteBackgroundIndex >= favoriteBackgroundItems.length) {
-    favoriteBackgroundIndex = 0;
-  }
-  applyFavoriteBackground();
+  applyBackgroundImage();
 }
 
 function normalizeBackgroundBankPayload(payload) {
@@ -12633,7 +12625,7 @@ function handleBackgroundDurationChange() {
     ? selected
     : getImageBackgroundRotationMs();
   writeStoredBackgroundDuration(backgroundRotationMs);
-  applyFavoriteBackground();
+  applyBackgroundImage();
 }
 
 function handleBackgroundToggleClick() {
@@ -12896,18 +12888,20 @@ function setImageBackgroundEnabled(enabled, options = {}) {
   imageBackgroundEnabled = nextValue;
   writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
   updateBackgroundToggleLabel();
-  const pool = getActiveBackgroundItems();
+  const pool = getBackgroundItems();
   if (imageBackgroundEnabled) {
     if (!pool.length && options.showEmptyStatus !== false) {
-      setImagesStatus(
-        'index.sections.images.status.backgroundEmpty',
-        'Add favorites to show them on the main page.'
+      showToast(
+        translateOrDefault(
+          'index.sections.options.background.status.empty',
+          'Select a background folder in Options > Background.'
+        )
       );
     }
     const shouldResetIndex = options.resetIndex !== false;
-    refreshFavoriteBackgroundPool({ resetIndex: shouldResetIndex });
+    refreshBackgroundPool({ resetIndex: shouldResetIndex });
   } else {
-    applyFavoriteBackground();
+    applyBackgroundImage();
   }
   return imageBackgroundEnabled;
 }
@@ -12986,7 +12980,6 @@ function refreshImagesDisplay(options = {}) {
   const visibleItems = getVisibleImageItems();
   renderImagesViewer(visibleItems);
   renderImagesGallery(visibleItems);
-  refreshFavoriteBackgroundPool();
   if (!options.skipStatus && !imageFeedIsLoading && !imageFeedLastError) {
     const key = visibleItems.length
       ? 'index.sections.images.status.ready'
@@ -13148,7 +13141,7 @@ function initImagesModule() {
   updateImagesFavoritesToggleLabel();
   hydrateImageFeedFromFavoriteCache();
   refreshImagesDisplay({ skipStatus: true });
-  refreshFavoriteBackgroundPool({ resetIndex: true });
+  applyBackgroundImage();
   fetchImageFeeds();
 }
 
@@ -19417,7 +19410,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   document.body.classList.toggle('view-news', pageId === 'news');
   document.body.classList.toggle('view-images', pageId === 'images');
-  applyFavoriteBackground();
+  applyBackgroundImage();
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
