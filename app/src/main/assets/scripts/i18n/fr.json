@@ -2055,6 +2055,29 @@
         "preferences": {
           "title": "Préférences d’interface"
         },
+        "background": {
+          "title": "Background",
+          "description": "Reliez un dossier d’images depuis votre appareil Android pour afficher vos photos en arrière-plan sur la page principale.",
+          "addButton": "Ajouter une banque d’images",
+          "toggle": {
+            "on": "Désactiver le diaporama",
+            "off": "Activer le diaporama"
+          },
+          "durationLabel": "Durée d’affichage",
+          "durations": {
+            "oneMinute": "1 minute",
+            "fiveMinutes": "5 minutes",
+            "fifteenMinutes": "15 minutes",
+            "oneHour": "1 heure"
+          },
+          "status": {
+            "empty": "Aucune banque d’images sélectionnée pour l’instant.",
+            "loading": "Analyse du dossier en cours…",
+            "ready": "{count} images prêtes depuis {name}.",
+            "error": "Impossible de lire ce dossier."
+          },
+          "fallbackName": "ce dossier"
+        },
         "backups": {
           "title": "Gérer les sauvegardes",
           "description": "Exportez ou importez votre progression via un fichier local.",
@@ -3685,6 +3708,14 @@
           "decodeError": "Fichier de sauvegarde invalide.",
           "applyError": "Erreur lors de l’application de la sauvegarde."
         }
+      },
+      "background": {
+        "bankReady": "Banque d’images ajoutée : {count} fichiers.",
+        "permission": "Autorisez l’accès aux images pour utiliser ce dossier.",
+        "empty": "Aucune image trouvée dans ce dossier.",
+        "cancelled": "Sélection annulée.",
+        "error": "Impossible d’accéder à ce dossier.",
+        "unsupported": "Cette action requiert l’application Android."
       },
       "holdemOptions": {
         "restartSuccess": "Réserve des IA fixée à {stack} atomes.",

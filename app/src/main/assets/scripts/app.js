@@ -345,6 +345,8 @@ const IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY = 'atom2univers.images.favorites.ca
 const IMAGE_FAVORITE_CACHE_MAX_DIMENSION = 1280;
 const IMAGE_THUMBNAIL_MAX_DIMENSION = 512;
 const IMAGE_THUMBNAIL_IDLE_DELAY_MS = 300;
+const LOCAL_BACKGROUND_BANK_STORAGE_KEY = 'atom2univers.background.bank.v1';
+const BACKGROUND_DURATION_STORAGE_KEY = 'atom2univers.background.duration.ms';
 
 function normalizeCryptoWidgetEndpoint(endpoint, fallback) {
   if (typeof endpoint === 'string' && endpoint.trim()) {
@@ -507,6 +509,10 @@ let imageBackgroundEnabled = false;
 let favoriteBackgroundItems = [];
 let favoriteBackgroundIndex = 0;
 let favoriteBackgroundTimerId = null;
+let localBackgroundItems = [];
+let backgroundLibraryLabel = '';
+let backgroundLibraryStatus = 'idle';
+let backgroundRotationMs = readStoredBackgroundDuration();
 const imageSizeAllowanceCache = new Map();
 let imageAssetCache = new Map();
 const imageAssetDownloads = new Map();
@@ -6631,6 +6637,10 @@ function collectDomElements() {
     musicOptionCard: document.querySelector('.option-card--chiptune-link'),
     musicOptionRow: document.querySelector('.option-row--midi-link'),
     openMidiModuleButton: document.getElementById('openMidiModuleButton'),
+    backgroundLibraryButton: document.getElementById('backgroundLibraryButton'),
+    backgroundLibraryStatus: document.getElementById('backgroundLibraryStatus'),
+    backgroundDurationSelect: document.getElementById('backgroundDurationSelect'),
+    backgroundToggleButton: document.getElementById('backgroundToggleButton'),
     backupSaveButton: document.getElementById('backupSaveButton'),
     backupLoadButton: document.getElementById('backupLoadButton'),
     backupStatus: document.getElementById('backupStatus'),
@@ -11574,6 +11584,14 @@ function getImageBackgroundRotationMs() {
   return DEFAULT_IMAGE_FEED_SETTINGS.favoriteBackgroundRotationMs;
 }
 
+function getBackgroundRotationDuration() {
+  const duration = Number(backgroundRotationMs);
+  if (Number.isFinite(duration) && duration > 0) {
+    return duration;
+  }
+  return getImageBackgroundRotationMs();
+}
+
 function getImageMaxBytes() {
   const settings = getImageFeedSettings();
   const raw = Number(settings?.maxImageBytes);
@@ -11835,6 +11853,70 @@ function writeStoredImageBackgroundEnabled(enabled) {
     globalThis.localStorage?.setItem(IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY, enabled ? 'true' : 'false');
   } catch (error) {
     console.warn('Unable to persist background preference', error);
+  }
+}
+
+function readStoredBackgroundDuration() {
+  try {
+    const raw = globalThis.localStorage?.getItem(BACKGROUND_DURATION_STORAGE_KEY);
+    const parsed = Number(raw);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return parsed;
+    }
+  } catch (error) {
+    console.warn('Unable to read background duration', error);
+  }
+  return getImageBackgroundRotationMs();
+}
+
+function writeStoredBackgroundDuration(durationMs) {
+  try {
+    const normalized = Number(durationMs);
+    if (!Number.isFinite(normalized) || normalized <= 0) {
+      globalThis.localStorage?.removeItem(BACKGROUND_DURATION_STORAGE_KEY);
+      return;
+    }
+    globalThis.localStorage?.setItem(BACKGROUND_DURATION_STORAGE_KEY, String(normalized));
+  } catch (error) {
+    console.warn('Unable to persist background duration', error);
+  }
+}
+
+function readStoredLocalBackgroundBank() {
+  try {
+    const raw = globalThis.localStorage?.getItem(LOCAL_BACKGROUND_BANK_STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    const uris = Array.isArray(parsed?.uris)
+      ? parsed.uris.filter(uri => typeof uri === 'string' && uri)
+      : [];
+    const label = typeof parsed?.label === 'string' ? parsed.label : '';
+    if (!uris.length) {
+      return null;
+    }
+    return { uris, label };
+  } catch (error) {
+    console.warn('Unable to read local background bank', error);
+  }
+  return null;
+}
+
+function writeStoredLocalBackgroundBank(bank) {
+  try {
+    const uris = Array.isArray(bank?.uris)
+      ? bank.uris.filter(uri => typeof uri === 'string' && uri)
+      : [];
+    const label = typeof bank?.label === 'string' ? bank.label : '';
+    if (!uris.length) {
+      globalThis.localStorage?.removeItem(LOCAL_BACKGROUND_BANK_STORAGE_KEY);
+      return;
+    }
+    const payload = { uris, label };
+    globalThis.localStorage?.setItem(LOCAL_BACKGROUND_BANK_STORAGE_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.warn('Unable to persist local background bank', error);
   }
 }
 
@@ -12279,6 +12361,80 @@ function dismissImageItem(itemId) {
   refreshFavoriteBackgroundPool({ resetIndex: true });
 }
 
+function getActiveBackgroundItems() {
+  const localPool = Array.isArray(localBackgroundItems) ? localBackgroundItems : [];
+  if (localPool.length) {
+    return localPool;
+  }
+  return Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems : [];
+}
+
+function hasLocalBackgrounds() {
+  return Array.isArray(localBackgroundItems) && localBackgroundItems.length > 0;
+}
+
+function pickNextBackgroundIndex(poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (total <= 1) {
+    return 0;
+  }
+  const randomIndex = Math.floor(Math.random() * total);
+  if (randomIndex === favoriteBackgroundIndex) {
+    return (randomIndex + 1) % total;
+  }
+  return randomIndex;
+}
+
+function setBackgroundLibraryStatus(status) {
+  backgroundLibraryStatus = status;
+  renderBackgroundLibraryStatus();
+}
+
+function renderBackgroundLibraryStatus() {
+  if (!elements.backgroundLibraryStatus) {
+    return;
+  }
+  const localPool = Array.isArray(localBackgroundItems) ? localBackgroundItems : [];
+  const hasLocal = localPool.length > 0;
+  let key = 'index.sections.options.background.status.empty';
+  let fallback = 'No image bank selected yet.';
+  let params = {};
+  if (backgroundLibraryStatus === 'loading') {
+    key = 'index.sections.options.background.status.loading';
+    fallback = 'Scanning your folder…';
+  } else if (hasLocal) {
+    key = 'index.sections.options.background.status.ready';
+    fallback = '{count} images ready from {name}.';
+    params = {
+      count: localPool.length,
+      name: backgroundLibraryLabel || translateOrDefault(
+        'index.sections.options.background.fallbackName',
+        'this folder'
+      )
+    };
+  } else if (backgroundLibraryStatus === 'error') {
+    key = 'index.sections.options.background.status.error';
+    fallback = 'Unable to read this folder.';
+  }
+  elements.backgroundLibraryStatus.textContent = translateOrDefault(key, fallback, params);
+  elements.backgroundLibraryStatus.setAttribute('data-i18n', key);
+}
+
+function setLocalBackgroundItems(uris, options = {}) {
+  const uniqueUris = Array.from(new Set((uris || []).filter(uri => typeof uri === 'string' && uri)));
+  localBackgroundItems = uniqueUris.map((uri, index) => ({ id: `local-background-${index}`, imageUrl: uri }));
+  backgroundLibraryLabel = typeof options.label === 'string' ? options.label : backgroundLibraryLabel;
+  setBackgroundLibraryStatus(localBackgroundItems.length ? 'ready' : 'idle');
+  if (options.persist !== false) {
+    writeStoredLocalBackgroundBank({ uris: uniqueUris, label: backgroundLibraryLabel });
+  }
+  if (localBackgroundItems.length) {
+    favoriteBackgroundIndex = Math.floor(Math.random() * localBackgroundItems.length);
+    setImageBackgroundEnabled(true, { resetIndex: true, showEmptyStatus: false, force: true });
+  }
+  applyFavoriteBackground();
+}
+
 function clearFavoriteBackgroundTimer() {
   if (favoriteBackgroundTimerId != null) {
     clearTimeout(favoriteBackgroundTimerId);
@@ -12288,23 +12444,25 @@ function clearFavoriteBackgroundTimer() {
 
 function scheduleFavoriteBackgroundRotation() {
   clearFavoriteBackgroundTimer();
-  if (!imageBackgroundEnabled || !favoriteBackgroundItems.length) {
+  const pool = getActiveBackgroundItems();
+  if (!imageBackgroundEnabled || !pool.length) {
     return;
   }
-  const delay = Math.max(1000, getImageBackgroundRotationMs() || 300000);
+  const delay = Math.max(1000, getBackgroundRotationDuration() || 300000);
   favoriteBackgroundTimerId = setTimeout(() => {
-    if (!favoriteBackgroundItems.length) {
+    const activePool = getActiveBackgroundItems();
+    if (!activePool.length) {
       clearFavoriteBackgroundTimer();
       return;
     }
-    favoriteBackgroundIndex = (favoriteBackgroundIndex + 1) % favoriteBackgroundItems.length;
+    favoriteBackgroundIndex = pickNextBackgroundIndex(activePool.length);
     applyFavoriteBackground();
   }, delay);
 }
 
 function applyFavoriteBackground() {
   clearFavoriteBackgroundTimer();
-  const pool = Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems : [];
+  const pool = getActiveBackgroundItems();
   const hasPool = pool.length > 0;
   const canDisplay = imageBackgroundEnabled && hasPool;
   if (!elements.favoriteBackground) {
@@ -12326,19 +12484,44 @@ function applyFavoriteBackground() {
   }
   const current = pool[favoriteBackgroundIndex] || null;
   const backgroundUrl = current ? getFullImageSrc(current) : '';
-  if (backgroundUrl) {
-    elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
-  } else {
-    elements.favoriteBackground.style.backgroundImage = '';
-  }
   const isGameActive = document.body?.dataset?.activePage === 'game';
-  const shouldShow = Boolean(current) && isGameActive;
-  elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
-  document.body.classList.toggle('favorite-background-active', shouldShow);
-  scheduleFavoriteBackgroundRotation();
+  const handleMissingBackground = () => {
+    elements.favoriteBackground.style.backgroundImage = '';
+    elements.favoriteBackground.toggleAttribute('hidden', true);
+    document.body.classList.toggle('favorite-background-active', false);
+    if (pool.length > 1) {
+      favoriteBackgroundIndex = pickNextBackgroundIndex(pool.length);
+      setTimeout(() => applyFavoriteBackground(), 80);
+      return;
+    }
+    scheduleFavoriteBackgroundRotation();
+  };
+
+  if (!backgroundUrl) {
+    handleMissingBackground();
+    return;
+  }
+
+  const applyLoadedBackground = () => {
+    elements.favoriteBackground.style.backgroundImage = `url("${backgroundUrl}")`;
+    const shouldShow = Boolean(current) && isGameActive;
+    elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
+    document.body.classList.toggle('favorite-background-active', shouldShow);
+    scheduleFavoriteBackgroundRotation();
+  };
+
+  const loader = new Image();
+  loader.onload = applyLoadedBackground;
+  loader.onerror = handleMissingBackground;
+  loader.referrerPolicy = 'no-referrer';
+  loader.src = backgroundUrl;
 }
 
 function refreshFavoriteBackgroundPool(options = {}) {
+  if (hasLocalBackgrounds()) {
+    applyFavoriteBackground();
+    return;
+  }
   const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const items = Array.isArray(imageFeedItems) ? imageFeedItems : [];
   const previousLength = Array.isArray(favoriteBackgroundItems) ? favoriteBackgroundItems.length : 0;
@@ -12352,6 +12535,143 @@ function refreshFavoriteBackgroundPool(options = {}) {
     favoriteBackgroundIndex = 0;
   }
   applyFavoriteBackground();
+}
+
+function normalizeBackgroundBankPayload(payload) {
+  if (typeof payload === 'string') {
+    try {
+      const parsed = JSON.parse(payload);
+      return normalizeBackgroundBankPayload(parsed);
+    } catch (error) {
+      console.warn('Unable to parse background bank payload', error);
+      return null;
+    }
+  }
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+  const uris = Array.isArray(payload.uris)
+    ? payload.uris.filter(uri => typeof uri === 'string' && uri)
+    : [];
+  const label = typeof payload.label === 'string' ? payload.label : '';
+  return { uris, label };
+}
+
+function handleNativeBackgroundBank(payload) {
+  const normalized = normalizeBackgroundBankPayload(payload);
+  setBackgroundLibraryStatus('ready');
+  if (!normalized || !normalized.uris.length) {
+    setLocalBackgroundItems([], { label: normalized?.label || '', persist: false });
+    return;
+  }
+  setLocalBackgroundItems(normalized.uris, { label: normalized.label, persist: true });
+  showToast(
+    translateOrDefault(
+      'scripts.app.background.bankReady',
+      'Image bank added: {count} images.',
+      { count: normalized.uris.length }
+    )
+  );
+}
+
+function handleBackgroundBankError(reason) {
+  const normalized = typeof reason === 'string' ? reason : '';
+  setBackgroundLibraryStatus(hasLocalBackgrounds() ? 'ready' : 'error');
+  let key = 'scripts.app.background.error';
+  let fallback = 'Unable to access this folder.';
+  if (normalized === 'permission-denied') {
+    key = 'scripts.app.background.permission';
+    fallback = 'Allow image access to use this folder.';
+  } else if (normalized === 'empty') {
+    key = 'scripts.app.background.empty';
+    fallback = 'No images found in this folder.';
+  } else if (normalized === 'cancelled') {
+    key = 'scripts.app.background.cancelled';
+    fallback = 'Selection cancelled.';
+  }
+  showToast(translateOrDefault(key, fallback));
+}
+
+function applyStoredLocalBackgroundBank() {
+  const stored = readStoredLocalBackgroundBank();
+  if (!stored || !stored.uris?.length) {
+    return;
+  }
+  backgroundLibraryLabel = stored.label || backgroundLibraryLabel;
+  setLocalBackgroundItems(stored.uris, { label: stored.label || '', persist: false });
+}
+
+function requestNativeBackgroundBank() {
+  if (window.AndroidBridge && typeof window.AndroidBridge.loadBackgroundImageBank === 'function') {
+    setBackgroundLibraryStatus('loading');
+    window.AndroidBridge.loadBackgroundImageBank();
+  }
+}
+
+function handleBackgroundLibraryRequest() {
+  setBackgroundLibraryStatus('loading');
+  if (window.AndroidBridge && typeof window.AndroidBridge.pickBackgroundImageBank === 'function') {
+    window.AndroidBridge.pickBackgroundImageBank();
+    return;
+  }
+  setBackgroundLibraryStatus(hasLocalBackgrounds() ? 'ready' : 'idle');
+  showToast(translateOrDefault('scripts.app.background.unsupported', 'This action requires the Android app.'));
+}
+
+function updateBackgroundDurationControl() {
+  if (!elements.backgroundDurationSelect) {
+    return;
+  }
+  elements.backgroundDurationSelect.value = String(getBackgroundRotationDuration());
+}
+
+function handleBackgroundDurationChange() {
+  if (!elements.backgroundDurationSelect) {
+    return;
+  }
+  const selected = Number(elements.backgroundDurationSelect.value);
+  backgroundRotationMs = Number.isFinite(selected) && selected > 0
+    ? selected
+    : getImageBackgroundRotationMs();
+  writeStoredBackgroundDuration(backgroundRotationMs);
+  applyFavoriteBackground();
+}
+
+function handleBackgroundToggleClick() {
+  setImageBackgroundEnabled(!imageBackgroundEnabled, { resetIndex: true });
+}
+
+function initBackgroundOptions() {
+  updateBackgroundDurationControl();
+  if (elements.backgroundDurationSelect) {
+    elements.backgroundDurationSelect.addEventListener('change', handleBackgroundDurationChange);
+  }
+  if (elements.backgroundLibraryButton) {
+    elements.backgroundLibraryButton.addEventListener('click', handleBackgroundLibraryRequest);
+  }
+  if (elements.backgroundToggleButton) {
+    elements.backgroundToggleButton.addEventListener('click', handleBackgroundToggleClick);
+  }
+  updateBackgroundToggleLabel();
+  applyStoredLocalBackgroundBank();
+  renderBackgroundLibraryStatus();
+  requestNativeBackgroundBank();
+}
+
+function subscribeBackgroundLanguageUpdates() {
+  const handler = () => {
+    updateBackgroundDurationControl();
+    renderBackgroundLibraryStatus();
+    updateBackgroundToggleLabel();
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
 }
 
 function getVisibleImageItems() {
@@ -12554,6 +12874,19 @@ function updateImagesFavoritesToggleLabel() {
   elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'non-favorites';
 }
 
+function updateBackgroundToggleLabel() {
+  if (!elements.backgroundToggleButton) {
+    return;
+  }
+  const key = imageBackgroundEnabled
+    ? 'index.sections.options.background.toggle.on'
+    : 'index.sections.options.background.toggle.off';
+  const fallback = imageBackgroundEnabled ? 'Disable slideshow' : 'Enable slideshow';
+  elements.backgroundToggleButton.textContent = translateOrDefault(key, fallback);
+  elements.backgroundToggleButton.setAttribute('data-i18n', key);
+  elements.backgroundToggleButton.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
+}
+
 function updateImagesBackgroundToggleLabel() {
   if (!elements.imagesBackgroundToggle) {
     return;
@@ -12567,6 +12900,34 @@ function updateImagesBackgroundToggleLabel() {
   elements.imagesBackgroundToggle.dataset.state = imageBackgroundEnabled ? 'on' : 'off';
 }
 
+function setImageBackgroundEnabled(enabled, options = {}) {
+  const nextValue = Boolean(enabled);
+  const force = options.force === true;
+  if (imageBackgroundEnabled === nextValue && !force) {
+    updateImagesBackgroundToggleLabel();
+    updateBackgroundToggleLabel();
+    return imageBackgroundEnabled;
+  }
+  imageBackgroundEnabled = nextValue;
+  writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
+  updateImagesBackgroundToggleLabel();
+  updateBackgroundToggleLabel();
+  const pool = getActiveBackgroundItems();
+  if (imageBackgroundEnabled) {
+    if (!pool.length && options.showEmptyStatus !== false) {
+      setImagesStatus(
+        'index.sections.images.status.backgroundEmpty',
+        'Add favorites to show them on the main page.'
+      );
+    }
+    const shouldResetIndex = options.resetIndex !== false;
+    refreshFavoriteBackgroundPool({ resetIndex: shouldResetIndex });
+  } else {
+    applyFavoriteBackground();
+  }
+  return imageBackgroundEnabled;
+}
+
 function handleImagesFavoritesToggle() {
   imageFeedShowFavoritesOnly = !imageFeedShowFavoritesOnly;
   updateImagesFavoritesToggleLabel();
@@ -12574,20 +12935,7 @@ function handleImagesFavoritesToggle() {
 }
 
 function handleImagesBackgroundToggle() {
-  imageBackgroundEnabled = !imageBackgroundEnabled;
-  writeStoredImageBackgroundEnabled(imageBackgroundEnabled);
-  updateImagesBackgroundToggleLabel();
-  if (imageBackgroundEnabled && !favoriteBackgroundItems.length) {
-    setImagesStatus(
-      'index.sections.images.status.backgroundEmpty',
-      'Add favorites to show them on the main page.'
-    );
-  }
-  if (imageBackgroundEnabled) {
-    refreshFavoriteBackgroundPool({ resetIndex: true });
-  } else {
-    applyFavoriteBackground();
-  }
+  setImageBackgroundEnabled(!imageBackgroundEnabled, { resetIndex: true });
 }
 
 function selectImageById(itemId) {
@@ -12642,6 +12990,15 @@ function handleImageSavedOnDevice(success) {
 if (typeof globalThis !== 'undefined') {
   globalThis.onImageSaved = function onImageSaved(success) {
     handleImageSavedOnDevice(Boolean(success));
+  };
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.onBackgroundImageBankLoaded = function onBackgroundImageBankLoaded(payload) {
+    handleNativeBackgroundBank(payload);
+  };
+  globalThis.onBackgroundImageBankError = function onBackgroundImageBankError(reason) {
+    handleBackgroundBankError(reason);
   };
 }
 
@@ -26453,6 +26810,8 @@ function initializeDomBoundModules() {
   subscribeCryptoWidgetLanguageUpdates();
   initImagesModule();
   subscribeImagesLanguageUpdates();
+  initBackgroundOptions();
+  subscribeBackgroundLanguageUpdates();
   initNewsOption();
   subscribeNewsLanguageUpdates();
   initNewsModule();

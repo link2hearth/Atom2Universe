@@ -2118,6 +2118,29 @@
         "preferences": {
           "title": "Interface preferences"
         },
+        "background": {
+          "title": "Background",
+          "description": "Link an image folder from your Android device to show your photos behind the main page.",
+          "addButton": "Add image bank",
+          "toggle": {
+            "on": "Disable slideshow",
+            "off": "Enable slideshow"
+          },
+          "durationLabel": "Display duration",
+          "durations": {
+            "oneMinute": "1 minute",
+            "fiveMinutes": "5 minutes",
+            "fifteenMinutes": "15 minutes",
+            "oneHour": "1 hour"
+          },
+          "status": {
+            "empty": "No image bank selected yet.",
+            "loading": "Scanning your folder…",
+            "ready": "{count} images ready from {name}.",
+            "error": "Unable to read this folder."
+          },
+          "fallbackName": "this folder"
+        },
         "backups": {
           "title": "Manage saves",
           "description": "Export or import your progress with an external file.",
@@ -3658,6 +3681,14 @@
           "decodeError": "Invalid backup file.",
           "applyError": "An error occurred while applying the backup."
         }
+      },
+      "background": {
+        "bankReady": "Image bank added: {count} images.",
+        "permission": "Allow image access to use this folder.",
+        "empty": "No images found in this folder.",
+        "cancelled": "Selection cancelled.",
+        "error": "Unable to access this folder.",
+        "unsupported": "This action requires the Android app."
       },
       "holdemOptions": {
         "restartSuccess": "Hold’em AI stacks set to {stack}.",

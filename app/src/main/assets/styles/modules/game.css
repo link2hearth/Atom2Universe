@@ -50,7 +50,7 @@ body.theme-aurora .page--void {
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
-  background-color: transparent;
+  background-color: #000;
   transition: opacity 0.6s ease;
   opacity: 0;
 }

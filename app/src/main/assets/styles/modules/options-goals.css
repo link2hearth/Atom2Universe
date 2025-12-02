@@ -101,6 +101,28 @@ body.theme-aurora {
   box-shadow: 0 16px 34px rgba(40, 140, 160, 0.18);
 }
 
+.option-card--background .option-row--status {
+  margin-top: -0.25rem;
+}
+
+.option-card--background .option-status {
+  margin: 0;
+  font-size: calc(0.78rem * var(--font-scale-factor, 1));
+  color: rgba(255, 255, 255, 0.78);
+}
+
+body.theme-light .option-card--background .option-status {
+  color: rgba(12, 16, 32, 0.78);
+}
+
+.option-card--background .option-row--background-actions {
+  justify-content: flex-start;
+}
+
+.option-card--background .option-field--background-duration select {
+  min-width: 12.5em;
+}
+
 body.theme-light .option-card--holdem {
   border-color: rgba(40, 110, 180, 0.2);
   box-shadow: 0 14px 30px rgba(40, 110, 180, 0.12);
