@@ -341,9 +341,8 @@ const ACTIVE_IMAGE_FEED_SETTINGS = typeof IMAGE_FEED_SETTINGS !== 'undefined'
 
 const IMAGE_DOWNLOAD_TARGET_PATH = 'Pictures/Atom2Univers';
 
-const IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY = 'atom2univers.images.favorites.cache.v1';
-const IMAGE_FAVORITE_CACHE_MAX_DIMENSION = 1280;
-const IMAGE_THUMBNAIL_MAX_DIMENSION = 512;
+  const IMAGE_FAVORITE_CACHE_MAX_DIMENSION = 1280;
+  const IMAGE_THUMBNAIL_MAX_DIMENSION = 512;
 const IMAGE_THUMBNAIL_IDLE_DELAY_MS = 300;
 const LOCAL_BACKGROUND_BANK_STORAGE_KEY = 'atom2univers.background.bank.v1';
 const BACKGROUND_DURATION_STORAGE_KEY = 'atom2univers.background.duration.ms';
@@ -496,14 +495,11 @@ let newsHighlightedStoryId = null;
 
 let imageFeedItems = [];
 let imageFeedVisibleItems = [];
-let imageFeedFavorites = new Set();
 let imageFeedDismissedIds = new Set();
 let imageFeedEnabledSources = null;
-let imageFeedShowFavoritesOnly = false;
 let imageFeedCurrentIndex = 0;
 let imageFeedIsLoading = false;
 let imageFeedLastError = null;
-let imageFeedRefreshTimerId = null;
 let imageFeedAbortController = null;
 let imageBackgroundEnabled = false;
 let backgroundIndex = 0;
@@ -560,7 +556,6 @@ const NEWS_HIDDEN_ITEMS_STORAGE_KEY = 'atom2univers.news.hiddenItems.v1';
 const NEWS_LAST_QUERY_STORAGE_KEY = 'atom2univers.news.lastQuery';
 const NEWS_BANNED_WORDS_STORAGE_KEY = 'atom2univers.news.bannedWords.v1';
 const NEWS_SOURCES_STORAGE_KEY = 'atom2univers.news.sources.v1';
-const IMAGE_FEED_FAVORITES_STORAGE_KEY = 'atom2univers.images.favorites.v1';
 const IMAGE_FEED_SOURCES_STORAGE_KEY = 'atom2univers.images.sources.v1';
 const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
 const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
@@ -6685,7 +6680,6 @@ function collectDomElements() {
   cryptoWidgetToggleStatus: document.getElementById('cryptoWidgetToggleStatus'),
   imagesStatus: document.getElementById('imagesStatus'),
   imagesRefreshButton: document.getElementById('imagesRefreshButton'),
-  imagesFavoritesToggle: document.getElementById('imagesFavoritesToggle'),
   imagesOpenButton: document.getElementById('imagesOpenButton'),
   imagesDownloadButton: document.getElementById('imagesDownloadButton'),
   imagesSourcesList: document.getElementById('imagesSourcesList'),
@@ -6695,8 +6689,13 @@ function collectDomElements() {
   imagesPrevButton: document.getElementById('imagesPrevButton'),
   imagesNextButton: document.getElementById('imagesNextButton'),
   imagesActiveImage: document.getElementById('imagesActiveImage'),
+  imagesHideButton: document.getElementById('imagesHideButton'),
   imagesActiveTitle: document.getElementById('imagesActiveTitle'),
   imagesActiveSource: document.getElementById('imagesActiveSource'),
+  imagesLightbox: document.getElementById('imagesLightbox'),
+  imagesLightboxImage: document.getElementById('imagesLightboxImage'),
+  imagesLightboxCaption: document.getElementById('imagesLightboxCaption'),
+  imagesLightboxClose: document.getElementById('imagesLightboxClose'),
   newsToggleCard: document.getElementById('newsToggleCard'),
   newsToggle: document.getElementById('newsToggle'),
   newsToggleStatus: document.getElementById('newsToggleStatus'),
@@ -11844,106 +11843,6 @@ function getEnabledImageSources(availableSources = getAvailableImageSources()) {
   return availableSources.filter(source => imageFeedEnabledSources.has(source.id));
 }
 
-function readStoredImageFavorites() {
-  try {
-    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_FAVORITES_STORAGE_KEY);
-    if (!raw) {
-      return new Set();
-    }
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return new Set(parsed.filter(item => typeof item === 'string' && item));
-    }
-  } catch (error) {
-    console.warn('Unable to read image favorites', error);
-  }
-  return new Set();
-}
-
-function writeStoredImageFavorites(favorites) {
-  try {
-    const items = Array.from(favorites || []).filter(item => typeof item === 'string' && item);
-    if (!items.length) {
-      globalThis.localStorage?.removeItem(IMAGE_FEED_FAVORITES_STORAGE_KEY);
-      return;
-    }
-    globalThis.localStorage?.setItem(IMAGE_FEED_FAVORITES_STORAGE_KEY, JSON.stringify(items));
-  } catch (error) {
-    console.warn('Unable to persist image favorites', error);
-  }
-}
-
-function readStoredFavoriteImageAssets() {
-  const result = new Map();
-  try {
-    const raw = globalThis.localStorage?.getItem(IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY);
-    if (!raw) {
-      return result;
-    }
-    const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') {
-      return result;
-    }
-    Object.entries(parsed).forEach(([id, entry]) => {
-      if (typeof id !== 'string' || !id) {
-        return;
-      }
-      if (!entry || typeof entry !== 'object') {
-        return;
-      }
-      const imageUrl = typeof entry.imageUrl === 'string' && entry.imageUrl ? entry.imageUrl : '';
-      const fullDataUrl = typeof entry.fullDataUrl === 'string' && entry.fullDataUrl ? entry.fullDataUrl : '';
-      if (!imageUrl && !fullDataUrl) {
-        return;
-      }
-      result.set(id, {
-        imageUrl,
-        fullDataUrl,
-        thumbDataUrl: typeof entry.thumbDataUrl === 'string' ? entry.thumbDataUrl : '',
-        title: typeof entry.title === 'string' ? entry.title : '',
-        link: typeof entry.link === 'string' ? entry.link : '',
-        sourceId: typeof entry.sourceId === 'string' ? entry.sourceId : '',
-        pubDate: Number(entry.pubDate) || 0,
-        updatedAt: Number(entry.updatedAt) || Date.now()
-      });
-    });
-  } catch (error) {
-    console.warn('Unable to read cached favorite images', error);
-  }
-  return result;
-}
-
-function writeStoredFavoriteImageAssets(cache) {
-  try {
-    const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-    const payload = {};
-    favorites.forEach(id => {
-      const entry = cache.get(id);
-      if (!entry || !entry.fullDataUrl) {
-        return;
-      }
-      payload[id] = {
-        imageUrl: entry.imageUrl,
-        fullDataUrl: entry.fullDataUrl,
-        thumbDataUrl: entry.thumbDataUrl || '',
-        title: entry.title || '',
-        link: entry.link || '',
-        sourceId: entry.sourceId || '',
-        pubDate: entry.pubDate || 0,
-        updatedAt: entry.updatedAt || Date.now()
-      };
-    });
-    const keys = Object.keys(payload);
-    if (!keys.length) {
-      globalThis.localStorage?.removeItem(IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY);
-      return;
-    }
-    globalThis.localStorage?.setItem(IMAGE_FEED_FAVORITES_CACHE_STORAGE_KEY, JSON.stringify(payload));
-  } catch (error) {
-    console.warn('Unable to persist cached favorite images', error);
-  }
-}
-
 function readStoredDismissedImages() {
   try {
     const raw = globalThis.localStorage?.getItem(IMAGE_FEED_DISMISSED_STORAGE_KEY);
@@ -12127,28 +12026,6 @@ function getImageItemById(itemId) {
   return (Array.isArray(imageFeedItems) ? imageFeedItems : []).find(item => item.id === itemId) || null;
 }
 
-function persistFavoriteImageAssets() {
-  writeStoredFavoriteImageAssets(imageAssetCache);
-}
-
-function hydrateImageFeedFromFavoriteCache() {
-  const cachedEntries = Array.from(imageAssetCache.entries())
-    .filter(([id]) => (imageFeedFavorites instanceof Set ? imageFeedFavorites.has(id) : false))
-    .map(([id, entry]) => ({
-      id,
-      title: entry.title || '',
-      link: entry.link || entry.imageUrl,
-      imageUrl: entry.fullDataUrl || entry.imageUrl,
-      thumbnailUrl: entry.thumbDataUrl || '',
-      sourceId: entry.sourceId || '',
-      pubDate: entry.pubDate || 0
-    }));
-  if (cachedEntries.length && (!Array.isArray(imageFeedItems) || !imageFeedItems.length)) {
-    imageFeedItems = cachedEntries;
-    refreshImagesDisplay({ skipStatus: true });
-  }
-}
-
 function createDataUrlFromBlob(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -12213,9 +12090,6 @@ async function warmImageAsset(item) {
         updatedAt: Date.now()
       });
       imageAssetCache.set(item.id, asset);
-      if (imageFeedFavorites instanceof Set && imageFeedFavorites.has(item.id)) {
-        persistFavoriteImageAssets();
-      }
       return asset;
     } catch (error) {
       console.warn('Unable to cache image asset', error);
@@ -12242,9 +12116,6 @@ async function generateThumbnailForItem(item) {
   const thumbDataUrl = await buildResizedDataUrl(cached.fullDataUrl, IMAGE_THUMBNAIL_MAX_DIMENSION, 0.75);
   const updated = Object.assign({}, cached, { thumbDataUrl, updatedAt: Date.now() });
   imageAssetCache.set(item.id, updated);
-  if (imageFeedFavorites instanceof Set && imageFeedFavorites.has(item.id)) {
-    persistFavoriteImageAssets();
-  }
   return updated;
 }
 
@@ -12457,26 +12328,6 @@ function parseImageFeed(xmlText, sourceId) {
   return items;
 }
 
-function toggleImageFavorite(itemId) {
-  if (!itemId) {
-    return;
-  }
-  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-  if (favorites.has(itemId)) {
-    favorites.delete(itemId);
-  } else {
-    favorites.add(itemId);
-    const item = getImageItemById(itemId);
-    if (item) {
-      warmImageAsset(item);
-    }
-  }
-  imageFeedFavorites = favorites;
-  writeStoredImageFavorites(imageFeedFavorites);
-  persistFavoriteImageAssets();
-  refreshImagesDisplay();
-}
-
 function dismissImageItem(itemId) {
   if (!itemId) {
     return;
@@ -12484,11 +12335,6 @@ function dismissImageItem(itemId) {
   if (!(imageFeedDismissedIds instanceof Set)) {
     imageFeedDismissedIds = new Set();
   }
-  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
-  favorites.delete(itemId);
-  imageFeedFavorites = favorites;
-  writeStoredImageFavorites(imageFeedFavorites);
-  persistFavoriteImageAssets();
   imageFeedDismissedIds.add(itemId);
   writeStoredDismissedImages(imageFeedDismissedIds);
   imageFeedItems = (Array.isArray(imageFeedItems) ? imageFeedItems : []).filter(item => item.id !== itemId);
@@ -12864,23 +12710,19 @@ function subscribeBackgroundLanguageUpdates() {
 
 function getVisibleImageItems() {
   const enabledSources = new Set(getEnabledImageSources().map(source => source.id));
-  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const dismissed = imageFeedDismissedIds instanceof Set ? imageFeedDismissedIds : new Set();
-  const baseItems = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
+  const normalizedItems = (Array.isArray(imageFeedItems) ? imageFeedItems : [])
     .filter(item => enabledSources.has(item.sourceId))
     .filter(item => !dismissed.has(item.id));
-  const filtered = imageFeedShowFavoritesOnly
-    ? baseItems.filter(item => favorites.has(item.id))
-    : baseItems.filter(item => !favorites.has(item.id));
-  const normalized = filtered.map(entry => applyCachedAssetToItem(entry));
-  imageFeedVisibleItems = normalized;
-  if (normalized.length === 0) {
+  const hydrated = normalizedItems.map(entry => applyCachedAssetToItem(entry));
+  imageFeedVisibleItems = hydrated;
+  if (hydrated.length === 0) {
     imageFeedCurrentIndex = 0;
-  } else if (imageFeedCurrentIndex >= filtered.length) {
+  } else if (imageFeedCurrentIndex >= hydrated.length) {
     imageFeedCurrentIndex = 0;
   }
   writeStoredImageCurrentIndex(imageFeedCurrentIndex);
-  return normalized;
+  return hydrated;
 }
 
 function updateImagesEmptyState(visibleItems = imageFeedVisibleItems) {
@@ -12916,6 +12758,9 @@ function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
     elements.imagesActiveTitle.textContent = '—';
     elements.imagesActiveSource.textContent = '';
     updateImagesEmptyState(normalizedItems);
+    if (elements.imagesHideButton) {
+      elements.imagesHideButton.disabled = true;
+    }
     if (elements.imagesOpenButton) {
       elements.imagesOpenButton.disabled = true;
     }
@@ -12932,6 +12777,9 @@ function renderImagesViewer(visibleItems = imageFeedVisibleItems) {
   updateImagesEmptyState(normalizedItems);
   warmImageAsset(current);
   queueThumbnailGeneration([current]);
+  if (elements.imagesHideButton) {
+    elements.imagesHideButton.disabled = false;
+  }
   if (elements.imagesOpenButton) {
     elements.imagesOpenButton.disabled = false;
   }
@@ -12946,7 +12794,6 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
   }
   elements.imagesGallery.replaceChildren();
   const items = Array.isArray(visibleItems) ? visibleItems : [];
-  const favorites = imageFeedFavorites instanceof Set ? imageFeedFavorites : new Set();
   const normalizedItems = items.map(entry => applyCachedAssetToItem(entry));
   normalizedItems.forEach((item, index) => {
     const card = document.createElement('article');
@@ -12954,9 +12801,6 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     card.dataset.id = item.id;
     if (index === imageFeedCurrentIndex) {
       card.classList.add('is-active');
-    }
-    if (favorites.has(item.id)) {
-      card.classList.add('is-favorite');
     }
     const dismiss = document.createElement('button');
     dismiss.type = 'button';
@@ -12985,19 +12829,8 @@ function renderImagesGallery(visibleItems = imageFeedVisibleItems) {
     const source = document.createElement('p');
     source.className = 'images-card__source';
     source.textContent = getImageSourceLabelById(item.sourceId);
-    const favorite = document.createElement('span');
-    favorite.className = 'images-card__favorite';
-    favorite.textContent = '★';
-    favorite.title = translateOrDefault(
-      'index.sections.images.viewer.favorite',
-      'Toggle favorite'
-    );
-    favorite.addEventListener('click', event => {
-      event.stopPropagation();
-      toggleImageFavorite(item.id);
-    });
     body.append(title, source);
-    card.append(dismiss, thumb, body, favorite);
+    card.append(dismiss, thumb, body);
     card.addEventListener('click', () => {
       setImagesCurrentIndex(index);
       refreshImagesDisplay({ skipStatus: true });
@@ -13042,24 +12875,11 @@ function renderImageSources() {
       }
       writeStoredImageSources(imageFeedEnabledSources);
       refreshImagesDisplay({ skipStatus: true });
-      fetchImageFeeds({ silent: true });
+      setImagesStatus('index.sections.images.status.idle', 'Click refresh to load images.');
     });
     listItem.append(input, label);
     elements.imagesSourcesList.append(listItem);
   });
-}
-
-function updateImagesFavoritesToggleLabel() {
-  if (!elements.imagesFavoritesToggle) {
-    return;
-  }
-  const key = imageFeedShowFavoritesOnly
-    ? 'index.sections.images.actions.nonFavoritesOnly'
-    : 'index.sections.images.actions.favoritesOnly';
-  const fallback = imageFeedShowFavoritesOnly ? 'Show non-favorites only' : 'Show favorites only';
-  elements.imagesFavoritesToggle.textContent = translateOrDefault(key, fallback);
-  elements.imagesFavoritesToggle.setAttribute('data-i18n', key);
-  elements.imagesFavoritesToggle.dataset.state = imageFeedShowFavoritesOnly ? 'favorites' : 'non-favorites';
 }
 
 function updateBackgroundToggleLabel() {
@@ -13103,12 +12923,6 @@ function setImageBackgroundEnabled(enabled, options = {}) {
   return imageBackgroundEnabled;
 }
 
-function handleImagesFavoritesToggle() {
-  imageFeedShowFavoritesOnly = !imageFeedShowFavoritesOnly;
-  updateImagesFavoritesToggleLabel();
-  refreshImagesDisplay({ skipStatus: true });
-}
-
 function selectImageById(itemId) {
   const index = imageFeedVisibleItems.findIndex(item => item.id === itemId);
   if (index >= 0) {
@@ -13148,6 +12962,40 @@ function downloadCurrentImage() {
   link.remove();
 }
 
+function hideCurrentImage() {
+  const current = imageFeedVisibleItems[imageFeedCurrentIndex];
+  if (!current) {
+    return;
+  }
+  dismissImageItem(current.id);
+}
+
+function openActiveImageFullscreen() {
+  const current = imageFeedVisibleItems[imageFeedCurrentIndex];
+  if (!current || !elements.imagesLightbox || !elements.imagesLightboxImage || !elements.imagesLightboxCaption) {
+    return;
+  }
+  const fullSrc = getFullImageSrc(current);
+  elements.imagesLightboxImage.src = fullSrc;
+  elements.imagesLightboxImage.alt = current.title || getImageSourceLabelById(current.sourceId);
+  elements.imagesLightboxCaption.textContent = current.title || getImageSourceLabelById(current.sourceId) || '';
+  elements.imagesLightbox.removeAttribute('hidden');
+  document.body.classList.add('images-lightbox-open');
+}
+
+function closeImageFullscreen() {
+  if (!elements.imagesLightbox || !elements.imagesLightboxImage) {
+    return;
+  }
+  elements.imagesLightbox.setAttribute('hidden', 'hidden');
+  elements.imagesLightboxImage.src = '';
+  elements.imagesLightboxImage.alt = '';
+  if (elements.imagesLightboxCaption) {
+    elements.imagesLightboxCaption.textContent = '';
+  }
+  document.body.classList.remove('images-lightbox-open');
+}
+
 function handleImageSavedOnDevice(success) {
   const key = success
     ? 'index.sections.images.status.downloaded'
@@ -13185,24 +13033,6 @@ function refreshImagesDisplay(options = {}) {
     setImagesStatus(key, fallback, { count: visibleItems.length });
   }
   return visibleItems;
-}
-
-function clearImagesRefreshTimer() {
-  if (imageFeedRefreshTimerId != null) {
-    clearTimeout(imageFeedRefreshTimerId);
-    imageFeedRefreshTimerId = null;
-  }
-}
-
-function scheduleImagesRefresh() {
-  clearImagesRefreshTimer();
-  const delay = Math.max(60 * 1000, Number(getImageFeedSettings()?.refreshIntervalMs) || 0);
-  if (!delay) {
-    return;
-  }
-  imageFeedRefreshTimerId = setTimeout(() => {
-    fetchImageFeeds({ silent: true });
-  }, delay);
 }
 
 function abortImageFeedRequest() {
@@ -13315,7 +13145,6 @@ async function fetchImageFeeds(options = {}) {
       `${visibleItems.length} images loaded.`,
       { count: visibleItems.length }
     );
-    scheduleImagesRefresh();
     return visibleItems;
   } catch (error) {
     imageFeedLastError = error || lastError;
@@ -13328,25 +13157,22 @@ async function fetchImageFeeds(options = {}) {
 }
 
 function initImagesModule() {
-  imageFeedFavorites = readStoredImageFavorites();
-  imageAssetCache = readStoredFavoriteImageAssets();
+  imageAssetCache = new Map();
   imageFeedEnabledSources = readStoredImageSources();
   imageFeedDismissedIds = readStoredDismissedImages();
   imageFeedCurrentIndex = readStoredImageCurrentIndex();
   imageBackgroundEnabled = readStoredImageBackgroundEnabled();
   renderImageSources();
-  updateImagesFavoritesToggleLabel();
-  hydrateImageFeedFromFavoriteCache();
   refreshImagesDisplay({ skipStatus: true });
+  setImagesStatus('index.sections.images.status.idle', 'Click refresh to load images.');
   applyBackgroundImage();
-  fetchImageFeeds();
 }
 
 function subscribeImagesLanguageUpdates() {
   const handler = () => {
-    updateImagesFavoritesToggleLabel();
     renderImageSources();
     refreshImagesDisplay({ skipStatus: true });
+    setImagesStatus('index.sections.images.status.idle', 'Click refresh to load images.');
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
@@ -19611,9 +19437,6 @@ function showPage(pageId) {
   if (pageId === 'game') {
     randomizeAtomButtonImage();
   }
-  if (pageId === 'images' && !imageFeedItems.length && !imageFeedIsLoading) {
-    fetchImageFeeds({ silent: true });
-  }
   if (pageId === 'metaux') {
     initMetauxGame();
   }
@@ -20217,8 +20040,8 @@ function bindDomEventListeners() {
       fetchImageFeeds();
     });
   }
-  if (elements.imagesFavoritesToggle) {
-    elements.imagesFavoritesToggle.addEventListener('click', handleImagesFavoritesToggle);
+  if (elements.imagesHideButton) {
+    elements.imagesHideButton.addEventListener('click', hideCurrentImage);
   }
   if (elements.imagesSourcesReset) {
     elements.imagesSourcesReset.addEventListener('click', () => {
@@ -20227,7 +20050,7 @@ function bindDomEventListeners() {
       writeStoredImageSources(imageFeedEnabledSources);
       renderImageSources();
       refreshImagesDisplay({ skipStatus: true });
-      fetchImageFeeds({ silent: true });
+      setImagesStatus('index.sections.images.status.idle', 'Click refresh to load images.');
     });
   }
   if (elements.imagesPrevButton) {
@@ -20255,6 +20078,27 @@ function bindDomEventListeners() {
   }
   if (elements.imagesDownloadButton) {
     elements.imagesDownloadButton.addEventListener('click', downloadCurrentImage);
+  }
+  if (elements.imagesActiveImage) {
+    elements.imagesActiveImage.addEventListener('click', openActiveImageFullscreen);
+  }
+  if (elements.imagesLightboxClose) {
+    elements.imagesLightboxClose.addEventListener('click', closeImageFullscreen);
+  }
+  if (elements.imagesLightbox) {
+    elements.imagesLightbox.addEventListener('click', event => {
+      const target = event?.target;
+      if (target === elements.imagesLightbox || target?.classList?.contains('images-lightbox__backdrop')) {
+        closeImageFullscreen();
+      }
+    });
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('keydown', event => {
+      if (event?.key === 'Escape') {
+        closeImageFullscreen();
+      }
+    });
   }
 
   if (elements.newsSearchButton) {

@@ -342,18 +342,17 @@
       "images": {
         "title": "Images",
         "subtitle": "Parcourez une sélection d’images issues de flux photo et d’actualités scientifiques.",
-        "hint": "Touchez une vignette pour l’ouvrir, marquez vos favoris et filtrez par source.",
+        "hint": "Touchez une vignette pour l’ouvrir. Appuyez sur Actualiser pour charger de nouvelles images et filtrez par source.",
         "actions": {
           "refresh": "Actualiser",
-          "favorites": "Favoris",
-          "favoritesOnly": "Afficher uniquement les favoris",
-          "nonFavoritesOnly": "Afficher uniquement les non favoris",
-          "all": "Afficher toutes les images",
           "open": "Ouvrir la source",
           "download": "Télécharger",
-          "dismiss": "Supprimer cette image"
+          "dismiss": "Supprimer cette image",
+          "hide": "Masquer cette image",
+          "closeFullscreen": "Fermer le plein écran"
         },
         "status": {
+          "idle": "Appuyez sur Actualiser pour charger des images.",
           "loading": "Chargement des images…",
           "error": "Impossible de charger les images pour le moment.",
           "empty": "Aucune image à afficher pour ces filtres.",
