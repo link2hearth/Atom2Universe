@@ -6945,15 +6945,6 @@
             >
               Actualiser
             </button>
-            <button
-              type="button"
-              id="imagesFavoritesToggle"
-              class="images-page__action"
-              data-state="non-favorites"
-              data-i18n="index.sections.images.actions.favoritesOnly"
-            >
-              Afficher uniquement les favoris
-            </button>
           </div>
         </div>
         <div class="images-page__status-bar">
@@ -6962,9 +6953,9 @@
             class="images-page__status"
             role="status"
             aria-live="polite"
-            data-i18n="index.sections.images.status.loading"
+            data-i18n="index.sections.images.status.idle"
           >
-            Chargement des images…
+            Cliquez sur « Actualiser » pour charger des images.
           </p>
           <div class="images-page__quick-actions">
             <button
@@ -6998,6 +6989,15 @@
                 ◀
               </button>
               <div class="images-viewer__frame">
+                <button
+                  type="button"
+                  id="imagesHideButton"
+                  class="images-viewer__dismiss"
+                  aria-label="Masquer cette image"
+                  data-i18n="aria-label:index.sections.images.actions.hide"
+                >
+                  ✕
+                </button>
                 <div class="images-viewer__media" id="imagesActiveMedia">
                   <img
                     id="imagesActiveImage"
@@ -7051,6 +7051,22 @@
             </p>
             <ul id="imagesSourcesList" class="images-sources" aria-live="polite"></ul>
           </aside>
+        </div>
+        <div class="images-lightbox" id="imagesLightbox" hidden>
+          <div class="images-lightbox__backdrop" aria-hidden="true"></div>
+          <figure class="images-lightbox__content">
+            <button
+              type="button"
+              id="imagesLightboxClose"
+              class="images-lightbox__close"
+              aria-label="Fermer l’image en plein écran"
+              data-i18n="aria-label:index.sections.images.actions.closeFullscreen"
+            >
+              ✕
+            </button>
+            <img id="imagesLightboxImage" class="images-lightbox__image" src="" alt="" loading="lazy" />
+            <figcaption id="imagesLightboxCaption" class="images-lightbox__caption"></figcaption>
+          </figure>
         </div>
       </div>
     </section>
