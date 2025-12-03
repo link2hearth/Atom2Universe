@@ -468,9 +468,10 @@ body.theme-light .news-card__button {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(var(--safe-bottom) + 1.6rem);
+  bottom: calc(var(--safe-bottom) + 1.6rem + 5vh);
   width: min(var(--max-width), calc(100% - 2rem));
   z-index: 20;
+  font-size: 1.3rem;
 }
 
 .news-ticker__container {
@@ -579,6 +580,6 @@ body.theme-light .news-ticker__label-button {
 
   .news-ticker {
     width: calc(100% - 1.2rem);
-    bottom: calc(var(--safe-bottom) + 1rem);
+    bottom: calc(var(--safe-bottom) + 1rem + 5vh);
   }
 }
