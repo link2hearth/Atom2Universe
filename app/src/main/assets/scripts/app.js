@@ -6465,6 +6465,8 @@ function collectDomElements() {
   bigBangDialogConfirm: document.getElementById('bigBangDialogConfirm'),
   bigBangDialogCancel: document.getElementById('bigBangDialogCancel'),
     headerPlaybackButton: document.getElementById('headerPlaybackToggle'),
+    nowPlayingBar: document.getElementById('nowPlayingBar'),
+    nowPlayingTrack: document.getElementById('nowPlayingTrack'),
     pages: document.querySelectorAll('.page'),
   statusAtomsButton: document.getElementById('statusAtomsButton'),
   statusAtoms: document.getElementById('statusAtoms'),
@@ -15195,6 +15197,106 @@ function updateMusicStatus() {
   status.textContent = message;
 }
 
+function decodeTrackName(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch (error) {
+    return value;
+  }
+}
+
+function extractTrackDisplay(track) {
+  if (!track) {
+    return { display: '' };
+  }
+  const fileCandidate = typeof track.filename === 'string'
+    ? track.filename
+    : typeof track.id === 'string'
+      ? track.id
+      : '';
+  const baseName = fileCandidate.split('/').pop() || '';
+  const withoutExtension = baseName.replace(/\.[^.]+$/, '');
+  const decodedBase = decodeTrackName(withoutExtension).trim();
+  const separators = [' - ', ' – ', ' — '];
+  let artist = '';
+  let title = '';
+
+  separators.some(separator => {
+    if (decodedBase.includes(separator)) {
+      const [candidateArtist, ...rest] = decodedBase.split(separator);
+      artist = candidateArtist.trim();
+      title = rest.join(separator).trim();
+      return true;
+    }
+    return false;
+  });
+
+  if (!artist && decodedBase.includes('-')) {
+    const dashParts = decodedBase.split('-');
+    if (dashParts.length >= 2) {
+      artist = dashParts.shift().trim();
+      title = dashParts.join('-').trim();
+    }
+  }
+
+  if (!artist && decodedBase.includes('_')) {
+    const underscoreParts = decodedBase.split('_');
+    if (underscoreParts.length >= 2) {
+      artist = underscoreParts.shift().trim();
+      title = underscoreParts.join(' ').trim();
+    }
+  }
+
+  const fallbackDisplay = track.displayName || decodedBase || fileCandidate;
+  const display = artist && title
+    ? `${artist} — ${title}`
+    : artist || fallbackDisplay;
+  const tooltip = title && artist
+    ? `${artist} — ${title}`
+    : fallbackDisplay;
+
+  return { artist, title, display, tooltip };
+}
+
+function toggleNowPlayingBar(visible) {
+  if (!elements.nowPlayingBar) {
+    return;
+  }
+  if (visible) {
+    elements.nowPlayingBar.hidden = false;
+    elements.nowPlayingBar.setAttribute('aria-hidden', 'false');
+    elements.nowPlayingBar.classList.add('now-playing--visible');
+    return;
+  }
+  elements.nowPlayingBar.classList.remove('now-playing--visible');
+  elements.nowPlayingBar.hidden = true;
+  elements.nowPlayingBar.setAttribute('aria-hidden', 'true');
+  if (elements.nowPlayingTrack) {
+    elements.nowPlayingTrack.textContent = '';
+    elements.nowPlayingTrack.removeAttribute('title');
+  }
+  elements.nowPlayingBar.removeAttribute('title');
+}
+
+function updateNowPlayingBanner(event) {
+  if (!elements.nowPlayingBar || !elements.nowPlayingTrack || !isMusicModuleEnabled()) {
+    return;
+  }
+  const playbackState = event?.state || musicPlayer.getPlaybackState();
+  const track = event?.currentTrack || musicPlayer.getCurrentTrack();
+  const shouldShow = playbackState === 'playing' && track;
+  if (!shouldShow) {
+    toggleNowPlayingBar(false);
+    return;
+  }
+  const info = extractTrackDisplay(track);
+  const displayText = info.display || track.displayName || track.filename || '';
+  setTextContentIfChanged(elements.nowPlayingTrack, displayText);
+  elements.nowPlayingBar.title = info.tooltip || displayText;
+  elements.nowPlayingTrack.setAttribute('title', info.tooltip || displayText);
+  toggleNowPlayingBar(true);
+}
+
 function updateMusicVolumeControl() {
   const slider = elements.musicVolumeSlider;
   if (!slider) {
@@ -15232,6 +15334,7 @@ function refreshMusicControls() {
   updateMusicSelectOptions();
   updateMusicStatus();
   updateMusicVolumeControl();
+  updateNowPlayingBanner();
 }
 
 musicPlayer.onChange(event => {
@@ -15258,10 +15361,15 @@ musicPlayer.onChange(event => {
     || event?.type === 'stop') {
     refreshMusicControls();
   }
+  updateNowPlayingBanner(event);
 });
 
 function updateMusicModuleVisibility() {
   const enabled = isMusicModuleEnabled();
+
+  if (!enabled) {
+    toggleNowPlayingBar(false);
+  }
 
   if (enabled && appStartCompleted && !musicModuleInitRequested) {
     musicModuleInitRequested = true;
