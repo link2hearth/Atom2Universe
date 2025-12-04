@@ -560,7 +560,7 @@ class MainActivity : AppCompatActivity() {
         return uris
     }
 
-    private fun buildMidiLibraryPayload(root: DocumentFile, maxTracks: Int = 800): Pair<List<JSONObject>, Int> {
+    private fun buildMidiLibraryPayload(root: DocumentFile): Pair<List<JSONObject>, Int> {
         val artists = mutableListOf<JSONObject>()
         var totalTracks = 0
 
@@ -568,9 +568,6 @@ class MainActivity : AppCompatActivity() {
         val artistFolders = mutableListOf<DocumentFile>()
 
         root.listFiles().forEach { entry ->
-            if (totalTracks >= maxTracks) {
-                return@forEach
-            }
             if (entry.isDirectory) {
                 artistFolders.add(entry)
             } else if (isMidiDocument(entry)) {
@@ -592,11 +589,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         for (folder in artistFolders) {
-            if (totalTracks >= maxTracks) {
-                break
-            }
             val tracks = mutableListOf<JSONObject>()
-            collectMidiTracks(folder, tracks, folder.name ?: "", maxTracks - totalTracks)
+            collectMidiTracks(folder, tracks, folder.name ?: "")
             if (tracks.isNotEmpty()) {
                 val artist = JSONObject().apply {
                     val artistName = folder.name ?: getString(R.string.midi_default_artist)
@@ -614,17 +608,11 @@ class MainActivity : AppCompatActivity() {
         return Pair(artists, totalTracks)
     }
 
-    private fun collectMidiTracks(folder: DocumentFile, target: MutableList<JSONObject>, prefix: String, remaining: Int) {
-        if (remaining <= 0) {
-            return
-        }
+    private fun collectMidiTracks(folder: DocumentFile, target: MutableList<JSONObject>, prefix: String) {
         for (entry in folder.listFiles()) {
-            if (target.size >= remaining) {
-                break
-            }
             if (entry.isDirectory) {
                 val childPrefix = if (prefix.isNotBlank()) "$prefix/${entry.name ?: ""}" else (entry.name ?: "")
-                collectMidiTracks(entry, target, childPrefix, remaining - target.size)
+                collectMidiTracks(entry, target, childPrefix)
             } else if (isMidiDocument(entry)) {
                 val relative = if (prefix.isNotBlank()) "$prefix/${entry.name}" else (entry.name ?: "")
                 makeMidiTrack(entry, entry.name ?: relative, relative)?.let { track ->
