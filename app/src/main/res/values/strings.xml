@@ -9,4 +9,11 @@
     <string name="soundfont_error_too_large">SoundFont trop volumineuse (max %1$d Mo).</string>
     <string name="midi_root_artist">Sans artiste</string>
     <string name="midi_default_artist">Artiste local</string>
+    <string name="notification_channel_audio_name">Lecture audio</string>
+    <string name="notification_channel_audio_description">Maintient la lecture chiptune en arrière-plan.</string>
+    <string name="audio_notification_title">Lecture en cours</string>
+    <string name="audio_notification_unknown_artist">Artiste inconnu</string>
+    <string name="audio_action_pause">Pause</string>
+    <string name="audio_action_play">Lecture</string>
+    <string name="audio_action_stop">Arrêter</string>
 </resources>
