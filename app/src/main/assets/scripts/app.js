@@ -478,7 +478,7 @@ let newsFeatureEnabled = true;
 let newsBannedWords = [];
 let newsItems = [];
 let newsRawItems = [];
-let newsHiddenIds = new Set();
+let newsHiddenIds = new Map();
 let newsCurrentQuery = '';
 let newsEnabledSources = null;
 let newsRefreshTimerId = null;
@@ -556,6 +556,7 @@ const NEWS_HIDDEN_ITEMS_STORAGE_KEY = 'atom2univers.news.hiddenItems.v1';
 const NEWS_LAST_QUERY_STORAGE_KEY = 'atom2univers.news.lastQuery';
 const NEWS_BANNED_WORDS_STORAGE_KEY = 'atom2univers.news.bannedWords.v1';
 const NEWS_SOURCES_STORAGE_KEY = 'atom2univers.news.sources.v1';
+const NEWS_HIDDEN_ENTRY_TTL_MS = 72 * 60 * 60 * 1000;
 const IMAGE_FEED_SOURCES_STORAGE_KEY = 'atom2univers.images.sources.v1';
 const IMAGE_FEED_LAST_INDEX_STORAGE_KEY = 'atom2univers.images.lastIndex';
 const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.background.enabled';
@@ -13326,61 +13327,103 @@ function writeStoredNewsEnabled(enabled) {
   }
 }
 
-function readStoredNewsHiddenItems() {
+function readStoredNewsHiddenItems(now = Date.now()) {
   try {
     const raw = globalThis.localStorage?.getItem(NEWS_HIDDEN_ITEMS_STORAGE_KEY);
     if (!raw) {
-      return new Set();
+      return new Map();
     }
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return new Set(parsed.filter(item => typeof item === 'string' && item));
+    const entries = Array.isArray(parsed)
+      ? parsed
+      : Array.isArray(parsed?.items)
+        ? parsed.items
+        : [];
+    const cutoff = now - NEWS_HIDDEN_ENTRY_TTL_MS;
+    const normalized = new Map();
+    entries.forEach(entry => {
+      const key = typeof entry === 'string'
+        ? entry
+        : typeof entry?.key === 'string'
+          ? entry.key
+          : typeof entry?.id === 'string'
+            ? entry.id
+            : '';
+      const timestamp = Number(entry?.hiddenAt);
+      const hiddenAt = Number.isFinite(timestamp) ? timestamp : now;
+      if (key && hiddenAt >= cutoff) {
+        const existing = normalized.get(key);
+        normalized.set(key, Math.min(hiddenAt, existing ?? hiddenAt));
+      }
+    });
+    if (normalized.size !== entries.length) {
+      writeStoredNewsHiddenItems(normalized, now);
     }
+    return normalized;
   } catch (error) {
     console.warn('Unable to read hidden news list', error);
   }
-  return new Set();
+  return new Map();
 }
 
-function writeStoredNewsHiddenItems(hiddenSet) {
+function writeStoredNewsHiddenItems(hiddenEntries, now = Date.now()) {
   try {
-    const items = Array.from(hiddenSet || []).filter(item => typeof item === 'string' && item);
+    const cutoff = now - NEWS_HIDDEN_ENTRY_TTL_MS;
+    const items = [];
+    if (hiddenEntries instanceof Map) {
+      Array.from(hiddenEntries.entries()).forEach(([key, hiddenAt]) => {
+        const normalizedKey = typeof key === 'string' ? key : '';
+        const timestamp = Number(hiddenAt);
+        const normalizedTimestamp = Number.isFinite(timestamp) ? timestamp : now;
+        if (!normalizedKey || normalizedTimestamp < cutoff) {
+          hiddenEntries.delete(key);
+          return;
+        }
+        items.push({ key: normalizedKey, hiddenAt: normalizedTimestamp });
+      });
+    }
     if (!items.length) {
       globalThis.localStorage?.removeItem(NEWS_HIDDEN_ITEMS_STORAGE_KEY);
       return;
     }
+    items.sort((first, second) => (first.hiddenAt ?? 0) - (second.hiddenAt ?? 0));
     globalThis.localStorage?.setItem(NEWS_HIDDEN_ITEMS_STORAGE_KEY, JSON.stringify(items));
   } catch (error) {
     console.warn('Unable to persist hidden news list', error);
   }
 }
 
-function pruneHiddenNewsItems(validItems = []) {
-  if (!(newsHiddenIds instanceof Set)) {
-    newsHiddenIds = new Set();
+function pruneHiddenNewsItems(validItems = [], now = Date.now()) {
+  if (!(newsHiddenIds instanceof Map)) {
+    newsHiddenIds = new Map();
   }
-  const validIds = new Set();
-  const legacyToCanonicalId = new Map();
-  (Array.isArray(validItems) ? validItems : []).forEach(item => {
+  const cutoff = now - NEWS_HIDDEN_ENTRY_TTL_MS;
+  const currentItems = Array.isArray(validItems) ? validItems : [];
+  let changed = false;
+
+  currentItems.forEach(item => {
     const candidates = getNewsItemCandidateIds(item);
-    candidates.forEach(id => validIds.add(id));
-    candidates.forEach(candidate => {
-      if (candidate !== item?.id && typeof item?.id === 'string' && item.id) {
-        legacyToCanonicalId.set(candidate, item.id);
-      }
-    });
-  });
-  const initialSize = newsHiddenIds.size;
-  for (const hiddenId of Array.from(newsHiddenIds)) {
-    if (legacyToCanonicalId.has(hiddenId)) {
-      newsHiddenIds.add(legacyToCanonicalId.get(hiddenId));
+    if (candidates.some(id => newsHiddenIds.has(id))) {
+      const keys = buildHiddenNewsKeys(item);
+      keys.forEach(key => {
+        if (!newsHiddenIds.has(key)) {
+          newsHiddenIds.set(key, now);
+          changed = true;
+        }
+      });
     }
-    if (!validIds.has(hiddenId)) {
-      newsHiddenIds.delete(hiddenId);
+  });
+
+  for (const [key, hiddenAt] of Array.from(newsHiddenIds.entries())) {
+    const timestamp = Number(hiddenAt);
+    if (!Number.isFinite(timestamp) || timestamp < cutoff) {
+      newsHiddenIds.delete(key);
+      changed = true;
     }
   }
-  if (newsHiddenIds.size !== initialSize) {
-    writeStoredNewsHiddenItems(newsHiddenIds);
+
+  if (changed) {
+    writeStoredNewsHiddenItems(newsHiddenIds, now);
   }
 }
 
@@ -13645,6 +13688,30 @@ function buildNewsAlternateIds(title, link, guid, pubDate) {
   return Array.from(new Set(alternates));
 }
 
+function buildHiddenNewsKeys(item, fallbackId = '') {
+  const keys = new Set();
+  const candidates = getNewsItemCandidateIds(item);
+  candidates.forEach(id => {
+    if (typeof id === 'string' && id) {
+      keys.add(id);
+    }
+  });
+  const normalizedTitle = normalizeNewsTitle(item?.title);
+  if (normalizedTitle) {
+    keys.add(`title:${normalizedTitle}`);
+    keys.add(`title-hash:${hashCanonicalNewsKey(normalizedTitle)}`);
+  }
+  const normalizedUrl = normalizeNewsUrl(item?.link);
+  if (normalizedUrl) {
+    keys.add(`url:${normalizedUrl}`);
+  }
+  const normalizedFallback = typeof fallbackId === 'string' ? fallbackId : '';
+  if (normalizedFallback) {
+    keys.add(normalizedFallback);
+  }
+  return keys;
+}
+
 function getNewsItemCandidateIds(item) {
   if (!item) {
     return [];
@@ -13699,13 +13766,26 @@ function parseNewsFeed(xmlText) {
   return items;
 }
 
-function isNewsItemHidden(item, hiddenSet = newsHiddenIds instanceof Set ? newsHiddenIds : new Set()) {
-  const candidates = getNewsItemCandidateIds(item);
-  return candidates.some(id => hiddenSet.has(id));
+function isNewsItemHidden(item, hiddenEntries = newsHiddenIds instanceof Map ? newsHiddenIds : new Map()) {
+  if (!item) {
+    return false;
+  }
+  const cutoff = Date.now() - NEWS_HIDDEN_ENTRY_TTL_MS;
+  const keys = buildHiddenNewsKeys(item);
+  for (const key of keys) {
+    if (!hiddenEntries.has(key)) {
+      continue;
+    }
+    const timestamp = Number(hiddenEntries.get(key));
+    if (!Number.isFinite(timestamp) || timestamp >= cutoff) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function getVisibleNewsItems() {
-  const hidden = newsHiddenIds instanceof Set ? newsHiddenIds : new Set();
+  const hidden = newsHiddenIds instanceof Map ? newsHiddenIds : new Map();
   return (Array.isArray(newsItems) ? newsItems : [])
     .filter(item => item && typeof item.id === 'string' && !isNewsItemHidden(item, hidden));
 }
@@ -14058,13 +14138,16 @@ function hideNewsStory(storyId) {
   if (!storyId) {
     return;
   }
-  newsHiddenIds.add(storyId);
-  writeStoredNewsHiddenItems(newsHiddenIds);
+  const story = (Array.isArray(newsItems) ? newsItems : []).find(item => item?.id === storyId) || null;
+  const keys = buildHiddenNewsKeys(story, storyId);
+  const now = Date.now();
+  keys.forEach(key => newsHiddenIds.set(key, now));
+  writeStoredNewsHiddenItems(newsHiddenIds, now);
   renderNewsList();
 }
 
 function restoreHiddenNewsStories() {
-  newsHiddenIds = new Set();
+  newsHiddenIds = new Map();
   writeStoredNewsHiddenItems(newsHiddenIds);
   renderNewsList();
 }
@@ -14336,6 +14419,9 @@ function handleNewsBannedWordsSave() {
 
 function initNewsModule() {
   newsHiddenIds = readStoredNewsHiddenItems();
+  if (!(newsHiddenIds instanceof Map)) {
+    newsHiddenIds = new Map();
+  }
   newsCurrentQuery = readStoredNewsQuery();
   newsBannedWords = readStoredNewsBannedWords();
   const storedSources = readStoredNewsSources();
