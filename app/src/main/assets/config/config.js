@@ -535,21 +535,21 @@ const MIDI_AUDIO_MIXING_SETTINGS = Object.freeze({
   contextOptions: Object.freeze({
     latencyHint: 'balanced'
   }),
-  polyphonyHeadroom: 1.18,
+  polyphonyHeadroom: 0.9,
   polyphonyMinGain: 0.32,
-  polyphonyStackPenalty: 0.12,
-  polyphonyMaxContribution: 1.8,
+  polyphonyStackPenalty: 0.2,
+  polyphonyMaxContribution: 1.0,
   reverbSend: 0.08,
   reverbMix: 0.18,
-  soundFontGainHeadroom: 1.16,
+  soundFontGainHeadroom: 0.8,
   soundFontVelocityCompression: 0.18,
   soundFontLayerPressure: 0.3,
   limiter: Object.freeze({
-    threshold: -10,
-    knee: 10,
-    ratio: 6,
-    attack: 0.003,
-    release: 0.18
+    threshold: -6,
+    knee: 6,
+    ratio: 3,
+    attack: 0.005,
+    release: 0.1
   })
 });
 

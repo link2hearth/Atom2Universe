@@ -1507,18 +1507,15 @@
       this.noteEventCounter = 0;
       this.lastProgramByChannel = new Map();
 
-      this.userLibraryStorageKey = 'atom2univers.midi.userLibrary';
-      this.userLibraryPersistPromise = null;
-
-      this.masterVolume = 0.9;
+      this.masterVolume = 0.75;
       this.maxGain = 0.32;
       this.polyphonyGain = null;
       this.polyphonyWeight = 0;
       this.polyphonyVoiceCount = 0;
-      this.polyphonyHeadroom = resolveNumberSetting(audioSettings?.polyphonyHeadroom, 1.48, 0.4, 4);
+      this.polyphonyHeadroom = resolveNumberSetting(audioSettings?.polyphonyHeadroom, 0.9, 0.4, 4);
       this.polyphonyMinGain = resolveNumberSetting(audioSettings?.polyphonyMinGain, 0.36, 0.05, 1);
-      this.polyphonyStackPenalty = resolveNumberSetting(audioSettings?.polyphonyStackPenalty, 0.09, 0, 1);
-      this.polyphonyMaxContribution = resolveNumberSetting(audioSettings?.polyphonyMaxContribution, 2.1, 0.4, 6);
+      this.polyphonyStackPenalty = resolveNumberSetting(audioSettings?.polyphonyStackPenalty, 0.2, 0, 1);
+      this.polyphonyMaxContribution = resolveNumberSetting(audioSettings?.polyphonyMaxContribution, 1, 0.4, 6);
       this.polyphonyAttackTime = 0.02;
       this.polyphonyReleaseTime = 0.45;
       this.polyphonyLastTarget = 1;
@@ -1527,7 +1524,7 @@
       this.reverbBuffer = null;
       this.reverbDefaultSend = resolveNumberSetting(audioSettings?.reverbSend, 0.12, 0, 1);
       this.reverbMixLevel = resolveNumberSetting(audioSettings?.reverbMix, 0.25, 0, 1);
-      this.soundFontGainHeadroom = resolveNumberSetting(audioSettings?.soundFontGainHeadroom, 1.32, 0.5, 3);
+      this.soundFontGainHeadroom = resolveNumberSetting(audioSettings?.soundFontGainHeadroom, 0.8, 0.5, 3);
       this.soundFontMinGainTrim = 0.72;
       this.soundFontVelocityCompression = resolveNumberSetting(audioSettings?.soundFontVelocityCompression, 0.12, 0, 1);
       this.soundFontLayerPressure = resolveNumberSetting(audioSettings?.soundFontLayerPressure, 0.32, 0, 2);
@@ -1582,11 +1579,11 @@
         ? audioSettings.limiter
         : null;
       this.limiterSettings = {
-        threshold: resolveNumberSetting(limiterOverrides?.threshold, -8, -60, 0),
-        knee: resolveNumberSetting(limiterOverrides?.knee, 10, 0, 40),
-        ratio: resolveNumberSetting(limiterOverrides?.ratio, 6, 1, 20),
-        attack: resolveNumberSetting(limiterOverrides?.attack, 0.003, 0.001, 0.2),
-        release: resolveNumberSetting(limiterOverrides?.release, 0.25, 0.01, 1.5),
+        threshold: resolveNumberSetting(limiterOverrides?.threshold, -6, -60, 0),
+        knee: resolveNumberSetting(limiterOverrides?.knee, 6, 0, 40),
+        ratio: resolveNumberSetting(limiterOverrides?.ratio, 3, 1, 20),
+        attack: resolveNumberSetting(limiterOverrides?.attack, 0.005, 0.001, 0.2),
+        release: resolveNumberSetting(limiterOverrides?.release, 0.1, 0.01, 1.5),
       };
       this.transposeSemitones = 0;
       this.fineDetuneCents = 0;
