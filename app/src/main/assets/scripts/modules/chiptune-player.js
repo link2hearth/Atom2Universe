@@ -1475,6 +1475,7 @@
       this.baseLibraryArtists = [];
       this.userLibraryArtists = [];
       this.userLibrarySignatures = new Map();
+      this.androidLibraryLabel = '';
       this.currentArtistId = '';
       this.readyStatusMessage = null;
       this.lastStatusMessage = null;
@@ -1915,6 +1916,25 @@
         || type === 'audio/mid';
     }
 
+    isMidiUri(value, mimeType = '') {
+      if (typeof value !== 'string') {
+        return false;
+      }
+      const normalized = value.trim().toLowerCase();
+      if (!normalized) {
+        return false;
+      }
+      const path = normalized.replace(/[?#].*$/, '');
+      if (path.endsWith('.mid') || path.endsWith('.midi')) {
+        return true;
+      }
+      const type = typeof mimeType === 'string' ? mimeType.toLowerCase() : '';
+      if (type === 'audio/midi' || type === 'audio/x-midi' || type === 'audio/smf' || type === 'audio/mid') {
+        return true;
+      }
+      return false;
+    }
+
     getFileRelativePath(file) {
       if (!file) {
         return '';
@@ -2223,6 +2243,27 @@
 
       if (this.folderButton) {
         this.folderButton.addEventListener('click', () => {
+          const bridge = typeof window !== 'undefined' ? window.AndroidBridge : null;
+          if (bridge && typeof bridge.pickMidiFolder === 'function') {
+            try {
+              this.setStatusMessage(
+                'index.sections.options.chiptune.folderImport.android.request',
+                'Choisissez un dossier MIDI sur votre appareil.',
+                {},
+                'info',
+              );
+              bridge.pickMidiFolder();
+            } catch (error) {
+              console.error('Unable to open Android MIDI picker', error);
+              this.setStatusMessage(
+                'index.sections.options.chiptune.folderImport.android.error',
+                'Impossible d’ouvrir le sélecteur Android.',
+                {},
+                'error',
+              );
+            }
+            return;
+          }
           if (this.folderInput) {
             this.folderInput.click();
           }
@@ -4422,6 +4463,22 @@
     }
 
     async fetchArrayBuffer(url) {
+      const normalizedUrl = typeof url === 'string' ? url.trim() : '';
+      const bridge = typeof globalThis !== 'undefined' ? globalThis.AndroidBridge : null;
+      if (normalizedUrl.startsWith('content://') && bridge && typeof bridge.resolveContentUri === 'function') {
+        try {
+          const resolved = bridge.resolveContentUri(normalizedUrl);
+          if (typeof resolved === 'string' && resolved.trim()) {
+            const response = await fetch(resolved.trim());
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+            return response.arrayBuffer();
+          }
+        } catch (error) {
+          console.warn('Unable to resolve MIDI content URI', error);
+        }
+      }
       const response = await fetch(url, { cache: 'no-cache' });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -4987,6 +5044,168 @@
 
       this.loadingSoundFont = { id: info.id, promise: loadPromise };
       return loadPromise;
+    }
+
+    normalizeAndroidMidiLibrary(payload) {
+      if (typeof payload === 'string') {
+        try {
+          const parsed = JSON.parse(payload);
+          return this.normalizeAndroidMidiLibrary(parsed);
+        } catch (error) {
+          console.warn('Unable to parse Android MIDI payload', error);
+          return null;
+        }
+      }
+      if (!payload || typeof payload !== 'object') {
+        return null;
+      }
+      const artists = Array.isArray(payload.artists) ? payload.artists : [];
+      const label = typeof payload.label === 'string' ? payload.label : '';
+      const normalizedArtists = [];
+      let totalTracks = 0;
+
+      artists.forEach((artist, index) => {
+        if (!artist || typeof artist !== 'object') {
+          return;
+        }
+        const rawTracks = Array.isArray(artist.tracks) ? artist.tracks : [];
+        const normalizedTracks = [];
+        rawTracks.forEach((track, trackIndex) => {
+          const file = typeof track?.file === 'string' && track.file ? track.file.trim() : '';
+          const name = typeof track?.name === 'string' && track.name.trim()
+            ? track.name.trim()
+            : typeof track?.relativePath === 'string' && track.relativePath.trim()
+              ? track.relativePath.trim()
+              : `Track ${trackIndex + 1}`;
+          const mimeType = typeof track?.mimeType === 'string' ? track.mimeType : '';
+          if (!file || !this.isMidiUri(file, mimeType)) {
+            return;
+          }
+          const relativePath = typeof track?.relativePath === 'string' && track.relativePath
+            ? track.relativePath
+            : name;
+          normalizedTracks.push({
+            file,
+            name,
+            source: 'android',
+            relativePath,
+          });
+        });
+
+        if (!normalizedTracks.length) {
+          return;
+        }
+
+        const name = typeof artist.name === 'string' && artist.name.trim()
+          ? artist.name.trim()
+          : this.translate('index.sections.options.chiptune.android.rootArtist', 'Sans artiste');
+        const rawId = typeof artist.id === 'string' && artist.id.trim()
+          ? artist.id.trim()
+          : `${name}-${index + 1}`;
+        const artistId = this.generateUserArtistId(rawId);
+        normalizedArtists.push({
+          id: artistId,
+          name,
+          tracks: normalizedTracks,
+          source: 'android',
+        });
+        totalTracks += normalizedTracks.length;
+      });
+
+      return { artists: normalizedArtists, label, totalTracks };
+    }
+
+    registerAndroidMidiLibrary(payload) {
+      const normalized = this.normalizeAndroidMidiLibrary(payload);
+      if (!normalized || !Array.isArray(normalized.artists)) {
+        this.setStatusMessage(
+          'index.sections.options.chiptune.folderImport.android.error',
+          'Impossible de charger ce dossier MIDI.',
+          {},
+          'error',
+        );
+        this.populateLibrary(
+          [...this.baseLibraryArtists, ...this.userLibraryArtists],
+          this.libraryLoadErrored,
+          { maintainSelection: true },
+        );
+        return;
+      }
+
+      if (!normalized.artists.length || normalized.totalTracks <= 0) {
+        this.setStatusMessage(
+          'index.sections.options.chiptune.folderImport.android.empty',
+          'Aucun fichier MIDI trouvé dans ce dossier.',
+          {},
+          'error',
+        );
+        const preservedUserArtists = this.userLibraryArtists.filter(artist => artist?.source !== 'android');
+        this.userLibraryArtists = preservedUserArtists;
+        this.userLibrarySignatures = new Map(
+          preservedUserArtists
+            .filter(artist => typeof artist?.signature === 'string')
+            .map(artist => [artist.signature, artist.id]),
+        );
+        this.populateLibrary(
+          [...this.baseLibraryArtists, ...preservedUserArtists],
+          this.libraryLoadErrored,
+          { maintainSelection: true },
+        );
+        return;
+      }
+
+      this.androidLibraryLabel = normalized.label || '';
+      const preservedUserArtists = this.userLibraryArtists.filter(artist => artist?.source !== 'android');
+      const signatures = new Map(
+        preservedUserArtists
+          .filter(artist => typeof artist?.signature === 'string')
+          .map(artist => [artist.signature, artist.id]),
+      );
+
+      this.userLibraryArtists = [...preservedUserArtists, ...normalized.artists];
+      normalized.artists.forEach((artist) => {
+        if (typeof artist?.signature === 'string') {
+          signatures.set(artist.signature, artist.id);
+        }
+      });
+      this.userLibrarySignatures = signatures;
+
+      const firstArtist = normalized.artists.find(artist => Array.isArray(artist.tracks) && artist.tracks.length);
+      const firstTrack = firstArtist && firstArtist.tracks ? firstArtist.tracks[0] : null;
+
+      this.populateLibrary(
+        [...this.baseLibraryArtists, ...this.userLibraryArtists],
+        this.libraryLoadErrored,
+        {
+          maintainSelection: false,
+          preferredArtistId: firstArtist?.id || '',
+          preferredTrackFile: firstTrack?.file || '',
+        },
+      );
+
+      this.setStatusMessage(
+        'index.sections.options.chiptune.folderImport.android.ready',
+        'Bibliothèque Android prête : {tracks} titres.',
+        { tracks: normalized.totalTracks },
+        'success',
+      );
+    }
+
+    handleAndroidMidiLibraryError(reason) {
+      const normalized = typeof reason === 'string' ? reason : 'error';
+      let key = 'index.sections.options.chiptune.folderImport.android.error';
+      let fallback = 'Impossible de charger ce dossier MIDI.';
+      if (normalized === 'permission-denied') {
+        key = 'index.sections.options.chiptune.folderImport.android.permission';
+        fallback = 'Autorisez l’accès aux fichiers MIDI pour continuer.';
+      } else if (normalized === 'cancelled') {
+        key = 'index.sections.options.chiptune.folderImport.android.cancelled';
+        fallback = 'Sélection annulée.';
+      } else if (normalized === 'empty') {
+        key = 'index.sections.options.chiptune.folderImport.android.empty';
+        fallback = 'Aucun fichier MIDI trouvé dans ce dossier.';
+      }
+      this.setStatusMessage(key, fallback, {}, normalized === 'cancelled' ? 'info' : 'error');
     }
 
     async loadLibrary() {
@@ -10703,12 +10922,37 @@
         );
       };
 
+      globalScope.onAndroidMidiLibraryLoaded = (payload) => {
+        try {
+          player.registerAndroidMidiLibrary(payload || {});
+        } catch (error) {
+          console.error('Unable to register Android MIDI library', error);
+          player.setStatusMessage(
+            'index.sections.options.chiptune.folderImport.android.error',
+            'Impossible de charger ce dossier MIDI.',
+            {},
+            'error',
+          );
+        }
+      };
+
+      globalScope.onAndroidMidiLibraryError = (reason) => {
+        player.handleAndroidMidiLibraryError(reason);
+      };
+
       const bridge = globalScope.AndroidBridge;
       if (bridge && typeof bridge.loadCachedSoundFont === 'function') {
         try {
           bridge.loadCachedSoundFont();
         } catch (error) {
           console.error('Unable to load cached SoundFont from Android bridge', error);
+        }
+      }
+      if (bridge && typeof bridge.loadMidiFolder === 'function') {
+        try {
+          bridge.loadMidiFolder();
+        } catch (error) {
+          console.error('Unable to load Android MIDI folder', error);
         }
       }
     }

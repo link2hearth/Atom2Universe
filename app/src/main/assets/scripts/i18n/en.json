@@ -2523,13 +2523,24 @@
             }
           },
           "folderImport": {
-            "button": "Add a local MIDI folder",
+            "button": "Add a MIDI folder",
             "prompt": "Choose a name for this folder (optional)",
             "defaultName": "Local MIDI folder",
             "statusEmpty": "The selected folder does not contain any MIDI files.",
             "statusAdded": "Folder ready: {name} ({count} tracks)",
             "statusUpdated": "Folder updated: {name} ({count} tracks)",
-            "statusError": "Unable to import the selected folder."
+            "statusError": "Unable to import the selected folder.",
+            "android": {
+              "request": "Pick a MIDI folder on your device.",
+              "error": "Unable to open or load this MIDI folder.",
+              "permission": "Allow access to MIDI files to continue.",
+              "cancelled": "Selection cancelled.",
+              "empty": "No MIDI files found in this folder.",
+              "ready": "Android library ready: {tracks} tracks."
+            }
+          },
+          "android": {
+            "rootArtist": "No artist"
           },
           "trackSlider": {
             "label": "Browse tracks",

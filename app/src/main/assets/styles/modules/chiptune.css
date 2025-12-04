@@ -1598,7 +1598,6 @@ body.theme-aurora .midi-page__module .option-row--buttons button {
  * Midi player display adjustments
  * (functionality remains available programmatically)
  */
-.midi-page__module .option-row--import,
 .midi-page__module .option-row--dropzone,
 .midi-page__module .option-row--usage,
 .midi-page__module .option-row--pitch,
