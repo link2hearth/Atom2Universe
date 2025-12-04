@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private var pendingBackupUri: Uri? = null
     private var pendingMidiLabel: String? = null
     private var mediaCommandReceiver: BroadcastReceiver? = null
+    private var isForegroundAudioPlaying: Boolean = false
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
@@ -317,7 +318,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         requestWebViewSave()
-        if (::webView.isInitialized) {
+        if (::webView.isInitialized && !isForegroundAudioPlaying) {
             webView.pauseTimers()
             webView.onPause()
         }
@@ -988,8 +989,17 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    internal fun setForegroundAudioPlayback(isPlaying: Boolean) {
+        isForegroundAudioPlaying = isPlaying
+    }
+
     private fun handleMediaCommand(command: String?) {
         val action = command?.takeIf { it.isNotBlank() } ?: return
+        if (action == AudioPlaybackService.COMMAND_PAUSE || action == AudioPlaybackService.COMMAND_STOP) {
+            isForegroundAudioPlaying = false
+        } else if (action == AudioPlaybackService.COMMAND_PLAY) {
+            isForegroundAudioPlaying = true
+        }
         val script = "window.onAndroidMediaCommand && window.onAndroidMediaCommand(${JSONObject.quote(action)});"
         postJavascript(script)
     }

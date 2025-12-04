@@ -99,6 +99,7 @@ class WebAppBridge(activity: MainActivity) {
     fun startForegroundAudio(title: String?, artist: String?, playing: Boolean) {
         val activity = activityRef.get()
         activity?.runOnUiThread {
+            activity.setForegroundAudioPlayback(playing)
             AudioPlaybackService.startForegroundPlayback(activity, title, artist, playing)
         }
     }
@@ -107,6 +108,7 @@ class WebAppBridge(activity: MainActivity) {
     fun updateForegroundAudio(title: String?, artist: String?, playing: Boolean) {
         val activity = activityRef.get()
         activity?.runOnUiThread {
+            activity.setForegroundAudioPlayback(playing)
             AudioPlaybackService.updateMetadata(activity, title, artist, playing)
         }
     }
@@ -115,6 +117,7 @@ class WebAppBridge(activity: MainActivity) {
     fun stopForegroundAudio() {
         val activity = activityRef.get()
         activity?.runOnUiThread {
+            activity.setForegroundAudioPlayback(false)
             AudioPlaybackService.stopPlayback(activity)
         }
     }
