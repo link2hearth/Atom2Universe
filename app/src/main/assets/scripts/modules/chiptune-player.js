@@ -3062,30 +3062,36 @@
         return true;
       }
 
-      let candidate = null;
-      for (const voice of this.liveVoices) {
-        if (!voice) {
-          continue;
+      let safeguard = 0;
+      while (this.liveVoices.size >= limit && safeguard < limit + 6) {
+        let candidate = null;
+        for (const voice of this.liveVoices) {
+          if (!voice) {
+            continue;
+          }
+          if (!candidate) {
+            candidate = voice;
+            continue;
+          }
+          const candidateWeight = Number.isFinite(candidate.mixCompensationWeight)
+            ? candidate.mixCompensationWeight
+            : 1;
+          const voiceWeight = Number.isFinite(voice.mixCompensationWeight)
+            ? voice.mixCompensationWeight
+            : 1;
+          const candidateStop = Number.isFinite(candidate.stopTime) ? candidate.stopTime : Infinity;
+          const voiceStop = Number.isFinite(voice.stopTime) ? voice.stopTime : Infinity;
+          if (voiceWeight < candidateWeight || (voiceWeight === candidateWeight && voiceStop < candidateStop)) {
+            candidate = voice;
+          }
         }
-        if (!candidate) {
-          candidate = voice;
-          continue;
-        }
-        const candidateWeight = Number.isFinite(candidate.mixCompensationWeight)
-          ? candidate.mixCompensationWeight
-          : 1;
-        const voiceWeight = Number.isFinite(voice.mixCompensationWeight)
-          ? voice.mixCompensationWeight
-          : 1;
-        const candidateStop = Number.isFinite(candidate.stopTime) ? candidate.stopTime : Infinity;
-        const voiceStop = Number.isFinite(voice.stopTime) ? voice.stopTime : Infinity;
-        if (voiceWeight < candidateWeight || (voiceWeight === candidateWeight && voiceStop < candidateStop)) {
-          candidate = voice;
-        }
-      }
 
-      if (candidate) {
+        if (!candidate) {
+          break;
+        }
+
         this.fadeOutVoice(candidate, referenceTime, true);
+        safeguard += 1;
       }
 
       return this.liveVoices.size < limit;

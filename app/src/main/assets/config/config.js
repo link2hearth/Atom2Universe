@@ -535,7 +535,7 @@ const MIDI_AUDIO_MIXING_SETTINGS = Object.freeze({
   contextOptions: Object.freeze({
     latencyHint: 'playback'
   }),
-  polyphonyMaxVoices: 48,
+  polyphonyMaxVoices: 64,
   polyphonyHeadroom: 0.9,
   polyphonyMinGain: 0.32,
   polyphonyStackPenalty: 0.2,
