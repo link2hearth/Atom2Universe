@@ -1488,6 +1488,20 @@
       this.lastKnownPosition = 0;
       this.isScrubbing = false;
 
+      const audioSettings = typeof globalThis !== 'undefined'
+        ? globalThis.MIDI_AUDIO_MIXING_SETTINGS || null
+        : null;
+      const resolveNumberSetting = (value, fallback, min = -Infinity, max = Infinity) => {
+        const numeric = Number.isFinite(value) ? value : fallback;
+        if (!Number.isFinite(numeric)) {
+          return fallback;
+        }
+        return Math.min(max, Math.max(min, numeric));
+      };
+
+      this.audioContextOptions = audioSettings && typeof audioSettings.contextOptions === 'object'
+        ? { ...audioSettings.contextOptions }
+        : null;
       this.noteObservers = new Set();
       this.activeNoteVisuals = new Map();
       this.noteEventCounter = 0;
@@ -1498,21 +1512,22 @@
       this.polyphonyGain = null;
       this.polyphonyWeight = 0;
       this.polyphonyVoiceCount = 0;
-      this.polyphonyHeadroom = 1.48;
-      this.polyphonyMinGain = 0.36;
-      this.polyphonyStackPenalty = 0.09;
-      this.polyphonyMaxContribution = 2.1;
+      this.polyphonyHeadroom = resolveNumberSetting(audioSettings?.polyphonyHeadroom, 1.48, 0.4, 4);
+      this.polyphonyMinGain = resolveNumberSetting(audioSettings?.polyphonyMinGain, 0.36, 0.05, 1);
+      this.polyphonyStackPenalty = resolveNumberSetting(audioSettings?.polyphonyStackPenalty, 0.09, 0, 1);
+      this.polyphonyMaxContribution = resolveNumberSetting(audioSettings?.polyphonyMaxContribution, 2.1, 0.4, 6);
       this.polyphonyAttackTime = 0.02;
       this.polyphonyReleaseTime = 0.45;
       this.polyphonyLastTarget = 1;
       this.waveCache = new Map();
       this.noiseBuffer = null;
       this.reverbBuffer = null;
-      this.reverbDefaultSend = 0.12;
-      this.soundFontGainHeadroom = 1.32;
+      this.reverbDefaultSend = resolveNumberSetting(audioSettings?.reverbSend, 0.12, 0, 1);
+      this.reverbMixLevel = resolveNumberSetting(audioSettings?.reverbMix, 0.25, 0, 1);
+      this.soundFontGainHeadroom = resolveNumberSetting(audioSettings?.soundFontGainHeadroom, 1.32, 0.5, 3);
       this.soundFontMinGainTrim = 0.72;
-      this.soundFontVelocityCompression = 0.12;
-      this.soundFontLayerPressure = 0.32;
+      this.soundFontVelocityCompression = resolveNumberSetting(audioSettings?.soundFontVelocityCompression, 0.12, 0, 1);
+      this.soundFontLayerPressure = resolveNumberSetting(audioSettings?.soundFontLayerPressure, 0.32, 0, 2);
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
       this.sccEngineScriptPromise = null;
       this.engineMode = 'scc';
@@ -1560,12 +1575,15 @@
       this.sccPlaybackSource = null;
       this.sccPlaybackGain = null;
       this.sccPlaybackDuration = 0;
+      const limiterOverrides = audioSettings && typeof audioSettings.limiter === 'object'
+        ? audioSettings.limiter
+        : null;
       this.limiterSettings = {
-        threshold: -8,
-        knee: 10,
-        ratio: 6,
-        attack: 0.003,
-        release: 0.25,
+        threshold: resolveNumberSetting(limiterOverrides?.threshold, -8, -60, 0),
+        knee: resolveNumberSetting(limiterOverrides?.knee, 10, 0, 40),
+        ratio: resolveNumberSetting(limiterOverrides?.ratio, 6, 1, 20),
+        attack: resolveNumberSetting(limiterOverrides?.attack, 0.003, 0.001, 0.2),
+        release: resolveNumberSetting(limiterOverrides?.release, 0.25, 0.01, 1.5),
       };
       this.transposeSemitones = 0;
       this.fineDetuneCents = 0;
@@ -4360,7 +4378,13 @@
         if (!AudioContextClass) {
           throw new Error(translateMessage('index.sections.options.chiptune.errors.webAudioUnavailable', 'API Web Audio non disponible dans ce navigateur.'));
         }
-        this.audioContext = new AudioContextClass();
+        try {
+          this.audioContext = this.audioContextOptions
+            ? new AudioContextClass(this.audioContextOptions)
+            : new AudioContextClass();
+        } catch (error) {
+          this.audioContext = new AudioContextClass();
+        }
         this.waveCache = new Map();
         this.noiseBuffer = null;
         this.reverbBuffer = null;
@@ -4378,7 +4402,7 @@
         this.reverbSend.gain.value = 1;
 
         this.reverbMix = this.audioContext.createGain();
-        this.reverbMix.gain.value = 0.25;
+        this.reverbMix.gain.value = this.reverbMixLevel;
 
         this.reverbNode = this.createReverbNode();
 
