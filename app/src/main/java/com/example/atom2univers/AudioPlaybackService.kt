@@ -12,6 +12,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -27,6 +28,7 @@ class AudioPlaybackService : Service() {
     private var audioManager: AudioManager? = null
     private var audioFocusRequest: AudioFocusRequest? = null
     private var hasStartedForeground = false
+    private var wakeLock: PowerManager.WakeLock? = null
 
     private var currentTitle: String = ""
     private var currentArtist: String = ""
@@ -83,6 +85,7 @@ class AudioPlaybackService : Service() {
         mediaSession?.isActive = false
         mediaSession?.release()
         mediaSession = null
+        releaseWakeLock()
     }
 
     private fun handlePlaybackUpdate(intent: Intent, startForeground: Boolean) {
@@ -93,6 +96,12 @@ class AudioPlaybackService : Service() {
         if (isPlaying && !requestAudioFocus()) {
             stopSelf()
             return
+        }
+
+        if (isPlaying) {
+            acquireWakeLock()
+        } else {
+            releaseWakeLock()
         }
 
         if (!isPlaying) {
@@ -115,6 +124,7 @@ class AudioPlaybackService : Service() {
             stopSelf()
             return
         }
+        acquireWakeLock()
         updatePlaybackState()
         notifyPlaybackCommand(COMMAND_PLAY)
         updateNotification()
@@ -126,6 +136,7 @@ class AudioPlaybackService : Service() {
         notifyPlaybackCommand(COMMAND_PAUSE)
         updateNotification()
         abandonAudioFocus()
+        releaseWakeLock()
     }
 
     private fun handleStopIntent() {
@@ -135,6 +146,7 @@ class AudioPlaybackService : Service() {
         stopForeground(STOP_FOREGROUND_REMOVE)
         hasStartedForeground = false
         abandonAudioFocus()
+        releaseWakeLock()
         stopSelf()
     }
 
@@ -317,6 +329,26 @@ class AudioPlaybackService : Service() {
         }
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
         notificationManager?.createNotificationChannel(channel)
+    }
+
+    private fun acquireWakeLock() {
+        if (wakeLock?.isHeld == true) {
+            return
+        }
+        val manager = getSystemService(Context.POWER_SERVICE) as? PowerManager ?: return
+        wakeLock = manager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$TAG:Audio").apply {
+            setReferenceCounted(false)
+            acquire()
+        }
+    }
+
+    private fun releaseWakeLock() {
+        wakeLock?.let {
+            if (it.isHeld) {
+                it.release()
+            }
+        }
+        wakeLock = null
     }
 
     companion object {
