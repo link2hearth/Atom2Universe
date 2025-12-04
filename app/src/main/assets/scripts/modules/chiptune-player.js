@@ -1515,18 +1515,23 @@
       this.polyphonyGain = null;
       this.polyphonyWeight = 0;
       this.polyphonyVoiceCount = 0;
-      this.polyphonyHeadroom = resolveNumberSetting(audioSettings?.polyphonyHeadroom, 0.9, 0.4, 4);
-      this.polyphonyMinGain = resolveNumberSetting(audioSettings?.polyphonyMinGain, 0.36, 0.05, 1);
-      this.polyphonyStackPenalty = resolveNumberSetting(audioSettings?.polyphonyStackPenalty, 0.2, 0, 1);
-      this.polyphonyMaxContribution = resolveNumberSetting(audioSettings?.polyphonyMaxContribution, 1, 0.4, 6);
+      this.polyphonyHeadroom = resolveNumberSetting(audioSettings?.polyphonyHeadroom, 0.74, 0.4, 4);
+      this.polyphonyMinGain = resolveNumberSetting(audioSettings?.polyphonyMinGain, 0.26, 0.05, 1);
+      this.polyphonyStackPenalty = resolveNumberSetting(audioSettings?.polyphonyStackPenalty, 0.26, 0, 1);
+      this.polyphonyMaxContribution = resolveNumberSetting(audioSettings?.polyphonyMaxContribution, 1.05, 0.4, 6);
+      this.polyphonySurgeVoices = resolveNumberSetting(audioSettings?.polyphonySurgeVoices, 7, 1, 64);
+      this.polyphonySurgeSlope = resolveNumberSetting(audioSettings?.polyphonySurgeSlope, 0.22, 0, 3);
       this.polyphonyAttackTime = 0.02;
       this.polyphonyReleaseTime = 0.45;
       this.polyphonyLastTarget = 1;
       this.waveCache = new Map();
       this.noiseBuffer = null;
       this.reverbBuffer = null;
-      this.reverbDefaultSend = resolveNumberSetting(audioSettings?.reverbSend, 0.12, 0, 1);
-      this.reverbMixLevel = resolveNumberSetting(audioSettings?.reverbMix, 0.25, 0, 1);
+      this.reverbDefaultSend = resolveNumberSetting(audioSettings?.reverbSend, 0.06, 0, 1);
+      this.reverbMixLevel = resolveNumberSetting(audioSettings?.reverbMix, 0.16, 0, 1);
+      this.reverbDuckingVoices = resolveNumberSetting(audioSettings?.reverbDuckingVoices, 5, 1, 64);
+      this.reverbDuckingSlope = resolveNumberSetting(audioSettings?.reverbDuckingSlope, 0.12, 0, 1);
+      this.reverbDuckingFloor = resolveNumberSetting(audioSettings?.reverbDuckingFloor, 0.38, 0, 1);
       this.soundFontGainHeadroom = resolveNumberSetting(audioSettings?.soundFontGainHeadroom, 0.8, 0.5, 3);
       this.soundFontMinGainTrim = 0.72;
       this.soundFontVelocityCompression = resolveNumberSetting(audioSettings?.soundFontVelocityCompression, 0.12, 0, 1);
@@ -1582,11 +1587,11 @@
         ? audioSettings.limiter
         : null;
       this.limiterSettings = {
-        threshold: resolveNumberSetting(limiterOverrides?.threshold, -6, -60, 0),
-        knee: resolveNumberSetting(limiterOverrides?.knee, 6, 0, 40),
-        ratio: resolveNumberSetting(limiterOverrides?.ratio, 3, 1, 20),
+        threshold: resolveNumberSetting(limiterOverrides?.threshold, -8.5, -60, 0),
+        knee: resolveNumberSetting(limiterOverrides?.knee, 5, 0, 40),
+        ratio: resolveNumberSetting(limiterOverrides?.ratio, 3.6, 1, 20),
         attack: resolveNumberSetting(limiterOverrides?.attack, 0.005, 0.001, 0.2),
-        release: resolveNumberSetting(limiterOverrides?.release, 0.1, 0.01, 1.5),
+        release: resolveNumberSetting(limiterOverrides?.release, 0.14, 0.01, 1.5),
       };
       this.transposeSemitones = 0;
       this.fineDetuneCents = 0;
@@ -2933,7 +2938,9 @@
       }
       const energy = Math.max(0, this.polyphonyWeight || 0);
       const penalty = Math.max(0, voiceCount - 1) * this.polyphonyStackPenalty;
-      const effective = energy + penalty;
+      const surgeVoices = Math.max(0, voiceCount - this.polyphonySurgeVoices);
+      const surgePenalty = 1 + (surgeVoices * this.polyphonySurgeSlope);
+      const effective = (energy + penalty) * surgePenalty;
       const headroom = Math.max(0.2, this.polyphonyHeadroom || 1.28);
       if (effective <= headroom) {
         return 1;
@@ -2947,6 +2954,7 @@
         return;
       }
       const target = this.getPolyphonyGainTarget();
+      const voiceCount = Math.max(0, this.polyphonyVoiceCount || 0);
       const param = this.polyphonyGain.gain;
       const now = Number.isFinite(referenceTime)
         ? Math.max(referenceTime, this.audioContext.currentTime)
@@ -2967,6 +2975,26 @@
       const rampTime = Math.max(0.015, rampDuration);
       param.linearRampToValueAtTime(clampedTarget, now + rampTime);
       this.polyphonyLastTarget = clampedTarget;
+
+      if (this.reverbMix && this.reverbMix.gain) {
+        const duckingStart = Math.max(1, this.reverbDuckingVoices || 1);
+        const duckingExcess = Math.max(0, voiceCount - duckingStart);
+        const duckingRatio = 1 / (1 + (duckingExcess * this.reverbDuckingSlope));
+        const targetMix = Math.max(this.reverbDuckingFloor, this.reverbMixLevel * duckingRatio);
+        const mixParam = this.reverbMix.gain;
+        try {
+          mixParam.cancelScheduledValues(now);
+        } catch (error) {
+          // Ignore cancellation issues on early init
+        }
+        const currentMix = Math.max(
+          this.reverbDuckingFloor,
+          Number.isFinite(mixParam.value) ? mixParam.value : this.reverbMixLevel,
+        );
+        const mixRamp = Math.max(0.015, rampDuration);
+        mixParam.setValueAtTime(currentMix, now);
+        mixParam.linearRampToValueAtTime(targetMix, now + mixRamp);
+      }
     }
 
     resetPolyphonyCompensation(immediate = false) {
