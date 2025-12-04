@@ -15258,6 +15258,32 @@ function extractTrackDisplay(track) {
   return { artist, title, display, tooltip };
 }
 
+const midiPlaybackInfo = {
+  state: 'idle',
+  artist: '',
+  title: '',
+  track: ''
+};
+
+function updateMidiPlaybackInfo(detail = {}) {
+  midiPlaybackInfo.state = detail.state || (detail.playing ? 'playing' : 'idle');
+  midiPlaybackInfo.artist = detail.artist || '';
+  midiPlaybackInfo.title = detail.title || '';
+  midiPlaybackInfo.track = detail.track || '';
+}
+
+function getMidiNowPlayingDisplay() {
+  const isPlaying = midiPlaybackInfo.state === 'playing';
+  if (!isPlaying) {
+    return null;
+  }
+  const artist = (midiPlaybackInfo.artist || '').trim();
+  const title = (midiPlaybackInfo.title || '').trim();
+  const display = artist && title ? `${artist} — ${title}` : artist || title;
+  const tooltip = display || midiPlaybackInfo.track || '';
+  return display ? { display, tooltip } : null;
+}
+
 function toggleNowPlayingBar(visible) {
   if (!elements.nowPlayingBar) {
     return;
@@ -15280,6 +15306,14 @@ function toggleNowPlayingBar(visible) {
 
 function updateNowPlayingBanner(event) {
   if (!elements.nowPlayingBar || !elements.nowPlayingTrack || !isMusicModuleEnabled()) {
+    return;
+  }
+  const midiDisplay = getMidiNowPlayingDisplay();
+  if (midiDisplay) {
+    setTextContentIfChanged(elements.nowPlayingTrack, midiDisplay.display);
+    elements.nowPlayingBar.title = midiDisplay.tooltip;
+    elements.nowPlayingTrack.setAttribute('title', midiDisplay.tooltip);
+    toggleNowPlayingBar(true);
     return;
   }
   const playbackState = event?.state || musicPlayer.getPlaybackState();
@@ -15363,6 +15397,13 @@ musicPlayer.onChange(event => {
   }
   updateNowPlayingBanner(event);
 });
+
+if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+  globalThis.addEventListener('atom2univers:midiPlayback', event => {
+    updateMidiPlaybackInfo(event?.detail || {});
+    updateNowPlayingBanner();
+  });
+}
 
 function updateMusicModuleVisibility() {
   const enabled = isMusicModuleEnabled();
