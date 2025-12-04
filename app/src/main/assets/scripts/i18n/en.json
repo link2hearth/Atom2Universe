@@ -2505,7 +2505,8 @@
             "loading": "Loading SoundFonts…",
             "placeholder": "Choose a SoundFont",
             "noneAvailable": "No SoundFont available",
-            "noneDeclared": "No SoundFont declared"
+            "noneDeclared": "No SoundFont declared",
+            "customLabel": "Custom SoundFont"
           },
           "library": {
             "unknownArtist": "Unknown artist",
@@ -2561,7 +2562,8 @@
             "skip": "Skip",
             "stop": "Stop",
             "randomAll": "Shuffle (all artists)",
-            "randomArtist": "Shuffle (artist)"
+            "randomArtist": "Shuffle (artist)",
+            "selectSoundFont": "Choose a SoundFont"
           },
           "status": {
             "noneLoaded": "No track loaded yet.",

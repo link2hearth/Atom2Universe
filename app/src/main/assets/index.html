@@ -7801,12 +7801,22 @@
               <label for="chiptuneEngineSelect" data-i18n="index.sections.options.chiptune.labels.engine">Moteur sonore</label>
               <select id="chiptuneEngineSelect">
                 <option value="hifi" data-i18n="index.sections.options.chiptune.engineOptions.hifi">SoundFont Hi-Fi</option>
-                <option value="scc" data-i18n="index.sections.options.chiptune.engineOptions.scc">SCC (MSX)</option>
+                <option value="scc" data-i18n="index.sections.options.chiptune.engineOptions.scc" selected>SCC (MSX)</option>
                 <option value="n163" data-i18n="index.sections.options.chiptune.engineOptions.n163">Namco 163 (N163)</option>
                 <option value="ym2413" data-i18n="index.sections.options.chiptune.engineOptions.ym2413">Yamaha OPLL (YM2413)</option>
                 <option value="sid" data-i18n="index.sections.options.chiptune.engineOptions.sid">MOS SID (6581/8580)</option>
                 <option value="original" data-i18n="index.sections.options.chiptune.engineOptions.original">Original</option>
               </select>
+            </div>
+          </div>
+          <div class="option-row option-row--selectors option-row--soundfont">
+            <div class="option-field option-field--wide">
+              <label for="chiptuneSoundFontSelect" data-i18n="index.sections.options.chiptune.labels.soundFont">SoundFont</label>
+              <select id="chiptuneSoundFontSelect" disabled></select>
+            </div>
+            <div class="option-field">
+              <label class="visually-hidden" for="chiptuneSoundFontButton" data-i18n="index.sections.options.chiptune.controls.selectSoundFont">Choisir un SoundFont</label>
+              <button type="button" id="chiptuneSoundFontButton" data-i18n="index.sections.options.chiptune.controls.selectSoundFont">Choisir un SoundFont</button>
             </div>
           </div>
           <div class="option-row option-row--buttons option-row--random">
