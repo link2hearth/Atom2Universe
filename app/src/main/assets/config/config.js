@@ -525,6 +525,36 @@ const MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = 0.12;
 const MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = 0.06;
 
 /**
+ * Réglages audio du lecteur MIDI.
+ * - `contextOptions` agrandit le buffer pour limiter les craquements.
+ * - Les paramètres "polyphony" adoucissent le mixage et plafonnent le nombre de voix actives.
+ * - Les réglages de réverb réduisent la charge CPU et la saturation dans le bus wet.
+ * - Le limiteur est calibré plus bas pour absorber les crêtes en fortissimo.
+ */
+const MIDI_AUDIO_MIXING_SETTINGS = Object.freeze({
+  contextOptions: Object.freeze({
+    latencyHint: 'playback'
+  }),
+  polyphonyMaxVoices: 64,
+  polyphonyHeadroom: 0.9,
+  polyphonyMinGain: 0.32,
+  polyphonyStackPenalty: 0.2,
+  polyphonyMaxContribution: 1.0,
+  reverbSend: 0.08,
+  reverbMix: 0.18,
+  soundFontGainHeadroom: 0.8,
+  soundFontVelocityCompression: 0.18,
+  soundFontLayerPressure: 0.3,
+  limiter: Object.freeze({
+    threshold: -6,
+    knee: 6,
+    ratio: 3,
+    attack: 0.005,
+    release: 0.1
+  })
+});
+
+/**
  * Palette cyclique appliquée aux barres de notes de prévisualisation.
  * Chaque entrée définit un dégradé (start → end) et les teintes de halo associées.
  */
@@ -578,6 +608,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS;
   globalThis.MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS;
   globalThis.MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS;
+  globalThis.MIDI_AUDIO_MIXING_SETTINGS = MIDI_AUDIO_MIXING_SETTINGS;
   globalThis.MIDI_PREVIEW_COLOR_PALETTE = MIDI_PREVIEW_COLOR_PALETTE;
   globalThis.PERFORMANCE_MODE_SETTINGS = PERFORMANCE_MODE_SETTINGS;
   globalThis.PERFORMANCE_MODE_DEFINITIONS = PERFORMANCE_MODE_DEFINITIONS;

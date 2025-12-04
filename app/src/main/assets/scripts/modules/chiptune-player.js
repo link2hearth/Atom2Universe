@@ -1488,31 +1488,47 @@
       this.lastKnownPosition = 0;
       this.isScrubbing = false;
 
+      const audioSettings = typeof globalThis !== 'undefined'
+        ? globalThis.MIDI_AUDIO_MIXING_SETTINGS || null
+        : null;
+      const resolveNumberSetting = (value, fallback, min = -Infinity, max = Infinity) => {
+        const numeric = Number.isFinite(value) ? value : fallback;
+        if (!Number.isFinite(numeric)) {
+          return fallback;
+        }
+        return Math.min(max, Math.max(min, numeric));
+      };
+
+      this.audioContextOptions = audioSettings && typeof audioSettings.contextOptions === 'object'
+        ? { ...audioSettings.contextOptions }
+        : null;
       this.noteObservers = new Set();
       this.activeNoteVisuals = new Map();
       this.noteEventCounter = 0;
       this.lastProgramByChannel = new Map();
 
-      this.masterVolume = 0.9;
+      this.masterVolume = 0.75;
       this.maxGain = 0.32;
       this.polyphonyGain = null;
       this.polyphonyWeight = 0;
       this.polyphonyVoiceCount = 0;
-      this.polyphonyHeadroom = 1.48;
-      this.polyphonyMinGain = 0.36;
-      this.polyphonyStackPenalty = 0.09;
-      this.polyphonyMaxContribution = 2.1;
+      this.polyphonyVoiceLimit = resolveNumberSetting(audioSettings?.polyphonyMaxVoices, 48, 8, 96);
+      this.polyphonyHeadroom = resolveNumberSetting(audioSettings?.polyphonyHeadroom, 0.9, 0.4, 4);
+      this.polyphonyMinGain = resolveNumberSetting(audioSettings?.polyphonyMinGain, 0.36, 0.05, 1);
+      this.polyphonyStackPenalty = resolveNumberSetting(audioSettings?.polyphonyStackPenalty, 0.2, 0, 1);
+      this.polyphonyMaxContribution = resolveNumberSetting(audioSettings?.polyphonyMaxContribution, 1, 0.4, 6);
       this.polyphonyAttackTime = 0.02;
       this.polyphonyReleaseTime = 0.45;
       this.polyphonyLastTarget = 1;
       this.waveCache = new Map();
       this.noiseBuffer = null;
       this.reverbBuffer = null;
-      this.reverbDefaultSend = 0.12;
-      this.soundFontGainHeadroom = 1.32;
+      this.reverbDefaultSend = resolveNumberSetting(audioSettings?.reverbSend, 0.12, 0, 1);
+      this.reverbMixLevel = resolveNumberSetting(audioSettings?.reverbMix, 0.25, 0, 1);
+      this.soundFontGainHeadroom = resolveNumberSetting(audioSettings?.soundFontGainHeadroom, 0.8, 0.5, 3);
       this.soundFontMinGainTrim = 0.72;
-      this.soundFontVelocityCompression = 0.12;
-      this.soundFontLayerPressure = 0.32;
+      this.soundFontVelocityCompression = resolveNumberSetting(audioSettings?.soundFontVelocityCompression, 0.12, 0, 1);
+      this.soundFontLayerPressure = resolveNumberSetting(audioSettings?.soundFontLayerPressure, 0.32, 0, 2);
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
       this.sccEngineScriptPromise = null;
       this.engineMode = 'scc';
@@ -1560,12 +1576,15 @@
       this.sccPlaybackSource = null;
       this.sccPlaybackGain = null;
       this.sccPlaybackDuration = 0;
+      const limiterOverrides = audioSettings && typeof audioSettings.limiter === 'object'
+        ? audioSettings.limiter
+        : null;
       this.limiterSettings = {
-        threshold: -8,
-        knee: 10,
-        ratio: 6,
-        attack: 0.003,
-        release: 0.25,
+        threshold: resolveNumberSetting(limiterOverrides?.threshold, -6, -60, 0),
+        knee: resolveNumberSetting(limiterOverrides?.knee, 6, 0, 40),
+        ratio: resolveNumberSetting(limiterOverrides?.ratio, 3, 1, 20),
+        attack: resolveNumberSetting(limiterOverrides?.attack, 0.005, 0.001, 0.2),
+        release: resolveNumberSetting(limiterOverrides?.release, 0.1, 0.01, 1.5),
       };
       this.transposeSemitones = 0;
       this.fineDetuneCents = 0;
@@ -2812,6 +2831,110 @@
       );
       this.polyphonyGain.gain.setValueAtTime(currentValue, now);
       this.polyphonyGain.gain.linearRampToValueAtTime(1, now + Math.max(0.05, this.polyphonyReleaseTime));
+    }
+
+    pruneFinishedVoices(referenceTime = null) {
+      if (!this.liveVoices || !this.liveVoices.size) {
+        return;
+      }
+      const now = Number.isFinite(referenceTime)
+        ? referenceTime
+        : (this.audioContext?.currentTime ?? 0);
+      for (const voice of Array.from(this.liveVoices)) {
+        const stopTime = Number.isFinite(voice?.stopTime) ? voice.stopTime : null;
+        if (stopTime != null && stopTime + 0.02 < now) {
+          voice.cleanup?.();
+        }
+      }
+    }
+
+    fadeOutVoice(voice, referenceTime = null, immediateCleanup = false) {
+      if (!voice) {
+        return;
+      }
+      const now = this.audioContext?.currentTime ?? 0;
+      const startAt = Number.isFinite(referenceTime)
+        ? Math.max(referenceTime, now)
+        : now;
+
+      if (voice.gainNode?.gain && this.audioContext) {
+        const gainParam = voice.gainNode.gain;
+        try {
+          gainParam.cancelScheduledValues(startAt);
+        } catch (error) {
+          // Ignore cancellation errors when tearing down voices
+        }
+        const current = Math.max(0.0001, gainParam.value || 0.0001);
+        gainParam.setValueAtTime(current, startAt);
+        gainParam.exponentialRampToValueAtTime(0.0001, startAt + 0.05);
+      }
+
+      if (Array.isArray(voice.oscillators)) {
+        for (const osc of voice.oscillators) {
+          try {
+            osc.stop?.(startAt + 0.05);
+          } catch (error) {
+            // Ignore stop errors on already-ended oscillators
+          }
+        }
+      }
+
+      if (immediateCleanup || typeof setTimeout !== 'function') {
+        voice.cleanup?.();
+      } else {
+        setTimeout(() => voice.cleanup?.(), 70);
+      }
+    }
+
+    ensurePolyphonyBudget(referenceTime = null) {
+      if (!this.liveVoices) {
+        return true;
+      }
+      const limit = Number.isFinite(this.polyphonyVoiceLimit)
+        ? Math.max(1, Math.floor(this.polyphonyVoiceLimit))
+        : 0;
+      if (!limit) {
+        return true;
+      }
+
+      this.pruneFinishedVoices(referenceTime);
+      if (this.liveVoices.size < limit) {
+        return true;
+      }
+
+      let safeguard = 0;
+      while (this.liveVoices.size >= limit && safeguard < limit + 6) {
+        let candidate = null;
+        for (const voice of this.liveVoices) {
+          if (!voice) {
+            continue;
+          }
+          if (!candidate) {
+            candidate = voice;
+            continue;
+          }
+          const candidateWeight = Number.isFinite(candidate.mixCompensationWeight)
+            ? candidate.mixCompensationWeight
+            : 1;
+          const voiceWeight = Number.isFinite(voice.mixCompensationWeight)
+            ? voice.mixCompensationWeight
+            : 1;
+          const candidateStop = Number.isFinite(candidate.stopTime) ? candidate.stopTime : Infinity;
+          const voiceStop = Number.isFinite(voice.stopTime) ? voice.stopTime : Infinity;
+          if (voiceWeight < candidateWeight || (voiceWeight === candidateWeight && voiceStop < candidateStop)) {
+            candidate = voice;
+          }
+        }
+
+        if (!candidate) {
+          break;
+        }
+
+        this.fadeOutVoice(candidate, referenceTime, true);
+        safeguard += 1;
+      }
+
+      return this.liveVoices.size < limit;
     }
 
     clampTranspose(value) {
@@ -4360,7 +4483,13 @@
         if (!AudioContextClass) {
           throw new Error(translateMessage('index.sections.options.chiptune.errors.webAudioUnavailable', 'API Web Audio non disponible dans ce navigateur.'));
         }
-        this.audioContext = new AudioContextClass();
+        try {
+          this.audioContext = this.audioContextOptions
+            ? new AudioContextClass(this.audioContextOptions)
+            : new AudioContextClass();
+        } catch (error) {
+          this.audioContext = new AudioContextClass();
+        }
         this.waveCache = new Map();
         this.noiseBuffer = null;
         this.reverbBuffer = null;
@@ -4378,7 +4507,7 @@
         this.reverbSend.gain.value = 1;
 
         this.reverbMix = this.audioContext.createGain();
-        this.reverbMix.gain.value = 0.25;
+        this.reverbMix.gain.value = this.reverbMixLevel;
 
         this.reverbNode = this.createReverbNode();
 
@@ -7863,6 +7992,9 @@
       let voice = null;
 
       if (instrument && instrument.type === 'soundfont' && Array.isArray(instrument.regions) && instrument.regions.length) {
+        if (!this.ensurePolyphonyBudget(startAt)) {
+          return null;
+        }
         voice = this.scheduleSoundFontVoice(note, instrument, {
           startAt,
           stopAt,
@@ -7880,142 +8012,145 @@
         }
         voice.source = source;
       } else {
-
-      const layers = Array.isArray(instrument.layers) && instrument.layers.length
-        ? instrument.layers
-        : [{ type: instrument.type || 'sine', dutyCycle: instrument.dutyCycle, detune: 0, gain: 1 }];
-      const totalLayerGain = layers.reduce((sum, layer) => sum + Math.max(0, layer.gain ?? 1), 0) || 1;
-
-      const voiceInput = this.audioContext.createGain();
-      voiceInput.gain.setValueAtTime(1, startAt);
-
-      let lfoOscillator = null;
-      let vibratoGain = null;
-      if (needsLfo) {
-        lfoOscillator = this.audioContext.createOscillator();
-        lfoOscillator.type = lfoSettings.waveform || 'sine';
-        lfoOscillator.frequency.setValueAtTime(lfoSettings.rate, startAt);
-      }
-
-      if (lfoOscillator && hasVibrato) {
-        vibratoGain = this.audioContext.createGain();
-        const depthInCents = lfoSettings.vibratoDepth;
-        const depthFactor = Math.max(0, Math.pow(2, depthInCents / 1200) - 1);
-        const depthHz = frequency * depthFactor;
-        vibratoGain.gain.setValueAtTime(depthHz, startAt);
-      }
-
-      voice = {
-        type: 'melodic',
-        startTime: startAt,
-        stopTime: stopAt + releaseDuration,
-        gainNode: null,
-        oscillators: [],
-        effectOscillators: [],
-        nodes: [voiceInput],
-        baseMidiNote: note.note,
-        source,
-      };
-
-      this.liveVoices.add(voice);
-
-      let activeOscillators = 0;
-
-      const connectOscillator = (layer) => {
-        const osc = this.audioContext.createOscillator();
-        const useSccWave = this.shouldUseSccWaveform(instrument, layer);
-        const useN163Wave = this.shouldUseN163Waveform(instrument, layer);
-        let configured = false;
-        if (useSccWave) {
-          const sccWave = this.getSccWave();
-          if (sccWave) {
-            osc.setPeriodicWave(sccWave);
-            configured = true;
-          }
-        }
-        if (!configured && useN163Wave) {
-          const waveId = layer?.n163Wave || instrument?.n163Wave || 'default';
-          const n163Wave = this.getN163Wave(waveId);
-          if (n163Wave) {
-            osc.setPeriodicWave(n163Wave);
-            configured = true;
-          }
-        }
-        if (!configured) {
-          const analogType = layer?.type ?? instrument?.type ?? 'sine';
-          if (analogType === 'pulse') {
-            const dutyCycle = Number.isFinite(layer?.dutyCycle)
-              ? layer.dutyCycle
-              : Number.isFinite(instrument?.dutyCycle)
-                ? instrument.dutyCycle
-                : 0.5;
-            const pulseWave = this.getPulseWave(dutyCycle);
-            if (pulseWave) {
-              osc.setPeriodicWave(pulseWave);
-              configured = true;
-            } else {
-              osc.type = 'square';
-              configured = true;
-            }
-          } else if (analogType === 'square' || analogType === 'sawtooth' || analogType === 'triangle' || analogType === 'sine') {
-            osc.type = analogType;
-            configured = true;
-          } else {
-            osc.type = 'sine';
-            configured = true;
-          }
-        }
-        osc.frequency.setValueAtTime(frequency, startAt);
-        if (Number.isFinite(layer.detune)) {
-          osc.detune.setValueAtTime(layer.detune * 100, startAt);
+        if (!this.ensurePolyphonyBudget(startAt)) {
+          return null;
         }
 
-        const layerGain = this.audioContext.createGain();
-        const normalizedGain = Math.max(0, layer.gain ?? 1) / totalLayerGain;
-        layerGain.gain.setValueAtTime(normalizedGain, startAt);
+        const layers = Array.isArray(instrument.layers) && instrument.layers.length
+          ? instrument.layers
+          : [{ type: instrument.type || 'sine', dutyCycle: instrument.dutyCycle, detune: 0, gain: 1 }];
+        const totalLayerGain = layers.reduce((sum, layer) => sum + Math.max(0, layer.gain ?? 1), 0) || 1;
 
-        osc.connect(layerGain).connect(voiceInput);
+        const voiceInput = this.audioContext.createGain();
+        voiceInput.gain.setValueAtTime(1, startAt);
 
-        if (vibratoGain) {
-          vibratoGain.connect(osc.frequency);
+        let lfoOscillator = null;
+        let vibratoGain = null;
+        if (needsLfo) {
+          lfoOscillator = this.audioContext.createOscillator();
+          lfoOscillator.type = lfoSettings.waveform || 'sine';
+          lfoOscillator.frequency.setValueAtTime(lfoSettings.rate, startAt);
         }
 
-        activeOscillators += 1;
-        voice.oscillators.push(osc);
-        voice.nodes.push(layerGain);
+        if (lfoOscillator && hasVibrato) {
+          vibratoGain = this.audioContext.createGain();
+          const depthInCents = lfoSettings.vibratoDepth;
+          const depthFactor = Math.max(0, Math.pow(2, depthInCents / 1200) - 1);
+          const depthHz = frequency * depthFactor;
+          vibratoGain.gain.setValueAtTime(depthHz, startAt);
+        }
 
-        osc.onended = () => {
-          activeOscillators -= 1;
-          try {
-            osc.disconnect();
-          } catch (error) {
-            // Ignore disconnect issues
-          }
-          try {
-            layerGain.disconnect();
-          } catch (error) {
-            // Ignore disconnect issues
-          }
-          if (activeOscillators <= 0) {
-            voice.cleanup?.();
-          }
+        voice = {
+          type: 'melodic',
+          startTime: startAt,
+          stopTime: stopAt + releaseDuration,
+          gainNode: null,
+          oscillators: [],
+          effectOscillators: [],
+          nodes: [voiceInput],
+          baseMidiNote: note.note,
+          source,
         };
 
-        osc.start(startAt);
-        osc.stop(stopAt + releaseDuration + 0.02);
-      };
+        this.liveVoices.add(voice);
 
-      for (const layer of layers) {
-        connectOscillator(layer);
-      }
+        let activeOscillators = 0;
 
-      if (vibratoGain && lfoOscillator) {
-        lfoOscillator.connect(vibratoGain);
-        voice.lfoGain = vibratoGain;
-        voice.nodes.push(vibratoGain);
-      }
+        const connectOscillator = (layer) => {
+          const osc = this.audioContext.createOscillator();
+          const useSccWave = this.shouldUseSccWaveform(instrument, layer);
+          const useN163Wave = this.shouldUseN163Waveform(instrument, layer);
+          let configured = false;
+          if (useSccWave) {
+            const sccWave = this.getSccWave();
+            if (sccWave) {
+              osc.setPeriodicWave(sccWave);
+              configured = true;
+            }
+          }
+          if (!configured && useN163Wave) {
+            const waveId = layer?.n163Wave || instrument?.n163Wave || 'default';
+            const n163Wave = this.getN163Wave(waveId);
+            if (n163Wave) {
+              osc.setPeriodicWave(n163Wave);
+              configured = true;
+            }
+          }
+          if (!configured) {
+            const analogType = layer?.type ?? instrument?.type ?? 'sine';
+            if (analogType === 'pulse') {
+              const dutyCycle = Number.isFinite(layer?.dutyCycle)
+                ? layer.dutyCycle
+                : Number.isFinite(instrument?.dutyCycle)
+                  ? instrument.dutyCycle
+                  : 0.5;
+              const pulseWave = this.getPulseWave(dutyCycle);
+              if (pulseWave) {
+                osc.setPeriodicWave(pulseWave);
+                configured = true;
+              } else {
+                osc.type = 'square';
+                configured = true;
+              }
+            } else if (analogType === 'square' || analogType === 'sawtooth' || analogType === 'triangle' || analogType === 'sine') {
+              osc.type = analogType;
+              configured = true;
+            } else {
+              osc.type = 'sine';
+              configured = true;
+            }
+          }
+          osc.frequency.setValueAtTime(frequency, startAt);
+          if (Number.isFinite(layer.detune)) {
+            osc.detune.setValueAtTime(layer.detune * 100, startAt);
+          }
 
-      let lastNode = voiceInput;
+          const layerGain = this.audioContext.createGain();
+          const normalizedGain = Math.max(0, layer.gain ?? 1) / totalLayerGain;
+          layerGain.gain.setValueAtTime(normalizedGain, startAt);
+
+          osc.connect(layerGain).connect(voiceInput);
+
+          if (vibratoGain) {
+            vibratoGain.connect(osc.frequency);
+          }
+
+          activeOscillators += 1;
+          voice.oscillators.push(osc);
+          voice.nodes.push(layerGain);
+
+          osc.onended = () => {
+            activeOscillators -= 1;
+            try {
+              osc.disconnect();
+            } catch (error) {
+              // Ignore disconnect issues
+            }
+            try {
+              layerGain.disconnect();
+            } catch (error) {
+              // Ignore disconnect issues
+            }
+            if (activeOscillators <= 0) {
+              voice.cleanup?.();
+            }
+          };
+
+          osc.start(startAt);
+          osc.stop(stopAt + releaseDuration + 0.02);
+        };
+
+        for (const layer of layers) {
+          connectOscillator(layer);
+        }
+
+        if (vibratoGain && lfoOscillator) {
+          lfoOscillator.connect(vibratoGain);
+          voice.lfoGain = vibratoGain;
+          voice.nodes.push(vibratoGain);
+        }
+
+        let lastNode = voiceInput;
 
       if (instrument.filter) {
         const filter = this.audioContext.createBiquadFilter();
@@ -8241,6 +8376,10 @@
         sustainProfile = null,
         source = 'playback',
       } = context;
+
+      if (!this.ensurePolyphonyBudget(startAt)) {
+        return null;
+      }
 
       const normalizedVelocity = Math.max(0.05, Math.min(1, Number.isFinite(velocity) ? velocity : 0.5));
       const gainTrim = this.computeSoundFontGainTrim(regions, normalizedVelocity);
@@ -8470,6 +8609,10 @@
       const release = Math.max(0.02, (envelope.release || 0.08) / speed);
       const stopAt = startAt + duration;
       const totalStop = stopAt + release;
+
+      if (!this.ensurePolyphonyBudget(startAt)) {
+        return null;
+      }
 
       const gainNode = this.audioContext.createGain();
       const peakGain = Math.min(1, velocity * this.maxGain * (settings.volume || 0.75));
