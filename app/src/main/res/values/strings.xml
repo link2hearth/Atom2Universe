@@ -7,4 +7,6 @@
     <string name="soundfont_error_missing">Aucune SoundFont disponible.</string>
     <string name="soundfont_error_empty">SoundFont vide ou corrompue.</string>
     <string name="soundfont_error_too_large">SoundFont trop volumineuse (max %1$d Mo).</string>
+    <string name="midi_root_artist">Sans artiste</string>
+    <string name="midi_default_artist">Artiste local</string>
 </resources>
