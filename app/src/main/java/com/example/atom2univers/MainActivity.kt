@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Base64
+import android.util.Base64OutputStream
 import android.util.Log
 import android.view.MotionEvent
 import android.webkit.WebResourceRequest
