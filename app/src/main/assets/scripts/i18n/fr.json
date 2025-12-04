@@ -2473,7 +2473,10 @@
               "permission": "Autorisez l’accès aux fichiers MIDI pour continuer.",
               "cancelled": "Sélection annulée.",
               "empty": "Aucun fichier MIDI trouvé dans ce dossier.",
-              "ready": "Bibliothèque Android prête : {tracks} titres."
+              "ready": "Bibliothèque Android prête : {tracks} titres.",
+              "rescanButton": "Mettre à jour le dossier Android",
+              "rescan": "Analyse du dossier Android en cours…",
+              "rescanUnavailable": "Impossible de relancer l’analyse du dossier Android."
             }
           },
           "android": {

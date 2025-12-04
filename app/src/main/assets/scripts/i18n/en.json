@@ -2536,7 +2536,10 @@
               "permission": "Allow access to MIDI files to continue.",
               "cancelled": "Selection cancelled.",
               "empty": "No MIDI files found in this folder.",
-              "ready": "Android library ready: {tracks} tracks."
+              "ready": "Android library ready: {tracks} tracks.",
+              "rescanButton": "Refresh Android folder",
+              "rescan": "Updating the Android folder…",
+              "rescanUnavailable": "Unable to refresh the Android folder."
             }
           },
           "android": {

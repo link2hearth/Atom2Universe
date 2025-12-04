@@ -190,6 +190,15 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
                 ensureStylesheetsLoaded(view, url)
+                tryRestoreNativeMidiLibrary()
+            }
+
+            private fun tryRestoreNativeMidiLibrary() {
+                try {
+                    loadPersistedMidiLibrary()
+                } catch (error: Exception) {
+                    Log.w(TAG, "Unable to restore persisted MIDI library", error)
+                }
             }
 
             private fun ensureStylesheetsLoaded(view: WebView, url: String) {
@@ -414,11 +423,14 @@ class MainActivity : AppCompatActivity() {
         openMidiFolderLauncher.launch(null)
     }
 
-    internal fun loadPersistedMidiLibrary() {
+    internal fun loadPersistedMidiLibrary(forceRescan: Boolean = false) {
         val storedUri = preferences.getString(KEY_MIDI_TREE_URI, null) ?: return
         val treeUri = Uri.parse(storedUri)
         if (!hasPersistedPermission(treeUri)) {
             notifyMidiLibraryError("permission-denied")
+            return
+        }
+        if (!forceRescan && loadCachedMidiLibrary()) {
             return
         }
         loadMidiLibrary(treeUri, false)
@@ -481,10 +493,12 @@ class MainActivity : AppCompatActivity() {
                     if (notifyWhenEmpty) {
                         notifyMidiLibraryError("empty")
                     }
+                    cacheMidiLibrary(emptyList(), label ?: "")
                     notifyMidiLibraryReady(emptyList(), label ?: "")
                     return@Thread
                 }
 
+                cacheMidiLibrary(library.first, label ?: "")
                 notifyMidiLibraryReady(library.first, label ?: "")
                 Log.i(TAG, "Loaded MIDI library from Android tree: artists=$artistCount tracks=$trackCount")
             } catch (error: SecurityException) {
@@ -661,9 +675,64 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun persistMidiLibrary(treeUri: Uri, relativePath: String) {
+        clearMidiLibraryCache()
         preferences.edit {
             putString(KEY_MIDI_TREE_URI, treeUri.toString())
             putString(KEY_MIDI_RELATIVE_PATH, relativePath)
+        }
+    }
+
+    private fun cacheMidiLibrary(artists: List<JSONObject>, label: String) {
+        try {
+            val payload = JSONObject().apply {
+                put("artists", JSONArray(artists))
+                put("label", label)
+            }
+            preferences.edit {
+                putString(KEY_MIDI_LIBRARY_CACHE, payload.toString())
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to cache MIDI library", error)
+        }
+    }
+
+    private fun loadCachedMidiLibrary(): Boolean {
+        val cached = preferences.getString(KEY_MIDI_LIBRARY_CACHE, null) ?: return false
+        return try {
+            val payload = JSONObject(cached)
+            val artistsArray = payload.optJSONArray("artists") ?: JSONArray()
+            val label = payload.optString(
+                "label",
+                preferences.getString(KEY_MIDI_RELATIVE_PATH, "") ?: ""
+            )
+
+            val artists = mutableListOf<JSONObject>()
+            var trackCount = 0
+            for (index in 0 until artistsArray.length()) {
+                val artist = artistsArray.optJSONObject(index) ?: continue
+                val tracks = artist.optJSONArray("tracks") ?: JSONArray()
+                if (tracks.length() <= 0) {
+                    continue
+                }
+                artists.add(artist)
+                trackCount += tracks.length()
+            }
+
+            if (artists.isEmpty() || trackCount <= 0) {
+                false
+            } else {
+                notifyMidiLibraryReady(artists, label)
+                true
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to read cached MIDI library", error)
+            false
+        }
+    }
+
+    private fun clearMidiLibraryCache() {
+        preferences.edit {
+            remove(KEY_MIDI_LIBRARY_CACHE)
         }
     }
 
@@ -933,6 +1002,7 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_BACKGROUND_RELATIVE_PATH = "background.relative.path"
         private const val KEY_MIDI_TREE_URI = "midi.tree.uri"
         private const val KEY_MIDI_RELATIVE_PATH = "midi.relative.path"
+        private const val KEY_MIDI_LIBRARY_CACHE = "midi.library.cache"
         private const val KEY_SOUND_FONT_LABEL = "soundfont.label"
         private const val SOUND_FONT_CACHE_NAME = "user_soundfont.sf2"
         private const val DEFAULT_SOUNDFONT_ID = "user-soundfont"
