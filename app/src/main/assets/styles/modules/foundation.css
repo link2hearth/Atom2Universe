@@ -254,6 +254,7 @@ body[data-page-group="arcade"] main {
 }
 
 .header-playback-button,
+.header-next-button,
 .header-banner-toggle {
   appearance: none;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -271,7 +272,8 @@ body[data-page-group="arcade"] main {
     transform var(--transition), box-shadow var(--transition);
 }
 
-.header-playback-button::before {
+.header-playback-button::before,
+.header-next-button::before {
   content: '▶';
   font-size: calc(clamp(0.5rem, 0.7vw, 0.6rem) * var(--header-scale, 1));
   line-height: 1;
@@ -280,6 +282,11 @@ body[data-page-group="arcade"] main {
 
 .header-playback-button[data-state="pause"]::before {
   content: '⏸';
+  transform: none;
+}
+
+.header-next-button::before {
+  content: '⏭';
   transform: none;
 }
 
@@ -295,6 +302,8 @@ body[data-page-group="arcade"] main {
 
 .header-playback-button:hover:not(:disabled):not(.is-disabled),
 .header-playback-button:focus-visible:not(.is-disabled),
+.header-next-button:hover:not(:disabled):not(.is-disabled),
+.header-next-button:focus-visible:not(.is-disabled),
 .header-banner-toggle:hover:not(:disabled):not(.is-disabled),
 .header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(255, 255, 255, 0.16);
@@ -303,12 +312,14 @@ body[data-page-group="arcade"] main {
 }
 
 .header-playback-button:focus-visible:not(.is-disabled),
+.header-next-button:focus-visible:not(.is-disabled),
 .header-banner-toggle:focus-visible:not(.is-disabled) {
   outline: 2px solid rgba(255, 255, 255, 0.65);
   outline-offset: 3px;
 }
 
 body.theme-light .header-playback-button,
+body.theme-light .header-next-button,
 body.theme-light .header-banner-toggle {
   background: rgba(12, 16, 32, 0.08);
   border-color: rgba(12, 16, 32, 0.12);
@@ -316,6 +327,8 @@ body.theme-light .header-banner-toggle {
 
 body.theme-light .header-playback-button:hover:not(:disabled):not(.is-disabled),
 body.theme-light .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-light .header-next-button:hover:not(:disabled):not(.is-disabled),
+body.theme-light .header-next-button:focus-visible:not(.is-disabled),
 body.theme-light .header-banner-toggle:hover:not(:disabled):not(.is-disabled),
 body.theme-light .header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(12, 16, 32, 0.16);
@@ -323,17 +336,20 @@ body.theme-light .header-banner-toggle:focus-visible:not(.is-disabled) {
 }
 
 body.theme-light .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-light .header-next-button:focus-visible:not(.is-disabled),
 body.theme-light .header-banner-toggle:focus-visible:not(.is-disabled) {
   outline-color: rgba(40, 48, 96, 0.65);
 }
 
 body.theme-neon .header-playback-button,
+body.theme-neon .header-next-button,
 body.theme-neon .header-banner-toggle {
   background: rgba(120, 140, 255, 0.18);
   border-color: rgba(140, 160, 255, 0.28);
 }
 
 body.theme-aurora .header-playback-button,
+body.theme-aurora .header-next-button,
 body.theme-aurora .header-banner-toggle {
   background: rgba(120, 255, 200, 0.18);
   border-color: rgba(140, 255, 210, 0.28);
@@ -341,6 +357,8 @@ body.theme-aurora .header-banner-toggle {
 
 body.theme-neon .header-playback-button:hover:not(:disabled):not(.is-disabled),
 body.theme-neon .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-neon .header-next-button:hover:not(:disabled):not(.is-disabled),
+body.theme-neon .header-next-button:focus-visible:not(.is-disabled),
 body.theme-neon .header-banner-toggle:hover:not(:disabled):not(.is-disabled),
 body.theme-neon .header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(140, 160, 255, 0.28);
@@ -349,6 +367,8 @@ body.theme-neon .header-banner-toggle:focus-visible:not(.is-disabled) {
 
 body.theme-aurora .header-playback-button:hover:not(:disabled):not(.is-disabled),
 body.theme-aurora .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-aurora .header-next-button:hover:not(:disabled):not(.is-disabled),
+body.theme-aurora .header-next-button:focus-visible:not(.is-disabled),
 body.theme-aurora .header-banner-toggle:hover:not(:disabled):not(.is-disabled),
 body.theme-aurora .header-banner-toggle:focus-visible:not(.is-disabled) {
   background: rgba(150, 255, 220, 0.26);
@@ -356,11 +376,13 @@ body.theme-aurora .header-banner-toggle:focus-visible:not(.is-disabled) {
 }
 
 body.theme-neon .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-neon .header-next-button:focus-visible:not(.is-disabled),
 body.theme-neon .header-banner-toggle:focus-visible:not(.is-disabled) {
   outline-color: rgba(150, 170, 255, 0.6);
 }
 
 body.theme-aurora .header-playback-button:focus-visible:not(.is-disabled),
+body.theme-aurora .header-next-button:focus-visible:not(.is-disabled),
 body.theme-aurora .header-banner-toggle:focus-visible:not(.is-disabled) {
   outline-color: rgba(120, 255, 200, 0.65);
 }
@@ -386,24 +408,28 @@ body.theme-aurora .header-playback-button.is-playing {
   box-shadow: 0 0.6rem 1.4rem rgba(90, 255, 190, 0.45);
 }
 
-.header-playback-button.is-disabled {
+.header-playback-button.is-disabled,
+.header-next-button.is-disabled {
   opacity: 0.48;
   box-shadow: none;
   transform: none;
 }
 
-.header-playback-button.is-disabled::before {
+.header-playback-button.is-disabled::before,
+.header-next-button.is-disabled::before {
   opacity: 0.7;
 }
 
-.header-playback-button:disabled {
+.header-playback-button:disabled,
+.header-next-button:disabled {
   opacity: 0.48;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
 }
 
-.header-playback-button:disabled::before {
+.header-playback-button:disabled::before,
+.header-next-button:disabled::before {
   opacity: 0.7;
 }
 
