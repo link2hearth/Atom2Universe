@@ -33,7 +33,7 @@
       }
     },
     "nowPlaying": {
-      "label": "Lecture"
+      "label": "->"
     },
     "status": {
       "totalAtoms": "Total d’atomes",
