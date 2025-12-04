@@ -96,6 +96,30 @@ class WebAppBridge(activity: MainActivity) {
     }
 
     @JavascriptInterface
+    fun startForegroundAudio(title: String?, artist: String?, playing: Boolean) {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            AudioPlaybackService.startForegroundPlayback(activity, title, artist, playing)
+        }
+    }
+
+    @JavascriptInterface
+    fun updateForegroundAudio(title: String?, artist: String?, playing: Boolean) {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            AudioPlaybackService.updateMetadata(activity, title, artist, playing)
+        }
+    }
+
+    @JavascriptInterface
+    fun stopForegroundAudio() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            AudioPlaybackService.stopPlayback(activity)
+        }
+    }
+
+    @JavascriptInterface
     fun loadBackgroundImageBank() {
         val activity = activityRef.get()
         activity?.runOnUiThread {
