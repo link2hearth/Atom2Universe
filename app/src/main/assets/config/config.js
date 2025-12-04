@@ -526,30 +526,31 @@ const MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = 0.06;
 
 /**
  * Réglages audio du lecteur MIDI.
- * - `contextOptions` agrandit légèrement le buffer pour limiter les craquements.
- * - Les paramètres "polyphony" adoucissent le mixage quand trop de voix sont actives.
+ * - `contextOptions` agrandit le buffer pour limiter les craquements.
+ * - Les paramètres "polyphony" adoucissent le mixage et plafonnent le nombre de voix actives.
  * - Les réglages de réverb réduisent la charge CPU et la saturation dans le bus wet.
  * - Le limiteur est calibré plus bas pour absorber les crêtes en fortissimo.
  */
 const MIDI_AUDIO_MIXING_SETTINGS = Object.freeze({
   contextOptions: Object.freeze({
-    latencyHint: 'balanced'
+    latencyHint: 'playback'
   }),
-  polyphonyHeadroom: 1.18,
+  polyphonyMaxVoices: 64,
+  polyphonyHeadroom: 0.9,
   polyphonyMinGain: 0.32,
-  polyphonyStackPenalty: 0.12,
-  polyphonyMaxContribution: 1.8,
+  polyphonyStackPenalty: 0.2,
+  polyphonyMaxContribution: 1.0,
   reverbSend: 0.08,
   reverbMix: 0.18,
-  soundFontGainHeadroom: 1.16,
+  soundFontGainHeadroom: 0.8,
   soundFontVelocityCompression: 0.18,
   soundFontLayerPressure: 0.3,
   limiter: Object.freeze({
-    threshold: -10,
-    knee: 10,
-    ratio: 6,
-    attack: 0.003,
-    release: 0.18
+    threshold: -6,
+    knee: 6,
+    ratio: 3,
+    attack: 0.005,
+    release: 0.1
   })
 });
 
