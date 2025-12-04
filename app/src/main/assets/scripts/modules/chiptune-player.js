@@ -1431,6 +1431,7 @@
       this.keyboardAudioEnabled = true;
       this.engineSelect = elements.engineSelect;
       this.soundFontSelect = elements.soundFontSelect;
+      this.soundFontButton = elements.soundFontButton;
       this.progressLabel = elements.progressLabel;
       this.progressSlider = elements.progressSlider;
       this.progressValue = elements.progressValue;
@@ -1513,10 +1514,11 @@
       this.soundFontLayerPressure = 0.32;
       this.sccWaveform = typeof window !== 'undefined' ? window.SccWaveform || null : null;
       this.sccEngineScriptPromise = null;
-      this.engineMode = 'hifi';
+      this.engineMode = 'scc';
       this.soundFontList = DEFAULT_SOUNDFONTS.map(font => ({ ...font }));
       this.soundFontFallback = DEFAULT_SOUNDFONTS;
       this.soundFontCache = new Map();
+      this.userSoundFontEntry = null;
       this.activeSoundFont = null;
       this.activeSoundFontId = null;
       this.selectedSoundFontId = null;
@@ -1636,7 +1638,11 @@
         const requestedValue = typeof this.engineSelect.value === 'string' ? this.engineSelect.value : '';
         let initialValue = validModes.has(requestedValue)
           ? requestedValue
-          : 'hifi';
+          : '';
+        const prefersDefaultHifi = !initialValue || initialValue === 'hifi';
+        if (prefersDefaultHifi) {
+          initialValue = hasScc ? 'scc' : 'n163';
+        }
         if (!validModes.has(initialValue)) {
           initialValue = hasScc ? 'scc' : 'n163';
         }
@@ -2521,6 +2527,12 @@
             this.setEngineMode('hifi');
             this.setStatusMessage('index.sections.options.chiptune.status.autoHiFi', 'Hi-Fi mode enabled automatically to use the SoundFont.', {}, 'success');
           }
+        });
+      }
+
+      if (this.soundFontButton) {
+        this.soundFontButton.addEventListener('click', () => {
+          this.requestNativeSoundFont();
         });
       }
 
@@ -4710,21 +4722,131 @@
       }
     }
 
+    requestNativeSoundFont() {
+      const scope = typeof window !== 'undefined'
+        ? window
+        : (typeof globalThis !== 'undefined' ? globalThis : null);
+      const bridge = scope && scope.AndroidBridge;
+      if (bridge && typeof bridge.selectSoundFont === 'function') {
+        try {
+          this.setStatusMessage('index.sections.options.chiptune.soundfonts.loading', 'Loading SoundFonts…');
+          bridge.selectSoundFont();
+        } catch (error) {
+          this.setStatusMessage(
+            'index.sections.options.chiptune.status.soundFontUnavailable',
+            'SoundFont unavailable: {error}',
+            { error: error?.message || 'Bridge unavailable' },
+            'error',
+          );
+        }
+        return;
+      }
+
+      this.setStatusMessage(
+        'index.sections.options.chiptune.status.soundFontUnavailable',
+        'SoundFont unavailable: {error}',
+        { error: this.translate('index.sections.options.chiptune.errors.soundFontMissingSelection', 'No SoundFont selected.') },
+        'error',
+      );
+    }
+
+    registerNativeSoundFont(payload = {}) {
+      const mimeType = typeof payload?.mimeType === 'string' && payload.mimeType
+        ? payload.mimeType
+        : 'audio/x-soundfont';
+      const label = typeof payload?.name === 'string' && payload.name
+        ? payload.name
+        : this.translate('index.sections.options.chiptune.soundfonts.customLabel', 'Custom SoundFont');
+      const id = typeof payload?.id === 'string' && payload.id
+        ? payload.id
+        : 'user-soundfont';
+      const url = typeof payload?.url === 'string' ? payload.url.trim() : '';
+      const base64 = typeof payload?.data === 'string' ? payload.data.trim() : '';
+      const file = url || (base64 ? `data:${mimeType};base64,${base64}` : '');
+
+      if (!file) {
+        this.setStatusMessage(
+          'index.sections.options.chiptune.status.soundFontUnavailable',
+          'SoundFont unavailable: {error}',
+          { error: 'Empty SoundFont payload' },
+          'error',
+        );
+        return;
+      }
+
+      this.setUserSoundFont({ id, name: label, file, default: true });
+      if (this.engineMode !== 'hifi') {
+        this.setEngineMode('hifi');
+        this.setStatusMessage(
+          'index.sections.options.chiptune.status.autoHiFi',
+          'Hi-Fi mode enabled automatically to use the SoundFont.',
+          {},
+          'success',
+        );
+      }
+    }
+
+    setUserSoundFont(entry) {
+      if (!entry || !entry.id || !entry.file) {
+        return;
+      }
+
+      if (this.userSoundFontEntry && this.userSoundFontEntry.id) {
+        this.soundFontCache.delete(this.userSoundFontEntry.id);
+        if (this.activeSoundFontId === this.userSoundFontEntry.id) {
+          this.activeSoundFont = null;
+          this.activeSoundFontId = null;
+        }
+      }
+
+      this.soundFontCache.delete(entry.id);
+
+      this.userSoundFontEntry = {
+        id: entry.id,
+        name: entry.name || entry.id,
+        file: entry.file,
+        default: true,
+      };
+
+      this.populateSoundFonts(this.soundFontList, false);
+      this.setSoundFontSelection(entry.id, { autoLoad: this.engineMode === 'hifi', stopPlayback: true });
+      this.setStatusMessage(
+        'index.sections.options.chiptune.status.soundFontReady',
+        'SoundFont ready: {name}',
+        { name: entry.name || entry.id },
+        'success',
+      );
+    }
+
     populateSoundFonts(list, errored) {
       this.soundFontLoadErrored = Boolean(errored);
       const sanitized = (Array.isArray(list) ? list : [])
         .map((item) => ({
-          id: typeof item?.id === 'string' ? item.id : '',
+          id: typeof item?.id === 'string' ? item.id.trim() : '',
           name: typeof item?.name === 'string' && item.name ? item.name : '',
           file: typeof item?.file === 'string' ? item.file : '',
           default: Boolean(item?.default),
         }))
         .filter((item) => item.id && item.file);
 
-      if (sanitized.length) {
-        this.soundFontList = sanitized;
+      const merged = [];
+      if (this.userSoundFontEntry && this.userSoundFontEntry.id && this.userSoundFontEntry.file) {
+        merged.push({ ...this.userSoundFontEntry });
+      }
+      for (const item of sanitized) {
+        if (!merged.some((entry) => entry.id === item.id)) {
+          merged.push(item);
+        }
+      }
+
+      if (merged.length) {
+        this.soundFontList = merged;
       } else if (!this.soundFontList || !this.soundFontList.length) {
-        this.soundFontList = (this.soundFontFallback || []).map((font) => ({ ...font }));
+        const fallbackList = (this.soundFontFallback || []).map((font) => ({ ...font }));
+        if (this.userSoundFontEntry) {
+          fallbackList.unshift({ ...this.userSoundFontEntry });
+        }
+        this.soundFontList = fallbackList;
       }
 
       const select = this.soundFontSelect;
@@ -10536,6 +10658,7 @@
     pianoOverrideValue: document.getElementById('chiptunePianoOverrideValue'),
     engineSelect: document.getElementById('chiptuneEngineSelect'),
     soundFontSelect: document.getElementById('chiptuneSoundFontSelect'),
+    soundFontButton: document.getElementById('chiptuneSoundFontButton'),
     progressLabel: document.getElementById('chiptuneProgressLabel'),
     progressSlider: document.getElementById('chiptuneProgressSlider'),
     progressValue: document.getElementById('chiptuneProgressValue'),
@@ -10551,6 +10674,45 @@
 
   if (elements.fileInput && elements.playButton && elements.stopButton && elements.status) {
     const player = new ChiptunePlayer(elements);
+    const globalScope = typeof globalThis !== 'undefined'
+      ? globalThis
+      : (typeof window !== 'undefined' ? window : null);
+
+    if (globalScope) {
+      globalScope.onAndroidSoundFontReady = (payload) => {
+        try {
+          player.registerNativeSoundFont(payload || {});
+        } catch (error) {
+          console.error('Unable to register SoundFont from Android bridge', error);
+          player.setStatusMessage(
+            'index.sections.options.chiptune.status.soundFontUnavailable',
+            'SoundFont unavailable: {error}',
+            { error: error?.message || 'Bridge error' },
+            'error',
+          );
+        }
+      };
+
+      globalScope.onAndroidSoundFontError = (reason) => {
+        const detail = typeof reason === 'string' && reason ? reason : 'error';
+        player.setStatusMessage(
+          'index.sections.options.chiptune.status.soundFontUnavailable',
+          'SoundFont unavailable: {error}',
+          { error: detail },
+          'error',
+        );
+      };
+
+      const bridge = globalScope.AndroidBridge;
+      if (bridge && typeof bridge.loadCachedSoundFont === 'function') {
+        try {
+          bridge.loadCachedSoundFont();
+        } catch (error) {
+          console.error('Unable to load cached SoundFont from Android bridge', error);
+        }
+      }
+    }
+
     if (typeof globalThis !== 'undefined') {
       globalThis.atom2universMidiPlayer = player;
       if (typeof globalThis.dispatchEvent === 'function') {

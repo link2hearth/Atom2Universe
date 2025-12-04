@@ -56,6 +56,22 @@ class WebAppBridge(activity: MainActivity) {
     }
 
     @JavascriptInterface
+    fun selectSoundFont() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            activity.startSoundFontPicker()
+        }
+    }
+
+    @JavascriptInterface
+    fun loadCachedSoundFont() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            activity.loadCachedSoundFont()
+        }
+    }
+
+    @JavascriptInterface
     fun loadBackgroundImageBank() {
         val activity = activityRef.get()
         activity?.runOnUiThread {
