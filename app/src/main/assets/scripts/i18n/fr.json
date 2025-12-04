@@ -2442,7 +2442,8 @@
             "loading": "Chargement des SoundFonts…",
             "placeholder": "Sélectionnez une SoundFont",
             "noneAvailable": "Aucune SoundFont disponible",
-            "noneDeclared": "Aucune SoundFont déclarée"
+            "noneDeclared": "Aucune SoundFont déclarée",
+            "customLabel": "SoundFont personnalisée"
           },
           "library": {
             "unknownArtist": "Artiste inconnu",
@@ -2498,7 +2499,8 @@
             "skip": "Suivant",
             "stop": "Stop",
             "randomAll": "Lecture aléatoire (bibliothèque)",
-            "randomArtist": "Lecture aléatoire (artiste)"
+            "randomArtist": "Lecture aléatoire (artiste)",
+            "selectSoundFont": "Choisir un SoundFont"
           },
           "status": {
             "noneLoaded": "Aucun morceau chargé pour le moment.",
