@@ -32,6 +32,9 @@
         "expand": "Déployer la bannière"
       }
     },
+    "nowPlaying": {
+      "label": "Lecture"
+    },
     "status": {
       "totalAtoms": "Total d’atomes",
       "apc": "APC",
