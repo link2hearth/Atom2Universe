@@ -1,9 +1,11 @@
 package com.example.atom2univers
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +22,7 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private var cssRecoveryAttempted = false
     private var pendingBackupUri: Uri? = null
     private var pendingMidiLabel: String? = null
+    private var mediaCommandReceiver: BroadcastReceiver? = null
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
@@ -104,6 +108,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
+
+        registerMediaCommandReceiver()
 
         val backCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -329,6 +335,12 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         requestWebViewSave()
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        mediaCommandReceiver?.let { unregisterReceiver(it) }
+        mediaCommandReceiver = null
+        super.onDestroy()
     }
 
     fun startOpenBackup() {
@@ -952,6 +964,33 @@ class MainActivity : AppCompatActivity() {
     private fun notifyMidiLibraryError(reason: String) {
         val safeReason = if (reason.isNotBlank()) reason else "error"
         val script = "window.onAndroidMidiLibraryError && window.onAndroidMidiLibraryError(${JSONObject.quote(safeReason)});"
+        postJavascript(script)
+    }
+
+    private fun registerMediaCommandReceiver() {
+        if (mediaCommandReceiver != null) {
+            return
+        }
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action != AudioPlaybackService.ACTION_MEDIA_COMMAND) {
+                    return
+                }
+                handleMediaCommand(intent.getStringExtra(AudioPlaybackService.EXTRA_MEDIA_COMMAND))
+            }
+        }
+        mediaCommandReceiver = receiver
+        ContextCompat.registerReceiver(
+            this,
+            receiver,
+            IntentFilter(AudioPlaybackService.ACTION_MEDIA_COMMAND),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    private fun handleMediaCommand(command: String?) {
+        val action = command?.takeIf { it.isNotBlank() } ?: return
+        val script = "window.onAndroidMediaCommand && window.onAndroidMediaCommand(${JSONObject.quote(action)});"
         postJavascript(script)
     }
 
