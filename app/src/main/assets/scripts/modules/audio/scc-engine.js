@@ -26,6 +26,9 @@
   const DEFAULT_PORTAMENTO_MS = 40;
   const PITCH_BEND_RANGE = 2;
   const MASTER_GAIN = 0.45;
+  const MIN_ATTACK_MS = 1.5;
+  const MIN_RELEASE_MS = 8;
+  const NOTE_ON_FADE_MS = 1.5;
 
   const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
     ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
@@ -226,9 +229,9 @@
         releaseSamples: 1,
       };
     }
-    const attackMs = Number.isFinite(definition.attack) ? Math.max(0, definition.attack) : 0;
+    const attackMs = Number.isFinite(definition.attack) ? Math.max(MIN_ATTACK_MS, definition.attack) : MIN_ATTACK_MS;
     const decayMs = Number.isFinite(definition.decay) ? Math.max(0, definition.decay) : 0;
-    const releaseMs = Number.isFinite(definition.release) ? Math.max(0, definition.release) : 0;
+    const releaseMs = Number.isFinite(definition.release) ? Math.max(MIN_RELEASE_MS, definition.release) : MIN_RELEASE_MS;
     const sustainLevel = clamp(Math.round(Number.isFinite(definition.sustain) ? definition.sustain : 12), 0, 15);
     return {
       attackSamples: Math.max(1, Math.round((attackMs / 1000) * sampleRate)),
@@ -367,6 +370,8 @@
       this.leftGain = gains.left;
       this.rightGain = gains.right;
       this.currentGain = 0;
+      this.fadeInSamples = Math.max(1, Math.round((NOTE_ON_FADE_MS / 1000) * this.sampleRate));
+      this.fadeInCounter = this.fadeInSamples;
       this.age = 0;
       this.startedAt = 0;
       this.isDrum = false;
@@ -423,6 +428,7 @@
       this.sustained = false;
       this.startedAt = params.samplePosition || 0;
       this.age = 0;
+      this.fadeInCounter = 0;
       if (params.pan !== undefined) {
         this.setPan(params.pan);
       }
@@ -603,8 +609,14 @@
         return { left: 0, right: 0 };
       }
       const volume = envelopeLevelToGain(envelopeLevel) * this.velocity * this.channelGain * this.additionalGain;
+      const fadeInFactor = this.fadeInCounter >= this.fadeInSamples
+        ? 1
+        : (this.fadeInCounter / this.fadeInSamples);
+      if (this.fadeInCounter < this.fadeInSamples) {
+        this.fadeInCounter += 1;
+      }
       this.currentGain = volume;
-      const output = sampleValue * volume;
+      const output = sampleValue * volume * fadeInFactor;
       return {
         left: output * this.leftGain,
         right: output * this.rightGain,
