@@ -586,12 +586,11 @@
         let effectiveIncrement = this.currentIncrement;
         if (this.vibratoEnabled) {
           const depthRatio = centsToRatio(this.vibratoDepth);
-          const minRatio = 2 - depthRatio;
-          this.vibratoPhase = (this.vibratoPhase + this.vibratoIncrement) % TWO_PI;
           const fadeFactor = clamp(this.vibratoSampleCounter / this.vibratoFadeSamples, 0, 1);
           this.vibratoSampleCounter = Math.min(this.vibratoSampleCounter + 1, this.vibratoFadeSamples);
-          const vibrato = Math.sin(this.vibratoPhase) * fadeFactor;
-          const ratio = lerp(1 / minRatio, depthRatio, (vibrato + 1) * 0.5);
+          this.vibratoPhase = (this.vibratoPhase + this.vibratoIncrement) % TWO_PI;
+          const vibratoAmount = Math.sin(this.vibratoPhase) * fadeFactor;
+          const ratio = Math.pow(depthRatio, vibratoAmount);
           effectiveIncrement *= ratio;
         }
         this.phase = (this.phase + effectiveIncrement) % TABLE_LENGTH;
