@@ -1537,7 +1537,7 @@
         : undefined;
       this.scheduleAheadTime = Number.isFinite(scheduleAheadConfig) && scheduleAheadConfig > 0
         ? scheduleAheadConfig
-        : 0.12;
+        : 0.18;
       this.scheduleIntervalSeconds = Number.isFinite(schedulerIntervalConfig) && schedulerIntervalConfig > 0
         ? schedulerIntervalConfig
         : 0.06;
@@ -2616,28 +2616,50 @@
 
     }
 
-    setMasterVolume(value, syncSlider = true) {
-      const clamped = Math.max(0, Math.min(1, value));
-      this.masterVolume = clamped;
-      if (this.volumeSlider && syncSlider) {
-        const sliderValue = Math.round(clamped * 100);
-        if (Number.parseInt(this.volumeSlider.value, 10) !== sliderValue) {
+      rampMasterGain(targetValue, durationSeconds = 0.08, options = {}) {
+        const { fromSilence = false } = options || {};
+        if (!this.audioContext || !this.masterGain) {
+          return;
+        }
+
+        const now = this.audioContext.currentTime;
+        const clamped = Math.max(0, Math.min(1, targetValue));
+        const current = Math.max(0.0001, this.masterGain.gain.value || 0.0001);
+        const startValue = fromSilence
+          ? Math.max(0.0001, Math.min(clamped, current * 0.25))
+          : current;
+
+        try {
+          this.masterGain.gain.cancelScheduledValues(now);
+        } catch (error) {
+          // Ignore cancellation errors if the context is not ready yet
+        }
+
+        const fadeEnd = now + Math.max(0.02, durationSeconds);
+        this.masterGain.gain.setValueAtTime(startValue, now);
+        this.masterGain.gain.linearRampToValueAtTime(clamped, fadeEnd);
+      }
+
+      setMasterVolume(value, syncSlider = true) {
+        const clamped = Math.max(0, Math.min(1, value));
+        this.masterVolume = clamped;
+        if (this.volumeSlider && syncSlider) {
+          const sliderValue = Math.round(clamped * 100);
+          if (Number.parseInt(this.volumeSlider.value, 10) !== sliderValue) {
           this.volumeSlider.value = String(sliderValue);
         }
       }
       if (this.volumeValue) {
         this.volumeValue.textContent = `${Math.round(clamped * 100)}%`;
       }
-      if (this.masterGain) {
-        const time = this.audioContext ? this.audioContext.currentTime : 0;
-        try {
-          this.masterGain.gain.cancelScheduledValues(time);
-        } catch (error) {
-          // Ignore cancellation errors if the context is not ready yet
+        if (this.masterGain) {
+          if (this.audioContext) {
+            this.rampMasterGain(clamped, 0.06, { fromSilence: false });
+          } else {
+            this.masterGain.gain.setValueAtTime(clamped, 0);
+          }
         }
-        this.masterGain.gain.setValueAtTime(clamped, time);
       }
-    }
 
     computeVoiceMixWeight(metadata = {}) {
       if (!metadata) {
@@ -8706,6 +8728,7 @@
         this.updateButtons();
 
         this.activePlaybackSpeed = this.playbackSpeed;
+        this.rampMasterGain(this.masterVolume, 0.14, { fromSilence: true });
         const playbackSpeed = this.activePlaybackSpeed || 1;
         const timelineDuration = this.getTimelineDuration(this.timeline);
         const requestedOffset = Number.isFinite(offset) ? offset : this.pendingSeekSeconds;
@@ -8723,7 +8746,7 @@
             : this.getEffectiveDuration(this.timeline, playbackSpeed));
         const previewLead = Math.max(0, this.previewLeadSeconds || 0);
         const finishDelaySeconds = Math.max(0, (effectiveDuration || 0) + previewLead + 0.6);
-        const baseStartTime = context.currentTime + 0.05;
+        const baseStartTime = context.currentTime + 0.08;
         const audioStartTime = baseStartTime;
         const schedulerStartTime = baseStartTime - (startOffset / playbackSpeed);
         this.playStartTime = audioStartTime;
@@ -8848,6 +8871,19 @@
       if (this.finishTimeout) {
         window.clearTimeout(this.finishTimeout);
         this.finishTimeout = null;
+      }
+
+      if (this.audioContext && this.masterGain) {
+        const now = this.audioContext.currentTime;
+        try {
+          this.masterGain.gain.cancelScheduledValues(now);
+        } catch (error) {
+          // Ignore cancellation errors when the context is not ready
+        }
+        const current = Math.max(0.0001, this.masterGain.gain.value || 0.0001);
+        this.masterGain.gain.setValueAtTime(current, now);
+        this.masterGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, current * 0.18), now + 0.05);
+        this.masterGain.gain.linearRampToValueAtTime(this.masterVolume, now + 0.28);
       }
 
       this.stopProgressMonitor();
