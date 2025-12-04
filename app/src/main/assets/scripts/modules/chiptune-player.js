@@ -5801,6 +5801,64 @@
       return this.libraryAllTracks.find(track => track.file === file) || null;
     }
 
+    getArtistNameById(artistId) {
+      if (!artistId) {
+        return '';
+      }
+      const artist = this.libraryArtists.find(item => item && item.id === artistId);
+      return artist && typeof artist.name === 'string' ? artist.name : '';
+    }
+
+    getCurrentTrackInfo() {
+      const selectedFile = this.trackSelect ? this.trackSelect.value : '';
+      const activeTrack = this.findTrackByFile(selectedFile, this.currentArtistId)
+        || this.randomPlaybackCurrentTrack
+        || null;
+      const artistId = (activeTrack && activeTrack.artistId) || this.currentArtistId || '';
+      const artistName = (activeTrack && activeTrack.artistName) || this.getArtistNameById(artistId);
+      const title = this.currentTitle
+        || (activeTrack && activeTrack.name)
+        || (activeTrack && activeTrack.file ? activeTrack.file.replace(/^.*\//, '') : '')
+        || '';
+
+      return {
+        artist: artistName || '',
+        title: typeof title === 'string' ? title : '',
+        file: (activeTrack && activeTrack.file) || selectedFile || '',
+        state: this.playing ? 'playing' : 'stopped',
+      };
+    }
+
+    notifyPlaybackChange(type = 'state') {
+      const detail = {
+        type,
+        state: this.playing ? 'playing' : 'stopped',
+        playing: Boolean(this.playing),
+        ...this.getCurrentTrackInfo(),
+        player: this,
+      };
+      if (typeof globalThis !== 'undefined' && typeof globalThis.dispatchEvent === 'function') {
+        try {
+          if (typeof CustomEvent === 'function') {
+            globalThis.dispatchEvent(new CustomEvent('atom2univers:midiPlayback', { detail }));
+          } else if (globalThis.document && typeof globalThis.document.createEvent === 'function') {
+            const event = globalThis.document.createEvent('CustomEvent');
+            event.initCustomEvent('atom2univers:midiPlayback', false, false, detail);
+            globalThis.dispatchEvent(event);
+          }
+        } catch (error) {
+          console.warn('Unable to dispatch MIDI playback event', error);
+        }
+      }
+      if (typeof this.onPlaybackChange === 'function') {
+        try {
+          this.onPlaybackChange(detail);
+        } catch (error) {
+          console.error('Unable to notify playback change listener', error);
+        }
+      }
+    }
+
     resetRandomPlayback() {
       this.randomPlaybackMode = null;
       this.randomPlaybackArtistId = null;
@@ -8944,6 +9002,7 @@
 
         this.playing = true;
         this.updateButtons();
+        this.notifyPlaybackChange('play');
 
         this.activePlaybackSpeed = this.playbackSpeed;
         this.rampMasterGain(this.masterVolume, 0.14, { fromSilence: true });
@@ -9059,6 +9118,7 @@
       this.setStatusMessage(key, fallback, params, 'info');
       this.scheduleReadyStatusRestore();
       this.updateButtons();
+      this.notifyPlaybackChange('pause');
     }
 
     capturePlaybackPosition() {
@@ -9237,6 +9297,8 @@
         this.setStatusMessage('index.sections.options.chiptune.status.playbackStopped', 'Playback stopped: {title}', { title: this.currentTitle });
         this.scheduleReadyStatusRestore();
       }
+
+      this.notifyPlaybackChange('stop');
     }
 
     startScheduler(startTime, offsetSeconds = 0) {
