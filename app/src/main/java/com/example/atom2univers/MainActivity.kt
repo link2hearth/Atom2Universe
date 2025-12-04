@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private var webViewSaveScript: String? = null
     private var cssRecoveryAttempted = false
     private var pendingBackupUri: Uri? = null
+    private var pendingMidiLabel: String? = null
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
@@ -78,6 +79,15 @@ class MainActivity : AppCompatActivity() {
                 return@registerForActivityResult
             }
             handleBackgroundBankSelection(uri)
+        }
+
+    private val openMidiFolderLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri: Uri? ->
+            if (uri == null) {
+                notifyMidiLibraryError("cancelled")
+                return@registerForActivityResult
+            }
+            handleMidiFolderSelection(uri)
         }
 
     private val openSoundFontLauncher =
@@ -400,6 +410,33 @@ class MainActivity : AppCompatActivity() {
         loadBackgroundBank(treeUri, true)
     }
 
+    internal fun startMidiFolderPicker() {
+        openMidiFolderLauncher.launch(null)
+    }
+
+    internal fun loadPersistedMidiLibrary() {
+        val storedUri = preferences.getString(KEY_MIDI_TREE_URI, null) ?: return
+        val treeUri = Uri.parse(storedUri)
+        if (!hasPersistedPermission(treeUri)) {
+            notifyMidiLibraryError("permission-denied")
+            return
+        }
+        loadMidiLibrary(treeUri, false)
+    }
+
+    private fun handleMidiFolderSelection(treeUri: Uri) {
+        val relativePath = extractRelativePath(treeUri)
+        pendingMidiLabel = relativePath
+        try {
+            val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            contentResolver.takePersistableUriPermission(treeUri, flags)
+        } catch (error: SecurityException) {
+            Log.w(TAG, "Unable to persist MIDI tree permission", error)
+        }
+        persistMidiLibrary(treeUri, relativePath)
+        loadMidiLibrary(treeUri, true)
+    }
+
     private fun loadBackgroundBank(treeUri: Uri, notifyWhenEmpty: Boolean) {
         Thread {
             try {
@@ -419,6 +456,45 @@ class MainActivity : AppCompatActivity() {
             } catch (error: Exception) {
                 Log.w(TAG, "Unable to load background bank", error)
                 notifyBackgroundBankError("error")
+            }
+        }.start()
+    }
+
+    private fun loadMidiLibrary(treeUri: Uri, notifyWhenEmpty: Boolean) {
+        Thread {
+            try {
+                val root = DocumentFile.fromTreeUri(this, treeUri)
+                if (root == null || !root.canRead()) {
+                    notifyMidiLibraryError("error")
+                    return@Thread
+                }
+
+                val library = buildMidiLibraryPayload(root)
+                val artistCount = library.first.size
+                val trackCount = library.second
+                val label = pendingMidiLabel
+                    ?: preferences.getString(KEY_MIDI_RELATIVE_PATH, extractRelativePath(treeUri))
+                    ?: extractRelativePath(treeUri)
+                pendingMidiLabel = null
+
+                if (trackCount <= 0) {
+                    if (notifyWhenEmpty) {
+                        notifyMidiLibraryError("empty")
+                    }
+                    notifyMidiLibraryReady(emptyList(), label ?: "")
+                    return@Thread
+                }
+
+                notifyMidiLibraryReady(library.first, label ?: "")
+                Log.i(TAG, "Loaded MIDI library from Android tree: artists=$artistCount tracks=$trackCount")
+            } catch (error: SecurityException) {
+                Log.w(TAG, "Unable to read MIDI folder", error)
+                notifyMidiLibraryError("permission-denied")
+            } catch (error: Exception) {
+                Log.w(TAG, "Unable to read MIDI folder", error)
+                notifyMidiLibraryError("error")
+            } finally {
+                pendingMidiLabel = null
             }
         }.start()
     }
@@ -484,6 +560,106 @@ class MainActivity : AppCompatActivity() {
         return uris
     }
 
+    private fun buildMidiLibraryPayload(root: DocumentFile, maxTracks: Int = 800): Pair<List<JSONObject>, Int> {
+        val artists = mutableListOf<JSONObject>()
+        var totalTracks = 0
+
+        val rootTracks = mutableListOf<JSONObject>()
+        val artistFolders = mutableListOf<DocumentFile>()
+
+        root.listFiles().forEach { entry ->
+            if (totalTracks >= maxTracks) {
+                return@forEach
+            }
+            if (entry.isDirectory) {
+                artistFolders.add(entry)
+            } else if (isMidiDocument(entry)) {
+                makeMidiTrack(entry, entry.name ?: "track-${rootTracks.size + 1}", entry.name ?: "")?.let { track ->
+                    rootTracks.add(track)
+                    totalTracks += 1
+                }
+            }
+        }
+
+        if (rootTracks.isNotEmpty()) {
+            val artist = JSONObject().apply {
+                put("id", "android-midis-root")
+                put("name", getString(R.string.midi_root_artist))
+                put("tracks", JSONArray(rootTracks))
+                put("source", "android")
+            }
+            artists.add(artist)
+        }
+
+        for (folder in artistFolders) {
+            if (totalTracks >= maxTracks) {
+                break
+            }
+            val tracks = mutableListOf<JSONObject>()
+            collectMidiTracks(folder, tracks, folder.name ?: "", maxTracks - totalTracks)
+            if (tracks.isNotEmpty()) {
+                val artist = JSONObject().apply {
+                    val artistName = folder.name ?: getString(R.string.midi_default_artist)
+                    put("id", "android-${artistName.lowercase().replace("[^a-z0-9]+".toRegex(), "-").trim('-')}")
+                    put("name", artistName)
+                    put("tracks", JSONArray(tracks))
+                    put("source", "android")
+                    put("sourceFolder", folder.name ?: "")
+                }
+                artists.add(artist)
+                totalTracks += tracks.size
+            }
+        }
+
+        return Pair(artists, totalTracks)
+    }
+
+    private fun collectMidiTracks(folder: DocumentFile, target: MutableList<JSONObject>, prefix: String, remaining: Int) {
+        if (remaining <= 0) {
+            return
+        }
+        for (entry in folder.listFiles()) {
+            if (target.size >= remaining) {
+                break
+            }
+            if (entry.isDirectory) {
+                val childPrefix = if (prefix.isNotBlank()) "$prefix/${entry.name ?: ""}" else (entry.name ?: "")
+                collectMidiTracks(entry, target, childPrefix, remaining - target.size)
+            } else if (isMidiDocument(entry)) {
+                val relative = if (prefix.isNotBlank()) "$prefix/${entry.name}" else (entry.name ?: "")
+                makeMidiTrack(entry, entry.name ?: relative, relative)?.let { track ->
+                    target.add(track)
+                }
+            }
+        }
+    }
+
+    private fun makeMidiTrack(document: DocumentFile, displayName: String, relativePath: String): JSONObject? {
+        val uri = document.uri.toString()
+        if (uri.isBlank()) {
+            return null
+        }
+        val track = JSONObject()
+        track.put("file", uri)
+        track.put("name", displayName)
+        track.put("source", "android")
+        track.put("relativePath", relativePath)
+        track.put("mimeType", document.type ?: "")
+        return track
+    }
+
+    private fun isMidiDocument(document: DocumentFile): Boolean {
+        val name = document.name?.lowercase() ?: ""
+        if (name.endsWith(".mid") || name.endsWith(".midi")) {
+            return true
+        }
+        val type = document.type?.lowercase() ?: ""
+        return type == "audio/midi"
+            || type == "audio/x-midi"
+            || type == "audio/mid"
+            || type == "audio/smf"
+    }
+
     private fun extractRelativePath(treeUri: Uri): String {
         val documentId = DocumentsContract.getTreeDocumentId(treeUri)
         return documentId.substringAfter(':', "")
@@ -493,6 +669,13 @@ class MainActivity : AppCompatActivity() {
         preferences.edit {
             putString(KEY_BACKGROUND_TREE_URI, treeUri.toString())
             putString(KEY_BACKGROUND_RELATIVE_PATH, relativePath)
+        }
+    }
+
+    private fun persistMidiLibrary(treeUri: Uri, relativePath: String) {
+        preferences.edit {
+            putString(KEY_MIDI_TREE_URI, treeUri.toString())
+            putString(KEY_MIDI_RELATIVE_PATH, relativePath)
         }
     }
 
@@ -700,6 +883,21 @@ class MainActivity : AppCompatActivity() {
         postJavascript(script)
     }
 
+    private fun notifyMidiLibraryReady(artists: List<JSONObject>, label: String) {
+        val payload = JSONObject().apply {
+            put("artists", JSONArray(artists))
+            put("label", label)
+        }
+        val script = "window.onAndroidMidiLibraryLoaded && window.onAndroidMidiLibraryLoaded(${payload});"
+        postJavascript(script)
+    }
+
+    private fun notifyMidiLibraryError(reason: String) {
+        val safeReason = if (reason.isNotBlank()) reason else "error"
+        val script = "window.onAndroidMidiLibraryError && window.onAndroidMidiLibraryError(${JSONObject.quote(safeReason)});"
+        postJavascript(script)
+    }
+
     private fun resetWebViewStyles(view: WebView, url: String) {
         view.post {
             view.clearCache(true)
@@ -745,6 +943,8 @@ class MainActivity : AppCompatActivity() {
         private const val PREFERENCES_NAME = "atom2univers_prefs"
         private const val KEY_BACKGROUND_TREE_URI = "background.tree.uri"
         private const val KEY_BACKGROUND_RELATIVE_PATH = "background.relative.path"
+        private const val KEY_MIDI_TREE_URI = "midi.tree.uri"
+        private const val KEY_MIDI_RELATIVE_PATH = "midi.relative.path"
         private const val KEY_SOUND_FONT_LABEL = "soundfont.label"
         private const val SOUND_FONT_CACHE_NAME = "user_soundfont.sf2"
         private const val DEFAULT_SOUNDFONT_ID = "user-soundfont"

@@ -72,6 +72,22 @@ class WebAppBridge(activity: MainActivity) {
     }
 
     @JavascriptInterface
+    fun pickMidiFolder() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            activity.startMidiFolderPicker()
+        }
+    }
+
+    @JavascriptInterface
+    fun loadMidiFolder() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            activity.loadPersistedMidiLibrary()
+        }
+    }
+
+    @JavascriptInterface
     fun loadBackgroundImageBank() {
         val activity = activityRef.get()
         activity?.runOnUiThread {
