@@ -33,7 +33,7 @@
       }
     },
     "nowPlaying": {
-      "label": "Now playing"
+      "label": "->"
     },
     "status": {
       "totalAtoms": "Total atoms",
