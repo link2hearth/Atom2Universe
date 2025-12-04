@@ -32,6 +32,9 @@
         "expand": "Expand banner"
       }
     },
+    "nowPlaying": {
+      "label": "Now playing"
+    },
     "status": {
       "totalAtoms": "Total atoms",
       "apc": "APC",
