@@ -5124,6 +5124,11 @@
           {},
           'error',
         );
+        this.populateLibrary(
+          [...this.baseLibraryArtists, ...this.userLibraryArtists],
+          this.libraryLoadErrored,
+          { maintainSelection: true },
+        );
         return;
       }
 
@@ -5134,21 +5139,43 @@
           {},
           'error',
         );
-        this.populateLibrary([], false, { maintainSelection: false });
+        const preservedUserArtists = this.userLibraryArtists.filter(artist => artist?.source !== 'android');
+        this.userLibraryArtists = preservedUserArtists;
+        this.userLibrarySignatures = new Map(
+          preservedUserArtists
+            .filter(artist => typeof artist?.signature === 'string')
+            .map(artist => [artist.signature, artist.id]),
+        );
+        this.populateLibrary(
+          [...this.baseLibraryArtists, ...preservedUserArtists],
+          this.libraryLoadErrored,
+          { maintainSelection: true },
+        );
         return;
       }
 
       this.androidLibraryLabel = normalized.label || '';
-      this.baseLibraryArtists = [];
-      this.userLibraryArtists = normalized.artists;
-      this.userLibrarySignatures.clear();
+      const preservedUserArtists = this.userLibraryArtists.filter(artist => artist?.source !== 'android');
+      const signatures = new Map(
+        preservedUserArtists
+          .filter(artist => typeof artist?.signature === 'string')
+          .map(artist => [artist.signature, artist.id]),
+      );
+
+      this.userLibraryArtists = [...preservedUserArtists, ...normalized.artists];
+      normalized.artists.forEach((artist) => {
+        if (typeof artist?.signature === 'string') {
+          signatures.set(artist.signature, artist.id);
+        }
+      });
+      this.userLibrarySignatures = signatures;
 
       const firstArtist = normalized.artists.find(artist => Array.isArray(artist.tracks) && artist.tracks.length);
       const firstTrack = firstArtist && firstArtist.tracks ? firstArtist.tracks[0] : null;
 
       this.populateLibrary(
-        [...this.userLibraryArtists],
-        false,
+        [...this.baseLibraryArtists, ...this.userLibraryArtists],
+        this.libraryLoadErrored,
         {
           maintainSelection: false,
           preferredArtistId: firstArtist?.id || '',
