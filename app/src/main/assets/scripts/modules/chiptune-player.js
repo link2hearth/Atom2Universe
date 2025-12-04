@@ -1396,6 +1396,7 @@
       this.dropZone = elements.dropZone;
       this.folderButton = elements.folderButton;
       this.folderInput = elements.folderInput;
+      this.androidRescanButton = elements.androidRescanButton;
       this.artistSelect = elements.artistSelect;
       this.trackSelect = elements.trackSelect;
       this.trackSlider = elements.trackSlider;
@@ -1441,6 +1442,10 @@
       this.programUsageNote = elements.programUsageNote;
       this.visibleTracks = [];
 
+      if (this.androidRescanButton) {
+        this.androidRescanButton.hidden = true;
+      }
+
       const hasWindow = typeof window !== 'undefined';
       if (hasWindow) {
         this.requestFrame = typeof window.requestAnimationFrame === 'function'
@@ -1449,6 +1454,10 @@
         this.cancelFrame = typeof window.cancelAnimationFrame === 'function'
           ? window.cancelAnimationFrame.bind(window)
           : (handle) => window.clearTimeout(handle);
+        if (this.androidRescanButton) {
+          const bridge = window.AndroidBridge;
+          this.androidRescanButton.hidden = !(bridge && typeof bridge.rescanMidiFolder === 'function');
+        }
       } else {
         this.requestFrame = () => 0;
         this.cancelFrame = () => {};
@@ -2453,6 +2462,40 @@
           }
           if (this.folderInput) {
             this.folderInput.click();
+          }
+        });
+      }
+
+      if (this.androidRescanButton) {
+        const bridge = typeof window !== 'undefined' ? window.AndroidBridge : null;
+        this.androidRescanButton.hidden = !(bridge && typeof bridge.rescanMidiFolder === 'function');
+        this.androidRescanButton.addEventListener('click', () => {
+          const nativeBridge = typeof window !== 'undefined' ? window.AndroidBridge : null;
+          if (!nativeBridge || typeof nativeBridge.rescanMidiFolder !== 'function') {
+            this.setStatusMessage(
+              'index.sections.options.chiptune.folderImport.android.rescanUnavailable',
+              'Unable to refresh the Android folder.',
+              {},
+              'error',
+            );
+            return;
+          }
+          this.setStatusMessage(
+            'index.sections.options.chiptune.folderImport.android.rescan',
+            'Updating the Android folder…',
+            {},
+            'info',
+          );
+          try {
+            nativeBridge.rescanMidiFolder();
+          } catch (error) {
+            console.error('Unable to rescan Android MIDI folder', error);
+            this.setStatusMessage(
+              'index.sections.options.chiptune.folderImport.android.rescanUnavailable',
+              'Unable to refresh the Android folder.',
+              {},
+              'error',
+            );
           }
         });
       }
@@ -11164,6 +11207,7 @@
     fileInput: document.getElementById('chiptuneFileInput'),
     dropZone: document.getElementById('chiptuneDropZone'),
     folderButton: document.getElementById('chiptuneImportFolderButton'),
+    androidRescanButton: document.getElementById('chiptuneRescanAndroidButton'),
     folderInput: document.getElementById('chiptuneFolderInput'),
     artistSelect: document.getElementById('chiptuneArtistSelect'),
     trackSelect: document.getElementById('chiptuneTrackSelect'),
