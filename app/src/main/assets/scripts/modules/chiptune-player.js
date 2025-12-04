@@ -1507,6 +1507,9 @@
       this.noteEventCounter = 0;
       this.lastProgramByChannel = new Map();
 
+      this.userLibraryStorageKey = 'atom2univers.midi.userLibrary';
+      this.userLibraryPersistPromise = null;
+
       this.masterVolume = 0.9;
       this.maxGain = 0.32;
       this.polyphonyGain = null;
@@ -2135,10 +2138,12 @@
         this.userLibrarySignatures.set(normalizedSignature, artist.id);
       }
 
+      this.scheduleUserLibraryPersist();
+
       return { replaced };
     }
 
-    importMidiFolder(files) {
+    async importMidiFolder(files) {
       if (!Array.isArray(files) || !files.length) {
         return;
       }
@@ -2172,11 +2177,11 @@
       const canPrompt = typeof window !== 'undefined'
         && window
         && typeof window.prompt === 'function';
-      if (canPrompt) {
-        const promptMessage = this.translate(
-          'index.sections.options.chiptune.folderImport.prompt',
-          'Choose a name for this folder (optional)',
-        );
+        if (canPrompt) {
+          const promptMessage = this.translate(
+            'index.sections.options.chiptune.folderImport.prompt',
+            'Choose a name for this folder (optional)',
+          );
         try {
           const response = window.prompt(promptMessage, artistName);
           if (response != null) {
@@ -2187,63 +2192,222 @@
           }
         } catch (error) {
           // Ignore prompt errors silently
+          }
         }
-      }
 
-      const artistId = existing && typeof existing.id === 'string' && existing.id
-        ? existing.id
-        : this.generateUserArtistId(artistName || folderRoot || defaultName);
+        const artistId = existing && typeof existing.id === 'string' && existing.id
+          ? existing.id
+          : this.generateUserArtistId(artistName || folderRoot || defaultName);
 
-      try {
-        const tracks = midiFiles.map((file, index) => {
-          const relativePath = this.getFileRelativePath(file);
-          const displayPath = this.trimFolderPrefix(relativePath, folderRoot)
-            || (typeof file.name === 'string' && file.name)
-            || `Track ${index + 1}`;
-          return {
-            file: `user-track-${artistId}-${index + 1}`,
-            name: displayPath,
+        try {
+          const tracks = midiFiles.map((file, index) => {
+            const relativePath = this.getFileRelativePath(file);
+            const displayPath = this.trimFolderPrefix(relativePath, folderRoot)
+              || (typeof file.name === 'string' && file.name)
+              || `Track ${index + 1}`;
+            return {
+              file: `user-track-${artistId}-${index + 1}`,
+              name: displayPath,
+              source: 'user',
+              blob: file,
+              relativePath,
+            };
+          });
+
+          const artist = {
+            id: artistId,
+            name: artistName || defaultName,
+            tracks,
             source: 'user',
-            blob: file,
-            relativePath,
+            signature,
+            sourceFolder: folderRoot || '',
           };
-        });
 
-        const artist = {
-          id: artistId,
-          name: artistName || defaultName,
-          tracks,
-          source: 'user',
-          signature,
-          sourceFolder: folderRoot || '',
-        };
+          const { replaced } = this.registerUserArtist(artist, signature, folderRoot || '');
+          await this.scheduleUserLibraryPersist();
 
-        const { replaced } = this.registerUserArtist(artist, signature, folderRoot || '');
+          this.populateLibrary(
+            [...this.baseLibraryArtists, ...this.userLibraryArtists],
+            this.libraryLoadErrored,
+            {
+              maintainSelection: false,
+              preferredArtistId: artist.id,
+              preferredTrackFile: tracks.length ? tracks[0].file : '',
+            },
+          );
 
-        this.populateLibrary(
-          [...this.baseLibraryArtists, ...this.userLibraryArtists],
-          this.libraryLoadErrored,
-          {
-            maintainSelection: false,
-            preferredArtistId: artist.id,
-            preferredTrackFile: tracks.length ? tracks[0].file : '',
-          },
-        );
-
-        const key = replaced
-          ? 'index.sections.options.chiptune.folderImport.statusUpdated'
-          : 'index.sections.options.chiptune.folderImport.statusAdded';
-        const fallback = replaced
-          ? 'Folder updated: {name} ({count} tracks)'
-          : 'Folder ready: {name} ({count} tracks)';
-        this.setStatusMessage(key, fallback, { name: artist.name, count: tracks.length }, 'success');
-      } catch (error) {
+          const key = replaced
+            ? 'index.sections.options.chiptune.folderImport.statusUpdated'
+            : 'index.sections.options.chiptune.folderImport.statusAdded';
+          const fallback = replaced
+            ? 'Folder updated: {name} ({count} tracks)'
+            : 'Folder ready: {name} ({count} tracks)';
+          this.setStatusMessage(key, fallback, { name: artist.name, count: tracks.length }, 'success');
+        } catch (error) {
         console.error('Unable to import MIDI folder', error);
         this.setStatusMessage(
           'index.sections.options.chiptune.folderImport.statusError',
           'Unable to import the selected folder.',
           {},
           'error',
+        );
+      }
+    }
+
+    getPersistentStorage() {
+      if (typeof window === 'undefined' || typeof window.localStorage === 'undefined') {
+        return null;
+      }
+      return window.localStorage;
+    }
+
+    scheduleUserLibraryPersist() {
+      if (this.userLibraryPersistPromise) {
+        return this.userLibraryPersistPromise;
+      }
+      this.userLibraryPersistPromise = this.persistUserLibrary()
+        .catch((error) => {
+          console.warn('Unable to persist user MIDI library', error);
+        })
+        .finally(() => {
+          this.userLibraryPersistPromise = null;
+        });
+      return this.userLibraryPersistPromise;
+    }
+
+    async persistUserLibrary() {
+      const storage = this.getPersistentStorage();
+      if (!storage) {
+        return;
+      }
+      const artists = this.userLibraryArtists.filter(artist => artist?.source === 'user');
+      if (!artists.length) {
+        storage.removeItem(this.userLibraryStorageKey);
+        return;
+      }
+
+      const serializedArtists = [];
+      for (const artist of artists) {
+        const serializedTracks = [];
+        const rawTracks = Array.isArray(artist.tracks) ? artist.tracks : [];
+        for (let index = 0; index < rawTracks.length; index += 1) {
+          const track = rawTracks[index];
+          const blob = track?.blob instanceof Blob ? track.blob : null;
+          if (!blob) {
+            continue;
+          }
+          const buffer = await blob.arrayBuffer();
+          const view = new Uint8Array(buffer);
+          let binary = '';
+          for (let i = 0; i < view.length; i += 1) {
+            binary += String.fromCharCode(view[i]);
+          }
+          const base64 = btoa(binary);
+          serializedTracks.push({
+            name: typeof track?.name === 'string' ? track.name : `Track ${index + 1}`,
+            relativePath: typeof track?.relativePath === 'string' ? track.relativePath : '',
+            mimeType: typeof blob.type === 'string' && blob.type ? blob.type : 'audio/midi',
+            data: base64,
+            id: typeof track?.file === 'string' && track.file ? track.file : '',
+          });
+        }
+        serializedArtists.push({
+          id: typeof artist?.id === 'string' ? artist.id : '',
+          name: typeof artist?.name === 'string' ? artist.name : '',
+          signature: typeof artist?.signature === 'string' ? artist.signature : '',
+          sourceFolder: typeof artist?.sourceFolder === 'string' ? artist.sourceFolder : '',
+          tracks: serializedTracks,
+        });
+      }
+
+      const payload = JSON.stringify({ artists: serializedArtists });
+      storage.setItem(this.userLibraryStorageKey, payload);
+    }
+
+    decodeBase64ToBlob(base64, mimeType) {
+      if (typeof base64 !== 'string' || !base64) {
+        return null;
+      }
+      try {
+        const binary = atob(base64);
+        const length = binary.length;
+        const buffer = new Uint8Array(length);
+        for (let i = 0; i < length; i += 1) {
+          buffer[i] = binary.charCodeAt(i);
+        }
+        return new Blob([buffer], { type: typeof mimeType === 'string' && mimeType ? mimeType : 'audio/midi' });
+      } catch (error) {
+        console.warn('Unable to decode persisted MIDI blob', error);
+        return null;
+      }
+    }
+
+    async restorePersistedUserLibrary() {
+      const storage = this.getPersistentStorage();
+      if (!storage) {
+        return;
+      }
+      const raw = storage.getItem(this.userLibraryStorageKey);
+      if (!raw) {
+        return;
+      }
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (error) {
+        console.warn('Unable to parse persisted MIDI library', error);
+        return;
+      }
+      const artists = Array.isArray(parsed?.artists) ? parsed.artists : [];
+      if (!artists.length) {
+        return;
+      }
+
+      let importedAny = false;
+      artists.forEach((artist, artistIndex) => {
+        const tracks = Array.isArray(artist?.tracks) ? artist.tracks : [];
+        const restoredTracks = [];
+        tracks.forEach((track, trackIndex) => {
+          const blob = this.decodeBase64ToBlob(track?.data, track?.mimeType);
+          if (!blob) {
+            return;
+          }
+          const trackId = typeof track?.id === 'string' && track.id
+            ? track.id
+            : `user-track-${artistIndex + 1}-${trackIndex + 1}`;
+          restoredTracks.push({
+            file: trackId,
+            name: typeof track?.name === 'string' && track.name ? track.name : `Track ${trackIndex + 1}`,
+            source: 'user',
+            blob,
+            relativePath: typeof track?.relativePath === 'string' ? track.relativePath : '',
+          });
+        });
+
+        if (!restoredTracks.length) {
+          return;
+        }
+
+        const signature = typeof artist?.signature === 'string' ? artist.signature : '';
+        const folderName = typeof artist?.sourceFolder === 'string' ? artist.sourceFolder : '';
+        const normalizedArtist = {
+          id: typeof artist?.id === 'string' && artist.id ? artist.id : this.generateUserArtistId(`user-${artistIndex + 1}`),
+          name: typeof artist?.name === 'string' && artist.name ? artist.name : `Dossier ${artistIndex + 1}`,
+          tracks: restoredTracks,
+          source: 'user',
+          signature,
+          sourceFolder: folderName,
+        };
+
+        this.registerUserArtist(normalizedArtist, signature, folderName);
+        importedAny = true;
+      });
+
+      if (importedAny) {
+        this.populateLibrary(
+          [...this.baseLibraryArtists, ...this.userLibraryArtists],
+          this.libraryLoadErrored,
+          { maintainSelection: true },
         );
       }
     }
@@ -2289,10 +2453,10 @@
       }
 
       if (this.folderInput) {
-        this.folderInput.addEventListener('change', () => {
+        this.folderInput.addEventListener('change', async () => {
           const files = this.folderInput.files ? Array.from(this.folderInput.files) : [];
           if (files.length) {
-            this.importMidiFolder(files);
+            await this.importMidiFolder(files);
           }
           this.folderInput.value = '';
         });
@@ -5256,6 +5420,8 @@
 
     async loadLibrary() {
       try {
+        await this.restorePersistedUserLibrary();
+
         const response = await fetch('resources/chiptune/library.json', { cache: 'no-cache' });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
