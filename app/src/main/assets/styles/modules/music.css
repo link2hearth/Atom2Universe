@@ -14,7 +14,7 @@
   min-width: 0;
   font-size: 0.9rem;
   pointer-events: none;
-  z-index: 120;
+  z-index: 60;
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 0.2s ease, transform 0.2s ease;
