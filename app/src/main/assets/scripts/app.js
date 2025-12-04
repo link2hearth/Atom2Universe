@@ -6465,6 +6465,7 @@ function collectDomElements() {
   bigBangDialogConfirm: document.getElementById('bigBangDialogConfirm'),
   bigBangDialogCancel: document.getElementById('bigBangDialogCancel'),
     headerPlaybackButton: document.getElementById('headerPlaybackToggle'),
+    headerNextButton: document.getElementById('headerNextTrack'),
     nowPlayingBar: document.getElementById('nowPlayingBar'),
     nowPlayingTrack: document.getElementById('nowPlayingTrack'),
     pages: document.querySelectorAll('.page'),
@@ -15466,6 +15467,22 @@ function updateMusicModuleVisibility() {
       }
     } else {
       elements.headerPlaybackButton.removeAttribute('tabindex');
+    }
+  }
+
+  if (elements.headerNextButton) {
+    elements.headerNextButton.hidden = !enabled;
+    elements.headerNextButton.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+    elements.headerNextButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+    elements.headerNextButton.disabled = !enabled;
+    if (!enabled) {
+      elements.headerNextButton.setAttribute('disabled', '');
+      elements.headerNextButton.classList.add('is-disabled');
+      elements.headerNextButton.setAttribute('tabindex', '-1');
+    } else {
+      elements.headerNextButton.removeAttribute('disabled');
+      elements.headerNextButton.classList.remove('is-disabled');
+      elements.headerNextButton.removeAttribute('tabindex');
     }
   }
 

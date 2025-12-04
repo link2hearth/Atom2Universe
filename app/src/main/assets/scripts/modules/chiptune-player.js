@@ -1402,6 +1402,7 @@
       this.trackSlider = elements.trackSlider;
       this.trackSliderValue = elements.trackSliderValue;
       this.headerPlaybackButton = elements.headerPlaybackButton;
+      this.headerNextButton = elements.headerNextButton;
       this.playButton = elements.playButton;
       this.skipButton = elements.skipButton;
       this.stopButton = elements.stopButton;
@@ -2641,6 +2642,15 @@
           } else if (this.hasPlayableTimeline()) {
             this.play();
           }
+        });
+      }
+
+      if (this.headerNextButton) {
+        this.headerNextButton.addEventListener('click', () => {
+          if (!isMusicModuleFeatureEnabled()) {
+            return;
+          }
+          this.playNextTrack();
         });
       }
 
@@ -4548,6 +4558,30 @@
           }
         }
       }
+      if (this.headerNextButton) {
+        const musicDisabled = !isMusicModuleFeatureEnabled();
+        const nextDisabled = musicDisabled || !this.canPlayNextTrack();
+        const key = 'index.sections.options.chiptune.controls.skip';
+        const label = this.translate(key, 'Next');
+        this.headerNextButton.setAttribute('aria-label', label);
+        this.headerNextButton.setAttribute('title', label);
+        if (this.headerNextButton.dataset) {
+          this.headerNextButton.dataset.i18n = `aria-label:${key};title:${key}`;
+        } else {
+          this.headerNextButton.setAttribute('data-i18n', `aria-label:${key};title:${key}`);
+        }
+        if (nextDisabled) {
+          this.headerNextButton.disabled = true;
+          this.headerNextButton.setAttribute('disabled', '');
+          this.headerNextButton.setAttribute('aria-disabled', 'true');
+          this.headerNextButton.classList.add('is-disabled');
+        } else {
+          this.headerNextButton.disabled = false;
+          this.headerNextButton.removeAttribute('disabled');
+          this.headerNextButton.removeAttribute('aria-disabled');
+          this.headerNextButton.classList.remove('is-disabled');
+        }
+      }
       this.updateHeaderPlaybackButton();
       if (this.stopButton) {
         this.stopButton.disabled = !this.playing;
@@ -6120,6 +6154,61 @@
         console.error('Unable to skip random track', error);
         this.randomPlaybackPending = false;
         this.updateButtons();
+      }
+    }
+
+    getVisibleTrackList() {
+      return Array.isArray(this.visibleTracks) ? this.visibleTracks : [];
+    }
+
+    getNextSequentialTrack() {
+      const tracks = this.getVisibleTrackList();
+      if (tracks.length <= 1) {
+        return null;
+      }
+      const currentFile = this.trackSelect ? this.trackSelect.value : '';
+      const currentIndex = tracks.findIndex(track => track && track.file === currentFile);
+      const startIndex = currentIndex >= 0 ? currentIndex : -1;
+      const nextIndex = (startIndex + 1) % tracks.length;
+      return tracks[nextIndex] || null;
+    }
+
+    canPlayNextTrack() {
+      if (this.randomPlaybackMode) {
+        return this.canSkipRandomTrack();
+      }
+      return Boolean(this.getNextSequentialTrack());
+    }
+
+    async playNextTrack() {
+      if (this.randomPlaybackMode) {
+        await this.skipRandomTrack();
+        return;
+      }
+      const nextTrack = this.getNextSequentialTrack();
+      if (!nextTrack) {
+        return;
+      }
+      const shouldAutoplay = this.playing;
+      try {
+        await this.loadFromLibrary(nextTrack);
+        if (this.trackSelect && this.trackSelect.value !== nextTrack.file) {
+          this.trackSelect.value = nextTrack.file;
+        }
+        this.refreshTrackSlider(nextTrack.file);
+        if (shouldAutoplay && this.hasPlayableTimeline()) {
+          await this.play();
+        } else {
+          this.updateButtons();
+        }
+      } catch (error) {
+        console.error('Unable to play next track', error);
+        this.setStatusMessage(
+          'index.sections.options.chiptune.status.trackError',
+          'Unable to load the track: {error}',
+          { error: error?.message || 'Unknown error' },
+          'error',
+        );
       }
     }
 
@@ -11214,6 +11303,7 @@
     trackSlider: document.getElementById('chiptuneTrackSlider'),
     trackSliderValue: document.getElementById('chiptuneTrackSliderValue'),
     headerPlaybackButton: document.getElementById('headerPlaybackToggle'),
+    headerNextButton: document.getElementById('headerNextTrack'),
     playButton: document.getElementById('chiptunePlayButton'),
     skipButton: document.getElementById('chiptuneSkipButton'),
     stopButton: document.getElementById('chiptuneStopButton'),
