@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Base64
+import android.util.Base64OutputStream
 import android.util.Log
 import android.view.MotionEvent
 import android.webkit.WebResourceRequest
@@ -27,6 +28,10 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.webkit.WebViewAssetLoader
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
@@ -74,6 +79,15 @@ class MainActivity : AppCompatActivity() {
                 return@registerForActivityResult
             }
             handleBackgroundBankSelection(uri)
+        }
+
+    private val openSoundFontLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            if (uri == null) {
+                notifySoundFontError("cancelled")
+                return@registerForActivityResult
+            }
+            handleSoundFontSelection(uri)
         }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -482,6 +496,150 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun startSoundFontPicker() {
+        openSoundFontLauncher.launch(arrayOf("audio/x-soundfont", "application/octet-stream"))
+    }
+
+    fun loadCachedSoundFont() {
+        val cacheFile = File(filesDir, SOUND_FONT_CACHE_NAME)
+        if (!cacheFile.exists()) {
+            notifySoundFontError("missing")
+            return
+        }
+
+        val cacheSize = cacheFile.length()
+        if (cacheSize <= 0) {
+            cacheFile.delete()
+            clearSoundFontLabel()
+            notifySoundFontError("empty")
+            return
+        }
+        if (cacheSize > SOUND_FONT_MAX_BYTES) {
+            cacheFile.delete()
+            clearSoundFontLabel()
+            notifySoundFontError("too_large")
+            return
+        }
+
+        val label = preferences.getString(KEY_SOUND_FONT_LABEL, getString(R.string.soundfont_default_label))
+        notifySoundFontReady(cacheFile, label)
+    }
+
+    private fun handleSoundFontSelection(uri: Uri) {
+        val declaredSize = DocumentFile.fromSingleUri(this, uri)?.length() ?: -1
+        if (declaredSize > SOUND_FONT_MAX_BYTES) {
+            clearSoundFontLabel()
+            notifySoundFontError("too_large")
+            return
+        }
+        try {
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (_: SecurityException) {
+        }
+
+        val target = File(filesDir, SOUND_FONT_CACHE_NAME)
+        if (target.exists()) {
+            target.delete()
+        }
+
+        try {
+            contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(target).use { output ->
+                    input.copyTo(output)
+                }
+            } ?: run {
+                clearSoundFontLabel()
+                notifySoundFontError("error")
+                return
+            }
+
+            val importedSize = target.length()
+            if (importedSize <= 0) {
+                target.delete()
+                clearSoundFontLabel()
+                notifySoundFontError("empty")
+                return
+            }
+            if (importedSize > SOUND_FONT_MAX_BYTES) {
+                target.delete()
+                clearSoundFontLabel()
+                notifySoundFontError("too_large")
+                return
+            }
+
+            val displayName = DocumentFile.fromSingleUri(this, uri)?.name
+                ?: getString(R.string.soundfont_default_label)
+            preferences.edit {
+                putString(KEY_SOUND_FONT_LABEL, displayName)
+            }
+            notifySoundFontReady(target, displayName)
+        } catch (error: Exception) {
+            Log.e(TAG, "Unable to import SoundFont", error)
+            clearSoundFontLabel()
+            notifySoundFontError("error")
+        }
+    }
+
+    private fun notifySoundFontReady(file: File, label: String?) {
+        try {
+            val base64 = encodeFileToBase64(file)
+            if (base64.isBlank()) {
+                notifySoundFontError("empty")
+                return
+            }
+            val payload = JSONObject().apply {
+                put("id", DEFAULT_SOUNDFONT_ID)
+                put("name", label?.takeIf { it.isNotBlank() }
+                    ?: getString(R.string.soundfont_default_label))
+                put("data", base64)
+                put("mimeType", "audio/x-soundfont")
+            }
+            val script = "window.onAndroidSoundFontReady && window.onAndroidSoundFontReady(${payload});"
+            postJavascript(script)
+        } catch (error: Exception) {
+            Log.e(TAG, "Unable to prepare SoundFont for JS", error)
+            notifySoundFontError("error")
+        }
+    }
+
+    private fun notifySoundFontError(reason: String) {
+        val safeReason = if (reason.isNotBlank()) reason else "error"
+        val message = when (safeReason) {
+            "missing" -> getString(R.string.soundfont_error_missing)
+            "empty" -> getString(R.string.soundfont_error_empty)
+            "too_large" -> getString(R.string.soundfont_error_too_large, SOUND_FONT_MAX_BYTES / (1024 * 1024))
+            else -> getString(R.string.soundfont_error_generic)
+        }
+        val script = "window.onAndroidSoundFontError && window.onAndroidSoundFontError(${JSONObject.quote(message)});"
+        postJavascript(script)
+    }
+
+    private fun encodeFileToBase64(file: File): String {
+        return FileInputStream(file).use { input ->
+            val buffer = ByteArray(8 * 1024)
+            val output = ByteArrayOutputStream()
+            Base64OutputStream(output, Base64.NO_WRAP).use { base64Stream ->
+                while (true) {
+                    val read = input.read(buffer)
+                    if (read <= 0) {
+                        break
+                    }
+                    base64Stream.write(buffer, 0, read)
+                }
+            }
+            output.toString(Charsets.UTF_8.name())
+        }
+    }
+
+    private fun clearSoundFontLabel() {
+        preferences.edit {
+            remove(KEY_SOUND_FONT_LABEL)
+        }
+    }
+
     private fun hasPersistedPermission(treeUri: Uri): Boolean {
         return contentResolver.persistedUriPermissions.any { permission ->
             permission.uri == treeUri && permission.isReadPermission
@@ -548,6 +706,10 @@ class MainActivity : AppCompatActivity() {
         private const val PREFERENCES_NAME = "atom2univers_prefs"
         private const val KEY_BACKGROUND_TREE_URI = "background.tree.uri"
         private const val KEY_BACKGROUND_RELATIVE_PATH = "background.relative.path"
+        private const val KEY_SOUND_FONT_LABEL = "soundfont.label"
+        private const val SOUND_FONT_CACHE_NAME = "user_soundfont.sf2"
+        private const val DEFAULT_SOUNDFONT_ID = "user-soundfont"
+        private const val SOUND_FONT_MAX_BYTES = 1L * 1024 * 1024 * 1024
         private const val CSS_PRESENCE_CHECK = """
             (function() {
               try {
