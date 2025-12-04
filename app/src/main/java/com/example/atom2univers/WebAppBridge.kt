@@ -88,6 +88,14 @@ class WebAppBridge(activity: MainActivity) {
     }
 
     @JavascriptInterface
+    fun rescanMidiFolder() {
+        val activity = activityRef.get()
+        activity?.runOnUiThread {
+            activity.loadPersistedMidiLibrary(true)
+        }
+    }
+
+    @JavascriptInterface
     fun loadBackgroundImageBank() {
         val activity = activityRef.get()
         activity?.runOnUiThread {
