@@ -3,4 +3,8 @@
     <string name="anti_cheat_detected_toast">Comportement suspect détecté</string>
     <string name="image_saved_toast">Image enregistrée dans %1$s</string>
     <string name="soundfont_default_label">SoundFont personnalisée</string>
+    <string name="soundfont_error_generic">Impossible de charger la SoundFont.</string>
+    <string name="soundfont_error_missing">Aucune SoundFont disponible.</string>
+    <string name="soundfont_error_empty">SoundFont vide ou corrompue.</string>
+    <string name="soundfont_error_too_large">SoundFont trop volumineuse (max %1$d Mo).</string>
 </resources>
