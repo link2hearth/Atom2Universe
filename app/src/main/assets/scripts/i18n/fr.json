@@ -2460,13 +2460,24 @@
             }
           },
           "folderImport": {
-            "button": "Ajouter un dossier MIDI local",
+            "button": "Ajouter un dossier MIDI",
             "prompt": "Choisissez un nom pour ce dossier (optionnel)",
             "defaultName": "Dossier MIDI local",
             "statusEmpty": "Le dossier sélectionné ne contient aucun fichier MIDI.",
             "statusAdded": "Dossier prêt : {name} ({count} morceaux)",
             "statusUpdated": "Dossier mis à jour : {name} ({count} morceaux)",
-            "statusError": "Impossible d’importer le dossier sélectionné."
+            "statusError": "Impossible d’importer le dossier sélectionné.",
+            "android": {
+              "request": "Choisissez un dossier MIDI sur votre appareil.",
+              "error": "Impossible d’ouvrir ou de charger ce dossier MIDI.",
+              "permission": "Autorisez l’accès aux fichiers MIDI pour continuer.",
+              "cancelled": "Sélection annulée.",
+              "empty": "Aucun fichier MIDI trouvé dans ce dossier.",
+              "ready": "Bibliothèque Android prête : {tracks} titres."
+            }
+          },
+          "android": {
+            "rootArtist": "Sans artiste"
           },
           "trackSlider": {
             "label": "Explorer les titres",
