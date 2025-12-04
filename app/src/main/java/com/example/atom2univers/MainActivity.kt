@@ -709,7 +709,7 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_SOUND_FONT_LABEL = "soundfont.label"
         private const val SOUND_FONT_CACHE_NAME = "user_soundfont.sf2"
         private const val DEFAULT_SOUNDFONT_ID = "user-soundfont"
-        private const val SOUND_FONT_MAX_BYTES = 16L * 1024 * 1024
+        private const val SOUND_FONT_MAX_BYTES = 1L * 1024 * 1024 * 1024
         private const val CSS_PRESENCE_CHECK = """
             (function() {
               try {
