@@ -28,11 +28,10 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.webkit.WebViewAssetLoader
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -135,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         val assetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .addPathHandler("/res/", WebViewAssetLoader.ResourcesPathHandler(this))
+            .addPathHandler("/soundfonts/", SoundFontPathHandler())
             .build()
 
         webView.webViewClient = object : WebViewClient() {
@@ -544,57 +544,88 @@ class MainActivity : AppCompatActivity() {
         if (target.exists()) {
             target.delete()
         }
+        Thread {
+            importSoundFont(uri, target)
+        }.start()
+    }
 
+    private fun importSoundFont(uri: Uri, target: File) {
+        var errorReason: String? = null
+        val displayName = DocumentFile.fromSingleUri(this, uri)?.name
+            ?: getString(R.string.soundfont_default_label)
         try {
             contentResolver.openInputStream(uri)?.use { input ->
-                FileOutputStream(target).use { output ->
-                    input.copyTo(output)
-                }
+                copySoundFontStream(input, target)
             } ?: run {
-                clearSoundFontLabel()
-                notifySoundFontError("error")
+                errorReason = "error"
                 return
             }
 
             val importedSize = target.length()
             if (importedSize <= 0) {
+                errorReason = "empty"
                 target.delete()
-                clearSoundFontLabel()
-                notifySoundFontError("empty")
-                return
-            }
-            if (importedSize > SOUND_FONT_MAX_BYTES) {
-                target.delete()
-                clearSoundFontLabel()
-                notifySoundFontError("too_large")
                 return
             }
 
-            val displayName = DocumentFile.fromSingleUri(this, uri)?.name
-                ?: getString(R.string.soundfont_default_label)
             preferences.edit {
                 putString(KEY_SOUND_FONT_LABEL, displayName)
             }
-            notifySoundFontReady(target, displayName)
+            runOnUiThread {
+                notifySoundFontReady(target, displayName)
+            }
+        } catch (error: SoundFontTooLargeException) {
+            target.delete()
+            errorReason = "too_large"
         } catch (error: Exception) {
             Log.e(TAG, "Unable to import SoundFont", error)
-            clearSoundFontLabel()
-            notifySoundFontError("error")
+            target.delete()
+            errorReason = "error"
+        } finally {
+            if (errorReason != null) {
+                runOnUiThread {
+                    clearSoundFontLabel()
+                    notifySoundFontError(errorReason ?: "error")
+                }
+            }
+        }
+    }
+
+    private fun copySoundFontStream(input: InputStream, target: File) {
+        FileOutputStream(target).use { output ->
+            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+            var read: Int
+            var total = 0L
+            while (true) {
+                read = input.read(buffer)
+                if (read <= 0) {
+                    break
+                }
+                total += read
+                if (total > SOUND_FONT_MAX_BYTES) {
+                    throw SoundFontTooLargeException()
+                }
+                output.write(buffer, 0, read)
+            }
+            output.flush()
         }
     }
 
     private fun notifySoundFontReady(file: File, label: String?) {
+        val url = "$SOUND_FONT_URL_PREFIX/$SOUND_FONT_CACHE_NAME"
+        if (!file.exists() || file.length() <= 0) {
+            notifySoundFontError("empty")
+            return
+        }
         try {
-            val base64 = encodeFileToBase64(file)
-            if (base64.isBlank()) {
-                notifySoundFontError("empty")
-                return
-            }
             val payload = JSONObject().apply {
                 put("id", DEFAULT_SOUNDFONT_ID)
-                put("name", label?.takeIf { it.isNotBlank() }
-                    ?: getString(R.string.soundfont_default_label))
-                put("data", base64)
+                put(
+                    "name",
+                    label?.takeIf { it.isNotBlank() }
+                        ?: getString(R.string.soundfont_default_label)
+                )
+                put("url", url)
                 put("mimeType", "audio/x-soundfont")
             }
             val script = "window.onAndroidSoundFontReady && window.onAndroidSoundFontReady(${payload});"
@@ -617,20 +648,28 @@ class MainActivity : AppCompatActivity() {
         postJavascript(script)
     }
 
-    private fun encodeFileToBase64(file: File): String {
-        return FileInputStream(file).use { input ->
-            val buffer = ByteArray(8 * 1024)
-            val output = ByteArrayOutputStream()
-            Base64OutputStream(output, Base64.NO_WRAP).use { base64Stream ->
-                while (true) {
-                    val read = input.read(buffer)
-                    if (read <= 0) {
-                        break
-                    }
-                    base64Stream.write(buffer, 0, read)
-                }
+    private class SoundFontTooLargeException : Exception()
+
+    private inner class SoundFontPathHandler : WebViewAssetLoader.PathHandler {
+        override fun handle(path: String): WebResourceResponse? {
+            if (path != SOUND_FONT_CACHE_NAME) {
+                return null
             }
-            output.toString(Charsets.UTF_8.name())
+
+            val file = File(filesDir, SOUND_FONT_CACHE_NAME)
+            if (!file.exists() || file.length() <= 0) {
+                return null
+            }
+
+            return try {
+                val stream = file.inputStream()
+                WebResourceResponse(SOUND_FONT_MIME_TYPE, null, stream).apply {
+                    responseHeaders = mapOf("Content-Length" to file.length().toString())
+                }
+            } catch (error: Exception) {
+                Log.w(TAG, "Unable to serve SoundFont", error)
+                null
+            }
         }
     }
 
@@ -709,6 +748,8 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_SOUND_FONT_LABEL = "soundfont.label"
         private const val SOUND_FONT_CACHE_NAME = "user_soundfont.sf2"
         private const val DEFAULT_SOUNDFONT_ID = "user-soundfont"
+        private const val SOUND_FONT_MIME_TYPE = "audio/x-soundfont"
+        private const val SOUND_FONT_URL_PREFIX = "https://appassets.androidplatform.net/soundfonts"
         private const val SOUND_FONT_MAX_BYTES = 1L * 1024 * 1024 * 1024
         private const val CSS_PRESENCE_CHECK = """
             (function() {

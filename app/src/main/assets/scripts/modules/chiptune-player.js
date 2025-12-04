@@ -4751,17 +4751,6 @@
     }
 
     registerNativeSoundFont(payload = {}) {
-      const base64 = typeof payload?.data === 'string' ? payload.data.trim() : '';
-      if (!base64) {
-        this.setStatusMessage(
-          'index.sections.options.chiptune.status.soundFontUnavailable',
-          'SoundFont unavailable: {error}',
-          { error: 'Empty SoundFont payload' },
-          'error',
-        );
-        return;
-      }
-
       const mimeType = typeof payload?.mimeType === 'string' && payload.mimeType
         ? payload.mimeType
         : 'audio/x-soundfont';
@@ -4771,9 +4760,21 @@
       const id = typeof payload?.id === 'string' && payload.id
         ? payload.id
         : 'user-soundfont';
+      const url = typeof payload?.url === 'string' ? payload.url.trim() : '';
+      const base64 = typeof payload?.data === 'string' ? payload.data.trim() : '';
+      const file = url || (base64 ? `data:${mimeType};base64,${base64}` : '');
 
-      const dataUrl = `data:${mimeType};base64,${base64}`;
-      this.setUserSoundFont({ id, name: label, file: dataUrl, default: true });
+      if (!file) {
+        this.setStatusMessage(
+          'index.sections.options.chiptune.status.soundFontUnavailable',
+          'SoundFont unavailable: {error}',
+          { error: 'Empty SoundFont payload' },
+          'error',
+        );
+        return;
+      }
+
+      this.setUserSoundFont({ id, name: label, file, default: true });
       if (this.engineMode !== 'hifi') {
         this.setEngineMode('hifi');
         this.setStatusMessage(
