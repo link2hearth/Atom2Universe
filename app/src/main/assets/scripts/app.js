@@ -14859,6 +14859,57 @@ function renderRadioResults() {
   });
 }
 
+function getAndroidBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const bridge = window.AndroidBridge;
+  if (!bridge) {
+    return null;
+  }
+  const bridgeType = typeof bridge;
+  if (bridgeType === 'object' || bridgeType === 'function') {
+    return bridge;
+  }
+  return null;
+}
+
+function updateAndroidRadioPlayback(isPlaying) {
+  const bridge = getAndroidBridge();
+  if (!bridge) {
+    return;
+  }
+  const title = radioSelectedStation?.name || '';
+  const artist = radioSelectedStation ? formatRadioStationMeta(radioSelectedStation) : '';
+  if (isPlaying) {
+    if (typeof bridge.startForegroundAudio === 'function') {
+      bridge.startForegroundAudio(title, artist, true);
+      return;
+    }
+    if (typeof bridge.updateForegroundAudio === 'function') {
+      bridge.updateForegroundAudio(title, artist, true);
+    }
+    return;
+  }
+  if (typeof bridge.updateForegroundAudio === 'function') {
+    bridge.updateForegroundAudio(title, artist, false);
+  }
+}
+
+function stopAndroidRadioPlayback() {
+  const bridge = getAndroidBridge();
+  if (!bridge) {
+    return;
+  }
+  if (typeof bridge.stopForegroundAudio === 'function') {
+    bridge.stopForegroundAudio();
+  } else if (typeof bridge.updateForegroundAudio === 'function') {
+    const title = radioSelectedStation?.name || '';
+    const artist = radioSelectedStation ? formatRadioStationMeta(radioSelectedStation) : '';
+    bridge.updateForegroundAudio(title, artist, false);
+  }
+}
+
 function normalizeRadioDirectoryEntries(items, labelField = 'name') {
   if (!Array.isArray(items)) {
     return [];
@@ -14881,14 +14932,29 @@ async function fetchRadioDirectory(path) {
   for (let index = 0; index < servers.length; index += 1) {
     const base = servers[index];
     const url = `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timeoutId = controller && RADIO_REQUEST_TIMEOUT_MS > 0
+      ? setTimeout(() => controller.abort(), RADIO_REQUEST_TIMEOUT_MS)
+      : null;
     try {
-      const response = await fetch(url, { headers: { Accept: 'application/json', 'Client-Name': RADIO_USER_AGENT } });
+      const response = await fetch(url, {
+        headers: { Accept: 'application/json' },
+        signal: controller?.signal,
+        cache: 'no-cache'
+      });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-      return await response.json();
+      const payload = await response.json();
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      return payload;
     } catch (error) {
       lastError = error;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     }
   }
   throw lastError || new Error('Radio directory unavailable');
@@ -14900,6 +14966,10 @@ async function ensureRadioFiltersLoaded() {
   }
   radioFiltersPromise = (async () => {
     try {
+      const showLoadingStatus = !radioCountries.length && !radioLanguages.length && !radioIsLoading;
+      if (showLoadingStatus) {
+        setRadioStatus('index.sections.radio.status.filtersLoading', 'Chargement des filtres en cours…');
+      }
       const [countries, languages] = await Promise.all([
         fetchRadioDirectory('json/countries'),
         fetchRadioDirectory('json/languages')
@@ -14907,10 +14977,16 @@ async function ensureRadioFiltersLoaded() {
       radioCountries = normalizeRadioDirectoryEntries(countries, 'name');
       radioLanguages = normalizeRadioDirectoryEntries(languages, 'name');
       applyRadioFilters();
+      if (showLoadingStatus) {
+        setRadioStatus('index.sections.radio.status.idle', 'Entrez une requête pour démarrer une recherche.');
+      }
     } catch (error) {
       radioLastError = error;
       radioFiltersPromise = null;
       console.warn('Unable to load radio filters', error);
+      if (!radioCountries.length && !radioLanguages.length && !radioIsLoading) {
+        setRadioStatus('index.sections.radio.status.filtersError', 'Impossible de charger les listes de pays et langues.');
+      }
     }
   })();
   return radioFiltersPromise;
@@ -15053,18 +15129,22 @@ function ensureRadioAudio() {
   audio.preload = 'none';
   audio.addEventListener('playing', () => {
     setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+    updateAndroidRadioPlayback(true);
   });
   audio.addEventListener('pause', () => {
     if (audio.currentTime > 0 && !audio.ended) {
       setRadioPlayerStatus('index.sections.radio.player.status.paused', 'Lecture en pause');
+      updateAndroidRadioPlayback(false);
     }
   });
   audio.addEventListener('ended', () => {
     setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
+    stopAndroidRadioPlayback();
   });
   audio.addEventListener('error', () => {
     radioLastError = audio.error;
     setRadioPlayerStatus('index.sections.radio.player.status.error', 'Impossible de lire le flux.');
+    stopAndroidRadioPlayback();
   });
   radioAudioElement = audio;
   return radioAudioElement;
@@ -15088,6 +15168,7 @@ async function playSelectedRadioStation(options = {}) {
   try {
     await audio.play();
     setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+    updateAndroidRadioPlayback(true);
   } catch (error) {
     radioLastError = error;
     setRadioPlayerStatus('index.sections.radio.player.status.error', 'Impossible de lire le flux.');
@@ -15101,6 +15182,7 @@ function pauseRadioPlayback() {
   }
   audio.pause();
   setRadioPlayerStatus('index.sections.radio.player.status.paused', 'Lecture en pause');
+  updateAndroidRadioPlayback(false);
 }
 
 function stopRadioPlayback() {
@@ -15113,6 +15195,7 @@ function stopRadioPlayback() {
   audio.removeAttribute('src');
   audio.load();
   setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
+  stopAndroidRadioPlayback();
 }
 
 function reloadRadioStream() {
@@ -15120,6 +15203,20 @@ function reloadRadioStream() {
     return;
   }
   playSelectedRadioStation({ forceReload: true });
+}
+
+function handleAndroidMediaCommand(command) {
+  if (typeof command !== 'string' || !command) {
+    return;
+  }
+  const normalized = command.toLowerCase();
+  if (normalized === 'play') {
+    playSelectedRadioStation();
+  } else if (normalized === 'pause') {
+    pauseRadioPlayback();
+  } else if (normalized === 'stop') {
+    stopRadioPlayback();
+  }
 }
 
 async function searchRadioStations(params = {}) {
@@ -15236,6 +15333,10 @@ function subscribeRadioLanguageUpdates() {
   if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
     globalThis.addEventListener('i18n:languagechange', handler);
   }
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.onAndroidMediaCommand = handleAndroidMediaCommand;
 }
 
 

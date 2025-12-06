@@ -478,7 +478,9 @@
           "loading": "Searching for stations…",
           "loaded": "{count} stations found.",
           "empty": "No stations found.",
-          "error": "Unable to fetch stations."
+          "error": "Unable to fetch stations.",
+          "filtersLoading": "Loading countries and languages…",
+          "filtersError": "Unable to load the country and language lists."
         },
         "player": {
           "title": "Player",
