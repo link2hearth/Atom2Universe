@@ -564,6 +564,16 @@ let radioPlayerStatusState = {
 };
 let radioLastError = null;
 
+let notesItems = [];
+let notesEditingNote = null;
+let notesStylePreference = null;
+let notesBusy = false;
+let notesStatusState = {
+  key: 'index.sections.notes.status.idle',
+  fallback: 'Prêt à charger vos notes.',
+  params: null
+};
+
 let imageFeedItems = [];
 let imageFeedVisibleItems = [];
 let imageFeedDismissedIds = new Set();
@@ -618,6 +628,14 @@ const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
 const ATOM_ANIMATION_PREFERENCE_STORAGE_KEY = 'atom2univers.options.atomAnimationsEnabled';
 const ATOM_ICON_VISIBILITY_STORAGE_KEY = 'atom2univers.options.atomIconVisible';
+const NOTES_STYLE_STORAGE_KEY = 'atom2univers.notes.editorStyle';
+const NOTE_SUPPORTED_FORMATS = Object.freeze(['txt', 'md']);
+const NOTES_DEFAULT_STYLE = Object.freeze({
+  font: 'monospace',
+  fontSize: 16,
+  textColor: '#f5f5f5',
+  backgroundColor: '#0b1021'
+});
 const FRENZY_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.frenzyAutoCollectEnabled';
 const TICKET_STAR_AUTO_COLLECT_STORAGE_KEY = 'atom2univers.options.ticketStarAutoCollectEnabled';
 const TICKET_STAR_SPRITE_STORAGE_KEY = 'atom2univers.options.ticketStarSprite';
@@ -6948,7 +6966,22 @@ function collectDomElements() {
   radioStationName: document.getElementById('radioStationName'),
   radioStationDetails: document.getElementById('radioStationDetails'),
   radioPlayerStatus: document.getElementById('radioPlayerStatus'),
-  radioStationLogo: document.getElementById('radioStationLogo')
+  radioStationLogo: document.getElementById('radioStationLogo'),
+  notesPage: document.getElementById('notes'),
+  notesStatus: document.getElementById('notesStatus'),
+  notesList: document.getElementById('notesList'),
+  notesEmptyState: document.getElementById('notesEmptyState'),
+  notesNewButton: document.getElementById('notesNewButton'),
+  notesRefreshButton: document.getElementById('notesRefreshButton'),
+  notesTitleInput: document.getElementById('notesTitleInput'),
+  notesFormatSelect: document.getElementById('notesFormatSelect'),
+  notesFontSelect: document.getElementById('notesFontSelect'),
+  notesFontSize: document.getElementById('notesFontSize'),
+  notesTextColor: document.getElementById('notesTextColor'),
+  notesBackgroundColor: document.getElementById('notesBackgroundColor'),
+  notesContent: document.getElementById('notesContent'),
+  notesSaveButton: document.getElementById('notesSaveButton'),
+  notesCancelButton: document.getElementById('notesCancelButton')
   };
 }
 
@@ -15626,6 +15659,534 @@ function subscribeRadioLanguageUpdates() {
   }
 }
 
+function getAndroidNotesBridge() {
+  const bridge = getAndroidBridge();
+  if (!bridge) {
+    return null;
+  }
+  const supportsNotes = typeof bridge.listUserNotes === 'function'
+    && typeof bridge.readUserNote === 'function'
+    && typeof bridge.saveUserNote === 'function'
+    && typeof bridge.deleteUserNote === 'function';
+  return supportsNotes ? bridge : null;
+}
+
+function isNotesFeatureSupported() {
+  return !!getAndroidNotesBridge();
+}
+
+function normalizeNoteFormat(format) {
+  if (typeof format !== 'string') {
+    return 'txt';
+  }
+  const normalized = format.trim().toLowerCase();
+  return NOTE_SUPPORTED_FORMATS.includes(normalized) ? normalized : 'txt';
+}
+
+function sanitizeNoteName(raw) {
+  if (typeof raw !== 'string') {
+    return '';
+  }
+  const normalized = raw
+    .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim()
+    .replace(/^[-]+|[-]+$/g, '');
+  return normalized;
+}
+
+function buildNoteFileName(baseName, format) {
+  const safeBase = sanitizeNoteName(baseName);
+  const safeFormat = normalizeNoteFormat(format);
+  const fallback = `note-${Date.now()}`;
+  return `${safeBase || fallback}.${safeFormat}`;
+}
+
+function extractNoteBaseName(fileName) {
+  if (typeof fileName !== 'string') {
+    return '';
+  }
+  const normalized = fileName.trim();
+  const lastDot = normalized.lastIndexOf('.');
+  if (lastDot > 0) {
+    return normalized.substring(0, lastDot);
+  }
+  return normalized;
+}
+
+function getNoteMimeType(format) {
+  const normalized = normalizeNoteFormat(format);
+  return normalized === 'md' ? 'text/markdown' : 'text/plain';
+}
+
+function normalizeNoteEntry(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+  const name = typeof raw.name === 'string' && raw.name.trim() ? raw.name.trim() : '';
+  if (!name) {
+    return null;
+  }
+  const mimeType = typeof raw.mimeType === 'string' ? raw.mimeType : '';
+  const uri = typeof raw.uri === 'string' ? raw.uri : '';
+  const updatedAtValue = Number(raw.updatedAt);
+  const updatedAt = Number.isFinite(updatedAtValue) ? updatedAtValue : null;
+  return { name, mimeType, uri, updatedAt };
+}
+
+function formatNoteDate(timestamp) {
+  if (!Number.isFinite(timestamp)) {
+    return '';
+  }
+  const api = getI18nApi();
+  const locale = api && typeof api.getCurrentLanguage === 'function'
+    ? api.getCurrentLanguage()
+    : (typeof navigator !== 'undefined' && navigator.language ? navigator.language : undefined);
+  try {
+    return new Date(timestamp).toLocaleString(locale || undefined);
+  } catch (error) {
+    return new Date(timestamp).toLocaleString();
+  }
+}
+
+function setNotesStatus(key, fallback, params) {
+  notesStatusState = { key, fallback, params: params || null };
+  if (!elements?.notesStatus) {
+    return;
+  }
+  const label = translateOrDefault(key, fallback, params);
+  elements.notesStatus.textContent = label;
+  if (key) {
+    elements.notesStatus.setAttribute('data-i18n', key);
+  }
+}
+
+function updateNotesControlsAvailability() {
+  const supported = isNotesFeatureSupported();
+  const disableActions = notesBusy || !supported;
+  const actionTargets = [
+    elements?.notesNewButton,
+    elements?.notesRefreshButton,
+    elements?.notesSaveButton,
+    elements?.notesCancelButton
+  ];
+  actionTargets.forEach(target => {
+    if (target) {
+      target.disabled = disableActions;
+    }
+  });
+  const fields = [
+    elements?.notesTitleInput,
+    elements?.notesFormatSelect,
+    elements?.notesFontSelect,
+    elements?.notesFontSize,
+    elements?.notesTextColor,
+    elements?.notesBackgroundColor,
+    elements?.notesContent
+  ];
+  fields.forEach(field => {
+    if (field) {
+      field.disabled = !supported;
+    }
+  });
+}
+
+function setNotesBusyState(isBusy) {
+  notesBusy = !!isBusy;
+  if (elements?.notesStatus) {
+    elements.notesStatus.setAttribute('aria-busy', notesBusy ? 'true' : 'false');
+  }
+  updateNotesControlsAvailability();
+}
+
+function normalizeNotesStyle(raw) {
+  const base = { ...NOTES_DEFAULT_STYLE };
+  if (raw && typeof raw === 'object') {
+    if (typeof raw.font === 'string' && raw.font.trim()) {
+      base.font = raw.font.trim();
+    }
+    const sizeValue = Number(raw.fontSize);
+    if (Number.isFinite(sizeValue) && sizeValue >= 10 && sizeValue <= 48) {
+      base.fontSize = sizeValue;
+    }
+    if (typeof raw.textColor === 'string' && raw.textColor.trim()) {
+      base.textColor = raw.textColor.trim();
+    }
+    if (typeof raw.backgroundColor === 'string' && raw.backgroundColor.trim()) {
+      base.backgroundColor = raw.backgroundColor.trim();
+    }
+  }
+  return base;
+}
+
+function readStoredNotesStyle() {
+  try {
+    const raw = globalThis.localStorage?.getItem(NOTES_STYLE_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return normalizeNotesStyle(parsed);
+    }
+  } catch (error) {
+    console.warn('Unable to read notes editor style', error);
+  }
+  return { ...NOTES_DEFAULT_STYLE };
+}
+
+function writeStoredNotesStyle(style) {
+  try {
+    globalThis.localStorage?.setItem(NOTES_STYLE_STORAGE_KEY, JSON.stringify(style));
+  } catch (error) {
+    console.warn('Unable to persist notes editor style', error);
+  }
+}
+
+function resolveNotesFontFamily(fontKey) {
+  const normalized = typeof fontKey === 'string' ? fontKey.trim().toLowerCase() : 'system';
+  switch (normalized) {
+    case 'serif':
+      return 'Georgia, Cambria, "Times New Roman", serif';
+    case 'sans':
+      return 'Inter, "Segoe UI", system-ui, sans-serif';
+    case 'system':
+      return 'system-ui, -apple-system, "Segoe UI", sans-serif';
+    default:
+      return '"Courier New", Courier, monospace';
+  }
+}
+
+function applyNotesEditorStyle(style) {
+  const normalized = normalizeNotesStyle(style);
+  notesStylePreference = normalized;
+  if (elements?.notesFontSelect && normalized.font) {
+    elements.notesFontSelect.value = normalized.font;
+  }
+  if (elements?.notesFontSize && Number.isFinite(normalized.fontSize)) {
+    elements.notesFontSize.value = normalized.fontSize;
+  }
+  if (elements?.notesTextColor && normalized.textColor) {
+    elements.notesTextColor.value = normalized.textColor;
+  }
+  if (elements?.notesBackgroundColor && normalized.backgroundColor) {
+    elements.notesBackgroundColor.value = normalized.backgroundColor;
+  }
+  if (elements?.notesContent) {
+    elements.notesContent.style.color = normalized.textColor;
+    elements.notesContent.style.backgroundColor = normalized.backgroundColor;
+    elements.notesContent.style.fontSize = `${normalized.fontSize}px`;
+    elements.notesContent.style.fontFamily = resolveNotesFontFamily(normalized.font);
+  }
+  writeStoredNotesStyle(normalized);
+}
+
+function getNotesStyleFromInputs() {
+  return normalizeNotesStyle({
+    font: elements?.notesFontSelect?.value,
+    fontSize: Number(elements?.notesFontSize?.value),
+    textColor: elements?.notesTextColor?.value,
+    backgroundColor: elements?.notesBackgroundColor?.value
+  });
+}
+
+function handleNotesStyleChange() {
+  applyNotesEditorStyle(getNotesStyleFromInputs());
+}
+
+function renderNotesList() {
+  if (!elements?.notesList) {
+    return;
+  }
+  elements.notesList.innerHTML = '';
+  const hasItems = Array.isArray(notesItems) && notesItems.length > 0;
+  if (elements.notesEmptyState) {
+    elements.notesEmptyState.hidden = hasItems;
+  }
+  if (!hasItems) {
+    return;
+  }
+  notesItems.forEach(note => {
+    const listItem = document.createElement('li');
+    listItem.className = 'notes-list__item';
+
+    const info = document.createElement('div');
+    info.className = 'notes-list__info';
+
+    const title = document.createElement('p');
+    title.className = 'notes-list__name';
+    title.textContent = note.name;
+    info.appendChild(title);
+
+    const meta = document.createElement('p');
+    meta.className = 'notes-list__meta';
+    const extension = note.name.includes('.') ? note.name.split('.').pop() : 'txt';
+    const dateLabel = note.updatedAt ? formatNoteDate(note.updatedAt) : '';
+    meta.textContent = translateOrDefault(
+      'index.sections.notes.list.meta',
+      `${extension} · Mis à jour ${dateLabel}`,
+      { extension, date: dateLabel }
+    );
+    info.appendChild(meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'notes-list__actions';
+
+    const editButton = document.createElement('button');
+    editButton.type = 'button';
+    editButton.className = 'notes-list__button';
+    editButton.textContent = translateOrDefault(
+      'index.sections.notes.actions.edit',
+      'Éditer'
+    );
+    editButton.addEventListener('click', () => {
+      openNote(note);
+    });
+    actions.appendChild(editButton);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'notes-list__button notes-list__button--danger';
+    deleteButton.textContent = translateOrDefault(
+      'index.sections.notes.actions.delete',
+      'Supprimer'
+    );
+    deleteButton.addEventListener('click', () => {
+      handleDeleteNote(note);
+    });
+    actions.appendChild(deleteButton);
+
+    listItem.appendChild(info);
+    listItem.appendChild(actions);
+    elements.notesList.appendChild(listItem);
+  });
+}
+
+function startNewNote() {
+  if (elements?.notesTitleInput) {
+    elements.notesTitleInput.value = '';
+  }
+  if (elements?.notesFormatSelect) {
+    elements.notesFormatSelect.value = 'txt';
+  }
+  if (elements?.notesContent) {
+    elements.notesContent.value = '';
+  }
+  notesEditingNote = null;
+  setNotesStatus('index.sections.notes.status.new', 'Nouvelle note prête à être écrite.');
+}
+
+function refreshNotesList(options = {}) {
+  const supported = isNotesFeatureSupported();
+  if (!supported) {
+    setNotesStatus(
+      'index.sections.notes.status.unsupported',
+      'Disponible uniquement sur l’application Android.'
+    );
+    updateNotesControlsAvailability();
+    return;
+  }
+  const silent = options && options.silent;
+  setNotesBusyState(true);
+  setNotesStatus('index.sections.notes.status.loading', 'Chargement de vos notes…');
+  try {
+    const bridge = getAndroidNotesBridge();
+    if (!bridge) {
+      throw new Error('Missing Android notes bridge');
+    }
+    const response = bridge.listUserNotes();
+    const parsed = response ? JSON.parse(response) : [];
+    const normalized = Array.isArray(parsed)
+      ? parsed.map(normalizeNoteEntry).filter(Boolean)
+      : [];
+    normalized.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+    notesItems = normalized;
+    renderNotesList();
+    if (!silent) {
+      setNotesStatus(
+        'index.sections.notes.status.loaded',
+        'Notes mises à jour.',
+        { count: notesItems.length }
+      );
+    }
+  } catch (error) {
+    console.error('Unable to load notes list', error);
+    setNotesStatus('index.sections.notes.status.error', 'Impossible de charger vos notes.');
+  } finally {
+    setNotesBusyState(false);
+  }
+}
+
+function openNote(note) {
+  const supported = isNotesFeatureSupported();
+  if (!supported) {
+    setNotesStatus(
+      'index.sections.notes.status.unsupported',
+      'Disponible uniquement sur l’application Android.'
+    );
+    return;
+  }
+  const target = note && typeof note === 'object' ? note : null;
+  if (!target) {
+    return;
+  }
+  setNotesBusyState(true);
+  setNotesStatus(
+    'index.sections.notes.status.loadingNote',
+    'Ouverture de la note…',
+    { name: target.name }
+  );
+  try {
+    const bridge = getAndroidNotesBridge();
+    if (!bridge) {
+      throw new Error('Missing Android bridge');
+    }
+    const content = bridge.readUserNote(target.name) || '';
+    if (elements?.notesTitleInput) {
+      elements.notesTitleInput.value = extractNoteBaseName(target.name);
+    }
+    const format = target.name.includes('.') ? target.name.split('.').pop() : 'txt';
+    if (elements?.notesFormatSelect) {
+      elements.notesFormatSelect.value = normalizeNoteFormat(format);
+    }
+    if (elements?.notesContent) {
+      elements.notesContent.value = content;
+    }
+    notesEditingNote = { ...target };
+    setNotesStatus(
+      'index.sections.notes.status.loadedNote',
+      'Note chargée.',
+      { name: target.name }
+    );
+  } catch (error) {
+    console.error('Unable to open note', error);
+    setNotesStatus('index.sections.notes.status.error', 'Impossible de charger vos notes.');
+  } finally {
+    setNotesBusyState(false);
+  }
+}
+
+function saveActiveNote() {
+  const supported = isNotesFeatureSupported();
+  if (!supported) {
+    setNotesStatus(
+      'index.sections.notes.status.unsupported',
+      'Disponible uniquement sur l’application Android.'
+    );
+    return;
+  }
+  const baseName = elements?.notesTitleInput?.value || '';
+  const format = elements?.notesFormatSelect?.value || 'txt';
+  const fileName = buildNoteFileName(baseName, format);
+  const mimeType = getNoteMimeType(format);
+  const content = elements?.notesContent?.value || '';
+  setNotesBusyState(true);
+  setNotesStatus(
+    'index.sections.notes.status.saving',
+    'Enregistrement de la note…',
+    { name: fileName }
+  );
+  try {
+    const bridge = getAndroidNotesBridge();
+    if (!bridge) {
+      throw new Error('Missing Android bridge');
+    }
+    const result = bridge.saveUserNote(fileName, content, mimeType);
+    const uri = typeof result === 'string' && result.trim() ? result.trim() : (notesEditingNote?.uri || '');
+    notesEditingNote = { name: fileName, mimeType, uri, updatedAt: Date.now() };
+    refreshNotesList({ silent: true });
+    setNotesStatus(
+      'index.sections.notes.status.saved',
+      'Note enregistrée.',
+      { name: fileName }
+    );
+  } catch (error) {
+    console.error('Unable to save note', error);
+    setNotesStatus('index.sections.notes.status.error', 'Impossible d’enregistrer la note.');
+  } finally {
+    setNotesBusyState(false);
+  }
+}
+
+function handleDeleteNote(note) {
+  const target = note && typeof note === 'object' ? note : null;
+  if (!target) {
+    return;
+  }
+  const message = translateOrDefault(
+    'index.sections.notes.actions.deleteConfirm',
+    'Supprimer la note {{name}} ?',
+    { name: target.name }
+  );
+  const confirmed = typeof window !== 'undefined'
+    && typeof window.confirm === 'function'
+    ? window.confirm(message)
+    : true;
+  if (!confirmed) {
+    return;
+  }
+  const bridge = getAndroidNotesBridge();
+  if (!bridge) {
+    setNotesStatus(
+      'index.sections.notes.status.unsupported',
+      'Disponible uniquement sur l’application Android.'
+    );
+    return;
+  }
+  setNotesBusyState(true);
+  try {
+    const result = bridge.deleteUserNote(target.name);
+    const success = result === true || result === undefined;
+    if (success) {
+      notesItems = notesItems.filter(item => item?.name !== target.name);
+      renderNotesList();
+      if (notesEditingNote && notesEditingNote.name === target.name) {
+        startNewNote();
+      }
+      setNotesStatus(
+        'index.sections.notes.status.deleted',
+        'Note supprimée.',
+        { name: target.name }
+      );
+    } else {
+      setNotesStatus('index.sections.notes.status.error', 'Impossible de supprimer la note.');
+    }
+  } catch (error) {
+    console.error('Unable to delete note', error);
+    setNotesStatus('index.sections.notes.status.error', 'Impossible de supprimer la note.');
+  } finally {
+    setNotesBusyState(false);
+  }
+}
+
+function subscribeNotesLanguageUpdates() {
+  const handler = () => {
+    setNotesStatus(notesStatusState.key, notesStatusState.fallback, notesStatusState.params);
+    renderNotesList();
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+function initNotesModule() {
+  notesStylePreference = readStoredNotesStyle();
+  applyNotesEditorStyle(notesStylePreference);
+  updateNotesControlsAvailability();
+  startNewNote();
+  if (isNotesFeatureSupported()) {
+    refreshNotesList({ silent: true });
+  } else {
+    setNotesStatus(
+      'index.sections.notes.status.unsupported',
+      'Disponible uniquement sur l’application Android.'
+    );
+  }
+}
+
 if (typeof globalThis !== 'undefined') {
   globalThis.onAndroidMediaCommand = handleAndroidMediaCommand;
 }
@@ -20838,6 +21399,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-news', pageId === 'news');
   document.body.classList.toggle('view-images', pageId === 'images');
   document.body.classList.toggle('view-radio', pageId === 'radio');
+  document.body.classList.toggle('view-notes', pageId === 'notes');
   applyBackgroundImage();
   if (pageId === 'game') {
     randomizeAtomButtonImage();
@@ -20885,6 +21447,9 @@ function showPage(pageId) {
   }
   if (pageId === 'radio') {
     ensureRadioFiltersLoaded();
+  }
+  if (pageId === 'notes' && !notesItems.length) {
+    refreshNotesList({ silent: true });
   }
   renderNewsTicker();
   if (quantum2048Game) {
@@ -21596,6 +22161,37 @@ function bindDomEventListeners() {
       }
     });
   }
+
+  if (elements.notesNewButton) {
+    elements.notesNewButton.addEventListener('click', startNewNote);
+  }
+  if (elements.notesRefreshButton) {
+    elements.notesRefreshButton.addEventListener('click', () => refreshNotesList());
+  }
+  if (elements.notesSaveButton) {
+    elements.notesSaveButton.addEventListener('click', event => {
+      event.preventDefault();
+      saveActiveNote();
+    });
+  }
+  if (elements.notesCancelButton) {
+    elements.notesCancelButton.addEventListener('click', event => {
+      if (event) {
+        event.preventDefault();
+      }
+      if (notesEditingNote) {
+        openNote(notesEditingNote);
+      } else {
+        startNewNote();
+      }
+    });
+  }
+  ['notesFontSelect', 'notesFontSize', 'notesTextColor', 'notesBackgroundColor']
+    .forEach(key => {
+      if (elements[key]) {
+        elements[key].addEventListener('change', handleNotesStyleChange);
+      }
+    });
 
   if (elements.arcadeHubCards?.length) {
     elements.arcadeHubCards.forEach(card => {
@@ -28312,6 +28908,8 @@ function initializeDomBoundModules() {
   initNewsModule();
   initRadioModule();
   subscribeRadioLanguageUpdates();
+  initNotesModule();
+  subscribeNotesLanguageUpdates();
   subscribeHeaderBannerLanguageUpdates();
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
