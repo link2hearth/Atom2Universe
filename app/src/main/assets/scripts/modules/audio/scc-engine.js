@@ -26,9 +26,9 @@
   const DEFAULT_PORTAMENTO_MS = 40;
   const PITCH_BEND_RANGE = 2;
   const MASTER_GAIN = 0.45;
-  const MIN_ATTACK_MS = 1.5;
-  const MIN_RELEASE_MS = 8;
-  const NOTE_ON_FADE_MS = 1.5;
+  const MIN_ATTACK_MS = 0.5;
+  const MIN_RELEASE_MS = 6;
+  const NOTE_ON_FADE_MS = 0.6;
 
   const DEFAULT_MASTER_GAIN = Number.isFinite(SCC_ENGINE_CONFIG?.masterGain)
     ? clamp(SCC_ENGINE_CONFIG.masterGain, 0, 1)
@@ -398,6 +398,12 @@
       this.vibratoFadeSamples = Math.max(1, Math.round((vibratoFade / 1000) * sampleRate));
       this.vibratoSampleCounter = 0;
       this.envelope.setDefinition(envelopeDefinition, sampleRate);
+      const attackMs = (this.envelope.definition.attackSamples / sampleRate) * 1000;
+      const protectiveFadeMs = Math.min(
+        NOTE_ON_FADE_MS,
+        Math.max(0.25, attackMs * 0.4)
+      );
+      this.fadeInSamples = Math.max(1, Math.round((protectiveFadeMs / 1000) * sampleRate));
       this.isDrum = Boolean(instrument?.isDrum);
       this.drumType = instrument?.drumType || '';
       this.drumState = null;
