@@ -15359,6 +15359,9 @@ function handleAndroidRadioStateChange(state) {
   } else if (normalized === 'stopped') {
     setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
     stopAndroidRadioPlayback();
+  } else if (normalized === 'error') {
+    setRadioPlayerStatus('index.sections.radio.player.status.error', 'Impossible de lire le flux.');
+    stopAndroidRadioPlayback();
   }
 }
 
