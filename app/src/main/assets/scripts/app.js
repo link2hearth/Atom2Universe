@@ -314,6 +314,56 @@ const ACTIVE_NEWS_SETTINGS = typeof NEWS_SETTINGS !== 'undefined'
     ? NEWS_SETTINGS
     : DEFAULT_NEWS_SETTINGS;
 
+const DEFAULT_RADIO_SETTINGS = Object.freeze({
+  servers: ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info'],
+  requestTimeoutMs: 12000,
+  maxResults: 50,
+  hideBroken: true,
+  favoritesStorageKey: 'atom2univers.radio.favorites',
+  userAgent: 'Atom2Univers/Radio'
+});
+
+const ACTIVE_RADIO_SETTINGS = typeof RADIO_SETTINGS !== 'undefined'
+  && RADIO_SETTINGS
+  && typeof RADIO_SETTINGS === 'object'
+    ? RADIO_SETTINGS
+    : DEFAULT_RADIO_SETTINGS;
+
+const RADIO_REQUEST_TIMEOUT_MS = (() => {
+  const fallback = DEFAULT_RADIO_SETTINGS.requestTimeoutMs;
+  const raw = Number(ACTIVE_RADIO_SETTINGS?.requestTimeoutMs);
+  if (Number.isFinite(raw) && raw > 0) {
+    return Math.floor(raw);
+  }
+  return fallback;
+})();
+
+const RADIO_MAX_RESULTS = (() => {
+  const fallback = DEFAULT_RADIO_SETTINGS.maxResults;
+  const raw = Number(ACTIVE_RADIO_SETTINGS?.maxResults);
+  if (Number.isFinite(raw) && raw > 0) {
+    return Math.floor(raw);
+  }
+  return fallback;
+})();
+
+const RADIO_HIDE_BROKEN = ACTIVE_RADIO_SETTINGS?.hideBroken !== false;
+
+const RADIO_FAVORITES_STORAGE_KEY = (() => {
+  const raw = typeof ACTIVE_RADIO_SETTINGS?.favoritesStorageKey === 'string'
+    ? ACTIVE_RADIO_SETTINGS.favoritesStorageKey.trim()
+    : '';
+  if (raw) {
+    return raw;
+  }
+  return DEFAULT_RADIO_SETTINGS.favoritesStorageKey;
+})();
+
+const RADIO_USER_AGENT = typeof ACTIVE_RADIO_SETTINGS?.userAgent === 'string'
+  && ACTIVE_RADIO_SETTINGS.userAgent.trim()
+  ? ACTIVE_RADIO_SETTINGS.userAgent.trim()
+  : DEFAULT_RADIO_SETTINGS.userAgent;
+
 const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
   maxItems: 15,
@@ -492,6 +542,26 @@ let newsTickerCurrentIndex = 0;
 let newsTickerTimerId = null;
 let newsTickerActiveStoryId = null;
 let newsHighlightedStoryId = null;
+
+let radioStations = [];
+let radioFavorites = new Map();
+let radioSelectedStation = null;
+let radioSearchAbortController = null;
+let radioIsLoading = false;
+let radioCountries = [];
+let radioLanguages = [];
+let radioFiltersPromise = null;
+let radioAudioElement = null;
+let radioStatusState = {
+  key: 'index.sections.radio.status.idle',
+  fallback: 'Entrez une requête pour démarrer une recherche.',
+  params: null
+};
+let radioPlayerStatusState = {
+  key: 'index.sections.radio.player.status.idle',
+  fallback: 'Sélectionnez une station pour lancer la lecture.'
+};
+let radioLastError = null;
 
 let imageFeedItems = [];
 let imageFeedVisibleItems = [];
@@ -6452,6 +6522,7 @@ function collectDomElements() {
     navInfoButton: document.querySelector('.nav-button[data-target="info"]'),
     navImagesButton: document.querySelector('.nav-button[data-target="images"]'),
     navNewsButton: document.querySelector('.nav-button[data-target="news"]'),
+    navRadioButton: document.querySelector('.nav-button[data-target="radio"]'),
     navCollectionButton: document.querySelector('.nav-button[data-target="collection"]'),
     navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
     navBigBangButton: document.getElementById('navBigBangButton'),
@@ -6849,7 +6920,27 @@ function collectDomElements() {
   newsTicker: document.getElementById('newsTicker'),
   newsTickerItems: document.getElementById('newsTickerItems'),
   newsTickerOpenButton: document.getElementById('newsTickerOpenButton'),
-  newsTickerHideButton: document.getElementById('newsTickerHideButton')
+  newsTickerHideButton: document.getElementById('newsTickerHideButton'),
+  radioStatus: document.getElementById('radioStatus'),
+  radioSearchForm: document.getElementById('radioSearchForm'),
+  radioSearchInput: document.getElementById('radioQuery'),
+  radioSearchButton: document.getElementById('radioSearchButton'),
+  radioResetButton: document.getElementById('radioResetButton'),
+  radioCountrySelect: document.getElementById('radioCountry'),
+  radioLanguageSelect: document.getElementById('radioLanguage'),
+  radioResults: document.getElementById('radioResults'),
+  radioEmptyState: document.getElementById('radioEmptyState'),
+  radioFavoritesList: document.getElementById('radioFavoritesList'),
+  radioFavoritesEmpty: document.getElementById('radioFavoritesEmpty'),
+  radioPlayButton: document.getElementById('radioPlayButton'),
+  radioPauseButton: document.getElementById('radioPauseButton'),
+  radioStopButton: document.getElementById('radioStopButton'),
+  radioReloadButton: document.getElementById('radioReloadButton'),
+  radioFavoriteButton: document.getElementById('radioFavoriteButton'),
+  radioStationName: document.getElementById('radioStationName'),
+  radioStationDetails: document.getElementById('radioStationDetails'),
+  radioPlayerStatus: document.getElementById('radioPlayerStatus'),
+  radioStationLogo: document.getElementById('radioStationLogo')
   };
 }
 
@@ -14479,6 +14570,675 @@ function subscribeNewsLanguageUpdates() {
 }
 
 
+function getRadioSettings() {
+  return ACTIVE_RADIO_SETTINGS || DEFAULT_RADIO_SETTINGS;
+}
+
+function normalizeRadioServer(server) {
+  if (typeof server !== 'string') {
+    return '';
+  }
+  const trimmed = server.trim();
+  if (!trimmed) {
+    return '';
+  }
+  const normalized = trimmed.replace(/\/+$/, '');
+  if (!/^https?:\/\//i.test(normalized)) {
+    return '';
+  }
+  return normalized;
+}
+
+function getRadioServers() {
+  const settings = getRadioSettings();
+  const servers = Array.isArray(settings?.servers) ? settings.servers : [];
+  const normalized = servers.map(normalizeRadioServer).filter(Boolean);
+  if (normalized.length) {
+    return normalized;
+  }
+  return DEFAULT_RADIO_SETTINGS.servers.map(normalizeRadioServer).filter(Boolean);
+}
+
+function normalizeRadioStation(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+  const id = typeof raw.stationuuid === 'string' && raw.stationuuid.trim()
+    ? raw.stationuuid.trim()
+    : typeof raw.id === 'string' && raw.id.trim()
+      ? raw.id.trim()
+      : '';
+  const url = typeof raw.url === 'string' && raw.url.trim() ? raw.url.trim() : '';
+  if (!id || !url) {
+    return null;
+  }
+  const name = typeof raw.name === 'string' && raw.name.trim() ? raw.name.trim() : 'Station';
+  const country = typeof raw.country === 'string' ? raw.country.trim() : '';
+  const language = typeof raw.language === 'string' ? raw.language.trim() : '';
+  const favicon = typeof raw.favicon === 'string' && raw.favicon.trim() ? raw.favicon.trim() : '';
+  const bitrateValue = Number(raw.bitrate);
+  const bitrate = Number.isFinite(bitrateValue) && bitrateValue > 0 ? Math.round(bitrateValue) : null;
+  return { id, stationuuid: id, name, url, country, language, favicon, bitrate };
+}
+
+function readStoredRadioFavorites() {
+  try {
+    const raw = globalThis.localStorage?.getItem(RADIO_FAVORITES_STORAGE_KEY);
+    if (!raw) {
+      return new Map();
+    }
+    const parsed = JSON.parse(raw);
+    const entries = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.items) ? parsed.items : [];
+    const map = new Map();
+    entries.forEach(entry => {
+      const normalized = normalizeRadioStation(entry);
+      if (normalized) {
+        map.set(normalized.id, normalized);
+      }
+    });
+    return map;
+  } catch (error) {
+    console.warn('Unable to read radio favorites', error);
+    return new Map();
+  }
+}
+
+function writeStoredRadioFavorites(favoritesMap) {
+  try {
+    const values = Array.from(favoritesMap?.values?.() || []);
+    globalThis.localStorage?.setItem(RADIO_FAVORITES_STORAGE_KEY, JSON.stringify(values));
+  } catch (error) {
+    console.warn('Unable to persist radio favorites', error);
+  }
+}
+
+function setRadioStatus(key, fallback, params) {
+  radioStatusState = { key, fallback, params };
+  if (!elements?.radioStatus) {
+    return;
+  }
+  const label = translateOrDefault(key, fallback, params);
+  elements.radioStatus.textContent = label;
+  if (key) {
+    elements.radioStatus.setAttribute('data-i18n', key);
+  }
+}
+
+function setRadioPlayerStatus(key, fallback, params) {
+  radioPlayerStatusState = { key, fallback, params };
+  if (!elements?.radioPlayerStatus) {
+    return;
+  }
+  const label = translateOrDefault(key, fallback, params);
+  elements.radioPlayerStatus.textContent = label;
+  if (key) {
+    elements.radioPlayerStatus.setAttribute('data-i18n', key);
+  }
+}
+
+function setRadioLoading(isLoading) {
+  radioIsLoading = !!isLoading;
+  if (elements?.radioSearchButton) {
+    elements.radioSearchButton.disabled = isLoading;
+  }
+  if (elements?.radioResetButton) {
+    elements.radioResetButton.disabled = isLoading;
+  }
+  if (elements?.radioStatus) {
+    elements.radioStatus.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+  }
+}
+
+function formatRadioStationMeta(station) {
+  if (!station) {
+    return '';
+  }
+  const parts = [];
+  const country = station.country || '';
+  const language = station.language || '';
+  if (country && language) {
+    parts.push(translateOrDefault('index.sections.radio.meta.countryLanguage', `${country} · ${language}`, { country, language }));
+  } else if (country) {
+    parts.push(country);
+  } else if (language) {
+    parts.push(language);
+  }
+  if (station.bitrate) {
+    parts.push(translateOrDefault('index.sections.radio.meta.bitrate', `${station.bitrate} kbps`, { value: station.bitrate }));
+  }
+  return parts.join(' · ');
+}
+
+function renderRadioPlayer() {
+  if (!elements) {
+    return;
+  }
+  const station = radioSelectedStation;
+  const hasStation = !!(station && station.id);
+  if (elements.radioStationLogo) {
+    if (hasStation && station.favicon) {
+      elements.radioStationLogo.src = station.favicon;
+      elements.radioStationLogo.hidden = false;
+    } else {
+      elements.radioStationLogo.hidden = true;
+      elements.radioStationLogo.removeAttribute('src');
+    }
+  }
+  if (elements.radioStationName) {
+    if (hasStation) {
+      elements.radioStationName.textContent = station.name;
+      elements.radioStationName.removeAttribute('data-i18n');
+    } else {
+      elements.radioStationName.textContent = translateOrDefault(
+        'index.sections.radio.player.empty',
+        'Aucune station sélectionnée.'
+      );
+      elements.radioStationName.setAttribute('data-i18n', 'index.sections.radio.player.empty');
+    }
+  }
+  if (elements.radioStationDetails) {
+    const meta = hasStation ? formatRadioStationMeta(station) : '';
+    elements.radioStationDetails.textContent = meta;
+  }
+  const favoriteLabel = hasStation && radioFavorites.has(station.id)
+    ? translateOrDefault('index.sections.radio.actions.favoriteRemove', 'Retirer des favoris')
+    : translateOrDefault('index.sections.radio.actions.favorite', 'Ajouter aux favoris');
+  if (elements.radioFavoriteButton) {
+    elements.radioFavoriteButton.textContent = favoriteLabel;
+    elements.radioFavoriteButton.disabled = !hasStation;
+  }
+  if (elements.radioPlayButton) {
+    elements.radioPlayButton.disabled = !hasStation;
+  }
+  if (elements.radioPauseButton) {
+    elements.radioPauseButton.disabled = !hasStation;
+  }
+  if (elements.radioStopButton) {
+    elements.radioStopButton.disabled = !hasStation;
+  }
+  if (elements.radioReloadButton) {
+    elements.radioReloadButton.disabled = !hasStation;
+  }
+}
+
+function renderRadioFavorites() {
+  if (!elements?.radioFavoritesList) {
+    return;
+  }
+  const favorites = Array.from(radioFavorites.values());
+  elements.radioFavoritesList.innerHTML = '';
+  if (!favorites.length) {
+    if (elements.radioFavoritesEmpty) {
+      elements.radioFavoritesEmpty.hidden = false;
+    }
+    return;
+  }
+  if (elements.radioFavoritesEmpty) {
+    elements.radioFavoritesEmpty.hidden = true;
+  }
+  const listenLabel = translateOrDefault('index.sections.radio.actions.listen', 'Écouter');
+  const removeLabel = translateOrDefault('index.sections.radio.actions.favoriteRemove', 'Retirer des favoris');
+  favorites.forEach(station => {
+    const item = document.createElement('li');
+    item.className = 'radio-favorite';
+    const title = document.createElement('p');
+    title.className = 'radio-favorite__title';
+    title.textContent = station.name;
+    const meta = document.createElement('p');
+    meta.className = 'radio-favorite__meta';
+    meta.textContent = formatRadioStationMeta(station);
+    const actions = document.createElement('div');
+    actions.className = 'radio-favorite__actions';
+    const openButton = document.createElement('button');
+    openButton.type = 'button';
+    openButton.className = 'radio-player__button radio-player__button--primary';
+    openButton.textContent = listenLabel;
+    openButton.dataset.radioAction = 'open';
+    openButton.dataset.stationId = station.id;
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'radio-player__button';
+    removeButton.textContent = removeLabel;
+    removeButton.dataset.radioAction = 'favorite';
+    removeButton.dataset.stationId = station.id;
+    actions.appendChild(openButton);
+    actions.appendChild(removeButton);
+    item.appendChild(title);
+    item.appendChild(meta);
+    item.appendChild(actions);
+    elements.radioFavoritesList.appendChild(item);
+  });
+}
+
+function renderRadioResults() {
+  if (!elements?.radioResults) {
+    return;
+  }
+  elements.radioResults.innerHTML = '';
+  const hasResults = Array.isArray(radioStations) && radioStations.length > 0;
+  if (elements.radioEmptyState) {
+    elements.radioEmptyState.hidden = hasResults || radioIsLoading;
+  }
+  if (!hasResults) {
+    return;
+  }
+  const listenLabel = translateOrDefault('index.sections.radio.actions.listen', 'Écouter');
+  radioStations.forEach(station => {
+    const item = document.createElement('li');
+    item.className = 'radio-station';
+    const content = document.createElement('div');
+    const title = document.createElement('p');
+    title.className = 'radio-station__title';
+    title.textContent = station.name;
+    const meta = document.createElement('p');
+    meta.className = 'radio-station__meta';
+    meta.textContent = formatRadioStationMeta(station);
+    content.appendChild(title);
+    content.appendChild(meta);
+    const actions = document.createElement('div');
+    actions.className = 'radio-station__actions';
+    const listenButton = document.createElement('button');
+    listenButton.type = 'button';
+    listenButton.className = 'radio-player__button radio-player__button--primary';
+    listenButton.textContent = listenLabel;
+    listenButton.dataset.radioAction = 'listen';
+    listenButton.dataset.stationId = station.id;
+    const favoriteButton = document.createElement('button');
+    favoriteButton.type = 'button';
+    favoriteButton.className = 'radio-player__button';
+    favoriteButton.dataset.radioAction = 'favorite';
+    favoriteButton.dataset.stationId = station.id;
+    favoriteButton.textContent = radioFavorites.has(station.id)
+      ? translateOrDefault('index.sections.radio.actions.favoriteRemove', 'Retirer des favoris')
+      : translateOrDefault('index.sections.radio.actions.favorite', 'Ajouter aux favoris');
+    actions.appendChild(listenButton);
+    actions.appendChild(favoriteButton);
+    item.appendChild(content);
+    item.appendChild(actions);
+    elements.radioResults.appendChild(item);
+  });
+}
+
+function normalizeRadioDirectoryEntries(items, labelField = 'name') {
+  if (!Array.isArray(items)) {
+    return [];
+  }
+  return items
+    .map(item => {
+      const label = typeof item?.[labelField] === 'string' ? item[labelField].trim() : '';
+      if (!label) {
+        return null;
+      }
+      return label;
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b));
+}
+
+async function fetchRadioDirectory(path) {
+  const servers = getRadioServers();
+  let lastError = null;
+  for (let index = 0; index < servers.length; index += 1) {
+    const base = servers[index];
+    const url = `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
+    try {
+      const response = await fetch(url, { headers: { Accept: 'application/json', 'Client-Name': RADIO_USER_AGENT } });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error('Radio directory unavailable');
+}
+
+async function ensureRadioFiltersLoaded() {
+  if (radioFiltersPromise) {
+    return radioFiltersPromise;
+  }
+  radioFiltersPromise = (async () => {
+    try {
+      const [countries, languages] = await Promise.all([
+        fetchRadioDirectory('json/countries'),
+        fetchRadioDirectory('json/languages')
+      ]);
+      radioCountries = normalizeRadioDirectoryEntries(countries, 'name');
+      radioLanguages = normalizeRadioDirectoryEntries(languages, 'name');
+      applyRadioFilters();
+    } catch (error) {
+      radioLastError = error;
+      radioFiltersPromise = null;
+      console.warn('Unable to load radio filters', error);
+    }
+  })();
+  return radioFiltersPromise;
+}
+
+function applyRadioFilters() {
+  if (elements?.radioCountrySelect) {
+    const selected = elements.radioCountrySelect.value;
+    while (elements.radioCountrySelect.options.length > 1) {
+      elements.radioCountrySelect.remove(1);
+    }
+    radioCountries.forEach(country => {
+      const option = document.createElement('option');
+      option.value = country;
+      option.textContent = country;
+      elements.radioCountrySelect.appendChild(option);
+    });
+    elements.radioCountrySelect.value = selected;
+  }
+  if (elements?.radioLanguageSelect) {
+    const selectedLang = elements.radioLanguageSelect.value;
+    while (elements.radioLanguageSelect.options.length > 1) {
+      elements.radioLanguageSelect.remove(1);
+    }
+    radioLanguages.forEach(language => {
+      const option = document.createElement('option');
+      option.value = language;
+      option.textContent = language;
+      elements.radioLanguageSelect.appendChild(option);
+    });
+    elements.radioLanguageSelect.value = selectedLang;
+  }
+}
+
+function selectRadioStation(station, options = {}) {
+  if (!station) {
+    radioSelectedStation = null;
+    renderRadioPlayer();
+    return;
+  }
+  radioSelectedStation = station;
+  renderRadioPlayer();
+  if (options.autoplay) {
+    playSelectedRadioStation();
+  }
+}
+
+function handleRadioSearchSubmit(event) {
+  event.preventDefault();
+  const query = elements.radioSearchInput?.value?.trim() || '';
+  const country = elements.radioCountrySelect?.value || '';
+  const language = elements.radioLanguageSelect?.value || '';
+  searchRadioStations({ query, country, language });
+}
+
+function handleRadioReset(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  if (elements.radioSearchInput) {
+    elements.radioSearchInput.value = '';
+  }
+  if (elements.radioCountrySelect) {
+    elements.radioCountrySelect.value = '';
+  }
+  if (elements.radioLanguageSelect) {
+    elements.radioLanguageSelect.value = '';
+  }
+  radioStations = [];
+  renderRadioResults();
+  setRadioStatus('index.sections.radio.status.idle', 'Entrez une requête pour démarrer une recherche.');
+}
+
+function handleRadioResultsClick(event) {
+  const action = event.target?.closest('[data-radio-action]');
+  if (!action) {
+    return;
+  }
+  const stationId = action.dataset.stationId;
+  if (!stationId) {
+    return;
+  }
+  const station = radioStations.find(item => item.id === stationId) || radioFavorites.get(stationId);
+  if (!station) {
+    return;
+  }
+  const type = action.dataset.radioAction;
+  if (type === 'listen') {
+    selectRadioStation(station, { autoplay: true });
+  } else if (type === 'favorite') {
+    toggleRadioFavorite(station);
+  }
+}
+
+function handleRadioFavoritesClick(event) {
+  const action = event.target?.closest('[data-radio-action]');
+  if (!action) {
+    return;
+  }
+  const stationId = action.dataset.stationId;
+  if (!stationId) {
+    return;
+  }
+  const station = radioFavorites.get(stationId) || radioStations.find(item => item.id === stationId);
+  if (!station) {
+    return;
+  }
+  const type = action.dataset.radioAction;
+  if (type === 'open') {
+    selectRadioStation(station, { autoplay: true });
+  } else if (type === 'favorite') {
+    toggleRadioFavorite(station);
+  }
+}
+
+function toggleRadioFavorite(station) {
+  if (!station || !station.id) {
+    return;
+  }
+  const exists = radioFavorites.has(station.id);
+  if (exists) {
+    radioFavorites.delete(station.id);
+  } else {
+    radioFavorites.set(station.id, station);
+  }
+  writeStoredRadioFavorites(radioFavorites);
+  renderRadioFavorites();
+  renderRadioResults();
+  renderRadioPlayer();
+}
+
+function ensureRadioAudio() {
+  if (radioAudioElement) {
+    return radioAudioElement;
+  }
+  if (typeof Audio === 'undefined') {
+    return null;
+  }
+  const audio = new Audio();
+  audio.preload = 'none';
+  audio.addEventListener('playing', () => {
+    setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+  });
+  audio.addEventListener('pause', () => {
+    if (audio.currentTime > 0 && !audio.ended) {
+      setRadioPlayerStatus('index.sections.radio.player.status.paused', 'Lecture en pause');
+    }
+  });
+  audio.addEventListener('ended', () => {
+    setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
+  });
+  audio.addEventListener('error', () => {
+    radioLastError = audio.error;
+    setRadioPlayerStatus('index.sections.radio.player.status.error', 'Impossible de lire le flux.');
+  });
+  radioAudioElement = audio;
+  return radioAudioElement;
+}
+
+async function playSelectedRadioStation(options = {}) {
+  const station = radioSelectedStation;
+  if (!station || !station.url) {
+    setRadioPlayerStatus('index.sections.radio.player.status.idle', 'Sélectionnez une station pour lancer la lecture.');
+    return;
+  }
+  const audio = ensureRadioAudio();
+  if (!audio) {
+    return;
+  }
+  const shouldReload = options.forceReload || audio.src !== station.url;
+  if (shouldReload) {
+    audio.src = station.url;
+    audio.load();
+  }
+  try {
+    await audio.play();
+    setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+  } catch (error) {
+    radioLastError = error;
+    setRadioPlayerStatus('index.sections.radio.player.status.error', 'Impossible de lire le flux.');
+  }
+}
+
+function pauseRadioPlayback() {
+  const audio = ensureRadioAudio();
+  if (!audio) {
+    return;
+  }
+  audio.pause();
+  setRadioPlayerStatus('index.sections.radio.player.status.paused', 'Lecture en pause');
+}
+
+function stopRadioPlayback() {
+  const audio = ensureRadioAudio();
+  if (!audio) {
+    return;
+  }
+  audio.pause();
+  audio.currentTime = 0;
+  audio.removeAttribute('src');
+  audio.load();
+  setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
+}
+
+function reloadRadioStream() {
+  if (!radioSelectedStation) {
+    return;
+  }
+  playSelectedRadioStation({ forceReload: true });
+}
+
+async function searchRadioStations(params = {}) {
+  const query = typeof params.query === 'string' ? params.query.trim() : '';
+  const country = typeof params.country === 'string' ? params.country.trim() : '';
+  const language = typeof params.language === 'string' ? params.language.trim() : '';
+  radioLastError = null;
+  setRadioLoading(true);
+  setRadioStatus('index.sections.radio.status.loading', 'Recherche de stations en cours…');
+  if (radioSearchAbortController) {
+    radioSearchAbortController.abort();
+  }
+  const controller = typeof AbortController === 'function' ? new AbortController() : null;
+  radioSearchAbortController = controller;
+  const timeoutId = controller && RADIO_REQUEST_TIMEOUT_MS > 0
+    ? setTimeout(() => controller.abort(), RADIO_REQUEST_TIMEOUT_MS)
+    : null;
+  const servers = getRadioServers();
+  let normalizedStations = null;
+  for (let index = 0; index < servers.length; index += 1) {
+    const base = servers[index];
+    const url = new URL('/json/stations/search', base);
+    if (query) {
+      url.searchParams.set('name', query);
+    }
+    if (country) {
+      url.searchParams.set('country', country);
+    }
+    if (language) {
+      url.searchParams.set('language', language);
+    }
+    if (RADIO_HIDE_BROKEN) {
+      url.searchParams.set('hidebroken', 'true');
+    }
+    url.searchParams.set('limit', String(RADIO_MAX_RESULTS));
+    try {
+      const response = await fetch(url.toString(), controller ? { signal: controller.signal } : undefined);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const payload = await response.json();
+      normalizedStations = Array.isArray(payload)
+        ? payload.map(normalizeRadioStation).filter(Boolean)
+        : [];
+      break;
+    } catch (error) {
+      radioLastError = error;
+      if (error?.name === 'AbortError') {
+        break;
+      }
+    }
+  }
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+  if (radioSearchAbortController === controller) {
+    radioSearchAbortController = null;
+  }
+  setRadioLoading(false);
+  if (controller?.signal?.aborted) {
+    setRadioStatus('index.sections.radio.status.idle', 'Entrez une requête pour démarrer une recherche.');
+    return;
+  }
+  if (!normalizedStations) {
+    setRadioStatus('index.sections.radio.status.error', 'Impossible de récupérer les stations.');
+    radioStations = [];
+    renderRadioResults();
+    return;
+  }
+  radioStations = normalizedStations.slice(0, RADIO_MAX_RESULTS);
+  renderRadioResults();
+  if (radioStations.length) {
+    setRadioStatus('index.sections.radio.status.loaded', `${radioStations.length} stations found.`, { count: radioStations.length });
+    const stillAvailable = radioSelectedStation && radioStations.find(station => station.id === radioSelectedStation.id);
+    if (!stillAvailable) {
+      selectRadioStation(radioStations[0]);
+    }
+  } else {
+    setRadioStatus('index.sections.radio.status.empty', 'Aucune station trouvée.');
+  }
+}
+
+function initRadioModule() {
+  radioFavorites = readStoredRadioFavorites();
+  if (!(radioFavorites instanceof Map)) {
+    radioFavorites = new Map();
+  }
+  setRadioStatus(radioStatusState.key, radioStatusState.fallback, radioStatusState.params);
+  setRadioPlayerStatus(radioPlayerStatusState.key, radioPlayerStatusState.fallback, radioPlayerStatusState.params);
+  renderRadioFavorites();
+  renderRadioResults();
+  renderRadioPlayer();
+  if (elements.radioStationLogo) {
+    elements.radioStationLogo.addEventListener('error', () => {
+      elements.radioStationLogo.hidden = true;
+    });
+  }
+  ensureRadioFiltersLoaded();
+}
+
+function subscribeRadioLanguageUpdates() {
+  const handler = () => {
+    setRadioStatus(radioStatusState.key, radioStatusState.fallback, radioStatusState.params);
+    setRadioPlayerStatus(radioPlayerStatusState.key, radioPlayerStatusState.fallback, radioPlayerStatusState.params);
+    renderRadioFavorites();
+    renderRadioResults();
+    renderRadioPlayer();
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
+
 const musicPlayer = (() => {
   const MUSIC_DIR = 'Assets/Music/';
   const SUPPORTED_EXTENSIONS = MUSIC_SUPPORTED_EXTENSIONS;
@@ -19685,6 +20445,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   document.body.classList.toggle('view-news', pageId === 'news');
   document.body.classList.toggle('view-images', pageId === 'images');
+  document.body.classList.toggle('view-radio', pageId === 'radio');
   applyBackgroundImage();
   if (pageId === 'game') {
     randomizeAtomButtonImage();
@@ -19729,6 +20490,9 @@ function showPage(pageId) {
   }
   if (pageId === 'news') {
     renderNewsList();
+  }
+  if (pageId === 'radio') {
+    ensureRadioFiltersLoaded();
   }
   renderNewsTicker();
   if (quantum2048Game) {
@@ -20391,6 +21155,38 @@ function bindDomEventListeners() {
         return;
       }
       hideNewsStory(newsTickerActiveStoryId);
+    });
+  }
+
+  if (elements.radioSearchForm) {
+    elements.radioSearchForm.addEventListener('submit', handleRadioSearchSubmit);
+  }
+  if (elements.radioResetButton) {
+    elements.radioResetButton.addEventListener('click', handleRadioReset);
+  }
+  if (elements.radioResults) {
+    elements.radioResults.addEventListener('click', handleRadioResultsClick);
+  }
+  if (elements.radioFavoritesList) {
+    elements.radioFavoritesList.addEventListener('click', handleRadioFavoritesClick);
+  }
+  if (elements.radioPlayButton) {
+    elements.radioPlayButton.addEventListener('click', () => playSelectedRadioStation());
+  }
+  if (elements.radioPauseButton) {
+    elements.radioPauseButton.addEventListener('click', pauseRadioPlayback);
+  }
+  if (elements.radioStopButton) {
+    elements.radioStopButton.addEventListener('click', stopRadioPlayback);
+  }
+  if (elements.radioReloadButton) {
+    elements.radioReloadButton.addEventListener('click', reloadRadioStream);
+  }
+  if (elements.radioFavoriteButton) {
+    elements.radioFavoriteButton.addEventListener('click', () => {
+      if (radioSelectedStation) {
+        toggleRadioFavorite(radioSelectedStation);
+      }
     });
   }
 
@@ -27107,6 +27903,8 @@ function initializeDomBoundModules() {
   initNewsOption();
   subscribeNewsLanguageUpdates();
   initNewsModule();
+  initRadioModule();
+  subscribeRadioLanguageUpdates();
   subscribeHeaderBannerLanguageUpdates();
   subscribePerformanceModeLanguageUpdates();
   subscribeInfoWelcomeLanguageUpdates();
