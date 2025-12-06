@@ -910,6 +910,46 @@
       return matches;
     }
 
+    getPrograms(options = {}) {
+      const banks = Array.isArray(options.banks)
+        ? options.banks
+        : [Number.isFinite(options.bank) ? options.bank : 0];
+      const normalizedBanks = banks
+        .map((value) => {
+          if (!Number.isFinite(value)) {
+            return null;
+          }
+          const clamped = Math.max(0, Math.min(16383, Math.round(value)));
+          return clamped;
+        })
+        .filter((value) => value != null);
+
+      const seen = new Set();
+      const programs = [];
+      const limit = Math.max(0, this.phdr.length - 1);
+      for (let i = 0; i < limit; i += 1) {
+        const preset = this.phdr[i];
+        if (!preset) {
+          continue;
+        }
+        const bank = Number.isFinite(preset.bank) ? Math.max(0, Math.min(16383, preset.bank)) : 0;
+        if (normalizedBanks.length && !normalizedBanks.includes(bank)) {
+          continue;
+        }
+        const program = Number.isFinite(preset.preset) ? Math.max(0, Math.min(127, preset.preset)) : 0;
+        const key = `${bank}:${program}`;
+        if (seen.has(key)) {
+          continue;
+        }
+        seen.add(key);
+        const name = typeof preset.name === 'string' ? preset.name.trim() : '';
+        programs.push({ bank, program, name });
+      }
+
+      programs.sort((a, b) => (a.bank === b.bank ? a.program - b.program : a.bank - b.bank));
+      return programs;
+    }
+
     getRegionBuffer(audioContext, region) {
       if (!audioContext || !region || !this.sampleData) {
         return null;
@@ -1623,6 +1663,9 @@
       this.randomPlaybackCurrentTrack = null;
       this.randomPlaybackPending = false;
       this.lastRandomPlaybackTrack = null;
+      this.keyboardProgramOverride = null;
+      this.keyboardProgramOptions = [];
+      this.keyboardProgramListeners = new Set();
 
       this.populateSoundFonts(this.soundFontList, false);
 
@@ -3388,6 +3431,8 @@
       } else {
         this.updateReadyStatusMessage();
       }
+
+      this.refreshKeyboardPrograms();
     }
 
     getEngineLabel() {
@@ -5004,9 +5049,18 @@
       }
 
       const channel = Number.isFinite(options.channel) ? options.channel : 0;
+      const overrideProgram = this.canUseKeyboardPrograms() && this.keyboardProgramOverride
+        ? this.keyboardProgramOverride.program
+        : null;
+      const overrideBank = this.canUseKeyboardPrograms() && this.keyboardProgramOverride
+        ? this.keyboardProgramOverride.bank
+        : null;
       const program = Number.isFinite(options.program)
         ? options.program
-        : this.getManualProgram(channel);
+        : (overrideProgram != null ? overrideProgram : this.getManualProgram(channel));
+      const bank = Number.isFinite(options.bank)
+        ? options.bank
+        : (overrideBank != null ? overrideBank : (channel === 9 ? 128 : 0));
       this.lastProgramByChannel.set(channel, program);
 
       const manualScope = typeof globalThis !== 'undefined'
@@ -5035,6 +5089,7 @@
         velocity,
         channel,
         program,
+        bank,
         pan,
         rawVelocity: velocity,
       };
@@ -5355,6 +5410,8 @@
       } else {
         this.updateReadyStatusMessage();
       }
+
+      this.refreshKeyboardPrograms();
     }
 
     getCurrentSoundFontInfo() {
@@ -5362,6 +5419,113 @@
         return null;
       }
       return this.soundFontList.find((item) => item.id === this.selectedSoundFontId) || null;
+    }
+
+    canUseKeyboardPrograms() {
+      return this.engineMode === 'hifi' && Boolean(this.activeSoundFont);
+    }
+
+    normalizeProgramSelection(selection) {
+      if (selection == null) {
+        return null;
+      }
+      if (typeof selection === 'string') {
+        const trimmed = selection.trim();
+        if (!trimmed) {
+          return null;
+        }
+        const parts = trimmed.split(':');
+        const numericProgram = parts.length === 2 ? Number(parts[1]) : Number(parts[0]);
+        const numericBank = parts.length === 2 ? Number(parts[0]) : 0;
+        const program = Number.isFinite(numericProgram) ? Math.max(0, Math.min(127, Math.round(numericProgram))) : null;
+        const bank = Number.isFinite(numericBank) ? Math.max(0, Math.min(16383, Math.round(numericBank))) : 0;
+        if (program == null) {
+          return null;
+        }
+        return { bank, program };
+      }
+      if (typeof selection === 'object') {
+        const program = Number.isFinite(selection.program)
+          ? Math.max(0, Math.min(127, Math.round(selection.program)))
+          : null;
+        if (program == null) {
+          return null;
+        }
+        const bank = Number.isFinite(selection.bank)
+          ? Math.max(0, Math.min(16383, Math.round(selection.bank)))
+          : 0;
+        return { bank, program };
+      }
+      if (Number.isFinite(selection)) {
+        const program = Math.max(0, Math.min(127, Math.round(selection)));
+        return { bank: 0, program };
+      }
+      return null;
+    }
+
+    getKeyboardProgramOverride() {
+      return this.keyboardProgramOverride;
+    }
+
+    setKeyboardProgramOverride(selection) {
+      const normalized = this.normalizeProgramSelection(selection);
+      this.keyboardProgramOverride = normalized;
+      this.notifyKeyboardProgramListeners();
+    }
+
+    registerKeyboardProgramListener(listener) {
+      if (typeof listener !== 'function') {
+        return () => {};
+      }
+      this.keyboardProgramListeners.add(listener);
+      try {
+        listener({
+          programs: this.keyboardProgramOptions,
+          selected: this.keyboardProgramOverride,
+          enabled: this.canUseKeyboardPrograms(),
+        });
+      } catch (error) {
+        console.warn('Unable to notify keyboard program listener', error);
+      }
+      return () => {
+        this.keyboardProgramListeners.delete(listener);
+      };
+    }
+
+    notifyKeyboardProgramListeners() {
+      const payload = {
+        programs: this.keyboardProgramOptions,
+        selected: this.keyboardProgramOverride,
+        enabled: this.canUseKeyboardPrograms(),
+      };
+      this.keyboardProgramListeners.forEach((listener) => {
+        try {
+          listener(payload);
+        } catch (error) {
+          console.warn('Unable to notify keyboard program listener', error);
+        }
+      });
+    }
+
+    refreshKeyboardPrograms() {
+      let programs = [];
+      if (this.canUseKeyboardPrograms() && this.activeSoundFont && typeof this.activeSoundFont.getPrograms === 'function') {
+        try {
+          programs = this.activeSoundFont.getPrograms({ banks: [0, 128] }) || [];
+        } catch (error) {
+          console.warn('Unable to collect SoundFont programs', error);
+        }
+      }
+      this.keyboardProgramOptions = programs;
+      const hasSelection = programs.some((entry) => (
+        this.keyboardProgramOverride
+        && entry.program === this.keyboardProgramOverride.program
+        && entry.bank === this.keyboardProgramOverride.bank
+      ));
+      if (!hasSelection) {
+        this.keyboardProgramOverride = null;
+      }
+      this.notifyKeyboardProgramListeners();
     }
 
     async ensureSoundFontReady() {
@@ -5378,6 +5542,7 @@
         this.activeSoundFontId = info.id;
         this.currentSoundFontLabel = info.name || info.id;
         this.updateReadyStatusMessage();
+        this.refreshKeyboardPrograms();
         return cached;
       }
       if (this.loadingSoundFont && this.loadingSoundFont.id === info.id) {
@@ -5400,6 +5565,7 @@
             this.currentSoundFontLabel = info.name || info.id;
             this.updateReadyStatusMessage();
             this.scheduleReadyStatusRestore(1600);
+            this.refreshKeyboardPrograms();
           }
           this.setStatusMessage('index.sections.options.chiptune.status.soundFontReady', 'SoundFont ready: {name}', { name: info.name || info.id }, 'success');
           return font;
@@ -6239,7 +6405,8 @@
       return Boolean(this.getNextSequentialTrack());
     }
 
-    async playNextTrack() {
+    async playNextTrack(options = {}) {
+      const { autoplay = false } = options;
       if (this.randomPlaybackMode) {
         await this.skipRandomTrack();
         return;
@@ -6248,7 +6415,7 @@
       if (!nextTrack) {
         return;
       }
-      const shouldAutoplay = this.playing;
+      const shouldAutoplay = autoplay || this.playing;
       try {
         await this.loadFromLibrary(nextTrack);
         if (this.trackSelect && this.trackSelect.value !== nextTrack.file) {
@@ -6850,7 +7017,9 @@
         ? Math.max(0, Math.min(1, note.rawVelocity))
         : (Number.isFinite(note.velocity) ? Math.max(0, Math.min(1, note.velocity)) : 0.6);
       const velocity = Math.max(0, Math.min(127, Math.round(velocityBase * 127)));
-      const bank = note.channel === 9 ? 128 : 0;
+      const bank = Number.isFinite(note.bank)
+        ? Math.max(0, Math.min(16383, Math.round(note.bank)))
+        : (note.channel === 9 ? 128 : 0);
 
       if (this.pianoOverrideEnabled && bank !== 128) {
         const normalizedProgram = Math.max(0, Math.min(127, Math.round(program)));
@@ -9256,6 +9425,8 @@
           const sessionFinished = hasRandomSession
             && !shouldQueueNext
             && (!Array.isArray(this.randomPlaybackQueue) || !this.randomPlaybackQueue.length);
+          const nextSequentialTrack = !hasRandomSession ? this.getNextSequentialTrack() : null;
+          const shouldAutoAdvance = Boolean(nextSequentialTrack) && !shouldQueueNext && !sessionFinished;
 
           if (shouldQueueNext) {
             this.stop(false, { skipRandomReset: true });
@@ -9270,6 +9441,11 @@
             this.playRandomTrack(nextArtistId, { continueSession: true }).catch((error) => {
               console.error('Unable to continue random playback', error);
               this.completeRandomPlayback();
+            });
+          } else if (shouldAutoAdvance) {
+            this.playNextTrack({ autoplay: true }).catch((error) => {
+              console.error('Unable to continue sequential playback', error);
+              this.setStatusMessage('index.sections.options.chiptune.status.trackError', 'Unable to load the track: {error}', { error: error?.message || 'Unknown error' }, 'error');
             });
           } else if (sessionFinished) {
             this.completeRandomPlayback();
@@ -9929,6 +10105,7 @@
 
       const layoutSelect = root.querySelector('#midiKeyboardLayoutSelect');
       const windowSizeSelect = root.querySelector('#midiKeyboardOctaveSelect');
+      const programSelect = root.querySelector('#midiKeyboardProgramSelect');
       const fullContainer = root.querySelector('#midiKeyboardFull');
       const miniContainer = root.querySelector('#midiKeyboardMini');
       const rangeValue = root.querySelector('#midiKeyboardRangeValue');
@@ -9949,6 +10126,7 @@
           ? globalScope.atom2universMidiPlayer
           : null);
       let detachNoteObserver = null;
+      let detachProgramListener = null;
       let attachedPlayer = null;
 
       const debugNoteEvents = Boolean(globalScope && globalScope.atom2universDebugMidiSelection);
@@ -9963,6 +10141,7 @@
       const keyboardNotes = new Map();
       let playbackPreviewOnFull = fullPreviewToggle ? Boolean(fullPreviewToggle.checked) : false;
       let playbackPreviewOnMini = practiceScrollToggle ? Boolean(practiceScrollToggle.checked) : false;
+      updateProgramSelect({ programs: [], selected: null, enabled: false });
 
       const isPlaybackPreviewEnabled = () => playbackPreviewOnFull || playbackPreviewOnMini;
 
@@ -10163,6 +10342,105 @@
           }
         }
         return null;
+      }
+
+      function buildProgramValue(entry) {
+        if (!entry || !Number.isFinite(entry.program)) {
+          return '';
+        }
+        const bank = Number.isFinite(entry.bank) ? Math.max(0, Math.min(16383, Math.round(entry.bank))) : 0;
+        const program = Math.max(0, Math.min(127, Math.round(entry.program)));
+        return `${bank}:${program}`;
+      }
+
+      function formatProgramOption(entry) {
+        if (!entry || !Number.isFinite(entry.program)) {
+          return '';
+        }
+        const bank = Number.isFinite(entry.bank) ? Math.max(0, Math.min(16383, Math.round(entry.bank))) : 0;
+        const program = Math.max(0, Math.min(127, Math.round(entry.program)));
+        const programLabel = program.toString().padStart(3, '0');
+        const prefix = `${bank}:${programLabel}`;
+        return entry.name ? `${prefix} — ${entry.name}` : prefix;
+      }
+
+      function formatProgramAutoLabel() {
+        const api = getI18n();
+        if (api && typeof api.t === 'function') {
+          return api.t('midi.keyboard.programAuto', 'Automatic (use track program)');
+        }
+        return 'Automatic (use track program)';
+      }
+
+      function formatProgramUnavailableLabel() {
+        const api = getI18n();
+        if (api && typeof api.t === 'function') {
+          return api.t('midi.keyboard.programUnavailable', 'Choose a SoundFont to pick a program.');
+        }
+        return 'Choose a SoundFont to pick a program.';
+      }
+
+      function parseProgramValue(value) {
+        if (typeof value !== 'string' || !value.trim()) {
+          return null;
+        }
+        const parts = value.split(':');
+        const numericProgram = parts.length === 2 ? Number(parts[1]) : Number(parts[0]);
+        const numericBank = parts.length === 2 ? Number(parts[0]) : 0;
+        if (!Number.isFinite(numericProgram)) {
+          return null;
+        }
+        const program = Math.max(0, Math.min(127, Math.round(numericProgram)));
+        const bank = Number.isFinite(numericBank) ? Math.max(0, Math.min(16383, Math.round(numericBank))) : 0;
+        return { bank, program };
+      }
+
+      function updateProgramSelect(payload = {}) {
+        if (!programSelect) {
+          return;
+        }
+        const { programs = [], selected = null, enabled = false } = payload;
+        const doc = programSelect.ownerDocument || document;
+        programSelect.innerHTML = '';
+
+        const autoOption = doc.createElement('option');
+        autoOption.value = '';
+        autoOption.dataset.i18n = 'midi.keyboard.programAuto';
+        autoOption.textContent = formatProgramAutoLabel();
+        programSelect.append(autoOption);
+
+        if (programs.length) {
+          const fragment = doc.createDocumentFragment();
+          programs.forEach((entry) => {
+            if (!entry) {
+              return;
+            }
+            const option = doc.createElement('option');
+            option.value = buildProgramValue(entry);
+            option.textContent = formatProgramOption(entry);
+            fragment.append(option);
+          });
+          programSelect.append(fragment);
+        } else {
+          const placeholder = doc.createElement('option');
+          placeholder.value = '';
+          placeholder.dataset.i18n = 'midi.keyboard.programUnavailable';
+          placeholder.textContent = formatProgramUnavailableLabel();
+          placeholder.disabled = true;
+          placeholder.hidden = true;
+          programSelect.append(placeholder);
+        }
+
+        const targetValue = selected ? buildProgramValue(selected) : '';
+        if (programSelect.value !== targetValue) {
+          programSelect.value = targetValue;
+        }
+        programSelect.disabled = !enabled || !programs.length;
+
+        const api = getI18n();
+        if (api && typeof api.updateTranslations === 'function') {
+          api.updateTranslations(programSelect.parentElement || programSelect);
+        }
       }
 
       function shouldObserveDetail(detail) {
@@ -10919,6 +11197,10 @@
           detachNoteObserver();
           detachNoteObserver = null;
         }
+        if (detachProgramListener) {
+          detachProgramListener();
+          detachProgramListener = null;
+        }
         attachedPlayer = nextPlayer;
         midiPlayer = nextPlayer;
         if (nextPlayer && typeof nextPlayer.registerNoteObserver === 'function') {
@@ -10926,6 +11208,11 @@
             onNoteOn: handleNoteOn,
             onNoteOff: handleNoteOff,
           });
+        }
+        if (nextPlayer && typeof nextPlayer.registerKeyboardProgramListener === 'function') {
+          detachProgramListener = nextPlayer.registerKeyboardProgramListener(updateProgramSelect);
+        } else {
+          updateProgramSelect({ programs: [], selected: null, enabled: false });
         }
       }
 
@@ -11098,6 +11385,16 @@
       if (practiceScrollToggle) {
         practiceScrollToggle.addEventListener('change', () => {
           setPracticePreviewEnabled(practiceScrollToggle.checked);
+        });
+      }
+
+      if (programSelect) {
+        programSelect.addEventListener('change', () => {
+          if (!midiPlayer || typeof midiPlayer.setKeyboardProgramOverride !== 'function') {
+            return;
+          }
+          const selection = parseProgramValue(programSelect.value);
+          midiPlayer.setKeyboardProgramOverride(selection);
         });
       }
 
