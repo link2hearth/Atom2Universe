@@ -501,7 +501,22 @@
         "favorites": {
           "title": "Favorites",
           "subtitle": "Jump back to the stations you love.",
-          "empty": "No favorite stations yet."
+          "empty": "No favorite stations yet.",
+          "addUrl": "Add URL",
+          "form": {
+            "urlLabel": "Stream address",
+            "urlPlaceholder": "https://example.com/stream",
+            "nameLabel": "Station name (optional)",
+            "namePlaceholder": "My web radio",
+            "submit": "Add",
+            "cancel": "Cancel"
+          },
+          "dialog": {
+            "urlPrompt": "Enter the radio stream URL to save:",
+            "namePrompt": "Station name (optional):",
+            "invalidUrl": "Please enter a valid URL starting with http:// or https://.",
+            "duplicate": "This station is already in your favorites."
+          }
         },
         "meta": {
           "bitrate": "{value} kbps",
