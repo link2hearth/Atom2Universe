@@ -7256,70 +7256,7 @@
         </div>
 
         <div class="radio-page__layout">
-          <div class="radio-page__search">
-            <form id="radioSearchForm" class="radio-search" novalidate>
-              <div class="radio-search__row">
-                <div class="radio-search__field">
-                  <label for="radioQuery" data-i18n="index.sections.radio.form.queryLabel">Recherche</label>
-                  <input
-                    id="radioQuery"
-                    class="radio-search__input"
-                    type="search"
-                    data-i18n="placeholder:index.sections.radio.form.queryPlaceholder"
-                    placeholder="Nom, tag, ville…"
-                  />
-                </div>
-                <div class="radio-search__field">
-                  <label for="radioCountry" data-i18n="index.sections.radio.form.countryLabel">Pays</label>
-                  <select id="radioCountry" class="radio-search__select">
-                    <option value="" data-i18n="index.sections.radio.form.anyCountry">Tous les pays</option>
-                  </select>
-                </div>
-                <div class="radio-search__field">
-                  <label for="radioLanguage" data-i18n="index.sections.radio.form.languageLabel">Langue</label>
-                  <select id="radioLanguage" class="radio-search__select">
-                    <option value="" data-i18n="index.sections.radio.form.anyLanguage">Toutes les langues</option>
-                  </select>
-                </div>
-              </div>
-              <div class="radio-search__actions">
-                <button
-                  type="submit"
-                  id="radioSearchButton"
-                  class="radio-search__button radio-search__button--primary"
-                  data-i18n="index.sections.radio.actions.search"
-                >
-                  Rechercher
-                </button>
-                <button
-                  type="button"
-                  id="radioResetButton"
-                  class="radio-search__button radio-search__button--ghost"
-                  data-i18n="index.sections.radio.actions.reset"
-                >
-                  Réinitialiser
-                </button>
-              </div>
-            </form>
-
-            <div class="radio-results" aria-live="polite">
-              <p
-                id="radioEmptyState"
-                class="radio-results__empty"
-                hidden
-                data-i18n="index.sections.radio.status.empty"
-              >
-                Aucune station trouvée.
-              </p>
-              <ul
-                id="radioResults"
-                class="radio-stations"
-                aria-label="Résultats de la recherche"
-              ></ul>
-            </div>
-          </div>
-
-          <aside class="radio-page__aside">
+          <div class="radio-page__panels">
             <section class="radio-card" aria-labelledby="radioPlayerTitle">
               <div class="radio-card__header">
                 <h3 id="radioPlayerTitle" data-i18n="index.sections.radio.player.title">Lecteur</h3>
@@ -7409,7 +7346,70 @@
               </p>
               <ul id="radioFavoritesList" class="radio-favorites" aria-live="polite"></ul>
             </section>
-          </aside>
+          </div>
+
+          <div class="radio-page__search">
+            <form id="radioSearchForm" class="radio-search" novalidate>
+              <div class="radio-search__row">
+                <div class="radio-search__field">
+                  <label for="radioQuery" data-i18n="index.sections.radio.form.queryLabel">Recherche</label>
+                  <input
+                    id="radioQuery"
+                    class="radio-search__input"
+                    type="search"
+                    data-i18n="placeholder:index.sections.radio.form.queryPlaceholder"
+                    placeholder="Nom, tag, ville…"
+                  />
+                </div>
+                <div class="radio-search__field">
+                  <label for="radioCountry" data-i18n="index.sections.radio.form.countryLabel">Pays</label>
+                  <select id="radioCountry" class="radio-search__select">
+                    <option value="" data-i18n="index.sections.radio.form.anyCountry">Tous les pays</option>
+                  </select>
+                </div>
+                <div class="radio-search__field">
+                  <label for="radioLanguage" data-i18n="index.sections.radio.form.languageLabel">Langue</label>
+                  <select id="radioLanguage" class="radio-search__select">
+                    <option value="" data-i18n="index.sections.radio.form.anyLanguage">Toutes les langues</option>
+                  </select>
+                </div>
+              </div>
+              <div class="radio-search__actions">
+                <button
+                  type="submit"
+                  id="radioSearchButton"
+                  class="radio-search__button radio-search__button--primary"
+                  data-i18n="index.sections.radio.actions.search"
+                >
+                  Rechercher
+                </button>
+                <button
+                  type="button"
+                  id="radioResetButton"
+                  class="radio-search__button radio-search__button--ghost"
+                  data-i18n="index.sections.radio.actions.reset"
+                >
+                  Réinitialiser
+                </button>
+              </div>
+            </form>
+
+            <div class="radio-results" aria-live="polite">
+              <p
+                id="radioEmptyState"
+                class="radio-results__empty"
+                hidden
+                data-i18n="index.sections.radio.status.empty"
+              >
+                Aucune station trouvée.
+              </p>
+              <ul
+                id="radioResults"
+                class="radio-stations"
+                aria-label="Résultats de la recherche"
+              ></ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
