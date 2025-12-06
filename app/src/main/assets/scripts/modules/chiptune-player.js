@@ -1441,6 +1441,8 @@
       this.programUsageSummary = elements.programUsageSummary;
       this.programUsageTitle = elements.programUsageTitle;
       this.programUsageNote = elements.programUsageNote;
+      this.programUsageRows = new Map();
+      this.programActivityCounts = new Map();
       this.visibleTracks = [];
 
       if (this.androidRescanButton) {
@@ -3659,7 +3661,24 @@
       }
     }
 
+    resetProgramActivityState() {
+      if (!this.programUsageRows) {
+        this.programUsageRows = new Map();
+      }
+      if (!this.programActivityCounts) {
+        this.programActivityCounts = new Map();
+      } else {
+        this.programActivityCounts.clear();
+      }
+      for (const row of this.programUsageRows.values()) {
+        if (row?.classList) {
+          row.classList.remove('is-active');
+        }
+      }
+    }
+
     initializeProgramUsageGrid() {
+      this.resetProgramActivityState();
       if (!this.programUsageContainer) {
         return;
       }
@@ -3667,6 +3686,8 @@
     }
 
     updateProgramUsage(timeline) {
+      this.resetProgramActivityState();
+      this.programUsageRows.clear();
       if (!this.programUsageContainer) {
         if (this.programUsageSummary) {
           this.programUsageSummary.textContent = '';
@@ -3721,6 +3742,7 @@
           statusCell.textContent = '✖';
 
           row.append(programCell, statusCell);
+          this.programUsageRows.set(program, row);
           fragment.append(row);
         }
         this.programUsageContainer.append(fragment);
@@ -3749,6 +3771,42 @@
             : percussionLabel;
         }
         this.programUsageSummary.textContent = summary;
+      }
+    }
+
+    updateProgramActivityStatus(type, detail) {
+      if (!this.programUsageRows || this.programUsageRows.size === 0) {
+        return;
+      }
+      const programNumber = Number.isFinite(detail?.program)
+        ? Math.max(0, Math.min(127, Math.round(detail.program)))
+        : null;
+      if (programNumber == null) {
+        return;
+      }
+      const channel = Number.isFinite(detail?.channel) ? detail.channel : 0;
+      if (channel === 9) {
+        return;
+      }
+
+      const row = this.programUsageRows.get(programNumber) || null;
+      if (!row) {
+        return;
+      }
+
+      const currentCount = this.programActivityCounts.get(programNumber) || 0;
+      if (type === 'start') {
+        const nextCount = currentCount + 1;
+        this.programActivityCounts.set(programNumber, nextCount);
+        row.classList.add('is-active');
+      } else if (type === 'stop') {
+        const nextCount = Math.max(0, currentCount - 1);
+        if (nextCount <= 0) {
+          this.programActivityCounts.delete(programNumber);
+          row.classList.remove('is-active');
+        } else {
+          this.programActivityCounts.set(programNumber, nextCount);
+        }
       }
     }
 
@@ -3811,6 +3869,7 @@
     }
 
     notifyNoteEvent(type, detail) {
+      this.updateProgramActivityStatus(type, detail);
       if (!this.noteObservers || this.noteObservers.size === 0) {
         return;
       }
