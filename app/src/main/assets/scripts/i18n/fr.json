@@ -15,11 +15,17 @@
         "info": "Infos",
         "images": "Images",
         "news": "News",
-        "radio": "Radio",
+        "radio": "Musique",
         "notes": "Notes",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
+      }
+    },
+    "music": {
+      "tabs": {
+        "radio": "Radio",
+        "midi": "Lecteur MIDI"
       }
     },
     "header": {

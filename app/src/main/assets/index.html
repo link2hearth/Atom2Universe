@@ -113,7 +113,7 @@
           <span data-i18n="index.navigation.items.news">News</span>
         </button>
         <button class="nav-button" data-target="radio">
-          <span data-i18n="index.navigation.items.radio">Radio</span>
+          <span data-i18n="index.navigation.items.radio">Musique</span>
         </button>
         <button class="nav-button" data-target="notes">
           <span data-i18n="index.navigation.items.notes">Notes</span>
@@ -7258,6 +7258,21 @@
           </div>
         </div>
 
+        <div class="music-tabs" role="tablist" aria-label="Navigation musicale">
+          <button
+            class="music-tab music-tab--active"
+            type="button"
+            data-target="radio"
+            role="tab"
+            aria-selected="true"
+          >
+            <span data-i18n="index.sections.music.tabs.radio">Radio</span>
+          </button>
+          <button class="music-tab" type="button" data-target="midi" role="tab" aria-selected="false">
+            <span data-i18n="index.sections.music.tabs.midi">Lecteur MIDI</span>
+          </button>
+        </div>
+
         <div class="radio-page__layout">
           <div class="radio-page__panels">
             <section class="radio-card" aria-labelledby="radioPlayerTitle">
@@ -8220,32 +8235,46 @@
       data-scroll-behavior="force"
       hidden
     >
-    <div class="midi-page__main">
-      <div class="midi-page__content">
-        <section class="option-card option-card--chiptune midi-page__module" aria-labelledby="midiModuleTitle">
-          <h2 id="midiModuleTitle" class="visually-hidden" data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h2>
-          <div class="option-row option-row--buttons option-row--import">
-            <button
-              type="button"
-              id="chiptuneImportFolderButton"
-              data-i18n="index.sections.options.chiptune.folderImport.button"
-            >Ajouter un dossier MIDI local</button>
-            <button
-              type="button"
-              id="chiptuneRescanAndroidButton"
-              hidden
-              data-i18n="index.sections.options.chiptune.folderImport.android.rescanButton"
-            >Mettre à jour le dossier Android</button>
-            <input
-              type="file"
-              id="chiptuneFolderInput"
-              accept=".mid,.midi"
-              webkitdirectory
-              directory
-              multiple
-              hidden
-            />
-          </div>
+      <div class="music-tabs" role="tablist" aria-label="Navigation musicale">
+        <button class="music-tab" type="button" data-target="radio" role="tab" aria-selected="false">
+          <span data-i18n="index.sections.music.tabs.radio">Radio</span>
+        </button>
+        <button
+          class="music-tab music-tab--active"
+          type="button"
+          data-target="midi"
+          role="tab"
+          aria-selected="true"
+        >
+          <span data-i18n="index.sections.music.tabs.midi">Lecteur MIDI</span>
+        </button>
+      </div>
+      <div class="midi-page__main">
+        <div class="midi-page__content">
+          <section class="option-card option-card--chiptune midi-page__module" aria-labelledby="midiModuleTitle">
+            <h2 id="midiModuleTitle" class="visually-hidden" data-i18n="index.sections.options.chiptune.title">Module Musique Midi</h2>
+            <div class="option-row option-row--buttons option-row--import">
+              <button
+                type="button"
+                id="chiptuneImportFolderButton"
+                data-i18n="index.sections.options.chiptune.folderImport.button"
+              >Ajouter un dossier MIDI local</button>
+              <button
+                type="button"
+                id="chiptuneRescanAndroidButton"
+                hidden
+                data-i18n="index.sections.options.chiptune.folderImport.android.rescanButton"
+              >Mettre à jour le dossier Android</button>
+              <input
+                type="file"
+                id="chiptuneFolderInput"
+                accept=".mid,.midi"
+                webkitdirectory
+                directory
+                multiple
+                hidden
+              />
+            </div>
           <div class="option-row option-row--selectors">
             <div class="option-field option-field--wide option-field--artist">
               <label for="chiptuneArtistSelect" data-i18n="index.sections.options.chiptune.labels.artist">Artiste</label>
