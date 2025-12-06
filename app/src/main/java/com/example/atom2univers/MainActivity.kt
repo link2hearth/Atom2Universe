@@ -28,7 +28,12 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.documentfile.provider.DocumentFile
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.webkit.WebViewAssetLoader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -45,6 +50,9 @@ class MainActivity : AppCompatActivity() {
     private var pendingMidiLabel: String? = null
     private var mediaCommandReceiver: BroadcastReceiver? = null
     private var isForegroundAudioPlaying: Boolean = false
+    private lateinit var radioPlayer: ExoPlayer
+    private lateinit var radioBridge: RadioBridge
+    private val radioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
@@ -109,6 +117,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
+
+        radioPlayer = ExoPlayer.Builder(this).build()
 
         registerMediaCommandReceiver()
 
@@ -267,6 +277,12 @@ class MainActivity : AppCompatActivity() {
             useWideViewPort = true
         }
 
+        radioBridge = RadioBridge(this, webView, radioPlayer, radioScope)
+        webView.addJavascriptInterface(
+            radioBridge,
+            "Android"
+        )
+
         webView.addJavascriptInterface(
             AndroidSaveBridge(applicationContext),
             "AndroidSaveBridge"
@@ -341,6 +357,13 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         mediaCommandReceiver?.let { unregisterReceiver(it) }
         mediaCommandReceiver = null
+        if (::radioBridge.isInitialized) {
+            radioBridge.release()
+        }
+        if (::radioPlayer.isInitialized) {
+            radioPlayer.release()
+        }
+        radioScope.cancel()
         super.onDestroy()
     }
 

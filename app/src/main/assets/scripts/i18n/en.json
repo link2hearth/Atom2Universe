@@ -465,6 +465,8 @@
           "search": "Search",
           "reset": "Reset",
           "play": "Play",
+          "record": "REC",
+          "stopRecord": "Stop REC",
           "pause": "Pause",
           "stop": "Stop",
           "reload": "Reload",
@@ -490,6 +492,9 @@
             "playing": "Now playing",
             "paused": "Playback paused",
             "stopped": "Playback stopped",
+            "recording": "Recording…",
+            "recordingStopped": "Recording stopped.",
+            "recordUnavailable": "Recording is available on Android only.",
             "error": "Unable to play this stream."
           }
         },
