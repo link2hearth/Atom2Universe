@@ -501,7 +501,14 @@
         "favorites": {
           "title": "Favoris",
           "subtitle": "Retrouvez rapidement vos stations préférées.",
-          "empty": "Aucune station en favori pour le moment."
+          "empty": "Aucune station en favori pour le moment.",
+          "addUrl": "Ajouter une URL",
+          "dialog": {
+            "urlPrompt": "Entrez l’URL du flux radio à ajouter :",
+            "namePrompt": "Nom de la station (optionnel) :",
+            "invalidUrl": "Merci de saisir une URL valide commençant par http:// ou https://.",
+            "duplicate": "Cette station est déjà dans vos favoris."
+          }
         },
         "meta": {
           "bitrate": "{value} kbps",

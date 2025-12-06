@@ -6933,6 +6933,7 @@ function collectDomElements() {
   radioEmptyState: document.getElementById('radioEmptyState'),
   radioFavoritesList: document.getElementById('radioFavoritesList'),
   radioFavoritesEmpty: document.getElementById('radioFavoritesEmpty'),
+  radioFavoritesAddUrlButton: document.getElementById('radioFavoritesAddUrlButton'),
   radioPlayButton: document.getElementById('radioPlayButton'),
   radioRecordButton: document.getElementById('radioRecordButton'),
   radioRecordStopButton: document.getElementById('radioRecordStopButton'),
@@ -14832,6 +14833,64 @@ function renderRadioFavorites() {
   });
 }
 
+function handleManualRadioFavorite() {
+  if (typeof globalThis?.prompt !== 'function') {
+    return;
+  }
+  const urlPrompt = translateOrDefault(
+    'index.sections.radio.favorites.dialog.urlPrompt',
+    'Entrez l’URL du flux radio à ajouter :'
+  );
+  const urlInput = prompt(urlPrompt, '');
+  if (urlInput === null) {
+    return;
+  }
+  const normalizedUrl = normalizeRadioServer(urlInput);
+  if (!normalizedUrl) {
+    if (typeof globalThis?.alert === 'function') {
+      alert(
+        translateOrDefault(
+          'index.sections.radio.favorites.dialog.invalidUrl',
+          'Merci de saisir une URL valide commençant par http:// ou https://.'
+        )
+      );
+    }
+    return;
+  }
+  const duplicate = Array.from(radioFavorites.values()).find(station => station.url === normalizedUrl);
+  if (duplicate) {
+    if (typeof globalThis?.alert === 'function') {
+      alert(
+        translateOrDefault(
+          'index.sections.radio.favorites.dialog.duplicate',
+          'Cette station est déjà dans vos favoris.'
+        )
+      );
+    }
+    return;
+  }
+  const namePrompt = translateOrDefault(
+    'index.sections.radio.favorites.dialog.namePrompt',
+    'Nom de la station (optionnel) :'
+  );
+  const rawName = prompt(namePrompt, '');
+  const name = rawName && rawName.trim() ? rawName.trim() : normalizedUrl;
+  const station = {
+    id: `manual-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    name,
+    url: normalizedUrl,
+    country: '',
+    language: '',
+    favicon: '',
+    bitrate: null
+  };
+  radioFavorites.set(station.id, station);
+  writeStoredRadioFavorites(radioFavorites);
+  renderRadioFavorites();
+  renderRadioResults();
+  renderRadioPlayer();
+}
+
 function renderRadioResults() {
   if (!elements?.radioResults) {
     return;
@@ -21429,6 +21488,9 @@ function bindDomEventListeners() {
   }
   if (elements.radioFavoritesList) {
     elements.radioFavoritesList.addEventListener('click', handleRadioFavoritesClick);
+  }
+  if (elements.radioFavoritesAddUrlButton) {
+    elements.radioFavoritesAddUrlButton.addEventListener('click', handleManualRadioFavorite);
   }
   if (elements.radioPlayButton) {
     elements.radioPlayButton.addEventListener('click', () => playSelectedRadioStation());

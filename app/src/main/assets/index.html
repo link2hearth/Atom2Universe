@@ -7346,11 +7346,23 @@
             </section>
 
             <section class="radio-card" aria-labelledby="radioFavoritesTitle">
-              <div class="radio-card__header">
-                <h3 id="radioFavoritesTitle" data-i18n="index.sections.radio.favorites.title">Favoris</h3>
-                <p class="radio-card__status" data-i18n="index.sections.radio.favorites.subtitle">
-                  Retrouvez rapidement vos stations préférées.
-                </p>
+              <div class="radio-card__header radio-card__header--with-actions">
+                <div class="radio-card__title">
+                  <h3 id="radioFavoritesTitle" data-i18n="index.sections.radio.favorites.title">Favoris</h3>
+                  <p class="radio-card__status" data-i18n="index.sections.radio.favorites.subtitle">
+                    Retrouvez rapidement vos stations préférées.
+                  </p>
+                </div>
+                <div class="radio-card__actions">
+                  <button
+                    type="button"
+                    id="radioFavoritesAddUrlButton"
+                    class="radio-player__button radio-player__button--ghost"
+                    data-i18n="index.sections.radio.favorites.addUrl"
+                  >
+                    Ajouter une URL
+                  </button>
+                </div>
               </div>
               <p
                 id="radioFavoritesEmpty"
