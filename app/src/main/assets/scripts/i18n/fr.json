@@ -465,6 +465,8 @@
           "search": "Rechercher",
           "reset": "Réinitialiser",
           "play": "Lecture",
+          "record": "Enregistrer",
+          "stopRecord": "Stop REC",
           "pause": "Pause",
           "stop": "Stop",
           "reload": "Recharger",
@@ -490,6 +492,9 @@
             "playing": "Lecture en cours",
             "paused": "Lecture en pause",
             "stopped": "Lecture arrêtée",
+            "recording": "Enregistrement en cours…",
+            "recordingStopped": "Enregistrement arrêté.",
+            "recordUnavailable": "Enregistrement disponible uniquement sur Android.",
             "error": "Impossible de lire le flux."
           }
         },

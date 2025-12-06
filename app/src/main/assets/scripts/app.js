@@ -552,6 +552,7 @@ let radioCountries = [];
 let radioLanguages = [];
 let radioFiltersPromise = null;
 let radioAudioElement = null;
+let radioIsRecording = false;
 let radioStatusState = {
   key: 'index.sections.radio.status.idle',
   fallback: 'Entrez une requête pour démarrer une recherche.',
@@ -6933,6 +6934,8 @@ function collectDomElements() {
   radioFavoritesList: document.getElementById('radioFavoritesList'),
   radioFavoritesEmpty: document.getElementById('radioFavoritesEmpty'),
   radioPlayButton: document.getElementById('radioPlayButton'),
+  radioRecordButton: document.getElementById('radioRecordButton'),
+  radioRecordStopButton: document.getElementById('radioRecordStopButton'),
   radioPauseButton: document.getElementById('radioPauseButton'),
   radioStopButton: document.getElementById('radioStopButton'),
   radioReloadButton: document.getElementById('radioReloadButton'),
@@ -14715,6 +14718,7 @@ function renderRadioPlayer() {
   }
   const station = radioSelectedStation;
   const hasStation = !!(station && station.id);
+  const androidRecordingAvailable = isAndroidRadioBridgeAvailable();
   if (elements.radioStationLogo) {
     if (hasStation && station.favicon) {
       elements.radioStationLogo.src = station.favicon;
@@ -14750,6 +14754,18 @@ function renderRadioPlayer() {
   if (elements.radioPlayButton) {
     elements.radioPlayButton.disabled = !hasStation;
   }
+  if (elements.radioRecordButton) {
+    elements.radioRecordButton.disabled = !hasStation || radioIsRecording || !androidRecordingAvailable;
+    elements.radioRecordButton.title = androidRecordingAvailable
+      ? ''
+      : translateOrDefault(
+        'index.sections.radio.player.status.recordUnavailable',
+        'Enregistrement disponible uniquement sur Android.'
+      );
+  }
+  if (elements.radioRecordStopButton) {
+    elements.radioRecordStopButton.disabled = !hasStation || !radioIsRecording || !androidRecordingAvailable;
+  }
   if (elements.radioPauseButton) {
     elements.radioPauseButton.disabled = !hasStation;
   }
@@ -14758,6 +14774,12 @@ function renderRadioPlayer() {
   }
   if (elements.radioReloadButton) {
     elements.radioReloadButton.disabled = !hasStation;
+  }
+  if (radioIsRecording) {
+    setRadioPlayerStatus(
+      'index.sections.radio.player.status.recording',
+      'Enregistrement en cours…'
+    );
   }
 }
 
@@ -14872,6 +14894,37 @@ function getAndroidBridge() {
     return bridge;
   }
   return null;
+}
+
+function getAndroidRadioBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const bridge = window.Android;
+  if (!bridge) {
+    return null;
+  }
+  const bridgeType = typeof bridge;
+  if (bridgeType !== 'object' && bridgeType !== 'function') {
+    return null;
+  }
+  if (typeof bridge.playStream !== 'function') {
+    return null;
+  }
+  return bridge;
+}
+
+function isAndroidRadioBridgeAvailable() {
+  const bridge = getAndroidRadioBridge();
+  if (!bridge) {
+    return false;
+  }
+  return typeof bridge.startRecording === 'function' && typeof bridge.stopRecording === 'function';
+}
+
+function setRadioRecordingState(isRecording) {
+  radioIsRecording = !!isRecording;
+  renderRadioPlayer();
 }
 
 function updateAndroidRadioPlayback(isPlaying) {
@@ -15023,9 +15076,15 @@ function applyRadioFilters() {
 
 function selectRadioStation(station, options = {}) {
   if (!station) {
+    if (radioIsRecording) {
+      stopRadioRecording({ silent: true });
+    }
     radioSelectedStation = null;
     renderRadioPlayer();
     return;
+  }
+  if (radioIsRecording) {
+    stopRadioRecording({ silent: true });
   }
   radioSelectedStation = station;
   renderRadioPlayer();
@@ -15119,6 +15178,9 @@ function toggleRadioFavorite(station) {
 }
 
 function ensureRadioAudio() {
+  if (getAndroidRadioBridge()) {
+    return null;
+  }
   if (radioAudioElement) {
     return radioAudioElement;
   }
@@ -15156,6 +15218,13 @@ async function playSelectedRadioStation(options = {}) {
     setRadioPlayerStatus('index.sections.radio.player.status.idle', 'Sélectionnez une station pour lancer la lecture.');
     return;
   }
+  const androidBridge = getAndroidRadioBridge();
+  if (androidBridge) {
+    androidBridge.playStream(station.url, station.name || '');
+    setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+    updateAndroidRadioPlayback(true);
+    return;
+  }
   const audio = ensureRadioAudio();
   if (!audio) {
     return;
@@ -15176,6 +15245,13 @@ async function playSelectedRadioStation(options = {}) {
 }
 
 function pauseRadioPlayback() {
+  const androidBridge = getAndroidRadioBridge();
+  if (androidBridge && typeof androidBridge.pauseStream === 'function') {
+    androidBridge.pauseStream();
+    setRadioPlayerStatus('index.sections.radio.player.status.paused', 'Lecture en pause');
+    updateAndroidRadioPlayback(false);
+    return;
+  }
   const audio = ensureRadioAudio();
   if (!audio) {
     return;
@@ -15186,6 +15262,16 @@ function pauseRadioPlayback() {
 }
 
 function stopRadioPlayback() {
+  if (radioIsRecording) {
+    stopRadioRecording({ silent: true });
+  }
+  const androidBridge = getAndroidRadioBridge();
+  if (androidBridge && typeof androidBridge.stopStream === 'function') {
+    androidBridge.stopStream();
+    setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
+    stopAndroidRadioPlayback();
+    return;
+  }
   const audio = ensureRadioAudio();
   if (!audio) {
     return;
@@ -15202,7 +15288,47 @@ function reloadRadioStream() {
   if (!radioSelectedStation) {
     return;
   }
+  const androidBridge = getAndroidRadioBridge();
+  if (androidBridge) {
+    if (typeof androidBridge.stopStream === 'function') {
+      androidBridge.stopStream();
+    }
+    androidBridge.playStream(radioSelectedStation.url, radioSelectedStation.name || '');
+    setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+    return;
+  }
   playSelectedRadioStation({ forceReload: true });
+}
+
+function startRadioRecording() {
+  const station = radioSelectedStation;
+  if (!station || !station.url) {
+    setRadioPlayerStatus('index.sections.radio.player.status.idle', 'Sélectionnez une station pour lancer la lecture.');
+    return;
+  }
+  const androidBridge = getAndroidRadioBridge();
+  if (!androidBridge || typeof androidBridge.startRecording !== 'function') {
+    setRadioPlayerStatus(
+      'index.sections.radio.player.status.recordUnavailable',
+      'Enregistrement disponible uniquement sur Android.'
+    );
+    return;
+  }
+  androidBridge.playStream(station.url, station.name || '');
+  androidBridge.startRecording();
+  setRadioRecordingState(true);
+  setRadioPlayerStatus('index.sections.radio.player.status.recording', 'Enregistrement en cours…');
+}
+
+function stopRadioRecording(options = {}) {
+  const androidBridge = getAndroidRadioBridge();
+  if (androidBridge && typeof androidBridge.stopRecording === 'function') {
+    androidBridge.stopRecording();
+  }
+  setRadioRecordingState(false);
+  if (!options?.silent) {
+    setRadioPlayerStatus('index.sections.radio.player.status.recordingStopped', 'Enregistrement arrêté.');
+  }
 }
 
 function handleAndroidMediaCommand(command) {
@@ -15218,6 +15344,39 @@ function handleAndroidMediaCommand(command) {
     stopRadioPlayback();
   }
 }
+
+function handleAndroidRadioStateChange(state) {
+  if (typeof state !== 'string') {
+    return;
+  }
+  const normalized = state.toLowerCase();
+  if (normalized === 'playing') {
+    setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+    updateAndroidRadioPlayback(true);
+  } else if (normalized === 'paused') {
+    setRadioPlayerStatus('index.sections.radio.player.status.paused', 'Lecture en pause');
+    updateAndroidRadioPlayback(false);
+  } else if (normalized === 'stopped') {
+    setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
+    stopAndroidRadioPlayback();
+  } else if (normalized === 'error') {
+    setRadioPlayerStatus('index.sections.radio.player.status.error', 'Impossible de lire le flux.');
+    stopAndroidRadioPlayback();
+  }
+}
+
+window.onAndroidRadioStateChanged = handleAndroidRadioStateChange;
+
+window.onRadioRecordingChanged = isRecording => {
+  const wasRecording = radioIsRecording;
+  const recording = !!isRecording;
+  setRadioRecordingState(recording);
+  if (recording) {
+    setRadioPlayerStatus('index.sections.radio.player.status.recording', 'Enregistrement en cours…');
+  } else if (wasRecording) {
+    setRadioPlayerStatus('index.sections.radio.player.status.recordingStopped', 'Enregistrement arrêté.');
+  }
+};
 
 async function searchRadioStations(params = {}) {
   const query = typeof params.query === 'string' ? params.query.trim() : '';
@@ -21273,6 +21432,12 @@ function bindDomEventListeners() {
   }
   if (elements.radioPlayButton) {
     elements.radioPlayButton.addEventListener('click', () => playSelectedRadioStation());
+  }
+  if (elements.radioRecordButton) {
+    elements.radioRecordButton.addEventListener('click', startRadioRecording);
+  }
+  if (elements.radioRecordStopButton) {
+    elements.radioRecordStopButton.addEventListener('click', () => stopRadioRecording());
   }
   if (elements.radioPauseButton) {
     elements.radioPauseButton.addEventListener('click', pauseRadioPlayback);

@@ -280,6 +280,12 @@
   border-color: rgba(255, 255, 255, 0.18);
 }
 
+.radio-player__button--danger {
+  background: linear-gradient(135deg, rgba(229, 57, 53, 0.4), rgba(198, 40, 40, 0.6));
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff8f6;
+}
+
 .radio-player__button--ghost {
   background: rgba(255, 255, 255, 0.05);
 }
@@ -333,6 +339,12 @@ body.theme-light .radio-search__button--primary,
 body.theme-light .radio-player__button--primary {
   background: linear-gradient(135deg, rgba(90, 130, 255, 0.2), rgba(60, 96, 210, 0.35));
   border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light .radio-player__button--danger {
+  background: linear-gradient(135deg, rgba(234, 84, 85, 0.2), rgba(216, 67, 67, 0.35));
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #4a0a0a;
 }
 
 @media (max-width: 960px) {
