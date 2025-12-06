@@ -6546,6 +6546,9 @@ function collectDomElements() {
     navCollectionButton: document.querySelector('.nav-button[data-target="collection"]'),
     navMidiButton: document.querySelector('.nav-button[data-target="midi"]'),
     navBigBangButton: document.getElementById('navBigBangButton'),
+    radioPage: document.getElementById('radio'),
+    midiPage: document.getElementById('midi'),
+    musicTabs: document.querySelectorAll('.music-tab'),
   bigBangSummary: document.getElementById('bigBangSummary'),
   bigBangBonusInfo: document.getElementById('bigBangBonusInfo'),
   bigBangRequirement: document.getElementById('bigBangRequirement'),
@@ -21332,6 +21335,74 @@ if (typeof window !== 'undefined' && typeof window.setInterval === 'function') {
   }, TOUCH_TRACKING_WATCHDOG_INTERVAL_MS);
 }
 
+const MUSIC_SWIPE_THRESHOLD_PX = 60;
+let musicSwipeStart = null;
+
+function resetMusicSwipeTracking() {
+  musicSwipeStart = null;
+}
+
+function handleMusicSwipeStart(event) {
+  if (!event?.isPrimary) {
+    return;
+  }
+  if (event.pointerType === 'mouse' && event.buttons !== 1) {
+    return;
+  }
+  const activePage = document.body?.dataset?.activePage;
+  if (activePage !== 'radio' && activePage !== 'midi') {
+    return;
+  }
+  musicSwipeStart = {
+    x: event.clientX,
+    y: event.clientY,
+    page: activePage,
+    pointerId: event.pointerId,
+  };
+}
+
+function handleMusicSwipeEnd(event) {
+  if (!musicSwipeStart || musicSwipeStart.pointerId !== event?.pointerId) {
+    return;
+  }
+  const start = musicSwipeStart;
+  resetMusicSwipeTracking();
+  const deltaX = event.clientX - start.x;
+  const deltaY = event.clientY - start.y;
+  if (Math.abs(deltaX) < MUSIC_SWIPE_THRESHOLD_PX || Math.abs(deltaX) < Math.abs(deltaY)) {
+    return;
+  }
+  if (start.page === 'radio' && deltaX < 0) {
+    showPage('midi');
+  } else if (start.page === 'midi' && deltaX > 0) {
+    showPage('radio');
+  }
+}
+
+function setupMusicSwipeNavigation() {
+  const swipeTargets = [elements?.radioPage, elements?.midiPage].filter(Boolean);
+  swipeTargets.forEach(target => {
+    target.addEventListener('pointerdown', handleMusicSwipeStart, passiveEventListenerOptions);
+    target.addEventListener('pointerup', handleMusicSwipeEnd, passiveEventListenerOptions);
+    target.addEventListener('pointercancel', resetMusicSwipeTracking, passiveEventListenerOptions);
+    target.addEventListener('pointerleave', resetMusicSwipeTracking, passiveEventListenerOptions);
+  });
+}
+
+function updateMusicTabs(activePageId) {
+  if (!elements?.musicTabs?.length) {
+    return;
+  }
+  const isMusicPage = activePageId === 'radio' || activePageId === 'midi';
+  elements.musicTabs.forEach(tab => {
+    const target = tab.dataset.target;
+    const isActive = isMusicPage && target === activePageId;
+    tab.classList.toggle('music-tab--active', isActive);
+    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    tab.tabIndex = isMusicPage ? '0' : '-1';
+  });
+}
+
 function showPage(pageId) {
   if (pageId === 'midi' && !isMusicModuleEnabled()) {
     if (document.body?.dataset?.activePage !== 'options') {
@@ -21348,6 +21419,8 @@ function showPage(pageId) {
     }
     return;
   }
+  const isMusicPage = pageId === 'radio' || pageId === 'midi';
+  const navActiveTarget = isMusicPage ? 'radio' : pageId;
   forceUnlockScrollSafe({ reapplyScrollBehavior: false });
   const now = performance.now();
   if (pageId === 'wave') {
@@ -21401,9 +21474,12 @@ function showPage(pageId) {
     page.toggleAttribute('hidden', !isActive);
   });
   elements.navButtons.forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.target === pageId);
+    const target = btn.dataset.target;
+    const isActiveNav = target === navActiveTarget;
+    btn.classList.toggle('active', isActiveNav);
   });
   document.body.dataset.activePage = pageId;
+  updateMusicTabs(pageId);
   if (pageId === 'info') {
     updateDevKitUI();
   }
@@ -21443,7 +21519,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
   document.body.classList.toggle('view-news', pageId === 'news');
   document.body.classList.toggle('view-images', pageId === 'images');
-  document.body.classList.toggle('view-radio', pageId === 'radio');
+  document.body.classList.toggle('view-radio', isMusicPage);
   document.body.classList.toggle('view-notes', pageId === 'notes');
   applyBackgroundImage();
   if (pageId === 'game') {
@@ -22052,6 +22128,19 @@ function bindDomEventListeners() {
       showPage(target);
     });
   });
+
+  if (elements.musicTabs?.length) {
+    elements.musicTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.target;
+        if (target === 'radio' || target === 'midi') {
+          showPage(target);
+        }
+      });
+    });
+  }
+
+  setupMusicSwipeNavigation();
 
   if (elements.imagesRefreshButton) {
     elements.imagesRefreshButton.addEventListener('click', () => {

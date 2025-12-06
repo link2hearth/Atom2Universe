@@ -48,6 +48,38 @@
   gap: 1rem;
 }
 
+.music-tabs {
+  display: inline-flex;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 0.25rem;
+  gap: 0.25rem;
+}
+
+.music-tab {
+  border: none;
+  background: transparent;
+  color: #f7fbff;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.music-tab--active {
+  background: linear-gradient(135deg, rgba(88, 134, 255, 0.35), rgba(54, 90, 210, 0.65));
+  box-shadow: 0 6px 16px rgba(18, 38, 94, 0.25);
+  color: #ffffff;
+}
+
+.music-tab:focus-visible {
+  outline: 2px solid rgba(107, 165, 255, 0.9);
+  outline-offset: 2px;
+}
+
 .radio-page__panels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
