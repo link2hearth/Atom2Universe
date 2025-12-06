@@ -503,6 +503,14 @@
           "subtitle": "Jump back to the stations you love.",
           "empty": "No favorite stations yet.",
           "addUrl": "Add URL",
+          "form": {
+            "urlLabel": "Stream address",
+            "urlPlaceholder": "https://example.com/stream",
+            "nameLabel": "Station name (optional)",
+            "namePlaceholder": "My web radio",
+            "submit": "Add",
+            "cancel": "Cancel"
+          },
           "dialog": {
             "urlPrompt": "Enter the radio stream URL to save:",
             "namePrompt": "Station name (optional):",

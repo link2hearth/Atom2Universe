@@ -7355,14 +7355,60 @@
                 </div>
                 <div class="radio-card__actions">
                   <button
-                    type="button"
                     id="radioFavoritesAddUrlButton"
                     class="radio-player__button radio-player__button--ghost"
+                    type="button"
                     data-i18n="index.sections.radio.favorites.addUrl"
                   >
                     Ajouter une URL
                   </button>
                 </div>
+                <form id="radioFavoritesManualForm" class="radio-manual-form" hidden>
+                  <div class="radio-manual-form__fields">
+                    <label for="radioFavoritesUrlInput" data-i18n="index.sections.radio.favorites.form.urlLabel">
+                      Adresse du flux
+                    </label>
+                    <input
+                      id="radioFavoritesUrlInput"
+                      class="radio-manual-form__input"
+                      name="url"
+                      type="url"
+                      autocomplete="off"
+                      required
+                      data-i18n="placeholder:index.sections.radio.favorites.form.urlPlaceholder"
+                      placeholder="https://exemple.com/stream"
+                    />
+                    <label for="radioFavoritesNameInput" data-i18n="index.sections.radio.favorites.form.nameLabel">
+                      Nom de la station (optionnel)
+                    </label>
+                    <input
+                      id="radioFavoritesNameInput"
+                      class="radio-manual-form__input"
+                      name="name"
+                      type="text"
+                      autocomplete="off"
+                      data-i18n="placeholder:index.sections.radio.favorites.form.namePlaceholder"
+                      placeholder="Ma webradio"
+                    />
+                  </div>
+                  <div class="radio-manual-form__actions">
+                    <button
+                      class="radio-player__button radio-player__button--primary"
+                      type="submit"
+                      data-i18n="index.sections.radio.favorites.form.submit"
+                    >
+                      Ajouter
+                    </button>
+                    <button
+                      class="radio-player__button radio-player__button--ghost"
+                      id="radioFavoritesManualCancel"
+                      type="button"
+                      data-i18n="index.sections.radio.favorites.form.cancel"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </form>
               </div>
               <p
                 id="radioFavoritesEmpty"

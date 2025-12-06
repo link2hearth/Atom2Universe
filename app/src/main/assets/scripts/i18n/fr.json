@@ -503,6 +503,14 @@
           "subtitle": "Retrouvez rapidement vos stations préférées.",
           "empty": "Aucune station en favori pour le moment.",
           "addUrl": "Ajouter une URL",
+          "form": {
+            "urlLabel": "Adresse du flux",
+            "urlPlaceholder": "https://exemple.com/stream",
+            "nameLabel": "Nom de la station (optionnel)",
+            "namePlaceholder": "Ma webradio",
+            "submit": "Ajouter",
+            "cancel": "Annuler"
+          },
           "dialog": {
             "urlPrompt": "Entrez l’URL du flux radio à ajouter :",
             "namePrompt": "Nom de la station (optionnel) :",

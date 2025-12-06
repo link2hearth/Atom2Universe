@@ -6933,6 +6933,10 @@ function collectDomElements() {
   radioEmptyState: document.getElementById('radioEmptyState'),
   radioFavoritesList: document.getElementById('radioFavoritesList'),
   radioFavoritesEmpty: document.getElementById('radioFavoritesEmpty'),
+  radioFavoritesManualForm: document.getElementById('radioFavoritesManualForm'),
+  radioFavoritesUrlInput: document.getElementById('radioFavoritesUrlInput'),
+  radioFavoritesNameInput: document.getElementById('radioFavoritesNameInput'),
+  radioFavoritesManualCancel: document.getElementById('radioFavoritesManualCancel'),
   radioFavoritesAddUrlButton: document.getElementById('radioFavoritesAddUrlButton'),
   radioPlayButton: document.getElementById('radioPlayButton'),
   radioRecordButton: document.getElementById('radioRecordButton'),
@@ -14833,7 +14837,90 @@ function renderRadioFavorites() {
   });
 }
 
+function hideManualRadioFavoriteForm() {
+  if (elements?.radioFavoritesManualForm) {
+    elements.radioFavoritesManualForm.hidden = true;
+    elements.radioFavoritesManualForm.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function showManualRadioFavoriteForm() {
+  if (!elements?.radioFavoritesManualForm) {
+    return false;
+  }
+  elements.radioFavoritesManualForm.hidden = false;
+  elements.radioFavoritesManualForm.setAttribute('aria-hidden', 'false');
+  if (elements.radioFavoritesUrlInput) {
+    elements.radioFavoritesUrlInput.value = '';
+    elements.radioFavoritesUrlInput.focus();
+  }
+  if (elements.radioFavoritesNameInput) {
+    elements.radioFavoritesNameInput.value = '';
+  }
+  return true;
+}
+
+function addManualRadioFavoriteEntry(urlInput, rawName) {
+  const normalizedUrl = normalizeRadioServer(urlInput);
+  if (!normalizedUrl) {
+    if (typeof globalThis?.alert === 'function') {
+      alert(
+        translateOrDefault(
+          'index.sections.radio.favorites.dialog.invalidUrl',
+          'Merci de saisir une URL valide commençant par http:// ou https://.'
+        )
+      );
+    }
+    return false;
+  }
+  const duplicate = Array.from(radioFavorites.values()).find(station => station.url === normalizedUrl);
+  if (duplicate) {
+    if (typeof globalThis?.alert === 'function') {
+      alert(
+        translateOrDefault(
+          'index.sections.radio.favorites.dialog.duplicate',
+          'Cette station est déjà dans vos favoris.'
+        )
+      );
+    }
+    return false;
+  }
+  const name = rawName && rawName.trim() ? rawName.trim() : normalizedUrl;
+  const station = {
+    id: `manual-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    name,
+    url: normalizedUrl,
+    country: '',
+    language: '',
+    favicon: '',
+    bitrate: null
+  };
+  radioFavorites.set(station.id, station);
+  writeStoredRadioFavorites(radioFavorites);
+  renderRadioFavorites();
+  renderRadioResults();
+  renderRadioPlayer();
+  return true;
+}
+
+function handleManualRadioFavoriteFormSubmit(event) {
+  event.preventDefault();
+  const urlInput = elements?.radioFavoritesUrlInput?.value?.trim() || '';
+  const nameInput = elements?.radioFavoritesNameInput?.value?.trim() || '';
+  const success = addManualRadioFavoriteEntry(urlInput, nameInput);
+  if (success) {
+    hideManualRadioFavoriteForm();
+  }
+}
+
+function handleManualRadioFavoriteCancel() {
+  hideManualRadioFavoriteForm();
+}
+
 function handleManualRadioFavorite() {
+  if (showManualRadioFavoriteForm()) {
+    return;
+  }
   if (typeof globalThis?.prompt !== 'function') {
     return;
   }
@@ -14874,21 +14961,7 @@ function handleManualRadioFavorite() {
     'Nom de la station (optionnel) :'
   );
   const rawName = prompt(namePrompt, '');
-  const name = rawName && rawName.trim() ? rawName.trim() : normalizedUrl;
-  const station = {
-    id: `manual-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-    name,
-    url: normalizedUrl,
-    country: '',
-    language: '',
-    favicon: '',
-    bitrate: null
-  };
-  radioFavorites.set(station.id, station);
-  writeStoredRadioFavorites(radioFavorites);
-  renderRadioFavorites();
-  renderRadioResults();
-  renderRadioPlayer();
+  addManualRadioFavoriteEntry(normalizedUrl, rawName || '');
 }
 
 function renderRadioResults() {
@@ -21488,6 +21561,12 @@ function bindDomEventListeners() {
   }
   if (elements.radioFavoritesList) {
     elements.radioFavoritesList.addEventListener('click', handleRadioFavoritesClick);
+  }
+  if (elements.radioFavoritesManualForm) {
+    elements.radioFavoritesManualForm.addEventListener('submit', handleManualRadioFavoriteFormSubmit);
+  }
+  if (elements.radioFavoritesManualCancel) {
+    elements.radioFavoritesManualCancel.addEventListener('click', handleManualRadioFavoriteCancel);
   }
   if (elements.radioFavoritesAddUrlButton) {
     elements.radioFavoritesAddUrlButton.addEventListener('click', handleManualRadioFavorite);
