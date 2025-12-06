@@ -117,8 +117,11 @@ class WebAppBridge(activity: MainActivity) {
     fun stopForegroundAudio() {
         val activity = activityRef.get()
         activity?.runOnUiThread {
+            val wasPlaying = activity.isForegroundAudioPlaybackRunning()
             activity.setForegroundAudioPlayback(false)
-            AudioPlaybackService.stopPlayback(activity)
+            if (wasPlaying) {
+                AudioPlaybackService.stopPlayback(activity)
+            }
         }
     }
 
