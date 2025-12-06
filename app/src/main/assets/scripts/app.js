@@ -568,6 +568,7 @@ let notesItems = [];
 let notesEditingNote = null;
 let notesStylePreference = null;
 let notesBusy = false;
+let notesIsFullscreen = false;
 let notesStatusState = {
   key: 'index.sections.notes.status.idle',
   fallback: 'Prêt à charger vos notes.',
@@ -6968,6 +6969,7 @@ function collectDomElements() {
   radioPlayerStatus: document.getElementById('radioPlayerStatus'),
   radioStationLogo: document.getElementById('radioStationLogo'),
   notesPage: document.getElementById('notes'),
+  notesRoot: document.getElementById('notesRoot'),
   notesStatus: document.getElementById('notesStatus'),
   notesList: document.getElementById('notesList'),
   notesEmptyState: document.getElementById('notesEmptyState'),
@@ -6981,8 +6983,10 @@ function collectDomElements() {
   notesBackgroundColor: document.getElementById('notesBackgroundColor'),
   notesContent: document.getElementById('notesContent'),
   notesSaveButton: document.getElementById('notesSaveButton'),
-  notesCancelButton: document.getElementById('notesCancelButton')
-  };
+  notesCancelButton: document.getElementById('notesCancelButton'),
+  notesFullscreenButton: document.getElementById('notesFullscreenButton'),
+  notesExitFullscreenButton: document.getElementById('notesExitFullscreenButton')
+};
 }
 
 const manualBackupStatusFallbacks = Object.freeze({
@@ -15800,6 +15804,43 @@ function setNotesBusyState(isBusy) {
   updateNotesControlsAvailability();
 }
 
+function updateNotesFullscreenUi() {
+  const page = elements?.notesPage;
+  const root = elements?.notesRoot;
+  if (page) {
+    page.classList.toggle('page--notes-fullscreen', notesIsFullscreen);
+  }
+  if (root) {
+    root.classList.toggle('notes--fullscreen', notesIsFullscreen);
+  }
+  const body = typeof document !== 'undefined' ? document.body : null;
+  if (body) {
+    body.classList.toggle('notes-fullscreen-active', notesIsFullscreen);
+  }
+  if (elements?.notesFullscreenButton) {
+    elements.notesFullscreenButton.setAttribute('aria-pressed', notesIsFullscreen ? 'true' : 'false');
+  }
+  if (elements?.notesExitFullscreenButton) {
+    elements.notesExitFullscreenButton.hidden = !notesIsFullscreen;
+  }
+}
+
+function setNotesFullscreen(active) {
+  const next = !!active;
+  if (next === notesIsFullscreen) {
+    return;
+  }
+  notesIsFullscreen = next;
+  updateNotesFullscreenUi();
+  if (notesIsFullscreen && elements?.notesContent) {
+    elements.notesContent.focus();
+  }
+}
+
+function toggleNotesFullscreen() {
+  setNotesFullscreen(!notesIsFullscreen);
+}
+
 function normalizeNotesStyle(raw) {
   const base = { ...NOTES_DEFAULT_STYLE };
   if (raw && typeof raw === 'object') {
@@ -16175,6 +16216,7 @@ function subscribeNotesLanguageUpdates() {
 function initNotesModule() {
   notesStylePreference = readStoredNotesStyle();
   applyNotesEditorStyle(notesStylePreference);
+  updateNotesFullscreenUi();
   updateNotesControlsAvailability();
   startNewNote();
   if (isNotesFeatureSupported()) {
@@ -21297,6 +21339,9 @@ function showPage(pageId) {
     }
     return;
   }
+  if (pageId !== 'notes' && notesIsFullscreen) {
+    setNotesFullscreen(false);
+  }
   if (!isPageUnlocked(pageId)) {
     if (pageId !== 'game') {
       showPage('game');
@@ -22185,6 +22230,12 @@ function bindDomEventListeners() {
         startNewNote();
       }
     });
+  }
+  if (elements.notesFullscreenButton) {
+    elements.notesFullscreenButton.addEventListener('click', toggleNotesFullscreen);
+  }
+  if (elements.notesExitFullscreenButton) {
+    elements.notesExitFullscreenButton.addEventListener('click', () => setNotesFullscreen(false));
   }
   ['notesFontSelect', 'notesFontSize', 'notesTextColor', 'notesBackgroundColor']
     .forEach(key => {

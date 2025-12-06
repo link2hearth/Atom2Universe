@@ -7492,7 +7492,7 @@
     </section>
 
     <section id="notes" class="page" data-page-group="clicker" aria-labelledby="notesTitle">
-      <div class="notes">
+      <div class="notes" id="notesRoot">
         <div class="notes__header">
           <div>
             <h2 id="notesTitle" class="notes__title" data-i18n="index.sections.notes.title">Notes</h2>
@@ -7551,8 +7551,32 @@
 
           <section class="notes-editor" aria-labelledby="notesEditorTitle">
             <div class="notes-editor__header">
-              <div>
-                <h3 id="notesEditorTitle" data-i18n="index.sections.notes.editor.title">Éditeur</h3>
+              <div class="notes-editor__title-block">
+                <div class="notes-editor__title-row">
+                  <button
+                    type="button"
+                    id="notesExitFullscreenButton"
+                    class="notes-editor__icon-button"
+                    aria-label="Retour"
+                    title="Retour"
+                    hidden
+                    data-i18n="aria-label:index.sections.notes.actions.exitFullscreen;title:index.sections.notes.actions.exitFullscreen"
+                  >
+                    <span data-i18n="index.sections.notes.actions.exitFullscreen">Retour</span>
+                  </button>
+                  <h3 id="notesEditorTitle" data-i18n="index.sections.notes.editor.title">Éditeur</h3>
+                  <button
+                    type="button"
+                    id="notesFullscreenButton"
+                    class="notes-editor__icon-button"
+                    aria-pressed="false"
+                    aria-label="Plein écran"
+                    title="Plein écran"
+                    data-i18n="aria-label:index.sections.notes.actions.fullscreen;title:index.sections.notes.actions.fullscreen"
+                  >
+                    <span data-i18n="index.sections.notes.actions.fullscreen">Plein écran</span>
+                  </button>
+                </div>
                 <p
                   class="notes-editor__subtitle"
                   data-i18n="index.sections.notes.editor.subtitle"

@@ -532,6 +532,8 @@
           "refresh": "Refresh",
           "save": "Save",
           "reset": "Reset",
+          "fullscreen": "Fullscreen",
+          "exitFullscreen": "Exit fullscreen",
           "edit": "Edit",
           "delete": "Delete",
           "deleteConfirm": "Delete note {{name}}?"

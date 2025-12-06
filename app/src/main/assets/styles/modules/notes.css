@@ -13,6 +13,46 @@
   flex-wrap: wrap;
 }
 
+.notes-editor__title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notes-editor__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notes-editor__title-row h3 {
+  margin: 0;
+}
+
+.notes-editor__icon-button {
+  border: 1px solid #31405c;
+  background: #0f1627;
+  color: #e6e9f5;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notes-editor__icon-button:hover {
+  transform: translateY(-1px);
+  background: #141c33;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.notes-editor__icon-button:active {
+  transform: translateY(0);
+}
+
 .notes__title {
   font-size: 28px;
   margin: 0;
@@ -240,6 +280,88 @@
   line-height: 1.5;
   font-family: 'Courier New', monospace;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+.page--notes-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: #050815;
+  overflow: hidden;
+}
+
+.notes-fullscreen-active .app-header {
+  display: none;
+}
+
+.notes--fullscreen {
+  height: 100%;
+  padding: 0;
+  gap: 0;
+}
+
+.notes--fullscreen .notes__header,
+.notes--fullscreen .notes__status,
+.notes--fullscreen .notes-list {
+  display: none;
+}
+
+.notes--fullscreen .notes__layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+.notes--fullscreen .notes-editor {
+  border: 0;
+  border-radius: 0;
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notes--fullscreen .notes-editor__header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 12px;
+  margin: -12px -12px 0;
+  background: linear-gradient(135deg, #0f1627, #0b1021);
+  border-bottom: 1px solid #1f2940;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.notes--fullscreen .notes-editor__actions {
+  flex-wrap: wrap;
+}
+
+.notes--fullscreen .notes-editor__form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: auto;
+}
+
+.notes--fullscreen .notes-field--inline {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.notes--fullscreen .notes-editor__textarea {
+  flex: 1;
+  min-height: auto;
+  height: 100%;
+  resize: none;
+  overflow: auto;
+}
+
+.notes--fullscreen .notes-field:last-of-type {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 960px) {

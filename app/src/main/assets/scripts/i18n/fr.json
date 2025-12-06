@@ -532,6 +532,8 @@
           "refresh": "Actualiser",
           "save": "Enregistrer",
           "reset": "Réinitialiser",
+          "fullscreen": "Plein écran",
+          "exitFullscreen": "Retour",
           "edit": "Éditer",
           "delete": "Supprimer",
           "deleteConfirm": "Supprimer la note {{name}} ?"
