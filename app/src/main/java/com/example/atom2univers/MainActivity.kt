@@ -993,6 +993,10 @@ class MainActivity : AppCompatActivity() {
         isForegroundAudioPlaying = isPlaying
     }
 
+    internal fun isForegroundAudioPlaybackRunning(): Boolean {
+        return isForegroundAudioPlaying
+    }
+
     private fun handleMediaCommand(command: String?) {
         val action = command?.takeIf { it.isNotBlank() } ?: return
         if (action == AudioPlaybackService.COMMAND_PAUSE || action == AudioPlaybackService.COMMAND_STOP) {

@@ -27,6 +27,7 @@ class AudioPlaybackService : Service() {
     private var mediaSession: MediaSessionCompat? = null
     private var audioManager: AudioManager? = null
     private var audioFocusRequest: AudioFocusRequest? = null
+    private var hasAudioFocus: Boolean = false
     private var hasStartedForeground = false
     private var wakeLock: PowerManager.WakeLock? = null
 
@@ -35,18 +36,29 @@ class AudioPlaybackService : Service() {
     private var isPlaying: Boolean = false
 
     private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { change ->
+        if (!hasAudioFocus) {
+            return@OnAudioFocusChangeListener
+        }
+
         when (change) {
             AudioManager.AUDIOFOCUS_GAIN -> {
+                hasAudioFocus = true
                 // No-op: the web player should decide when to resume.
             }
 
-            AudioManager.AUDIOFOCUS_LOSS,
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                isPlaying = false
-                updatePlaybackState()
-                notifyPlaybackCommand(COMMAND_PAUSE)
-                updateNotification()
+                // Keep playing; the web player can decide whether to lower its volume.
+            }
+
+            AudioManager.AUDIOFOCUS_LOSS,
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                hasAudioFocus = false
+                if (isPlaying) {
+                    isPlaying = false
+                    updatePlaybackState()
+                    notifyPlaybackCommand(COMMAND_PAUSE)
+                    updateNotification()
+                }
             }
 
             else -> {
@@ -143,6 +155,12 @@ class AudioPlaybackService : Service() {
         isPlaying = false
         updatePlaybackState()
         notifyPlaybackCommand(COMMAND_STOP)
+
+        if (!hasStartedForeground) {
+            startForeground(NOTIFICATION_ID, buildNotification())
+            hasStartedForeground = true
+        }
+
         stopForeground(STOP_FOREGROUND_REMOVE)
         hasStartedForeground = false
         abandonAudioFocus()
@@ -279,7 +297,7 @@ class AudioPlaybackService : Service() {
 
     private fun requestAudioFocus(): Boolean {
         val manager = audioManager ?: return false
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val attributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -298,10 +316,14 @@ class AudioPlaybackService : Service() {
                 AudioManager.AUDIOFOCUS_GAIN
             ) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
         }
+
+        hasAudioFocus = granted
+        return granted
     }
 
     private fun abandonAudioFocus() {
         val manager = audioManager ?: return
+        hasAudioFocus = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest?.let { manager.abandonAudioFocusRequest(it) }
         } else {
