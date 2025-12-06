@@ -1599,13 +1599,26 @@ body.theme-aurora .midi-page__module .option-row--buttons button {
  * (functionality remains available programmatically)
  */
 .midi-page__module .option-row--dropzone,
-.midi-page__module .option-row--usage,
 .midi-page__module .option-row--pitch,
 #chiptuneSpeedLabel,
 #chiptuneSpeedSlider,
 #chiptuneSpeedValue,
 #chiptuneSkipButton,
-.midi-page__module .chiptune-usage,
 label[for="midiKeyboardLayoutSelect"] {
   display: none !important;
+}
+
+.chiptune-usage__row.is-active {
+  box-shadow:
+    0 0 0 2px rgba(80, 255, 180, 0.8),
+    0 0 16px rgba(80, 255, 180, 0.55);
+  border: 1px solid rgba(80, 255, 180, 0.85);
+}
+
+.midi-page__module .chiptune-usage__row.is-active {
+  background: rgba(60, 190, 140, 0.9);
+  color: #0b1a12;
+  box-shadow:
+    0 0 0 2px rgba(20, 140, 90, 0.6),
+    0 0 18px rgba(30, 200, 130, 0.65);
 }
