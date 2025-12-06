@@ -143,6 +143,12 @@ class AudioPlaybackService : Service() {
         isPlaying = false
         updatePlaybackState()
         notifyPlaybackCommand(COMMAND_STOP)
+
+        if (!hasStartedForeground) {
+            startForeground(NOTIFICATION_ID, buildNotification())
+            hasStartedForeground = true
+        }
+
         stopForeground(STOP_FOREGROUND_REMOVE)
         hasStartedForeground = false
         abandonAudioFocus()
