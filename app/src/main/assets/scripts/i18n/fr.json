@@ -16,6 +16,7 @@
         "images": "Images",
         "news": "News",
         "radio": "Radio",
+        "notes": "Notes",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -521,6 +522,61 @@
         "meta": {
           "bitrate": "{value} kbps",
           "countryLanguage": "{country} · {language}"
+        }
+      },
+      "notes": {
+        "title": "Notes",
+        "subtitle": "Créez, éditez et supprimez vos fichiers texte ou Markdown sauvegardés dans Documents/Atom2Univers.",
+        "actions": {
+          "new": "Nouvelle note",
+          "refresh": "Actualiser",
+          "save": "Enregistrer",
+          "reset": "Réinitialiser",
+          "edit": "Éditer",
+          "delete": "Supprimer",
+          "deleteConfirm": "Supprimer la note {{name}} ?"
+        },
+        "status": {
+          "idle": "Prêt à charger vos notes.",
+          "loading": "Chargement de vos notes…",
+          "loadingNote": "Ouverture de {{name}}…",
+          "loaded": "Notes mises à jour.",
+          "loadedNote": "Note chargée.",
+          "saving": "Enregistrement de {{name}}…",
+          "saved": "Note enregistrée : {{name}}.",
+          "deleted": "Note supprimée.",
+          "new": "Nouvelle note prête à être écrite.",
+          "unsupported": "Disponible uniquement sur l’application Android.",
+          "error": "Impossible de charger vos notes."
+        },
+        "list": {
+          "title": "Vos fichiers",
+          "hint": "Les notes sont stockées dans Documents/Atom2Univers.",
+          "empty": "Aucune note pour le moment.",
+          "meta": "{{extension}} · Mis à jour {{date}}"
+        },
+        "editor": {
+          "title": "Éditeur",
+          "subtitle": "Sélectionnez une note ou créez-en une nouvelle pour commencer.",
+          "name": "Nom du fichier",
+          "namePlaceholder": "ex: idées",
+          "formatLabel": "Format du fichier",
+          "format": {
+            "txt": ".txt",
+            "md": ".md"
+          },
+          "font": "Police",
+          "fonts": {
+            "system": "Classique",
+            "monospace": "Monospace",
+            "serif": "Serif",
+            "sans": "Sans serif"
+          },
+          "size": "Taille",
+          "textColor": "Texte",
+          "backgroundColor": "Fond",
+          "content": "Contenu",
+          "contentPlaceholder": "Votre texte ici"
         }
       },
       "bigbang": {

@@ -1,6 +1,7 @@
 package com.example.atom2univers
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.os.Build
 import android.os.Environment
@@ -11,6 +12,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
@@ -21,11 +23,14 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.lang.ref.WeakReference
+import kotlin.text.Charsets
 
 class WebAppBridge(activity: MainActivity) {
 
     private val activityRef = WeakReference(activity)
     private val defaultNewsFeedUrl = "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr"
+    private val notesRelativePath = "${Environment.DIRECTORY_DOCUMENTS}/Atom2Univers/"
+    private val legacyNotesFolderName = "Atom2Univers"
 
     @JavascriptInterface
     fun saveBackup() {
@@ -187,6 +192,214 @@ class WebAppBridge(activity: MainActivity) {
             val script = "window.onNewsLoaded && window.onNewsLoaded($payload);"
             activity.postJavascript(script)
         }.start()
+    }
+
+    @JavascriptInterface
+    fun listUserNotes(): String {
+        val activity = activityRef.get() ?: return JSONArray().toString()
+        val result = JSONArray()
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = activity.contentResolver
+                val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+                val projection = arrayOf(
+                    MediaStore.Files.FileColumns._ID,
+                    MediaStore.Files.FileColumns.DISPLAY_NAME,
+                    MediaStore.Files.FileColumns.MIME_TYPE,
+                    MediaStore.Files.FileColumns.DATE_MODIFIED
+                )
+                val selection = "${MediaStore.Files.FileColumns.RELATIVE_PATH} = ?"
+                val selectionArgs = arrayOf(notesRelativePath)
+                val sortOrder = "${MediaStore.Files.FileColumns.DATE_MODIFIED} DESC"
+                resolver.query(collection, projection, selection, selectionArgs, sortOrder)?.use { cursor ->
+                    val idIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID)
+                    val nameIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME)
+                    val mimeIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE)
+                    val dateIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED)
+                    while (cursor.moveToNext()) {
+                        val displayName = cursor.getString(nameIndex) ?: continue
+                        val id = cursor.getLong(idIndex)
+                        val mimeType = cursor.getString(mimeIndex) ?: guessNoteMimeType(displayName)
+                        val updatedAtSeconds = cursor.getLong(dateIndex)
+                        val entry = JSONObject()
+                        entry.put("name", displayName)
+                        entry.put("mimeType", mimeType)
+                        entry.put("uri", Uri.withAppendedPath(collection, id.toString()).toString())
+                        entry.put("updatedAt", updatedAtSeconds * 1000)
+                        result.put(entry)
+                    }
+                }
+            } else {
+                val directory = ensureLegacyNotesDir(activity) ?: return result.toString()
+                directory.listFiles { file -> file.isFile && isNoteFile(file.name) }
+                    ?.sortedByDescending { it.lastModified() }
+                    ?.forEach { file ->
+                        val entry = JSONObject()
+                        entry.put("name", file.name)
+                        entry.put("mimeType", guessNoteMimeType(file.name))
+                        entry.put("uri", Uri.fromFile(file).toString())
+                        entry.put("updatedAt", file.lastModified())
+                        result.put(entry)
+                    }
+            }
+            result.toString()
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to list notes", error)
+            result.toString()
+        }
+    }
+
+    @JavascriptInterface
+    fun readUserNote(displayName: String?): String? {
+        val activity = activityRef.get() ?: return null
+        val safeName = sanitizeNoteFileName(displayName, "txt") ?: return null
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = activity.contentResolver
+                val uri = findNoteUri(resolver, safeName) ?: return null
+                return resolver.openInputStream(uri)?.bufferedReader(Charsets.UTF_8)?.use { reader ->
+                    reader.readText()
+                }
+            }
+            val directory = ensureLegacyNotesDir(activity) ?: return null
+            val target = File(directory, safeName)
+            if (!target.exists()) {
+                return null
+            }
+            target.inputStream().bufferedReader(Charsets.UTF_8).use { reader ->
+                reader.readText()
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to read note $displayName", error)
+            null
+        }
+    }
+
+    @JavascriptInterface
+    fun saveUserNote(displayName: String?, content: String?, mimeType: String?): String? {
+        val activity = activityRef.get() ?: return null
+        val fallbackExt = if (mimeType?.contains("markdown", ignoreCase = true) == true) "md" else "txt"
+        val safeName = sanitizeNoteFileName(displayName, fallbackExt) ?: return null
+        val payload = content ?: ""
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = activity.contentResolver
+                val existingUri = findNoteUri(resolver, safeName)
+                val targetUri = existingUri ?: run {
+                    val values = ContentValues().apply {
+                        put(MediaStore.Files.FileColumns.DISPLAY_NAME, safeName)
+                        put(MediaStore.Files.FileColumns.MIME_TYPE, mimeType ?: guessNoteMimeType(safeName))
+                        put(MediaStore.Files.FileColumns.RELATIVE_PATH, notesRelativePath)
+                    }
+                    resolver.insert(MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), values)
+                }
+                targetUri ?: return null
+                resolver.openOutputStream(targetUri, "wt")?.use { stream ->
+                    stream.write(payload.toByteArray(Charsets.UTF_8))
+                } ?: return null
+                return targetUri.toString()
+            }
+
+            val directory = ensureLegacyNotesDir(activity) ?: return null
+            val target = File(directory, safeName)
+            target.outputStream().buffered().use { output ->
+                output.write(payload.toByteArray(Charsets.UTF_8))
+            }
+            Uri.fromFile(target).toString()
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to save note $displayName", error)
+            null
+        }
+    }
+
+    @JavascriptInterface
+    fun deleteUserNote(displayName: String?): Boolean {
+        val activity = activityRef.get() ?: return false
+        val safeName = sanitizeNoteFileName(displayName, "txt") ?: return false
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = activity.contentResolver
+                val uri = findNoteUri(resolver, safeName) ?: return false
+                resolver.delete(uri, null, null) > 0
+            } else {
+                val directory = ensureLegacyNotesDir(activity) ?: return false
+                val target = File(directory, safeName)
+                !target.exists() || target.delete()
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to delete note $displayName", error)
+            false
+        }
+    }
+
+    private fun sanitizeNoteFileName(raw: String?, defaultExt: String): String? {
+        val cleaned = raw?.trim()
+            ?.replace("[\\\\/:*?\"<>|]".toRegex(), "")
+            ?.replace("\\s+".toRegex(), "-")
+            ?.takeIf { it.isNotBlank() }
+        val basePart = cleaned?.substringBeforeLast('.')?.takeIf { it.isNotBlank() }
+            ?: cleaned?.takeIf { it.isNotBlank() }
+            ?: "note-${System.currentTimeMillis()}"
+        val extPart = cleaned?.substringAfterLast('.', "")?.lowercase()?.takeIf { it.isNotBlank() }
+        val normalizedExt = when (extPart) {
+            "md", "markdown" -> "md"
+            "txt" -> "txt"
+            else -> defaultExt.ifBlank { "txt" }
+        }
+        return "$basePart.$normalizedExt"
+    }
+
+    private fun guessNoteMimeType(displayName: String): String {
+        val normalized = displayName.lowercase()
+        return if (normalized.endsWith(".md") || normalized.endsWith(".markdown")) {
+            "text/markdown"
+        } else {
+            "text/plain"
+        }
+    }
+
+    private fun isNoteFile(name: String?): Boolean {
+        if (name.isNullOrBlank()) {
+            return false
+        }
+        val normalized = name.lowercase()
+        return normalized.endsWith(".txt") || normalized.endsWith(".md") || normalized.endsWith(".markdown")
+    }
+
+    private fun ensureLegacyNotesDir(activity: Activity): File? {
+        return try {
+            val baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+            val target = File(baseDir, legacyNotesFolderName)
+            if (!target.exists() && !target.mkdirs()) {
+                val fallback = activity.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+                    ?.let { File(it, legacyNotesFolderName) }
+                if (fallback != null && (fallback.exists() || fallback.mkdirs())) {
+                    fallback
+                } else {
+                    null
+                }
+            } else {
+                target
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to access legacy notes directory", error)
+            null
+        }
+    }
+
+    private fun findNoteUri(resolver: ContentResolver, displayName: String): Uri? {
+        val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        val projection = arrayOf(MediaStore.Files.FileColumns._ID)
+        val selection = "${MediaStore.Files.FileColumns.RELATIVE_PATH} = ? AND ${MediaStore.Files.FileColumns.DISPLAY_NAME} = ?"
+        val selectionArgs = arrayOf(notesRelativePath, displayName)
+        resolver.query(collection, projection, selection, selectionArgs, null)?.use { cursor ->
+            val idIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID)
+            if (idIndex >= 0 && cursor.moveToFirst()) {
+                val id = cursor.getLong(idIndex)
+                return Uri.withAppendedPath(collection, id.toString())
+            }
+        }
+        return null
     }
 
     private fun fetchRss(url: String): String {
