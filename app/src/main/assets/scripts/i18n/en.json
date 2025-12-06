@@ -501,7 +501,14 @@
         "favorites": {
           "title": "Favorites",
           "subtitle": "Jump back to the stations you love.",
-          "empty": "No favorite stations yet."
+          "empty": "No favorite stations yet.",
+          "addUrl": "Add URL",
+          "dialog": {
+            "urlPrompt": "Enter the radio stream URL to save:",
+            "namePrompt": "Station name (optional):",
+            "invalidUrl": "Please enter a valid URL starting with http:// or https://.",
+            "duplicate": "This station is already in your favorites."
+          }
         },
         "meta": {
           "bitrate": "{value} kbps",
