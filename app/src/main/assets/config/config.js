@@ -135,6 +135,24 @@ const NEWS_SETTINGS = Object.freeze({
 });
 
 /**
+ * Paramètres du module RadioBrowser.
+ * - `servers` : liste ordonnée des hôtes à interroger (mêmes endpoints sur chaque serveur).
+ * - `requestTimeoutMs` : délai maximal avant d’abandonner une requête.
+ * - `maxResults` : limite par défaut du nombre de stations retournées.
+ * - `hideBroken` : filtre les stations cassées.
+ * - `favoritesStorageKey` : clé de stockage locale des favoris.
+ * - `userAgent` : identifiant HTTP envoyé aux serveurs RadioBrowser.
+ */
+const RADIO_SETTINGS = Object.freeze({
+  servers: ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info'],
+  requestTimeoutMs: 12000,
+  maxResults: 50,
+  hideBroken: true,
+  favoritesStorageKey: 'atom2univers.radio.favorites',
+  userAgent: 'Atom2Univers/Radio'
+});
+
+/**
  * Paramètres des flux d’images externes.
  * - `sources` : liste des flux RSS/Atom à agréger.
  * - `proxyBaseUrls` : proxys HTTP facultatifs pour contourner le CORS.

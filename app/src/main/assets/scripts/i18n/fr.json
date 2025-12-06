@@ -15,6 +15,7 @@
         "info": "Infos",
         "images": "Images",
         "news": "News",
+        "radio": "Radio",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -447,6 +448,57 @@
           "title": "News",
           "open": "Voir toutes les news",
           "hide": "Masquer cette info"
+        }
+      },
+      "radio": {
+        "title": "Radio",
+        "subtitle": "Recherchez des stations en ligne, ajoutez vos favorites et lancez la lecture en un clic.",
+        "form": {
+          "queryLabel": "Recherche",
+          "queryPlaceholder": "Nom, tag, ville…",
+          "countryLabel": "Pays",
+          "languageLabel": "Langue",
+          "anyCountry": "Tous les pays",
+          "anyLanguage": "Toutes les langues"
+        },
+        "actions": {
+          "search": "Rechercher",
+          "reset": "Réinitialiser",
+          "play": "Lecture",
+          "pause": "Pause",
+          "stop": "Stop",
+          "reload": "Recharger",
+          "favorite": "Ajouter aux favoris",
+          "favoriteRemove": "Retirer des favoris",
+          "listen": "Écouter",
+          "openFavorite": "Ouvrir"
+        },
+        "status": {
+          "idle": "Entrez une requête pour démarrer une recherche.",
+          "loading": "Recherche de stations en cours…",
+          "loaded": "{count} stations trouvées.",
+          "empty": "Aucune station trouvée.",
+          "error": "Impossible de récupérer les stations."
+        },
+        "player": {
+          "title": "Lecteur",
+          "empty": "Aucune station sélectionnée.",
+          "status": {
+            "idle": "Sélectionnez une station pour lancer la lecture.",
+            "playing": "Lecture en cours",
+            "paused": "Lecture en pause",
+            "stopped": "Lecture arrêtée",
+            "error": "Impossible de lire le flux."
+          }
+        },
+        "favorites": {
+          "title": "Favoris",
+          "subtitle": "Retrouvez rapidement vos stations préférées.",
+          "empty": "Aucune station en favori pour le moment."
+        },
+        "meta": {
+          "bitrate": "{value} kbps",
+          "countryLanguage": "{country} · {language}"
         }
       },
       "bigbang": {

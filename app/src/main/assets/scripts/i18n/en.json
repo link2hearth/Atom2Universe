@@ -15,6 +15,7 @@
         "info": "Info",
         "images": "Images",
         "news": "News",
+        "radio": "Radio",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -447,6 +448,57 @@
           "title": "News",
           "open": "View all news",
           "hide": "Hide this story"
+        }
+      },
+      "radio": {
+        "title": "Radio",
+        "subtitle": "Search online stations, save favorites, and play them in one tap.",
+        "form": {
+          "queryLabel": "Search",
+          "queryPlaceholder": "Name, tag, city…",
+          "countryLabel": "Country",
+          "languageLabel": "Language",
+          "anyCountry": "All countries",
+          "anyLanguage": "All languages"
+        },
+        "actions": {
+          "search": "Search",
+          "reset": "Reset",
+          "play": "Play",
+          "pause": "Pause",
+          "stop": "Stop",
+          "reload": "Reload",
+          "favorite": "Add to favorites",
+          "favoriteRemove": "Remove from favorites",
+          "listen": "Listen",
+          "openFavorite": "Open"
+        },
+        "status": {
+          "idle": "Enter a query to start searching.",
+          "loading": "Searching for stations…",
+          "loaded": "{count} stations found.",
+          "empty": "No stations found.",
+          "error": "Unable to fetch stations."
+        },
+        "player": {
+          "title": "Player",
+          "empty": "No station selected.",
+          "status": {
+            "idle": "Select a station to start playback.",
+            "playing": "Now playing",
+            "paused": "Playback paused",
+            "stopped": "Playback stopped",
+            "error": "Unable to play this stream."
+          }
+        },
+        "favorites": {
+          "title": "Favorites",
+          "subtitle": "Jump back to the stations you love.",
+          "empty": "No favorite stations yet."
+        },
+        "meta": {
+          "bitrate": "{value} kbps",
+          "countryLanguage": "{country} · {language}"
         }
       },
       "bigbang": {
