@@ -7,9 +7,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
-import android.media.AudioManager
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -25,9 +22,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 class AudioPlaybackService : Service() {
 
     private var mediaSession: MediaSessionCompat? = null
-    private var audioManager: AudioManager? = null
-    private var audioFocusRequest: AudioFocusRequest? = null
-    private var hasAudioFocus: Boolean = false
     private var hasStartedForeground = false
     private var wakeLock: PowerManager.WakeLock? = null
 
@@ -35,41 +29,8 @@ class AudioPlaybackService : Service() {
     private var currentArtist: String = ""
     private var isPlaying: Boolean = false
 
-    private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { change ->
-        if (!hasAudioFocus) {
-            return@OnAudioFocusChangeListener
-        }
-
-        when (change) {
-            AudioManager.AUDIOFOCUS_GAIN -> {
-                hasAudioFocus = true
-                // No-op: the web player should decide when to resume.
-            }
-
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                // Keep playing; the web player can decide whether to lower its volume.
-            }
-
-            AudioManager.AUDIOFOCUS_LOSS,
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                hasAudioFocus = false
-                if (isPlaying) {
-                    isPlaying = false
-                    updatePlaybackState()
-                    notifyPlaybackCommand(COMMAND_PAUSE)
-                    updateNotification()
-                }
-            }
-
-            else -> {
-                // No-op
-            }
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         createNotificationChannel()
         setupMediaSession()
     }
@@ -93,7 +54,6 @@ class AudioPlaybackService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        abandonAudioFocus()
         mediaSession?.isActive = false
         mediaSession?.release()
         mediaSession = null
@@ -105,19 +65,10 @@ class AudioPlaybackService : Service() {
         currentArtist = intent.getStringExtra(EXTRA_ARTIST) ?: ""
         isPlaying = intent.getBooleanExtra(EXTRA_IS_PLAYING, true)
 
-        if (isPlaying && !requestAudioFocus()) {
-            stopSelf()
-            return
-        }
-
         if (isPlaying) {
             acquireWakeLock()
         } else {
             releaseWakeLock()
-        }
-
-        if (!isPlaying) {
-            abandonAudioFocus()
         }
 
         updatePlaybackState()
@@ -132,10 +83,6 @@ class AudioPlaybackService : Service() {
 
     private fun handlePlayIntent() {
         isPlaying = true
-        if (!requestAudioFocus()) {
-            stopSelf()
-            return
-        }
         acquireWakeLock()
         updatePlaybackState()
         notifyPlaybackCommand(COMMAND_PLAY)
@@ -147,7 +94,6 @@ class AudioPlaybackService : Service() {
         updatePlaybackState()
         notifyPlaybackCommand(COMMAND_PAUSE)
         updateNotification()
-        abandonAudioFocus()
         releaseWakeLock()
     }
 
@@ -163,7 +109,6 @@ class AudioPlaybackService : Service() {
 
         stopForeground(STOP_FOREGROUND_REMOVE)
         hasStartedForeground = false
-        abandonAudioFocus()
         releaseWakeLock()
         stopSelf()
     }
@@ -293,42 +238,6 @@ class AudioPlaybackService : Service() {
             return
         }
         NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, buildNotification())
-    }
-
-    private fun requestAudioFocus(): Boolean {
-        val manager = audioManager ?: return false
-        val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val attributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build()
-
-            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                .setAudioAttributes(attributes)
-                .setOnAudioFocusChangeListener(audioFocusChangeListener)
-                .build()
-            audioFocusRequest = request
-            manager.requestAudioFocus(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-        } else {
-            manager.requestAudioFocus(
-                audioFocusChangeListener,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN
-            ) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-        }
-
-        hasAudioFocus = granted
-        return granted
-    }
-
-    private fun abandonAudioFocus() {
-        val manager = audioManager ?: return
-        hasAudioFocus = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            audioFocusRequest?.let { manager.abandonAudioFocusRequest(it) }
-        } else {
-            manager.abandonAudioFocus(audioFocusChangeListener)
-        }
     }
 
     private fun notifyPlaybackCommand(command: String) {
