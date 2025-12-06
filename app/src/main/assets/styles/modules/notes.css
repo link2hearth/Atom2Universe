@@ -1,0 +1,375 @@
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.notes__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.notes-editor__title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notes-editor__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notes-editor__title-row h3 {
+  margin: 0;
+}
+
+.notes-editor__icon-button {
+  border: 1px solid #31405c;
+  background: #0f1627;
+  color: #e6e9f5;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notes-editor__icon-button:hover {
+  transform: translateY(-1px);
+  background: #141c33;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.notes-editor__icon-button:active {
+  transform: translateY(0);
+}
+
+.notes__title {
+  font-size: 28px;
+  margin: 0;
+}
+
+.notes__subtitle {
+  margin: 4px 0 0;
+  color: #c8d0e0;
+  max-width: 760px;
+}
+
+.notes__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notes__action-button {
+  border: 1px solid #3a3f58;
+  background: #0f1425;
+  color: #e6e9f5;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.notes__action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.notes__action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.notes__action-button--primary {
+  background: linear-gradient(135deg, #1f8ef1, #7f5af0);
+  border-color: #5c7bea;
+  color: #fff;
+}
+
+.notes__action-button--ghost {
+  background: transparent;
+}
+
+.notes__layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+}
+
+.notes__status {
+  background: rgba(31, 142, 241, 0.12);
+  border: 1px solid rgba(31, 142, 241, 0.35);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #e6e9f5;
+}
+
+.notes-list {
+  background: #0d1120;
+  border: 1px solid #1d2335;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 480px;
+}
+
+.notes-list__header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.notes-list__hint {
+  margin: 4px 0 0;
+  color: #9aa7c0;
+  font-size: 13px;
+}
+
+.notes-list__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.notes-list__item {
+  background: #0f1627;
+  border: 1px solid #1f2940;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.notes-list__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.notes-list__name {
+  margin: 0;
+  font-weight: 600;
+  color: #f5f7ff;
+  word-break: break-all;
+}
+
+.notes-list__meta {
+  margin: 0;
+  color: #9aa7c0;
+  font-size: 12px;
+}
+
+.notes-list__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notes-list__button {
+  border: 1px solid #31405c;
+  background: #141a2c;
+  color: #e6e9f5;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.notes-list__button:hover {
+  background: #1b2235;
+  transform: translateY(-1px);
+}
+
+.notes-list__button--danger {
+  border-color: #ff6b6b;
+  color: #ffdede;
+}
+
+.notes-list__empty {
+  margin: 0;
+  color: #9aa7c0;
+  font-style: italic;
+}
+
+.notes-editor {
+  background: #0d1120;
+  border: 1px solid #1d2335;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notes-editor__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.notes-editor__subtitle {
+  margin: 2px 0 0;
+  color: #9aa7c0;
+}
+
+.notes-editor__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notes-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notes-field label {
+  font-weight: 600;
+  color: #e6e9f5;
+}
+
+.notes-field input,
+.notes-field select,
+.notes-editor__textarea {
+  background: #0b0f1d;
+  border: 1px solid #1f2940;
+  color: #f5f7ff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+}
+
+.notes-field__group {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 10px;
+}
+
+.notes-field--inline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.notes-editor__textarea {
+  resize: vertical;
+  min-height: 320px;
+  line-height: 1.5;
+  font-family: 'Courier New', monospace;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.page--notes-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: #050815;
+  overflow: hidden;
+}
+
+.notes-fullscreen-active .app-header {
+  display: none;
+}
+
+.notes--fullscreen {
+  height: 100%;
+  padding: 0;
+  gap: 0;
+}
+
+.notes--fullscreen .notes__header,
+.notes--fullscreen .notes__status,
+.notes--fullscreen .notes-list {
+  display: none;
+}
+
+.notes--fullscreen .notes__layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+.notes--fullscreen .notes-editor {
+  border: 0;
+  border-radius: 0;
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notes--fullscreen .notes-editor__header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 12px;
+  margin: -12px -12px 0;
+  background: linear-gradient(135deg, #0f1627, #0b1021);
+  border-bottom: 1px solid #1f2940;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.notes--fullscreen .notes-editor__actions {
+  flex-wrap: wrap;
+}
+
+.notes--fullscreen .notes-editor__form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: auto;
+}
+
+.notes--fullscreen .notes-field--inline {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.notes--fullscreen .notes-editor__textarea {
+  flex: 1;
+  min-height: auto;
+  height: 100%;
+  resize: none;
+  overflow: auto;
+}
+
+.notes--fullscreen .notes-field:last-of-type {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 960px) {
+  .notes__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .notes-list {
+    min-height: auto;
+  }
+}

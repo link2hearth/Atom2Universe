@@ -115,6 +115,9 @@
         <button class="nav-button" data-target="radio">
           <span data-i18n="index.navigation.items.radio">Radio</span>
         </button>
+        <button class="nav-button" data-target="notes">
+          <span data-i18n="index.navigation.items.notes">Notes</span>
+        </button>
         <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
@@ -7484,6 +7487,182 @@
               ></ul>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="notes" class="page" data-page-group="clicker" aria-labelledby="notesTitle">
+      <div class="notes" id="notesRoot">
+        <div class="notes__header">
+          <div>
+            <h2 id="notesTitle" class="notes__title" data-i18n="index.sections.notes.title">Notes</h2>
+            <p class="notes__subtitle" data-i18n="index.sections.notes.subtitle">
+              Créez, éditez et supprimez vos fichiers texte ou Markdown sauvegardés dans Documents/Atom2Univers.
+            </p>
+          </div>
+          <div class="notes__actions">
+            <button
+              type="button"
+              id="notesNewButton"
+              class="notes__action-button notes__action-button--primary"
+              data-i18n="index.sections.notes.actions.new"
+            >
+              Nouvelle note
+            </button>
+            <button
+              type="button"
+              id="notesRefreshButton"
+              class="notes__action-button"
+              data-i18n="index.sections.notes.actions.refresh"
+            >
+              Actualiser
+            </button>
+          </div>
+        </div>
+
+        <p
+          id="notesStatus"
+          class="notes__status"
+          role="status"
+          aria-live="polite"
+          data-i18n="index.sections.notes.status.idle"
+        >
+          Prêt à charger vos notes.
+        </p>
+
+        <div class="notes__layout">
+          <aside class="notes-list" aria-labelledby="notesListTitle">
+            <div class="notes-list__header">
+              <h3 id="notesListTitle" data-i18n="index.sections.notes.list.title">Vos fichiers</h3>
+              <p class="notes-list__hint" data-i18n="index.sections.notes.list.hint">
+                Les notes sont stockées dans Documents/Atom2Univers.
+              </p>
+            </div>
+            <ul id="notesList" class="notes-list__items" aria-live="polite"></ul>
+            <p
+              id="notesEmptyState"
+              class="notes-list__empty"
+              hidden
+              data-i18n="index.sections.notes.list.empty"
+            >
+              Aucune note pour le moment.
+            </p>
+          </aside>
+
+          <section class="notes-editor" aria-labelledby="notesEditorTitle">
+            <div class="notes-editor__header">
+              <div class="notes-editor__title-block">
+                <div class="notes-editor__title-row">
+                  <button
+                    type="button"
+                    id="notesExitFullscreenButton"
+                    class="notes-editor__icon-button"
+                    aria-label="Retour"
+                    title="Retour"
+                    hidden
+                    data-i18n="aria-label:index.sections.notes.actions.exitFullscreen;title:index.sections.notes.actions.exitFullscreen"
+                  >
+                    <span data-i18n="index.sections.notes.actions.exitFullscreen">Retour</span>
+                  </button>
+                  <h3 id="notesEditorTitle" data-i18n="index.sections.notes.editor.title">Éditeur</h3>
+                  <button
+                    type="button"
+                    id="notesFullscreenButton"
+                    class="notes-editor__icon-button"
+                    aria-pressed="false"
+                    aria-label="Plein écran"
+                    title="Plein écran"
+                    data-i18n="aria-label:index.sections.notes.actions.fullscreen;title:index.sections.notes.actions.fullscreen"
+                  >
+                    <span data-i18n="index.sections.notes.actions.fullscreen">Plein écran</span>
+                  </button>
+                </div>
+                <p
+                  class="notes-editor__subtitle"
+                  data-i18n="index.sections.notes.editor.subtitle"
+                >
+                  Sélectionnez une note ou créez-en une nouvelle pour commencer.
+                </p>
+              </div>
+              <div class="notes-editor__actions">
+                <button
+                  type="button"
+                  id="notesSaveButton"
+                  class="notes__action-button notes__action-button--primary"
+                  data-i18n="index.sections.notes.actions.save"
+                >
+                  Enregistrer
+                </button>
+                <button
+                  type="button"
+                  id="notesCancelButton"
+                  class="notes__action-button notes__action-button--ghost"
+                  data-i18n="index.sections.notes.actions.reset"
+                >
+                  Réinitialiser
+                </button>
+              </div>
+            </div>
+
+            <div class="notes-editor__form">
+              <div class="notes-field">
+                <label for="notesTitleInput" data-i18n="index.sections.notes.editor.name">Nom du fichier</label>
+                <div class="notes-field__group">
+                  <input
+                    id="notesTitleInput"
+                    type="text"
+                    maxlength="80"
+                    autocomplete="off"
+                    data-i18n="placeholder:index.sections.notes.editor.namePlaceholder"
+                    placeholder="ex: idées"
+                  />
+                  <select
+                    id="notesFormatSelect"
+                    aria-label="Format"
+                    data-i18n="aria-label:index.sections.notes.editor.formatLabel"
+                  >
+                    <option value="txt" data-i18n="index.sections.notes.editor.format.txt">.txt</option>
+                    <option value="md" data-i18n="index.sections.notes.editor.format.md">.md</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="notes-field notes-field--inline">
+                <div class="notes-field">
+                  <label for="notesFontSelect" data-i18n="index.sections.notes.editor.font">Police</label>
+                  <select id="notesFontSelect">
+                    <option value="system" data-i18n="index.sections.notes.editor.fonts.system">Classique</option>
+                    <option value="monospace" data-i18n="index.sections.notes.editor.fonts.monospace">Monospace</option>
+                    <option value="serif" data-i18n="index.sections.notes.editor.fonts.serif">Serif</option>
+                    <option value="sans" data-i18n="index.sections.notes.editor.fonts.sans">Sans serif</option>
+                  </select>
+                </div>
+                <div class="notes-field">
+                  <label for="notesFontSize" data-i18n="index.sections.notes.editor.size">Taille</label>
+                  <input id="notesFontSize" type="number" min="10" max="36" step="1" value="16" />
+                </div>
+                <div class="notes-field">
+                  <label for="notesTextColor" data-i18n="index.sections.notes.editor.textColor">Texte</label>
+                  <input id="notesTextColor" type="color" value="#f5f5f5" />
+                </div>
+                <div class="notes-field">
+                  <label for="notesBackgroundColor" data-i18n="index.sections.notes.editor.backgroundColor">Fond</label>
+                  <input id="notesBackgroundColor" type="color" value="#0b1021" />
+                </div>
+              </div>
+
+              <div class="notes-field">
+                <label for="notesContent" data-i18n="index.sections.notes.editor.content">Contenu</label>
+                <textarea
+                  id="notesContent"
+                  class="notes-editor__textarea"
+                  rows="16"
+                  data-i18n="placeholder:index.sections.notes.editor.contentPlaceholder"
+                  placeholder="Votre texte ici"
+                ></textarea>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </section>

@@ -16,6 +16,7 @@
         "images": "Images",
         "news": "News",
         "radio": "Radio",
+        "notes": "Notes",
         "midi": "MIDI",
         "bigbang": "Big Bang",
         "options": "Options"
@@ -521,6 +522,63 @@
         "meta": {
           "bitrate": "{value} kbps",
           "countryLanguage": "{country} · {language}"
+        }
+      },
+      "notes": {
+        "title": "Notes",
+        "subtitle": "Create, edit, and delete text or Markdown files saved in Documents/Atom2Univers.",
+        "actions": {
+          "new": "New note",
+          "refresh": "Refresh",
+          "save": "Save",
+          "reset": "Reset",
+          "fullscreen": "Fullscreen",
+          "exitFullscreen": "Exit fullscreen",
+          "edit": "Edit",
+          "delete": "Delete",
+          "deleteConfirm": "Delete note {{name}}?"
+        },
+        "status": {
+          "idle": "Ready to load your notes.",
+          "loading": "Loading your notes…",
+          "loadingNote": "Opening {{name}}…",
+          "loaded": "Notes refreshed.",
+          "loadedNote": "Note loaded.",
+          "saving": "Saving {{name}}…",
+          "saved": "Saved note: {{name}}.",
+          "deleted": "Note deleted.",
+          "new": "New note ready to edit.",
+          "unsupported": "Available on the Android app only.",
+          "error": "Unable to load your notes."
+        },
+        "list": {
+          "title": "Your files",
+          "hint": "Notes are stored in Documents/Atom2Univers.",
+          "empty": "No notes yet.",
+          "meta": "{{extension}} · Updated {{date}}"
+        },
+        "editor": {
+          "title": "Editor",
+          "subtitle": "Pick an existing note or create a new one to get started.",
+          "name": "File name",
+          "namePlaceholder": "e.g. ideas",
+          "formatLabel": "File format",
+          "format": {
+            "txt": ".txt",
+            "md": ".md"
+          },
+          "font": "Font",
+          "fonts": {
+            "system": "System",
+            "monospace": "Monospace",
+            "serif": "Serif",
+            "sans": "Sans serif"
+          },
+          "size": "Size",
+          "textColor": "Text",
+          "backgroundColor": "Background",
+          "content": "Content",
+          "contentPlaceholder": "Start typing"
         }
       },
       "bigbang": {
