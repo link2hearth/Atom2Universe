@@ -25,7 +25,7 @@ const CONFIG_OVERRIDE_KEYS = Object.freeze({
  */
 const ANTI_CHEAT_SETTINGS = Object.freeze({
   windowMs: 1000,
-  minClicks: 20,
+  minClicks: 10,
   maxPosDelta: 10
 });
 
@@ -161,7 +161,7 @@ const RADIO_SETTINGS = Object.freeze({
  */
 const IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
-  maxItems: 15,
+  maxItems: 30,
   refreshIntervalMs: 30 * 60 * 1000,
   requestTimeoutMs: 15000,
   maxImageBytes: 10 * 1024 * 1024,
