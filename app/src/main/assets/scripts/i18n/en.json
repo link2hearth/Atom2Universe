@@ -4621,7 +4621,7 @@
         "alloyMastery": {
           "name": "Alloy Mastery",
           "description": "Successfully perform every available metal alloy fusion.",
-          "reward": "Adds +10 to the trophy multiplier."
+          "reward": "Adds +2 to the trophy multiplier."
         }
       }
     },

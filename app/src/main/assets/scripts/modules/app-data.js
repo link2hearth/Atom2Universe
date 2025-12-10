@@ -324,10 +324,10 @@
         amount: { type: 'number', value: 1_000_000 }
       },
       reward: {
-        trophyMultiplierAdd: 0.5,
+        trophyMultiplierAdd: 2,
         description: translate('scripts.appData.trophies.millionAtoms.reward', {
-          bonus: formatAtomScaleBonusValue(0.5),
-          total: formatAtomScaleBonusValue(1.5)
+          bonus: formatAtomScaleBonusValue(2),
+          total: formatAtomScaleBonusValue(3)
         })
       },
       order: 1000
