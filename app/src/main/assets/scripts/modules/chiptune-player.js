@@ -1544,6 +1544,9 @@
       const audioSettings = typeof globalThis !== 'undefined'
         ? globalThis.MIDI_AUDIO_MIXING_SETTINGS || null
         : null;
+      const volumeSettings = typeof globalThis !== 'undefined'
+        ? globalThis.MIDI_VOLUME_SETTINGS || null
+        : null;
       const resolveNumberSetting = (value, fallback, min = -Infinity, max = Infinity) => {
         const numeric = Number.isFinite(value) ? value : fallback;
         if (!Number.isFinite(numeric)) {
@@ -1551,6 +1554,13 @@
         }
         return Math.min(max, Math.max(min, numeric));
       };
+      const maxVolumePercent = resolveNumberSetting(volumeSettings?.maxPercent, 200, 50, 400);
+      const defaultVolumePercent = resolveNumberSetting(
+        volumeSettings?.defaultPercent,
+        100,
+        0,
+        maxVolumePercent,
+      );
 
       this.audioContextOptions = audioSettings && typeof audioSettings.contextOptions === 'object'
         ? { ...audioSettings.contextOptions }
@@ -1563,7 +1573,8 @@
       this.userLibraryStorageKey = 'atom2univers.midi.userLibrary';
       this.userLibraryPersistPromise = null;
 
-      this.masterVolume = 0.9;
+      this.maxVolume = maxVolumePercent / 100;
+      this.masterVolume = defaultVolumePercent / 100;
       this.maxGain = 0.32;
       this.polyphonyGain = null;
       this.polyphonyWeight = 0;
@@ -1674,9 +1685,13 @@
       this.initializeProgramUsageGrid();
 
       if (this.volumeSlider) {
+        const sliderMax = Math.round(this.maxVolume * 100);
+        if (Number.isFinite(sliderMax) && sliderMax > 0) {
+          this.volumeSlider.max = String(sliderMax);
+        }
         const sliderValue = Number.parseFloat(this.volumeSlider.value);
         if (Number.isFinite(sliderValue)) {
-          this.masterVolume = Math.max(0, Math.min(1, sliderValue / 100));
+          this.masterVolume = Math.max(0, Math.min(this.maxVolume, sliderValue / 100));
         } else {
           this.volumeSlider.value = String(Math.round(this.masterVolume * 100));
         }
@@ -2718,7 +2733,7 @@
           if (!Number.isFinite(sliderValue)) {
             return;
           }
-          this.setMasterVolume(Math.max(0, Math.min(1, sliderValue / 100)), false);
+          this.setMasterVolume(Math.max(0, Math.min(this.maxVolume, sliderValue / 100)), false);
         });
       }
 
@@ -2909,7 +2924,7 @@
         }
 
         const now = this.audioContext.currentTime;
-        const clamped = Math.max(0, Math.min(1, targetValue));
+        const clamped = Math.max(0, Math.min(this.maxVolume, targetValue));
         const current = Math.max(0.0001, this.masterGain.gain.value || 0.0001);
         const startValue = fromSilence
           ? Math.max(0.0001, Math.min(clamped, current * 0.25))
@@ -2927,17 +2942,17 @@
       }
 
       setMasterVolume(value, syncSlider = true) {
-        const clamped = Math.max(0, Math.min(1, value));
+        const clamped = Math.max(0, Math.min(this.maxVolume, value));
         this.masterVolume = clamped;
         if (this.volumeSlider && syncSlider) {
           const sliderValue = Math.round(clamped * 100);
           if (Number.parseInt(this.volumeSlider.value, 10) !== sliderValue) {
-          this.volumeSlider.value = String(sliderValue);
+            this.volumeSlider.value = String(sliderValue);
+          }
         }
-      }
-      if (this.volumeValue) {
-        this.volumeValue.textContent = `${Math.round(clamped * 100)}%`;
-      }
+        if (this.volumeValue) {
+          this.volumeValue.textContent = `${Math.round(clamped * 100)}%`;
+        }
         if (this.masterGain) {
           if (this.audioContext) {
             this.rampMasterGain(clamped, 0.06, { fromSilence: false });
