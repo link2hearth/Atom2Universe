@@ -625,6 +625,7 @@ const DEFAULT_SUDOKU_COMPLETION_REWARD = Object.freeze({
 const PRIMARY_SAVE_STORAGE_KEY = 'atom2univers';
 const RELOAD_SAVE_STORAGE_KEY = 'atom2univers.reloadPendingSave';
 const LANGUAGE_STORAGE_KEY = 'atom2univers.language';
+const MUSIC_PAGE_STORAGE_KEY = 'atom2univers.music.lastPage';
 const CLICK_SOUND_STORAGE_KEY = 'atom2univers.options.clickSoundMuted';
 const CRIT_ATOM_VISUALS_STORAGE_KEY = 'atom2univers.options.critAtomVisualsDisabled';
 const ATOM_ANIMATION_PREFERENCE_STORAGE_KEY = 'atom2univers.options.atomAnimationsEnabled';
@@ -3342,6 +3343,28 @@ function writeStoredAtomIconVisibility(visible) {
     globalThis.localStorage?.setItem(ATOM_ICON_VISIBILITY_STORAGE_KEY, value);
   } catch (error) {
     console.warn('Unable to persist atom icon preference', error);
+  }
+}
+
+function readStoredMusicPagePreference() {
+  try {
+    const stored = globalThis.localStorage?.getItem(MUSIC_PAGE_STORAGE_KEY);
+    if (stored === 'radio' || stored === 'midi') {
+      return stored;
+    }
+  } catch (error) {
+    console.warn('Unable to read stored music page preference', error);
+  }
+  return null;
+}
+
+function writeStoredMusicPagePreference(pageId) {
+  try {
+    if (pageId === 'radio' || pageId === 'midi') {
+      globalThis.localStorage?.setItem(MUSIC_PAGE_STORAGE_KEY, pageId);
+    }
+  } catch (error) {
+    console.warn('Unable to persist music page preference', error);
   }
 }
 
@@ -21335,58 +21358,13 @@ if (typeof window !== 'undefined' && typeof window.setInterval === 'function') {
   }, TOUCH_TRACKING_WATCHDOG_INTERVAL_MS);
 }
 
-const MUSIC_SWIPE_THRESHOLD_PX = 60;
-let musicSwipeStart = null;
-
-function resetMusicSwipeTracking() {
-  musicSwipeStart = null;
-}
-
-function handleMusicSwipeStart(event) {
-  if (!event?.isPrimary) {
-    return;
+function getPreferredMusicPage() {
+  const stored = readStoredMusicPagePreference();
+  const preferred = stored === 'radio' || stored === 'midi' ? stored : 'midi';
+  if (preferred === 'midi' && !isMusicModuleEnabled()) {
+    return 'radio';
   }
-  if (event.pointerType === 'mouse' && event.buttons !== 1) {
-    return;
-  }
-  const activePage = document.body?.dataset?.activePage;
-  if (activePage !== 'radio' && activePage !== 'midi') {
-    return;
-  }
-  musicSwipeStart = {
-    x: event.clientX,
-    y: event.clientY,
-    page: activePage,
-    pointerId: event.pointerId,
-  };
-}
-
-function handleMusicSwipeEnd(event) {
-  if (!musicSwipeStart || musicSwipeStart.pointerId !== event?.pointerId) {
-    return;
-  }
-  const start = musicSwipeStart;
-  resetMusicSwipeTracking();
-  const deltaX = event.clientX - start.x;
-  const deltaY = event.clientY - start.y;
-  if (Math.abs(deltaX) < MUSIC_SWIPE_THRESHOLD_PX || Math.abs(deltaX) < Math.abs(deltaY)) {
-    return;
-  }
-  if (start.page === 'radio' && deltaX < 0) {
-    showPage('midi');
-  } else if (start.page === 'midi' && deltaX > 0) {
-    showPage('radio');
-  }
-}
-
-function setupMusicSwipeNavigation() {
-  const swipeTargets = [elements?.radioPage, elements?.midiPage].filter(Boolean);
-  swipeTargets.forEach(target => {
-    target.addEventListener('pointerdown', handleMusicSwipeStart, passiveEventListenerOptions);
-    target.addEventListener('pointerup', handleMusicSwipeEnd, passiveEventListenerOptions);
-    target.addEventListener('pointercancel', resetMusicSwipeTracking, passiveEventListenerOptions);
-    target.addEventListener('pointerleave', resetMusicSwipeTracking, passiveEventListenerOptions);
-  });
+  return preferred;
 }
 
 function updateMusicTabs(activePageId) {
@@ -21479,6 +21457,9 @@ function showPage(pageId) {
     btn.classList.toggle('active', isActiveNav);
   });
   document.body.dataset.activePage = pageId;
+  if (isMusicPage) {
+    writeStoredMusicPagePreference(pageId);
+  }
   updateMusicTabs(pageId);
   if (pageId === 'info') {
     updateDevKitUI();
@@ -22121,7 +22102,10 @@ function bindDomEventListeners() {
 
   elements.navButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const target = btn.dataset.target;
+      let target = btn.dataset.target;
+      if (target === 'radio') {
+        target = getPreferredMusicPage();
+      }
       if (!isPageUnlocked(target)) {
         return;
       }
@@ -22139,8 +22123,6 @@ function bindDomEventListeners() {
       });
     });
   }
-
-  setupMusicSwipeNavigation();
 
   if (elements.imagesRefreshButton) {
     elements.imagesRefreshButton.addEventListener('click', () => {
@@ -27368,6 +27350,7 @@ if (typeof window !== 'undefined') {
 const RESET_LOCAL_STORAGE_KEYS = [
   PRIMARY_SAVE_STORAGE_KEY,
   LANGUAGE_STORAGE_KEY,
+  MUSIC_PAGE_STORAGE_KEY,
   CLICK_SOUND_STORAGE_KEY,
   ATOM_ANIMATION_PREFERENCE_STORAGE_KEY,
   CRIT_ATOM_VISUALS_STORAGE_KEY,

@@ -1464,7 +1464,7 @@
       this.speedValue = elements.speedValue;
       this.pianoOverrideToggle = elements.pianoOverrideToggle;
       this.pianoOverrideValue = elements.pianoOverrideValue;
-      this.pianoOverrideEnabled = true;
+      this.pianoOverrideEnabled = false;
       this.engineAudioToggle = elements.engineAudioToggle;
       this.engineAudioValue = elements.engineAudioValue;
       this.keyboardAudioToggle = elements.keyboardAudioToggle;
@@ -2884,7 +2884,7 @@
       if (this.pianoOverrideToggle) {
         this.setPianoOverrideEnabled(Boolean(this.pianoOverrideToggle.checked));
       } else {
-        this.setPianoOverrideEnabled(true, { syncControl: false });
+        this.setPianoOverrideEnabled(false, { syncControl: false });
       }
 
       if (this.engineAudioToggle) {
