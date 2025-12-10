@@ -1176,7 +1176,7 @@ function formatAtomScaleBonus(value) {
 function createAtomScaleTrophies() {
   const bonusIncrement = 2;
   return RESOLVED_ATOM_SCALE_TROPHY_PRESETS.map((entry, index) => {
-    const bonusPerTrophy = bonusIncrement * (index + 1);
+    const bonusPerTrophy = bonusIncrement;
     const displayBonus = formatAtomScaleBonus(bonusPerTrophy);
     const displayTotal = formatAtomScaleBonus(1 + bonusPerTrophy);
     const descriptionFallback = `Atteignez ${entry.targetText} atomes cumulés, ${entry.flavor}.`;
@@ -1775,8 +1775,8 @@ const GAME_CONFIG = {
         amount: { type: 'number', value: 1_000_000 }
       },
       reward: {
-        trophyMultiplierAdd: 0.5,
-        description: 'Ajoute +0,5 au Boost global sur la production manuelle et automatique.'
+        trophyMultiplierAdd: 2,
+        description: 'Ajoute +2 au Boost global sur la production manuelle et automatique.'
       },
       order: -1
     },
@@ -1943,8 +1943,8 @@ const GAME_CONFIG = {
         ]
       },
       reward: {
-        trophyMultiplierAdd: 10,
-        description: 'Ajoute +10 au multiplicateur de trophées.'
+        trophyMultiplierAdd: 2,
+        description: 'Ajoute +2 au multiplicateur de trophées.'
       },
       order: 1110
     }

@@ -4648,7 +4648,7 @@
         "alloyMastery": {
           "name": "Maîtres des alliages",
           "description": "Réussissez toutes les fusions d’alliages métalliques disponibles.",
-          "reward": "Ajoute +10 au multiplicateur de trophées."
+          "reward": "Ajoute +2 au multiplicateur de trophées."
         }
       }
     },
