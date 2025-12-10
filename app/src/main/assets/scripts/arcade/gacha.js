@@ -751,6 +751,34 @@ function rollForPermanentBonusGachaImage() {
   return Math.random() < BONUS_GACHA_PERMANENT_IMAGE_CHANCE;
 }
 
+function isPrimaryBonusImageCollectionCompleteForGacha() {
+  if (!Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    return false;
+  }
+  const collection = ensureGachaBonusImageCollection();
+  return GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.every(def => {
+    if (!def || !def.id) {
+      return true;
+    }
+    const entry = collection[def.id];
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
+function isSecondaryBonusImageCollectionUnlockedForGacha() {
+  if (typeof globalThis !== 'undefined'
+    && typeof globalThis.isSecondaryBonusImageCollectionUnlocked === 'function'
+  ) {
+    try {
+      return globalThis.isSecondaryBonusImageCollectionUnlocked();
+    } catch (error) {
+      // Fallback to local computation on unexpected errors.
+    }
+  }
+  return isPrimaryBonusImageCollectionCompleteForGacha();
+}
+
 function getAvailablePermanentBonusGachaImageIds() {
   if (!BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.length) {
     return [];
@@ -773,6 +801,9 @@ function rollForSecondaryPermanentBonusGachaImage() {
 }
 
 function getAvailableSecondaryPermanentBonusGachaImageIds() {
+  if (!isSecondaryBonusImageCollectionUnlockedForGacha()) {
+    return [];
+  }
   if (!BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.length) {
     return [];
   }

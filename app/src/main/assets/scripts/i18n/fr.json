@@ -4649,6 +4649,16 @@
           "name": "Maîtres des alliages",
           "description": "Réussissez toutes les fusions d’alliages métalliques disponibles.",
           "reward": "Ajoute +2 au multiplicateur de trophées."
+        },
+        "bonusImagesCollection": {
+          "name": "Collection bonus I",
+          "description": "Complétez l’ensemble des images bonus 1.",
+          "reward": "Ajoute +{bonus} au multiplicateur de trophées."
+        },
+        "bonusImagesCollection2": {
+          "name": "Collection bonus II",
+          "description": "Complétez l’ensemble des images bonus 2.",
+          "reward": "Ajoute +{bonus} au multiplicateur de trophées."
         }
       }
     },

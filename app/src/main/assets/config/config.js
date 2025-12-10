@@ -1947,6 +1947,34 @@ const GAME_CONFIG = {
         description: 'Ajoute +2 au multiplicateur de trophées.'
       },
       order: 1110
+    },
+    {
+      id: 'bonusImagesCollection',
+      name: 'Collection bonus I',
+      description: 'Complétez la collection d’images bonus 1.',
+      condition: {
+        type: 'bonusCollection',
+        collection: 'primary'
+      },
+      reward: {
+        trophyMultiplierAdd: 2,
+        description: 'Ajoute +2 au multiplicateur de trophées.'
+      },
+      order: 1115
+    },
+    {
+      id: 'bonusImagesCollection2',
+      name: 'Collection bonus II',
+      description: 'Complétez la collection d’images bonus 2.',
+      condition: {
+        type: 'bonusCollection',
+        collection: 'secondary'
+      },
+      reward: {
+        trophyMultiplierAdd: 2,
+        description: 'Ajoute +2 au multiplicateur de trophées.'
+      },
+      order: 1120
     }
   ],
 
