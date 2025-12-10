@@ -6819,9 +6819,6 @@ function collectDomElements() {
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
     optionsWelcomeTitle: document.getElementById('optionsWelcomeTitle'),
     optionsWelcomeIntro: document.getElementById('optionsWelcomeIntro'),
-    musicOptionCard: document.querySelector('.option-card--chiptune-link'),
-    musicOptionRow: document.querySelector('.option-row--midi-link'),
-    openMidiModuleButton: document.getElementById('openMidiModuleButton'),
     backgroundLibraryButton: document.getElementById('backgroundLibraryButton'),
     backgroundLibraryStatus: document.getElementById('backgroundLibraryStatus'),
     backgroundDurationSelect: document.getElementById('backgroundDurationSelect'),
@@ -17271,29 +17268,6 @@ function updateMusicModuleVisibility() {
     });
   }
 
-  if (elements.musicOptionCard) {
-    elements.musicOptionCard.hidden = !enabled;
-    elements.musicOptionCard.setAttribute('aria-hidden', enabled ? 'false' : 'true');
-  }
-
-  if (elements.musicOptionRow) {
-    elements.musicOptionRow.hidden = !enabled;
-    elements.musicOptionRow.setAttribute('aria-hidden', enabled ? 'false' : 'true');
-  }
-
-  if (elements.openMidiModuleButton) {
-    elements.openMidiModuleButton.disabled = !enabled;
-    elements.openMidiModuleButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
-    if (!enabled) {
-      elements.openMidiModuleButton.setAttribute('tabindex', '-1');
-      if (typeof elements.openMidiModuleButton.blur === 'function') {
-        elements.openMidiModuleButton.blur();
-      }
-    } else {
-      elements.openMidiModuleButton.removeAttribute('tabindex');
-    }
-  }
-
   setNavButtonLockState(elements.navMidiButton, enabled);
 
   if (elements.headerPlaybackButton) {
@@ -22417,16 +22391,6 @@ function bindDomEventListeners() {
           activateArcadeHubCard(card);
         }
       });
-    });
-  }
-
-  if (elements.openMidiModuleButton) {
-    elements.openMidiModuleButton.addEventListener('click', () => {
-      if (!isMusicModuleEnabled()) {
-        showToast(t('scripts.app.music.disabled'));
-        return;
-      }
-      showPage('midi');
     });
   }
 
