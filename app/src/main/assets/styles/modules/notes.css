@@ -316,7 +316,7 @@
 .notes--fullscreen .notes-editor {
   border: 0;
   border-radius: 0;
-  padding: 12px;
+  padding: 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -328,10 +328,15 @@
   top: 0;
   z-index: 2;
   padding: 12px;
-  margin: -12px -12px 0;
+  margin: 0 0 0;
   background: linear-gradient(135deg, #0f1627, #0b1021);
   border-bottom: 1px solid #1f2940;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.notes--fullscreen .notes-editor__actions,
+.notes--fullscreen .notes-field--filename {
+  display: none;
 }
 
 .notes--fullscreen .notes-editor__actions {
@@ -343,7 +348,8 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  overflow: auto;
+  padding: 12px;
+  overflow: hidden;
 }
 
 .notes--fullscreen .notes-field--inline {
@@ -352,10 +358,11 @@
 
 .notes--fullscreen .notes-editor__textarea {
   flex: 1;
-  min-height: auto;
+  min-height: 0;
   height: 100%;
   resize: none;
   overflow: auto;
+  border-radius: 6px;
 }
 
 .notes--fullscreen .notes-field:last-of-type {
