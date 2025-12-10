@@ -427,6 +427,16 @@ const AUDIO_ENGINE_SETTINGS = Object.freeze({
 });
 
 /**
+ * Réglages du volume principal pour le module MIDI.
+ * `defaultPercent` fixe le niveau appliqué lors de l'ouverture de la page, tandis que `maxPercent`
+ * autorise un dépassement de 100 % pour augmenter le gain (ex. jusqu'à 200 %).
+ */
+const MIDI_VOLUME_SETTINGS = Object.freeze({
+  defaultPercent: 100,
+  maxPercent: 200
+});
+
+/**
  * Profils de performance disponibles pour la boucle principale du jeu.
  * - `apcFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
  *   à laquelle les gains manuels (APC) sont appliqués au total d'atomes.
