@@ -2726,7 +2726,11 @@
             "percussionInactive": "Percussions inactives",
             "note": "Les numéros correspondent aux programmes General MIDI (0 à 127).",
             "rowUsed": "Programme {program} utilisé",
-            "rowUnused": "Programme {program} inactif"
+            "rowUnused": "Programme {program} inactif",
+            "rowPreviewOn": "Programme {program} affiché sur le clavier",
+            "rowPreviewOff": "Programme {program} masqué sur le clavier",
+            "previewEnabled": "Visualisation activée",
+            "previewDisabled": "Visualisation désactivée"
           },
           "errors": {
             "soundFontEmpty": "SoundFont vide.",

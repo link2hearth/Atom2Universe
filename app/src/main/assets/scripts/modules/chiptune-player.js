@@ -1483,6 +1483,7 @@
       this.programUsageNote = elements.programUsageNote;
       this.programUsageRows = new Map();
       this.programActivityCounts = new Map();
+      this.programPreviewVisibility = new Map();
       this.visibleTracks = [];
 
       if (this.androidRescanButton) {
@@ -3730,6 +3731,125 @@
       this.programUsageContainer.textContent = '';
     }
 
+    normalizeProgramNumber(program) {
+      const numeric = Number(program);
+      if (!Number.isFinite(numeric)) {
+        return null;
+      }
+      return Math.max(0, Math.min(127, Math.round(numeric)));
+    }
+
+    isProgramPreviewEnabled(program) {
+      const normalized = this.normalizeProgramNumber(program);
+      if (normalized == null) {
+        return true;
+      }
+      if (!this.programPreviewVisibility) {
+        this.programPreviewVisibility = new Map();
+        return true;
+      }
+      if (!this.programPreviewVisibility.has(normalized)) {
+        return true;
+      }
+      return this.programPreviewVisibility.get(normalized) !== false;
+    }
+
+    setProgramPreviewEnabled(program, enabled) {
+      const normalized = this.normalizeProgramNumber(program);
+      if (normalized == null) {
+        return;
+      }
+      if (!this.programPreviewVisibility) {
+        this.programPreviewVisibility = new Map();
+      }
+      this.programPreviewVisibility.set(normalized, Boolean(enabled));
+      this.applyProgramPreviewState(normalized);
+      if (!enabled) {
+        this.clearVisualizationsForProgram(normalized);
+      }
+    }
+
+    toggleProgramPreview(program) {
+      const normalized = this.normalizeProgramNumber(program);
+      if (normalized == null) {
+        return;
+      }
+      const nextState = !this.isProgramPreviewEnabled(normalized);
+      this.setProgramPreviewEnabled(normalized, nextState);
+    }
+
+    clearVisualizationsForProgram(program) {
+      const normalized = this.normalizeProgramNumber(program);
+      if (normalized == null || !this.activeNoteVisuals) {
+        return;
+      }
+      const ids = [];
+      this.activeNoteVisuals.forEach((entry, id) => {
+        const entryProgram = this.normalizeProgramNumber(entry?.detail?.program);
+        if (entryProgram === normalized) {
+          const detail = entry?.detail && typeof entry.detail === 'object'
+            ? { ...entry.detail }
+            : {};
+          detail.forcePreview = true;
+          entry.detail = detail;
+          ids.push(id);
+        }
+      });
+      ids.forEach((id) => this.cancelNoteVisualization(id, { notify: true }));
+    }
+
+    applyProgramPreviewState(program) {
+      const normalized = this.normalizeProgramNumber(program);
+      if (normalized == null || !this.programUsageRows) {
+        return;
+      }
+      const row = this.programUsageRows.get(normalized) || null;
+      if (!row) {
+        return;
+      }
+      const enabled = this.isProgramPreviewEnabled(normalized);
+      row.classList.toggle('is-visual-muted', !enabled);
+      row.dataset.preview = enabled ? 'on' : 'off';
+      row.setAttribute('aria-label', this.translate(
+        enabled
+          ? 'index.sections.options.chiptune.usage.rowPreviewOn'
+          : 'index.sections.options.chiptune.usage.rowPreviewOff',
+        enabled
+          ? `Program ${normalized} visible on keyboard`
+          : `Program ${normalized} hidden on keyboard`,
+        { program: normalized },
+      ));
+      row.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+      row.tabIndex = 0;
+      const statusCell = row.querySelector('.chiptune-usage__status');
+      if (statusCell) {
+        statusCell.classList.toggle('is-muted', !enabled);
+        statusCell.setAttribute('title', this.translate(
+          enabled
+            ? 'index.sections.options.chiptune.usage.previewEnabled'
+            : 'index.sections.options.chiptune.usage.previewDisabled',
+          enabled ? 'Keyboard preview enabled' : 'Keyboard preview disabled',
+        ));
+      }
+    }
+
+    syncProgramPreviewVisibility(programs) {
+      if (!this.programPreviewVisibility) {
+        this.programPreviewVisibility = new Map();
+      }
+      const validPrograms = new Set(programs);
+      const existing = new Map(this.programPreviewVisibility);
+      this.programPreviewVisibility.clear();
+      validPrograms.forEach((program) => {
+        const normalized = this.normalizeProgramNumber(program);
+        if (normalized == null) {
+          return;
+        }
+        const previousState = existing.has(normalized) ? existing.get(normalized) !== false : true;
+        this.programPreviewVisibility.set(normalized, previousState);
+      });
+    }
+
     updateProgramUsage(timeline) {
       this.resetProgramActivityState();
       this.programUsageRows.clear();
@@ -3759,6 +3879,7 @@
       }
 
       const programs = Array.from(usedPrograms).sort((a, b) => a - b);
+      this.syncProgramPreviewVisibility(programs);
       this.programUsageContainer.textContent = '';
       if (programs.length > 0) {
         const fragment = doc.createDocumentFragment();
@@ -3774,6 +3895,7 @@
             `Program ${program} in use`,
             { program }
           ));
+          row.dataset.preview = 'on';
 
           const programCell = doc.createElement('span');
           programCell.className = 'chiptune-usage__program';
@@ -3788,7 +3910,19 @@
 
           row.append(programCell, statusCell);
           this.programUsageRows.set(program, row);
+          row.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.toggleProgramPreview(program);
+          });
+          row.addEventListener('keydown', (event) => {
+            const key = event.key || event.code;
+            if (key === ' ' || key === 'Enter' || key === 'Spacebar') {
+              event.preventDefault();
+              this.toggleProgramPreview(program);
+            }
+          });
           fragment.append(row);
+          this.applyProgramPreviewState(program);
         }
         this.programUsageContainer.append(fragment);
       }
@@ -10447,6 +10581,9 @@
         if (!detail) {
           return false;
         }
+        if (detail.forcePreview) {
+          return true;
+        }
         if (detail.source === 'manual') {
           return true;
         }
@@ -10454,16 +10591,20 @@
           ? detail.source
           : 'playback';
 
+        const program = resolveProgramForDetail(detail);
+        const previewAllowed = midiPlayer && typeof midiPlayer.isProgramPreviewEnabled === 'function'
+          ? (program == null ? true : midiPlayer.isProgramPreviewEnabled(program))
+          : true;
+
         if (normalizedSource === 'playback') {
-          return isPlaybackPreviewEnabled();
+          return isPlaybackPreviewEnabled() && previewAllowed;
         }
 
         if (!isPlaybackPreviewEnabled()) {
           return false;
         }
 
-        const program = resolveProgramForDetail(detail);
-        return program != null && isPianoProgram(program);
+        return previewAllowed && program != null && isPianoProgram(program);
       }
 
       function resolveKeyFromMap(refs, container, noteNumber) {

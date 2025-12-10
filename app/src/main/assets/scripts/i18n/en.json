@@ -2789,7 +2789,11 @@
             "percussionInactive": "Percussion inactive",
             "note": "Numbers refer to General MIDI program numbers (0 to 127).",
             "rowUsed": "Program {program} in use",
-            "rowUnused": "Program {program} inactive"
+            "rowUnused": "Program {program} inactive",
+            "rowPreviewOn": "Program {program} shown on the keyboard",
+            "rowPreviewOff": "Program {program} hidden on the keyboard",
+            "previewEnabled": "Keyboard preview enabled",
+            "previewDisabled": "Keyboard preview disabled"
           },
           "errors": {
             "soundFontEmpty": "Empty SoundFont.",
