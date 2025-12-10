@@ -5064,6 +5064,19 @@ function normalizeTrophyCondition(raw) {
     };
   }
   if (
+    type === 'bonusCollection'
+    || type === 'bonusImages'
+    || type === 'bonusCollectionComplete'
+  ) {
+    const collection = normalizeBonusCollectionId(
+      raw.collection ?? raw.target ?? raw.id ?? raw.collectionId
+    );
+    return {
+      type: 'bonusCollection',
+      collection: collection || 'primary'
+    };
+  }
+  if (
     type === 'fusionSuccesses'
     || type === 'fusionSuccess'
     || type === 'fusionSet'
@@ -5269,6 +5282,59 @@ function hasOwnedGachaBonusImages() {
   });
 }
 
+function normalizeBonusCollectionId(value) {
+  const normalized = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  if (normalized === 'bonus2' || normalized === 'secondary' || normalized === 'permanent2') {
+    return 'secondary';
+  }
+  if (normalized === 'bonus' || normalized === 'bonus1'
+    || normalized === 'primary' || normalized === 'permanent'
+  ) {
+    return 'primary';
+  }
+  return '';
+}
+
+function getBonusImageCollectionTotals(collectionId = 'primary') {
+  const normalized = normalizeBonusCollectionId(collectionId) || 'primary';
+  const definitions = normalized === 'secondary'
+    ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS
+    : GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS;
+  const collection = gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object'
+    ? gameState.gachaBonusImages
+    : {};
+  let total = 0;
+  let owned = 0;
+  if (Array.isArray(definitions)) {
+    definitions.forEach(def => {
+      if (!def || !def.id) {
+        return;
+      }
+      total += 1;
+      const entry = collection[def.id];
+      const count = Number(entry?.count ?? entry);
+      if (Number.isFinite(count) && count > 0) {
+        owned += 1;
+      }
+    });
+  }
+  return { total, owned };
+}
+
+function isBonusImageCollectionComplete(collectionId = 'primary') {
+  const { total, owned } = getBonusImageCollectionTotals(collectionId);
+  return total > 0 && owned >= total;
+}
+
+function isSecondaryBonusImageCollectionUnlocked() {
+  return isBonusImageCollectionComplete('primary');
+}
+
+function hasOwnedGachaBonus2Images() {
+  const { owned } = getBonusImageCollectionTotals('secondary');
+  return owned > 0;
+}
+
 function getSpecialGachaCardName(cardId) {
   if (typeof cardId !== 'string' || !cardId) {
     return '';
@@ -5402,23 +5468,6 @@ function normalizeFrenzyChanceAdd(raw) {
     };
   }
   return { perClick: 0, perSecond: 0 };
-}
-
-function hasOwnedGachaBonus2Images() {
-  const collection = gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object'
-    ? gameState.gachaBonusImages
-    : {};
-  if (!Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
-    return false;
-  }
-  return GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.some(def => {
-    if (!def || !def.id) {
-      return false;
-    }
-    const entry = collection[def.id];
-    const count = Number(entry?.count ?? entry);
-    return Number.isFinite(count) && count > 0;
-  });
 }
 
 function hasOwnedCollectionVideos() {
@@ -5790,6 +5839,17 @@ function formatTrophyProgress(def) {
       })
     };
   }
+  if (condition.type === 'bonusCollection') {
+    const { total, owned } = getBonusImageCollectionTotals(condition.collection);
+    const percent = total > 0 ? Math.max(0, Math.min(1, owned / total)) : 0;
+    return {
+      current: owned,
+      target: total,
+      percent,
+      displayCurrent: formatIntegerLocalized(owned),
+      displayTarget: formatIntegerLocalized(total)
+    };
+  }
   if (condition.type === 'fusionSuccesses') {
     const fusionIds = Array.isArray(condition.fusions) ? condition.fusions : [];
     const total = fusionIds.length;
@@ -5870,6 +5930,9 @@ function isTrophyConditionMet(def) {
       return false;
     }
     return rarities.every(rarityId => isRarityCollectionComplete(rarityId));
+  }
+  if (condition.type === 'bonusCollection') {
+    return isBonusImageCollectionComplete(condition.collection);
   }
   if (condition.type === 'fusionSuccesses') {
     const fusionIds = Array.isArray(condition.fusions) ? condition.fusions : [];
@@ -8515,7 +8578,7 @@ function updateCollectionBonusImagesVisibility() {
   if (!elements.collectionBonusImagesCard) {
     return;
   }
-  const unlocked = isPageUnlocked('collection') && hasOwnedGachaBonusImages();
+  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection');
   elements.collectionBonusImagesCard.hidden = !unlocked;
   elements.collectionBonusImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
@@ -8524,7 +8587,9 @@ function updateCollectionBonus2ImagesVisibility() {
   if (!elements.collectionBonus2ImagesCard) {
     return;
   }
-  const unlocked = isPageUnlocked('collection') && hasOwnedGachaBonus2Images();
+  const unlocked = isCollectionFeatureEnabled()
+    && isPageUnlocked('collection')
+    && isSecondaryBonusImageCollectionUnlocked();
   elements.collectionBonus2ImagesCard.hidden = !unlocked;
   elements.collectionBonus2ImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }

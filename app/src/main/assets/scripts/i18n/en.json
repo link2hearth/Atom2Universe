@@ -4622,6 +4622,16 @@
           "name": "Alloy Mastery",
           "description": "Successfully perform every available metal alloy fusion.",
           "reward": "Adds +2 to the trophy multiplier."
+        },
+        "bonusImagesCollection": {
+          "name": "Bonus Collection I",
+          "description": "Complete every bonus image I in the collection.",
+          "reward": "Adds +{bonus} to the trophy multiplier."
+        },
+        "bonusImagesCollection2": {
+          "name": "Bonus Collection II",
+          "description": "Complete every bonus image II in the collection.",
+          "reward": "Adds +{bonus} to the trophy multiplier."
         }
       }
     },
