@@ -96,8 +96,7 @@ class Recorder(
 
         var segmentMetadataVersion = metadataVersion
         var metadataSnapshot = latestMetadata
-        var segment = createNewSegment(segmentMetadataVersion, metadataSnapshot)
-        if (segment == null) {
+        var segment = createNewSegment(segmentMetadataVersion, metadataSnapshot) ?: run {
             keepRecording = false
             return
         }
@@ -118,8 +117,7 @@ class Recorder(
                         finalizeSegment(segment, wasSuccessful = true)
                         segmentMetadataVersion = metadataVersion
                         metadataSnapshot = latestMetadata
-                        segment = createNewSegment(segmentMetadataVersion, metadataSnapshot)
-                        if (segment == null) {
+                        segment = createNewSegment(segmentMetadataVersion, metadataSnapshot) ?: run {
                             keepRecording = false
                             return
                         }
