@@ -300,6 +300,13 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+.radio-card__now-playing {
+  margin: 0.35rem 0 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  word-break: break-word;
+}
+
 .radio-player {
   display: flex;
   flex-direction: column;
@@ -387,6 +394,7 @@ body.theme-light .radio-page__subtitle,
 body.theme-light .radio-page__status,
 body.theme-light .radio-search__field label,
 body.theme-light .radio-card__status,
+body.theme-light .radio-card__now-playing,
 body.theme-light .radio-results__empty,
 body.theme-light .radio-favorites__empty,
 body.theme-light .radio-player__details,

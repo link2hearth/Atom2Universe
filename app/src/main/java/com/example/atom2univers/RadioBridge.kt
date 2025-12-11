@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.util.Log
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -25,6 +26,10 @@ class RadioBridge(
         player.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 notifyPlaybackError(error.errorCodeName ?: "playback_error")
+            }
+
+            override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+                notifyMetadata(mediaMetadata)
             }
         })
     }
@@ -114,6 +119,24 @@ class RadioBridge(
     private fun notifyPlaybackError(reason: String) {
         Log.w(TAG, "Radio playback error: $reason")
         val script = "window.onAndroidRadioStateChanged && window.onAndroidRadioStateChanged('error');"
+        postToWebView(script)
+    }
+
+    private fun notifyMetadata(mediaMetadata: MediaMetadata?) {
+        val artist = mediaMetadata?.artist?.takeIf { it.isNotBlank() }
+            ?: mediaMetadata?.albumArtist?.takeIf { it.isNotBlank() }
+        val title = mediaMetadata?.title?.takeIf { it.isNotBlank() }
+
+        val json = JSONObject()
+        artist?.let { json.put("artist", it) }
+        title?.let { json.put("title", it) }
+
+        val script = if (json.length() > 0) {
+            "window.onAndroidRadioMetadataChanged && window.onAndroidRadioMetadataChanged($json);"
+        } else {
+            "window.onAndroidRadioMetadataChanged && window.onAndroidRadioMetadataChanged(null);"
+        }
+
         postToWebView(script)
     }
 
