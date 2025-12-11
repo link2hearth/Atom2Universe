@@ -20,7 +20,7 @@ class RadioBridge(
 
     private val recorder = Recorder(activity.applicationContext, scope)
     private var currentStreamUrl: String? = null
-    private var currentStreamName: String? = null
+    private var latestMetadata: TrackMetadata? = null
 
     init {
         player.addListener(object : Player.Listener {
@@ -43,7 +43,7 @@ class RadioBridge(
         }
 
         currentStreamUrl = streamUrl
-        currentStreamName = name?.takeIf { it.isNotBlank() }
+        latestMetadata = null
         activity.runOnUiThread {
             try {
                 val mediaItem = MediaItem.fromUri(streamUrl)
@@ -86,8 +86,7 @@ class RadioBridge(
     @JavascriptInterface
     fun startRecording() {
         val streamUrl = currentStreamUrl ?: return
-        val baseName = currentStreamName?.takeIf { it.isNotBlank() } ?: "radio_record"
-        val started = recorder.startRecording(streamUrl, baseName) {
+        val started = recorder.startRecording(streamUrl, latestMetadata) {
             notifyRecordingState(false)
         }
         if (started) {
@@ -123,9 +122,15 @@ class RadioBridge(
     }
 
     private fun notifyMetadata(mediaMetadata: MediaMetadata?) {
-        val artist = mediaMetadata?.artist?.takeIf { it.isNotBlank() }
-            ?: mediaMetadata?.albumArtist?.takeIf { it.isNotBlank() }
-        val title = mediaMetadata?.title?.takeIf { it.isNotBlank() }
+        val artist = mediaMetadata?.artist?.toString()?.takeIf { it.isNotBlank() }
+            ?: mediaMetadata?.albumArtist?.toString()?.takeIf { it.isNotBlank() }
+        val title = mediaMetadata?.title?.toString()?.takeIf { it.isNotBlank() }
+
+        latestMetadata = if (artist != null || title != null) {
+            TrackMetadata(artist, title)
+        } else {
+            null
+        }
 
         val json = JSONObject()
         artist?.let { json.put("artist", it) }
@@ -137,6 +142,7 @@ class RadioBridge(
             "window.onAndroidRadioMetadataChanged && window.onAndroidRadioMetadataChanged(null);"
         }
 
+        recorder.updateMetadata(latestMetadata)
         postToWebView(script)
     }
 
