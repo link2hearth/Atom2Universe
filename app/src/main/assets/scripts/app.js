@@ -21418,6 +21418,13 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   window.addEventListener('focus', () => {
     applyActivePageScrollBehavior();
   }, passiveEventListenerOptions);
+  window.addEventListener('resize', () => {
+    forceResetStuckTouchTracking();
+    applyActivePageScrollBehavior();
+  }, passiveEventListenerOptions);
+  window.addEventListener('orientationchange', () => {
+    forceUnlockScrollSafe();
+  }, passiveEventListenerOptions);
   window.addEventListener('atom2univers:scroll-reset', () => {
     forceUnlockScrollSafe();
   });
