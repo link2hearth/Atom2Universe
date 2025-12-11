@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -112,7 +112,7 @@ class Recorder(
                 val input = body.byteStream()
                 val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
 
-                while (isActive && keepRecording) {
+                while (currentCoroutineContext().isActive && keepRecording) {
                     if (metadataVersion != segmentMetadataVersion) {
                         finalizeSegment(segment, wasSuccessful = true)
                         segmentMetadataVersion = metadataVersion

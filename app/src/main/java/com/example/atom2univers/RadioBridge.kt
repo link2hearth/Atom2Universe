@@ -132,12 +132,6 @@ class RadioBridge(
             null
         }
 
-        latestMetadata = if (artist != null || title != null) {
-            TrackMetadata(artist, title)
-        } else {
-            null
-        }
-
         val json = JSONObject()
         artist?.let { json.put("artist", it) }
         title?.let { json.put("title", it) }
