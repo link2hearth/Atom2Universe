@@ -122,9 +122,15 @@ class RadioBridge(
     }
 
     private fun notifyMetadata(mediaMetadata: MediaMetadata?) {
-        val artist = mediaMetadata?.artist?.takeIf { it.isNotBlank() }
-            ?: mediaMetadata?.albumArtist?.takeIf { it.isNotBlank() }
-        val title = mediaMetadata?.title?.takeIf { it.isNotBlank() }
+        val artist = mediaMetadata?.artist?.toString()?.takeIf { it.isNotBlank() }
+            ?: mediaMetadata?.albumArtist?.toString()?.takeIf { it.isNotBlank() }
+        val title = mediaMetadata?.title?.toString()?.takeIf { it.isNotBlank() }
+
+        latestMetadata = if (artist != null || title != null) {
+            TrackMetadata(artist, title)
+        } else {
+            null
+        }
 
         latestMetadata = if (artist != null || title != null) {
             TrackMetadata(artist, title)
