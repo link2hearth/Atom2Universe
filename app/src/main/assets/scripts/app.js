@@ -563,6 +563,7 @@ let radioPlayerStatusState = {
   fallback: 'Sélectionnez une station pour lancer la lecture.'
 };
 let radioLastError = null;
+let radioNowPlayingInfo = '';
 
 let notesItems = [];
 let notesEditingNote = null;
@@ -7053,6 +7054,7 @@ function collectDomElements() {
   radioStationName: document.getElementById('radioStationName'),
   radioStationDetails: document.getElementById('radioStationDetails'),
   radioPlayerStatus: document.getElementById('radioPlayerStatus'),
+  radioNowPlaying: document.getElementById('radioNowPlaying'),
   radioStationLogo: document.getElementById('radioStationLogo'),
   notesPage: document.getElementById('notes'),
   notesRoot: document.getElementById('notesRoot'),
@@ -14809,6 +14811,26 @@ function setRadioPlayerStatus(key, fallback, params) {
   }
 }
 
+function formatRadioNowPlaying(payload) {
+  if (!payload) {
+    return '';
+  }
+  if (typeof payload === 'string') {
+    return payload.trim();
+  }
+  const title = typeof payload.title === 'string' ? payload.title.trim() : '';
+  const artist = typeof payload.artist === 'string' ? payload.artist.trim() : '';
+  if (artist && title) {
+    return `${artist} — ${title}`;
+  }
+  return artist || title;
+}
+
+function setRadioNowPlaying(payload) {
+  radioNowPlayingInfo = formatRadioNowPlaying(payload);
+  renderRadioPlayer();
+}
+
 function setRadioLoading(isLoading) {
   radioIsLoading = !!isLoading;
   if (elements?.radioSearchButton) {
@@ -14873,6 +14895,11 @@ function renderRadioPlayer() {
   if (elements.radioStationDetails) {
     const meta = hasStation ? formatRadioStationMeta(station) : '';
     elements.radioStationDetails.textContent = meta;
+  }
+  if (elements.radioNowPlaying) {
+    elements.radioNowPlaying.textContent = radioNowPlayingInfo || '';
+    elements.radioNowPlaying.hidden = !radioNowPlayingInfo;
+    elements.radioNowPlaying.title = radioNowPlayingInfo || '';
   }
   const favoriteLabel = hasStation && radioFavorites.has(station.id)
     ? translateOrDefault('index.sections.radio.actions.favoriteRemove', 'Retirer des favoris')
@@ -15337,6 +15364,7 @@ function selectRadioStation(station, options = {}) {
       stopRadioRecording({ silent: true });
     }
     radioSelectedStation = null;
+    setRadioNowPlaying(null);
     renderRadioPlayer();
     return;
   }
@@ -15344,6 +15372,7 @@ function selectRadioStation(station, options = {}) {
     stopRadioRecording({ silent: true });
   }
   radioSelectedStation = station;
+  setRadioNowPlaying(null);
   renderRadioPlayer();
   if (options.autoplay) {
     playSelectedRadioStation();
@@ -15527,6 +15556,7 @@ function stopRadioPlayback() {
     androidBridge.stopStream();
     setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
     stopAndroidRadioPlayback();
+    setRadioNowPlaying(null);
     return;
   }
   const audio = ensureRadioAudio();
@@ -15539,6 +15569,7 @@ function stopRadioPlayback() {
   audio.load();
   setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
   stopAndroidRadioPlayback();
+  setRadioNowPlaying(null);
 }
 
 function reloadRadioStream() {
@@ -15552,8 +15583,10 @@ function reloadRadioStream() {
     }
     androidBridge.playStream(radioSelectedStation.url, radioSelectedStation.name || '');
     setRadioPlayerStatus('index.sections.radio.player.status.playing', 'Lecture en cours');
+    setRadioNowPlaying(null);
     return;
   }
+  setRadioNowPlaying(null);
   playSelectedRadioStation({ forceReload: true });
 }
 
@@ -15616,13 +15649,29 @@ function handleAndroidRadioStateChange(state) {
   } else if (normalized === 'stopped') {
     setRadioPlayerStatus('index.sections.radio.player.status.stopped', 'Lecture arrêtée');
     stopAndroidRadioPlayback();
+    setRadioNowPlaying(null);
   } else if (normalized === 'error') {
     setRadioPlayerStatus('index.sections.radio.player.status.error', 'Impossible de lire le flux.');
     stopAndroidRadioPlayback();
+    setRadioNowPlaying(null);
   }
 }
 
 window.onAndroidRadioStateChanged = handleAndroidRadioStateChange;
+
+function handleAndroidRadioMetadataChange(payload) {
+  if (!payload) {
+    setRadioNowPlaying(null);
+    return;
+  }
+  const info = {
+    artist: typeof payload.artist === 'string' ? payload.artist : '',
+    title: typeof payload.title === 'string' ? payload.title : ''
+  };
+  setRadioNowPlaying(info);
+}
+
+window.onAndroidRadioMetadataChanged = handleAndroidRadioMetadataChange;
 
 window.onRadioRecordingChanged = isRecording => {
   const wasRecording = radioIsRecording;
