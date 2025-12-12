@@ -147,7 +147,8 @@ class Recorder(
 
     private fun createNewSegment(versionSnapshot: Long, metadataSnapshot: TrackMetadata?): RecordingSegment? {
         val resolver = context.contentResolver
-        val displayName = buildDisplayName(metadataSnapshot)
+        val timestampMs = System.currentTimeMillis()
+        val displayName = buildDisplayName(metadataSnapshot, timestampMs)
         val contentValues = buildContentValues(displayName)
         val targetUri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentValues)
         if (targetUri == null) {
@@ -168,8 +169,10 @@ class Recorder(
         return RecordingSegment(
             targetUri = targetUri,
             outputStream = outputStream,
-            startTimeMs = System.currentTimeMillis(),
+            startTimeMs = timestampMs,
             metadataVersion = versionSnapshot,
+            metadataSnapshot = metadataSnapshot,
+            initialDisplayName = displayName,
             bytesWritten = 0,
             wasSuccessful = false
         )
@@ -199,24 +202,54 @@ class Recorder(
                 resolver.delete(segment.targetUri, null)
             } catch (_: Exception) {
             }
+            return
+        }
+
+        val desiredMetadata = normalizeMetadata(latestMetadata) ?: segment.metadataSnapshot
+        val desiredDisplayName = buildDisplayName(desiredMetadata, segment.startTimeMs)
+        if (desiredDisplayName != segment.initialDisplayName) {
+            renameRecording(segment, desiredDisplayName)
         }
     }
 
-    private fun buildDisplayName(metadata: TrackMetadata?): String {
-        val base = buildBaseName(metadata)
+    private fun renameRecording(segment: RecordingSegment, newDisplayName: String) {
+        val resolver = context.contentResolver
+        val values = ContentValues().apply {
+            put(MediaStore.Audio.Media.DISPLAY_NAME, newDisplayName)
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            val targetDir = File(musicDir, "Atom2Univers")
+            val currentFile = File(targetDir, segment.initialDisplayName)
+            val renamedFile = File(targetDir, newDisplayName)
+
+            if (currentFile.exists() && currentFile.renameTo(renamedFile)) {
+                values.put(MediaStore.Audio.Media.DATA, renamedFile.absolutePath)
+            }
+        }
+
+        try {
+            resolver.update(segment.targetUri, values, null, null)
+        } catch (_: Exception) {
+        }
+    }
+
+    private fun buildDisplayName(metadata: TrackMetadata?, timestampMs: Long = System.currentTimeMillis()): String {
+        val base = buildBaseName(metadata, timestampMs)
         val safeBase = base.replace(ILLEGAL_FILENAME_CHARS.toRegex(), "_").trim('_').ifEmpty { "radio_record" }
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(timestampMs))
         return "${safeBase}_$timestamp.mp3"
     }
 
-    private fun buildBaseName(metadata: TrackMetadata?): String {
+    private fun buildBaseName(metadata: TrackMetadata?, timestampMs: Long = System.currentTimeMillis()): String {
         val normalized = normalizeMetadata(metadata)
         val artist = normalized?.artist
         val title = normalized?.title
         if (artist != null && title != null) {
             return "$artist - $title"
         }
-        return SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        return SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(timestampMs))
     }
 
     private fun normalizeMetadata(metadata: TrackMetadata?): TrackMetadata? {
@@ -253,6 +286,8 @@ class Recorder(
         val outputStream: OutputStream,
         val startTimeMs: Long,
         val metadataVersion: Long,
+        val metadataSnapshot: TrackMetadata?,
+        val initialDisplayName: String,
         var bytesWritten: Long,
         var wasSuccessful: Boolean
     )
