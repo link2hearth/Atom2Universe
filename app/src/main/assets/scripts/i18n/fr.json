@@ -250,6 +250,10 @@
             "bestTime": "Temps de survie",
             "timeUnit": "s"
           },
+          "reflex": {
+            "title": "Reflex",
+            "bestScore": "Meilleur score"
+          },
           "motocross": {
             "title": "Motocross",
             "distance": "Distance maximale",
@@ -673,6 +677,12 @@
             "title": "Jumping Cat",
             "description": "Faites bondir le chat entre les pylônes, esquivez les oiseaux géants et survivez le plus longtemps possible.",
             "cta": "Sauter"
+          },
+          "reflex": {
+            "aria": "Accéder au mini-jeu Reflex",
+            "title": "Reflex",
+            "description": "Cliquez sur le cercle dès qu’il apparaît pour marquer un maximum de points.",
+            "cta": "Réagir"
           },
           "quantum2048": {
             "aria": "Accéder au mini-jeu ObjectX",
@@ -2171,6 +2181,30 @@
           "bestScore": "Record",
           "bestTime": "Durée"
         }
+      },
+      "reflex": {
+        "aria": "Mini-jeu Reflex : touchez les cercles dès qu'ils apparaissent.",
+        "kicker": "Arcade",
+        "title": "Reflex",
+        "subtitle": "Cliquez sur le cercle dès qu’il apparaît pour gagner des points avant qu’ils ne s’accumulent.",
+        "controls": {
+          "aria": "Commandes Reflex",
+          "start": "Démarrer"
+        },
+        "stats": {
+          "score": "Score",
+          "best": "Record"
+        },
+        "hint": "Cliquez sur chaque cercle dès qu'il apparaît.",
+        "status": {
+          "ready": "Prêt ? Cliquez sur les cercles dès qu’ils apparaissent.",
+          "hit": "Touché ! +{points}",
+          "gameOver": "Partie terminée : {score} points",
+          "overload": "Trop de cercles : partie terminée.",
+          "newRecord": "Nouveau record !"
+        },
+        "targetAria": "Cible Reflex",
+        "playfieldAria": "Zone de jeu Reflex"
       },
       "metaux": {
         "aria": "Mini-jeu Métaux Mach3",
@@ -4788,6 +4822,9 @@
           "empty": "—"
         },
         "jumpingCat": {
+          "empty": "—"
+        },
+        "reflex": {
           "empty": "—"
         },
         "starsWar": {
