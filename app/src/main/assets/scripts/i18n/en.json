@@ -250,6 +250,10 @@
             "bestTime": "Survival time",
             "timeUnit": "s"
           },
+          "reflex": {
+            "title": "Reflex",
+            "bestScore": "Best score"
+          },
           "motocross": {
             "title": "Motocross",
             "distance": "Longest distance",
@@ -673,6 +677,12 @@
             "title": "Jumping Cat",
             "description": "Bounce the cat between pylons, dodge huge birds, and survive as long as you can.",
             "cta": "Jump in"
+          },
+          "reflex": {
+            "aria": "Open the Reflex mini-game",
+            "title": "Reflex",
+            "description": "Click the circle the moment it appears to stack up points.",
+            "cta": "React"
           },
           "quantum2048": {
             "aria": "Open the ObjectX mini-game",
@@ -2234,6 +2244,30 @@
           "bestScore": "Best",
           "bestTime": "Duration"
         }
+      },
+      "reflex": {
+        "aria": "Reflex mini-game: tap circles as soon as they appear.",
+        "kicker": "Arcade",
+        "title": "Reflex",
+        "subtitle": "Click the circle the instant it appears to bank points before the screen fills up.",
+        "controls": {
+          "aria": "Reflex controls",
+          "start": "Start"
+        },
+        "stats": {
+          "score": "Score",
+          "best": "Best"
+        },
+        "hint": "Click each circle as soon as it appears.",
+        "status": {
+          "ready": "Ready? Click the circles as soon as they pop up.",
+          "hit": "Hit! +{points}",
+          "gameOver": "Run over: {score} pts",
+          "overload": "Too many circles: run over.",
+          "newRecord": "New high score!"
+        },
+        "targetAria": "Reflex target",
+        "playfieldAria": "Reflex play area"
       },
       "metaux": {
         "aria": "Metals Match-3 mini-game",
@@ -4761,6 +4795,9 @@
           "empty": "—"
         },
         "jumpingCat": {
+          "empty": "—"
+        },
+        "reflex": {
           "empty": "—"
         },
         "starsWar": {

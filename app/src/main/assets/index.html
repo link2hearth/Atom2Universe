@@ -1888,6 +1888,48 @@
             Lâchez des orbes prismatiques sur un plateau néon et visez les multiplicateurs cosmiques.
           </p>
         </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Reflex"
+          aria-describedby="arcadeCardDescription-reflex"
+          data-card-id="reflex"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.reflex.aria"
+          data-page-target="reflex"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.reflex.title"
+            >Reflex</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-reflex"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-reflex"
+            data-i18n="index.sections.arcadeHub.cards.reflex.description"
+          >
+            Visez le cercle au plus vite pour accumuler des points.
+          </p>
+        </article>
       </div>
     </section>
 
@@ -2187,6 +2229,53 @@
             <span class="jumping-cat__record-value" id="jumpingCatBestTimeValue">—</span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="reflex"
+      class="page page--reflex"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Reflex : touchez les cercles dès qu'ils apparaissent."
+      data-i18n="aria-label:index.sections.reflex.aria"
+      hidden
+    >
+      <div class="reflex" data-reflex-root>
+        <div
+          class="reflex__controls"
+          role="group"
+          aria-label="Commandes Reflex"
+          data-i18n="aria-label:index.sections.reflex.controls.aria"
+        >
+          <button
+            type="button"
+            class="reflex__start-button"
+            id="reflexStartButton"
+            data-i18n="index.sections.reflex.controls.start"
+          >
+            Démarrer
+          </button>
+          <div class="reflex__stat-chip">
+            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.score">Score</span>
+            <span class="reflex__stat-value" id="reflexScoreValue">0</span>
+          </div>
+          <div class="reflex__stat-chip reflex__stat-chip--best">
+            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.best">Record</span>
+            <span class="reflex__stat-value" id="reflexBestScoreValue">—</span>
+          </div>
+        </div>
+        <p class="reflex__hint" id="reflexHint" data-i18n="index.sections.reflex.hint">
+          Cliquez sur chaque cercle dès qu'il apparaît.
+        </p>
+        <div
+          class="reflex__playfield"
+          id="reflexPlayfield"
+          aria-label="Zone de jeu Reflex"
+          data-i18n="aria-label:index.sections.reflex.playfieldAria"
+        >
+          <div class="reflex__layer" id="reflexTargetLayer"></div>
+        </div>
+        <p class="reflex__sr-status" id="reflexStatus" role="status" aria-live="polite"></p>
       </div>
     </section>
 
@@ -6352,6 +6441,21 @@
                 </div>
               </dl>
             </section>
+            <section class="info-progress-block info-progress-block--reflex" aria-labelledby="info-reflex-title">
+              <header class="info-progress-block__header">
+                <h4 id="info-reflex-title" data-i18n="index.sections.info.progress.reflex.title">Reflex</h4>
+              </header>
+              <dl class="info-metrics">
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.reflex.bestScore">Meilleur score</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoReflexBestScoreValue" class="info-metrics__value">—</span>
+                    </span>
+                  </dd>
+                </div>
+              </dl>
+            </section>
             <section class="info-progress-block info-progress-block--motocross" aria-labelledby="info-motocross-title">
               <header class="info-progress-block__header">
                 <h4 id="info-motocross-title" data-i18n="index.sections.info.progress.motocross.title">Motocross</h4>
@@ -9045,6 +9149,7 @@
   <script src="scripts/arcade/circles.js"></script>
   <script src="scripts/arcade/stars-war.js"></script>
   <script src="scripts/arcade/jumping-cat.js"></script>
+  <script src="scripts/arcade/reflex.js"></script>
   <script src="scripts/arcade/motocross.js"></script>
   <script src="scripts/arcade/sokoban.js"></script>
   <script src="scripts/arcade/taquin.js"></script>
