@@ -11,8 +11,13 @@
   flex-direction: column;
   width: 100%;
   max-width: none;
-  padding: 0;
+  padding: calc(var(--app-header-offset) + clamp(12px, 3vw, 24px))
+    clamp(12px, 3vw, 24px)
+    clamp(16px, 3vw, 28px);
   min-height: 100vh;
+  box-sizing: border-box;
+  overflow: auto;
+  touch-action: auto;
 }
 
 .page--reflex.active {
@@ -24,7 +29,7 @@
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: clamp(12px, 3vw, 24px);
+  padding: clamp(8px, 2.5vw, 18px) 0 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
