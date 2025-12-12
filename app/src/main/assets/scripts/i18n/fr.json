@@ -533,6 +533,10 @@
       "notes": {
         "title": "Notes",
         "subtitle": "Créez, éditez et supprimez vos fichiers texte ou Markdown sauvegardés dans Documents/Atom2Univers.",
+        "selector": {
+          "label": "Vos notes",
+          "placeholder": "Sélectionnez une note"
+        },
         "actions": {
           "new": "Nouvelle note",
           "refresh": "Actualiser",

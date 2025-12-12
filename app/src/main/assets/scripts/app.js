@@ -7059,10 +7059,10 @@ function collectDomElements() {
   notesPage: document.getElementById('notes'),
   notesRoot: document.getElementById('notesRoot'),
   notesStatus: document.getElementById('notesStatus'),
-  notesList: document.getElementById('notesList'),
-  notesEmptyState: document.getElementById('notesEmptyState'),
+  notesPicker: document.getElementById('notesPicker'),
   notesNewButton: document.getElementById('notesNewButton'),
   notesRefreshButton: document.getElementById('notesRefreshButton'),
+  notesDeleteButton: document.getElementById('notesDeleteButton'),
   notesTitleInput: document.getElementById('notesTitleInput'),
   notesFormatSelect: document.getElementById('notesFormatSelect'),
   notesFontSelect: document.getElementById('notesFontSelect'),
@@ -15917,6 +15917,10 @@ function updateNotesControlsAvailability() {
       target.disabled = disableActions;
     }
   });
+  if (elements?.notesDeleteButton) {
+    const hasSelection = !!elements?.notesPicker?.value;
+    elements.notesDeleteButton.disabled = disableActions || !hasSelection;
+  }
   const fields = [
     elements?.notesTitleInput,
     elements?.notesFormatSelect,
@@ -15931,6 +15935,10 @@ function updateNotesControlsAvailability() {
       field.disabled = !supported;
     }
   });
+  if (elements?.notesPicker) {
+    const hasItems = Array.isArray(notesItems) && notesItems.length > 0;
+    elements.notesPicker.disabled = notesBusy || !supported || !hasItems;
+  }
 }
 
 function setNotesBusyState(isBusy) {
@@ -16071,71 +16079,49 @@ function handleNotesStyleChange() {
 }
 
 function renderNotesList() {
-  if (!elements?.notesList) {
+  if (!elements?.notesPicker) {
     return;
   }
-  elements.notesList.innerHTML = '';
   const hasItems = Array.isArray(notesItems) && notesItems.length > 0;
-  if (elements.notesEmptyState) {
-    elements.notesEmptyState.hidden = hasItems;
-  }
+  const previousSelection = elements.notesPicker.value;
+  elements.notesPicker.innerHTML = '';
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = translateOrDefault(
+    'index.sections.notes.selector.placeholder',
+    'Sélectionnez une note'
+  );
+  elements.notesPicker.appendChild(placeholder);
+  elements.notesPicker.disabled = !hasItems;
+
   if (!hasItems) {
+    updateNotesControlsAvailability();
     return;
   }
+
   notesItems.forEach(note => {
-    const listItem = document.createElement('li');
-    listItem.className = 'notes-list__item';
-
-    const info = document.createElement('div');
-    info.className = 'notes-list__info';
-
-    const title = document.createElement('p');
-    title.className = 'notes-list__name';
-    title.textContent = note.name;
-    info.appendChild(title);
-
-    const meta = document.createElement('p');
-    meta.className = 'notes-list__meta';
+    const option = document.createElement('option');
+    option.value = note.name;
+    option.textContent = note.name;
     const extension = note.name.includes('.') ? note.name.split('.').pop() : 'txt';
     const dateLabel = note.updatedAt ? formatNoteDate(note.updatedAt) : '';
-    meta.textContent = translateOrDefault(
-      'index.sections.notes.list.meta',
-      `${extension} · Mis à jour ${dateLabel}`,
-      { extension, date: dateLabel }
-    );
-    info.appendChild(meta);
-
-    const actions = document.createElement('div');
-    actions.className = 'notes-list__actions';
-
-    const editButton = document.createElement('button');
-    editButton.type = 'button';
-    editButton.className = 'notes-list__button';
-    editButton.textContent = translateOrDefault(
-      'index.sections.notes.actions.edit',
-      'Éditer'
-    );
-    editButton.addEventListener('click', () => {
-      openNote(note);
-    });
-    actions.appendChild(editButton);
-
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.className = 'notes-list__button notes-list__button--danger';
-    deleteButton.textContent = translateOrDefault(
-      'index.sections.notes.actions.delete',
-      'Supprimer'
-    );
-    deleteButton.addEventListener('click', () => {
-      handleDeleteNote(note);
-    });
-    actions.appendChild(deleteButton);
-
-    listItem.appendChild(info);
-    listItem.appendChild(actions);
-    elements.notesList.appendChild(listItem);
+    if (dateLabel) {
+      option.title = translateOrDefault(
+        'index.sections.notes.list.meta',
+        `${extension} · Mis à jour ${dateLabel}`,
+        { extension, date: dateLabel }
+      );
+    }
+    elements.notesPicker.appendChild(option);
   });
+
+  const preferredSelection = notesEditingNote?.name || previousSelection;
+  if (preferredSelection && notesItems.some(item => item?.name === preferredSelection)) {
+    elements.notesPicker.value = preferredSelection;
+  }
+
+  updateNotesControlsAvailability();
 }
 
 function startNewNote() {
@@ -16148,8 +16134,12 @@ function startNewNote() {
   if (elements?.notesContent) {
     elements.notesContent.value = '';
   }
+  if (elements?.notesPicker) {
+    elements.notesPicker.value = '';
+  }
   notesEditingNote = null;
   setNotesStatus('index.sections.notes.status.new', 'Nouvelle note prête à être écrite.');
+  updateNotesControlsAvailability();
 }
 
 function refreshNotesList(options = {}) {
@@ -16227,6 +16217,9 @@ function openNote(note) {
     }
     if (elements?.notesContent) {
       elements.notesContent.value = content;
+    }
+    if (elements?.notesPicker) {
+      elements.notesPicker.value = target.name;
     }
     notesEditingNote = { ...target };
     setNotesStatus(
@@ -22378,6 +22371,27 @@ function bindDomEventListeners() {
   }
   if (elements.notesRefreshButton) {
     elements.notesRefreshButton.addEventListener('click', () => refreshNotesList());
+  }
+  if (elements.notesPicker) {
+    elements.notesPicker.addEventListener('change', event => {
+      const selectedName = event?.target?.value || '';
+      const selectedNote = notesItems.find(item => item?.name === selectedName);
+      if (selectedNote) {
+        openNote(selectedNote);
+      } else if (!selectedName) {
+        startNewNote();
+      }
+      updateNotesControlsAvailability();
+    });
+  }
+  if (elements.notesDeleteButton) {
+    elements.notesDeleteButton.addEventListener('click', () => {
+      const selectedName = elements?.notesPicker?.value;
+      const target = notesItems.find(item => item?.name === selectedName);
+      if (target) {
+        handleDeleteNote(target);
+      }
+    });
   }
   if (elements.notesSaveButton) {
     elements.notesSaveButton.addEventListener('click', event => {

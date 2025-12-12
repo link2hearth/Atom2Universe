@@ -533,6 +533,10 @@
       "notes": {
         "title": "Notes",
         "subtitle": "Create, edit, and delete text or Markdown files saved in Documents/Atom2Univers.",
+        "selector": {
+          "label": "Your notes",
+          "placeholder": "Select a note"
+        },
         "actions": {
           "new": "New note",
           "refresh": "Refresh",
