@@ -947,6 +947,12 @@ function awardPermanentBonusGachaImage(imageId, options = null) {
     entry.acquiredOrder = counter;
     gameState.gachaBonusImageAcquisitionCounter = counter;
   }
+  if (typeof updateCollectionBonusImagesVisibility === 'function') {
+    updateCollectionBonusImagesVisibility();
+  }
+  if (typeof updateCollectionBonus2ImagesVisibility === 'function') {
+    updateCollectionBonus2ImagesVisibility();
+  }
   const label = resolveBonusGachaImageLabel(imageId);
   return {
     cardId: imageId,
