@@ -3066,6 +3066,88 @@ function updateJumpingCatStats() {
   }
 }
 
+function normalizeReflexRecord(record) {
+  if (!record || typeof record !== 'object') {
+    return { bestScore: 0 };
+  }
+  return {
+    bestScore: toNonNegativeInteger(record.bestScore ?? record.score ?? 0)
+  };
+}
+
+function hasReflexRecord(record) {
+  return Boolean(record && record.bestScore > 0);
+}
+
+function getReflexAutosaveStats() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const api = window.ArcadeAutosave;
+  if (!api || typeof api.get !== 'function') {
+    return null;
+  }
+  try {
+    const raw = api.get('reflex');
+    return normalizeReflexRecord(raw);
+  } catch (error) {
+    return null;
+  }
+}
+
+function syncReflexProgressEntry(record) {
+  if (!hasReflexRecord(record) || typeof gameState !== 'object') {
+    return;
+  }
+  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+    gameState.arcadeProgress = { version: 1, entries: {} };
+  }
+  if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
+    gameState.arcadeProgress.entries = {};
+  }
+  gameState.arcadeProgress.entries.reflex = {
+    state: { bestScore: record.bestScore },
+    updatedAt: Date.now()
+  };
+  const persistSave = typeof saveGame === 'function'
+    ? saveGame
+    : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
+      ? window.saveGame
+      : null);
+  if (typeof persistSave === 'function') {
+    persistSave();
+  }
+}
+
+function getReflexProgressStats() {
+  const progress = gameState.arcadeProgress;
+  const entries = progress && typeof progress === 'object' && progress.entries && typeof progress.entries === 'object'
+    ? progress.entries
+    : {};
+  const entry = entries.reflex || null;
+  const state = entry && typeof entry === 'object' ? (entry.state && typeof entry.state === 'object' ? entry.state : entry) : null;
+  const normalized = normalizeReflexRecord(state);
+  if (hasReflexRecord(normalized)) {
+    return normalized;
+  }
+  const autosave = getReflexAutosaveStats();
+  if (hasReflexRecord(autosave)) {
+    syncReflexProgressEntry(autosave);
+    return autosave;
+  }
+  return normalized;
+}
+
+function updateReflexStats() {
+  const stats = getReflexProgressStats();
+  const emptyValue = translateOrDefault('scripts.info.progress.reflex.empty', '—');
+  if (elements.infoReflexBestScoreValue) {
+    elements.infoReflexBestScoreValue.textContent = stats.bestScore > 0
+      ? formatIntegerLocalized(stats.bestScore)
+      : emptyValue;
+  }
+}
+
 const STARS_WAR_DIFFICULTY_MODES = Object.freeze({ hard: 'hard', easy: 'easy' });
 const STARS_WAR_AUTOSAVE_KEY = 'starsWar';
 
@@ -3418,6 +3500,7 @@ function updateGlobalStats() {
 
   updatePhotonStats();
   updateJumpingCatStats();
+  updateReflexStats();
   updateMotocrossStats();
   updateStarsWarStats();
   updateFrenzyHighscores(global);
@@ -3463,6 +3546,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('arcadeAutosaveSync', () => {
     updatePhotonStats();
     updateJumpingCatStats();
+    updateReflexStats();
     updateStarsWarStats();
     updateMotocrossStats();
   });

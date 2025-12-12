@@ -10,6 +10,7 @@
     'starBridges',
     'pipeTap',
     'colorStack',
+    'reflex',
     'motocross',
     'jumpingCat',
     'sokoban',

@@ -431,6 +431,7 @@ const CRYPTO_WIDGET_PLACEHOLDER = '---';
     starBridges: 'arcade.starBridges',
     starsWar: 'arcade.starsWar',
     jumpingCat: 'arcade.jumpingCat',
+    reflex: 'arcade.reflex',
     pipeTap: 'arcade.pipeTap',
     colorStack: 'arcade.colorStack',
     motocross: 'arcade.motocross',
@@ -4621,6 +4622,7 @@ const ARCADE_GAME_IDS = Object.freeze([
   'wave',
   'starsWar',
   'jumpingCat',
+  'reflex',
   'quantum2048',
   'bigger',
   'math',
@@ -6933,6 +6935,7 @@ function collectDomElements() {
   infoStarsWarEasyValue: document.getElementById('infoStarsWarEasyValue'),
   infoJumpingCatScoreValue: document.getElementById('infoJumpingCatScoreValue'),
   infoJumpingCatTimeValue: document.getElementById('infoJumpingCatTimeValue'),
+  infoReflexBestScoreValue: document.getElementById('infoReflexBestScoreValue'),
   infoMotocrossDistanceValue: document.getElementById('infoMotocrossDistanceValue'),
   infoMotocrossSpeedValue: document.getElementById('infoMotocrossSpeedValue'),
   infoFrenzyHighscoreSingle: document.getElementById('infoFrenzyHighscoreSingle'),
@@ -8383,6 +8386,17 @@ function ensureJumpingCatGame() {
   if (window.jumpingCatArcade && typeof window.jumpingCatArcade === 'object') {
     jumpingCatGame = window.jumpingCatArcade;
     return jumpingCatGame;
+  }
+  return null;
+}
+
+function ensureReflexGame() {
+  if (reflexGame && typeof reflexGame === 'object') {
+    return reflexGame;
+  }
+  if (window.reflexArcade && typeof window.reflexArcade === 'object') {
+    reflexGame = window.reflexArcade;
+    return reflexGame;
   }
   return null;
 }
@@ -19647,6 +19661,7 @@ let escapeGame = null;
 let starBridgesGame = null;
 let starsWarGame = null;
 let jumpingCatGame = null;
+let reflexGame = null;
 let pipeTapGame = null;
 let colorStackGame = null;
 let motocrossGame = null;
@@ -21515,6 +21530,9 @@ function showPage(pageId) {
   if (pageId === 'jumpingCat') {
     ensureJumpingCatGame();
   }
+  if (pageId === 'reflex') {
+    ensureReflexGame();
+  }
   if (pageId === 'pipeTap') {
     ensurePipeTapGame();
   }
@@ -21577,6 +21595,7 @@ function showPage(pageId) {
   document.body.classList.toggle('view-star-bridges', pageId === 'starBridges');
   document.body.classList.toggle('view-stars-war', pageId === 'starsWar');
   document.body.classList.toggle('view-jumping-cat', pageId === 'jumpingCat');
+  document.body.classList.toggle('view-reflex', pageId === 'reflex');
   document.body.classList.toggle('view-pipe-tap', pageId === 'pipeTap');
   document.body.classList.toggle('view-color-stack', pageId === 'colorStack');
   document.body.classList.toggle('view-motocross', pageId === 'motocross');
@@ -21673,6 +21692,14 @@ function showPage(pageId) {
       jumpingCat.onEnter?.();
     } else {
       jumpingCat.onLeave?.();
+    }
+  }
+  const reflex = ensureReflexGame();
+  if (reflex) {
+    if (pageId === 'reflex') {
+      reflex.onEnter?.();
+    } else {
+      reflex.onLeave?.();
     }
   }
   const pipeTap = ensurePipeTapGame();
@@ -21814,6 +21841,10 @@ document.addEventListener('visibilitychange', () => {
     if (jumpingCatInstance && activePage === 'jumpingCat') {
       jumpingCatInstance.onLeave?.();
     }
+    const reflexInstance = ensureReflexGame();
+    if (reflexInstance && activePage === 'reflex') {
+      reflexInstance.onLeave?.();
+    }
     const pipeTap = ensurePipeTapGame();
     if (pipeTap && activePage === 'pipeTap') {
       pipeTap.onLeave?.();
@@ -21889,6 +21920,10 @@ document.addEventListener('visibilitychange', () => {
   if (activePage === 'jumpingCat') {
     const jumpingCatInstance = ensureJumpingCatGame();
     jumpingCatInstance?.onEnter?.();
+  }
+  if (activePage === 'reflex') {
+    const reflexInstance = ensureReflexGame();
+    reflexInstance?.onEnter?.();
   }
   if (activePage === 'pipeTap') {
     const pipeTap = ensurePipeTapGame();
