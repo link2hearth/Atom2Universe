@@ -21,6 +21,7 @@ class RadioBridge(
     private val recorder = Recorder(activity.applicationContext, scope)
     private var currentStreamUrl: String? = null
     private var latestMetadata: TrackMetadata? = null
+    private var currentStationName: String? = null
 
     init {
         player.addListener(object : Player.Listener {
@@ -43,7 +44,8 @@ class RadioBridge(
         }
 
         currentStreamUrl = streamUrl
-        latestMetadata = null
+        currentStationName = name?.takeIf { it.isNotBlank() }
+        latestMetadata = TrackMetadata(null, null, currentStationName)
         activity.runOnUiThread {
             try {
                 val mediaItem = MediaItem.fromUri(streamUrl)
@@ -125,12 +127,9 @@ class RadioBridge(
         val artist = mediaMetadata?.artist?.toString()?.takeIf { it.isNotBlank() }
             ?: mediaMetadata?.albumArtist?.toString()?.takeIf { it.isNotBlank() }
         val title = mediaMetadata?.title?.toString()?.takeIf { it.isNotBlank() }
+        val station = currentStationName
 
-        latestMetadata = if (artist != null || title != null) {
-            TrackMetadata(artist, title)
-        } else {
-            null
-        }
+        latestMetadata = TrackMetadata(artist, title, station)
 
         val json = JSONObject()
         artist?.let { json.put("artist", it) }

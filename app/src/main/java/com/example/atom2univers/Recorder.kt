@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-data class TrackMetadata(val artist: String?, val title: String?)
+data class TrackMetadata(val artist: String?, val title: String?, val station: String?)
 
 class Recorder(
     private val context: Context,
@@ -311,8 +311,9 @@ class Recorder(
         val normalized = normalizeMetadata(metadata)
         val artist = normalized?.artist ?: "Unknown artist"
         val title = normalized?.title ?: "Unknown title"
+        val station = normalized?.station ?: "Unknown station"
         val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(timestampMs))
-        return "Recorded at: $timestamp\nArtist: $artist\nTitle: $title\n"
+        return "Recorded at: $timestamp\nArtist: $artist\nTitle: $title\nStation: $station\n"
     }
 
     private fun createOrUpdateSidecar(
@@ -416,19 +417,24 @@ class Recorder(
         val normalized = normalizeMetadata(metadata)
         val artist = normalized?.artist
         val title = normalized?.title
-        if (artist != null && title != null) {
-            return "$artist - $title"
+        val station = normalized?.station
+        return when {
+            artist != null && title != null -> "$artist - $title"
+            station != null && title != null -> "$station - $title"
+            station != null -> station
+            title != null -> title
+            else -> SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(timestampMs))
         }
-        return SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(timestampMs))
     }
 
     private fun normalizeMetadata(metadata: TrackMetadata?): TrackMetadata? {
         val artist = metadata?.artist?.trim()?.takeIf { it.isNotEmpty() }
         val title = metadata?.title?.trim()?.takeIf { it.isNotEmpty() }
-        if (artist == null && title == null) {
+        val station = metadata?.station?.trim()?.takeIf { it.isNotEmpty() }
+        if (artist == null && title == null && station == null) {
             return null
         }
-        return TrackMetadata(artist, title)
+        return TrackMetadata(artist, title, station)
     }
 
     private fun buildContentValues(displayName: String): ContentValues {
