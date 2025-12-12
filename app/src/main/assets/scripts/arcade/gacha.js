@@ -576,6 +576,22 @@ function ensureGachaBonusImageCollection() {
   return gameState.gachaBonusImages;
 }
 
+function getOwnedBonusGachaImageCount(imageId) {
+  if (!imageId) {
+    return 0;
+  }
+  const bonusCollection = ensureGachaBonusImageCollection();
+  const bonusEntry = bonusCollection[imageId];
+  const bonusCount = Number(bonusEntry?.count ?? bonusEntry);
+  if (Number.isFinite(bonusCount) && bonusCount > 0) {
+    return bonusCount;
+  }
+  const imageCollection = ensureGachaImageCollection();
+  const legacyEntry = imageCollection[imageId];
+  const legacyCount = Number(legacyEntry?.count ?? legacyEntry);
+  return Number.isFinite(legacyCount) && legacyCount > 0 ? legacyCount : 0;
+}
+
 function ensureCollectionVideoCollection() {
   if (!gameState.collectionVideos || typeof gameState.collectionVideos !== 'object') {
     if (typeof createInitialCollectionVideoCollection === 'function') {
@@ -755,13 +771,11 @@ function isPrimaryBonusImageCollectionCompleteForGacha() {
   if (!Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
     return false;
   }
-  const collection = ensureGachaBonusImageCollection();
   return GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.every(def => {
     if (!def || !def.id) {
       return true;
     }
-    const entry = collection[def.id];
-    const count = Number(entry?.count ?? entry);
+    const count = getOwnedBonusGachaImageCount(def.id);
     return Number.isFinite(count) && count > 0;
   });
 }
@@ -783,15 +797,11 @@ function getAvailablePermanentBonusGachaImageIds() {
   if (!BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.length) {
     return [];
   }
-  const collection = ensureGachaBonusImageCollection();
   return BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.filter(imageId => {
     if (isBonusGachaImageMarkedMissing(imageId)) {
       return false;
     }
-    const stored = collection[imageId];
-    const rawCount = Number.isFinite(Number(stored?.count ?? stored))
-      ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
-      : 0;
+    const rawCount = Math.max(0, Math.floor(getOwnedBonusGachaImageCount(imageId)));
     return rawCount <= 0;
   });
 }
@@ -807,15 +817,11 @@ function getAvailableSecondaryPermanentBonusGachaImageIds() {
   if (!BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.length) {
     return [];
   }
-  const collection = ensureGachaBonusImageCollection();
   return BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.filter(imageId => {
     if (isBonusGachaImageMarkedMissing(imageId)) {
       return false;
     }
-    const stored = collection[imageId];
-    const rawCount = Number.isFinite(Number(stored?.count ?? stored))
-      ? Math.max(0, Math.floor(Number(stored?.count ?? stored)))
-      : 0;
+    const rawCount = Math.max(0, Math.floor(getOwnedBonusGachaImageCount(imageId)));
     return rawCount <= 0;
   });
 }
@@ -946,6 +952,12 @@ function awardPermanentBonusGachaImage(imageId, options = null) {
     counter = Math.floor(counter) + 1;
     entry.acquiredOrder = counter;
     gameState.gachaBonusImageAcquisitionCounter = counter;
+  }
+  if (typeof updateCollectionBonusImagesVisibility === 'function') {
+    updateCollectionBonusImagesVisibility();
+  }
+  if (typeof updateCollectionBonus2ImagesVisibility === 'function') {
+    updateCollectionBonus2ImagesVisibility();
   }
   const label = resolveBonusGachaImageLabel(imageId);
   return {
