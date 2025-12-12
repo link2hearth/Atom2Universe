@@ -8577,7 +8577,9 @@ function updateCollectionBonusImagesVisibility() {
   if (!elements.collectionBonusImagesCard) {
     return;
   }
-  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection');
+  const unlocked = isCollectionFeatureEnabled()
+    && isPageUnlocked('collection')
+    && hasOwnedGachaBonusImages();
   elements.collectionBonusImagesCard.hidden = !unlocked;
   elements.collectionBonusImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
