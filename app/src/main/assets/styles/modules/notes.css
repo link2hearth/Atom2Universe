@@ -5,6 +5,29 @@
   padding: 16px;
 }
 
+.notes__toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.notes-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 clamp(260px, 50vw, 1200px);
+}
+
+.notes-picker label {
+  font-weight: 600;
+  color: #e6e9f5;
+}
+
+.notes-picker select {
+  width: 100%;
+}
+
 .notes__header {
   display: flex;
   justify-content: space-between;
@@ -264,8 +287,18 @@
 
 .notes-field__group {
   display: grid;
-  grid-template-columns: 1fr 90px;
+  grid-template-columns: minmax(0, 1fr) 90px;
   gap: 10px;
+  align-items: center;
+}
+
+.notes-field--filename {
+  max-width: 560px;
+  width: 100%;
+}
+
+.notes-field--filename .notes-field__group {
+  max-width: 100%;
 }
 
 .notes-field--inline {
