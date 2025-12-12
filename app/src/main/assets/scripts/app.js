@@ -8628,7 +8628,7 @@ function updateCollectionBonus2ImagesVisibility() {
   }
   const unlocked = isCollectionFeatureEnabled()
     && isPageUnlocked('collection')
-    && isSecondaryBonusImageCollectionUnlocked();
+    && (isSecondaryBonusImageCollectionUnlocked() || hasOwnedGachaBonus2Images());
   elements.collectionBonus2ImagesCard.hidden = !unlocked;
   elements.collectionBonus2ImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
