@@ -5279,7 +5279,25 @@ function hasOwnedGachaImages() {
 }
 
 function hasOwnedGachaBonusImages() {
-  return Object.values(gameState.gachaBonusImages || {}).some(entry => {
+  const bonusEntries = Object.entries(gameState.gachaBonusImages || {});
+  if (bonusEntries.some(([, entry]) => {
+    const count = Number(entry?.count ?? entry);
+    return Number.isFinite(count) && count > 0;
+  })) {
+    return true;
+  }
+  const definitions = new Map([
+    ...(Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+      ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+      : []),
+    ...(Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+      ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+      : [])
+  ]);
+  return Object.entries(gameState.gachaImages || {}).some(([imageId, entry]) => {
+    if (!definitions.has(imageId)) {
+      return false;
+    }
     const count = Number(entry?.count ?? entry);
     return Number.isFinite(count) && count > 0;
   });
@@ -5306,6 +5324,9 @@ function getBonusImageCollectionTotals(collectionId = 'primary') {
   const collection = gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object'
     ? gameState.gachaBonusImages
     : {};
+  const legacyImages = gameState.gachaImages && typeof gameState.gachaImages === 'object'
+    ? gameState.gachaImages
+    : {};
   let total = 0;
   let owned = 0;
   if (Array.isArray(definitions)) {
@@ -5316,7 +5337,10 @@ function getBonusImageCollectionTotals(collectionId = 'primary') {
       total += 1;
       const entry = collection[def.id];
       const count = Number(entry?.count ?? entry);
-      if (Number.isFinite(count) && count > 0) {
+      const legacyEntry = legacyImages[def.id];
+      const legacyCount = Number(legacyEntry?.count ?? legacyEntry);
+      if ((Number.isFinite(count) && count > 0)
+        || (Number.isFinite(legacyCount) && legacyCount > 0)) {
         owned += 1;
       }
     });
