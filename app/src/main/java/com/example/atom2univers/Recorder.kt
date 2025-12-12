@@ -147,7 +147,8 @@ class Recorder(
 
     private fun createNewSegment(versionSnapshot: Long, metadataSnapshot: TrackMetadata?): RecordingSegment? {
         val resolver = context.contentResolver
-        val displayName = buildDisplayName(metadataSnapshot)
+        val timestampMs = System.currentTimeMillis()
+        val displayName = buildDisplayName(metadataSnapshot, timestampMs)
         val contentValues = buildContentValues(displayName)
         val targetUri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentValues)
         if (targetUri == null) {
@@ -165,11 +166,19 @@ class Recorder(
             return null
         }
 
+        val sidecarDisplayName = buildSidecarName(displayName)
+        val sidecarUri = createOrUpdateSidecar(sidecarDisplayName, metadataSnapshot, timestampMs)
+
         return RecordingSegment(
             targetUri = targetUri,
             outputStream = outputStream,
-            startTimeMs = System.currentTimeMillis(),
+            startTimeMs = timestampMs,
             metadataVersion = versionSnapshot,
+            metadataSnapshot = metadataSnapshot,
+            initialDisplayName = displayName,
+            sidecarUri = sidecarUri,
+            sidecarDisplayName = sidecarDisplayName,
+            usesLegacyStorage = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q,
             bytesWritten = 0,
             wasSuccessful = false
         )
@@ -199,24 +208,218 @@ class Recorder(
                 resolver.delete(segment.targetUri, null)
             } catch (_: Exception) {
             }
+            deleteSidecar(segment)
+            return
+        }
+
+        val desiredMetadata = normalizeMetadata(latestMetadata) ?: segment.metadataSnapshot
+        val desiredDisplayName = buildDisplayName(desiredMetadata, segment.startTimeMs)
+        val desiredSidecarName = buildSidecarName(desiredDisplayName)
+        updateSidecarContent(segment, desiredMetadata)
+        if (desiredDisplayName != segment.initialDisplayName) {
+            renameRecording(segment, desiredDisplayName)
+            renameSidecar(segment, desiredSidecarName)
         }
     }
 
-    private fun buildDisplayName(metadata: TrackMetadata?): String {
-        val base = buildBaseName(metadata)
+    private fun renameRecording(segment: RecordingSegment, newDisplayName: String) {
+        val resolver = context.contentResolver
+        val values = ContentValues().apply {
+            put(MediaStore.Audio.Media.DISPLAY_NAME, newDisplayName)
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            val targetDir = File(musicDir, "Atom2Univers")
+            val currentFile = File(targetDir, segment.initialDisplayName)
+            val renamedFile = File(targetDir, newDisplayName)
+
+            if (currentFile.exists() && currentFile.renameTo(renamedFile)) {
+                values.put(MediaStore.Audio.Media.DATA, renamedFile.absolutePath)
+            }
+        }
+
+        try {
+            resolver.update(segment.targetUri, values, null, null)
+        } catch (_: Exception) {
+        }
+    }
+
+    private fun renameSidecar(segment: RecordingSegment, newDisplayName: String) {
+        val resolver = context.contentResolver
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, newDisplayName)
+        }
+
+        if (segment.usesLegacyStorage) {
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            val targetDir = File(musicDir, "Atom2Univers")
+            val currentFile = File(targetDir, segment.sidecarDisplayName)
+            val renamedFile = File(targetDir, newDisplayName)
+
+            if (currentFile.exists() && currentFile.renameTo(renamedFile)) {
+                values.put(MediaStore.MediaColumns.DATA, renamedFile.absolutePath)
+            }
+        }
+
+        segment.sidecarUri?.let {
+            try {
+                resolver.update(it, values, null, null)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    private fun updateSidecarContent(segment: RecordingSegment, metadata: TrackMetadata?) {
+        val metadataText = buildMetadataText(metadata, segment.startTimeMs)
+        if (segment.usesLegacyStorage) {
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            val targetDir = File(musicDir, "Atom2Univers")
+            val sidecarFile = File(targetDir, segment.sidecarDisplayName)
+            try {
+                sidecarFile.parentFile?.mkdirs()
+                sidecarFile.writeText(metadataText)
+            } catch (_: Exception) {
+            }
+            return
+        }
+
+        val uri = segment.sidecarUri ?: return
+        try {
+            context.contentResolver.openOutputStream(uri, "wt")?.use { output ->
+                output.writer().use { writer ->
+                    writer.write(metadataText)
+                }
+            }
+        } catch (_: Exception) {
+        }
+    }
+
+    private fun buildDisplayName(metadata: TrackMetadata?, timestampMs: Long = System.currentTimeMillis()): String {
+        val base = buildBaseName(metadata, timestampMs)
         val safeBase = base.replace(ILLEGAL_FILENAME_CHARS.toRegex(), "_").trim('_').ifEmpty { "radio_record" }
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(timestampMs))
         return "${safeBase}_$timestamp.mp3"
     }
 
-    private fun buildBaseName(metadata: TrackMetadata?): String {
+    private fun buildSidecarName(displayName: String): String {
+        val base = displayName.substringBeforeLast('.')
+        return "$base.txt"
+    }
+
+    private fun buildMetadataText(metadata: TrackMetadata?, timestampMs: Long): String {
+        val normalized = normalizeMetadata(metadata)
+        val artist = normalized?.artist ?: "Unknown artist"
+        val title = normalized?.title ?: "Unknown title"
+        val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(timestampMs))
+        return "Recorded at: $timestamp\nArtist: $artist\nTitle: $title\n"
+    }
+
+    private fun createOrUpdateSidecar(
+        displayName: String,
+        metadata: TrackMetadata?,
+        timestampMs: Long
+    ): Uri? {
+        val resolver = context.contentResolver
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
+        }
+
+        val isLegacy = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+        val sidecarFile = if (isLegacy) {
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            val targetDir = File(musicDir, "Atom2Univers")
+            if (!targetDir.exists()) {
+                targetDir.mkdirs()
+            }
+            File(targetDir, displayName).also { file ->
+                values.put(MediaStore.MediaColumns.DATA, file.absolutePath)
+            }
+        } else {
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_MUSIC}/Atom2Univers")
+            values.put(MediaStore.MediaColumns.IS_PENDING, 1)
+            null
+        }
+
+        val filesUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Files.getContentUri("external")
+        }
+
+        val createdUri = try {
+            resolver.insert(filesUri, values)
+        } catch (_: Exception) {
+            null
+        }
+
+        val metadataText = buildMetadataText(metadata, timestampMs)
+        if (createdUri != null) {
+            try {
+                resolver.openOutputStream(createdUri, "wt")?.use { stream ->
+                    stream.writer().use { writer ->
+                        writer.write(metadataText)
+                    }
+                }
+            } catch (_: Exception) {
+                try {
+                    resolver.delete(createdUri, null)
+                } catch (_: Exception) {
+                }
+                return null
+            }
+
+            if (!isLegacy) {
+                val doneValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.IS_PENDING, 0)
+                }
+                try {
+                    resolver.update(createdUri, doneValues, null, null)
+                } catch (_: Exception) {
+                }
+            }
+            return createdUri
+        }
+
+        if (sidecarFile != null) {
+            try {
+                sidecarFile.writeText(metadataText)
+            } catch (_: Exception) {
+            }
+        }
+        return null
+    }
+
+    private fun deleteSidecar(segment: RecordingSegment) {
+        if (segment.usesLegacyStorage) {
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            val targetDir = File(musicDir, "Atom2Univers")
+            val sidecarFile = File(targetDir, segment.sidecarDisplayName)
+            if (sidecarFile.exists()) {
+                try {
+                    sidecarFile.delete()
+                } catch (_: Exception) {
+                }
+            }
+        }
+
+        segment.sidecarUri?.let {
+            try {
+                context.contentResolver.delete(it, null, null)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    private fun buildBaseName(metadata: TrackMetadata?, timestampMs: Long = System.currentTimeMillis()): String {
         val normalized = normalizeMetadata(metadata)
         val artist = normalized?.artist
         val title = normalized?.title
         if (artist != null && title != null) {
             return "$artist - $title"
         }
-        return SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        return SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(timestampMs))
     }
 
     private fun normalizeMetadata(metadata: TrackMetadata?): TrackMetadata? {
@@ -253,6 +456,11 @@ class Recorder(
         val outputStream: OutputStream,
         val startTimeMs: Long,
         val metadataVersion: Long,
+        val metadataSnapshot: TrackMetadata?,
+        val initialDisplayName: String,
+        val sidecarUri: Uri?,
+        val sidecarDisplayName: String,
+        val usesLegacyStorage: Boolean,
         var bytesWritten: Long,
         var wasSuccessful: Boolean
     )
