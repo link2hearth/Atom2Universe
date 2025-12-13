@@ -14621,6 +14621,9 @@ function applyNewsEnabled(enabled, options = {}) {
   }
   updateNewsToggleStatusLabel(newsFeatureEnabled);
   updateNewsControlsAvailability();
+  if (settings.persist) {
+    writeStoredNewsEnabled(newsFeatureEnabled);
+  }
   if (!newsFeatureEnabled) {
     clearNewsRefreshTimer();
     abortNewsRequest();
@@ -14628,9 +14631,6 @@ function applyNewsEnabled(enabled, options = {}) {
     setNewsStatus('index.sections.news.disabled', 'Enable News in Options to display this feed.');
     renderNewsList();
     return false;
-  }
-  if (settings.persist) {
-    writeStoredNewsEnabled(newsFeatureEnabled);
   }
   renderNewsList();
   if (!settings.skipFetch) {
@@ -27297,6 +27297,7 @@ function serializeState() {
     })(),
     fusionBonuses: serializeFusionBonusesForSave(),
     theme: gameState.theme,
+    newsEnabled: isNewsEnabled(),
     arcadeBrickSkin: normalizeBrickSkinSelection(gameState.arcadeBrickSkin),
     stats: {
       session: {
@@ -28393,6 +28394,9 @@ function applySerializedGameState(raw) {
   gameState.fusions = fusionState;
   gameState.fusionBonuses = normalizeStoredFusionBonuses(data.fusionBonuses);
   gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
+  if (typeof data.newsEnabled === 'boolean') {
+    applyNewsEnabled(data.newsEnabled, { persist: true, updateControl: true, skipFetch: true });
+  }
   const storedBrickSkin = data.arcadeBrickSkin
     ?? data.particulesBrickSkin
     ?? data.brickSkin
