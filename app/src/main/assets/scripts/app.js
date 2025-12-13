@@ -14622,6 +14622,9 @@ function applyNewsEnabled(enabled, options = {}) {
   }
   updateNewsToggleStatusLabel(newsFeatureEnabled);
   updateNewsControlsAvailability();
+  if (settings.persist) {
+    writeStoredNewsEnabled(newsFeatureEnabled);
+  }
   if (!newsFeatureEnabled) {
     clearNewsRefreshTimer();
     abortNewsRequest();
@@ -14629,9 +14632,6 @@ function applyNewsEnabled(enabled, options = {}) {
     setNewsStatus('index.sections.news.disabled', 'Enable News in Options to display this feed.');
     renderNewsList();
     return false;
-  }
-  if (settings.persist) {
-    writeStoredNewsEnabled(newsFeatureEnabled);
   }
   renderNewsList();
   if (!settings.skipFetch) {
