@@ -2256,13 +2256,48 @@
           >
             Démarrer
           </button>
+          <div
+            class="reflex__mode"
+            role="group"
+            aria-label="Choix du mode Reflex"
+            data-i18n="aria-label:index.sections.reflex.controls.modeAria"
+            id="reflexModeGroup"
+          >
+            <span class="reflex__mode-label" data-i18n="index.sections.reflex.controls.modeLabel">
+              Mode
+            </span>
+            <div class="reflex__mode-options">
+              <button
+                type="button"
+                class="reflex__mode-option reflex__mode-option--active"
+                data-reflex-mode-option="easy"
+                aria-pressed="true"
+                data-i18n="index.sections.reflex.controls.modes.easy"
+              >
+                Easy
+              </button>
+              <button
+                type="button"
+                class="reflex__mode-option"
+                data-reflex-mode-option="hard"
+                aria-pressed="false"
+                data-i18n="index.sections.reflex.controls.modes.hard"
+              >
+                Hard
+              </button>
+            </div>
+          </div>
           <div class="reflex__stat-chip">
             <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.score">Score</span>
             <span class="reflex__stat-value" id="reflexScoreValue">0</span>
           </div>
           <div class="reflex__stat-chip reflex__stat-chip--best">
-            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.best">Record</span>
-            <span class="reflex__stat-value" id="reflexBestScoreValue">—</span>
+            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.bestEasy">Record Easy</span>
+            <span class="reflex__stat-value" id="reflexBestScoreEasyValue">—</span>
+          </div>
+          <div class="reflex__stat-chip reflex__stat-chip--best">
+            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.bestHard">Record Hard</span>
+            <span class="reflex__stat-value" id="reflexBestScoreHardValue">—</span>
           </div>
         </div>
         <p class="reflex__hint" id="reflexHint" data-i18n="index.sections.reflex.hint">
@@ -6448,10 +6483,18 @@
               </header>
               <dl class="info-metrics">
                 <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.reflex.bestScore">Meilleur score</dt>
+                  <dt data-i18n="index.sections.info.progress.reflex.bestScoreEasy">Record Easy</dt>
                   <dd>
                     <span class="info-metrics__group">
-                      <span id="infoReflexBestScoreValue" class="info-metrics__value">—</span>
+                      <span id="infoReflexBestScoreEasyValue" class="info-metrics__value">—</span>
+                    </span>
+                  </dd>
+                </div>
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.reflex.bestScoreHard">Record Hard</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoReflexBestScoreHardValue" class="info-metrics__value">—</span>
                     </span>
                   </dd>
                 </div>

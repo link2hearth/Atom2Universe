@@ -3068,15 +3068,21 @@ function updateJumpingCatStats() {
 
 function normalizeReflexRecord(record) {
   if (!record || typeof record !== 'object') {
-    return { bestScore: 0 };
+    return { bestScores: { easy: 0, hard: 0 } };
   }
   return {
-    bestScore: toNonNegativeInteger(record.bestScore ?? record.score ?? 0)
+    bestScores: {
+      easy: toNonNegativeInteger(record.bestScores?.easy ?? 0),
+      hard: Math.max(
+        toNonNegativeInteger(record.bestScores?.hard ?? 0),
+        toNonNegativeInteger(record.bestScore ?? record.score ?? 0)
+      )
+    }
   };
 }
 
 function hasReflexRecord(record) {
-  return Boolean(record && record.bestScore > 0);
+  return Boolean(record && record.bestScores && (record.bestScores.easy > 0 || record.bestScores.hard > 0));
 }
 
 function getReflexAutosaveStats() {
@@ -3096,7 +3102,8 @@ function getReflexAutosaveStats() {
 }
 
 function syncReflexProgressEntry(record) {
-  if (!hasReflexRecord(record) || typeof gameState !== 'object') {
+  const normalized = normalizeReflexRecord(record);
+  if (!hasReflexRecord(normalized) || typeof gameState !== 'object') {
     return;
   }
   if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
@@ -3106,7 +3113,10 @@ function syncReflexProgressEntry(record) {
     gameState.arcadeProgress.entries = {};
   }
   gameState.arcadeProgress.entries.reflex = {
-    state: { bestScore: record.bestScore },
+    state: {
+      bestScores: normalized.bestScores,
+      bestScore: Math.max(normalized.bestScores.easy, normalized.bestScores.hard)
+    },
     updatedAt: Date.now()
   };
   const persistSave = typeof saveGame === 'function'
@@ -3128,6 +3138,9 @@ function getReflexProgressStats() {
   const state = entry && typeof entry === 'object' ? (entry.state && typeof entry.state === 'object' ? entry.state : entry) : null;
   const normalized = normalizeReflexRecord(state);
   if (hasReflexRecord(normalized)) {
+    if (!state || typeof state.bestScores !== 'object') {
+      syncReflexProgressEntry(normalized);
+    }
     return normalized;
   }
   const autosave = getReflexAutosaveStats();
@@ -3141,9 +3154,14 @@ function getReflexProgressStats() {
 function updateReflexStats() {
   const stats = getReflexProgressStats();
   const emptyValue = translateOrDefault('scripts.info.progress.reflex.empty', '—');
-  if (elements.infoReflexBestScoreValue) {
-    elements.infoReflexBestScoreValue.textContent = stats.bestScore > 0
-      ? formatIntegerLocalized(stats.bestScore)
+  if (elements.infoReflexBestScoreEasyValue) {
+    elements.infoReflexBestScoreEasyValue.textContent = stats.bestScores?.easy > 0
+      ? formatIntegerLocalized(stats.bestScores.easy)
+      : emptyValue;
+  }
+  if (elements.infoReflexBestScoreHardValue) {
+    elements.infoReflexBestScoreHardValue.textContent = stats.bestScores?.hard > 0
+      ? formatIntegerLocalized(stats.bestScores.hard)
       : emptyValue;
   }
 }

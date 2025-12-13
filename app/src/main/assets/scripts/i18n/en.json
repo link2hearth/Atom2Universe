@@ -250,10 +250,11 @@
             "bestTime": "Survival time",
             "timeUnit": "s"
           },
-          "reflex": {
-            "title": "Reflex",
-            "bestScore": "Best score"
-          },
+        "reflex": {
+          "title": "Reflex",
+          "bestScoreEasy": "Easy record",
+          "bestScoreHard": "Hard record"
+        },
           "motocross": {
             "title": "Motocross",
             "distance": "Longest distance",
@@ -2252,11 +2253,19 @@
         "subtitle": "Click the circle the instant it appears to bank points before the screen fills up.",
         "controls": {
           "aria": "Reflex controls",
+          "modeAria": "Reflex mode selection",
+          "modeLabel": "Mode",
+          "modes": {
+            "easy": "Easy",
+            "hard": "Hard"
+          },
           "start": "Start"
         },
         "stats": {
           "score": "Score",
-          "best": "Best"
+          "best": "Best",
+          "bestEasy": "Easy record",
+          "bestHard": "Hard record"
         },
         "hint": "Click each circle as soon as it appears.",
         "status": {
