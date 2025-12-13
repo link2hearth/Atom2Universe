@@ -250,10 +250,11 @@
             "bestTime": "Temps de survie",
             "timeUnit": "s"
           },
-          "reflex": {
-            "title": "Reflex",
-            "bestScore": "Meilleur score"
-          },
+        "reflex": {
+          "title": "Reflex",
+          "bestScoreEasy": "Record Easy",
+          "bestScoreHard": "Record Hard"
+        },
           "motocross": {
             "title": "Motocross",
             "distance": "Distance maximale",
@@ -2189,11 +2190,19 @@
         "subtitle": "Cliquez sur le cercle dès qu’il apparaît pour gagner des points avant qu’ils ne s’accumulent.",
         "controls": {
           "aria": "Commandes Reflex",
+          "modeAria": "Choix du mode Reflex",
+          "modeLabel": "Mode",
+          "modes": {
+            "easy": "Easy",
+            "hard": "Hard"
+          },
           "start": "Démarrer"
         },
         "stats": {
           "score": "Score",
-          "best": "Record"
+          "best": "Record",
+          "bestEasy": "Record Easy",
+          "bestHard": "Record Hard"
         },
         "hint": "Cliquez sur chaque cercle dès qu'il apparaît.",
         "status": {

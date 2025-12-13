@@ -13,9 +13,11 @@
     layer: document.getElementById('reflexTargetLayer'),
     startButton: document.getElementById('reflexStartButton'),
     scoreValue: document.getElementById('reflexScoreValue'),
-    bestScoreValue: document.getElementById('reflexBestScoreValue'),
+    bestScoreEasyValue: document.getElementById('reflexBestScoreEasyValue'),
+    bestScoreHardValue: document.getElementById('reflexBestScoreHardValue'),
     status: document.getElementById('reflexStatus'),
-    hint: document.getElementById('reflexHint')
+    hint: document.getElementById('reflexHint'),
+    modeOptions: Array.from(document.querySelectorAll('[data-reflex-mode-option]'))
   };
 
   const GAME_ID = 'reflex';
@@ -25,14 +27,35 @@
   const EARLY_SPAWN_COUNT = 5;
   const MIN_INTERVAL_MS = 220;
   const TARGET_SIZE = 68;
+  const TOUCH_MODES = {
+    easy: 'easy',
+    hard: 'hard'
+  };
 
   const state = {
     running: false,
     score: 0,
-    bestScore: 0,
+    bestScores: {
+      easy: 0,
+      hard: 0
+    },
     spawnCount: 0,
-    timerId: null
+    timerId: null,
+    touchMode: TOUCH_MODES.easy
   };
+
+  const layoutState = {
+    listenersAttached: false,
+    headerObserver: null
+  };
+
+  function normalizeScore(value) {
+    const number = Number(value);
+    if (!Number.isFinite(number) || number <= 0) {
+      return 0;
+    }
+    return Math.floor(number);
+  }
 
   function translate(key, fallback, params) {
     if (typeof translateOrDefault === 'function') {
@@ -78,8 +101,15 @@
     if (elements.scoreValue) {
       elements.scoreValue.textContent = Math.floor(state.score);
     }
-    if (elements.bestScoreValue) {
-      elements.bestScoreValue.textContent = state.bestScore > 0 ? Math.floor(state.bestScore) : '—';
+    if (elements.bestScoreEasyValue) {
+      elements.bestScoreEasyValue.textContent = state.bestScores.easy > 0
+        ? Math.floor(state.bestScores.easy)
+        : '—';
+    }
+    if (elements.bestScoreHardValue) {
+      elements.bestScoreHardValue.textContent = state.bestScores.hard > 0
+        ? Math.floor(state.bestScores.hard)
+        : '—';
     }
   }
 
@@ -102,7 +132,12 @@
     }
   }
 
-  function persistBestScore(bestScore) {
+  function persistBestScores(bestScores) {
+    const normalized = {
+      easy: normalizeScore(bestScores?.easy),
+      hard: normalizeScore(bestScores?.hard)
+    };
+    const bestScore = Math.max(normalized.easy, normalized.hard);
     const globalState = getGlobalGameState();
     if (globalState) {
       if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
@@ -112,14 +147,20 @@
         globalState.arcadeProgress.entries = {};
       }
       globalState.arcadeProgress.entries[GAME_ID] = {
-        state: { bestScore },
+        state: {
+          bestScores: normalized,
+          bestScore
+        },
         updatedAt: Date.now()
       };
     }
 
     if (window.ArcadeAutosave && typeof window.ArcadeAutosave.set === 'function') {
       try {
-        window.ArcadeAutosave.set(GAME_ID, { bestScore });
+        window.ArcadeAutosave.set(GAME_ID, {
+          bestScores: normalized,
+          bestScore
+        });
       } catch (error) {
         // ignore autosave errors
       }
@@ -130,16 +171,40 @@
   }
 
   function recordBestScore(nextScore) {
-    if (!Number.isFinite(nextScore) || nextScore <= state.bestScore) {
+    const normalizedScore = normalizeScore(nextScore);
+    if (!normalizedScore) {
       return;
     }
-    state.bestScore = Math.floor(nextScore);
+    const currentMode = state.touchMode === TOUCH_MODES.hard ? TOUCH_MODES.hard : TOUCH_MODES.easy;
+    const currentBest = state.bestScores[currentMode] || 0;
+    if (normalizedScore <= currentBest) {
+      return;
+    }
+    state.bestScores[currentMode] = normalizedScore;
     updateDisplays();
-    persistBestScore(state.bestScore);
-    setStatus('index.sections.reflex.status.newRecord', 'Nouveau record !', { score: state.bestScore });
+    persistBestScores(state.bestScores);
+    setStatus('index.sections.reflex.status.newRecord', 'Nouveau record !', { score: normalizedScore });
   }
 
-  function readStoredBestScore() {
+  function normalizeStoredBestScores(record) {
+    if (!record || typeof record !== 'object') {
+      return { easy: 0, hard: 0 };
+    }
+    const bestScores = record.bestScores && typeof record.bestScores === 'object'
+      ? record.bestScores
+      : {};
+    const easy = normalizeScore(bestScores.easy);
+    const hard = normalizeScore(bestScores.hard);
+    const legacy = normalizeScore(record.bestScore ?? record.score);
+    const merged = {
+      easy,
+      hard: Math.max(hard, legacy)
+    };
+    return merged;
+  }
+
+  function readStoredBestScores() {
+    const empty = { easy: 0, hard: 0 };
     const globalState = getGlobalGameState();
     const entries = globalState && globalState.arcadeProgress && typeof globalState.arcadeProgress === 'object'
       ? (globalState.arcadeProgress.entries && typeof globalState.arcadeProgress.entries === 'object'
@@ -150,26 +215,26 @@
     const entry = entries && entries[GAME_ID];
     if (entry && typeof entry === 'object') {
       const savedState = entry.state && typeof entry.state === 'object' ? entry.state : entry;
-      const savedScore = Number(savedState.bestScore ?? savedState.score);
-      if (Number.isFinite(savedScore) && savedScore > 0) {
-        return Math.floor(savedScore);
+      const normalized = normalizeStoredBestScores(savedState);
+      if (normalized.easy > 0 || normalized.hard > 0) {
+        return normalized;
       }
     }
 
     if (window.ArcadeAutosave && typeof window.ArcadeAutosave.get === 'function') {
       try {
         const autosave = window.ArcadeAutosave.get(GAME_ID);
-        const autosaveScore = Number(autosave?.bestScore ?? autosave?.score);
-        if (Number.isFinite(autosaveScore) && autosaveScore > 0) {
-          persistBestScore(Math.floor(autosaveScore));
-          return Math.floor(autosaveScore);
+        const normalized = normalizeStoredBestScores(autosave);
+        if (normalized.easy > 0 || normalized.hard > 0) {
+          persistBestScores(normalized);
+          return normalized;
         }
       } catch (error) {
-        return 0;
+        return empty;
       }
     }
 
-    return 0;
+    return empty;
   }
 
   function computeNextInterval() {
@@ -211,11 +276,19 @@
     if (!state.running || !target || !elements.layer) {
       return;
     }
+
+    if (target.dataset.resolved === '1') {
+      return;
+    }
+
+    target.dataset.resolved = '1';
     const createdAt = Number(target.dataset.createdAt || performance.now());
     const delayMs = Math.max(0, performance.now() - createdAt);
     const points = Math.max(0, Math.round(1000 - delayMs * 0.5));
     state.score += points;
-    elements.layer.removeChild(target);
+    if (target.parentElement === elements.layer) {
+      elements.layer.removeChild(target);
+    }
     updateDisplays();
     recordBestScore(state.score);
     setStatus('index.sections.reflex.status.hit', `Touché ! +${points}`, {
@@ -246,6 +319,26 @@
     target.dataset.createdAt = performance.now().toString();
 
     target.addEventListener('click', () => handleTargetClick(target));
+    target.addEventListener(
+      'touchstart',
+      (event) => {
+        if (state.touchMode !== TOUCH_MODES.easy) {
+          return;
+        }
+        event.preventDefault();
+        handleTargetClick(target);
+      },
+      { passive: false }
+    );
+    target.addEventListener('pointerdown', (event) => {
+      if (state.touchMode !== TOUCH_MODES.easy) {
+        return;
+      }
+      if (event.pointerType === 'mouse') {
+        return;
+      }
+      handleTargetClick(target);
+    });
     elements.layer.appendChild(target);
 
     if (elements.layer.children.length > MAX_ACTIVE_TARGETS) {
@@ -268,16 +361,70 @@
     spawnTarget();
   }
 
+  function setTouchMode(mode) {
+    if (!Object.values(TOUCH_MODES).includes(mode)) {
+      return;
+    }
+    state.touchMode = mode;
+    elements.modeOptions.forEach((button) => {
+      const isActive = button.dataset.reflexModeOption === mode;
+      button.classList.toggle('reflex__mode-option--active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  function measureHeaderHeight() {
+    const header = document.querySelector('.app-header');
+    if (!header || typeof header.getBoundingClientRect !== 'function') {
+      return 32;
+    }
+    const rect = header.getBoundingClientRect();
+    const measured = Number.isFinite(rect.height) ? rect.height : 0;
+    return Math.max(32, Math.round(measured));
+  }
+
+  function updateTopOffset() {
+    const offset = measureHeaderHeight();
+    if (!root || typeof root.style?.setProperty !== 'function') {
+      return;
+    }
+    root.style.setProperty('--reflex-banner-offset', `${offset}px`);
+  }
+
+  function attachLayoutListeners() {
+    if (layoutState.listenersAttached) {
+      return;
+    }
+    layoutState.listenersAttached = true;
+    updateTopOffset();
+    window.addEventListener('resize', updateTopOffset, { passive: true });
+    const header = document.querySelector('.app-header');
+    if (header && typeof MutationObserver !== 'undefined') {
+      layoutState.headerObserver = new MutationObserver(updateTopOffset);
+      layoutState.headerObserver.observe(header, { attributes: true, attributeFilter: ['data-collapsed'] });
+    }
+  }
+
   function attachEvents() {
     if (elements.startButton) {
       elements.startButton.addEventListener('click', () => {
         resetRun();
       });
     }
+
+    if (elements.modeOptions.length > 0) {
+      elements.modeOptions.forEach((button) => {
+        button.addEventListener('click', () => {
+          const mode = button.dataset.reflexModeOption;
+          setTouchMode(mode);
+        });
+      });
+    }
   }
 
   function onEnter() {
-    state.bestScore = readStoredBestScore();
+    state.bestScores = readStoredBestScores();
+    updateTopOffset();
     updateDisplays();
     setStatus('index.sections.reflex.status.ready', 'Prêt ? Cliquez sur les cercles dès qu’ils apparaissent.');
   }
@@ -290,8 +437,10 @@
   }
 
   function init() {
-    state.bestScore = readStoredBestScore();
+    state.bestScores = readStoredBestScores();
     updateDisplays();
+    setTouchMode(state.touchMode);
+    attachLayoutListeners();
     attachEvents();
   }
 
