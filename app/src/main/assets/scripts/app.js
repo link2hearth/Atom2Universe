@@ -8611,27 +8611,24 @@ function updateCollectionImagesVisibility() {
   elements.collectionImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
 }
 
-function updateCollectionBonusImagesVisibility() {
-  if (!elements.collectionBonusImagesCard) {
-    return;
+  function updateCollectionBonusImagesVisibility() {
+    if (!elements.collectionBonusImagesCard) {
+      return;
+    }
+    const unlocked = isPageUnlocked('collection') && hasOwnedGachaBonusImages();
+    elements.collectionBonusImagesCard.hidden = !unlocked;
+    elements.collectionBonusImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
   }
-  const unlocked = isCollectionFeatureEnabled()
-    && isPageUnlocked('collection')
-    && hasOwnedGachaBonusImages();
-  elements.collectionBonusImagesCard.hidden = !unlocked;
-  elements.collectionBonusImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
-}
 
-function updateCollectionBonus2ImagesVisibility() {
-  if (!elements.collectionBonus2ImagesCard) {
-    return;
+  function updateCollectionBonus2ImagesVisibility() {
+    if (!elements.collectionBonus2ImagesCard) {
+      return;
+    }
+    const unlocked = isPageUnlocked('collection')
+      && (isSecondaryBonusImageCollectionUnlocked() || hasOwnedGachaBonus2Images());
+    elements.collectionBonus2ImagesCard.hidden = !unlocked;
+    elements.collectionBonus2ImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
   }
-  const unlocked = isCollectionFeatureEnabled()
-    && isPageUnlocked('collection')
-    && (isSecondaryBonusImageCollectionUnlocked() || hasOwnedGachaBonus2Images());
-  elements.collectionBonus2ImagesCard.hidden = !unlocked;
-  elements.collectionBonus2ImagesCard.setAttribute('aria-hidden', unlocked ? 'false' : 'true');
-}
 
 function updateCollectionVideosVisibility() {
   if (!elements.collectionVideosCard) {
