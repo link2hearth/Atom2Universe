@@ -15,7 +15,8 @@
     scoreValue: document.getElementById('reflexScoreValue'),
     bestScoreValue: document.getElementById('reflexBestScoreValue'),
     status: document.getElementById('reflexStatus'),
-    hint: document.getElementById('reflexHint')
+    hint: document.getElementById('reflexHint'),
+    modeOptions: Array.from(document.querySelectorAll('[data-reflex-mode-option]'))
   };
 
   const GAME_ID = 'reflex';
@@ -25,13 +26,18 @@
   const EARLY_SPAWN_COUNT = 5;
   const MIN_INTERVAL_MS = 220;
   const TARGET_SIZE = 68;
+  const TOUCH_MODES = {
+    easy: 'easy',
+    hard: 'hard'
+  };
 
   const state = {
     running: false,
     score: 0,
     bestScore: 0,
     spawnCount: 0,
-    timerId: null
+    timerId: null,
+    touchMode: TOUCH_MODES.easy
   };
 
   function translate(key, fallback, params) {
@@ -211,11 +217,19 @@
     if (!state.running || !target || !elements.layer) {
       return;
     }
+
+    if (target.dataset.resolved === '1') {
+      return;
+    }
+
+    target.dataset.resolved = '1';
     const createdAt = Number(target.dataset.createdAt || performance.now());
     const delayMs = Math.max(0, performance.now() - createdAt);
     const points = Math.max(0, Math.round(1000 - delayMs * 0.5));
     state.score += points;
-    elements.layer.removeChild(target);
+    if (target.parentElement === elements.layer) {
+      elements.layer.removeChild(target);
+    }
     updateDisplays();
     recordBestScore(state.score);
     setStatus('index.sections.reflex.status.hit', `Touché ! +${points}`, {
@@ -246,6 +260,26 @@
     target.dataset.createdAt = performance.now().toString();
 
     target.addEventListener('click', () => handleTargetClick(target));
+    target.addEventListener(
+      'touchstart',
+      (event) => {
+        if (state.touchMode !== TOUCH_MODES.easy) {
+          return;
+        }
+        event.preventDefault();
+        handleTargetClick(target);
+      },
+      { passive: false }
+    );
+    target.addEventListener('pointerdown', (event) => {
+      if (state.touchMode !== TOUCH_MODES.easy) {
+        return;
+      }
+      if (event.pointerType === 'mouse') {
+        return;
+      }
+      handleTargetClick(target);
+    });
     elements.layer.appendChild(target);
 
     if (elements.layer.children.length > MAX_ACTIVE_TARGETS) {
@@ -268,10 +302,31 @@
     spawnTarget();
   }
 
+  function setTouchMode(mode) {
+    if (!Object.values(TOUCH_MODES).includes(mode)) {
+      return;
+    }
+    state.touchMode = mode;
+    elements.modeOptions.forEach((button) => {
+      const isActive = button.dataset.reflexModeOption === mode;
+      button.classList.toggle('reflex__mode-option--active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
   function attachEvents() {
     if (elements.startButton) {
       elements.startButton.addEventListener('click', () => {
         resetRun();
+      });
+    }
+
+    if (elements.modeOptions.length > 0) {
+      elements.modeOptions.forEach((button) => {
+        button.addEventListener('click', () => {
+          const mode = button.dataset.reflexModeOption;
+          setTouchMode(mode);
+        });
       });
     }
   }
@@ -292,6 +347,7 @@
   function init() {
     state.bestScore = readStoredBestScore();
     updateDisplays();
+    setTouchMode(state.touchMode);
     attachEvents();
   }
 

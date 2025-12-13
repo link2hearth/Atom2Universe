@@ -2189,6 +2189,12 @@
         "subtitle": "Cliquez sur le cercle dès qu’il apparaît pour gagner des points avant qu’ils ne s’accumulent.",
         "controls": {
           "aria": "Commandes Reflex",
+          "modeAria": "Choix du mode Reflex",
+          "modeLabel": "Mode",
+          "modes": {
+            "easy": "Easy (touché instantané)",
+            "hard": "Hard (valide au relâchement)"
+          },
           "start": "Démarrer"
         },
         "stats": {

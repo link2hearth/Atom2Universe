@@ -2252,6 +2252,12 @@
         "subtitle": "Click the circle the instant it appears to bank points before the screen fills up.",
         "controls": {
           "aria": "Reflex controls",
+          "modeAria": "Reflex mode selection",
+          "modeLabel": "Mode",
+          "modes": {
+            "easy": "Easy (register on touch)",
+            "hard": "Hard (register on release)"
+          },
           "start": "Start"
         },
         "stats": {

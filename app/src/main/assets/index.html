@@ -2256,6 +2256,37 @@
           >
             Démarrer
           </button>
+          <div
+            class="reflex__mode"
+            role="group"
+            aria-label="Choix du mode Reflex"
+            data-i18n="aria-label:index.sections.reflex.controls.modeAria"
+            id="reflexModeGroup"
+          >
+            <span class="reflex__mode-label" data-i18n="index.sections.reflex.controls.modeLabel">
+              Mode
+            </span>
+            <div class="reflex__mode-options">
+              <button
+                type="button"
+                class="reflex__mode-option reflex__mode-option--active"
+                data-reflex-mode-option="easy"
+                aria-pressed="true"
+                data-i18n="index.sections.reflex.controls.modes.easy"
+              >
+                Easy
+              </button>
+              <button
+                type="button"
+                class="reflex__mode-option"
+                data-reflex-mode-option="hard"
+                aria-pressed="false"
+                data-i18n="index.sections.reflex.controls.modes.hard"
+              >
+                Hard
+              </button>
+            </div>
+          </div>
           <div class="reflex__stat-chip">
             <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.score">Score</span>
             <span class="reflex__stat-value" id="reflexScoreValue">0</span>
