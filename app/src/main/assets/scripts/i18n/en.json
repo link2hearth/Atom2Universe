@@ -250,10 +250,11 @@
             "bestTime": "Survival time",
             "timeUnit": "s"
           },
-          "reflex": {
-            "title": "Reflex",
-            "bestScore": "Best score"
-          },
+        "reflex": {
+          "title": "Reflex",
+          "bestScoreEasy": "Easy record",
+          "bestScoreHard": "Hard record"
+        },
           "motocross": {
             "title": "Motocross",
             "distance": "Longest distance",
@@ -2255,14 +2256,16 @@
           "modeAria": "Reflex mode selection",
           "modeLabel": "Mode",
           "modes": {
-            "easy": "Easy (register on touch)",
-            "hard": "Hard (register on release)"
+            "easy": "Easy",
+            "hard": "Hard"
           },
           "start": "Start"
         },
         "stats": {
           "score": "Score",
-          "best": "Best"
+          "best": "Best",
+          "bestEasy": "Easy record",
+          "bestHard": "Hard record"
         },
         "hint": "Click each circle as soon as it appears.",
         "status": {
