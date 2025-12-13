@@ -42,6 +42,8 @@
         easy: Object.freeze({
           centerMinRatio: 0.4,
           rightMinRatio: 0.3,
+          cornerMaxRatio: 0.25,
+          interiorMinRatio: 0.5,
           diagonalGroupChance: 0.45,
           serpentineChance: 0.42,
           serpentineDensity: Object.freeze({ min: 0.38, max: 0.58 }),
@@ -51,6 +53,8 @@
         medium: Object.freeze({
           centerMinRatio: 0.32,
           rightMinRatio: 0.26,
+          cornerMaxRatio: 0.22,
+          interiorMinRatio: 0.58,
           diagonalGroupChance: 0.3,
           serpentineChance: 0.18,
           serpentineDensity: Object.freeze({ min: 0.32, max: 0.48 }),
@@ -60,6 +64,8 @@
         hard: Object.freeze({
           centerMinRatio: 0.3,
           rightMinRatio: 0.24,
+          cornerMaxRatio: 0.2,
+          interiorMinRatio: 0.62,
           diagonalGroupChance: 0.25,
           serpentineChance: 0.12,
           serpentineDensity: Object.freeze({ min: 0.28, max: 0.45 }),
@@ -899,6 +905,18 @@
       0.9,
       clampNumber(base.rightMinRatio, 0, 0.9, 0)
     );
+    const cornerMaxRatio = clampNumber(
+      source.cornerMaxRatio,
+      0,
+      0.9,
+      clampNumber(base.cornerMaxRatio, 0, 0.9, 0.65)
+    );
+    const interiorMinRatio = clampNumber(
+      source.interiorMinRatio,
+      0,
+      0.95,
+      clampNumber(base.interiorMinRatio, 0, 0.95, 0.35)
+    );
     const diagonalGroupChance = clampNumber(
       source.diagonalGroupChance,
       0,
@@ -956,7 +974,9 @@
         max: clampNumber(maxDensity, 0.2, 0.98, Math.max(minDensity, 0.55))
       },
       edgeRowMaxRatio,
-      minRowSpread
+      minRowSpread,
+      cornerMaxRatio,
+      interiorMinRatio
     };
   }
 
@@ -1367,6 +1387,7 @@
     }
     maybeInjectPattern(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
     enforceDistributionTargets(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
+    enforceCornerAndInteriorDiversity(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
     balanceRowDistribution(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
     return blocked;
   }
@@ -1558,8 +1579,8 @@
     }
     const centerRatio = clampNumber(distribution.centerMinRatio, 0, 0.9, 0);
     const rightRatio = clampNumber(distribution.rightMinRatio, 0, 0.9, 0);
-    const targetCenter = Math.min(limit, Math.round(limit * centerRatio));
-    const targetRight = Math.min(limit, Math.round(limit * rightRatio));
+    const targetCenter = Math.min(limit, Math.ceil(limit * centerRatio));
+    const targetRight = Math.min(limit, Math.ceil(limit * rightRatio));
     if (targetCenter <= 0 && targetRight <= 0) {
       return;
     }
@@ -1607,6 +1628,54 @@
       if (!adjusted) {
         break;
       }
+    }
+  }
+
+  function enforceCornerAndInteriorDiversity(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
+    if (!blocked || !blocked.size || !limit) {
+      return;
+    }
+    const distribution = layoutConfig?.distribution?.[difficultyKey];
+    if (!distribution) {
+      return;
+    }
+    const cornerLimit = clampNumber(distribution.cornerMaxRatio, 0, 0.9, 0.65);
+    const interiorRatio = clampNumber(distribution.interiorMinRatio, 0, 0.95, 0.35);
+    const maxCorners = Math.floor(limit * cornerLimit);
+    const targetInterior = Math.min(limit, Math.ceil(limit * interiorRatio));
+    if (maxCorners <= 0 && targetInterior <= 0) {
+      return;
+    }
+    const maxIterations = Math.max(1, limit * 4);
+    for (let iteration = 0; iteration < maxIterations; iteration += 1) {
+      const data = computeDistributionData(blocked, width, height, protectedIndices);
+      const cornerExcess = maxCorners >= 0 && data.blockedCorners.length > maxCorners;
+      const interiorMissing = targetInterior > 0 && data.blockedInterior.length < targetInterior;
+      if (!cornerExcess && !interiorMissing) {
+        break;
+      }
+      let donor = null;
+      let recipient = null;
+      if (cornerExcess) {
+        const movableCorners = data.blockedCorners.filter(cell => !cell.protected);
+        donor = pickRandomCell(movableCorners);
+        recipient = pickRandomCell(data.availableInterior.length ? data.availableInterior : data.availableCells);
+      }
+      if (!recipient && interiorMissing) {
+        const donors = buildDonorList([
+          data.blockedLeftEdge,
+          data.blockedRightEdge,
+          data.blockedNeutralEdge,
+          data.blockedCorners
+        ], protectedIndices);
+        donor = donor || pickPriorityDonor(donors);
+        recipient = pickRandomCell(data.availableInterior.length ? data.availableInterior : data.availableCells);
+      }
+      if (!donor || !recipient) {
+        break;
+      }
+      blocked.delete(donor.index);
+      blocked.add(recipient.index);
     }
   }
 
