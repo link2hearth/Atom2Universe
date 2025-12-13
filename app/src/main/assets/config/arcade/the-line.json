@@ -36,6 +36,8 @@
       "easy": {
         "centerMinRatio": 0.4,
         "rightMinRatio": 0.3,
+        "cornerMaxRatio": 0.25,
+        "interiorMinRatio": 0.5,
         "diagonalGroupChance": 0.45,
         "serpentineChance": 0.42,
         "serpentineDensity": { "min": 0.38, "max": 0.58 },
@@ -45,6 +47,8 @@
       "medium": {
         "centerMinRatio": 0.32,
         "rightMinRatio": 0.26,
+        "cornerMaxRatio": 0.22,
+        "interiorMinRatio": 0.58,
         "diagonalGroupChance": 0.3,
         "serpentineChance": 0.18,
         "serpentineDensity": { "min": 0.32, "max": 0.48 },
@@ -54,6 +58,8 @@
       "hard": {
         "centerMinRatio": 0.3,
         "rightMinRatio": 0.24,
+        "cornerMaxRatio": 0.2,
+        "interiorMinRatio": 0.62,
         "diagonalGroupChance": 0.25,
         "serpentineChance": 0.12,
         "serpentineDensity": { "min": 0.28, "max": 0.45 },
