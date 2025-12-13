@@ -1339,26 +1339,58 @@
       if (typeof document === 'undefined') {
         return null;
       }
+
+      const draggedElements = state.selected && state.selected.cards
+        ? state.selected.cards
+          .map((card) => (card && card.element ? card.element : null))
+          .filter(Boolean)
+        : [];
+
+      const restorePointerEvents = () => {
+        draggedElements.forEach((entry) => {
+          if (Object.prototype.hasOwnProperty.call(entry.dataset, 'dragPointerBlock')) {
+            const previous = entry.dataset.dragPointerBlock;
+            if (previous) {
+              entry.style.pointerEvents = previous;
+            } else {
+              entry.style.removeProperty('pointer-events');
+            }
+            delete entry.dataset.dragPointerBlock;
+          }
+        });
+      };
+
+      draggedElements.forEach((element) => {
+        element.dataset.dragPointerBlock = element.style.pointerEvents || '';
+        element.style.pointerEvents = 'none';
+      });
+
       let element = document.elementFromPoint(clientX, clientY);
       while (element) {
         if (element.classList && element.classList.contains('solitaire-card')) {
           const card = element.__solitaireCard;
           const location = card ? getCardLocation(card) : null;
           if (location && (location.type === 'tableau' || location.type === 'foundation')) {
+            restorePointerEvents();
             return { type: location.type, index: location.index };
           }
         }
         if (element.classList && element.classList.contains('solitaire-pile')) {
           const pileType = element.dataset.pileType;
           if (pileType === 'tableau' && typeof element.dataset.column === 'string') {
+            restorePointerEvents();
             return { type: 'tableau', index: Number(element.dataset.column) };
           }
           if (pileType === 'foundation' && typeof element.dataset.foundation === 'string') {
+            restorePointerEvents();
             return { type: 'foundation', index: Number(element.dataset.foundation) };
           }
         }
         element = element.parentElement;
       }
+
+      restorePointerEvents();
+
       return null;
     }
 
