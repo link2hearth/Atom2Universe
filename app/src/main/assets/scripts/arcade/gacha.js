@@ -3813,68 +3813,12 @@ function buildFusionCard(definition) {
   stats.className = 'fusion-card__stats';
   stats.textContent = t('scripts.gacha.fusion.stats', { attempts: 0, successes: 0 });
 
-  const bonusParts = [];
   const isHydrogen = definition.id === HYDROGEN_FUSION_ID;
-  if (definition.rewards.apcFlat) {
-    bonusParts.push(t('scripts.gacha.fusion.apcBonus', {
-      value: formatNumberLocalized(definition.rewards.apcFlat)
-    }));
-  }
-  if (definition.rewards.apsFlat) {
-    bonusParts.push(t('scripts.gacha.fusion.apsBonus', {
-      value: formatNumberLocalized(definition.rewards.apsFlat)
-    }));
-  }
-  if (definition.rewards.apcBaseBoost) {
-    bonusParts.push(t('scripts.gacha.fusion.apcBaseBonus', {
-      value: formatNumberLocalized(definition.rewards.apcBaseBoost)
-    }));
-  }
-  if (definition.rewards.apsBaseBoost) {
-    bonusParts.push(t('scripts.gacha.fusion.apsBaseBonus', {
-      value: formatNumberLocalized(definition.rewards.apsBaseBoost)
-    }));
-  }
-  if (definition.rewards.apcFrenzyDurationSeconds) {
-    bonusParts.push(t('scripts.gacha.fusion.apcFrenzyBonus', {
-      value: formatNumberLocalized(definition.rewards.apcFrenzyDurationSeconds)
-    }));
-  }
-  if (definition.rewards.apsFrenzyDurationSeconds) {
-    bonusParts.push(t('scripts.gacha.fusion.apsFrenzyBonus', {
-      value: formatNumberLocalized(definition.rewards.apsFrenzyDurationSeconds)
-    }));
-  }
-  if (Array.isArray(definition.rewards.elements)) {
-    definition.rewards.elements.forEach(reward => {
-      const count = Number(reward?.count ?? reward?.quantity ?? reward?.amount ?? 0);
-      if (!Number.isFinite(count) || count <= 0) {
-        return;
-      }
-      const formattedCount = formatNumberLocalized(count, { maximumFractionDigits: 0 });
-      const label = formatFusionElementLabel(reward);
-      bonusParts.push(t('scripts.gacha.fusion.elementBonus', { count: formattedCount, element: label }));
-    });
-  }
-  if (definition.rewards.fusionMultiplier) {
-    bonusParts.push(t('scripts.gacha.fusion.multiplierReward', {
-      value: formatNumberLocalized(definition.rewards.fusionMultiplier, { maximumFractionDigits: 0 })
-    }));
-  }
-  if (isHydrogen) {
-    bonusParts.push(t('scripts.gacha.fusion.multiplierNote'));
-  }
-  const bonus = document.createElement('p');
-  bonus.className = 'fusion-card__bonus';
-  bonus.textContent = bonusParts.length
-    ? t('scripts.gacha.fusion.successBonus', { bonus: bonusParts.join(' · ') })
-    : t('scripts.gacha.fusion.noBonus');
-
   const totalBonus = document.createElement('p');
   totalBonus.className = 'fusion-card__feedback fusion-card__total';
   totalBonus.textContent = t('scripts.gacha.fusion.totalBonus', { bonus: '—' });
 
-  card.append(bodyFragment, actions, stats, bonus, totalBonus);
+  card.append(bodyFragment, actions, stats, totalBonus);
 
   return {
     root: card,
@@ -3882,7 +3826,6 @@ function buildFusionCard(definition) {
     requirements,
     stats,
     status,
-    bonus,
     totalBonus
   };
 }
