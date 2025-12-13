@@ -139,7 +139,9 @@
     };
     const bestScore = Math.max(normalized.easy, normalized.hard);
     const globalState = getGlobalGameState();
-    if (globalState) {
+    const canPersistToGlobal = globalState && window.appStartCompleted === true;
+
+    if (canPersistToGlobal) {
       if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
         globalState.arcadeProgress = { version: 1, entries: {} };
       }
@@ -166,7 +168,9 @@
       }
     }
 
-    requestSave();
+    if (canPersistToGlobal) {
+      requestSave();
+    }
     window.dispatchEvent(new Event('arcadeAutosaveSync'));
   }
 
