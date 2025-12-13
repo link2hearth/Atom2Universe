@@ -108,6 +108,10 @@
   min-height: calc(var(--solitaire-card-height) * 3.4);
 }
 
+.solitaire__board.is-dragging {
+  user-select: none;
+}
+
 .solitaire--complete .solitaire__board {
   box-shadow: var(--solitaire-board-complete-shadow);
 }
@@ -196,7 +200,11 @@
   letter-spacing: 0.02em;
   box-shadow: var(--solitaire-card-shadow);
   cursor: pointer;
-  transform: translate(var(--solitaire-offset-x, 0px), var(--solitaire-offset-y, 0px));
+  touch-action: none;
+  transform: translate(
+    calc(var(--solitaire-offset-x, 0px) + var(--solitaire-drag-x, 0px)),
+    calc(var(--solitaire-offset-y, 0px) + var(--solitaire-drag-y, 0px))
+  );
   transition: transform 0.18s ease, box-shadow 0.2s ease, filter 0.2s ease;
   text-transform: uppercase;
 }
@@ -212,6 +220,11 @@
 
 .solitaire-card.is-selected {
   box-shadow: var(--solitaire-card-selected-shadow);
+}
+
+.solitaire-card.is-dragging {
+  cursor: grabbing;
+  transition: box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .solitaire-card[data-color='red'] {
