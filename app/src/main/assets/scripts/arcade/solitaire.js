@@ -1258,14 +1258,15 @@
       }
 
       const draggedCards = state.selected && state.selected.cards ? [...state.selected.cards] : [];
+      let dropApplied = false;
       if (dragState.moved) {
         const dropTarget = resolveDropTarget(event.clientX, event.clientY);
         if (dropTarget) {
-          attemptDropOnTarget(dropTarget);
+          dropApplied = attemptDropOnTarget(dropTarget);
         }
       }
 
-      stopDragSession({ preventClick: dragState.moved, cards: draggedCards });
+      stopDragSession({ preventClick: dragState.moved, cards: draggedCards, dropApplied });
       if (typeof event.preventDefault === 'function' && dragState.moved) {
         event.preventDefault();
       }
@@ -1273,6 +1274,7 @@
 
     function stopDragSession(options) {
       const cards = options && Array.isArray(options.cards) ? options.cards : null;
+      const dropApplied = Boolean(options && options.dropApplied);
 
       dragState.active = false;
       dragState.pointerId = null;
@@ -1281,7 +1283,7 @@
       dragState.card = null;
       dragState.moved = false;
 
-      clearDragVisuals(cards);
+      clearDragVisuals(cards, { dropApplied });
       detachDragListeners();
 
       if (boardElement) {
@@ -1311,11 +1313,12 @@
       });
     }
 
-    function clearDragVisuals(cards) {
+    function clearDragVisuals(cards, options) {
       const list = cards || (state.selected ? state.selected.cards : []);
       if (!list) {
         return;
       }
+      const dropApplied = Boolean(options && options.dropApplied);
       list.forEach((card) => {
         if (!card || !card.element) {
           return;
@@ -1325,10 +1328,12 @@
         card.element.style.removeProperty('--solitaire-drag-y');
         if (Object.prototype.hasOwnProperty.call(card.element.dataset, 'dragBaseZ')) {
           const base = card.element.dataset.dragBaseZ;
-          if (base) {
-            card.element.style.zIndex = base;
-          } else {
-            card.element.style.removeProperty('z-index');
+          if (!dropApplied) {
+            if (base) {
+              card.element.style.zIndex = base;
+            } else {
+              card.element.style.removeProperty('z-index');
+            }
           }
           delete card.element.dataset.dragBaseZ;
         }
