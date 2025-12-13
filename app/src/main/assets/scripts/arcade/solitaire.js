@@ -221,6 +221,16 @@
       rewardClaimed: false
     };
 
+    const dragState = {
+      active: false,
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      card: null,
+      moved: false,
+      ignoreNextClick: false
+    };
+
     let autosaveTimer = null;
     let autosaveSuppressed = false;
 
@@ -577,9 +587,11 @@
       const element = document.createElement('button');
       element.type = 'button';
       element.className = 'solitaire-card';
+      element.dataset.cardId = card.id;
       element.dataset.color = card.color;
       element.dataset.rank = formatRank(card.rank);
       element.dataset.suit = card.suit;
+      element.__solitaireCard = card;
 
       const topCorner = document.createElement('span');
       topCorner.className = 'solitaire-card__corner solitaire-card__corner--top';
@@ -596,7 +608,16 @@
       topCorner.append(topCornerSymbol, topCornerRank);
       element.append(topCorner, value);
 
+      element.addEventListener('pointerdown', (event) => {
+        handleCardPointerDown(card, event);
+      });
+
       element.addEventListener('click', (event) => {
+        if (dragState.ignoreNextClick) {
+          dragState.ignoreNextClick = false;
+          event.preventDefault();
+          return;
+        }
         handleCardClick(card, event);
       });
 
@@ -1111,6 +1132,284 @@
       }
       state.selected = null;
       updateDropTargets();
+    }
+
+    function handleCardPointerDown(card, event) {
+      if (!card || (typeof event.button === 'number' && event.button !== 0 && event.pointerType !== 'touch')) {
+        return;
+      }
+
+      if (card.pile === 'stock') {
+        return;
+      }
+
+      if (!card.faceUp) {
+        if (card.pile === 'tableau' && isTopCard(card)) {
+          card.faceUp = true;
+          renderTableauPile(card.pileIndex);
+          updateDropTargets();
+          scheduleAutosave();
+        }
+        return;
+      }
+
+      startDragSession(card, event);
+    }
+
+    function selectCardForDrag(card) {
+      if (!card) {
+        clearSelection();
+        return;
+      }
+      if (card.pile === 'waste') {
+        setSelection('waste', null, state.waste.length - 1);
+        return;
+      }
+      if (card.pile === 'foundation') {
+        const foundation = state.foundations[card.pileIndex];
+        const index = foundation ? foundation.indexOf(card) : -1;
+        if (index !== -1) {
+          setSelection('foundation', card.pileIndex, index);
+        }
+        return;
+      }
+      if (card.pile === 'tableau') {
+        const column = state.tableau[card.pileIndex];
+        const index = column ? column.indexOf(card) : -1;
+        if (index !== -1) {
+          setSelection('tableau', card.pileIndex, index);
+        }
+      }
+    }
+
+    function startDragSession(card, pointerEvent) {
+      if (!pointerEvent) {
+        return;
+      }
+
+      dragState.active = true;
+      dragState.card = card;
+      dragState.pointerId = typeof pointerEvent.pointerId === 'number' ? pointerEvent.pointerId : null;
+      dragState.startX = pointerEvent.clientX;
+      dragState.startY = pointerEvent.clientY;
+      dragState.moved = false;
+      attachDragListeners();
+
+      if (pointerEvent.target && typeof pointerEvent.target.setPointerCapture === 'function' && dragState.pointerId != null) {
+        try {
+          pointerEvent.target.setPointerCapture(dragState.pointerId);
+        } catch (error) {
+          // Ignore pointer capture errors (unsupported target)
+        }
+      }
+    }
+
+    function attachDragListeners() {
+      if (typeof document === 'undefined') {
+        return;
+      }
+      document.addEventListener('pointermove', handlePointerMove, { passive: false });
+      document.addEventListener('pointerup', handlePointerEnd, { passive: false });
+      document.addEventListener('pointercancel', handlePointerEnd, { passive: false });
+    }
+
+    function detachDragListeners() {
+      if (typeof document === 'undefined') {
+        return;
+      }
+      document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerup', handlePointerEnd);
+      document.removeEventListener('pointercancel', handlePointerEnd);
+    }
+
+    function handlePointerMove(event) {
+      if (!dragState.active) {
+        return;
+      }
+      if (dragState.pointerId != null && typeof event.pointerId === 'number' && dragState.pointerId !== event.pointerId) {
+        return;
+      }
+      const deltaX = event.clientX - dragState.startX;
+      const deltaY = event.clientY - dragState.startY;
+      if (!dragState.moved) {
+        const threshold = 3;
+        dragState.moved = Math.abs(deltaX) > threshold || Math.abs(deltaY) > threshold;
+      }
+      if (dragState.moved) {
+        if (!state.selected || !state.selected.cards || !state.selected.cards.includes(dragState.card)) {
+          selectCardForDrag(dragState.card);
+        }
+        if (boardElement) {
+          boardElement.classList.add('is-dragging');
+        }
+        applyDragOffsets(deltaX, deltaY);
+      }
+      if (typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+    }
+
+    function handlePointerEnd(event) {
+      if (!dragState.active) {
+        return;
+      }
+      if (dragState.pointerId != null && typeof event.pointerId === 'number' && dragState.pointerId !== event.pointerId) {
+        return;
+      }
+
+      const draggedCards = state.selected && state.selected.cards ? [...state.selected.cards] : [];
+      let dropApplied = false;
+      if (dragState.moved) {
+        const dropTarget = resolveDropTarget(event.clientX, event.clientY);
+        if (dropTarget) {
+          dropApplied = attemptDropOnTarget(dropTarget);
+        }
+      }
+
+      stopDragSession({ preventClick: dragState.moved, cards: draggedCards, dropApplied });
+      if (typeof event.preventDefault === 'function' && dragState.moved) {
+        event.preventDefault();
+      }
+    }
+
+    function stopDragSession(options) {
+      const cards = options && Array.isArray(options.cards) ? options.cards : null;
+      const dropApplied = Boolean(options && options.dropApplied);
+
+      dragState.active = false;
+      dragState.pointerId = null;
+      dragState.startX = 0;
+      dragState.startY = 0;
+      dragState.card = null;
+      dragState.moved = false;
+
+      clearDragVisuals(cards, { dropApplied });
+      detachDragListeners();
+
+      if (boardElement) {
+        boardElement.classList.remove('is-dragging');
+      }
+
+      if (options && options.preventClick) {
+        dragState.ignoreNextClick = true;
+      }
+    }
+
+    function applyDragOffsets(deltaX, deltaY) {
+      if (!state.selected || !state.selected.cards) {
+        return;
+      }
+      state.selected.cards.forEach((card, index) => {
+        if (!card.element) {
+          return;
+        }
+        if (!Object.prototype.hasOwnProperty.call(card.element.dataset, 'dragBaseZ')) {
+          card.element.dataset.dragBaseZ = card.element.style.zIndex || '';
+        }
+        card.element.classList.add('is-dragging');
+        card.element.style.setProperty('--solitaire-drag-x', `${deltaX}px`);
+        card.element.style.setProperty('--solitaire-drag-y', `${deltaY}px`);
+        card.element.style.zIndex = String(400 + index);
+      });
+    }
+
+    function clearDragVisuals(cards, options) {
+      const list = cards || (state.selected ? state.selected.cards : []);
+      if (!list) {
+        return;
+      }
+      const dropApplied = Boolean(options && options.dropApplied);
+      list.forEach((card) => {
+        if (!card || !card.element) {
+          return;
+        }
+        card.element.classList.remove('is-dragging');
+        card.element.style.removeProperty('--solitaire-drag-x');
+        card.element.style.removeProperty('--solitaire-drag-y');
+        if (Object.prototype.hasOwnProperty.call(card.element.dataset, 'dragBaseZ')) {
+          const base = card.element.dataset.dragBaseZ;
+          if (!dropApplied) {
+            if (base) {
+              card.element.style.zIndex = base;
+            } else {
+              card.element.style.removeProperty('z-index');
+            }
+          }
+          delete card.element.dataset.dragBaseZ;
+        }
+      });
+    }
+
+    function resolveDropTarget(clientX, clientY) {
+      if (typeof document === 'undefined') {
+        return null;
+      }
+
+      const draggedElements = state.selected && state.selected.cards
+        ? state.selected.cards
+          .map((card) => (card && card.element ? card.element : null))
+          .filter(Boolean)
+        : [];
+
+      const restorePointerEvents = () => {
+        draggedElements.forEach((entry) => {
+          if (Object.prototype.hasOwnProperty.call(entry.dataset, 'dragPointerBlock')) {
+            const previous = entry.dataset.dragPointerBlock;
+            if (previous) {
+              entry.style.pointerEvents = previous;
+            } else {
+              entry.style.removeProperty('pointer-events');
+            }
+            delete entry.dataset.dragPointerBlock;
+          }
+        });
+      };
+
+      draggedElements.forEach((element) => {
+        element.dataset.dragPointerBlock = element.style.pointerEvents || '';
+        element.style.pointerEvents = 'none';
+      });
+
+      let element = document.elementFromPoint(clientX, clientY);
+      while (element) {
+        if (element.classList && element.classList.contains('solitaire-card')) {
+          const card = element.__solitaireCard;
+          const location = card ? getCardLocation(card) : null;
+          if (location && (location.type === 'tableau' || location.type === 'foundation')) {
+            restorePointerEvents();
+            return { type: location.type, index: location.index };
+          }
+        }
+        if (element.classList && element.classList.contains('solitaire-pile')) {
+          const pileType = element.dataset.pileType;
+          if (pileType === 'tableau' && typeof element.dataset.column === 'string') {
+            restorePointerEvents();
+            return { type: 'tableau', index: Number(element.dataset.column) };
+          }
+          if (pileType === 'foundation' && typeof element.dataset.foundation === 'string') {
+            restorePointerEvents();
+            return { type: 'foundation', index: Number(element.dataset.foundation) };
+          }
+        }
+        element = element.parentElement;
+      }
+
+      restorePointerEvents();
+
+      return null;
+    }
+
+    function attemptDropOnTarget(target) {
+      if (!target || !state.selected) {
+        return false;
+      }
+      if (target.type === 'tableau' && typeof target.index === 'number') {
+        return moveSelectionToTableau(target.index);
+      }
+      if (target.type === 'foundation' && typeof target.index === 'number') {
+        return moveSelectionToFoundation(target.index);
+      }
+      return false;
     }
 
     resetButton.addEventListener('click', () => {
