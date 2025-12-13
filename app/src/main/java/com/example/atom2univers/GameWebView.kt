@@ -16,17 +16,36 @@ class GameWebView @JvmOverloads constructor(
         isFocusableInTouchMode = true
     }
 
+    private var activeTouchCount = 0
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!hasFocus()) {
             requestFocusFromTouch()
         }
 
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN ->
+            MotionEvent.ACTION_DOWN -> {
+                activeTouchCount = 1
                 parent?.requestDisallowInterceptTouchEvent(true)
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+            }
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                activeTouchCount += 1
+                parent?.requestDisallowInterceptTouchEvent(true)
+            }
+            MotionEvent.ACTION_POINTER_UP -> {
+                activeTouchCount = (activeTouchCount - 1).coerceAtLeast(0)
+                if (activeTouchCount == 0) {
+                    parent?.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            MotionEvent.ACTION_UP -> {
+                activeTouchCount = 0
                 parent?.requestDisallowInterceptTouchEvent(false)
                 performClick()
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                activeTouchCount = 0
+                parent?.requestDisallowInterceptTouchEvent(false)
             }
         }
 
