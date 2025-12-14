@@ -549,8 +549,8 @@ const MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = 2;
  * fréquence de recalcul. Des valeurs plus faibles allègent la charge CPU tout en
  * conservant une marge suffisante pour éviter les coupures audio.
  */
-const MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = 0.12;
-const MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = 0.06;
+const MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = 0.18;
+const MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = 0.045;
 
 /**
  * Réglages audio du lecteur MIDI.

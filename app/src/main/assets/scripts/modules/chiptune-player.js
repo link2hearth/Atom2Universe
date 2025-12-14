@@ -1627,7 +1627,7 @@
         : 0.18;
       this.scheduleIntervalSeconds = Number.isFinite(schedulerIntervalConfig) && schedulerIntervalConfig > 0
         ? schedulerIntervalConfig
-        : 0.06;
+        : 0.045;
       const previewLeadConfig = typeof globalThis !== 'undefined'
         ? globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS
         : undefined;
@@ -9861,12 +9861,13 @@
       let index = this.schedulerState.index;
       const currentTime = this.audioContext.currentTime;
       const windowEnd = currentTime + this.scheduleAheadTime;
+      const burstPadding = Math.min(0.12, Math.max(0.04, this.scheduleAheadTime * 0.6));
 
       while (index < notes.length) {
         const note = notes[index];
         const offset = Number.isFinite(note.startTime) ? note.startTime : 0;
         const noteStart = startTime + (offset / speed);
-        if (noteStart > windowEnd) {
+        if (noteStart - burstPadding > windowEnd) {
           break;
         }
         this.scheduleNote(note, startTime, speed);
