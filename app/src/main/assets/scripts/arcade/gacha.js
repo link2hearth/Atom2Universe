@@ -862,7 +862,7 @@ function awardBonusGachaImage(imageId, options = null) {
     return null;
   }
   const { definition: providedDefinition = null, skipAssetCheck = false } = options || {};
-  const collection = ensureGachaBonusImageCollection();
+  const collection = ensureGachaImageCollection();
   if (!collection[imageId]) {
     collection[imageId] = {
       id: imageId,
@@ -889,13 +889,13 @@ function awardBonusGachaImage(imageId, options = null) {
     if (!Number.isFinite(Number(entry.firstAcquiredAt)) || Number(entry.firstAcquiredAt) <= 0) {
       entry.firstAcquiredAt = now;
     }
-    let counter = Number(gameState.gachaBonusImageAcquisitionCounter);
+    let counter = Number(gameState.gachaImageAcquisitionCounter);
     if (!Number.isFinite(counter) || counter < 0) {
       counter = 0;
     }
     counter = Math.floor(counter) + 1;
     entry.acquiredOrder = counter;
-    gameState.gachaBonusImageAcquisitionCounter = counter;
+    gameState.gachaImageAcquisitionCounter = counter;
   }
   if (typeof updateCollectionBonusImagesVisibility === 'function') {
     updateCollectionBonusImagesVisibility();
