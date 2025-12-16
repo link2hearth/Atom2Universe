@@ -594,6 +594,9 @@ let localBackgroundItems = [];
 let backgroundLibraryLabel = '';
 let backgroundLibraryStatus = 'idle';
 let backgroundRotationMs = readStoredBackgroundDuration();
+let collectionDownloadsEntries = [];
+let collectionDownloadsCurrentIndex = 0;
+let collectionDownloadsTouchStartX = null;
 const imageSizeAllowanceCache = new Map();
 let imageAssetCache = new Map();
 const imageAssetDownloads = new Map();
@@ -7012,6 +7015,12 @@ function collectDomElements() {
   collectionDownloadsGallery: document.getElementById('collectionDownloadsGallery'),
   collectionDownloadsEmpty: document.getElementById('collectionDownloadsEmpty'),
   collectionDownloadsRefresh: document.getElementById('collectionDownloadsRefresh'),
+  collectionDownloadsLightbox: document.getElementById('collectionDownloadsLightbox'),
+  collectionDownloadsLightboxImage: document.getElementById('collectionDownloadsLightboxImage'),
+  collectionDownloadsLightboxCaption: document.getElementById('collectionDownloadsLightboxCaption'),
+  collectionDownloadsLightboxClose: document.getElementById('collectionDownloadsLightboxClose'),
+  collectionDownloadsPrev: document.getElementById('collectionDownloadsPrev'),
+  collectionDownloadsNext: document.getElementById('collectionDownloadsNext'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
@@ -12831,11 +12840,104 @@ function buildDownloadedImageAlt(position, labelText = '') {
   );
 }
 
-function openDownloadedImage(imageUrl) {
-  if (!imageUrl || typeof window === 'undefined' || typeof window.open !== 'function') {
+function setCollectionDownloadsEntries(entries = []) {
+  collectionDownloadsEntries = Array.isArray(entries) ? entries : [];
+  if (!collectionDownloadsEntries.length) {
+    collectionDownloadsCurrentIndex = 0;
     return;
   }
-  window.open(imageUrl, '_blank', 'noopener');
+  const cappedIndex = Math.min(collectionDownloadsCurrentIndex, collectionDownloadsEntries.length - 1);
+  collectionDownloadsCurrentIndex = Math.max(0, cappedIndex);
+}
+
+function isCollectionDownloadsLightboxOpen() {
+  return Boolean(
+    elements.collectionDownloadsLightbox && !elements.collectionDownloadsLightbox.hasAttribute('hidden')
+  );
+}
+
+function openCollectionDownloadFullscreen(index = 0) {
+  if (!elements.collectionDownloadsLightbox || !elements.collectionDownloadsLightboxImage) {
+    return;
+  }
+  if (!Array.isArray(collectionDownloadsEntries) || !collectionDownloadsEntries.length) {
+    return;
+  }
+
+  const safeIndex = Math.min(Math.max(Number(index) || 0, 0), collectionDownloadsEntries.length - 1);
+  const entry = collectionDownloadsEntries[safeIndex];
+  if (!entry) {
+    return;
+  }
+
+  collectionDownloadsCurrentIndex = safeIndex;
+  const labelText = entry.labelText || buildDownloadedImageLabel(entry.position, entry.fileName);
+  const altText = entry.altText || buildDownloadedImageAlt(entry.position, labelText);
+
+  elements.collectionDownloadsLightboxImage.src = entry.resolvedUrl;
+  elements.collectionDownloadsLightboxImage.alt = altText;
+  if (elements.collectionDownloadsLightboxCaption) {
+    elements.collectionDownloadsLightboxCaption.textContent = labelText;
+  }
+
+  elements.collectionDownloadsLightbox.removeAttribute('hidden');
+  refreshLightboxBodyState();
+}
+
+function closeCollectionDownloadsFullscreen() {
+  if (!elements.collectionDownloadsLightbox || !elements.collectionDownloadsLightboxImage) {
+    return;
+  }
+
+  elements.collectionDownloadsLightbox.setAttribute('hidden', 'hidden');
+  elements.collectionDownloadsLightboxImage.src = '';
+  elements.collectionDownloadsLightboxImage.alt = '';
+  if (elements.collectionDownloadsLightboxCaption) {
+    elements.collectionDownloadsLightboxCaption.textContent = '';
+  }
+  collectionDownloadsTouchStartX = null;
+  refreshLightboxBodyState();
+}
+
+function showNextCollectionDownload() {
+  if (!Array.isArray(collectionDownloadsEntries) || collectionDownloadsEntries.length === 0) {
+    return;
+  }
+  const nextIndex = (collectionDownloadsCurrentIndex + 1) % collectionDownloadsEntries.length;
+  openCollectionDownloadFullscreen(nextIndex);
+}
+
+function showPreviousCollectionDownload() {
+  if (!Array.isArray(collectionDownloadsEntries) || collectionDownloadsEntries.length === 0) {
+    return;
+  }
+  const previousIndex = (collectionDownloadsCurrentIndex - 1 + collectionDownloadsEntries.length)
+    % collectionDownloadsEntries.length;
+  openCollectionDownloadFullscreen(previousIndex);
+}
+
+function handleCollectionDownloadsTouchStart(event) {
+  if (!event?.touches?.length) {
+    return;
+  }
+  collectionDownloadsTouchStartX = event.touches[0].clientX;
+}
+
+function handleCollectionDownloadsTouchEnd(event) {
+  if (collectionDownloadsTouchStartX === null || !event?.changedTouches?.length) {
+    collectionDownloadsTouchStartX = null;
+    return;
+  }
+  const deltaX = event.changedTouches[0].clientX - collectionDownloadsTouchStartX;
+  collectionDownloadsTouchStartX = null;
+  if (Math.abs(deltaX) < 30) {
+    return;
+  }
+  if (deltaX < 0) {
+    showNextCollectionDownload();
+    return;
+  }
+  showPreviousCollectionDownload();
 }
 
 function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
@@ -12859,7 +12961,14 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
         fileName: extractFileNameFromUri(resolvedUrl || entry?.imageUrl)
       };
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .map(entry => {
+      const labelText = buildDownloadedImageLabel(entry.position, entry.fileName);
+      const altText = buildDownloadedImageAlt(entry.position, labelText);
+      return { ...entry, labelText, altText };
+    });
+
+  setCollectionDownloadsEntries(normalizedEntries);
 
   const hasEntries = normalizedEntries.length > 0;
   gallery.toggleAttribute('hidden', !hasEntries);
@@ -12867,10 +12976,13 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
   elements.collectionDownloadsEmpty.setAttribute('aria-hidden', hasEntries ? 'true' : 'false');
 
   if (!hasEntries) {
+    closeCollectionDownloadsFullscreen();
     return;
   }
 
-  normalizedEntries.forEach(entry => {
+  const lightboxWasOpen = isCollectionDownloadsLightboxOpen();
+
+  normalizedEntries.forEach((entry, index) => {
     const card = document.createElement('article');
     card.className = 'images-card collection-downloads-card';
     card.setAttribute('role', 'listitem');
@@ -12881,12 +12993,11 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
     thumb.loading = 'lazy';
     thumb.decoding = 'async';
     thumb.src = entry.resolvedUrl;
-    const labelText = buildDownloadedImageLabel(entry.position, entry.fileName);
-    thumb.alt = buildDownloadedImageAlt(entry.position, labelText);
+    thumb.alt = entry.altText;
 
     card.appendChild(thumb);
 
-    const handleOpen = () => openDownloadedImage(entry.resolvedUrl);
+    const handleOpen = () => openCollectionDownloadFullscreen(index);
     card.addEventListener('click', handleOpen);
     card.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -12897,6 +13008,10 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
 
     gallery.appendChild(card);
   });
+
+  if (lightboxWasOpen) {
+    openCollectionDownloadFullscreen(collectionDownloadsCurrentIndex);
+  }
 }
 
 function pickNextBackgroundIndex(poolLength) {
@@ -13477,6 +13592,19 @@ function selectImageById(itemId) {
   }
 }
 
+function refreshLightboxBodyState() {
+  const imageLightboxOpen = elements.imagesLightbox && !elements.imagesLightbox.hasAttribute('hidden');
+  const downloadsLightboxOpen = elements.collectionDownloadsLightbox
+    && !elements.collectionDownloadsLightbox.hasAttribute('hidden');
+
+  if (imageLightboxOpen || downloadsLightboxOpen) {
+    document.body.classList.add('images-lightbox-open');
+    return;
+  }
+
+  document.body.classList.remove('images-lightbox-open');
+}
+
 function openCurrentImage() {
   const current = imageFeedVisibleItems[imageFeedCurrentIndex];
   if (!current || typeof window?.open !== 'function') {
@@ -13526,7 +13654,7 @@ function openActiveImageFullscreen() {
   elements.imagesLightboxImage.alt = current.title || getImageSourceLabelById(current.sourceId);
   elements.imagesLightboxCaption.textContent = current.title || getImageSourceLabelById(current.sourceId) || '';
   elements.imagesLightbox.removeAttribute('hidden');
-  document.body.classList.add('images-lightbox-open');
+  refreshLightboxBodyState();
 }
 
 function closeImageFullscreen() {
@@ -13539,7 +13667,7 @@ function closeImageFullscreen() {
   if (elements.imagesLightboxCaption) {
     elements.imagesLightboxCaption.textContent = '';
   }
-  document.body.classList.remove('images-lightbox-open');
+  refreshLightboxBodyState();
 }
 
 function handleImageSavedOnDevice(success) {
@@ -22626,10 +22754,43 @@ function bindDomEventListeners() {
       }
     });
   }
+  if (elements.collectionDownloadsLightboxClose) {
+    elements.collectionDownloadsLightboxClose.addEventListener('click', closeCollectionDownloadsFullscreen);
+  }
+  if (elements.collectionDownloadsLightbox) {
+    elements.collectionDownloadsLightbox.addEventListener('click', event => {
+      const target = event?.target;
+      if (target === elements.collectionDownloadsLightbox
+        || target?.classList?.contains('images-lightbox__backdrop')) {
+        closeCollectionDownloadsFullscreen();
+      }
+    });
+    elements.collectionDownloadsLightbox.addEventListener('touchstart', handleCollectionDownloadsTouchStart, {
+      passive: true
+    });
+    elements.collectionDownloadsLightbox.addEventListener('touchend', handleCollectionDownloadsTouchEnd, {
+      passive: true
+    });
+  }
+  if (elements.collectionDownloadsPrev) {
+    elements.collectionDownloadsPrev.addEventListener('click', showPreviousCollectionDownload);
+  }
+  if (elements.collectionDownloadsNext) {
+    elements.collectionDownloadsNext.addEventListener('click', showNextCollectionDownload);
+  }
   if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
     globalThis.addEventListener('keydown', event => {
       if (event?.key === 'Escape') {
         closeImageFullscreen();
+        closeCollectionDownloadsFullscreen();
+        return;
+      }
+      if (event?.key === 'ArrowRight' && isCollectionDownloadsLightboxOpen()) {
+        showNextCollectionDownload();
+        return;
+      }
+      if (event?.key === 'ArrowLeft' && isCollectionDownloadsLightboxOpen()) {
+        showPreviousCollectionDownload();
       }
     });
   }

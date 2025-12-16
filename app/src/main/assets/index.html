@@ -6131,6 +6131,46 @@
             ></div>
           </div>
         </article>
+        <div class="images-lightbox" id="collectionDownloadsLightbox" hidden>
+          <div class="images-lightbox__backdrop" aria-hidden="true"></div>
+          <figure class="images-lightbox__content">
+            <button
+              type="button"
+              id="collectionDownloadsLightboxClose"
+              class="images-lightbox__close"
+              aria-label="Fermer l’image en plein écran"
+              data-i18n="aria-label:index.sections.images.actions.closeFullscreen"
+            >
+              ✕
+            </button>
+            <button
+              type="button"
+              id="collectionDownloadsPrev"
+              class="images-lightbox__nav images-lightbox__nav--prev"
+              aria-label="Image précédente"
+              data-i18n="aria-label:index.sections.images.viewer.prev"
+            >
+              ◀
+            </button>
+            <img
+              id="collectionDownloadsLightboxImage"
+              class="images-lightbox__image"
+              src=""
+              alt=""
+              loading="lazy"
+            />
+            <figcaption id="collectionDownloadsLightboxCaption" class="images-lightbox__caption"></figcaption>
+            <button
+              type="button"
+              id="collectionDownloadsNext"
+              class="images-lightbox__nav images-lightbox__nav--next"
+              aria-label="Image suivante"
+              data-i18n="aria-label:index.sections.images.viewer.next"
+            >
+              ▶
+            </button>
+          </figure>
+        </div>
       </div>
     </section>
 
