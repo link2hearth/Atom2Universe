@@ -6084,16 +6084,26 @@
             >
               Téléchargées
             </h3>
-            <button
-              type="button"
-              id="collectionDownloadsToggle"
-              class="info-card__collapse-button"
-              aria-expanded="true"
-              aria-controls="collection-downloads-content"
-              data-i18n="index.sections.collection.downloads.toggle.collapse"
-            >
-              Réduire
-            </button>
+            <div class="info-card__actions">
+              <button
+                type="button"
+                id="collectionDownloadsRefresh"
+                class="info-card__action-button"
+                data-i18n="index.sections.collection.downloads.refresh"
+              >
+                Actualiser
+              </button>
+              <button
+                type="button"
+                id="collectionDownloadsToggle"
+                class="info-card__collapse-button"
+                aria-expanded="true"
+                aria-controls="collection-downloads-content"
+                data-i18n="index.sections.collection.downloads.toggle.collapse"
+              >
+                Réduire
+              </button>
+            </div>
           </header>
           <div
             id="collection-downloads-content"

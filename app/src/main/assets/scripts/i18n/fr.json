@@ -198,6 +198,7 @@
             "collapse": "Réduire",
             "expand": "Développer"
           },
+          "refresh": "Actualiser",
           "empty": "Aucune image téléchargée trouvée pour le moment.",
           "itemLabel": "Image téléchargée {index}",
           "itemAlt": "Image téléchargée {index}",

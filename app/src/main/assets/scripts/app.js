@@ -7011,6 +7011,7 @@ function collectDomElements() {
   collectionDownloadsToggle: document.getElementById('collectionDownloadsToggle'),
   collectionDownloadsGallery: document.getElementById('collectionDownloadsGallery'),
   collectionDownloadsEmpty: document.getElementById('collectionDownloadsEmpty'),
+  collectionDownloadsRefresh: document.getElementById('collectionDownloadsRefresh'),
   infoCharactersCard: document.querySelector('.info-card--characters'),
   infoCharactersContent: document.getElementById('info-characters-content'),
   infoCharactersToggle: document.getElementById('infoCharactersToggle'),
@@ -8667,6 +8668,7 @@ function updateCollectionDownloadsVisibility() {
   const visible = shouldShowCollectionDownloadsCard();
   elements.collectionDownloadsCard.hidden = !visible;
   elements.collectionDownloadsCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  updateCollectionDownloadsRefreshState();
 }
 
 function updateCollectionShortcutState() {
@@ -9301,6 +9303,30 @@ function updateCollectionDownloadsToggleLabel(collapsed) {
   elements.collectionDownloadsToggle.setAttribute('aria-label', label);
 }
 
+function updateCollectionDownloadsRefreshLabel() {
+  if (!elements.collectionDownloadsRefresh) {
+    return;
+  }
+  const key = 'index.sections.collection.downloads.refresh';
+  const fallback = 'Refresh';
+  const label = translateOrDefault(key, fallback);
+  elements.collectionDownloadsRefresh.setAttribute('data-i18n', key);
+  elements.collectionDownloadsRefresh.textContent = label;
+  elements.collectionDownloadsRefresh.setAttribute('aria-label', label);
+  elements.collectionDownloadsRefresh.title = label;
+}
+
+function updateCollectionDownloadsRefreshState() {
+  if (!elements.collectionDownloadsRefresh) {
+    return;
+  }
+  const available = hasAndroidBackgroundBridge();
+  elements.collectionDownloadsRefresh.disabled = !available;
+  elements.collectionDownloadsRefresh.setAttribute('aria-disabled', available ? 'false' : 'true');
+  elements.collectionDownloadsRefresh.hidden = !available;
+  elements.collectionDownloadsRefresh.setAttribute('aria-hidden', available ? 'false' : 'true');
+}
+
 function updateCollectionVideosToggleLabel(collapsed) {
   if (!elements.collectionVideosToggle) {
     return;
@@ -9619,6 +9645,17 @@ function toggleCollectionDownloadsCollapsed() {
   setCollectionDownloadsCollapsed(!currentlyCollapsed);
 }
 
+function handleCollectionDownloadsRefresh(event) {
+  if (event && typeof event.preventDefault === 'function') {
+    event.preventDefault();
+  }
+  if (!hasAndroidBackgroundBridge()) {
+    showToast(translateOrDefault('scripts.app.background.unsupported', 'This action requires the Android app.'));
+    return;
+  }
+  requestNativeBackgroundBank();
+}
+
 function toggleCollectionVideosCollapsed() {
   if (!elements.collectionVideosCard) {
     return;
@@ -9686,10 +9723,15 @@ function initCollectionDownloadsCard() {
     false
   );
   setCollectionDownloadsCollapsed(initialCollapsed, { persist: false });
+  updateCollectionDownloadsRefreshLabel();
+  updateCollectionDownloadsRefreshState();
   elements.collectionDownloadsToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleCollectionDownloadsCollapsed();
   });
+  if (elements.collectionDownloadsRefresh) {
+    elements.collectionDownloadsRefresh.addEventListener('click', handleCollectionDownloadsRefresh);
+  }
   renderCollectionDownloadsGallery(getBackgroundItems());
   updateCollectionDownloadsVisibility();
 }
@@ -9870,6 +9912,7 @@ function subscribeCollectionDownloadsLanguageUpdates() {
       ? elements.collectionDownloadsCard.classList.contains('info-card--collapsed')
       : false;
     updateCollectionDownloadsToggleLabel(collapsed);
+    updateCollectionDownloadsRefreshLabel();
     renderCollectionDownloadsGallery(getBackgroundItems());
   };
   const api = getI18nApi();
@@ -12804,7 +12847,21 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
   gallery.innerHTML = '';
 
   const entries = Array.isArray(items) ? items : [];
-  const hasEntries = entries.length > 0;
+  const normalizedEntries = entries
+    .map((entry, index) => {
+      const resolvedUrl = resolveBackgroundUrl(getFullImageSrc(entry));
+      if (!resolvedUrl) {
+        return null;
+      }
+      return {
+        resolvedUrl,
+        position: index + 1,
+        fileName: extractFileNameFromUri(resolvedUrl || entry?.imageUrl)
+      };
+    })
+    .filter(Boolean);
+
+  const hasEntries = normalizedEntries.length > 0;
   gallery.toggleAttribute('hidden', !hasEntries);
   elements.collectionDownloadsEmpty.hidden = hasEntries;
   elements.collectionDownloadsEmpty.setAttribute('aria-hidden', hasEntries ? 'true' : 'false');
@@ -12819,7 +12876,7 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
     { path: IMAGE_DOWNLOAD_TARGET_PATH }
   );
 
-  entries.forEach((entry, index) => {
+  normalizedEntries.forEach(entry => {
     const card = document.createElement('article');
     card.className = 'images-card collection-downloads-card';
     card.setAttribute('role', 'listitem');
@@ -12829,9 +12886,9 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
     thumb.className = 'images-card__thumb';
     thumb.loading = 'lazy';
     thumb.decoding = 'async';
-    thumb.src = entry?.imageUrl || '';
-    const labelText = buildDownloadedImageLabel(index + 1, extractFileNameFromUri(entry?.imageUrl));
-    thumb.alt = buildDownloadedImageAlt(index + 1, labelText);
+    thumb.src = entry.resolvedUrl;
+    const labelText = buildDownloadedImageLabel(entry.position, entry.fileName);
+    thumb.alt = buildDownloadedImageAlt(entry.position, labelText);
 
     const body = document.createElement('div');
     body.className = 'images-card__body';
@@ -12850,7 +12907,7 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
     card.appendChild(thumb);
     card.appendChild(body);
 
-    const handleOpen = () => openDownloadedImage(entry?.imageUrl);
+    const handleOpen = () => openDownloadedImage(entry.resolvedUrl);
     card.addEventListener('click', handleOpen);
     card.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {

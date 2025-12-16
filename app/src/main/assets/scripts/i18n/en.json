@@ -198,6 +198,7 @@
             "collapse": "Collapse",
             "expand": "Expand"
           },
+          "refresh": "Refresh",
           "empty": "No downloaded images found yet.",
           "itemLabel": "Downloaded image {index}",
           "itemAlt": "Downloaded image {index}",
