@@ -16,6 +16,7 @@
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: none;
+  scroll-margin-top: var(--reflex-banner-offset, 0px);
 }
 
 .page--reflex.active {
@@ -41,7 +42,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: max(0px, calc(var(--reflex-banner-offset, 2px) - var(--reflex-padding, 0px)));
+  margin-top: 0;
 }
 
 .reflex__mode {
