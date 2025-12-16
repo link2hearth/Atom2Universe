@@ -190,6 +190,19 @@
           "empty": "No bonus 2 image unlocked yet.",
           "view": "View {card}",
           "count": "×{count}"
+        },
+        "downloads": {
+          "title": "Downloaded",
+          "subtitle": "Images saved by the Android app (Pictures/Atom2Univers).",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "refresh": "Refresh",
+          "empty": "No downloaded images found yet.",
+          "itemLabel": "Downloaded image {index}",
+          "itemAlt": "Downloaded image {index}",
+          "location": "Saved in {path}"
         }
       },
       "info": {
@@ -361,6 +374,7 @@
         "subtitle": "Browse curated photos from public and science feeds.",
         "hint": "Tap a thumbnail to open it. Use Refresh to load new images and filter by source.",
         "actions": {
+          "collection": "Collection",
           "refresh": "Refresh",
           "open": "Open source",
           "download": "Download",

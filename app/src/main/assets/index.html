@@ -97,9 +97,6 @@
         <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
-        <button class="nav-button" data-target="collection" hidden aria-hidden="true" disabled aria-disabled="true">
-          <span data-i18n="index.navigation.items.collection">Collection</span>
-        </button>
         <button class="nav-button" data-target="info">
           <span data-i18n="index.navigation.items.info">Infos</span>
         </button>
@@ -6073,6 +6070,67 @@
             ></ul>
           </div>
         </article>
+
+        <article
+          id="collectionDownloadsCard"
+          class="info-card info-card--cards"
+          aria-labelledby="collection-downloads-title"
+          hidden
+        >
+          <header class="info-card__header info-card__header--collapsible">
+            <h3
+              id="collection-downloads-title"
+              data-i18n="index.sections.collection.downloads.title"
+            >
+              Téléchargées
+            </h3>
+            <div class="info-card__actions">
+              <button
+                type="button"
+                id="collectionDownloadsRefresh"
+                class="info-card__action-button"
+                data-i18n="index.sections.collection.downloads.refresh"
+              >
+                Actualiser
+              </button>
+              <button
+                type="button"
+                id="collectionDownloadsToggle"
+                class="info-card__collapse-button"
+                aria-expanded="true"
+                aria-controls="collection-downloads-content"
+                data-i18n="index.sections.collection.downloads.toggle.collapse"
+              >
+                Réduire
+              </button>
+            </div>
+          </header>
+          <div
+            id="collection-downloads-content"
+            class="info-card__content info-card__content--cards"
+            aria-hidden="false"
+          >
+            <p
+              class="info-card__subtitle info-card__subtitle--cards"
+              id="collectionDownloadsSubtitle"
+              data-i18n="index.sections.collection.downloads.subtitle"
+            >
+              Vos images téléchargées depuis l’application Android.
+            </p>
+            <p
+              id="collectionDownloadsEmpty"
+              class="info-card__empty"
+              data-i18n="index.sections.collection.downloads.empty"
+            >
+              Aucune image téléchargée trouvée pour le moment.
+            </p>
+            <div
+              id="collectionDownloadsGallery"
+              class="images-gallery collection-downloads-gallery"
+              role="list"
+            ></div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -7107,13 +7165,23 @@
     >
       <div class="images-page">
         <div class="images-page__header">
-          <h2
-            id="images-title"
-            class="images-page__title visually-hidden"
-            data-i18n="index.sections.images.title"
-          >
-            Images
-          </h2>
+          <div class="images-page__lead">
+            <h2
+              id="images-title"
+              class="images-page__title visually-hidden"
+              data-i18n="index.sections.images.title"
+            >
+              Images
+            </h2>
+            <button
+              type="button"
+              id="imagesCollectionButton"
+              class="images-page__action"
+              data-i18n="index.sections.images.actions.collection"
+            >
+              Collection
+            </button>
+          </div>
           <div class="images-page__actions">
             <button
               type="button"

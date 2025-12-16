@@ -190,6 +190,19 @@
           "empty": "Aucune image bonus 2 débloquée pour le moment.",
           "view": "Afficher {card}",
           "count": "×{count}"
+        },
+        "downloads": {
+          "title": "Téléchargées",
+          "subtitle": "Vos images téléchargées depuis l’application Android (Pictures/Atom2Univers).",
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Développer"
+          },
+          "refresh": "Actualiser",
+          "empty": "Aucune image téléchargée trouvée pour le moment.",
+          "itemLabel": "Image téléchargée {index}",
+          "itemAlt": "Image téléchargée {index}",
+          "location": "Enregistrée dans {path}"
         }
       },
       "info": {
@@ -361,6 +374,7 @@
         "subtitle": "Parcourez une sélection d’images issues de flux photo et d’actualités scientifiques.",
         "hint": "Touchez une vignette pour l’ouvrir. Appuyez sur Actualiser pour charger de nouvelles images et filtrez par source.",
         "actions": {
+          "collection": "Collection",
           "refresh": "Actualiser",
           "open": "Ouvrir la source",
           "download": "Télécharger",
