@@ -12870,12 +12870,6 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
     return;
   }
 
-  const locationText = translateOrDefault(
-    'index.sections.collection.downloads.location',
-    `Saved in ${IMAGE_DOWNLOAD_TARGET_PATH}`,
-    { path: IMAGE_DOWNLOAD_TARGET_PATH }
-  );
-
   normalizedEntries.forEach(entry => {
     const card = document.createElement('article');
     card.className = 'images-card collection-downloads-card';
@@ -12890,22 +12884,7 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
     const labelText = buildDownloadedImageLabel(entry.position, entry.fileName);
     thumb.alt = buildDownloadedImageAlt(entry.position, labelText);
 
-    const body = document.createElement('div');
-    body.className = 'images-card__body';
-
-    const title = document.createElement('p');
-    title.className = 'images-card__title';
-    title.textContent = labelText;
-
-    const source = document.createElement('p');
-    source.className = 'images-card__source';
-    source.textContent = locationText;
-
-    body.appendChild(title);
-    body.appendChild(source);
-
     card.appendChild(thumb);
-    card.appendChild(body);
 
     const handleOpen = () => openDownloadedImage(entry.resolvedUrl);
     card.addEventListener('click', handleOpen);
