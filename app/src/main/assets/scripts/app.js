@@ -13257,7 +13257,6 @@ function initBackgroundOptions() {
   updateBackgroundToggleLabel();
   applyStoredLocalBackgroundBank();
   renderBackgroundLibraryStatus();
-  requestNativeBackgroundBank();
 }
 
 function subscribeBackgroundLanguageUpdates() {
