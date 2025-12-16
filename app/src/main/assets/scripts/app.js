@@ -6759,6 +6759,8 @@ function collectDomElements() {
   gachaAnimation: document.getElementById('gachaAnimation'),
   gachaAnimationConfetti: document.getElementById('gachaAnimationConfetti'),
   gachaContinueHint: document.getElementById('gachaContinueHint'),
+  gachaPeriodicLink: document.getElementById('gachaPeriodicLink'),
+  gachaPeriodicButton: document.getElementById('gachaPeriodicButton'),
   arcadeReturnButton: document.getElementById('arcadeReturnButton'),
   arcadeTicketButtons: document.querySelectorAll('[data-arcade-ticket-button]'),
   arcadeTicketValues: document.querySelectorAll('[data-arcade-ticket-value]'),
@@ -9810,6 +9812,13 @@ function updatePageUnlockUI() {
     const unlocked = isPageUnlocked(pageId);
     setNavButtonLockState(button, unlocked);
   });
+
+  const tableauUnlocked = isPageUnlocked('tableau');
+  setNavButtonLockState(elements.gachaPeriodicButton, tableauUnlocked);
+  if (elements.gachaPeriodicLink) {
+    elements.gachaPeriodicLink.hidden = !tableauUnlocked;
+    elements.gachaPeriodicLink.setAttribute('aria-hidden', tableauUnlocked ? 'false' : 'true');
+  }
 
   setNavButtonLockState(elements.navInfoButton, true);
   updateInfoBonusVisibility();
@@ -22259,6 +22268,15 @@ function bindDomEventListeners() {
       showPage(target);
     });
   });
+
+  if (elements.gachaPeriodicButton) {
+    elements.gachaPeriodicButton.addEventListener('click', () => {
+      if (!isPageUnlocked('tableau')) {
+        return;
+      }
+      showPage('tableau');
+    });
+  }
 
   if (elements.musicTabs?.length) {
     elements.musicTabs.forEach(tab => {

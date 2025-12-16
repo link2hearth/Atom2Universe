@@ -97,7 +97,8 @@
         "sunAlt": "Soleil cosmique",
         "continue": "Cliquer pour continuer",
         "featuredPlaceholder": "Aucun tirage vedette pour le moment.",
-        "resultPlaceholder": "Résultat du tirage"
+        "resultPlaceholder": "Résultat du tirage",
+        "periodicButton": "Tableau périodique"
       },
       "table": {
         "aria": "Tableau périodique des éléments",

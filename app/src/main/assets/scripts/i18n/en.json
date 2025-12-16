@@ -97,7 +97,8 @@
         "sunAlt": "Cosmic sun",
         "continue": "Click to continue",
         "featuredPlaceholder": "No featured draw is available right now.",
-        "resultPlaceholder": "Draw result"
+        "resultPlaceholder": "Draw result",
+        "periodicButton": "Periodic table"
       },
       "table": {
         "aria": "Periodic table of elements",
