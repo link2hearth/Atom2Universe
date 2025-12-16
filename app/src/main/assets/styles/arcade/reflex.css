@@ -41,7 +41,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: max(0px, calc(var(--reflex-banner-offset, 32px) - var(--reflex-padding, 0px)));
+  margin-top: max(0px, calc(var(--reflex-banner-offset, 2px) - var(--reflex-padding, 0px)));
 }
 
 .reflex__mode {
