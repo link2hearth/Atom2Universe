@@ -549,8 +549,30 @@ const MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS = 2;
  * fréquence de recalcul. Des valeurs plus faibles allègent la charge CPU tout en
  * conservant une marge suffisante pour éviter les coupures audio.
  */
-const MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = 0.18;
-const MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = 0.045;
+const MIDI_PLAYBACK_SCHEDULE_AHEAD_SECONDS = 0.24;
+const MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = 0.035;
+
+/**
+ * Réglages avancés pour les passages très denses en MIDI.
+ * - `burstPaddingMinSeconds`/`burstPaddingMaxSeconds` encadrent l'avance appliquée aux salves.
+ * - `burstPaddingRatio` proportion de la fenêtre de planification utilisée pour anticiper les rafales.
+ * - `densityProbeSeconds` scanne un peu plus loin que la fenêtre pour détecter les clusters.
+ * - `densityNoteThreshold` et `densityMinSpacingSeconds` déclenchent le mode agressif en cas de foule.
+ * - `extraAheadSeconds` ajoute une marge supplémentaire quand un passage dense est détecté.
+ * - `maxExtraAheadSeconds` limite cette marge, même à grande vitesse.
+ * - `speedExtraScale` ajoute un bonus d'avance proportionnel à la vitesse de lecture.
+ */
+const MIDI_PLAYBACK_DENSITY_SETTINGS = Object.freeze({
+  burstPaddingMinSeconds: 0.05,
+  burstPaddingMaxSeconds: 0.16,
+  burstPaddingRatio: 0.7,
+  densityProbeSeconds: 0.35,
+  densityNoteThreshold: 32,
+  densityMinSpacingSeconds: 0.03,
+  extraAheadSeconds: 0.08,
+  maxExtraAheadSeconds: 0.16,
+  speedExtraScale: 0.045
+});
 
 /**
  * Réglages audio du lecteur MIDI.

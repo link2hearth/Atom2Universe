@@ -1622,12 +1622,26 @@
       const schedulerIntervalConfig = typeof globalThis !== 'undefined'
         ? globalThis.MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS
         : undefined;
+      const schedulerDensityConfig = typeof globalThis !== 'undefined'
+        ? globalThis.MIDI_PLAYBACK_DENSITY_SETTINGS
+        : null;
       this.scheduleAheadTime = Number.isFinite(scheduleAheadConfig) && scheduleAheadConfig > 0
         ? scheduleAheadConfig
-        : 0.18;
+        : 0.24;
       this.scheduleIntervalSeconds = Number.isFinite(schedulerIntervalConfig) && schedulerIntervalConfig > 0
         ? schedulerIntervalConfig
-        : 0.045;
+        : 0.035;
+      this.schedulerDensity = {
+        burstPaddingMinSeconds: resolveNumberSetting(schedulerDensityConfig?.burstPaddingMinSeconds, 0.05, 0, 1),
+        burstPaddingMaxSeconds: resolveNumberSetting(schedulerDensityConfig?.burstPaddingMaxSeconds, 0.16, 0.05, 1),
+        burstPaddingRatio: resolveNumberSetting(schedulerDensityConfig?.burstPaddingRatio, 0.7, 0.2, 2),
+        densityProbeSeconds: resolveNumberSetting(schedulerDensityConfig?.densityProbeSeconds, 0.35, 0.05, 2),
+        densityNoteThreshold: resolveNumberSetting(schedulerDensityConfig?.densityNoteThreshold, 32, 1, 200),
+        densityMinSpacingSeconds: resolveNumberSetting(schedulerDensityConfig?.densityMinSpacingSeconds, 0.03, 0.001, 1),
+        extraAheadSeconds: resolveNumberSetting(schedulerDensityConfig?.extraAheadSeconds, 0.08, 0, 1),
+        maxExtraAheadSeconds: resolveNumberSetting(schedulerDensityConfig?.maxExtraAheadSeconds, 0.16, 0, 2),
+        speedExtraScale: resolveNumberSetting(schedulerDensityConfig?.speedExtraScale, 0.045, 0, 1),
+      };
       const previewLeadConfig = typeof globalThis !== 'undefined'
         ? globalThis.MIDI_PLAYBACK_PREVIEW_LEAD_SECONDS
         : undefined;
@@ -9860,8 +9874,10 @@
 
       let index = this.schedulerState.index;
       const currentTime = this.audioContext.currentTime;
-      const windowEnd = currentTime + this.scheduleAheadTime;
-      const burstPadding = Math.min(0.12, Math.max(0.04, this.scheduleAheadTime * 0.6));
+      const baseWindowEnd = currentTime + this.scheduleAheadTime;
+      const densityBoost = this.computeDensityAheadBoost(index, notes, startTime, speed, baseWindowEnd);
+      const windowEnd = baseWindowEnd + densityBoost;
+      const burstPadding = this.computeBurstPadding();
 
       while (index < notes.length) {
         const note = notes[index];
@@ -9879,6 +9895,74 @@
       if (index >= notes.length) {
         this.stopScheduler();
       }
+    }
+
+    computeBurstPadding() {
+      const minPad = Number.isFinite(this.schedulerDensity?.burstPaddingMinSeconds)
+        ? this.schedulerDensity.burstPaddingMinSeconds
+        : 0.04;
+      const maxPad = Number.isFinite(this.schedulerDensity?.burstPaddingMaxSeconds)
+        ? this.schedulerDensity.burstPaddingMaxSeconds
+        : 0.12;
+      const ratio = Number.isFinite(this.schedulerDensity?.burstPaddingRatio)
+        ? this.schedulerDensity.burstPaddingRatio
+        : 0.6;
+      const estimated = this.scheduleAheadTime * ratio;
+      return Math.min(maxPad, Math.max(minPad, estimated));
+    }
+
+    computeDensityAheadBoost(startIndex, notes, startTime, speed, baseWindowEnd) {
+      const probeSeconds = Number.isFinite(this.schedulerDensity?.densityProbeSeconds)
+        ? this.schedulerDensity.densityProbeSeconds
+        : 0.25;
+      const noteThreshold = Number.isFinite(this.schedulerDensity?.densityNoteThreshold)
+        ? this.schedulerDensity.densityNoteThreshold
+        : 0;
+      const minSpacingSeconds = Number.isFinite(this.schedulerDensity?.densityMinSpacingSeconds)
+        ? this.schedulerDensity.densityMinSpacingSeconds
+        : 0.01;
+      const extraAheadSeconds = Number.isFinite(this.schedulerDensity?.extraAheadSeconds)
+        ? this.schedulerDensity.extraAheadSeconds
+        : 0;
+      const maxExtraAheadSeconds = Number.isFinite(this.schedulerDensity?.maxExtraAheadSeconds)
+        ? this.schedulerDensity.maxExtraAheadSeconds
+        : extraAheadSeconds;
+      const speedExtraScale = Number.isFinite(this.schedulerDensity?.speedExtraScale)
+        ? this.schedulerDensity.speedExtraScale
+        : 0;
+
+      if (extraAheadSeconds <= 0 && maxExtraAheadSeconds <= 0) {
+        return 0;
+      }
+
+      const probeEnd = baseWindowEnd + probeSeconds;
+      let count = 0;
+      let lastStart = null;
+      let minGap = Number.POSITIVE_INFINITY;
+
+      for (let i = startIndex; i < notes.length; i += 1) {
+        const note = notes[i];
+        const offset = Number.isFinite(note.startTime) ? note.startTime : 0;
+        const noteStart = startTime + (offset / speed);
+        if (noteStart > probeEnd) {
+          break;
+        }
+        count += 1;
+        if (lastStart !== null) {
+          minGap = Math.min(minGap, noteStart - lastStart);
+        }
+        lastStart = noteStart;
+      }
+
+      const denseByCount = noteThreshold > 0 && count >= noteThreshold;
+      const denseByGap = minGap < minSpacingSeconds;
+      if (!denseByCount && !denseByGap) {
+        return 0;
+      }
+
+      const speedBoost = Math.max(0, (this.activePlaybackSpeed || speed) - 1) * speedExtraScale;
+      const boost = Math.min(maxExtraAheadSeconds, extraAheadSeconds + speedBoost);
+      return Math.max(0, boost);
     }
   }
 
