@@ -9,13 +9,21 @@
 
 .images-page__header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .images-page__title {
   margin: 0;
+}
+
+.images-page__lead {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .images-page__actions {
@@ -359,6 +367,18 @@ body.theme-light .images-viewer__source {
   margin: 0;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.7);
+}
+
+.collection-downloads-card {
+  min-height: 0;
+}
+
+.collection-downloads-card .images-card__thumb {
+  height: 120px;
+}
+
+.collection-downloads-card .images-card__source {
+  font-size: 0.82rem;
 }
 
 
