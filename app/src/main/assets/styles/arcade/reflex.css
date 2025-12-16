@@ -24,11 +24,12 @@
 
 .reflex {
   --reflex-banner-offset: 32px;
+  --reflex-padding: clamp(12px, 3vw, 24px);
   flex: 1 1 auto;
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: clamp(12px, 3vw, 24px);
+  padding: var(--reflex-padding);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -40,7 +41,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: var(--reflex-banner-offset, 32px);
+  margin-top: max(0px, calc(var(--reflex-banner-offset, 32px) - var(--reflex-padding, 0px)));
 }
 
 .reflex__mode {
