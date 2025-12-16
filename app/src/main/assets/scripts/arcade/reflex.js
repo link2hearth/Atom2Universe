@@ -389,10 +389,13 @@
 
   function updateTopOffset() {
     const offset = measureHeaderHeight();
-    if (!root || typeof root.style?.setProperty !== 'function') {
-      return;
+    if (root && typeof root.style?.setProperty === 'function') {
+      root.style.setProperty('--reflex-banner-offset', `${offset}px`);
     }
-    root.style.setProperty('--reflex-banner-offset', `${offset}px`);
+    const page = root?.closest?.('.page');
+    if (page && typeof page.style?.setProperty === 'function') {
+      page.style.setProperty('--reflex-banner-offset', `${offset}px`);
+    }
   }
 
   function attachLayoutListeners() {
