@@ -491,6 +491,37 @@ body.theme-light .images-gallery__empty {
   color: #0c101a;
 }
 
+.images-lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.38);
+  color: #f6f8ff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.images-lightbox__nav--prev {
+  left: 0.35rem;
+}
+
+.images-lightbox__nav--next {
+  right: 0.35rem;
+}
+
+.images-lightbox__nav:hover {
+  transform: translateY(-50%) scale(1.03);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+  background: rgba(255, 255, 255, 0.22);
+  color: #0c101a;
+}
+
 body.images-lightbox-open {
   overflow: hidden;
 }
