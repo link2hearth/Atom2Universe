@@ -7,27 +7,27 @@
       "tracks": [
         {
           "name": "Gnossienne 1",
-          "file": "Assets/Chiptune/Satie/gnossienne_1_(c)oguri.mid"
+          "file": "Assets/Chiptune/Satie/gnossiennes1.mid"
         },
         {
           "name": "Gnossienne 2",
-          "file": "Assets/Chiptune/Satie/gnossienne_2_(c)oguri.mid"
+          "file": "Assets/Chiptune/Satie/gnossiennes2.mid"
         },
         {
           "name": "Gnossienne 3",
-          "file": "Assets/Chiptune/Satie/gnossienne_3_(c)dery.mid"
+          "file": "Assets/Chiptune/Satie/gnossiennes3.mid"
         },
         {
           "name": "Gnossienne 4",
-          "file": "Assets/Chiptune/Satie/gnossienne_4_(c)dery.mid"
+          "file": "Assets/Chiptune/Satie/gnossiennes4.mid"
         },
         {
           "name": "Gnossienne 5",
-          "file": "Assets/Chiptune/Satie/gnossienne_5_(c)dery.mid"
+          "file": "Assets/Chiptune/Satie/gnossiennes5.mid"
         },
         {
           "name": "Gnossienne 6",
-          "file": "Assets/Chiptune/Satie/gnossienne_6_(c)oguri.mid"
+          "file": "Assets/Chiptune/Satie/gnossiennes6.mid"
         }
       ]
     }
