@@ -11943,6 +11943,8 @@
     const globalScope = typeof globalThis !== 'undefined'
       ? globalThis
       : (typeof window !== 'undefined' ? window : null);
+    const androidMidiStartupFlagKey = 'atom2universAndroidMidiStartupRequested';
+    const androidSoundFontStartupFlagKey = 'atom2universAndroidSoundFontStartupRequested';
 
     if (globalScope) {
       globalScope.onAndroidSoundFontReady = (payload) => {
@@ -11988,14 +11990,18 @@
       };
 
       const bridge = globalScope.AndroidBridge;
-      if (bridge && typeof bridge.loadCachedSoundFont === 'function') {
+      const soundFontStartupRequested = globalScope[androidSoundFontStartupFlagKey] === true;
+      if (bridge && typeof bridge.loadCachedSoundFont === 'function' && !soundFontStartupRequested) {
+        globalScope[androidSoundFontStartupFlagKey] = true;
         try {
           bridge.loadCachedSoundFont();
         } catch (error) {
           console.error('Unable to load cached SoundFont from Android bridge', error);
         }
       }
-      if (bridge && typeof bridge.loadMidiFolder === 'function') {
+      const midiStartupRequested = globalScope[androidMidiStartupFlagKey] === true;
+      if (bridge && typeof bridge.loadMidiFolder === 'function' && !midiStartupRequested) {
+        globalScope[androidMidiStartupFlagKey] = true;
         try {
           bridge.loadMidiFolder();
         } catch (error) {

@@ -3,6 +3,13 @@
     "meta": {
       "title": "Atom to Univers"
     },
+    "startup": {
+      "title": "Loading…",
+      "status": {
+        "default": "Preparing the app…",
+        "android": "Loading Android files…"
+      }
+    },
     "navigation": {
       "primary": "Main navigation",
       "items": {

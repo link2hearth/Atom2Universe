@@ -3,6 +3,13 @@
     "meta": {
       "title": "Atom to Univers"
     },
+    "startup": {
+      "title": "Chargement en cours…",
+      "status": {
+        "default": "Initialisation de l’application…",
+        "android": "Chargement des fichiers Android…"
+      }
+    },
     "navigation": {
       "primary": "Navigation principale",
       "items": {
