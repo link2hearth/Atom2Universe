@@ -1057,6 +1057,46 @@ const TEXT_FONT_CHOICES = Object.freeze({
   vt323: {
     id: 'vt323',
     stack: "'VT323', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  adelia: {
+    id: 'adelia',
+    stack: "'Adelia', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'super-meatball': {
+    id: 'super-meatball',
+    stack: "'Super Meatball', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'milk-days': {
+    id: 'milk-days',
+    stack: "'Milk Days', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'christmas-buttermilk': {
+    id: 'christmas-buttermilk',
+    stack: "'Christmas Buttermilk', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'magic-red': {
+    id: 'magic-red',
+    stack: "'Magic Red', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  grinchmas: {
+    id: 'grinchmas',
+    stack: "'Grinchmas', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  galter: {
+    id: 'galter',
+    stack: "'Galter', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'vanilla-caramel': {
+    id: 'vanilla-caramel',
+    stack: "'Vanilla Caramel', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  starborn: {
+    id: 'starborn',
+    stack: "'Starborn', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  supermario256: {
+    id: 'supermario256',
+    stack: "'SuperMario256', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   }
 });
 
@@ -1082,6 +1122,56 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     id: 'vt323',
     stack: "'VT323', 'DigitTech7', 'Orbitron', sans-serif",
     compactStack: "'VT323', 'Orbitron', monospace"
+  },
+  adelia: {
+    id: 'adelia',
+    stack: "'Adelia', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Adelia', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'super-meatball': {
+    id: 'super-meatball',
+    stack: "'Super Meatball', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Super Meatball', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'milk-days': {
+    id: 'milk-days',
+    stack: "'Milk Days', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Milk Days', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'christmas-buttermilk': {
+    id: 'christmas-buttermilk',
+    stack: "'Christmas Buttermilk', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Christmas Buttermilk', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'magic-red': {
+    id: 'magic-red',
+    stack: "'Magic Red', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Magic Red', 'DigitTech7', 'Orbitron', monospace"
+  },
+  grinchmas: {
+    id: 'grinchmas',
+    stack: "'Grinchmas', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Grinchmas', 'DigitTech7', 'Orbitron', monospace"
+  },
+  galter: {
+    id: 'galter',
+    stack: "'Galter', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Galter', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'vanilla-caramel': {
+    id: 'vanilla-caramel',
+    stack: "'Vanilla Caramel', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Vanilla Caramel', 'DigitTech7', 'Orbitron', monospace"
+  },
+  starborn: {
+    id: 'starborn',
+    stack: "'Starborn', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Starborn', 'DigitTech7', 'Orbitron', monospace"
+  },
+  supermario256: {
+    id: 'supermario256',
+    stack: "'SuperMario256', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'SuperMario256', 'DigitTech7', 'Orbitron', monospace"
   }
 });
 
