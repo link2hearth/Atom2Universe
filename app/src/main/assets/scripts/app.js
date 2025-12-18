@@ -1347,6 +1347,7 @@ let autoUiScaleFactor = 1;
 let pendingAutoUiScaleFrame = null;
 let pendingAutoUiScaleTimeoutId = null;
 let autoUiScaleFrameUsesTimeout = false;
+let autoUiScaleReferenceViewport = { width: 0, height: 0 };
 
 const AUTO_UI_SCALE_MIN_FACTOR = 0.7;
 const AUTO_UI_SCALE_TOLERANCE = 0.015;
@@ -1354,6 +1355,7 @@ const AUTO_UI_SCALE_SAFE_PADDING = 24;
 const AUTO_UI_SCALE_OVERFLOW_TOLERANCE = 12;
 const AUTO_UI_SCALE_VERTICAL_PADDING = 32;
 const AUTO_UI_SCALE_HEIGHT_TOLERANCE = 32;
+const AUTO_UI_SCALE_VIEWPORT_TOLERANCE = 18;
 
 let critAtomVisualsDisabled = false;
 let atomAnimationsEnabled = true;
@@ -7915,7 +7917,7 @@ function getActivePageElement() {
 
 function computeAutoUiScaleForPage(pageElement) {
   if (typeof window === 'undefined') {
-    return 1;
+    return { factor: 1, viewportWidth: 0, viewportHeight: 0 };
   }
   const viewportWidth = Math.max(
     window.innerWidth || 0,
@@ -8002,16 +8004,22 @@ function computeAutoUiScaleForPage(pageElement) {
 
   const finalScale = Math.min(widthScale, heightScale);
   if (!Number.isFinite(finalScale) || finalScale <= 0) {
-    return 1;
+    return { factor: 1, viewportWidth, viewportHeight };
   }
-  return Math.max(AUTO_UI_SCALE_MIN_FACTOR, Math.min(1, finalScale));
+  return {
+    factor: Math.max(AUTO_UI_SCALE_MIN_FACTOR, Math.min(1, finalScale)),
+    viewportWidth,
+    viewportHeight
+  };
 }
 
 function recalculateAutoUiScaleFactor() {
   pendingAutoUiScaleFrame = null;
   autoUiScaleFrameUsesTimeout = false;
   const activePage = getActivePageElement();
-  const newFactor = computeAutoUiScaleForPage(activePage);
+  const { factor: newFactor, viewportWidth, viewportHeight } = computeAutoUiScaleForPage(activePage) || {};
+  const effectiveViewportWidth = Number.isFinite(viewportWidth) ? viewportWidth : 0;
+  const effectiveViewportHeight = Number.isFinite(viewportHeight) ? viewportHeight : 0;
   if (!Number.isFinite(newFactor) || newFactor <= 0) {
     if (autoUiScaleFactor !== 1) {
       autoUiScaleFactor = 1;
@@ -8019,13 +8027,37 @@ function recalculateAutoUiScaleFactor() {
     }
     return;
   }
-  if (Math.abs(newFactor - autoUiScaleFactor) <= AUTO_UI_SCALE_TOLERANCE && newFactor < 1) {
+  if (!autoUiScaleReferenceViewport.width && effectiveViewportWidth > 0) {
+    autoUiScaleReferenceViewport.width = effectiveViewportWidth;
+  }
+  if (!autoUiScaleReferenceViewport.height && effectiveViewportHeight > 0) {
+    autoUiScaleReferenceViewport.height = effectiveViewportHeight;
+  }
+  const wantsDecrease = newFactor + AUTO_UI_SCALE_TOLERANCE < autoUiScaleFactor;
+  const wantsIncrease = newFactor - AUTO_UI_SCALE_TOLERANCE > autoUiScaleFactor;
+  if (!wantsDecrease && !wantsIncrease) {
     return;
   }
-  if (Math.abs(newFactor - autoUiScaleFactor) <= AUTO_UI_SCALE_TOLERANCE && newFactor >= 1 && autoUiScaleFactor >= 1) {
+  if (wantsDecrease) {
+    autoUiScaleFactor = newFactor;
+    autoUiScaleReferenceViewport = {
+      width: effectiveViewportWidth || autoUiScaleReferenceViewport.width,
+      height: effectiveViewportHeight || autoUiScaleReferenceViewport.height
+    };
+    updateEffectiveUiScaleFactor();
+    return;
+  }
+  const viewportGrewEnough =
+    effectiveViewportWidth > autoUiScaleReferenceViewport.width + AUTO_UI_SCALE_VIEWPORT_TOLERANCE ||
+    effectiveViewportHeight > autoUiScaleReferenceViewport.height + AUTO_UI_SCALE_VIEWPORT_TOLERANCE;
+  if (!viewportGrewEnough) {
     return;
   }
   autoUiScaleFactor = newFactor;
+  autoUiScaleReferenceViewport = {
+    width: Math.max(autoUiScaleReferenceViewport.width, effectiveViewportWidth),
+    height: Math.max(autoUiScaleReferenceViewport.height, effectiveViewportHeight)
+  };
   updateEffectiveUiScaleFactor();
 }
 
