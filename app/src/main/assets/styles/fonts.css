@@ -64,3 +64,200 @@
   src: url('../fonts/VT323-Regular.woff2') format('woff2'),
        url('../fonts/VT323-Regular.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'Adelia';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/ADELIA.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Super Meatball';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Meatball.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Milk Days';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Milk Days.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Christmas Buttermilk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Christmas Buttermilk.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Magic Red';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Magic Red.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Grinchmas';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Grinchmas.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Galter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Galter.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Vanilla Caramel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Vanilla Caramel.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Starborn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Starborn.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SuperMario256';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/SuperMario256.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Alien';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Alien.otf') format('opentype'),
+       url('../fonts/Alien.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Bilbofine';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Bilbofine.otf') format('opentype'),
+       url('../fonts/Bilbofine.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Birds of Paradise';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Birds of Paradise.otf') format('opentype'),
+       url('../fonts/Birds of Paradise.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Chomsky';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Chomsky.otf') format('opentype'),
+       url('../fonts/Chomsky.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cream Cake';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Cream Cake.otf') format('opentype'),
+       url('../fonts/Cream Cake.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cute Dog';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Cute Dog.otf') format('opentype'),
+       url('../fonts/Cute Dog.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'dealerplate california';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/dealerplate california.otf') format('opentype'),
+       url('../fonts/dealerplate california.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Designer';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Designer.otf') format('opentype'),
+       url('../fonts/Designer.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Jack in the Box';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Jack in the Box.otf') format('opentype'),
+       url('../fonts/Jack in the Box.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Markbats12-Regular';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Markbats12-Regular.otf') format('opentype'),
+       url('../fonts/Markbats12-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Roboto-Condensed.otf') format('opentype'),
+       url('../fonts/Roboto-Condensed.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto Thin';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url('../fonts/Roboto-Thin.otf') format('opentype'),
+       url('../fonts/Roboto-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'To Japan';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/To Japan.otf') format('opentype'),
+       url('../fonts/To Japan.ttf') format('truetype');
+}
