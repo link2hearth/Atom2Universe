@@ -193,36 +193,35 @@ body.theme-light .crypto-widget__status {
 
 .apc-frenzy-counter {
   --apc-frenzy-scale: var(--ui-control-scale, 1);
-  position: fixed;
-  left: clamp(1.2rem, 3vw, 2rem);
-  top: 44%;
-  bottom: auto;
-  z-index: 35;
-  min-width: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(0.18rem * var(--apc-frenzy-scale, 1));
+  min-width: calc(clamp(2.85rem, 7vw, 4.6rem) * var(--apc-frenzy-scale, 1));
+  padding:
+    calc(clamp(0.22rem, 0.9vw, 0.44rem) * var(--apc-frenzy-scale, 1))
+    calc(clamp(0.35rem, 1vw, 0.68rem) * var(--apc-frenzy-scale, 1));
+  border-radius: calc(0.72rem * var(--apc-frenzy-scale, 1));
+  background: rgba(18, 22, 32, 0.48);
+  border: 1px solid rgba(220, 236, 255, 0.18);
   color: inherit;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  opacity: 0.92;
-  transform: translateY(-50%) scale(var(--apc-frenzy-scale, 1));
+  font-variant-numeric: tabular-nums;
+  opacity: 0.94;
+  transform: scale(var(--apc-frenzy-scale, 1));
   transition: transform 0.24s ease, opacity 0.24s ease;
   pointer-events: none;
 }
 
 .frenzy-status__item .apc-frenzy-counter {
   --apc-frenzy-scale: var(--frenzy-scale, var(--ui-control-scale, 1));
-  position: static;
-  left: auto;
-  bottom: auto;
-  margin-top: clamp(0.25rem, 0.7vw, 0.5rem);
-  padding-top: clamp(0.2rem, 0.6vw, 0.35rem);
   width: 100%;
-  gap: clamp(0.1rem, 0.5vw, 0.24rem);
-  border-top: 1px solid rgba(220, 236, 255, 0.28);
+  margin-top: calc(clamp(0.18rem, 0.8vw, 0.5rem) * var(--apc-frenzy-scale, 1));
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(220, 236, 255, 0.2);
+  box-shadow: inset 0 0 0.4rem rgba(0, 0, 0, 0.22);
   transform: none;
-  transition: opacity 0.24s ease;
+  transition: opacity 0.24s ease, transform 0.24s ease;
 }
 
 .frenzy-status__item .apc-frenzy-counter.is-active {
@@ -230,31 +229,38 @@ body.theme-light .crypto-widget__status {
 }
 
 .frenzy-status__item .apc-frenzy-counter__value {
-  font-size: calc(clamp(0.8rem, 1.7vw, 1.1rem) * var(--apc-frenzy-scale, 1));
+  font-size: calc(clamp(0.52rem, 0.9vw, 0.72rem) * var(--apc-frenzy-scale, 1));
 }
 
 body.theme-light .frenzy-status__item .apc-frenzy-counter {
-  border-top-color: rgba(12, 24, 44, 0.16);
+  background: rgba(12, 24, 44, 0.08);
+  border-color: rgba(12, 24, 44, 0.16);
+  box-shadow: inset 0 0 0.4rem rgba(12, 24, 44, 0.14);
 }
 
 body.theme-neon .frenzy-status__item .apc-frenzy-counter {
-  border-top-color: rgba(190, 236, 255, 0.32);
+  background: rgba(20, 44, 82, 0.22);
+  border-color: rgba(190, 236, 255, 0.28);
+  box-shadow: inset 0 0 0.4rem rgba(12, 40, 78, 0.2);
 }
 
 body.theme-aurora .frenzy-status__item .apc-frenzy-counter {
-  border-top-color: rgba(120, 255, 200, 0.36);
+  background: rgba(8, 40, 28, 0.2);
+  border-color: rgba(120, 255, 200, 0.3);
+  box-shadow: inset 0 0 0.4rem rgba(6, 44, 30, 0.18);
 }
 
 .apc-frenzy-counter.is-active {
   opacity: 1;
-  transform: translateY(-50%) scale(calc(var(--apc-frenzy-scale, 1) * 1.05));
+  transform: scale(calc(var(--apc-frenzy-scale, 1) * 1.05));
 }
 
 .apc-frenzy-counter__value {
-  font-size: calc(1.1rem * var(--apc-frenzy-scale, 1));
+  font-size: calc(clamp(0.62rem, 1.6vw, 0.92rem) * var(--apc-frenzy-scale, 1));
   font-weight: 700;
   line-height: 1;
   color: inherit;
+  letter-spacing: 0.02em;
 }
 
 .apc-frenzy-counter__value--pulse {
@@ -267,13 +273,13 @@ body:not(.view-game):not(.view-wave) .apc-frenzy-counter {
 
 @keyframes apcFrenzyPulse {
   0% {
-    transform: translateY(-50%) scale(var(--apc-frenzy-scale, 1));
+    transform: scale(var(--apc-frenzy-scale, 1));
   }
   45% {
-    transform: translateY(-50%) scale(calc(var(--apc-frenzy-scale, 1) * 1.24));
+    transform: scale(calc(var(--apc-frenzy-scale, 1) * 1.18));
   }
   100% {
-    transform: translateY(-50%) scale(var(--apc-frenzy-scale, 1));
+    transform: scale(var(--apc-frenzy-scale, 1));
   }
 }
 
@@ -616,4 +622,3 @@ body[data-performance-mode='eco'] .atom-image.atom-image--eco-pressed {
   margin-top: 0;
   opacity: 0.7;
 }
-
