@@ -2934,12 +2934,6 @@
           "effect": "Achetez 1 ticket gacha garanti par niveau. Limite : 200 niveaux (+200 par Big Bang). Chaque achat augmente le coût de 25 000 atomes et le coût de base est multiplié par 4 000 après chaque Big Bang.",
           "effectSummary": "Achetez des tickets gacha garantis."
         },
-        "mach3TicketBooth": {
-          "name": "Terminal Mach3",
-          "description": "Échangez vos tickets gacha contre des crédits Mach3 garantis.",
-          "effect": "Convertissez 100 tickets gacha en 1 crédit Mach3 par niveau. Limite : 2 niveaux (+2 par Big Bang).",
-          "effectSummary": "Échangez 100 tickets gacha contre 1 crédit Métaux."
-        },
         "frenzyDuplicateExchange": {
           "name": "Catalyseur de frénésie",
           "description": "Échangez des cartes rares en double contre un bonus permanent.",

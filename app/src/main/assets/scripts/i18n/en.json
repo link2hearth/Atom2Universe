@@ -2997,12 +2997,6 @@
           "effect": "Buy 1 guaranteed gacha ticket per level. Cap: 200 levels (+200 per Big Bang). Each purchase increases the price by 25,000 atoms and the base cost is multiplied by 4,000 after each Big Bang.",
           "effectSummary": "Purchase guaranteed gacha tickets."
         },
-        "mach3TicketBooth": {
-          "name": "Mach3 Terminal",
-          "description": "Trade your gacha tickets for guaranteed Mach3 credits.",
-          "effect": "Convert 100 gacha tickets into 1 Mach3 credit per level. Cap: 2 levels (+2 per Big Bang).",
-          "effectSummary": "Trade 100 gacha tickets for 1 Mach3 credit per purchase."
-        },
         "frenzyDuplicateExchange": {
           "name": "Frenzy Catalyst",
           "description": "Trade rare duplicate cards for a permanent frenzy boost.",

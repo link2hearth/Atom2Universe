@@ -726,7 +726,7 @@ function getBuildingLevel(context, id) {
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
-const SHOP_BUILDING_IDS = ['godFinger', 'starCore', 'gachaTicketBooth', 'mach3TicketBooth'];
+const SHOP_BUILDING_IDS = ['godFinger', 'starCore', 'gachaTicketBooth'];
 
 const SHOP_PROGRESSIVE_GROWTH_RATE = 1.08;
 
@@ -916,21 +916,6 @@ function createShopBuildingDefinitions() {
       maxLevel: 100,
       bigBangLevelBonusMultiplier: 2,
       // Multiplie le bonus de niveaux supplémentaires accordé après chaque Big Bang.
-      effect: () => ({})
-    },
-    {
-      id: 'mach3TicketBooth',
-      name: 'Terminal Mach3',
-      description: 'Échangez vos tickets gacha contre des crédits Mach3 garantis.',
-      effectSummary:
-        'Convertit 100 tickets gacha en 1 crédit Mach3 par achat. Limite portée à 2 niveaux (+2 par Big Bang).',
-      category: 'special',
-      baseCost: 0,
-      gachaTicketCostPerPurchase: 100,
-      mach3TicketsPerPurchase: 1,
-      maxLevel: 1,
-      bigBangLevelBonusMultiplier: 0.01,
-      // 0,02 = +2 niveaux par Big Bang avec un palier de 100.
       effect: () => ({})
     },
     {
@@ -2105,7 +2090,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 
