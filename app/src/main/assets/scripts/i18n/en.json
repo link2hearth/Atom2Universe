@@ -3255,25 +3255,25 @@
       },
       "windowLabel": "Displayed octaves",
       "windowOptions": {
-    "one": "1 octave",
-    "two": "2 octaves",
-    "three": "3 octaves",
-    "four": "4 octaves",
-    "five": "5 octaves"
-  },
-  "programLabel": "SoundFont program",
-  "programAuto": "Automatic (use track program)",
-  "programUnavailable": "Select a SoundFont to choose a program.",
-  "fullLabel": "Full keyboard",
-  "fullHint": "Click a key to choose a range.",
-  "rangeLabel": "Selected range",
+        "one": "1 octave",
+        "two": "2 octaves",
+        "three": "3 octaves",
+        "four": "4 octaves",
+        "five": "5 octaves"
+      },
+      "programLabel": "SoundFont program",
+      "programAuto": "Automatic (use track program)",
+      "programUnavailable": "Select a SoundFont to choose a program.",
+      "fullLabel": "Full keyboard",
+      "fullHint": "Click a key to choose a range.",
+      "rangeLabel": "Selected range",
       "practiceRegionLabel": "Practice keyboard",
-      "fullPreviewLabel": "Animated keys (upper keyboard)",
-      "fullPreviewEnabled": "Animated keys enabled",
-      "fullPreviewDisabled": "Animated keys disabled",
-      "practiceScrollLabel": "Animated keys (lower keyboard)",
-      "practiceScrollEnabled": "Animated keys enabled",
-      "practiceScrollDisabled": "Animated keys disabled"
+      "fullPreviewLabel": "Full keyboard animation",
+      "fullPreviewEnabled": "Full keyboard animation",
+      "fullPreviewDisabled": "Full keyboard animation",
+      "practiceScrollLabel": "Practice keyboard animation",
+      "practiceScrollEnabled": "Practice keyboard animation",
+      "practiceScrollDisabled": "Practice keyboard animation"
     }
   },
   "scripts": {
