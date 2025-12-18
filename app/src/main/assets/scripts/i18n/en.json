@@ -2487,6 +2487,17 @@
             "x2": "Extra large size (×2)"
           }
         },
+        "textScale": {
+          "label": "Text size",
+          "ariaLabel": "Choose a multiplier dedicated to interface text",
+          "reset": "Reset text size",
+          "options": {
+            "compact": "Compact (×0.9)",
+            "normal": "Standard size",
+            "comfortable": "Comfort (×1.1)",
+            "reading": "Reading (×1.25)"
+          }
+        },
         "theme": {
           "label": "Visual theme",
           "ariaLabel": "Choose the interface visual theme",

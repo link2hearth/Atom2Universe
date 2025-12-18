@@ -102,9 +102,9 @@ body.theme-aurora.view-wave .app-header {
 
 .wave-hud__label {
   font-size: clamp(
-    calc(var(--font-scale-factor, 1) * 0.32rem),
-    calc(var(--font-scale-factor, 1) * 0.9vw),
-    calc(var(--font-scale-factor, 1) * 0.55rem)
+    calc(var(--font-size-scale-factor, 1) * 0.32rem),
+    calc(var(--font-size-scale-factor, 1) * 0.9vw),
+    calc(var(--font-size-scale-factor, 1) * 0.55rem)
   );
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -122,18 +122,18 @@ body.theme-aurora.view-wave .app-header {
   gap: clamp(0.08rem, 0.6vw, 0.2rem);
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-size: clamp(
-    calc(var(--font-scale-factor, 1) * 0.5rem),
-    calc(var(--font-scale-factor, 1) * 1.8vw),
-    calc(var(--font-scale-factor, 1) * 0.9rem)
+    calc(var(--font-size-scale-factor, 1) * 0.5rem),
+    calc(var(--font-size-scale-factor, 1) * 1.8vw),
+    calc(var(--font-size-scale-factor, 1) * 0.9rem)
   );
   font-weight: 600;
 }
 
 .wave-hud__unit {
   font-size: clamp(
-    calc(var(--font-scale-factor, 1) * 0.3rem),
-    calc(var(--font-scale-factor, 1) * 1vw),
-    calc(var(--font-scale-factor, 1) * 0.45rem)
+    calc(var(--font-size-scale-factor, 1) * 0.3rem),
+    calc(var(--font-size-scale-factor, 1) * 1vw),
+    calc(var(--font-size-scale-factor, 1) * 0.45rem)
   );
   opacity: 0.75;
 }

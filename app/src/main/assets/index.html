@@ -8317,6 +8317,39 @@
                 </option>
               </select>
             </div>
+            <div class="option-field option-field--text-scale">
+              <label for="textScaleSelect" data-i18n="index.sections.options.textScale.label">
+                Taille du texte
+              </label>
+              <select
+                id="textScaleSelect"
+                aria-label="Choisir un facteur dédié à la taille des textes affichés"
+                data-i18n="aria-label:index.sections.options.textScale.ariaLabel"
+              >
+                <option value="compact" data-i18n="index.sections.options.textScale.options.compact">
+                  Compact (×0,9)
+                </option>
+                <option value="normal" data-i18n="index.sections.options.textScale.options.normal">
+                  Taille standard
+                </option>
+                <option value="comfortable" data-i18n="index.sections.options.textScale.options.comfortable">
+                  Confort (×1,1)
+                </option>
+                <option value="reading" data-i18n="index.sections.options.textScale.options.reading">
+                  Lecture (×1,25)
+                </option>
+              </select>
+              <button
+                type="button"
+                class="option-link-button option-link-button--secondary"
+                id="textScaleResetButton"
+                data-i18n="index.sections.options.textScale.reset"
+                aria-label="Réinitialiser la taille du texte sur la valeur par défaut"
+                data-i18n-aria-label="index.sections.options.textScale.reset"
+              >
+                Réinitialiser
+              </button>
+            </div>
             <div class="option-field option-field--theme">
               <label for="themeSelect" data-i18n="index.sections.options.theme.label">Thème visuel</label>
               <select
