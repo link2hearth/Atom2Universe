@@ -1551,8 +1551,8 @@ const GAME_CONFIG = {
       options: [
         { id: 'compact', factor: 0.9 },
         { id: 'normal', factor: 1 },
-        { id: 'comfortable', factor: 1.1 },
-        { id: 'reading', factor: 1.25 }
+        { id: 'comfortable', factor: 1.2 },
+        { id: 'reading', factor: 1.5 }
       ]
     }
   },
