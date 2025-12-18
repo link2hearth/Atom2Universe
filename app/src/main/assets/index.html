@@ -11,7 +11,19 @@
   <link rel="stylesheet" href="styles/main.css" />
 </head>
 <body class="theme-dark">
-  <div id="startupOverlay" class="startup-overlay startup-overlay--visible" aria-hidden="true"></div>
+  <div id="startupOverlay" class="startup-overlay startup-overlay--visible">
+    <div class="startup-overlay__content" role="status" aria-live="polite">
+      <div class="startup-overlay__spinner" aria-hidden="true"></div>
+      <p class="startup-overlay__title" data-i18n="index.startup.title">Chargement en cours…</p>
+      <p
+        id="startupOverlayStatus"
+        class="startup-overlay__status"
+        data-i18n="index.startup.status.default"
+      >
+        Initialisation de l’application…
+      </p>
+    </div>
+  </div>
   <header class="app-header">
     <div class="header-main">
       <div class="header-brand-group">

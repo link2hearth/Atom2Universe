@@ -6080,6 +6080,112 @@ function getStartupOverlayElement() {
   return overlay || null;
 }
 
+function getStartupOverlayStatusElement() {
+  if (elements && elements.startupOverlayStatus) {
+    const statusCandidate = elements.startupOverlayStatus;
+    if (typeof HTMLElement === 'undefined' || statusCandidate instanceof HTMLElement) {
+      return statusCandidate;
+    }
+  }
+
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  const status = document.getElementById('startupOverlayStatus');
+  if (status && elements && typeof elements === 'object') {
+    elements.startupOverlayStatus = status;
+  }
+
+  return status || null;
+}
+
+function setStartupOverlayStatus(key, fallback) {
+  const statusElement = getStartupOverlayStatusElement();
+  if (!statusElement) {
+    return;
+  }
+  const normalizedKey = typeof key === 'string' && key.trim()
+    ? key.trim()
+    : statusElement.dataset?.i18n || 'index.startup.status.default';
+  statusElement.dataset.i18n = normalizedKey;
+  statusElement.textContent = translateOrDefault(
+    normalizedKey,
+    fallback || statusElement.textContent || ''
+  );
+}
+
+const ANDROID_MIDI_STARTUP_FLAG = 'atom2universAndroidMidiStartupRequested';
+const ANDROID_SOUND_FONT_STARTUP_FLAG = 'atom2universAndroidSoundFontStartupRequested';
+const ANDROID_BACKGROUND_STARTUP_FLAG = 'atom2universAndroidBackgroundStartupRequested';
+
+function isGlobalFlagSet(flagKey) {
+  return typeof globalThis !== 'undefined' && globalThis && globalThis[flagKey] === true;
+}
+
+function setGlobalFlag(flagKey) {
+  if (typeof globalThis === 'undefined' || !globalThis) {
+    return;
+  }
+  globalThis[flagKey] = true;
+}
+
+function prefetchAndroidManagedFiles() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const bridge = window.AndroidBridge;
+  const hasBridge = bridge && (typeof bridge === 'object' || typeof bridge === 'function');
+
+  if (!hasBridge) {
+    return;
+  }
+
+  const canLoadBackgrounds = typeof bridge.loadBackgroundImageBank === 'function'
+    && !isGlobalFlagSet(ANDROID_BACKGROUND_STARTUP_FLAG);
+  const canLoadMidiLibrary = typeof bridge.loadMidiFolder === 'function'
+    && !isGlobalFlagSet(ANDROID_MIDI_STARTUP_FLAG);
+  const canLoadSoundFont = typeof bridge.loadCachedSoundFont === 'function'
+    && !isGlobalFlagSet(ANDROID_SOUND_FONT_STARTUP_FLAG);
+
+  if (!canLoadBackgrounds && !canLoadMidiLibrary && !canLoadSoundFont) {
+    return;
+  }
+
+  setStartupOverlayStatus(
+    'index.startup.status.android',
+    'Chargement des fichiers Android…'
+  );
+
+  if (canLoadBackgrounds) {
+    setGlobalFlag(ANDROID_BACKGROUND_STARTUP_FLAG);
+    try {
+      requestNativeBackgroundBank();
+    } catch (error) {
+      console.warn('Unable to request Android background bank during startup', error);
+    }
+  }
+
+  if (canLoadMidiLibrary) {
+    setGlobalFlag(ANDROID_MIDI_STARTUP_FLAG);
+    try {
+      bridge.loadMidiFolder();
+    } catch (error) {
+      console.warn('Unable to preload Android MIDI library', error);
+    }
+  }
+
+  if (canLoadSoundFont) {
+    setGlobalFlag(ANDROID_SOUND_FONT_STARTUP_FLAG);
+    try {
+      bridge.loadCachedSoundFont();
+    } catch (error) {
+      console.warn('Unable to preload Android SoundFont', error);
+    }
+  }
+}
+
 function resolveGlobalNumberOption(optionKey, fallback) {
   if (typeof optionKey !== 'string' || !optionKey) {
     return Number.isFinite(fallback) ? fallback : 0;
@@ -6646,6 +6752,7 @@ function handleResetPromptFallback() {
 function collectDomElements() {
   return {
     startupOverlay: getStartupOverlayElement(),
+    startupOverlayStatus: getStartupOverlayStatusElement(),
     appHeader: document.querySelector('.app-header'),
     headerBannerToggle: document.getElementById('headerBannerToggle'),
     pageContainer: document.getElementById('pageContainer'),
@@ -29731,6 +29838,7 @@ function initializeApp() {
   applyAtomVariantVisualState();
   applyStartupOverlayDuration();
   scheduleStartupOverlayFailsafe();
+  prefetchAndroidManagedFiles();
   if (!visibilityChangeListenerAttached) {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     visibilityChangeListenerAttached = true;
