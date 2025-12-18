@@ -8700,7 +8700,7 @@
         </section>
         <section class="midi-page__keyboard" id="midiKeyboardArea" aria-labelledby="midiKeyboardTitle">
           <header class="midi-keyboard__header">
-            <div class="midi-keyboard__heading">
+            <div class="midi-keyboard__heading visually-hidden">
               <h2
                 id="midiKeyboardTitle"
                 class="midi-keyboard__title"
@@ -8712,15 +8712,15 @@
                 Choisissez la zone à pratiquer et visualisez-la sur la plage sélectionnée.
               </p>
             </div>
-            <div class="midi-keyboard__controls">
+            <div class="midi-keyboard__controls midi-keyboard__controls--compact">
               <label class="midi-keyboard__control" for="midiKeyboardLayoutSelect">
-                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.layoutLabel">
+                <span class="midi-keyboard__control-label visually-hidden" data-i18n="midi.keyboard.layoutLabel">
                   Nombre de touches
                 </span>
                 <select id="midiKeyboardLayoutSelect" class="midi-keyboard__select"></select>
               </label>
               <label class="midi-keyboard__control" for="midiKeyboardOctaveSelect">
-                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.windowLabel">
+                <span class="midi-keyboard__control-label visually-hidden" data-i18n="midi.keyboard.windowLabel">
                   Octaves affichées
                 </span>
                 <select id="midiKeyboardOctaveSelect" class="midi-keyboard__select">
@@ -8732,14 +8732,14 @@
                 </select>
               </label>
               <label class="midi-keyboard__control" for="midiKeyboardProgramSelect">
-                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.programLabel">
+                <span class="midi-keyboard__control-label visually-hidden" data-i18n="midi.keyboard.programLabel">
                   Programme SoundFont
                 </span>
                 <select id="midiKeyboardProgramSelect" class="midi-keyboard__select"></select>
               </label>
               <label class="midi-keyboard__control midi-keyboard__control--toggle" for="midiKeyboardFullPreviewToggle">
-                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.fullPreviewLabel">
-                  Touches animées (clavier du haut)
+                <span class="midi-keyboard__control-label visually-hidden" data-i18n="midi.keyboard.fullPreviewLabel">
+                  Animation clavier complet
                 </span>
                 <div class="midi-keyboard__toggle">
                   <input
@@ -8754,12 +8754,12 @@
                     id="midiKeyboardFullPreviewValue"
                     aria-live="polite"
                     data-i18n="midi.keyboard.fullPreviewDisabled"
-                  >Touches animées désactivées</span>
+                  >Animation clavier complet</span>
                 </div>
               </label>
               <label class="midi-keyboard__control midi-keyboard__control--toggle" for="midiKeyboardMiniPreviewToggle">
-                <span class="midi-keyboard__control-label" data-i18n="midi.keyboard.practiceScrollLabel">
-                  Touches animées (clavier du bas)
+                <span class="midi-keyboard__control-label visually-hidden" data-i18n="midi.keyboard.practiceScrollLabel">
+                  Animation clavier d'exercice
                 </span>
                 <div class="midi-keyboard__toggle">
                   <input
@@ -8774,7 +8774,7 @@
                     id="midiKeyboardMiniPreviewValue"
                     aria-live="polite"
                     data-i18n="midi.keyboard.practiceScrollDisabled"
-                  >Touches animées désactivées</span>
+                  >Animation clavier d'exercice</span>
                 </div>
               </label>
             </div>
@@ -8783,20 +8783,9 @@
             <div
               class="midi-keyboard__panel midi-keyboard__panel--full"
               role="region"
-              aria-labelledby="midiKeyboardFullLabel"
+              data-i18n-aria-label="midi.keyboard.fullLabel"
+              aria-label="Clavier complet"
             >
-              <div class="midi-keyboard__panel-header">
-                <h3
-                  id="midiKeyboardFullLabel"
-                  class="midi-keyboard__panel-title"
-                  data-i18n="midi.keyboard.fullLabel"
-                >
-                  Clavier complet
-                </h3>
-                <p class="midi-keyboard__panel-hint" data-i18n="midi.keyboard.fullHint">
-                  Cliquez sur une touche pour sélectionner une plage.
-                </p>
-              </div>
               <div class="midi-keyboard__range" id="midiKeyboardRange">
                 <span data-i18n="midi.keyboard.rangeLabel">Plage sélectionnée</span>
                 <span class="midi-keyboard__range-value" id="midiKeyboardRangeValue">C3 – B4</span>
