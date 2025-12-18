@@ -1460,6 +1460,7 @@ const DEFAULT_THEME_ID = (() => {
 })();
 
 const UI_SCALE_STORAGE_KEY = 'atom2univers.options.uiScale';
+const TEXT_SCALE_STORAGE_KEY = 'atom2univers.options.textScale';
 
 const UI_SCALE_CONFIG = (() => {
   const fallbackChoices = {
@@ -1543,6 +1544,78 @@ const AUTO_UI_SCALE_OVERFLOW_TOLERANCE = 12;
 const AUTO_UI_SCALE_VERTICAL_PADDING = 32;
 const AUTO_UI_SCALE_HEIGHT_TOLERANCE = 32;
 const AUTO_UI_SCALE_VIEWPORT_TOLERANCE = 18;
+
+const TEXT_SCALE_CONFIG = (() => {
+  const fallbackChoices = {
+    compact: Object.freeze({ id: 'compact', factor: 0.9 }),
+    normal: Object.freeze({ id: 'normal', factor: 1 }),
+    comfortable: Object.freeze({ id: 'comfortable', factor: 1.1 }),
+    reading: Object.freeze({ id: 'reading', factor: 1.25 })
+  };
+  const fallback = {
+    defaultId: 'normal',
+    choices: Object.freeze(fallbackChoices)
+  };
+
+  const rawConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.ui && GLOBAL_CONFIG.ui.textScale;
+  if (!rawConfig || !Array.isArray(rawConfig.options)) {
+    return fallback;
+  }
+
+  const normalizedChoices = {};
+  rawConfig.options.forEach(option => {
+    if (!option || typeof option.id !== 'string') {
+      return;
+    }
+    const id = option.id.trim().toLowerCase();
+    if (!id || Object.prototype.hasOwnProperty.call(normalizedChoices, id)) {
+      return;
+    }
+    const factorValue = Number(option.factor);
+    if (!Number.isFinite(factorValue) || factorValue <= 0) {
+      return;
+    }
+    normalizedChoices[id] = Object.freeze({
+      id,
+      factor: factorValue
+    });
+  });
+
+  const ids = Object.keys(normalizedChoices);
+  if (!ids.length) {
+    return fallback;
+  }
+
+  let defaultId = 'normal';
+  if (typeof rawConfig.default === 'string') {
+    const normalizedDefault = rawConfig.default.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(normalizedChoices, normalizedDefault)) {
+      defaultId = normalizedDefault;
+    }
+  }
+  if (!Object.prototype.hasOwnProperty.call(normalizedChoices, defaultId)) {
+    defaultId = ids[0];
+  }
+
+  return {
+    defaultId,
+    choices: Object.freeze(normalizedChoices)
+  };
+})();
+
+const TEXT_SCALE_CHOICES = TEXT_SCALE_CONFIG.choices;
+const TEXT_SCALE_DEFAULT = TEXT_SCALE_CONFIG.defaultId;
+const TEXT_SCALE_MIN_FACTOR = 0.7;
+const TEXT_SCALE_MAX_FACTOR = 2.5;
+
+const DEFAULT_TEXT_SCALE_FACTOR = (() => {
+  const config = TEXT_SCALE_CHOICES?.[TEXT_SCALE_DEFAULT];
+  const factor = Number(config?.factor);
+  return Number.isFinite(factor) && factor > 0 ? factor : 1;
+})();
+
+let currentTextScaleSelection = TEXT_SCALE_DEFAULT;
+let currentTextScaleFactor = DEFAULT_TEXT_SCALE_FACTOR;
 
 let critAtomVisualsDisabled = false;
 let atomAnimationsEnabled = true;
@@ -7140,6 +7213,8 @@ function collectDomElements() {
   performanceModeSelect: document.getElementById('performanceModeSelect'),
   performanceModeNote: document.getElementById('performanceModeNote'),
   uiScaleSelect: document.getElementById('uiScaleSelect'),
+  textScaleSelect: document.getElementById('textScaleSelect'),
+  textScaleResetButton: document.getElementById('textScaleResetButton'),
   themeSelect: document.getElementById('themeSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
   digitFontSelect: document.getElementById('digitFontSelect'),
@@ -8445,6 +8520,180 @@ function initUiScaleOption() {
     const value = event?.target?.value;
     applyUiScaleSelection(value, { persist: true, updateControl: false });
   });
+}
+
+function clampTextScaleFactor(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Math.max(TEXT_SCALE_MIN_FACTOR, Math.min(TEXT_SCALE_MAX_FACTOR, value));
+  }
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return 1;
+  }
+  return Math.max(TEXT_SCALE_MIN_FACTOR, Math.min(TEXT_SCALE_MAX_FACTOR, numeric));
+}
+
+function normalizeTextScaleSelection(value) {
+  if (typeof value !== 'string') {
+    return TEXT_SCALE_DEFAULT;
+  }
+  const normalized = value.trim().toLowerCase();
+  return Object.prototype.hasOwnProperty.call(TEXT_SCALE_CHOICES, normalized)
+    ? normalized
+    : TEXT_SCALE_DEFAULT;
+}
+
+function readStoredTextScale() {
+  try {
+    const stored = globalThis.localStorage?.getItem(TEXT_SCALE_STORAGE_KEY);
+    if (typeof stored === 'string' && stored.trim()) {
+      return normalizeTextScaleSelection(stored);
+    }
+  } catch (error) {
+    console.warn('Unable to read text scale preference', error);
+  }
+  return null;
+}
+
+function writeStoredTextScale(value) {
+  try {
+    const normalized = normalizeTextScaleSelection(value);
+    globalThis.localStorage?.setItem(TEXT_SCALE_STORAGE_KEY, normalized);
+  } catch (error) {
+    console.warn('Unable to persist text scale preference', error);
+  }
+}
+
+function updateTextScaleCssVariable(factor) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const root = document.documentElement;
+  if (!root || !root.style) {
+    return;
+  }
+  const clamped = clampTextScaleFactor(factor);
+  root.style.setProperty('--font-text-scale-factor', String(clamped));
+  return clamped;
+}
+
+function formatTextScaleMultiplier(factor) {
+  const clamped = clampTextScaleFactor(factor);
+  const maximumFractionDigits = clamped >= 2 || Number.isInteger(clamped) ? 0 : 2;
+  try {
+    const localized = clamped.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits
+    });
+    return `×${localized}`;
+  } catch (error) {
+    const raw = clamped.toFixed(maximumFractionDigits || 0).replace(/\\.0+$/, '');
+    return `×${raw}`;
+  }
+}
+
+function getTextScaleFallbackLabel(option) {
+  const multiplier = formatTextScaleMultiplier(option?.factor ?? 1);
+  switch (option?.id) {
+    case 'compact':
+      return `Compact ${multiplier}`;
+    case 'comfortable':
+      return `Comfort ${multiplier}`;
+    case 'reading':
+      return `Reading ${multiplier}`;
+    default:
+      return `Standard ${multiplier}`;
+  }
+}
+
+function renderTextScaleOptions() {
+  if (!elements.textScaleSelect) {
+    return;
+  }
+  const select = elements.textScaleSelect;
+  const previousSelection = select.value || currentTextScaleSelection || TEXT_SCALE_DEFAULT;
+  select.innerHTML = '';
+  Object.values(TEXT_SCALE_CHOICES).forEach(option => {
+    const optionElement = document.createElement('option');
+    optionElement.value = option.id;
+    optionElement.setAttribute('data-i18n', `index.sections.options.textScale.options.${option.id}`);
+    optionElement.textContent = translateOrDefault(
+      `index.sections.options.textScale.options.${option.id}`,
+      getTextScaleFallbackLabel(option)
+    );
+    select.appendChild(optionElement);
+  });
+  const i18n = getI18nApi();
+  if (i18n && typeof i18n.updateTranslations === 'function') {
+    i18n.updateTranslations(select);
+  }
+  const normalized = normalizeTextScaleSelection(previousSelection);
+  if (select.value !== normalized) {
+    select.value = normalized;
+  }
+}
+
+function applyTextScaleSelection(selection, options = {}) {
+  const normalized = normalizeTextScaleSelection(selection);
+  const config = TEXT_SCALE_CHOICES[normalized] || TEXT_SCALE_CHOICES[TEXT_SCALE_DEFAULT];
+  const settings = Object.assign({ persist: true, updateControl: true }, options);
+  const factor = clampTextScaleFactor(config?.factor);
+  currentTextScaleSelection = normalized;
+  currentTextScaleFactor = factor;
+  updateTextScaleCssVariable(factor);
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.setAttribute('data-text-scale', normalized);
+  }
+  if (settings.updateControl && elements.textScaleSelect) {
+    elements.textScaleSelect.value = normalized;
+  }
+  if (settings.persist) {
+    writeStoredTextScale(normalized);
+  }
+  return normalized;
+}
+
+function initTextScaleOption() {
+  renderTextScaleOptions();
+  const stored = readStoredTextScale();
+  const initial = stored ?? TEXT_SCALE_DEFAULT;
+  applyTextScaleSelection(initial, { persist: false, updateControl: true });
+  if (elements.textScaleSelect) {
+    elements.textScaleSelect.addEventListener('change', event => {
+      const value = event?.target?.value;
+      applyTextScaleSelection(value, { persist: true, updateControl: false });
+    });
+  }
+  if (elements.textScaleResetButton) {
+    elements.textScaleResetButton.addEventListener('click', () => {
+      applyTextScaleSelection(TEXT_SCALE_DEFAULT, { persist: true, updateControl: true });
+    });
+  }
+}
+
+function subscribeTextScaleLanguageUpdates() {
+  const api = getI18nApi();
+  const refresh = () => {
+    renderTextScaleOptions();
+    const i18n = getI18nApi();
+    if (elements.textScaleResetButton) {
+      if (i18n && typeof i18n.updateTranslations === 'function') {
+        i18n.updateTranslations(elements.textScaleResetButton);
+      } else {
+        elements.textScaleResetButton.textContent = translateOrDefault(
+          'index.sections.options.textScale.reset',
+          'Réinitialiser la taille du texte'
+        );
+      }
+    }
+  };
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(refresh);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', refresh);
+  }
 }
 
 function normalizeTextFontSelection(value) {
@@ -28313,6 +28562,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   HEADER_COLLAPSED_STORAGE_KEY,
   PERFORMANCE_MODE_STORAGE_KEY,
   UI_SCALE_STORAGE_KEY,
+  TEXT_SCALE_STORAGE_KEY,
   QUANTUM_2048_STORAGE_KEY,
   BIGGER_STORAGE_KEY,
   ...GAME_OF_LIFE_STORAGE_KEYS
@@ -29945,6 +30195,8 @@ function initializeDomBoundModules() {
   updateMusicModuleVisibility();
   initializeHoldemOptionsUI();
   initUiScaleOption();
+  initTextScaleOption();
+  subscribeTextScaleLanguageUpdates();
   initResponsiveAutoScale();
   initTextFontOption();
   initDigitFontOption();

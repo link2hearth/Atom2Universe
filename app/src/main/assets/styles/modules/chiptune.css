@@ -47,7 +47,7 @@
 }
 
 .option-card--chiptune .option-row--selectors label {
-  font-size: calc(0.9rem * var(--font-scale-factor, 1));
+  font-size: calc(0.9rem * var(--font-size-scale-factor, 1));
   font-weight: 600;
 }
 
@@ -772,7 +772,7 @@ body.theme-aurora .midi-keyboard__subtitle {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  font-size: calc(0.95rem * var(--font-scale-factor, 1));
+  font-size: calc(0.95rem * var(--font-size-scale-factor, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -860,7 +860,7 @@ body.theme-aurora .midi-keyboard__toggle {
 }
 
 .midi-keyboard__toggle-value {
-  font-size: calc(0.9rem * var(--font-scale-factor, 1));
+  font-size: calc(0.9rem * var(--font-size-scale-factor, 1));
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: none;

@@ -172,7 +172,7 @@
 .gacha-ticket-counter__value {
   white-space: nowrap;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: calc(1.12em * var(--font-scale-factor, 1));
+  font-size: calc(1.12em * var(--font-size-scale-factor, 1));
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1;
@@ -585,13 +585,13 @@ body.has-gacha-card-overlay {
 }
 
 .gacha-card-overlay__label {
-  font-size: calc(var(--font-scale-factor, 1) * 1rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 1rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .gacha-card-overlay__count {
-  font-size: calc(var(--font-scale-factor, 1) * 1.1rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 1.1rem);
   font-weight: 600;
   letter-spacing: 0.1em;
   opacity: 0.9;
@@ -599,7 +599,7 @@ body.has-gacha-card-overlay {
 
 .gacha-card-overlay__hint {
   margin: clamp(1.2rem, 2.6vw, 1.8rem) 0 0;
-  font-size: calc(var(--font-scale-factor, 1) * 0.92rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 0.92rem);
   opacity: 0.78;
 }
 

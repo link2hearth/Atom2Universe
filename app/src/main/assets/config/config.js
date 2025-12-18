@@ -1545,6 +1545,15 @@ const GAME_CONFIG = {
         { id: 'large', factor: 1.25 },
         { id: 'x2', factor: 1.6 }
       ]
+    },
+    textScale: {
+      default: 'normal',
+      options: [
+        { id: 'compact', factor: 0.9 },
+        { id: 'normal', factor: 1 },
+        { id: 'comfortable', factor: 1.1 },
+        { id: 'reading', factor: 1.25 }
+      ]
     }
   },
 
@@ -2090,7 +2099,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 

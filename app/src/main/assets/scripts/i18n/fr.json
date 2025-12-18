@@ -2424,6 +2424,17 @@
             "x2": "Taille maximale (×2)"
           }
         },
+        "textScale": {
+          "label": "Taille du texte",
+          "ariaLabel": "Choisir un facteur dédié à la taille des textes affichés",
+          "reset": "Réinitialiser la taille du texte",
+          "options": {
+            "compact": "Compact (×0,9)",
+            "normal": "Taille standard",
+            "comfortable": "Confort (×1,1)",
+            "reading": "Lecture (×1,25)"
+          }
+        },
         "theme": {
           "label": "Thème visuel",
           "ariaLabel": "Choisir le thème visuel de l’interface",
