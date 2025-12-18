@@ -1097,6 +1097,58 @@ const TEXT_FONT_CHOICES = Object.freeze({
   supermario256: {
     id: 'supermario256',
     stack: "'SuperMario256', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  alien: {
+    id: 'alien',
+    stack: "'Alien', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  bilbofine: {
+    id: 'bilbofine',
+    stack: "'Bilbofine', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'birds-of-paradise': {
+    id: 'birds-of-paradise',
+    stack: "'Birds of Paradise', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  chomsky: {
+    id: 'chomsky',
+    stack: "'Chomsky', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'cream-cake': {
+    id: 'cream-cake',
+    stack: "'Cream Cake', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'cute-dog': {
+    id: 'cute-dog',
+    stack: "'Cute Dog', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'dealerplate-california': {
+    id: 'dealerplate-california',
+    stack: "'dealerplate california', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  designer: {
+    id: 'designer',
+    stack: "'Designer', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'jack-in-the-box': {
+    id: 'jack-in-the-box',
+    stack: "'Jack in the Box', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'markbats12-regular': {
+    id: 'markbats12-regular',
+    stack: "'Markbats12-Regular', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'roboto-condensed': {
+    id: 'roboto-condensed',
+    stack: "'Roboto Condensed', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'roboto-thin': {
+    id: 'roboto-thin',
+    stack: "'Roboto Thin', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'to-japan': {
+    id: 'to-japan',
+    stack: "'To Japan', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   }
 });
 
@@ -1123,11 +1175,6 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     stack: "'VT323', 'DigitTech7', 'Orbitron', sans-serif",
     compactStack: "'VT323', 'Orbitron', monospace"
   },
-  adelia: {
-    id: 'adelia',
-    stack: "'Adelia', 'DigitTech7', 'Orbitron', sans-serif",
-    compactStack: "'Adelia', 'DigitTech7', 'Orbitron', monospace"
-  },
   'super-meatball': {
     id: 'super-meatball',
     stack: "'Super Meatball', 'DigitTech7', 'Orbitron', sans-serif",
@@ -1148,11 +1195,6 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     stack: "'Magic Red', 'DigitTech7', 'Orbitron', sans-serif",
     compactStack: "'Magic Red', 'DigitTech7', 'Orbitron', monospace"
   },
-  grinchmas: {
-    id: 'grinchmas',
-    stack: "'Grinchmas', 'DigitTech7', 'Orbitron', sans-serif",
-    compactStack: "'Grinchmas', 'DigitTech7', 'Orbitron', monospace"
-  },
   galter: {
     id: 'galter',
     stack: "'Galter', 'DigitTech7', 'Orbitron', sans-serif",
@@ -1172,6 +1214,61 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     id: 'supermario256',
     stack: "'SuperMario256', 'DigitTech7', 'Orbitron', sans-serif",
     compactStack: "'SuperMario256', 'DigitTech7', 'Orbitron', monospace"
+  },
+  alien: {
+    id: 'alien',
+    stack: "'Alien', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Alien', 'DigitTech7', 'Orbitron', monospace"
+  },
+  bilbofine: {
+    id: 'bilbofine',
+    stack: "'Bilbofine', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Bilbofine', 'DigitTech7', 'Orbitron', monospace"
+  },
+  chomsky: {
+    id: 'chomsky',
+    stack: "'Chomsky', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Chomsky', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'cute-dog': {
+    id: 'cute-dog',
+    stack: "'Cute Dog', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Cute Dog', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'dealerplate-california': {
+    id: 'dealerplate-california',
+    stack: "'dealerplate california', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'dealerplate california', 'DigitTech7', 'Orbitron', monospace"
+  },
+  designer: {
+    id: 'designer',
+    stack: "'Designer', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Designer', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'jack-in-the-box': {
+    id: 'jack-in-the-box',
+    stack: "'Jack in the Box', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Jack in the Box', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'markbats12-regular': {
+    id: 'markbats12-regular',
+    stack: "'Markbats12-Regular', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Markbats12-Regular', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'roboto-condensed': {
+    id: 'roboto-condensed',
+    stack: "'Roboto Condensed', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Roboto Condensed', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'roboto-thin': {
+    id: 'roboto-thin',
+    stack: "'Roboto Thin', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'Roboto Thin', 'DigitTech7', 'Orbitron', monospace"
+  },
+  'to-japan': {
+    id: 'to-japan',
+    stack: "'To Japan', 'DigitTech7', 'Orbitron', sans-serif",
+    compactStack: "'To Japan', 'DigitTech7', 'Orbitron', monospace"
   }
 });
 
