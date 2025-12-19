@@ -66,21 +66,27 @@ body.favorite-background-active .starfield {
 
 .crypto-widget {
   position: absolute;
-  top: clamp(0.75rem, 2.4vw, 2rem);
+  top: calc(clamp(0.75rem, 2.4vw, 2rem) * var(--crypto-widget-scale, 1));
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
-  width: min(90vw, 380px);
+  width: min(
+    calc(90vw * var(--crypto-widget-scale, 1)),
+    calc(380px * var(--crypto-widget-scale, 1))
+  );
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 2.6vw, 1.6rem);
+  gap: calc(0.6rem * var(--crypto-widget-scale, 1));
+  padding: calc(clamp(0.8rem, 2vw, 1.2rem) * var(--crypto-widget-scale, 1))
+    calc(clamp(1rem, 2.6vw, 1.6rem) * var(--crypto-widget-scale, 1));
   background: rgba(6, 10, 22, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 1.2rem;
+  border-radius: calc(1.2rem * var(--crypto-widget-scale, 1));
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(18px);
   color: inherit;
+  --crypto-widget-scale: var(--ui-control-scale, 1);
+  --crypto-widget-font-scale: var(--font-size-scale-factor, 1);
   --crypto-widget-up-color: #4ade80;
   --crypto-widget-down-color: #f87171;
 }
@@ -103,7 +109,7 @@ body.theme-aurora .crypto-widget {
 
 .crypto-widget__title {
   margin: 0;
-  font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+  font-size: calc(clamp(0.9rem, 2.2vw, 1.05rem) * var(--crypto-widget-font-scale, 1));
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -112,7 +118,7 @@ body.theme-aurora .crypto-widget {
 .crypto-widget__body {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: calc(0.35rem * var(--crypto-widget-scale, 1));
 }
 
 .crypto-widget__row {
@@ -120,7 +126,7 @@ body.theme-aurora .crypto-widget {
   align-items: baseline;
   justify-content: space-between;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: clamp(1rem, 2.8vw, 1.35rem);
+  font-size: calc(clamp(1rem, 2.8vw, 1.35rem) * var(--crypto-widget-font-scale, 1));
 }
 
 .crypto-widget__label {
@@ -139,7 +145,7 @@ body.theme-aurora .crypto-widget {
 .crypto-widget__value {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.35rem;
+  gap: calc(0.35rem * var(--crypto-widget-scale, 1));
 }
 
 .crypto-widget__amount {
@@ -167,15 +173,15 @@ body.theme-aurora .crypto-widget {
 }
 
 .crypto-widget__currency {
-  font-size: clamp(0.78rem, 2vw, 0.95rem);
+  font-size: calc(clamp(0.78rem, 2vw, 0.95rem) * var(--crypto-widget-font-scale, 1));
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.75;
 }
 
 .crypto-widget__status {
-  margin: 0.15rem 0 0;
-  font-size: clamp(0.78rem, 2vw, 0.9rem);
+  margin: calc(0.15rem * var(--crypto-widget-scale, 1)) 0 0;
+  font-size: calc(clamp(0.78rem, 2vw, 0.9rem) * var(--crypto-widget-font-scale, 1));
   text-align: center;
   color: var(--accent, #ffdf6f);
 }
