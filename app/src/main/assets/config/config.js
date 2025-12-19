@@ -437,6 +437,16 @@ const MIDI_VOLUME_SETTINGS = Object.freeze({
 });
 
 /**
+ * Réglages du pont Android pour éviter de charger trop tôt les bibliothèques lourdes.
+ * `midiLibraryAutoload` définit quand relire le dossier MIDI stocké :
+ * - "immediate" : dès le chargement de l'application.
+ * - "visible" : uniquement quand le module MIDI devient visible à l'écran.
+ */
+const ANDROID_BRIDGE_STARTUP_SETTINGS = Object.freeze({
+  midiLibraryAutoload: 'visible'
+});
+
+/**
  * Profils de performance disponibles pour la boucle principale du jeu.
  * - `apcFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
  *   à laquelle les gains manuels (APC) sont appliqués au total d'atomes.
@@ -665,6 +675,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS = MIDI_PLAYBACK_SCHEDULER_INTERVAL_SECONDS;
   globalThis.MIDI_AUDIO_MIXING_SETTINGS = MIDI_AUDIO_MIXING_SETTINGS;
   globalThis.MIDI_PREVIEW_COLOR_PALETTE = MIDI_PREVIEW_COLOR_PALETTE;
+  globalThis.ANDROID_BRIDGE_STARTUP_SETTINGS = ANDROID_BRIDGE_STARTUP_SETTINGS;
   globalThis.PERFORMANCE_MODE_SETTINGS = PERFORMANCE_MODE_SETTINGS;
   globalThis.PERFORMANCE_MODE_DEFINITIONS = PERFORMANCE_MODE_DEFINITIONS;
   globalThis.STARTUP_FADE_DURATION_MS = STARTUP_FADE_DURATION_MS;
@@ -2099,7 +2110,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 

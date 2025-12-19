@@ -252,15 +252,6 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
                 ensureStylesheetsLoaded(view, url)
-                tryRestoreNativeMidiLibrary()
-            }
-
-            private fun tryRestoreNativeMidiLibrary() {
-                try {
-                    loadPersistedMidiLibrary()
-                } catch (error: Exception) {
-                    Log.w(TAG, "Unable to restore persisted MIDI library", error)
-                }
             }
 
             private fun ensureStylesheetsLoaded(view: WebView, url: String) {
@@ -1162,4 +1153,3 @@ class MainActivity : AppCompatActivity() {
         """.trimIndent()
     }
 }
-
