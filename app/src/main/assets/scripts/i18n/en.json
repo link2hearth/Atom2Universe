@@ -1285,7 +1285,8 @@
           "remaining": "Tiles remaining"
         },
         "actions": {
-          "reset": "New route"
+          "reset": "New route",
+          "impossible": "New Impossible?"
         },
         "board": "The Line puzzle grid",
         "endpointLabels": {

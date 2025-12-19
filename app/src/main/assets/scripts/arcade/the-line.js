@@ -7,6 +7,13 @@
   const DEFAULT_CONFIG = Object.freeze({
     maxGenerationAttempts: 200,
     holeRetryLimit: 24,
+    impossible: Object.freeze({
+      blockedRange: Object.freeze({
+        easy: Object.freeze({ min: 5, max: 8 }),
+        medium: Object.freeze({ min: 9, max: 14 }),
+        hard: Object.freeze({ min: 15, max: 20 })
+      })
+    }),
     difficulties: Object.freeze({
       easy: Object.freeze({
         gridSizes: Object.freeze([[5, 5], [5, 6], [6, 6]]),
@@ -155,6 +162,7 @@
   ]);
 
   const COMPLETION_REWARD = Object.freeze({ chance: 0.5, gachaTickets: 1 });
+  const IMPOSSIBLE_REWARD_MULTIPLIER = 2;
   const AUTOSAVE_GAME_ID = 'theLine';
   const AUTOSAVE_VERSION = 1;
   const AUTOSAVE_DEBOUNCE_MS = 200;
@@ -256,7 +264,8 @@
       width,
       height,
       blocked: Array.from(blocked),
-      path
+      path,
+      impossible: Boolean(puzzle.impossible)
     };
     if (payload.mode === 'multi') {
       const segments = [];
@@ -463,7 +472,8 @@
         height,
         blockedIndices: blocked,
         path,
-        segments
+        segments,
+        impossible: false
       };
     }
     const endpoints = {
@@ -476,7 +486,8 @@
       height,
       blockedIndices: blocked,
       path,
-      endpoints
+      endpoints,
+      impossible: Boolean(puzzlePayload.impossible)
     };
   }
 
@@ -744,12 +755,38 @@
       );
     });
     const layout = normalizeLayoutConfig(source.layout, base.layout);
+    const impossible = normalizeImpossibleConfig(source.impossible, base.impossible);
     return {
       maxGenerationAttempts,
       holeRetryLimit,
       difficulties,
-      layout
+      layout,
+      impossible
     };
+  }
+
+  function normalizeImpossibleConfig(config, fallback) {
+    const base = fallback && typeof fallback === 'object'
+      ? fallback
+      : DEFAULT_CONFIG.impossible;
+    const source = config && typeof config === 'object' ? config : {};
+    const ranges = {};
+    ['easy', 'medium', 'hard'].forEach(key => {
+      const baseRange = base && base.blockedRange && base.blockedRange[key]
+        ? base.blockedRange[key]
+        : DEFAULT_CONFIG.impossible.blockedRange.easy;
+      const sourceRange = source && source.blockedRange && source.blockedRange[key]
+        ? source.blockedRange[key]
+        : baseRange;
+      const min = Number.isFinite(sourceRange?.min)
+        ? Math.max(0, Math.floor(sourceRange.min))
+        : Math.max(0, Math.floor(baseRange?.min || 0));
+      const max = Number.isFinite(sourceRange?.max)
+        ? Math.max(min, Math.floor(sourceRange.max))
+        : Math.max(min, Math.floor(baseRange?.max || min));
+      ranges[key] = { min, max };
+    });
+    return { blockedRange: ranges };
   }
 
   function normalizeDifficultyConfig(config, fallback) {
@@ -1006,6 +1043,7 @@
       board: document.getElementById('theLineBoard'),
       message: document.getElementById('theLineMessage'),
       reset: document.getElementById('theLineResetButton'),
+      impossible: document.getElementById('theLineImpossibleButton'),
       level: document.getElementById('theLineLevelValue'),
       remaining: document.getElementById('theLineRemainingValue'),
       modeButtons: Array.from(section.querySelectorAll('[data-line-mode]')),
@@ -1034,6 +1072,15 @@
       elements.reset.addEventListener('click', () => {
         clearMessageTimeout();
         prepareNewPuzzle();
+      });
+    }
+    if (elements.impossible) {
+      elements.impossible.addEventListener('click', () => {
+        if (state.mode !== 'single') {
+          return;
+        }
+        clearMessageTimeout();
+        prepareImpossiblePuzzle();
       });
     }
   }
@@ -1084,6 +1131,16 @@
     prepareNewPuzzle();
   }
 
+  function updateImpossibleButton() {
+    const elements = state.elements;
+    if (!elements || !elements.impossible) {
+      return;
+    }
+    const isSingle = state.mode === 'single';
+    elements.impossible.disabled = !isSingle;
+    elements.impossible.setAttribute('aria-disabled', String(!isSingle));
+  }
+
   function setDifficulty(difficulty) {
     if (!['easy', 'medium', 'hard'].includes(difficulty)) {
       return;
@@ -1109,6 +1166,7 @@
       button.classList.toggle('the-line__toggle--active', isActive);
       button.setAttribute('aria-pressed', String(isActive));
     });
+    updateImpossibleButton();
   }
 
   function updateDifficultyButtons() {
@@ -1198,6 +1256,27 @@
       ? 'Reliez chaque paire de couleurs sans croiser les chemins.'
       : 'Tracez un parcours continu qui visite chaque case.';
     setMessage(hintKey, fallback, { width: puzzle.width, height: puzzle.height });
+    scheduleAutosave();
+  }
+
+  function prepareImpossiblePuzzle() {
+    cancelActivePath();
+    const config = state.config || normalizeConfig(DEFAULT_CONFIG, null);
+    const puzzle = generateImpossiblePuzzle(state.difficulty, config);
+    if (!puzzle) {
+      setMessage(
+        'index.sections.theLine.messages.error',
+        'Impossible de générer une nouvelle grille. Réessayez.'
+      );
+      return;
+    }
+    state.currentPuzzle = puzzle;
+    renderPuzzle(puzzle);
+    setMessage(
+      'index.sections.theLine.messages.single',
+      'Tracez un parcours continu qui visite chaque case.',
+      { width: puzzle.width, height: puzzle.height }
+    );
     scheduleAutosave();
   }
   function generatePuzzle(mode, difficulty, config) {
@@ -1311,6 +1390,62 @@
       return fallbackPuzzle;
     }
     return null;
+  }
+
+  function generateImpossiblePuzzle(difficulty, config) {
+    const difficultyConfig = config.difficulties[difficulty] || config.difficulties.easy;
+    const sizes = Array.isArray(difficultyConfig.gridSizes)
+      ? difficultyConfig.gridSizes
+      : [[5, 5]];
+    const [width, height] = sizes[randomInt(0, sizes.length - 1)];
+    const totalCells = width * height;
+    const rangeConfig = config.impossible?.blockedRange?.[difficulty]
+      || DEFAULT_CONFIG.impossible.blockedRange[difficulty]
+      || DEFAULT_CONFIG.impossible.blockedRange.easy;
+    const min = clampNumber(rangeConfig?.min, 0, totalCells - 2, 0);
+    const max = clampNumber(rangeConfig?.max, min, totalCells - 2, min);
+    const holeCount = min === max ? min : randomInt(min, max);
+    const blocked = createRandomBlockedSet(totalCells, holeCount);
+    const available = [];
+    for (let index = 0; index < totalCells; index += 1) {
+      if (!blocked.has(index)) {
+        available.push(index);
+      }
+    }
+    if (available.length < 2) {
+      return null;
+    }
+    shuffle(available);
+    const startIndex = available[0];
+    const endIndex = available[1];
+    const startCoord = indexToCoord(startIndex, width);
+    const endCoord = indexToCoord(endIndex, width);
+    return {
+      mode: 'single',
+      width,
+      height,
+      blockedIndices: blocked,
+      path: [startCoord, endCoord],
+      endpoints: {
+        start: startCoord,
+        end: endCoord
+      },
+      impossible: true
+    };
+  }
+
+  function createRandomBlockedSet(totalCells, count) {
+    const limit = Math.max(0, Math.min(count, totalCells - 2));
+    const blocked = new Set();
+    if (!Number.isFinite(totalCells) || totalCells <= 0 || limit <= 0) {
+      return blocked;
+    }
+    const indices = Array.from({ length: totalCells }, (_, index) => index);
+    shuffle(indices);
+    for (let i = 0; i < limit; i += 1) {
+      blocked.add(indices[i]);
+    }
+    return blocked;
   }
 
   function selectHoleStrategy(mode, difficultyKey, layoutConfig, totalCells, holeMin, holeMax) {
@@ -3011,7 +3146,11 @@
     }
     let gained = 0;
     try {
-      gained = awardGacha(COMPLETION_REWARD.gachaTickets, { unlockTicketStar: true });
+      const multiplier = state.currentPuzzle && state.currentPuzzle.impossible
+        ? IMPOSSIBLE_REWARD_MULTIPLIER
+        : 1;
+      const tickets = Math.max(1, Math.round(COMPLETION_REWARD.gachaTickets * multiplier));
+      gained = awardGacha(tickets, { unlockTicketStar: true });
     } catch (error) {
       console.warn('The Line: unable to grant gacha tickets', error);
       gained = 0;

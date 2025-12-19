@@ -1291,7 +1291,8 @@
           "remaining": "Cases restantes"
         },
         "actions": {
-          "reset": "Nouveau tracé"
+          "reset": "Nouveau tracé",
+          "impossible": "Nouveau impossible ?"
         },
         "board": "Grille du puzzle The Line",
         "endpointLabels": {
