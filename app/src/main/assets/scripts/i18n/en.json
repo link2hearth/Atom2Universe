@@ -2491,6 +2491,7 @@
         "textScale": {
           "label": "Text size",
           "ariaLabel": "Choose a multiplier dedicated to interface text",
+          "reset": "Reset text size",
           "options": {
             "compact": "Compact (×0.9)",
             "normal": "Standard size",
