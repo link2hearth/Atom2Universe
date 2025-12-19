@@ -137,7 +137,7 @@ body.theme-aurora .crypto-widget {
 }
 
 .crypto-widget__label::after {
-  content: ' :';
+  content: '';
   font-weight: 400;
   letter-spacing: normal;
 }
