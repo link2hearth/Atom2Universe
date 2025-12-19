@@ -982,7 +982,7 @@ body.view-sudoku .status-bar {
 .frenzy-status {
   --frenzy-scale: calc(2 * var(--ui-control-scale, 1));
   position: fixed;
-  top: clamp(3.15rem, 19.8vh, 10.8rem);
+  top: calc(var(--app-header-offset, 0rem) + clamp(0.45rem, 1.6vh, 1.4rem));
   left: 0;
   right: 0;
   display: flex;
