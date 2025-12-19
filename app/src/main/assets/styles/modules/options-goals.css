@@ -322,6 +322,7 @@ body.theme-neon .options-devkit-button:focus-visible {
 
 .options-reset > #resetButton {
   align-self: flex-end;
+  font-size: calc(0.85rem * var(--font-size-scale-factor, 1));
 }
 
 .reset-dialog,
@@ -440,7 +441,7 @@ body.theme-neon .reset-dialog__input {
 .bigbang-dialog__button {
   padding: 0.55rem 1.15rem;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--font-size-scale-factor, 1));
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -683,7 +684,7 @@ select:focus-visible {
   padding: calc(0.55rem * var(--ui-control-scale, 1))
     calc(1.6rem * var(--ui-control-scale, 1));
   border-radius: calc(999px * var(--ui-control-scale, 1));
-  font-size: calc(0.82rem * var(--ui-control-scale, 1));
+  font-size: calc(0.82rem * var(--ui-control-scale, 1) * var(--font-size-scale-factor, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   text-decoration: none;
