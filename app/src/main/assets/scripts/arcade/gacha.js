@@ -4410,45 +4410,8 @@ const GACHA_ANIMATION_REVEAL_DELAY = 2500;
 const GACHA_CONFETTI_BASE_RARITY_ID = 'commun';
 const DEFAULT_GACHA_CONFETTI_COLOR = '#4f7ec2';
 const DEFAULT_GACHA_CONFETTI_RGB = { r: 79, g: 126, b: 194 };
-const DEFAULT_GACHA_ROLL_MODES = [1, 10];
 let gachaAnimationInProgress = false;
 let gachaRollMode = 1;
-
-function getGachaRollModeOptions() {
-  const rawOptions = (typeof SHOP_PURCHASE_AMOUNTS !== 'undefined' && Array.isArray(SHOP_PURCHASE_AMOUNTS))
-    ? SHOP_PURCHASE_AMOUNTS
-    : DEFAULT_GACHA_ROLL_MODES;
-  const normalized = rawOptions
-    .map(value => Math.max(1, Math.floor(Number(value) || 0)))
-    .filter(value => Number.isFinite(value) && value > 0);
-  const unique = Array.from(new Set(normalized));
-  return unique.length ? unique : DEFAULT_GACHA_ROLL_MODES.slice();
-}
-
-function normalizeGachaRollMode(value) {
-  const options = getGachaRollModeOptions();
-  const numeric = Math.max(1, Math.floor(Number(value) || 0));
-  if (options.includes(numeric)) {
-    return numeric;
-  }
-  return options[0] ?? 1;
-}
-
-function resolveGachaRollModeFromScale() {
-  if (typeof getActiveShopPurchaseAmount !== 'function') {
-    return normalizeGachaRollMode(gachaRollMode);
-  }
-  return normalizeGachaRollMode(getActiveShopPurchaseAmount());
-}
-
-function updateGachaRollModeFromScale() {
-  const nextMode = resolveGachaRollModeFromScale();
-  if (gachaRollMode === nextMode) {
-    return;
-  }
-  gachaRollMode = nextMode;
-  updateGachaUI();
-}
 
 function updateGachaUI() {
   updateGachaFeaturedInfo();
@@ -5453,20 +5416,7 @@ function handleGachaRoll() {
 }
 
 function toggleGachaRollMode() {
-  const options = getGachaRollModeOptions();
-  const currentMode = normalizeGachaRollMode(gachaRollMode);
-  const currentIndex = options.indexOf(currentMode);
-  const nextMode = options[(currentIndex + 1) % options.length] ?? options[0] ?? 1;
-  if (typeof setActiveShopPurchaseAmount === 'function') {
-    const active = typeof getActiveShopPurchaseAmount === 'function'
-      ? getActiveShopPurchaseAmount()
-      : null;
-    if (active !== nextMode) {
-      setActiveShopPurchaseAmount(nextMode);
-      return;
-    }
-  }
-  gachaRollMode = nextMode;
+  gachaRollMode = gachaRollMode === 1 ? 10 : 1;
   updateGachaUI();
 }
 
@@ -6173,3 +6123,4 @@ if (typeof window !== 'undefined') {
     updateGachaUI();
   });
 }
+
