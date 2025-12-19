@@ -291,7 +291,6 @@ body[data-page-group="arcade"] main {
   justify-content: flex-start;
   column-gap: calc(0.3rem * var(--header-scale, 1));
   row-gap: calc(0.3rem * var(--header-scale, 1));
-  position: relative;
 }
 
 .header-brand-group {
@@ -1148,6 +1147,7 @@ body.theme-aurora .status-bar {
   justify-content: flex-start;
   align-content: flex-start;
   flex: 0 0 auto;
+  width: 100%;
 }
 
 @supports (display: contents) {
@@ -1161,6 +1161,12 @@ body.theme-aurora .status-bar {
   }
 }
 
+@supports (display: contents) {
+  .header-main .nav-menu {
+    display: flex;
+    gap: calc(0.3rem * var(--header-scale, 1));
+  }
+}
 
 .nav-button {
   background: #1c1f2b;
