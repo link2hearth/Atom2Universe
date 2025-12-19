@@ -982,7 +982,7 @@ body.view-sudoku .status-bar {
 .frenzy-status {
   --frenzy-scale: calc(2 * var(--ui-control-scale, 1));
   position: fixed;
-  top: clamp(3.15rem, 19.8vh, 10.8rem);
+  top: var(--frenzy-status-offset, clamp(3.15rem, 19.8vh, 10.8rem));
   left: 0;
   right: 0;
   display: flex;
@@ -994,7 +994,9 @@ body.view-sudoku .status-bar {
   padding: 0 calc(clamp(0.9rem, 4vw, 3.2rem) * var(--frenzy-scale));
   pointer-events: none;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: calc(clamp(0.58rem, 0.98vw, 0.82rem) * var(--frenzy-scale));
+  font-size: calc(
+    clamp(0.58rem, 0.98vw, 0.82rem) * var(--frenzy-scale) * var(--font-text-scale-factor, 1)
+  );
   color: rgba(220, 236, 255, 0.78);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1045,7 +1047,9 @@ body.view-sudoku .status-bar {
 }
 
 .frenzy-status__timer {
-  font-size: calc(clamp(0.52rem, 0.9vw, 0.72rem) * var(--frenzy-scale));
+  font-size: calc(
+    clamp(0.52rem, 0.9vw, 0.72rem) * var(--frenzy-scale) * var(--font-text-scale-factor, 1)
+  );
   font-weight: 500;
   opacity: 0.78;
 }
