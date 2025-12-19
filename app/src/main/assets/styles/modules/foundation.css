@@ -283,6 +283,7 @@ body[data-page-group="arcade"] main {
   justify-content: flex-start;
   column-gap: calc(0.3rem * var(--header-scale, 1));
   row-gap: calc(0.3rem * var(--header-scale, 1));
+  position: relative;
 }
 
 .header-brand-group {
@@ -326,6 +327,16 @@ body[data-page-group="arcade"] main {
   position: relative;
   transition: background var(--transition), border-color var(--transition), color var(--transition),
     transform var(--transition), box-shadow var(--transition);
+}
+
+.header-banner-toggle {
+  position: absolute;
+  inset-block-start: calc(var(--header-padding-y) * 0.7);
+  inset-inline-end: calc(var(--header-padding-x) * 0.85);
+}
+
+.app-header[data-collapsed="true"] .header-banner-toggle {
+  inset-block-start: calc(var(--header-padding-y) * 0.45);
 }
 
 .header-playback-button::before,
@@ -1123,7 +1134,7 @@ body.theme-aurora .status-bar {
   gap: calc(0.3rem * var(--header-scale, 1));
   justify-content: flex-start;
   align-content: flex-start;
-  flex: 1 1 18rem;
+  flex: 0 0 auto;
 }
 
 @supports (display: contents) {
@@ -1136,6 +1147,7 @@ body.theme-aurora .status-bar {
     flex: 0 0 auto;
   }
 }
+
 
 .nav-button {
   background: #1c1f2b;
