@@ -55,9 +55,9 @@
   });
 
   const DEFAULT_SEARCH = Object.freeze({
-    easy: { maxDepth: 2, maxTimeMs: 600, iterative: false },
-    medium: { maxDepth: 4, maxTimeMs: 1000, iterative: true },
-    hard: { maxDepth: 6, maxTimeMs: 2000, iterative: true, moveOrdering: true }
+    easy: { maxDepth: 2, maxTimeMs: 600, iterative: false, maxCandidates: 10 },
+    medium: { maxDepth: 4, maxTimeMs: 1000, iterative: true, maxCandidates: 14 },
+    hard: { maxDepth: 6, maxTimeMs: 2000, iterative: true, moveOrdering: true, maxCandidates: 20 }
   });
 
   const DEFAULT_BOARD_SETTINGS = Object.freeze({
@@ -163,6 +163,9 @@
         }
         if (typeof entry.moveOrdering === 'boolean') {
           search[key].moveOrdering = entry.moveOrdering;
+        }
+        if (Number.isInteger(entry.maxCandidates) && entry.maxCandidates > 0) {
+          search[key].maxCandidates = entry.maxCandidates;
         }
       });
     }
@@ -1153,6 +1156,29 @@
     return score;
   }
 
+  function scoreMoveTactics(board, row, col, player, weights) {
+    const move = new Move(row, col, player);
+    const nextBoard = board.applyMove(move);
+    let score = 0;
+    for (let i = 0; i < DIRECTIONS.length; i += 1) {
+      const dir = DIRECTIONS[i];
+      const info = getRunInfo(nextBoard, row, col, player, dir[0], dir[1]);
+      if (!info) {
+        continue;
+      }
+      if (info.length >= 5) {
+        score += weights.five;
+      } else if (info.length === 4) {
+        score += info.openLeft && info.openRight ? weights.openFour : weights.closedFour;
+      } else if (info.length === 3) {
+        score += info.openLeft && info.openRight ? weights.openThree : weights.closedThree;
+      } else if (info.length === 2) {
+        score += weights.two;
+      }
+    }
+    return score;
+  }
+
   function estimatePotential(board, row, col, player, dRow, dCol) {
     let total = 1;
     let r = row + dRow;
@@ -1487,10 +1513,20 @@
         const resultingBoard = board.applyMove(urgentBlock);
         return { move: urgentBlock, value: evaluateBoard(resultingBoard, player, context) };
       }
+      const weights = context.evaluationWeights || CONFIG.evaluation;
+      const maxCandidates = CONFIG.search.easy.maxCandidates;
+      const ordering = orderCandidates(
+        board,
+        player,
+        candidates,
+        weights,
+        maxCandidates,
+        { includeTactics: true }
+      );
       let bestMove = null;
       let bestScore = Number.NEGATIVE_INFINITY;
-      for (let i = 0; i < candidates.length; i += 1) {
-        const pos = candidates[i];
+      for (let i = 0; i < ordering.length; i += 1) {
+        const pos = ordering[i];
         const move = new Move(pos.row, pos.col, player);
         const foul = context.ruleSet === RULE_SET.RENJU && player === PLAYERS.BLACK
           ? checkRenjuFoul(board, move)
@@ -1530,20 +1566,28 @@
       const iterative = settings.iterative !== false;
       const maxDepth = Math.max(1, settings.maxDepth || 2);
       const orderEnabled = context.moveOrdering !== false;
+      const maxCandidates = Number.isInteger(settings.maxCandidates) && settings.maxCandidates > 0
+        ? settings.maxCandidates
+        : null;
 
       const ordering = orderEnabled
-        ? candidates
-          .map(pos => ({ pos, score: scoreMoveHeuristic(board, pos.row, pos.col, player, context.evaluationWeights || CONFIG.evaluation) }))
-          .sort((a, b) => b.score - a.score)
-          .map(item => item.pos)
-        : candidates;
+        ? orderCandidates(
+          board,
+          player,
+          candidates,
+          context.evaluationWeights || CONFIG.evaluation,
+          maxCandidates,
+          { includeTactics: true }
+        )
+        : applyCandidateLimit(candidates, maxCandidates);
 
       const ctx = {
         ...context,
         deadline: context.deadline,
         timedOut: false,
         transposition: context.transposition || new Map(),
-        orderEnabled
+        orderEnabled,
+        maxCandidates
       };
 
       const startDepth = iterative ? 1 : maxDepth;
@@ -1599,7 +1643,8 @@
     }
 
     const neighborRadius = context.neighborRadius || CONFIG.board.neighborRadius;
-    const candidates = orderedCandidates || generateCandidateMoves(board, player, neighborRadius);
+    const candidates = orderedCandidates
+      || getCandidateMoves(board, player, neighborRadius, context, depth);
     let bestValue = Number.NEGATIVE_INFINITY;
     let bestMove = null;
 
@@ -1633,6 +1678,38 @@
     }
 
     return { move: bestMove, value: bestValue };
+  }
+
+  function getCandidateMoves(board, player, neighborRadius, context, depth) {
+    const candidates = generateCandidateMoves(board, player, neighborRadius);
+    if (!context || !context.orderEnabled) {
+      return applyCandidateLimit(candidates, context ? context.maxCandidates : null);
+    }
+    const weights = context.evaluationWeights || CONFIG.evaluation;
+    const includeTactics = depth <= 2;
+    return orderCandidates(board, player, candidates, weights, context.maxCandidates, { includeTactics });
+  }
+
+  function applyCandidateLimit(candidates, maxCandidates) {
+    if (!Number.isInteger(maxCandidates) || maxCandidates <= 0 || candidates.length <= maxCandidates) {
+      return candidates;
+    }
+    return candidates.slice(0, maxCandidates);
+  }
+
+  function orderCandidates(board, player, candidates, weights, maxCandidates, options = {}) {
+    const includeTactics = options.includeTactics === true;
+    const scored = candidates.map(pos => {
+      const baseScore = scoreMoveHeuristic(board, pos.row, pos.col, player, weights);
+      const tacticalScore = includeTactics ? scoreMoveTactics(board, pos.row, pos.col, player, weights) : 0;
+      return {
+        pos,
+        score: baseScore + tacticalScore
+      };
+    });
+    scored.sort((a, b) => b.score - a.score);
+    const ordered = scored.map(item => item.pos);
+    return applyCandidateLimit(ordered, maxCandidates);
   }
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = {

@@ -93,6 +93,11 @@
     })
   });
 
+  const DEFAULT_BOARD_LAYOUT = Object.freeze({
+    boardMaxVmin: 96,
+    boardMaxPx: 640
+  });
+
   const DEFAULT_DIFFICULTY_MODES = Object.freeze([
     Object.freeze({
       id: 'training',
@@ -981,6 +986,28 @@
       creativity: Object.freeze(creativity),
       extensions: Object.freeze(extensions)
     };
+  }
+
+  function getConfiguredBoardLayout() {
+    const arcadeConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.arcade ? GLOBAL_CONFIG.arcade : null;
+    const chessConfig = arcadeConfig && arcadeConfig.echecs ? arcadeConfig.echecs : null;
+    const layoutConfig = chessConfig && chessConfig.layout ? chessConfig.layout : null;
+
+    let boardMaxVmin = DEFAULT_BOARD_LAYOUT.boardMaxVmin;
+    let boardMaxPx = DEFAULT_BOARD_LAYOUT.boardMaxPx;
+
+    if (layoutConfig) {
+      const vminCandidate = Number(layoutConfig.boardMaxVmin);
+      if (Number.isFinite(vminCandidate) && vminCandidate > 0) {
+        boardMaxVmin = Math.min(Math.max(vminCandidate, 1), 100);
+      }
+      const pxCandidate = Number(layoutConfig.boardMaxPx);
+      if (Number.isFinite(pxCandidate) && pxCandidate > 0) {
+        boardMaxPx = Math.round(pxCandidate);
+      }
+    }
+
+    return { boardMaxVmin, boardMaxPx };
   }
 
   function createAiContext(difficultyMode) {
@@ -6659,6 +6686,10 @@
     if (!section) {
       return;
     }
+
+    const boardLayout = getConfiguredBoardLayout();
+    section.style.setProperty('--chess-board-max-vmin', String(boardLayout.boardMaxVmin));
+    section.style.setProperty('--chess-board-max-px', `${boardLayout.boardMaxPx}px`);
 
     const boardElement = section.querySelector(BOARD_SELECTOR);
     const statusElement = section.querySelector(STATUS_SELECTOR);

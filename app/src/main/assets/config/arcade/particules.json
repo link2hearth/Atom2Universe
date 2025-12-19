@@ -1,5 +1,8 @@
 {
   "ticketReward": 1,
+  "scroll": {
+    "autoScrollOnEnter": true
+  },
   "visualEffects": {
     "enableScreenPulse": false,
     "enableGlow": false,
