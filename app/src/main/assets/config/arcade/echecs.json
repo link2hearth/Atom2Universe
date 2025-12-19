@@ -1,4 +1,9 @@
 {
+  "layout": {
+    "_comment": "Réglages d'affichage du plateau (vmin = pourcentage du plus petit côté).",
+    "boardMaxVmin": 96,
+    "boardMaxPx": 640
+  },
   "ai": {
     "searchDepth": 4,
     "timeLimitMs": 3000,
