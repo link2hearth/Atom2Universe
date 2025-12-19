@@ -2431,7 +2431,6 @@
         "textScale": {
           "label": "Taille du texte",
           "ariaLabel": "Choisir un facteur dédié à la taille des textes affichés",
-          "reset": "Réinitialiser la taille du texte",
           "options": {
             "compact": "Compact (×0,9)",
             "normal": "Taille standard",
