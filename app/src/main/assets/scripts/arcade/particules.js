@@ -3,6 +3,7 @@
   const ARCADE_CONFIG = GLOBAL_CONFIG && typeof GLOBAL_CONFIG === 'object' && GLOBAL_CONFIG.arcade
     ? GLOBAL_CONFIG.arcade.particules ?? {}
     : {};
+  const AUTO_SCROLL_ON_ENTER = Boolean(ARCADE_CONFIG?.scroll?.autoScrollOnEnter);
 
   const translate = (() => {
     const hasTranslator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function';
@@ -96,6 +97,34 @@
       }
     });
   }
+
+  const scrollArcadeViewToBottom = () => {
+    if (!AUTO_SCROLL_ON_ENTER || typeof document === 'undefined') {
+      return;
+    }
+    const scrollElement = document.scrollingElement || document.documentElement || document.body;
+    if (!scrollElement) {
+      return;
+    }
+    const maxScrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+    if (maxScrollTop <= 0) {
+      return;
+    }
+    scrollElement.scrollTop = maxScrollTop;
+  };
+
+  const scheduleArcadeScrollToBottom = () => {
+    if (!AUTO_SCROLL_ON_ENTER || typeof window === 'undefined') {
+      return;
+    }
+    if (typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(scrollArcadeViewToBottom);
+      });
+      return;
+    }
+    scrollArcadeViewToBottom();
+  };
 
   function requestScrollUnlock() {
     let eventDispatched = false;
@@ -3890,6 +3919,7 @@
     onEnter() {
       if (!this.enabled) return;
       this.handleResize();
+      scheduleArcadeScrollToBottom();
       if (this.pendingResume && !this.isOverlayVisible()) {
         this.showOverlay({
           message: PAUSE_OVERLAY_MESSAGE,
