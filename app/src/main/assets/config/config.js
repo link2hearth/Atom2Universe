@@ -1549,10 +1549,10 @@ const GAME_CONFIG = {
     textScale: {
       default: 'normal',
       options: [
-        { id: 'compact', factor: 0.9 },
-        { id: 'normal', factor: 1 },
-        { id: 'comfortable', factor: 1.2 },
-        { id: 'reading', factor: 1.5 }
+        { id: 'compact', factor: 1 },
+        { id: 'normal', factor: 1.1 },
+        { id: 'comfortable', factor: 1.5 },
+        { id: 'reading', factor: 2 }
       ]
     }
   },
