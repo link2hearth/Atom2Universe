@@ -20,6 +20,7 @@ function setHeaderCollapsed(collapsed, options = {}) {
   if (options.persist !== false) {
     writeStoredHeaderCollapsed(shouldCollapse);
   }
+  scheduleHeaderOffsetUpdate();
 }
 function initializeDomBoundModules() {
   refreshOptionsWelcomeContent();
