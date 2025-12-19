@@ -2105,7 +2105,17 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
 
-
+if (typeof document !== 'undefined') {
+  const root = document.documentElement;
+  if (root && root.style) {
+    const offsetRaw = GAME_CONFIG?.ui?.frenzyStatusOffsetVh;
+    const offsetValue = Number(offsetRaw);
+    if (Number.isFinite(offsetValue)) {
+      const clamped = Math.max(0, Math.min(100, offsetValue));
+      root.style.setProperty('--frenzy-status-offset', `${clamped}vh`);
+    }
+  }
+}
 
 
 
