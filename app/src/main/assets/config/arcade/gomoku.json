@@ -9,18 +9,21 @@
     "easy": {
       "maxDepth": 2,
       "maxTimeMs": 600,
-      "iterative": false
+      "iterative": false,
+      "maxCandidates": 10
     },
     "medium": {
       "maxDepth": 4,
       "maxTimeMs": 1000,
-      "iterative": true
+      "iterative": true,
+      "maxCandidates": 14
     },
     "hard": {
       "maxDepth": 6,
       "maxTimeMs": 2000,
       "iterative": true,
-      "moveOrdering": true
+      "moveOrdering": true,
+      "maxCandidates": 20
     }
   },
   "renju": {
