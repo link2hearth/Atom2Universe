@@ -11990,7 +11990,6 @@
       };
 
       const bridge = globalScope.AndroidBridge;
-      const androidBridgeStartupSettings = globalScope.ANDROID_BRIDGE_STARTUP_SETTINGS || {};
       const soundFontStartupRequested = globalScope[androidSoundFontStartupFlagKey] === true;
       if (bridge && typeof bridge.loadCachedSoundFont === 'function' && !soundFontStartupRequested) {
         globalScope[androidSoundFontStartupFlagKey] = true;
@@ -12000,37 +11999,14 @@
           console.error('Unable to load cached SoundFont from Android bridge', error);
         }
       }
-      const requestAndroidMidiLibrary = () => {
-        const midiStartupRequested = globalScope[androidMidiStartupFlagKey] === true;
-        if (bridge && typeof bridge.loadMidiFolder === 'function' && !midiStartupRequested) {
-          globalScope[androidMidiStartupFlagKey] = true;
-          try {
-            bridge.loadMidiFolder();
-          } catch (error) {
-            console.error('Unable to load Android MIDI folder', error);
-          }
+      const midiStartupRequested = globalScope[androidMidiStartupFlagKey] === true;
+      if (bridge && typeof bridge.loadMidiFolder === 'function' && !midiStartupRequested) {
+        globalScope[androidMidiStartupFlagKey] = true;
+        try {
+          bridge.loadMidiFolder();
+        } catch (error) {
+          console.error('Unable to load Android MIDI folder', error);
         }
-      };
-      const midiAutoloadMode = typeof androidBridgeStartupSettings.midiLibraryAutoload === 'string'
-        ? androidBridgeStartupSettings.midiLibraryAutoload
-        : 'immediate';
-      if (midiAutoloadMode === 'visible') {
-        const midiModule = document.querySelector('.option-card--chiptune');
-        if (midiModule && typeof IntersectionObserver === 'function') {
-          const observer = new IntersectionObserver((entries) => {
-            if (entries.some((entry) => entry.isIntersecting)) {
-              observer.disconnect();
-              requestAndroidMidiLibrary();
-            }
-          }, { threshold: 0.2 });
-          observer.observe(midiModule);
-        } else if (typeof requestIdleCallback === 'function') {
-          requestIdleCallback(() => requestAndroidMidiLibrary(), { timeout: 5000 });
-        } else {
-          setTimeout(() => requestAndroidMidiLibrary(), 5000);
-        }
-      } else if (midiAutoloadMode === 'immediate') {
-        requestAndroidMidiLibrary();
       }
     }
 
