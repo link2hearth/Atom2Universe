@@ -2590,10 +2590,10 @@
         },
         "ticketStarSprite": {
           "title": "Visuel des étoiles à tickets",
-          "ariaLabel": "Basculer entre l’étoile PNG statique et le GIF animé sur l’écran principal",
+          "ariaLabel": "Basculer entre GIF et JPG pour l’étoile de l’écran principal",
           "state": {
-            "animated": "Animée (GIF)",
-            "static": "Statique (PNG)"
+            "animated": "GIF",
+            "static": "JPG"
           }
         },
         "cryptoWidget": {

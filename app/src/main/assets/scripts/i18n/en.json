@@ -2650,10 +2650,10 @@
         },
         "ticketStarSprite": {
           "title": "Ticket star visual",
-          "ariaLabel": "Switch between the static PNG and animated GIF for the home ticket star",
+          "ariaLabel": "Switch between GIF and JPG for the home ticket star",
           "state": {
-            "animated": "Animated (GIF)",
-            "static": "Static (PNG)"
+            "animated": "GIF",
+            "static": "JPG"
           }
         },
         "cryptoWidget": {
