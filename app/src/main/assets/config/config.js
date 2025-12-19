@@ -1554,12 +1554,7 @@ const GAME_CONFIG = {
         { id: 'comfortable', factor: 1.2 },
         { id: 'reading', factor: 1.5 }
       ]
-    },
-    /**
-     * Décalage vertical (en vh) des fenêtres de frénésie en haut de l'écran.
-     * Exemple : 25 signifie 25% de la hauteur de l'écran.
-     */
-    frenzyStatusOffsetVh: 25
+    }
   },
 
   /**
@@ -2104,6 +2099,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
+
 
 
 
