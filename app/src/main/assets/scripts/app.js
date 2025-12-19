@@ -3,6 +3,7 @@ const CRYPTO_WIDGET_BASE_URL = (() => {
   return raw.replace(/\/+$/, '');
 })();
 
+let headerOffsetObserver = null;
 let pendingHeaderOffsetFrame = null;
 let lastHeaderOffset = null;
 
@@ -31,7 +32,7 @@ function applyHeaderOffsetCss() {
   if (typeof document === 'undefined') {
     return;
   }
-  const offset = Math.max(0, Math.round(getAppHeaderOffsetHeight()));
+  const offset = Math.max(0, getAppHeaderOffsetHeight());
   const root = document.documentElement;
   if (!root) {
     return;
@@ -53,12 +54,20 @@ function scheduleHeaderOffsetUpdate() {
   if (typeof window.requestAnimationFrame === 'function') {
     pendingHeaderOffsetFrame = window.requestAnimationFrame(() => {
       pendingHeaderOffsetFrame = null;
-      applyHeaderOffsetCss();
+      try {
+        applyHeaderOffsetCss();
+      } catch (error) {
+        console.warn('Unable to update header offset', error);
+      }
     });
   } else {
     pendingHeaderOffsetFrame = setTimeout(() => {
       pendingHeaderOffsetFrame = null;
-      applyHeaderOffsetCss();
+      try {
+        applyHeaderOffsetCss();
+      } catch (error) {
+        console.warn('Unable to update header offset', error);
+      }
     }, 16);
   }
 }
@@ -67,10 +76,24 @@ function initHeaderOffsetTracking() {
   if (typeof window === 'undefined') {
     return;
   }
-  applyHeaderOffsetCss();
-  window.addEventListener('resize', scheduleHeaderOffsetUpdate, { passive: true });
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', scheduleHeaderOffsetUpdate);
+  try {
+    applyHeaderOffsetCss();
+    if (headerOffsetObserver) {
+      headerOffsetObserver.disconnect();
+      headerOffsetObserver = null;
+    }
+    if (typeof window.ResizeObserver === 'function' && elements?.appHeader) {
+      headerOffsetObserver = new ResizeObserver(() => {
+        scheduleHeaderOffsetUpdate();
+      });
+      headerOffsetObserver.observe(elements.appHeader);
+    }
+    window.addEventListener('resize', scheduleHeaderOffsetUpdate, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', scheduleHeaderOffsetUpdate);
+    }
+  } catch (error) {
+    console.warn('Unable to initialize header offset tracking', error);
   }
 }
 
