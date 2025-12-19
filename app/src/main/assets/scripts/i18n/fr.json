@@ -1157,6 +1157,9 @@
           "white": "pion blanc",
           "empty": "vide"
         },
+        "rewards": {
+          "gachaWin": "Victoire ! {count} ticket{suffix} gacha gagné{suffix}."
+        },
         "players": {
           "black": "noirs",
           "white": "blancs"
@@ -3792,6 +3795,55 @@
         "die": {
           "available": "Dé {index} affichant {value}.",
           "held": "Dé {index} affichant {value}, mis de côté."
+        },
+        "rewards": {
+          "vsAiVictory": "Victoire contre l’IA ! +{count} ticket{suffix} gacha."
+        }
+      },
+      "bigger": {
+        "rewardToast": "Bille 512 forgée ! {tickets} remportés."
+      },
+      "circles": {
+        "rewardToast": "Circles : +{count} ticket{suffix} gacha !",
+        "rewardDisabledToast": "Circles : récompense désactivée, l’aide a été utilisée pour ce puzzle.",
+        "rewardMissToast": "Circles : pas de ticket gacha cette fois-ci.",
+        "rewardStatGuaranteed": "+{tickets}",
+        "rewardStatChance": "{chance} % → +{tickets}"
+      },
+      "gomoku": {
+        "rewards": {
+          "vsAiVictory": "Victoire contre l’IA ! +{count} ticket{suffix} gacha."
+        }
+      },
+      "hex": {
+        "reward": {
+          "gained": "Tickets gacha gagnés : {count}"
+        }
+      },
+      "minesweeper": {
+        "rewardToast": "Récompense Démineur : {tickets}"
+      },
+      "pipeTap": {
+        "rewardToast": "PipeTap : +{count} ticket{suffix} gacha !"
+      },
+      "quantum2048": {
+        "rewardToast": "Récompense ObjectX : {reward}"
+      },
+      "solitaire": {
+        "rewards": {
+          "gacha": "{count} ticket{suffix} gacha",
+          "mach3": "{count} ticket{suffix} Mach3"
+        },
+        "toast": {
+          "completion": "Solitaire terminé ! Récompenses : {rewards}."
+        }
+      },
+      "starBridges": {
+        "rewardToast": "Bridges : +{count} ticket{suffix} gacha !"
+      },
+      "taquin": {
+        "rewards": {
+          "gacha": "Taquin réussi ! +{count} ticket{suffix} gacha."
         }
       },
       "holdem": {
