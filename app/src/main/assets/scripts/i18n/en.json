@@ -2362,6 +2362,10 @@
             "unsupported": "Feature available only in the Android app."
           }
         },
+        "notes": {
+          "title": "Notes",
+          "openButton": "Open notes"
+        },
         "welcome": {
           "title": "Welcome",
           "intro": {
