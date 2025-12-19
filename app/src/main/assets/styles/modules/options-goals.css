@@ -231,6 +231,7 @@ body.theme-neon .option-card__description {
 .option-row--language {
   width: 100%;
   align-items: flex-end;
+  justify-content: space-between;
 }
 
 .option-field--language {
@@ -239,6 +240,12 @@ body.theme-neon .option-card__description {
 
 .option-field--language select {
   min-width: 12em;
+}
+
+.option-row--language .option-field--theme {
+  margin-left: auto;
+  min-width: 220px;
+  text-align: right;
 }
 
 .options-reset {
@@ -823,7 +830,7 @@ select option:focus {
 
 .option-toggle-card__title {
   margin: 0;
-  font-size: calc(0.65rem * var(--ui-control-scale, 1));
+  font-size: calc(0.65rem * var(--font-size-scale-factor, 1));
   font-weight: 600;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -831,7 +838,7 @@ select option:focus {
 
 .option-toggle-card__description {
   margin: calc(0.2rem * var(--ui-control-scale, 1)) 0 0;
-  font-size: calc(0.6rem * var(--ui-control-scale, 1));
+  font-size: calc(0.6rem * var(--font-size-scale-factor, 1));
   opacity: 0.8;
 }
 
@@ -848,7 +855,7 @@ select option:focus {
   gap: calc(0.6rem * var(--ui-control-scale, 1));
   cursor: pointer;
   font-weight: 600;
-  font-size: calc(0.65rem * var(--ui-control-scale, 1));
+  font-size: calc(0.65rem * var(--font-size-scale-factor, 1));
 }
 
 .toggle-switch input {
@@ -890,7 +897,7 @@ select option:focus {
 }
 
 .toggle-switch__label {
-  font-size: calc(0.9rem * var(--ui-control-scale, 1));
+  font-size: calc(0.9rem * var(--font-size-scale-factor, 1));
 }
 
 body.theme-light .option-toggle-card {

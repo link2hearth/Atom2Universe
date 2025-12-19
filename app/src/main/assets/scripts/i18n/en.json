@@ -2326,7 +2326,6 @@
         },
         "background": {
           "title": "Background",
-          "description": "Link an image folder from your Android device to show your photos behind the main page.",
           "addButton": "Add image bank",
           "toggle": {
             "on": "Disable slideshow",
@@ -2349,7 +2348,6 @@
         },
         "backups": {
           "title": "Manage saves",
-          "description": "Export or import your progress with an external file.",
           "actions": {
             "save": "Save",
             "load": "Load"
