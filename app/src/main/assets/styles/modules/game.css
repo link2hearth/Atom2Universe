@@ -235,9 +235,7 @@ body.theme-light .crypto-widget__status {
 }
 
 .frenzy-status__item .apc-frenzy-counter__value {
-  font-size: calc(
-    clamp(0.52rem, 0.9vw, 0.72rem) * var(--apc-frenzy-scale, 1) * var(--font-text-scale-factor, 1)
-  );
+  font-size: calc(clamp(0.52rem, 0.9vw, 0.72rem) * var(--apc-frenzy-scale, 1));
 }
 
 body.theme-light .frenzy-status__item .apc-frenzy-counter {
@@ -264,9 +262,7 @@ body.theme-aurora .frenzy-status__item .apc-frenzy-counter {
 }
 
 .apc-frenzy-counter__value {
-  font-size: calc(
-    clamp(0.62rem, 1.6vw, 0.92rem) * var(--apc-frenzy-scale, 1) * var(--font-text-scale-factor, 1)
-  );
+  font-size: calc(clamp(0.62rem, 1.6vw, 0.92rem) * var(--apc-frenzy-scale, 1));
   font-weight: 700;
   line-height: 1;
   color: inherit;
