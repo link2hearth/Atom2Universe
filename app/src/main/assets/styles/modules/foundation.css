@@ -1147,7 +1147,8 @@ body.theme-aurora .status-bar {
   gap: calc(0.3rem * var(--header-scale, 1));
   justify-content: flex-start;
   align-content: flex-start;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 @supports (display: contents) {
@@ -1163,6 +1164,7 @@ body.theme-aurora .status-bar {
 
 
 .nav-button {
+  flex: 0 0 auto;
   background: #1c1f2b;
   border: none;
   color: #f5f7ff;
