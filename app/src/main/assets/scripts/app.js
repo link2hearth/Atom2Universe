@@ -42,7 +42,6 @@ function applyNewsEnabled(enabled, options = {}) {
   if (settings.persist) {
     writeStoredNewsEnabled(newsFeatureEnabled);
   }
-}
 
 
 (function initStartupOverlay() {
