@@ -120,6 +120,15 @@
   outline: none;
 }
 
+.the-line__action-button:disabled,
+.the-line__action-button[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.25);
+  transform: none;
+  box-shadow: 0 12px 24px rgba(16, 24, 72, 0.4);
+}
+
 .the-line__board-wrapper {
   display: flex;
   justify-content: center;
