@@ -2080,10 +2080,13 @@ const GAME_CONFIG = {
   elements: COLLECTION_ELEMENTS
 };
 
+var GLOBAL_CONFIG = GAME_CONFIG;
+
 GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 
 if (typeof globalThis !== 'undefined') {
   globalThis.GAME_CONFIG = GAME_CONFIG;
+  globalThis.GLOBAL_CONFIG = GLOBAL_CONFIG;
   globalThis.DEVKIT_ENABLED = DEVKIT_ENABLED;
   globalThis.COLLECTION_SYSTEM_ENABLED = COLLECTION_SYSTEM_ENABLED;
   globalThis.COLLECTION_VIDEOS_ENABLED = COLLECTION_VIDEOS_ENABLED;
@@ -2099,8 +2102,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
-
 
 
 
