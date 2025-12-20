@@ -6586,6 +6586,8 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   } else if (normalizedKeyword === 'ATOM') {
     applyAtomVariantVisualState();
     randomizeAtomButtonImage();
+  } else {
+    scheduleConfigReload();
   }
   return true;
 }
@@ -23028,6 +23030,5 @@ if (document.readyState === 'loading') {
 } else {
   bootApplication();
 }
-
 
 
