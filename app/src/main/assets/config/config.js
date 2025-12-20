@@ -64,12 +64,9 @@ const CRYPTO_WIDGET_SETTINGS = Object.freeze({
  * - `proxyBaseUrls` : liste ordonnée de proxys à essayer avant de revenir au flux direct.
  * - `refreshIntervalMs` : fréquence de rafraîchissement automatique du flux.
  * - `bannerDisplayDurationMs` : durée d’affichage de chaque titre dans le bandeau.
- * - `enabledByDefault` : état par défaut du module News.
- * - `enabledStorageKey` : clé localStorage qui persiste l’option Actus.
  */
 const NEWS_SETTINGS = Object.freeze({
   enabledByDefault: true,
-  enabledStorageKey: 'atom2univers.options.news.enabled',
   defaultFeedUrl: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr',
   searchUrlTemplate: 'https://news.google.com/rss/search?q={query}&hl=fr&gl=FR&ceid=FR:fr',
   sources: [
@@ -2102,6 +2099,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
+
 
 
 
