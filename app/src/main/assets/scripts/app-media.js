@@ -2869,6 +2869,17 @@ function applyNewsEnabled(enabled, options = {}) {
   }
   updateNewsToggleStatusLabel(newsFeatureEnabled);
   updateNewsControlsAvailability();
+  if (typeof setNavButtonLockState === 'function') {
+    setNavButtonLockState(elements.navNewsButton, newsFeatureEnabled);
+  } else if (elements.navNewsButton) {
+    elements.navNewsButton.hidden = !newsFeatureEnabled;
+    elements.navNewsButton.setAttribute('aria-hidden', newsFeatureEnabled ? 'false' : 'true');
+    elements.navNewsButton.disabled = !newsFeatureEnabled;
+    elements.navNewsButton.setAttribute('aria-disabled', newsFeatureEnabled ? 'false' : 'true');
+    if (!newsFeatureEnabled) {
+      elements.navNewsButton.classList.remove('active');
+    }
+  }
   if (settings.persist) {
     writeStoredNewsEnabled(newsFeatureEnabled);
   }
