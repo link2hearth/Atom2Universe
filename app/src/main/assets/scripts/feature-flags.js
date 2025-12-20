@@ -1,5 +1,5 @@
 function resolveGlobalBooleanFlag(flagName, fallback = true) {
-  if (typeof globalThis !== 'undefined' && globalThis[flagName] === 'boolean') {
+  if (typeof globalThis !== 'undefined' && typeof globalThis[flagName] === 'boolean') {
     return globalThis[flagName];
   }
   return fallback;
