@@ -6586,6 +6586,10 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   } else if (normalizedKeyword === 'ATOM') {
     applyAtomVariantVisualState();
     randomizeAtomButtonImage();
+  } else if (normalizedKeyword === 'DEVKIT') {
+    updateDevkitButtonVisibility();
+  } else {
+    scheduleConfigReload();
   }
   return true;
 }
@@ -11528,6 +11532,19 @@ function closeDevKit() {
     DEVKIT_STATE.lastFocusedElement.focus();
   }
   DEVKIT_STATE.lastFocusedElement = null;
+}
+
+function updateDevkitButtonVisibility() {
+  if (!elements.openDevkitButton) {
+    return;
+  }
+  const enabled = isDevkitFeatureEnabled();
+  elements.openDevkitButton.hidden = !enabled;
+  elements.openDevkitButton.style.display = enabled ? '' : 'none';
+  elements.openDevkitButton.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+  if (!enabled && DEVKIT_STATE.isOpen) {
+    closeDevKit();
+  }
 }
 
 function toggleDevKit() {
@@ -16687,19 +16704,14 @@ function bindDomEventListeners() {
   }
 
   if (elements.openDevkitButton) {
-    if (!isDevkitFeatureEnabled()) {
-      if (typeof elements.openDevkitButton.remove === 'function') {
-        elements.openDevkitButton.remove();
-      } else {
-        elements.openDevkitButton.style.display = 'none';
+    elements.openDevkitButton.addEventListener('click', event => {
+      event.preventDefault();
+      if (!isDevkitFeatureEnabled()) {
+        return;
       }
-      elements.openDevkitButton = null;
-    } else {
-      elements.openDevkitButton.addEventListener('click', event => {
-        event.preventDefault();
-        toggleDevKit();
-      });
-    }
+      toggleDevKit();
+    });
+    updateDevkitButtonVisibility();
   }
 
   if (elements.resetButton) {
@@ -23028,6 +23040,3 @@ if (document.readyState === 'loading') {
 } else {
   bootApplication();
 }
-
-
-
