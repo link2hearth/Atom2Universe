@@ -4,9 +4,9 @@
   "_comment": "Paramètres supplémentaires pour la génération des niveaux en mode 'New Impossible?'.",
   "impossible": {
     "blockedRange": {
-      "easy": { "min": 1, "max": 2 },
-      "medium": { "min": 3, "max": 4 },
-      "hard": { "min": 5, "max": 6 }
+      "easy": { "min": 1, "max": 3 },
+      "medium": { "min": 1, "max": 3 },
+      "hard": { "min": 1, "max": 3 }
     }
   },
   "difficulties": {
@@ -20,13 +20,13 @@
       "gridSizes": [[7, 6], [7, 7], [8, 6], [8, 7]],
       "holeRange": { "min": 3, "max": 8 },
       "minTurns": 12,
-      "multiPairs": { "min": 3, "max": 4 }
+      "multiPairs": { "min": 2, "max": 4 }
     },
     "hard": {
       "gridSizes": [[8, 8], [9, 7], [9, 8], [9, 9]],
       "holeRange": { "min": 5, "max": 12 },
       "minTurns": 18,
-      "multiPairs": { "min": 4, "max": 5 }
+      "multiPairs": { "min": 3, "max": 5 }
     }
   },
   "layout": {
