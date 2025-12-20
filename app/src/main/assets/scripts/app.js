@@ -8263,8 +8263,35 @@ function registerChessVictoryReward(options = {}) {
 }
 
 function formatDuration(ms) {
+  const defaultDurationUnits = {
+    daysPerWeek: 7,
+    daysPerMonth: 30,
+    daysPerYear: 365
+  };
+  const durationUnits = GLOBAL_CONFIG?.progression?.durationUnits || {};
+  const daysPerWeek = Number(durationUnits.daysPerWeek);
+  const daysPerMonth = Number(durationUnits.daysPerMonth);
+  const daysPerYear = Number(durationUnits.daysPerYear);
+  const normalizedDaysPerWeek = Number.isFinite(daysPerWeek) && daysPerWeek > 0
+    ? daysPerWeek
+    : defaultDurationUnits.daysPerWeek;
+  const normalizedDaysPerMonth = Number.isFinite(daysPerMonth) && daysPerMonth > 0
+    ? daysPerMonth
+    : defaultDurationUnits.daysPerMonth;
+  const normalizedDaysPerYear = Number.isFinite(daysPerYear) && daysPerYear > 0
+    ? daysPerYear
+    : defaultDurationUnits.daysPerYear;
+  const units = {
+    year: translateOrDefault('scripts.app.duration.units.year', 'y'),
+    month: translateOrDefault('scripts.app.duration.units.month', 'mo'),
+    week: translateOrDefault('scripts.app.duration.units.week', 'w'),
+    day: translateOrDefault('scripts.app.duration.units.day', 'd'),
+    hour: translateOrDefault('scripts.app.duration.units.hour', 'h'),
+    minute: translateOrDefault('scripts.app.duration.units.minute', 'm'),
+    second: translateOrDefault('scripts.app.duration.units.second', 's')
+  };
   if (!Number.isFinite(ms) || ms <= 0) {
-    return '0s';
+    return `0${units.second}`;
   }
   const totalSeconds = Math.floor(ms / 1000);
   const seconds = totalSeconds % 60;
@@ -8272,18 +8299,34 @@ function formatDuration(ms) {
   const minutes = totalMinutes % 60;
   const totalHours = Math.floor(totalMinutes / 60);
   const hours = totalHours % 24;
-  const days = Math.floor(totalHours / 24);
+  const totalDays = Math.floor(totalHours / 24);
+  const years = Math.floor(totalDays / normalizedDaysPerYear);
+  const remainingAfterYears = totalDays % normalizedDaysPerYear;
+  const months = Math.floor(remainingAfterYears / normalizedDaysPerMonth);
+  const remainingAfterMonths = remainingAfterYears % normalizedDaysPerMonth;
+  const weeks = Math.floor(remainingAfterMonths / normalizedDaysPerWeek);
+  const days = remainingAfterMonths % normalizedDaysPerWeek;
   const parts = [];
+  if (years > 0) {
+    parts.push(`${years}${units.year}`);
+  }
+  if (months > 0) {
+    parts.push(`${months}${units.month}`);
+  }
+  if (weeks > 0) {
+    parts.push(`${weeks}${units.week}`);
+  }
   if (days > 0) {
-    parts.push(`${days}j`);
+    parts.push(`${days}${units.day}`);
   }
-  if (hours > 0 || days > 0) {
-    const hourStr = hours.toString().padStart(days > 0 ? 2 : 1, '0');
-    parts.push(`${hourStr}h`);
+  const hasLargerUnit = years > 0 || months > 0 || weeks > 0 || days > 0;
+  if (hours > 0 || hasLargerUnit) {
+    const hourStr = hours.toString().padStart(hasLargerUnit ? 2 : 1, '0');
+    parts.push(`${hourStr}${units.hour}`);
   }
-  const minuteStr = minutes.toString().padStart(hours > 0 || days > 0 ? 2 : 1, '0');
-  parts.push(`${minuteStr}m`);
-  parts.push(`${seconds.toString().padStart(2, '0')}s`);
+  const minuteStr = minutes.toString().padStart(hours > 0 || hasLargerUnit ? 2 : 1, '0');
+  parts.push(`${minuteStr}${units.minute}`);
+  parts.push(`${seconds.toString().padStart(2, '0')}${units.second}`);
   return parts.join(' ');
 }
 

@@ -4066,6 +4066,17 @@
         "blindUpdated": "Blinde Hold’em ajustée à {blind}.",
         "blindUnavailable": "Impossible d’ajuster la blinde pour le moment."
       },
+      "duration": {
+        "units": {
+          "year": "an",
+          "month": "mois",
+          "week": "sem",
+          "day": "j",
+          "hour": "h",
+          "minute": "m",
+          "second": "s"
+        }
+      },
       "frenzy": "Frénésie",
       "frenzyActivate": "Activer la {label} ({multiplier})",
       "frenzyToast": "{label} ×{multiplier} pendant {duration} !",

@@ -1579,6 +1579,7 @@ const GAME_CONFIG = {
    * - offlineTickets : configuration des gains de tickets hors-ligne (intervalle et plafond).
    * - defaultTheme : thème visuel utilisé lors d'une nouvelle partie ou après réinitialisation.
    * - crit : paramètres initiaux des coups critiques (chance, multiplicateur et plafond).
+   * - durationUnits : base de conversion des durées affichées (semaines, mois, années).
    */
   progression: {
     basePerClick: { type: 'number', value: 1 },
@@ -1593,6 +1594,11 @@ const GAME_CONFIG = {
       baseChance: 0.05,
       baseMultiplier: 2,
       maxMultiplier: 1000
+    },
+    durationUnits: {
+      daysPerWeek: 7,
+      daysPerMonth: 30,
+      daysPerYear: 365
     },
     featureUnlocks: {
       arcade: {
@@ -2099,7 +2105,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 

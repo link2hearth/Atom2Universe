@@ -4039,6 +4039,17 @@
         "blindUpdated": "Hold’em blind adjusted to {blind}.",
         "blindUnavailable": "Unable to adjust the blind right now."
       },
+      "duration": {
+        "units": {
+          "year": "y",
+          "month": "mo",
+          "week": "w",
+          "day": "d",
+          "hour": "h",
+          "minute": "m",
+          "second": "s"
+        }
+      },
       "frenzy": "Frenzy",
       "frenzyActivate": "Activate {label} ({multiplier})",
       "frenzyToast": "{label} ×{multiplier} for {duration}!",
