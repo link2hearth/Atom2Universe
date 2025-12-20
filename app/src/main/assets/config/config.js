@@ -57,6 +57,12 @@ const CRYPTO_WIDGET_SETTINGS = Object.freeze({
 });
 
 /**
+ * Délai maximal avant de forcer la fermeture de l'écran de chargement.
+ * Utile si une ressource bloque l'initialisation complète de l'application.
+ */
+const STARTUP_OVERLAY_MAX_WAIT_MS = 15000;
+
+/**
  * Réglages des flux d’actualités.
  * - `sources` : liste des flux RSS disponibles avec leurs clés i18n.
  * - `defaultFeedUrl`/`searchUrlTemplate` : valeurs de repli si aucune source n’est fournie.
@@ -2099,7 +2105,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 
