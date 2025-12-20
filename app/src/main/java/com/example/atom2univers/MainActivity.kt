@@ -474,6 +474,9 @@ class MainActivity : AppCompatActivity() {
             notifyBackgroundBankError("permission-denied")
             return
         }
+        if (loadCachedBackgroundBank()) {
+            return
+        }
         loadBackgroundBank(treeUri, false)
     }
 
@@ -525,12 +528,14 @@ class MainActivity : AppCompatActivity() {
                 val images = queryImagesForTree(treeUri)
                 val label = preferences.getString(KEY_BACKGROUND_RELATIVE_PATH, extractRelativePath(treeUri)) ?: ""
                 if (images.isEmpty()) {
+                    clearBackgroundBankCache()
                     notifyBackgroundBankReady(emptyList(), label)
                     if (notifyWhenEmpty) {
                         notifyBackgroundBankError("empty")
                     }
                     return@Thread
                 }
+                cacheBackgroundBank(images, label)
                 notifyBackgroundBankReady(images, label)
             } catch (error: SecurityException) {
                 Log.w(TAG, "Unable to load background bank", error)
@@ -583,8 +588,8 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    private fun queryImagesForTree(treeUri: Uri, limit: Int = 250): List<String> {
-        val documentUris = queryImagesWithDocumentFile(treeUri, limit)
+    private fun queryImagesForTree(treeUri: Uri): List<String> {
+        val documentUris = queryImagesWithDocumentFile(treeUri)
         if (documentUris.isNotEmpty()) {
             return documentUris
         }
@@ -606,11 +611,9 @@ class MainActivity : AppCompatActivity() {
             val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
             contentResolver.query(collection, projection, selection, selectionArgs, sortOrder)?.use { cursor ->
                 val idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-                var count = 0
-                while (cursor.moveToNext() && count < limit) {
+                while (cursor.moveToNext()) {
                     val id = cursor.getLong(idIndex)
                     results.add(ContentUris.withAppendedId(collection, id).toString())
-                    count += 1
                 }
             }
         }
@@ -622,17 +625,11 @@ class MainActivity : AppCompatActivity() {
         return results
     }
 
-    private fun queryImagesWithDocumentFile(treeUri: Uri, limit: Int): List<String> {
+    private fun queryImagesWithDocumentFile(treeUri: Uri): List<String> {
         val root = DocumentFile.fromTreeUri(this, treeUri) ?: return emptyList()
         val uris = mutableListOf<String>()
         fun collectFiles(folder: DocumentFile) {
-            if (uris.size >= limit) {
-                return
-            }
             folder.listFiles().forEach { file ->
-                if (uris.size >= limit) {
-                    return
-                }
                 if (file.isDirectory) {
                     collectFiles(file)
                 } else if (file.type?.startsWith("image/") == true) {
@@ -803,6 +800,54 @@ class MainActivity : AppCompatActivity() {
     private fun clearMidiLibraryCache() {
         preferences.edit {
             remove(KEY_MIDI_LIBRARY_CACHE)
+        }
+    }
+
+    private fun cacheBackgroundBank(uris: List<String>, label: String) {
+        try {
+            val payload = JSONObject().apply {
+                put("uris", JSONArray(uris))
+                put("label", label)
+            }
+            preferences.edit {
+                putString(KEY_BACKGROUND_BANK_CACHE, payload.toString())
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to cache background bank", error)
+        }
+    }
+
+    private fun loadCachedBackgroundBank(): Boolean {
+        val cached = preferences.getString(KEY_BACKGROUND_BANK_CACHE, null) ?: return false
+        return try {
+            val payload = JSONObject(cached)
+            val urisArray = payload.optJSONArray("uris") ?: JSONArray()
+            val label = payload.optString(
+                "label",
+                preferences.getString(KEY_BACKGROUND_RELATIVE_PATH, "") ?: ""
+            )
+            val uris = mutableListOf<String>()
+            for (index in 0 until urisArray.length()) {
+                val uri = urisArray.optString(index, "")
+                if (uri.isNotBlank()) {
+                    uris.add(uri)
+                }
+            }
+            if (uris.isEmpty()) {
+                false
+            } else {
+                notifyBackgroundBankReady(uris, label)
+                true
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to read cached background bank", error)
+            false
+        }
+    }
+
+    private fun clearBackgroundBankCache() {
+        preferences.edit {
+            remove(KEY_BACKGROUND_BANK_CACHE)
         }
     }
 
@@ -1110,6 +1155,7 @@ class MainActivity : AppCompatActivity() {
         private const val PREFERENCES_NAME = "atom2univers_prefs"
         private const val KEY_BACKGROUND_TREE_URI = "background.tree.uri"
         private const val KEY_BACKGROUND_RELATIVE_PATH = "background.relative.path"
+        private const val KEY_BACKGROUND_BANK_CACHE = "background.bank.cache"
         private const val KEY_MIDI_TREE_URI = "midi.tree.uri"
         private const val KEY_MIDI_RELATIVE_PATH = "midi.relative.path"
         private const val KEY_MIDI_LIBRARY_CACHE = "midi.library.cache"
@@ -1162,4 +1208,3 @@ class MainActivity : AppCompatActivity() {
         """.trimIndent()
     }
 }
-
