@@ -91,6 +91,18 @@ const TEXT_FONT_CHOICES = Object.freeze({
   hobbitonbrushhand: {
     id: 'hobbitonbrushhand',
     stack: "'Hobbiton Brush Hand', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'south-park': {
+    id: 'south-park',
+    stack: "'South Park', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'to-japan': {
+    id: 'to-japan',
+    stack: "'To Japan', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  'science-gothic': {
+    id: 'science-gothic',
+    stack: "'Science Gothic', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   }
 });
 
@@ -211,5 +223,20 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     id: 'hobbitonbrushhand',
     stack: "'Hobbiton Brush Hand', 'DigitTech16 Regular', 'Orbitron', sans-serif",
     compactStack: "'Hobbiton Brush Hand', 'DigitTech16 Regular', 'Orbitron', monospace"
+  },
+  'south-park': {
+    id: 'south-park',
+    stack: "'South Park', 'DigitTech16 Regular', 'Orbitron', sans-serif",
+    compactStack: "'South Park', 'DigitTech16 Regular', 'Orbitron', monospace"
+  },
+  'to-japan': {
+    id: 'to-japan',
+    stack: "'To Japan', 'DigitTech16 Regular', 'Orbitron', sans-serif",
+    compactStack: "'To Japan', 'DigitTech16 Regular', 'Orbitron', monospace"
+  },
+  'science-gothic': {
+    id: 'science-gothic',
+    stack: "'Science Gothic', 'DigitTech16 Regular', 'Orbitron', sans-serif",
+    compactStack: "'Science Gothic', 'DigitTech16 Regular', 'Orbitron', monospace"
   }
 });
