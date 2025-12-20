@@ -65,15 +65,17 @@ function hideStartupOverlay() {
 
   overlay.addEventListener('transitionend', cleanup, { once: true });
   overlay.classList.remove('startup-overlay--visible');
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.style.pointerEvents = 'none';
   window.setTimeout(cleanup, Math.max(0, duration) + 120);
 }
 
 function setupStartupOverlay() {
-  if (document.readyState === 'complete') {
+  if (document.readyState !== 'loading') {
     hideStartupOverlay();
     return;
   }
-  window.addEventListener('load', () => {
+  document.addEventListener('DOMContentLoaded', () => {
     hideStartupOverlay();
   }, { once: true });
 }
