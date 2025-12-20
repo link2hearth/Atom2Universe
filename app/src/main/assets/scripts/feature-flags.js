@@ -6,11 +6,11 @@ function resolveGlobalBooleanFlag(flagName, fallback = true) {
 }
 
 function isDevkitFeatureEnabled() {
-  return resolveGlobalBooleanFlag('DEVKIT_ENABLED', false);
+  return resolveGlobalBooleanFlag('DEVKIT_ENABLED', true);
 }
 
 function isCollectionFeatureEnabled() {
-  return resolveGlobalBooleanFlag('COLLECTION_SYSTEM_ENABLED', false);
+  return resolveGlobalBooleanFlag('COLLECTION_SYSTEM_ENABLED', true);
 }
 
 function isCollectionVideosFeatureEnabled() {
@@ -18,7 +18,7 @@ function isCollectionVideosFeatureEnabled() {
 }
 
 function isInfoSectionsFeatureEnabled() {
-  return resolveGlobalBooleanFlag('INFO_SECTIONS_ENABLED', false);
+  return resolveGlobalBooleanFlag('INFO_SECTIONS_ENABLED', true);
 }
 
 function isMusicModuleEnabled() {

@@ -432,7 +432,7 @@ function updateCollectionShortcutState() {
   if (!elements.imagesCollectionButton) {
     return;
   }
-  const unlocked = isCollectionFeatureEnabled() && isPageUnlocked('collection');
+  const unlocked = isPageUnlocked('collection');
   elements.imagesCollectionButton.disabled = !unlocked;
   elements.imagesCollectionButton.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
   elements.imagesCollectionButton.hidden = !unlocked;
@@ -1722,9 +1722,7 @@ function updatePageUnlockUI() {
   ];
 
   buttonConfig.forEach(([pageId, button]) => {
-    const unlocked = pageId === 'collection'
-      ? isCollectionFeatureEnabled() && isPageUnlocked(pageId)
-      : isPageUnlocked(pageId);
+    const unlocked = isPageUnlocked(pageId);
     setNavButtonLockState(button, unlocked);
   });
 
@@ -1735,7 +1733,7 @@ function updatePageUnlockUI() {
     elements.gachaPeriodicLink.setAttribute('aria-hidden', tableauUnlocked ? 'false' : 'true');
   }
 
-  setNavButtonLockState(elements.navInfoButton, isInfoSectionsFeatureEnabled());
+  setNavButtonLockState(elements.navInfoButton, true);
   updateCollectionShortcutState();
   updateInfoBonusVisibility();
 
@@ -2323,3 +2321,4 @@ function updateMetauxCreditsUI() {
     elements.metauxCreditStatus.hidden = false;
   }
 }
+
