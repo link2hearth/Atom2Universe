@@ -1,9 +1,3 @@
-diff --git a/app/src/main/assets/scripts/src/core/app-constants.js b/app/src/main/assets/scripts/src/core/app-constants.js
-new file mode 100644
-index 0000000000000000000000000000000000000000..70ded18e9bec4337e67a9de977292ba7ea97303e
---- /dev/null
-+++ b/app/src/main/assets/scripts/src/core/app-constants.js
-@@ -0,0 +1,369 @@
 +const CONFIG_OPTIONS_WELCOME_CARD =
 +  GLOBAL_CONFIG
 +  && GLOBAL_CONFIG.uiText
