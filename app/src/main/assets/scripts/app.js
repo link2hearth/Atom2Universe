@@ -5787,6 +5787,14 @@ function ensureActivePageUnlocked() {
     showPage('options');
     return;
   }
+  if (activePage === 'info' && !isInfoSectionsFeatureEnabled()) {
+    showPage('game');
+    return;
+  }
+  if (activePage === 'collection' && !isCollectionFeatureEnabled()) {
+    showPage('game');
+    return;
+  }
   if (!isPageUnlocked(activePage) && activePage !== 'game') {
     showPage('game');
   }
@@ -6587,6 +6595,9 @@ function handleResetSpecialKeyword(normalizedKeyword) {
     applyAtomVariantVisualState();
     randomizeAtomButtonImage();
   }
+  updateDevkitAvailability();
+  updatePrimaryNavigationLocks();
+  updatePageUnlockUI();
   return true;
 }
 
@@ -11538,6 +11549,19 @@ function toggleDevKit() {
     closeDevKit();
   } else {
     openDevKit();
+  }
+}
+
+function updateDevkitAvailability() {
+  const enabled = isDevkitFeatureEnabled();
+  if (elements.openDevkitButton) {
+    elements.openDevkitButton.hidden = !enabled;
+    elements.openDevkitButton.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+    elements.openDevkitButton.disabled = !enabled;
+    elements.openDevkitButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+  }
+  if (!enabled) {
+    closeDevKit();
   }
 }
 
@@ -16687,19 +16711,11 @@ function bindDomEventListeners() {
   }
 
   if (elements.openDevkitButton) {
-    if (!isDevkitFeatureEnabled()) {
-      if (typeof elements.openDevkitButton.remove === 'function') {
-        elements.openDevkitButton.remove();
-      } else {
-        elements.openDevkitButton.style.display = 'none';
-      }
-      elements.openDevkitButton = null;
-    } else {
-      elements.openDevkitButton.addEventListener('click', event => {
-        event.preventDefault();
-        toggleDevKit();
-      });
-    }
+    elements.openDevkitButton.addEventListener('click', event => {
+      event.preventDefault();
+      toggleDevKit();
+    });
+    updateDevkitAvailability();
   }
 
   if (elements.resetButton) {
@@ -23028,6 +23044,3 @@ if (document.readyState === 'loading') {
 } else {
   bootApplication();
 }
-
-
-
