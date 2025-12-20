@@ -1,20 +1,9 @@
 @font-face {
-  font-family: 'Audiowide';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Audiowide-400.woff2') format('woff2'),
-       url('../fonts/Audiowide-400.ttf') format('truetype');
-}
-
-@font-face {
   font-family: 'Orbitron';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Orbitron-400.woff2') format('woff2'),
-       url('../fonts/Orbitron-400.ttf') format('truetype'),
-       url('../fonts/Orbitron-Regular.ttf') format('truetype');
+  src: url('../fonts/Orbitron-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -22,9 +11,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('../fonts/Orbitron-600.woff2') format('woff2'),
-       url('../fonts/Orbitron-600.ttf') format('truetype'),
-       url('../fonts/Orbitron-SemiBold.ttf') format('truetype');
+  src: url('../fonts/Orbitron-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
@@ -32,45 +19,128 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../fonts/Orbitron-700.woff2') format('woff2'),
-       url('../fonts/Orbitron-700.ttf') format('truetype'),
-       url('../fonts/Orbitron-Bold.ttf') format('truetype');
+  src: url('../fonts/Orbitron-Bold.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Cinzel';
+  font-family: 'DigitTech16 Regular';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Cinzel-400.woff2') format('woff2'),
-       url('../fonts/Cinzel-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'DigitTech7';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/DigitTech16-8M01J.ttf') format('truetype'),
-       url('../fonts/DigitTech7-Regular.woff2') format('woff2');
+  src: url('../fonts/DigitTech16-Regular.ttf') format('truetype');
   unicode-range: U+0020, U+0025, U+002B, U+002C, U+002D, U+002E, U+00A0, U+00B0, U+00B7, U+00D7, U+202F, U+2212, U+0030-0039;
 }
 
 @font-face {
-  font-family: 'VT323';
+  font-family: 'Alien';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/VT323-Regular.woff2') format('woff2'),
-       url('../fonts/VT323-Regular.ttf') format('truetype');
+  src: url('../fonts/Alien.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Adelia';
+  font-family: 'Aquiline Two';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/ADELIA.otf') format('opentype');
+  src: url('../fonts/AquilineTwo.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Chomsky';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Chomsky.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Coffee Spark';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Coffee Spark.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Creativo Regular';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Creativo Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Darling Coffee';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Darling Coffee.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Designer Notes';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Designer-Notes.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Fair Prosper';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Fair Prosper.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Little Days';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Little days.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Roboto-Condensed.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Slow Play';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Slow Play.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Super Chiby';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Chiby.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Super Croissant';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Croissant.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Super Mario 64';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Mario 64.ttf') format('truetype');
 }
 
 @font-face {
@@ -82,62 +152,6 @@
 }
 
 @font-face {
-  font-family: 'Milk Days';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Milk Days.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Christmas Buttermilk';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Christmas Buttermilk.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Magic Red';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Magic Red.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Grinchmas';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Grinchmas.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Galter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Galter.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Vanilla Caramel';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Vanilla Caramel.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Starborn';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Starborn.ttf') format('truetype');
-}
-
-@font-face {
   font-family: 'SuperMario256';
   font-style: normal;
   font-weight: 400;
@@ -146,57 +160,11 @@
 }
 
 @font-face {
-  font-family: 'Alien';
+  font-family: 'Alamain 1';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Alien.otf') format('opentype'),
-       url('../fonts/Alien.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Bilbofine';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Bilbofine.otf') format('opentype'),
-       url('../fonts/Bilbofine.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Birds of Paradise';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Birds of Paradise.otf') format('opentype'),
-       url('../fonts/Birds of Paradise.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Chomsky';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Chomsky.otf') format('opentype'),
-       url('../fonts/Chomsky.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Cream Cake';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Cream Cake.otf') format('opentype'),
-       url('../fonts/Cream Cake.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Cute Dog';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Cute Dog.otf') format('opentype'),
-       url('../fonts/Cute Dog.ttf') format('truetype');
+  src: url('../fonts/alamain1.ttf') format('truetype');
 }
 
 @font-face {
@@ -204,60 +172,29 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/dealerplate california.otf') format('opentype'),
-       url('../fonts/dealerplate california.ttf') format('truetype');
+  src: url('../fonts/dealerplate california.otf') format('opentype');
 }
 
 @font-face {
-  font-family: 'Designer';
+  font-family: 'Exmouth';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Designer.otf') format('opentype'),
-       url('../fonts/Designer.ttf') format('truetype');
+  src: url('../fonts/exmouth.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Jack in the Box';
+  font-family: 'Hobbiton';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Jack in the Box.otf') format('opentype'),
-       url('../fonts/Jack in the Box.ttf') format('truetype');
+  src: url('../fonts/hobbiton.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Markbats12-Regular';
+  font-family: 'Hobbiton Brush Hand';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Markbats12-Regular.otf') format('opentype'),
-       url('../fonts/Markbats12-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Roboto Condensed';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Roboto-Condensed.otf') format('opentype'),
-       url('../fonts/Roboto-Condensed.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Roboto Thin';
-  font-style: normal;
-  font-weight: 100;
-  font-display: swap;
-  src: url('../fonts/Roboto-Thin.otf') format('opentype'),
-       url('../fonts/Roboto-Thin.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'To Japan';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/To Japan.otf') format('opentype'),
-       url('../fonts/To Japan.ttf') format('truetype');
+  src: url('../fonts/hobbitonbrushhand.ttf') format('truetype');
 }
