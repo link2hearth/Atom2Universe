@@ -659,7 +659,6 @@ const IMAGE_FEED_BACKGROUND_ENABLED_STORAGE_KEY = 'atom2univers.images.backgroun
 const IMAGE_FEED_DISMISSED_STORAGE_KEY = 'atom2univers.images.dismissed.v1';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const ANDROID_STATUS_BAR_STORAGE_KEY = 'atom2univers.options.androidStatusBarVisible';
-const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
@@ -30101,6 +30100,5 @@ if (document.readyState === 'loading') {
 } else {
   bootApplication();
 }
-
 
 
