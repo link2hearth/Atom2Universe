@@ -42,3 +42,24 @@ function applyNewsEnabled(enabled, options = {}) {
   if (settings.persist) {
     writeStoredNewsEnabled(newsFeatureEnabled);
   }
+}
+
+function hideStartupOverlay() {
+  const overlay = document.getElementById('startupOverlay');
+  if (!overlay) {
+    return;
+  }
+  overlay.classList.remove('startup-overlay--visible');
+  overlay.setAttribute('aria-hidden', 'true');
+  const finalize = () => {
+    overlay.hidden = true;
+  };
+  overlay.addEventListener('transitionend', finalize, { once: true });
+  window.setTimeout(finalize, 2200);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', hideStartupOverlay, { once: true });
+} else {
+  hideStartupOverlay();
+}
