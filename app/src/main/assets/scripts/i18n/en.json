@@ -2537,7 +2537,10 @@
             "dealerplate-california": "dealerplate california",
             "exmouth": "Exmouth",
             "hobbiton": "Hobbiton",
-            "hobbitonbrushhand": "Hobbiton Brush Hand"
+            "hobbitonbrushhand": "Hobbiton Brush Hand",
+            "south-park": "South Park",
+            "to-japan": "To Japan",
+            "science-gothic": "Science Gothic"
           }
         },
         "textFont": {
@@ -2566,7 +2569,10 @@
             "dealerplate-california": "dealerplate california",
             "exmouth": "Exmouth",
             "hobbiton": "Hobbiton",
-            "hobbitonbrushhand": "Hobbiton Brush Hand"
+            "hobbitonbrushhand": "Hobbiton Brush Hand",
+            "south-park": "South Park",
+            "to-japan": "To Japan",
+            "science-gothic": "Science Gothic"
           }
         },
         "performance": {

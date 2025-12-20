@@ -198,3 +198,24 @@
   font-display: swap;
   src: url('../fonts/hobbitonbrushhand.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'South Park';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/south park.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'To Japan';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/To Japan .otf') format('opentype');
+}
+@font-face {
+  font-family: 'Science Gothic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/ScienceGothic_Expanded-Regular.ttf') format('truetype');
+}
