@@ -1,3 +1,7 @@
+const GLOBAL_CONFIG = typeof globalThis !== 'undefined' && globalThis.GAME_CONFIG
+  ? globalThis.GAME_CONFIG
+  : null;
+
 const CONFIG_OPTIONS_WELCOME_CARD =
   GLOBAL_CONFIG
   && GLOBAL_CONFIG.uiText

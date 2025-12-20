@@ -2085,6 +2085,7 @@ var GLOBAL_CONFIG = GAME_CONFIG;
 GAME_CONFIG.progression.defaultTheme = GAME_CONFIG.themes.default;
 
 if (typeof globalThis !== 'undefined') {
+  var GLOBAL_CONFIG = GAME_CONFIG;
   globalThis.GAME_CONFIG = GAME_CONFIG;
   globalThis.GLOBAL_CONFIG = GLOBAL_CONFIG;
   globalThis.DEVKIT_ENABLED = DEVKIT_ENABLED;
