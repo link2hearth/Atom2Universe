@@ -715,7 +715,11 @@ function openCollectionDownloadFullscreen(index = 0) {
   const labelText = entry.labelText || buildDownloadedImageLabel(entry.position, entry.fileName);
   const altText = entry.altText || buildDownloadedImageAlt(entry.position, labelText);
 
-  elements.collectionDownloadsLightboxImage.src = entry.resolvedUrl;
+  const resolvedUrl = resolveCollectionDownloadUrl(entry);
+  if (!resolvedUrl) {
+    return;
+  }
+  elements.collectionDownloadsLightboxImage.src = resolvedUrl;
   elements.collectionDownloadsLightboxImage.alt = altText;
   if (elements.collectionDownloadsLightboxCaption) {
     elements.collectionDownloadsLightboxCaption.textContent = labelText;
@@ -781,6 +785,27 @@ function handleCollectionDownloadsTouchEnd(event) {
   showPreviousCollectionDownload();
 }
 
+function resolveCollectionDownloadUrl(entry) {
+  if (!entry) {
+    return '';
+  }
+  const rawUrl = entry.rawUrl || '';
+  if (!rawUrl) {
+    return '';
+  }
+  return resolveBackgroundUrl(rawUrl);
+}
+
+function applyCollectionDownloadImage(imageElement, entry) {
+  if (!imageElement || !entry) {
+    return;
+  }
+  const resolvedUrl = resolveCollectionDownloadUrl(entry);
+  if (resolvedUrl) {
+    imageElement.src = resolvedUrl;
+  }
+}
+
 function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
   if (!elements.collectionDownloadsGallery || !elements.collectionDownloadsEmpty) {
     return;
@@ -792,14 +817,14 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
   const entries = Array.isArray(items) ? items : [];
   const normalizedEntries = entries
     .map((entry, index) => {
-      const resolvedUrl = resolveBackgroundUrl(getFullImageSrc(entry));
-      if (!resolvedUrl) {
+      const rawUrl = getFullImageSrc(entry);
+      if (!rawUrl) {
         return null;
       }
       return {
-        resolvedUrl,
+        rawUrl,
         position: index + 1,
-        fileName: extractFileNameFromUri(resolvedUrl || entry?.imageUrl)
+        fileName: extractFileNameFromUri(rawUrl || entry?.imageUrl)
       };
     })
     .filter(Boolean)
@@ -846,6 +871,21 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
         handleOpen();
       }
     });
+
+    if (typeof IntersectionObserver === 'function') {
+      const observer = new IntersectionObserver(entriesList => {
+        entriesList.forEach(observed => {
+          if (!observed.isIntersecting) {
+            return;
+          }
+          applyCollectionDownloadImage(thumb, entry);
+          observer.disconnect();
+        });
+      }, { root: gallery, rootMargin: '120px' });
+      observer.observe(card);
+    } else {
+      applyCollectionDownloadImage(thumb, entry);
+    }
 
     gallery.appendChild(card);
   });
