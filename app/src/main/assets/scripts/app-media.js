@@ -900,11 +900,81 @@ function pickNextBackgroundIndex(poolLength) {
   if (total <= 1) {
     return 0;
   }
-  const randomIndex = Math.floor(Math.random() * total);
-  if (randomIndex === backgroundIndex) {
-    return (randomIndex + 1) % total;
+  ensureBackgroundRotationQueue(total);
+  if (!backgroundRotationQueue.length) {
+    backgroundRotationQueue = buildBackgroundRotationQueue(total);
   }
-  return randomIndex;
+  if (!backgroundRotationQueue.length) {
+    return 0;
+  }
+  let nextIndex = backgroundRotationQueue.shift();
+  if (nextIndex === backgroundIndex && backgroundRotationQueue.length) {
+    backgroundRotationQueue.push(nextIndex);
+    nextIndex = backgroundRotationQueue.shift();
+  }
+  return nextIndex;
+}
+
+function buildBackgroundRotationQueue(poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (!total) {
+    return [];
+  }
+  const excluded = backgroundRotationExclusions instanceof Set ? backgroundRotationExclusions : new Set();
+  const indices = [];
+  for (let i = 0; i < total; i += 1) {
+    if (!excluded.has(i)) {
+      indices.push(i);
+    }
+  }
+  for (let i = indices.length - 1; i > 0; i -= 1) {
+    const swapIndex = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[swapIndex]] = [indices[swapIndex], indices[i]];
+  }
+  return indices;
+}
+
+function resetBackgroundRotationSession(poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  backgroundRotationExclusions = new Set();
+  backgroundRotationQueue = buildBackgroundRotationQueue(total);
+  backgroundRotationPoolSize = total;
+}
+
+function ensureBackgroundRotationQueue(poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (total !== backgroundRotationPoolSize) {
+    resetBackgroundRotationSession(total);
+    return;
+  }
+  if (backgroundRotationQueue.length) {
+    return;
+  }
+  if (backgroundRotationExclusions.size >= total) {
+    backgroundRotationExclusions.clear();
+  }
+  backgroundRotationQueue = buildBackgroundRotationQueue(total);
+}
+
+function markBackgroundIndexSeen(index, poolLength) {
+  const safeIndex = Math.max(0, Math.floor(Number(index) || 0));
+  ensureBackgroundRotationQueue(poolLength);
+  if (!backgroundRotationQueue.length) {
+    return;
+  }
+  backgroundRotationQueue = backgroundRotationQueue.filter(item => item !== safeIndex);
+}
+
+function markBackgroundIndexExcluded(index, poolLength) {
+  const safeIndex = Math.max(0, Math.floor(Number(index) || 0));
+  if (!(backgroundRotationExclusions instanceof Set)) {
+    backgroundRotationExclusions = new Set();
+  }
+  backgroundRotationExclusions.add(safeIndex);
+  backgroundRotationQueue = backgroundRotationQueue.filter(item => item !== safeIndex);
+  if (backgroundRotationExclusions.size >= Math.max(0, Number(poolLength) || 0)) {
+    backgroundRotationExclusions.clear();
+  }
 }
 
 function setBackgroundLibraryStatus(status) {
@@ -947,11 +1017,12 @@ function setLocalBackgroundItems(uris, options = {}) {
   localBackgroundItems = uniqueUris.map((uri, index) => ({ id: `local-background-${index}`, imageUrl: uri }));
   backgroundLibraryLabel = typeof options.label === 'string' ? options.label : backgroundLibraryLabel;
   setBackgroundLibraryStatus(localBackgroundItems.length ? 'ready' : 'idle');
+  resetBackgroundRotationSession(localBackgroundItems.length);
   if (options.persist !== false) {
     writeStoredLocalBackgroundBank({ uris: uniqueUris, label: backgroundLibraryLabel });
   }
   if (localBackgroundItems.length) {
-    backgroundIndex = Math.floor(Math.random() * localBackgroundItems.length);
+    backgroundIndex = pickNextBackgroundIndex(localBackgroundItems.length);
     setImageBackgroundEnabled(true, { resetIndex: true, showEmptyStatus: false, force: true });
   } else {
     backgroundIndex = 0;
@@ -1042,6 +1113,7 @@ function applyBackgroundImage() {
   const shouldShow = Boolean(current) && isGameActive;
   const fallbackShouldShow = Boolean(lastLoadedBackgroundUrl) && isGameActive;
   const handleMissingBackground = () => {
+    markBackgroundIndexExcluded(backgroundIndex, pool.length);
     if (fallbackShouldShow) {
       elements.favoriteBackground.style.backgroundImage = `url("${lastLoadedBackgroundUrl}")`;
       elements.favoriteBackground.toggleAttribute('hidden', !fallbackShouldShow);
@@ -1070,6 +1142,7 @@ function applyBackgroundImage() {
     elements.favoriteBackground.toggleAttribute('hidden', !shouldShow);
     document.body.classList.toggle('favorite-background-active', shouldShow);
     lastLoadedBackgroundUrl = backgroundUrl;
+    markBackgroundIndexSeen(backgroundIndex, pool.length);
     scheduleBackgroundRotation();
   };
 
@@ -1107,7 +1180,8 @@ function refreshBackgroundPool(options = {}) {
   const pool = getBackgroundItems();
   const shouldRandomize = options.resetIndex === true;
   if (shouldRandomize && pool.length) {
-    backgroundIndex = Math.floor(Math.random() * pool.length);
+    resetBackgroundRotationSession(pool.length);
+    backgroundIndex = pickNextBackgroundIndex(pool.length);
   } else if (backgroundIndex >= pool.length) {
     backgroundIndex = 0;
   }
