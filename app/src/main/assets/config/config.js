@@ -858,19 +858,19 @@ function loadConfigJson(path, fallback) {
   return fallback;
 }
 
-const ARCADE_HOLDEM_CONFIG = loadConfigJson('./config/arcade/holdem.json', {});
-const ARCADE_BALANCE_CONFIG = loadConfigJson('./config/arcade/balance.json', {});
-const ARCADE_MATH_CONFIG = loadConfigJson('./config/arcade/math.json', {});
-const ARCADE_DICE_CONFIG = loadConfigJson('./config/arcade/dice.json', {});
-const ARCADE_PARTICULES_CONFIG = loadConfigJson('./config/arcade/particules.json', {});
-const ARCADE_ECHECS_CONFIG = loadConfigJson('./config/arcade/echecs.json', {});
-const ARCADE_SUDOKU_CONFIG = loadConfigJson('./config/arcade/sudoku.json', {});
-const ARCADE_SOLITAIRE_CONFIG = loadConfigJson('./config/arcade/solitaire.json', {});
-const ARCADE_QUANTUM2048_CONFIG = loadConfigJson('./config/arcade/quantum2048.json', {});
-const ARCADE_DEMINEUR_CONFIG = loadConfigJson('./config/arcade/demineur.json', {});
-const ARCADE_METAUX_CONFIG = loadConfigJson('./config/arcade/metaux.json', {});
-const ARCADE_GOMOKU_CONFIG = loadConfigJson('./config/arcade/gomoku.json', {});
-const ARCADE_CIRCLES_CONFIG = loadConfigJson('./config/arcade/circles.json', {});
+const ARCADE_HOLDEM_CONFIG = loadConfigJson('./arcade/holdem.json', {});
+const ARCADE_BALANCE_CONFIG = loadConfigJson('./arcade/balance.json', {});
+const ARCADE_MATH_CONFIG = loadConfigJson('./arcade/math.json', {});
+const ARCADE_DICE_CONFIG = loadConfigJson('./arcade/dice.json', {});
+const ARCADE_PARTICULES_CONFIG = loadConfigJson('./arcade/particules.json', {});
+const ARCADE_ECHECS_CONFIG = loadConfigJson('./arcade/echecs.json', {});
+const ARCADE_SUDOKU_CONFIG = loadConfigJson('./arcade/sudoku.json', {});
+const ARCADE_SOLITAIRE_CONFIG = loadConfigJson('./arcade/solitaire.json', {});
+const ARCADE_QUANTUM2048_CONFIG = loadConfigJson('./arcade/quantum2048.json', {});
+const ARCADE_DEMINEUR_CONFIG = loadConfigJson('./arcade/demineur.json', {});
+const ARCADE_METAUX_CONFIG = loadConfigJson('./arcade/metaux.json', {});
+const ARCADE_GOMOKU_CONFIG = loadConfigJson('./arcade/gomoku.json', {});
+const ARCADE_CIRCLES_CONFIG = loadConfigJson('./arcade/circles.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1227,11 +1227,11 @@ function createAtomScaleTrophies() {
 }
 
 const RAW_GACHA_BONUS_IMAGE_CONFIG = loadConfigJson(
-  './config/gacha/bonus-images.json',
+  './gacha/bonus-images.json',
   { images: [] }
 );
 
-const RAW_GACHA_CONFIG = loadConfigJson('./config/systems/gacha.json', {
+const RAW_GACHA_CONFIG = loadConfigJson('./systems/gacha.json', {
   ticketCost: 1,
   bonusImages: { folder: 'Assets/Image/Gacha' },
   rarities: [],
@@ -1257,27 +1257,27 @@ const GACHA_SYSTEM_CONFIG = {
       : {}
 };
 
-const RAW_FUSION_SYSTEM_CONFIG = loadConfigJson('./config/systems/fusions.json', { fusions: [] });
+const RAW_FUSION_SYSTEM_CONFIG = loadConfigJson('./systems/fusions.json', { fusions: [] });
 const FUSION_SYSTEM_CONFIG = Array.isArray(RAW_FUSION_SYSTEM_CONFIG?.fusions)
   ? RAW_FUSION_SYSTEM_CONFIG.fusions
   : [];
 
-const RAW_COLLECTION_BONUSES_CONFIG = loadConfigJson('./config/collection/bonuses.json', { groups: {} });
+const RAW_COLLECTION_BONUSES_CONFIG = loadConfigJson('./collection/bonuses.json', { groups: {} });
 const COLLECTION_BONUSES_CONFIG =
   RAW_COLLECTION_BONUSES_CONFIG && typeof RAW_COLLECTION_BONUSES_CONFIG === 'object'
     ? RAW_COLLECTION_BONUSES_CONFIG
     : { groups: {} };
 
-const RAW_COLLECTION_FAMILIES_CONFIG = loadConfigJson('./config/collection/families.json', {});
+const RAW_COLLECTION_FAMILIES_CONFIG = loadConfigJson('./collection/families.json', {});
 const COLLECTION_FAMILIES_CONFIG =
   RAW_COLLECTION_FAMILIES_CONFIG && typeof RAW_COLLECTION_FAMILIES_CONFIG === 'object'
     ? RAW_COLLECTION_FAMILIES_CONFIG
     : {};
 
-const RAW_COLLECTION_ELEMENTS = loadConfigJson('./config/collection/elements.json', []);
+const RAW_COLLECTION_ELEMENTS = loadConfigJson('./collection/elements.json', []);
 const COLLECTION_ELEMENTS = Array.isArray(RAW_COLLECTION_ELEMENTS) ? RAW_COLLECTION_ELEMENTS : [];
 
-const RAW_COLLECTION_VIDEOS_CONFIG = loadConfigJson('./config/collection/videos.json', {
+const RAW_COLLECTION_VIDEOS_CONFIG = loadConfigJson('./collection/videos.json', {
   folder: 'Assets/Collection/Videos',
   videos: []
 });
@@ -2099,7 +2099,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 

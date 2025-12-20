@@ -6581,6 +6581,8 @@ function handleResetSpecialKeyword(normalizedKeyword) {
   const messageKey = nextValue ? action.enabledKey : action.disabledKey;
   const fallbackMessage = nextValue ? action.enabledFallback : action.disabledFallback;
   showToast(translateResetString(messageKey, fallbackMessage));
+  updateUI();
+  updateDevkitButtonVisibility();
   if (normalizedKeyword === 'MUSIC') {
     updateMusicModuleVisibility();
   } else if (normalizedKeyword === 'ATOM') {
