@@ -1,0 +1,35 @@
+{
+  "_comment": "Ajoutez vos morceaux dans Assets/Chiptune et référencez-les ici.",
+  "artists": [
+    {
+      "id": "Satie",
+      "name": "Erik Satie",
+      "tracks": [
+        {
+          "name": "Gnossienne 1",
+          "file": "Assets/Chiptune/Satie/gnossiennes1.mid"
+        },
+        {
+          "name": "Gnossienne 2",
+          "file": "Assets/Chiptune/Satie/gnossiennes2.mid"
+        },
+        {
+          "name": "Gnossienne 3",
+          "file": "Assets/Chiptune/Satie/gnossiennes3.mid"
+        },
+        {
+          "name": "Gnossienne 4",
+          "file": "Assets/Chiptune/Satie/gnossiennes4.mid"
+        },
+        {
+          "name": "Gnossienne 5",
+          "file": "Assets/Chiptune/Satie/gnossiennes5.mid"
+        },
+        {
+          "name": "Gnossienne 6",
+          "file": "Assets/Chiptune/Satie/gnossiennes6.mid"
+        }
+      ]
+    }
+  ]
+}

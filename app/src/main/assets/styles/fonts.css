@@ -1,0 +1,200 @@
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Orbitron-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/Orbitron-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/Orbitron-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'DigitTech16 Regular';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/DigitTech16-Regular.ttf') format('truetype');
+  unicode-range: U+0020, U+0025, U+002B, U+002C, U+002D, U+002E, U+00A0, U+00B0, U+00B7, U+00D7, U+202F, U+2212, U+0030-0039;
+}
+
+@font-face {
+  font-family: 'Alien';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Alien.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Aquiline Two';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/AquilineTwo.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Chomsky';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Chomsky.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Coffee Spark';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Coffee Spark.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Creativo Regular';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Creativo Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Darling Coffee';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Darling Coffee.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Designer Notes';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Designer-Notes.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Fair Prosper';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Fair Prosper.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Little Days';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Little days.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Roboto-Condensed.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Slow Play';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Slow Play.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Super Chiby';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Chiby.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Super Croissant';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Croissant.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Super Mario 64';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Mario 64.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Super Meatball';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Super Meatball.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SuperMario256';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/SuperMario256.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Alamain 1';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/alamain1.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'dealerplate california';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/dealerplate california.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Exmouth';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/exmouth.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Hobbiton';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/hobbiton.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Hobbiton Brush Hand';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/hobbitonbrushhand.ttf') format('truetype');
+}

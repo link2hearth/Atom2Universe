@@ -1,0 +1,9 @@
+{
+  "betOptions": [10, 20, 50],
+  "slotMultipliers": [0, 0.3, 1.5, 2.5, 1.5, 0.3, 0],
+  "advantageBonus": 0.1,
+  "board": {
+    "rows": 8,
+    "stepMs": 280
+  }
+}

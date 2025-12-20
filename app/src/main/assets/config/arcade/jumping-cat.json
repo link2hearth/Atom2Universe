@@ -1,0 +1,32 @@
+{
+  "gravity": 2400,
+  "jumpImpulse": 760,
+  "maxFallSpeed": 1800,
+  "forwardSpeed": 190,
+  "obstacleSpacing": {
+    "min": 1.6,
+    "max": 2.4
+  },
+  "pylonGap": {
+    "min": 135,
+    "max": 170
+  },
+  "safetyCorridor": 120,
+  "birdInterval": {
+    "min": 3,
+    "max": 5.5
+  },
+  "birdSpeed": {
+    "min": 150,
+    "max": 230
+  },
+  "birdWobble": 26,
+  "groundHeight": 60,
+  "backgroundScrollSpeed": 110,
+  "rewards": {
+    "gacha": {
+      "survivalIntervalSeconds": 45,
+      "ticketAmount": 1
+    }
+  }
+}

@@ -1,0 +1,557 @@
+.page--dice {
+  --dice-text-color: var(--color-text-primary, #f8fbff);
+  --dice-felt-background: radial-gradient(circle at 30% 30%, rgba(34, 197, 94, 0.95), rgba(6, 95, 70, 0.92));
+  --dice-felt-border: rgba(255, 255, 255, 0.08);
+  --dice-felt-shadow: 0 28px 46px rgba(0, 0, 0, 0.55);
+  --dice-die-background: radial-gradient(circle at 30% 30%, #ffffff, #f3f4f6);
+  --dice-die-border: rgba(15, 23, 42, 0.22);
+  --dice-die-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+  --dice-die-held-outline: rgba(250, 204, 21, 0.85);
+  --dice-die-held-shadow: 0 24px 48px rgba(250, 204, 21, 0.35);
+  --dice-scorecard-background: linear-gradient(160deg, rgba(13, 23, 42, 0.92), rgba(37, 56, 88, 0.88));
+  --dice-scorecard-border: rgba(255, 255, 255, 0.12);
+  --dice-scorecard-shadow: 0 26px 42px rgba(0, 0, 0, 0.55);
+  --dice-scorecard-highlight: rgba(94, 234, 212, 0.18);
+  --dice-accent: #facc15;
+  --dice-muted: rgba(248, 250, 252, 0.6);
+  --dice-preview-color: rgba(248, 250, 252, 0.7);
+  padding: clamp(1rem, 2vw, 2.5rem) clamp(0.75rem, 2vw, 2rem);
+  justify-content: center;
+  align-items: center;
+  min-height: clamp(38rem, 90vh, 54rem);
+  color: var(--dice-text-color);
+}
+
+.page--dice.active {
+  display: flex;
+}
+
+.dice {
+  width: min(1180px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.dice-layout {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .dice-layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: start;
+  }
+}
+
+.dice-table {
+  display: grid;
+  gap: clamp(0.75rem, 2vw, 1.4rem);
+}
+
+.dice-table__felt {
+  background: var(--dice-felt-background);
+  border-radius: clamp(1.25rem, 3vw, 2.4rem);
+  border: 1px solid var(--dice-felt-border);
+  padding: clamp(0.75rem, 2vw, 1.6rem) clamp(1.25rem, 3vw, 2rem);
+  box-shadow: var(--dice-felt-shadow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.55rem, 1.6vw, 0.95rem);
+}
+
+.dice-table__felt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.25), transparent 55%);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.dice-table__dice {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.55rem, 1.4vw, 0.95rem);
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: clamp(0.25rem, 1vw, 0.5rem);
+  perspective: 1200px;
+}
+
+.dice-table__dice::-webkit-scrollbar {
+  height: 6px;
+}
+
+.dice-table__dice::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.25);
+  border-radius: 999px;
+}
+
+.dice-table__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vw, 1.35rem);
+  flex-wrap: wrap;
+}
+
+.dice-table__rolls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: clamp(0.72rem, 1.6vw, 0.88rem);
+  color: var(--dice-muted);
+  margin: 0;
+}
+
+.dice-table__roll-button {
+  min-width: clamp(8rem, 22vw, 10rem);
+}
+
+.dice-die {
+  position: relative;
+  width: clamp(3.9rem, 8vw, 5.4rem);
+  aspect-ratio: 1 / 1;
+  border-radius: clamp(0.9rem, 2vw, 1.4rem);
+  background: var(--dice-die-background);
+  border: 2px solid var(--dice-die-border);
+  box-shadow: var(--dice-die-shadow);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: clamp(0.55rem, 1.2vw, 0.85rem);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  will-change: transform;
+  --roll-dx: 0px;
+  --roll-dy: 0px;
+  --roll-rot: 0deg;
+  --roll-tilt-x: 0deg;
+  --roll-tilt-y: 0deg;
+  --roll-scale: 1;
+  --roll-delay: 0s;
+}
+
+.dice-die:focus-visible {
+  outline: 3px solid rgba(94, 234, 212, 0.8);
+  outline-offset: 3px;
+}
+
+.dice-die:not([aria-pressed='true']):hover {
+  transform: translateY(-6px);
+}
+
+.dice-die[aria-pressed='true'] {
+  border-color: var(--dice-die-held-outline);
+  box-shadow: var(--dice-die-held-shadow);
+  transform: translateY(-4px) scale(1.02);
+}
+
+.dice-die__pip {
+  width: clamp(0.45rem, 1vw, 0.65rem);
+  height: clamp(0.45rem, 1vw, 0.65rem);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.8));
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dice-die[data-value='1'] .dice-die__pip[data-position='5'],
+.dice-die[data-value='2'] .dice-die__pip[data-position='1'],
+.dice-die[data-value='2'] .dice-die__pip[data-position='9'],
+.dice-die[data-value='3'] .dice-die__pip[data-position='1'],
+.dice-die[data-value='3'] .dice-die__pip[data-position='5'],
+.dice-die[data-value='3'] .dice-die__pip[data-position='9'],
+.dice-die[data-value='4'] .dice-die__pip[data-position='1'],
+.dice-die[data-value='4'] .dice-die__pip[data-position='3'],
+.dice-die[data-value='4'] .dice-die__pip[data-position='7'],
+.dice-die[data-value='4'] .dice-die__pip[data-position='9'],
+.dice-die[data-value='5'] .dice-die__pip[data-position='1'],
+.dice-die[data-value='5'] .dice-die__pip[data-position='3'],
+.dice-die[data-value='5'] .dice-die__pip[data-position='5'],
+.dice-die[data-value='5'] .dice-die__pip[data-position='7'],
+.dice-die[data-value='5'] .dice-die__pip[data-position='9'],
+.dice-die[data-value='6'] .dice-die__pip[data-position='1'],
+.dice-die[data-value='6'] .dice-die__pip[data-position='3'],
+.dice-die[data-value='6'] .dice-die__pip[data-position='4'],
+.dice-die[data-value='6'] .dice-die__pip[data-position='6'],
+.dice-die[data-value='6'] .dice-die__pip[data-position='7'],
+.dice-die[data-value='6'] .dice-die__pip[data-position='9'] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.dice-die--rolling {
+  animation: dice-roll-bounce 0.85s cubic-bezier(0.25, 0.8, 0.25, 1.05);
+  animation-delay: var(--roll-delay, 0s);
+}
+
+@keyframes dice-roll-bounce {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) rotateX(0deg) rotateY(0deg) scale(1);
+  }
+  22% {
+    transform: translate3d(var(--roll-dx, 0px), calc(var(--roll-dy, 0px) * 0.85), 0)
+      rotate(calc(var(--roll-rot, 180deg) * 0.55))
+      rotateX(calc(var(--roll-tilt-x, 0deg) * 0.65))
+      rotateY(calc(var(--roll-tilt-y, 0deg) * 0.65))
+      scale(calc(var(--roll-scale, 1) * 0.95));
+  }
+  45% {
+    transform: translate3d(calc(var(--roll-dx, 0px) * 0.55), calc(var(--roll-dy, 0px) * -0.35), 0)
+      rotate(calc(var(--roll-rot, 180deg) * -0.3))
+      rotateX(calc(var(--roll-tilt-x, 0deg) * -0.35))
+      rotateY(calc(var(--roll-tilt-y, 0deg) * -0.4))
+      scale(calc(var(--roll-scale, 1) * 1.05));
+  }
+  68% {
+    transform: translate3d(calc(var(--roll-dx, 0px) * 0.25), calc(var(--roll-dy, 0px) * 0.18), 0)
+      rotate(calc(var(--roll-rot, 180deg) * 0.12))
+      rotateX(calc(var(--roll-tilt-x, 0deg) * 0.18))
+      rotateY(calc(var(--roll-tilt-y, 0deg) * 0.22))
+      scale(calc(var(--roll-scale, 1) * 0.98));
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) rotateX(0deg) rotateY(0deg) scale(1);
+  }
+}
+
+.dice-button {
+  background: rgba(37, 56, 88, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: inherit;
+  padding: 0.35rem 0.8rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.dice-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(48, 72, 112, 0.92);
+}
+
+.dice-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.dice-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.dice-status {
+  margin: 0;
+  font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+  color: var(--dice-preview-color);
+  min-height: 1.4em;
+  text-align: center;
+}
+
+.dice-scorecard {
+  background: var(--dice-scorecard-background);
+  border-radius: clamp(0.8rem, 2.2vw, 1.4rem);
+  border: 1px solid var(--dice-scorecard-border);
+  box-shadow: var(--dice-scorecard-shadow);
+  padding: clamp(0.75rem, 2.2vw, 1.35rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.8vw, 1.2rem);
+  color: inherit;
+}
+
+.dice-scorecard__board {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.9rem;
+  background: rgba(15, 23, 42, 0.35);
+  padding: clamp(0.6rem, 1.8vw, 1rem);
+}
+
+.dice-scorecard__columns {
+  display: grid;
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .dice-scorecard__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.dice-scorecard__column {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.45rem, 1.4vw, 0.8rem);
+}
+
+.dice-scorecard__column-title {
+  margin: 0;
+  font-size: clamp(0.82rem, 1.8vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dice-muted);
+}
+
+.dice-scorecard__mode {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1rem);
+  font-size: clamp(0.78rem, 1.7vw, 0.95rem);
+  color: var(--dice-muted);
+  font-weight: 600;
+}
+
+.dice-scorecard__select {
+  appearance: none;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 0.65rem;
+  color: inherit;
+  font-size: clamp(0.82rem, 1.8vw, 0.98rem);
+  font-weight: 600;
+  padding: 0.45rem 1.2rem 0.45rem 0.75rem;
+  min-width: clamp(9rem, 24vw, 10.5rem);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.45);
+}
+
+.dice-scorecard__select:focus-visible {
+  outline: 3px solid rgba(94, 234, 212, 0.6);
+  outline-offset: 2px;
+}
+
+.dice-scorecard__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(0.65rem, 1.8vw, 1.1rem);
+  flex-wrap: wrap;
+}
+
+.dice-scorecard__new-game {
+  min-width: clamp(8.5rem, 24vw, 11rem);
+}
+
+.dice-scorecard__table {
+  width: 100%;
+  min-width: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.dice-scorecard__table thead th {
+  position: sticky;
+  top: 0;
+  background: rgba(15, 23, 42, 0.4);
+  color: var(--dice-muted);
+  font-size: clamp(0.72rem, 1.5vw, 0.88rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+}
+
+.dice-scorecard__table tbody th {
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  font-size: clamp(0.78rem, 1.7vw, 0.98rem);
+  font-weight: 600;
+  color: inherit;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  word-break: break-word;
+}
+
+.dice-scorecard__table tbody td {
+  padding: 0.45rem 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  vertical-align: middle;
+}
+
+.dice-scorecard__hint {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: clamp(0.68rem, 1.4vw, 0.82rem);
+  color: var(--dice-muted);
+  letter-spacing: 0.02em;
+}
+
+.dice-scorecard__cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dice-scorecard__cell-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+}
+
+.dice-scorecard__cell[data-state='empty'] .dice-scorecard__cell-value {
+  color: var(--dice-muted);
+  font-weight: 600;
+}
+
+.dice-scorecard__cell[data-state='preview'] .dice-scorecard__cell-value {
+  color: var(--dice-muted);
+  font-weight: 600;
+}
+
+.dice-scorecard__cell[data-state='assigned'] .dice-scorecard__cell-value {
+  color: var(--dice-accent);
+}
+
+.dice-scorecard__preview {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  color: var(--dice-preview-color);
+  min-width: 3.1ch;
+  text-align: right;
+}
+
+.dice-scorecard__cell[data-state='assigned'] .dice-scorecard__preview {
+  display: none;
+}
+
+.dice-scorecard__cell[data-state='preview'] .dice-scorecard__preview {
+  opacity: 1;
+}
+
+.dice-scorecard__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(94, 234, 212, 0.45);
+  background: rgba(94, 234, 212, 0.15);
+  color: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+.dice-scorecard__action:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(94, 234, 212, 0.25);
+}
+
+.dice-scorecard__action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: rgba(148, 163, 184, 0.15);
+  border-color: rgba(148, 163, 184, 0.25);
+  box-shadow: none;
+}
+
+.dice-scorecard__action[hidden] {
+  display: none;
+}
+
+.dice-scorecard__table th[data-active='true'],
+.dice-scorecard__table td[data-active='true'] {
+  background: rgba(94, 234, 212, 0.14);
+}
+
+.dice-scorecard__table td[data-active='true'] .dice-scorecard__cell-value {
+  color: #fefce8;
+}
+
+.dice-scorecard__table td[data-winner='true'] {
+  box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.55);
+}
+
+.dice-scorecard__footnote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dice-scorecard__footnote-title {
+  margin: 0;
+  font-size: clamp(0.78rem, 1.6vw, 0.95rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dice-muted);
+}
+
+.dice-scorecard__footnote-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+  color: var(--dice-preview-color);
+  font-size: clamp(0.72rem, 1.6vw, 0.88rem);
+}
+
+.dice-scorecard__footnote-list li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.dice-scorecard__footnote-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--dice-accent);
+}
+
+@media (max-width: 720px) {
+  .dice-table__dice {
+    justify-content: flex-start;
+  }
+
+  .dice-scorecard__columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dice-scorecard__controls {
+    justify-content: center;
+  }
+
+  .dice-scorecard__mode {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .dice-scorecard__select {
+    width: min(100%, 16rem);
+  }
+
+  .dice-scorecard__new-game {
+    width: min(100%, 16rem);
+    justify-content: center;
+  }
+}

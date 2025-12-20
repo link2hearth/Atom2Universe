@@ -1,0 +1,10 @@
+{
+  "soundfonts": [
+    {
+      "id": "Piano",
+      "name": "Piano",
+      "file": "Assets/Music/Piano.sf2",
+      "default": true
+    }
+  ]
+}

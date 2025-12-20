@@ -1,0 +1,42 @@
+{
+  "alkali-metal": {
+    "label": "Métaux alcalins",
+    "bonuses": []
+  },
+  "alkaline-earth-metal": {
+    "label": "Métaux alcalino-terreux",
+    "bonuses": []
+  },
+  "transition-metal": {
+    "label": "Métaux de transition",
+    "bonuses": []
+  },
+  "post-transition-metal": {
+    "label": "Métaux pauvres",
+    "bonuses": []
+  },
+  "metalloid": {
+    "label": "Métalloïdes",
+    "bonuses": []
+  },
+  "nonmetal": {
+    "label": "Non-métaux",
+    "bonuses": []
+  },
+  "halogen": {
+    "label": "Halogènes",
+    "bonuses": []
+  },
+  "noble-gas": {
+    "label": "Gaz nobles",
+    "bonuses": []
+  },
+  "lanthanide": {
+    "label": "Lanthanides",
+    "bonuses": []
+  },
+  "actinide": {
+    "label": "Actinides",
+    "bonuses": []
+  }
+}
