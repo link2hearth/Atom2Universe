@@ -4472,35 +4472,6 @@ const DEFAULT_STATE = {
   featureUnlockFlags: []
 };
 
-const ARCADE_GAME_IDS = Object.freeze([
-  'particules',
-  'metaux',
-  'wave',
-  'starsWar',
-  'jumpingCat',
-  'reflex',
-  'quantum2048',
-  'bigger',
-  'math',
-  'theLine',
-  'lightsOut',
-  'link',
-  'starBridges',
-  'pipeTap',
-  'colorStack',
-  'motocross',
-  'hex',
-  'twins',
-  'sokoban',
-  'taquin',
-  'balance',
-  'sudoku',
-  'minesweeper',
-  'solitaire',
-  'holdem',
-  'blackjack',
-  'echecs'
-]);
 
 const DEFAULT_TICKET_STAR_SPRITE_ID = (() => {
   const raw = CONFIG?.ticketStar?.sprite?.defaultSprite
@@ -4544,17 +4515,6 @@ function normalizeTicketStarSpecialReward(value, fallback = DEFAULT_TICKET_STAR_
     return Math.floor(fallbackNumeric);
   }
   return 1;
-}
-
-function createInitialArcadeProgress() {
-  const entries = {};
-  ARCADE_GAME_IDS.forEach(id => {
-    entries[id] = null;
-  });
-  return {
-    version: 1,
-    entries
-  };
 }
 
 const gameState = {
