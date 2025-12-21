@@ -314,7 +314,20 @@
     const entries = globalState.arcadeProgress.entries && typeof globalState.arcadeProgress.entries === 'object'
       ? globalState.arcadeProgress.entries
       : globalState.arcadeProgress;
-    const entry = entries && entries[GAME_ID];
+    const entry = (() => {
+      if (!entries || typeof entries !== 'object') {
+        return null;
+      }
+      if (entries[GAME_ID]) {
+        return entries[GAME_ID];
+      }
+      const lowerId = GAME_ID.toLowerCase();
+      if (entries[lowerId]) {
+        return entries[lowerId];
+      }
+      const fallbackKey = Object.keys(entries).find(key => typeof key === 'string' && key.toLowerCase() === lowerId);
+      return fallbackKey ? entries[fallbackKey] : null;
+    })();
     if (entry && typeof entry === 'object') {
       const state = entry.state && typeof entry.state === 'object' ? entry.state : entry;
       return {
