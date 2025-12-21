@@ -471,7 +471,35 @@ function loadGame() {
     gameState.crit = createDefaultCritState();
     gameState.lastCritical = null;
     let raw = null;
+    let parsedData = null;
     const reloadSnapshot = consumeReloadSaveSnapshot();
+    const parseSaveCandidate = value => {
+      if (!value) {
+        return null;
+      }
+      let normalizedRaw = value;
+      if (typeof normalizeNativeBridgePayload === 'function') {
+        const normalized = normalizeNativeBridgePayload(value);
+        if (typeof normalized === 'string' && normalized) {
+          normalizedRaw = normalized;
+        }
+      }
+      try {
+        const data = JSON.parse(normalizedRaw);
+        const hasCoreClickerFields = data
+          && typeof data === 'object'
+          && data.atoms != null
+          && data.lifetime != null
+          && data.perClick != null
+          && data.perSecond != null;
+        if (!hasCoreClickerFields) {
+          return null;
+        }
+        return { data, raw: normalizedRaw };
+      } catch (error) {
+        return null;
+      }
+    };
     try {
       if (typeof localStorage !== 'undefined' && localStorage) {
         raw = localStorage.getItem(PRIMARY_SAVE_STORAGE_KEY);
@@ -479,13 +507,24 @@ function loadGame() {
     } catch (error) {
       console.error('Erreur de lecture de la sauvegarde locale', error);
     }
+    const localCandidate = parseSaveCandidate(raw);
+    if (localCandidate) {
+      raw = localCandidate.raw;
+      parsedData = localCandidate.data;
+    } else {
+      raw = null;
+    }
     if (!raw) {
       const nativeRaw = readNativeSaveData();
       if (nativeRaw) {
-        raw = nativeRaw;
+        const nativeCandidate = parseSaveCandidate(nativeRaw);
+        if (nativeCandidate) {
+          raw = nativeCandidate.raw;
+          parsedData = nativeCandidate.data;
+        }
         try {
           if (typeof localStorage !== 'undefined' && localStorage) {
-            localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, nativeRaw);
+            localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, raw || nativeRaw);
           }
         } catch (syncError) {
           console.warn('Unable to sync native save with local storage', syncError);
@@ -493,10 +532,14 @@ function loadGame() {
       }
     }
     if (!raw && reloadSnapshot) {
-      raw = reloadSnapshot;
+      const reloadCandidate = parseSaveCandidate(reloadSnapshot);
+      if (reloadCandidate) {
+        raw = reloadCandidate.raw;
+        parsedData = reloadCandidate.data;
+      }
       try {
         if (typeof localStorage !== 'undefined' && localStorage) {
-          localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, reloadSnapshot);
+          localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, raw || reloadSnapshot);
         }
       } catch (syncError) {
         console.warn('Unable to persist reload snapshot to local storage', syncError);
@@ -513,7 +556,7 @@ function loadGame() {
       updateUI();
       return;
     }
-    const data = JSON.parse(raw);
+    const data = parsedData || JSON.parse(raw);
     gameState.atoms = LayeredNumber.fromJSON(data.atoms);
     gameState.lifetime = LayeredNumber.fromJSON(data.lifetime);
     gameState.perClick = LayeredNumber.fromJSON(data.perClick);
