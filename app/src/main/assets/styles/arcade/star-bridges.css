@@ -1,0 +1,384 @@
+.page--star-bridges {
+  --starbridges-surface: rgba(16, 20, 42, 0.9);
+  --starbridges-surface-strong: rgba(12, 16, 32, 0.95);
+  --starbridges-border: rgba(94, 129, 255, 0.38);
+  --starbridges-border-strong: rgba(129, 161, 255, 0.72);
+  --starbridges-accent: #22d3ee;
+  --starbridges-accent-strong: #38bdf8;
+  --starbridges-danger: #f87171;
+  --starbridges-muted: rgba(206, 222, 255, 0.78);
+  --starbridges-text: rgba(244, 248, 255, 0.98);
+  --starbridges-node-size: clamp(57.5px, 9.5vw, 75px);
+  --starbridges-bridge-thickness: clamp(7.5px, 1.75vw, 11.25px);
+  --starbridges-shadow: 0 28px 52px rgba(4, 6, 22, 0.56);
+  --starbridges-radius: 1.1rem;
+  padding: clamp(1rem, 4vw, 2.75rem) clamp(0.75rem, 4vw, 3rem);
+  background: radial-gradient(1100px 540px at 50% -200px, rgba(36, 34, 84, 0.6), rgba(5, 9, 24, 0.95));
+}
+
+.starbridges {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 2.25rem);
+  max-width: min(960px, 100%);
+  margin: 0 auto;
+  color: var(--starbridges-text);
+}
+
+.starbridges__header {
+  display: grid;
+  gap: clamp(0.45rem, 1vw, 0.84rem);
+}
+
+.starbridges__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.4rem, 1vw, 0.6rem);
+  align-items: flex-end;
+  padding: clamp(0.45rem, 1.1vw, 0.66rem) clamp(0.54rem, 1.14vw, 0.81rem);
+  border-radius: var(--starbridges-radius);
+  border: 1px solid var(--starbridges-border);
+  background: linear-gradient(165deg, rgba(22, 18, 44, 0.85), rgba(10, 12, 26, 0.92));
+  box-shadow: var(--starbridges-shadow);
+}
+
+.starbridges__controls-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.3rem, 0.84vw, 0.6rem);
+  flex: 1 1 auto;
+  min-width: 132px;
+}
+
+.starbridges__field {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1 1 100px;
+}
+
+.starbridges__label {
+  font-size: clamp(0.5rem, 1.2vw, 0.6rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--starbridges-muted);
+}
+
+.starbridges__input,
+.starbridges__select,
+.starbridges__button {
+  appearance: none;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(150, 180, 255, 0.32);
+  background: var(--starbridges-surface);
+  color: var(--starbridges-text);
+  font-size: clamp(0.55rem, 1.35vw, 0.66rem);
+  line-height: 1.2;
+  padding: clamp(0.33rem, 0.9vw, 0.45rem) clamp(0.54rem, 1.2vw, 0.72rem);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.starbridges__input:focus-visible,
+.starbridges__select:focus-visible,
+.starbridges__button:focus-visible {
+  outline: none;
+  border-color: var(--starbridges-border-strong);
+  box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.28);
+}
+
+.starbridges__button {
+  cursor: pointer;
+  font-weight: 600;
+  background: linear-gradient(150deg, rgba(125, 211, 252, 0.32), rgba(168, 85, 247, 0.34));
+  border-color: rgba(168, 196, 255, 0.6);
+  box-shadow: 0 20px 36px rgba(8, 10, 28, 0.55);
+}
+
+.starbridges__button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 24px 40px rgba(10, 14, 36, 0.6);
+}
+
+.starbridges__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 1.6vw, 0.85rem);
+}
+
+.starbridges__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 180, 255, 0.42);
+  background: rgba(10, 14, 28, 0.78);
+  color: var(--starbridges-muted);
+  font-size: clamp(0.82rem, 1.8vw, 0.98rem);
+}
+
+.starbridges__pill-value {
+  color: var(--starbridges-text);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.starbridges__board-wrapper {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.starbridges__board-message {
+  font-size: clamp(0.85rem, 2vw, 0.98rem);
+  color: var(--starbridges-muted);
+  text-align: center;
+}
+
+.starbridges__board {
+  position: relative;
+  width: min(675px, 100%);
+  aspect-ratio: 1 / 1;
+  border-radius: calc(var(--starbridges-radius) + 0.4rem);
+  border: 1px solid rgba(148, 180, 255, 0.28);
+  background: linear-gradient(170deg, rgba(16, 18, 32, 0.94), rgba(8, 10, 20, 0.94));
+  box-shadow: var(--starbridges-shadow);
+  overflow: hidden;
+}
+
+.starbridges__board::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      to right,
+      rgba(120, 140, 220, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(120, 140, 220, 0.1) 1px,
+      transparent 1px
+    );
+  background-size: calc(100% / var(--star-bridges-size)) calc(100% / var(--star-bridges-size));
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.starbridges__bridge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: var(--starbridges-bridge-thickness);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.88), rgba(129, 140, 248, 0.92));
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+  transform-origin: 50% 50%;
+}
+
+.starbridges__bridge[data-orientation^='diagonal'] {
+  background: linear-gradient(90deg, rgba(110, 231, 183, 0.9), rgba(34, 211, 238, 0.9));
+  box-shadow: 0 0 18px rgba(110, 231, 183, 0.45);
+}
+
+.starbridges__node {
+  position: absolute;
+  left: calc(var(--node-x) / var(--star-bridges-size) * 100%);
+  top: calc(var(--node-y) / var(--star-bridges-size) * 100%);
+  width: var(--starbridges-node-size);
+  height: var(--starbridges-node-size);
+  border-radius: 50%;
+  border: 2px solid rgba(129, 140, 248, 0.55);
+  background: radial-gradient(circle at 42% 32%, rgba(153, 132, 255, 0.42), rgba(49, 46, 129, 0.9));
+  color: var(--starbridges-text);
+  font-size: clamp(1.1rem, 2.9vw, 1.6rem);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 16px 28px rgba(7, 12, 36, 0.6);
+  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  touch-action: manipulation;
+}
+
+.starbridges__node:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.45), 0 16px 28px rgba(6, 10, 30, 0.55);
+}
+
+.starbridges__node:hover {
+  transform: translate(-50%, -52%);
+}
+
+.starbridges__node--selected {
+  border-color: rgba(34, 211, 238, 0.85);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.35), 0 18px 30px rgba(5, 12, 32, 0.6);
+  background: radial-gradient(circle at 40% 32%, rgba(34, 211, 238, 0.32), rgba(30, 64, 175, 0.9));
+}
+
+.starbridges__node--satisfied {
+  background: radial-gradient(circle at 45% 32%, rgba(45, 212, 191, 0.95), rgba(14, 165, 233, 0.9));
+  border-color: rgba(45, 212, 191, 0.85);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.32), 0 20px 32px rgba(2, 14, 32, 0.6);
+  color: rgba(3, 37, 48, 0.9);
+}
+
+.starbridges__node--overloaded {
+  background: radial-gradient(circle at 45% 32%, rgba(248, 113, 113, 0.95), rgba(220, 38, 38, 0.9));
+  border-color: rgba(248, 113, 113, 0.78);
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.32), 0 20px 34px rgba(46, 12, 20, 0.64);
+}
+
+.starbridges__overlay {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: clamp(0.85rem, 2vw, 1.15rem) clamp(1rem, 2.4vw, 1.5rem);
+  border-radius: var(--starbridges-radius);
+  background: rgba(10, 12, 26, 0.88);
+  border: 1px solid rgba(156, 196, 255, 0.42);
+  box-shadow: 0 18px 34px rgba(6, 10, 24, 0.55);
+}
+
+.starbridges__overlay[hidden] {
+  display: none;
+}
+
+.starbridges__overlay-message {
+  font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+  color: var(--starbridges-text);
+}
+
+.starbridges__overlay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 1.6vw, 0.85rem);
+}
+
+.starbridges__footer {
+  text-align: center;
+}
+
+.starbridges__button--secondary {
+  background: rgba(12, 16, 30, 0.9);
+  border-color: rgba(132, 160, 220, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.starbridges__button--link {
+  background: none;
+  border-color: transparent;
+  color: var(--starbridges-accent);
+  padding-inline: 0.5rem;
+  box-shadow: none;
+}
+
+.starbridges__button--link:hover {
+  transform: none;
+  text-decoration: underline;
+}
+
+.starbridges__how {
+  display: inline-block;
+  color: var(--starbridges-accent);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.starbridges__how:hover {
+  color: var(--starbridges-accent-strong);
+}
+
+.starbridges__how-dialog {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 6vw, 2.75rem);
+  background: rgba(6, 10, 26, 0.78);
+  backdrop-filter: blur(6px);
+  z-index: 60;
+}
+
+.starbridges__how-dialog[hidden] {
+  display: none;
+}
+
+.starbridges__how-dialog-panel {
+  width: min(520px, 100%);
+  background: var(--starbridges-surface-strong);
+  color: var(--starbridges-text);
+  border-radius: var(--starbridges-radius);
+  border: 1px solid var(--starbridges-border-strong);
+  box-shadow: var(--starbridges-shadow);
+  padding: clamp(1rem, 3.4vw, 1.8rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 2.5vw, 1.2rem);
+}
+
+body.theme-light .starbridges__how-dialog {
+  background: rgba(12, 16, 32, 0.48);
+}
+
+body.theme-light .starbridges__how-dialog-panel {
+  background: rgba(255, 255, 255, 0.98);
+  color: rgba(12, 16, 32, 0.92);
+  border-color: rgba(80, 110, 200, 0.25);
+  box-shadow: 0 22px 44px rgba(12, 16, 32, 0.18);
+}
+
+body.theme-neon .starbridges__how-dialog-panel {
+  border-color: rgba(120, 160, 255, 0.45);
+  box-shadow: 0 24px 52px rgba(60, 90, 220, 0.38);
+}
+
+body.theme-aurora .starbridges__how-dialog-panel {
+  border-color: rgba(80, 220, 180, 0.45);
+  box-shadow: 0 24px 52px rgba(26, 96, 70, 0.32);
+}
+
+.starbridges__how-dialog-title {
+  margin: 0;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--starbridges-accent);
+}
+
+body.theme-light .starbridges__how-dialog-title {
+  color: var(--starbridges-accent-strong);
+}
+
+.starbridges__how-dialog-message {
+  margin: 0;
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  line-height: 1.6;
+  color: var(--starbridges-muted);
+}
+
+body.theme-light .starbridges__how-dialog-message {
+  color: rgba(12, 16, 32, 0.78);
+}
+
+.starbridges__how-dialog-close {
+  align-self: flex-end;
+  font-size: clamp(0.6rem, 1.4vw, 0.72rem);
+  padding-inline: clamp(0.7rem, 1.6vw, 1rem);
+}
+
+@media (max-width: 540px) {
+  .page--star-bridges {
+    --starbridges-node-size: clamp(47.5px, 15vw, 65px);
+  }
+
+  .starbridges__board {
+    width: 100%;
+  }
+}

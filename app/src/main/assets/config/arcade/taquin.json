@@ -1,0 +1,20 @@
+{
+  "imageCount": 100,
+  "difficulties": {
+    "small": {
+      "size": 3,
+      "shuffle": { "min": 32, "max": 64 },
+      "gachaTickets": 5
+    },
+    "medium": {
+      "size": 4,
+      "shuffle": { "min": 48, "max": 96 },
+      "gachaTickets": 10
+    },
+    "large": {
+      "size": 5,
+      "shuffle": { "min": 64, "max": 128 },
+      "gachaTickets": 15
+    }
+  }
+}

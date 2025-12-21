@@ -1,0 +1,673 @@
+.page--quantum2048 {
+  --quantum2048-header-subtitle-color: rgba(214, 218, 228, 0.78);
+  --quantum2048-toolbar-background: rgba(18, 18, 26, 0.65);
+  --quantum2048-toolbar-border: rgba(112, 116, 128, 0.28);
+  --quantum2048-toolbar-select-background: rgba(32, 32, 44, 0.75);
+  --quantum2048-toolbar-select-border: rgba(128, 132, 150, 0.35);
+  --quantum2048-toolbar-select-color: inherit;
+  --quantum2048-toolbar-select-outline: rgba(188, 192, 210, 0.6);
+  --quantum2048-goal-background: linear-gradient(
+    135deg,
+    rgba(84, 84, 98, 0.82),
+    rgba(48, 48, 60, 0.72)
+  );
+  --quantum2048-goal-border: rgba(156, 160, 176, 0.42);
+  --quantum2048-goal-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+  --quantum2048-goal-shadow-hover: 0 16px 36px rgba(0, 0, 0, 0.65);
+  --quantum2048-goal-outline: rgba(200, 204, 216, 0.65);
+  --quantum2048-hud-subtitle-color: rgba(214, 218, 228, 0.75);
+  --quantum2048-hud-stat-color: rgba(220, 224, 234, 0.78);
+  --quantum2048-hud-stat-value-color: #ffffff;
+  --quantum2048-status-color: rgba(210, 214, 226, 0.8);
+  --quantum2048-status-success-color: #8ff2c8;
+  --quantum2048-status-warning-color: #ffb7a1;
+  --quantum2048-board-background: radial-gradient(
+    circle at top,
+    rgba(54, 54, 64, 0.82),
+    rgba(12, 12, 18, 0.95)
+  );
+  --quantum2048-board-shadow: 0 28px 60px rgba(0, 0, 0, 0.6);
+  --quantum2048-cell-background: rgba(255, 255, 255, 0.08);
+  --quantum2048-overlay-backdrop: rgba(8, 8, 14, 0.82);
+  --quantum2048-overlay-content-background: linear-gradient(
+    145deg,
+    rgba(40, 40, 52, 0.95),
+    rgba(18, 18, 26, 0.92)
+  );
+  --quantum2048-overlay-content-border: rgba(160, 164, 180, 0.32);
+  --quantum2048-overlay-content-color: inherit;
+  --quantum2048-overlay-content-shadow: 0 22px 36px rgba(0, 0, 0, 0.6);
+  --quantum2048-overlay-button-background: linear-gradient(
+    135deg,
+    rgba(120, 120, 136, 0.82),
+    rgba(90, 90, 106, 0.65)
+  );
+  --quantum2048-overlay-button-border: rgba(184, 188, 204, 0.4);
+  --quantum2048-overlay-button-color: inherit;
+  --quantum2048-overlay-button-shadow: 0 12px 20px rgba(24, 24, 38, 0.45);
+  --quantum2048-overlay-button-shadow-hover: 0 12px 20px rgba(24, 24, 38, 0.5);
+  flex-direction: column;
+  min-height: 100%;
+  gap: var(--arcade-stage-spacing);
+  padding-top: 0;
+}
+
+body.theme-light .page--quantum2048 {
+  --quantum2048-header-subtitle-color: rgba(18, 28, 72, 0.72);
+  --quantum2048-toolbar-background: rgba(242, 246, 255, 0.9);
+  --quantum2048-toolbar-border: rgba(48, 64, 120, 0.18);
+  --quantum2048-toolbar-select-background: rgba(220, 230, 255, 0.94);
+  --quantum2048-toolbar-select-border: rgba(96, 124, 200, 0.3);
+  --quantum2048-toolbar-select-color: rgba(20, 32, 72, 0.88);
+  --quantum2048-toolbar-select-outline: rgba(132, 160, 230, 0.5);
+  --quantum2048-goal-background: linear-gradient(
+    135deg,
+    rgba(148, 172, 255, 0.92),
+    rgba(112, 138, 236, 0.78)
+  );
+  --quantum2048-goal-border: rgba(92, 112, 220, 0.35);
+  --quantum2048-goal-shadow: 0 18px 38px rgba(36, 46, 98, 0.28);
+  --quantum2048-goal-shadow-hover: 0 18px 38px rgba(36, 46, 98, 0.32);
+  --quantum2048-goal-outline: rgba(132, 160, 230, 0.55);
+  --quantum2048-hud-subtitle-color: rgba(18, 28, 72, 0.72);
+  --quantum2048-hud-stat-color: rgba(28, 38, 78, 0.68);
+  --quantum2048-hud-stat-value-color: #1f2c66;
+  --quantum2048-status-color: rgba(20, 32, 72, 0.82);
+  --quantum2048-status-success-color: #1f8f58;
+  --quantum2048-status-warning-color: #cb5b40;
+  --quantum2048-board-background: radial-gradient(
+    circle at top,
+    rgba(228, 234, 255, 0.92),
+    rgba(176, 188, 240, 0.95)
+  );
+  --quantum2048-board-shadow: 0 28px 52px rgba(32, 42, 88, 0.28);
+  --quantum2048-cell-background: rgba(200, 210, 255, 0.28);
+  --quantum2048-overlay-backdrop: rgba(228, 232, 255, 0.82);
+  --quantum2048-overlay-content-background: linear-gradient(
+    145deg,
+    rgba(232, 238, 255, 0.95),
+    rgba(208, 220, 255, 0.92)
+  );
+  --quantum2048-overlay-content-border: rgba(88, 112, 220, 0.28);
+  --quantum2048-overlay-content-color: rgba(20, 32, 72, 0.88);
+  --quantum2048-overlay-content-shadow: 0 22px 34px rgba(40, 60, 110, 0.28);
+  --quantum2048-overlay-button-background: linear-gradient(
+    135deg,
+    rgba(136, 160, 255, 0.92),
+    rgba(108, 140, 240, 0.78)
+  );
+  --quantum2048-overlay-button-border: rgba(88, 112, 220, 0.32);
+  --quantum2048-overlay-button-color: rgba(18, 28, 72, 0.9);
+  --quantum2048-overlay-button-shadow: 0 12px 20px rgba(60, 90, 200, 0.3);
+  --quantum2048-overlay-button-shadow-hover: 0 14px 24px rgba(64, 92, 210, 0.36);
+}
+
+body.theme-neon .page--quantum2048 {
+  --quantum2048-header-subtitle-color: rgba(208, 212, 255, 0.86);
+  --quantum2048-toolbar-background: rgba(24, 20, 92, 0.72);
+  --quantum2048-toolbar-border: rgba(150, 180, 255, 0.32);
+  --quantum2048-toolbar-select-background: rgba(36, 28, 110, 0.78);
+  --quantum2048-toolbar-select-border: rgba(170, 200, 255, 0.4);
+  --quantum2048-toolbar-select-color: rgba(232, 236, 255, 0.92);
+  --quantum2048-toolbar-select-outline: rgba(180, 200, 255, 0.6);
+  --quantum2048-goal-background: linear-gradient(
+    135deg,
+    rgba(152, 102, 255, 0.92),
+    rgba(104, 56, 220, 0.75)
+  );
+  --quantum2048-goal-border: rgba(210, 150, 255, 0.45);
+  --quantum2048-goal-shadow: 0 20px 44px rgba(12, 8, 38, 0.65);
+  --quantum2048-goal-shadow-hover: 0 22px 48px rgba(20, 10, 50, 0.7);
+  --quantum2048-goal-outline: rgba(190, 150, 255, 0.6);
+  --quantum2048-hud-subtitle-color: rgba(210, 216, 255, 0.82);
+  --quantum2048-hud-stat-color: rgba(220, 226, 255, 0.86);
+  --quantum2048-hud-stat-value-color: rgba(240, 244, 255, 0.95);
+  --quantum2048-status-color: rgba(220, 226, 255, 0.86);
+  --quantum2048-status-success-color: #74ffd5;
+  --quantum2048-status-warning-color: #ff8f78;
+  --quantum2048-board-background: radial-gradient(
+    circle at top,
+    rgba(60, 30, 140, 0.9),
+    rgba(22, 16, 68, 0.96)
+  );
+  --quantum2048-board-shadow: 0 32px 62px rgba(12, 8, 44, 0.6);
+  --quantum2048-cell-background: rgba(110, 120, 220, 0.18);
+  --quantum2048-overlay-backdrop: rgba(10, 12, 34, 0.84);
+  --quantum2048-overlay-content-background: linear-gradient(
+    145deg,
+    rgba(40, 28, 120, 0.92),
+    rgba(18, 20, 68, 0.9)
+  );
+  --quantum2048-overlay-content-border: rgba(210, 150, 255, 0.45);
+  --quantum2048-overlay-content-color: rgba(228, 232, 255, 0.94);
+  --quantum2048-overlay-content-shadow: 0 24px 40px rgba(12, 10, 60, 0.48);
+  --quantum2048-overlay-button-background: linear-gradient(
+    135deg,
+    rgba(152, 102, 255, 0.92),
+    rgba(96, 56, 224, 0.78)
+  );
+  --quantum2048-overlay-button-border: rgba(210, 150, 255, 0.45);
+  --quantum2048-overlay-button-color: rgba(22, 12, 58, 0.92);
+  --quantum2048-overlay-button-shadow: 0 14px 26px rgba(70, 40, 180, 0.45);
+  --quantum2048-overlay-button-shadow-hover: 0 16px 30px rgba(90, 60, 200, 0.5);
+}
+
+body.theme-aurora .page--quantum2048 {
+  --quantum2048-header-subtitle-color: rgba(210, 255, 235, 0.82);
+  --quantum2048-toolbar-background: rgba(16, 72, 60, 0.6);
+  --quantum2048-toolbar-border: rgba(90, 230, 190, 0.32);
+  --quantum2048-toolbar-select-background: rgba(20, 88, 70, 0.7);
+  --quantum2048-toolbar-select-border: rgba(110, 240, 200, 0.45);
+  --quantum2048-toolbar-select-color: rgba(210, 255, 240, 0.92);
+  --quantum2048-toolbar-select-outline: rgba(110, 240, 200, 0.45);
+  --quantum2048-goal-background: linear-gradient(
+    135deg,
+    rgba(64, 210, 160, 0.85),
+    rgba(38, 160, 124, 0.82)
+  );
+  --quantum2048-goal-border: rgba(120, 255, 210, 0.5);
+  --quantum2048-goal-shadow: 0 20px 44px rgba(14, 70, 56, 0.42);
+  --quantum2048-goal-shadow-hover: 0 22px 46px rgba(18, 90, 70, 0.5);
+  --quantum2048-goal-outline: rgba(110, 255, 210, 0.58);
+  --quantum2048-hud-subtitle-color: rgba(200, 255, 235, 0.78);
+  --quantum2048-hud-stat-color: rgba(190, 255, 230, 0.78);
+  --quantum2048-hud-stat-value-color: rgba(240, 255, 246, 0.96);
+  --quantum2048-status-color: rgba(190, 255, 230, 0.86);
+  --quantum2048-status-success-color: #5ff1b5;
+  --quantum2048-status-warning-color: #ffd2a1;
+  --quantum2048-board-background: radial-gradient(
+    circle at top,
+    rgba(32, 120, 100, 0.82),
+    rgba(10, 40, 34, 0.95)
+  );
+  --quantum2048-board-shadow: 0 28px 58px rgba(10, 60, 48, 0.42);
+  --quantum2048-cell-background: rgba(70, 180, 150, 0.22);
+  --quantum2048-overlay-backdrop: rgba(4, 24, 18, 0.85);
+  --quantum2048-overlay-content-background: linear-gradient(
+    145deg,
+    rgba(20, 80, 68, 0.94),
+    rgba(10, 36, 28, 0.9)
+  );
+  --quantum2048-overlay-content-border: rgba(90, 220, 180, 0.35);
+  --quantum2048-overlay-content-color: rgba(210, 255, 236, 0.92);
+  --quantum2048-overlay-content-shadow: 0 24px 40px rgba(16, 80, 62, 0.42);
+  --quantum2048-overlay-button-background: linear-gradient(
+    135deg,
+    rgba(70, 210, 170, 0.92),
+    rgba(40, 160, 130, 0.78)
+  );
+  --quantum2048-overlay-button-border: rgba(110, 240, 200, 0.45);
+  --quantum2048-overlay-button-color: rgba(6, 24, 20, 0.92);
+  --quantum2048-overlay-button-shadow: 0 12px 24px rgba(18, 100, 80, 0.4);
+  --quantum2048-overlay-button-shadow-hover: 0 16px 28px rgba(28, 130, 102, 0.48);
+}
+
+.page--quantum2048.active {
+  display: flex;
+}
+
+.quantum2048-content {
+  --quantum2048-layout-width: clamp(320px, 62vw, 560px);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: clamp(0.8rem, 2.4vh, 1.8rem);
+  width: 100%;
+  padding: clamp(1.2rem, 2.8vh, 2.4rem) var(--arcade-padding-x);
+}
+
+.quantum2048-header {
+  display: grid;
+  gap: clamp(0.45rem, 1.2vw, 0.75rem);
+  text-align: center;
+}
+
+.quantum2048-header__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.quantum2048-header__subtitle {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  line-height: 1.6;
+  color: var(--quantum2048-header-subtitle-color, rgba(226, 232, 255, 0.78));
+}
+
+.quantum2048-toolbar {
+  display: grid;
+  gap: clamp(0.75rem, 2vw, 1.2rem);
+  width: min(100%, var(--quantum2048-layout-width, clamp(320px, 62vw, 560px)));
+  margin: 0 auto;
+  padding: clamp(0.75rem, 2vw, 1.1rem);
+  border-radius: 18px;
+  background: var(--quantum2048-toolbar-background, rgba(15, 23, 42, 0.55));
+  border: 1px solid var(--quantum2048-toolbar-border, rgba(148, 163, 184, 0.25));
+}
+
+.quantum2048-toolbar__control {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.quantum2048-toolbar__label {
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.quantum2048-toolbar__select {
+  appearance: none;
+  width: 100%;
+  border-radius: 0.75em;
+  border: 1px solid var(--quantum2048-toolbar-select-border, rgba(148, 163, 184, 0.35));
+  padding: 0.55em 2.5em 0.55em 0.9em;
+  background-color: var(--quantum2048-toolbar-select-background, rgba(30, 41, 59, 0.75));
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none"%3E%3Cpath d="M2 2L10 10L18 2" stroke="rgba(210,220,255,0.8)" stroke-width="2.5" stroke-linecap="round"/%3E%3C/svg%3E');
+  background-position: right 0.8em center;
+  background-size: 1.2em auto;
+  background-repeat: no-repeat;
+  color: var(--quantum2048-toolbar-select-color, inherit);
+  font: inherit;
+}
+
+.quantum2048-toolbar__select:focus-visible {
+  outline: 2px solid var(--quantum2048-toolbar-select-outline, rgba(191, 219, 254, 0.6));
+  outline-offset: 2px;
+}
+
+.quantum2048-toolbar__status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.6rem, 1.6vw, 1rem);
+  justify-content: center;
+}
+
+.quantum2048-toolbar__status {
+  --quantum2048-status-scale: calc(var(--ui-control-scale, 1) * 2);
+}
+
+.quantum2048-toolbar__status .arcade-header__status {
+  gap: calc(
+    clamp(0.26rem, 0.68vw, 0.45rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+  padding:
+    calc(
+      clamp(0.3rem, 0.6vw, 0.53rem)
+      * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+    )
+    calc(
+      clamp(0.52rem, 0.88vw, 0.74rem)
+      * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+    );
+  border-radius: calc(
+    1.2rem * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
+.quantum2048-toolbar__status .arcade-header__status-label {
+  font-size: calc(
+    clamp(0.36rem, 0.55vw, 0.47rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
+.quantum2048-toolbar__status .arcade-header__status-value {
+  font-size: calc(
+    clamp(0.62rem, 1.15vw, 0.84rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
+.quantum2048-toolbar__status .arcade-header__status--info .arcade-header__status-value {
+  font-size: calc(
+    clamp(0.53rem, 0.99vw, 0.72rem)
+    * var(--quantum2048-status-scale, calc(var(--ui-control-scale, 1) * 2))
+  );
+}
+
+@media (min-width: 768px) {
+  .quantum2048-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quantum2048-toolbar__status {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+  }
+}
+
+.page--quantum2048 #quantum2048GoalDisplay {
+  display: inline-flex;
+  pointer-events: auto;
+  cursor: pointer;
+  background: var(
+    --quantum2048-goal-background,
+    linear-gradient(135deg, rgba(52, 72, 156, 0.82), rgba(86, 116, 224, 0.72))
+  );
+  border-color: var(--quantum2048-goal-border, rgba(110, 142, 255, 0.45));
+  box-shadow: var(--quantum2048-goal-shadow, 0 14px 32px rgba(12, 18, 44, 0.45));
+}
+
+.page--quantum2048 #quantum2048GoalDisplay:hover,
+.page--quantum2048 #quantum2048GoalDisplay:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: var(--quantum2048-goal-shadow-hover, 0 16px 36px rgba(12, 18, 44, 0.55));
+}
+
+.page--quantum2048 #quantum2048GoalDisplay:focus-visible {
+  outline: 2px solid var(--quantum2048-goal-outline, rgba(196, 220, 255, 0.7));
+  outline-offset: 3px;
+}
+
+.quantum2048-hud {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 2.2vh, 1.6rem);
+  width: min(100%, var(--quantum2048-layout-width, clamp(320px, 62vw, 560px)));
+  margin: 0 auto;
+  text-align: center;
+}
+
+.quantum2048-hud__header {
+  display: grid;
+  gap: clamp(0.45rem, 1vw, 0.7rem);
+}
+
+.quantum2048-hud__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quantum2048-hud__subtitle {
+  margin: 0;
+  font-size: clamp(0.82rem, 1.4vw, 1rem);
+  line-height: 1.6;
+  color: var(--quantum2048-hud-subtitle-color, rgba(226, 232, 255, 0.75));
+}
+
+.quantum2048-hud__stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.55rem, 1.4vw, 0.95rem);
+  width: 100%;
+}
+
+.quantum2048-hud__stat {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.4rem, 1vw, 0.6rem);
+  font-size: clamp(1.7rem, 3.2vw, 2.1rem);
+  color: var(--quantum2048-hud-stat-color, rgba(226, 232, 255, 0.78));
+}
+
+.quantum2048-hud__stat-label {
+  font-family: var(--font-sans, inherit);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quantum2048-hud__stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: clamp(2.5rem, 4.4vw, 3.6rem);
+  color: var(--quantum2048-hud-stat-value-color, #ffffff);
+}
+
+.quantum2048-hud__status {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  line-height: 1.6;
+  color: var(--quantum2048-status-color, rgba(220, 226, 255, 0.78));
+  transition: color 160ms ease;
+}
+
+.quantum2048-status--success {
+  color: var(--quantum2048-status-success-color, #8ff2c8);
+}
+
+.quantum2048-status--warning {
+  color: var(--quantum2048-status-warning-color, #ffb7a1);
+}
+
+.quantum2048-board {
+  position: relative;
+  flex: 0 0 var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
+  width: var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
+  height: var(--quantum2048-board-size, clamp(280px, 40vw, 560px));
+  border-radius: 1.8rem;
+  background: var(
+    --quantum2048-board-background,
+    radial-gradient(circle at top, rgba(44, 58, 130, 0.82), rgba(14, 18, 52, 0.95))
+  );
+  box-shadow: var(--quantum2048-board-shadow, 0 28px 60px rgba(6, 8, 28, 0.6));
+  padding: clamp(0.7rem, 1.5vw, 1.2rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.quantum2048-board__background,
+.quantum2048-board__tiles {
+  position: absolute;
+  inset: clamp(0.4rem, 0.9vw, 0.75rem);
+  display: grid;
+  grid-template-columns: repeat(var(--quantum2048-grid-size, 4), 1fr);
+  grid-template-rows: repeat(var(--quantum2048-grid-size, 4), 1fr);
+  gap: var(--quantum2048-cell-gap, clamp(0.35rem, 0.9vw, 0.7rem));
+}
+
+.quantum2048-board__tiles {
+  pointer-events: none;
+  z-index: 2;
+}
+
+.quantum2048-cell {
+  border-radius: 1.1rem;
+  background: var(--quantum2048-cell-background, rgba(255, 255, 255, 0.08));
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.08), inset 0 -2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.quantum2048-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.95rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: calc(clamp(1.05rem, 2.8vw, 2.6rem) * 2 * var(--quantum2048-font-scale, 1));
+  color: #0a0f20;
+  box-shadow: inset 0 4px 12px rgba(255, 255, 255, 0.25), 0 16px 28px rgba(10, 14, 40, 0.45);
+  transform: scale(1);
+  transition: transform 160ms ease;
+}
+
+.quantum2048-tile--spawned {
+  animation: quantum2048-tile-in 180ms ease-out;
+}
+
+@keyframes quantum2048-tile-in {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.quantum2048-tile--merged {
+  animation: quantum2048-merge 220ms ease;
+}
+
+@keyframes quantum2048-merge {
+  0% {
+    transform: scale(0.95);
+  }
+  55% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.quantum2048-tile--2 {
+  background: linear-gradient(135deg, #f1f6ff, #d1dcff);
+}
+
+.quantum2048-tile--4 {
+  background: linear-gradient(135deg, #e3ecff, #b9caff);
+}
+
+.quantum2048-tile--8 {
+  background: linear-gradient(135deg, #ffe5c4, #ffcc92);
+}
+
+.quantum2048-tile--16 {
+  background: linear-gradient(135deg, #ffd4c3, #ff9f85);
+}
+
+.quantum2048-tile--32 {
+  background: linear-gradient(135deg, #ffc5d3, #ff8fa3);
+}
+
+.quantum2048-tile--64 {
+  background: linear-gradient(135deg, #ffb5be, #ff7184);
+}
+
+.quantum2048-tile--128 {
+  background: linear-gradient(135deg, #ffe178, #ffb43b);
+}
+
+.quantum2048-tile--256 {
+  background: linear-gradient(135deg, #ffd75f, #ff9f2b);
+}
+
+.quantum2048-tile--512 {
+  background: linear-gradient(135deg, #ffe96b, #ffc23e);
+}
+
+.quantum2048-tile--1024 {
+  background: linear-gradient(135deg, #9fffdc, #5de6b6);
+}
+
+.quantum2048-tile--2048 {
+  background: linear-gradient(135deg, #8cffe4, #4fd9b3);
+  color: #052020;
+}
+
+.quantum2048-tile--super {
+  background: linear-gradient(135deg, #a18cff, #6e50ff);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.quantum2048-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--quantum2048-overlay-backdrop, rgba(6, 10, 28, 0.82));
+  backdrop-filter: blur(6px);
+  z-index: 3;
+}
+
+.quantum2048-overlay[hidden] {
+  display: none !important;
+}
+
+.quantum2048-overlay__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.2rem, 2.4vw, 2rem);
+  border-radius: 1.4rem;
+  background: var(
+    --quantum2048-overlay-content-background,
+    linear-gradient(145deg, rgba(30, 42, 96, 0.95), rgba(14, 20, 52, 0.92))
+  );
+  border: 1px solid var(--quantum2048-overlay-content-border, rgba(160, 190, 255, 0.32));
+  box-shadow: var(--quantum2048-overlay-content-shadow, 0 22px 36px rgba(6, 8, 28, 0.6));
+  color: var(--quantum2048-overlay-content-color, inherit);
+  text-align: center;
+  max-width: min(90vw, 360px);
+}
+
+.quantum2048-overlay__message {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+  line-height: 1.6;
+}
+
+.quantum2048-overlay__button {
+  align-self: center;
+  padding: 0.65rem 1.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--quantum2048-overlay-button-border, rgba(180, 210, 255, 0.4));
+  background: var(
+    --quantum2048-overlay-button-background,
+    linear-gradient(135deg, rgba(110, 150, 255, 0.82), rgba(88, 120, 220, 0.65))
+  );
+  color: var(--quantum2048-overlay-button-color, inherit);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: var(--quantum2048-overlay-button-shadow, 0 12px 20px rgba(60, 90, 220, 0.45));
+}
+
+.quantum2048-overlay__button:hover,
+.quantum2048-overlay__button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: var(
+    --quantum2048-overlay-button-shadow-hover,
+    0 12px 20px rgba(60, 90, 220, 0.45)
+  );
+}
+
+@media (max-width: 960px) {
+  .arcade-side-panel {
+    flex-basis: 100%;
+  }
+
+  .arcade-side-card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .quantum2048-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+}
+
+@media (max-width: 600px) {
+  .quantum2048-board__background,
+  .quantum2048-board__tiles {
+    inset: clamp(0.3rem, 1vw, 0.5rem);
+  }
+
+  .quantum2048-tile {
+    border-radius: 0.75rem;
+  }
+}
