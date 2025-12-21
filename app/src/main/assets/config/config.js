@@ -1337,132 +1337,7 @@ const GAME_CONFIG = {
   uiText: {
     options: {
       welcomeCard: {
-        title: 'Bienvenue',
-        introParagraphs: [
-          "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers."
-        ],
-        unlockedDetails: [
-          {
-            id: 'particles',
-            label: 'Arcade Particules :',
-            description:
-              'Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Métaux.'
-          },
-          {
-            id: 'match3',
-            label: 'Arcade Métaux :',
-            description:
-              'Alignez les alliages pour forger des bonus qui dopent votre production.'
-          },
-          {
-            id: 'photon',
-            label: 'Arcade Photon :',
-            description:
-              'Guidez un photon sur son onde cosmique et récoltez l’énergie sans perdre le rythme.'
-          },
-          {
-            id: 'objectx',
-            label: 'Arcade ObjectX :',
-            description:
-              "Fusionnez des blocs quantiques sur la grille choisie jusqu’à atteindre la tuile objectif."
-          },
-          {
-            id: 'bigger',
-            label: 'Arcade Plus gros :',
-            description:
-              'Gérez un bac plein écran et fusionnez les billes identiques pour fabriquer la taille 1024.'
-          },
-          {
-            id: 'balance',
-            label: 'Arcade Balance :',
-            description:
-              'Disposez des blocs de masses différentes pour maintenir la planche parfaitement stable.'
-          },
-          {
-            id: 'math',
-            label: 'Arcade Math :',
-            description:
-              'Complétez les nombres ou symboles manquants et maintenez la série de calculs.'
-          },
-          {
-            id: 'sudoku',
-            label: 'Arcade Sudoku :',
-            description:
-              'Résolvez des grilles générées dynamiquement avec des aides optionnelles.'
-          },
-          {
-            id: 'demineur',
-            label: 'Arcade Démineur :',
-            description:
-              'Dévoilez toutes les cases sans déclencher les mines quantiques.'
-          },
-          {
-            id: 'solitaire',
-            label: 'Arcade Solitaire :',
-            description:
-              'Empilez les cartes pour compléter les quatre fondations le plus efficacement possible.'
-          },
-          {
-            id: 'echecs',
-            label: 'Arcade Échecs :',
-            description:
-              'Affrontez une IA adaptable sur un échiquier futuriste.'
-          },
-          {
-            id: 'gameOfLife',
-            label: 'Arcade Jeu de la vie :',
-            description:
-              'Orchestrez vos motifs favoris dans l’automate cellulaire de Conway.'
-          },
-          {
-            id: 'escape',
-            label: 'Arcade Escape :',
-            description:
-              'Progressez en infiltration dans un labyrinthe procédural sans entrer dans le champ de vision des gardiens.'
-          },
-          {
-            id: 'blackjack',
-            label: 'Arcade Blackjack :',
-            description:
-              'Affrontez le croupier avec un sabot qui se régénère automatiquement.'
-          },
-          {
-            id: 'pachinko',
-            label: 'Arcade Pachinko :',
-            description:
-              'Lâchez des orbes prismatiques sur un plateau étoilé et visez les cases à fort multiplicateur.'
-          },
-          {
-            id: 'holdem',
-            label: 'Arcade Hold’em :',
-            description:
-              'Affrontez une table de poker quantique avec des adversaires adaptatifs et gérez vos relances.'
-          },
-          {
-            id: 'gacha',
-            label: 'Gacha :',
-            description:
-              'Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment.'
-          },
-          {
-            id: 'tableau',
-            label: 'Tableau :',
-            description:
-              'Consultez le tableau périodique pour suivre vos collections et leurs bonus cumulés.'
-          },
-          {
-            id: 'fusion',
-            label: 'Fusion :',
-            description:
-              'Combinez vos éléments spéciaux pour débloquer des améliorations permanentes.'
-          },
-          {
-            id: 'musique',
-            label: 'Musique :',
-            description:
-              'Personnalisez l’ambiance sonore avec vos playlists chiptune et vos SoundFonts.'
-          }
-        ]
+        title: 'Bienvenue'
       }
     }
   },
@@ -2109,8 +1984,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
-
 
 
 
