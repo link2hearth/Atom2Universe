@@ -189,9 +189,6 @@
     if (typeof window === 'undefined') {
       return null;
     }
-    if (typeof window.atom2universSaveGame === 'function') {
-      return window.atom2universSaveGame;
-    }
     if (typeof window.saveGame === 'function') {
       return window.saveGame;
     }
