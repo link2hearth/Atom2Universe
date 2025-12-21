@@ -220,22 +220,10 @@ function accumulateAutoProduction(deltaSeconds) {
         gainAtoms(gain, 'aps');
       }
     }
-    performanceModeState.pendingAutoGain = null;
     performanceModeState.autoAccumulatedMs = 0;
     return;
   }
-  let added = false;
   if (gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()) {
-    const increment = gameState.perSecond.multiplyNumber(deltaSeconds);
-    if (increment instanceof LayeredNumber && !increment.isZero()) {
-      performanceModeState.pendingAutoGain = performanceModeState.pendingAutoGain
-        ? performanceModeState.pendingAutoGain.add(increment)
-        : increment;
-      added = true;
-    }
-  }
-  if (added || (performanceModeState.pendingAutoGain instanceof LayeredNumber
-    && !performanceModeState.pendingAutoGain.isZero())) {
     performanceModeState.autoAccumulatedMs += deltaSeconds * 1000;
   }
 }
@@ -244,18 +232,8 @@ function flushPendingAutoGain(now, options = {}) {
   const config = Object.assign({ force: false }, options);
   const interval = Number(performanceModeState.settings?.apsFlushIntervalMs) || 0;
   if (interval <= 0) {
-    performanceModeState.pendingAutoGain = null;
     performanceModeState.autoAccumulatedMs = 0;
     performanceModeState.lastAutoFlush = now;
-    return;
-  }
-  const pending = performanceModeState.pendingAutoGain;
-  if (!(pending instanceof LayeredNumber) || pending.isZero() || pending.sign <= 0) {
-    if (config.force) {
-      performanceModeState.pendingAutoGain = null;
-      performanceModeState.autoAccumulatedMs = 0;
-      performanceModeState.lastAutoFlush = now;
-    }
     return;
   }
   if (!config.force) {
@@ -264,8 +242,15 @@ function flushPendingAutoGain(now, options = {}) {
       return;
     }
   }
-  gainAtoms(pending, 'aps');
-  performanceModeState.pendingAutoGain = null;
+  if (gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()) {
+    const accumulatedSeconds = Math.max(0, performanceModeState.autoAccumulatedMs) / 1000;
+    if (accumulatedSeconds > 0) {
+      const gain = gameState.perSecond.multiplyNumber(accumulatedSeconds);
+      if (gain instanceof LayeredNumber && !gain.isZero()) {
+        gainAtoms(gain, 'aps');
+      }
+    }
+  }
   performanceModeState.autoAccumulatedMs = 0;
   performanceModeState.lastAutoFlush = now;
 }
@@ -292,7 +277,6 @@ function applyPerformanceMode(modeId, options = {}) {
     flushManualApcGains(now, { force: true });
     flushPendingAutoGain(now, { force: true });
     performanceModeState.pendingManualGain = null;
-    performanceModeState.pendingAutoGain = null;
     performanceModeState.autoAccumulatedMs = 0;
   }
   performanceModeState.id = normalized;
