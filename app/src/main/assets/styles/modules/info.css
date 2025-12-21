@@ -747,7 +747,7 @@ body.theme-neon .info-progress-block--global {
   margin: 0;
   font-family: var(--font-digits, var(--font-text, 'Orbitron', sans-serif));
   font-weight: 600;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.98rem * var(--font-digits-scale-factor, 1));
+  font-size: calc(var(--font-ui-size-factor, 1) * 0.98rem * var(--font-digits-scale-factor, 1));
   text-align: right;
   letter-spacing: 0.04em;
 }
@@ -1279,7 +1279,7 @@ body.theme-light .element-bonus-specials__item {
 .production-breakdown__value {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.95rem * var(--font-digits-scale-factor, 1));
+  font-size: calc(var(--font-ui-size-factor, 1) * 0.95rem * var(--font-digits-scale-factor, 1));
   font-family: var(--font-digits, 'Orbitron', sans-serif);
 }
 

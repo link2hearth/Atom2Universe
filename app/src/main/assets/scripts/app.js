@@ -4607,7 +4607,7 @@ function updateTextScaleCssVariable(factor) {
     return;
   }
   const clamped = clampTextScaleFactor(factor);
-  root.style.setProperty('--font-text-scale-factor', String(clamped));
+  root.style.setProperty('--font-text-user-scale', String(clamped));
   return clamped;
 }
 
@@ -4769,7 +4769,7 @@ function applyTextFontSelection(selection, options = {}) {
   if (root && root.style) {
     root.style.setProperty('--font-text', config.stack);
     const scale = resolveFontScaleMultiplier(FONT_SCALE_CONFIG.text, normalized);
-    root.style.setProperty('--font-text-base-size', `calc(1rem * ${scale})`);
+    root.style.setProperty('--font-text-font-scale', String(scale));
   }
   if (typeof document !== 'undefined' && document.body) {
     document.body.setAttribute('data-text-font', normalized);

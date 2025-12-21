@@ -8,7 +8,14 @@
   --font-display: 'Audiowide', 'Orbitron', sans-serif;
   --font-text-base-size: 1rem;
   --font-scale-factor: 1;
-  --font-text-scale-factor: 1;
+  --font-text-user-scale: 1;
+  --font-text-font-scale: 1;
+  --font-text-scale-factor: calc(
+    var(--font-text-user-scale, 1) * var(--font-text-font-scale, 1)
+  );
+  --font-ui-size-factor: calc(
+    var(--font-scale-factor, 1) * var(--font-text-user-scale, 1)
+  );
   --font-digits-scale-factor: 1;
   --font-size-scale-factor: calc(
     var(--font-scale-factor, 1) * var(--font-text-scale-factor, 1)
@@ -976,7 +983,7 @@ body.view-sudoku .status-bar {
 .status-value {
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: calc(
-    var(--font-size-scale-factor, 1) * clamp(0.92rem, 1.6vw, 1.2rem) * var(--header-scale, 1)
+    var(--font-ui-size-factor, 1) * clamp(0.92rem, 1.6vw, 1.2rem) * var(--header-scale, 1)
     * var(--font-digits-scale-factor, 1)
   );
 }
