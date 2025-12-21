@@ -12584,11 +12584,9 @@ function updateUI() {
   updateMilestone();
   refreshGoalCardTexts();
   updateGoalsUI();
+  updateInfoPanels();
   const infoPageActive = typeof document !== 'undefined'
     && document.body?.dataset?.activePage === 'info';
-  if (infoPageActive) {
-    updateInfoPanels();
-  }
   const shouldRefreshDevkit = infoPageActive || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
   if (shouldRefreshDevkit) {
     updateDevKitUI();
