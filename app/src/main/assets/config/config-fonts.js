@@ -7,10 +7,14 @@
 const UI_FONT_SCALE_CONFIG = Object.freeze({
   text: Object.freeze({
     default: 1,
-    overrides: Object.freeze({})
+    overrides: Object.freeze({
+      chomsky: 1.5
+    })
   }),
   digits: Object.freeze({
     default: 1,
-    overrides: Object.freeze({})
+    overrides: Object.freeze({
+      chomsky: 1.5
+    })
   })
 });
