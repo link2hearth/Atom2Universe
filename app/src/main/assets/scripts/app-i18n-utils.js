@@ -236,14 +236,15 @@ function flushPendingAutoGain(now, options = {}) {
     performanceModeState.lastAutoFlush = now;
     return;
   }
-  if (!config.force) {
-    const accumulated = performanceModeState.autoAccumulatedMs;
-    if (Number.isFinite(accumulated) && accumulated < interval) {
-      return;
-    }
+  const accumulated = Number(performanceModeState.autoAccumulatedMs) || 0;
+  if (!config.force && Number.isFinite(accumulated) && accumulated < interval) {
+    return;
   }
+  const maxChunkRaw = Number(performanceModeState.settings?.apsFlushMaxChunkMs) || 0;
+  const maxChunkMs = Number.isFinite(maxChunkRaw) && maxChunkRaw > 0 ? maxChunkRaw : interval;
+  const flushMs = config.force ? accumulated : Math.min(accumulated, maxChunkMs);
   if (gameState.perSecond instanceof LayeredNumber && !gameState.perSecond.isZero()) {
-    const accumulatedSeconds = Math.max(0, performanceModeState.autoAccumulatedMs) / 1000;
+    const accumulatedSeconds = Math.max(0, flushMs) / 1000;
     if (accumulatedSeconds > 0) {
       const gain = gameState.perSecond.multiplyNumber(accumulatedSeconds);
       if (gain instanceof LayeredNumber && !gain.isZero()) {
@@ -251,7 +252,7 @@ function flushPendingAutoGain(now, options = {}) {
       }
     }
   }
-  performanceModeState.autoAccumulatedMs = 0;
+  performanceModeState.autoAccumulatedMs = Math.max(0, accumulated - flushMs);
   performanceModeState.lastAutoFlush = now;
 }
 
