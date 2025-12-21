@@ -1343,6 +1343,14 @@ const GAME_CONFIG = {
   },
 
   /**
+   * Réglages liés à la navigation entre les pages.
+   * - pointerClickSuppressMs : fenêtre (ms) pour ignorer le clic après un pointerup.
+   */
+  navigation: {
+    pointerClickSuppressMs: 350
+  },
+
+  /**
    * Liste des fonctionnalités configurables du jeu.
    * Permet aux modules d’interface de parcourir facilement les identifiants déclarés.
    */
@@ -1984,7 +1992,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 
