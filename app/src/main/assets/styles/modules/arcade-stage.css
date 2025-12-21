@@ -96,12 +96,16 @@
 }
 
 .arcade-header__status-label {
-  font-size: calc(clamp(0.36rem, 0.55vw, 0.47rem) * var(--ui-control-scale, 1));
+  font-size: calc(
+    clamp(0.36rem, 0.55vw, 0.47rem) * var(--ui-control-scale, 1) * var(--font-digits-scale-factor, 1)
+  );
   opacity: 0.78;
 }
 
 .arcade-header__status-value {
-  font-size: calc(clamp(0.62rem, 1.15vw, 0.84rem) * var(--ui-control-scale, 1));
+  font-size: calc(
+    clamp(0.62rem, 1.15vw, 0.84rem) * var(--ui-control-scale, 1) * var(--font-digits-scale-factor, 1)
+  );
   font-weight: 700;
   letter-spacing: 0.08em;
 }
