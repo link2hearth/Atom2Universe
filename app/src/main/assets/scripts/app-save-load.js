@@ -1,6 +1,5 @@
 function applySerializedGameState(raw) {
   resetFrenzyState({ skipApply: true });
-  resetTicketStarState({ reschedule: true });
   gameState.baseCrit = createDefaultCritState();
   gameState.crit = createDefaultCritState();
   gameState.lastCritical = null;
@@ -186,6 +185,7 @@ function applySerializedGameState(raw) {
     }
   );
   updateTicketStarSpriteOptionVisibility();
+  resetTicketStarState({ reschedule: true });
   gameState.ticketStarSpecialChance = clampTicketStarSpecialChance(
     data.ticketStarSpecialChance ?? data.ticketStarSpecialRate
   );
@@ -466,7 +466,6 @@ function applySerializedGameState(raw) {
 function loadGame() {
   try {
     resetFrenzyState({ skipApply: true });
-    resetTicketStarState({ reschedule: true });
     gameState.baseCrit = createDefaultCritState();
     gameState.crit = createDefaultCritState();
     gameState.lastCritical = null;
@@ -735,6 +734,7 @@ function loadGame() {
       }
     );
     updateTicketStarSpriteOptionVisibility();
+    resetTicketStarState({ reschedule: true });
     gameState.ticketStarSpecialChance = clampTicketStarSpecialChance(
       data.ticketStarSpecialChance ?? data.ticketStarSpecialRate
     );
