@@ -387,7 +387,7 @@ function showPage(pageId) {
       quantum2048Game.onLeave();
     }
   }
-  const starBridges = ensureStarBridgesGame();
+  const starBridges = pageId === 'starBridges' ? ensureStarBridgesGame() : starBridgesGame;
   if (starBridges) {
     if (pageId === 'starBridges') {
       starBridges.onEnter?.();
@@ -395,7 +395,7 @@ function showPage(pageId) {
       starBridges.onLeave?.();
     }
   }
-  const starsWar = ensureStarsWarGame();
+  const starsWar = pageId === 'starsWar' ? ensureStarsWarGame() : starsWarGame;
   if (starsWar) {
     if (pageId === 'starsWar') {
       starsWar.onEnter?.();
@@ -403,7 +403,7 @@ function showPage(pageId) {
       starsWar.onLeave?.();
     }
   }
-  const jumpingCat = ensureJumpingCatGame();
+  const jumpingCat = pageId === 'jumpingCat' ? ensureJumpingCatGame() : jumpingCatGame;
   if (jumpingCat) {
     if (pageId === 'jumpingCat') {
       jumpingCat.onEnter?.();
@@ -411,7 +411,7 @@ function showPage(pageId) {
       jumpingCat.onLeave?.();
     }
   }
-  const reflex = ensureReflexGame();
+  const reflex = pageId === 'reflex' ? ensureReflexGame() : reflexGame;
   if (reflex) {
     if (pageId === 'reflex') {
       reflex.onEnter?.();
@@ -419,7 +419,7 @@ function showPage(pageId) {
       reflex.onLeave?.();
     }
   }
-  const pipeTap = ensurePipeTapGame();
+  const pipeTap = pageId === 'pipeTap' ? ensurePipeTapGame() : pipeTapGame;
   if (pipeTap) {
     if (pageId === 'pipeTap') {
       pipeTap.onEnter?.();
@@ -427,7 +427,7 @@ function showPage(pageId) {
       pipeTap.onLeave?.();
     }
   }
-  const colorStack = ensureColorStackGame();
+  const colorStack = pageId === 'colorStack' ? ensureColorStackGame() : colorStackGame;
   if (colorStack) {
     if (pageId === 'colorStack') {
       colorStack.onEnter?.();
@@ -435,7 +435,7 @@ function showPage(pageId) {
       colorStack.onLeave?.();
     }
   }
-  const hex = ensureHexGame();
+  const hex = pageId === 'hex' ? ensureHexGame() : hexGame;
   if (hex) {
     if (pageId === 'hex') {
       hex.onEnter?.();
@@ -443,7 +443,7 @@ function showPage(pageId) {
       hex.onLeave?.();
     }
   }
-  const motocross = ensureMotocrossGame();
+  const motocross = pageId === 'motocross' ? ensureMotocrossGame() : motocrossGame;
   if (motocross) {
     if (pageId === 'motocross') {
       motocross.onEnter?.();
@@ -451,7 +451,7 @@ function showPage(pageId) {
       motocross.onLeave?.();
     }
   }
-  const twins = ensureTwinsGame();
+  const twins = pageId === 'twins' ? ensureTwinsGame() : twinsGame;
   if (twins) {
     if (pageId === 'twins') {
       twins.onEnter?.();
@@ -459,7 +459,7 @@ function showPage(pageId) {
       twins.onLeave?.();
     }
   }
-  const sokoban = ensureSokobanGame();
+  const sokoban = pageId === 'sokoban' ? ensureSokobanGame() : sokobanGame;
   if (sokoban) {
     if (pageId === 'sokoban') {
       sokoban.onEnter?.();
@@ -467,7 +467,7 @@ function showPage(pageId) {
       sokoban.onLeave?.();
     }
   }
-  const taquin = ensureTaquinGame();
+  const taquin = pageId === 'taquin' ? ensureTaquinGame() : taquinGame;
   if (taquin) {
     if (pageId === 'taquin') {
       taquin.onEnter?.();
@@ -475,7 +475,7 @@ function showPage(pageId) {
       taquin.onLeave?.();
     }
   }
-  const link = ensureLinkGame();
+  const link = pageId === 'link' ? ensureLinkGame() : linkGame;
   if (link) {
     if (pageId === 'link') {
       link.onEnter?.();
@@ -483,7 +483,7 @@ function showPage(pageId) {
       link.onLeave?.();
     }
   }
-  const lightsOut = ensureLightsOutGame();
+  const lightsOut = pageId === 'lightsOut' ? ensureLightsOutGame() : lightsOutGame;
   if (lightsOut) {
     if (pageId === 'lightsOut') {
       lightsOut.onEnter?.();
@@ -491,7 +491,7 @@ function showPage(pageId) {
       lightsOut.onLeave?.();
     }
   }
-  const gameOfLife = ensureGameOfLifeGame();
+  const gameOfLife = pageId === 'gameOfLife' ? ensureGameOfLifeGame() : gameOfLifeGame;
   if (gameOfLife) {
     if (pageId === 'gameOfLife') {
       gameOfLife.onEnter?.();
