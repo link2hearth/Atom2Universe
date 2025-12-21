@@ -545,6 +545,9 @@ function loadGame() {
       }
     }
     if (!raw) {
+      if (attemptRestoreFromBackup()) {
+        return;
+      }
       gameState.theme = DEFAULT_THEME_ID;
       gameState.stats = createInitialStats();
       gameState.shopUnlocks = new Set();
