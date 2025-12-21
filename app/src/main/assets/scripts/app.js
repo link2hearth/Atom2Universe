@@ -13130,13 +13130,6 @@ function serializeState() {
           }
         });
       }
-      if (Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
-        GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
-          if (def && def.id) {
-            knownIdSet.add(def.id);
-          }
-        });
-      }
       if (Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
         GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
           if (def && def.id) {
