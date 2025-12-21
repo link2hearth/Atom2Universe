@@ -1877,10 +1877,7 @@ function initSpecialCardOverlay() {
 }
 
 function resolveCollectionEntryLabel(id, type) {
-  if (type === 'image'
-    || type === 'bonusImage'
-    || type === 'bonusImage1'
-    || type === 'bonusImage2') {
+  if (type === 'image' || type === 'bonusImage' || type === 'bonusImage2') {
     return resolveBonusImageLabel(id);
   }
   if (type === 'video') {
@@ -2157,10 +2154,7 @@ function renderCollectionList(options) {
     return;
   }
 
-  if (type === 'image'
-    || type === 'bonusImage'
-    || type === 'bonusImage1'
-    || type === 'bonusImage2') {
+  if (type === 'image' || type === 'bonusImage' || type === 'bonusImage2') {
     renderBonusImageCollectionList({
       definitions,
       collection,
@@ -2171,7 +2165,7 @@ function renderCollectionList(options) {
         ? 'bonusImage'
         : (type === 'bonusImage2'
           ? 'bonusImage2'
-          : (type === 'bonusImage1' ? 'bonusImage1' : 'image'))
+          : (type === 'video' ? 'video' : 'image'))
     });
     return;
   }
