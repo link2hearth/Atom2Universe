@@ -958,6 +958,23 @@ const TEXT_SCALE_CONFIG = (() => {
   };
 })();
 
+const TITLE_SCALE_CONFIG = (() => {
+  const fallback = {
+    info: 0.5,
+    options: 0.5
+  };
+  const rawConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.ui && GLOBAL_CONFIG.ui.titleScale;
+  if (!rawConfig || typeof rawConfig !== 'object') {
+    return fallback;
+  }
+  const infoScale = Number(rawConfig.info);
+  const optionsScale = Number(rawConfig.options);
+  return {
+    info: Number.isFinite(infoScale) && infoScale > 0 ? infoScale : fallback.info,
+    options: Number.isFinite(optionsScale) && optionsScale > 0 ? optionsScale : fallback.options
+  };
+})();
+
 const TEXT_SCALE_CHOICES = TEXT_SCALE_CONFIG.choices;
 const TEXT_SCALE_DEFAULT = TEXT_SCALE_CONFIG.defaultId;
 const TEXT_SCALE_MIN_FACTOR = 0.7;
@@ -4279,6 +4296,18 @@ function updateEffectiveUiScaleFactor() {
     : 1;
   const effective = Math.max(0.4, Math.min(3, baseFactor * autoFactor));
   root.style.setProperty('--font-scale-factor', String(effective));
+}
+
+function applyTitleScaleConfig() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const root = document.documentElement;
+  if (!root || !root.style) {
+    return;
+  }
+  root.style.setProperty('--info-title-scale', String(TITLE_SCALE_CONFIG.info));
+  root.style.setProperty('--options-title-scale', String(TITLE_SCALE_CONFIG.options));
 }
 
 function getActivePageElement() {
@@ -13892,6 +13921,7 @@ function safelyStartApp(options = {}) {
 }
 
 function initializeDomBoundModules() {
+  applyTitleScaleConfig();
   refreshOptionsWelcomeContent();
   subscribeOptionsWelcomeContentUpdates();
   renderThemeOptions();

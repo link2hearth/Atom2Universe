@@ -202,6 +202,10 @@ body.theme-aurora .option-card--holdem {
   gap: 0.8rem;
 }
 
+.option-card__header h3 {
+  font-size: calc(1.17em * var(--options-title-scale, 1));
+}
+
 .option-card--preferences .option-card__header {
   align-items: flex-start;
   justify-content: flex-start;

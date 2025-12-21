@@ -1558,7 +1558,16 @@ const GAME_CONFIG = {
     /**
      * Ajustements de taille propres aux polices (voir `config/config-fonts.js`).
      */
-    fonts: UI_FONT_SCALE_CONFIG
+    fonts: UI_FONT_SCALE_CONFIG,
+    /**
+     * Réduction des titres sur certaines pages de l'interface.
+     * - info : facteur appliqué aux titres des cartes dans la page Infos.
+     * - options : facteur appliqué aux titres des cartes dans la page Options.
+     */
+    titleScale: {
+      info: 0.5,
+      options: 0.5
+    }
   },
 
   /**
@@ -2109,7 +2118,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 
