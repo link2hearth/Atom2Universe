@@ -2411,6 +2411,10 @@
             "reading": "Reading (×1.25)"
           }
         },
+        "atomDecimals": {
+          "label": "Decimals",
+          "ariaLabel": "Choose how many decimals are shown in the atom counter"
+        },
         "theme": {
           "label": "Visual theme",
           "ariaLabel": "Choose the interface visual theme",

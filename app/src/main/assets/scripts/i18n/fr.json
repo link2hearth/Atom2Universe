@@ -2351,6 +2351,10 @@
             "reading": "Lecture (×1,25)"
           }
         },
+        "atomDecimals": {
+          "label": "Décimales",
+          "ariaLabel": "Choisir le nombre de décimales affichées dans le compteur d’atomes"
+        },
         "theme": {
           "label": "Thème visuel",
           "ariaLabel": "Choisir le thème visuel de l’interface",

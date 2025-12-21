@@ -243,6 +243,7 @@ const IMAGE_FEED_DISMISSED_STORAGE_KEY = 'atom2univers.images.dismissed.v1';
 const SCREEN_WAKE_LOCK_STORAGE_KEY = 'atom2univers.options.screenWakeLockEnabled';
 const ANDROID_STATUS_BAR_STORAGE_KEY = 'atom2univers.options.androidStatusBarVisible';
 const TEXT_FONT_STORAGE_KEY = 'atom2univers.options.textFont';
+const ATOM_DECIMAL_STORAGE_KEY = 'atom2univers.options.atomCounterDecimals';
 const INFO_WELCOME_COLLAPSED_STORAGE_KEY = 'atom2univers.info.welcomeCollapsed';
 const INFO_ACHIEVEMENTS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.achievementsCollapsed';
 const INFO_CHARACTERS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.charactersCollapsed';
@@ -971,6 +972,57 @@ const DEFAULT_TEXT_SCALE_FACTOR = (() => {
 
 let currentTextScaleSelection = TEXT_SCALE_DEFAULT;
 let currentTextScaleFactor = DEFAULT_TEXT_SCALE_FACTOR;
+
+const ATOM_DECIMAL_CONFIG = (() => {
+  const fallbackOptions = [1, 2, 3, 4];
+  const fallback = {
+    defaultValue: 2,
+    options: Object.freeze(fallbackOptions)
+  };
+
+  const rawConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.ui && GLOBAL_CONFIG.ui.atomCounterDecimals;
+  if (!rawConfig || !Array.isArray(rawConfig.options)) {
+    return fallback;
+  }
+
+  const normalizedOptions = [];
+  rawConfig.options.forEach(option => {
+    const numeric = Number(option);
+    if (!Number.isFinite(numeric)) {
+      return;
+    }
+    const rounded = Math.round(numeric);
+    if (rounded <= 0 || normalizedOptions.includes(rounded)) {
+      return;
+    }
+    normalizedOptions.push(rounded);
+  });
+
+  if (!normalizedOptions.length) {
+    return fallback;
+  }
+
+  let defaultValue = fallback.defaultValue;
+  const rawDefault = Number(rawConfig.default);
+  if (Number.isFinite(rawDefault)) {
+    const roundedDefault = Math.round(rawDefault);
+    if (normalizedOptions.includes(roundedDefault)) {
+      defaultValue = roundedDefault;
+    }
+  }
+  if (!normalizedOptions.includes(defaultValue)) {
+    defaultValue = normalizedOptions[0];
+  }
+
+  return {
+    defaultValue,
+    options: Object.freeze(normalizedOptions)
+  };
+})();
+
+const ATOM_DECIMAL_OPTIONS = ATOM_DECIMAL_CONFIG.options;
+const ATOM_DECIMAL_DEFAULT = ATOM_DECIMAL_CONFIG.defaultValue;
+let currentAtomDecimalSelection = ATOM_DECIMAL_DEFAULT;
 
 let critAtomVisualsDisabled = false;
 let atomAnimationsEnabled = true;
@@ -4831,6 +4883,68 @@ function initDigitFontOption() {
   elements.digitFontSelect.addEventListener('change', event => {
     const value = event?.target?.value;
     applyDigitFontSelection(value, { persist: true, updateControl: false });
+  });
+}
+
+function normalizeAtomDecimalSelection(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return ATOM_DECIMAL_DEFAULT;
+  }
+  const rounded = Math.round(numeric);
+  return ATOM_DECIMAL_OPTIONS.includes(rounded)
+    ? rounded
+    : ATOM_DECIMAL_DEFAULT;
+}
+
+function readStoredAtomDecimal() {
+  try {
+    const stored = globalThis.localStorage?.getItem(ATOM_DECIMAL_STORAGE_KEY);
+    if (typeof stored === 'string' && stored.trim()) {
+      return normalizeAtomDecimalSelection(stored);
+    }
+  } catch (error) {
+    console.warn('Unable to read atom decimal preference', error);
+  }
+  return null;
+}
+
+function writeStoredAtomDecimal(value) {
+  try {
+    const normalized = normalizeAtomDecimalSelection(value);
+    globalThis.localStorage?.setItem(ATOM_DECIMAL_STORAGE_KEY, String(normalized));
+  } catch (error) {
+    console.warn('Unable to persist atom decimal preference', error);
+  }
+}
+
+function applyAtomDecimalSelection(selection, options = {}) {
+  const normalized = normalizeAtomDecimalSelection(selection);
+  const settings = Object.assign({ persist: true, updateControl: true, refreshUi: true }, options);
+  currentAtomDecimalSelection = normalized;
+  LayeredNumber.MANTISSA_FRACTION_DIGITS = normalized;
+  if (settings.updateControl && elements.atomDecimalSelect) {
+    elements.atomDecimalSelect.value = String(normalized);
+  }
+  if (settings.persist) {
+    writeStoredAtomDecimal(normalized);
+  }
+  if (settings.refreshUi) {
+    updateUI();
+  }
+  return normalized;
+}
+
+function initAtomDecimalOption() {
+  const stored = readStoredAtomDecimal();
+  const initial = stored ?? ATOM_DECIMAL_DEFAULT;
+  applyAtomDecimalSelection(initial, { persist: false, updateControl: true, refreshUi: false });
+  if (!elements.atomDecimalSelect) {
+    return;
+  }
+  elements.atomDecimalSelect.addEventListener('change', event => {
+    const value = event?.target?.value;
+    applyAtomDecimalSelection(value, { persist: true, updateControl: false, refreshUi: true });
   });
 }
 
@@ -13906,6 +14020,7 @@ function initializeDomBoundModules() {
   initResponsiveAutoScale();
   initTextFontOption();
   initDigitFontOption();
+  initAtomDecimalOption();
   initPerformanceModeOption();
   initAtomIconOption();
   subscribeAtomIconLanguageUpdates();

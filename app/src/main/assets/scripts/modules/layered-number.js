@@ -481,10 +481,14 @@ class LayeredNumber {
         }
         return `${numeric}`;
       }
+      const configuredDigits = Number(LayeredNumber.MANTISSA_FRACTION_DIGITS);
+      const clampedDigits = Number.isFinite(configuredDigits)
+        ? Math.max(0, Math.min(8, Math.round(configuredDigits)))
+        : 2;
       const mantissa = LayeredNumber.formatLocalizedNumber(this.sign * this.mantissa, {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-      }) || (this.sign * this.mantissa).toFixed(2);
+        maximumFractionDigits: clampedDigits,
+        minimumFractionDigits: clampedDigits
+      }) || (this.sign * this.mantissa).toFixed(clampedDigits);
       return `${mantissa}e${this.exponent}`;
     }
     const exponentText = LayeredNumber.formatExponent(this.value);
@@ -565,6 +569,7 @@ class LayeredNumber {
   }
 }
 
+const DEFAULT_MANTISSA_FRACTION_DIGITS = 2;
 const DEFAULT_LAYER1_THRESHOLD = 1e6;
 const DEFAULT_LAYER1_DOWNSHIFT = 5;
 const DEFAULT_LOG_DIFF_LIMIT = 15;
@@ -573,6 +578,9 @@ const DEFAULT_EPSILON = 1e-12;
 LayeredNumber.LAYER1_THRESHOLD = Number.isFinite(LayeredNumber.LAYER1_THRESHOLD)
   ? LayeredNumber.LAYER1_THRESHOLD
   : DEFAULT_LAYER1_THRESHOLD;
+LayeredNumber.MANTISSA_FRACTION_DIGITS = Number.isFinite(LayeredNumber.MANTISSA_FRACTION_DIGITS)
+  ? LayeredNumber.MANTISSA_FRACTION_DIGITS
+  : DEFAULT_MANTISSA_FRACTION_DIGITS;
 LayeredNumber.LAYER1_DOWN = Number.isFinite(LayeredNumber.LAYER1_DOWN)
   ? LayeredNumber.LAYER1_DOWN
   : DEFAULT_LAYER1_DOWNSHIFT;
@@ -582,4 +590,3 @@ LayeredNumber.LOG_DIFF_LIMIT = Number.isFinite(LayeredNumber.LOG_DIFF_LIMIT)
 LayeredNumber.EPSILON = Number.isFinite(LayeredNumber.EPSILON)
   ? LayeredNumber.EPSILON
   : DEFAULT_EPSILON;
-
