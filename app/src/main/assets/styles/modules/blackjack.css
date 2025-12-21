@@ -165,7 +165,9 @@
   place-items: center;
   position: relative;
   font-weight: 700;
-  font-size: calc(clamp(1.1rem, 4vw, 1.6rem) * var(--blackjack-scale, 1));
+  font-size: calc(
+    clamp(1.1rem, 4vw, 1.6rem) * var(--blackjack-scale, 1) * var(--font-digits-scale-factor, 1)
+  );
   padding: calc(0.35rem * var(--blackjack-scale, 1));
 }
 

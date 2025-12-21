@@ -15,6 +15,7 @@ Bienvenue dans Atom2Univers ! Voici les consignes à respecter lorsque tu interv
    - Le projet est un jeu web construit en **JavaScript**, **CSS**, **HTML** et **JSON** qui est porté sur Android dans une webview.
    - Le cœur du jeu est un clicker principal entouré de nombreux modules offrant des bonus.
    - Chaque mini-jeu arcade possède son propre fichier JavaScript et CSS dédiés. Respecte cette séparation lorsque tu ajoutes du contenu.
+   - Favorise la fragmentation en fichiers dédiés par fonction pour éviter les fichiers trop longs, tout en gardant une structure claire et cohérente.
 
 4. **Collaboration**
    - Le propriétaire du dépôt est débutant en code, mais nous formons une équipe formidable. Explique tes choix et garde un ton pédagogique dans les messages de commit et de PR.

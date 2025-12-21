@@ -196,7 +196,7 @@ body.theme-neon .devkit-form__controls input {
 
 .devkit-status-row strong {
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--font-digits-scale-factor, 1));
 }
 
 .devkit-link {
@@ -315,7 +315,7 @@ body.theme-neon .devkit-shop-card {
 
 .devkit-shop-card__stats dd {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--font-digits-scale-factor, 1));
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
 }
 
@@ -337,7 +337,7 @@ body.theme-neon .devkit-shop-card {
   border-radius: 0.4rem;
   background: rgba(255, 255, 255, 0.15);
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--font-digits-scale-factor, 1));
 }
 
 body.theme-light .devkit-panel__footer kbd {

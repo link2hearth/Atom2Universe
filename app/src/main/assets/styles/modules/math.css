@@ -206,7 +206,7 @@ body.theme-aurora .page--math {
 }
 
 .math-game__counter-value {
-  font-size: calc(var(--math-scale, 1) * clamp(1.4rem, 4vw, 2rem));
+  font-size: calc(var(--math-scale, 1) * clamp(1.4rem, 4vw, 2rem) * var(--font-digits-scale-factor, 1));
   font-weight: 700;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
 }
@@ -218,7 +218,7 @@ body.theme-aurora .page--math {
 }
 
 .math-game__expression {
-  font-size: calc(var(--math-scale, 1) * clamp(1.35rem, 4.2vw, 2rem));
+  font-size: calc(var(--math-scale, 1) * clamp(1.35rem, 4.2vw, 2rem) * var(--font-digits-scale-factor, 1));
   font-weight: 600;
   text-align: center;
   margin: 0;
@@ -237,7 +237,7 @@ body.theme-aurora .page--math {
   border-radius: 14px;
   padding: 0.75rem 1rem;
   font: inherit;
-  font-size: calc(2rem * var(--math-scale, 1));
+  font-size: calc(2rem * var(--math-scale, 1) * var(--font-digits-scale-factor, 1));
   font-weight: 600;
   color: var(--math-option-color, inherit);
   background: var(--math-option-background, rgba(255, 255, 255, 0.08));

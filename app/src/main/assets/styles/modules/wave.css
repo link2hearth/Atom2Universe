@@ -122,9 +122,9 @@ body.theme-aurora.view-wave .app-header {
   gap: clamp(0.08rem, 0.6vw, 0.2rem);
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-size: clamp(
-    calc(var(--font-size-scale-factor, 1) * 0.5rem),
-    calc(var(--font-size-scale-factor, 1) * 1.8vw),
-    calc(var(--font-size-scale-factor, 1) * 0.9rem)
+    calc(var(--font-size-scale-factor, 1) * 0.5rem * var(--font-digits-scale-factor, 1)),
+    calc(var(--font-size-scale-factor, 1) * 1.8vw * var(--font-digits-scale-factor, 1)),
+    calc(var(--font-size-scale-factor, 1) * 0.9rem * var(--font-digits-scale-factor, 1))
   );
   font-weight: 600;
 }
