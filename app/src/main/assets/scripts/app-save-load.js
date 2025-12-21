@@ -1,4 +1,9 @@
 function applySerializedGameState(raw) {
+  resetFrenzyState({ skipApply: true });
+  resetTicketStarState({ reschedule: true });
+  gameState.baseCrit = createDefaultCritState();
+  gameState.crit = createDefaultCritState();
+  gameState.lastCritical = null;
   const data = JSON.parse(raw);
   gameState.atoms = LayeredNumber.fromJSON(data.atoms);
   gameState.lifetime = LayeredNumber.fromJSON(data.lifetime);
