@@ -108,7 +108,9 @@
 }
 
 .metaux-timer__value {
-  font-size: calc(clamp(1.3rem, 2.6vw, 1.7rem) * var(--ui-control-scale, 1));
+  font-size: calc(
+    clamp(1.3rem, 2.6vw, 1.7rem) * var(--ui-control-scale, 1) * var(--font-digits-scale-factor, 1)
+  );
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;

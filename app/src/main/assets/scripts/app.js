@@ -4739,6 +4739,8 @@ function applyTextFontSelection(selection, options = {}) {
   const root = typeof document !== 'undefined' ? document.documentElement : null;
   if (root && root.style) {
     root.style.setProperty('--font-text', config.stack);
+    const scale = resolveFontScaleMultiplier(FONT_SCALE_CONFIG.text, normalized);
+    root.style.setProperty('--font-text-base-size', `calc(1rem * ${scale})`);
   }
   if (typeof document !== 'undefined' && document.body) {
     document.body.setAttribute('data-text-font', normalized);
@@ -4804,6 +4806,8 @@ function applyDigitFontSelection(selection, options = {}) {
   if (root && root.style) {
     root.style.setProperty('--font-digits', config.stack);
     root.style.setProperty('--font-digits-compact', config.compactStack);
+    const scale = resolveFontScaleMultiplier(FONT_SCALE_CONFIG.digits, normalized);
+    root.style.setProperty('--font-digits-scale-factor', String(scale));
   }
   if (typeof document !== 'undefined' && document.body) {
     document.body.setAttribute('data-digit-font', normalized);

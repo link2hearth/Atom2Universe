@@ -1554,7 +1554,11 @@ const GAME_CONFIG = {
         { id: 'comfortable', factor: 1.5 },
         { id: 'reading', factor: 2 }
       ]
-    }
+    },
+    /**
+     * Ajustements de taille propres aux polices (voir `config/config-fonts.js`).
+     */
+    fonts: UI_FONT_SCALE_CONFIG
   },
 
   /**
@@ -2105,8 +2109,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
-
 
 
 

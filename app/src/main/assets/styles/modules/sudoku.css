@@ -536,7 +536,9 @@ body.theme-aurora .page--sudoku {
   color: var(--sudoku-pad-button-color, inherit);
   font: inherit;
   font-weight: 700;
-  font-size: calc(clamp(1.1rem, 2vw, 1.35rem) * var(--sudoku-scale, 1));
+  font-size: calc(
+    clamp(1.1rem, 2vw, 1.35rem) * var(--sudoku-scale, 1) * var(--font-digits-scale-factor, 1)
+  );
   min-height: calc(clamp(3rem, 9vw, 3.6rem) * var(--sudoku-scale, 1));
   display: inline-flex;
   align-items: center;
@@ -609,9 +611,12 @@ body.theme-aurora .page--sudoku {
   background: transparent;
   color: inherit;
   text-align: center;
-  font-size: var(
-    --sudoku-cell-font-size,
-    calc(clamp(1.2rem, 3vw, 1.8rem) * var(--sudoku-scale, 1))
+  font-size: calc(
+    var(
+      --sudoku-cell-font-size,
+      calc(clamp(1.2rem, 3vw, 1.8rem) * var(--sudoku-scale, 1))
+    )
+    * var(--font-digits-scale-factor, 1)
   );
   font-weight: 700;
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
