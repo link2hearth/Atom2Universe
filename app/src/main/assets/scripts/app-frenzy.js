@@ -465,6 +465,9 @@ function pruneFrenzyEffects(entry, now = performance.now()) {
 }
 
 function applyFrenzyEffects(now = performance.now()) {
+  if (typeof flushPendingAutoGain === 'function') {
+    flushPendingAutoGain(now, { force: true });
+  }
   const basePerClick = gameState.basePerClick instanceof LayeredNumber
     ? gameState.basePerClick.clone()
     : BASE_PER_CLICK.clone();
