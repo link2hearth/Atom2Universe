@@ -6,7 +6,19 @@
   const CONFIG_PATH = 'config/arcade/twins.json';
   const CARD_IMAGE_BASE_PATH = 'Assets/Cartes/bonus/';
 
-  function resolveCardImageConfig(rawList, fallbackList) {
+  function normalizeBasePath(value) {
+    if (typeof value !== 'string') {
+      return CARD_IMAGE_BASE_PATH;
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return CARD_IMAGE_BASE_PATH;
+    }
+    return trimmed.endsWith('/') ? trimmed : `${trimmed}/`;
+  }
+
+  function resolveCardImageConfig(rawList, fallbackList, basePath) {
+    const normalizedBasePath = normalizeBasePath(basePath);
     const fallback = Array.isArray(fallbackList) ? fallbackList : [];
     const names = [];
     const seen = new Set();
@@ -38,10 +50,10 @@
         }
         const isAbsolute = /^(?:https?:)?\/\//.test(name) || name.startsWith('/');
         const isRelativePath = name.startsWith('./') || name.startsWith('../');
-        const alreadyPrefixed = name.startsWith(CARD_IMAGE_BASE_PATH);
+        const alreadyPrefixed = normalizedBasePath && name.startsWith(normalizedBasePath);
         const base = isAbsolute || isRelativePath || alreadyPrefixed
           ? name
-          : `${CARD_IMAGE_BASE_PATH}${name}`;
+          : `${normalizedBasePath}${name}`;
         return encodeURI(base);
       })
       .filter(path => typeof path === 'string' && path.length > 0);
@@ -53,42 +65,94 @@
   }
 
   const DEFAULT_CARD_IMAGE_NAMES = Object.freeze([
-    'images (1).png',
-    'images (2).png',
-    'images (3).png',
-    'images (4).png',
-    'images (5).png',
-    'images (6).png',
-    'images (7).png',
-    'images (8).png',
-    'images (9).png',
-    'images (10).png',
-    'images (11).png',
-    'images (12).png',
-    'images (13).png',
-    'images (14).png',
-    'images (15).png',
-    'images (16).png',
-    'images (17).png',
-    'images (18).png',
-    'images (19).png',
-    'images (20).png',
-    'images (21).png',
-    'images (22).png',
-    'images (23).png',
-    'images (24).png',
-    'images (25).png',
-    'images (26).png',
-    'images (27).png',
-    'images (28).png',
-    'images (29).png',
-    'images (30).png',
-    'images (31).png',
-    'images (32).png'
+    'images (1).jpg',
+    'images (2).jpg',
+    'images (3).jpg',
+    'images (4).jpg',
+    'images (5).jpg',
+    'images (6).jpg',
+    'images (7).jpg',
+    'images (8).jpg',
+    'images (9).jpg',
+    'images (10).jpg',
+    'images (11).jpg',
+    'images (12).jpg',
+    'images (13).jpg',
+    'images (14).jpg',
+    'images (15).jpg',
+    'images (16).jpg',
+    'images (17).jpg',
+    'images (18).jpg',
+    'images (19).jpg',
+    'images (20).jpg',
+    'images (21).jpg',
+    'images (22).jpg',
+    'images (23).jpg',
+    'images (24).jpg',
+    'images (25).jpg',
+    'images (26).jpg',
+    'images (27).jpg',
+    'images (28).jpg',
+    'images (29).jpg',
+    'images (30).jpg',
+    'images (31).jpg',
+    'images (32).jpg'
+  ]);
+  const DEFAULT_CARD_IMAGE_NAMES_BIS = Object.freeze([
+    'imagesbis (1).jpg',
+    'imagesbis (2).jpg',
+    'imagesbis (3).jpg',
+    'imagesbis (4).jpg',
+    'imagesbis (5).jpg',
+    'imagesbis (6).jpg',
+    'imagesbis (7).jpg',
+    'imagesbis (8).jpg',
+    'imagesbis (9).jpg',
+    'imagesbis (10).jpg',
+    'imagesbis (11).jpg',
+    'imagesbis (12).jpg',
+    'imagesbis (13).jpg',
+    'imagesbis (14).jpg',
+    'imagesbis (15).jpg',
+    'imagesbis (16).jpg',
+    'imagesbis (17).jpg',
+    'imagesbis (18).jpg',
+    'imagesbis (19).jpg',
+    'imagesbis (20).jpg',
+    'imagesbis (21).jpg',
+    'imagesbis (22).jpg',
+    'imagesbis (23).jpg',
+    'imagesbis (24).jpg',
+    'imagesbis (25).jpg',
+    'imagesbis (26).jpg',
+    'imagesbis (27).jpg',
+    'imagesbis (28).jpg',
+    'imagesbis (29).jpg',
+    'imagesbis (30).jpg',
+    'imagesbis (31).jpg',
+    'imagesbis (32).jpg'
+  ]);
+  const DEFAULT_CARD_SET_LABEL_FALLBACKS = Object.freeze({
+    set1: 'Set 1',
+    set2: 'Set 2',
+    mix: 'Mix'
+  });
+  const DEFAULT_CARD_SETS = Object.freeze([
+    Object.freeze({
+      id: 'set1',
+      basePath: CARD_IMAGE_BASE_PATH,
+      images: DEFAULT_CARD_IMAGE_NAMES
+    }),
+    Object.freeze({
+      id: 'set2',
+      basePath: 'Assets/Cartes/bonus1/',
+      images: DEFAULT_CARD_IMAGE_NAMES_BIS
+    })
   ]);
   const DEFAULT_CARD_RESOURCES = resolveCardImageConfig(
     DEFAULT_CARD_IMAGE_NAMES,
-    DEFAULT_CARD_IMAGE_NAMES
+    DEFAULT_CARD_IMAGE_NAMES,
+    CARD_IMAGE_BASE_PATH
   );
 
   const READY_FALLBACK = 'Choisissez une difficulté puis appuyez sur « Commencer » pour lancer une partie.';
@@ -99,12 +163,15 @@
   const START_ARIA_FALLBACK = 'Démarrer une partie de Twins';
   const RESTART_ARIA_FALLBACK = 'Relancer la partie de Twins';
   const DIFFICULTY_ARIA_FALLBACK = 'Choisir la difficulté du jeu Twins';
+  const CARD_SET_ARIA_FALLBACK = 'Choisir un set de cartes pour Twins';
 
   const DEFAULT_CONFIG = Object.freeze({
     defaultDifficulty: 'easy',
+    defaultCardSet: 'set1',
     mismatchDelayMs: 900,
     cardAspectRatio: 0.72,
     cardImages: DEFAULT_CARD_IMAGE_NAMES,
+    cardImageSets: DEFAULT_CARD_SETS,
     difficulties: Object.freeze({
       easy: Object.freeze({ pairs: 8, columns: 4, rows: 4, gachaTickets: 1 }),
       medium: Object.freeze({ pairs: 12, columns: 6, rows: 4, gachaTickets: 2 }),
@@ -120,6 +187,8 @@
     elements: null,
     config: DEFAULT_CONFIG,
     difficulty: DEFAULT_CONFIG.defaultDifficulty,
+    cardSetId: DEFAULT_CONFIG.defaultCardSet,
+    cardSets: DEFAULT_CARD_SETS,
     cards: [],
     cardImages: DEFAULT_CARD_RESOURCES.paths,
     cardElements: [],
@@ -205,6 +274,44 @@
     return Math.min(Math.max(numeric, min), max);
   }
 
+  function getCardSetLabelKey(id) {
+    if (typeof id !== 'string' || !id.trim()) {
+      return 'index.sections.twins.ui.cardSets.set1';
+    }
+    return `index.sections.twins.ui.cardSets.${id}`;
+  }
+
+  function resolveCardSetList(rawSets, fallbackSets) {
+    const source = Array.isArray(rawSets) && rawSets.length > 0 ? rawSets : fallbackSets;
+    const fallback = Array.isArray(fallbackSets) ? fallbackSets : [];
+    const resolved = [];
+    const seen = new Set();
+
+    (Array.isArray(source) ? source : []).forEach((entry, index) => {
+      const rawId = typeof entry?.id === 'string' ? entry.id.trim() : '';
+      const fallbackEntry = fallback.find(set => set.id === rawId) || fallback[index];
+      const id = rawId || fallbackEntry?.id;
+      if (!id || seen.has(id)) {
+        return;
+      }
+      seen.add(id);
+      const basePath = normalizeBasePath(entry?.basePath || fallbackEntry?.basePath || CARD_IMAGE_BASE_PATH);
+      const rawImages = Array.isArray(entry?.images) ? entry.images : fallbackEntry?.images;
+      const fallbackImages = Array.isArray(fallbackEntry?.images) ? fallbackEntry.images : DEFAULT_CARD_IMAGE_NAMES;
+      const resources = resolveCardImageConfig(rawImages, fallbackImages, basePath);
+      const labelKey = getCardSetLabelKey(id);
+      const labelFallback = DEFAULT_CARD_SET_LABEL_FALLBACKS[id] || id;
+      resolved.push(Object.freeze({
+        id,
+        labelKey,
+        labelFallback,
+        resources
+      }));
+    });
+
+    return Object.freeze([...resolved]);
+  }
+
   function formatTicketCount(value) {
     if (typeof formatIntegerLocalized === 'function') {
       try {
@@ -275,7 +382,63 @@
     }
   }
 
+  function isMixAllowed() {
+    return Array.isArray(state.cardSets) && state.cardSets.length > 1;
+  }
+
+  function getCardSetOptionsList() {
+    const options = Array.isArray(state.cardSets)
+      ? state.cardSets.map(set => ({
+        id: set.id,
+        labelKey: set.labelKey,
+        labelFallback: set.labelFallback
+      }))
+      : [];
+    if (isMixAllowed()) {
+      options.push({
+        id: 'mix',
+        labelKey: getCardSetLabelKey('mix'),
+        labelFallback: DEFAULT_CARD_SET_LABEL_FALLBACKS.mix
+      });
+    }
+    return options;
+  }
+
+  function getCardSetById(id) {
+    if (!Array.isArray(state.cardSets)) {
+      return null;
+    }
+    return state.cardSets.find(set => set.id === id) || null;
+  }
+
+  function getCardImagePoolForSet(setId) {
+    if (setId === 'mix' && isMixAllowed()) {
+      const combined = [];
+      const seen = new Set();
+      state.cardSets.forEach(set => {
+        const paths = Array.isArray(set?.resources?.paths) ? set.resources.paths : [];
+        paths.forEach(path => {
+          if (!path || seen.has(path)) {
+            return;
+          }
+          seen.add(path);
+          combined.push(path);
+        });
+      });
+      return combined;
+    }
+    const selected = getCardSetById(setId);
+    if (Array.isArray(selected?.resources?.paths) && selected.resources.paths.length > 0) {
+      return selected.resources.paths;
+    }
+    return [];
+  }
+
   function getCardImagePool() {
+    const pool = getCardImagePoolForSet(state.cardSetId);
+    if (Array.isArray(pool) && pool.length > 0) {
+      return pool;
+    }
     if (Array.isArray(state.cardImages) && state.cardImages.length > 0) {
       return state.cardImages;
     }
@@ -285,6 +448,12 @@
   function getMaxPairs() {
     const pool = getCardImagePool();
     return Math.max(1, pool.length || DEFAULT_CARD_RESOURCES.paths.length || 1);
+  }
+
+  function getPairCountForDifficulty() {
+    const config = getDifficultyConfig(state.difficulty);
+    const desired = Math.max(1, Number(config?.pairs) || DEFAULT_CONFIG.difficulties.easy.pairs);
+    return Math.min(desired, getMaxPairs());
   }
 
   function sanitizeDifficulty(raw, fallback, maxPairs) {
@@ -324,12 +493,35 @@
 
   function applyConfig(rawConfig) {
     const raw = rawConfig && typeof rawConfig === 'object' ? rawConfig : {};
-    const cardResources = resolveCardImageConfig(raw.cardImages, DEFAULT_CONFIG.cardImages);
-    const cardImagePaths = cardResources.paths.length > 0
-      ? cardResources.paths
-      : DEFAULT_CARD_RESOURCES.paths;
-    state.cardImages = cardImagePaths;
-    const maxPairs = Math.max(1, cardImagePaths.length || DEFAULT_CARD_RESOURCES.paths.length || 1);
+    let resolvedCardSets = resolveCardSetList(raw.cardImageSets, DEFAULT_CARD_SETS);
+    if (resolvedCardSets.length === 0) {
+      resolvedCardSets = resolveCardSetList(null, DEFAULT_CARD_SETS);
+    }
+    if ((!Array.isArray(raw.cardImageSets) || raw.cardImageSets.length === 0) && Array.isArray(raw.cardImages)) {
+      const legacySet = resolveCardSetList([
+        { id: 'set1', basePath: CARD_IMAGE_BASE_PATH, images: raw.cardImages }
+      ], DEFAULT_CARD_SETS);
+      if (legacySet.length > 0) {
+        resolvedCardSets = Object.freeze([
+          legacySet[0],
+          ...resolvedCardSets.filter(set => set.id !== legacySet[0].id)
+        ]);
+      }
+    }
+    state.cardSets = resolvedCardSets;
+    const defaultCardSet = typeof raw.defaultCardSet === 'string'
+      ? raw.defaultCardSet.trim()
+      : DEFAULT_CONFIG.defaultCardSet;
+    const availableOptions = getCardSetOptionsList();
+    const availableIds = availableOptions.map(option => option.id);
+    const persisted = normalizeCardSet(state.cardSetId);
+    let selectedCardSet = persisted || defaultCardSet;
+    if (!availableIds.includes(selectedCardSet)) {
+      selectedCardSet = availableIds[0] || DEFAULT_CONFIG.defaultCardSet;
+    }
+    state.cardSetId = selectedCardSet;
+    state.cardImages = getCardImagePoolForSet(state.cardSetId);
+    const maxPairs = getMaxPairs();
     const fallbackDifficulties = DEFAULT_CONFIG.difficulties;
     const resolvedDifficulties = {};
     Object.keys(fallbackDifficulties).forEach(key => {
@@ -344,15 +536,18 @@
     const cardAspectRatio = clampNumber(raw.cardAspectRatio, DEFAULT_CONFIG.cardAspectRatio, 0.45, 1.05);
     state.config = Object.freeze({
       defaultDifficulty,
+      defaultCardSet: availableIds.includes(defaultCardSet) ? defaultCardSet : state.cardSetId,
       mismatchDelayMs,
       cardAspectRatio,
-      cardImages: cardResources.names,
+      cardImages: Array.isArray(state.cardImages) ? Object.freeze([...state.cardImages]) : DEFAULT_CARD_IMAGE_NAMES,
+      cardImageSets: resolvedCardSets,
       difficulties: Object.freeze(resolvedDifficulties)
     });
     if (!resolvedDifficulties[state.difficulty]) {
       state.difficulty = defaultDifficulty;
     }
     syncDifficultySelect();
+    syncCardSetSelectOptions();
     updateStats();
     updateMoves();
     if (!state.started) {
@@ -395,6 +590,7 @@
       root,
       toolbar: root.querySelector('.twins__toolbar'),
       difficultySelect: document.getElementById('twinsDifficulty'),
+      cardSetSelect: document.getElementById('twinsCardSet'),
       startButton: document.getElementById('twinsStartButton'),
       status: document.getElementById('twinsStatus'),
       matches: document.getElementById('twinsMatches'),
@@ -414,6 +610,28 @@
     }
   }
 
+  function syncCardSetSelectOptions() {
+    const select = state.elements?.cardSetSelect;
+    if (!select) {
+      return;
+    }
+    const options = getCardSetOptionsList();
+    select.innerHTML = '';
+    options.forEach(option => {
+      const element = document.createElement('option');
+      element.value = option.id;
+      element.dataset.i18n = option.labelKey;
+      element.textContent = translate(option.labelKey, option.labelFallback);
+      select.appendChild(element);
+    });
+    const normalized = normalizeCardSet(state.cardSetId) || options[0]?.id;
+    if (normalized) {
+      state.cardSetId = normalized;
+      select.value = normalized;
+    }
+    updateCardSetAriaLabel();
+  }
+
   function normalizeDifficulty(value) {
     if (typeof value !== 'string') {
       return null;
@@ -423,6 +641,18 @@
       return null;
     }
     return state.config?.difficulties?.[trimmed] ? trimmed : null;
+  }
+
+  function normalizeCardSet(value) {
+    if (typeof value !== 'string') {
+      return null;
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return null;
+    }
+    const optionIds = getCardSetOptionsList().map(option => option.id);
+    return optionIds.includes(trimmed) ? trimmed : null;
   }
 
   function getDifficultyConfig(key) {
@@ -452,8 +682,7 @@
     if (!state.elements?.matches) {
       return;
     }
-    const config = getDifficultyConfig(state.difficulty);
-    const totalPairs = Math.max(0, config?.pairs || 0);
+    const totalPairs = Math.max(0, getPairCountForDifficulty());
     const text = translate('index.sections.twins.stats.matches', 'Paires trouvées : {{found}}/{{total}}', {
       found: formatNumber(Math.min(state.matches, totalPairs)),
       total: formatNumber(totalPairs)
@@ -497,6 +726,14 @@
     }
     const ariaLabel = translate('index.sections.twins.ui.difficultyAria', DIFFICULTY_ARIA_FALLBACK);
     state.elements.difficultySelect.setAttribute('aria-label', ariaLabel);
+  }
+
+  function updateCardSetAriaLabel() {
+    if (!state.elements?.cardSetSelect) {
+      return;
+    }
+    const ariaLabel = translate('index.sections.twins.ui.cardSetAria', CARD_SET_ARIA_FALLBACK);
+    state.elements.cardSetSelect.setAttribute('aria-label', ariaLabel);
   }
 
   function createCard(pairId, image, uid) {
@@ -662,8 +899,7 @@
   }
 
   function updateProgressStatus() {
-    const config = getDifficultyConfig(state.difficulty);
-    const totalPairs = Math.max(0, config?.pairs || 0);
+    const totalPairs = Math.max(0, getPairCountForDifficulty());
     const remaining = Math.max(0, totalPairs - state.matches);
     if (remaining === 0 && totalPairs > 0) {
       setStatus('index.sections.twins.status.victory', VICTORY_FALLBACK, {
@@ -741,8 +977,7 @@
   }
 
   function startGame() {
-    const difficultyConfig = getDifficultyConfig(state.difficulty);
-    const pairCount = Math.max(1, difficultyConfig?.pairs || DEFAULT_CONFIG.difficulties.easy.pairs);
+    const pairCount = getPairCountForDifficulty();
     resetBoardState();
     state.cards = createDeck(pairCount);
     state.started = true;
@@ -776,6 +1011,28 @@
     setStatus('index.sections.twins.status.ready', READY_FALLBACK);
     updateStartButtonLabel();
     updateDifficultyAriaLabel();
+    scheduleLayoutUpdate();
+  }
+
+  function handleCardSetChange(event) {
+    const normalized = normalizeCardSet(event?.target?.value)
+      || state.config?.defaultCardSet
+      || DEFAULT_CONFIG.defaultCardSet;
+    if (state.cardSetId === normalized && !state.started) {
+      updateCardSetAriaLabel();
+      scheduleLayoutUpdate();
+      return;
+    }
+    state.cardSetId = normalized;
+    state.cardImages = getCardImagePoolForSet(state.cardSetId);
+    syncCardSetSelectOptions();
+    resetBoardState();
+    state.started = false;
+    updateStats();
+    updateMoves();
+    setStatus('index.sections.twins.status.ready', READY_FALLBACK);
+    updateStartButtonLabel();
+    updateCardSetAriaLabel();
     scheduleLayoutUpdate();
   }
 
@@ -872,13 +1129,16 @@
     }
     state.initialized = true;
     syncDifficultySelect();
+    syncCardSetSelectOptions();
     updateStats();
     updateMoves();
     setStatus('index.sections.twins.status.ready', READY_FALLBACK);
     updateStartButtonLabel();
     updateDifficultyAriaLabel();
+    updateCardSetAriaLabel();
     state.elements.startButton?.addEventListener('click', handleStartButtonClick);
     state.elements.difficultySelect?.addEventListener('change', handleDifficultyChange);
+    state.elements.cardSetSelect?.addEventListener('change', handleCardSetChange);
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', handleWindowResize);
     }
@@ -902,6 +1162,8 @@
         updateProgressStatus();
       }
       updateDifficultyAriaLabel();
+      syncCardSetSelectOptions();
+      updateCardSetAriaLabel();
       state.cardElements.forEach((element, index) => {
         const card = state.cards[index];
         if (card && element) {
@@ -913,6 +1175,7 @@
     state.languageHandlerAttached = true;
     state.languageHandler = handler;
     updateDifficultyAriaLabel();
+    updateCardSetAriaLabel();
   }
 
   const api = {
