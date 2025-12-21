@@ -1469,6 +1469,7 @@
   const state = {
     initialized: false,
     active: false,
+    frameHandle: null,
     elements: null,
     ctx: null,
     config: normalizeConfig(DEFAULT_CONFIG),
@@ -2892,7 +2893,9 @@
     if (!state.initialized) {
       return;
     }
-    window.requestAnimationFrame(tick);
+    if (!state.frameHandle) {
+      return;
+    }
     if (!state.ctx) {
       return;
     }
@@ -2929,6 +2932,11 @@
 
     renderScene();
     updateDistanceDisplay();
+    if (state.active || state.test?.active) {
+      state.frameHandle = window.requestAnimationFrame(tick);
+    } else {
+      state.frameHandle = null;
+    }
   }
 
   function pickBackgroundSource(forceNew) {
@@ -3302,7 +3310,24 @@
     applyStatus();
     ensureBikeSprite(false);
     generateTrack({ silent: true });
-    window.requestAnimationFrame(tick);
+  }
+
+  function startAnimationLoop() {
+    if (!state.initialized) {
+      return;
+    }
+    if (state.frameHandle) {
+      return;
+    }
+    state.frameHandle = window.requestAnimationFrame(tick);
+  }
+
+  function stopAnimationLoop() {
+    if (!state.frameHandle) {
+      return;
+    }
+    window.cancelAnimationFrame(state.frameHandle);
+    state.frameHandle = null;
   }
 
   const api = {
@@ -3312,6 +3337,7 @@
       state.active = true;
       state.lastTimestamp = null;
       applyStatus();
+      startAnimationLoop();
     },
     onLeave() {
       stopTrackTest();
@@ -3319,6 +3345,7 @@
       resetInputState();
       hideGameOverOverlay();
       persistMotocrossRecords();
+      stopAnimationLoop();
     },
     syncRecordsFromSave() {
       hydrateMotocrossRecords();
