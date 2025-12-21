@@ -187,6 +187,17 @@
           "view": "View {card}",
           "count": "×{count}"
         },
+        "bonus1Images": {
+          "title": "Bonus images 1",
+          "subtitle": "Your bonus images 1 earned after the first collection.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No bonus image 1 unlocked yet.",
+          "view": "View {card}",
+          "count": "×{count}"
+        },
         "bonus2Images": {
           "title": "Bonus Images 2",
           "subtitle": "Your additional bonus images won from the gacha.",
@@ -4330,6 +4341,10 @@
       "bonusImages": {
         "toastNew": "Bonus image unlocked: {card}",
         "toastDuplicate": "Bonus image found again: {card}"
+      },
+      "bonusImages1": {
+        "toastNew": "Bonus image 1 unlocked: {card}",
+        "toastDuplicate": "Bonus image 1 found again: {card}"
       },
       "bonusImages2": {
         "toastNew": "Bonus image 2 unlocked: {card}",

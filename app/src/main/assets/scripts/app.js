@@ -253,6 +253,7 @@ const INFO_PROGRESS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.progressCollapsed
 const INFO_SCORES_COLLAPSED_STORAGE_KEY = 'atom2univers.info.scoresCollapsed';
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
+const COLLECTION_BONUS1_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus1ImagesCollapsed';
 const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
 const COLLECTION_DOWNLOADS_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.downloadsCollapsed';
 const COLLECTION_VIDEOS_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.videosCollapsed';
@@ -3329,6 +3330,9 @@ function hasOwnedGachaBonusImages() {
     ...(Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
       ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
       : []),
+    ...(Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+      ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+      : []),
     ...(Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
       ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
       : [])
@@ -3344,10 +3348,13 @@ function hasOwnedGachaBonusImages() {
 
 function normalizeBonusCollectionId(value) {
   const normalized = typeof value === 'string' ? value.trim().toLowerCase() : '';
-  if (normalized === 'bonus2' || normalized === 'secondary' || normalized === 'permanent2') {
+  if (normalized === 'bonus2' || normalized === 'tertiary' || normalized === 'permanent2') {
+    return 'tertiary';
+  }
+  if (normalized === 'bonus1' || normalized === 'secondary' || normalized === 'permanent1') {
     return 'secondary';
   }
-  if (normalized === 'bonus' || normalized === 'bonus1'
+  if (normalized === 'bonus'
     || normalized === 'primary' || normalized === 'permanent'
   ) {
     return 'primary';
@@ -3357,9 +3364,12 @@ function normalizeBonusCollectionId(value) {
 
 function getBonusImageCollectionTotals(collectionId = 'primary') {
   const normalized = normalizeBonusCollectionId(collectionId) || 'primary';
-  const definitions = normalized === 'secondary'
-    ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS
-    : GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS;
+  let definitions = GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS;
+  if (normalized === 'secondary') {
+    definitions = GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS;
+  } else if (normalized === 'tertiary') {
+    definitions = GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS;
+  }
   const collection = gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object'
     ? gameState.gachaBonusImages
     : {};
@@ -3396,8 +3406,17 @@ function isSecondaryBonusImageCollectionUnlocked() {
   return isBonusImageCollectionComplete('primary');
 }
 
-function hasOwnedGachaBonus2Images() {
+function isTertiaryBonusImageCollectionUnlocked() {
+  return isBonusImageCollectionComplete('secondary');
+}
+
+function hasOwnedGachaBonus1Images() {
   const { owned } = getBonusImageCollectionTotals('secondary');
+  return owned > 0;
+}
+
+function hasOwnedGachaBonus2Images() {
+  const { owned } = getBonusImageCollectionTotals('tertiary');
   return owned > 0;
 }
 
@@ -13401,6 +13420,8 @@ const RESET_LOCAL_STORAGE_KEYS = [
   INFO_PROGRESS_COLLAPSED_STORAGE_KEY,
   COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
+  COLLECTION_BONUS1_IMAGES_COLLAPSED_STORAGE_KEY,
+  COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_DOWNLOADS_COLLAPSED_STORAGE_KEY,
   COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY,
   COLLECTION_VIDEOS_STATE_STORAGE_KEY,
@@ -14064,6 +14085,7 @@ function initializeDomBoundModules() {
   subscribeCollectionImagesLanguageUpdates();
   subscribeCollectionVideosLanguageUpdates();
   subscribeCollectionBonusImagesLanguageUpdates();
+  subscribeCollectionBonus1ImagesLanguageUpdates();
   subscribeCollectionBonus2ImagesLanguageUpdates();
   subscribeCollectionDownloadsLanguageUpdates();
   subscribeBigBangLanguageUpdates();

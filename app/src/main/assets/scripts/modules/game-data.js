@@ -194,6 +194,11 @@ function normalizeBonusImageDefinition(entry, folder) {
     || normalizedCollection === 'always-on'
   ) {
     collectionType = 'permanent';
+  } else if (normalizedCollection === 'permanent1'
+    || normalizedCollection === 'bonus1'
+    || normalizedCollection === 'permanent-1'
+  ) {
+    collectionType = 'permanent1';
   } else if (normalizedCollection === 'permanent2'
     || normalizedCollection === 'bonus2'
     || normalizedCollection === 'permanent-2'
@@ -311,11 +316,14 @@ const GACHA_BONUS_IMAGE_DEFINITIONS = RAW_BONUS_IMAGE_ENTRIES
 const GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
   .filter(def => {
     const type = def.collectionType || 'optional';
-    return type !== 'permanent' && type !== 'permanent2';
+    return type !== 'permanent' && type !== 'permanent1' && type !== 'permanent2';
   });
 
 const GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
   .filter(def => def.collectionType === 'permanent');
+
+const GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
+  .filter(def => def.collectionType === 'permanent1');
 
 const GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
   .filter(def => def.collectionType === 'permanent2');
@@ -2139,6 +2147,9 @@ function createInitialGachaBonusImageCollection() {
   if (Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
     definitions.push(...GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS);
   }
+  if (Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    definitions.push(...GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS);
+  }
   if (Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
     definitions.push(...GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS);
   }
@@ -2289,4 +2300,3 @@ function toLayeredNumber(value, fallback = 0) {
   }
   return new LayeredNumber(fallback);
 }
-
