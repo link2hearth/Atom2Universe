@@ -1439,6 +1439,15 @@ const GAME_CONFIG = {
       ]
     },
     /**
+     * Nombre de décimales affichées dans le compteur d'atomes (notation scientifique).
+     * - default : valeur appliquée par défaut lors d'une nouvelle partie.
+     * - options : valeurs autorisées dans les préférences d’interface.
+     */
+    atomCounterDecimals: {
+      default: 2,
+      options: [1, 2, 3, 4]
+    },
+    /**
      * Ajustements de taille propres aux polices (voir `config/config-fonts.js`).
      */
     fonts: UI_FONT_SCALE_CONFIG
@@ -1992,7 +2001,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 

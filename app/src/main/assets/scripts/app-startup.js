@@ -908,6 +908,7 @@ function collectDomElements() {
   themeSelect: document.getElementById('themeSelect'),
   textFontSelect: document.getElementById('textFontSelect'),
   digitFontSelect: document.getElementById('digitFontSelect'),
+  atomDecimalSelect: document.getElementById('atomDecimalSelect'),
   musicTrackSelect: document.getElementById('musicTrackSelect'),
   musicTrackStatus: document.getElementById('musicTrackStatus'),
   musicVolumeSlider: document.getElementById('musicVolumeSlider'),
