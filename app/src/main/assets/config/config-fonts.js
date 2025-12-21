@@ -8,7 +8,7 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
   text: Object.freeze({
     default: 1,
     overrides: Object.freeze({
-      orbitron: 1.2,
+      orbitron: 0.8,
       alien: 1.2,
       'aquiline-two': 1,
       chomsky: 1.5,
