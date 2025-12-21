@@ -185,6 +185,19 @@
     return null;
   };
 
+  const getSaveGameFunction = () => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    if (typeof window.atom2universSaveGame === 'function') {
+      return window.atom2universSaveGame;
+    }
+    if (typeof window.saveGame === 'function') {
+      return window.saveGame;
+    }
+    return null;
+  };
+
   const readStoredState = () => {
     const result = { version: 1, entries: {} };
 
@@ -313,6 +326,14 @@
       }
       globalState.arcadeProgress.version = 1;
       globalState.arcadeProgress.entries = normalized;
+      const saveFn = getSaveGameFunction();
+      if (typeof saveFn === 'function') {
+        try {
+          saveFn();
+        } catch (error) {
+          // Ignore save errors for this optional sync.
+        }
+      }
     }
     return normalized;
   };
