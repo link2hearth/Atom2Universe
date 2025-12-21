@@ -8,7 +8,11 @@
   --font-display: 'Audiowide', 'Orbitron', sans-serif;
   --font-text-base-size: 1rem;
   --font-scale-factor: 1;
-  --font-text-scale-factor: 1;
+  --font-text-user-scale: 1;
+  --font-text-font-scale: 1;
+  --font-text-scale-factor: calc(
+    var(--font-text-user-scale, 1) * var(--font-text-font-scale, 1)
+  );
   --font-digits-scale-factor: 1;
   --font-size-scale-factor: calc(
     var(--font-scale-factor, 1) * var(--font-text-scale-factor, 1)
