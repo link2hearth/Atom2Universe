@@ -496,10 +496,38 @@
     }
   };
 
+  const registerGlobalSaveBridge = () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const existing = window.atom2universSaveGame;
+    if (existing && existing.__arcadeSaveWrapper) {
+      return;
+    }
+    const wrapper = (...args) => {
+      let result;
+      if (typeof existing === 'function') {
+        try {
+          result = existing(...args);
+        } catch (error) {
+          // Ignore errors from the primary save path.
+        }
+      }
+      try {
+        persistNow();
+      } catch (error) {
+        // Ignore autosave persistence errors.
+      }
+      return result;
+    };
+    wrapper.__arcadeSaveWrapper = true;
+    wrapper.__arcadeSaveOriginal = existing;
+    window.atom2universSaveGame = wrapper;
+  };
+
   if (typeof window !== 'undefined') {
     window.ArcadeAutosave = api;
-    // Expose a global save function for the native app to call
-    window.atom2universSaveGame = persistNow;
+    registerGlobalSaveBridge();
     dispatchAutosaveEvent(AUTOSAVE_READY_EVENT, () => ({ api }));
   }
 })();
