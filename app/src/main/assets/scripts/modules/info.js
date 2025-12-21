@@ -1277,6 +1277,9 @@ function getBonusImageDefinition(imageId) {
     || (Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
       ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.find(def => def.id === imageId)
       : null)
+    || (Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+      ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.find(def => def.id === imageId)
+      : null)
     || (Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
       ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.find(def => def.id === imageId)
       : null)
@@ -1293,6 +1296,12 @@ function getBonusImageCollection() {
 function getPermanentBonusImageDefinitions() {
   return Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
     ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS
+    : [];
+}
+
+function getIntermediatePermanentBonusImageDefinitions() {
+  return Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS
     : [];
 }
 
@@ -1837,6 +1846,9 @@ function initSpecialCardOverlay() {
   if (elements.collectionBonusImagesList) {
     elements.collectionBonusImagesList.addEventListener('click', handleCollectionListClick);
   }
+  if (elements.collectionBonus1ImagesList) {
+    elements.collectionBonus1ImagesList.addEventListener('click', handleCollectionListClick);
+  }
   if (elements.collectionBonus2ImagesList) {
     elements.collectionBonus2ImagesList.addEventListener('click', handleCollectionListClick);
   }
@@ -2258,6 +2270,16 @@ function renderSpecialCardCollection() {
     type: 'bonusImage',
     viewKey: 'index.sections.collection.bonusImages.view',
     countKey: 'index.sections.collection.bonusImages.count'
+  });
+
+  renderCollectionList({
+    definitions: getIntermediatePermanentBonusImageDefinitions(),
+    collection: getPermanentBonusImageCollection(),
+    container: elements.collectionBonus1ImagesList,
+    emptyElement: elements.collectionBonus1ImagesEmpty,
+    type: 'bonusImage1',
+    viewKey: 'index.sections.collection.bonus1Images.view',
+    countKey: 'index.sections.collection.bonus1Images.count'
   });
 
   renderCollectionList({
@@ -3569,4 +3591,3 @@ if (typeof window !== 'undefined') {
     updateMotocrossStats();
   });
 }
-

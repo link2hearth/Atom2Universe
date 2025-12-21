@@ -310,6 +310,7 @@ const SPECIAL_GACHA_CARD_DEFINITION_INDEX = new Map(
 const COLLECTION_VIDEO_GACHA_CHANCE = 0.0005;
 const BONUS_GACHA_IMAGE_CHANCE = 1 / 100;
 const BONUS_GACHA_PERMANENT_IMAGE_CHANCE = 1 / 200;
+const BONUS_GACHA_INTERMEDIATE_PERMANENT_IMAGE_CHANCE = 1 / 200;
 const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE = 1 / 200;
 const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 12;
 
@@ -335,6 +336,12 @@ const BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
     : []
 );
 
+const BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
+
 const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
   Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
     ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
@@ -347,6 +354,10 @@ const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFIN
 
 const BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
   ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
+
+const BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS = Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
   : [];
 
 const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
@@ -627,6 +638,7 @@ function getBonusGachaImageDefinition(imageId) {
   }
   return BONUS_GACHA_IMAGE_DEFINITION_INDEX.get(imageId)
     || BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
+    || BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX.get(imageId)
     || BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
     || null;
 }
@@ -780,6 +792,23 @@ function isPrimaryBonusImageCollectionCompleteForGacha() {
   });
 }
 
+function rollForIntermediatePermanentBonusGachaImage() {
+  return Math.random() < BONUS_GACHA_INTERMEDIATE_PERMANENT_IMAGE_CHANCE;
+}
+
+function isIntermediateBonusImageCollectionCompleteForGacha() {
+  if (!Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    return false;
+  }
+  return GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.every(def => {
+    if (!def || !def.id) {
+      return true;
+    }
+    const count = getOwnedBonusGachaImageCount(def.id);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
 function isSecondaryBonusImageCollectionUnlockedForGacha() {
   if (typeof globalThis !== 'undefined'
     && typeof globalThis.isSecondaryBonusImageCollectionUnlocked === 'function'
@@ -791,6 +820,19 @@ function isSecondaryBonusImageCollectionUnlockedForGacha() {
     }
   }
   return isPrimaryBonusImageCollectionCompleteForGacha();
+}
+
+function isTertiaryBonusImageCollectionUnlockedForGacha() {
+  if (typeof globalThis !== 'undefined'
+    && typeof globalThis.isTertiaryBonusImageCollectionUnlocked === 'function'
+  ) {
+    try {
+      return globalThis.isTertiaryBonusImageCollectionUnlocked();
+    } catch (error) {
+      // Fallback to local computation on unexpected errors.
+    }
+  }
+  return isIntermediateBonusImageCollectionCompleteForGacha();
 }
 
 function getAvailablePermanentBonusGachaImageIds() {
@@ -806,12 +848,28 @@ function getAvailablePermanentBonusGachaImageIds() {
   });
 }
 
+function getAvailableIntermediatePermanentBonusGachaImageIds() {
+  if (!isSecondaryBonusImageCollectionUnlockedForGacha()) {
+    return [];
+  }
+  if (!BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS.length) {
+    return [];
+  }
+  return BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS.filter(imageId => {
+    if (isBonusGachaImageMarkedMissing(imageId)) {
+      return false;
+    }
+    const rawCount = Math.max(0, Math.floor(getOwnedBonusGachaImageCount(imageId)));
+    return rawCount <= 0;
+  });
+}
+
 function rollForSecondaryPermanentBonusGachaImage() {
   return Math.random() < BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE;
 }
 
 function getAvailableSecondaryPermanentBonusGachaImageIds() {
-  if (!isSecondaryBonusImageCollectionUnlockedForGacha()) {
+  if (!isTertiaryBonusImageCollectionUnlockedForGacha()) {
     return [];
   }
   if (!BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.length) {
@@ -900,11 +958,8 @@ function awardBonusGachaImage(imageId, options = null) {
   if (typeof updateCollectionBonusImagesVisibility === 'function') {
     updateCollectionBonusImagesVisibility();
   }
-  if (typeof updateCollectionBonus2ImagesVisibility === 'function') {
-    updateCollectionBonus2ImagesVisibility();
-  }
-  if (typeof updateCollectionBonusImagesVisibility === 'function') {
-    updateCollectionBonusImagesVisibility();
+  if (typeof updateCollectionBonus1ImagesVisibility === 'function') {
+    updateCollectionBonus1ImagesVisibility();
   }
   if (typeof updateCollectionBonus2ImagesVisibility === 'function') {
     updateCollectionBonus2ImagesVisibility();
@@ -967,6 +1022,9 @@ function awardPermanentBonusGachaImage(imageId, options = null) {
   }
   if (typeof updateCollectionBonusImagesVisibility === 'function') {
     updateCollectionBonusImagesVisibility();
+  }
+  if (typeof updateCollectionBonus1ImagesVisibility === 'function') {
+    updateCollectionBonus1ImagesVisibility();
   }
   if (typeof updateCollectionBonus2ImagesVisibility === 'function') {
     updateCollectionBonus2ImagesVisibility();
@@ -1155,6 +1213,43 @@ function maybeAwardPermanentBonusGachaImage() {
     return null;
   }
   if (!rollForPermanentBonusGachaImage()) {
+    return null;
+  }
+  const shuffledIds = availableIds.slice();
+  for (let i = shuffledIds.length - 1; i > 0; i -= 1) {
+    const swapIndex = Math.floor(Math.random() * (i + 1));
+    const temp = shuffledIds[i];
+    shuffledIds[i] = shuffledIds[swapIndex];
+    shuffledIds[swapIndex] = temp;
+  }
+  for (let index = 0; index < shuffledIds.length; index += 1) {
+    const imageId = shuffledIds[index];
+    if (!imageId) {
+      continue;
+    }
+    const definition = getBonusGachaImageDefinition(imageId);
+    if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+      markBonusGachaImageMissing(imageId, definition);
+      continue;
+    }
+    const reward = awardPermanentBonusGachaImage(imageId, { definition, skipAssetCheck: true });
+    if (reward) {
+      return reward;
+    }
+    markBonusGachaImageMissing(imageId, definition);
+  }
+  return null;
+}
+
+function maybeAwardIntermediatePermanentBonusGachaImage() {
+  if (!isGachaBonusImageCollectionEnabled()) {
+    return null;
+  }
+  const availableIds = getAvailableIntermediatePermanentBonusGachaImageIds();
+  if (!availableIds.length) {
+    return null;
+  }
+  if (!rollForIntermediatePermanentBonusGachaImage()) {
     return null;
   }
   const shuffledIds = availableIds.slice();
@@ -4656,6 +4751,10 @@ function performGachaRoll(count = 1) {
       if (permanentImageReward) {
         collectionRewards.push(permanentImageReward);
       }
+      const intermediateImageReward = maybeAwardIntermediatePermanentBonusGachaImage();
+      if (intermediateImageReward) {
+        collectionRewards.push(intermediateImageReward);
+      }
       const secondaryPermanentImageReward = maybeAwardSecondaryPermanentBonusGachaImage();
       if (secondaryPermanentImageReward) {
         collectionRewards.push(secondaryPermanentImageReward);
@@ -4689,12 +4788,17 @@ function performGachaRoll(count = 1) {
         ? reward.collectionType.toLowerCase()
         : '';
       const isPermanentImage = isImage
-        && (imageCollectionType === 'permanent' || imageCollectionType === 'permanent2');
-      const isSecondaryPermanentImage = isImage && imageCollectionType === 'permanent2';
+        && (imageCollectionType === 'permanent'
+          || imageCollectionType === 'permanent1'
+          || imageCollectionType === 'permanent2');
+      const isSecondaryPermanentImage = isImage && imageCollectionType === 'permanent1';
+      const isTertiaryPermanentImage = isImage && imageCollectionType === 'permanent2';
       const namespace = isImage
-        ? (isSecondaryPermanentImage
+        ? (isTertiaryPermanentImage
           ? 'scripts.gacha.bonusImages2'
-          : (isPermanentImage ? 'scripts.gacha.bonusImages' : 'scripts.gacha.images'))
+          : (isSecondaryPermanentImage
+            ? 'scripts.gacha.bonusImages1'
+            : (isPermanentImage ? 'scripts.gacha.bonusImages' : 'scripts.gacha.images')))
         : (isVideo ? 'scripts.collection.videos' : 'scripts.gacha.cards');
       const toastKey = reward.isNew
         ? `${namespace}.toastNew`
@@ -4702,14 +4806,22 @@ function performGachaRoll(count = 1) {
       const fallback = reward.isNew
         ? (isImage
             ? (isPermanentImage
-                ? 'Bonus image unlocked: {card}'
+                ? (isTertiaryPermanentImage
+                  ? 'Bonus image 2 unlocked: {card}'
+                  : (isSecondaryPermanentImage
+                    ? 'Bonus image 1 unlocked: {card}'
+                    : 'Bonus image unlocked: {card}'))
                 : 'Gallery image unlocked: {card}')
             : (isVideo
               ? 'Bonus video unlocked: {card}'
               : 'Special card unlocked: {card}'))
         : (isImage
             ? (isPermanentImage
-                ? 'Bonus image found again: {card}'
+                ? (isTertiaryPermanentImage
+                  ? 'Bonus image 2 found again: {card}'
+                  : (isSecondaryPermanentImage
+                    ? 'Bonus image 1 found again: {card}'
+                    : 'Bonus image found again: {card}'))
                 : 'Gallery image found again: {card}')
             : (isVideo
               ? 'Bonus video found again: {card}'
@@ -6123,4 +6235,3 @@ if (typeof window !== 'undefined') {
     updateGachaUI();
   });
 }
-
