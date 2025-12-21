@@ -9,6 +9,12 @@
     "enableShockwave": false,
     "enableBallGhost": false
   },
+  "impactParticles": {
+    "minCount": 6,
+    "maxCount": 12,
+    "maxActive": 120,
+    "durationMs": 1200
+  },
   "grid": {
     "columns": 14,
     "rows": 6,

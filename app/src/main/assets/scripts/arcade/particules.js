@@ -203,6 +203,7 @@
   );
 
   const VISUAL_EFFECTS_CONFIG = readObject(ARCADE_CONFIG.visualEffects, {});
+  const IMPACT_PARTICLES_CONFIG = readObject(ARCADE_CONFIG.impactParticles, {});
   const SCREEN_PULSE_ENABLED = VISUAL_EFFECTS_CONFIG.enableScreenPulse === true;
   const GLOW_EFFECTS_ENABLED = VISUAL_EFFECTS_CONFIG.enableGlow === true;
   const SHOCKWAVE_ENABLED = VISUAL_EFFECTS_CONFIG.enableShockwave === true;
@@ -757,6 +758,19 @@
     launchAngleMax: degreesToRadians(launchAngleMaxDeg)
   };
 
+  settings.impactParticles = {
+    minCount: readNumber(IMPACT_PARTICLES_CONFIG.minCount, 6, { min: 0, round: 'round' }),
+    maxCount: readNumber(IMPACT_PARTICLES_CONFIG.maxCount, 12, { min: 0, round: 'round' }),
+    maxActive: readNumber(IMPACT_PARTICLES_CONFIG.maxActive, 120, { min: 0, round: 'round' }),
+    durationMs: readNumber(IMPACT_PARTICLES_CONFIG.durationMs, 1200, { min: 0 })
+  };
+  if (settings.impactParticles.maxCount < settings.impactParticles.minCount) {
+    [settings.impactParticles.minCount, settings.impactParticles.maxCount] = [
+      settings.impactParticles.maxCount,
+      settings.impactParticles.minCount
+    ];
+  }
+
   const gravitonConfig = readObject(ARCADE_CONFIG.graviton);
   const gravitonSpawnConfig = readObject(gravitonConfig.spawnChance);
   const gravitonSpawnOverrides = readArray(gravitonSpawnConfig.overrides, []).map(override => {
@@ -1204,6 +1218,7 @@
   const BALL_GHOST_INTERVAL_MS = SETTINGS.ball.ghostIntervalMs;
   const BALL_GHOST_BLUR_FACTOR = SETTINGS.ball.ghostBlurFactor;
   const BALL_GHOST_REMOVE_DELAY_MS = SETTINGS.ball.ghostRemoveDelayMs;
+  const IMPACT_PARTICLE_SETTINGS = SETTINGS.impactParticles;
   const BALL_SPEED_FACTOR = SETTINGS.ball.speedFactor;
   const BALL_SPEED_GROWTH_LEVEL_CAP = 9;
   const BALL_MIN_SPEED_PER_MS = SETTINGS.ball.minSpeedPerMs;
@@ -3066,11 +3081,23 @@
       const brickHeight = brick.relHeight * rect.height;
       const brickCenterX = brickLeft + brickWidth / 2;
       const brickCenterY = brickTop + brickHeight / 2;
-      const rawCount = Math.round(18 + Math.random() * 10);
-      const baseCount = Math.max(7, Math.round(rawCount * 0.5));
+      const rawCount = Math.round(
+        IMPACT_PARTICLE_SETTINGS.minCount
+        + Math.random() * (IMPACT_PARTICLE_SETTINGS.maxCount - IMPACT_PARTICLE_SETTINGS.minCount)
+      );
+      const baseCount = Math.max(0, rawCount);
+      const maxActive = Math.max(0, IMPACT_PARTICLE_SETTINGS.maxActive);
+      const activeCount = this.particleLayer.childElementCount || 0;
+      const availableSlots = maxActive > 0 ? Math.max(0, maxActive - activeCount) : baseCount;
+      const particleCount = Math.min(baseCount, availableSlots);
+      if (particleCount <= 0) {
+        return;
+      }
       const maxHorizontalScatter = Math.min(rect.width * 0.2, 180);
+      const fragment = doc.createDocumentFragment();
+      const duration = IMPACT_PARTICLE_SETTINGS.durationMs;
 
-      for (let index = 0; index < baseCount; index += 1) {
+      for (let index = 0; index < particleCount; index += 1) {
         const particle = doc.createElement('div');
         if (!particle) {
           break;
@@ -3101,7 +3128,6 @@
         particle.style.setProperty('--arcade-particle-scale-peak', peakScale.toFixed(2));
         particle.style.setProperty('--arcade-particle-scale-end', scaleEnd.toFixed(2));
         particle.style.setProperty('--arcade-particle-rotation', `${((Math.random() - 0.5) * 220).toFixed(1)}deg`);
-        const duration = 1500;
         particle.style.setProperty('--arcade-particle-duration', `${duration}ms`);
         particle.style.animationDelay = `${Math.random() * 130}ms`;
         const removeParticle = () => {
@@ -3111,9 +3137,10 @@
           }
         };
         particle.addEventListener('animationend', removeParticle);
-        this.particleLayer.appendChild(particle);
+        fragment.appendChild(particle);
         setTimeout(removeParticle, duration + 200);
       }
+      this.particleLayer.appendChild(fragment);
     }
 
     spawnPowerUp(brick) {
