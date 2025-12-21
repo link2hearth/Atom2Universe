@@ -2229,6 +2229,7 @@ function performBigBang() {
 
 function resetPendingProductionGains(now = getLoopTimestamp()) {
   performanceModeState.pendingManualGain = null;
+  performanceModeState.pendingAutoGain = null;
   performanceModeState.autoAccumulatedMs = 0;
   performanceModeState.lastManualFlush = now;
   performanceModeState.lastAutoFlush = now;
