@@ -12611,15 +12611,6 @@ function normalizeNativeBridgePayload(raw) {
     if (!parsed || typeof parsed !== 'object') {
       return raw;
     }
-    const schema = typeof parsed.schema === 'string' ? parsed.schema.toLowerCase() : '';
-    const version = Number(parsed.version);
-    const hasClicker = parsed.clicker && typeof parsed.clicker === 'object';
-    const isEnvelope = schema === 'atom2univers.save.v2'
-      || (Number.isFinite(version) && version >= 2 && hasClicker);
-    if (!isEnvelope) {
-      return raw;
-    }
-
     const safeClone = value => {
       if (!value || typeof value !== 'object') {
         return undefined;
@@ -12630,8 +12621,45 @@ function normalizeNativeBridgePayload(raw) {
         return undefined;
       }
     };
-
-    const result = hasClicker ? safeClone(parsed.clicker) || {} : {};
+    const hasCoreClickerFields = candidate => candidate
+      && typeof candidate === 'object'
+      && candidate.atoms != null
+      && candidate.lifetime != null
+      && candidate.perClick != null
+      && candidate.perSecond != null;
+    const readClickerCandidate = value => {
+      if (!value) {
+        return null;
+      }
+      if (typeof value === 'string') {
+        try {
+          const decoded = JSON.parse(value);
+          return readClickerCandidate(decoded);
+        } catch (error) {
+          return null;
+        }
+      }
+      if (typeof value !== 'object') {
+        return null;
+      }
+      const cloned = safeClone(value);
+      if (!cloned || !hasCoreClickerFields(cloned)) {
+        return null;
+      }
+      return cloned;
+    };
+    const schema = typeof parsed.schema === 'string' ? parsed.schema.toLowerCase() : '';
+    const version = Number(parsed.version);
+    const hasClicker = parsed.clicker && typeof parsed.clicker === 'object';
+    const isEnvelope = schema === 'atom2univers.save.v2'
+      || (Number.isFinite(version) && version >= 2 && hasClicker);
+    const clickerPayload = readClickerCandidate(parsed.clicker)
+      || readClickerCandidate(parsed.data)
+      || readClickerCandidate(parsed.state);
+    if (!isEnvelope && !clickerPayload) {
+      return raw;
+    }
+    const result = clickerPayload || (hasClicker ? safeClone(parsed.clicker) || {} : {});
 
     if (!result.arcadeProgress && parsed.arcadeProgress && typeof parsed.arcadeProgress === 'object') {
       const clonedProgress = safeClone(parsed.arcadeProgress);
@@ -12655,14 +12683,7 @@ function normalizeNativeBridgePayload(raw) {
       result.updatedAt = parsed.updatedAt;
     }
 
-    const hasCoreClickerFields = result
-      && typeof result === 'object'
-      && result.atoms != null
-      && result.lifetime != null
-      && result.perClick != null
-      && result.perSecond != null;
-
-    if (!hasCoreClickerFields) {
+    if (!hasCoreClickerFields(result)) {
       return null;
     }
 
