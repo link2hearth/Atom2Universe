@@ -1394,6 +1394,13 @@
           "controls": "Twins controls",
           "difficulty": "Difficulty",
           "difficultyAria": "Choose the Twins difficulty",
+          "cardSet": "Card set",
+          "cardSetAria": "Choose a Twins card set",
+          "cardSets": {
+            "set1": "Set 1",
+            "set2": "Set 2",
+            "mix": "Mix"
+          },
           "difficulties": {
             "easy": "Easy — 8 pairs",
             "medium": "Medium — 12 pairs",
