@@ -4274,11 +4274,12 @@
               const vy = typeof point.vy === 'number' ? point.vy : ball.vy;
               let rotation = 0;
               if (vx !== 0 || vy !== 0) {
-                rotation = Math.atan2(-vx, -vy);
+                rotation = Math.atan2(vx, -vy);
               }
               ctx.save();
               ctx.translate(point.x, point.y);
               ctx.rotate(rotation);
+              ctx.scale(1, -1);
               ctx.globalAlpha = alpha;
               ctx.drawImage(
                 sprite.image,
@@ -4287,7 +4288,7 @@
                 sprite.frameWidth,
                 sprite.trailHeight,
                 -destWidth / 2,
-                0,
+                -destHeight,
                 destWidth,
                 destHeight
               );
