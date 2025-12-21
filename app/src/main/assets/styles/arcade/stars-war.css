@@ -59,7 +59,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: clamp(0.6rem, 1.3vw, 0.85rem);
+  font-size: calc(clamp(0.6rem, 1.3vw, 0.85rem) * var(--font-digits-scale-factor, 1));
   font-weight: 600;
   display: grid;
   place-items: center;
@@ -112,7 +112,7 @@
 }
 
 .stars-war__value {
-  font-size: clamp(0.6rem, 1.3vw, 0.85rem);
+  font-size: calc(clamp(0.6rem, 1.3vw, 0.85rem) * var(--font-digits-scale-factor, 1));
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-weight: 600;
 }
@@ -248,7 +248,7 @@
 .stars-war__scores-value {
   margin-left: auto;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+  font-size: calc(clamp(0.72rem, 1.6vw, 0.95rem) * var(--font-digits-scale-factor, 1));
   font-weight: 600;
   color: var(--stars-war-text);
 }
@@ -272,7 +272,7 @@
 
 .stars-war__life-count {
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--font-digits-scale-factor, 1));
   letter-spacing: 0.06em;
   color: var(--stars-war-muted);
   font-weight: 600;
@@ -326,7 +326,7 @@
 
 .stars-war__powerup-count {
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem * var(--font-digits-scale-factor, 1));
 }
 
 .stars-war__overlay {

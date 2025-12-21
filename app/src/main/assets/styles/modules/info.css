@@ -735,7 +735,7 @@ body.theme-neon .info-progress-block--global {
   margin: 0;
   font-family: var(--font-digits, var(--font-text, 'Orbitron', sans-serif));
   font-weight: 600;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.98rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 0.98rem * var(--font-digits-scale-factor, 1));
   text-align: right;
   letter-spacing: 0.04em;
 }
@@ -933,7 +933,7 @@ body.theme-neon .element-bonus-card {
 
 .element-bonus-count__value {
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.85rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 0.85rem * var(--font-digits-scale-factor, 1));
   min-width: 0;
   word-break: break-word;
 }
@@ -1111,7 +1111,7 @@ body.theme-light .element-bonus-effects__item {
 
 .element-bonus-effects__value {
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: calc(var(--font-size-scale-factor, 1) * 1rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 1rem * var(--font-digits-scale-factor, 1));
   text-align: right;
   white-space: normal;
   word-break: break-word;
@@ -1245,7 +1245,7 @@ body.theme-light .element-bonus-specials__item {
 
 .element-bonus-specials__value {
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: calc(var(--font-size-scale-factor, 1) * 1rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 1rem * var(--font-digits-scale-factor, 1));
   text-align: right;
   white-space: normal;
   word-break: break-word;
@@ -1267,7 +1267,7 @@ body.theme-light .element-bonus-specials__item {
 .production-breakdown__value {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.95rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * 0.95rem * var(--font-digits-scale-factor, 1));
   font-family: var(--font-digits, 'Orbitron', sans-serif);
 }
 

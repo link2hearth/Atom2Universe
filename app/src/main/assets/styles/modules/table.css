@@ -225,7 +225,10 @@
 
 .periodic-summary__value {
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: calc(var(--font-size-scale-factor, 1) * clamp(0.48rem, 0.95vw, 0.72rem));
+  font-size: calc(
+    var(--font-size-scale-factor, 1) * clamp(0.48rem, 0.95vw, 0.72rem)
+    * var(--font-digits-scale-factor, 1)
+  );
   letter-spacing: 0.05em;
 }
 

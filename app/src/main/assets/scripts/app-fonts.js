@@ -240,3 +240,56 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     compactStack: "'Science Gothic', 'DigitTech16 Regular', 'Orbitron', monospace"
   }
 });
+
+const FONT_SCALE_CONFIG = (() => {
+  const fallbackGroup = Object.freeze({ default: 1, overrides: Object.freeze({}) });
+  const fallback = Object.freeze({
+    text: fallbackGroup,
+    digits: fallbackGroup
+  });
+
+  const rawConfig = GLOBAL_CONFIG && GLOBAL_CONFIG.ui && GLOBAL_CONFIG.ui.fonts;
+  if (!rawConfig || typeof rawConfig !== 'object') {
+    return fallback;
+  }
+
+  const normalizeGroup = group => {
+    const resolved = {
+      default: 1,
+      overrides: {}
+    };
+    if (!group || typeof group !== 'object') {
+      return resolved;
+    }
+    const defaultValue = Number(group.default);
+    if (Number.isFinite(defaultValue) && defaultValue > 0) {
+      resolved.default = defaultValue;
+    }
+    if (group.overrides && typeof group.overrides === 'object') {
+      Object.entries(group.overrides).forEach(([key, value]) => {
+        const id = typeof key === 'string' ? key.trim().toLowerCase() : '';
+        const factor = Number(value);
+        if (id && Number.isFinite(factor) && factor > 0) {
+          resolved.overrides[id] = factor;
+        }
+      });
+    }
+    return resolved;
+  };
+
+  return Object.freeze({
+    text: Object.freeze(normalizeGroup(rawConfig.text)),
+    digits: Object.freeze(normalizeGroup(rawConfig.digits))
+  });
+})();
+
+function resolveFontScaleMultiplier(group, fontId) {
+  const normalizedId = typeof fontId === 'string' ? fontId.trim().toLowerCase() : '';
+  const override = normalizedId ? group?.overrides?.[normalizedId] : undefined;
+  const overrideValue = Number(override);
+  if (Number.isFinite(overrideValue) && overrideValue > 0) {
+    return overrideValue;
+  }
+  const fallbackValue = Number(group?.default);
+  return Number.isFinite(fallbackValue) && fallbackValue > 0 ? fallbackValue : 1;
+}
