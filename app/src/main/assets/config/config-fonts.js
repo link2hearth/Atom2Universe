@@ -21,7 +21,7 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
       'little-days': 1.8,
       'roboto-condensed': 1.5,
       'slow-play': 1.5,
-      'super-chiby': 1.5,
+      'super-chiby': 2.5,
       'super-croissant': 1.5,
       'super-mario-64': 1.5,
       'super-meatball': 1.4,
