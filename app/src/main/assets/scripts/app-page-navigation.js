@@ -1539,6 +1539,16 @@ function bindDomEventListeners() {
     });
   }
 
+  if (elements.openNotesButton) {
+    elements.openNotesButton.addEventListener('click', event => {
+      event.preventDefault?.();
+      if (!isPageUnlocked('notes')) {
+        return;
+      }
+      showPage('notes');
+    });
+  }
+
   if (elements.themeSelect) {
     elements.themeSelect.addEventListener('change', event => {
       const appliedId = applyTheme(event.target.value);
@@ -1721,4 +1731,3 @@ document.addEventListener('selectstart', event => {
     event.preventDefault();
   }
 });
-
