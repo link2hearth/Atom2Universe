@@ -1,0 +1,401 @@
+.page--bigger {
+  --bigger-panel-bg: linear-gradient(160deg, rgba(22, 24, 40, 0.9), rgba(10, 12, 24, 0.92));
+  --bigger-panel-border: rgba(120, 130, 170, 0.25);
+  --bigger-panel-shadow: 0 28px 64px rgba(2, 4, 16, 0.5);
+  --bigger-text-color: rgba(236, 240, 255, 0.92);
+  --bigger-heading-color: #f7f9ff;
+  --bigger-subtle-text: rgba(210, 218, 255, 0.68);
+  --bigger-accent: #7dd4ff;
+  --bigger-board-bg: rgba(14, 16, 32, 0.94);
+  --bigger-board-border: rgba(120, 140, 190, 0.32);
+  --bigger-board-grid: rgba(140, 160, 210, 0.12);
+  --bigger-board-glow-top: rgba(140, 180, 255, 0.22);
+  --bigger-board-glow-left: rgba(90, 150, 255, 0.16);
+  --bigger-board-glow-right: rgba(255, 160, 210, 0.12);
+  --bigger-overlay-bg: rgba(6, 8, 18, 0.82);
+  --bigger-overlay-panel-bg: linear-gradient(150deg, rgba(20, 28, 46, 0.95), rgba(10, 14, 28, 0.96));
+  --bigger-overlay-border: rgba(140, 160, 220, 0.45);
+  --bigger-button-bg: rgba(134, 148, 255, 0.18);
+  --bigger-button-border: rgba(172, 186, 255, 0.38);
+  --bigger-button-hover: rgba(180, 196, 255, 0.3);
+  --bigger-button-text: var(--bigger-heading-color);
+  --bigger-ball-shadow: 0 16px 44px rgba(8, 10, 24, 0.45);
+  --bigger-cell-size: 64px;
+  --bigger-cols: 10;
+  --bigger-rows: 14;
+  --bigger-board-width: clamp(520px, 70vw, 960px);
+  padding: clamp(1.2rem, 3vw, 2.4rem);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  color: var(--bigger-text-color);
+  min-height: 100vh;
+}
+
+.bigger-stage {
+  flex: 1 1 auto;
+  width: min(100%, calc(var(--bigger-board-width, clamp(640px, 86vw, 1280px)) + clamp(2.4rem, 6vw, 4.8rem)));
+  max-width: none;
+  margin: 0 auto;
+  background: var(--bigger-panel-bg);
+  border: 1px solid var(--bigger-panel-border);
+  border-radius: clamp(1rem, 2.4vw, 1.8rem);
+  padding: clamp(1.2rem, 2.5vw, 2.2rem);
+  box-shadow: var(--bigger-panel-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  min-height: max(
+    clamp(620px, 100vh - clamp(2.4rem, 6vw, 4.8rem), 100vh),
+    calc(var(--bigger-board-height, 720px) + clamp(5.4rem, 12vw, 7.8rem))
+  );
+}
+
+.bigger-stage__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.bigger-stage__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bigger-button-text);
+  background: var(--bigger-button-bg);
+  border: 1px solid var(--bigger-button-border);
+  border-radius: 999px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.bigger-stage__button:hover,
+.bigger-stage__button:focus-visible {
+  background: var(--bigger-button-hover);
+  border-color: rgba(200, 210, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+.bigger-stage__button:active {
+  transform: translateY(0);
+}
+
+.bigger-playfield {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  min-height: 0;
+}
+
+.bigger-board-container {
+  position: relative;
+  flex: 1 1 auto;
+  width: min(100%, var(--bigger-board-width, clamp(520px, 90vw, 1280px)));
+  height: var(--bigger-board-height, 82vh);
+  margin: 0 auto;
+  border-radius: clamp(1rem, 2vw, 1.6rem);
+  background: var(--bigger-board-bg);
+  border: 1px solid var(--bigger-board-border);
+  box-shadow: inset 0 18px 36px rgba(4, 6, 18, 0.45);
+  overflow: hidden;
+}
+
+.bigger-board {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% -18%, var(--bigger-board-glow-top), transparent 60%),
+    radial-gradient(circle at 12% 120%, var(--bigger-board-glow-left), transparent 70%),
+    radial-gradient(circle at 86% 126%, var(--bigger-board-glow-right), transparent 68%),
+    var(--bigger-board-bg);
+}
+
+.bigger-board__highlight {
+  position: absolute;
+  top: clamp(0.4rem, 1.2vw, 0.9rem);
+  left: 50%;
+  width: var(--bigger-indicator-size, 72px);
+  height: var(--bigger-indicator-size, 72px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 0);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  font-weight: 700;
+  color: rgba(245, 248, 255, 0.95);
+  z-index: 2;
+}
+
+.bigger-board__highlight.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.bigger-board__highlight::after {
+  content: attr(data-value);
+}
+
+.bigger-board__highlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(120, 180, 255, 0.4), rgba(72, 110, 255, 0.3));
+  box-shadow: 0 12px 24px rgba(20, 40, 120, 0.35);
+  border: 1px solid rgba(190, 210, 255, 0.45);
+  z-index: -1;
+  opacity: 0.85;
+}
+
+.bigger-board__indicator-line {
+  position: absolute;
+  inset: calc(var(--bigger-indicator-size, 72px) + clamp(0.35rem, 1vw, 0.6rem)) auto 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(170, 200, 255, 0.35), rgba(120, 150, 255, 0.6));
+  border-radius: 999px;
+  pointer-events: none;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.bigger-board__indicator-line.is-visible {
+  opacity: 1;
+}
+
+.bigger-ball {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--bigger-ball-text, #0b0d1c);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
+  border-radius: 50%;
+  box-shadow: var(--bigger-ball-shadow);
+  transition: top 0.28s cubic-bezier(0.2, 0.8, 0.25, 1),
+    left 0.28s cubic-bezier(0.2, 0.8, 0.25, 1),
+    transform 0.24s ease;
+  will-change: top, left, transform;
+  pointer-events: none;
+}
+
+.bigger-board--physics .bigger-ball {
+  transition: none;
+  will-change: top, left;
+}
+
+.bigger-ball[data-state="merging"] {
+  transform: scale(1.08);
+}
+
+.bigger-ball[data-state="spawn"] {
+  transform: scale(0.92);
+}
+
+.bigger-ball--tier-0 { --bigger-ball-color: linear-gradient(135deg, #f3f9ff, #b2d6ff); }
+.bigger-ball--tier-1 { --bigger-ball-color: linear-gradient(135deg, #dff8ff, #8ecaff); }
+.bigger-ball--tier-2 { --bigger-ball-color: linear-gradient(135deg, #bff5ff, #64b6ff); }
+.bigger-ball--tier-3 { --bigger-ball-color: linear-gradient(135deg, #9fe9ff, #4a9dff); }
+.bigger-ball--tier-4 { --bigger-ball-color: linear-gradient(135deg, #86dcff, #5270ff); }
+.bigger-ball--tier-5 {
+  --bigger-ball-color: linear-gradient(135deg, #80d0ff, #7655ff);
+  --bigger-ball-text: #f7f8ff;
+}
+.bigger-ball--tier-6 {
+  --bigger-ball-color: linear-gradient(135deg, #7dd4ff, #9a55ff);
+  --bigger-ball-text: #f7f8ff;
+}
+.bigger-ball--tier-7 {
+  --bigger-ball-color: linear-gradient(135deg, #7bdff5, #d256ff);
+  --bigger-ball-text: #fff7ff;
+}
+.bigger-ball--tier-8 {
+  --bigger-ball-color: linear-gradient(135deg, #83f0c6, #ff6bc8);
+  --bigger-ball-text: #fff7ff;
+}
+.bigger-ball--tier-9 {
+  --bigger-ball-color: linear-gradient(135deg, #92ffac, #ff8c74);
+  --bigger-ball-text: #0d1320;
+}
+.bigger-ball--tier-10 {
+  --bigger-ball-color: linear-gradient(135deg, #fff4a0, #ff9472);
+  --bigger-ball-text: #181420;
+}
+
+.bigger-ball::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--bigger-ball-color);
+  opacity: 1;
+}
+
+.bigger-ball::after {
+  content: attr(data-value);
+  position: relative;
+  z-index: 1;
+}
+
+.bigger-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2rem);
+  background: var(--bigger-overlay-bg);
+  backdrop-filter: blur(6px);
+  z-index: 4;
+}
+
+.bigger-overlay.is-visible {
+  display: flex;
+}
+
+.bigger-overlay__panel {
+  width: min(420px, 100%);
+  background: var(--bigger-overlay-panel-bg);
+  border: 1px solid var(--bigger-overlay-border);
+  border-radius: 1.4rem;
+  padding: clamp(1.2rem, 3vw, 1.8rem);
+  box-shadow: 0 24px 48px rgba(4, 6, 18, 0.55);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bigger-overlay__title {
+  margin: 0;
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  color: var(--bigger-heading-color);
+}
+
+.bigger-overlay__message {
+  margin: 0;
+  color: var(--bigger-text-color);
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.bigger-overlay__actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.bigger-overlay__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--bigger-button-text);
+  background: var(--bigger-button-bg);
+  border: 1px solid var(--bigger-button-border);
+  border-radius: 999px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.bigger-overlay__button.primary {
+  background: rgba(142, 156, 255, 0.28);
+  border-color: rgba(172, 186, 255, 0.48);
+}
+
+.bigger-overlay__button:hover,
+.bigger-overlay__button:focus-visible {
+  background: var(--bigger-button-hover);
+  border-color: rgba(210, 220, 255, 0.55);
+  transform: translateY(-1px);
+}
+
+.bigger-overlay__button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 720px) {
+  .bigger-stage__button,
+  .bigger-stage__goal,
+  .bigger-stage__current {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+body.theme-light .page--bigger {
+  --bigger-panel-bg: linear-gradient(160deg, rgba(245, 248, 255, 0.95), rgba(230, 236, 255, 0.92));
+  --bigger-panel-border: rgba(80, 96, 150, 0.18);
+  --bigger-panel-shadow: 0 22px 46px rgba(34, 48, 96, 0.22);
+  --bigger-text-color: rgba(32, 40, 72, 0.88);
+  --bigger-heading-color: rgba(18, 28, 64, 0.95);
+  --bigger-subtle-text: rgba(32, 48, 92, 0.58);
+  --bigger-board-bg: rgba(248, 250, 255, 0.92);
+  --bigger-board-border: rgba(120, 140, 210, 0.24);
+  --bigger-board-grid: rgba(80, 110, 190, 0.12);
+  --bigger-board-glow-top: rgba(128, 168, 255, 0.2);
+  --bigger-board-glow-left: rgba(100, 150, 255, 0.16);
+  --bigger-board-glow-right: rgba(255, 190, 210, 0.12);
+  --bigger-overlay-bg: rgba(240, 244, 255, 0.78);
+  --bigger-overlay-panel-bg: linear-gradient(150deg, rgba(252, 254, 255, 0.96), rgba(232, 240, 255, 0.95));
+  --bigger-overlay-border: rgba(120, 140, 210, 0.38);
+  --bigger-button-bg: rgba(122, 144, 255, 0.22);
+  --bigger-button-border: rgba(122, 144, 255, 0.42);
+  --bigger-button-hover: rgba(140, 160, 255, 0.35);
+  --bigger-button-text: rgba(24, 36, 84, 0.96);
+  --bigger-ball-shadow: 0 12px 32px rgba(24, 36, 80, 0.25);
+}
+
+body.theme-neon .page--bigger {
+  --bigger-panel-bg: linear-gradient(170deg, rgba(24, 32, 72, 0.92), rgba(12, 16, 48, 0.92));
+  --bigger-panel-border: rgba(100, 130, 255, 0.35);
+  --bigger-panel-shadow: 0 32px 70px rgba(2, 6, 30, 0.55);
+  --bigger-text-color: rgba(224, 236, 255, 0.94);
+  --bigger-heading-color: rgba(244, 248, 255, 0.98);
+  --bigger-subtle-text: rgba(180, 206, 255, 0.7);
+  --bigger-board-bg: rgba(10, 12, 30, 0.92);
+  --bigger-board-border: rgba(150, 180, 255, 0.38);
+  --bigger-board-grid: rgba(140, 170, 255, 0.15);
+  --bigger-board-glow-top: rgba(150, 200, 255, 0.28);
+  --bigger-board-glow-left: rgba(110, 170, 255, 0.22);
+  --bigger-board-glow-right: rgba(255, 120, 230, 0.18);
+  --bigger-ball-shadow: 0 20px 50px rgba(6, 10, 30, 0.55);
+}
+
+body.theme-aurora .page--bigger {
+  --bigger-panel-bg: linear-gradient(170deg, rgba(18, 44, 42, 0.9), rgba(6, 18, 26, 0.92));
+  --bigger-panel-border: rgba(80, 210, 190, 0.35);
+  --bigger-panel-shadow: 0 28px 60px rgba(2, 20, 20, 0.45);
+  --bigger-text-color: rgba(220, 250, 240, 0.92);
+  --bigger-heading-color: #effff9;
+  --bigger-subtle-text: rgba(180, 230, 220, 0.68);
+  --bigger-board-bg: rgba(6, 18, 20, 0.9);
+  --bigger-board-border: rgba(80, 210, 190, 0.36);
+  --bigger-board-grid: rgba(90, 210, 190, 0.18);
+  --bigger-board-glow-top: rgba(90, 220, 210, 0.24);
+  --bigger-board-glow-left: rgba(70, 190, 180, 0.18);
+  --bigger-board-glow-right: rgba(190, 240, 200, 0.14);
+  --bigger-ball-shadow: 0 16px 44px rgba(6, 20, 24, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bigger-ball,
+  .bigger-drop-button,
+  .bigger-stage__button,
+  .bigger-overlay__button {
+    transition: none;
+  }
+}
