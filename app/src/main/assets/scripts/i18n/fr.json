@@ -301,7 +301,7 @@
           }
         },
         "achievements": {
-          "title": "Succès débloqués",
+          "title": "Succès",
           "subtitle": "Visualisez les trophées obtenus au cours de votre aventure.",
           "empty": "Aucun trophée complété pour le moment. Terminez des objectifs pour les afficher ici.",
           "toggle": {
@@ -310,7 +310,7 @@
           }
         },
         "calculations": {
-          "title": "Calculs de production",
+          "title": "Calculs",
           "toggle": {
             "collapse": "Réduire",
             "expand": "Dérouler"
@@ -2318,106 +2318,7 @@
         "welcome": {
           "title": "Bienvenue",
           "intro": {
-            "main": "Bienvenue dans Atom to Univers. Cliquez pour générer vos premiers atomes, achetez des améliorations dans la boutique et automatisez la production pour façonner votre univers.",
-            "note": "Débloquez les mini-jeux et fonctionnalités au fil de votre progression pour multiplier vos gains d’APC et d’APS."
-          },
-          "details": {
-            "particles": {
-              "label": "Mini Jeu Particules :",
-              "description": "Collisionnez les particules élémentaires pour gagner des tickets de tirage et des crédits Mach3."
-            },
-            "gacha": {
-              "label": "Gacha :",
-              "description": "Utilisez vos tickets pour récupérer des éléments du tableau périodique et débloquer des bonus de production."
-            },
-            "match3": {
-              "label": "Mini jeu Mach3 :",
-              "description": "Alignez les métaux le plus vite possible pour booster vos gains d’APS."
-            },
-            "photon": {
-              "label": "Mini jeu Photon :",
-              "description": "Faites vibrer un photon le long de son onde lumineuse pour transformer son énergie en atomes bonus."
-            },
-            "objectx": {
-              "label": "Mini jeu ObjectX :",
-              "description": "Fusionnez les blocs quantiques jusqu’à atteindre la tuile objectif et décrocher des tickets."
-            },
-            "bigger": {
-              "label": "Mini jeu Plus gros :",
-              "description": "Choisissez où laisser tomber chaque bille pour fabriquer la masse la plus imposante."
-            },
-            "math": {
-              "label": "Mini jeu Math :",
-              "description": "Complétez les nombres ou symboles manquants avant la fin du chronomètre."
-            },
-            "balance": {
-              "label": "Mini jeu Balance :",
-              "description": "Disposez chaque poids pour garder la planche stable et gagner des essais supplémentaires pour Métaux."
-            },
-            "lightsOut": {
-              "label": "Mini jeu All Off :",
-              "description": "Éteignez chaque case d’une grille qui change de taille selon la difficulté choisie en planifiant vos clics."
-            },
-            "pipeTap": {
-              "label": "Mini jeu PipeTap :",
-              "description": "Faites pivoter les tuiles pour relier toute la canalisation sans fuite et décrocher des tickets de gacha."
-            },
-            "colorStack": {
-              "label": "Mini jeu Color Stack :",
-              "description": "Déplacez les jetons du haut pour regrouper chaque couleur dans sa colonne tout en gérant l’espace libre." 
-            },
-            "sokoban": {
-              "label": "Mini jeu Sokoban :",
-              "description": "Faites glisser ou touchez pour pousser les caisses sur chaque cible sans jamais les tirer."
-            },
-            "sudoku": {
-              "label": "Mini jeu Sudoku :",
-              "description": "Remplissez les lignes, colonnes et blocs de la grille générée pour booster la production hors ligne."
-            },
-            "theLine": {
-              "label": "Mini jeu The Line :",
-              "description": "Tracez un chemin continu qui couvre chaque case sans repasser dessus, même quand les couleurs s’en mêlent."
-            },
-            "minesweeper": {
-              "label": "Mini jeu Boom! :",
-              "description": "Déduisez l’emplacement des mines et ouvrez toutes les cases sûres pour remporter des tickets."
-            },
-            "solitaire": {
-              "label": "Mini jeu Solitaire :",
-              "description": "Organisez les cartes par couleur et valeur pour compléter les quatre fondations."
-            },
-            "echecs": {
-              "label": "Mini jeu Échecs :",
-              "description": "Affrontez une IA adaptable et peaufinez vos ouvertures et tactiques à votre rythme."
-            },
-            "othello": {
-              "label": "Mini jeu Reversi :",
-              "description": "Encerclez les pions adverses pour retourner la majorité du plateau 8×8."
-            },
-            "gameOfLife": {
-              "label": "Mini jeu Jeu de la vie :",
-              "description": "Placez des cellules vivantes et observez les règles : une cellule survit avec 2 ou 3 voisines, naît avec exactement 3 et meurt autrement."
-            },
-            "pachinko": {
-              "label": "Mini jeu Pachinko :",
-              "description": "Lâchez des orbes prismatiques sur un champ de picots néon pour viser les multiplicateurs cosmiques et gonfler vos atomes."
-            },
-            "roulette": {
-              "label": "Mini jeu Roulette :",
-              "description": "Misez vos atomes sur la roue néon et choisissez la couleur gagnante pour multiplier vos gains."
-            },
-            "blackjack": {
-              "label": "Mini jeu Blackjack :",
-              "description": "Affrontez le croupier, approchez-vous de 21 sans le dépasser pour tenter de doubler vos atomes."
-            },
-            "holdem": {
-              "label": "Mini jeu Hold’em :",
-              "description": "Affrontez jusqu’à quatre IA en Texas Hold’em et combinez vos cartes avec le tapis pour rafler le pot."
-            },
-            "dice": {
-              "label": "Mini jeu Yams :",
-              "description": "Lancez cinq dés électroniques, verrouillez vos meilleurs jets et chassez les figures façon yams."
-            }
+            "main": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule."
           }
         },
         "language": {
@@ -3298,77 +3199,7 @@
         "options": {
           "welcomeCard": {
             "title": "Bienvenue",
-            "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule.",
-            "details": {
-              "particles": {
-                "label": "Arcade Particules :",
-                "description": "Collisionnez les particules élémentaires afin de gagner des tickets de tirage pour le Gacha, et des crédits pour le mini jeu Métaux."
-              },
-              "match3": {
-                "label": "Arcade Métaux :",
-                "description": "Alignez les alliages pour forger des bonus qui dopent votre production."
-              },
-              "photon": {
-                "label": "Arcade Photon :",
-                "description": "Guidez un photon sur son onde cosmique et récoltez l’énergie sans perdre le rythme."
-              },
-              "objectx": {
-                "label": "Arcade ObjectX :",
-                "description": "Fusionnez des blocs quantiques sur la grille choisie jusqu’à atteindre la tuile objectif."
-              },
-              "balance": {
-                "label": "Arcade Balance :",
-                "description": "Disposez des blocs de masses différentes pour maintenir la planche parfaitement stable."
-              },
-              "math": {
-                "label": "Arcade Math :",
-                "description": "Complétez les nombres ou symboles manquants et maintenez la série de calculs."
-              },
-              "sudoku": {
-                "label": "Arcade Sudoku :",
-                "description": "Résolvez des grilles générées dynamiquement avec des aides optionnelles."
-              },
-              "demineur": {
-                "label": "Arcade Boom! :",
-                "description": "Dévoilez toutes les cases sans déclencher les mines."
-              },
-              "solitaire": {
-                "label": "Arcade Solitaire :",
-                "description": "Empilez les cartes pour compléter les quatre fondations le plus efficacement possible."
-              },
-              "echecs": {
-                "label": "Arcade Échecs :",
-                "description": "Affrontez une IA adaptable sur un échiquier."
-              },
-              "gameOfLife": {
-                "label": "Arcade Jeu de la vie :",
-                "description": "Orchestrez vos motifs favoris dans l’automate cellulaire de Conway."
-              },
-              "blackjack": {
-                "label": "Arcade Blackjack :",
-                "description": "Pariez vous Atomes."
-              },
-              "pachinko": {
-                "label": "Arcade Pachinko :",
-                "description": "Lâchez des orbes prismatiques dans un jardin de picots néon et ciblez les multiplicateurs flamboyants."
-              },
-              "gacha": {
-                "label": "Gacha :",
-                "description": "Grâce à vos tickets gagnez des Atomes du tableau périodique des éléments, leurs collections vous octroieront des bonus de APS et APC notamment."
-              },
-              "tableau": {
-                "label": "Tableau :",
-                "description": "Consultez le tableau périodique pour suivre vos collections et leurs bonus cumulés."
-              },
-              "fusion": {
-                "label": "Fusion :",
-                "description": "Combinez vos éléments spéciaux pour débloquer des améliorations permanentes."
-              },
-              "musique": {
-                "label": "Musique :",
-                "description": "Personnalisez l’ambiance sonore avec vos playlists chiptune et vos SoundFonts."
-              }
-            }
+            "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule."
           }
         }
       },
