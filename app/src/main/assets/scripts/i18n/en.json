@@ -301,7 +301,7 @@
           }
         },
         "achievements": {
-          "title": "Unlocked achievements",
+          "title": "Achievements",
           "subtitle": "Review the trophies you have earned on your journey.",
           "empty": "No trophy completed yet. Finish objectives to display them here.",
           "toggle": {
@@ -310,7 +310,7 @@
           }
         },
         "calculations": {
-          "title": "Production breakdown",
+          "title": "Calculations",
           "toggle": {
             "collapse": "Collapse",
             "expand": "Expand"
@@ -2378,106 +2378,7 @@
         "welcome": {
           "title": "Welcome",
           "intro": {
-            "main": "Welcome to Atom to Univers. Start clicking to generate your first atoms, buy upgrades in the shop, and automate production to shape your universe.",
-            "note": "Unlock mini-games and features as you progress to multiply your APC and APS gains."
-          },
-          "details": {
-            "particles": {
-              "label": "Particles mini-game:",
-              "description": "Collide elemental particles to earn gacha tickets and Metals credits."
-            },
-            "gacha": {
-              "label": "Gacha:",
-              "description": "Spend your tickets to collect periodic table elements and unlock production bonuses."
-            },
-            "match3": {
-              "label": "Metals mini-game:",
-              "description": "Align metals as fast as possible to boost your APS gains."
-            },
-            "photon": {
-              "label": "Photon mini-game:",
-              "description": "Guide a photon along its wave to turn light into bonus atoms."
-            },
-            "objectx": {
-              "label": "ObjectX mini-game:",
-              "description": "Merge quantum tiles until you hit the target value and earn tickets."
-            },
-            "bigger": {
-              "label": "Bigger mini-game:",
-              "description": "Choose where each ball drops to build the largest mass possible."
-            },
-            "math": {
-              "label": "Math mini-game:",
-              "description": "Solve timed equations by filling in the missing numbers or operators."
-            },
-            "balance": {
-              "label": "Balance mini-game:",
-              "description": "Place every weight to keep the beam level and earn extra Metals attempts."
-            },
-            "lightsOut": {
-              "label": "All Off mini-game:",
-              "description": "Plan each move to switch off every tile on grids that grow with the selected difficulty."
-            },
-            "pipeTap": {
-              "label": "PipeTap mini-game:",
-              "description": "Rotate pipe tiles to connect the full circuit without leaks and claim extra gacha tickets."
-            },
-            "colorStack": {
-              "label": "Color Stack mini-game:",
-              "description": "Move the top discs only to gather each colour in its own column while keeping an empty slot handy."
-            },
-            "sokoban": {
-              "label": "Sokoban mini-game:",
-              "description": "Slide or tap to push crates onto every target without ever pulling them back."
-            },
-            "sudoku": {
-              "label": "Sudoku mini-game:",
-              "description": "Complete each procedurally generated grid to boost offline production."
-            },
-            "theLine": {
-              "label": "The Line mini-game:",
-              "description": "Draw a continuous path that covers every tile without revisiting it, colours included."
-            },
-            "minesweeper": {
-              "label": "Boom! mini-game:",
-              "description": "Use the numbers to locate every mine and clear the board to win tickets."
-            },
-            "solitaire": {
-              "label": "Solitaire mini-game:",
-              "description": "Stack cards by suit and rank to complete the four foundations."
-            },
-            "echecs": {
-              "label": "Chess mini-game:",
-              "description": "Challenge an adaptable AI to polish your openings and tactics at your own pace."
-            },
-            "othello": {
-              "label": "Reversi mini-game:",
-              "description": "Surround your opponent’s discs to flip them and control most of the 8×8 board."
-            },
-            "gameOfLife": {
-              "label": "Game of Life mini-game:",
-              "description": "Seed live cells and watch the rules in action: survive on 2 or 3 neighbours, be born on exactly 3, otherwise die."
-            },
-            "pachinko": {
-              "label": "Pachinko mini-game:",
-              "description": "Drop prismatic orbs through a neon forest of pegs to hit cosmic multipliers and grow your atom stash."
-            },
-            "roulette": {
-              "label": "Roulette mini-game:",
-              "description": "Wager your atoms on the neon wheel and pick the winning card colour to multiply your stash."
-            },
-            "blackjack": {
-              "label": "Blackjack mini-game:",
-              "description": "Draw cards against the dealer, aiming for 21 without busting to double your atoms."
-            },
-            "holdem": {
-              "label": "Hold’em mini-game:",
-              "description": "Face up to four AIs in Texas Hold’em and build the best five-card hand from the board."
-            },
-            "dice": {
-              "label": "Yams mini-game:",
-              "description": "Roll five glowing dice, lock your favourites, and chase Yahtzee-style combinations."
-            }
+            "main": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you the number of digits after the decimal point."
           }
         },
         "language": {
@@ -3358,77 +3259,7 @@
         "options": {
           "welcomeCard": {
             "title": "Welcome",
-            "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you the number of digits after the decimal point.",
-            "details": {
-              "particles": {
-                "label": "Arcade Particles:",
-                "description": "Collide elementary particles to earn draw tickets for the Gacha and credits for the Metals mini-game."
-              },
-              "match3": {
-                "label": "Arcade Metals:",
-                "description": "Align metallic tiles in the forge to craft production-boosting bonuses."
-              },
-              "photon": {
-                "label": "Arcade Photon:",
-                "description": "Guide a photon along its cosmic wave and gather energy without missing a beat."
-              },
-              "objectx": {
-                "label": "Arcade ObjectX:",
-                "description": "Merge quantum tiles on the selected board until you reach the requested target tile."
-              },
-              "balance": {
-                "label": "Arcade Balance:",
-                "description": "Arrange blocks with different weights to keep the board perfectly level."
-              },
-              "math": {
-                "label": "Arcade Math:",
-                "description": "Fill in the missing numbers or operators to sustain the puzzle streak."
-              },
-              "sudoku": {
-                "label": "Arcade Sudoku:",
-                "description": "Solve dynamically generated grids with optional assists."
-              },
-              "demineur": {
-                "label": "Arcade Boom!:",
-                "description": "Reveal every cell without triggering the quantum mines."
-              },
-              "solitaire": {
-                "label": "Arcade Solitaire:",
-                "description": "Stack the tableau to complete all four foundations efficiently."
-              },
-              "echecs": {
-                "label": "Arcade Chess:",
-                "description": "Challenge an adaptive AI across a chessboard."
-              },
-              "gameOfLife": {
-                "label": "Arcade Game of Life:",
-                "description": "Conduct your favorite patterns inside Conway’s cellular automaton."
-              },
-              "blackjack": {
-                "label": "Arcade Blackjack:",
-                "description": "Bet your Atoms.."
-              },
-              "pachinko": {
-                "label": "Arcade Pachinko:",
-                "description": "Drop radiant orbs across a neon peg garden and aim for dazzling multipliers."
-              },
-              "gacha": {
-                "label": "Gacha:",
-                "description": "Spend your tickets to obtain atoms from the periodic table; completing collections grants APS and APC bonuses among others."
-              },
-              "tableau": {
-                "label": "Periodic Table:",
-                "description": "Review the periodic table to track your collections and their cumulative bonuses."
-              },
-              "fusion": {
-                "label": "Fusion:",
-                "description": "Combine special elements to unlock permanent upgrades."
-              },
-              "musique": {
-                "label": "Music:",
-                "description": "Customize the soundtrack with chiptune playlists and your SoundFonts."
-              }
-            }
+            "intro": "Welcome to Atom to Univers. Start by clicking to earn Atoms (APC Atoms Per Click), purchase upgrades in the shop, and automate harvesting (APS Atoms Per Second). Unlock mini-games as you progress. The goal is to gather as many Atoms as possible to forge a Universe. Large values use an easy scientific-style notation: 1.0e6 means 1,000,000 (1.0 × 10^6) and the number after “e” tells you the number of digits after the decimal point."
           }
         }
       },
