@@ -8,13 +8,63 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
   text: Object.freeze({
     default: 1,
     overrides: Object.freeze({
-      chomsky: 1.5
+      orbitron: 1,
+      alien: 1,
+      'aquiline-two': 1,
+      chomsky: 1,
+      'coffee-spark': 1,
+      'creativo-regular': 1,
+      'darling-coffee': 1,
+      'designer-notes': 1,
+      'digittech16-regular': 1,
+      'fair-prosper': 1,
+      'little-days': 1,
+      'roboto-condensed': 1,
+      'slow-play': 1,
+      'super-chiby': 1,
+      'super-croissant': 1,
+      'super-mario-64': 1,
+      'super-meatball': 1,
+      supermario256: 1,
+      alamain1: 1,
+      'dealerplate-california': 1,
+      exmouth: 1,
+      hobbiton: 1,
+      hobbitonbrushhand: 1,
+      'south-park': 1,
+      'to-japan': 1,
+      'science-gothic': 1
     })
   }),
   digits: Object.freeze({
     default: 1,
     overrides: Object.freeze({
-      chomsky: 1.5
+      orbitron: 1,
+      alien: 1,
+      'aquiline-two': 1,
+      chomsky: 1,
+      'coffee-spark': 1,
+      'creativo-regular': 1,
+      'darling-coffee': 1,
+      'designer-notes': 1,
+      'digittech16-regular': 1,
+      'fair-prosper': 1,
+      'little-days': 1,
+      'roboto-condensed': 1,
+      'slow-play': 1,
+      'super-chiby': 1,
+      'super-croissant': 1,
+      'super-mario-64': 1,
+      'super-meatball': 1,
+      supermario256: 1,
+      alamain1: 1,
+      'dealerplate-california': 1,
+      exmouth: 1,
+      hobbiton: 1,
+      hobbitonbrushhand: 1,
+      'south-park': 1,
+      'to-japan': 1,
+      'science-gothic': 1
     })
   })
 });
