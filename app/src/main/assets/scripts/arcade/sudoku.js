@@ -9,6 +9,29 @@
     moyen: Object.freeze({ min: 24, max: 28 }),
     difficile: Object.freeze({ min: 18, max: 22 })
   });
+  const DEFAULT_DIGIT_SCALE_OPTIONS = Object.freeze([
+    Object.freeze({
+      value: 1,
+      labelKey: 'index.sections.sudoku.toolbar.digitScale.options.x1',
+      fallback: 'x1'
+    }),
+    Object.freeze({
+      value: 1.5,
+      labelKey: 'index.sections.sudoku.toolbar.digitScale.options.x1_5',
+      fallback: 'x1.5'
+    }),
+    Object.freeze({
+      value: 2,
+      labelKey: 'index.sections.sudoku.toolbar.digitScale.options.x2',
+      fallback: 'x2'
+    }),
+    Object.freeze({
+      value: 3,
+      labelKey: 'index.sections.sudoku.toolbar.digitScale.options.x3',
+      fallback: 'x3'
+    })
+  ]);
+  const DEFAULT_DIGIT_SCALE = 1;
 
   function normalizeCompletionReward(raw) {
     if (raw === false) {
@@ -80,6 +103,54 @@
     const normalizedMin = Math.max(17, Math.min(min, max));
     const normalizedMax = Math.max(normalizedMin, max);
     return { min: normalizedMin, max: normalizedMax };
+  }
+
+  function normalizeDigitScaleOptions(raw) {
+    if (!Array.isArray(raw)) {
+      return DEFAULT_DIGIT_SCALE_OPTIONS;
+    }
+    const normalized = raw
+      .map(option => {
+        if (!option || typeof option !== 'object') {
+          return null;
+        }
+        const value = Number(option.value);
+        if (!Number.isFinite(value) || value <= 0) {
+          return null;
+        }
+        const labelKey = typeof option.labelKey === 'string' ? option.labelKey.trim() : '';
+        return {
+          value,
+          labelKey,
+          fallback: typeof option.fallback === 'string' && option.fallback.trim()
+            ? option.fallback
+            : `x${value}`
+        };
+      })
+      .filter(Boolean);
+    return normalized.length ? normalized : DEFAULT_DIGIT_SCALE_OPTIONS;
+  }
+
+  function getConfiguredDigitScaleOptions() {
+    if (!GLOBAL_CONFIG || !GLOBAL_CONFIG.arcade || !GLOBAL_CONFIG.arcade.sudoku) {
+      return DEFAULT_DIGIT_SCALE_OPTIONS;
+    }
+    return normalizeDigitScaleOptions(GLOBAL_CONFIG.arcade.sudoku.digitScaleOptions);
+  }
+
+  function getConfiguredDigitScaleDefault(options) {
+    const fallbackValue = Array.isArray(options) && options.length
+      ? options[0].value
+      : DEFAULT_DIGIT_SCALE;
+    if (!GLOBAL_CONFIG || !GLOBAL_CONFIG.arcade || !GLOBAL_CONFIG.arcade.sudoku) {
+      return fallbackValue;
+    }
+    const value = Number(GLOBAL_CONFIG.arcade.sudoku.digitScaleDefault);
+    if (!Number.isFinite(value) || value <= 0) {
+      return fallbackValue;
+    }
+    const allowedValues = options.map(option => option.value);
+    return allowedValues.includes(value) ? value : fallbackValue;
   }
 
   function pickClueCount(level) {
@@ -314,6 +385,17 @@
     return translate(`scripts.arcade.sudoku.status.${key}`, fallback, params);
   }
 
+  function getI18nApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const i18n = window.i18n;
+    if (!i18n || typeof i18n.updateTranslations !== 'function') {
+      return null;
+    }
+    return i18n;
+  }
+
   onReady(() => {
     const gridElement = document.getElementById('sudokuGrid');
     if (!gridElement) {
@@ -322,14 +404,17 @@
 
     const statusElement = document.getElementById('sudokuStatus');
     const levelSelect = document.getElementById('sudokuLevel');
+    const digitScaleSelect = document.getElementById('sudokuDigitScale');
     const generateButton = document.getElementById('sudokuGenerate');
     const checkButton = document.getElementById('sudokuCheck');
     const padValidateButton = document.getElementById('sudokuPadValidate');
     const padElement = document.getElementById('sudokuPad');
+    const sudokuPage = gridElement.closest('.page--sudoku') || document.getElementById('sudoku');
 
     if (
       !statusElement ||
       !levelSelect ||
+      !digitScaleSelect ||
       !generateButton ||
       !padValidateButton ||
       !padElement ||
@@ -367,9 +452,57 @@
     let puzzleStartTimestamp = null;
     let puzzleSolved = false;
     let puzzleBoard = createEmptyBoard();
+    const digitScaleOptions = getConfiguredDigitScaleOptions();
+    const defaultDigitScale = getConfiguredDigitScaleDefault(digitScaleOptions);
     const AUTOSAVE_ID = 'sudoku';
     const AUTOSAVE_DELAY_MS = 160;
     let autosaveTimerId = null;
+
+    function applyDigitScale(value) {
+      if (!sudokuPage) {
+        return;
+      }
+      sudokuPage.style.setProperty('--sudoku-digit-scale', String(value));
+    }
+
+    function resolveOptionLabel(option) {
+      if (!option || !option.labelKey) {
+        return option?.fallback ?? '';
+      }
+      const translated = translate(option.labelKey, option.fallback);
+      return translated === option.labelKey ? option.fallback : translated;
+    }
+
+    function populateDigitScaleOptions() {
+      digitScaleSelect.replaceChildren();
+      digitScaleOptions.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = String(option.value);
+        if (option.labelKey) {
+          optionElement.setAttribute('data-i18n', option.labelKey);
+        }
+        optionElement.textContent = resolveOptionLabel(option);
+        digitScaleSelect.appendChild(optionElement);
+      });
+      const i18n = getI18nApi();
+      if (i18n) {
+        i18n.updateTranslations(digitScaleSelect);
+      }
+    }
+
+    function syncDigitScaleSelection() {
+      const selectedValue = Number(digitScaleSelect.value);
+      const isValidSelection = digitScaleOptions.some(option => option.value === selectedValue);
+      const nextValue = isValidSelection ? selectedValue : defaultDigitScale;
+      digitScaleSelect.value = String(nextValue);
+      applyDigitScale(nextValue);
+    }
+
+    populateDigitScaleOptions();
+    syncDigitScaleSelection();
+    digitScaleSelect.addEventListener('change', () => {
+      syncDigitScaleSelection();
+    });
 
     function getAutosaveApi() {
       if (typeof window === 'undefined') {

@@ -1725,6 +1725,15 @@
           "level": "Niveau",
           "generate": "Générer une grille",
           "check": "Vérifier la grille",
+          "digitScale": {
+            "label": "Taille des chiffres",
+            "options": {
+              "x1": "x1",
+              "x1_5": "x1.5",
+              "x2": "x2",
+              "x3": "x3"
+            }
+          },
           "options": {
             "facile": "Facile",
             "moyen": "Moyen",
