@@ -16,7 +16,7 @@
 
 .news-page__title {
   font-family: var(--font-display, var(--font-text));
-  font-size: calc(clamp(1.4rem, 2vw, 1.7rem) * var(--font-size-scale-factor, 1));
+  font-size: clamp(1.4rem, 2vw, 1.7rem);
   margin: 0 0 0.2rem;
 }
 
@@ -28,7 +28,7 @@
 .news-page__feed-label {
   margin: 0.25rem 0 0;
   color: rgba(255, 255, 255, 0.65);
-  font-size: calc(0.95rem * var(--font-size-scale-factor, 1));
+  font-size: 0.95rem;
 }
 
 body.theme-light .news-page__subtitle,
@@ -188,7 +188,7 @@ body.theme-light .news-page__control-button {
 
 .news-banned__title {
   margin: 0;
-  font-size: calc(1.08rem * var(--font-size-scale-factor, 1));
+  font-size: 1.08rem;
 }
 
 .news-banned__subtitle {
@@ -286,7 +286,7 @@ body.theme-light .news-banned__button {
 
 .news-sources__title {
   margin: 0;
-  font-size: calc(1.08rem * var(--font-size-scale-factor, 1));
+  font-size: 1.08rem;
 }
 
 .news-sources__subtitle {
@@ -334,7 +334,7 @@ body.theme-light .news-banned__button {
 
 .news-sources__url {
   color: rgba(255, 255, 255, 0.65);
-  font-size: calc(0.92rem * var(--font-size-scale-factor, 1));
+  font-size: 0.92rem;
 }
 
 .news-sources__empty {
@@ -389,7 +389,7 @@ body.theme-light .news-sources__name {
 
 .news-card__title {
   margin: 0 0 0.25rem;
-  font-size: calc(1.02rem * var(--font-size-scale-factor, 1));
+  font-size: 1.02rem;
 }
 
 .news-card__title a {
@@ -404,13 +404,13 @@ body.theme-light .news-sources__name {
 .news-card__meta {
   margin: 0;
   color: rgba(255, 255, 255, 0.65);
-  font-size: calc(0.92rem * var(--font-size-scale-factor, 1));
+  font-size: 0.92rem;
 }
 
 .news-card__source {
   margin: 0.05rem 0 0;
   color: rgba(255, 255, 255, 0.7);
-  font-size: calc(0.9rem * var(--font-size-scale-factor, 1));
+  font-size: 0.9rem;
 }
 
 .news-card__actions {
@@ -428,7 +428,7 @@ body.theme-light .news-sources__name {
   background: rgba(255, 255, 255, 0.04);
   color: #f4f6fb;
   cursor: pointer;
-  font-size: calc(0.92rem * var(--font-size-scale-factor, 1));
+  font-size: 0.92rem;
 }
 
 .news-card__button--primary {
@@ -471,7 +471,7 @@ body.theme-light .news-card__button {
   bottom: calc(var(--safe-bottom) + 1.6rem + 5vh);
   width: min(var(--max-width), calc(100% - 2rem));
   z-index: 20;
-  font-size: calc(1.3rem * var(--font-size-scale-factor, 1));
+  font-size: 1.3rem;
 }
 
 .news-ticker__container {
