@@ -385,6 +385,17 @@
     return translate(`scripts.arcade.sudoku.status.${key}`, fallback, params);
   }
 
+  function getI18nApi() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    const i18n = window.i18n;
+    if (!i18n || typeof i18n.updateTranslations !== 'function') {
+      return null;
+    }
+    return i18n;
+  }
+
   onReady(() => {
     const gridElement = document.getElementById('sudokuGrid');
     if (!gridElement) {
@@ -454,17 +465,29 @@
       sudokuPage.style.setProperty('--sudoku-digit-scale', String(value));
     }
 
+    function resolveOptionLabel(option) {
+      if (!option || !option.labelKey) {
+        return option?.fallback ?? '';
+      }
+      const translated = translate(option.labelKey, option.fallback);
+      return translated === option.labelKey ? option.fallback : translated;
+    }
+
     function populateDigitScaleOptions() {
       digitScaleSelect.replaceChildren();
       digitScaleOptions.forEach(option => {
         const optionElement = document.createElement('option');
         optionElement.value = String(option.value);
-        const label = option.labelKey
-          ? translate(option.labelKey, option.fallback)
-          : option.fallback;
-        optionElement.textContent = label;
+        if (option.labelKey) {
+          optionElement.setAttribute('data-i18n', option.labelKey);
+        }
+        optionElement.textContent = resolveOptionLabel(option);
         digitScaleSelect.appendChild(optionElement);
       });
+      const i18n = getI18nApi();
+      if (i18n) {
+        i18n.updateTranslations(digitScaleSelect);
+      }
     }
 
     function syncDigitScaleSelection() {
