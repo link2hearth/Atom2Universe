@@ -789,18 +789,11 @@ function resolveCollectionDownloadUrl(entry) {
   if (!entry) {
     return '';
   }
-  if (typeof entry.resolvedUrl === 'string' && entry.resolvedUrl) {
-    return entry.resolvedUrl;
-  }
   const rawUrl = entry.rawUrl || '';
   if (!rawUrl) {
     return '';
   }
-  const resolved = resolveBackgroundUrl(rawUrl);
-  if (resolved) {
-    entry.resolvedUrl = resolved;
-  }
-  return resolved;
+  return resolveBackgroundUrl(rawUrl);
 }
 
 function applyCollectionDownloadImage(imageElement, entry) {
@@ -1021,7 +1014,6 @@ function renderBackgroundLibraryStatus() {
 
 function setLocalBackgroundItems(uris, options = {}) {
   const uniqueUris = Array.from(new Set((uris || []).filter(uri => typeof uri === 'string' && uri)));
-  clearAndroidContentUriCache();
   localBackgroundItems = uniqueUris.map((uri, index) => ({ id: `local-background-${index}`, imageUrl: uri }));
   backgroundLibraryLabel = typeof options.label === 'string' ? options.label : backgroundLibraryLabel;
   setBackgroundLibraryStatus(localBackgroundItems.length ? 'ready' : 'idle');
@@ -1065,18 +1057,6 @@ function scheduleBackgroundRotation() {
   }, delay);
 }
 
-function getAndroidContentUriCache() {
-  if (typeof androidContentUriCache === 'undefined' || !(androidContentUriCache instanceof Map)) {
-    androidContentUriCache = new Map();
-  }
-  return androidContentUriCache;
-}
-
-function clearAndroidContentUriCache() {
-  const cache = getAndroidContentUriCache();
-  cache.clear();
-}
-
 function resolveBackgroundUrl(rawUrl) {
   if (typeof rawUrl !== 'string') {
     return '';
@@ -1086,20 +1066,11 @@ function resolveBackgroundUrl(rawUrl) {
     return '';
   }
   const isContentUri = normalized.startsWith('content://');
-  if (isContentUri) {
-    const cache = getAndroidContentUriCache();
-    const cached = cache.get(normalized);
-    if (typeof cached === 'string' && cached.trim()) {
-      return cached;
-    }
-  }
   if (isContentUri && window.AndroidBridge && typeof window.AndroidBridge.resolveContentUri === 'function') {
     try {
       const resolved = window.AndroidBridge.resolveContentUri(normalized);
       if (typeof resolved === 'string' && resolved.trim()) {
-        const trimmed = resolved.trim();
-        getAndroidContentUriCache().set(normalized, trimmed);
-        return trimmed;
+        return resolved.trim();
       }
     } catch (error) {
       console.warn('Unable to resolve background URI', error);

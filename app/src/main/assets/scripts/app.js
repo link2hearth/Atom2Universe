@@ -183,7 +183,6 @@ let collectionDownloadsCurrentIndex = 0;
 let collectionDownloadsTouchStartX = null;
 const imageSizeAllowanceCache = new Map();
 let imageAssetCache = new Map();
-let androidContentUriCache = new Map();
 const imageAssetDownloads = new Map();
 let imageThumbnailQueue = [];
 let imageThumbnailWorkerActive = false;
