@@ -640,6 +640,7 @@ const RESOLVED_PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS
     fluid: Object.freeze({
       apcFlushIntervalMs: 0,
       apsFlushIntervalMs: 0,
+      apsFlushMaxChunkMs: 0,
       frameIntervalMs: 0,
       atomAnimation: Object.freeze({
         amplitudeScale: 1,
@@ -649,6 +650,7 @@ const RESOLVED_PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS
     eco: Object.freeze({
       apcFlushIntervalMs: 200,
       apsFlushIntervalMs: 1000,
+      apsFlushMaxChunkMs: 200,
       frameIntervalMs: 120,
       atomAnimation: Object.freeze({
         amplitudeScale: 0.5,
