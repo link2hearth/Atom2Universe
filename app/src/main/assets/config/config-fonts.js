@@ -8,11 +8,11 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
   text: Object.freeze({
     default: 1,
     overrides: Object.freeze({
-      orbitron: 1.2,
+      orbitron: 0.8,
       alien: 1.2,
       'aquiline-two': 1,
-      chomsky: 2,
-      'coffee-spark': 1.5,
+      chomsky: 1.5,
+      'coffee-spark': 1.4,
       'creativo-regular': 1.2,
       'darling-coffee': 1.2,
       'designer-notes': 1.5,
@@ -21,7 +21,7 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
       'little-days': 1.8,
       'roboto-condensed': 1.5,
       'slow-play': 1.5,
-      'super-chiby': 2.5,
+      'super-chiby': 1.5,
       'super-croissant': 1.5,
       'super-mario-64': 1.5,
       'super-meatball': 1.4,

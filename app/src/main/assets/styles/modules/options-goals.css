@@ -202,10 +202,6 @@ body.theme-aurora .option-card--holdem {
   gap: 0.8rem;
 }
 
-.option-card__header h3 {
-  font-size: calc(1.17em * var(--options-title-scale, 1));
-}
-
 .option-card--preferences .option-card__header {
   align-items: flex-start;
   justify-content: flex-start;
@@ -392,7 +388,7 @@ body.theme-neon .bigbang-dialog__panel {
 .reset-dialog__title,
 .bigbang-dialog__title {
   margin: 0;
-  font-size: calc(clamp(1.05rem, 2.4vw, 1.35rem) * var(--font-size-scale-factor, 1));
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -418,7 +414,7 @@ body.theme-neon .bigbang-dialog__panel {
   background: rgba(6, 10, 24, 0.85);
   color: inherit;
   font-family: var(--font-text, 'Orbitron', sans-serif);
-  font-size: calc(1rem * var(--font-size-scale-factor, 1));
+  font-size: 1rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -504,7 +500,7 @@ body.theme-neon .bigbang-dialog__button--confirm {
 
 .reset-dialog__error {
   margin: 0;
-  font-size: calc(0.85rem * var(--font-size-scale-factor, 1));
+  font-size: 0.85rem;
   color: #ff9aa2;
 }
 
@@ -573,7 +569,7 @@ body.theme-neon .reset-dialog__error {
 .goal-card__title {
   margin: 0;
   font-family: var(--font-text, 'Orbitron', sans-serif);
-  font-size: calc(clamp(0.95rem, 1.6vw, 1.15rem) * var(--font-size-scale-factor, 1));
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
