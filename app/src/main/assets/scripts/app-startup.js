@@ -1171,6 +1171,7 @@ function collectDomElements() {
   notesNewButton: document.getElementById('notesNewButton'),
   notesRefreshButton: document.getElementById('notesRefreshButton'),
   notesDeleteButton: document.getElementById('notesDeleteButton'),
+  openNotesButton: document.getElementById('openNotesButton'),
   notesTitleInput: document.getElementById('notesTitleInput'),
   notesFormatSelect: document.getElementById('notesFormatSelect'),
   notesFontSelect: document.getElementById('notesFontSelect'),
