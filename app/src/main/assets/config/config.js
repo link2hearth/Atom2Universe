@@ -1337,10 +1337,7 @@ const GAME_CONFIG = {
   uiText: {
     options: {
       welcomeCard: {
-        title: 'Bienvenue',
-        introParagraphs: [
-          "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule."
-        ]
+        title: 'Bienvenue'
       }
     }
   },
@@ -1987,7 +1984,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 
