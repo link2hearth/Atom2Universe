@@ -63,6 +63,70 @@ const STARFIELD_MODE_SETTINGS = Object.freeze({
 });
 let starfieldInitializedForMode = null;
 
+const NAVIGATION_CONFIG =
+  typeof GAME_CONFIG !== 'undefined' && GAME_CONFIG && typeof GAME_CONFIG.navigation === 'object'
+    ? GAME_CONFIG.navigation
+    : null;
+
+const NAV_POINTER_CLICK_SUPPRESSION_MS = (() => {
+  const raw = Number(NAVIGATION_CONFIG?.pointerClickSuppressMs);
+  if (Number.isFinite(raw) && raw >= 0) {
+    return Math.floor(raw);
+  }
+  return 350;
+})();
+
+let lastPointerNavAt = 0;
+
+function getNavigationNowMs() {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    return performance.now();
+  }
+  return Date.now();
+}
+
+function shouldSuppressNavClick() {
+  if (NAV_POINTER_CLICK_SUPPRESSION_MS <= 0) {
+    return false;
+  }
+  const elapsed = getNavigationNowMs() - lastPointerNavAt;
+  return elapsed >= 0 && elapsed <= NAV_POINTER_CLICK_SUPPRESSION_MS;
+}
+
+function handlePageNavigation(target) {
+  if (!target) {
+    return;
+  }
+  if (!isPageUnlocked(target)) {
+    return;
+  }
+  showPage(target);
+}
+
+function bindPageNavigation(element, resolveTarget) {
+  if (!element) {
+    return;
+  }
+  const resolve = typeof resolveTarget === 'function' ? resolveTarget : () => null;
+  const handleActivation = () => {
+    const target = resolve();
+    handlePageNavigation(target);
+  };
+  element.addEventListener('pointerup', event => {
+    if (event.pointerType === 'mouse' && typeof event.button === 'number' && event.button !== 0) {
+      return;
+    }
+    lastPointerNavAt = getNavigationNowMs();
+    handleActivation();
+  });
+  element.addEventListener('click', () => {
+    if (shouldSuppressNavClick()) {
+      return;
+    }
+    handleActivation();
+  });
+}
+
 function resolveStarfieldMode(modeId) {
   if (typeof modeId === 'string') {
     const normalized = modeId.trim();
@@ -880,45 +944,33 @@ function bindDomEventListeners() {
   window.handleMetauxSessionEnd = handleMetauxSessionEnd;
 
   elements.navButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      let target = btn.dataset.target;
-      if (target === 'radio') {
-        target = getPreferredMusicPage();
+    bindPageNavigation(btn, () => {
+      const rawTarget = btn.dataset.target;
+      if (rawTarget === 'radio') {
+        return getPreferredMusicPage();
       }
-      if (!isPageUnlocked(target)) {
-        return;
-      }
-      showPage(target);
+      return rawTarget;
     });
   });
 
   if (elements.gachaPeriodicButton) {
-    elements.gachaPeriodicButton.addEventListener('click', () => {
-      if (!isPageUnlocked('tableau')) {
-        return;
-      }
-      showPage('tableau');
-    });
+    bindPageNavigation(elements.gachaPeriodicButton, () => 'tableau');
   }
 
   if (elements.musicTabs?.length) {
     elements.musicTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
+      bindPageNavigation(tab, () => {
         const target = tab.dataset.target;
         if (target === 'radio' || target === 'midi') {
-          showPage(target);
+          return target;
         }
+        return null;
       });
     });
   }
 
   if (elements.imagesCollectionButton) {
-    elements.imagesCollectionButton.addEventListener('click', () => {
-      if (!isPageUnlocked('collection')) {
-        return;
-      }
-      showPage('collection');
-    });
+    bindPageNavigation(elements.imagesCollectionButton, () => 'collection');
   }
 
   if (elements.imagesRefreshButton) {
