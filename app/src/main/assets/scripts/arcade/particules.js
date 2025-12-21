@@ -744,6 +744,7 @@
     minSpeedPerMs: readNumber(ballConfig.minSpeedPerMs, 0.25, { min: 0 }),
     speedFactor: readNumber(ballConfig.speedFactor, 0.0006),
     followOffsetRatio: readNumber(ballConfig.followOffsetRatio, 1.6),
+    trailEnabled: ballTrailConfig.enabled !== false,
     trailMinDistance: readNumber(ballTrailConfig.minDistance, 2, { min: 0 }),
     trailMinDistanceFactor: readNumber(ballTrailConfig.minDistanceFactor, 0.35),
     trailCaptureIntervalMs: readNumber(ballTrailConfig.captureIntervalMs, 18, { min: 0 }),
@@ -1194,6 +1195,7 @@
   const PADDLE_BOUNCE_MAX_RATIO = SETTINGS.paddle.bounceMaxHeightRatio;
   const PADDLE_EXTEND_MAX_WIDTH_RATIO = SETTINGS.paddle.extendMaxWidthRatio;
   const PADDLE_EXTEND_MULTIPLIER = SETTINGS.paddle.extendMultiplier;
+  const BALL_TRAIL_ENABLED = SETTINGS.ball.trailEnabled;
   const BALL_TRAIL_MIN_DISTANCE = SETTINGS.ball.trailMinDistance;
   const BALL_TRAIL_MIN_DISTANCE_FACTOR = SETTINGS.ball.trailMinDistanceFactor;
   const BALL_TRAIL_CAPTURE_INTERVAL_MS = SETTINGS.ball.trailCaptureIntervalMs;
@@ -2684,8 +2686,12 @@
         }
         this.handlePaddleCollision(ball);
         this.handleBrickCollisions(ball);
-        this.addBallTrailPoint(ball, now);
-        this.pruneBallTrail(ball, now);
+        if (BALL_TRAIL_ENABLED) {
+          this.addBallTrailPoint(ball, now);
+          this.pruneBallTrail(ball, now);
+        } else if (Array.isArray(ball.trail) && ball.trail.length > 0) {
+          ball.trail.length = 0;
+        }
       }
       if (lostBall && this.balls.length === 0) {
         this.handleLifeLost();
@@ -2725,6 +2731,7 @@
     }
 
     addBallTrailPoint(ball, timestamp) {
+      if (!BALL_TRAIL_ENABLED) return;
       if (!ball || !ball.inPlay) return;
       const now = Number.isFinite(timestamp) && timestamp > 0
         ? timestamp
@@ -2765,6 +2772,7 @@
     }
 
     pruneBallTrail(ball, timestamp) {
+      if (!BALL_TRAIL_ENABLED) return;
       if (!ball || !Array.isArray(ball.trail) || ball.trail.length === 0) return;
       const now = Number.isFinite(timestamp) && timestamp > 0
         ? timestamp
@@ -4245,7 +4253,7 @@
         const electricSeed = typeof ball.electricSeed === 'number' ? ball.electricSeed : 0;
         const pulse = 0.55 + 0.35 * Math.sin(time * 7.1 + electricSeed);
         const trail = Array.isArray(ball.trail) ? ball.trail : [];
-        if (trail.length > 0) {
+        if (BALL_TRAIL_ENABLED && trail.length > 0) {
           if (energySpriteReady) {
             const sprite = ENERGY_BALL_SPRITE;
             const variantCount = Math.max(1, sprite.colorCount || 1);

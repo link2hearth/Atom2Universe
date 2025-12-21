@@ -59,6 +59,7 @@
       "max": -80
     },
     "trail": {
+      "enabled": false,
       "minDistance": 2,
       "minDistanceFactor": 0.35,
       "captureIntervalMs": 18,
