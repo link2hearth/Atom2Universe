@@ -5773,17 +5773,19 @@
             id="elementCollectionSummary"
             aria-live="polite"
           >
-            <h3 class="periodic-summary__title" data-i18n="index.sections.table.summary.title">Collection</h3>
-            <dl class="periodic-summary__stats">
-              <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.current">Éléments possédés</dt>
-                <dd id="elementCollectionCurrentTotal" class="periodic-summary__value">0</dd>
-              </div>
-              <div class="periodic-summary__row">
-                <dt data-i18n="index.sections.table.summary.lifetime">Éléments découverts</dt>
-                <dd id="elementCollectionLifetimeTotal" class="periodic-summary__value">0</dd>
-              </div>
-            </dl>
+            <h3 class="periodic-summary__title visually-hidden" data-i18n="index.sections.table.summary.title">Collection</h3>
+            <div
+              class="periodic-summary__counts"
+              aria-label="Collection"
+              data-i18n="aria-label:index.sections.table.summary.title"
+            >
+              <span class="visually-hidden" data-i18n="index.sections.table.summary.current">Éléments possédés</span>
+              <span id="elementCollectionCurrentTotal" class="periodic-summary__value">0</span>
+              <span class="periodic-summary__slash" aria-hidden="true"> /</span>
+              <br />
+              <span class="visually-hidden" data-i18n="index.sections.table.summary.lifetime">Éléments découverts</span>
+              <span id="elementCollectionLifetimeTotal" class="periodic-summary__value">0</span>
+            </div>
           </section>
           <!-- Le tableau est généré dynamiquement par app.js -->
         </div>
