@@ -1407,6 +1407,14 @@ const GAME_CONFIG = {
   },
 
   /**
+   * Réglages liés à la navigation entre les pages.
+   * - pointerClickSuppressMs : fenêtre (ms) pour ignorer le clic après un pointerup.
+   */
+  navigation: {
+    pointerClickSuppressMs: 350
+  },
+
+  /**
    * Options d’accessibilité de l’interface utilisateur.
    * - scale.default : identifiant de l’option utilisée par défaut lors d’une nouvelle partie.
    * - scale.options : facteurs d’agrandissement disponibles pour l’interface.
