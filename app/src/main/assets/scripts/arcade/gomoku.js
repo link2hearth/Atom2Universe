@@ -1499,19 +1499,80 @@
     return bestMove;
   }
 
+  function findThreatBlockMove(board, player, context) {
+    const ruleSet = context.ruleSet || state.ruleSet;
+    const opponent = invertPlayer(player);
+    const weights = context.evaluationWeights || CONFIG.evaluation;
+    let bestMove = null;
+    let bestThreat = Number.NEGATIVE_INFINITY;
+    let bestScore = Number.NEGATIVE_INFINITY;
+
+    for (let row = 0; row < board.size; row += 1) {
+      for (let col = 0; col < board.size; col += 1) {
+        if (board.getCell(row, col) !== opponent) {
+          continue;
+        }
+        for (let i = 0; i < DIRECTIONS.length; i += 1) {
+          const dir = DIRECTIONS[i];
+          const prevRow = row - dir[0];
+          const prevCol = col - dir[1];
+          if (board.isInside(prevRow, prevCol) && board.getCell(prevRow, prevCol) === opponent) {
+            continue;
+          }
+          const info = getRunInfo(board, row, col, opponent, dir[0], dir[1]);
+          if (!info || info.length !== 3 || (!info.openLeft && !info.openRight)) {
+            continue;
+          }
+          const threatValue = info.openLeft && info.openRight ? weights.openThree : weights.closedThree;
+          const endpoints = [];
+          if (info.openLeft) {
+            const start = info.positions[0];
+            endpoints.push({ row: start.row - dir[0], col: start.col - dir[1] });
+          }
+          if (info.openRight) {
+            const end = info.positions[info.positions.length - 1];
+            endpoints.push({ row: end.row + dir[0], col: end.col + dir[1] });
+          }
+          for (let j = 0; j < endpoints.length; j += 1) {
+            const pos = endpoints[j];
+            if (!board.isInside(pos.row, pos.col) || !board.isEmpty(pos.row, pos.col)) {
+              continue;
+            }
+            const blockMove = new Move(pos.row, pos.col, player);
+            if (!isLegalMoveForRuleSet(board, blockMove, ruleSet)) {
+              continue;
+            }
+            const score = scoreMoveHeuristic(board, pos.row, pos.col, player, weights);
+            if (threatValue > bestThreat || (threatValue === bestThreat && score > bestScore) || !bestMove) {
+              bestThreat = threatValue;
+              bestScore = score;
+              bestMove = blockMove;
+            }
+          }
+        }
+      }
+    }
+    return bestMove;
+  }
+
   const Search = {
     findEasyMove(board, player, context) {
       const neighborRadius = context.neighborRadius || CONFIG.board.neighborRadius;
       const candidates = generateCandidateMoves(board, player, neighborRadius);
-      const immediateWin = findImmediateWinningMove(board, player, context, candidates);
-      if (immediateWin) {
-        const resultingBoard = board.applyMove(immediateWin);
-        return { move: immediateWin, value: evaluateBoard(resultingBoard, player, context) };
-      }
       const urgentBlock = findImmediateBlockMove(board, player, context);
       if (urgentBlock) {
         const resultingBoard = board.applyMove(urgentBlock);
         return { move: urgentBlock, value: evaluateBoard(resultingBoard, player, context) };
+      }
+      const threatBlock = findThreatBlockMove(board, player, context);
+      if (threatBlock) {
+        const resultingBoard = board.applyMove(threatBlock);
+        return { move: threatBlock, value: evaluateBoard(resultingBoard, player, context) };
+      }
+      const immediateWin = findImmediateWinningMove(board, player, context, candidates);
+      if (immediateWin) {
+        const resultingBoard = board.applyMove(immediateWin);
+        return { move: immediateWin, value: evaluateBoard(resultingBoard, player, context) };
       }
       const weights = context.evaluationWeights || CONFIG.evaluation;
       const maxCandidates = CONFIG.search.easy.maxCandidates;
@@ -1550,15 +1611,21 @@
       if (candidates.length === 0) {
         return { move: null, value: 0 };
       }
-      const immediateWin = findImmediateWinningMove(board, player, context, candidates);
-      if (immediateWin) {
-        return { move: immediateWin, value: Number.POSITIVE_INFINITY, depth: 1 };
-      }
       const urgentBlock = findImmediateBlockMove(board, player, context);
       if (urgentBlock) {
         const resultingBoard = board.applyMove(urgentBlock);
         const value = evaluateBoard(resultingBoard, player, context);
         return { move: urgentBlock, value, depth: 1 };
+      }
+      const threatBlock = findThreatBlockMove(board, player, context);
+      if (threatBlock) {
+        const resultingBoard = board.applyMove(threatBlock);
+        const value = evaluateBoard(resultingBoard, player, context);
+        return { move: threatBlock, value, depth: 1 };
+      }
+      const immediateWin = findImmediateWinningMove(board, player, context, candidates);
+      if (immediateWin) {
+        return { move: immediateWin, value: Number.POSITIVE_INFINITY, depth: 1 };
       }
       let bestMove = null;
       let bestValue = Number.NEGATIVE_INFINITY;
