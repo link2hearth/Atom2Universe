@@ -156,18 +156,6 @@ body.theme-aurora .info-card {
   letter-spacing: 0.12em;
 }
 
-.info-card h2 {
-  font-size: calc(1.5em * var(--info-title-scale, 1));
-}
-
-.info-card h3 {
-  font-size: calc(1.17em * var(--info-title-scale, 1));
-}
-
-.info-card h4 {
-  font-size: calc(1em * var(--info-title-scale, 1));
-}
-
 .info-card__header {
   display: flex;
   flex-direction: column;
