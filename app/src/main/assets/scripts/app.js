@@ -2881,7 +2881,6 @@ const performanceModeState = {
   settings: initialPerformanceModeSettings,
   atomAnimation: normalizeAtomAnimationSettings(initialPerformanceModeSettings?.atomAnimation),
   pendingManualGain: null,
-  pendingAutoGain: null,
   autoAccumulatedMs: 0,
   lastManualFlush: typeof performance !== 'undefined' && typeof performance.now === 'function'
     ? performance.now()
