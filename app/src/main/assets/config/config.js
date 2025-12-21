@@ -442,8 +442,6 @@ const MIDI_VOLUME_SETTINGS = Object.freeze({
  *   à laquelle les gains manuels (APC) sont appliqués au total d'atomes.
  * - `apsFlushIntervalMs` contrôle la fréquence minimale (en millisecondes)
  *   à laquelle les gains automatiques (APS) sont appliqués.
- * - `apsFlushMaxChunkMs` limite la quantité maximale (en millisecondes)
- *   d'APS appliquée par flush pour éviter les pics de charge.
  * - `frameIntervalMs` impose un délai minimal entre deux itérations de la
  *   boucle principale (0 = rafraîchissement natif via requestAnimationFrame).
  */
@@ -451,7 +449,6 @@ const PERFORMANCE_MODE_SETTINGS = Object.freeze({
   fluid: Object.freeze({
     apcFlushIntervalMs: 16,
     apsFlushIntervalMs: 16,
-    apsFlushMaxChunkMs: 16,
     frameIntervalMs: 0,
     atomAnimation: Object.freeze({
       amplitudeScale: 1,
@@ -461,7 +458,6 @@ const PERFORMANCE_MODE_SETTINGS = Object.freeze({
   eco: Object.freeze({
     apcFlushIntervalMs: 250,
     apsFlushIntervalMs: 500,
-    apsFlushMaxChunkMs: 200,
     frameIntervalMs: 33,
     atomAnimation: Object.freeze({
       amplitudeScale: 1,
@@ -1997,6 +1993,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
+
 
 
 
