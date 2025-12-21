@@ -12550,7 +12550,6 @@ function pulseApsCritPanel() {
 }
 
 function updateUI() {
-  const activePage = typeof document !== 'undefined' ? document.body?.dataset?.activePage : null;
   if (typeof refreshGachaRarityLocalization === 'function') {
     refreshGachaRarityLocalization();
   }
@@ -12577,18 +12576,15 @@ function updateUI() {
   updateFrenzyIndicators();
   updateApcFrenzyCounterDisplay();
   updateGachaUI();
-  if (activePage === 'collection' || activePage === 'gacha') {
-    updateCollectionDisplay();
-  }
+  updateCollectionDisplay();
   updateFusionUI();
   updateShopAffordability();
   updateMilestone();
   refreshGoalCardTexts();
-  if (activePage === 'info') {
-    updateGoalsUI();
-    updateInfoPanels();
-  }
-  const infoPageActive = activePage === 'info';
+  updateGoalsUI();
+  updateInfoPanels();
+  const infoPageActive = typeof document !== 'undefined'
+    && document.body?.dataset?.activePage === 'info';
   const shouldRefreshDevkit = infoPageActive || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
   if (shouldRefreshDevkit) {
     updateDevKitUI();
