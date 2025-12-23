@@ -2549,46 +2549,46 @@
           "description": "Prevents Android from turning the screen off automatically.",
           "ariaLabel": "Prevent Android from putting the screen to sleep automatically",
           "state": {
-            "on": "Enabled",
-            "off": "Disabled"
+            "on": "On",
+            "off": "Off"
           }
         },
         "androidStatusBar": {
-          "title": "Android status bar",
+          "title": "Android banner",
           "description": "Show or hide the Android status bar (time, battery, notifications).",
           "ariaLabel": "Show or hide the Android system banner",
           "state": {
-            "on": "Shown",
-            "off": "Hidden"
+            "on": "On",
+            "off": "Off"
           },
           "unsupported": "This feature is available on Android only."
         },
         "frenzyAutoCollect": {
-          "title": "Frenzy auto-collect",
+          "title": "Auto Frenzy",
           "ariaLabel": "Enable or disable automatic frenzy collection",
           "state": {
-            "on": "Enabled",
-            "off": "Disabled"
+            "on": "Yes",
+            "off": "No"
           }
         },
         "atomIcon": {
-          "title": "Atom icon on main button",
+          "title": "Atom icon",
           "ariaLabel": "Show or hide the Atom icon on the main button",
           "state": {
-            "on": "Visible",
-            "off": "Hidden"
+            "on": "On",
+            "off": "Off"
           }
         },
         "ticketStarAutoCollect": {
           "title": "Auto Loot Stars",
           "ariaLabel": "Enable or disable automatic ticket-star pickup",
           "state": {
-            "on": "Enabled",
-            "off": "Disabled"
+            "on": "On",
+            "off": "Off"
           }
         },
         "ticketStarSprite": {
-          "title": "Ticket star visual",
+          "title": "Star",
           "ariaLabel": "Switch between GIF and JPG for the home ticket star",
           "state": {
             "animated": "GIF",
@@ -2596,19 +2596,19 @@
           }
         },
         "cryptoWidget": {
-          "title": "Crypto widget",
+          "title": "Crypto",
           "description": "Show BTC and ETH right under the main banner.",
           "ariaLabel": "Enable or disable the crypto widget on the home screen",
           "state": {
-            "on": "Visible",
-            "off": "Hidden"
+            "on": "On",
+            "off": "Off"
           }
         },
         "news": {
           "title": "News",
           "description": "",
           "ariaLabel": "Enable or disable Google News headlines",
-          "state": { "on": "Enabled", "off": "Disabled" }
+          "state": { "on": "On", "off": "Off" }
         },
         "music": {
           "title": "Music",
