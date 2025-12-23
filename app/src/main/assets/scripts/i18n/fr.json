@@ -2455,20 +2455,20 @@
             "eco": "Mode éco (calculs réduits)"
           },
           "note": {
-            "fluid": "Mode fluide : mises à jour fréquentes pour une sensation immédiate.",
-            "eco": "Mode éco : applique les clics toutes les 200 ms et les APS chaque seconde pour économiser la batterie."
+            "fluid": "Mode fluide",
+            "eco": "Mode éco"
           }
         },
         "clickSound": {
           "title": "Son du clicker",
           "ariaLabel": "Activer ou couper le son du clicker",
           "state": {
-            "on": "Avec",
-            "off": "Sans"
+            "on": "Oui",
+            "off": "Non"
           }
         },
         "atomAnimation": {
-          "title": "Animations du bouton principal",
+          "title": "Animations tremblante",
           "description": "Réduit le mouvement du gros atome pour bloquer les zooms et effets de gameplay.",
           "ariaLabel": "Activer ou désactiver les animations du bouton principal",
           "state": {
@@ -2485,12 +2485,12 @@
           }
         },
         "screenWakeLock": {
-          "title": "Écran toujours actif",
+          "title": "Écran tjr actif",
           "description": "Empêche Android de mettre automatiquement l’écran en veille.",
           "ariaLabel": "Empêcher Android de mettre l’écran en veille automatiquement",
           "state": {
-            "on": "Actif",
-            "off": "Inactif"
+            "on": "Oui",
+            "off": "Non"
           }
         },
         "androidStatusBar": {
@@ -2498,37 +2498,37 @@
           "description": "Affiche ou masque la barre d’état Android (heure, batterie, notifications).",
           "ariaLabel": "Afficher ou masquer la bannière système d’Android",
           "state": {
-            "on": "Visible",
-            "off": "Masquée"
+            "on": "Oui",
+            "off": "Non"
           },
           "unsupported": "Fonction disponible uniquement sur Android."
         },
         "frenzyAutoCollect": {
-          "title": "Récolte auto frénésie",
+          "title": "Auto Frénésie",
           "ariaLabel": "Activer ou désactiver la récolte automatique des frénésies",
           "state": {
-            "on": "Activée",
-            "off": "Désactivée"
+            "on": "Oui",
+            "off": "Non"
           }
         },
         "atomIcon": {
-          "title": "Icône Atom sur le bouton",
+          "title": "Atome visible",
           "ariaLabel": "Afficher ou masquer l’icône Atom sur le bouton principal",
           "state": {
-            "on": "Visible",
-            "off": "Masquée"
+            "on": "Oui",
+            "off": "Non"
           }
         },
         "ticketStarAutoCollect": {
-          "title": "Auto Loot Stars",
+          "title": "Récolte étoile",
           "ariaLabel": "Activer ou désactiver la récolte automatique des étoiles à tickets",
           "state": {
-            "on": "Activée",
-            "off": "Désactivée"
+            "on": "Auto",
+            "off": "Manuel"
           }
         },
         "ticketStarSprite": {
-          "title": "Visuel des étoiles à tickets",
+          "title": "Visuel étoile",
           "ariaLabel": "Basculer entre GIF et JPG pour l’étoile de l’écran principal",
           "state": {
             "animated": "GIF",
@@ -2536,12 +2536,12 @@
           }
         },
         "cryptoWidget": {
-          "title": "Widget crypto",
+          "title": "Crypto",
           "description": "Affiche BTC et ETH sous la bannière principale.",
           "ariaLabel": "Activer ou désactiver l’affichage du widget crypto sur la page principale",
           "state": {
-            "on": "Affiché",
-            "off": "Masqué"
+            "on": "Oui",
+            "off": "Non"
           }
         },
         "news": {
@@ -2602,7 +2602,7 @@
             "engine": "Moteur sonore",
             "soundFont": "SoundFont",
             "volume": "Volume général",
-            "pianoOverride": "Forcer le programme piano pour les pistes piano",
+            "pianoOverride": "Forcer le piano 0",
             "engineAudio": "Son du moteur",
             "keyboardAudio": "Son du clavier",
             "speed": "Vitesse de lecture",
