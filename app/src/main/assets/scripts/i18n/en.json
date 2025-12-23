@@ -37,7 +37,7 @@
     },
     "header": {
       "brand": {
-        "home": "Atom2Univers",
+        "home": "Atom2Universe",
         "homeAria": "Return to the main page",
         "portal": "Arcade",
         "portalAria": "Enter the arcade"
@@ -669,7 +669,7 @@
       "arcadeHub": {
         "aria": "Mini-game selection hub",
         "title": "Arcade",
-        "subtitle": "Pick a bonus mini-game to extend your Atom2Univers session.",
+        "subtitle": "Pick a bonus mini-game to extend your Atom2Universe session.",
         "instructions": "Choose a game and try to win Gacha tickets.",
         "locked": {
           "requiresAtoms": "Collect {{amount}} atoms to unlock the arcade.",
