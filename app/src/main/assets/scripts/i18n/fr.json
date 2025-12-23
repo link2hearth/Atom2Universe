@@ -1,7 +1,7 @@
 {
   "index": {
     "meta": {
-      "title": "Atom to Univers"
+      "title": "Atom to Universe"
     },
     "startup": {
       "title": "Chargement en cours…",
@@ -37,7 +37,7 @@
     },
     "header": {
       "brand": {
-        "home": "Atom2Univers",
+        "home": "Atom2Universe",
         "homeAria": "Revenir à la page principale",
         "portal": "Arcade",
         "portalAria": "Ouvrir l’arcade"
@@ -669,7 +669,7 @@
       "arcadeHub": {
         "aria": "Hall de sélection des mini-jeux",
         "title": "Arcade",
-        "subtitle": "Choisissez un mini-jeu pour prolonger l’expérience Atom2Univers.",
+        "subtitle": "Choisissez un mini-jeu pour prolonger l’expérience Atom2Universe.",
         "instructions": "Choisissez un jeu et tentez de gagner des tickets Gacha.",
         "locked": {
           "requiresAtoms": "Collectez {{amount}} atomes pour débloquer l’arcade.",
@@ -2336,7 +2336,7 @@
         "welcome": {
           "title": "Bienvenue",
           "intro": {
-            "main": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule."
+            "main": "Bienvenue dans Atom2Universe, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule."
           }
         },
         "language": {
@@ -3221,7 +3221,7 @@
         "options": {
           "welcomeCard": {
             "title": "Bienvenue",
-            "intro": "Bienvenue dans Atom to Univers, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule."
+            "intro": "Bienvenue dans Atom2Universe, commencez en cliquant pour gagner des Atomes (APC Atoms Par Clic), achetez des améliorations dans le magasin et automatisez la récolte (APS Atoms Par Seconde). Débloquez des minis jeux au fur et à mesure de votre progression. L’objectif est d’accumuler le plus possible d’Atomes pour fabriquer un Univers. Les grands nombres utilisent une notation abrégée très simple : 1.0e6 signifie 1 000 000 (1.0 × 10^6) et le chiffre après « e » indique le nombre de chiffres après la virgule."
           }
         }
       },
