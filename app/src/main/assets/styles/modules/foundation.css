@@ -1213,6 +1213,15 @@ body.theme-aurora .status-bar {
   animation-name: navButtonVibrateHover;
 }
 
+.nav-button--shop-ready:not(.active) {
+  color: #64f0a8;
+}
+
+.nav-button--shop-ready:not(.active):hover,
+.nav-button--shop-ready:not(.active):focus-visible {
+  color: #7affbf;
+}
+
 body[data-performance-mode='eco'] .nav-button--vibrate,
 body[data-performance-mode='eco'] .nav-button--vibrate:hover,
 body[data-performance-mode='eco'] .nav-button--vibrate:focus-visible {
