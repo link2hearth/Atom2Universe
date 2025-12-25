@@ -871,6 +871,7 @@ const ARCADE_DEMINEUR_CONFIG = loadConfigJson('./config/arcade/demineur.json', {
 const ARCADE_METAUX_CONFIG = loadConfigJson('./config/arcade/metaux.json', {});
 const ARCADE_GOMOKU_CONFIG = loadConfigJson('./config/arcade/gomoku.json', {});
 const ARCADE_CIRCLES_CONFIG = loadConfigJson('./config/arcade/circles.json', {});
+const ARCADE_REFLEX_CONFIG = loadConfigJson('./config/arcade/reflex.json', {});
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1584,7 +1585,7 @@ const GAME_CONFIG = {
     // Échecs et Sudoku sont définies dans des fichiers JSON dédiés (`config/arcade/holdem.json`,
     // `config/arcade/roulette.json`, `config/arcade/pachinko.json`, `config/arcade/balance.json`,
     // `config/arcade/math.json`, `config/arcade/dice.json`, `config/arcade/particules.json`,
-    // `config/arcade/echecs.json` et `config/arcade/sudoku.json`).
+    // `config/arcade/echecs.json`, `config/arcade/sudoku.json` et `config/arcade/reflex.json`).
     /**
      * Paramètres du mini-jeu Hold’em.
      * - blind : montant unique utilisé comme blinde et relance de référence.
@@ -1622,6 +1623,7 @@ const GAME_CONFIG = {
     gomoku: ARCADE_GOMOKU_CONFIG,
     quantum2048: ARCADE_QUANTUM2048_CONFIG,
     demineur: ARCADE_DEMINEUR_CONFIG,
+    reflex: ARCADE_REFLEX_CONFIG,
   },
 
   /**
@@ -2001,7 +2003,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 

@@ -1,0 +1,23 @@
+{
+  "_comment": "Réglages du mini-jeu Reflex (rythme d'apparition, tolérance de clic et tailles).",
+  "target": {
+    "sizePx": 68,
+    "easyHitScale": 2
+  },
+  "difficulty": {
+    "easy": {
+      "maxActiveTargets": 6,
+      "initialIntervalMs": 1150,
+      "intervalDecreaseMs": 8,
+      "earlySpawnCount": 6,
+      "minIntervalMs": 260
+    },
+    "hard": {
+      "maxActiveTargets": 5,
+      "initialIntervalMs": 1000,
+      "intervalDecreaseMs": 10,
+      "earlySpawnCount": 5,
+      "minIntervalMs": 220
+    }
+  }
+}

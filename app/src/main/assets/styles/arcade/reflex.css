@@ -192,29 +192,54 @@
 
 .reflex__target {
   position: absolute;
-  width: 68px;
-  height: 68px;
+  width: var(--reflex-target-hit-size, 68px);
+  height: var(--reflex-target-hit-size, 68px);
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 30%, #e8f0ff, #7ef3d1);
-  box-shadow: 0 10px 24px rgba(62, 230, 255, 0.35), 0 0 0 6px rgba(62, 230, 255, 0.15);
-  border: 2px solid rgba(10, 15, 23, 0.35);
+  background: transparent;
+  border: none;
+  padding: 0;
   cursor: pointer;
-  transition: transform 80ms ease, box-shadow 120ms ease;
 }
 
 .reflex__target:focus-visible,
 .reflex__target:hover {
-  transform: scale(1.04);
+  outline: none;
+}
+
+.reflex__target::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--reflex-target-size, 68px);
+  height: var(--reflex-target-size, 68px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #e8f0ff, #7ef3d1);
+  box-shadow: 0 10px 24px rgba(62, 230, 255, 0.35), 0 0 0 6px rgba(62, 230, 255, 0.15);
+  border: 2px solid rgba(10, 15, 23, 0.35);
+  transition: transform 80ms ease, box-shadow 120ms ease;
+  pointer-events: none;
+}
+
+.reflex__target:focus-visible::before,
+.reflex__target:hover::before {
+  transform: translate(-50%, -50%) scale(1.04);
   box-shadow: 0 12px 28px rgba(62, 230, 255, 0.45), 0 0 0 8px rgba(62, 230, 255, 0.22);
 }
 
 .reflex__target::after {
   content: '';
   position: absolute;
-  inset: 18%;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--reflex-target-size, 68px) * 0.64);
+  height: calc(var(--reflex-target-size, 68px) * 0.64);
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   border: 2px dashed rgba(10, 15, 23, 0.3);
   opacity: 0.6;
+  pointer-events: none;
 }
 
 .reflex__sr-status {
