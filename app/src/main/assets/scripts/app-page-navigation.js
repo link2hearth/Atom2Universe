@@ -62,6 +62,106 @@ const STARFIELD_MODE_SETTINGS = Object.freeze({
   })
 });
 let starfieldInitializedForMode = null;
+let lastNavActiveTarget = null;
+let navButtonByTarget = null;
+
+const PAGE_VIEW_CLASS_MAP = Object.freeze({
+  game: 'view-game',
+  arcade: 'view-arcade',
+  arcadeHub: 'view-arcade-hub',
+  metaux: 'view-metaux',
+  bigger: 'view-bigger',
+  wave: 'view-wave',
+  balance: 'view-balance',
+  quantum2048: 'view-quantum2048',
+  starBridges: 'view-star-bridges',
+  starsWar: 'view-stars-war',
+  jumpingCat: 'view-jumping-cat',
+  reflex: 'view-reflex',
+  pipeTap: 'view-pipe-tap',
+  colorStack: 'view-color-stack',
+  motocross: 'view-motocross',
+  hex: 'view-hex',
+  twins: 'view-twins',
+  sokoban: 'view-sokoban',
+  taquin: 'view-taquin',
+  sudoku: 'view-sudoku',
+  lightsOut: 'view-lights-out',
+  link: 'view-link',
+  gameOfLife: 'view-game-of-life',
+  news: 'view-news',
+  images: 'view-images',
+  notes: 'view-notes'
+});
+
+function getNavButtonMap() {
+  if (navButtonByTarget) {
+    return navButtonByTarget;
+  }
+  navButtonByTarget = new Map();
+  if (elements?.navButtons?.length) {
+    elements.navButtons.forEach(btn => {
+      const target = btn?.dataset?.target;
+      if (typeof target === 'string' && target.trim()) {
+        navButtonByTarget.set(target, btn);
+      }
+    });
+  }
+  return navButtonByTarget;
+}
+
+function updateActiveNavButton(target) {
+  if (!elements?.navButtons?.length) {
+    return;
+  }
+  const buttonsByTarget = getNavButtonMap();
+  const nextButton = buttonsByTarget.get(target) || null;
+  if (lastNavActiveTarget && lastNavActiveTarget !== target) {
+    const previousButton = buttonsByTarget.get(lastNavActiveTarget);
+    previousButton?.classList?.remove('active');
+  }
+  if (nextButton) {
+    nextButton.classList.add('active');
+  }
+  lastNavActiveTarget = target;
+}
+
+function updateActivePageVisibility(nextPageId) {
+  const previousPageId = document.body?.dataset?.activePage;
+  const previousPage = previousPageId ? document.getElementById(previousPageId) : null;
+  const nextPage = document.getElementById(nextPageId);
+  if (previousPage && nextPage) {
+    if (previousPage !== nextPage) {
+      previousPage.classList.remove('active');
+      previousPage.toggleAttribute('hidden', true);
+    }
+    nextPage.classList.add('active');
+    nextPage.toggleAttribute('hidden', false);
+    return;
+  }
+  elements.pages.forEach(page => {
+    const isActive = page.id === nextPageId;
+    page.classList.toggle('active', isActive);
+    page.toggleAttribute('hidden', !isActive);
+  });
+}
+
+function updateBodyViewClasses(previousPageId, nextPageId, isMusicPage) {
+  if (!document?.body?.classList) {
+    return;
+  }
+  if (previousPageId && previousPageId !== nextPageId) {
+    const previousClass = PAGE_VIEW_CLASS_MAP[previousPageId];
+    if (previousClass) {
+      document.body.classList.remove(previousClass);
+    }
+  }
+  const nextClass = PAGE_VIEW_CLASS_MAP[nextPageId];
+  if (nextClass) {
+    document.body.classList.add(nextClass);
+  }
+  document.body.classList.toggle('view-radio', isMusicPage);
+}
 
 const NAVIGATION_CONFIG =
   typeof GAME_CONFIG !== 'undefined' && GAME_CONFIG && typeof GAME_CONFIG.navigation === 'object'
@@ -210,6 +310,7 @@ function showPage(pageId) {
     }
     return;
   }
+  const previousPageId = document.body?.dataset?.activePage;
   if (pageId !== 'notes' && notesIsFullscreen) {
     setNotesFullscreen(false);
   }
@@ -223,64 +324,11 @@ function showPage(pageId) {
   const navActiveTarget = isMusicPage ? 'radio' : pageId;
   forceUnlockScrollSafe({ reapplyScrollBehavior: false });
   const now = performance.now();
-  if (pageId === 'wave') {
-    ensureWaveGame();
-  }
-  if (pageId === 'bigger') {
-    ensureBiggerGame();
-  }
-  if (pageId === 'balance') {
-    ensureBalanceGame();
-  }
-  if (pageId === 'quantum2048') {
-    ensureQuantum2048Game();
-  }
   if (pageId === 'escape') {
     ensureEscapeGame();
   }
-  if (pageId === 'starBridges') {
-    ensureStarBridgesGame();
-  }
-  if (pageId === 'starsWar') {
-    ensureStarsWarGame();
-  }
-  if (pageId === 'jumpingCat') {
-    ensureJumpingCatGame();
-  }
-  if (pageId === 'reflex') {
-    ensureReflexGame();
-  }
-  if (pageId === 'pipeTap') {
-    ensurePipeTapGame();
-  }
-  if (pageId === 'colorStack') {
-    ensureColorStackGame();
-  }
-  if (pageId === 'hex') {
-    ensureHexGame();
-  }
-  if (pageId === 'sokoban') {
-    ensureSokobanGame();
-  }
-  if (pageId === 'taquin') {
-    ensureTaquinGame();
-  }
-  if (pageId === 'link') {
-    ensureLinkGame();
-  }
-  if (pageId === 'lightsOut') {
-    ensureLightsOutGame();
-  }
-  elements.pages.forEach(page => {
-    const isActive = page.id === pageId;
-    page.classList.toggle('active', isActive);
-    page.toggleAttribute('hidden', !isActive);
-  });
-  elements.navButtons.forEach(btn => {
-    const target = btn.dataset.target;
-    const isActiveNav = target === navActiveTarget;
-    btn.classList.toggle('active', isActiveNav);
-  });
+  updateActivePageVisibility(pageId);
+  updateActiveNavButton(navActiveTarget);
   document.body.dataset.activePage = pageId;
   if (isMusicPage) {
     writeStoredMusicPagePreference(pageId);
@@ -301,33 +349,7 @@ function showPage(pageId) {
     : 'clicker';
   document.body.dataset.pageGroup = activePageGroup;
   applyActivePageScrollBehavior(activePageElement);
-  document.body.classList.toggle('view-game', pageId === 'game');
-  document.body.classList.toggle('view-arcade', pageId === 'arcade');
-  document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');
-  document.body.classList.toggle('view-metaux', pageId === 'metaux');
-  document.body.classList.toggle('view-bigger', pageId === 'bigger');
-  document.body.classList.toggle('view-wave', pageId === 'wave');
-  document.body.classList.toggle('view-balance', pageId === 'balance');
-  document.body.classList.toggle('view-quantum2048', pageId === 'quantum2048');
-  document.body.classList.toggle('view-star-bridges', pageId === 'starBridges');
-  document.body.classList.toggle('view-stars-war', pageId === 'starsWar');
-  document.body.classList.toggle('view-jumping-cat', pageId === 'jumpingCat');
-  document.body.classList.toggle('view-reflex', pageId === 'reflex');
-  document.body.classList.toggle('view-pipe-tap', pageId === 'pipeTap');
-  document.body.classList.toggle('view-color-stack', pageId === 'colorStack');
-  document.body.classList.toggle('view-motocross', pageId === 'motocross');
-  document.body.classList.toggle('view-hex', pageId === 'hex');
-  document.body.classList.toggle('view-twins', pageId === 'twins');
-  document.body.classList.toggle('view-sokoban', pageId === 'sokoban');
-  document.body.classList.toggle('view-taquin', pageId === 'taquin');
-  document.body.classList.toggle('view-sudoku', pageId === 'sudoku');
-  document.body.classList.toggle('view-lights-out', pageId === 'lightsOut');
-  document.body.classList.toggle('view-link', pageId === 'link');
-  document.body.classList.toggle('view-game-of-life', pageId === 'gameOfLife');
-  document.body.classList.toggle('view-news', pageId === 'news');
-  document.body.classList.toggle('view-images', pageId === 'images');
-  document.body.classList.toggle('view-radio', isMusicPage);
-  document.body.classList.toggle('view-notes', pageId === 'notes');
+  updateBodyViewClasses(previousPageId, pageId, isMusicPage);
   applyBackgroundImage();
   if (pageId === 'game') {
     randomizeAtomButtonImage();
@@ -380,124 +402,95 @@ function showPage(pageId) {
     refreshNotesList({ silent: true });
   }
   renderNewsTicker();
-  if (quantum2048Game) {
-    if (pageId === 'quantum2048') {
-      quantum2048Game.onEnter();
-    } else {
-      quantum2048Game.onLeave();
-    }
+  if (pageId === 'quantum2048') {
+    ensureQuantum2048Game();
+    quantum2048Game?.onEnter();
+  } else if (quantum2048Game) {
+    quantum2048Game.onLeave();
   }
-  const starBridges = ensureStarBridgesGame();
-  if (starBridges) {
-    if (pageId === 'starBridges') {
-      starBridges.onEnter?.();
-    } else {
-      starBridges.onLeave?.();
-    }
+  if (pageId === 'starBridges') {
+    const starBridges = ensureStarBridgesGame();
+    starBridges?.onEnter?.();
+  } else if (starBridgesGame) {
+    starBridgesGame.onLeave?.();
   }
-  const starsWar = ensureStarsWarGame();
-  if (starsWar) {
-    if (pageId === 'starsWar') {
-      starsWar.onEnter?.();
-    } else {
-      starsWar.onLeave?.();
-    }
+  if (pageId === 'starsWar') {
+    const starsWar = ensureStarsWarGame();
+    starsWar?.onEnter?.();
+  } else if (starsWarGame) {
+    starsWarGame.onLeave?.();
   }
-  const jumpingCat = ensureJumpingCatGame();
-  if (jumpingCat) {
-    if (pageId === 'jumpingCat') {
-      jumpingCat.onEnter?.();
-    } else {
-      jumpingCat.onLeave?.();
-    }
+  if (pageId === 'jumpingCat') {
+    const jumpingCat = ensureJumpingCatGame();
+    jumpingCat?.onEnter?.();
+  } else if (jumpingCatGame) {
+    jumpingCatGame.onLeave?.();
   }
-  const reflex = ensureReflexGame();
-  if (reflex) {
-    if (pageId === 'reflex') {
-      reflex.onEnter?.();
-    } else {
-      reflex.onLeave?.();
-    }
+  if (pageId === 'reflex') {
+    const reflex = ensureReflexGame();
+    reflex?.onEnter?.();
+  } else if (reflexGame) {
+    reflexGame.onLeave?.();
   }
-  const pipeTap = ensurePipeTapGame();
-  if (pipeTap) {
-    if (pageId === 'pipeTap') {
-      pipeTap.onEnter?.();
-    } else {
-      pipeTap.onLeave?.();
-    }
+  if (pageId === 'pipeTap') {
+    const pipeTap = ensurePipeTapGame();
+    pipeTap?.onEnter?.();
+  } else if (pipeTapGame) {
+    pipeTapGame.onLeave?.();
   }
-  const colorStack = ensureColorStackGame();
-  if (colorStack) {
-    if (pageId === 'colorStack') {
-      colorStack.onEnter?.();
-    } else {
-      colorStack.onLeave?.();
-    }
+  if (pageId === 'colorStack') {
+    const colorStack = ensureColorStackGame();
+    colorStack?.onEnter?.();
+  } else if (colorStackGame) {
+    colorStackGame.onLeave?.();
   }
-  const hex = ensureHexGame();
-  if (hex) {
-    if (pageId === 'hex') {
-      hex.onEnter?.();
-    } else {
-      hex.onLeave?.();
-    }
+  if (pageId === 'hex') {
+    const hex = ensureHexGame();
+    hex?.onEnter?.();
+  } else if (hexGame) {
+    hexGame.onLeave?.();
   }
-  const motocross = ensureMotocrossGame();
-  if (motocross) {
-    if (pageId === 'motocross') {
-      motocross.onEnter?.();
-    } else {
-      motocross.onLeave?.();
-    }
+  if (pageId === 'motocross') {
+    const motocross = ensureMotocrossGame();
+    motocross?.onEnter?.();
+  } else if (motocrossGame) {
+    motocrossGame.onLeave?.();
   }
-  const twins = ensureTwinsGame();
-  if (twins) {
-    if (pageId === 'twins') {
-      twins.onEnter?.();
-    } else {
-      twins.onLeave?.();
-    }
+  if (pageId === 'twins') {
+    const twins = ensureTwinsGame();
+    twins?.onEnter?.();
+  } else if (twinsGame) {
+    twinsGame.onLeave?.();
   }
-  const sokoban = ensureSokobanGame();
-  if (sokoban) {
-    if (pageId === 'sokoban') {
-      sokoban.onEnter?.();
-    } else {
-      sokoban.onLeave?.();
-    }
+  if (pageId === 'sokoban') {
+    const sokoban = ensureSokobanGame();
+    sokoban?.onEnter?.();
+  } else if (sokobanGame) {
+    sokobanGame.onLeave?.();
   }
-  const taquin = ensureTaquinGame();
-  if (taquin) {
-    if (pageId === 'taquin') {
-      taquin.onEnter?.();
-    } else {
-      taquin.onLeave?.();
-    }
+  if (pageId === 'taquin') {
+    const taquin = ensureTaquinGame();
+    taquin?.onEnter?.();
+  } else if (taquinGame) {
+    taquinGame.onLeave?.();
   }
-  const link = ensureLinkGame();
-  if (link) {
-    if (pageId === 'link') {
-      link.onEnter?.();
-    } else {
-      link.onLeave?.();
-    }
+  if (pageId === 'link') {
+    const link = ensureLinkGame();
+    link?.onEnter?.();
+  } else if (linkGame) {
+    linkGame.onLeave?.();
   }
-  const lightsOut = ensureLightsOutGame();
-  if (lightsOut) {
-    if (pageId === 'lightsOut') {
-      lightsOut.onEnter?.();
-    } else {
-      lightsOut.onLeave?.();
-    }
+  if (pageId === 'lightsOut') {
+    const lightsOut = ensureLightsOutGame();
+    lightsOut?.onEnter?.();
+  } else if (lightsOutGame) {
+    lightsOutGame.onLeave?.();
   }
-  const gameOfLife = ensureGameOfLifeGame();
-  if (gameOfLife) {
-    if (pageId === 'gameOfLife') {
-      gameOfLife.onEnter?.();
-    } else {
-      gameOfLife.onLeave?.();
-    }
+  if (pageId === 'gameOfLife') {
+    const gameOfLife = ensureGameOfLifeGame();
+    gameOfLife?.onEnter?.();
+  } else if (gameOfLifeGame) {
+    gameOfLifeGame.onLeave?.();
   }
   const manualPageActive = pageId === 'game' || pageId === 'wave';
   if (manualPageActive && (typeof document === 'undefined' || !document.hidden)) {
