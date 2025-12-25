@@ -2930,32 +2930,32 @@ function getMotocrossAutosaveStats() {
   }
 }
 
+function writeArcadeProgressEntry(gameId, entryState) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const autosave = window.ArcadeAutosave;
+  if (autosave && typeof autosave.writeProgressEntry === 'function') {
+    autosave.writeProgressEntry(gameId, entryState);
+    return;
+  }
+  if (autosave && typeof autosave.set === 'function') {
+    try {
+      autosave.set(gameId, entryState);
+    } catch (error) {
+      // Ignore autosave failures
+    }
+  }
+}
+
 function syncMotocrossProgressEntry(record) {
   if (!hasMotocrossRecordData(record) || typeof gameState !== 'object') {
     return;
   }
-  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
-    gameState.arcadeProgress = { version: 1, entries: {} };
-  }
-  if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
-    gameState.arcadeProgress.entries = {};
-  }
-  const entry = {
-    state: {
-      bestDistance: record.bestDistance,
-      bestSpeed: record.bestSpeed
-    },
-    updatedAt: Date.now()
-  };
-  gameState.arcadeProgress.entries.motocross = entry;
-  const persistSave = typeof saveGame === 'function'
-    ? saveGame
-    : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
-      ? window.saveGame
-      : null);
-  if (typeof persistSave === 'function') {
-    persistSave();
-  }
+  writeArcadeProgressEntry('motocross', {
+    bestDistance: record.bestDistance,
+    bestSpeed: record.bestSpeed
+  });
 }
 
 function getMotocrossProgressStats() {
@@ -3042,27 +3042,10 @@ function syncJumpingCatProgressEntry(record) {
   if (!hasJumpingCatRecord(record) || typeof gameState !== 'object') {
     return;
   }
-  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
-    gameState.arcadeProgress = { version: 1, entries: {} };
-  }
-  if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
-    gameState.arcadeProgress.entries = {};
-  }
-  gameState.arcadeProgress.entries.jumpingCat = {
-    state: {
-      bestScore: record.bestScore,
-      bestTime: record.bestTime
-    },
-    updatedAt: Date.now()
-  };
-  const save = typeof saveGame === 'function'
-    ? saveGame
-    : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
-      ? window.saveGame
-      : null);
-  if (typeof save === 'function') {
-    save();
-  }
+  writeArcadeProgressEntry('jumpingCat', {
+    bestScore: record.bestScore,
+    bestTime: record.bestTime
+  });
 }
 
 function getJumpingCatProgressStats() {
@@ -3143,27 +3126,10 @@ function syncReflexProgressEntry(record) {
   if (!hasReflexRecord(normalized) || typeof gameState !== 'object') {
     return;
   }
-  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
-    gameState.arcadeProgress = { version: 1, entries: {} };
-  }
-  if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
-    gameState.arcadeProgress.entries = {};
-  }
-  gameState.arcadeProgress.entries.reflex = {
-    state: {
-      bestScores: normalized.bestScores,
-      bestScore: Math.max(normalized.bestScores.easy, normalized.bestScores.hard)
-    },
-    updatedAt: Date.now()
-  };
-  const persistSave = typeof saveGame === 'function'
-    ? saveGame
-    : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
-      ? window.saveGame
-      : null);
-  if (typeof persistSave === 'function') {
-    persistSave();
-  }
+  writeArcadeProgressEntry('reflex', {
+    bestScores: normalized.bestScores,
+    bestScore: Math.max(normalized.bestScores.easy, normalized.bestScores.hard)
+  });
 }
 
 function getReflexProgressStats() {
@@ -3305,18 +3271,11 @@ function syncStarsWarProgressEntry(stats) {
   if (!gameState || typeof gameState !== 'object') {
     return;
   }
-  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
-    gameState.arcadeProgress = { version: 1, entries: {} };
-  }
   const progress = gameState.arcadeProgress;
-  if (!progress.entries || typeof progress.entries !== 'object') {
-    progress.entries = {};
-  }
-  progress.version = Number.isFinite(progress.version) && progress.version > 0
-    ? Math.floor(progress.version)
-    : 1;
-
-  const currentEntry = progress.entries.starsWar || progress.entries.starswar || null;
+  const entries = progress && typeof progress === 'object' && progress.entries && typeof progress.entries === 'object'
+    ? progress.entries
+    : {};
+  const currentEntry = entries.starsWar || entries.starswar || null;
   const currentState = currentEntry && typeof currentEntry === 'object' && typeof currentEntry.state === 'object'
     ? currentEntry.state
     : null;
@@ -3368,18 +3327,8 @@ function syncStarsWarProgressEntry(stats) {
     updatedAt: Date.now()
   };
 
-  progress.entries.starsWar = entry;
-  progress.entries.starswar = entry;
-
   if (changed || !existingHasData) {
-    const persistSave = typeof saveGame === 'function'
-      ? saveGame
-      : (typeof window !== 'undefined' && typeof window.saveGame === 'function'
-        ? window.saveGame
-        : null);
-    if (typeof persistSave === 'function') {
-      persistSave();
-    }
+    writeArcadeProgressEntry('starsWar', entry.state);
   }
 }
 

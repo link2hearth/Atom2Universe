@@ -153,30 +153,6 @@
     return fallbackKey || null;
   }
 
-  function ensureMotocrossProgressEntry(globalState) {
-    if (!globalState || typeof globalState !== 'object') {
-      return null;
-    }
-    if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
-      globalState.arcadeProgress = { version: 1, entries: {} };
-    }
-    const progress = globalState.arcadeProgress;
-    if (!progress.entries || typeof progress.entries !== 'object') {
-      progress.entries = {};
-    }
-    const entries = progress.entries;
-    const key = findMotocrossEntryKey(entries);
-    let entry = key ? entries[key] : null;
-    if (!entry || typeof entry !== 'object') {
-      entry = { state: {}, updatedAt: Date.now() };
-    }
-    if (!entry.state || typeof entry.state !== 'object') {
-      entry.state = {};
-    }
-    entries[MOTOCROSS_PROGRESS_KEY] = entry;
-    return entry;
-  }
-
   function readMotocrossAutosaveSnapshot() {
     const api = getArcadeAutosaveApi();
     if (!api) {
@@ -1592,36 +1568,16 @@
       bestSpeed: state.bestRecords.bestSpeed
     };
     const autosave = getArcadeAutosaveApi();
-    if (autosave) {
+    if (autosave && typeof autosave.writeProgressEntry === 'function') {
+      autosave.writeProgressEntry(MOTOCROSS_PROGRESS_KEY, autosavePayload);
+    } else if (autosave && typeof autosave.set === 'function') {
       try {
         autosave.set(MOTOCROSS_PROGRESS_KEY, autosavePayload);
       } catch (error) {
         // Ignore autosave errors to avoid interrupting the run.
       }
     }
-    const globalState = getGlobalGameState();
-    if (globalState) {
-      const entry = ensureMotocrossProgressEntry(globalState);
-      if (entry) {
-        const nextState = entry.state && typeof entry.state === 'object' ? { ...entry.state } : {};
-        nextState.bestDistance = autosavePayload.bestDistance;
-        nextState.bestSpeed = autosavePayload.bestSpeed;
-        const payload = { state: nextState, updatedAt: Date.now() };
-        if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
-          globalState.arcadeProgress.entries = {};
-        }
-        globalState.arcadeProgress.entries[MOTOCROSS_PROGRESS_KEY] = payload;
-      }
-    }
     state.recordsDirty = false;
-    const saveFn = getSaveGameFunction();
-    if (typeof saveFn === 'function') {
-      try {
-        saveFn();
-      } catch (error) {
-        // Ignore save errors for this optional sync
-      }
-    }
   }
 
   hydrateMotocrossRecords();

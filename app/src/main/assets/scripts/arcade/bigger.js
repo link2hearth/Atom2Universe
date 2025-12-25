@@ -1510,20 +1510,14 @@
     persistState() {
       const payload = this.serializeState();
       writeStoredState(payload);
-      const globalState = getGlobalGameState();
-      if (globalState) {
-        if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
-          globalState.arcadeProgress = { version: 1, entries: {} };
-        }
-        if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
-          globalState.arcadeProgress.entries = {};
-        }
-        globalState.arcadeProgress.entries[GAME_ID] = {
-          state: deepClone(payload),
-          updatedAt: Date.now()
-        };
+      const autosave = typeof window !== 'undefined' ? window.ArcadeAutosave : null;
+      if (autosave && typeof autosave.writeProgressEntry === 'function') {
+        autosave.writeProgressEntry(GAME_ID, payload);
+      } else if (autosave && typeof autosave.set === 'function') {
+        autosave.set(GAME_ID, payload);
+      } else {
+        requestSave();
       }
-      requestSave();
     }
 
     serializeState() {

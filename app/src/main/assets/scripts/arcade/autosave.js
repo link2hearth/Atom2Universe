@@ -460,6 +460,13 @@
     updateGlobalProgress();
   };
 
+  const writeProgressEntry = (gameId, entryState) => {
+    if (!entryState || typeof entryState !== 'object') {
+      return;
+    }
+    setEntry(gameId, entryState);
+  };
+
   const clearEntry = gameId => {
     if (!gameId || typeof gameId !== 'string') {
       return;
@@ -491,6 +498,7 @@
     },
     getEntry,
     set: setEntry,
+    writeProgressEntry,
     clear: clearEntry,
     list: listEntries,
     knownGames: () => KNOWN_GAME_IDS.slice(),
