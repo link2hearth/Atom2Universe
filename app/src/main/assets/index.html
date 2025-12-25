@@ -8533,6 +8533,23 @@
             Choisissez une action pour gérer vos sauvegardes.
           </p>
         </div>
+        <div class="option-card option-card--custom-pages">
+          <div class="option-card__header">
+            <h3 data-i18n="index.sections.options.customPages.title">Pages personnalisées</h3>
+            <p class="option-card__subtitle" data-i18n="index.sections.options.customPages.subtitle">
+              Accédez aux pages ajoutées via la configuration.
+            </p>
+          </div>
+          <p
+            id="customPagesEmptyState"
+            class="option-note"
+            data-i18n="index.sections.options.customPages.empty"
+            hidden
+          >
+            Aucune page personnalisée n’est disponible pour le moment.
+          </p>
+          <ul id="customPagesList" class="custom-pages-list" aria-live="polite"></ul>
+        </div>
         <div class="option-card option-card--notes">
           <div class="option-card__header">
             <h3 data-i18n="index.sections.options.notes.title">Notes</h3>
@@ -9419,6 +9436,7 @@
   <script src="scripts/modules/audio/scc-engine.js"></script>
   <script src="scripts/modules/chiptune-player.js"></script>
   <script src="scripts/modules/app-data.js"></script>
+  <script src="scripts/modules/custom-pages.js"></script>
   <script src="scripts/app-ui-arcade.js"></script>
   <script src="scripts/app-media.js"></script>
   <script src="scripts/feature-flags.js"></script>

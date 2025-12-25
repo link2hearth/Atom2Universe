@@ -858,6 +858,37 @@ function loadConfigJson(path, fallback) {
   return fallback;
 }
 
+function normalizeCustomPageEntry(entry) {
+  if (!entry || typeof entry !== 'object') {
+    return null;
+  }
+  const id = typeof entry.id === 'string' ? entry.id.trim() : '';
+  const path = typeof entry.path === 'string' ? entry.path.trim() : '';
+  const titleKey = typeof entry.titleKey === 'string' ? entry.titleKey.trim() : '';
+  const descriptionKey = typeof entry.descriptionKey === 'string' ? entry.descriptionKey.trim() : '';
+  const openMode = typeof entry.openMode === 'string' ? entry.openMode.trim() : '';
+  const css = Array.isArray(entry.css)
+    ? entry.css.filter(value => typeof value === 'string' && value.trim())
+    : (typeof entry.css === 'string' && entry.css.trim() ? [entry.css.trim()] : []);
+  const js = Array.isArray(entry.js)
+    ? entry.js.filter(value => typeof value === 'string' && value.trim())
+    : (typeof entry.js === 'string' && entry.js.trim() ? [entry.js.trim()] : []);
+
+  if (!id || !path || !titleKey) {
+    return null;
+  }
+
+  return Object.freeze({
+    id,
+    path,
+    titleKey,
+    descriptionKey: descriptionKey || null,
+    openMode: openMode || 'standalone',
+    css,
+    js
+  });
+}
+
 const ARCADE_HOLDEM_CONFIG = loadConfigJson('./config/arcade/holdem.json', {});
 const ARCADE_BALANCE_CONFIG = loadConfigJson('./config/arcade/balance.json', {});
 const ARCADE_MATH_CONFIG = loadConfigJson('./config/arcade/math.json', {});
@@ -872,6 +903,13 @@ const ARCADE_METAUX_CONFIG = loadConfigJson('./config/arcade/metaux.json', {});
 const ARCADE_GOMOKU_CONFIG = loadConfigJson('./config/arcade/gomoku.json', {});
 const ARCADE_CIRCLES_CONFIG = loadConfigJson('./config/arcade/circles.json', {});
 const ARCADE_REFLEX_CONFIG = loadConfigJson('./config/arcade/reflex.json', {});
+
+const RAW_CUSTOM_PAGES_CONFIG = loadConfigJson('./config/custom-pages.json', []);
+const CUSTOM_PAGES_CONFIG = Object.freeze(
+  (Array.isArray(RAW_CUSTOM_PAGES_CONFIG) ? RAW_CUSTOM_PAGES_CONFIG : [])
+    .map(normalizeCustomPageEntry)
+    .filter(Boolean)
+);
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1349,6 +1387,14 @@ const GAME_CONFIG = {
    */
   navigation: {
     pointerClickSuppressMs: 350
+  },
+
+  /**
+   * Registre des pages personnalisées affichées dans les options.
+   * - entries : liste déclarative des pages externes (id, path, titleKey, etc.).
+   */
+  customPages: {
+    entries: CUSTOM_PAGES_CONFIG
   },
 
   /**
@@ -2003,8 +2049,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
-
 
 
 

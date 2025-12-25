@@ -2389,6 +2389,17 @@
             "unsupported": "Feature available only in the Android app."
           }
         },
+        "customPages": {
+          "title": "Custom pages",
+          "subtitle": "Access pages added through configuration.",
+          "empty": "No custom page is available at the moment.",
+          "pages": {
+            "reflex": {
+              "title": "Reflex (standalone page)",
+              "description": "Launch the Reflex mini-game in a separate page."
+            }
+          }
+        },
         "notes": {
           "title": "Notes",
           "openButton": "Open notes"
