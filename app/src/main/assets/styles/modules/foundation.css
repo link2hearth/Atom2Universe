@@ -996,7 +996,7 @@ body.view-sudoku .status-bar {
   display: inline-block;
   background-image: var(--header-turtle-sprite, url('../../Assets/sprites/Tortue.png'));
   background-repeat: no-repeat;
-  background-position: 0 0;
+  background-position: var(--header-turtle-frame-offset, 0px) 0;
   background-size: calc(var(--header-turtle-frame-width, 48px) * var(--header-turtle-frame-count, 6))
     var(--header-turtle-frame-height, 48px);
   image-rendering: pixelated;
@@ -1004,17 +1004,7 @@ body.view-sudoku .status-bar {
   position: relative;
   z-index: 2;
   opacity: 1;
-  animation: header-turtle-walk var(--header-turtle-animation-duration, 3000ms)
-    steps(var(--header-turtle-frame-count, 6)) infinite;
-}
-
-@keyframes header-turtle-walk {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: calc(-1 * var(--header-turtle-sprite-offset, 240px)) 0;
-  }
+  transition: background-position 0ms;
 }
 
 .status-value {

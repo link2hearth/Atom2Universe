@@ -5,6 +5,7 @@ let startupOverlayGlobalFallbackTimeout = null;
 let visibilityChangeListenerAttached = false;
 let appStartAttempted = false;
 let appStartCompleted = false;
+let headerTurtleAnimationTimer = null;
 
 function getStartupOverlayElement() {
   if (elements && elements.startupOverlay) {
@@ -1233,6 +1234,27 @@ function applyHeaderTurtleSettings() {
     return;
   }
 
+  const normalizedSettings = getNormalizedHeaderTurtleSettings();
+  const {
+    frameWidth: normalizedFrameWidth,
+    frameHeight: normalizedFrameHeight,
+    frameCount: normalizedFrameCount,
+    frameDurationMs: normalizedFrameDurationMs,
+    spriteUrl: normalizedSpriteUrl
+  } = normalizedSettings;
+
+  const totalDurationMs = normalizedFrameDurationMs * normalizedFrameCount;
+  const spriteOffsetPx = Math.max(0, normalizedFrameWidth * (normalizedFrameCount - 1));
+
+  root.style.setProperty('--header-turtle-frame-width', `${normalizedFrameWidth}px`);
+  root.style.setProperty('--header-turtle-frame-height', `${normalizedFrameHeight}px`);
+  root.style.setProperty('--header-turtle-frame-count', String(normalizedFrameCount));
+  root.style.setProperty('--header-turtle-animation-duration', `${totalDurationMs}ms`);
+  root.style.setProperty('--header-turtle-sprite-offset', `${spriteOffsetPx}px`);
+  root.style.setProperty('--header-turtle-sprite', `url("${normalizedSpriteUrl}")`);
+}
+
+function getNormalizedHeaderTurtleSettings() {
   const fallback = DEFAULT_HEADER_TURTLE_SETTINGS;
   const settings = typeof ACTIVE_HEADER_TURTLE_SETTINGS === 'object' && ACTIVE_HEADER_TURTLE_SETTINGS
     ? ACTIVE_HEADER_TURTLE_SETTINGS
@@ -1259,9 +1281,6 @@ function applyHeaderTurtleSettings() {
     ? Math.max(50, Math.round(frameDurationMs))
     : fallback.frameDurationMs;
 
-  const totalDurationMs = normalizedFrameDurationMs * normalizedFrameCount;
-  const spriteOffsetPx = Math.max(0, normalizedFrameWidth * (normalizedFrameCount - 1));
-
   const normalizedSpriteUrl = (() => {
     if (!spriteUrl) {
       return '';
@@ -1275,12 +1294,42 @@ function applyHeaderTurtleSettings() {
     return `../../${spriteUrl.replace(/^\/+/, '')}`;
   })();
 
-  root.style.setProperty('--header-turtle-frame-width', `${normalizedFrameWidth}px`);
-  root.style.setProperty('--header-turtle-frame-height', `${normalizedFrameHeight}px`);
-  root.style.setProperty('--header-turtle-frame-count', String(normalizedFrameCount));
-  root.style.setProperty('--header-turtle-animation-duration', `${totalDurationMs}ms`);
-  root.style.setProperty('--header-turtle-sprite-offset', `${spriteOffsetPx}px`);
-  root.style.setProperty('--header-turtle-sprite', `url("${normalizedSpriteUrl}")`);
+  return {
+    spriteUrl: normalizedSpriteUrl,
+    frameWidth: normalizedFrameWidth,
+    frameHeight: normalizedFrameHeight,
+    frameCount: normalizedFrameCount,
+    frameDurationMs: normalizedFrameDurationMs
+  };
+}
+
+function startHeaderTurtleAnimation() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const turtle = document.querySelector('.status-turtle');
+  if (!turtle) {
+    return;
+  }
+
+  const { frameWidth, frameCount, frameDurationMs } = getNormalizedHeaderTurtleSettings();
+
+  if (headerTurtleAnimationTimer != null) {
+    clearInterval(headerTurtleAnimationTimer);
+    headerTurtleAnimationTimer = null;
+  }
+
+  let currentFrame = 0;
+
+  const applyFrame = () => {
+    const offset = -frameWidth * currentFrame;
+    turtle.style.setProperty('--header-turtle-frame-offset', `${offset}px`);
+    currentFrame = (currentFrame + 1) % frameCount;
+  };
+
+  applyFrame();
+  headerTurtleAnimationTimer = setInterval(applyFrame, frameDurationMs);
 }
 
 function showStartupOverlay(options = {}) {

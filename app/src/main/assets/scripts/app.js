@@ -14159,6 +14159,7 @@ function initializeApp() {
   applyAtomVariantVisualState();
   applyStartupOverlayDuration();
   applyHeaderTurtleSettings();
+  startHeaderTurtleAnimation();
   scheduleStartupOverlayFailsafe();
   prefetchAndroidManagedFiles();
   if (!visibilityChangeListenerAttached) {
