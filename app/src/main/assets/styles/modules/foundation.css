@@ -980,6 +980,37 @@ body.view-sudoku .status-bar {
   opacity: 0.72;
 }
 
+.status-label--aps {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(0.3rem * var(--header-scale, 1));
+}
+
+.status-turtle {
+  width: var(--header-turtle-frame-width, 48px);
+  height: var(--header-turtle-frame-height, 48px);
+  flex-shrink: 0;
+  display: inline-block;
+  background-image: var(--header-turtle-sprite, url('Assets/sprites/Tortue.png'));
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: calc(var(--header-turtle-frame-width, 48px) * var(--header-turtle-frame-count, 6))
+    var(--header-turtle-frame-height, 48px);
+  image-rendering: pixelated;
+  transform: scaleX(-1);
+  animation: header-turtle-walk var(--header-turtle-animation-duration, 3000ms)
+    steps(var(--header-turtle-frame-count, 6)) infinite;
+}
+
+@keyframes header-turtle-walk {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: calc(-1 * var(--header-turtle-sprite-offset, 240px)) 0;
+  }
+}
+
 .status-value {
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: calc(
