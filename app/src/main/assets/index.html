@@ -103,10 +103,10 @@
         >
           <span data-i18n="index.navigation.items.shop">Boutique</span>
         </button>
-        <button class="nav-button" data-target="gacha" hidden>
+        <button class="nav-button" data-target="gacha" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.gacha">Gacha</span>
         </button>
-        <button class="nav-button" data-target="fusion" hidden>
+        <button class="nav-button" data-target="fusion" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.fusion">Fusion</span>
         </button>
         <button class="nav-button" data-target="info">
@@ -121,7 +121,7 @@
         <button class="nav-button" data-target="radio">
           <span data-i18n="index.navigation.items.radio">Musique</span>
         </button>
-        <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden>
+        <button class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
           <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
         </button>
         <button class="nav-button" data-target="options">
@@ -160,10 +160,10 @@
       <div class="frenzy-status__item frenzy-status__item--apc" id="statusApcFrenzy" hidden>
         <span class="frenzy-status__multiplier" id="statusApcFrenzyMultiplier"></span>
         <span class="frenzy-status__timer" id="statusApcFrenzyTimer"></span>
-        <div class="apc-frenzy-counter" id="apcFrenzyCounter" aria-live="polite" hidden>
+        <div class="apc-frenzy-counter" id="apcFrenzyCounter" aria-live="polite" aria-hidden="true" hidden>
           <span class="apc-frenzy-counter__value" id="apcFrenzyCounterValue">0</span>
         </div>
-        <div class="apc-frenzy-counter" id="waveApcFrenzyCounter" aria-live="polite" hidden>
+        <div class="apc-frenzy-counter" id="waveApcFrenzyCounter" aria-live="polite" aria-hidden="true" hidden>
           <span class="apc-frenzy-counter__value" id="waveApcFrenzyCounterValue">0</span>
         </div>
       </div>
@@ -197,7 +197,7 @@
       aria-label="Chambre de création atomique"
       data-i18n="aria-label:index.sections.game.aria"
     >
-      <div class="favorite-background" id="favoriteBackground" hidden></div>
+      <div class="favorite-background" id="favoriteBackground" aria-hidden="true" hidden></div>
       <div class="starfield" aria-hidden="true"></div>
 
       <div
@@ -436,7 +436,7 @@
         </p>
       </div>
 
-      <div class="gacha-periodic-link" id="gachaPeriodicLink" hidden>
+      <div class="gacha-periodic-link" id="gachaPeriodicLink" hidden aria-hidden="true">
         <button
           class="gacha-periodic-link__button"
           id="gachaPeriodicButton"
@@ -2206,7 +2206,7 @@
             aria-label="Zone de jeu Jumping Cat"
             data-i18n="aria-label:index.sections.jumpingCat.canvas"
           ></canvas>
-          <div class="jumping-cat__overlay" id="jumpingCatOverlay" role="dialog" aria-modal="true" hidden>
+          <div class="jumping-cat__overlay" id="jumpingCatOverlay" role="dialog" aria-modal="true" hidden aria-hidden="true">
             <div class="jumping-cat__panel">
               <p class="kicker" data-i18n="index.sections.jumpingCat.overlay.kicker">Prêt à bondir ?</p>
               <h3 id="jumpingCatOverlayTitle" data-i18n="index.sections.jumpingCat.overlay.readyTitle">Jumping Cat</h3>
@@ -4747,7 +4747,7 @@
             tabindex="0"
           ></div>
         </div>
-        <div class="taquin__preview" id="taquinPreview" hidden>
+        <div class="taquin__preview" id="taquinPreview" hidden aria-hidden="true">
           <h3 class="taquin__preview-title" data-i18n="index.sections.taquin.preview.title">
             Image originale
           </h3>
@@ -8940,7 +8940,7 @@
     </div>
   </div>
 
-  <div class="element-details-overlay" id="elementDetailsOverlay" hidden>
+  <div class="element-details-overlay" id="elementDetailsOverlay" hidden aria-hidden="true">
     <div class="element-details-overlay__backdrop" data-element-details-close></div>
     <section
       class="element-details-overlay__dialog"
@@ -8970,7 +8970,7 @@
     </section>
   </div>
 
-  <div class="element-details-overlay element-family-overlay" id="elementFamilyOverlay" hidden>
+  <div class="element-details-overlay element-family-overlay" id="elementFamilyOverlay" hidden aria-hidden="true">
     <div class="element-details-overlay__backdrop" data-element-family-close></div>
     <section
       class="element-details-overlay__dialog"
@@ -9004,7 +9004,7 @@
     </section>
   </div>
 
-  <div class="gacha-card-overlay" id="gachaCardOverlay" hidden>
+  <div class="gacha-card-overlay" id="gachaCardOverlay" hidden aria-hidden="true">
     <section
       class="gacha-card-overlay__dialog"
       id="gachaCardOverlayDialog"
@@ -9069,7 +9069,7 @@
     </section>
   </div>
 
-  <div class="devkit-overlay" id="devkitOverlay" hidden>
+  <div class="devkit-overlay" id="devkitOverlay" hidden aria-hidden="true">
     <div class="devkit-panel" id="devkitPanel" role="dialog" aria-modal="true" aria-labelledby="devkitTitle" tabindex="-1">
       <header class="devkit-panel__header">
         <h2 id="devkitTitle" data-i18n="index.sections.devkit.title">DevKit quantique</h2>
