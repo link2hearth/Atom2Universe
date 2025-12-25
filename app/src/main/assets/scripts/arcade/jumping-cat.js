@@ -339,23 +339,13 @@
   }
 
   function persistProgress(progress) {
-    const globalState = getGlobalGameState();
-    if (globalState) {
-      if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
-        globalState.arcadeProgress = { version: 1, entries: {} };
-      }
-      if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
-        globalState.arcadeProgress.entries = {};
-      }
-      globalState.arcadeProgress.entries[GAME_ID] = {
-        state: {
-          bestScore: progress.bestScore,
-          bestTime: progress.bestTime
-        },
-        updatedAt: Date.now()
-      };
+    if (window.ArcadeAutosave && typeof window.ArcadeAutosave.writeProgressEntry === 'function') {
+      window.ArcadeAutosave.writeProgressEntry(GAME_ID, {
+        bestScore: progress.bestScore,
+        bestTime: progress.bestTime
+      });
+      return;
     }
-
     if (window.ArcadeAutosave && typeof window.ArcadeAutosave.set === 'function') {
       try {
         window.ArcadeAutosave.set(GAME_ID, { bestScore: progress.bestScore, bestTime: progress.bestTime });
@@ -363,9 +353,6 @@
         // Ignore autosave failures
       }
     }
-
-    requestSave();
-    window.dispatchEvent(new Event('arcadeAutosaveSync'));
   }
 
   function restoreProgress() {
