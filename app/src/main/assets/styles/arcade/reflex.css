@@ -14,12 +14,6 @@
   padding: clamp(12px, 3vw, 24px);
 }
 
-.reflex-page__header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
 .reflex__back-button {
   text-decoration: none;
   font-size: 14px;
@@ -152,6 +146,7 @@
   border-radius: 12px;
   color: var(--reflex-text);
   min-width: 120px;
+  flex: 1 1 160px;
 }
 
 .reflex__stat-chip--best {
@@ -232,11 +227,6 @@
 }
 
 @media (max-width: 640px) {
-  .reflex__stat-chip {
-    width: 100%;
-    justify-content: space-between;
-  }
-
   .reflex__mode {
     width: 100%;
     justify-content: space-between;
