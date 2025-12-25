@@ -11277,23 +11277,23 @@ function updateShopUnlockHint() {
     return;
   }
 
-  let shouldVibrate = false;
-  if (!button.hidden && !button.disabled && lastVisibleShopIndex >= 0 && lastVisibleShopIndex < UPGRADE_DEFS.length) {
-    const def = UPGRADE_DEFS[lastVisibleShopIndex];
-    if (def) {
-      const level = getUpgradeLevel(gameState.upgrades, def.id);
-      if (!Number.isFinite(level) || level <= 0) {
-        const remainingLevels = getRemainingUpgradeCapacity(def);
-        if (!Number.isFinite(remainingLevels) || remainingLevels > 0) {
-          const cost = computeUpgradeCost(def, 1);
-          const atoms = toLayeredValue(gameState.atoms, 0);
-          shouldVibrate = atoms.compare(cost) >= 0;
-        }
+  let shouldHighlight = false;
+  if (!button.hidden && !button.disabled) {
+    const atoms = toLayeredValue(gameState.atoms, 0);
+    const candidateDefs = ['godFinger', 'starCore']
+      .map(id => UPGRADE_DEFS[UPGRADE_INDEX_MAP.get(id)])
+      .filter(Boolean);
+    shouldHighlight = candidateDefs.some(def => {
+      const remainingLevels = getRemainingUpgradeCapacity(def);
+      if (Number.isFinite(remainingLevels) && remainingLevels <= 0) {
+        return false;
       }
-    }
+      const cost = computeUpgradeCost(def, 1);
+      return atoms.compare(cost) >= 0;
+    });
   }
 
-  button.classList.toggle('nav-button--vibrate', shouldVibrate);
+  button.classList.toggle('nav-button--shop-ready', shouldHighlight);
 }
 
 function updateShopVisibility() {
