@@ -46,7 +46,9 @@
 
   const layoutState = {
     listenersAttached: false,
-    headerObserver: null
+    headerObserver: null,
+    resizeObserver: null,
+    rafId: null
   };
 
   function normalizeScore(value) {
@@ -398,17 +400,58 @@
     }
   }
 
+  function updatePlayfieldHeight() {
+    if (!elements.playfield) {
+      return;
+    }
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const playfieldRect = elements.playfield.getBoundingClientRect();
+    const rootStyle = root && typeof window.getComputedStyle === 'function'
+      ? window.getComputedStyle(root)
+      : null;
+    const paddingBottom = rootStyle ? Number.parseFloat(rootStyle.paddingBottom) : 0;
+    const safePadding = Number.isFinite(paddingBottom) ? paddingBottom : 0;
+    const available = Math.max(0, Math.floor(viewportHeight - playfieldRect.top - safePadding));
+    if (available > 0) {
+      elements.playfield.style.minHeight = `${available}px`;
+    } else {
+      elements.playfield.style.minHeight = '';
+    }
+  }
+
+  function scheduleLayoutUpdate() {
+    if (layoutState.rafId) {
+      cancelAnimationFrame(layoutState.rafId);
+    }
+    layoutState.rafId = requestAnimationFrame(() => {
+      layoutState.rafId = null;
+      updateTopOffset();
+      updatePlayfieldHeight();
+    });
+  }
+
   function attachLayoutListeners() {
     if (layoutState.listenersAttached) {
       return;
     }
     layoutState.listenersAttached = true;
-    updateTopOffset();
-    window.addEventListener('resize', updateTopOffset, { passive: true });
+    scheduleLayoutUpdate();
+    window.addEventListener('resize', scheduleLayoutUpdate, { passive: true });
     const header = document.querySelector('.app-header');
     if (header && typeof MutationObserver !== 'undefined') {
-      layoutState.headerObserver = new MutationObserver(updateTopOffset);
+      layoutState.headerObserver = new MutationObserver(scheduleLayoutUpdate);
       layoutState.headerObserver.observe(header, { attributes: true, attributeFilter: ['data-collapsed'] });
+    }
+    if (typeof ResizeObserver !== 'undefined') {
+      layoutState.resizeObserver = new ResizeObserver(scheduleLayoutUpdate);
+      layoutState.resizeObserver.observe(root);
+      if (elements.playfield) {
+        layoutState.resizeObserver.observe(elements.playfield);
+      }
+      const controls = root.querySelector('.reflex__controls');
+      if (controls) {
+        layoutState.resizeObserver.observe(controls);
+      }
     }
   }
 
@@ -431,7 +474,7 @@
 
   function onEnter() {
     state.bestScores = readStoredBestScores();
-    updateTopOffset();
+    scheduleLayoutUpdate();
     updateDisplays();
     setStatus('index.sections.reflex.status.ready', 'Prêt ? Cliquez sur les cercles dès qu’ils apparaissent.');
   }
