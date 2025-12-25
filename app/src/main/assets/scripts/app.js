@@ -13146,6 +13146,9 @@ function serializeState() {
       });
       return serializedElements;
     })(),
+    elementBonusSummary: gameState.elementBonusSummary && typeof gameState.elementBonusSummary === 'object'
+      ? gameState.elementBonusSummary
+      : {},
     gachaCards: (() => {
       const source = gameState.gachaCards && typeof gameState.gachaCards === 'object'
         ? gameState.gachaCards
