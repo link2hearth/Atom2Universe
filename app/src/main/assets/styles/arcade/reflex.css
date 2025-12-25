@@ -6,6 +6,31 @@
   --reflex-text: #e8f0ff;
 }
 
+.reflex-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vw, 20px);
+  padding: clamp(12px, 3vw, 24px);
+}
+
+.reflex-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.reflex__back-button {
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 14px;
+}
+
+.reflex__back-button:focus-visible {
+  outline: 2px solid rgba(62, 230, 255, 0.6);
+  outline-offset: 3px;
+}
+
 .page--reflex {
   display: flex;
   flex-direction: column;

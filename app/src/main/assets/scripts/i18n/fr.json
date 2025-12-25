@@ -6775,5 +6775,14 @@
         }
       }
     }
+  },
+  "reflex": {
+    "meta": {
+      "title": "Reflex"
+    },
+    "page": {
+      "back": "Retour",
+      "backAria": "Retour à la page principale"
+    }
   }
 }
