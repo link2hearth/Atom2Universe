@@ -842,6 +842,113 @@ function subscribeHeaderBannerLanguageUpdates() {
   }
 }
 
+function updateOptionCardToggleLabel(toggleButton, collapsed) {
+  if (!toggleButton) {
+    return;
+  }
+  const key = collapsed
+    ? 'index.sections.options.cards.toggle.expand'
+    : 'index.sections.options.cards.toggle.collapse';
+  const fallback = collapsed ? 'Expand' : 'Collapse';
+  const label = translateOrDefault(key, fallback);
+  toggleButton.setAttribute('data-i18n', key);
+  toggleButton.textContent = label;
+  toggleButton.setAttribute('aria-label', label);
+}
+
+function setOptionCardCollapsed(card, content, toggleButton, storageKey, collapsed, options = {}) {
+  if (!card || !content || !toggleButton) {
+    return;
+  }
+  const shouldCollapse = !!collapsed;
+  card.classList.toggle('option-card--collapsed', shouldCollapse);
+  content.hidden = shouldCollapse;
+  content.setAttribute('aria-hidden', shouldCollapse ? 'true' : 'false');
+  toggleButton.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  updateOptionCardToggleLabel(toggleButton, shouldCollapse);
+  if (options.persist !== false && storageKey) {
+    writeStoredInfoCardCollapsed(storageKey, shouldCollapse);
+  }
+}
+
+function initOptionCardCollapse(card, content, toggleButton, storageKey) {
+  if (!card || !content || !toggleButton) {
+    return;
+  }
+  const initialCollapsed = storageKey
+    ? readStoredInfoCardCollapsed(storageKey, false)
+    : false;
+  setOptionCardCollapsed(card, content, toggleButton, storageKey, initialCollapsed, { persist: false });
+  toggleButton.addEventListener('click', event => {
+    event.preventDefault();
+    const currentlyCollapsed = card.classList.contains('option-card--collapsed');
+    setOptionCardCollapsed(card, content, toggleButton, storageKey, !currentlyCollapsed);
+  });
+}
+
+function getOptionCardCollapseConfigs() {
+  return [
+    {
+      card: elements.optionsPreferencesCard,
+      content: elements.optionsPreferencesContent,
+      toggle: elements.optionsPreferencesToggle,
+      storageKey: OPTIONS_PREFERENCES_COLLAPSED_STORAGE_KEY
+    },
+    {
+      card: elements.optionsBackgroundCard,
+      content: elements.optionsBackgroundContent,
+      toggle: elements.optionsBackgroundToggle,
+      storageKey: OPTIONS_BACKGROUND_COLLAPSED_STORAGE_KEY
+    },
+    {
+      card: elements.optionsBackupsCard,
+      content: elements.optionsBackupsContent,
+      toggle: elements.optionsBackupsToggle,
+      storageKey: OPTIONS_BACKUPS_COLLAPSED_STORAGE_KEY
+    },
+    {
+      card: elements.optionsCustomPagesCard,
+      content: elements.optionsCustomPagesContent,
+      toggle: elements.optionsCustomPagesToggle,
+      storageKey: OPTIONS_CUSTOM_PAGES_COLLAPSED_STORAGE_KEY
+    },
+    {
+      card: elements.optionsNotesCard,
+      content: elements.optionsNotesContent,
+      toggle: elements.optionsNotesToggle,
+      storageKey: OPTIONS_NOTES_COLLAPSED_STORAGE_KEY
+    }
+  ];
+}
+
+function initOptionCards() {
+  const configs = getOptionCardCollapseConfigs();
+  configs.forEach(({ card, content, toggle, storageKey }) => {
+    initOptionCardCollapse(card, content, toggle, storageKey);
+  });
+}
+
+function subscribeOptionCardsLanguageUpdates() {
+  const handler = () => {
+    const configs = getOptionCardCollapseConfigs();
+    configs.forEach(({ card, toggle }) => {
+      if (!toggle) {
+        return;
+      }
+      const collapsed = card ? card.classList.contains('option-card--collapsed') : false;
+      updateOptionCardToggleLabel(toggle, collapsed);
+    });
+  };
+  const api = getI18nApi();
+  if (api && typeof api.onLanguageChanged === 'function') {
+    api.onLanguageChanged(handler);
+    return;
+  }
+  if (typeof globalThis !== 'undefined' && typeof globalThis.addEventListener === 'function') {
+    globalThis.addEventListener('i18n:languagechange', handler);
+  }
+}
+
 function updateInfoWelcomeToggleLabel(collapsed) {
   if (!elements.infoWelcomeToggle) {
     return;

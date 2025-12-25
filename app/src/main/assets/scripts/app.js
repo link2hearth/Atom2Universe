@@ -251,6 +251,11 @@ const INFO_CARDS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.cardsCollapsed';
 const INFO_CALCULATIONS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.calculationsCollapsed';
 const INFO_PROGRESS_COLLAPSED_STORAGE_KEY = 'atom2univers.info.progressCollapsed';
 const INFO_SCORES_COLLAPSED_STORAGE_KEY = 'atom2univers.info.scoresCollapsed';
+const OPTIONS_PREFERENCES_COLLAPSED_STORAGE_KEY = 'atom2univers.options.preferencesCollapsed';
+const OPTIONS_BACKGROUND_COLLAPSED_STORAGE_KEY = 'atom2univers.options.backgroundCollapsed';
+const OPTIONS_BACKUPS_COLLAPSED_STORAGE_KEY = 'atom2univers.options.backupsCollapsed';
+const OPTIONS_CUSTOM_PAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.options.customPagesCollapsed';
+const OPTIONS_NOTES_COLLAPSED_STORAGE_KEY = 'atom2univers.options.notesCollapsed';
 const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesCollapsed';
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const COLLECTION_BONUS1_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus1ImagesCollapsed';
@@ -13430,6 +13435,11 @@ const RESET_LOCAL_STORAGE_KEYS = [
   INFO_CARDS_COLLAPSED_STORAGE_KEY,
   INFO_CALCULATIONS_COLLAPSED_STORAGE_KEY,
   INFO_PROGRESS_COLLAPSED_STORAGE_KEY,
+  OPTIONS_PREFERENCES_COLLAPSED_STORAGE_KEY,
+  OPTIONS_BACKGROUND_COLLAPSED_STORAGE_KEY,
+  OPTIONS_BACKUPS_COLLAPSED_STORAGE_KEY,
+  OPTIONS_CUSTOM_PAGES_COLLAPSED_STORAGE_KEY,
+  OPTIONS_NOTES_COLLAPSED_STORAGE_KEY,
   COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS1_IMAGES_COLLAPSED_STORAGE_KEY,
@@ -14094,6 +14104,7 @@ function initializeDomBoundModules() {
   subscribeInfoProgressLanguageUpdates();
   subscribeInfoCharactersLanguageUpdates();
   subscribeInfoCardsLanguageUpdates();
+  subscribeOptionCardsLanguageUpdates();
   subscribeCollectionImagesLanguageUpdates();
   subscribeCollectionVideosLanguageUpdates();
   subscribeCollectionBonusImagesLanguageUpdates();

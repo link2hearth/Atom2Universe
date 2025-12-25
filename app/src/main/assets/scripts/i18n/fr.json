@@ -2288,6 +2288,12 @@
       },
       "options": {
         "title": "Options",
+        "cards": {
+          "toggle": {
+            "collapse": "Réduire",
+            "expand": "Dérouler"
+          }
+        },
         "preferences": {
           "title": "Préférences d’interface"
         },
