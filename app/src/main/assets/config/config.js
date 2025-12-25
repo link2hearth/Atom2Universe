@@ -30,6 +30,21 @@ const ANTI_CHEAT_SETTINGS = Object.freeze({
 });
 
 /**
+ * Réglages du sprite de la tortue affichée avant l’APS dans la bannière.
+ * - `spriteUrl` : chemin vers le sprite sheet (48x48 * 6 frames).
+ * - `frameWidth`/`frameHeight` : taille d’une frame en pixels.
+ * - `frameCount` : nombre total de frames.
+ * - `frameDurationMs` : durée d’affichage d’une frame en millisecondes.
+ */
+const HEADER_TURTLE_SETTINGS = Object.freeze({
+  spriteUrl: 'Assets/sprites/Tortue.png',
+  frameWidth: 48,
+  frameHeight: 48,
+  frameCount: 6,
+  frameDurationMs: 500
+});
+
+/**
  * Paramètres globaux pour la gestion des sauvegardes.
  * `storageKey` est utilisé pour stocker les métadonnées côté web.
  * `maxEntries` limite le nombre de sauvegardes conservées.
@@ -2059,7 +2074,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 
