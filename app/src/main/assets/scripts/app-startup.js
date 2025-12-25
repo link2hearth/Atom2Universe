@@ -1254,6 +1254,31 @@ function applyHeaderTurtleSettings() {
   root.style.setProperty('--header-turtle-sprite', `url("${normalizedSpriteUrl}")`);
 }
 
+function applyHeaderRabbitSettings() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const root = document.documentElement;
+  if (!root || !root.style || typeof root.style.setProperty !== 'function') {
+    return;
+  }
+
+  const normalizedSettings = getNormalizedHeaderRabbitSettings();
+  const {
+    frameWidth: normalizedFrameWidth,
+    frameHeight: normalizedFrameHeight,
+    frameCount: normalizedFrameCount,
+    spriteUrl: normalizedSpriteUrl
+  } = normalizedSettings;
+
+  root.style.setProperty('--header-rabbit-frame-width', `${normalizedFrameWidth}px`);
+  root.style.setProperty('--header-rabbit-frame-height', `${normalizedFrameHeight}px`);
+  root.style.setProperty('--header-rabbit-frame-count', String(normalizedFrameCount));
+  root.style.setProperty('--header-rabbit-frame-offset', '0px');
+  root.style.setProperty('--header-rabbit-sprite', `url("${normalizedSpriteUrl}")`);
+}
+
 function getNormalizedHeaderTurtleSettings() {
   const fallback = DEFAULT_HEADER_TURTLE_SETTINGS;
   const settings = typeof ACTIVE_HEADER_TURTLE_SETTINGS === 'object' && ACTIVE_HEADER_TURTLE_SETTINGS
@@ -1300,6 +1325,70 @@ function getNormalizedHeaderTurtleSettings() {
     frameHeight: normalizedFrameHeight,
     frameCount: normalizedFrameCount,
     frameDurationMs: normalizedFrameDurationMs
+  };
+}
+
+function getNormalizedHeaderRabbitSettings() {
+  const fallback = DEFAULT_HEADER_RABBIT_SETTINGS;
+  const settings = typeof ACTIVE_HEADER_RABBIT_SETTINGS === 'object' && ACTIVE_HEADER_RABBIT_SETTINGS
+    ? ACTIVE_HEADER_RABBIT_SETTINGS
+    : fallback;
+
+  const spriteUrl = typeof settings.spriteUrl === 'string' && settings.spriteUrl.trim()
+    ? settings.spriteUrl.trim()
+    : fallback.spriteUrl;
+  const frameWidth = Number(settings.frameWidth);
+  const frameHeight = Number(settings.frameHeight);
+  const frameCount = Number(settings.frameCount);
+  const minClicksPerSecond = Number(settings.minClicksPerSecond);
+  const maxClicksPerSecond = Number(settings.maxClicksPerSecond);
+  const minFrameDurationMs = Number(settings.minFrameDurationMs);
+  const maxFrameDurationMs = Number(settings.maxFrameDurationMs);
+
+  const normalizedFrameWidth = Number.isFinite(frameWidth) && frameWidth > 0
+    ? Math.round(frameWidth)
+    : fallback.frameWidth;
+  const normalizedFrameHeight = Number.isFinite(frameHeight) && frameHeight > 0
+    ? Math.round(frameHeight)
+    : fallback.frameHeight;
+  const normalizedFrameCount = Number.isFinite(frameCount) && frameCount > 0
+    ? Math.max(1, Math.round(frameCount))
+    : fallback.frameCount;
+  const normalizedMinClicksPerSecond = Number.isFinite(minClicksPerSecond) && minClicksPerSecond >= 0
+    ? Math.max(0, minClicksPerSecond)
+    : fallback.minClicksPerSecond;
+  const normalizedMaxClicksPerSecond = Number.isFinite(maxClicksPerSecond) && maxClicksPerSecond > 0
+    ? Math.max(normalizedMinClicksPerSecond, maxClicksPerSecond)
+    : fallback.maxClicksPerSecond;
+  const normalizedMinFrameDurationMs = Number.isFinite(minFrameDurationMs) && minFrameDurationMs > 0
+    ? Math.max(50, Math.round(minFrameDurationMs))
+    : fallback.minFrameDurationMs;
+  const normalizedMaxFrameDurationMs = Number.isFinite(maxFrameDurationMs) && maxFrameDurationMs > 0
+    ? Math.max(normalizedMinFrameDurationMs, Math.round(maxFrameDurationMs))
+    : fallback.maxFrameDurationMs;
+
+  const normalizedSpriteUrl = (() => {
+    if (!spriteUrl) {
+      return '';
+    }
+    if (/^(?:https?:|data:|blob:)/i.test(spriteUrl)) {
+      return spriteUrl;
+    }
+    if (spriteUrl.startsWith('/') || spriteUrl.startsWith('./') || spriteUrl.startsWith('../')) {
+      return spriteUrl;
+    }
+    return `../../${spriteUrl.replace(/^\/+/, '')}`;
+  })();
+
+  return {
+    spriteUrl: normalizedSpriteUrl,
+    frameWidth: normalizedFrameWidth,
+    frameHeight: normalizedFrameHeight,
+    frameCount: normalizedFrameCount,
+    minClicksPerSecond: normalizedMinClicksPerSecond,
+    maxClicksPerSecond: normalizedMaxClicksPerSecond,
+    minFrameDurationMs: normalizedMinFrameDurationMs,
+    maxFrameDurationMs: normalizedMaxFrameDurationMs
   };
 }
 
