@@ -6768,5 +6768,13 @@
       "back": "Back",
       "backAria": "Back to the main page"
     }
+  },
+  "pages": {
+    "header": {
+      "title": "Page",
+      "back": "Back",
+      "backAria": "Back to the main page",
+      "aria": "Page header"
+    }
   }
 }
