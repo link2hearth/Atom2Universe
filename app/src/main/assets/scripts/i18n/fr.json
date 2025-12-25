@@ -2329,6 +2329,17 @@
             "unsupported": "Fonction disponible uniquement sur l’application Android."
           }
         },
+        "customPages": {
+          "title": "Pages personnalisées",
+          "subtitle": "Accédez aux pages ajoutées via la configuration.",
+          "empty": "Aucune page personnalisée n’est disponible pour le moment.",
+          "pages": {
+            "reflex": {
+              "title": "Reflex (page dédiée)",
+              "description": "Lancer le mini-jeu Reflex dans une page séparée."
+            }
+          }
+        },
         "notes": {
           "title": "Notes",
           "openButton": "Ouvrir les notes"

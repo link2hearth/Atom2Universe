@@ -1,0 +1,9 @@
+[
+  {
+    "id": "reflex",
+    "path": "reflex.html",
+    "titleKey": "index.sections.options.customPages.pages.reflex.title",
+    "descriptionKey": "index.sections.options.customPages.pages.reflex.description",
+    "openMode": "standalone"
+  }
+]
