@@ -8637,6 +8637,7 @@ function updateHeaderRabbitAnimation(now = performance.now()) {
     frameCount,
     minClicksPerSecond,
     maxClicksPerSecond,
+    maxClickGapMs,
     minFrameDurationMs,
     maxFrameDurationMs
   } = settings;
@@ -8646,6 +8647,22 @@ function updateHeaderRabbitAnimation(now = performance.now()) {
       headerRabbitFrameIndex = 0;
       rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
     }
+    return;
+  }
+
+  const clickCount = clickHistory.length;
+  if (clickCount < 2) {
+    headerRabbitFrameIndex = 0;
+    headerRabbitLastFrameAt = now;
+    rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
+    return;
+  }
+
+  const lastGapMs = clickHistory[clickCount - 1] - clickHistory[clickCount - 2];
+  if (Number.isFinite(maxClickGapMs) && maxClickGapMs > 0 && lastGapMs > maxClickGapMs) {
+    headerRabbitFrameIndex = 0;
+    headerRabbitLastFrameAt = now;
+    rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
     return;
   }
 
