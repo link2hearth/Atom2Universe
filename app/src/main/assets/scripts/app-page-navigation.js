@@ -676,6 +676,26 @@ function bindDomEventListeners() {
     document.body.classList.remove('view-game');
   }
 
+  const requestedPage = (() => {
+    if (typeof window === 'undefined' || !window.location || !window.location.search) {
+      return null;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get('page');
+    if (!target) {
+      return null;
+    }
+    const normalized = target.trim();
+    if (!normalized) {
+      return null;
+    }
+    return document.getElementById(normalized) ? normalized : null;
+  })();
+
+  if (requestedPage) {
+    showPage(requestedPage);
+  }
+
   initInfoWelcomeCard();
   initInfoAchievementsCard();
   initInfoCalculationsCard();
