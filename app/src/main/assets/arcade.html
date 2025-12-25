@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover"
+  />
+  <title data-i18n="index.meta.title">Atom to Univers</title>
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body class="theme-dark">
+  <header class="app-header">
+    <div class="header-main">
+      <div class="header-brand-group">
+        <a
+          class="brand brand-button brand-button--home"
+          id="brandHomeButton"
+          href="index.html"
+          data-i18n="index.header.brand.home;aria-label:index.header.brand.homeAria;title:index.header.brand.homeAria"
+          aria-label="Revenir à la page principale"
+          title="Revenir à la page principale"
+        >
+          Atom2Univers
+        </a>
+        <a
+          class="brand brand-button brand-button--portal"
+          id="brandPortal"
+          href="arcade.html"
+          data-i18n="index.header.brand.portal;aria-label:index.header.brand.portalAria;title:index.header.brand.portalAria"
+          aria-label="Ouvrir l’arcade"
+          title="Ouvrir l’arcade"
+        >
+          Arcade
+        </a>
+      </div>
+      <nav
+        class="nav-menu"
+        aria-label="Navigation principale"
+        data-i18n="aria-label:index.navigation.primary"
+      >
+        <a class="nav-button" data-target="shop" hidden aria-hidden="true">
+          <span data-i18n="index.navigation.items.shop">Boutique</span>
+        </a>
+        <a class="nav-button" data-target="gacha" hidden aria-hidden="true">
+          <span data-i18n="index.navigation.items.gacha">Gacha</span>
+        </a>
+        <a class="nav-button" data-target="fusion" hidden aria-hidden="true">
+          <span data-i18n="index.navigation.items.fusion">Fusion</span>
+        </a>
+        <a class="nav-button" href="index.html?page=info" data-target="info">
+          <span data-i18n="index.navigation.items.info">Infos</span>
+        </a>
+        <a class="nav-button" href="index.html?page=images" data-target="images">
+          <span data-i18n="index.navigation.items.images">Images</span>
+        </a>
+        <a class="nav-button" href="index.html?page=news" data-target="news">
+          <span data-i18n="index.navigation.items.news">News</span>
+        </a>
+        <a class="nav-button" href="index.html?page=radio" data-target="radio">
+          <span data-i18n="index.navigation.items.radio">Musique</span>
+        </a>
+        <a class="nav-button" data-target="bigbang" id="navBigBangButton" hidden aria-hidden="true">
+          <span data-i18n="index.navigation.items.bigbang">Big Bang</span>
+        </a>
+        <a class="nav-button" href="index.html?page=options" data-target="options">
+          <span data-i18n="index.navigation.items.options">Options</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="pageContainer">
+    <section
+      id="arcadeHub"
+      class="page page--arcade-hub"
+      aria-label="Hall de sélection des mini-jeux"
+      data-i18n="aria-label:index.sections.arcadeHub.aria"
+    >
+      <p
+        class="arcade-hub__intro"
+        data-i18n="index.sections.arcadeHub.instructions"
+      >
+        Choisissez un jeu et tentez de gagner des tickets Gacha.
+      </p>
+      <div class="arcade-hub__grid">
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Particules"
+          aria-describedby="arcadeCardDescription-arcade"
+          data-card-id="arcade"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.particules.aria"
+          data-page-target="arcade"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.particules.title"
+            >Particules</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-arcade"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-arcade"
+            data-i18n="index.sections.arcadeHub.cards.particules.description"
+          >
+            Jouez et gagnez des tickets de gacha.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Stars War"
+          aria-describedby="arcadeCardDescription-starsWar"
+          data-card-id="starsWar"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.starsWar.aria"
+          data-page-target="starsWar"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.starsWar.title"
+            >Stars War</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-starsWar"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-starsWar"
+            data-i18n="index.sections.arcadeHub.cards.starsWar.description"
+          >
+            Affrontez des vagues stellaires dans un shoot’em up vertical procédural et survivez le plus longtemps possible.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Jumping Cat"
+          aria-describedby="arcadeCardDescription-jumpingCat"
+          data-card-id="jumpingCat"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.jumpingCat.aria"
+          data-page-target="jumpingCat"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.jumpingCat.title"
+            >Jumping Cat</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-jumpingCat"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-jumpingCat"
+            data-i18n="index.sections.arcadeHub.cards.jumpingCat.description"
+          >
+            Sautez entre les pylônes et esquivez les oiseaux géants pour défendre le ciel.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Motocross"
+          aria-describedby="arcadeCardDescription-motocross"
+          data-card-id="motocross"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.motocross.aria"
+          data-page-target="motocross"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.motocross.title"
+            >Motocross</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-motocross"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-motocross"
+            data-i18n="index.sections.arcadeHub.cards.motocross.description"
+          >
+            Accélérez, sautez et réalisez des figures pour battre votre record.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Sudoku"
+          aria-describedby="arcadeCardDescription-sudoku"
+          data-card-id="sudoku"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.sudoku.aria"
+          data-page-target="sudoku"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.sudoku.title"
+            >Sudoku</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-sudoku"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-sudoku"
+            data-i18n="index.sections.arcadeHub.cards.sudoku.description"
+          >
+            Remplissez la grille avec logique pour gagner vos tickets.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Solitaire"
+          aria-describedby="arcadeCardDescription-solitaire"
+          data-card-id="solitaire"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.solitaire.aria"
+          data-page-target="solitaire"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.solitaire.title"
+            >Solitaire</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-solitaire"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-solitaire"
+            data-i18n="index.sections.arcadeHub.cards.solitaire.description"
+          >
+            Combinez les cartes pour décrocher la victoire.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Échecs"
+          aria-describedby="arcadeCardDescription-echecs"
+          data-card-id="echecs"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.echecs.aria"
+          data-page-target="echecs"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.echecs.title"
+            >Échecs</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-echecs"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-echecs"
+            data-i18n="index.sections.arcadeHub.cards.echecs.description"
+          >
+            Défiez l’IA et développez vos stratégies.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Twins"
+          aria-describedby="arcadeCardDescription-twins"
+          data-card-id="twins"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.twins.aria"
+          data-page-target="twins"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.twins.title"
+            >Twins</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-twins"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-twins"
+            data-i18n="index.sections.arcadeHub.cards.twins.description"
+          >
+            Synchronisez les pions pour gagner en duo.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Puissance 4"
+          aria-describedby="arcadeCardDescription-p4"
+          data-card-id="p4"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.p4.aria"
+          data-page-target="p4"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.p4.title"
+            >Puissance 4</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-p4"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-p4"
+            data-i18n="index.sections.arcadeHub.cards.p4.description"
+          >
+            Alignez quatre jetons avant votre adversaire.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Dés"
+          aria-describedby="arcadeCardDescription-dice"
+          data-card-id="dice"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.dice.aria"
+          data-page-target="dice"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.dice.title"
+            >Dés</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-dice"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-dice"
+            data-i18n="index.sections.arcadeHub.cards.dice.description"
+          >
+            Lancez les dés et tentez de battre le hasard.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Quantum 2048"
+          aria-describedby="arcadeCardDescription-quantum2048"
+          data-card-id="quantum2048"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.quantum2048.aria"
+          data-page-target="quantum2048"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.quantum2048.title"
+            >Quantum 2048</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-quantum2048"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-quantum2048"
+            data-i18n="index.sections.arcadeHub.cards.quantum2048.description"
+          >
+            Fusionnez les tuiles quantiques pour atteindre 2048.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Circles"
+          aria-describedby="arcadeCardDescription-circles"
+          data-card-id="circles"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.circles.aria"
+          data-page-target="circles"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.circles.title"
+            >Cercles</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-circles"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-circles"
+            data-i18n="index.sections.arcadeHub.cards.circles.description"
+          >
+            Reliez les cercles et tentez de créer la forme parfaite.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Color Stack"
+          aria-describedby="arcadeCardDescription-colorStack"
+          data-card-id="colorStack"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.colorStack.aria"
+          data-page-target="colorStack"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.colorStack.title"
+            >Color Stack</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-colorStack"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-colorStack"
+            data-i18n="index.sections.arcadeHub.cards.colorStack.description"
+          >
+            Empilez les couleurs sans vous tromper.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Link"
+          aria-describedby="arcadeCardDescription-link"
+          data-card-id="link"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.link.aria"
+          data-page-target="link"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.link.title"
+            >Link</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-link"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-link"
+            data-i18n="index.sections.arcadeHub.cards.link.description"
+          >
+            Connectez les nœuds pour former le réseau parfait.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Othello"
+          aria-describedby="arcadeCardDescription-othello"
+          data-card-id="othello"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.othello.aria"
+          data-page-target="othello"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.othello.title"
+            >Othello</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-othello"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-othello"
+            data-i18n="index.sections.arcadeHub.cards.othello.description"
+          >
+            Retournez les pièces et remportez la majorité.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Gomoku"
+          aria-describedby="arcadeCardDescription-gomoku"
+          data-card-id="gomoku"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.gomoku.aria"
+          data-page-target="gomoku"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.gomoku.title"
+            >Gomoku</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-gomoku"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-gomoku"
+            data-i18n="index.sections.arcadeHub.cards.gomoku.description"
+          >
+            Alignez cinq pierres pour l’emporter.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Métaux"
+          aria-describedby="arcadeCardDescription-metaux"
+          data-card-id="metaux"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.metaux.aria"
+          data-page-target="metaux"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.metaux.title"
+            >Métaux</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-metaux"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-metaux"
+            data-i18n="index.sections.arcadeHub.cards.metaux.description"
+          >
+            Alignez les métaux pour marquer des points.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu The Line"
+          aria-describedby="arcadeCardDescription-theLine"
+          data-card-id="theLine"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.theLine.aria"
+          data-page-target="theLine"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.theLine.title"
+            >The Line</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-theLine"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-theLine"
+            data-i18n="index.sections.arcadeHub.cards.theLine.description"
+          >
+            Tracez la trajectoire parfaite et évitez les obstacles.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Escape"
+          aria-describedby="arcadeCardDescription-escape"
+          data-card-id="escape"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.escape.aria"
+          data-page-target="escape"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.escape.title"
+            >Escape</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-escape"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-escape"
+            data-i18n="index.sections.arcadeHub.cards.escape.description"
+          >
+            Réussissez à vous échapper du labyrinthe piégé.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Sokoban"
+          aria-describedby="arcadeCardDescription-sokoban"
+          data-card-id="sokoban"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.sokoban.aria"
+          data-page-target="sokoban"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.sokoban.title"
+            >Sokoban</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-sokoban"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-sokoban"
+            data-i18n="index.sections.arcadeHub.cards.sokoban.description"
+          >
+            Poussez les caisses sur les emplacements dédiés.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Taquin"
+          aria-describedby="arcadeCardDescription-taquin"
+          data-card-id="taquin"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.taquin.aria"
+          data-page-target="taquin"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.taquin.title"
+            >Taquin</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-taquin"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-taquin"
+            data-i18n="index.sections.arcadeHub.cards.taquin.description"
+          >
+            Replacez les tuiles dans l’ordre pour gagner.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Game of Life"
+          aria-describedby="arcadeCardDescription-gameOfLife"
+          data-card-id="gameOfLife"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.gameOfLife.aria"
+          data-page-target="gameOfLife"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.gameOfLife.title"
+            >Game of Life</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-gameOfLife"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-gameOfLife"
+            data-i18n="index.sections.arcadeHub.cards.gameOfLife.description"
+          >
+            Expérimentez l’évolution d’une colonie de cellules.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Roulette"
+          aria-describedby="arcadeCardDescription-roulette"
+          data-card-id="roulette"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.roulette.aria"
+          data-page-target="roulette"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.roulette.title"
+            >Roulette</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-roulette"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-roulette"
+            data-i18n="index.sections.arcadeHub.cards.roulette.description"
+          >
+            Pariez et faites tourner la roue.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Blackjack"
+          aria-describedby="arcadeCardDescription-blackjack"
+          data-card-id="blackjack"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.blackjack.aria"
+          data-page-target="blackjack"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.blackjack.title"
+            >Blackjack</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-blackjack"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-blackjack"
+            data-i18n="index.sections.arcadeHub.cards.blackjack.description"
+          >
+            Approchez-vous de 21 sans le dépasser.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Holdem"
+          aria-describedby="arcadeCardDescription-holdem"
+          data-card-id="holdem"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.holdem.aria"
+          data-page-target="holdem"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.holdem.title"
+            >Holdem</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-holdem"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-holdem"
+            data-i18n="index.sections.arcadeHub.cards.holdem.description"
+          >
+            Jouez au poker et tentez la meilleure main.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Pachinko"
+          aria-describedby="arcadeCardDescription-pachinko"
+          data-card-id="pachinko"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.pachinko.aria"
+          data-page-target="pachinko"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.pachinko.title"
+            >Pachinko</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-pachinko"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-pachinko"
+            data-i18n="index.sections.arcadeHub.cards.pachinko.description"
+          >
+            Faites tomber la bille et récoltez vos gains.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
+          aria-label="Accéder au mini-jeu Reflex"
+          aria-describedby="arcadeCardDescription-reflex"
+          data-card-id="reflex"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.reflex.aria"
+          data-page-target="reflex"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.reflex.title"
+            >Reflex</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-reflex"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-reflex"
+            data-i18n="index.sections.arcadeHub.cards.reflex.description"
+          >
+            Testez votre vitesse et votre précision.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const arcadeCards = Array.from(document.querySelectorAll('.arcade-hub-card'));
+
+    function resolveArcadeTarget(card) {
+      const target = card?.dataset?.pageTarget;
+      return typeof target === 'string' ? target.trim() : '';
+    }
+
+    function handleArcadeNavigation(target) {
+      if (!target) {
+        return;
+      }
+      window.location.href = `index.html?page=${encodeURIComponent(target)}`;
+    }
+
+    arcadeCards.forEach(card => {
+      const target = resolveArcadeTarget(card);
+      if (!target) {
+        return;
+      }
+
+      card.addEventListener('click', event => {
+        if (event.defaultPrevented) {
+          return;
+        }
+        handleArcadeNavigation(target);
+      });
+
+      card.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleArcadeNavigation(target);
+        }
+      });
+    });
+
+    document.querySelectorAll('.arcade-hub-card__toggle').forEach(toggle => {
+      toggle.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const card = toggle.closest('.arcade-hub-card');
+        const descriptionId = toggle.getAttribute('aria-controls');
+        const description = descriptionId ? document.getElementById(descriptionId) : null;
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        const nextExpanded = !expanded;
+
+        toggle.setAttribute('aria-expanded', String(nextExpanded));
+        if (description) {
+          description.hidden = !nextExpanded;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
