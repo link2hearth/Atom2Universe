@@ -13119,12 +13119,17 @@ function serializeState() {
     elements: (() => {
       const baseCollection = createInitialElementCollection();
       const serializedElements = {};
-      Object.keys(baseCollection).forEach(id => {
+      const storedCollection = gameState.elements && typeof gameState.elements === 'object'
+        ? gameState.elements
+        : {};
+      const baseIds = Object.keys(baseCollection);
+      const sourceIds = baseIds.length ? baseIds : Object.keys(storedCollection);
+      sourceIds.forEach(id => {
         const reference = baseCollection[id];
-        if (!reference) {
+        const stored = storedCollection?.[id];
+        if (!reference && !stored) {
           return;
         }
-        const stored = gameState.elements?.[id];
         const rawCount = Number(stored?.count);
         const count = Number.isFinite(rawCount) && rawCount > 0 ? Math.floor(rawCount) : 0;
         const rawLifetime = Number(stored?.lifetime);
@@ -13133,19 +13138,32 @@ function serializeState() {
           : count > 0 || stored?.owned
             ? Math.max(count, 1)
             : 0;
+        const effects = Array.isArray(reference?.effects)
+          ? [...reference.effects]
+          : Array.isArray(stored?.effects)
+            ? [...stored.effects]
+            : [];
+        const bonuses = Array.isArray(reference?.bonuses)
+          ? [...reference.bonuses]
+          : Array.isArray(stored?.bonuses)
+            ? [...stored.bonuses]
+            : [];
         serializedElements[id] = {
           id,
-          gachaId: reference.gachaId,
+          gachaId: reference?.gachaId ?? stored?.gachaId ?? id,
           count,
           lifetime,
           owned: lifetime > 0,
-          rarity: reference.rarity ?? (typeof stored?.rarity === 'string' ? stored.rarity : null),
-          effects: Array.isArray(reference.effects) ? [...reference.effects] : [],
-          bonuses: Array.isArray(reference.bonuses) ? [...reference.bonuses] : []
+          rarity: reference?.rarity ?? (typeof stored?.rarity === 'string' ? stored.rarity : null),
+          effects,
+          bonuses
         };
       });
       return serializedElements;
     })(),
+    elementBonusSummary: gameState.elementBonusSummary && typeof gameState.elementBonusSummary === 'object'
+      ? gameState.elementBonusSummary
+      : {},
     gachaCards: (() => {
       const source = gameState.gachaCards && typeof gameState.gachaCards === 'object'
         ? gameState.gachaCards
