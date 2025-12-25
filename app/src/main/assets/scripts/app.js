@@ -8948,10 +8948,9 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
 
 function updateClickVisuals(now = performance.now()) {
   if (isAtomAnimationSuppressed()) {
-    clickHistory.length = 0;
+    updateClickHistory(now);
     targetClickStrength = 0;
     displayedClickStrength = 0;
-    lastClickRatePerSecond = 0;
     resetGlowEffects();
     updateHeaderRabbitAnimation(now);
     return;
@@ -8968,9 +8967,7 @@ function updateClickVisuals(now = performance.now()) {
 
 function registerManualClick() {
   const now = performance.now();
-  if (areAtomAnimationsEnabled()) {
-    clickHistory.push(now);
-  }
+  clickHistory.push(now);
   updateClickVisuals(now);
   triggerEcoClickFeedbackPulse();
   if (isAtomAnimationSuppressed()) {

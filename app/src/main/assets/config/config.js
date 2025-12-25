@@ -69,7 +69,7 @@ const HEADER_RABBIT_SETTINGS = Object.freeze({
   minClicksPerSecond: 2,
   maxClicksPerSecond: 15,
   maxClickGapMs: 500,
-  minFrameDurationMs: 67,
+  minFrameDurationMs: 80,
   maxFrameDurationMs: 1000
 });
 
