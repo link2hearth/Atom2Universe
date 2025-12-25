@@ -515,8 +515,8 @@ function handleManualAtomClick(options = {}) {
     ? gameState.perClick
     : toLayeredNumber(gameState.perClick ?? 0, 0);
   const critResult = applyCriticalHit(baseAmount);
-  queueManualApcGain(critResult.amount);
   registerManualClick();
+  queueManualApcGain(critResult.amount);
   registerApcFrenzyClick(performance.now(), context);
   soundEffects.pop.play();
   if (critResult.isCritical) {

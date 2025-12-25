@@ -1368,6 +1368,7 @@ function getNormalizedHeaderRabbitSettings() {
   const frameCount = Number(settings.frameCount);
   const minClicksPerSecond = Number(settings.minClicksPerSecond);
   const maxClicksPerSecond = Number(settings.maxClicksPerSecond);
+  const maxClickGapMs = Number(settings.maxClickGapMs);
   const minFrameDurationMs = Number(settings.minFrameDurationMs);
   const maxFrameDurationMs = Number(settings.maxFrameDurationMs);
 
@@ -1386,6 +1387,9 @@ function getNormalizedHeaderRabbitSettings() {
   const normalizedMaxClicksPerSecond = Number.isFinite(maxClicksPerSecond) && maxClicksPerSecond > 0
     ? Math.max(normalizedMinClicksPerSecond, maxClicksPerSecond)
     : fallback.maxClicksPerSecond;
+  const normalizedMaxClickGapMs = Number.isFinite(maxClickGapMs) && maxClickGapMs > 0
+    ? Math.max(1, Math.round(maxClickGapMs))
+    : fallback.maxClickGapMs;
   const normalizedMinFrameDurationMs = Number.isFinite(minFrameDurationMs) && minFrameDurationMs > 0
     ? Math.max(50, Math.round(minFrameDurationMs))
     : fallback.minFrameDurationMs;
@@ -1413,6 +1417,7 @@ function getNormalizedHeaderRabbitSettings() {
     frameCount: normalizedFrameCount,
     minClicksPerSecond: normalizedMinClicksPerSecond,
     maxClicksPerSecond: normalizedMaxClicksPerSecond,
+    maxClickGapMs: normalizedMaxClickGapMs,
     minFrameDurationMs: normalizedMinFrameDurationMs,
     maxFrameDurationMs: normalizedMaxFrameDurationMs
   };
