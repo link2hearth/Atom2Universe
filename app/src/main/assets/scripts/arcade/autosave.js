@@ -227,8 +227,6 @@
               Object.keys(entries).forEach(key => {
                 mergeRawEntry(result.entries, key, entries[key]);
               });
-              // If data is loaded from the bridge, we're done.
-              return result;
             }
           }
         }

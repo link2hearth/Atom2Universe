@@ -20,17 +20,43 @@
     modeOptions: Array.from(document.querySelectorAll('[data-reflex-mode-option]'))
   };
 
+  const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+  const RAW_CONFIG =
+    GLOBAL_CONFIG
+    && GLOBAL_CONFIG.arcade
+    && GLOBAL_CONFIG.arcade.reflex
+      ? GLOBAL_CONFIG.arcade.reflex
+      : {};
+
   const GAME_ID = 'reflex';
-  const MAX_ACTIVE_TARGETS = 5;
-  const INITIAL_INTERVAL_MS = 1000;
-  const INTERVAL_DECREASE_MS = 10;
-  const EARLY_SPAWN_COUNT = 5;
-  const MIN_INTERVAL_MS = 220;
-  const TARGET_SIZE = 68;
+  const LOCAL_BEST_SCORES_KEY = 'atom2univers.arcade.reflex.bestScores.v1';
   const TOUCH_MODES = {
     easy: 'easy',
     hard: 'hard'
   };
+
+  const DEFAULT_CONFIG = Object.freeze({
+    target: {
+      sizePx: 68,
+      easyHitScale: 2
+    },
+    difficulty: {
+      easy: {
+        maxActiveTargets: 6,
+        initialIntervalMs: 1150,
+        intervalDecreaseMs: 8,
+        earlySpawnCount: 6,
+        minIntervalMs: 260
+      },
+      hard: {
+        maxActiveTargets: 5,
+        initialIntervalMs: 1000,
+        intervalDecreaseMs: 10,
+        earlySpawnCount: 5,
+        minIntervalMs: 220
+      }
+    }
+  });
 
   const state = {
     running: false,
@@ -50,6 +76,68 @@
     resizeObserver: null,
     rafId: null
   };
+
+  function normalizeConfig(raw) {
+    const config = {
+      target: { ...DEFAULT_CONFIG.target },
+      difficulty: {
+        easy: { ...DEFAULT_CONFIG.difficulty.easy },
+        hard: { ...DEFAULT_CONFIG.difficulty.hard }
+      }
+    };
+
+    if (raw && typeof raw === 'object') {
+      if (raw.target && typeof raw.target === 'object') {
+        const size = Number(raw.target.sizePx);
+        if (Number.isFinite(size) && size > 0) {
+          config.target.sizePx = Math.floor(size);
+        }
+        const scale = Number(raw.target.easyHitScale);
+        if (Number.isFinite(scale) && scale >= 1) {
+          config.target.easyHitScale = scale;
+        }
+      }
+      if (raw.difficulty && typeof raw.difficulty === 'object') {
+        ['easy', 'hard'].forEach((mode) => {
+          const source = raw.difficulty[mode];
+          if (!source || typeof source !== 'object') {
+            return;
+          }
+          const target = config.difficulty[mode];
+          const maxActiveTargets = Number(source.maxActiveTargets);
+          if (Number.isFinite(maxActiveTargets) && maxActiveTargets > 0) {
+            target.maxActiveTargets = Math.floor(maxActiveTargets);
+          }
+          const initialIntervalMs = Number(source.initialIntervalMs);
+          if (Number.isFinite(initialIntervalMs) && initialIntervalMs > 0) {
+            target.initialIntervalMs = Math.floor(initialIntervalMs);
+          }
+          const intervalDecreaseMs = Number(source.intervalDecreaseMs);
+          if (Number.isFinite(intervalDecreaseMs) && intervalDecreaseMs > 0) {
+            target.intervalDecreaseMs = Math.floor(intervalDecreaseMs);
+          }
+          const earlySpawnCount = Number(source.earlySpawnCount);
+          if (Number.isFinite(earlySpawnCount) && earlySpawnCount >= 0) {
+            target.earlySpawnCount = Math.floor(earlySpawnCount);
+          }
+          const minIntervalMs = Number(source.minIntervalMs);
+          if (Number.isFinite(minIntervalMs) && minIntervalMs > 0) {
+            target.minIntervalMs = Math.floor(minIntervalMs);
+          }
+        });
+      }
+    }
+
+    return config;
+  }
+
+  const CONFIG = normalizeConfig(RAW_CONFIG);
+
+  function getModeSettings() {
+    return state.touchMode === TOUCH_MODES.hard
+      ? CONFIG.difficulty.hard
+      : CONFIG.difficulty.easy;
+  }
 
   function normalizeScore(value) {
     const number = Number(value);
@@ -87,6 +175,33 @@
       return window.gameState;
     }
     return null;
+  }
+
+  function readLocalBestScores() {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return null;
+    }
+    try {
+      const raw = window.localStorage.getItem(LOCAL_BEST_SCORES_KEY);
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw);
+      return normalizeStoredBestScores(parsed);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function persistLocalBestScores(bestScores) {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return;
+    }
+    try {
+      window.localStorage.setItem(LOCAL_BEST_SCORES_KEY, JSON.stringify({ bestScores }));
+    } catch (error) {
+      // ignore local storage errors
+    }
   }
 
   function requestSave() {
@@ -173,6 +288,7 @@
     if (canPersistToGlobal) {
       requestSave();
     }
+    persistLocalBestScores(normalized);
     window.dispatchEvent(new Event('arcadeAutosaveSync'));
   }
 
@@ -198,9 +314,9 @@
     }
     const bestScores = record.bestScores && typeof record.bestScores === 'object'
       ? record.bestScores
-      : {};
-    const easy = normalizeScore(bestScores.easy);
-    const hard = normalizeScore(bestScores.hard);
+      : record;
+    const easy = normalizeScore(bestScores.easy ?? record.easy);
+    const hard = normalizeScore(bestScores.hard ?? record.hard);
     const legacy = normalizeScore(record.bestScore ?? record.score);
     const merged = {
       easy,
@@ -240,16 +356,23 @@
       }
     }
 
+    const local = readLocalBestScores();
+    if (local && (local.easy > 0 || local.hard > 0)) {
+      persistBestScores(local);
+      return local;
+    }
+
     return empty;
   }
 
   function computeNextInterval() {
-    if (state.spawnCount < EARLY_SPAWN_COUNT) {
-      return INITIAL_INTERVAL_MS;
+    const settings = getModeSettings();
+    if (state.spawnCount < settings.earlySpawnCount) {
+      return settings.initialIntervalMs;
     }
-    const extraSpawns = state.spawnCount - EARLY_SPAWN_COUNT + 1;
-    const reduced = INITIAL_INTERVAL_MS - INTERVAL_DECREASE_MS * extraSpawns;
-    return Math.max(MIN_INTERVAL_MS, reduced);
+    const extraSpawns = state.spawnCount - settings.earlySpawnCount + 1;
+    const reduced = settings.initialIntervalMs - settings.intervalDecreaseMs * extraSpawns;
+    return Math.max(settings.minIntervalMs, reduced);
   }
 
   function scheduleNextSpawn() {
@@ -314,14 +437,19 @@
     target.className = 'reflex__target';
     target.setAttribute('aria-label', translate('index.sections.reflex.targetAria', 'Cible Reflex')); 
 
+    const size = CONFIG.target.sizePx;
+    const hitScale = state.touchMode === TOUCH_MODES.easy ? CONFIG.target.easyHitScale : 1;
+    const hitSize = Math.round(size * hitScale);
     const boundsWidth = elements.playfield.clientWidth;
     const boundsHeight = elements.playfield.clientHeight;
-    const maxX = Math.max(0, boundsWidth - TARGET_SIZE);
-    const maxY = Math.max(0, boundsHeight - TARGET_SIZE);
+    const maxX = Math.max(0, boundsWidth - hitSize);
+    const maxY = Math.max(0, boundsHeight - hitSize);
     const x = Math.random() * maxX;
     const y = Math.random() * maxY;
     target.style.left = `${x}px`;
     target.style.top = `${y}px`;
+    target.style.setProperty('--reflex-target-size', `${size}px`);
+    target.style.setProperty('--reflex-target-hit-size', `${hitSize}px`);
     target.dataset.createdAt = performance.now().toString();
 
     target.addEventListener('click', () => handleTargetClick(target));
@@ -347,7 +475,7 @@
     });
     elements.layer.appendChild(target);
 
-    if (elements.layer.children.length > MAX_ACTIVE_TARGETS) {
+    if (elements.layer.children.length > getModeSettings().maxActiveTargets) {
       gameOver('overload');
       return;
     }
@@ -470,6 +598,23 @@
         });
       });
     }
+
+    const flushAutosave = () => {
+      if (window.ArcadeAutosave && typeof window.ArcadeAutosave.flush === 'function') {
+        try {
+          window.ArcadeAutosave.flush();
+        } catch (error) {
+          // ignore flush errors
+        }
+      }
+    };
+
+    window.addEventListener('pagehide', flushAutosave);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        flushAutosave();
+      }
+    });
   }
 
   function onEnter() {
