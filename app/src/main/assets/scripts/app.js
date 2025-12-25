@@ -275,6 +275,7 @@ const ARCADE_AUTOSAVE_STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
 const CHESS_LIBRARY_STORAGE_KEY = 'atom2univers.arcade.echecs';
 const QUANTUM_2048_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
 const BIGGER_STORAGE_KEY = 'atom2univers.arcade.bigger';
+const LOCAL_STORAGE_BACKUP_PREFIX = 'atom2univers.';
 const GAME_OF_LIFE_STORAGE_KEYS = [
   'atom2univers.arcade.gameOfLife.seed',
   'atom2univers.arcade.gameOfLife.customPatterns',
@@ -13479,6 +13480,33 @@ function serializeState() {
     bigBangButtonVisible: gameState.bigBangButtonVisible === true,
     trophies: getUnlockedTrophyIds(),
     arcadeProgress: cloneArcadeProgress(gameState.arcadeProgress),
+    localStorage: (() => {
+      const storage = typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
+      if (!storage || typeof storage.length !== 'number') {
+        return null;
+      }
+      const entries = {};
+      for (let index = 0; index < storage.length; index += 1) {
+        const key = storage.key(index);
+        if (!key || !key.startsWith(LOCAL_STORAGE_BACKUP_PREFIX)) {
+          continue;
+        }
+        if (key === PRIMARY_SAVE_STORAGE_KEY || key === RELOAD_SAVE_STORAGE_KEY) {
+          continue;
+        }
+        const value = storage.getItem(key);
+        if (typeof value === 'string') {
+          entries[key] = value;
+        }
+      }
+      if (!Object.keys(entries).length) {
+        return null;
+      }
+      return {
+        version: 1,
+        entries
+      };
+    })(),
     lastSave: Date.now()
   };
 }
