@@ -64,8 +64,6 @@ const STARFIELD_MODE_SETTINGS = Object.freeze({
 let starfieldInitializedForMode = null;
 let lastNavActiveTarget = null;
 let navButtonByTarget = null;
-let pageVisibilityNormalized = false;
-let navButtonsNormalized = false;
 
 const PAGE_VIEW_CLASS_MAP = Object.freeze({
   game: 'view-game',
@@ -116,15 +114,6 @@ function updateActiveNavButton(target) {
   if (!elements?.navButtons?.length) {
     return;
   }
-  if (!navButtonsNormalized) {
-    elements.navButtons.forEach(btn => {
-      const isActiveNav = btn?.dataset?.target === target;
-      btn.classList.toggle('active', isActiveNav);
-    });
-    navButtonsNormalized = true;
-    lastNavActiveTarget = target;
-    return;
-  }
   const buttonsByTarget = getNavButtonMap();
   const nextButton = buttonsByTarget.get(target) || null;
   if (lastNavActiveTarget && lastNavActiveTarget !== target) {
@@ -137,18 +126,10 @@ function updateActiveNavButton(target) {
   lastNavActiveTarget = target;
 }
 
-function updateActivePageVisibility(previousPageId, nextPageId) {
+function updateActivePageVisibility(nextPageId) {
+  const previousPageId = document.body?.dataset?.activePage;
   const previousPage = previousPageId ? document.getElementById(previousPageId) : null;
   const nextPage = document.getElementById(nextPageId);
-  if (!pageVisibilityNormalized || !previousPage || !nextPage) {
-    elements.pages.forEach(page => {
-      const isActive = page.id === nextPageId;
-      page.classList.toggle('active', isActive);
-      page.toggleAttribute('hidden', !isActive);
-    });
-    pageVisibilityNormalized = true;
-    return;
-  }
   if (previousPage && nextPage) {
     if (previousPage !== nextPage) {
       previousPage.classList.remove('active');
@@ -156,7 +137,13 @@ function updateActivePageVisibility(previousPageId, nextPageId) {
     }
     nextPage.classList.add('active');
     nextPage.toggleAttribute('hidden', false);
+    return;
   }
+  elements.pages.forEach(page => {
+    const isActive = page.id === nextPageId;
+    page.classList.toggle('active', isActive);
+    page.toggleAttribute('hidden', !isActive);
+  });
 }
 
 function updateBodyViewClasses(previousPageId, nextPageId, isMusicPage) {
@@ -340,7 +327,7 @@ function showPage(pageId) {
   if (pageId === 'escape') {
     ensureEscapeGame();
   }
-  updateActivePageVisibility(previousPageId, pageId);
+  updateActivePageVisibility(pageId);
   updateActiveNavButton(navActiveTarget);
   document.body.dataset.activePage = pageId;
   if (isMusicPage) {
