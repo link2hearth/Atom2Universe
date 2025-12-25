@@ -297,6 +297,7 @@
           "frenzy": {
             "title": "Frénésie",
             "single": "Record frénésie",
+            "singleEnhanced": "Record frénésie simple améliorée",
             "multi": "Record frénésie (chaîne)",
             "empty": "—",
             "singleValue": "{count} clics",

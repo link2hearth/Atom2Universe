@@ -10,6 +10,7 @@ const frenzyState = {
     currentStacks: 0,
     currentClickCount: 0,
     frenziesUsedInChain: 0,
+    singleFrenzyDurationMs: 0,
     isActive: false,
     visibleUntil: 0,
     lastDisplayedCount: 0,
@@ -383,7 +384,7 @@ function registerApcFrenzyClick(now = performance.now(), context = null) {
   updateApcFrenzyCounterDisplay(now);
 }
 
-function handleApcFrenzyActivated(wasActive, now = performance.now()) {
+function handleApcFrenzyActivated(wasActive, durationMs, now = performance.now()) {
   const entry = frenzyState.perClick;
   if (!entry) {
     return;
@@ -392,13 +393,14 @@ function handleApcFrenzyActivated(wasActive, now = performance.now()) {
     entry.currentClickCount = 0;
     entry.frenziesUsedInChain = 0;
     entry.lastDisplayedCount = 0;
+    entry.singleFrenzyDurationMs = Math.max(0, Math.floor(durationMs || 0));
   }
   entry.frenziesUsedInChain = Math.max(0, Math.floor(entry.frenziesUsedInChain || 0)) + 1;
   entry.isActive = true;
   updateApcFrenzyCounterDisplay(now);
 }
 
-function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
+function applyApcFrenzyRunToStats(runClicks, frenziesUsed, options = {}) {
   if (!gameState.stats) {
     return;
   }
@@ -407,6 +409,7 @@ function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
     return;
   }
   const sanitizedFrenzies = Math.max(1, Math.floor(frenziesUsed || 0));
+  const { isEnhancedSingle = false } = options;
   const applyToStore = store => {
     if (!store || typeof store !== 'object') {
       return;
@@ -416,6 +419,7 @@ function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
     const currentBestClicks = Math.max(0, Math.floor(statsEntry.best?.clicks || 0));
     const currentBestFrenzies = Math.max(0, Math.floor(statsEntry.best?.frenziesUsed || 0)) || 0;
     const currentBestSingle = Math.max(0, Math.floor(statsEntry.bestSingle?.clicks || 0));
+    const currentBestSingleEnhanced = Math.max(0, Math.floor(statsEntry.bestSingleEnhanced?.clicks || 0));
     if (
       sanitizedClicks > currentBestClicks
       || (
@@ -425,7 +429,10 @@ function applyApcFrenzyRunToStats(runClicks, frenziesUsed) {
     ) {
       statsEntry.best = { clicks: sanitizedClicks, frenziesUsed: sanitizedFrenzies };
     }
-    if (sanitizedFrenzies <= 1 && sanitizedClicks > currentBestSingle) {
+    if (sanitizedFrenzies <= 1 && isEnhancedSingle && sanitizedClicks > currentBestSingleEnhanced) {
+      statsEntry.bestSingleEnhanced = { clicks: sanitizedClicks };
+    }
+    if (sanitizedFrenzies <= 1 && !isEnhancedSingle && sanitizedClicks > currentBestSingle) {
       statsEntry.bestSingle = { clicks: sanitizedClicks };
     }
   };
@@ -440,14 +447,18 @@ function finalizeApcFrenzyRun(now = performance.now()) {
   }
   const runClicks = Math.max(0, Math.floor(entry.currentClickCount || 0));
   const frenziesUsed = Math.max(0, Math.floor(entry.frenziesUsedInChain || 0));
+  const durationMs = Math.max(0, Math.floor(entry.singleFrenzyDurationMs || 0));
+  const baseDurationMs = Math.max(0, Math.floor(FRENZY_CONFIG.effectDurationMs || 0));
+  const isEnhancedSingle = frenziesUsed === 1 && durationMs > baseDurationMs;
   if (runClicks > 0) {
-    applyApcFrenzyRunToStats(runClicks, frenziesUsed);
+    applyApcFrenzyRunToStats(runClicks, frenziesUsed, { isEnhancedSingle });
     saveGame();
   }
   entry.lastDisplayedCount = runClicks;
   entry.visibleUntil = Math.max(entry.visibleUntil || 0, now + APC_FRENZY_COUNTER_GRACE_MS);
   entry.currentClickCount = 0;
   entry.frenziesUsedInChain = 0;
+  entry.singleFrenzyDurationMs = 0;
   entry.isActive = false;
   updateApcFrenzyCounterDisplay(now);
 }
@@ -711,7 +722,7 @@ function collectFrenzy(type, now = performance.now()) {
   updateUI();
 
   if (type === 'perClick') {
-    handleApcFrenzyActivated(wasActive, now);
+    handleApcFrenzyActivated(wasActive, duration, now);
   }
 
   const rawSeconds = duration / 1000;
@@ -784,6 +795,7 @@ function resetFrenzyState(options = {}) {
     entry.currentStacks = 0;
     entry.currentClickCount = 0;
     entry.frenziesUsedInChain = 0;
+    entry.singleFrenzyDurationMs = 0;
     entry.isActive = false;
     entry.visibleUntil = 0;
     entry.lastDisplayedCount = 0;

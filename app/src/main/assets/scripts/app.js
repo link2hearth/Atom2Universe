@@ -2310,6 +2310,9 @@ function createInitialApcFrenzyStats() {
     },
     bestSingle: {
       clicks: 0
+    },
+    bestSingleEnhanced: {
+      clicks: 0
     }
   };
 }
@@ -2330,6 +2333,13 @@ function normalizeApcFrenzyStats(raw) {
   const bestSingleClicks = Number(bestSingleRaw.clicks ?? bestSingleRaw.count ?? 0);
   base.bestSingle.clicks = Number.isFinite(bestSingleClicks)
     ? Math.max(0, Math.floor(bestSingleClicks))
+    : 0;
+  const bestSingleEnhancedRaw = raw.bestSingleEnhanced && typeof raw.bestSingleEnhanced === 'object'
+    ? raw.bestSingleEnhanced
+    : {};
+  const bestSingleEnhancedClicks = Number(bestSingleEnhancedRaw.clicks ?? bestSingleEnhancedRaw.count ?? 0);
+  base.bestSingleEnhanced.clicks = Number.isFinite(bestSingleEnhancedClicks)
+    ? Math.max(0, Math.floor(bestSingleEnhancedClicks))
     : 0;
   if ((!raw.bestSingle || typeof raw.bestSingle !== 'object') && base.best.frenziesUsed <= 1) {
     base.bestSingle.clicks = Math.max(base.bestSingle.clicks, base.best.clicks);
@@ -13236,6 +13246,9 @@ function serializeState() {
           },
           bestSingle: {
             clicks: sessionFrenzyStats.bestSingle?.clicks || 0
+          },
+          bestSingleEnhanced: {
+            clicks: sessionFrenzyStats.bestSingleEnhanced?.clicks || 0
           }
         }
       },
@@ -13259,6 +13272,9 @@ function serializeState() {
           },
           bestSingle: {
             clicks: globalFrenzyStats.bestSingle?.clicks || 0
+          },
+          bestSingleEnhanced: {
+            clicks: globalFrenzyStats.bestSingleEnhanced?.clicks || 0
           }
         }
       }
