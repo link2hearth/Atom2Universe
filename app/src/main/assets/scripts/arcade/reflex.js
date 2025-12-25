@@ -198,7 +198,7 @@
       return;
     }
     try {
-      window.localStorage.setItem(LOCAL_BEST_SCORES_KEY, JSON.stringify(bestScores));
+      window.localStorage.setItem(LOCAL_BEST_SCORES_KEY, JSON.stringify({ bestScores }));
     } catch (error) {
       // ignore local storage errors
     }
@@ -314,9 +314,9 @@
     }
     const bestScores = record.bestScores && typeof record.bestScores === 'object'
       ? record.bestScores
-      : {};
-    const easy = normalizeScore(bestScores.easy);
-    const hard = normalizeScore(bestScores.hard);
+      : record;
+    const easy = normalizeScore(bestScores.easy ?? record.easy);
+    const hard = normalizeScore(bestScores.hard ?? record.hard);
     const legacy = normalizeScore(record.bestScore ?? record.score);
     const merged = {
       easy,
