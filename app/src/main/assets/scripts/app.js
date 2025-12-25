@@ -657,6 +657,25 @@ const RESOLVED_PERFORMANCE_MODE_SETTINGS = GLOBAL_PERFORMANCE_MODE_SETTINGS
     })
   };
 const GAME_LOOP_MIN_TIMEOUT_MS = 16;
+const UI_UPDATE_INTERVALS = CONFIG?.ui?.updateIntervals || {};
+const UI_FAST_UPDATE_INTERVAL_MS = (() => {
+  const raw = Number(UI_UPDATE_INTERVALS.fastMs);
+  if (Number.isFinite(raw) && raw > 0) {
+    return Math.floor(raw);
+  }
+  return 250;
+})();
+const UI_SLOW_UPDATE_INTERVAL_MS = (() => {
+  const raw = Number(UI_UPDATE_INTERVALS.slowMs);
+  if (Number.isFinite(raw) && raw > 0) {
+    return Math.floor(raw);
+  }
+  return 1000;
+})();
+const UI_SLOW_UPDATE_INTERVAL_LIMIT_MS = Math.max(
+  UI_FAST_UPDATE_INTERVAL_MS,
+  UI_SLOW_UPDATE_INTERVAL_MS
+);
 const GLOBAL_PERFORMANCE_MODE_DEFINITIONS = typeof globalThis !== 'undefined'
   ? globalThis.PERFORMANCE_MODE_DEFINITIONS
   : null;
@@ -12554,17 +12573,38 @@ function pulseApsCritPanel() {
   });
 }
 
-function updateUI() {
-  if (typeof refreshGachaRarityLocalization === 'function') {
-    refreshGachaRarityLocalization();
+function updateUI(now) {
+  const timestamp = Number.isFinite(now) ? now : getLoopTimestamp();
+  const shouldUpdateSlow = timestamp - lastSlowUiUpdate > UI_SLOW_UPDATE_INTERVAL_LIMIT_MS;
+
+  if (shouldUpdateSlow) {
+    lastSlowUiUpdate = timestamp;
+    if (typeof refreshGachaRarityLocalization === 'function') {
+      refreshGachaRarityLocalization();
+    }
+    updatePrimaryNavigationLocks();
+    updatePageUnlockUI();
+    updateBigBangVisibility();
+    updateOptionsIntroDetails();
+    updateBrickSkinOption();
+    updateBrandPortalState();
+    updateMetauxCreditsUI();
+    updateGachaUI();
+    updateCollectionDisplay();
+    updateFusionUI();
+    updateShopAffordability();
+    updateMilestone();
+    refreshGoalCardTexts();
+    updateGoalsUI();
+    updateInfoPanels();
+    const infoPageActive = typeof document !== 'undefined'
+      && document.body?.dataset?.activePage === 'info';
+    const shouldRefreshDevkit = infoPageActive || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
+    if (shouldRefreshDevkit) {
+      updateDevKitUI();
+    }
   }
-  updatePrimaryNavigationLocks();
-  updatePageUnlockUI();
-  updateBigBangVisibility();
-  updateOptionsIntroDetails();
-  updateBrickSkinOption();
-  updateBrandPortalState();
-  updateMetauxCreditsUI();
+
   if (elements.statusAtoms) {
     const atomsText = gameState.atoms.toString();
     setTextContentIfChanged(elements.statusAtoms, atomsText);
@@ -12580,20 +12620,6 @@ function updateUI() {
   updateApsCritDisplay();
   updateFrenzyIndicators();
   updateApcFrenzyCounterDisplay();
-  updateGachaUI();
-  updateCollectionDisplay();
-  updateFusionUI();
-  updateShopAffordability();
-  updateMilestone();
-  refreshGoalCardTexts();
-  updateGoalsUI();
-  updateInfoPanels();
-  const infoPageActive = typeof document !== 'undefined'
-    && document.body?.dataset?.activePage === 'info';
-  const shouldRefreshDevkit = infoPageActive || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
-  if (shouldRefreshDevkit) {
-    updateDevKitUI();
-  }
 }
 
 function showToast(message) {
@@ -13936,6 +13962,7 @@ function normalizeArcadeProgress(raw) {
 let lastUpdate = performance.now();
 let lastSaveTime = performance.now();
 let lastUIUpdate = performance.now();
+let lastSlowUiUpdate = performance.now();
 
 function updatePlaytime(deltaSeconds) {
   if (!gameState.stats) return;
@@ -13962,8 +13989,8 @@ function loop(now) {
   updateFrenzies(delta, now);
   updateTicketStar(delta, now);
 
-  if (now - lastUIUpdate > 250) {
-    updateUI();
+  if (now - lastUIUpdate > UI_FAST_UPDATE_INTERVAL_MS) {
+    updateUI(now);
     lastUIUpdate = now;
   }
 

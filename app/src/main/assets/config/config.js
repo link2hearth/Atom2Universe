@@ -1421,6 +1421,15 @@ const GAME_CONFIG = {
    * - scale.options : facteurs d’agrandissement disponibles pour l’interface.
    */
   ui: {
+    /**
+     * Cadence des rafraîchissements UI.
+     * - fastMs : intervalle minimum pour les compteurs principaux.
+     * - slowMs : intervalle minimum pour les sections secondaires (menus, onglets, etc.).
+     */
+    updateIntervals: {
+      fastMs: 250,
+      slowMs: 1000
+    },
     scale: {
       default: 'large',
       options: [
