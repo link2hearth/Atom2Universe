@@ -57,6 +57,7 @@ const HEADER_BANNER_SPRITE_SCALE = 2;
  * - `frameCount` : nombre total de frames.
  * - `minClicksPerSecond` : vitesse min (en clics/s) avant d’animer.
  * - `maxClicksPerSecond` : vitesse max (en clics/s) pour l’animation rapide.
+ * - `maxClickGapMs` : délai max entre deux clics pour lancer l'animation.
  * - `minFrameDurationMs` : durée d’affichage d’une frame au rythme max.
  * - `maxFrameDurationMs` : durée d’affichage d’une frame au rythme min.
  */
@@ -67,7 +68,8 @@ const HEADER_RABBIT_SETTINGS = Object.freeze({
   frameCount: 4,
   minClicksPerSecond: 2,
   maxClicksPerSecond: 20,
-  minFrameDurationMs: 80,
+  maxClickGapMs: 500,
+  minFrameDurationMs: 67,
   maxFrameDurationMs: 1000
 });
 

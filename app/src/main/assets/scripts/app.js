@@ -8637,6 +8637,7 @@ function updateHeaderRabbitAnimation(now = performance.now()) {
     frameCount,
     minClicksPerSecond,
     maxClicksPerSecond,
+    maxClickGapMs,
     minFrameDurationMs,
     maxFrameDurationMs
   } = settings;
@@ -8646,6 +8647,22 @@ function updateHeaderRabbitAnimation(now = performance.now()) {
       headerRabbitFrameIndex = 0;
       rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
     }
+    return;
+  }
+
+  const clickCount = clickHistory.length;
+  if (clickCount < 2) {
+    headerRabbitFrameIndex = 0;
+    headerRabbitLastFrameAt = now;
+    rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
+    return;
+  }
+
+  const lastGapMs = clickHistory[clickCount - 1] - clickHistory[clickCount - 2];
+  if (Number.isFinite(maxClickGapMs) && maxClickGapMs > 0 && lastGapMs > maxClickGapMs) {
+    headerRabbitFrameIndex = 0;
+    headerRabbitLastFrameAt = now;
+    rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
     return;
   }
 
@@ -8931,10 +8948,9 @@ function updateAtomSpring(now = performance.now(), drive = 0) {
 
 function updateClickVisuals(now = performance.now()) {
   if (isAtomAnimationSuppressed()) {
-    clickHistory.length = 0;
+    updateClickHistory(now);
     targetClickStrength = 0;
     displayedClickStrength = 0;
-    lastClickRatePerSecond = 0;
     resetGlowEffects();
     updateHeaderRabbitAnimation(now);
     return;
@@ -8951,9 +8967,7 @@ function updateClickVisuals(now = performance.now()) {
 
 function registerManualClick() {
   const now = performance.now();
-  if (areAtomAnimationsEnabled()) {
-    clickHistory.push(now);
-  }
+  clickHistory.push(now);
   updateClickVisuals(now);
   triggerEcoClickFeedbackPulse();
   if (isAtomAnimationSuppressed()) {
