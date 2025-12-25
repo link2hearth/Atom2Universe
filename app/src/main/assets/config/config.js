@@ -45,6 +45,27 @@ const HEADER_TURTLE_SETTINGS = Object.freeze({
 });
 
 /**
+ * Réglages du sprite du lapin affiché avant l’APC dans la bannière.
+ * - `spriteUrl` : chemin vers le sprite sheet (64x16 * 4 frames).
+ * - `frameWidth`/`frameHeight` : taille d’une frame en pixels.
+ * - `frameCount` : nombre total de frames.
+ * - `minClicksPerSecond` : vitesse min (en clics/s) avant d’animer.
+ * - `maxClicksPerSecond` : vitesse max (en clics/s) pour l’animation rapide.
+ * - `minFrameDurationMs` : durée d’affichage d’une frame au rythme max.
+ * - `maxFrameDurationMs` : durée d’affichage d’une frame au rythme min.
+ */
+const HEADER_RABBIT_SETTINGS = Object.freeze({
+  spriteUrl: 'Assets/sprites/Lapin.png',
+  frameWidth: 16,
+  frameHeight: 16,
+  frameCount: 4,
+  minClicksPerSecond: 2,
+  maxClicksPerSecond: 20,
+  minFrameDurationMs: 200,
+  maxFrameDurationMs: 1000
+});
+
+/**
  * Paramètres globaux pour la gestion des sauvegardes.
  * `storageKey` est utilisé pour stocker les métadonnées côté web.
  * `maxEntries` limite le nombre de sauvegardes conservées.
@@ -2074,6 +2095,5 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 

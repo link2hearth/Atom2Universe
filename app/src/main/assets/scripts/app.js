@@ -8345,6 +8345,10 @@ const MAX_CLICKS_PER_SECOND = CONFIG.presentation?.clicks?.maxClicksPerSecond ??
 const clickHistory = [];
 let targetClickStrength = 0;
 let displayedClickStrength = 0;
+let lastClickRatePerSecond = 0;
+let headerRabbitFrameIndex = 0;
+let headerRabbitLastFrameAt = 0;
+let headerRabbitElement = null;
 
 const TOUCH_POINTER_CLICK_SUPPRESSION_MS = 320;
 let suppressPointerClickUntil = 0;
@@ -8588,6 +8592,7 @@ function updateClickHistory(now = performance.now()) {
   const count = clickHistory.length;
   if (count === 0) {
     targetClickStrength = 0;
+    lastClickRatePerSecond = 0;
     return;
   }
 
@@ -8609,6 +8614,78 @@ function updateClickHistory(now = performance.now()) {
   const normalized = Math.max(0, Math.min(1, rawRate / MAX_CLICKS_PER_SECOND));
   const curved = 1 - Math.exp(-normalized * 3.8);
   targetClickStrength = Math.min(1, curved * 1.08);
+  lastClickRatePerSecond = rawRate;
+}
+
+function getHeaderRabbitElement() {
+  if (headerRabbitElement?.isConnected) {
+    return headerRabbitElement;
+  }
+  headerRabbitElement = document.querySelector('.status-rabbit');
+  return headerRabbitElement;
+}
+
+function updateHeaderRabbitAnimation(now = performance.now()) {
+  const rabbit = getHeaderRabbitElement();
+  if (!rabbit || typeof getNormalizedHeaderRabbitSettings !== 'function') {
+    return;
+  }
+
+  const settings = getNormalizedHeaderRabbitSettings();
+  const {
+    frameWidth,
+    frameCount,
+    minClicksPerSecond,
+    maxClicksPerSecond,
+    minFrameDurationMs,
+    maxFrameDurationMs
+  } = settings;
+
+  if (frameCount <= 1) {
+    if (headerRabbitFrameIndex !== 0) {
+      headerRabbitFrameIndex = 0;
+      rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
+    }
+    return;
+  }
+
+  const rate = Number.isFinite(lastClickRatePerSecond) ? lastClickRatePerSecond : 0;
+  if (rate < minClicksPerSecond) {
+    headerRabbitFrameIndex = 0;
+    headerRabbitLastFrameAt = now;
+    rabbit.style.setProperty('--header-rabbit-frame-offset', '0px');
+    return;
+  }
+
+  const clampedRate = Math.min(Math.max(rate, minClicksPerSecond), maxClicksPerSecond);
+  const range = Math.max(1e-6, maxClicksPerSecond - minClicksPerSecond);
+  const t = (clampedRate - minClicksPerSecond) / range;
+  const frameDurationMs = maxFrameDurationMs - (maxFrameDurationMs - minFrameDurationMs) * t;
+
+  if (!Number.isFinite(headerRabbitLastFrameAt) || headerRabbitLastFrameAt <= 0) {
+    headerRabbitLastFrameAt = now;
+  }
+
+  const maxFrameIndex = Math.max(1, frameCount - 1);
+  let nextFrameAt = headerRabbitLastFrameAt + frameDurationMs;
+
+  if (now >= nextFrameAt) {
+    while (now >= nextFrameAt) {
+      if (headerRabbitFrameIndex === 0) {
+        headerRabbitFrameIndex = 1;
+      } else {
+        headerRabbitFrameIndex += 1;
+        if (headerRabbitFrameIndex > maxFrameIndex) {
+          headerRabbitFrameIndex = 1;
+        }
+      }
+      headerRabbitLastFrameAt = nextFrameAt;
+      nextFrameAt = headerRabbitLastFrameAt + frameDurationMs;
+    }
+  }
+
+  const offset = -frameWidth * headerRabbitFrameIndex;
+  rabbit.style.setProperty('--header-rabbit-frame-offset', `${offset}px`);
 }
 
 const glowStops = (() => {
@@ -8857,7 +8934,9 @@ function updateClickVisuals(now = performance.now()) {
     clickHistory.length = 0;
     targetClickStrength = 0;
     displayedClickStrength = 0;
+    lastClickRatePerSecond = 0;
     resetGlowEffects();
+    updateHeaderRabbitAnimation(now);
     return;
   }
   updateClickHistory(now);
@@ -8867,6 +8946,7 @@ function updateClickVisuals(now = performance.now()) {
   }
   applyClickStrength(displayedClickStrength);
   updateAtomSpring(now, displayedClickStrength);
+  updateHeaderRabbitAnimation(now);
 }
 
 function registerManualClick() {
@@ -14159,6 +14239,7 @@ function initializeApp() {
   applyAtomVariantVisualState();
   applyStartupOverlayDuration();
   applyHeaderTurtleSettings();
+  applyHeaderRabbitSettings();
   startHeaderTurtleAnimation();
   scheduleStartupOverlayFailsafe();
   prefetchAndroidManagedFiles();

@@ -40,6 +40,23 @@ const ACTIVE_HEADER_TURTLE_SETTINGS = typeof HEADER_TURTLE_SETTINGS !== 'undefin
     ? HEADER_TURTLE_SETTINGS
     : DEFAULT_HEADER_TURTLE_SETTINGS;
 
+const DEFAULT_HEADER_RABBIT_SETTINGS = Object.freeze({
+  spriteUrl: 'Assets/sprites/Lapin.png',
+  frameWidth: 16,
+  frameHeight: 16,
+  frameCount: 4,
+  minClicksPerSecond: 2,
+  maxClicksPerSecond: 20,
+  minFrameDurationMs: 200,
+  maxFrameDurationMs: 1000
+});
+
+const ACTIVE_HEADER_RABBIT_SETTINGS = typeof HEADER_RABBIT_SETTINGS !== 'undefined'
+  && HEADER_RABBIT_SETTINGS
+  && typeof HEADER_RABBIT_SETTINGS === 'object'
+    ? HEADER_RABBIT_SETTINGS
+    : DEFAULT_HEADER_RABBIT_SETTINGS;
+
 const MUSIC_SUPPORTED_EXTENSIONS = Array.isArray(APP_DATA.MUSIC_SUPPORTED_EXTENSIONS)
   && APP_DATA.MUSIC_SUPPORTED_EXTENSIONS.length
     ? [...APP_DATA.MUSIC_SUPPORTED_EXTENSIONS]
