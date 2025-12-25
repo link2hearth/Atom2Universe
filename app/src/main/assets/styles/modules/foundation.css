@@ -996,15 +996,16 @@ body.view-sudoku .status-bar {
 }
 
 .status-rabbit {
-  width: var(--header-rabbit-frame-width, 16px);
-  height: var(--header-rabbit-frame-height, 16px);
+  width: calc(var(--header-rabbit-frame-width, 16px) * var(--header-banner-sprite-scale, 1));
+  height: calc(var(--header-rabbit-frame-height, 16px) * var(--header-banner-sprite-scale, 1));
   flex-shrink: 0;
   display: inline-block;
   background-image: var(--header-rabbit-sprite, url('../../Assets/sprites/Lapin.png'));
   background-repeat: no-repeat;
-  background-position: var(--header-rabbit-frame-offset, 0px) 0;
-  background-size: calc(var(--header-rabbit-frame-width, 16px) * var(--header-rabbit-frame-count, 4))
-    var(--header-rabbit-frame-height, 16px);
+  background-position: calc(var(--header-rabbit-frame-offset, 0px) * var(--header-banner-sprite-scale, 1)) 0;
+  background-size: calc(var(--header-rabbit-frame-width, 16px) * var(--header-rabbit-frame-count, 4)
+      * var(--header-banner-sprite-scale, 1))
+    calc(var(--header-rabbit-frame-height, 16px) * var(--header-banner-sprite-scale, 1));
   image-rendering: pixelated;
   position: relative;
   z-index: 2;
@@ -1013,15 +1014,16 @@ body.view-sudoku .status-bar {
 }
 
 .status-turtle {
-  width: var(--header-turtle-frame-width, 48px);
-  height: var(--header-turtle-frame-height, 48px);
+  width: calc(var(--header-turtle-frame-width, 48px) * var(--header-banner-sprite-scale, 1));
+  height: calc(var(--header-turtle-frame-height, 16px) * var(--header-banner-sprite-scale, 1));
   flex-shrink: 0;
   display: inline-block;
   background-image: var(--header-turtle-sprite, url('../../Assets/sprites/Tortue.png'));
   background-repeat: no-repeat;
-  background-position: var(--header-turtle-frame-offset, 0px) 0;
-  background-size: calc(var(--header-turtle-frame-width, 48px) * var(--header-turtle-frame-count, 6))
-    var(--header-turtle-frame-height, 48px);
+  background-position: calc(var(--header-turtle-frame-offset, 0px) * var(--header-banner-sprite-scale, 1)) 0;
+  background-size: calc(var(--header-turtle-frame-width, 48px) * var(--header-turtle-frame-count, 6)
+      * var(--header-banner-sprite-scale, 1))
+    calc(var(--header-turtle-frame-height, 16px) * var(--header-banner-sprite-scale, 1));
   image-rendering: pixelated;
   transform: scaleX(-1);
   position: relative;
