@@ -1588,6 +1588,15 @@ const GAME_CONFIG = {
     starfield: {
       starCount: 60,
       ecoStarCount: 45
+    },
+    /**
+     * Réglages de l'animation des atomes critiques.
+     * - maxActive : nombre maximum d'atomes critiques visibles en même temps.
+     * - maxFps : limite de rafraîchissement des animations (en images/seconde).
+     */
+    critAtoms: {
+      maxActive: 24,
+      maxFps: 30
     }
   },
 
@@ -2049,7 +2058,6 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
 
 
