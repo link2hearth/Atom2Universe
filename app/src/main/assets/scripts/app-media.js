@@ -247,6 +247,58 @@ function writeStoredLocalBackgroundBank(bank) {
   }
 }
 
+function readStoredBackgroundRotationState() {
+  try {
+    const raw = globalThis.localStorage?.getItem(BACKGROUND_ROTATION_STATE_STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') {
+      return null;
+    }
+    const poolSize = Math.max(0, Math.floor(Number(parsed.poolSize) || 0));
+    const queue = Array.isArray(parsed.queue) ? parsed.queue : [];
+    const excluded = Array.isArray(parsed.excluded) ? parsed.excluded : [];
+    const lastIndex = Number.isFinite(Number(parsed.lastIndex)) ? Math.floor(Number(parsed.lastIndex)) : null;
+    return { poolSize, queue, excluded, lastIndex };
+  } catch (error) {
+    console.warn('Unable to read background rotation state', error);
+  }
+  return null;
+}
+
+function writeStoredBackgroundRotationState(state) {
+  try {
+    const poolSize = Math.max(0, Math.floor(Number(state?.poolSize) || 0));
+    if (!poolSize) {
+      globalThis.localStorage?.removeItem(BACKGROUND_ROTATION_STATE_STORAGE_KEY);
+      return;
+    }
+    const queue = Array.isArray(state?.queue)
+      ? state.queue.map(entry => Math.floor(Number(entry))).filter(entry => Number.isFinite(entry))
+      : [];
+    const excluded = Array.isArray(state?.excluded)
+      ? state.excluded.map(entry => Math.floor(Number(entry))).filter(entry => Number.isFinite(entry))
+      : [];
+    const lastIndex = Number.isFinite(Number(state?.lastIndex))
+      ? Math.floor(Number(state.lastIndex))
+      : null;
+    const payload = { poolSize, queue, excluded, lastIndex };
+    globalThis.localStorage?.setItem(BACKGROUND_ROTATION_STATE_STORAGE_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.warn('Unable to persist background rotation state', error);
+  }
+}
+
+function clearStoredBackgroundRotationState() {
+  try {
+    globalThis.localStorage?.removeItem(BACKGROUND_ROTATION_STATE_STORAGE_KEY);
+  } catch (error) {
+    console.warn('Unable to clear background rotation state', error);
+  }
+}
+
 function readStoredImageSources() {
   try {
     const raw = globalThis.localStorage?.getItem(IMAGE_FEED_SOURCES_STORAGE_KEY);
@@ -915,6 +967,64 @@ function pickNextBackgroundIndex(poolLength) {
   return nextIndex;
 }
 
+function normalizeBackgroundRotationList(list, poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (!Array.isArray(list) || total <= 0) {
+    return [];
+  }
+  const normalized = [];
+  const seen = new Set();
+  list.forEach(entry => {
+    const value = Math.floor(Number(entry));
+    if (!Number.isFinite(value) || value < 0 || value >= total) {
+      return;
+    }
+    if (seen.has(value)) {
+      return;
+    }
+    seen.add(value);
+    normalized.push(value);
+  });
+  return normalized;
+}
+
+function restoreBackgroundRotationState(poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (!total) {
+    clearStoredBackgroundRotationState();
+    return false;
+  }
+  const stored = readStoredBackgroundRotationState();
+  if (!stored || stored.poolSize !== total) {
+    return false;
+  }
+  const restoredQueue = normalizeBackgroundRotationList(stored.queue, total);
+  const restoredExcluded = normalizeBackgroundRotationList(stored.excluded, total);
+  backgroundRotationQueue = restoredQueue;
+  backgroundRotationExclusions = new Set(restoredExcluded);
+  backgroundRotationPoolSize = total;
+  if (Number.isFinite(stored.lastIndex) && stored.lastIndex >= 0 && stored.lastIndex < total) {
+    backgroundIndex = stored.lastIndex;
+  }
+  return true;
+}
+
+function persistBackgroundRotationState(poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (!total) {
+    clearStoredBackgroundRotationState();
+    return;
+  }
+  const queue = normalizeBackgroundRotationList(backgroundRotationQueue, total);
+  const excluded = normalizeBackgroundRotationList(Array.from(backgroundRotationExclusions || []), total);
+  writeStoredBackgroundRotationState({
+    poolSize: total,
+    queue,
+    excluded,
+    lastIndex: backgroundIndex
+  });
+}
+
 function buildBackgroundRotationQueue(poolLength) {
   const total = Math.max(0, Number(poolLength) || 0);
   if (!total) {
@@ -939,6 +1049,7 @@ function resetBackgroundRotationSession(poolLength) {
   backgroundRotationExclusions = new Set();
   backgroundRotationQueue = buildBackgroundRotationQueue(total);
   backgroundRotationPoolSize = total;
+  persistBackgroundRotationState(total);
 }
 
 function ensureBackgroundRotationQueue(poolLength) {
@@ -963,6 +1074,7 @@ function markBackgroundIndexSeen(index, poolLength) {
     return;
   }
   backgroundRotationQueue = backgroundRotationQueue.filter(item => item !== safeIndex);
+  persistBackgroundRotationState(poolLength);
 }
 
 function markBackgroundIndexExcluded(index, poolLength) {
@@ -975,6 +1087,7 @@ function markBackgroundIndexExcluded(index, poolLength) {
   if (backgroundRotationExclusions.size >= Math.max(0, Number(poolLength) || 0)) {
     backgroundRotationExclusions.clear();
   }
+  persistBackgroundRotationState(poolLength);
 }
 
 function setBackgroundLibraryStatus(status) {
@@ -1017,16 +1130,22 @@ function setLocalBackgroundItems(uris, options = {}) {
   localBackgroundItems = uniqueUris.map((uri, index) => ({ id: `local-background-${index}`, imageUrl: uri }));
   backgroundLibraryLabel = typeof options.label === 'string' ? options.label : backgroundLibraryLabel;
   setBackgroundLibraryStatus(localBackgroundItems.length ? 'ready' : 'idle');
-  resetBackgroundRotationSession(localBackgroundItems.length);
+  const shouldRestoreRotation = options.restoreRotationState !== false;
+  const didRestore = shouldRestoreRotation && restoreBackgroundRotationState(localBackgroundItems.length);
+  if (!didRestore) {
+    resetBackgroundRotationSession(localBackgroundItems.length);
+  }
   if (options.persist !== false) {
     writeStoredLocalBackgroundBank({ uris: uniqueUris, label: backgroundLibraryLabel });
   }
   if (localBackgroundItems.length) {
     backgroundIndex = pickNextBackgroundIndex(localBackgroundItems.length);
-    setImageBackgroundEnabled(true, { resetIndex: true, showEmptyStatus: false, force: true });
+    setImageBackgroundEnabled(true, { resetIndex: false, showEmptyStatus: false, force: true });
   } else {
     backgroundIndex = 0;
+    clearStoredBackgroundRotationState();
   }
+  persistBackgroundRotationState(localBackgroundItems.length);
   applyBackgroundImage();
   renderCollectionDownloadsGallery(getBackgroundItems());
   updateCollectionDownloadsVisibility();
@@ -1185,6 +1304,7 @@ function refreshBackgroundPool(options = {}) {
   } else if (backgroundIndex >= pool.length) {
     backgroundIndex = 0;
   }
+  persistBackgroundRotationState(pool.length);
   applyBackgroundImage();
 }
 
@@ -1212,10 +1332,10 @@ function handleNativeBackgroundBank(payload) {
   const normalized = normalizeBackgroundBankPayload(payload);
   setBackgroundLibraryStatus('ready');
   if (!normalized || !normalized.uris.length) {
-    setLocalBackgroundItems([], { label: normalized?.label || '', persist: false });
+    setLocalBackgroundItems([], { label: normalized?.label || '', persist: false, restoreRotationState: false });
     return;
   }
-  setLocalBackgroundItems(normalized.uris, { label: normalized.label, persist: true });
+  setLocalBackgroundItems(normalized.uris, { label: normalized.label, persist: true, restoreRotationState: false });
   showToast(
     translateOrDefault(
       'scripts.app.background.bankReady',
@@ -1249,7 +1369,7 @@ function applyStoredLocalBackgroundBank() {
     return;
   }
   backgroundLibraryLabel = stored.label || backgroundLibraryLabel;
-  setLocalBackgroundItems(stored.uris, { label: stored.label || '', persist: false });
+  setLocalBackgroundItems(stored.uris, { label: stored.label || '', persist: false, restoreRotationState: true });
 }
 
 function requestNativeBackgroundBank() {

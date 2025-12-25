@@ -289,3 +289,4 @@ const IMAGE_THUMBNAIL_MAX_DIMENSION = 512;
 const IMAGE_THUMBNAIL_IDLE_DELAY_MS = 300;
 const LOCAL_BACKGROUND_BANK_STORAGE_KEY = 'atom2univers.background.bank.v1';
 const BACKGROUND_DURATION_STORAGE_KEY = 'atom2univers.background.duration.ms';
+const BACKGROUND_ROTATION_STATE_STORAGE_KEY = 'atom2univers.background.rotation.v1';
