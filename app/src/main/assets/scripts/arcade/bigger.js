@@ -76,8 +76,12 @@
     return null;
   }
 
-  function requestSave() {
+  function requestSaveImmediate() {
     if (typeof window === 'undefined') {
+      return;
+    }
+    if (typeof window.requestSaveImmediate === 'function') {
+      window.requestSaveImmediate();
       return;
     }
     if (typeof window.atom2universSaveGame === 'function') {
@@ -87,6 +91,17 @@
     if (typeof window.saveGame === 'function') {
       window.saveGame();
     }
+  }
+
+  function requestSaveDebounced(options = {}) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (typeof window.requestSaveDebounced === 'function') {
+      window.requestSaveDebounced(options);
+      return;
+    }
+    requestSaveImmediate();
   }
 
   function clampQueue(values) {
@@ -306,11 +321,11 @@
       } else {
         this.hideOverlay();
       }
-      this.persistState();
+      this.persistState({ flush: true });
       this.startPhysics();
       if (this.prefersReducedMotion) {
         this.settleBallsInstantly();
-        this.persistState();
+        this.persistState({ flush: true });
       }
     }
 
@@ -716,7 +731,7 @@
         this.persistState();
         return;
       }
-      this.persistState();
+      this.persistState({ flush: true });
       this.startPhysics();
     }
 
@@ -942,7 +957,7 @@
         updateArcadeTicketDisplay();
       }
 
-      requestSave();
+      requestSaveDebounced();
     }
 
     handleRestartClick() {
@@ -1507,7 +1522,8 @@
       this.overlayElement.hidden = true;
     }
 
-    persistState() {
+    persistState(options = {}) {
+      const { flush = false } = options;
       const payload = this.serializeState();
       writeStoredState(payload);
       const autosave = typeof window !== 'undefined' ? window.ArcadeAutosave : null;
@@ -1516,7 +1532,7 @@
       } else if (autosave && typeof autosave.set === 'function') {
         autosave.set(GAME_ID, payload);
       } else {
-        requestSave();
+        requestSaveDebounced({ flush });
       }
     }
 

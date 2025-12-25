@@ -86,6 +86,12 @@ const SAVE_BACKUP_SETTINGS = Object.freeze({
 });
 
 /**
+ * Délai (en millisecondes) utilisé pour regrouper les sauvegardes arcade déclenchées
+ * par les mini-jeux afin de limiter les écritures rapprochées.
+ */
+const ARCADE_SAVE_DEBOUNCE_MS = 1000;
+
+/**
  * Paramètres ajustables du widget crypto (prix BTC/ETH sous la bannière principale).
  * `enabledByDefault` détermine l'état initial, `refreshIntervalMs` la fréquence des requêtes
  * et les champs `apiBaseUrl`/`endpoint` permettent de cibler un autre fournisseur.
@@ -1679,6 +1685,10 @@ const GAME_CONFIG = {
    * (vitesses, probabilités, textes, etc.) afin de centraliser les réglages.
    */
   arcade: {
+    /**
+     * Délai (en millisecondes) utilisé par les mini-jeux arcade pour regrouper les sauvegardes.
+     */
+    saveDebounceMs: ARCADE_SAVE_DEBOUNCE_MS,
     // Les configurations des mini-jeux Hold’em, Roulette, Pachinko, Balance, Math, Dice, Particules,
     // Échecs et Sudoku sont définies dans des fichiers JSON dédiés (`config/arcade/holdem.json`,
     // `config/arcade/roulette.json`, `config/arcade/pachinko.json`, `config/arcade/balance.json`,
@@ -2101,4 +2111,3 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-

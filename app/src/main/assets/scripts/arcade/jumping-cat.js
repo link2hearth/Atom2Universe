@@ -150,7 +150,11 @@
     return null;
   }
 
-  function requestSave() {
+  function requestSave(options = {}) {
+    if (typeof window !== 'undefined' && typeof window.requestSaveDebounced === 'function') {
+      window.requestSaveDebounced(options);
+      return;
+    }
     if (typeof window.atom2universSaveGame === 'function') {
       window.atom2universSaveGame();
       return;
