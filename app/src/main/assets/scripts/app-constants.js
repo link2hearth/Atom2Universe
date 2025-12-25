@@ -26,6 +26,20 @@ const SHOP_UNLOCK_THRESHOLD = new LayeredNumber(15);
 
 const DEFAULT_STARTUP_FADE_DURATION_MS = 2000;
 
+const DEFAULT_HEADER_TURTLE_SETTINGS = Object.freeze({
+  spriteUrl: 'Assets/sprites/Tortue.png',
+  frameWidth: 48,
+  frameHeight: 48,
+  frameCount: 6,
+  frameDurationMs: 500
+});
+
+const ACTIVE_HEADER_TURTLE_SETTINGS = typeof HEADER_TURTLE_SETTINGS !== 'undefined'
+  && HEADER_TURTLE_SETTINGS
+  && typeof HEADER_TURTLE_SETTINGS === 'object'
+    ? HEADER_TURTLE_SETTINGS
+    : DEFAULT_HEADER_TURTLE_SETTINGS;
+
 const MUSIC_SUPPORTED_EXTENSIONS = Array.isArray(APP_DATA.MUSIC_SUPPORTED_EXTENSIONS)
   && APP_DATA.MUSIC_SUPPORTED_EXTENSIONS.length
     ? [...APP_DATA.MUSIC_SUPPORTED_EXTENSIONS]
