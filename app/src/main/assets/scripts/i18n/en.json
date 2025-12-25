@@ -2348,6 +2348,12 @@
       },
       "options": {
         "title": "Options",
+        "cards": {
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          }
+        },
         "preferences": {
           "title": "Interface preferences"
         },

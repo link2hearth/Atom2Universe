@@ -683,6 +683,7 @@ function bindDomEventListeners() {
   initInfoScoresCard();
   initInfoCharactersCard();
   initInfoCardsCard();
+  initOptionCards();
   initCollectionImagesCard();
   initCollectionVideosCard();
   initCollectionBonusImagesCard();

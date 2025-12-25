@@ -7973,12 +7973,27 @@
       data-page-group="clicker"
     >
       <div class="options-grid">
-        <div class="option-card option-card--preferences">
-          <div class="option-card__header">
+        <div class="option-card option-card--preferences" id="optionsPreferencesCard">
+          <div class="option-card__header option-card__header--collapsible">
             <h3 data-i18n="index.sections.options.preferences.title">
               Préférences d’interface
             </h3>
+            <button
+              type="button"
+              id="optionsPreferencesToggle"
+              class="option-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="options-preferences-content"
+              data-i18n="index.sections.options.cards.toggle.collapse"
+            >
+              Réduire
+            </button>
           </div>
+          <div
+            id="options-preferences-content"
+            class="option-card__content"
+            aria-hidden="false"
+          >
           <div class="option-row option-row--language">
             <div class="option-field option-field--language">
               <label for="languageSelect" data-i18n="index.sections.options.language.label">
@@ -8445,11 +8460,27 @@
               </select>
             </div>
           </div>
-        </div>
-        <div class="option-card option-card--background">
-          <div class="option-card__header">
-            <h3 data-i18n="index.sections.options.background.title">Fond d’écran</h3>
           </div>
+        </div>
+        <div class="option-card option-card--background" id="optionsBackgroundCard">
+          <div class="option-card__header option-card__header--collapsible">
+            <h3 data-i18n="index.sections.options.background.title">Fond d’écran</h3>
+            <button
+              type="button"
+              id="optionsBackgroundToggle"
+              class="option-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="options-background-content"
+              data-i18n="index.sections.options.cards.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </div>
+          <div
+            id="options-background-content"
+            class="option-card__content"
+            aria-hidden="false"
+          >
           <div class="option-row option-row--buttons option-row--background-actions">
             <button
               type="button"
@@ -8500,11 +8531,27 @@
               </select>
             </div>
           </div>
-        </div>
-        <div class="option-card option-card--backups">
-          <div class="option-card__header">
-            <h3 data-i18n="index.sections.options.backups.title">Gérer les sauvegardes</h3>
           </div>
+        </div>
+        <div class="option-card option-card--backups" id="optionsBackupsCard">
+          <div class="option-card__header option-card__header--collapsible">
+            <h3 data-i18n="index.sections.options.backups.title">Gérer les sauvegardes</h3>
+            <button
+              type="button"
+              id="optionsBackupsToggle"
+              class="option-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="options-backups-content"
+              data-i18n="index.sections.options.cards.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </div>
+          <div
+            id="options-backups-content"
+            class="option-card__content"
+            aria-hidden="false"
+          >
           <div class="option-row option-row--buttons option-row--backups">
             <button
               type="button"
@@ -8532,14 +8579,27 @@
           >
             Choisissez une action pour gérer vos sauvegardes.
           </p>
-        </div>
-        <div class="option-card option-card--custom-pages">
-          <div class="option-card__header">
-            <h3 data-i18n="index.sections.options.customPages.title">Pages personnalisées</h3>
-            <p class="option-card__subtitle" data-i18n="index.sections.options.customPages.subtitle">
-              Accédez aux pages ajoutées via la configuration.
-            </p>
           </div>
+        </div>
+        <div class="option-card option-card--custom-pages" id="optionsCustomPagesCard">
+          <div class="option-card__header option-card__header--collapsible">
+            <h3 data-i18n="index.sections.options.customPages.title">Pages personnalisées</h3>
+            <button
+              type="button"
+              id="optionsCustomPagesToggle"
+              class="option-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="options-custom-pages-content"
+              data-i18n="index.sections.options.cards.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </div>
+          <div
+            id="options-custom-pages-content"
+            class="option-card__content"
+            aria-hidden="false"
+          >
           <p
             id="customPagesEmptyState"
             class="option-note"
@@ -8549,11 +8609,27 @@
             Aucune page personnalisée n’est disponible pour le moment.
           </p>
           <ul id="customPagesList" class="custom-pages-list" aria-live="polite"></ul>
-        </div>
-        <div class="option-card option-card--notes">
-          <div class="option-card__header">
-            <h3 data-i18n="index.sections.options.notes.title">Notes</h3>
           </div>
+        </div>
+        <div class="option-card option-card--notes" id="optionsNotesCard">
+          <div class="option-card__header option-card__header--collapsible">
+            <h3 data-i18n="index.sections.options.notes.title">Notes</h3>
+            <button
+              type="button"
+              id="optionsNotesToggle"
+              class="option-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="options-notes-content"
+              data-i18n="index.sections.options.cards.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </div>
+          <div
+            id="options-notes-content"
+            class="option-card__content"
+            aria-hidden="false"
+          >
           <div class="option-row option-row--buttons option-row--notes">
             <button
               type="button"
@@ -8564,6 +8640,7 @@
             >
               Ouvrir les notes
             </button>
+          </div>
           </div>
         </div>
       </div>

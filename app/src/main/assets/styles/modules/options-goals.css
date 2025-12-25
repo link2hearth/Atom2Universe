@@ -82,12 +82,22 @@ body.theme-aurora {
   gap: 0.8rem;
 }
 
+.option-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
 .option-row--performance {
   /* Masque temporairement le sélecteur de performances sans retirer la fonctionnalité. */
   display: none;
 }
 
 .option-card--preferences {
+  gap: clamp(1rem, 1.8vw, 1.4rem);
+}
+
+.option-card--preferences .option-card__content {
   gap: clamp(1rem, 1.8vw, 1.4rem);
 }
 
@@ -202,9 +212,90 @@ body.theme-aurora .option-card--holdem {
   gap: 0.8rem;
 }
 
+.option-card__header--collapsible {
+  align-items: center;
+  justify-content: space-between;
+}
+
 .option-card--preferences .option-card__header {
   align-items: flex-start;
   justify-content: flex-start;
+}
+
+.option-card--preferences .option-card__header--collapsible {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.option-card__collapse-button {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-size: calc(var(--font-size-scale-factor, 1) * 0.75rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.option-card__collapse-button::after {
+  content: '';
+  width: 0.65rem;
+  height: 0.65rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.option-card--collapsed .option-card__collapse-button::after {
+  transform: rotate(-135deg);
+}
+
+body.theme-light .option-card__collapse-button {
+  border-color: rgba(12, 16, 32, 0.24);
+  background: rgba(12, 16, 32, 0.08);
+}
+
+body.theme-neon .option-card__collapse-button {
+  border-color: rgba(110, 130, 255, 0.36);
+  background: rgba(80, 100, 255, 0.18);
+}
+
+body.theme-aurora .option-card__collapse-button {
+  border-color: rgba(90, 230, 170, 0.36);
+  background: rgba(40, 170, 120, 0.2);
+}
+
+.option-card__collapse-button:hover,
+.option-card__collapse-button:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+body.theme-light .option-card__collapse-button:hover,
+body.theme-light .option-card__collapse-button:focus-visible {
+  background: rgba(12, 16, 32, 0.12);
+  border-color: rgba(12, 16, 32, 0.36);
+}
+
+body.theme-neon .option-card__collapse-button:hover,
+body.theme-neon .option-card__collapse-button:focus-visible {
+  background: rgba(80, 100, 255, 0.24);
+  border-color: rgba(110, 130, 255, 0.48);
+}
+
+body.theme-aurora .option-card__collapse-button:hover,
+body.theme-aurora .option-card__collapse-button:focus-visible {
+  background: rgba(40, 170, 120, 0.26);
+  border-color: rgba(90, 230, 170, 0.48);
 }
 
 .option-card__description {
