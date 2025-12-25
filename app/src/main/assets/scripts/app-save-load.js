@@ -1,3 +1,110 @@
+function applyLocalStorageSnapshot(snapshot) {
+  if (!snapshot || typeof snapshot !== 'object') {
+    return;
+  }
+  const storage = typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
+  if (!storage) {
+    return;
+  }
+  const entries = snapshot.entries && typeof snapshot.entries === 'object'
+    ? snapshot.entries
+    : snapshot;
+  Object.entries(entries).forEach(([key, value]) => {
+    if (!key || !key.startsWith('atom2univers.')) {
+      return;
+    }
+    if (key === PRIMARY_SAVE_STORAGE_KEY || key === RELOAD_SAVE_STORAGE_KEY) {
+      return;
+    }
+    if (typeof value === 'string') {
+      storage.setItem(key, value);
+    } else if (value == null) {
+      storage.removeItem(key);
+    }
+  });
+}
+
+function refreshStoredPreferences() {
+  if (typeof applyUiScaleSelection === 'function' && typeof readStoredUiScale === 'function') {
+    const stored = readStoredUiScale();
+    if (typeof stored === 'string' && stored) {
+      applyUiScaleSelection(stored, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyTextScaleSelection === 'function' && typeof readStoredTextScale === 'function') {
+    const stored = readStoredTextScale();
+    if (typeof stored === 'string' && stored) {
+      applyTextScaleSelection(stored, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyTextFontSelection === 'function' && typeof readStoredTextFont === 'function') {
+    const stored = readStoredTextFont();
+    if (typeof stored === 'string' && stored) {
+      applyTextFontSelection(stored, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyDigitFontSelection === 'function' && typeof readStoredDigitFont === 'function') {
+    const stored = readStoredDigitFont();
+    if (typeof stored === 'string' && stored) {
+      applyDigitFontSelection(stored, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyClickSoundMuted === 'function' && typeof readStoredClickSoundMuted === 'function') {
+    const stored = readStoredClickSoundMuted();
+    if (stored != null) {
+      applyClickSoundMuted(stored === true, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyCritAtomVisualsDisabled === 'function'
+    && typeof readStoredCritAtomVisualsDisabled === 'function') {
+    const stored = readStoredCritAtomVisualsDisabled();
+    if (stored != null) {
+      applyCritAtomVisualsDisabled(stored === true, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyAtomAnimationPreference === 'function'
+    && typeof readStoredAtomAnimationsEnabled === 'function') {
+    const stored = readStoredAtomAnimationsEnabled();
+    if (stored != null) {
+      applyAtomAnimationPreference(stored === true, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyAtomIconVisibilityPreference === 'function'
+    && typeof readStoredAtomIconVisibility === 'function') {
+    const stored = readStoredAtomIconVisibility();
+    if (stored != null) {
+      applyAtomIconVisibilityPreference(stored === true, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyScreenWakeLockEnabled === 'function'
+    && typeof readStoredScreenWakeLockEnabled === 'function') {
+    const stored = readStoredScreenWakeLockEnabled();
+    if (stored != null) {
+      applyScreenWakeLockEnabled(stored === true, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof applyAndroidStatusBarVisible === 'function'
+    && typeof readStoredAndroidStatusBarVisible === 'function') {
+    const stored = readStoredAndroidStatusBarVisible();
+    if (stored != null) {
+      applyAndroidStatusBarVisible(stored === true, { persist: false, updateControl: true });
+    }
+  }
+  if (typeof readStoredLanguagePreference === 'function'
+    && typeof i18n !== 'undefined'
+    && typeof i18n.setLanguage === 'function') {
+    const stored = readStoredLanguagePreference();
+    if (stored) {
+      if (typeof updateLanguageSelectorValue === 'function') {
+        updateLanguageSelectorValue(stored);
+      }
+      i18n.setLanguage(stored).catch(error => {
+        console.error('Unable to load language resources', error);
+      });
+    }
+  }
+}
+
 function applySerializedGameState(raw) {
   resetFrenzyState({ skipApply: true });
   gameState.baseCrit = createDefaultCritState();
@@ -453,6 +560,8 @@ function applySerializedGameState(raw) {
   recalcProduction();
   renderShop();
   updateBigBangVisibility();
+  applyLocalStorageSnapshot(data.localStorage ?? data.localStorageSnapshot);
+  refreshStoredPreferences();
   updateUI();
   updateFrenzyAutoCollectOptionVisibility();
   updateTicketStarAutoCollectOptionVisibility();
@@ -1011,6 +1120,8 @@ function loadGame() {
     recalcProduction();
     renderShop();
     updateBigBangVisibility();
+    applyLocalStorageSnapshot(data.localStorage ?? data.localStorageSnapshot);
+    refreshStoredPreferences();
     updateUI();
     updateFrenzyAutoCollectOptionVisibility();
     if (data.lastSave) {
