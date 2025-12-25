@@ -29,7 +29,7 @@ const DEFAULT_STARTUP_FADE_DURATION_MS = 2000;
 const DEFAULT_HEADER_TURTLE_SETTINGS = Object.freeze({
   spriteUrl: 'Assets/sprites/Tortue.png',
   frameWidth: 48,
-  frameHeight: 48,
+  frameHeight: 16,
   frameCount: 6,
   frameDurationMs: 500
 });
@@ -39,6 +39,12 @@ const ACTIVE_HEADER_TURTLE_SETTINGS = typeof HEADER_TURTLE_SETTINGS !== 'undefin
   && typeof HEADER_TURTLE_SETTINGS === 'object'
     ? HEADER_TURTLE_SETTINGS
     : DEFAULT_HEADER_TURTLE_SETTINGS;
+
+const DEFAULT_HEADER_BANNER_SPRITE_SCALE = 1;
+
+const ACTIVE_HEADER_BANNER_SPRITE_SCALE = typeof HEADER_BANNER_SPRITE_SCALE !== 'undefined'
+  ? HEADER_BANNER_SPRITE_SCALE
+  : DEFAULT_HEADER_BANNER_SPRITE_SCALE;
 
 const DEFAULT_HEADER_RABBIT_SETTINGS = Object.freeze({
   spriteUrl: 'Assets/sprites/Lapin.png',

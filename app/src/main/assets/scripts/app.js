@@ -14240,6 +14240,7 @@ function initializeApp() {
   applyStartupOverlayDuration();
   applyHeaderTurtleSettings();
   applyHeaderRabbitSettings();
+  applyHeaderBannerSpriteScale();
   startHeaderTurtleAnimation();
   scheduleStartupOverlayFailsafe();
   prefetchAndroidManagedFiles();

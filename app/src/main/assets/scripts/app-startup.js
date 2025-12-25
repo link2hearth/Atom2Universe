@@ -1279,6 +1279,21 @@ function applyHeaderRabbitSettings() {
   root.style.setProperty('--header-rabbit-sprite', `url("${normalizedSpriteUrl}")`);
 }
 
+function applyHeaderBannerSpriteScale() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const root = document.documentElement;
+  if (!root || !root.style || typeof root.style.setProperty !== 'function') {
+    return;
+  }
+
+  const normalizedScale = getNormalizedHeaderBannerSpriteScale();
+
+  root.style.setProperty('--header-banner-sprite-scale', String(normalizedScale));
+}
+
 function getNormalizedHeaderTurtleSettings() {
   const fallback = DEFAULT_HEADER_TURTLE_SETTINGS;
   const settings = typeof ACTIVE_HEADER_TURTLE_SETTINGS === 'object' && ACTIVE_HEADER_TURTLE_SETTINGS
@@ -1326,6 +1341,17 @@ function getNormalizedHeaderTurtleSettings() {
     frameCount: normalizedFrameCount,
     frameDurationMs: normalizedFrameDurationMs
   };
+}
+
+function getNormalizedHeaderBannerSpriteScale() {
+  const fallback = DEFAULT_HEADER_BANNER_SPRITE_SCALE;
+  const scale = Number(ACTIVE_HEADER_BANNER_SPRITE_SCALE);
+
+  if (!Number.isFinite(scale) || scale <= 0) {
+    return fallback;
+  }
+
+  return Math.max(0.1, Math.round(scale * 100) / 100);
 }
 
 function getNormalizedHeaderRabbitSettings() {

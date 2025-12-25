@@ -31,7 +31,7 @@ const ANTI_CHEAT_SETTINGS = Object.freeze({
 
 /**
  * Réglages du sprite de la tortue affichée avant l’APS dans la bannière.
- * - `spriteUrl` : chemin vers le sprite sheet (48x48 * 6 frames).
+ * - `spriteUrl` : chemin vers le sprite sheet (48x16 * 6 frames).
  * - `frameWidth`/`frameHeight` : taille d’une frame en pixels.
  * - `frameCount` : nombre total de frames.
  * - `frameDurationMs` : durée d’affichage d’une frame en millisecondes.
@@ -39,10 +39,16 @@ const ANTI_CHEAT_SETTINGS = Object.freeze({
 const HEADER_TURTLE_SETTINGS = Object.freeze({
   spriteUrl: 'Assets/sprites/Tortue.png',
   frameWidth: 48,
-  frameHeight: 48,
+  frameHeight: 16,
   frameCount: 6,
   frameDurationMs: 500
 });
+
+/**
+ * Échelle d’affichage des sprites (tortue + lapin) de la bannière.
+ * Exemple : 2 signifie 2x plus grand.
+ */
+const HEADER_BANNER_SPRITE_SCALE = 2;
 
 /**
  * Réglages du sprite du lapin affiché avant l’APC dans la bannière.
@@ -2095,5 +2101,4 @@ if (typeof globalThis !== 'undefined') {
   globalThis.toggleAtomImageVariantEnabled = toggleAtomImageVariantEnabled;
   globalThis.toggleEscapeAdvancedDifficultiesEnabled = toggleEscapeAdvancedDifficultiesEnabled;
 }
-
 
