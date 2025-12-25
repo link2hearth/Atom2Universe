@@ -395,18 +395,6 @@ function handleGlobalTouchMove(event) {
   registerActiveTouches(event?.changedTouches, event?.touches);
 }
 
-function handleFormControlTouchStart(event) {
-  const target = event?.target;
-  if (!target || typeof target.closest !== 'function') {
-    return;
-  }
-  const select = target.closest('select');
-  if (!select || select.disabled) {
-    return;
-  }
-  forceUnlockScrollSafe();
-}
-
 function handleGlobalTouchCompletion(event) {
   registerActiveTouches(event?.changedTouches, event?.touches);
   unregisterActiveTouches(event?.changedTouches, event?.touches);
@@ -469,18 +457,6 @@ function handleGlobalPointerStart(event) {
   }
 }
 
-function handleFormControlPointerDown(event) {
-  const target = event?.target;
-  if (!target || typeof target.closest !== 'function') {
-    return;
-  }
-  const select = target.closest('select');
-  if (!select || select.disabled) {
-    return;
-  }
-  forceUnlockScrollSafe();
-}
-
 function resetTouchTrackingState(options = {}) {
   const { reapplyScrollBehavior = true } = options;
   activeTouchIdentifiers.clear();
@@ -507,7 +483,6 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
   });
 
   document.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
-  document.addEventListener('touchstart', handleFormControlTouchStart, passiveCaptureEventListenerOptions);
   document.addEventListener('touchmove', handleGlobalTouchMove, passiveCaptureEventListenerOptions);
   ['touchend', 'touchcancel'].forEach(eventName => {
     document.addEventListener(eventName, handleGlobalTouchCompletion, passiveCaptureEventListenerOptions);
@@ -515,7 +490,6 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
 
   if (supportsGlobalPointerEvents) {
     document.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
-    document.addEventListener('pointerdown', handleFormControlPointerDown, passiveCaptureEventListenerOptions);
     ['pointerup', 'pointercancel', 'pointerleave', 'pointerout', 'lostpointercapture'].forEach(eventName => {
       document.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
@@ -540,14 +514,12 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
     forceUnlockScrollSafe();
   });
   window.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
-  window.addEventListener('touchstart', handleFormControlTouchStart, passiveCaptureEventListenerOptions);
   window.addEventListener('touchmove', handleGlobalTouchMove, passiveCaptureEventListenerOptions);
   ['touchend', 'touchcancel'].forEach(eventName => {
     window.addEventListener(eventName, handleGlobalTouchCompletion, passiveCaptureEventListenerOptions);
   });
   if (supportsGlobalPointerEvents) {
     window.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
-    window.addEventListener('pointerdown', handleFormControlPointerDown, passiveCaptureEventListenerOptions);
     ['pointerup', 'pointercancel', 'pointerleave', 'pointerout', 'lostpointercapture'].forEach(eventName => {
       window.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
