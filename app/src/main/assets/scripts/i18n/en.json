@@ -297,6 +297,7 @@
           "frenzy": {
             "title": "Frenzy",
             "single": "Frenzy high score",
+            "singleEnhanced": "Enhanced single frenzy high score",
             "multi": "Frenzy chain high score",
             "empty": "—",
             "singleValue": "{count} clicks",

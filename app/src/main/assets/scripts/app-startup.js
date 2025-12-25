@@ -1048,6 +1048,7 @@ function collectDomElements() {
   infoMotocrossDistanceValue: document.getElementById('infoMotocrossDistanceValue'),
   infoMotocrossSpeedValue: document.getElementById('infoMotocrossSpeedValue'),
   infoFrenzyHighscoreSingle: document.getElementById('infoFrenzyHighscoreSingle'),
+  infoFrenzyHighscoreSingleEnhanced: document.getElementById('infoFrenzyHighscoreSingleEnhanced'),
   infoFrenzyHighscoreMulti: document.getElementById('infoFrenzyHighscoreMulti'),
   starsWarHighscoreHard: document.getElementById('starsWarHighscoreHard'),
   starsWarHighscoreEasy: document.getElementById('starsWarHighscoreEasy'),

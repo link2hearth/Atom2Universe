@@ -2710,6 +2710,9 @@ function createFallbackApcFrenzyStats() {
     },
     bestSingle: {
       clicks: 0
+    },
+    bestSingleEnhanced: {
+      clicks: 0
     }
   };
 }
@@ -2732,11 +2735,17 @@ function getNormalizedApcFrenzyStats(store) {
     : {};
   const bestRaw = rawStats.best && typeof rawStats.best === 'object' ? rawStats.best : {};
   const bestSingleRaw = rawStats.bestSingle && typeof rawStats.bestSingle === 'object' ? rawStats.bestSingle : {};
+  const bestSingleEnhancedRaw = rawStats.bestSingleEnhanced && typeof rawStats.bestSingleEnhanced === 'object'
+    ? rawStats.bestSingleEnhanced
+    : {};
 
   fallback.totalClicks = toNonNegativeInteger(rawStats.totalClicks ?? rawStats.total ?? 0);
   fallback.best.clicks = toNonNegativeInteger(bestRaw.clicks ?? bestRaw.count ?? 0);
   fallback.best.frenziesUsed = toNonNegativeInteger(bestRaw.frenziesUsed ?? bestRaw.frenzies ?? 0);
   fallback.bestSingle.clicks = toNonNegativeInteger(bestSingleRaw.clicks ?? bestSingleRaw.count ?? 0);
+  fallback.bestSingleEnhanced.clicks = toNonNegativeInteger(
+    bestSingleEnhancedRaw.clicks ?? bestSingleEnhancedRaw.count ?? 0
+  );
 
   if (fallback.bestSingle.clicks <= 0 && fallback.best.frenziesUsed <= 1) {
     fallback.bestSingle.clicks = Math.max(fallback.bestSingle.clicks, fallback.best.clicks);
@@ -3559,6 +3568,11 @@ function updateFrenzyHighscores(globalStats) {
 
   if (elements.infoFrenzyHighscoreSingle) {
     elements.infoFrenzyHighscoreSingle.textContent = formatFrenzySingleRecordValue(stats.bestSingle?.clicks);
+  }
+  if (elements.infoFrenzyHighscoreSingleEnhanced) {
+    elements.infoFrenzyHighscoreSingleEnhanced.textContent = formatFrenzySingleRecordValue(
+      stats.bestSingleEnhanced?.clicks
+    );
   }
   if (elements.infoFrenzyHighscoreMulti) {
     elements.infoFrenzyHighscoreMulti.textContent = formatFrenzyMultiRecordValue(
