@@ -1767,11 +1767,6 @@ function activateArcadeHubCard(card) {
   if (!target || !isPageUnlocked(target)) {
     return;
   }
-  const pageHref = card.dataset?.pageHref;
-  if (pageHref) {
-    window.location.href = pageHref;
-    return;
-  }
   if (target === 'wave') {
     ensureWaveGame();
   }
