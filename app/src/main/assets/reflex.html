@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover"
+  />
+  <title data-i18n="reflex.meta.title">Reflex</title>
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body class="theme-dark reflex-standalone">
+  <main class="reflex-page">
+    <header class="reflex-page__header">
+      <a
+        class="reflex__back-button reflex__start-button"
+        href="index.html"
+        aria-label="Retour à la page principale"
+        title="Retour à la page principale"
+        data-i18n="reflex.page.back;aria-label:reflex.page.backAria;title:reflex.page.backAria"
+      >Retour</a>
+    </header>
+
+    <section
+      id="reflex"
+      class="page page--reflex active"
+      data-page-group="arcade"
+      data-scroll-behavior="lock"
+      aria-label="Mini-jeu Reflex : touchez les cercles dès qu'ils apparaissent."
+      data-i18n="aria-label:index.sections.reflex.aria"
+    >
+      <div class="reflex" data-reflex-root>
+        <div
+          class="reflex__controls"
+          role="group"
+          aria-label="Commandes Reflex"
+          data-i18n="aria-label:index.sections.reflex.controls.aria"
+        >
+          <button
+            type="button"
+            class="reflex__start-button"
+            id="reflexStartButton"
+            data-i18n="index.sections.reflex.controls.start"
+          >
+            Démarrer
+          </button>
+          <div
+            class="reflex__mode"
+            role="group"
+            aria-label="Choix du mode Reflex"
+            data-i18n="aria-label:index.sections.reflex.controls.modeAria"
+            id="reflexModeGroup"
+          >
+            <span class="reflex__mode-label" data-i18n="index.sections.reflex.controls.modeLabel">
+              Mode
+            </span>
+            <div class="reflex__mode-options">
+              <button
+                type="button"
+                class="reflex__mode-option reflex__mode-option--active"
+                data-reflex-mode-option="easy"
+                aria-pressed="true"
+                data-i18n="index.sections.reflex.controls.modes.easy"
+              >
+                Easy
+              </button>
+              <button
+                type="button"
+                class="reflex__mode-option"
+                data-reflex-mode-option="hard"
+                aria-pressed="false"
+                data-i18n="index.sections.reflex.controls.modes.hard"
+              >
+                Hard
+              </button>
+            </div>
+          </div>
+          <div class="reflex__stat-chip">
+            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.score">Score</span>
+            <span class="reflex__stat-value" id="reflexScoreValue">0</span>
+          </div>
+          <div class="reflex__stat-chip reflex__stat-chip--best">
+            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.bestEasy">Record Easy</span>
+            <span class="reflex__stat-value" id="reflexBestScoreEasyValue">—</span>
+          </div>
+          <div class="reflex__stat-chip reflex__stat-chip--best">
+            <span class="reflex__stat-label" data-i18n="index.sections.reflex.stats.bestHard">Record Hard</span>
+            <span class="reflex__stat-value" id="reflexBestScoreHardValue">—</span>
+          </div>
+        </div>
+        <p class="reflex__hint" id="reflexHint" data-i18n="index.sections.reflex.hint">
+          Cliquez sur chaque cercle dès qu'il apparaît.
+        </p>
+        <div
+          class="reflex__playfield"
+          id="reflexPlayfield"
+          aria-label="Zone de jeu Reflex"
+          data-i18n="aria-label:index.sections.reflex.playfieldAria"
+        >
+          <div class="reflex__layer" id="reflexTargetLayer"></div>
+        </div>
+        <p class="reflex__sr-status" id="reflexStatus" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="config/config.js"></script>
+  <script src="scripts/i18n/embedded-resources.js"></script>
+  <script src="scripts/modules/i18n.js"></script>
+  <script src="scripts/arcade/autosave.js"></script>
+  <script src="scripts/arcade/reflex.js"></script>
+  <script>
+    (() => {
+      const i18n = window.i18n;
+      if (!i18n || typeof i18n.setLanguage !== 'function') {
+        return;
+      }
+      const storageKey = 'atom2univers.language';
+      let preferred = '';
+      try {
+        preferred = window.localStorage.getItem(storageKey) || '';
+      } catch (error) {
+        preferred = '';
+      }
+      const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+      const fallback = preferred || browserLanguage || 'fr';
+      i18n
+        .setLanguage(fallback)
+        .catch((error) => {
+          console.warn('Unable to load language resources', error);
+        })
+        .finally(() => {
+          if (typeof i18n.updateTranslations === 'function') {
+            i18n.updateTranslations(document);
+          }
+        });
+    })();
+  </script>
+</body>
+</html>
