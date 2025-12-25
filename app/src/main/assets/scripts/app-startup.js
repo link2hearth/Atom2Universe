@@ -1223,6 +1223,53 @@ function applyStartupOverlayDuration() {
   root.style.setProperty('--startup-fade-duration', `${normalizedDuration}ms`);
 }
 
+function applyHeaderTurtleSettings() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const root = document.documentElement;
+  if (!root || !root.style || typeof root.style.setProperty !== 'function') {
+    return;
+  }
+
+  const fallback = DEFAULT_HEADER_TURTLE_SETTINGS;
+  const settings = typeof ACTIVE_HEADER_TURTLE_SETTINGS === 'object' && ACTIVE_HEADER_TURTLE_SETTINGS
+    ? ACTIVE_HEADER_TURTLE_SETTINGS
+    : fallback;
+
+  const spriteUrl = typeof settings.spriteUrl === 'string' && settings.spriteUrl.trim()
+    ? settings.spriteUrl.trim()
+    : fallback.spriteUrl;
+  const frameWidth = Number(settings.frameWidth);
+  const frameHeight = Number(settings.frameHeight);
+  const frameCount = Number(settings.frameCount);
+  const frameDurationMs = Number(settings.frameDurationMs);
+
+  const normalizedFrameWidth = Number.isFinite(frameWidth) && frameWidth > 0
+    ? Math.round(frameWidth)
+    : fallback.frameWidth;
+  const normalizedFrameHeight = Number.isFinite(frameHeight) && frameHeight > 0
+    ? Math.round(frameHeight)
+    : fallback.frameHeight;
+  const normalizedFrameCount = Number.isFinite(frameCount) && frameCount > 0
+    ? Math.max(1, Math.round(frameCount))
+    : fallback.frameCount;
+  const normalizedFrameDurationMs = Number.isFinite(frameDurationMs) && frameDurationMs > 0
+    ? Math.max(50, Math.round(frameDurationMs))
+    : fallback.frameDurationMs;
+
+  const totalDurationMs = normalizedFrameDurationMs * normalizedFrameCount;
+  const spriteOffsetPx = Math.max(0, normalizedFrameWidth * (normalizedFrameCount - 1));
+
+  root.style.setProperty('--header-turtle-frame-width', `${normalizedFrameWidth}px`);
+  root.style.setProperty('--header-turtle-frame-height', `${normalizedFrameHeight}px`);
+  root.style.setProperty('--header-turtle-frame-count', String(normalizedFrameCount));
+  root.style.setProperty('--header-turtle-animation-duration', `${totalDurationMs}ms`);
+  root.style.setProperty('--header-turtle-sprite-offset', `${spriteOffsetPx}px`);
+  root.style.setProperty('--header-turtle-sprite', `url("${spriteUrl}")`);
+}
+
 function showStartupOverlay(options = {}) {
   const overlay = getStartupOverlayElement();
   if (!overlay) {
