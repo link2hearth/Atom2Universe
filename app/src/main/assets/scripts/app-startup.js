@@ -1262,12 +1262,25 @@ function applyHeaderTurtleSettings() {
   const totalDurationMs = normalizedFrameDurationMs * normalizedFrameCount;
   const spriteOffsetPx = Math.max(0, normalizedFrameWidth * (normalizedFrameCount - 1));
 
+  const normalizedSpriteUrl = (() => {
+    if (!spriteUrl) {
+      return '';
+    }
+    if (/^(?:https?:|data:|blob:)/i.test(spriteUrl)) {
+      return spriteUrl;
+    }
+    if (spriteUrl.startsWith('/') || spriteUrl.startsWith('./') || spriteUrl.startsWith('../')) {
+      return spriteUrl;
+    }
+    return `../../${spriteUrl.replace(/^\/+/, '')}`;
+  })();
+
   root.style.setProperty('--header-turtle-frame-width', `${normalizedFrameWidth}px`);
   root.style.setProperty('--header-turtle-frame-height', `${normalizedFrameHeight}px`);
   root.style.setProperty('--header-turtle-frame-count', String(normalizedFrameCount));
   root.style.setProperty('--header-turtle-animation-duration', `${totalDurationMs}ms`);
   root.style.setProperty('--header-turtle-sprite-offset', `${spriteOffsetPx}px`);
-  root.style.setProperty('--header-turtle-sprite', `url("${spriteUrl}")`);
+  root.style.setProperty('--header-turtle-sprite', `url("${normalizedSpriteUrl}")`);
 }
 
 function showStartupOverlay(options = {}) {
