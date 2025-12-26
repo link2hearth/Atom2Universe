@@ -4387,6 +4387,8 @@ function updateEffectiveUiScaleFactor() {
     ? autoUiScaleFactor
     : 1;
   const effective = Math.max(0.4, Math.min(3, baseFactor * autoFactor));
+  root.style.setProperty('--ui-base-scale-factor', String(baseFactor));
+  root.style.setProperty('--ui-auto-scale-factor', String(autoFactor));
   root.style.setProperty('--font-scale-factor', String(effective));
 }
 
