@@ -1169,7 +1169,13 @@ function setLocalBackgroundItems(uris, options = {}) {
     writeStoredLocalBackgroundBank({ uris: uniqueUris, label: backgroundLibraryLabel });
   }
   if (localBackgroundItems.length) {
-    backgroundIndex = pickNextBackgroundIndex(localBackgroundItems.length);
+    const hasStoredIndex = Number.isFinite(backgroundIndex)
+      && backgroundIndex >= 0
+      && backgroundIndex < localBackgroundItems.length;
+    if (!didRestore || !hasStoredIndex) {
+      backgroundIndex = pickNextBackgroundIndex(localBackgroundItems.length);
+      persistBackgroundRotationState(localBackgroundItems.length);
+    }
     setImageBackgroundEnabled(true, { resetIndex: false, showEmptyStatus: false, force: true });
   } else {
     backgroundIndex = 0;
@@ -1203,6 +1209,7 @@ function scheduleBackgroundRotation() {
       return;
     }
     backgroundIndex = pickNextBackgroundIndex(activePool.length);
+    persistBackgroundRotationState(activePool.length);
     applyBackgroundImage();
   }, delay);
 }
