@@ -1050,6 +1050,7 @@ function resetBackgroundRotationSession(poolLength) {
   backgroundRotationQueue = buildBackgroundRotationQueue(total);
   backgroundRotationPoolSize = total;
   persistBackgroundRotationState(total);
+  renderBackgroundRotationCounter(total);
 }
 
 function ensureBackgroundRotationQueue(poolLength) {
@@ -1075,6 +1076,7 @@ function markBackgroundIndexSeen(index, poolLength) {
   }
   backgroundRotationQueue = backgroundRotationQueue.filter(item => item !== safeIndex);
   persistBackgroundRotationState(poolLength);
+  renderBackgroundRotationCounter(poolLength);
 }
 
 function markBackgroundIndexExcluded(index, poolLength) {
@@ -1088,6 +1090,7 @@ function markBackgroundIndexExcluded(index, poolLength) {
     backgroundRotationExclusions.clear();
   }
   persistBackgroundRotationState(poolLength);
+  renderBackgroundRotationCounter(poolLength);
 }
 
 function setBackgroundLibraryStatus(status) {
@@ -1125,6 +1128,33 @@ function renderBackgroundLibraryStatus() {
   elements.backgroundLibraryStatus.setAttribute('data-i18n', key);
 }
 
+function getBackgroundRotationSeenCount(poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (!total) {
+    return 0;
+  }
+  const queueLength = Array.isArray(backgroundRotationQueue) ? backgroundRotationQueue.length : 0;
+  const excludedCount = backgroundRotationExclusions instanceof Set ? backgroundRotationExclusions.size : 0;
+  return Math.max(0, total - queueLength - excludedCount);
+}
+
+function renderBackgroundRotationCounter(poolLength) {
+  if (!elements.backgroundRotationCounter) {
+    return;
+  }
+  const total = Math.max(0, Number(poolLength) || 0);
+  const seen = getBackgroundRotationSeenCount(total);
+  elements.backgroundRotationCounter.textContent = `${seen}/${total}`;
+}
+
+function renderBackgroundRotationMeta(options = {}) {
+  const poolLength = Math.max(
+    0,
+    Number(options.poolLength != null ? options.poolLength : getBackgroundItems().length) || 0
+  );
+  renderBackgroundRotationCounter(poolLength);
+}
+
 function setLocalBackgroundItems(uris, options = {}) {
   const uniqueUris = Array.from(new Set((uris || []).filter(uri => typeof uri === 'string' && uri)));
   localBackgroundItems = uniqueUris.map((uri, index) => ({ id: `local-background-${index}`, imageUrl: uri }));
@@ -1149,6 +1179,7 @@ function setLocalBackgroundItems(uris, options = {}) {
   applyBackgroundImage();
   renderCollectionDownloadsGallery(getBackgroundItems());
   updateCollectionDownloadsVisibility();
+  renderBackgroundRotationMeta({ poolLength: localBackgroundItems.length });
 }
 
 function clearBackgroundTimer() {
@@ -1219,6 +1250,7 @@ function applyBackgroundImage() {
     elements.favoriteBackground.style.backgroundImage = '';
     elements.favoriteBackground.toggleAttribute('hidden', true);
     document.body.classList.toggle('favorite-background-active', false);
+    renderBackgroundRotationMeta({ poolLength: pool.length });
     return;
   }
 
@@ -1243,6 +1275,7 @@ function applyBackgroundImage() {
       elements.favoriteBackground.toggleAttribute('hidden', true);
       document.body.classList.toggle('favorite-background-active', false);
     }
+    renderBackgroundRotationMeta({ poolLength: pool.length });
     if (pool.length > 1) {
       backgroundIndex = pickNextBackgroundIndex(pool.length);
       setTimeout(() => applyBackgroundImage(), 80);
@@ -1262,6 +1295,7 @@ function applyBackgroundImage() {
     document.body.classList.toggle('favorite-background-active', shouldShow);
     lastLoadedBackgroundUrl = backgroundUrl;
     markBackgroundIndexSeen(backgroundIndex, pool.length);
+    renderBackgroundRotationMeta({ poolLength: pool.length });
     scheduleBackgroundRotation();
   };
 
@@ -1374,7 +1408,9 @@ function applyStoredLocalBackgroundBank() {
 
 function requestNativeBackgroundBank() {
   if (window.AndroidBridge && typeof window.AndroidBridge.loadBackgroundImageBank === 'function') {
-    setBackgroundLibraryStatus('loading');
+    if (!hasLocalBackgrounds()) {
+      setBackgroundLibraryStatus('loading');
+    }
     window.AndroidBridge.loadBackgroundImageBank();
   }
 }
@@ -1426,6 +1462,7 @@ function initBackgroundOptions() {
   updateBackgroundToggleLabel();
   applyStoredLocalBackgroundBank();
   renderBackgroundLibraryStatus();
+  renderBackgroundRotationMeta();
 }
 
 function subscribeBackgroundLanguageUpdates() {
@@ -1433,6 +1470,7 @@ function subscribeBackgroundLanguageUpdates() {
     updateBackgroundDurationControl();
     renderBackgroundLibraryStatus();
     updateBackgroundToggleLabel();
+    renderBackgroundRotationMeta();
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
