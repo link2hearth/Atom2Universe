@@ -43,7 +43,7 @@
       enemy: 0.5
     }),
     showScoresPanel: false,
-    renderFps: 30
+    renderFps: 45
   });
 
   const DIFFICULTY_MODES = Object.freeze({
