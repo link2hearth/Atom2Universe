@@ -1,3 +1,31 @@
+function normalizeSavedElementCollection(rawElements) {
+  if (!rawElements) {
+    return null;
+  }
+  if (Array.isArray(rawElements)) {
+    const mapped = {};
+    rawElements.forEach(entry => {
+      if (!entry || typeof entry !== 'object') {
+        return;
+      }
+      const id = typeof entry.id === 'string' && entry.id
+        ? entry.id
+        : typeof entry.elementId === 'string' && entry.elementId
+          ? entry.elementId
+          : null;
+      if (!id) {
+        return;
+      }
+      mapped[id] = entry;
+    });
+    return mapped;
+  }
+  if (typeof rawElements === 'object') {
+    return rawElements;
+  }
+  return null;
+}
+
 function applySerializedGameState(raw) {
   resetFrenzyState({ skipApply: true });
   gameState.baseCrit = createDefaultCritState();
@@ -222,6 +250,39 @@ function applySerializedGameState(raw) {
   if (typeof storedBigBangState === 'boolean') {
     gameState.bigBangButtonVisible = storedBigBangState && isBigBangUnlocked();
   }
+  const baseCollection = createInitialElementCollection();
+  const storedElements = normalizeSavedElementCollection(data.elements);
+  if (storedElements) {
+    Object.entries(storedElements).forEach(([id, saved]) => {
+      if (!baseCollection[id]) return;
+      const reference = baseCollection[id];
+      const savedCount = Number(saved?.count);
+      const normalizedCount = Number.isFinite(savedCount) && savedCount > 0
+        ? Math.floor(savedCount)
+        : 0;
+      const savedLifetime = Number(saved?.lifetime);
+      let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
+        ? Math.floor(savedLifetime)
+        : 0;
+      if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
+        normalizedLifetime = Math.max(normalizedCount, 1);
+      }
+      if (normalizedLifetime < normalizedCount) {
+        normalizedLifetime = normalizedCount;
+      }
+      baseCollection[id] = {
+        id,
+        gachaId: reference.gachaId,
+        owned: normalizedLifetime > 0,
+        count: normalizedCount,
+        lifetime: normalizedLifetime,
+        rarity: reference.rarity ?? (typeof saved?.rarity === 'string' ? saved.rarity : null),
+        effects: Array.isArray(reference?.effects) ? [...reference.effects] : [],
+        bonuses: Array.isArray(reference?.bonuses) ? [...reference.bonuses] : []
+      };
+    });
+  }
+  gameState.elements = baseCollection;
   const storedElementSummary = data.elementBonusSummary;
   gameState.elementBonusSummary = storedElementSummary && typeof storedElementSummary === 'object'
     ? storedElementSummary
@@ -766,8 +827,9 @@ function loadGame() {
       resetTicketStarState({ reschedule: true });
     }
     const baseCollection = createInitialElementCollection();
-    if (data.elements && typeof data.elements === 'object') {
-      Object.entries(data.elements).forEach(([id, saved]) => {
+    const storedElements = normalizeSavedElementCollection(data.elements);
+    if (storedElements) {
+      Object.entries(storedElements).forEach(([id, saved]) => {
         if (!baseCollection[id]) return;
         const reference = baseCollection[id];
         const savedCount = Number(saved?.count);
