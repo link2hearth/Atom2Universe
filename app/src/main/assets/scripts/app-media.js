@@ -1170,6 +1170,7 @@ function setLocalBackgroundItems(uris, options = {}) {
   }
   if (localBackgroundItems.length) {
     backgroundIndex = pickNextBackgroundIndex(localBackgroundItems.length);
+    persistBackgroundRotationState(localBackgroundItems.length);
     setImageBackgroundEnabled(true, { resetIndex: false, showEmptyStatus: false, force: true });
   } else {
     backgroundIndex = 0;
@@ -1203,6 +1204,7 @@ function scheduleBackgroundRotation() {
       return;
     }
     backgroundIndex = pickNextBackgroundIndex(activePool.length);
+    persistBackgroundRotationState(activePool.length);
     applyBackgroundImage();
   }, delay);
 }
