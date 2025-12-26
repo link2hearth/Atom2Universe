@@ -147,6 +147,20 @@
   gap: clamp(1rem, 2.5vw, 2rem);
   align-items: start;
   justify-items: center;
+  grid-template-areas:
+    'stage'
+    'powerups'
+    'scores';
+}
+
+.stars-war__powerups-panel {
+  grid-area: powerups;
+  width: 100%;
+  padding: clamp(0.6rem, 1.6vw, 0.9rem);
+  border-radius: 1rem;
+  border: 1px solid var(--stars-war-border);
+  background: var(--stars-war-panel);
+  box-shadow: 0 20px 36px rgba(6, 10, 24, 0.25);
 }
 
 .stars-war__powerups-panel {
@@ -162,10 +176,14 @@
   .stars-war__layout {
     grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
     justify-items: stretch;
+    grid-template-areas:
+      'stage scores'
+      'powerups scores';
   }
 }
 
 .stars-war__stage {
+  grid-area: stage;
   position: relative;
   margin-inline: auto;
 }
@@ -206,6 +224,7 @@
 }
 
 .stars-war__scores {
+  grid-area: scores;
   width: min(100%, 320px);
   justify-self: center;
   padding: clamp(1rem, 2.3vw, 1.5rem);
