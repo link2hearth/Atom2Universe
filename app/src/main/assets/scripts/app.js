@@ -12688,6 +12688,7 @@ function updateUI() {
   const isInfoPage = activePageId === 'info';
   const isTablePage = activePageId === 'tableau';
   const isGachaPage = activePageId === 'gacha';
+  const isCollectionPage = activePageId === 'collection';
   if (typeof refreshGachaRarityLocalization === 'function') {
     refreshGachaRarityLocalization();
   }
@@ -12724,6 +12725,9 @@ function updateUI() {
   updateGoalsUI();
   if (isInfoPage) {
     updateInfoPanels();
+  }
+  if (isCollectionPage && typeof renderSpecialCardCollection === 'function') {
+    renderSpecialCardCollection();
   }
   const shouldRefreshDevkit = isInfoPage || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
   if (shouldRefreshDevkit) {
