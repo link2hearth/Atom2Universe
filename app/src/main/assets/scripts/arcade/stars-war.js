@@ -42,7 +42,8 @@
       player: 0.5,
       enemy: 0.5
     }),
-    showScoresPanel: false
+    showScoresPanel: false,
+    renderFps: 45
   });
 
   const DIFFICULTY_MODES = Object.freeze({
@@ -156,6 +157,12 @@
     const showScoresPanel = typeof raw.showScoresPanel === 'boolean'
       ? raw.showScoresPanel
       : DEFAULT_CONFIG.showScoresPanel;
+    const renderFps = clampNumber(
+      raw.renderFps,
+      20,
+      60,
+      DEFAULT_CONFIG.renderFps
+    );
     return Object.freeze({
       maxWaveDurationSeconds: Math.max(5, Math.floor(maxWaveDuration)),
       enemyBulletCap: Object.freeze({
@@ -166,7 +173,8 @@
         player: playerHitboxScale,
         enemy: enemyHitboxScale
       }),
-      showScoresPanel
+      showScoresPanel,
+      renderFps: Math.max(20, Math.floor(renderFps))
     });
   }
 
@@ -1786,6 +1794,7 @@
     running: false,
     paused: false,
     lastTimestamp: 0,
+    lastRenderTimestamp: 0,
     accumulator: 0,
     uiAccumulator: 0,
     uiNeedsSync: true,
@@ -4080,6 +4089,15 @@
     }
   }
 
+  function getTargetRenderFps() {
+    const config = state && state.config ? state.config : DEFAULT_CONFIG;
+    const fps = Number(config.renderFps);
+    if (Number.isFinite(fps) && fps > 0) {
+      return fps;
+    }
+    return DEFAULT_CONFIG.renderFps;
+  }
+
   function notifyStarsWarInfoUpdate(mode, runStats) {
     if (typeof window === 'undefined') {
       return;
@@ -4307,6 +4325,7 @@
       ? performance.now()
       : Date.now();
     state.lastTimestamp = now;
+    state.lastRenderTimestamp = 0;
     state.accumulator = 0;
     state.uiAccumulator = 0;
     state.uiNeedsSync = true;
@@ -4378,7 +4397,11 @@
       update(SIMULATION_STEP);
       state.accumulator -= SIMULATION_STEP;
     }
-    render();
+    const renderInterval = 1000 / getTargetRenderFps();
+    if (!state.lastRenderTimestamp || timestamp - state.lastRenderTimestamp >= renderInterval) {
+      render();
+      state.lastRenderTimestamp = timestamp;
+    }
     if (state.running) {
       requestAnimationFrame(loop);
     }

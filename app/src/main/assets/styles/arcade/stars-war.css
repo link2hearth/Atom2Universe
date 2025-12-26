@@ -149,6 +149,15 @@
   justify-items: center;
 }
 
+.stars-war__powerups-panel {
+  padding: 0.4rem 0.55rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(120, 170, 255, 0.35);
+  background: rgba(8, 14, 26, 0.45);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 14px 26px rgba(6, 10, 24, 0.2);
+}
+
 @media (min-width: 60rem) {
   .stars-war__layout {
     grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
@@ -280,7 +289,7 @@
 
 .stars-war__powerups {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 0.4rem;
   margin: 0;
   padding: 0;

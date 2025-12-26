@@ -1,4 +1,5 @@
 {
+  "_comment": "Réglages Stars War (affichage, cadence d'ennemis, et plafonds visuels).",
   "maxWaveDurationSeconds": 15,
   "enemyBulletCap": {
     "base": 1,
@@ -8,5 +9,6 @@
     "player": 0.5,
     "enemy": 0.5
   },
-  "showScoresPanel": false
+  "showScoresPanel": false,
+  "renderFps": 45
 }

@@ -2108,21 +2108,23 @@
         <div class="stars-war__layout">
           <div class="arcade-stage arcade-stage--vertical stars-war__stage">
             <div class="stars-war__hud" role="status" aria-live="polite">
-              <div
-                class="stars-war__lives"
-                id="starsWarLives"
-                aria-label="Vies du vaisseau"
-                data-i18n="aria-label:index.sections.starsWar.hud.lives"
-              ></div>
+            <div
+              class="stars-war__lives"
+              id="starsWarLives"
+              aria-label="Vies du vaisseau"
+              data-i18n="aria-label:index.sections.starsWar.hud.lives"
+            ></div>
+            <div class="stars-war__powerups-panel">
               <ul
                 class="stars-war__powerups"
                 id="starsWarPowerupList"
                 aria-label="Bonus actifs"
                 data-i18n="aria-label:index.sections.starsWar.hud.powerups"
               ></ul>
-              <p id="starsWarStatus" class="visually-hidden" aria-live="polite"></p>
             </div>
-            <canvas
+            <p id="starsWarStatus" class="visually-hidden" aria-live="polite"></p>
+          </div>
+          <canvas
               id="starsWarCanvas"
               class="arcade-stage__canvas"
               role="presentation"
