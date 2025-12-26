@@ -77,6 +77,44 @@
         "imagesbis (31).jpg",
         "imagesbis (32).jpg"
       ]
+    },
+    {
+      "id": "set3",
+      "basePath": "Assets/Cartes/bonus3/",
+      "images": [
+        "bonus2 (1).jpg",
+        "bonus2 (2).jpg",
+        "bonus2 (3).jpg",
+        "bonus2 (4).jpg",
+        "bonus2 (5).jpg",
+        "bonus2 (6).jpg",
+        "bonus2 (7).jpg",
+        "bonus2 (8).jpg",
+        "bonus2 (9).jpg",
+        "bonus2 (10).jpg",
+        "bonus2 (11).jpg",
+        "bonus2 (12).jpg",
+        "bonus2 (13).jpg",
+        "bonus2 (14).jpg",
+        "bonus2 (15).jpg",
+        "bonus2 (16).jpg",
+        "bonus2 (17).jpg",
+        "bonus2 (18).jpg",
+        "bonus2 (19).jpg",
+        "bonus2 (20).jpg",
+        "bonus2 (21).jpg",
+        "bonus2 (22).jpg",
+        "bonus2 (23).jpg",
+        "bonus2 (24).jpg",
+        "bonus2 (25).jpg",
+        "bonus2 (26).jpg",
+        "bonus2 (27).jpg",
+        "bonus2 (28).jpg",
+        "bonus2 (29).jpg",
+        "bonus2 (30).jpg",
+        "bonus2 (31).jpg",
+        "bonus2 (32).jpg"
+      ]
     }
   ],
   "difficulties": {

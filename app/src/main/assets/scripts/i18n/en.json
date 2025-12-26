@@ -209,6 +209,17 @@
           "view": "View {card}",
           "count": "×{count}"
         },
+        "bonus3Images": {
+          "title": "Bonus images 3",
+          "subtitle": "Your bonus images 3 available after completing the previous collections.",
+          "toggle": {
+            "collapse": "Collapse",
+            "expand": "Expand"
+          },
+          "empty": "No bonus image 3 unlocked yet.",
+          "view": "View {card}",
+          "count": "×{count}"
+        },
         "downloads": {
           "title": "Downloaded",
           "subtitle": "Images saved by the Android app (Pictures/Atom2Univers).",
@@ -1411,6 +1422,7 @@
           "cardSets": {
             "set1": "Set 1",
             "set2": "Set 2",
+            "set3": "Set 3",
             "mix": "Mix"
           },
           "difficulties": {
@@ -4367,6 +4379,10 @@
       "bonusImages2": {
         "toastNew": "Bonus image 2 unlocked: {card}",
         "toastDuplicate": "Bonus image 2 found again: {card}"
+      },
+      "bonusImages3": {
+        "toastNew": "Bonus image 3 unlocked: {card}",
+        "toastDuplicate": "Bonus image 3 found again: {card}"
       },
       "featured": {
         "today": "Today",

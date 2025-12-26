@@ -132,9 +132,44 @@
     'imagesbis (31).jpg',
     'imagesbis (32).jpg'
   ]);
+  const DEFAULT_CARD_IMAGE_NAMES_TERTIARY = Object.freeze([
+    'bonus2 (1).jpg',
+    'bonus2 (2).jpg',
+    'bonus2 (3).jpg',
+    'bonus2 (4).jpg',
+    'bonus2 (5).jpg',
+    'bonus2 (6).jpg',
+    'bonus2 (7).jpg',
+    'bonus2 (8).jpg',
+    'bonus2 (9).jpg',
+    'bonus2 (10).jpg',
+    'bonus2 (11).jpg',
+    'bonus2 (12).jpg',
+    'bonus2 (13).jpg',
+    'bonus2 (14).jpg',
+    'bonus2 (15).jpg',
+    'bonus2 (16).jpg',
+    'bonus2 (17).jpg',
+    'bonus2 (18).jpg',
+    'bonus2 (19).jpg',
+    'bonus2 (20).jpg',
+    'bonus2 (21).jpg',
+    'bonus2 (22).jpg',
+    'bonus2 (23).jpg',
+    'bonus2 (24).jpg',
+    'bonus2 (25).jpg',
+    'bonus2 (26).jpg',
+    'bonus2 (27).jpg',
+    'bonus2 (28).jpg',
+    'bonus2 (29).jpg',
+    'bonus2 (30).jpg',
+    'bonus2 (31).jpg',
+    'bonus2 (32).jpg'
+  ]);
   const DEFAULT_CARD_SET_LABEL_FALLBACKS = Object.freeze({
     set1: 'Set 1',
     set2: 'Set 2',
+    set3: 'Set 3',
     mix: 'Mix'
   });
   const DEFAULT_CARD_SETS = Object.freeze([
@@ -147,6 +182,11 @@
       id: 'set2',
       basePath: 'Assets/Cartes/bonus1/',
       images: DEFAULT_CARD_IMAGE_NAMES_BIS
+    }),
+    Object.freeze({
+      id: 'set3',
+      basePath: 'Assets/Cartes/bonus3/',
+      images: DEFAULT_CARD_IMAGE_NAMES_TERTIARY
     })
   ]);
   const DEFAULT_CARD_RESOURCES = resolveCardImageConfig(
