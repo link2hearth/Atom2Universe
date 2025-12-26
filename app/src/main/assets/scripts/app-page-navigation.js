@@ -93,6 +93,22 @@ function shouldSuppressNavClick() {
   return elapsed >= 0 && elapsed <= NAV_POINTER_CLICK_SUPPRESSION_MS;
 }
 
+function suppressPointerNavigationClick(event) {
+  if (!shouldSuppressNavClick()) {
+    return false;
+  }
+  if (event?.defaultPrevented) {
+    return true;
+  }
+  if (typeof event?.preventDefault === 'function') {
+    event.preventDefault();
+  }
+  if (typeof event?.stopPropagation === 'function') {
+    event.stopPropagation();
+  }
+  return true;
+}
+
 function handlePageNavigation(target) {
   if (!target) {
     return;
@@ -116,13 +132,17 @@ function bindPageNavigation(element, resolveTarget) {
     if (event.pointerType === 'mouse' && typeof event.button === 'number' && event.button !== 0) {
       return;
     }
+    if (typeof event?.preventDefault === 'function') {
+      event.preventDefault();
+    }
+    if (typeof event?.stopPropagation === 'function') {
+      event.stopPropagation();
+    }
     lastPointerNavAt = getNavigationNowMs();
     handleActivation();
   });
   element.addEventListener('click', () => {
-    if (shouldSuppressNavClick()) {
-      return;
-    }
+    if (shouldSuppressNavClick()) return;
     handleActivation();
   });
 }
@@ -1774,6 +1794,10 @@ function bindDomEventListeners() {
 
 
 }
+
+document.addEventListener('click', event => {
+  suppressPointerNavigationClick(event);
+}, true);
 
 document.addEventListener('click', event => {
   if (shouldSuppressPointerDerivedClick()) return;

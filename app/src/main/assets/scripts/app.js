@@ -4402,6 +4402,18 @@ function computeAutoUiScaleForPage(pageElement) {
   if (typeof window === 'undefined') {
     return { factor: 1, viewportWidth: 0, viewportHeight: 0 };
   }
+  const headerBaseHeight = (() => {
+    if (typeof document === 'undefined') {
+      return 0;
+    }
+    const root = document.documentElement;
+    if (!root) {
+      return 0;
+    }
+    const raw = globalThis.getComputedStyle?.(root)?.getPropertyValue('--app-header-offset');
+    const numeric = Number.parseFloat(raw);
+    return Number.isFinite(numeric) ? numeric : 0;
+  })();
   const viewportWidth = Math.max(
     window.innerWidth || 0,
     document?.documentElement?.clientWidth || 0,
@@ -4417,9 +4429,11 @@ function computeAutoUiScaleForPage(pageElement) {
     elements?.appHeader?.scrollWidth || 0,
     headerRect?.width || 0
   );
+  const headerIsCollapsed = elements?.appHeader?.dataset?.collapsed === 'true';
   const headerHeight = Math.max(
     headerRect?.height || 0,
-    elements?.appHeader?.offsetHeight || 0
+    elements?.appHeader?.offsetHeight || 0,
+    headerIsCollapsed ? 0 : headerBaseHeight
   );
 
   let widthScale = 1;
