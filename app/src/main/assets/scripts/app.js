@@ -12682,6 +12682,12 @@ function pulseApsCritPanel() {
 }
 
 function updateUI() {
+  const activePageId = typeof document !== 'undefined'
+    ? document.body?.dataset?.activePage
+    : null;
+  const isInfoPage = activePageId === 'info';
+  const isTablePage = activePageId === 'tableau';
+  const isGachaPage = activePageId === 'gacha';
   if (typeof refreshGachaRarityLocalization === 'function') {
     refreshGachaRarityLocalization();
   }
@@ -12708,16 +12714,18 @@ function updateUI() {
   updateFrenzyIndicators();
   updateApcFrenzyCounterDisplay();
   updateGachaUI();
-  updateCollectionDisplay();
+  if (isTablePage || (isGachaPage && elements.gachaOwnedSummary)) {
+    updateCollectionDisplay();
+  }
   updateFusionUI();
   updateShopAffordability();
   updateMilestone();
   refreshGoalCardTexts();
   updateGoalsUI();
-  updateInfoPanels();
-  const infoPageActive = typeof document !== 'undefined'
-    && document.body?.dataset?.activePage === 'info';
-  const shouldRefreshDevkit = infoPageActive || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
+  if (isInfoPage) {
+    updateInfoPanels();
+  }
+  const shouldRefreshDevkit = isInfoPage || (DEVKIT_STATE && DEVKIT_STATE.isOpen);
   if (shouldRefreshDevkit) {
     updateDevKitUI();
   }
