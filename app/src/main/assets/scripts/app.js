@@ -260,6 +260,7 @@ const COLLECTION_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.imagesC
 const COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonusImagesCollapsed';
 const COLLECTION_BONUS1_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus1ImagesCollapsed';
 const COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus2ImagesCollapsed';
+const COLLECTION_BONUS3_IMAGES_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.bonus3ImagesCollapsed';
 const COLLECTION_DOWNLOADS_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.downloadsCollapsed';
 const COLLECTION_VIDEOS_COLLAPSED_STORAGE_KEY = 'atom2univers.collection.videosCollapsed';
 const COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY = 'atom2univers.collection.videosUnlocked';
@@ -3355,6 +3356,9 @@ function hasOwnedGachaBonusImages() {
       : []),
     ...(Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
       ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+      : []),
+    ...(Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+      ? GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
       : [])
   ]);
   return Object.entries(gameState.gachaImages || {}).some(([imageId, entry]) => {
@@ -3368,6 +3372,9 @@ function hasOwnedGachaBonusImages() {
 
 function normalizeBonusCollectionId(value) {
   const normalized = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  if (normalized === 'bonus3' || normalized === 'quaternary' || normalized === 'permanent3') {
+    return 'quaternary';
+  }
   if (normalized === 'bonus2' || normalized === 'tertiary' || normalized === 'permanent2') {
     return 'tertiary';
   }
@@ -3389,6 +3396,8 @@ function getBonusImageCollectionTotals(collectionId = 'primary') {
     definitions = GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS;
   } else if (normalized === 'tertiary') {
     definitions = GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS;
+  } else if (normalized === 'quaternary') {
+    definitions = GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS;
   }
   const collection = gameState.gachaBonusImages && typeof gameState.gachaBonusImages === 'object'
     ? gameState.gachaBonusImages
@@ -3430,6 +3439,10 @@ function isTertiaryBonusImageCollectionUnlocked() {
   return isBonusImageCollectionComplete('secondary');
 }
 
+function isQuaternaryBonusImageCollectionUnlocked() {
+  return isBonusImageCollectionComplete('tertiary');
+}
+
 function hasOwnedGachaBonus1Images() {
   const { owned } = getBonusImageCollectionTotals('secondary');
   return owned > 0;
@@ -3437,6 +3450,11 @@ function hasOwnedGachaBonus1Images() {
 
 function hasOwnedGachaBonus2Images() {
   const { owned } = getBonusImageCollectionTotals('tertiary');
+  return owned > 0;
+}
+
+function hasOwnedGachaBonus3Images() {
+  const { owned } = getBonusImageCollectionTotals('quaternary');
   return owned > 0;
 }
 
@@ -13276,6 +13294,13 @@ function serializeState() {
           }
         });
       }
+      if (Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+        GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+          if (def && def.id) {
+            knownIdSet.add(def.id);
+          }
+        });
+      }
       const knownIds = knownIdSet.size > 0 ? Array.from(knownIdSet) : Object.keys(source);
       knownIds.forEach(imageId => {
         if (!imageId) {
@@ -13572,6 +13597,7 @@ const RESET_LOCAL_STORAGE_KEYS = [
   COLLECTION_BONUS_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS1_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_BONUS2_IMAGES_COLLAPSED_STORAGE_KEY,
+  COLLECTION_BONUS3_IMAGES_COLLAPSED_STORAGE_KEY,
   COLLECTION_DOWNLOADS_COLLAPSED_STORAGE_KEY,
   COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY,
   COLLECTION_VIDEOS_STATE_STORAGE_KEY,
@@ -14238,6 +14264,7 @@ function initializeDomBoundModules() {
   subscribeCollectionBonusImagesLanguageUpdates();
   subscribeCollectionBonus1ImagesLanguageUpdates();
   subscribeCollectionBonus2ImagesLanguageUpdates();
+  subscribeCollectionBonus3ImagesLanguageUpdates();
   subscribeCollectionDownloadsLanguageUpdates();
   subscribeBigBangLanguageUpdates();
   if (typeof subscribeSpecialCardOverlayLanguageUpdates === 'function') {

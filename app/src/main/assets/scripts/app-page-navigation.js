@@ -689,6 +689,7 @@ function bindDomEventListeners() {
   initCollectionBonusImagesCard();
   initCollectionBonus1ImagesCard();
   initCollectionBonus2ImagesCard();
+  initCollectionBonus3ImagesCard();
   initCollectionDownloadsCard();
   if (typeof initSpecialCardOverlay === 'function') {
     initSpecialCardOverlay();

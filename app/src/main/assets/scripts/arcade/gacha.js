@@ -312,6 +312,7 @@ const BONUS_GACHA_IMAGE_CHANCE = 1 / 10000;
 const BONUS_GACHA_PERMANENT_IMAGE_CHANCE = 1 / 1000;
 const BONUS_GACHA_INTERMEDIATE_PERMANENT_IMAGE_CHANCE = 1 / 1000;
 const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE = 1 / 1000;
+const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_CHANCE = 1 / 1000;
 const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 10;
 
 const COLLECTION_VIDEO_DEFINITION_INDEX = new Map(
@@ -348,6 +349,12 @@ const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
     : []
 );
 
+const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
+
 const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
   ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
   : [];
@@ -362,6 +369,10 @@ const BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS = Array.isArray(GACHA_INTERMEDIATE_
 
 const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
   ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
+
+const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
   : [];
 
 const bonusGachaImageAssetAvailabilityCache = new Map();
@@ -640,6 +651,7 @@ function getBonusGachaImageDefinition(imageId) {
     || BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
     || BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX.get(imageId)
     || BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
+    || BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX.get(imageId)
     || null;
 }
 
@@ -809,6 +821,19 @@ function isIntermediateBonusImageCollectionCompleteForGacha() {
   });
 }
 
+function isTertiaryBonusImageCollectionCompleteForGacha() {
+  if (!Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    return false;
+  }
+  return GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.every(def => {
+    if (!def || !def.id) {
+      return true;
+    }
+    const count = getOwnedBonusGachaImageCount(def.id);
+    return Number.isFinite(count) && count > 0;
+  });
+}
+
 function isSecondaryBonusImageCollectionUnlockedForGacha() {
   if (typeof globalThis !== 'undefined'
     && typeof globalThis.isSecondaryBonusImageCollectionUnlocked === 'function'
@@ -833,6 +858,19 @@ function isTertiaryBonusImageCollectionUnlockedForGacha() {
     }
   }
   return isIntermediateBonusImageCollectionCompleteForGacha();
+}
+
+function isQuaternaryBonusImageCollectionUnlockedForGacha() {
+  if (typeof globalThis !== 'undefined'
+    && typeof globalThis.isQuaternaryBonusImageCollectionUnlocked === 'function'
+  ) {
+    try {
+      return globalThis.isQuaternaryBonusImageCollectionUnlocked();
+    } catch (error) {
+      // Fallback to local computation on unexpected errors.
+    }
+  }
+  return isTertiaryBonusImageCollectionCompleteForGacha();
 }
 
 function getAvailablePermanentBonusGachaImageIds() {
@@ -876,6 +914,26 @@ function getAvailableSecondaryPermanentBonusGachaImageIds() {
     return [];
   }
   return BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.filter(imageId => {
+    if (isBonusGachaImageMarkedMissing(imageId)) {
+      return false;
+    }
+    const rawCount = Math.max(0, Math.floor(getOwnedBonusGachaImageCount(imageId)));
+    return rawCount <= 0;
+  });
+}
+
+function rollForTertiaryPermanentBonusGachaImage() {
+  return Math.random() < BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_CHANCE;
+}
+
+function getAvailableTertiaryPermanentBonusGachaImageIds() {
+  if (!isQuaternaryBonusImageCollectionUnlockedForGacha()) {
+    return [];
+  }
+  if (!BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS.length) {
+    return [];
+  }
+  return BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS.filter(imageId => {
     if (isBonusGachaImageMarkedMissing(imageId)) {
       return false;
     }
@@ -964,6 +1022,9 @@ function awardBonusGachaImage(imageId, options = null) {
   if (typeof updateCollectionBonus2ImagesVisibility === 'function') {
     updateCollectionBonus2ImagesVisibility();
   }
+  if (typeof updateCollectionBonus3ImagesVisibility === 'function') {
+    updateCollectionBonus3ImagesVisibility();
+  }
   const label = resolveBonusGachaImageLabel(imageId);
   return {
     cardId: imageId,
@@ -1028,6 +1089,9 @@ function awardPermanentBonusGachaImage(imageId, options = null) {
   }
   if (typeof updateCollectionBonus2ImagesVisibility === 'function') {
     updateCollectionBonus2ImagesVisibility();
+  }
+  if (typeof updateCollectionBonus3ImagesVisibility === 'function') {
+    updateCollectionBonus3ImagesVisibility();
   }
   const label = resolveBonusGachaImageLabel(imageId);
   return {
@@ -1287,6 +1351,43 @@ function maybeAwardSecondaryPermanentBonusGachaImage() {
     return null;
   }
   if (!rollForSecondaryPermanentBonusGachaImage()) {
+    return null;
+  }
+  const shuffledIds = availableIds.slice();
+  for (let i = shuffledIds.length - 1; i > 0; i -= 1) {
+    const swapIndex = Math.floor(Math.random() * (i + 1));
+    const temp = shuffledIds[i];
+    shuffledIds[i] = shuffledIds[swapIndex];
+    shuffledIds[swapIndex] = temp;
+  }
+  for (let index = 0; index < shuffledIds.length; index += 1) {
+    const imageId = shuffledIds[index];
+    if (!imageId) {
+      continue;
+    }
+    const definition = getBonusGachaImageDefinition(imageId);
+    if (!definition || !isBonusGachaImageAssetAvailable(definition)) {
+      markBonusGachaImageMissing(imageId, definition);
+      continue;
+    }
+    const reward = awardPermanentBonusGachaImage(imageId, { definition, skipAssetCheck: true });
+    if (reward) {
+      return reward;
+    }
+    markBonusGachaImageMissing(imageId, definition);
+  }
+  return null;
+}
+
+function maybeAwardTertiaryPermanentBonusGachaImage() {
+  if (!isGachaBonusImageCollectionEnabled()) {
+    return null;
+  }
+  const availableIds = getAvailableTertiaryPermanentBonusGachaImageIds();
+  if (!availableIds.length) {
+    return null;
+  }
+  if (!rollForTertiaryPermanentBonusGachaImage()) {
     return null;
   }
   const shuffledIds = availableIds.slice();
@@ -4759,6 +4860,10 @@ function performGachaRoll(count = 1) {
       if (secondaryPermanentImageReward) {
         collectionRewards.push(secondaryPermanentImageReward);
       }
+      const tertiaryPermanentImageReward = maybeAwardTertiaryPermanentBonusGachaImage();
+      if (tertiaryPermanentImageReward) {
+        collectionRewards.push(tertiaryPermanentImageReward);
+      }
       const collectionVideoReward = maybeAwardCollectionVideo();
       if (collectionVideoReward) {
         collectionRewards.push(collectionVideoReward);
@@ -4790,15 +4895,19 @@ function performGachaRoll(count = 1) {
       const isPermanentImage = isImage
         && (imageCollectionType === 'permanent'
           || imageCollectionType === 'permanent1'
-          || imageCollectionType === 'permanent2');
+          || imageCollectionType === 'permanent2'
+          || imageCollectionType === 'permanent3');
       const isSecondaryPermanentImage = isImage && imageCollectionType === 'permanent1';
       const isTertiaryPermanentImage = isImage && imageCollectionType === 'permanent2';
+      const isQuaternaryPermanentImage = isImage && imageCollectionType === 'permanent3';
       const namespace = isImage
-        ? (isTertiaryPermanentImage
-          ? 'scripts.gacha.bonusImages2'
-          : (isSecondaryPermanentImage
-            ? 'scripts.gacha.bonusImages1'
-            : (isPermanentImage ? 'scripts.gacha.bonusImages' : 'scripts.gacha.images')))
+        ? (isQuaternaryPermanentImage
+          ? 'scripts.gacha.bonusImages3'
+          : (isTertiaryPermanentImage
+            ? 'scripts.gacha.bonusImages2'
+            : (isSecondaryPermanentImage
+              ? 'scripts.gacha.bonusImages1'
+              : (isPermanentImage ? 'scripts.gacha.bonusImages' : 'scripts.gacha.images'))))
         : (isVideo ? 'scripts.collection.videos' : 'scripts.gacha.cards');
       const toastKey = reward.isNew
         ? `${namespace}.toastNew`
@@ -4806,22 +4915,26 @@ function performGachaRoll(count = 1) {
       const fallback = reward.isNew
         ? (isImage
             ? (isPermanentImage
-                ? (isTertiaryPermanentImage
-                  ? 'Bonus image 2 unlocked: {card}'
-                  : (isSecondaryPermanentImage
-                    ? 'Bonus image 1 unlocked: {card}'
-                    : 'Bonus image unlocked: {card}'))
+                ? (isQuaternaryPermanentImage
+                  ? 'Bonus image 3 unlocked: {card}'
+                  : (isTertiaryPermanentImage
+                    ? 'Bonus image 2 unlocked: {card}'
+                    : (isSecondaryPermanentImage
+                      ? 'Bonus image 1 unlocked: {card}'
+                      : 'Bonus image unlocked: {card}')))
                 : 'Gallery image unlocked: {card}')
             : (isVideo
               ? 'Bonus video unlocked: {card}'
               : 'Special card unlocked: {card}'))
         : (isImage
             ? (isPermanentImage
-                ? (isTertiaryPermanentImage
-                  ? 'Bonus image 2 found again: {card}'
-                  : (isSecondaryPermanentImage
-                    ? 'Bonus image 1 found again: {card}'
-                    : 'Bonus image found again: {card}'))
+                ? (isQuaternaryPermanentImage
+                  ? 'Bonus image 3 found again: {card}'
+                  : (isTertiaryPermanentImage
+                    ? 'Bonus image 2 found again: {card}'
+                    : (isSecondaryPermanentImage
+                      ? 'Bonus image 1 found again: {card}'
+                      : 'Bonus image found again: {card}')))
                 : 'Gallery image found again: {card}')
             : (isVideo
               ? 'Bonus video found again: {card}'

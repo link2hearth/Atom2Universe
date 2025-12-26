@@ -204,6 +204,11 @@ function normalizeBonusImageDefinition(entry, folder) {
     || normalizedCollection === 'permanent-2'
   ) {
     collectionType = 'permanent2';
+  } else if (normalizedCollection === 'permanent3'
+    || normalizedCollection === 'bonus3'
+    || normalizedCollection === 'permanent-3'
+  ) {
+    collectionType = 'permanent3';
   }
   return {
     id,
@@ -316,7 +321,7 @@ const GACHA_BONUS_IMAGE_DEFINITIONS = RAW_BONUS_IMAGE_ENTRIES
 const GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
   .filter(def => {
     const type = def.collectionType || 'optional';
-    return type !== 'permanent' && type !== 'permanent1' && type !== 'permanent2';
+    return type !== 'permanent' && type !== 'permanent1' && type !== 'permanent2' && type !== 'permanent3';
   });
 
 const GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
@@ -327,6 +332,9 @@ const GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_D
 
 const GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
   .filter(def => def.collectionType === 'permanent2');
+
+const GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
+  .filter(def => def.collectionType === 'permanent3');
 
 const RAW_COLLECTION_VIDEO_CONFIG = (() => {
   const config = CONFIG?.collection?.videos;
@@ -2152,6 +2160,9 @@ function createInitialGachaBonusImageCollection() {
   }
   if (Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
     definitions.push(...GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS);
+  }
+  if (Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    definitions.push(...GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS);
   }
   definitions.forEach(def => {
     if (!def || !def.id) {

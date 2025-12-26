@@ -4086,6 +4086,7 @@
           >
             <option value="set1" data-i18n="index.sections.twins.ui.cardSets.set1">Set 1</option>
             <option value="set2" data-i18n="index.sections.twins.ui.cardSets.set2">Set 2</option>
+            <option value="set3" data-i18n="index.sections.twins.ui.cardSets.set3">Set 3</option>
             <option value="mix" data-i18n="index.sections.twins.ui.cardSets.mix">Mix</option>
           </select>
           <button
@@ -6162,6 +6163,58 @@
             </p>
             <ul
               id="collectionBonus2ImagesList"
+              class="info-card-list"
+              role="list"
+              hidden
+            ></ul>
+          </div>
+        </article>
+
+        <article
+          id="collectionBonus3ImagesCard"
+          class="info-card info-card--cards"
+          aria-labelledby="collection-bonus3-images-title"
+          hidden
+        >
+          <header class="info-card__header info-card__header--collapsible">
+            <h3
+              id="collection-bonus3-images-title"
+              data-i18n="index.sections.collection.bonus3Images.title"
+            >
+              Images Bonus 3
+            </h3>
+            <button
+              type="button"
+              id="collectionBonus3ImagesToggle"
+              class="info-card__collapse-button"
+              aria-expanded="true"
+              aria-controls="collection-bonus3-images-content"
+              data-i18n="index.sections.collection.bonus3Images.toggle.collapse"
+            >
+              Réduire
+            </button>
+          </header>
+          <div
+            id="collection-bonus3-images-content"
+            class="info-card__content info-card__content--cards"
+            aria-hidden="false"
+          >
+            <p
+              class="info-card__subtitle info-card__subtitle--cards"
+              id="collectionBonus3ImagesSubtitle"
+              data-i18n="index.sections.collection.bonus3Images.subtitle"
+            >
+              Vos images bonus 3 disponibles après les collections précédentes.
+            </p>
+            <p
+              id="collectionBonus3ImagesEmpty"
+              class="info-card__empty"
+              data-i18n="index.sections.collection.bonus3Images.empty"
+            >
+              Aucune image bonus 3 débloquée pour le moment.
+            </p>
+            <ul
+              id="collectionBonus3ImagesList"
               class="info-card-list"
               role="list"
               hidden
