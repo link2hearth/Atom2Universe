@@ -2330,7 +2330,9 @@
             "ready": "{count} images prêtes depuis {name}.",
             "error": "Impossible de lire ce dossier."
           },
-          "fallbackName": "ce dossier"
+          "fallbackName": "ce dossier",
+          "currentLabel": "Image actuelle :",
+          "currentEmpty": "Aucune image chargée."
         },
         "backups": {
           "title": "Gérer les sauvegardes",
