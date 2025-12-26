@@ -13,12 +13,17 @@
   --font-text-scale-factor: calc(
     var(--font-text-user-scale, 1) * var(--font-text-font-scale, 1)
   );
+  --ui-base-scale-factor: 1;
+  --ui-auto-scale-factor: 1;
   --font-ui-size-factor: calc(
     var(--font-scale-factor, 1) * var(--font-text-user-scale, 1)
   );
   --font-digits-scale-factor: 1;
   --font-size-scale-factor: calc(
     var(--font-scale-factor, 1) * var(--font-text-scale-factor, 1)
+  );
+  --font-size-scale-factor-base: calc(
+    var(--ui-base-scale-factor, 1) * var(--font-text-scale-factor, 1)
   );
   --ui-control-scale: var(--font-scale-factor, 1);
   --header-scale: 1.5;
@@ -212,6 +217,8 @@ body.theme-aurora {
   padding-top: var(--safe-top, 0px);
   padding-left: var(--safe-left, 0px);
   padding-right: var(--safe-right, 0px);
+  --font-size-scale-factor: var(--font-size-scale-factor-base, 1);
+  --ui-control-scale: var(--ui-base-scale-factor, 1);
 }
 
 body.view-arcade {
