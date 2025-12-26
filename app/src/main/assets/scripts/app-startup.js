@@ -932,6 +932,8 @@ function collectDomElements() {
     optionsWelcomeIntro: document.getElementById('optionsWelcomeIntro'),
     backgroundLibraryButton: document.getElementById('backgroundLibraryButton'),
     backgroundLibraryStatus: document.getElementById('backgroundLibraryStatus'),
+    backgroundCurrentImageName: document.getElementById('backgroundCurrentImageName'),
+    backgroundRotationCounter: document.getElementById('backgroundRotationCounter'),
     backgroundDurationSelect: document.getElementById('backgroundDurationSelect'),
     backgroundToggleButton: document.getElementById('backgroundToggleButton'),
     backupSaveButton: document.getElementById('backupSaveButton'),

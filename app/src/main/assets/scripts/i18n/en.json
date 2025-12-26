@@ -2390,7 +2390,9 @@
             "ready": "{count} images ready from {name}.",
             "error": "Unable to read this folder."
           },
-          "fallbackName": "this folder"
+          "fallbackName": "this folder",
+          "currentLabel": "Current image:",
+          "currentEmpty": "No background image loaded."
         },
         "backups": {
           "title": "Manage saves",
