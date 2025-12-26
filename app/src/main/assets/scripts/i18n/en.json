@@ -2380,6 +2380,7 @@
           "durationLabel": "Display duration",
           "durations": {
             "oneMinute": "1 minute",
+            "twoMinutes": "2 minutes",
             "fiveMinutes": "5 minutes",
             "fifteenMinutes": "15 minutes",
             "oneHour": "1 hour"
