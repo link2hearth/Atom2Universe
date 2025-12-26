@@ -1128,31 +1128,6 @@ function renderBackgroundLibraryStatus() {
   elements.backgroundLibraryStatus.setAttribute('data-i18n', key);
 }
 
-function formatBackgroundImageLabel(rawUrl) {
-  if (typeof rawUrl !== 'string' || !rawUrl) {
-    return '';
-  }
-  const trimmed = rawUrl.trim();
-  if (!trimmed) {
-    return '';
-  }
-  let cleaned = trimmed;
-  try {
-    cleaned = decodeURI(trimmed);
-  } catch (error) {
-    cleaned = trimmed;
-  }
-  cleaned = cleaned.split('#')[0].split('?')[0];
-  const segments = cleaned.split('/').filter(Boolean);
-  if (!segments.length) {
-    return cleaned;
-  }
-  if (segments.length >= 2) {
-    return segments.slice(-2).join('/');
-  }
-  return segments[segments.length - 1] || cleaned;
-}
-
 function getBackgroundRotationSeenCount(poolLength) {
   const total = Math.max(0, Number(poolLength) || 0);
   if (!total) {
@@ -1172,37 +1147,12 @@ function renderBackgroundRotationCounter(poolLength) {
   elements.backgroundRotationCounter.textContent = `${seen}/${total}`;
 }
 
-function renderBackgroundCurrentImageName(rawUrl) {
-  if (!elements.backgroundCurrentImageName) {
-    return;
-  }
-  const label = formatBackgroundImageLabel(rawUrl);
-  if (!label) {
-    const key = 'index.sections.options.background.currentEmpty';
-    const fallback = 'No background image loaded.';
-    elements.backgroundCurrentImageName.textContent = translateOrDefault(key, fallback);
-    elements.backgroundCurrentImageName.setAttribute('data-i18n', key);
-    return;
-  }
-  elements.backgroundCurrentImageName.textContent = label;
-  elements.backgroundCurrentImageName.removeAttribute('data-i18n');
-}
-
 function renderBackgroundRotationMeta(options = {}) {
   const poolLength = Math.max(
     0,
     Number(options.poolLength != null ? options.poolLength : getBackgroundItems().length) || 0
   );
   renderBackgroundRotationCounter(poolLength);
-  if (Object.prototype.hasOwnProperty.call(options, 'currentUrl')) {
-    renderBackgroundCurrentImageName(options.currentUrl);
-    return;
-  }
-  if (!lastLoadedBackgroundUrl) {
-    renderBackgroundCurrentImageName('');
-    return;
-  }
-  renderBackgroundCurrentImageName(lastLoadedBackgroundUrl);
 }
 
 function setLocalBackgroundItems(uris, options = {}) {
@@ -1300,7 +1250,7 @@ function applyBackgroundImage() {
     elements.favoriteBackground.style.backgroundImage = '';
     elements.favoriteBackground.toggleAttribute('hidden', true);
     document.body.classList.toggle('favorite-background-active', false);
-    renderBackgroundRotationMeta({ poolLength: pool.length, currentUrl: '' });
+    renderBackgroundRotationMeta({ poolLength: pool.length });
     return;
   }
 
@@ -1325,7 +1275,7 @@ function applyBackgroundImage() {
       elements.favoriteBackground.toggleAttribute('hidden', true);
       document.body.classList.toggle('favorite-background-active', false);
     }
-    renderBackgroundRotationMeta({ poolLength: pool.length, currentUrl: lastLoadedBackgroundUrl });
+    renderBackgroundRotationMeta({ poolLength: pool.length });
     if (pool.length > 1) {
       backgroundIndex = pickNextBackgroundIndex(pool.length);
       setTimeout(() => applyBackgroundImage(), 80);
@@ -1345,7 +1295,7 @@ function applyBackgroundImage() {
     document.body.classList.toggle('favorite-background-active', shouldShow);
     lastLoadedBackgroundUrl = backgroundUrl;
     markBackgroundIndexSeen(backgroundIndex, pool.length);
-    renderBackgroundRotationMeta({ poolLength: pool.length, currentUrl: backgroundUrl });
+    renderBackgroundRotationMeta({ poolLength: pool.length });
     scheduleBackgroundRotation();
   };
 
