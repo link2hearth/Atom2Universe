@@ -239,6 +239,13 @@ function showPage(pageId) {
     }
     return;
   }
+  const previousPageId = document.body?.dataset?.activePage;
+  const previousPageElement = previousPageId ? document.getElementById(previousPageId) : null;
+  const previousPageGroup = previousPageElement?.dataset?.pageGroup || '';
+  const leavingArcadePage = previousPageId
+    && previousPageId !== pageId
+    && typeof previousPageGroup === 'string'
+    && previousPageGroup.trim().toLowerCase() === 'arcade';
   const isMusicPage = pageId === 'radio' || pageId === 'midi';
   const navActiveTarget = isMusicPage ? 'radio' : pageId;
   forceUnlockScrollSafe({ reapplyScrollBehavior: false });
@@ -321,6 +328,11 @@ function showPage(pageId) {
     : 'clicker';
   document.body.dataset.pageGroup = activePageGroup;
   applyActivePageScrollBehavior(activePageElement);
+  if (leavingArcadePage) {
+    const scrollLockManager = typeof globalThis !== 'undefined' ? globalThis : null;
+    scrollLockManager?.resetTouchTrackingState?.({ reapplyScrollBehavior: false });
+    forceUnlockScrollSafe({ reapplyScrollBehavior: true });
+  }
   document.body.classList.toggle('view-game', pageId === 'game');
   document.body.classList.toggle('view-arcade', pageId === 'arcade');
   document.body.classList.toggle('view-arcade-hub', pageId === 'arcadeHub');

@@ -457,6 +457,19 @@ function handleGlobalPointerStart(event) {
   }
 }
 
+function handleGlobalPointerMove(event) {
+  if (!isTouchLikePointerEvent(event)) {
+    return;
+  }
+  const now = getCurrentTimestamp();
+  if (Number.isFinite(event.pointerId)) {
+    activePointerTouchIds.set(event.pointerId, now);
+  } else {
+    activePointerTouchIds.set('pointer', now);
+  }
+  scheduleScrollUnlockCheck();
+}
+
 function resetTouchTrackingState(options = {}) {
   const { reapplyScrollBehavior = true } = options;
   activeTouchIdentifiers.clear();
@@ -490,6 +503,7 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
 
   if (supportsGlobalPointerEvents) {
     document.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
+    document.addEventListener('pointermove', handleGlobalPointerMove, passiveCaptureEventListenerOptions);
     ['pointerup', 'pointercancel', 'pointerleave', 'pointerout', 'lostpointercapture'].forEach(eventName => {
       document.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
@@ -520,6 +534,7 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   });
   if (supportsGlobalPointerEvents) {
     window.addEventListener('pointerdown', handleGlobalPointerStart, passiveCaptureEventListenerOptions);
+    window.addEventListener('pointermove', handleGlobalPointerMove, passiveCaptureEventListenerOptions);
     ['pointerup', 'pointercancel', 'pointerleave', 'pointerout', 'lostpointercapture'].forEach(eventName => {
       window.addEventListener(eventName, handleGlobalPointerCompletion, passiveCaptureEventListenerOptions);
     });
