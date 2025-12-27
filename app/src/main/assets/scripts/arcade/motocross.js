@@ -20,6 +20,21 @@
         intervalMeters: 500,
         ticketAmount: 1
       })
+    }),
+    camera: Object.freeze({
+      lookAhead: 0.24,
+      offsetY: 180,
+      smooth: 6.5,
+      zoomSmooth: 5.2,
+      verticalAnchor: 0.55,
+      zoomMin: 0.48,
+      zoomMax: 1,
+      trackWindowBehind: 420,
+      trackWindowAhead: 960,
+      topMargin: 140,
+      bottomMargin: 220,
+      smallScreenHeight: 720,
+      zoomMinSmallScreen: 0.4
     })
   });
 
@@ -76,18 +91,7 @@
   const NORMAL_CORRECTION_FACTOR = 0.7;
   const AIR_ROTATION_MAX_SPEED = Math.PI * 3;
   const AIR_ROTATION_ACCEL = AIR_ROTATION_MAX_SPEED * 6;
-  const CAMERA_LOOK_AHEAD = 0.24;
-  const CAMERA_OFFSET_Y = 180;
-  const CAMERA_SMOOTH = 6.5;
-  const CAMERA_ZOOM_SMOOTH = 5.2;
   const FALL_EXTRA_MARGIN = 480;
-  const CAMERA_VERTICAL_ANCHOR = 0.55;
-  const CAMERA_ZOOM_MIN = 0.48;
-  const CAMERA_ZOOM_MAX = 1;
-  const CAMERA_TRACK_WINDOW_BEHIND = 420;
-  const CAMERA_TRACK_WINDOW_AHEAD = 960;
-  const CAMERA_TOP_MARGIN = 140;
-  const CAMERA_BOTTOM_MARGIN = 220;
   const GROUND_PROXIMITY_THRESHOLD = 10;
   const UPSIDE_DOWN_WHEEL_CLEARANCE = 64;
   const UPSIDE_DOWN_CENTER_CLEARANCE = CHASSIS_HEIGHT * 3;
@@ -546,13 +550,41 @@
     };
   }
 
+  function normalizeCameraConfig(rawConfig) {
+    const fallback = DEFAULT_CONFIG.camera;
+    const zoomMax = clampNumber(rawConfig?.zoomMax, 0.2, 2, fallback.zoomMax);
+    const zoomMin = clampNumber(rawConfig?.zoomMin, 0.2, zoomMax, fallback.zoomMin);
+    const zoomMinSmallScreen = clampNumber(
+      rawConfig?.zoomMinSmallScreen,
+      0.2,
+      zoomMin,
+      fallback.zoomMinSmallScreen
+    );
+    return {
+      lookAhead: clampNumber(rawConfig?.lookAhead, -1, 1, fallback.lookAhead),
+      offsetY: clampNumber(rawConfig?.offsetY, 0, 600, fallback.offsetY),
+      smooth: clampNumber(rawConfig?.smooth, 0.1, 20, fallback.smooth),
+      zoomSmooth: clampNumber(rawConfig?.zoomSmooth, 0.1, 20, fallback.zoomSmooth),
+      verticalAnchor: clampNumber(rawConfig?.verticalAnchor, 0.2, 0.8, fallback.verticalAnchor),
+      zoomMin,
+      zoomMax,
+      trackWindowBehind: clampNumber(rawConfig?.trackWindowBehind, 100, 2000, fallback.trackWindowBehind),
+      trackWindowAhead: clampNumber(rawConfig?.trackWindowAhead, 100, 4000, fallback.trackWindowAhead),
+      topMargin: clampNumber(rawConfig?.topMargin, 0, 600, fallback.topMargin),
+      bottomMargin: clampNumber(rawConfig?.bottomMargin, 0, 800, fallback.bottomMargin),
+      smallScreenHeight: clampNumber(rawConfig?.smallScreenHeight, 300, 2000, fallback.smallScreenHeight),
+      zoomMinSmallScreen
+    };
+  }
+
   function normalizeConfig(rawConfig) {
     const source = (!rawConfig || typeof rawConfig !== 'object') ? {} : rawConfig;
     return {
       steepSlopeGrip: normalizeSteepSlopeGrip(source.steepSlopeGrip),
       rewards: {
         gacha: normalizeGachaReward(source?.rewards?.gacha || source?.rewards)
-      }
+      },
+      camera: normalizeCameraConfig(source.camera)
     };
   }
 
@@ -1507,6 +1539,10 @@
     test: { active: false, timer: null, index: 0, resumeActive: false }
   };
 
+  function getCameraConfig() {
+    return state.config?.camera || DEFAULT_CONFIG.camera;
+  }
+
   function sanitizeMotocrossRecordValue(value) {
     const numeric = Number(value);
     if (!Number.isFinite(numeric) || numeric <= 0) {
@@ -2084,8 +2120,9 @@
     updateWheelData();
     resetAverageSpeed(point.x);
     state.camera.x = point.x;
-    state.camera.y = point.y - CAMERA_OFFSET_Y;
-    state.camera.targetZoom = clamp(TEST_CAMERA_ZOOM, CAMERA_ZOOM_MIN, CAMERA_ZOOM_MAX);
+    const cameraConfig = getCameraConfig();
+    state.camera.y = point.y - cameraConfig.offsetY;
+    state.camera.targetZoom = clamp(TEST_CAMERA_ZOOM, cameraConfig.zoomMin, cameraConfig.zoomMax);
     state.camera.zoom = state.camera.targetZoom;
     renderScene();
   }
@@ -2279,7 +2316,8 @@
     wheels.front.segmentIndex = data.segmentIndex;
     updateWheelData();
     state.camera.x = bike.position.x;
-    state.camera.y = bike.position.y - CAMERA_OFFSET_Y;
+    const cameraConfig = getCameraConfig();
+    state.camera.y = bike.position.y - cameraConfig.offsetY;
     state.camera.zoom = 1;
     state.camera.targetZoom = 1;
     state.pendingRespawn = false;
@@ -2568,8 +2606,9 @@
     if (!track || !Number.isFinite(centerX)) {
       return null;
     }
-    const minX = centerX - CAMERA_TRACK_WINDOW_BEHIND;
-    const maxX = centerX + CAMERA_TRACK_WINDOW_AHEAD;
+    const cameraConfig = getCameraConfig();
+    const minX = centerX - cameraConfig.trackWindowBehind;
+    const maxX = centerX + cameraConfig.trackWindowAhead;
     const segments = Array.isArray(track.segments) ? track.segments : null;
     let minY = Number.POSITIVE_INFINITY;
     let maxY = Number.NEGATIVE_INFINITY;
@@ -2635,6 +2674,7 @@
     if (!canvas) {
       return camera?.zoom || 1;
     }
+    const cameraConfig = getCameraConfig();
     const height = canvas.height / (devicePixelRatio || 1);
     if (!Number.isFinite(height) || height <= 0) {
       return camera?.zoom || 1;
@@ -2643,17 +2683,20 @@
     if (!windowBounds) {
       return camera?.zoom || 1;
     }
-    let allowedZoom = CAMERA_ZOOM_MAX;
-    const topAvailable = height * CAMERA_VERTICAL_ANCHOR;
-    const bottomAvailable = height * (1 - CAMERA_VERTICAL_ANCHOR);
+    const zoomMin = height <= cameraConfig.smallScreenHeight
+      ? Math.min(cameraConfig.zoomMinSmallScreen, cameraConfig.zoomMin)
+      : cameraConfig.zoomMin;
+    let allowedZoom = cameraConfig.zoomMax;
+    const topAvailable = height * cameraConfig.verticalAnchor;
+    const bottomAvailable = height * (1 - cameraConfig.verticalAnchor);
     if (topAvailable > 0) {
-      const topDelta = targetY - (windowBounds.minY - CAMERA_TOP_MARGIN);
+      const topDelta = targetY - (windowBounds.minY - cameraConfig.topMargin);
       if (topDelta > 0) {
         allowedZoom = Math.min(allowedZoom, topAvailable / topDelta);
       }
     }
     if (bottomAvailable > 0) {
-      const bottomDelta = (windowBounds.maxY + CAMERA_BOTTOM_MARGIN) - targetY;
+      const bottomDelta = (windowBounds.maxY + cameraConfig.bottomMargin) - targetY;
       if (bottomDelta > 0) {
         allowedZoom = Math.min(allowedZoom, bottomAvailable / bottomDelta);
       }
@@ -2661,20 +2704,21 @@
     if (!Number.isFinite(allowedZoom) || allowedZoom <= 0) {
       allowedZoom = camera?.zoom || 1;
     }
-    return clamp(allowedZoom, CAMERA_ZOOM_MIN, CAMERA_ZOOM_MAX);
+    return clamp(allowedZoom, zoomMin, cameraConfig.zoomMax);
   }
 
   function updateCamera(dt) {
     const { camera, bike } = state;
-    const lookAhead = clamp(bike.velocity.x * CAMERA_LOOK_AHEAD, -160, 240);
+    const cameraConfig = getCameraConfig();
+    const lookAhead = clamp(bike.velocity.x * cameraConfig.lookAhead, -160, 240);
     const targetX = bike.position.x + lookAhead;
-    const targetY = bike.position.y - CAMERA_OFFSET_Y;
-    const smooth = 1 - Math.exp(-CAMERA_SMOOTH * dt);
+    const targetY = bike.position.y - cameraConfig.offsetY;
+    const smooth = 1 - Math.exp(-cameraConfig.smooth * dt);
     camera.x = lerp(camera.x, targetX, smooth);
     camera.y = lerp(camera.y, targetY, smooth);
     const zoomTarget = computeCameraZoom(targetY);
     camera.targetZoom = zoomTarget;
-    const zoomSmooth = 1 - Math.exp(-CAMERA_ZOOM_SMOOTH * dt);
+    const zoomSmooth = 1 - Math.exp(-cameraConfig.zoomSmooth * dt);
     camera.zoom = lerp(camera.zoom, zoomTarget, zoomSmooth);
   }
 
@@ -2833,8 +2877,9 @@
     renderBackground(ctx, width, height);
 
     const zoom = camera && Number.isFinite(camera.zoom) ? camera.zoom : 1;
+    const cameraConfig = getCameraConfig();
     ctx.save();
-    ctx.translate(width * 0.5, height * CAMERA_VERTICAL_ANCHOR);
+    ctx.translate(width * 0.5, height * cameraConfig.verticalAnchor);
     ctx.scale(zoom, zoom);
     ctx.translate(-camera.x, -camera.y);
     if (track) {
