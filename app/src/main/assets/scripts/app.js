@@ -902,6 +902,37 @@ let pendingAutoUiScaleFrame = null;
 let pendingAutoUiScaleTimeoutId = null;
 let autoUiScaleFrameUsesTimeout = false;
 let autoUiScaleReferenceViewport = { width: 0, height: 0 };
+const autoUiScaleCache = new Map();
+const autoUiScaleDirtyPages = new Set();
+let autoUiScaleResizeObserver = null;
+
+function getAutoUiScaleCacheKey(pageElement) {
+  const id = pageElement?.id;
+  if (typeof id === 'string' && id.trim()) {
+    return id;
+  }
+  return null;
+}
+
+function markAutoUiScaleDirty(pageId) {
+  if (typeof pageId !== 'string' || !pageId.trim()) {
+    return;
+  }
+  autoUiScaleDirtyPages.add(pageId);
+}
+
+function markAllAutoUiScaleDirty() {
+  autoUiScaleCache.clear();
+  autoUiScaleDirtyPages.clear();
+  if (!elements?.pages?.length) {
+    return;
+  }
+  elements.pages.forEach(page => {
+    if (page?.id) {
+      autoUiScaleDirtyPages.add(page.id);
+    }
+  });
+}
 
 const AUTO_UI_SCALE_MIN_FACTOR = 0.7;
 const AUTO_UI_SCALE_TOLERANCE = 0.015;
@@ -4407,6 +4438,26 @@ function computeAutoUiScaleForPage(pageElement) {
   if (typeof window === 'undefined') {
     return { factor: 1, viewportWidth: 0, viewportHeight: 0 };
   }
+  const viewportWidth = Math.max(
+    window.innerWidth || 0,
+    document?.documentElement?.clientWidth || 0,
+    document?.body?.clientWidth || 0
+  );
+  const viewportHeight = Math.max(
+    window.innerHeight || 0,
+    document?.documentElement?.clientHeight || 0,
+    document?.body?.clientHeight || 0
+  );
+  const cacheKey = getAutoUiScaleCacheKey(pageElement);
+  if (cacheKey && !autoUiScaleDirtyPages.has(cacheKey)) {
+    const cached = autoUiScaleCache.get(cacheKey);
+    if (cached
+      && cached.viewportWidth === viewportWidth
+      && cached.viewportHeight === viewportHeight
+      && Number.isFinite(cached.factor)) {
+      return { factor: cached.factor, viewportWidth, viewportHeight };
+    }
+  }
   const headerBaseHeight = (() => {
     if (typeof document === 'undefined') {
       return 0;
@@ -4419,16 +4470,6 @@ function computeAutoUiScaleForPage(pageElement) {
     const numeric = Number.parseFloat(raw);
     return Number.isFinite(numeric) ? numeric : 0;
   })();
-  const viewportWidth = Math.max(
-    window.innerWidth || 0,
-    document?.documentElement?.clientWidth || 0,
-    document?.body?.clientWidth || 0
-  );
-  const viewportHeight = Math.max(
-    window.innerHeight || 0,
-    document?.documentElement?.clientHeight || 0,
-    document?.body?.clientHeight || 0
-  );
   const headerRect = elements?.appHeader?.getBoundingClientRect?.();
   const headerWidth = Math.max(
     elements?.appHeader?.scrollWidth || 0,
@@ -4508,8 +4549,13 @@ function computeAutoUiScaleForPage(pageElement) {
   if (!Number.isFinite(finalScale) || finalScale <= 0) {
     return { factor: 1, viewportWidth, viewportHeight };
   }
+  const factor = Math.max(AUTO_UI_SCALE_MIN_FACTOR, Math.min(1, finalScale));
+  if (cacheKey) {
+    autoUiScaleCache.set(cacheKey, { factor, viewportWidth, viewportHeight });
+    autoUiScaleDirtyPages.delete(cacheKey);
+  }
   return {
-    factor: Math.max(AUTO_UI_SCALE_MIN_FACTOR, Math.min(1, finalScale)),
+    factor,
     viewportWidth,
     viewportHeight
   };
@@ -4594,10 +4640,12 @@ function scheduleAutoUiScaleUpdate(options = {}) {
 }
 
 function handleAutoUiScaleResize() {
+  markAllAutoUiScaleDirty();
   scheduleAutoUiScaleUpdate();
 }
 
 function handleAutoUiScaleOrientationChange() {
+  markAllAutoUiScaleDirty();
   scheduleAutoUiScaleUpdate();
   if (pendingAutoUiScaleTimeoutId != null) {
     clearTimeout(pendingAutoUiScaleTimeoutId);
@@ -4611,6 +4659,44 @@ function handleAutoUiScaleOrientationChange() {
 function initResponsiveAutoScale() {
   if (typeof window === 'undefined') {
     return;
+  }
+  markAllAutoUiScaleDirty();
+  if (typeof ResizeObserver !== 'undefined' && !autoUiScaleResizeObserver) {
+    autoUiScaleResizeObserver = new ResizeObserver(entries => {
+      if (!entries?.length) {
+        return;
+      }
+      let shouldUpdate = false;
+      entries.forEach(entry => {
+        const target = entry?.target;
+        if (!target) {
+          return;
+        }
+        if (target === elements?.appHeader || target === elements?.pageContainer) {
+          markAllAutoUiScaleDirty();
+          shouldUpdate = true;
+          return;
+        }
+        if (target?.id) {
+          markAutoUiScaleDirty(target.id);
+          shouldUpdate = true;
+        }
+      });
+      if (shouldUpdate) {
+        scheduleAutoUiScaleUpdate();
+      }
+    });
+    if (elements?.appHeader) {
+      autoUiScaleResizeObserver.observe(elements.appHeader);
+    }
+    if (elements?.pageContainer) {
+      autoUiScaleResizeObserver.observe(elements.pageContainer);
+    }
+    elements?.pages?.forEach(page => {
+      if (page) {
+        autoUiScaleResizeObserver.observe(page);
+      }
+    });
   }
   scheduleAutoUiScaleUpdate({ immediate: true });
   window.addEventListener('resize', handleAutoUiScaleResize, { passive: true });
@@ -4628,6 +4714,7 @@ function applyUiScaleSelection(selection, options = {}) {
   const factor = config && Number.isFinite(config.factor) && config.factor > 0 ? config.factor : 1;
   currentUiScaleSelection = normalized;
   currentUiScaleFactor = factor;
+  markAllAutoUiScaleDirty();
   updateEffectiveUiScaleFactor();
   scheduleAutoUiScaleUpdate();
   if (typeof document !== 'undefined' && document.body) {
