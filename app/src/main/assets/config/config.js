@@ -486,8 +486,7 @@ const AUDIO_ENGINE_SETTINGS = Object.freeze({
     masterGain: 0.22,
     softClipperDrive: 1.05,
     chorusDelayMs: 12,
-    chorusMix: 0.025,
-    instrumentMapUrl: 'config/audio/scc-instrument-map.json'
+    chorusMix: 0.025
   })
 });
 
@@ -1426,7 +1425,6 @@ const GAME_CONFIG = {
    * - engines.scc.softClipperDrive : intensité du lissage appliqué pour limiter les crêtes.
    * - engines.scc.chorusDelayMs : délai du chorus (en millisecondes).
    * - engines.scc.chorusMix : proportion du signal traité réinjectée.
-   * - engines.scc.instrumentMapUrl : chemin du mapping d'instruments SCC chargé au démarrage.
    */
   audio: {
     engines: {
@@ -1434,8 +1432,7 @@ const GAME_CONFIG = {
         masterGain: AUDIO_ENGINE_SETTINGS.scc.masterGain,
         softClipperDrive: AUDIO_ENGINE_SETTINGS.scc.softClipperDrive,
         chorusDelayMs: AUDIO_ENGINE_SETTINGS.scc.chorusDelayMs,
-        chorusMix: AUDIO_ENGINE_SETTINGS.scc.chorusMix,
-        instrumentMapUrl: AUDIO_ENGINE_SETTINGS.scc.instrumentMapUrl
+        chorusMix: AUDIO_ENGINE_SETTINGS.scc.chorusMix
       }
     }
   },
