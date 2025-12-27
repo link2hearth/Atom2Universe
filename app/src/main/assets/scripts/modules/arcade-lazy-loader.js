@@ -40,7 +40,6 @@
     blackjack: 'scripts/arcade/blackjack.js',
     echecs: 'scripts/arcade/echecs.js',
     othello: 'scripts/arcade/othello.js',
-    gomoku: 'scripts/arcade/gomoku.js',
     p4: 'scripts/arcade/p4.js',
     hex: 'scripts/arcade/hex.js',
     gameOfLife: 'scripts/arcade/game-of-life.js',
