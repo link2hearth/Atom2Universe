@@ -2391,7 +2391,7 @@
             "twoMinutes": "2 minutes",
             "fiveMinutes": "5 minutes",
             "fifteenMinutes": "15 minutes",
-            "never": "Jamais"
+            "never": "Toujours"
           },
           "status": {
             "empty": "Aucune banque d’images sélectionnée pour l’instant.",
