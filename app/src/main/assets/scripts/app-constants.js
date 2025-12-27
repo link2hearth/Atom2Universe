@@ -265,6 +265,7 @@ const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   maxImageBytes: 10 * 1024 * 1024,
   favoriteBackgroundRotationMs: 5 * 60 * 1000,
   favoriteBackgroundEnabledByDefault: false,
+  favoriteBackgroundPageIds: ['game', 'shop', 'fusion', 'info', 'options'],
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
