@@ -78,6 +78,7 @@
 
   const AUTOSAVE_GAME_ID = 'gomoku';
   const SETTINGS_STORAGE_KEY = 'atom2univers.arcade.gomoku.settings';
+  let gomokuInitialized = false;
 
   const CONFIG = normalizeConfig(RAW_CONFIG);
 
@@ -105,6 +106,9 @@
   const zobrist = createZobristTable(MAX_BOARD_SIZE);
 
   onReady(initialize);
+  if (typeof window !== 'undefined') {
+    window.initGomokuArcade = initialize;
+  }
   function normalizeConfig(raw) {
     const board = { ...DEFAULT_BOARD_SETTINGS };
     if (raw.board && typeof raw.board === 'object') {
@@ -182,10 +186,14 @@
   }
 
   function initialize() {
+    if (gomokuInitialized) {
+      return;
+    }
     const elements = getElements();
     if (!elements) {
       return;
     }
+    gomokuInitialized = true;
     state.elements = elements;
     buildBoard();
     attachEvents();
