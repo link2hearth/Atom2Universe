@@ -1,5 +1,6 @@
 {
   "ticketCost": 1,
+  "featuredSmokeEnabled": true,
   "bonusImages": {
     "folder": "Assets/Image/Gacha"
   },
