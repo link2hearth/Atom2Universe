@@ -1531,7 +1531,7 @@ function handleNativeBackgroundBank(payload) {
     setLocalBackgroundItems([], { label: normalized?.label || '', persist: false, restoreRotationState: false });
     return;
   }
-  setLocalBackgroundItems(normalized.uris, { label: normalized.label, persist: true, restoreRotationState: false });
+  setLocalBackgroundItems(normalized.uris, { label: normalized.label, persist: true, restoreRotationState: true });
   showToast(
     translateOrDefault(
       'scripts.app.background.bankReady',
