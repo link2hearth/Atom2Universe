@@ -11,6 +11,20 @@ function getImageBackgroundRotationMs() {
   return DEFAULT_IMAGE_FEED_SETTINGS.favoriteBackgroundRotationMs;
 }
 
+function getFavoriteBackgroundPageIds() {
+  const settings = getImageFeedSettings();
+  const defaultIds = Array.isArray(DEFAULT_IMAGE_FEED_SETTINGS.favoriteBackgroundPageIds)
+    ? DEFAULT_IMAGE_FEED_SETTINGS.favoriteBackgroundPageIds
+    : ['game'];
+  const rawIds = Array.isArray(settings?.favoriteBackgroundPageIds)
+    ? settings.favoriteBackgroundPageIds
+    : [];
+  const selectedIds = rawIds.length ? rawIds : defaultIds;
+  return selectedIds
+    .filter(entry => typeof entry === 'string' && entry.trim())
+    .map(entry => entry.trim());
+}
+
 function getBackgroundRotationDuration() {
   const duration = Number(backgroundRotationMs);
   if (Number.isFinite(duration) && duration > 0) {
@@ -1302,10 +1316,11 @@ function applyBackgroundImage() {
   }
   const current = pool[backgroundIndex] || null;
   const backgroundUrl = resolveBackgroundUrl(current ? getFullImageSrc(current) : '');
-  const activePage = document.body?.dataset?.activePage;
-  const isGameActive = !activePage || activePage === 'game';
-  const shouldShow = Boolean(current) && isGameActive;
-  const fallbackShouldShow = Boolean(lastLoadedBackgroundUrl) && isGameActive;
+  const activePage = document.body?.dataset?.activePage || 'game';
+  const allowedPages = getFavoriteBackgroundPageIds();
+  const shouldDisplayOnPage = allowedPages.includes(activePage);
+  const shouldShow = Boolean(current) && shouldDisplayOnPage;
+  const fallbackShouldShow = Boolean(lastLoadedBackgroundUrl) && shouldDisplayOnPage;
   const handleMissingBackground = () => {
     markBackgroundIndexExcluded(backgroundIndex, pool.length);
     if (fallbackShouldShow) {
