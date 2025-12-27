@@ -626,6 +626,70 @@ body.theme-aurora .info-progress-block--photon {
   --progress-accent: rgba(255, 236, 150, 0.78);
 }
 
+.info-progress-block--stars-war {
+  --progress-accent: rgba(40, 90, 180, 0.78);
+}
+
+body.theme-light .info-progress-block--stars-war {
+  --progress-accent: rgba(30, 70, 150, 0.7);
+}
+
+body.theme-neon .info-progress-block--stars-war {
+  --progress-accent: rgba(80, 140, 255, 0.82);
+}
+
+body.theme-aurora .info-progress-block--stars-war {
+  --progress-accent: rgba(60, 120, 220, 0.78);
+}
+
+.info-progress-block--jumping-cat {
+  --progress-accent: rgba(90, 200, 120, 0.78);
+}
+
+body.theme-light .info-progress-block--jumping-cat {
+  --progress-accent: rgba(40, 140, 80, 0.72);
+}
+
+body.theme-neon .info-progress-block--jumping-cat {
+  --progress-accent: rgba(130, 255, 180, 0.82);
+}
+
+body.theme-aurora .info-progress-block--jumping-cat {
+  --progress-accent: rgba(110, 230, 160, 0.8);
+}
+
+.info-progress-block--motocross {
+  --progress-accent: rgba(90, 190, 255, 0.78);
+}
+
+body.theme-light .info-progress-block--motocross {
+  --progress-accent: rgba(60, 140, 210, 0.72);
+}
+
+body.theme-neon .info-progress-block--motocross {
+  --progress-accent: rgba(130, 220, 255, 0.84);
+}
+
+body.theme-aurora .info-progress-block--motocross {
+  --progress-accent: rgba(110, 210, 240, 0.8);
+}
+
+.info-progress-block--frenzy {
+  --progress-accent: rgba(255, 110, 70, 0.78);
+}
+
+body.theme-light .info-progress-block--frenzy {
+  --progress-accent: rgba(220, 80, 40, 0.72);
+}
+
+body.theme-neon .info-progress-block--frenzy {
+  --progress-accent: rgba(255, 150, 110, 0.84);
+}
+
+body.theme-aurora .info-progress-block--frenzy {
+  --progress-accent: rgba(255, 140, 100, 0.8);
+}
+
 .info-progress-block::before,
 .info-calculation-block::before {
   content: '';
