@@ -121,7 +121,10 @@
 
 .link__moves-value {
   font-weight: 600;
-  font-size: 1.25rem;
+  font-size: calc(
+    1.25rem * var(--font-digits-scale-factor, 1) * var(--font-text-font-normalizer, 1)
+  );
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   color: var(--link-text-primary);
 }
 
@@ -170,7 +173,11 @@
 
 .link__board {
   --link-size: 10;
-  --link-cell-font-size: clamp(0.85rem, 1.25vw, 1.2rem);
+  --link-cell-font-size: calc(
+    clamp(0.85rem, 1.25vw, 1.2rem)
+      * var(--font-digits-scale-factor, 1)
+      * var(--font-text-font-normalizer, 1)
+  );
   display: grid;
   grid-template-columns: repeat(var(--link-size), minmax(0, 1fr));
   gap: 0.45rem;
@@ -197,6 +204,7 @@
   box-shadow: var(--link-cell-shadow);
   font-size: var(--link-cell-font-size);
   font-weight: 600;
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   color: var(--link-cell-text);
   cursor: pointer;
   user-select: none;

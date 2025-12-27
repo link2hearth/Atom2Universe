@@ -10,6 +10,7 @@
   --font-scale-factor: 1;
   --font-text-user-scale: 1;
   --font-text-font-scale: 1;
+  --font-text-font-normalizer: 1;
   --font-text-scale-factor: calc(
     var(--font-text-user-scale, 1) * var(--font-text-font-scale, 1)
   );
@@ -19,6 +20,11 @@
     var(--font-scale-factor, 1) * var(--font-text-user-scale, 1)
   );
   --font-digits-scale-factor: 1;
+  --font-digits-size-factor: calc(
+    var(--font-size-scale-factor, 1) *
+      var(--font-digits-scale-factor, 1) *
+      var(--font-text-font-normalizer, 1)
+  );
   --font-size-scale-factor: calc(
     var(--font-scale-factor, 1) * var(--font-text-scale-factor, 1)
   );
@@ -740,7 +746,10 @@ body.view-sudoku .status-bar {
   color: #ffdcbc;
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: calc(
-    clamp(0.86rem, 1.35vw, 1.1rem) * var(--header-scale, 1) * var(--font-digits-scale-factor, 1)
+    clamp(0.86rem, 1.35vw, 1.1rem)
+      * var(--header-scale, 1)
+      * var(--font-digits-scale-factor, 1)
+      * var(--font-text-font-normalizer, 1)
   );
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -806,7 +815,13 @@ body.view-sudoku .status-bar {
 }
 
 .status-aps-crit-value {
-  font-size: calc(var(--font-size-scale-factor, 1) * clamp(0.58rem, 0.9vw, 0.75rem) * var(--header-scale, 1));
+  font-size: calc(
+    var(--font-size-scale-factor, 1)
+      * clamp(0.58rem, 0.9vw, 0.75rem)
+      * var(--header-scale, 1)
+      * var(--font-digits-scale-factor, 1)
+      * var(--font-text-font-normalizer, 1)
+  );
   font-weight: 600;
   min-width: 0;
   white-space: nowrap;
@@ -824,7 +839,13 @@ body.view-sudoku .status-bar {
 }
 
 .status-aps-crit-separator {
-  font-size: calc(var(--font-size-scale-factor, 1) * clamp(0.58rem, 0.9vw, 0.72rem) * var(--header-scale, 1));
+  font-size: calc(
+    var(--font-size-scale-factor, 1)
+      * clamp(0.58rem, 0.9vw, 0.72rem)
+      * var(--header-scale, 1)
+      * var(--font-digits-scale-factor, 1)
+      * var(--font-text-font-normalizer, 1)
+  );
   opacity: 0.75;
   transform: translateY(-0.02rem);
 }
@@ -1043,7 +1064,8 @@ body.view-sudoku .status-bar {
   font-family: var(--font-digits-compact, 'Orbitron', monospace);
   font-size: calc(
     var(--font-ui-size-factor, 1) * clamp(0.92rem, 1.6vw, 1.2rem) * var(--header-scale, 1)
-    * var(--font-digits-scale-factor, 1)
+      * var(--font-digits-scale-factor, 1)
+      * var(--font-text-font-normalizer, 1)
   );
 }
 
@@ -1082,8 +1104,7 @@ body.view-sudoku .status-bar {
   pointer-events: none;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-size: calc(
-    clamp(0.58rem, 0.98vw, 0.82rem) * var(--frenzy-scale) * var(--font-text-scale-factor, 1)
-    * var(--font-digits-scale-factor, 1)
+    clamp(0.58rem, 0.98vw, 0.82rem) * var(--frenzy-scale) * var(--font-digits-size-factor, 1)
   );
   color: rgba(220, 236, 255, 0.78);
   letter-spacing: 0.04em;
@@ -1136,7 +1157,7 @@ body.view-sudoku .status-bar {
 
 .frenzy-status__timer {
   font-size: calc(
-    clamp(0.52rem, 0.9vw, 0.72rem) * var(--frenzy-scale) * var(--font-text-scale-factor, 1)
+    clamp(0.52rem, 0.9vw, 0.72rem) * var(--frenzy-scale) * var(--font-digits-size-factor, 1)
   );
   font-weight: 500;
   opacity: 0.78;
@@ -1170,7 +1191,13 @@ body.theme-aurora .frenzy-status__item {
 }
 
 .status-value--main {
-  font-size: calc(var(--font-size-scale-factor, 1) * clamp(1.65rem, 3vw, 2.35rem) * var(--header-scale, 1));
+  font-size: calc(
+    var(--font-size-scale-factor, 1)
+      * clamp(1.65rem, 3vw, 2.35rem)
+      * var(--header-scale, 1)
+      * var(--font-digits-scale-factor, 1)
+      * var(--font-text-font-normalizer, 1)
+  );
   background: linear-gradient(120deg, #ffd166, #ff8ba7, #70d6ff, #caffbf, #bdb2ff, #ffd166);
   background-size: 240% 240%;
   -webkit-background-clip: text;
