@@ -2379,6 +2379,7 @@
         "background": {
           "title": "Background",
           "addButton": "Add image bank",
+          "nextButton": "Next",
           "toggle": {
             "on": "Disable slideshow",
             "off": "Enable slideshow"

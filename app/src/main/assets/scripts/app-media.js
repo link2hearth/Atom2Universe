@@ -1245,13 +1245,27 @@ function clearBackgroundTimer() {
   }
 }
 
-function scheduleBackgroundRotation() {
+function resetBackgroundRotationCountdown() {
+  const duration = Math.max(1000, getBackgroundRotationDuration() || 300000);
+  backgroundNextRotationAt = Date.now() + duration;
+}
+
+function scheduleBackgroundRotation(options = {}) {
   clearBackgroundTimer();
   const pool = getBackgroundItems();
   if (!imageBackgroundEnabled || !pool.length) {
     return;
   }
-  const delay = Math.max(1000, getBackgroundRotationDuration() || 300000);
+  const duration = Math.max(1000, getBackgroundRotationDuration() || 300000);
+  const now = Date.now();
+  if (
+    options.resetCountdown === true
+    || !Number.isFinite(backgroundNextRotationAt)
+    || backgroundNextRotationAt <= now
+  ) {
+    backgroundNextRotationAt = now + duration;
+  }
+  const delay = Math.max(1000, backgroundNextRotationAt - now);
   backgroundTimerId = setTimeout(() => {
     const activePool = getBackgroundItems();
     if (!activePool.length) {
@@ -1260,6 +1274,8 @@ function scheduleBackgroundRotation() {
     }
     backgroundIndex = pickNextBackgroundIndex(activePool.length);
     persistBackgroundRotationState(activePool.length);
+    const nextDuration = Math.max(1000, getBackgroundRotationDuration() || 300000);
+    backgroundNextRotationAt = Date.now() + nextDuration;
     applyBackgroundImage();
   }, delay);
 }
@@ -1393,6 +1409,7 @@ function refreshBackgroundPool(options = {}) {
   if (shouldRandomize && pool.length) {
     resetBackgroundRotationSession(pool.length);
     backgroundIndex = pickNextBackgroundIndex(pool.length);
+    resetBackgroundRotationCountdown();
   } else if (backgroundIndex >= pool.length) {
     backgroundIndex = 0;
   }
@@ -1499,11 +1516,23 @@ function handleBackgroundDurationChange() {
     ? selected
     : getImageBackgroundRotationMs();
   writeStoredBackgroundDuration(backgroundRotationMs);
+  resetBackgroundRotationCountdown();
   applyBackgroundImage();
 }
 
 function handleBackgroundToggleClick() {
   setImageBackgroundEnabled(!imageBackgroundEnabled, { resetIndex: true });
+}
+
+function handleBackgroundNextClick() {
+  const pool = getBackgroundItems();
+  if (!imageBackgroundEnabled || !pool.length) {
+    return;
+  }
+  backgroundIndex = pickNextBackgroundIndex(pool.length);
+  persistBackgroundRotationState(pool.length);
+  resetBackgroundRotationCountdown();
+  applyBackgroundImage();
 }
 
 function initBackgroundOptions() {
@@ -1516,6 +1545,9 @@ function initBackgroundOptions() {
   }
   if (elements.backgroundToggleButton) {
     elements.backgroundToggleButton.addEventListener('click', handleBackgroundToggleClick);
+  }
+  if (elements.backgroundNextButton) {
+    elements.backgroundNextButton.addEventListener('click', handleBackgroundNextClick);
   }
   updateBackgroundToggleLabel();
   applyStoredLocalBackgroundBank();
