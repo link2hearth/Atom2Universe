@@ -15,6 +15,10 @@
       "ticketAmount": 1
     }
   },
+  "_comment_background": "Réglages du décor défilant (facteur appliqué en mode portrait).",
+  "background": {
+    "portraitScale": 2
+  },
   "_comment": "Réglages caméra pour le mini-jeu Motocross (zoom/centrage).",
   "camera": {
     "lookAhead": 0.24,

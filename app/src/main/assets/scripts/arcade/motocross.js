@@ -21,6 +21,9 @@
         ticketAmount: 1
       })
     }),
+    background: Object.freeze({
+      portraitScale: 2
+    }),
     camera: Object.freeze({
       lookAhead: 0.24,
       offsetY: 180,
@@ -577,6 +580,13 @@
     };
   }
 
+  function normalizeBackgroundConfig(rawConfig) {
+    const fallback = DEFAULT_CONFIG.background;
+    return {
+      portraitScale: clampNumber(rawConfig?.portraitScale, 1, 3, fallback.portraitScale)
+    };
+  }
+
   function normalizeConfig(rawConfig) {
     const source = (!rawConfig || typeof rawConfig !== 'object') ? {} : rawConfig;
     return {
@@ -584,6 +594,7 @@
       rewards: {
         gacha: normalizeGachaReward(source?.rewards?.gacha || source?.rewards)
       },
+      background: normalizeBackgroundConfig(source.background),
       camera: normalizeCameraConfig(source.camera)
     };
   }
@@ -3033,14 +3044,18 @@
     const cameraX = state.camera?.x || 0;
     let drawn = false;
     if (background && background.loaded && background.image && background.width > 0 && background.height > 0) {
-      const scale = height / background.height;
+      const backgroundConfig = state.config?.background || DEFAULT_CONFIG.background;
+      const portraitScale = backgroundConfig?.portraitScale || 1;
+      const isPortrait = height > width;
+      const scale = (height * (isPortrait ? portraitScale : 1)) / background.height;
       const scaledWidth = background.width * scale;
       if (scaledWidth > 0 && Number.isFinite(scale)) {
         const offset = ((cameraX * BACKGROUND_SCROLL_RATIO) % scaledWidth + scaledWidth) % scaledWidth;
         const startX = -offset;
-        const scaledHeight = height;
+        const scaledHeight = background.height * scale;
+        const drawY = (height - scaledHeight) / 2;
         for (let drawX = startX; drawX < width; drawX += scaledWidth) {
-          ctx.drawImage(background.image, drawX, height - scaledHeight, scaledWidth, scaledHeight);
+          ctx.drawImage(background.image, drawX, drawY, scaledWidth, scaledHeight);
         }
         drawn = true;
       }
