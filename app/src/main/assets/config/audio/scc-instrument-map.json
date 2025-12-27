@@ -17,52 +17,52 @@
     },
     "38": {
       "drumType": "snare",
-      "envelope": "DRUM_SHORT",
+      "envelope": "SNARE_CRISP",
       "wavetable": "NOISE_KIT"
     },
     "40": {
       "drumType": "snare",
-      "envelope": "DRUM_SHORT",
+      "envelope": "SNARE_CRISP",
       "wavetable": "NOISE_KIT"
     },
     "41": {
       "drumType": "tom",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_MEDIUM",
       "wavetable": "NOISE_KIT"
     },
     "42": {
       "drumType": "hihat",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_TIGHT",
       "wavetable": "NOISE_KIT"
     },
     "43": {
       "drumType": "tom",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_MEDIUM",
       "wavetable": "NOISE_KIT"
     },
     "44": {
       "drumType": "hihat",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_TIGHT",
       "wavetable": "NOISE_KIT"
     },
     "45": {
       "drumType": "tom",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_MEDIUM",
       "wavetable": "NOISE_KIT"
     },
     "46": {
       "drumType": "hihat",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_TIGHT",
       "wavetable": "NOISE_KIT"
     },
     "49": {
       "drumType": "crash",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_LONG",
       "wavetable": "NOISE_KIT"
     },
     "57": {
       "drumType": "crash",
-      "envelope": "DRUM_SHORT",
+      "envelope": "DRUM_LONG",
       "wavetable": "NOISE_KIT"
     }
   },
@@ -120,6 +120,156 @@
       "decay": 120,
       "release": 220,
       "sustain": 12
+    },
+    "DRUM_TIGHT": {
+      "attack": 0,
+      "decay": 35,
+      "release": 0,
+      "sustain": 0
+    },
+    "DRUM_LONG": {
+      "attack": 0,
+      "decay": 140,
+      "release": 30,
+      "sustain": 0
+    },
+    "SNARE_CRISP": {
+      "attack": 0,
+      "decay": 45,
+      "release": 20,
+      "sustain": 0
+    },
+    "LEAD_MEDIUM": {
+      "attack": 6,
+      "decay": 70,
+      "release": 90,
+      "sustain": 11
+    },
+    "PAD_SOFT": {
+      "attack": 80,
+      "decay": 260,
+      "release": 360,
+      "sustain": 10
+    },
+    "FX_NOISE": {
+      "attack": 0,
+      "decay": 110,
+      "release": 140,
+      "sustain": 4
+    },
+    "NOISE_SHORT": {
+      "attack": 0,
+      "decay": 55,
+      "release": 25,
+      "sustain": 0
+    },
+    "DRUM_MEDIUM": {
+      "attack": 0,
+      "decay": 90,
+      "release": 20,
+      "sustain": 0
+    }
+  },
+  "presets": {
+    "KEY_EPIANO_TRI": {
+      "envelope": "E_PIANO",
+      "vibrato": false,
+      "wavetable": "TRI_SOFT"
+    },
+    "KEY_EPIANO_SINE": {
+      "envelope": "E_PIANO",
+      "vibrato": false,
+      "wavetable": "SINE_COARSE"
+    },
+    "LEAD_PULSE25": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "LEAD_PULSE50": {
+      "envelope": "LEAD_FAST",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "LEAD_PULSE25_VIB": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "LEAD_PULSE50_VIB": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "LEAD_SAW_VIB": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "LEAD_SINE_VIB": {
+      "envelope": "LEAD_FAST",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "LEAD_SLOW_PULSE25": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "LEAD_SLOW_PULSE25_VIB": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE25"
+    },
+    "LEAD_SLOW_PULSE50_VIB": {
+      "envelope": "LEAD_SLOW",
+      "vibrato": true,
+      "wavetable": "PULSE50"
+    },
+    "PAD_TRI_VIB": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "PAD_SAW_VIB": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "PAD_SINE_VIB": {
+      "envelope": "PAD",
+      "vibrato": true,
+      "wavetable": "SINE_COARSE"
+    },
+    "STRINGS_TRI_VIB": {
+      "envelope": "STRINGS",
+      "vibrato": true,
+      "wavetable": "TRI_SOFT"
+    },
+    "BRASS_SAW_VIB": {
+      "envelope": "BRASS",
+      "vibrato": true,
+      "wavetable": "SAW_SOFT"
+    },
+    "BASS_PLUCK_PULSE25": {
+      "envelope": "BASS_PLUCK",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "BASS_PLUCK_PULSE50": {
+      "envelope": "BASS_PLUCK",
+      "vibrato": false,
+      "wavetable": "PULSE50"
+    },
+    "BASS_SOLID_PULSE25": {
+      "envelope": "BASS_SOLID",
+      "vibrato": false,
+      "wavetable": "PULSE25"
+    },
+    "BASS_SOLID_PULSE50": {
+      "envelope": "BASS_SOLID",
+      "vibrato": false,
+      "wavetable": "PULSE50"
     }
   },
   "meta": {
@@ -128,650 +278,1189 @@
   },
   "programs": {
     "0": {
-      "envelope": "E_PIANO",
-      "vibrato": false,
-      "wavetable": "TRI_SOFT"
+      "preset": "KEY_EPIANO_TRI",
+      "category": "keyboard",
+      "tags": [
+        "plucked",
+        "soft"
+      ]
     },
     "1": {
-      "envelope": "E_PIANO",
-      "vibrato": false,
-      "wavetable": "TRI_SOFT"
+      "preset": "KEY_EPIANO_TRI",
+      "category": "keyboard",
+      "tags": [
+        "plucked",
+        "soft"
+      ]
     },
     "10": {
-      "envelope": "LEAD_FAST",
+      "envelope": "LEAD_MEDIUM",
       "vibrato": false,
-      "wavetable": "PULSE25"
+      "wavetable": "PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "100": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "101": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "102": {
-      "envelope": "LEAD_FAST",
+      "envelope": "FX_NOISE",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "103": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "104": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "105": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "106": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "107": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "108": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "109": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "11": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "preset": "PAD_SINE_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "110": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "111": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "112": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "113": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "114": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "115": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "116": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "117": {
-      "envelope": "LEAD_FAST",
+      "envelope": "NOISE_SHORT",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "118": {
-      "envelope": "LEAD_FAST",
+      "envelope": "NOISE_SHORT",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "119": {
-      "envelope": "LEAD_FAST",
+      "envelope": "NOISE_SHORT",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "12": {
-      "envelope": "LEAD_FAST",
+      "envelope": "LEAD_MEDIUM",
       "vibrato": false,
-      "wavetable": "PULSE25"
+      "wavetable": "PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "120": {
-      "envelope": "LEAD_FAST",
+      "envelope": "NOISE_SHORT",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "121": {
-      "envelope": "LEAD_FAST",
+      "envelope": "FX_NOISE",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "122": {
-      "envelope": "LEAD_FAST",
+      "envelope": "FX_NOISE",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "123": {
-      "envelope": "LEAD_FAST",
+      "envelope": "FX_NOISE",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "124": {
-      "envelope": "LEAD_FAST",
+      "envelope": "FX_NOISE",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "125": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "126": {
-      "envelope": "LEAD_FAST",
+      "envelope": "FX_NOISE",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "127": {
-      "envelope": "LEAD_FAST",
+      "envelope": "FX_NOISE",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "13": {
-      "envelope": "LEAD_FAST",
+      "envelope": "LEAD_MEDIUM",
       "vibrato": false,
-      "wavetable": "PULSE25"
+      "wavetable": "PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "14": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "preset": "PAD_SINE_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "15": {
       "envelope": "LEAD_SLOW",
       "vibrato": false,
-      "wavetable": "PULSE50"
+      "wavetable": "PULSE50",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "16": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "17": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "18": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "19": {
       "envelope": "LEAD_SLOW",
       "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "wavetable": "SAW_SOFT",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "2": {
-      "envelope": "E_PIANO",
-      "vibrato": false,
-      "wavetable": "TRI_SOFT"
+      "preset": "KEY_EPIANO_TRI",
+      "category": "keyboard",
+      "tags": [
+        "plucked",
+        "soft"
+      ]
     },
     "20": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "21": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "22": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "23": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "24": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_SLOW_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "25": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_SLOW_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "26": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "27": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "28": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "29": {
-      "envelope": "LEAD_FAST",
       "portamento": true,
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "glide"
+      ]
     },
     "3": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_SLOW_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "30": {
-      "envelope": "LEAD_FAST",
+      "envelope": "LEAD_MEDIUM",
       "vibrato": true,
-      "wavetable": "PULSE50"
+      "wavetable": "PULSE50",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "31": {
-      "envelope": "LEAD_FAST",
+      "envelope": "LEAD_MEDIUM",
       "vibrato": true,
-      "wavetable": "PULSE25"
+      "wavetable": "PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "32": {
-      "envelope": "BASS_PLUCK",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "BASS_PLUCK_PULSE25",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "33": {
-      "envelope": "BASS_PLUCK",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "BASS_PLUCK_PULSE25",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "34": {
-      "envelope": "BASS_SOLID",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "BASS_SOLID_PULSE50",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "35": {
-      "envelope": "BASS_PLUCK",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "BASS_PLUCK_PULSE50",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "36": {
-      "envelope": "BASS_SOLID",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "BASS_SOLID_PULSE25",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "37": {
-      "envelope": "BASS_SOLID",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "BASS_SOLID_PULSE25",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "38": {
-      "envelope": "BASS_SOLID",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "BASS_SOLID_PULSE50",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "39": {
-      "envelope": "BASS_SOLID",
-      "vibrato": false,
-      "wavetable": "PULSE50"
+      "preset": "BASS_SOLID_PULSE50",
+      "category": "bass",
+      "tags": [
+        "low",
+        "punchy"
+      ]
     },
     "4": {
-      "envelope": "E_PIANO",
-      "vibrato": false,
-      "wavetable": "SINE_COARSE"
+      "preset": "KEY_EPIANO_SINE",
+      "category": "keyboard",
+      "tags": [
+        "plucked",
+        "soft"
+      ]
     },
     "40": {
-      "envelope": "STRINGS",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato"
+      ]
     },
     "41": {
-      "envelope": "STRINGS",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato"
+      ]
     },
     "42": {
-      "envelope": "STRINGS",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato"
+      ]
     },
     "43": {
-      "envelope": "STRINGS",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato"
+      ]
     },
     "44": {
-      "envelope": "STRINGS",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato"
+      ]
     },
     "45": {
-      "envelope": "STRINGS",
       "portamento": true,
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato",
+        "glide"
+      ]
     },
     "46": {
-      "envelope": "STRINGS",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato"
+      ]
     },
     "47": {
-      "envelope": "STRINGS",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "STRINGS_TRI_VIB",
+      "category": "strings",
+      "tags": [
+        "sustained",
+        "lush",
+        "vibrato"
+      ]
     },
     "48": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "portamento": true,
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato",
+        "glide"
+      ]
     },
     "49": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "portamento": true,
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato",
+        "glide"
+      ]
     },
     "5": {
-      "envelope": "E_PIANO",
-      "vibrato": false,
-      "wavetable": "SINE_COARSE"
+      "preset": "KEY_EPIANO_SINE",
+      "category": "keyboard",
+      "tags": [
+        "plucked",
+        "soft"
+      ]
     },
     "50": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "51": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "52": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "preset": "PAD_SINE_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "53": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "preset": "PAD_SINE_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "54": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "55": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "56": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "57": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "58": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "59": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "6": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "60": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "61": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "62": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "63": {
-      "envelope": "BRASS",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "BRASS_SAW_VIB",
+      "category": "brass",
+      "tags": [
+        "bright",
+        "brassy",
+        "vibrato"
+      ]
     },
     "64": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "portamento": true,
+      "preset": "LEAD_SLOW_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato",
+        "glide"
+      ]
     },
     "65": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_SLOW_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "66": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_SLOW_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "67": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_SLOW_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "68": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_SLOW_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "69": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "portamento": true,
+      "preset": "LEAD_SLOW_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato",
+        "glide"
+      ]
     },
     "7": {
-      "envelope": "LEAD_FAST",
       "portamento": true,
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "glide"
+      ]
     },
     "70": {
-      "envelope": "LEAD_SLOW",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "portamento": true,
+      "preset": "LEAD_SLOW_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato",
+        "glide"
+      ]
     },
     "71": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "72": {
-      "envelope": "PAD",
+      "envelope": "PAD_SOFT",
       "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "wavetable": "SINE_COARSE",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "73": {
-      "envelope": "PAD",
+      "envelope": "PAD_SOFT",
       "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "wavetable": "SINE_COARSE",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "74": {
-      "envelope": "PAD",
+      "envelope": "PAD_SOFT",
       "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "wavetable": "SINE_COARSE",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "75": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "76": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "77": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "78": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "preset": "PAD_SINE_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "79": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "8": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "preset": "LEAD_SINE_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "80": {
-      "envelope": "LEAD_FAST",
       "portamento": true,
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato",
+        "glide"
+      ]
     },
     "81": {
-      "envelope": "LEAD_FAST",
       "portamento": true,
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato",
+        "glide"
+      ]
     },
     "82": {
-      "envelope": "LEAD_FAST",
       "portamento": true,
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "LEAD_SAW_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato",
+        "glide"
+      ]
     },
     "83": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "LEAD_SAW_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "84": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "85": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "86": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "LEAD_SAW_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "87": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "LEAD_SAW_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "88": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "portamento": true,
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato",
+        "glide"
+      ]
     },
     "89": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "portamento": true,
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato",
+        "glide"
+      ]
     },
     "9": {
-      "envelope": "LEAD_FAST",
-      "vibrato": false,
-      "wavetable": "PULSE25"
+      "preset": "LEAD_PULSE25",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused"
+      ]
     },
     "90": {
-      "envelope": "PAD",
+      "envelope": "PAD_SOFT",
       "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "wavetable": "SINE_COARSE",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "91": {
-      "envelope": "PAD",
+      "envelope": "PAD_SOFT",
       "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "wavetable": "SINE_COARSE",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "92": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "93": {
-      "envelope": "PAD",
+      "envelope": "PAD_SOFT",
       "vibrato": true,
-      "wavetable": "SINE_COARSE"
+      "wavetable": "SINE_COARSE",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "94": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "95": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "TRI_SOFT"
+      "preset": "PAD_TRI_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     },
     "96": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "LEAD_SAW_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "97": {
-      "envelope": "LEAD_FAST",
-      "vibrato": true,
-      "wavetable": "PULSE50"
+      "preset": "LEAD_PULSE50_VIB",
+      "category": "lead",
+      "tags": [
+        "melodic",
+        "focused",
+        "vibrato"
+      ]
     },
     "98": {
-      "envelope": "LEAD_FAST",
+      "envelope": "NOISE_SHORT",
       "vibrato": false,
-      "wavetable": "NOISE_KIT"
+      "wavetable": "NOISE_KIT",
+      "category": "fx",
+      "tags": [
+        "noise",
+        "fx"
+      ]
     },
     "99": {
-      "envelope": "PAD",
-      "vibrato": true,
-      "wavetable": "SAW_SOFT"
+      "preset": "PAD_SAW_VIB",
+      "category": "pad",
+      "tags": [
+        "ambient",
+        "warm",
+        "vibrato"
+      ]
     }
   }
 }
