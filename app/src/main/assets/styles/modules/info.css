@@ -29,6 +29,14 @@
   gap: 1rem;
 }
 
+body.favorite-background-active #info .info-card {
+  background: rgba(8, 12, 22, 0.75);
+}
+
+body.theme-light.favorite-background-active #info .info-card {
+  background: rgba(255, 255, 255, 0.82);
+}
+
 .info-card--welcome {
   grid-column: 1 / -1;
   gap: clamp(0.8rem, 1.6vw, 1.4rem);
