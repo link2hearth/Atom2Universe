@@ -3,6 +3,10 @@
   "scroll": {
     "autoScrollOnEnter": true
   },
+  "performance": {
+    "maxFps": 60,
+    "maxDeltaMs": 32
+  },
   "visualEffects": {
     "enableScreenPulse": false,
     "enableGlow": false,
