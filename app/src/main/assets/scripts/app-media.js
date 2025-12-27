@@ -1253,12 +1253,34 @@ function renderBackgroundRotationCounter(poolLength) {
   elements.backgroundRotationCounter.textContent = `${seen}/${total}`;
 }
 
+function renderBackgroundCurrentName() {
+  if (!elements.backgroundCurrentName) {
+    return;
+  }
+  const pool = getBackgroundItems();
+  const current = pool[backgroundIndex] || null;
+  const rawName = current ? extractFileNameFromUri(current.imageUrl || '') : '';
+  const cleanedName = typeof rawName === 'string'
+    ? rawName.split('?')[0].split('#')[0].trim()
+    : '';
+  if (cleanedName) {
+    elements.backgroundCurrentName.textContent = cleanedName;
+    elements.backgroundCurrentName.removeAttribute('data-i18n');
+    return;
+  }
+  const emptyKey = 'index.sections.options.background.currentEmpty';
+  const emptyFallback = 'No background image loaded.';
+  elements.backgroundCurrentName.textContent = translateOrDefault(emptyKey, emptyFallback);
+  elements.backgroundCurrentName.setAttribute('data-i18n', emptyKey);
+}
+
 function renderBackgroundRotationMeta(options = {}) {
   const poolLength = Math.max(
     0,
     Number(options.poolLength != null ? options.poolLength : getBackgroundItems().length) || 0
   );
   renderBackgroundRotationCounter(poolLength);
+  renderBackgroundCurrentName();
 }
 
 function setLocalBackgroundItems(uris, options = {}) {
