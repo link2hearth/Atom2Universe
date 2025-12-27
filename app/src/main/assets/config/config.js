@@ -185,6 +185,20 @@ const NEWS_SETTINGS = Object.freeze({
 });
 
 /**
+ * Paramètres pour charger les scripts arcade à la demande.
+ * - `enabled` : charge chaque mini-jeu uniquement lorsqu'il est affiché.
+ * - `prefetchOnIdle` : précharge en tâche de fond si besoin.
+ * - `prefetchDelayMs` : délai avant la précharge automatique.
+ */
+const LAZY_LOAD_SETTINGS = Object.freeze({
+  arcade: Object.freeze({
+    enabled: true,
+    prefetchOnIdle: false,
+    prefetchDelayMs: 2500
+  })
+});
+
+/**
  * Paramètres du module RadioBrowser.
  * - `servers` : liste ordonnée des hôtes à interroger (mêmes endpoints sur chaque serveur).
  * - `requestTimeoutMs` : délai maximal avant d’abandonner une requête.
@@ -1458,6 +1472,17 @@ const GAME_CONFIG = {
    */
   navigation: {
     pointerClickSuppressMs: 350
+  },
+
+  /**
+   * Réglages de performance liés au chargement différé des scripts arcade.
+   */
+  lazyLoad: {
+    arcade: {
+      enabled: LAZY_LOAD_SETTINGS.arcade.enabled,
+      prefetchOnIdle: LAZY_LOAD_SETTINGS.arcade.prefetchOnIdle,
+      prefetchDelayMs: LAZY_LOAD_SETTINGS.arcade.prefetchDelayMs
+    }
   },
 
   /**
