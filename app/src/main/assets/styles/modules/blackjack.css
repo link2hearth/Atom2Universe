@@ -63,6 +63,9 @@
   --blackjack-button-color: #f8fafc;
   --blackjack-button-hover-background: rgba(90, 92, 106, 0.82);
   --blackjack-button-hover-shadow: 0 10px 18px rgba(0, 0, 0, 0.32);
+  --blackjack-digit-scale: calc(
+    var(--font-digits-scale-factor, 1) * var(--font-text-font-normalizer, 1)
+  );
   padding: clamp(1rem, 2vw, 2.5rem) clamp(0.75rem, 2vw, 2rem);
   justify-content: center;
   color: var(--blackjack-text-color);
@@ -135,8 +138,13 @@
 }
 
 .blackjack-hand__total {
-  font-size: calc(clamp(1rem, 2.5vw, 1.2rem) * var(--blackjack-scale, 1));
+  font-size: calc(
+    clamp(1rem, 2.5vw, 1.2rem)
+      * var(--blackjack-scale, 1)
+      * var(--blackjack-digit-scale, 1)
+  );
   font-weight: 600;
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   margin: 0;
 }
 
@@ -166,7 +174,9 @@
   position: relative;
   font-weight: 700;
   font-size: calc(
-    clamp(1.1rem, 4vw, 1.6rem) * var(--blackjack-scale, 1) * var(--font-digits-scale-factor, 1)
+    clamp(1.1rem, 4vw, 1.6rem)
+      * var(--blackjack-scale, 1)
+      * var(--blackjack-digit-scale, 1)
   );
   padding: calc(0.35rem * var(--blackjack-scale, 1));
 }
@@ -236,7 +246,8 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: calc(0.85rem * var(--blackjack-scale, 1));
+  font-size: calc(0.85rem * var(--blackjack-scale, 1) * var(--blackjack-digit-scale, 1));
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   padding: calc(0.5rem * var(--blackjack-scale, 1))
     calc(0.65rem * var(--blackjack-scale, 1));
 }
@@ -244,7 +255,8 @@
 .blackjack-bet__option {
   font: inherit;
   font-weight: 600;
-  font-size: calc(0.95rem * var(--blackjack-scale, 1));
+  font-size: calc(0.95rem * var(--blackjack-scale, 1) * var(--blackjack-digit-scale, 1));
+  font-family: var(--font-digits, 'Orbitron', sans-serif);
   padding: calc(0.55rem * var(--blackjack-scale, 1))
     calc(0.9rem * var(--blackjack-scale, 1));
   border-radius: calc(0.85rem * var(--blackjack-scale, 1));

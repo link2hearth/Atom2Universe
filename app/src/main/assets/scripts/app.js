@@ -4869,6 +4869,8 @@ function applyTextFontSelection(selection, options = {}) {
     root.style.setProperty('--font-text', config.stack);
     const scale = resolveFontScaleMultiplier(FONT_SCALE_CONFIG.text, normalized);
     root.style.setProperty('--font-text-font-scale', String(scale));
+    const normalizer = Number.isFinite(scale) && scale > 0 ? 1 / scale : 1;
+    root.style.setProperty('--font-text-font-normalizer', String(normalizer));
   }
   if (typeof document !== 'undefined' && document.body) {
     document.body.setAttribute('data-text-font', normalized);

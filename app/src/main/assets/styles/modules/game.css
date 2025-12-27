@@ -99,7 +99,9 @@ body.favorite-background-active .page--void::after {
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   --crypto-widget-scale: var(--ui-control-scale, 1);
   --crypto-widget-font-scale: calc(
-    var(--font-ui-size-factor, 1) * var(--font-digits-scale-factor, 1)
+    var(--font-ui-size-factor, 1)
+      * var(--font-digits-scale-factor, 1)
+      * var(--font-text-font-normalizer, 1)
   );
   --crypto-widget-up-color: #4ade80;
   --crypto-widget-down-color: #f87171;
