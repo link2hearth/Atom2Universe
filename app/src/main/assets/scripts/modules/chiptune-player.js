@@ -1918,8 +1918,12 @@
       if (!ResolvedEngineClass) {
         throw new Error('SCC engine unavailable');
       }
+      const configuredSampleRate = globalThis.GAME_CONFIG?.audio?.engines?.scc?.renderSampleRate;
+      const resolvedSampleRate = Number.isFinite(configuredSampleRate)
+        ? Math.max(8000, Math.min(48000, Math.round(configuredSampleRate)))
+        : 44100;
       this.sccEngine = new ResolvedEngineClass({
-        sampleRate: 44100,
+        sampleRate: resolvedSampleRate,
         portamentoMs: 40,
         panSpread: [-0.25, -0.1, 0.1, 0.25, 0],
       });
