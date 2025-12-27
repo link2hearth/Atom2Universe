@@ -178,6 +178,7 @@ let backgroundRotationPoolSize = 0;
 let backgroundLibraryLabel = '';
 let backgroundLibraryStatus = 'idle';
 let backgroundRotationMs = readStoredBackgroundDuration();
+let collectionDownloadsItems = [];
 let collectionDownloadsEntries = [];
 let collectionDownloadsCurrentIndex = 0;
 let collectionDownloadsTouchStartX = null;

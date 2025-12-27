@@ -434,8 +434,14 @@ function hasAndroidBackgroundBridge() {
     && typeof window.AndroidBridge.loadBackgroundImageBank === 'function';
 }
 
+function hasAndroidCollectionDownloadsBridge() {
+  return typeof window !== 'undefined'
+    && window.AndroidBridge
+    && typeof window.AndroidBridge.loadCollectionDownloads === 'function';
+}
+
 function shouldShowCollectionDownloadsCard() {
-  return isPageUnlocked('collection') && (hasLocalBackgrounds() || hasAndroidBackgroundBridge());
+  return isPageUnlocked('collection') && hasAndroidCollectionDownloadsBridge();
 }
 
 function updateCollectionDownloadsVisibility() {
@@ -1232,7 +1238,7 @@ function updateCollectionDownloadsRefreshState() {
   if (!elements.collectionDownloadsRefresh) {
     return;
   }
-  const available = hasAndroidBackgroundBridge();
+  const available = hasAndroidCollectionDownloadsBridge();
   elements.collectionDownloadsRefresh.disabled = !available;
   elements.collectionDownloadsRefresh.setAttribute('aria-disabled', available ? 'false' : 'true');
   elements.collectionDownloadsRefresh.hidden = !available;
@@ -1615,7 +1621,7 @@ function handleCollectionDownloadsRefresh(event) {
     showToast(translateOrDefault('scripts.app.background.unsupported', 'This action requires the Android app.'));
     return;
   }
-  requestNativeBackgroundBank();
+  requestNativeCollectionDownloads();
 }
 
 function toggleCollectionVideosCollapsed() {
@@ -1728,7 +1734,10 @@ function initCollectionDownloadsCard() {
   if (elements.collectionDownloadsRefresh) {
     elements.collectionDownloadsRefresh.addEventListener('click', handleCollectionDownloadsRefresh);
   }
-  renderCollectionDownloadsGallery(getBackgroundItems());
+  renderCollectionDownloadsGallery(getCollectionDownloadsItems());
+  if (hasAndroidCollectionDownloadsBridge()) {
+    requestNativeCollectionDownloads();
+  }
   updateCollectionDownloadsVisibility();
 }
 
@@ -1943,7 +1952,7 @@ function subscribeCollectionDownloadsLanguageUpdates() {
       : false;
     updateCollectionDownloadsToggleLabel(collapsed);
     updateCollectionDownloadsRefreshLabel();
-    renderCollectionDownloadsGallery(getBackgroundItems());
+    renderCollectionDownloadsGallery(getCollectionDownloadsItems());
   };
   const api = getI18nApi();
   if (api && typeof api.onLanguageChanged === 'function') {
