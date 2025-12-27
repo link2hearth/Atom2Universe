@@ -471,7 +471,7 @@ body.theme-light .news-card__button {
   bottom: calc(var(--safe-bottom) + 1.6rem + 5vh);
   width: min(var(--max-width), calc(100% - 2rem));
   z-index: 20;
-  font-size: 1.3rem;
+  font-size: calc(0.85rem * var(--font-size-scale-factor, 1));
 }
 
 .news-ticker__container {
