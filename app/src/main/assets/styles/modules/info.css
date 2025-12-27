@@ -445,6 +445,10 @@ body.theme-aurora .collection-image-button:hover {
   transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
+.info-card__collapse-button {
+  font-size: 0;
+}
+
 .info-card__collapse-button::after {
   content: '';
   width: 0.65rem;
