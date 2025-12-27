@@ -1,4 +1,7 @@
 const DEFAULT_GACHA_TICKET_COST = 1;
+const GLOBAL_CONFIG = typeof globalThis !== 'undefined' ? globalThis.GAME_CONFIG : null;
+const GACHA_CONFIG = GLOBAL_CONFIG?.gacha ?? {};
+const GACHA_FEATURED_SMOKE_ENABLED = GACHA_CONFIG.featuredSmokeEnabled !== false;
 
 function isCollectionSystemActive() {
   if (typeof globalThis !== 'undefined' && typeof globalThis.COLLECTION_SYSTEM_ENABLED === 'boolean') {
@@ -174,6 +177,9 @@ function startGachaFeaturedSmokeAnimation(element) {
 }
 
 function createGachaFeaturedSmokeBackdrop() {
+  if (!GACHA_FEATURED_SMOKE_ENABLED) {
+    return null;
+  }
   if (typeof document === 'undefined') {
     return null;
   }
@@ -1809,12 +1815,20 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
       if (featuredInfo.hidden) {
         featuredInfo.hidden = false;
       }
-      const activeSmokeElement = gachaSmokeAnimationState.element;
-      const hasSmokeElement = featuredInfo.querySelector('.gacha-featured-info__smoke');
-      if (!hasSmokeElement || (activeSmokeElement && activeSmokeElement !== hasSmokeElement)) {
-        const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
-        if (smokeBackdrop) {
-          featuredInfo.prepend(smokeBackdrop);
+      if (GACHA_FEATURED_SMOKE_ENABLED) {
+        const activeSmokeElement = gachaSmokeAnimationState.element;
+        const hasSmokeElement = featuredInfo.querySelector('.gacha-featured-info__smoke');
+        if (!hasSmokeElement || (activeSmokeElement && activeSmokeElement !== hasSmokeElement)) {
+          const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
+          if (smokeBackdrop) {
+            featuredInfo.prepend(smokeBackdrop);
+          }
+        }
+      } else {
+        stopGachaFeaturedSmokeAnimation();
+        const hasSmokeElement = featuredInfo.querySelector('.gacha-featured-info__smoke');
+        if (hasSmokeElement) {
+          hasSmokeElement.remove();
         }
       }
       return;
@@ -1823,9 +1837,11 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
     featuredInfo.innerHTML = '';
     const todayText = t('scripts.gacha.featured.today');
     const fragment = document.createDocumentFragment();
-    const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
-    if (smokeBackdrop) {
-      fragment.appendChild(smokeBackdrop);
+    if (GACHA_FEATURED_SMOKE_ENABLED) {
+      const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
+      if (smokeBackdrop) {
+        fragment.appendChild(smokeBackdrop);
+      }
     }
     if (typeof todayText === 'string' && todayText.trim()) {
       const dayElement = document.createElement('span');
