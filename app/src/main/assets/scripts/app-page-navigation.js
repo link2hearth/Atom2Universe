@@ -306,6 +306,11 @@ function activateArcadePageAfterLoad(pageId) {
     const lightsOut = ensureLightsOutGame();
     lightsOut?.onEnter?.();
   }
+  if (pageId === 'gomoku') {
+    if (typeof initGomokuArcade === 'function') {
+      initGomokuArcade();
+    }
+  }
   if (pageId === 'gameOfLife') {
     const gameOfLife = ensureGameOfLifeGame();
     gameOfLife?.onEnter?.();
