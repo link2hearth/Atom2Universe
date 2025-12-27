@@ -868,7 +868,6 @@
         programs: map.programs || {},
         envelopes: map.envelopes || {},
         drums: map.drums || {},
-        presets: map.presets || {},
         defaults: {
           ...this.defaults,
           ...(map.defaults || {}),
@@ -899,30 +898,6 @@
 
     resolveProgram(programNumber) {
       const entry = this.instrumentMap.programs[String(programNumber)];
-      const presets = this.instrumentMap.presets || {};
-      let resolvedEntry = entry;
-      if (entry && entry.preset) {
-        const presetNames = Array.isArray(entry.preset) ? entry.preset : [entry.preset];
-        let presetData = {};
-        let presetTags = [];
-        for (const presetName of presetNames) {
-          const preset = presets[presetName];
-          if (!preset) {
-            continue;
-          }
-          presetData = { ...presetData, ...preset };
-          if (Array.isArray(preset.tags)) {
-            presetTags = presetTags.concat(preset.tags);
-          }
-        }
-        const entryTags = Array.isArray(entry.tags) ? entry.tags : [];
-        const mergedTags = [...new Set([...presetTags, ...entryTags])];
-        resolvedEntry = {
-          ...presetData,
-          ...entry,
-          ...(mergedTags.length ? { tags: mergedTags } : {}),
-        };
-      }
       if (!entry) {
         const defaultEnvelopeConfig = this.instrumentMap.defaults.envelope;
         const fallbackEnvelope = defaultEnvelopeConfig
@@ -941,7 +916,7 @@
           vibratoFadeMs: this.instrumentMap.defaults.vibratoFadeMs,
         };
       }
-      const envelopeName = resolvedEntry.envelope;
+      const envelopeName = entry.envelope;
       const resolvedEnvelope = envelopeName ? this.getEnvelope(envelopeName) : null;
       const defaultEnvelopeConfig = this.instrumentMap.defaults.envelope;
       const fallbackEnvelope = defaultEnvelopeConfig
@@ -950,16 +925,14 @@
           : defaultEnvelopeConfig)
         : this.defaults.envelope;
       return {
-        wavetable: resolvedEntry.wavetable || this.instrumentMap.defaults.wavetable || 'PULSE50',
+        wavetable: entry.wavetable || this.instrumentMap.defaults.wavetable || 'PULSE50',
         envelope: resolvedEnvelope || fallbackEnvelope,
-        vibrato: resolvedEntry.vibrato ?? this.instrumentMap.defaults.vibrato,
-        portamento: resolvedEntry.portamento ?? false,
-        gain: resolvedEntry.gain ?? 1,
-        vibratoRate: resolvedEntry.vibratoRate,
-        vibratoDepth: resolvedEntry.vibratoDepth,
-        vibratoFadeMs: resolvedEntry.vibratoFadeMs,
-        category: resolvedEntry.category,
-        tags: resolvedEntry.tags,
+        vibrato: entry.vibrato ?? this.instrumentMap.defaults.vibrato,
+        portamento: entry.portamento ?? false,
+        gain: entry.gain ?? 1,
+        vibratoRate: entry.vibratoRate,
+        vibratoDepth: entry.vibratoDepth,
+        vibratoFadeMs: entry.vibratoFadeMs,
       };
     }
 
