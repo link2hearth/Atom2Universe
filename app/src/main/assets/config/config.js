@@ -1537,8 +1537,8 @@ const GAME_CONFIG = {
       options: [
         { id: 'small', factor: 0.85 },
         { id: 'normal', factor: 1 },
-        { id: 'large', factor: 1.2 },
-        { id: 'x2', factor: 1.45 }
+        { id: 'large', factor: 1.25 },
+        { id: 'x2', factor: 1.5 }
       ]
     },
     textScale: {
@@ -1546,8 +1546,8 @@ const GAME_CONFIG = {
       options: [
         { id: 'compact', factor: 0.9 },
         { id: 'normal', factor: 1 },
-        { id: 'comfortable', factor: 1.35 },
-        { id: 'reading', factor: 1.75 }
+        { id: 'comfortable', factor: 1.3 },
+        { id: 'reading', factor: 1.5 }
       ]
     },
     /**
