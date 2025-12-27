@@ -947,6 +947,7 @@ function collectDomElements() {
     backgroundRotationCounter: document.getElementById('backgroundRotationCounter'),
     backgroundDurationSelect: document.getElementById('backgroundDurationSelect'),
     backgroundToggleButton: document.getElementById('backgroundToggleButton'),
+    backgroundPrevButton: document.getElementById('backgroundPrevButton'),
     backgroundNextButton: document.getElementById('backgroundNextButton'),
     backupSaveButton: document.getElementById('backupSaveButton'),
     backupLoadButton: document.getElementById('backupLoadButton'),

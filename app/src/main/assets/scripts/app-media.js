@@ -27,7 +27,7 @@ function getFavoriteBackgroundPageIds() {
 
 function getBackgroundRotationDuration() {
   const duration = Number(backgroundRotationMs);
-  if (Number.isFinite(duration) && duration > 0) {
+  if (Number.isFinite(duration) && duration >= 0) {
     return duration;
   }
   return getImageBackgroundRotationMs();
@@ -201,7 +201,7 @@ function readStoredBackgroundDuration() {
   try {
     const raw = globalThis.localStorage?.getItem(BACKGROUND_DURATION_STORAGE_KEY);
     const parsed = Number(raw);
-    if (Number.isFinite(parsed) && parsed > 0) {
+    if (Number.isFinite(parsed) && parsed >= 0) {
       return parsed;
     }
   } catch (error) {
@@ -213,7 +213,7 @@ function readStoredBackgroundDuration() {
 function writeStoredBackgroundDuration(durationMs) {
   try {
     const normalized = Number(durationMs);
-    if (!Number.isFinite(normalized) || normalized <= 0) {
+    if (!Number.isFinite(normalized) || normalized < 0) {
       globalThis.localStorage?.removeItem(BACKGROUND_DURATION_STORAGE_KEY);
       return;
     }
@@ -274,8 +274,9 @@ function readStoredBackgroundRotationState() {
     const poolSize = Math.max(0, Math.floor(Number(parsed.poolSize) || 0));
     const queue = Array.isArray(parsed.queue) ? parsed.queue : [];
     const excluded = Array.isArray(parsed.excluded) ? parsed.excluded : [];
+    const history = Array.isArray(parsed.history) ? parsed.history : [];
     const lastIndex = Number.isFinite(Number(parsed.lastIndex)) ? Math.floor(Number(parsed.lastIndex)) : null;
-    return { poolSize, queue, excluded, lastIndex };
+    return { poolSize, queue, excluded, history, lastIndex };
   } catch (error) {
     console.warn('Unable to read background rotation state', error);
   }
@@ -295,10 +296,19 @@ function writeStoredBackgroundRotationState(state) {
     const excluded = Array.isArray(state?.excluded)
       ? state.excluded.map(entry => Math.floor(Number(entry))).filter(entry => Number.isFinite(entry))
       : [];
+    const history = Array.isArray(state?.history)
+      ? state.history.map(entry => Math.floor(Number(entry))).filter(entry => Number.isFinite(entry))
+      : [];
     const lastIndex = Number.isFinite(Number(state?.lastIndex))
       ? Math.floor(Number(state.lastIndex))
       : null;
-    const payload = { poolSize, queue, excluded, lastIndex };
+    const payload = {
+      poolSize,
+      queue,
+      excluded,
+      history,
+      lastIndex
+    };
     globalThis.localStorage?.setItem(BACKGROUND_ROTATION_STATE_STORAGE_KEY, JSON.stringify(payload));
   } catch (error) {
     console.warn('Unable to persist background rotation state', error);
@@ -1038,6 +1048,25 @@ function normalizeBackgroundRotationList(list, poolLength) {
   return normalized;
 }
 
+function normalizeBackgroundHistoryList(list, poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (!Array.isArray(list) || total <= 0) {
+    return [];
+  }
+  const normalized = [];
+  list.forEach(entry => {
+    const value = Math.floor(Number(entry));
+    if (!Number.isFinite(value) || value < 0 || value >= total) {
+      return;
+    }
+    normalized.push(value);
+  });
+  if (normalized.length > total) {
+    normalized.splice(0, normalized.length - total);
+  }
+  return normalized;
+}
+
 function restoreBackgroundRotationState(poolLength) {
   const total = Math.max(0, Number(poolLength) || 0);
   if (!total) {
@@ -1050,8 +1079,10 @@ function restoreBackgroundRotationState(poolLength) {
   }
   const restoredQueue = normalizeBackgroundRotationList(stored.queue, total);
   const restoredExcluded = normalizeBackgroundRotationList(stored.excluded, total);
+  const restoredHistory = normalizeBackgroundHistoryList(stored.history, total);
   backgroundRotationQueue = restoredQueue;
   backgroundRotationExclusions = new Set(restoredExcluded);
+  backgroundRotationHistory = restoredHistory;
   backgroundRotationPoolSize = total;
   if (Number.isFinite(stored.lastIndex) && stored.lastIndex >= 0 && stored.lastIndex < total) {
     backgroundIndex = stored.lastIndex;
@@ -1067,10 +1098,12 @@ function persistBackgroundRotationState(poolLength) {
   }
   const queue = normalizeBackgroundRotationList(backgroundRotationQueue, total);
   const excluded = normalizeBackgroundRotationList(Array.from(backgroundRotationExclusions || []), total);
+  const history = normalizeBackgroundHistoryList(backgroundRotationHistory, total);
   writeStoredBackgroundRotationState({
     poolSize: total,
     queue,
     excluded,
+    history,
     lastIndex: backgroundIndex
   });
 }
@@ -1099,6 +1132,7 @@ function resetBackgroundRotationSession(poolLength) {
   backgroundRotationExclusions = new Set();
   backgroundRotationQueue = buildBackgroundRotationQueue(total);
   backgroundRotationPoolSize = total;
+  backgroundRotationHistory = [];
   persistBackgroundRotationState(total);
   renderBackgroundRotationCounter(total);
 }
@@ -1124,6 +1158,7 @@ function markBackgroundIndexSeen(index, poolLength) {
   if (!backgroundRotationQueue.length) {
     return;
   }
+  recordBackgroundHistory(safeIndex, poolLength);
   backgroundRotationQueue = backgroundRotationQueue.filter(item => item !== safeIndex);
   persistBackgroundRotationState(poolLength);
   renderBackgroundRotationCounter(poolLength);
@@ -1141,6 +1176,27 @@ function markBackgroundIndexExcluded(index, poolLength) {
   }
   persistBackgroundRotationState(poolLength);
   renderBackgroundRotationCounter(poolLength);
+}
+
+function recordBackgroundHistory(index, poolLength) {
+  const total = Math.max(0, Number(poolLength) || 0);
+  if (!total) {
+    backgroundRotationHistory = [];
+    return;
+  }
+  const safeIndex = Math.max(0, Math.floor(Number(index) || 0));
+  if (safeIndex >= total) {
+    return;
+  }
+  const history = Array.isArray(backgroundRotationHistory) ? backgroundRotationHistory : [];
+  const lastIndex = history[history.length - 1];
+  if (lastIndex !== safeIndex) {
+    history.push(safeIndex);
+  }
+  if (history.length > total) {
+    history.splice(0, history.length - total);
+  }
+  backgroundRotationHistory = history;
 }
 
 function setBackgroundLibraryStatus(status) {
@@ -1246,8 +1302,12 @@ function clearBackgroundTimer() {
 }
 
 function resetBackgroundRotationCountdown() {
-  const duration = Math.max(1000, getBackgroundRotationDuration() || 300000);
-  backgroundNextRotationAt = Date.now() + duration;
+  const duration = getBackgroundRotationDuration();
+  if (!Number.isFinite(duration) || duration <= 0) {
+    backgroundNextRotationAt = null;
+    return;
+  }
+  backgroundNextRotationAt = Date.now() + Math.max(1000, duration);
 }
 
 function scheduleBackgroundRotation(options = {}) {
@@ -1256,7 +1316,12 @@ function scheduleBackgroundRotation(options = {}) {
   if (!imageBackgroundEnabled || !pool.length) {
     return;
   }
-  const duration = Math.max(1000, getBackgroundRotationDuration() || 300000);
+  const rotationDuration = getBackgroundRotationDuration();
+  if (!Number.isFinite(rotationDuration) || rotationDuration <= 0) {
+    backgroundNextRotationAt = null;
+    return;
+  }
+  const duration = Math.max(1000, rotationDuration);
   const now = Date.now();
   if (
     options.resetCountdown === true
@@ -1512,7 +1577,7 @@ function handleBackgroundDurationChange() {
     return;
   }
   const selected = Number(elements.backgroundDurationSelect.value);
-  backgroundRotationMs = Number.isFinite(selected) && selected > 0
+  backgroundRotationMs = Number.isFinite(selected) && selected >= 0
     ? selected
     : getImageBackgroundRotationMs();
   writeStoredBackgroundDuration(backgroundRotationMs);
@@ -1535,6 +1600,29 @@ function handleBackgroundNextClick() {
   applyBackgroundImage();
 }
 
+function handleBackgroundPreviousClick() {
+  const pool = getBackgroundItems();
+  if (!imageBackgroundEnabled || !pool.length) {
+    return;
+  }
+  const history = Array.isArray(backgroundRotationHistory) ? [...backgroundRotationHistory] : [];
+  if (!history.length) {
+    return;
+  }
+  if (history[history.length - 1] === backgroundIndex) {
+    history.pop();
+  }
+  if (!history.length) {
+    return;
+  }
+  const previousIndex = history[history.length - 1];
+  backgroundRotationHistory = history;
+  backgroundIndex = previousIndex;
+  persistBackgroundRotationState(pool.length);
+  resetBackgroundRotationCountdown();
+  applyBackgroundImage();
+}
+
 function initBackgroundOptions() {
   updateBackgroundDurationControl();
   if (elements.backgroundDurationSelect) {
@@ -1545,6 +1633,9 @@ function initBackgroundOptions() {
   }
   if (elements.backgroundToggleButton) {
     elements.backgroundToggleButton.addEventListener('click', handleBackgroundToggleClick);
+  }
+  if (elements.backgroundPrevButton) {
+    elements.backgroundPrevButton.addEventListener('click', handleBackgroundPreviousClick);
   }
   if (elements.backgroundNextButton) {
     elements.backgroundNextButton.addEventListener('click', handleBackgroundNextClick);
