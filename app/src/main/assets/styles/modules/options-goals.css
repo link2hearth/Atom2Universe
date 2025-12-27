@@ -82,6 +82,14 @@ body.theme-aurora {
   gap: 0.8rem;
 }
 
+body.favorite-background-active #options .option-card {
+  background: rgba(8, 12, 22, 0.75);
+}
+
+body.theme-light.favorite-background-active #options .option-card {
+  background: rgba(255, 255, 255, 0.82);
+}
+
 .option-card__content {
   display: flex;
   flex-direction: column;
