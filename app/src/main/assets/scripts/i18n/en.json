@@ -796,15 +796,21 @@
             "description": "Rotate the pipes to connect the full pipeline without leaks.",
             "cta": "Connect"
           },
-          "colorStack": {
-            "aria": "Open the Color Stack mini-game",
-            "title": "Color Stack",
-            "description": "Stack and sort the discs until every column holds a single colour.",
-            "cta": "Sort"
-          },
-          "motocross": {
-            "aria": "Open the Motocross procedural prototype",
-            "title": "Motocross",
+        "colorStack": {
+          "aria": "Open the Color Stack mini-game",
+          "title": "Color Stack",
+          "description": "Stack and sort the discs until every column holds a single colour.",
+          "cta": "Sort"
+        },
+        "circles": {
+          "aria": "Open the Circles mini-game",
+          "title": "Circles",
+          "description": "Rotate the coloured rings and realign each orbit without losing the link to the outer ring.",
+          "cta": "Align"
+        },
+        "motocross": {
+          "aria": "Open the Motocross procedural prototype",
+          "title": "Motocross",
             "description": "Assemble a block-based track and ride the experimental bike across every jump.",
             "cta": "Ride"
           },
@@ -3646,32 +3652,9 @@
         "cardLabel": "{rank} of {suit}"
       },
       "dice": {
-        "status": {
-          "start": "Roll the dice to begin.",
-          "rollsLeft": "Rolls left: {rolls}. Select dice to hold or roll again.",
-          "autoScored": "Picked {category} for {score} points. Current total: {total}.",
-          "noRolls": "No rolls left—scoring current hand.",
-          "dieHeld": "Die {index} held.",
-          "dieReleased": "Die {index} released.",
-          "holdsCleared": "All dice released.",
-          "needRoll": "Roll at least once before scoring.",
-          "categoryLocked": "Locked {category} for {score} points.",
-          "gameComplete": "Game complete! Final score: {score}.",
-          "resume": "Game resumed. Current total: {total}. Roll to continue.",
-          "newGame": "New game ready. Roll to begin.",
-          "ticketsAwarded": "Converted previous score ({score}) into {tickets} gacha ticket{suffix}. New game ready.",
-          "ticketsNone": "Previous score ({score}). No gacha tickets this time (needs {points} points each). New game ready."
-        },
-        "die": {
-          "available": "Die {index} showing {value}.",
-          "held": "Die {index} showing {value}, held."
-        },
         "rewards": {
           "vsAiVictory": "Victory against the AI! +{count} gacha ticket{suffix}."
-        },
-        "categoryAction": "Lock {score} points in {category}.",
-        "categoryLockedAria": "{category} locked for {score} points.",
-        "categoryDisabled": "{category} unavailable until you roll."
+        }
       },
       "bigger": {
         "rewardToast": "512 marble forged! {tickets} earned."
