@@ -204,10 +204,14 @@
 
   const VISUAL_EFFECTS_CONFIG = readObject(ARCADE_CONFIG.visualEffects, {});
   const IMPACT_PARTICLES_CONFIG = readObject(ARCADE_CONFIG.impactParticles, {});
+  const PERFORMANCE_CONFIG = readObject(ARCADE_CONFIG.performance, {});
   const SCREEN_PULSE_ENABLED = VISUAL_EFFECTS_CONFIG.enableScreenPulse === true;
   const GLOW_EFFECTS_ENABLED = VISUAL_EFFECTS_CONFIG.enableGlow === true;
   const SHOCKWAVE_ENABLED = VISUAL_EFFECTS_CONFIG.enableShockwave === true;
   const BALL_GHOST_ENABLED = VISUAL_EFFECTS_CONFIG.enableBallGhost === true;
+  const MAX_FPS = readNumber(PERFORMANCE_CONFIG.maxFps, 60, { min: 15, max: 120, round: 'round' });
+  const FRAME_INTERVAL_MS = MAX_FPS > 0 ? 1000 / MAX_FPS : 0;
+  const MAX_FRAME_DELTA_MS = readNumber(PERFORMANCE_CONFIG.maxDeltaMs, 32, { min: 16, max: 100 });
 
   const degreesToRadians = degrees => (Math.PI / 180) * degrees;
 
@@ -1627,6 +1631,8 @@
       this.pendingResume = false;
       this.running = false;
       this.lastTimestamp = 0;
+      this.lastFrameTime = 0;
+      this.frameIntervalMs = FRAME_INTERVAL_MS;
       this.animationFrameId = null;
       this.width = 0;
       this.height = 0;
@@ -2640,6 +2646,7 @@
       if (this.running) return;
       this.running = true;
       this.lastTimestamp = getHighResolutionTime();
+      this.lastFrameTime = this.lastTimestamp;
       this.animationFrameId = requestAnimationFrame(this.handleFrame);
     }
 
@@ -2647,6 +2654,7 @@
       if (!this.running) return;
       this.running = false;
       this.lastTimestamp = 0;
+      this.lastFrameTime = 0;
       if (this.animationFrameId != null) {
         cancelAnimationFrame(this.animationFrameId);
         this.animationFrameId = null;
@@ -2661,8 +2669,15 @@
       // the gameplay speed. Using the same high-resolution clock everywhere keeps delta
       // computations consistent regardless of platform quirks.
       const now = getHighResolutionTime();
-      const delta = Math.max(0, Math.min(32, now - this.lastTimestamp));
+      if (this.frameIntervalMs > 0 && this.lastFrameTime) {
+        if (now - this.lastFrameTime < this.frameIntervalMs) {
+          this.animationFrameId = requestAnimationFrame(this.handleFrame);
+          return;
+        }
+      }
+      const delta = Math.max(0, Math.min(MAX_FRAME_DELTA_MS, now - this.lastTimestamp));
       this.lastTimestamp = now;
+      this.lastFrameTime = now;
       this.update(delta, now);
       this.render(now);
       this.animationFrameId = requestAnimationFrame(this.handleFrame);
