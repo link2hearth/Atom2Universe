@@ -1535,19 +1535,19 @@ const GAME_CONFIG = {
     scale: {
       default: 'normal',
       options: [
-        { id: 'small', factor: 0.75 },
+        { id: 'small', factor: 0.85 },
         { id: 'normal', factor: 1 },
-        { id: 'large', factor: 1.25 },
-        { id: 'x2', factor: 1.6 }
+        { id: 'large', factor: 1.2 },
+        { id: 'x2', factor: 1.45 }
       ]
     },
     textScale: {
       default: 'normal',
       options: [
-        { id: 'compact', factor: 1 },
-        { id: 'normal', factor: 1.1 },
-        { id: 'comfortable', factor: 1.5 },
-        { id: 'reading', factor: 2 }
+        { id: 'compact', factor: 0.9 },
+        { id: 'normal', factor: 1 },
+        { id: 'comfortable', factor: 1.35 },
+        { id: 'reading', factor: 1.75 }
       ]
     },
     /**
