@@ -14,5 +14,21 @@
       "intervalMeters": 500,
       "ticketAmount": 1
     }
+  },
+  "_comment": "Réglages caméra pour le mini-jeu Motocross (zoom/centrage).",
+  "camera": {
+    "lookAhead": 0.24,
+    "offsetY": 180,
+    "smooth": 6.5,
+    "zoomSmooth": 5.2,
+    "verticalAnchor": 0.55,
+    "zoomMin": 0.48,
+    "zoomMax": 1,
+    "trackWindowBehind": 420,
+    "trackWindowAhead": 960,
+    "topMargin": 140,
+    "bottomMargin": 220,
+    "smallScreenHeight": 720,
+    "zoomMinSmallScreen": 0.4
   }
 }
