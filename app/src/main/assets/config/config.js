@@ -1348,7 +1348,7 @@ const RAW_GACHA_CONFIG = loadConfigJson('./config/systems/gacha.json', {
 const GACHA_SYSTEM_CONFIG = {
   ticketCost: RAW_GACHA_CONFIG.ticketCost ?? 1,
   // Active/désactive l'animation de fumée sur le bloc "vedette" du gacha.
-  featuredSmokeEnabled: RAW_GACHA_CONFIG.featuredSmokeEnabled ?? true,
+  featuredSmokeEnabled: RAW_GACHA_CONFIG.featuredSmokeEnabled ?? false,
   bonusImages: {
     folder: RAW_GACHA_CONFIG.bonusImages?.folder ?? 'Assets/Image/Gacha',
     images: Array.isArray(RAW_GACHA_BONUS_IMAGE_CONFIG?.images)
