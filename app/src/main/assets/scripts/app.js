@@ -175,6 +175,7 @@ let localBackgroundItems = [];
 let backgroundRotationQueue = [];
 let backgroundRotationExclusions = new Set();
 let backgroundRotationPoolSize = 0;
+let backgroundRotationHistory = [];
 let backgroundLibraryLabel = '';
 let backgroundLibraryStatus = 'idle';
 let backgroundRotationMs = readStoredBackgroundDuration();
