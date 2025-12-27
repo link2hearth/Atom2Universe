@@ -12204,6 +12204,24 @@ function cancelArcadeHubCardDrag(options = {}) {
   }
 }
 
+function normalizeArcadeHubPointerId(pointerId) {
+  return Number.isFinite(pointerId) ? pointerId : null;
+}
+
+function isArcadeHubPointerEventMatch(event, state) {
+  if (!state || !event) {
+    return false;
+  }
+  const pointerId = normalizeArcadeHubPointerId(event.pointerId);
+  if (state.pointerId !== null) {
+    return pointerId === state.pointerId;
+  }
+  if (state.pointerType && event.pointerType && state.pointerType !== event.pointerType) {
+    return false;
+  }
+  return true;
+}
+
 function handleArcadeHubCardPointerDown(event, card) {
   if (!card || activeArcadeHubCardDrag) {
     return;
@@ -12222,7 +12240,7 @@ function handleArcadeHubCardPointerDown(event, card) {
   activeArcadeHubCardDrag = {
     card,
     container,
-    pointerId: event.pointerId,
+    pointerId: normalizeArcadeHubPointerId(event.pointerId),
     pointerType: event.pointerType || '',
     originLeft: rect.left,
     originTop: rect.top,
@@ -12268,7 +12286,7 @@ function getArcadeHubCardMoveThreshold(state) {
 
 function handleArcadeHubPointerMove(event) {
   const state = activeArcadeHubCardDrag;
-  if (!state || event.pointerId !== state.pointerId) {
+  if (!isArcadeHubPointerEventMatch(event, state)) {
     return;
   }
   state.lastClientX = event.clientX;
@@ -12292,7 +12310,7 @@ function handleArcadeHubPointerMove(event) {
 
 function handleArcadeHubPointerUp(event) {
   const state = activeArcadeHubCardDrag;
-  if (!state || event.pointerId !== state.pointerId) {
+  if (!isArcadeHubPointerEventMatch(event, state)) {
     return;
   }
   if (state.dragging && event.cancelable) {
@@ -12303,7 +12321,7 @@ function handleArcadeHubPointerUp(event) {
 
 function handleArcadeHubPointerCancel(event) {
   const state = activeArcadeHubCardDrag;
-  if (!state || event.pointerId !== state.pointerId) {
+  if (!isArcadeHubPointerEventMatch(event, state)) {
     return;
   }
   cancelArcadeHubCardDrag({ suppressClick: true });
