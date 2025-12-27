@@ -227,8 +227,13 @@ function activateArcadePageAfterLoad(pageId) {
   if (document.body?.dataset.activePage !== pageId) {
     return;
   }
-  if (pageId === 'arcade' && particulesGame) {
-    particulesGame.onEnter();
+  if (pageId === 'arcade') {
+    if (typeof initParticulesGame === 'function') {
+      initParticulesGame();
+    }
+    if (particulesGame) {
+      particulesGame.onEnter();
+    }
   }
   if (pageId === 'wave') {
     ensureWaveGame();
