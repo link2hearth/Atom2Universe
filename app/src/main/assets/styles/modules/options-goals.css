@@ -322,7 +322,7 @@ body.theme-aurora .option-card__collapse-button:focus-visible {
 .option-card--backups .option-link-button,
 .option-card--custom-pages .option-link-button,
 .option-card--notes .option-link-button {
-  --ui-control-scale: 0.5;
+  --ui-control-scale: 0.7;
 }
 
 body.theme-light .option-card__description {
