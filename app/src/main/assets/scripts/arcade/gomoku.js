@@ -100,6 +100,7 @@
     lastMove: null,
     autosaveTimerId: null,
     languageListenerAttached: false,
+    boardClickBound: false,
     languageHandler: null
   };
 
@@ -108,6 +109,7 @@
   onReady(initialize);
   if (typeof window !== 'undefined') {
     window.initGomokuArcade = initialize;
+    window.ensureGomokuArcade = ensureBoardInteractive;
   }
   function normalizeConfig(raw) {
     const board = { ...DEFAULT_BOARD_SETTINGS };
@@ -206,6 +208,30 @@
     attachLanguageListener();
   }
 
+  function ensureBoardInteractive() {
+    if (!gomokuInitialized) {
+      initialize();
+      return;
+    }
+    if (!state.elements || !state.elements.board) {
+      gomokuInitialized = false;
+      initialize();
+      return;
+    }
+    const hasCells = state.elements.board.querySelector('button.gomoku__cell');
+    if (!hasCells) {
+      buildBoard();
+      if (!state.board) {
+        state.board = Board.empty(state.boardSize);
+      }
+      renderEverything();
+    }
+    if (!state.boardClickBound) {
+      state.elements.board.addEventListener('click', handleBoardClick);
+      state.boardClickBound = true;
+    }
+  }
+
   function getElements() {
     const root = document.querySelector('[data-gomoku-root]');
     if (!root) {
@@ -280,7 +306,10 @@
       restartButton.addEventListener('click', () => resetGame(false));
     }
 
-    board.addEventListener('click', handleBoardClick);
+    if (!state.boardClickBound) {
+      board.addEventListener('click', handleBoardClick);
+      state.boardClickBound = true;
+    }
   }
   function buildBoard() {
     if (!state.elements || !state.elements.board) {

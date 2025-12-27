@@ -310,6 +310,9 @@ function activateArcadePageAfterLoad(pageId) {
     if (typeof initGomokuArcade === 'function') {
       initGomokuArcade();
     }
+    if (typeof ensureGomokuArcade === 'function') {
+      ensureGomokuArcade();
+    }
   }
   if (pageId === 'gameOfLife') {
     const gameOfLife = ensureGameOfLifeGame();
