@@ -1104,9 +1104,7 @@ body.view-sudoku .status-bar {
   pointer-events: none;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-size: calc(
-    clamp(0.58rem, 0.98vw, 0.82rem) * var(--frenzy-scale) * var(--font-text-scale-factor, 1)
-      * var(--font-digits-scale-factor, 1)
-      * var(--font-text-font-normalizer, 1)
+    clamp(0.58rem, 0.98vw, 0.82rem) * var(--frenzy-scale) * var(--font-digits-size-factor, 1)
   );
   color: rgba(220, 236, 255, 0.78);
   letter-spacing: 0.04em;
@@ -1159,7 +1157,7 @@ body.view-sudoku .status-bar {
 
 .frenzy-status__timer {
   font-size: calc(
-    clamp(0.52rem, 0.9vw, 0.72rem) * var(--frenzy-scale) * var(--font-text-scale-factor, 1)
+    clamp(0.52rem, 0.9vw, 0.72rem) * var(--frenzy-scale) * var(--font-digits-size-factor, 1)
   );
   font-weight: 500;
   opacity: 0.78;
