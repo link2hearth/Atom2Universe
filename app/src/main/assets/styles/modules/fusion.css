@@ -25,6 +25,7 @@
   --fusion-log-success-border: rgba(110, 230, 190, 0.5);
   --fusion-log-failure-bg: rgba(88, 36, 36, 0.48);
   --fusion-log-failure-border: rgba(230, 120, 110, 0.48);
+  --fusion-font-scale: 0.5;
 }
 
 .page--fusion.active {
@@ -35,7 +36,7 @@
 
 .fusion-title {
   font-family: var(--font-text, 'Orbitron', sans-serif);
-  font-size: calc(var(--font-size-scale-factor, 1) * clamp(1.4rem, 3vw, 1.85rem));
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * clamp(1.4rem, 3vw, 1.85rem));
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin: 0;
@@ -66,7 +67,7 @@
   background: var(--fusion-button-bg, linear-gradient(120deg, #5079ff, #6ebeff));
   color: var(--fusion-button-color, #f4f7ff);
   font-weight: 600;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.85rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.85rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
@@ -127,13 +128,13 @@
 
 .fusion-card__title {
   margin: 0;
-  font-size: calc(var(--font-size-scale-factor, 1) * 1.1rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 1.1rem);
   font-weight: 600;
 }
 
 .fusion-card__chance {
   margin: 0;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.85rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.85rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--fusion-card-chance-color, rgba(238, 241, 255, 0.66));
@@ -150,7 +151,7 @@
 
 .fusion-card__description {
   margin: 0;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.9rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.9rem);
   line-height: 1.5;
   color: var(--fusion-card-description-color, rgba(238, 241, 255, 0.72));
 }
@@ -159,13 +160,13 @@
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.95rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.95rem);
 }
 
 .fusion-requirement__symbol {
   font-family: var(--font-text, 'Orbitron', sans-serif);
   letter-spacing: 0.08em;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.85rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.85rem);
   text-transform: uppercase;
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
@@ -179,14 +180,14 @@
 }
 
 .fusion-requirement__availability {
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.8rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.8rem);
   color: var(--fusion-availability-color, rgba(238, 241, 255, 0.6));
 }
 
 .fusion-card__stats,
 .fusion-card__bonus {
   margin: 0;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.85rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.85rem);
   color: var(--fusion-muted-color, rgba(238, 241, 255, 0.72));
 }
 
@@ -209,6 +210,7 @@
   background: var(--fusion-button-bg, linear-gradient(120deg, #5079ff, #6ebeff));
   color: var(--fusion-button-color, #f4f7ff);
   font-weight: 600;
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.85rem);
   letter-spacing: 0.04em;
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
@@ -233,7 +235,7 @@
 }
 
 .fusion-card__feedback {
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.82rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.82rem);
   color: var(--fusion-feedback-color, rgba(238, 241, 255, 0.65));
 }
 
@@ -248,7 +250,7 @@
   background: var(--fusion-empty-bg, rgba(26, 34, 68, 0.55));
   color: var(--fusion-empty-color, rgba(238, 241, 255, 0.75));
   text-align: center;
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.95rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.95rem);
   box-shadow: inset 0 0 0 1px var(--fusion-empty-border, rgba(130, 170, 255, 0.15));
 }
 
@@ -258,7 +260,7 @@
   border-radius: 0.9rem;
   background: var(--fusion-log-bg, rgba(32, 44, 88, 0.35));
   color: var(--fusion-log-color, rgba(238, 241, 255, 0.82));
-  font-size: calc(var(--font-size-scale-factor, 1) * 0.9rem);
+  font-size: calc(var(--font-size-scale-factor, 1) * var(--fusion-font-scale, 1) * 0.9rem);
   box-shadow: var(--fusion-log-shadow, 0 10px 22px rgba(4, 8, 20, 0.45));
   border: 1px solid var(--fusion-log-border, rgba(130, 170, 255, 0.18));
 }
