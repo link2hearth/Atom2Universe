@@ -369,7 +369,8 @@
     state.autosaveLoaded = true;
   }
 
-  function resetRun() {
+  function resetRun(options = {}) {
+    const { showOverlay: shouldShowOverlay = true, outcome = 'ready' } = options;
     state.running = false;
     state.started = false;
     state.cat.x = CANVAS_WIDTH * 0.25;
@@ -389,10 +390,12 @@
     state.nextBird = randomInRange(state.config.birdInterval.min, state.config.birdInterval.max);
     state.lastTimestamp = null;
     state.floorY = CANVAS_HEIGHT - state.config.groundHeight;
-    state.lastOutcome = 'ready';
+    state.lastOutcome = outcome;
     updateHud();
-    showOverlay('index.sections.jumpingCat.overlay.readyTitle', 'Jumping Cat',
-      'index.sections.jumpingCat.overlay.ready', 'Touchez ou appuyez sur espace pour commencer');
+    if (shouldShowOverlay) {
+      showOverlay('index.sections.jumpingCat.overlay.readyTitle', 'Jumping Cat',
+        'index.sections.jumpingCat.overlay.ready', 'Touchez ou appuyez sur espace pour commencer');
+    }
   }
 
   function startRun() {
@@ -425,6 +428,7 @@
       : 'index.sections.jumpingCat.overlay.gameOverTitle';
     const descriptionKey = messageKey || 'index.sections.jumpingCat.overlay.defaultMessage';
     showOverlay(titleKey, hasNewRecord ? 'Nouveau record' : 'Game over', descriptionKey, fallback);
+    resetRun({ showOverlay: false, outcome: 'gameOver' });
   }
 
   function showOverlay(titleKey, titleFallback, messageKey, messageFallback) {
