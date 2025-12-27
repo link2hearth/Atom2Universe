@@ -174,10 +174,7 @@
 .gacha-ticket-counter__value {
   white-space: nowrap;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
-  font-size: calc(
-    1.12em * var(--font-size-scale-factor, 1) * var(--font-digits-scale-factor, 1)
-      * var(--gacha-ui-scale, 1)
-  );
+  font-size: calc(1.12em * var(--font-digits-size-factor, 1) * var(--gacha-ui-scale, 1));
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1;
