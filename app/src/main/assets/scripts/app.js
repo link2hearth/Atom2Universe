@@ -836,7 +836,7 @@ const UI_SCALE_CONFIG = (() => {
     x2: Object.freeze({ id: 'x2', factor: 2 })
   };
   const fallback = {
-    defaultId: 'large',
+    defaultId: 'normal',
     choices: Object.freeze(fallbackChoices)
   };
 

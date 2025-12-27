@@ -8,10 +8,6 @@ const TEXT_FONT_CHOICES = Object.freeze({
     id: 'alien',
     stack: "'Alien', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   },
-  'aquiline-two': {
-    id: 'aquiline-two',
-    stack: "'Aquiline Two', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
   chomsky: {
     id: 'chomsky',
     stack: "'Chomsky', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
@@ -35,10 +31,6 @@ const TEXT_FONT_CHOICES = Object.freeze({
   'digittech16-regular': {
     id: 'digittech16-regular',
     stack: "'DigitTech16 Regular', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
-  'fair-prosper': {
-    id: 'fair-prosper',
-    stack: "'Fair Prosper', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   },
   'little-days': {
     id: 'little-days',
@@ -80,22 +72,6 @@ const TEXT_FONT_CHOICES = Object.freeze({
     id: 'dealerplate-california',
     stack: "'dealerplate california', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
   },
-  exmouth: {
-    id: 'exmouth',
-    stack: "'Exmouth', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
-  hobbiton: {
-    id: 'hobbiton',
-    stack: "'Hobbiton', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
-  hobbitonbrushhand: {
-    id: 'hobbitonbrushhand',
-    stack: "'Hobbiton Brush Hand', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
-  'south-park': {
-    id: 'south-park',
-    stack: "'South Park', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  },
   'to-japan': {
     id: 'to-japan',
     stack: "'To Japan', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
@@ -118,11 +94,6 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     id: 'alien',
     stack: "'Alien', 'DigitTech16 Regular', 'Orbitron', sans-serif",
     compactStack: "'Alien', 'DigitTech16 Regular', 'Orbitron', monospace"
-  },
-  'aquiline-two': {
-    id: 'aquiline-two',
-    stack: "'Aquiline Two', 'DigitTech16 Regular', 'Orbitron', sans-serif",
-    compactStack: "'Aquiline Two', 'DigitTech16 Regular', 'Orbitron', monospace"
   },
   chomsky: {
     id: 'chomsky',
@@ -153,11 +124,6 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     id: 'digittech16-regular',
     stack: "'DigitTech16 Regular', 'Orbitron', sans-serif",
     compactStack: "'DigitTech16 Regular', 'Orbitron', monospace"
-  },
-  'fair-prosper': {
-    id: 'fair-prosper',
-    stack: "'Fair Prosper', 'DigitTech16 Regular', 'Orbitron', sans-serif",
-    compactStack: "'Fair Prosper', 'DigitTech16 Regular', 'Orbitron', monospace"
   },
   'little-days': {
     id: 'little-days',
@@ -208,26 +174,6 @@ const DIGIT_FONT_CHOICES = Object.freeze({
     id: 'dealerplate-california',
     stack: "'dealerplate california', 'DigitTech16 Regular', 'Orbitron', sans-serif",
     compactStack: "'dealerplate california', 'DigitTech16 Regular', 'Orbitron', monospace"
-  },
-  exmouth: {
-    id: 'exmouth',
-    stack: "'Exmouth', 'DigitTech16 Regular', 'Orbitron', sans-serif",
-    compactStack: "'Exmouth', 'DigitTech16 Regular', 'Orbitron', monospace"
-  },
-  hobbiton: {
-    id: 'hobbiton',
-    stack: "'Hobbiton', 'DigitTech16 Regular', 'Orbitron', sans-serif",
-    compactStack: "'Hobbiton', 'DigitTech16 Regular', 'Orbitron', monospace"
-  },
-  hobbitonbrushhand: {
-    id: 'hobbitonbrushhand',
-    stack: "'Hobbiton Brush Hand', 'DigitTech16 Regular', 'Orbitron', sans-serif",
-    compactStack: "'Hobbiton Brush Hand', 'DigitTech16 Regular', 'Orbitron', monospace"
-  },
-  'south-park': {
-    id: 'south-park',
-    stack: "'South Park', 'DigitTech16 Regular', 'Orbitron', sans-serif",
-    compactStack: "'South Park', 'DigitTech16 Regular', 'Orbitron', monospace"
   },
   'to-japan': {
     id: 'to-japan',

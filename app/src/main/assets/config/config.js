@@ -1533,7 +1533,7 @@ const GAME_CONFIG = {
    */
   ui: {
     scale: {
-      default: 'large',
+      default: 'normal',
       options: [
         { id: 'small', factor: 0.75 },
         { id: 'normal', factor: 1 },
