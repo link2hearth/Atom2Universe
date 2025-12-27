@@ -768,6 +768,22 @@ function updateHeaderBannerToggleLabel(collapsed) {
   }
 }
 
+function updateHeaderBackgroundOffset() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  const root = document.documentElement;
+  if (!root || !elements.appHeader) {
+    return;
+  }
+  const rect = elements.appHeader.getBoundingClientRect?.();
+  const height = Math.max(
+    elements.appHeader.offsetHeight || 0,
+    rect?.height || 0
+  );
+  root.style.setProperty('--favorite-background-top', `${height}px`);
+}
+
 function setHeaderCollapsed(collapsed, options = {}) {
   if (!elements.appHeader || !elements.headerBannerToggle) {
     return;
@@ -816,6 +832,7 @@ function setHeaderCollapsed(collapsed, options = {}) {
   elements.headerBannerToggle.setAttribute('aria-pressed', shouldCollapse ? 'true' : 'false');
   elements.headerBannerToggle.setAttribute('data-state', shouldCollapse ? 'collapsed' : 'expanded');
   updateHeaderBannerToggleLabel(shouldCollapse);
+  updateHeaderBackgroundOffset();
   if (options.persist !== false) {
     writeStoredHeaderCollapsed(shouldCollapse);
   }
@@ -835,10 +852,17 @@ function initHeaderBannerToggle() {
   }
   const initiallyCollapsed = readStoredHeaderCollapsed(false);
   setHeaderCollapsed(initiallyCollapsed, { persist: false, force: true });
+  updateHeaderBackgroundOffset();
   elements.headerBannerToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleHeaderCollapsed();
   });
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', updateHeaderBackgroundOffset, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateHeaderBackgroundOffset);
+    }
+  }
 }
 
 function subscribeHeaderBannerLanguageUpdates() {

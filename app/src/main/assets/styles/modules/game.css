@@ -44,7 +44,7 @@ body.theme-aurora .page--void {
 
 .favorite-background {
   position: fixed;
-  top: var(--app-header-offset, 0px);
+  top: var(--favorite-background-top, var(--app-header-offset, 0px));
   left: 0;
   right: 0;
   bottom: 0;
