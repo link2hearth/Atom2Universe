@@ -1980,10 +1980,16 @@
       }
     }
 
-    async prepareSccPlayback({ context, audioStartTime, startOffset, playbackSpeed }) {
+    async prepareSccPlayback({
+      context,
+      startOffset,
+      playbackSpeed,
+      startDelaySeconds = 0.08,
+    }) {
       const engine = await this.ensureSccEngineReady();
       const renderResult = await this.renderSccIfNeeded({ speed: playbackSpeed });
       const buffer = engine.createAudioBuffer(context, renderResult);
+      const audioStartTime = context.currentTime + Math.max(0, startDelaySeconds);
       this.stopSccPlayback();
       const source = context.createBufferSource();
       source.buffer = buffer;
@@ -2010,6 +2016,7 @@
       this.sccPlaybackSource = source;
       this.sccPlaybackGain = gainNode;
       this.sccPlaybackDuration = renderResult.duration;
+      return { audioStartTime, duration: renderResult.duration };
     }
 
     isMidiFile(file) {
@@ -9546,24 +9553,19 @@
             : this.getEffectiveDuration(this.timeline, playbackSpeed));
         const previewLead = Math.max(0, this.previewLeadSeconds || 0);
         const finishDelaySeconds = Math.max(0, (effectiveDuration || 0) + previewLead + 0.6);
-        const baseStartTime = context.currentTime + 0.08;
-        const audioStartTime = baseStartTime;
-        const schedulerStartTime = baseStartTime - (startOffset / playbackSpeed);
-        this.playStartTime = audioStartTime;
-        this.playStartOffset = startOffset;
-        this.progressMonitorSpeed = playbackSpeed;
-        this.progressDuration = timelineDuration;
-        this.lastKnownPosition = startOffset;
-        this.pendingSeekSeconds = startOffset;
-        this.refreshProgressControls(this.timeline);
+        const startDelaySeconds = 0.08;
+        let audioStartTime = context.currentTime + startDelaySeconds;
         if (this.engineMode === 'scc') {
           try {
-            await this.prepareSccPlayback({
+            const prepared = await this.prepareSccPlayback({
               context,
-              audioStartTime,
               startOffset,
               playbackSpeed,
+              startDelaySeconds,
             });
+            if (prepared && Number.isFinite(prepared.audioStartTime)) {
+              audioStartTime = prepared.audioStartTime;
+            }
           } catch (error) {
             console.error('Unable to prepare SCC playback', error);
             this.setStatusMessage(
@@ -9578,6 +9580,14 @@
             return;
           }
         }
+        const schedulerStartTime = audioStartTime - (startOffset / playbackSpeed);
+        this.playStartTime = audioStartTime;
+        this.playStartOffset = startOffset;
+        this.progressMonitorSpeed = playbackSpeed;
+        this.progressDuration = timelineDuration;
+        this.lastKnownPosition = startOffset;
+        this.pendingSeekSeconds = startOffset;
+        this.refreshProgressControls(this.timeline);
         this.startScheduler(schedulerStartTime, startOffset);
         this.startProgressMonitor(audioStartTime, startOffset, playbackSpeed, timelineDuration);
 
