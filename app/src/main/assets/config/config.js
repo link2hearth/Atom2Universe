@@ -208,6 +208,7 @@ const RADIO_SETTINGS = Object.freeze({
  * - `proxyBaseUrls` : proxys HTTP facultatifs pour contourner le CORS.
  * - `refreshIntervalMs` : fréquence de rafraîchissement automatique de la galerie.
  * - `maxImageBytes` : taille maximale autorisée pour chaque image (en octets).
+ * - `favoriteBackgroundPageIds` : pages qui affichent l’image de fond sélectionnée.
  */
 const IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
@@ -217,6 +218,19 @@ const IMAGE_FEED_SETTINGS = Object.freeze({
   maxImageBytes: 10 * 1024 * 1024,
   favoriteBackgroundRotationMs: 5 * 60 * 1000,
   favoriteBackgroundEnabledByDefault: false,
+  favoriteBackgroundPageIds: [
+    'game',
+    'shop',
+    'fusion',
+    'info',
+    'options',
+    'arcadeHub',
+    'solitaire',
+    'quantum2048',
+    'colorStack',
+    'blackjack',
+    'roulette'
+  ],
   proxyBaseUrls: [
     'https://api.allorigins.win/raw?url=',
     'https://cors.isomorphic-git.org/'
