@@ -40,14 +40,6 @@
 }
 
 @font-face {
-  font-family: 'Aquiline Two';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/AquilineTwo.ttf') format('truetype');
-}
-
-@font-face {
   font-family: 'Chomsky';
   font-style: normal;
   font-weight: 400;
@@ -85,14 +77,6 @@
   font-weight: 400;
   font-display: swap;
   src: url('../fonts/Designer-Notes.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Fair Prosper';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Fair Prosper.ttf') format('truetype');
 }
 
 @font-face {
@@ -175,36 +159,6 @@
   src: url('../fonts/dealerplate california.otf') format('opentype');
 }
 
-@font-face {
-  font-family: 'Exmouth';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/exmouth.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Hobbiton';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/hobbiton.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Hobbiton Brush Hand';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/hobbitonbrushhand.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'South Park';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/south park.ttf') format('truetype');
-}
 @font-face {
   font-family: 'To Japan';
   font-style: normal;

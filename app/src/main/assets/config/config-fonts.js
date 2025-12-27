@@ -10,14 +10,12 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
     overrides: Object.freeze({
       orbitron: 0.8,
       alien: 1.2,
-      'aquiline-two': 1,
       chomsky: 1.5,
       'coffee-spark': 1.4,
       'creativo-regular': 1.2,
       'darling-coffee': 1.2,
       'designer-notes': 1.5,
       'digittech16-regular': 1,
-      'fair-prosper': 1.5,
       'little-days': 1.8,
       'roboto-condensed': 1.5,
       'slow-play': 1.5,
@@ -28,10 +26,6 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
       supermario256: 1.4,
       alamain1: 1,
       'dealerplate-california': 1.4,
-      exmouth: 1.8,
-      hobbiton: 1.4,
-      hobbitonbrushhand: 1.5,
-      'south-park': 1.4,
       'to-japan': 1,
       'science-gothic': 1.4
     })
@@ -41,14 +35,12 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
     overrides: Object.freeze({
       orbitron: 1,
       alien: 1,
-      'aquiline-two': 1,
       chomsky: 1,
       'coffee-spark': 1,
       'creativo-regular': 1,
       'darling-coffee': 1,
       'designer-notes': 1,
       'digittech16-regular': 1,
-      'fair-prosper': 1,
       'little-days': 1,
       'roboto-condensed': 1,
       'slow-play': 1,
@@ -59,10 +51,6 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
       supermario256: 1,
       alamain1: 1,
       'dealerplate-california': 1,
-      exmouth: 1,
-      hobbiton: 1,
-      hobbitonbrushhand: 1,
-      'south-park': 1,
       'to-japan': 1,
       'science-gothic': 1
     })
