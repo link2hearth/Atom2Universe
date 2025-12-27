@@ -223,6 +223,112 @@ function updateMusicTabs(activePageId) {
   });
 }
 
+function activateArcadePageAfterLoad(pageId) {
+  if (document.body?.dataset.activePage !== pageId) {
+    return;
+  }
+  if (pageId === 'arcade') {
+    if (typeof initParticulesGame === 'function') {
+      initParticulesGame();
+    }
+    if (particulesGame) {
+      particulesGame.onEnter();
+    }
+  }
+  if (pageId === 'wave') {
+    ensureWaveGame();
+    waveGame?.onEnter();
+  }
+  if (pageId === 'bigger') {
+    ensureBiggerGame();
+    biggerGame?.onEnter();
+  }
+  if (pageId === 'balance') {
+    ensureBalanceGame();
+    balanceGame?.onEnter();
+  }
+  if (pageId === 'quantum2048') {
+    ensureQuantum2048Game();
+    quantum2048Game?.onEnter();
+  }
+  if (pageId === 'escape') {
+    ensureEscapeGame();
+  }
+  if (pageId === 'starBridges') {
+    const starBridges = ensureStarBridgesGame();
+    starBridges?.onEnter?.();
+  }
+  if (pageId === 'starsWar') {
+    const starsWar = ensureStarsWarGame();
+    starsWar?.onEnter?.();
+  }
+  if (pageId === 'jumpingCat') {
+    const jumpingCat = ensureJumpingCatGame();
+    jumpingCat?.onEnter?.();
+  }
+  if (pageId === 'reflex') {
+    const reflex = ensureReflexGame();
+    reflex?.onEnter?.();
+  }
+  if (pageId === 'pipeTap') {
+    const pipeTap = ensurePipeTapGame();
+    pipeTap?.onEnter?.();
+  }
+  if (pageId === 'colorStack') {
+    const colorStack = ensureColorStackGame();
+    colorStack?.onEnter?.();
+  }
+  if (pageId === 'hex') {
+    const hex = ensureHexGame();
+    hex?.onEnter?.();
+  }
+  if (pageId === 'motocross') {
+    const motocross = ensureMotocrossGame();
+    motocross?.onEnter?.();
+  }
+  if (pageId === 'twins') {
+    const twins = ensureTwinsGame();
+    twins?.onEnter?.();
+  }
+  if (pageId === 'sokoban') {
+    const sokoban = ensureSokobanGame();
+    sokoban?.onEnter?.();
+  }
+  if (pageId === 'taquin') {
+    const taquin = ensureTaquinGame();
+    taquin?.onEnter?.();
+  }
+  if (pageId === 'link') {
+    const link = ensureLinkGame();
+    link?.onEnter?.();
+  }
+  if (pageId === 'lightsOut') {
+    const lightsOut = ensureLightsOutGame();
+    lightsOut?.onEnter?.();
+  }
+  if (pageId === 'gomoku') {
+    if (typeof initGomokuArcade === 'function') {
+      initGomokuArcade();
+    }
+    if (typeof ensureGomokuArcade === 'function') {
+      ensureGomokuArcade();
+    }
+  }
+  if (pageId === 'gameOfLife') {
+    const gameOfLife = ensureGameOfLifeGame();
+    gameOfLife?.onEnter?.();
+  }
+}
+
+function requestArcadeScriptForPage(pageId) {
+  if (typeof requestArcadeScript !== 'function') {
+    return;
+  }
+  requestArcadeScript(pageId, {
+    onLoaded: () => activateArcadePageAfterLoad(pageId)
+  });
+}
+
 function showPage(pageId) {
   if (pageId === 'midi' && !isMusicModuleEnabled()) {
     if (document.body?.dataset?.activePage !== 'options') {
@@ -313,6 +419,7 @@ function showPage(pageId) {
     writeStoredMusicPagePreference(pageId);
   }
   updateMusicTabs(pageId);
+  requestArcadeScriptForPage(pageId);
   if (pageId === 'info') {
     updateDevKitUI();
   }

@@ -78,6 +78,7 @@
 
   const AUTOSAVE_GAME_ID = 'gomoku';
   const SETTINGS_STORAGE_KEY = 'atom2univers.arcade.gomoku.settings';
+  let gomokuInitialized = false;
 
   const CONFIG = normalizeConfig(RAW_CONFIG);
 
@@ -99,12 +100,17 @@
     lastMove: null,
     autosaveTimerId: null,
     languageListenerAttached: false,
+    boardClickBound: false,
     languageHandler: null
   };
 
   const zobrist = createZobristTable(MAX_BOARD_SIZE);
 
   onReady(initialize);
+  if (typeof window !== 'undefined') {
+    window.initGomokuArcade = initialize;
+    window.ensureGomokuArcade = ensureBoardInteractive;
+  }
   function normalizeConfig(raw) {
     const board = { ...DEFAULT_BOARD_SETTINGS };
     if (raw.board && typeof raw.board === 'object') {
@@ -182,10 +188,14 @@
   }
 
   function initialize() {
+    if (gomokuInitialized) {
+      return;
+    }
     const elements = getElements();
     if (!elements) {
       return;
     }
+    gomokuInitialized = true;
     state.elements = elements;
     buildBoard();
     attachEvents();
@@ -196,6 +206,30 @@
       renderEverything();
     }
     attachLanguageListener();
+  }
+
+  function ensureBoardInteractive() {
+    if (!gomokuInitialized) {
+      initialize();
+      return;
+    }
+    if (!state.elements || !state.elements.board) {
+      gomokuInitialized = false;
+      initialize();
+      return;
+    }
+    const hasCells = state.elements.board.querySelector('button.gomoku__cell');
+    if (!hasCells) {
+      buildBoard();
+      if (!state.board) {
+        state.board = Board.empty(state.boardSize);
+      }
+      renderEverything();
+    }
+    if (!state.boardClickBound) {
+      state.elements.board.addEventListener('click', handleBoardClick);
+      state.boardClickBound = true;
+    }
   }
 
   function getElements() {
@@ -272,7 +306,10 @@
       restartButton.addEventListener('click', () => resetGame(false));
     }
 
-    board.addEventListener('click', handleBoardClick);
+    if (!state.boardClickBound) {
+      board.addEventListener('click', handleBoardClick);
+      state.boardClickBound = true;
+    }
   }
   function buildBoard() {
     if (!state.elements || !state.elements.board) {

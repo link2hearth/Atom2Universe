@@ -2702,8 +2702,18 @@
       menuHeader
     });
 
-    instance.init();
+    const initResult = instance.init();
     window.gameOfLifeArcade = instance;
+    const activateIfReady = () => {
+      if (document.body?.dataset?.activePage === 'gameOfLife') {
+        instance.onEnter();
+      }
+    };
+    if (initResult && typeof initResult.then === 'function') {
+      initResult.then(activateIfReady).catch(() => {});
+    } else {
+      activateIfReady();
+    }
 
     if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
       window.addEventListener('beforeunload', () => {
