@@ -8,7 +8,7 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
   text: Object.freeze({
     default: 1,
     overrides: Object.freeze({
-      orbitron: 0.8,
+      orbitron: 1,
       alien: 1.2,
       chomsky: 1.5,
       'coffee-spark': 1.4,
@@ -26,15 +26,15 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
       supermario256: 1.4,
       alamain1: 1,
       'dealerplate-california': 1.4,
-      'to-japan': 1,
-      'science-gothic': 1.4
+      'to-japan': 1.1,
+      'science-gothic': 1.2
     })
   }),
   digits: Object.freeze({
     default: 1,
     overrides: Object.freeze({
       orbitron: 1,
-      alien: 1,
+      alien: 1.2,
       chomsky: 1,
       'coffee-spark': 1,
       'creativo-regular': 1,
