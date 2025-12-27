@@ -1924,8 +1924,12 @@
         panSpread: [-0.25, -0.1, 0.1, 0.25, 0],
       });
       if (!this.sccInstrumentMapPromise) {
+        const configMapUrl = globalThis.GAME_CONFIG?.audio?.engines?.scc?.instrumentMapUrl;
+        const instrumentMapUrl = typeof configMapUrl === 'string' && configMapUrl.trim()
+          ? configMapUrl.trim()
+          : 'config/audio/scc-instrument-map.json';
         this.sccInstrumentMapPromise = this.sccEngine
-          .loadInstrumentMap('scripts/modules/audio/instrument_map.json')
+          .loadInstrumentMap(instrumentMapUrl)
           .catch((error) => {
             this.sccInstrumentMapPromise = null;
             throw error;
