@@ -693,6 +693,15 @@ function hasLocalBackgrounds() {
   return Array.isArray(localBackgroundItems) && localBackgroundItems.length > 0;
 }
 
+function getCollectionDownloadsItems() {
+  return Array.isArray(collectionDownloadsItems) ? collectionDownloadsItems : [];
+}
+
+function setCollectionDownloadsItems(items = []) {
+  collectionDownloadsItems = Array.isArray(items) ? items : [];
+  renderCollectionDownloadsGallery(collectionDownloadsItems);
+}
+
 function extractFileNameFromUri(uri) {
   if (typeof uri !== 'string') {
     return '';
@@ -774,7 +783,7 @@ function openCollectionDownloadFullscreen(index = 0) {
   elements.collectionDownloadsLightboxImage.src = resolvedUrl;
   elements.collectionDownloadsLightboxImage.alt = altText;
   if (elements.collectionDownloadsLightboxCaption) {
-    elements.collectionDownloadsLightboxCaption.textContent = labelText;
+    elements.collectionDownloadsLightboxCaption.textContent = '';
   }
 
   elements.collectionDownloadsLightbox.removeAttribute('hidden');
@@ -858,7 +867,7 @@ function applyCollectionDownloadImage(imageElement, entry) {
   }
 }
 
-function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
+function renderCollectionDownloadsGallery(items = getCollectionDownloadsItems()) {
   if (!elements.collectionDownloadsGallery || !elements.collectionDownloadsEmpty) {
     return;
   }
@@ -869,7 +878,7 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
   const entries = Array.isArray(items) ? items : [];
   const normalizedEntries = entries
     .map((entry, index) => {
-      const rawUrl = getFullImageSrc(entry);
+      const rawUrl = typeof entry === 'string' ? entry : getFullImageSrc(entry);
       if (!rawUrl) {
         return null;
       }
@@ -944,6 +953,33 @@ function renderCollectionDownloadsGallery(items = getBackgroundItems()) {
 
   if (lightboxWasOpen) {
     openCollectionDownloadFullscreen(collectionDownloadsCurrentIndex);
+  }
+}
+
+function normalizeCollectionDownloadsPayload(payload) {
+  if (typeof payload === 'string') {
+    try {
+      const parsed = JSON.parse(payload);
+      return normalizeCollectionDownloadsPayload(parsed);
+    } catch (error) {
+      console.warn('Unable to parse collection downloads payload', error);
+      return [];
+    }
+  }
+  if (Array.isArray(payload)) {
+    return payload.filter(entry => typeof entry === 'string' && entry.trim());
+  }
+  return [];
+}
+
+function handleNativeCollectionDownloads(payload) {
+  const normalized = normalizeCollectionDownloadsPayload(payload);
+  setCollectionDownloadsItems(normalized);
+}
+
+function requestNativeCollectionDownloads() {
+  if (window.AndroidBridge && typeof window.AndroidBridge.loadCollectionDownloads === 'function') {
+    window.AndroidBridge.loadCollectionDownloads();
   }
 }
 
@@ -1183,7 +1219,7 @@ function setLocalBackgroundItems(uris, options = {}) {
   }
   persistBackgroundRotationState(localBackgroundItems.length);
   applyBackgroundImage();
-  renderCollectionDownloadsGallery(getBackgroundItems());
+  renderCollectionDownloadsGallery(getCollectionDownloadsItems());
   updateCollectionDownloadsVisibility();
   renderBackgroundRotationMeta({ poolLength: localBackgroundItems.length });
 }
@@ -1812,6 +1848,9 @@ if (typeof globalThis !== 'undefined') {
   };
   globalThis.onBackgroundImageBankError = function onBackgroundImageBankError(reason) {
     handleBackgroundBankError(reason);
+  };
+  globalThis.onCollectionDownloadsLoaded = function onCollectionDownloadsLoaded(payload) {
+    handleNativeCollectionDownloads(payload);
   };
 }
 

@@ -1,6 +1,7 @@
 package com.example.atom2univers
 
 import android.app.Activity
+import android.content.ContentUris
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.os.Build
@@ -30,6 +31,7 @@ class WebAppBridge(activity: MainActivity) {
     private val activityRef = WeakReference(activity)
     private val defaultNewsFeedUrl = "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr"
     private val notesRelativePath = "${Environment.DIRECTORY_DOCUMENTS}/Atom2Univers/"
+    private val downloadsRelativePath = "${Environment.DIRECTORY_PICTURES}/Atom2Univers/"
     private val legacyNotesFolderName = "Atom2Univers"
 
     @JavascriptInterface
@@ -136,6 +138,17 @@ class WebAppBridge(activity: MainActivity) {
         activity?.runOnUiThread {
             activity.loadPersistedBackgroundBank()
         }
+    }
+
+    @JavascriptInterface
+    fun loadCollectionDownloads() {
+        val activity = activityRef.get() ?: return
+        Thread {
+            val downloads = fetchCollectionDownloads(activity)
+            val payload = JSONArray(downloads).toString()
+            val script = "window.onCollectionDownloadsLoaded && window.onCollectionDownloadsLoaded($payload);"
+            activity.postJavascript(script)
+        }.start()
     }
 
     @JavascriptInterface
@@ -483,6 +496,56 @@ class WebAppBridge(activity: MainActivity) {
         val buffer = ByteArrayOutputStream()
         stream.copyTo(buffer)
         return buffer.toByteArray()
+    }
+
+    private fun fetchCollectionDownloads(activity: Activity): List<String> {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                queryCollectionDownloadsWithMediaStore(activity)
+            } else {
+                queryCollectionDownloadsLegacy()
+            }
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to read collection downloads", error)
+            emptyList()
+        }
+    }
+
+    private fun queryCollectionDownloadsWithMediaStore(activity: Activity): List<String> {
+        val resolver = activity.contentResolver
+        val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ?"
+        val selectionArgs = arrayOf("$downloadsRelativePath%")
+        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+        val results = mutableListOf<String>()
+        resolver.query(collection, projection, selection, selectionArgs, sortOrder)?.use { cursor ->
+            val idIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(idIndex)
+                results.add(ContentUris.withAppendedId(collection, id).toString())
+            }
+        }
+        return results
+    }
+
+    private fun queryCollectionDownloadsLegacy(): List<String> {
+        val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val targetDir = File(picturesDir, "Atom2Univers")
+        if (!targetDir.exists()) {
+            return emptyList()
+        }
+        return targetDir.walkTopDown()
+            .filter { file -> file.isFile && isImageFile(file) }
+            .sortedByDescending { file -> file.lastModified() }
+            .map { file -> Uri.fromFile(file).toString() }
+            .toList()
+    }
+
+    private fun isImageFile(file: File): Boolean {
+        val extension = file.extension.lowercase()
+        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        return mimeType?.startsWith("image/") == true
     }
 
     private fun guessMimeType(source: String): String {

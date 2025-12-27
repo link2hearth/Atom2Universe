@@ -65,6 +65,7 @@ function setStartupOverlayStatus(key, fallback) {
 const ANDROID_MIDI_STARTUP_FLAG = 'atom2universAndroidMidiStartupRequested';
 const ANDROID_SOUND_FONT_STARTUP_FLAG = 'atom2universAndroidSoundFontStartupRequested';
 const ANDROID_BACKGROUND_STARTUP_FLAG = 'atom2universAndroidBackgroundStartupRequested';
+const ANDROID_COLLECTION_DOWNLOADS_STARTUP_FLAG = 'atom2universAndroidCollectionDownloadsStartupRequested';
 
 function isGlobalFlagSet(flagKey) {
   return typeof globalThis !== 'undefined' && globalThis && globalThis[flagKey] === true;
@@ -95,8 +96,10 @@ function prefetchAndroidManagedFiles() {
     && !isGlobalFlagSet(ANDROID_MIDI_STARTUP_FLAG);
   const canLoadSoundFont = typeof bridge.loadCachedSoundFont === 'function'
     && !isGlobalFlagSet(ANDROID_SOUND_FONT_STARTUP_FLAG);
+  const canLoadCollectionDownloads = typeof bridge.loadCollectionDownloads === 'function'
+    && !isGlobalFlagSet(ANDROID_COLLECTION_DOWNLOADS_STARTUP_FLAG);
 
-  if (!canLoadBackgrounds && !canLoadMidiLibrary && !canLoadSoundFont) {
+  if (!canLoadBackgrounds && !canLoadMidiLibrary && !canLoadSoundFont && !canLoadCollectionDownloads) {
     return;
   }
 
@@ -111,6 +114,15 @@ function prefetchAndroidManagedFiles() {
       requestNativeBackgroundBank();
     } catch (error) {
       console.warn('Unable to request Android background bank during startup', error);
+    }
+  }
+
+  if (canLoadCollectionDownloads) {
+    setGlobalFlag(ANDROID_COLLECTION_DOWNLOADS_STARTUP_FLAG);
+    try {
+      requestNativeCollectionDownloads();
+    } catch (error) {
+      console.warn('Unable to request Android collection downloads during startup', error);
     }
   }
 
