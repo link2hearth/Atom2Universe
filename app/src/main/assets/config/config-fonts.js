@@ -31,7 +31,7 @@ const UI_FONT_SCALE_CONFIG = Object.freeze({
     })
   }),
   digits: Object.freeze({
-    default: 1.2,
+    default: 1.1,
     overrides: Object.freeze({
       orbitron: 1,
       alien: 1.2,
