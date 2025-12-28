@@ -52,7 +52,7 @@
 }
 
 .game-of-life__menu {
-  --game-of-life-menu-scale: var(--ui-control-scale, 1);
+  --game-of-life-menu-scale: 0.65;
   --game-of-life-menu-height-scale: 0.5;
   position: fixed;
   top: 50%;
