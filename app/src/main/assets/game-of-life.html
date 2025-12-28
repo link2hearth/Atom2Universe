@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover"
+  />
+  <title data-i18n="index.sections.arcadeHub.cards.gameOfLife.title">Jeu de la vie</title>
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body class="theme-dark view-game-of-life game-of-life-standalone" data-active-page="gameOfLife">
+  <main class="game-of-life-page">
+    <header class="page-header" data-i18n="aria-label:pages.header.aria">
+      <a
+        class="page-header__back"
+        href="index.html"
+        data-i18n="pages.header.back;aria-label:pages.header.backAria;title:pages.header.backAria"
+      >
+        Retour
+      </a>
+      <h1 class="page-header__title" data-i18n="index.sections.arcadeHub.cards.gameOfLife.title">
+        Jeu de la vie
+      </h1>
+    </header>
+    <section
+      id="gameOfLife"
+      class="page page--game-of-life active"
+      data-page-group="arcade"
+      aria-label="Mini-jeu Jeu de la vie de Conway"
+      data-i18n="aria-label:index.sections.gameOfLife.aria"
+    >
+      <canvas
+        id="gameOfLifeCanvas"
+        class="game-of-life__canvas"
+        role="img"
+        aria-label="Grille du Jeu de la vie"
+        data-i18n="aria-label:index.sections.gameOfLife.canvas"
+      ></canvas>
+      <div class="game-of-life__menu" id="gameOfLifeMenu" data-expanded="true">
+        <div class="game-of-life__menu-header" id="gameOfLifeMenuHeader">
+          <span class="game-of-life__menu-handle" aria-hidden="true"></span>
+          <button
+            type="button"
+            class="game-of-life__menu-toggle"
+            id="gameOfLifeMenuToggle"
+            aria-expanded="true"
+            data-i18n="index.sections.gameOfLife.menu.collapse"
+          >Réduire le panneau</button>
+        </div>
+        <div class="game-of-life__menu-body" id="gameOfLifeMenuBody">
+          <div class="game-of-life__menu-content" id="gameOfLifeMenuContent">
+            <div
+              class="game-of-life__toolbar"
+              role="group"
+              aria-label="Commandes de la simulation"
+              data-i18n="aria-label:index.sections.gameOfLife.toolbar"
+            >
+              <div class="game-of-life__toolbar-group">
+                <button
+                  type="button"
+                  class="game-of-life__button"
+                  id="gameOfLifePlayPauseButton"
+                  aria-pressed="false"
+                  data-state="pause"
+                  data-i18n="index.sections.gameOfLife.controls.play"
+                >Lecture</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeStepButton"
+                  data-i18n="index.sections.gameOfLife.controls.step"
+                >Pas-à-pas</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeRewindButton"
+                  data-i18n="index.sections.gameOfLife.controls.rewind"
+                >Retour</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeClearButton"
+                  data-i18n="index.sections.gameOfLife.controls.clear"
+                >Réinitialiser</button>
+                <button
+                  type="button"
+                  class="game-of-life__button game-of-life__button--secondary"
+                  id="gameOfLifeSelectButton"
+                  aria-pressed="false"
+                  data-i18n="index.sections.gameOfLife.controls.select"
+                >Sélectionner</button>
+              </div>
+              <div class="game-of-life__toolbar-group" role="group">
+                <label class="game-of-life__label" for="gameOfLifeSpeedSlider" data-i18n="index.sections.gameOfLife.controls.speed">
+                  Vitesse
+                </label>
+                <input
+                  type="range"
+                  min="50"
+                  max="600"
+                  step="10"
+                  value="200"
+                  id="gameOfLifeSpeedSlider"
+                  class="game-of-life__slider"
+                  aria-label="Régler la vitesse de simulation"
+                  data-i18n="aria-label:index.sections.gameOfLife.controls.speedSlider"
+                />
+              </div>
+              <div class="game-of-life__toolbar-group" role="group">
+                <label class="game-of-life__label" for="gameOfLifeZoomSlider" data-i18n="index.sections.gameOfLife.controls.zoom">
+                  Zoom
+                </label>
+                <input
+                  type="range"
+                  min="6"
+                  max="64"
+                  step="1"
+                  value="22"
+                  id="gameOfLifeZoomSlider"
+                  class="game-of-life__slider"
+                  aria-label="Régler le niveau de zoom"
+                  data-i18n="aria-label:index.sections.gameOfLife.controls.zoomSlider"
+                />
+              </div>
+              <dl class="game-of-life__status">
+                <div>
+                  <dt data-i18n="index.sections.gameOfLife.status.generation">Génération</dt>
+                  <dd id="gameOfLifeGenerationValue">0</dd>
+                </div>
+                <div>
+                  <dt data-i18n="index.sections.gameOfLife.status.population">Population</dt>
+                  <dd id="gameOfLifePopulationValue">0</dd>
+                </div>
+              </dl>
+            </div>
+            <aside class="game-of-life__sidebar">
+              <section class="game-of-life__panel" aria-labelledby="gameOfLifePatternsTitle">
+                <h3 class="game-of-life__panel-title" id="gameOfLifePatternsTitle" data-i18n="index.sections.gameOfLife.patterns.title">
+                  Motifs emblématiques
+                </h3>
+                <div class="game-of-life__field">
+                  <label class="game-of-life__label" for="gameOfLifePatternSelect" data-i18n="index.sections.gameOfLife.patterns.selectLabel">
+                    Choisir un motif
+                  </label>
+                  <select class="game-of-life__select" id="gameOfLifePatternSelect">
+                    <option value="" data-i18n="index.sections.gameOfLife.patterns.none">Aucun motif</option>
+                  </select>
+                </div>
+                <p class="game-of-life__empty-state" id="gameOfLifePatternEmpty" hidden data-i18n="index.sections.gameOfLife.patterns.empty">
+                  Les motifs seront chargés automatiquement.
+                </p>
+                <p class="game-of-life__pattern-description" id="gameOfLifePatternDescription" hidden></p>
+                <div class="game-of-life__selection" id="gameOfLifeSelectionPanel" hidden>
+                  <h4
+                    class="game-of-life__selection-title"
+                    data-i18n="index.sections.gameOfLife.patterns.selection.title"
+                  >
+                    Enregistrer la sélection
+                  </h4>
+                  <p
+                    class="game-of-life__selection-hint"
+                    data-i18n="index.sections.gameOfLife.patterns.selection.hint"
+                  >
+                    Choisissez un nom pour le motif ou laissez vide pour utiliser un nom automatique.
+                  </p>
+                  <form class="game-of-life__selection-form" id="gameOfLifeSelectionForm">
+                    <div class="game-of-life__field">
+                      <label
+                        class="game-of-life__label"
+                        for="gameOfLifeSelectionName"
+                        data-i18n="index.sections.gameOfLife.patterns.selection.nameLabel"
+                      >
+                        Nom du motif
+                      </label>
+                      <input
+                        type="text"
+                        id="gameOfLifeSelectionName"
+                        class="game-of-life__input"
+                        maxlength="64"
+                        autocomplete="off"
+                        data-i18n="placeholder:index.sections.gameOfLife.patterns.selection.namePlaceholder"
+                        placeholder="Nom automatique : Motif perso"
+                      />
+                    </div>
+                    <div class="game-of-life__selection-actions">
+                      <button
+                        type="submit"
+                        class="game-of-life__button"
+                        id="gameOfLifeSelectionSave"
+                        data-i18n="index.sections.gameOfLife.patterns.selection.save"
+                      >
+                        Enregistrer
+                      </button>
+                      <button
+                        type="button"
+                        class="game-of-life__button game-of-life__button--secondary"
+                        id="gameOfLifeSelectionCancel"
+                        data-i18n="index.sections.gameOfLife.patterns.selection.cancel"
+                      >
+                        Annuler
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </section>
+              <section class="game-of-life__panel" aria-labelledby="gameOfLifeRandomTitle">
+                <h3 class="game-of-life__panel-title" id="gameOfLifeRandomTitle" data-i18n="index.sections.gameOfLife.random.title">
+                  Génération aléatoire
+                </h3>
+                <form class="game-of-life__random-form" id="gameOfLifeRandomForm">
+                  <div class="game-of-life__field">
+                    <label class="game-of-life__label" for="gameOfLifeRandomWidth" data-i18n="index.sections.gameOfLife.random.width">
+                      Largeur (cases)
+                    </label>
+                    <input
+                      type="number"
+                      id="gameOfLifeRandomWidth"
+                      class="game-of-life__input"
+                      min="5"
+                      max="200"
+                      value="40"
+                    />
+                  </div>
+                  <div class="game-of-life__field">
+                    <label class="game-of-life__label" for="gameOfLifeRandomHeight" data-i18n="index.sections.gameOfLife.random.height">
+                      Hauteur (cases)
+                    </label>
+                    <input
+                      type="number"
+                      id="gameOfLifeRandomHeight"
+                      class="game-of-life__input"
+                      min="5"
+                      max="200"
+                      value="24"
+                    />
+                  </div>
+                  <div class="game-of-life__field">
+                    <label class="game-of-life__label" for="gameOfLifeRandomDensity" data-i18n="index.sections.gameOfLife.random.density">
+                      Densité vivante
+                    </label>
+                    <input
+                      type="range"
+                      id="gameOfLifeRandomDensity"
+                      class="game-of-life__slider"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value="25"
+                      aria-label="Régler la densité vivante"
+                      data-i18n="aria-label:index.sections.gameOfLife.random.densitySlider"
+                    />
+                    <div class="game-of-life__pattern-meta">
+                      <span class="game-of-life__badge" id="gameOfLifeRandomDensityValue">25%</span>
+                    </div>
+                  </div>
+                  <div class="game-of-life__actions">
+                    <button
+                      type="button"
+                      class="game-of-life__button"
+                      id="gameOfLifeRandomReplace"
+                      data-i18n="index.sections.gameOfLife.random.replace"
+                    >Remplacer</button>
+                    <button
+                      type="button"
+                      class="game-of-life__button game-of-life__button--secondary"
+                      id="gameOfLifeRandomAdd"
+                      data-i18n="index.sections.gameOfLife.random.add"
+                    >Ajouter</button>
+                  </div>
+                  <p class="game-of-life__hint" data-i18n="index.sections.gameOfLife.random.hint">
+                    Le générateur utilise une graine mémorisée pour reproduire vos galaxies vivantes.
+                  </p>
+                </form>
+              </section>
+              <section class="game-of-life__panel" aria-labelledby="gameOfLifeHelpTitle">
+                <h3 class="game-of-life__panel-title" id="gameOfLifeHelpTitle" data-i18n="index.sections.gameOfLife.help.title">
+                  Commandes rapides
+                </h3>
+                <ul class="game-of-life__pattern-list" id="gameOfLifeHelpList">
+                  <li data-i18n="index.sections.gameOfLife.help.draw">Clique gauche : activer/désactiver une cellule.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.drag">Clique gauche maintenu : dessiner ou effacer une zone.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.select">Sélection (pause) : activer le mode sélection puis glisser pour enregistrer un motif.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.pan">Maintenez espace ou clic droit pour déplacer la caméra.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.zoom">Molette ou pincement : zoomer et dézoomer autour du pointeur.</li>
+                  <li data-i18n="index.sections.gameOfLife.help.shortcut">Barre espace : lecture/pause · R : réinitialiser · Z : retour.</li>
+                </ul>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="config/config.js"></script>
+  <script src="scripts/i18n/embedded-resources.js"></script>
+  <script src="scripts/modules/i18n.js"></script>
+  <script src="scripts/arcade/autosave.js"></script>
+  <script src="scripts/arcade/game-of-life.js"></script>
+  <script>
+    (() => {
+      const i18n = window.i18n;
+      if (!i18n || typeof i18n.setLanguage !== 'function') {
+        return;
+      }
+      const storageKey = 'atom2univers.language';
+      let preferred = '';
+      try {
+        preferred = window.localStorage.getItem(storageKey) || '';
+      } catch (error) {
+        preferred = '';
+      }
+      const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+      const fallback = preferred || browserLanguage || 'fr';
+      i18n
+        .setLanguage(fallback)
+        .catch((error) => {
+          console.warn('Unable to load language resources', error);
+        })
+        .finally(() => {
+          if (typeof i18n.updateTranslations === 'function') {
+            i18n.updateTranslations(document);
+          }
+        });
+    })();
+  </script>
+</body>
+</html>
