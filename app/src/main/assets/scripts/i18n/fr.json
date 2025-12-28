@@ -2424,9 +2424,9 @@
           "subtitle": "Accédez aux pages ajoutées via la configuration.",
           "empty": "Aucune page personnalisée n’est disponible pour le moment.",
           "pages": {
-            "reflex": {
-              "title": "Reflex (page dédiée)",
-              "description": "Lancer le mini-jeu Reflex dans une page séparée."
+            "gameOfLife": {
+              "title": "Jeu de la vie (page dédiée)",
+              "description": "Lancer le mini-jeu Jeu de la vie dans une page séparée."
             }
           }
         },

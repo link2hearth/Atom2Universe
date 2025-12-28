@@ -1,9 +1,9 @@
 [
   {
-    "id": "reflex",
-    "path": "reflex.html",
-    "titleKey": "index.sections.options.customPages.pages.reflex.title",
-    "descriptionKey": "index.sections.options.customPages.pages.reflex.description",
+    "id": "gameOfLife",
+    "path": "game-of-life.html",
+    "titleKey": "index.sections.options.customPages.pages.gameOfLife.title",
+    "descriptionKey": "index.sections.options.customPages.pages.gameOfLife.description",
     "openMode": "standalone"
   }
 ]
