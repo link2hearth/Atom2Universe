@@ -8,3 +8,45 @@
   </a>
   <h1 class="page-header__title" data-i18n="pages.header.title">Page</h1>
 </header>
+
+
+or
+
+<style>
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+  }
+
+  .page-header__back {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #f0f0f0; /* gris léger */
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .page-header__back:hover {
+    background-color: #e0e0e0;
+  }
+
+  .page-header__back:active {
+    background-color: #d5d5d5;
+  }
+</style>
+
+<header class="page-header" data-i18n="aria-label:pages.header.aria">
+  <a
+    class="page-header__back"
+    href="index.html"
+    data-i18n="pages.header.back;aria-label:pages.header.backAria;title:pages.header.backAria"
+  >
+    Retour
+  </a>
+  <h1 class="page-header__title" data-i18n="pages.header.title">Page</h1>
+</header>
