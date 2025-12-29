@@ -495,6 +495,21 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
     applyActivePageScrollBehavior();
   });
 
+  // Fix for Android WebView: reset touch tracking when interacting with native
+  // form elements like <select> to ensure they can open their dropdown.
+  // This handles the case where multitouch -> drag -> multitouch leaves
+  // ghost touch entries that keep touch-action: none active on body.
+  document.addEventListener('focus', event => {
+    const target = event.target;
+    if (!target || typeof target.tagName !== 'string') {
+      return;
+    }
+    const tagName = target.tagName.toUpperCase();
+    if (tagName === 'SELECT' || tagName === 'INPUT') {
+      forceUnlockScrollSafe();
+    }
+  }, true);
+
   document.addEventListener('touchstart', handleGlobalTouchStart, passiveCaptureEventListenerOptions);
   document.addEventListener('touchmove', handleGlobalTouchMove, passiveCaptureEventListenerOptions);
   ['touchend', 'touchcancel'].forEach(eventName => {

@@ -5,129 +5,25 @@
 
   const CONFIG_PATH = 'config/arcade/the-line.json';
   const DEFAULT_CONFIG = Object.freeze({
-    maxGenerationAttempts: 200,
-    holeRetryLimit: 24,
-    impossible: Object.freeze({
-      blockedRange: Object.freeze({
-        easy: Object.freeze({ min: 5, max: 8 }),
-        medium: Object.freeze({ min: 9, max: 14 }),
-        hard: Object.freeze({ min: 15, max: 20 })
-      })
-    }),
+    maxGenerationAttempts: 100,
     difficulties: Object.freeze({
       easy: Object.freeze({
         gridSizes: Object.freeze([[5, 5], [5, 6], [6, 6]]),
-        holeRange: Object.freeze({ min: 1, max: 3 }),
+        holeRange: Object.freeze({ min: 2, max: 5 }),
         minTurns: 6,
         multiPairs: Object.freeze({ min: 2, max: 3 })
       }),
       medium: Object.freeze({
         gridSizes: Object.freeze([[7, 6], [7, 7], [8, 6], [8, 7]]),
-        holeRange: Object.freeze({ min: 3, max: 8 }),
-        minTurns: 12,
-        multiPairs: Object.freeze({ min: 3, max: 4 })
+        holeRange: Object.freeze({ min: 5, max: 12 }),
+        minTurns: 10,
+        multiPairs: Object.freeze({ min: 2, max: 4 })
       }),
       hard: Object.freeze({
         gridSizes: Object.freeze([[8, 8], [9, 7], [9, 8], [9, 9]]),
-        holeRange: Object.freeze({ min: 5, max: 12 }),
-        minTurns: 18,
-        multiPairs: Object.freeze({ min: 4, max: 5 })
-      })
-    }),
-    layout: Object.freeze({
-      centerBias: Object.freeze({
-        easy: 0.35,
-        medium: 0.58,
-        hard: 0.85
-      }),
-      clusterBias: Object.freeze({
-        easy: 0.3,
-        medium: 0.5,
-        hard: 0.7
-      }),
-      distribution: Object.freeze({
-        easy: Object.freeze({
-          centerMinRatio: 0.4,
-          rightMinRatio: 0.3,
-          cornerMaxRatio: 0.25,
-          interiorMinRatio: 0.5,
-          diagonalGroupChance: 0.45,
-          serpentineChance: 0.42,
-          serpentineDensity: Object.freeze({ min: 0.38, max: 0.58 }),
-          edgeRowMaxRatio: 0.58,
-          minRowSpread: 3
-        }),
-        medium: Object.freeze({
-          centerMinRatio: 0.32,
-          rightMinRatio: 0.26,
-          cornerMaxRatio: 0.22,
-          interiorMinRatio: 0.58,
-          diagonalGroupChance: 0.3,
-          serpentineChance: 0.18,
-          serpentineDensity: Object.freeze({ min: 0.32, max: 0.48 }),
-          edgeRowMaxRatio: 0.48,
-          minRowSpread: 4
-        }),
-        hard: Object.freeze({
-          centerMinRatio: 0.3,
-          rightMinRatio: 0.24,
-          cornerMaxRatio: 0.2,
-          interiorMinRatio: 0.62,
-          diagonalGroupChance: 0.25,
-          serpentineChance: 0.12,
-          serpentineDensity: Object.freeze({ min: 0.28, max: 0.45 }),
-          edgeRowMaxRatio: 0.42,
-          minRowSpread: 5
-        })
-      }),
-      templates: Object.freeze({
-        easy: Object.freeze([]),
-        medium: Object.freeze([
-          Object.freeze({
-            width: 7,
-            height: 7,
-            mask: Object.freeze([
-              '..###..',
-              '.#####.',
-              '.##.##.',
-              '.#...#.',
-              '.##.##.',
-              '.#####.',
-              '..###..'
-            ])
-          })
-        ]),
-        hard: Object.freeze([
-          Object.freeze({
-            width: 8,
-            height: 8,
-            mask: Object.freeze([
-              '..####..',
-              '.######.',
-              '.##..##.',
-              '.#....#.',
-              '.##..##.',
-              '.######.',
-              '..####..',
-              '........'
-            ])
-          }),
-          Object.freeze({
-            width: 9,
-            height: 9,
-            mask: Object.freeze([
-              '...###...',
-              '..#####..',
-              '.#######.',
-              '.##...##.',
-              '.##...##.',
-              '.#######.',
-              '..#####..',
-              '...###...',
-              '.........'
-            ])
-          })
-        ])
+        holeRange: Object.freeze({ min: 10, max: 20 }),
+        minTurns: 14,
+        multiPairs: Object.freeze({ min: 3, max: 5 })
       })
     })
   });
@@ -162,7 +58,6 @@
   ]);
 
   const COMPLETION_REWARD = Object.freeze({ chance: 0.5, gachaTickets: 1 });
-  const IMPOSSIBLE_REWARD_MULTIPLIER = 2;
   const AUTOSAVE_GAME_ID = 'theLine';
   const AUTOSAVE_VERSION = 1;
   const AUTOSAVE_DEBOUNCE_MS = 200;
@@ -264,8 +159,7 @@
       width,
       height,
       blocked: Array.from(blocked),
-      path,
-      impossible: Boolean(puzzle.impossible)
+      path
     };
     if (payload.mode === 'multi') {
       const segments = [];
@@ -472,8 +366,7 @@
         height,
         blockedIndices: blocked,
         path,
-        segments,
-        impossible: false
+        segments
       };
     }
     const endpoints = {
@@ -486,8 +379,7 @@
       height,
       blockedIndices: blocked,
       path,
-      endpoints,
-      impossible: Boolean(puzzlePayload.impossible)
+      endpoints
     };
   }
 
@@ -738,14 +630,8 @@
     const maxGenerationAttempts = clampNumber(
       source.maxGenerationAttempts,
       20,
-      1200,
+      500,
       base.maxGenerationAttempts
-    );
-    const holeRetryLimit = clampNumber(
-      source.holeRetryLimit,
-      4,
-      200,
-      base.holeRetryLimit
     );
     const difficulties = {};
     ['easy', 'medium', 'hard'].forEach(key => {
@@ -754,39 +640,10 @@
         base.difficulties[key]
       );
     });
-    const layout = normalizeLayoutConfig(source.layout, base.layout);
-    const impossible = normalizeImpossibleConfig(source.impossible, base.impossible);
     return {
       maxGenerationAttempts,
-      holeRetryLimit,
-      difficulties,
-      layout,
-      impossible
+      difficulties
     };
-  }
-
-  function normalizeImpossibleConfig(config, fallback) {
-    const base = fallback && typeof fallback === 'object'
-      ? fallback
-      : DEFAULT_CONFIG.impossible;
-    const source = config && typeof config === 'object' ? config : {};
-    const ranges = {};
-    ['easy', 'medium', 'hard'].forEach(key => {
-      const baseRange = base && base.blockedRange && base.blockedRange[key]
-        ? base.blockedRange[key]
-        : DEFAULT_CONFIG.impossible.blockedRange.easy;
-      const sourceRange = source && source.blockedRange && source.blockedRange[key]
-        ? source.blockedRange[key]
-        : baseRange;
-      const min = Number.isFinite(sourceRange?.min)
-        ? Math.max(0, Math.floor(sourceRange.min))
-        : Math.max(0, Math.floor(baseRange?.min || 0));
-      const max = Number.isFinite(sourceRange?.max)
-        ? Math.max(min, Math.floor(sourceRange.max))
-        : Math.max(min, Math.floor(baseRange?.max || min));
-      ranges[key] = { min, max };
-    });
-    return { blockedRange: ranges };
   }
 
   function normalizeDifficultyConfig(config, fallback) {
@@ -844,179 +701,6 @@
     };
   }
 
-  function normalizeLayoutConfig(config, fallback) {
-    const base = fallback && typeof fallback === 'object'
-      ? fallback
-      : DEFAULT_CONFIG.layout;
-    const source = config && typeof config === 'object' ? config : {};
-
-    const centerBias = {};
-    const clusterBias = {};
-    const distribution = {};
-    ['easy', 'medium', 'hard'].forEach(key => {
-      const baseCenter = clampNumber(base?.centerBias?.[key], 0, 4, 0.4);
-      const baseCluster = clampNumber(base?.clusterBias?.[key], 0, 1, 0.4);
-      centerBias[key] = clampNumber(source?.centerBias?.[key], 0, 4, baseCenter);
-      clusterBias[key] = clampNumber(source?.clusterBias?.[key], 0, 1, baseCluster);
-      distribution[key] = normalizeDistributionConfig(
-        source?.distribution?.[key],
-        base?.distribution?.[key]
-      );
-    });
-
-    const templates = {};
-    const templateSource = source.templates && typeof source.templates === 'object'
-      ? source.templates
-      : base?.templates || {};
-    ['easy', 'medium', 'hard'].forEach(key => {
-      const list = Array.isArray(templateSource?.[key]) ? templateSource[key] : [];
-      const normalized = [];
-      list.forEach(entry => {
-        if (!entry || typeof entry !== 'object') {
-          return;
-        }
-        const width = Number.isFinite(entry.width) ? Math.max(3, Math.floor(entry.width)) : null;
-        const height = Number.isFinite(entry.height) ? Math.max(3, Math.floor(entry.height)) : null;
-        if (!width || !height) {
-          return;
-        }
-        const rawMask = Array.isArray(entry.mask)
-          ? entry.mask
-          : Array.isArray(entry.masks)
-            ? entry.masks
-            : null;
-        const directIndices = Array.isArray(entry.indices)
-          ? entry.indices.filter(index => Number.isFinite(index) && index >= 0)
-          : null;
-        const indices = [];
-        if (directIndices && directIndices.length) {
-          directIndices.forEach(index => {
-            const normalizedIndex = Math.floor(index);
-            if (normalizedIndex >= 0 && normalizedIndex < width * height) {
-              indices.push(normalizedIndex);
-            }
-          });
-        } else if (rawMask && rawMask.length) {
-          for (let y = 0; y < Math.min(rawMask.length, height); y += 1) {
-            const row = rawMask[y];
-            if (typeof row !== 'string') {
-              continue;
-            }
-            for (let x = 0; x < Math.min(row.length, width); x += 1) {
-              const symbol = row[x];
-              if (symbol === '#' || symbol === '1' || symbol === 'X' || symbol === 'x') {
-                indices.push(y * width + x);
-              }
-            }
-          }
-        }
-        if (!indices.length) {
-          return;
-        }
-        const unique = Array.from(new Set(indices)).filter(index => index >= 0 && index < width * height);
-        if (!unique.length) {
-          return;
-        }
-        normalized.push({ width, height, indices: unique });
-      });
-      if (normalized.length) {
-        templates[key] = normalized;
-      }
-    });
-
-    return { centerBias, clusterBias, distribution, templates };
-  }
-
-  function normalizeDistributionConfig(config, fallback) {
-    const base = fallback && typeof fallback === 'object' ? fallback : {};
-    const source = config && typeof config === 'object' ? config : {};
-    const centerMinRatio = clampNumber(
-      source.centerMinRatio,
-      0,
-      0.9,
-      clampNumber(base.centerMinRatio, 0, 0.9, 0)
-    );
-    const rightMinRatio = clampNumber(
-      source.rightMinRatio,
-      0,
-      0.9,
-      clampNumber(base.rightMinRatio, 0, 0.9, 0)
-    );
-    const cornerMaxRatio = clampNumber(
-      source.cornerMaxRatio,
-      0,
-      0.9,
-      clampNumber(base.cornerMaxRatio, 0, 0.9, 0.65)
-    );
-    const interiorMinRatio = clampNumber(
-      source.interiorMinRatio,
-      0,
-      0.95,
-      clampNumber(base.interiorMinRatio, 0, 0.95, 0.35)
-    );
-    const diagonalGroupChance = clampNumber(
-      source.diagonalGroupChance,
-      0,
-      1,
-      clampNumber(base.diagonalGroupChance, 0, 1, 0)
-    );
-    const serpentineChance = clampNumber(
-      source.serpentineChance,
-      0,
-      1,
-      clampNumber(base.serpentineChance, 0, 1, 0)
-    );
-    const baseSerp = base && typeof base.serpentineDensity === 'object'
-      ? base.serpentineDensity
-      : null;
-    const serpSource = source && typeof source.serpentineDensity === 'object'
-      ? source.serpentineDensity
-      : baseSerp;
-    const serpMin = clampNumber(
-      serpSource?.min,
-      0.15,
-      0.85,
-      clampNumber(baseSerp?.min, 0.15, 0.85, 0.4)
-    );
-    const serpMax = clampNumber(
-      serpSource?.max,
-      0.2,
-      0.95,
-      clampNumber(baseSerp?.max, 0.2, 0.95, Math.max(serpMin, 0.5))
-    );
-    const minDensity = Math.min(serpMin, serpMax);
-    const maxDensity = Math.max(serpMin, serpMax);
-    const baseEdgeRatio = clampNumber(base.edgeRowMaxRatio, 0.05, 0.95, 0.6);
-    const edgeRowMaxRatio = clampNumber(
-      source.edgeRowMaxRatio,
-      0.05,
-      0.95,
-      baseEdgeRatio
-    );
-    const baseRowSpread = clampNumber(base.minRowSpread, 1, 20, 0);
-    const spreadCandidate = clampNumber(
-      source.minRowSpread,
-      1,
-      20,
-      baseRowSpread
-    );
-    const minRowSpread = Math.max(0, Math.floor(spreadCandidate || 0));
-    return {
-      centerMinRatio,
-      rightMinRatio,
-      diagonalGroupChance,
-      serpentineChance,
-      serpentineDensity: {
-        min: clampNumber(minDensity, 0.15, 0.95, 0.35),
-        max: clampNumber(maxDensity, 0.2, 0.98, Math.max(minDensity, 0.55))
-      },
-      edgeRowMaxRatio,
-      minRowSpread,
-      cornerMaxRatio,
-      interiorMinRatio
-    };
-  }
-
   function loadRemoteConfig() {
     if (typeof window === 'undefined' || typeof window.fetch !== 'function') {
       return;
@@ -1043,7 +727,6 @@
       board: document.getElementById('theLineBoard'),
       message: document.getElementById('theLineMessage'),
       reset: document.getElementById('theLineResetButton'),
-      impossible: document.getElementById('theLineImpossibleButton'),
       level: document.getElementById('theLineLevelValue'),
       remaining: document.getElementById('theLineRemainingValue'),
       modeButtons: Array.from(section.querySelectorAll('[data-line-mode]')),
@@ -1072,15 +755,6 @@
       elements.reset.addEventListener('click', () => {
         clearMessageTimeout();
         prepareNewPuzzle();
-      });
-    }
-    if (elements.impossible) {
-      elements.impossible.addEventListener('click', () => {
-        if (state.mode !== 'single') {
-          return;
-        }
-        clearMessageTimeout();
-        prepareImpossiblePuzzle();
       });
     }
   }
@@ -1131,16 +805,6 @@
     prepareNewPuzzle();
   }
 
-  function updateImpossibleButton() {
-    const elements = state.elements;
-    if (!elements || !elements.impossible) {
-      return;
-    }
-    const isSingle = state.mode === 'single';
-    elements.impossible.disabled = !isSingle;
-    elements.impossible.setAttribute('aria-disabled', String(!isSingle));
-  }
-
   function setDifficulty(difficulty) {
     if (!['easy', 'medium', 'hard'].includes(difficulty)) {
       return;
@@ -1166,7 +830,6 @@
       button.classList.toggle('the-line__toggle--active', isActive);
       button.setAttribute('aria-pressed', String(isActive));
     });
-    updateImpossibleButton();
   }
 
   function updateDifficultyButtons() {
@@ -1259,29 +922,8 @@
     scheduleAutosave();
   }
 
-  function prepareImpossiblePuzzle() {
-    cancelActivePath();
-    const config = state.config || normalizeConfig(DEFAULT_CONFIG, null);
-    const puzzle = generateImpossiblePuzzle(state.difficulty, config);
-    if (!puzzle) {
-      setMessage(
-        'index.sections.theLine.messages.error',
-        'Impossible de générer une nouvelle grille. Réessayez.'
-      );
-      return;
-    }
-    state.currentPuzzle = puzzle;
-    renderPuzzle(puzzle);
-    setMessage(
-      'index.sections.theLine.messages.single',
-      'Tracez un parcours continu qui visite chaque case.',
-      { width: puzzle.width, height: puzzle.height }
-    );
-    scheduleAutosave();
-  }
   function generatePuzzle(mode, difficulty, config) {
     const difficultyConfig = config.difficulties[difficulty] || config.difficulties.easy;
-    const layoutConfig = config.layout || DEFAULT_CONFIG.layout;
     const sizes = Array.isArray(difficultyConfig.gridSizes)
       ? difficultyConfig.gridSizes
       : [[5, 5]];
@@ -1293,956 +935,252 @@
     if (mode === 'multi') {
       holeMax = Math.min(holeMax, Math.max(holeMin, 3));
     }
-    const maxAttempts = clampNumber(config.maxGenerationAttempts, 20, 2000, 200);
-    const holeRetryLimit = Math.max(1, Math.floor(config.holeRetryLimit || 16));
-    const generationLimiter = createTimeLimiter(
-      computeGenerationLimitMs(width, height, mode, difficulty)
-    );
+    const targetHoles = holeMin === holeMax ? holeMin : randomInt(holeMin, holeMax);
+    const minTurns = Math.max(2, difficultyConfig.minTurns || 0);
+    const maxAttempts = clampNumber(config.maxGenerationAttempts, 20, 200, 50);
 
-    let attempt = 0;
-    let holeAttempts = 0;
-    let currentHoleMax = holeMax;
-    let bestCandidate = null;
-    const holeStrategy = selectHoleStrategy(
-      mode,
-      difficulty,
-      layoutConfig,
-      totalCells,
-      holeMin,
-      holeMax
-    );
-    let useFixedHoles = holeStrategy.type === 'fixed' && Number.isFinite(holeStrategy.count);
-    let fixedHoleAttempts = 0;
+    let bestResult = null;
+    let bestTurns = -1;
 
-    while (attempt < maxAttempts && !generationLimiter.timedOut()) {
-      attempt += 1;
-      holeAttempts += 1;
-      let holeCount = holeMin === currentHoleMax
-        ? holeMin
-        : randomInt(holeMin, currentHoleMax);
-      if (useFixedHoles) {
-        holeCount = Math.max(holeMin, Math.min(totalCells - 2, Math.floor(holeStrategy.count)));
-        fixedHoleAttempts += 1;
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      const result = generatePuzzleWithHoles(width, height, targetHoles);
+      if (!result || !result.path || result.path.length < 2) {
+        continue;
       }
-      const blocked = generateBlockedSet(
-        width,
-        height,
-        holeCount,
-        layoutConfig,
-        difficulty
-      );
-      const path = findHamiltonianPath(width, height, blocked, generationLimiter);
-      if (generationLimiter.timedOut()) {
-        break;
-      }
-      if (!path) {
-        if (useFixedHoles && fixedHoleAttempts >= holeRetryLimit) {
-          useFixedHoles = false;
-          holeAttempts = 0;
-        }
-        if (holeAttempts >= holeRetryLimit && currentHoleMax > holeMin) {
-          currentHoleMax = Math.max(holeMin, currentHoleMax - 1);
-          holeAttempts = 0;
+      const turns = countTurns(result.path, width);
+      if (mode === 'single' && turns < minTurns) {
+        if (turns > bestTurns) {
+          bestResult = result;
+          bestTurns = turns;
         }
         continue;
       }
-      const turns = countTurns(path, width);
-      if (mode === 'single' && turns < Math.max(2, difficultyConfig.minTurns || 0)) {
-        if (!bestCandidate || turns > bestCandidate.turns) {
-          bestCandidate = { path, blocked, turns };
-        }
-        continue;
-      }
-      return buildPuzzleFromPath(mode, width, height, blocked, path, difficultyConfig);
+      return buildPuzzleFromPath(mode, width, height, result.blocked, result.path, difficultyConfig);
     }
 
-    if (generationLimiter.timedOut() && bestCandidate) {
-      return buildPuzzleFromPath(
-        mode,
-        width,
-        height,
-        bestCandidate.blocked,
-        bestCandidate.path,
-        difficultyConfig
-      );
+    if (bestResult) {
+      return buildPuzzleFromPath(mode, width, height, bestResult.blocked, bestResult.path, difficultyConfig);
     }
 
-    if (bestCandidate) {
-      return buildPuzzleFromPath(
-        mode,
-        width,
-        height,
-        bestCandidate.blocked,
-        bestCandidate.path,
-        difficultyConfig
-      );
-    }
-
-    const fallbackPuzzle = buildFallbackPuzzle(
-      mode,
-      width,
-      height,
-      difficultyConfig,
-      layoutConfig,
-      difficulty
-    );
-    if (fallbackPuzzle) {
-      return fallbackPuzzle;
+    const simplePath = createSimpleHamiltonianPath(width, height);
+    if (simplePath && simplePath.length >= 2) {
+      return buildPuzzleFromPath(mode, width, height, new Set(), simplePath, difficultyConfig);
     }
     return null;
   }
 
-  function generateImpossiblePuzzle(difficulty, config) {
-    const difficultyConfig = config.difficulties[difficulty] || config.difficulties.easy;
-    const sizes = Array.isArray(difficultyConfig.gridSizes)
-      ? difficultyConfig.gridSizes
-      : [[5, 5]];
-    const [width, height] = sizes[randomInt(0, sizes.length - 1)];
+  function generatePuzzleWithHoles(width, height, targetHoles) {
     const totalCells = width * height;
-    const rangeConfig = config.impossible?.blockedRange?.[difficulty]
-      || DEFAULT_CONFIG.impossible.blockedRange[difficulty]
-      || DEFAULT_CONFIG.impossible.blockedRange.easy;
-    const min = clampNumber(rangeConfig?.min, 0, totalCells - 2, 0);
-    const max = clampNumber(rangeConfig?.max, min, totalCells - 2, min);
-    const holeCount = min === max ? min : randomInt(min, max);
-    const blocked = createRandomBlockedSet(totalCells, holeCount);
-    const available = [];
-    for (let index = 0; index < totalCells; index += 1) {
-      if (!blocked.has(index)) {
-        available.push(index);
+    if (targetHoles <= 0) {
+      const path = createSimpleHamiltonianPath(width, height);
+      return path ? { path: path, blocked: new Set() } : null;
+    }
+
+    for (let holeCount = targetHoles; holeCount >= 1; holeCount -= 1) {
+      const blocked = generateValidBlockedSet(width, height, holeCount);
+      if (blocked.size === 0) {
+        continue;
+      }
+
+      const path = findHamiltonianPathIterative(width, height, blocked);
+      if (path && path.length >= 2) {
+        return { path: path, blocked: blocked };
       }
     }
-    if (available.length < 2) {
-      return null;
-    }
-    shuffle(available);
-    const startIndex = available[0];
-    const endIndex = available[1];
-    const startCoord = indexToCoord(startIndex, width);
-    const endCoord = indexToCoord(endIndex, width);
-    return {
-      mode: 'single',
-      width,
-      height,
-      blockedIndices: blocked,
-      path: [startCoord, endCoord],
-      endpoints: {
-        start: startCoord,
-        end: endCoord
-      },
-      impossible: true
-    };
+
+    return null;
   }
 
-  function createRandomBlockedSet(totalCells, count) {
-    const limit = Math.max(0, Math.min(count, totalCells - 2));
+  function generateValidBlockedSet(width, height, targetCount) {
+    const totalCells = width * height;
     const blocked = new Set();
-    if (!Number.isFinite(totalCells) || totalCells <= 0 || limit <= 0) {
+    const maxCount = Math.min(targetCount, Math.floor(totalCells * 0.4));
+
+    if (maxCount <= 0) {
       return blocked;
     }
-    const indices = Array.from({ length: totalCells }, (_, index) => index);
-    shuffle(indices);
-    for (let i = 0; i < limit; i += 1) {
-      blocked.add(indices[i]);
-    }
-    return blocked;
-  }
 
-  function selectHoleStrategy(mode, difficultyKey, layoutConfig, totalCells, holeMin, holeMax) {
-    if (mode !== 'single') {
-      return { type: 'range' };
-    }
-    const distribution = layoutConfig?.distribution?.[difficultyKey];
-    if (!distribution) {
-      return { type: 'range' };
-    }
-    const chance = clampNumber(distribution.serpentineChance, 0, 1, 0);
-    if (!(Math.random() < chance)) {
-      return { type: 'range' };
-    }
-    const density = distribution.serpentineDensity;
-    if (!density || typeof density !== 'object') {
-      return { type: 'range' };
-    }
-    const minRatio = clampNumber(density.min, 0.15, 0.9, 0.35);
-    const maxRatio = clampNumber(density.max, minRatio, 0.95, Math.max(minRatio, 0.55));
-    const ratio = minRatio === maxRatio
-      ? minRatio
-      : minRatio + Math.random() * (maxRatio - minRatio);
-    const count = Math.max(holeMin, Math.min(totalCells - 2, Math.round(totalCells * ratio)));
-    if (!Number.isFinite(count) || count <= holeMin) {
-      return { type: 'range' };
-    }
-    return { type: 'fixed', count: Math.max(holeMin, Math.min(totalCells - 2, count)) };
-  }
+    const corners = [0, width - 1, (height - 1) * width, totalCells - 1];
+    const edges = [];
+    const interior = [];
 
-  function generateBlockedSet(width, height, count, layoutConfig, difficultyKey) {
-    const total = width * height;
-    const limit = Math.max(0, Math.min(count, total - 2));
-    if (limit <= 0) {
-      return new Set();
-    }
-    const blocked = new Set();
-    const protectedIndices = new Set();
-    const clusterProbability = clampNumber(
-      layoutConfig?.clusterBias?.[difficultyKey],
-      0,
-      1,
-      clampNumber(DEFAULT_CONFIG.layout.clusterBias?.[difficultyKey], 0, 1, 0.4)
-    );
-    const centerBiasValue = clampNumber(
-      layoutConfig?.centerBias?.[difficultyKey],
-      0,
-      4,
-      clampNumber(DEFAULT_CONFIG.layout.centerBias?.[difficultyKey], 0, 4, 0.4)
-    );
-    const weights = createCenterWeightedMap(width, height, centerBiasValue);
-    const preferred = selectTemplateIndices(layoutConfig?.templates, difficultyKey, width, height);
-    if (preferred && preferred.length) {
-      const prioritized = shuffle(preferred.slice());
-      for (let i = 0; i < prioritized.length && blocked.size < limit; i += 1) {
-        blocked.add(prioritized[i]);
-        protectedIndices.add(prioritized[i]);
-      }
-    }
-    let safety = 0;
-    while (blocked.size < limit && safety < total * 4) {
-      safety += 1;
-      let candidate = null;
-      if (blocked.size > 0 && Math.random() < clusterProbability) {
-        candidate = selectClusterNeighbor(blocked, width, height, weights);
-      }
-      if (candidate === null || blocked.has(candidate)) {
-        candidate = selectWeightedIndex(weights, blocked);
-      }
-      if (candidate === null) {
-        break;
-      }
-      blocked.add(candidate);
-    }
-    maybeInjectPattern(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
-    enforceDistributionTargets(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
-    enforceCornerAndInteriorDiversity(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
-    balanceRowDistribution(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey);
-    return blocked;
-  }
-
-  function selectTemplateIndices(templates, difficultyKey, width, height) {
-    if (!templates || !templates[difficultyKey]) {
-      return null;
-    }
-    const candidates = templates[difficultyKey].filter(template => (
-      template
-      && template.width === width
-      && template.height === height
-      && Array.isArray(template.indices)
-    ));
-    if (!candidates.length) {
-      return null;
-    }
-    const choice = candidates[randomInt(0, candidates.length - 1)];
-    return choice.indices ? choice.indices.slice() : null;
-  }
-
-  function createCenterWeightedMap(width, height, biasValue) {
-    const weights = new Array(width * height);
-    const centerX = (width - 1) / 2;
-    const centerY = (height - 1) / 2;
-    const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY) || 1;
-    const exponent = 1 + Math.max(0, biasValue || 0) * 2.5;
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
-        const dx = x - centerX;
-        const dy = y - centerY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const normalized = Math.max(0, Math.min(1, distance / maxDistance));
-        const inverted = 1 - normalized;
-        const weight = Math.pow(Math.max(0, inverted), exponent) + 0.05;
-        const jitter = 0.85 + Math.random() * 0.3;
-        weights[y * width + x] = weight * jitter;
-      }
-    }
-    return weights;
-  }
+        const index = y * width + x;
+        const isCorner = (x === 0 || x === width - 1) && (y === 0 || y === height - 1);
+        const isEdge = !isCorner && (x === 0 || x === width - 1 || y === 0 || y === height - 1);
 
-  function selectWeightedIndex(weights, blocked) {
-    if (!Array.isArray(weights) || !weights.length) {
-      return null;
-    }
-    let totalWeight = 0;
-    for (let i = 0; i < weights.length; i += 1) {
-      if (!blocked.has(i)) {
-        totalWeight += Math.max(0, weights[i] || 0);
-      }
-    }
-    if (totalWeight <= 0) {
-      return null;
-    }
-    let threshold = Math.random() * totalWeight;
-    for (let i = 0; i < weights.length; i += 1) {
-      if (blocked.has(i)) {
-        continue;
-      }
-      threshold -= Math.max(0, weights[i] || 0);
-      if (threshold <= 0) {
-        return i;
-      }
-    }
-    for (let i = weights.length - 1; i >= 0; i -= 1) {
-      if (!blocked.has(i)) {
-        return i;
-      }
-    }
-    return null;
-  }
-
-  function selectClusterNeighbor(blocked, width, height, weights) {
-    const blockedIndices = Array.from(blocked);
-    if (!blockedIndices.length) {
-      return null;
-    }
-    for (let attempt = 0; attempt < blockedIndices.length * 2; attempt += 1) {
-      const anchor = blockedIndices[randomInt(0, blockedIndices.length - 1)];
-      const neighbors = getNeighborIndices(anchor, width, height);
-      const available = neighbors.filter(index => !blocked.has(index));
-      if (!available.length) {
-        continue;
-      }
-      if (!weights || !weights.length) {
-        return available[randomInt(0, available.length - 1)];
-      }
-      let bestCandidate = null;
-      let bestWeight = -1;
-      available.forEach(index => {
-        const weight = Math.max(0, weights[index] || 0);
-        const noise = 0.9 + Math.random() * 0.2;
-        const score = weight * noise;
-        if (score > bestWeight) {
-          bestWeight = score;
-          bestCandidate = index;
-        }
-      });
-      if (bestCandidate !== null && bestCandidate !== undefined) {
-        return bestCandidate;
-      }
-    }
-    return null;
-  }
-
-  function maybeInjectPattern(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
-    if (!blocked || !blocked.size || limit < 2) {
-      return;
-    }
-    const distribution = layoutConfig?.distribution?.[difficultyKey];
-    if (!distribution) {
-      return;
-    }
-    const chance = clampNumber(distribution.diagonalGroupChance, 0, 1, 0);
-    if (Math.random() >= chance) {
-      return;
-    }
-    const data = computeDistributionData(blocked, width, height, protectedIndices);
-    const anchors = data.availableInterior.length ? data.availableInterior : data.availableCells;
-    const anchor = pickRandomCell(anchors);
-    if (!anchor) {
-      return;
-    }
-    const directions = shuffle([
-      { dx: 1, dy: 1 },
-      { dx: 1, dy: -1 },
-      { dx: -1, dy: 1 },
-      { dx: -1, dy: -1 },
-      { dx: 1, dy: 0 },
-      { dx: 0, dy: 1 }
-    ]);
-    const donorCandidates = buildDonorList([
-      data.blockedCorners,
-      data.blockedLeftEdge,
-      data.blockedRightEdge,
-      data.blockedNeutralEdge,
-      data.blockedLeftInterior,
-      data.blockedRightInterior,
-      data.blockedInterior
-    ], protectedIndices);
-    if (!donorCandidates.length) {
-      return;
-    }
-    for (let i = 0; i < directions.length; i += 1) {
-      const pattern = collectPatternCells(anchor, directions[i], width, height, blocked, limit);
-      if (!pattern.length) {
-        continue;
-      }
-      const additions = pattern.filter(index => !blocked.has(index));
-      if (!additions.length || additions.length > donorCandidates.length) {
-        continue;
-      }
-      const donorPool = donorCandidates.slice();
-      const donors = [];
-      let valid = true;
-      for (let j = 0; j < additions.length; j += 1) {
-        if (!donorPool.length) {
-          valid = false;
-          break;
-        }
-        const donor = donorPool.splice(randomInt(0, donorPool.length - 1), 1)[0];
-        if (!donor) {
-          valid = false;
-          break;
-        }
-        donors.push(donor);
-      }
-      if (!valid || donors.length !== additions.length) {
-        continue;
-      }
-      donors.forEach(donor => {
-        blocked.delete(donor.index);
-      });
-      additions.forEach(index => {
-        blocked.add(index);
-      });
-      return;
-    }
-  }
-
-  function enforceDistributionTargets(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
-    if (!blocked || !blocked.size || !limit) {
-      return;
-    }
-    const distribution = layoutConfig?.distribution?.[difficultyKey];
-    if (!distribution) {
-      return;
-    }
-    const centerRatio = clampNumber(distribution.centerMinRatio, 0, 0.9, 0);
-    const rightRatio = clampNumber(distribution.rightMinRatio, 0, 0.9, 0);
-    const targetCenter = Math.min(limit, Math.ceil(limit * centerRatio));
-    const targetRight = Math.min(limit, Math.ceil(limit * rightRatio));
-    if (targetCenter <= 0 && targetRight <= 0) {
-      return;
-    }
-    const maxIterations = Math.max(1, limit * 3);
-    for (let iteration = 0; iteration < maxIterations; iteration += 1) {
-      const data = computeDistributionData(blocked, width, height, protectedIndices);
-      let adjusted = false;
-      if (targetCenter > 0 && data.blockedCenter.length < targetCenter) {
-        const recipient = pickRandomCell(data.availableCenter);
-        const donors = buildDonorList([
-          data.blockedCorners,
-          data.blockedLeftEdge,
-          data.blockedRightEdge,
-          data.blockedNeutralEdge,
-          data.blockedLeftInterior,
-          data.blockedRightInterior,
-          data.blockedInterior
-        ], protectedIndices);
-        const donor = pickPriorityDonor(donors);
-        if (recipient && donor) {
-          blocked.delete(donor.index);
-          blocked.add(recipient.index);
-          adjusted = true;
+        if (isCorner) {
           continue;
+        } else if (isEdge) {
+          edges.push(index);
+        } else {
+          interior.push(index);
         }
-      }
-      if (targetRight > 0 && data.blockedRight.length < targetRight) {
-        const recipient = pickRandomCell(data.availableRight);
-        const donors = buildDonorList([
-          data.blockedLeftInterior,
-          data.blockedLeftEdge,
-          data.blockedLeftCorners,
-          data.blockedNeutralEdge,
-          data.blockedInterior,
-          data.blockedCells
-        ], protectedIndices);
-        const donor = pickPriorityDonor(donors);
-        if (recipient && donor) {
-          blocked.delete(donor.index);
-          blocked.add(recipient.index);
-          adjusted = true;
-          continue;
-        }
-      }
-      if (!adjusted) {
-        break;
       }
     }
+
+    shuffle(interior);
+    shuffle(edges);
+
+    const candidates = interior.concat(edges);
+
+    for (let i = 0; i < candidates.length && blocked.size < maxCount; i += 1) {
+      const candidate = candidates[i];
+      blocked.add(candidate);
+
+      if (!isGraphConnected(width, height, blocked)) {
+        blocked.delete(candidate);
+      }
+    }
+
+    return blocked;
   }
 
-  function enforceCornerAndInteriorDiversity(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
-    if (!blocked || !blocked.size || !limit) {
-      return;
-    }
-    const distribution = layoutConfig?.distribution?.[difficultyKey];
-    if (!distribution) {
-      return;
-    }
-    const cornerLimit = clampNumber(distribution.cornerMaxRatio, 0, 0.9, 0.65);
-    const interiorRatio = clampNumber(distribution.interiorMinRatio, 0, 0.95, 0.35);
-    const maxCorners = Math.floor(limit * cornerLimit);
-    const targetInterior = Math.min(limit, Math.ceil(limit * interiorRatio));
-    if (maxCorners <= 0 && targetInterior <= 0) {
-      return;
-    }
-    const maxIterations = Math.max(1, limit * 4);
-    for (let iteration = 0; iteration < maxIterations; iteration += 1) {
-      const data = computeDistributionData(blocked, width, height, protectedIndices);
-      const cornerExcess = maxCorners >= 0 && data.blockedCorners.length > maxCorners;
-      const interiorMissing = targetInterior > 0 && data.blockedInterior.length < targetInterior;
-      if (!cornerExcess && !interiorMissing) {
-        break;
-      }
-      let donor = null;
-      let recipient = null;
-      if (cornerExcess) {
-        const movableCorners = data.blockedCorners.filter(cell => !cell.protected);
-        donor = pickRandomCell(movableCorners);
-        recipient = pickRandomCell(data.availableInterior.length ? data.availableInterior : data.availableCells);
-      }
-      if (!recipient && interiorMissing) {
-        const donors = buildDonorList([
-          data.blockedLeftEdge,
-          data.blockedRightEdge,
-          data.blockedNeutralEdge,
-          data.blockedCorners
-        ], protectedIndices);
-        donor = donor || pickPriorityDonor(donors);
-        recipient = pickRandomCell(data.availableInterior.length ? data.availableInterior : data.availableCells);
-      }
-      if (!donor || !recipient) {
-        break;
-      }
-      blocked.delete(donor.index);
-      blocked.add(recipient.index);
-    }
-  }
-
-  function balanceRowDistribution(blocked, protectedIndices, width, height, limit, layoutConfig, difficultyKey) {
-    if (!blocked || !blocked.size || limit <= 0 || height <= 2) {
-      return;
-    }
-    const distribution = layoutConfig?.distribution?.[difficultyKey];
-    if (!distribution) {
-      return;
-    }
-    const edgeThreshold = clampNumber(distribution.edgeRowMaxRatio, 0.05, 0.95, 0.65);
-    const minRowSpread = Math.max(0, Math.floor(distribution.minRowSpread || 0));
-    if (edgeThreshold <= 0 && minRowSpread <= 0) {
-      return;
-    }
-    const maxIterations = Math.max(1, limit * 6);
-    for (let iteration = 0; iteration < maxIterations; iteration += 1) {
-      const data = computeRowBalanceData(blocked, width, height, protectedIndices);
-      const totalBlocked = Math.min(limit, blocked.size);
-      if (!totalBlocked) {
-        break;
-      }
-      const currentEdgeRatio = data.edgeBlocked / totalBlocked;
-      const needsEdgeRebalance = edgeThreshold > 0 && currentEdgeRatio > edgeThreshold;
-      const needsSpread = minRowSpread > 0 && data.blockedRowCount < minRowSpread;
-      if (!needsEdgeRebalance && !needsSpread) {
-        break;
-      }
-      let donor = null;
-      let recipient = null;
-      if (needsEdgeRebalance) {
-        const edgeRows = data.rows.filter(row => (row.isTop || row.isBottom) && row.blocked.length > 0);
-        const interiorRows = data.rows.filter(row => !row.isTop && !row.isBottom && row.available.length > 0);
-        donor = pickRowDonor(edgeRows);
-        recipient = pickRowRecipient(interiorRows);
-      }
-      if ((!donor || !recipient) && needsSpread) {
-        const donorRows = data.rows.filter(row => row.blocked.length > 1 || (row.isTop || row.isBottom));
-        const recipientRows = data.rows.filter(row => row.available.length > 0);
-        donor = donor || pickRowDonor(donorRows);
-        recipient = recipient || pickRowRecipient(recipientRows);
-      }
-      if (!donor || !recipient) {
-        break;
-      }
-      blocked.delete(donor.index);
-      blocked.add(recipient.index);
-    }
-  }
-
-  function computeRowBalanceData(blocked, width, height, protectedIndices) {
-    const total = width * height;
-    const protectedSet = protectedIndices instanceof Set ? protectedIndices : null;
-    const rows = Array.from({ length: height }, (_, y) => ({
-      y,
-      isTop: y === 0,
-      isBottom: y === height - 1,
-      blocked: [],
-      available: []
-    }));
-    for (let index = 0; index < total; index += 1) {
-      const cell = describeCell(index, width, height);
-      cell.protected = protectedSet ? protectedSet.has(index) : false;
-      if (blocked.has(index)) {
-        rows[cell.y].blocked.push(cell);
-      } else {
-        rows[cell.y].available.push(cell);
-      }
-    }
-    const edgeBlocked = rows.reduce((sum, row) => {
-      if (row.isTop || row.isBottom) {
-        return sum + row.blocked.length;
-      }
-      return sum;
-    }, 0);
-    const blockedRowCount = rows.reduce((count, row) => (row.blocked.length ? count + 1 : count), 0);
-    return { rows, edgeBlocked, blockedRowCount };
-  }
-
-  function pickRowDonor(rows) {
-    if (!Array.isArray(rows) || !rows.length) {
-      return null;
-    }
-    const ordered = rows.slice().sort((a, b) => b.blocked.length - a.blocked.length);
-    for (let i = 0; i < ordered.length; i += 1) {
-      const candidates = ordered[i].blocked.filter(cell => !cell.protected);
-      if (candidates.length) {
-        return candidates[randomInt(0, candidates.length - 1)];
-      }
-    }
-    return null;
-  }
-
-  function pickRowRecipient(rows) {
-    if (!Array.isArray(rows) || !rows.length) {
-      return null;
-    }
-    const ordered = rows.slice().sort((a, b) => a.blocked.length - b.blocked.length);
-    for (let i = 0; i < ordered.length; i += 1) {
-      const candidates = ordered[i].available;
-      if (candidates && candidates.length) {
-        return candidates[randomInt(0, candidates.length - 1)];
-      }
-    }
-    return null;
-  }
-
-  function computeDistributionData(blocked, width, height, protectedIndices) {
-    const total = width * height;
-    const protectedSet = protectedIndices instanceof Set ? protectedIndices : null;
-    const data = {
-      blockedCells: [],
-      blockedCenter: [],
-      blockedRight: [],
-      blockedLeftInterior: [],
-      blockedRightInterior: [],
-      blockedInterior: [],
-      blockedCorners: [],
-      blockedLeftCorners: [],
-      blockedRightCorners: [],
-      blockedLeftEdge: [],
-      blockedRightEdge: [],
-      blockedNeutralEdge: [],
-      availableCells: [],
-      availableCenter: [],
-      availableRight: [],
-      availableInterior: [],
-      availableLeftInterior: [],
-      availableRightInterior: []
-    };
-    for (let index = 0; index < total; index += 1) {
-      const cell = describeCell(index, width, height);
-      cell.protected = protectedSet ? protectedSet.has(index) : false;
-      if (blocked.has(index)) {
-        data.blockedCells.push(cell);
-        if (cell.isCenter) {
-          data.blockedCenter.push(cell);
-        }
-        if (!cell.isEdge) {
-          data.blockedInterior.push(cell);
-        }
-        if (!cell.isEdge && cell.isLeft) {
-          data.blockedLeftInterior.push(cell);
-        }
-        if (!cell.isEdge && cell.isRight) {
-          data.blockedRightInterior.push(cell);
-        }
-        if (cell.isCorner) {
-          data.blockedCorners.push(cell);
-          if (cell.isLeft) {
-            data.blockedLeftCorners.push(cell);
-          }
-          if (cell.isRight) {
-            data.blockedRightCorners.push(cell);
-          }
-        } else if (cell.isEdge) {
-          if (cell.isLeft) {
-            data.blockedLeftEdge.push(cell);
-          } else if (cell.isRight) {
-            data.blockedRightEdge.push(cell);
-          } else {
-            data.blockedNeutralEdge.push(cell);
-          }
-        }
-        if (cell.isRight) {
-          data.blockedRight.push(cell);
-        }
-      } else {
-        data.availableCells.push(cell);
-        if (cell.isCenter) {
-          data.availableCenter.push(cell);
-        }
-        if (!cell.isEdge) {
-          data.availableInterior.push(cell);
-        }
-        if (!cell.isEdge && cell.isLeft) {
-          data.availableLeftInterior.push(cell);
-        }
-        if (!cell.isEdge && cell.isRight) {
-          data.availableRightInterior.push(cell);
-        }
-        if (cell.isRight) {
-          data.availableRight.push(cell);
-        }
-      }
-    }
-    return data;
-  }
-
-  function describeCell(index, width, height) {
-    const x = index % width;
-    const y = Math.floor(index / width);
-    const isLeftEdge = x === 0;
-    const isRightEdge = x === width - 1;
-    const isTopEdge = y === 0;
-    const isBottomEdge = y === height - 1;
-    const isCorner = (isLeftEdge || isRightEdge) && (isTopEdge || isBottomEdge);
-    const isEdge = isCorner || isLeftEdge || isRightEdge || isTopEdge || isBottomEdge;
-    const midLeft = Math.floor((width - 1) / 2);
-    const midRight = Math.ceil(width / 2);
-    const isLeft = x <= midLeft;
-    const isRight = x >= midRight;
-    return {
-      index,
-      x,
-      y,
-      isCorner,
-      isEdge,
-      isCenter: !isEdge,
-      isTop: isTopEdge,
-      isBottom: isBottomEdge,
-      isLeft,
-      isRight
-    };
-  }
-
-  function collectPatternCells(anchor, direction, width, height, blocked, limit) {
-    if (!anchor || !direction) {
-      return [];
-    }
-    const maxLength = Math.max(2, Math.min(limit, Math.max(width, height)));
-    const length = Math.max(2, Math.min(maxLength, randomInt(2, Math.min(5, maxLength))));
-    const cells = [];
-    let x = anchor.x;
-    let y = anchor.y;
-    for (let step = 0; step < length; step += 1) {
-      if (x < 0 || x >= width || y < 0 || y >= height) {
-        break;
-      }
-      const index = y * width + x;
-      if (step > 0 && blocked.has(index)) {
-        break;
-      }
-      cells.push(index);
-      x += direction.dx;
-      y += direction.dy;
-    }
-    return cells;
-  }
-
-  function buildDonorList(groups, protectedIndices) {
-    const donors = [];
-    const seen = new Set();
-    if (!Array.isArray(groups)) {
-      return donors;
-    }
-    groups.forEach(group => {
-      if (!Array.isArray(group) || !group.length) {
-        return;
-      }
-      group.forEach(cell => {
-        if (!cell || cell.protected || seen.has(cell.index)) {
-          return;
-        }
-        donors.push(cell);
-        seen.add(cell.index);
-      });
-    });
-    return donors;
-  }
-
-  function pickPriorityDonor(donors) {
-    if (!Array.isArray(donors) || !donors.length) {
-      return null;
-    }
-    const sampleSize = Math.min(donors.length, 3);
-    return donors[randomInt(0, sampleSize - 1)];
-  }
-
-  function pickRandomCell(cells) {
-    if (!Array.isArray(cells) || !cells.length) {
-      return null;
-    }
-    return cells[randomInt(0, cells.length - 1)];
-  }
-
-  function getNeighborIndices(index, width, height) {
-    const neighbors = [];
-    const x = index % width;
-    const y = Math.floor(index / width);
-    if (x > 0) {
-      neighbors.push(index - 1);
-    }
-    if (x < width - 1) {
-      neighbors.push(index + 1);
-    }
-    if (y > 0) {
-      neighbors.push(index - width);
-    }
-    if (y < height - 1) {
-      neighbors.push(index + width);
-    }
-    return neighbors;
-  }
-
-  function findHamiltonianPath(width, height, blockedIndices, limiter) {
+  function isGraphConnected(width, height, blocked) {
     const totalCells = width * height;
-    const totalAccessible = totalCells - blockedIndices.size;
-    if (totalAccessible <= 0) {
+    const available = [];
+    for (let i = 0; i < totalCells; i += 1) {
+      if (!blocked.has(i)) {
+        available.push(i);
+      }
+    }
+
+    if (available.length <= 1) {
+      return available.length === 1;
+    }
+
+    const visited = new Set();
+    const queue = [available[0]];
+    visited.add(available[0]);
+
+    while (queue.length > 0) {
+      const current = queue.shift();
+      const x = current % width;
+      const y = Math.floor(current / width);
+
+      const neighbors = [];
+      if (x > 0) neighbors.push(current - 1);
+      if (x < width - 1) neighbors.push(current + 1);
+      if (y > 0) neighbors.push(current - width);
+      if (y < height - 1) neighbors.push(current + width);
+
+      for (let i = 0; i < neighbors.length; i += 1) {
+        const neighbor = neighbors[i];
+        if (!blocked.has(neighbor) && !visited.has(neighbor)) {
+          visited.add(neighbor);
+          queue.push(neighbor);
+        }
+      }
+    }
+
+    return visited.size === available.length;
+  }
+
+  function findHamiltonianPathIterative(width, height, blocked) {
+    const totalCells = width * height;
+    const accessibleCount = totalCells - blocked.size;
+
+    if (accessibleCount <= 0) {
+      return null;
+    }
+    if (accessibleCount === 1) {
+      for (let i = 0; i < totalCells; i += 1) {
+        if (!blocked.has(i)) {
+          return [i];
+        }
+      }
       return null;
     }
 
-    const neighborCache = new Array(totalCells);
-    const accessible = [];
+    const neighborCache = [];
     for (let index = 0; index < totalCells; index += 1) {
-      if (blockedIndices.has(index)) {
+      if (blocked.has(index)) {
         neighborCache[index] = [];
         continue;
       }
-      const coord = indexToCoord(index, width);
+      const x = index % width;
+      const y = Math.floor(index / width);
       const neighbors = [];
-      if (coord.x > 0) {
-        const left = index - 1;
-        if (!blockedIndices.has(left)) {
-          neighbors.push(left);
-        }
-      }
-      if (coord.x < width - 1) {
-        const right = index + 1;
-        if (!blockedIndices.has(right)) {
-          neighbors.push(right);
-        }
-      }
-      if (coord.y > 0) {
-        const up = index - width;
-        if (!blockedIndices.has(up)) {
-          neighbors.push(up);
-        }
-      }
-      if (coord.y < height - 1) {
-        const down = index + width;
-        if (!blockedIndices.has(down)) {
-          neighbors.push(down);
-        }
-      }
+      if (x > 0 && !blocked.has(index - 1)) neighbors.push(index - 1);
+      if (x < width - 1 && !blocked.has(index + 1)) neighbors.push(index + 1);
+      if (y > 0 && !blocked.has(index - width)) neighbors.push(index - width);
+      if (y < height - 1 && !blocked.has(index + width)) neighbors.push(index + width);
       neighborCache[index] = neighbors;
-      accessible.push(index);
     }
 
-    if (!accessible.length) {
-      return null;
-    }
-
-    const visited = new Uint8Array(totalCells);
-    blockedIndices.forEach(index => {
-      visited[index] = 1;
-    });
-    const path = new Array(totalAccessible);
-    const startCandidates = shuffle(accessible.slice());
-    const maxStartCandidates = Math.min(
-      startCandidates.length,
-      Math.max(6, Math.ceil(totalAccessible / 12))
-    );
-    const iterationLimit = Math.max(12000, totalAccessible * 90);
-    let iterationCount = 0;
-
-    for (let i = 0; i < maxStartCandidates; i += 1) {
-      const start = startCandidates[i];
-      path[0] = start;
-      visited[start] = 1;
-      if (limiter && limiter.timedOut()) {
-        visited[start] = 0;
-        path[0] = undefined;
-        break;
+    const startCandidates = [];
+    for (let i = 0; i < totalCells; i += 1) {
+      if (!blocked.has(i)) {
+        startCandidates.push(i);
       }
-      if (search(1, start)) {
+    }
+    shuffle(startCandidates);
+
+    const maxStartTries = Math.min(startCandidates.length, 6);
+    const maxIterations = Math.min(50000, accessibleCount * 500);
+
+    for (let s = 0; s < maxStartTries; s += 1) {
+      const start = startCandidates[s];
+      const result = searchPathIterative(start, accessibleCount, neighborCache, maxIterations);
+      if (result) {
+        return result;
+      }
+    }
+
+    return null;
+  }
+
+  function searchPathIterative(start, targetLength, neighborCache, maxIterations) {
+    const path = [start];
+    const visited = new Set([start]);
+    const choiceStack = [0];
+    let iterations = 0;
+
+    while (path.length > 0 && iterations < maxIterations) {
+      iterations += 1;
+
+      if (path.length === targetLength) {
         return path.slice();
       }
-      visited[start] = 0;
-      path[0] = undefined;
-    }
-    return null;
 
-    function search(step, current) {
-      iterationCount += 1;
-      if (iterationCount >= iterationLimit) {
-        if (limiter && typeof limiter.forceTimeout === 'function') {
-          limiter.forceTimeout();
-        }
-        return false;
-      }
-      if (limiter && limiter.timedOut()) {
-        return false;
-      }
-      if (step >= totalAccessible) {
-        return true;
-      }
+      const current = path[path.length - 1];
       const neighbors = neighborCache[current];
-      if (!neighbors || !neighbors.length) {
-        return false;
-      }
-      const ordered = orderNeighbors(neighbors);
-      for (let j = 0; j < ordered.length; j += 1) {
-        const next = ordered[j];
-        if (visited[next]) {
-          continue;
-        }
-        visited[next] = 1;
-        path[step] = next;
-        if (search(step + 1, next)) {
-          return true;
-        }
-        visited[next] = 0;
-        path[step] = undefined;
-        if (limiter && limiter.timedOut()) {
-          return false;
+
+      const candidates = [];
+      for (let i = 0; i < neighbors.length; i += 1) {
+        if (!visited.has(neighbors[i])) {
+          const n = neighbors[i];
+          let degree = 0;
+          const nNeighbors = neighborCache[n];
+          for (let j = 0; j < nNeighbors.length; j += 1) {
+            if (!visited.has(nNeighbors[j])) {
+              degree += 1;
+            }
+          }
+          candidates.push({ index: n, degree: degree });
         }
       }
-      return false;
+
+      candidates.sort(function(a, b) { return a.degree - b.degree; });
+
+      const choiceIndex = choiceStack[choiceStack.length - 1];
+
+      if (choiceIndex < candidates.length) {
+        const next = candidates[choiceIndex].index;
+        choiceStack[choiceStack.length - 1] = choiceIndex + 1;
+
+        path.push(next);
+        visited.add(next);
+        choiceStack.push(0);
+      } else {
+        const removed = path.pop();
+        visited.delete(removed);
+        choiceStack.pop();
+      }
     }
 
-    function orderNeighbors(list) {
-      const candidates = [];
-      for (let k = 0; k < list.length; k += 1) {
-        const neighbor = list[k];
-        if (visited[neighbor]) {
-          continue;
-        }
-        const neighbors = neighborCache[neighbor];
-        let degree = 0;
-        for (let d = 0; d < neighbors.length; d += 1) {
-          if (!visited[neighbors[d]]) {
-            degree += 1;
-          }
-        }
-        candidates.push({ index: neighbor, degree });
-      }
-      shuffle(candidates);
-      candidates.sort((a, b) => a.degree - b.degree);
-      return candidates.map(candidate => candidate.index);
-    }
+    return null;
   }
 
   function countTurns(path, width) {
@@ -2308,214 +1246,6 @@
       }
     }
     return path;
-  }
-
-  function buildFallbackPuzzle(mode, width, height, difficultyConfig, layoutConfig, difficultyKey) {
-    const basePath = createSimpleHamiltonianPath(width, height);
-    if (!Array.isArray(basePath) || basePath.length < 2) {
-      return null;
-    }
-    const holeRange = difficultyConfig.holeRange || { min: 0, max: 0 };
-    const availableLength = basePath.length;
-    const minHoles = clampNumber(holeRange.min, 0, availableLength - 2, 0);
-    const maxHoles = clampNumber(holeRange.max, minHoles, availableLength - 2, minHoles);
-    if (maxHoles <= 0) {
-      return buildPuzzleFromPath(mode, width, height, new Set(), basePath, difficultyConfig);
-    }
-    const targetHoles = Math.max(minHoles, Math.min(maxHoles, Math.round((minHoles + maxHoles) / 2)));
-    const biasedBlocked = generateBlockedSet(
-      width,
-      height,
-      targetHoles,
-      layoutConfig,
-      difficultyKey
-    );
-    const biasedPath = findHamiltonianPath(width, height, biasedBlocked, null);
-    if (biasedPath && biasedPath.length >= 2) {
-      return buildPuzzleFromPath(mode, width, height, biasedBlocked, biasedPath, difficultyConfig);
-    }
-    const distributedBlocked = createDistributedHoleSetFromPath(basePath, width, height, targetHoles);
-    if (distributedBlocked.size) {
-      const distributedPath = findHamiltonianPath(width, height, distributedBlocked, null);
-      if (distributedPath && distributedPath.length >= 2) {
-        return buildPuzzleFromPath(mode, width, height, distributedBlocked, distributedPath, difficultyConfig);
-      }
-    }
-    const interiorBiasedBlocked = createInteriorBiasedHoleSetFromPath(
-      basePath,
-      width,
-      height,
-      targetHoles
-    );
-    if (interiorBiasedBlocked.size) {
-      const interiorPath = findHamiltonianPath(width, height, interiorBiasedBlocked, null);
-      if (interiorPath && interiorPath.length >= 2) {
-        return buildPuzzleFromPath(mode, width, height, interiorBiasedBlocked, interiorPath, difficultyConfig);
-      }
-    }
-    const blocked = new Set();
-    let startIndex = 0;
-    let endIndex = basePath.length - 1;
-    let holesCreated = 0;
-    let removeStartNext = true;
-    while (holesCreated < targetHoles && endIndex - startIndex + 1 > 2) {
-      const canRemoveStart = startIndex < endIndex - 1;
-      const canRemoveEnd = endIndex > startIndex + 1;
-      let removed = false;
-      if (removeStartNext && canRemoveStart) {
-        blocked.add(basePath[startIndex]);
-        startIndex += 1;
-        removed = true;
-      } else if (!removeStartNext && canRemoveEnd) {
-        blocked.add(basePath[endIndex]);
-        endIndex -= 1;
-        removed = true;
-      } else if (canRemoveStart) {
-        blocked.add(basePath[startIndex]);
-        startIndex += 1;
-        removed = true;
-      } else if (canRemoveEnd) {
-        blocked.add(basePath[endIndex]);
-        endIndex -= 1;
-        removed = true;
-      }
-      if (!removed) {
-        break;
-      }
-      holesCreated += 1;
-      removeStartNext = !removeStartNext;
-    }
-    const trimmedPath = basePath.slice(startIndex, endIndex + 1);
-    if (trimmedPath.length < 2) {
-      return buildPuzzleFromPath(mode, width, height, new Set(), basePath, difficultyConfig);
-    }
-    return buildPuzzleFromPath(mode, width, height, blocked, trimmedPath, difficultyConfig);
-  }
-
-  function createDistributedHoleSetFromPath(basePath, width, height, targetHoles) {
-    if (!Array.isArray(basePath) || basePath.length < 3 || !Number.isFinite(width) || !Number.isFinite(height)) {
-      return new Set();
-    }
-    const available = Math.max(0, basePath.length - 2);
-    const limit = Math.min(Math.max(0, targetHoles), available);
-    if (limit <= 0) {
-      return new Set();
-    }
-    const evenInterior = [];
-    const oddInterior = [];
-    const evenEdge = [];
-    const oddEdge = [];
-    for (let position = 1; position < basePath.length - 1; position += 1) {
-      const index = basePath[position];
-      const y = Math.floor(index / width);
-      const isEdgeRow = y === 0 || y === height - 1;
-      const entry = { index };
-      if (position % 2 === 0) {
-        (isEdgeRow ? evenEdge : evenInterior).push(entry);
-      } else {
-        (isEdgeRow ? oddEdge : oddInterior).push(entry);
-      }
-    }
-    const pools = {
-      even: { interior: evenInterior, edge: evenEdge },
-      odd: { interior: oddInterior, edge: oddEdge }
-    };
-    const swapParity = parity => (parity === 'even' ? 'odd' : 'even');
-    const pickFromPool = pool => {
-      if (!Array.isArray(pool) || pool.length === 0) {
-        return null;
-      }
-      const idx = randomInt(0, pool.length - 1);
-      const [choice] = pool.splice(idx, 1);
-      return choice;
-    };
-    const result = new Set();
-    let preferredParity = pools.even.interior.length >= pools.odd.interior.length ? 'even' : 'odd';
-    let guard = 0;
-    while (result.size < limit && guard < limit * 8) {
-      guard += 1;
-      const alternateParity = swapParity(preferredParity);
-      const order = [
-        pools[preferredParity].interior,
-        pools[alternateParity].interior,
-        pools[preferredParity].edge,
-        pools[alternateParity].edge
-      ];
-      let picked = null;
-      for (let i = 0; i < order.length; i += 1) {
-        picked = pickFromPool(order[i]);
-        if (picked) {
-          result.add(picked.index);
-          break;
-        }
-      }
-      if (!picked) {
-        break;
-      }
-      preferredParity = swapParity(preferredParity);
-    }
-    if (result.size < limit) {
-      const remaining = [];
-      for (let position = 1; position < basePath.length - 1; position += 1) {
-        const index = basePath[position];
-        if (!result.has(index)) {
-          remaining.push(index);
-        }
-      }
-      while (result.size < limit && remaining.length) {
-        const idx = randomInt(0, remaining.length - 1);
-        const [choice] = remaining.splice(idx, 1);
-        result.add(choice);
-      }
-    }
-    return result;
-  }
-
-  function createInteriorBiasedHoleSetFromPath(basePath, width, height, targetHoles) {
-    if (!Array.isArray(basePath) || basePath.length < 3 || !Number.isFinite(width) || !Number.isFinite(height)) {
-      return new Set();
-    }
-    const available = Math.max(0, basePath.length - 2);
-    const limit = Math.min(Math.max(0, targetHoles), available);
-    if (limit <= 0) {
-      return new Set();
-    }
-    const interiorPool = [];
-    const edgePool = [];
-    const protectedSpan = Math.max(2, Math.floor(basePath.length * 0.1));
-    for (let i = protectedSpan; i < basePath.length - protectedSpan; i += 1) {
-      const index = basePath[i];
-      const cell = describeCell(index, width, height);
-      if (cell.isCorner) {
-        continue;
-      }
-      if (cell.isEdge) {
-        edgePool.push(index);
-      } else {
-        interiorPool.push(index);
-      }
-    }
-    const pickFromPool = pool => {
-      if (!pool.length) {
-        return null;
-      }
-      const idx = randomInt(0, pool.length - 1);
-      const [choice] = pool.splice(idx, 1);
-      return choice;
-    };
-    const blocked = new Set();
-    let guard = 0;
-    while (blocked.size < limit && guard < limit * 6) {
-      guard += 1;
-      const preferInterior = interiorPool.length > edgePool.length || Math.random() < 0.75;
-      const source = preferInterior ? interiorPool : edgePool;
-      const candidate = pickFromPool(source) || pickFromPool(preferInterior ? edgePool : interiorPool);
-      if (candidate === null || candidate === undefined) {
-        break;
-      }
-      blocked.add(candidate);
-    }
-    return blocked;
   }
 
   function createColorSegments(pathCoords, difficultyConfig) {
@@ -3146,10 +1876,7 @@
     }
     let gained = 0;
     try {
-      const multiplier = state.currentPuzzle && state.currentPuzzle.impossible
-        ? IMPOSSIBLE_REWARD_MULTIPLIER
-        : 1;
-      const tickets = Math.max(1, Math.round(COMPLETION_REWARD.gachaTickets * multiplier));
+      const tickets = Math.max(1, COMPLETION_REWARD.gachaTickets);
       gained = awardGacha(tickets, { unlockTicketStar: true });
     } catch (error) {
       console.warn('The Line: unable to grant gacha tickets', error);

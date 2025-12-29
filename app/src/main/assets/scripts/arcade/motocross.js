@@ -3210,6 +3210,22 @@
     if (!event || event.pointerType !== 'touch') {
       return;
     }
+    // Only handle events when the game is active and the target is not a form element
+    if (!state.active) {
+      return;
+    }
+    const target = event.target;
+    if (target) {
+      const tagName = typeof target.tagName === 'string' ? target.tagName.toUpperCase() : '';
+      // Don't interfere with native form elements like <select>, <input>, <button>
+      if (tagName === 'SELECT' || tagName === 'INPUT' || tagName === 'BUTTON' || tagName === 'TEXTAREA') {
+        return;
+      }
+      // Don't interfere with elements inside overlays or controls
+      if (target.closest && (target.closest('.arcade-overlay') || target.closest('[data-motocross-control]'))) {
+        return;
+      }
+    }
     updatePointerSide(event.pointerId, event.clientX);
     if (typeof event.preventDefault === 'function') {
       event.preventDefault();
@@ -3217,21 +3233,22 @@
   }
 
   function handlePointerMove(event) {
-    if (!event || event.pointerType !== 'touch') {
-      return;
-    }
-    updatePointerSide(event.pointerId, event.clientX);
+    // Intentionally empty: once a pointer is down, its side (left/right) is locked
+    // until the pointer is released. This prevents the bike from stopping when
+    // the player drags their finger across the screen.
+    // The side is determined only at pointerdown in handlePointerDown.
   }
 
   function handlePointerUp(event) {
     if (!event || event.pointerType !== 'touch') {
       return;
     }
+    // Always release pointers even if not active, to clean up state
     releasePointer(event.pointerId);
   }
 
   function handleKeyDown(event) {
-    if (!event) {
+    if (!event || !state.active) {
       return;
     }
     const code = event.code;
@@ -3253,7 +3270,7 @@
   }
 
   function handleKeyUp(event) {
-    if (!event) {
+    if (!event || !state.active) {
       return;
     }
     const code = event.code;
