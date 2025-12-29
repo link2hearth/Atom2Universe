@@ -100,7 +100,7 @@ Il n’a pas vocation à être “propre” ou “optimisé” au sens industrie
 - Le code est généré avec l’aide de ChatGPT CODEX
 - La structure peut être inhabituelle même si j'ai tout fait pour structurer au mieux.
 - Certaines fonctionnalités existent surtout parce que "Pourquoi pas?"
-
+- Le jeu tourne bien sur mobiles, mais est designé pour une tablette. 
 Ce dépôt est autant un **jeu** qu’un **journal de curiosité numérique**.
 
 ---
