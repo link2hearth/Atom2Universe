@@ -483,7 +483,6 @@ body.theme-light .news-card__button {
   background: rgba(12, 14, 22, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
 }
 
 .news-ticker__label-button {
