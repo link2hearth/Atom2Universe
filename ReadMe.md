@@ -75,7 +75,7 @@ And that’s entirely intentional.
 
 ## 🧠 Project Philosophy
 
-Atom to Universe is прежде everything:
+Atom to Universe is everything:
 
 * an **AI-assisted creative experiment**
 * a demonstration of what someone with no programming knowledge can build
