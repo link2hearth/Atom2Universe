@@ -465,6 +465,7 @@ body.theme-light .news-card__button {
 }
 
 .news-ticker {
+    --font-text: "Science Gothic";
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
