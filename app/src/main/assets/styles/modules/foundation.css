@@ -514,7 +514,6 @@ body.theme-aurora .header-playback-button.is-playing {
   font-family: 'Audiowide', 'Orbitron', sans-serif;
   font-size: calc(clamp(1.162rem, 1.89vw, 1.68rem) * var(--header-scale, 1));
   letter-spacing: 0.14em;
-  text-transform: uppercase;
   display: inline-flex;
   align-items: center;
   gap: calc(0.4rem * var(--header-scale, 1));
@@ -1007,7 +1006,6 @@ body.view-sudoku .status-bar {
 .status-label {
   font-size: calc(var(--font-size-scale-factor, 1) * clamp(0.55rem, 0.88vw, 0.7rem) * var(--header-scale, 1));
   letter-spacing: 0.12em;
-  text-transform: uppercase;
   opacity: 0.72;
 }
 
@@ -1271,7 +1269,6 @@ body.theme-aurora .status-bar {
   );
   font-size: calc(0.48rem * var(--font-size-scale-factor, 1) * var(--header-scale, 1));
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   padding: calc(0.16rem * var(--header-scale, 1))
     calc(0.44rem * var(--header-scale, 1));
   border-radius: calc(0.45rem * var(--header-scale, 1));
