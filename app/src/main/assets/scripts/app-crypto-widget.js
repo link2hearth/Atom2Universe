@@ -147,41 +147,51 @@ function getCryptoWidgetTrend(current, previous) {
   }
   return null;
 }
-
 function renderCryptoWidgetAmount(element, value, previousValue) {
   if (!element) {
     return;
   }
+
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) {
     element.textContent = CRYPTO_WIDGET_PLACEHOLDER;
     return;
   }
+
   const parts = getCryptoWidgetFormattedPriceParts(numeric);
   if (!parts || typeof document === 'undefined' || typeof element.replaceChildren !== 'function') {
     element.textContent = formatCryptoWidgetPrice(numeric);
     return;
   }
+
   const fragment = document.createDocumentFragment();
   const trend = getCryptoWidgetTrend(numeric, previousValue);
+
+  // Partie entière (ne change jamais de couleur)
   const majorSpan = document.createElement('span');
   majorSpan.className = 'crypto-widget__amount-major';
-  if (trend === 'up') {
-    majorSpan.classList.add('is-up');
-  } else if (trend === 'down') {
-    majorSpan.classList.add('is-down');
-  }
   majorSpan.textContent = parts.major;
   fragment.append(majorSpan);
+
+  // Décimales (elles seules changent de couleur)
   if (parts.minor) {
     const minorSpan = document.createElement('span');
     minorSpan.className = 'crypto-widget__amount-minor';
+
+    if (trend === 'up') {
+      minorSpan.classList.add('is-up');
+    } else if (trend === 'down') {
+      minorSpan.classList.add('is-down');
+    }
+
     minorSpan.textContent = parts.minor;
     fragment.append(minorSpan);
   }
+
   if (parts.suffix) {
     fragment.append(parts.suffix);
   }
+
   element.replaceChildren(fragment);
 }
 
