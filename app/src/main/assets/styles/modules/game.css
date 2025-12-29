@@ -30,7 +30,6 @@ body.theme-aurora .page--void {
   position: absolute;
   inset: -15%;
   background: radial-gradient(circle at center, rgba(255, 230, 180, 0.08) 0%, rgba(255, 120, 40, 0.04) 18%, rgba(5, 6, 12, 0.9) 60%, #010103 100%);
-  filter: blur(28px);
   z-index: 0;
   pointer-events: none;
 }
@@ -96,7 +95,6 @@ body.favorite-background-active .page--void::after {
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: calc(1.2rem * var(--crypto-widget-scale, 1));
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(18px);
   color: inherit;
 
   /* 1) tes variables */
