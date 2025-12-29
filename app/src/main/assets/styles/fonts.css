@@ -28,7 +28,6 @@
   font-weight: 400;
   font-display: swap;
   src: url('../fonts/DigitTech16-Regular.ttf') format('truetype');
-  unicode-range: U+0020, U+0025, U+002B, U+002C, U+002D, U+002E, U+00A0, U+00B0, U+00B7, U+00D7, U+202F, U+2212, U+0030-0039;
 }
 
 @font-face {
@@ -74,7 +73,7 @@
 @font-face {
   font-family: 'Designer Notes';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   font-display: swap;
   src: url('../fonts/Designer-Notes.ttf') format('truetype');
 }
