@@ -336,6 +336,10 @@
               "chatNoir": "Chat Noir",
               "skeleton": "Skeleton",
               "vortex": "Vortex"
+            },
+            "labels": {
+              "time": "Time",
+              "kills": "Kills"
             }
           }
         },
@@ -955,6 +959,10 @@
             "message": "Use the joystick to move. Eliminate enemies and upgrade your weapons each level.",
             "bestTime": "Best time",
             "bestLevel": "Max level",
+            "records": {
+              "time": "Time",
+              "kills": "Kills"
+            },
             "chooseHero": "Choose a hero:",
             "randomButton": "Random hero",
             "button": "Start",

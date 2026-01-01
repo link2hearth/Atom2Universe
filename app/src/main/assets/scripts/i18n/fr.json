@@ -336,6 +336,10 @@
               "chatNoir": "Chat Noir",
               "skeleton": "Skeleton",
               "vortex": "Vortex"
+            },
+            "labels": {
+              "time": "Temps",
+              "kills": "Kills"
             }
           }
         },
@@ -950,16 +954,20 @@
           "kills": "Kills"
         },
         "overlay": {
-          "start": {
-            "title": "Survis",
-            "message": "Utilisez le joystick pour vous déplacer. Éliminez les ennemis et améliorez vos armes à chaque niveau.",
-            "bestTime": "Meilleur temps",
-            "bestLevel": "Niveau max",
-            "chooseHero": "Choisir un héros :",
-            "randomButton": "Héros aléatoire",
-            "button": "Commencer",
-            "continueButton": "Continuer"
-          },
+              "start": {
+                "title": "Survis",
+                "message": "Utilisez le joystick pour vous déplacer. Éliminez les ennemis et améliorez vos armes à chaque niveau.",
+                "bestTime": "Meilleur temps",
+                "bestLevel": "Niveau max",
+                "records": {
+                  "time": "Temps",
+                  "kills": "Kills"
+                },
+                "chooseHero": "Choisir un héros :",
+                "randomButton": "Héros aléatoire",
+                "button": "Commencer",
+                "continueButton": "Continuer"
+              },
           "levelup": {
             "title": "Niveau supérieur !",
             "message": "Choisissez une amélioration"
