@@ -14,7 +14,10 @@ import org.json.JSONObject
 import org.json.JSONTokener
 import kotlin.text.Charsets
 
-class AndroidSaveBridge(context: Context) {
+class AndroidSaveBridge(
+    context: Context,
+    private val saveCore: SaveCore = SaveCore(context)
+) {
 
     private val appContext = context.applicationContext
     private val preferences = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -28,6 +31,7 @@ class AndroidSaveBridge(context: Context) {
         synchronized(saveLock) {
             if (payload.isNullOrEmpty()) {
                 clearDataInternal()
+                saveCore.import(null)
                 return
             }
 
@@ -40,6 +44,7 @@ class AndroidSaveBridge(context: Context) {
                 }
                 createAutoBackupLocked(normalizedPayload)
                 writeToFile(normalizedPayload)
+                saveCore.import(normalizedPayload)
                 removeLegacyPreference()
             } catch (error: IOException) {
                 Log.e(TAG, "Unable to persist save data", error)
@@ -50,18 +55,28 @@ class AndroidSaveBridge(context: Context) {
     @JavascriptInterface
     fun loadData(): String? {
         synchronized(saveLock) {
+            saveCore.export()?.let { cached ->
+                val normalized = unwrapEnvelopeForClientPayload(cached) ?: cached
+                if (isValidSavePayload(normalized)) {
+                    return normalized
+                }
+            }
+
             val fileData = readFromFile()
             if (!fileData.isNullOrEmpty()) {
                 val normalizedForClient = unwrapEnvelopeForClientPayload(fileData)
                 if (!normalizedForClient.isNullOrEmpty() && isValidSavePayload(normalizedForClient)) {
+                    saveCore.import(fileData)
                     return normalizedForClient
                 }
                 if (isValidSavePayload(fileData)) {
+                    saveCore.import(fileData)
                     return fileData
                 }
                 Log.w(TAG, "Primary save data is corrupted, attempting recovery")
                 val restored = restoreLatestBackupLocked()
                 if (!restored.isNullOrEmpty()) {
+                    saveCore.import(restored)
                     return restored
                 }
                 Log.e(TAG, "No valid backup available, clearing corrupted save data")
@@ -79,6 +94,7 @@ class AndroidSaveBridge(context: Context) {
                 try {
                     writeToFile(legacyData)
                     removeLegacyPreference()
+                    saveCore.import(legacyData)
                 } catch (error: IOException) {
                     Log.w(TAG, "Unable to migrate legacy save data", error)
                 }
@@ -93,6 +109,21 @@ class AndroidSaveBridge(context: Context) {
     fun clearData() {
         synchronized(saveLock) {
             clearDataInternal()
+            saveCore.import(null)
+        }
+    }
+
+    internal fun loadLegacyPayload(): String? {
+        synchronized(saveLock) {
+            val fileData = readFromFile()
+            if (!fileData.isNullOrEmpty() && isValidSavePayload(fileData)) {
+                return fileData
+            }
+            val legacyData = preferences.getString(KEY_SAVE, null)
+            if (!legacyData.isNullOrEmpty() && isValidSavePayload(legacyData)) {
+                return legacyData
+            }
+            return null
         }
     }
 
