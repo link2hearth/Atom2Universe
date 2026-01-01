@@ -3966,10 +3966,7 @@
   }
 
   function loadGameState() {
-    const autosaveApi = window.ArcadeAutosave;
-    if (!autosaveApi) return false;
-
-    const saved = autosaveApi.get(GAME_ID);
+    const saved = getStoredProgressEntry();
     if (!saved || !saved.savedGame) return false;
 
     const savedGame = saved.savedGame;
@@ -4091,10 +4088,7 @@
   }
 
   function hasSavedGame() {
-    const autosaveApi = window.ArcadeAutosave;
-    if (!autosaveApi) return false;
-
-    const saved = autosaveApi.get(GAME_ID);
+    const saved = getStoredProgressEntry();
     return !!(saved && saved.savedGame);
   }
 
