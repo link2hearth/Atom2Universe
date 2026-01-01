@@ -221,5 +221,8 @@
       "survivalIntervalSeconds": 60,
       "ticketAmount": 1
     }
+  },
+  "autosave": {
+    "intervalMs": 15000
   }
 }
