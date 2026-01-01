@@ -88,6 +88,49 @@ const SAVE_BACKUP_SETTINGS = Object.freeze({
 });
 
 /**
+ * Clés utilisées par SaveCore (AndroidSaveCoreBridge) pour stocker des états ciblés.
+ * - `arcadeProgress` : sauvegarde arcade normalisée (version + entries).
+ * - `arcadeAutosaveLegacy` : clé historique localStorage des autosaves arcade.
+ * - `arcadeGamePrefix` : préfixe des sauvegardes par mini-jeu.
+ * - `arcadeUi` : préférences UI/collections persistées hors du blob principal.
+ */
+const SAVE_CORE_KEYS = Object.freeze({
+  arcadeProgress: 'arcadeProgress',
+  arcadeAutosaveLegacy: 'atom2univers.arcadeSaves.v1',
+  arcadeGamePrefix: 'atom2univers.arcade.',
+  arcadeUi: Object.freeze({
+    headerCollapsed: 'atom2univers.ui.headerCollapsed',
+    collectionVideosUnlocked: 'atom2univers.collection.videosUnlocked',
+    collectionVideosState: 'atom2univers.collection.videosState.v1',
+    infoCardsCollapsed: Object.freeze([
+      'atom2univers.info.welcomeCollapsed',
+      'atom2univers.info.achievementsCollapsed',
+      'atom2univers.info.charactersCollapsed',
+      'atom2univers.info.cardsCollapsed',
+      'atom2univers.info.calculationsCollapsed',
+      'atom2univers.info.progressCollapsed',
+      'atom2univers.info.scoresCollapsed'
+    ]),
+    optionsCardsCollapsed: Object.freeze([
+      'atom2univers.options.preferencesCollapsed',
+      'atom2univers.options.backgroundCollapsed',
+      'atom2univers.options.backupsCollapsed',
+      'atom2univers.options.customPagesCollapsed',
+      'atom2univers.options.notesCollapsed'
+    ]),
+    collectionCardsCollapsed: Object.freeze([
+      'atom2univers.collection.imagesCollapsed',
+      'atom2univers.collection.bonusImagesCollapsed',
+      'atom2univers.collection.bonus1ImagesCollapsed',
+      'atom2univers.collection.bonus2ImagesCollapsed',
+      'atom2univers.collection.bonus3ImagesCollapsed',
+      'atom2univers.collection.downloadsCollapsed',
+      'atom2univers.collection.videosCollapsed'
+    ])
+  })
+});
+
+/**
  * Délai (en millisecondes) utilisé pour regrouper les sauvegardes arcade déclenchées
  * par les mini-jeux afin de limiter les écritures rapprochées.
  */

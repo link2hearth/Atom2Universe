@@ -474,17 +474,69 @@ function updateInfoDevkitVisibility() {
   elements.infoDevkitShopCard.setAttribute('aria-hidden', visible ? 'false' : 'true');
 }
 
+function getSaveCoreBridge() {
+  if (typeof globalThis === 'undefined') {
+    return null;
+  }
+  return globalThis.AndroidSaveCoreBridge || null;
+}
+
+function readSaveCoreValue(key) {
+  const bridge = getSaveCoreBridge();
+  if (!bridge || typeof bridge.get !== 'function') {
+    return null;
+  }
+  try {
+    return bridge.get(key);
+  } catch (error) {
+    console.warn('Unable to read SaveCore preference', key, error);
+    return null;
+  }
+}
+
+function writeSaveCoreValue(key, value) {
+  const bridge = getSaveCoreBridge();
+  if (!bridge || typeof bridge.set !== 'function') {
+    return false;
+  }
+  try {
+    return bridge.set(key, value);
+  } catch (error) {
+    console.warn('Unable to write SaveCore preference', key, error);
+    return false;
+  }
+}
+
+function parseStoredBoolean(value) {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'true' || normalized === '1') {
+      return true;
+    }
+    if (normalized === 'false' || normalized === '0') {
+      return false;
+    }
+  }
+  return null;
+}
+
 function readStoredInfoCardCollapsed(storageKey, defaultValue = false) {
   try {
+    const saveCoreValue = readSaveCoreValue(storageKey);
+    const parsedSaveCore = parseStoredBoolean(saveCoreValue);
+    if (parsedSaveCore != null) {
+      return parsedSaveCore;
+    }
     const stored = globalThis.localStorage?.getItem(storageKey);
-    if (typeof stored === 'string') {
-      const normalized = stored.trim().toLowerCase();
-      if (normalized === 'true') {
-        return true;
+    const parsedLocal = parseStoredBoolean(stored);
+    if (parsedLocal != null) {
+      if (writeSaveCoreValue(storageKey, String(parsedLocal))) {
+        globalThis.localStorage?.removeItem(storageKey);
       }
-      if (normalized === 'false') {
-        return false;
-      }
+      return parsedLocal;
     }
   } catch (error) {
     console.warn('Unable to read info card preference', storageKey, error);
@@ -494,7 +546,12 @@ function readStoredInfoCardCollapsed(storageKey, defaultValue = false) {
 
 function writeStoredInfoCardCollapsed(storageKey, collapsed) {
   try {
-    globalThis.localStorage?.setItem(storageKey, collapsed ? 'true' : 'false');
+    const serialized = collapsed ? 'true' : 'false';
+    if (!writeSaveCoreValue(storageKey, serialized)) {
+      globalThis.localStorage?.setItem(storageKey, serialized);
+    } else {
+      globalThis.localStorage?.removeItem(storageKey);
+    }
   } catch (error) {
     console.warn('Unable to persist info card preference', storageKey, error);
   }
@@ -502,15 +559,18 @@ function writeStoredInfoCardCollapsed(storageKey, collapsed) {
 
 function readStoredCollectionVideosUnlocked(defaultValue = false) {
   try {
+    const saveCoreValue = readSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    const parsedSaveCore = parseStoredBoolean(saveCoreValue);
+    if (parsedSaveCore != null) {
+      return parsedSaveCore;
+    }
     const stored = globalThis.localStorage?.getItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
-    if (typeof stored === 'string') {
-      const normalized = stored.trim().toLowerCase();
-      if (normalized === 'true') {
-        return true;
+    const parsedLocal = parseStoredBoolean(stored);
+    if (parsedLocal != null) {
+      if (writeSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, String(parsedLocal))) {
+        globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
       }
-      if (normalized === 'false') {
-        return false;
-      }
+      return parsedLocal;
     }
   } catch (error) {
     console.warn('Unable to read collection video unlock state', error);
@@ -520,14 +580,17 @@ function readStoredCollectionVideosUnlocked(defaultValue = false) {
 
 function writeStoredCollectionVideosUnlocked(unlocked) {
   try {
-    if (!globalThis.localStorage) {
-      collectionVideosUnlockedCache = unlocked === true;
-      return;
-    }
-    if (unlocked) {
-      globalThis.localStorage.setItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true');
+    const shouldUnlock = unlocked === true;
+    if (shouldUnlock) {
+      if (!writeSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true')) {
+        globalThis.localStorage?.setItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true');
+      } else {
+        globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+      }
+    } else if (!writeSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, null)) {
+      globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
     } else {
-      globalThis.localStorage.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+      globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
     }
     collectionVideosUnlockedCache = unlocked === true;
   } catch (error) {
@@ -541,7 +604,8 @@ function persistCollectionVideoUnlockState(unlocked) {
 
 function readStoredCollectionVideoSnapshotEntries() {
   try {
-    const raw = globalThis.localStorage?.getItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+    const saveCoreValue = readSaveCoreValue(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+    const raw = saveCoreValue ?? globalThis.localStorage?.getItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
     if (typeof raw !== 'string' || !raw.trim()) {
       return [];
     }
@@ -566,6 +630,9 @@ function readStoredCollectionVideoSnapshotEntries() {
         };
       })
       .filter(entry => entry);
+    if (saveCoreValue == null && writeSaveCoreValue(COLLECTION_VIDEOS_STATE_STORAGE_KEY, raw)) {
+      globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+    }
   } catch (error) {
     console.warn('Unable to read collection video snapshot', error);
   }
@@ -574,11 +641,12 @@ function readStoredCollectionVideoSnapshotEntries() {
 
 function writeStoredCollectionVideoSnapshot(entries) {
   try {
-    if (!globalThis.localStorage) {
-      return false;
-    }
     if (!Array.isArray(entries) || entries.length === 0) {
-      globalThis.localStorage.removeItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+      if (!writeSaveCoreValue(COLLECTION_VIDEOS_STATE_STORAGE_KEY, null)) {
+        globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+      } else {
+        globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+      }
       return true;
     }
     const payload = {
@@ -589,7 +657,12 @@ function writeStoredCollectionVideoSnapshot(entries) {
         firstAcquiredAt: entry.firstAcquiredAt || null
       }))
     };
-    globalThis.localStorage.setItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY, JSON.stringify(payload));
+    const serialized = JSON.stringify(payload);
+    if (!writeSaveCoreValue(COLLECTION_VIDEOS_STATE_STORAGE_KEY, serialized)) {
+      globalThis.localStorage?.setItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY, serialized);
+    } else {
+      globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_STATE_STORAGE_KEY);
+    }
     return true;
   } catch (error) {
     console.warn('Unable to persist collection video snapshot', error);
@@ -682,15 +755,18 @@ if (typeof globalThis !== 'undefined') {
 
 function readStoredCollectionVideosUnlocked(defaultValue = false) {
   try {
+    const saveCoreValue = readSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+    const parsedSaveCore = parseStoredBoolean(saveCoreValue);
+    if (parsedSaveCore != null) {
+      return parsedSaveCore;
+    }
     const stored = globalThis.localStorage?.getItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
-    if (typeof stored === 'string') {
-      const normalized = stored.trim().toLowerCase();
-      if (normalized === 'true') {
-        return true;
+    const parsedLocal = parseStoredBoolean(stored);
+    if (parsedLocal != null) {
+      if (writeSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, String(parsedLocal))) {
+        globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
       }
-      if (normalized === 'false') {
-        return false;
-      }
+      return parsedLocal;
     }
   } catch (error) {
     console.warn('Unable to read collection video unlock state', error);
@@ -700,14 +776,17 @@ function readStoredCollectionVideosUnlocked(defaultValue = false) {
 
 function writeStoredCollectionVideosUnlocked(unlocked) {
   try {
-    if (!globalThis.localStorage) {
-      collectionVideosUnlockedCache = unlocked === true;
-      return;
-    }
-    if (unlocked) {
-      globalThis.localStorage.setItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true');
+    const shouldUnlock = unlocked === true;
+    if (shouldUnlock) {
+      if (!writeSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true')) {
+        globalThis.localStorage?.setItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, 'true');
+      } else {
+        globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+      }
+    } else if (!writeSaveCoreValue(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY, null)) {
+      globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
     } else {
-      globalThis.localStorage.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
+      globalThis.localStorage?.removeItem(COLLECTION_VIDEOS_UNLOCKED_STORAGE_KEY);
     }
     collectionVideosUnlockedCache = unlocked === true;
   } catch (error) {
@@ -722,15 +801,18 @@ function persistCollectionVideoUnlockState(unlocked) {
 
 function readStoredHeaderCollapsed(defaultValue = false) {
   try {
+    const saveCoreValue = readSaveCoreValue(HEADER_COLLAPSED_STORAGE_KEY);
+    const parsedSaveCore = parseStoredBoolean(saveCoreValue);
+    if (parsedSaveCore != null) {
+      return parsedSaveCore;
+    }
     const stored = globalThis.localStorage?.getItem(HEADER_COLLAPSED_STORAGE_KEY);
-    if (typeof stored === 'string') {
-      const normalized = stored.trim().toLowerCase();
-      if (normalized === 'true' || normalized === '1') {
-        return true;
+    const parsedLocal = parseStoredBoolean(stored);
+    if (parsedLocal != null) {
+      if (writeSaveCoreValue(HEADER_COLLAPSED_STORAGE_KEY, String(parsedLocal))) {
+        globalThis.localStorage?.removeItem(HEADER_COLLAPSED_STORAGE_KEY);
       }
-      if (normalized === 'false' || normalized === '0') {
-        return false;
-      }
+      return parsedLocal;
     }
   } catch (error) {
     console.warn('Unable to read header collapse preference', error);
@@ -740,7 +822,12 @@ function readStoredHeaderCollapsed(defaultValue = false) {
 
 function writeStoredHeaderCollapsed(collapsed) {
   try {
-    globalThis.localStorage?.setItem(HEADER_COLLAPSED_STORAGE_KEY, collapsed ? 'true' : 'false');
+    const serialized = collapsed ? 'true' : 'false';
+    if (!writeSaveCoreValue(HEADER_COLLAPSED_STORAGE_KEY, serialized)) {
+      globalThis.localStorage?.setItem(HEADER_COLLAPSED_STORAGE_KEY, serialized);
+    } else {
+      globalThis.localStorage?.removeItem(HEADER_COLLAPSED_STORAGE_KEY);
+    }
   } catch (error) {
     console.warn('Unable to persist header collapse preference', error);
   }

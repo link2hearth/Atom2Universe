@@ -35,6 +35,34 @@
     hard: 'hard'
   };
 
+  const getSaveCoreBridge = () => window.AndroidSaveCoreBridge || null;
+
+  const readSaveCoreValue = key => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.warn('[Reflex] Unable to read SaveCore', error);
+      return null;
+    }
+  };
+
+  const writeSaveCoreValue = (key, value) => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.warn('[Reflex] Unable to write SaveCore', error);
+      return false;
+    }
+  };
+
   const DEFAULT_CONFIG = Object.freeze({
     target: {
       sizePx: 68,
@@ -178,27 +206,42 @@
   }
 
   function readLocalBestScores() {
-    if (typeof window === 'undefined' || !window.localStorage) {
+    if (typeof window === 'undefined') {
       return null;
     }
     try {
-      const raw = window.localStorage.getItem(LOCAL_BEST_SCORES_KEY);
-      if (!raw) {
-        return null;
+      const rawSaveCore = readSaveCoreValue(LOCAL_BEST_SCORES_KEY);
+      if (rawSaveCore) {
+        const parsed = JSON.parse(rawSaveCore);
+        return normalizeStoredBestScores(parsed);
       }
-      const parsed = JSON.parse(raw);
-      return normalizeStoredBestScores(parsed);
+      if (window.localStorage) {
+        const raw = window.localStorage.getItem(LOCAL_BEST_SCORES_KEY);
+        if (!raw) {
+          return null;
+        }
+        const parsed = JSON.parse(raw);
+        const normalized = normalizeStoredBestScores(parsed);
+        if (normalized && writeSaveCoreValue(LOCAL_BEST_SCORES_KEY, raw)) {
+          window.localStorage.removeItem(LOCAL_BEST_SCORES_KEY);
+        }
+        return normalized;
+      }
     } catch (error) {
       return null;
     }
+    return null;
   }
 
   function persistLocalBestScores(bestScores) {
-    if (typeof window === 'undefined' || !window.localStorage) {
+    if (typeof window === 'undefined') {
       return;
     }
     try {
-      window.localStorage.setItem(LOCAL_BEST_SCORES_KEY, JSON.stringify({ bestScores }));
+      const payload = JSON.stringify({ bestScores });
+      if (!writeSaveCoreValue(LOCAL_BEST_SCORES_KEY, payload) && window.localStorage) {
+        window.localStorage.setItem(LOCAL_BEST_SCORES_KEY, payload);
+      }
     } catch (error) {
       // ignore local storage errors
     }
