@@ -6,6 +6,10 @@
     "iframeDuration": 500,
     "weaponSlots": 5
   },
+  "_comment_enemySprites": "Tentatives de chargement d'un sprite ennemi avant fallback sur les points de couleur.",
+  "enemySprites": {
+    "loadRetries": 5
+  },
   "weapons": {
     "projectile": {
       "damage": 40,
