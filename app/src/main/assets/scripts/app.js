@@ -9123,6 +9123,7 @@ function registerManualClick() {
       global.manualClicks += 1;
     }
   }
+  markSaveRequested();
 }
 
 function registerFrenzyTrigger(type) {
@@ -9186,6 +9187,9 @@ function gainAtoms(amount, source = 'generic') {
   evaluateTrophies();
   if (lastArcadeUnlockState !== true && isFeatureUnlocked('arcade.hub')) {
     updateBrandPortalState({ animate: true });
+  }
+  if (source !== 'aps' && source !== 'offline') {
+    markSaveRequested();
   }
 }
 
@@ -12045,6 +12049,7 @@ function attemptPurchase(def, quantity = 1) {
     const countLabel = formatIntegerLocalized(mach3TicketsAwarded);
     showToast(t('scripts.app.shop.mach3Reward', { count: countLabel, unit: unitLabel }));
   }
+  markSaveRequested();
 }
 
 function getArcadeHubCardContainer(card) {
@@ -13691,6 +13696,7 @@ function saveGame() {
   const success = persisted || nativePersisted;
 
   if (success) {
+    saveRequested = false;
     saveBackupManager.recordSuccessfulSave({
       previousSerialized,
       currentSerialized: serialized
@@ -14238,6 +14244,11 @@ function normalizeArcadeProgress(raw) {
 let lastUpdate = performance.now();
 let lastSaveTime = performance.now();
 let lastUIUpdate = performance.now();
+let saveRequested = true;
+
+function markSaveRequested() {
+  saveRequested = true;
+}
 
 function updatePlaytime(deltaSeconds) {
   if (!gameState.stats) return;
@@ -14269,7 +14280,8 @@ function loop(now) {
     lastUIUpdate = now;
   }
 
-  if (now - lastSaveTime > 5000) {
+  if (now - lastSaveTime > 5000 && saveRequested) {
+    saveRequested = false;
     saveGame();
     lastSaveTime = now;
   }
