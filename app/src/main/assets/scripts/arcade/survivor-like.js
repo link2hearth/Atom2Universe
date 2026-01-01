@@ -238,6 +238,7 @@
     bestTimeByHero: {},
     bestKillsByHero: {},
     selectedHero: null, // Selected hero from start screen (null = random)
+    pendingLevelUpChoices: null,
     player: {
       x: 0,
       y: 0,
@@ -941,6 +942,15 @@
       startGame();
       return;
     }
+    if (state.gameState === GameState.LEVELUP) {
+      state.running = false;
+      state.paused = true;
+      showStatusBar();
+      showOverlay('levelup');
+      elements.pauseButton?.classList.add('survivor-like__pause-button--visible');
+      return;
+    }
+
     state.gameState = GameState.PLAYING;
     state.running = true;
     state.paused = false;
@@ -3060,26 +3070,13 @@
     state.gameState = GameState.LEVELUP;
 
     const choices = generateUpgradeChoices();
+    state.pendingLevelUpChoices = choices;
 
-    if (!elements.upgradeChoices) return;
-    elements.upgradeChoices.innerHTML = '';
-
-    choices.forEach(upgrade => {
-      const card = document.createElement('div');
-      card.className = 'survivor-like__upgrade-card';
-      if (upgrade.isNew) {
-        card.classList.add('survivor-like__upgrade-card--new');
-      }
-      card.innerHTML = `
-        <div class="survivor-like__upgrade-title">${upgrade.title}</div>
-        <div class="survivor-like__upgrade-description">${upgrade.description}</div>
-      `;
-      card.addEventListener('click', () => applyUpgrade(upgrade));
-      elements.upgradeChoices.appendChild(card);
-    });
+    renderLevelUpChoices(choices);
 
     showStatusBar();
     showOverlay('levelup');
+    saveGameState();
   }
 
   function showPauseMenu() {
@@ -3111,6 +3108,7 @@
 
     showStatusBar();
     showOverlay('pause');
+    saveGameState();
   }
 
 
@@ -3340,6 +3338,8 @@
         break;
     }
 
+    state.pendingLevelUpChoices = null;
+
     // Si le joueur a refusé l'arme proposée, en proposer une autre
     if (upgrade.type !== 'weaponUnlock' && state.player.offeredWeapon !== null && state.player.weapons.length < 2) {
       const allWeapons = ['projectile', 'laser', 'aura', 'bouncing', 'bomb', 'blackhole'];
@@ -3359,6 +3359,7 @@
     hideStatusBar();
     state.lastTime = performance.now();
     requestAnimationFrame(gameLoop);
+    saveGameState();
   }
 
   function applyGlobalUpgrade(upgradeId, isSpecial) {
@@ -4127,50 +4128,143 @@
     updateHeroRecordDisplay();
   }
 
+  function buildSavedGamePayload() {
+    return {
+      elapsed: state.elapsed,
+      wave: state.wave,
+      kills: state.kills,
+      gameState: state.gameState,
+      paused: state.paused,
+      nextSpawnTime: state.nextSpawnTime,
+      nextWaveTime: state.nextWaveTime,
+      spawnInterval: state.spawnInterval,
+      lastGachaTime: state.lastGachaTime,
+      nextBossTime: state.nextBossTime,
+      bossSpawnBlocked: state.bossSpawnBlocked,
+      bossSpawnBlockedUntil: state.bossSpawnBlockedUntil,
+      backgroundTile: currentBackgroundTile ? { ...currentBackgroundTile } : null,
+      pendingLevelUpChoices: serializeLevelUpChoices(state.pendingLevelUpChoices),
+      player: {
+        x: state.player.x,
+        y: state.player.y,
+        speed: state.player.speed,
+        health: state.player.health,
+        maxHealth: state.player.maxHealth,
+        xp: state.player.xp,
+        level: state.player.level,
+        xpForNextLevel: state.player.xpForNextLevel,
+        weapons: state.player.weapons.map(w => ({
+          type: w.type,
+          level: w.level,
+          config: { ...w.config }
+        })),
+        weaponSlots: state.player.weaponSlots,
+        skinIndex: state.player.skinIndex,
+        characterType: state.player.characterType,
+        offeredWeapon: state.player.offeredWeapon,
+        upgrades: JSON.parse(JSON.stringify(state.player.upgrades)), // Deep copy
+        specialBonusesActive: [...state.player.specialBonusesActive],
+        usedRevives: state.player.usedRevives || 0
+      },
+      // Ne pas sauvegarder les ennemis et projectiles (régénérés au chargement)
+      savedAt: Date.now()
+    };
+  }
+
+  function syncSavedGameToArcadeProgress(savedGame) {
+    const globalState = window.gameState || window.atom2universGameState;
+    if (!globalState || !savedGame) return;
+
+    if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
+      globalState.arcadeProgress = { version: 1, entries: {} };
+    }
+    if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
+      globalState.arcadeProgress.entries = {};
+    }
+
+    const existingEntry = globalState.arcadeProgress.entries[GAME_ID] || {};
+    globalState.arcadeProgress.entries[GAME_ID] = {
+      ...existingEntry,
+      savedGame,
+      updatedAt: Date.now()
+    };
+
+    if (typeof window.saveGame === 'function') {
+      window.saveGame();
+    }
+  }
+
   function saveGameState() {
     const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
 
     const currentData = autosaveApi.get(GAME_ID) || {};
+    const savedGame = buildSavedGamePayload();
 
     autosaveApi.set(GAME_ID, {
       ...currentData,
-      savedGame: {
-        elapsed: state.elapsed,
-        wave: state.wave,
-        kills: state.kills,
-        nextSpawnTime: state.nextSpawnTime,
-        nextWaveTime: state.nextWaveTime,
-        spawnInterval: state.spawnInterval,
-        lastGachaTime: state.lastGachaTime,
-        nextBossTime: state.nextBossTime,
-        bossSpawnBlocked: state.bossSpawnBlocked,
-        bossSpawnBlockedUntil: state.bossSpawnBlockedUntil,
-        player: {
-          x: state.player.x,
-          y: state.player.y,
-          speed: state.player.speed,
-          health: state.player.health,
-          maxHealth: state.player.maxHealth,
-          xp: state.player.xp,
-          level: state.player.level,
-          xpForNextLevel: state.player.xpForNextLevel,
-          weapons: state.player.weapons.map(w => ({
-            type: w.type,
-            level: w.level,
-            config: { ...w.config }
-          })),
-          weaponSlots: state.player.weaponSlots,
-          skinIndex: state.player.skinIndex,
-          characterType: state.player.characterType,
-          offeredWeapon: state.player.offeredWeapon,
-          upgrades: JSON.parse(JSON.stringify(state.player.upgrades)), // Deep copy
-          specialBonusesActive: [...state.player.specialBonusesActive],
-          usedRevives: state.player.usedRevives || 0
-        },
-        // Ne pas sauvegarder les ennemis et projectiles (régénérés au chargement)
-        savedAt: Date.now()
+      savedGame
+    });
+
+    syncSavedGameToArcadeProgress(savedGame);
+  }
+
+  function serializeLevelUpChoices(choices) {
+    if (!Array.isArray(choices)) {
+      return null;
+    }
+    return choices.map(choice => ({
+      type: choice.type,
+      weaponType: choice.weaponType || null,
+      upgradeId: choice.upgradeId || null,
+      title: choice.title || '',
+      description: choice.description || '',
+      isNew: Boolean(choice.isNew),
+      special: Boolean(choice.special)
+    }));
+  }
+
+  function normalizeSavedLevelUpChoices(choices) {
+    if (!Array.isArray(choices)) {
+      return null;
+    }
+    const normalized = choices.map(choice => {
+      if (!choice || typeof choice !== 'object') {
+        return null;
       }
+      if (typeof choice.type !== 'string') {
+        return null;
+      }
+      return {
+        type: choice.type,
+        weaponType: typeof choice.weaponType === 'string' ? choice.weaponType : null,
+        upgradeId: typeof choice.upgradeId === 'string' ? choice.upgradeId : null,
+        title: typeof choice.title === 'string' ? choice.title : '',
+        description: typeof choice.description === 'string' ? choice.description : '',
+        isNew: Boolean(choice.isNew),
+        special: Boolean(choice.special)
+      };
+    }).filter(Boolean);
+    return normalized.length ? normalized : null;
+  }
+
+  function renderLevelUpChoices(choices) {
+    if (!elements.upgradeChoices) return;
+    const safeChoices = Array.isArray(choices) ? choices : [];
+    elements.upgradeChoices.innerHTML = '';
+
+    safeChoices.forEach(upgrade => {
+      const card = document.createElement('div');
+      card.className = 'survivor-like__upgrade-card';
+      if (upgrade.isNew) {
+        card.classList.add('survivor-like__upgrade-card--new');
+      }
+      card.innerHTML = `
+        <div class="survivor-like__upgrade-title">${upgrade.title}</div>
+        <div class="survivor-like__upgrade-description">${upgrade.description}</div>
+      `;
+      card.addEventListener('click', () => applyUpgrade(upgrade));
+      elements.upgradeChoices.appendChild(card);
     });
   }
 
@@ -4187,6 +4281,10 @@
     state.elapsed = savedGame.elapsed;
     state.wave = savedGame.wave;
     state.kills = savedGame.kills;
+    state.gameState = Object.values(GameState).includes(savedGame.gameState)
+      ? savedGame.gameState
+      : GameState.PLAYING;
+    state.paused = Boolean(savedGame.paused);
     state.nextSpawnTime = savedGame.nextSpawnTime;
     state.nextWaveTime = savedGame.nextWaveTime;
     state.spawnInterval = savedGame.spawnInterval;
@@ -4200,6 +4298,19 @@
     }
     state.bossSpawnBlocked = savedGame.bossSpawnBlocked || false;
     state.bossSpawnBlockedUntil = savedGame.bossSpawnBlockedUntil || 0;
+
+    const restoredBackground = savedGame.backgroundTile;
+    if (restoredBackground && Number.isFinite(restoredBackground.imageIndex)) {
+      currentBackgroundTile = {
+        imageIndex: restoredBackground.imageIndex,
+        tileX: restoredBackground.tileX || 0,
+        tileY: restoredBackground.tileY || 0
+      };
+    } else {
+      selectRandomBackgroundTile();
+    }
+
+    state.pendingLevelUpChoices = normalizeSavedLevelUpChoices(savedGame.pendingLevelUpChoices);
 
     // Restore player
     state.player.x = savedGame.player.x;
@@ -4283,6 +4394,17 @@
     updateHUD();
     // Charger les sprites d'ennemis pour la vague actuelle
     initializeWaveSprites();
+
+    if (state.gameState === GameState.LEVELUP) {
+      if (!state.pendingLevelUpChoices) {
+        state.pendingLevelUpChoices = generateUpgradeChoices();
+      }
+      renderLevelUpChoices(state.pendingLevelUpChoices);
+      state.running = false;
+      state.paused = true;
+      showStatusBar();
+      showOverlay('levelup');
+    }
     return true;
   }
 
@@ -4293,6 +4415,19 @@
     const currentData = autosaveApi.get(GAME_ID) || {};
     delete currentData.savedGame;
     autosaveApi.set(GAME_ID, currentData);
+
+    const globalState = window.gameState || window.atom2universGameState;
+    if (!globalState || !globalState.arcadeProgress || !globalState.arcadeProgress.entries) {
+      return;
+    }
+    const existingEntry = globalState.arcadeProgress.entries[GAME_ID];
+    if (existingEntry && Object.prototype.hasOwnProperty.call(existingEntry, 'savedGame')) {
+      delete existingEntry.savedGame;
+      existingEntry.updatedAt = Date.now();
+      if (typeof window.saveGame === 'function') {
+        window.saveGame();
+      }
+    }
   }
 
   function hasSavedGame() {
