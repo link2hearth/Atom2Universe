@@ -120,6 +120,10 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
 
+        if (BuildConfig.DEBUG) {
+            WebView.setWebContentsDebuggingEnabled(true)
+        }
+
         radioPlayer = ExoPlayer.Builder(this).build()
 
         registerMediaCommandReceiver()
