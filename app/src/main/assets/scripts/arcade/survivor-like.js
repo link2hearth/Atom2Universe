@@ -4272,6 +4272,8 @@
       card.addEventListener('click', () => applyUpgrade(upgrade));
       elements.upgradeChoices.appendChild(card);
     });
+
+    syncSavedGameToArcadeProgress(savedGame);
   }
 
   function loadGameState() {
