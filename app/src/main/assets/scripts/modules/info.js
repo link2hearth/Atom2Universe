@@ -3143,19 +3143,38 @@ function normalizeSurvivorLikeHeroTimes(raw) {
   }, {});
 }
 
+function normalizeSurvivorLikeHeroKills(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return {};
+  }
+  return SURVIVOR_LIKE_HERO_IDS.reduce((acc, hero) => {
+    const value = Number(raw[hero]);
+    if (Number.isFinite(value) && value > 0) {
+      acc[hero] = Math.floor(value);
+    }
+    return acc;
+  }, {});
+}
+
 function normalizeSurvivorLikeRecord(record) {
   if (!record || typeof record !== 'object') {
-    return { bestTime: 0, bestLevel: 1, bestTimeByHero: {} };
+    return { bestTime: 0, bestLevel: 1, bestTimeByHero: {}, bestKillsByHero: {} };
   }
   return {
     bestTime: Number.isFinite(Number(record.bestTime)) ? Math.max(0, Number(record.bestTime)) : 0,
     bestLevel: toNonNegativeInteger(record.bestLevel ?? 1) || 1,
-    bestTimeByHero: normalizeSurvivorLikeHeroTimes(record.bestTimeByHero)
+    bestTimeByHero: normalizeSurvivorLikeHeroTimes(record.bestTimeByHero),
+    bestKillsByHero: normalizeSurvivorLikeHeroKills(record.bestKillsByHero)
   };
 }
 
 function hasSurvivorLikeRecord(record) {
-  return Boolean(record && (record.bestTime > 0 || record.bestLevel > 1));
+  if (!record) {
+    return false;
+  }
+  const hasHeroTimes = Object.keys(record.bestTimeByHero || {}).length > 0;
+  const hasHeroKills = Object.keys(record.bestKillsByHero || {}).length > 0;
+  return Boolean(record.bestTime > 0 || record.bestLevel > 1 || hasHeroTimes || hasHeroKills);
 }
 
 function getSurvivorLikeAutosaveStats() {
@@ -3187,9 +3206,12 @@ function syncSurvivorLikeProgressEntry(record) {
     : existingEntry);
   const hasSameHeroTimes = JSON.stringify(current.bestTimeByHero || {})
     === JSON.stringify(record.bestTimeByHero || {});
+  const hasSameHeroKills = JSON.stringify(current.bestKillsByHero || {})
+    === JSON.stringify(record.bestKillsByHero || {});
   if (current.bestTime === record.bestTime
     && current.bestLevel === record.bestLevel
-    && hasSameHeroTimes) {
+    && hasSameHeroTimes
+    && hasSameHeroKills) {
     return;
   }
   const updatedEntry = {
@@ -3197,6 +3219,7 @@ function syncSurvivorLikeProgressEntry(record) {
     bestTime: record.bestTime,
     bestLevel: record.bestLevel,
     bestTimeByHero: record.bestTimeByHero,
+    bestKillsByHero: record.bestKillsByHero,
     updatedAt: Date.now()
   };
   entries.survivorLike = updatedEntry;
@@ -3225,7 +3248,7 @@ function getSurvivorLikeProgressStats() {
     syncSurvivorLikeProgressEntry(autosaveStats);
     return autosaveStats;
   }
-  return { bestTime: 0, bestLevel: 1, bestTimeByHero: {} };
+  return { bestTime: 0, bestLevel: 1, bestTimeByHero: {}, bestKillsByHero: {} };
 }
 
 function formatSurvivorLikeTime(milliseconds) {
@@ -3239,60 +3262,69 @@ function formatSurvivorLikeTime(milliseconds) {
 function updateSurvivorLikeStats() {
   const stats = getSurvivorLikeProgressStats();
   const emptyValue = '—';
-  const timeText = stats.bestTime > 0 ? formatSurvivorLikeTime(stats.bestTime) : emptyValue;
-  const levelText = stats.bestLevel > 1 ? formatIntegerLocalized(stats.bestLevel) : emptyValue;
   const heroTimes = stats.bestTimeByHero || {};
+  const heroKills = stats.bestKillsByHero || {};
 
   // Éléments de la page Info
-  if (elements.infoSurvivorLikeTimeValue) {
-    elements.infoSurvivorLikeTimeValue.textContent = timeText;
-  }
-  if (elements.infoSurvivorLikeLevelValue) {
-    elements.infoSurvivorLikeLevelValue.textContent = levelText;
-  }
-  if (elements.infoSurvivorLikeHeroMageValue) {
-    elements.infoSurvivorLikeHeroMageValue.textContent = heroTimes.Mage
+  if (elements.infoSurvivorLikeHeroMageTimeValue) {
+    elements.infoSurvivorLikeHeroMageTimeValue.textContent = heroTimes.Mage
       ? formatSurvivorLikeTime(heroTimes.Mage)
       : emptyValue;
   }
-  if (elements.infoSurvivorLikeHeroRobotValue) {
-    elements.infoSurvivorLikeHeroRobotValue.textContent = heroTimes.Robot
+  if (elements.infoSurvivorLikeHeroMageKillsValue) {
+    elements.infoSurvivorLikeHeroMageKillsValue.textContent = heroKills.Mage
+      ? formatIntegerLocalized(heroKills.Mage)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroRobotTimeValue) {
+    elements.infoSurvivorLikeHeroRobotTimeValue.textContent = heroTimes.Robot
       ? formatSurvivorLikeTime(heroTimes.Robot)
       : emptyValue;
   }
-  if (elements.infoSurvivorLikeHeroGhostValue) {
-    elements.infoSurvivorLikeHeroGhostValue.textContent = heroTimes.Ghost
+  if (elements.infoSurvivorLikeHeroRobotKillsValue) {
+    elements.infoSurvivorLikeHeroRobotKillsValue.textContent = heroKills.Robot
+      ? formatIntegerLocalized(heroKills.Robot)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroGhostTimeValue) {
+    elements.infoSurvivorLikeHeroGhostTimeValue.textContent = heroTimes.Ghost
       ? formatSurvivorLikeTime(heroTimes.Ghost)
       : emptyValue;
   }
-  if (elements.infoSurvivorLikeHeroChatNoirValue) {
-    elements.infoSurvivorLikeHeroChatNoirValue.textContent = heroTimes.ChatNoir
+  if (elements.infoSurvivorLikeHeroGhostKillsValue) {
+    elements.infoSurvivorLikeHeroGhostKillsValue.textContent = heroKills.Ghost
+      ? formatIntegerLocalized(heroKills.Ghost)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroChatNoirTimeValue) {
+    elements.infoSurvivorLikeHeroChatNoirTimeValue.textContent = heroTimes.ChatNoir
       ? formatSurvivorLikeTime(heroTimes.ChatNoir)
       : emptyValue;
   }
-  if (elements.infoSurvivorLikeHeroSkeletonValue) {
-    elements.infoSurvivorLikeHeroSkeletonValue.textContent = heroTimes.Skeleton
+  if (elements.infoSurvivorLikeHeroChatNoirKillsValue) {
+    elements.infoSurvivorLikeHeroChatNoirKillsValue.textContent = heroKills.ChatNoir
+      ? formatIntegerLocalized(heroKills.ChatNoir)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroSkeletonTimeValue) {
+    elements.infoSurvivorLikeHeroSkeletonTimeValue.textContent = heroTimes.Skeleton
       ? formatSurvivorLikeTime(heroTimes.Skeleton)
       : emptyValue;
   }
-  if (elements.infoSurvivorLikeHeroVortexValue) {
-    elements.infoSurvivorLikeHeroVortexValue.textContent = heroTimes.Vortex
+  if (elements.infoSurvivorLikeHeroSkeletonKillsValue) {
+    elements.infoSurvivorLikeHeroSkeletonKillsValue.textContent = heroKills.Skeleton
+      ? formatIntegerLocalized(heroKills.Skeleton)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroVortexTimeValue) {
+    elements.infoSurvivorLikeHeroVortexTimeValue.textContent = heroTimes.Vortex
       ? formatSurvivorLikeTime(heroTimes.Vortex)
       : emptyValue;
   }
-
-  // Éléments de la page de jeu (déclenche la sync comme Stars War)
-  if (elements.survivorLikeBestTimeValue) {
-    elements.survivorLikeBestTimeValue.textContent = timeText;
-  }
-  if (elements.survivorLikeBestLevelValue) {
-    elements.survivorLikeBestLevelValue.textContent = levelText;
-  }
-  if (elements.survivorLikeScoresBestTime) {
-    elements.survivorLikeScoresBestTime.textContent = timeText;
-  }
-  if (elements.survivorLikeScoresBestLevel) {
-    elements.survivorLikeScoresBestLevel.textContent = levelText;
+  if (elements.infoSurvivorLikeHeroVortexKillsValue) {
+    elements.infoSurvivorLikeHeroVortexKillsValue.textContent = heroKills.Vortex
+      ? formatIntegerLocalized(heroKills.Vortex)
+      : emptyValue;
   }
 }
 
