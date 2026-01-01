@@ -326,6 +326,17 @@
           "toggle": {
             "collapse": "Réduire",
             "expand": "Dérouler"
+          },
+          "survivorLike": {
+            "title": "Survis — Records héros",
+            "heroes": {
+              "mage": "Mage",
+              "robot": "Robot",
+              "ghost": "Ghost",
+              "chatNoir": "Chat Noir",
+              "skeleton": "Skeleton",
+              "vortex": "Vortex"
+            }
           }
         },
         "achievements": {
