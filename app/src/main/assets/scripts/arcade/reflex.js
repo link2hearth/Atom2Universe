@@ -517,6 +517,37 @@
     return Math.max(32, Math.round(measured));
   }
 
+  function hideStatusBar() {
+    const statusBar = document.querySelector('.app-header .status-bar');
+    const frenzyStatus = document.querySelector('.app-header .frenzy-status');
+    if (statusBar) {
+      statusBar.dataset.reflexHidden = '1';
+      statusBar.style.display = 'none';
+    }
+    if (frenzyStatus) {
+      frenzyStatus.dataset.reflexHidden = '1';
+      frenzyStatus.style.display = 'none';
+    }
+  }
+
+  function showStatusBar() {
+    const statusBar = document.querySelector('.app-header .status-bar');
+    const frenzyStatus = document.querySelector('.app-header .frenzy-status');
+    if (statusBar && statusBar.dataset.reflexHidden === '1') {
+      delete statusBar.dataset.reflexHidden;
+      statusBar.style.display = '';
+    }
+    if (frenzyStatus && frenzyStatus.dataset.reflexHidden === '1') {
+      delete frenzyStatus.dataset.reflexHidden;
+      frenzyStatus.style.display = '';
+    }
+  }
+
+  function isPageActive() {
+    const page = root?.closest?.('.page');
+    return page && page.classList.contains('active');
+  }
+
   function updateTopOffset() {
     const offset = measureHeaderHeight();
     if (root && typeof root.style?.setProperty === 'function') {
@@ -533,17 +564,23 @@
       return;
     }
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const headerHeight = measureHeaderHeight();
     const playfieldRect = elements.playfield.getBoundingClientRect();
     const rootStyle = root && typeof window.getComputedStyle === 'function'
       ? window.getComputedStyle(root)
       : null;
     const paddingBottom = rootStyle ? Number.parseFloat(rootStyle.paddingBottom) : 0;
     const safePadding = Number.isFinite(paddingBottom) ? paddingBottom : 0;
-    const available = Math.max(0, Math.floor(viewportHeight - playfieldRect.top - safePadding));
+    // Utiliser la position du playfield par rapport au viewport
+    const available = Math.max(0, Math.floor(viewportHeight - playfieldRect.top - safePadding - 8));
     if (available > 0) {
       elements.playfield.style.minHeight = `${available}px`;
+      elements.playfield.style.maxHeight = `${available}px`;
+      elements.playfield.style.height = `${available}px`;
     } else {
       elements.playfield.style.minHeight = '';
+      elements.playfield.style.maxHeight = '';
+      elements.playfield.style.height = '';
     }
   }
 
@@ -553,8 +590,17 @@
     }
     layoutState.rafId = requestAnimationFrame(() => {
       layoutState.rafId = null;
-      updateTopOffset();
-      updatePlayfieldHeight();
+      // Cacher/montrer la status-bar selon si la page est active
+      if (isPageActive()) {
+        hideStatusBar();
+      } else {
+        showStatusBar();
+      }
+      // Attendre un tick pour que le DOM se mette à jour après avoir caché la status-bar
+      requestAnimationFrame(() => {
+        updateTopOffset();
+        updatePlayfieldHeight();
+      });
     });
   }
 
@@ -570,6 +616,19 @@
       layoutState.headerObserver = new MutationObserver(scheduleLayoutUpdate);
       layoutState.headerObserver.observe(header, { attributes: true, attributeFilter: ['data-collapsed'] });
     }
+    // Observer les changements de classe sur la page (pour détecter quand elle devient active)
+    const page = root?.closest?.('.page');
+    if (page && typeof MutationObserver !== 'undefined') {
+      const pageObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.attributeName === 'class') {
+            scheduleLayoutUpdate();
+            break;
+          }
+        }
+      });
+      pageObserver.observe(page, { attributes: true, attributeFilter: ['class'] });
+    }
     if (typeof ResizeObserver !== 'undefined') {
       layoutState.resizeObserver = new ResizeObserver(scheduleLayoutUpdate);
       layoutState.resizeObserver.observe(root);
@@ -579,6 +638,10 @@
       const controls = root.querySelector('.reflex__controls');
       if (controls) {
         layoutState.resizeObserver.observe(controls);
+      }
+      // Observer aussi le header pour détecter les changements de taille
+      if (header) {
+        layoutState.resizeObserver.observe(header);
       }
     }
   }

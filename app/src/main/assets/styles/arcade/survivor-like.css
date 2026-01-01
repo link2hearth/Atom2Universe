@@ -1,0 +1,788 @@
+/* ============================================
+   SURVIVOR-LIKE - STYLES
+   ============================================ */
+
+/* Force Science Gothic font for all text */
+.page--survivor-like,
+.page--survivor-like *,
+.survivor-like,
+.survivor-like * {
+  font-family: 'Science Gothic', 'Orbitron', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Page container styles */
+.page--survivor-like {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  background: #0d0d0d !important;
+  color: #fff;
+  display: flex !important;
+  flex-direction: column;
+  min-height: 100vh !important;
+  height: 100% !important;
+  width: 100vw !important;
+  overflow: hidden !important;
+  position: relative;
+}
+
+/* Ensure the page is completely hidden when not active */
+.page--survivor-like[hidden] {
+  display: none !important;
+}
+
+/* Status bar hiding is handled via JavaScript (see survivor-like.js) */
+
+.survivor-like {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #1a1a1a;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   CANVAS
+   ============================================ */
+
+.survivor-like__canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #0d0d0d;
+}
+
+/* ============================================
+   HUD
+   ============================================ */
+
+.survivor-like__hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+  transform: none !important;
+  scale: 1 !important;
+  zoom: 1 !important;
+}
+
+/* Pause button */
+.survivor-like__pause-button {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  display: none; /* Masqué par défaut */
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+.survivor-like__pause-button--visible {
+  display: flex;
+}
+
+.survivor-like__pause-button:hover {
+  background: rgba(0, 0, 0, 0.85);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.survivor-like__pause-button:active {
+  transform: scale(0.95);
+}
+
+.survivor-like__hud-top {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Supprimé hud-left et hud-right car plus utilisés */
+
+.survivor-like__stat {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 120px;
+}
+
+.survivor-like__stat-label {
+  display: block;
+  font-size: calc(11px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.survivor-like__stat-value {
+  display: block;
+  font-size: calc(18px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Health Bar - Version verticale à gauche */
+.survivor-like__health-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 12px !important; /* Largeur fine fixe en pixels - ne doit JAMAIS changer */
+  min-width: 12px !important;
+  max-width: 12px !important;
+  background: rgba(0, 0, 0, 0.8);
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  z-index: 15;
+  transform: none !important;
+  transform-origin: unset !important;
+  scale: 1 !important;
+  zoom: 1 !important;
+}
+
+.survivor-like__health-label {
+  display: none; /* Texte retiré */
+}
+
+.survivor-like__health-bar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.survivor-like__health-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #ff6b6b, #e74c3c);
+  transition: height 0.2s ease-out;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+}
+
+.survivor-like__health-text {
+  display: none; /* Texte retiré */
+}
+
+/* XP Bar - Version verticale à droite */
+.survivor-like__xp-bar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 12px !important; /* Largeur fine fixe en pixels - ne doit JAMAIS changer */
+  min-width: 12px !important;
+  max-width: 12px !important;
+  background: rgba(0, 0, 0, 0.8);
+  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  z-index: 15;
+  transform: none !important;
+  transform-origin: unset !important;
+  scale: 1 !important;
+  zoom: 1 !important;
+}
+
+.survivor-like__xp-label {
+  display: none; /* Texte retiré */
+}
+
+.survivor-like__level {
+  display: none; /* Texte retiré */
+}
+
+.survivor-like__xp-bar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.survivor-like__xp-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #5dade2, #3498db);
+  transition: height 0.3s ease-out;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+/* ============================================
+   VIRTUAL JOYSTICK
+   ============================================ */
+
+.survivor-like__joystick-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.survivor-like__joystick {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.survivor-like__joystick--active {
+  opacity: 0.7;
+}
+
+.survivor-like__joystick-outer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.survivor-like__joystick-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transition: transform 0.05s ease-out;
+}
+
+/* ============================================
+   OVERLAYS (MENUS)
+   ============================================ */
+
+.survivor-like__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 100;
+  pointer-events: auto !important;
+  padding: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: auto !important;
+}
+
+.survivor-like__overlay--hidden {
+  display: none;
+}
+
+.survivor-like__overlay-content {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: auto 0;
+  padding: 8px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: auto !important;
+  pointer-events: auto !important;
+}
+
+/* Permettre le scroll sur tous les enfants des overlays */
+.survivor-like__overlay *,
+.survivor-like__overlay-content *,
+.survivor-like__levelup-choices *,
+.survivor-like__pause-content *,
+.survivor-like__hero-grid * {
+  touch-action: inherit;
+}
+
+/* Scrollbar personnalisée pour les overlays */
+.survivor-like__overlay::-webkit-scrollbar,
+.survivor-like__overlay-content::-webkit-scrollbar,
+.survivor-like__levelup-choices::-webkit-scrollbar,
+.survivor-like__pause-content::-webkit-scrollbar,
+.survivor-like__hero-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.survivor-like__overlay::-webkit-scrollbar-track,
+.survivor-like__overlay-content::-webkit-scrollbar-track,
+.survivor-like__levelup-choices::-webkit-scrollbar-track,
+.survivor-like__pause-content::-webkit-scrollbar-track,
+.survivor-like__hero-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.survivor-like__overlay::-webkit-scrollbar-thumb,
+.survivor-like__overlay-content::-webkit-scrollbar-thumb,
+.survivor-like__levelup-choices::-webkit-scrollbar-thumb,
+.survivor-like__pause-content::-webkit-scrollbar-thumb,
+.survivor-like__hero-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.survivor-like__overlay::-webkit-scrollbar-thumb:hover,
+.survivor-like__overlay-content::-webkit-scrollbar-thumb:hover,
+.survivor-like__levelup-choices::-webkit-scrollbar-thumb:hover,
+.survivor-like__pause-content::-webkit-scrollbar-thumb:hover,
+.survivor-like__hero-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.survivor-like__overlay-title {
+  font-size: calc(32px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.survivor-like__overlay-message {
+  font-size: calc(16px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.survivor-like__overlay-stats {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.survivor-like__overlay-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.survivor-like__overlay-stat:last-child {
+  border-bottom: none;
+}
+
+.survivor-like__overlay-stat-label {
+  font-size: calc(14px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.survivor-like__overlay-stat-value {
+  font-size: calc(16px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  color: #fff;
+}
+
+.survivor-like__button {
+  display: inline-block;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: #fff;
+  font-size: calc(16px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 6px;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.survivor-like__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+}
+
+.survivor-like__button:active {
+  transform: translateY(0);
+}
+
+.survivor-like__button--secondary {
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+}
+
+.survivor-like__button--secondary:hover {
+  box-shadow: 0 6px 12px rgba(149, 165, 166, 0.4);
+}
+
+/* Exit button (top-right cross) */
+.survivor-like__exit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  padding: 0;
+  line-height: 1;
+}
+
+.survivor-like__exit-button:hover {
+  background: rgba(255, 0, 0, 0.8);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.1);
+}
+
+.survivor-like__exit-button:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   LEVEL-UP OVERLAY
+   ============================================ */
+
+.survivor-like__levelup-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 4px;
+  touch-action: auto !important;
+  pointer-events: auto !important;
+}
+
+.survivor-like__upgrade-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.survivor-like__upgrade-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateX(4px);
+}
+
+.survivor-like__upgrade-card--new {
+  border-color: #f39c12;
+  background: rgba(243, 156, 18, 0.1);
+  box-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
+  animation: pulse-glow 2s infinite;
+}
+
+.survivor-like__upgrade-card--new:hover {
+  border-color: #f39c12;
+  background: rgba(243, 156, 18, 0.2);
+  box-shadow: 0 0 30px rgba(243, 156, 18, 0.5);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(243, 156, 18, 0.6);
+  }
+}
+
+.survivor-like__upgrade-title {
+  font-size: calc(18px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  color: #f39c12;
+  margin-bottom: 8px;
+}
+
+.survivor-like__upgrade-description {
+  font-size: calc(14px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+/* ============================================
+   PAUSE MENU
+   ============================================ */
+
+.survivor-like__pause-content {
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 4px;
+  touch-action: auto !important;
+  pointer-events: auto !important;
+}
+
+.survivor-like__pause-section {
+  margin-bottom: 24px;
+}
+
+.survivor-like__pause-section-title {
+  font-size: calc(20px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  color: #3498db;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.survivor-like__pause-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.survivor-like__pause-stat-item {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+}
+
+.survivor-like__pause-stat-label {
+  font-size: calc(11px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.survivor-like__pause-stat-value {
+  font-size: calc(15px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  color: #fff;
+}
+
+.survivor-like__pause-weapons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.survivor-like__pause-weapon-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.survivor-like__pause-weapon-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.survivor-like__pause-weapon-icon {
+  font-size: calc(20px * var(--ui-control-scale, 1));
+}
+
+.survivor-like__pause-weapon-name {
+  font-size: calc(16px * var(--ui-control-scale, 1));
+  font-weight: bold;
+  color: #f39c12;
+}
+
+.survivor-like__pause-weapon-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  font-size: calc(12px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.survivor-like__pause-weapon-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.survivor-like__pause-weapon-stat-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 600px) {
+  .survivor-like__hud {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .survivor-like__stat {
+    min-width: 100px;
+    padding: 6px 10px;
+  }
+
+  .survivor-like__stat-label {
+    font-size: 10px;
+  }
+
+  .survivor-like__stat-value {
+    font-size: 16px;
+  }
+
+  .survivor-like__health-bar,
+  .survivor-like__xp-bar {
+    min-width: 150px;
+  }
+
+  .survivor-like__overlay-title {
+    font-size: 24px;
+  }
+
+  .survivor-like__overlay-message {
+    font-size: 14px;
+  }
+
+  .survivor-like__button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================
+   HERO SELECTION
+   ============================================ */
+
+.survivor-like__hero-selection {
+  margin-bottom: 20px;
+}
+
+.survivor-like__hero-label {
+  font-size: calc(14px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.survivor-like__hero-grid {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px;
+  touch-action: auto !important;
+  pointer-events: auto !important;
+}
+
+.survivor-like__hero-card {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.survivor-like__hero-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.survivor-like__hero-card:active {
+  transform: translateY(0);
+}
+
+.survivor-like__hero-card--selected {
+  border-color: #3498db;
+  background: rgba(52, 152, 219, 0.2);
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+}
+
+.survivor-like__hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}

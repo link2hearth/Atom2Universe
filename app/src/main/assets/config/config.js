@@ -497,11 +497,11 @@ const COLLECTION_MULTIPLIER_LABEL_KEY = 'scripts.config.elementBonuses.collectio
  */
 const AUDIO_ENGINE_SETTINGS = Object.freeze({
  scc: Object.freeze({
-    masterGain: 0.22,
-    softClipperDrive: 1.05,
+    masterGain: 0.16,
+    softClipperDrive: 0.85,
     chorusDelayMs: 12,
     chorusMix: 0.025,
-    renderSampleRate: 32000,
+    renderSampleRate: 44100,
     instrumentMapUrl: 'config/audio/scc-instrument-map.json'
   })
 });

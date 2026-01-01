@@ -209,7 +209,14 @@
   const GLOW_EFFECTS_ENABLED = VISUAL_EFFECTS_CONFIG.enableGlow === true;
   const SHOCKWAVE_ENABLED = VISUAL_EFFECTS_CONFIG.enableShockwave === true;
   const BALL_GHOST_ENABLED = VISUAL_EFFECTS_CONFIG.enableBallGhost === true;
-  const MAX_FPS = readNumber(PERFORMANCE_CONFIG.maxFps, 60, { min: 15, max: 120, round: 'round' });
+
+  // Detect mobile device for performance optimizations
+  const IS_MOBILE = typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const IS_ANDROID = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+
+  // Reduce FPS target on mobile devices for better performance
+  const baseFps = readNumber(PERFORMANCE_CONFIG.maxFps, 60, { min: 15, max: 120, round: 'round' });
+  const MAX_FPS = IS_MOBILE ? Math.min(baseFps, 45) : baseFps;
   const FRAME_INTERVAL_MS = MAX_FPS > 0 ? 1000 / MAX_FPS : 0;
   const MAX_FRAME_DELTA_MS = readNumber(PERFORMANCE_CONFIG.maxDeltaMs, 32, { min: 16, max: 100 });
 
@@ -773,6 +780,12 @@
       settings.impactParticles.maxCount,
       settings.impactParticles.minCount
     ];
+  }
+  // Further reduce particles on mobile for better performance
+  if (IS_MOBILE) {
+    settings.impactParticles.maxActive = Math.min(settings.impactParticles.maxActive, 30);
+    settings.impactParticles.minCount = Math.max(3, Math.floor(settings.impactParticles.minCount * 0.6));
+    settings.impactParticles.maxCount = Math.max(6, Math.floor(settings.impactParticles.maxCount * 0.6));
   }
 
   const gravitonConfig = readObject(ARCADE_CONFIG.graviton);
@@ -1608,6 +1621,45 @@
 
       this.ctx = context;
       this.enabled = true;
+
+      // Performance monitoring system
+      this.performanceMonitor = {
+        enabled: true, // Can be toggled for production
+        fps: 60,
+        frameCount: 0,
+        lastFpsUpdate: 0,
+        renderTimes: [],
+        maxSamples: 60
+      };
+
+      // Gradient caching system for performance
+      this.gradientCache = {
+        background: null,
+        paddle: null,
+        floorShieldActive: null,
+        floorShieldInactive: null,
+        lastWidth: 0,
+        lastHeight: 0,
+        paddleLastHeight: 0
+      };
+
+      // Offscreen canvas cache for brick sprites
+      this.brickSpriteCache = new Map();
+
+      // Offscreen canvas cache for power-up sprites
+      this.powerUpSpriteCache = new Map();
+
+      // Particle pool for DOM element reuse
+      this.particlePool = [];
+      this.particlePoolSize = 50;
+
+      // Performance: cache canvas rect to avoid getBoundingClientRect calls
+      this.cachedCanvasRect = null;
+      this.lastRectUpdate = 0;
+
+      // Performance: track active brick count to avoid .some() iterations
+      this.activeBrickCount = 0;
+
       const initialBrickSkin = normalizeBrickSkinKey(
         savedState?.brickSkin != null
           ? savedState.brickSkin
@@ -1998,6 +2050,10 @@
       this.lives = this.maxLives;
       this.pendingFloorShieldBonus = true;
       this.bricks = this.generateBricks();
+
+      // Initialize active brick count for performance tracking
+      this.activeBrickCount = this.bricks.filter(b => b.active).length;
+
       this.resetComboChain();
       this.prepareServe();
       this.updateHud();
@@ -2014,6 +2070,170 @@
       while (this.particleLayer.firstChild) {
         this.particleLayer.removeChild(this.particleLayer.firstChild);
       }
+    }
+
+    updatePerformanceMonitor(frameStartTime) {
+      if (!this.performanceMonitor.enabled) return;
+
+      const now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+      const renderTime = now - frameStartTime;
+
+      this.performanceMonitor.renderTimes.push(renderTime);
+      if (this.performanceMonitor.renderTimes.length > this.performanceMonitor.maxSamples) {
+        this.performanceMonitor.renderTimes.shift();
+      }
+
+      this.performanceMonitor.frameCount++;
+      const elapsed = now - this.performanceMonitor.lastFpsUpdate;
+
+      if (elapsed >= 1000) {
+        this.performanceMonitor.fps = Math.round((this.performanceMonitor.frameCount * 1000) / elapsed);
+        this.performanceMonitor.frameCount = 0;
+        this.performanceMonitor.lastFpsUpdate = now;
+      }
+    }
+
+    invalidateGradientCache() {
+      this.gradientCache.background = null;
+      this.gradientCache.paddle = null;
+      this.gradientCache.floorShieldActive = null;
+      this.gradientCache.floorShieldInactive = null;
+      this.gradientCache.lastWidth = this.width;
+      this.gradientCache.lastHeight = this.height;
+    }
+
+    createBrickSprite(brick) {
+      const key = `${brick.type}|${brick.particle?.colors?.join(',')}|${brick.hitsRemaining}|${brick.particle?.symbol}`;
+
+      if (this.brickSpriteCache.has(key)) {
+        return this.brickSpriteCache.get(key);
+      }
+
+      const BRICK_SPRITE_WIDTH = 100;
+      const BRICK_SPRITE_HEIGHT = 50;
+      const spriteCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+      if (!spriteCanvas) return null;
+
+      spriteCanvas.width = BRICK_SPRITE_WIDTH;
+      spriteCanvas.height = BRICK_SPRITE_HEIGHT;
+      const spriteCtx = spriteCanvas.getContext('2d');
+      if (!spriteCtx) return null;
+
+      // Render gradient background
+      const colors = brick.particle?.colors || ['#6c8cff', '#3b4da6'];
+      const gradient = spriteCtx.createLinearGradient(0, 0, 0, BRICK_SPRITE_HEIGHT);
+      gradient.addColorStop(0, colors[0]);
+      gradient.addColorStop(1, colors[1] || colors[0]);
+      spriteCtx.fillStyle = gradient;
+
+      // Draw rounded rectangle if supported
+      const radius = Math.min(16, BRICK_SPRITE_HEIGHT * 0.4);
+      const hasRoundRect = typeof spriteCtx.roundRect === 'function';
+      if (hasRoundRect) {
+        spriteCtx.beginPath();
+        spriteCtx.roundRect(0, 0, BRICK_SPRITE_WIDTH, BRICK_SPRITE_HEIGHT, radius);
+        spriteCtx.fill();
+      } else {
+        spriteCtx.fillRect(0, 0, BRICK_SPRITE_WIDTH, BRICK_SPRITE_HEIGHT);
+      }
+
+      // Render particle symbol if present
+      if (brick.particle?.symbol) {
+        spriteCtx.fillStyle = brick.particle.symbolColor || '#ffffff';
+        const symbolScale = typeof brick.particle.symbolScale === 'number' ? brick.particle.symbolScale : 1;
+        const baseFontSize = Math.max(12, BRICK_SPRITE_HEIGHT * 0.55);
+        spriteCtx.font = `${Math.max(12, baseFontSize * symbolScale)}px 'Orbitron', sans-serif`;
+        spriteCtx.textAlign = 'center';
+        spriteCtx.textBaseline = 'middle';
+        spriteCtx.fillText(
+          brick.particle.symbol,
+          BRICK_SPRITE_WIDTH / 2,
+          BRICK_SPRITE_HEIGHT / 2 + BRICK_SPRITE_HEIGHT * 0.04
+        );
+      }
+
+      // Health bar for resistant bricks
+      if (brick.type === BRICK_TYPES.RESISTANT && brick.maxHits > 1 && brick.hitsRemaining > 0) {
+        const ratio = brick.hitsRemaining / brick.maxHits;
+        spriteCtx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+        spriteCtx.fillRect(
+          0,
+          BRICK_SPRITE_HEIGHT - BRICK_SPRITE_HEIGHT * ratio,
+          BRICK_SPRITE_WIDTH,
+          BRICK_SPRITE_HEIGHT * ratio * 0.12
+        );
+      }
+
+      this.brickSpriteCache.set(key, spriteCanvas);
+
+      // Protection contre memory leak - limiter la taille du cache
+      if (this.brickSpriteCache.size > 200) {
+        const entries = Array.from(this.brickSpriteCache.entries());
+        this.brickSpriteCache.clear();
+        entries.slice(-100).forEach(([k, v]) => this.brickSpriteCache.set(k, v));
+      }
+
+      return spriteCanvas;
+    }
+
+    createPowerUpSprite(powerUpType, size) {
+      const key = `${powerUpType}|${size}`;
+
+      if (this.powerUpSpriteCache.has(key)) {
+        return this.powerUpSpriteCache.get(key);
+      }
+
+      const spriteCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+      if (!spriteCanvas) return null;
+
+      const visuals = POWER_UP_VISUALS[powerUpType] || DEFAULT_POWER_UP_VISUAL;
+      const widthMultiplier = visuals.widthMultiplier || DEFAULT_POWER_UP_VISUAL.widthMultiplier;
+      const width = size * widthMultiplier;
+      const height = size;
+
+      spriteCanvas.width = Math.ceil(width);
+      spriteCanvas.height = Math.ceil(height);
+      const spriteCtx = spriteCanvas.getContext('2d');
+      if (!spriteCtx) return null;
+
+      const colors = visuals.gradient || DEFAULT_POWER_UP_VISUAL.gradient;
+      const radius = Math.min(18, height * 0.45);
+
+      // Render gradient background
+      const gradient = spriteCtx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, colors[0]);
+      gradient.addColorStop(1, colors[1] || colors[0]);
+      spriteCtx.fillStyle = gradient;
+
+      // Draw rounded rectangle
+      const hasRoundRect = typeof spriteCtx.roundRect === 'function';
+      if (hasRoundRect) {
+        spriteCtx.beginPath();
+        spriteCtx.roundRect(0, 0, width, height, radius);
+        spriteCtx.fill();
+      } else {
+        spriteCtx.fillRect(0, 0, width, height);
+      }
+
+      // Render symbol
+      const symbol = visuals.symbol || DEFAULT_POWER_UP_VISUAL.symbol;
+      const textColor = visuals.textColor || DEFAULT_POWER_UP_VISUAL.textColor;
+      spriteCtx.fillStyle = textColor;
+      spriteCtx.font = `bold ${Math.max(12, height * 0.6)}px 'Orbitron', sans-serif`;
+      spriteCtx.textAlign = 'center';
+      spriteCtx.textBaseline = 'middle';
+      spriteCtx.fillText(symbol, width / 2, height / 2);
+
+      this.powerUpSpriteCache.set(key, spriteCanvas);
+
+      // Protection contre memory leak
+      if (this.powerUpSpriteCache.size > 50) {
+        const entries = Array.from(this.powerUpSpriteCache.entries());
+        this.powerUpSpriteCache.clear();
+        entries.slice(-25).forEach(([k, v]) => this.powerUpSpriteCache.set(k, v));
+      }
+
+      return spriteCanvas;
     }
 
     generateBricks() {
@@ -2668,6 +2888,7 @@
       // Mixing those sources caused huge deltas that were then clamped to 32ms, doubling
       // the gameplay speed. Using the same high-resolution clock everywhere keeps delta
       // computations consistent regardless of platform quirks.
+      const frameStartTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
       const now = getHighResolutionTime();
       if (this.frameIntervalMs > 0 && this.lastFrameTime) {
         if (now - this.lastFrameTime < this.frameIntervalMs) {
@@ -2680,6 +2901,7 @@
       this.lastFrameTime = now;
       this.update(delta, now);
       this.render(now);
+      this.updatePerformanceMonitor(frameStartTime);
       this.animationFrameId = requestAnimationFrame(this.handleFrame);
     }
 
@@ -3009,12 +3231,39 @@
 
     handleBrickCollisions(ball) {
       if (!ball.inPlay) return;
+
+      // Spatial culling: only check bricks near the ball (significant performance boost)
+      const checkRadius = Math.max(this.width, this.height) * 0.4;
+      const ballCenterX = ball.x;
+      const ballCenterY = ball.y;
+
       for (const brick of this.bricks) {
         if (!brick.active || (brick.hidden && brick.type === BRICK_TYPES.GRAVITON)) continue;
-        const x = brick.relX * this.width;
-        const y = brick.relY * this.height;
-        const w = brick.relWidth * this.width;
-        const h = brick.relHeight * this.height;
+
+        // Early spatial culling: skip bricks far from ball
+        // Use cached absolute positions instead of recalculating
+        if (!brick.absX) {
+          brick.absX = brick.relX * this.width;
+          brick.absY = brick.relY * this.height;
+          brick.absW = brick.relWidth * this.width;
+          brick.absH = brick.relHeight * this.height;
+          brick.absCenterX = brick.absX + brick.absW / 2;
+          brick.absCenterY = brick.absY + brick.absH / 2;
+        }
+
+        const dx = brick.absCenterX - ballCenterX;
+        const dy = brick.absCenterY - ballCenterY;
+        const distSq = dx * dx + dy * dy;
+        if (distSq > checkRadius * checkRadius) {
+          continue;
+        }
+
+        // Use cached positions
+        const x = brick.absX;
+        const y = brick.absY;
+        const w = brick.absW;
+        const h = brick.absH;
+
         if (
           ball.x + ball.radius < x
           || ball.x - ball.radius > x + w
@@ -3023,6 +3272,7 @@
         ) {
           continue;
         }
+
         const overlapLeft = ball.x + ball.radius - x;
         const overlapRight = x + w - (ball.x - ball.radius);
         const overlapTop = ball.y + ball.radius - y;
@@ -3050,9 +3300,12 @@
       brick.hitsRemaining = Math.max(0, brick.hitsRemaining - 1);
       if (brick.hitsRemaining <= 0) {
         brick.active = false;
+        this.activeBrickCount = Math.max(0, this.activeBrickCount - 1);
         this.handleBrickDestroyed(brick);
       } else if (brick.type === BRICK_TYPES.RESISTANT && !brick.particle?.sprite) {
         brick.relHeight *= 0.98;
+        // Invalidate cached position when brick changes size
+        brick.absH = brick.relHeight * this.height;
       }
     }
 
@@ -3072,8 +3325,9 @@
       }
       this.registerComboChain(brick);
       this.scheduleAutosave();
-      const hasRemaining = this.bricks.some(entry => entry.active);
-      if (!hasRemaining) {
+
+      // Use cached count instead of iterating through all bricks
+      if (this.activeBrickCount <= 0) {
         this.handleLevelCleared();
       }
     }
@@ -3082,7 +3336,15 @@
       if (!this.particleLayer || !brick || !this.canvas) {
         return;
       }
-      const rect = this.canvas.getBoundingClientRect();
+
+      // Cache canvas rect to avoid expensive getBoundingClientRect calls
+      const now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+      if (!this.cachedCanvasRect || now - this.lastRectUpdate > 500) {
+        this.cachedCanvasRect = this.canvas.getBoundingClientRect();
+        this.lastRectUpdate = now;
+      }
+      const rect = this.cachedCanvasRect;
+
       if (!rect.width || !rect.height) {
         return;
       }
@@ -3113,42 +3375,46 @@
       const duration = IMPACT_PARTICLE_SETTINGS.durationMs;
 
       for (let index = 0; index < particleCount; index += 1) {
-        const particle = doc.createElement('div');
+        // Reuse particle from pool or create new one
+        let particle = this.particlePool.pop();
         if (!particle) {
-          break;
+          particle = doc.createElement('div');
+          if (!particle) {
+            break;
+          }
+          particle.className = 'arcade-particle';
         }
-        particle.className = 'arcade-particle';
+
+        // Calculate particle properties
         const size = 3.6 + Math.random() * 2.6;
         const spawnX = brickCenterX + (Math.random() - 0.5) * brickWidth * 0.6;
         const spawnY = brickCenterY + (Math.random() - 0.5) * brickHeight * 0.5;
-        particle.style.left = `${(spawnX - size / 2).toFixed(2)}px`;
-        particle.style.top = `${(spawnY - size / 2).toFixed(2)}px`;
-        particle.style.width = `${size.toFixed(2)}px`;
-        particle.style.height = `${size.toFixed(2)}px`;
-        particle.style.borderRadius = Math.random() < 0.45 ? '50%' : '1px';
         const hue = Math.floor(Math.random() * 360);
         const hueOffset = (hue + 40 + Math.random() * 60) % 360;
         const angle = Math.floor(Math.random() * 180);
-        particle.style.background = `linear-gradient(${angle}deg, hsla(${hue}, 98%, 66%, 0.95), hsla(${hueOffset}, 82%, 58%, 0.6))`;
         const burstRadius = 32 + Math.random() * 72;
         const burstAngle = Math.random() * Math.PI * 2;
         const burstX = clamp(Math.cos(burstAngle) * burstRadius, -maxHorizontalScatter, maxHorizontalScatter);
         const burstY = -Math.abs(Math.sin(burstAngle)) * (burstRadius * 0.82 + Math.random() * 34) - (16 + Math.random() * 28);
-        particle.style.setProperty('--arcade-particle-burst-x', `${burstX.toFixed(2)}px`);
-        particle.style.setProperty('--arcade-particle-burst-y', `${burstY.toFixed(2)}px`);
         const scaleStart = 0.6 + Math.random() * 0.4;
         const peakScale = scaleStart + 0.3 + Math.random() * 0.25;
         const scaleEnd = 0.35 + Math.random() * 0.25;
-        particle.style.setProperty('--arcade-particle-scale-start', scaleStart.toFixed(2));
-        particle.style.setProperty('--arcade-particle-scale-peak', peakScale.toFixed(2));
-        particle.style.setProperty('--arcade-particle-scale-end', scaleEnd.toFixed(2));
-        particle.style.setProperty('--arcade-particle-rotation', `${((Math.random() - 0.5) * 220).toFixed(1)}deg`);
-        particle.style.setProperty('--arcade-particle-duration', `${duration}ms`);
-        particle.style.animationDelay = `${Math.random() * 130}ms`;
+        const animDelay = Math.random() * 130;
+
+        // Batch all style updates with cssText for performance
+        const styles = `left: ${(spawnX - size / 2).toFixed(2)}px; top: ${(spawnY - size / 2).toFixed(2)}px; width: ${size.toFixed(2)}px; height: ${size.toFixed(2)}px; border-radius: ${Math.random() < 0.45 ? '50%' : '1px'}; background: linear-gradient(${angle}deg, hsla(${hue}, 98%, 66%, 0.95), hsla(${hueOffset}, 82%, 58%, 0.6)); --arcade-particle-burst-x: ${burstX.toFixed(2)}px; --arcade-particle-burst-y: ${burstY.toFixed(2)}px; --arcade-particle-scale-start: ${scaleStart.toFixed(2)}; --arcade-particle-scale-peak: ${peakScale.toFixed(2)}; --arcade-particle-scale-end: ${scaleEnd.toFixed(2)}; --arcade-particle-rotation: ${((Math.random() - 0.5) * 220).toFixed(1)}deg; --arcade-particle-duration: ${duration}ms; animation-delay: ${animDelay}ms;`;
+        particle.style.cssText = styles;
+
         const removeParticle = () => {
           particle.removeEventListener('animationend', removeParticle);
           if (particle.parentNode === this.particleLayer) {
             this.particleLayer.removeChild(particle);
+
+            // Return particle to pool for reuse
+            if (this.particlePool.length < this.particlePoolSize) {
+              particle.style.cssText = '';
+              this.particlePool.push(particle);
+            }
           }
         };
         particle.addEventListener('animationend', removeParticle);
@@ -4016,20 +4282,38 @@
       const floorShieldActive = this.effects.has(POWER_UP_IDS.FLOOR);
       this.balls.forEach(ball => this.pruneBallTrail(ball, renderTimestamp));
       ctx.clearRect(0, 0, this.width, this.height);
-      const background = ctx.createLinearGradient(0, 0, this.width, this.height);
-      background.addColorStop(0, 'rgba(12, 16, 38, 0.85)');
-      background.addColorStop(1, 'rgba(4, 6, 18, 0.95)');
-      ctx.fillStyle = background;
+
+      // Use cached background gradient
+      if (!this.gradientCache.background ||
+          this.gradientCache.lastWidth !== this.width ||
+          this.gradientCache.lastHeight !== this.height) {
+        this.gradientCache.background = ctx.createLinearGradient(0, 0, this.width, this.height);
+        this.gradientCache.background.addColorStop(0, 'rgba(12, 16, 38, 0.85)');
+        this.gradientCache.background.addColorStop(1, 'rgba(4, 6, 18, 0.95)');
+        this.gradientCache.lastWidth = this.width;
+        this.gradientCache.lastHeight = this.height;
+      }
+      ctx.fillStyle = this.gradientCache.background;
       ctx.fillRect(0, 0, this.width, this.height);
 
       const hasRoundRect = typeof ctx.roundRect === 'function';
       const originalImageSmoothing = ctx.imageSmoothingEnabled;
       this.bricks.forEach(brick => {
         if (!brick.active || (brick.hidden && brick.type === BRICK_TYPES.GRAVITON)) return;
-        const x = brick.relX * this.width;
-        const y = brick.relY * this.height;
-        const w = brick.relWidth * this.width;
-        const h = brick.relHeight * this.height;
+
+        // Use cached positions instead of recalculating every frame
+        if (!brick.absX) {
+          brick.absX = brick.relX * this.width;
+          brick.absY = brick.relY * this.height;
+          brick.absW = brick.relWidth * this.width;
+          brick.absH = brick.relHeight * this.height;
+          brick.absCenterX = brick.absX + brick.absW / 2;
+          brick.absCenterY = brick.absY + brick.absH / 2;
+        }
+        const x = brick.absX;
+        const y = brick.absY;
+        const w = brick.absW;
+        const h = brick.absH;
         if (brick.type === BRICK_TYPES.GRAVITON) {
           const gradient = ctx.createLinearGradient(x, y, x + w, y + h);
           brick.particle.colors.forEach((color, index) => {
@@ -4098,34 +4382,41 @@
         }
 
         if (!spriteDrawn) {
-          const colors = brick.particle?.colors || ['#6c8cff', '#3b4da6'];
-          const gradient = ctx.createLinearGradient(x, y, x, y + h);
-          gradient.addColorStop(0, colors[0]);
-          gradient.addColorStop(1, colors[1] || colors[0]);
-          ctx.fillStyle = gradient;
-          const radius = Math.min(16, h * 0.4);
-          if (hasRoundRect) {
-            ctx.beginPath();
-            ctx.roundRect(x, y, w, h, radius);
-            ctx.fill();
+          // Use offscreen canvas sprite for performance
+          const sprite = this.createBrickSprite(brick);
+          if (sprite) {
+            ctx.drawImage(sprite, x, y, w, h);
           } else {
-            ctx.fillRect(x, y, w, h);
-          }
-          if (brick.particle?.symbol) {
-            ctx.fillStyle = brick.particle.symbolColor || '#ffffff';
-            const symbolScale = typeof brick.particle.symbolScale === 'number'
-              ? brick.particle.symbolScale
-              : 1;
-            const baseFontSize = Math.max(12, h * 0.55);
-            ctx.font = `${Math.max(12, baseFontSize * symbolScale)}px 'Orbitron', sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(brick.particle.symbol, x + w / 2, y + h / 2 + h * 0.04);
-          }
-          if (brick.type === BRICK_TYPES.RESISTANT && brick.maxHits > 1 && brick.hitsRemaining > 0) {
-            const ratio = brick.hitsRemaining / brick.maxHits;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
-            ctx.fillRect(x, y + h - h * ratio, w, h * ratio * 0.12);
+            // Fallback to direct rendering if sprite creation failed
+            const colors = brick.particle?.colors || ['#6c8cff', '#3b4da6'];
+            const gradient = ctx.createLinearGradient(x, y, x, y + h);
+            gradient.addColorStop(0, colors[0]);
+            gradient.addColorStop(1, colors[1] || colors[0]);
+            ctx.fillStyle = gradient;
+            const radius = Math.min(16, h * 0.4);
+            if (hasRoundRect) {
+              ctx.beginPath();
+              ctx.roundRect(x, y, w, h, radius);
+              ctx.fill();
+            } else {
+              ctx.fillRect(x, y, w, h);
+            }
+            if (brick.particle?.symbol) {
+              ctx.fillStyle = brick.particle.symbolColor || '#ffffff';
+              const symbolScale = typeof brick.particle.symbolScale === 'number'
+                ? brick.particle.symbolScale
+                : 1;
+              const baseFontSize = Math.max(12, h * 0.55);
+              ctx.font = `${Math.max(12, baseFontSize * symbolScale)}px 'Orbitron', sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(brick.particle.symbol, x + w / 2, y + h / 2 + h * 0.04);
+            }
+            if (brick.type === BRICK_TYPES.RESISTANT && brick.maxHits > 1 && brick.hitsRemaining > 0) {
+              const ratio = brick.hitsRemaining / brick.maxHits;
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+              ctx.fillRect(x, y + h - h * ratio, w, h * ratio * 0.12);
+            }
           }
         }
       });
@@ -4140,44 +4431,58 @@
         const width = height * widthMultiplier;
         const left = powerUp.x - width / 2;
         const top = powerUp.y - height / 2;
-        const radius = Math.min(18, height * 0.45);
-        const colors = visuals.gradient || DEFAULT_POWER_UP_VISUAL.gradient;
-        const gradient = ctx.createLinearGradient(left, top, left, top + height);
-        gradient.addColorStop(0, colors[0]);
-        gradient.addColorStop(1, colors[1] || colors[0]);
-        ctx.save();
-        if (GLOW_EFFECTS_ENABLED) {
-          ctx.shadowColor = visuals.glow || DEFAULT_POWER_UP_VISUAL.glow;
-          ctx.shadowBlur = height * 0.55;
-        }
-        ctx.fillStyle = gradient;
-        if (hasRoundRect) {
-          ctx.beginPath();
-          ctx.roundRect(left, top, width, height, radius);
-          ctx.fill();
-        } else {
-          ctx.fillRect(left, top, width, height);
-        }
-        if (visuals.border) {
-          ctx.lineWidth = Math.max(1.2, height * 0.12);
-          ctx.strokeStyle = visuals.border;
-          if (hasRoundRect) {
-            ctx.stroke();
-          } else {
-            ctx.strokeRect(left, top, width, height);
+
+        // Use offscreen canvas sprite for performance
+        const sprite = this.createPowerUpSprite(powerUp.type, powerUp.size);
+        if (sprite) {
+          ctx.save();
+          if (GLOW_EFFECTS_ENABLED) {
+            ctx.shadowColor = visuals.glow || DEFAULT_POWER_UP_VISUAL.glow;
+            ctx.shadowBlur = height * 0.55;
           }
+          ctx.drawImage(sprite, left, top);
+          ctx.restore();
+        } else {
+          // Fallback to direct rendering if sprite creation failed
+          const radius = Math.min(18, height * 0.45);
+          const colors = visuals.gradient || DEFAULT_POWER_UP_VISUAL.gradient;
+          const gradient = ctx.createLinearGradient(left, top, left, top + height);
+          gradient.addColorStop(0, colors[0]);
+          gradient.addColorStop(1, colors[1] || colors[0]);
+          ctx.save();
+          if (GLOW_EFFECTS_ENABLED) {
+            ctx.shadowColor = visuals.glow || DEFAULT_POWER_UP_VISUAL.glow;
+            ctx.shadowBlur = height * 0.55;
+          }
+          ctx.fillStyle = gradient;
+          if (hasRoundRect) {
+            ctx.beginPath();
+            ctx.roundRect(left, top, width, height, radius);
+            ctx.fill();
+          } else {
+            ctx.fillRect(left, top, width, height);
+          }
+          if (visuals.border) {
+            ctx.lineWidth = Math.max(1.2, height * 0.12);
+            ctx.strokeStyle = visuals.border;
+            if (hasRoundRect) {
+              ctx.stroke();
+            } else {
+              ctx.strokeRect(left, top, width, height);
+            }
+          }
+          if (GLOW_EFFECTS_ENABLED) {
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = 'transparent';
+          }
+          ctx.fillStyle = visuals.textColor || DEFAULT_POWER_UP_VISUAL.textColor;
+          ctx.font = `${Math.max(14, height * 0.6)}px 'Orbitron', sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const symbol = powerUp.symbol || visuals.symbol || DEFAULT_POWER_UP_VISUAL.symbol;
+          ctx.fillText(symbol, powerUp.x, powerUp.y + height * 0.04);
+          ctx.restore();
         }
-        if (GLOW_EFFECTS_ENABLED) {
-          ctx.shadowBlur = 0;
-          ctx.shadowColor = 'transparent';
-        }
-        ctx.fillStyle = visuals.textColor || DEFAULT_POWER_UP_VISUAL.textColor;
-        ctx.font = `${Math.max(14, height * 0.6)}px 'Orbitron', sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const symbol = powerUp.symbol || visuals.symbol || DEFAULT_POWER_UP_VISUAL.symbol;
-        ctx.fillText(symbol, powerUp.x, powerUp.y + height * 0.04);
-        ctx.restore();
       });
 
       this.lasers.forEach(laser => {
@@ -4220,17 +4525,27 @@
       }
       if (floorShieldActive) {
         const pulse = 0.55 + 0.25 * Math.sin(time * 6.2);
-        const shieldGradient = ctx.createLinearGradient(
-          0,
-          this.height - floorHeight * 1.8,
-          0,
-          this.height
-        );
-        shieldGradient.addColorStop(0, 'rgba(40, 120, 255, 0)');
-        shieldGradient.addColorStop(0.45, `rgba(90, 180, 255, ${0.22 + pulse * 0.28})`);
-        shieldGradient.addColorStop(1, `rgba(180, 240, 255, ${0.48 + pulse * 0.35})`);
-        ctx.fillStyle = shieldGradient;
+
+        // Use cached floor shield gradient with globalAlpha for pulse effect
+        if (!this.gradientCache.floorShieldActive ||
+            this.gradientCache.lastWidth !== this.width ||
+            this.gradientCache.lastHeight !== this.height) {
+          this.gradientCache.floorShieldActive = ctx.createLinearGradient(
+            0,
+            this.height - floorHeight * 1.8,
+            0,
+            this.height
+          );
+          this.gradientCache.floorShieldActive.addColorStop(0, 'rgba(40, 120, 255, 0)');
+          this.gradientCache.floorShieldActive.addColorStop(0.45, 'rgba(90, 180, 255, 0.5)');
+          this.gradientCache.floorShieldActive.addColorStop(1, 'rgba(180, 240, 255, 0.83)');
+        }
+
+        const prevAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = 0.6 + pulse * 0.4;
+        ctx.fillStyle = this.gradientCache.floorShieldActive;
         ctx.fillRect(0, this.height - floorHeight * 1.8, this.width, floorHeight * 1.8);
+        ctx.globalAlpha = prevAlpha;
         ctx.strokeStyle = `rgba(200, 240, 255, ${0.55 + pulse * 0.4})`;
         ctx.lineWidth = Math.max(2, floorHeight * 0.22);
         ctx.beginPath();
@@ -4239,11 +4554,21 @@
         ctx.stroke();
       } else {
         const ember = 0.4 + 0.2 * Math.sin(time * 3.4);
-        const floorGradient = ctx.createLinearGradient(0, this.height - floorHeight, 0, this.height);
-        floorGradient.addColorStop(0, 'rgba(180, 30, 40, 0)');
-        floorGradient.addColorStop(1, `rgba(255, 60, 60, ${0.35 + ember * 0.25})`);
-        ctx.fillStyle = floorGradient;
+
+        // Use cached floor inactive gradient with globalAlpha for ember effect
+        if (!this.gradientCache.floorShieldInactive ||
+            this.gradientCache.lastWidth !== this.width ||
+            this.gradientCache.lastHeight !== this.height) {
+          this.gradientCache.floorShieldInactive = ctx.createLinearGradient(0, this.height - floorHeight, 0, this.height);
+          this.gradientCache.floorShieldInactive.addColorStop(0, 'rgba(180, 30, 40, 0)');
+          this.gradientCache.floorShieldInactive.addColorStop(1, 'rgba(255, 60, 60, 0.6)');
+        }
+
+        const prevAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = 0.7 + ember * 0.3;
+        ctx.fillStyle = this.gradientCache.floorShieldInactive;
         ctx.fillRect(0, this.height - floorHeight, this.width, floorHeight);
+        ctx.globalAlpha = prevAlpha;
         ctx.strokeStyle = `rgba(220, 40, 50, ${0.45 + ember * 0.25})`;
         ctx.lineWidth = Math.max(1.5, floorHeight * 0.18);
         ctx.beginPath();
@@ -4263,15 +4588,15 @@
       if (paddleBounceOffset !== 0) {
         ctx.translate(0, paddleBounceOffset);
       }
-      const paddleGradient = ctx.createLinearGradient(
-        this.paddle.x,
-        this.paddle.y,
-        this.paddle.x,
-        this.paddle.y + this.paddle.height
-      );
-      paddleGradient.addColorStop(0, 'rgba(120, 220, 255, 0.95)');
-      paddleGradient.addColorStop(1, 'rgba(86, 140, 255, 0.85)');
-      ctx.fillStyle = paddleGradient;
+
+      // Use cached paddle gradient (relative coordinates)
+      if (!this.gradientCache.paddle || this.gradientCache.paddleLastHeight !== this.paddle.height) {
+        this.gradientCache.paddle = ctx.createLinearGradient(0, 0, 0, this.paddle.height);
+        this.gradientCache.paddle.addColorStop(0, 'rgba(120, 220, 255, 0.95)');
+        this.gradientCache.paddle.addColorStop(1, 'rgba(86, 140, 255, 0.85)');
+        this.gradientCache.paddleLastHeight = this.paddle.height;
+      }
+      ctx.fillStyle = this.gradientCache.paddle;
       const paddleRadius = Math.min(18, this.paddle.height * 1.2);
       if (hasRoundRect) {
         ctx.beginPath();
@@ -4484,6 +4809,36 @@
           }
         }
       });
+
+      // Performance monitor overlay - Bottom left, large size for mobile visibility
+      if (this.performanceMonitor.enabled) {
+        const avgRenderTime = this.performanceMonitor.renderTimes.length > 0
+          ? (this.performanceMonitor.renderTimes.reduce((a, b) => a + b, 0) / this.performanceMonitor.renderTimes.length).toFixed(2)
+          : 0;
+
+        const boxWidth = 560;
+        const boxHeight = 200;
+        const boxX = 10;
+        const boxY = this.height - boxHeight - 10;
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+        ctx.strokeStyle = '#00ff00';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+        ctx.fillStyle = this.performanceMonitor.fps >= 55 ? '#00ff00' : this.performanceMonitor.fps >= 30 ? '#ffaa00' : '#ff0000';
+        ctx.font = 'bold 56px monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(`FPS: ${this.performanceMonitor.fps}`, boxX + 20, boxY + 20);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '44px monospace';
+        ctx.fillText(`Render: ${avgRenderTime}ms`, boxX + 20, boxY + 100);
+        ctx.restore();
+      }
     }
 
     updateHud() {

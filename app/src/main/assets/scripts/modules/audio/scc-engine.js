@@ -44,13 +44,13 @@
     : 0.025;
   const DEFAULT_LIMITER_THRESHOLD = Number.isFinite(SCC_ENGINE_CONFIG?.limiter?.threshold)
     ? clamp(SCC_ENGINE_CONFIG.limiter.threshold, 0.1, 1)
-    : 0.92;
+    : 0.97;
   const DEFAULT_LIMITER_ATTACK_MS = Number.isFinite(SCC_ENGINE_CONFIG?.limiter?.attackMs)
     ? Math.max(0.05, SCC_ENGINE_CONFIG.limiter.attackMs)
-    : 0.6;
+    : 1.2;
   const DEFAULT_LIMITER_RELEASE_MS = Number.isFinite(SCC_ENGINE_CONFIG?.limiter?.releaseMs)
     ? Math.max(1, SCC_ENGINE_CONFIG.limiter.releaseMs)
-    : 45;
+    : 25;
 
   // Limite supérieure appliquée aux volumes MIDI afin de conserver une marge
   // de sécurité lors du mixage et d'éviter la saturation perceptible.
@@ -209,7 +209,7 @@
     return {
       wavetable: 'PULSE50',
       envelope: {
-        attack: 3,
+        attack: 8,
         decay: 40,
         sustain: 12,
         release: 60,

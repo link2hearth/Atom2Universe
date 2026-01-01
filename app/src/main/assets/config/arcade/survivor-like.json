@@ -1,0 +1,225 @@
+{
+  "player": {
+    "baseSpeed": 120,
+    "baseHealth": 100,
+    "collisionRadius": 16,
+    "iframeDuration": 500,
+    "weaponSlots": 5
+  },
+  "weapons": {
+    "projectile": {
+      "damage": 40,
+      "fireRate": 2,
+      "projectileSpeed": 200,
+      "projectileCount": 1,
+      "projectileSize": 5,
+      "projectileLifetime": 500,
+      "penetration": 0
+    },
+    "laser": {
+      "damage": 30,
+      "fireRate": 1,
+      "range": 220,
+      "width": 6,
+      "duration": 400,
+      "color": "#ff3366"
+    },
+    "aura": {
+      "damage": 8,
+      "radius": 100,
+      "slowFactor": 0.7,
+      "tickRate": 4,
+      "color": "#4af0ff"
+    },
+    "bouncing": {
+      "damage": 25,
+      "fireRate": 0.8,
+      "speed": 220,
+      "maxBounces": 1,
+      "size": 7,
+      "homingStrength": 1
+    },
+    "bomb": {
+      "damage": 50,
+      "fireRate": 0.5,
+      "speed": 120,
+      "explosionRadius": 100,
+      "size": 8,
+      "color": "#ff8800"
+    },
+    "blackhole": {
+      "damage": 10,
+      "fireRate": 0.6,
+      "speed": 100,
+      "pullRadius": 120,
+      "size": 10,
+      "duration": 1200,
+      "tickRate": 5,
+      "color": "#9933ff"
+    }
+  },
+  "upgrades": {
+    "global": {
+      "speed": {
+        "maxLevel": 10,
+        "effect": 25
+      },
+      "maxHealth": {
+        "maxLevel": -1,
+        "effect": 20
+      },
+      "lifeSteal": {
+        "maxLevel": 10,
+        "effect": 1
+      },
+      "regeneration": {
+        "maxLevel": 15,
+        "effect": 1
+      },
+      "armor": {
+        "maxLevel": 10,
+        "effect": 5
+      },
+      "critChance": {
+        "maxLevel": 10,
+        "effect": 5
+      },
+      "revives": {
+        "maxLevel": 3,
+        "effect": 1
+      },
+      "xpBonus": {
+        "maxLevel": 20,
+        "effect": 10
+      }
+    },
+    "weapons": {
+      "projectile": {
+        "projectileCount": { "maxLevel": 10, "effect": 1 },
+        "damagePercent": { "maxLevel": 20, "effect": 10 },
+        "fireRatePercent": { "maxLevel": 15, "effect": 10 },
+        "speedPercent": { "maxLevel": 10, "effect": 15 },
+        "penetration": { "maxLevel": 5, "effect": 1 },
+        "lifetimePercent": { "maxLevel": 8, "effect": 20 },
+        "sizePercent": { "maxLevel": 5, "effect": 15 }
+      },
+      "laser": {
+        "rangePercent": { "maxLevel": 15, "effect": 20 },
+        "damagePercent": { "maxLevel": 20, "effect": 15 },
+        "widthPercent": { "maxLevel": 10, "effect": 25 },
+        "durationPercent": { "maxLevel": 12, "effect": 30 },
+        "fireRatePercent": { "maxLevel": 10, "effect": 15 },
+        "multiLaser": { "maxLevel": 3, "effect": 1 }
+      },
+      "aura": {
+        "radiusPercent": { "maxLevel": 20, "effect": 15 },
+        "damagePercent": { "maxLevel": 20, "effect": 20 },
+        "slowPercent": { "maxLevel": 10, "effect": 5 },
+        "tickRatePercent": { "maxLevel": 12, "effect": 25 },
+        "critChance": { "maxLevel": 5, "effect": 10 }
+      },
+      "bouncing": {
+        "maxBounces": { "maxLevel": 10, "effect": 1 },
+        "damagePercent": { "maxLevel": 20, "effect": 15 },
+        "speedPercent": { "maxLevel": 10, "effect": 15 },
+        "fireRatePercent": { "maxLevel": 12, "effect": 10 },
+        "sizePercent": { "maxLevel": 8, "effect": 20 },
+        "multiShot": { "maxLevel": 5, "effect": 1 }
+      },
+      "bomb": {
+        "explosionRadiusPercent": { "maxLevel": 15, "effect": 15 },
+        "damagePercent": { "maxLevel": 20, "effect": 20 },
+        "fireRatePercent": { "maxLevel": 10, "effect": 15 },
+        "speedPercent": { "maxLevel": 8, "effect": 10 },
+        "multiShot": { "maxLevel": 4, "effect": 1 },
+        "burnDamage": { "maxLevel": 5, "effect": 10 }
+      },
+      "blackhole": {
+        "pullRadiusPercent": { "maxLevel": 15, "effect": 15 },
+        "damagePercent": { "maxLevel": 20, "effect": 20 },
+        "durationPercent": { "maxLevel": 12, "effect": 15 },
+        "tickRatePercent": { "maxLevel": 10, "effect": 20 },
+        "fireRatePercent": { "maxLevel": 10, "effect": 15 },
+        "multiShot": { "maxLevel": 3, "effect": 1 }
+      }
+    }
+  },
+  "enemies": {
+    "zombie": {
+      "health": 50,
+      "speed": 80,
+      "damage": 20,
+      "xp": 3,
+      "radius": 14,
+      "color": "#4a9d4a",
+      "spawnWeight": 1
+    },
+    "fast": {
+      "health": 25,
+      "speed": 140,
+      "damage": 15,
+      "xp": 4,
+      "radius": 12,
+      "color": "#d4593a",
+      "spawnWeight": 0.7
+    },
+    "miniBoss": {
+      "health": 2000,
+      "speed": 60,
+      "damage": 45,
+      "xp": 200,
+      "radius": 32,
+      "color": "#ff4444",
+      "spawnWeight": 0
+    }
+  },
+  "spawning": {
+    "initialInterval": 700,
+    "minInterval": 150,
+    "intervalDecayPerWave": 50,
+    "intervalDecayExponential": 0.95,
+    "enemiesPerWave": 10,
+    "waveInterval": 30000,
+    "baseMaxEnemies": 20,
+    "maxEnemiesPerWave": 20,
+    "exponentialGrowth": 1.15,
+    "absoluteMaxEnemies": 2000,
+    "renderMaxEnemies": 1000,
+    "spawnDistance": 800,
+    "enemySeparation": {
+      "enabled": true,
+      "minDistance": 8,
+      "separationForce": 200
+    },
+    "healthScaling": {
+      "enabled": true,
+      "perWave": 0.1,
+      "maxMultiplier": 1000
+    },
+    "groupSpawn": {
+      "enabled": true,
+      "chance": 0.15,
+      "minWaveToActivate": 5,
+      "minSize": 8,
+      "maxSize": 25,
+      "sizeIncreasePerWave": 2,
+      "spreadRadius": 150
+    },
+    "bossSpawn": {
+      "enabled": true,
+      "spawnIntervalSeconds": 90,
+      "preventNormalSpawnDuration": 1000
+    }
+  },
+  "progression": {
+    "xpPerLevel": 100,
+    "xpScaling": "exponential",
+    "secondWeaponLevel": 3
+  },
+  "rewards": {
+    "gacha": {
+      "survivalIntervalSeconds": 60,
+      "ticketAmount": 1
+    }
+  }
+}

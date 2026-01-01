@@ -293,6 +293,11 @@
             "bestTime": "Temps de survie",
             "timeUnit": "s"
           },
+          "survivorLike": {
+            "title": "Survis",
+            "bestTime": "Temps de survie",
+            "bestLevel": "Niveau atteint"
+          },
         "reflex": {
           "title": "Reflex",
           "bestScoreEasy": "Record Easy",
@@ -808,6 +813,12 @@
             "description": "Faites pivoter les anneaux colorés et réalignez chaque orbite sans oublier le lien avec l’anneau extérieur.",
             "cta": "Aligner"
           },
+          "survivorLike": {
+            "aria": "Accéder au mini-jeu Survis",
+            "title": "Survis",
+            "description": "Survivez face à des hordes d'ennemis dans ce survivor-like intense. Améliorez vos armes et défiez les vagues.",
+            "cta": "Survivre"
+          },
           "motocross": {
             "aria": "Accéder au prototype Motocross procédural",
             "title": "Motocross",
@@ -909,6 +920,69 @@
             "title": "Hold’em",
             "description": "Affrontez jusqu’à quatre IA en Texas Hold’em et empochez le pot avec la meilleure main.",
             "cta": "S’asseoir"
+          }
+        }
+      },
+      "survivorLike": {
+        "aria": "Mini-jeu Survis : survivez face à des hordes d'ennemis.",
+        "hud": {
+          "health": "Vie",
+          "xp": "Expérience",
+          "level": "Niv.",
+          "time": "Temps",
+          "wave": "Vague",
+          "kills": "Kills"
+        },
+        "overlay": {
+          "start": {
+            "title": "Survis",
+            "message": "Utilisez le joystick pour vous déplacer. Éliminez les ennemis et améliorez vos armes à chaque niveau.",
+            "bestTime": "Meilleur temps",
+            "bestLevel": "Niveau max",
+            "chooseHero": "Choisir un héros :",
+            "randomButton": "Héros aléatoire",
+            "button": "Commencer",
+            "continueButton": "Continuer"
+          },
+          "levelup": {
+            "title": "Niveau supérieur !",
+            "message": "Choisissez une amélioration"
+          },
+          "gameover": {
+            "title": "Game Over",
+            "message": "Vous avez survécu vaillamment !",
+            "time": "Temps survécu",
+            "level": "Niveau atteint",
+            "kills": "Ennemis éliminés",
+            "tickets": "Tickets gagnés",
+            "restart": "Rejouer",
+            "quit": "Quitter"
+          }
+        },
+        "upgrades": {
+          "damage": {
+            "title": "Dégâts accrus",
+            "description": "Augmentez les dégâts de vos projectiles"
+          },
+          "fireRate": {
+            "title": "Cadence rapide",
+            "description": "Tirez plus rapidement"
+          },
+          "projectileCount": {
+            "title": "Projectile supplémentaire",
+            "description": "Ajoutez un projectile à chaque tir"
+          },
+          "projectileSpeed": {
+            "title": "Projectiles véloces",
+            "description": "Augmentez la vitesse des projectiles"
+          },
+          "maxHealth": {
+            "title": "Vie accrue",
+            "description": "Augmentez votre vie maximale et récupérez toute votre santé"
+          },
+          "speed": {
+            "title": "Déplacement rapide",
+            "description": "Déplacez-vous plus vite"
           }
         }
       },

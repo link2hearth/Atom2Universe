@@ -215,7 +215,7 @@ body.arcade-hub-reordering .arcade-hub-card {
   display: block;
   margin: 0;
   font-family: 'Orbitron', 'Audiowide', sans-serif;
-  font-size: calc(var(--arcade-hub-font-scale) * clamp(0.92rem, 1.8vw, 1.25rem));
+  font-size: calc(var(--arcade-hub-scale) * clamp(0.92rem, 1.8vw, 1.25rem));
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -432,6 +432,14 @@ body.theme-aurora .page--arcade-hub {
   --arcade-hub-card-border: rgba(120, 104, 210, 0.52);
   --arcade-hub-card-shadow: 0 22px 38px rgba(8, 18, 54, 0.62);
   --arcade-hub-card-shadow-hover: 0 30px 56px rgba(22, 34, 92, 0.78);
+}
+
+.arcade-hub-card[data-card-id="survivorLike"] {
+  --arcade-hub-card-background: linear-gradient(135deg, #3a0f0f, #8a2525);
+  --arcade-hub-card-border: rgba(200, 70, 70, 0.52);
+  --arcade-hub-card-shadow: 0 22px 38px rgba(54, 12, 12, 0.62);
+  --arcade-hub-card-shadow-hover: 0 30px 56px rgba(92, 22, 22, 0.78);
+  --arcade-hub-card-description-color: rgba(255, 255, 255, 0.88);
 }
 
 .arcade-hub-card[data-card-id="starBridges"] {

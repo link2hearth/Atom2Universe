@@ -16,7 +16,7 @@
   "impactParticles": {
     "minCount": 6,
     "maxCount": 12,
-    "maxActive": 120,
+    "maxActive": 60,
     "durationMs": 1200
   },
   "grid": {

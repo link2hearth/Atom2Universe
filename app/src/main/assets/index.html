@@ -603,6 +603,48 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
+          aria-label="Accéder au mini-jeu Survis"
+          aria-describedby="arcadeCardDescription-survivorLike"
+          data-card-id="survivorLike"
+          data-i18n="aria-label:index.sections.arcadeHub.cards.survivorLike.aria"
+          data-page-target="survivorLike"
+        >
+          <div class="arcade-hub-card__header">
+            <span
+              class="arcade-hub-card__title"
+              role="heading"
+              aria-level="3"
+              data-i18n="index.sections.arcadeHub.cards.survivorLike.title"
+            >Survis</span>
+            <button
+              class="arcade-hub-card__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="arcadeCardDescription-survivorLike"
+              aria-label="Masquer la description"
+              title="Masquer la description"
+              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
+            >
+              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
+              <span
+                class="visually-hidden"
+                data-role="arcade-hub-card-toggle-label"
+                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
+              >Masquer la description</span>
+            </button>
+          </div>
+          <p
+            class="arcade-hub-card__description"
+            id="arcadeCardDescription-survivorLike"
+            data-i18n="index.sections.arcadeHub.cards.survivorLike.description"
+          >
+            Survivez face à des hordes d'ennemis dans ce survivor-like intense. Améliorez vos armes et défiez les vagues.
+          </p>
+        </article>
+        <article
+          class="arcade-hub-card"
+          role="button"
+          tabindex="0"
           aria-label="Accéder au mini-jeu Motocross"
           aria-describedby="arcadeCardDescription-motocross"
           data-card-id="motocross"
@@ -1713,47 +1755,6 @@
           class="arcade-hub-card"
           role="button"
           tabindex="0"
-          aria-label="Accéder au mini-jeu Jeu de la vie"
-          aria-describedby="arcadeCardDescription-gameOfLife"
-          data-card-id="gameOfLife"
-          data-i18n="aria-label:index.sections.arcadeHub.cards.gameOfLife.aria"
-          data-page-target="gameOfLife"
-          data-page-href="game-of-life.html"
-        >
-          <div class="arcade-hub-card__header">
-            <span
-              class="arcade-hub-card__title"
-              role="heading"
-              aria-level="3"
-              data-i18n="index.sections.arcadeHub.cards.gameOfLife.title"
-            >Jeu de la vie</span>
-            <button
-              class="arcade-hub-card__toggle"
-              type="button"
-              aria-expanded="true"
-              aria-controls="arcadeCardDescription-gameOfLife"
-              aria-label="Masquer la description"
-              title="Masquer la description"
-              data-i18n="aria-label:index.sections.arcadeHub.cards.toggle.collapse;title:index.sections.arcadeHub.cards.toggle.collapse"
-            >
-              <span class="arcade-hub-card__toggle-icon" aria-hidden="true"></span>
-              <span
-                class="visually-hidden"
-                data-role="arcade-hub-card-toggle-label"
-                data-i18n="index.sections.arcadeHub.cards.toggle.collapse"
-              >Masquer la description</span>
-            </button>
-          </div>
-          <p
-            class="arcade-hub-card__description"
-            id="arcadeCardDescription-gameOfLife"
-            data-i18n="index.sections.arcadeHub.cards.gameOfLife.description"
-          >Rien à gagner, c'est une aire de test pour le jeu de la vie de Conway.</p>
-        </article>
-        <article
-          class="arcade-hub-card"
-          role="button"
-          tabindex="0"
           aria-label="Ouvrir le mini-jeu Roulette"
           aria-describedby="arcadeCardDescription-roulette"
           data-card-id="roulette"
@@ -2257,6 +2258,262 @@
           <div class="jumping-cat__record">
             <span class="jumping-cat__record-label" data-i18n="index.sections.jumpingCat.hud.bestTime">Longévité</span>
             <span class="jumping-cat__record-value" id="jumpingCatBestTimeValue">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="survivorLike"
+      class="page page--survivor-like"
+      data-page-group="arcade"
+      data-scroll-behavior="lock"
+      aria-label="Mini-jeu Survis : survivez face à des hordes d'ennemis."
+      data-i18n="aria-label:index.sections.survivorLike.aria"
+      hidden
+    >
+      <div class="survivor-like" data-survivor-like-root>
+        <!-- Canvas de jeu -->
+        <canvas id="survivorLikeCanvas" class="survivor-like__canvas"></canvas>
+
+        <!-- HUD (overlay non-interactif) -->
+        <div class="survivor-like__hud">
+          <!-- Bouton pause en haut à gauche -->
+          <button
+            type="button"
+            id="survivorLikePauseButton"
+            class="survivor-like__pause-button"
+            aria-label="Pause"
+          >
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" rx="1"/>
+              <rect x="14" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </button>
+
+          <!-- Stats en haut au centre -->
+          <div class="survivor-like__hud-top">
+            <!-- Timer -->
+            <div class="survivor-like__stat">
+              <span class="survivor-like__stat-label" data-i18n="index.sections.survivorLike.hud.time">Temps</span>
+              <span id="survivorLikeTimeValue" class="survivor-like__stat-value">0:00</span>
+            </div>
+
+            <!-- Wave -->
+            <div class="survivor-like__stat">
+              <span class="survivor-like__stat-label" data-i18n="index.sections.survivorLike.hud.wave">Vague</span>
+              <span id="survivorLikeWaveValue" class="survivor-like__stat-value">1</span>
+            </div>
+
+            <!-- Kills -->
+            <div class="survivor-like__stat">
+              <span class="survivor-like__stat-label" data-i18n="index.sections.survivorLike.hud.kills">Kills</span>
+              <span id="survivorLikeKillsValue" class="survivor-like__stat-value">0</span>
+            </div>
+          </div>
+
+          <!-- Barre de vie en bas -->
+          <div class="survivor-like__health-bar">
+            <span class="survivor-like__health-label" data-i18n="index.sections.survivorLike.hud.health">Vie</span>
+            <div class="survivor-like__health-bar-container">
+              <div id="survivorLikeHealthFill" class="survivor-like__health-bar-fill" style="width: 100%;"></div>
+              <span id="survivorLikeHealthText" class="survivor-like__health-text">100 / 100</span>
+            </div>
+          </div>
+
+          <!-- Barre XP verticale à droite -->
+          <div class="survivor-like__xp-bar">
+            <div class="survivor-like__xp-label">
+              <span data-i18n="index.sections.survivorLike.hud.xp">Expérience</span>
+              <span id="survivorLikeLevel" class="survivor-like__level">Niv. 1</span>
+            </div>
+            <div class="survivor-like__xp-bar-container">
+              <div id="survivorLikeXpFill" class="survivor-like__xp-bar-fill" style="height: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Virtual Joystick -->
+        <div id="survivorLikeJoystickZone" class="survivor-like__joystick-zone">
+          <div id="survivorLikeJoystick" class="survivor-like__joystick">
+            <div class="survivor-like__joystick-outer"></div>
+            <div id="survivorLikeJoystickInner" class="survivor-like__joystick-inner"></div>
+          </div>
+        </div>
+
+        <!-- Start Menu Overlay -->
+        <div id="survivorLikeStartOverlay" class="survivor-like__overlay">
+          <div class="survivor-like__overlay-content">
+            <button type="button" class="survivor-like__exit-button" id="survivorLikeExitButton" title="Quitter">✕</button>
+            <h2 class="survivor-like__overlay-title" data-i18n="index.sections.survivorLike.overlay.start.title">Survis</h2>
+            <p class="survivor-like__overlay-message" data-i18n="index.sections.survivorLike.overlay.start.message">
+              Utilisez le joystick pour vous déplacer. Éliminez les ennemis et améliorez vos armes à chaque niveau.
+            </p>
+            <div class="survivor-like__overlay-stats">
+              <div class="survivor-like__overlay-stat">
+                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.start.bestTime">Meilleur temps</span>
+                <span id="survivorLikeBestTimeValue" class="survivor-like__overlay-stat-value">—</span>
+              </div>
+              <div class="survivor-like__overlay-stat">
+                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.start.bestLevel">Niveau max</span>
+                <span id="survivorLikeBestLevelValue" class="survivor-like__overlay-stat-value">—</span>
+              </div>
+            </div>
+            <!-- Hero Selection -->
+            <div class="survivor-like__hero-selection">
+              <p class="survivor-like__hero-label" data-i18n="index.sections.survivorLike.overlay.start.chooseHero">Choisir un héros :</p>
+              <div class="survivor-like__hero-grid">
+                <button type="button" class="survivor-like__hero-card" data-hero="Mage" data-weapon="projectile">
+                  <img src="Assets/sprites/Survive/Mage.png" alt="Mage" class="survivor-like__hero-img">
+                </button>
+                <button type="button" class="survivor-like__hero-card" data-hero="Robot" data-weapon="laser">
+                  <img src="Assets/sprites/Survive/Robot.png" alt="Robot" class="survivor-like__hero-img">
+                </button>
+                <button type="button" class="survivor-like__hero-card" data-hero="Ghost" data-weapon="aura">
+                  <img src="Assets/sprites/Survive/Ghost.png" alt="Ghost" class="survivor-like__hero-img">
+                </button>
+                <button type="button" class="survivor-like__hero-card" data-hero="ChatNoir" data-weapon="bouncing">
+                  <img src="Assets/sprites/Survive/ChatNoir.png" alt="Chat Noir" class="survivor-like__hero-img">
+                </button>
+                <button type="button" class="survivor-like__hero-card" data-hero="Skeleton" data-weapon="bomb">
+                  <img src="Assets/sprites/Survive/Skeleton.png" alt="Skeleton" class="survivor-like__hero-img">
+                </button>
+                <button type="button" class="survivor-like__hero-card" data-hero="Vortex" data-weapon="blackhole">
+                  <img src="Assets/sprites/Survive/Vortex.png" alt="Vortex" class="survivor-like__hero-img">
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              id="survivorLikeContinueButton"
+              class="survivor-like__button"
+              data-i18n="index.sections.survivorLike.overlay.start.continueButton"
+              style="display: none;"
+            >Continuer</button>
+            <button
+              type="button"
+              id="survivorLikeStartButton"
+              class="survivor-like__button"
+              data-i18n="index.sections.survivorLike.overlay.start.randomButton"
+            >Héros aléatoire</button>
+          </div>
+        </div>
+
+        <!-- Level-Up Overlay -->
+        <div id="survivorLikeLevelUpOverlay" class="survivor-like__overlay survivor-like__overlay--hidden">
+          <div class="survivor-like__overlay-content">
+            <button type="button" class="survivor-like__exit-button" id="survivorLikeExitButtonLevelUp" title="Quitter">✕</button>
+            <h2 class="survivor-like__overlay-title" data-i18n="index.sections.survivorLike.overlay.levelup.title">Niveau supérieur !</h2>
+            <p class="survivor-like__overlay-message" data-i18n="index.sections.survivorLike.overlay.levelup.message">
+              Choisissez une amélioration
+            </p>
+            <div id="survivorLikeUpgradeChoices" class="survivor-like__levelup-choices">
+              <!-- Upgrade cards will be inserted here by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div id="survivorLikeGameOverOverlay" class="survivor-like__overlay survivor-like__overlay--hidden">
+          <div class="survivor-like__overlay-content">
+            <button type="button" class="survivor-like__exit-button" id="survivorLikeExitButtonGameOver" title="Quitter">✕</button>
+            <h2 class="survivor-like__overlay-title" data-i18n="index.sections.survivorLike.overlay.gameover.title">Game Over</h2>
+            <p class="survivor-like__overlay-message" data-i18n="index.sections.survivorLike.overlay.gameover.message">
+              Vous avez survécu vaillamment !
+            </p>
+            <div class="survivor-like__overlay-stats">
+              <div class="survivor-like__overlay-stat">
+                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.gameover.time">Temps survécu</span>
+                <span id="survivorLikeGameOverTime" class="survivor-like__overlay-stat-value">0:00</span>
+              </div>
+              <div class="survivor-like__overlay-stat">
+                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.gameover.level">Niveau atteint</span>
+                <span id="survivorLikeGameOverLevel" class="survivor-like__overlay-stat-value">1</span>
+              </div>
+              <div class="survivor-like__overlay-stat">
+                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.gameover.kills">Ennemis éliminés</span>
+                <span id="survivorLikeGameOverKills" class="survivor-like__overlay-stat-value">0</span>
+              </div>
+              <div class="survivor-like__overlay-stat">
+                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.gameover.tickets">Tickets gagnés</span>
+                <span id="survivorLikeGameOverTickets" class="survivor-like__overlay-stat-value">0</span>
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                id="survivorLikeRestartButton"
+                class="survivor-like__button"
+                data-i18n="index.sections.survivorLike.overlay.gameover.restart"
+              >Rejouer</button>
+              <button
+                type="button"
+                id="survivorLikeQuitButton"
+                class="survivor-like__button survivor-like__button--secondary"
+                data-i18n="index.sections.survivorLike.overlay.gameover.quit"
+              >Quitter</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div id="survivorLikePauseOverlay" class="survivor-like__overlay survivor-like__overlay--hidden">
+          <div class="survivor-like__overlay-content survivor-like__pause-content">
+            <button type="button" class="survivor-like__exit-button" id="survivorLikeExitButtonPause" title="Quitter">✕</button>
+            <h2 class="survivor-like__overlay-title">Pause</h2>
+
+            <!-- Stats de la partie actuelle -->
+            <div class="survivor-like__pause-section">
+              <h3 class="survivor-like__pause-section-title">Partie en cours</h3>
+              <div class="survivor-like__overlay-stats">
+                <div class="survivor-like__overlay-stat">
+                  <span class="survivor-like__overlay-stat-label">Temps</span>
+                  <span id="survivorLikePauseTime" class="survivor-like__overlay-stat-value">0:00</span>
+                </div>
+                <div class="survivor-like__overlay-stat">
+                  <span class="survivor-like__overlay-stat-label">Vague</span>
+                  <span id="survivorLikePauseWave" class="survivor-like__overlay-stat-value">1</span>
+                </div>
+                <div class="survivor-like__overlay-stat">
+                  <span class="survivor-like__overlay-stat-label">Niveau</span>
+                  <span id="survivorLikePauseLevel" class="survivor-like__overlay-stat-value">1</span>
+                </div>
+                <div class="survivor-like__overlay-stat">
+                  <span class="survivor-like__overlay-stat-label">Kills</span>
+                  <span id="survivorLikePauseKills" class="survivor-like__overlay-stat-value">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats du personnage -->
+            <div class="survivor-like__pause-section">
+              <h3 class="survivor-like__pause-section-title">Statistiques</h3>
+              <div id="survivorLikePausePlayerStats" class="survivor-like__pause-stats-grid">
+                <!-- Généré par JS -->
+              </div>
+            </div>
+
+            <!-- Armes équipées -->
+            <div class="survivor-like__pause-section">
+              <h3 class="survivor-like__pause-section-title">Armes équipées</h3>
+              <div id="survivorLikePauseWeapons" class="survivor-like__pause-weapons">
+                <!-- Généré par JS -->
+              </div>
+            </div>
+
+            <!-- Boutons -->
+            <div>
+              <button
+                type="button"
+                id="survivorLikeResumeButton"
+                class="survivor-like__button"
+              >Reprendre</button>
+              <button
+                type="button"
+                id="survivorLikePauseQuitButton"
+                class="survivor-like__button survivor-like__button--secondary"
+              >Quitter</button>
+            </div>
           </div>
         </div>
       </div>
@@ -6376,6 +6633,29 @@
                 </div>
               </dl>
             </section>
+            <section class="info-progress-block info-progress-block--survivor-like" aria-labelledby="info-survivor-like-title">
+              <header class="info-progress-block__header">
+                <h4 id="info-survivor-like-title" data-i18n="index.sections.info.progress.survivorLike.title">Survis</h4>
+              </header>
+              <dl class="info-metrics">
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.survivorLike.bestTime">Temps de survie</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoSurvivorLikeTimeValue" class="info-metrics__value">—</span>
+                    </span>
+                  </dd>
+                </div>
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.survivorLike.bestLevel">Niveau atteint</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoSurvivorLikeLevelValue" class="info-metrics__value">—</span>
+                    </span>
+                  </dd>
+                </div>
+              </dl>
+            </section>
             <section class="info-progress-block info-progress-block--motocross" aria-labelledby="info-motocross-title">
               <header class="info-progress-block__header">
                 <h4 id="info-motocross-title" data-i18n="index.sections.info.progress.motocross.title">Motocross</h4>
@@ -6396,6 +6676,29 @@
                     <span class="info-metrics__group">
                       <span id="infoMotocrossSpeedValue" class="info-metrics__value">—</span>
                       <span class="info-metrics__unit" data-i18n="index.sections.info.progress.motocross.speedUnit">km/h</span>
+                    </span>
+                  </dd>
+                </div>
+              </dl>
+            </section>
+            <section class="info-progress-block info-progress-block--reflex" aria-labelledby="info-reflex-title">
+              <header class="info-progress-block__header">
+                <h4 id="info-reflex-title" data-i18n="index.sections.info.progress.reflex.title">Reflex</h4>
+              </header>
+              <dl class="info-metrics">
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.reflex.easyScore">Score — Mode facile</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoReflexBestScoreEasyValue" class="info-metrics__value">—</span>
+                    </span>
+                  </dd>
+                </div>
+                <div class="info-metrics__row">
+                  <dt data-i18n="index.sections.info.progress.reflex.hardScore">Score — Mode difficile</dt>
+                  <dd>
+                    <span class="info-metrics__group">
+                      <span id="infoReflexBestScoreHardValue" class="info-metrics__value">—</span>
                     </span>
                   </dd>
                 </div>

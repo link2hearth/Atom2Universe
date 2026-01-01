@@ -1019,10 +1019,9 @@ function pickNextBackgroundIndex(poolLength) {
   if (!backgroundRotationQueue.length) {
     return 0;
   }
-  let nextIndex = backgroundRotationQueue.shift();
-  if (nextIndex === backgroundIndex && backgroundRotationQueue.length) {
-    backgroundRotationQueue.push(nextIndex);
-    nextIndex = backgroundRotationQueue.shift();
+  let nextIndex = backgroundRotationQueue[0];
+  if (nextIndex === backgroundIndex && backgroundRotationQueue.length > 1) {
+    nextIndex = backgroundRotationQueue[1];
   }
   return nextIndex;
 }
@@ -1159,7 +1158,11 @@ function markBackgroundIndexSeen(index, poolLength) {
     return;
   }
   recordBackgroundHistory(safeIndex, poolLength);
-  backgroundRotationQueue = backgroundRotationQueue.filter(item => item !== safeIndex);
+  if (backgroundRotationQueue[0] === safeIndex) {
+    backgroundRotationQueue.shift();
+  } else if (backgroundRotationQueue[1] === safeIndex) {
+    backgroundRotationQueue.splice(1, 1);
+  }
   persistBackgroundRotationState(poolLength);
   renderBackgroundRotationCounter(poolLength);
 }

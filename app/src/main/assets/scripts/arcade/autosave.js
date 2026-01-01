@@ -13,6 +13,7 @@
     'reflex',
     'motocross',
     'jumpingCat',
+    'survivorLike',
     'sokoban',
     'bigger',
     'math',

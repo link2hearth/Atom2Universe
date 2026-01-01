@@ -1352,6 +1352,128 @@
       }
 
       return { x: baseX, y: baseY, rotation: 0 };
+    },
+
+    circular_loop(params, t) {
+      const {
+        centerX = CANVAS_WIDTH / 2,
+        centerY = CANVAS_HEIGHT * 0.3,
+        radius = 80,
+        angularSpeed = 2,
+        startAngle = 0,
+        loops = 1,
+        clockwise = true
+      } = params;
+
+      const direction = clockwise ? 1 : -1;
+      const angle = startAngle + direction * angularSpeed * t;
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
+
+      const rotation = angle + (clockwise ? Math.PI / 2 : -Math.PI / 2);
+
+      return { x, y, rotation };
+    },
+
+    figure_eight(params, t) {
+      const {
+        centerX = CANVAS_WIDTH / 2,
+        centerY = CANVAS_HEIGHT * 0.3,
+        scale = 100,
+        speed = 1,
+        orientation = 'horizontal',
+        phase = 0
+      } = params;
+
+      const theta = speed * t + phase;
+      const sin_t = Math.sin(theta);
+      const cos_t = Math.cos(theta);
+
+      const denominator = 1 + sin_t * sin_t;
+      const r = scale * Math.sqrt(2 * cos_t * cos_t / denominator);
+
+      let x, y;
+      if (orientation === 'vertical') {
+        x = centerX + r * sin_t;
+        y = centerY + r * cos_t;
+      } else {
+        x = centerX + r * cos_t;
+        y = centerY + r * sin_t;
+      }
+
+      const epsilon = 0.01;
+      const theta2 = theta + epsilon;
+      const sin_t2 = Math.sin(theta2);
+      const cos_t2 = Math.cos(theta2);
+      const denom2 = 1 + sin_t2 * sin_t2;
+      const r2 = scale * Math.sqrt(2 * cos_t2 * cos_t2 / denom2);
+
+      let x2, y2;
+      if (orientation === 'vertical') {
+        x2 = centerX + r2 * sin_t2;
+        y2 = centerY + r2 * cos_t2;
+      } else {
+        x2 = centerX + r2 * cos_t2;
+        y2 = centerY + r2 * sin_t2;
+      }
+
+      const rotation = Math.atan2(y2 - y, x2 - x);
+
+      return { x, y, rotation };
+    },
+
+    dive_through(params, t) {
+      const {
+        startX = CANVAS_WIDTH / 2,
+        startY = -60,
+        endX = CANVAS_WIDTH / 2,
+        endY = CANVAS_HEIGHT + 60,
+        speed = 300,
+        easing = 'linear'
+      } = params;
+
+      const totalDistance = Math.hypot(endX - startX, endY - startY);
+      const travelled = speed * t;
+      const rawProgress = clamp(travelled / totalDistance, 0, 1);
+
+      let progress;
+      if (easing === 'easeIn') {
+        progress = rawProgress * rawProgress;
+      } else if (easing === 'easeOut') {
+        progress = 1 - Math.pow(1 - rawProgress, 2);
+      } else {
+        progress = rawProgress;
+      }
+
+      const x = lerp(startX, endX, progress);
+      const y = lerp(startY, endY, progress);
+      const rotation = Math.atan2(endY - startY, endX - startX);
+
+      return { x, y, rotation };
+    },
+
+    arc_sweep(params, t) {
+      const {
+        startSide = 'left',
+        arcCenterX = CANVAS_WIDTH / 2,
+        arcCenterY = CANVAS_HEIGHT * 0.3,
+        radius = 200,
+        startAngle = Math.PI,
+        endAngle = 0,
+        duration = 2,
+        easing = 'easeInOutQuad'
+      } = params;
+
+      const rawProgress = clamp(t / duration, 0, 1);
+      const progress = easing === 'easeInOutQuad' ? easeInOutQuad(rawProgress) : rawProgress;
+
+      const angle = lerp(startAngle, endAngle, progress);
+      const x = arcCenterX + radius * Math.cos(angle);
+      const y = arcCenterY + radius * Math.sin(angle);
+
+      const rotation = angle + Math.PI / 2;
+
+      return { x, y, rotation };
     }
   });
 
@@ -1490,6 +1612,71 @@
           jitter: 4,
           jitterFreq: 0.8
         })
+      }),
+      Object.freeze({
+        name: 'loop_entry',
+        type: 'circular_loop',
+        params: Object.freeze({
+          centerX: CANVAS_WIDTH / 2,
+          centerY: CANVAS_HEIGHT * 0.2,
+          radius: 150,
+          angularSpeed: 2.2,
+          startAngle: -Math.PI / 2,
+          loops: 1.5,
+          clockwise: true
+        })
+      }),
+      Object.freeze({
+        name: 'figure_eight_maneuver',
+        type: 'figure_eight',
+        params: Object.freeze({
+          centerX: CANVAS_WIDTH / 2,
+          centerY: CANVAS_HEIGHT * 0.25,
+          scale: 150,
+          speed: 1.1,
+          orientation: 'vertical',
+          phase: Math.PI
+        })
+      }),
+      Object.freeze({
+        name: 'dive_through_screen',
+        type: 'dive_through',
+        params: Object.freeze({
+          startX: CANVAS_WIDTH * 0.3,
+          startY: -50,
+          endX: CANVAS_WIDTH * 0.7,
+          endY: CANVAS_HEIGHT + 50,
+          speed: 280,
+          easing: 'linear'
+        })
+      }),
+      Object.freeze({
+        name: 'arc_from_left',
+        type: 'arc_sweep',
+        params: Object.freeze({
+          startSide: 'left',
+          arcCenterX: CANVAS_WIDTH / 2,
+          arcCenterY: CANVAS_HEIGHT * 0.3,
+          radius: 220,
+          startAngle: Math.PI,
+          endAngle: 0,
+          duration: 2.2,
+          easing: 'easeInOutQuad'
+        })
+      }),
+      Object.freeze({
+        name: 'arc_from_right',
+        type: 'arc_sweep',
+        params: Object.freeze({
+          startSide: 'right',
+          arcCenterX: CANVAS_WIDTH / 2,
+          arcCenterY: CANVAS_HEIGHT * 0.3,
+          radius: 220,
+          startAngle: 0,
+          endAngle: Math.PI,
+          duration: 2.2,
+          easing: 'easeInOutQuad'
+        })
       })
     ]),
     waves: Object.freeze([
@@ -1526,6 +1713,94 @@
           Object.freeze({ pattern: 'waypoints_to_formation', timeOffset: 0.6, then: 'idle_formation', thenAt: 3, formationOffset: [20, -28], enemyType: 'tank' }),
           Object.freeze({ pattern: 'waypoints_to_formation', timeOffset: 0.9, then: 'idle_formation', thenAt: 3.2, formationOffset: [80, -36], enemyType: 'gunner' })
         ])
+      }),
+      Object.freeze({
+        name: 'Wave_5_FileToFormation',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0, then: 'idle_formation', thenAt: 2.2, formationOffset: [-90, -50], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0.3, then: 'idle_formation', thenAt: 2.5, formationOffset: [-90, -20], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0.6, then: 'idle_formation', thenAt: 2.8, formationOffset: [-90, 10], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0.9, then: 'idle_formation', thenAt: 3.1, formationOffset: [-90, 40], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 0.15, then: 'idle_formation', thenAt: 2.35, formationOffset: [90, -50], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 0.45, then: 'idle_formation', thenAt: 2.65, formationOffset: [90, -20], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 0.75, then: 'idle_formation', thenAt: 2.95, formationOffset: [90, 10], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 1.05, then: 'idle_formation', thenAt: 3.25, formationOffset: [90, 40], enemyType: 'gunner' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_6_FileThenDive',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 0, then: 'dive_at_player', thenAt: 1.8, enemyType: 'kamikaze' }),
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 0.25, then: 'dive_at_player', thenAt: 2.05, enemyType: 'kamikaze' }),
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 0.5, then: 'dive_at_player', thenAt: 2.3, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 0.75, then: 'dive_at_player', thenAt: 2.55, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'sine_sweep', timeOffset: 1.0, then: 'dive_at_player', thenAt: 2.8, enemyType: 'kamikaze' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_7_DiveThroughScreen',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 0, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 0.3, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 0.6, enemyType: 'drone' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 1.5, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 1.8, enemyType: 'drone' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 2.1, enemyType: 'fast' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_8_LoopToFormation',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'loop_entry', timeOffset: 0, then: 'idle_formation', thenAt: 4.2, formationOffset: [-70, -30], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'loop_entry', timeOffset: 0.4, then: 'idle_formation', thenAt: 4.6, formationOffset: [-30, -30], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'loop_entry', timeOffset: 0.8, then: 'idle_formation', thenAt: 5.0, formationOffset: [30, -30], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'loop_entry', timeOffset: 1.2, then: 'idle_formation', thenAt: 5.4, formationOffset: [70, -30], enemyType: 'drone' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_9_FigureEightDive',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'figure_eight_maneuver', timeOffset: 0, then: 'dive_at_player', thenAt: 5.7, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'figure_eight_maneuver', timeOffset: 1.0, then: 'dive_at_player', thenAt: 6.7, enemyType: 'kamikaze' }),
+          Object.freeze({ pattern: 'figure_eight_maneuver', timeOffset: 2.0, then: 'dive_at_player', thenAt: 7.7, enemyType: 'fast' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_10_MixedFormation',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0, then: 'idle_formation', thenAt: 2.2, formationOffset: [-110, -40], enemyType: 'tank' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 0.2, then: 'idle_formation', thenAt: 2.4, formationOffset: [110, -40], enemyType: 'tank' }),
+          Object.freeze({ pattern: 'loop_entry', timeOffset: 1.0, then: 'idle_formation', thenAt: 5.2, formationOffset: [-50, 0], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'loop_entry', timeOffset: 1.4, then: 'idle_formation', thenAt: 5.6, formationOffset: [50, 0], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'entrance_spiral', timeOffset: 2.0, then: 'idle_formation', thenAt: 4.4, formationOffset: [0, -20], enemyType: 'sniper' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_11_MassiveDiveThrough',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 0, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 0.2, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 0.4, enemyType: 'drone' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 0.6, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 1.5, enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 1.7, enemyType: 'drone' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 1.9, enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 3.0, enemyType: 'fast' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 3.2, enemyType: 'kamikaze' }),
+          Object.freeze({ pattern: 'dive_through_screen', timeOffset: 3.4, enemyType: 'fast' })
+        ])
+      }),
+      Object.freeze({
+        name: 'Wave_12_VFormation',
+        enemies: Object.freeze([
+          Object.freeze({ pattern: 'entrance_spiral', timeOffset: 0, then: 'idle_formation', thenAt: 2.4, formationOffset: [0, -60], enemyType: 'sniper' }),
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0.3, then: 'idle_formation', thenAt: 2.5, formationOffset: [-60, -30], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0.5, then: 'idle_formation', thenAt: 2.7, formationOffset: [-100, 0], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'arc_from_left', timeOffset: 0.7, then: 'idle_formation', thenAt: 2.9, formationOffset: [-140, 30], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 0.3, then: 'idle_formation', thenAt: 2.5, formationOffset: [60, -30], enemyType: 'gunner' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 0.5, then: 'idle_formation', thenAt: 2.7, formationOffset: [100, 0], enemyType: 'drone' }),
+          Object.freeze({ pattern: 'arc_from_right', timeOffset: 0.7, then: 'idle_formation', thenAt: 2.9, formationOffset: [140, 30], enemyType: 'drone' })
+        ])
       })
     ])
   });
@@ -1543,7 +1818,15 @@
     'Wave_1_SpiralToFormation',
     'Wave_2_SineThenDive',
     'Wave_3_BezierEscort',
-    'Wave_4_WaypointScreen'
+    'Wave_4_WaypointScreen',
+    'Wave_5_FileToFormation',
+    'Wave_6_FileThenDive',
+    'Wave_7_DiveThroughScreen',
+    'Wave_8_LoopToFormation',
+    'Wave_9_FigureEightDive',
+    'Wave_10_MixedFormation',
+    'Wave_11_MassiveDiveThrough',
+    'Wave_12_VFormation'
   ]);
 
   function clonePatternParams(params = {}) {
@@ -1654,6 +1937,65 @@
         params.jitterFreq = clamp(baseFreq * randomRange(0.85, 1.2), 0.5, 1.4);
         break;
       }
+      case 'circular_loop': {
+        const baseX = params.centerX != null ? params.centerX : CANVAS_WIDTH / 2;
+        const baseY = params.centerY != null ? params.centerY : CANVAS_HEIGHT * 0.3;
+        const baseRadius = params.radius != null ? params.radius : 80;
+        const baseSpeed = params.angularSpeed != null ? params.angularSpeed : 2;
+        params.centerX = clamp(baseX + randomRange(-100, 100), 80, CANVAS_WIDTH - 80);
+        params.centerY = clamp(baseY + randomRange(-60, 60), 60, CANVAS_HEIGHT * 0.4);
+        params.radius = clamp(baseRadius * randomRange(0.8, 1.3), 50, 150);
+        params.angularSpeed = clamp(baseSpeed * randomRange(0.85, 1.2), 1.5, 3);
+        params.startAngle = randomRange(0, Math.PI * 2);
+        params.loops = params.loops != null ? params.loops : 1;
+        params.clockwise = params.clockwise != null ? params.clockwise : (getRandomFloat() > 0.5);
+        break;
+      }
+      case 'figure_eight': {
+        const baseX = params.centerX != null ? params.centerX : CANVAS_WIDTH / 2;
+        const baseY = params.centerY != null ? params.centerY : CANVAS_HEIGHT * 0.3;
+        const baseScale = params.scale != null ? params.scale : 100;
+        const baseSpeed = params.speed != null ? params.speed : 1;
+        params.centerX = clamp(baseX + randomRange(-80, 80), 120, CANVAS_WIDTH - 120);
+        params.centerY = clamp(baseY + randomRange(-50, 50), 120, CANVAS_HEIGHT * 0.4);
+        params.scale = clamp(baseScale * randomRange(0.8, 1.25), 60, 140);
+        params.speed = clamp(baseSpeed * randomRange(0.85, 1.2), 0.8, 1.5);
+        params.orientation = params.orientation || (getRandomFloat() > 0.5 ? 'horizontal' : 'vertical');
+        params.phase = randomRange(0, Math.PI * 2);
+        break;
+      }
+      case 'dive_through': {
+        const baseStartX = params.startX != null ? params.startX : CANVAS_WIDTH / 2;
+        const baseEndX = params.endX != null ? params.endX : CANVAS_WIDTH / 2;
+        const baseSpeed = params.speed != null ? params.speed : 300;
+        params.startX = clamp(baseStartX + randomRange(-120, 120), -40, CANVAS_WIDTH + 40);
+        params.startY = randomRange(-80, -40);
+        params.endX = clamp(baseEndX + randomRange(-120, 120), -40, CANVAS_WIDTH + 40);
+        params.endY = CANVAS_HEIGHT + randomRange(40, 80);
+        params.speed = clamp(baseSpeed * randomRange(0.85, 1.2), 220, 400);
+        params.easing = params.easing || ['linear', 'easeIn', 'easeOut'][Math.floor(getRandomFloat() * 3)];
+        break;
+      }
+      case 'arc_sweep': {
+        const baseCenterX = params.arcCenterX != null ? params.arcCenterX : CANVAS_WIDTH / 2;
+        const baseCenterY = params.arcCenterY != null ? params.arcCenterY : CANVAS_HEIGHT * 0.3;
+        const baseRadius = params.radius != null ? params.radius : 200;
+        const baseDuration = params.duration != null ? params.duration : 2;
+        params.startSide = params.startSide || (getRandomFloat() > 0.5 ? 'left' : 'right');
+        params.arcCenterX = clamp(baseCenterX + randomRange(-60, 60), 100, CANVAS_WIDTH - 100);
+        params.arcCenterY = clamp(baseCenterY + randomRange(-40, 40), 80, CANVAS_HEIGHT * 0.4);
+        params.radius = clamp(baseRadius * randomRange(0.85, 1.2), 150, 280);
+        if (params.startSide === 'left') {
+          params.startAngle = Math.PI + randomRange(-0.3, 0.3);
+          params.endAngle = randomRange(-0.3, 0.3);
+        } else {
+          params.startAngle = randomRange(-0.3, 0.3);
+          params.endAngle = Math.PI + randomRange(-0.3, 0.3);
+        }
+        params.duration = clamp(baseDuration * randomRange(0.9, 1.15), 1.5, 3);
+        params.easing = params.easing || 'easeInOutQuad';
+        break;
+      }
       default:
         break;
     }
@@ -1674,6 +2016,26 @@
         return (patternDef.params?.duration || 3) + randomRange(0.2, 0.6);
       case 'waypoints':
         return randomRange(2.2, 3.1);
+      case 'circular_loop': {
+        const loops = patternDef.params?.loops || 1;
+        const angularSpeed = patternDef.params?.angularSpeed || 2;
+        return (loops * 2 * Math.PI) / angularSpeed;
+      }
+      case 'figure_eight': {
+        const speed = patternDef.params?.speed || 1;
+        return (2 * Math.PI) / speed;
+      }
+      case 'dive_through': {
+        const startX = patternDef.params?.startX || CANVAS_WIDTH / 2;
+        const startY = patternDef.params?.startY || -60;
+        const endX = patternDef.params?.endX || CANVAS_WIDTH / 2;
+        const endY = patternDef.params?.endY || CANVAS_HEIGHT + 60;
+        const speed = patternDef.params?.speed || 300;
+        const distance = Math.hypot(endX - startX, endY - startY);
+        return distance / speed;
+      }
+      case 'arc_sweep':
+        return (patternDef.params?.duration || 2) + randomRange(0.1, 0.4);
       default:
         return randomRange(2, 3);
     }
@@ -3550,7 +3912,7 @@
         const enemyBounds = getEnemyCollisionBounds(enemy);
         if (intersects(bounds, enemyBounds)) {
           bullet.remove = true;
-          damageEnemy(enemy);
+          damageEnemy(enemy, 1.5);
           break;
         }
       }

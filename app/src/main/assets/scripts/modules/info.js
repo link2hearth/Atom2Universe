@@ -3117,6 +3117,52 @@ function updateJumpingCatStats() {
   }
 }
 
+function getSurvivorLikeProgressStats() {
+  const autosaveApi = window.ArcadeAutosave;
+  if (!autosaveApi || typeof autosaveApi.get !== 'function') {
+    return { bestTime: 0, bestLevel: 1 };
+  }
+  const autosaveStats = autosaveApi.get('survivorLike');
+  if (autosaveStats && typeof autosaveStats === 'object') {
+    return {
+      bestTime: autosaveStats.bestTime || 0,
+      bestLevel: autosaveStats.bestLevel || 1
+    };
+  }
+  return { bestTime: 0, bestLevel: 1 };
+}
+
+function formatSurvivorLikeTime(milliseconds) {
+  if (!milliseconds || milliseconds <= 0) return '—';
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function updateSurvivorLikeStats() {
+  const stats = getSurvivorLikeProgressStats();
+  const emptyValue = '—';
+  const timeText = stats.bestTime > 0 ? formatSurvivorLikeTime(stats.bestTime) : emptyValue;
+  const levelText = stats.bestLevel > 1 ? formatIntegerLocalized(stats.bestLevel) : emptyValue;
+
+  // Éléments de la page Info
+  if (elements.infoSurvivorLikeTimeValue) {
+    elements.infoSurvivorLikeTimeValue.textContent = timeText;
+  }
+  if (elements.infoSurvivorLikeLevelValue) {
+    elements.infoSurvivorLikeLevelValue.textContent = levelText;
+  }
+
+  // Éléments de la page de jeu (déclenche la sync comme Stars War)
+  if (elements.survivorLikeBestTimeValue) {
+    elements.survivorLikeBestTimeValue.textContent = timeText;
+  }
+  if (elements.survivorLikeBestLevelValue) {
+    elements.survivorLikeBestLevelValue.textContent = levelText;
+  }
+}
+
 function normalizeReflexRecord(record) {
   if (!record || typeof record !== 'object') {
     return { bestScores: { easy: 0, hard: 0 } };
@@ -3535,6 +3581,7 @@ function updateGlobalStats() {
 
   updatePhotonStats();
   updateJumpingCatStats();
+  updateSurvivorLikeStats();
   updateReflexStats();
   updateMotocrossStats();
   updateStarsWarStats();
@@ -3586,6 +3633,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('arcadeAutosaveSync', () => {
     updatePhotonStats();
     updateJumpingCatStats();
+    updateSurvivorLikeStats();
     updateReflexStats();
     updateStarsWarStats();
     updateMotocrossStats();

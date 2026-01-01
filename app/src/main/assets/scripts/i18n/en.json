@@ -293,6 +293,11 @@
             "bestTime": "Survival time",
             "timeUnit": "s"
           },
+          "survivorLike": {
+            "title": "Survive",
+            "bestTime": "Survival time",
+            "bestLevel": "Level reached"
+          },
         "reflex": {
           "title": "Reflex",
           "bestScoreEasy": "Easy record",
@@ -808,6 +813,12 @@
           "description": "Rotate the coloured rings and realign each orbit without losing the link to the outer ring.",
           "cta": "Align"
         },
+        "survivorLike": {
+          "aria": "Open the Survive mini-game",
+          "title": "Survive",
+          "description": "Survive against hordes of enemies in this intense survivor-like. Upgrade your weapons and challenge the waves.",
+          "cta": "Survive"
+        },
         "motocross": {
           "aria": "Open the Motocross procedural prototype",
           "title": "Motocross",
@@ -909,6 +920,69 @@
             "title": "Hold’em",
             "description": "Face up to four AI opponents at a Texas Hold’em table and rake the pot with the best hand.",
             "cta": "Take a seat"
+          }
+        }
+      },
+      "survivorLike": {
+        "aria": "Survive mini-game: survive against hordes of enemies.",
+        "hud": {
+          "health": "Health",
+          "xp": "Experience",
+          "level": "Lvl.",
+          "time": "Time",
+          "wave": "Wave",
+          "kills": "Kills"
+        },
+        "overlay": {
+          "start": {
+            "title": "Survive",
+            "message": "Use the joystick to move. Eliminate enemies and upgrade your weapons each level.",
+            "bestTime": "Best time",
+            "bestLevel": "Max level",
+            "chooseHero": "Choose a hero:",
+            "randomButton": "Random hero",
+            "button": "Start",
+            "continueButton": "Continue"
+          },
+          "levelup": {
+            "title": "Level Up!",
+            "message": "Choose an upgrade"
+          },
+          "gameover": {
+            "title": "Game Over",
+            "message": "You survived valiantly!",
+            "time": "Time survived",
+            "level": "Level reached",
+            "kills": "Enemies killed",
+            "tickets": "Tickets earned",
+            "restart": "Restart",
+            "quit": "Quit"
+          }
+        },
+        "upgrades": {
+          "damage": {
+            "title": "Increased Damage",
+            "description": "Increase your projectile damage"
+          },
+          "fireRate": {
+            "title": "Rapid Fire",
+            "description": "Shoot faster"
+          },
+          "projectileCount": {
+            "title": "Extra Projectile",
+            "description": "Add one projectile per shot"
+          },
+          "projectileSpeed": {
+            "title": "Swift Projectiles",
+            "description": "Increase projectile speed"
+          },
+          "maxHealth": {
+            "title": "Increased Health",
+            "description": "Increase max health and fully heal"
+          },
+          "speed": {
+            "title": "Rapid Movement",
+            "description": "Move faster"
           }
         }
       },

@@ -6,6 +6,14 @@
   --reflex-text: #e8f0ff;
 }
 
+/* Cacher la barre de status (APS/APC/atomes) quand la page Reflex est active */
+.page--reflex.active ~ .app-header .status-bar,
+.page--reflex.active ~ .app-header .frenzy-status,
+body:has(.page--reflex.active) .app-header .status-bar,
+body:has(.page--reflex.active) .app-header .frenzy-status {
+  display: none !important;
+}
+
 .reflex-page {
   min-height: 100vh;
   display: flex;

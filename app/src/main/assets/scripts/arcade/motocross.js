@@ -50,9 +50,9 @@
   const TRACK_AHEAD_BUFFER = 3600;
 
   const TRACK_LENGTH_MULTIPLIER = 2.6;
-  const TRACK_HEIGHT_MULTIPLIER = 3;
-  const PROFILE_AMPLITUDE_MULTIPLIER = 1.45;
-  const TRACK_CURVE_SUBDIVISIONS = 8;
+  const TRACK_HEIGHT_MULTIPLIER = 2.8;
+  const PROFILE_AMPLITUDE_MULTIPLIER = 1.3;
+  const TRACK_CURVE_SUBDIVISIONS = 10;
   const TRACK_MIN_CURVE_STEP = 4;
 
   const BACKGROUND_OPTIONS = [
@@ -807,12 +807,12 @@
     ]),
     ridgeDrop: Object.freeze([
       [0, 0],
-      [0.1, -0.22],
-      [0.24, -0.96],
-      [0.36, -1.15],
-      [0.54, -0.42],
-      [0.72, 0.32],
-      [0.88, 0.14],
+      [0.1, -0.18],
+      [0.22, -0.52],
+      [0.38, -0.68],
+      [0.52, -0.42],
+      [0.68, -0.12],
+      [0.84, 0.08],
       [1, 0]
     ]),
     rolling: Object.freeze([
@@ -845,11 +845,12 @@
     ]),
     deepValley: Object.freeze([
       [0, 0],
-      [0.18, 0.32],
-      [0.38, 0.84],
-      [0.5, 1],
-      [0.62, 0.84],
-      [0.82, 0.3],
+      [0.12, 0.18],
+      [0.28, 0.52],
+      [0.42, 0.74],
+      [0.58, 0.74],
+      [0.72, 0.52],
+      [0.86, 0.18],
       [1, 0]
     ]),
     bowl: Object.freeze([
@@ -924,6 +925,52 @@
       [0.74, -0.42],
       [0.88, -0.24],
       [1, 0]
+    ]),
+    // Nouveaux templates plus doux et variés (tous commencent et finissent à 0)
+    smoothHump: Object.freeze([
+      [0, 0],
+      [0.15, -0.12],
+      [0.35, -0.45],
+      [0.5, -0.55],
+      [0.65, -0.45],
+      [0.85, -0.12],
+      [1, 0]
+    ]),
+    gentleSlalom: Object.freeze([
+      [0, 0],
+      [0.12, -0.15],
+      [0.24, 0.1],
+      [0.38, -0.2],
+      [0.52, 0.15],
+      [0.66, -0.18],
+      [0.8, 0.08],
+      [0.92, -0.06],
+      [1, 0]
+    ]),
+    upperPlatform: Object.freeze([
+      [0, 0],
+      [0.1, -0.2],
+      [0.2, -0.55],
+      [0.3, -0.75],
+      [0.4, -0.8],
+      [0.6, -0.8],
+      [0.7, -0.75],
+      [0.8, -0.55],
+      [0.9, -0.2],
+      [1, 0]
+    ]),
+    doubleArch: Object.freeze([
+      [0, 0],
+      [0.08, -0.22],
+      [0.18, -0.38],
+      [0.28, -0.22],
+      [0.38, 0],
+      [0.5, -0.15],
+      [0.62, -0.42],
+      [0.72, -0.38],
+      [0.82, -0.18],
+      [0.92, -0.05],
+      [1, 0]
     ])
   });
 
@@ -975,7 +1022,18 @@
     createProfileBlock('climb/long/easy/01', ['climb', 'easy'], 680, 'longClimb', 42, 8),
     createProfileBlock('climb/long/easy/02', ['climb', 'easy'], 820, 'longClimb', 48, 10),
     createProfileBlock('flow/plateau/easy/long/01', ['flow', 'easy'], 640, 'plateauRollers', 26, 6),
-    createProfileBlock('flow/cascade/easy/01', ['flow', 'easy'], 720, 'cascadeWaves', 32)
+    createProfileBlock('flow/cascade/easy/01', ['flow', 'easy'], 720, 'cascadeWaves', 32),
+    // Nouveaux blocs avec profils doux (commencent et finissent à 0)
+    createProfileBlock('hump/smooth/easy/01', ['hump', 'easy'], 320, 'smoothHump', 28),
+    createProfileBlock('hump/smooth/easy/02', ['hump', 'easy'], 420, 'smoothHump', 35),
+    createProfileBlock('slalom/gentle/easy/01', ['slalom', 'easy'], 380, 'gentleSlalom', 22),
+    createProfileBlock('slalom/gentle/easy/02', ['slalom', 'easy'], 520, 'gentleSlalom', 28),
+    // Plateformes surélevées (montent et redescendent)
+    createProfileBlock('platform/upper/easy/01', ['platform', 'easy'], 400, 'upperPlatform', 45),
+    createProfileBlock('platform/upper/easy/02', ['platform', 'easy'], 560, 'upperPlatform', 55),
+    // Arches doubles
+    createProfileBlock('arch/double/easy/01', ['arch', 'easy'], 380, 'doubleArch', 30),
+    createProfileBlock('arch/double/easy/02', ['arch', 'easy'], 500, 'doubleArch', 40)
   ]);
 
   const TRACK_BLOCKS = BLOCK_LIBRARY.filter(block => block !== START_BLOCK);

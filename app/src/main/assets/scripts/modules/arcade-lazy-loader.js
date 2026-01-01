@@ -53,6 +53,7 @@
     circles: 'scripts/arcade/circles.js',
     starsWar: 'scripts/arcade/stars-war.js',
     jumpingCat: 'scripts/arcade/jumping-cat.js',
+    survivorLike: 'scripts/arcade/survivor-like.js',
     reflex: 'scripts/arcade/reflex.js',
     motocross: 'scripts/arcade/motocross.js',
     sokoban: 'scripts/arcade/sokoban.js',

@@ -47,13 +47,14 @@
 }
 
 .option-card--chiptune .option-row--selectors label {
-  font-size: calc(0.9rem * var(--font-size-scale-factor, 1));
+  font-size: calc(0.9rem * var(--ui-control-scale, 1));
   font-weight: 600;
 }
 
 .option-card--chiptune select {
   width: 100%;
   max-width: 100%;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
 }
 
 .option-card--chiptune select.chiptune-select--scrollable {
@@ -132,6 +133,7 @@
 .option-card--chiptune .option-row--slider .option-value {
   min-width: 3ch;
   text-align: right;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -144,9 +146,12 @@
 
 .option-card--chiptune .option-row--audio label {
   min-width: 10rem;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
+  font-weight: 600;
 }
 
 .option-card--chiptune .option-row--audio .option-value {
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -172,7 +177,7 @@
   border: 2px dashed rgba(120, 200, 255, 0.4);
   border-radius: 10px;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--ui-control-scale, 1));
   color: rgba(255, 255, 255, 0.75);
   background: rgba(20, 30, 60, 0.4);
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease,
@@ -199,7 +204,7 @@
 }
 
 .option-card--chiptune #chiptuneStatus {
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--ui-control-scale, 1));
   line-height: 1.4;
 }
 
@@ -219,6 +224,7 @@
 
 .option-card--chiptune .option-row--progress label {
   min-width: 160px;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-weight: 600;
 }
 
@@ -230,6 +236,7 @@
 .option-card--chiptune .option-row--progress .option-value {
   min-width: 120px;
   text-align: right;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-variant-numeric: tabular-nums;
 }
 
@@ -254,7 +261,7 @@
 }
 
 .chiptune-usage__summary {
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--ui-control-scale, 1));
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -262,7 +269,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 0.4rem 0.6rem;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--ui-control-scale, 1));
 }
 
 .chiptune-usage__row {
@@ -299,7 +306,7 @@
 
 .chiptune-usage__status {
   text-align: right;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   color: rgba(255, 255, 255, 0.85);
   transition: color 0.2s ease, opacity 0.2s ease;
 }
@@ -310,7 +317,7 @@
 
 .chiptune-usage__note {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--ui-control-scale, 1));
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -650,6 +657,7 @@ body.theme-aurora {
   margin: 0;
   max-width: 58ch;
   line-height: 1.6;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -772,7 +780,7 @@ body.theme-aurora .midi-keyboard__subtitle {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  font-size: calc(0.95rem * var(--font-size-scale-factor, 1));
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -794,6 +802,7 @@ body.theme-aurora .midi-keyboard__subtitle {
   padding: 0.48em 0.9em;
   border-radius: 12px;
   border: 1px solid rgba(96, 96, 112, 0.6);
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(242, 242, 248, 0.95);
@@ -833,6 +842,7 @@ body.theme-aurora .midi-keyboard__select {
   padding: 0.45rem 0.85rem;
   border-radius: 12px;
   border: 1px solid rgba(96, 96, 112, 0.5);
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   background: linear-gradient(120deg, rgba(62, 62, 70, 0.9), rgba(22, 22, 28, 0.9));
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
 }
@@ -860,7 +870,7 @@ body.theme-aurora .midi-keyboard__toggle {
 }
 
 .midi-keyboard__toggle-value {
-  font-size: calc(0.9rem * var(--font-size-scale-factor, 1));
+  font-size: calc(0.9rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: none;
@@ -925,6 +935,7 @@ body.theme-aurora .midi-keyboard__panel {
 
 .midi-keyboard__panel-hint {
   margin: 0;
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   color: rgba(210, 210, 220, 0.68);
 }
 
@@ -944,12 +955,14 @@ body.theme-aurora .midi-keyboard__panel-hint {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .midi-keyboard__range-value {
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   color: rgba(212, 216, 228, 0.88);
 }
 
@@ -1320,7 +1333,7 @@ body.theme-aurora .midi-page__nav-link:focus-visible {
   position: absolute;
   inset: auto 0 0;
   transform: translateY(110%);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem * var(--ui-control-scale, 1));
   letter-spacing: 0.04em;
   opacity: 0.65;
 }
@@ -1404,6 +1417,7 @@ body.theme-aurora .midi-page__nav-link:focus-visible {
 
 .midi-page__module .option-row--audio label {
   flex: 0 0 auto;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-weight: 600;
 }
 
@@ -1413,11 +1427,14 @@ body.theme-aurora .midi-page__nav-link:focus-visible {
 
 .midi-page__module .option-row--audio .option-value {
   flex: 0 0 auto;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-weight: 600;
 }
 
 .midi-page__module .option-row--slider label {
   flex: 0 0 auto;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
+  font-weight: 600;
 }
 
 .midi-page__module .option-row--slider input[type="range"] {
@@ -1451,6 +1468,7 @@ body.theme-aurora .midi-page__module input[type="checkbox"] {
 
 .midi-page__module .option-note {
   margin: 0;
+  font-size: calc(0.95rem * var(--ui-control-scale, 1));
   line-height: 1.6;
 }
 
@@ -1495,6 +1513,7 @@ body.theme-aurora .midi-page__module .chiptune-usage {
 }
 
 .midi-page__module .chiptune-usage__summary {
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1526,7 +1545,7 @@ body.theme-aurora .midi-page__module .chiptune-usage__summary {
   padding: 0.6rem 0.8rem;
   border-radius: 12px;
   background: rgba(18, 28, 60, 0.65);
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--ui-control-scale, 1));
 }
 
 .midi-page__module .chiptune-usage__row.is-used {
@@ -1631,6 +1650,7 @@ body.theme-aurora .midi-page__module .option-row--buttons button:focus-visible {
   border: 1px solid rgba(92, 92, 110, 0.6);
   padding: 0.55rem 1.2rem;
   border-radius: 999px;
+  font-size: calc(1rem * var(--ui-control-scale, 1));
   font-weight: 600;
   letter-spacing: 0.04em;
   box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45);

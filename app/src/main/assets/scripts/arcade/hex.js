@@ -978,7 +978,7 @@
       )
     );
     if (viewportWidth > 0) {
-      width = Math.min(width, viewportWidth);
+      width = Math.min(width, viewportWidth * 0.98);
     }
     let availableWidth = width;
     if (boardFrame) {
@@ -987,6 +987,10 @@
       const framePaddingEnd = Number.parseFloat(frameStyles.paddingRight) || 0;
       availableWidth -= framePaddingStart + framePaddingEnd;
     }
+    const pageStyles = window.getComputedStyle(page);
+    const pagePaddingStart = Number.parseFloat(pageStyles.paddingLeft) || 0;
+    const pagePaddingEnd = Number.parseFloat(pageStyles.paddingRight) || 0;
+    availableWidth -= (pagePaddingStart + pagePaddingEnd) * 0.5;
     if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
       return;
     }

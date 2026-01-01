@@ -3158,6 +3158,405 @@
     return true;
   }
 
+  // ===== INTENTION-BASED GENERATION SYSTEM =====
+
+  /**
+   * Sélectionne un pull qui crée une séquence (une caisse bloque une autre)
+   */
+  function selectSequencePull(actions, boxes, targetKeys) {
+    const pullActions = actions.filter(a => a.type === 'pull');
+    if (!pullActions.length) return null;
+
+    // Préférer les pulls qui rapprochent deux caisses
+    const scored = pullActions.map(action => {
+      const boxToPos = decodeKey(action.boxTo);
+      let nearbyBoxes = 0;
+      for (const dir of DIRECTIONS) {
+        const checkKey = keyFor(boxToPos.row + dir.row, boxToPos.col + dir.col);
+        if (boxes.has(checkKey) && checkKey !== action.boxFrom) {
+          nearbyBoxes++;
+        }
+      }
+      return { action, score: nearbyBoxes };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored[0].action;
+  }
+
+  /**
+   * Sélectionne un pull qui crée un détour (éloigne la caisse de sa cible)
+   */
+  function selectDetourPull(actions, boxes, targetKeys) {
+    const pullActions = actions.filter(a => a.type === 'pull');
+    if (!pullActions.length) return null;
+
+    // Calculer la distance moyenne vers les cibles pour chaque pull
+    const targetArray = Array.from(targetKeys).map(decodeKey);
+    const scored = pullActions.map(action => {
+      const boxToPos = decodeKey(action.boxTo);
+      let minDist = Infinity;
+      for (const target of targetArray) {
+        const dist = Math.abs(boxToPos.row - target.row) + Math.abs(boxToPos.col - target.col);
+        if (dist < minDist) minDist = dist;
+      }
+      return { action, score: minDist };
+    });
+
+    // Préférer les pulls qui éloignent la caisse
+    scored.sort((a, b) => b.score - a.score);
+    return scored[0].action;
+  }
+
+  /**
+   * Sélectionne un pull qui place une caisse près d'un coin (potentiel piège)
+   */
+  function selectCornerTrapPull(actions, boxes, targetKeys) {
+    const pullActions = actions.filter(a => a.type === 'pull');
+    if (!pullActions.length) return null;
+
+    // Compter les murs adjacents pour chaque position
+    const scored = pullActions.map(action => {
+      const boxToPos = decodeKey(action.boxTo);
+      let wallCount = 0;
+      for (const dir of DIRECTIONS) {
+        if (isWall(boxToPos.row + dir.row, boxToPos.col + dir.col)) {
+          wallCount++;
+        }
+      }
+      return { action, score: wallCount };
+    });
+
+    // Préférer les positions avec plus de murs adjacents (mais pas deadlock)
+    scored.sort((a, b) => b.score - a.score);
+    return scored[0].action;
+  }
+
+  /**
+   * Sélectionne un pull qui disperse les caisses
+   */
+  function selectSpreadPull(actions, boxes, targetKeys) {
+    const pullActions = actions.filter(a => a.type === 'pull');
+    if (!pullActions.length) return null;
+
+    // Préférer les pulls qui éloignent des autres caisses
+    const scored = pullActions.map(action => {
+      const boxToPos = decodeKey(action.boxTo);
+      let totalDist = 0;
+      let count = 0;
+      for (const boxKey of boxes) {
+        if (boxKey !== action.boxFrom) {
+          const boxPos = decodeKey(boxKey);
+          totalDist += Math.abs(boxToPos.row - boxPos.row) + Math.abs(boxToPos.col - boxPos.col);
+          count++;
+        }
+      }
+      return { action, score: count > 0 ? totalDist / count : 0 };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored[0].action;
+  }
+
+  /**
+   * Choisit une action selon l'intention et les actions disponibles
+   */
+  function selectIntentionBasedAction(intention, actions, boxes, targetKeys) {
+    const pullActions = actions.filter(a => a.type === 'pull');
+    if (!pullActions.length) {
+      return chooseRandomEntry(actions);
+    }
+
+    switch (intention) {
+      case 'sequence':
+        return selectSequencePull(actions, boxes, targetKeys);
+      case 'detour':
+        return selectDetourPull(actions, boxes, targetKeys);
+      case 'corner-trap':
+        return selectCornerTrapPull(actions, boxes, targetKeys);
+      case 'spread':
+        return selectSpreadPull(actions, boxes, targetKeys);
+      default:
+        return chooseRandomEntry(pullActions);
+    }
+  }
+
+  /**
+   * Sélectionne une intention selon la pondération
+   */
+  function chooseWeightedIntention(intentionWeights) {
+    const total = intentionWeights.reduce((sum, item) => sum + item.weight, 0);
+    let random = Math.random() * total;
+
+    for (const item of intentionWeights) {
+      random -= item.weight;
+      if (random <= 0) {
+        return item.type;
+      }
+    }
+
+    return intentionWeights[0].type;
+  }
+
+  /**
+   * Track toutes les cellules visitées pendant la génération
+   */
+  function trackVisitedCells(player, boxes) {
+    const visited = new Set();
+    visited.add(keyFor(player.row, player.col));
+    for (const boxKey of boxes) {
+      visited.add(boxKey);
+    }
+    return visited;
+  }
+
+  /**
+   * Version améliorée avec intentions et tracking
+   */
+  function shuffleFromSolvedStateWithIntentions(deadlineTimestamp = null) {
+    if (state.targetKeys.size <= 0) {
+      return false;
+    }
+
+    const deadline = Number.isFinite(deadlineTimestamp) ? deadlineTimestamp : null;
+
+    const requestedSteps = clampInt(
+      randomInt(state.config.shuffleMoves.min, state.config.shuffleMoves.max),
+      12,
+      2400,
+      120
+    );
+
+    const caches = buildRowTargetPresence();
+    const totalBoxes = state.targetKeys.size;
+
+    // Définir les intentions avec leurs poids
+    const intentionWeights = [
+      { type: 'sequence', weight: 0.3 },
+      { type: 'detour', weight: 0.3 },
+      { type: 'corner-trap', weight: 0.2 },
+      { type: 'spread', weight: 0.2 }
+    ];
+
+    let player = { row: state.playerStart.row, col: state.playerStart.col };
+    let boxes = new Set(state.targetKeys);
+
+    // Track des cellules visitées
+    const allVisitedCells = trackVisitedCells(player, boxes);
+
+    const initialReachable = computeReachableCells(player.row, player.col, boxes);
+    if (!initialReachable.has(keyFor(player.row, player.col))) {
+      const alternatives = Array.from(initialReachable).filter(entry => !boxes.has(entry));
+      const randomKey = chooseRandomEntry(alternatives);
+      if (!randomKey) {
+        return false;
+      }
+      const coords = decodeKey(randomKey);
+      player = { row: coords.row, col: coords.col };
+      allVisitedCells.add(randomKey);
+    }
+
+    let pulls = 0;
+    let stagnation = 0;
+    const maxStagnation = requestedSteps * 18;
+    let consecutiveSameIntention = 0;
+    let lastIntention = null;
+
+    for (let step = 0; step < requestedSteps && stagnation < maxStagnation; step += 1) {
+      if (deadline && Date.now() > deadline) {
+        return false;
+      }
+
+      let actions = legalInverseActions(player, boxes, caches);
+      if (!actions.length) {
+        const reachable = computeReachableCells(player.row, player.col, boxes);
+        let reassigned = false;
+        for (const key of reachable) {
+          allVisitedCells.add(key);
+          const coords = decodeKey(key);
+          const candidateActions = legalInverseActions({ row: coords.row, col: coords.col }, boxes, caches);
+          if (candidateActions.length) {
+            player = { row: coords.row, col: coords.col };
+            actions = candidateActions;
+            reassigned = true;
+            break;
+          }
+        }
+        if (!reassigned) {
+          stagnation += 1;
+          const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
+          const randomKey = chooseRandomEntry(alternatives);
+          if (randomKey) {
+            const coords = decodeKey(randomKey);
+            player = { row: coords.row, col: coords.col };
+            allVisitedCells.add(randomKey);
+          }
+          continue;
+        }
+      }
+
+      // Sélection basée sur les intentions
+      let intention = chooseWeightedIntention(intentionWeights);
+
+      // Éviter trop de répétitions de la même intention
+      if (intention === lastIntention) {
+        consecutiveSameIntention++;
+        if (consecutiveSameIntention >= 3) {
+          // Forcer un changement d'intention
+          const otherIntentions = intentionWeights.filter(iw => iw.type !== lastIntention);
+          intention = chooseWeightedIntention(otherIntentions);
+          consecutiveSameIntention = 0;
+        }
+      } else {
+        consecutiveSameIntention = 0;
+      }
+      lastIntention = intention;
+
+      const chosen = selectIntentionBasedAction(intention, actions, boxes, state.targetKeys);
+
+      if (!chosen) {
+        stagnation += 1;
+        continue;
+      }
+
+      const result = applyInverseAction(player, boxes, chosen);
+      player = result.player;
+      boxes = result.boxes;
+
+      // Track les nouvelles cellules
+      allVisitedCells.add(keyFor(player.row, player.col));
+      for (const boxKey of boxes) {
+        allVisitedCells.add(boxKey);
+      }
+
+      stagnation = 0;
+      if (chosen.type === 'pull') {
+        pulls += 1;
+      }
+    }
+
+    const stepQuota = Math.max(1, Math.floor(requestedSteps * 0.25));
+    const requiredPulls = Math.max(3, Math.min(stepQuota, totalBoxes * 2));
+    if (pulls < requiredPulls) {
+      return false;
+    }
+
+    if (containsStaticDeadlock(boxes, state.targetKeys, caches)) {
+      return false;
+    }
+
+    const boxesOnTargets = countBoxesOnTargets(boxes, state.targetKeys);
+    if (boxesOnTargets / totalBoxes > 0.5) {
+      return false;
+    }
+
+    const averageDistance = computeAverageBoxGoalDistance(boxes, state.targetKeys);
+    if (!Number.isFinite(averageDistance) || averageDistance < 1.8) {
+      return false;
+    }
+
+    if (!isWalkable(player.row, player.col) || boxes.has(keyFor(player.row, player.col))) {
+      const reachable = computeReachableCells(player.row, player.col, boxes);
+      for (const key of reachable) {
+        allVisitedCells.add(key);
+      }
+      const alternatives = Array.from(reachable).filter(entry => !boxes.has(entry));
+      const randomKey = chooseRandomEntry(alternatives);
+      if (!randomKey) {
+        return false;
+      }
+      const coords = decodeKey(randomKey);
+      player = { row: coords.row, col: coords.col };
+    }
+
+    if (deadline && Date.now() > deadline) {
+      return false;
+    }
+    let solverTimeLimit = 2500;
+    if (deadline) {
+      const remaining = deadline - Date.now();
+      if (remaining <= 200) {
+        return false;
+      }
+      solverTimeLimit = clampInt(Math.min(remaining, 2500), 200, 3500, 2500);
+    }
+    const solverResult = solveForwardMinPushes(player, boxes, state.targetKeys, { timeLimitMs: solverTimeLimit });
+    if (!validateSolverSolution({ row: player.row, col: player.col }, boxes, state.targetKeys, solverResult)) {
+      return false;
+    }
+    const metrics = computeSolverMetrics(solverResult);
+    if (!metrics) {
+      return false;
+    }
+    const difficultyHint = Math.max(pulls, Math.floor(requestedSteps * 0.25));
+    if (!fitsDifficulty(metrics, difficultyHint, totalBoxes)) {
+      return false;
+    }
+
+    state.player = { row: player.row, col: player.col };
+    state.boxes = boxes;
+    state.currentMetrics = metrics;
+
+    // Optimiser le placement des murs
+    optimizeWallPlacement(allVisitedCells);
+
+    return true;
+  }
+
+  /**
+   * Optimise le placement des murs autour des cellules visitées
+   * Les cellules visitées restent libres, les cellules adjacentes sont majoritairement des murs
+   */
+  function optimizeWallPlacement(visitedCells) {
+    if (!visitedCells || visitedCells.size === 0) {
+      return;
+    }
+
+    // Identifier les cellules adjacentes aux cellules visitées
+    const adjacentCells = new Set();
+    for (const cellKey of visitedCells) {
+      const pos = decodeKey(cellKey);
+      for (const dir of DIRECTIONS) {
+        const adjRow = pos.row + dir.row;
+        const adjCol = pos.col + dir.col;
+        const adjKey = keyFor(adjRow, adjCol);
+
+        if (isInside(adjRow, adjCol) && !visitedCells.has(adjKey)) {
+          adjacentCells.add(adjKey);
+        }
+      }
+    }
+
+    // Pour chaque cellule adjacente, décider si elle doit être un mur
+    for (const cellKey of adjacentCells) {
+      const pos = decodeKey(cellKey);
+
+      // Compter combien de cellules visitées sont adjacentes
+      let adjacentToVisited = 0;
+      for (const dir of DIRECTIONS) {
+        const checkKey = keyFor(pos.row + dir.row, pos.col + dir.col);
+        if (visitedCells.has(checkKey)) {
+          adjacentToVisited++;
+        }
+      }
+
+      // Si la cellule est entourée de beaucoup de cellules visitées,
+      // elle devrait probablement rester libre (pour créer des chemins)
+      // Sinon, la transformer en mur avec une certaine probabilité
+      const wallProbability = adjacentToVisited <= 1 ? 0.85 :
+                              adjacentToVisited === 2 ? 0.5 : 0.2;
+
+      if (Math.random() < wallProbability && !state.targetKeys.has(cellKey)) {
+        // S'assurer que state.tiles existe et est correctement dimensionné
+        if (state.tiles && state.tiles[pos.row] && state.tiles[pos.row][pos.col]) {
+          state.tiles[pos.row][pos.col].wall = true;
+        }
+      }
+    }
+  }
+
+  // ===== FIN DU SYSTÈME D'INTENTIONS =====
+
   function shuffleFromSolvedState(deadlineTimestamp = null) {
     if (state.targetKeys.size <= 0) {
       return false;
@@ -3316,7 +3715,8 @@
       if (deadline && Date.now() > deadline) {
         break;
       }
-      const shuffled = shuffleFromSolvedState(deadline);
+      // Utiliser la nouvelle fonction avec intentions et optimisation des murs
+      const shuffled = shuffleFromSolvedStateWithIntentions(deadline);
       if (!shuffled) {
         continue;
       }

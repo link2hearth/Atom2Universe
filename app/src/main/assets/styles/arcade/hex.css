@@ -179,6 +179,9 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 
 .hex__board-frame {
@@ -187,6 +190,8 @@
   justify-content: center;
   align-items: center;
   padding: var(--hex-frame-padding-y) var(--hex-frame-padding-x);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .hex__board-frame::before,
@@ -294,11 +299,24 @@
 }
 
 @media (max-width: 600px) {
+  .page--hex {
+    padding: clamp(0.5rem, 2vw, 1rem) clamp(0.5rem, 2vw, 1rem);
+  }
+
   .hex__board {
-    padding: clamp(0.7rem, 4vw, 1.2rem);
+    padding: clamp(0.5rem, 3vw, 1rem);
+    padding-inline-end: calc(clamp(0.5rem, 3vw, 1rem) + var(--hex-row-offset-unit) * 13);
+  }
+
+  .hex__board-frame {
+    padding: clamp(0.4rem, 1.5vw, 0.8rem) clamp(0.6rem, 2vw, 1rem);
   }
 
   .hex__row {
-    gap: clamp(0.2rem, 1.6vw, 0.35rem);
+    gap: clamp(0.15rem, 1.2vw, 0.3rem);
+  }
+
+  .hex {
+    gap: clamp(0.8rem, 2vw, 1.5rem);
   }
 }
