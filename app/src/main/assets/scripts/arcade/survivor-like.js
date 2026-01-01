@@ -3080,6 +3080,7 @@
 
     showStatusBar();
     showOverlay('levelup');
+    saveGameState();
   }
 
   function showPauseMenu() {
@@ -3111,6 +3112,7 @@
 
     showStatusBar();
     showOverlay('pause');
+    saveGameState();
   }
 
 
@@ -4127,51 +4129,81 @@
     updateHeroRecordDisplay();
   }
 
+  function buildSavedGamePayload() {
+    return {
+      elapsed: state.elapsed,
+      wave: state.wave,
+      kills: state.kills,
+      nextSpawnTime: state.nextSpawnTime,
+      nextWaveTime: state.nextWaveTime,
+      spawnInterval: state.spawnInterval,
+      lastGachaTime: state.lastGachaTime,
+      nextBossTime: state.nextBossTime,
+      bossSpawnBlocked: state.bossSpawnBlocked,
+      bossSpawnBlockedUntil: state.bossSpawnBlockedUntil,
+      player: {
+        x: state.player.x,
+        y: state.player.y,
+        speed: state.player.speed,
+        health: state.player.health,
+        maxHealth: state.player.maxHealth,
+        xp: state.player.xp,
+        level: state.player.level,
+        xpForNextLevel: state.player.xpForNextLevel,
+        weapons: state.player.weapons.map(w => ({
+          type: w.type,
+          level: w.level,
+          config: { ...w.config }
+        })),
+        weaponSlots: state.player.weaponSlots,
+        skinIndex: state.player.skinIndex,
+        characterType: state.player.characterType,
+        offeredWeapon: state.player.offeredWeapon,
+        upgrades: JSON.parse(JSON.stringify(state.player.upgrades)), // Deep copy
+        specialBonusesActive: [...state.player.specialBonusesActive],
+        usedRevives: state.player.usedRevives || 0
+      },
+      // Ne pas sauvegarder les ennemis et projectiles (régénérés au chargement)
+      savedAt: Date.now()
+    };
+  }
+
+  function syncSavedGameToArcadeProgress(savedGame) {
+    const globalState = window.gameState || window.atom2universGameState;
+    if (!globalState || !savedGame) return;
+
+    if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
+      globalState.arcadeProgress = { version: 1, entries: {} };
+    }
+    if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
+      globalState.arcadeProgress.entries = {};
+    }
+
+    const existingEntry = globalState.arcadeProgress.entries[GAME_ID] || {};
+    globalState.arcadeProgress.entries[GAME_ID] = {
+      ...existingEntry,
+      savedGame,
+      updatedAt: Date.now()
+    };
+
+    if (typeof window.saveGame === 'function') {
+      window.saveGame();
+    }
+  }
+
   function saveGameState() {
     const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
 
     const currentData = autosaveApi.get(GAME_ID) || {};
+    const savedGame = buildSavedGamePayload();
 
     autosaveApi.set(GAME_ID, {
       ...currentData,
-      savedGame: {
-        elapsed: state.elapsed,
-        wave: state.wave,
-        kills: state.kills,
-        nextSpawnTime: state.nextSpawnTime,
-        nextWaveTime: state.nextWaveTime,
-        spawnInterval: state.spawnInterval,
-        lastGachaTime: state.lastGachaTime,
-        nextBossTime: state.nextBossTime,
-        bossSpawnBlocked: state.bossSpawnBlocked,
-        bossSpawnBlockedUntil: state.bossSpawnBlockedUntil,
-        player: {
-          x: state.player.x,
-          y: state.player.y,
-          speed: state.player.speed,
-          health: state.player.health,
-          maxHealth: state.player.maxHealth,
-          xp: state.player.xp,
-          level: state.player.level,
-          xpForNextLevel: state.player.xpForNextLevel,
-          weapons: state.player.weapons.map(w => ({
-            type: w.type,
-            level: w.level,
-            config: { ...w.config }
-          })),
-          weaponSlots: state.player.weaponSlots,
-          skinIndex: state.player.skinIndex,
-          characterType: state.player.characterType,
-          offeredWeapon: state.player.offeredWeapon,
-          upgrades: JSON.parse(JSON.stringify(state.player.upgrades)), // Deep copy
-          specialBonusesActive: [...state.player.specialBonusesActive],
-          usedRevives: state.player.usedRevives || 0
-        },
-        // Ne pas sauvegarder les ennemis et projectiles (régénérés au chargement)
-        savedAt: Date.now()
-      }
+      savedGame
     });
+
+    syncSavedGameToArcadeProgress(savedGame);
   }
 
   function loadGameState() {
@@ -4293,6 +4325,19 @@
     const currentData = autosaveApi.get(GAME_ID) || {};
     delete currentData.savedGame;
     autosaveApi.set(GAME_ID, currentData);
+
+    const globalState = window.gameState || window.atom2universGameState;
+    if (!globalState || !globalState.arcadeProgress || !globalState.arcadeProgress.entries) {
+      return;
+    }
+    const existingEntry = globalState.arcadeProgress.entries[GAME_ID];
+    if (existingEntry && Object.prototype.hasOwnProperty.call(existingEntry, 'savedGame')) {
+      delete existingEntry.savedGame;
+      existingEntry.updatedAt = Date.now();
+      if (typeof window.saveGame === 'function') {
+        window.saveGame();
+      }
+    }
   }
 
   function hasSavedGame() {
