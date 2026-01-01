@@ -1,5 +1,6 @@
 package com.example.atom2univers
 
+import com.example.atom2univers.BuildConfig
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.ContentUris
