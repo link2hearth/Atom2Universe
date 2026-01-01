@@ -2193,6 +2193,7 @@ if (typeof globalThis !== 'undefined') {
   globalThis.MUSIC_MODULE_ENABLED = MUSIC_MODULE_ENABLED;
   globalThis.ATOM_IMAGE_VARIANT_ENABLED = ATOM_IMAGE_VARIANT_ENABLED;
   globalThis.ESCAPE_ADVANCED_DIFFICULTIES_ENABLED = ESCAPE_ADVANCED_DIFFICULTIES_ENABLED;
+  globalThis.SAVE_CORE_KEYS = SAVE_CORE_KEYS;
   globalThis.toggleDevkitFeatureEnabled = toggleDevkitFeatureEnabled;
   globalThis.toggleCollectionFeatureEnabled = toggleCollectionFeatureEnabled;
   globalThis.toggleCollectionVideosFeatureEnabled = toggleCollectionVideosFeatureEnabled;
