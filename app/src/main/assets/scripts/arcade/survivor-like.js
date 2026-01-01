@@ -3808,11 +3808,24 @@
     });
   }
 
-  function loadRecords() {
+  function getStoredProgressEntry() {
     const autosaveApi = window.ArcadeAutosave;
-    if (!autosaveApi) return;
+    if (autosaveApi) {
+      return autosaveApi.get(GAME_ID);
+    }
+    const globalState = window.gameState || window.atom2universGameState;
+    const entry = globalState?.arcadeProgress?.entries?.[GAME_ID];
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+    if (entry.state && typeof entry.state === 'object') {
+      return entry.state;
+    }
+    return entry;
+  }
 
-    const saved = autosaveApi.get(GAME_ID);
+  function loadRecords() {
+    const saved = getStoredProgressEntry();
     if (saved) {
       state.bestTime = saved.bestTime || 0;
       state.bestLevel = saved.bestLevel || 1;
@@ -3855,6 +3868,11 @@
     });
     flushAutosave();
     requestGlobalSave();
+
+    updateArcadeProgressEntry({
+      bestTime: state.bestTime,
+      bestLevel: state.bestLevel
+    });
 
     if (elements.bestTimeValue) {
       elements.bestTimeValue.textContent = formatTime(state.bestTime);
@@ -3919,10 +3937,7 @@
   }
 
   function loadGameState() {
-    const autosaveApi = window.ArcadeAutosave;
-    if (!autosaveApi) return false;
-
-    const saved = autosaveApi.get(GAME_ID);
+    const saved = getStoredProgressEntry();
     if (!saved || !saved.savedGame) return false;
 
     const savedGame = saved.savedGame;
@@ -4032,7 +4047,11 @@
 
   function clearGameState() {
     const autosaveApi = window.ArcadeAutosave;
-    if (!autosaveApi) return;
+    if (autosaveApi) {
+      const currentData = autosaveApi.get(GAME_ID) || {};
+      delete currentData.savedGame;
+      autosaveApi.set(GAME_ID, currentData);
+    }
 
     const currentData = autosaveApi.get(GAME_ID) || {};
     delete currentData.savedGame;
@@ -4042,10 +4061,7 @@
   }
 
   function hasSavedGame() {
-    const autosaveApi = window.ArcadeAutosave;
-    if (!autosaveApi) return false;
-
-    const saved = autosaveApi.get(GAME_ID);
+    const saved = getStoredProgressEntry();
     return !!(saved && saved.savedGame);
   }
 
