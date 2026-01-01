@@ -3231,7 +3231,7 @@ function getSurvivorLikeSaveCoreStats() {
   return normalizeSurvivorLikeRecord(parsed);
 }
 
-function syncSurvivorLikeProgressEntry(record) {
+function syncSurvivorLikeProgressEntry(record, { persist = true } = {}) {
   if (!hasSurvivorLikeRecord(record) || typeof gameState !== 'object') {
     return;
   }
@@ -3265,7 +3265,7 @@ function syncSurvivorLikeProgressEntry(record) {
     updatedAt: Date.now()
   };
   entries.survivorLike = updatedEntry;
-  if (typeof window.saveGame === 'function') {
+  if (persist && typeof window.saveGame === 'function') {
     window.saveGame();
   }
 }
@@ -3287,7 +3287,7 @@ function getSurvivorLikeProgressStats() {
   }
   const saveCoreStats = getSurvivorLikeSaveCoreStats();
   if (hasSurvivorLikeRecord(saveCoreStats)) {
-    syncSurvivorLikeProgressEntry(saveCoreStats);
+    syncSurvivorLikeProgressEntry(saveCoreStats, { persist: false });
     return saveCoreStats;
   }
   const autosaveStats = getSurvivorLikeAutosaveStats();
