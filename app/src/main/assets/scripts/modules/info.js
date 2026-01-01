@@ -3129,6 +3129,39 @@ function findSurvivorLikeEntry(entries) {
 }
 
 const SURVIVOR_LIKE_HERO_IDS = Object.freeze(['Mage', 'Robot', 'Ghost', 'ChatNoir', 'Skeleton', 'Vortex']);
+const SURVIVOR_LIKE_SAVE_CORE_KEY = typeof SAVE_CORE_KEYS !== 'undefined' && SAVE_CORE_KEYS?.arcadeGamePrefix
+  ? `${SAVE_CORE_KEYS.arcadeGamePrefix}survivorLike`
+  : 'atom2univers.arcade.survivorLike';
+
+function getSaveCoreBridge() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  return window.AndroidSaveCoreBridge || null;
+}
+
+function readSaveCoreValue(key) {
+  const bridge = getSaveCoreBridge();
+  if (!bridge || typeof bridge.get !== 'function') {
+    return null;
+  }
+  try {
+    return bridge.get(key);
+  } catch (error) {
+    return null;
+  }
+}
+
+function parseStoredPayload(raw) {
+  if (typeof raw !== 'string' || !raw.trim()) {
+    return null;
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    return null;
+  }
+}
 
 function normalizeSurvivorLikeHeroTimes(raw) {
   if (!raw || typeof raw !== 'object') {
@@ -3189,6 +3222,15 @@ function getSurvivorLikeAutosaveStats() {
   }
 }
 
+function getSurvivorLikeSaveCoreStats() {
+  const raw = readSaveCoreValue(SURVIVOR_LIKE_SAVE_CORE_KEY);
+  const parsed = parseStoredPayload(raw);
+  if (!parsed || typeof parsed !== 'object') {
+    return null;
+  }
+  return normalizeSurvivorLikeRecord(parsed);
+}
+
 function syncSurvivorLikeProgressEntry(record) {
   if (!hasSurvivorLikeRecord(record) || typeof gameState !== 'object') {
     return;
@@ -3242,6 +3284,11 @@ function getSurvivorLikeProgressStats() {
     if (hasSurvivorLikeRecord(normalized)) {
       return normalized;
     }
+  }
+  const saveCoreStats = getSurvivorLikeSaveCoreStats();
+  if (hasSurvivorLikeRecord(saveCoreStats)) {
+    syncSurvivorLikeProgressEntry(saveCoreStats);
+    return saveCoreStats;
   }
   const autosaveStats = getSurvivorLikeAutosaveStats();
   if (hasSurvivorLikeRecord(autosaveStats)) {
