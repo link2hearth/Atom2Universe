@@ -7,6 +7,10 @@ android {
     namespace = "com.example.atom2univers"
     compileSdk = 36
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.atom2univers"
         minSdk = 24

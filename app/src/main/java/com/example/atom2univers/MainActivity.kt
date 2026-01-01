@@ -1,5 +1,6 @@
 package com.example.atom2univers
 
+import com.example.atom2univers.BuildConfig
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.ContentUris
@@ -119,6 +120,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
+
+        if (BuildConfig.DEBUG) {
+            WebView.setWebContentsDebuggingEnabled(true)
+        }
 
         radioPlayer = ExoPlayer.Builder(this).build()
 
