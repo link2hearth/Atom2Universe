@@ -9,6 +9,9 @@
   }
 
   const GAME_ID = 'survivorLike';
+  const SAVE_CORE_KEY = typeof SAVE_CORE_KEYS !== 'undefined' && SAVE_CORE_KEYS?.arcadeGamePrefix
+    ? `${SAVE_CORE_KEYS.arcadeGamePrefix}${GAME_ID}`
+    : 'atom2univers.arcade.survivorLike';
   const CONFIG_PATH = 'config/arcade/survivor-like.json';
 
   // Configuration des sprites d'ennemis (sprite sheets 256x256, 4x4 grille, chaque sprite 64x64)
@@ -3765,12 +3768,145 @@
   const AUTOSAVE_READY_EVENT = 'arcadeAutosaveReady';
   const AUTOSAVE_READY_FALLBACK_MS = 800;
 
+  function getSaveCoreBridge() {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return window.AndroidSaveCoreBridge || null;
+  }
+
+  function readSaveCoreValue(key) {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.warn('Survivor Like: unable to read SaveCore', error);
+      return null;
+    }
+  }
+
+  function writeSaveCoreValue(key, value) {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.warn('Survivor Like: unable to write SaveCore', error);
+      return false;
+    }
+  }
+
+  function parseStoredPayload(raw) {
+    if (typeof raw !== 'string' || !raw.trim()) {
+      return null;
+    }
+    try {
+      return JSON.parse(raw);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function readLegacyAutosave() {
+    const legacyApi = typeof window !== 'undefined' ? window.ArcadeAutosave : null;
+    if (legacyApi && typeof legacyApi.get === 'function') {
+      try {
+        return legacyApi.get(GAME_ID);
+      } catch (error) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  function clearLegacyAutosave() {
+    const legacyApi = typeof window !== 'undefined' ? window.ArcadeAutosave : null;
+    if (legacyApi && typeof legacyApi.clear === 'function') {
+      try {
+        legacyApi.clear(GAME_ID);
+      } catch (error) {
+        // Ignore legacy clear errors
+      }
+    }
+  }
+
   function getAutosaveApi() {
     if (typeof window === 'undefined') return null;
-    const api = window.ArcadeAutosave;
-    if (!api || typeof api !== 'object') return null;
-    if (typeof api.get !== 'function' || typeof api.set !== 'function') return null;
-    return api;
+    const storage = window.localStorage || null;
+    const hasStorage = storage && typeof storage.getItem === 'function';
+    const bridge = getSaveCoreBridge();
+    const canSaveCore = bridge && typeof bridge.get === 'function' && typeof bridge.set === 'function';
+    if (!canSaveCore && !hasStorage && !window.ArcadeAutosave) {
+      return null;
+    }
+    return {
+      get() {
+        if (canSaveCore) {
+          const raw = readSaveCoreValue(SAVE_CORE_KEY);
+          const parsed = parseStoredPayload(raw);
+          if (parsed && typeof parsed === 'object') {
+            return parsed;
+          }
+        }
+        const legacy = readLegacyAutosave();
+        if (legacy && typeof legacy === 'object') {
+          if (canSaveCore) {
+            const serialized = JSON.stringify(legacy);
+            if (writeSaveCoreValue(SAVE_CORE_KEY, serialized)) {
+              if (hasStorage) {
+                storage.removeItem(SAVE_CORE_KEY);
+              }
+              clearLegacyAutosave();
+            }
+          }
+          return legacy;
+        }
+        if (hasStorage) {
+          const parsed = parseStoredPayload(storage.getItem(SAVE_CORE_KEY));
+          if (parsed && typeof parsed === 'object') {
+            if (canSaveCore) {
+              const serialized = JSON.stringify(parsed);
+              if (writeSaveCoreValue(SAVE_CORE_KEY, serialized)) {
+                storage.removeItem(SAVE_CORE_KEY);
+              }
+            }
+            return parsed;
+          }
+        }
+        return null;
+      },
+      set(_key, payload) {
+        if (!payload || typeof payload !== 'object') {
+          return;
+        }
+        const serialized = JSON.stringify(payload);
+        if (canSaveCore && writeSaveCoreValue(SAVE_CORE_KEY, serialized)) {
+          if (hasStorage) {
+            storage.removeItem(SAVE_CORE_KEY);
+          }
+          return;
+        }
+        if (hasStorage) {
+          storage.setItem(SAVE_CORE_KEY, serialized);
+        }
+      },
+      clear() {
+        if (canSaveCore && writeSaveCoreValue(SAVE_CORE_KEY, null)) {
+          if (hasStorage) {
+            storage.removeItem(SAVE_CORE_KEY);
+          }
+          return;
+        }
+        if (hasStorage) {
+          storage.removeItem(SAVE_CORE_KEY);
+        }
+      }
+    };
   }
 
   function waitForAutosaveReady() {
@@ -3802,7 +3938,7 @@
   }
 
   function loadRecords() {
-    const autosaveApi = window.ArcadeAutosave;
+    const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
 
     const saved = autosaveApi.get(GAME_ID);
@@ -3820,7 +3956,7 @@
   }
 
   function saveRecords() {
-    const autosaveApi = window.ArcadeAutosave;
+    const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
 
     // Préserver savedGame existant lors de la sauvegarde des records
@@ -3864,7 +4000,7 @@
   }
 
   function saveGameState() {
-    const autosaveApi = window.ArcadeAutosave;
+    const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
 
     const currentData = autosaveApi.get(GAME_ID) || {};
@@ -3911,7 +4047,7 @@
   }
 
   function loadGameState() {
-    const autosaveApi = window.ArcadeAutosave;
+    const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return false;
 
     const saved = autosaveApi.get(GAME_ID);
@@ -4023,7 +4159,7 @@
   }
 
   function clearGameState() {
-    const autosaveApi = window.ArcadeAutosave;
+    const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
 
     const currentData = autosaveApi.get(GAME_ID) || {};
@@ -4032,7 +4168,7 @@
   }
 
   function hasSavedGame() {
-    const autosaveApi = window.ArcadeAutosave;
+    const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return false;
 
     const saved = autosaveApi.get(GAME_ID);

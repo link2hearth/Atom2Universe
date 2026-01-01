@@ -40,6 +40,38 @@
   const ARCHIVE_NEXT_SELECTOR = '[data-chess-archive-next]';
 
   const LOCAL_STORAGE_KEY = 'atom2univers.arcade.echecs';
+  const getSaveCoreBridge = () => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return window.AndroidSaveCoreBridge || null;
+  };
+
+  const readSaveCoreValue = key => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.warn('[Echecs] Unable to read SaveCore', error);
+      return null;
+    }
+  };
+
+  const writeSaveCoreValue = (key, value) => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.warn('[Echecs] Unable to write SaveCore', error);
+      return false;
+    }
+  };
   const STORAGE_VERSION = 3;
   const POINTER_DRAG_THRESHOLD = 6;
   const ARCHIVE_LIMIT = 25;
@@ -5738,6 +5770,19 @@
       }
     }
 
+    const saveCoreRaw = readSaveCoreValue(LOCAL_STORAGE_KEY);
+    if (saveCoreRaw) {
+      try {
+        const parsed = JSON.parse(saveCoreRaw);
+        const normalized = normalizeStoredChessProgress(parsed);
+        if (normalized) {
+          return normalized;
+        }
+      } catch (error) {
+        // Ignore SaveCore errors
+      }
+    }
+
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
         const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -5745,6 +5790,9 @@
           const parsed = JSON.parse(raw);
           const normalized = normalizeStoredChessProgress(parsed);
           if (normalized) {
+            if (writeSaveCoreValue(LOCAL_STORAGE_KEY, raw)) {
+              window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+            }
             return normalized;
           }
         }
@@ -6460,9 +6508,12 @@
       }
     }
 
-    if (typeof window !== 'undefined' && window.localStorage) {
+    const serialized = JSON.stringify(container);
+    if (!writeSaveCoreValue(LOCAL_STORAGE_KEY, serialized)
+      && typeof window !== 'undefined'
+      && window.localStorage) {
       try {
-        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(container));
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, serialized);
       } catch (error) {
         // Ignore storage errors
       }

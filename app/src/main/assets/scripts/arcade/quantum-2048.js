@@ -40,29 +40,77 @@
   const UNIVERSE_DEFEAT_EXTRA_DELAY_MS = 250;
   const PARALLEL_UNIVERSE_STORAGE_KEY = 'atom2univers.quantum2048.parallelUniverses';
 
+  const getSaveCoreBridge = () => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return window.AndroidSaveCoreBridge || null;
+  };
+
+  const readSaveCoreValue = key => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.warn('[Quantum2048] Unable to read SaveCore', error);
+      return null;
+    }
+  };
+
+  const writeSaveCoreValue = (key, value) => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.warn('[Quantum2048] Unable to write SaveCore', error);
+      return false;
+    }
+  };
+
   function readStoredParallelUniverses(defaultValue = 0) {
-    if (typeof window === 'undefined' || !window.localStorage) {
+    if (typeof window === 'undefined') {
       return defaultValue;
     }
     try {
-      const raw = window.localStorage.getItem(PARALLEL_UNIVERSE_STORAGE_KEY);
-      if (raw == null) {
-        return defaultValue;
+      const rawSaveCore = readSaveCoreValue(PARALLEL_UNIVERSE_STORAGE_KEY);
+      if (rawSaveCore != null) {
+        const parsed = Number.parseInt(rawSaveCore, 10);
+        return Number.isFinite(parsed) && parsed >= 0 ? parsed : defaultValue;
       }
-      const parsed = Number.parseInt(raw, 10);
-      return Number.isFinite(parsed) && parsed >= 0 ? parsed : defaultValue;
+      if (window.localStorage) {
+        const raw = window.localStorage.getItem(PARALLEL_UNIVERSE_STORAGE_KEY);
+        if (raw != null) {
+          const parsed = Number.parseInt(raw, 10);
+          if (Number.isFinite(parsed) && parsed >= 0) {
+            if (writeSaveCoreValue(PARALLEL_UNIVERSE_STORAGE_KEY, String(parsed))) {
+              window.localStorage.removeItem(PARALLEL_UNIVERSE_STORAGE_KEY);
+            }
+            return parsed;
+          }
+        }
+      }
     } catch (error) {
       return defaultValue;
     }
+    return defaultValue;
   }
 
   function writeStoredParallelUniverses(value) {
-    if (typeof window === 'undefined' || !window.localStorage) {
+    if (typeof window === 'undefined') {
       return;
     }
     try {
       const normalized = Math.max(0, Number.parseInt(value, 10) || 0);
-      window.localStorage.setItem(PARALLEL_UNIVERSE_STORAGE_KEY, String(normalized));
+      if (!writeSaveCoreValue(PARALLEL_UNIVERSE_STORAGE_KEY, String(normalized))
+        && window.localStorage) {
+        window.localStorage.setItem(PARALLEL_UNIVERSE_STORAGE_KEY, String(normalized));
+      }
     } catch (error) {
       // Ignore storage errors (e.g., private mode)
     }

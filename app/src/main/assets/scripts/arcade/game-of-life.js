@@ -14,6 +14,34 @@
 
   const DEFAULT_CELL_COLOR = 'rgba(255, 255, 255, 0.92)';
 
+  const getSaveCoreBridge = () => window.AndroidSaveCoreBridge || null;
+
+  const readSaveCoreValue = key => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.warn('[GameOfLife] Unable to read SaveCore', error);
+      return null;
+    }
+  };
+
+  const writeSaveCoreValue = (key, value) => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.warn('[GameOfLife] Unable to write SaveCore', error);
+      return false;
+    }
+  };
+
   const DEFAULT_CONFIG = Object.freeze({
     simulation: Object.freeze({
       tickMs: 400,
@@ -276,12 +304,16 @@
 
   function loadSeed() {
     try {
-      const raw = window.localStorage?.getItem(RANDOM_SEED_STORAGE_KEY);
+      const rawSaveCore = readSaveCoreValue(RANDOM_SEED_STORAGE_KEY);
+      const raw = rawSaveCore ?? window.localStorage?.getItem(RANDOM_SEED_STORAGE_KEY);
       if (!raw) {
         return Math.floor(Math.random() * 0xffffffff);
       }
       const parsed = Number.parseInt(raw, 10);
       if (Number.isFinite(parsed) && parsed >= 0) {
+        if (rawSaveCore == null && writeSaveCoreValue(RANDOM_SEED_STORAGE_KEY, String(parsed))) {
+          window.localStorage?.removeItem(RANDOM_SEED_STORAGE_KEY);
+        }
         return parsed >>> 0;
       }
     } catch (error) {
@@ -292,7 +324,10 @@
 
   function saveSeed(seed) {
     try {
-      window.localStorage?.setItem(RANDOM_SEED_STORAGE_KEY, String(seed >>> 0));
+      const serialized = String(seed >>> 0);
+      if (!writeSaveCoreValue(RANDOM_SEED_STORAGE_KEY, serialized)) {
+        window.localStorage?.setItem(RANDOM_SEED_STORAGE_KEY, serialized);
+      }
     } catch (error) {
       // ignore storage errors
     }
@@ -1136,11 +1171,15 @@
 
       let parsedList = [];
       try {
-        const raw = window.localStorage?.getItem(CUSTOM_PATTERNS_STORAGE_KEY);
+        const rawSaveCore = readSaveCoreValue(CUSTOM_PATTERNS_STORAGE_KEY);
+        const raw = rawSaveCore ?? window.localStorage?.getItem(CUSTOM_PATTERNS_STORAGE_KEY);
         if (raw) {
           const json = JSON.parse(raw);
           if (Array.isArray(json)) {
             parsedList = json;
+            if (rawSaveCore == null && writeSaveCoreValue(CUSTOM_PATTERNS_STORAGE_KEY, raw)) {
+              window.localStorage?.removeItem(CUSTOM_PATTERNS_STORAGE_KEY);
+            }
           }
         }
       } catch (error) {
@@ -1171,12 +1210,17 @@
 
     readStoredCustomPatternCounter() {
       try {
-        const raw = window.localStorage?.getItem(CUSTOM_PATTERN_COUNTER_STORAGE_KEY);
+        const rawSaveCore = readSaveCoreValue(CUSTOM_PATTERN_COUNTER_STORAGE_KEY);
+        const raw = rawSaveCore ?? window.localStorage?.getItem(CUSTOM_PATTERN_COUNTER_STORAGE_KEY);
         if (!raw) {
           return 1;
         }
         const parsed = Number.parseInt(raw, 10);
         if (Number.isFinite(parsed) && parsed > 0) {
+          if (rawSaveCore == null
+            && writeSaveCoreValue(CUSTOM_PATTERN_COUNTER_STORAGE_KEY, String(parsed))) {
+            window.localStorage?.removeItem(CUSTOM_PATTERN_COUNTER_STORAGE_KEY);
+          }
           return parsed;
         }
       } catch (error) {
@@ -1188,7 +1232,10 @@
     persistCustomPatternCounter() {
       try {
         const value = Math.max(1, Math.floor(this.customPatternCounter || 1));
-        window.localStorage?.setItem(CUSTOM_PATTERN_COUNTER_STORAGE_KEY, String(value));
+        const serialized = String(value);
+        if (!writeSaveCoreValue(CUSTOM_PATTERN_COUNTER_STORAGE_KEY, serialized)) {
+          window.localStorage?.setItem(CUSTOM_PATTERN_COUNTER_STORAGE_KEY, serialized);
+        }
       } catch (error) {
         // ignore storage errors
       }
@@ -1282,7 +1329,10 @@
         });
       }
       try {
-        window.localStorage?.setItem(CUSTOM_PATTERNS_STORAGE_KEY, JSON.stringify(serialized));
+        const payload = JSON.stringify(serialized);
+        if (!writeSaveCoreValue(CUSTOM_PATTERNS_STORAGE_KEY, payload)) {
+          window.localStorage?.setItem(CUSTOM_PATTERNS_STORAGE_KEY, payload);
+        }
       } catch (error) {
         // ignore storage errors
       }
