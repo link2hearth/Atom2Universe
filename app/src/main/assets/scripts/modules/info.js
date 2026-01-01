@@ -3128,13 +3128,29 @@ function findSurvivorLikeEntry(entries) {
   return key && typeof entries[key] === 'object' ? entries[key] : null;
 }
 
+const SURVIVOR_LIKE_HERO_IDS = Object.freeze(['Mage', 'Robot', 'Ghost', 'ChatNoir', 'Skeleton', 'Vortex']);
+
+function normalizeSurvivorLikeHeroTimes(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return {};
+  }
+  return SURVIVOR_LIKE_HERO_IDS.reduce((acc, hero) => {
+    const value = Number(raw[hero]);
+    if (Number.isFinite(value) && value > 0) {
+      acc[hero] = value;
+    }
+    return acc;
+  }, {});
+}
+
 function normalizeSurvivorLikeRecord(record) {
   if (!record || typeof record !== 'object') {
-    return { bestTime: 0, bestLevel: 1 };
+    return { bestTime: 0, bestLevel: 1, bestTimeByHero: {} };
   }
   return {
     bestTime: Number.isFinite(Number(record.bestTime)) ? Math.max(0, Number(record.bestTime)) : 0,
-    bestLevel: toNonNegativeInteger(record.bestLevel ?? 1) || 1
+    bestLevel: toNonNegativeInteger(record.bestLevel ?? 1) || 1,
+    bestTimeByHero: normalizeSurvivorLikeHeroTimes(record.bestTimeByHero)
   };
 }
 
@@ -3169,13 +3185,18 @@ function syncSurvivorLikeProgressEntry(record) {
   const current = normalizeSurvivorLikeRecord(existingEntry.state && typeof existingEntry.state === 'object'
     ? existingEntry.state
     : existingEntry);
-  if (current.bestTime === record.bestTime && current.bestLevel === record.bestLevel) {
+  const hasSameHeroTimes = JSON.stringify(current.bestTimeByHero || {})
+    === JSON.stringify(record.bestTimeByHero || {});
+  if (current.bestTime === record.bestTime
+    && current.bestLevel === record.bestLevel
+    && hasSameHeroTimes) {
     return;
   }
   const updatedEntry = {
     ...existingEntry,
     bestTime: record.bestTime,
     bestLevel: record.bestLevel,
+    bestTimeByHero: record.bestTimeByHero,
     updatedAt: Date.now()
   };
   entries.survivorLike = updatedEntry;
@@ -3204,7 +3225,7 @@ function getSurvivorLikeProgressStats() {
     syncSurvivorLikeProgressEntry(autosaveStats);
     return autosaveStats;
   }
-  return { bestTime: 0, bestLevel: 1 };
+  return { bestTime: 0, bestLevel: 1, bestTimeByHero: {} };
 }
 
 function formatSurvivorLikeTime(milliseconds) {
@@ -3220,6 +3241,7 @@ function updateSurvivorLikeStats() {
   const emptyValue = '—';
   const timeText = stats.bestTime > 0 ? formatSurvivorLikeTime(stats.bestTime) : emptyValue;
   const levelText = stats.bestLevel > 1 ? formatIntegerLocalized(stats.bestLevel) : emptyValue;
+  const heroTimes = stats.bestTimeByHero || {};
 
   // Éléments de la page Info
   if (elements.infoSurvivorLikeTimeValue) {
@@ -3227,6 +3249,36 @@ function updateSurvivorLikeStats() {
   }
   if (elements.infoSurvivorLikeLevelValue) {
     elements.infoSurvivorLikeLevelValue.textContent = levelText;
+  }
+  if (elements.infoSurvivorLikeHeroMageValue) {
+    elements.infoSurvivorLikeHeroMageValue.textContent = heroTimes.Mage
+      ? formatSurvivorLikeTime(heroTimes.Mage)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroRobotValue) {
+    elements.infoSurvivorLikeHeroRobotValue.textContent = heroTimes.Robot
+      ? formatSurvivorLikeTime(heroTimes.Robot)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroGhostValue) {
+    elements.infoSurvivorLikeHeroGhostValue.textContent = heroTimes.Ghost
+      ? formatSurvivorLikeTime(heroTimes.Ghost)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroChatNoirValue) {
+    elements.infoSurvivorLikeHeroChatNoirValue.textContent = heroTimes.ChatNoir
+      ? formatSurvivorLikeTime(heroTimes.ChatNoir)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroSkeletonValue) {
+    elements.infoSurvivorLikeHeroSkeletonValue.textContent = heroTimes.Skeleton
+      ? formatSurvivorLikeTime(heroTimes.Skeleton)
+      : emptyValue;
+  }
+  if (elements.infoSurvivorLikeHeroVortexValue) {
+    elements.infoSurvivorLikeHeroVortexValue.textContent = heroTimes.Vortex
+      ? formatSurvivorLikeTime(heroTimes.Vortex)
+      : emptyValue;
   }
 
   // Éléments de la page de jeu (déclenche la sync comme Stars War)

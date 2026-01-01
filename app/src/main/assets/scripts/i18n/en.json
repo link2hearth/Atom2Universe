@@ -326,6 +326,17 @@
           "toggle": {
             "collapse": "Collapse",
             "expand": "Expand"
+          },
+          "survivorLike": {
+            "title": "Survivor — Hero records",
+            "heroes": {
+              "mage": "Mage",
+              "robot": "Robot",
+              "ghost": "Ghost",
+              "chatNoir": "Chat Noir",
+              "skeleton": "Skeleton",
+              "vortex": "Vortex"
+            }
           }
         },
         "achievements": {

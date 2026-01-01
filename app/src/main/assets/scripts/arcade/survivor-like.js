@@ -12,6 +12,7 @@
   const SAVE_CORE_KEY = typeof SAVE_CORE_KEYS !== 'undefined' && SAVE_CORE_KEYS?.arcadeGamePrefix
     ? `${SAVE_CORE_KEYS.arcadeGamePrefix}${GAME_ID}`
     : 'atom2univers.arcade.survivorLike';
+  const HERO_IDS = Object.freeze(['Mage', 'Robot', 'Ghost', 'ChatNoir', 'Skeleton', 'Vortex']);
   const CONFIG_PATH = 'config/arcade/survivor-like.json';
 
   // Configuration des sprites d'ennemis (sprite sheets 256x256, 4x4 grille, chaque sprite 64x64)
@@ -996,12 +997,11 @@
 
     if (state.elapsed > state.bestTime) {
       state.bestTime = state.elapsed;
-      saveRecords();
     }
     if (state.player.level > state.bestLevel) {
       state.bestLevel = state.player.level;
-      saveRecords();
     }
+    saveRecords({ heroId: state.player.characterType, heroTime: state.elapsed });
 
     showStatusBar();
     showOverlay('gameover');
@@ -3955,16 +3955,62 @@
     }
   }
 
-  function saveRecords() {
+  function normalizeHeroId(raw) {
+    if (typeof raw !== 'string' || !raw.trim()) {
+      return null;
+    }
+    const normalized = raw.trim().toLowerCase();
+    return HERO_IDS.find(hero => hero.toLowerCase() === normalized) || null;
+  }
+
+  function extractBestTimeByHero(raw) {
+    if (!raw || typeof raw !== 'object') {
+      return {};
+    }
+    return HERO_IDS.reduce((acc, hero) => {
+      const value = Number(raw[hero]);
+      if (Number.isFinite(value) && value > 0) {
+        acc[hero] = value;
+      }
+      return acc;
+    }, {});
+  }
+
+  function saveRecords(options = {}) {
     const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
 
     // Préserver savedGame existant lors de la sauvegarde des records
     const currentData = autosaveApi.get(GAME_ID) || {};
+    const bestTimeByHero = extractBestTimeByHero(currentData.bestTimeByHero);
+    let shouldPersist = false;
+
+    const heroId = normalizeHeroId(options.heroId || state.player.characterType);
+    const heroTime = Number(options.heroTime ?? state.elapsed);
+    if (heroId && Number.isFinite(heroTime) && heroTime > 0) {
+      const previousHeroTime = Number(bestTimeByHero[heroId]) || 0;
+      if (heroTime > previousHeroTime) {
+        bestTimeByHero[heroId] = heroTime;
+        shouldPersist = true;
+      }
+    }
+
+    if (state.bestTime > (Number(currentData.bestTime) || 0)) {
+      shouldPersist = true;
+    }
+    if (state.bestLevel > (Number(currentData.bestLevel) || 1)) {
+      shouldPersist = true;
+    }
+
+    if (!shouldPersist) {
+      return;
+    }
+
     autosaveApi.set(GAME_ID, {
       ...currentData,
       bestTime: state.bestTime,
       bestLevel: state.bestLevel,
+      bestTimeByHero,
       updatedAt: Date.now()
     });
 
@@ -3979,12 +4025,30 @@
 
       // Préserver les données existantes (comme savedGame)
       const existingEntry = globalState.arcadeProgress.entries[GAME_ID] || {};
-      globalState.arcadeProgress.entries[GAME_ID] = {
-        ...existingEntry,
-        bestTime: state.bestTime,
-        bestLevel: state.bestLevel,
-        updatedAt: Date.now()
-      };
+      const existingState = existingEntry.state && typeof existingEntry.state === 'object'
+        ? existingEntry.state
+        : null;
+      const updatedState = existingState
+        ? {
+          ...existingState,
+          bestTime: state.bestTime,
+          bestLevel: state.bestLevel,
+          bestTimeByHero
+        }
+        : null;
+      globalState.arcadeProgress.entries[GAME_ID] = existingState
+        ? {
+          ...existingEntry,
+          state: updatedState,
+          updatedAt: Date.now()
+        }
+        : {
+          ...existingEntry,
+          bestTime: state.bestTime,
+          bestLevel: state.bestLevel,
+          bestTimeByHero,
+          updatedAt: Date.now()
+        };
 
       if (typeof window.saveGame === 'function') {
         window.saveGame();
