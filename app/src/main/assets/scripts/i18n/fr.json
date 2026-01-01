@@ -925,6 +925,11 @@
       },
       "survivorLike": {
         "aria": "Mini-jeu Survis : survivez face à des hordes d'ennemis.",
+        "scores": {
+          "title": "Scores",
+          "time": "Temps de survie",
+          "level": "Niveau max"
+        },
         "hud": {
           "health": "Vie",
           "xp": "Expérience",
