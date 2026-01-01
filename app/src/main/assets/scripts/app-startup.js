@@ -1074,6 +1074,8 @@ function collectDomElements() {
   starsWarHighscoreEasy: document.getElementById('starsWarHighscoreEasy'),
   survivorLikeBestTimeValue: document.getElementById('survivorLikeBestTimeValue'),
   survivorLikeBestLevelValue: document.getElementById('survivorLikeBestLevelValue'),
+  survivorLikeScoresBestTime: document.getElementById('survivorLikeScoresBestTime'),
+  survivorLikeScoresBestLevel: document.getElementById('survivorLikeScoresBestLevel'),
   infoBonusSubtitle: document.getElementById('infoBonusSubtitle'),
   infoElementBonuses: document.getElementById('infoElementBonuses'),
   infoElementBonusCard: document.getElementById('infoElementBonusCard'),

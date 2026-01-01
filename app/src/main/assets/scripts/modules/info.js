@@ -3117,17 +3117,92 @@ function updateJumpingCatStats() {
   }
 }
 
-function getSurvivorLikeProgressStats() {
-  const autosaveApi = window.ArcadeAutosave;
-  if (!autosaveApi || typeof autosaveApi.get !== 'function') {
+function findSurvivorLikeEntry(entries) {
+  if (!entries || typeof entries !== 'object') {
+    return null;
+  }
+  if (entries.survivorLike && typeof entries.survivorLike === 'object') {
+    return entries.survivorLike;
+  }
+  const key = Object.keys(entries).find(id => typeof id === 'string' && id.toLowerCase() === 'survivorlike');
+  return key && typeof entries[key] === 'object' ? entries[key] : null;
+}
+
+function normalizeSurvivorLikeRecord(record) {
+  if (!record || typeof record !== 'object') {
     return { bestTime: 0, bestLevel: 1 };
   }
-  const autosaveStats = autosaveApi.get('survivorLike');
-  if (autosaveStats && typeof autosaveStats === 'object') {
-    return {
-      bestTime: autosaveStats.bestTime || 0,
-      bestLevel: autosaveStats.bestLevel || 1
-    };
+  return {
+    bestTime: Number.isFinite(Number(record.bestTime)) ? Math.max(0, Number(record.bestTime)) : 0,
+    bestLevel: toNonNegativeInteger(record.bestLevel ?? 1) || 1
+  };
+}
+
+function hasSurvivorLikeRecord(record) {
+  return Boolean(record && (record.bestTime > 0 || record.bestLevel > 1));
+}
+
+function getSurvivorLikeAutosaveStats() {
+  const autosaveApi = window.ArcadeAutosave;
+  if (!autosaveApi || typeof autosaveApi.get !== 'function') {
+    return null;
+  }
+  try {
+    return normalizeSurvivorLikeRecord(autosaveApi.get('survivorLike'));
+  } catch (error) {
+    return null;
+  }
+}
+
+function syncSurvivorLikeProgressEntry(record) {
+  if (!hasSurvivorLikeRecord(record) || typeof gameState !== 'object') {
+    return;
+  }
+  if (!gameState.arcadeProgress || typeof gameState.arcadeProgress !== 'object') {
+    gameState.arcadeProgress = { version: 1, entries: {} };
+  }
+  if (!gameState.arcadeProgress.entries || typeof gameState.arcadeProgress.entries !== 'object') {
+    gameState.arcadeProgress.entries = {};
+  }
+  const entries = gameState.arcadeProgress.entries;
+  const existingEntry = findSurvivorLikeEntry(entries) || {};
+  const current = normalizeSurvivorLikeRecord(existingEntry.state && typeof existingEntry.state === 'object'
+    ? existingEntry.state
+    : existingEntry);
+  if (current.bestTime === record.bestTime && current.bestLevel === record.bestLevel) {
+    return;
+  }
+  const updatedEntry = {
+    ...existingEntry,
+    bestTime: record.bestTime,
+    bestLevel: record.bestLevel,
+    updatedAt: Date.now()
+  };
+  entries.survivorLike = updatedEntry;
+  if (typeof window.saveGame === 'function') {
+    window.saveGame();
+  }
+}
+
+function getSurvivorLikeProgressStats() {
+  const entries = gameState.arcadeProgress && typeof gameState.arcadeProgress === 'object'
+    && gameState.arcadeProgress.entries && typeof gameState.arcadeProgress.entries === 'object'
+      ? gameState.arcadeProgress.entries
+      : null;
+  const progressEntry = findSurvivorLikeEntry(entries);
+  if (progressEntry && typeof progressEntry === 'object') {
+    const state = progressEntry.state && typeof progressEntry.state === 'object'
+      ? progressEntry.state
+      : progressEntry;
+    const normalized = normalizeSurvivorLikeRecord(state);
+    if (hasSurvivorLikeRecord(normalized)) {
+      return normalized;
+    }
+  }
+  const autosaveStats = getSurvivorLikeAutosaveStats();
+  if (hasSurvivorLikeRecord(autosaveStats)) {
+    syncSurvivorLikeProgressEntry(autosaveStats);
+    return autosaveStats;
   }
   return { bestTime: 0, bestLevel: 1 };
 }
@@ -3160,6 +3235,12 @@ function updateSurvivorLikeStats() {
   }
   if (elements.survivorLikeBestLevelValue) {
     elements.survivorLikeBestLevelValue.textContent = levelText;
+  }
+  if (elements.survivorLikeScoresBestTime) {
+    elements.survivorLikeScoresBestTime.textContent = timeText;
+  }
+  if (elements.survivorLikeScoresBestLevel) {
+    elements.survivorLikeScoresBestLevel.textContent = levelText;
   }
 }
 

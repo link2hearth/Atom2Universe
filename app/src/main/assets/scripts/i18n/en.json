@@ -925,6 +925,11 @@
       },
       "survivorLike": {
         "aria": "Survive mini-game: survive against hordes of enemies.",
+        "scores": {
+          "title": "Scores",
+          "time": "Time survived",
+          "level": "Max level"
+        },
         "hud": {
           "health": "Health",
           "xp": "Experience",
