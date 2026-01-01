@@ -57,7 +57,7 @@ class AndroidSaveBridge(
         synchronized(saveLock) {
             saveCore.export()?.let { cached ->
                 val normalized = unwrapEnvelopeForClientPayload(cached) ?: cached
-                if (isValidSavePayload(normalized)) {
+                if (isClientSavePayload(normalized)) {
                     return normalized
                 }
             }
@@ -65,11 +65,11 @@ class AndroidSaveBridge(
             val fileData = readFromFile()
             if (!fileData.isNullOrEmpty()) {
                 val normalizedForClient = unwrapEnvelopeForClientPayload(fileData)
-                if (!normalizedForClient.isNullOrEmpty() && isValidSavePayload(normalizedForClient)) {
+                if (!normalizedForClient.isNullOrEmpty() && isClientSavePayload(normalizedForClient)) {
                     saveCore.import(fileData)
                     return normalizedForClient
                 }
-                if (isValidSavePayload(fileData)) {
+                if (isClientSavePayload(fileData)) {
                     saveCore.import(fileData)
                     return fileData
                 }
@@ -86,7 +86,7 @@ class AndroidSaveBridge(
 
             val legacyData = preferences.getString(KEY_SAVE, null)
             if (!legacyData.isNullOrEmpty()) {
-                if (!isValidSavePayload(legacyData)) {
+                if (!isClientSavePayload(legacyData)) {
                     Log.w(TAG, "Ignoring invalid legacy save data")
                     removeLegacyPreference()
                     return null
@@ -116,11 +116,11 @@ class AndroidSaveBridge(
     internal fun loadLegacyPayload(): String? {
         synchronized(saveLock) {
             val fileData = readFromFile()
-            if (!fileData.isNullOrEmpty() && isValidSavePayload(fileData)) {
+            if (!fileData.isNullOrEmpty() && isClientSavePayload(fileData)) {
                 return fileData
             }
             val legacyData = preferences.getString(KEY_SAVE, null)
-            if (!legacyData.isNullOrEmpty() && isValidSavePayload(legacyData)) {
+            if (!legacyData.isNullOrEmpty() && isClientSavePayload(legacyData)) {
                 return legacyData
             }
             return null
@@ -221,7 +221,7 @@ class AndroidSaveBridge(
         files.sortedByDescending { it.lastModified() }
             .forEach { file ->
                 val payload = readBackupPayload(file)
-                if (payload.isNullOrEmpty() || !isValidSavePayload(payload)) {
+                if (payload.isNullOrEmpty() || !isClientSavePayload(payload)) {
                     return@forEach
                 }
                 try {
@@ -337,16 +337,13 @@ class AndroidSaveBridge(
         }
     }
 
-    private fun isValidSavePayload(payload: String): Boolean {
-        if (payload.isBlank()) {
-            return false
+    private fun isClientSavePayload(payload: String): Boolean {
+        val parsed = parseJsonObject(payload) ?: return false
+        if (isSerializedClickerState(parsed)) {
+            return true
         }
-        return try {
-            val token = JSONTokener(payload).nextValue()
-            token is JSONObject || token is JSONArray
-        } catch (error: JSONException) {
-            false
-        }
+        val clicker = extractClickerState(parsed)
+        return isSerializedClickerState(clicker)
     }
 
     private fun clearDataInternal() {
