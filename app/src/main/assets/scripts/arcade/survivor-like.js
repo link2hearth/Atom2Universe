@@ -3839,16 +3839,28 @@
     }
   }
 
-  function requestGlobalSave() {
-    const requestSave = typeof window.requestSaveImmediate === 'function'
-      ? window.requestSaveImmediate
-      : typeof window.requestSaveDebounced === 'function'
-        ? window.requestSaveDebounced
-        : null;
-    if (requestSave) {
-      requestSave();
-      return;
+  function updateArcadeProgressEntry(update) {
+    const globalState = window.gameState || window.atom2universGameState;
+    if (!globalState) return;
+
+    if (!globalState.arcadeProgress) {
+      globalState.arcadeProgress = { version: 1, entries: {} };
     }
+    if (!globalState.arcadeProgress.entries) {
+      globalState.arcadeProgress.entries = {};
+    }
+
+    const existingEntry = globalState.arcadeProgress.entries[GAME_ID] || {};
+    const nextEntry = typeof update === 'function' ? update(existingEntry) : { ...existingEntry, ...update };
+    if (!nextEntry) {
+      delete globalState.arcadeProgress.entries[GAME_ID];
+    } else {
+      globalState.arcadeProgress.entries[GAME_ID] = {
+        ...nextEntry,
+        updatedAt: Date.now()
+      };
+    }
+
     if (typeof window.saveGame === 'function') {
       window.saveGame();
     }
@@ -3856,18 +3868,16 @@
 
   function saveRecords() {
     const autosaveApi = window.ArcadeAutosave;
-    if (!autosaveApi) return;
-
-    // Préserver savedGame existant lors de la sauvegarde des records
-    const currentData = autosaveApi.get(GAME_ID) || {};
-    autosaveApi.set(GAME_ID, {
-      ...currentData,
-      bestTime: state.bestTime,
-      bestLevel: state.bestLevel,
-      updatedAt: Date.now()
-    });
-    flushAutosave();
-    requestGlobalSave();
+    if (autosaveApi) {
+      // Préserver savedGame existant lors de la sauvegarde des records
+      const currentData = autosaveApi.get(GAME_ID) || {};
+      autosaveApi.set(GAME_ID, {
+        ...currentData,
+        bestTime: state.bestTime,
+        bestLevel: state.bestLevel,
+        updatedAt: Date.now()
+      });
+    }
 
     updateArcadeProgressEntry({
       bestTime: state.bestTime,
@@ -3925,15 +3935,15 @@
     const autosaveApi = window.ArcadeAutosave;
     const savedGame = buildSavedGamePayload();
 
-    if (!autosaveApi) return;
+    if (autosaveApi) {
+      const currentData = autosaveApi.get(GAME_ID) || {};
+      autosaveApi.set(GAME_ID, {
+        ...currentData,
+        savedGame
+      });
+    }
 
-    const currentData = autosaveApi.get(GAME_ID) || {};
-    autosaveApi.set(GAME_ID, {
-      ...currentData,
-      savedGame
-    });
-    flushAutosave();
-    requestGlobalSave();
+    updateArcadeProgressEntry({ savedGame });
   }
 
   function loadGameState() {
@@ -4053,11 +4063,12 @@
       autosaveApi.set(GAME_ID, currentData);
     }
 
-    const currentData = autosaveApi.get(GAME_ID) || {};
-    delete currentData.savedGame;
-    autosaveApi.set(GAME_ID, currentData);
-    flushAutosave();
-    requestGlobalSave();
+    updateArcadeProgressEntry((entry) => {
+      if (!entry) return entry;
+      const next = { ...entry };
+      delete next.savedGame;
+      return next;
+    });
   }
 
   function hasSavedGame() {
@@ -4267,7 +4278,6 @@
       }
     };
 
-    window.addEventListener('beforeunload', handlePageHide);
     window.addEventListener('pagehide', handlePageHide);
     document.addEventListener('visibilitychange', handleVisibilityChange);
   }
