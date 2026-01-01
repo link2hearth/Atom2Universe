@@ -80,6 +80,39 @@
   const SETTINGS_STORAGE_KEY = 'atom2univers.arcade.gomoku.settings';
   let gomokuInitialized = false;
 
+  const getSaveCoreBridge = () => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return window.AndroidSaveCoreBridge || null;
+  };
+
+  const readSaveCoreValue = key => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.warn('Gomoku: unable to read SaveCore', error);
+      return null;
+    }
+  };
+
+  const writeSaveCoreValue = (key, value) => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.warn('Gomoku: unable to write SaveCore', error);
+      return false;
+    }
+  };
+
   const CONFIG = normalizeConfig(RAW_CONFIG);
 
   const state = {
@@ -885,10 +918,13 @@
   function restoreSettings() {
     try {
       const storage = window.localStorage;
-      if (!storage) {
-        return;
+      let raw = readSaveCoreValue(SETTINGS_STORAGE_KEY);
+      if (!raw && storage) {
+        raw = storage.getItem(SETTINGS_STORAGE_KEY);
+        if (raw && writeSaveCoreValue(SETTINGS_STORAGE_KEY, raw)) {
+          storage.removeItem(SETTINGS_STORAGE_KEY);
+        }
       }
-      const raw = storage.getItem(SETTINGS_STORAGE_KEY);
       if (!raw) {
         return;
       }
@@ -922,17 +958,16 @@
 
   function saveSettings() {
     try {
-      const storage = window.localStorage;
-      if (!storage) {
-        return;
-      }
       const payload = {
         ruleSet: state.ruleSet,
         mode: state.mode,
         boardSize: state.boardSize,
         difficulty: state.difficulty
       };
-      storage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(payload));
+      const serialized = JSON.stringify(payload);
+      if (!writeSaveCoreValue(SETTINGS_STORAGE_KEY, serialized) && window.localStorage) {
+        window.localStorage.setItem(SETTINGS_STORAGE_KEY, serialized);
+      }
     } catch (error) {
       console.warn('Gomoku: unable to persist settings', error);
     }

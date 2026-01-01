@@ -33,6 +33,39 @@
   const PHYSICS_POSITION_EPSILON = 0.25;
   const PHYSICS_RESTING_FRAME_THRESHOLD = 6;
 
+  const getSaveCoreBridge = () => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return window.AndroidSaveCoreBridge || null;
+  };
+
+  const readSaveCoreValue = key => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.warn('[Bigger] Unable to read SaveCore', error);
+      return null;
+    }
+  };
+
+  const writeSaveCoreValue = (key, value) => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.warn('[Bigger] Unable to write SaveCore', error);
+      return false;
+    }
+  };
+
   const toInteger = value => {
     const parsed = Number(value);
     if (!Number.isFinite(parsed)) {
@@ -159,12 +192,27 @@
       }
     }
 
+    const saveCoreRaw = readSaveCoreValue(LOCAL_STORAGE_KEY);
+    if (saveCoreRaw) {
+      try {
+        const parsed = JSON.parse(saveCoreRaw);
+        if (parsed && typeof parsed === 'object') {
+          return parsed;
+        }
+      } catch (error) {
+        // Ignore malformed SaveCore data
+      }
+    }
+
     if (window.localStorage) {
       try {
         const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === 'object') {
+            if (writeSaveCoreValue(LOCAL_STORAGE_KEY, raw)) {
+              window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+            }
             return parsed;
           }
         }
@@ -187,9 +235,10 @@
         // Ignore autosave errors (private mode, quota, ...)
       }
     }
-    if (window.localStorage) {
+    const serialized = JSON.stringify(state);
+    if (!writeSaveCoreValue(LOCAL_STORAGE_KEY, serialized) && window.localStorage) {
       try {
-        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, serialized);
       } catch (error) {
         // Ignore storage failures
       }

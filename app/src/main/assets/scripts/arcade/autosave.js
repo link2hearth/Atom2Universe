@@ -1,5 +1,10 @@
 (() => {
-  const STORAGE_KEY = 'atom2univers.arcadeSaves.v1';
+  const STORAGE_KEY = typeof SAVE_CORE_KEYS !== 'undefined' && SAVE_CORE_KEYS?.arcadeAutosaveLegacy
+    ? SAVE_CORE_KEYS.arcadeAutosaveLegacy
+    : 'atom2univers.arcadeSaves.v1';
+  const ARCADE_PROGRESS_SAVE_KEY = typeof SAVE_CORE_KEYS !== 'undefined' && SAVE_CORE_KEYS?.arcadeProgress
+    ? SAVE_CORE_KEYS.arcadeProgress
+    : 'arcadeProgress';
   const KNOWN_GAME_IDS = [
     'particules',
     'metaux',
@@ -56,6 +61,39 @@
   };
 
   const clampObject = value => (value && typeof value === 'object' ? value : {});
+
+  const getSaveCoreBridge = () => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return window.AndroidSaveCoreBridge || null;
+  };
+
+  const readSaveCoreValue = key => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.get !== 'function') {
+      return null;
+    }
+    try {
+      return bridge.get(key);
+    } catch (error) {
+      console.error('[ArcadeAutosave] Error reading SaveCore value', error);
+      return null;
+    }
+  };
+
+  const writeSaveCoreValue = (key, value) => {
+    const bridge = getSaveCoreBridge();
+    if (!bridge || typeof bridge.set !== 'function') {
+      return false;
+    }
+    try {
+      return bridge.set(key, value);
+    } catch (error) {
+      console.error('[ArcadeAutosave] Error writing SaveCore value', error);
+      return false;
+    }
+  };
 
   const safeClone = value => {
     if (!value || typeof value !== 'object') {
@@ -212,27 +250,24 @@
   const readStoredState = () => {
     const result = { version: 1, entries: {} };
 
-    // Prefer loading from the native bridge
-    if (typeof window !== 'undefined' && window.AndroidSaveBridge && typeof window.AndroidSaveBridge.loadData === 'function') {
+    const saveCoreRaw = readSaveCoreValue(ARCADE_PROGRESS_SAVE_KEY);
+    if (saveCoreRaw) {
       try {
-        const raw = window.AndroidSaveBridge.loadData();
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === 'object') {
-            const progress = extractArcadeProgressFromNativePayload(parsed);
-            if (progress && progress.entries && typeof progress.entries === 'object') {
-              result.version = Number.isFinite(progress.version) && progress.version > 0
-                ? Math.floor(progress.version)
-                : result.version;
-              const entries = clampObject(progress.entries);
-              Object.keys(entries).forEach(key => {
-                mergeRawEntry(result.entries, key, entries[key]);
-              });
-            }
+        const parsed = JSON.parse(saveCoreRaw);
+        if (parsed && typeof parsed === 'object') {
+          const progress = extractArcadeProgressFromNativePayload(parsed);
+          if (progress && progress.entries && typeof progress.entries === 'object') {
+            result.version = Number.isFinite(progress.version) && progress.version > 0
+              ? Math.floor(progress.version)
+              : result.version;
+            const entries = clampObject(progress.entries);
+            Object.keys(entries).forEach(key => {
+              mergeRawEntry(result.entries, key, entries[key]);
+            });
           }
         }
       } catch (error) {
-        console.error('[ArcadeAutosave] Error loading data from native bridge', error);
+        console.error('[ArcadeAutosave] Error loading SaveCore payload', error);
       }
     }
 
@@ -257,6 +292,9 @@
             Object.keys(entries).forEach(key => {
               mergeRawEntry(result.entries, key, entries[key]);
             });
+          }
+          if (writeSaveCoreValue(ARCADE_PROGRESS_SAVE_KEY, raw)) {
+            window.localStorage.removeItem(STORAGE_KEY);
           }
         }
       } catch (error) {
@@ -378,14 +416,9 @@
     };
     const serializedPayload = JSON.stringify(payload);
 
-    // Prefer saving to the native bridge
-    if (typeof window !== 'undefined' && window.AndroidSaveBridge && typeof window.AndroidSaveBridge.saveData === 'function') {
-      try {
-        window.AndroidSaveBridge.saveData(serializedPayload);
-      } catch (error) {
-        console.error('[ArcadeAutosave] Error saving data to native bridge', error);
-      }
-    } else if (typeof window !== 'undefined' && window.localStorage) {
+    if (!writeSaveCoreValue(ARCADE_PROGRESS_SAVE_KEY, serializedPayload)
+      && typeof window !== 'undefined'
+      && window.localStorage) {
       // Fallback to localStorage if bridge is not available
       try {
         window.localStorage.setItem(STORAGE_KEY, serializedPayload);
