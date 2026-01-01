@@ -3812,27 +3812,27 @@
     });
   }
 
-  function loadRecords() {
+  function getStoredProgressEntry() {
+    const autosaveApi = window.ArcadeAutosave;
+    if (autosaveApi) {
+      return autosaveApi.get(GAME_ID);
+    }
     const globalState = window.gameState || window.atom2universGameState;
-    const entries = globalState && globalState.arcadeProgress && typeof globalState.arcadeProgress === 'object'
-      ? (globalState.arcadeProgress.entries && typeof globalState.arcadeProgress.entries === 'object'
-          ? globalState.arcadeProgress.entries
-          : globalState.arcadeProgress)
-      : null;
-    const entry = entries && entries[GAME_ID];
-    if (entry && typeof entry === 'object') {
-      const savedState = entry.state && typeof entry.state === 'object' ? entry.state : entry;
-      state.bestTime = savedState.bestTime || 0;
-      state.bestLevel = savedState.bestLevel || 1;
-    } else {
-      const autosaveApi = window.ArcadeAutosave;
-      if (autosaveApi) {
-        const saved = autosaveApi.get(GAME_ID);
-        if (saved) {
-          state.bestTime = saved.bestTime || 0;
-          state.bestLevel = saved.bestLevel || 1;
-        }
-      }
+    const entry = globalState?.arcadeProgress?.entries?.[GAME_ID];
+    if (!entry || typeof entry !== 'object') {
+      return null;
+    }
+    if (entry.state && typeof entry.state === 'object') {
+      return entry.state;
+    }
+    return entry;
+  }
+
+  function loadRecords() {
+    const saved = getStoredProgressEntry();
+    if (saved) {
+      state.bestTime = saved.bestTime || 0;
+      state.bestLevel = saved.bestLevel || 1;
     }
 
     if (elements.bestTimeValue) {
@@ -3871,24 +3871,6 @@
       updatedAt: Date.now()
     });
     flushAutosave();
-
-    const globalState = window.gameState || window.atom2universGameState;
-    const canPersistToGlobal = globalState && window.appStartCompleted === true;
-    if (canPersistToGlobal) {
-      if (!globalState.arcadeProgress || typeof globalState.arcadeProgress !== 'object') {
-        globalState.arcadeProgress = { version: 1, entries: {} };
-      }
-      if (!globalState.arcadeProgress.entries || typeof globalState.arcadeProgress.entries !== 'object') {
-        globalState.arcadeProgress.entries = {};
-      }
-      globalState.arcadeProgress.entries[GAME_ID] = {
-        state: {
-          bestTime: state.bestTime,
-          bestLevel: state.bestLevel
-        },
-        updatedAt: Date.now()
-      };
-    }
     requestGlobalSave();
 
     if (elements.bestTimeValue) {
