@@ -210,6 +210,14 @@
     heroCards: document.querySelectorAll('.survivor-like__hero-card')
   };
 
+  const heroRecordElements = HERO_IDS.reduce((acc, hero) => {
+    acc[hero] = {
+      time: document.getElementById(`survivorLikeHero${hero}Time`),
+      kills: document.getElementById(`survivorLikeHero${hero}Kills`)
+    };
+    return acc;
+  }, {});
+
   const GameState = {
     MENU: 'MENU',
     PLAYING: 'PLAYING',
@@ -227,6 +235,8 @@
     elapsed: 0,
     bestTime: 0,
     bestLevel: 1,
+    bestTimeByHero: {},
+    bestKillsByHero: {},
     selectedHero: null, // Selected hero from start screen (null = random)
     player: {
       x: 0,
@@ -1001,7 +1011,7 @@
     if (state.player.level > state.bestLevel) {
       state.bestLevel = state.player.level;
     }
-    saveRecords({ heroId: state.player.characterType, heroTime: state.elapsed });
+    saveRecords({ heroId: state.player.characterType, heroTime: state.elapsed, heroKills: state.kills });
 
     showStatusBar();
     showOverlay('gameover');
@@ -1012,6 +1022,27 @@
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  function formatKills(value) {
+    if (!Number.isFinite(Number(value)) || value <= 0) {
+      return '—';
+    }
+    return Math.floor(Number(value)).toLocaleString();
+  }
+
+  function updateHeroRecordDisplay() {
+    HERO_IDS.forEach((hero) => {
+      const heroTime = state.bestTimeByHero[hero] || 0;
+      const heroKills = state.bestKillsByHero[hero] || 0;
+      const heroElements = heroRecordElements[hero];
+      if (heroElements?.time) {
+        heroElements.time.textContent = heroTime > 0 ? formatTime(heroTime) : '—';
+      }
+      if (heroElements?.kills) {
+        heroElements.kills.textContent = heroKills > 0 ? formatKills(heroKills) : '—';
+      }
+    });
   }
 
   function updateHUD() {
@@ -3945,6 +3976,8 @@
     if (saved) {
       state.bestTime = saved.bestTime || 0;
       state.bestLevel = saved.bestLevel || 1;
+      state.bestTimeByHero = extractBestTimeByHero(saved.bestTimeByHero);
+      state.bestKillsByHero = extractBestKillsByHero(saved.bestKillsByHero);
     }
 
     if (elements.bestTimeValue) {
@@ -3953,6 +3986,8 @@
     if (elements.bestLevelValue) {
       elements.bestLevelValue.textContent = state.bestLevel > 1 ? state.bestLevel : '—';
     }
+
+    updateHeroRecordDisplay();
   }
 
   function normalizeHeroId(raw) {
@@ -3976,6 +4011,19 @@
     }, {});
   }
 
+  function extractBestKillsByHero(raw) {
+    if (!raw || typeof raw !== 'object') {
+      return {};
+    }
+    return HERO_IDS.reduce((acc, hero) => {
+      const value = Number(raw[hero]);
+      if (Number.isFinite(value) && value > 0) {
+        acc[hero] = Math.floor(value);
+      }
+      return acc;
+    }, {});
+  }
+
   function saveRecords(options = {}) {
     const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return;
@@ -3983,14 +4031,23 @@
     // Préserver savedGame existant lors de la sauvegarde des records
     const currentData = autosaveApi.get(GAME_ID) || {};
     const bestTimeByHero = extractBestTimeByHero(currentData.bestTimeByHero);
+    const bestKillsByHero = extractBestKillsByHero(currentData.bestKillsByHero);
     let shouldPersist = false;
 
     const heroId = normalizeHeroId(options.heroId || state.player.characterType);
     const heroTime = Number(options.heroTime ?? state.elapsed);
+    const heroKills = Number(options.heroKills ?? state.kills);
     if (heroId && Number.isFinite(heroTime) && heroTime > 0) {
       const previousHeroTime = Number(bestTimeByHero[heroId]) || 0;
       if (heroTime > previousHeroTime) {
         bestTimeByHero[heroId] = heroTime;
+        shouldPersist = true;
+      }
+    }
+    if (heroId && Number.isFinite(heroKills) && heroKills > 0) {
+      const previousHeroKills = Number(bestKillsByHero[heroId]) || 0;
+      if (heroKills > previousHeroKills) {
+        bestKillsByHero[heroId] = Math.floor(heroKills);
         shouldPersist = true;
       }
     }
@@ -4011,6 +4068,7 @@
       bestTime: state.bestTime,
       bestLevel: state.bestLevel,
       bestTimeByHero,
+      bestKillsByHero,
       updatedAt: Date.now()
     });
 
@@ -4033,7 +4091,8 @@
           ...existingState,
           bestTime: state.bestTime,
           bestLevel: state.bestLevel,
-          bestTimeByHero
+          bestTimeByHero,
+          bestKillsByHero
         }
         : null;
       globalState.arcadeProgress.entries[GAME_ID] = existingState
@@ -4047,6 +4106,7 @@
           bestTime: state.bestTime,
           bestLevel: state.bestLevel,
           bestTimeByHero,
+          bestKillsByHero,
           updatedAt: Date.now()
         };
 
@@ -4061,6 +4121,10 @@
     if (elements.bestLevelValue) {
       elements.bestLevelValue.textContent = state.bestLevel;
     }
+
+    state.bestTimeByHero = bestTimeByHero;
+    state.bestKillsByHero = bestKillsByHero;
+    updateHeroRecordDisplay();
   }
 
   function saveGameState() {

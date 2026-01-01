@@ -747,6 +747,50 @@
   pointer-events: auto !important;
 }
 
+.survivor-like__hero-grid--column {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  flex-wrap: nowrap;
+}
+
+.survivor-like__hero-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 14px;
+  background: rgba(8, 16, 26, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.survivor-like__hero-records {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.survivor-like__hero-record {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: calc(13px * var(--ui-control-scale, 1));
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.survivor-like__hero-record-label {
+  font-size: calc(11px * var(--ui-control-scale, 1));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.survivor-like__hero-record-value {
+  font-weight: 600;
+}
+
 .survivor-like__hero-card {
   width: 56px;
   height: 56px;

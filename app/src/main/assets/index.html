@@ -2333,34 +2333,6 @@
           </div>
         </div>
 
-        <aside
-          class="survivor-like__scores"
-          aria-labelledby="survivorLikeScoresTitle"
-          role="complementary"
-          hidden
-          aria-hidden="true"
-        >
-          <h3
-            id="survivorLikeScoresTitle"
-            class="survivor-like__scores-title"
-            data-i18n="index.sections.survivorLike.scores.title"
-          >Scores</h3>
-          <dl class="survivor-like__scores-list">
-            <div class="survivor-like__scores-row">
-              <dt class="survivor-like__scores-label" data-i18n="index.sections.survivorLike.scores.time">
-                Temps de survie
-              </dt>
-              <dd class="survivor-like__scores-value" id="survivorLikeScoresBestTime">—</dd>
-            </div>
-            <div class="survivor-like__scores-row">
-              <dt class="survivor-like__scores-label" data-i18n="index.sections.survivorLike.scores.level">
-                Niveau max
-              </dt>
-              <dd class="survivor-like__scores-value" id="survivorLikeScoresBestLevel">—</dd>
-            </div>
-          </dl>
-        </aside>
-
         <!-- Virtual Joystick -->
         <div id="survivorLikeJoystickZone" class="survivor-like__joystick-zone">
           <div id="survivorLikeJoystick" class="survivor-like__joystick">
@@ -2377,38 +2349,100 @@
             <p class="survivor-like__overlay-message" data-i18n="index.sections.survivorLike.overlay.start.message">
               Utilisez le joystick pour vous déplacer. Éliminez les ennemis et améliorez vos armes à chaque niveau.
             </p>
-            <div class="survivor-like__overlay-stats">
-              <div class="survivor-like__overlay-stat">
-                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.start.bestTime">Meilleur temps</span>
-                <span id="survivorLikeBestTimeValue" class="survivor-like__overlay-stat-value">—</span>
-              </div>
-              <div class="survivor-like__overlay-stat">
-                <span class="survivor-like__overlay-stat-label" data-i18n="index.sections.survivorLike.overlay.start.bestLevel">Niveau max</span>
-                <span id="survivorLikeBestLevelValue" class="survivor-like__overlay-stat-value">—</span>
-              </div>
-            </div>
             <!-- Hero Selection -->
             <div class="survivor-like__hero-selection">
               <p class="survivor-like__hero-label" data-i18n="index.sections.survivorLike.overlay.start.chooseHero">Choisir un héros :</p>
-              <div class="survivor-like__hero-grid">
-                <button type="button" class="survivor-like__hero-card" data-hero="Mage" data-weapon="projectile">
-                  <img src="Assets/sprites/Survive/Mage.png" alt="Mage" class="survivor-like__hero-img">
-                </button>
-                <button type="button" class="survivor-like__hero-card" data-hero="Robot" data-weapon="laser">
-                  <img src="Assets/sprites/Survive/Robot.png" alt="Robot" class="survivor-like__hero-img">
-                </button>
-                <button type="button" class="survivor-like__hero-card" data-hero="Ghost" data-weapon="aura">
-                  <img src="Assets/sprites/Survive/Ghost.png" alt="Ghost" class="survivor-like__hero-img">
-                </button>
-                <button type="button" class="survivor-like__hero-card" data-hero="ChatNoir" data-weapon="bouncing">
-                  <img src="Assets/sprites/Survive/ChatNoir.png" alt="Chat Noir" class="survivor-like__hero-img">
-                </button>
-                <button type="button" class="survivor-like__hero-card" data-hero="Skeleton" data-weapon="bomb">
-                  <img src="Assets/sprites/Survive/Skeleton.png" alt="Skeleton" class="survivor-like__hero-img">
-                </button>
-                <button type="button" class="survivor-like__hero-card" data-hero="Vortex" data-weapon="blackhole">
-                  <img src="Assets/sprites/Survive/Vortex.png" alt="Vortex" class="survivor-like__hero-img">
-                </button>
+              <div class="survivor-like__hero-grid survivor-like__hero-grid--column">
+                <div class="survivor-like__hero-row">
+                  <button type="button" class="survivor-like__hero-card" data-hero="Mage" data-weapon="projectile">
+                    <img src="Assets/sprites/Survive/Mage.png" alt="Mage" class="survivor-like__hero-img">
+                  </button>
+                  <div class="survivor-like__hero-records">
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.time">Temps</span>
+                      <span id="survivorLikeHeroMageTime" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.kills">Kills</span>
+                      <span id="survivorLikeHeroMageKills" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="survivor-like__hero-row">
+                  <button type="button" class="survivor-like__hero-card" data-hero="Robot" data-weapon="laser">
+                    <img src="Assets/sprites/Survive/Robot.png" alt="Robot" class="survivor-like__hero-img">
+                  </button>
+                  <div class="survivor-like__hero-records">
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.time">Temps</span>
+                      <span id="survivorLikeHeroRobotTime" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.kills">Kills</span>
+                      <span id="survivorLikeHeroRobotKills" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="survivor-like__hero-row">
+                  <button type="button" class="survivor-like__hero-card" data-hero="Ghost" data-weapon="aura">
+                    <img src="Assets/sprites/Survive/Ghost.png" alt="Ghost" class="survivor-like__hero-img">
+                  </button>
+                  <div class="survivor-like__hero-records">
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.time">Temps</span>
+                      <span id="survivorLikeHeroGhostTime" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.kills">Kills</span>
+                      <span id="survivorLikeHeroGhostKills" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="survivor-like__hero-row">
+                  <button type="button" class="survivor-like__hero-card" data-hero="ChatNoir" data-weapon="bouncing">
+                    <img src="Assets/sprites/Survive/ChatNoir.png" alt="Chat Noir" class="survivor-like__hero-img">
+                  </button>
+                  <div class="survivor-like__hero-records">
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.time">Temps</span>
+                      <span id="survivorLikeHeroChatNoirTime" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.kills">Kills</span>
+                      <span id="survivorLikeHeroChatNoirKills" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="survivor-like__hero-row">
+                  <button type="button" class="survivor-like__hero-card" data-hero="Skeleton" data-weapon="bomb">
+                    <img src="Assets/sprites/Survive/Skeleton.png" alt="Skeleton" class="survivor-like__hero-img">
+                  </button>
+                  <div class="survivor-like__hero-records">
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.time">Temps</span>
+                      <span id="survivorLikeHeroSkeletonTime" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.kills">Kills</span>
+                      <span id="survivorLikeHeroSkeletonKills" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="survivor-like__hero-row">
+                  <button type="button" class="survivor-like__hero-card" data-hero="Vortex" data-weapon="blackhole">
+                    <img src="Assets/sprites/Survive/Vortex.png" alt="Vortex" class="survivor-like__hero-img">
+                  </button>
+                  <div class="survivor-like__hero-records">
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.time">Temps</span>
+                      <span id="survivorLikeHeroVortexTime" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                    <div class="survivor-like__hero-record">
+                      <span class="survivor-like__hero-record-label" data-i18n="index.sections.survivorLike.overlay.start.records.kills">Kills</span>
+                      <span id="survivorLikeHeroVortexKills" class="survivor-like__hero-record-value">—</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <button
@@ -6645,48 +6679,90 @@
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.scores.survivorLike.heroes.mage">Mage</dt>
                   <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeHeroMageValue" class="info-metrics__value">—</span>
+                    <span class="info-metrics__group info-metrics__group--stacked">
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.time">Temps</span>
+                        <span id="infoSurvivorLikeHeroMageTimeValue" class="info-metrics__value">—</span>
+                      </span>
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.kills">Kills</span>
+                        <span id="infoSurvivorLikeHeroMageKillsValue" class="info-metrics__value">—</span>
+                      </span>
                     </span>
                   </dd>
                 </div>
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.scores.survivorLike.heroes.robot">Robot</dt>
                   <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeHeroRobotValue" class="info-metrics__value">—</span>
+                    <span class="info-metrics__group info-metrics__group--stacked">
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.time">Temps</span>
+                        <span id="infoSurvivorLikeHeroRobotTimeValue" class="info-metrics__value">—</span>
+                      </span>
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.kills">Kills</span>
+                        <span id="infoSurvivorLikeHeroRobotKillsValue" class="info-metrics__value">—</span>
+                      </span>
                     </span>
                   </dd>
                 </div>
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.scores.survivorLike.heroes.ghost">Ghost</dt>
                   <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeHeroGhostValue" class="info-metrics__value">—</span>
+                    <span class="info-metrics__group info-metrics__group--stacked">
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.time">Temps</span>
+                        <span id="infoSurvivorLikeHeroGhostTimeValue" class="info-metrics__value">—</span>
+                      </span>
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.kills">Kills</span>
+                        <span id="infoSurvivorLikeHeroGhostKillsValue" class="info-metrics__value">—</span>
+                      </span>
                     </span>
                   </dd>
                 </div>
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.scores.survivorLike.heroes.chatNoir">Chat Noir</dt>
                   <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeHeroChatNoirValue" class="info-metrics__value">—</span>
+                    <span class="info-metrics__group info-metrics__group--stacked">
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.time">Temps</span>
+                        <span id="infoSurvivorLikeHeroChatNoirTimeValue" class="info-metrics__value">—</span>
+                      </span>
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.kills">Kills</span>
+                        <span id="infoSurvivorLikeHeroChatNoirKillsValue" class="info-metrics__value">—</span>
+                      </span>
                     </span>
                   </dd>
                 </div>
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.scores.survivorLike.heroes.skeleton">Skeleton</dt>
                   <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeHeroSkeletonValue" class="info-metrics__value">—</span>
+                    <span class="info-metrics__group info-metrics__group--stacked">
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.time">Temps</span>
+                        <span id="infoSurvivorLikeHeroSkeletonTimeValue" class="info-metrics__value">—</span>
+                      </span>
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.kills">Kills</span>
+                        <span id="infoSurvivorLikeHeroSkeletonKillsValue" class="info-metrics__value">—</span>
+                      </span>
                     </span>
                   </dd>
                 </div>
                 <div class="info-metrics__row">
                   <dt data-i18n="index.sections.info.scores.survivorLike.heroes.vortex">Vortex</dt>
                   <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeHeroVortexValue" class="info-metrics__value">—</span>
+                    <span class="info-metrics__group info-metrics__group--stacked">
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.time">Temps</span>
+                        <span id="infoSurvivorLikeHeroVortexTimeValue" class="info-metrics__value">—</span>
+                      </span>
+                      <span class="info-metrics__line">
+                        <span class="info-metrics__label" data-i18n="index.sections.info.scores.survivorLike.labels.kills">Kills</span>
+                        <span id="infoSurvivorLikeHeroVortexKillsValue" class="info-metrics__value">—</span>
+                      </span>
                     </span>
                   </dd>
                 </div>
@@ -6711,29 +6787,6 @@
                     <span class="info-metrics__group">
                       <span id="infoJumpingCatTimeValue" class="info-metrics__value">—</span>
                       <span class="info-metrics__unit" data-i18n="index.sections.info.progress.jumpingCat.timeUnit">s</span>
-                    </span>
-                  </dd>
-                </div>
-              </dl>
-            </section>
-            <section class="info-progress-block info-progress-block--survivor-like" aria-labelledby="info-survivor-like-title">
-              <header class="info-progress-block__header">
-                <h4 id="info-survivor-like-title" data-i18n="index.sections.info.progress.survivorLike.title">Survis</h4>
-              </header>
-              <dl class="info-metrics">
-                <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.survivorLike.bestTime">Temps de survie</dt>
-                  <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeTimeValue" class="info-metrics__value">—</span>
-                    </span>
-                  </dd>
-                </div>
-                <div class="info-metrics__row">
-                  <dt data-i18n="index.sections.info.progress.survivorLike.bestLevel">Niveau atteint</dt>
-                  <dd>
-                    <span class="info-metrics__group">
-                      <span id="infoSurvivorLikeLevelValue" class="info-metrics__value">—</span>
                     </span>
                   </dd>
                 </div>
