@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity() {
     private var isForegroundAudioPlaying: Boolean = false
     private lateinit var radioPlayer: ExoPlayer
     private lateinit var radioBridge: RadioBridge
+    private lateinit var saveCore: SaveCore
+    private lateinit var saveBridge: AndroidSaveBridge
     private val radioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val preferences by lazy { getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE) }
@@ -316,6 +318,10 @@ class MainActivity : AppCompatActivity() {
             useWideViewPort = true
         }
 
+        saveCore = SaveCore(applicationContext)
+        saveBridge = AndroidSaveBridge(applicationContext, saveCore)
+        saveCore.migrateFromLegacy { saveBridge.loadLegacyPayload() }
+
         radioBridge = RadioBridge(this, webView, radioPlayer, radioScope)
         webView.addJavascriptInterface(
             radioBridge,
@@ -323,8 +329,13 @@ class MainActivity : AppCompatActivity() {
         )
 
         webView.addJavascriptInterface(
-            AndroidSaveBridge(applicationContext),
+            saveBridge,
             "AndroidSaveBridge"
+        )
+
+        webView.addJavascriptInterface(
+            AndroidSaveCoreBridge(saveCore),
+            "AndroidSaveCoreBridge"
         )
 
         webView.addJavascriptInterface(
