@@ -46,6 +46,9 @@
       weaponSlots: 5,
       startWeapons: ['projectile']
     },
+    enemySprites: {
+      loadRetries: 5
+    },
     weapons: {
       projectile: {
         damage: 10,
@@ -581,6 +584,14 @@
     }
   }
 
+  function getEnemySpriteLoadRetries() {
+    const configuredRetries = state.config?.enemySprites?.loadRetries;
+    if (Number.isFinite(configuredRetries)) {
+      return Math.max(1, Math.floor(configuredRetries));
+    }
+    return DEFAULT_CONFIG.enemySprites.loadRetries;
+  }
+
   /**
    * Charge un sprite sheet d'ennemi
    * @param {string} filename - Le nom du fichier (ex: '42s.png')
@@ -590,18 +601,49 @@
     const spriteData = {
       filename: filename,
       image: new Image(),
-      loaded: false
+      loaded: false,
+      attempts: 0
     };
 
-    spriteData.image.onload = () => {
-      spriteData.loaded = true;
+    const attempted = new Set();
+    const maxAttempts = getEnemySpriteLoadRetries();
+
+    const attemptLoad = () => {
+      if (spriteData.loaded) {
+        return;
+      }
+
+      let nextFilename = filename;
+      if (attempted.size > 0) {
+        let guard = 0;
+        do {
+          nextFilename = chooseRandomEnemySprite();
+          guard += 1;
+        } while (attempted.has(nextFilename) && guard < ENEMY_SPRITE_CONFIG.maxSpriteNumber);
+      }
+
+      attempted.add(nextFilename);
+      spriteData.attempts = attempted.size;
+      spriteData.filename = nextFilename;
+
+      const image = new Image();
+      spriteData.image = image;
+      image.onload = () => {
+        spriteData.loaded = true;
+      };
+
+      image.onerror = () => {
+        if (attempted.size < maxAttempts) {
+          attemptLoad();
+          return;
+        }
+        console.error(`Failed to load enemy sprite sheet after ${attempted.size} attempts.`);
+      };
+
+      image.src = ENEMY_SPRITE_CONFIG.basePath + nextFilename;
     };
 
-    spriteData.image.onerror = () => {
-      console.error(`Failed to load enemy sprite sheet: ${filename}`);
-    };
-
-    spriteData.image.src = ENEMY_SPRITE_CONFIG.basePath + filename;
+    attemptLoad();
 
     return spriteData;
   }
