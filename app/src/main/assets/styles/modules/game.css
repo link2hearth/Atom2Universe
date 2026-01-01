@@ -80,7 +80,8 @@ body.favorite-background-active .page--void::after {
   transform: translateX(-50%);
   z-index: 4;
 
-  width: min(
+  width: fit-content;
+  max-width: min(
     calc(90vw * var(--crypto-widget-scale, 1)),
     calc(380px * var(--crypto-widget-scale, 1))
   );
