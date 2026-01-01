@@ -4273,6 +4273,7 @@
       elements.upgradeChoices.appendChild(card);
     });
 
+    const savedGame = buildSavedGamePayload();
     syncSavedGameToArcadeProgress(savedGame);
   }
 
