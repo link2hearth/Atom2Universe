@@ -238,6 +238,7 @@
     bestTimeByHero: {},
     bestKillsByHero: {},
     selectedHero: null, // Selected hero from start screen (null = random)
+    pendingLevelUpChoices: null,
     player: {
       x: 0,
       y: 0,
@@ -941,6 +942,15 @@
       startGame();
       return;
     }
+    if (state.gameState === GameState.LEVELUP) {
+      state.running = false;
+      state.paused = true;
+      showStatusBar();
+      showOverlay('levelup');
+      elements.pauseButton?.classList.add('survivor-like__pause-button--visible');
+      return;
+    }
+
     state.gameState = GameState.PLAYING;
     state.running = true;
     state.paused = false;
@@ -3060,23 +3070,9 @@
     state.gameState = GameState.LEVELUP;
 
     const choices = generateUpgradeChoices();
+    state.pendingLevelUpChoices = choices;
 
-    if (!elements.upgradeChoices) return;
-    elements.upgradeChoices.innerHTML = '';
-
-    choices.forEach(upgrade => {
-      const card = document.createElement('div');
-      card.className = 'survivor-like__upgrade-card';
-      if (upgrade.isNew) {
-        card.classList.add('survivor-like__upgrade-card--new');
-      }
-      card.innerHTML = `
-        <div class="survivor-like__upgrade-title">${upgrade.title}</div>
-        <div class="survivor-like__upgrade-description">${upgrade.description}</div>
-      `;
-      card.addEventListener('click', () => applyUpgrade(upgrade));
-      elements.upgradeChoices.appendChild(card);
-    });
+    renderLevelUpChoices(choices);
 
     showStatusBar();
     showOverlay('levelup');
@@ -3342,6 +3338,8 @@
         break;
     }
 
+    state.pendingLevelUpChoices = null;
+
     // Si le joueur a refusé l'arme proposée, en proposer une autre
     if (upgrade.type !== 'weaponUnlock' && state.player.offeredWeapon !== null && state.player.weapons.length < 2) {
       const allWeapons = ['projectile', 'laser', 'aura', 'bouncing', 'bomb', 'blackhole'];
@@ -3361,6 +3359,7 @@
     hideStatusBar();
     state.lastTime = performance.now();
     requestAnimationFrame(gameLoop);
+    saveGameState();
   }
 
   function applyGlobalUpgrade(upgradeId, isSpecial) {
@@ -4134,6 +4133,8 @@
       elapsed: state.elapsed,
       wave: state.wave,
       kills: state.kills,
+      gameState: state.gameState,
+      paused: state.paused,
       nextSpawnTime: state.nextSpawnTime,
       nextWaveTime: state.nextWaveTime,
       spawnInterval: state.spawnInterval,
@@ -4141,6 +4142,8 @@
       nextBossTime: state.nextBossTime,
       bossSpawnBlocked: state.bossSpawnBlocked,
       bossSpawnBlockedUntil: state.bossSpawnBlockedUntil,
+      backgroundTile: currentBackgroundTile ? { ...currentBackgroundTile } : null,
+      pendingLevelUpChoices: serializeLevelUpChoices(state.pendingLevelUpChoices),
       player: {
         x: state.player.x,
         y: state.player.y,
@@ -4206,6 +4209,67 @@
     syncSavedGameToArcadeProgress(savedGame);
   }
 
+  function serializeLevelUpChoices(choices) {
+    if (!Array.isArray(choices)) {
+      return null;
+    }
+    return choices.map(choice => ({
+      type: choice.type,
+      weaponType: choice.weaponType || null,
+      upgradeId: choice.upgradeId || null,
+      title: choice.title || '',
+      description: choice.description || '',
+      isNew: Boolean(choice.isNew),
+      special: Boolean(choice.special)
+    }));
+  }
+
+  function normalizeSavedLevelUpChoices(choices) {
+    if (!Array.isArray(choices)) {
+      return null;
+    }
+    const normalized = choices.map(choice => {
+      if (!choice || typeof choice !== 'object') {
+        return null;
+      }
+      if (typeof choice.type !== 'string') {
+        return null;
+      }
+      return {
+        type: choice.type,
+        weaponType: typeof choice.weaponType === 'string' ? choice.weaponType : null,
+        upgradeId: typeof choice.upgradeId === 'string' ? choice.upgradeId : null,
+        title: typeof choice.title === 'string' ? choice.title : '',
+        description: typeof choice.description === 'string' ? choice.description : '',
+        isNew: Boolean(choice.isNew),
+        special: Boolean(choice.special)
+      };
+    }).filter(Boolean);
+    return normalized.length ? normalized : null;
+  }
+
+  function renderLevelUpChoices(choices) {
+    if (!elements.upgradeChoices) return;
+    const safeChoices = Array.isArray(choices) ? choices : [];
+    elements.upgradeChoices.innerHTML = '';
+
+    safeChoices.forEach(upgrade => {
+      const card = document.createElement('div');
+      card.className = 'survivor-like__upgrade-card';
+      if (upgrade.isNew) {
+        card.classList.add('survivor-like__upgrade-card--new');
+      }
+      card.innerHTML = `
+        <div class="survivor-like__upgrade-title">${upgrade.title}</div>
+        <div class="survivor-like__upgrade-description">${upgrade.description}</div>
+      `;
+      card.addEventListener('click', () => applyUpgrade(upgrade));
+      elements.upgradeChoices.appendChild(card);
+    });
+
+    syncSavedGameToArcadeProgress(savedGame);
+  }
+
   function loadGameState() {
     const autosaveApi = getAutosaveApi();
     if (!autosaveApi) return false;
@@ -4219,6 +4283,10 @@
     state.elapsed = savedGame.elapsed;
     state.wave = savedGame.wave;
     state.kills = savedGame.kills;
+    state.gameState = Object.values(GameState).includes(savedGame.gameState)
+      ? savedGame.gameState
+      : GameState.PLAYING;
+    state.paused = Boolean(savedGame.paused);
     state.nextSpawnTime = savedGame.nextSpawnTime;
     state.nextWaveTime = savedGame.nextWaveTime;
     state.spawnInterval = savedGame.spawnInterval;
@@ -4232,6 +4300,19 @@
     }
     state.bossSpawnBlocked = savedGame.bossSpawnBlocked || false;
     state.bossSpawnBlockedUntil = savedGame.bossSpawnBlockedUntil || 0;
+
+    const restoredBackground = savedGame.backgroundTile;
+    if (restoredBackground && Number.isFinite(restoredBackground.imageIndex)) {
+      currentBackgroundTile = {
+        imageIndex: restoredBackground.imageIndex,
+        tileX: restoredBackground.tileX || 0,
+        tileY: restoredBackground.tileY || 0
+      };
+    } else {
+      selectRandomBackgroundTile();
+    }
+
+    state.pendingLevelUpChoices = normalizeSavedLevelUpChoices(savedGame.pendingLevelUpChoices);
 
     // Restore player
     state.player.x = savedGame.player.x;
@@ -4315,6 +4396,17 @@
     updateHUD();
     // Charger les sprites d'ennemis pour la vague actuelle
     initializeWaveSprites();
+
+    if (state.gameState === GameState.LEVELUP) {
+      if (!state.pendingLevelUpChoices) {
+        state.pendingLevelUpChoices = generateUpgradeChoices();
+      }
+      renderLevelUpChoices(state.pendingLevelUpChoices);
+      state.running = false;
+      state.paused = true;
+      showStatusBar();
+      showOverlay('levelup');
+    }
     return true;
   }
 
