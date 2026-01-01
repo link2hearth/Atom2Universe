@@ -4213,15 +4213,21 @@
     if (!Array.isArray(choices)) {
       return null;
     }
-    return choices.map(choice => ({
-      type: choice.type,
-      weaponType: choice.weaponType || null,
-      upgradeId: choice.upgradeId || null,
-      title: choice.title || '',
-      description: choice.description || '',
-      isNew: Boolean(choice.isNew),
-      special: Boolean(choice.special)
-    }));
+    const normalized = choices.map((choice) => {
+      if (!choice || typeof choice !== 'object' || typeof choice.type !== 'string') {
+        return null;
+      }
+      return {
+        type: choice.type,
+        weaponType: choice.weaponType || null,
+        upgradeId: choice.upgradeId || null,
+        title: choice.title || '',
+        description: choice.description || '',
+        isNew: Boolean(choice.isNew),
+        special: Boolean(choice.special)
+      };
+    }).filter(Boolean);
+    return normalized.length ? normalized : null;
   }
 
   function normalizeSavedLevelUpChoices(choices) {
