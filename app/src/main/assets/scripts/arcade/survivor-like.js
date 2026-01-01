@@ -159,6 +159,9 @@
         survivalIntervalSeconds: 60,
         ticketAmount: 1
       }
+    },
+    autosave: {
+      intervalMs: 15000
     }
   });
 
@@ -344,6 +347,7 @@
   let canvasHeight = 0;
   let spriteSheet = null;
   let spriteSheetLoaded = false;
+  let autosaveTimerId = null;
 
   // Background system
   const BACKGROUND_CONFIG = {
@@ -919,6 +923,7 @@
     hideStatusBar();
     // Afficher le bouton pause
     elements.pauseButton?.classList.add('survivor-like__pause-button--visible');
+    startAutosaveTimer();
     requestAnimationFrame(gameLoop);
   }
 
@@ -935,6 +940,7 @@
     hideStatusBar();
     // Afficher le bouton pause
     elements.pauseButton?.classList.add('survivor-like__pause-button--visible');
+    startAutosaveTimer();
     requestAnimationFrame(gameLoop);
   }
 
@@ -960,6 +966,7 @@
     // Pas de résurrection disponible, vraiment game over
     state.gameState = GameState.GAMEOVER;
     state.running = false;
+    stopAutosaveTimer();
 
     clearGameState();
 
@@ -3819,6 +3826,21 @@
     }
   }
 
+  function requestGlobalSave() {
+    const requestSave = typeof window.requestSaveImmediate === 'function'
+      ? window.requestSaveImmediate
+      : typeof window.requestSaveDebounced === 'function'
+        ? window.requestSaveDebounced
+        : null;
+    if (requestSave) {
+      requestSave();
+      return;
+    }
+    if (typeof window.saveGame === 'function') {
+      window.saveGame();
+    }
+  }
+
   function saveRecords() {
     const autosaveApi = window.ArcadeAutosave;
     if (!autosaveApi) return;
@@ -3831,29 +3853,8 @@
       bestLevel: state.bestLevel,
       updatedAt: Date.now()
     });
-
-    const globalState = window.gameState || window.atom2universGameState;
-    if (globalState) {
-      if (!globalState.arcadeProgress) {
-        globalState.arcadeProgress = { version: 1, entries: {} };
-      }
-      if (!globalState.arcadeProgress.entries) {
-        globalState.arcadeProgress.entries = {};
-      }
-
-      // Préserver les données existantes (comme savedGame)
-      const existingEntry = globalState.arcadeProgress.entries[GAME_ID] || {};
-      globalState.arcadeProgress.entries[GAME_ID] = {
-        ...existingEntry,
-        bestTime: state.bestTime,
-        bestLevel: state.bestLevel,
-        updatedAt: Date.now()
-      };
-
-      if (typeof window.saveGame === 'function') {
-        window.saveGame();
-      }
-    }
+    flushAutosave();
+    requestGlobalSave();
 
     if (elements.bestTimeValue) {
       elements.bestTimeValue.textContent = formatTime(state.bestTime);
@@ -3863,51 +3864,58 @@
     }
   }
 
+  function buildSavedGamePayload() {
+    return {
+      elapsed: state.elapsed,
+      wave: state.wave,
+      kills: state.kills,
+      nextSpawnTime: state.nextSpawnTime,
+      nextWaveTime: state.nextWaveTime,
+      spawnInterval: state.spawnInterval,
+      lastGachaTime: state.lastGachaTime,
+      nextBossTime: state.nextBossTime,
+      bossSpawnBlocked: state.bossSpawnBlocked,
+      bossSpawnBlockedUntil: state.bossSpawnBlockedUntil,
+      player: {
+        x: state.player.x,
+        y: state.player.y,
+        speed: state.player.speed,
+        health: state.player.health,
+        maxHealth: state.player.maxHealth,
+        xp: state.player.xp,
+        level: state.player.level,
+        xpForNextLevel: state.player.xpForNextLevel,
+        weapons: state.player.weapons.map(w => ({
+          type: w.type,
+          level: w.level,
+          config: { ...w.config }
+        })),
+        weaponSlots: state.player.weaponSlots,
+        skinIndex: state.player.skinIndex,
+        characterType: state.player.characterType,
+        offeredWeapon: state.player.offeredWeapon,
+        upgrades: JSON.parse(JSON.stringify(state.player.upgrades)), // Deep copy
+        specialBonusesActive: [...state.player.specialBonusesActive],
+        usedRevives: state.player.usedRevives || 0
+      },
+      // Ne pas sauvegarder les ennemis et projectiles (régénérés au chargement)
+      savedAt: Date.now()
+    };
+  }
+
   function saveGameState() {
     const autosaveApi = window.ArcadeAutosave;
+    const savedGame = buildSavedGamePayload();
+
     if (!autosaveApi) return;
 
     const currentData = autosaveApi.get(GAME_ID) || {};
-
     autosaveApi.set(GAME_ID, {
       ...currentData,
-      savedGame: {
-        elapsed: state.elapsed,
-        wave: state.wave,
-        kills: state.kills,
-        nextSpawnTime: state.nextSpawnTime,
-        nextWaveTime: state.nextWaveTime,
-        spawnInterval: state.spawnInterval,
-        lastGachaTime: state.lastGachaTime,
-        nextBossTime: state.nextBossTime,
-        bossSpawnBlocked: state.bossSpawnBlocked,
-        bossSpawnBlockedUntil: state.bossSpawnBlockedUntil,
-        player: {
-          x: state.player.x,
-          y: state.player.y,
-          speed: state.player.speed,
-          health: state.player.health,
-          maxHealth: state.player.maxHealth,
-          xp: state.player.xp,
-          level: state.player.level,
-          xpForNextLevel: state.player.xpForNextLevel,
-          weapons: state.player.weapons.map(w => ({
-            type: w.type,
-            level: w.level,
-            config: { ...w.config }
-          })),
-          weaponSlots: state.player.weaponSlots,
-          skinIndex: state.player.skinIndex,
-          characterType: state.player.characterType,
-          offeredWeapon: state.player.offeredWeapon,
-          upgrades: JSON.parse(JSON.stringify(state.player.upgrades)), // Deep copy
-          specialBonusesActive: [...state.player.specialBonusesActive],
-          usedRevives: state.player.usedRevives || 0
-        },
-        // Ne pas sauvegarder les ennemis et projectiles (régénérés au chargement)
-        savedAt: Date.now()
-      }
+      savedGame
     });
+    flushAutosave();
+    requestGlobalSave();
   }
 
   function loadGameState() {
@@ -4029,6 +4037,8 @@
     const currentData = autosaveApi.get(GAME_ID) || {};
     delete currentData.savedGame;
     autosaveApi.set(GAME_ID, currentData);
+    flushAutosave();
+    requestGlobalSave();
   }
 
   function hasSavedGame() {
@@ -4067,6 +4077,7 @@
         state.gameState = GameState.MENU;
         showStatusBar();
         showOverlay('start');
+        stopAutosaveTimer();
       });
     }
     if (elements.pauseButton) {
@@ -4080,11 +4091,17 @@
         state.gameState = GameState.MENU;
         showStatusBar();
         showOverlay('start');
+        stopAutosaveTimer();
       });
     }
 
     // Exit buttons (croix en haut à droite)
     const exitHandler = () => {
+      if (state.gameState === GameState.PLAYING && state.running) {
+        saveGameState();
+      }
+      stopAutosaveTimer();
+      flushAutosave();
       // Restaurer l'app-header avant de quitter
       const appHeader = document.querySelector('.app-header');
       if (appHeader) {
@@ -4159,11 +4176,32 @@
     }
   }
 
+  function stopAutosaveTimer() {
+    if (autosaveTimerId != null) {
+      window.clearInterval(autosaveTimerId);
+      autosaveTimerId = null;
+    }
+  }
+
+  function startAutosaveTimer() {
+    stopAutosaveTimer();
+    const intervalMs = Number(state.config.autosave?.intervalMs);
+    if (!Number.isFinite(intervalMs) || intervalMs <= 0) {
+      return;
+    }
+    autosaveTimerId = window.setInterval(() => {
+      if (state.gameState === GameState.PLAYING && state.running && !state.paused) {
+        saveGameState();
+      }
+    }, intervalMs);
+  }
+
   function pauseGame() {
     if (state.gameState === GameState.PLAYING && state.running && !state.paused) {
       state.running = false;
       state.paused = true;
       saveGameState();
+      stopAutosaveTimer();
     }
   }
 
@@ -4176,6 +4214,7 @@
       state.lastTime = performance.now();
       hideAllOverlays();
       hideStatusBar();
+      startAutosaveTimer();
       requestAnimationFrame(gameLoop);
       return;
     }
@@ -4186,8 +4225,35 @@
       state.running = true;
       state.lastTime = performance.now();
       hideStatusBar();
+      startAutosaveTimer();
       requestAnimationFrame(gameLoop);
     }
+  }
+
+  function flushAutosave() {
+    const autosaveApi = window.ArcadeAutosave;
+    if (autosaveApi && typeof autosaveApi.flush === 'function') {
+      autosaveApi.flush();
+    }
+  }
+
+  function setupAutosaveVisibility() {
+    const handlePageHide = () => {
+      if (state.gameState === GameState.PLAYING && state.running) {
+        saveGameState();
+      }
+      flushAutosave();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        handlePageHide();
+      }
+    };
+
+    window.addEventListener('beforeunload', handlePageHide);
+    window.addEventListener('pagehide', handlePageHide);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
   }
 
   function setupPageVisibility() {
@@ -4239,6 +4305,7 @@
     setupJoystick();
     setupEventListeners();
     setupPageVisibility();
+    setupAutosaveVisibility();
 
     // Attendre que l'API autosave soit prête avant de charger les records
     await waitForAutosaveReady();
