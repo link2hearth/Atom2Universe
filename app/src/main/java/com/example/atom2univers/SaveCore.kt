@@ -84,6 +84,17 @@ class SaveCore(context: Context) {
                 payload.put("arcadeProgress", parsed)
                 return persistJsonLocked(payload)
             }
+            val payload = loadJsonObjectLocked()
+            if (payload == null || payload.length() == 0) {
+                return persistJsonLocked(parsed)
+            }
+            val iterator = payload.keys()
+            while (iterator.hasNext()) {
+                val key = iterator.next()
+                if (!parsed.has(key)) {
+                    parsed.put(key, payload.get(key))
+                }
+            }
             return persistJsonLocked(parsed)
         }
     }
