@@ -36,153 +36,6 @@ function isCollectionVideoCollectionEnabled() {
   return isCollectionSystemActive();
 }
 
-const GACHA_SMOKE_FRAME_COUNT = 91;
-const GACHA_SMOKE_FRAME_RATE = 12;
-const GACHA_SMOKE_FRAME_PAD = 4;
-const GACHA_SMOKE_ASSET_PATH = 'Assets/sprites/Smoke';
-
-const gachaSmokeAnimationState = {
-  timer: null,
-  frame: 0,
-  element: null,
-  reducedMotion: false,
-  lastUpdate: 0,
-  timerType: null,
-  lastFrameUrl: ''
-};
-
-let gachaSmokeFramesPreloaded = false;
-const gachaSmokePreloadedImages = [];
-
-function getGachaSmokeFrameUrl(frameIndex) {
-  const frameName = formatGachaSmokeFrame(frameIndex);
-  return encodeURI(`${GACHA_SMOKE_ASSET_PATH}/${frameName}.png`);
-}
-
-function preloadGachaSmokeFrames() {
-  if (gachaSmokeFramesPreloaded || typeof Image !== 'function') {
-    return;
-  }
-  gachaSmokeFramesPreloaded = true;
-  for (let index = 0; index < GACHA_SMOKE_FRAME_COUNT; index += 1) {
-    const image = new Image();
-    try {
-      image.decoding = 'async';
-    } catch (error) {
-      // Ignore if the browser does not support setting decoding.
-    }
-    image.src = getGachaSmokeFrameUrl(index);
-    gachaSmokePreloadedImages.push(image);
-  }
-}
-
-function prefersReducedMotion() {
-  if (typeof matchMedia !== 'function') {
-    return false;
-  }
-  try {
-    return matchMedia('(prefers-reduced-motion: reduce)').matches;
-  } catch (error) {
-    return false;
-  }
-}
-
-function formatGachaSmokeFrame(frameIndex) {
-  const normalized = ((frameIndex % GACHA_SMOKE_FRAME_COUNT) + GACHA_SMOKE_FRAME_COUNT) % GACHA_SMOKE_FRAME_COUNT;
-  return String(normalized).padStart(GACHA_SMOKE_FRAME_PAD, '0');
-}
-
-function applyGachaSmokeFrame(element, frameIndex) {
-  if (!element) {
-    return;
-  }
-  const frameUrl = getGachaSmokeFrameUrl(frameIndex);
-  if (frameUrl === gachaSmokeAnimationState.lastFrameUrl) {
-    return;
-  }
-  gachaSmokeAnimationState.lastFrameUrl = frameUrl;
-  element.style.backgroundImage = `url("${frameUrl}")`;
-}
-
-function stopGachaFeaturedSmokeAnimation() {
-  if (gachaSmokeAnimationState.timer != null) {
-    if (gachaSmokeAnimationState.timerType === 'timeout' && typeof clearTimeout === 'function') {
-      clearTimeout(gachaSmokeAnimationState.timer);
-    } else if (typeof cancelAnimationFrame === 'function') {
-      cancelAnimationFrame(gachaSmokeAnimationState.timer);
-    }
-  }
-  gachaSmokeAnimationState.timer = null;
-  gachaSmokeAnimationState.frame = 0;
-  if (gachaSmokeAnimationState.element) {
-    gachaSmokeAnimationState.element.style.backgroundImage = '';
-  }
-  gachaSmokeAnimationState.element = null;
-  gachaSmokeAnimationState.reducedMotion = false;
-  gachaSmokeAnimationState.lastUpdate = 0;
-  gachaSmokeAnimationState.timerType = null;
-  gachaSmokeAnimationState.lastFrameUrl = '';
-}
-
-function startGachaFeaturedSmokeAnimation(element) {
-  if (!element) {
-    return;
-  }
-  stopGachaFeaturedSmokeAnimation();
-  gachaSmokeAnimationState.element = element;
-  gachaSmokeAnimationState.reducedMotion = prefersReducedMotion();
-  gachaSmokeAnimationState.frame = 0;
-  gachaSmokeAnimationState.lastUpdate = typeof performance !== 'undefined'
-    ? performance.now()
-    : Date.now();
-  preloadGachaSmokeFrames();
-  applyGachaSmokeFrame(element, gachaSmokeAnimationState.frame);
-  if (gachaSmokeAnimationState.reducedMotion) {
-    return;
-  }
-  const frameDuration = 1000 / GACHA_SMOKE_FRAME_RATE;
-  gachaSmokeAnimationState.timerType = typeof requestAnimationFrame === 'function' ? 'raf' : 'timeout';
-  const step = (timestamp) => {
-    const target = gachaSmokeAnimationState.element;
-    if (!target) {
-      stopGachaFeaturedSmokeAnimation();
-      return;
-    }
-    const now = timestamp ?? (typeof performance !== 'undefined' ? performance.now() : Date.now());
-    const elapsed = now - gachaSmokeAnimationState.lastUpdate;
-    if (elapsed >= frameDuration) {
-      const framesToAdvance = Math.max(1, Math.floor(elapsed / frameDuration));
-      gachaSmokeAnimationState.lastUpdate = now - (elapsed % frameDuration);
-      gachaSmokeAnimationState.frame = (gachaSmokeAnimationState.frame + framesToAdvance) % GACHA_SMOKE_FRAME_COUNT;
-      applyGachaSmokeFrame(target, gachaSmokeAnimationState.frame);
-    }
-    if (gachaSmokeAnimationState.timerType === 'timeout') {
-      gachaSmokeAnimationState.timer = setTimeout(() => {
-        step(typeof performance !== 'undefined' ? performance.now() : Date.now());
-      }, frameDuration);
-    } else {
-      gachaSmokeAnimationState.timer = requestAnimationFrame(step);
-    }
-  };
-  if (gachaSmokeAnimationState.timerType === 'timeout') {
-    gachaSmokeAnimationState.timer = setTimeout(() => {
-      step(typeof performance !== 'undefined' ? performance.now() : Date.now());
-    }, frameDuration);
-  } else {
-    gachaSmokeAnimationState.timer = requestAnimationFrame(step);
-  }
-}
-
-function createGachaFeaturedSmokeBackdrop() {
-  if (typeof document === 'undefined') {
-    return null;
-  }
-  const element = document.createElement('span');
-  element.className = 'gacha-featured-info__smoke';
-  startGachaFeaturedSmokeAnimation(element);
-  return element;
-}
-
 const gachaTranslate = (() => {
   const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
     ? globalThis.t.bind(globalThis)
@@ -1854,24 +1707,11 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
       if (featuredInfo.hidden) {
         featuredInfo.hidden = false;
       }
-      const activeSmokeElement = gachaSmokeAnimationState.element;
-      const hasSmokeElement = featuredInfo.querySelector('.gacha-featured-info__smoke');
-      if (!hasSmokeElement || (activeSmokeElement && activeSmokeElement !== hasSmokeElement)) {
-        const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
-        if (smokeBackdrop) {
-          featuredInfo.prepend(smokeBackdrop);
-        }
-      }
       return;
     }
-    stopGachaFeaturedSmokeAnimation();
     featuredInfo.innerHTML = '';
     const todayText = t('scripts.gacha.featured.today');
     const fragment = document.createDocumentFragment();
-    const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
-    if (smokeBackdrop) {
-      fragment.appendChild(smokeBackdrop);
-    }
     if (typeof todayText === 'string' && todayText.trim()) {
       const dayElement = document.createElement('span');
       dayElement.className = 'gacha-featured-info__day';
@@ -1889,7 +1729,6 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
     }
     featuredInfo.hidden = false;
   } else {
-    stopGachaFeaturedSmokeAnimation();
     featuredInfo.innerHTML = '';
     if (featuredInfo.dataset) {
       delete featuredInfo.dataset.featuredLabel;
