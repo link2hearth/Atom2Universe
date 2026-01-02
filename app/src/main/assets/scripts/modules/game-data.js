@@ -420,6 +420,8 @@ rebuildElementConfigIndexes();
 
 if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
   window.addEventListener('config:elements:update', rebuildElementConfigIndexes);
+  window.addEventListener('config:collection-bonuses:update', rebuildElementGroupBonusConfig);
+  window.addEventListener('config:collection-families:update', rebuildElementFamilyConfig);
 }
 
 function normalizeFusionElementList(source) {
@@ -1381,7 +1383,7 @@ function normalizeElementGroupBonus(raw) {
   };
 }
 
-const RAW_ELEMENT_GROUP_BONUS_GROUPS = (() => {
+function getRawElementGroupBonusGroups() {
   const rawConfig = CONFIG.elementBonuses ?? CONFIG.elementBonus ?? null;
   if (!rawConfig || typeof rawConfig !== 'object') {
     return {};
@@ -1395,7 +1397,7 @@ const RAW_ELEMENT_GROUP_BONUS_GROUPS = (() => {
     return {};
   }
   return rawGroups;
-})();
+}
 
 const CATEGORY_LABEL_KEYS = {
   'alkali-metal': 'scripts.gameData.categories.alkaliMetal',
@@ -1439,19 +1441,6 @@ Object.entries(CATEGORY_LABEL_KEYS).forEach(([key, messageKey]) => {
   });
 });
 
-const ELEMENT_GROUP_BONUS_CONFIG = (() => {
-  const result = new Map();
-  Object.entries(RAW_ELEMENT_GROUP_BONUS_GROUPS).forEach(([rarityId, rawValue]) => {
-    if (!rarityId) return;
-    const normalizedRarityId = String(rarityId).trim();
-    if (!normalizedRarityId) return;
-    const normalizedConfig = normalizeElementGroupBonus(rawValue);
-    if (!normalizedConfig) return;
-    result.set(normalizedRarityId, normalizedConfig);
-  });
-  return result;
-})();
-
 const MYTHIQUE_RARITY_ID = 'mythique';
 const COMPACT_COLLECTION_RARITIES = new Set([
   'commun',
@@ -1461,33 +1450,46 @@ const COMPACT_COLLECTION_RARITIES = new Set([
   MYTHIQUE_RARITY_ID,
   'irreel'
 ]);
-const RAW_MYTHIQUE_GROUP_CONFIG = (() => {
-  const raw = RAW_ELEMENT_GROUP_BONUS_GROUPS[MYTHIQUE_RARITY_ID];
-  return raw && typeof raw === 'object' ? raw : null;
-})();
+const ELEMENT_GROUP_BONUS_CONFIG = new Map();
 
-if (!ELEMENT_GROUP_BONUS_CONFIG.has(MYTHIQUE_RARITY_ID)) {
-  const fallback = {};
-  if (RAW_MYTHIQUE_GROUP_CONFIG?.labels && typeof RAW_MYTHIQUE_GROUP_CONFIG.labels === 'object') {
-    fallback.labels = {};
-    Object.entries(RAW_MYTHIQUE_GROUP_CONFIG.labels).forEach(([key, value]) => {
-      if (typeof value === 'string' && value.trim()) {
-        fallback.labels[key] = value.trim();
-      }
-    });
-  }
-  ELEMENT_GROUP_BONUS_CONFIG.set(MYTHIQUE_RARITY_ID, fallback);
-} else if (RAW_MYTHIQUE_GROUP_CONFIG?.labels && typeof RAW_MYTHIQUE_GROUP_CONFIG.labels === 'object') {
-  const entry = ELEMENT_GROUP_BONUS_CONFIG.get(MYTHIQUE_RARITY_ID);
-  if (entry) {
-    entry.labels = { ...(entry.labels || {}) };
-    Object.entries(RAW_MYTHIQUE_GROUP_CONFIG.labels).forEach(([key, value]) => {
-      if (typeof value === 'string' && value.trim()) {
-        entry.labels[key] = value.trim();
-      }
-    });
+function rebuildElementGroupBonusConfig() {
+  const rawGroups = getRawElementGroupBonusGroups();
+  ELEMENT_GROUP_BONUS_CONFIG.clear();
+  Object.entries(rawGroups).forEach(([rarityId, rawValue]) => {
+    if (!rarityId) return;
+    const normalizedRarityId = String(rarityId).trim();
+    if (!normalizedRarityId) return;
+    const normalizedConfig = normalizeElementGroupBonus(rawValue);
+    if (!normalizedConfig) return;
+    ELEMENT_GROUP_BONUS_CONFIG.set(normalizedRarityId, normalizedConfig);
+  });
+
+  const rawMythiqueGroup = rawGroups[MYTHIQUE_RARITY_ID];
+  if (!ELEMENT_GROUP_BONUS_CONFIG.has(MYTHIQUE_RARITY_ID)) {
+    const fallback = {};
+    if (rawMythiqueGroup?.labels && typeof rawMythiqueGroup.labels === 'object') {
+      fallback.labels = {};
+      Object.entries(rawMythiqueGroup.labels).forEach(([key, value]) => {
+        if (typeof value === 'string' && value.trim()) {
+          fallback.labels[key] = value.trim();
+        }
+      });
+    }
+    ELEMENT_GROUP_BONUS_CONFIG.set(MYTHIQUE_RARITY_ID, fallback);
+  } else if (rawMythiqueGroup?.labels && typeof rawMythiqueGroup.labels === 'object') {
+    const entry = ELEMENT_GROUP_BONUS_CONFIG.get(MYTHIQUE_RARITY_ID);
+    if (entry) {
+      entry.labels = { ...(entry.labels || {}) };
+      Object.entries(rawMythiqueGroup.labels).forEach(([key, value]) => {
+        if (typeof value === 'string' && value.trim()) {
+          entry.labels[key] = value.trim();
+        }
+      });
+    }
   }
 }
+
+rebuildElementGroupBonusConfig();
 
 function normalizeElementFamilyBonusEntry(raw, { familyId, defaultLabel, index }) {
   if (raw == null) {
@@ -1794,19 +1796,22 @@ function normalizeElementEffects(source, { elementId, defaultLabel }) {
   return effects;
 }
 
-const RAW_ELEMENT_FAMILY_CONFIG = (() => {
+function getRawElementFamilyConfig() {
   const raw = CONFIG.elementFamilies
     ?? CONFIG.elementFamilyBonuses
     ?? CONFIG.families;
   return raw && typeof raw === 'object' ? raw : null;
-})();
+}
 
-const ELEMENT_FAMILY_CONFIG = (() => {
-  const result = new Map();
-  if (!RAW_ELEMENT_FAMILY_CONFIG) {
-    return result;
+const ELEMENT_FAMILY_CONFIG = new Map();
+
+function rebuildElementFamilyConfig() {
+  ELEMENT_FAMILY_CONFIG.clear();
+  const rawConfig = getRawElementFamilyConfig();
+  if (!rawConfig) {
+    return;
   }
-  Object.entries(RAW_ELEMENT_FAMILY_CONFIG).forEach(([familyId, rawValue]) => {
+  Object.entries(rawConfig).forEach(([familyId, rawValue]) => {
     if (!familyId) {
       return;
     }
@@ -1818,10 +1823,11 @@ const ELEMENT_FAMILY_CONFIG = (() => {
     if (!normalized) {
       return;
     }
-    result.set(normalizedId, normalized);
+    ELEMENT_FAMILY_CONFIG.set(normalizedId, normalized);
   });
-  return result;
-})();
+}
+
+rebuildElementFamilyConfig();
 
 function pickDefined(...candidates) {
   for (const candidate of candidates) {
