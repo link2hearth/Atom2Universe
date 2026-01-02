@@ -301,18 +301,10 @@ function applySerializedGameState(raw) {
     const base = createInitialGachaCardCollection();
     Object.keys(base).forEach(id => {
       const stored = storedGachaCards[id];
-      if (!stored || typeof stored !== 'object') {
-        base[id] = { owned: 0, seen: 0, level: 0 };
-        return;
-      }
-      const owned = Number(stored.owned ?? stored.count ?? stored.total);
-      const seen = Number(stored.seen ?? stored.viewed ?? stored.visited);
-      const level = Number(stored.level ?? stored.rank);
-      base[id] = {
-        owned: Number.isFinite(owned) && owned > 0 ? Math.floor(owned) : 0,
-        seen: Number.isFinite(seen) && seen > 0 ? Math.floor(seen) : 0,
-        level: Number.isFinite(level) && level > 0 ? Math.floor(level) : 0
-      };
+      const rawCount = Number(stored?.count ?? stored?.owned ?? stored?.total ?? stored);
+      base[id].count = Number.isFinite(rawCount) && rawCount > 0
+        ? Math.floor(rawCount)
+        : 0;
     });
     gameState.gachaCards = base;
   } else {
