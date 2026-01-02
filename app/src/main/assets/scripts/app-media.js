@@ -3501,20 +3501,6 @@ function normalizeRadioServer(server) {
   return normalized;
 }
 
-function normalizeRadioProxyBaseUrl(proxy) {
-  if (typeof proxy !== 'string') {
-    return '';
-  }
-  const trimmed = proxy.trim();
-  if (!trimmed) {
-    return '';
-  }
-  if (!/^https?:\/\//i.test(trimmed)) {
-    return '';
-  }
-  return trimmed;
-}
-
 function getRadioServers() {
   const settings = getRadioSettings();
   const servers = Array.isArray(settings?.servers) ? settings.servers : [];
@@ -3523,99 +3509,6 @@ function getRadioServers() {
     return normalized;
   }
   return DEFAULT_RADIO_SETTINGS.servers.map(normalizeRadioServer).filter(Boolean);
-}
-
-function getRadioProxyBaseUrls() {
-  const settings = getRadioSettings();
-  const proxyBaseUrls = Array.isArray(settings?.proxyBaseUrls) ? settings.proxyBaseUrls : [];
-  const normalized = proxyBaseUrls.map(normalizeRadioProxyBaseUrl).filter(Boolean);
-  if (normalized.length) {
-    return normalized;
-  }
-  const fallback = Array.isArray(DEFAULT_RADIO_SETTINGS?.proxyBaseUrls)
-    ? DEFAULT_RADIO_SETTINGS.proxyBaseUrls
-    : [];
-  return fallback.map(normalizeRadioProxyBaseUrl).filter(Boolean);
-}
-
-function getRadioProxyOnlyOrigins() {
-  const settings = getRadioSettings();
-  const rawOrigins = Array.isArray(settings?.proxyOnlyOrigins) ? settings.proxyOnlyOrigins : [];
-  const normalized = rawOrigins
-    .map(origin => (typeof origin === 'string' ? origin.trim() : ''))
-    .filter(Boolean);
-  if (normalized.length) {
-    return normalized;
-  }
-  const fallback = Array.isArray(DEFAULT_RADIO_SETTINGS?.proxyOnlyOrigins)
-    ? DEFAULT_RADIO_SETTINGS.proxyOnlyOrigins
-    : [];
-  return fallback
-    .map(origin => (typeof origin === 'string' ? origin.trim() : ''))
-    .filter(Boolean);
-}
-
-function shouldUseRadioProxyOnly() {
-  const proxyBaseUrls = getRadioProxyBaseUrls();
-  if (!proxyBaseUrls.length || typeof window === 'undefined') {
-    return false;
-  }
-  const origin = window.location?.origin || '';
-  const protocol = window.location?.protocol || '';
-  if (protocol === 'file:') {
-    return true;
-  }
-  if (!origin) {
-    return false;
-  }
-  const origins = getRadioProxyOnlyOrigins();
-  return origins.includes(origin);
-}
-
-function buildRadioProxyUrl(proxyBase, targetUrl) {
-  if (!proxyBase || !targetUrl) {
-    return '';
-  }
-  if (proxyBase.includes('{url}')) {
-    return proxyBase.replace(/\{url\}/g, encodeURIComponent(targetUrl));
-  }
-  if (/url=$/i.test(proxyBase) || /[?&]url=$/i.test(proxyBase)) {
-    return `${proxyBase}${encodeURIComponent(targetUrl)}`;
-  }
-  if (proxyBase.endsWith('?')) {
-    return `${proxyBase}${encodeURIComponent(targetUrl)}`;
-  }
-  if (proxyBase.endsWith('/')) {
-    return `${proxyBase}${targetUrl}`;
-  }
-  return `${proxyBase}/${targetUrl}`;
-}
-
-function buildRadioRequestUrls(path, configureUrl) {
-  const servers = getRadioServers();
-  const proxyBaseUrls = getRadioProxyBaseUrls();
-  const targets = servers.map(server => {
-    const url = new URL(path, server);
-    if (typeof configureUrl === 'function') {
-      configureUrl(url);
-    }
-    return url.toString();
-  });
-  const urls = new Set();
-  if (!shouldUseRadioProxyOnly()) {
-    targets.forEach(target => urls.add(target));
-  }
-  if (proxyBaseUrls.length) {
-    targets.forEach(target => {
-      proxyBaseUrls.forEach(proxy => {
-        const proxied = buildRadioProxyUrl(proxy, target);
-        if (proxied) {
-          urls.add(proxied);
-        }
-      });
-    });
-  }
-  return Array.from(urls);
 }
 
 function normalizeRadioStation(raw) {
@@ -4148,10 +4041,11 @@ function normalizeRadioDirectoryEntries(items, labelField = 'name') {
 }
 
 async function fetchRadioDirectory(path) {
-  const urls = buildRadioRequestUrls(path);
+  const servers = getRadioServers();
   let lastError = null;
-  for (let index = 0; index < urls.length; index += 1) {
-    const url = urls[index];
+  for (let index = 0; index < servers.length; index += 1) {
+    const base = servers[index];
+    const url = `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
     const controller = typeof AbortController === 'function' ? new AbortController() : null;
     const timeoutId = controller && RADIO_REQUEST_TIMEOUT_MS > 0
       ? setTimeout(() => controller.abort(), RADIO_REQUEST_TIMEOUT_MS)
@@ -4582,7 +4476,11 @@ async function searchRadioStations(params = {}) {
   const timeoutId = controller && RADIO_REQUEST_TIMEOUT_MS > 0
     ? setTimeout(() => controller.abort(), RADIO_REQUEST_TIMEOUT_MS)
     : null;
-  const urls = buildRadioRequestUrls('/json/stations/search', url => {
+  const servers = getRadioServers();
+  let normalizedStations = null;
+  for (let index = 0; index < servers.length; index += 1) {
+    const base = servers[index];
+    const url = new URL('/json/stations/search', base);
     if (query) {
       url.searchParams.set('name', query);
     }
@@ -4596,12 +4494,8 @@ async function searchRadioStations(params = {}) {
       url.searchParams.set('hidebroken', 'true');
     }
     url.searchParams.set('limit', String(RADIO_MAX_RESULTS));
-  });
-  let normalizedStations = null;
-  for (let index = 0; index < urls.length; index += 1) {
-    const url = urls[index];
     try {
-      const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
+      const response = await fetch(url.toString(), controller ? { signal: controller.signal } : undefined);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }

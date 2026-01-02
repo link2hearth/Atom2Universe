@@ -2,16 +2,6 @@ const musicPlayer = (() => {
   const MUSIC_DIR = 'Assets/Music/';
   const SUPPORTED_EXTENSIONS = MUSIC_SUPPORTED_EXTENSIONS;
   const FALLBACK_TRACKS = MUSIC_FALLBACK_TRACKS;
-  const MANIFEST_FILES = Array.isArray(globalThis?.MUSIC_MANIFEST_FILES)
-    ? globalThis.MUSIC_MANIFEST_FILES
-    : typeof MUSIC_MANIFEST_FILES !== 'undefined' && Array.isArray(MUSIC_MANIFEST_FILES)
-      ? MUSIC_MANIFEST_FILES
-      : ['manifest.json'];
-  const ALLOW_DIRECTORY_LISTING = typeof globalThis?.MUSIC_ALLOW_DIRECTORY_LISTING === 'boolean'
-    ? globalThis.MUSIC_ALLOW_DIRECTORY_LISTING
-    : typeof MUSIC_ALLOW_DIRECTORY_LISTING !== 'undefined'
-      ? MUSIC_ALLOW_DIRECTORY_LISTING
-      : false;
 
   const SUPPORTED_EXTENSION_PATTERN = (() => {
     const uniqueExtensions = Array.from(new Set(
@@ -452,7 +442,7 @@ const musicPlayer = (() => {
       discovered.add(normalized);
     };
 
-    for (const manifest of MANIFEST_FILES) {
+    for (const manifest of ['tracks.json', 'manifest.json', 'playlist.json', 'music.json', 'list.json']) {
       const entries = await loadJsonList(manifest);
       entries.forEach(pushCandidate);
       if (discovered.size > 0) {
@@ -460,7 +450,7 @@ const musicPlayer = (() => {
       }
     }
 
-    if (discovered.size === 0 && ALLOW_DIRECTORY_LISTING) {
+    if (discovered.size === 0) {
       const listing = await loadDirectoryListing();
       listing.forEach(pushCandidate);
     }

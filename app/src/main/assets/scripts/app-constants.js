@@ -209,11 +209,6 @@ const ACTIVE_NEWS_SETTINGS = typeof NEWS_SETTINGS !== 'undefined'
 
 const DEFAULT_RADIO_SETTINGS = Object.freeze({
   servers: ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info'],
-  proxyBaseUrls: [
-    'https://api.allorigins.win/raw?url=',
-    'https://cors.isomorphic-git.org/'
-  ],
-  proxyOnlyOrigins: ['https://appassets.androidplatform.net'],
   requestTimeoutMs: 12000,
   maxResults: 50,
   hideBroken: true,
@@ -261,32 +256,6 @@ const RADIO_USER_AGENT = typeof ACTIVE_RADIO_SETTINGS?.userAgent === 'string'
   && ACTIVE_RADIO_SETTINGS.userAgent.trim()
   ? ACTIVE_RADIO_SETTINGS.userAgent.trim()
   : DEFAULT_RADIO_SETTINGS.userAgent;
-
-const DEFAULT_MUSIC_DISCOVERY_SETTINGS = Object.freeze({
-  manifestFiles: ['manifest.json'],
-  allowDirectoryListing: false
-});
-
-const ACTIVE_MUSIC_DISCOVERY_SETTINGS = typeof MUSIC_DISCOVERY_SETTINGS !== 'undefined'
-  && MUSIC_DISCOVERY_SETTINGS
-  && typeof MUSIC_DISCOVERY_SETTINGS === 'object'
-    ? MUSIC_DISCOVERY_SETTINGS
-    : DEFAULT_MUSIC_DISCOVERY_SETTINGS;
-
-const MUSIC_MANIFEST_FILES = (() => {
-  const raw = Array.isArray(ACTIVE_MUSIC_DISCOVERY_SETTINGS?.manifestFiles)
-    ? ACTIVE_MUSIC_DISCOVERY_SETTINGS.manifestFiles
-    : [];
-  const normalized = raw
-    .map(entry => (typeof entry === 'string' ? entry.trim() : ''))
-    .filter(Boolean);
-  if (normalized.length) {
-    return normalized;
-  }
-  return DEFAULT_MUSIC_DISCOVERY_SETTINGS.manifestFiles.slice();
-})();
-
-const MUSIC_ALLOW_DIRECTORY_LISTING = ACTIVE_MUSIC_DISCOVERY_SETTINGS?.allowDirectoryListing === true;
 
 const DEFAULT_IMAGE_FEED_SETTINGS = Object.freeze({
   enabledByDefault: true,
