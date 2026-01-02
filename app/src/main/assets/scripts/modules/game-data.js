@@ -356,15 +356,7 @@ const COLLECTION_VIDEO_DEFINITION_MAP = new Map(
   COLLECTION_VIDEO_DEFINITIONS.map(def => [def.id, def])
 );
 
-const configElements = Array.isArray(CONFIG.elements) ? CONFIG.elements : [];
-
 const elementConfigByAtomicNumber = new Map();
-configElements.forEach(entry => {
-  if (!entry || typeof entry !== 'object') return;
-  const atomicNumber = Number(entry.numero ?? entry.number ?? entry.atomicNumber);
-  if (!Number.isFinite(atomicNumber)) return;
-  elementConfigByAtomicNumber.set(atomicNumber, entry);
-});
 
 function resolveElementRarity(definition) {
   if (!definition) return null;
@@ -383,14 +375,37 @@ function resolveElementRarity(definition) {
 }
 
 const elementRarityIndex = new Map();
-periodicElements.forEach(def => {
-  const rarity = resolveElementRarity(def);
-  if (rarity) {
-    elementRarityIndex.set(def.id, rarity);
-  }
-});
+const configuredRarityIds = new Set();
 
-const configuredRarityIds = new Set(elementRarityIndex.values());
+function rebuildElementConfigIndexes() {
+  elementConfigByAtomicNumber.clear();
+  const configElements = Array.isArray(CONFIG.elements) ? CONFIG.elements : [];
+  configElements.forEach(entry => {
+    if (!entry || typeof entry !== 'object') return;
+    const atomicNumber = Number(entry.numero ?? entry.number ?? entry.atomicNumber);
+    if (!Number.isFinite(atomicNumber)) return;
+    elementConfigByAtomicNumber.set(atomicNumber, entry);
+  });
+
+  elementRarityIndex.clear();
+  periodicElements.forEach(def => {
+    const rarity = resolveElementRarity(def);
+    if (rarity) {
+      elementRarityIndex.set(def.id, rarity);
+    }
+  });
+
+  configuredRarityIds.clear();
+  elementRarityIndex.forEach(rarity => {
+    configuredRarityIds.add(rarity);
+  });
+}
+
+rebuildElementConfigIndexes();
+
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('config:elements:update', rebuildElementConfigIndexes);
+}
 
 function normalizeFusionElementList(source) {
   const normalized = [];
