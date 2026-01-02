@@ -4946,18 +4946,6 @@
 
       // Performance monitor overlay - Bottom left, large size for mobile visibility
       if (this.performanceMonitor.enabled) {
-        const boxWidth = 560;
-        const boxHeight = 200;
-        const boxX = 10;
-        const boxY = this.height - boxHeight - 10;
-
-        ctx.save();
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-        ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-        ctx.strokeStyle = '#00ff00';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-        ctx.restore();
       }
     }
 
