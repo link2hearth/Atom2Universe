@@ -3555,39 +3555,6 @@ function getRadioProxyOnlyOrigins() {
     .filter(Boolean);
 }
 
-function getRadioDisableRemoteOrigins() {
-  const settings = getRadioSettings();
-  const rawOrigins = Array.isArray(settings?.disableRemoteOrigins) ? settings.disableRemoteOrigins : [];
-  const normalized = rawOrigins
-    .map(origin => (typeof origin === 'string' ? origin.trim() : ''))
-    .filter(Boolean);
-  if (normalized.length) {
-    return normalized;
-  }
-  const fallback = Array.isArray(DEFAULT_RADIO_SETTINGS?.disableRemoteOrigins)
-    ? DEFAULT_RADIO_SETTINGS.disableRemoteOrigins
-    : [];
-  return fallback
-    .map(origin => (typeof origin === 'string' ? origin.trim() : ''))
-    .filter(Boolean);
-}
-
-function isRadioRemoteEnabled() {
-  if (typeof window === 'undefined') {
-    return true;
-  }
-  const protocol = window.location?.protocol || '';
-  if (protocol === 'file:') {
-    return false;
-  }
-  const origin = window.location?.origin || '';
-  const disabledOrigins = getRadioDisableRemoteOrigins();
-  if (!origin || !disabledOrigins.length) {
-    return true;
-  }
-  return !disabledOrigins.includes(origin);
-}
-
 function shouldUseRadioProxyOnly() {
   const proxyBaseUrls = getRadioProxyBaseUrls();
   if (!proxyBaseUrls.length || typeof window === 'undefined') {
@@ -3625,9 +3592,6 @@ function buildRadioProxyUrl(proxyBase, targetUrl) {
 }
 
 function buildRadioRequestUrls(path, configureUrl) {
-  if (!isRadioRemoteEnabled()) {
-    return [];
-  }
   const servers = getRadioServers();
   const proxyBaseUrls = getRadioProxyBaseUrls();
   const targets = servers.map(server => {
@@ -4185,9 +4149,6 @@ function normalizeRadioDirectoryEntries(items, labelField = 'name') {
 
 async function fetchRadioDirectory(path) {
   const urls = buildRadioRequestUrls(path);
-  if (!urls.length) {
-    throw new Error('Radio directory disabled');
-  }
   let lastError = null;
   for (let index = 0; index < urls.length; index += 1) {
     const url = urls[index];
@@ -4225,10 +4186,6 @@ async function ensureRadioFiltersLoaded() {
   }
   radioFiltersPromise = (async () => {
     try {
-      if (!isRadioRemoteEnabled()) {
-        setRadioStatus('index.sections.radio.status.filtersError', 'Impossible de charger les listes de pays et langues.');
-        return;
-      }
       const showLoadingStatus = !radioCountries.length && !radioLanguages.length && !radioIsLoading;
       if (showLoadingStatus) {
         setRadioStatus('index.sections.radio.status.filtersLoading', 'Chargement des filtres en cours…');
@@ -4615,12 +4572,6 @@ async function searchRadioStations(params = {}) {
   const country = typeof params.country === 'string' ? params.country.trim() : '';
   const language = typeof params.language === 'string' ? params.language.trim() : '';
   radioLastError = null;
-  if (!isRadioRemoteEnabled()) {
-    setRadioStatus('index.sections.radio.status.error', 'Impossible de récupérer les stations.');
-    radioStations = [];
-    renderRadioResults();
-    return;
-  }
   setRadioLoading(true);
   setRadioStatus('index.sections.radio.status.loading', 'Recherche de stations en cours…');
   if (radioSearchAbortController) {
