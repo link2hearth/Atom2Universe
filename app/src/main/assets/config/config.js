@@ -256,7 +256,6 @@ const MUSIC_DISCOVERY_SETTINGS = Object.freeze({
  * - `servers` : liste ordonnée des hôtes à interroger (mêmes endpoints sur chaque serveur).
  * - `proxyBaseUrls` : proxys HTTP facultatifs pour contourner le CORS.
  * - `proxyOnlyOrigins` : origines qui doivent obligatoirement utiliser un proxy.
- * - `disableRemoteOrigins` : origines où les appels réseau sont désactivés.
  * - `requestTimeoutMs` : délai maximal avant d’abandonner une requête.
  * - `maxResults` : limite par défaut du nombre de stations retournées.
  * - `hideBroken` : filtre les stations cassées.
@@ -269,7 +268,6 @@ const RADIO_SETTINGS = Object.freeze({
     'https://corsproxy.io/?{url}'
   ],
   proxyOnlyOrigins: ['https://appassets.androidplatform.net'],
-  disableRemoteOrigins: ['https://appassets.androidplatform.net'],
   requestTimeoutMs: 12000,
   maxResults: 50,
   hideBroken: true,

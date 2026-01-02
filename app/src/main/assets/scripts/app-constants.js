@@ -213,7 +213,6 @@ const DEFAULT_RADIO_SETTINGS = Object.freeze({
     'https://corsproxy.io/?{url}'
   ],
   proxyOnlyOrigins: ['https://appassets.androidplatform.net'],
-  disableRemoteOrigins: ['https://appassets.androidplatform.net'],
   requestTimeoutMs: 12000,
   maxResults: 50,
   hideBroken: true,
