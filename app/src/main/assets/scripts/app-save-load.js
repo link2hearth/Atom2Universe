@@ -26,6 +26,59 @@ function normalizeSavedElementCollection(rawElements) {
   return null;
 }
 
+function normalizeSavedElementCounts(saved) {
+  if (saved == null) {
+    return { count: 0, lifetime: 0 };
+  }
+  const isObject = typeof saved === 'object';
+  const hasCountField = isObject && Object.prototype.hasOwnProperty.call(saved, 'count');
+  const rawCount = isObject
+    ? Number(
+      saved.count
+        ?? saved.quantity
+        ?? saved.total
+        ?? saved.totalCount
+        ?? saved.current
+        ?? saved.active
+        ?? saved.copies
+        ?? saved.copy
+        ?? saved.amount
+        ?? saved.value
+    )
+    : Number(saved);
+  let normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+    ? Math.floor(rawCount)
+    : 0;
+  const rawLifetime = isObject
+    ? Number(
+      saved.lifetime
+        ?? saved.lifetimeCount
+        ?? saved.totalLifetime
+        ?? saved.collected
+        ?? saved.collectedCount
+        ?? saved.ownedCount
+        ?? saved.totalOwned
+    )
+    : Number.NaN;
+  let normalizedLifetime = Number.isFinite(rawLifetime) && rawLifetime > 0
+    ? Math.floor(rawLifetime)
+    : 0;
+  if (!hasCountField && normalizedCount === 0) {
+    if (normalizedLifetime > 0) {
+      normalizedCount = normalizedLifetime;
+    } else if (isObject && saved.owned) {
+      normalizedCount = 1;
+    }
+  }
+  if (normalizedLifetime === 0 && ((isObject && saved.owned) || normalizedCount > 0)) {
+    normalizedLifetime = Math.max(normalizedCount, 1);
+  }
+  if (normalizedLifetime < normalizedCount) {
+    normalizedLifetime = normalizedCount;
+  }
+  return { count: normalizedCount, lifetime: normalizedLifetime };
+}
+
 function applySerializedGameState(raw) {
   resetFrenzyState({ skipApply: true });
   gameState.baseCrit = createDefaultCritState();
@@ -256,29 +309,7 @@ function applySerializedGameState(raw) {
     Object.entries(storedElements).forEach(([id, saved]) => {
       if (!baseCollection[id]) return;
       const reference = baseCollection[id];
-      const hasCountField = saved && typeof saved === 'object'
-        && Object.prototype.hasOwnProperty.call(saved, 'count');
-      const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
-      let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
-        ? Math.floor(savedCount)
-        : 0;
-      const savedLifetime = Number(saved?.lifetime);
-      let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
-        ? Math.floor(savedLifetime)
-        : 0;
-      if (!hasCountField && normalizedCount === 0) {
-        if (normalizedLifetime > 0) {
-          normalizedCount = normalizedLifetime;
-        } else if (saved?.owned) {
-          normalizedCount = 1;
-        }
-      }
-      if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
-        normalizedLifetime = Math.max(normalizedCount, 1);
-      }
-      if (normalizedLifetime < normalizedCount) {
-        normalizedLifetime = normalizedCount;
-      }
+      const { count: normalizedCount, lifetime: normalizedLifetime } = normalizeSavedElementCounts(saved);
       baseCollection[id] = {
         id,
         gachaId: reference.gachaId,
@@ -851,47 +882,25 @@ function loadGame() {
     if (intervalChanged) {
       resetTicketStarState({ reschedule: true });
     }
-    const baseCollection = createInitialElementCollection();
-    const storedElements = normalizeSavedElementCollection(data.elements);
-    if (storedElements) {
+  const baseCollection = createInitialElementCollection();
+  const storedElements = normalizeSavedElementCollection(data.elements);
+  if (storedElements) {
     Object.entries(storedElements).forEach(([id, saved]) => {
       if (!baseCollection[id]) return;
       const reference = baseCollection[id];
-      const hasCountField = saved && typeof saved === 'object'
-        && Object.prototype.hasOwnProperty.call(saved, 'count');
-      const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
-      let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
-        ? Math.floor(savedCount)
-        : 0;
-      const savedLifetime = Number(saved?.lifetime);
-      let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
-        ? Math.floor(savedLifetime)
-        : 0;
-      if (!hasCountField && normalizedCount === 0) {
-        if (normalizedLifetime > 0) {
-          normalizedCount = normalizedLifetime;
-        } else if (saved?.owned) {
-          normalizedCount = 1;
-        }
-      }
-      if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
-        normalizedLifetime = Math.max(normalizedCount, 1);
-      }
-        if (normalizedLifetime < normalizedCount) {
-          normalizedLifetime = normalizedCount;
-        }
-        baseCollection[id] = {
-          id,
-          gachaId: reference.gachaId,
-          owned: normalizedLifetime > 0,
-          count: normalizedCount,
-          lifetime: normalizedLifetime,
-          rarity: reference.rarity ?? (typeof saved?.rarity === 'string' ? saved.rarity : null),
-          effects: Array.isArray(reference?.effects) ? [...reference.effects] : [],
-          bonuses: Array.isArray(reference?.bonuses) ? [...reference.bonuses] : []
-        };
-      });
-    }
+      const { count: normalizedCount, lifetime: normalizedLifetime } = normalizeSavedElementCounts(saved);
+      baseCollection[id] = {
+        id,
+        gachaId: reference.gachaId,
+        owned: normalizedLifetime > 0,
+        count: normalizedCount,
+        lifetime: normalizedLifetime,
+        rarity: reference.rarity ?? (typeof saved?.rarity === 'string' ? saved.rarity : null),
+        effects: Array.isArray(reference?.effects) ? [...reference.effects] : [],
+        bonuses: Array.isArray(reference?.bonuses) ? [...reference.bonuses] : []
+      };
+    });
+  }
     gameState.elements = baseCollection;
     const baseCardCollection = createInitialGachaCardCollection();
     if (data.gachaCards && typeof data.gachaCards === 'object') {
