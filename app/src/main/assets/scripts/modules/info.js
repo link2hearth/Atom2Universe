@@ -288,6 +288,9 @@ if (typeof window !== 'undefined') {
   window.addEventListener('i18n:languagechange', () => {
     COLLECTION_BONUS_OVERVIEW_CACHE.clear();
   });
+  window.addEventListener('config:collection-bonuses:update', () => {
+    COLLECTION_BONUS_OVERVIEW_CACHE.clear();
+  });
 }
 
 function formatSignedBonus(value, { forcePlus = true } = {}) {
