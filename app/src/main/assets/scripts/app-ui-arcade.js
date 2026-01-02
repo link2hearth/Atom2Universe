@@ -855,6 +855,8 @@ function updateHeaderBannerToggleLabel(collapsed) {
   }
 }
 
+let headerBannerResizeObserver = null;
+
 function updateHeaderBackgroundOffset() {
   if (typeof document === 'undefined') {
     return;
@@ -940,6 +942,15 @@ function initHeaderBannerToggle() {
   const initiallyCollapsed = readStoredHeaderCollapsed(false);
   setHeaderCollapsed(initiallyCollapsed, { persist: false, force: true });
   updateHeaderBackgroundOffset();
+  if (typeof window !== 'undefined' && typeof window.ResizeObserver === 'function') {
+    if (headerBannerResizeObserver) {
+      headerBannerResizeObserver.disconnect();
+    }
+    headerBannerResizeObserver = new window.ResizeObserver(() => {
+      updateHeaderBackgroundOffset();
+    });
+    headerBannerResizeObserver.observe(elements.appHeader);
+  }
   elements.headerBannerToggle.addEventListener('click', event => {
     event.preventDefault();
     toggleHeaderCollapsed();
