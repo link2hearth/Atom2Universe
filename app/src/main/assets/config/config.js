@@ -1507,16 +1507,6 @@ function refreshGachaSystemConfig() {
       ? RAW_GACHA_CONFIG.weeklyRarityWeights
       : {}
   );
-  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
-    try {
-      const event = typeof CustomEvent === 'function'
-        ? new CustomEvent('config:gacha:update', { detail: { config: GACHA_SYSTEM_CONFIG } })
-        : new Event('config:gacha:update');
-      window.dispatchEvent(event);
-    } catch (error) {
-      console.warn('Unable to notify gacha configuration update', error);
-    }
-  }
 }
 
 refreshGachaSystemConfig();
@@ -1531,16 +1521,6 @@ function refreshFusionSystemConfig() {
     FUSION_SYSTEM_CONFIG,
     Array.isArray(RAW_FUSION_SYSTEM_CONFIG?.fusions) ? RAW_FUSION_SYSTEM_CONFIG.fusions : []
   );
-  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
-    try {
-      const event = typeof CustomEvent === 'function'
-        ? new CustomEvent('config:fusions:update', { detail: { fusions: FUSION_SYSTEM_CONFIG } })
-        : new Event('config:fusions:update');
-      window.dispatchEvent(event);
-    } catch (error) {
-      console.warn('Unable to notify fusion configuration update', error);
-    }
-  }
 }
 
 refreshFusionSystemConfig();
