@@ -168,110 +168,65 @@ const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE = 1 / 500;
 const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_CHANCE = 1 / 500;
 const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 10;
 
-const COLLECTION_VIDEO_DEFINITION_INDEX = new Map();
-const COLLECTION_VIDEO_ALL_IDS = [];
+const COLLECTION_VIDEO_DEFINITION_INDEX = new Map(
+  Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
+    ? COLLECTION_VIDEO_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
 
-const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map();
-const BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX = new Map();
-const BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX = new Map();
-const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map();
-const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map();
+const COLLECTION_VIDEO_ALL_IDS = Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
+  ? COLLECTION_VIDEO_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
 
-const BONUS_GACHA_IMAGE_ALL_IDS = [];
-const BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS = [];
-const BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS = [];
-const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS = [];
-const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS = [];
+const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
 
-function rebuildCollectionVideoIndexes() {
-  COLLECTION_VIDEO_DEFINITION_INDEX.clear();
-  COLLECTION_VIDEO_ALL_IDS.length = 0;
-  if (!Array.isArray(COLLECTION_VIDEO_DEFINITIONS)) {
-    return;
-  }
-  COLLECTION_VIDEO_DEFINITIONS.forEach(def => {
-    if (def?.id) {
-      COLLECTION_VIDEO_DEFINITION_INDEX.set(def.id, def);
-      COLLECTION_VIDEO_ALL_IDS.push(def.id);
-    }
-  });
-}
+const BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
 
-function rebuildBonusGachaImageIndexes() {
-  BONUS_GACHA_IMAGE_DEFINITION_INDEX.clear();
-  BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.clear();
-  BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX.clear();
-  BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX.clear();
-  BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX.clear();
-  BONUS_GACHA_IMAGE_ALL_IDS.length = 0;
-  BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.length = 0;
-  BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS.length = 0;
-  BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.length = 0;
-  BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS.length = 0;
+const BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
 
-  if (Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)) {
-    GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.forEach(def => {
-      if (!def?.id) return;
-      BONUS_GACHA_IMAGE_DEFINITION_INDEX.set(def.id, def);
-      BONUS_GACHA_IMAGE_ALL_IDS.push(def.id);
-    });
-  }
+const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
 
-  if (Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
-    GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
-      if (!def?.id) return;
-      BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.set(def.id, def);
-      BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.push(def.id);
-    });
-  }
+const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
+  Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+    ? GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
+    : []
+);
 
-  if (Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
-    GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
-      if (!def?.id) return;
-      BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX.set(def.id, def);
-      BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS.push(def.id);
-    });
-  }
+const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
 
-  if (Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
-    GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
-      if (!def?.id) return;
-      BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX.set(def.id, def);
-      BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.push(def.id);
-    });
-  }
+const BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
 
-  if (Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
-    GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
-      if (!def?.id) return;
-      BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX.set(def.id, def);
-      BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS.push(def.id);
-    });
-  }
-}
+const BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS = Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
 
-rebuildCollectionVideoIndexes();
-rebuildBonusGachaImageIndexes();
+const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
 
-if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-  window.addEventListener('config:gacha:update', () => {
-    if (typeof window.refreshGachaBonusImageDefinitions === 'function') {
-      window.refreshGachaBonusImageDefinitions();
-    }
-    rebuildBonusGachaImageIndexes();
-  });
-  window.addEventListener('config:elements:update', () => {
-    rebuildGachaPools();
-    if (elements.gachaRarityList) {
-      renderGachaRarityList();
-    } else {
-      updateGachaRarityProgress();
-    }
-  });
-  window.addEventListener('config:fusions:update', () => {
-    renderFusionList();
-  });
-}
+const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
+  ? GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
+  : [];
 
 const bonusGachaImageAssetAvailabilityCache = new Map();
 const missingBonusGachaImageIds = new Set();
