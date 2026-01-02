@@ -256,14 +256,23 @@ function applySerializedGameState(raw) {
     Object.entries(storedElements).forEach(([id, saved]) => {
       if (!baseCollection[id]) return;
       const reference = baseCollection[id];
-      const savedCount = Number(saved?.count);
-      const normalizedCount = Number.isFinite(savedCount) && savedCount > 0
+      const hasCountField = saved && typeof saved === 'object'
+        && Object.prototype.hasOwnProperty.call(saved, 'count');
+      const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
+      let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
         ? Math.floor(savedCount)
         : 0;
       const savedLifetime = Number(saved?.lifetime);
       let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
         ? Math.floor(savedLifetime)
         : 0;
+      if (!hasCountField && normalizedCount === 0) {
+        if (normalizedLifetime > 0) {
+          normalizedCount = normalizedLifetime;
+        } else if (saved?.owned) {
+          normalizedCount = 1;
+        }
+      }
       if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
         normalizedLifetime = Math.max(normalizedCount, 1);
       }
@@ -282,6 +291,7 @@ function applySerializedGameState(raw) {
       };
     });
   }
+  normalizeLegacyElementCounts(baseCollection);
   gameState.elements = baseCollection;
   const storedElementSummary = data.elementBonusSummary;
   gameState.elementBonusSummary = storedElementSummary && typeof storedElementSummary === 'object'
@@ -524,6 +534,41 @@ function applySerializedGameState(raw) {
   }
 }
 
+function normalizeLegacyElementCounts(collection) {
+  if (!collection || typeof collection !== 'object') {
+    return;
+  }
+  const entries = Object.values(collection);
+  if (!entries.length) {
+    return;
+  }
+  let totalCount = 0;
+  let totalLifetime = 0;
+  entries.forEach(entry => {
+    if (!entry || typeof entry !== 'object') {
+      return;
+    }
+    totalCount += getElementCurrentCount(entry);
+    totalLifetime += getElementLifetimeCount(entry);
+  });
+  if (totalCount !== 0 || totalLifetime === 0) {
+    return;
+  }
+  entries.forEach(entry => {
+    if (!entry || typeof entry !== 'object') {
+      return;
+    }
+    const lifetime = getElementLifetimeCount(entry);
+    if (lifetime > 0) {
+      entry.count = lifetime;
+      entry.owned = true;
+      if (entry.lifetime < lifetime) {
+        entry.lifetime = lifetime;
+      }
+    }
+  });
+}
+
 function loadGame() {
   try {
     resetFrenzyState({ skipApply: true });
@@ -560,6 +605,22 @@ function loadGame() {
         return null;
       }
     };
+    const getCandidateTimestamp = candidate => {
+      if (!candidate || !candidate.data || typeof candidate.data !== 'object') {
+        return 0;
+      }
+      const data = candidate.data;
+      const lastSave = Number(
+        data.lastSave
+        ?? data.updatedAt
+        ?? data.meta?.lastSave
+        ?? data.meta?.updatedAt
+        ?? 0
+      );
+      return Number.isFinite(lastSave) ? lastSave : 0;
+    };
+    let localCandidate = null;
+    let nativeCandidate = null;
     try {
       if (typeof localStorage !== 'undefined' && localStorage) {
         raw = localStorage.getItem(PRIMARY_SAVE_STORAGE_KEY);
@@ -567,28 +628,36 @@ function loadGame() {
     } catch (error) {
       console.error('Erreur de lecture de la sauvegarde locale', error);
     }
-    const localCandidate = parseSaveCandidate(raw);
-    if (localCandidate) {
+    localCandidate = parseSaveCandidate(raw);
+    raw = null;
+    const nativeRaw = readNativeSaveData();
+    if (nativeRaw) {
+      nativeCandidate = parseSaveCandidate(nativeRaw);
+    }
+    if (localCandidate && nativeCandidate) {
+      const localTimestamp = getCandidateTimestamp(localCandidate);
+      const nativeTimestamp = getCandidateTimestamp(nativeCandidate);
+      if (nativeTimestamp >= localTimestamp) {
+        raw = nativeCandidate.raw;
+        parsedData = nativeCandidate.data;
+      } else {
+        raw = localCandidate.raw;
+        parsedData = localCandidate.data;
+      }
+    } else if (nativeCandidate) {
+      raw = nativeCandidate.raw;
+      parsedData = nativeCandidate.data;
+    } else if (localCandidate) {
       raw = localCandidate.raw;
       parsedData = localCandidate.data;
-    } else {
-      raw = null;
     }
-    if (!raw) {
-      const nativeRaw = readNativeSaveData();
-      if (nativeRaw) {
-        const nativeCandidate = parseSaveCandidate(nativeRaw);
-        if (nativeCandidate) {
-          raw = nativeCandidate.raw;
-          parsedData = nativeCandidate.data;
+    if (raw) {
+      try {
+        if (typeof localStorage !== 'undefined' && localStorage) {
+          localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, raw);
         }
-        try {
-          if (typeof localStorage !== 'undefined' && localStorage) {
-            localStorage.setItem(PRIMARY_SAVE_STORAGE_KEY, raw || nativeRaw);
-          }
-        } catch (syncError) {
-          console.warn('Unable to sync native save with local storage', syncError);
-        }
+      } catch (syncError) {
+        console.warn('Unable to sync native save with local storage', syncError);
       }
     }
     if (!raw && reloadSnapshot) {
@@ -832,14 +901,23 @@ function loadGame() {
       Object.entries(storedElements).forEach(([id, saved]) => {
         if (!baseCollection[id]) return;
         const reference = baseCollection[id];
-        const savedCount = Number(saved?.count);
-        const normalizedCount = Number.isFinite(savedCount) && savedCount > 0
+        const hasCountField = saved && typeof saved === 'object'
+          && Object.prototype.hasOwnProperty.call(saved, 'count');
+        const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
+        let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
           ? Math.floor(savedCount)
           : 0;
         const savedLifetime = Number(saved?.lifetime);
         let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
           ? Math.floor(savedLifetime)
           : 0;
+        if (!hasCountField && normalizedCount === 0) {
+          if (normalizedLifetime > 0) {
+            normalizedCount = normalizedLifetime;
+          } else if (saved?.owned) {
+            normalizedCount = 1;
+          }
+        }
         if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
           normalizedLifetime = Math.max(normalizedCount, 1);
         }
@@ -858,6 +936,7 @@ function loadGame() {
         };
       });
     }
+    normalizeLegacyElementCounts(baseCollection);
     gameState.elements = baseCollection;
     const baseCardCollection = createInitialGachaCardCollection();
     if (data.gachaCards && typeof data.gachaCards === 'object') {
