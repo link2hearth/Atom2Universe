@@ -264,6 +264,16 @@ function rebuildBonusGachaImageIndexes() {
 rebuildCollectionVideoIndexes();
 rebuildBonusGachaImageIndexes();
 
+function getElementsRef() {
+  if (typeof elements !== 'undefined') {
+    return elements;
+  }
+  if (typeof globalThis !== 'undefined' && globalThis.elements) {
+    return globalThis.elements;
+  }
+  return null;
+}
+
 if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
   window.addEventListener('config:gacha:update', () => {
     if (typeof window.refreshGachaBonusImageDefinitions === 'function') {
@@ -273,14 +283,18 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
   });
   window.addEventListener('config:elements:update', () => {
     rebuildGachaPools();
-    if (elements.gachaRarityList) {
+    const appElements = getElementsRef();
+    if (appElements && appElements.gachaRarityList) {
       renderGachaRarityList();
     } else {
       updateGachaRarityProgress();
     }
   });
   window.addEventListener('config:fusions:update', () => {
-    renderFusionList();
+    const appElements = getElementsRef();
+    if (appElements && appElements.fusionList) {
+      renderFusionList();
+    }
   });
 }
 
