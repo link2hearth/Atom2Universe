@@ -291,7 +291,6 @@ function applySerializedGameState(raw) {
       };
     });
   }
-  normalizeLegacyElementCounts(baseCollection);
   gameState.elements = baseCollection;
   const storedElementSummary = data.elementBonusSummary;
   gameState.elementBonusSummary = storedElementSummary && typeof storedElementSummary === 'object'
@@ -532,41 +531,6 @@ function applySerializedGameState(raw) {
     const diff = Math.max(0, (Date.now() - data.lastSave) / 1000);
     applyOfflineProgress(diff);
   }
-}
-
-function normalizeLegacyElementCounts(collection) {
-  if (!collection || typeof collection !== 'object') {
-    return;
-  }
-  const entries = Object.values(collection);
-  if (!entries.length) {
-    return;
-  }
-  let totalCount = 0;
-  let totalLifetime = 0;
-  entries.forEach(entry => {
-    if (!entry || typeof entry !== 'object') {
-      return;
-    }
-    totalCount += getElementCurrentCount(entry);
-    totalLifetime += getElementLifetimeCount(entry);
-  });
-  if (totalCount !== 0 || totalLifetime === 0) {
-    return;
-  }
-  entries.forEach(entry => {
-    if (!entry || typeof entry !== 'object') {
-      return;
-    }
-    const lifetime = getElementLifetimeCount(entry);
-    if (lifetime > 0) {
-      entry.count = lifetime;
-      entry.owned = true;
-      if (entry.lifetime < lifetime) {
-        entry.lifetime = lifetime;
-      }
-    }
-  });
 }
 
 function loadGame() {
@@ -898,28 +862,24 @@ function loadGame() {
     const baseCollection = createInitialElementCollection();
     const storedElements = normalizeSavedElementCollection(data.elements);
     if (storedElements) {
-      Object.entries(storedElements).forEach(([id, saved]) => {
-        if (!baseCollection[id]) return;
-        const reference = baseCollection[id];
-        const hasCountField = saved && typeof saved === 'object'
-          && Object.prototype.hasOwnProperty.call(saved, 'count');
-        const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
-        let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
-          ? Math.floor(savedCount)
-          : 0;
-        const savedLifetime = Number(saved?.lifetime);
-        let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
-          ? Math.floor(savedLifetime)
-          : 0;
-        if (!hasCountField && normalizedCount === 0) {
-          if (normalizedLifetime > 0) {
-            normalizedCount = normalizedLifetime;
-          } else if (saved?.owned) {
-            normalizedCount = 1;
-          }
-        }
-        if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
-          normalizedLifetime = Math.max(normalizedCount, 1);
+    Object.entries(storedElements).forEach(([id, saved]) => {
+      if (!baseCollection[id]) return;
+      const reference = baseCollection[id];
+      const hasCountField = saved && typeof saved === 'object'
+        && Object.prototype.hasOwnProperty.call(saved, 'count');
+      const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
+      let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
+        ? Math.floor(savedCount)
+        : 0;
+      const savedLifetime = Number(saved?.lifetime);
+      let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
+        ? Math.floor(savedLifetime)
+        : 0;
+      if (!hasCountField && normalizedCount === 0) {
+        if (normalizedLifetime > 0) {
+          normalizedCount = normalizedLifetime;
+        } else if (saved?.owned) {
+          normalizedCount = 1;
         }
       }
       if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
@@ -940,7 +900,6 @@ function loadGame() {
         };
       });
     }
-    normalizeLegacyElementCounts(baseCollection);
     gameState.elements = baseCollection;
     const baseCardCollection = createInitialGachaCardCollection();
     if (data.gachaCards && typeof data.gachaCards === 'object') {
