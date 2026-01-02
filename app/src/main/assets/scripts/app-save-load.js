@@ -921,6 +921,10 @@ function loadGame() {
         if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
           normalizedLifetime = Math.max(normalizedCount, 1);
         }
+      }
+      if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
+        normalizedLifetime = Math.max(normalizedCount, 1);
+      }
         if (normalizedLifetime < normalizedCount) {
           normalizedLifetime = normalizedCount;
         }
