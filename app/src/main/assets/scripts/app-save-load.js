@@ -26,216 +26,6 @@ function normalizeSavedElementCollection(rawElements) {
   return null;
 }
 
-let pendingGachaImageData = null;
-let pendingGachaBonusImageData = null;
-let pendingFusionData = null;
-
-function hasGachaImageDefinitions() {
-  return Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
-    && GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.length > 0;
-}
-
-function hasGachaBonusImageDefinitions() {
-  const lists = [
-    GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS,
-    GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS,
-    GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS,
-    GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS
-  ];
-  return lists.some(list => Array.isArray(list) && list.length > 0);
-}
-
-function hasFusionDefinitions() {
-  return Array.isArray(FUSION_DEFS) && FUSION_DEFS.length > 0;
-}
-
-function buildGachaImageCollectionFromSave(storedImages, storedCounter) {
-  const collection = createInitialGachaImageCollection();
-  let inferredImageAcquisitionCounter = 0;
-  if (storedImages && typeof storedImages === 'object') {
-    Object.entries(storedImages).forEach(([imageId, stored]) => {
-      const reference = collection[imageId];
-      if (!reference) {
-        return;
-      }
-      const rawCount = Number(stored?.count ?? stored);
-      const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
-        ? Math.floor(rawCount)
-        : 0;
-      reference.count = normalizedCount;
-      if (normalizedCount > 0) {
-        const storedOrder = Number(stored?.acquiredOrder);
-        if (Number.isFinite(storedOrder) && storedOrder > 0) {
-          reference.acquiredOrder = Math.floor(storedOrder);
-          if (reference.acquiredOrder > inferredImageAcquisitionCounter) {
-            inferredImageAcquisitionCounter = reference.acquiredOrder;
-          }
-        }
-        const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
-        if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
-          reference.firstAcquiredAt = storedFirstAcquiredAt;
-        }
-      }
-    });
-  }
-  const storedImageCounter = Number(storedCounter);
-  const counter = Number.isFinite(storedImageCounter) && storedImageCounter > inferredImageAcquisitionCounter
-    ? Math.floor(storedImageCounter)
-    : inferredImageAcquisitionCounter;
-  return { collection, counter };
-}
-
-function buildGachaBonusImageCollectionFromSave(storedImages, storedCounter) {
-  const collection = createInitialGachaBonusImageCollection();
-  let inferredBonusImageAcquisitionCounter = 0;
-  if (storedImages && typeof storedImages === 'object') {
-    Object.entries(storedImages).forEach(([imageId, stored]) => {
-      const reference = collection[imageId];
-      if (!reference) {
-        return;
-      }
-      const rawCount = Number(stored?.count ?? stored);
-      const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
-        ? Math.floor(rawCount)
-        : 0;
-      reference.count = normalizedCount;
-      if (normalizedCount > 0) {
-        const storedOrder = Number(stored?.acquiredOrder);
-        if (Number.isFinite(storedOrder) && storedOrder > 0) {
-          reference.acquiredOrder = Math.floor(storedOrder);
-          if (reference.acquiredOrder > inferredBonusImageAcquisitionCounter) {
-            inferredBonusImageAcquisitionCounter = reference.acquiredOrder;
-          }
-        }
-        const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
-        if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
-          reference.firstAcquiredAt = storedFirstAcquiredAt;
-        }
-      }
-    });
-  }
-  const storedBonusCounter = Number(storedCounter);
-  const counter = Number.isFinite(storedBonusCounter) && storedBonusCounter > inferredBonusImageAcquisitionCounter
-    ? Math.floor(storedBonusCounter)
-    : inferredBonusImageAcquisitionCounter;
-  return { collection, counter };
-}
-
-function buildFusionStateFromSave(storedFusions) {
-  const fusionState = createInitialFusionState();
-  if (storedFusions && typeof storedFusions === 'object') {
-    Object.keys(fusionState).forEach(id => {
-      const stored = storedFusions[id];
-      if (!stored || typeof stored !== 'object') {
-        fusionState[id] = { attempts: 0, successes: 0 };
-        return;
-      }
-      const attemptsRaw = Number(
-        stored.attempts
-          ?? stored.tries
-          ?? stored.tentatives
-          ?? stored.total
-          ?? 0
-      );
-      const successesRaw = Number(
-        stored.successes
-          ?? stored.success
-          ?? stored.victories
-          ?? stored.wins
-          ?? 0
-      );
-      fusionState[id] = {
-        attempts: Number.isFinite(attemptsRaw) && attemptsRaw > 0 ? Math.floor(attemptsRaw) : 0,
-        successes: Number.isFinite(successesRaw) && successesRaw > 0 ? Math.floor(successesRaw) : 0
-      };
-    });
-  }
-  return fusionState;
-}
-
-function mergeGachaImageCollectionWithDefinitions() {
-  const baseCollection = createInitialGachaImageCollection();
-  if (!gameState.gachaImages || typeof gameState.gachaImages !== 'object') {
-    gameState.gachaImages = baseCollection;
-    return;
-  }
-  Object.keys(baseCollection).forEach(id => {
-    if (!gameState.gachaImages[id]) {
-      gameState.gachaImages[id] = baseCollection[id];
-    }
-  });
-}
-
-function mergeGachaBonusImageCollectionWithDefinitions() {
-  const baseCollection = createInitialGachaBonusImageCollection();
-  if (!gameState.gachaBonusImages || typeof gameState.gachaBonusImages !== 'object') {
-    gameState.gachaBonusImages = baseCollection;
-    return;
-  }
-  Object.keys(baseCollection).forEach(id => {
-    if (!gameState.gachaBonusImages[id]) {
-      gameState.gachaBonusImages[id] = baseCollection[id];
-    }
-  });
-}
-
-function mergeFusionStateWithDefinitions() {
-  const baseState = createInitialFusionState();
-  if (!gameState.fusions || typeof gameState.fusions !== 'object') {
-    gameState.fusions = baseState;
-    return;
-  }
-  Object.keys(baseState).forEach(id => {
-    if (!gameState.fusions[id]) {
-      gameState.fusions[id] = baseState[id];
-    }
-  });
-}
-
-function applyPendingCollections() {
-  let updated = false;
-  if (pendingGachaImageData && hasGachaImageDefinitions()) {
-    const { collection, counter } = buildGachaImageCollectionFromSave(
-      pendingGachaImageData.images,
-      pendingGachaImageData.counter
-    );
-    gameState.gachaImages = collection;
-    gameState.gachaImageAcquisitionCounter = counter;
-    pendingGachaImageData = null;
-    updated = true;
-  } else if (hasGachaImageDefinitions()) {
-    mergeGachaImageCollectionWithDefinitions();
-    updated = true;
-  }
-
-  if (pendingGachaBonusImageData && hasGachaBonusImageDefinitions()) {
-    const { collection, counter } = buildGachaBonusImageCollectionFromSave(
-      pendingGachaBonusImageData.images,
-      pendingGachaBonusImageData.counter
-    );
-    gameState.gachaBonusImages = collection;
-    gameState.gachaBonusImageAcquisitionCounter = counter;
-    pendingGachaBonusImageData = null;
-    updated = true;
-  } else if (hasGachaBonusImageDefinitions()) {
-    mergeGachaBonusImageCollectionWithDefinitions();
-    updated = true;
-  }
-
-  if (pendingFusionData && hasFusionDefinitions()) {
-    gameState.fusions = buildFusionStateFromSave(pendingFusionData);
-    pendingFusionData = null;
-    updated = true;
-  } else if (hasFusionDefinitions()) {
-    mergeFusionStateWithDefinitions();
-    updated = true;
-  }
-
-  if (updated) {
-    updateUI();
-  }
-}
-
 function applySerializedGameState(raw) {
   resetFrenzyState({ skipApply: true });
   gameState.baseCrit = createDefaultCritState();
@@ -520,17 +310,40 @@ function applySerializedGameState(raw) {
     gameState.gachaCards = createInitialGachaCardCollection();
   }
   const storedGachaImages = data.gachaImages;
-  const imageCollection = buildGachaImageCollectionFromSave(
-    storedGachaImages,
-    data.gachaImageAcquisitionCounter
-  );
-  gameState.gachaImages = imageCollection.collection;
-  gameState.gachaImageAcquisitionCounter = imageCollection.counter;
-  if (storedGachaImages && typeof storedGachaImages === 'object' && !hasGachaImageDefinitions()) {
-    pendingGachaImageData = {
-      images: storedGachaImages,
-      counter: data.gachaImageAcquisitionCounter
-    };
+  const baseImageCollection = createInitialGachaImageCollection();
+  let inferredImageAcquisitionCounter = 0;
+  if (storedGachaImages && typeof storedGachaImages === 'object') {
+    Object.entries(storedGachaImages).forEach(([imageId, stored]) => {
+      const reference = baseImageCollection[imageId];
+      if (!reference) {
+        return;
+      }
+      const rawCount = Number(stored?.count ?? stored);
+      const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+        ? Math.floor(rawCount)
+        : 0;
+      reference.count = normalizedCount;
+      if (normalizedCount > 0) {
+        const storedOrder = Number(stored?.acquiredOrder);
+        if (Number.isFinite(storedOrder) && storedOrder > 0) {
+          reference.acquiredOrder = Math.floor(storedOrder);
+          if (reference.acquiredOrder > inferredImageAcquisitionCounter) {
+            inferredImageAcquisitionCounter = reference.acquiredOrder;
+          }
+        }
+        const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+        if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+          reference.firstAcquiredAt = storedFirstAcquiredAt;
+        }
+      }
+    });
+  }
+  gameState.gachaImages = baseImageCollection;
+  const storedImageCounter = Number(data.gachaImageAcquisitionCounter);
+  if (Number.isFinite(storedImageCounter) && storedImageCounter > inferredImageAcquisitionCounter) {
+    gameState.gachaImageAcquisitionCounter = Math.floor(storedImageCounter);
+  } else {
+    gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
   }
   const baseVideoCollection = createInitialCollectionVideoCollection();
   if (data.collectionVideos && typeof data.collectionVideos === 'object') {
@@ -560,23 +373,70 @@ function applySerializedGameState(raw) {
   gameState.collectionVideos = baseVideoCollection;
   persistCollectionVideoUnlockState(hasOwnedCollectionVideos());
   syncCollectionVideoStateSnapshot({ collection: baseVideoCollection });
-  const storedBonusImages = data.gachaBonusImages;
-  const bonusImageCollection = buildGachaBonusImageCollectionFromSave(
-    storedBonusImages,
-    data.gachaBonusImageAcquisitionCounter
-  );
-  gameState.gachaBonusImages = bonusImageCollection.collection;
-  gameState.gachaBonusImageAcquisitionCounter = bonusImageCollection.counter;
-  if (storedBonusImages && typeof storedBonusImages === 'object' && !hasGachaBonusImageDefinitions()) {
-    pendingGachaBonusImageData = {
-      images: storedBonusImages,
-      counter: data.gachaBonusImageAcquisitionCounter
-    };
+  const baseBonusImageCollection = createInitialGachaBonusImageCollection();
+  let inferredBonusImageAcquisitionCounter = 0;
+  if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
+    Object.entries(data.gachaBonusImages).forEach(([imageId, stored]) => {
+      const reference = baseBonusImageCollection[imageId];
+      if (!reference) {
+        return;
+      }
+      const rawCount = Number(stored?.count ?? stored);
+      const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+        ? Math.floor(rawCount)
+        : 0;
+      reference.count = normalizedCount;
+      if (normalizedCount > 0) {
+        const storedOrder = Number(stored?.acquiredOrder);
+        if (Number.isFinite(storedOrder) && storedOrder > 0) {
+          reference.acquiredOrder = Math.floor(storedOrder);
+          if (reference.acquiredOrder > inferredBonusImageAcquisitionCounter) {
+            inferredBonusImageAcquisitionCounter = reference.acquiredOrder;
+          }
+        }
+        const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+        if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+          reference.firstAcquiredAt = storedFirstAcquiredAt;
+        }
+      }
+    });
   }
-  gameState.fusions = buildFusionStateFromSave(data.fusions);
-  if (data.fusions && typeof data.fusions === 'object' && !hasFusionDefinitions()) {
-    pendingFusionData = data.fusions;
+  gameState.gachaBonusImages = baseBonusImageCollection;
+  const storedBonusCounter = Number(data.gachaBonusImageAcquisitionCounter);
+  if (Number.isFinite(storedBonusCounter) && storedBonusCounter > inferredBonusImageAcquisitionCounter) {
+    gameState.gachaBonusImageAcquisitionCounter = Math.floor(storedBonusCounter);
+  } else {
+    gameState.gachaBonusImageAcquisitionCounter = inferredBonusImageAcquisitionCounter;
   }
+  const fusionState = createInitialFusionState();
+  if (data.fusions && typeof data.fusions === 'object') {
+    Object.keys(fusionState).forEach(id => {
+      const stored = data.fusions[id];
+      if (!stored || typeof stored !== 'object') {
+        fusionState[id] = { attempts: 0, successes: 0 };
+        return;
+      }
+      const attemptsRaw = Number(
+        stored.attempts
+          ?? stored.tries
+          ?? stored.tentatives
+          ?? stored.total
+          ?? 0
+      );
+      const successesRaw = Number(
+        stored.successes
+          ?? stored.success
+          ?? stored.victories
+          ?? stored.wins
+          ?? 0
+      );
+      fusionState[id] = {
+        attempts: Number.isFinite(attemptsRaw) && attemptsRaw > 0 ? Math.floor(attemptsRaw) : 0,
+        successes: Number.isFinite(successesRaw) && successesRaw > 0 ? Math.floor(successesRaw) : 0
+      };
+    });
+  }
+  gameState.fusions = fusionState;
   gameState.fusionBonuses = normalizeStoredFusionBonuses(data.fusionBonuses);
   gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
   if (typeof data.newsEnabled === 'boolean') {
@@ -647,7 +507,6 @@ function applySerializedGameState(raw) {
   if (gameState.musicEnabled === false) {
     gameState.musicTrackId = null;
   }
-  applyPendingCollections();
   evaluatePageUnlocks({ save: false, deferUI: true });
   getShopUnlockSet();
   invalidateFeatureUnlockCache({ resetArcadeState: true });
@@ -1013,18 +872,40 @@ function loadGame() {
       });
     }
     gameState.gachaCards = baseCardCollection;
-    const storedGachaImages = data.gachaImages;
-    const imageCollection = buildGachaImageCollectionFromSave(
-      storedGachaImages,
-      data.gachaImageAcquisitionCounter
-    );
-    gameState.gachaImages = imageCollection.collection;
-    gameState.gachaImageAcquisitionCounter = imageCollection.counter;
-    if (storedGachaImages && typeof storedGachaImages === 'object' && !hasGachaImageDefinitions()) {
-      pendingGachaImageData = {
-        images: storedGachaImages,
-        counter: data.gachaImageAcquisitionCounter
-      };
+    const baseImageCollection = createInitialGachaImageCollection();
+    let inferredImageAcquisitionCounter = 0;
+    if (data.gachaImages && typeof data.gachaImages === 'object') {
+      Object.entries(data.gachaImages).forEach(([imageId, stored]) => {
+        const reference = baseImageCollection[imageId];
+        if (!reference) {
+          return;
+        }
+        const rawCount = Number(stored?.count ?? stored);
+        const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+          ? Math.floor(rawCount)
+          : 0;
+        reference.count = normalizedCount;
+        if (normalizedCount > 0) {
+          const storedOrder = Number(stored?.acquiredOrder);
+          if (Number.isFinite(storedOrder) && storedOrder > 0) {
+            reference.acquiredOrder = Math.floor(storedOrder);
+            if (reference.acquiredOrder > inferredImageAcquisitionCounter) {
+              inferredImageAcquisitionCounter = reference.acquiredOrder;
+            }
+          }
+          const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+          if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+            reference.firstAcquiredAt = storedFirstAcquiredAt;
+          }
+        }
+      });
+    }
+    gameState.gachaImages = baseImageCollection;
+    const storedImageCounter = Number(data.gachaImageAcquisitionCounter);
+    if (Number.isFinite(storedImageCounter) && storedImageCounter > inferredImageAcquisitionCounter) {
+      gameState.gachaImageAcquisitionCounter = Math.floor(storedImageCounter);
+    } else {
+      gameState.gachaImageAcquisitionCounter = inferredImageAcquisitionCounter;
     }
     const baseVideoCollection = createInitialCollectionVideoCollection();
     if (data.collectionVideos && typeof data.collectionVideos === 'object') {
@@ -1054,23 +935,70 @@ function loadGame() {
     gameState.collectionVideos = baseVideoCollection;
     persistCollectionVideoUnlockState(hasOwnedCollectionVideos());
     syncCollectionVideoStateSnapshot({ collection: baseVideoCollection });
-    const storedBonusImages = data.gachaBonusImages;
-    const bonusImageCollection = buildGachaBonusImageCollectionFromSave(
-      storedBonusImages,
-      data.gachaBonusImageAcquisitionCounter
-    );
-    gameState.gachaBonusImages = bonusImageCollection.collection;
-    gameState.gachaBonusImageAcquisitionCounter = bonusImageCollection.counter;
-    if (storedBonusImages && typeof storedBonusImages === 'object' && !hasGachaBonusImageDefinitions()) {
-      pendingGachaBonusImageData = {
-        images: storedBonusImages,
-        counter: data.gachaBonusImageAcquisitionCounter
-      };
+    const baseBonusImageCollection = createInitialGachaBonusImageCollection();
+    let inferredBonusImageAcquisitionCounter = 0;
+    if (data.gachaBonusImages && typeof data.gachaBonusImages === 'object') {
+      Object.entries(data.gachaBonusImages).forEach(([imageId, stored]) => {
+        const reference = baseBonusImageCollection[imageId];
+        if (!reference) {
+          return;
+        }
+        const rawCount = Number(stored?.count ?? stored);
+        const normalizedCount = Number.isFinite(rawCount) && rawCount > 0
+          ? Math.floor(rawCount)
+          : 0;
+        reference.count = normalizedCount;
+        if (normalizedCount > 0) {
+          const storedOrder = Number(stored?.acquiredOrder);
+          if (Number.isFinite(storedOrder) && storedOrder > 0) {
+            reference.acquiredOrder = Math.floor(storedOrder);
+            if (reference.acquiredOrder > inferredBonusImageAcquisitionCounter) {
+              inferredBonusImageAcquisitionCounter = reference.acquiredOrder;
+            }
+          }
+          const storedFirstAcquiredAt = Number(stored?.firstAcquiredAt);
+          if (Number.isFinite(storedFirstAcquiredAt) && storedFirstAcquiredAt > 0) {
+            reference.firstAcquiredAt = storedFirstAcquiredAt;
+          }
+        }
+      });
     }
-    gameState.fusions = buildFusionStateFromSave(data.fusions);
-    if (data.fusions && typeof data.fusions === 'object' && !hasFusionDefinitions()) {
-      pendingFusionData = data.fusions;
+    gameState.gachaBonusImages = baseBonusImageCollection;
+    const storedBonusCounter = Number(data.gachaBonusImageAcquisitionCounter);
+    if (Number.isFinite(storedBonusCounter) && storedBonusCounter > inferredBonusImageAcquisitionCounter) {
+      gameState.gachaBonusImageAcquisitionCounter = Math.floor(storedBonusCounter);
+    } else {
+      gameState.gachaBonusImageAcquisitionCounter = inferredBonusImageAcquisitionCounter;
     }
+    const fusionState = createInitialFusionState();
+    if (data.fusions && typeof data.fusions === 'object') {
+      Object.keys(fusionState).forEach(id => {
+        const stored = data.fusions[id];
+        if (!stored || typeof stored !== 'object') {
+          fusionState[id] = { attempts: 0, successes: 0 };
+          return;
+        }
+        const attemptsRaw = Number(
+          stored.attempts
+            ?? stored.tries
+            ?? stored.tentatives
+            ?? stored.total
+            ?? 0
+        );
+        const successesRaw = Number(
+          stored.successes
+            ?? stored.success
+            ?? stored.victories
+            ?? stored.wins
+            ?? 0
+        );
+        fusionState[id] = {
+          attempts: Number.isFinite(attemptsRaw) && attemptsRaw > 0 ? Math.floor(attemptsRaw) : 0,
+          successes: Number.isFinite(successesRaw) && successesRaw > 0 ? Math.floor(successesRaw) : 0
+        };
+      });
+    }
+    gameState.fusions = fusionState;
     gameState.fusionBonuses = normalizeStoredFusionBonuses(data.fusionBonuses);
     gameState.theme = getThemeDefinition(data.theme) ? data.theme : DEFAULT_THEME_ID;
     const storedBrickSkin = data.arcadeBrickSkin
@@ -1138,7 +1066,6 @@ function loadGame() {
     if (gameState.musicEnabled === false) {
       gameState.musicTrackId = null;
     }
-    applyPendingCollections();
     evaluatePageUnlocks({ save: false, deferUI: true });
     getShopUnlockSet();
     invalidateFeatureUnlockCache({ resetArcadeState: true });
@@ -1207,13 +1134,4 @@ function attemptRestoreFromBackup() {
     console.error('Unable to restore from backup', error);
   }
   return false;
-}
-
-if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-  window.addEventListener('config:gacha:update', () => {
-    applyPendingCollections();
-  });
-  window.addEventListener('config:fusions:update', () => {
-    applyPendingCollections();
-  });
 }
