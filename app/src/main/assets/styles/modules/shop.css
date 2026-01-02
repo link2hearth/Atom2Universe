@@ -102,7 +102,7 @@
   border-radius: 10px;
   padding: clamp(0.55rem, 1.2vw, 0.9rem) clamp(0.75rem, 1.8vw, 1.1rem);
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
     "header actions"
     "desc actions";
@@ -162,6 +162,8 @@
   gap: clamp(0.35rem, 0.8vw, 0.55rem);
   justify-content: flex-end;
   align-items: stretch;
+  justify-self: end;
+  align-self: stretch;
 }
 
 .shop-item__actions--fallback {
@@ -200,7 +202,7 @@
 }
 
 .shop-item__action-price {
-  font-size: calc(0.82rem * var(--font-digits-size-factor, 1));
+  font-size: calc(0.82rem * var(--font-digits-size-factor, 1) * 1.5);
   opacity: 0.85;
   font-family: var(--font-digits, 'Orbitron', sans-serif);
   font-weight: 600;
