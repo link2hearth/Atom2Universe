@@ -38,6 +38,7 @@
       base: 10,
       perWave: 2
     }),
+    enemyDespawnPadding: 40,
     shipHitboxScale: Object.freeze({
       player: 0.5,
       enemy: 0.5
@@ -163,12 +164,19 @@
       60,
       DEFAULT_CONFIG.renderFps
     );
+    const enemyDespawnPadding = clampNumber(
+      raw.enemyDespawnPadding,
+      0,
+      200,
+      DEFAULT_CONFIG.enemyDespawnPadding
+    );
     return Object.freeze({
       maxWaveDurationSeconds: Math.max(5, Math.floor(maxWaveDuration)),
       enemyBulletCap: Object.freeze({
         base: Math.max(0, Math.floor(bulletBase)),
         perWave: Math.max(0, Math.floor(bulletPerWave))
       }),
+      enemyDespawnPadding: Math.max(0, Math.floor(enemyDespawnPadding)),
       shipHitboxScale: Object.freeze({
         player: playerHitboxScale,
         enemy: enemyHitboxScale
@@ -3050,6 +3058,15 @@
     return cap;
   }
 
+  function getEnemyDespawnPadding() {
+    const config = state.config || DEFAULT_CONFIG;
+    const padding = toFiniteNumber(config.enemyDespawnPadding, DEFAULT_CONFIG.enemyDespawnPadding);
+    if (!Number.isFinite(padding) || padding < 0) {
+      return DEFAULT_CONFIG.enemyDespawnPadding;
+    }
+    return Math.max(0, padding);
+  }
+
   function computeWaveInterval() {
     const progress = Math.min(1, state.elapsed / WAVE_ACCELERATION_DURATION);
     const reduction = (INITIAL_WAVE_INTERVAL - MIN_WAVE_INTERVAL) * progress;
@@ -4012,14 +4029,16 @@
 
   function updateEnemies(delta) {
     const playerBounds = getPlayerBounds();
+    const despawnPadding = getEnemyDespawnPadding();
     state.enemies.forEach(enemy => {
       moveEnemy(enemy, delta);
-      fireEnemyWeapons(enemy, delta);
       const collisionBounds = getEnemyCollisionBounds(enemy);
       const enemyVisualTop = enemy.y - enemy.height / 2;
-      if (enemyVisualTop > CANVAS_HEIGHT + enemy.height) {
+      if (enemyVisualTop > CANVAS_HEIGHT + despawnPadding) {
         enemy.remove = true;
+        return;
       }
+      fireEnemyWeapons(enemy, delta);
       if (intersects(playerBounds, collisionBounds)) {
         enemy.remove = true;
         addExplosion(enemy.x, enemy.y, 40);
