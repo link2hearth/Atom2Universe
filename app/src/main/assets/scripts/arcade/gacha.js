@@ -36,6 +36,17 @@ function isCollectionVideoCollectionEnabled() {
   return isCollectionSystemActive();
 }
 
+function prefersReducedMotion() {
+  if (typeof matchMedia !== 'function') {
+    return false;
+  }
+  try {
+    return matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (error) {
+    return false;
+  }
+}
+
 const gachaTranslate = (() => {
   const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
     ? globalThis.t.bind(globalThis)
