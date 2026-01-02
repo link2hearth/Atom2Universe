@@ -541,6 +541,7 @@ function handleManualAtomClick(options = {}) {
 
 if (typeof globalThis !== 'undefined') {
   globalThis.handleManualAtomClick = handleManualAtomClick;
+  globalThis.isManualClickContextActive = isManualClickContextActive;
 }
 
 function shouldTriggerGlobalClick(event) {
