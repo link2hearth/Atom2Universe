@@ -242,8 +242,20 @@ const LAZY_LOAD_SETTINGS = Object.freeze({
 });
 
 /**
+ * Paramètres de découverte de la musique locale.
+ * - `manifestFiles` : fichiers JSON à lire dans `Assets/Music` (listes de pistes).
+ * - `allowDirectoryListing` : tente une lecture du dossier si aucun manifeste n'est trouvé.
+ */
+const MUSIC_DISCOVERY_SETTINGS = Object.freeze({
+  manifestFiles: ['manifest.json'],
+  allowDirectoryListing: false
+});
+
+/**
  * Paramètres du module RadioBrowser.
  * - `servers` : liste ordonnée des hôtes à interroger (mêmes endpoints sur chaque serveur).
+ * - `proxyBaseUrls` : proxys HTTP facultatifs pour contourner le CORS.
+ * - `proxyOnlyOrigins` : origines qui doivent obligatoirement utiliser un proxy.
  * - `requestTimeoutMs` : délai maximal avant d’abandonner une requête.
  * - `maxResults` : limite par défaut du nombre de stations retournées.
  * - `hideBroken` : filtre les stations cassées.
@@ -252,6 +264,10 @@ const LAZY_LOAD_SETTINGS = Object.freeze({
  */
 const RADIO_SETTINGS = Object.freeze({
   servers: ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info'],
+  proxyBaseUrls: [
+    'https://corsproxy.io/?{url}'
+  ],
+  proxyOnlyOrigins: ['https://appassets.androidplatform.net'],
   requestTimeoutMs: 12000,
   maxResults: 50,
   hideBroken: true,
