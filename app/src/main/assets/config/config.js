@@ -969,32 +969,79 @@ function getCompressedShopCost(level) {
   return Math.max(1, Math.floor(cost));
 }
 
-function loadConfigJson(path, fallback) {
+function replaceArrayContents(target, source) {
+  if (!Array.isArray(target)) {
+    return;
+  }
+  target.length = 0;
+  if (Array.isArray(source)) {
+    target.push(...source);
+  }
+}
+
+function replaceObjectContents(target, source) {
+  if (!target || typeof target !== 'object' || Array.isArray(target)) {
+    return;
+  }
+  Object.keys(target).forEach(key => {
+    delete target[key];
+  });
+  if (source && typeof source === 'object' && !Array.isArray(source)) {
+    Object.assign(target, source);
+  }
+}
+
+function applyConfigUpdate(target, loaded) {
+  if (Array.isArray(target)) {
+    if (Array.isArray(loaded)) {
+      replaceArrayContents(target, loaded);
+    } else {
+      console.warn('Unexpected configuration format (expected array)', loaded);
+    }
+    return;
+  }
+
+  if (target && typeof target === 'object') {
+    if (loaded && typeof loaded === 'object' && !Array.isArray(loaded)) {
+      replaceObjectContents(target, loaded);
+    } else {
+      console.warn('Unexpected configuration format (expected object)', loaded);
+    }
+  }
+}
+
+function loadConfigJson(path, fallback, onUpdate) {
   if (typeof path !== 'string' || !path.trim()) {
     return fallback;
   }
-  if (typeof XMLHttpRequest === 'undefined') {
+  if (typeof fetch !== 'function') {
     return fallback;
   }
-  try {
-    const request = new XMLHttpRequest();
-    request.open('GET', path, false);
-    request.overrideMimeType('application/json');
-    request.send(null);
-    const status = Number(request.status) || 0;
-    const responseText = request.responseText;
-    const hasBody = typeof responseText === 'string' && responseText.trim();
-    const successfulRequest = (status >= 200 && status < 300) || (status === 0 && hasBody);
-    if (successfulRequest && hasBody) {
+  fetch(path)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return response.text();
+    })
+    .then(text => {
+      const trimmed = typeof text === 'string' ? text.trim() : '';
+      if (!trimmed) {
+        return;
+      }
       try {
-        return JSON.parse(responseText);
+        const parsed = JSON.parse(trimmed);
+        applyConfigUpdate(fallback, parsed);
+        if (typeof onUpdate === 'function') {
+          onUpdate(parsed, fallback);
+        }
       } catch (parseError) {
         console.warn('Unable to parse configuration JSON', path, parseError);
       }
-    }
-  } catch (error) {
-    console.warn('Unable to load configuration JSON', path, error);
-  }
+    })
+    .catch(error => {
+      console.warn('Unable to load configuration JSON', path, error);
+    });
   return fallback;
 }
 
@@ -1044,12 +1091,19 @@ const ARCADE_GOMOKU_CONFIG = loadConfigJson('./config/arcade/gomoku.json', {});
 const ARCADE_CIRCLES_CONFIG = loadConfigJson('./config/arcade/circles.json', {});
 const ARCADE_REFLEX_CONFIG = loadConfigJson('./config/arcade/reflex.json', {});
 
-const RAW_CUSTOM_PAGES_CONFIG = loadConfigJson('./config/custom-pages.json', []);
-const CUSTOM_PAGES_CONFIG = Object.freeze(
-  (Array.isArray(RAW_CUSTOM_PAGES_CONFIG) ? RAW_CUSTOM_PAGES_CONFIG : [])
+const CUSTOM_PAGES_CONFIG = [];
+const RAW_CUSTOM_PAGES_CONFIG = loadConfigJson('./config/custom-pages.json', [], () => {
+  refreshCustomPagesConfig();
+});
+
+function refreshCustomPagesConfig() {
+  const normalized = (Array.isArray(RAW_CUSTOM_PAGES_CONFIG) ? RAW_CUSTOM_PAGES_CONFIG : [])
     .map(normalizeCustomPageEntry)
-    .filter(Boolean)
-);
+    .filter(Boolean);
+  replaceArrayContents(CUSTOM_PAGES_CONFIG, normalized);
+}
+
+refreshCustomPagesConfig();
 
 function createShopBuildingDefinitions() {
   const withDefaults = def => ({ maxLevel: SHOP_MAX_PURCHASE_DEFAULT, ...def });
@@ -1405,9 +1459,21 @@ function createAtomScaleTrophies() {
   });
 }
 
+const GACHA_SYSTEM_CONFIG = {
+  ticketCost: 1,
+  bonusImages: {
+    folder: 'Assets/Image/Gacha',
+    images: []
+  },
+  rarities: [],
+  collectionUnlocks: [],
+  weeklyRarityWeights: {}
+};
+
 const RAW_GACHA_BONUS_IMAGE_CONFIG = loadConfigJson(
   './config/gacha/bonus-images.json',
-  { images: [] }
+  { images: [] },
+  () => refreshGachaSystemConfig()
 );
 
 const RAW_GACHA_CONFIG = loadConfigJson('./config/systems/gacha.json', {
@@ -1416,60 +1482,118 @@ const RAW_GACHA_CONFIG = loadConfigJson('./config/systems/gacha.json', {
   rarities: [],
   collectionUnlocks: [],
   weeklyRarityWeights: {}
-});
+}, () => refreshGachaSystemConfig());
 
-const GACHA_SYSTEM_CONFIG = {
-  ticketCost: RAW_GACHA_CONFIG.ticketCost ?? 1,
-  bonusImages: {
-    folder: RAW_GACHA_CONFIG.bonusImages?.folder ?? 'Assets/Image/Gacha',
-    images: Array.isArray(RAW_GACHA_BONUS_IMAGE_CONFIG?.images)
-      ? RAW_GACHA_BONUS_IMAGE_CONFIG.images
-      : []
-  },
-  rarities: Array.isArray(RAW_GACHA_CONFIG.rarities) ? RAW_GACHA_CONFIG.rarities : [],
-  collectionUnlocks: Array.isArray(RAW_GACHA_CONFIG.collectionUnlocks)
-    ? RAW_GACHA_CONFIG.collectionUnlocks
-    : [],
-  weeklyRarityWeights:
+function refreshGachaSystemConfig() {
+  GACHA_SYSTEM_CONFIG.ticketCost = RAW_GACHA_CONFIG.ticketCost ?? 1;
+  GACHA_SYSTEM_CONFIG.bonusImages.folder = RAW_GACHA_CONFIG.bonusImages?.folder ?? 'Assets/Image/Gacha';
+  replaceArrayContents(
+    GACHA_SYSTEM_CONFIG.bonusImages.images,
+    Array.isArray(RAW_GACHA_BONUS_IMAGE_CONFIG?.images) ? RAW_GACHA_BONUS_IMAGE_CONFIG.images : []
+  );
+  replaceArrayContents(
+    GACHA_SYSTEM_CONFIG.rarities,
+    Array.isArray(RAW_GACHA_CONFIG.rarities) ? RAW_GACHA_CONFIG.rarities : []
+  );
+  replaceArrayContents(
+    GACHA_SYSTEM_CONFIG.collectionUnlocks,
+    Array.isArray(RAW_GACHA_CONFIG.collectionUnlocks) ? RAW_GACHA_CONFIG.collectionUnlocks : []
+  );
+  replaceObjectContents(
+    GACHA_SYSTEM_CONFIG.weeklyRarityWeights,
     typeof RAW_GACHA_CONFIG.weeklyRarityWeights === 'object' && RAW_GACHA_CONFIG.weeklyRarityWeights !== null
       ? RAW_GACHA_CONFIG.weeklyRarityWeights
       : {}
-};
+  );
+}
 
-const RAW_FUSION_SYSTEM_CONFIG = loadConfigJson('./config/systems/fusions.json', { fusions: [] });
-const FUSION_SYSTEM_CONFIG = Array.isArray(RAW_FUSION_SYSTEM_CONFIG?.fusions)
-  ? RAW_FUSION_SYSTEM_CONFIG.fusions
-  : [];
+refreshGachaSystemConfig();
 
-const RAW_COLLECTION_BONUSES_CONFIG = loadConfigJson('./config/collection/bonuses.json', { groups: {} });
-const COLLECTION_BONUSES_CONFIG =
-  RAW_COLLECTION_BONUSES_CONFIG && typeof RAW_COLLECTION_BONUSES_CONFIG === 'object'
-    ? RAW_COLLECTION_BONUSES_CONFIG
-    : { groups: {} };
+const RAW_FUSION_SYSTEM_CONFIG = loadConfigJson('./config/systems/fusions.json', { fusions: [] }, () => {
+  refreshFusionSystemConfig();
+});
+const FUSION_SYSTEM_CONFIG = [];
 
-const RAW_COLLECTION_FAMILIES_CONFIG = loadConfigJson('./config/collection/families.json', {});
-const COLLECTION_FAMILIES_CONFIG =
-  RAW_COLLECTION_FAMILIES_CONFIG && typeof RAW_COLLECTION_FAMILIES_CONFIG === 'object'
-    ? RAW_COLLECTION_FAMILIES_CONFIG
-    : {};
+function refreshFusionSystemConfig() {
+  replaceArrayContents(
+    FUSION_SYSTEM_CONFIG,
+    Array.isArray(RAW_FUSION_SYSTEM_CONFIG?.fusions) ? RAW_FUSION_SYSTEM_CONFIG.fusions : []
+  );
+}
 
-const RAW_COLLECTION_ELEMENTS = loadConfigJson('./config/collection/elements.json', []);
-const COLLECTION_ELEMENTS = Array.isArray(RAW_COLLECTION_ELEMENTS) ? RAW_COLLECTION_ELEMENTS : [];
+refreshFusionSystemConfig();
+
+const RAW_COLLECTION_BONUSES_CONFIG = loadConfigJson('./config/collection/bonuses.json', { groups: {} }, () => {
+  refreshCollectionBonusesConfig();
+});
+const COLLECTION_BONUSES_CONFIG = {};
+
+function refreshCollectionBonusesConfig() {
+  replaceObjectContents(
+    COLLECTION_BONUSES_CONFIG,
+    RAW_COLLECTION_BONUSES_CONFIG && typeof RAW_COLLECTION_BONUSES_CONFIG === 'object'
+      ? RAW_COLLECTION_BONUSES_CONFIG
+      : { groups: {} }
+  );
+}
+
+refreshCollectionBonusesConfig();
+
+const RAW_COLLECTION_FAMILIES_CONFIG = loadConfigJson('./config/collection/families.json', {}, () => {
+  refreshCollectionFamiliesConfig();
+});
+const COLLECTION_FAMILIES_CONFIG = {};
+
+function refreshCollectionFamiliesConfig() {
+  replaceObjectContents(
+    COLLECTION_FAMILIES_CONFIG,
+    RAW_COLLECTION_FAMILIES_CONFIG && typeof RAW_COLLECTION_FAMILIES_CONFIG === 'object'
+      ? RAW_COLLECTION_FAMILIES_CONFIG
+      : {}
+  );
+}
+
+refreshCollectionFamiliesConfig();
+
+const RAW_COLLECTION_ELEMENTS = loadConfigJson('./config/collection/elements.json', [], () => {
+  refreshCollectionElementsConfig();
+});
+const COLLECTION_ELEMENTS = [];
+
+function refreshCollectionElementsConfig() {
+  replaceArrayContents(
+    COLLECTION_ELEMENTS,
+    Array.isArray(RAW_COLLECTION_ELEMENTS) ? RAW_COLLECTION_ELEMENTS : []
+  );
+}
+
+refreshCollectionElementsConfig();
 
 const RAW_COLLECTION_VIDEOS_CONFIG = loadConfigJson('./config/collection/videos.json', {
   folder: 'Assets/Collection/Videos',
   videos: []
+}, () => {
+  refreshCollectionVideosConfig();
 });
 
 const COLLECTION_VIDEOS_CONFIG = {
-  folder: typeof RAW_COLLECTION_VIDEOS_CONFIG?.folder === 'string'
+  folder: 'Assets/Collection/Videos',
+  videos: []
+};
+
+function refreshCollectionVideosConfig() {
+  const folderValue = typeof RAW_COLLECTION_VIDEOS_CONFIG?.folder === 'string'
       && RAW_COLLECTION_VIDEOS_CONFIG.folder.trim()
     ? RAW_COLLECTION_VIDEOS_CONFIG.folder.trim()
-    : 'Assets/Collection/Videos',
-  videos: Array.isArray(RAW_COLLECTION_VIDEOS_CONFIG?.videos)
-    ? RAW_COLLECTION_VIDEOS_CONFIG.videos
-    : []
-};
+    : 'Assets/Collection/Videos';
+  COLLECTION_VIDEOS_CONFIG.folder = folderValue;
+  replaceArrayContents(
+    COLLECTION_VIDEOS_CONFIG.videos,
+    Array.isArray(RAW_COLLECTION_VIDEOS_CONFIG?.videos) ? RAW_COLLECTION_VIDEOS_CONFIG.videos : []
+  );
+}
+
+refreshCollectionVideosConfig();
 
 const GAME_CONFIG = {
   /**
