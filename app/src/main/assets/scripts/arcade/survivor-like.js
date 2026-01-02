@@ -46,6 +46,16 @@
       weaponSlots: 5,
       startWeapons: ['projectile']
     },
+    assets: {
+      enableSpriteSheet: true,
+      spriteSheetPath: 'Assets/sprites/ennemis-survive.png',
+      enableEnemySprites: true,
+      enemySpriteBasePath: 'Assets/sprites/Survive/ennemis/',
+      enableBackgrounds: true,
+      backgroundBasePath: 'Assets/sprites/Survive/Background/',
+      enablePlayerSprites: true,
+      playerSpriteBasePath: 'Assets/sprites/Survive/'
+    },
     enemySprites: {
       loadRetries: 5
     },
@@ -469,6 +479,11 @@
   }
 
   function loadSpriteSheet() {
+    const assetsConfig = state.config?.assets;
+    if (!assetsConfig || !assetsConfig.enableSpriteSheet || !assetsConfig.spriteSheetPath) {
+      spriteSheetLoaded = false;
+      return;
+    }
     spriteSheet = new Image();
     spriteSheet.onload = () => {
       spriteSheetLoaded = true;
@@ -477,7 +492,7 @@
       console.error('Failed to load sprite sheet');
       spriteSheetLoaded = false;
     };
-    spriteSheet.src = 'Assets/sprites/ennemis-survive.png';
+    spriteSheet.src = assetsConfig.spriteSheetPath;
   }
 
   // ============================================
@@ -485,6 +500,12 @@
   // ============================================
 
   function loadBackgroundImages() {
+    const assetsConfig = state.config?.assets;
+    if (!assetsConfig || !assetsConfig.enableBackgrounds || !assetsConfig.backgroundBasePath) {
+      backgroundsLoaded = false;
+      backgroundImages = [];
+      return;
+    }
     backgroundImages = [];
     let loadedCount = 0;
 
@@ -499,7 +520,7 @@
       img.onerror = () => {
         console.error(`Failed to load background: ${filename}`);
       };
-      img.src = BACKGROUND_CONFIG.basePath + filename;
+      img.src = assetsConfig.backgroundBasePath + filename;
       backgroundImages[index] = img;
     });
   }
@@ -598,6 +619,15 @@
    * @returns {Object} - { filename, image, loaded }
    */
   function loadEnemySpriteSheet(filename) {
+    const assetsConfig = state.config?.assets;
+    if (!assetsConfig || !assetsConfig.enableEnemySprites || !assetsConfig.enemySpriteBasePath) {
+      return {
+        filename,
+        image: null,
+        loaded: false,
+        attempts: 0
+      };
+    }
     const spriteData = {
       filename: filename,
       image: new Image(),
@@ -640,7 +670,7 @@
         console.error(`Failed to load enemy sprite sheet after ${attempted.size} attempts.`);
       };
 
-      image.src = ENEMY_SPRITE_CONFIG.basePath + nextFilename;
+      image.src = assetsConfig.enemySpriteBasePath + nextFilename;
     };
 
     attemptLoad();
@@ -653,6 +683,11 @@
    * Choisit et charge 3 sprites aléatoires parmi les ~1832 disponibles
    */
   function initializeWaveSprites() {
+    const assetsConfig = state.config?.assets;
+    if (!assetsConfig || !assetsConfig.enableEnemySprites) {
+      state.waveEnemySprites = {};
+      return;
+    }
     const enemyTypes = ['zombie', 'fast', 'miniBoss'];
 
     for (const enemyType of enemyTypes) {
@@ -871,6 +906,11 @@
 
   function loadCharacterSprite() {
     if (!state.player.characterType) return;
+    const assetsConfig = state.config?.assets;
+    if (!assetsConfig || !assetsConfig.enablePlayerSprites || !assetsConfig.playerSpriteBasePath) {
+      state.player.characterSprite = null;
+      return;
+    }
 
     const sprite = new Image();
     sprite.onload = () => {
@@ -880,7 +920,7 @@
       console.error(`Failed to load character sprite: ${state.player.characterType}.png`);
       state.player.characterSprite = null;
     };
-    sprite.src = `Assets/sprites/Survive/${state.player.characterType}.png`;
+    sprite.src = `${assetsConfig.playerSpriteBasePath}${state.player.characterType}.png`;
   }
 
   function resetGame() {
