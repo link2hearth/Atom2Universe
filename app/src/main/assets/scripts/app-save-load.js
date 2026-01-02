@@ -256,14 +256,23 @@ function applySerializedGameState(raw) {
     Object.entries(storedElements).forEach(([id, saved]) => {
       if (!baseCollection[id]) return;
       const reference = baseCollection[id];
-      const savedCount = Number(saved?.count);
-      const normalizedCount = Number.isFinite(savedCount) && savedCount > 0
+      const hasCountField = saved && typeof saved === 'object'
+        && Object.prototype.hasOwnProperty.call(saved, 'count');
+      const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
+      let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
         ? Math.floor(savedCount)
         : 0;
       const savedLifetime = Number(saved?.lifetime);
       let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
         ? Math.floor(savedLifetime)
         : 0;
+      if (!hasCountField && normalizedCount === 0) {
+        if (normalizedLifetime > 0) {
+          normalizedCount = normalizedLifetime;
+        } else if (saved?.owned) {
+          normalizedCount = 1;
+        }
+      }
       if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
         normalizedLifetime = Math.max(normalizedCount, 1);
       }
@@ -829,20 +838,29 @@ function loadGame() {
     const baseCollection = createInitialElementCollection();
     const storedElements = normalizeSavedElementCollection(data.elements);
     if (storedElements) {
-      Object.entries(storedElements).forEach(([id, saved]) => {
-        if (!baseCollection[id]) return;
-        const reference = baseCollection[id];
-        const savedCount = Number(saved?.count);
-        const normalizedCount = Number.isFinite(savedCount) && savedCount > 0
-          ? Math.floor(savedCount)
-          : 0;
-        const savedLifetime = Number(saved?.lifetime);
-        let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
-          ? Math.floor(savedLifetime)
-          : 0;
-        if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
-          normalizedLifetime = Math.max(normalizedCount, 1);
+    Object.entries(storedElements).forEach(([id, saved]) => {
+      if (!baseCollection[id]) return;
+      const reference = baseCollection[id];
+      const hasCountField = saved && typeof saved === 'object'
+        && Object.prototype.hasOwnProperty.call(saved, 'count');
+      const savedCount = hasCountField ? Number(saved?.count) : Number.NaN;
+      let normalizedCount = Number.isFinite(savedCount) && savedCount > 0
+        ? Math.floor(savedCount)
+        : 0;
+      const savedLifetime = Number(saved?.lifetime);
+      let normalizedLifetime = Number.isFinite(savedLifetime) && savedLifetime > 0
+        ? Math.floor(savedLifetime)
+        : 0;
+      if (!hasCountField && normalizedCount === 0) {
+        if (normalizedLifetime > 0) {
+          normalizedCount = normalizedLifetime;
+        } else if (saved?.owned) {
+          normalizedCount = 1;
         }
+      }
+      if (normalizedLifetime === 0 && (saved?.owned || normalizedCount > 0)) {
+        normalizedLifetime = Math.max(normalizedCount, 1);
+      }
         if (normalizedLifetime < normalizedCount) {
           normalizedLifetime = normalizedCount;
         }
