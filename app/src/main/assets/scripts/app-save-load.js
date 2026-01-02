@@ -1108,6 +1108,9 @@ function loadGame() {
     if (gameState.musicEnabled === false) {
       gameState.musicTrackId = null;
     }
+    if (typeof evaluateTrophies === 'function') {
+      evaluateTrophies();
+    }
     evaluatePageUnlocks({ save: false, deferUI: true });
     getShopUnlockSet();
     invalidateFeatureUnlockCache({ resetArcadeState: true });
