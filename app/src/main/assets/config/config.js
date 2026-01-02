@@ -265,8 +265,7 @@ const MUSIC_DISCOVERY_SETTINGS = Object.freeze({
 const RADIO_SETTINGS = Object.freeze({
   servers: ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info'],
   proxyBaseUrls: [
-    'https://api.allorigins.win/raw?url=',
-    'https://cors.isomorphic-git.org/'
+    'https://corsproxy.io/?{url}'
   ],
   proxyOnlyOrigins: ['https://appassets.androidplatform.net'],
   requestTimeoutMs: 12000,
