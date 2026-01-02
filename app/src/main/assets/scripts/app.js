@@ -14497,16 +14497,6 @@ function bootApplication() {
   }
 }
 
-function handleCollectionBonusConfigUpdate() {
-  recalcProduction();
-  updateUI();
-}
-
-if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-  window.addEventListener('config:collection-bonuses:update', handleCollectionBonusConfigUpdate);
-  window.addEventListener('config:collection-families:update', handleCollectionBonusConfigUpdate);
-}
-
 armStartupOverlayFallback({ reset: true });
 
 if (document.readyState === 'loading') {
