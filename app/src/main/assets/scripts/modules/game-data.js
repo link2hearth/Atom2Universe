@@ -300,41 +300,56 @@ function normalizeCollectionVideoDefinition(entry, folder) {
   };
 }
 
-const RAW_BONUS_IMAGE_ENTRIES = (() => {
+const GACHA_BONUS_IMAGE_DEFINITIONS = [];
+const GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS = [];
+const GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS = [];
+const GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS = [];
+const GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = [];
+const GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = [];
+
+function rebuildGachaBonusImageDefinitions() {
   const config = CONFIG?.gacha?.bonusImages;
-  if (!config) {
-    return [];
-  }
+  let rawEntries = [];
   if (Array.isArray(config)) {
-    return config;
+    rawEntries = config;
+  } else if (Array.isArray(config?.images)) {
+    rawEntries = config.images;
   }
-  if (Array.isArray(config.images)) {
-    return config.images;
-  }
-  return [];
-})();
-
-const GACHA_BONUS_IMAGE_DEFINITIONS = RAW_BONUS_IMAGE_ENTRIES
-  .map(entry => normalizeBonusImageDefinition(entry, CONFIG?.gacha?.bonusImages?.folder))
-  .filter(def => def && def.id);
-
-const GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
-  .filter(def => {
+  const folder = CONFIG?.gacha?.bonusImages?.folder;
+  const allDefinitions = rawEntries
+    .map(entry => normalizeBonusImageDefinition(entry, folder))
+    .filter(def => def && def.id);
+  GACHA_BONUS_IMAGE_DEFINITIONS.length = 0;
+  GACHA_BONUS_IMAGE_DEFINITIONS.push(...allDefinitions);
+  GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.length = 0;
+  GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.length = 0;
+  GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.length = 0;
+  GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.length = 0;
+  GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.length = 0;
+  allDefinitions.forEach(def => {
     const type = def.collectionType || 'optional';
-    return type !== 'permanent' && type !== 'permanent1' && type !== 'permanent2' && type !== 'permanent3';
+    if (type === 'permanent') {
+      GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.push(def);
+    } else if (type === 'permanent1') {
+      GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.push(def);
+    } else if (type === 'permanent2') {
+      GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.push(def);
+    } else if (type === 'permanent3') {
+      GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.push(def);
+    } else {
+      GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.push(def);
+    }
   });
+}
 
-const GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
-  .filter(def => def.collectionType === 'permanent');
+rebuildGachaBonusImageDefinitions();
 
-const GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
-  .filter(def => def.collectionType === 'permanent1');
-
-const GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
-  .filter(def => def.collectionType === 'permanent2');
-
-const GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS = GACHA_BONUS_IMAGE_DEFINITIONS
-  .filter(def => def.collectionType === 'permanent3');
+if (typeof window !== 'undefined') {
+  window.refreshGachaBonusImageDefinitions = rebuildGachaBonusImageDefinitions;
+  if (typeof window.addEventListener === 'function') {
+    window.addEventListener('config:gacha:update', rebuildGachaBonusImageDefinitions);
+  }
+}
 
 const RAW_COLLECTION_VIDEO_CONFIG = (() => {
   const config = CONFIG?.collection?.videos;
@@ -568,11 +583,24 @@ function normalizeFusionDefinition(entry, index = 0) {
   };
 }
 
-const rawFusionList = Array.isArray(CONFIG.fusions) ? CONFIG.fusions : [];
-const FUSION_DEFS = rawFusionList
-  .map((entry, index) => normalizeFusionDefinition(entry, index))
-  .filter(Boolean);
-const FUSION_DEFINITION_MAP = new Map(FUSION_DEFS.map(def => [def.id, def]));
+const FUSION_DEFS = [];
+const FUSION_DEFINITION_MAP = new Map();
+
+function rebuildFusionDefinitions() {
+  const rawFusionList = Array.isArray(CONFIG.fusions) ? CONFIG.fusions : [];
+  const normalized = rawFusionList
+    .map((entry, index) => normalizeFusionDefinition(entry, index))
+    .filter(Boolean);
+  FUSION_DEFS.length = 0;
+  FUSION_DEFS.push(...normalized);
+  FUSION_DEFINITION_MAP.clear();
+  normalized.forEach(def => {
+    FUSION_DEFINITION_MAP.set(def.id, def);
+  });
+  refreshFusionLocalization();
+}
+
+rebuildFusionDefinitions();
 
 function refreshFusionLocalization() {
   FUSION_DEFS.forEach(def => {
@@ -595,12 +623,12 @@ function refreshFusionLocalization() {
   });
 }
 
-refreshFusionLocalization();
-
 if (typeof window !== 'undefined') {
   window.refreshFusionLocalization = refreshFusionLocalization;
+  window.refreshFusionDefinitions = rebuildFusionDefinitions;
   if (typeof window.addEventListener === 'function') {
     window.addEventListener('i18n:languagechange', refreshFusionLocalization);
+    window.addEventListener('config:fusions:update', rebuildFusionDefinitions);
   }
 }
 
