@@ -1567,16 +1567,6 @@ function refreshCollectionElementsConfig() {
     COLLECTION_ELEMENTS,
     Array.isArray(RAW_COLLECTION_ELEMENTS) ? RAW_COLLECTION_ELEMENTS : []
   );
-  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
-    try {
-      const event = typeof CustomEvent === 'function'
-        ? new CustomEvent('config:elements:update')
-        : new Event('config:elements:update');
-      window.dispatchEvent(event);
-    } catch (error) {
-      console.warn('Unable to notify element configuration update', error);
-    }
-  }
 }
 
 refreshCollectionElementsConfig();
