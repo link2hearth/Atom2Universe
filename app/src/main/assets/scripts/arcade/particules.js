@@ -4946,32 +4946,6 @@
 
       // Performance monitor overlay - Bottom left, large size for mobile visibility
       if (this.performanceMonitor.enabled) {
-        const avgRenderTime = this.performanceMonitor.renderTimes.length > 0
-          ? (this.performanceMonitor.renderTimes.reduce((a, b) => a + b, 0) / this.performanceMonitor.renderTimes.length).toFixed(2)
-          : 0;
-
-        const boxWidth = 560;
-        const boxHeight = 200;
-        const boxX = 10;
-        const boxY = this.height - boxHeight - 10;
-
-        ctx.save();
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-        ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-        ctx.strokeStyle = '#00ff00';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-
-        ctx.fillStyle = this.performanceMonitor.fps >= 55 ? '#00ff00' : this.performanceMonitor.fps >= 30 ? '#ffaa00' : '#ff0000';
-        ctx.font = 'bold 56px monospace';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
-        ctx.fillText(`FPS: ${this.performanceMonitor.fps}`, boxX + 20, boxY + 20);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '44px monospace';
-        ctx.fillText(`Render: ${avgRenderTime}ms`, boxX + 20, boxY + 100);
-        ctx.restore();
       }
     }
 
