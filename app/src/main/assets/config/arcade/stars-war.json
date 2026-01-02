@@ -1,11 +1,10 @@
 {
-  "_comment": "Réglages Stars War (affichage, cadence d'ennemis, plafonds visuels, et marge de sortie écran pour éliminer les ennemis).",
+  "_comment": "Réglages Stars War (affichage, cadence d'ennemis, et plafonds visuels).",
   "maxWaveDurationSeconds": 15,
   "enemyBulletCap": {
     "base": 1,
     "perWave": 1
   },
-  "enemyDespawnPadding": 40,
   "shipHitboxScale": {
     "player": 0.5,
     "enemy": 0.5
