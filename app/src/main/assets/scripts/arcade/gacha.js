@@ -36,6 +36,153 @@ function isCollectionVideoCollectionEnabled() {
   return isCollectionSystemActive();
 }
 
+const GACHA_SMOKE_FRAME_COUNT = 91;
+const GACHA_SMOKE_FRAME_RATE = 12;
+const GACHA_SMOKE_FRAME_PAD = 4;
+const GACHA_SMOKE_ASSET_PATH = 'Assets/sprites/Smoke';
+
+const gachaSmokeAnimationState = {
+  timer: null,
+  frame: 0,
+  element: null,
+  reducedMotion: false,
+  lastUpdate: 0,
+  timerType: null,
+  lastFrameUrl: ''
+};
+
+let gachaSmokeFramesPreloaded = false;
+const gachaSmokePreloadedImages = [];
+
+function getGachaSmokeFrameUrl(frameIndex) {
+  const frameName = formatGachaSmokeFrame(frameIndex);
+  return encodeURI(`${GACHA_SMOKE_ASSET_PATH}/${frameName}.png`);
+}
+
+function preloadGachaSmokeFrames() {
+  if (gachaSmokeFramesPreloaded || typeof Image !== 'function') {
+    return;
+  }
+  gachaSmokeFramesPreloaded = true;
+  for (let index = 0; index < GACHA_SMOKE_FRAME_COUNT; index += 1) {
+    const image = new Image();
+    try {
+      image.decoding = 'async';
+    } catch (error) {
+      // Ignore if the browser does not support setting decoding.
+    }
+    image.src = getGachaSmokeFrameUrl(index);
+    gachaSmokePreloadedImages.push(image);
+  }
+}
+
+function prefersReducedMotion() {
+  if (typeof matchMedia !== 'function') {
+    return false;
+  }
+  try {
+    return matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (error) {
+    return false;
+  }
+}
+
+function formatGachaSmokeFrame(frameIndex) {
+  const normalized = ((frameIndex % GACHA_SMOKE_FRAME_COUNT) + GACHA_SMOKE_FRAME_COUNT) % GACHA_SMOKE_FRAME_COUNT;
+  return String(normalized).padStart(GACHA_SMOKE_FRAME_PAD, '0');
+}
+
+function applyGachaSmokeFrame(element, frameIndex) {
+  if (!element) {
+    return;
+  }
+  const frameUrl = getGachaSmokeFrameUrl(frameIndex);
+  if (frameUrl === gachaSmokeAnimationState.lastFrameUrl) {
+    return;
+  }
+  gachaSmokeAnimationState.lastFrameUrl = frameUrl;
+  element.style.backgroundImage = `url("${frameUrl}")`;
+}
+
+function stopGachaFeaturedSmokeAnimation() {
+  if (gachaSmokeAnimationState.timer != null) {
+    if (gachaSmokeAnimationState.timerType === 'timeout' && typeof clearTimeout === 'function') {
+      clearTimeout(gachaSmokeAnimationState.timer);
+    } else if (typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(gachaSmokeAnimationState.timer);
+    }
+  }
+  gachaSmokeAnimationState.timer = null;
+  gachaSmokeAnimationState.frame = 0;
+  if (gachaSmokeAnimationState.element) {
+    gachaSmokeAnimationState.element.style.backgroundImage = '';
+  }
+  gachaSmokeAnimationState.element = null;
+  gachaSmokeAnimationState.reducedMotion = false;
+  gachaSmokeAnimationState.lastUpdate = 0;
+  gachaSmokeAnimationState.timerType = null;
+  gachaSmokeAnimationState.lastFrameUrl = '';
+}
+
+function startGachaFeaturedSmokeAnimation(element) {
+  if (!element) {
+    return;
+  }
+  stopGachaFeaturedSmokeAnimation();
+  gachaSmokeAnimationState.element = element;
+  gachaSmokeAnimationState.reducedMotion = prefersReducedMotion();
+  gachaSmokeAnimationState.frame = 0;
+  gachaSmokeAnimationState.lastUpdate = typeof performance !== 'undefined'
+    ? performance.now()
+    : Date.now();
+  preloadGachaSmokeFrames();
+  applyGachaSmokeFrame(element, gachaSmokeAnimationState.frame);
+  if (gachaSmokeAnimationState.reducedMotion) {
+    return;
+  }
+  const frameDuration = 1000 / GACHA_SMOKE_FRAME_RATE;
+  gachaSmokeAnimationState.timerType = typeof requestAnimationFrame === 'function' ? 'raf' : 'timeout';
+  const step = (timestamp) => {
+    const target = gachaSmokeAnimationState.element;
+    if (!target) {
+      stopGachaFeaturedSmokeAnimation();
+      return;
+    }
+    const now = timestamp ?? (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    const elapsed = now - gachaSmokeAnimationState.lastUpdate;
+    if (elapsed >= frameDuration) {
+      const framesToAdvance = Math.max(1, Math.floor(elapsed / frameDuration));
+      gachaSmokeAnimationState.lastUpdate = now - (elapsed % frameDuration);
+      gachaSmokeAnimationState.frame = (gachaSmokeAnimationState.frame + framesToAdvance) % GACHA_SMOKE_FRAME_COUNT;
+      applyGachaSmokeFrame(target, gachaSmokeAnimationState.frame);
+    }
+    if (gachaSmokeAnimationState.timerType === 'timeout') {
+      gachaSmokeAnimationState.timer = setTimeout(() => {
+        step(typeof performance !== 'undefined' ? performance.now() : Date.now());
+      }, frameDuration);
+    } else {
+      gachaSmokeAnimationState.timer = requestAnimationFrame(step);
+    }
+  };
+  if (gachaSmokeAnimationState.timerType === 'timeout') {
+    gachaSmokeAnimationState.timer = setTimeout(() => {
+      step(typeof performance !== 'undefined' ? performance.now() : Date.now());
+    }, frameDuration);
+  } else {
+    gachaSmokeAnimationState.timer = requestAnimationFrame(step);
+  }
+}
+
+function createGachaFeaturedSmokeBackdrop() {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+  const element = document.createElement('span');
+  element.className = 'gacha-featured-info__smoke';
+  startGachaFeaturedSmokeAnimation(element);
+  return element;
+}
+
 const gachaTranslate = (() => {
   const translator = typeof globalThis !== 'undefined' && typeof globalThis.t === 'function'
     ? globalThis.t.bind(globalThis)
@@ -168,65 +315,110 @@ const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_CHANCE = 1 / 500;
 const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_CHANCE = 1 / 500;
 const BONUS_GACHA_IMAGE_AVAILABILITY_BATCH_SIZE = 10;
 
-const COLLECTION_VIDEO_DEFINITION_INDEX = new Map(
-  Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
-    ? COLLECTION_VIDEO_DEFINITIONS.map(def => [def.id, def])
-    : []
-);
+const COLLECTION_VIDEO_DEFINITION_INDEX = new Map();
+const COLLECTION_VIDEO_ALL_IDS = [];
 
-const COLLECTION_VIDEO_ALL_IDS = Array.isArray(COLLECTION_VIDEO_DEFINITIONS)
-  ? COLLECTION_VIDEO_DEFINITIONS.map(def => def.id).filter(Boolean)
-  : [];
+const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map();
+const BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX = new Map();
+const BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX = new Map();
+const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map();
+const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map();
 
-const BONUS_GACHA_IMAGE_DEFINITION_INDEX = new Map(
-  Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
-    ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
-    : []
-);
+const BONUS_GACHA_IMAGE_ALL_IDS = [];
+const BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS = [];
+const BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS = [];
+const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS = [];
+const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS = [];
 
-const BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
-  Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-    ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
-    : []
-);
+function rebuildCollectionVideoIndexes() {
+  COLLECTION_VIDEO_DEFINITION_INDEX.clear();
+  COLLECTION_VIDEO_ALL_IDS.length = 0;
+  if (!Array.isArray(COLLECTION_VIDEO_DEFINITIONS)) {
+    return;
+  }
+  COLLECTION_VIDEO_DEFINITIONS.forEach(def => {
+    if (def?.id) {
+      COLLECTION_VIDEO_DEFINITION_INDEX.set(def.id, def);
+      COLLECTION_VIDEO_ALL_IDS.push(def.id);
+    }
+  });
+}
 
-const BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX = new Map(
-  Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-    ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
-    : []
-);
+function rebuildBonusGachaImageIndexes() {
+  BONUS_GACHA_IMAGE_DEFINITION_INDEX.clear();
+  BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.clear();
+  BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX.clear();
+  BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX.clear();
+  BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX.clear();
+  BONUS_GACHA_IMAGE_ALL_IDS.length = 0;
+  BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.length = 0;
+  BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS.length = 0;
+  BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.length = 0;
+  BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS.length = 0;
 
-const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
-  Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-    ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
-    : []
-);
+  if (Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)) {
+    GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+      if (!def?.id) return;
+      BONUS_GACHA_IMAGE_DEFINITION_INDEX.set(def.id, def);
+      BONUS_GACHA_IMAGE_ALL_IDS.push(def.id);
+    });
+  }
 
-const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX = new Map(
-  Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-    ? GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => [def.id, def])
-    : []
-);
+  if (Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+      if (!def?.id) return;
+      BONUS_GACHA_PERMANENT_IMAGE_DEFINITION_INDEX.set(def.id, def);
+      BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS.push(def.id);
+    });
+  }
 
-const BONUS_GACHA_IMAGE_ALL_IDS = Array.isArray(GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS)
-  ? GACHA_OPTIONAL_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
-  : [];
+  if (Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+      if (!def?.id) return;
+      BONUS_GACHA_INTERMEDIATE_IMAGE_DEFINITION_INDEX.set(def.id, def);
+      BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS.push(def.id);
+    });
+  }
 
-const BONUS_GACHA_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-  ? GACHA_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
-  : [];
+  if (Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+      if (!def?.id) return;
+      BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_DEFINITION_INDEX.set(def.id, def);
+      BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS.push(def.id);
+    });
+  }
 
-const BONUS_GACHA_INTERMEDIATE_IMAGE_ALL_IDS = Array.isArray(GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-  ? GACHA_INTERMEDIATE_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
-  : [];
+  if (Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)) {
+    GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.forEach(def => {
+      if (!def?.id) return;
+      BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_DEFINITION_INDEX.set(def.id, def);
+      BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS.push(def.id);
+    });
+  }
+}
 
-const BONUS_GACHA_SECONDARY_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-  ? GACHA_SECONDARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
-  : [];
+rebuildCollectionVideoIndexes();
+rebuildBonusGachaImageIndexes();
 
-const BONUS_GACHA_TERTIARY_PERMANENT_IMAGE_ALL_IDS = Array.isArray(GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS)
-  ? GACHA_TERTIARY_PERMANENT_BONUS_IMAGE_DEFINITIONS.map(def => def.id).filter(Boolean)
-  : [];
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('config:gacha:update', () => {
+    if (typeof window.refreshGachaBonusImageDefinitions === 'function') {
+      window.refreshGachaBonusImageDefinitions();
+    }
+    rebuildBonusGachaImageIndexes();
+  });
+  window.addEventListener('config:elements:update', () => {
+    rebuildGachaPools();
+    if (elements.gachaRarityList) {
+      renderGachaRarityList();
+    } else {
+      updateGachaRarityProgress();
+    }
+  });
+  window.addEventListener('config:fusions:update', () => {
+    renderFusionList();
+  });
+}
 
 const bonusGachaImageAssetAvailabilityCache = new Map();
 const missingBonusGachaImageIds = new Set();
@@ -1662,11 +1854,24 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
       if (featuredInfo.hidden) {
         featuredInfo.hidden = false;
       }
+      const activeSmokeElement = gachaSmokeAnimationState.element;
+      const hasSmokeElement = featuredInfo.querySelector('.gacha-featured-info__smoke');
+      if (!hasSmokeElement || (activeSmokeElement && activeSmokeElement !== hasSmokeElement)) {
+        const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
+        if (smokeBackdrop) {
+          featuredInfo.prepend(smokeBackdrop);
+        }
+      }
       return;
     }
+    stopGachaFeaturedSmokeAnimation();
     featuredInfo.innerHTML = '';
     const todayText = t('scripts.gacha.featured.today');
     const fragment = document.createDocumentFragment();
+    const smokeBackdrop = createGachaFeaturedSmokeBackdrop();
+    if (smokeBackdrop) {
+      fragment.appendChild(smokeBackdrop);
+    }
     if (typeof todayText === 'string' && todayText.trim()) {
       const dayElement = document.createElement('span');
       dayElement.className = 'gacha-featured-info__day';
@@ -1684,6 +1889,7 @@ function updateGachaFeaturedInfo(dayKey = WEEKDAY_KEYS[new Date().getDay()] ?? n
     }
     featuredInfo.hidden = false;
   } else {
+    stopGachaFeaturedSmokeAnimation();
     featuredInfo.innerHTML = '';
     if (featuredInfo.dataset) {
       delete featuredInfo.dataset.featuredLabel;
