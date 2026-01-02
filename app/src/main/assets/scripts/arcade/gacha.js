@@ -5500,17 +5500,18 @@ async function playGachaAnimation(outcome) {
       : 0;
 
     await waitForGachaAnimationDismiss(layer, { ignoreClicksUntil: guardTime });
+  } catch (error) {
+    console.warn('Gacha animation interrupted', error);
   } finally {
     stopGachaConfettiAnimation();
-  }
-
-  layer.classList.remove('show-result');
-  layer.classList.remove('is-active');
-  layer.setAttribute('aria-hidden', 'true');
-  layer.hidden = true;
-  if (elements.gachaResult) {
-    elements.gachaResult.innerHTML = '';
-    elements.gachaResult.style.removeProperty('--rarity-color');
+    layer.classList.remove('show-result');
+    layer.classList.remove('is-active');
+    layer.setAttribute('aria-hidden', 'true');
+    layer.hidden = true;
+    if (elements.gachaResult) {
+      elements.gachaResult.innerHTML = '';
+      elements.gachaResult.style.removeProperty('--rarity-color');
+    }
   }
 }
 
