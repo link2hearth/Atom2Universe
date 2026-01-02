@@ -7,6 +7,17 @@
     "weaponSlots": 5
   },
   "_comment_enemySprites": "Tentatives de chargement d'un sprite ennemi avant fallback sur les points de couleur.",
+  "_comment_assets": "Activez ces sprites si vous ajoutez les images correspondantes dans Assets/sprites/Survive.",
+  "assets": {
+    "enableSpriteSheet": false,
+    "spriteSheetPath": "Assets/sprites/ennemis-survive.png",
+    "enableEnemySprites": false,
+    "enemySpriteBasePath": "Assets/sprites/Survive/ennemis/",
+    "enableBackgrounds": false,
+    "backgroundBasePath": "Assets/sprites/Survive/Background/",
+    "enablePlayerSprites": false,
+    "playerSpriteBasePath": "Assets/sprites/Survive/"
+  },
   "enemySprites": {
     "loadRetries": 5
   },
