@@ -259,14 +259,10 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
       window.refreshGachaBonusImageDefinitions();
     }
     rebuildBonusGachaImageIndexes();
+    rebuildGachaConfigCaches();
   });
   window.addEventListener('config:elements:update', () => {
-    rebuildGachaPools();
-    if (elements.gachaRarityList) {
-      renderGachaRarityList();
-    } else {
-      updateGachaRarityProgress();
-    }
+    rebuildGachaConfigCaches();
   });
   window.addEventListener('config:fusions:update', () => {
     renderFusionList();
@@ -1416,7 +1412,7 @@ const rawGachaConfig = CONFIG.gacha && typeof CONFIG.gacha === 'object'
   ? CONFIG.gacha
   : {};
 
-const GACHA_TICKET_COST = Math.max(
+let GACHA_TICKET_COST = Math.max(
   1,
   Math.floor(
     Number(
@@ -1463,7 +1459,7 @@ function localizeRarityEntry(entry) {
   };
 }
 
-const BASE_GACHA_RARITIES = sanitizeGachaRarities(rawGachaConfig.rarities).map(localizeRarityEntry);
+let BASE_GACHA_RARITIES = sanitizeGachaRarities(rawGachaConfig.rarities).map(localizeRarityEntry);
 
 BASE_GACHA_RARITIES.forEach(entry => {
   configuredRarityIds.delete(entry.id);
@@ -1474,7 +1470,7 @@ configuredRarityIds.forEach(id => {
   BASE_GACHA_RARITIES.push(fallback);
 });
 
-const BASE_GACHA_RARITY_ID_SET = new Set(BASE_GACHA_RARITIES.map(entry => entry.id));
+let BASE_GACHA_RARITY_ID_SET = new Set(BASE_GACHA_RARITIES.map(entry => entry.id));
 
 function sanitizeGachaCollectionUnlocks(rawUnlocks) {
   if (!Array.isArray(rawUnlocks) || !rawUnlocks.length) {
@@ -1574,7 +1570,7 @@ function sanitizeGachaCollectionUnlocks(rawUnlocks) {
   return deduped;
 }
 
-const GACHA_COLLECTION_UNLOCKS = sanitizeGachaCollectionUnlocks(rawGachaConfig.collectionUnlocks);
+let GACHA_COLLECTION_UNLOCKS = sanitizeGachaCollectionUnlocks(rawGachaConfig.collectionUnlocks);
 
 const WEEKDAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
@@ -1615,7 +1611,7 @@ function sanitizeWeeklyRarityWeights(rawWeights) {
   return sanitized;
 }
 
-const WEEKLY_RARITY_WEIGHTS = sanitizeWeeklyRarityWeights(
+let WEEKLY_RARITY_WEIGHTS = sanitizeWeeklyRarityWeights(
   rawGachaConfig.weeklyRarityWeights
     ?? rawGachaConfig.weeklyWeights
     ?? rawGachaConfig.dailyRarityWeights
@@ -1742,10 +1738,10 @@ function getCurrentGachaTotalWeight() {
   return GACHA_RARITIES.reduce((total, entry) => total + (entry.weight || 0), 0);
 }
 
-const RARITY_IDS = BASE_GACHA_RARITIES.map(entry => entry.id);
-const GACHA_RARITY_ORDER = new Map(RARITY_IDS.map((id, index) => [id, index]));
+let RARITY_IDS = BASE_GACHA_RARITIES.map(entry => entry.id);
+let GACHA_RARITY_ORDER = new Map(RARITY_IDS.map((id, index) => [id, index]));
 const RARITY_LABEL_MAP = new Map();
-const INFO_BONUS_RARITIES = RARITY_IDS.length > 0
+let INFO_BONUS_RARITIES = RARITY_IDS.length > 0
   ? [...RARITY_IDS]
   : ['commun', 'essentiel', 'stellaire', 'singulier', 'mythique', 'irreel'];
 let INFO_BONUS_SUBTITLE = '';
@@ -2223,6 +2219,60 @@ const PRODUCTION_STEP_ORDER = resolveProductionStepOrder(CONFIG.infoPanels?.prod
 
 const gachaPools = new Map();
 const gachaRarityRows = new Map();
+
+function rebuildGachaConfigCaches({ refreshRarities = true } = {}) {
+  const baseRarities = sanitizeGachaRarities(rawGachaConfig.rarities).map(localizeRarityEntry);
+  const missingRarityIds = new Set(configuredRarityIds);
+  baseRarities.forEach(entry => {
+    missingRarityIds.delete(entry.id);
+  });
+  missingRarityIds.forEach(id => {
+    baseRarities.push({ id, label: id, description: '', weight: 0, color: null });
+  });
+  BASE_GACHA_RARITIES = baseRarities;
+  BASE_GACHA_RARITY_ID_SET = new Set(baseRarities.map(entry => entry.id));
+  GACHA_COLLECTION_UNLOCKS = sanitizeGachaCollectionUnlocks(rawGachaConfig.collectionUnlocks);
+  WEEKLY_RARITY_WEIGHTS = sanitizeWeeklyRarityWeights(
+    rawGachaConfig.weeklyRarityWeights
+      ?? rawGachaConfig.weeklyWeights
+      ?? rawGachaConfig.dailyRarityWeights
+      ?? {}
+  );
+  GACHA_TICKET_COST = Math.max(
+    1,
+    Math.floor(
+      Number(
+        rawGachaConfig.ticketCost
+          ?? rawGachaConfig.cost
+          ?? DEFAULT_GACHA_TICKET_COST
+      ) || DEFAULT_GACHA_TICKET_COST
+    )
+  );
+  RARITY_IDS = BASE_GACHA_RARITIES.map(entry => entry.id);
+  GACHA_RARITY_ORDER = new Map(RARITY_IDS.map((id, index) => [id, index]));
+  INFO_BONUS_RARITIES = RARITY_IDS.length > 0
+    ? [...RARITY_IDS]
+    : ['commun', 'essentiel', 'stellaire', 'singulier', 'mythique', 'irreel'];
+  updateLocalizedRarityData({ includeEffective: true, force: true });
+  RARITY_IDS.forEach(rarityId => {
+    const rarityLabel = RARITY_LABEL_MAP.get(rarityId) || rarityId;
+    defineProductionStep(
+      `rarityMultiplier:${rarityId}`,
+      'multiplier',
+      `Rareté ${rarityLabel}`,
+      { source: 'rarityMultiplier', rarityId }
+    );
+  });
+  if (refreshRarities) {
+    refreshGachaRarities(new Date(), { force: true });
+  }
+  rebuildGachaPools();
+  if (typeof elements !== 'undefined' && elements?.gachaRarityList) {
+    renderGachaRarityList();
+  } else {
+    updateGachaRarityProgress();
+  }
+}
 
 function rebuildGachaPools() {
   gachaPools.clear();
