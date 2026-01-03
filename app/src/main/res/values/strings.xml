@@ -32,6 +32,7 @@
     <string name="pixel_art_action_redo">Refaire</string>
     <string name="pixel_art_action_clear">Effacer</string>
     <string name="pixel_art_action_export">Exporter PNG</string>
+    <string name="pixel_art_action_import">Charger PNG</string>
     <string name="pixel_art_grid_toggle">Grille</string>
     <string name="pixel_art_canvas_size">Taille: %1$dx%2$d</string>
     <string name="pixel_art_color_picker_title">Choisir une couleur</string>
@@ -45,4 +46,9 @@
     <string name="pixel_art_palette_color_added">Couleur ajoutee a la palette</string>
     <string name="pixel_art_palette_color_removed">Couleur supprimee</string>
     <string name="pixel_art_palette_reset_confirm">Reinitialiser la palette ?</string>
+    <string name="pixel_art_save_success">Image sauvegardee.</string>
+    <string name="pixel_art_save_error">Erreur lors de la sauvegarde.</string>
+    <string name="pixel_art_load_success">Image chargee.</string>
+    <string name="pixel_art_load_error">Impossible de charger l'image.</string>
+    <string name="pixel_art_load_scaled">Image redimensionnee pour tenir dans %1$d x %2$d.</string>
 </resources>
