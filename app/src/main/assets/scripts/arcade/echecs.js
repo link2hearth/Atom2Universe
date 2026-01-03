@@ -75,7 +75,7 @@
   const STORAGE_VERSION = 3;
   const POINTER_DRAG_THRESHOLD = 6;
   const ARCHIVE_LIMIT = 25;
-  const PGN_EVENT_NAME = 'Atom2Univers Chess';
+  const PGN_EVENT_NAME = 'Atom2Universe Chess';
 
   const BOARD_SIZE = 8;
   const WHITE = 'w';
@@ -6137,7 +6137,7 @@
         );
     const headers = [
       `[Event "${PGN_EVENT_NAME}"]`,
-      '[Site "Atom2Univers"]',
+      '[Site "Atom2Universe"]',
       `[Date "${formatPgnDate(createdAt)}"]`,
       '[Round "-"]',
       `[White "${whiteLabel}"]`,

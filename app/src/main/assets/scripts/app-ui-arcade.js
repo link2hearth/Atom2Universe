@@ -2692,36 +2692,66 @@ function updateMetauxCreditsUI() {
     const canStart = available > 0 && !active;
     elements.metauxNewGameButton.disabled = !canStart;
     elements.metauxNewGameButton.setAttribute('aria-disabled', canStart ? 'false' : 'true');
-    const tooltip = canStart
+    const newGameTooltipKey = canStart
+      ? 'index.sections.arcade.metaux.tooltips.newGameReady'
+      : available > 0
+        ? 'index.sections.arcade.metaux.tooltips.inProgress'
+        : 'index.sections.arcade.metaux.tooltips.noCredits';
+    const tooltipFallback = canStart
       ? `Consomme 1 crédit Mach3 (restant : ${formatMetauxCreditLabel(available)}).`
       : available > 0
         ? 'Partie en cours… Terminez-la avant de relancer.'
-        : 'Aucun crédit Mach3 disponible. Jouez à Atom2Univers pour en gagner.';
+        : 'Aucun crédit Mach3 disponible. Jouez à Atom2Universe pour en gagner.';
+    const tooltip = translateOrDefault(newGameTooltipKey, tooltipFallback, {
+      credits: formatMetauxCreditLabel(available)
+    });
     elements.metauxNewGameButton.title = tooltip;
     elements.metauxNewGameButton.setAttribute('aria-label', `${available > 0 ? 'Nouvelle partie' : 'Crédit indisponible'} — ${tooltip}`);
+    elements.metauxNewGameButton.setAttribute('data-i18n', `aria-label:${newGameTooltipKey};title:${newGameTooltipKey}`);
   }
   if (elements.metauxFreePlayButton) {
     const disabled = active;
     elements.metauxFreePlayButton.disabled = disabled;
     elements.metauxFreePlayButton.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    const tooltip = disabled
+    const freePlayTooltipKey = disabled
+      ? 'index.sections.arcade.metaux.tooltips.inProgress'
+      : 'index.sections.arcade.metaux.tooltips.freePlay';
+    const tooltipFallback = disabled
       ? 'Partie en cours… Terminez-la avant de relancer.'
       : 'Partie libre : aucun crédit requis.';
+    const tooltip = translateOrDefault(freePlayTooltipKey, tooltipFallback);
     elements.metauxFreePlayButton.title = tooltip;
     const label = (elements.metauxFreePlayButton.textContent || '').trim() || 'Free Play';
     elements.metauxFreePlayButton.setAttribute('aria-label', `${label} — ${tooltip}`);
+    elements.metauxFreePlayButton.setAttribute('data-i18n', `aria-label:${freePlayTooltipKey};title:${freePlayTooltipKey}`);
   }
   if (elements.metauxCreditStatus) {
     let statusText = '';
     const freeMode = metauxGame && typeof metauxGame.isFreePlayMode === 'function' && metauxGame.isFreePlayMode();
     if (active) {
-      statusText = freeMode
+      const statusKey = freeMode
+        ? 'index.sections.arcade.metaux.status.freePlayActive'
+        : 'index.sections.arcade.metaux.status.active';
+      const statusFallback = freeMode
         ? 'Partie libre en cours — expérimentez sans pression.'
         : 'Forge en cours… Utilisez vos déplacements pour créer des alliages !';
+      statusText = translateOrDefault(statusKey, statusFallback);
+      elements.metauxCreditStatus.setAttribute('data-i18n', statusKey);
     } else if (available > 0) {
-      statusText = `Crédits disponibles : ${formatMetauxCreditLabel(available)}.`;
+      const statusKey = 'index.sections.arcade.metaux.status.available';
+      statusText = translateOrDefault(
+        statusKey,
+        `Crédits disponibles : ${formatMetauxCreditLabel(available)}.`,
+        { credits: formatMetauxCreditLabel(available) }
+      );
+      elements.metauxCreditStatus.setAttribute('data-i18n', statusKey);
     } else {
-      statusText = 'Aucun crédit Mach3 disponible. Lancez une partie libre ou jouez à Atom2Univers pour en gagner.';
+      const statusKey = 'index.sections.arcade.metaux.status.noCredits';
+      statusText = translateOrDefault(
+        statusKey,
+        'Aucun crédit Mach3 disponible. Lancez une partie libre ou jouez à Atom2Universe pour en gagner.'
+      );
+      elements.metauxCreditStatus.setAttribute('data-i18n', statusKey);
     }
     elements.metauxCreditStatus.textContent = statusText;
     elements.metauxCreditStatus.hidden = false;

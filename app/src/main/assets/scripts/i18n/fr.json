@@ -1,7 +1,7 @@
 {
   "index": {
     "meta": {
-      "title": "Atom to Universe"
+      "title": "Atom2Universe"
     },
     "startup": {
       "title": "Chargement en cours…",
@@ -222,7 +222,7 @@
         },
         "downloads": {
           "title": "Téléchargées",
-          "subtitle": "Vos images téléchargées depuis l’application Android (Pictures/Atom2Univers).",
+          "subtitle": "Vos images téléchargées depuis l’application Android (Pictures/Atom2Universe).",
           "toggle": {
             "collapse": "Réduire",
             "expand": "Développer"
@@ -602,7 +602,7 @@
       },
       "notes": {
         "title": "Notes",
-        "subtitle": "Créez, éditez et supprimez vos fichiers texte ou Markdown sauvegardés dans Documents/Atom2Univers.",
+        "subtitle": "Créez, éditez et supprimez vos fichiers texte ou Markdown sauvegardés dans Documents/Atom2Universe.",
         "selector": {
           "label": "Vos notes",
           "placeholder": "Sélectionnez une note"
@@ -633,7 +633,7 @@
         },
         "list": {
           "title": "Vos fichiers",
-          "hint": "Les notes sont stockées dans Documents/Atom2Univers.",
+          "hint": "Les notes sont stockées dans Documents/Atom2Universe.",
           "empty": "Aucune note pour le moment.",
           "meta": "{{extension}} · Mis à jour {{date}}"
         },
@@ -2461,7 +2461,19 @@
         "newGameCredits": "Coût : 1 crédit Mach3",
         "freePlay": "Mode libre",
         "return": "Retourner au clicker",
-        "creditStatus": "Crédits Mach3 restants : 0"
+        "creditStatus": "Crédits Mach3 restants : 0",
+        "tooltips": {
+          "newGameReady": "Consomme 1 crédit Mach3 (restant : {credits}).",
+          "inProgress": "Partie en cours… Terminez-la avant de relancer.",
+          "noCredits": "Aucun crédit Mach3 disponible. Jouez à Atom2Universe pour en gagner.",
+          "freePlay": "Partie libre : aucun crédit requis."
+        },
+        "status": {
+          "freePlayActive": "Partie libre en cours — expérimentez sans pression.",
+          "active": "Forge en cours… Utilisez vos déplacements pour créer des alliages !",
+          "available": "Crédits disponibles : {credits}.",
+          "noCredits": "Aucun crédit Mach3 disponible. Lancez une partie libre ou jouez à Atom2Universe pour en gagner."
+        }
       },
       "options": {
         "title": "Options",

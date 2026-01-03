@@ -44,6 +44,8 @@ class Recorder(
 
     @Volatile
     private var keepRecording = false
+    private val musicFolderName = "Atom2Universe"
+    private val legacyMusicFolderName = "Atom2Univers"
 
     fun startRecording(streamUrl: String, metadata: TrackMetadata?, onFinished: (() -> Unit)? = null): Boolean {
         if (recordJob?.isActive == true) {
@@ -149,7 +151,7 @@ class Recorder(
         val resolver = context.contentResolver
         val timestampMs = System.currentTimeMillis()
         val displayName = buildDisplayName(metadataSnapshot, timestampMs)
-        val contentValues = buildContentValues(displayName)
+        val (contentValues, legacyMusicDir) = buildContentValues(displayName)
         val targetUri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentValues)
         if (targetUri == null) {
             Log.w(TAG, "Unable to create MediaStore entry for recording")
@@ -179,6 +181,7 @@ class Recorder(
             sidecarUri = sidecarUri,
             sidecarDisplayName = sidecarDisplayName,
             usesLegacyStorage = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q,
+            legacyMusicDir = legacyMusicDir,
             bytesWritten = 0,
             wasSuccessful = false
         )
@@ -229,8 +232,7 @@ class Recorder(
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            val targetDir = File(musicDir, "Atom2Univers")
+            val targetDir = segment.legacyMusicDir ?: resolveLegacyMusicDir()
             val currentFile = File(targetDir, segment.initialDisplayName)
             val renamedFile = File(targetDir, newDisplayName)
 
@@ -252,8 +254,7 @@ class Recorder(
         }
 
         if (segment.usesLegacyStorage) {
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            val targetDir = File(musicDir, "Atom2Univers")
+            val targetDir = segment.legacyMusicDir ?: resolveLegacyMusicDir()
             val currentFile = File(targetDir, segment.sidecarDisplayName)
             val renamedFile = File(targetDir, newDisplayName)
 
@@ -273,8 +274,7 @@ class Recorder(
     private fun updateSidecarContent(segment: RecordingSegment, metadata: TrackMetadata?) {
         val metadataText = buildMetadataText(metadata, segment.startTimeMs)
         if (segment.usesLegacyStorage) {
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            val targetDir = File(musicDir, "Atom2Univers")
+            val targetDir = segment.legacyMusicDir ?: resolveLegacyMusicDir()
             val sidecarFile = File(targetDir, segment.sidecarDisplayName)
             try {
                 sidecarFile.parentFile?.mkdirs()
@@ -329,8 +329,7 @@ class Recorder(
 
         val isLegacy = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
         val sidecarFile = if (isLegacy) {
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            val targetDir = File(musicDir, "Atom2Univers")
+            val targetDir = resolveLegacyMusicDir()
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
@@ -338,7 +337,7 @@ class Recorder(
                 values.put(MediaStore.MediaColumns.DATA, file.absolutePath)
             }
         } else {
-            values.put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_MUSIC}/Atom2Univers")
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_MUSIC}/$musicFolderName")
             values.put(MediaStore.MediaColumns.IS_PENDING, 1)
             null
         }
@@ -394,8 +393,7 @@ class Recorder(
 
     private fun deleteSidecar(segment: RecordingSegment) {
         if (segment.usesLegacyStorage) {
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            val targetDir = File(musicDir, "Atom2Univers")
+            val targetDir = segment.legacyMusicDir ?: resolveLegacyMusicDir()
             val sidecarFile = File(targetDir, segment.sidecarDisplayName)
             if (sidecarFile.exists()) {
                 try {
@@ -437,24 +435,37 @@ class Recorder(
         return TrackMetadata(artist, title, station)
     }
 
-    private fun buildContentValues(displayName: String): ContentValues {
+    private fun buildContentValues(displayName: String): Pair<ContentValues, File?> {
         val values = ContentValues().apply {
             put(MediaStore.Audio.Media.DISPLAY_NAME, displayName)
             put(MediaStore.Audio.Media.MIME_TYPE, "audio/mpeg")
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            values.put(MediaStore.Audio.Media.RELATIVE_PATH, "${Environment.DIRECTORY_MUSIC}/Atom2Univers")
+            values.put(MediaStore.Audio.Media.RELATIVE_PATH, "${Environment.DIRECTORY_MUSIC}/$musicFolderName")
             values.put(MediaStore.Audio.Media.IS_PENDING, 1)
+            return values to null
         } else {
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            val targetDir = File(musicDir, "Atom2Univers")
+            val targetDir = resolveLegacyMusicDir()
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
             val legacyPath = File(targetDir, displayName).absolutePath
             values.put(MediaStore.Audio.Media.DATA, legacyPath)
+            return values to targetDir
         }
-        return values
+    }
+
+    private fun resolveLegacyMusicDir(): File {
+        val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+        val preferred = File(musicDir, musicFolderName)
+        val legacy = File(musicDir, legacyMusicFolderName)
+        return when {
+            preferred.exists() -> preferred
+            legacy.exists() -> legacy
+            preferred.mkdirs() -> preferred
+            legacy.mkdirs() -> legacy
+            else -> preferred
+        }
     }
 
     private data class RecordingSegment(
@@ -467,6 +478,7 @@ class Recorder(
         val sidecarUri: Uri?,
         val sidecarDisplayName: String,
         val usesLegacyStorage: Boolean,
+        val legacyMusicDir: File?,
         var bytesWritten: Long,
         var wasSuccessful: Boolean
     )
