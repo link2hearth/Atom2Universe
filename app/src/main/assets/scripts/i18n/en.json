@@ -1,7 +1,7 @@
 {
   "index": {
     "meta": {
-      "title": "Atom to Universe"
+      "title": "Atom2Universe"
     },
     "startup": {
       "title": "Loading…",
@@ -222,7 +222,7 @@
         },
         "downloads": {
           "title": "Downloaded",
-          "subtitle": "Images saved by the Android app (Pictures/Atom2Univers).",
+          "subtitle": "Images saved by the Android app (Pictures/Atom2Universe).",
           "toggle": {
             "collapse": "Collapse",
             "expand": "Expand"
@@ -602,7 +602,7 @@
       },
       "notes": {
         "title": "Notes",
-        "subtitle": "Create, edit, and delete text or Markdown files saved in Documents/Atom2Univers.",
+        "subtitle": "Create, edit, and delete text or Markdown files saved in Documents/Atom2Universe.",
         "selector": {
           "label": "Your notes",
           "placeholder": "Select a note"
@@ -633,7 +633,7 @@
         },
         "list": {
           "title": "Your files",
-          "hint": "Notes are stored in Documents/Atom2Univers.",
+          "hint": "Notes are stored in Documents/Atom2Universe.",
           "empty": "No notes yet.",
           "meta": "{{extension}} · Updated {{date}}"
         },
@@ -2461,7 +2461,19 @@
         "newGameCredits": "Cost: 1 Mach3 credit",
         "freePlay": "Free mode",
         "return": "Return to clicker",
-        "creditStatus": "Mach3 credits left: 0"
+        "creditStatus": "Mach3 credits left: 0",
+        "tooltips": {
+          "newGameReady": "Uses 1 Mach3 credit (remaining: {credits}).",
+          "inProgress": "Game in progress… Finish it before restarting.",
+          "noCredits": "No Mach3 credits available. Play Atom2Universe to earn some.",
+          "freePlay": "Free play: no credits required."
+        },
+        "status": {
+          "freePlayActive": "Free play in progress — experiment without pressure.",
+          "active": "Forge in progress… Use your moves to craft alloys!",
+          "available": "Credits available: {credits}.",
+          "noCredits": "No Mach3 credits available. Start a free run or play Atom2Universe to earn some."
+        }
       },
       "options": {
         "title": "Options",

@@ -1994,7 +1994,7 @@ function handleImageSavedOnDevice(success) {
     ? 'index.sections.images.status.downloaded'
     : 'index.sections.images.status.downloadError';
   const fallback = success
-    ? 'Image saved to Pictures/Atom2Univers.'
+    ? 'Image saved to Pictures/Atom2Universe.'
     : 'Unable to save image.';
   showToast(translateOrDefault(key, fallback, { path: IMAGE_DOWNLOAD_TARGET_PATH }));
 }
