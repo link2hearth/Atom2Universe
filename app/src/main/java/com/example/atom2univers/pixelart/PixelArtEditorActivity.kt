@@ -1,15 +1,15 @@
 package com.example.atom2univers.pixelart
 
+import android.content.ContentValues
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
-import android.net.Uri
-import android.util.Log
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import android.widget.*
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.atom2univers.R
@@ -18,15 +18,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.min
 
 class PixelArtEditorActivity : AppCompatActivity() {
 
     private lateinit var pixelCanvas: PixelCanvas
     private lateinit var btnUndo: ImageButton
     private lateinit var btnRedo: ImageButton
-    private lateinit var btnExport: ImageButton
-    private lateinit var btnImport: ImageButton
     private lateinit var txtZoom: TextView
     private lateinit var txtCanvasSize: TextView
     private lateinit var colorPrimary: View
@@ -57,18 +54,6 @@ class PixelArtEditorActivity : AppCompatActivity() {
     private val customPalette = mutableListOf<Int>()
     private val PREFS_NAME = "PixelArtPrefs"
     private val PALETTE_KEY = "custom_palette"
-    private val AUTOSAVE_FILENAME = "pixel_art_autosave.png"
-    private val autosaveLogTag = "PixelArtAutosave"
-
-    private val createDocumentLauncher =
-        registerForActivityResult(ActivityResultContracts.CreateDocument("image/png")) { uri ->
-            uri?.let { saveBitmapToUri(it) }
-        }
-
-    private val openDocumentLauncher =
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-            uri?.let { loadImageFromUri(it) }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,15 +66,12 @@ class PixelArtEditorActivity : AppCompatActivity() {
         setupSizePresets()
         setupZoomControls()
         setupCanvas()
-        loadTempProjectIfAvailable()
     }
 
     private fun initViews() {
         pixelCanvas = findViewById(R.id.pixel_canvas)
         btnUndo = findViewById(R.id.btn_undo)
         btnRedo = findViewById(R.id.btn_redo)
-        btnExport = findViewById(R.id.btn_export)
-        btnImport = findViewById(R.id.btn_import)
         txtZoom = findViewById(R.id.txt_zoom)
         txtCanvasSize = findViewById(R.id.txt_canvas_size)
         colorPrimary = findViewById(R.id.color_primary)
@@ -115,12 +97,8 @@ class PixelArtEditorActivity : AppCompatActivity() {
             showClearConfirmDialog()
         }
 
-        btnExport.setOnClickListener {
+        findViewById<ImageButton>(R.id.btn_export).setOnClickListener {
             exportImage()
-        }
-
-        btnImport.setOnClickListener {
-            openDocumentLauncher.launch(arrayOf("image/png"))
         }
 
         updateCanvasSizeText()
@@ -476,89 +454,42 @@ class PixelArtEditorActivity : AppCompatActivity() {
     }
 
     private fun exportImage() {
+        val bitmap = pixelCanvas.exportToBitmap()
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val filename = "PixelArt_$timestamp.png"
-        createDocumentLauncher.launch(filename)
-    }
 
-    private fun saveBitmapToUri(uri: Uri) {
-        val bitmap = pixelCanvas.exportToBitmap()
         try {
-            contentResolver.openOutputStream(uri)?.use { outputStream ->
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            } ?: throw IllegalStateException("OutputStream null")
-            Toast.makeText(this, R.string.pixel_art_save_success, Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Toast.makeText(this, R.string.pixel_art_save_error, Toast.LENGTH_LONG).show()
-        }
-    }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Use MediaStore for Android 10+
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/PixelArt")
+                }
 
-    private fun loadImageFromUri(uri: Uri) {
-        val bitmap = contentResolver.openInputStream(uri)?.use { inputStream ->
-            BitmapFactory.decodeStream(inputStream)
-        }
+                val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                uri?.let {
+                    contentResolver.openOutputStream(it)?.use { outputStream ->
+                        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, outputStream)
+                    }
+                    Toast.makeText(this, "Image sauvegardee: $filename", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Legacy storage for older Android versions
+                val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                val pixelArtDir = File(picturesDir, "PixelArt")
+                if (!pixelArtDir.exists()) {
+                    pixelArtDir.mkdirs()
+                }
 
-        if (bitmap == null) {
-            Toast.makeText(this, R.string.pixel_art_load_error, Toast.LENGTH_LONG).show()
-            return
-        }
-
-        val preparedBitmap = prepareBitmapForCanvas(bitmap)
-        pixelCanvas.loadFromBitmap(preparedBitmap)
-        updateCanvasSizeText()
-        updateSizeButtonStates(pixelCanvas.getCanvasWidth())
-        Toast.makeText(this, R.string.pixel_art_load_success, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun prepareBitmapForCanvas(source: Bitmap): Bitmap {
-        val maxSize = 512
-        val bitmap = if (source.config == Bitmap.Config.ARGB_8888) source else {
-            source.copy(Bitmap.Config.ARGB_8888, false)
-        }
-
-        val exceedsBounds = bitmap.width > maxSize || bitmap.height > maxSize
-        if (!exceedsBounds) {
-            return bitmap
-        }
-
-        val ratio = min(
-            maxSize.toFloat() / bitmap.width.toFloat(),
-            maxSize.toFloat() / bitmap.height.toFloat()
-        )
-        val newWidth = (bitmap.width * ratio).toInt().coerceAtLeast(1)
-        val newHeight = (bitmap.height * ratio).toInt().coerceAtLeast(1)
-        Toast.makeText(
-            this,
-            getString(R.string.pixel_art_load_scaled, maxSize, maxSize),
-            Toast.LENGTH_SHORT
-        ).show()
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false)
-    }
-
-    private fun saveTempProject() {
-        val file = File(filesDir, AUTOSAVE_FILENAME)
-        val bitmap = pixelCanvas.exportToBitmap()
-        try {
-            FileOutputStream(file).use { outputStream ->
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                val file = File(pixelArtDir, filename)
+                FileOutputStream(file).use { outputStream ->
+                    bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, outputStream)
+                }
+                Toast.makeText(this, "Image sauvegardee: ${file.absolutePath}", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
-            Log.w(autosaveLogTag, "Autosave failed", e)
+            Toast.makeText(this, "Erreur lors de la sauvegarde: ${e.message}", Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun loadTempProjectIfAvailable() {
-        val file = File(filesDir, AUTOSAVE_FILENAME)
-        if (!file.exists()) return
-        val bitmap = BitmapFactory.decodeFile(file.absolutePath) ?: return
-        val preparedBitmap = prepareBitmapForCanvas(bitmap)
-        pixelCanvas.loadFromBitmap(preparedBitmap)
-        updateCanvasSizeText()
-        updateSizeButtonStates(pixelCanvas.getCanvasWidth())
-    }
-
-    override fun onPause() {
-        super.onPause()
-        saveTempProject()
     }
 }
