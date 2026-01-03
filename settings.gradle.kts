@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Atom2Univers"
+rootProject.name = "Atom2Universe"
 include(":app")

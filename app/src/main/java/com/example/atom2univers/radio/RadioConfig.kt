@@ -63,7 +63,7 @@ class RadioConfig(
                 maxResults = 25,
                 hideBroken = true,
                 favoritesStorageKey = "radioKotlinFavorites",
-                userAgent = "Atom2Univers/RadioKotlin"
+                userAgent = "Atom2Universe/RadioKotlin"
             )
         }
     }

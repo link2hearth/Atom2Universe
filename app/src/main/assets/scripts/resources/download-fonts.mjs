@@ -27,7 +27,7 @@ const ensureFontsDir = async () => {
 const fetchText = async (url) => {
   const response = await fetch(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; Atom2Univers Font Fetcher)'
+      'User-Agent': 'Mozilla/5.0 (compatible; Atom2Universe Font Fetcher)'
     }
   });
 
@@ -41,7 +41,7 @@ const fetchText = async (url) => {
 const fetchBinary = async (url) => {
   const response = await fetch(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; Atom2Univers Font Fetcher)'
+      'User-Agent': 'Mozilla/5.0 (compatible; Atom2Universe Font Fetcher)'
     }
   });
 

@@ -218,7 +218,7 @@ const DEFAULT_RADIO_SETTINGS = Object.freeze({
   maxResults: 50,
   hideBroken: true,
   favoritesStorageKey: 'atom2univers.radio.favorites',
-  userAgent: 'Atom2Univers/Radio'
+  userAgent: 'Atom2Universe/Radio'
 });
 
 const ACTIVE_RADIO_SETTINGS = typeof RADIO_SETTINGS !== 'undefined'
@@ -326,7 +326,7 @@ const ACTIVE_IMAGE_FEED_SETTINGS = typeof IMAGE_FEED_SETTINGS !== 'undefined'
     ? IMAGE_FEED_SETTINGS
     : DEFAULT_IMAGE_FEED_SETTINGS;
 
-const IMAGE_DOWNLOAD_TARGET_PATH = 'Pictures/Atom2Univers';
+const IMAGE_DOWNLOAD_TARGET_PATH = 'Pictures/Atom2Universe';
 
 const IMAGE_FAVORITE_CACHE_MAX_DIMENSION = 1280;
 const IMAGE_THUMBNAIL_MAX_DIMENSION = 512;
