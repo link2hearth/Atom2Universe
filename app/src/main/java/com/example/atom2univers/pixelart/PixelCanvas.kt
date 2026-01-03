@@ -709,26 +709,6 @@ class PixelCanvas @JvmOverloads constructor(
         return canvasBitmap.copy(Bitmap.Config.ARGB_8888, false)
     }
 
-    fun loadFromBitmap(bitmap: Bitmap) {
-        val safeBitmap = if (bitmap.config == Bitmap.Config.ARGB_8888) {
-            bitmap
-        } else {
-            bitmap.copy(Bitmap.Config.ARGB_8888, false)
-        }
-
-        canvasWidth = safeBitmap.width
-        canvasHeight = safeBitmap.height
-        pixelData = IntArray(canvasWidth * canvasHeight)
-        safeBitmap.getPixels(pixelData, 0, canvasWidth, 0, 0, canvasWidth, canvasHeight)
-        canvasBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888)
-        updateBitmap()
-        undoStack.clear()
-        redoStack.clear()
-        notifyHistoryChanged()
-        post { centerCanvas() }
-        invalidate()
-    }
-
     fun swapColors() {
         val temp = primaryColor
         primaryColor = secondaryColor
