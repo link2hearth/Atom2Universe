@@ -274,7 +274,7 @@ const RADIO_SETTINGS = Object.freeze({
   maxResults: 50,
   hideBroken: true,
   favoritesStorageKey: 'atom2univers.radio.favorites',
-  userAgent: 'Atom2Univers/Radio'
+  userAgent: 'Atom2Universe/Radio'
 });
 
 /**

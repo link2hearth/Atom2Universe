@@ -1165,7 +1165,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private companion object {
-        private const val TAG = "Atom2Univers"
+        private const val TAG = "Atom2Universe"
         private const val ASSET_URL_PREFIX = "https://appassets.androidplatform.net/assets/"
         private const val BACKUP_FILE_NAME = "atom2univers-backup.json"
         private const val PREFERENCES_NAME = "atom2univers_prefs"

@@ -30,9 +30,14 @@ class WebAppBridge(activity: MainActivity) {
 
     private val activityRef = WeakReference(activity)
     private val defaultNewsFeedUrl = "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr"
-    private val notesRelativePath = "${Environment.DIRECTORY_DOCUMENTS}/Atom2Univers/"
-    private val downloadsRelativePath = "${Environment.DIRECTORY_PICTURES}/Atom2Univers/"
+    private val notesRelativePath = "${Environment.DIRECTORY_DOCUMENTS}/Atom2Universe/"
+    private val legacyNotesRelativePath = "${Environment.DIRECTORY_DOCUMENTS}/Atom2Univers/"
+    private val downloadsRelativePath = "${Environment.DIRECTORY_PICTURES}/Atom2Universe/"
+    private val legacyDownloadsRelativePath = "${Environment.DIRECTORY_PICTURES}/Atom2Univers/"
+    private val notesFolderName = "Atom2Universe"
     private val legacyNotesFolderName = "Atom2Univers"
+    private val downloadsFolderName = "Atom2Universe"
+    private val legacyDownloadsFolderName = "Atom2Univers"
 
     @JavascriptInterface
     fun saveBackup() {
@@ -164,15 +169,15 @@ class WebAppBridge(activity: MainActivity) {
             val mimeType = guessMimeType(source)
             val displayName = buildImageDisplayName(itemId, mimeType)
             val imageBytes = decodeDataUrl(source) ?: downloadBinary(source)
-            val success = if (imageBytes != null && imageBytes.isNotEmpty()) {
+            val savedPath = if (imageBytes != null && imageBytes.isNotEmpty()) {
                 saveImageBytes(activity, imageBytes, mimeType, displayName)
             } else {
-                false
+                null
             }
-            if (success) {
-                showImageSavedToast(activity)
+            if (savedPath != null) {
+                showImageSavedToast(activity, savedPath)
             }
-            val script = "window.onImageSaved && window.onImageSaved(${if (success) "true" else "false"});"
+            val script = "window.onImageSaved && window.onImageSaved(${if (savedPath != null) "true" else "false"});"
             activity.postJavascript(script)
         }.start()
     }
@@ -221,8 +226,8 @@ class WebAppBridge(activity: MainActivity) {
                     MediaStore.Files.FileColumns.MIME_TYPE,
                     MediaStore.Files.FileColumns.DATE_MODIFIED
                 )
-                val selection = "${MediaStore.Files.FileColumns.RELATIVE_PATH} = ?"
-                val selectionArgs = arrayOf(notesRelativePath)
+                val selection = "${MediaStore.Files.FileColumns.RELATIVE_PATH} = ? OR ${MediaStore.Files.FileColumns.RELATIVE_PATH} = ?"
+                val selectionArgs = arrayOf(notesRelativePath, legacyNotesRelativePath)
                 val sortOrder = "${MediaStore.Files.FileColumns.DATE_MODIFIED} DESC"
                 resolver.query(collection, projection, selection, selectionArgs, sortOrder)?.use { cursor ->
                     val idIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID)
@@ -382,15 +387,19 @@ class WebAppBridge(activity: MainActivity) {
     private fun ensureLegacyNotesDir(activity: Activity): File? {
         return try {
             val baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-            val target = File(baseDir, legacyNotesFolderName)
-            if (!target.exists() && !target.mkdirs()) {
+            val preferred = File(baseDir, notesFolderName)
+            val legacy = File(baseDir, legacyNotesFolderName)
+            val target = when {
+                preferred.exists() -> preferred
+                legacy.exists() -> legacy
+                preferred.mkdirs() -> preferred
+                legacy.mkdirs() -> legacy
+                else -> preferred
+            }
+            if (!target.exists()) {
                 val fallback = activity.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-                    ?.let { File(it, legacyNotesFolderName) }
-                if (fallback != null && (fallback.exists() || fallback.mkdirs())) {
-                    fallback
-                } else {
-                    null
-                }
+                    ?.let { File(it, notesFolderName) }
+                if (fallback != null && (fallback.exists() || fallback.mkdirs())) fallback else null
             } else {
                 target
             }
@@ -404,12 +413,17 @@ class WebAppBridge(activity: MainActivity) {
         val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         val projection = arrayOf(MediaStore.Files.FileColumns._ID)
         val selection = "${MediaStore.Files.FileColumns.RELATIVE_PATH} = ? AND ${MediaStore.Files.FileColumns.DISPLAY_NAME} = ?"
-        val selectionArgs = arrayOf(notesRelativePath, displayName)
-        resolver.query(collection, projection, selection, selectionArgs, null)?.use { cursor ->
-            val idIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID)
-            if (idIndex >= 0 && cursor.moveToFirst()) {
-                val id = cursor.getLong(idIndex)
-                return Uri.withAppendedPath(collection, id.toString())
+        val selectionArgsList = listOf(
+            arrayOf(notesRelativePath, displayName),
+            arrayOf(legacyNotesRelativePath, displayName)
+        )
+        for (selectionArgs in selectionArgsList) {
+            resolver.query(collection, projection, selection, selectionArgs, null)?.use { cursor ->
+                val idIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID)
+                if (idIndex >= 0 && cursor.moveToFirst()) {
+                    val id = cursor.getLong(idIndex)
+                    return Uri.withAppendedPath(collection, id.toString())
+                }
             }
         }
         return null
@@ -440,17 +454,6 @@ class WebAppBridge(activity: MainActivity) {
             } catch (_: Exception) {
             }
             connection?.disconnect()
-        }
-    }
-
-    private fun showImageSavedToast(activity: Activity) {
-        val targetPath = Environment.DIRECTORY_PICTURES + "/Atom2Univers"
-        activity.runOnUiThread {
-            Toast.makeText(
-                activity,
-                activity.getString(R.string.image_saved_toast, targetPath),
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
@@ -515,8 +518,8 @@ class WebAppBridge(activity: MainActivity) {
         val resolver = activity.contentResolver
         val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         val projection = arrayOf(MediaStore.Images.Media._ID)
-        val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ?"
-        val selectionArgs = arrayOf("$downloadsRelativePath%")
+        val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ? OR ${MediaStore.Images.Media.RELATIVE_PATH} LIKE ?"
+        val selectionArgs = arrayOf("$downloadsRelativePath%", "$legacyDownloadsRelativePath%")
         val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
         val results = mutableListOf<String>()
         resolver.query(collection, projection, selection, selectionArgs, sortOrder)?.use { cursor ->
@@ -531,15 +534,21 @@ class WebAppBridge(activity: MainActivity) {
 
     private fun queryCollectionDownloadsLegacy(): List<String> {
         val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val targetDir = File(picturesDir, "Atom2Univers")
-        if (!targetDir.exists()) {
+        val targetDirs = listOf(
+            File(picturesDir, downloadsFolderName),
+            File(picturesDir, legacyDownloadsFolderName)
+        ).filter { it.exists() }
+        if (targetDirs.isEmpty()) {
             return emptyList()
         }
-        return targetDir.walkTopDown()
-            .filter { file -> file.isFile && isImageFile(file) }
+        return targetDirs
+            .flatMap { dir ->
+                dir.walkTopDown()
+                    .filter { file -> file.isFile && isImageFile(file) }
+                    .toList()
+            }
             .sortedByDescending { file -> file.lastModified() }
             .map { file -> Uri.fromFile(file).toString() }
-            .toList()
     }
 
     private fun isImageFile(file: File): Boolean {
@@ -578,7 +587,7 @@ class WebAppBridge(activity: MainActivity) {
         return "$base.$extension"
     }
 
-    private fun saveImageBytes(activity: Activity, data: ByteArray, mimeType: String, displayName: String): Boolean {
+    private fun saveImageBytes(activity: Activity, data: ByteArray, mimeType: String, displayName: String): String? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             saveWithMediaStore(activity, data, mimeType, displayName)
         } else {
@@ -586,38 +595,35 @@ class WebAppBridge(activity: MainActivity) {
         }
     }
 
-    private fun saveWithMediaStore(activity: Activity, data: ByteArray, mimeType: String, displayName: String): Boolean {
+    private fun saveWithMediaStore(activity: Activity, data: ByteArray, mimeType: String, displayName: String): String? {
         val resolver = activity.contentResolver
         val values = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
             put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Atom2Univers")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/$downloadsFolderName")
             put(MediaStore.MediaColumns.IS_PENDING, 1)
         }
         val uri = resolver.insert(MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), values)
-            ?: return false
+            ?: return null
         return try {
             resolver.openOutputStream(uri)?.use { output ->
                 output.write(data)
-            } ?: return false
+            } ?: return null
             values.clear()
             values.put(MediaStore.MediaColumns.IS_PENDING, 0)
             resolver.update(uri, values, null, null)
-            true
+            "${Environment.DIRECTORY_PICTURES}/$downloadsFolderName"
         } catch (error: Exception) {
             Log.w(TAG, "Unable to persist image with MediaStore", error)
             resolver.delete(uri, null, null)
-            false
+            null
         }
     }
 
-    private fun saveLegacyImage(activity: Activity, data: ByteArray, mimeType: String, displayName: String): Boolean {
+    private fun saveLegacyImage(activity: Activity, data: ByteArray, mimeType: String, displayName: String): String? {
         return try {
             val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-            val targetDir = File(picturesDir, "Atom2Univers")
-            if (!targetDir.exists() && !targetDir.mkdirs()) {
-                return false
-            }
+            val targetDir = resolveLegacyDownloadsDir(picturesDir) ?: return null
             val targetFile = File(targetDir, displayName)
             FileOutputStream(targetFile).use { it.write(data) }
             val values = ContentValues().apply {
@@ -626,10 +632,32 @@ class WebAppBridge(activity: MainActivity) {
                 put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
             }
             activity.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            true
+            "${Environment.DIRECTORY_PICTURES}/${targetDir.name}"
         } catch (error: Exception) {
             Log.w(TAG, "Unable to persist image on legacy storage", error)
-            false
+            null
+        }
+    }
+
+    private fun resolveLegacyDownloadsDir(picturesDir: File): File? {
+        val preferred = File(picturesDir, downloadsFolderName)
+        val legacy = File(picturesDir, legacyDownloadsFolderName)
+        return when {
+            preferred.exists() -> preferred
+            legacy.exists() -> legacy
+            preferred.mkdirs() -> preferred
+            legacy.mkdirs() -> legacy
+            else -> null
+        }
+    }
+
+    private fun showImageSavedToast(activity: Activity, targetPath: String) {
+        activity.runOnUiThread {
+            Toast.makeText(
+                activity,
+                activity.getString(R.string.image_saved_toast, targetPath),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
