@@ -16,4 +16,6 @@
     <string name="audio_action_pause">Pause</string>
     <string name="audio_action_play">Lecture</string>
     <string name="audio_action_stop">Arrêter</string>
+    <string name="startup_subtitle">Menu de démarrage</string>
+    <string name="startup_start_button">Démarrer</string>
 </resources>
