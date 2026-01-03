@@ -2474,6 +2474,10 @@
         "preferences": {
           "title": "Préférences d’interface"
         },
+        "returnMenu": {
+          "title": "Retour au menu",
+          "button": "Quitter"
+        },
         "background": {
           "title": "Background",
           "addButton": "Ajouter une banque d’images",

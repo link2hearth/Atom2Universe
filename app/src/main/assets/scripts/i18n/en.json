@@ -2474,6 +2474,10 @@
         "preferences": {
           "title": "Interface preferences"
         },
+        "returnMenu": {
+          "title": "Back to menu",
+          "button": "Quit"
+        },
         "background": {
           "title": "Background",
           "addButton": "Add image bank",

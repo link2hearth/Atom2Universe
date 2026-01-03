@@ -1,6 +1,7 @@
 package com.example.atom2univers
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.view.WindowManager
 import android.webkit.JavascriptInterface
@@ -34,8 +35,8 @@ class AndroidSystemBridge(activity: Activity, webView: GameWebView) {
 
     @JavascriptInterface
     fun setStatusBarVisible(visible: Boolean): Boolean {
-        val activity = activityRef.get() ?: return false
-        val shouldShow = visible
+      val activity = activityRef.get() ?: return false
+      val shouldShow = visible
         activity.runOnUiThread {
             val window = activity.window ?: return@runOnUiThread
             val controller = WindowCompat.getInsetsController(window, window.decorView)
@@ -56,5 +57,20 @@ class AndroidSystemBridge(activity: Activity, webView: GameWebView) {
             controller.hide(WindowInsetsCompat.Type.navigationBars())
         }
         return shouldShow
+    }
+
+    @JavascriptInterface
+    fun returnToStartupMenu(): Boolean {
+        val activity = activityRef.get() ?: return false
+        activity.runOnUiThread {
+            if (activity.isFinishing || activity.isDestroyed) {
+                return@runOnUiThread
+            }
+            val intent = Intent(activity, StartupActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            activity.startActivity(intent)
+            activity.finish()
+        }
+        return true
     }
 }

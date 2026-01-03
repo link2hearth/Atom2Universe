@@ -5507,6 +5507,54 @@ function subscribeAndroidStatusBarLanguageUpdates() {
   }
 }
 
+function updateReturnToMenuVisibility(supported) {
+  if (!elements.optionsReturnMenuCard) {
+    return;
+  }
+  if (supported) {
+    elements.optionsReturnMenuCard.removeAttribute('hidden');
+    elements.optionsReturnMenuCard.removeAttribute('aria-hidden');
+  } else {
+    elements.optionsReturnMenuCard.setAttribute('hidden', '');
+    elements.optionsReturnMenuCard.setAttribute('aria-hidden', 'true');
+  }
+  if (elements.optionsReturnMenuButton) {
+    elements.optionsReturnMenuButton.disabled = !supported;
+  }
+}
+
+function requestReturnToStartupMenu() {
+  const bridge = getAndroidSystemBridge();
+  if (!bridge || typeof bridge.returnToStartupMenu !== 'function') {
+    return false;
+  }
+  try {
+    const result = bridge.returnToStartupMenu();
+    if (typeof result === 'boolean') {
+      return result;
+    }
+    return true;
+  } catch (error) {
+    console.warn('Unable to return to startup menu', error);
+  }
+  return false;
+}
+
+function initReturnToStartupMenuOption() {
+  if (!elements.optionsReturnMenuCard && !elements.optionsReturnMenuButton) {
+    return;
+  }
+  const bridge = getAndroidSystemBridge();
+  const supported = Boolean(bridge && typeof bridge.returnToStartupMenu === 'function');
+  updateReturnToMenuVisibility(supported);
+  if (!supported || !elements.optionsReturnMenuButton) {
+    return;
+  }
+  elements.optionsReturnMenuButton.addEventListener('click', () => {
+    requestReturnToStartupMenu();
+  });
+}
+
 function updateAtomIconStatusLabel(visible) {
   if (!elements.atomIconToggleStatus) {
     return;
@@ -14385,6 +14433,7 @@ function initializeDomBoundModules() {
   subscribeCritAtomLanguageUpdates();
   initAndroidStatusBarOption();
   subscribeAndroidStatusBarLanguageUpdates();
+  initReturnToStartupMenuOption();
   initScreenWakeLockOption();
   subscribeScreenWakeLockLanguageUpdates();
   initFrenzyAutoCollectOption();
