@@ -2,6 +2,13 @@
 
 Bienvenue dans Atom2Univers ! Voici les consignes à respecter lorsque tu interviens sur ce dépôt :
 
+> **Orientation actuelle**
+> - On privilégie désormais le **natif Android** avec **Kotlin** (et Java si besoin).
+> - Si l’utilisateur dit explicitement qu’on travaille sur **Atom2Univers**, alors la cible est la **page HTML/web**.
+> - Sinon, la cible est le **natif Android** (Kotlin/Java).
+> - Un projet de **Pixel Art Editor** est déjà en cours ; d’autres modules seront ajoutés plus tard.
+> - Priorité absolue à la **savecore Android** ; envisager **Room** selon les modules.
+
 1. **Internationalisation**
    - Dès qu’un texte visible par l’utilisateur est modifié, ajoute ou mets à jour les entrées correspondantes dans les fichiers de langues (système i18n).
    - Utilise la méthode de fallback HTML (texte visible + data-i18n), pas la méthode JS avec defaultValue.
