@@ -925,6 +925,8 @@ function collectDomElements() {
   optionsPreferencesCard: document.getElementById('optionsPreferencesCard'),
   optionsPreferencesContent: document.getElementById('options-preferences-content'),
   optionsPreferencesToggle: document.getElementById('optionsPreferencesToggle'),
+  optionsReturnMenuCard: document.getElementById('optionsReturnMenuCard'),
+  optionsReturnMenuButton: document.getElementById('optionsReturnMenuButton'),
   optionsBackgroundCard: document.getElementById('optionsBackgroundCard'),
   optionsBackgroundContent: document.getElementById('options-background-content'),
   optionsBackgroundToggle: document.getElementById('optionsBackgroundToggle'),
