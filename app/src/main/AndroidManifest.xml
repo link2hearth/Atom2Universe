@@ -42,6 +42,12 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:resizeableActivity="false" />
 
+        <activity
+            android:name=".pixelart.PixelArtEditorActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.Atom2Univers" />
+
         <service
             android:name=".AudioPlaybackService"
             android:exported="false"

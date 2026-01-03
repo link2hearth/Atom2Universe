@@ -13479,11 +13479,17 @@ function serializeState() {
         ? gameState.fusions
         : {};
       const result = {};
-      FUSION_DEFS.forEach(def => {
-        const entry = source[def.id] || base[def.id] || { attempts: 0, successes: 0 };
+      // Include all fusion IDs from both FUSION_DEFS and gameState.fusions
+      // This preserves fusion data even if FUSION_DEFS wasn't fully loaded
+      const allFusionIds = new Set([
+        ...FUSION_DEFS.map(def => def.id),
+        ...Object.keys(source)
+      ]);
+      allFusionIds.forEach(fusionId => {
+        const entry = source[fusionId] || base[fusionId] || { attempts: 0, successes: 0 };
         const attempts = Number(entry.attempts);
         const successes = Number(entry.successes);
-        result[def.id] = {
+        result[fusionId] = {
           attempts: Number.isFinite(attempts) && attempts > 0 ? Math.floor(attempts) : 0,
           successes: Number.isFinite(successes) && successes > 0 ? Math.floor(successes) : 0
         };

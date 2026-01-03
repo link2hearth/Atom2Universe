@@ -3,6 +3,7 @@ package com.example.atom2univers
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.atom2univers.pixelart.PixelArtEditorActivity
 
 class StartupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,6 +13,10 @@ class StartupActivity : AppCompatActivity() {
         findViewById<android.view.View>(R.id.start_button).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
+        }
+
+        findViewById<android.view.View>(R.id.pixel_art_button).setOnClickListener {
+            startActivity(Intent(this, PixelArtEditorActivity::class.java))
         }
     }
 }

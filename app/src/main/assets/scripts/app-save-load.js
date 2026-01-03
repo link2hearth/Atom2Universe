@@ -442,7 +442,9 @@ function applySerializedGameState(raw) {
   }
   const fusionState = createInitialFusionState();
   if (data.fusions && typeof data.fusions === 'object') {
-    Object.keys(fusionState).forEach(id => {
+    // Iterate over saved fusion data, not just known FUSION_DEFS
+    // This ensures we load fusion state even if FUSION_DEFS isn't populated yet (async config loading)
+    Object.keys(data.fusions).forEach(id => {
       const stored = data.fusions[id];
       if (!stored || typeof stored !== 'object') {
         fusionState[id] = { attempts: 0, successes: 0 };
@@ -1015,7 +1017,9 @@ function loadGame() {
     }
     const fusionState = createInitialFusionState();
     if (data.fusions && typeof data.fusions === 'object') {
-      Object.keys(fusionState).forEach(id => {
+      // Iterate over saved fusion data, not just known FUSION_DEFS
+      // This ensures we load fusion state even if FUSION_DEFS isn't populated yet (async config loading)
+      Object.keys(data.fusions).forEach(id => {
         const stored = data.fusions[id];
         if (!stored || typeof stored !== 'object') {
           fusionState[id] = { attempts: 0, successes: 0 };

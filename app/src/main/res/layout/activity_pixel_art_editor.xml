@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1a1a1a">
+
+    <!-- Top Toolbar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#2d2d2d"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="Retour"
+            app:tint="#ffffff" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/pixel_art_editor_title"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp" />
+
+        <TextView
+            android:id="@+id/txt_canvas_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#aaaaaa"
+            android:textSize="12sp"
+            android:layout_marginEnd="16dp"
+            tools:text="32x32" />
+
+        <ImageButton
+            android:id="@+id/btn_undo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="@string/pixel_art_action_undo"
+            android:enabled="false"
+            app:tint="#888888" />
+
+        <ImageButton
+            android:id="@+id/btn_redo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_send"
+            android:contentDescription="@string/pixel_art_action_redo"
+            android:enabled="false"
+            app:tint="#888888" />
+
+        <ImageButton
+            android:id="@+id/btn_clear"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="@string/pixel_art_action_clear"
+            app:tint="#ffffff" />
+
+        <ImageButton
+            android:id="@+id/btn_export"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_save"
+            android:contentDescription="@string/pixel_art_action_export"
+            app:tint="#ffffff" />
+    </LinearLayout>
+
+    <!-- Main Canvas Area -->
+    <com.example.atom2univers.pixelart.PixelCanvas
+        android:id="@+id/pixel_canvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/bottom_panel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Zoom Controls -->
+    <LinearLayout
+        android:id="@+id/zoom_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#80000000"
+        android:padding="4dp"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_zoom_out"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/btn_minus"
+            android:contentDescription="Zoom out"
+            app:tint="#ffffff" />
+
+        <TextView
+            android:id="@+id/txt_zoom"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            tools:text="100%" />
+
+        <ImageButton
+            android:id="@+id/btn_zoom_in"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/btn_plus"
+            android:contentDescription="Zoom in"
+            app:tint="#ffffff" />
+    </LinearLayout>
+
+    <!-- Grid Toggle -->
+    <CheckBox
+        android:id="@+id/chk_grid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pixel_art_grid_toggle"
+        android:textColor="#ffffff"
+        android:checked="true"
+        android:buttonTint="#ffffff"
+        android:padding="8dp"
+        android:background="#80000000"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Bottom Panel -->
+    <LinearLayout
+        android:id="@+id/bottom_panel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#2d2d2d"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Tools Row -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <RadioGroup
+                    android:id="@+id/tool_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/tool_pencil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pixel_art_tool_pencil"
+                        android:textColor="#ffffff"
+                        android:buttonTint="#4CAF50"
+                        android:textSize="12sp"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/tool_eraser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pixel_art_tool_eraser"
+                        android:textColor="#ffffff"
+                        android:buttonTint="#4CAF50"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp" />
+
+                    <RadioButton
+                        android:id="@+id/tool_fill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pixel_art_tool_fill"
+                        android:textColor="#ffffff"
+                        android:buttonTint="#4CAF50"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp" />
+
+                    <RadioButton
+                        android:id="@+id/tool_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pixel_art_tool_picker"
+                        android:textColor="#ffffff"
+                        android:buttonTint="#4CAF50"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp" />
+
+                    <RadioButton
+                        android:id="@+id/tool_line"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pixel_art_tool_line"
+                        android:textColor="#ffffff"
+                        android:buttonTint="#2196F3"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp" />
+
+                    <RadioButton
+                        android:id="@+id/tool_rectangle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pixel_art_tool_rectangle"
+                        android:textColor="#ffffff"
+                        android:buttonTint="#2196F3"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp" />
+
+                    <RadioButton
+                        android:id="@+id/tool_circle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pixel_art_tool_circle"
+                        android:textColor="#ffffff"
+                        android:buttonTint="#2196F3"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp" />
+                </RadioGroup>
+
+                <CheckBox
+                    android:id="@+id/chk_filled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pixel_art_shape_filled"
+                    android:textColor="#aaaaaa"
+                    android:buttonTint="#FF9800"
+                    android:textSize="12sp"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Color Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <!-- Current Colors -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp">
+
+                <View
+                    android:id="@+id/color_secondary"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="#ffffff" />
+
+                <View
+                    android:id="@+id/color_primary"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="#000000" />
+
+                <ImageButton
+                    android:id="@+id/btn_swap_colors"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_menu_rotate"
+                    android:contentDescription="Swap colors"
+                    app:tint="#ffffff" />
+            </FrameLayout>
+
+            <!-- Color Palette -->
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:id="@+id/color_palette"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical" />
+
+                    <!-- Add color button -->
+                    <ImageButton
+                        android:id="@+id/btn_add_color"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:drawable/btn_default"
+                        android:src="@android:drawable/ic_input_add"
+                        android:contentDescription="@string/pixel_art_palette_add"
+                        app:tint="#4CAF50" />
+
+                    <!-- Reset palette button -->
+                    <ImageButton
+                        android:id="@+id/btn_reset_palette"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@android:drawable/btn_default"
+                        android:src="@android:drawable/ic_menu_revert"
+                        android:contentDescription="@string/pixel_art_palette_reset"
+                        app:tint="#FF5722" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- Size Presets Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_size_16"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="16x16"
+                android:textSize="12sp"
+                app:strokeColor="#666666" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_size_32"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="32x32"
+                android:textSize="12sp"
+                android:layout_marginStart="8dp"
+                app:strokeColor="#4CAF50" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_size_64"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="64x64"
+                android:textSize="12sp"
+                android:layout_marginStart="8dp"
+                app:strokeColor="#666666" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_size_128"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="128x128"
+                android:textSize="12sp"
+                android:layout_marginStart="8dp"
+                app:strokeColor="#666666" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1557,6 +1557,16 @@ function refreshCollectionBonusesConfig() {
       ? RAW_COLLECTION_BONUSES_CONFIG
       : { groups: {} }
   );
+  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+    try {
+      const event = typeof CustomEvent === 'function'
+        ? new CustomEvent('config:bonuses:update', { detail: { config: COLLECTION_BONUSES_CONFIG } })
+        : new Event('config:bonuses:update');
+      window.dispatchEvent(event);
+    } catch (error) {
+      console.warn('Unable to notify bonuses configuration update', error);
+    }
+  }
 }
 
 refreshCollectionBonusesConfig();

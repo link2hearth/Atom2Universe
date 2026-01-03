@@ -1381,7 +1381,7 @@ function normalizeElementGroupBonus(raw) {
   };
 }
 
-const RAW_ELEMENT_GROUP_BONUS_GROUPS = (() => {
+function getRawElementGroupBonusGroups() {
   const rawConfig = CONFIG.elementBonuses ?? CONFIG.elementBonus ?? null;
   if (!rawConfig || typeof rawConfig !== 'object') {
     return {};
@@ -1395,7 +1395,9 @@ const RAW_ELEMENT_GROUP_BONUS_GROUPS = (() => {
     return {};
   }
   return rawGroups;
-})();
+}
+
+let RAW_ELEMENT_GROUP_BONUS_GROUPS = getRawElementGroupBonusGroups();
 
 const CATEGORY_LABEL_KEYS = {
   'alkali-metal': 'scripts.gameData.categories.alkaliMetal',
@@ -1461,10 +1463,12 @@ const COMPACT_COLLECTION_RARITIES = new Set([
   MYTHIQUE_RARITY_ID,
   'irreel'
 ]);
-const RAW_MYTHIQUE_GROUP_CONFIG = (() => {
+function getRawMythiqueGroupConfig() {
   const raw = RAW_ELEMENT_GROUP_BONUS_GROUPS[MYTHIQUE_RARITY_ID];
   return raw && typeof raw === 'object' ? raw : null;
-})();
+}
+
+let RAW_MYTHIQUE_GROUP_CONFIG = getRawMythiqueGroupConfig();
 
 if (!ELEMENT_GROUP_BONUS_CONFIG.has(MYTHIQUE_RARITY_ID)) {
   const fallback = {};
@@ -1487,6 +1491,48 @@ if (!ELEMENT_GROUP_BONUS_CONFIG.has(MYTHIQUE_RARITY_ID)) {
       }
     });
   }
+}
+
+function rebuildElementGroupBonusConfig() {
+  RAW_ELEMENT_GROUP_BONUS_GROUPS = getRawElementGroupBonusGroups();
+  RAW_MYTHIQUE_GROUP_CONFIG = getRawMythiqueGroupConfig();
+
+  ELEMENT_GROUP_BONUS_CONFIG.clear();
+  Object.entries(RAW_ELEMENT_GROUP_BONUS_GROUPS).forEach(([rarityId, rawValue]) => {
+    if (!rarityId) return;
+    const normalizedRarityId = String(rarityId).trim();
+    if (!normalizedRarityId) return;
+    const normalizedConfig = normalizeElementGroupBonus(rawValue);
+    if (!normalizedConfig) return;
+    ELEMENT_GROUP_BONUS_CONFIG.set(normalizedRarityId, normalizedConfig);
+  });
+
+  if (!ELEMENT_GROUP_BONUS_CONFIG.has(MYTHIQUE_RARITY_ID)) {
+    const fallback = {};
+    if (RAW_MYTHIQUE_GROUP_CONFIG?.labels && typeof RAW_MYTHIQUE_GROUP_CONFIG.labels === 'object') {
+      fallback.labels = {};
+      Object.entries(RAW_MYTHIQUE_GROUP_CONFIG.labels).forEach(([key, value]) => {
+        if (typeof value === 'string' && value.trim()) {
+          fallback.labels[key] = value.trim();
+        }
+      });
+    }
+    ELEMENT_GROUP_BONUS_CONFIG.set(MYTHIQUE_RARITY_ID, fallback);
+  } else if (RAW_MYTHIQUE_GROUP_CONFIG?.labels && typeof RAW_MYTHIQUE_GROUP_CONFIG.labels === 'object') {
+    const entry = ELEMENT_GROUP_BONUS_CONFIG.get(MYTHIQUE_RARITY_ID);
+    if (entry) {
+      entry.labels = { ...(entry.labels || {}) };
+      Object.entries(RAW_MYTHIQUE_GROUP_CONFIG.labels).forEach(([key, value]) => {
+        if (typeof value === 'string' && value.trim()) {
+          entry.labels[key] = value.trim();
+        }
+      });
+    }
+  }
+}
+
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('config:bonuses:update', rebuildElementGroupBonusConfig);
 }
 
 function normalizeElementFamilyBonusEntry(raw, { familyId, defaultLabel, index }) {

@@ -1,0 +1,510 @@
+# Prompt: Éditeur de Pixel Art Android Natif
+
+---
+## SUIVI DES AVANCÉES
+
+### Session 1 - 2026-01-03
+
+#### Fonctionnalités implémentées (Phase 1 - Base)
+
+**Bouton d'accès:**
+- [x] Ajout du bouton "Pixel Art Editor" dans `activity_startup.xml`
+- [x] Modification de `StartupActivity.kt` pour naviguer vers l'éditeur
+
+**Structure de base:**
+- [x] Création du package `com.example.atom2univers.pixelart`
+- [x] `PixelCanvas.kt` - Vue personnalisée pour le dessin pixel art
+- [x] `PixelArtEditorActivity.kt` - Activity principale de l'éditeur
+- [x] `activity_pixel_art_editor.xml` - Layout de l'interface
+
+**Fonctionnalités du PixelCanvas:**
+- [x] Dessin pixel par pixel (outil Crayon)
+- [x] Zoom pinch-to-zoom (0.5x à 32x)
+- [x] Pan avec 2 doigts
+- [x] Grille configurable (affichée à partir de zoom 4x)
+- [x] Damier de transparence
+- [x] Outil Gomme
+- [x] Outil Remplissage (flood fill)
+- [x] Outil Pipette
+- [x] Système Undo/Redo (50 étapes max)
+- [x] Couleurs primaire/secondaire avec swap
+- [x] Redimensionnement du canvas (8x8 à 512x512)
+
+**Interface utilisateur:**
+- [x] Toolbar avec actions (retour, undo, redo, effacer, export)
+- [x] Sélection d'outils (RadioGroup)
+- [x] Palette de 16 couleurs par défaut
+- [x] Indicateur de zoom
+- [x] Boutons de taille prédéfinie (16x16, 32x32, 64x64, 128x128)
+- [x] Export PNG vers Pictures/PixelArt
+
+**Fichiers créés/modifiés:**
+- `app/src/main/java/com/example/atom2univers/pixelart/PixelCanvas.kt` (nouveau)
+- `app/src/main/java/com/example/atom2univers/pixelart/PixelArtEditorActivity.kt` (nouveau)
+- `app/src/main/res/layout/activity_pixel_art_editor.xml` (nouveau)
+- `app/src/main/res/layout/activity_startup.xml` (modifié - ajout bouton)
+- `app/src/main/java/com/example/atom2univers/StartupActivity.kt` (modifié - navigation)
+- `app/src/main/res/values/strings.xml` (modifié - nouvelles strings)
+- `app/src/main/AndroidManifest.xml` (modifié - déclaration activity)
+
+### Session 2 - 2026-01-03 (suite)
+
+#### Fonctionnalités implémentées (Phase 2 - Outils)
+
+**Zoom débloqué:**
+- [x] Suppression des limites de zoom (0.01x à infini)
+- [x] Callback onZoomChanged pour mise à jour temps réel de l'affichage
+
+**Nouveaux outils de forme:**
+- [x] Outil Ligne (algorithme de Bresenham)
+- [x] Outil Rectangle (vide ou rempli)
+- [x] Outil Cercle (algorithme midpoint, vide ou rempli)
+- [x] Preview semi-transparent pendant le tracé
+- [x] Option "Rempli" pour Rectangle et Cercle
+
+**Fichiers modifiés:**
+- `PixelCanvas.kt` - Ajout Tool.LINE/RECTANGLE/CIRCLE, algorithmes Bresenham, preview
+- `PixelArtEditorActivity.kt` - Gestion nouveaux outils + checkbox Rempli + onZoomChanged
+- `activity_pixel_art_editor.xml` - Nouveaux RadioButtons + CheckBox Rempli
+- `strings.xml` - Nouvelles chaînes (Ligne, Rectangle, Cercle, Rempli)
+
+### Session 3 - 2026-01-03 (suite)
+
+#### Corrections de bugs touch
+- [x] Correction du saut de position au relâchement zoom (utilisation du centre des pointeurs)
+- [x] Gestion de ACTION_POINTER_UP pour éviter le recalcul brusque
+- [x] Dessin différé : le pixel n'est dessiné qu'au relâchement ou au mouvement
+- [x] Flag wasMultiTouch pour annuler le dessin si zoom/pan déclenché
+
+#### Fonctionnalités implémentées (Phase 2 - Suite)
+
+**Color Picker HSV amélioré:**
+- [x] Dialog personnalisé avec sliders HSV
+- [x] Slider Alpha pour la transparence
+- [x] Preview couleur en temps réel
+- [x] Affichage hex et RGB
+- [x] Presets de couleurs rapides
+
+**Palettes personnalisables:**
+- [x] Sauvegarde/chargement via SharedPreferences
+- [x] Bouton "+" pour ajouter la couleur courante
+- [x] Bouton reset pour réinitialiser la palette
+- [x] Long press sur couleur : options (secondaire / supprimer)
+- [x] Détection des doublons
+
+**Fichiers modifiés/créés:**
+- `PixelCanvas.kt` - Refonte complète du touch (center-based pan, pending draw)
+- `PixelArtEditorActivity.kt` - Color picker HSV, palettes personnalisables
+- `dialog_color_picker.xml` (nouveau) - Layout du color picker
+- `activity_pixel_art_editor.xml` - Boutons add/reset palette
+- `strings.xml` - Nouvelles chaînes
+
+#### Prochaines étapes (Phase 3)
+- [ ] Outil Sélection rectangulaire
+- [ ] Copier/Coller sélection
+- [ ] Miroir horizontal/vertical
+
+#### Phases futures
+- Phase 4: Frames et Layers (animation)
+- Phase 5: Import/Export avancé (GIF, sprite sheet)
+- Phase 6: Finitions et optimisations
+
+---
+
+## Contexte
+Créer une application Android native complète d'édition de pixel art (style Aseprite/Paint) en Kotlin, avec architecture MVVM et Material Design 3.
+
+## Architecture du Projet
+
+### Structure des packages
+```
+com.pixelart.editor/
+├── ui/
+│   ├── canvas/          # Vue canvas et gestion du dessin
+│   ├── toolbar/         # Barre d'outils
+│   ├── colorpicker/     # Sélecteur de couleurs
+│   ├── layers/          # Gestion des calques
+│   └── frames/          # Timeline et frames
+├── viewmodel/
+├── model/
+│   ├── Project.kt       # Projet avec frames/layers
+│   ├── Canvas.kt        # Représentation du canvas
+│   ├── Tool.kt          # Types d'outils
+│   └── History.kt       # Système undo/redo
+├── utils/
+│   ├── BitmapUtils.kt
+│   └── FileManager.kt
+└── data/
+    └── repository/
+```
+
+## Fonctionnalités Requises
+
+### 1. Canvas et Dessin
+- **Canvas personnalisé** avec `CustomView` héritant de `View`
+- **Grille configurable** (activable/désactivable, couleur ajustable)
+- **Zoom** avec pinch-to-zoom 
+- **Pan/Défilement** pour naviguer sur le canvas zoomé, deux doigts pour glisser
+- **Affichage pixel-perfect** sans anti-aliasing
+- **Aperçu en temps réel** du pixel sous le curseur
+
+### 2. Outils de Dessin
+Implémenter les outils suivants avec pattern Strategy:
+- **Pinceau/Crayon**: dessin pixel par pixel
+- **Gomme**: effacer avec couleur de fond
+- **Remplissage** (bucket fill): flood fill algorithm
+- **Pipette**: sélectionner couleur depuis le canvas
+- **Ligne**: tracer lignes droites (algorithme de Bresenham)
+- **Rectangle**: vide ou rempli
+- **Cercle/Ellipse**: vide ou rempli
+- **Sélection rectangulaire**: couper/copier/coller
+- **Sélection lasso**: sélection libre (optionnel pour v2)
+
+### 3. Gestion des Couleurs
+- **Palette de couleurs**:
+  - Palette primaire (roue chromatique ou grille HSV)
+  - Palette secondaire avec couleurs récentes (8-16 couleurs)
+  - Couleurs favorites sauvegardées
+- **Sélecteur de couleur principal** avec:
+  - Roue chromatique ou carré HSV
+  - Slider luminosité/saturation
+  - Champ hexadécimal éditable (#RRGGBB)
+  - Sliders RGB individuels (0-255)
+  - Support transparence (alpha channel)
+- **Couleur primaire/secondaire** (interchangeables)
+
+### 4. Système de Frames (Animation)
+- **Timeline horizontale** en bas de l'écran
+- **Navigation entre frames**:
+  - Boutons précédent/suivant
+  - Miniatures cliquables
+  - Raccourcis clavier (si support externe)
+- **Gestion frames**:
+  - Ajouter/supprimer frame
+  - Dupliquer frame
+  - Réorganiser (drag & drop)
+  - Définir durée par frame (ms)
+- **Onion skinning**:
+  - Superposition frame précédente (rouge, 50% opacité)
+  - Superposition frame suivante (bleu, 50% opacité)
+  - Réglage intensité transparence
+  - Toggle on/off
+
+
+
+### 5. Système de Calques (Layers) utilisant le système gif ou juste avec plusieurs png
+- **Panel latéral calques** avec:
+  - Liste des calques (réorganisables)
+  - Miniature preview
+  - Nom éditable
+  - Visibilité (icône œil)
+  - Verrouillage (icône cadenas)
+  - Opacité par calque (slider 0-100%)
+- **Opérations**:
+  - Créer/supprimer calque ou png
+  - Dupliquer
+  - Fusionner calques
+  - Modes de fusion (Normal, Multiply, Screen, Overlay)
+
+### 6. Gestion de Projet
+- **Formats de canvas prédéfinis**:
+  - 16x16, 32x32, 64x64, 128x128
+  - Format personnalisé (max 512x512)
+- **Import/Export**:
+  - Exporter PNG (frame unique ou sprite sheet)
+  - Exporter GIF animé (si frames multiples)
+  - Importer PNG comme nouveau calque/frame
+  - Sauvegarder projet (.pixproj format JSON avec tous les calques/frames)
+  - Charger projet existant
+- **Métadonnées**:
+  - Nom du projet
+  - Date création/modification
+  - Nombre de frames/calques
+  - Résolution
+
+### 7. Sélection et Presse-papier
+- **Sélection rectangulaire**:
+  - Visualisation avec bordure pointillée animée
+  - Poignées de redimensionnement
+- **Opérations**:
+  - Copier (Ctrl+C ou bouton)
+  - Couper (Ctrl+X)
+  - Coller (Ctrl+V) - créer nouveau calque ou sur calque actif
+  - Transformer sélection: rotation 90°, flip H/V
+  - Déplacer sélection (drag)
+  - Annuler sélection (Esc ou tap extérieur)
+
+### 8. Historique Undo/Redo
+- **Stack d'actions** (minimum 50 étapes):
+  - Pattern Command pour chaque action
+  - Serialization légère (deltas bitmap)
+- **Interface**:
+  - Boutons undo/redo (avec compteur d'actions)
+  - Support gestes (2 doigts swipe gauche/droite)
+  - Nettoyage automatique pour limiter mémoire
+
+### 9. Interface Utilisateur
+
+#### Layout Principal
+```
+┌─────────────────────────────────────┐
+│ [Menu] [Undo] [Redo]      [⚙️]     │ Top Bar
+├─────────────────────────────────────┤
+│ [Tools]  │                │ [Layers]│
+│ [Brush]  │                │  Layer1 │
+│ [Eraser] │    CANVAS      │  Layer2 │
+│ [Fill]   │                │  +New   │
+│ [Line]   │                │         │
+│ [....]   │                │         │
+├──────────┴────────────────┴─────────┤
+│ [Frames Timeline]                   │
+│ [1] [2] [3] [+] [▶️]                │
+├─────────────────────────────────────┤
+│ [Color] [Grid] [Zoom: 4x]          │ Bottom Bar
+└─────────────────────────────────────┘
+```
+
+#### Composants Material Design 3
+- `TopAppBar` avec actions menu
+- `NavigationRail` ou `BottomNavigation` pour outils
+- `BottomSheet` pour sélecteur couleurs
+- `Dialog` pour nouveaux projets/paramètres
+- `FAB` pour actions rapides
+- `Slider` pour zoom, opacité
+- `RecyclerView` pour frames et layers
+
+### 10. Performance et Optimisation
+- **Gestion mémoire**:
+  - Utiliser `Bitmap.Config.ARGB_8888` pour qualité
+  - Recycler bitmaps inutilisés
+  - Canvas offscreen pour layers
+  - Cache des miniatures frames
+- **Rendu**:
+  - Invalidation partielle du canvas
+  - Hardware acceleration quand possible
+  - Throttling des events touch pour dessin fluide
+- **Storage**:
+  - Compression PNG pour export
+  - Format projet JSON + images Base64 ou fichiers séparés
+
+### 11. Paramètres et Préférences
+- **Thème**: Clair/Sombre/Auto
+- **Grille**: Taille, couleur, opacité
+- **Outils**: Taille pinceau par défaut
+- **Export**: Qualité PNG, FPS pour GIF
+- **Interface**: Position des panels (gauche/droite)
+
+## Spécifications Techniques
+
+### Technologies
+- **Langage**: Kotlin 100%
+- **Min SDK**: 24 (Android 7.0)
+- **Target SDK**: 34 (Android 14)
+- **Architecture**: MVVM avec LiveData/Flow
+- **DI**: Hilt ou Koin (optionnel)
+- **Storage**: Room pour projets récents, DataStore pour préférences
+
+### Bibliothèques Recommandées
+```gradle
+// UI
+implementation("androidx.compose.ui:ui") // ou Views classiques
+implementation("com.google.android.material:material:1.11.0")
+
+// ViewModel
+implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
+implementation("androidx.lifecycle:lifecycle-livedata-ktx")
+
+// Coroutines
+implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+
+// Image
+implementation("com.github.bumptech.glide:glide:4.16.0") // pour miniatures
+
+// Serialization
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+
+// Color Picker
+implementation("com.github.skydoves:colorpicker-compose:2.3.0")
+// ou implémentation custom
+```
+
+### Classes Principales à Implémenter
+
+#### 1. PixelCanvas.kt
+```kotlin
+class PixelCanvas(context: Context, attrs: AttributeSet) : View(context, attrs) {
+    private val canvasBitmap: Bitmap
+    private val canvasPaint: Paint
+    private var zoomLevel: Float = 4f
+    private var offsetX: Float = 0f
+    private var offsetY: Float = 0f
+    private var showGrid: Boolean = true
+    
+    fun drawPixel(x: Int, y: Int, color: Int)
+    fun clearCanvas()
+    fun undo()
+    fun redo()
+    override fun onDraw(canvas: Canvas)
+    override fun onTouchEvent(event: MotionEvent): Boolean
+}
+```
+
+#### 2. DrawingTool.kt
+```kotlin
+sealed class DrawingTool {
+    object Pencil : DrawingTool()
+    object Eraser : DrawingTool()
+    object Fill : DrawingTool()
+    data class Line(val startX: Int, val startY: Int) : DrawingTool()
+    // ...
+}
+
+interface ToolStrategy {
+    fun onTouchDown(x: Int, y: Int, canvas: PixelCanvas)
+    fun onTouchMove(x: Int, y: Int, canvas: PixelCanvas)
+    fun onTouchUp(x: Int, y: Int, canvas: PixelCanvas)
+}
+```
+
+#### 3. Project.kt
+```kotlin
+data class Project(
+    val id: String,
+    val name: String,
+    val width: Int,
+    val height: Int,
+    val frames: MutableList<Frame>,
+    val backgroundColor: Int,
+    val createdAt: Long,
+    val modifiedAt: Long
+)
+
+data class Frame(
+    val id: String,
+    val layers: MutableList<Layer>,
+    val duration: Int = 100 // ms
+)
+
+data class Layer(
+    val id: String,
+    val name: String,
+    val bitmap: Bitmap,
+    val opacity: Float = 1f,
+    val visible: Boolean = true,
+    val locked: Boolean = false
+)
+```
+
+#### 4. HistoryManager.kt
+```kotlin
+class HistoryManager(private val maxSteps: Int = 50) {
+    private val undoStack = Stack<Action>()
+    private val redoStack = Stack<Action>()
+    
+    fun recordAction(action: Action)
+    fun undo(): Action?
+    fun redo(): Action?
+    fun canUndo(): Boolean
+    fun canRedo(): Boolean
+}
+
+sealed class Action {
+    data class DrawPixels(val pixels: List<Pixel>) : Action()
+    data class AddLayer(val layer: Layer) : Action()
+    // ...
+}
+```
+
+#### 5. FileManager.kt
+```kotlin
+object FileManager {
+    suspend fun saveProject(project: Project, uri: Uri)
+    suspend fun loadProject(uri: Uri): Project
+    suspend fun exportPNG(frame: Frame, uri: Uri)
+    suspend fun exportSpriteSheet(project: Project, uri: Uri)
+    suspend fun exportGIF(project: Project, uri: Uri)
+}
+```
+
+## Plan d'Implémentation
+
+### Phase 1: Base (Semaine 1-2)
+1. Setup projet Android avec architecture MVVM
+2. Créer PixelCanvas avec dessin basique pixel par pixel
+3. Implémenter zoom et pan
+4. Ajouter grille configurable
+5. Système de couleurs basique
+
+### Phase 2: Outils (Semaine 3)
+1. Pattern Strategy pour outils
+2. Implémenter: Pinceau, Gomme, Pipette
+3. Implémenter: Ligne, Rectangle, Cercle
+4. Implémenter: Remplissage (flood fill)
+5. UI toolbar avec sélection outil
+
+### Phase 3: Historique et Sélection (Semaine 4)
+1. HistoryManager avec undo/redo
+2. Sélection rectangulaire
+3. Copier/Couper/Coller
+4. Transform sélection
+
+### Phase 4: Frames et Layers (Semaine 5-6)
+1. Système multi-frames
+2. Timeline UI avec miniatures
+3. Onion skinning
+4. Système de calques
+5. Panel layers avec réorganisation
+
+### Phase 5: Fichiers et Export (Semaine 7)
+1. Sauvegarde/Chargement projet
+2. Export PNG
+3. Export Sprite Sheet
+4. Export GIF animé
+5. Import PNG
+
+### Phase 6: Finitions (Semaine 8)
+1. Sélecteur couleurs avancé
+2. Palettes personnalisées
+3. Paramètres application
+4. Optimisations performance
+5. Tests et debug
+
+## Tests à Réaliser
+- Dessin sur différentes résolutions (16x16 à 512x512)
+- Performance avec 20+ frames et 5+ layers
+- Import/Export fichiers volumineux
+- Rotation écran sans perte données
+- Mémoire: pas de leak avec undo/redo intensif
+- UI responsive sur tablettes et téléphones
+
+## Livrables Attendus
+1. **Code source complet** commenté en anglais
+2. **Fichier README.md** avec instructions build
+3. **Documentation architecture** (diagrammes classes)
+4. **APK de démonstration**
+5. **Assets de test** (quelques sprites exemples)
+
+## Contraintes et Bonnes Pratiques
+- Code Kotlin idiomatique avec null-safety
+- Respect Material Design guidelines
+- Support rotation écran (sauvegarde état)
+- Gestion permissions (WRITE_EXTERNAL_STORAGE pour SDK < 29)
+- Pas de dépendance à Google Play Services
+- Support mode hors-ligne complet
+- Utiliser Coroutines pour opérations I/O
+- ViewBinding ou DataBinding pour UI
+- Logs appropriés pour debugging
+
+## Extensions Futures (V2)
+- Sélection magique (magic wand)
+- Filtres et effets (blur, noise)
+- Symétrie horizontale/verticale en temps réel
+- Tiling mode pour textures répétables
+- Support de palettes de couleurs indexées
+- Export vers autres formats (SVG, WEBP)
+- Cloud sync (optionnel)
+- Collaboration temps réel (optionnel)
+
+---
+
+**Commence par établir l'architecture complète du projet, puis implémente phase par phase en fournissant le code complet de chaque classe mentionnée ci-dessus.**
