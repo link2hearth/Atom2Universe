@@ -85,16 +85,6 @@
             android:src="@android:drawable/ic_menu_save"
             android:contentDescription="@string/pixel_art_action_export"
             app:tint="#ffffff" />
-
-        <ImageButton
-            android:id="@+id/btn_import"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/arrow_down_float"
-            android:contentDescription="@string/pixel_art_action_import"
-            app:tint="#ffffff" />
     </LinearLayout>
 
     <!-- Main Canvas Area -->
