@@ -1,0 +1,12 @@
+{
+  "enabled": true,
+  "servers": [
+    "https://de1.api.radio-browser.info",
+    "https://de2.api.radio-browser.info"
+  ],
+  "requestTimeoutMs": 8000,
+  "maxResults": 25,
+  "hideBroken": true,
+  "favoritesStorageKey": "radioKotlinFavorites",
+  "userAgent": "Atom2Univers/RadioKotlin"
+}
