@@ -338,6 +338,14 @@ class MainClickerActivity : AppCompatActivity() {
             showToast(getString(R.string.crypto_background_folder_saved))
         }
 
+    private val openAtomFolderLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val uri = result.data?.data ?: return@registerForActivityResult
+            persistFolderPermission(uri, result.data?.flags ?: 0)
+            MainClickerPreferences.setCustomAtomFolderUri(this, uri)
+            applyCustomAtomFolder(uri)
+        }
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
     }
@@ -444,7 +452,9 @@ class MainClickerActivity : AppCompatActivity() {
         musicToggle.setOnCheckedChangeListener { _, isChecked -> onMusicToggleChanged(isChecked) }
 
         atomSpringView = findViewById(R.id.atom_spring_view)
-        atomSpringView.setNsfwMode(MainClickerPreferences.isNsfwMode(this))
+        atomSpringView.setLowAnimation(MainClickerPreferences.isAtomLowAnimation(this))
+        atomSpringView.setBiggerImage(MainClickerPreferences.isAtomBiggerImage(this))
+        MainClickerPreferences.getCustomAtomFolderUri(this)?.let { applyCustomAtomFolder(it) }
         atomSpringView.setAtomIndex(MainClickerPreferences.getAtomSpringIndex(this))
         atomSpringView.visibility = if (MainClickerPreferences.isAtomSpringEnabled(this)) View.VISIBLE else View.GONE
 
@@ -1818,16 +1828,16 @@ class MainClickerActivity : AppCompatActivity() {
         slider2.valueFrom = 36f
         slider2.valueTo = 200f
         slider2.stepSize = 4f
-        lbl2.text = "Épaisseur bannière"
+        lbl2.text = getString(R.string.atom_banner_height)
         val currentHeight = MainClickerPreferences.getClickerHeightDp(this)
         slider2.value = currentHeight.toFloat()
-        val2.text = "${currentHeight} dp"
+        val2.text = getString(R.string.atom_banner_height_value, currentHeight)
         slider2.addOnChangeListener { _, value, fromUser ->
             if (!fromUser) return@addOnChangeListener
             val dp = value.roundToInt()
             MainClickerPreferences.setClickerHeightDp(this, dp)
             clickerBannerView.applySize(dp)
-            val2.text = "${dp} dp"
+            val2.text = getString(R.string.atom_banner_height_value, dp)
         }
 
         // Slider décimales (0–5)
@@ -1850,11 +1860,71 @@ class MainClickerActivity : AppCompatActivity() {
         val toggleLabel = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle_label)
         val toggleSwitch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle_switch)
         toggleContainer.visibility = View.VISIBLE
-        toggleLabel.text = "Atome animé"
+        toggleLabel.text = getString(R.string.atom_animated)
         toggleSwitch.isChecked = MainClickerPreferences.isAtomSpringEnabled(this)
         toggleSwitch.setOnCheckedChangeListener { _, isChecked ->
             MainClickerPreferences.setAtomSpringEnabled(this, isChecked)
             atomSpringView.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
+        // Toggle animation réduite
+        val toggle2Container = popupView.findViewById<View>(R.id.popup_toggle2_container)
+        val toggle2Label = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle2_label)
+        val toggle2Switch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle2_switch)
+        toggle2Container.visibility = View.VISIBLE
+        toggle2Label.text = getString(R.string.atom_low_animation)
+        toggle2Switch.isChecked = MainClickerPreferences.isAtomLowAnimation(this)
+        toggle2Switch.setOnCheckedChangeListener { _, isChecked ->
+            MainClickerPreferences.setAtomLowAnimation(this, isChecked)
+            atomSpringView.setLowAnimation(isChecked)
+        }
+
+        // Toggle image agrandie
+        val toggle3Container = popupView.findViewById<View>(R.id.popup_toggle3_container)
+        val toggle3Label = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle3_label)
+        val toggle3Switch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle3_switch)
+        toggle3Container.visibility = View.VISIBLE
+        toggle3Label.text = getString(R.string.atom_bigger_image)
+        toggle3Switch.isChecked = MainClickerPreferences.isAtomBiggerImage(this)
+        toggle3Switch.setOnCheckedChangeListener { _, isChecked ->
+            MainClickerPreferences.setAtomBiggerImage(this, isChecked)
+            atomSpringView.setBiggerImage(isChecked)
+        }
+
+        // Bouton sélection dossier images personnalisées pour l'atome
+        val folderBtn = popupView.findViewById<Button>(R.id.popup_folder_btn)
+        folderBtn.visibility = View.VISIBLE
+        val hasCustomFolder = MainClickerPreferences.getCustomAtomFolderUri(this) != null
+        folderBtn.text = getString(
+            if (hasCustomFolder) R.string.atom_custom_folder_change else R.string.atom_custom_folder_pick
+        )
+        folderBtn.setOnClickListener {
+            if (MainClickerPreferences.getCustomAtomFolderUri(this) != null) {
+                AlertDialog.Builder(this)
+                    .setItems(arrayOf(
+                        getString(R.string.atom_custom_folder_clear),
+                        getString(R.string.atom_custom_folder_pick_new)
+                    )) { _, which ->
+                        if (which == 0) {
+                            MainClickerPreferences.setCustomAtomFolderUri(this, null)
+                            atomSpringView.setCustomImageUris(emptyList())
+                            folderBtn.text = getString(R.string.atom_custom_folder_pick)
+                        } else {
+                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                            }
+                            openAtomFolderLauncher.launch(intent)
+                        }
+                    }
+                    .show()
+            } else {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                }
+                openAtomFolderLauncher.launch(intent)
+            }
         }
 
         val popup = PopupWindow(
@@ -1916,6 +1986,39 @@ class MainClickerActivity : AppCompatActivity() {
         // ExternalStorage URIs: "primary:DCIM/Camera/image.jpg"
         val path = if (lastSegment.contains(':')) lastSegment.substringAfter(':') else lastSegment
         return path
+    }
+
+    private fun applyCustomAtomFolder(folderUri: Uri) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val uris = listImageUrisFromFolder(folderUri)
+            withContext(Dispatchers.Main) {
+                atomSpringView.setCustomImageUris(uris)
+            }
+        }
+    }
+
+    private fun listImageUrisFromFolder(folderUri: Uri): List<Uri> {
+        return try {
+            val treeDocId = DocumentsContract.getTreeDocumentId(folderUri)
+            val childUri = DocumentsContract.buildChildDocumentsUriUsingTree(folderUri, treeDocId)
+            val uris = mutableListOf<Uri>()
+            contentResolver.query(
+                childUri,
+                arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_MIME_TYPE),
+                null, null, null
+            )?.use { cursor ->
+                val idCol = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
+                val mimeCol = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE)
+                while (cursor.moveToNext()) {
+                    val mime = cursor.getString(mimeCol) ?: continue
+                    if (mime.startsWith("image/")) {
+                        val docId = cursor.getString(idCol)
+                        uris.add(DocumentsContract.buildDocumentUriUsingTree(folderUri, docId))
+                    }
+                }
+            }
+            uris.sortedBy { it.lastPathSegment }
+        } catch (_: Exception) { emptyList() }
     }
 
     private fun openCurrentBackgroundImageOptions() {

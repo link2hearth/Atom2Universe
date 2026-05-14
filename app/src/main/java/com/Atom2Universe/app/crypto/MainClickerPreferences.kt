@@ -56,7 +56,9 @@ object MainClickerPreferences {
     private const val KEY_CLICKER_DECIMAL_DIGITS = "clicker_decimal_digits"
     private const val KEY_ATOM_SPRING_ENABLED = "atom_spring_enabled"
     private const val KEY_ATOM_SPRING_INDEX = "atom_spring_index"
-    private const val KEY_NSFW_MODE = "atom_nsfw_mode"
+    private const val KEY_ATOM_LOW_ANIMATION = "atom_low_animation"
+    private const val KEY_ATOM_BIGGER_IMAGE = "atom_bigger_image"
+    private const val KEY_CUSTOM_ATOM_FOLDER_URI = "atom_custom_folder_uri"
     private const val KEY_BANNER_TOGGLE_CLICKER_VISIBLE = "banner_toggle_clicker_visible"
     private const val KEY_BACKGROUND_DISPLAY_ENABLED = "background_display_enabled"
     private const val KEY_BLACKJACK_WIDGET_ENABLED = "blackjack_widget_enabled"
@@ -130,7 +132,7 @@ object MainClickerPreferences {
     }
 
     fun isAtomSpringEnabled(context: Context): Boolean =
-        prefs(context).getBoolean(KEY_ATOM_SPRING_ENABLED, false)
+        prefs(context).getBoolean(KEY_ATOM_SPRING_ENABLED, true)
 
     fun setAtomSpringEnabled(context: Context, enabled: Boolean) {
         prefs(context).edit().putBoolean(KEY_ATOM_SPRING_ENABLED, enabled).apply()
@@ -143,17 +145,27 @@ object MainClickerPreferences {
         prefs(context).edit().putInt(KEY_ATOM_SPRING_INDEX, index).apply()
     }
 
-    fun isNsfwMode(context: Context): Boolean =
-        prefs(context).getBoolean(KEY_NSFW_MODE, false)
+    fun isAtomLowAnimation(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_ATOM_LOW_ANIMATION, false)
 
-    fun setNsfwMode(context: Context, enabled: Boolean) {
-        prefs(context).edit().putBoolean(KEY_NSFW_MODE, enabled).apply()
+    fun setAtomLowAnimation(context: Context, enabled: Boolean) {
+        prefs(context).edit().putBoolean(KEY_ATOM_LOW_ANIMATION, enabled).apply()
     }
 
-    fun toggleNsfwMode(context: Context): Boolean {
-        val newState = !isNsfwMode(context)
-        setNsfwMode(context, newState)
-        return newState
+    fun isAtomBiggerImage(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_ATOM_BIGGER_IMAGE, false)
+
+    fun setAtomBiggerImage(context: Context, enabled: Boolean) {
+        prefs(context).edit().putBoolean(KEY_ATOM_BIGGER_IMAGE, enabled).apply()
+    }
+
+    fun getCustomAtomFolderUri(context: Context): Uri? {
+        val s = prefs(context).getString(KEY_CUSTOM_ATOM_FOLDER_URI, null)
+        return s?.let(Uri::parse)
+    }
+
+    fun setCustomAtomFolderUri(context: Context, uri: Uri?) {
+        prefs(context).edit().putString(KEY_CUSTOM_ATOM_FOLDER_URI, uri?.toString()).apply()
     }
 
     fun isKeepScreenOnEnabled(context: Context): Boolean {
@@ -486,7 +498,7 @@ object MainClickerPreferences {
     }
 
     fun isBackgroundDisplayEnabled(context: Context): Boolean =
-        prefs(context).getBoolean(KEY_BACKGROUND_DISPLAY_ENABLED, true)
+        prefs(context).getBoolean(KEY_BACKGROUND_DISPLAY_ENABLED, false)
 
     fun setBackgroundDisplayEnabled(context: Context, enabled: Boolean) {
         prefs(context).edit().putBoolean(KEY_BACKGROUND_DISPLAY_ENABLED, enabled).apply()

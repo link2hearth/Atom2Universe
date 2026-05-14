@@ -140,4 +140,64 @@
             android:showText="false" />
     </LinearLayout>
 
+    <!-- Toggle optionnel 2 (animation réduite, etc.) -->
+    <LinearLayout
+        android:id="@+id/popup_toggle2_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="6dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/popup_toggle2_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#94A3B8"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/popup_toggle2_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:showText="false" />
+    </LinearLayout>
+
+    <!-- Toggle optionnel 3 (image agrandie, etc.) -->
+    <LinearLayout
+        android:id="@+id/popup_toggle3_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="6dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/popup_toggle3_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#94A3B8"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/popup_toggle3_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:showText="false" />
+    </LinearLayout>
+
+    <!-- Bouton optionnel (sélection dossier images custom, etc.) -->
+    <Button
+        android:id="@+id/popup_folder_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:visibility="gone"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
 </LinearLayout>

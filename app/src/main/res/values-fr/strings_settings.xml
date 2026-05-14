@@ -88,6 +88,15 @@
     <string name="settings_reset_clicker_wrong_text">Vous devez taper «reset» pour confirmer</string>
     <string name="settings_hidden_mode_on">✓</string>
     <string name="settings_hidden_mode_off">✗</string>
+    <string name="atom_animated">Atome animé</string>
+    <string name="atom_banner_height">Épaisseur bannière</string>
+    <string name="atom_banner_height_value">%1$d dp</string>
+    <string name="atom_low_animation">Animation réduite</string>
+    <string name="atom_bigger_image">Image agrandie</string>
+    <string name="atom_custom_folder_pick">Images personnalisées : choisir un dossier…</string>
+    <string name="atom_custom_folder_change">Images personnalisées : changer de dossier…</string>
+    <string name="atom_custom_folder_clear">Revenir aux images par défaut</string>
+    <string name="atom_custom_folder_pick_new">Choisir un nouveau dossier</string>
     <string name="about_title">À propos</string>
     <string name="about_version_format">Version %1$s (build %2$d)</string>
     <string name="about_version_unknown">Version inconnue</string>

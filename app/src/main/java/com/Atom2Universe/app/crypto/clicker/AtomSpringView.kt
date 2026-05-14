@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.View
@@ -21,33 +22,51 @@ class AtomSpringView @JvmOverloads constructor(
         "Atom9.png", "Atom10.png", "Atom11.png", "Atom12.png"
     )
 
-    private val nsfwAtomFiles = (1..41).map { "nsfw ($it).png" }
+    private var customImageUris: List<Uri> = emptyList()
+    private val isCustomMode get() = customImageUris.isNotEmpty()
+    private val fileCount get() = if (isCustomMode) customImageUris.size else normalAtomFiles.size
 
-    private var isNsfwMode = false
-    private val activeFiles get() = if (isNsfwMode) nsfwAtomFiles else normalAtomFiles
+    var isLowAnimation = false
+        private set
+    var isBiggerImage = false
+        private set
 
     private var currentIndex = 0
     private var currentBitmap: Bitmap? = null
 
     private fun loadBitmap(index: Int): Bitmap? = try {
-        val folder = if (isNsfwMode) "Assets/Image/Atom2" else "Assets/Image/Atom low"
-        context.assets.open("$folder/${activeFiles[index]}").use {
-            BitmapFactory.decodeStream(it)
+        if (isCustomMode) {
+            context.contentResolver.openInputStream(customImageUris[index])
+                ?.use { BitmapFactory.decodeStream(it) }
+        } else {
+            context.assets.open("Assets/Image/Atom low/${normalAtomFiles[index]}").use {
+                BitmapFactory.decodeStream(it)
+            }
         }
     } catch (_: Exception) { null }
 
-    fun setNsfwMode(enabled: Boolean) {
-        isNsfwMode = enabled
-        currentIndex = currentIndex.coerceIn(0, activeFiles.lastIndex)
-        currentBitmap = loadBitmap(currentIndex)
+    fun setCustomImageUris(uris: List<Uri>) {
+        customImageUris = uris
+        currentIndex = currentIndex.coerceIn(0, (fileCount - 1).coerceAtLeast(0))
+        currentBitmap = if (fileCount > 0) loadBitmap(currentIndex) else null
+        invalidate()
+    }
+
+    fun setLowAnimation(enabled: Boolean) {
+        isLowAnimation = enabled
+        invalidate()
+    }
+
+    fun setBiggerImage(enabled: Boolean) {
+        isBiggerImage = enabled
         invalidate()
     }
 
     fun setAtomIndex(index: Int) {
-        val start = index.coerceIn(0, activeFiles.lastIndex)
+        val start = index.coerceIn(0, (fileCount - 1).coerceAtLeast(0))
         var i = start
         var bmp = loadBitmap(i)
-        while (bmp == null && i < activeFiles.lastIndex) {
+        while (bmp == null && i < fileCount - 1) {
             i++
             bmp = loadBitmap(i)
         }
@@ -62,7 +81,7 @@ class AtomSpringView @JvmOverloads constructor(
 
     /** Passe au variant suivant, retourne le nouvel index pour le persister. */
     fun cycleToNext(): Int {
-        val next = (currentIndex + 1) % activeFiles.size
+        val next = (currentIndex + 1) % fileCount.coerceAtLeast(1)
         setAtomIndex(next)
         return next
     }
@@ -127,7 +146,7 @@ class AtomSpringView @JvmOverloads constructor(
         targetStrength = curved.coerceIn(0f, 1f)
     }
 
-    private val motionFactor get() = if (isNsfwMode || currentIndex == normalAtomFiles.lastIndex) 1f / 3f else 1f
+    private val motionFactor get() = if (isLowAnimation) 1f / 3f else 1f
 
     private fun injectImpulse() {
         val f = motionFactor
@@ -247,13 +266,13 @@ class AtomSpringView @JvmOverloads constructor(
         val bmp = currentBitmap ?: return
         val cx = width / 2f
         val cy = height / 2f
-        // Taille fixe de l'atome : 160dp, indépendant des dimensions de la vue
         val dp = resources.displayMetrics.density
-        val atomSize = 160f * dp
         val bmpW = bmp.width.toFloat()
         val bmpH = bmp.height.toFloat()
-        val sizeMultiplier = if (isNsfwMode || currentIndex == normalAtomFiles.lastIndex) 5f else 1f
-        val baseScale = atomSize / maxOf(bmpW, bmpH) * sizeMultiplier
+        // En mode agrandi : 72 % du côté le plus court de la vue (adaptatif phone/tablette)
+        // En mode normal  : 160dp fixe
+        val atomSize = if (isBiggerImage) minOf(width, height) * 0.72f else 160f * dp
+        val baseScale = atomSize / maxOf(bmpW, bmpH)
         val energy = intensity.pow(0.65f)
         // Rotation légère, pas de squash/stretch pour éviter la distorsion
         val f = motionFactor

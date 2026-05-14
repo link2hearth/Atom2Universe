@@ -14,7 +14,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.crypto.MainClickerPreferences
 import com.Atom2Universe.app.crypto.clicker.ClickerOfflineRepository
 import com.Atom2Universe.app.crypto.clicker.ClickerRepository
 import com.Atom2Universe.app.crypto.clicker.ClickerStatsRepository
@@ -105,13 +104,6 @@ class ClickerStatsActivity : ThemedActivity() {
 
             confirmBtn.setOnClickListener {
                 val word = wordInput.text.toString().trim()
-                if (word == "nsfw") {
-                    dialog.dismiss()
-                    val enabled = MainClickerPreferences.toggleNsfwMode(this)
-                    val msgRes = if (enabled) R.string.settings_hidden_mode_on else R.string.settings_hidden_mode_off
-                    Toast.makeText(this, msgRes, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
                 if (word != "reset") return@setOnClickListener
 
                 if (toggleStats.isChecked) {
