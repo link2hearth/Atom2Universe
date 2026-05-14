@@ -136,9 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:checked="true"
-                    app:thumbTint="@color/quiz_switch_thumb_on"
-                    app:trackTint="@color/quiz_switch_track_on" />
+                    android:checked="true" />
             </LinearLayout>
 
             <!-- Think mode switch -->
@@ -187,9 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:checked="false"
-                    app:thumbTint="@color/quiz_switch_thumb_off"
-                    app:trackTint="@color/quiz_switch_track_off" />
+                    android:checked="false" />
             </LinearLayout>
 
             <!-- Troll mode switch -->
@@ -238,9 +234,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:checked="false"
-                    app:thumbTint="@color/quiz_switch_thumb_off"
-                    app:trackTint="@color/quiz_switch_track_off" />
+                    android:checked="false" />
             </LinearLayout>
 
             <!-- Play button -->
@@ -256,7 +250,7 @@
 
             <!-- Challenge buttons row -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
@@ -264,20 +258,21 @@
 
                 <!-- Challenge Express button (15 questions) -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_marginEnd="8dp">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/challenge_express_button"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="120dp"
-                        android:layout_height="50dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
                         android:text="@string/quiz_challenge_express"
-                        android:textSize="14sp"
-                        android:textColor="@color/startup_text_primary" />
+                        android:textSize="20sp"
+                        android:textColor="@color/startup_button_text"
+                        app:backgroundTint="@color/startup_button_background" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -290,20 +285,21 @@
 
                 <!-- Challenge Full button (50 questions) -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_marginStart="8dp">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/challenge_button"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="120dp"
-                        android:layout_height="50dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
                         android:text="@string/quiz_challenge"
-                        android:textSize="14sp"
-                        android:textColor="@color/startup_text_primary" />
+                        android:textSize="20sp"
+                        android:textColor="@color/startup_button_text"
+                        app:backgroundTint="@color/startup_button_background" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -391,13 +387,14 @@
                 <!-- Show answers button (for think mode) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/show_answers_button"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:layout_marginTop="32dp"
                     android:layout_gravity="center"
                     android:text="@string/quiz_show_answers"
-                    android:textColor="@color/startup_text_primary"
+                    android:textSize="14sp"
+                    android:textColor="@color/startup_button_text"
+                    app:backgroundTint="@color/startup_button_background"
                     android:visibility="gone" />
 
                 <!-- Answer buttons container (dynamically populated) -->
@@ -569,17 +566,19 @@
                     android:layout_marginEnd="8dp"
                     android:text="@string/quiz_play_again"
                     android:textColor="@color/startup_button_text"
+                    android:textSize="14sp"
                     app:backgroundTint="@color/startup_button_background" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/back_to_menu_button"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="56dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:text="@string/quiz_back_to_menu"
-                    android:textColor="@color/startup_text_primary" />
+                    android:textColor="@color/startup_button_text"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/startup_button_background" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -751,17 +750,19 @@
                     android:layout_marginEnd="8dp"
                     android:text="@string/quiz_play_again"
                     android:textColor="@color/startup_button_text"
+                    android:textSize="14sp"
                     app:backgroundTint="@color/startup_button_background" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/challenge_back_to_menu_button"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="56dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:text="@string/quiz_back_to_menu"
-                    android:textColor="@color/startup_text_primary" />
+                    android:textColor="@color/startup_button_text"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/startup_button_background" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -386,9 +386,14 @@ class ChessWidgetView @JvmOverloads constructor(
         resultText.setTextColor(color)
         resultOverlay.visibility = View.VISIBLE
         if (playerWon) {
-            NeutrinoRepository(context).addPending(1)
+            val reward = when (difficulty) {
+                ChessDifficulty.TRAINING -> 10
+                ChessDifficulty.STANDARD -> 20
+                ChessDifficulty.EXPERT   -> 50
+                else -> 0
+            }
+            if (reward > 0) NeutrinoRepository(context).addPending(reward)
             GameStatsRepository(context).recordChessWon()
-            Toast.makeText(context, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
         }
     }
 

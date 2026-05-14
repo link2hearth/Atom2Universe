@@ -102,7 +102,9 @@ class BlackjackGame {
 
     fun startRound() {
         for (p in players) {
-            val bet = if (p.isHuman) pendingBet.coerceIn(1, p.balance.coerceAtLeast(1)) else randomAIBet(p)
+            val bet = if (p.isHuman) {
+                if (pendingBet == 0) 0 else pendingBet.coerceIn(1, p.balance.coerceAtLeast(1))
+            } else randomAIBet(p)
             p.resetForRound(bet)
         }
         dealer.resetForRound(0)
@@ -199,26 +201,54 @@ class BlackjackGame {
         return false
     }
 
-    // Simplified basic strategy for AI
+    // Basic strategy complète (6 decks, dealer stands on soft 17)
     fun getAIAction(player: BJPlayer): PlayerAction {
         val hand = player.currentHand ?: return PlayerAction.STAND
         val dealerUp = dealer.currentHand!!.cards.firstOrNull { it.faceUp }?.value ?: 7
-        val v = hand.value
 
-        return when {
-            hand.canSplit && hand.cards[0].rank == 1 -> PlayerAction.SPLIT
-            hand.canSplit && hand.cards[0].value == 8 -> PlayerAction.SPLIT
-            hand.canSplit && hand.cards[0].value == 9 && dealerUp !in listOf(7, 10, 1) -> PlayerAction.SPLIT
-            hand.canDouble && v == 11 -> PlayerAction.DOUBLE
-            hand.canDouble && v == 10 && dealerUp <= 9 -> PlayerAction.DOUBLE
-            hand.canDouble && v == 9 && dealerUp in 3..6 -> PlayerAction.DOUBLE
-            v >= 17 -> PlayerAction.STAND
-            v >= 13 && dealerUp <= 6 -> PlayerAction.STAND
-            v == 12 && dealerUp in 4..6 -> PlayerAction.STAND
-            hand.isSoft && v >= 19 -> PlayerAction.STAND
-            hand.isSoft && v == 18 && dealerUp !in listOf(9, 10, 1) -> PlayerAction.STAND
-            else -> PlayerAction.HIT
+        // Splits — vérifiés en premier
+        if (hand.canSplit) {
+            val pairVal = hand.cards[0].value
+            val isAce = hand.cards[0].rank == 1
+            when {
+                isAce || pairVal == 8 -> return PlayerAction.SPLIT
+                pairVal == 9 && dealerUp !in listOf(7, 10, 1) -> return PlayerAction.SPLIT
+                pairVal == 7 && dealerUp in 2..7 -> return PlayerAction.SPLIT
+                pairVal == 6 && dealerUp in 2..6 -> return PlayerAction.SPLIT
+                pairVal == 4 && dealerUp in 5..6 -> return PlayerAction.SPLIT
+                pairVal in 2..3 && dealerUp in 2..7 -> return PlayerAction.SPLIT
+                // 10s et 5s : ne pas splitter, traiter comme main dure
+            }
         }
+
+        return if (hand.isSoft) aiSoftAction(hand, dealerUp, hand.value)
+        else aiHardAction(hand, dealerUp, hand.value)
+    }
+
+    private fun aiSoftAction(hand: BlackjackHand, dealerUp: Int, v: Int): PlayerAction = when {
+        v >= 20 -> PlayerAction.STAND
+        v == 19 -> if (hand.canDouble && dealerUp == 6) PlayerAction.DOUBLE else PlayerAction.STAND
+        v == 18 -> when {                                          // As+7
+            hand.canDouble && dealerUp in 3..6 -> PlayerAction.DOUBLE
+            dealerUp in listOf(9, 10, 1) -> PlayerAction.HIT
+            else -> PlayerAction.STAND                             // vs 2,7,8
+        }
+        v == 17 -> if (hand.canDouble && dealerUp in 3..6) PlayerAction.DOUBLE else PlayerAction.HIT
+        v == 16 -> if (hand.canDouble && dealerUp in 4..6) PlayerAction.DOUBLE else PlayerAction.HIT
+        v == 15 -> if (hand.canDouble && dealerUp in 4..6) PlayerAction.DOUBLE else PlayerAction.HIT
+        v == 14 -> if (hand.canDouble && dealerUp in 5..6) PlayerAction.DOUBLE else PlayerAction.HIT
+        v == 13 -> if (hand.canDouble && dealerUp in 5..6) PlayerAction.DOUBLE else PlayerAction.HIT
+        else -> PlayerAction.HIT
+    }
+
+    private fun aiHardAction(hand: BlackjackHand, dealerUp: Int, v: Int): PlayerAction = when {
+        v >= 17 -> PlayerAction.STAND
+        v in 13..16 -> if (dealerUp in 2..6) PlayerAction.STAND else PlayerAction.HIT
+        v == 12 -> if (dealerUp in 4..6) PlayerAction.STAND else PlayerAction.HIT
+        v == 11 -> if (hand.canDouble && dealerUp != 1) PlayerAction.DOUBLE else PlayerAction.HIT
+        v == 10 -> if (hand.canDouble && dealerUp in 2..9) PlayerAction.DOUBLE else PlayerAction.HIT
+        v == 9 -> if (hand.canDouble && dealerUp in 3..6) PlayerAction.DOUBLE else PlayerAction.HIT
+        else -> PlayerAction.HIT
     }
 
     // Returns true if moved to dealer turn

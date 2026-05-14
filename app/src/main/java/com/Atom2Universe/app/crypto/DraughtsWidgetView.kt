@@ -318,8 +318,13 @@ class DraughtsWidgetView @JvmOverloads constructor(
         resultOverlay.visibility = View.VISIBLE
 
         if (playerWon) {
-            NeutrinoRepository(context).addPending(1)
-            Toast.makeText(context, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
+            val reward = when (difficulty) {
+                DraughtsDifficulty.TRAINING -> 10
+                DraughtsDifficulty.STANDARD -> 20
+                DraughtsDifficulty.EXPERT   -> 50
+                else -> 0
+            }
+            if (reward > 0) NeutrinoRepository(context).addPending(reward)
         }
     }
 

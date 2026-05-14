@@ -187,6 +187,7 @@
     <color name="game_tile_starswar">#1A237E</color>
     <color name="game_tile_flappycat">#00838F</color>
     <color name="game_tile_blackjack">#1B5E20</color>
+    <color name="game_tile_roulette">#4A0000</color>
     <color name="game_tile_chess">#4E342E</color>
     <color name="game_tile_draughts">#1A6B3A</color>
     <color name="game_tile_sudoku">#0D47A1</color>
@@ -199,6 +200,7 @@
     <color name="game_tile_memory">#311B92</color>
     <color name="game_tile_quiz">#33691E</color>
     <color name="game_tile_link">#00695C</color>
+    <color name="game_tile_wavesurf">#0D2B5E</color>
     <color name="category_alkali_metal">#B87070</color>
     <color name="category_alkaline_earth_metal">#C48A5C</color>
     <color name="category_transition_metal">#A89A6E</color>

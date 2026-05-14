@@ -319,6 +319,18 @@
                 <TextView style="@style/StatLabel" android:text="@string/stat_particules_level" />
                 <TextView android:id="@+id/stat_particules_level_value" style="@style/StatValue" android:text="—" />
             </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_wavesurf_speed" />
+                <TextView android:id="@+id/stat_wavesurf_speed_value" style="@style/StatValue" android:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_wavesurf_altitude" />
+                <TextView android:id="@+id/stat_wavesurf_altitude_value" style="@style/StatValue" android:text="—" />
+            </LinearLayout>
 
         </LinearLayout>
 

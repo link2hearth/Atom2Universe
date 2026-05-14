@@ -214,15 +214,7 @@ class Game2048WidgetView @JvmOverloads constructor(
 
         if (game.hasWon) {
             GameStatsRepository(context).recordGame2048Won()
-            val isHardWin = if (game.quantumMode) {
-                game.quantumTarget == QUANTUM_HARD[game.size]
-            } else {
-                game.target == TARGETS_HARD[game.size]
-            }
-            if (isHardWin) {
-                NeutrinoRepository(context).addPending(1)
-                Toast.makeText(context, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
-            }
+            NeutrinoRepository(context).addPending(5)
         }
         if (game.hasWon || game.gameOver) {
             boardView.postDelayed({

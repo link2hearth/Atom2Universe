@@ -176,12 +176,8 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     private fun awardReward() {
         if (game.rewardClaimed) return
         game.rewardClaimed = true
-        if (!game.difficulty.isHard) return
-        val repo = NeutrinoRepository(this)
-        if (repo.recordPipeTapHardWin()) {
-            repo.addPending(1)
-            Toast.makeText(this, R.string.clicker_neutrino_awarded_double, Toast.LENGTH_SHORT).show()
-        }
+        val reward = game.difficulty.ordinal + 1  // EASY=1, MEDIUM=2, HARD=3, EXPERT=4, MASTER=5
+        NeutrinoRepository(this).addPending(reward)
         GameStatsRepository(this).recordPipeTapHardWon()
     }
 

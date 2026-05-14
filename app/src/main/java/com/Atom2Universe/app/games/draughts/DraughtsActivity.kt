@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.games.draughts.ai.DraughtsAI
 import com.Atom2Universe.app.util.enableImmersiveMode
 
@@ -319,6 +320,15 @@ class DraughtsActivity : ThemedActivity(),
         val statsRepo = GameStatsRepository(this)
         statsRepo.recordDraughtsPlayed()
         if (winner == DraughtsPieceColor.WHITE) statsRepo.recordDraughtsWon()
+        if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI()) {
+            val reward = when (currentDifficulty) {
+                DraughtsDifficulty.TRAINING -> 10
+                DraughtsDifficulty.STANDARD -> 20
+                DraughtsDifficulty.EXPERT   -> 50
+                else -> 0
+            }
+            if (reward > 0) NeutrinoRepository(this).addPending(reward)
+        }
         if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI() && currentDifficulty.gachaTickets > 0) {
             showVictoryDialog()
         } else {

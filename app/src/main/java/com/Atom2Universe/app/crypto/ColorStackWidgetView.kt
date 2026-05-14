@@ -214,11 +214,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
                         statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                     }
                     hardGameStartMs = 0L
-                    val repo = NeutrinoRepository(context)
-                    if (repo.recordColorStackHardWin()) {
-                        repo.addPending(1)
-                        Toast.makeText(context, R.string.clicker_neutrino_awarded_double, Toast.LENGTH_SHORT).show()
-                    }
+                    NeutrinoRepository(context).addPending(1)
                 }
             } else {
                 persistGame()

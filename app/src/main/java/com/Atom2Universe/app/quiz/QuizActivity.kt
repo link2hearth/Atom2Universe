@@ -1,15 +1,14 @@
 package com.Atom2Universe.app.quiz
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.quiz.data.AnsweredQuestion
 import com.Atom2Universe.app.quiz.data.AnswerType
 import com.Atom2Universe.app.quiz.data.Question
@@ -17,7 +16,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.Atom2Universe.app.util.enableImmersiveMode
 
-class QuizActivity : AppCompatActivity() {
+class QuizActivity : ThemedActivity() {
 
     // State
     private enum class QuizState { MENU, PLAYING, RESULT, CHALLENGE_RESULT }
@@ -104,10 +103,6 @@ class QuizActivity : AppCompatActivity() {
     // Language
     private val currentLang: String
         get() = LocaleHelper.getLanguage(this)
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -222,7 +217,7 @@ class QuizActivity : AppCompatActivity() {
 
         val progress = "${gameState.currentQuestionIndex}/${gameState.questionIds.size}"
 
-        android.app.AlertDialog.Builder(this)
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.quiz_resume_game_title))
             .setMessage(getString(R.string.quiz_resume_game_message, modeText, progress))
             .setPositiveButton(getString(R.string.quiz_resume_game_yes)) { _, _ ->
@@ -380,14 +375,6 @@ class QuizActivity : AppCompatActivity() {
         } else {
             getString(R.string.quiz_option_disabled)
         }
-        // Update switch colors
-        if (isChecked) {
-            switchView.thumbTintList = ContextCompat.getColorStateList(this, R.color.quiz_switch_thumb_on)
-            switchView.trackTintList = ContextCompat.getColorStateList(this, R.color.quiz_switch_track_on)
-        } else {
-            switchView.thumbTintList = ContextCompat.getColorStateList(this, R.color.quiz_switch_thumb_off)
-            switchView.trackTintList = ContextCompat.getColorStateList(this, R.color.quiz_switch_track_off)
-        }
     }
 
     private fun showState(state: QuizState) {
@@ -519,6 +506,7 @@ class QuizActivity : AppCompatActivity() {
             // Troll mode: 4 correct answers + 8 random answers from other questions
             val correctChoices = question.getChoices(currentLang).toMutableList()
             val correctAnswer = correctChoices[question.getCorrectIndex()]
+            val correctChoicesTrimmed = correctChoices.map { it.trim() }
 
             // Get 8 random wrong answers from other questions
             val otherQuestions = allQuestions.filter { it.id != question.id }
@@ -529,16 +517,18 @@ class QuizActivity : AppCompatActivity() {
             otherQuestions.forEach { otherQ ->
                 val otherChoices = otherQ.getChoices(currentLang)
                 otherChoices.forEachIndexed { index, choice ->
-                    // Exclude correct answers from other questions and duplicates
-                    if (index != otherQ.getCorrectIndex() && !correctChoices.contains(choice)) {
+                    // Exclude correct answers from other questions and any text already present
+                    // in the current question's choices (trim to catch whitespace differences)
+                    if (index != otherQ.getCorrectIndex() && !correctChoicesTrimmed.contains(choice.trim())) {
                         allOtherChoices.add(choice)
                     }
                 }
             }
 
-            // Shuffle and take up to 8 unique wrong choices
+            // Shuffle and take up to 8 unique wrong choices (distinct by trimmed text)
             allOtherChoices.shuffle()
-            val distinctWrongChoices = allOtherChoices.distinct().take(8)
+            val seen = mutableSetOf<String>()
+            val distinctWrongChoices = allOtherChoices.filter { seen.add(it.trim()) }.take(8)
             randomWrongChoices.addAll(distinctWrongChoices)
 
             // Combine all choices: 4 from current question + 8 random

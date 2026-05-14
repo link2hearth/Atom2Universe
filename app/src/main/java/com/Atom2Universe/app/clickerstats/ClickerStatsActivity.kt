@@ -131,6 +131,7 @@ class ClickerStatsActivity : ThemedActivity() {
                     getSharedPreferences("stars_war_save",   MODE_PRIVATE).edit().clear().apply()
                     getSharedPreferences("reflex_save",      MODE_PRIVATE).edit().clear().apply()
                     getSharedPreferences("flappy_cat_save",  MODE_PRIVATE).edit().clear().apply()
+                    getSharedPreferences("wave_surf_save",   MODE_PRIVATE).edit().clear().apply()
                     // Best score 2048 seulement (la partie en cours est gérée par toggleClicker)
                     getSharedPreferences("game2048_save",    MODE_PRIVATE).edit().remove("best_score").apply()
                     // Particules : zéro les records en conservant la progression shop
@@ -247,6 +248,14 @@ class ClickerStatsActivity : ThemedActivity() {
         val g2048 = getSharedPreferences("game2048_save", MODE_PRIVATE)
         val best2048 = g2048.getInt("best_score", 0)
         findViewById<TextView>(R.id.stat_2048_best_value).text = if (best2048 > 0) fmt.format(best2048) else "—"
+
+        val ws = getSharedPreferences("wave_surf_save", MODE_PRIVATE)
+        val wsSpeed = ws.getInt("best_speed", 0)
+        val wsAlt   = ws.getInt("best_altitude", 0)
+        findViewById<TextView>(R.id.stat_wavesurf_speed_value).text =
+            if (wsSpeed > 0) "${fmt.format(wsSpeed)} km/h" else "—"
+        findViewById<TextView>(R.id.stat_wavesurf_altitude_value).text =
+            if (wsAlt > 0) "${fmt.format(wsAlt)} m" else "—"
 
         // Particules : Room DB async
         lifecycleScope.launch {

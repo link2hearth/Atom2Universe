@@ -109,11 +109,11 @@ class PipeTapWidgetView @JvmOverloads constructor(
                 if (solved) {
                     stopTimer()
                     showWinOverlay()
-                    if (game.difficulty == PipeTapDifficulty.MASTER && !game.rewardClaimed) {
+                    if (!game.rewardClaimed) {
                         game.rewardClaimed = true
-                        NeutrinoRepository(context).addPending(1)
+                        val reward = game.difficulty.ordinal + 1
+                        NeutrinoRepository(context).addPending(reward)
                         GameStatsRepository(context).recordPipeTapHardWon()
-                        Toast.makeText(context, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

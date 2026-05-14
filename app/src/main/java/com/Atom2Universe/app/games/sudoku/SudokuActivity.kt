@@ -433,10 +433,12 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
                 database.sudokuDao().deleteSave()
             }
 
-            if (currentDifficulty == SudokuDifficulty.HARD) {
-                NeutrinoRepository(this).addPending(1)
-                Toast.makeText(this, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
+            val reward = when (currentDifficulty) {
+                SudokuDifficulty.EASY   -> 5
+                SudokuDifficulty.MEDIUM -> 10
+                SudokuDifficulty.HARD   -> 20
             }
+            NeutrinoRepository(this).addPending(reward)
 
             Toast.makeText(this, R.string.sudoku_status_solved, Toast.LENGTH_LONG).show()
         }

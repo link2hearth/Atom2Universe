@@ -385,8 +385,7 @@ class SolitaireActivity : AppCompatActivity(), SolitaireView.OnGameActionListene
             database.solitaireDao().deleteSave()
         }
 
-        NeutrinoRepository(this).addPending(1)
-        Toast.makeText(this, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
+        NeutrinoRepository(this).addPending(5)
 
         // Start victory animation
         gameView.startVictoryAnimation()

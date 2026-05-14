@@ -415,6 +415,13 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         return base
     }
 
+    fun flushWidgetBalance() {
+        if (!initCompleted) return
+        if (neutrinoRepo.getPending() == 0 && neutrinoRepo.getDebit() == 0) {
+            neutrinoRepo.setWidgetBalance(_state.value.neutrinos)
+        }
+    }
+
     fun syncNeutrinos() {
         val pending = neutrinoRepo.claimPending()
         val debit = neutrinoRepo.claimDebit()

@@ -322,10 +322,12 @@ class SudokuWidgetView @JvmOverloads constructor(
             resultText.text = context.getString(R.string.sudoku_result_success)
             resultText.setTextColor(Color.parseColor("#22C55E"))
             GameStatsRepository(context).recordSudokuWon()
-            if (currentDifficulty == SudokuDifficulty.HARD) {
-                NeutrinoRepository(context).addPending(1)
-                Toast.makeText(context, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
+            val reward = when (currentDifficulty) {
+                SudokuDifficulty.EASY   -> 5
+                SudokuDifficulty.MEDIUM -> 10
+                SudokuDifficulty.HARD   -> 20
             }
+            NeutrinoRepository(context).addPending(reward)
         } else {
             resultText.text = context.getString(R.string.sudoku_result_failure)
             resultText.setTextColor(Color.parseColor("#EF4444"))

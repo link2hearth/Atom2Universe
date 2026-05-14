@@ -1196,6 +1196,20 @@
     <string name="link_victory_title">Solved!</string>
     <string name="link_victory_moves">%1$d moves</string>
 
+    <!-- Wave Surf -->
+    <string name="wave_surf_title">Wave Surf</string>
+    <string name="wave_surf_description">Surf the procedural hills — tap to dive and build speed!</string>
+    <string name="wave_surf_restart">Restart</string>
+    <string name="wave_surf_hud_distance">%1$d m</string>
+    <string name="wave_surf_hud_speed">%1$d km/h</string>
+    <string name="wave_surf_hud_altitude">%1$d m ↑</string>
+    <string name="wave_surf_theme_vivid">Vivid</string>
+    <string name="wave_surf_theme_pastel">Pastel</string>
+    <string name="wave_surf_theme_old">Old</string>
+    <string name="wave_surf_theme_gray">B&amp;W</string>
+    <string name="stat_wavesurf_speed">Wave Surf – Top speed</string>
+    <string name="stat_wavesurf_altitude">Wave Surf – Max altitude</string>
+
     <!-- Game stats page -->
     <string name="clicker_stats_title">Game Stats</string>
     <string name="stat_section_wins">Victories</string>
@@ -1217,4 +1231,25 @@
     <string name="stat_2048_best">2048 – Best Score</string>
     <string name="stat_particules_score">Particles – Score</string>
     <string name="stat_particules_level">Particles – Level</string>
+    <!-- Roulette -->
+    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_description">Slot machine – line up suits and colors to win neutrinos</string>
+    <string name="roulette_spin">SPIN</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Select a bet and spin!</string>
+    <string name="roulette_status_spinning">Spinning…</string>
+    <string name="roulette_status_lose">No win this time.</string>
+    <string name="roulette_status_no_funds">Not enough neutrinos!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_joker">🃏 Full Joker row! ×%1$d</string>
+    <string name="roulette_win_suit_line">%1$s Suit line! ×%2$d</string>
+    <string name="roulette_win_suit_diag">%1$s Suit diagonal! ×%2$d</string>
+    <string name="roulette_win_color_line">%1$s Color line! ×%2$d</string>
+    <string name="roulette_win_color_diag">%1$s Color diagonal! ×%2$d</string>
+    <string name="roulette_win_multiple">Multiple wins! ×%1$d total</string>
+    <string name="roulette_color_red">Red</string>
+    <string name="roulette_color_black">Black</string>
+    <string name="roulette_pay_suit">♥♦ Same suit ×5</string>
+    <string name="roulette_pay_color">♥♣ Same color ×2</string>
+    <string name="roulette_pay_joker">🃏🃏🃏 Jokers ×10/25</string>
 </resources>

@@ -156,11 +156,7 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
                         statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                     }
                     hardGameStartMs = 0L
-                    val repo = NeutrinoRepository(this)
-                    if (repo.recordColorStackHardWin()) {
-                        repo.addPending(1)
-                        Toast.makeText(this, R.string.clicker_neutrino_awarded_double, Toast.LENGTH_SHORT).show()
-                    }
+                    NeutrinoRepository(this).addPending(1)
                 }
             }
             saveGame()

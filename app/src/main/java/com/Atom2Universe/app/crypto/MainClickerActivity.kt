@@ -1,6 +1,5 @@
 package com.Atom2Universe.app.crypto
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.view.View
@@ -26,10 +25,10 @@ import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.data.MainClickerDatabase
 import com.Atom2Universe.app.news.NewsWidgetView
 import com.Atom2Universe.app.crypto.data.MainClickerRepository
@@ -72,7 +71,7 @@ import com.Atom2Universe.app.crypto.clicker.ClickerBannerView
 import com.Atom2Universe.app.crypto.clicker.ClickerGameState
 import com.Atom2Universe.app.crypto.clicker.ClickerViewModel
 
-class MainClickerActivity : AppCompatActivity() {
+class MainClickerActivity : ThemedActivity() {
 
     companion object {
         private val SLIDESHOW_STEPS = intArrayOf(0, 1, 2, 3, 4, 5, 10, 15, 30, 45, 60)
@@ -346,9 +345,6 @@ class MainClickerActivity : AppCompatActivity() {
             applyCustomAtomFolder(uri)
         }
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -634,6 +630,7 @@ class MainClickerActivity : AppCompatActivity() {
     override fun onPause() {
         floatingWebWidget.onPause()
         colorStackWidgetView.cancelTimer()
+        clickerViewModel.flushWidgetBalance()
         super.onPause()
     }
 

@@ -9,13 +9,17 @@ class NeutrinoRepository(context: Context) {
     fun addPending(count: Int) {
         val current = prefs.getInt("pending", 0)
         val lifetime = prefs.getInt("lifetime_neutrinos", 0)
+        val widgetBalance = prefs.getInt("widget_balance", 0)
         prefs.edit()
             .putInt("pending", current + count)
             .putInt("lifetime_neutrinos", lifetime + count)
+            .putInt("widget_balance", widgetBalance + count)
             .apply()
     }
 
     fun getLifetimeNeutrinos(): Int = prefs.getInt("lifetime_neutrinos", 0)
+
+    fun getPending(): Int = prefs.getInt("pending", 0)
 
     fun claimPending(): Int {
         val pending = prefs.getInt("pending", 0)
@@ -30,8 +34,14 @@ class NeutrinoRepository(context: Context) {
     /** Le widget a perdu des neutrinos : les débiter du clicker au prochain sync. */
     fun addDebit(count: Int) {
         val current = prefs.getInt("pending_debit", 0)
-        prefs.edit().putInt("pending_debit", current + count).apply()
+        val widgetBalance = prefs.getInt("widget_balance", 0)
+        prefs.edit()
+            .putInt("pending_debit", current + count)
+            .putInt("widget_balance", (widgetBalance - count).coerceAtLeast(0))
+            .apply()
     }
+
+    fun getDebit(): Int = prefs.getInt("pending_debit", 0)
 
     fun claimDebit(): Int {
         val debit = prefs.getInt("pending_debit", 0)

@@ -385,8 +385,13 @@ class ChessActivity : AppCompatActivity(),
         // Victoire du joueur contre l'IA
         if (game.isCheckmate && game.currentTurn == PieceColor.BLACK && ai != null) {
             Toast.makeText(this, R.string.chess_victory_title, Toast.LENGTH_SHORT).show()
-            NeutrinoRepository(this).addPending(1)
-            Toast.makeText(this, R.string.clicker_neutrino_awarded, Toast.LENGTH_SHORT).show()
+            val reward = when (currentDifficulty) {
+                ChessDifficulty.TRAINING -> 10
+                ChessDifficulty.STANDARD -> 20
+                ChessDifficulty.EXPERT   -> 50
+                else -> 0
+            }
+            if (reward > 0) NeutrinoRepository(this).addPending(reward)
         }
     }
 

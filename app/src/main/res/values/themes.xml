@@ -162,6 +162,31 @@
         <item name="a2uMidiAccentOnText">@color/accent_on_text_default</item>
     </style>
 
+    <!-- ===== Roulette ===== -->
+    <style name="RouletteCell">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">44sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+    <style name="RouletteBetButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginHorizontal">3dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <!-- ===== Styles migrés depuis Atom2Universe ===== -->
 
     <!-- Dialog Theme pour les modules migrés -->

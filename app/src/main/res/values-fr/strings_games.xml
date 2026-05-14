@@ -1216,4 +1216,39 @@
     <string name="stat_2048_best">2048 – Meilleur Score</string>
     <string name="stat_particules_score">Particles – Score</string>
     <string name="stat_particules_level">Particles – Niveau</string>
+
+    <!-- Wave Surf -->
+    <string name="wave_surf_title">Wave Surf</string>
+    <string name="wave_surf_description">Surfez les collines — appuyez pour plonger et gagner de la vitesse !</string>
+    <string name="wave_surf_restart">Recommencer</string>
+    <string name="wave_surf_hud_distance">%1$d m</string>
+    <string name="wave_surf_hud_speed">%1$d km/h</string>
+    <string name="wave_surf_hud_altitude">%1$d m ↑</string>
+    <string name="wave_surf_theme_vivid">Vif</string>
+    <string name="wave_surf_theme_pastel">Pastel</string>
+    <string name="wave_surf_theme_old">Vieux</string>
+    <string name="wave_surf_theme_gray">N&amp;B</string>
+    <string name="stat_wavesurf_speed">Wave Surf – Vitesse max</string>
+    <string name="stat_wavesurf_altitude">Wave Surf – Altitude max</string>
+    <!-- Roulette -->
+    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_description">Machine à sous – alignez enseignes et couleurs pour gagner des neutrinos</string>
+    <string name="roulette_spin">LANCER</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Choisissez une mise et lancez !</string>
+    <string name="roulette_status_spinning">Les rouleaux tournent…</string>
+    <string name="roulette_status_lose">Pas de gain cette fois.</string>
+    <string name="roulette_status_no_funds">Pas assez de neutrinos !</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_joker">🃏 Ligne de Jokers ! ×%1$d</string>
+    <string name="roulette_win_suit_line">Ligne %1$s ! ×%2$d</string>
+    <string name="roulette_win_suit_diag">Diagonale %1$s ! ×%2$d</string>
+    <string name="roulette_win_color_line">Ligne %1$s ! ×%2$d</string>
+    <string name="roulette_win_color_diag">Diagonale %1$s ! ×%2$d</string>
+    <string name="roulette_win_multiple">Combinaisons multiples ! ×%1$d au total</string>
+    <string name="roulette_color_red">Rouge</string>
+    <string name="roulette_color_black">Noir</string>
+    <string name="roulette_pay_suit">♥♦ Même enseigne ×5</string>
+    <string name="roulette_pay_color">♥♣ Même couleur ×2</string>
+    <string name="roulette_pay_joker">🃏🃏🃏 Jokers ×10/25</string>
 </resources>
