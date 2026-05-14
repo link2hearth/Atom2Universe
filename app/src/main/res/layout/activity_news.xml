@@ -81,8 +81,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:text="@string/news_search_button"
-                            android:textSize="12sp"
-                            style="@style/Widget.Material3.Button" />
+                            android:textSize="14sp"
+                            android:textColor="?attr/a2uMidiAccent"
+                            app:backgroundTint="#1E293B"
+                            app:strokeColor="#334155"
+                            app:strokeWidth="1dp"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/news_clear_button"
@@ -90,7 +94,11 @@
                             android:layout_height="36dp"
                             android:layout_marginStart="8dp"
                             android:text="@string/news_clear_button"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
+                            android:textColor="?attr/a2uMidiAccent"
+                            app:backgroundTint="#1E293B"
+                            app:strokeColor="#334155"
+                            app:strokeWidth="1dp"
                             style="@style/Widget.Material3.Button.OutlinedButton" />
 
                     </LinearLayout>
@@ -119,8 +127,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:text="@string/news_refresh_button"
-                    android:textSize="11sp"
-                    style="@style/Widget.Material3.Button.TonalButton" />
+                    android:textSize="13sp"
+                    android:textColor="?attr/a2uMidiAccent"
+                    app:backgroundTint="#1E293B"
+                    app:strokeColor="#334155"
+                    app:strokeWidth="1dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/news_restore_button"
@@ -128,7 +140,11 @@
                     android:layout_height="32dp"
                     android:layout_marginStart="6dp"
                     android:text="@string/news_restore_hidden"
-                    android:textSize="11sp"
+                    android:textSize="13sp"
+                    android:textColor="?attr/a2uMidiAccent"
+                    app:backgroundTint="#1E293B"
+                    app:strokeColor="#334155"
+                    app:strokeWidth="1dp"
                     style="@style/Widget.Material3.Button.OutlinedButton" />
 
             </LinearLayout>
@@ -166,8 +182,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:text="@string/news_banned_title"
-                android:textColor="?android:attr/colorAccent"
-                android:textSize="14sp"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -196,10 +212,15 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/news_banned_save"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/news_banned_save"
-                style="@style/Widget.Material3.Button.TonalButton" />
+                android:textSize="14sp"
+                android:textColor="?attr/a2uMidiAccent"
+                app:backgroundTint="#1E293B"
+                app:strokeColor="#334155"
+                app:strokeWidth="1dp"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
 
             <!-- Séparateur -->
             <View
@@ -214,8 +235,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:text="@string/news_sources_title"
-                android:textColor="?android:attr/colorAccent"
-                android:textSize="14sp"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView

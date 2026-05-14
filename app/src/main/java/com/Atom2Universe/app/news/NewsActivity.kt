@@ -1,6 +1,5 @@
 package com.Atom2Universe.app.news
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -8,11 +7,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -22,7 +20,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NewsActivity : AppCompatActivity() {
+class NewsActivity : com.Atom2Universe.app.ThemedActivity() {
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -42,13 +40,10 @@ class NewsActivity : AppCompatActivity() {
     private lateinit var adapter: NewsAdapter
     private var highlightId: String? = null
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
+        enableImmersiveMode()
 
         highlightId = intent.getStringExtra(NewsWidgetView.EXTRA_HIGHLIGHT_ID)
 
@@ -132,6 +127,15 @@ class NewsActivity : AppCompatActivity() {
             }
             val toggle = SwitchMaterial(this).apply {
                 isChecked = source.id in enabledIds
+                val ta = context.obtainStyledAttributes(intArrayOf(R.attr.a2uMidiAccent))
+                val accent = ta.getColor(0, 0xFF4CAF50.toInt())
+                ta.recycle()
+                val accentList = android.content.res.ColorStateList.valueOf(accent)
+                thumbTintList = accentList
+                trackTintList = android.content.res.ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                    intArrayOf(android.graphics.Color.argb(128, android.graphics.Color.red(accent), android.graphics.Color.green(accent), android.graphics.Color.blue(accent)), 0xFF1E293B.toInt())
+                )
                 setOnCheckedChangeListener { _, isChecked ->
                     val current = NewsPreferences.getEnabledSourceIds(this@NewsActivity).toMutableSet()
                     if (isChecked) current.add(source.id) else current.remove(source.id)

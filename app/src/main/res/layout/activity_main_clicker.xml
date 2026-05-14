@@ -194,10 +194,11 @@
         <TextView
             android:id="@+id/main_clicker_label_earth"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/banner_label_earth"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -212,10 +213,11 @@
         <TextView
             android:id="@+id/main_clicker_label_chess"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/banner_label_chess"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -230,10 +232,11 @@
         <TextView
             android:id="@+id/main_clicker_label_draughts"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/banner_label_draughts"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -248,10 +251,11 @@
         <TextView
             android:id="@+id/main_clicker_label_sudoku"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Sudoku"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -266,10 +270,11 @@
         <TextView
             android:id="@+id/main_clicker_label_2048"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="2048"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -284,10 +289,11 @@
         <TextView
             android:id="@+id/main_clicker_label_crypto"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Crypto"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -302,10 +308,11 @@
         <TextView
             android:id="@+id/main_clicker_label_news"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="News"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -320,10 +327,11 @@
         <TextView
             android:id="@+id/main_clicker_label_solitaire"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Solitaire"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -338,10 +346,11 @@
         <TextView
             android:id="@+id/main_clicker_label_blackjack"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/banner_label_blackjack"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -356,10 +365,11 @@
         <TextView
             android:id="@+id/main_clicker_label_color_stack"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Stack"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -374,10 +384,11 @@
         <TextView
             android:id="@+id/main_clicker_label_clicker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Clicker"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -392,10 +403,11 @@
         <TextView
             android:id="@+id/main_clicker_label_music"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/banner_label_music"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -410,10 +422,11 @@
         <TextView
             android:id="@+id/main_clicker_label_pipetap"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/banner_label_pipetap"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -428,10 +441,11 @@
         <TextView
             android:id="@+id/main_clicker_label_the_line"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/banner_label_the_line"
             android:textColor="#94A3B8"
             android:textSize="12sp"
+            android:gravity="center_vertical"
             android:paddingEnd="2dp" />
 
         <androidx.appcompat.widget.SwitchCompat
