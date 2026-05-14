@@ -207,14 +207,18 @@ class ColorStackWidgetView @JvmOverloads constructor(
                 resultOverlay.visibility = View.VISIBLE
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit().remove(KEY_SAVE).apply()
-                if (game.difficulty == ColorStackGame.Difficulty.HARD) {
-                    val statsRepo = GameStatsRepository(context)
-                    statsRepo.recordColorStackHardWon()
-                    if (hardGameStartMs > 0L) {
-                        statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
+                when (game.difficulty) {
+                    ColorStackGame.Difficulty.HARD -> {
+                        val statsRepo = GameStatsRepository(context)
+                        statsRepo.recordColorStackHardWon()
+                        if (hardGameStartMs > 0L) {
+                            statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
+                        }
+                        hardGameStartMs = 0L
+                        NeutrinoRepository(context).addPending(3)
                     }
-                    hardGameStartMs = 0L
-                    NeutrinoRepository(context).addPending(1)
+                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(context).addPending(1)
+                    else -> Unit
                 }
             } else {
                 persistGame()

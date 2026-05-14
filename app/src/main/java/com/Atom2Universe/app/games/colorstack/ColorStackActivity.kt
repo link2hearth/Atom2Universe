@@ -149,14 +149,18 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
             updateUI()
             if (game.solved) {
                 statusText.text = getString(R.string.color_stack_status_won)
-                if (game.difficulty == ColorStackGame.Difficulty.HARD) {
-                    val statsRepo = GameStatsRepository(this)
-                    statsRepo.recordColorStackHardWon()
-                    if (hardGameStartMs > 0L) {
-                        statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
+                when (game.difficulty) {
+                    ColorStackGame.Difficulty.HARD -> {
+                        val statsRepo = GameStatsRepository(this)
+                        statsRepo.recordColorStackHardWon()
+                        if (hardGameStartMs > 0L) {
+                            statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
+                        }
+                        hardGameStartMs = 0L
+                        NeutrinoRepository(this).addPending(3)
                     }
-                    hardGameStartMs = 0L
-                    NeutrinoRepository(this).addPending(1)
+                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addPending(1)
+                    else -> Unit
                 }
             }
             saveGame()

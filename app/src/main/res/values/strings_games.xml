@@ -960,6 +960,18 @@
     <string name="crypto_banner_toggle_pipetap_label">Show PipeTap toggle</string>
     <string name="crypto_pipetap_widget_opacity_label">PipeTap widget opacity</string>
     <string name="crypto_pipetap_widget_section">PipeTap widget</string>
+    <!-- Star Bridges -->
+    <string name="starbridges_title">Star Bridges</string>
+    <string name="starbridges_description">Connect all stars with non-crossing bridges</string>
+    <string name="starbridges_bridges">%1$d / %2$d bridges</string>
+    <string name="starbridges_solved">Constellation complete!</string>
+    <string name="starbridges_solved_header">★ Complete!</string>
+    <string name="starbridges_win_message">Done in %1$s — %2$d moves, %3$d bridges.</string>
+    <string name="starbridges_btn_again">New game</string>
+    <string name="starbridges_btn_next">Next size</string>
+    <string name="starbridges_hint_source">Tap a star to start a bridge.</string>
+    <string name="starbridges_hint_target">Tap an aligned star to place the bridge.</string>
+    <string name="starbridges_restart_desc">Restart puzzle</string>
     <!-- BlackJack -->
     <string name="blackjack_title">BlackJack</string>
     <string name="blackjack_description">Casino blackjack with up to 4 AI opponents</string>
