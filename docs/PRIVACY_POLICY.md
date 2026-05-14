@@ -138,7 +138,7 @@ We may update this Privacy Policy from time to time. Changes will be reflected i
 If you have questions about this Privacy Policy, you can:
 
 - Open an issue on our GitHub repository
-- Contact the developer at: Contact@Atom2Universe.app
+- Contact the developer at: contact@atom2universe.com
 
 ---
 

@@ -62,4 +62,4 @@ Forks are welcome. If you publish a fork, you must use your own name, icon, and 
 
 ## Contact
 
-**Contact@Atom2Universe.app**
+**contact@atom2universe.com**

@@ -172,7 +172,7 @@ These Terms, together with the Privacy Policy, constitute the entire agreement b
 For questions about these Terms:
 
 - Open an issue on our GitHub repository
-- Contact: Contact@Atom2Universe.app
+- Contact: contact@atom2universe.com
 
 ---
 
