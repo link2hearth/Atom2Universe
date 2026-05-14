@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:scrollbars="none"
+    android:overScrollMode="never"
+    android:background="#0F172A">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/btn_toggle_source"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_code_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_toggle_source"
+            android:tint="#94A3B8" />
+
+        <ImageButton
+            android:id="@+id/btn_bold"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_format_bold_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_format_bold"
+            android:tint="#94A3B8" />
+
+        <ImageButton
+            android:id="@+id/btn_italic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_format_italic_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_format_italic"
+            android:tint="#94A3B8" />
+
+        <ImageButton
+            android:id="@+id/btn_underline"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_format_underline_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_format_underline"
+            android:tint="#94A3B8" />
+
+        <TextView
+            android:id="@+id/btn_h1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="H1"
+            android:textColor="#94A3B8"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <TextView
+            android:id="@+id/btn_h2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="H2"
+            android:textColor="#94A3B8"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <TextView
+            android:id="@+id/btn_h3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="H3"
+            android:textColor="#94A3B8"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <ImageButton
+            android:id="@+id/btn_link"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_link_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_insert_link"
+            android:tint="#94A3B8" />
+
+        <ImageButton
+            android:id="@+id/btn_font_size"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_format_size_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_font_size"
+            android:tint="#94A3B8" />
+
+        <ImageButton
+            android:id="@+id/btn_font_family"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_font_download_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_font_family"
+            android:tint="#94A3B8" />
+
+    </LinearLayout>
+</HorizontalScrollView>

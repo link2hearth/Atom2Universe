@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/game2048_widget_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#0F172A"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Zone de drag du widget (header) : [Objectif 🐱×N] · [↺] -->
+        <LinearLayout
+            android:id="@+id/game2048_header_area"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- Objectif (centre, expansible) — tap pour activer le joker en mode quantique -->
+            <TextView
+                android:id="@+id/game2048_header_target"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="256"
+                android:textColor="#EDC22E"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+            <!-- Reset → affiche l'overlay de difficulté -->
+            <TextView
+                android:id="@+id/game2048_btn_reset"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="↺"
+                android:textColor="#F97316"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+        <!-- Plateau + overlay de sélection de difficulté -->
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp">
+
+            <com.Atom2Universe.app.games.game2048.Game2048View
+                android:id="@+id/game2048_widget_board"
+                android:layout_width="184dp"
+                android:layout_height="184dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Overlay de sélection de difficulté (caché par défaut) -->
+            <FrameLayout
+                android:id="@+id/game2048_difficulty_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CC0F172A"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/game2048_diff_easy"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:text="Facile"
+                        android:textColor="#94A3B8"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/game2048_diff_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="Normal"
+                        android:textColor="#94A3B8"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/game2048_diff_hard"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="Difficile"
+                        android:textColor="#94A3B8"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/game2048_diff_random"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="Aléatoire"
+                        android:textColor="#7E57C2"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <!-- Toggle Mode Quantique 🐱 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:background="@drawable/bg_widget_arrow">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🐱"
+                            android:textSize="13sp"
+                            android:layout_marginEnd="6dp" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/game2048_quantum_toggle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#A78BFA"
+                            android:textSize="11sp" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

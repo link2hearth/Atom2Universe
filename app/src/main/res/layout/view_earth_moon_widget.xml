@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/earth_moon_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#0F172A"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="8dp"
+    app:strokeColor="#1F2937"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Barre de drag avec label de vue intégré -->
+        <FrameLayout
+            android:id="@+id/earth_moon_drag_handle_area"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="@android:color/transparent">
+
+            <TextView
+                android:id="@+id/earth_moon_view_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Depuis le Soleil"
+                android:textColor="#94A3B8"
+                android:textSize="10sp"
+                android:singleLine="true"
+                android:letterSpacing="0.05" />
+        </FrameLayout>
+
+        <!-- Canvas avec boutons superposés dans le fond étoilé -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clipChildren="false">
+
+            <com.Atom2Universe.app.crypto.EarthMoonCanvasView
+                android:id="@+id/earth_moon_canvas"
+                android:layout_width="340dp"
+                android:layout_height="300dp"
+                android:clickable="false"
+                android:focusable="false" />
+
+            <!-- Bouton lieu précédent — coin haut gauche (visible seulement en vue fixe) -->
+            <TextView
+                android:id="@+id/earth_moon_location_prev"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="top|start"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="◀"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_widget_arrow" />
+
+            <!-- Bouton lieu suivant — coin haut droit (visible seulement en vue fixe) -->
+            <TextView
+                android:id="@+id/earth_moon_location_next"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="top|end"
+                android:layout_marginEnd="6dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="▶"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_widget_arrow" />
+
+            <!-- Bouton précédent — coin bas gauche -->
+            <TextView
+                android:id="@+id/earth_moon_view_prev"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="6dp"
+                android:layout_marginBottom="6dp"
+                android:gravity="center"
+                android:text="◀"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_widget_arrow" />
+
+            <!-- Bouton suivant — coin bas droit -->
+            <TextView
+                android:id="@+id/earth_moon_view_next"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="6dp"
+                android:gravity="center"
+                android:text="▶"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_widget_arrow" />
+        </FrameLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

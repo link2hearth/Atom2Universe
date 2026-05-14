@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="6dp"
+    android:gravity="center_vertical"
+    android:background="@color/music_surface">
+
+    <!-- Sort buttons (left) -->
+    <TextView
+        android:id="@+id/btn_sort_track"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/music_folder_sort_by_track"
+        android:textSize="13sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+    <TextView
+        android:id="@+id/btn_sort_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/music_folder_sort_by_name"
+        android:textSize="13sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginStart="4dp" />
+
+    <!-- Spacer -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Track count (right) -->
+    <TextView
+        android:id="@+id/folder_tracks_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="@color/music_text_secondary" />
+
+</LinearLayout>

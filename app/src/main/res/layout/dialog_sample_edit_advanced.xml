@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sf2_edit_sample_title"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Sample name -->
+        <TextView
+            android:id="@+id/sample_name_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:labelFor="@+id/sample_name_input"
+            android:text="@string/sf2_sample_name_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/sample_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:autofillHints=""
+            android:background="@drawable/bg_rounded_dark"
+            android:inputType="text"
+            android:maxLength="20"
+            android:padding="10dp"
+            android:textColor="@color/startup_text_primary"
+            android:textColorHint="@color/startup_text_secondary"
+            android:textSize="14sp"
+            android:importantForAutofill="no" />
+
+        <!-- Key Range (compact) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_key_range"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/key_range_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/edit_key_range_button"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="8dp"
+                android:text="@string/sf2_change_note"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Velocity Range (compact) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_section_velocity"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/vel_range_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/edit_vel_range_button"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="8dp"
+                android:text="@string/sf2_change_note"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="12dp"
+            android:background="#33FFFFFF" />
+
+        <!-- ==================== VOLUME ENVELOPE ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_vol_env"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_vol_envelope"
+            app:showResetButton="true"
+            app:startExpanded="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Delay -->
+                <include
+                    android:id="@+id/vol_env_delay_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Attack -->
+                <include
+                    android:id="@+id/vol_env_attack_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Hold -->
+                <include
+                    android:id="@+id/vol_env_hold_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Decay -->
+                <include
+                    android:id="@+id/vol_env_decay_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Sustain -->
+                <include
+                    android:id="@+id/vol_env_sustain_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Release -->
+                <include
+                    android:id="@+id/vol_env_release_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Key to Hold -->
+                <include
+                    android:id="@+id/key_to_vol_env_hold_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Key to Decay -->
+                <include
+                    android:id="@+id/key_to_vol_env_decay_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- ==================== MODULATION ENVELOPE ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_mod_env"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_mod_envelope"
+            app:showResetButton="true"
+            app:startExpanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Delay -->
+                <include
+                    android:id="@+id/mod_env_delay_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Attack -->
+                <include
+                    android:id="@+id/mod_env_attack_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Hold -->
+                <include
+                    android:id="@+id/mod_env_hold_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Decay -->
+                <include
+                    android:id="@+id/mod_env_decay_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Sustain -->
+                <include
+                    android:id="@+id/mod_env_sustain_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Release -->
+                <include
+                    android:id="@+id/mod_env_release_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- To Pitch -->
+                <include
+                    android:id="@+id/mod_env_to_pitch_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- To Filter -->
+                <include
+                    android:id="@+id/mod_env_to_filter_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Key to Hold -->
+                <include
+                    android:id="@+id/key_to_mod_env_hold_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Key to Decay -->
+                <include
+                    android:id="@+id/key_to_mod_env_decay_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- ==================== VIBRATO LFO ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_vib_lfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_vib_lfo"
+            app:showResetButton="true"
+            app:startExpanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Delay -->
+                <include
+                    android:id="@+id/vib_lfo_delay_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Frequency -->
+                <include
+                    android:id="@+id/vib_lfo_freq_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- To Pitch -->
+                <include
+                    android:id="@+id/vib_lfo_to_pitch_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- ==================== MODULATION LFO ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_mod_lfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_mod_lfo"
+            app:showResetButton="true"
+            app:startExpanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Delay -->
+                <include
+                    android:id="@+id/mod_lfo_delay_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Frequency -->
+                <include
+                    android:id="@+id/mod_lfo_freq_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- To Pitch -->
+                <include
+                    android:id="@+id/mod_lfo_to_pitch_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- To Filter -->
+                <include
+                    android:id="@+id/mod_lfo_to_filter_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- To Volume -->
+                <include
+                    android:id="@+id/mod_lfo_to_vol_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- ==================== TUNING ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_tuning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_tuning"
+            app:showResetButton="true"
+            app:startExpanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Coarse Tune -->
+                <include
+                    android:id="@+id/coarse_tune_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Fine Tune -->
+                <include
+                    android:id="@+id/fine_tune_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Scale Tuning -->
+                <include
+                    android:id="@+id/scale_tune_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Attenuation / Gain -->
+                <include
+                    android:id="@+id/gain_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- ==================== FILTER ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_filter"
+            app:showResetButton="true"
+            app:startExpanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Cutoff -->
+                <include
+                    android:id="@+id/filter_cutoff_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Resonance -->
+                <include
+                    android:id="@+id/filter_resonance_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- ==================== EFFECTS & PAN ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_effects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_effects"
+            app:showResetButton="true"
+            app:startExpanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Chorus -->
+                <include
+                    android:id="@+id/chorus_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Reverb -->
+                <include
+                    android:id="@+id/reverb_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Pan -->
+                <include
+                    android:id="@+id/pan_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Exclusive Class -->
+                <include
+                    android:id="@+id/exclusive_class_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- ==================== ADVANCED ==================== -->
+        <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
+            android:id="@+id/section_advanced"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sectionTitle="@string/sf2_section_advanced"
+            app:showResetButton="true"
+            app:startExpanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Fixed Key -->
+                <include
+                    android:id="@+id/fixed_key_row"
+                    layout="@layout/item_parameter_slider" />
+
+                <!-- Fixed Velocity -->
+                <include
+                    android:id="@+id/fixed_velocity_row"
+                    layout="@layout/item_parameter_slider" />
+
+            </LinearLayout>
+
+        </com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancel_button"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="100dp"
+                android:paddingHorizontal="16dp"
+                android:text="@string/midi_cancel"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/save_button"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="12dp"
+                android:minWidth="120dp"
+                android:paddingHorizontal="24dp"
+                android:backgroundTint="?attr/a2uMidiAccent"
+                android:text="@string/sf2_save"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#2d2d2d">
+
+    <!-- Color preview -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp">
+
+        <!-- Checkerboard background for transparency -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#888888" />
+
+        <View
+            android:id="@+id/color_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/color_hex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="#000000" />
+    </FrameLayout>
+
+    <!-- Hue slider -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pixel_art_color_hue"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
+    <SeekBar
+        android:id="@+id/slider_hue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="360"
+        android:progress="0"
+        android:progressTint="#FF5722"
+        android:thumbTint="#FF5722" />
+
+    <!-- Saturation slider -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pixel_art_color_saturation"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+    <SeekBar
+        android:id="@+id/slider_saturation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="#4CAF50"
+        android:thumbTint="#4CAF50" />
+
+    <!-- Value/Brightness slider -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pixel_art_color_brightness"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+    <SeekBar
+        android:id="@+id/slider_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="#2196F3"
+        android:thumbTint="#2196F3" />
+
+    <!-- Alpha slider -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pixel_art_color_alpha"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+    <SeekBar
+        android:id="@+id/slider_alpha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="255"
+        android:progress="255"
+        android:progressTint="#9C27B0"
+        android:thumbTint="#9C27B0" />
+
+    <!-- RGB values display -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/txt_rgb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#aaaaaa"
+            android:textSize="12sp"
+            android:text="R: 0  G: 0  B: 0  A: 255" />
+    </LinearLayout>
+
+    <!-- Quick color presets -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pixel_art_color_presets"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/preset_colors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+</LinearLayout>

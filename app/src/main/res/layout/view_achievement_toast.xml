@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/achievement_toast_bg"
+    android:padding="12dp"
+    android:gravity="center_vertical"
+    android:elevation="8dp">
+
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="🏆"
+        android:textSize="26sp"
+        android:gravity="center"
+        android:layout_marginEnd="12dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/achievement_toast_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/achievement_unlocked_header"
+            android:textColor="#FCD34D"
+            android:textSize="10sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/achievement_toast_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/achievement_toast_flavor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FDE68A"
+            android:textSize="11sp"
+            android:fontFamily="monospace" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/achievement_toast_target"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#F59E0B"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>

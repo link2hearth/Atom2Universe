@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notes_action_create">Buat</string>
+    <string name="notes_action_save">Simpan</string>
+    <string name="notes_action_edit">Edit</string>
+    <string name="notes_action_delete">Hapus</string>
+    <string name="notes_action_cancel">Batal</string>
+    <string name="notes_action_ok">OK</string>
+    <string name="notes_action_insert">Sisipkan</string>
+    <string name="notes_action_pin">Sematkan</string>
+    <string name="notes_action_unpin">Lepas sematan</string>
+    <string name="notes_action_favorite">Favorit</string>
+    <string name="notes_action_move">Pindahkan</string>
+    <string name="notes_action_move_to_group">Pindahkan ke grup</string>
+    <string name="notes_action_menu">Menu</string>
+    <string name="notes_action_color">Pilih warna</string>
+    <string name="notes_color_picker_title">Pilih warna</string>
+    <string name="notes_color_quick">Warna cepat</string>
+    <string name="notes_color_none">Tanpa warna</string>
+    <string name="notes_color_custom">Warna kustom</string>
+    <string name="notes_color_hue">Hue</string>
+    <string name="notes_color_alpha">Transparansi</string>
+    <string name="notes_color_preview_text">Pratinjau</string>
+    <string name="notes_color_text_mode">Warna teks</string>
+    <string name="notes_color_text_auto">Otomatis</string>
+    <string name="notes_color_text_white">Putih</string>
+    <string name="notes_color_text_black">Hitam</string>
+    <string name="notes_color_text_gray">Abu-abu</string>
+    <string name="notes_color_favorites">Favorit</string>
+    <string name="notes_color_add_favorite">Favorit</string>
+    <string name="notes_color_favorite_added">Warna ditambahkan ke favorit</string>
+    <string name="notes_color_favorite_exists">Warna ini sudah ada di favorit</string>
+    <string name="notes_color_favorite_deleted">Warna dihapus dari favorit</string>
+    <string name="notes_color_delete_favorite_title">Hapus favorit</string>
+    <string name="notes_color_delete_favorite_message">Apakah Anda ingin menghapus warna favorit ini?</string>
+    <string name="notes_color_select_first">Pilih warna terlebih dahulu</string>
+    <string name="notes_color_hex">Hex:</string>
+    <string name="notes_color_hex_hint">#RRGGBB</string>
+    <string name="notes_color_alpha_value_default">255</string>
+</resources>

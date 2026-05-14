@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Nu afspelen</string>
+    <string name="audio_notification_unknown_artist">Onbekende artiest</string>
+    <string name="audio_action_pause">Pauzeren</string>
+    <string name="audio_action_play">Afspelen</string>
+    <string name="audio_action_stop">Stoppen</string>
+    <string name="audio_action_dismiss">Sluiten</string>
+    <string name="audio_source_radio">Radio</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Muziek</string>
+    <string name="audio_conflict_title">Audio speelt af</string>
+    <string name="audio_conflict_message">%1$s speelt al af. Waarnaar wilt u luisteren?</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_settings_title">Audio-instellingen</string>
+    <string name="audio_settings_description">Configureer audio-uitvoer wanneer een MIDI-keyboard is aangesloten.</string>
+    <string name="audio_option_speaker_force">Geluid altijd via tabletluidsprekers</string>
+    <string name="audio_option_keyboard_sound">Mijn noten op tablet afspelen (anders op keyboard)</string>
+    <string name="audio_settings_help">Help</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Afspelen / Pauzeren</string>
+    <string name="audio_hub_stop">Stoppen</string>
+    <string name="audio_hub_no_playback">Geen weergave</string>
+    <string name="audio_hub_playing">Nu afspelen…</string>
+    <string name="audio_hub_paused">Gepauzeerd</string>
+    <string name="audio_hub_radio_title">Webradio</string>
+    <string name="audio_hub_radio_desc">Luister naar duizenden zenders</string>
+    <string name="audio_hub_midi_title">MIDI-speler</string>
+    <string name="audio_hub_midi_desc">MIDI-bestanden met SCC-synthese</string>
+    <string name="audio_hub_music_title">Muziekspeler</string>
+    <string name="audio_hub_music_desc">Uw muziekbibliotheek</string>
+    <string name="audio_hub_editor_title">Audio-editor</string>
+    <string name="audio_hub_editor_desc">Uw audiobestanden bijsnijden</string>
+    <string name="audio_hub_stats_title">Statistieken</string>
+    <string name="audio_hub_stats_desc">Uw luisteroverzicht</string>
+</resources>

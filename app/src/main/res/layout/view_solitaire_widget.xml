@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/solitaire_widget_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#0F172A"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#1F2937"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header : titre + bouton nouvelle partie -->
+        <FrameLayout
+            android:id="@+id/solitaire_header_area"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start|center_vertical"
+                android:paddingStart="10dp"
+                android:text="♠ Solitaire"
+                android:textColor="#64748B"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/solitaire_btn_new_game"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="↺"
+                android:textColor="#64748B"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </FrameLayout>
+
+        <!-- Tableau de jeu + overlays -->
+        <FrameLayout
+            android:layout_width="300dp"
+            android:layout_height="370dp">
+
+            <com.Atom2Universe.app.games.solitaire.SolitaireView
+                android:id="@+id/solitaire_widget_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Overlay résultat Victoire (caché par défaut) -->
+            <FrameLayout
+                android:id="@+id/solitaire_result_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CC0F172A"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/solitaire_result_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text=""
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="#22C55E" />
+
+            </FrameLayout>
+
+            <!-- Overlay confirmation reset (caché par défaut) -->
+            <FrameLayout
+                android:id="@+id/solitaire_reset_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CC0F172A"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:text="Nouvelle partie ?"
+                        android:textColor="#CBD5E1"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/solitaire_reset_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:gravity="center"
+                        android:text="✓ Confirmer"
+                        android:textColor="#22C55E"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/solitaire_reset_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="✕ Annuler"
+                        android:textColor="#64748B"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                </LinearLayout>
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

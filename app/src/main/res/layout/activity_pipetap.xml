@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A0F1E">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/pipetap_header"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:background="#0D1526"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/pipetap_back_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/color_stack_back"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back_24"
+            android:tint="#94A3B8" />
+
+        <TextView
+            android:id="@+id/pipetap_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="@string/pipetap_title"
+            android:textColor="#E2E8F0"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Stats : moves + time -->
+        <TextView
+            android:id="@+id/pipetap_moves"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:textColor="#94A3B8"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/pipetap_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:textColor="#94A3B8"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- Difficulty chips -->
+    <HorizontalScrollView
+        android:id="@+id/pipetap_diff_scroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pipetap_header">
+
+        <LinearLayout
+            android:id="@+id/pipetap_diff_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp" />
+
+    </HorizontalScrollView>
+
+    <!-- Game view -->
+    <com.Atom2Universe.app.games.pipetap.PipeTapView
+        android:id="@+id/pipetap_game_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pipetap_diff_scroll" />
+
+    <!-- Win overlay -->
+    <FrameLayout
+        android:id="@+id/pipetap_win_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#99000000"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pipetap_diff_scroll">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pipetap_solved"
+                android:textColor="#06B6D4"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/pipetap_win_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="#CBD5E1"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/pipetap_btn_again"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/pipetap_btn_again"
+                    android:textColor="#94A3B8" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/pipetap_btn_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pipetap_btn_next"
+                    android:backgroundTint="#06B6D4" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

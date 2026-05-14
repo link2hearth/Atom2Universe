@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_back">Назад</string>
+    <string name="stats_tab_day">Сегодня</string>
+    <string name="stats_tab_week">Неделя</string>
+    <string name="stats_tab_month">Месяц</string>
+    <string name="stats_tab_year">Год</string>
+    <string name="stats_total_time">Общее время</string>
+    <string name="stats_listening_time">Прослушивание музыки</string>
+    <string name="stats_practice_time">Практика MIDI</string>
+    <string name="stats_hours_format">%1$d ч %2$d мин</string>
+    <string name="stats_minutes_format">%1$d мин</string>
+    <string name="stats_top_artists">Топ исполнителей</string>
+    <string name="stats_top_albums">Топ альбомов</string>
+    <string name="stats_top_midi">Топ MIDI-файлов</string>
+    <string name="stats_average_score">Средний балл практики: %.1f%%</string>
+    <string name="stats_no_data">Нет данных за этот период</string>
+</resources>

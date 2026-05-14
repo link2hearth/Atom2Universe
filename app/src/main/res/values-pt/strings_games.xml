@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_back">Voltar</string>
+    <string name="stats_tab_day">Hoje</string>
+    <string name="stats_tab_week">Semana</string>
+    <string name="stats_tab_month">Mês</string>
+    <string name="stats_tab_year">Ano</string>
+    <string name="stats_total_time">Tempo total de uso</string>
+    <string name="stats_listening_time">Tempo de audição</string>
+    <string name="stats_practice_time">Tempo de prática</string>
+    <string name="stats_hours_format">%1$d h %2$d min</string>
+    <string name="stats_minutes_format">%1$d min</string>
+    <string name="stats_top_artists">Top artistas</string>
+    <string name="stats_top_albums">Top álbuns</string>
+    <string name="stats_top_midi">Músicas mais praticadas</string>
+    <string name="stats_average_score">Pontuação média de prática</string>
+    <string name="stats_no_data">Sem dados para este período</string>
+</resources>

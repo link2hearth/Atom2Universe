@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_back">Zurück</string>
+    <string name="stats_tab_day">Heute</string>
+    <string name="stats_tab_week">Woche</string>
+    <string name="stats_tab_month">Monat</string>
+    <string name="stats_tab_year">Jahr</string>
+    <string name="stats_total_time">Gesamtnutzungszeit</string>
+    <string name="stats_listening_time">Hörzeit</string>
+    <string name="stats_practice_time">Übungszeit</string>
+    <string name="stats_hours_format">%1$d Std %2$d Min</string>
+    <string name="stats_minutes_format">%1$d Min</string>
+    <string name="stats_top_artists">Top-Künstler</string>
+    <string name="stats_top_albums">Top-Alben</string>
+    <string name="stats_top_midi">Meistgeübte Stücke</string>
+    <string name="stats_average_score">Durchschnittliche Punktzahl</string>
+    <string name="stats_no_data">Keine Daten für diesen Zeitraum</string>
+</resources>

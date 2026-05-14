@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_color_favorites"
+            android:textColor="#94A3B8"
+            android:textSize="11sp"
+            android:paddingBottom="6dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/color_favorites_row"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical" />
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_color_quick"
+            android:textColor="#94A3B8"
+            android:textSize="11sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="6dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/color_quick_colors_row"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical" />
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <View
+                android:id="@+id/color_preview_swatch"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="#1E293B" />
+
+            <Button
+                android:id="@+id/btn_no_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/notes_color_none"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+        </LinearLayout>
+
+        <com.Atom2Universe.app.notes.ui.view.ColorPickerSatValView
+            android:id="@+id/color_picker_sat_val"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp" />
+
+        <com.Atom2Universe.app.notes.ui.view.ColorPickerHueView
+            android:id="@+id/color_picker_hue"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/color_hex_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/notes_color_hex_hint"
+                android:inputType="text"
+                android:maxLength="6" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_text_color_mode"
+            android:textColor="#94A3B8"
+            android:textSize="11sp"
+            android:paddingTop="12dp"
+            android:paddingBottom="6dp" />
+
+        <RadioGroup
+            android:id="@+id/text_mode_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton android:id="@+id/radio_text_auto"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/notes_text_auto" android:textColor="#F1F5F9" />
+
+            <RadioButton android:id="@+id/radio_text_white"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/notes_text_white" android:textColor="#F1F5F9" />
+
+            <RadioButton android:id="@+id/radio_text_black"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/notes_text_black" android:textColor="#F1F5F9" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="16dp">
+
+            <Button android:id="@+id/btn_add_favorite"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/notes_add_to_favorites"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+            <Button android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/notes_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+            <Button android:id="@+id/btn_confirm"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/notes_ok"
+                style="@style/Widget.MaterialComponents.Button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

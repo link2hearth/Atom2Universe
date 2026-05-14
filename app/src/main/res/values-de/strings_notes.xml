@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notes_action_create">Erstellen</string>
+    <string name="notes_action_save">Speichern</string>
+    <string name="notes_action_edit">Bearbeiten</string>
+    <string name="notes_action_delete">Löschen</string>
+    <string name="notes_action_cancel">Abbrechen</string>
+    <string name="notes_action_ok">OK</string>
+    <string name="notes_action_insert">Einfügen</string>
+    <string name="notes_action_pin">Anheften</string>
+    <string name="notes_action_unpin">Lösen</string>
+    <string name="notes_action_favorite">Favorit</string>
+    <string name="notes_action_move">Verschieben</string>
+    <string name="notes_action_move_to_group">In Gruppe verschieben</string>
+    <string name="notes_action_menu">Menü</string>
+    <string name="notes_action_color">Farbe wählen</string>
+    <string name="notes_color_picker_title">Farbe auswählen</string>
+    <string name="notes_color_quick">Schnellauswahl</string>
+    <string name="notes_color_none">Keine Farbe</string>
+    <string name="notes_color_custom">Benutzerdefinierte Farbe</string>
+    <string name="notes_color_hue">Farbton</string>
+    <string name="notes_color_alpha">Transparenz</string>
+    <string name="notes_color_preview_text">Vorschau</string>
+    <string name="notes_color_text_mode">Textfarbe</string>
+    <string name="notes_color_text_auto">Automatisch</string>
+    <string name="notes_color_text_white">Weiß</string>
+    <string name="notes_color_text_black">Schwarz</string>
+    <string name="notes_color_text_gray">Grau</string>
+    <string name="notes_color_favorites">Favoriten</string>
+    <string name="notes_color_add_favorite">Favorit</string>
+    <string name="notes_color_favorite_added">Farbe zu Favoriten hinzugefügt</string>
+    <string name="notes_color_favorite_exists">Diese Farbe ist bereits in den Favoriten</string>
+    <string name="notes_color_favorite_deleted">Farbe aus Favoriten entfernt</string>
+    <string name="notes_color_delete_favorite_title">Favorit löschen</string>
+    <string name="notes_color_delete_favorite_message">Möchten Sie diese Lieblingsfarbe löschen?</string>
+    <string name="notes_color_select_first">Bitte zuerst eine Farbe auswählen</string>
+    <string name="notes_color_hex">Hex:</string>
+    <string name="notes_color_hex_hint">#RRGGBB</string>
+    <string name="notes_color_alpha_value_default">255</string>
+</resources>

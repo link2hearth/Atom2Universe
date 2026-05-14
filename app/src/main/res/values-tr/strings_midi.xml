@@ -1,0 +1,547 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="midi_player_title">MIDI Oynatıcı</string>
+    <string name="midi_nav_library">Kütüphane</string>
+    <string name="midi_nav_playlists">Çalma Listeleri</string>
+    <string name="midi_nav_now_playing">Şu An Çalınan</string>
+    <string name="midi_nav_practice">Pratik</string>
+    <string name="midi_no_track_playing">Çalan parça yok</string>
+    <string name="midi_soundfont_imported">SoundFont içe aktarıldı: %1$s (%2$d MB)</string>
+    <string name="midi_soundfont_import_error">Hata: %1$s</string>
+    <string name="midi_folder_scanning">MIDI klasörü taranıyor…</string>
+    <string name="midi_folder_scan_complete">Tarama tamamlandı: %1$d MIDI dosyası bulundu</string>
+    <string name="midi_library_empty">MIDI dosyası yok. Taramak için bir klasör seçin.</string>
+    <string name="midi_select_soundfont">Sentezleyici</string>
+    <string name="midi_select_folder">MIDI klasörü seç</string>
+    <string name="midi_refresh_library">Kütüphaneyi yenile</string>
+    <string name="midi_clear_library">Kütüphaneyi temizle</string>
+    <string name="midi_clear_library_confirm">Tüm MIDI kütüphanesini temizlemek istediğinizden emin misiniz?</string>
+    <string name="midi_library_cleared">Kütüphane temizlendi</string>
+    <string name="midi_library_refreshing">Kütüphane yenileniyor…</string>
+    <string name="midi_action_previous">Önceki</string>
+    <string name="midi_action_next">Sonraki</string>
+    <string name="midi_action_shuffle">Karıştır</string>
+    <string name="midi_action_repeat">Tekrarla</string>
+    <string name="midi_shuffle_scope_title">Karıştırma kapsamı</string>
+    <string name="midi_shuffle_scope_current">Mevcut albüm/klasör</string>
+    <string name="midi_shuffle_scope_artist">Mevcut sanatçı (tüm albümler)</string>
+    <string name="midi_shuffle_scope_library">Tüm kütüphane</string>
+    <string name="midi_unknown_artist">Bilinmeyen sanatçı</string>
+    <string name="midi_unknown_album">Bilinmeyen albüm</string>
+    <string name="midi_channels_active">Aktif parçalar</string>
+    <string name="midi_no_channels">Parça algılanmadı</string>
+    <string name="midi_mute_track">Parçayı sustur</string>
+    <string name="midi_unmute_track">Parça sesini aç</string>
+    <string name="midi_toggle_keyboard">Klavyeyi göster/gizle</string>
+    <string name="midi_practice_mode">Pratik modu</string>
+    <string name="midi_refresh_keyboards">Klavyeleri yenile</string>
+    <string name="midi_keyboards_refreshed">Klavyeler yenilendi</string>
+    <string name="midi_two_hands_practice">İki el pratiği</string>
+    <string name="midi_two_hands_detected">Piyano parçası algılandı (Sol/Sağ el)</string>
+    <string name="audio_help_title">Yardım - Ses ayarları</string>
+    <string name="midi_favorite">Favori</string>
+    <string name="midi_added_to_favorites">Favorilere eklendi</string>
+    <string name="midi_removed_from_favorites">Favorilerden kaldırıldı</string>
+    <string name="midi_create_playlist">Yeni çalma listesi</string>
+    <string name="midi_playlist_name_hint">Çalma listesi adı</string>
+    <string name="midi_create">Oluştur</string>
+    <string name="midi_cancel">İptal</string>
+    <string name="midi_playlist_name_empty">Ad boş olamaz</string>
+    <string name="midi_playlist_created">Çalma listesi oluşturuldu: %1$s</string>
+    <string name="midi_rename">Yeniden adlandır</string>
+    <string name="midi_delete">Sil</string>
+    <string name="midi_rename_playlist">Çalma listesini yeniden adlandır</string>
+    <string name="midi_playlist_renamed">Çalma listesi yeniden adlandırıldı</string>
+    <string name="midi_delete_playlist">Çalma listesini sil</string>
+    <string name="midi_delete_playlist_confirm">\"%1$s\" çalma listesi silinsin mi?</string>
+    <string name="midi_playlist_deleted">Çalma listesi silindi</string>
+    <string name="midi_clear_playlist">Çalma listesini temizle</string>
+    <string name="midi_clear_playlist_confirm">\"%1$s\" içindeki tüm parçalar kaldırılsın mı?</string>
+    <string name="midi_clear">Temizle</string>
+    <string name="midi_playlist_cleared">Çalma listesi temizlendi</string>
+    <plurals name="midi_track_count">
+        <item quantity="one">%d parça</item>
+        <item quantity="other">%d parça</item>
+    </plurals>
+    <string name="midi_playlists_empty">Çalma listesi yok.\nBir tane oluşturun!</string>
+    <string name="midi_playlist_empty">Bu çalma listesi boş.</string>
+    <string name="midi_shuffle_play">Karıştırarak çal</string>
+    <string name="midi_remove_from_playlist">Çalma listesinden kaldır</string>
+    <string name="midi_track_removed">Parça kaldırıldı</string>
+    <string name="midi_add_to_playlist">Çalma listesine ekle</string>
+    <string name="midi_add_to_playlist_title">\"%1$s\" ekle</string>
+    <string name="midi_new_playlist">+ Yeni çalma listesi</string>
+    <string name="midi_loading_playlists">Yükleniyor…</string>
+    <string name="midi_track_added_to_playlist">%1$s listesine eklendi</string>
+    <string name="midi_track_already_in_playlist">Bu listede zaten var</string>
+    <string name="midi_track_info">Bilgi</string>
+    <string name="midi_info_title">MIDI Bilgisi</string>
+    <string name="midi_info_loading">Dosya analiz ediliyor…</string>
+    <string name="midi_info_close">Kapat</string>
+    <string name="midi_info_section_file">Dosya</string>
+    <string name="midi_info_filename">Ad</string>
+    <string name="midi_info_size">Boyut</string>
+    <string name="midi_info_modified">Değiştirilme</string>
+    <string name="midi_info_path">Yol</string>
+    <string name="midi_info_section_midi">MIDI Formatı</string>
+    <string name="midi_info_format">Format</string>
+    <string name="midi_info_tracks">Parçalar</string>
+    <string name="midi_info_resolution">Çözünürlük</string>
+    <string name="midi_info_duration">Süre</string>
+    <string name="midi_info_total_notes">Toplam nota</string>
+    <string name="midi_info_section_tempo">Tempo</string>
+    <string name="midi_info_bpm">Tempo</string>
+    <string name="midi_info_tempo_changes">Değişiklikler</string>
+    <string name="midi_info_avg_bpm">Ortalama tempo</string>
+    <string name="midi_info_time_signature">Ölçü işareti</string>
+    <string name="midi_info_time_changes">Ölçü değişiklikleri</string>
+    <string name="midi_info_section_channels">Kanallar (%d)</string>
+    <string name="midi_info_channel">Kanal %d</string>
+    <string name="midi_info_channel_drums">Kanal %d (Davul)</string>
+    <string name="midi_info_section_metadata">Meta veriler</string>
+    <string name="midi_info_track_names">Parça adları</string>
+    <string name="midi_info_copyright">Telif hakkı</string>
+    <string name="midi_info_text_events">Metin</string>
+    <string name="midi_scan_loading_title">Taranıyor…</string>
+    <string name="midi_scan_loading_progress">%1$d / %2$d dosya</string>
+    <string name="midi_scan_loading_counting">Dosyalar sayılıyor…</string>
+    <string name="midi_scan_loading_current">%1$s</string>
+    <string name="midi_audio_settings">Ses ayarları</string>
+    <string name="midi_audio_normalization">Ses seviyesi normalleştirme</string>
+    <string name="midi_audio_normalization_desc">Kırpılmayı önlemek için ses zirvelerini azaltır</string>
+    <string name="midi_audio_master_gain">Ana ses</string>
+    <string name="midi_audio_reverb">Yankı</string>
+    <string name="midi_reverb_off">Kapalı</string>
+    <string name="midi_reverb_large_hall">Büyük salon</string>
+    <string name="midi_reverb_hall">Salon</string>
+    <string name="midi_reverb_chamber">Oda orkestrası</string>
+    <string name="midi_reverb_room">Oda</string>
+    <string name="midi_sf2_settings">SF2 Motoru</string>
+    <string name="midi_sf2_settings_desc">Özel SoundFont sentezleyici ayarları</string>
+    <string name="midi_sf2_velocity_curve">Vurgu eğrisi</string>
+    <string name="midi_sf2_velocity_linear">Doğrusal</string>
+    <string name="midi_sf2_velocity_linear_desc">Doğrudan eşleme (düz tepki)</string>
+    <string name="midi_sf2_velocity_concave">İçbükey</string>
+    <string name="midi_sf2_velocity_concave_desc">Düşük vurkularda daha fazla kontrol (önerilen)</string>
+    <string name="midi_sf2_velocity_soft">Yumuşak</string>
+    <string name="midi_sf2_velocity_soft_desc">Düşük vurkularda çok nazik (ifadeli piyano)</string>
+    <string name="midi_sf2_velocity_hard">Sert</string>
+    <string name="midi_sf2_velocity_hard_desc">Agresif tepki (davul, güçlü sesler)</string>
+    <string name="midi_sf2_not_active">SF2 motoru aktif değil</string>
+    <string name="midi_eq_title">Ekolayzer</string>
+    <string name="midi_eq_enabled">EQ\'yi etkinleştir</string>
+    <string name="midi_eq_preset_flat">Düz</string>
+    <string name="midi_eq_preset_rock">Rock</string>
+    <string name="midi_eq_preset_jazz">Jazz</string>
+    <string name="midi_eq_preset_piano">Piano</string>
+    <string name="midi_eq_preset_bass">Bas Artırma</string>
+    <string name="midi_player_not_connected">Oynatıcı bağlı değil</string>
+    <string name="midi_no_track_current">Mevcut parça yok</string>
+    <string name="midi_no_tracks_found">Parça bulunamadı</string>
+    <string name="midi_error_message">Hata: %1$s</string>
+    <string name="midi_service_not_connected">Oynatma servisi bağlı değil</string>
+    <string name="midi_events_received">MIDI olayları alındı!</string>
+    <string name="midi_importing_soundfont">SoundFont içe aktarılıyor…</string>
+    <string name="midi_scanning_folder">MIDI klasörü taranıyor…</string>
+    <string name="midi_synth_title">Sentezleyici</string>
+    <string name="midi_synthesizer_selection">Sentezleyici</string>
+    <string name="midi_synth_description">MIDI çalma için ses motorunu seçin</string>
+    <string name="midi_synth_sonivox">Sonivox (yerleşik)</string>
+    <string name="midi_synth_sonivox_desc">Genel MIDI sesleri olan hafif yerleşik sentezleyici. Harici dosya gerekmez.</string>
+    <string name="midi_synth_sf2_custom">SoundFont (SF2)</string>
+    <string name="midi_synth_sf2_none">SoundFont (içe aktarılmadı)</string>
+    <string name="midi_synth_sf2_desc">Özel enstrüman örnekleriyle yüksek kaliteli sentez.</string>
+    <string name="midi_synth_sf2_tip">İpucu: En iyi sonuç için 44kHz örnekli kaliteli SF2 dosyası kullanın. Cihazınıza bağlı olarak 100-500 MB arası SoundFont\'ları tercih edin. Küçük sıkıştırılmış SoundFont\'lar hızlı pasajlarda ses sorunlarına neden olabilir.</string>
+    <string name="midi_synth_import_sf2">SF2 İçe Aktar</string>
+    <string name="midi_synth_change_sf2">SF2 Değiştir</string>
+    <string name="midi_synth_remove_sf2">Kaldır</string>
+    <string name="midi_synth_switched_sonivox">Sonivox sentezleyiciye geçildi</string>
+    <string name="midi_synth_switched_sf2">SoundFont\'a geçildi: %1$s</string>
+    <string name="midi_synth_sf2_imported">SoundFont yüklendi: %1$s</string>
+    <string name="midi_synth_sf2_removed">SoundFont kaldırıldı</string>
+    <string name="midi_synth_sf2_large_warning">Büyük dosya (%1$d MB). Yükleme zaman alabilir ve önemli bellek kullanabilir.</string>
+    <string name="midi_synth_hybrid">Hibrit (SF2 + Sonivox)</string>
+    <string name="midi_synth_hybrid_none">Hibrit (SF2 içe aktarılmadı)</string>
+    <string name="midi_synth_hybrid_desc">Enstrümana göre SF2 ve Sonivox seslerini karıştırın. Hangi enstrümanların SoundFont kullanacağını seçin.</string>
+    <string name="midi_synth_hybrid_info">%1$d enstrüman SF2 kullanıyor</string>
+    <string name="midi_synth_configure_instruments">Enstrümanları yapılandır…</string>
+    <string name="midi_synth_switched_hybrid">%1$d SF2 enstrümanı ile Hibrit moda geçildi</string>
+    <string name="midi_synth_fluidsynth">FluidSynth</string>
+    <string name="midi_synth_fluidsynth_none">FluidSynth (SF2 içe aktarılmadı)</string>
+    <string name="midi_synth_fluidsynth_desc">Tanınmış açık kaynak sentez motoru. Yerel kütüphane olarak içe aktarıldı.</string>
+    <string name="midi_synth_switched_fluidsynth">FluidSynth\'e geçildi: %1$s</string>
+    <string name="midi_synth_sf2_engines_header">SoundFont motorları</string>
+    <string name="midi_synth_sf2_engines_subtitle">SoundFont (.sf2) dosyası gerektirir</string>
+    <string name="midi_synth_a2u">A2U (Deneysel)</string>
+    <string name="midi_synth_a2u_desc">Bu uygulama için yapılmış yerleşik sentez motoru.</string>
+    <string name="midi_synth_active_badge">AKTİF</string>
+    <string name="midi_synth_no_soundfont">SoundFont içe aktarılmadı</string>
+    <string name="midi_synth_soundfont_section">SoundFont</string>
+    <string name="midi_synth_advanced_options">Gelişmiş seçenekler</string>
+    <string name="midi_synth_hybrid_mode">Hibrit mod</string>
+    <string name="practice_title">Pratik Modu</string>
+    <string name="practice_restart">Yeniden başlat</string>
+    <string name="practice_mark">Konum işaretle</string>
+    <string name="practice_goto_mark">İşarete git</string>
+    <string name="practice_marker_added">İşaret eklendi: %1$s</string>
+    <string name="practice_marker_position">İşaret konumu: %1$s</string>
+    <string name="practice_accompaniment">Eşlik</string>
+    <string name="practice_midi_input">MIDI klavye</string>
+    <string name="practice_midi_keyboard_detected">Klavye algılandı</string>
+    <string name="practice_midi_keyboard_not_detected">Klavye algılanmadı</string>
+    <string name="practice_midi_keyboard_unauthorized">Klavye algılandı ancak yetkilendirilmedi</string>
+    <string name="practice_led_control">Klavye LED\'leri</string>
+    <string name="practice_led_immediate">Anlık</string>
+    <string name="practice_led_advance_format">%d ms</string>
+    <string name="practice_audio_settings">Ses ayarları</string>
+    <string name="practice_i_play">Ben çalıyorum</string>
+    <string name="practice_keyboard_leds">Klavye LED\'leri</string>
+    <string name="practice_mute_led_sound">LED sesini sustur</string>
+    <string name="practice_mute_internal_synth">Klavye notaları için dahili sentezi sustur</string>
+    <string name="practice_scoring">Puanlama</string>
+    <string name="practice_note_names">Notalar</string>
+    <string name="practice_score">Puan</string>
+    <string name="practice_correct">Doğru</string>
+    <string name="practice_missed">Kaçırılan</string>
+    <string name="practice_streak">Seri</string>
+    <string name="practice_best_streak">En iyi seri</string>
+    <string name="practice_accuracy">Doğruluk</string>
+    <string name="practice_speed">Hız</string>
+    <string name="practice_speed_min">0.1x</string>
+    <string name="practice_speed_max">1.0x</string>
+    <string name="practice_time_zero">0:00</string>
+    <string name="practice_time_remaining">-%1$s</string>
+    <string name="practice_free_mode">Serbest Çalma</string>
+    <string name="practice_left_hand_only">Yalnızca sol el</string>
+    <string name="practice_right_hand_only">Yalnızca sağ el</string>
+    <string name="practice_both_hands">Her iki el</string>
+    <string name="practice_hand_mode_left">Sol el pratiği</string>
+    <string name="practice_hand_mode_right">Sağ el pratiği</string>
+    <string name="practice_hand_mode_both">Her iki el pratiği</string>
+    <string name="practice_left_hand_sound">Sol el sesi</string>
+    <string name="practice_right_hand_sound">Sağ el sesi</string>
+    <string name="practice_both_hands_sound">Her iki el sesi</string>
+    <string name="practice_sound_mode_left">Yalnızca sol el çalıyor</string>
+    <string name="practice_sound_mode_right">Yalnızca sağ el çalıyor</string>
+    <string name="practice_sound_mode_both">Her iki el çalıyor</string>
+    <string name="practice_octaves">Oktavlar</string>
+    <string name="practice_octave_down">Oktavı aşağı kaydır</string>
+    <string name="practice_octave_up">Oktavı yukarı kaydır</string>
+    <string name="practice_less_octaves">Daha az oktav</string>
+    <string name="practice_more_octaves">Daha fazla oktav</string>
+    <string name="practice_octave_count">%d okt.</string>
+    <string name="practice_current_instrument">%1$d: %2$s</string>
+    <string name="practice_select_instrument">Enstrüman seç</string>
+    <string name="practice_sf2_load_error">SF2 SoundFont yüklenemiyor. Sentezleyici ayarlarını kontrol edin.</string>
+    <string name="practice_wait_mode">Bekleme modu</string>
+    <string name="practice_wait_mode_delay">Bekleme modu gecikmesi</string>
+    <string name="practice_sheet_music">Nota</string>
+    <string name="practice_recording_mode">Pratik kaydı</string>
+    <string name="practice_recording_enabled">Pratik kaydı etkin</string>
+    <string name="practice_recording_enabled_cleared">Pratik kaydı etkin (önceki kayıt temizlendi)</string>
+    <string name="practice_recording_filename">Kayıt_%1$s</string>
+    <string name="practice_volume_percent">%1$d%%</string>
+    <string name="practice_countdown">Başlama gecikmesi</string>
+    <string name="practice_countdown_title">Başlama Gecikmesi</string>
+    <string name="practice_countdown_description">MIDI çalmaya başlamadan önceki gecikmeyi ayarlayın</string>
+    <string name="practice_countdown_seconds">%d saniye</string>
+    <string name="practice_countdown_disabled">Devre dışı</string>
+    <string name="practice_countdown_start_on_play">Çalmaya başladığımda başla</string>
+    <string name="practice_countdown_start_on_play_desc">MIDI, ilk notanızı çaldığınızda başlayacak</string>
+    <string name="practice_countdown_active">%d saniye içinde başlıyor…</string>
+    <string name="practice_countdown_waiting">Çalmanız bekleniyor…</string>
+    <string name="practice_countdown_cancelled">Geri sayım iptal edildi</string>
+    <string name="practice_recording_disabled">Pratik kaydı devre dışı</string>
+    <string name="practice_wait_mode_delay_title">Duraklamadan önceki gecikme</string>
+    <string name="practice_wait_mode_enabled">Bekleme modu etkin</string>
+    <string name="practice_wait_mode_disabled">Bekleme modu devre dışı</string>
+    <string name="practice_switch_to_free_mode_title">Serbest Çalmaya geç?</string>
+    <string name="practice_switch_to_free_mode_message">Bu, mevcut MIDI dosyasını kaldıracak. Kütüphaneden yeniden yükleyebilirsiniz.</string>
+    <string name="practice_switch_confirm">Geç</string>
+    <string name="practice_accompaniment_disabled_in_wait_mode">Bekleme modunda orkestrasyon devre dışı</string>
+    <string name="practice_settings_strictness">Hassasiyet</string>
+    <string name="practice_hold_duration_validation">Nota tutma doğrulaması</string>
+    <string name="practice_hold_duration_validation_desc">Notaları en az süresinin %%50\'si kadar tutmayı zorunlu kıl</string>
+    <string name="practice_hold_duration_enabled">Tutma doğrulaması etkin</string>
+    <string name="practice_hold_duration_disabled">Tutma doğrulaması devre dışı</string>
+    <string name="practice_timing_tolerance">Zamanlama toleransı</string>
+    <string name="practice_timing_tolerance_strict">Sıkı (30ms)</string>
+    <string name="practice_timing_tolerance_normal">Normal (60ms)</string>
+    <string name="practice_timing_tolerance_relaxed">Rahat (120ms)</string>
+    <string name="practice_timing_tolerance_very_relaxed">Çok rahat (200ms)</string>
+    <string name="practice_chord_tolerance">Akor toleransı</string>
+    <string name="practice_chord_tolerance_desc">Notaların aynı akorun parçası sayılması için zaman aralığı</string>
+    <string name="practice_visual_style">Görsel stil</string>
+    <string name="practice_visual_style_classic">Klasik</string>
+    <string name="practice_visual_style_rainbow">Gökkuşağı</string>
+    <string name="practice_visual_style_neon">Neon</string>
+    <string name="practice_visual_style_ocean">Okyanus</string>
+    <string name="practice_visual_style_fire">Ateş</string>
+    <string name="practice_visual_style_changed">Görsel stil: %s</string>
+    <string name="practice_scoring_display">Puanlama gösterimi</string>
+    <string name="practice_scoring_display_title">Puanlama Gösterimi</string>
+    <string name="practice_scoring_display_desc">Pratik sırasında hangi metriklerin gösterileceğini seçin</string>
+    <string name="practice_scoring_enabled">Puanlamayı göster</string>
+    <string name="practice_scoring_preset">Ön ayar</string>
+    <string name="practice_scoring_preset_encouragement">Teşvik</string>
+    <string name="practice_scoring_preset_encouragement_desc">Sadece olumlu metrikler (seriler, doğru notalar)</string>
+    <string name="practice_scoring_preset_full">Tam istatistikler</string>
+    <string name="practice_scoring_preset_full_desc">Tüm metrikler görünür</string>
+    <string name="practice_scoring_preset_minimal">Minimal</string>
+    <string name="practice_scoring_preset_minimal_desc">Sadece puan ve kombo</string>
+    <string name="practice_scoring_preset_custom">Özel</string>
+    <string name="practice_scoring_preset_custom_desc">Metrikleri tek tek seçin</string>
+    <string name="practice_scoring_show_score">Puan</string>
+    <string name="practice_scoring_show_accuracy">Doğruluk</string>
+    <string name="practice_scoring_show_streak">Mevcut seri</string>
+    <string name="practice_scoring_show_best_streak">En iyi seri</string>
+    <string name="practice_scoring_show_good_notes">İyi notalar</string>
+    <string name="practice_scoring_show_perfect_notes">Mükemmel notalar</string>
+    <string name="practice_scoring_show_missed_notes">Kaçırılan notalar</string>
+    <string name="practice_scoring_show_combo">Kombo çarpanı</string>
+    <string name="practice_scoring_show_grade">Not</string>
+    <string name="practice_scoring_compact">Kompakt mod</string>
+    <string name="practice_scoring_animations">Animasyonlar</string>
+    <string name="practice_scoring_streak_popups">Seri bildirimleri</string>
+    <string name="practice_scoring_disabled">Puanlama gösterimi devre dışı</string>
+    <string name="practice_scoring_config_saved">Puanlama gösterimi güncellendi</string>
+    <string name="practice_results_title">Oturum Tamamlandı</string>
+    <string name="practice_results_accuracy">Doğruluk</string>
+    <string name="practice_results_perfect">Mükemmel notalar</string>
+    <string name="practice_results_good">İyi notalar</string>
+    <string name="practice_results_missed">Kaçırılan notalar</string>
+    <string name="practice_results_wrong">Yanlış notalar</string>
+    <string name="practice_results_best_streak">En iyi seri</string>
+    <string name="practice_results_close">Kapat</string>
+    <string name="midi_keyboard_connected">MIDI klavye bağlandı</string>
+    <string name="midi_keyboard_settings">MIDI Klavye Ayarları</string>
+    <string name="midi_keyboard_info_section">Bilgi</string>
+    <string name="midi_keyboard_config_section">Yapılandırma</string>
+    <string name="midi_keyboard_name">Ad</string>
+    <string name="midi_keyboard_manufacturer">Üretici</string>
+    <string name="midi_keyboard_connection">Bağlantı</string>
+    <string name="midi_keyboard_connection_usb">USB</string>
+    <string name="midi_keyboard_connection_bluetooth">Bluetooth</string>
+    <string name="midi_keyboard_connection_virtual">Sanal</string>
+    <string name="midi_keyboard_ports">Portlar</string>
+    <string name="midi_keyboard_ports_format">%1$d giriş / %2$d çıkış</string>
+    <string name="midi_keyboard_led_channel">LED Kanalı</string>
+    <string name="midi_keyboard_mute_sound">Klavye sesini kapat</string>
+    <string name="midi_keyboard_mute_sound_desc">Sadece LED komutları gönder, klavyeden ses çıkmasın</string>
+    <string name="midi_keyboard_octave_offset">LED oktav kaydırma</string>
+    <string name="midi_keyboard_octave_offset_desc">LED notalarını klavye aralığınıza uydurmak için kaydırın</string>
+    <string name="midi_keyboard_octave_minus">Düşük oktav</string>
+    <string name="midi_keyboard_octave_plus">Yüksek oktav</string>
+    <string name="gm_instrument_unknown">Bilinmeyen</string>
+    <string name="gm_drum_channel">Davullar</string>
+    <string name="gm_percussion_format">Perküsyon %d</string>
+    <string name="audio_help_content">Bu menü, harici MIDI klavye bağlıyken ses çıkışını yapılandırır.\n\n• Sesi hoparlörlerden çıkmaya zorla:\nEtkinleştirildiğinde, USB klavye bağlı olsa bile MIDI parça müziği her zaman tablet hoparlörlerinden çalar.\n\n• Notalarımı tablette çal:\nDevre dışı olduğunda (varsayılan), harici klavyede çaldığınız notalar klavyenin kendisinden gelir (dahili hoparlörü varsa).\nEtkinleştirildiğinde, notalarınız tablet hoparlörlerinden de gelir.\n\nİpucu: Hoparlörlü klavyeniz varsa (birçok Yamaha klavye gibi), daha iyi ses kalitesi için 2. seçeneği devre dışı bırakın.</string>
+    <string name="gm_category_piano">Piyano</string>
+    <string name="gm_category_chromatic_percussion">Kromatik Perküsyon</string>
+    <string name="gm_category_organ">Org</string>
+    <string name="gm_category_guitar">Gitar</string>
+    <string name="gm_category_bass">Bas</string>
+    <string name="gm_category_strings">Yaylılar</string>
+    <string name="gm_category_ensemble">Topluluk</string>
+    <string name="gm_category_brass">Bakır Üflemeli</string>
+    <string name="gm_category_reed">Kamışlı</string>
+    <string name="gm_category_pipe">Borulu</string>
+    <string name="gm_category_synth_lead">Synth Lead</string>
+    <string name="gm_category_synth_pad">Synth Pad</string>
+    <string name="gm_category_synth_fx">Synth FX</string>
+    <string name="gm_category_ethnic">Etnik</string>
+    <string name="gm_category_percussive">Vurmalı</string>
+    <string name="gm_category_sound_fx">Ses Efektleri</string>
+    <string name="gm_category_other">Diğer</string>
+    <string name="gm_drum_35">Akustik Bas Davul</string>
+    <string name="gm_drum_36">Bas Davul 1</string>
+    <string name="gm_drum_37">Yan Vuruş</string>
+    <string name="gm_drum_38">Akustik Trampet</string>
+    <string name="gm_drum_39">El Çırpma</string>
+    <string name="gm_drum_40">Elektrik Trampet</string>
+    <string name="gm_drum_41">Düşük Yer Tom</string>
+    <string name="gm_drum_42">Kapalı Hi-Hat</string>
+    <string name="gm_drum_43">Yüksek Yer Tom</string>
+    <string name="gm_drum_44">Pedal Hi-Hat</string>
+    <string name="gm_drum_45">Düşük Tom</string>
+    <string name="gm_drum_46">Açık Hi-Hat</string>
+    <string name="gm_drum_47">Düşük-Orta Tom</string>
+    <string name="gm_drum_48">Yüksek-Orta Tom</string>
+    <string name="gm_drum_49">Crash Zil 1</string>
+    <string name="gm_drum_50">Yüksek Tom</string>
+    <string name="gm_drum_51">Ride Zil 1</string>
+    <string name="gm_drum_52">Çin Zili</string>
+    <string name="gm_drum_53">Ride Çan</string>
+    <string name="gm_drum_54">Tef</string>
+    <string name="gm_drum_55">Splash Zil</string>
+    <string name="gm_drum_56">Cowbell</string>
+    <string name="gm_drum_57">Crash Zil 2</string>
+    <string name="gm_drum_58">Vibraslap</string>
+    <string name="gm_drum_59">Ride Zil 2</string>
+    <string name="gm_drum_60">Yüksek Bongo</string>
+    <string name="gm_drum_61">Düşük Bongo</string>
+    <string name="gm_drum_62">Kapalı Yüksek Konga</string>
+    <string name="gm_drum_63">Açık Yüksek Konga</string>
+    <string name="gm_drum_64">Düşük Konga</string>
+    <string name="gm_drum_65">Yüksek Timbale</string>
+    <string name="gm_drum_66">Düşük Timbale</string>
+    <string name="gm_drum_67">Yüksek Agogo</string>
+    <string name="gm_drum_68">Düşük Agogo</string>
+    <string name="gm_drum_69">Cabasa</string>
+    <string name="gm_drum_70">Marakas</string>
+    <string name="gm_drum_71">Kısa Düdük</string>
+    <string name="gm_drum_72">Uzun Düdük</string>
+    <string name="gm_drum_73">Kısa Guiro</string>
+    <string name="gm_drum_74">Uzun Guiro</string>
+    <string name="gm_drum_75">Claves</string>
+    <string name="gm_drum_76">Yüksek Tahta Blok</string>
+    <string name="gm_drum_77">Düşük Tahta Blok</string>
+    <string name="gm_drum_78">Kapalı Cuica</string>
+    <string name="gm_drum_79">Açık Cuica</string>
+    <string name="gm_drum_80">Kapalı Üçgen</string>
+    <string name="gm_drum_81">Açık Üçgen</string>
+    <string-array name="gm_instruments">
+        <item>Akustik Kuyruklu Piyano</item>
+        <item>Parlak Akustik Piyano</item>
+        <item>Elektrik Kuyruklu Piyano</item>
+        <item>Honky-tonk Piyano</item>
+        <item>Elektrik Piyano 1</item>
+        <item>Elektrik Piyano 2</item>
+        <item>Klavsen</item>
+        <item>Klavinet</item>
+        <item>Çelesta</item>
+        <item>Glockenspiel</item>
+        <item>Müzik Kutusu</item>
+        <item>Vibrafon</item>
+        <item>Marimba</item>
+        <item>Ksilofon</item>
+        <item>Boru Çanlar</item>
+        <item>Santur</item>
+        <item>Drawbar Org</item>
+        <item>Perküsif Org</item>
+        <item>Rock Org</item>
+        <item>Kilise Orgu</item>
+        <item>Kamışlı Org</item>
+        <item>Akordeon</item>
+        <item>Mızıka</item>
+        <item>Tango Akordeonu</item>
+        <item>Akustik Gitar (naylon)</item>
+        <item>Akustik Gitar (çelik)</item>
+        <item>Elektro Gitar (caz)</item>
+        <item>Elektro Gitar (temiz)</item>
+        <item>Elektro Gitar (susturulmuş)</item>
+        <item>Overdrive Gitar</item>
+        <item>Distortion Gitar</item>
+        <item>Gitar Harmonikleri</item>
+        <item>Akustik Bas</item>
+        <item>Elektrik Bas (parmak)</item>
+        <item>Elektrik Bas (pena)</item>
+        <item>Perdesiz Bas</item>
+        <item>Slap Bas 1</item>
+        <item>Slap Bas 2</item>
+        <item>Synth Bas 1</item>
+        <item>Synth Bas 2</item>
+        <item>Keman</item>
+        <item>Viyola</item>
+        <item>Çello</item>
+        <item>Kontrbas</item>
+        <item>Tremolo Yaylılar</item>
+        <item>Pizzicato Yaylılar</item>
+        <item>Orkestra Arp</item>
+        <item>Timpani</item>
+        <item>Yaylı Topluluk 1</item>
+        <item>Yaylı Topluluk 2</item>
+        <item>Synth Yaylılar 1</item>
+        <item>Synth Yaylılar 2</item>
+        <item>Koro Aaa</item>
+        <item>Ses Ooo</item>
+        <item>Synth Ses</item>
+        <item>Orkestra Vuruşu</item>
+        <item>Trompet</item>
+        <item>Trombon</item>
+        <item>Tuba</item>
+        <item>Susturulmuş Trompet</item>
+        <item>Fransız Kornosu</item>
+        <item>Bakır Üflemeli Bölüm</item>
+        <item>Synth Bakır 1</item>
+        <item>Synth Bakır 2</item>
+        <item>Soprano Saksafon</item>
+        <item>Alto Saksafon</item>
+        <item>Tenor Saksafon</item>
+        <item>Bariton Saksafon</item>
+        <item>Obua</item>
+        <item>İngiliz Kornosu</item>
+        <item>Fagot</item>
+        <item>Klarnet</item>
+        <item>Pikolo</item>
+        <item>Flüt</item>
+        <item>Blok Flüt</item>
+        <item>Pan Flüt</item>
+        <item>Üflemeli Şişe</item>
+        <item>Shakuhachi</item>
+        <item>Düdük</item>
+        <item>Okarina</item>
+        <item>Lead 1 (kare)</item>
+        <item>Lead 2 (testere)</item>
+        <item>Lead 3 (calliope)</item>
+        <item>Lead 4 (chiff)</item>
+        <item>Lead 5 (charang)</item>
+        <item>Lead 6 (ses)</item>
+        <item>Lead 7 (beşli)</item>
+        <item>Lead 8 (bas + lead)</item>
+        <item>Pad 1 (new age)</item>
+        <item>Pad 2 (sıcak)</item>
+        <item>Pad 3 (polysynth)</item>
+        <item>Pad 4 (koro)</item>
+        <item>Pad 5 (yaylı)</item>
+        <item>Pad 6 (metalik)</item>
+        <item>Pad 7 (halo)</item>
+        <item>Pad 8 (süpürme)</item>
+        <item>FX 1 (yağmur)</item>
+        <item>FX 2 (film müziği)</item>
+        <item>FX 3 (kristal)</item>
+        <item>FX 4 (atmosfer)</item>
+        <item>FX 5 (parlaklık)</item>
+        <item>FX 6 (goblinler)</item>
+        <item>FX 7 (yankılar)</item>
+        <item>FX 8 (bilim kurgu)</item>
+        <item>Sitar</item>
+        <item>Banjo</item>
+        <item>Shamisen</item>
+        <item>Koto</item>
+        <item>Kalimba</item>
+        <item>Gayda</item>
+        <item>Fiddle</item>
+        <item>Shanai</item>
+        <item>Tinkle Bell</item>
+        <item>Agogo</item>
+        <item>Çelik Davullar</item>
+        <item>Tahta Blok</item>
+        <item>Taiko Davulu</item>
+        <item>Melodik Tom</item>
+        <item>Synth Davul</item>
+        <item>Ters Zil</item>
+        <item>Gitar Perde Gürültüsü</item>
+        <item>Nefes Sesi</item>
+        <item>Deniz Kıyısı</item>
+        <item>Kuş Cıvıltısı</item>
+        <item>Telefon Zili</item>
+        <item>Helikopter</item>
+        <item>Alkış</item>
+        <item>Silah Sesi</item>
+    </string-array>
+    <string name="practice_record">Kaydet</string>
+    <string name="practice_record_stop">Kaydı durdur</string>
+    <string name="practice_no_notes_recorded">Nota kaydedilmedi</string>
+    <string name="practice_recording_max_duration">Kayıt durduruldu — maksimum süreye ulaşıldı (30 dk)</string>
+    <string name="practice_export_title">Kaydı dışa aktar</string>
+    <string name="practice_export_filename">Dosya adı</string>
+    <string name="practice_export_format_midi">MIDI (.mid)</string>
+    <string name="practice_export_format_wav">WAV (.wav)</string>
+    <string name="practice_export_format_wav_disabled">WAV (.wav) — SF2 SoundFont gerektirir</string>
+    <string name="practice_export_button">Dışa aktar</string>
+    <string name="practice_export_share_button">Paylaş</string>
+    <string name="practice_export_success">%s konumuna dışa aktarıldı</string>
+    <string name="practice_export_error">Dışa aktarma hatası: %s</string>
+    <string name="practice_export_rendering">Ses oluşturuluyor…</string>
+</resources>

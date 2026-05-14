@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_create_playlist"
+        android:title="@string/music_create_playlist"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="@string/music_refresh"
+        android:icon="@android:drawable/stat_notify_sync"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/action_refresh_fast"
+                android:title="@string/music_refresh_fast" />
+            <item
+                android:id="@+id/action_refresh_deep"
+                android:title="@string/music_refresh_deep" />
+            <item
+                android:id="@+id/action_refresh_complete"
+                android:title="@string/music_refresh_complete" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_manage_folders"
+        android:title="@string/music_manage_folders"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_artist_display_mode"
+        android:title="@string/music_artist_display_mode"
+        android:icon="@drawable/ic_view_list"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/action_display_mode" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/music_settings"
+        app:showAsAction="never" />
+
+</menu>

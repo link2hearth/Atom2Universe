@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/music_background">
+
+    <!-- Toolbar avec navigation intégrée -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/music_surface"
+        app:title=""
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:menu="@menu/menu_music_player"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Breadcrumb navigation cliquable -->
+        <HorizontalScrollView
+            android:id="@+id/breadcrumb_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:id="@+id/breadcrumb_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingEnd="48dp" />
+
+        </HorizontalScrollView>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!-- Stats info -->
+    <TextView
+        android:id="@+id/stats_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:textColor="@color/music_text_secondary"
+        android:textSize="13sp"
+        tools:text="15 artists, 42 albums, 234 tracks"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Sort bar for FOLDER_TRACKS mode (hidden by default) -->
+    <include
+        android:id="@+id/folder_tracks_sort_bar"
+        layout="@layout/folder_tracks_sort_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/stats_info"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Loading indicator -->
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/folder_tracks_sort_bar"
+        app:layout_constraintBottom_toTopOf="@id/mini_player"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/music_empty_library"
+        android:textColor="@color/music_text_secondary"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/folder_tracks_sort_bar"
+        app:layout_constraintBottom_toTopOf="@id/mini_player"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Content list (Artists / Albums / Tracks) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/content_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/folder_tracks_sort_bar"
+        app:layout_constraintBottom_toTopOf="@id/mini_player"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/alphabet_index" />
+
+    <!-- Barre de navigation alphabétique (A-Z) -->
+    <com.Atom2Universe.app.music.AlphabetIndexView
+        android:id="@+id/alphabet_index"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:paddingVertical="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/folder_tracks_sort_bar"
+        app:layout_constraintBottom_toTopOf="@id/mini_player"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Mini Player -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mini_player"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/music_surface"
+        android:elevation="8dp"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Progress bar thin -->
+        <ProgressBar
+            android:id="@+id/mini_progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:progressDrawable="@drawable/music_mini_progress"
+            android:max="100"
+            android:progress="0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Album art mini -->
+        <ImageView
+            android:id="@+id/mini_album_art"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_music_album_placeholder"
+            android:contentDescription="@string/music_album_art"
+            android:layout_margin="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mini_progress"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Track info -->
+        <TextView
+            android:id="@+id/mini_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/music_text_primary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            tools:text="Song Title"
+            app:layout_constraintStart_toEndOf="@id/mini_album_art"
+            app:layout_constraintEnd_toStartOf="@id/mini_btn_prev"
+            app:layout_constraintTop_toTopOf="@id/mini_album_art"
+            app:layout_constraintBottom_toTopOf="@id/mini_artist" />
+
+        <TextView
+            android:id="@+id/mini_artist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/music_text_secondary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            tools:text="Artist Name"
+            app:layout_constraintStart_toEndOf="@id/mini_album_art"
+            app:layout_constraintEnd_toStartOf="@id/mini_btn_prev"
+            app:layout_constraintTop_toBottomOf="@id/mini_title"
+            app:layout_constraintBottom_toBottomOf="@id/mini_album_art" />
+
+        <!-- Control buttons -->
+        <ImageButton
+            android:id="@+id/mini_btn_prev"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_media_previous"
+            android:contentDescription="@string/music_previous"
+            app:tint="@color/music_text_primary"
+            app:layout_constraintEnd_toStartOf="@id/mini_btn_play_pause"
+            app:layout_constraintTop_toBottomOf="@id/mini_progress"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageButton
+            android:id="@+id/mini_btn_play_pause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_media_play"
+            android:contentDescription="@string/music_play_pause"
+            app:tint="?attr/a2uMusicAccent"
+            app:layout_constraintEnd_toStartOf="@id/mini_btn_next"
+            app:layout_constraintTop_toBottomOf="@id/mini_progress"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageButton
+            android:id="@+id/mini_btn_next"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_media_next"
+            android:contentDescription="@string/music_next"
+            app:tint="@color/music_text_primary"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mini_progress"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Bouton retour vers le widget clicker — visible uniquement si lancé depuis le widget -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_back_to_clicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_games"
+        android:contentDescription="@string/music_widget_back_to_clicker_desc"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:backgroundTint="#1E293B"
+        app:tint="#94A3B8"
+        app:elevation="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/mini_player" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdk 36
+    namespace = "org.billthefarmer.mididriver"
+
+    externalNativeBuild {
+        ndkBuild {
+            path = 'src/main/jni/Android.mk'
+        }
+    }
+
+    ndkVersion = "28.0.13004108"
+
+    defaultConfig {
+        minSdk 24
+        versionCode 129
+        versionName "1.29"
+
+        ndk {
+            // Uniquement arm64 pour téléphones modernes (réduit la taille de l'APK)
+            // Anciennes valeurs conservées : 'armeabi-v7a', 'x86', 'x86_64'
+            abiFilters = ['arm64-v8a']
+        }
+    }
+
+    buildFeatures {
+        prefab = true
+    }
+
+    compileOptions {
+        encoding = 'UTF-8'
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    lint {
+        disable 'OldTargetApi', 'ExpiredTargetSdkVersion', 'GradleDependency'
+    }
+}
+
+dependencies {
+    implementation 'com.google.oboe:oboe:1.9.3'
+}

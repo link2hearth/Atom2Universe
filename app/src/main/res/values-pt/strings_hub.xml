@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Voltar</string>
+    <string name="hub_toggle_view">Alternar visualização</string>
+    <string name="hub_edit_mode">Modo de edição</string>
+    <string name="hub_confirm_edit">Concluir edição</string>
+    <string name="startup_view_toggle">Alternar visualização</string>
+    <string name="notification_channel_audio_name">Reprodução de áudio</string>
+    <string name="notification_channel_audio_description">Mantém a reprodução de áudio em segundo plano.</string>
+    <string name="hub_pick_color">Escolher uma cor</string>
+    <string name="hub_edit_tile">Editar bloco</string>
+    <string name="hub_change_language">Alterar idioma</string>
+    <string name="hub_language_changed">Idioma alterado para %1$s</string>
+    <string name="hub_select_language">Selecionar idioma</string>
+    <string name="hub_settings">Configurações</string>
+    <string name="hub_about">Sobre</string>
+    <string name="hub_theme">Tema do aplicativo</string>
+</resources>

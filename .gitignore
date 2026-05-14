@@ -1,0 +1,45 @@
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# Gradle / local
+.gradle/
+local.properties
+.cxx/
+.externalNativeBuild/
+**/build/
+captures/
+
+# Kotlin (often generated locally)
+.kotlin/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.log
+logcat.txt
+
+# Signing keys (IMPORTANT - never commit these!)
+*.jks
+*.keystore
+key.properties
+
+# Google Services / Firebase (contains API keys)
+google-services.json
+
+# APK / AAB outputs
+*.apk
+*.aab
+
+# Images de cache / album art (kept local only, not app resources)
+app/src/main/assets/images/
+app/src/main/assets/covers/
+
+# Claude / notes
+.claude/
+CLAUDE.md
+
+# In-app billing / Play Console sensitive files
+app/src/main/assets/billing*.json
+app/src/main/assets/billing*.properties
+play-billing*.json

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/startup_background">
+
+    <!-- Toolbar avec flèche retour -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/radio_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/startup_button_background"
+        android:elevation="4dp"
+        app:title="@string/radio_title"
+        app:titleTextColor="@color/startup_text_primary"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <TextView
+            android:id="@+id/radio_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/radio_status_idle"
+            android:textColor="@color/startup_text_secondary" />
+
+        <LinearLayout
+            android:id="@+id/radio_player_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/startup_button_background"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Station name and status on same line -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/radio_station_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/radio_player_empty"
+                    android:textColor="@color/startup_text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/radio_player_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/radio_player_status_idle"
+                    android:textColor="@color/startup_text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/radio_station_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/radio_now_playing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="13sp"
+                android:textStyle="italic"
+                android:visibility="gone" />
+
+            <!-- Recording indicator -->
+            <LinearLayout
+                android:id="@+id/radio_recording_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/radio_recording_dot"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_record"
+                    android:contentDescription="@string/radio_recording" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/radio_recording"
+                    android:textColor="#F44336"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Playback controls row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/radio_play_button"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="@drawable/circle_button_bg"
+                    android:contentDescription="@string/radio_action_play"
+                    android:src="@drawable/ic_play"
+                    app:tint="@android:color/white" />
+
+                <ImageButton
+                    android:id="@+id/radio_pause_button"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/circle_button_bg"
+                    android:contentDescription="@string/radio_action_pause"
+                    android:src="@drawable/ic_pause"
+                    app:tint="@android:color/white" />
+
+                <ImageButton
+                    android:id="@+id/radio_stop_button"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/circle_button_black_bg"
+                    android:contentDescription="@string/radio_action_stop"
+                    android:src="@drawable/ic_stop"
+                    app:tint="@android:color/white" />
+            </LinearLayout>
+
+            <!-- Secondary controls row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/radio_reload_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/radio_action_reload"
+                    android:src="@drawable/ic_reload"
+                    app:tint="@color/startup_text_primary" />
+
+                <ImageButton
+                    android:id="@+id/radio_favorite_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/radio_action_favorite"
+                    android:src="@drawable/ic_star_outline"
+                    app:tint="#FFC107" />
+
+                <ImageButton
+                    android:id="@+id/radio_record_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/radio_action_record"
+                    android:src="@drawable/ic_record" />
+
+                <ImageButton
+                    android:id="@+id/radio_record_stop_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/radio_action_stop_record"
+                    android:src="@drawable/ic_stop"
+                    app:tint="#F44336" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/startup_button_background"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_favorites_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/radio_favorites_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/radio_favorites_empty"
+                android:textColor="@color/startup_text_secondary" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/radio_favorites_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/radio_favorites_add_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/radio_favorites_add"
+                app:backgroundTint="@color/startup_button_background"
+                android:textColor="@color/startup_button_text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/startup_button_background"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_search_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/radio_query"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/radio_search_placeholder"
+                android:inputType="text"
+                android:textColor="@color/startup_text_primary"
+                android:textColorHint="@color/startup_text_secondary" />
+
+            <Spinner
+                android:id="@+id/radio_country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <Spinner
+                android:id="@+id/radio_language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/radio_search_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/radio_action_search"
+                    app:backgroundTint="@color/startup_button_background"
+                    android:textColor="@color/startup_button_text" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/radio_reset_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/radio_action_reset"
+                    app:backgroundTint="@color/startup_button_background"
+                    android:textColor="@color/startup_button_text" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/radio_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/radio_results_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/radio_results_empty"
+                android:textColor="@color/startup_text_secondary" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/radio_results_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

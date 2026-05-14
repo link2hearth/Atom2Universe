@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="@color/startup_button_background"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <!-- Sample icon/note indicator -->
+        <TextView
+            android:id="@+id/root_note_badge"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_rounded_accent"
+            android:backgroundTint="?attr/a2uMidiAccent"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Sample name -->
+        <TextView
+            android:id="@+id/sample_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/delete_button"
+            app:layout_constraintStart_toEndOf="@id/root_note_badge"
+            app:layout_constraintTop_toTopOf="@id/root_note_badge" />
+
+        <!-- Key range info -->
+        <TextView
+            android:id="@+id/key_range_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/delete_button"
+            app:layout_constraintStart_toEndOf="@id/root_note_badge"
+            app:layout_constraintTop_toBottomOf="@id/sample_name" />
+
+        <!-- Loop indicator -->
+        <TextView
+            android:id="@+id/loop_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/bg_chip"
+            android:paddingStart="6dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="2dp"
+            android:text="@string/sf2_loop"
+            android:textColor="?attr/a2uMidiAccent"
+            android:textSize="11sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/root_note_badge"
+            app:layout_constraintTop_toBottomOf="@id/key_range_text" />
+
+        <!-- Delete button -->
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/sf2_delete_sample"
+            android:src="@drawable/ic_close"
+            app:tint="@color/startup_text_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

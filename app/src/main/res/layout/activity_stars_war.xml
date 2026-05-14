@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/startup_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:gravity="center_vertical"
+        android:background="@color/startup_background">
+
+        <ImageButton
+            android:id="@+id/stars_war_btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stars_war_title"
+            android:textSize="20sp"
+            android:textColor="@color/startup_text_primary"
+            android:gravity="center"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/stars_war_btn_pause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_pause"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/stars_war_paused" />
+
+    </LinearLayout>
+
+    <com.Atom2Universe.app.games.starswar.StarsWarView
+        android:id="@+id/stars_war_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

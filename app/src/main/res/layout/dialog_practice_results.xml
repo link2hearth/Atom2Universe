@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="#DD1A1A1A">
+
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header with title and close button -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/txt_results_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/practice_results_title"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <ImageButton
+                android:id="@+id/btn_close"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/practice_results_close"
+                app:tint="#AAAAAA"/>
+        </RelativeLayout>
+
+        <!-- Track Title -->
+        <TextView
+            android:id="@+id/txt_track_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginBottom="12dp"
+            tools:text="Moonlight Sonata - 1st Movement"/>
+
+        <!-- Grade and Score row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <!-- Grade (large) -->
+            <TextView
+                android:id="@+id/txt_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="64sp"
+                android:textStyle="bold"
+                android:textColor="?attr/a2uMidiAccent"
+                android:layout_marginEnd="16dp"
+                tools:text="A"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Score -->
+                <TextView
+                    android:id="@+id/txt_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    tools:text="12,450"/>
+
+                <!-- Accuracy -->
+                <TextView
+                    android:id="@+id/txt_accuracy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp"
+                    tools:text="87.5% accuracy"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Stats grid (2 columns) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <!-- Left column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Perfect -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/practice_results_perfect"
+                        android:textColor="#888888"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/txt_perfect_notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#4CAF50"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="145"/>
+                </LinearLayout>
+
+                <!-- Good -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/practice_results_good"
+                        android:textColor="#888888"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/txt_good_notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#8BC34A"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="180"/>
+                </LinearLayout>
+
+                <!-- Missed -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/practice_results_missed"
+                        android:textColor="#888888"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/txt_missed_notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FF5722"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="12"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Right column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
+
+                <!-- Wrong -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/practice_results_wrong"
+                        android:textColor="#888888"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/txt_wrong_notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#F44336"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="5"/>
+                </LinearLayout>
+
+                <!-- Best streak -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/practice_results_best_streak"
+                        android:textColor="#888888"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/txt_best_streak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFD700"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="47"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

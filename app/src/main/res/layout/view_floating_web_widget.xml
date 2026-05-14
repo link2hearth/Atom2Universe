@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/floating_web_card"
+    android:layout_width="340dp"
+    android:layout_height="480dp"
+    app:cardBackgroundColor="#0F172A"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header : titre + bouton ✕ -->
+        <FrameLayout
+            android:id="@+id/floating_web_header"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="#111827"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/floating_web_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="80dp"
+                android:paddingStart="10dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="#94A3B8"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/floating_web_expand"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_marginEnd="40dp"
+                android:gravity="center"
+                android:text="⤢"
+                android:textColor="#64748B"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/floating_web_expand_desc" />
+
+            <TextView
+                android:id="@+id/floating_web_close"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="✕"
+                android:textColor="#EF4444"
+                android:textSize="13sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/floating_web_close_desc" />
+
+        </FrameLayout>
+
+        <!-- Barre de navigation -->
+        <LinearLayout
+            android:id="@+id/floating_web_navbar"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="#0D1117"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="4dp">
+
+            <TextView
+                android:id="@+id/floating_web_back"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:gravity="center"
+                android:text="←"
+                android:textColor="#64748B"
+                android:textSize="17sp"
+                android:alpha="0.4"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/floating_web_back_desc" />
+
+            <TextView
+                android:id="@+id/floating_web_reload"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:gravity="center"
+                android:text="↻"
+                android:textColor="#64748B"
+                android:textSize="17sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/floating_web_reload_desc" />
+
+            <EditText
+                android:id="@+id/floating_web_url_bar"
+                android:layout_width="0dp"
+                android:layout_height="26dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:background="#1E293B"
+                android:hint="@string/floating_web_url_hint"
+                android:textColor="#F1F5F9"
+                android:textColorHint="#475569"
+                android:textSize="10sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="true"
+                android:inputType="textUri"
+                android:imeOptions="actionGo"
+                android:selectAllOnFocus="true" />
+
+        </LinearLayout>
+
+        <!-- Séparateur -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1F2937" />
+
+        <!-- Indicateur de chargement -->
+        <ProgressBar
+            android:id="@+id/floating_web_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:max="100"
+            android:visibility="gone" />
+
+        <!-- WebView -->
+        <WebView
+            android:id="@+id/floating_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

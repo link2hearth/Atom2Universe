@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="6dp"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Track number -->
+    <TextView
+        android:id="@+id/track_number"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/music_text_secondary"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:text="01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/playing_indicator"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@android:drawable/ic_media_play"
+        android:visibility="gone"
+        android:contentDescription="@string/music_now_playing"
+        app:layout_constraintStart_toEndOf="@id/track_number"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tint="?attr/a2uMusicAccent" />
+
+    <TextView
+        android:id="@+id/track_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/music_text_primary"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginStart="6dp"
+        tools:text="Song Title"
+        app:layout_constraintStart_toEndOf="@id/playing_indicator"
+        app:layout_constraintEnd_toStartOf="@id/track_play_count"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/track_play_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@color/music_text_secondary"
+        android:visibility="gone"
+        android:layout_marginEnd="4dp"
+        tools:text="42x"
+        app:layout_constraintEnd_toStartOf="@id/btn_add_to_playlist"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Add to playlist button (visible only in edit mode) -->
+    <ImageButton
+        android:id="@+id/btn_add_to_playlist"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_add"
+        android:contentDescription="@string/music_add_to_queue_and_playlist"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        app:tint="?attr/a2uMusicAccent"
+        app:layout_constraintEnd_toStartOf="@id/btn_favorite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_favorite"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_favorite_outline"
+        android:contentDescription="@string/music_add_to_favorites"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toStartOf="@id/track_duration"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/track_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:textColor="@color/music_text_secondary"
+        android:layout_marginStart="4dp"
+        tools:text="3:45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <View
+        android:id="@+id/track_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/music_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

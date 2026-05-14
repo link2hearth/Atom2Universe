@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Teraz odtwarzane</string>
+    <string name="audio_notification_unknown_artist">Nieznany wykonawca</string>
+    <string name="audio_action_pause">Pauza</string>
+    <string name="audio_action_play">Odtwórz</string>
+    <string name="audio_action_stop">Zatrzymaj</string>
+    <string name="audio_action_dismiss">Zamknij</string>
+    <string name="audio_source_radio">Radio</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Muzyka</string>
+    <string name="audio_conflict_title">Trwa odtwarzanie</string>
+    <string name="audio_conflict_message">%1$s jest już odtwarzane. Czego chcesz słuchać?</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_settings_title">Ustawienia audio</string>
+    <string name="audio_settings_description">Konfiguracja wyjścia audio po podłączeniu klawiatury MIDI.</string>
+    <string name="audio_option_speaker_force">Wymuś dźwięk przez głośniki tabletu</string>
+    <string name="audio_option_keyboard_sound">Odtwarzaj moje nuty na tablecie (w przeciwnym razie na klawiaturze)</string>
+    <string name="audio_settings_help">Pomoc</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Odtwórz / Pauza</string>
+    <string name="audio_hub_stop">Zatrzymaj</string>
+    <string name="audio_hub_no_playback">Brak odtwarzania</string>
+    <string name="audio_hub_playing">Teraz odtwarzane…</string>
+    <string name="audio_hub_paused">Wstrzymano</string>
+    <string name="audio_hub_radio_title">Radio internetowe</string>
+    <string name="audio_hub_radio_desc">Słuchaj tysięcy stacji</string>
+    <string name="audio_hub_midi_title">Odtwarzacz MIDI</string>
+    <string name="audio_hub_midi_desc">Pliki MIDI z syntezą SCC</string>
+    <string name="audio_hub_music_title">Odtwarzacz muzyki</string>
+    <string name="audio_hub_music_desc">Twoja biblioteka muzyki</string>
+    <string name="audio_hub_editor_title">Edytor audio</string>
+    <string name="audio_hub_editor_desc">Przycinaj pliki audio</string>
+    <string name="audio_hub_stats_title">Statystyki</string>
+    <string name="audio_hub_stats_desc">Twoje podsumowania odsłuchów</string>
+</resources>

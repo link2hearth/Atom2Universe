@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_back">Geri</string>
+    <string name="stats_tab_day">Bugün</string>
+    <string name="stats_tab_week">Hafta</string>
+    <string name="stats_tab_month">Ay</string>
+    <string name="stats_tab_year">Yıl</string>
+    <string name="stats_total_time">Toplam süre</string>
+    <string name="stats_listening_time">Müzik dinleme</string>
+    <string name="stats_practice_time">MIDI pratiği</string>
+    <string name="stats_hours_format">%1$d sa %2$d dk</string>
+    <string name="stats_minutes_format">%1$d dk</string>
+    <string name="stats_top_artists">En çok dinlenen sanatçılar</string>
+    <string name="stats_top_albums">En çok dinlenen albümler</string>
+    <string name="stats_top_midi">En çok kullanılan MIDI dosyaları</string>
+    <string name="stats_average_score">Ortalama pratik puanı: %.1f%%</string>
+    <string name="stats_no_data">Bu dönem için veri yok</string>
+</resources>

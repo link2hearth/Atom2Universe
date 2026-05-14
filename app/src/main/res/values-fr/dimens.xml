@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Color Picker -->
+    <dimen name="color_button_size">32dp</dimen>
+    <dimen name="color_button_margin">4dp</dimen>
+
+    <!-- Pixel Art Editor -->
+    <dimen name="palette_max_height">76dp</dimen>
+
+    <!-- Quiz -->
+    <dimen name="quiz_button_margin">12dp</dimen>
+    <dimen name="quiz_button_height">56dp</dimen>
+    <dimen name="quiz_button_padding">16dp</dimen>
+</resources>

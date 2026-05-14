@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bj_widget_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#0F172A"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#1F2937"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header draggable -->
+        <FrameLayout
+            android:id="@+id/bj_widget_header"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start|center_vertical"
+                android:paddingStart="10dp"
+                android:text="♠ BlackJack"
+                android:textColor="#64748B"
+                android:textSize="11sp" />
+
+            <!-- Solde neutrinos -->
+            <TextView
+                android:id="@+id/bj_widget_neutrinos"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#FFD700"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bj_widget_btn_reset"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="↺"
+                android:textColor="#64748B"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true" />
+        </FrameLayout>
+
+        <!-- Table + overlays -->
+        <FrameLayout
+            android:layout_width="250dp"
+            android:layout_height="300dp">
+
+            <com.Atom2Universe.app.games.blackjack.BlackjackView
+                android:id="@+id/bj_widget_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Deal area : bouton cycle mise + DEAL -->
+            <LinearLayout
+                android:id="@+id/bj_widget_deal_area"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="#CC0B2E10"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/bj_widget_btn_bet_cycle"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="⚛1 +"
+                    android:textColor="#FFD700"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="#CC1B5E20"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/bj_widget_btn_deal"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="DEAL ▶"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="#CC9E1616"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Action area (HIT / STAND) -->
+            <LinearLayout
+                android:id="@+id/bj_widget_action_area"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal"
+                android:background="#CC0B2E10"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/bj_widget_btn_hit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/blackjack_hit"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="#CC1565C0"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/bj_widget_btn_stand"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/blackjack_stand"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="#CCB71C1C"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Result overlay : clic simple pour fermer -->
+            <FrameLayout
+                android:id="@+id/bj_widget_result_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CC0F172A"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/bj_widget_result_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#66BB6A" />
+            </FrameLayout>
+
+            <!-- Reset confirmation overlay -->
+            <FrameLayout
+                android:id="@+id/bj_widget_reset_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CC0F172A"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:text="Nouvelle partie ?"
+                        android:textColor="#CBD5E1"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/bj_widget_reset_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:gravity="center"
+                        android:text="✓ Confirmer"
+                        android:textColor="#22C55E"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/bj_widget_reset_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="✕ Annuler"
+                        android:textColor="#64748B"
+                        android:textSize="13sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

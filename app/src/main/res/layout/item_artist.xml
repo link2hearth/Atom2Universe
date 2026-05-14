@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="1dp"
+    app:rippleColor="?attr/a2uMidiAccent"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Icon artiste -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/a2uMidiAccent">
+
+            <TextView
+                android:id="@+id/artist_initial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                tools:text="A" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Infos artiste -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:id="@+id/artist_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Artiste Name" />
+
+            <TextView
+                android:id="@+id/artist_stats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="5 albums · 42 titres" />
+        </LinearLayout>
+
+        <!-- Flèche -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@android:drawable/ic_menu_more"
+            android:importantForAccessibility="no"
+            android:rotation="270"
+            app:tint="?android:attr/textColorSecondary" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

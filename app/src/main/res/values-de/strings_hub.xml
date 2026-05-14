@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Zurück</string>
+    <string name="hub_toggle_view">Ansicht wechseln</string>
+    <string name="hub_edit_mode">Bearbeitungsmodus</string>
+    <string name="hub_confirm_edit">Bearbeitung abschließen</string>
+    <string name="startup_view_toggle">Ansicht wechseln</string>
+    <string name="notification_channel_audio_name">Audiowiedergabe</string>
+    <string name="notification_channel_audio_description">Hält die Audiowiedergabe im Hintergrund aktiv.</string>
+    <string name="hub_pick_color">Farbe wählen</string>
+    <string name="hub_edit_tile">Kachel bearbeiten</string>
+    <string name="hub_change_language">Sprache ändern</string>
+    <string name="hub_language_changed">Sprache auf %1$s geändert</string>
+    <string name="hub_select_language">Sprache auswählen</string>
+    <string name="hub_settings">Einstellungen</string>
+    <string name="hub_about">Über</string>
+    <string name="hub_theme">App-Design</string>
+</resources>

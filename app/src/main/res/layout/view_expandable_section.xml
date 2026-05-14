@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Header (clickable) -->
+    <LinearLayout
+        android:id="@+id/section_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:minHeight="44dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="8dp">
+
+        <!-- Expand/Collapse arrow -->
+        <ImageView
+            android:id="@+id/section_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:rotation="0"
+            android:src="@drawable/ic_expand_more"
+            app:tint="?attr/a2uMidiAccent"
+            tools:ignore="ContentDescription" />
+
+        <!-- Section title -->
+        <TextView
+            android:id="@+id/section_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:textColor="?attr/a2uMidiAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Section Title" />
+
+        <!-- Reset button (optional) -->
+        <ImageView
+            android:id="@+id/section_reset_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_refresh"
+            android:visibility="gone"
+            app:tint="@color/startup_text_secondary"
+            tools:ignore="ContentDescription"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <!-- Content container (collapsible) -->
+    <LinearLayout
+        android:id="@+id/section_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="32dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</merge>

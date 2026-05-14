@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_sheet_music"
+        android:title="@string/practice_sheet_music"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_wait_mode"
+        android:title="@string/practice_wait_mode"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_hold_validation"
+        android:title="@string/practice_hold_duration_validation"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_timing_tolerance"
+        android:title="@string/practice_timing_tolerance"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_visual_style"
+        android:title="@string/practice_visual_style"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_scoring_display"
+        android:title="@string/practice_scoring_display"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_audio_settings"
+        android:title="@string/midi_audio_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_select_soundfont"
+        android:title="@string/midi_select_soundfont"
+        app:showAsAction="never" />
+
+</menu>

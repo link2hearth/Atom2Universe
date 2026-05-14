@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">BD</string>
+    <string name="hub_comics_desc">Lecteur PDF, CBZ et dossier d\'images</string>
+    <string name="comics_library_title">Bibliothèque BD</string>
+    <string name="comics_library_empty">Aucune BD</string>
+    <string name="comics_library_empty_hint">Appuyez sur + pour ajouter votre première BD</string>
+    <string name="comics_add_title">Ajouter une BD</string>
+    <string name="comics_add_pdf">Fichier PDF</string>
+    <string name="comics_add_cbz">Fichier CBZ / ZIP</string>
+    <string name="comics_add_folder">Dossier d\'images</string>
+    <string name="comics_delete_title">Supprimer la BD</string>
+    <string name="comics_delete_msg">Retirer \"%s\" de la bibliothèque ?</string>
+    <string name="comics_delete_confirm">Retirer</string>
+    <string name="comics_layout_title">Mise en page</string>
+    <string name="comics_layout_full">Page entière</string>
+    <string name="comics_layout_half_top">Moitié supérieure</string>
+    <string name="comics_layout_half_left">Moitié gauche (manga)</string>
+    <string name="comics_layout_half_right">Moitié droite (manga)</string>
+    <string name="comics_error_open">Impossible d\'ouvrir ce fichier</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Scanner un dossier bibliothèque</string>
+    <string name="comics_scanning_title">Analyse en cours…</string>
+    <string name="comics_scanning_found">%d BD trouvées</string>
+    <string name="comics_delete_root_msg">Retirer \"%s\" et toutes ses BD de la bibliothèque ?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d BD</item>
+        <item quantity="other">%d BD</item>
+    </plurals>
+    <string name="comics_rescan">Rescanner</string>
+    <string name="comics_clear_all">Tout effacer</string>
+    <string name="comics_clear_all_msg">Retirer toutes les BD et bibliothèques de la liste ?</string>
+    <string name="comics_rescanning_title">Nouveau scan…</string>
+    <string name="comics_toggle_view">Changer l\'affichage</string>
+</resources>

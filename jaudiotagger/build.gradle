@@ -1,0 +1,36 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdk 36
+    namespace = "org.jaudiotagger"
+
+    defaultConfig {
+        minSdk 24
+        versionCode 1
+        versionName "2.2.6"
+    }
+
+    compileOptions {
+        encoding = 'UTF-8'
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    // Supprimer les warnings de style de code (ne pas bloquer le build)
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs << '-Xlint:-deprecation'
+        options.compilerArgs << '-Xlint:-unchecked'
+        options.compilerArgs << '-Xlint:-dep-ann'
+    }
+
+    lint {
+        disable 'OldTargetApi', 'ExpiredTargetSdkVersion'
+        abortOnError = false
+    }
+}
+
+dependencies {
+    // Pas de dépendances externes nécessaires
+}

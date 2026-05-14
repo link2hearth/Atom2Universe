@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atom2Universe</string>
+    <string name="hybrid_program_selection_title">Seleziona strumenti SF2</string>
+    <string name="hybrid_program_selection_desc">Seleziona quali strumenti devono usare il tuo SoundFont. Gli strumenti non selezionati useranno Sonivox (suoni GM integrati).</string>
+    <string name="hybrid_drums_channel_9">Percussioni (Canale 10)</string>
+    <string name="hybrid_drums_desc">Kit di batteria e strumenti a percussione</string>
+    <string name="hybrid_select_all">Seleziona tutto</string>
+    <string name="hybrid_select_none">Deseleziona tutto</string>
+    <string name="hybrid_selection_summary">%1$d strumenti usano SF2%2$s</string>
+    <string name="hybrid_selection_summary_format">%1$d strumenti usano SF2%2$s</string>
+    <string name="expand">Espandi</string>
+    <string name="widget_description">Widget di controllo audio per Musica, Radio e MIDI</string>
+    <string name="widget_no_track">Nessuna riproduzione</string>
+    <string name="widget_tap_to_play">Tocca per riprendere</string>
+    <string name="widget_album_art">Copertina album</string>
+    <string name="widget_play_pause">Riproduci / Pausa</string>
+    <string name="widget_next">Successivo</string>
+    <string name="widget_previous">Precedente</string>
+    <string name="play">Riproduci</string>
+    <string name="stop">Stop</string>
+    <string name="settings">Impostazioni</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annulla</string>
+    <string name="confirm">Conferma</string>
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">Annulla</string>
+    <string name="common_delete">Elimina</string>
+    <string name="common_continue">Continua</string>
+    <string name="common_permission_required">Permesso richiesto</string>
+    <string name="save">Salva</string>
+    <string name="delete">Elimina</string>
+    <string name="close">Chiudi</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
+    <string name="color_channel_format">Canale %d</string>
+    <string name="color_not_set">Predefinito</string>
+    <string name="apply">Applica</string>
+</resources>

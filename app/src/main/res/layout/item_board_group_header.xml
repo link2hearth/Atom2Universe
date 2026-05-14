@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="12dp"
+    android:paddingEnd="8dp"
+    android:background="#0F172A"
+    android:layout_marginTop="8dp">
+
+    <TextView
+        android:id="@+id/board_group_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#F1F5F9"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/board_group_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:textColor="#64748B"
+        android:textSize="11sp" />
+
+    <ImageButton
+        android:id="@+id/board_group_add"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_add_24"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="#64748B"
+        android:contentDescription="@null" />
+
+    <ImageButton
+        android:id="@+id/board_group_menu"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_more_vert"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="#64748B"
+        android:contentDescription="@null" />
+
+</LinearLayout>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/startup_background"
+    android:padding="24dp">
+
+    <!-- Settings button -->
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/hub_settings"
+        android:src="@drawable/ic_settings"
+        app:tint="@color/startup_text_secondary"
+        app:layout_constraintEnd_toStartOf="@id/view_toggle_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- View toggle button (grid/list) -->
+    <ImageButton
+        android:id="@+id/view_toggle_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/hub_toggle_view"
+        android:src="@drawable/ic_view_list"
+        app:tint="@color/startup_text_secondary"
+        app:layout_constraintEnd_toStartOf="@id/language_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Language button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/language_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/hub_change_language"
+        android:gravity="center"
+        android:padding="0dp"
+        android:textAllCaps="true"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/audio_hub_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/audio_hub_title"
+        android:textColor="@color/startup_text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_button" />
+
+    <!-- Playback controls card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/playback_controls_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@color/audio_hub_card_background"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/audio_hub_title">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <!-- Stop button -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/stop_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/audio_hub_stop"
+                android:src="@drawable/ic_stop"
+                app:backgroundTint="@color/audio_hub_stop_button"
+                app:fabSize="normal"
+                app:tint="@android:color/white" />
+
+            <!-- Play/Pause button -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/play_pause_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/audio_hub_play_pause"
+                android:src="@drawable/ic_play"
+                app:backgroundTint="@color/audio_hub_play_button"
+                app:fabSize="normal"
+                app:tint="@android:color/white" />
+
+            <!-- Now playing info -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/now_playing_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/audio_hub_no_playback"
+                    android:textColor="@color/startup_text_primary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/source_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/startup_text_secondary"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Sleep timer button -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/sleep_timer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/sleep_timer_title"
+                android:src="@drawable/ic_sleep_timer"
+                app:backgroundTint="@color/audio_hub_card_background"
+                app:fabSize="normal"
+                app:tint="?attr/a2uMidiAccent" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Module tiles grid (RecyclerView for drag & drop) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tiles_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playback_controls_card" />
+
+    <!-- FAB to confirm edit mode -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/confirm_edit_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/hub_confirm_edit"
+        android:src="@drawable/ic_check"
+        android:visibility="gone"
+        app:backgroundTint="#4CAF50"
+        app:fabSize="mini"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

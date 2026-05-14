@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Назад</string>
+    <string name="hub_toggle_view">Перемкнути вигляд</string>
+    <string name="hub_edit_mode">Режим редагування</string>
+    <string name="hub_confirm_edit">Завершити редагування</string>
+    <string name="startup_view_toggle">Перемкнути вигляд</string>
+    <string name="notification_channel_audio_name">Відтворення аудіо</string>
+    <string name="notification_channel_audio_description">Підтримує відтворення аудіо у фоновому режимі.</string>
+    <string name="hub_pick_color">Вибрати колір</string>
+    <string name="hub_edit_tile">Редагувати плитку</string>
+    <string name="hub_change_language">Змінити мову</string>
+    <string name="hub_language_changed">Мову змінено на %1$s</string>
+    <string name="hub_select_language">Вибрати мову</string>
+    <string name="hub_settings">Налаштування</string>
+    <string name="hub_about">Про додаток</string>
+    <string name="hub_theme">Тема додатку</string>
+</resources>

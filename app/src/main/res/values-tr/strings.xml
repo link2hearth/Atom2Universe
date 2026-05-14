@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atom2Universe</string>
+    <string name="hybrid_program_selection_title">SF2 Enstrümanları Seç</string>
+    <string name="hybrid_program_selection_desc">Hangi enstrümanların SoundFont kullanacağını seçin. Seçilmeyenler Sonivox (yerleşik GM sesleri) kullanacak.</string>
+    <string name="hybrid_drums_channel_9">Perküsyon (Kanal 10)</string>
+    <string name="hybrid_drums_desc">Davul setleri ve perküsyon enstrümanları</string>
+    <string name="hybrid_select_all">Tümünü Seç</string>
+    <string name="hybrid_select_none">Tümünü Temizle</string>
+    <string name="hybrid_selection_summary">%1$d enstrüman SF2 kullanıyor%2$s</string>
+    <string name="hybrid_selection_summary_format">%1$d enstrüman SF2 kullanıyor%2$s</string>
+    <string name="expand">Genişlet</string>
+    <string name="widget_description">Müzik, Radyo ve MIDI için ses kontrol widget\'ı</string>
+    <string name="widget_no_track">Oynatma yok</string>
+    <string name="widget_tap_to_play">Devam etmek için dokun</string>
+    <string name="widget_album_art">Albüm kapağı</string>
+    <string name="widget_play_pause">Oynat / Duraklat</string>
+    <string name="widget_next">Sonraki</string>
+    <string name="widget_previous">Önceki</string>
+    <string name="play">Oynat</string>
+    <string name="stop">Durdur</string>
+    <string name="settings">Ayarlar</string>
+    <string name="ok">Tamam</string>
+    <string name="cancel">İptal</string>
+    <string name="confirm">Onayla</string>
+    <string name="common_ok">Tamam</string>
+    <string name="common_cancel">İptal</string>
+    <string name="common_delete">Sil</string>
+    <string name="common_continue">Devam</string>
+    <string name="common_permission_required">İzin gerekli</string>
+    <string name="save">Kaydet</string>
+    <string name="delete">Sil</string>
+    <string name="close">Kapat</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="color_channel_format">Kanal %d</string>
+    <string name="color_not_set">Varsayılan</string>
+    <string name="apply">Uygula</string>
+</resources>

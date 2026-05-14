@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Kembali</string>
+    <string name="hub_toggle_view">Ganti tampilan</string>
+    <string name="hub_edit_mode">Mode edit</string>
+    <string name="hub_confirm_edit">Selesai mengedit</string>
+    <string name="startup_view_toggle">Ganti tampilan</string>
+    <string name="notification_channel_audio_name">Pemutaran audio</string>
+    <string name="notification_channel_audio_description">Menjaga pemutaran audio di latar belakang.</string>
+    <string name="hub_pick_color">Pilih warna</string>
+    <string name="hub_edit_tile">Edit ubin</string>
+    <string name="hub_change_language">Ganti bahasa</string>
+    <string name="hub_language_changed">Bahasa diubah ke %1$s</string>
+    <string name="hub_select_language">Pilih bahasa</string>
+    <string name="hub_settings">Pengaturan</string>
+    <string name="hub_about">Tentang</string>
+    <string name="hub_theme">Tema aplikasi</string>
+</resources>

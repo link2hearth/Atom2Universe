@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/startup_background">
+
+    <!-- ==================== MENU SECTION ==================== -->
+    <ScrollView
+        android:id="@+id/menu_section"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
+
+            <!-- Back button -->
+            <ImageButton
+                android:id="@+id/menu_back_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="start"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_revert"
+                android:contentDescription="@string/quiz_back" />
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/quiz_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/quiz_subtitle"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="16sp" />
+
+            <!-- Question count selector -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="@string/quiz_question_count"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/question_count_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quiz_questions_10"
+                    android:textColor="@color/startup_text_primary"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/quiz_questions_15"
+                    android:textColor="@color/startup_text_primary" />
+
+                <RadioButton
+                    android:id="@+id/radio_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/quiz_questions_20"
+                    android:textColor="@color/startup_text_primary" />
+            </RadioGroup>
+
+            <!-- Show explanations switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:background="@drawable/quiz_card_background">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quiz_show_explanations"
+                        android:textColor="@color/startup_text_primary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/quiz_show_explanations_desc"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/show_explanations_status"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quiz_option_enabled"
+                    android:textColor="@color/startup_text_secondary"
+                    android:textSize="12sp"
+                    android:gravity="end" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/show_explanations_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:checked="true"
+                    app:thumbTint="@color/quiz_switch_thumb_on"
+                    app:trackTint="@color/quiz_switch_track_on" />
+            </LinearLayout>
+
+            <!-- Think mode switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:background="@drawable/quiz_card_background">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quiz_think_mode"
+                        android:textColor="@color/startup_text_primary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/quiz_think_mode_desc"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/think_mode_status"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quiz_option_disabled"
+                    android:textColor="@color/startup_text_secondary"
+                    android:textSize="12sp"
+                    android:gravity="end" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/think_mode_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:checked="false"
+                    app:thumbTint="@color/quiz_switch_thumb_off"
+                    app:trackTint="@color/quiz_switch_track_off" />
+            </LinearLayout>
+
+            <!-- Troll mode switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:background="@drawable/quiz_card_background">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quiz_troll_mode"
+                        android:textColor="@color/startup_text_primary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/quiz_troll_mode_desc"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/troll_mode_status"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quiz_option_disabled"
+                    android:textColor="@color/startup_text_secondary"
+                    android:textSize="12sp"
+                    android:gravity="end" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/troll_mode_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:checked="false"
+                    app:thumbTint="@color/quiz_switch_thumb_off"
+                    app:trackTint="@color/quiz_switch_track_off" />
+            </LinearLayout>
+
+            <!-- Play button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/start_button"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="48dp"
+                android:text="@string/quiz_start"
+                android:textSize="20sp"
+                android:textColor="@color/startup_button_text"
+                app:backgroundTint="@color/startup_button_background" />
+
+            <!-- Challenge buttons row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- Challenge Express button (15 questions) -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginEnd="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/challenge_express_button"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="120dp"
+                        android:layout_height="50dp"
+                        android:text="@string/quiz_challenge_express"
+                        android:textSize="14sp"
+                        android:textColor="@color/startup_text_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/quiz_challenge_express_desc"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <!-- Challenge Full button (50 questions) -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/challenge_button"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="120dp"
+                        android:layout_height="50dp"
+                        android:text="@string/quiz_challenge"
+                        android:textSize="14sp"
+                        android:textColor="@color/startup_text_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/quiz_challenge_desc"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ==================== QUESTION SECTION ==================== -->
+    <LinearLayout
+        android:id="@+id/question_section"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="@color/quiz_header_background">
+
+            <ImageButton
+                android:id="@+id/question_back_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_revert"
+                android:contentDescription="@string/quiz_back" />
+
+            <!-- Question counter (left-center) -->
+            <TextView
+                android:id="@+id/question_counter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Question 1/10"
+                android:textColor="@color/startup_button_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Category (right) -->
+            <TextView
+                android:id="@+id/category_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Scrollable content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Question text -->
+                <TextView
+                    android:id="@+id/question_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Question text here"
+                    android:textColor="@color/startup_text_primary"
+                    android:textSize="20sp"
+                    android:lineSpacingMultiplier="1.3" />
+
+                <!-- Show answers button (for think mode) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/show_answers_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_gravity="center"
+                    android:text="@string/quiz_show_answers"
+                    android:textColor="@color/startup_text_primary"
+                    android:visibility="gone" />
+
+                <!-- Answer buttons container (dynamically populated) -->
+                <LinearLayout
+                    android:id="@+id/answers_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical" />
+
+                <!-- Feedback section (shown after validation) -->
+                <LinearLayout
+                    android:id="@+id/feedback_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/feedback_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/feedback_explanation_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/quiz_explanation"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/feedback_explanation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/startup_text_primary"
+                        android:textSize="14sp"
+                        android:lineSpacingMultiplier="1.2" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Bottom buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/validate_button"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="@string/quiz_validate"
+                android:textColor="@color/startup_button_text"
+                android:enabled="false"
+                app:backgroundTint="@color/startup_button_background" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/next_button"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="@string/quiz_next"
+                android:textColor="@color/startup_button_text"
+                android:visibility="gone"
+                app:backgroundTint="@color/startup_button_background" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ==================== RESULT SECTION ==================== -->
+    <ScrollView
+        android:id="@+id/result_section"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/quiz_result_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <!-- Score -->
+            <TextView
+                android:id="@+id/result_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="15/20"
+                android:textColor="@color/startup_button_background"
+                android:textSize="64sp"
+                android:textStyle="bold" />
+
+            <!-- Percentage -->
+            <TextView
+                android:id="@+id/result_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="75%"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="24sp" />
+
+            <!-- Mistakes section -->
+            <TextView
+                android:id="@+id/mistakes_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/quiz_mistakes_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/mistakes_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical" />
+
+            <!-- No mistakes message -->
+            <TextView
+                android:id="@+id/no_mistakes_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/quiz_no_mistakes"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <!-- Action buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/play_again_button"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/quiz_play_again"
+                    android:textColor="@color/startup_button_text"
+                    app:backgroundTint="@color/startup_button_background" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/back_to_menu_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/quiz_back_to_menu"
+                    android:textColor="@color/startup_text_primary" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ==================== CHALLENGE RESULT SECTION ==================== -->
+    <ScrollView
+        android:id="@+id/challenge_result_section"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/quiz_challenge_result_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <!-- Score -->
+            <TextView
+                android:id="@+id/challenge_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="25 points"
+                android:textColor="@color/startup_button_background"
+                android:textSize="56sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/challenge_score_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="sur 50 possibles"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="18sp" />
+
+            <!-- Stats breakdown -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- Correct answers -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/challenge_correct_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="30"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quiz_challenge_points_plus"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Wrong answers -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/challenge_wrong_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="15"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quiz_challenge_points_zero"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Troll answers -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/challenge_troll_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quiz_challenge_points_minus"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Review title -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/quiz_challenge_review_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Questions review container -->
+            <LinearLayout
+                android:id="@+id/challenge_review_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical" />
+
+            <!-- Action buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/challenge_play_again_button"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/quiz_play_again"
+                    android:textColor="@color/startup_button_text"
+                    app:backgroundTint="@color/startup_button_background" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/challenge_back_to_menu_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/quiz_back_to_menu"
+                    android:textColor="@color/startup_text_primary" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

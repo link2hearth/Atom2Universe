@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atom2Universe</string>
+    <string name="hybrid_program_selection_title">Выбор SF2-инструментов</string>
+    <string name="hybrid_program_selection_desc">Выберите, какие инструменты должны использовать ваш SoundFont. Невыбранные инструменты будут использовать Sonivox (встроенные звуки GM).</string>
+    <string name="hybrid_drums_channel_9">Перкуссия (канал 10)</string>
+    <string name="hybrid_drums_desc">Ударные наборы и перкуссионные инструменты</string>
+    <string name="hybrid_select_all">Выбрать все</string>
+    <string name="hybrid_select_none">Очистить все</string>
+    <string name="hybrid_selection_summary">%1$d инструментов используют SF2%2$s</string>
+    <string name="hybrid_selection_summary_format">%1$d инструментов используют SF2%2$s</string>
+    <string name="expand">Развернуть</string>
+    <string name="widget_description">Виджет управления аудио для Музыки, Радио и MIDI</string>
+    <string name="widget_no_track">Нет воспроизведения</string>
+    <string name="widget_tap_to_play">Нажмите для продолжения</string>
+    <string name="widget_album_art">Обложка альбома</string>
+    <string name="widget_play_pause">Воспроизведение / Пауза</string>
+    <string name="widget_next">Следующий</string>
+    <string name="widget_previous">Предыдущий</string>
+    <string name="play">Воспроизвести</string>
+    <string name="stop">Стоп</string>
+    <string name="settings">Настройки</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="common_ok">ОК</string>
+    <string name="common_cancel">Отмена</string>
+    <string name="common_delete">Удалить</string>
+    <string name="common_continue">Продолжить</string>
+    <string name="common_permission_required">Требуется разрешение</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="close">Закрыть</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="color_channel_format">Канал %d</string>
+    <string name="color_not_set">По умолчанию</string>
+    <string name="apply">Применить</string>
+</resources>

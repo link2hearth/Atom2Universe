@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="music_player_title">Musica</string>
+    <string name="music_track_count">%1$d brani</string>
+    <string name="music_empty_library">Nessun file audio trovato</string>
+    <string name="music_now_playing">In riproduzione</string>
+    <string name="music_play_pause">Riproduci/Pausa</string>
+    <string name="music_previous">Precedente</string>
+    <string name="music_next">Successivo</string>
+    <string name="music_shuffle">Casuale</string>
+    <string name="music_play_all">Riproduci tutto</string>
+    <string name="music_all_tracks">Tutti i brani</string>
+    <string name="music_repeat">Ripeti</string>
+    <string name="music_permission_rationale">L’accesso ai file audio è necessario per mostrare la tua libreria musicale.</string>
+    <string name="music_grant_permission">Consenti</string>
+    <string name="music_permission_denied">Permesso negato. Impossibile accedere alla libreria musicale.</string>
+    <string name="music_artists">Artisti</string>
+    <string name="music_albums">Album</string>
+    <string name="music_tracks">Brani</string>
+    <string name="music_artist">Artista</string>
+    <string name="music_album">Album</string>
+    <string name="music_album_art">Copertina album</string>
+    <string name="music_open">Apri</string>
+    <string name="music_stats_format">%1$d artisti, %2$d album, %3$d brani</string>
+    <string name="music_albums_count">%1$d album</string>
+    <string name="music_tracks_in_album">%1$d brani</string>
+    <plurals name="music_artist_count">
+        <item quantity="one">%d artista</item>
+        <item quantity="many">%d artisti</item>
+        <item quantity="other">%d artisti</item>
+    </plurals>
+    <plurals name="music_album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="many">%d album</item>
+        <item quantity="other">%d album</item>
+    </plurals>
+    <plurals name="music_track_count_plural">
+        <item quantity="one">%d brano</item>
+        <item quantity="many">%d brani</item>
+        <item quantity="other">%d brani</item>
+    </plurals>
+    <string name="music_refresh">Aggiorna</string>
+    <string name="music_refresh_fast">Veloce (MediaStore)</string>
+    <string name="music_refresh_deep">Profonda (+ tag ID3)</string>
+    <string name="music_refresh_complete">Completa (+ statistiche POPM)</string>
+    <string name="music_add_folder">Aggiungi cartella</string>
+    <string name="music_shuffle_all">Riproduci tutto in casuale</string>
+    <string name="music_settings">Impostazioni</string>
+    <string name="music_scanning">Scansione…</string>
+    <string name="music_loading_stats">Caricamento statistiche…</string>
+    <string name="music_add_to_favorites">Aggiungi ai preferiti</string>
+    <string name="music_remove_from_favorites">Rimuovi dai preferiti</string>
+    <string name="music_added_to_favorites">Aggiunto ai preferiti</string>
+    <string name="music_removed_from_favorites">Rimosso dai preferiti</string>
+    <string name="music_play_next">Riproduci dopo</string>
+    <string name="music_add_to_queue">Aggiungi alla coda</string>
+    <string name="music_will_play_next">Verrà riprodotto dopo</string>
+    <string name="music_added_to_queue">Aggiunto alla coda</string>
+    <string name="music_track_info">Informazioni</string>
+    <string name="music_info_title">Titolo: %1$s</string>
+    <string name="music_info_artist">Artista: %1$s</string>
+    <string name="music_info_album">Album: %1$s</string>
+    <string name="music_info_duration">Durata: %1$s</string>
+    <string name="music_info_year">Anno: %1$d</string>
+    <string name="music_info_track_number">Traccia: %1$d</string>
+    <string name="music_info_section_basic">Informazioni di base</string>
+    <string name="music_info_section_technical">Informazioni tecniche</string>
+    <string name="music_info_section_stats">Statistiche</string>
+    <string name="music_info_section_file">File</string>
+    <string name="music_info_format">Formato: %1$s</string>
+    <string name="music_info_bitrate">Bitrate: %1$s</string>
+    <string name="music_info_sample_rate">Frequenza di campionamento: %1$s</string>
+    <string name="music_info_channels">Canali: %1$s</string>
+    <string name="music_info_channels_mono">Mono</string>
+    <string name="music_info_channels_stereo">Stereo</string>
+    <string name="music_info_channels_format">%1$d canali</string>
+    <string name="music_info_file_size">Dimensione: %1$s</string>
+    <string name="music_info_file_path">Percorso: %1$s</string>
+    <string name="music_info_date_modified">Modificato: %1$s</string>
+    <string name="music_info_date_added">Aggiunto: %1$s</string>
+    <string name="music_info_play_count">Conteggio riproduzioni: %1$d</string>
+    <string name="music_info_rating">Valutazione:</string>
+    <string name="music_rating_star_1">1 stella</string>
+    <string name="music_rating_star_2">2 stelle</string>
+    <string name="music_rating_star_3">3 stelle</string>
+    <string name="music_rating_star_4">4 stelle</string>
+    <string name="music_rating_star_5">5 stelle</string>
+    <string name="music_rating_updated">Valutazione aggiornata</string>
+    <string name="music_manage_folders">Gestisci cartelle</string>
+    <string name="music_folder_added">Cartella aggiunta: %1$s</string>
+    <string name="music_no_custom_folders">Nessuna cartella personalizzata</string>
+    <string name="music_remove_selected">Rimuovi selezionate</string>
+    <string name="music_add_new">Aggiungi nuova</string>
+    <string name="music_cancel">Annulla</string>
+    <plurals name="music_folders_removed">
+        <item quantity="one">%d cartella rimossa</item>
+        <item quantity="many">%d cartelle rimosse</item>
+        <item quantity="other">%d cartelle rimosse</item>
+    </plurals>
+    <plurals name="music_new_tracks_detected">
+        <item quantity="one">%d nuovo brano rilevato</item>
+        <item quantity="many">%d nuovi brani rilevati</item>
+        <item quantity="other">%d nuovi brani rilevati</item>
+    </plurals>
+    <string name="music_edit_tags">Modifica tag</string>
+    <string name="music_tag_title">Titolo</string>
+    <string name="music_tag_artist">Artista</string>
+    <string name="music_tag_album_artist">Artista album</string>
+    <string name="music_tag_album">Album</string>
+    <string name="music_tag_year">Anno</string>
+    <string name="music_tag_track_number">Traccia n.</string>
+    <string name="music_tag_disc_number">Disco n.</string>
+    <string name="music_tags_saved">Tag salvati</string>
+    <string name="music_tags_save_error">Errore nel salvataggio dei tag</string>
+    <string name="music_tags_pending">Il brano è in riproduzione. Le modifiche saranno applicate quando la riproduzione si interromperà.</string>
+    <string name="music_tags_pending_short">in sospeso</string>
+    <string name="music_tags_read_error">Impossibile leggere i tag</string>
+    <string name="music_tags_save">Salva</string>
+    <string name="music_play_album">Riproduci album</string>
+    <string name="music_shuffle_album">Riproduci album in casuale</string>
+    <string name="music_edit_album_tags">Modifica tag album</string>
+    <string name="music_album_tags_saved">Tag aggiornati su %1$d/%2$d brani</string>
+    <string name="music_edit_folder_tags">Modifica tag: %1$s</string>
+    <string name="music_folder_tags_saved">Tag aggiornati su %1$d/%2$d brani</string>
+    <string name="music_album_with_year">%1$s • %2$d</string>
+    <string name="music_album_track_count_with_year">%1$s • %2$d</string>
+    <string name="music_permission_required">Permesso richiesto</string>
+    <string name="music_write_permission_message">Per modificare i tag MP3, l’app ha bisogno del permesso di accesso a tutti i file. Abilitalo nelle impostazioni.</string>
+    <string name="music_open_settings">Apri impostazioni</string>
+    <string name="music_auto_track_number_title">Numeri di traccia rilevati</string>
+    <string name="music_auto_track_number_message">Questo album contiene %1$d tracce senza numero, ma i nomi dei file iniziano con numeri.
+
+Vuoi scrivere automaticamente questi numeri nei tag ID3?</string>
+    <string name="music_auto_track_number_apply">Applica</string>
+    <string name="music_auto_track_number_later">Più tardi</string>
+    <string name="music_auto_track_number_never">Non chiedere più</string>
+    <string name="music_auto_track_number_success">Numeri di traccia aggiunti a %1$d/%2$d brani</string>
+    <string name="music_auto_track_number_error">Errore nella scrittura dei tag</string>
+    <string name="music_folder_sort_by_name">Nome</string>
+    <string name="music_folder_sort_by_track">Traccia #</string>
+    <string name="music_sort_albums">Ordina album</string>
+    <string name="music_sort_name_asc">Nome (A-Z)</string>
+    <string name="music_sort_name_desc">Nome (Z-A)</string>
+    <string name="music_sort_year_asc">Anno (vecchio → nuovo)</string>
+    <string name="music_sort_year_desc">Anno (nuovo → vecchio)</string>
+    <string name="music_sort_applied">Ordinamento applicato</string>
+    <string name="music_settings_section_display">Visualizzazione</string>
+    <string name="music_settings_section_sorting">Ordinamento</string>
+    <string name="music_settings_show_play_count">Mostra conteggio riproduzioni</string>
+    <string name="music_settings_show_play_count_desc">Mostra il contatore accanto al pulsante dei preferiti</string>
+    <string name="music_settings_suggest_track_numbers">Suggerisci numeri di traccia</string>
+    <string name="music_settings_suggest_track_numbers_desc">Propone di scrivere i numeri di traccia quando rilevati nei nomi dei file</string>
+    <string name="music_settings_enabled">Attivato</string>
+    <string name="music_settings_disabled">Disattivato</string>
+    <string name="music_settings_write_tags_to_files">Scrivi nei tag ID3/POPM</string>
+    <string name="music_settings_write_tags_to_files_desc">Salva metadati e statistiche nei file audio. Se disattivato, i dati vengono memorizzati solo localmente e su Google Drive</string>
+    <string name="music_settings_section_advanced">Avanzate</string>
+    <string name="music_settings_full_scan">Scansione completa tag</string>
+    <string name="music_settings_full_scan_desc">Importa statistiche POPM dai file MP3</string>
+    <string name="music_settings_full_scan_confirm">Questa operazione leggerà i tag POPM di tutti i tuoi file MP3 per importare conteggi di riproduzione e valutazioni.
+
+Potrebbe richiedere diversi minuti in base alla dimensione della libreria.</string>
+    <string name="music_settings_start_scan">Avvia</string>
+    <string name="music_settings_tag_migration">Aggiorna tag ID3</string>
+    <string name="music_settings_tag_migration_desc">Converti i vecchi tag ID3v2.2 in ID3v2.3</string>
+    <string name="music_settings_sync_pending_popm">Applica tag in sospeso</string>
+    <string name="music_settings_sync_pending_popm_desc">Scrivi conteggi di riproduzione e valutazioni nei file MP3</string>
+    <string name="music_settings_sync_pending_popm_confirm">Questo scriverà tutti gli aggiornamenti in sospeso di conteggio riproduzioni e valutazioni nei file MP3.
+
+%1$d file da aggiornare.</string>
+    <string name="music_settings_sync_pending_popm_none">Nessun aggiornamento in sospeso.
+
+Tutti i conteggi di riproduzione e le valutazioni sono già sincronizzati nei file MP3.</string>
+    <string name="music_settings_sync_pending_popm_start">Sincronizza ora</string>
+    <string name="music_settings_sync_pending_popm_progress">Sincronizzazione tag…</string>
+    <string name="music_settings_sync_pending_popm_complete">Tag sincronizzati correttamente</string>
+    <string name="music_settings_tag_migration_title">Migrazione tag ID3</string>
+    <string name="music_settings_tag_migration_confirm">Questa operazione analizzerà la tua libreria e convertirà i tag obsoleti ID3v2.2 in ID3v2.3.
+
+Questo risolverà problemi di compatibilità con i metadati POPM.
+
+I progressi saranno mostrati artista per artista.</string>
+    <string name="music_settings_tag_migration_analyzing">Analisi della libreria…</string>
+    <string name="music_settings_tag_migration_analysis_result">Risultato analisi:
+
+• %1$d file con ID3v2.2 (da migrare)
+• %2$d file con ID3v2.3
+• %3$d file con ID3v2.4
+
+Vuoi avviare la migrazione?</string>
+    <string name="music_settings_tag_migration_no_migration_needed">Tutti i tuoi file usano già un formato di tag compatibile (ID3v2.3 o superiore).
+
+Nessuna migrazione necessaria.</string>
+    <string name="music_settings_tag_migration_progress_title">Migrazione in corso</string>
+    <string name="music_settings_tag_migration_progress_artist">Artista: %1$s</string>
+    <string name="music_settings_tag_migration_progress_file">File: %1$s</string>
+    <string name="music_settings_tag_migration_progress_count">%1$d / %2$d file</string>
+    <string name="music_settings_tag_migration_complete">Migrazione completata!
+
+• %1$d file aggiornati
+• %2$d errori</string>
+    <string name="music_settings_tag_migration_start">Avvia migrazione</string>
+    <string name="music_settings_section_cloud_sync">Sincronizzazione cloud</string>
+    <string name="music_settings_google_account">Account Google</string>
+    <string name="music_settings_not_signed_in">Non connesso</string>
+    <string name="music_settings_sign_in">Accedi</string>
+    <string name="music_settings_sign_out">Esci</string>
+    <string name="music_settings_enable_sync">Abilita sincronizzazione cloud</string>
+    <string name="music_settings_sync_description">Sincronizza conteggi di riproduzione, preferiti e testi tra dispositivi</string>
+    <string name="music_settings_last_sync_never">Mai sincronizzato</string>
+    <string name="music_settings_last_sync_format">Ultima sincronizzazione: %1$s</string>
+    <string name="music_settings_sync_now">Sincronizza ora</string>
+    <string name="music_settings_sync_in_progress">Sincronizzazione…</string>
+    <string name="music_settings_sync_success">Sincronizzazione completata con successo</string>
+    <string name="music_settings_sync_error">Sincronizzazione fallita: %1$s</string>
+    <string name="music_settings_reset_play_counts">Reimposta conteggi di riproduzione</string>
+    <string name="music_settings_reset_play_counts_title">Reimpostare i conteggi di riproduzione?</string>
+    <string name="music_settings_reset_play_counts_message">Questo farà:
+
+• Elimina tutti i file delta dal cloud
+• Reimposta i conteggi alle riproduzioni locali
+• Rimuove le riproduzioni sincronizzate da altri dispositivi
+
+Esegui questa operazione su TUTTI i dispositivi interessati, iniziando dal dispositivo principale.
+
+Questa azione non può essere annullata.</string>
+    <string name="music_settings_reset_play_counts_confirm">Reimposta</string>
+    <string name="music_settings_reset_in_progress">Reimpostazione…</string>
+    <string name="music_settings_reset_success">Reimpostazione completata: %1$d file cloud eliminati, %2$d conteggi azzerati</string>
+    <string name="music_settings_reset_error">Reimpostazione fallita: %1$s</string>
+    <string name="music_settings_delete_cloud_data">Elimina dati cloud</string>
+    <string name="music_settings_delete_cloud_data_title">Eliminare tutti i dati cloud?</string>
+    <string name="music_settings_delete_cloud_data_warning">Questo eliminerà definitivamente TUTTI i tuoi dati A2U da Google Drive:
+
+• Conteggi di riproduzione
+• Preferiti
+• Playlist
+• Testi
+• Immagini artisti
+• Tutti i dati di backup
+
+I tuoi dati locali su questo dispositivo NON saranno influenzati.
+
+Questa azione non può essere annullata.</string>
+    <string name="music_settings_delete_cloud_data_continue">Continua</string>
+    <string name="music_settings_delete_cloud_data_confirm_title">Conferma eliminazione</string>
+    <string name="music_settings_delete_cloud_data_confirm_message">Per confermare, digita "%1$s" qui sotto:</string>
+    <string name="music_settings_delete_cloud_data_confirm_hint">Digita "%1$s" per confermare</string>
+    <string name="music_settings_delete_cloud_data_confirm_word">ELIMINA</string>
+    <string name="music_settings_delete_cloud_data_delete">Elimina tutto</string>
+    <string name="music_settings_delete_cloud_data_in_progress">Eliminazione…</string>
+    <string name="music_settings_delete_cloud_data_success">Eliminati %1$d file dal cloud</string>
+    <string name="music_settings_delete_cloud_data_error">Errore: %1$s</string>
+    <string name="music_settings_section_backup">Backup</string>
+    <string name="music_settings_primary_device">Dispositivo principale</string>
+    <string name="music_settings_primary_device_desc">Carica backup completo durante la sincronizzazione giornaliera</string>
+    <string name="music_settings_last_backup_never">Nessun backup trovato</string>
+    <string name="music_settings_last_backup_format">Backup: %1$s del %2$s</string>
+    <string name="music_settings_restore_backup">Ripristina dal cloud</string>
+    <string name="music_settings_restore_in_progress">Ripristino…</string>
+    <string name="music_settings_restore_success">Ripristino completato</string>
+    <string name="music_settings_restore_error">Ripristino fallito: %1$s</string>
+    <string name="music_settings_backup_now">Backup nel cloud</string>
+    <string name="music_settings_backup_in_progress">Backup in corso…</string>
+    <string name="music_settings_backup_success">Backup completato</string>
+    <string name="music_settings_backup_error">Backup fallito: %1$s</string>
+    <string name="music_settings_no_backup_found">Nessun backup trovato nel cloud</string>
+    <string name="music_settings_primary_device_set">Questo dispositivo è ora quello principale</string>
+    <string name="music_settings_primary_device_unset">Stato dispositivo principale rimosso</string>
+    <string name="music_backup_found_title">Backup trovato!</string>
+    <string name="music_backup_found_message">È stato trovato un backup sul tuo account Google:
+
+• %1$d conteggi di riproduzione
+• %2$d preferiti (brani + album)
+• %3$d playlist
+• %4$d immagini artisti
+• %5$d testi
+
+Creato %6$s
+da "%7$s"
+
+Vuoi ripristinarlo?</string>
+    <string name="music_backup_restore">Ripristina</string>
+    <string name="music_backup_ignore">Ignora</string>
+    <string name="music_restore_summary_title">Ripristino completato</string>
+    <string name="music_restore_summary_message">Ripristinati:
+• %1$d conteggi di riproduzione
+• %2$d preferiti brani
+• %3$d preferiti album
+• %4$d personalizzazioni artisti
+• %5$d playlist
+• %6$d immagini artisti
+• %7$d testi</string>
+    <string name="music_artist_display_mode">Modalità di visualizzazione</string>
+    <string name="music_display_mode_list">Modalità elenco</string>
+    <string name="music_display_mode_compact">Modalità compatta</string>
+    <string name="music_display_mode_tiles">Modalità riquadri</string>
+    <string name="music_root_visibility_title">Mostra/nascondi riquadri</string>
+    <string name="music_browse_artists">Artisti</string>
+    <string name="music_browse_artists_desc">Sfoglia per artista</string>
+    <string name="music_browse_playlists">Playlist</string>
+    <string name="music_browse_playlists_desc">Le tue playlist</string>
+    <string name="music_playlist_favorites">Preferiti</string>
+    <string name="music_playlist_all_library">Tutta la libreria</string>
+    <string name="music_playlist_top_played">Più ascoltati</string>
+    <string name="music_playlist_discovery">Scoperta</string>
+    <string name="music_shuffle_discovery">Riproduzione scoperta</string>
+    <string name="music_discovery_started">Riproduzione di brani con %1$d ascolti</string>
+    <string name="music_no_tracks">Nessun brano disponibile</string>
+    <string name="music_play_count">%1$d ascolti</string>
+    <string name="music_create_playlist">Crea playlist</string>
+    <string name="music_delete_playlist">Elimina</string>
+    <string name="music_rename_playlist">Rinomina</string>
+    <string name="music_add_to_playlist">Aggiungi alla playlist</string>
+    <string name="music_remove_from_playlist">Rimuovi dalla playlist</string>
+    <string name="music_playlist_created">Playlist creata</string>
+    <string name="music_playlist_deleted">Playlist eliminata</string>
+    <string name="music_track_added_to_playlist">Aggiunto a %1$s</string>
+    <string name="music_track_removed_from_playlist">Rimosso dalla playlist</string>
+    <string name="music_enter_playlist_name">Nome playlist</string>
+    <string name="music_add_tracks">Aggiungi brani</string>
+    <string name="music_playlist_empty">Questa playlist è vuota</string>
+    <string name="music_select_playlist">Seleziona playlist</string>
+    <string name="music_no_playlists">Nessuna playlist</string>
+    <string name="music_create_playlist_first">Crea prima una playlist</string>
+    <string name="music_confirm_delete_playlist">Vuoi eliminare la playlist "%1$s"?</string>
+    <string name="music_track_already_in_playlist">Questo brano è già nella playlist</string>
+    <string name="music_save_queue_as_playlist">Salva coda come playlist</string>
+    <string name="music_queue_saved_as_playlist">Coda salvata come "%1$s"</string>
+    <string name="music_edit_playlist_mode">Modalità modifica playlist</string>
+    <string name="music_edit_mode_enabled">Modalità modifica: le modifiche si sincronizzano con la playlist</string>
+    <string name="music_edit_mode_disabled">Modalità modifica disattivata</string>
+    <string name="music_add_cover">Aggiungi copertina</string>
+    <string name="music_replace_cover">Sostituisci copertina</string>
+    <string name="music_cover_from_gallery">Da galleria</string>
+    <string name="music_cover_from_web">Cerca sul web</string>
+    <string name="music_search_cover">Cerca copertina</string>
+    <string name="music_cover_preview">Anteprima copertina</string>
+    <string name="music_cover_apply">Applica</string>
+    <string name="music_cover_added">Copertina aggiunta a %1$d/%2$d brani</string>
+    <string name="music_cover_error">Errore nell’elaborazione dell’immagine</string>
+    <string name="music_downloading_cover">Download immagine…</string>
+    <string name="music_download_error">Errore di download</string>
+    <string name="music_viz_bars">Barre</string>
+    <string name="music_viz_wave">Onda</string>
+    <string name="music_viz_circle">Cerchio</string>
+    <string name="music_viz_mirror">Specchio</string>
+    <string name="music_viz_spectrum">Spettro</string>
+    <string name="music_viz_particles">Particelle</string>
+    <string name="music_viz_particles_mono">Particelle mono</string>
+    <string name="music_viz_kaleidoscope">Kaleidoscope</string>
+    <string name="music_viz_boids">Boids</string>
+    <string name="music_viz_julia">Julia</string>
+    <string name="music_viz_mandelbrot">Mandelbrot</string>
+    <string name="music_viz_radial">Radiale</string>
+    <string name="music_viz_blob">Blob</string>
+    <string name="music_viz_fire">Fuoco</string>
+    <string name="music_viz_delaunay">Mesh Delaunay</string>
+    <string name="music_viz_delaunay_grayscale">Delaunay Scala di grigi</string>
+    <string name="music_viz_voronoi">Voronoi</string>
+    <string name="music_viz_voronoi_grayscale">Voronoi Scala di grigi</string>
+    <string name="music_reorder_visuals">Riordina visualizzazioni</string>
+    <string name="music_reorder_reset">Ripristina</string>
+    <string name="music_viz_drag_handle">Trascina per riordinare</string>
+    <string name="music_toggle_album_art">Mostra/nascondi copertina</string>
+    <string name="music_fullscreen">Entra in schermo intero</string>
+    <string name="music_exit_fullscreen">Esci da schermo intero</string>
+    <string name="music_browse_album_artists">Artisti album</string>
+    <string name="music_browse_album_artists_desc">Sfoglia per artista dell’album</string>
+    <string name="music_browse_all_albums">Tutti gli album</string>
+    <string name="music_browse_all_albums_desc">Sfoglia tutti gli album</string>
+    <string name="music_browse_search">Cerca</string>
+    <string name="music_browse_search_desc">Cerca brani, artisti, album</string>
+    <string name="music_browse_folders">Cartelle</string>
+    <plurals name="music_folder_count">
+        <item quantity="one">%d cartella</item>
+        <item quantity="many">%d cartelle</item>
+        <item quantity="other">%d cartelle</item>
+    </plurals>
+    <plurals name="music_subfolder_count">
+        <item quantity="one">%d sottocartella</item>
+        <item quantity="many">%d sottocartelle</item>
+        <item quantity="other">%d sottocartelle</item>
+    </plurals>
+    <string name="music_search_hint">Cerca…</string>
+    <string name="music_search_no_results">Nessun risultato</string>
+    <string name="music_search_results">%1$d risultato/i</string>
+    <string name="music_search_section_tracks">Brani</string>
+    <string name="music_search_section_albums">Album</string>
+    <string name="music_search_section_artists">Artisti</string>
+    <string name="music_queue">Coda</string>
+    <string name="music_queue_count">(%1$d brani)</string>
+    <string name="music_play_count_format">%1$d ascolti</string>
+    <string name="music_play_count_single">1 ascolto</string>
+    <string name="music_drag_to_reorder">Trascina per riordinare</string>
+    <string name="music_track_removed_from_queue">Brano rimosso dalla coda</string>
+    <string name="music_track_removed_from_queue_and_playlist">Brano rimosso dalla coda e dalla playlist</string>
+    <string name="music_add_to_queue_and_playlist">Aggiungi alla coda e alla playlist</string>
+    <string name="music_track_added_to_queue_and_playlist">Brano aggiunto alla coda e alla playlist</string>
+    <string name="music_track_will_play_next_and_added_to_playlist">Riprodotto dopo (aggiunto alla playlist)</string>
+    <string name="music_browse_favorite_artists">Artisti preferiti</string>
+    <string name="music_change_artist_icon">Cambia icona</string>
+    <string name="music_change_artist_color">Cambia colore</string>
+    <string name="music_add_artist_to_favorites">Aggiungi ai preferiti</string>
+    <string name="music_remove_artist_from_favorites">Rimuovi dai preferiti</string>
+    <string name="music_play_all_artist">Riproduci tutto</string>
+    <string name="music_shuffle_all_artist">Riproduci tutto in casuale</string>
+    <string name="music_artist_added_to_favorites">Artista aggiunto ai preferiti</string>
+    <string name="music_artist_removed_from_favorites">Artista rimosso dai preferiti</string>
+    <string name="music_icon_from_gallery">Da galleria</string>
+    <string name="music_icon_from_web">Cerca sul web</string>
+    <string name="music_remove_custom_icon">Rimuovi icona</string>
+    <string name="music_search_artist_icon">Cerca immagine artista</string>
+    <string name="music_artist_icon_updated">Icona artista aggiornata</string>
+    <string name="music_artist_icon_removed">Icona artista rimossa</string>
+    <string name="music_artist_color_updated">Colore artista aggiornato</string>
+    <string name="music_browse_favorite_albums">Album preferiti</string>
+    <string name="music_add_album_to_favorites">Aggiungi ai preferiti</string>
+    <string name="music_remove_album_from_favorites">Rimuovi dai preferiti</string>
+    <string name="music_album_added_to_favorites">Album aggiunto ai preferiti</string>
+    <string name="music_album_removed_from_favorites">Album rimosso dai preferiti</string>
+    <string name="music_unknown_title">Sconosciuto</string>
+    <string name="music_unknown_artist">Artista sconosciuto</string>
+    <string name="music_unknown_album">Album sconosciuto</string>
+    <string name="music_notification_channel_name">Riproduzione musica</string>
+    <string name="music_notification_channel_desc">Controlli del player musicale</string>
+    <string name="music_action_play">Riproduci</string>
+    <string name="music_action_pause">Pausa</string>
+    <string name="music_action_stop">Stop</string>
+    <string name="music_playback_error">Errore di riproduzione: %1$s</string>
+    <string name="music_delete_file">Elimina file</string>
+    <string name="music_delete_album">Elimina album</string>
+    <string name="music_confirm_delete_track">Vuoi eliminare definitivamente "%1$s"?
+
+Questa azione non può essere annullata.</string>
+    <string name="music_confirm_delete_album">Vuoi eliminare definitivamente l’album "%1$s" e i suoi %2$d brani?
+
+Questa azione non può essere annullata.</string>
+    <string name="music_track_deleted">File eliminato</string>
+    <string name="music_album_deleted">Album eliminato (%1$d file)</string>
+    <string name="music_delete_error">Errore durante l’eliminazione</string>
+    <string name="music_delete_permission_required">Permesso richiesto per eliminare questo file</string>
+    <string name="music_album_info_format">%1$s - %2$s\n%3$s</string>
+    <string name="music_album_track_summary">%1$s, %2$s</string>
+    <string name="music_track_summary_with_year">%1$s • %2$s - %3$s</string>
+    <string name="music_track_summary_no_year">%1$s - %2$s</string>
+    <string name="music_queue_position_format">%1$02d</string>
+    <string name="music_play_count_short_format">%1$dx</string>
+    <string name="music_artist_album_track_counts">%1$s, %2$s</string>
+    <string name="music_album_track_count_with_duration">%1$s - %2$s</string>
+</resources>

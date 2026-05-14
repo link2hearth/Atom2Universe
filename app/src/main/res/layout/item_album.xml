@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="1dp"
+    app:rippleColor="?attr/a2uMidiAccent"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Icon dossier -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#E3F2FD">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_my_calendar"
+                android:importantForAccessibility="no"
+                app:tint="?attr/a2uMidiAccent" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Infos album -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:id="@+id/album_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Album Name / Sous-Album" />
+
+            <TextView
+                android:id="@+id/album_track_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="12 titres" />
+        </LinearLayout>
+
+        <!-- Flèche -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@android:drawable/ic_menu_more"
+            android:importantForAccessibility="no"
+            android:rotation="270"
+            app:tint="?android:attr/textColorSecondary" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

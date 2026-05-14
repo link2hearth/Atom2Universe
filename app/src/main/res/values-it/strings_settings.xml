@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_notification_title">Abilita notifiche</string>
+    <string name="permission_notification_message">A2U ha bisogno dell\'accesso alle notifiche per visualizzare i controlli di riproduzione nella schermata di blocco e nella barra di stato (radio, musica).\n\nSenza questa autorizzazione, la riproduzione in background funzionerà comunque, ma non potrai controllarla dall\'esterno dell\'app.</string>
+    <string name="permission_dialog_title">Permesso richiesto</string>
+    <string name="permission_dialog_message">A2U ha bisogno dell’accesso ai tuoi file audio per mostrare la libreria musicale, riprodurre i brani e sincronizzare i conteggi di riproduzione.
+
+Questo permesso è essenziale per il corretto funzionamento dell’app.</string>
+    <string name="permission_dialog_grant">Concedi accesso</string>
+    <string name="permission_dialog_later">Più tardi</string>
+    <string name="permission_rationale_message">Senza accesso ai file audio, A2U non può mostrare la tua libreria musicale né riprodurre i brani.
+
+Concedi il permesso per usare l’app.</string>
+    <string name="permission_denied_title">Permesso negato</string>
+    <string name="permission_denied_message">Puoi concedere il permesso più tardi dalle impostazioni dell’app quando entri nel player Musica o MIDI.</string>
+    <string name="sleep_timer_title">Stop tra…</string>
+    <string name="sleep_timer_hours">Ore</string>
+    <string name="sleep_timer_minutes">Minuti</string>
+    <string name="sleep_timer_not_set">Nessun timer impostato</string>
+    <string name="sleep_timer_remaining">%1$02d:%2$02d rimanenti</string>
+    <string name="sleep_timer_start">Programma stop</string>
+    <string name="sleep_timer_stop">Annulla timer</string>
+    <string name="sleep_timer_finished">Riproduzione interrotta</string>
+    <string name="eq_title">Equalizzatore</string>
+    <string name="eq_preset">Preset</string>
+    <string name="eq_apply_to">Applica a</string>
+    <string name="eq_global">Globale</string>
+    <string name="eq_track">Brano</string>
+    <string name="eq_album">Album</string>
+    <string name="eq_artist">Artista</string>
+    <string name="eq_bass_boost">Bass Boost</string>
+    <string name="eq_bass_short">Bassi</string>
+    <string name="eq_virtualizer">Virtualizer</string>
+    <string name="eq_virtual_short">3D</string>
+    <string name="eq_quick_presets">Preset rapidi</string>
+    <string name="eq_save_preset">Salva preset</string>
+    <string name="eq_delete_preset">Elimina preset</string>
+    <string name="eq_save_preset_title">Salva come preset</string>
+    <string name="eq_preset_name_hint">Nome preset</string>
+    <string name="eq_preset_saved">Preset salvato</string>
+    <string name="eq_preset_deleted">Preset eliminato</string>
+    <string name="eq_preset_name_empty">Il nome non può essere vuoto</string>
+    <string name="eq_preset_name_exists">Esiste già un preset con questo nome</string>
+    <string name="eq_cannot_delete_system">Impossibile eliminare i preset di sistema</string>
+    <string name="eq_override_track">EQ: %1$s (Brano)</string>
+    <string name="eq_override_album">EQ: %1$s (Album)</string>
+    <string name="eq_override_artist">EQ: %1$s (Artista)</string>
+    <string name="eq_override_global">EQ: %1$s</string>
+    <string name="eq_clear_override">Rimuovi override</string>
+    <string name="eq_override_cleared">Override rimosso</string>
+    <string name="eq_override_cleared_track">Override brano rimosso</string>
+    <string name="eq_override_cleared_album">Override album rimosso</string>
+    <string name="eq_override_cleared_artist">Override artista rimosso</string>
+    <string name="eq_apply_to_track">Applica EQ a questo brano</string>
+    <string name="eq_apply_to_album">Applica EQ a questo album</string>
+    <string name="eq_apply_to_artist">Applica EQ a questo artista</string>
+    <string name="eq_delete_confirm">Eliminare il preset "%1$s"?</string>
+    <string name="about_title">Informazioni</string>
+    <string name="about_version_format">Versione %1$s (build %2$d)</string>
+    <string name="about_version_unknown">Versione sconosciuta</string>
+    <string name="about_description_title">Informazioni su A2U</string>
+    <string name="about_description">A2U è un hub audio completo per Android che combina più funzioni in un\'unica app:
+
+• Player musicale con gestione libreria, playlist, preferiti, modifica tag ID3 e sincronizzazione cloud
+• Player MIDI con sintesi SoundFont, modalità esercizio con note che cadono e supporto a tastiere esterne
+• Web Radio con stazioni e preferiti
+• Editor audio per tagli e modifiche di base
+• Creatore/editor SoundFont SF2 completo</string>
+    <string name="about_credits_title">Ringraziamenti</string>
+    <string name="about_credits_subtitle">A2U utilizza le seguenti librerie open source:</string>
+    <string name="about_credit_mididriver_name">MidiDriver</string>
+    <string name="about_credit_mididriver_desc">Di Bill Farmer — Wrapper driver MIDI per Sonivox EAS su Android. Licenza Apache 2.0.</string>
+    <string name="about_credit_sonivox_name">Sonivox EAS</string>
+    <string name="about_credit_sonivox_desc">Di Sonic Network Inc. — Motore di sintesi audio integrato per la riproduzione MIDI. Licenza Apache 2.0.</string>
+    <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
+    <string name="about_credit_jaudiotagger_desc">Di Raphaël Slinckx e altri — Libreria Java per leggere e scrivere metadati audio (tag ID3). Licenza LGPL.</string>
+    <string name="about_credit_midilib_name">android-midi-lib</string>
+    <string name="about_credit_midilib_desc">Di LeffelMania — Parser di file MIDI per Android. Licenza Apache 2.0.</string>
+    <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
+    <string name="about_credit_ffmpeg_desc">Di Arthenica — Wrapper FFmpeg per piattaforme mobili, usato per l’elaborazione audio. Licenza LGPL 3.0.</string>
+    <string name="about_credit_exoplayer_name">Media3 ExoPlayer</string>
+    <string name="about_credit_exoplayer_desc">Di Google — Potente player multimediale per Android, usato per la riproduzione di musica e radio. Licenza Apache 2.0.</string>
+    <string name="about_credit_okhttp_name">OkHttp</string>
+    <string name="about_credit_okhttp_desc">Di Square — Client HTTP per richieste di rete. Licenza Apache 2.0.</string>
+    <string name="about_credit_fluidsynth_name">FluidSynth</string>
+    <string name="about_credit_fluidsynth_desc">Dalla comunità FluidSynth — Sintetizzatore software in tempo reale basato sulla specifica SoundFont 2. Licenza LGPL 2.1.</string>
+    <string name="about_license_notice">Tutte le librerie sono utilizzate nel rispetto delle rispettive licenze.
+Grazie a tutti i contributori open source!</string>
+    <string name="about_privacy_title">Privacy &amp; Permessi</string>
+    <string name="about_privacy_microphone">A2U richiede l\'accesso al microfono per due scopi specifici:
+
+• Registrazione audio nell\'Editor audio e nel Creatore di SoundFont
+• Visualizzazione in tempo reale dello spettro di frequenze nel player Musica (l\'app ascolta l\'uscita audio per mostrare le curve di frequenza)
+
+Il microfono non viene usato per altri scopi. Nessun audio viene registrato, trasmesso o salvato senza una tua azione esplicita nell\'Editor audio o nel Creatore di SoundFont.</string>
+    <string name="color_settings_title">Impostazioni colori</string>
+    <string name="color_settings_desc">Personalizza i colori per canali e strumenti MIDI.</string>
+    <string name="color_settings_channels">Canali MIDI</string>
+    <string name="color_settings_instruments">Strumenti</string>
+    <string name="color_settings_reset_all">Ripristina tutti ai valori predefiniti</string>
+    <string name="color_settings_reset_confirm">Ripristinare tutti i colori ai valori predefiniti?</string>
+    <string name="theme_selection_title">Tema visivo</string>
+    <string name="theme_section_free">Temi gratuiti</string>
+    <string name="theme_current">Tema attuale</string>
+    <string name="theme_applied">Tema applicato: %1$s</string>
+    <string name="theme_name_classic">Classico</string>
+    <string name="theme_name_rainbow">Arcobaleno</string>
+    <string name="theme_name_neon">Neon</string>
+    <string name="theme_name_ocean">Oceano</string>
+    <string name="theme_name_fire">Fuoco</string>
+    <string name="theme_name_ocean_deep">Oceano profondo</string>
+    <string name="theme_name_galaxy">Galassia</string>
+    <string name="theme_name_cyberpunk">Cyberpunk</string>
+    <string name="theme_name_minimal">Minimal</string>
+    <string name="theme_name_matrix">Hacker</string>
+    <string name="theme_name_custom">Personalizzato</string>
+    <string name="custom_theme_title">Tema personalizzato</string>
+    <string name="custom_theme_desc">Usa una tua immagine come sfondo</string>
+    <string name="custom_theme_section_image">Immagine di sfondo</string>
+    <string name="custom_theme_section_opacity">Opacità immagine</string>
+    <string name="custom_theme_section_base">Tema di base</string>
+    <string name="custom_theme_select_image">Scegli immagine</string>
+    <string name="custom_theme_delete_image">Rimuovi</string>
+    <string name="custom_theme_no_image">Nessuna immagine impostata</string>
+    <string name="custom_theme_image_set">Immagine impostata</string>
+    <string name="custom_theme_base_desc">Seleziona un tema per i colori e gli effetti delle note</string>
+    <string name="custom_theme_configure">Configura</string>
+    <string name="theme_select_title">Scegli un tema</string>
+    <string name="theme_default">Predefinito</string>
+    <string name="theme_green">Verde</string>
+    <string name="theme_turquoise">Turchese</string>
+    <string name="theme_classic">Classico</string>
+    <string name="theme_orange">Arancione</string>
+    <string name="theme_purple">Viola</string>
+    <string name="theme_pink">Rosa</string>
+    <string name="theme_blue">Blu</string>
+    <string name="theme_red">Rosso</string>
+    <string name="theme_indigo">Indaco</string>
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_audio_section">Audio</string>
+    <string name="settings_auto_resume_title">Riprendi dopo interruzione</string>
+    <string name="settings_auto_resume_summary">Riprendi automaticamente la riproduzione dopo una chiamata o altra interruzione</string>
+    <string name="settings_appearance_section">Aspetto</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_summary">Cambia il colore di accento dell\'app</string>
+    <string name="settings_system_bars_title">Mostra barre di sistema</string>
+    <string name="settings_system_bars_summary">Mostra la barra di stato e la barra di navigazione. Quando disattivato, scorri dai bordi per mostrarle. Nota: alcuni dispositivi potrebbero comunque mostrare le barre a seconda della versione Android e delle impostazioni del produttore.</string>
+    <string name="settings_storage_section">Archiviazione</string>
+    <string name="settings_auto_cleanup_title">Pulizia automatica</string>
+    <string name="settings_auto_cleanup_summary">Elimina automaticamente i file orfani all\'avvio</string>
+    <string name="settings_manual_cleanup_title">Pulizia manuale</string>
+    <string name="settings_cleanup_status_none">Nessuna pulizia effettuata</string>
+    <string name="settings_cleanup_now_button">🧹 Pulisci ora</string>
+    <string name="settings_cleanup_enabled">✅ Pulizia automatica attivata</string>
+    <string name="settings_cleanup_disabled">❌ Pulizia automatica disattivata</string>
+    <string name="settings_cleanup_in_progress">🧹 Pulizia in corso...</string>
+    <string name="settings_cleanup_analyzing">Analisi dei file...</string>
+    <string name="settings_cleanup_no_orphans">✅ Nessun file orfano trovato</string>
+    <string name="settings_cleanup_nothing_to_clean">Niente da pulire</string>
+    <string name="settings_cleanup_error">❌ Errore durante la pulizia</string>
+    <string name="settings_cleanup_error_short">Errore durante la pulizia</string>
+    <string name="settings_cleanup_last_day">Ultima pulizia: %1$d giorno%2$s fa</string>
+    <string name="settings_cleanup_last_hour">Ultima pulizia: %1$d ora%2$s fa</string>
+    <string name="settings_cleanup_last_now">Ultima pulizia: proprio ora</string>
+    <string name="settings_cleanup_snackbar">🧹 Pulizia: %1$d file eliminati, %2$s MB liberati</string>
+</resources>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Section: Informations de base -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/music_info_section_basic"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="?android:attr/colorAccent"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/info_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Titre : Example Song" />
+
+        <TextView
+            android:id="@+id/info_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Artiste : Example Artist" />
+
+        <TextView
+            android:id="@+id/info_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Album : Example Album" />
+
+        <TextView
+            android:id="@+id/info_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"
+            tools:text="Année : 2024" />
+
+        <TextView
+            android:id="@+id/info_track_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"
+            tools:text="Piste : 3" />
+
+        <TextView
+            android:id="@+id/info_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            tools:text="Durée : 3:45" />
+
+        <!-- Section: Informations techniques -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/music_info_section_technical"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="?android:attr/colorAccent"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/info_format"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Format : MP3" />
+
+        <TextView
+            android:id="@+id/info_bitrate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Débit : 320 kbps" />
+
+        <TextView
+            android:id="@+id/info_sample_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Échantillonnage : 44100 Hz" />
+
+        <TextView
+            android:id="@+id/info_channels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Canaux : Stéréo" />
+
+        <TextView
+            android:id="@+id/info_file_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            tools:text="Taille : 8.5 Mo" />
+
+        <!-- Section: Statistiques -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/music_info_section_stats"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="?android:attr/colorAccent"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/info_play_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Nombre d'écoutes : 42" />
+
+        <!-- Note avec étoiles cliquables -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/music_info_rating"
+                android:layout_marginEnd="8dp" />
+
+            <ImageView
+                android:id="@+id/star_1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_star_outline"
+                android:contentDescription="@string/music_rating_star_1"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <ImageView
+                android:id="@+id/star_2"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_star_outline"
+                android:contentDescription="@string/music_rating_star_2"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <ImageView
+                android:id="@+id/star_3"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_star_outline"
+                android:contentDescription="@string/music_rating_star_3"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <ImageView
+                android:id="@+id/star_4"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_star_outline"
+                android:contentDescription="@string/music_rating_star_4"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <ImageView
+                android:id="@+id/star_5"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_star_outline"
+                android:contentDescription="@string/music_rating_star_5"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+        </LinearLayout>
+
+        <!-- Section: Fichier -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/music_info_section_file"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="?android:attr/colorAccent"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/info_file_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:textSize="12sp"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            tools:text="Chemin : /storage/emulated/0/Music/song.mp3" />
+
+        <TextView
+            android:id="@+id/info_date_modified"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            tools:text="Date de modification : 15/01/2024" />
+
+        <TextView
+            android:id="@+id/info_date_added"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Date d'ajout : 10/01/2024" />
+
+    </LinearLayout>
+
+</ScrollView>

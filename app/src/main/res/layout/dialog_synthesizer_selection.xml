@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ═══ Sonivox Engine Card ═══ -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_sonivox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/midi_synth_sonivox"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/icon_hybrid_sonivox"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_shuffle"
+                        app:tint="?attr/a2uMidiAccent"
+                        android:visibility="gone"
+                        android:contentDescription="@string/midi_synth_hybrid" />
+
+                    <TextView
+                        android:id="@+id/badge_sonivox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/midi_synth_active_badge"
+                        android:textSize="10sp"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/white"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/midi_synth_sonivox_desc"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══ SoundFont Engines Section Header ═══ -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/midi_synth_sf2_engines_header"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/midi_synth_sf2_engines_subtitle"
+            android:textSize="11sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:alpha="0.7"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ═══ FluidSynth Engine Card ═══ -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_fluidsynth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/midi_synth_fluidsynth"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/icon_hybrid_fluidsynth"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_shuffle"
+                        app:tint="?attr/a2uMidiAccent"
+                        android:visibility="gone"
+                        android:contentDescription="@string/midi_synth_hybrid" />
+
+                    <TextView
+                        android:id="@+id/badge_fluidsynth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/midi_synth_active_badge"
+                        android:textSize="10sp"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/white"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/midi_synth_fluidsynth_desc"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══ A2U Engine Card ═══ -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_a2u"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/midi_synth_a2u"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/icon_hybrid_a2u"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_shuffle"
+                        app:tint="?attr/a2uMidiAccent"
+                        android:visibility="gone"
+                        android:contentDescription="@string/midi_synth_hybrid" />
+
+                    <TextView
+                        android:id="@+id/badge_a2u"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/midi_synth_active_badge"
+                        android:textSize="10sp"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/white"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/midi_synth_a2u_desc"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══ SoundFont Card ═══ -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_soundfont"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <!-- Section header -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/midi_synth_soundfont_section"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- State: SF2 loaded -->
+                <LinearLayout
+                    android:id="@+id/layout_sf2_loaded"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- File name with folder icon -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\uD83D\uDCC1"
+                            android:textSize="16sp"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:id="@+id/text_sf2_filename"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:ellipsize="middle"
+                            android:singleLine="true" />
+
+                    </LinearLayout>
+
+                    <!-- Action buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="end"
+                        android:layout_marginTop="8dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_change_sf2"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/midi_synth_change_sf2"
+                            android:textColor="?attr/a2uMidiAccent"
+                            android:textSize="13sp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_remove_sf2"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/midi_synth_remove_sf2"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- State: No SF2 loaded -->
+                <LinearLayout
+                    android:id="@+id/layout_sf2_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/midi_synth_no_soundfont"
+                        android:textSize="13sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_import_sf2"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/midi_synth_import_sf2"
+                        android:textColor="?attr/a2uMidiAccent"
+                        app:strokeColor="?attr/a2uMidiAccent"
+                        app:iconTint="?attr/a2uMidiAccent"
+                        android:textSize="14sp"
+                        app:icon="@drawable/ic_folder_open" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══ SF2 Tip ═══ -->
+        <TextView
+            android:id="@+id/text_sf2_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/midi_synth_sf2_tip"
+            android:textSize="11sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:background="#0A888888"
+            android:padding="12dp"
+            android:visibility="gone" />
+
+        <!-- ═══ Hybrid Mode Button ═══ -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_hybrid_mode"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/midi_synth_hybrid_mode"
+            android:textSize="13sp"
+            app:icon="@drawable/ic_shuffle"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+</ScrollView>

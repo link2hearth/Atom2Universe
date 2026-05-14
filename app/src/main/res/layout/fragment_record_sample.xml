@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Instructions -->
+    <TextView
+        android:id="@+id/instructions_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/sf2_record_instructions"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Recording settings -->
+    <LinearLayout
+        android:id="@+id/settings_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instructions_text">
+
+        <!-- Countdown delay slider -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_countdown_delay"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="12sp" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/countdown_slider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:valueFrom="0"
+                android:valueTo="10"
+                android:stepSize="1"
+                android:value="3"
+                app:labelBehavior="gone"
+                app:trackColorActive="?attr/a2uMidiAccent"
+                app:trackColorInactive="@color/startup_button_background"
+                app:thumbColor="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/countdown_value"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/sf2_countdown_value_default"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- Max duration slider -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_max_duration"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="12sp" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/max_duration_slider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:valueFrom="1"
+                android:valueTo="10"
+                android:stepSize="1"
+                android:value="5"
+                app:labelBehavior="gone"
+                app:trackColorActive="?attr/a2uMidiAccent"
+                app:trackColorInactive="@color/startup_button_background"
+                app:thumbColor="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/max_duration_value"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/sf2_max_duration_value_default"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Two-button container -->
+    <LinearLayout
+        android:id="@+id/buttons_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/amplitude_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_container"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <!-- Get Ready button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginEnd="24dp">
+
+            <ImageButton
+                android:id="@+id/get_ready_button"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_circle_button"
+                android:backgroundTint="?attr/a2uMidiAccent"
+                android:contentDescription="@string/sf2_get_ready"
+                android:padding="28dp"
+                android:src="@drawable/ic_mic"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/get_ready_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/sf2_get_ready"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Record button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/record_button"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_circle_record"
+                android:contentDescription="@string/sf2_record"
+                android:padding="28dp"
+                android:src="@drawable/ic_stop"
+                android:enabled="false"
+                android:alpha="0.4"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/record_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/sf2_record"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Amplitude visualization -->
+    <ProgressBar
+        android:id="@+id/amplitude_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:max="100"
+        android:progress="0"
+        android:progressTint="?attr/a2uMidiAccent"
+        android:progressBackgroundTint="@color/startup_button_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttons_container"
+        app:layout_constraintBottom_toTopOf="@id/duration_text" />
+
+    <!-- Duration text -->
+    <TextView
+        android:id="@+id/duration_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/sf2_record_duration_default"
+        android:textColor="@color/startup_text_primary"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/amplitude_bar"
+        app:layout_constraintBottom_toTopOf="@id/status_text" />
+
+    <!-- Status text -->
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/sf2_tap_get_ready"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/duration_text"
+        app:layout_constraintBottom_toTopOf="@id/pitch_text" />
+
+    <!-- Detected pitch text -->
+    <TextView
+        android:id="@+id/pitch_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="?attr/a2uMidiAccent"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/status_text"
+        app:layout_constraintBottom_toTopOf="@id/button_container" />
+
+    <!-- Button container -->
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pitch_text">
+
+        <!-- Play preview button -->
+        <ImageButton
+            android:id="@+id/play_button"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="?attr/a2uMidiAccent"
+            android:contentDescription="@string/sf2_play_preview"
+            android:padding="16dp"
+            android:src="@drawable/ic_play"
+            android:visibility="gone"
+            app:tint="@android:color/white" />
+
+        <!-- Continue button -->
+        <Button
+            android:id="@+id/continue_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/a2uMidiAccent"
+            android:text="@string/sf2_continue"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+
+        <!-- Retry button -->
+        <Button
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="@color/startup_button_background"
+            android:text="@string/sf2_retry"
+            android:textColor="@color/startup_text_primary"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- My Projects button - always visible at bottom -->
+    <Button
+        android:id="@+id/my_projects_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/startup_button_background"
+        android:drawableStart="@drawable/ic_folder_open"
+        android:drawablePadding="8dp"
+        android:drawableTint="?attr/a2uMidiAccent"
+        android:text="@string/sf2_my_projects"
+        android:textColor="@color/startup_text_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

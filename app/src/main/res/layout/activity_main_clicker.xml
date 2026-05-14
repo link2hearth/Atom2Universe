@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/startup_background">
+
+    <com.Atom2Universe.app.crypto.StarfieldView
+        android:id="@+id/main_clicker_starfield"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.Atom2Universe.app.crypto.BottomCropImageView
+        android:id="@+id/main_clicker_background_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/main_clicker_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.Atom2Universe.app.crypto.clicker.AtomSpringView
+            android:id="@+id/atom_spring_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false"
+            android:visibility="gone" />
+
+        <com.Atom2Universe.app.crypto.EarthMoonWidgetView
+            android:id="@+id/earth_moon_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_margin="16dp" />
+
+        <com.Atom2Universe.app.crypto.CryptoWidgetView
+            android:id="@+id/crypto_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="16dp" />
+
+        <com.Atom2Universe.app.crypto.SudokuWidgetView
+            android:id="@+id/sudoku_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp" />
+
+        <com.Atom2Universe.app.crypto.ChessWidgetView
+            android:id="@+id/chess_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp" />
+
+        <com.Atom2Universe.app.crypto.DraughtsWidgetView
+            android:id="@+id/draughts_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp" />
+
+        <com.Atom2Universe.app.crypto.Game2048WidgetView
+            android:id="@+id/game2048_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp" />
+
+<com.Atom2Universe.app.crypto.SolitaireWidgetView
+            android:id="@+id/solitaire_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp" />
+
+        <com.Atom2Universe.app.crypto.BlackjackWidgetView
+            android:id="@+id/blackjack_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:visibility="gone" />
+
+        <com.Atom2Universe.app.music.MusicPlayerWidgetView
+            android:id="@+id/music_player_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:visibility="gone" />
+
+        <com.Atom2Universe.app.crypto.ColorStackWidgetView
+            android:id="@+id/color_stack_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:visibility="gone" />
+
+        <com.Atom2Universe.app.crypto.PipeTapWidgetView
+            android:id="@+id/pipetap_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:visibility="gone" />
+
+        <com.Atom2Universe.app.crypto.TheLineWidgetView
+            android:id="@+id/the_line_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:visibility="gone" />
+
+        <com.Atom2Universe.app.news.NewsWidgetView
+            android:id="@+id/news_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="16dp"
+            android:visibility="gone" />
+
+        <com.Atom2Universe.app.crypto.FloatingWebWidget
+            android:id="@+id/floating_web_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Bannière toujours au-dessus des widgets (dessinée en dernier) -->
+    <View
+        android:id="@+id/main_clicker_top_banner"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:background="@color/crypto_banner_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/main_clicker_back_button"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/crypto_back"
+        android:padding="10dp"
+        android:src="@drawable/ic_arrow_back_24"
+        app:layout_constraintBottom_toBottomOf="@id/main_clicker_top_banner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/main_clicker_top_banner" />
+
+    <HorizontalScrollView
+        android:id="@+id/main_clicker_toggles"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:fillViewport="false"
+        app:layout_constraintEnd_toStartOf="@id/main_clicker_settings_button"
+        app:layout_constraintStart_toEndOf="@id/main_clicker_back_button"
+        app:layout_constraintTop_toTopOf="@id/main_clicker_top_banner">
+
+    <LinearLayout
+        android:id="@+id/main_clicker_toggles_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clipToPadding="false">
+
+        <TextView
+            android:id="@+id/main_clicker_label_earth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/banner_label_earth"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_earth_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_earth_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_chess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/banner_label_chess"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_chess_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_chess_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_draughts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/banner_label_draughts"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_draughts_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_draughts_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_sudoku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sudoku"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_sudoku_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_sudoku_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_2048"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2048"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_2048_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_game2048_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_crypto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crypto"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_crypto_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Crypto widget"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="News"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_news_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_news_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_solitaire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Solitaire"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_solitaire_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_solitaire_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_blackjack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/banner_label_blackjack"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_blackjack_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_blackjack_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_color_stack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stack"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_color_stack_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_color_stack_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_clicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clicker"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_clicker_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Clicker widget"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/banner_label_music"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_music_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_music_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_pipetap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/banner_label_pipetap"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_pipetap_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_pipetap_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="8dp"
+            android:showText="false" />
+
+        <TextView
+            android:id="@+id/main_clicker_label_the_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/banner_label_the_line"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:paddingEnd="2dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/main_clicker_the_line_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/crypto_the_line_widget_toggle_desc"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:showText="false" />
+
+    </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <ImageButton
+        android:id="@+id/main_clicker_settings_button"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/crypto_background_settings"
+        android:padding="10dp"
+        android:src="@drawable/ic_settings_24"
+        android:tint="@color/crypto_banner_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/main_clicker_top_banner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/main_clicker_top_banner" />
+
+    <!-- Bannière clicker — visible uniquement quand le toggle Clicker est actif -->
+    <com.Atom2Universe.app.crypto.clicker.ClickerBannerView
+        android:id="@+id/clicker_banner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_clicker_top_banner" />
+
+    <!-- Toast de succès débloqué -->
+    <include
+        android:id="@+id/achievement_toast_container"
+        layout="@layout/view_achievement_toast"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clicker_banner"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="4dp" />
+
+    <!-- Zone de tap transparente pour afficher la bannière — toujours présente, sous les boutons -->
+    <View
+        android:id="@+id/main_clicker_banner_tap_zone"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

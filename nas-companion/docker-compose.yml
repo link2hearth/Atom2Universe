@@ -1,0 +1,24 @@
+﻿services:
+  musicsync:
+    build: .
+    container_name: musicsync
+    restart: unless-stopped
+
+    # network_mode: host est obligatoire pour que le mDNS (multicast) fonctionne.
+    # En mode bridge, les paquets multicast ne traversent pas l'interface réseau du NAS.
+    network_mode: host
+
+    volumes:
+      - musicsync_data:/data
+
+    environment:
+      # Port HTTP (doit correspondre à PeerSyncServer.PORT dans l'app Android)
+      - PORT=47123
+      # Intervalle de resync périodique avec les pairs connus, en secondes
+      - RESYNC_INTERVAL=18000
+      # Doit correspondre exactement au SERVICE_TYPE dans PeerDiscoveryManager.kt
+      # Format : la partie entre underscores, ex. "a2u" → _a2u._tcp
+      - SERVICE_NAME=a2u
+
+volumes:
+  musicsync_data:

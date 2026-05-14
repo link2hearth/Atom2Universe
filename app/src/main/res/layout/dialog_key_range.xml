@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sf2_key_range_dialog_title"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Root note (fixed, for reference) -->
+        <TextView
+            android:id="@+id/root_note_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="14sp" />
+
+        <!-- Mini keyboard visualization -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <com.Atom2Universe.app.sf2creator.ui.KeyRangeKeyboardView
+                android:id="@+id/range_keyboard"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+        </FrameLayout>
+
+        <!-- Range preview text -->
+        <TextView
+            android:id="@+id/range_preview_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:textColor="?attr/a2uMidiAccent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Start note selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/sf2_range_start"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/start_note_spinner"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="2"
+                android:background="@drawable/spinner_background"
+                android:popupBackground="@color/startup_background" />
+
+            <Spinner
+                android:id="@+id/start_octave_spinner"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/spinner_background"
+                android:popupBackground="@color/startup_background" />
+
+            <TextView
+                android:id="@+id/start_note_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:minWidth="48dp"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- End note selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_range_end"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/end_note_spinner"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="2"
+                android:background="@drawable/spinner_background"
+                android:popupBackground="@color/startup_background" />
+
+            <Spinner
+                android:id="@+id/end_octave_spinner"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/spinner_background"
+                android:popupBackground="@color/startup_background" />
+
+            <TextView
+                android:id="@+id/end_note_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:minWidth="48dp"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Validation error -->
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="end"
+            android:orientation="horizontal"
+            style="?android:attr/buttonBarStyle">
+
+            <Button
+                android:id="@+id/cancel_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="100dp"
+                android:text="@string/midi_cancel"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/confirm_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="100dp"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="?attr/a2uMidiAccent"
+                android:text="@string/sf2_confirm"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

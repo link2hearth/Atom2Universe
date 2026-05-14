@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#2B2B2B">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Section: Couleurs favorites -->
+        <LinearLayout
+            android:id="@+id/favorites_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_color_favorites"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
+
+            <GridLayout
+                android:id="@+id/color_favorites_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:columnCount="8"
+                android:alignmentMode="alignBounds" />
+
+            <!-- Séparateur après favoris -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="#CCCCCC"
+                android:alpha="0.3" />
+
+        </LinearLayout>
+
+        <!-- Section: Couleurs rapides -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_color_quick"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <GridLayout
+            android:id="@+id/color_quick_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:columnCount="8"
+            android:alignmentMode="alignBounds" />
+
+        <!-- Séparateur -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="#666666" />
+
+        <!-- Section: Couleur personnalisée -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_color_custom"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <!-- HSV Color Picker -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Carré de saturation/valeur -->
+            <com.Atom2Universe.app.view.ColorPickerSatValView
+                android:id="@+id/color_satval_picker"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1" />
+
+            <!-- Prévisualisation -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/color_preview_card"
+                android:layout_width="80dp"
+                android:layout_height="150dp"
+                android:layout_marginStart="12dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp">
+
+                <TextView
+                    android:id="@+id/color_preview_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/notes_color_preview_text"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- Slider de teinte -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/notes_color_hue"
+            android:textSize="12sp"
+            android:textColor="#B0B0B0" />
+
+        <com.Atom2Universe.app.view.ColorPickerHueView
+            android:id="@+id/color_hue_picker"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Champ Hex -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_color_hex"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/color_hex_input"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:hint="@string/notes_color_hex_hint"
+                android:inputType="text"
+                android:maxLength="7"
+                android:textSize="14sp"
+                android:fontFamily="monospace" />
+
+        </LinearLayout>
+
+        <!-- Section: Transparence (Alpha) - Visible uniquement pour Pixel Art Editor -->
+        <LinearLayout
+            android:id="@+id/alpha_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_color_alpha"
+                android:textSize="12sp"
+                android:textColor="#B0B0B0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <SeekBar
+                    android:id="@+id/alpha_slider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="255"
+                    android:progress="255" />
+
+                <TextView
+                    android:id="@+id/alpha_value_text"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/notes_color_alpha_value_default"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="end" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Séparateur -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="#666666" />
+
+        <!-- Section: Couleur du texte (peut être cachée pour Pixel Art) -->
+        <LinearLayout
+            android:id="@+id/text_mode_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_color_text_mode"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
+
+            <RadioGroup
+                android:id="@+id/color_text_mode_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_text_auto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/notes_color_text_auto" />
+
+                <RadioButton
+                    android:id="@+id/radio_text_white"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/notes_color_text_white" />
+
+                <RadioButton
+                    android:id="@+id/radio_text_black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/notes_color_text_black" />
+
+                <RadioButton
+                    android:id="@+id/radio_text_gray"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/notes_color_text_gray" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <!-- Boutons d'action -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_favorite"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_color_add_favorite"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#666666"
+                app:icon="@drawable/ic_star_outline"
+                app:iconTint="#FFFFFF"
+                app:iconGravity="textStart" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textColor="#FFFFFF" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/confirm"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#666666" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

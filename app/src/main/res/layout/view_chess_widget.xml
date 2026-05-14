@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chess_widget_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#0F172A"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="8dp"
+    app:strokeColor="#1F2937"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header : pièces capturées + bouton reset -->
+        <FrameLayout
+            android:id="@+id/chess_header_area"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.Atom2Universe.app.crypto.ChessCapturedPiecesView
+                android:id="@+id/chess_captured_pieces"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="28dp" />
+
+            <TextView
+                android:id="@+id/chess_btn_reset"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="↺"
+                android:textColor="#64748B"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </FrameLayout>
+
+        <!-- Échiquier + overlay de sélection de difficulté -->
+        <FrameLayout
+            android:layout_width="196dp"
+            android:layout_height="196dp">
+
+            <com.Atom2Universe.app.games.chess.ChessView
+                android:id="@+id/chess_widget_board"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Overlay résultat Mat / Pat (caché par défaut) -->
+            <FrameLayout
+                android:id="@+id/chess_result_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CC0F172A"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/chess_result_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text=""
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="#22C55E" />
+
+            </FrameLayout>
+
+            <!-- Overlay difficulté (caché par défaut) -->
+            <FrameLayout
+                android:id="@+id/chess_difficulty_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CC0F172A"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/chess_diff_training"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:text="Entraînement"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/chess_diff_standard"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="Standard"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/chess_diff_expert"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="Expert"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/chess_diff_two_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="Deux joueurs"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/chess_diff_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="✕ Annuler"
+                        android:textColor="#64748B"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_widget_arrow"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                </LinearLayout>
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

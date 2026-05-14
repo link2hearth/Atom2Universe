@@ -1,0 +1,547 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="midi_player_title">MIDI-speler</string>
+    <string name="midi_nav_library">Bibliotheek</string>
+    <string name="midi_nav_playlists">Afspeellijsten</string>
+    <string name="midi_nav_now_playing">Nu afspelen</string>
+    <string name="midi_nav_practice">Oefenen</string>
+    <string name="midi_no_track_playing">Geen nummer actief</string>
+    <string name="midi_soundfont_imported">SoundFont geïmporteerd: %1$s (%2$d MB)</string>
+    <string name="midi_soundfont_import_error">Fout: %1$s</string>
+    <string name="midi_folder_scanning">MIDI-map scannen…</string>
+    <string name="midi_folder_scan_complete">Scan voltooid: %1$d MIDI-bestanden gevonden</string>
+    <string name="midi_library_empty">Geen MIDI-bestanden. Selecteer een map om te scannen.</string>
+    <string name="midi_select_soundfont">Synthesizer</string>
+    <string name="midi_select_folder">MIDI-map selecteren</string>
+    <string name="midi_refresh_library">Bibliotheek vernieuwen</string>
+    <string name="midi_clear_library">Bibliotheek wissen</string>
+    <string name="midi_clear_library_confirm">Weet u zeker dat u de hele MIDI-bibliotheek wilt wissen?</string>
+    <string name="midi_library_cleared">Bibliotheek gewist</string>
+    <string name="midi_library_refreshing">Bibliotheek vernieuwen…</string>
+    <string name="midi_action_previous">Vorige</string>
+    <string name="midi_action_next">Volgende</string>
+    <string name="midi_action_shuffle">Willekeurig</string>
+    <string name="midi_action_repeat">Herhalen</string>
+    <string name="midi_shuffle_scope_title">Willekeurig bereik</string>
+    <string name="midi_shuffle_scope_current">Huidig album/map</string>
+    <string name="midi_shuffle_scope_artist">Huidige artiest (alle albums)</string>
+    <string name="midi_shuffle_scope_library">Hele bibliotheek</string>
+    <string name="midi_unknown_artist">Onbekende artiest</string>
+    <string name="midi_unknown_album">Onbekend album</string>
+    <string name="midi_channels_active">Actieve sporen</string>
+    <string name="midi_no_channels">Geen sporen gedetecteerd</string>
+    <string name="midi_mute_track">Spoor dempen</string>
+    <string name="midi_unmute_track">Spoor dempen opheffen</string>
+    <string name="midi_toggle_keyboard">Keyboard tonen/verbergen</string>
+    <string name="midi_practice_mode">Oefenmodus</string>
+    <string name="midi_refresh_keyboards">Keyboards vernieuwen</string>
+    <string name="midi_keyboards_refreshed">Keyboards vernieuwd</string>
+    <string name="midi_two_hands_practice">Oefenen met twee handen</string>
+    <string name="midi_two_hands_detected">Pianostuk gedetecteerd (Linker/Rechterhand)</string>
+    <string name="audio_help_title">Help - Audio-instellingen</string>
+    <string name="midi_favorite">Favoriet</string>
+    <string name="midi_added_to_favorites">Toegevoegd aan favorieten</string>
+    <string name="midi_removed_from_favorites">Verwijderd uit favorieten</string>
+    <string name="midi_create_playlist">Nieuwe afspeellijst</string>
+    <string name="midi_playlist_name_hint">Naam afspeellijst</string>
+    <string name="midi_create">Aanmaken</string>
+    <string name="midi_cancel">Annuleren</string>
+    <string name="midi_playlist_name_empty">Naam mag niet leeg zijn</string>
+    <string name="midi_playlist_created">Afspeellijst aangemaakt: %1$s</string>
+    <string name="midi_rename">Hernoemen</string>
+    <string name="midi_delete">Verwijderen</string>
+    <string name="midi_rename_playlist">Afspeellijst hernoemen</string>
+    <string name="midi_playlist_renamed">Afspeellijst hernoemd</string>
+    <string name="midi_delete_playlist">Afspeellijst verwijderen</string>
+    <string name="midi_delete_playlist_confirm">Afspeellijst \"%1$s\" verwijderen?</string>
+    <string name="midi_playlist_deleted">Afspeellijst verwijderd</string>
+    <string name="midi_clear_playlist">Afspeellijst leegmaken</string>
+    <string name="midi_clear_playlist_confirm">Alle nummers uit \"%1$s\" verwijderen?</string>
+    <string name="midi_clear">Leegmaken</string>
+    <string name="midi_playlist_cleared">Afspeellijst leeggemaakt</string>
+    <plurals name="midi_track_count">
+        <item quantity="one">%d nummer</item>
+        <item quantity="other">%d nummers</item>
+    </plurals>
+    <string name="midi_playlists_empty">Geen afspeellijsten.\nMaak er een aan!</string>
+    <string name="midi_playlist_empty">Deze afspeellijst is leeg.</string>
+    <string name="midi_shuffle_play">Willekeurig afspelen</string>
+    <string name="midi_remove_from_playlist">Verwijderen uit afspeellijst</string>
+    <string name="midi_track_removed">Nummer verwijderd</string>
+    <string name="midi_add_to_playlist">Toevoegen aan afspeellijst</string>
+    <string name="midi_add_to_playlist_title">\"%1$s\" toevoegen</string>
+    <string name="midi_new_playlist">+ Nieuwe afspeellijst</string>
+    <string name="midi_loading_playlists">Laden…</string>
+    <string name="midi_track_added_to_playlist">Toegevoegd aan %1$s</string>
+    <string name="midi_track_already_in_playlist">Staat al in deze afspeellijst</string>
+    <string name="midi_track_info">Informatie</string>
+    <string name="midi_info_title">MIDI-informatie</string>
+    <string name="midi_info_loading">Bestand analyseren…</string>
+    <string name="midi_info_close">Sluiten</string>
+    <string name="midi_info_section_file">Bestand</string>
+    <string name="midi_info_filename">Naam</string>
+    <string name="midi_info_size">Grootte</string>
+    <string name="midi_info_modified">Gewijzigd</string>
+    <string name="midi_info_path">Pad</string>
+    <string name="midi_info_section_midi">MIDI-formaat</string>
+    <string name="midi_info_format">Formaat</string>
+    <string name="midi_info_tracks">Sporen</string>
+    <string name="midi_info_resolution">Resolutie</string>
+    <string name="midi_info_duration">Duur</string>
+    <string name="midi_info_total_notes">Totaal noten</string>
+    <string name="midi_info_section_tempo">Tempo</string>
+    <string name="midi_info_bpm">Tempo</string>
+    <string name="midi_info_tempo_changes">Wijzigingen</string>
+    <string name="midi_info_avg_bpm">Gemiddeld tempo</string>
+    <string name="midi_info_time_signature">Maatsoort</string>
+    <string name="midi_info_time_changes">Maatsoortwisselingen</string>
+    <string name="midi_info_section_channels">Kanalen (%d)</string>
+    <string name="midi_info_channel">Kanaal %d</string>
+    <string name="midi_info_channel_drums">Kanaal %d (Drums)</string>
+    <string name="midi_info_section_metadata">Metadata</string>
+    <string name="midi_info_track_names">Spoornamen</string>
+    <string name="midi_info_copyright">Copyright</string>
+    <string name="midi_info_text_events">Tekst</string>
+    <string name="midi_scan_loading_title">Scannen…</string>
+    <string name="midi_scan_loading_progress">%1$d / %2$d bestanden</string>
+    <string name="midi_scan_loading_counting">Bestanden tellen…</string>
+    <string name="midi_scan_loading_current">%1$s</string>
+    <string name="midi_audio_settings">Audio-instellingen</string>
+    <string name="midi_audio_normalization">Volumenormalisatie</string>
+    <string name="midi_audio_normalization_desc">Vermindert volumepieken om vervorming te voorkomen</string>
+    <string name="midi_audio_master_gain">Hoofdvolume</string>
+    <string name="midi_audio_reverb">Galm</string>
+    <string name="midi_reverb_off">Uit</string>
+    <string name="midi_reverb_large_hall">Grote zaal</string>
+    <string name="midi_reverb_hall">Zaal</string>
+    <string name="midi_reverb_chamber">Kamer</string>
+    <string name="midi_reverb_room">Ruimte</string>
+    <string name="midi_sf2_settings">SF2 Engine</string>
+    <string name="midi_sf2_settings_desc">Instellingen voor aangepaste SoundFont-synthesizer</string>
+    <string name="midi_sf2_velocity_curve">Aanslagcurve</string>
+    <string name="midi_sf2_velocity_linear">Lineair</string>
+    <string name="midi_sf2_velocity_linear_desc">Directe mapping (vlakke respons)</string>
+    <string name="midi_sf2_velocity_concave">Concaaf</string>
+    <string name="midi_sf2_velocity_concave_desc">Meer controle bij lage aanslagsterkte (aanbevolen)</string>
+    <string name="midi_sf2_velocity_soft">Zacht</string>
+    <string name="midi_sf2_velocity_soft_desc">Zeer zacht bij lage aanslagsterkte (expressieve piano)</string>
+    <string name="midi_sf2_velocity_hard">Hard</string>
+    <string name="midi_sf2_velocity_hard_desc">Agressieve respons (drums, krachtige klanken)</string>
+    <string name="midi_sf2_not_active">SF2 engine niet actief</string>
+    <string name="midi_eq_title">Equalizer</string>
+    <string name="midi_eq_enabled">EQ inschakelen</string>
+    <string name="midi_eq_preset_flat">Vlak</string>
+    <string name="midi_eq_preset_rock">Rock</string>
+    <string name="midi_eq_preset_jazz">Jazz</string>
+    <string name="midi_eq_preset_piano">Piano</string>
+    <string name="midi_eq_preset_bass">Bass Boost</string>
+    <string name="midi_player_not_connected">Speler niet verbonden</string>
+    <string name="midi_no_track_current">Geen huidig nummer</string>
+    <string name="midi_no_tracks_found">Geen nummers gevonden</string>
+    <string name="midi_error_message">Fout: %1$s</string>
+    <string name="midi_service_not_connected">Afspeelservice niet verbonden</string>
+    <string name="midi_events_received">MIDI-events ontvangen!</string>
+    <string name="midi_importing_soundfont">SoundFont importeren…</string>
+    <string name="midi_scanning_folder">MIDI-map scannen…</string>
+    <string name="midi_synth_title">Synthesizer</string>
+    <string name="midi_synthesizer_selection">Synthesizer</string>
+    <string name="midi_synth_description">Kies de geluidsengine voor MIDI-weergave</string>
+    <string name="midi_synth_sonivox">Sonivox (ingebouwd)</string>
+    <string name="midi_synth_sonivox_desc">Lichte ingebouwde synthesizer met General MIDI-geluiden. Geen externe bestanden vereist.</string>
+    <string name="midi_synth_sf2_custom">SoundFont (SF2)</string>
+    <string name="midi_synth_sf2_none">SoundFont (geen geïmporteerd)</string>
+    <string name="midi_synth_sf2_desc">Hoge kwaliteit synthese met aangepaste instrumentsamples.</string>
+    <string name="midi_synth_sf2_tip">Tip: Gebruik voor beste resultaten een kwaliteits-SF2-bestand met 44kHz-samples. Kies SoundFonts tussen 100 en 500 MB afhankelijk van uw apparaat. Kleine gecomprimeerde SoundFonts kunnen audioproblemen hebben bij snelle passages.</string>
+    <string name="midi_synth_import_sf2">SF2 importeren</string>
+    <string name="midi_synth_change_sf2">SF2 wijzigen</string>
+    <string name="midi_synth_remove_sf2">Verwijderen</string>
+    <string name="midi_synth_switched_sonivox">Overgeschakeld naar Sonivox-synthesizer</string>
+    <string name="midi_synth_switched_sf2">Overgeschakeld naar SoundFont: %1$s</string>
+    <string name="midi_synth_sf2_imported">SoundFont geladen: %1$s</string>
+    <string name="midi_synth_sf2_removed">SoundFont verwijderd</string>
+    <string name="midi_synth_sf2_large_warning">Groot bestand (%1$d MB). Laden kan tijd en veel geheugen kosten.</string>
+    <string name="midi_synth_hybrid">Hybride (SF2 + Sonivox)</string>
+    <string name="midi_synth_hybrid_none">Hybride (geen SF2 geïmporteerd)</string>
+    <string name="midi_synth_hybrid_desc">Mix SF2- en Sonivox-geluiden per instrument. Kies welke instrumenten uw SoundFont gebruiken.</string>
+    <string name="midi_synth_hybrid_info">%1$d instrumenten gebruiken SF2</string>
+    <string name="midi_synth_configure_instruments">Instrumenten configureren…</string>
+    <string name="midi_synth_switched_hybrid">Overgeschakeld naar hybride modus met %1$d SF2-instrumenten</string>
+    <string name="midi_synth_fluidsynth">FluidSynth</string>
+    <string name="midi_synth_fluidsynth_none">FluidSynth (geen SF2 geïmporteerd)</string>
+    <string name="midi_synth_fluidsynth_desc">Erkende open-source synthese-engine. Geïmporteerd als native library.</string>
+    <string name="midi_synth_switched_fluidsynth">Overgeschakeld naar FluidSynth: %1$s</string>
+    <string name="midi_synth_sf2_engines_header">SoundFont-engines</string>
+    <string name="midi_synth_sf2_engines_subtitle">Vereisen een SoundFont (.sf2)-bestand</string>
+    <string name="midi_synth_a2u">A2U (Experimenteel)</string>
+    <string name="midi_synth_a2u_desc">Ingebouwde synthese-engine, gemaakt voor deze app.</string>
+    <string name="midi_synth_active_badge">ACTIEF</string>
+    <string name="midi_synth_no_soundfont">Geen SoundFont geïmporteerd</string>
+    <string name="midi_synth_soundfont_section">SoundFont</string>
+    <string name="midi_synth_advanced_options">Geavanceerde opties</string>
+    <string name="midi_synth_hybrid_mode">Hybride modus</string>
+    <string name="practice_title">Oefenmodus</string>
+    <string name="practice_restart">Opnieuw starten</string>
+    <string name="practice_mark">Positie markeren</string>
+    <string name="practice_goto_mark">Naar markering gaan</string>
+    <string name="practice_marker_added">Markering toegevoegd: %1$s</string>
+    <string name="practice_marker_position">Markeringspositie: %1$s</string>
+    <string name="practice_accompaniment">Begeleiding</string>
+    <string name="practice_midi_input">MIDI-keyboard</string>
+    <string name="practice_midi_keyboard_detected">Keyboard gedetecteerd</string>
+    <string name="practice_midi_keyboard_not_detected">Keyboard niet gedetecteerd</string>
+    <string name="practice_midi_keyboard_unauthorized">Keyboard gedetecteerd maar niet geautoriseerd</string>
+    <string name="practice_led_control">Keyboard-LED\'s</string>
+    <string name="practice_led_immediate">Onmiddellijk</string>
+    <string name="practice_led_advance_format">%d ms</string>
+    <string name="practice_audio_settings">Audio-instellingen</string>
+    <string name="practice_i_play">Ik speel</string>
+    <string name="practice_keyboard_leds">Keyboard-LED\'s</string>
+    <string name="practice_mute_led_sound">LED-geluid dempen</string>
+    <string name="practice_mute_internal_synth">Interne synth dempen voor keyboardnoten</string>
+    <string name="practice_scoring">Punten</string>
+    <string name="practice_note_names">Noten</string>
+    <string name="practice_score">Score</string>
+    <string name="practice_correct">Correct</string>
+    <string name="practice_missed">Gemist</string>
+    <string name="practice_streak">Reeks</string>
+    <string name="practice_best_streak">Beste reeks</string>
+    <string name="practice_accuracy">Nauwkeurigheid</string>
+    <string name="practice_speed">Snelheid</string>
+    <string name="practice_speed_min">0,1x</string>
+    <string name="practice_speed_max">1,0x</string>
+    <string name="practice_time_zero">0:00</string>
+    <string name="practice_time_remaining">-%1$s</string>
+    <string name="practice_free_mode">Vrij spelen</string>
+    <string name="practice_left_hand_only">Alleen linkerhand</string>
+    <string name="practice_right_hand_only">Alleen rechterhand</string>
+    <string name="practice_both_hands">Beide handen</string>
+    <string name="practice_hand_mode_left">Linkerhand oefenen</string>
+    <string name="practice_hand_mode_right">Rechterhand oefenen</string>
+    <string name="practice_hand_mode_both">Beide handen oefenen</string>
+    <string name="practice_left_hand_sound">Linkerhandgeluid</string>
+    <string name="practice_right_hand_sound">Rechterhandgeluid</string>
+    <string name="practice_both_hands_sound">Beide handen geluid</string>
+    <string name="practice_sound_mode_left">Alleen linkerhand afspelen</string>
+    <string name="practice_sound_mode_right">Alleen rechterhand afspelen</string>
+    <string name="practice_sound_mode_both">Beide handen afspelen</string>
+    <string name="practice_octaves">Octaven</string>
+    <string name="practice_octave_down">Octaaf omlaag</string>
+    <string name="practice_octave_up">Octaaf omhoog</string>
+    <string name="practice_less_octaves">Minder octaven</string>
+    <string name="practice_more_octaves">Meer octaven</string>
+    <string name="practice_octave_count">%d oct.</string>
+    <string name="practice_current_instrument">%1$d: %2$s</string>
+    <string name="practice_select_instrument">Instrument selecteren</string>
+    <string name="practice_sf2_load_error">Kan SF2 SoundFont niet laden. Controleer synthesizerinstellingen.</string>
+    <string name="practice_wait_mode">Wachtmodus</string>
+    <string name="practice_wait_mode_delay">Wachtmodusvertraging</string>
+    <string name="practice_sheet_music">Bladmuziek</string>
+    <string name="practice_recording_mode">Oefeningsopname</string>
+    <string name="practice_recording_enabled">Oefeningsopname ingeschakeld</string>
+    <string name="practice_recording_enabled_cleared">Oefeningsopname ingeschakeld (vorige opname gewist)</string>
+    <string name="practice_recording_filename">Opname_%1$s</string>
+    <string name="practice_volume_percent">%1$d%%</string>
+    <string name="practice_countdown">Startvertraging</string>
+    <string name="practice_countdown_title">Startvertraging</string>
+    <string name="practice_countdown_description">Pas de vertraging aan voordat de MIDI begint te spelen</string>
+    <string name="practice_countdown_seconds">%d seconden</string>
+    <string name="practice_countdown_disabled">Uitgeschakeld</string>
+    <string name="practice_countdown_start_on_play">Starten wanneer ik begin te spelen</string>
+    <string name="practice_countdown_start_on_play_desc">De MIDI start zodra u uw eerste noot speelt</string>
+    <string name="practice_countdown_active">Start over %d…</string>
+    <string name="practice_countdown_waiting">Wachten tot u begint te spelen…</string>
+    <string name="practice_countdown_cancelled">Aftellen geannuleerd</string>
+    <string name="practice_recording_disabled">Oefeningsopname uitgeschakeld</string>
+    <string name="practice_wait_mode_delay_title">Vertraging voor pauze</string>
+    <string name="practice_wait_mode_enabled">Wachtmodus ingeschakeld</string>
+    <string name="practice_wait_mode_disabled">Wachtmodus uitgeschakeld</string>
+    <string name="practice_switch_to_free_mode_title">Overschakelen naar vrij spelen?</string>
+    <string name="practice_switch_to_free_mode_message">Dit laadt het huidige MIDI-bestand uit. U kunt het opnieuw laden vanuit de bibliotheek.</string>
+    <string name="practice_switch_confirm">Overschakelen</string>
+    <string name="practice_accompaniment_disabled_in_wait_mode">Begeleiding uitgeschakeld in wachtmodus</string>
+    <string name="practice_settings_strictness">Strengheid</string>
+    <string name="practice_hold_duration_validation">Nootduurvalidatie</string>
+    <string name="practice_hold_duration_validation_desc">Vereist dat noten minimaal 50%% van hun duur worden aangehouden</string>
+    <string name="practice_hold_duration_enabled">Duurvalidatie ingeschakeld</string>
+    <string name="practice_hold_duration_disabled">Duurvalidatie uitgeschakeld</string>
+    <string name="practice_timing_tolerance">Timingtolerantie</string>
+    <string name="practice_timing_tolerance_strict">Streng (30ms)</string>
+    <string name="practice_timing_tolerance_normal">Normaal (60ms)</string>
+    <string name="practice_timing_tolerance_relaxed">Ontspannen (120ms)</string>
+    <string name="practice_timing_tolerance_very_relaxed">Zeer ontspannen (200ms)</string>
+    <string name="practice_chord_tolerance">Akkoordtolerantie</string>
+    <string name="practice_chord_tolerance_desc">Tijdsvenster waarbinnen noten als deel van hetzelfde akkoord worden beschouwd</string>
+    <string name="practice_visual_style">Visuele stijl</string>
+    <string name="practice_visual_style_classic">Klassiek</string>
+    <string name="practice_visual_style_rainbow">Regenboog</string>
+    <string name="practice_visual_style_neon">Neon</string>
+    <string name="practice_visual_style_ocean">Oceaan</string>
+    <string name="practice_visual_style_fire">Vuur</string>
+    <string name="practice_visual_style_changed">Visuele stijl: %s</string>
+    <string name="practice_scoring_display">Scoreweergave</string>
+    <string name="practice_scoring_display_title">Scoreweergave</string>
+    <string name="practice_scoring_display_desc">Kies welke statistieken tijdens het oefenen worden getoond</string>
+    <string name="practice_scoring_enabled">Score tonen</string>
+    <string name="practice_scoring_preset">Voorinstelling</string>
+    <string name="practice_scoring_preset_encouragement">Aanmoediging</string>
+    <string name="practice_scoring_preset_encouragement_desc">Alleen positieve statistieken (reeksen, goede noten)</string>
+    <string name="practice_scoring_preset_full">Volledige statistieken</string>
+    <string name="practice_scoring_preset_full_desc">Alle statistieken zichtbaar</string>
+    <string name="practice_scoring_preset_minimal">Minimaal</string>
+    <string name="practice_scoring_preset_minimal_desc">Alleen score en combo</string>
+    <string name="practice_scoring_preset_custom">Aangepast</string>
+    <string name="practice_scoring_preset_custom_desc">Kies individuele statistieken</string>
+    <string name="practice_scoring_show_score">Score</string>
+    <string name="practice_scoring_show_accuracy">Nauwkeurigheid</string>
+    <string name="practice_scoring_show_streak">Huidige reeks</string>
+    <string name="practice_scoring_show_best_streak">Beste reeks</string>
+    <string name="practice_scoring_show_good_notes">Goede noten</string>
+    <string name="practice_scoring_show_perfect_notes">Perfecte noten</string>
+    <string name="practice_scoring_show_missed_notes">Gemiste noten</string>
+    <string name="practice_scoring_show_combo">Combo-vermenigvuldiger</string>
+    <string name="practice_scoring_show_grade">Cijfer</string>
+    <string name="practice_scoring_compact">Compacte modus</string>
+    <string name="practice_scoring_animations">Animaties</string>
+    <string name="practice_scoring_streak_popups">Reeks-pop-ups</string>
+    <string name="practice_scoring_disabled">Scoreweergave uitgeschakeld</string>
+    <string name="practice_scoring_config_saved">Scoreweergave bijgewerkt</string>
+    <string name="practice_results_title">Sessie voltooid</string>
+    <string name="practice_results_accuracy">Nauwkeurigheid</string>
+    <string name="practice_results_perfect">Perfecte noten</string>
+    <string name="practice_results_good">Goede noten</string>
+    <string name="practice_results_missed">Gemiste noten</string>
+    <string name="practice_results_wrong">Verkeerde noten</string>
+    <string name="practice_results_best_streak">Beste reeks</string>
+    <string name="practice_results_close">Sluiten</string>
+    <string name="midi_keyboard_connected">MIDI-keyboard aangesloten</string>
+    <string name="midi_keyboard_settings">MIDI-keyboardinstellingen</string>
+    <string name="midi_keyboard_info_section">Informatie</string>
+    <string name="midi_keyboard_config_section">Configuratie</string>
+    <string name="midi_keyboard_name">Naam</string>
+    <string name="midi_keyboard_manufacturer">Fabrikant</string>
+    <string name="midi_keyboard_connection">Verbinding</string>
+    <string name="midi_keyboard_connection_usb">USB</string>
+    <string name="midi_keyboard_connection_bluetooth">Bluetooth</string>
+    <string name="midi_keyboard_connection_virtual">Virtueel</string>
+    <string name="midi_keyboard_ports">Poorten</string>
+    <string name="midi_keyboard_ports_format">%1$d in / %2$d uit</string>
+    <string name="midi_keyboard_led_channel">LED-kanaal</string>
+    <string name="midi_keyboard_mute_sound">Keyboardgeluid dempen</string>
+    <string name="midi_keyboard_mute_sound_desc">Alleen LED-opdrachten verzenden, geen geluid van keyboard</string>
+    <string name="midi_keyboard_octave_offset">LED-octaafverschuiving</string>
+    <string name="midi_keyboard_octave_offset_desc">Verschuif LED-noten om bij uw keyboardbereik te passen</string>
+    <string name="midi_keyboard_octave_minus">Lager octaaf</string>
+    <string name="midi_keyboard_octave_plus">Hoger octaaf</string>
+    <string name="gm_instrument_unknown">Onbekend</string>
+    <string name="gm_drum_channel">Drums</string>
+    <string name="gm_percussion_format">Percussie %d</string>
+    <string name="audio_help_content">Dit menu configureert audio-uitvoer wanneer een extern MIDI-keyboard is aangesloten.\n\n• Geluid altijd via luidsprekers:\nIndien ingeschakeld, speelt MIDI-muziek altijd via de tabletluidsprekers, ook wanneer een USB-keyboard is aangesloten.\n\n• Mijn noten op tablet afspelen:\nIndien uitgeschakeld (standaard), komen uw noten gespeeld op het externe keyboard van het keyboard zelf (indien het ingebouwde luidsprekers heeft).\nIndien ingeschakeld, komen uw noten ook via de tabletluidsprekers.\n\nTip: Als u een keyboard met luidsprekers hebt (zoals veel Yamaha-keyboards), laat de 2e optie uit voor betere geluidskwaliteit.</string>
+    <string name="gm_category_piano">Piano</string>
+    <string name="gm_category_chromatic_percussion">Chromatische percussie</string>
+    <string name="gm_category_organ">Orgel</string>
+    <string name="gm_category_guitar">Gitaar</string>
+    <string name="gm_category_bass">Bas</string>
+    <string name="gm_category_strings">Strijkers</string>
+    <string name="gm_category_ensemble">Ensemble</string>
+    <string name="gm_category_brass">Koper</string>
+    <string name="gm_category_reed">Riet</string>
+    <string name="gm_category_pipe">Blaasinstrumenten</string>
+    <string name="gm_category_synth_lead">Synth Lead</string>
+    <string name="gm_category_synth_pad">Synth Pad</string>
+    <string name="gm_category_synth_fx">Synth FX</string>
+    <string name="gm_category_ethnic">Etnisch</string>
+    <string name="gm_category_percussive">Percussief</string>
+    <string name="gm_category_sound_fx">Geluidseffecten</string>
+    <string name="gm_category_other">Overig</string>
+    <string name="gm_drum_35">Akoestische basdrum</string>
+    <string name="gm_drum_36">Basdrum 1</string>
+    <string name="gm_drum_37">Rimshot</string>
+    <string name="gm_drum_38">Akoestische snare</string>
+    <string name="gm_drum_39">Handklap</string>
+    <string name="gm_drum_40">Elektrische snare</string>
+    <string name="gm_drum_41">Lage vloertom</string>
+    <string name="gm_drum_42">Gesloten hi-hat</string>
+    <string name="gm_drum_43">Hoge vloertom</string>
+    <string name="gm_drum_44">Pedaal hi-hat</string>
+    <string name="gm_drum_45">Lage tom</string>
+    <string name="gm_drum_46">Open hi-hat</string>
+    <string name="gm_drum_47">Laag-midden tom</string>
+    <string name="gm_drum_48">Hoog-midden tom</string>
+    <string name="gm_drum_49">Crashbekken 1</string>
+    <string name="gm_drum_50">Hoge tom</string>
+    <string name="gm_drum_51">Ride-bekken 1</string>
+    <string name="gm_drum_52">Chinese bekken</string>
+    <string name="gm_drum_53">Ride-bel</string>
+    <string name="gm_drum_54">Tamboerijn</string>
+    <string name="gm_drum_55">Splash-bekken</string>
+    <string name="gm_drum_56">Koebel</string>
+    <string name="gm_drum_57">Crashbekken 2</string>
+    <string name="gm_drum_58">Vibraslap</string>
+    <string name="gm_drum_59">Ride-bekken 2</string>
+    <string name="gm_drum_60">Hoge bongo</string>
+    <string name="gm_drum_61">Lage bongo</string>
+    <string name="gm_drum_62">Gedempte hoge conga</string>
+    <string name="gm_drum_63">Open hoge conga</string>
+    <string name="gm_drum_64">Lage conga</string>
+    <string name="gm_drum_65">Hoge timbaal</string>
+    <string name="gm_drum_66">Lage timbaal</string>
+    <string name="gm_drum_67">Hoge agogo</string>
+    <string name="gm_drum_68">Lage agogo</string>
+    <string name="gm_drum_69">Cabasa</string>
+    <string name="gm_drum_70">Maracas</string>
+    <string name="gm_drum_71">Kort fluitje</string>
+    <string name="gm_drum_72">Lang fluitje</string>
+    <string name="gm_drum_73">Korte guïro</string>
+    <string name="gm_drum_74">Lange guïro</string>
+    <string name="gm_drum_75">Claves</string>
+    <string name="gm_drum_76">Hoog woodblock</string>
+    <string name="gm_drum_77">Laag woodblock</string>
+    <string name="gm_drum_78">Gedempte cuíca</string>
+    <string name="gm_drum_79">Open cuíca</string>
+    <string name="gm_drum_80">Gedempte triangel</string>
+    <string name="gm_drum_81">Open triangel</string>
+    <string-array name="gm_instruments">
+        <item>Akoestische vleugel</item>
+        <item>Heldere akoestische piano</item>
+        <item>Elektrische vleugel</item>
+        <item>Honky-tonk piano</item>
+        <item>Elektrische piano 1</item>
+        <item>Elektrische piano 2</item>
+        <item>Klavecimbel</item>
+        <item>Clavinet</item>
+        <item>Celesta</item>
+        <item>Klokkenspel</item>
+        <item>Muziekdoos</item>
+        <item>Vibrafoon</item>
+        <item>Marimba</item>
+        <item>Xylofoon</item>
+        <item>Buisklokken</item>
+        <item>Hakkebord</item>
+        <item>Registerorgel</item>
+        <item>Percussief orgel</item>
+        <item>Rockorgel</item>
+        <item>Kerkorgel</item>
+        <item>Harmonium</item>
+        <item>Accordeon</item>
+        <item>Mondharmonica</item>
+        <item>Tango-accordeon</item>
+        <item>Akoestische gitaar (nylon)</item>
+        <item>Akoestische gitaar (staal)</item>
+        <item>Elektrische gitaar (jazz)</item>
+        <item>Elektrische gitaar (clean)</item>
+        <item>Elektrische gitaar (gedempt)</item>
+        <item>Overdrive gitaar</item>
+        <item>Distortion gitaar</item>
+        <item>Gitaar harmonics</item>
+        <item>Akoestische bas</item>
+        <item>Elektrische bas (vinger)</item>
+        <item>Elektrische bas (plectrum)</item>
+        <item>Fretloze bas</item>
+        <item>Slapbas 1</item>
+        <item>Slapbas 2</item>
+        <item>Synthbas 1</item>
+        <item>Synthbas 2</item>
+        <item>Viool</item>
+        <item>Altviool</item>
+        <item>Cello</item>
+        <item>Contrabas</item>
+        <item>Tremolo strijkers</item>
+        <item>Pizzicato strijkers</item>
+        <item>Orkestharp</item>
+        <item>Pauken</item>
+        <item>Strijkensemble 1</item>
+        <item>Strijkensemble 2</item>
+        <item>Synthstrijkers 1</item>
+        <item>Synthstrijkers 2</item>
+        <item>Koor Aahs</item>
+        <item>Stem Oohs</item>
+        <item>Synthstem</item>
+        <item>Orkestslag</item>
+        <item>Trompet</item>
+        <item>Trombone</item>
+        <item>Tuba</item>
+        <item>Gedempte trompet</item>
+        <item>Hoorn</item>
+        <item>Kopersectie</item>
+        <item>Synthkoper 1</item>
+        <item>Synthkoper 2</item>
+        <item>Sopraansax</item>
+        <item>Altsax</item>
+        <item>Tenorsax</item>
+        <item>Baritonsax</item>
+        <item>Hobo</item>
+        <item>Engelse hoorn</item>
+        <item>Fagot</item>
+        <item>Klarinet</item>
+        <item>Piccolo</item>
+        <item>Dwarsfluit</item>
+        <item>Blokfluit</item>
+        <item>Panfluit</item>
+        <item>Geblazen fles</item>
+        <item>Shakuhachi</item>
+        <item>Fluitje</item>
+        <item>Ocarina</item>
+        <item>Lead 1 (blokgolf)</item>
+        <item>Lead 2 (zaagtand)</item>
+        <item>Lead 3 (calliope)</item>
+        <item>Lead 4 (chiff)</item>
+        <item>Lead 5 (charang)</item>
+        <item>Lead 6 (stem)</item>
+        <item>Lead 7 (kwinten)</item>
+        <item>Lead 8 (bas + lead)</item>
+        <item>Pad 1 (new age)</item>
+        <item>Pad 2 (warm)</item>
+        <item>Pad 3 (polysynth)</item>
+        <item>Pad 4 (koor)</item>
+        <item>Pad 5 (gestreken)</item>
+        <item>Pad 6 (metallic)</item>
+        <item>Pad 7 (halo)</item>
+        <item>Pad 8 (sweep)</item>
+        <item>FX 1 (regen)</item>
+        <item>FX 2 (soundtrack)</item>
+        <item>FX 3 (kristal)</item>
+        <item>FX 4 (atmosfeer)</item>
+        <item>FX 5 (helderheid)</item>
+        <item>FX 6 (goblins)</item>
+        <item>FX 7 (echo\'s)</item>
+        <item>FX 8 (sci-fi)</item>
+        <item>Sitar</item>
+        <item>Banjo</item>
+        <item>Shamisen</item>
+        <item>Koto</item>
+        <item>Kalimba</item>
+        <item>Doedelzak</item>
+        <item>Fiddle</item>
+        <item>Shanai</item>
+        <item>Rinkelklok</item>
+        <item>Agogo</item>
+        <item>Steeldrums</item>
+        <item>Woodblock</item>
+        <item>Taiko-trom</item>
+        <item>Melodische tom</item>
+        <item>Synthtrom</item>
+        <item>Omgekeerd bekken</item>
+        <item>Gitaar fretgeruis</item>
+        <item>Ademgeruis</item>
+        <item>Branding</item>
+        <item>Vogelgezang</item>
+        <item>Telefoon</item>
+        <item>Helikopter</item>
+        <item>Applaus</item>
+        <item>Geweerschot</item>
+    </string-array>
+    <string name="practice_record">Opnemen</string>
+    <string name="practice_record_stop">Opname stoppen</string>
+    <string name="practice_no_notes_recorded">Geen noten opgenomen</string>
+    <string name="practice_recording_max_duration">Opname gestopt — maximale duur bereikt (30 min)</string>
+    <string name="practice_export_title">Opname exporteren</string>
+    <string name="practice_export_filename">Bestandsnaam</string>
+    <string name="practice_export_format_midi">MIDI (.mid)</string>
+    <string name="practice_export_format_wav">WAV (.wav)</string>
+    <string name="practice_export_format_wav_disabled">WAV (.wav) — vereist SF2 SoundFont</string>
+    <string name="practice_export_button">Exporteren</string>
+    <string name="practice_export_share_button">Delen</string>
+    <string name="practice_export_success">Geëxporteerd naar %s</string>
+    <string name="practice_export_error">Exportfout: %s</string>
+    <string name="practice_export_rendering">Audio renderen…</string>
+</resources>

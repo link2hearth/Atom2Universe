@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/startup_button_background"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Project icon -->
+        <ImageView
+            android:id="@+id/project_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_folder_open"
+            app:tint="?attr/a2uMidiAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Project name -->
+        <TextView
+            android:id="@+id/project_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/delete_button"
+            app:layout_constraintStart_toEndOf="@id/project_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Sample count -->
+        <TextView
+            android:id="@+id/sample_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/delete_button"
+            app:layout_constraintStart_toEndOf="@id/project_icon"
+            app:layout_constraintTop_toBottomOf="@id/project_name" />
+
+        <!-- Modified date -->
+        <TextView
+            android:id="@+id/modified_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toStartOf="@id/delete_button"
+            app:layout_constraintStart_toEndOf="@id/project_icon"
+            app:layout_constraintTop_toBottomOf="@id/sample_count" />
+
+        <!-- Delete button -->
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/sf2_delete_project"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/startup_text_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

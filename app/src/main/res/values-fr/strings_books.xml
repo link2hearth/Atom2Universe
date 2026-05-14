@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_books_title">Livres</string>
+    <string name="hub_books_desc">Lecteur EPUB, PDF et texte</string>
+    <string name="hub_reading_title">Lecture</string>
+    <string name="hub_reading_desc">Livres et BD</string>
+    <string name="reading_hub_title">Lecture</string>
+    <string name="reading_hub_subtitle">Livres et BD</string>
+    <string name="book_reader_title">Lecteur</string>
+    <string name="book_reader_no_book">Aucun livre ouvert</string>
+    <string name="book_reader_open">Ouvrir un livre</string>
+    <string name="book_reader_open_new">Ouvrir un autre livre</string>
+    <string name="book_reader_tts">Lecture à voix haute</string>
+    <string name="book_reader_pages">%1$d pages</string>
+    <string name="book_reader_page_of">%1$d / %2$d</string>
+    <string name="book_reader_theme">Thème de lecture</string>
+    <string name="book_reader_theme_dark">Sombre</string>
+    <string name="book_reader_theme_light">Clair</string>
+    <string name="book_reader_theme_sepia">Sépia</string>
+    <string name="book_reader_theme_sky">Bleu ciel</string>
+    <string name="book_reader_theme_mint">Vert menthe</string>
+    <string name="book_reader_theme_forest">Vert sapin</string>
+    <string name="book_reader_theme_pastel">Pastel</string>
+    <string name="book_reader_para_distinction">Distinction des paragraphes</string>
+    <string name="book_reader_speed">Vitesse</string>
+    <string name="book_reader_pitch">Ton</string>
+    <string name="book_reader_voice">Voix</string>
+    <string name="book_reader_voice_default">Défaut</string>
+    <string name="book_reader_tts_not_ready">TTS non prêt</string>
+    <string name="book_reader_error">Impossible d\'ouvrir ce fichier</string>
+    <string name="book_reader_font_picker_title">Polices</string>
+    <string name="book_reader_font_default">Par défaut (système)</string>
+    <string name="book_reader_font_size">Taille : %1$d sp</string>
+    <string name="book_reader_font_preview_text">Le vif renard brun saute par-dessus le chien paresseux.\n\nLa lecture est un voyage vers d\'autres mondes et d\'autres esprits.</string>
+
+    <!-- Library screen -->
+    <string name="book_library_title">Récents</string>
+    <string name="book_library_empty">Aucun livre</string>
+    <string name="book_library_empty_hint">Appuyez sur + pour ajouter votre premier livre</string>
+    <string name="book_library_add">Ajouter un livre</string>
+    <string name="book_library_author_unknown">Auteur inconnu</string>
+    <string name="book_library_delete">Retirer</string>
+    <string name="book_library_delete_confirm">Retirer ce livre de votre bibliothèque ?</string>
+    <string name="book_tab_recents">Récents</string>
+    <string name="book_tab_shelf">Bibliothèques</string>
+    <string name="book_add_book">Ajouter un livre</string>
+    <string name="book_add_library">Bibliothèques</string>
+
+    <!-- Bookshelf -->
+    <string name="book_shelf_title">Bibliothèques</string>
+    <string name="book_shelf_empty">Aucune bibliothèque.\nAppuyez sur + pour ajouter un dossier.</string>
+    <string name="book_shelf_add_library">Ajouter une bibliothèque</string>
+    <string name="book_shelf_scanning_title">Scan en cours…</string>
+    <string name="book_shelf_rescanning_title">Rescan en cours…</string>
+    <string name="book_shelf_scanning_found">%1$d livres trouvés</string>
+    <string name="book_shelf_options_rescan">Rescanner</string>
+    <string name="book_shelf_options_delete">Supprimer la bibliothèque</string>
+    <string name="book_shelf_delete_confirm">Supprimer cette bibliothèque et tous ses livres ?</string>
+    <string name="book_shelf_books_count">%1$d livres</string>
+    <string name="book_shelf_tree_empty">Aucun livre dans cette bibliothèque.</string>
+    <string name="book_shelf_format">%1$s</string>
+    <string name="book_shelf_size">%1$s</string>
+</resources>

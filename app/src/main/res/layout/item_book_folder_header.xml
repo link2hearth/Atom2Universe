@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingEnd="16dp">
+
+    <View
+        android:id="@+id/folder_indent"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/folder_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_folder_open"
+        android:tint="#BCAAA4"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/folder_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:alpha="0.85" />
+
+    <TextView
+        android:id="@+id/folder_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.45"
+        android:paddingEnd="6dp"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/folder_chevron"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_chevron_down"
+        android:alpha="0.5"
+        android:contentDescription="@null" />
+
+</LinearLayout>

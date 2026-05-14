@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Sedang diputar</string>
+    <string name="audio_notification_unknown_artist">Artis tidak dikenal</string>
+    <string name="audio_action_pause">Jeda</string>
+    <string name="audio_action_play">Putar</string>
+    <string name="audio_action_stop">Berhenti</string>
+    <string name="audio_action_dismiss">Tutup</string>
+    <string name="audio_source_radio">Radio</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Musik</string>
+    <string name="audio_conflict_title">Audio sedang diputar</string>
+    <string name="audio_conflict_message">%1$s sedang diputar. Apa yang ingin Anda dengarkan?</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_settings_title">Pengaturan audio</string>
+    <string name="audio_settings_description">Konfigurasi output audio saat keyboard MIDI terhubung.</string>
+    <string name="audio_option_speaker_force">Paksa suara melalui speaker tablet</string>
+    <string name="audio_option_keyboard_sound">Putar nada saya di tablet (jika tidak, di keyboard)</string>
+    <string name="audio_settings_help">Bantuan</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Putar / Jeda</string>
+    <string name="audio_hub_stop">Berhenti</string>
+    <string name="audio_hub_no_playback">Tidak ada pemutaran</string>
+    <string name="audio_hub_playing">Sedang diputar...</string>
+    <string name="audio_hub_paused">Dijeda</string>
+    <string name="audio_hub_radio_title">Radio Web</string>
+    <string name="audio_hub_radio_desc">Dengarkan ribuan stasiun</string>
+    <string name="audio_hub_midi_title">Pemutar MIDI</string>
+    <string name="audio_hub_midi_desc">File MIDI dengan sintesis SCC</string>
+    <string name="audio_hub_music_title">Pemutar Musik</string>
+    <string name="audio_hub_music_desc">Pustaka musik Anda</string>
+    <string name="audio_hub_editor_title">Editor Audio</string>
+    <string name="audio_hub_editor_desc">Potong file audio Anda</string>
+    <string name="audio_hub_stats_title">Statistik</string>
+    <string name="audio_hub_stats_desc">Rekap mendengarkan Anda</string>
+</resources>

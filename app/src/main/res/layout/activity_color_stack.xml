@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A0F1E">
+
+    <!-- Bouton retour -->
+    <ImageButton
+        android:id="@+id/color_stack_back_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/color_stack_back"
+        android:padding="10dp"
+        android:src="@drawable/ic_arrow_back_24"
+        android:tint="#94A3B8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Label difficulté -->
+    <TextView
+        android:id="@+id/color_stack_difficulty_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/color_stack_difficulty_label"
+        android:textColor="#94A3B8"
+        android:textSize="13sp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@id/color_stack_back_button"
+        app:layout_constraintTop_toTopOf="@id/color_stack_back_button"
+        app:layout_constraintBottom_toBottomOf="@id/color_stack_back_button" />
+
+    <!-- Spinner difficulté -->
+    <Spinner
+        android:id="@+id/color_stack_difficulty_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/color_stack_difficulty_label"
+        app:layout_constraintTop_toTopOf="@id/color_stack_back_button"
+        app:layout_constraintBottom_toBottomOf="@id/color_stack_back_button" />
+
+    <!-- Compteur de coups -->
+    <TextView
+        android:id="@+id/color_stack_moves"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/color_stack_moves_zero"
+        android:textColor="#64748B"
+        android:textSize="13sp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/color_stack_back_button"
+        app:layout_constraintBottom_toBottomOf="@id/color_stack_back_button" />
+
+    <!-- Vue du jeu -->
+    <com.Atom2Universe.app.games.colorstack.ColorStackView
+        android:id="@+id/color_stack_game_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/color_stack_back_button"
+        app:layout_constraintBottom_toTopOf="@id/color_stack_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Message statut -->
+    <TextView
+        android:id="@+id/color_stack_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#22C55E"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/color_stack_buttons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Boutons en bas -->
+    <LinearLayout
+        android:id="@+id/color_stack_buttons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="12dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/color_stack_btn_new"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/color_stack_btn_new"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/color_stack_btn_restart"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/color_stack_btn_restart"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/color_stack_btn_undo"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/color_stack_btn_undo"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

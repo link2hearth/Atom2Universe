@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Зараз грає</string>
+    <string name="audio_notification_unknown_artist">Невідомий виконавець</string>
+    <string name="audio_action_pause">Пауза</string>
+    <string name="audio_action_play">Грати</string>
+    <string name="audio_action_stop">Зупинити</string>
+    <string name="audio_action_dismiss">Закрити</string>
+    <string name="audio_source_radio">Радіо</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Музика</string>
+    <string name="audio_conflict_title">Аудіо відтворюється</string>
+    <string name="audio_conflict_message">%1$s вже відтворюється. Що ви хочете слухати?</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_settings_title">Налаштування звуку</string>
+    <string name="audio_settings_description">Налаштуйте аудіовихід при підключенні MIDI-клавіатури.</string>
+    <string name="audio_option_speaker_force">Примусово виводити звук через динаміки планшета</string>
+    <string name="audio_option_keyboard_sound">Відтворювати мої ноти на планшеті (інакше на клавіатурі)</string>
+    <string name="audio_settings_help">Довідка</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Грати / Пауза</string>
+    <string name="audio_hub_stop">Зупинити</string>
+    <string name="audio_hub_no_playback">Немає відтворення</string>
+    <string name="audio_hub_playing">Зараз грає…</string>
+    <string name="audio_hub_paused">Призупинено</string>
+    <string name="audio_hub_radio_title">Веб-радіо</string>
+    <string name="audio_hub_radio_desc">Слухайте тисячі станцій</string>
+    <string name="audio_hub_midi_title">MIDI-програвач</string>
+    <string name="audio_hub_midi_desc">MIDI-файли з SCC-синтезом</string>
+    <string name="audio_hub_music_title">Музичний програвач</string>
+    <string name="audio_hub_music_desc">Ваша музична бібліотека</string>
+    <string name="audio_hub_editor_title">Аудіоредактор</string>
+    <string name="audio_hub_editor_desc">Обрізайте ваші аудіофайли</string>
+    <string name="audio_hub_stats_title">Статистика</string>
+    <string name="audio_hub_stats_desc">Перегляд статистики використання</string>
+</resources>

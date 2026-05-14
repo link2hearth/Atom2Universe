@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Geri</string>
+    <string name="hub_toggle_view">Görünümü değiştir</string>
+    <string name="hub_edit_mode">Düzenleme modu</string>
+    <string name="hub_confirm_edit">Düzenleme bitti</string>
+    <string name="startup_view_toggle">Görünümü değiştir</string>
+    <string name="notification_channel_audio_name">Ses oynatma</string>
+    <string name="notification_channel_audio_description">Sesin arka planda çalmaya devam etmesini sağlar.</string>
+    <string name="hub_pick_color">Renk seçin</string>
+    <string name="hub_edit_tile">Kutucuğu düzenle</string>
+    <string name="hub_change_language">Dili değiştir</string>
+    <string name="hub_language_changed">Dil %1$s olarak değiştirildi</string>
+    <string name="hub_select_language">Dil seçin</string>
+    <string name="hub_settings">Ayarlar</string>
+    <string name="hub_about">Hakkında</string>
+    <string name="hub_theme">Uygulama teması</string>
+</resources>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atom2Universe</string>
+    <string name="hybrid_program_selection_title">Wybierz instrumenty SF2</string>
+    <string name="hybrid_program_selection_desc">Wybierz, które instrumenty powinny używać Twojego SoundFonta. Niewybrane instrumenty będą używać Sonivox (wbudowane dźwięki GM).</string>
+    <string name="hybrid_drums_channel_9">Perkusja (kanał 10)</string>
+    <string name="hybrid_drums_desc">Zestawy perkusyjne i instrumenty perkusyjne</string>
+    <string name="hybrid_select_all">Zaznacz wszystko</string>
+    <string name="hybrid_select_none">Odznacz wszystko</string>
+    <string name="hybrid_selection_summary">%1$d instrumentów używa SF2%2$s</string>
+    <string name="hybrid_selection_summary_format">%1$d instrumentów używa SF2%2$s</string>
+    <string name="expand">Rozwiń</string>
+    <string name="widget_description">Widget sterowania audio dla Muzyki, Radia i MIDI</string>
+    <string name="widget_no_track">Brak odtwarzania</string>
+    <string name="widget_tap_to_play">Dotknij, aby wznowić</string>
+    <string name="widget_album_art">Okładka albumu</string>
+    <string name="widget_play_pause">Odtwórz / Pauza</string>
+    <string name="widget_next">Następny</string>
+    <string name="widget_previous">Poprzedni</string>
+    <string name="play">Odtwórz</string>
+    <string name="stop">Zatrzymaj</string>
+    <string name="settings">Ustawienia</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Anuluj</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">Anuluj</string>
+    <string name="common_delete">Usuń</string>
+    <string name="common_continue">Kontynuuj</string>
+    <string name="common_permission_required">Wymagane uprawnienia</string>
+    <string name="save">Zapisz</string>
+    <string name="delete">Usuń</string>
+    <string name="close">Zamknij</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="color_channel_format">Kanał %d</string>
+    <string name="color_not_set">Domyślny</string>
+    <string name="apply">Zastosuj</string>
+</resources>

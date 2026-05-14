@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="midi_player_title">MIDI-плеер</string>
+    <string name="midi_nav_library">Библиотека</string>
+    <string name="midi_nav_playlists">Плейлисты</string>
+    <string name="midi_nav_now_playing">Сейчас играет</string>
+    <string name="midi_nav_practice">Практика</string>
+    <string name="midi_no_track_playing">Трек не воспроизводится</string>
+    <string name="midi_soundfont_imported">SoundFont импортирован: %1$s (%2$d МБ)</string>
+    <string name="midi_soundfont_import_error">Ошибка: %1$s</string>
+    <string name="midi_folder_scanning">Сканирование папки MIDI…</string>
+    <string name="midi_folder_scan_complete">Сканирование завершено: найдено %1$d MIDI-файлов</string>
+    <string name="midi_library_empty">MIDI-файлы не найдены. Выберите папку для сканирования.</string>
+    <string name="midi_select_soundfont">Синтезатор</string>
+    <string name="midi_select_folder">Выбрать папку MIDI</string>
+    <string name="midi_refresh_library">Обновить библиотеку</string>
+    <string name="midi_clear_library">Очистить библиотеку</string>
+    <string name="midi_clear_library_confirm">Вы уверены, что хотите очистить всю библиотеку MIDI?</string>
+    <string name="midi_library_cleared">Библиотека очищена</string>
+    <string name="midi_library_refreshing">Обновление библиотеки…</string>
+    <string name="midi_action_previous">Предыдущий</string>
+    <string name="midi_action_next">Следующий</string>
+    <string name="midi_action_shuffle">Случайный порядок</string>
+    <string name="midi_action_repeat">Повтор</string>
+    <string name="midi_shuffle_scope_title">Область перемешивания</string>
+    <string name="midi_shuffle_scope_current">Текущий альбом/папка</string>
+    <string name="midi_shuffle_scope_artist">Текущий исполнитель (все альбомы)</string>
+    <string name="midi_shuffle_scope_library">Вся библиотека</string>
+    <string name="midi_unknown_artist">Неизвестный исполнитель</string>
+    <string name="midi_unknown_album">Неизвестный альбом</string>
+    <string name="midi_channels_active">Активные дорожки</string>
+    <string name="midi_no_channels">Дорожки не обнаружены</string>
+    <string name="midi_mute_track">Заглушить дорожку</string>
+    <string name="midi_unmute_track">Включить звук дорожки</string>
+    <string name="midi_toggle_keyboard">Показать/скрыть клавиатуру</string>
+    <string name="midi_practice_mode">Режим практики</string>
+    <string name="midi_refresh_keyboards">Обновить клавиатуры</string>
+    <string name="midi_keyboards_refreshed">Клавиатуры обновлены</string>
+    <string name="midi_two_hands_practice">Практика двумя руками</string>
+    <string name="midi_two_hands_detected">Обнаружена пьеса для фортепиано (левая/правая руки)</string>
+    <string name="audio_help_title">Справка - Настройки звука</string>
+    <string name="midi_favorite">Избранное</string>
+    <string name="midi_added_to_favorites">Добавлено в избранное</string>
+    <string name="midi_removed_from_favorites">Удалено из избранного</string>
+    <string name="midi_create_playlist">Новый плейлист</string>
+    <string name="midi_playlist_name_hint">Название плейлиста</string>
+    <string name="midi_create">Создать</string>
+    <string name="midi_cancel">Отмена</string>
+    <string name="midi_playlist_name_empty">Название не может быть пустым</string>
+    <string name="midi_playlist_created">Плейлист создан: %1$s</string>
+    <string name="midi_rename">Переименовать</string>
+    <string name="midi_delete">Удалить</string>
+    <string name="midi_rename_playlist">Переименовать плейлист</string>
+    <string name="midi_playlist_renamed">Плейлист переименован</string>
+    <string name="midi_delete_playlist">Удалить плейлист</string>
+    <string name="midi_delete_playlist_confirm">Удалить плейлист \"%1$s\"?</string>
+    <string name="midi_playlist_deleted">Плейлист удалён</string>
+    <string name="midi_clear_playlist">Очистить плейлист</string>
+    <string name="midi_clear_playlist_confirm">Удалить все треки из \"%1$s\"?</string>
+    <string name="midi_clear">Очистить</string>
+    <string name="midi_playlist_cleared">Плейлист очищен</string>
+    <plurals name="midi_track_count">
+        <item quantity="one">%d трек</item>
+        <item quantity="few">%d трека</item>
+        <item quantity="many">%d треков</item>
+        <item quantity="other">%d треков</item>
+    </plurals>
+    <string name="midi_playlists_empty">Нет плейлистов.\nСоздайте один!</string>
+    <string name="midi_playlist_empty">Этот плейлист пуст.</string>
+    <string name="midi_shuffle_play">Случайное воспроизведение</string>
+    <string name="midi_remove_from_playlist">Удалить из плейлиста</string>
+    <string name="midi_track_removed">Трек удалён</string>
+    <string name="midi_add_to_playlist">Добавить в плейлист</string>
+    <string name="midi_add_to_playlist_title">Добавить \"%1$s\"</string>
+    <string name="midi_new_playlist">+ Новый плейлист</string>
+    <string name="midi_loading_playlists">Загрузка…</string>
+    <string name="midi_track_added_to_playlist">Добавлено в %1$s</string>
+    <string name="midi_track_already_in_playlist">Уже в этом плейлисте</string>
+    <string name="midi_track_info">Информация</string>
+    <string name="midi_info_title">Информация о MIDI</string>
+    <string name="midi_info_loading">Анализ файла…</string>
+    <string name="midi_info_close">Закрыть</string>
+    <string name="midi_info_section_file">Файл</string>
+    <string name="midi_info_filename">Имя</string>
+    <string name="midi_info_size">Размер</string>
+    <string name="midi_info_modified">Изменён</string>
+    <string name="midi_info_path">Путь</string>
+    <string name="midi_info_section_midi">Формат MIDI</string>
+    <string name="midi_info_format">Формат</string>
+    <string name="midi_info_tracks">Дорожки</string>
+    <string name="midi_info_resolution">Разрешение</string>
+    <string name="midi_info_duration">Длительность</string>
+    <string name="midi_info_total_notes">Всего нот</string>
+    <string name="midi_info_section_tempo">Темп</string>
+    <string name="midi_info_bpm">Темп</string>
+    <string name="midi_info_tempo_changes">Изменения</string>
+    <string name="midi_info_avg_bpm">Средний темп</string>
+    <string name="midi_info_time_signature">Музыкальный размер</string>
+    <string name="midi_info_time_changes">Изменения размера</string>
+    <string name="midi_info_section_channels">Каналы (%d)</string>
+    <string name="midi_info_channel">Канал %d</string>
+    <string name="midi_info_channel_drums">Канал %d (Ударные)</string>
+    <string name="midi_info_section_metadata">Метаданные</string>
+    <string name="midi_info_track_names">Названия дорожек</string>
+    <string name="midi_info_copyright">Авторские права</string>
+    <string name="midi_info_text_events">Текст</string>
+    <string name="midi_scan_loading_title">Сканирование…</string>
+    <string name="midi_scan_loading_progress">%1$d / %2$d файлов</string>
+    <string name="midi_scan_loading_counting">Подсчёт файлов…</string>
+    <string name="midi_scan_loading_current">%1$s</string>
+    <string name="midi_audio_settings">Настройки звука</string>
+    <string name="midi_audio_normalization">Нормализация громкости</string>
+    <string name="midi_audio_normalization_desc">Снижение пиков громкости для предотвращения искажений</string>
+    <string name="midi_audio_master_gain">Общая громкость</string>
+    <string name="midi_audio_reverb">Реверберация</string>
+    <string name="midi_reverb_off">Выкл.</string>
+    <string name="midi_reverb_large_hall">Большой зал</string>
+    <string name="midi_reverb_hall">Зал</string>
+    <string name="midi_reverb_chamber">Камерный зал</string>
+    <string name="midi_reverb_room">Комната</string>
+    <string name="midi_sf2_settings">Движок SF2</string>
+    <string name="midi_sf2_settings_desc">Настройки пользовательского SoundFont-синтезатора</string>
+    <string name="midi_sf2_velocity_curve">Кривая velocity</string>
+    <string name="midi_sf2_velocity_linear">Линейная</string>
+    <string name="midi_sf2_velocity_linear_desc">Прямое отображение (плоский отклик)</string>
+    <string name="midi_sf2_velocity_concave">Вогнутая</string>
+    <string name="midi_sf2_velocity_concave_desc">Больше контроля на низких velocity (рекомендуется)</string>
+    <string name="midi_sf2_velocity_soft">Мягкая</string>
+    <string name="midi_sf2_velocity_soft_desc">Очень плавная на низких velocity (выразительное фортепиано)</string>
+    <string name="midi_sf2_velocity_hard">Жёсткая</string>
+    <string name="midi_sf2_velocity_hard_desc">Агрессивный отклик (ударные, резкие звуки)</string>
+    <string name="midi_sf2_not_active">Движок SF2 не активен</string>
+    <string name="midi_eq_title">Эквалайзер</string>
+    <string name="midi_eq_enabled">Включить EQ</string>
+    <string name="midi_eq_preset_flat">Ровно</string>
+    <string name="midi_eq_preset_rock">Rock</string>
+    <string name="midi_eq_preset_jazz">Jazz</string>
+    <string name="midi_eq_preset_piano">Piano</string>
+    <string name="midi_eq_preset_bass">Усиление басов</string>
+    <string name="midi_player_not_connected">Плеер не подключён</string>
+    <string name="midi_no_track_current">Нет текущего трека</string>
+    <string name="midi_no_tracks_found">Треки не найдены</string>
+    <string name="midi_error_message">Ошибка: %1$s</string>
+    <string name="midi_service_not_connected">Служба воспроизведения не подключена</string>
+    <string name="midi_events_received">MIDI-события получены!</string>
+    <string name="midi_importing_soundfont">Импорт SoundFont…</string>
+    <string name="midi_scanning_folder">Сканирование папки MIDI…</string>
+    <string name="midi_synth_title">Синтезатор</string>
+    <string name="midi_synthesizer_selection">Синтезатор</string>
+    <string name="midi_synth_description">Выберите звуковой движок для воспроизведения MIDI</string>
+    <string name="midi_synth_sonivox">Sonivox (встроенный)</string>
+    <string name="midi_synth_sonivox_desc">Лёгкий встроенный синтезатор со звуками General MIDI. Внешние файлы не требуются.</string>
+    <string name="midi_synth_sf2_custom">SoundFont (SF2)</string>
+    <string name="midi_synth_sf2_none">SoundFont (не импортирован)</string>
+    <string name="midi_synth_sf2_desc">Высококачественный синтез с пользовательскими сэмплами инструментов.</string>
+    <string name="midi_synth_sf2_tip">Совет: для лучшего результата используйте качественный SF2-файл с сэмплами 44 кГц. Предпочтительны SoundFont-ы от 100 до 500 МБ в зависимости от устройства. Маленькие сжатые SoundFont-ы могут иметь проблемы со звуком на быстрых пассажах.</string>
+    <string name="midi_synth_import_sf2">Импортировать SF2</string>
+    <string name="midi_synth_change_sf2">Изменить SF2</string>
+    <string name="midi_synth_remove_sf2">Удалить</string>
+    <string name="midi_synth_switched_sonivox">Переключено на синтезатор Sonivox</string>
+    <string name="midi_synth_switched_sf2">Переключено на SoundFont: %1$s</string>
+    <string name="midi_synth_sf2_imported">SoundFont загружен: %1$s</string>
+    <string name="midi_synth_sf2_removed">SoundFont удалён</string>
+    <string name="midi_synth_sf2_large_warning">Большой файл (%1$d МБ). Загрузка может занять время и потребовать значительного объёма памяти.</string>
+    <string name="midi_synth_hybrid">Гибридный (SF2 + Sonivox)</string>
+    <string name="midi_synth_hybrid_none">Гибридный (SF2 не импортирован)</string>
+    <string name="midi_synth_hybrid_desc">Комбинирование звуков SF2 и Sonivox по инструментам. Выберите, какие инструменты используют ваш SoundFont.</string>
+    <string name="midi_synth_hybrid_info">%1$d инструментов используют SF2</string>
+    <string name="midi_synth_configure_instruments">Настроить инструменты…</string>
+    <string name="midi_synth_switched_hybrid">Переключено на гибридный режим с %1$d SF2-инструментами</string>
+    <string name="midi_synth_fluidsynth">FluidSynth</string>
+    <string name="midi_synth_fluidsynth_none">FluidSynth (SF2 не импортирован)</string>
+    <string name="midi_synth_fluidsynth_desc">Признанный движок синтеза с открытым исходным кодом. Импортирован как нативная библиотека.</string>
+    <string name="midi_synth_switched_fluidsynth">Переключено на FluidSynth: %1$s</string>
+    <string name="midi_synth_sf2_engines_header">Движки SoundFont</string>
+    <string name="midi_synth_sf2_engines_subtitle">Требуют файл SoundFont (.sf2)</string>
+    <string name="midi_synth_a2u">A2U (Экспериментальный)</string>
+    <string name="midi_synth_a2u_desc">Встроенный движок синтеза, созданный для этого приложения.</string>
+    <string name="midi_synth_active_badge">АКТИВЕН</string>
+    <string name="midi_synth_no_soundfont">SoundFont не импортирован</string>
+    <string name="midi_synth_soundfont_section">SoundFont</string>
+    <string name="midi_synth_advanced_options">Дополнительные настройки</string>
+    <string name="midi_synth_hybrid_mode">Гибридный режим</string>
+    <string name="practice_title">Режим практики</string>
+    <string name="practice_restart">Перезапустить</string>
+    <string name="practice_mark">Установить маркер</string>
+    <string name="practice_goto_mark">Перейти к маркеру</string>
+    <string name="practice_marker_added">Маркер добавлен: %1$s</string>
+    <string name="practice_marker_position">Позиция маркера: %1$s</string>
+    <string name="practice_accompaniment">Аккомпанемент</string>
+    <string name="practice_midi_input">MIDI-клавиатура</string>
+    <string name="practice_midi_keyboard_detected">Клавиатура обнаружена</string>
+    <string name="practice_midi_keyboard_not_detected">Клавиатура не обнаружена</string>
+    <string name="practice_midi_keyboard_unauthorized">Клавиатура обнаружена, но не авторизована</string>
+    <string name="practice_led_control">Подсветка клавиш</string>
+    <string name="practice_led_immediate">Мгновенно</string>
+    <string name="practice_led_advance_format">%d мс</string>
+    <string name="practice_audio_settings">Настройки звука</string>
+    <string name="practice_i_play">Я играю</string>
+    <string name="practice_keyboard_leds">Подсветка клавиш</string>
+    <string name="practice_mute_led_sound">Отключить звук подсветки</string>
+    <string name="practice_mute_internal_synth">Отключить внутренний синтезатор для нот клавиатуры</string>
+    <string name="practice_scoring">Подсчёт очков</string>
+    <string name="practice_note_names">Ноты</string>
+    <string name="practice_score">Счёт</string>
+    <string name="practice_correct">Правильно</string>
+    <string name="practice_missed">Пропущено</string>
+    <string name="practice_streak">Серия</string>
+    <string name="practice_best_streak">Лучшая серия</string>
+    <string name="practice_accuracy">Точность</string>
+    <string name="practice_speed">Скорость</string>
+    <string name="practice_speed_min">0,1x</string>
+    <string name="practice_speed_max">1,0x</string>
+    <string name="practice_time_zero">0:00</string>
+    <string name="practice_time_remaining">-%1$s</string>
+    <string name="practice_free_mode">Свободная игра</string>
+    <string name="practice_left_hand_only">Только левая рука</string>
+    <string name="practice_right_hand_only">Только правая рука</string>
+    <string name="practice_both_hands">Обе руки</string>
+    <string name="practice_hand_mode_left">Практика левой руки</string>
+    <string name="practice_hand_mode_right">Практика правой руки</string>
+    <string name="practice_hand_mode_both">Практика обеих рук</string>
+    <string name="practice_left_hand_sound">Звук левой руки</string>
+    <string name="practice_right_hand_sound">Звук правой руки</string>
+    <string name="practice_both_hands_sound">Звук обеих рук</string>
+    <string name="practice_sound_mode_left">Воспроизведение только левой руки</string>
+    <string name="practice_sound_mode_right">Воспроизведение только правой руки</string>
+    <string name="practice_sound_mode_both">Воспроизведение обеих рук</string>
+    <string name="practice_octaves">Октавы</string>
+    <string name="practice_octave_down">Сдвинуть октаву вниз</string>
+    <string name="practice_octave_up">Сдвинуть октаву вверх</string>
+    <string name="practice_less_octaves">Меньше октав</string>
+    <string name="practice_more_octaves">Больше октав</string>
+    <string name="practice_octave_count">%d окт.</string>
+    <string name="practice_current_instrument">%1$d: %2$s</string>
+    <string name="practice_select_instrument">Выбрать инструмент</string>
+    <string name="practice_sf2_load_error">Не удалось загрузить SF2 SoundFont. Проверьте настройки синтезатора.</string>
+    <string name="practice_wait_mode">Режим ожидания</string>
+    <string name="practice_wait_mode_delay">Задержка режима ожидания</string>
+    <string name="practice_sheet_music">Ноты</string>
+    <string name="practice_recording_mode">Запись практики</string>
+    <string name="practice_recording_enabled">Запись практики включена</string>
+    <string name="practice_recording_enabled_cleared">Запись практики включена (предыдущий дубль очищен)</string>
+    <string name="practice_recording_filename">Запись_%1$s</string>
+    <string name="practice_volume_percent">%1$d%%</string>
+    <string name="practice_countdown">Задержка старта</string>
+    <string name="practice_countdown_title">Задержка старта</string>
+    <string name="practice_countdown_description">Настройте задержку перед началом воспроизведения MIDI</string>
+    <string name="practice_countdown_seconds">%d секунд</string>
+    <string name="practice_countdown_disabled">Отключено</string>
+    <string name="practice_countdown_start_on_play">Начать, когда я заиграю</string>
+    <string name="practice_countdown_start_on_play_desc">MIDI начнётся, как только вы сыграете первую ноту</string>
+    <string name="practice_countdown_active">Старт через %d…</string>
+    <string name="practice_countdown_waiting">Ожидание вашей игры…</string>
+    <string name="practice_countdown_cancelled">Отсчёт отменён</string>
+    <string name="practice_recording_disabled">Запись практики отключена</string>
+    <string name="practice_wait_mode_delay_title">Задержка перед паузой</string>
+    <string name="practice_wait_mode_enabled">Режим ожидания включён</string>
+    <string name="practice_wait_mode_disabled">Режим ожидания отключён</string>
+    <string name="practice_switch_to_free_mode_title">Переключиться на свободную игру?</string>
+    <string name="practice_switch_to_free_mode_message">Это выгрузит текущий MIDI-файл. Вы можете загрузить его снова из библиотеки.</string>
+    <string name="practice_switch_confirm">Переключить</string>
+    <string name="practice_accompaniment_disabled_in_wait_mode">Оркестровка отключена в режиме ожидания</string>
+    <string name="practice_settings_strictness">Строгость</string>
+    <string name="practice_hold_duration_validation">Проверка удержания нот</string>
+    <string name="practice_hold_duration_validation_desc">Требовать удержания нот не менее 50%% их длительности</string>
+    <string name="practice_hold_duration_enabled">Проверка удержания включена</string>
+    <string name="practice_hold_duration_disabled">Проверка удержания отключена</string>
+    <string name="practice_timing_tolerance">Допуск по времени</string>
+    <string name="practice_timing_tolerance_strict">Строгий (30 мс)</string>
+    <string name="practice_timing_tolerance_normal">Обычный (60 мс)</string>
+    <string name="practice_timing_tolerance_relaxed">Свободный (120 мс)</string>
+    <string name="practice_timing_tolerance_very_relaxed">Очень свободный (200 мс)</string>
+    <string name="practice_chord_tolerance">Допуск аккордов</string>
+    <string name="practice_chord_tolerance_desc">Временное окно для нот, считающихся частью одного аккорда</string>
+    <string name="practice_visual_style">Визуальный стиль</string>
+    <string name="practice_visual_style_classic">Классический</string>
+    <string name="practice_visual_style_rainbow">Радуга</string>
+    <string name="practice_visual_style_neon">Неон</string>
+    <string name="practice_visual_style_ocean">Океан</string>
+    <string name="practice_visual_style_fire">Огонь</string>
+    <string name="practice_visual_style_changed">Визуальный стиль: %s</string>
+    <string name="practice_scoring_display">Отображение очков</string>
+    <string name="practice_scoring_display_title">Отображение очков</string>
+    <string name="practice_scoring_display_desc">Выберите, какие показатели отображать во время практики</string>
+    <string name="practice_scoring_enabled">Показывать счёт</string>
+    <string name="practice_scoring_preset">Пресет</string>
+    <string name="practice_scoring_preset_encouragement">Поощрение</string>
+    <string name="practice_scoring_preset_encouragement_desc">Только позитивные показатели (серии, хорошие ноты)</string>
+    <string name="practice_scoring_preset_full">Полная статистика</string>
+    <string name="practice_scoring_preset_full_desc">Все показатели видимы</string>
+    <string name="practice_scoring_preset_minimal">Минимальный</string>
+    <string name="practice_scoring_preset_minimal_desc">Только счёт и комбо</string>
+    <string name="practice_scoring_preset_custom">Пользовательский</string>
+    <string name="practice_scoring_preset_custom_desc">Выбрать отдельные показатели</string>
+    <string name="practice_scoring_show_score">Счёт</string>
+    <string name="practice_scoring_show_accuracy">Точность</string>
+    <string name="practice_scoring_show_streak">Текущая серия</string>
+    <string name="practice_scoring_show_best_streak">Лучшая серия</string>
+    <string name="practice_scoring_show_good_notes">Хорошие ноты</string>
+    <string name="practice_scoring_show_perfect_notes">Идеальные ноты</string>
+    <string name="practice_scoring_show_missed_notes">Пропущенные ноты</string>
+    <string name="practice_scoring_show_combo">Множитель комбо</string>
+    <string name="practice_scoring_show_grade">Оценка</string>
+    <string name="practice_scoring_compact">Компактный режим</string>
+    <string name="practice_scoring_animations">Анимации</string>
+    <string name="practice_scoring_streak_popups">Всплывающие окна серий</string>
+    <string name="practice_scoring_disabled">Отображение очков отключено</string>
+    <string name="practice_scoring_config_saved">Отображение очков обновлено</string>
+    <string name="practice_results_title">Сессия завершена</string>
+    <string name="practice_results_accuracy">Точность</string>
+    <string name="practice_results_perfect">Идеальные ноты</string>
+    <string name="practice_results_good">Хорошие ноты</string>
+    <string name="practice_results_missed">Пропущенные ноты</string>
+    <string name="practice_results_wrong">Неверные ноты</string>
+    <string name="practice_results_best_streak">Лучшая серия</string>
+    <string name="practice_results_close">Закрыть</string>
+    <string name="midi_keyboard_connected">MIDI-клавиатура подключена</string>
+    <string name="midi_keyboard_settings">Настройки MIDI-клавиатуры</string>
+    <string name="midi_keyboard_info_section">Информация</string>
+    <string name="midi_keyboard_config_section">Конфигурация</string>
+    <string name="midi_keyboard_name">Название</string>
+    <string name="midi_keyboard_manufacturer">Производитель</string>
+    <string name="midi_keyboard_connection">Подключение</string>
+    <string name="midi_keyboard_connection_usb">USB</string>
+    <string name="midi_keyboard_connection_bluetooth">Bluetooth</string>
+    <string name="midi_keyboard_connection_virtual">Виртуальное</string>
+    <string name="midi_keyboard_ports">Порты</string>
+    <string name="midi_keyboard_ports_format">%1$d вход / %2$d выход</string>
+    <string name="midi_keyboard_led_channel">Канал подсветки</string>
+    <string name="midi_keyboard_mute_sound">Отключить звук клавиатуры</string>
+    <string name="midi_keyboard_mute_sound_desc">Отправлять только команды подсветки, без звука с клавиатуры</string>
+    <string name="midi_keyboard_octave_offset">Смещение октавы подсветки</string>
+    <string name="midi_keyboard_octave_offset_desc">Сдвиг нот подсветки для соответствия диапазону клавиатуры</string>
+    <string name="midi_keyboard_octave_minus">Ниже октава</string>
+    <string name="midi_keyboard_octave_plus">Выше октава</string>
+    <string name="gm_instrument_unknown">Неизвестно</string>
+    <string name="gm_drum_channel">Ударные</string>
+    <string name="gm_percussion_format">Перкуссия %d</string>
+    <string name="audio_help_content">Это меню настраивает аудиовыход при подключении внешней MIDI-клавиатуры.\n\n• Принудительный вывод через динамики:\nКогда включено, музыка MIDI-трека всегда воспроизводится через динамики планшета, даже при подключённой USB-клавиатуре.\n\n• Воспроизводить мои ноты на планшете:\nКогда отключено (по умолчанию), ноты, сыгранные на внешней клавиатуре, звучат через саму клавиатуру (если у неё есть встроенные динамики).\nКогда включено, ваши ноты также звучат через динамики планшета.\n\nСовет: Если у вас клавиатура с динамиками (как многие Yamaha), оставьте 2-ю опцию отключённой для лучшего качества звука.</string>
+    <string name="gm_category_piano">Фортепиано</string>
+    <string name="gm_category_chromatic_percussion">Хроматическая перкуссия</string>
+    <string name="gm_category_organ">Орган</string>
+    <string name="gm_category_guitar">Гитара</string>
+    <string name="gm_category_bass">Бас</string>
+    <string name="gm_category_strings">Струнные</string>
+    <string name="gm_category_ensemble">Ансамбль</string>
+    <string name="gm_category_brass">Медные духовые</string>
+    <string name="gm_category_reed">Язычковые</string>
+    <string name="gm_category_pipe">Флейты</string>
+    <string name="gm_category_synth_lead">Синт-соло</string>
+    <string name="gm_category_synth_pad">Синт-пэд</string>
+    <string name="gm_category_synth_fx">Синт-эффекты</string>
+    <string name="gm_category_ethnic">Этнические</string>
+    <string name="gm_category_percussive">Ударные</string>
+    <string name="gm_category_sound_fx">Звуковые эффекты</string>
+    <string name="gm_category_other">Другое</string>
+    <string name="gm_drum_35">Акустический бас-барабан</string>
+    <string name="gm_drum_36">Бас-барабан 1</string>
+    <string name="gm_drum_37">Римшот</string>
+    <string name="gm_drum_38">Акустический малый барабан</string>
+    <string name="gm_drum_39">Хлопок</string>
+    <string name="gm_drum_40">Электронный малый барабан</string>
+    <string name="gm_drum_41">Низкий напольный том</string>
+    <string name="gm_drum_42">Закрытый хай-хэт</string>
+    <string name="gm_drum_43">Высокий напольный том</string>
+    <string name="gm_drum_44">Педальный хай-хэт</string>
+    <string name="gm_drum_45">Низкий том</string>
+    <string name="gm_drum_46">Открытый хай-хэт</string>
+    <string name="gm_drum_47">Низкий средний том</string>
+    <string name="gm_drum_48">Высокий средний том</string>
+    <string name="gm_drum_49">Крэш-тарелка 1</string>
+    <string name="gm_drum_50">Высокий том</string>
+    <string name="gm_drum_51">Райд-тарелка 1</string>
+    <string name="gm_drum_52">Китайская тарелка</string>
+    <string name="gm_drum_53">Райд-белл</string>
+    <string name="gm_drum_54">Тамбурин</string>
+    <string name="gm_drum_55">Сплэш-тарелка</string>
+    <string name="gm_drum_56">Коубелл</string>
+    <string name="gm_drum_57">Крэш-тарелка 2</string>
+    <string name="gm_drum_58">Вибраслэп</string>
+    <string name="gm_drum_59">Райд-тарелка 2</string>
+    <string name="gm_drum_60">Высокий бонго</string>
+    <string name="gm_drum_61">Низкий бонго</string>
+    <string name="gm_drum_62">Приглушённая высокая конга</string>
+    <string name="gm_drum_63">Открытая высокая конга</string>
+    <string name="gm_drum_64">Низкая конга</string>
+    <string name="gm_drum_65">Высокий тимбал</string>
+    <string name="gm_drum_66">Низкий тимбал</string>
+    <string name="gm_drum_67">Высокий агого</string>
+    <string name="gm_drum_68">Низкий агого</string>
+    <string name="gm_drum_69">Кабаса</string>
+    <string name="gm_drum_70">Маракасы</string>
+    <string name="gm_drum_71">Короткий свисток</string>
+    <string name="gm_drum_72">Длинный свисток</string>
+    <string name="gm_drum_73">Короткий гуиро</string>
+    <string name="gm_drum_74">Длинный гуиро</string>
+    <string name="gm_drum_75">Клавес</string>
+    <string name="gm_drum_76">Высокий вуд-блок</string>
+    <string name="gm_drum_77">Низкий вуд-блок</string>
+    <string name="gm_drum_78">Приглушённая куика</string>
+    <string name="gm_drum_79">Открытая куика</string>
+    <string name="gm_drum_80">Приглушённый треугольник</string>
+    <string name="gm_drum_81">Открытый треугольник</string>
+    <string-array name="gm_instruments">
+        <item>Акустический рояль</item>
+        <item>Яркое фортепиано</item>
+        <item>Электрический рояль</item>
+        <item>Расстроенное пианино</item>
+        <item>Электропиано 1</item>
+        <item>Электропиано 2</item>
+        <item>Клавесин</item>
+        <item>Клавинет</item>
+        <item>Челеста</item>
+        <item>Глокеншпиль</item>
+        <item>Музыкальная шкатулка</item>
+        <item>Вибрафон</item>
+        <item>Маримба</item>
+        <item>Ксилофон</item>
+        <item>Колокольчики</item>
+        <item>Цимбалы</item>
+        <item>Орган с регистрами</item>
+        <item>Перкуссионный орган</item>
+        <item>Рок-орган</item>
+        <item>Церковный орган</item>
+        <item>Фисгармония</item>
+        <item>Аккордеон</item>
+        <item>Губная гармоника</item>
+        <item>Танго-аккордеон</item>
+        <item>Акустическая гитара (нейлон)</item>
+        <item>Акустическая гитара (сталь)</item>
+        <item>Электрогитара (джаз)</item>
+        <item>Электрогитара (чистая)</item>
+        <item>Электрогитара (приглушённая)</item>
+        <item>Гитара с овердрайвом</item>
+        <item>Дисторшн-гитара</item>
+        <item>Гитарные гармоники</item>
+        <item>Акустический бас</item>
+        <item>Электробас (пальцы)</item>
+        <item>Электробас (медиатор)</item>
+        <item>Безладовый бас</item>
+        <item>Слэп-бас 1</item>
+        <item>Слэп-бас 2</item>
+        <item>Синтезаторный бас 1</item>
+        <item>Синтезаторный бас 2</item>
+        <item>Скрипка</item>
+        <item>Альт</item>
+        <item>Виолончель</item>
+        <item>Контрабас</item>
+        <item>Тремоло струнных</item>
+        <item>Пиццикато струнных</item>
+        <item>Арфа</item>
+        <item>Литавры</item>
+        <item>Струнный ансамбль 1</item>
+        <item>Струнный ансамбль 2</item>
+        <item>Синтезаторные струнные 1</item>
+        <item>Синтезаторные струнные 2</item>
+        <item>Хор «А»</item>
+        <item>Хор «О»</item>
+        <item>Синтезаторный голос</item>
+        <item>Оркестровый удар</item>
+        <item>Труба</item>
+        <item>Тромбон</item>
+        <item>Туба</item>
+        <item>Труба с сурдиной</item>
+        <item>Валторна</item>
+        <item>Группа медных</item>
+        <item>Синтезаторные медные 1</item>
+        <item>Синтезаторные медные 2</item>
+        <item>Сопрано-саксофон</item>
+        <item>Альт-саксофон</item>
+        <item>Тенор-саксофон</item>
+        <item>Баритон-саксофон</item>
+        <item>Гобой</item>
+        <item>Английский рожок</item>
+        <item>Фагот</item>
+        <item>Кларнет</item>
+        <item>Пикколо</item>
+        <item>Флейта</item>
+        <item>Блокфлейта</item>
+        <item>Пан-флейта</item>
+        <item>Звук бутылки</item>
+        <item>Сякухати</item>
+        <item>Свисток</item>
+        <item>Окарина</item>
+        <item>Соло 1 (квадрат)</item>
+        <item>Соло 2 (пила)</item>
+        <item>Соло 3 (каллиопа)</item>
+        <item>Соло 4 (чифф)</item>
+        <item>Соло 5 (чаранг)</item>
+        <item>Соло 6 (голос)</item>
+        <item>Соло 7 (квинты)</item>
+        <item>Соло 8 (бас + соло)</item>
+        <item>Пэд 1 (нью-эйдж)</item>
+        <item>Пэд 2 (тёплый)</item>
+        <item>Пэд 3 (полисинт)</item>
+        <item>Пэд 4 (хор)</item>
+        <item>Пэд 5 (смычковый)</item>
+        <item>Пэд 6 (металлический)</item>
+        <item>Пэд 7 (ореол)</item>
+        <item>Пэд 8 (свип)</item>
+        <item>Эффект 1 (дождь)</item>
+        <item>Эффект 2 (саундтрек)</item>
+        <item>Эффект 3 (кристалл)</item>
+        <item>Эффект 4 (атмосфера)</item>
+        <item>Эффект 5 (яркость)</item>
+        <item>Эффект 6 (гоблины)</item>
+        <item>Эффект 7 (эхо)</item>
+        <item>Эффект 8 (научная фантастика)</item>
+        <item>Ситар</item>
+        <item>Банджо</item>
+        <item>Сямисэн</item>
+        <item>Кото</item>
+        <item>Калимба</item>
+        <item>Волынка</item>
+        <item>Скрипка народная</item>
+        <item>Шанай</item>
+        <item>Колокольчик</item>
+        <item>Агого</item>
+        <item>Стил-драм</item>
+        <item>Вуд-блок</item>
+        <item>Тайко</item>
+        <item>Мелодичный том</item>
+        <item>Синтезаторный барабан</item>
+        <item>Обратная тарелка</item>
+        <item>Шум гитарных ладов</item>
+        <item>Шум дыхания</item>
+        <item>Морской прибой</item>
+        <item>Пение птиц</item>
+        <item>Телефонный звонок</item>
+        <item>Вертолёт</item>
+        <item>Аплодисменты</item>
+        <item>Выстрел</item>
+    </string-array>
+    <string name="practice_record">Записать</string>
+    <string name="practice_record_stop">Остановить запись</string>
+    <string name="practice_no_notes_recorded">Ноты не записаны</string>
+    <string name="practice_recording_max_duration">Запись остановлена — достигнута максимальная длительность (30 мин)</string>
+    <string name="practice_export_title">Экспорт записи</string>
+    <string name="practice_export_filename">Имя файла</string>
+    <string name="practice_export_format_midi">MIDI (.mid)</string>
+    <string name="practice_export_format_wav">WAV (.wav)</string>
+    <string name="practice_export_format_wav_disabled">WAV (.wav) — требуется SF2 SoundFont</string>
+    <string name="practice_export_button">Экспорт</string>
+    <string name="practice_export_share_button">Поделиться</string>
+    <string name="practice_export_success">Экспортировано в %s</string>
+    <string name="practice_export_error">Ошибка экспорта: %s</string>
+    <string name="practice_export_rendering">Рендеринг аудио…</string>
+</resources>

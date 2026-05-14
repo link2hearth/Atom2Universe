@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Wird abgespielt</string>
+    <string name="audio_notification_unknown_artist">Unbekannter Interpret</string>
+    <string name="audio_action_pause">Pause</string>
+    <string name="audio_action_play">Abspielen</string>
+    <string name="audio_action_stop">Stopp</string>
+    <string name="audio_action_dismiss">Schließen</string>
+    <string name="audio_source_radio">Radio</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Musik</string>
+    <string name="audio_conflict_title">Audiowiedergabe aktiv</string>
+    <string name="audio_conflict_message">%1$s wird bereits abgespielt. Was möchten Sie hören?</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_settings_title">Audioeinstellungen</string>
+    <string name="audio_settings_description">Audioausgabe konfigurieren, wenn eine MIDI-Tastatur verbunden ist.</string>
+    <string name="audio_option_speaker_force">Ton über Tablet-Lautsprecher erzwingen</string>
+    <string name="audio_option_keyboard_sound">Meine Noten auf Tablet abspielen (sonst auf Tastatur)</string>
+    <string name="audio_settings_help">Hilfe</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Abspielen / Pause</string>
+    <string name="audio_hub_stop">Stopp</string>
+    <string name="audio_hub_no_playback">Keine Wiedergabe</string>
+    <string name="audio_hub_playing">Wird abgespielt…</string>
+    <string name="audio_hub_paused">Pausiert</string>
+    <string name="audio_hub_radio_title">Webradio</string>
+    <string name="audio_hub_radio_desc">Tausende Sender anhören</string>
+    <string name="audio_hub_midi_title">MIDI Player</string>
+    <string name="audio_hub_midi_desc">MIDI-Dateien mit SCC-Synthese</string>
+    <string name="audio_hub_music_title">Musik Player</string>
+    <string name="audio_hub_music_desc">Ihre Musikbibliothek</string>
+    <string name="audio_hub_editor_title">Audio-Editor</string>
+    <string name="audio_hub_editor_desc">Audiodateien zuschneiden</string>
+    <string name="audio_hub_stats_title">Statistiken</string>
+    <string name="audio_hub_stats_desc">Ihre Hörübersicht</string>
+</resources>

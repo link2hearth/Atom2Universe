@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/music_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <!-- Drag handle -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/music_text_secondary"/>
+
+        <!-- Header with title and enable switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_equalizer"
+                android:importantForAccessibility="no"
+                app:tint="?attr/a2uMusicAccent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="@string/eq_title"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/music_text_primary"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchEqEnabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumbTint="?attr/a2uMusicAccent"
+                android:trackTint="@color/music_surface"/>
+        </LinearLayout>
+
+        <!-- Preset selector (hidden - quick presets chips are used instead) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eq_preset"
+                android:textSize="14sp"
+                android:textColor="@color/music_text_secondary"/>
+
+            <Spinner
+                android:id="@+id/spinnerPreset"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:background="@color/music_surface"
+                android:paddingHorizontal="12dp"
+                android:popupBackground="@color/music_surface"/>
+
+            <ImageButton
+                android:id="@+id/btnSavePreset"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_save"
+                android:contentDescription="@string/eq_save_preset"
+                app:tint="@color/music_text_primary"/>
+
+            <ImageButton
+                android:id="@+id/btnDeletePreset"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_delete"
+                android:contentDescription="@string/eq_delete_preset"
+                app:tint="@color/music_text_primary"/>
+        </LinearLayout>
+
+        <!-- Apply to selector (Global/Track/Album/Artist) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eq_apply_to"
+                android:textSize="14sp"
+                android:textColor="@color/music_text_secondary"/>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupApplyTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGlobal"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eq_global"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipArtist"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eq_artist"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAlbum"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eq_album"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipTrack"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eq_track"/>
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
+        <!-- Current override indicator -->
+        <TextView
+            android:id="@+id/txtOverrideInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="4dp"
+            android:textSize="12sp"
+            android:textColor="?attr/a2uMusicAccent"
+            android:visibility="gone"/>
+
+        <!-- 12-band Equalizer (10 EQ + Bass Boost + Virtualizer) -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:fillViewport="true"
+            android:paddingVertical="8dp">
+
+            <LinearLayout
+                android:id="@+id/layoutEqBands"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="bottom">
+
+                <!-- EQ bands (1-10) will be added programmatically -->
+
+                <!-- Separator between EQ bands and effects -->
+                <View
+                    android:id="@+id/viewEffectSeparator"
+                    android:layout_width="1dp"
+                    android:layout_height="150dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="?attr/a2uMusicAccent"/>
+
+                <!-- Effect bands container (Bass Boost + Virtualizer) -->
+                <LinearLayout
+                    android:id="@+id/layoutEffectBands"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Quick presets (no title) -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupQuickPresets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                app:singleLine="true"
+                app:singleSelection="true"
+                app:selectionRequired="false"/>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

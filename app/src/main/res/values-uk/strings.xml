@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atom2Universe</string>
+    <string name="hybrid_program_selection_title">Вибір SF2-інструментів</string>
+    <string name="hybrid_program_selection_desc">Оберіть, які інструменти мають використовувати ваш SoundFont. Невибрані інструменти використовуватимуть Sonivox (вбудовані GM-звуки).</string>
+    <string name="hybrid_drums_channel_9">Перкусія (Канал 10)</string>
+    <string name="hybrid_drums_desc">Ударні та перкусійні інструменти</string>
+    <string name="hybrid_select_all">Вибрати все</string>
+    <string name="hybrid_select_none">Очистити все</string>
+    <string name="hybrid_selection_summary">%1$d інструментів використовують SF2%2$s</string>
+    <string name="hybrid_selection_summary_format">%1$d інструментів використовують SF2%2$s</string>
+    <string name="expand">Розгорнути</string>
+    <string name="widget_description">Віджет керування аудіо для Музики, Радіо та MIDI</string>
+    <string name="widget_no_track">Немає відтворення</string>
+    <string name="widget_tap_to_play">Торкніться для відновлення</string>
+    <string name="widget_album_art">Обкладинка альбому</string>
+    <string name="widget_play_pause">Грати / Пауза</string>
+    <string name="widget_next">Наступний</string>
+    <string name="widget_previous">Попередній</string>
+    <string name="play">Грати</string>
+    <string name="stop">Зупинити</string>
+    <string name="settings">Налаштування</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Скасувати</string>
+    <string name="confirm">Підтвердити</string>
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">Скасувати</string>
+    <string name="common_delete">Видалити</string>
+    <string name="common_continue">Продовжити</string>
+    <string name="common_permission_required">Потрібен дозвіл</string>
+    <string name="save">Зберегти</string>
+    <string name="delete">Видалити</string>
+    <string name="close">Закрити</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="color_channel_format">Канал %d</string>
+    <string name="color_not_set">За замовчуванням</string>
+    <string name="apply">Застосувати</string>
+</resources>

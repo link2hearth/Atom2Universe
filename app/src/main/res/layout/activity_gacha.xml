@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gacha_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#010310">
+
+    <!-- Bouton retour -->
+    <ImageButton
+        android:id="@+id/gacha_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="12dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:background="@android:color/transparent"
+        android:tint="#AAFFFFFF"
+        android:contentDescription="Retour" />
+
+
+    <ImageButton
+        android:id="@+id/gacha_open_periodic"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="12dp"
+        android:src="@android:drawable/ic_menu_info_details"
+        android:background="@android:color/transparent"
+        android:tint="#AAFFFFFF"
+        android:contentDescription="@string/gacha_open_periodic_table" />
+
+    <!-- Titre + tickets -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GACHA"
+            android:textColor="#FFFFD700"
+            android:textSize="13sp"
+            android:letterSpacing="0.3"
+            android:fontFamily="monospace"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/gacha_tickets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#FFFFFFFF"
+                android:textSize="14sp"
+                android:fontFamily="monospace"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/gacha_multi_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="×1"
+                android:textColor="#AAFFFFFF"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:layout_marginStart="10dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:background="@drawable/gacha_rarity_badge"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Vue particules (arrière-plan) -->
+    <com.Atom2Universe.app.crypto.gacha.GachaParticleView
+        android:id="@+id/gacha_particles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Bouton soleil central -->
+    <FrameLayout
+        android:id="@+id/gacha_sun_btn"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/gacha_sun_image"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_gravity="center"
+            android:contentDescription="Soleil gacha" />
+
+        <!-- Anneau de lueur (pulse) -->
+        <View
+            android:id="@+id/gacha_sun_glow"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:layout_gravity="center"
+            android:alpha="0.35"
+            android:background="@drawable/gacha_glow_ring" />
+
+    </FrameLayout>
+
+    <!-- Terre et Lune en haut de l'écran -->
+    <com.Atom2Universe.app.crypto.EarthMoonCanvasView
+        android:id="@+id/gacha_earth_moon"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="60dp" />
+
+
+    <!-- Overlay multi-résultat ×10 (caché au début) -->
+    <FrameLayout
+        android:id="@+id/gacha_multi_result_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#D9010310"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingTop="56dp"
+            android:paddingBottom="40dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gacha_multi_results_title"
+                android:textColor="#FFFFD700"
+                android:textSize="13sp"
+                android:letterSpacing="0.3"
+                android:fontFamily="monospace"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/gacha_multi_result_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            </ScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gacha_press_continue"
+                android:textColor="#44FFFFFF"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Card résultat (cachée au début) -->
+    <LinearLayout
+        android:id="@+id/gacha_result_card"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp"
+        android:background="@drawable/gacha_card_bg"
+        android:visibility="invisible"
+        android:alpha="0">
+
+        <!-- Numéro atomique -->
+        <TextView
+            android:id="@+id/gacha_result_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textColor="#88FFFFFF"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.2" />
+
+        <!-- Symbole -->
+        <TextView
+            android:id="@+id/gacha_result_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="H"
+            android:textColor="#FFFFFFFF"
+            android:textSize="56sp"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- Nom -->
+        <TextView
+            android:id="@+id/gacha_result_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hydrogène"
+            android:textColor="#DDFFFFFF"
+            android:textSize="18sp"
+            android:fontFamily="monospace"
+            android:layout_marginTop="4dp" />
+
+        <!-- Masse atomique -->
+        <TextView
+            android:id="@+id/gacha_result_mass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.008"
+            android:textColor="#66FFFFFF"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:layout_marginTop="2dp" />
+
+        <!-- Rareté -->
+        <TextView
+            android:id="@+id/gacha_result_rarity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="COMMUN"
+            android:textSize="11sp"
+            android:letterSpacing="0.3"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/gacha_rarity_badge" />
+
+        <!-- Famille -->
+        <TextView
+            android:id="@+id/gacha_result_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Non-métal"
+            android:textColor="#88FFFFFF"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:layout_marginTop="6dp" />
+
+
+        <TextView
+            android:id="@+id/gacha_result_copies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gacha_result_copies_placeholder"
+            android:textColor="#CCFFFFFF"
+            android:textSize="10sp"
+            android:fontFamily="monospace"
+            android:layout_marginTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:background="@drawable/gacha_rarity_badge" />
+
+        <!-- Appuyer pour continuer -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Appuyez pour continuer"
+            android:textColor="#44FFFFFF"
+            android:textSize="10sp"
+            android:fontFamily="monospace"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

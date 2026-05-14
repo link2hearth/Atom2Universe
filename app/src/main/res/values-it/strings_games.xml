@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_back">Indietro</string>
+    <string name="stats_tab_day">Oggi</string>
+    <string name="stats_tab_week">Settimana</string>
+    <string name="stats_tab_month">Mese</string>
+    <string name="stats_tab_year">Anno</string>
+    <string name="stats_total_time">Tempo totale di utilizzo</string>
+    <string name="stats_listening_time">Tempo di ascolto</string>
+    <string name="stats_practice_time">Tempo di pratica</string>
+    <string name="stats_hours_format">%1$d h %2$d min</string>
+    <string name="stats_minutes_format">%1$d min</string>
+    <string name="stats_top_artists">Top artisti</string>
+    <string name="stats_top_albums">Top album</string>
+    <string name="stats_top_midi">Brani più praticati</string>
+    <string name="stats_average_score">Punteggio medio di pratica</string>
+    <string name="stats_no_data">Nessun dato per questo periodo</string>
+</resources>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/music_background">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lyrics_title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/music_text_primary"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Status text -->
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lyrics_loading"
+        android:textSize="16sp"
+        android:textColor="@color/music_text_secondary"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Alternatives navigation row - hidden by default, shown when multiple results are available -->
+    <LinearLayout
+        android:id="@+id/alternatives_nav_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="4dp">
+
+        <ImageButton
+            android:id="@+id/btn_prev_alt"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_chevron_left"
+            android:contentDescription="@string/lyrics_prev_alt"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/music_text_primary" />
+
+        <TextView
+            android:id="@+id/tv_alt_counter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/music_text_secondary"
+            android:textSize="14sp" />
+
+        <ImageButton
+            android:id="@+id/btn_next_alt"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_chevron_right"
+            android:contentDescription="@string/lyrics_next_alt"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/music_text_primary" />
+
+    </LinearLayout>
+
+    <!-- Progress bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Lyrics text (scrollable) - NestedScrollView prevents BottomSheet drag conflict -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/lyrics_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/lyrics_edit_background"
+        android:fillViewport="true">
+
+        <EditText
+            android:id="@+id/lyrics_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="300dp"
+            android:gravity="top|start"
+            android:inputType="textMultiLine|textCapSentences"
+            android:hint="@string/lyrics_hint"
+            android:textSize="16sp"
+            android:lineSpacingExtra="6dp"
+            android:enabled="false"
+            android:textColor="@color/music_text_primary"
+            android:textColorHint="@color/music_text_secondary"
+            android:padding="16dp"
+            android:background="@android:color/transparent"
+            android:scrollbars="vertical" />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Search buttons (row 1) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <Button
+            android:id="@+id/btn_search_auto"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="@string/lyrics_auto"
+            android:textSize="16sp"
+            style="@style/Widget.Material3.Button" />
+
+        <Button
+            android:id="@+id/btn_search_manual"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="@string/lyrics_web"
+            android:textSize="16sp"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+    </LinearLayout>
+
+    <!-- Edit/Save buttons (row 2) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="@string/lyrics_edit"
+            android:textSize="16sp"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="@string/lyrics_save"
+            android:textSize="16sp"
+            style="@style/Widget.Material3.Button" />
+
+    </LinearLayout>
+
+</LinearLayout>

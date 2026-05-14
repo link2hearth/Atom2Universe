@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Comics</string>
+    <string name="hub_comics_desc">PDF, CBZ and image folder reader</string>
+    <string name="comics_library_title">Comics Library</string>
+    <string name="comics_library_empty">No comics yet</string>
+    <string name="comics_library_empty_hint">Tap + to add your first comic</string>
+    <string name="comics_add_title">Add a comic</string>
+    <string name="comics_add_pdf">PDF file</string>
+    <string name="comics_add_cbz">CBZ / ZIP file</string>
+    <string name="comics_add_folder">Image folder</string>
+    <string name="comics_delete_title">Remove comic</string>
+    <string name="comics_delete_msg">Remove \"%s\" from the library?</string>
+    <string name="comics_delete_confirm">Remove</string>
+    <string name="comics_layout_title">Page layout</string>
+    <string name="comics_layout_full">Full page</string>
+    <string name="comics_layout_half_top">Top half</string>
+    <string name="comics_layout_half_left">Left half (manga)</string>
+    <string name="comics_layout_half_right">Right half (manga)</string>
+    <string name="comics_error_open">Unable to open this file</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Scan a library folder</string>
+    <string name="comics_scanning_title">Scanning library…</string>
+    <string name="comics_scanning_found">%d comics found</string>
+    <string name="comics_delete_root_msg">Remove \"%s\" and all its comics from the library?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d comic</item>
+        <item quantity="other">%d comics</item>
+    </plurals>
+    <string name="comics_rescan">Rescan</string>
+    <string name="comics_clear_all">Clear all</string>
+    <string name="comics_clear_all_msg">Remove all comics and libraries from the list?</string>
+    <string name="comics_rescanning_title">Rescanning…</string>
+    <string name="comics_toggle_view">Toggle view</string>
+</resources>

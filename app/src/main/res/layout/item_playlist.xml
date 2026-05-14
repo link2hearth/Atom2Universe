@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    app:cardBackgroundColor="@color/midi_surface"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Playlist icon -->
+        <ImageView
+            android:id="@+id/playlist_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_agenda"
+            app:tint="?attr/a2uMidiAccent"
+            android:importantForAccessibility="no" />
+
+        <!-- Playlist info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/playlist_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Ma Playlist" />
+
+            <TextView
+                android:id="@+id/playlist_track_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/midi_text_secondary"
+                android:textSize="11sp"
+                tools:text="15 morceaux" />
+
+        </LinearLayout>
+
+        <!-- Menu button -->
+        <ImageButton
+            android:id="@+id/btn_menu"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@android:drawable/ic_menu_more"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside"
+            app:tint="@color/midi_text_secondary"
+            android:contentDescription="@string/notes_action_menu" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

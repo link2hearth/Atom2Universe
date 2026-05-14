@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atom2Universe</string>
+    <string name="hybrid_program_selection_title">SF2-instrumenten selecteren</string>
+    <string name="hybrid_program_selection_desc">Selecteer welke instrumenten uw SoundFont moeten gebruiken. Niet-geselecteerde instrumenten gebruiken Sonivox (ingebouwde GM-geluiden).</string>
+    <string name="hybrid_drums_channel_9">Percussie (Kanaal 10)</string>
+    <string name="hybrid_drums_desc">Drumkits en percussie-instrumenten</string>
+    <string name="hybrid_select_all">Alles selecteren</string>
+    <string name="hybrid_select_none">Alles wissen</string>
+    <string name="hybrid_selection_summary">%1$d instrumenten gebruiken SF2%2$s</string>
+    <string name="hybrid_selection_summary_format">%1$d instrumenten gebruiken SF2%2$s</string>
+    <string name="expand">Uitvouwen</string>
+    <string name="widget_description">Audiobedieningswidget voor Muziek, Radio en MIDI</string>
+    <string name="widget_no_track">Geen weergave</string>
+    <string name="widget_tap_to_play">Tik om te hervatten</string>
+    <string name="widget_album_art">Albumhoes</string>
+    <string name="widget_play_pause">Afspelen / Pauzeren</string>
+    <string name="widget_next">Volgende</string>
+    <string name="widget_previous">Vorige</string>
+    <string name="play">Afspelen</string>
+    <string name="stop">Stoppen</string>
+    <string name="settings">Instellingen</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuleren</string>
+    <string name="confirm">Bevestigen</string>
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">Annuleren</string>
+    <string name="common_delete">Verwijderen</string>
+    <string name="common_continue">Doorgaan</string>
+    <string name="common_permission_required">Toestemming vereist</string>
+    <string name="save">Opslaan</string>
+    <string name="delete">Verwijderen</string>
+    <string name="close">Sluiten</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <string name="color_channel_format">Kanaal %d</string>
+    <string name="color_not_set">Standaard</string>
+    <string name="apply">Toepassen</string>
+</resources>

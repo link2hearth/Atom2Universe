@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/midi_background"
+    tools:context=".midi.ui.MidiPlayerActivity">
+
+    <!-- Toolbar avec tabs intégrés -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/midi_surface"
+        android:elevation="4dp"
+        app:title="MIDI Player"
+        app:titleTextColor="@color/midi_text_primary"
+        app:contentInsetEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Container pour les onglets (entre titre et menu) -->
+        <LinearLayout
+            android:id="@+id/tab_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="8dp">
+
+            <!-- Tab Bibliothèque -->
+            <TextView
+                android:id="@+id/tab_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_nav_library"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <!-- Tab Playlists -->
+            <TextView
+                android:id="@+id/tab_playlists"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_nav_playlists"
+                android:textColor="@color/midi_text_secondary"
+                android:textSize="13sp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <!-- Tab Lecture -->
+            <TextView
+                android:id="@+id/tab_now_playing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_nav_now_playing"
+                android:textColor="@color/midi_text_secondary"
+                android:textSize="13sp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <!-- Tab Practice -->
+            <TextView
+                android:id="@+id/tab_practice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_nav_practice"
+                android:textColor="@color/midi_text_secondary"
+                android:textSize="13sp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- ViewPager2 pour les fragments -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/midi_background"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/playback_bar_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Container pour le mode pratique (overlay plein écran) -->
+    <FrameLayout
+        android:id="@+id/practice_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:elevation="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Playback Bar (visible on Library and Playlists tabs) -->
+    <LinearLayout
+        android:id="@+id/playback_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/midi_surface"
+        android:elevation="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <!-- Track info (clickable to go to Now Playing) -->
+        <LinearLayout
+            android:id="@+id/playback_bar_track_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="8dp"
+            android:background="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/playback_bar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/midi_no_track_playing"
+                    android:textColor="@color/midi_text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:singleLine="true"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/playback_bar_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    tools:text="Artist Name"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Seek bar with time labels -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="4dp">
+
+            <SeekBar
+                android:id="@+id/playback_bar_seek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="1000"
+                android:progress="0"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="4dp">
+
+                <TextView
+                    android:id="@+id/playback_bar_time_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0:00"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="11sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/playback_bar_time_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0:00"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Playback controls -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp">
+
+            <!-- Shuffle button -->
+            <ImageButton
+                android:id="@+id/playback_bar_shuffle"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/stat_notify_sync"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_secondary"
+                android:contentDescription="@string/midi_action_shuffle"
+                android:scaleType="centerInside"
+                android:padding="6dp" />
+
+            <!-- Previous button -->
+            <ImageButton
+                android:id="@+id/playback_bar_previous"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_media_previous"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_primary"
+                android:contentDescription="@string/midi_action_previous" />
+
+            <!-- Stop button -->
+            <ImageButton
+                android:id="@+id/playback_bar_stop"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_stop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_primary"
+                android:contentDescription="@string/audio_action_stop"
+                android:scaleType="centerInside"
+                android:padding="8dp" />
+
+            <!-- Play/Pause button -->
+            <ImageButton
+                android:id="@+id/playback_bar_play_pause"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="8dp"
+                android:src="@android:drawable/ic_media_play"
+                android:background="@drawable/play_button_background"
+                app:tint="@android:color/white"
+                android:scaleType="centerInside"
+                android:padding="10dp"
+                android:contentDescription="@string/audio_hub_play_pause" />
+
+            <!-- Next button -->
+            <ImageButton
+                android:id="@+id/playback_bar_next"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="4dp"
+                android:src="@android:drawable/ic_media_next"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_primary"
+                android:contentDescription="@string/midi_action_next" />
+
+            <!-- Repeat button -->
+            <ImageButton
+                android:id="@+id/playback_bar_repeat"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_menu_revert"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_secondary"
+                android:contentDescription="@string/midi_action_repeat"
+                android:scaleType="centerInside"
+                android:padding="6dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

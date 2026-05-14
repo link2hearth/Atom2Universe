@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/music_surface">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Square container with 1:1 ratio -->
+        <FrameLayout
+            android:id="@+id/image_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Gradient background (fallback) -->
+            <View
+                android:id="@+id/gradient_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/all_tracks_tile_bg" />
+
+            <!-- Fallback icon (shown when no images) -->
+            <ImageView
+                android:id="@+id/fallback_icon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_music_note"
+                app:tint="@android:color/white"
+                android:alpha="0.9"
+                android:visibility="gone"
+                android:contentDescription="@string/music_all_tracks" />
+
+            <!-- Artist custom icon (full size, shown when artist has custom icon) -->
+            <ImageView
+                android:id="@+id/artist_custom_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:contentDescription="@string/music_all_tracks" />
+
+            <!-- 2x2 grid of album covers (shown when no custom icon) -->
+            <GridLayout
+                android:id="@+id/album_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="2"
+                android:rowCount="2"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/album_art_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:scaleType="centerCrop"
+                    android:importantForAccessibility="no" />
+
+                <ImageView
+                    android:id="@+id/album_art_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:scaleType="centerCrop"
+                    android:importantForAccessibility="no" />
+
+                <ImageView
+                    android:id="@+id/album_art_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:scaleType="centerCrop"
+                    android:importantForAccessibility="no" />
+
+                <ImageView
+                    android:id="@+id/album_art_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:scaleType="centerCrop"
+                    android:importantForAccessibility="no" />
+
+            </GridLayout>
+
+            <!-- Text zone at bottom with semi-transparent background -->
+            <LinearLayout
+                android:id="@+id/text_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="@drawable/tile_text_gradient_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/music_all_tracks"
+                        android:textSize="13sp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:shadowColor="#80000000"
+                        android:shadowDx="1"
+                        android:shadowDy="1"
+                        android:shadowRadius="2" />
+
+                    <!-- Quick action buttons -->
+                    <ImageView
+                        android:id="@+id/btn_shuffle"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_shuffle"
+                        android:contentDescription="@string/music_shuffle"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@android:color/white" />
+
+                    <ImageView
+                        android:id="@+id/btn_play"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_play"
+                        android:contentDescription="@string/music_play_all"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@android:color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="@android:color/white"
+                    android:alpha="0.8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    tools:text="47 tracks" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

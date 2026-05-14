@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AnimatedVectorDrawable pour la tuile Audio du hub.
+  L'animation tourne en continu dès que la tuile est visible.
+-->
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/ic_audio_globe">
+
+    <!-- Globe : rotation complète en 20s (2 tuiles de 160dp = -320dp) -->
+    <target android:name="continents_spin">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="20000"
+                android:propertyName="translateX"
+                android:valueFrom="0"
+                android:valueTo="-320"
+                android:valueType="floatType"
+                android:repeatCount="infinite"
+                android:repeatMode="restart"
+                android:interpolator="@android:interpolator/linear"/>
+        </aapt:attr>
+    </target>
+
+    <!-- Note 1 (♪) : monte et s'efface en 2.4s -->
+    <target android:name="note1">
+        <aapt:attr name="android:animation">
+            <set xmlns:android="http://schemas.android.com/apk/res/android">
+                <objectAnimator
+                    android:duration="2400"
+                    android:propertyName="translateY"
+                    android:valueFrom="0" android:valueTo="-38"
+                    android:valueType="floatType"
+                    android:repeatCount="infinite" android:repeatMode="restart"
+                    android:interpolator="@android:interpolator/decelerate_quad"/>
+                <objectAnimator
+                    android:duration="2400"
+                    android:propertyName="alpha"
+                    android:valueFrom="1.0" android:valueTo="0.0"
+                    android:valueType="floatType"
+                    android:repeatCount="infinite" android:repeatMode="restart"
+                    android:interpolator="@android:interpolator/accelerate_quad"/>
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Note 2 (♩) : 2.0s (décalage naturel) -->
+    <target android:name="note2">
+        <aapt:attr name="android:animation">
+            <set xmlns:android="http://schemas.android.com/apk/res/android">
+                <objectAnimator
+                    android:duration="2000"
+                    android:propertyName="translateY"
+                    android:valueFrom="0" android:valueTo="-32"
+                    android:valueType="floatType"
+                    android:repeatCount="infinite" android:repeatMode="restart"
+                    android:interpolator="@android:interpolator/decelerate_quad"/>
+                <objectAnimator
+                    android:duration="2000"
+                    android:propertyName="alpha"
+                    android:valueFrom="1.0" android:valueTo="0.0"
+                    android:valueType="floatType"
+                    android:repeatCount="infinite" android:repeatMode="restart"
+                    android:interpolator="@android:interpolator/accelerate_quad"/>
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Note 3 (♫) : 1.7s -->
+    <target android:name="note3">
+        <aapt:attr name="android:animation">
+            <set xmlns:android="http://schemas.android.com/apk/res/android">
+                <objectAnimator
+                    android:duration="1700"
+                    android:propertyName="translateY"
+                    android:valueFrom="0" android:valueTo="-22"
+                    android:valueType="floatType"
+                    android:repeatCount="infinite" android:repeatMode="restart"
+                    android:interpolator="@android:interpolator/decelerate_quad"/>
+                <objectAnimator
+                    android:duration="1700"
+                    android:propertyName="alpha"
+                    android:valueFrom="1.0" android:valueTo="0.0"
+                    android:valueType="floatType"
+                    android:repeatCount="infinite" android:repeatMode="restart"
+                    android:interpolator="@android:interpolator/accelerate_quad"/>
+            </set>
+        </aapt:attr>
+    </target>
+
+</animated-vector>

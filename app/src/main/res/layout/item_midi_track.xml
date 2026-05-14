@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    app:cardBackgroundColor="@color/midi_surface"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header row (always visible) -->
+        <LinearLayout
+            android:id="@+id/track_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:gravity="center_vertical">
+
+            <!-- Music icon -->
+            <ImageView
+                android:id="@+id/track_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_media_play"
+                app:tint="@color/midi_track_icon_idle"
+                android:importantForAccessibility="no" />
+
+            <!-- Track info -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/track_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/midi_text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Song Title" />
+
+                <TextView
+                    android:id="@+id/track_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="11sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Artist Name" />
+
+                <TextView
+                    android:id="@+id/track_album"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Album Name" />
+
+            </LinearLayout>
+
+            <!-- Favorite button (star) -->
+            <ImageButton
+                android:id="@+id/btn_favorite"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_star_outline"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:contentDescription="@string/midi_favorite" />
+
+            <!-- Add to playlist button -->
+            <ImageButton
+                android:id="@+id/btn_add_to_playlist"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_playlist_add"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:contentDescription="@string/midi_add_to_playlist" />
+
+            <!-- Info/expand button -->
+            <ImageButton
+                android:id="@+id/btn_menu"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_menu_info_details"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                app:tint="@color/midi_text_secondary"
+                android:contentDescription="@string/midi_track_info" />
+
+        </LinearLayout>
+
+        <!-- Expandable info section (hidden by default) -->
+        <LinearLayout
+            android:id="@+id/info_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            android:background="@color/midi_surface_variant">
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/midi_divider"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Loading indicator -->
+            <LinearLayout
+                android:id="@+id/info_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="4dp"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    style="?android:attr/progressBarStyleSmall" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/midi_info_loading"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <!-- Error message -->
+            <TextView
+                android:id="@+id/info_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="11sp"
+                android:padding="4dp"
+                tools:text="Erreur: fichier introuvable" />
+
+            <!-- Info content -->
+            <LinearLayout
+                android:id="@+id/info_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Summary line -->
+                <TextView
+                    android:id="@+id/info_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="3:45 • 12543 notes • 6 canaux • 120 BPM" />
+
+                <!-- File info -->
+                <TextView
+                    android:id="@+id/info_file"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="10sp"
+                    tools:text="Type 1 • 8 pistes • 480 PPQ • 125 Ko" />
+
+                <!-- Tempo & time signature -->
+                <TextView
+                    android:id="@+id/info_tempo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="10sp"
+                    tools:text="Tempo: 120 BPM • Mesure: 4/4" />
+
+                <!-- Instruments -->
+                <TextView
+                    android:id="@+id/info_instruments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/midi_text_primary"
+                    android:textSize="10sp"
+                    android:textStyle="italic"
+                    tools:text="Piano, Guitare, Basse, Batterie" />
+
+                <!-- Copyright (optional) -->
+                <TextView
+                    android:id="@+id/info_copyright"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="© 2025 Artist Name" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

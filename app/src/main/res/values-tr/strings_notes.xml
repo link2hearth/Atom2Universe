@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notes_action_create">Oluştur</string>
+    <string name="notes_action_save">Kaydet</string>
+    <string name="notes_action_edit">Düzenle</string>
+    <string name="notes_action_delete">Sil</string>
+    <string name="notes_action_cancel">İptal</string>
+    <string name="notes_action_ok">Tamam</string>
+    <string name="notes_action_insert">Ekle</string>
+    <string name="notes_action_pin">Sabitle</string>
+    <string name="notes_action_unpin">Sabitlemeyi kaldır</string>
+    <string name="notes_action_favorite">Favori</string>
+    <string name="notes_action_move">Taşı</string>
+    <string name="notes_action_move_to_group">Gruba taşı</string>
+    <string name="notes_action_menu">Menü</string>
+    <string name="notes_action_color">Renk seç</string>
+    <string name="notes_color_picker_title">Renk seçin</string>
+    <string name="notes_color_quick">Hızlı renkler</string>
+    <string name="notes_color_none">Renk yok</string>
+    <string name="notes_color_custom">Özel renk</string>
+    <string name="notes_color_hue">Ton</string>
+    <string name="notes_color_alpha">Saydamlık</string>
+    <string name="notes_color_preview_text">Önizleme</string>
+    <string name="notes_color_text_mode">Metin rengi</string>
+    <string name="notes_color_text_auto">Otomatik</string>
+    <string name="notes_color_text_white">Beyaz</string>
+    <string name="notes_color_text_black">Siyah</string>
+    <string name="notes_color_text_gray">Gri</string>
+    <string name="notes_color_favorites">Favoriler</string>
+    <string name="notes_color_add_favorite">Favori</string>
+    <string name="notes_color_favorite_added">Renk favorilere eklendi</string>
+    <string name="notes_color_favorite_exists">Bu renk zaten favorilerde</string>
+    <string name="notes_color_favorite_deleted">Renk favorilerden kaldırıldı</string>
+    <string name="notes_color_delete_favorite_title">Favoriyi sil</string>
+    <string name="notes_color_delete_favorite_message">Bu favori rengi silmek istiyor musunuz?</string>
+    <string name="notes_color_select_first">Önce bir renk seçin</string>
+    <string name="notes_color_hex">Hex:</string>
+    <string name="notes_color_hex_hint">#RRGGBB</string>
+    <string name="notes_color_alpha_value_default">255</string>
+</resources>

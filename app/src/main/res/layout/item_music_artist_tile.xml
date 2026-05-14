@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/music_surface">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Conteneur carre pour l'image avec ratio 1:1 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/image_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Background color (custom artist color) -->
+            <View
+                android:id="@+id/color_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/music_surface"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Image de l'artiste ou pochette d'album -->
+            <ImageView
+                android:id="@+id/artist_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/music_artist"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:src="@drawable/ic_music_artist" />
+
+            <!-- Icone par defaut si pas d'image -->
+            <ImageView
+                android:id="@+id/default_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_music_artist"
+                android:visibility="gone"
+                android:importantForAccessibility="no"
+                app:tint="@color/music_text_secondary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible" />
+
+            <!-- Icone favori en haut a droite -->
+            <ImageView
+                android:id="@+id/favorite_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="6dp"
+                android:src="@drawable/ic_favorite_filled"
+                android:contentDescription="@string/music_add_to_favorites"
+                android:visibility="gone"
+                app:tint="?attr/a2uMusicAccent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible" />
+
+            <!-- Zone de texte en bas avec fond semi-transparent -->
+            <LinearLayout
+                android:id="@+id/text_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="@drawable/tile_text_gradient_bg"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/artist_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="13sp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:shadowColor="#80000000"
+                        android:shadowDx="1"
+                        android:shadowDy="1"
+                        android:shadowRadius="2"
+                        tools:text="Artist Name" />
+
+                    <!-- Quick action buttons -->
+                    <ImageView
+                        android:id="@+id/btn_shuffle"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_shuffle"
+                        android:contentDescription="@string/music_shuffle"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@android:color/white" />
+
+                    <ImageView
+                        android:id="@+id/btn_play"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_play"
+                        android:contentDescription="@string/music_play_all"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@android:color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/artist_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="@android:color/white"
+                    android:alpha="0.8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    tools:text="3 albums, 24 tracks" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

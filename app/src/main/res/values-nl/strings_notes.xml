@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notes_action_create">Aanmaken</string>
+    <string name="notes_action_save">Opslaan</string>
+    <string name="notes_action_edit">Bewerken</string>
+    <string name="notes_action_delete">Verwijderen</string>
+    <string name="notes_action_cancel">Annuleren</string>
+    <string name="notes_action_ok">OK</string>
+    <string name="notes_action_insert">Invoegen</string>
+    <string name="notes_action_pin">Vastpinnen</string>
+    <string name="notes_action_unpin">Losmaken</string>
+    <string name="notes_action_favorite">Favoriet</string>
+    <string name="notes_action_move">Verplaatsen</string>
+    <string name="notes_action_move_to_group">Verplaatsen naar groep</string>
+    <string name="notes_action_menu">Menu</string>
+    <string name="notes_action_color">Kleur kiezen</string>
+    <string name="notes_color_picker_title">Kies een kleur</string>
+    <string name="notes_color_quick">Snelle kleuren</string>
+    <string name="notes_color_none">Geen kleur</string>
+    <string name="notes_color_custom">Aangepaste kleur</string>
+    <string name="notes_color_hue">Tint</string>
+    <string name="notes_color_alpha">Transparantie</string>
+    <string name="notes_color_preview_text">Voorbeeld</string>
+    <string name="notes_color_text_mode">Tekstkleur</string>
+    <string name="notes_color_text_auto">Automatisch</string>
+    <string name="notes_color_text_white">Wit</string>
+    <string name="notes_color_text_black">Zwart</string>
+    <string name="notes_color_text_gray">Grijs</string>
+    <string name="notes_color_favorites">Favorieten</string>
+    <string name="notes_color_add_favorite">Favoriet</string>
+    <string name="notes_color_favorite_added">Kleur toegevoegd aan favorieten</string>
+    <string name="notes_color_favorite_exists">Deze kleur staat al bij favorieten</string>
+    <string name="notes_color_favorite_deleted">Kleur verwijderd uit favorieten</string>
+    <string name="notes_color_delete_favorite_title">Favoriet verwijderen</string>
+    <string name="notes_color_delete_favorite_message">Wilt u deze favoriete kleur verwijderen?</string>
+    <string name="notes_color_select_first">Selecteer eerst een kleur</string>
+    <string name="notes_color_hex">Hex:</string>
+    <string name="notes_color_hex_hint">#RRGGBB</string>
+    <string name="notes_color_alpha_value_default">255</string>
+</resources>

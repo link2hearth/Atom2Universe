@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#2B2B2B"
+    android:padding="24dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/sleep_timer_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF" />
+
+    <!-- Remaining time display (visible when timer is active) -->
+    <TextView
+        android:id="@+id/remaining_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="@string/sleep_timer_not_set"
+        android:textSize="16sp"
+        android:textColor="#26A69A"
+        android:visibility="visible" />
+
+    <!-- Separator -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#666666" />
+
+    <!-- Number pickers container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Hours picker -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sleep_timer_hours"
+                android:textSize="12sp"
+                android:textColor="#B0B0B0" />
+
+            <NumberPicker
+                android:id="@+id/hours_picker"
+                android:layout_width="60dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="4dp"
+                android:theme="@style/NumberPickerTheme" />
+
+        </LinearLayout>
+
+        <!-- Separator : -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text=":"
+            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <!-- Minutes picker -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sleep_timer_minutes"
+                android:textSize="12sp"
+                android:textColor="#B0B0B0" />
+
+            <NumberPicker
+                android:id="@+id/minutes_picker"
+                android:layout_width="60dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="4dp"
+                android:theme="@style/NumberPickerTheme" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Separator -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="#666666" />
+
+    <!-- Action buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <!-- Stop button (visible only when timer is active) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_stop"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sleep_timer_stop"
+            android:textColor="#EF5350"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancel"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/sleep_timer_start"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:backgroundTint="#26A69A" />
+
+    </LinearLayout>
+
+</LinearLayout>

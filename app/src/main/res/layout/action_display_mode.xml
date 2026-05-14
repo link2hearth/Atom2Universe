@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/action_display_mode_button"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:background="?attr/actionBarItemBackground"
+    android:src="@drawable/ic_view_list"
+    android:scaleType="centerInside"
+    android:contentDescription="@string/music_artist_display_mode"
+    android:padding="12dp" />

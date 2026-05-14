@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/startup_background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/crypto_banner_background"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/news_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back_24"
+            app:title="@string/news_activity_title"
+            app:titleTextColor="@color/crypto_banner_arrow" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Barre de recherche -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="#0F172A"
+                app:cardCornerRadius="12dp"
+                app:strokeColor="#1F2937"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <EditText
+                        android:id="@+id/news_search_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:background="@null"
+                        android:hint="@string/news_search_hint"
+                        android:textColor="#F1F5F9"
+                        android:textColorHint="#475569"
+                        android:textSize="14sp"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch"
+                        android:singleLine="true"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#1F2937" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/news_search_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="@string/news_search_button"
+                            android:textSize="12sp"
+                            style="@style/Widget.Material3.Button" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/news_clear_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/news_clear_button"
+                            android:textSize="12sp"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Barre d'état + contrôles -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/news_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/news_loading"
+                    android:textColor="#64748B"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/news_refresh_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="@string/news_refresh_button"
+                    android:textSize="11sp"
+                    style="@style/Widget.Material3.Button.TonalButton" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/news_restore_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/news_restore_hidden"
+                    android:textSize="11sp"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
+
+            </LinearLayout>
+
+            <!-- Liste des articles -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/news_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
+
+            <!-- État vide -->
+            <TextView
+                android:id="@+id/news_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="@string/news_empty"
+                android:textColor="#475569"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <!-- Séparateur -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="20dp"
+                android:background="?android:attr/listDivider" />
+
+            <!-- Section mots bannis -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="@string/news_banned_title"
+                android:textColor="?android:attr/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/news_banned_hint"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/news_banned_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/news_banned_input_hint"
+                android:textColor="#F1F5F9"
+                android:textColorHint="#475569"
+                android:textSize="13sp"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:maxLines="4"
+                android:padding="8dp"
+                android:backgroundTint="#1F2937" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/news_banned_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/news_banned_save"
+                style="@style/Widget.Material3.Button.TonalButton" />
+
+            <!-- Séparateur -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="20dp"
+                android:background="?android:attr/listDivider" />
+
+            <!-- Section sources -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="@string/news_sources_title"
+                android:textColor="?android:attr/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/news_sources_hint"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/news_sources_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

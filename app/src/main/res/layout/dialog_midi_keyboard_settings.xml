@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Section Informations -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/midi_keyboard_info_section"
+        android:textColor="?attr/a2uMidiAccent"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Nom du clavier -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/midi_keyboard_name"
+            android:textColor="@color/midi_text_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_keyboard_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@color/midi_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <!-- Fabricant -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/midi_keyboard_manufacturer"
+            android:textColor="@color/midi_text_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_keyboard_manufacturer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@color/midi_text_primary"
+            android:textSize="14sp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <!-- Type de connexion -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/midi_keyboard_connection"
+            android:textColor="@color/midi_text_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_keyboard_connection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@color/midi_text_primary"
+            android:textSize="14sp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <!-- Nombre de ports -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/midi_keyboard_ports"
+            android:textColor="@color/midi_text_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_keyboard_ports"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@color/midi_text_primary"
+            android:textSize="14sp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/midi_divider"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Section Configuration -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/midi_keyboard_config_section"
+        android:textColor="?attr/a2uMidiAccent"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Canal LED -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/midi_keyboard_led_channel"
+            android:textColor="@color/midi_text_primary"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner_led_channel"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_container_background"
+            android:padding="4dp"
+            android:popupBackground="@color/midi_surface" />
+
+    </LinearLayout>
+
+    <!-- Octave offset for LEDs -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_keyboard_octave_offset"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_keyboard_octave_offset_desc"
+                android:textColor="@color/midi_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/btn_octave_minus"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_remove"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/midi_keyboard_octave_minus"
+                app:tint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/txt_octave_offset"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <ImageButton
+                android:id="@+id/btn_octave_plus"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_add"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/midi_keyboard_octave_plus"
+                app:tint="?attr/a2uMidiAccent" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

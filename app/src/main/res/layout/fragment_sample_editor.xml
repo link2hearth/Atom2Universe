@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Instructions -->
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/sf2_edit_sample"
+        android:textColor="@color/startup_text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Edit Mode Toggle (Trim / Loop) -->
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/editModeToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_text">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trimModeButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/sf2_trim"
+            android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loopModeButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/sf2_loop"
+            android:textSize="12sp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Waveform View -->
+    <com.Atom2Universe.app.sf2creator.ui.SampleWaveformView
+        android:id="@+id/waveformView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editModeToggle" />
+
+    <!-- Spectrum View -->
+    <com.Atom2Universe.app.audioeditor.SpectrumView
+        android:id="@+id/spectrumView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/waveformView" />
+
+    <!-- Info Container -->
+    <LinearLayout
+        android:id="@+id/info_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spectrumView">
+
+        <!-- Sample Info -->
+        <TextView
+            android:id="@+id/infoText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:lineSpacingExtra="4dp"
+            android:text="@string/sf2_sample_info_placeholder"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <!-- Trim/Loop Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <!-- Trim Info (visible in trim mode) -->
+            <TextView
+                android:id="@+id/trimInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/sf2_trimmed_duration"
+                android:textColor="#2196F3"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Loop Info (visible in loop mode) -->
+            <TextView
+                android:id="@+id/loopInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/sf2_no_loop"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/loopHintText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/sf2_loop_hint"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Trim Controls (visible in trim mode) -->
+    <LinearLayout
+        android:id="@+id/trim_controls"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info_container">
+
+        <Button
+            android:id="@+id/previewTrimButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/sf2_preview"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/applyTrimButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/sf2_apply"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/processButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:text="@string/sf2_reset"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
+    <!-- Loop Controls (visible in loop mode) -->
+    <LinearLayout
+        android:id="@+id/loop_controls"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info_container">
+
+        <Button
+            android:id="@+id/autoLoopButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/sf2_auto_loop"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/sustainTestButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/sf2_sustain_test"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/noLoopButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/sf2_no_loop"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <!-- Barrier to position elements below whichever control group is visible -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/controls_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="trim_controls,loop_controls" />
+
+    <!-- ADSR Section Title -->
+    <TextView
+        android:id="@+id/adsr_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/sf2_adsr_preset"
+        android:textColor="@color/startup_text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/controls_barrier" />
+
+    <!-- ADSR Description -->
+    <TextView
+        android:id="@+id/adsr_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/sf2_adsr_description"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/adsr_title" />
+
+    <!-- ADSR Radio Group (horizontal scrollable) -->
+    <HorizontalScrollView
+        android:id="@+id/adsr_scroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/adsr_description">
+
+        <RadioGroup
+            android:id="@+id/adsrRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp" />
+
+    </HorizontalScrollView>
+
+    <!-- Play Preview Button -->
+    <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_circle_button"
+        android:backgroundTint="?attr/a2uMidiAccent"
+        android:contentDescription="@string/sf2_play_preview"
+        android:padding="18dp"
+        android:src="@drawable/ic_play"
+        app:tint="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@id/continueButton"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/adsr_scroll" />
+
+    <!-- Continue Button -->
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:backgroundTint="?attr/a2uMidiAccent"
+        android:text="@string/sf2_continue"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@id/playButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playButton"
+        app:layout_constraintTop_toTopOf="@id/playButton" />
+
+    <!-- Hint text (dynamic based on mode) -->
+    <TextView
+        android:id="@+id/hint_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/sf2_trim_markers_hint"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

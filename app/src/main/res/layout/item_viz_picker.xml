@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:background="@drawable/viz_picker_item_bg">
+
+    <TextView
+        android:id="@+id/viz_item_number"
+        android:layout_width="28dp"
+        android:layout_height="wrap_content"
+        android:textColor="#3B82F6"
+        android:textSize="11sp"
+        android:fontFamily="monospace"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/viz_item_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="6dp"
+        android:textColor="#F1F5F9"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/viz_item_check"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="✓"
+        android:textColor="#3B82F6"
+        android:textSize="13sp"
+        android:visibility="invisible" />
+
+</LinearLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="4dp"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp">
+
+    <View
+        android:id="@+id/category_divider"
+        android:layout_width="3dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="#3B82F6" />
+
+    <TextView
+        android:id="@+id/category_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#94A3B8"
+        android:textSize="11sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.1" />
+
+    <ImageButton
+        android:id="@+id/category_menu_btn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_more_vert_24"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/notes_menu"
+        android:tint="#64748B" />
+
+</LinearLayout>

@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/midi_background">
+
+    <!-- Header: Track info with favorite button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/midi_surface"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Track info (title + artist) -->
+        <LinearLayout
+            android:id="@+id/track_info_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_favorite">
+
+            <!-- Track title -->
+            <TextView
+                android:id="@+id/track_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_no_track_playing"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Artist -->
+            <TextView
+                android:id="@+id/track_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/midi_text_secondary"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="gone"
+                tools:text="Artist Name"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <!-- Favorite button (star) -->
+        <ImageButton
+            android:id="@+id/btn_favorite"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/ic_star_outline"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/midi_favorite"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_add_to_playlist" />
+
+        <!-- Add to playlist button -->
+        <ImageButton
+            android:id="@+id/btn_add_to_playlist"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/ic_playlist_add"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/midi_add_to_playlist"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Channels header with refresh button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/channels_header_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/channels_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/midi_channels_active"
+            android:textColor="@color/midi_text_secondary"
+            android:textSize="12sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_two_hands_practice" />
+
+        <!-- Bouton entrainement deux mains (visible si MIDI détecté comme piano 2 mains) -->
+        <ImageButton
+            android:id="@+id/btn_two_hands_practice"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_piano_keyboard"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="?attr/a2uMidiAccent"
+            android:contentDescription="@string/midi_two_hands_practice"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_refresh_keyboards" />
+
+        <ImageButton
+            android:id="@+id/btn_refresh_keyboards"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_refresh"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/midi_text_secondary"
+            android:contentDescription="@string/midi_refresh_keyboards"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Channels list with individual keyboards -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/channels_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/channels_header_container"
+        app:layout_constraintBottom_toTopOf="@id/controls_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_midi_channel_with_piano"
+        tools:itemCount="3" />
+
+    <!-- Empty state for channels -->
+    <TextView
+        android:id="@+id/channels_empty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:text="@string/midi_no_channels"
+        android:textColor="@color/midi_text_secondary"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/channels_header_container"
+        app:layout_constraintBottom_toTopOf="@id/controls_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
+
+    <!-- Controls container -->
+    <LinearLayout
+        android:id="@+id/controls_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:background="@color/midi_surface"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Seek bar with time labels -->
+        <LinearLayout
+            android:id="@+id/seek_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
+
+            <SeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="1000"
+                android:progress="0"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="4dp">
+
+                <TextView
+                    android:id="@+id/time_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0:00"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/time_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0:00"
+                    android:textColor="@color/midi_text_secondary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- All playback controls on a single line -->
+        <LinearLayout
+            android:id="@+id/controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Shuffle button -->
+            <ImageButton
+                android:id="@+id/btn_shuffle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/stat_notify_sync"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_secondary"
+                android:contentDescription="@string/midi_action_shuffle"
+                android:scaleType="centerInside"
+                android:padding="8dp" />
+
+            <!-- Previous button -->
+            <ImageButton
+                android:id="@+id/btn_previous"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_media_previous"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_primary"
+                android:contentDescription="@string/midi_action_previous" />
+
+            <!-- Stop button -->
+            <ImageButton
+                android:id="@+id/btn_stop"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_stop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_primary"
+                android:contentDescription="@string/audio_action_stop"
+                android:scaleType="centerInside"
+                android:padding="10dp" />
+
+            <!-- Play/Pause button -->
+            <ImageButton
+                android:id="@+id/btn_play_pause"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginHorizontal="8dp"
+                android:src="@android:drawable/ic_media_play"
+                android:background="@drawable/play_button_background"
+                app:tint="@android:color/white"
+                android:scaleType="centerInside"
+                android:padding="12dp"
+                android:contentDescription="@string/audio_hub_play_pause" />
+
+            <!-- Next button -->
+            <ImageButton
+                android:id="@+id/btn_next"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginEnd="4dp"
+                android:src="@android:drawable/ic_media_next"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_primary"
+                android:contentDescription="@string/midi_action_next" />
+
+            <!-- Repeat button -->
+            <ImageButton
+                android:id="@+id/btn_repeat"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_menu_revert"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/midi_text_secondary"
+                android:contentDescription="@string/midi_action_repeat"
+                android:scaleType="centerInside"
+                android:padding="8dp" />
+
+        </LinearLayout>
+
+        <!-- Test MIDI button (debug - hidden by default) -->
+        <Button
+            android:id="@+id/btn_test_midi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="TEST MIDI"
+            android:backgroundTint="#FF6B00"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"
+            android:visibility="gone"
+            tools:visibility="gone" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

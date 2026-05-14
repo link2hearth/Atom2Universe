@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/startup_background">
+
+    <include layout="@layout/view_editor_toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/note_title_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/notes_title_hint"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:inputType="text"
+                    android:imeOptions="actionNext" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/note_tags_chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <com.Atom2Universe.app.notes.editor.RichTextEditor
+                android:id="@+id/note_rich_editor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:minHeight="200dp"
+                android:gravity="top"
+                android:textColor="#F1F5F9"
+                android:textSize="16sp"
+                android:background="@null"
+                android:hint="@string/notes_content_hint"
+                android:inputType="textMultiLine|textCapSentences"
+                android:scrollbars="vertical" />
+
+            <EditText
+                android:id="@+id/note_source_editor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:minHeight="200dp"
+                android:gravity="top"
+                android:textColor="#94A3B8"
+                android:textSize="14sp"
+                android:fontFamily="monospace"
+                android:background="@null"
+                android:inputType="textMultiLine"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/note_voice_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:textColor="#3B82F6"
+                android:textSize="13sp"
+                android:background="#1E293B"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- STT / TTS bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="#0F172A"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <ImageButton
+            android:id="@+id/btn_stt"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_mic_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_stt_start"
+            android:tint="#94A3B8" />
+
+        <ImageButton
+            android:id="@+id/btn_tts"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_volume_up_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/notes_tts_speak"
+            android:tint="#94A3B8" />
+
+    </LinearLayout>
+
+</LinearLayout>

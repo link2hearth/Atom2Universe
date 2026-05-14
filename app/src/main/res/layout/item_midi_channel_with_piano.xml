@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/midi_surface"
+    android:layout_marginBottom="4dp">
+
+    <!-- Header: Infos canal + Toggle visibilité -->
+    <LinearLayout
+        android:id="@+id/channel_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp"
+        android:background="?attr/selectableItemBackground">
+
+        <!-- Indicateur couleur du canal -->
+        <View
+            android:id="@+id/channel_color"
+            android:layout_width="6dp"
+            android:layout_height="36dp"
+            android:background="@drawable/channel_color_indicator" />
+
+        <!-- Numéro du canal -->
+        <TextView
+            android:id="@+id/channel_number"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/midi_text_secondary"
+            android:textSize="13sp"
+            android:gravity="center"
+            tools:text="1" />
+
+        <!-- Nom de l'instrument + indicateur multi-programmes -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/instrument_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Piano Acoustique" />
+
+            <!-- Badge multi-programmes (ex: "x3" pour 3 instruments) -->
+            <TextView
+                android:id="@+id/multi_program_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:background="@drawable/multi_program_badge_bg"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="x3"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <!-- Slider de volume par canal -->
+        <SeekBar
+            android:id="@+id/volume_slider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:max="100"
+            android:progress="100"
+            android:progressTint="?attr/a2uMidiAccent"
+            android:thumbTint="?attr/a2uMidiAccent"
+            android:minHeight="32dp"
+            tools:progress="80" />
+
+        <!-- Indicateur d'activité (5 dots) -->
+        <LinearLayout
+            android:id="@+id/activity_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="12dp">
+
+            <View
+                android:id="@+id/dot_1"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/activity_dot"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/dot_2"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/activity_dot"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/dot_3"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/activity_dot"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/dot_4"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/activity_dot"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/dot_5"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:background="@drawable/activity_dot"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <!-- Bouton Practice Mode -->
+        <ImageButton
+            android:id="@+id/btn_practice"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_piano"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="?attr/a2uMidiAccent"
+            android:contentDescription="@string/midi_practice_mode"
+            android:layout_marginEnd="4dp" />
+
+        <!-- Bouton Mute/Unmute -->
+        <ImageButton
+            android:id="@+id/btn_mute"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_lock_silent_mode_off"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/midi_text_secondary"
+            android:contentDescription="@string/midi_mute_track"
+            android:layout_marginEnd="4dp" />
+
+        <!-- Toggle visibilité clavier -->
+        <ImageButton
+            android:id="@+id/btn_toggle_keyboard"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/arrow_down_float"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/midi_text_secondary"
+            android:contentDescription="@string/midi_toggle_keyboard"
+            android:rotation="0" />
+
+    </LinearLayout>
+
+    <!-- Clavier piano (collapsible) -->
+    <HorizontalScrollView
+        android:id="@+id/piano_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:fillViewport="true"
+        android:visibility="visible">
+
+        <com.Atom2Universe.app.midi.visualizer.PianoKeyboardView
+            android:id="@+id/piano_keyboard"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:minWidth="200dp" />
+
+    </HorizontalScrollView>
+
+</LinearLayout>

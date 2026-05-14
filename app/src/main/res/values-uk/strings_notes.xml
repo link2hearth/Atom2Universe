@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notes_action_create">Створити</string>
+    <string name="notes_action_save">Зберегти</string>
+    <string name="notes_action_edit">Редагувати</string>
+    <string name="notes_action_delete">Видалити</string>
+    <string name="notes_action_cancel">Скасувати</string>
+    <string name="notes_action_ok">OK</string>
+    <string name="notes_action_insert">Вставити</string>
+    <string name="notes_action_pin">Закріпити</string>
+    <string name="notes_action_unpin">Відкріпити</string>
+    <string name="notes_action_favorite">Обране</string>
+    <string name="notes_action_move">Перемістити</string>
+    <string name="notes_action_move_to_group">Перемістити до групи</string>
+    <string name="notes_action_menu">Меню</string>
+    <string name="notes_action_color">Вибрати колір</string>
+    <string name="notes_color_picker_title">Виберіть колір</string>
+    <string name="notes_color_quick">Швидкі кольори</string>
+    <string name="notes_color_none">Без кольору</string>
+    <string name="notes_color_custom">Власний колір</string>
+    <string name="notes_color_hue">Відтінок</string>
+    <string name="notes_color_alpha">Прозорість</string>
+    <string name="notes_color_preview_text">Попередній перегляд</string>
+    <string name="notes_color_text_mode">Колір тексту</string>
+    <string name="notes_color_text_auto">Авто</string>
+    <string name="notes_color_text_white">Білий</string>
+    <string name="notes_color_text_black">Чорний</string>
+    <string name="notes_color_text_gray">Сірий</string>
+    <string name="notes_color_favorites">Обране</string>
+    <string name="notes_color_add_favorite">Обране</string>
+    <string name="notes_color_favorite_added">Колір додано до обраного</string>
+    <string name="notes_color_favorite_exists">Цей колір вже є в обраному</string>
+    <string name="notes_color_favorite_deleted">Колір видалено з обраного</string>
+    <string name="notes_color_delete_favorite_title">Видалити обране</string>
+    <string name="notes_color_delete_favorite_message">Ви хочете видалити цей обраний колір?</string>
+    <string name="notes_color_select_first">Спочатку виберіть колір</string>
+    <string name="notes_color_hex">Hex:</string>
+    <string name="notes_color_hex_hint">#RRGGBB</string>
+    <string name="notes_color_alpha_value_default">255</string>
+</resources>

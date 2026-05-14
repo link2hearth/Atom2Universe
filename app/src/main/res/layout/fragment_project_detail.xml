@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Project name -->
+    <TextView
+        android:id="@+id/project_name_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/startup_text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/samples_count_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/project_name_text" />
+
+    <!-- Programs section (MIDI Program 0-127) -->
+    <TextView
+        android:id="@+id/programs_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/sf2_programs_label"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/samples_count_text" />
+
+    <HorizontalScrollView
+        android:id="@+id/programs_scroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/programs_label">
+
+        <LinearLayout
+            android:id="@+id/programs_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Program chips will be added here dynamically -->
+
+            <ImageButton
+                android:id="@+id/add_program_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_rounded_accent"
+                android:backgroundTint="?attr/a2uMidiAccent"
+                android:contentDescription="@string/sf2_add_program"
+                android:src="@drawable/ic_add"
+                app:tint="@android:color/white" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!-- Instruments section (presets in SF2 terms) -->
+    <TextView
+        android:id="@+id/presets_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/sf2_instruments_label"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/programs_scroll" />
+
+    <HorizontalScrollView
+        android:id="@+id/presets_scroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/presets_label">
+
+        <LinearLayout
+            android:id="@+id/presets_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Instrument chips will be added here dynamically -->
+
+            <ImageButton
+                android:id="@+id/add_preset_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_rounded_accent"
+                android:backgroundTint="?attr/a2uMidiAccent"
+                android:contentDescription="@string/sf2_add_instrument"
+                android:src="@drawable/ic_add"
+                app:tint="@android:color/white" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!-- MIDI Program row (for selected preset) -->
+    <LinearLayout
+        android:id="@+id/program_row"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/presets_scroll">
+
+        <TextView
+            android:id="@+id/program_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/change_program_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="8dp"
+            android:text="@string/sf2_program_change"
+            android:textColor="?attr/a2uMidiAccent"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <!-- Action buttons row -->
+    <LinearLayout
+        android:id="@+id/actions_row"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/program_row">
+
+        <Button
+            android:id="@+id/add_sample_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="?attr/a2uMidiAccent"
+            android:drawableStart="@drawable/ic_mic"
+            android:drawablePadding="4dp"
+            android:drawableTint="@android:color/white"
+            android:text="@string/sf2_add_sample"
+            android:textColor="@android:color/white"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/export_project_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/startup_button_background"
+            android:drawableStart="@drawable/ic_save"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/startup_text_primary"
+            android:text="@string/sf2_export_project"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
+    <!-- Keyboard Preview Section -->
+    <TextView
+        android:id="@+id/keyboard_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/sf2_preview_keyboard"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actions_row" />
+
+    <!-- Engine selector row -->
+    <LinearLayout
+        android:id="@+id/engine_selector_row"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/keyboard_label">
+
+        <TextView
+            android:id="@+id/engine_name_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/switch_engine_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="12dp"
+            android:text="@string/sf2_preview_engine_switch"
+            android:textColor="?attr/a2uMidiAccent"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/keyboard_section"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/engine_selector_row">
+
+        <ImageButton
+            android:id="@+id/octave_down_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/sf2_octave_down"
+            android:src="@drawable/ic_chevron_left"
+            app:tint="@color/startup_text_secondary" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.Atom2Universe.app.sf2creator.ui.KeyboardPreviewView
+                android:id="@+id/keyboard_preview"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginHorizontal="4dp" />
+
+            <ProgressBar
+                android:id="@+id/keyboard_loading"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="?attr/a2uMidiAccent"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/octave_up_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/sf2_octave_up"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/startup_text_secondary" />
+
+    </LinearLayout>
+
+    <!-- Keyboard empty state (shown when no samples) -->
+    <TextView
+        android:id="@+id/keyboard_empty_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="@string/sf2_keyboard_no_samples_hint"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/keyboard_section" />
+
+    <!-- Samples label -->
+    <TextView
+        android:id="@+id/samples_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/sf2_samples_label"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/keyboard_empty_hint" />
+
+    <!-- Samples list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/samples_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/samples_label" />
+
+    <!-- Empty state for samples -->
+    <TextView
+        android:id="@+id/samples_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:drawableTint="@color/startup_text_secondary"
+        android:drawableTop="@drawable/ic_music_note"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/sf2_no_samples"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/samples_label" />
+
+    <!-- Progress overlay -->
+    <LinearLayout
+        android:id="@+id/progress_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#CC000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="?attr/a2uMidiAccent" />
+
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_exporting"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

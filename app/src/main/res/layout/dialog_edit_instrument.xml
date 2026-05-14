@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Instrument name -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/sf2_instrument_name"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/instrument_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="20" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Program number -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/sf2_program_label"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="12sp" />
+
+    <Spinner
+        android:id="@+id/program_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_spinner" />
+
+    <!-- Bank number -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/sf2_bank_label"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="12sp" />
+
+    <Spinner
+        android:id="@+id/bank_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_spinner" />
+
+    <!-- Sample count info -->
+    <TextView
+        android:id="@+id/sample_count_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_music_note"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        app:drawableTint="@color/startup_text_secondary" />
+
+</LinearLayout>

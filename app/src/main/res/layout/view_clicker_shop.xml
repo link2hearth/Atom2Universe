@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/crypto_widget_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:minWidth="300dp">
+
+        <!-- ── Shop ──────────────────────────────────────────────────────────── -->
+
+        <!-- Doigt créateur (APC) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="14dp">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="☝"
+                android:textSize="22sp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/shop_god_finger_level"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Niv. 0"
+                android:textColor="#E2E8F0"
+                android:textSize="16sp"
+                android:fontFamily="monospace"
+                android:paddingStart="8dp" />
+
+            <TextView
+                android:id="@+id/shop_god_finger_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#94A3B8"
+                android:textSize="15sp"
+                android:fontFamily="monospace"
+                android:paddingEnd="6dp" />
+
+            <Button
+                android:id="@+id/shop_god_finger_mult"
+                android:layout_width="52dp"
+                android:layout_height="36dp"
+                android:text="×1"
+                android:textSize="13sp"
+                android:textColor="#94A3B8"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:fontFamily="monospace" />
+
+            <Button
+                android:id="@+id/shop_god_finger_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/clicker_shop_buy"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:backgroundTint="#1D4ED8" />
+
+        </LinearLayout>
+
+        <!-- Séparateur -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1E293B"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Cœur d'étoile (APS) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="⭐"
+                android:textSize="22sp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/shop_star_core_level"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Niv. 0"
+                android:textColor="#E2E8F0"
+                android:textSize="16sp"
+                android:fontFamily="monospace"
+                android:paddingStart="8dp" />
+
+            <TextView
+                android:id="@+id/shop_star_core_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#94A3B8"
+                android:textSize="15sp"
+                android:fontFamily="monospace"
+                android:paddingEnd="6dp" />
+
+            <Button
+                android:id="@+id/shop_star_core_mult"
+                android:layout_width="52dp"
+                android:layout_height="36dp"
+                android:text="×1"
+                android:textSize="13sp"
+                android:textColor="#94A3B8"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:fontFamily="monospace" />
+
+            <Button
+                android:id="@+id/shop_star_core_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/clicker_shop_buy"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:backgroundTint="#1D4ED8" />
+
+        </LinearLayout>
+
+        <!-- ── Section Neutrinos ─────────────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2D3748"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clicker_neutrinos_section"
+            android:textColor="#64748B"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Solde neutrinos -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_neutrino_balance" />
+            <TextView android:id="@+id/shop_neutrino_balance" style="@style/ShopStatValue" android:text="0" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Conversion APC→APS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="⟳"
+                android:textSize="22sp"
+                android:gravity="center" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="8dp">
+
+                <TextView
+                    android:id="@+id/shop_apc_to_aps_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Niv. 0"
+                    android:textColor="#E2E8F0"
+                    android:textSize="16sp"
+                    android:fontFamily="monospace" />
+
+                <TextView
+                    android:id="@+id/shop_apc_to_aps_effect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+0% APC → APS"
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/shop_apc_to_aps_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 ⚛"
+                android:textColor="#94A3B8"
+                android:textSize="15sp"
+                android:fontFamily="monospace"
+                android:paddingEnd="6dp" />
+
+            <Button
+                android:id="@+id/shop_apc_to_aps_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/clicker_shop_buy"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:backgroundTint="#7C3AED" />
+
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Conversion APS→APC -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="⟲"
+                android:textSize="22sp"
+                android:gravity="center" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="8dp">
+
+                <TextView
+                    android:id="@+id/shop_aps_to_apc_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Niv. 0"
+                    android:textColor="#E2E8F0"
+                    android:textSize="16sp"
+                    android:fontFamily="monospace" />
+
+                <TextView
+                    android:id="@+id/shop_aps_to_apc_effect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+0% APS → APC"
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/shop_aps_to_apc_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 ⚛"
+                android:textColor="#94A3B8"
+                android:textSize="15sp"
+                android:fontFamily="monospace"
+                android:paddingEnd="6dp" />
+
+            <Button
+                android:id="@+id/shop_aps_to_apc_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/clicker_shop_buy"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:backgroundTint="#7C3AED" />
+
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Éléments → Neutrinos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="⚗"
+                android:textSize="22sp"
+                android:gravity="center" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="8dp">
+
+                <TextView
+                    android:id="@+id/shop_elem_to_neutrino_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clicker_shop_elem_to_neutrino_label"
+                    android:textColor="#E2E8F0"
+                    android:textSize="16sp"
+                    android:fontFamily="monospace" />
+
+                <TextView
+                    android:id="@+id/shop_elem_to_neutrino_stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 éléments"
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/shop_elem_to_neutrino_mult"
+                android:layout_width="52dp"
+                android:layout_height="36dp"
+                android:text="×1"
+                android:textSize="13sp"
+                android:textColor="#94A3B8"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:fontFamily="monospace" />
+
+            <Button
+                android:id="@+id/shop_elem_to_neutrino_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/clicker_shop_buy"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:backgroundTint="#0F766E" />
+
+        </LinearLayout>
+
+        <!-- ── Séparateur section stats ───────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2D3748"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clicker_shop_stats_title"
+            android:textColor="#64748B"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="10dp" />
+
+        <!-- ── Lignes de stats ────────────────────────────────────────────────── -->
+
+        <!-- Atomes totaux -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_lifetime" />
+            <TextView android:id="@+id/shop_stat_lifetime" style="@style/ShopStatValue" android:text="0" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Par clic -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_apc" />
+            <TextView android:id="@+id/shop_stat_apc" style="@style/ShopStatValue" android:text="0" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Par seconde -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_aps" />
+            <TextView android:id="@+id/shop_stat_aps" style="@style/ShopStatValue" android:text="0" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Bonus éléments APC -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_elem_apc" />
+            <TextView android:id="@+id/shop_stat_elem_apc" style="@style/ShopStatValue" android:text="—" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Bonus éléments APS -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_elem_aps" />
+            <TextView android:id="@+id/shop_stat_elem_aps" style="@style/ShopStatValue" android:text="—" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Clics totaux -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_total_clicks" />
+            <TextView android:id="@+id/shop_stat_total_clicks" style="@style/ShopStatValue" android:text="0" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Frénésies -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_frenzies" />
+            <TextView android:id="@+id/shop_stat_frenzies" style="@style/ShopStatValue" android:text="0 / 0" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Record clics en frénésie APC -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_max_apc_clicks" />
+            <TextView android:id="@+id/shop_stat_max_apc_clicks" style="@style/ShopStatValue" android:text="—" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Record clics/s -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_max_cps" />
+            <TextView android:id="@+id/shop_stat_max_cps" style="@style/ShopStatValue" android:text="—" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Temps de jeu -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_play_time" />
+            <TextView android:id="@+id/shop_stat_play_time" style="@style/ShopStatValue" android:text="—" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- ── Section tracker APC / APS ─────────────────────────────────────── -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/stat_production_title"
+            android:textColor="#64748B"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1"
+            android:paddingTop="10dp"
+            android:paddingBottom="6dp" />
+
+        <LinearLayout
+            android:id="@+id/shop_prod_bar"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#4A90D9" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#4CAF50" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/stat_production_apc" />
+            <TextView android:id="@+id/shop_stat_prod_apc" style="@style/ShopStatValue"
+                android:text="—" android:textColor="#4A90D9" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/stat_production_aps" />
+            <TextView android:id="@+id/shop_stat_prod_aps" style="@style/ShopStatValue"
+                android:text="—" android:textColor="#4CAF50" />
+        </LinearLayout>
+
+        <!-- ── Séparateur section succès ────────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2D3748"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/clicker_achievements_section"
+                android:textColor="#64748B"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/shop_achievement_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/23"
+                android:textColor="#64748B"
+                android:textSize="11sp"
+                android:fontFamily="monospace" />
+
+        </LinearLayout>
+
+        <!-- Conteneur dynamique pour les items de succès -->
+        <LinearLayout
+            android:id="@+id/shop_achievements_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+
+</ScrollView>

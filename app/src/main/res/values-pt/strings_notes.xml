@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notes_action_create">Criar</string>
+    <string name="notes_action_save">Salvar</string>
+    <string name="notes_action_edit">Editar</string>
+    <string name="notes_action_delete">Excluir</string>
+    <string name="notes_action_cancel">Cancelar</string>
+    <string name="notes_action_ok">OK</string>
+    <string name="notes_action_insert">Inserir</string>
+    <string name="notes_action_pin">Fixar</string>
+    <string name="notes_action_unpin">Desfixar</string>
+    <string name="notes_action_favorite">Favorito</string>
+    <string name="notes_action_move">Mover</string>
+    <string name="notes_action_move_to_group">Mover para grupo</string>
+    <string name="notes_action_menu">Menu</string>
+    <string name="notes_action_color">Escolher cor</string>
+    <string name="notes_color_picker_title">Escolha uma cor</string>
+    <string name="notes_color_quick">Cores rápidas</string>
+    <string name="notes_color_none">Sem cor</string>
+    <string name="notes_color_custom">Cor personalizada</string>
+    <string name="notes_color_hue">Matiz</string>
+    <string name="notes_color_alpha">Transparência</string>
+    <string name="notes_color_preview_text">Pré-visualização</string>
+    <string name="notes_color_text_mode">Cor do texto</string>
+    <string name="notes_color_text_auto">Automático</string>
+    <string name="notes_color_text_white">Branco</string>
+    <string name="notes_color_text_black">Preto</string>
+    <string name="notes_color_text_gray">Cinza</string>
+    <string name="notes_color_favorites">Favoritos</string>
+    <string name="notes_color_add_favorite">Favorito</string>
+    <string name="notes_color_favorite_added">Cor adicionada aos favoritos</string>
+    <string name="notes_color_favorite_exists">Esta cor já está nos favoritos</string>
+    <string name="notes_color_favorite_deleted">Cor removida dos favoritos</string>
+    <string name="notes_color_delete_favorite_title">Excluir favorito</string>
+    <string name="notes_color_delete_favorite_message">Deseja excluir esta cor favorita?</string>
+    <string name="notes_color_select_first">Selecione uma cor primeiro</string>
+    <string name="notes_color_hex">Hex:</string>
+    <string name="notes_color_hex_hint">#RRGGBB</string>
+    <string name="notes_color_alpha_value_default">255</string>
+</resources>

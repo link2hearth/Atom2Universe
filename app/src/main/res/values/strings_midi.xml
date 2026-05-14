@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="midi_player_title">MIDI Player</string>
+    <string name="midi_nav_library">Library</string>
+    <string name="midi_nav_playlists">Playlists</string>
+    <string name="midi_nav_now_playing">Now Playing</string>
+    <string name="midi_nav_practice">Practice</string>
+    <string name="midi_no_track_playing">No track playing</string>
+    <string name="midi_soundfont_imported">SoundFont imported: %1$s (%2$d MB)</string>
+    <string name="midi_soundfont_import_error">Error: %1$s</string>
+    <string name="midi_folder_scanning">Scanning MIDI folder…</string>
+    <string name="midi_folder_scan_complete">Scan complete: %1$d MIDI files found</string>
+    <string name="midi_library_empty">No MIDI files. Select a folder to scan.</string>
+    <string name="midi_select_soundfont">Synthesizer</string>
+    <string name="midi_select_folder">Select MIDI folder</string>
+    <string name="midi_refresh_library">Refresh library</string>
+    <string name="midi_clear_library">Clear library</string>
+    <string name="midi_clear_library_confirm">Are you sure you want to clear the entire MIDI library?</string>
+    <string name="midi_library_cleared">Library cleared</string>
+    <string name="midi_library_refreshing">Refreshing library…</string>
+    <string name="midi_action_previous">Previous</string>
+    <string name="midi_action_next">Next</string>
+    <string name="midi_action_shuffle">Shuffle</string>
+    <string name="midi_action_repeat">Repeat</string>
+    <string name="midi_shuffle_scope_title">Shuffle scope</string>
+    <string name="midi_shuffle_scope_current">Current album/folder</string>
+    <string name="midi_shuffle_scope_artist">Current artist (all albums)</string>
+    <string name="midi_shuffle_scope_library">Entire library</string>
+    <string name="midi_unknown_artist">Unknown artist</string>
+    <string name="midi_unknown_album">Unknown album</string>
+    <string name="midi_channels_active">Active tracks</string>
+    <string name="midi_no_channels">No tracks detected</string>
+    <string name="midi_mute_track">Mute track</string>
+    <string name="midi_unmute_track">Unmute track</string>
+    <string name="midi_toggle_keyboard">Show/hide keyboard</string>
+    <string name="midi_practice_mode">Practice mode</string>
+    <string name="midi_refresh_keyboards">Refresh keyboards</string>
+    <string name="midi_keyboards_refreshed">Keyboards refreshed</string>
+    <string name="midi_two_hands_practice">Two hands practice</string>
+    <string name="midi_two_hands_detected">Piano piece detected (Left/Right hands)</string>
+    <string name="audio_help_title">Help - Audio settings</string>
+    <string name="midi_favorite">Favorite</string>
+    <string name="midi_added_to_favorites">Added to favorites</string>
+    <string name="midi_removed_from_favorites">Removed from favorites</string>
+    <string name="midi_create_playlist">New playlist</string>
+    <string name="midi_playlist_name_hint">Playlist name</string>
+    <string name="midi_create">Create</string>
+    <string name="midi_cancel">Cancel</string>
+    <string name="midi_playlist_name_empty">Name cannot be empty</string>
+    <string name="midi_playlist_created">Playlist created: %1$s</string>
+    <string name="midi_rename">Rename</string>
+    <string name="midi_delete">Delete</string>
+    <string name="midi_rename_playlist">Rename playlist</string>
+    <string name="midi_playlist_renamed">Playlist renamed</string>
+    <string name="midi_delete_playlist">Delete playlist</string>
+    <string name="midi_delete_playlist_confirm">Delete playlist \"%1$s\"?</string>
+    <string name="midi_playlist_deleted">Playlist deleted</string>
+    <string name="midi_clear_playlist">Clear playlist</string>
+    <string name="midi_clear_playlist_confirm">Clear all tracks from \"%1$s\"?</string>
+    <string name="midi_clear">Clear</string>
+    <string name="midi_playlist_cleared">Playlist cleared</string>
+    <plurals name="midi_track_count">
+        <item quantity="one">%d track</item>
+        <item quantity="other">%d tracks</item>
+    </plurals>
+    <string name="midi_playlists_empty">No playlists.\nCreate one!</string>
+    <string name="midi_playlist_empty">This playlist is empty.</string>
+    <string name="midi_shuffle_play">Shuffle play</string>
+    <string name="midi_remove_from_playlist">Remove from playlist</string>
+    <string name="midi_track_removed">Track removed</string>
+    <string name="midi_add_to_playlist">Add to playlist</string>
+    <string name="midi_add_to_playlist_title">Add \"%1$s\"</string>
+    <string name="midi_new_playlist">+ New playlist</string>
+    <string name="midi_loading_playlists">Loading…</string>
+    <string name="midi_track_added_to_playlist">Added to %1$s</string>
+    <string name="midi_track_already_in_playlist">Already in this playlist</string>
+    <string name="midi_track_info">Information</string>
+    <string name="midi_info_title">MIDI Information</string>
+    <string name="midi_info_loading">Analyzing file…</string>
+    <string name="midi_info_close">Close</string>
+    <string name="midi_info_section_file">File</string>
+    <string name="midi_info_filename">Name</string>
+    <string name="midi_info_size">Size</string>
+    <string name="midi_info_modified">Modified</string>
+    <string name="midi_info_path">Path</string>
+    <string name="midi_info_section_midi">MIDI Format</string>
+    <string name="midi_info_format">Format</string>
+    <string name="midi_info_tracks">Tracks</string>
+    <string name="midi_info_resolution">Resolution</string>
+    <string name="midi_info_duration">Duration</string>
+    <string name="midi_info_total_notes">Total notes</string>
+    <string name="midi_info_section_tempo">Tempo</string>
+    <string name="midi_info_bpm">Tempo</string>
+    <string name="midi_info_tempo_changes">Changes</string>
+    <string name="midi_info_avg_bpm">Average tempo</string>
+    <string name="midi_info_time_signature">Time signature</string>
+    <string name="midi_info_time_changes">Signature changes</string>
+    <string name="midi_info_section_channels">Channels (%d)</string>
+    <string name="midi_info_channel">Channel %d</string>
+    <string name="midi_info_channel_drums">Channel %d (Drums)</string>
+    <string name="midi_info_section_metadata">Metadata</string>
+    <string name="midi_info_track_names">Track names</string>
+    <string name="midi_info_copyright">Copyright</string>
+    <string name="midi_info_text_events">Text</string>
+    <string name="midi_scan_loading_title">Scanning…</string>
+    <string name="midi_scan_loading_progress">%1$d / %2$d files</string>
+    <string name="midi_scan_loading_counting">Counting files…</string>
+    <string name="midi_scan_loading_current">%1$s</string>
+    <string name="midi_audio_settings">Audio settings</string>
+    <string name="midi_audio_normalization">Volume normalization</string>
+    <string name="midi_audio_normalization_desc">Reduces volume peaks to avoid clipping</string>
+    <string name="midi_audio_master_gain">Master volume</string>
+    <string name="midi_audio_reverb">Reverb</string>
+    <string name="midi_reverb_off">Off</string>
+    <string name="midi_reverb_large_hall">Large hall</string>
+    <string name="midi_reverb_hall">Hall</string>
+    <string name="midi_reverb_chamber">Chamber</string>
+    <string name="midi_reverb_room">Room</string>
+    <string name="midi_sf2_settings">SF2 Engine</string>
+    <string name="midi_sf2_settings_desc">Custom SoundFont synthesizer settings</string>
+    <string name="midi_sf2_velocity_curve">Velocity curve</string>
+    <string name="midi_sf2_velocity_linear">Linear</string>
+    <string name="midi_sf2_velocity_linear_desc">Direct mapping (flat response)</string>
+    <string name="midi_sf2_velocity_concave">Concave</string>
+    <string name="midi_sf2_velocity_concave_desc">More control at low velocities (recommended)</string>
+    <string name="midi_sf2_velocity_soft">Soft</string>
+    <string name="midi_sf2_velocity_soft_desc">Very gentle at low velocities (expressive piano)</string>
+    <string name="midi_sf2_velocity_hard">Hard</string>
+    <string name="midi_sf2_velocity_hard_desc">Aggressive response (drums, punchy sounds)</string>
+    <string name="midi_sf2_not_active">SF2 engine not active</string>
+    <string name="midi_eq_title">Equalizer</string>
+    <string name="midi_eq_enabled">Enable EQ</string>
+    <string name="midi_eq_preset_flat">Flat</string>
+    <string name="midi_eq_preset_rock">Rock</string>
+    <string name="midi_eq_preset_jazz">Jazz</string>
+    <string name="midi_eq_preset_piano">Piano</string>
+    <string name="midi_eq_preset_bass">Bass Boost</string>
+    <string name="midi_player_not_connected">Player not connected</string>
+    <string name="midi_no_track_current">No current track</string>
+    <string name="midi_no_tracks_found">No tracks found</string>
+    <string name="midi_error_message">Error: %1$s</string>
+    <string name="midi_service_not_connected">Playback service not connected</string>
+    <string name="midi_events_received">MIDI events received!</string>
+    <string name="midi_importing_soundfont">Importing SoundFont…</string>
+    <string name="midi_scanning_folder">Scanning MIDI folder…</string>
+    <string name="midi_synth_title">Synthesizer</string>
+    <string name="midi_synthesizer_selection">Synthesizer</string>
+    <string name="midi_synth_description">Choose the sound engine for MIDI playback</string>
+    <string name="midi_synth_sonivox">Sonivox (built-in)</string>
+    <string name="midi_synth_sonivox_desc">Lightweight built-in synthesizer with General MIDI sounds. No external files required.</string>
+    <string name="midi_synth_sf2_custom">SoundFont (SF2)</string>
+    <string name="midi_synth_sf2_none">SoundFont (none imported)</string>
+    <string name="midi_synth_sf2_desc">High-quality synthesis with custom instrument samples.</string>
+    <string name="midi_synth_sf2_tip">💡 Tip: For best results, use a quality SF2 file with 44kHz samples. Prefer SoundFonts between 100 and 500 MB depending on your device. Small compressed SoundFonts may have audio issues on fast passages.</string>
+    <string name="midi_synth_import_sf2">Import SF2</string>
+    <string name="midi_synth_change_sf2">Change SF2</string>
+    <string name="midi_synth_remove_sf2">Remove</string>
+    <string name="midi_synth_switched_sonivox">Switched to Sonivox synthesizer</string>
+    <string name="midi_synth_switched_sf2">Switched to SoundFont: %1$s</string>
+    <string name="midi_synth_sf2_imported">SoundFont loaded: %1$s</string>
+    <string name="midi_synth_sf2_removed">SoundFont removed</string>
+    <string name="midi_synth_sf2_large_warning">Large file (%1$d MB). Loading may take time and use significant memory.</string>
+    <string name="midi_synth_hybrid">Hybrid (SF2 + Sonivox)</string>
+    <string name="midi_synth_hybrid_none">Hybrid (no SF2 imported)</string>
+    <string name="midi_synth_hybrid_desc">Mix SF2 and Sonivox sounds by instrument. Choose which instruments use your SoundFont.</string>
+    <string name="midi_synth_hybrid_info">%1$d instruments use SF2</string>
+    <string name="midi_synth_configure_instruments">Configure instruments…</string>
+    <string name="midi_synth_switched_hybrid">Switched to Hybrid mode with %1$d SF2 instruments</string>
+    <string name="midi_synth_fluidsynth">FluidSynth</string>
+    <string name="midi_synth_fluidsynth_none">FluidSynth (no SF2 imported)</string>
+    <string name="midi_synth_fluidsynth_desc">Recognized open-source synthesis engine. Imported as a native library.</string>
+    <string name="midi_synth_switched_fluidsynth">Switched to FluidSynth: %1$s</string>
+    <string name="midi_synth_sf2_engines_header">SoundFont engines</string>
+    <string name="midi_synth_sf2_engines_subtitle">Require a SoundFont (.sf2) file</string>
+    <string name="midi_synth_a2u">A2U (Experimental)</string>
+    <string name="midi_synth_a2u_desc">Built-in synthesis engine, made for this app.</string>
+    <string name="midi_synth_active_badge">ACTIVE</string>
+    <string name="midi_synth_no_soundfont">No SoundFont imported</string>
+    <string name="midi_synth_soundfont_section">SoundFont</string>
+    <string name="midi_synth_advanced_options">Advanced options</string>
+    <string name="midi_synth_hybrid_mode">Hybrid mode</string>
+    <string name="practice_title">Practice Mode</string>
+    <string name="practice_restart">Restart</string>
+    <string name="practice_mark">Mark position</string>
+    <string name="practice_goto_mark">Go to marker</string>
+    <string name="practice_marker_added">Marker added: %1$s</string>
+    <string name="practice_marker_position">Marker position: %1$s</string>
+    <string name="practice_accompaniment">Accompaniment</string>
+    <string name="practice_midi_input">MIDI keyboard</string>
+    <string name="practice_midi_keyboard_detected">Keyboard detected</string>
+    <string name="practice_midi_keyboard_not_detected">Keyboard not detected</string>
+    <string name="practice_midi_keyboard_unauthorized">Keyboard detected but not authorized</string>
+    <string name="practice_led_control">Keyboard LEDs</string>
+    <string name="practice_led_immediate">Immediate</string>
+    <string name="practice_led_advance_format">%d ms</string>
+    <string name="practice_audio_settings">Audio settings</string>
+    <string name="practice_i_play">I play</string>
+    <string name="practice_keyboard_leds">Keyboard LEDs</string>
+    <string name="practice_mute_led_sound">Mute LED sound</string>
+    <string name="practice_mute_internal_synth">Mute internal synth for keyboard notes</string>
+    <string name="practice_scoring">Scoring</string>
+    <string name="practice_note_names">Notes</string>
+    <string name="practice_score">Score</string>
+    <string name="practice_correct">Correct</string>
+    <string name="practice_missed">Missed</string>
+    <string name="practice_streak">Streak</string>
+    <string name="practice_best_streak">Best streak</string>
+    <string name="practice_accuracy">Accuracy</string>
+    <string name="practice_speed">Speed</string>
+    <string name="practice_speed_min">0.1x</string>
+    <string name="practice_speed_max">1.0x</string>
+    <string name="practice_time_zero">0:00</string>
+    <string name="practice_time_remaining">-%1$s</string>
+    <string name="practice_free_mode">Free Play</string>
+    <string name="practice_left_hand_only">Left hand only</string>
+    <string name="practice_right_hand_only">Right hand only</string>
+    <string name="practice_both_hands">Both hands</string>
+    <string name="practice_hand_mode_left">Practicing left hand</string>
+    <string name="practice_hand_mode_right">Practicing right hand</string>
+    <string name="practice_hand_mode_both">Practicing both hands</string>
+    <string name="practice_left_hand_sound">Left hand sound</string>
+    <string name="practice_right_hand_sound">Right hand sound</string>
+    <string name="practice_both_hands_sound">Both hands sound</string>
+    <string name="practice_sound_mode_left">Playing left hand only</string>
+    <string name="practice_sound_mode_right">Playing right hand only</string>
+    <string name="practice_sound_mode_both">Playing both hands</string>
+    <string name="practice_octaves">Octaves</string>
+    <string name="practice_octave_down">Shift octave down</string>
+    <string name="practice_octave_up">Shift octave up</string>
+    <string name="practice_less_octaves">Less octaves</string>
+    <string name="practice_more_octaves">More octaves</string>
+    <string name="practice_octave_count">%d oct.</string>
+    <string name="practice_current_instrument">%1$d: %2$s</string>
+    <string name="practice_select_instrument">Select instrument</string>
+    <string name="practice_sf2_load_error">Unable to load SF2 SoundFont. Check synthesizer settings.</string>
+    <string name="practice_wait_mode">Wait mode</string>
+    <string name="practice_wait_mode_delay">Wait mode delay</string>
+    <string name="practice_sheet_music">Sheet music</string>
+    <string name="practice_recording_mode">Practice recording</string>
+    <string name="practice_recording_enabled">Practice recording enabled</string>
+    <string name="practice_recording_enabled_cleared">Practice recording enabled (previous take cleared)</string>
+    <string name="practice_recording_filename">Recording_%1$s</string>
+    <string name="practice_volume_percent">%1$d%%</string>
+    <string name="practice_countdown">Start delay</string>
+    <string name="practice_countdown_title">Start Delay</string>
+    <string name="practice_countdown_description">Adjust the delay before the MIDI starts playing</string>
+    <string name="practice_countdown_seconds">%d seconds</string>
+    <string name="practice_countdown_disabled">Disabled</string>
+    <string name="practice_countdown_start_on_play">Start when I begin playing</string>
+    <string name="practice_countdown_start_on_play_desc">The MIDI will start as soon as you play your first note</string>
+    <string name="practice_countdown_active">Starting in %d…</string>
+    <string name="practice_countdown_waiting">Waiting for you to play…</string>
+    <string name="practice_countdown_cancelled">Countdown cancelled</string>
+    <string name="practice_recording_disabled">Practice recording disabled</string>
+    <string name="practice_wait_mode_delay_title">Delay before pause</string>
+    <string name="practice_wait_mode_enabled">Wait mode enabled</string>
+    <string name="practice_wait_mode_disabled">Wait mode disabled</string>
+    <string name="practice_switch_to_free_mode_title">Switch to Free Play?</string>
+    <string name="practice_switch_to_free_mode_message">This will unload the current MIDI file. You can reload it from the library.</string>
+    <string name="practice_switch_confirm">Switch</string>
+    <string name="practice_accompaniment_disabled_in_wait_mode">Orchestration disabled in wait mode</string>
+    <string name="practice_settings_strictness">Strictness</string>
+    <string name="practice_hold_duration_validation">Hold note validation</string>
+    <string name="practice_hold_duration_validation_desc">Require holding notes for at least 50%% of their duration</string>
+    <string name="practice_hold_duration_enabled">Hold validation enabled</string>
+    <string name="practice_hold_duration_disabled">Hold validation disabled</string>
+    <string name="practice_timing_tolerance">Timing tolerance</string>
+    <string name="practice_timing_tolerance_strict">Strict (30ms)</string>
+    <string name="practice_timing_tolerance_normal">Normal (60ms)</string>
+    <string name="practice_timing_tolerance_relaxed">Relaxed (120ms)</string>
+    <string name="practice_timing_tolerance_very_relaxed">Very relaxed (200ms)</string>
+    <string name="practice_chord_tolerance">Chord tolerance</string>
+    <string name="practice_chord_tolerance_desc">Time window for notes to be considered part of the same chord</string>
+    <string name="practice_visual_style">Visual style</string>
+    <string name="practice_visual_style_classic">Classic</string>
+    <string name="practice_visual_style_rainbow">Rainbow</string>
+    <string name="practice_visual_style_neon">Neon</string>
+    <string name="practice_visual_style_ocean">Ocean</string>
+    <string name="practice_visual_style_fire">Fire</string>
+    <string name="practice_visual_style_changed">Visual style: %s</string>
+    <string name="practice_scoring_display">Scoring display</string>
+    <string name="practice_scoring_display_title">Scoring Display</string>
+    <string name="practice_scoring_display_desc">Choose which metrics to show during practice</string>
+    <string name="practice_scoring_enabled">Show scoring</string>
+    <string name="practice_scoring_preset">Preset</string>
+    <string name="practice_scoring_preset_encouragement">Encouragement</string>
+    <string name="practice_scoring_preset_encouragement_desc">Only positive metrics (streaks, good notes)</string>
+    <string name="practice_scoring_preset_full">Full stats</string>
+    <string name="practice_scoring_preset_full_desc">All metrics visible</string>
+    <string name="practice_scoring_preset_minimal">Minimal</string>
+    <string name="practice_scoring_preset_minimal_desc">Just score and combo</string>
+    <string name="practice_scoring_preset_custom">Custom</string>
+    <string name="practice_scoring_preset_custom_desc">Choose individual metrics</string>
+    <string name="practice_scoring_show_score">Score</string>
+    <string name="practice_scoring_show_accuracy">Accuracy</string>
+    <string name="practice_scoring_show_streak">Current streak</string>
+    <string name="practice_scoring_show_best_streak">Best streak</string>
+    <string name="practice_scoring_show_good_notes">Good notes</string>
+    <string name="practice_scoring_show_perfect_notes">Perfect notes</string>
+    <string name="practice_scoring_show_missed_notes">Missed notes</string>
+    <string name="practice_scoring_show_combo">Combo multiplier</string>
+    <string name="practice_scoring_show_grade">Grade</string>
+    <string name="practice_scoring_compact">Compact mode</string>
+    <string name="practice_scoring_animations">Animations</string>
+    <string name="practice_scoring_streak_popups">Streak popups</string>
+    <string name="practice_scoring_disabled">Scoring display disabled</string>
+    <string name="practice_scoring_config_saved">Scoring display updated</string>
+    <string name="practice_results_title">Session Complete</string>
+    <string name="practice_results_accuracy">Accuracy</string>
+    <string name="practice_results_perfect">Perfect notes</string>
+    <string name="practice_results_good">Good notes</string>
+    <string name="practice_results_missed">Missed notes</string>
+    <string name="practice_results_wrong">Wrong notes</string>
+    <string name="practice_results_best_streak">Best streak</string>
+    <string name="practice_results_close">Close</string>
+    <string name="midi_keyboard_connected">MIDI keyboard connected</string>
+    <string name="midi_keyboard_settings">MIDI Keyboard Settings</string>
+    <string name="midi_keyboard_info_section">Information</string>
+    <string name="midi_keyboard_config_section">Configuration</string>
+    <string name="midi_keyboard_name">Name</string>
+    <string name="midi_keyboard_manufacturer">Manufacturer</string>
+    <string name="midi_keyboard_connection">Connection</string>
+    <string name="midi_keyboard_connection_usb">USB</string>
+    <string name="midi_keyboard_connection_bluetooth">Bluetooth</string>
+    <string name="midi_keyboard_connection_virtual">Virtual</string>
+    <string name="midi_keyboard_ports">Ports</string>
+    <string name="midi_keyboard_ports_format">%1$d in / %2$d out</string>
+    <string name="midi_keyboard_led_channel">LED Channel</string>
+    <string name="midi_keyboard_mute_sound">Mute keyboard sound</string>
+    <string name="midi_keyboard_mute_sound_desc">Only send LED commands, no sound from keyboard</string>
+    <string name="midi_keyboard_octave_offset">LED octave offset</string>
+    <string name="midi_keyboard_octave_offset_desc">Shift LED notes to match your keyboard range</string>
+    <string name="midi_keyboard_octave_minus">Lower octave</string>
+    <string name="midi_keyboard_octave_plus">Higher octave</string>
+    <string name="gm_instrument_unknown">Unknown</string>
+    <string name="gm_drum_channel">Drums</string>
+    <string name="gm_percussion_format">Percussion %d</string>
+    <string name="audio_help_content">This menu configures audio output when an external MIDI keyboard is connected.\n\n• Force sound through speakers:\nWhen enabled, MIDI track music always plays through tablet speakers, even when a USB keyboard is connected.\n\n• Play my notes on tablet:\nWhen disabled (default), your notes played on the external keyboard come from the keyboard itself (if it has built-in speakers).\nWhen enabled, your notes also come from tablet speakers.\n\nTip: If you have a keyboard with speakers (like many Yamaha keyboards), leave the 2nd option disabled for better sound quality.</string>
+    <string name="gm_category_piano">Piano</string>
+    <string name="gm_category_chromatic_percussion">Chromatic Percussion</string>
+    <string name="gm_category_organ">Organ</string>
+    <string name="gm_category_guitar">Guitar</string>
+    <string name="gm_category_bass">Bass</string>
+    <string name="gm_category_strings">Strings</string>
+    <string name="gm_category_ensemble">Ensemble</string>
+    <string name="gm_category_brass">Brass</string>
+    <string name="gm_category_reed">Reed</string>
+    <string name="gm_category_pipe">Pipe</string>
+    <string name="gm_category_synth_lead">Synth Lead</string>
+    <string name="gm_category_synth_pad">Synth Pad</string>
+    <string name="gm_category_synth_fx">Synth FX</string>
+    <string name="gm_category_ethnic">Ethnic</string>
+    <string name="gm_category_percussive">Percussive</string>
+    <string name="gm_category_sound_fx">Sound Effects</string>
+    <string name="gm_category_other">Other</string>
+    <string name="gm_drum_35">Acoustic Bass Drum</string>
+    <string name="gm_drum_36">Bass Drum 1</string>
+    <string name="gm_drum_37">Side Stick</string>
+    <string name="gm_drum_38">Acoustic Snare</string>
+    <string name="gm_drum_39">Hand Clap</string>
+    <string name="gm_drum_40">Electric Snare</string>
+    <string name="gm_drum_41">Low Floor Tom</string>
+    <string name="gm_drum_42">Closed Hi-Hat</string>
+    <string name="gm_drum_43">High Floor Tom</string>
+    <string name="gm_drum_44">Pedal Hi-Hat</string>
+    <string name="gm_drum_45">Low Tom</string>
+    <string name="gm_drum_46">Open Hi-Hat</string>
+    <string name="gm_drum_47">Low-Mid Tom</string>
+    <string name="gm_drum_48">Hi-Mid Tom</string>
+    <string name="gm_drum_49">Crash Cymbal 1</string>
+    <string name="gm_drum_50">High Tom</string>
+    <string name="gm_drum_51">Ride Cymbal 1</string>
+    <string name="gm_drum_52">Chinese Cymbal</string>
+    <string name="gm_drum_53">Ride Bell</string>
+    <string name="gm_drum_54">Tambourine</string>
+    <string name="gm_drum_55">Splash Cymbal</string>
+    <string name="gm_drum_56">Cowbell</string>
+    <string name="gm_drum_57">Crash Cymbal 2</string>
+    <string name="gm_drum_58">Vibraslap</string>
+    <string name="gm_drum_59">Ride Cymbal 2</string>
+    <string name="gm_drum_60">High Bongo</string>
+    <string name="gm_drum_61">Low Bongo</string>
+    <string name="gm_drum_62">Mute High Conga</string>
+    <string name="gm_drum_63">Open High Conga</string>
+    <string name="gm_drum_64">Low Conga</string>
+    <string name="gm_drum_65">High Timbale</string>
+    <string name="gm_drum_66">Low Timbale</string>
+    <string name="gm_drum_67">High Agogo</string>
+    <string name="gm_drum_68">Low Agogo</string>
+    <string name="gm_drum_69">Cabasa</string>
+    <string name="gm_drum_70">Maracas</string>
+    <string name="gm_drum_71">Short Whistle</string>
+    <string name="gm_drum_72">Long Whistle</string>
+    <string name="gm_drum_73">Short Guiro</string>
+    <string name="gm_drum_74">Long Guiro</string>
+    <string name="gm_drum_75">Claves</string>
+    <string name="gm_drum_76">High Woodblock</string>
+    <string name="gm_drum_77">Low Woodblock</string>
+    <string name="gm_drum_78">Mute Cuica</string>
+    <string name="gm_drum_79">Open Cuica</string>
+    <string name="gm_drum_80">Mute Triangle</string>
+    <string name="gm_drum_81">Open Triangle</string>
+    <string-array name="gm_instruments">
+        <item>Acoustic Grand Piano</item>
+        <item>Bright Acoustic Piano</item>
+        <item>Electric Grand Piano</item>
+        <item>Honky-tonk Piano</item>
+        <item>Electric Piano 1</item>
+        <item>Electric Piano 2</item>
+        <item>Harpsichord</item>
+        <item>Clavinet</item>
+        <item>Celesta</item>
+        <item>Glockenspiel</item>
+        <item>Music Box</item>
+        <item>Vibraphone</item>
+        <item>Marimba</item>
+        <item>Xylophone</item>
+        <item>Tubular Bells</item>
+        <item>Dulcimer</item>
+        <item>Drawbar Organ</item>
+        <item>Percussive Organ</item>
+        <item>Rock Organ</item>
+        <item>Church Organ</item>
+        <item>Reed Organ</item>
+        <item>Accordion</item>
+        <item>Harmonica</item>
+        <item>Tango Accordion</item>
+        <item>Acoustic Guitar (nylon)</item>
+        <item>Acoustic Guitar (steel)</item>
+        <item>Electric Guitar (jazz)</item>
+        <item>Electric Guitar (clean)</item>
+        <item>Electric Guitar (muted)</item>
+        <item>Overdriven Guitar</item>
+        <item>Distortion Guitar</item>
+        <item>Guitar Harmonics</item>
+        <item>Acoustic Bass</item>
+        <item>Electric Bass (finger)</item>
+        <item>Electric Bass (pick)</item>
+        <item>Fretless Bass</item>
+        <item>Slap Bass 1</item>
+        <item>Slap Bass 2</item>
+        <item>Synth Bass 1</item>
+        <item>Synth Bass 2</item>
+        <item>Violin</item>
+        <item>Viola</item>
+        <item>Cello</item>
+        <item>Contrabass</item>
+        <item>Tremolo Strings</item>
+        <item>Pizzicato Strings</item>
+        <item>Orchestral Harp</item>
+        <item>Timpani</item>
+        <item>String Ensemble 1</item>
+        <item>String Ensemble 2</item>
+        <item>Synth Strings 1</item>
+        <item>Synth Strings 2</item>
+        <item>Choir Aahs</item>
+        <item>Voice Oohs</item>
+        <item>Synth Voice</item>
+        <item>Orchestra Hit</item>
+        <item>Trumpet</item>
+        <item>Trombone</item>
+        <item>Tuba</item>
+        <item>Muted Trumpet</item>
+        <item>French Horn</item>
+        <item>Brass Section</item>
+        <item>Synth Brass 1</item>
+        <item>Synth Brass 2</item>
+        <item>Soprano Sax</item>
+        <item>Alto Sax</item>
+        <item>Tenor Sax</item>
+        <item>Baritone Sax</item>
+        <item>Oboe</item>
+        <item>English Horn</item>
+        <item>Bassoon</item>
+        <item>Clarinet</item>
+        <item>Piccolo</item>
+        <item>Flute</item>
+        <item>Recorder</item>
+        <item>Pan Flute</item>
+        <item>Blown Bottle</item>
+        <item>Shakuhachi</item>
+        <item>Whistle</item>
+        <item>Ocarina</item>
+        <item>Lead 1 (square)</item>
+        <item>Lead 2 (sawtooth)</item>
+        <item>Lead 3 (calliope)</item>
+        <item>Lead 4 (chiff)</item>
+        <item>Lead 5 (charang)</item>
+        <item>Lead 6 (voice)</item>
+        <item>Lead 7 (fifths)</item>
+        <item>Lead 8 (bass + lead)</item>
+        <item>Pad 1 (new age)</item>
+        <item>Pad 2 (warm)</item>
+        <item>Pad 3 (polysynth)</item>
+        <item>Pad 4 (choir)</item>
+        <item>Pad 5 (bowed)</item>
+        <item>Pad 6 (metallic)</item>
+        <item>Pad 7 (halo)</item>
+        <item>Pad 8 (sweep)</item>
+        <item>FX 1 (rain)</item>
+        <item>FX 2 (soundtrack)</item>
+        <item>FX 3 (crystal)</item>
+        <item>FX 4 (atmosphere)</item>
+        <item>FX 5 (brightness)</item>
+        <item>FX 6 (goblins)</item>
+        <item>FX 7 (echoes)</item>
+        <item>FX 8 (sci-fi)</item>
+        <item>Sitar</item>
+        <item>Banjo</item>
+        <item>Shamisen</item>
+        <item>Koto</item>
+        <item>Kalimba</item>
+        <item>Bagpipe</item>
+        <item>Fiddle</item>
+        <item>Shanai</item>
+        <item>Tinkle Bell</item>
+        <item>Agogo</item>
+        <item>Steel Drums</item>
+        <item>Woodblock</item>
+        <item>Taiko Drum</item>
+        <item>Melodic Tom</item>
+        <item>Synth Drum</item>
+        <item>Reverse Cymbal</item>
+        <item>Guitar Fret Noise</item>
+        <item>Breath Noise</item>
+        <item>Seashore</item>
+        <item>Bird Tweet</item>
+        <item>Telephone Ring</item>
+        <item>Helicopter</item>
+        <item>Applause</item>
+        <item>Gunshot</item>
+    </string-array>
+    <string name="practice_record">Record</string>
+    <string name="practice_record_stop">Stop recording</string>
+    <string name="practice_no_notes_recorded">No notes recorded</string>
+    <string name="practice_recording_max_duration">Recording stopped - maximum duration reached (30 min)</string>
+    <string name="practice_export_title">Export recording</string>
+    <string name="practice_export_filename">File name</string>
+    <string name="practice_export_format_midi">MIDI (.mid)</string>
+    <string name="practice_export_format_wav">WAV (.wav)</string>
+    <string name="practice_export_format_wav_disabled">WAV (.wav) - requires SF2 SoundFont</string>
+    <string name="practice_export_button">Export</string>
+    <string name="practice_export_share_button">Share</string>
+    <string name="practice_export_success">Exported to %s</string>
+    <string name="practice_export_error">Export error: %s</string>
+    <string name="practice_export_rendering">Rendering audio…</string>
+    <string name="midi_root_artist">Sans artiste</string>
+    <string name="midi_default_artist">Artiste local</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Now playing</string>
+    <string name="audio_notification_unknown_artist">Unknown artist</string>
+    <string name="audio_action_pause">Pause</string>
+    <string name="audio_action_play">Play</string>
+    <string name="audio_action_stop">Stop</string>
+    <string name="audio_action_dismiss">Dismiss</string>
+    <string name="audio_source_radio">Radio</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Music</string>
+    <string name="audio_conflict_title">Audio playing</string>
+    <string name="audio_conflict_message">%1$s is already playing. What would you like to listen to?</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_settings_title">Audio settings</string>
+    <string name="audio_settings_description">Configure audio output when a MIDI keyboard is connected.</string>
+    <string name="audio_option_speaker_force">Force sound through tablet speakers</string>
+    <string name="audio_option_keyboard_sound">Play my notes on tablet (otherwise on keyboard)</string>
+    <string name="audio_settings_help">Help</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Play / Pause</string>
+    <string name="audio_hub_stop">Stop</string>
+    <string name="audio_hub_no_playback">No playback</string>
+    <string name="audio_hub_playing">Now playing…</string>
+    <string name="audio_hub_paused">Paused</string>
+    <string name="audio_hub_radio_title">Web Radio</string>
+    <string name="audio_hub_radio_desc">Listen to thousands of stations</string>
+    <string name="audio_hub_midi_title">MIDI Player</string>
+    <string name="audio_hub_midi_desc">MIDI files with SCC synthesis</string>
+    <string name="audio_hub_music_title">Music Player</string>
+    <string name="audio_hub_music_desc">Your music library</string>
+    <string name="audio_hub_editor_title">Audio Editor</string>
+    <string name="audio_hub_editor_desc">Trim your audio files</string>
+    <string name="audio_hub_stats_title">Statistics</string>
+    <string name="audio_hub_stats_desc">Your listening recaps</string>
+</resources>

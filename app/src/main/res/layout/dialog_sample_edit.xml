@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sf2_edit_sample_title"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Sample name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_sample_name_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/sample_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_rounded_dark"
+            android:inputType="text"
+            android:maxLength="20"
+            android:padding="12dp"
+            android:textColor="@color/startup_text_primary"
+            android:textColorHint="@color/startup_text_secondary" />
+
+        <!-- Key Range -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_key_range"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/key_range_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="?attr/a2uMidiAccent"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/edit_key_range_button"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_set_key_range"
+                android:textColor="?attr/a2uMidiAccent" />
+
+        </LinearLayout>
+
+        <!-- Volume / Attenuation -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_gain_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <SeekBar
+                android:id="@+id/gain_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="480"
+                android:progress="480"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/gain_value_text"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- ADSR Envelope -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_envelope_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <!-- Attack -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_attack_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/attack_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="3000"
+                android:progress="12"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/attack_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Decay -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_decay_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/decay_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="3000"
+                android:progress="125"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/decay_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Sustain -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_sustain_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/sustain_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="100"
+                android:progress="100"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/sustain_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Release -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_release_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/release_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="3000"
+                android:progress="500"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/release_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Fine Tune -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_fine_tune_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <SeekBar
+                android:id="@+id/fine_tune_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="198"
+                android:progress="99"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/fine_tune_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- Filter -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_filter_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <!-- Cutoff -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_filter_cutoff_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/filter_cutoff_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="1000"
+                android:progress="1000"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/filter_cutoff_value_text"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Resonance -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_filter_resonance_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/filter_resonance_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="400"
+                android:progress="0"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/filter_resonance_value_text"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Effects -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_effects_send_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <!-- Chorus -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_chorus_send_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/chorus_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="1000"
+                android:progress="0"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/chorus_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Reverb -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_reverb_send_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/reverb_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="1000"
+                android:progress="0"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:id="@+id/reverb_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Pan -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/sf2_pan_label"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_pan_left"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <SeekBar
+                android:id="@+id/pan_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="1000"
+                android:progress="500"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sf2_pan_right"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/pan_value_text"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancel_button"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/midi_cancel"
+                android:textColor="@color/startup_text_secondary" />
+
+            <Button
+                android:id="@+id/save_button"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="?attr/a2uMidiAccent"
+                android:text="@string/sf2_save" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

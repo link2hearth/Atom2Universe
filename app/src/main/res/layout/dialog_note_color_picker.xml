@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Favorites section -->
+        <LinearLayout
+            android:id="@+id/favorites_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_color_favorites"
+                android:textColor="#94A3B8"
+                android:textSize="11sp"
+                android:paddingBottom="6dp" />
+
+            <GridLayout
+                android:id="@+id/color_favorites_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="8"
+                android:layout_marginBottom="8dp" />
+
+        </LinearLayout>
+
+        <!-- Quick colors -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_color_quick"
+            android:textColor="#94A3B8"
+            android:textSize="11sp"
+            android:paddingBottom="6dp" />
+
+        <GridLayout
+            android:id="@+id/color_quick_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="8"
+            android:layout_marginBottom="8dp" />
+
+        <!-- No color option -->
+        <LinearLayout
+            android:id="@+id/color_none_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/color_button_no_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/notes_color_none"
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- Preview card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/color_preview_card"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/color_preview_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/notes_color_preview_text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- HSV Picker -->
+        <com.Atom2Universe.app.view.ColorPickerSatValView
+            android:id="@+id/color_satval_picker"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="8dp" />
+
+        <com.Atom2Universe.app.view.ColorPickerHueView
+            android:id="@+id/color_hue_picker"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Hex input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/color_hex_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/notes_color_hex"
+                android:inputType="text"
+                android:maxLength="7" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Text color mode -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_color_text_mode"
+            android:textColor="#94A3B8"
+            android:textSize="11sp"
+            android:paddingBottom="6dp" />
+
+        <RadioGroup
+            android:id="@+id/color_text_mode_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton android:id="@+id/radio_text_auto"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/notes_color_text_auto" android:textColor="#F1F5F9" />
+
+            <RadioButton android:id="@+id/radio_text_white"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="@string/notes_color_text_white" android:textColor="#F1F5F9" />
+
+            <RadioButton android:id="@+id/radio_text_black"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="@string/notes_color_text_black" android:textColor="#F1F5F9" />
+
+            <RadioButton android:id="@+id/radio_text_gray"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="@string/notes_color_text_gray" android:textColor="#F1F5F9" />
+
+        </RadioGroup>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_color_add_favorite"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_action_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notes_action_ok"
+                style="@style/Widget.MaterialComponents.Button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

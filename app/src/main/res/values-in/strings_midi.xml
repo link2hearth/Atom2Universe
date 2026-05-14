@@ -1,0 +1,547 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="midi_player_title">Pemutar MIDI</string>
+    <string name="midi_nav_library">Pustaka</string>
+    <string name="midi_nav_playlists">Daftar putar</string>
+    <string name="midi_nav_now_playing">Sedang Diputar</string>
+    <string name="midi_nav_practice">Latihan</string>
+    <string name="midi_no_track_playing">Tidak ada lagu diputar</string>
+    <string name="midi_soundfont_imported">SoundFont diimpor: %1$s (%2$d MB)</string>
+    <string name="midi_soundfont_import_error">Kesalahan: %1$s</string>
+    <string name="midi_folder_scanning">Memindai folder MIDI...</string>
+    <string name="midi_folder_scan_complete">Pemindaian selesai: %1$d file MIDI ditemukan</string>
+    <string name="midi_library_empty">Tidak ada file MIDI. Pilih folder untuk dipindai.</string>
+    <string name="midi_select_soundfont">Synthesizer</string>
+    <string name="midi_select_folder">Pilih folder MIDI</string>
+    <string name="midi_refresh_library">Segarkan pustaka</string>
+    <string name="midi_clear_library">Hapus pustaka</string>
+    <string name="midi_clear_library_confirm">Apakah Anda yakin ingin menghapus seluruh pustaka MIDI?</string>
+    <string name="midi_library_cleared">Pustaka dihapus</string>
+    <string name="midi_library_refreshing">Menyegarkan pustaka...</string>
+    <string name="midi_action_previous">Sebelumnya</string>
+    <string name="midi_action_next">Berikutnya</string>
+    <string name="midi_action_shuffle">Acak</string>
+    <string name="midi_action_repeat">Ulangi</string>
+    <string name="midi_shuffle_scope_title">Lingkup pengacakan</string>
+    <string name="midi_shuffle_scope_current">Album/folder saat ini</string>
+    <string name="midi_shuffle_scope_artist">Artis saat ini (semua album)</string>
+    <string name="midi_shuffle_scope_library">Seluruh pustaka</string>
+    <string name="midi_unknown_artist">Artis tidak dikenal</string>
+    <string name="midi_unknown_album">Album tidak dikenal</string>
+    <string name="midi_channels_active">Trek aktif</string>
+    <string name="midi_no_channels">Tidak ada trek terdeteksi</string>
+    <string name="midi_mute_track">Bisukan trek</string>
+    <string name="midi_unmute_track">Bunyikan trek</string>
+    <string name="midi_toggle_keyboard">Tampilkan/sembunyikan keyboard</string>
+    <string name="midi_practice_mode">Mode latihan</string>
+    <string name="midi_refresh_keyboards">Segarkan keyboard</string>
+    <string name="midi_keyboards_refreshed">Keyboard disegarkan</string>
+    <string name="midi_two_hands_practice">Latihan dua tangan</string>
+    <string name="midi_two_hands_detected">Lagu piano terdeteksi (Tangan Kiri/Kanan)</string>
+    <string name="audio_help_title">Bantuan - Pengaturan audio</string>
+    <string name="midi_favorite">Favorit</string>
+    <string name="midi_added_to_favorites">Ditambahkan ke favorit</string>
+    <string name="midi_removed_from_favorites">Dihapus dari favorit</string>
+    <string name="midi_create_playlist">Daftar putar baru</string>
+    <string name="midi_playlist_name_hint">Nama daftar putar</string>
+    <string name="midi_create">Buat</string>
+    <string name="midi_cancel">Batal</string>
+    <string name="midi_playlist_name_empty">Nama tidak boleh kosong</string>
+    <string name="midi_playlist_created">Daftar putar dibuat: %1$s</string>
+    <string name="midi_rename">Ubah nama</string>
+    <string name="midi_delete">Hapus</string>
+    <string name="midi_rename_playlist">Ubah nama daftar putar</string>
+    <string name="midi_playlist_renamed">Daftar putar diubah namanya</string>
+    <string name="midi_delete_playlist">Hapus daftar putar</string>
+    <string name="midi_delete_playlist_confirm">Hapus daftar putar \"%1$s\"?</string>
+    <string name="midi_playlist_deleted">Daftar putar dihapus</string>
+    <string name="midi_clear_playlist">Kosongkan daftar putar</string>
+    <string name="midi_clear_playlist_confirm">Hapus semua lagu dari \"%1$s\"?</string>
+    <string name="midi_clear">Kosongkan</string>
+    <string name="midi_playlist_cleared">Daftar putar dikosongkan</string>
+    <plurals name="midi_track_count">
+        <item quantity="one">%d lagu</item>
+        <item quantity="other">%d lagu</item>
+    </plurals>
+    <string name="midi_playlists_empty">Tidak ada daftar putar.\nBuat satu!</string>
+    <string name="midi_playlist_empty">Daftar putar ini kosong.</string>
+    <string name="midi_shuffle_play">Putar acak</string>
+    <string name="midi_remove_from_playlist">Hapus dari daftar putar</string>
+    <string name="midi_track_removed">Lagu dihapus</string>
+    <string name="midi_add_to_playlist">Tambahkan ke daftar putar</string>
+    <string name="midi_add_to_playlist_title">Tambahkan \"%1$s\"</string>
+    <string name="midi_new_playlist">+ Daftar putar baru</string>
+    <string name="midi_loading_playlists">Memuat...</string>
+    <string name="midi_track_added_to_playlist">Ditambahkan ke %1$s</string>
+    <string name="midi_track_already_in_playlist">Sudah ada di daftar putar ini</string>
+    <string name="midi_track_info">Informasi</string>
+    <string name="midi_info_title">Informasi MIDI</string>
+    <string name="midi_info_loading">Menganalisis file...</string>
+    <string name="midi_info_close">Tutup</string>
+    <string name="midi_info_section_file">File</string>
+    <string name="midi_info_filename">Nama</string>
+    <string name="midi_info_size">Ukuran</string>
+    <string name="midi_info_modified">Diubah</string>
+    <string name="midi_info_path">Lokasi</string>
+    <string name="midi_info_section_midi">Format MIDI</string>
+    <string name="midi_info_format">Format</string>
+    <string name="midi_info_tracks">Trek</string>
+    <string name="midi_info_resolution">Resolusi</string>
+    <string name="midi_info_duration">Durasi</string>
+    <string name="midi_info_total_notes">Total not</string>
+    <string name="midi_info_section_tempo">Tempo</string>
+    <string name="midi_info_bpm">Tempo</string>
+    <string name="midi_info_tempo_changes">Perubahan</string>
+    <string name="midi_info_avg_bpm">Tempo rata-rata</string>
+    <string name="midi_info_time_signature">Tanda birama</string>
+    <string name="midi_info_time_changes">Perubahan tanda birama</string>
+    <string name="midi_info_section_channels">Kanal (%d)</string>
+    <string name="midi_info_channel">Kanal %d</string>
+    <string name="midi_info_channel_drums">Kanal %d (Drum)</string>
+    <string name="midi_info_section_metadata">Metadata</string>
+    <string name="midi_info_track_names">Nama trek</string>
+    <string name="midi_info_copyright">Hak cipta</string>
+    <string name="midi_info_text_events">Teks</string>
+    <string name="midi_scan_loading_title">Memindai...</string>
+    <string name="midi_scan_loading_progress">%1$d / %2$d file</string>
+    <string name="midi_scan_loading_counting">Menghitung file...</string>
+    <string name="midi_scan_loading_current">%1$s</string>
+    <string name="midi_audio_settings">Pengaturan audio</string>
+    <string name="midi_audio_normalization">Normalisasi volume</string>
+    <string name="midi_audio_normalization_desc">Mengurangi puncak volume untuk menghindari distorsi</string>
+    <string name="midi_audio_master_gain">Volume master</string>
+    <string name="midi_audio_reverb">Reverb</string>
+    <string name="midi_reverb_off">Mati</string>
+    <string name="midi_reverb_large_hall">Aula besar</string>
+    <string name="midi_reverb_hall">Aula</string>
+    <string name="midi_reverb_chamber">Kamar</string>
+    <string name="midi_reverb_room">Ruangan</string>
+    <string name="midi_sf2_settings">SF2 Engine</string>
+    <string name="midi_sf2_settings_desc">Pengaturan synthesizer SoundFont kustom</string>
+    <string name="midi_sf2_velocity_curve">Kurva velocity</string>
+    <string name="midi_sf2_velocity_linear">Linear</string>
+    <string name="midi_sf2_velocity_linear_desc">Pemetaan langsung (respons datar)</string>
+    <string name="midi_sf2_velocity_concave">Cekung</string>
+    <string name="midi_sf2_velocity_concave_desc">Lebih kontrol pada velocity rendah (direkomendasikan)</string>
+    <string name="midi_sf2_velocity_soft">Lembut</string>
+    <string name="midi_sf2_velocity_soft_desc">Sangat halus pada velocity rendah (piano ekspresif)</string>
+    <string name="midi_sf2_velocity_hard">Keras</string>
+    <string name="midi_sf2_velocity_hard_desc">Respons agresif (drum, suara tajam)</string>
+    <string name="midi_sf2_not_active">SF2 engine tidak aktif</string>
+    <string name="midi_eq_title">Ekualizer</string>
+    <string name="midi_eq_enabled">Aktifkan EQ</string>
+    <string name="midi_eq_preset_flat">Datar</string>
+    <string name="midi_eq_preset_rock">Rock</string>
+    <string name="midi_eq_preset_jazz">Jazz</string>
+    <string name="midi_eq_preset_piano">Piano</string>
+    <string name="midi_eq_preset_bass">Boost Bass</string>
+    <string name="midi_player_not_connected">Pemutar tidak terhubung</string>
+    <string name="midi_no_track_current">Tidak ada lagu saat ini</string>
+    <string name="midi_no_tracks_found">Tidak ada lagu ditemukan</string>
+    <string name="midi_error_message">Kesalahan: %1$s</string>
+    <string name="midi_service_not_connected">Layanan pemutaran tidak terhubung</string>
+    <string name="midi_events_received">Event MIDI diterima!</string>
+    <string name="midi_importing_soundfont">Mengimpor SoundFont...</string>
+    <string name="midi_scanning_folder">Memindai folder MIDI...</string>
+    <string name="midi_synth_title">Synthesizer</string>
+    <string name="midi_synthesizer_selection">Synthesizer</string>
+    <string name="midi_synth_description">Pilih mesin suara untuk pemutaran MIDI</string>
+    <string name="midi_synth_sonivox">Sonivox (bawaan)</string>
+    <string name="midi_synth_sonivox_desc">Synthesizer bawaan ringan dengan suara General MIDI. Tidak memerlukan file eksternal.</string>
+    <string name="midi_synth_sf2_custom">SoundFont (SF2)</string>
+    <string name="midi_synth_sf2_none">SoundFont (belum diimpor)</string>
+    <string name="midi_synth_sf2_desc">Sintesis berkualitas tinggi dengan sampel instrumen kustom.</string>
+    <string name="midi_synth_sf2_tip">Tip: Untuk hasil terbaik, gunakan file SF2 berkualitas dengan sampel 44kHz. Pilih SoundFont antara 100 dan 500 MB tergantung perangkat Anda. SoundFont kecil yang terkompresi mungkin memiliki masalah audio pada bagian cepat.</string>
+    <string name="midi_synth_import_sf2">Impor SF2</string>
+    <string name="midi_synth_change_sf2">Ganti SF2</string>
+    <string name="midi_synth_remove_sf2">Hapus</string>
+    <string name="midi_synth_switched_sonivox">Beralih ke synthesizer Sonivox</string>
+    <string name="midi_synth_switched_sf2">Beralih ke SoundFont: %1$s</string>
+    <string name="midi_synth_sf2_imported">SoundFont dimuat: %1$s</string>
+    <string name="midi_synth_sf2_removed">SoundFont dihapus</string>
+    <string name="midi_synth_sf2_large_warning">File besar (%1$d MB). Pemuatan mungkin memakan waktu dan menggunakan banyak memori.</string>
+    <string name="midi_synth_hybrid">Hybrid (SF2 + Sonivox)</string>
+    <string name="midi_synth_hybrid_none">Hybrid (belum ada SF2 diimpor)</string>
+    <string name="midi_synth_hybrid_desc">Campurkan suara SF2 dan Sonivox per instrumen. Pilih instrumen mana yang menggunakan SoundFont Anda.</string>
+    <string name="midi_synth_hybrid_info">%1$d instrumen menggunakan SF2</string>
+    <string name="midi_synth_configure_instruments">Konfigurasi instrumen...</string>
+    <string name="midi_synth_switched_hybrid">Beralih ke mode Hybrid dengan %1$d instrumen SF2</string>
+    <string name="midi_synth_fluidsynth">FluidSynth</string>
+    <string name="midi_synth_fluidsynth_none">FluidSynth (belum ada SF2 diimpor)</string>
+    <string name="midi_synth_fluidsynth_desc">Mesin sintesis open-source yang diakui. Diimpor sebagai pustaka native.</string>
+    <string name="midi_synth_switched_fluidsynth">Beralih ke FluidSynth: %1$s</string>
+    <string name="midi_synth_sf2_engines_header">Mesin SoundFont</string>
+    <string name="midi_synth_sf2_engines_subtitle">Memerlukan file SoundFont (.sf2)</string>
+    <string name="midi_synth_a2u">A2U (Eksperimental)</string>
+    <string name="midi_synth_a2u_desc">Mesin sintesis bawaan, dibuat untuk aplikasi ini.</string>
+    <string name="midi_synth_active_badge">AKTIF</string>
+    <string name="midi_synth_no_soundfont">Tidak ada SoundFont diimpor</string>
+    <string name="midi_synth_soundfont_section">SoundFont</string>
+    <string name="midi_synth_advanced_options">Opsi lanjutan</string>
+    <string name="midi_synth_hybrid_mode">Mode hybrid</string>
+    <string name="practice_title">Mode Latihan</string>
+    <string name="practice_restart">Mulai ulang</string>
+    <string name="practice_mark">Tandai posisi</string>
+    <string name="practice_goto_mark">Ke penanda</string>
+    <string name="practice_marker_added">Penanda ditambahkan: %1$s</string>
+    <string name="practice_marker_position">Posisi penanda: %1$s</string>
+    <string name="practice_accompaniment">Pengiring</string>
+    <string name="practice_midi_input">Keyboard MIDI</string>
+    <string name="practice_midi_keyboard_detected">Keyboard terdeteksi</string>
+    <string name="practice_midi_keyboard_not_detected">Keyboard tidak terdeteksi</string>
+    <string name="practice_midi_keyboard_unauthorized">Keyboard terdeteksi tapi tidak diizinkan</string>
+    <string name="practice_led_control">LED keyboard</string>
+    <string name="practice_led_immediate">Langsung</string>
+    <string name="practice_led_advance_format">%d md</string>
+    <string name="practice_audio_settings">Pengaturan audio</string>
+    <string name="practice_i_play">Saya mainkan</string>
+    <string name="practice_keyboard_leds">LED keyboard</string>
+    <string name="practice_mute_led_sound">Bisukan suara LED</string>
+    <string name="practice_mute_internal_synth">Bisukan synth internal untuk not keyboard</string>
+    <string name="practice_scoring">Penilaian</string>
+    <string name="practice_note_names">Not</string>
+    <string name="practice_score">Skor</string>
+    <string name="practice_correct">Benar</string>
+    <string name="practice_missed">Terlewat</string>
+    <string name="practice_streak">Beruntun</string>
+    <string name="practice_best_streak">Beruntun terbaik</string>
+    <string name="practice_accuracy">Akurasi</string>
+    <string name="practice_speed">Kecepatan</string>
+    <string name="practice_speed_min">0.1x</string>
+    <string name="practice_speed_max">1.0x</string>
+    <string name="practice_time_zero">0:00</string>
+    <string name="practice_time_remaining">-%1$s</string>
+    <string name="practice_free_mode">Bermain Bebas</string>
+    <string name="practice_left_hand_only">Tangan kiri saja</string>
+    <string name="practice_right_hand_only">Tangan kanan saja</string>
+    <string name="practice_both_hands">Kedua tangan</string>
+    <string name="practice_hand_mode_left">Latihan tangan kiri</string>
+    <string name="practice_hand_mode_right">Latihan tangan kanan</string>
+    <string name="practice_hand_mode_both">Latihan kedua tangan</string>
+    <string name="practice_left_hand_sound">Suara tangan kiri</string>
+    <string name="practice_right_hand_sound">Suara tangan kanan</string>
+    <string name="practice_both_hands_sound">Suara kedua tangan</string>
+    <string name="practice_sound_mode_left">Memainkan tangan kiri saja</string>
+    <string name="practice_sound_mode_right">Memainkan tangan kanan saja</string>
+    <string name="practice_sound_mode_both">Memainkan kedua tangan</string>
+    <string name="practice_octaves">Oktaf</string>
+    <string name="practice_octave_down">Turunkan oktaf</string>
+    <string name="practice_octave_up">Naikkan oktaf</string>
+    <string name="practice_less_octaves">Kurangi oktaf</string>
+    <string name="practice_more_octaves">Tambah oktaf</string>
+    <string name="practice_octave_count">%d okt.</string>
+    <string name="practice_current_instrument">%1$d: %2$s</string>
+    <string name="practice_select_instrument">Pilih instrumen</string>
+    <string name="practice_sf2_load_error">Tidak dapat memuat SoundFont SF2. Periksa pengaturan synthesizer.</string>
+    <string name="practice_wait_mode">Mode tunggu</string>
+    <string name="practice_wait_mode_delay">Jeda mode tunggu</string>
+    <string name="practice_sheet_music">Partitur musik</string>
+    <string name="practice_recording_mode">Rekaman latihan</string>
+    <string name="practice_recording_enabled">Rekaman latihan diaktifkan</string>
+    <string name="practice_recording_enabled_cleared">Rekaman latihan diaktifkan (take sebelumnya dihapus)</string>
+    <string name="practice_recording_filename">Rekaman_%1$s</string>
+    <string name="practice_volume_percent">%1$d%%</string>
+    <string name="practice_countdown">Jeda mulai</string>
+    <string name="practice_countdown_title">Jeda Mulai</string>
+    <string name="practice_countdown_description">Atur jeda sebelum MIDI mulai diputar</string>
+    <string name="practice_countdown_seconds">%d detik</string>
+    <string name="practice_countdown_disabled">Dinonaktifkan</string>
+    <string name="practice_countdown_start_on_play">Mulai saat saya bermain</string>
+    <string name="practice_countdown_start_on_play_desc">MIDI akan mulai segera setelah Anda memainkan not pertama</string>
+    <string name="practice_countdown_active">Mulai dalam %d…</string>
+    <string name="practice_countdown_waiting">Menunggu Anda bermain…</string>
+    <string name="practice_countdown_cancelled">Hitung mundur dibatalkan</string>
+    <string name="practice_recording_disabled">Rekaman latihan dinonaktifkan</string>
+    <string name="practice_wait_mode_delay_title">Jeda sebelum jeda</string>
+    <string name="practice_wait_mode_enabled">Mode tunggu diaktifkan</string>
+    <string name="practice_wait_mode_disabled">Mode tunggu dinonaktifkan</string>
+    <string name="practice_switch_to_free_mode_title">Beralih ke Bermain Bebas?</string>
+    <string name="practice_switch_to_free_mode_message">Ini akan memuat ulang file MIDI saat ini. Anda dapat memuatnya kembali dari pustaka.</string>
+    <string name="practice_switch_confirm">Beralih</string>
+    <string name="practice_accompaniment_disabled_in_wait_mode">Orkestra dinonaktifkan dalam mode tunggu</string>
+    <string name="practice_settings_strictness">Keketatan</string>
+    <string name="practice_hold_duration_validation">Validasi tahan not</string>
+    <string name="practice_hold_duration_validation_desc">Mengharuskan menahan not minimal 50%% dari durasinya</string>
+    <string name="practice_hold_duration_enabled">Validasi tahan diaktifkan</string>
+    <string name="practice_hold_duration_disabled">Validasi tahan dinonaktifkan</string>
+    <string name="practice_timing_tolerance">Toleransi waktu</string>
+    <string name="practice_timing_tolerance_strict">Ketat (30ms)</string>
+    <string name="practice_timing_tolerance_normal">Normal (60ms)</string>
+    <string name="practice_timing_tolerance_relaxed">Santai (120ms)</string>
+    <string name="practice_timing_tolerance_very_relaxed">Sangat santai (200ms)</string>
+    <string name="practice_chord_tolerance">Toleransi akor</string>
+    <string name="practice_chord_tolerance_desc">Jendela waktu untuk not dianggap sebagai bagian dari akor yang sama</string>
+    <string name="practice_visual_style">Gaya visual</string>
+    <string name="practice_visual_style_classic">Klasik</string>
+    <string name="practice_visual_style_rainbow">Pelangi</string>
+    <string name="practice_visual_style_neon">Neon</string>
+    <string name="practice_visual_style_ocean">Samudra</string>
+    <string name="practice_visual_style_fire">Api</string>
+    <string name="practice_visual_style_changed">Gaya visual: %s</string>
+    <string name="practice_scoring_display">Tampilan skor</string>
+    <string name="practice_scoring_display_title">Tampilan Skor</string>
+    <string name="practice_scoring_display_desc">Pilih metrik yang ditampilkan saat latihan</string>
+    <string name="practice_scoring_enabled">Tampilkan skor</string>
+    <string name="practice_scoring_preset">Preset</string>
+    <string name="practice_scoring_preset_encouragement">Penyemangat</string>
+    <string name="practice_scoring_preset_encouragement_desc">Hanya metrik positif (streak, not bagus)</string>
+    <string name="practice_scoring_preset_full">Statistik lengkap</string>
+    <string name="practice_scoring_preset_full_desc">Semua metrik ditampilkan</string>
+    <string name="practice_scoring_preset_minimal">Minimal</string>
+    <string name="practice_scoring_preset_minimal_desc">Hanya skor dan kombo</string>
+    <string name="practice_scoring_preset_custom">Kustom</string>
+    <string name="practice_scoring_preset_custom_desc">Pilih metrik individual</string>
+    <string name="practice_scoring_show_score">Skor</string>
+    <string name="practice_scoring_show_accuracy">Akurasi</string>
+    <string name="practice_scoring_show_streak">Streak saat ini</string>
+    <string name="practice_scoring_show_best_streak">Streak terbaik</string>
+    <string name="practice_scoring_show_good_notes">Not bagus</string>
+    <string name="practice_scoring_show_perfect_notes">Not sempurna</string>
+    <string name="practice_scoring_show_missed_notes">Not terlewat</string>
+    <string name="practice_scoring_show_combo">Pengali kombo</string>
+    <string name="practice_scoring_show_grade">Nilai</string>
+    <string name="practice_scoring_compact">Mode ringkas</string>
+    <string name="practice_scoring_animations">Animasi</string>
+    <string name="practice_scoring_streak_popups">Popup streak</string>
+    <string name="practice_scoring_disabled">Tampilan skor dinonaktifkan</string>
+    <string name="practice_scoring_config_saved">Tampilan skor diperbarui</string>
+    <string name="practice_results_title">Sesi Selesai</string>
+    <string name="practice_results_accuracy">Akurasi</string>
+    <string name="practice_results_perfect">Not sempurna</string>
+    <string name="practice_results_good">Not bagus</string>
+    <string name="practice_results_missed">Not terlewat</string>
+    <string name="practice_results_wrong">Not salah</string>
+    <string name="practice_results_best_streak">Streak terbaik</string>
+    <string name="practice_results_close">Tutup</string>
+    <string name="midi_keyboard_connected">Keyboard MIDI terhubung</string>
+    <string name="midi_keyboard_settings">Pengaturan Keyboard MIDI</string>
+    <string name="midi_keyboard_info_section">Informasi</string>
+    <string name="midi_keyboard_config_section">Konfigurasi</string>
+    <string name="midi_keyboard_name">Nama</string>
+    <string name="midi_keyboard_manufacturer">Produsen</string>
+    <string name="midi_keyboard_connection">Koneksi</string>
+    <string name="midi_keyboard_connection_usb">USB</string>
+    <string name="midi_keyboard_connection_bluetooth">Bluetooth</string>
+    <string name="midi_keyboard_connection_virtual">Virtual</string>
+    <string name="midi_keyboard_ports">Port</string>
+    <string name="midi_keyboard_ports_format">%1$d masuk / %2$d keluar</string>
+    <string name="midi_keyboard_led_channel">Kanal LED</string>
+    <string name="midi_keyboard_mute_sound">Bisukan suara keyboard</string>
+    <string name="midi_keyboard_mute_sound_desc">Hanya kirim perintah LED, tanpa suara dari keyboard</string>
+    <string name="midi_keyboard_octave_offset">Offset oktaf LED</string>
+    <string name="midi_keyboard_octave_offset_desc">Geser not LED untuk mencocokkan rentang keyboard Anda</string>
+    <string name="midi_keyboard_octave_minus">Oktaf lebih rendah</string>
+    <string name="midi_keyboard_octave_plus">Oktaf lebih tinggi</string>
+    <string name="gm_instrument_unknown">Tidak dikenal</string>
+    <string name="gm_drum_channel">Drum</string>
+    <string name="gm_percussion_format">Perkusi %d</string>
+    <string name="audio_help_content">Menu ini mengonfigurasi output audio saat keyboard MIDI eksternal terhubung.\n\n• Paksa suara melalui speaker:\nJika diaktifkan, musik trek MIDI selalu diputar melalui speaker tablet, bahkan saat keyboard USB terhubung.\n\n• Putar nada saya di tablet:\nJika dinonaktifkan (default), nada yang Anda mainkan di keyboard eksternal berasal dari keyboard itu sendiri (jika memiliki speaker bawaan).\nJika diaktifkan, nada Anda juga berasal dari speaker tablet.\n\nTip: Jika Anda memiliki keyboard dengan speaker (seperti banyak keyboard Yamaha), biarkan opsi ke-2 dinonaktifkan untuk kualitas suara yang lebih baik.</string>
+    <string name="gm_category_piano">Piano</string>
+    <string name="gm_category_chromatic_percussion">Perkusi Kromatik</string>
+    <string name="gm_category_organ">Organ</string>
+    <string name="gm_category_guitar">Gitar</string>
+    <string name="gm_category_bass">Bass</string>
+    <string name="gm_category_strings">String</string>
+    <string name="gm_category_ensemble">Ensembel</string>
+    <string name="gm_category_brass">Kuningan</string>
+    <string name="gm_category_reed">Reed</string>
+    <string name="gm_category_pipe">Pipa</string>
+    <string name="gm_category_synth_lead">Synth Lead</string>
+    <string name="gm_category_synth_pad">Synth Pad</string>
+    <string name="gm_category_synth_fx">Synth FX</string>
+    <string name="gm_category_ethnic">Etnik</string>
+    <string name="gm_category_percussive">Perkusif</string>
+    <string name="gm_category_sound_fx">Efek Suara</string>
+    <string name="gm_category_other">Lainnya</string>
+    <string name="gm_drum_35">Bass Drum Akustik</string>
+    <string name="gm_drum_36">Bass Drum 1</string>
+    <string name="gm_drum_37">Side Stick</string>
+    <string name="gm_drum_38">Snare Akustik</string>
+    <string name="gm_drum_39">Tepuk Tangan</string>
+    <string name="gm_drum_40">Snare Elektrik</string>
+    <string name="gm_drum_41">Low Floor Tom</string>
+    <string name="gm_drum_42">Hi-Hat Tertutup</string>
+    <string name="gm_drum_43">High Floor Tom</string>
+    <string name="gm_drum_44">Pedal Hi-Hat</string>
+    <string name="gm_drum_45">Low Tom</string>
+    <string name="gm_drum_46">Hi-Hat Terbuka</string>
+    <string name="gm_drum_47">Low-Mid Tom</string>
+    <string name="gm_drum_48">Hi-Mid Tom</string>
+    <string name="gm_drum_49">Crash Cymbal 1</string>
+    <string name="gm_drum_50">High Tom</string>
+    <string name="gm_drum_51">Ride Cymbal 1</string>
+    <string name="gm_drum_52">Chinese Cymbal</string>
+    <string name="gm_drum_53">Ride Bell</string>
+    <string name="gm_drum_54">Tamborin</string>
+    <string name="gm_drum_55">Splash Cymbal</string>
+    <string name="gm_drum_56">Cowbell</string>
+    <string name="gm_drum_57">Crash Cymbal 2</string>
+    <string name="gm_drum_58">Vibraslap</string>
+    <string name="gm_drum_59">Ride Cymbal 2</string>
+    <string name="gm_drum_60">Bongo Tinggi</string>
+    <string name="gm_drum_61">Bongo Rendah</string>
+    <string name="gm_drum_62">Conga Tinggi Diredam</string>
+    <string name="gm_drum_63">Conga Tinggi Terbuka</string>
+    <string name="gm_drum_64">Conga Rendah</string>
+    <string name="gm_drum_65">Timbale Tinggi</string>
+    <string name="gm_drum_66">Timbale Rendah</string>
+    <string name="gm_drum_67">Agogo Tinggi</string>
+    <string name="gm_drum_68">Agogo Rendah</string>
+    <string name="gm_drum_69">Cabasa</string>
+    <string name="gm_drum_70">Marakas</string>
+    <string name="gm_drum_71">Peluit Pendek</string>
+    <string name="gm_drum_72">Peluit Panjang</string>
+    <string name="gm_drum_73">Guiro Pendek</string>
+    <string name="gm_drum_74">Guiro Panjang</string>
+    <string name="gm_drum_75">Claves</string>
+    <string name="gm_drum_76">Woodblock Tinggi</string>
+    <string name="gm_drum_77">Woodblock Rendah</string>
+    <string name="gm_drum_78">Cuica Diredam</string>
+    <string name="gm_drum_79">Cuica Terbuka</string>
+    <string name="gm_drum_80">Segitiga Diredam</string>
+    <string name="gm_drum_81">Segitiga Terbuka</string>
+    <string-array name="gm_instruments">
+        <item>Piano Grand Akustik</item>
+        <item>Piano Akustik Cerah</item>
+        <item>Piano Grand Elektrik</item>
+        <item>Piano Honky-tonk</item>
+        <item>Piano Elektrik 1</item>
+        <item>Piano Elektrik 2</item>
+        <item>Harpsichord</item>
+        <item>Clavinet</item>
+        <item>Celesta</item>
+        <item>Glockenspiel</item>
+        <item>Kotak Musik</item>
+        <item>Vibrafon</item>
+        <item>Marimba</item>
+        <item>Xilofon</item>
+        <item>Lonceng Tabung</item>
+        <item>Dulcimer</item>
+        <item>Organ Drawbar</item>
+        <item>Organ Perkusif</item>
+        <item>Organ Rock</item>
+        <item>Organ Gereja</item>
+        <item>Organ Reed</item>
+        <item>Akordeon</item>
+        <item>Harmonika</item>
+        <item>Akordeon Tango</item>
+        <item>Gitar Akustik (nilon)</item>
+        <item>Gitar Akustik (baja)</item>
+        <item>Gitar Elektrik (jazz)</item>
+        <item>Gitar Elektrik (clean)</item>
+        <item>Gitar Elektrik (muted)</item>
+        <item>Gitar Overdrive</item>
+        <item>Gitar Distorsi</item>
+        <item>Harmonik Gitar</item>
+        <item>Bass Akustik</item>
+        <item>Bass Elektrik (finger)</item>
+        <item>Bass Elektrik (pick)</item>
+        <item>Bass Fretless</item>
+        <item>Slap Bass 1</item>
+        <item>Slap Bass 2</item>
+        <item>Synth Bass 1</item>
+        <item>Synth Bass 2</item>
+        <item>Biola</item>
+        <item>Viola</item>
+        <item>Cello</item>
+        <item>Kontrabass</item>
+        <item>String Tremolo</item>
+        <item>String Pizzicato</item>
+        <item>Harpa Orkestra</item>
+        <item>Timpani</item>
+        <item>Ensembel String 1</item>
+        <item>Ensembel String 2</item>
+        <item>Synth String 1</item>
+        <item>Synth String 2</item>
+        <item>Paduan Suara Aahs</item>
+        <item>Suara Oohs</item>
+        <item>Suara Synth</item>
+        <item>Pukulan Orkestra</item>
+        <item>Terompet</item>
+        <item>Trombon</item>
+        <item>Tuba</item>
+        <item>Terompet Muted</item>
+        <item>French Horn</item>
+        <item>Seksi Kuningan</item>
+        <item>Synth Brass 1</item>
+        <item>Synth Brass 2</item>
+        <item>Saksofon Sopran</item>
+        <item>Saksofon Alto</item>
+        <item>Saksofon Tenor</item>
+        <item>Saksofon Bariton</item>
+        <item>Oboe</item>
+        <item>English Horn</item>
+        <item>Bassoon</item>
+        <item>Klarinet</item>
+        <item>Pikolo</item>
+        <item>Flute</item>
+        <item>Rekorder</item>
+        <item>Pan Flute</item>
+        <item>Botol Tiup</item>
+        <item>Shakuhachi</item>
+        <item>Peluit</item>
+        <item>Okarina</item>
+        <item>Lead 1 (kotak)</item>
+        <item>Lead 2 (gergaji)</item>
+        <item>Lead 3 (calliope)</item>
+        <item>Lead 4 (chiff)</item>
+        <item>Lead 5 (charang)</item>
+        <item>Lead 6 (suara)</item>
+        <item>Lead 7 (fifth)</item>
+        <item>Lead 8 (bass + lead)</item>
+        <item>Pad 1 (new age)</item>
+        <item>Pad 2 (hangat)</item>
+        <item>Pad 3 (polysynth)</item>
+        <item>Pad 4 (paduan suara)</item>
+        <item>Pad 5 (digesek)</item>
+        <item>Pad 6 (metalik)</item>
+        <item>Pad 7 (halo)</item>
+        <item>Pad 8 (sweep)</item>
+        <item>FX 1 (hujan)</item>
+        <item>FX 2 (soundtrack)</item>
+        <item>FX 3 (kristal)</item>
+        <item>FX 4 (atmosfer)</item>
+        <item>FX 5 (kecerahan)</item>
+        <item>FX 6 (goblin)</item>
+        <item>FX 7 (gema)</item>
+        <item>FX 8 (sci-fi)</item>
+        <item>Sitar</item>
+        <item>Banjo</item>
+        <item>Shamisen</item>
+        <item>Koto</item>
+        <item>Kalimba</item>
+        <item>Bagpipe</item>
+        <item>Fiddle</item>
+        <item>Shanai</item>
+        <item>Lonceng Gemerincing</item>
+        <item>Agogo</item>
+        <item>Drum Baja</item>
+        <item>Woodblock</item>
+        <item>Drum Taiko</item>
+        <item>Tom Melodis</item>
+        <item>Drum Synth</item>
+        <item>Simbal Terbalik</item>
+        <item>Noise Fret Gitar</item>
+        <item>Noise Napas</item>
+        <item>Pantai</item>
+        <item>Kicau Burung</item>
+        <item>Dering Telepon</item>
+        <item>Helikopter</item>
+        <item>Tepuk Tangan</item>
+        <item>Tembakan</item>
+    </string-array>
+    <string name="practice_record">Rekam</string>
+    <string name="practice_record_stop">Hentikan rekaman</string>
+    <string name="practice_no_notes_recorded">Tidak ada not terekam</string>
+    <string name="practice_recording_max_duration">Rekaman dihentikan — durasi maksimum tercapai (30 menit)</string>
+    <string name="practice_export_title">Ekspor rekaman</string>
+    <string name="practice_export_filename">Nama file</string>
+    <string name="practice_export_format_midi">MIDI (.mid)</string>
+    <string name="practice_export_format_wav">WAV (.wav)</string>
+    <string name="practice_export_format_wav_disabled">WAV (.wav) — memerlukan SF2 SoundFont</string>
+    <string name="practice_export_button">Ekspor</string>
+    <string name="practice_export_share_button">Bagikan</string>
+    <string name="practice_export_success">Diekspor ke %s</string>
+    <string name="practice_export_error">Kesalahan ekspor: %s</string>
+    <string name="practice_export_rendering">Merender audio…</string>
+</resources>

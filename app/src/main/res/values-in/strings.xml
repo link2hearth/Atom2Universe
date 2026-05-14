@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atom2Universe</string>
+    <string name="hybrid_program_selection_title">Pilih Instrumen SF2</string>
+    <string name="hybrid_program_selection_desc">Pilih instrumen mana yang harus menggunakan SoundFont Anda. Instrumen yang tidak dipilih akan menggunakan Sonivox (suara GM bawaan).</string>
+    <string name="hybrid_drums_channel_9">Perkusi (Kanal 10)</string>
+    <string name="hybrid_drums_desc">Kit drum dan instrumen perkusi</string>
+    <string name="hybrid_select_all">Pilih Semua</string>
+    <string name="hybrid_select_none">Hapus Semua</string>
+    <string name="hybrid_selection_summary">%1$d instrumen menggunakan SF2%2$s</string>
+    <string name="hybrid_selection_summary_format">%1$d instrumen menggunakan SF2%2$s</string>
+    <string name="expand">Perluas</string>
+    <string name="widget_description">Widget kontrol audio untuk Musik, Radio, dan MIDI</string>
+    <string name="widget_no_track">Tidak ada pemutaran</string>
+    <string name="widget_tap_to_play">Ketuk untuk melanjutkan</string>
+    <string name="widget_album_art">Sampul album</string>
+    <string name="widget_play_pause">Putar / Jeda</string>
+    <string name="widget_next">Berikutnya</string>
+    <string name="widget_previous">Sebelumnya</string>
+    <string name="play">Putar</string>
+    <string name="stop">Berhenti</string>
+    <string name="settings">Pengaturan</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Batal</string>
+    <string name="confirm">Konfirmasi</string>
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">Batal</string>
+    <string name="common_delete">Hapus</string>
+    <string name="common_continue">Lanjutkan</string>
+    <string name="common_permission_required">Izin diperlukan</string>
+    <string name="save">Simpan</string>
+    <string name="delete">Hapus</string>
+    <string name="close">Tutup</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="color_channel_format">Kanal %d</string>
+    <string name="color_not_set">Default</string>
+    <string name="apply">Terapkan</string>
+</resources>

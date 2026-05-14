@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1a1a1a">
+
+    <!-- Top Toolbar -->
+    <HorizontalScrollView
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#2d2d2d"
+        android:scrollbars="none"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_revert"
+                android:contentDescription="@string/canvas_back"
+                app:tint="#ffffff" />
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="@string/canvas_editor_title"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btn_fit_content"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_view"
+                android:contentDescription="@string/canvas_fit_content"
+                app:tint="#ffffff" />
+
+            <ImageButton
+                android:id="@+id/btn_layers"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_sort_alphabetically"
+                android:contentDescription="@string/canvas_layers"
+                app:tint="#ffffff" />
+
+            <ImageButton
+                android:id="@+id/btn_grid"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                android:contentDescription="@string/canvas_toggle_grid"
+                app:tint="#ffffff" />
+
+            <ImageButton
+                android:id="@+id/btn_menu"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_more"
+                android:contentDescription="@string/canvas_menu"
+                app:tint="#ffffff" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Infinite Canvas -->
+    <com.Atom2Universe.app.pixelart.canvas.InfiniteCanvas
+        android:id="@+id/infinite_canvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/bottom_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Zoom indicator -->
+    <TextView
+        android:id="@+id/zoom_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:padding="6dp"
+        android:background="#80000000"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:text="100%"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bottom Toolbar - Tools -->
+    <HorizontalScrollView
+        android:id="@+id/bottom_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#2d2d2d"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <!-- Tool: Pan (main = déplacer) -->
+            <ImageButton
+                android:id="@+id/tool_pan"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_view"
+                android:contentDescription="@string/canvas_tool_pan"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                app:tint="#ffffff" />
+
+            <!-- Tool: Select (curseur = sélection) -->
+            <ImageButton
+                android:id="@+id/tool_select"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:contentDescription="@string/canvas_tool_select"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                app:tint="#ffffff" />
+
+            <!-- Tool: Draw (crayon = dessin) -->
+            <ImageButton
+                android:id="@+id/tool_draw"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_edit"
+                android:contentDescription="@string/canvas_tool_draw"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                app:tint="#ffffff" />
+
+            <!-- Tool: Shape (dropdown avec icône de la forme sélectionnée) -->
+            <ImageButton
+                android:id="@+id/tool_shape"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@drawable/ic_shape_rectangle"
+                android:contentDescription="@string/canvas_tool_shape"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                app:tint="#ffffff" />
+
+            <!-- Tool: Text -->
+            <ImageButton
+                android:id="@+id/tool_text"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_info_details"
+                android:contentDescription="@string/canvas_tool_text"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                app:tint="#ffffff" />
+
+            <!-- Tool: Image -->
+            <ImageButton
+                android:id="@+id/tool_image"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:contentDescription="@string/canvas_tool_image"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                app:tint="#ffffff" />
+
+            <!-- Separator -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="#444444" />
+
+            <!-- Brush size button -->
+            <TextView
+                android:id="@+id/btn_brush_size"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:gravity="center"
+                android:text="12"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Color picker button -->
+            <View
+                android:id="@+id/btn_color"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/color_button_background" />
+
+            <!-- Separator -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="#444444" />
+
+            <!-- Undo button -->
+            <ImageButton
+                android:id="@+id/btn_undo"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_revert"
+                android:contentDescription="@string/canvas_undo"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:alpha="0.5"
+                app:tint="#ffffff" />
+
+            <!-- Redo button -->
+            <ImageButton
+                android:id="@+id/btn_redo"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_rotate"
+                android:contentDescription="@string/canvas_redo"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:alpha="0.5"
+                app:tint="#ffffff" />
+
+            <!-- Delete button (visible only in SELECT mode with selection) -->
+            <ImageButton
+                android:id="@+id/btn_delete"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/tool_button_background"
+                android:src="@android:drawable/ic_menu_delete"
+                android:contentDescription="@string/canvas_delete"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:visibility="gone"
+                app:tint="#ff5252" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

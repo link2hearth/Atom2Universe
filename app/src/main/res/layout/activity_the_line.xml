@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0F172A">
+
+    <!-- Top bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <ImageButton
+            android:id="@+id/the_line_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/the_line_back"
+            android:tint="#94A3B8" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/the_line_title"
+            android:textColor="#E2E8F0"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/the_line_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#7AD3FF"
+            android:textSize="14sp"
+            android:paddingHorizontal="8dp"
+            tools:text="Level 1" />
+    </LinearLayout>
+
+    <!-- Mode buttons -->
+    <LinearLayout
+        android:id="@+id/the_line_mode_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="4dp" />
+
+    <!-- Difficulty buttons -->
+    <LinearLayout
+        android:id="@+id/the_line_diff_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="6dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/the_line_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#94A3B8"
+        android:textSize="13sp"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="4dp"
+        tools:text="Draw a path that visits every cell." />
+
+    <!-- Board -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.Atom2Universe.app.games.theline.TheLineBoardView
+            android:id="@+id/the_line_board"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp" />
+
+        <ProgressBar
+            android:id="@+id/the_line_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Bottom bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:id="@+id/the_line_remaining"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#64748B"
+            android:textSize="13sp"
+            tools:text="Cells left: 5" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/the_line_btn_reset"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/the_line_btn_reset"
+            android:textColor="#7AD3FF" />
+    </LinearLayout>
+</LinearLayout>

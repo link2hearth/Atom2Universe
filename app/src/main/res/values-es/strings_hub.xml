@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Atras</string>
+    <string name="hub_toggle_view">Cambiar vista</string>
+    <string name="hub_edit_mode">Modo edicion</string>
+    <string name="hub_confirm_edit">Terminar edicion</string>
+    <string name="startup_view_toggle">Cambiar vista</string>
+    <string name="notification_channel_audio_name">Reproduccion de audio</string>
+    <string name="notification_channel_audio_description">Mantiene la reproduccion de audio en segundo plano.</string>
+    <string name="hub_pick_color">Elegir un color</string>
+    <string name="hub_edit_tile">Editar mosaico</string>
+    <string name="hub_change_language">Cambiar idioma</string>
+    <string name="hub_language_changed">Idioma cambiado a %1$s</string>
+    <string name="hub_select_language">Seleccionar idioma</string>
+    <string name="hub_settings">Ajustes</string>
+    <string name="hub_about">Acerca de</string>
+    <string name="hub_theme">Tema de la aplicacion</string>
+</resources>
