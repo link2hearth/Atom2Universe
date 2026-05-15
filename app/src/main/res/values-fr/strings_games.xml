@@ -1252,15 +1252,19 @@
     <string name="roulette_status_lose">Pas de gain cette fois.</string>
     <string name="roulette_status_no_funds">Pas assez de neutrinos !</string>
     <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
-    <string name="roulette_win_joker">🃏 Ligne de Jokers ! ×%1$d</string>
-    <string name="roulette_win_suit_line">Ligne %1$s ! ×%2$d</string>
-    <string name="roulette_win_suit_diag">Diagonale %1$s ! ×%2$d</string>
-    <string name="roulette_win_color_line">Ligne %1$s ! ×%2$d</string>
-    <string name="roulette_win_color_diag">Diagonale %1$s ! ×%2$d</string>
+    <string name="roulette_win_symbol">Ligne %1$s ! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker ! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Ligne de Jokers ! ×%1$d</string>
     <string name="roulette_win_multiple">Combinaisons multiples ! ×%1$d au total</string>
-    <string name="roulette_color_red">Rouge</string>
-    <string name="roulette_color_black">Noir</string>
-    <string name="roulette_pay_suit">♥♦ Même enseigne ×5</string>
-    <string name="roulette_pay_color">♥♣ Même couleur ×2</string>
-    <string name="roulette_pay_joker">🃏🃏🃏 Jokers ×10/25</string>
+    <string name="roulette_pay_suit">Identiques ×2  +🃏 ×3  +🃏🃏 ×4</string>
+    <string name="roulette_pay_joker">🃏🃏🃏 ×5</string>
+    <string name="roulette_win_overlay_title">GAGNÉ !</string>
+    <string name="roulette_win_overlay_tap">Appuyer pour continuer</string>
+
+    <!-- Roguelike donjon -->
+    <string name="roguelike_title">Donjon</string>
+    <string name="roguelike_description">Explorez des donjons procéduraux et survivez 5 niveaux</string>
+    <string name="roguelike_btn_descend">Descendre &gt;</string>
+    <string name="roguelike_btn_no_item">Pas d\'objet</string>
+    <string name="roguelike_inventory_empty">—</string>
 </resources>

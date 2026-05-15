@@ -21,6 +21,7 @@ import com.Atom2Universe.app.quiz.QuizActivity
 import com.Atom2Universe.app.games.colorstack.ColorStackActivity
 import com.Atom2Universe.app.games.game2048.Game2048Activity
 import com.Atom2Universe.app.games.particules.ParticulesActivity
+import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
 import com.Atom2Universe.app.games.reflex.ReflexActivity
 import com.Atom2Universe.app.games.solitaire.SolitaireActivity
 import com.Atom2Universe.app.games.sudoku.SudokuActivity
@@ -59,7 +60,16 @@ class GamesActivity : BaseHubActivity() {
             defaultColorRes = R.color.game_tile_quiz,
             activityClass = QuizActivity::class.java
         ),
-        // Roguelike : casse-briques + shmup
+        // Roguelike
+        HubTile(
+            id = "roguelike",
+            titleRes = R.string.roguelike_title,
+            descriptionRes = R.string.roguelike_description,
+            iconRes = android.R.drawable.ic_menu_mapmode,
+            defaultColorRes = R.color.game_tile_roguelike,
+            activityClass = RoguelikeActivity::class.java
+        ),
+        // Arcade : casse-briques + shmup
         HubTile(
             id = "particules",
             titleRes = R.string.particules_title,

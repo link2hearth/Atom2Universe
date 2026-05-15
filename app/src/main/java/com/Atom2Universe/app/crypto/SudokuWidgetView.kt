@@ -327,7 +327,7 @@ class SudokuWidgetView @JvmOverloads constructor(
                 SudokuDifficulty.MEDIUM -> 10
                 SudokuDifficulty.HARD   -> 20
             }
-            NeutrinoRepository(context).addPending(reward)
+            NeutrinoRepository(context).addBalance(reward)
         } else {
             resultText.text = context.getString(R.string.sudoku_result_failure)
             resultText.setTextColor(Color.parseColor("#EF4444"))

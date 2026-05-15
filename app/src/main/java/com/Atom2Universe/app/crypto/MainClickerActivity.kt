@@ -597,7 +597,7 @@ class MainClickerActivity : ThemedActivity() {
         clickerViewModel.resumeOfflineGains()
         clickerViewModel.refreshElementBonuses()
         clickerViewModel.awardGachaTickets()
-        clickerViewModel.syncNeutrinos()
+        clickerViewModel.refreshNeutrinoBalance()
         reloadPreferences()
         reloadBackground(force = false)
         if (MainClickerPreferences.isChessWidgetEnabled(this)) {
@@ -630,7 +630,6 @@ class MainClickerActivity : ThemedActivity() {
     override fun onPause() {
         floatingWebWidget.onPause()
         colorStackWidgetView.cancelTimer()
-        clickerViewModel.flushWidgetBalance()
         super.onPause()
     }
 
@@ -677,7 +676,7 @@ class MainClickerActivity : ThemedActivity() {
 
     private fun showShopDialog() {
         if (shopDialog?.isShowing == true) return
-        clickerViewModel.syncNeutrinos()
+        clickerViewModel.refreshNeutrinoBalance()
         val view = layoutInflater.inflate(R.layout.view_clicker_shop, null)
 
         shopGodFingerLevelView  = view.findViewById(R.id.shop_god_finger_level)

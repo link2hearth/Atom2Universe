@@ -392,7 +392,7 @@ class ChessWidgetView @JvmOverloads constructor(
                 ChessDifficulty.EXPERT   -> 50
                 else -> 0
             }
-            if (reward > 0) NeutrinoRepository(context).addPending(reward)
+            if (reward > 0) NeutrinoRepository(context).addBalance(reward)
             GameStatsRepository(context).recordChessWon()
         }
     }

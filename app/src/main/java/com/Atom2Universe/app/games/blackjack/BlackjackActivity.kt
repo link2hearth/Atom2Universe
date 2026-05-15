@@ -130,7 +130,7 @@ class BlackjackActivity : AppCompatActivity() {
             .setPositiveButton(if (firstTime) R.string.blackjack_start else android.R.string.ok) { _, _ ->
                 numAI = selectedAI
                 game.setupPlayers(numAI)
-                game.humanPlayer.balance = neutrinoRepo.getWidgetBalance().coerceAtLeast(0)
+                game.humanPlayer.balance = neutrinoRepo.getBalance().coerceAtLeast(0)
                 for (ai in game.aiPlayers) ai.balance = 100
                 aiLabel.text = if (numAI > 0) getString(R.string.blackjack_ai_players_label, numAI) else ""
                 game.pendingBet = game.pendingBet.coerceIn(1, game.humanPlayer.balance.coerceAtLeast(1))
@@ -319,18 +319,9 @@ class BlackjackActivity : AppCompatActivity() {
 
         // Sync neutrino balance (sauf mode gratuit)
         val isFreeBet = humanHands.all { it.bet == 0 }
-        if (!isFreeBet) {
-            when {
-                netChange > 0 -> {
-                    neutrinoRepo.addPending(netChange)
-                    neutrinoRepo.setWidgetBalance(game.humanPlayer.balance)
-                    statsRepo.recordBlackjackWon()
-                }
-                netChange < 0 -> {
-                    neutrinoRepo.addDebit(-netChange)
-                    neutrinoRepo.setWidgetBalance(game.humanPlayer.balance)
-                }
-            }
+        if (!isFreeBet && netChange != 0) {
+            neutrinoRepo.setBalance(game.humanPlayer.balance)
+            if (netChange > 0) statsRepo.recordBlackjackWon()
         }
 
         updateBalanceDisplay()
@@ -376,7 +367,7 @@ class BlackjackActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         handler.removeCallbacksAndMessages(null)
-        neutrinoRepo.setWidgetBalance(game.humanPlayer.balance)
+        neutrinoRepo.setBalance(game.humanPlayer.balance)
     }
 
     override fun onDestroy() {

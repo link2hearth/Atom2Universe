@@ -297,7 +297,7 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
         val winTarget = if (quantumMode) game.quantumTarget else game.target
         statusText.text = getString(R.string.game2048_status_win, winTarget)
 
-        NeutrinoRepository(this).addPending(5)
+        NeutrinoRepository(this).addBalance(5)
 
         boardView.postDelayed({
             val qTarget = if (quantumMode) game.quantumTarget else 0

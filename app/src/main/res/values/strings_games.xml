@@ -1253,15 +1253,19 @@
     <string name="roulette_status_lose">No win this time.</string>
     <string name="roulette_status_no_funds">Not enough neutrinos!</string>
     <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
-    <string name="roulette_win_joker">🃏 Full Joker row! ×%1$d</string>
-    <string name="roulette_win_suit_line">%1$s Suit line! ×%2$d</string>
-    <string name="roulette_win_suit_diag">%1$s Suit diagonal! ×%2$d</string>
-    <string name="roulette_win_color_line">%1$s Color line! ×%2$d</string>
-    <string name="roulette_win_color_diag">%1$s Color diagonal! ×%2$d</string>
+    <string name="roulette_win_symbol">%1$s line! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Full Jokers! ×%1$d</string>
     <string name="roulette_win_multiple">Multiple wins! ×%1$d total</string>
-    <string name="roulette_color_red">Red</string>
-    <string name="roulette_color_black">Black</string>
-    <string name="roulette_pay_suit">♥♦ Same suit ×5</string>
-    <string name="roulette_pay_color">♥♣ Same color ×2</string>
-    <string name="roulette_pay_joker">🃏🃏🃏 Jokers ×10/25</string>
+    <string name="roulette_pay_suit">Same ×2  +🃏 ×3  +🃏🃏 ×4</string>
+    <string name="roulette_pay_joker">🃏🃏🃏 ×5</string>
+    <string name="roulette_win_overlay_title">WIN!</string>
+    <string name="roulette_win_overlay_tap">Tap to continue</string>
+
+    <!-- Roguelike dungeon -->
+    <string name="roguelike_title">Dungeon</string>
+    <string name="roguelike_description">Explore procedural dungeons and survive 5 floors</string>
+    <string name="roguelike_btn_descend">Descend &gt;</string>
+    <string name="roguelike_btn_no_item">No item</string>
+    <string name="roguelike_inventory_empty">—</string>
 </resources>

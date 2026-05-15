@@ -1,25 +1,23 @@
 package com.Atom2Universe.app.games.roulette
 
 enum class RouletteSymbol(
-    val label: String,
-    val colorType: ColorType,
+    val displayName: String,
+    val assetPath: String?,
     val weight: Float
 ) {
-    HEARTS("♥", ColorType.RED, 1f),
-    DIAMONDS("♦", ColorType.RED, 1f),
-    CLUBS("♣", ColorType.BLACK, 1f),
-    SPADES("♠", ColorType.BLACK, 1f),
-    JOKER("🃏", ColorType.JOKER, 0.5f),
-    VOID("●", ColorType.VOID, 2f);
-
-    enum class ColorType { RED, BLACK, JOKER, VOID }
+    STAR    ("★",  "Assets/Image/terre.png",          1f),
+    EARTH   ("🌍", "Assets/Image/jupiter.png",         1f),
+    SUN     ("☀",  "Assets/Image/Sun.png",             1f),
+    MOON    ("🌕", "Assets/Image/FullMoon2010.png",    1f),
+    SATURN  ("🪐", "Assets/Image/saturn.png",          1f),
+    BLACKHOLE("⚫","Assets/sprites/blackhole.jpg",     1f),
+    JOKER   ("🃏", "Assets/Image/RainbowStar.gif",    0.5f);
 
     val isJoker: Boolean get() = this == JOKER
-    val isVoid: Boolean get() = this == VOID
-    val isSuit: Boolean get() = this == HEARTS || this == DIAMONDS || this == CLUBS || this == SPADES
+    val isBlackhole: Boolean get() = this == BLACKHOLE
 
     companion object {
-        private val totalWeight: Float = entries.sumOf { it.weight.toDouble() }.toFloat()
+        private val totalWeight = entries.sumOf { it.weight.toDouble() }.toFloat()  // 6.5
 
         fun random(): RouletteSymbol {
             val roll = (Math.random() * totalWeight).toFloat()
@@ -28,7 +26,7 @@ enum class RouletteSymbol(
                 cumulative += s.weight
                 if (roll < cumulative) return s
             }
-            return VOID
+            return BLACKHOLE
         }
     }
 }

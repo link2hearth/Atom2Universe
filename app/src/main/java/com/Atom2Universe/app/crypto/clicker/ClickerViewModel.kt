@@ -90,7 +90,6 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             offlineRepo.save(now)
             val recalcedState = recalcProduction(withGain)
             _state.value = recalcedState
-            neutrinoRepo.setWidgetBalance(withGain.neutrinos)
             stats = statsRepository.load()
             if (!offlineInitGain.isZero()) {
                 stats = stats.copy(lifetimeApsAtoms = stats.lifetimeApsAtoms.add(offlineInitGain))
@@ -98,6 +97,19 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             unlockedAchievementIds.addAll(achievementRepository.loadUnlocked())
             // Débloquer silencieusement les succès acquis hors-ligne (sans animation)
             checkAchievements(recalcedState.lifetime, emitEvents = false)
+
+            // SharedPrefs est la source de vérité pour les neutrinos.
+            // Migration : si SharedPrefs est vide mais que la DB a un solde, initialiser SharedPrefs.
+            val dbNeutrinos = recalcedState.neutrinos
+            val sharedBalance = neutrinoRepo.getBalance()
+            val neutrinos = if (sharedBalance == 0 && dbNeutrinos > 0) {
+                neutrinoRepo.setBalance(dbNeutrinos)
+                dbNeutrinos
+            } else {
+                sharedBalance
+            }
+            _state.value = recalcedState.copy(neutrinos = neutrinos)
+
             initCompleted = true
         }
     }
@@ -217,7 +229,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
         if (resetClicker) {
             _state.value = ClickerGameState()
-            neutrinoRepo.setWidgetBalance(0)
+            neutrinoRepo.setBalance(0)
         }
     }
 
@@ -382,7 +394,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         val newState = recalcProduction(s.copy(neutrinos = newNeutrinos))
         _state.value = newState
         viewModelScope.launch { repository.save(newState) }
-        neutrinoRepo.setWidgetBalance(newNeutrinos)
+        neutrinoRepo.addBalance(spent)
         return spent
     }
 
@@ -415,25 +427,14 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         return base
     }
 
-    fun flushWidgetBalance() {
+    fun refreshNeutrinoBalance() {
         if (!initCompleted) return
-        if (neutrinoRepo.getPending() == 0 && neutrinoRepo.getDebit() == 0) {
-            neutrinoRepo.setWidgetBalance(_state.value.neutrinos)
-        }
-    }
-
-    fun syncNeutrinos() {
-        val pending = neutrinoRepo.claimPending()
-        val debit = neutrinoRepo.claimDebit()
-        if (pending > 0 || debit > 0) {
-            val s = _state.value
-            val newNeutrinos = (s.neutrinos + pending - debit).coerceAtLeast(0)
-            val newState = s.copy(neutrinos = newNeutrinos)
+        val balance = neutrinoRepo.getBalance()
+        val s = _state.value
+        if (s.neutrinos != balance) {
+            val newState = s.copy(neutrinos = balance)
             _state.value = newState
             viewModelScope.launch { repository.save(newState) }
-            neutrinoRepo.setWidgetBalance(newNeutrinos)
-        } else if (initCompleted) {
-            neutrinoRepo.setWidgetBalance(_state.value.neutrinos)
         }
     }
 
@@ -449,6 +450,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         )
         val newState = recalcProduction(afterPurchase)
         _state.value = newState
+        neutrinoRepo.setBalance(afterPurchase.neutrinos)
         viewModelScope.launch { repository.save(newState) }
     }
 
@@ -464,6 +466,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         )
         val newState = recalcProduction(afterPurchase)
         _state.value = newState
+        neutrinoRepo.setBalance(afterPurchase.neutrinos)
         viewModelScope.launch { repository.save(newState) }
     }
 

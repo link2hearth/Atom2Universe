@@ -189,7 +189,7 @@ class TheLineActivity : AppCompatActivity() {
 
         if (game.difficulty == TheLineDifficulty.HARD) {
             val reward = if (game.mode == TheLineMode.MULTI) 2 else 1
-            NeutrinoRepository(this).addPending(reward)
+            NeutrinoRepository(this).addBalance(reward)
         }
 
         val r = Runnable {

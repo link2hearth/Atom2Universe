@@ -327,7 +327,7 @@ class DraughtsActivity : ThemedActivity(),
                 DraughtsDifficulty.EXPERT   -> 50
                 else -> 0
             }
-            if (reward > 0) NeutrinoRepository(this).addPending(reward)
+            if (reward > 0) NeutrinoRepository(this).addBalance(reward)
         }
         if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI() && currentDifficulty.gachaTickets > 0) {
             showVictoryDialog()

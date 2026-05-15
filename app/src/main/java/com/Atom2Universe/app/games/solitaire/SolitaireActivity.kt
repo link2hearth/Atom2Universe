@@ -385,7 +385,7 @@ class SolitaireActivity : AppCompatActivity(), SolitaireView.OnGameActionListene
             database.solitaireDao().deleteSave()
         }
 
-        NeutrinoRepository(this).addPending(5)
+        NeutrinoRepository(this).addBalance(5)
 
         // Start victory animation
         gameView.startVictoryAnimation()

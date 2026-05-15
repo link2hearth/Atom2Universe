@@ -215,9 +215,9 @@ class ColorStackWidgetView @JvmOverloads constructor(
                             statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                         }
                         hardGameStartMs = 0L
-                        NeutrinoRepository(context).addPending(3)
+                        NeutrinoRepository(context).addBalance(3)
                     }
-                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(context).addPending(1)
+                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(context).addBalance(1)
                     else -> Unit
                 }
             } else {

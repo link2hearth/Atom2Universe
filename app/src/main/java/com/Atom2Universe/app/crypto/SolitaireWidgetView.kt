@@ -319,7 +319,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
             resultText.setTextColor(Color.parseColor("#22C55E"))
             resultOverlay.visibility = View.VISIBLE
             solitaireView.startVictoryAnimation()
-            NeutrinoRepository(context).addPending(5)
+            NeutrinoRepository(context).addBalance(5)
             GameStatsRepository(context).recordSolitaireWon()
             ioScope.launch {
                 runCatching { SolitaireDatabase.getInstance(context).solitaireDao().deleteSave() }

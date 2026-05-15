@@ -214,7 +214,7 @@ class Game2048WidgetView @JvmOverloads constructor(
 
         if (game.hasWon) {
             GameStatsRepository(context).recordGame2048Won()
-            NeutrinoRepository(context).addPending(5)
+            NeutrinoRepository(context).addBalance(5)
         }
         if (game.hasWon || game.gameOver) {
             boardView.postDelayed({

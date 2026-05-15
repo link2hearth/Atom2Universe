@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0D0D0D">
+
+    <!-- Banner : back | floor+level | gold -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="12dp"
+        android:gravity="center_vertical"
+        android:background="#1A1A1A">
+
+        <ImageButton
+            android:id="@+id/roguelike_btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:id="@+id/roguelike_tv_floorlevel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="#EEEEEE"
+            android:gravity="center"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:text="Floor 1/5  Lv 1" />
+
+        <TextView
+            android:id="@+id/roguelike_tv_gold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#FFD600"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:text="0 g" />
+
+    </LinearLayout>
+
+    <!-- Game canvas -->
+    <com.Atom2Universe.app.games.roguelike.RoguelikeView
+        android:id="@+id/roguelike_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+</LinearLayout>

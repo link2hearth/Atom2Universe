@@ -131,7 +131,7 @@ class BlackjackWidgetView @JvmOverloads constructor(
 
     // ── Neutrinos ─────────────────────────────────────────────────────────────────
     private fun syncBalanceFromRepo() {
-        game.humanPlayer.balance = neutrinoRepo.getWidgetBalance()
+        game.humanPlayer.balance = neutrinoRepo.getBalance()
     }
 
     private fun updateNeutrinoDisplay() {
@@ -282,19 +282,9 @@ class BlackjackWidgetView @JvmOverloads constructor(
         }
 
         // Synchroniser le vrai solde neutrinos (sauf mode gratuit)
-        if (hand.bet > 0) {
-            when {
-                netChange > 0 -> {
-                    neutrinoRepo.addPending(netChange)
-                    neutrinoRepo.setWidgetBalance(game.humanPlayer.balance)
-                    GameStatsRepository(context).recordBlackjackWon()
-                }
-                netChange < 0 -> {
-                    neutrinoRepo.addDebit(-netChange)
-                    neutrinoRepo.setWidgetBalance(game.humanPlayer.balance)
-                }
-                else -> Unit
-            }
+        if (hand.bet > 0 && netChange != 0) {
+            neutrinoRepo.setBalance(game.humanPlayer.balance)
+            if (netChange > 0) GameStatsRepository(context).recordBlackjackWon()
         }
 
         val rText = if (hand.bet == 0) {
@@ -328,7 +318,7 @@ class BlackjackWidgetView @JvmOverloads constructor(
     fun setNeutrinoBalance(n: Int) {
         if (game.phase == GamePhase.BETTING) {
             game.humanPlayer.balance = n
-            neutrinoRepo.setWidgetBalance(n)
+            neutrinoRepo.setBalance(n)
             updateNeutrinoDisplay()
             showBettingUI()
         }

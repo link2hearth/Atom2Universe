@@ -3,22 +3,19 @@ package com.Atom2Universe.app.games.roulette
 data class RouletteWin(
     val type: WinType,
     val multiplier: Int,
-    val cells: List<Pair<Int, Int>>   // (row, col)
+    val cells: List<Pair<Int, Int>>
 )
 
-enum class WinType { SUIT_LINE, SUIT_DIAGONAL, COLOR_LINE, COLOR_DIAGONAL, JOKER_ROW }
+enum class WinType { SYMBOL_MATCH, JOKER_WILD, JOKER_LINE }
 
 class RouletteGame {
 
-    // Multiplicateurs
-    val suitLine        = 5
-    val suitDiagonal    = 5
-    val colorLine       = 2
-    val colorDiagonal   = 2
-    val jokerRowMid     = 25
-    val jokerRowEdge    = 10
+    val symbolMatch = 2   // 3 symboles identiques
+    val jokerWild1  = 3   // 2 identiques + 1 joker
+    val jokerWild2  = 4   // 1 symbole + 2 jokers
+    val jokerLine   = 5   // 3 jokers
 
-    val grid: Array<Array<RouletteSymbol>> = Array(3) { Array(3) { RouletteSymbol.VOID } }
+    val grid: Array<Array<RouletteSymbol>> = Array(3) { Array(3) { RouletteSymbol.SATURN } }
 
     fun spin() {
         for (r in 0..2) for (c in 0..2) grid[r][c] = RouletteSymbol.random()
@@ -26,75 +23,33 @@ class RouletteGame {
 
     fun evaluate(): Pair<List<RouletteWin>, Int> {
         val wins = mutableListOf<RouletteWin>()
-
-        // Jokers sur lignes entières (priorité max, avant couleur/enseigne)
-        for (r in 0..2) {
-            val row = listOf(grid[r][0], grid[r][1], grid[r][2])
-            if (row.all { it.isJoker }) {
-                val mult = if (r == 1) jokerRowMid else jokerRowEdge
-                wins += RouletteWin(WinType.JOKER_ROW, mult,
-                    listOf(Pair(r, 0), Pair(r, 1), Pair(r, 2)))
-            }
-        }
-
-        val diagonals = listOf(
-            listOf(Pair(0,0), Pair(1,1), Pair(2,2)),
-            listOf(Pair(0,2), Pair(1,1), Pair(2,0))
-        )
-
-        // Diagonales
-        for (coords in diagonals) {
+        for (coords in allLines()) {
             val cells = coords.map { (r, c) -> grid[r][c] }
-            uniformSuit(cells)?.let {
-                wins += RouletteWin(WinType.SUIT_DIAGONAL, suitDiagonal, coords)
-            }
-            uniformColor(cells)?.let {
-                wins += RouletteWin(WinType.COLOR_DIAGONAL, colorDiagonal, coords)
-            }
+            evaluateLine(cells, coords)?.let { wins += it }
         }
-
-        // Lignes horizontales
-        for (r in 0..2) {
-            val coords = listOf(Pair(r,0), Pair(r,1), Pair(r,2))
-            val cells  = coords.map { (row, col) -> grid[row][col] }
-            // On saute si déjà compté comme ligne de jokers
-            if (cells.all { it.isJoker }) continue
-            uniformSuit(cells)?.let  { wins += RouletteWin(WinType.SUIT_LINE,  suitLine,  coords) }
-            uniformColor(cells)?.let { wins += RouletteWin(WinType.COLOR_LINE, colorLine, coords) }
-        }
-
-        // Colonnes verticales
-        for (c in 0..2) {
-            val coords = listOf(Pair(0,c), Pair(1,c), Pair(2,c))
-            val cells  = coords.map { (row, col) -> grid[row][col] }
-            uniformSuit(cells)?.let  { wins += RouletteWin(WinType.SUIT_LINE,  suitLine,  coords) }
-            uniformColor(cells)?.let { wins += RouletteWin(WinType.COLOR_LINE, colorLine, coords) }
-        }
-
         val totalMult = wins.sumOf { it.multiplier }
         return Pair(wins, totalMult)
     }
 
-    /** Retourne l'enseigne commune si toutes les cellules ont la même (le Joker est joker, le Void bloque). */
-    private fun uniformSuit(cells: List<RouletteSymbol>): RouletteSymbol? {
-        var base: RouletteSymbol? = null
-        for (s in cells) {
-            if (s.isVoid) return null
-            if (s.isJoker) continue
-            if (base == null) base = s else if (s != base) return null
-        }
-        return base  // null si que des jokers → ne compte pas comme enseigne
+    private fun allLines(): List<List<Pair<Int, Int>>> = buildList {
+        for (r in 0..2) add(listOf(Pair(r, 0), Pair(r, 1), Pair(r, 2)))   // lignes
+        for (c in 0..2) add(listOf(Pair(0, c), Pair(1, c), Pair(2, c)))   // colonnes
+        add(listOf(Pair(0, 0), Pair(1, 1), Pair(2, 2)))                    // diagonale \
+        add(listOf(Pair(0, 2), Pair(1, 1), Pair(2, 0)))                    // diagonale /
     }
 
-    /** Retourne la couleur commune (RED/BLACK) si toutes les cellules l'ont (Joker = wildcard, Void bloque). */
-    private fun uniformColor(cells: List<RouletteSymbol>): RouletteSymbol.ColorType? {
-        var base: RouletteSymbol.ColorType? = null
-        for (s in cells) {
-            val ct = s.colorType
-            if (ct == RouletteSymbol.ColorType.VOID) return null
-            if (ct == RouletteSymbol.ColorType.JOKER) continue
-            if (base == null) base = ct else if (ct != base) return null
+    private fun evaluateLine(cells: List<RouletteSymbol>, coords: List<Pair<Int, Int>>): RouletteWin? {
+        if (cells.any { it.isBlackhole }) return null
+        val jokerCount = cells.count { it.isJoker }
+        val nonJokers  = cells.filter { !it.isJoker }
+        if (nonJokers.isEmpty()) return RouletteWin(WinType.JOKER_LINE, jokerLine, coords)
+        val base = nonJokers.first()
+        if (!nonJokers.all { it == base }) return null
+        return when (jokerCount) {
+            0 -> RouletteWin(WinType.SYMBOL_MATCH, symbolMatch, coords)
+            1 -> RouletteWin(WinType.JOKER_WILD,   jokerWild1,  coords)
+            2 -> RouletteWin(WinType.JOKER_WILD,   jokerWild2,  coords)
+            else -> null
         }
-        return if (base == RouletteSymbol.ColorType.RED || base == RouletteSymbol.ColorType.BLACK) base else null
     }
 }

@@ -438,7 +438,7 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
                 SudokuDifficulty.MEDIUM -> 10
                 SudokuDifficulty.HARD   -> 20
             }
-            NeutrinoRepository(this).addPending(reward)
+            NeutrinoRepository(this).addBalance(reward)
 
             Toast.makeText(this, R.string.sudoku_status_solved, Toast.LENGTH_LONG).show()
         }

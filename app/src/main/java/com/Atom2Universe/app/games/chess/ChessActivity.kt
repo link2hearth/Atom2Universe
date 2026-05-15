@@ -391,7 +391,7 @@ class ChessActivity : AppCompatActivity(),
                 ChessDifficulty.EXPERT   -> 50
                 else -> 0
             }
-            if (reward > 0) NeutrinoRepository(this).addPending(reward)
+            if (reward > 0) NeutrinoRepository(this).addBalance(reward)
         }
     }
 

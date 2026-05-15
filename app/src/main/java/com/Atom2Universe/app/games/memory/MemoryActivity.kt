@@ -277,7 +277,7 @@ class MemoryActivity : AppCompatActivity() {
         winMessage.text = getString(R.string.memory_win_message, game.flips, formatTime(game.elapsedSeconds))
         winOverlay.visibility = View.VISIBLE
         // EASY=+1, NORMAL=+2, MEDIUM=+3, PRO=+4, HARD=+5
-        NeutrinoRepository(this).addPending(game.difficulty.ordinal + 1)
+        NeutrinoRepository(this).addBalance(game.difficulty.ordinal + 1)
     }
 
     // ── Bitmap loading ────────────────────────────────────────────────────────────

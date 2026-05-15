@@ -186,7 +186,7 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
         if (game.rewardClaimed || !game.seedWasRandom) { game.rewardClaimed = true; return }
         game.rewardClaimed = true
         val tickets = when (game.size) { 6 -> 5; 7 -> 10; else -> 15 }
-        NeutrinoRepository(this).addPending(tickets)
+        NeutrinoRepository(this).addBalance(tickets)
     }
 
     // ── Timer ─────────────────────────────────────────────────────────────────────
