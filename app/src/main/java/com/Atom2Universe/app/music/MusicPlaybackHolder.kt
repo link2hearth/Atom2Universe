@@ -209,6 +209,17 @@ object MusicPlaybackHolder {
                 .setWakeMode(C.WAKE_MODE_LOCAL)  // Maintient le CPU actif pendant la lecture (écran éteint)
                 .build().apply {
                 addListener(exoPlayerListener!!)
+                // Désactiver la gestion du focus audio interne d'ExoPlayer :
+                // AudioFocusManager est la seule source de vérité pour le focus audio.
+                // Sans ça, ExoPlayer reprend tout seul la lecture quand il reçoit AUDIOFOCUS_GAIN,
+                // même pendant un appel téléphonique (bug de reprise intempestive).
+                setAudioAttributes(
+                    androidx.media3.common.AudioAttributes.Builder()
+                        .setUsage(C.USAGE_MEDIA)
+                        .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                        .build(),
+                    false  // handleAudioFocus = false
+                )
             }
 
             Log.d(TAG, "ExoPlayer created with DSP Equalizer Processor")

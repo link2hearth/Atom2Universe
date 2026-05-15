@@ -198,11 +198,12 @@ class NewsWidgetView @JvmOverloads constructor(
                 it.id in NewsPreferences.getEnabledSourceIds(context)
             }
             val banned = NewsPreferences.getBannedWords(context)
-            val hidden = NewsPreferences.getHiddenIds(context).keys
             try {
                 withContext(Dispatchers.IO) {
                     NewsRepository.refresh(sources, bannedWords = banned)
                 }
+                // Lu après le fetch pour inclure les hides effectués pendant le réseau.
+                val hidden = NewsPreferences.getHiddenIds(context).keys
                 visibleArticles = NewsRepository.filterVisible(hidden, banned)
                 currentIndex = 0
                 if (visibleArticles.isEmpty()) {
@@ -363,13 +364,17 @@ class NewsWidgetView @JvmOverloads constructor(
     // ── Touch : dispatch ─────────────────────────────────────────────────────
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        // Les enfants (MaterialCardView) consomment les events : on doit intercepter
-        // ici pour que le pincement et le swipe fonctionnent malgré ça.
         scaleDetector.onTouchEvent(event)
         if (scaleDetector.isInProgress) return true
         swipeDetector.onTouchEvent(event)
         return super.dispatchTouchEvent(event)
     }
+
+    // Sans cet override, si aucun enfant ne consomme ACTION_DOWN (zone titre/méta),
+    // le système ne livre plus les MOVE/UP au widget et le GestureDetector ne peut
+    // jamais déclencher onFling. En retournant true ici, le widget consomme tous les
+    // touches que ses enfants n'ont pas pris, garantissant la séquence complète.
+    override fun onTouchEvent(event: MotionEvent): Boolean = true
 
     // ── Touch : drag via header ───────────────────────────────────────────────
 

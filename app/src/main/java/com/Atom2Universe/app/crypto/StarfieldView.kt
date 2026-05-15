@@ -54,7 +54,7 @@ class StarfieldView @JvmOverloads constructor(
     }
 
     private fun triggerSpawn() {
-        if (width > 0 && height > 0 && visibility == VISIBLE) {
+        if (width > 0 && height > 0 && visibility == VISIBLE && shootingStars.size < 2) {
             spawnShootingStar(width.toFloat(), height.toFloat())
         }
         scheduleNextSpawn()
@@ -89,6 +89,10 @@ class StarfieldView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         val now = System.currentTimeMillis()
+        // Si la vue était masquée par un overlay, les étoiles ont pu s'accumuler sans progresser
+        if (lastFrameMs != 0L && now - lastFrameMs > 2_000L) {
+            shootingStars.clear()
+        }
         val dt = if (lastFrameMs == 0L) 16f else (now - lastFrameMs).coerceIn(1, 100).toFloat()
         lastFrameMs = now
 
