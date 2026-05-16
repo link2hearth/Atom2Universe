@@ -331,6 +331,18 @@
                 <TextView style="@style/StatLabel" android:text="@string/stat_wavesurf_altitude" />
                 <TextView android:id="@+id/stat_wavesurf_altitude_value" style="@style/StatValue" android:text="—" />
             </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_survivor_time" />
+                <TextView android:id="@+id/stat_survivor_time_value" style="@style/StatValue" android:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_survivor_level" />
+                <TextView android:id="@+id/stat_survivor_kills_value" style="@style/StatValue" android:text="—" />
+            </LinearLayout>
 
         </LinearLayout>
 

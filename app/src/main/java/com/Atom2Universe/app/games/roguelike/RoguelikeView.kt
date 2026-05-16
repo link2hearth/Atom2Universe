@@ -432,7 +432,7 @@ class RoguelikeView @JvmOverloads constructor(
 
         // 3 items
         val items = listOf(
-            Triple(ShopItem.POTION,  "♥  Potion",          "Restaure 20 HP"),
+            Triple(ShopItem.POTION,  "♥  Vie max +10",      "Max HP +10 + soins complets"),
             Triple(ShopItem.ATK_UP, "⚔  Cristal de force", "ATK +1 permanent"),
             Triple(ShopItem.BARRIER,"◈  Bouclier",         "Recharge la barrière")
         )

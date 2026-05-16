@@ -14,7 +14,7 @@ data class Pos(val x: Int, val y: Int) {
 
 // ─── Items ──────────────────────────────────────────────────────────────────────
 enum class ItemType(val symbol: Char, val label: String, val colorArgb: Int) {
-    HEALTH_POTION('!', "Health Potion", 0xFFE53935.toInt()),
+    HEALTH_POTION('♥', "Health Potion", 0xFFE53935.toInt()),
     SWORD('/', "Sword",               0xFFB0BEC5.toInt()),
     SHIELD(')', "Shield",             0xFF78909C.toInt()),
     GOLD('$', "Gold",                 0xFFFFD600.toInt())
@@ -66,13 +66,13 @@ class Player(startPos: Pos) {
     val maxBarrier get() = if (barrierUnlocked) maxHp / 5 else 0
     var barrierStep = 0
 
-    val atk get() = baseAtk + if (equippedWeapon?.type == ItemType.SWORD) 3 else 0
+    val atk get() = baseAtk + floor + if (equippedWeapon?.type == ItemType.SWORD) 3 else 0
     val def get() = baseDef + if (equippedShield?.type == ItemType.SHIELD) 2 else 0
 }
 
 // ─── Shop ───────────────────────────────────────────────────────────────────────
 enum class ShopItem(val cost: Int) {
-    POTION(15),
+    POTION(20),
     ATK_UP(25),
     BARRIER(20)
 }
@@ -153,9 +153,9 @@ class RoguelikeGame {
         shopBought.add(item)
         when (item) {
             ShopItem.POTION -> {
-                val gain = min(20, player.maxHp - player.hp)
-                player.hp += gain
-                addLog("Potion. +$gain HP.")
+                player.maxHp += 10
+                player.hp = player.maxHp
+                addLog("Max HP +10! Soins complets!")
             }
             ShopItem.ATK_UP -> {
                 player.baseAtk++
@@ -197,17 +197,19 @@ class RoguelikeGame {
         val item = player.inventory.getOrNull(index) ?: return
         when (item.type) {
             ItemType.HEALTH_POTION -> {
-                val gain = min(15, player.maxHp - player.hp)
-                player.hp += gain
+                val gain = player.maxHp - player.hp
+                player.hp = player.maxHp
                 player.inventory.removeAt(index)
-                addLog("You drink a potion. +$gain HP.")
+                addLog("Potion bue. +$gain HP. Soins complets!")
             }
             ItemType.SWORD -> {
                 player.equippedWeapon = item
+                player.inventory.removeAt(index)
                 addLog("Sword equipped (+3 ATK).")
             }
             ItemType.SHIELD -> {
                 player.equippedShield = item
+                player.inventory.removeAt(index)
                 addLog("Shield equipped (+2 DEF).")
             }
             ItemType.GOLD -> { /* auto-collected */ }
@@ -289,18 +291,21 @@ class RoguelikeGame {
     }
 
     private fun checkPickup() {
-        val it = level.itemAt(player.pos.x, player.pos.y) ?: return
-        if (it.type == ItemType.GOLD) {
-            val gain = Random.nextInt(3, 12)
-            player.gold += gain
-            level.items.remove(it)
-            addLog("+$gain gold!")
-        } else if (player.inventory.size < MAX_INV) {
-            player.inventory.add(it)
-            level.items.remove(it)
-            addLog("Picked up ${it.type.label}.")
-        } else {
-            addLog("Inventory full!")
+        val here = level.items.filter { it.pos.x == player.pos.x && it.pos.y == player.pos.y }
+        if (here.isEmpty()) return
+        for (it in here) {
+            if (it.type == ItemType.GOLD) {
+                val gain = Random.nextInt(3, 12)
+                player.gold += gain
+                level.items.remove(it)
+                addLog("+$gain gold!")
+            } else if (player.inventory.size < MAX_INV) {
+                player.inventory.add(it)
+                level.items.remove(it)
+                addLog("Ramassé : ${it.type.label}.")
+            } else {
+                addLog("Inventaire plein !")
+            }
         }
     }
 
@@ -382,11 +387,13 @@ class RoguelikeGame {
                 lv.monsters.add(Monster(eligible.random(), pos))
         }
 
-        repeat(2 + Random.nextInt(4)) {
+        val itemCount = (4 + Random.nextInt(5)) + maxOf(0, (floor - 3) * 2)
+        val potionProb = minOf(0.8f, 0.3f + floor * 0.1f)
+        repeat(itemCount) {
             val room = shuffled.randomOrNull() ?: return@repeat
             val pos = room.randomInner()
             if (lv.tiles[pos.y][pos.x] == TileType.FLOOR && lv.itemAt(pos.x, pos.y) == null) {
-                val type = if (Random.nextFloat() < 0.5f) ItemType.HEALTH_POTION else ItemType.GOLD
+                val type = if (Random.nextFloat() < potionProb) ItemType.HEALTH_POTION else ItemType.GOLD
                 lv.items.add(Item(type, pos))
             }
         }

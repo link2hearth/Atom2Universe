@@ -173,11 +173,6 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         // Setup callbacks
         setupCallbacks()
 
-        // Initialiser le synthétiseur (Sonivox, SF2, ou Hybride selon settings)
-        serviceScope.launch {
-            initializeSynthesizer()
-        }
-
         // Enregistrer le BroadcastReceiver pour les commandes widget
         registerWidgetCommandReceiver()
 

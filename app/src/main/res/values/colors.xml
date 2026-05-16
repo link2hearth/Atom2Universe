@@ -203,6 +203,8 @@
     <color name="game_tile_link">#00695C</color>
     <color name="game_tile_wavesurf">#0D2B5E</color>
     <color name="game_tile_roguelike">#2D1B00</color>
+    <color name="game_tile_survivor">#0D1A0D</color>
+    <color name="game_tile_bigger">#1A0D2E</color>
     <color name="category_alkali_metal">#B87070</color>
     <color name="category_alkaline_earth_metal">#C48A5C</color>
     <color name="category_transition_metal">#A89A6E</color>

@@ -257,6 +257,15 @@ class ClickerStatsActivity : ThemedActivity() {
         findViewById<TextView>(R.id.stat_wavesurf_altitude_value).text =
             if (wsAlt > 0) "${fmt.format(wsAlt)} m" else "—"
 
+        val sv = getSharedPreferences("survivor_save", MODE_PRIVATE)
+        val svTime  = sv.getFloat("best_time", 0f)
+        val svKills = sv.getInt("best_kills", 0)
+        val svTimeSec = svTime.toInt()
+        findViewById<TextView>(R.id.stat_survivor_time_value).text =
+            if (svTime > 0f) "%d:%02d".format(svTimeSec / 60, svTimeSec % 60) else "—"
+        findViewById<TextView>(R.id.stat_survivor_kills_value).text =
+            if (svKills > 0) fmt.format(svKills) else "—"
+
         // Particules : Room DB async
         lifecycleScope.launch {
             val meta = com.Atom2Universe.app.games.particules.data.ParticulesDatabase
