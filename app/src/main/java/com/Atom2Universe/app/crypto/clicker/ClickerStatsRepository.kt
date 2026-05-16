@@ -2,6 +2,7 @@ package com.Atom2Universe.app.crypto.clicker
 
 import android.content.Context
 import com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber
+import androidx.core.content.edit
 
 class ClickerStatsRepository(context: Context) {
 
@@ -38,7 +39,7 @@ class ClickerStatsRepository(context: Context) {
     }
 
     fun reset() {
-        prefs.edit().clear().apply()
+        prefs.edit { clear() }
     }
 
     private fun loadLayeredNumber(prefix: String): LayeredNumber =

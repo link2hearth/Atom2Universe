@@ -18,6 +18,7 @@ import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.games.draughts.ai.DraughtsAI
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 class DraughtsActivity : ThemedActivity(),
     DraughtsView.DraughtsViewListener,
@@ -380,16 +381,15 @@ class DraughtsActivity : ThemedActivity(),
 
     private fun saveGame() {
         if (game.moveCount == 0) return
-        getSharedPreferences("draughts_save", MODE_PRIVATE).edit().apply {
+        getSharedPreferences("draughts_save", MODE_PRIVATE).edit {
             putString("state", game.serialize())
             putString("difficulty", currentDifficulty.name)
             putLong("elapsed_time", elapsedTimeMs)
-            apply()
         }
     }
 
     private fun clearSave() {
-        getSharedPreferences("draughts_save", MODE_PRIVATE).edit().clear().apply()
+        getSharedPreferences("draughts_save", MODE_PRIVATE).edit { clear() }
     }
 
     private fun loadSavedGame() {

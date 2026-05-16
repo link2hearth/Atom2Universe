@@ -19,6 +19,7 @@ import org.json.JSONObject
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import androidx.core.content.edit
 
 /**
  * Gestionnaire des compteurs d'écoutes persistants.
@@ -584,7 +585,7 @@ object MusicPlayCountManager {
         val entries = dao.getAllWithEarnedPlayCount()
 
         if (entries.isEmpty()) {
-            prefs.edit().putBoolean("listen_events_migrated", true).apply()
+            prefs.edit { putBoolean("listen_events_migrated", true) }
             return@withContext
         }
 
@@ -619,7 +620,7 @@ object MusicPlayCountManager {
         // Insérer par lots pour éviter des transactions trop grandes
         events.chunked(500).forEach { batch -> listenEventDao.insertAll(batch) }
 
-        prefs.edit().putBoolean("listen_events_migrated", true).apply()
+        prefs.edit { putBoolean("listen_events_migrated", true) }
         Log.i(TAG, "Migrated ${events.size} historical listen events from earnedPlayCount (${entries.size} tracks)")
     }
 

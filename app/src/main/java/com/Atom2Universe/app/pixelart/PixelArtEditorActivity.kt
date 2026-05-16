@@ -39,6 +39,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 class PixelArtEditorActivity : AppCompatActivity() {
 
@@ -2599,7 +2600,7 @@ class PixelArtEditorActivity : AppCompatActivity() {
     private fun savePalette() {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val paletteString = customPalette.joinToString(",")
-        prefs.edit().putString(PALETTE_KEY, paletteString).apply()
+        prefs.edit { putString(PALETTE_KEY, paletteString) }
     }
 
     private fun rebuildPaletteUI() {
@@ -2748,7 +2749,7 @@ class PixelArtEditorActivity : AppCompatActivity() {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         // Save current palette name
-        prefs.edit().putString(CURRENT_PALETTE_NAME_KEY, currentPaletteName).apply()
+        prefs.edit { putString(CURRENT_PALETTE_NAME_KEY, currentPaletteName) }
 
         // Save palettes as JSON
         try {
@@ -2763,7 +2764,7 @@ class PixelArtEditorActivity : AppCompatActivity() {
                 obj.put("colors", colorsArray)
                 jsonArray.put(obj)
             }
-            prefs.edit().putString(PALETTES_KEY, jsonArray.toString()).apply()
+            prefs.edit { putString(PALETTES_KEY, jsonArray.toString()) }
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -14,6 +14,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.games.chess.ai.ChessAI
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 /**
  * Activité principale du jeu d'échecs
@@ -404,19 +405,16 @@ class ChessActivity : AppCompatActivity(),
         if (game.moveHistory.isEmpty()) return // Pas de partie à sauvegarder
 
         val prefs = getSharedPreferences("chess_save", MODE_PRIVATE)
-        prefs.edit().apply {
+        prefs.edit {
             putString("fen", game.toFEN())
             putString("difficulty", currentDifficulty.name)
             putLong("elapsed_time", elapsedTimeMs)
             putBoolean("is_game_over", game.isGameOver())
 
-            // Sauvegarder les pièces capturées
             val capturedPiecesJson = game.capturedPieces.joinToString(",") { piece ->
                 "${piece.type.notation}${piece.color.name}"
             }
             putString("captured_pieces", capturedPiecesJson)
-
-            apply()
         }
     }
 
@@ -495,7 +493,7 @@ class ChessActivity : AppCompatActivity(),
      * Supprime la sauvegarde
      */
     private fun deleteSave() {
-        getSharedPreferences("chess_save", MODE_PRIVATE).edit().clear().apply()
+        getSharedPreferences("chess_save", MODE_PRIVATE).edit { clear() }
     }
 
     // ========== Lifecycle ==========

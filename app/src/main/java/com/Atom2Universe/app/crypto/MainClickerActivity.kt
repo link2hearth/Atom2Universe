@@ -26,7 +26,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
-import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.data.MainClickerDatabase
@@ -70,6 +69,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.crypto.clicker.ClickerBannerView
 import com.Atom2Universe.app.crypto.clicker.ClickerGameState
 import com.Atom2Universe.app.crypto.clicker.ClickerViewModel
+import androidx.core.content.edit
 
 class MainClickerActivity : ThemedActivity() {
 
@@ -591,7 +591,7 @@ class MainClickerActivity : ThemedActivity() {
         val resetStats   = resetFlags.getBoolean("reset_stats",   false)
         val resetClicker = resetFlags.getBoolean("reset_clicker", false)
         if (resetStats || resetClicker) {
-            resetFlags.edit().clear().apply()
+            resetFlags.edit { clear() }
             clickerViewModel.applyPendingReset(resetStats, resetClicker)
         }
         clickerViewModel.resumeOfflineGains()

@@ -2,6 +2,7 @@ package com.Atom2Universe.app.music
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 /**
  * Modes d'affichage des artistes
@@ -119,7 +120,7 @@ class MusicPreferences(context: Context) {
             return MusicLibrary.AlbumSortOrder.entries.getOrElse(ordinal) { MusicLibrary.AlbumSortOrder.NAME_ASC }
         }
         set(value) {
-            prefs.edit().putInt(KEY_ALBUM_SORT_ORDER, value.ordinal).apply()
+            prefs.edit { putInt(KEY_ALBUM_SORT_ORDER, value.ordinal) }
         }
 
     /**
@@ -128,7 +129,7 @@ class MusicPreferences(context: Context) {
     var showPlayCount: Boolean
         get() = prefs.getBoolean(KEY_SHOW_PLAY_COUNT, false)
         set(value) {
-            prefs.edit().putBoolean(KEY_SHOW_PLAY_COUNT, value).apply()
+            prefs.edit { putBoolean(KEY_SHOW_PLAY_COUNT, value) }
         }
 
     /**
@@ -137,7 +138,7 @@ class MusicPreferences(context: Context) {
     var autoFetchLyrics: Boolean
         get() = prefs.getBoolean(KEY_AUTO_FETCH_LYRICS, false)
         set(value) {
-            prefs.edit().putBoolean(KEY_AUTO_FETCH_LYRICS, value).apply()
+            prefs.edit { putBoolean(KEY_AUTO_FETCH_LYRICS, value) }
         }
 
     /**
@@ -148,7 +149,7 @@ class MusicPreferences(context: Context) {
     var suggestTrackNumbers: Boolean
         get() = prefs.getBoolean(KEY_SUGGEST_TRACK_NUMBERS, false)
         set(value) {
-            prefs.edit().putBoolean(KEY_SUGGEST_TRACK_NUMBERS, value).apply()
+            prefs.edit { putBoolean(KEY_SUGGEST_TRACK_NUMBERS, value) }
         }
 
     /**
@@ -158,7 +159,7 @@ class MusicPreferences(context: Context) {
     var lyricsAutoScroll: Boolean
         get() = prefs.getBoolean(KEY_LYRICS_AUTO_SCROLL, true)
         set(value) {
-            prefs.edit().putBoolean(KEY_LYRICS_AUTO_SCROLL, value).apply()
+            prefs.edit { putBoolean(KEY_LYRICS_AUTO_SCROLL, value) }
         }
 
     /**
@@ -169,7 +170,7 @@ class MusicPreferences(context: Context) {
     var writeTagsToFiles: Boolean
         get() = prefs.getBoolean(KEY_WRITE_TAGS_TO_FILES, false)
         set(value) {
-            prefs.edit().putBoolean(KEY_WRITE_TAGS_TO_FILES, value).apply()
+            prefs.edit { putBoolean(KEY_WRITE_TAGS_TO_FILES, value) }
         }
 
     // ========== Navidrome Settings ==========
@@ -177,19 +178,19 @@ class MusicPreferences(context: Context) {
     var navidromeServerUrl: String
         get() = prefs.getString(KEY_NAVIDROME_SERVER_URL, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_NAVIDROME_SERVER_URL, value.trim()).apply()
+            prefs.edit { putString(KEY_NAVIDROME_SERVER_URL, value.trim()) }
         }
 
     var navidromeUsername: String
         get() = prefs.getString(KEY_NAVIDROME_USERNAME, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_NAVIDROME_USERNAME, value.trim()).apply()
+            prefs.edit { putString(KEY_NAVIDROME_USERNAME, value.trim()) }
         }
 
     var navidromePassword: String
         get() = prefs.getString(KEY_NAVIDROME_PASSWORD, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_NAVIDROME_PASSWORD, value).apply()
+            prefs.edit { putString(KEY_NAVIDROME_PASSWORD, value) }
         }
 
     /**
@@ -199,7 +200,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiPrimary: String
         get() = prefs.getString(KEY_LYRICS_API_PRIMARY, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_PRIMARY, value.trim()).apply()
+            prefs.edit { putString(KEY_LYRICS_API_PRIMARY, value.trim()) }
         }
 
     /**
@@ -209,7 +210,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiFallback: String
         get() = prefs.getString(KEY_LYRICS_API_FALLBACK, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_FALLBACK, value.trim()).apply()
+            prefs.edit { putString(KEY_LYRICS_API_FALLBACK, value.trim()) }
         }
 
     /**
@@ -218,7 +219,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiPrimaryHeaders: String
         get() = prefs.getString(KEY_LYRICS_API_PRIMARY_HEADERS, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_PRIMARY_HEADERS, value).apply()
+            prefs.edit { putString(KEY_LYRICS_API_PRIMARY_HEADERS, value) }
         }
 
     /**
@@ -227,7 +228,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiFallbackHeaders: String
         get() = prefs.getString(KEY_LYRICS_API_FALLBACK_HEADERS, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_FALLBACK_HEADERS, value).apply()
+            prefs.edit { putString(KEY_LYRICS_API_FALLBACK_HEADERS, value) }
         }
 
     /**
@@ -236,7 +237,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiPrimaryLyricsPath: String
         get() = prefs.getString(KEY_LYRICS_API_PRIMARY_LYRICS_PATH, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_PRIMARY_LYRICS_PATH, value.trim()).apply()
+            prefs.edit { putString(KEY_LYRICS_API_PRIMARY_LYRICS_PATH, value.trim()) }
         }
 
     /**
@@ -245,7 +246,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiPrimarySyncedPath: String
         get() = prefs.getString(KEY_LYRICS_API_PRIMARY_SYNCED_PATH, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_PRIMARY_SYNCED_PATH, value.trim()).apply()
+            prefs.edit { putString(KEY_LYRICS_API_PRIMARY_SYNCED_PATH, value.trim()) }
         }
 
     /**
@@ -254,7 +255,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiFallbackLyricsPath: String
         get() = prefs.getString(KEY_LYRICS_API_FALLBACK_LYRICS_PATH, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_FALLBACK_LYRICS_PATH, value.trim()).apply()
+            prefs.edit { putString(KEY_LYRICS_API_FALLBACK_LYRICS_PATH, value.trim()) }
         }
 
     /**
@@ -263,7 +264,7 @@ class MusicPreferences(context: Context) {
     var lyricsApiFallbackSyncedPath: String
         get() = prefs.getString(KEY_LYRICS_API_FALLBACK_SYNCED_PATH, "") ?: ""
         set(value) {
-            prefs.edit().putString(KEY_LYRICS_API_FALLBACK_SYNCED_PATH, value.trim()).apply()
+            prefs.edit { putString(KEY_LYRICS_API_FALLBACK_SYNCED_PATH, value.trim()) }
         }
 
     /**
@@ -275,7 +276,7 @@ class MusicPreferences(context: Context) {
             return ArtistDisplayMode.entries.getOrElse(ordinal) { ArtistDisplayMode.LIST }
         }
         set(value) {
-            prefs.edit().putInt(KEY_ARTIST_DISPLAY_MODE, value.ordinal).apply()
+            prefs.edit { putInt(KEY_ARTIST_DISPLAY_MODE, value.ordinal) }
         }
 
     /**
@@ -285,7 +286,7 @@ class MusicPreferences(context: Context) {
         get() = prefs.getInt(KEY_ARTIST_TILE_COLUMNS, DEFAULT_TILE_COLUMNS)
             .coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)
         set(value) {
-            prefs.edit().putInt(KEY_ARTIST_TILE_COLUMNS, value.coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)).apply()
+            prefs.edit { putInt(KEY_ARTIST_TILE_COLUMNS, value.coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)) }
         }
 
     /**
@@ -297,7 +298,7 @@ class MusicPreferences(context: Context) {
             return AlbumDisplayMode.entries.getOrElse(ordinal) { AlbumDisplayMode.LIST }
         }
         set(value) {
-            prefs.edit().putInt(KEY_ALBUM_DISPLAY_MODE, value.ordinal).apply()
+            prefs.edit { putInt(KEY_ALBUM_DISPLAY_MODE, value.ordinal) }
         }
 
     /**
@@ -307,7 +308,7 @@ class MusicPreferences(context: Context) {
         get() = prefs.getInt(KEY_ALBUM_TILE_COLUMNS, DEFAULT_TILE_COLUMNS)
             .coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)
         set(value) {
-            prefs.edit().putInt(KEY_ALBUM_TILE_COLUMNS, value.coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)).apply()
+            prefs.edit { putInt(KEY_ALBUM_TILE_COLUMNS, value.coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)) }
         }
 
     /**
@@ -319,7 +320,7 @@ class MusicPreferences(context: Context) {
             return FolderDisplayMode.entries.getOrElse(ordinal) { FolderDisplayMode.LIST }
         }
         set(value) {
-            prefs.edit().putInt(KEY_FOLDER_DISPLAY_MODE, value.ordinal).apply()
+            prefs.edit { putInt(KEY_FOLDER_DISPLAY_MODE, value.ordinal) }
         }
 
     /**
@@ -329,7 +330,7 @@ class MusicPreferences(context: Context) {
         get() = prefs.getInt(KEY_FOLDER_TILE_COLUMNS, DEFAULT_TILE_COLUMNS)
             .coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)
         set(value) {
-            prefs.edit().putInt(KEY_FOLDER_TILE_COLUMNS, value.coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)).apply()
+            prefs.edit { putInt(KEY_FOLDER_TILE_COLUMNS, value.coerceIn(MIN_TILE_COLUMNS, MAX_TILE_COLUMNS)) }
         }
 
     /**
@@ -341,7 +342,7 @@ class MusicPreferences(context: Context) {
             return TrackDisplayMode.entries.getOrElse(ordinal) { TrackDisplayMode.LIST }
         }
         set(value) {
-            prefs.edit().putInt(KEY_TRACK_DISPLAY_MODE, value.ordinal).apply()
+            prefs.edit { putInt(KEY_TRACK_DISPLAY_MODE, value.ordinal) }
         }
 
     /**
@@ -353,7 +354,7 @@ class MusicPreferences(context: Context) {
             return RootDisplayMode.entries.getOrElse(ordinal) { RootDisplayMode.LIST }
         }
         set(value) {
-            prefs.edit().putInt(KEY_ROOT_DISPLAY_MODE, value.ordinal).apply()
+            prefs.edit { putInt(KEY_ROOT_DISPLAY_MODE, value.ordinal) }
         }
 
     /**
@@ -369,7 +370,7 @@ class MusicPreferences(context: Context) {
         }
         set(value) {
             val serialized = value.joinToString(separator = "|")
-            prefs.edit().putString(KEY_ROOT_OPTION_ORDER, serialized).apply()
+            prefs.edit { putString(KEY_ROOT_OPTION_ORDER, serialized) }
         }
 
     /**
@@ -383,7 +384,7 @@ class MusicPreferences(context: Context) {
             return stored.split("|").filter { it.isNotBlank() }
         }
         set(value) {
-            prefs.edit().putString(KEY_VISUALIZER_MODES_ORDER, value.joinToString("|")).apply()
+            prefs.edit { putString(KEY_VISUALIZER_MODES_ORDER, value.joinToString("|")) }
         }
 
     /**
@@ -392,7 +393,7 @@ class MusicPreferences(context: Context) {
     var hiddenRootOptions: Set<String>
         get() = prefs.getStringSet(KEY_HIDDEN_ROOT_OPTIONS, emptySet()) ?: emptySet()
         set(value) {
-            prefs.edit().putStringSet(KEY_HIDDEN_ROOT_OPTIONS, value).apply()
+            prefs.edit { putStringSet(KEY_HIDDEN_ROOT_OPTIONS, value) }
         }
 
     /**
@@ -432,14 +433,14 @@ class MusicPreferences(context: Context) {
         val albumId = "$artistName|$albumName"
         val checkedAlbums = prefs.getStringSet(KEY_ALBUMS_TRACK_NUMBER_CHECKED, emptySet())?.toMutableSet() ?: mutableSetOf()
         checkedAlbums.add(albumId)
-        prefs.edit().putStringSet(KEY_ALBUMS_TRACK_NUMBER_CHECKED, checkedAlbums).apply()
+        prefs.edit { putStringSet(KEY_ALBUMS_TRACK_NUMBER_CHECKED, checkedAlbums) }
     }
 
     /**
      * Réinitialise la liste des albums traités (utile pour forcer une nouvelle vérification).
      */
     fun clearAlbumsTrackNumberChecked() {
-        prefs.edit().remove(KEY_ALBUMS_TRACK_NUMBER_CHECKED).apply()
+        prefs.edit { remove(KEY_ALBUMS_TRACK_NUMBER_CHECKED) }
     }
 
     // ========== Equalizer Settings ==========
@@ -450,7 +451,7 @@ class MusicPreferences(context: Context) {
     var eqEnabled: Boolean
         get() = prefs.getBoolean(KEY_EQ_ENABLED, false)
         set(value) {
-            prefs.edit().putBoolean(KEY_EQ_ENABLED, value).apply()
+            prefs.edit { putBoolean(KEY_EQ_ENABLED, value) }
         }
 
     /**
@@ -459,6 +460,6 @@ class MusicPreferences(context: Context) {
     var eqGlobalPresetId: Long
         get() = prefs.getLong(KEY_EQ_GLOBAL_PRESET_ID, 1L)
         set(value) {
-            prefs.edit().putLong(KEY_EQ_GLOBAL_PRESET_ID, value).apply()
+            prefs.edit { putLong(KEY_EQ_GLOBAL_PRESET_ID, value) }
         }
 }

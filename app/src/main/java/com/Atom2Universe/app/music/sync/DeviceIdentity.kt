@@ -2,6 +2,7 @@
 
 import android.content.Context
 import java.util.UUID
+import androidx.core.content.edit
 
 /**
  * Identité stable de l'appareil courant.
@@ -25,7 +26,7 @@ object DeviceIdentity {
             return stored
         }
         val newId = UUID.randomUUID().toString()
-        prefs.edit().putString(KEY_DEVICE_ID, newId).apply()
+        prefs.edit { putString(KEY_DEVICE_ID, newId) }
         cachedId = newId
         return newId
     }

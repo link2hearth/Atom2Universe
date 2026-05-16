@@ -9,6 +9,7 @@ import android.view.SurfaceView
 import com.Atom2Universe.app.R
 import kotlin.math.*
 import kotlin.random.Random
+import androidx.core.content.edit
 
 class FlappyCatView @JvmOverloads constructor(
     context: Context,
@@ -144,7 +145,7 @@ class FlappyCatView @JvmOverloads constructor(
     }
 
     private fun loadBestScore()  { bestScore = prefs.getInt("best_score", 0) }
-    private fun saveBestScore()  { prefs.edit().putInt("best_score", bestScore).apply() }
+    private fun saveBestScore()  { prefs.edit { putInt("best_score", bestScore) } }
 
     // ── Surface callbacks ─────────────────────────────────────────────────────
     override fun surfaceCreated(holder: SurfaceHolder) {

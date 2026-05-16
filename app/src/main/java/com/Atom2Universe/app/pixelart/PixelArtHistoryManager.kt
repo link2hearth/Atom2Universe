@@ -5,6 +5,7 @@ import android.util.Base64
 import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.ByteBuffer
+import androidx.core.content.edit
 
 /**
  * Action types for history tracking
@@ -652,7 +653,7 @@ class PixelArtHistoryManager(context: Context) {
 
                 // Store under project-specific key
                 val key = "$KEY_PREFIX$currentProjectId"
-                preferences.edit().putString(key, payload.toString()).apply()
+                preferences.edit { putString(key, payload.toString()) }
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -732,7 +733,7 @@ class PixelArtHistoryManager(context: Context) {
     fun clearStorage() {
         synchronized(saveLock) {
             val key = "$KEY_PREFIX$currentProjectId"
-            preferences.edit().remove(key).apply()
+            preferences.edit { remove(key) }
         }
     }
 

@@ -60,6 +60,7 @@ import java.io.File
 import java.util.Locale
 import java.util.zip.ZipInputStream
 import javax.xml.parsers.DocumentBuilderFactory
+import androidx.core.content.edit
 
 class BookReaderActivity : ThemedActivity() {
 
@@ -390,14 +391,14 @@ class BookReaderActivity : ThemedActivity() {
 
         switchView.setOnCheckedChangeListener { _, checked ->
             paragraphDistinction = checked
-            prefs.edit().putBoolean(KEY_DISTINCTION, checked).apply()
+            prefs.edit { putBoolean(KEY_DISTINCTION, checked) }
             paragraphAdapter?.setDistinction(checked)
         }
         rg.setOnCheckedChangeListener { _, checkedId ->
             val chosen = ReadingTheme.entries[checkedId]
             if (chosen != currentTheme) {
                 currentTheme = chosen
-                prefs.edit().putInt(KEY_THEME, checkedId).apply()
+                prefs.edit { putInt(KEY_THEME, checkedId) }
                 applyThemeToUi()
                 paragraphAdapter?.updateTheme(currentTheme)
                 if (currentViewType == ViewType.EPUB) currentUri?.let { loadEpub(it) }
@@ -500,7 +501,7 @@ class BookReaderActivity : ThemedActivity() {
             override fun onStartTrackingTouch(sb: SeekBar) {}
             override fun onStopTrackingTouch(sb: SeekBar) {
                 currentFontSize = tempSize
-                prefs.edit().putFloat(KEY_FONT_SIZE, tempSize).apply()
+                prefs.edit { putFloat(KEY_FONT_SIZE, tempSize) }
                 paragraphAdapter?.updateFont(tempTypeface, tempSize)
             }
         })
@@ -545,7 +546,7 @@ class BookReaderActivity : ThemedActivity() {
             previewTv.typeface = tempTypeface
             currentFontName = tempFontName
             currentTypeface = tempTypeface
-            prefs.edit().putString(KEY_FONT_NAME, tempFontName).apply()
+            prefs.edit { putString(KEY_FONT_NAME, tempFontName) }
             paragraphAdapter?.updateFont(tempTypeface, currentFontSize)
         }
         root.addView(rg)
@@ -616,7 +617,7 @@ class BookReaderActivity : ThemedActivity() {
             showSliderPopup(speedBtn, ttsSpeed, 0.5f, 2.0f, 0.1f, "×") { v ->
                 ttsSpeed = v
                 speedBtn.text = "%.1f×".format(v)
-                prefs.edit().putFloat(KEY_TTS_SPEED, v).apply()
+                prefs.edit { putFloat(KEY_TTS_SPEED, v) }
                 tts?.setSpeechRate(v)
                 if (ttsState == TtsState.PLAYING) restartCurrentParagraph()
             }
@@ -626,7 +627,7 @@ class BookReaderActivity : ThemedActivity() {
             showSliderPopup(pitchBtn, ttsPitch, 0.5f, 2.0f, 0.1f, "♪") { v ->
                 ttsPitch = v
                 pitchBtn.text = "%.1f♪".format(v)
-                prefs.edit().putFloat(KEY_TTS_PITCH, v).apply()
+                prefs.edit { putFloat(KEY_TTS_PITCH, v) }
                 tts?.setPitch(v)
                 if (ttsState == TtsState.PLAYING) restartCurrentParagraph()
             }
@@ -667,13 +668,13 @@ class BookReaderActivity : ThemedActivity() {
                 val voice = voices[idx]
                 selectedVoiceName = voice.name
                 engine.voice = voice
-                prefs.edit().putString(KEY_TTS_VOICE, voice.name).apply()
+                prefs.edit { putString(KEY_TTS_VOICE, voice.name) }
                 if (ttsState == TtsState.PLAYING) restartCurrentParagraph()
                 dialog.dismiss()
             }
             .setNeutralButton(R.string.book_reader_voice_default) { _, _ ->
                 selectedVoiceName = null
-                prefs.edit().remove(KEY_TTS_VOICE).apply()
+                prefs.edit { remove(KEY_TTS_VOICE) }
                 engine.language = Locale.getDefault()
                 if (ttsState == TtsState.PLAYING) restartCurrentParagraph()
             }
@@ -822,7 +823,10 @@ class BookReaderActivity : ThemedActivity() {
         toolbar.title = title
         currentUri = uri
         currentFileSize = getFileSize(uri)
-        prefs.edit().putString(KEY_CURRENT_URI, uri.toString()).putString(KEY_CURRENT_TITLE, title).apply()
+        prefs.edit {
+            putString(KEY_CURRENT_URI, uri.toString())
+            putString(KEY_CURRENT_TITLE, title)
+        }
         try { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
         catch (_: Exception) {}
         when {
@@ -1169,14 +1173,16 @@ class BookReaderActivity : ThemedActivity() {
             ViewType.TXT, ViewType.EPUB -> {
                 val lm = txtRecycler.layoutManager as? LinearLayoutManager ?: return
                 val pos = lm.findFirstVisibleItemPosition()
-                prefs.edit().putInt("${k}_idx", pos)
-                    .putInt("${k}_off", txtRecycler.getChildAt(0)?.top ?: 0).apply()
+                prefs.edit {
+                    putInt("${k}_idx", pos)
+                    putInt("${k}_off", txtRecycler.getChildAt(0)?.top ?: 0)
+                }
                 BookLibraryActivity.updateProgress(prefs, uri.toString(), pos, paragraphs.size)
             }
             ViewType.PDF -> {
                 val lm = pdfRecycler.layoutManager as? LinearLayoutManager ?: return
                 val pos = lm.findFirstVisibleItemPosition()
-                prefs.edit().putInt("${k}_idx", pos).apply()
+                prefs.edit { putInt("${k}_idx", pos) }
                 BookLibraryActivity.updateProgress(prefs, uri.toString(), pos, pdfRenderer?.pageCount ?: 0)
             }
             ViewType.EMPTY -> {}

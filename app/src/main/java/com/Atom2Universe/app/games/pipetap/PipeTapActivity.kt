@@ -13,7 +13,6 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.LocaleHelper
@@ -21,6 +20,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
 
@@ -210,7 +210,7 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
 
     // ── Persistence ───────────────────────────────────────────────────────────────
     private fun saveGame() {
-        prefs.edit().putString(KEY_SAVE, game.serialize()).apply()
+        prefs.edit { putString(KEY_SAVE, game.serialize()) }
     }
 
     private fun loadGame(): Boolean {

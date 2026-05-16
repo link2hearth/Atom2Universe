@@ -21,6 +21,7 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.SimpleColorPickerDialog
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 /**
  * Activité de base pour tous les hubs.
@@ -111,7 +112,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
     private fun setupViewToggle() {
         viewToggleButton.setOnClickListener {
             isGridMode = !isGridMode
-            hubPrefs.edit().putString(KEY_VIEW_MODE, if (isGridMode) VIEW_MODE_GRID else VIEW_MODE_LIST).apply()
+            hubPrefs.edit { putString(KEY_VIEW_MODE, if (isGridMode) VIEW_MODE_GRID else VIEW_MODE_LIST) }
             updateViewMode()
         }
     }
@@ -213,7 +214,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
     }
 
     private fun saveTileOrder(order: List<String>) {
-        hubPrefs.edit().putString(KEY_TILE_ORDER, order.joinToString(",")).apply()
+        hubPrefs.edit { putString(KEY_TILE_ORDER, order.joinToString(",")) }
     }
 
     private fun loadTileColors(): Map<String, Pair<String, String>> {
@@ -233,7 +234,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
 
     private fun saveTileColors(colors: Map<String, Pair<String, String>>) {
         val encoded = colors.entries.joinToString(";") { "${it.key}:${it.value.first}:${it.value.second}" }
-        hubPrefs.edit().putString(KEY_TILE_COLORS, encoded).apply()
+        hubPrefs.edit { putString(KEY_TILE_COLORS, encoded) }
     }
 
     private fun showColorPicker(tile: HubTile) {
@@ -342,7 +343,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
             !(parts.size >= 3 && parts[0] == parentTileId && parts[2] == activityClassName)
         }
 
-        parentPrefs.edit().putString(KEY_QUICK_ACCESS, newEntries.joinToString(";")).apply()
+        parentPrefs.edit { putString(KEY_QUICK_ACCESS, newEntries.joinToString(";")) }
     }
 
     protected fun startActivityForTile(activityClass: Class<*>) {

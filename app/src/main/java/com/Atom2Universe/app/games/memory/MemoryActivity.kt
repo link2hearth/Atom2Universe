@@ -28,6 +28,7 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.core.content.edit
 
 class MemoryActivity : AppCompatActivity() {
 
@@ -347,6 +348,6 @@ class MemoryActivity : AppCompatActivity() {
     }
 
     private fun saveGame() {
-        prefs.edit().putString(KEY_SAVE, game.serialize()).apply()
+        prefs.edit { putString(KEY_SAVE, game.serialize()) }
     }
 }

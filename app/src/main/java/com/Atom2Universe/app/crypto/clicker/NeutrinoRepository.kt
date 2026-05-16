@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.crypto.clicker
 
 import android.content.Context
+import androidx.core.content.edit
 
 class NeutrinoRepository(context: Context) {
 
@@ -27,24 +28,24 @@ class NeutrinoRepository(context: Context) {
     }
 
     fun setBalance(n: Int) {
-        prefs.edit().putInt("balance", n.coerceAtLeast(0)).apply()
+        prefs.edit { putInt("balance", n.coerceAtLeast(0)) }
     }
 
     fun getLifetimeNeutrinos(): Int = prefs.getInt("lifetime_neutrinos", 0)
 
     fun reset() {
-        prefs.edit().clear().apply()
+        prefs.edit { clear() }
     }
 
     fun recordColorStackHardWin(): Boolean {
         val wins = prefs.getInt("colorstack_hard_wins", 0) + 1
-        prefs.edit().putInt("colorstack_hard_wins", wins).apply()
+        prefs.edit { putInt("colorstack_hard_wins", wins) }
         return wins % 2 == 0
     }
 
     fun recordPipeTapHardWin(): Boolean {
         val wins = prefs.getInt("pipetap_hard_wins", 0) + 1
-        prefs.edit().putInt("pipetap_hard_wins", wins).apply()
+        prefs.edit { putInt("pipetap_hard_wins", wins) }
         return wins % 2 == 0
     }
 }

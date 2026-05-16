@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
 
 /**
  * Écran de paramètres du Hub.
@@ -113,7 +114,7 @@ class HubSettingsActivity : ThemedActivity() {
             autoCleanupSwitch.isChecked = !autoCleanupSwitch.isChecked
         }
         autoCleanupSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("auto_cleanup_enabled", isChecked).apply()
+            prefs.edit { putBoolean("auto_cleanup_enabled", isChecked) }
             Toast.makeText(
                 this,
                 if (isChecked) getString(R.string.settings_cleanup_enabled)
@@ -199,7 +200,7 @@ class HubSettingsActivity : ThemedActivity() {
                 val report = cleanerManager.cleanOrphanedFiles(dryRun = false)
 
                 // Sauvegarder le timestamp
-                prefs.edit().putLong("last_cleanup_timestamp", System.currentTimeMillis()).apply()
+                prefs.edit { putLong("last_cleanup_timestamp", System.currentTimeMillis()) }
 
                 // Mettre à jour l'UI
                 runOnUiThread {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
+import androidx.core.content.edit
 
 class FavoriteColorsManager(context: Context) {
 
@@ -44,7 +45,7 @@ class FavoriteColorsManager(context: Context) {
         val arr = JSONArray(favorites.map { JSONObject().apply {
             put("colorHex", it.colorHex); put("textColorMode", it.textColorMode)
         }})
-        prefs.edit().putString(KEY_FAVORITES, arr.toString()).apply()
+        prefs.edit { putString(KEY_FAVORITES, arr.toString()) }
     }
 
     companion object {

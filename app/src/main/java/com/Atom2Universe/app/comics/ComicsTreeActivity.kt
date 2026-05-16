@@ -37,6 +37,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
+import androidx.core.content.edit
 
 class ComicsTreeActivity : ThemedActivity() {
 
@@ -150,7 +151,7 @@ class ComicsTreeActivity : ThemedActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_toggle_view) {
             displayMode = if (displayMode == MODE_TREE) MODE_GRID else MODE_TREE
-            prefs.edit().putInt(KEY_DISPLAY_MODE, displayMode).apply()
+            prefs.edit { putInt(KEY_DISPLAY_MODE, displayMode) }
             applyDisplayMode()
             updateToggleIcon()
             return true
@@ -187,7 +188,7 @@ class ComicsTreeActivity : ThemedActivity() {
     private fun setGridColumns(cols: Int) {
         if (cols == gridColumns) return
         gridColumns = cols
-        prefs.edit().putInt(KEY_GRID_COLUMNS, cols).apply()
+        prefs.edit { putInt(KEY_GRID_COLUMNS, cols) }
         (recycler.layoutManager as? GridLayoutManager)?.spanCount = cols
         recycler.post { recycler.invalidateItemDecorations(); recycler.requestLayout() }
     }

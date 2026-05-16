@@ -8,7 +8,6 @@ import android.view.View
 import com.Atom2Universe.app.LocaleHelper
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.Atom2Universe.app.quiz.data.AnswerType
 import org.json.JSONArray
 import org.json.JSONObject
+import androidx.core.content.edit
 
 /**
  * Gestionnaire des préférences et de la sauvegarde pour le module Quiz.
@@ -56,7 +57,7 @@ class QuizPreferences(context: Context) {
      * Définit le nombre de questions
      */
     fun setQuestionCount(count: Int) {
-        prefs.edit().putInt(KEY_QUESTION_COUNT, count).apply()
+        prefs.edit { putInt(KEY_QUESTION_COUNT, count) }
     }
 
     /**
@@ -70,7 +71,7 @@ class QuizPreferences(context: Context) {
      * Définit l'état du mode explications
      */
     fun setShowExplanations(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_SHOW_EXPLANATIONS, enabled).apply()
+        prefs.edit { putBoolean(KEY_SHOW_EXPLANATIONS, enabled) }
     }
 
     /**
@@ -84,7 +85,7 @@ class QuizPreferences(context: Context) {
      * Définit l'état du mode réflexion
      */
     fun setThinkMode(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_THINK_MODE, enabled).apply()
+        prefs.edit { putBoolean(KEY_THINK_MODE, enabled) }
     }
 
     /**
@@ -98,7 +99,7 @@ class QuizPreferences(context: Context) {
      * Définit l'état du mode troll
      */
     fun setTrollMode(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_TROLL_MODE, enabled).apply()
+        prefs.edit { putBoolean(KEY_TROLL_MODE, enabled) }
     }
 
     // ========================================
@@ -137,7 +138,7 @@ class QuizPreferences(context: Context) {
 
         // Sauvegarder
         val jsonArray = JSONArray(trimmedHistory)
-        prefs.edit().putString(KEY_QUESTION_HISTORY, jsonArray.toString()).apply()
+        prefs.edit { putString(KEY_QUESTION_HISTORY, jsonArray.toString()) }
     }
 
     /**
@@ -151,7 +152,7 @@ class QuizPreferences(context: Context) {
      * Efface l'historique des questions
      */
     fun clearQuestionHistory() {
-        prefs.edit().remove(KEY_QUESTION_HISTORY).apply()
+        prefs.edit { remove(KEY_QUESTION_HISTORY) }
     }
 
     // ========================================

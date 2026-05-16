@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +25,7 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
+import androidx.core.content.edit
 
 class ClickerStatsActivity : ThemedActivity() {
 
@@ -109,7 +109,7 @@ class ClickerStatsActivity : ThemedActivity() {
                 if (toggleStats.isChecked) {
                     statsRepository.reset()
                     GameStatsRepository(this).reset()
-                    getSharedPreferences("clicker_achievements", MODE_PRIVATE).edit().clear().apply()
+                    getSharedPreferences("clicker_achievements", MODE_PRIVATE).edit { clear() }
                 }
                 if (togglePeriodic.isChecked) periodicStore.reset()
                 if (toggleClicker.isChecked) {
@@ -119,21 +119,21 @@ class ClickerStatsActivity : ThemedActivity() {
                     }
                     NeutrinoRepository(this).reset()
                     offlineRepo.save(0L)
-                    getSharedPreferences("chess_save",            MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("game2048_save",         MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("draughts_save",         MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("color_stack_save",      MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("the_line_widget_save",  MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("memory_save",           MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("pipetap_save",          MODE_PRIVATE).edit().clear().apply()
+                    getSharedPreferences("chess_save",            MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("game2048_save",         MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("draughts_save",         MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("color_stack_save",      MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("the_line_widget_save",  MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("memory_save",           MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("pipetap_save",          MODE_PRIVATE).edit { clear() }
                 }
                 if (toggleRecords.isChecked) {
-                    getSharedPreferences("stars_war_save",   MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("reflex_save",      MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("flappy_cat_save",  MODE_PRIVATE).edit().clear().apply()
-                    getSharedPreferences("wave_surf_save",   MODE_PRIVATE).edit().clear().apply()
+                    getSharedPreferences("stars_war_save",   MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("reflex_save",      MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("flappy_cat_save",  MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("wave_surf_save",   MODE_PRIVATE).edit { clear() }
                     // Best score 2048 seulement (la partie en cours est gérée par toggleClicker)
-                    getSharedPreferences("game2048_save",    MODE_PRIVATE).edit().remove("best_score").apply()
+                    getSharedPreferences("game2048_save",    MODE_PRIVATE).edit { remove("best_score") }
                     // Particules : zéro les records en conservant la progression shop
                     lifecycleScope.launch(kotlinx.coroutines.NonCancellable) {
                         val db = com.Atom2Universe.app.games.particules.data.ParticulesDatabase

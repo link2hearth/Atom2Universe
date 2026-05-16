@@ -42,6 +42,7 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.util.zip.ZipFile
+import androidx.core.content.edit
 
 data class BookEntry(
     val uri: String,
@@ -139,7 +140,7 @@ class BookLibraryActivity : ThemedActivity() {
                     put("fileSize", b.fileSize)
                 })
             }
-            prefs.edit().putString(KEY_LIBRARY, arr.toString()).apply()
+            prefs.edit { putString(KEY_LIBRARY, arr.toString()) }
         }
     }
 

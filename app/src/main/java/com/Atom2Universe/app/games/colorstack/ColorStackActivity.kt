@@ -10,12 +10,12 @@ import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Toast
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
 
@@ -175,7 +175,7 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
     }
 
     private fun saveGame() {
-        prefs.edit().putString(KEY_SAVE, game.serialize()).apply()
+        prefs.edit { putString(KEY_SAVE, game.serialize()) }
     }
 
     private fun loadGame(): Boolean {

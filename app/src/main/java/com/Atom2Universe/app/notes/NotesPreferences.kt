@@ -2,6 +2,7 @@ package com.Atom2Universe.app.notes
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 class NotesPreferences(context: Context) {
 
@@ -9,19 +10,19 @@ class NotesPreferences(context: Context) {
 
     var fontSize: Int
         get() = prefs.getInt(KEY_FONT_SIZE, 16)
-        set(value) = prefs.edit().putInt(KEY_FONT_SIZE, value.coerceIn(14, 48)).apply()
+        set(value) = prefs.edit { putInt(KEY_FONT_SIZE, value.coerceIn(14, 48)) }
 
     var fontFamily: String
         get() = prefs.getString(KEY_FONT_FAMILY, FONT_DEFAULT) ?: FONT_DEFAULT
-        set(value) = prefs.edit().putString(KEY_FONT_FAMILY, value).apply()
+        set(value) = prefs.edit { putString(KEY_FONT_FAMILY, value) }
 
     var ttsSpeechRate: Float
         get() = prefs.getFloat(KEY_TTS_SPEECH_RATE, 1.0f)
-        set(value) = prefs.edit().putFloat(KEY_TTS_SPEECH_RATE, value).apply()
+        set(value) = prefs.edit { putFloat(KEY_TTS_SPEECH_RATE, value) }
 
     var ttsVoiceName: String?
         get() = prefs.getString(KEY_TTS_VOICE_NAME, null)
-        set(value) = prefs.edit().putString(KEY_TTS_VOICE_NAME, value).apply()
+        set(value) = prefs.edit { putString(KEY_TTS_VOICE_NAME, value) }
 
     companion object {
         private const val PREFS_NAME = "notes_preferences"

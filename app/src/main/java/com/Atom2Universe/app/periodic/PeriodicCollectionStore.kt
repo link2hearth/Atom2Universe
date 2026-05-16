@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.periodic
 
 import android.content.Context
+import androidx.core.content.edit
 
 class PeriodicCollectionStore(context: Context) {
   private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -37,7 +38,7 @@ class PeriodicCollectionStore(context: Context) {
   fun consumeCopy(atomicNumber: Int): Boolean {
     val current = getCopyCount(atomicNumber)
     if (current <= 0) return false
-    prefs.edit().putInt(copyKey(atomicNumber), current - 1).apply()
+    prefs.edit { putInt(copyKey(atomicNumber), current - 1) }
     return true
   }
 
@@ -49,11 +50,11 @@ class PeriodicCollectionStore(context: Context) {
   private fun everKey(atomicNumber: Int): String = "element_${atomicNumber}_ever"
 
   fun setCopyCount(atomicNumber: Int, count: Int) {
-    prefs.edit().putInt(copyKey(atomicNumber), count).apply()
+    prefs.edit { putInt(copyKey(atomicNumber), count) }
   }
 
   fun reset() {
-    prefs.edit().clear().apply()
+    prefs.edit { clear() }
   }
 
   companion object {

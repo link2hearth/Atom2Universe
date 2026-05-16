@@ -14,6 +14,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.TimeUnit
+import androidx.core.content.edit
 
 /**
  * Synchronisation des listen_events via un dossier partagé par Syncthing.
@@ -62,7 +63,7 @@ object SyncthingManager {
     }
 
     fun setSyncFolder(context: Context, path: String) {
-        prefs(context).edit().putString(KEY_SYNC_FOLDER, path.trim()).apply()
+        prefs(context).edit { putString(KEY_SYNC_FOLDER, path.trim()) }
         Log.i(TAG, "Sync folder set: $path")
     }
 
@@ -152,7 +153,7 @@ object SyncthingManager {
         val file = File(folder, "$FILE_PREFIX$deviceId.json")
         file.writeText(payload.toString(2))
 
-        prefs(context).edit().putLong(KEY_LAST_EXPORT_AT, System.currentTimeMillis()).apply()
+        prefs(context).edit { putLong(KEY_LAST_EXPORT_AT, System.currentTimeMillis()) }
         Log.i(TAG, "Exported ${events.size} events → ${file.name}")
     }
 

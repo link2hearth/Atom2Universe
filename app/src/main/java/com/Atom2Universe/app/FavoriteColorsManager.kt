@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
+import androidx.core.content.edit
 
 /**
  * Gestionnaire des couleurs favorites
@@ -100,7 +101,7 @@ class FavoriteColorsManager(context: Context) {
     private fun saveFavorites(favorites: List<FavoriteColor>) {
         val jsonArray = JSONArray()
         favorites.forEach { jsonArray.put(it.toJson()) }
-        prefs.edit().putString(KEY_FAVORITES, jsonArray.toString()).apply()
+        prefs.edit { putString(KEY_FAVORITES, jsonArray.toString()) }
     }
 
     companion object {

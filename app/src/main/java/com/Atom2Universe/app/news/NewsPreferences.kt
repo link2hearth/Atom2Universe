@@ -2,6 +2,7 @@ package com.Atom2Universe.app.news
 
 import android.content.Context
 import org.json.JSONObject
+import androidx.core.content.edit
 
 object NewsPreferences {
 
@@ -23,7 +24,7 @@ object NewsPreferences {
     }
 
     fun setEnabledSourceIds(context: Context, ids: Set<String>) {
-        prefs(context).edit().putStringSet(KEY_SOURCES, ids).apply()
+        prefs(context).edit { putStringSet(KEY_SOURCES, ids) }
     }
 
     // ── Banned words ──────────────────────────────────────────────────────────
@@ -34,7 +35,7 @@ object NewsPreferences {
     }
 
     fun setBannedWords(context: Context, words: List<String>) {
-        prefs(context).edit().putString(KEY_BANNED, words.joinToString(",")).apply()
+        prefs(context).edit { putString(KEY_BANNED, words.joinToString(",")) }
     }
 
     // ── Hidden article IDs (JSON map id→timestamp) ────────────────────────────
@@ -66,13 +67,13 @@ object NewsPreferences {
     }
 
     fun clearHiddenIds(context: Context) {
-        prefs(context).edit().remove(KEY_HIDDEN_IDS).apply()
+        prefs(context).edit { remove(KEY_HIDDEN_IDS) }
     }
 
     private fun saveHiddenIds(context: Context, map: Map<String, Long>) {
         val json = JSONObject()
         map.forEach { (k, v) -> json.put(k, v) }
-        prefs(context).edit().putString(KEY_HIDDEN_IDS, json.toString()).apply()
+        prefs(context).edit { putString(KEY_HIDDEN_IDS, json.toString()) }
     }
 
     // ── Search query ──────────────────────────────────────────────────────────
@@ -81,6 +82,6 @@ object NewsPreferences {
         prefs(context).getString(KEY_QUERY, "") ?: ""
 
     fun setLastQuery(context: Context, query: String) {
-        prefs(context).edit().putString(KEY_QUERY, query).apply()
+        prefs(context).edit { putString(KEY_QUERY, query) }
     }
 }

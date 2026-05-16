@@ -8,6 +8,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
+import androidx.core.content.edit
 
 /**
  * Gestionnaire du mode d'affichage des barres système.
@@ -31,7 +32,7 @@ object SystemBarsManager {
      */
     fun setShowSystemBars(context: Context, show: Boolean) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(KEY_SHOW_SYSTEM_BARS, show).apply()
+        prefs.edit { putBoolean(KEY_SHOW_SYSTEM_BARS, show) }
     }
 }
 

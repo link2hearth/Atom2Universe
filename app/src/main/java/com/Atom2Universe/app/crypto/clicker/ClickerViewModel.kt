@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.core.content.edit
 
 class ClickerViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -56,7 +58,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             val resetStats   = prefs.getBoolean("reset_stats",   false)
             val resetClicker = prefs.getBoolean("reset_clicker", false)
             if (resetStats || resetClicker) {
-                prefs.edit().clear().apply()
+                prefs.edit { clear() }
                 applyPendingReset(resetStats, resetClicker)
             }
         }
@@ -249,7 +251,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             gameLoopStartMs = 0L
         }
         statsRepository.save(stats)
-        viewModelScope.launch(NonCancellable) { repository.save(_state.value) }
+        viewModelScope.launch { withContext(NonCancellable) { repository.save(_state.value) } }
     }
 
     // Appelé depuis onResume() pour couvrir le cas écran-off → écran-on sans onStop().
@@ -537,7 +539,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     fun getUnlockedAchievementIds(): Set<String> = unlockedAchievementIds.toSet()
 
     fun save() {
-        viewModelScope.launch(NonCancellable) { repository.save(_state.value) }
+        viewModelScope.launch { withContext(NonCancellable) { repository.save(_state.value) } }
     }
 
     fun consumeGachaTicket() {
@@ -567,6 +569,6 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             )
         }
         statsRepository.save(stats)
-        viewModelScope.launch(NonCancellable) { repository.save(_state.value) }
+        viewModelScope.launch { withContext(NonCancellable) { repository.save(_state.value) } }
     }
 }

@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.crypto.clicker
 
 import android.content.Context
+import androidx.core.content.edit
 
 data class GameStats(
     val solitairePlayed: Int = 0,
@@ -53,7 +54,7 @@ class GameStatsRepository(context: Context) {
     fun recordColorStackHardBestTime(ms: Long) {
         val current = prefs.getLong("colorstack_hard_best_ms", 0L)
         if (current == 0L || ms < current) {
-            prefs.edit().putLong("colorstack_hard_best_ms", ms).apply()
+            prefs.edit { putLong("colorstack_hard_best_ms", ms) }
         }
     }
 
@@ -75,10 +76,10 @@ class GameStatsRepository(context: Context) {
     fun recordPipeTapHardWon() = increment("pipetap_hard_won")
 
     fun reset() {
-        prefs.edit().clear().apply()
+        prefs.edit { clear() }
     }
 
     private fun increment(key: String) {
-        prefs.edit().putInt(key, prefs.getInt(key, 0) + 1).apply()
+        prefs.edit { putInt(key, prefs.getInt(key, 0) + 1) }
     }
 }

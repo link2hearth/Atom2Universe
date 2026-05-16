@@ -157,6 +157,7 @@ object MusicQueuePersistence {
             // This ensures data is written synchronously before returning.
             // While slightly slower, it guarantees the queue is persisted even if
             // the app is killed immediately after.
+            @Suppress("ApplySharedPref")
             val success = prefs.edit().putString(KEY_QUEUE_DATA, json.toString()).commit()
 
             if (success) {
@@ -355,7 +356,7 @@ object MusicQueuePersistence {
             json.put("positionMs", positionMs)
             json.put("savedAt", System.currentTimeMillis())
 
-            prefs.edit().putString(KEY_QUEUE_DATA, json.toString()).commit()
+            prefs.edit(commit = true) { putString(KEY_QUEUE_DATA, json.toString()) }
         } catch (e: Exception) {
             Log.e(TAG, "Error updating position", e)
         }
@@ -376,7 +377,7 @@ object MusicQueuePersistence {
             json.put("positionMs", 0L)  // Reset position on track change
             json.put("savedAt", System.currentTimeMillis())
 
-            prefs.edit().putString(KEY_QUEUE_DATA, json.toString()).commit()
+            prefs.edit(commit = true) { putString(KEY_QUEUE_DATA, json.toString()) }
         } catch (e: Exception) {
             Log.e(TAG, "Error updating current index", e)
         }

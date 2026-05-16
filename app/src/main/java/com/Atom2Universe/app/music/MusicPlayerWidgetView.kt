@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.hypot
 import kotlin.math.roundToInt
+import androidx.core.content.edit
 
 class MusicPlayerWidgetView @JvmOverloads constructor(
     context: Context,
@@ -290,7 +291,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         currentVizMode = mode
         visualizerView.mode = mode
         visualizerView.isFullscreen = mode.isCentral()
-        prefs.edit().putString(KEY_VIZ_MODE, mode.name).apply()
+        prefs.edit { putString(KEY_VIZ_MODE, mode.name) }
     }
 
     private fun AudioVisualizerView.VisualizationMode.isCentral(): Boolean =

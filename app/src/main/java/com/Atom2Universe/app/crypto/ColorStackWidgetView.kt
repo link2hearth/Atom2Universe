@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
-import android.widget.Toast
 import com.Atom2Universe.app.R
 import com.google.android.material.card.MaterialCardView
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
@@ -18,6 +17,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.games.colorstack.ColorStackGame
 import com.Atom2Universe.app.games.colorstack.ColorStackView
 import kotlin.math.hypot
+import androidx.core.content.edit
 
 class ColorStackWidgetView @JvmOverloads constructor(
     context: Context,
@@ -206,7 +206,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
                 resultText.text = "🎉 Trié !"
                 resultOverlay.visibility = View.VISIBLE
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                    .edit().remove(KEY_SAVE).apply()
+                    .edit { remove(KEY_SAVE) }
                 when (game.difficulty) {
                     ColorStackGame.Difficulty.HARD -> {
                         val statsRepo = GameStatsRepository(context)
@@ -231,7 +231,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
     private fun persistGame() {
         if (game.solved) return
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit().putString(KEY_SAVE, game.serialize()).apply()
+            .edit { putString(KEY_SAVE, game.serialize()) }
     }
 
     fun reload() {
