@@ -46,6 +46,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     @Volatile private var initCompleted = false
 
+    private var cachedElementBonuses: ElementBonuses? = null
+
     private var apsJob: Job? = null
 
     // Référence forte obligatoire — sinon le GC supprime le listener silencieusement.
@@ -99,14 +101,13 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             checkAchievements(recalcedState.lifetime, emitEvents = false)
 
             // SharedPrefs est la source de vérité pour les neutrinos.
-            // Migration : si SharedPrefs est vide mais que la DB a un solde, initialiser SharedPrefs.
+            // Migration : si SharedPrefs n'a jamais été initialisé mais que la DB a un solde, initialiser SharedPrefs.
             val dbNeutrinos = recalcedState.neutrinos
-            val sharedBalance = neutrinoRepo.getBalance()
-            val neutrinos = if (sharedBalance == 0 && dbNeutrinos > 0) {
+            val neutrinos = if (!neutrinoRepo.isBalanceInitialized() && dbNeutrinos > 0) {
                 neutrinoRepo.setBalance(dbNeutrinos)
                 dbNeutrinos
             } else {
-                sharedBalance
+                neutrinoRepo.getBalance()
             }
             _state.value = recalcedState.copy(neutrinos = neutrinos)
 
@@ -412,7 +413,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     // APS sans frénésie : shop + éléments flat + éléments mult + conversion APC→APS
     // Utilisé pour le gain hors-ligne afin d'éviter de compter la frénésie (30s max)
     private fun computeOfflineAps(state: ClickerGameState): LayeredNumber {
-        val elem = ElementBonusEngine.compute(collectionStore)
+        val elem = getElementBonuses()
         var base = ClickerShopEngine.bonus(state.starCoreLevel)
         if (elem.flatAps > 0) base = base.add(LayeredNumber(elem.flatAps.toDouble()))
         if (elem.multAps > 0.0) base = base.multiplyNumber(1.0 + elem.multAps)
@@ -471,14 +472,18 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun refreshElementBonuses() {
+        cachedElementBonuses = null
         _state.value = recalcProduction(_state.value)
     }
+
+    private fun getElementBonuses(): ElementBonuses =
+        cachedElementBonuses ?: ElementBonusEngine.compute(collectionStore).also { cachedElementBonuses = it }
 
     private fun recalcProduction(
         state: ClickerGameState,
         nowMs: Long = System.currentTimeMillis()
     ): ClickerGameState {
-        val elem = ElementBonusEngine.compute(collectionStore)
+        val elem = getElementBonuses()
 
         // APC : base 1 + bonus shop + flat éléments (H)
         var perClick = LayeredNumber.one()
@@ -515,13 +520,16 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun checkAchievements(lifetime: LayeredNumber, emitEvents: Boolean) {
+        if (unlockedAchievementIds.size == ClickerAchievements.all.size) return
         var anyNew = false
         for (a in ClickerAchievements.all) {
-            if (a.id !in unlockedAchievementIds && lifetime.greaterOrEqual(a.target)) {
-                unlockedAchievementIds.add(a.id)
-                anyNew = true
-                if (emitEvents) _achievementUnlocked.tryEmit(a)
-            }
+            if (a.id in unlockedAchievementIds) continue
+            // La liste est triée par cible croissante — dès qu'une cible n'est pas atteinte,
+            // toutes les suivantes ne le seront pas non plus.
+            if (!lifetime.greaterOrEqual(a.target)) break
+            unlockedAchievementIds.add(a.id)
+            anyNew = true
+            if (emitEvents) _achievementUnlocked.tryEmit(a)
         }
         if (anyNew) achievementRepository.saveUnlocked(unlockedAchievementIds.toSet())
     }

@@ -79,8 +79,7 @@ class FrenzyManager {
     }
 
     private fun prune(t: FrenzyTypeState, nowMs: Long): PruneResult {
-        val active  = t.instances.filter { it.expiryMs > nowMs }
-        val expired = t.instances.filter { it.expiryMs <= nowMs }
+        val (active, expired) = t.instances.partition { it.expiryMs > nowMs }
         val newState = if (active.size == t.instances.size) t else t.copy(instances = active)
         return PruneResult(newState, expired)
     }
@@ -106,11 +105,15 @@ class FrenzyManager {
         return if (stacks == 0) 1.0 else FRENZY_MULTIPLIER.pow(stacks.toDouble())
     }
 
-    fun buildUiState(nowMs: Long) = FrenzyUiState(
-        apcEffectExpiries = state.perClick.instances.filter { it.expiryMs > nowMs }.map { it.expiryMs },
-        apsEffectExpiries = state.perSecond.instances.filter { it.expiryMs > nowMs }.map { it.expiryMs },
-        apcClickCount     = state.perClick.instances.filter { it.expiryMs > nowMs }.maxOfOrNull { it.clickCount } ?: 0
-    )
+    fun buildUiState(nowMs: Long): FrenzyUiState {
+        val activeApc = state.perClick.instances.filter { it.expiryMs > nowMs }
+        val activeAps = state.perSecond.instances.filter { it.expiryMs > nowMs }
+        return FrenzyUiState(
+            apcEffectExpiries = activeApc.map { it.expiryMs },
+            apsEffectExpiries = activeAps.map { it.expiryMs },
+            apcClickCount     = activeApc.maxOfOrNull { it.clickCount } ?: 0
+        )
+    }
 
     fun reset() {
         state = InternalFrenzyState()

@@ -781,16 +781,29 @@ class ChessGame {
     }
 
     /**
-     * Crée une copie profonde du jeu
+     * Crée une copie profonde du jeu par copie directe des champs.
+     * Piece est immutable (data class), on peut partager les références de cases.
      */
     fun clone(): ChessGame {
         val copy = ChessGame()
-        copy.fromFEN(this.toFEN())
-        // Copier l'historique et les pièces capturées
-        copy.moveHistory.clear()
-        copy.moveHistory.addAll(this.moveHistory)
-        copy.capturedPieces.clear()
-        copy.capturedPieces.addAll(this.capturedPieces)
+        for (row in 0..7) {
+            for (col in 0..7) {
+                copy.board[row][col] = board[row][col]
+            }
+        }
+        copy.currentTurn             = currentTurn
+        copy.enPassantTarget         = enPassantTarget
+        copy.whiteKingMoved          = whiteKingMoved
+        copy.blackKingMoved          = blackKingMoved
+        copy.whiteRookKingsideMoved  = whiteRookKingsideMoved
+        copy.whiteRookQueensideMoved = whiteRookQueensideMoved
+        copy.blackRookKingsideMoved  = blackRookKingsideMoved
+        copy.blackRookQueensideMoved = blackRookQueensideMoved
+        copy.isInCheck               = isInCheck
+        copy.isCheckmate             = isCheckmate
+        copy.isStalemate             = isStalemate
+        copy.moveHistory.clear();    copy.moveHistory.addAll(moveHistory)
+        copy.capturedPieces.clear(); copy.capturedPieces.addAll(capturedPieces)
         return copy
     }
 }

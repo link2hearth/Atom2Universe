@@ -58,7 +58,6 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.applySystemBarsVisibility
 import com.Atom2Universe.app.music.equalizer.MusicEqualizerManager
 import com.Atom2Universe.app.music.equalizer.ui.EqualizerFragment
-import com.Atom2Universe.app.BuildConfig
 import java.util.Locale
 
 class FullPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener {
@@ -394,8 +393,6 @@ class FullPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener 
         btnLyrics = findViewById(R.id.btn_lyrics)
         visualizerModes = findViewById(R.id.visualizer_modes)
         btnEqualizer = findViewById(R.id.btn_equalizer)
-        // Bouton EQ masqué en release (fonctionnalité pas encore finalisée)
-        btnEqualizer.visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
 
         // Lyrics overlay (normal - sur pochette)
         lyricsOverlayContainer = findViewById(R.id.lyrics_overlay_container)

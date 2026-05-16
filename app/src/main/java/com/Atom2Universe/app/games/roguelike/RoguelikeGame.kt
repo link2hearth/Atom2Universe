@@ -282,12 +282,21 @@ class RoguelikeGame {
     private fun stepToward(from: Pos, to: Pos): Pos? {
         val sx = (to.x - from.x).sign
         val sy = (to.y - from.y).sign
-        val candidates = buildList {
-            if (sx != 0 && sy != 0) add(Pos(from.x + sx, from.y + sy))
-            if (sx != 0) add(Pos(from.x + sx, from.y))
-            if (sy != 0) add(Pos(from.x, from.y + sy))
+        // Préférer la diagonale, puis horizontal, puis vertical.
+        // On crée les Pos à la demande (early-exit) plutôt qu'une liste complète.
+        if (sx != 0 && sy != 0) {
+            val p = Pos(from.x + sx, from.y + sy)
+            if (level.walkable(p.x, p.y)) return p
         }
-        return candidates.firstOrNull { level.walkable(it.x, it.y) }
+        if (sx != 0) {
+            val p = Pos(from.x + sx, from.y)
+            if (level.walkable(p.x, p.y)) return p
+        }
+        if (sy != 0) {
+            val p = Pos(from.x, from.y + sy)
+            if (level.walkable(p.x, p.y)) return p
+        }
+        return null
     }
 
     private fun checkPickup() {
@@ -326,7 +335,8 @@ class RoguelikeGame {
         val px = player.pos.x; val py = player.pos.y
         for (ty in maxOf(0, py - FOV_RADIUS)..minOf(lv.h - 1, py + FOV_RADIUS)) {
             for (tx in maxOf(0, px - FOV_RADIUS)..minOf(lv.w - 1, px + FOV_RADIUS)) {
-                if (Pos(tx, ty).chebyshev(player.pos) > FOV_RADIUS) continue
+                // Chebyshev inline pour éviter l'allocation d'un Pos par case
+                if (max(abs(tx - px), abs(ty - py)) > FOV_RADIUS) continue
                 if (los(px, py, tx, ty, lv)) {
                     lv.visible[ty][tx] = true
                     lv.explored[ty][tx] = true

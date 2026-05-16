@@ -8,6 +8,8 @@ class NeutrinoRepository(context: Context) {
 
     fun getBalance(): Int = prefs.getInt("balance", 0)
 
+    fun isBalanceInitialized(): Boolean = prefs.contains("balance")
+
     fun addBalance(count: Int) {
         val newBalance = getBalance() + count
         val lifetime = prefs.getInt("lifetime_neutrinos", 0)

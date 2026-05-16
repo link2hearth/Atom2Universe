@@ -306,38 +306,25 @@ class DspEqualizerProcessor : AudioProcessor {
         val frameCount = sampleCount / channelCount
 
         lock.withLock {
+            // Hoist loop-invariant computations out of the per-sample loop.
+            val bassActive = bassBoostStrength > 0
+            val virtActive = virtualizerStrength > 0 && channelCount == 2
+            val virtAmount = virtualizerStrength / 1000.0 * 0.3
+            val activeFilters = buildActiveFilterList()
+
             for (frame in 0 until frameCount) {
                 for (channel in 0 until channelCount) {
-                    // Read sample and normalize to -1.0 to 1.0
-                    val shortSample = shortInput.get()
-                    var sample = shortSample / 32768.0
+                    var sample = shortInput.get() / 32768.0 * preGain
 
-                    // Apply pre-gain
-                    sample *= preGain
-
-                    // Process through all band filters
-                    for (i in 0 until BAND_COUNT) {
-                        if (!bandFilters[i].isPassthrough()) {
-                            sample = bandFilters[i].process(sample, channel)
-                        }
+                    for (filter in activeFilters) {
+                        sample = filter.process(sample, channel)
                     }
 
-                    // Apply bass boost
-                    if (bassBoostStrength > 0) {
-                        sample = bassBoostFilter.process(sample, channel)
-                    }
+                    if (bassActive) sample = bassBoostFilter.process(sample, channel)
+                    if (virtActive) sample = applyVirtualizer(sample, channel, virtAmount)
 
-                    // Apply stereo virtualizer (simple stereo widening)
-                    if (virtualizerStrength > 0 && channelCount == 2) {
-                        sample = applyVirtualizer(sample, channel, frame)
-                    }
-
-                    // Soft clip to prevent harsh distortion
                     sample = softClip(sample)
-
-                    // Convert back to 16-bit
-                    val outputSample = (sample * 32767.0).toInt().coerceIn(-32768, 32767).toShort()
-                    shortOutput.put(outputSample)
+                    shortOutput.put((sample * 32767.0).toInt().coerceIn(-32768, 32767).toShort())
                 }
             }
         }
@@ -357,33 +344,23 @@ class DspEqualizerProcessor : AudioProcessor {
         val frameCount = sampleCount / channelCount
 
         lock.withLock {
+            val bassActive = bassBoostStrength > 0
+            val virtActive = virtualizerStrength > 0 && channelCount == 2
+            val virtAmount = virtualizerStrength / 1000.0 * 0.3
+            val activeFilters = buildActiveFilterList()
+
             for (frame in 0 until frameCount) {
                 for (channel in 0 until channelCount) {
-                    var sample = floatInput.get().toDouble()
+                    var sample = floatInput.get().toDouble() * preGain
 
-                    // Apply pre-gain
-                    sample *= preGain
-
-                    // Process through all band filters
-                    for (i in 0 until BAND_COUNT) {
-                        if (!bandFilters[i].isPassthrough()) {
-                            sample = bandFilters[i].process(sample, channel)
-                        }
+                    for (filter in activeFilters) {
+                        sample = filter.process(sample, channel)
                     }
 
-                    // Apply bass boost
-                    if (bassBoostStrength > 0) {
-                        sample = bassBoostFilter.process(sample, channel)
-                    }
+                    if (bassActive) sample = bassBoostFilter.process(sample, channel)
+                    if (virtActive) sample = applyVirtualizer(sample, channel, virtAmount)
 
-                    // Apply stereo virtualizer
-                    if (virtualizerStrength > 0 && channelCount == 2) {
-                        sample = applyVirtualizer(sample, channel, frame)
-                    }
-
-                    // Soft clip
                     sample = softClip(sample)
-
                     floatOutput.put(sample.toFloat())
                 }
             }
@@ -393,6 +370,14 @@ class DspEqualizerProcessor : AudioProcessor {
         output.position(output.position() + sampleCount * 4)
     }
 
+    private fun buildActiveFilterList(): List<BiquadFilter> {
+        val list = ArrayList<BiquadFilter>(BAND_COUNT)
+        for (i in 0 until BAND_COUNT) {
+            if (!bandFilters[i].isPassthrough()) list.add(bandFilters[i])
+        }
+        return list
+    }
+
     // State for virtualizer (simple stereo widening)
     private var prevLeft = 0.0
     private var prevRight = 0.0
@@ -400,15 +385,13 @@ class DspEqualizerProcessor : AudioProcessor {
     /**
      * Simple stereo widening effect.
      * Adds a portion of the opposite channel's previous sample (Haas effect simulation).
+     * [amount] doit être pré-calculé avant la boucle (virtualizerStrength / 1000.0 * 0.3).
      */
-    private fun applyVirtualizer(sample: Double, channel: Int, frame: Int): Double {
-        val amount = virtualizerStrength / 1000.0 * 0.3 // Max 30% mixing
-
+    private fun applyVirtualizer(sample: Double, channel: Int, amount: Double): Double {
         return when (channel) {
             0 -> { // Left channel
                 val widened = sample - prevRight * amount
-                if (frame == 0) prevLeft = sample
-                else prevLeft = sample
+                prevLeft = sample
                 widened
             }
             1 -> { // Right channel
