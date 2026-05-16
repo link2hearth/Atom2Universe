@@ -3505,7 +3505,7 @@ class MusicPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener
                         val refreshed = MusicLibrary.getAllAlbums().map { AlbumListItem.AlbumItem(it) }
                         albumAdapter.submitList(refreshed) {
                             refreshed.forEachIndexed { pos, item ->
-                                if (item is AlbumListItem.AlbumItem && item.album.id in albumsNeedingYear) {
+                                if (item.album.id in albumsNeedingYear) {
                                     albumAdapter.notifyItemChanged(pos)
                                 }
                             }

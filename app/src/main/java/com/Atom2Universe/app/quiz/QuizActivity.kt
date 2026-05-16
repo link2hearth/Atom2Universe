@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
@@ -116,6 +117,15 @@ class QuizActivity : ThemedActivity() {
         loadPreferences()
         setupListeners()
         showState(QuizState.MENU)
+
+        onBackPressedDispatcher.addCallback(this) {
+            when (currentState) {
+                QuizState.MENU -> finish()
+                QuizState.PLAYING -> showState(QuizState.MENU)
+                QuizState.RESULT -> showState(QuizState.MENU)
+                QuizState.CHALLENGE_RESULT -> showState(QuizState.MENU)
+            }
+        }
 
         // Check for game in progress
         checkForSavedGame()
@@ -1009,13 +1019,4 @@ class QuizActivity : ThemedActivity() {
         challengeReviewContainer.addView(cardLayout)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        when (currentState) {
-            QuizState.MENU -> super.onBackPressed()
-            QuizState.PLAYING -> showState(QuizState.MENU)
-            QuizState.RESULT -> showState(QuizState.MENU)
-            QuizState.CHALLENGE_RESULT -> showState(QuizState.MENU)
-        }
-    }
 }

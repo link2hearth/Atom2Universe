@@ -122,7 +122,7 @@ class SurvivorView @JvmOverloads constructor(
 
     override fun surfaceCreated(h: SurfaceHolder) {
         _dp = resources.displayMetrics.density
-        _sp = resources.displayMetrics.scaledDensity
+        _sp = resources.displayMetrics.density * resources.configuration.fontScale
         start()
     }
     override fun surfaceChanged(h: SurfaceHolder, fmt: Int, w: Int, h2: Int) {

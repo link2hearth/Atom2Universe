@@ -28,7 +28,7 @@ abstract class SudokuDatabase : RoomDatabase() {
                     SudokuDatabase::class.java,
                     "sudoku_database"
                 )
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(true)
                     .build()
                 INSTANCE = instance
                 instance

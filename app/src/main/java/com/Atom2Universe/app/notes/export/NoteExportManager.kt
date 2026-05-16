@@ -62,7 +62,7 @@ object NoteExportManager {
         return ImportedNoteData(
             title = title,
             content = noteContent,
-            tagNames = frontMatter["tags"] as? List<String> ?: emptyList(),
+            tagNames = (frontMatter["tags"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
             groupName = frontMatter["group"] as? String,
             isFavorite = frontMatter["favorite"] == true,
             isPinned = frontMatter["pinned"] == true,

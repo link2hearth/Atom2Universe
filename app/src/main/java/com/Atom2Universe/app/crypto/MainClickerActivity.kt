@@ -2637,7 +2637,7 @@ class MainClickerActivity : ThemedActivity() {
             makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0)
 
         override fun onMove(rv: RecyclerView, vh: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            adapter.onItemMoved(vh.adapterPosition, target.adapterPosition)
+            adapter.onItemMoved(vh.bindingAdapterPosition, target.bindingAdapterPosition)
             return true
         }
 

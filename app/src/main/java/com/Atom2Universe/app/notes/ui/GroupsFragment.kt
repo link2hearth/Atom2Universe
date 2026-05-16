@@ -60,15 +60,15 @@ class GroupsFragment : Fragment() {
             ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
         ) {
             override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                return if (boardAdapter.getItem(viewHolder.adapterPosition) is BoardItem.NoteCard)
+                return if (boardAdapter.getItem(viewHolder.bindingAdapterPosition) is BoardItem.NoteCard)
                     makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0)
                 else
                     makeMovementFlags(0, 0)
             }
 
             override fun onMove(rv: RecyclerView, from: RecyclerView.ViewHolder, to: RecyclerView.ViewHolder): Boolean {
-                if (boardAdapter.getItem(to.adapterPosition) is BoardItem.GroupHeader) return false
-                boardAdapter.moveItem(from.adapterPosition, to.adapterPosition)
+                if (boardAdapter.getItem(to.bindingAdapterPosition) is BoardItem.GroupHeader) return false
+                boardAdapter.moveItem(from.bindingAdapterPosition, to.bindingAdapterPosition)
                 return true
             }
 
@@ -76,7 +76,7 @@ class GroupsFragment : Fragment() {
 
             override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(recyclerView, viewHolder)
-                val pos = viewHolder.adapterPosition
+                val pos = viewHolder.bindingAdapterPosition
                 if (pos == RecyclerView.NO_POSITION) return
                 val item = boardAdapter.getItem(pos) as? BoardItem.NoteCard ?: return
                 val newGroupId = boardAdapter.resolveGroupForPosition(pos)

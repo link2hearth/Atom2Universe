@@ -851,7 +851,7 @@ class PeriodicTableActivity : AppCompatActivity() {
         textSize = 17f
         setTextColor(0xFFE0E0E0.toInt())
         setTextIsSelectable(true)
-        lineHeight = (textSize * 1.55f * resources.displayMetrics.scaledDensity).toInt()
+        lineHeight = (textSize * 1.55f * resources.displayMetrics.density * resources.configuration.fontScale).toInt()
       })
     }
 

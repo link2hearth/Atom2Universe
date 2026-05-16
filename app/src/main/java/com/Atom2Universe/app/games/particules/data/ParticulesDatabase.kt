@@ -25,7 +25,7 @@ abstract class ParticulesDatabase : RoomDatabase() {
                     ParticulesDatabase::class.java,
                     "particules_database"
                 )
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(true)
                     .build()
                 INSTANCE = instance
                 instance

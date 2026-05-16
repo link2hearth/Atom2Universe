@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
 
 /**
  * Gère l'enregistrement NSD (mDNS) du service local et la découverte des pairs A2U.
@@ -146,7 +147,12 @@ class PeerDiscoveryManager(
                 }
             }
         }
-        nsdManager.resolveService(info, resolveListener)
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            nsdManager.resolveService(info, Executors.newSingleThreadExecutor(), resolveListener)
+        } else {
+            nsdManager.resolveService(info, resolveListener)
+        }
     }
 
     private suspend fun enrichPeerInfo(peer: DiscoveredPeer): DiscoveredPeer {

@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.addCallback
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -42,8 +43,13 @@ class SurvivorActivity : ThemedActivity() {
         gameView.game.bestTime  = prefs.getFloat("best_time", 0f)
         gameView.game.bestKills = prefs.getInt("best_kills", 0)
 
+        onBackPressedDispatcher.addCallback(this) {
+            if (gameView.game.phase == GamePhase.WEAPON_SELECT) finish()
+            else gameView.requestMenu()
+        }
+
         findViewById<ImageButton>(R.id.survivor_btn_back).setOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
         findViewById<ImageButton>(R.id.survivor_btn_pause).setOnClickListener {
             gameView.requestPause()
@@ -69,9 +75,4 @@ class SurvivorActivity : ThemedActivity() {
         }
     }
 
-    @Suppress("DEPRECATION")
-    override fun onBackPressed() {
-        if (gameView.game.phase == GamePhase.WEAPON_SELECT) super.onBackPressed()
-        else gameView.requestMenu()
-    }
 }

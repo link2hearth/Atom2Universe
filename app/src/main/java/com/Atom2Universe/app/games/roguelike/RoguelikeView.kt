@@ -287,7 +287,7 @@ class RoguelikeView @JvmOverloads constructor(
     // ── HUD overlay (log + hint escaliers) ──────────────────────────────────────
 
     private fun drawHud(canvas: Canvas, g: RoguelikeGame) {
-        val sd = context.resources.displayMetrics.scaledDensity
+        val sd = context.resources.displayMetrics.density * context.resources.configuration.fontScale
         val logTextSize  = sd * 17f
         val hintTextSize = sd * 15f
 
@@ -325,7 +325,7 @@ class RoguelikeView @JvmOverloads constructor(
     // ── End screen ──────────────────────────────────────────────────────────────
 
     private fun drawEndScreen(canvas: Canvas, g: RoguelikeGame) {
-        val sd = context.resources.displayMetrics.scaledDensity
+        val sd = context.resources.displayMetrics.density * context.resources.configuration.fontScale
         canvas.drawRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), pOverlay)
         pText.textAlign = Paint.Align.CENTER
         val cx = width / 2f; val cy = height / 2f
@@ -361,7 +361,7 @@ class RoguelikeView @JvmOverloads constructor(
 
     private fun drawHudIcons(canvas: Canvas, g: RoguelikeGame) {
         if (g.phase != GamePhase.PLAYING) return
-        val sd = context.resources.displayMetrics.scaledDensity
+        val sd = context.resources.displayMetrics.density * context.resources.configuration.fontScale
         pText.textAlign = Paint.Align.CENTER
 
         // ── Cœur (utiliser objet) ──
@@ -412,7 +412,7 @@ class RoguelikeView @JvmOverloads constructor(
     }
 
     private fun drawShop(canvas: Canvas, g: RoguelikeGame) {
-        val sd    = context.resources.displayMetrics.scaledDensity
+        val sd    = context.resources.displayMetrics.density * context.resources.configuration.fontScale
         val panel = shopPanelRect()
         val cr    = 16f * context.resources.displayMetrics.density
 
