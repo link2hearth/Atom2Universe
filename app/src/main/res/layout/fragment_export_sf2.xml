@@ -9,7 +9,6 @@
     tools:ignore="TooManyViews">
 
     <LinearLayout
-        android:id="@+id/export_root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -30,7 +29,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/name_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sf2_instrument_name_label"
@@ -141,7 +139,6 @@
             android:visibility="gone">
 
             <TextView
-                android:id="@+id/key_range_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_key_range"
@@ -571,7 +568,6 @@
 
         <!-- Post-export buttons -->
         <LinearLayout
-            android:id="@+id/post_export_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

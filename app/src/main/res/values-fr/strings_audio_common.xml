@@ -11,17 +11,10 @@
     <string name="audio_source_music">Musique</string>
     <string name="audio_conflict_title">Audio en cours</string>
     <string name="audio_conflict_message">%1$s est déjà en lecture. Que souhaitez-vous écouter ?</string>
-    <string name="audio_settings_title">Paramètres audio</string>
-    <string name="audio_settings_description">Configurez où sortent les sons quand un clavier MIDI est connecté.</string>
-    <string name="audio_option_speaker_force">Forcer le son sur les haut-parleurs de la tablette</string>
-    <string name="audio_option_keyboard_sound">Jouer mes notes sur la tablette (sinon, sur le clavier)</string>
-    <string name="audio_settings_help">Aide</string>
     <string name="audio_hub_title">A2U</string>
     <string name="audio_hub_play_pause">Lecture / Pause</string>
     <string name="audio_hub_stop">Stop</string>
     <string name="audio_hub_no_playback">Aucune lecture en cours</string>
-    <string name="audio_hub_playing">Lecture en cours…</string>
-    <string name="audio_hub_paused">En pause</string>
     <string name="audio_hub_radio_title">Radio Web</string>
     <string name="audio_hub_radio_desc">Écoutez des milliers de stations</string>
     <string name="audio_hub_midi_title">Lecteur MIDI</string>

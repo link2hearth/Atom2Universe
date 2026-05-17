@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="music_player_title">Музика</string>
-    <string name="music_track_count">%1$d треків</string>
     <string name="music_empty_library">Аудіофайлів не знайдено</string>
     <string name="music_now_playing">Зараз грає</string>
     <string name="music_play_pause">Грати/Пауза</string>
@@ -14,11 +13,7 @@
     <string name="music_permission_rationale">Доступ до аудіофайлів потрібен для відображення вашої музичної бібліотеки.</string>
     <string name="music_grant_permission">Дозволити</string>
     <string name="music_permission_denied">Дозвіл відхилено. Немає доступу до музичної бібліотеки.</string>
-    <string name="music_artists">Виконавці</string>
-    <string name="music_albums">Альбоми</string>
-    <string name="music_tracks">Треки</string>
     <string name="music_artist">Виконавець</string>
-    <string name="music_album">Альбом</string>
     <string name="music_album_art">Обкладинка альбому</string>
     <string name="music_open">Відкрити</string>
     <string name="music_stats_format">%1$d виконавців, %2$d альбомів, %3$d треків</string>
@@ -26,8 +21,6 @@
     <string name="music_album_track_summary">%1$s, %2$s</string>
     <string name="music_track_summary_with_year">%1$s • %2$s - %3$s</string>
     <string name="music_track_summary_no_year">%1$s - %2$s</string>
-    <string name="music_albums_count">%1$d альбомів</string>
-    <string name="music_tracks_in_album">%1$d треків</string>
     <plurals name="music_artist_count">
         <item quantity="one">%d виконавець</item>
         <item quantity="few">%d виконавці</item>
@@ -51,12 +44,10 @@
     <string name="music_refresh_deep">Глибоке (+ ID3-теги)</string>
     <string name="music_refresh_complete">Повне (+ POPM-статистика)</string>
     <string name="music_add_folder">Додати папку</string>
-    <string name="music_shuffle_all">Перемішати все</string>
     <string name="music_settings">Налаштування</string>
     <string name="music_scanning">Сканування…</string>
     <string name="music_loading_stats">Завантаження статистики…</string>
     <string name="music_add_to_favorites">Додати до обраного</string>
-    <string name="music_remove_from_favorites">Видалити з обраного</string>
     <string name="music_added_to_favorites">Додано до обраного</string>
     <string name="music_removed_from_favorites">Видалено з обраного</string>
     <string name="music_play_next">Грати наступним</string>
@@ -84,7 +75,6 @@
     <string name="music_info_file_size">Розмір: %1$s</string>
     <string name="music_info_file_path">Шлях: %1$s</string>
     <string name="music_info_date_modified">Змінено: %1$s</string>
-    <string name="music_info_date_added">Додано: %1$s</string>
     <string name="music_info_play_count">Кількість відтворень: %1$d</string>
     <string name="music_info_rating">Оцінка:</string>
     <string name="music_rating_star_1">1 зірка</string>
@@ -122,7 +112,6 @@
     <string name="music_tags_saved">Теги збережено</string>
     <string name="music_tags_save_error">Помилка збереження тегів</string>
     <string name="music_tags_pending">Трек відтворюється. Зміни будуть застосовані після зупинки.</string>
-    <string name="music_tags_pending_short">очікує</string>
     <string name="music_tags_read_error">Не вдалося прочитати теги</string>
     <string name="music_tags_save">Зберегти</string>
     <string name="music_play_album">Грати альбом</string>
@@ -150,22 +139,15 @@
     <string name="music_sort_name_desc">Назва (Я-А)</string>
     <string name="music_sort_year_asc">Рік (старі → нові)</string>
     <string name="music_sort_year_desc">Рік (нові → старі)</string>
-    <string name="music_sort_applied">Сортування застосовано</string>
     <string name="music_settings_section_display">Відображення</string>
     <string name="music_settings_section_sorting">Сортування</string>
     <string name="music_settings_show_play_count">Показувати кількість відтворень</string>
     <string name="music_settings_show_play_count_desc">Показує лічильник поруч із кнопкою обраного</string>
-    <string name="music_settings_suggest_track_numbers">Пропонувати номери треків</string>
-    <string name="music_settings_suggest_track_numbers_desc">Пропонувати записати номери треків, виявлені в назвах файлів</string>
     <string name="music_settings_enabled">Увімкнено</string>
     <string name="music_settings_disabled">Вимкнено</string>
     <string name="music_settings_write_tags_to_files">Запис у теги ID3/POPM</string>
     <string name="music_settings_write_tags_to_files_desc">Зберігати метадані та статистику в аудіофайли. Якщо вимкнено, дані зберігаються лише локально та в Google Drive</string>
     <string name="music_settings_section_advanced">Розширені</string>
-    <string name="music_settings_full_scan">Повне сканування тегів</string>
-    <string name="music_settings_full_scan_desc">Імпортувати POPM-статистику з MP3-файлів</string>
-    <string name="music_settings_full_scan_confirm">Ця операція прочитає POPM-теги з усіх ваших MP3-файлів для імпорту кількості відтворень та оцінок.\n\nЦе може зайняти кілька хвилин залежно від розміру бібліотеки.</string>
-    <string name="music_settings_start_scan">Почати</string>
     <string name="music_settings_tag_migration">Оновити ID3-теги</string>
     <string name="music_settings_tag_migration_desc">Конвертувати старі ID3v2.2 теги в ID3v2.3</string>
     <string name="music_settings_sync_pending_popm">Застосувати очікуючі теги</string>
@@ -182,7 +164,6 @@
     <string name="music_settings_tag_migration_no_migration_needed">Усі ваші файли вже використовують сумісний формат тегів (ID3v2.3 або вище).\n\nМіграція не потрібна.</string>
     <string name="music_settings_tag_migration_progress_title">Міграція в процесі</string>
     <string name="music_settings_tag_migration_progress_artist">Виконавець: %1$s</string>
-    <string name="music_settings_tag_migration_progress_file">Файл: %1$s</string>
     <string name="music_settings_tag_migration_progress_count">%1$d / %2$d файлів</string>
     <string name="music_settings_tag_migration_complete">Міграцію завершено!\n\n• %1$d файлів оновлено\n• %2$d помилок</string>
     <string name="music_settings_tag_migration_start">Почати міграцію</string>
@@ -225,7 +206,6 @@
     <string name="music_settings_last_backup_format">Копія: %1$s з %2$s</string>
     <string name="music_settings_restore_backup">Відновити з хмари</string>
     <string name="music_settings_restore_in_progress">Відновлення…</string>
-    <string name="music_settings_restore_success">Відновлення завершено</string>
     <string name="music_settings_restore_error">Помилка відновлення: %1$s</string>
     <string name="music_settings_backup_now">Зберегти в хмару</string>
     <string name="music_settings_backup_in_progress">Резервне копіювання…</string>
@@ -246,17 +226,14 @@
     <string name="music_display_mode_tiles">Плитки</string>
     <string name="music_root_visibility_title">Показати/Сховати плитки</string>
     <string name="music_browse_artists">Виконавці</string>
-    <string name="music_browse_artists_desc">Переглядати за виконавцем</string>
     <string name="music_browse_playlists">Плейлисти</string>
     <string name="music_browse_playlists_desc">Ваші плейлисти</string>
     <string name="music_playlist_favorites">Обране</string>
     <string name="music_playlist_all_library">Вся бібліотека</string>
     <string name="music_playlist_top_played">Найбільш відтворювані</string>
     <string name="music_playlist_discovery">Відкриття</string>
-    <string name="music_shuffle_discovery">Відтворення відкриттів</string>
     <string name="music_discovery_started">Відтворення треків з %1$d відтвореннями</string>
     <string name="music_no_tracks">Немає доступних треків</string>
-    <string name="music_play_count">%1$d відтворень</string>
     <string name="music_create_playlist">Створити плейлист</string>
     <string name="music_delete_playlist">Видалити</string>
     <string name="music_rename_playlist">Перейменувати</string>
@@ -267,10 +244,8 @@
     <string name="music_track_added_to_playlist">Додано до %1$s</string>
     <string name="music_track_removed_from_playlist">Видалено з плейлиста</string>
     <string name="music_enter_playlist_name">Назва плейлиста</string>
-    <string name="music_add_tracks">Додати треки</string>
     <string name="music_playlist_empty">Цей плейлист порожній</string>
     <string name="music_select_playlist">Вибрати плейлист</string>
-    <string name="music_no_playlists">Немає плейлистів</string>
     <string name="music_create_playlist_first">Спочатку створіть плейлист</string>
     <string name="music_confirm_delete_playlist">Видалити плейлист \"%1$s\"?</string>
     <string name="music_track_already_in_playlist">Цей трек вже є в плейлисті</string>
@@ -315,9 +290,7 @@
     <string name="music_fullscreen">На весь екран</string>
     <string name="music_exit_fullscreen">Вийти з повноекранного режиму</string>
     <string name="music_browse_album_artists">Виконавці альбомів</string>
-    <string name="music_browse_album_artists_desc">Переглядати за виконавцем альбому</string>
     <string name="music_browse_all_albums">Усі альбоми</string>
-    <string name="music_browse_all_albums_desc">Переглядати всі альбоми</string>
     <string name="music_browse_search">Пошук</string>
     <string name="music_browse_search_desc">Пошук треків, виконавців, альбомів</string>
     <string name="music_browse_folders">Папки</string>
@@ -336,9 +309,6 @@
     <string name="music_search_hint">Пошук…</string>
     <string name="music_search_no_results">Немає результатів</string>
     <string name="music_search_results">%1$d результат(ів)</string>
-    <string name="music_search_section_tracks">Треки</string>
-    <string name="music_search_section_albums">Альбоми</string>
-    <string name="music_search_section_artists">Виконавці</string>
     <string name="music_queue">Черга</string>
     <string name="music_queue_count">(%1$d треків)</string>
     <string name="music_queue_position_format">%1$02d</string>
@@ -390,13 +360,11 @@
     <string name="music_track_deleted">Файл видалено</string>
     <string name="music_album_deleted">Альбом видалено (%1$d файлів)</string>
     <string name="music_delete_error">Помилка видалення</string>
-    <string name="music_delete_permission_required">Для видалення цього файлу потрібен дозвіл</string>
     <string name="music_viz_julia_grayscale">Julia відтінки сірого</string>
     <string name="music_viz_penrose">Плаваючі ромби</string>
     <string name="music_viz_penrose_true">Penrose</string>
     <string name="navidrome_settings">Налаштування Navidrome</string>
     <string name="navidrome_server_url">URL сервера</string>
-    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
     <string name="navidrome_username">Ім\'я користувача</string>
     <string name="navidrome_password">Пароль</string>
     <string name="navidrome_test_connection">Перевірити підключення</string>
@@ -409,7 +377,4 @@
     <string name="music_settings_trusted_wifi_active">LAN-синхронізація активна в «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">LAN-синхронізацію вимкнено в цій мережі</string>
     <string name="music_settings_trusted_wifi_no_wifi">Не підключено до Wi-Fi</string>
-    <string name="lan_sync_notif_channel">LAN-синхронізація</string>
-    <string name="lan_sync_notif_title">Синхронізація A2U</string>
-    <string name="lan_sync_notif_text">Синхронізація історії прослуховування з пристроями поруч</string>
 </resources>

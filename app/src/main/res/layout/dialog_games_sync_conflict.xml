@@ -31,7 +31,6 @@
 
         <!-- ─── Carte sauvegarde locale ─── -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/conflict_card_local"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -176,7 +175,6 @@
 
         <!-- ─── Carte sauvegarde Drive ─── -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/conflict_card_remote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"

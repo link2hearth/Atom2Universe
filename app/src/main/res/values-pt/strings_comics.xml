@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">Leitor de PDF, CBZ e pastas de imagens</string>
     <string name="comics_library_title">Biblioteca de Quadrinhos</string>
     <string name="comics_library_empty">Nenhum quadrinho ainda</string>
-    <string name="comics_library_empty_hint">Toque em + para adicionar seu primeiro quadrinho</string>
     <string name="comics_add_title">Adicionar um quadrinho</string>
     <string name="comics_add_pdf">Arquivo PDF</string>
     <string name="comics_add_cbz">Arquivo CBZ / ZIP</string>

@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">PDF-, CBZ- en afbeeldingenmaplezer</string>
     <string name="comics_library_title">Comicsbibliotheek</string>
     <string name="comics_library_empty">Nog geen comics</string>
-    <string name="comics_library_empty_hint">Tik op + om uw eerste comic toe te voegen</string>
     <string name="comics_add_title">Een comic toevoegen</string>
     <string name="comics_add_pdf">PDF-bestand</string>
     <string name="comics_add_cbz">CBZ / ZIP-bestand</string>

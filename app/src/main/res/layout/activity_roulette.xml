@@ -69,7 +69,6 @@
 
     <!-- ── Grille 3×3 (ImageViews) ─────────────────────────────────────── -->
     <LinearLayout
-        android:id="@+id/roulette_grid"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"

@@ -12,17 +12,10 @@
     <string name="audio_conflict_title">Audio sedang diputar</string>
     <string name="audio_conflict_message">%1$s sedang diputar. Apa yang ingin Anda dengarkan?</string>
     <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
-    <string name="audio_settings_title">Pengaturan audio</string>
-    <string name="audio_settings_description">Konfigurasi output audio saat keyboard MIDI terhubung.</string>
-    <string name="audio_option_speaker_force">Paksa suara melalui speaker tablet</string>
-    <string name="audio_option_keyboard_sound">Putar nada saya di tablet (jika tidak, di keyboard)</string>
-    <string name="audio_settings_help">Bantuan</string>
     <string name="audio_hub_title">A2U</string>
     <string name="audio_hub_play_pause">Putar / Jeda</string>
     <string name="audio_hub_stop">Berhenti</string>
     <string name="audio_hub_no_playback">Tidak ada pemutaran</string>
-    <string name="audio_hub_playing">Sedang diputar...</string>
-    <string name="audio_hub_paused">Dijeda</string>
     <string name="audio_hub_radio_title">Radio Web</string>
     <string name="audio_hub_radio_desc">Dengarkan ribuan stasiun</string>
     <string name="audio_hub_midi_title">Pemutar MIDI</string>

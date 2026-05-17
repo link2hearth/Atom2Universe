@@ -16,7 +16,6 @@
 
         <!-- Square container with 1:1 ratio -->
         <FrameLayout
-            android:id="@+id/image_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -101,7 +100,6 @@
 
             <!-- Text zone at bottom with semi-transparent background -->
             <LinearLayout
-                android:id="@+id/text_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"

@@ -216,7 +216,6 @@
             tools:text="Date de modification : 15/01/2024" />
 
         <TextView
-            android:id="@+id/info_date_added"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Date d'ajout : 10/01/2024" />

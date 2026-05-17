@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="music_player_title">Müzik</string>
-    <string name="music_track_count">%1$d parça</string>
     <string name="music_empty_library">Ses dosyası bulunamadı</string>
     <string name="music_now_playing">Şu an çalınıyor</string>
     <string name="music_play_pause">Oynat/Duraklat</string>
@@ -14,11 +13,7 @@
     <string name="music_permission_rationale">Müzik kütüphanenizi görüntülemek için ses dosyası erişimi gerekli.</string>
     <string name="music_grant_permission">İzin Ver</string>
     <string name="music_permission_denied">İzin reddedildi. Müzik kütüphanesine erişilemiyor.</string>
-    <string name="music_artists">Sanatçılar</string>
-    <string name="music_albums">Albümler</string>
-    <string name="music_tracks">Parçalar</string>
     <string name="music_artist">Sanatçı</string>
-    <string name="music_album">Albüm</string>
     <string name="music_album_art">Albüm kapağı</string>
     <string name="music_open">Aç</string>
     <string name="music_stats_format">%1$d sanatçı, %2$d albüm, %3$d parça</string>
@@ -26,8 +21,6 @@
     <string name="music_album_track_summary">%1$s, %2$s</string>
     <string name="music_track_summary_with_year">%1$s • %2$s - %3$s</string>
     <string name="music_track_summary_no_year">%1$s - %2$s</string>
-    <string name="music_albums_count">%1$d albüm</string>
-    <string name="music_tracks_in_album">%1$d parça</string>
     <plurals name="music_artist_count">
         <item quantity="one">%d sanatçı</item>
         <item quantity="other">%d sanatçı</item>
@@ -45,12 +38,10 @@
     <string name="music_refresh_deep">Derin (+ ID3 etiketleri)</string>
     <string name="music_refresh_complete">Tam (+ POPM istatistikleri)</string>
     <string name="music_add_folder">Klasör ekle</string>
-    <string name="music_shuffle_all">Tümünü karıştır</string>
     <string name="music_settings">Ayarlar</string>
     <string name="music_scanning">Taranıyor…</string>
     <string name="music_loading_stats">İstatistikler yükleniyor…</string>
     <string name="music_add_to_favorites">Favorilere ekle</string>
-    <string name="music_remove_from_favorites">Favorilerden kaldır</string>
     <string name="music_added_to_favorites">Favorilere eklendi</string>
     <string name="music_removed_from_favorites">Favorilerden kaldırıldı</string>
     <string name="music_play_next">Sonraki olarak çal</string>
@@ -78,7 +69,6 @@
     <string name="music_info_file_size">Boyut: %1$s</string>
     <string name="music_info_file_path">Yol: %1$s</string>
     <string name="music_info_date_modified">Değiştirilme: %1$s</string>
-    <string name="music_info_date_added">Ekleme: %1$s</string>
     <string name="music_info_play_count">Çalma sayısı: %1$d</string>
     <string name="music_info_rating">Puan:</string>
     <string name="music_rating_star_1">1 yıldız</string>
@@ -112,7 +102,6 @@
     <string name="music_tags_saved">Etiketler kaydedildi</string>
     <string name="music_tags_save_error">Etiketler kaydedilirken hata</string>
     <string name="music_tags_pending">Parça çalıyor. Değişiklikler oynatma durduğunda uygulanacak.</string>
-    <string name="music_tags_pending_short">beklemede</string>
     <string name="music_tags_read_error">Etiketler okunamıyor</string>
     <string name="music_tags_save">Kaydet</string>
     <string name="music_play_album">Albümü çal</string>
@@ -140,22 +129,15 @@
     <string name="music_sort_name_desc">Ad (Z-A)</string>
     <string name="music_sort_year_asc">Yıl (eski → yeni)</string>
     <string name="music_sort_year_desc">Yıl (yeni → eski)</string>
-    <string name="music_sort_applied">Sıralama uygulandı</string>
     <string name="music_settings_section_display">Görünüm</string>
     <string name="music_settings_section_sorting">Sıralama</string>
     <string name="music_settings_show_play_count">Çalma sayısını göster</string>
     <string name="music_settings_show_play_count_desc">Favori butonunun yanında sayacı gösterir</string>
-    <string name="music_settings_suggest_track_numbers">Parça numaralarını öner</string>
-    <string name="music_settings_suggest_track_numbers_desc">Dosya adlarında algılandığında parça numaralarını yazmayı öner</string>
     <string name="music_settings_enabled">Etkin</string>
     <string name="music_settings_disabled">Devre dışı</string>
     <string name="music_settings_write_tags_to_files">ID3/POPM etiketlerine yaz</string>
     <string name="music_settings_write_tags_to_files_desc">Meta verileri ve istatistikleri ses dosyalarına kaydedin. Devre dışı bırakılırsa, veriler yalnızca yerel olarak ve Google Drive\'da saklanır</string>
     <string name="music_settings_section_advanced">Gelişmiş</string>
-    <string name="music_settings_full_scan">Tam etiket taraması</string>
-    <string name="music_settings_full_scan_desc">MP3 dosyalarından POPM istatistiklerini içe aktar</string>
-    <string name="music_settings_full_scan_confirm">Bu işlem çalma sayılarını ve puanları içe aktarmak için tüm MP3 dosyalarınızdaki POPM etiketlerini okuyacak.\n\nKütüphane boyutunuza bağlı olarak bu birkaç dakika sürebilir.</string>
-    <string name="music_settings_start_scan">Başlat</string>
     <string name="music_settings_tag_migration">ID3 etiketlerini güncelle</string>
     <string name="music_settings_tag_migration_desc">Eski ID3v2.2 etiketlerini ID3v2.3\'e dönüştür</string>
     <string name="music_settings_sync_pending_popm">Bekleyen etiketleri uygula</string>
@@ -172,7 +154,6 @@
     <string name="music_settings_tag_migration_no_migration_needed">Tüm dosyalarınız zaten uyumlu etiket formatı kullanıyor (ID3v2.3 veya üstü).\n\nGeçiş gerekmiyor.</string>
     <string name="music_settings_tag_migration_progress_title">Geçiş devam ediyor</string>
     <string name="music_settings_tag_migration_progress_artist">Sanatçı: %1$s</string>
-    <string name="music_settings_tag_migration_progress_file">Dosya: %1$s</string>
     <string name="music_settings_tag_migration_progress_count">%1$d / %2$d dosya</string>
     <string name="music_settings_tag_migration_complete">Geçiş tamamlandı!\n\n• %1$d dosya güncellendi\n• %2$d hata</string>
     <string name="music_settings_tag_migration_start">Geçişi başlat</string>
@@ -215,7 +196,6 @@
     <string name="music_settings_last_backup_format">Yedekleme: %1$s - %2$s</string>
     <string name="music_settings_restore_backup">Buluttan geri yükle</string>
     <string name="music_settings_restore_in_progress">Geri yükleniyor…</string>
-    <string name="music_settings_restore_success">Geri yükleme tamamlandı</string>
     <string name="music_settings_restore_error">Geri yükleme başarısız: %1$s</string>
     <string name="music_settings_backup_now">Buluta yedekle</string>
     <string name="music_settings_backup_in_progress">Yedekleniyor…</string>
@@ -236,17 +216,14 @@
     <string name="music_display_mode_tiles">Kutucuk modu</string>
     <string name="music_root_visibility_title">Kutucukları göster/gizle</string>
     <string name="music_browse_artists">Sanatçılar</string>
-    <string name="music_browse_artists_desc">Sanatçıya göre gözat</string>
     <string name="music_browse_playlists">Çalma Listeleri</string>
     <string name="music_browse_playlists_desc">Çalma listeleriniz</string>
     <string name="music_playlist_favorites">Favoriler</string>
     <string name="music_playlist_all_library">Tüm Kütüphane</string>
     <string name="music_playlist_top_played">En çok çalınanlar</string>
     <string name="music_playlist_discovery">Keşfet</string>
-    <string name="music_shuffle_discovery">Keşif oynatma</string>
     <string name="music_discovery_started">%1$d kez çalınan parçalar oynatılıyor</string>
     <string name="music_no_tracks">Parça yok</string>
-    <string name="music_play_count">%1$d çalma</string>
     <string name="music_create_playlist">Çalma listesi oluştur</string>
     <string name="music_delete_playlist">Sil</string>
     <string name="music_rename_playlist">Yeniden adlandır</string>
@@ -257,10 +234,8 @@
     <string name="music_track_added_to_playlist">%1$s listesine eklendi</string>
     <string name="music_track_removed_from_playlist">Çalma listesinden kaldırıldı</string>
     <string name="music_enter_playlist_name">Çalma listesi adı</string>
-    <string name="music_add_tracks">Parça ekle</string>
     <string name="music_playlist_empty">Bu çalma listesi boş</string>
     <string name="music_select_playlist">Çalma listesi seç</string>
-    <string name="music_no_playlists">Çalma listesi yok</string>
     <string name="music_create_playlist_first">Önce bir çalma listesi oluşturun</string>
     <string name="music_confirm_delete_playlist">\"%1$s\" çalma listesini silmek istiyor musunuz?</string>
     <string name="music_track_already_in_playlist">Bu parça zaten çalma listesinde</string>
@@ -305,9 +280,7 @@
     <string name="music_fullscreen">Tam ekrana geç</string>
     <string name="music_exit_fullscreen">Tam ekrandan çık</string>
     <string name="music_browse_album_artists">Albüm sanatçıları</string>
-    <string name="music_browse_album_artists_desc">Albüm sanatçısına göre gözat</string>
     <string name="music_browse_all_albums">Tüm albümler</string>
-    <string name="music_browse_all_albums_desc">Tüm albümlere gözat</string>
     <string name="music_browse_search">Ara</string>
     <string name="music_browse_search_desc">Parça, sanatçı, albüm ara</string>
     <string name="music_browse_folders">Klasörler</string>
@@ -322,9 +295,6 @@
     <string name="music_search_hint">Ara…</string>
     <string name="music_search_no_results">Sonuç yok</string>
     <string name="music_search_results">%1$d sonuç</string>
-    <string name="music_search_section_tracks">Parçalar</string>
-    <string name="music_search_section_albums">Albümler</string>
-    <string name="music_search_section_artists">Sanatçılar</string>
     <string name="music_queue">Sıra</string>
     <string name="music_queue_count">(%1$d parça)</string>
     <string name="music_queue_position_format">%1$02d</string>
@@ -376,13 +346,11 @@
     <string name="music_track_deleted">Dosya silindi</string>
     <string name="music_album_deleted">Albüm silindi (%1$d dosya)</string>
     <string name="music_delete_error">Silme hatası</string>
-    <string name="music_delete_permission_required">Bu dosyayı silmek için izin gerekli</string>
     <string name="music_viz_julia_grayscale">Julia Gri Tonlama</string>
     <string name="music_viz_penrose">Yüzen Baklava</string>
     <string name="music_viz_penrose_true">Penrose</string>
     <string name="navidrome_settings">Navidrome ayarları</string>
     <string name="navidrome_server_url">Sunucu URL\'si</string>
-    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
     <string name="navidrome_username">Kullanıcı adı</string>
     <string name="navidrome_password">Parola</string>
     <string name="navidrome_test_connection">Bağlantıyı test et</string>
@@ -395,7 +363,4 @@
     <string name="music_settings_trusted_wifi_active">«%1$s» üzerinde LAN senkronizasyonu etkin</string>
     <string name="music_settings_trusted_wifi_inactive">Bu ağda LAN senkronizasyonu devre dışı</string>
     <string name="music_settings_trusted_wifi_no_wifi">Wi-Fi\'a bağlı değil</string>
-    <string name="lan_sync_notif_channel">LAN Senkronizasyonu</string>
-    <string name="lan_sync_notif_title">A2U senkronizasyonu</string>
-    <string name="lan_sync_notif_text">Yakındaki cihazlarla dinleme geçmişi senkronize ediliyor</string>
 </resources>

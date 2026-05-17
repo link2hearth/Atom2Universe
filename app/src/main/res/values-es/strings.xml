@@ -12,7 +12,6 @@
     <string name="expand">Expandir</string>
     <string name="widget_description">Widget de control de audio para Musica, Radio y MIDI</string>
     <string name="widget_no_track">Sin reproduccion</string>
-    <string name="widget_tap_to_play">Toca para reanudar</string>
     <string name="widget_album_art">Caratula del album</string>
     <string name="widget_play_pause">Reproducir / Pausar</string>
     <string name="widget_next">Siguiente</string>
@@ -31,9 +30,5 @@
     <string name="save">Guardar</string>
     <string name="delete">Eliminar</string>
     <string name="close">Cerrar</string>
-    <string name="yes">Si</string>
-    <string name="no">No</string>
-    <string name="color_channel_format">Canal %d</string>
     <string name="color_not_set">Predeterminado</string>
-    <string name="apply">Aplicar</string>
 </resources>

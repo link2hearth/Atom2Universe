@@ -12,14 +12,7 @@
     <string name="flappy_cat_new_best">Nouveau record !</string>
     <string name="stars_war_title">Stars War</string>
     <string name="stars_war_description">Shoot\'em up — survivez aux vagues !</string>
-    <string name="stars_war_tap_to_start">Glissez pour bouger • Tir automatique\nTouchez pour commencer</string>
-    <string name="stars_war_tap_to_retry">Touchez pour réessayer</string>
-    <string name="stars_war_game_over">Game Over</string>
     <string name="stars_war_paused">En pause</string>
-    <string name="stars_war_tap_to_resume">Touchez pour reprendre</string>
-    <string name="stars_war_new_best">Nouveau record !</string>
-    <string name="stars_war_score_label">Score</string>
-    <string name="stars_war_best_label">MEILLEUR</string>
     <string name="achievement_unlocked_header">Succès débloqué !</string>
     <string name="clicker_achievements_section">Succès</string>
     <string name="achievement_human_cell_name">Échelle : cellule humaine</string>
@@ -140,7 +133,6 @@
     <string name="link_title">Link</string>
     <string name="link_description">Reliez des cases pour atteindre zéro — ou dix !</string>
     <string name="link_moves_label">Coups :</string>
-    <string name="link_length_label">Lien :</string>
     <string name="link_difficulty_easy">Petit</string>
     <string name="link_difficulty_medium">Moyen</string>
     <string name="link_difficulty_hard">Grand</string>
@@ -155,7 +147,6 @@
     <string name="link_msg_new_level">Nouveau niveau %1$s. Reliez %2$d cases pour ajuster les valeurs !</string>
     <string name="link_msg_new_level_perfect">Mode Parfait — %1$s. Trouvez les %2$d bons coups.</string>
     <string name="link_msg_progress">%1$d cases normales et %2$d cases + restantes à ajuster.</string>
-    <string name="link_msg_victory">Puzzle résolu en %1$d coups !</string>
     <string name="link_msg_invalid_pattern">Motif invalide pour cette longueur de lien.</string>
     <string name="link_msg_undo">Dernier coup annulé.</string>
     <string name="link_msg_nothing_to_undo">Aucun coup à annuler.</string>
@@ -210,15 +201,10 @@
     <string name="roulette_win_joker_wild">%1$s + Joker ! ×%2$d</string>
     <string name="roulette_win_joker_line">🃏🃏🃏 Ligne de Jokers ! ×%1$d</string>
     <string name="roulette_win_multiple">Combinaisons multiples ! ×%1$d au total</string>
-    <string name="roulette_pay_suit">Identiques ×2  +🃏 ×3  +🃏🃏 ×4</string>
-    <string name="roulette_pay_joker">🃏🃏🃏 ×5</string>
     <string name="roulette_win_overlay_title">GAGNÉ !</string>
     <string name="roulette_win_overlay_tap">Appuyer pour continuer</string>
     <string name="roguelike_title">Donjon</string>
     <string name="roguelike_description">Explorez des donjons procéduraux et survivez 5 niveaux</string>
-    <string name="roguelike_btn_descend">Descendre &gt;</string>
-    <string name="roguelike_btn_no_item">Pas d\'objet</string>
-    <string name="roguelike_inventory_empty">—</string>
     <string name="the_line_new_game">Nouvelle partie</string>
     <string name="the_line_solved_label">✓ Résolu !</string>
     <string name="the_line_diff_simple">Simple</string>

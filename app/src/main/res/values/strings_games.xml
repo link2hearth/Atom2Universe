@@ -5,8 +5,6 @@
     <string name="stats_tab_month">Month</string>
     <string name="stats_tab_year">Year</string>
     <string name="stats_total_time">Total usage time</string>
-    <string name="stats_listening_time">Listening time</string>
-    <string name="stats_practice_time">Practice time</string>
     <string name="stats_hours_format">%1$d h %2$d min</string>
     <string name="stats_minutes_format">%1$d min</string>
     <string name="stats_top_artists">Top artists</string>

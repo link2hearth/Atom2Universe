@@ -12,17 +12,10 @@
     <string name="audio_conflict_title">Воспроизведение активно</string>
     <string name="audio_conflict_message">%1$s уже воспроизводится. Что вы хотите слушать?</string>
     <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
-    <string name="audio_settings_title">Настройки звука</string>
-    <string name="audio_settings_description">Настройка аудиовыхода при подключении MIDI-клавиатуры.</string>
-    <string name="audio_option_speaker_force">Принудительный вывод звука через динамики планшета</string>
-    <string name="audio_option_keyboard_sound">Воспроизводить мои ноты на планшете (иначе на клавиатуре)</string>
-    <string name="audio_settings_help">Справка</string>
     <string name="audio_hub_title">A2U</string>
     <string name="audio_hub_play_pause">Воспроизведение / Пауза</string>
     <string name="audio_hub_stop">Стоп</string>
     <string name="audio_hub_no_playback">Нет воспроизведения</string>
-    <string name="audio_hub_playing">Сейчас играет…</string>
-    <string name="audio_hub_paused">На паузе</string>
     <string name="audio_hub_radio_title">Интернет-радио</string>
     <string name="audio_hub_radio_desc">Слушайте тысячи станций</string>
     <string name="audio_hub_midi_title">MIDI-плеер</string>

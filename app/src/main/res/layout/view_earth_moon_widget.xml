@@ -17,7 +17,6 @@
 
         <!-- Barre de drag avec label de vue intégré -->
         <FrameLayout
-            android:id="@+id/earth_moon_drag_handle_area"
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:background="@android:color/transparent">

@@ -163,13 +163,11 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="10dp">
                 <View
-                    android:id="@+id/bar_apc"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#4A90D9" />
                 <View
-                    android:id="@+id/bar_aps"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

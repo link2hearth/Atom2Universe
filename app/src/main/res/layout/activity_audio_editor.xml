@@ -113,7 +113,6 @@
 
         <!-- Time display -->
         <LinearLayout
-            android:id="@+id/timeContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -158,7 +157,6 @@
 
         <!-- Playback controls -->
         <LinearLayout
-            android:id="@+id/playbackControls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -210,7 +208,6 @@
 
         <!-- Edit toolbar (Copy/Cut/Paste/Delete/Trim + Undo/Redo) -->
         <LinearLayout
-            android:id="@+id/editToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -326,7 +323,6 @@
 
         <!-- Help text -->
         <TextView
-            android:id="@+id/tvSelectionInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -338,7 +334,6 @@
 
         <!-- Action buttons -->
         <LinearLayout
-            android:id="@+id/actionButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"

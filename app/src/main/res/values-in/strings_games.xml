@@ -6,8 +6,6 @@
     <string name="stats_tab_month">Bulan</string>
     <string name="stats_tab_year">Tahun</string>
     <string name="stats_total_time">Total waktu penggunaan</string>
-    <string name="stats_listening_time">Waktu mendengarkan</string>
-    <string name="stats_practice_time">Waktu latihan</string>
     <string name="stats_hours_format">%1$d j %2$d mnt</string>
     <string name="stats_minutes_format">%1$d mnt</string>
     <string name="stats_top_artists">Artis teratas</string>

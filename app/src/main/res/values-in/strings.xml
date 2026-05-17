@@ -12,7 +12,6 @@
     <string name="expand">Perluas</string>
     <string name="widget_description">Widget kontrol audio untuk Musik, Radio, dan MIDI</string>
     <string name="widget_no_track">Tidak ada pemutaran</string>
-    <string name="widget_tap_to_play">Ketuk untuk melanjutkan</string>
     <string name="widget_album_art">Sampul album</string>
     <string name="widget_play_pause">Putar / Jeda</string>
     <string name="widget_next">Berikutnya</string>
@@ -31,9 +30,5 @@
     <string name="save">Simpan</string>
     <string name="delete">Hapus</string>
     <string name="close">Tutup</string>
-    <string name="yes">Ya</string>
-    <string name="no">Tidak</string>
-    <string name="color_channel_format">Kanal %d</string>
     <string name="color_not_set">Default</string>
-    <string name="apply">Terapkan</string>
 </resources>

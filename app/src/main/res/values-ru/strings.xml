@@ -12,7 +12,6 @@
     <string name="expand">Развернуть</string>
     <string name="widget_description">Виджет управления аудио для Музыки, Радио и MIDI</string>
     <string name="widget_no_track">Нет воспроизведения</string>
-    <string name="widget_tap_to_play">Нажмите для продолжения</string>
     <string name="widget_album_art">Обложка альбома</string>
     <string name="widget_play_pause">Воспроизведение / Пауза</string>
     <string name="widget_next">Следующий</string>
@@ -31,9 +30,5 @@
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>
     <string name="close">Закрыть</string>
-    <string name="yes">Да</string>
-    <string name="no">Нет</string>
-    <string name="color_channel_format">Канал %d</string>
     <string name="color_not_set">По умолчанию</string>
-    <string name="apply">Применить</string>
 </resources>

@@ -12,7 +12,6 @@
     <string name="expand">Розгорнути</string>
     <string name="widget_description">Віджет керування аудіо для Музики, Радіо та MIDI</string>
     <string name="widget_no_track">Немає відтворення</string>
-    <string name="widget_tap_to_play">Торкніться для відновлення</string>
     <string name="widget_album_art">Обкладинка альбому</string>
     <string name="widget_play_pause">Грати / Пауза</string>
     <string name="widget_next">Наступний</string>
@@ -31,9 +30,5 @@
     <string name="save">Зберегти</string>
     <string name="delete">Видалити</string>
     <string name="close">Закрити</string>
-    <string name="yes">Так</string>
-    <string name="no">Ні</string>
-    <string name="color_channel_format">Канал %d</string>
     <string name="color_not_set">За замовчуванням</string>
-    <string name="apply">Застосувати</string>
 </resources>

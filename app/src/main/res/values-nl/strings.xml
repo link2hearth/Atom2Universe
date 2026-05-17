@@ -12,7 +12,6 @@
     <string name="expand">Uitvouwen</string>
     <string name="widget_description">Audiobedieningswidget voor Muziek, Radio en MIDI</string>
     <string name="widget_no_track">Geen weergave</string>
-    <string name="widget_tap_to_play">Tik om te hervatten</string>
     <string name="widget_album_art">Albumhoes</string>
     <string name="widget_play_pause">Afspelen / Pauzeren</string>
     <string name="widget_next">Volgende</string>
@@ -31,9 +30,5 @@
     <string name="save">Opslaan</string>
     <string name="delete">Verwijderen</string>
     <string name="close">Sluiten</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
-    <string name="color_channel_format">Kanaal %d</string>
     <string name="color_not_set">Standaard</string>
-    <string name="apply">Toepassen</string>
 </resources>

@@ -19,7 +19,6 @@
         android:padding="10dp">
 
         <View
-            android:id="@+id/note_color_indicator"
             android:layout_width="4dp"
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"

@@ -9,9 +9,6 @@
     <string name="book_reader_title">Lector</string>
     <string name="book_reader_no_book">Ningun libro abierto</string>
     <string name="book_reader_open">Abrir un libro</string>
-    <string name="book_reader_open_new">Abrir otro libro</string>
-    <string name="book_reader_tts">Leer en voz alta</string>
-    <string name="book_reader_pages">%1$d paginas</string>
     <string name="book_reader_page_of">%1$d / %2$d</string>
     <string name="book_reader_theme">Tema de lectura</string>
     <string name="book_reader_theme_dark">Oscuro</string>
@@ -22,8 +19,6 @@
     <string name="book_reader_theme_forest">Bosque</string>
     <string name="book_reader_theme_pastel">Pastel</string>
     <string name="book_reader_para_distinction">Distincion de parrafos</string>
-    <string name="book_reader_speed">Velocidad</string>
-    <string name="book_reader_pitch">Tono</string>
     <string name="book_reader_voice">Voz</string>
     <string name="book_reader_voice_default">Predeterminada</string>
     <string name="book_reader_tts_not_ready">TTS no disponible</string>
@@ -32,7 +27,6 @@
     <string name="book_reader_font_default">Predeterminada (sistema)</string>
     <string name="book_reader_font_size">Tamano: %1$d sp</string>
     <string name="book_reader_font_preview_text">El rapido zorro marron salta sobre el perro perezoso.\n\nLeer es un viaje a otros mundos y otras mentes.</string>
-    <string name="book_library_title">Recientes</string>
     <string name="book_library_empty">Aun no hay libros</string>
     <string name="book_library_empty_hint">Toca + para agregar tu primer libro</string>
     <string name="book_library_add">Agregar un libro</string>
@@ -41,8 +35,6 @@
     <string name="book_library_delete_confirm">Eliminar este libro de tu biblioteca?</string>
     <string name="book_tab_recents">Recientes</string>
     <string name="book_tab_shelf">Bibliotecas</string>
-    <string name="book_add_book">Agregar un libro</string>
-    <string name="book_add_library">Explorar bibliotecas</string>
     <string name="book_shelf_title">Bibliotecas</string>
     <string name="book_shelf_empty">Ninguna biblioteca aun.\nToca + para agregar una carpeta.</string>
     <string name="book_shelf_add_library">Agregar una biblioteca</string>
@@ -54,6 +46,4 @@
     <string name="book_shelf_delete_confirm">Eliminar esta biblioteca y todas sus entradas?</string>
     <string name="book_shelf_books_count">%1$d libros</string>
     <string name="book_shelf_tree_empty">No hay libros en esta biblioteca.</string>
-    <string name="book_shelf_format">%1$s</string>
-    <string name="book_shelf_size">%1$s</string>
 </resources>

@@ -7,7 +7,6 @@
     android:padding="24dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/preset_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/sf2_preset_name_hint"

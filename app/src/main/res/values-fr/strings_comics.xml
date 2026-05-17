@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">Lecteur PDF, CBZ et dossier d\'images</string>
     <string name="comics_library_title">Bibliothèque BD</string>
     <string name="comics_library_empty">Aucune BD</string>
-    <string name="comics_library_empty_hint">Appuyez sur + pour ajouter votre première BD</string>
     <string name="comics_add_title">Ajouter une BD</string>
     <string name="comics_add_pdf">Fichier PDF</string>
     <string name="comics_add_cbz">Fichier CBZ / ZIP</string>

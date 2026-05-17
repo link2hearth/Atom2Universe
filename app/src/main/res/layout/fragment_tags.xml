@@ -24,7 +24,6 @@
             android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/btn_sort_tags"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_sort_24"

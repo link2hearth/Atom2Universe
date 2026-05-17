@@ -12,14 +12,7 @@
     <string name="flappy_cat_new_best">New record!</string>
     <string name="stars_war_title">Stars War</string>
     <string name="stars_war_description">Space shooter — survive the waves!</string>
-    <string name="stars_war_tap_to_start">Drag to move • Auto-fire\nTap to start</string>
-    <string name="stars_war_tap_to_retry">Tap to retry</string>
-    <string name="stars_war_game_over">Game Over</string>
     <string name="stars_war_paused">Paused</string>
-    <string name="stars_war_tap_to_resume">Tap to resume</string>
-    <string name="stars_war_new_best">New record!</string>
-    <string name="stars_war_score_label">Score</string>
-    <string name="stars_war_best_label">BEST</string>
     <string name="achievement_unlocked_header">Achievement unlocked!</string>
     <string name="clicker_achievements_section">Achievements</string>
     <string name="achievement_human_cell_name">Scale: human cell</string>
@@ -140,7 +133,6 @@
     <string name="link_title">Link</string>
     <string name="link_description">Connect cells to reach zero — or ten!</string>
     <string name="link_moves_label">Moves:</string>
-    <string name="link_length_label">Link:</string>
     <string name="link_difficulty_easy">Small</string>
     <string name="link_difficulty_medium">Medium</string>
     <string name="link_difficulty_hard">Large</string>
@@ -155,7 +147,6 @@
     <string name="link_msg_new_level">New %1$s level. Connect %2$d cells to adjust values!</string>
     <string name="link_msg_new_level_perfect">Perfect mode — %1$s. Find the %2$d exact moves.</string>
     <string name="link_msg_progress">%1$d normal and %2$d plus cells left to adjust.</string>
-    <string name="link_msg_victory">Puzzle solved in %1$d moves!</string>
     <string name="link_msg_invalid_pattern">Invalid pattern for this link length.</string>
     <string name="link_msg_undo">Last move undone.</string>
     <string name="link_msg_nothing_to_undo">Nothing to undo.</string>
@@ -210,15 +201,10 @@
     <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
     <string name="roulette_win_joker_line">🃏🃏🃏 Full Jokers! ×%1$d</string>
     <string name="roulette_win_multiple">Multiple wins! ×%1$d total</string>
-    <string name="roulette_pay_suit">Same ×2  +🃏 ×3  +🃏🃏 ×4</string>
-    <string name="roulette_pay_joker">🃏🃏🃏 ×5</string>
     <string name="roulette_win_overlay_title">WIN!</string>
     <string name="roulette_win_overlay_tap">Tap to continue</string>
     <string name="roguelike_title">Dungeon</string>
     <string name="roguelike_description">Explore procedural dungeons and survive 5 floors</string>
-    <string name="roguelike_btn_descend">Descend &gt;</string>
-    <string name="roguelike_btn_no_item">No item</string>
-    <string name="roguelike_inventory_empty">—</string>
     <string name="the_line_new_game">New game</string>
     <string name="the_line_solved_label">✓ Solved!</string>
     <string name="the_line_diff_simple">Simple</string>

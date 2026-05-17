@@ -9,9 +9,6 @@
     <string name="book_reader_title">Reader</string>
     <string name="book_reader_no_book">No book open</string>
     <string name="book_reader_open">Open a book</string>
-    <string name="book_reader_open_new">Open another book</string>
-    <string name="book_reader_tts">Read aloud</string>
-    <string name="book_reader_pages">%1$d pages</string>
     <string name="book_reader_page_of">%1$d / %2$d</string>
     <string name="book_reader_theme">Reading theme</string>
     <string name="book_reader_theme_dark">Dark</string>
@@ -22,8 +19,6 @@
     <string name="book_reader_theme_forest">Forest</string>
     <string name="book_reader_theme_pastel">Pastel</string>
     <string name="book_reader_para_distinction">Paragraph distinction</string>
-    <string name="book_reader_speed">Speed</string>
-    <string name="book_reader_pitch">Pitch</string>
     <string name="book_reader_voice">Voice</string>
     <string name="book_reader_voice_default">Default</string>
     <string name="book_reader_tts_not_ready">TTS not ready</string>
@@ -34,7 +29,6 @@
     <string name="book_reader_font_preview_text">The quick brown fox jumps over the lazy dog.\n\nReading is a journey into other worlds and other minds.</string>
 
     <!-- Library screen -->
-    <string name="book_library_title">Recent</string>
     <string name="book_library_empty">No books yet</string>
     <string name="book_library_empty_hint">Tap + to add your first book</string>
     <string name="book_library_add">Add a book</string>
@@ -43,8 +37,6 @@
     <string name="book_library_delete_confirm">Remove this book from your library?</string>
     <string name="book_tab_recents">Recent</string>
     <string name="book_tab_shelf">Libraries</string>
-    <string name="book_add_book">Add a book</string>
-    <string name="book_add_library">Browse libraries</string>
 
     <!-- Bookshelf -->
     <string name="book_shelf_title">Libraries</string>
@@ -58,6 +50,4 @@
     <string name="book_shelf_delete_confirm">Delete this library and all its entries?</string>
     <string name="book_shelf_books_count">%1$d books</string>
     <string name="book_shelf_tree_empty">No books in this library.</string>
-    <string name="book_shelf_format">%1$s</string>
-    <string name="book_shelf_size">%1$s</string>
 </resources>

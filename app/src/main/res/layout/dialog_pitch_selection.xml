@@ -125,7 +125,6 @@
             app:tint="@color/startup_text_secondary" />
 
         <FrameLayout
-            android:id="@+id/keyboard_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">

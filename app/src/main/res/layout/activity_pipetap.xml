@@ -29,7 +29,6 @@
             android:tint="#94A3B8" />
 
         <TextView
-            android:id="@+id/pipetap_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"

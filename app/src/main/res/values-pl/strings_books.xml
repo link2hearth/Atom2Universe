@@ -9,9 +9,6 @@
     <string name="book_reader_title">Czytnik</string>
     <string name="book_reader_no_book">Brak otwartej książki</string>
     <string name="book_reader_open">Otwórz książkę</string>
-    <string name="book_reader_open_new">Otwórz inną książkę</string>
-    <string name="book_reader_tts">Czytaj na głos</string>
-    <string name="book_reader_pages">%1$d stron</string>
     <string name="book_reader_page_of">%1$d / %2$d</string>
     <string name="book_reader_theme">Motyw czytania</string>
     <string name="book_reader_theme_dark">Ciemny</string>
@@ -22,8 +19,6 @@
     <string name="book_reader_theme_forest">Las</string>
     <string name="book_reader_theme_pastel">Pastelowy</string>
     <string name="book_reader_para_distinction">Rozróżnienie akapitów</string>
-    <string name="book_reader_speed">Prędkość</string>
-    <string name="book_reader_pitch">Ton</string>
     <string name="book_reader_voice">Głos</string>
     <string name="book_reader_voice_default">Domyślny</string>
     <string name="book_reader_tts_not_ready">TTS niedostępny</string>
@@ -32,7 +27,6 @@
     <string name="book_reader_font_default">Domyślna (systemowa)</string>
     <string name="book_reader_font_size">Rozmiar: %1$d sp</string>
     <string name="book_reader_font_preview_text">Zażółć gęślą jaźń.\n\nCzytanie to podróż do innych światów i innych umysłów.</string>
-    <string name="book_library_title">Ostatnie</string>
     <string name="book_library_empty">Brak książek</string>
     <string name="book_library_empty_hint">Dotknij +, aby dodać pierwszą książkę</string>
     <string name="book_library_add">Dodaj książkę</string>
@@ -41,8 +35,6 @@
     <string name="book_library_delete_confirm">Usunąć tę książkę z biblioteki?</string>
     <string name="book_tab_recents">Ostatnie</string>
     <string name="book_tab_shelf">Biblioteki</string>
-    <string name="book_add_book">Dodaj książkę</string>
-    <string name="book_add_library">Przeglądaj biblioteki</string>
     <string name="book_shelf_title">Biblioteki</string>
     <string name="book_shelf_empty">Brak biblioteki.\nDotknij +, aby dodać folder.</string>
     <string name="book_shelf_add_library">Dodaj bibliotekę</string>
@@ -54,6 +46,4 @@
     <string name="book_shelf_delete_confirm">Usunąć tę bibliotekę i wszystkie jej wpisy?</string>
     <string name="book_shelf_books_count">%1$d książek</string>
     <string name="book_shelf_tree_empty">Brak książek w tej bibliotece.</string>
-    <string name="book_shelf_format">%1$s</string>
-    <string name="book_shelf_size">%1$s</string>
 </resources>

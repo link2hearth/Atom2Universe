@@ -11,17 +11,10 @@
     <string name="audio_source_music">Musica</string>
     <string name="audio_conflict_title">Audio in riproduzione</string>
     <string name="audio_conflict_message">%1$s è già in riproduzione. Cosa vuoi ascoltare?</string>
-    <string name="audio_settings_title">Impostazioni audio</string>
-    <string name="audio_settings_description">Configura l’uscita audio quando è collegata una tastiera MIDI.</string>
-    <string name="audio_option_speaker_force">Forza l’audio dagli altoparlanti del tablet</string>
-    <string name="audio_option_keyboard_sound">Riproduci le mie note sul tablet (altrimenti sulla tastiera)</string>
-    <string name="audio_settings_help">Aiuto</string>
     <string name="audio_hub_title">A2U</string>
     <string name="audio_hub_play_pause">Riproduci / Pausa</string>
     <string name="audio_hub_stop">Stop</string>
     <string name="audio_hub_no_playback">Nessuna riproduzione</string>
-    <string name="audio_hub_playing">In riproduzione…</string>
-    <string name="audio_hub_paused">In pausa</string>
     <string name="audio_hub_radio_title">Radio Web</string>
     <string name="audio_hub_radio_desc">Ascolta migliaia di stazioni</string>
     <string name="audio_hub_midi_title">Player MIDI</string>

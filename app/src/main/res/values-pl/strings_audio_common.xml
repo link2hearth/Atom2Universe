@@ -12,17 +12,10 @@
     <string name="audio_conflict_title">Trwa odtwarzanie</string>
     <string name="audio_conflict_message">%1$s jest już odtwarzane. Czego chcesz słuchać?</string>
     <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
-    <string name="audio_settings_title">Ustawienia audio</string>
-    <string name="audio_settings_description">Konfiguracja wyjścia audio po podłączeniu klawiatury MIDI.</string>
-    <string name="audio_option_speaker_force">Wymuś dźwięk przez głośniki tabletu</string>
-    <string name="audio_option_keyboard_sound">Odtwarzaj moje nuty na tablecie (w przeciwnym razie na klawiaturze)</string>
-    <string name="audio_settings_help">Pomoc</string>
     <string name="audio_hub_title">A2U</string>
     <string name="audio_hub_play_pause">Odtwórz / Pauza</string>
     <string name="audio_hub_stop">Zatrzymaj</string>
     <string name="audio_hub_no_playback">Brak odtwarzania</string>
-    <string name="audio_hub_playing">Teraz odtwarzane…</string>
-    <string name="audio_hub_paused">Wstrzymano</string>
     <string name="audio_hub_radio_title">Radio internetowe</string>
     <string name="audio_hub_radio_desc">Słuchaj tysięcy stacji</string>
     <string name="audio_hub_midi_title">Odtwarzacz MIDI</string>

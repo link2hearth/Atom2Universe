@@ -21,7 +21,6 @@
 
         <!-- Track info (title + artist) -->
         <LinearLayout
-            android:id="@+id/track_info_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -198,7 +197,6 @@
 
         <!-- Seek bar with time labels -->
         <LinearLayout
-            android:id="@+id/seek_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

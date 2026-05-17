@@ -7,7 +7,6 @@
     android:background="@color/startup_background">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/notes_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#0F172A"

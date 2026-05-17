@@ -167,7 +167,6 @@
 
             <!-- Option: Google Account -->
             <LinearLayout
-                android:id="@+id/option_google_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -725,7 +724,6 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/divider_advanced"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider"
@@ -733,7 +731,6 @@
 
             <!-- Section: Avancé -->
             <TextView
-                android:id="@+id/text_section_advanced"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/music_settings_section_advanced"
@@ -994,7 +991,6 @@
 
         <!-- Navidrome Section -->
         <LinearLayout
-            android:id="@+id/section_navidrome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

@@ -9,9 +9,6 @@
     <string name="book_reader_title">Читач</string>
     <string name="book_reader_no_book">Книгу не відкрито</string>
     <string name="book_reader_open">Відкрити книгу</string>
-    <string name="book_reader_open_new">Відкрити іншу книгу</string>
-    <string name="book_reader_tts">Читати вголос</string>
-    <string name="book_reader_pages">%1$d сторінок</string>
     <string name="book_reader_page_of">%1$d / %2$d</string>
     <string name="book_reader_theme">Тема читання</string>
     <string name="book_reader_theme_dark">Темна</string>
@@ -22,8 +19,6 @@
     <string name="book_reader_theme_forest">Лісова</string>
     <string name="book_reader_theme_pastel">Пастельна</string>
     <string name="book_reader_para_distinction">Розрізнення абзаців</string>
-    <string name="book_reader_speed">Швидкість</string>
-    <string name="book_reader_pitch">Тон</string>
     <string name="book_reader_voice">Голос</string>
     <string name="book_reader_voice_default">За замовчуванням</string>
     <string name="book_reader_tts_not_ready">TTS не готовий</string>
@@ -32,7 +27,6 @@
     <string name="book_reader_font_default">За замовчуванням (системний)</string>
     <string name="book_reader_font_size">Розмір: %1$d sp</string>
     <string name="book_reader_font_preview_text">Швидка коричнева лисиця перестрибує через ледачого пса.\n\nЧитання — це подорож в інші світи та інші думки.</string>
-    <string name="book_library_title">Нещодавні</string>
     <string name="book_library_empty">Ще немає книг</string>
     <string name="book_library_empty_hint">Натисніть +, щоб додати першу книгу</string>
     <string name="book_library_add">Додати книгу</string>
@@ -41,8 +35,6 @@
     <string name="book_library_delete_confirm">Видалити цю книгу з бібліотеки?</string>
     <string name="book_tab_recents">Нещодавні</string>
     <string name="book_tab_shelf">Бібліотеки</string>
-    <string name="book_add_book">Додати книгу</string>
-    <string name="book_add_library">Переглянути бібліотеки</string>
     <string name="book_shelf_title">Бібліотеки</string>
     <string name="book_shelf_empty">Ще немає бібліотеки.\nНатисніть +, щоб додати папку.</string>
     <string name="book_shelf_add_library">Додати бібліотеку</string>
@@ -54,6 +46,4 @@
     <string name="book_shelf_delete_confirm">Видалити цю бібліотеку та всі її записи?</string>
     <string name="book_shelf_books_count">%1$d книг</string>
     <string name="book_shelf_tree_empty">У цій бібліотеці немає книг.</string>
-    <string name="book_shelf_format">%1$s</string>
-    <string name="book_shelf_size">%1$s</string>
 </resources>

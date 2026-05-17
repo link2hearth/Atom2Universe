@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">PDF-, CBZ- und Bildordner-Lesegerät</string>
     <string name="comics_library_title">Comics-Bibliothek</string>
     <string name="comics_library_empty">Noch keine Comics</string>
-    <string name="comics_library_empty_hint">Tippen Sie auf +, um Ihren ersten Comic hinzuzufügen</string>
     <string name="comics_add_title">Comic hinzufügen</string>
     <string name="comics_add_pdf">PDF-Datei</string>
     <string name="comics_add_cbz">CBZ / ZIP-Datei</string>

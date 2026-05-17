@@ -135,7 +135,6 @@
 
         <!-- Section EQ 10 bandes (toujours visible) -->
         <LinearLayout
-            android:id="@+id/section_midi_eq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

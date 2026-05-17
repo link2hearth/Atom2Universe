@@ -68,7 +68,6 @@
 
         <!-- Barre de navigation -->
         <LinearLayout
-            android:id="@+id/floating_web_navbar"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:background="#0D1117"

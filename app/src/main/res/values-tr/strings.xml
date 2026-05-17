@@ -12,7 +12,6 @@
     <string name="expand">Genişlet</string>
     <string name="widget_description">Müzik, Radyo ve MIDI için ses kontrol widget\'ı</string>
     <string name="widget_no_track">Oynatma yok</string>
-    <string name="widget_tap_to_play">Devam etmek için dokun</string>
     <string name="widget_album_art">Albüm kapağı</string>
     <string name="widget_play_pause">Oynat / Duraklat</string>
     <string name="widget_next">Sonraki</string>
@@ -31,9 +30,5 @@
     <string name="save">Kaydet</string>
     <string name="delete">Sil</string>
     <string name="close">Kapat</string>
-    <string name="yes">Evet</string>
-    <string name="no">Hayır</string>
-    <string name="color_channel_format">Kanal %d</string>
     <string name="color_not_set">Varsayılan</string>
-    <string name="apply">Uygula</string>
 </resources>

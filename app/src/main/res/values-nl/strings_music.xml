@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="music_player_title">Muziek</string>
-    <string name="music_track_count">%1$d nummers</string>
     <string name="music_empty_library">Geen audiobestanden gevonden</string>
     <string name="music_now_playing">Nu afspelen</string>
     <string name="music_play_pause">Afspelen/Pauzeren</string>
@@ -14,11 +13,7 @@
     <string name="music_permission_rationale">Toegang tot audiobestanden is vereist om uw muziekbibliotheek weer te geven.</string>
     <string name="music_grant_permission">Toestaan</string>
     <string name="music_permission_denied">Toestemming geweigerd. Kan geen toegang krijgen tot muziekbibliotheek.</string>
-    <string name="music_artists">Artiesten</string>
-    <string name="music_albums">Albums</string>
-    <string name="music_tracks">Nummers</string>
     <string name="music_artist">Artiest</string>
-    <string name="music_album">Album</string>
     <string name="music_album_art">Albumhoes</string>
     <string name="music_open">Openen</string>
     <string name="music_stats_format">%1$d artiesten, %2$d albums, %3$d nummers</string>
@@ -26,8 +21,6 @@
     <string name="music_album_track_summary">%1$s, %2$s</string>
     <string name="music_track_summary_with_year">%1$s • %2$s - %3$s</string>
     <string name="music_track_summary_no_year">%1$s - %2$s</string>
-    <string name="music_albums_count">%1$d albums</string>
-    <string name="music_tracks_in_album">%1$d nummers</string>
     <plurals name="music_artist_count">
         <item quantity="one">%d artiest</item>
         <item quantity="other">%d artiesten</item>
@@ -45,12 +38,10 @@
     <string name="music_refresh_deep">Uitgebreid (+ ID3-tags)</string>
     <string name="music_refresh_complete">Volledig (+ POPM-statistieken)</string>
     <string name="music_add_folder">Map toevoegen</string>
-    <string name="music_shuffle_all">Alles willekeurig</string>
     <string name="music_settings">Instellingen</string>
     <string name="music_scanning">Scannen…</string>
     <string name="music_loading_stats">Statistieken laden…</string>
     <string name="music_add_to_favorites">Toevoegen aan favorieten</string>
-    <string name="music_remove_from_favorites">Verwijderen uit favorieten</string>
     <string name="music_added_to_favorites">Toegevoegd aan favorieten</string>
     <string name="music_removed_from_favorites">Verwijderd uit favorieten</string>
     <string name="music_play_next">Hierna afspelen</string>
@@ -78,7 +69,6 @@
     <string name="music_info_file_size">Grootte: %1$s</string>
     <string name="music_info_file_path">Pad: %1$s</string>
     <string name="music_info_date_modified">Gewijzigd: %1$s</string>
-    <string name="music_info_date_added">Toegevoegd: %1$s</string>
     <string name="music_info_play_count">Aantal keer afgespeeld: %1$d</string>
     <string name="music_info_rating">Beoordeling:</string>
     <string name="music_rating_star_1">1 ster</string>
@@ -112,7 +102,6 @@
     <string name="music_tags_saved">Tags opgeslagen</string>
     <string name="music_tags_save_error">Fout bij opslaan tags</string>
     <string name="music_tags_pending">Nummer speelt af. Wijzigingen worden toegepast wanneer het afspelen stopt.</string>
-    <string name="music_tags_pending_short">in behandeling</string>
     <string name="music_tags_read_error">Kan tags niet lezen</string>
     <string name="music_tags_save">Opslaan</string>
     <string name="music_play_album">Album afspelen</string>
@@ -140,22 +129,15 @@
     <string name="music_sort_name_desc">Naam (Z-A)</string>
     <string name="music_sort_year_asc">Jaar (oud → nieuw)</string>
     <string name="music_sort_year_desc">Jaar (nieuw → oud)</string>
-    <string name="music_sort_applied">Sortering toegepast</string>
     <string name="music_settings_section_display">Weergave</string>
     <string name="music_settings_section_sorting">Sorteren</string>
     <string name="music_settings_show_play_count">Afspeelteller tonen</string>
     <string name="music_settings_show_play_count_desc">Toont de teller naast de favorietknop</string>
-    <string name="music_settings_suggest_track_numbers">Tracknummers voorstellen</string>
-    <string name="music_settings_suggest_track_numbers_desc">Bied aan tracknummers te schrijven wanneer gedetecteerd in bestandsnamen</string>
     <string name="music_settings_enabled">Ingeschakeld</string>
     <string name="music_settings_disabled">Uitgeschakeld</string>
     <string name="music_settings_write_tags_to_files">Schrijf naar ID3/POPM-tags</string>
     <string name="music_settings_write_tags_to_files_desc">Bewaar metadata en statistieken in audiobestanden. Indien uitgeschakeld, worden gegevens alleen lokaal en op Google Drive opgeslagen</string>
     <string name="music_settings_section_advanced">Geavanceerd</string>
-    <string name="music_settings_full_scan">Volledige tagscan</string>
-    <string name="music_settings_full_scan_desc">POPM-statistieken importeren uit MP3-bestanden</string>
-    <string name="music_settings_full_scan_confirm">Deze bewerking leest POPM-tags uit al uw MP3-bestanden om afspeeltellingen en beoordelingen te importeren.\n\nDit kan enkele minuten duren afhankelijk van de grootte van uw bibliotheek.</string>
-    <string name="music_settings_start_scan">Starten</string>
     <string name="music_settings_tag_migration">ID3-tags bijwerken</string>
     <string name="music_settings_tag_migration_desc">Oude ID3v2.2-tags converteren naar ID3v2.3</string>
     <string name="music_settings_sync_pending_popm">Wachtende tags toepassen</string>
@@ -172,7 +154,6 @@
     <string name="music_settings_tag_migration_no_migration_needed">Al uw bestanden gebruiken al een compatibel tagformaat (ID3v2.3 of hoger).\n\nGeen migratie nodig.</string>
     <string name="music_settings_tag_migration_progress_title">Migratie bezig</string>
     <string name="music_settings_tag_migration_progress_artist">Artiest: %1$s</string>
-    <string name="music_settings_tag_migration_progress_file">Bestand: %1$s</string>
     <string name="music_settings_tag_migration_progress_count">%1$d / %2$d bestanden</string>
     <string name="music_settings_tag_migration_complete">Migratie voltooid!\n\n• %1$d bestanden bijgewerkt\n• %2$d fouten</string>
     <string name="music_settings_tag_migration_start">Migratie starten</string>
@@ -215,7 +196,6 @@
     <string name="music_settings_last_backup_format">Back-up: %1$s van %2$s</string>
     <string name="music_settings_restore_backup">Herstellen vanuit cloud</string>
     <string name="music_settings_restore_in_progress">Herstellen…</string>
-    <string name="music_settings_restore_success">Herstel voltooid</string>
     <string name="music_settings_restore_error">Herstel mislukt: %1$s</string>
     <string name="music_settings_backup_now">Back-up naar cloud</string>
     <string name="music_settings_backup_in_progress">Back-up maken…</string>
@@ -236,17 +216,14 @@
     <string name="music_display_mode_tiles">Tegelmodus</string>
     <string name="music_root_visibility_title">Tegels tonen/verbergen</string>
     <string name="music_browse_artists">Artiesten</string>
-    <string name="music_browse_artists_desc">Bladeren op artiest</string>
     <string name="music_browse_playlists">Afspeellijsten</string>
     <string name="music_browse_playlists_desc">Uw afspeellijsten</string>
     <string name="music_playlist_favorites">Favorieten</string>
     <string name="music_playlist_all_library">Volledige bibliotheek</string>
     <string name="music_playlist_top_played">Meest afgespeeld</string>
     <string name="music_playlist_discovery">Ontdekken</string>
-    <string name="music_shuffle_discovery">Ontdekken afspelen</string>
     <string name="music_discovery_started">Nummers afspelen met %1$d afspelingen</string>
     <string name="music_no_tracks">Geen nummers beschikbaar</string>
-    <string name="music_play_count">%1$d afspelingen</string>
     <string name="music_create_playlist">Afspeellijst aanmaken</string>
     <string name="music_delete_playlist">Verwijderen</string>
     <string name="music_rename_playlist">Hernoemen</string>
@@ -257,10 +234,8 @@
     <string name="music_track_added_to_playlist">Toegevoegd aan %1$s</string>
     <string name="music_track_removed_from_playlist">Verwijderd uit afspeellijst</string>
     <string name="music_enter_playlist_name">Naam afspeellijst</string>
-    <string name="music_add_tracks">Nummers toevoegen</string>
     <string name="music_playlist_empty">Deze afspeellijst is leeg</string>
     <string name="music_select_playlist">Afspeellijst selecteren</string>
-    <string name="music_no_playlists">Geen afspeellijsten</string>
     <string name="music_create_playlist_first">Maak eerst een afspeellijst aan</string>
     <string name="music_confirm_delete_playlist">Wilt u de afspeellijst \"%1$s\" verwijderen?</string>
     <string name="music_track_already_in_playlist">Dit nummer staat al in de afspeellijst</string>
@@ -305,9 +280,7 @@
     <string name="music_fullscreen">Volledig scherm openen</string>
     <string name="music_exit_fullscreen">Volledig scherm sluiten</string>
     <string name="music_browse_album_artists">Albumartiesten</string>
-    <string name="music_browse_album_artists_desc">Bladeren op albumartiest</string>
     <string name="music_browse_all_albums">Alle albums</string>
-    <string name="music_browse_all_albums_desc">Bladeren door alle albums</string>
     <string name="music_browse_search">Zoeken</string>
     <string name="music_browse_search_desc">Zoek nummers, artiesten, albums</string>
     <string name="music_browse_folders">Mappen</string>
@@ -322,9 +295,6 @@
     <string name="music_search_hint">Zoeken…</string>
     <string name="music_search_no_results">Geen resultaten</string>
     <string name="music_search_results">%1$d resulta(a)t(en)</string>
-    <string name="music_search_section_tracks">Nummers</string>
-    <string name="music_search_section_albums">Albums</string>
-    <string name="music_search_section_artists">Artiesten</string>
     <string name="music_queue">Wachtrij</string>
     <string name="music_queue_count">(%1$d nummers)</string>
     <string name="music_queue_position_format">%1$02d</string>
@@ -376,13 +346,11 @@
     <string name="music_track_deleted">Bestand verwijderd</string>
     <string name="music_album_deleted">Album verwijderd (%1$d bestanden)</string>
     <string name="music_delete_error">Fout bij verwijderen</string>
-    <string name="music_delete_permission_required">Toestemming vereist om dit bestand te verwijderen</string>
     <string name="music_viz_julia_grayscale">Julia Grijstinten</string>
     <string name="music_viz_penrose">Zwevende ruiten</string>
     <string name="music_viz_penrose_true">Penrose</string>
     <string name="navidrome_settings">Navidrome-instellingen</string>
     <string name="navidrome_server_url">Server-URL</string>
-    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
     <string name="navidrome_username">Gebruikersnaam</string>
     <string name="navidrome_password">Wachtwoord</string>
     <string name="navidrome_test_connection">Verbinding testen</string>
@@ -395,7 +363,4 @@
     <string name="music_settings_trusted_wifi_active">LAN-synchronisatie actief op «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">LAN-synchronisatie uitgeschakeld op dit netwerk</string>
     <string name="music_settings_trusted_wifi_no_wifi">Niet verbonden met Wi-Fi</string>
-    <string name="lan_sync_notif_channel">LAN-synchronisatie</string>
-    <string name="lan_sync_notif_title">A2U synchronisatie</string>
-    <string name="lan_sync_notif_text">Luistergeschiedenis synchroniseren met nabijgelegen apparaten</string>
 </resources>

@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">PDF, CBZ ve resim klasörü okuyucusu</string>
     <string name="comics_library_title">Çizgi Roman Kütüphanesi</string>
     <string name="comics_library_empty">Henüz çizgi roman yok</string>
-    <string name="comics_library_empty_hint">İlk çizgi romanınızı eklemek için + düğmesine dokunun</string>
     <string name="comics_add_title">Çizgi roman ekle</string>
     <string name="comics_add_pdf">PDF dosyası</string>
     <string name="comics_add_cbz">CBZ / ZIP dosyası</string>

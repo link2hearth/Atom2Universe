@@ -9,9 +9,6 @@
     <string name="book_reader_title">Pembaca</string>
     <string name="book_reader_no_book">Tidak ada buku terbuka</string>
     <string name="book_reader_open">Buka buku</string>
-    <string name="book_reader_open_new">Buka buku lain</string>
-    <string name="book_reader_tts">Baca keras</string>
-    <string name="book_reader_pages">%1$d halaman</string>
     <string name="book_reader_page_of">%1$d / %2$d</string>
     <string name="book_reader_theme">Tema membaca</string>
     <string name="book_reader_theme_dark">Gelap</string>
@@ -22,8 +19,6 @@
     <string name="book_reader_theme_forest">Hutan</string>
     <string name="book_reader_theme_pastel">Pastel</string>
     <string name="book_reader_para_distinction">Pembeda paragraf</string>
-    <string name="book_reader_speed">Kecepatan</string>
-    <string name="book_reader_pitch">Nada</string>
     <string name="book_reader_voice">Suara</string>
     <string name="book_reader_voice_default">Default</string>
     <string name="book_reader_tts_not_ready">TTS belum siap</string>
@@ -32,7 +27,6 @@
     <string name="book_reader_font_default">Default (sistem)</string>
     <string name="book_reader_font_size">Ukuran: %1$d sp</string>
     <string name="book_reader_font_preview_text">The quick brown fox jumps over the lazy dog.\n\nMembaca adalah perjalanan ke dunia dan pikiran lain.</string>
-    <string name="book_library_title">Terbaru</string>
     <string name="book_library_empty">Belum ada buku</string>
     <string name="book_library_empty_hint">Ketuk + untuk menambahkan buku pertama Anda</string>
     <string name="book_library_add">Tambah buku</string>
@@ -41,8 +35,6 @@
     <string name="book_library_delete_confirm">Hapus buku ini dari pustaka Anda?</string>
     <string name="book_tab_recents">Terbaru</string>
     <string name="book_tab_shelf">Pustaka</string>
-    <string name="book_add_book">Tambah buku</string>
-    <string name="book_add_library">Jelajahi pustaka</string>
     <string name="book_shelf_title">Pustaka</string>
     <string name="book_shelf_empty">Belum ada pustaka.\nKetuk + untuk menambahkan folder.</string>
     <string name="book_shelf_add_library">Tambah pustaka</string>
@@ -54,6 +46,4 @@
     <string name="book_shelf_delete_confirm">Hapus pustaka ini dan semua entrinya?</string>
     <string name="book_shelf_books_count">%1$d buku</string>
     <string name="book_shelf_tree_empty">Tidak ada buku di pustaka ini.</string>
-    <string name="book_shelf_format">%1$s</string>
-    <string name="book_shelf_size">%1$s</string>
 </resources>

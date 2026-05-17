@@ -29,7 +29,6 @@
 
         <!-- Artiste -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/music_tag_artist"
@@ -46,7 +45,6 @@
 
         <!-- Artiste de l'album -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_album_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/music_tag_album_artist"

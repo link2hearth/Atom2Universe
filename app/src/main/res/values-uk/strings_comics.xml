@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">Читач PDF, CBZ та папок із зображеннями</string>
     <string name="comics_library_title">Бібліотека коміксів</string>
     <string name="comics_library_empty">Ще немає коміксів</string>
-    <string name="comics_library_empty_hint">Натисніть +, щоб додати перший комікс</string>
     <string name="comics_add_title">Додати комікс</string>
     <string name="comics_add_pdf">PDF-файл</string>
     <string name="comics_add_cbz">CBZ / ZIP-файл</string>

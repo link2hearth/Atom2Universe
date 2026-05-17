@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="music_player_title">Muzyka</string>
-    <string name="music_track_count">%1$d utworów</string>
     <string name="music_empty_library">Nie znaleziono plików audio</string>
     <string name="music_now_playing">Teraz odtwarzane</string>
     <string name="music_play_pause">Odtwórz/Pauza</string>
@@ -14,11 +13,7 @@
     <string name="music_permission_rationale">Dostęp do plików audio jest wymagany do wyświetlenia biblioteki muzyki.</string>
     <string name="music_grant_permission">Zezwól</string>
     <string name="music_permission_denied">Odmówiono uprawnień. Nie można uzyskać dostępu do biblioteki muzyki.</string>
-    <string name="music_artists">Wykonawcy</string>
-    <string name="music_albums">Albumy</string>
-    <string name="music_tracks">Utwory</string>
     <string name="music_artist">Wykonawca</string>
-    <string name="music_album">Album</string>
     <string name="music_album_art">Okładka albumu</string>
     <string name="music_open">Otwórz</string>
     <string name="music_stats_format">%1$d wykonawców, %2$d albumów, %3$d utworów</string>
@@ -26,8 +21,6 @@
     <string name="music_album_track_summary">%1$s, %2$s</string>
     <string name="music_track_summary_with_year">%1$s • %2$s - %3$s</string>
     <string name="music_track_summary_no_year">%1$s - %2$s</string>
-    <string name="music_albums_count">%1$d albumów</string>
-    <string name="music_tracks_in_album">%1$d utworów</string>
     <plurals name="music_artist_count">
         <item quantity="one">%d wykonawca</item>
         <item quantity="few">%d wykonawców</item>
@@ -51,12 +44,10 @@
     <string name="music_refresh_deep">Głębokie (+ tagi ID3)</string>
     <string name="music_refresh_complete">Pełne (+ statystyki POPM)</string>
     <string name="music_add_folder">Dodaj folder</string>
-    <string name="music_shuffle_all">Losowo wszystko</string>
     <string name="music_settings">Ustawienia</string>
     <string name="music_scanning">Skanowanie…</string>
     <string name="music_loading_stats">Ładowanie statystyk…</string>
     <string name="music_add_to_favorites">Dodaj do ulubionych</string>
-    <string name="music_remove_from_favorites">Usuń z ulubionych</string>
     <string name="music_added_to_favorites">Dodano do ulubionych</string>
     <string name="music_removed_from_favorites">Usunięto z ulubionych</string>
     <string name="music_play_next">Odtwórz jako następny</string>
@@ -84,7 +75,6 @@
     <string name="music_info_file_size">Rozmiar: %1$s</string>
     <string name="music_info_file_path">Ścieżka: %1$s</string>
     <string name="music_info_date_modified">Zmodyfikowano: %1$s</string>
-    <string name="music_info_date_added">Dodano: %1$s</string>
     <string name="music_info_play_count">Liczba odtworzeń: %1$d</string>
     <string name="music_info_rating">Ocena:</string>
     <string name="music_rating_star_1">1 gwiazdka</string>
@@ -122,7 +112,6 @@
     <string name="music_tags_saved">Tagi zapisane</string>
     <string name="music_tags_save_error">Błąd zapisu tagów</string>
     <string name="music_tags_pending">Utwór jest odtwarzany. Zmiany zostaną zastosowane po zatrzymaniu odtwarzania.</string>
-    <string name="music_tags_pending_short">oczekujące</string>
     <string name="music_tags_read_error">Nie można odczytać tagów</string>
     <string name="music_tags_save">Zapisz</string>
     <string name="music_play_album">Odtwórz album</string>
@@ -150,22 +139,15 @@
     <string name="music_sort_name_desc">Nazwa (Z-A)</string>
     <string name="music_sort_year_asc">Rok (od najstarszych)</string>
     <string name="music_sort_year_desc">Rok (od najnowszych)</string>
-    <string name="music_sort_applied">Sortowanie zastosowane</string>
     <string name="music_settings_section_display">Wyświetlanie</string>
     <string name="music_settings_section_sorting">Sortowanie</string>
     <string name="music_settings_show_play_count">Pokaż liczbę odtworzeń</string>
     <string name="music_settings_show_play_count_desc">Wyświetla licznik obok przycisku ulubionych</string>
-    <string name="music_settings_suggest_track_numbers">Sugeruj numery utworów</string>
-    <string name="music_settings_suggest_track_numbers_desc">Proponuj zapis numerów utworów wykrytych w nazwach plików</string>
     <string name="music_settings_enabled">Włączone</string>
     <string name="music_settings_disabled">Wyłączone</string>
     <string name="music_settings_write_tags_to_files">Zapisz w tagach ID3/POPM</string>
     <string name="music_settings_write_tags_to_files_desc">Zapisz metadane i statystyki w plikach audio. Jeśli wyłączone, dane są przechowywane tylko lokalnie i na Google Drive</string>
     <string name="music_settings_section_advanced">Zaawansowane</string>
-    <string name="music_settings_full_scan">Pełne skanowanie tagów</string>
-    <string name="music_settings_full_scan_desc">Importuj statystyki POPM z plików MP3</string>
-    <string name="music_settings_full_scan_confirm">Ta operacja odczyta tagi POPM ze wszystkich plików MP3, aby zaimportować liczbę odtworzeń i oceny.\n\nTo może potrwać kilka minut w zależności od rozmiaru biblioteki.</string>
-    <string name="music_settings_start_scan">Rozpocznij</string>
     <string name="music_settings_tag_migration">Aktualizuj tagi ID3</string>
     <string name="music_settings_tag_migration_desc">Konwertuj stare tagi ID3v2.2 na ID3v2.3</string>
     <string name="music_settings_sync_pending_popm">Zastosuj oczekujące tagi</string>
@@ -182,7 +164,6 @@
     <string name="music_settings_tag_migration_no_migration_needed">Wszystkie pliki używają już kompatybilnego formatu tagów (ID3v2.3 lub nowszego).\n\nMigracja nie jest potrzebna.</string>
     <string name="music_settings_tag_migration_progress_title">Migracja w toku</string>
     <string name="music_settings_tag_migration_progress_artist">Wykonawca: %1$s</string>
-    <string name="music_settings_tag_migration_progress_file">Plik: %1$s</string>
     <string name="music_settings_tag_migration_progress_count">%1$d / %2$d plików</string>
     <string name="music_settings_tag_migration_complete">Migracja zakończona!\n\n• %1$d plików zaktualizowanych\n• %2$d błędów</string>
     <string name="music_settings_tag_migration_start">Rozpocznij migrację</string>
@@ -225,7 +206,6 @@
     <string name="music_settings_last_backup_format">Kopia zapasowa: %1$s z %2$s</string>
     <string name="music_settings_restore_backup">Przywróć z chmury</string>
     <string name="music_settings_restore_in_progress">Przywracanie…</string>
-    <string name="music_settings_restore_success">Przywracanie zakończone</string>
     <string name="music_settings_restore_error">Przywracanie nie powiodło się: %1$s</string>
     <string name="music_settings_backup_now">Utwórz kopię zapasową w chmurze</string>
     <string name="music_settings_backup_in_progress">Tworzenie kopii zapasowej…</string>
@@ -246,17 +226,14 @@
     <string name="music_display_mode_tiles">Tryb kafelków</string>
     <string name="music_root_visibility_title">Pokaż/Ukryj kafelki</string>
     <string name="music_browse_artists">Wykonawcy</string>
-    <string name="music_browse_artists_desc">Przeglądaj według wykonawców</string>
     <string name="music_browse_playlists">Playlisty</string>
     <string name="music_browse_playlists_desc">Twoje playlisty</string>
     <string name="music_playlist_favorites">Ulubione</string>
     <string name="music_playlist_all_library">Cała biblioteka</string>
     <string name="music_playlist_top_played">Najczęściej odtwarzane</string>
     <string name="music_playlist_discovery">Odkrywanie</string>
-    <string name="music_shuffle_discovery">Odtwarzanie odkrywcze</string>
     <string name="music_discovery_started">Odtwarzanie utworów z %1$d odtworzeń</string>
     <string name="music_no_tracks">Brak dostępnych utworów</string>
-    <string name="music_play_count">%1$d odtworzeń</string>
     <string name="music_create_playlist">Utwórz playlistę</string>
     <string name="music_delete_playlist">Usuń</string>
     <string name="music_rename_playlist">Zmień nazwę</string>
@@ -267,10 +244,8 @@
     <string name="music_track_added_to_playlist">Dodano do %1$s</string>
     <string name="music_track_removed_from_playlist">Usunięto z playlisty</string>
     <string name="music_enter_playlist_name">Nazwa playlisty</string>
-    <string name="music_add_tracks">Dodaj utwory</string>
     <string name="music_playlist_empty">Ta playlista jest pusta</string>
     <string name="music_select_playlist">Wybierz playlistę</string>
-    <string name="music_no_playlists">Brak playlist</string>
     <string name="music_create_playlist_first">Najpierw utwórz playlistę</string>
     <string name="music_confirm_delete_playlist">Czy chcesz usunąć playlistę \"%1$s\"?</string>
     <string name="music_track_already_in_playlist">Ten utwór jest już na playliście</string>
@@ -315,9 +290,7 @@
     <string name="music_fullscreen">Włącz pełny ekran</string>
     <string name="music_exit_fullscreen">Wyłącz pełny ekran</string>
     <string name="music_browse_album_artists">Wykonawcy albumów</string>
-    <string name="music_browse_album_artists_desc">Przeglądaj według wykonawców albumów</string>
     <string name="music_browse_all_albums">Wszystkie albumy</string>
-    <string name="music_browse_all_albums_desc">Przeglądaj wszystkie albumy</string>
     <string name="music_browse_search">Szukaj</string>
     <string name="music_browse_search_desc">Szukaj utworów, wykonawców, albumów</string>
     <string name="music_browse_folders">Foldery</string>
@@ -336,9 +309,6 @@
     <string name="music_search_hint">Szukaj…</string>
     <string name="music_search_no_results">Brak wyników</string>
     <string name="music_search_results">%1$d wynik(ów)</string>
-    <string name="music_search_section_tracks">Utwory</string>
-    <string name="music_search_section_albums">Albumy</string>
-    <string name="music_search_section_artists">Wykonawcy</string>
     <string name="music_queue">Kolejka</string>
     <string name="music_queue_count">(%1$d utworów)</string>
     <string name="music_queue_position_format">%1$02d</string>
@@ -390,13 +360,11 @@
     <string name="music_track_deleted">Plik usunięty</string>
     <string name="music_album_deleted">Album usunięty (%1$d plików)</string>
     <string name="music_delete_error">Błąd usuwania</string>
-    <string name="music_delete_permission_required">Wymagane uprawnienia do usunięcia tego pliku</string>
     <string name="music_viz_julia_grayscale">Julia Skala szarości</string>
     <string name="music_viz_penrose">Losanges flottants</string>
     <string name="music_viz_penrose_true">Penrose</string>
     <string name="navidrome_settings">Ustawienia Navidrome</string>
     <string name="navidrome_server_url">Adres serwera</string>
-    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
     <string name="navidrome_username">Nazwa użytkownika</string>
     <string name="navidrome_password">Hasło</string>
     <string name="navidrome_test_connection">Testuj połączenie</string>
@@ -409,7 +377,4 @@
     <string name="music_settings_trusted_wifi_active">Synchronizacja LAN aktywna w sieci «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">Synchronizacja LAN wyłączona w tej sieci</string>
     <string name="music_settings_trusted_wifi_no_wifi">Brak połączenia z Wi-Fi</string>
-    <string name="lan_sync_notif_channel">Synchronizacja LAN</string>
-    <string name="lan_sync_notif_title">Synchronizacja A2U</string>
-    <string name="lan_sync_notif_text">Synchronizowanie historii słuchania z pobliskimi urządzeniami</string>
 </resources>

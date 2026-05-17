@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">PDF, CBZ and image folder reader</string>
     <string name="comics_library_title">Comics Library</string>
     <string name="comics_library_empty">No comics yet</string>
-    <string name="comics_library_empty_hint">Tap + to add your first comic</string>
     <string name="comics_add_title">Add a comic</string>
     <string name="comics_add_pdf">PDF file</string>
     <string name="comics_add_cbz">CBZ / ZIP file</string>

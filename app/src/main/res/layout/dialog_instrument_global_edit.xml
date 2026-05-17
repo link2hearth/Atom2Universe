@@ -22,7 +22,6 @@
 
         <!-- Info text explaining global parameters -->
         <TextView
-            android:id="@+id/global_params_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -4,7 +4,6 @@
     <string name="hub_comics_desc">Pembaca PDF, CBZ, dan folder gambar</string>
     <string name="comics_library_title">Pustaka Komik</string>
     <string name="comics_library_empty">Belum ada komik</string>
-    <string name="comics_library_empty_hint">Ketuk + untuk menambahkan komik pertama Anda</string>
     <string name="comics_add_title">Tambah komik</string>
     <string name="comics_add_pdf">File PDF</string>
     <string name="comics_add_cbz">File CBZ / ZIP</string>
