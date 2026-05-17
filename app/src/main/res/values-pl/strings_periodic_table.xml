@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Otwórz układ okresowy</string>
+    <string name="periodic_info_atomic_number">Liczba atomowa</string>
+    <string name="periodic_info_mass">Masa</string>
+    <string name="periodic_info_period">Okres</string>
+    <string name="periodic_info_symbol">Symbol</string>
+    <string name="periodic_info_category">Kategoria</string>
+    <string name="periodic_info_group">Grupa</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Dotknij nazwy, aby zobaczyć opis</string>
+    <string name="periodic_table_title">Układ Okresowy</string>
+    <string name="periodic_prop_phase">Faza</string>
+    <string name="periodic_prop_density">Gęstość</string>
+    <string name="periodic_prop_melt">Temperatura topnienia</string>
+    <string name="periodic_prop_boil">Temperatura wrzenia</string>
+    <string name="periodic_prop_block">Blok orbitalny</string>
+    <string name="periodic_prop_electronegativity">Elektroujemność</string>
+    <string name="periodic_prop_electron_config">Konfiguracja elektr.</string>
+    <string name="periodic_prop_discovered_by">Odkryty przez</string>
+    <string name="periodic_prop_named_by">Nazwany przez</string>
+    <string name="periodic_prop_appearance">Wygląd</string>
+    <string name="periodic_prop_unknown">Nieznany</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Właściwości fizyczne &amp; chemiczne</string>
+    <string name="periodic_atom_section_title">Model Bohra</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+</resources>

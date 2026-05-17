@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="survivor_title">SURVIVOR</string>
+    <string name="survivor_description">Überlebe Feindwellen mit Waffen und Upgrades</string>
+    <string name="survivor_resume">FORTSETZEN</string>
+    <string name="survivor_quit">BEENDEN</string>
+    <string name="survivor_game_over">GAME OVER</string>
+    <string name="survivor_level_up">LEVEL UP!</string>
+    <string name="survivor_choose_upgrade">Wähle ein Upgrade:</string>
+    <string name="survivor_weapon_projectile">Projektile</string>
+    <string name="survivor_weapon_laser">Laser</string>
+    <string name="survivor_weapon_aura">Aura</string>
+    <string name="survivor_weapon_bouncing">Abpraller</string>
+    <string name="survivor_weapon_bomb">Bombe</string>
+    <string name="survivor_tap_to_start">Tippen zum Starten</string>
+    <string name="survivor_paused">Pause</string>
+    <string name="survivor_restart">Neustart</string>
+    <string name="survivor_menu">MENÜ</string>
+    <string name="survivor_wave">Welle</string>
+    <string name="survivor_kills">Kills</string>
+    <string name="survivor_best">Bestes</string>
+    <string name="survivor_boss">BOSS!</string>
+    <string name="survivor_upg_speed">Geschwindigkeit</string>
+    <string name="survivor_upg_speed_desc">+25 Bewegungsgeschwindigkeit</string>
+    <string name="survivor_upg_max_hp">Max. Leben</string>
+    <string name="survivor_upg_max_hp_desc">+20 max. LP und vollständige Heilung</string>
+    <string name="survivor_upg_life_steal">Lebensraub</string>
+    <string name="survivor_upg_life_steal_desc">+2% Lebensraub bei Treffern</string>
+    <string name="survivor_upg_regen">Regeneration</string>
+    <string name="survivor_upg_regen_desc">+1 LP pro Sekunde</string>
+    <string name="survivor_upg_armor">Rüstung</string>
+    <string name="survivor_upg_armor_desc" formatted="false">+5% Schadensreduktion</string>
+    <string name="survivor_upg_crit">Kritischer Treffer</string>
+    <string name="survivor_upg_crit_desc" formatted="false">+5% Chance auf kritischen Schaden (x1.5 Basis)</string>
+    <string name="survivor_upg_crit_mult">Krit. Multiplikator</string>
+    <string name="survivor_upg_crit_mult_desc">+0.5 zum kritischen Schadensmultiplikator</string>
+    <string name="survivor_upg_revive">Wiederbelebung</string>
+    <string name="survivor_upg_revive_desc">+1 automatische Wiederbelebung beim Tod</string>
+    <string name="survivor_upg_xp_bonus">XP-Boost</string>
+    <string name="survivor_upg_xp_bonus_desc" formatted="false">+10% erhaltene EP</string>
+    <string name="survivor_upg_shield">Schild</string>
+    <string name="survivor_upg_shield_desc">+25 max. Schild</string>
+    <string name="survivor_upg_thorns">Dornen</string>
+    <string name="survivor_upg_thorns_desc">Schild reflektiert 15% des absorbierten Schadens auf nahe Feinde</string>
+    <string name="survivor_upg_explosion_on_kill">Kettenreaktion</string>
+    <string name="survivor_upg_explosion_on_kill_desc" formatted="false">+12% Chance, dass ein getöteter Feind explodiert</string>
+    <string name="survivor_upg_unlock_laser">Laserstrahl</string>
+    <string name="survivor_upg_unlock_laser_desc">Freischalten: feuert einen Laser auf den nächsten Feind</string>
+    <string name="survivor_upg_unlock_aura">Schadensaura</string>
+    <string name="survivor_upg_unlock_aura_desc">Freischalten: Aura, die nahe Feinde verlangsamt und schädigt</string>
+    <string name="survivor_upg_unlock_bouncing">Abprallschuss</string>
+    <string name="survivor_upg_unlock_bouncing_desc">Freischalten: Projektil, das zwischen Feinden abprallt</string>
+    <string name="survivor_upg_unlock_bomb">Bombe</string>
+    <string name="survivor_upg_unlock_bomb_desc">Freischalten: wirft eine Bombe, die beim Aufprall explodiert</string>
+    <string name="survivor_upg_unlock_orbital">Orbitalkugeln</string>
+    <string name="survivor_upg_unlock_orbital_desc">Freischalten: Kugeln, die um dich kreisen und Feinde schädigen</string>
+    <string name="survivor_upg_unlock_chain_lightning">Kettenblitz</string>
+    <string name="survivor_upg_unlock_chain_lightning_desc">Freischalten: Blitz, der zwischen mehreren Feinden springt</string>
+    <string name="survivor_upg_proj_count">+1 Projektil</string>
+    <string name="survivor_upg_proj_count_desc">Feuert ein zusätzliches Projektil pro Schuss</string>
+    <string name="survivor_upg_proj_dmg">Projektilschaden</string>
+    <string name="survivor_upg_proj_dmg_desc">+20% Projektilschaden</string>
+    <string name="survivor_upg_proj_rate">Feuerrate</string>
+    <string name="survivor_upg_proj_rate_desc">+10% Projektilfeuerrate</string>
+    <string name="survivor_upg_proj_speed">Projektilgeschwindigkeit</string>
+    <string name="survivor_upg_proj_speed_desc">+15% Projektilgeschwindigkeit</string>
+    <string name="survivor_upg_proj_pen">Durchdringung</string>
+    <string name="survivor_upg_proj_pen_desc">+1 durchdrungener Feind pro Projektil</string>
+    <string name="survivor_upg_proj_range">Projektilreichweite</string>
+    <string name="survivor_upg_proj_range_desc">+20% Projektilreichweite</string>
+    <string name="survivor_upg_proj_fork">Gabelschuss</string>
+    <string name="survivor_upg_proj_fork_desc">Projektile teilen sich beim Aufprall in 2</string>
+    <string name="survivor_upg_poison">Gift</string>
+    <string name="survivor_upg_poison_desc">Projektile verursachen ein Gift-DoT (stapelbar)</string>
+    <string name="survivor_upg_laser_range">Laserreichweite</string>
+    <string name="survivor_upg_laser_range_desc">+20% Laserreichweite</string>
+    <string name="survivor_upg_laser_dmg">Laserschaden</string>
+    <string name="survivor_upg_laser_dmg_desc">+20% Laserschaden</string>
+    <string name="survivor_upg_laser_burn">Verbrennung</string>
+    <string name="survivor_upg_laser_burn_desc" formatted="false">Laser entzündet Feinde: +20% Verbrennung-DoT über 2s</string>
+    <string name="survivor_upg_laser_rate">Laser-Feuerrate</string>
+    <string name="survivor_upg_laser_rate_desc">+15% Laser-Feuerrate</string>
+    <string name="survivor_upg_laser_multi">Multi-Laser</string>
+    <string name="survivor_upg_laser_multi_desc">+1 zusätzlicher paralleler Laser</string>
+    <string name="survivor_upg_aura_radius">Aura-Radius</string>
+    <string name="survivor_upg_aura_radius_desc" formatted="false">+15% Aura-Radius</string>
+    <string name="survivor_upg_aura_dmg">Aura-Schaden</string>
+    <string name="survivor_upg_aura_dmg_desc" formatted="false">+20% Aura-DPS</string>
+    <string name="survivor_upg_aura_slow">Aura-Verlangsamung</string>
+    <string name="survivor_upg_aura_slow_desc" formatted="false">+5% Feindverlangsamung in der Aura</string>
+    <string name="survivor_upg_aura_tick">Aura-Frequenz</string>
+    <string name="survivor_upg_aura_tick_desc" formatted="false">+15% Aura-Tick-Rate</string>
+    <string name="survivor_upg_bounce_count">Mehr Abpraller</string>
+    <string name="survivor_upg_bounce_count_desc">+1 max. Abpraller</string>
+    <string name="survivor_upg_bounce_dmg">Abprallschaden</string>
+    <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% Abprallschaden</string>
+    <string name="survivor_upg_bounce_speed">Abprallgeschwindigkeit</string>
+    <string name="survivor_upg_bounce_speed_desc" formatted="false">+15% Abprall-Projektilgeschwindigkeit</string>
+    <string name="survivor_upg_bounce_rate">Abprall-Feuerrate</string>
+    <string name="survivor_upg_bounce_rate_desc" formatted="false">+10% Abprall-Feuerrate</string>
+    <string name="survivor_upg_bomb_radius">Explosionsradius</string>
+    <string name="survivor_upg_bomb_radius_desc" formatted="false">+10% Explosionsradius</string>
+    <string name="survivor_upg_bomb_dmg">Bombenschaden</string>
+    <string name="survivor_upg_bomb_dmg_desc" formatted="false">+20% Bombenschaden</string>
+    <string name="survivor_upg_bomb_rate">Bomben-Feuerrate</string>
+    <string name="survivor_upg_bomb_rate_desc" formatted="false">+10% Bomben-Feuerrate</string>
+    <string name="survivor_upg_bomb_multi">Multi-Bombe</string>
+    <string name="survivor_upg_bomb_multi_desc">+1 Bombe pro Wurf</string>
+    <string name="survivor_upg_bomb_residue">Rückstand</string>
+    <string name="survivor_upg_bomb_residue_desc">Explosionen hinterlassen 2s eine Giftzone, die alle 0,5s 1/5 des Bombenschadens verursacht</string>
+    <string name="survivor_upg_bomb_residue_duration">Rückstandsdauer</string>
+    <string name="survivor_upg_bomb_residue_duration_desc">+0,5s Zonenzeit pro Level</string>
+    <string name="survivor_upg_chain_dmg">Blitzschaden</string>
+    <string name="survivor_upg_chain_dmg_desc">+1 Schaden pro Level</string>
+    <string name="survivor_upg_chain_bounces">Mehr Ketten</string>
+    <string name="survivor_upg_chain_bounces_desc">+1 zusätzlicher Kettensprung</string>
+    <string name="survivor_upg_chain_rate">Blitz-Feuerrate</string>
+    <string name="survivor_upg_chain_rate_desc" formatted="false">+10% Blitz-Feuerrate</string>
+    <string name="survivor_upg_chain_range">Blitzreichweite</string>
+    <string name="survivor_upg_chain_range_desc">+50 Reichweite pro Level (max 800)</string>
+    <string name="survivor_upg_chain_split">Kettenspaltung</string>
+    <string name="survivor_upg_chain_split_desc">+10% Chance pro Level, den Blitz bei jedem Feind aufzuteilen (max 50%)</string>
+    <string name="survivor_upg_orbital_count">+1 Orbital</string>
+    <string name="survivor_upg_orbital_count_desc">Fügt eine weitere Orbitalkugel hinzu</string>
+    <string name="survivor_upg_orbital_dmg">Orbitalschaden</string>
+    <string name="survivor_upg_orbital_dmg_desc">+20% Orbitalschaden</string>
+    <string name="survivor_upg_orbital_speed">Orbitalgeschwindigkeit</string>
+    <string name="survivor_upg_orbital_speed_desc">+30% Orbitalrotationsgeschwindigkeit</string>
+    <string name="survivor_upg_orbital_rate">Orbital-Feuerrate</string>
+    <string name="survivor_upg_orbital_rate_desc" formatted="false">+15% Orbital-Feuerrate</string>
+    <string name="survivor_upg_orbital_multi">+1 Orbitalschuss</string>
+    <string name="survivor_upg_orbital_multi_desc">Jede Kugel feuert ein zusätzliches Projektil</string>
+    <string name="survivor_upg_orbital_frag">Orbitalfragmentierung</string>
+    <string name="survivor_upg_orbital_frag_desc">Orbitalprojektile teilen sich beim Aufprall in 2</string>
+    <string name="survivor_upg_orbital_poison">Orbital-Gift</string>
+    <string name="survivor_upg_orbital_poison_desc">Orbitalprojektile verursachen ein Gift-DoT</string>
+    <string name="survivor_upg_orbital_burn">Orbital-Verbrennung</string>
+    <string name="survivor_upg_orbital_burn_desc">Orbitalprojektile entzünden Feinde für 2s</string>
+    <string name="survivor_select_weapon">Wähle deine Startwaffe</string>
+    <string name="survivor_weapon_chain_lightning">Kettenblitz</string>
+    <string name="survivor_weapon_orbital">Orbital</string>
+    <string name="survivor_weapon_desc_projectile">Feuert Projektile auf den nächsten Feind</string>
+    <string name="survivor_weapon_desc_laser">Feuert einen Laserstrahl, kann Feinde verbrennen</string>
+    <string name="survivor_weapon_desc_aura">Schädigt und verlangsamt alle nahen Feinde</string>
+    <string name="survivor_weapon_desc_bouncing">Ball, der zwischen Feinden abprallt</string>
+    <string name="survivor_weapon_desc_bomb">Wirft Bomben, die beim Aufprall explodieren</string>
+    <string name="survivor_weapon_desc_chain_lightning">Blitz, der zwischen Feinden springt</string>
+    <string name="survivor_weapon_desc_orbital">Kugeln, die um dich kreisen und auf Feinde schießen</string>
+</resources>

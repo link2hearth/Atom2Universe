@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_back">Atras</string>
     <string name="stats_tab_day">Hoy</string>
     <string name="stats_tab_week">Semana</string>
     <string name="stats_tab_month">Mes</string>

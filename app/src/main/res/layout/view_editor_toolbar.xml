@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:scrollbars="none"
@@ -21,7 +22,7 @@
             android:src="@drawable/ic_code_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_toggle_source"
-            android:tint="#94A3B8" />
+            app:tint="#94A3B8" />
 
         <ImageButton
             android:id="@+id/btn_bold"
@@ -30,7 +31,7 @@
             android:src="@drawable/ic_format_bold_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_format_bold"
-            android:tint="#94A3B8" />
+            app:tint="#94A3B8" />
 
         <ImageButton
             android:id="@+id/btn_italic"
@@ -39,7 +40,7 @@
             android:src="@drawable/ic_format_italic_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_format_italic"
-            android:tint="#94A3B8" />
+            app:tint="#94A3B8" />
 
         <ImageButton
             android:id="@+id/btn_underline"
@@ -48,7 +49,7 @@
             android:src="@drawable/ic_format_underline_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_format_underline"
-            android:tint="#94A3B8" />
+            app:tint="#94A3B8" />
 
         <TextView
             android:id="@+id/btn_h1"
@@ -96,7 +97,7 @@
             android:src="@drawable/ic_link_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_insert_link"
-            android:tint="#94A3B8" />
+            app:tint="#94A3B8" />
 
         <ImageButton
             android:id="@+id/btn_font_size"
@@ -105,7 +106,7 @@
             android:src="@drawable/ic_format_size_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_font_size"
-            android:tint="#94A3B8" />
+            app:tint="#94A3B8" />
 
         <ImageButton
             android:id="@+id/btn_font_family"
@@ -114,7 +115,7 @@
             android:src="@drawable/ic_font_download_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_font_family"
-            android:tint="#94A3B8" />
+            app:tint="#94A3B8" />
 
     </LinearLayout>
 </HorizontalScrollView>

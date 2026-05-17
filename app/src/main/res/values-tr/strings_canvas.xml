@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Yaratıcı Tuval</string>
+    <string name="canvas_fit_content">İçeriği sığdır</string>
+    <string name="canvas_toggle_grid">Kılavuz</string>
+    <string name="canvas_menu">Menü</string>
+    <string name="canvas_tool_pan">Kaydır</string>
+    <string name="canvas_tool_select">Seç</string>
+    <string name="canvas_tool_draw">Çiz</string>
+    <string name="canvas_tool_shape">Şekil</string>
+    <string name="canvas_tool_text">Metin</string>
+    <string name="canvas_tool_image">Görsel</string>
+    <string name="canvas_menu_new">Yeni tuval</string>
+    <string name="canvas_menu_export">Dışa aktar</string>
+    <string name="canvas_menu_delete_selected">Seçimi sil</string>
+    <string name="canvas_menu_clear_all">Tümünü temizle</string>
+    <string name="canvas_new_created">Yeni tuval oluşturuldu</string>
+    <string name="canvas_exported">Tuval dışa aktarıldı</string>
+    <string name="canvas_empty">Boş tuval</string>
+    <string name="canvas_object_deleted">Nesne silindi</string>
+    <string name="canvas_cleared">Tuval temizlendi</string>
+    <string name="canvas_selected">Seçildi: %1$s</string>
+    <string name="canvas_image_imported">Görsel içe aktarıldı</string>
+    <string name="canvas_import_error">İçe aktarma hatası</string>
+    <string name="canvas_text_dialog_title">Metin ekle</string>
+    <string name="canvas_text_hint">Metninizi girin…</string>
+    <string name="canvas_text_font">Yazı tipi:</string>
+    <string name="canvas_text_size">Boyut: %d</string>
+    <string name="canvas_text_bold">Kalın</string>
+    <string name="canvas_text_italic">İtalik</string>
+    <string name="canvas_color_picker_title">Renk seç</string>
+    <string name="canvas_brush_size_title">Fırça boyutu</string>
+    <string name="canvas_layers">Katmanlar</string>
+    <string name="canvas_layer_bring_front">Öne getir</string>
+    <string name="canvas_layer_bring_forward">İleri taşı</string>
+    <string name="canvas_layer_send_backward">Geri taşı</string>
+    <string name="canvas_layer_send_back">Arkaya gönder</string>
+    <string name="canvas_layer_no_selection">Önce bir nesne seçin</string>
+    <string name="canvas_undo">Geri al</string>
+    <string name="canvas_redo">Yeniden yap</string>
+    <string name="canvas_delete">Sil</string>
+    <string name="canvas_undo_action">Eylem geri alındı</string>
+    <string name="canvas_redo_action">Eylem yeniden yapıldı</string>
+    <string name="canvas_nothing_to_undo">Geri alınacak bir şey yok</string>
+    <string name="canvas_nothing_to_redo">Yeniden yapılacak bir şey yok</string>
+    <string name="canvas_object_restored">Nesne geri yüklendi</string>
+</resources>

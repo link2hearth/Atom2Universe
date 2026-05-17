@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_back">Назад</string>
     <string name="stats_tab_day">Сьогодні</string>
     <string name="stats_tab_week">Тиждень</string>
     <string name="stats_tab_month">Місяць</string>

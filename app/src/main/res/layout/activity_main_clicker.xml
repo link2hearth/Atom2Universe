@@ -468,7 +468,7 @@
         android:contentDescription="@string/crypto_background_settings"
         android:padding="10dp"
         android:src="@drawable/ic_settings_24"
-        android:tint="@color/crypto_banner_arrow"
+        app:tint="@color/crypto_banner_arrow"
         app:layout_constraintBottom_toBottomOf="@id/main_clicker_top_banner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/main_clicker_top_banner" />

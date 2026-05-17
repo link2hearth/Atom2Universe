@@ -64,7 +64,7 @@
     <string name="settings_cleanup_nothing_to_clean">Nic do wyczyszczenia</string>
     <string name="settings_cleanup_error">❌ Błąd podczas czyszczenia</string>
     <string name="settings_cleanup_error_short">Błąd podczas czyszczenia</string>
-    <string name="settings_cleanup_last_day" tools:ignore="StringFormatCount">Ostatnie czyszczenie: %1$d dzień/dni temu</string>
+    <string name="settings_cleanup_last_day">Ostatnie czyszczenie: %1$d dzień%2$s temu</string>
     <string name="settings_cleanup_last_hour">Ostatnie czyszczenie: %1$d godzin%2$s temu</string>
     <string name="settings_cleanup_last_now">Ostatnie czyszczenie: przed chwilą</string>
     <string name="settings_cleanup_snackbar">🧹 Czyszczenie: %1$d plików usuniętych, %2$s MB zwolnione</string>

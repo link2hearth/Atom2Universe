@@ -42,7 +42,7 @@
             android:layout_height="16dp"
             android:layout_marginStart="2dp"
             android:src="@drawable/ic_expand_more_24"
-            android:tint="#64748B"
+            app:tint="#64748B"
             android:contentDescription="@null" />
 
         <ImageView
@@ -51,7 +51,7 @@
             android:layout_height="16dp"
             android:layout_marginStart="2dp"
             android:src="@drawable/ic_edit_24"
-            android:tint="#64748B"
+            app:tint="#64748B"
             android:contentDescription="@string/notes_edit_tag"
             android:clickable="true"
             android:focusable="true" />

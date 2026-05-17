@@ -15,6 +15,7 @@
     <string name="survivor_tap_to_start">Tap to Start</string>
     <string name="survivor_paused">Paused</string>
     <string name="survivor_restart">Restart</string>
+    <string name="survivor_menu">MENU</string>
     <string name="survivor_wave">Wave</string>
     <string name="survivor_kills">Kills</string>
     <string name="survivor_best">Best</string>

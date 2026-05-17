@@ -14,7 +14,7 @@
         android:contentDescription="@string/color_stack_back"
         android:padding="10dp"
         android:src="@drawable/ic_arrow_back_24"
-        android:tint="#94A3B8"
+        app:tint="#94A3B8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

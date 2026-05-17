@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Buka tabel periodik</string>
+    <string name="periodic_info_atomic_number">Nomor atom</string>
+    <string name="periodic_info_mass">Massa</string>
+    <string name="periodic_info_period">Periode</string>
+    <string name="periodic_info_symbol">Simbol</string>
+    <string name="periodic_info_category">Kategori</string>
+    <string name="periodic_info_group">Golongan</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Ketuk nama untuk melihat deskripsi</string>
+    <string name="periodic_table_title">Tabel Periodik</string>
+
+    <string name="periodic_prop_phase">Fase</string>
+    <string name="periodic_prop_density">Densitas</string>
+    <string name="periodic_prop_melt">Titik lebur</string>
+    <string name="periodic_prop_boil">Titik didih</string>
+    <string name="periodic_prop_block">Blok orbital</string>
+    <string name="periodic_prop_electronegativity">Elektronegativitas</string>
+    <string name="periodic_prop_electron_config">Konfigurasi elektron</string>
+    <string name="periodic_prop_discovered_by">Ditemukan oleh</string>
+    <string name="periodic_prop_named_by">Dinamai oleh</string>
+    <string name="periodic_prop_appearance">Penampilan</string>
+    <string name="periodic_prop_unknown">Tidak diketahui</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Sifat Fisika &amp; Kimia</string>
+    <string name="periodic_atom_section_title">Model Bohr</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+
+</resources>

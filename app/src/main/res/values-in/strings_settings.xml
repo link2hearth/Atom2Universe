@@ -64,8 +64,8 @@
     <string name="settings_cleanup_nothing_to_clean">Tidak ada yang perlu dibersihkan</string>
     <string name="settings_cleanup_error">❌ Kesalahan saat pembersihan</string>
     <string name="settings_cleanup_error_short">Kesalahan saat pembersihan</string>
-    <string name="settings_cleanup_last_day" tools:ignore="StringFormatCount">Pembersihan terakhir: %1$d hari yang lalu</string>
-    <string name="settings_cleanup_last_hour" tools:ignore="StringFormatCount">Pembersihan terakhir: %1$d jam yang lalu</string>
+    <string name="settings_cleanup_last_day">Pembersihan terakhir: %1$d hari yang lalu%2$s</string>
+    <string name="settings_cleanup_last_hour">Pembersihan terakhir: %1$d jam yang lalu%2$s</string>
     <string name="settings_cleanup_last_now">Pembersihan terakhir: baru saja</string>
     <string name="settings_cleanup_snackbar">🧹 Pembersihan: %1$d file dihapus, %2$s MB dibebaskan</string>
     <string name="atom_animated">Atom beranimasi</string>

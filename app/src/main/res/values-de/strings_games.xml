@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_back">Zurück</string>
     <string name="stats_tab_day">Heute</string>
     <string name="stats_tab_week">Woche</string>
     <string name="stats_tab_month">Monat</string>

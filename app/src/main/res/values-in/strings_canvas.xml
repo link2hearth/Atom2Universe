@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Kanvas Kreatif</string>
+    <string name="canvas_fit_content">Sesuaikan konten</string>
+    <string name="canvas_toggle_grid">Grid</string>
+    <string name="canvas_menu">Menu</string>
+    <string name="canvas_tool_pan">Geser</string>
+    <string name="canvas_tool_select">Pilih</string>
+    <string name="canvas_tool_draw">Gambar</string>
+    <string name="canvas_tool_shape">Bentuk</string>
+    <string name="canvas_tool_text">Teks</string>
+    <string name="canvas_tool_image">Gambar</string>
+    <string name="canvas_menu_new">Kanvas baru</string>
+    <string name="canvas_menu_export">Ekspor</string>
+    <string name="canvas_menu_delete_selected">Hapus pilihan</string>
+    <string name="canvas_menu_clear_all">Hapus semua</string>
+    <string name="canvas_new_created">Kanvas baru dibuat</string>
+    <string name="canvas_exported">Kanvas diekspor</string>
+    <string name="canvas_empty">Kanvas kosong</string>
+    <string name="canvas_object_deleted">Objek dihapus</string>
+    <string name="canvas_cleared">Kanvas dibersihkan</string>
+    <string name="canvas_selected">Dipilih: %1$s</string>
+    <string name="canvas_image_imported">Gambar diimpor</string>
+    <string name="canvas_import_error">Kesalahan impor</string>
+    <string name="canvas_text_dialog_title">Tambahkan teks</string>
+    <string name="canvas_text_hint">Masukkan teks Anda…</string>
+    <string name="canvas_text_font">Font:</string>
+    <string name="canvas_text_size">Ukuran: %d</string>
+    <string name="canvas_text_bold">Tebal</string>
+    <string name="canvas_text_italic">Miring</string>
+    <string name="canvas_color_picker_title">Pilih warna</string>
+    <string name="canvas_brush_size_title">Ukuran kuas</string>
+    <string name="canvas_layers">Lapisan</string>
+    <string name="canvas_layer_bring_front">Bawa ke depan</string>
+    <string name="canvas_layer_bring_forward">Maju</string>
+    <string name="canvas_layer_send_backward">Mundur</string>
+    <string name="canvas_layer_send_back">Kirim ke belakang</string>
+    <string name="canvas_layer_no_selection">Pilih objek terlebih dahulu</string>
+    <string name="canvas_undo">Batalkan</string>
+    <string name="canvas_redo">Ulangi</string>
+    <string name="canvas_delete">Hapus</string>
+    <string name="canvas_undo_action">Tindakan dibatalkan</string>
+    <string name="canvas_redo_action">Tindakan diulang</string>
+    <string name="canvas_nothing_to_undo">Tidak ada yang dibatalkan</string>
+    <string name="canvas_nothing_to_redo">Tidak ada yang diulang</string>
+    <string name="canvas_object_restored">Objek dipulihkan</string>
+</resources>

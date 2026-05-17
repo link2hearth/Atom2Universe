@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Periyodik tabloyu aç</string>
+    <string name="periodic_info_atomic_number">Atom numarası</string>
+    <string name="periodic_info_mass">Kütle</string>
+    <string name="periodic_info_period">Periyot</string>
+    <string name="periodic_info_symbol">Sembol</string>
+    <string name="periodic_info_category">Kategori</string>
+    <string name="periodic_info_group">Grup</string>
+    <string name="periodic_info_copies_badge" formatted="false">x%1$d</string>
+    <string name="periodic_info_hint">Açıklamayı görmek için ada dokunun</string>
+    <string name="periodic_table_title">Periyodik Tablo</string>
+    <string name="periodic_prop_phase">Faz</string>
+    <string name="periodic_prop_density">Yoğunluk</string>
+    <string name="periodic_prop_melt">Erime noktası</string>
+    <string name="periodic_prop_boil">Kaynama noktası</string>
+    <string name="periodic_prop_block">Yörünge bloğu</string>
+    <string name="periodic_prop_electronegativity">Elektronegatiflik</string>
+    <string name="periodic_prop_electron_config">Elektron yapısı</string>
+    <string name="periodic_prop_discovered_by">Keşfeden</string>
+    <string name="periodic_prop_named_by">Adlandıran</string>
+    <string name="periodic_prop_appearance">Görünüm</string>
+    <string name="periodic_prop_unknown">Bilinmiyor</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Fiziksel &amp; Kimyasal Özellikler</string>
+    <string name="periodic_atom_section_title">Bohr Modeli</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+</resources>

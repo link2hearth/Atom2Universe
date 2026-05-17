@@ -27,6 +27,7 @@ import androidx.media.session.MediaButtonReceiver
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.Atom2Universe.app.AudioFocusManager
@@ -397,6 +398,7 @@ object RadioPlaybackHolder {
      * Démarre la lecture d'une station
      * @return true si la lecture a démarré, false si l'URL est invalide
      */
+    @androidx.annotation.OptIn(UnstableApi::class)
     fun play(context: Context, station: RadioStation, forceReload: Boolean = false): Boolean {
         // Bug 4.22: Valider l'URL avant de continuer
         val stationUri = validateAndParseUrl(station.url)

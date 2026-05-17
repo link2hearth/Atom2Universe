@@ -37,7 +37,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_push_pin_24"
-                android:tint="#94A3B8"
+                app:tint="#94A3B8"
                 android:visibility="gone"
                 android:contentDescription="@null" />
 
@@ -71,7 +71,7 @@
                 android:layout_height="16dp"
                 android:layout_marginStart="4dp"
                 android:src="@drawable/ic_star_filled_24"
-                android:tint="#EAB308"
+                app:tint="#EAB308"
                 android:visibility="gone"
                 android:contentDescription="@null" />
 

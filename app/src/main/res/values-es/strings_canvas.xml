@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Lienzo creativo</string>
+    <string name="canvas_fit_content">Ajustar contenido</string>
+    <string name="canvas_toggle_grid">Cuadrícula</string>
+    <string name="canvas_menu">Menú</string>
+    <string name="canvas_tool_pan">Desplazar</string>
+    <string name="canvas_tool_select">Seleccionar</string>
+    <string name="canvas_tool_draw">Dibujar</string>
+    <string name="canvas_tool_shape">Forma</string>
+    <string name="canvas_tool_text">Texto</string>
+    <string name="canvas_tool_image">Imagen</string>
+    <string name="canvas_menu_new">Nuevo lienzo</string>
+    <string name="canvas_menu_export">Exportar</string>
+    <string name="canvas_menu_delete_selected">Eliminar selección</string>
+    <string name="canvas_menu_clear_all">Borrar todo</string>
+    <string name="canvas_new_created">Nuevo lienzo creado</string>
+    <string name="canvas_exported">Lienzo exportado</string>
+    <string name="canvas_empty">Lienzo vacío</string>
+    <string name="canvas_object_deleted">Objeto eliminado</string>
+    <string name="canvas_cleared">Lienzo borrado</string>
+    <string name="canvas_selected">Seleccionado: %1$s</string>
+    <string name="canvas_image_imported">Imagen importada</string>
+    <string name="canvas_import_error">Error de importación</string>
+    <string name="canvas_text_dialog_title">Añadir texto</string>
+    <string name="canvas_text_hint">Escribe tu texto…</string>
+    <string name="canvas_text_font">Fuente:</string>
+    <string name="canvas_text_size">Tamaño: %d</string>
+    <string name="canvas_text_bold">Negrita</string>
+    <string name="canvas_text_italic">Cursiva</string>
+    <string name="canvas_color_picker_title">Elige un color</string>
+    <string name="canvas_brush_size_title">Tamaño del pincel</string>
+    <string name="canvas_layers">Capas</string>
+    <string name="canvas_layer_bring_front">Traer al frente</string>
+    <string name="canvas_layer_bring_forward">Avanzar</string>
+    <string name="canvas_layer_send_backward">Retroceder</string>
+    <string name="canvas_layer_send_back">Enviar al fondo</string>
+    <string name="canvas_layer_no_selection">Selecciona un objeto primero</string>
+    <string name="canvas_undo">Deshacer</string>
+    <string name="canvas_redo">Rehacer</string>
+    <string name="canvas_delete">Eliminar</string>
+    <string name="canvas_undo_action">Acción deshecha</string>
+    <string name="canvas_redo_action">Acción rehecha</string>
+    <string name="canvas_nothing_to_undo">Nada que deshacer</string>
+    <string name="canvas_nothing_to_redo">Nada que rehacer</string>
+    <string name="canvas_object_restored">Objeto restaurado</string>
+</resources>

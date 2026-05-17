@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Творческий холст</string>
+    <string name="canvas_fit_content">По размеру</string>
+    <string name="canvas_toggle_grid">Сетка</string>
+    <string name="canvas_menu">Меню</string>
+    <string name="canvas_tool_pan">Перемещение</string>
+    <string name="canvas_tool_select">Выделить</string>
+    <string name="canvas_tool_draw">Рисовать</string>
+    <string name="canvas_tool_shape">Фигура</string>
+    <string name="canvas_tool_text">Текст</string>
+    <string name="canvas_tool_image">Изображение</string>
+    <string name="canvas_menu_new">Новый холст</string>
+    <string name="canvas_menu_export">Экспорт</string>
+    <string name="canvas_menu_delete_selected">Удалить выделение</string>
+    <string name="canvas_menu_clear_all">Очистить всё</string>
+    <string name="canvas_new_created">Новый холст создан</string>
+    <string name="canvas_exported">Холст экспортирован</string>
+    <string name="canvas_empty">Пустой холст</string>
+    <string name="canvas_object_deleted">Объект удалён</string>
+    <string name="canvas_cleared">Холст очищен</string>
+    <string name="canvas_selected">Выбрано: %1$s</string>
+    <string name="canvas_image_imported">Изображение импортировано</string>
+    <string name="canvas_import_error">Ошибка импорта</string>
+    <string name="canvas_text_dialog_title">Добавить текст</string>
+    <string name="canvas_text_hint">Введите текст…</string>
+    <string name="canvas_text_font">Шрифт:</string>
+    <string name="canvas_text_size">Размер: %d</string>
+    <string name="canvas_text_bold">Жирный</string>
+    <string name="canvas_text_italic">Курсив</string>
+    <string name="canvas_color_picker_title">Выбрать цвет</string>
+    <string name="canvas_brush_size_title">Размер кисти</string>
+    <string name="canvas_layers">Слои</string>
+    <string name="canvas_layer_bring_front">На передний план</string>
+    <string name="canvas_layer_bring_forward">Поднять</string>
+    <string name="canvas_layer_send_backward">Опустить</string>
+    <string name="canvas_layer_send_back">На задний план</string>
+    <string name="canvas_layer_no_selection">Сначала выберите объект</string>
+    <string name="canvas_undo">Отменить</string>
+    <string name="canvas_redo">Повторить</string>
+    <string name="canvas_delete">Удалить</string>
+    <string name="canvas_undo_action">Действие отменено</string>
+    <string name="canvas_redo_action">Действие повторено</string>
+    <string name="canvas_nothing_to_undo">Нечего отменять</string>
+    <string name="canvas_nothing_to_redo">Нечего повторять</string>
+    <string name="canvas_object_restored">Объект восстановлен</string>
+</resources>

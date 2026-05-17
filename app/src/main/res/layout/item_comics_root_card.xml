@@ -20,7 +20,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_hub_comics"
-            android:tint="#BB86FC"
+            app:tint="#BB86FC"
             android:contentDescription="@null" />
 
         <LinearLayout

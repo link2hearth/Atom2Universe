@@ -64,8 +64,8 @@
     <string name="settings_cleanup_nothing_to_clean">Temizlenecek bir şey yok</string>
     <string name="settings_cleanup_error">❌ Temizleme sırasında hata</string>
     <string name="settings_cleanup_error_short">Temizleme sırasında hata</string>
-    <string name="settings_cleanup_last_day" tools:ignore="StringFormatCount">Son temizleme: %1$d gün önce</string>
-    <string name="settings_cleanup_last_hour" tools:ignore="StringFormatCount">Son temizleme: %1$d saat önce</string>
+    <string name="settings_cleanup_last_day">Son temizleme: %1$d gün%2$s önce</string>
+    <string name="settings_cleanup_last_hour">Son temizleme: %1$d saat%2$s önce</string>
     <string name="settings_cleanup_last_now">Son temizleme: şimdi</string>
     <string name="settings_cleanup_snackbar">🧹 Temizleme: %1$d dosya silindi, %2$s MB boşaltıldı</string>
     <string name="atom_animated">Animasyonlu atom</string>

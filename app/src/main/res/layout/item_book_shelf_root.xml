@@ -20,7 +20,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_hub_books"
-            android:tint="#BCAAA4"
+            app:tint="#BCAAA4"
             android:contentDescription="@null" />
 
         <LinearLayout

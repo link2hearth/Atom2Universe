@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Открыть периодическую таблицу</string>
+    <string name="periodic_info_atomic_number">Атомный номер</string>
+    <string name="periodic_info_mass">Масса</string>
+    <string name="periodic_info_period">Период</string>
+    <string name="periodic_info_symbol">Символ</string>
+    <string name="periodic_info_category">Категория</string>
+    <string name="periodic_info_group">Группа</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Нажмите на название, чтобы увидеть описание</string>
+    <string name="periodic_table_title">Периодическая Таблица</string>
+    <string name="periodic_prop_phase">Фаза</string>
+    <string name="periodic_prop_density">Плотность</string>
+    <string name="periodic_prop_melt">Температура плавления</string>
+    <string name="periodic_prop_boil">Температура кипения</string>
+    <string name="periodic_prop_block">Орбитальный блок</string>
+    <string name="periodic_prop_electronegativity">Электроотрицательность</string>
+    <string name="periodic_prop_electron_config">Электронная конфигурация</string>
+    <string name="periodic_prop_discovered_by">Открыт</string>
+    <string name="periodic_prop_named_by">Назван</string>
+    <string name="periodic_prop_appearance">Внешний вид</string>
+    <string name="periodic_prop_unknown">Неизвестно</string>
+    <string name="periodic_prop_kelvin_suffix"> К</string>
+    <string name="periodic_prop_density_suffix"> г/см³</string>
+    <string name="periodic_prop_properties_title">Физические &amp; химические свойства</string>
+    <string name="periodic_atom_section_title">Модель Бора</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+</resources>

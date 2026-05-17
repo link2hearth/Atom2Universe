@@ -15,6 +15,7 @@
     <string name="survivor_tap_to_start">Appuyer pour commencer</string>
     <string name="survivor_paused">Pause</string>
     <string name="survivor_restart">Recommencer</string>
+    <string name="survivor_menu">MENU</string>
     <string name="survivor_best">Meilleur</string>
     <string name="survivor_boss">BOSS !</string>
     <string name="survivor_upg_speed">Vitesse</string>

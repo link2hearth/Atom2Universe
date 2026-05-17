@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="survivor_title">SURVIVOR</string>
+    <string name="survivor_description">Bertahan dari gelombang musuh dengan senjata dan peningkatan</string>
+    <string name="survivor_resume">LANJUTKAN</string>
+    <string name="survivor_quit">KELUAR</string>
+    <string name="survivor_game_over">GAME OVER</string>
+    <string name="survivor_level_up">NAIK LEVEL!</string>
+    <string name="survivor_choose_upgrade">Pilih peningkatan:</string>
+    <string name="survivor_weapon_projectile">Proyektil</string>
+    <string name="survivor_weapon_laser">Laser</string>
+    <string name="survivor_weapon_aura">Aura</string>
+    <string name="survivor_weapon_bouncing">Pantul</string>
+    <string name="survivor_weapon_bomb">Bom</string>
+    <string name="survivor_tap_to_start">Ketuk untuk mulai</string>
+    <string name="survivor_paused">Jeda</string>
+    <string name="survivor_restart">Mulai ulang</string>
+    <string name="survivor_menu">MENU</string>
+    <string name="survivor_wave">Gelombang</string>
+    <string name="survivor_kills">Kills</string>
+    <string name="survivor_best">Terbaik</string>
+    <string name="survivor_boss">BOS!</string>
+    <string name="survivor_upg_speed">Kecepatan</string>
+    <string name="survivor_upg_speed_desc">+25 kecepatan gerak</string>
+    <string name="survivor_upg_max_hp">HP Maks.</string>
+    <string name="survivor_upg_max_hp_desc">+20 HP maks. dan pemulihan penuh</string>
+    <string name="survivor_upg_life_steal">Curi Nyawa</string>
+    <string name="survivor_upg_life_steal_desc" formatted="false">+2% curi nyawa per serangan</string>
+    <string name="survivor_upg_regen">Regenerasi</string>
+    <string name="survivor_upg_regen_desc">+1 HP per detik</string>
+    <string name="survivor_upg_armor">Zirah</string>
+    <string name="survivor_upg_armor_desc">+5% pengurangan kerusakan</string>
+    <string name="survivor_upg_crit">Serangan Kritis</string>
+    <string name="survivor_upg_crit_desc" formatted="false">+5% peluang kerusakan kritis (x1.5 dasar)</string>
+    <string name="survivor_upg_crit_mult">Pengganda Kritis</string>
+    <string name="survivor_upg_crit_mult_desc">+0.5 ke pengganda kerusakan kritis</string>
+    <string name="survivor_upg_revive">Kebangkitan</string>
+    <string name="survivor_upg_revive_desc">+1 kebangkitan otomatis saat mati</string>
+    <string name="survivor_upg_xp_bonus">Bonus XP</string>
+    <string name="survivor_upg_xp_bonus_desc">+10% XP yang didapat</string>
+    <string name="survivor_upg_shield">Perisai</string>
+    <string name="survivor_upg_shield_desc">+25 perisai maks.</string>
+    <string name="survivor_upg_thorns">Duri</string>
+    <string name="survivor_upg_thorns_desc">Perisai memantulkan 15% kerusakan yang diserap ke musuh terdekat</string>
+    <string name="survivor_upg_explosion_on_kill">Reaksi Berantai</string>
+    <string name="survivor_upg_explosion_on_kill_desc" formatted="false">+12% peluang musuh yang terbunuh meledak</string>
+    <string name="survivor_upg_unlock_laser">Sinar Laser</string>
+    <string name="survivor_upg_unlock_laser_desc">Buka: tembakkan laser ke musuh terdekat</string>
+    <string name="survivor_upg_unlock_aura">Aura Kerusakan</string>
+    <string name="survivor_upg_unlock_aura_desc">Buka: aura yang memperlambat dan merusak musuh terdekat</string>
+    <string name="survivor_upg_unlock_bouncing">Tembakan Pantul</string>
+    <string name="survivor_upg_unlock_bouncing_desc">Buka: proyektil yang memantul antar musuh</string>
+    <string name="survivor_upg_unlock_bomb">Bom</string>
+    <string name="survivor_upg_unlock_bomb_desc">Buka: lempar bom yang meledak saat benturan</string>
+    <string name="survivor_upg_unlock_orbital">Bola Orbital</string>
+    <string name="survivor_upg_unlock_orbital_desc">Buka: bola yang mengorbit di sekitarmu dan merusak musuh</string>
+    <string name="survivor_upg_unlock_chain_lightning">Petir Berantai</string>
+    <string name="survivor_upg_unlock_chain_lightning_desc">Buka: petir yang melompat antar beberapa musuh</string>
+    <string name="survivor_upg_proj_count">+1 Proyektil</string>
+    <string name="survivor_upg_proj_count_desc">Tembakkan satu proyektil tambahan per tembakan</string>
+    <string name="survivor_upg_proj_dmg">Kerusakan Proyektil</string>
+    <string name="survivor_upg_proj_dmg_desc">+20% kerusakan proyektil</string>
+    <string name="survivor_upg_proj_rate">Laju Tembak</string>
+    <string name="survivor_upg_proj_rate_desc">+10% laju tembak proyektil</string>
+    <string name="survivor_upg_proj_speed">Kecepatan Proyektil</string>
+    <string name="survivor_upg_proj_speed_desc">+15% kecepatan proyektil</string>
+    <string name="survivor_upg_proj_pen">Tembus</string>
+    <string name="survivor_upg_proj_pen_desc">+1 musuh yang ditembus per proyektil</string>
+    <string name="survivor_upg_proj_range">Jangkauan Proyektil</string>
+    <string name="survivor_upg_proj_range_desc">+20% jangkauan proyektil</string>
+    <string name="survivor_upg_proj_fork">Tembakan Garpu</string>
+    <string name="survivor_upg_proj_fork_desc">Proyektil terbagi menjadi 2 saat benturan</string>
+    <string name="survivor_upg_poison">Racun</string>
+    <string name="survivor_upg_poison_desc">Proyektil menerapkan racun DoT (bisa ditumpuk)</string>
+    <string name="survivor_upg_laser_range">Jangkauan Laser</string>
+    <string name="survivor_upg_laser_range_desc">+20% jangkauan laser</string>
+    <string name="survivor_upg_laser_dmg">Kerusakan Laser</string>
+    <string name="survivor_upg_laser_dmg_desc">+20% kerusakan laser</string>
+    <string name="survivor_upg_laser_burn">Bakar</string>
+    <string name="survivor_upg_laser_burn_desc" formatted="false">Laser membakar musuh: +20% DoT bakar selama 2d</string>
+    <string name="survivor_upg_laser_rate">Laju Tembak Laser</string>
+    <string name="survivor_upg_laser_rate_desc">+15% laju tembak laser</string>
+    <string name="survivor_upg_laser_multi">Multi-Laser</string>
+    <string name="survivor_upg_laser_multi_desc">+1 laser paralel tambahan</string>
+    <string name="survivor_upg_aura_radius">Radius Aura</string>
+    <string name="survivor_upg_aura_radius_desc" formatted="false">+15% radius aura</string>
+    <string name="survivor_upg_aura_dmg">Kerusakan Aura</string>
+    <string name="survivor_upg_aura_dmg_desc" formatted="false">+20% DPS aura</string>
+    <string name="survivor_upg_aura_slow">Perlambat Aura</string>
+    <string name="survivor_upg_aura_slow_desc" formatted="false">+5% perlambatan musuh di aura</string>
+    <string name="survivor_upg_aura_tick">Frekuensi Aura</string>
+    <string name="survivor_upg_aura_tick_desc" formatted="false">+15% laju tick aura</string>
+    <string name="survivor_upg_bounce_count">Lebih Banyak Pantul</string>
+    <string name="survivor_upg_bounce_count_desc">+1 pantul maks.</string>
+    <string name="survivor_upg_bounce_dmg">Kerusakan Pantul</string>
+    <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% kerusakan pantul</string>
+    <string name="survivor_upg_bounce_speed">Kecepatan Pantul</string>
+    <string name="survivor_upg_bounce_speed_desc" formatted="false">+15% kecepatan proyektil pantul</string>
+    <string name="survivor_upg_bounce_rate">Laju Tembak Pantul</string>
+    <string name="survivor_upg_bounce_rate_desc" formatted="false">+10% laju tembak pantul</string>
+    <string name="survivor_upg_bomb_radius">Radius Ledakan</string>
+    <string name="survivor_upg_bomb_radius_desc" formatted="false">+10% radius ledakan</string>
+    <string name="survivor_upg_bomb_dmg">Kerusakan Bom</string>
+    <string name="survivor_upg_bomb_dmg_desc" formatted="false">+20% kerusakan bom</string>
+    <string name="survivor_upg_bomb_rate">Laju Lempar Bom</string>
+    <string name="survivor_upg_bomb_rate_desc" formatted="false">+10% laju lempar bom</string>
+    <string name="survivor_upg_bomb_multi">Multi-Bom</string>
+    <string name="survivor_upg_bomb_multi_desc">+1 bom per lemparan</string>
+    <string name="survivor_upg_bomb_residue">Residu</string>
+    <string name="survivor_upg_bomb_residue_desc">Ledakan meninggalkan zona beracun selama 2d, menyerang 1/5 kerusakan bom setiap 0,5d</string>
+    <string name="survivor_upg_bomb_residue_duration">Durasi Residu</string>
+    <string name="survivor_upg_bomb_residue_duration_desc">+0,5d durasi zona per level</string>
+    <string name="survivor_upg_chain_dmg">Kerusakan Petir</string>
+    <string name="survivor_upg_chain_dmg_desc">+1 kerusakan per level</string>
+    <string name="survivor_upg_chain_bounces">Lebih Banyak Rantai</string>
+    <string name="survivor_upg_chain_bounces_desc">+1 lompatan rantai tambahan</string>
+    <string name="survivor_upg_chain_rate">Laju Tembak Petir</string>
+    <string name="survivor_upg_chain_rate_desc">+10% laju tembak petir</string>
+    <string name="survivor_upg_chain_range">Jangkauan Petir</string>
+    <string name="survivor_upg_chain_range_desc">+50 jangkauan per level (maks. 800)</string>
+    <string name="survivor_upg_chain_split">Pemisahan Petir</string>
+    <string name="survivor_upg_chain_split_desc">+10% peluang per level memecah petir di setiap musuh (maks. 50%)</string>
+    <string name="survivor_upg_orbital_count">+1 Orbital</string>
+    <string name="survivor_upg_orbital_count_desc">Tambahkan satu bola orbital lagi</string>
+    <string name="survivor_upg_orbital_dmg">Kerusakan Orbital</string>
+    <string name="survivor_upg_orbital_dmg_desc">+20% kerusakan orbital</string>
+    <string name="survivor_upg_orbital_speed">Kecepatan Orbital</string>
+    <string name="survivor_upg_orbital_speed_desc">+30% kecepatan rotasi orbital</string>
+    <string name="survivor_upg_orbital_rate">Laju Tembak Orbital</string>
+    <string name="survivor_upg_orbital_rate_desc" formatted="false">+15% laju tembak orbital</string>
+    <string name="survivor_upg_orbital_multi">+1 Tembakan Orbital</string>
+    <string name="survivor_upg_orbital_multi_desc">Setiap bola menembakkan satu proyektil tambahan</string>
+    <string name="survivor_upg_orbital_frag">Fragmentasi Orbital</string>
+    <string name="survivor_upg_orbital_frag_desc">Proyektil orbital terbagi menjadi 2 saat benturan</string>
+    <string name="survivor_upg_orbital_poison">Racun Orbital</string>
+    <string name="survivor_upg_orbital_poison_desc">Proyektil orbital menerapkan racun DoT</string>
+    <string name="survivor_upg_orbital_burn">Bakar Orbital</string>
+    <string name="survivor_upg_orbital_burn_desc">Proyektil orbital membakar musuh selama 2d</string>
+    <string name="survivor_select_weapon">Pilih senjata awal</string>
+    <string name="survivor_weapon_chain_lightning">Petir Berantai</string>
+    <string name="survivor_weapon_orbital">Orbital</string>
+    <string name="survivor_weapon_desc_projectile">Menembakkan proyektil ke musuh terdekat</string>
+    <string name="survivor_weapon_desc_laser">Menembakkan sinar laser, bisa membakar musuh</string>
+    <string name="survivor_weapon_desc_aura">Merusak dan memperlambat semua musuh terdekat</string>
+    <string name="survivor_weapon_desc_bouncing">Bola yang memantul antar musuh</string>
+    <string name="survivor_weapon_desc_bomb">Melempar bom yang meledak saat benturan</string>
+    <string name="survivor_weapon_desc_chain_lightning">Petir yang melompat antar musuh</string>
+    <string name="survivor_weapon_desc_orbital">Bola yang mengorbit di sekitarmu dan menembak musuh</string>
+</resources>

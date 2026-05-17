@@ -2,11 +2,8 @@ package com.Atom2Universe.app.periodic
 
 import android.content.Context
 
-fun PeriodicElement.localizedName(context: Context): String {
-  val cleanId = id.replace("-", "_")
-  val resId = context.resources.getIdentifier("periodic_${cleanId}_name", "string", context.packageName)
-  return if (resId != 0) context.getString(resId) else name
-}
+fun PeriodicElement.localizedName(context: Context): String =
+  PeriodicElementDescriptionProvider(context).getName(this)
 
 data class PeriodicElement(
   val id: String,

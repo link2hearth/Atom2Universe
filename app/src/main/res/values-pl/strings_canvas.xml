@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Kreatywne Płótno</string>
+    <string name="canvas_fit_content">Dopasuj zawartość</string>
+    <string name="canvas_toggle_grid">Siatka</string>
+    <string name="canvas_menu">Menu</string>
+    <string name="canvas_tool_pan">Przesuń</string>
+    <string name="canvas_tool_select">Zaznacz</string>
+    <string name="canvas_tool_draw">Rysuj</string>
+    <string name="canvas_tool_shape">Kształt</string>
+    <string name="canvas_tool_text">Tekst</string>
+    <string name="canvas_tool_image">Obraz</string>
+    <string name="canvas_menu_new">Nowe płótno</string>
+    <string name="canvas_menu_export">Eksportuj</string>
+    <string name="canvas_menu_delete_selected">Usuń zaznaczenie</string>
+    <string name="canvas_menu_clear_all">Wyczyść wszystko</string>
+    <string name="canvas_new_created">Nowe płótno utworzone</string>
+    <string name="canvas_exported">Płótno wyeksportowane</string>
+    <string name="canvas_empty">Puste płótno</string>
+    <string name="canvas_object_deleted">Obiekt usunięty</string>
+    <string name="canvas_cleared">Płótno wyczyszczone</string>
+    <string name="canvas_selected">Zaznaczono: %1$s</string>
+    <string name="canvas_image_imported">Obraz zaimportowany</string>
+    <string name="canvas_import_error">Błąd importu</string>
+    <string name="canvas_text_dialog_title">Dodaj tekst</string>
+    <string name="canvas_text_hint">Wpisz swój tekst…</string>
+    <string name="canvas_text_font">Czcionka:</string>
+    <string name="canvas_text_size">Rozmiar: %d</string>
+    <string name="canvas_text_bold">Pogrubiony</string>
+    <string name="canvas_text_italic">Kursywa</string>
+    <string name="canvas_color_picker_title">Wybierz kolor</string>
+    <string name="canvas_brush_size_title">Rozmiar pędzla</string>
+    <string name="canvas_layers">Warstwy</string>
+    <string name="canvas_layer_bring_front">Przesuń na wierzch</string>
+    <string name="canvas_layer_bring_forward">Przesuń do przodu</string>
+    <string name="canvas_layer_send_backward">Przesuń do tyłu</string>
+    <string name="canvas_layer_send_back">Przesuń na spód</string>
+    <string name="canvas_layer_no_selection">Najpierw zaznacz obiekt</string>
+    <string name="canvas_undo">Cofnij</string>
+    <string name="canvas_redo">Ponów</string>
+    <string name="canvas_delete">Usuń</string>
+    <string name="canvas_undo_action">Akcja cofnięta</string>
+    <string name="canvas_redo_action">Akcja ponowiona</string>
+    <string name="canvas_nothing_to_undo">Brak akcji do cofnięcia</string>
+    <string name="canvas_nothing_to_redo">Brak akcji do ponowienia</string>
+    <string name="canvas_object_restored">Obiekt przywrócony</string>
+</resources>

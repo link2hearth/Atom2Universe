@@ -79,7 +79,7 @@
             android:src="@drawable/ic_arrow_back_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/crypto_back"
-            android:tint="#FFFFFF"
+            app:tint="#FFFFFF"
             android:padding="10dp" />
 
         <TextView
@@ -114,7 +114,7 @@
             android:src="@drawable/ic_settings_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Settings"
-            android:tint="#94A3B8"
+            app:tint="#94A3B8"
             android:padding="8dp" />
     </LinearLayout>
 

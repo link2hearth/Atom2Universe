@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Creatief Canvas</string>
+    <string name="canvas_fit_content">Inhoud aanpassen</string>
+    <string name="canvas_toggle_grid">Raster</string>
+    <string name="canvas_menu">Menu</string>
+    <string name="canvas_tool_pan">Verschuiven</string>
+    <string name="canvas_tool_select">Selecteren</string>
+    <string name="canvas_tool_draw">Tekenen</string>
+    <string name="canvas_tool_shape">Vorm</string>
+    <string name="canvas_tool_text">Tekst</string>
+    <string name="canvas_tool_image">Afbeelding</string>
+    <string name="canvas_menu_new">Nieuw canvas</string>
+    <string name="canvas_menu_export">Exporteren</string>
+    <string name="canvas_menu_delete_selected">Selectie verwijderen</string>
+    <string name="canvas_menu_clear_all">Alles wissen</string>
+    <string name="canvas_new_created">Nieuw canvas aangemaakt</string>
+    <string name="canvas_exported">Canvas geëxporteerd</string>
+    <string name="canvas_empty">Leeg canvas</string>
+    <string name="canvas_object_deleted">Object verwijderd</string>
+    <string name="canvas_cleared">Canvas gewist</string>
+    <string name="canvas_selected">Geselecteerd: %1$s</string>
+    <string name="canvas_image_imported">Afbeelding geïmporteerd</string>
+    <string name="canvas_import_error">Importfout</string>
+    <string name="canvas_text_dialog_title">Tekst toevoegen</string>
+    <string name="canvas_text_hint">Voer uw tekst in…</string>
+    <string name="canvas_text_font">Lettertype:</string>
+    <string name="canvas_text_size">Grootte: %d</string>
+    <string name="canvas_text_bold">Vet</string>
+    <string name="canvas_text_italic">Cursief</string>
+    <string name="canvas_color_picker_title">Kies een kleur</string>
+    <string name="canvas_brush_size_title">Penseelgrootte</string>
+    <string name="canvas_layers">Lagen</string>
+    <string name="canvas_layer_bring_front">Naar voren brengen</string>
+    <string name="canvas_layer_bring_forward">Naar voren</string>
+    <string name="canvas_layer_send_backward">Naar achteren</string>
+    <string name="canvas_layer_send_back">Naar achtergrond</string>
+    <string name="canvas_layer_no_selection">Selecteer eerst een object</string>
+    <string name="canvas_undo">Ongedaan maken</string>
+    <string name="canvas_redo">Opnieuw uitvoeren</string>
+    <string name="canvas_delete">Verwijderen</string>
+    <string name="canvas_undo_action">Actie ongedaan gemaakt</string>
+    <string name="canvas_redo_action">Actie opnieuw uitgevoerd</string>
+    <string name="canvas_nothing_to_undo">Niets ongedaan te maken</string>
+    <string name="canvas_nothing_to_redo">Niets opnieuw uit te voeren</string>
+    <string name="canvas_object_restored">Object hersteld</string>
+</resources>

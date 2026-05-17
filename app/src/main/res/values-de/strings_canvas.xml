@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Kreativ-Leinwand</string>
+    <string name="canvas_fit_content">Inhalt anpassen</string>
+    <string name="canvas_toggle_grid">Raster</string>
+    <string name="canvas_menu">Menü</string>
+    <string name="canvas_tool_pan">Verschieben</string>
+    <string name="canvas_tool_select">Auswählen</string>
+    <string name="canvas_tool_draw">Zeichnen</string>
+    <string name="canvas_tool_shape">Form</string>
+    <string name="canvas_tool_text">Text</string>
+    <string name="canvas_tool_image">Bild</string>
+    <string name="canvas_menu_new">Neue Leinwand</string>
+    <string name="canvas_menu_export">Exportieren</string>
+    <string name="canvas_menu_delete_selected">Auswahl löschen</string>
+    <string name="canvas_menu_clear_all">Alles löschen</string>
+    <string name="canvas_new_created">Neue Leinwand erstellt</string>
+    <string name="canvas_exported">Leinwand exportiert</string>
+    <string name="canvas_empty">Leere Leinwand</string>
+    <string name="canvas_object_deleted">Objekt gelöscht</string>
+    <string name="canvas_cleared">Leinwand geleert</string>
+    <string name="canvas_selected">Ausgewählt: %1$s</string>
+    <string name="canvas_image_imported">Bild importiert</string>
+    <string name="canvas_import_error">Importfehler</string>
+    <string name="canvas_text_dialog_title">Text hinzufügen</string>
+    <string name="canvas_text_hint">Text eingeben…</string>
+    <string name="canvas_text_font">Schriftart:</string>
+    <string name="canvas_text_size">Größe: %d</string>
+    <string name="canvas_text_bold">Fett</string>
+    <string name="canvas_text_italic">Kursiv</string>
+    <string name="canvas_color_picker_title">Farbe wählen</string>
+    <string name="canvas_brush_size_title">Pinselgröße</string>
+    <string name="canvas_layers">Ebenen</string>
+    <string name="canvas_layer_bring_front">In den Vordergrund</string>
+    <string name="canvas_layer_bring_forward">Nach vorne</string>
+    <string name="canvas_layer_send_backward">Nach hinten</string>
+    <string name="canvas_layer_send_back">In den Hintergrund</string>
+    <string name="canvas_layer_no_selection">Zuerst ein Objekt auswählen</string>
+    <string name="canvas_undo">Rückgängig</string>
+    <string name="canvas_redo">Wiederholen</string>
+    <string name="canvas_delete">Löschen</string>
+    <string name="canvas_undo_action">Aktion rückgängig gemacht</string>
+    <string name="canvas_redo_action">Aktion wiederholt</string>
+    <string name="canvas_nothing_to_undo">Nichts rückgängig zu machen</string>
+    <string name="canvas_nothing_to_redo">Nichts zu wiederholen</string>
+    <string name="canvas_object_restored">Objekt wiederhergestellt</string>
+</resources>

@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_arrow_back_24"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:tint="#94A3B8"
+                app:tint="#94A3B8"
                 android:contentDescription="@string/notes_back" />
 
             <View

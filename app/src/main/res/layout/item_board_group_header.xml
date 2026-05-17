@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:orientation="horizontal"
@@ -35,7 +36,7 @@
         android:layout_height="36dp"
         android:src="@drawable/ic_add_24"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="#64748B"
+        app:tint="#64748B"
         android:contentDescription="@null" />
 
     <ImageButton
@@ -44,7 +45,7 @@
         android:layout_height="36dp"
         android:src="@drawable/ic_more_vert"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="#64748B"
+        app:tint="#64748B"
         android:contentDescription="@null" />
 
 </LinearLayout>

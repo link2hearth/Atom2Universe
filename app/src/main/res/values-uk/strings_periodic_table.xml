@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Відкрити таблицю Менделєєва</string>
+    <string name="periodic_info_atomic_number">Атомний номер</string>
+    <string name="periodic_info_mass">Маса</string>
+    <string name="periodic_info_period">Період</string>
+    <string name="periodic_info_symbol">Символ</string>
+    <string name="periodic_info_category">Категорія</string>
+    <string name="periodic_info_group">Група</string>
+    <string name="periodic_info_copies_badge" formatted="false">x%1$d</string>
+    <string name="periodic_info_hint">Торкніться назви, щоб побачити опис</string>
+    <string name="periodic_table_title">Таблиця Менделєєва</string>
+    <string name="periodic_prop_phase">Фаза</string>
+    <string name="periodic_prop_density">Щільність</string>
+    <string name="periodic_prop_melt">Температура плавлення</string>
+    <string name="periodic_prop_boil">Температура кипіння</string>
+    <string name="periodic_prop_block">Орбітальний блок</string>
+    <string name="periodic_prop_electronegativity">Електронегативність</string>
+    <string name="periodic_prop_electron_config">Електронна конфіг.</string>
+    <string name="periodic_prop_discovered_by">Відкрив</string>
+    <string name="periodic_prop_named_by">Назвав</string>
+    <string name="periodic_prop_appearance">Зовнішній вигляд</string>
+    <string name="periodic_prop_unknown">Невідомо</string>
+    <string name="periodic_prop_kelvin_suffix"> К</string>
+    <string name="periodic_prop_density_suffix"> г/см³</string>
+    <string name="periodic_prop_properties_title">Фізичні &amp; Хімічні Властивості</string>
+    <string name="periodic_atom_section_title">Модель Бора</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+</resources>

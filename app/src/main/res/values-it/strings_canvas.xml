@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Tela Creativa</string>
+    <string name="canvas_fit_content">Adatta contenuto</string>
+    <string name="canvas_toggle_grid">Griglia</string>
+    <string name="canvas_menu">Menu</string>
+    <string name="canvas_tool_pan">Sposta</string>
+    <string name="canvas_tool_select">Seleziona</string>
+    <string name="canvas_tool_draw">Disegna</string>
+    <string name="canvas_tool_shape">Forma</string>
+    <string name="canvas_tool_text">Testo</string>
+    <string name="canvas_tool_image">Immagine</string>
+    <string name="canvas_menu_new">Nuova tela</string>
+    <string name="canvas_menu_export">Esporta</string>
+    <string name="canvas_menu_delete_selected">Elimina selezione</string>
+    <string name="canvas_menu_clear_all">Cancella tutto</string>
+    <string name="canvas_new_created">Nuova tela creata</string>
+    <string name="canvas_exported">Tela esportata</string>
+    <string name="canvas_empty">Tela vuota</string>
+    <string name="canvas_object_deleted">Oggetto eliminato</string>
+    <string name="canvas_cleared">Tela cancellata</string>
+    <string name="canvas_selected">Selezionato: %1$s</string>
+    <string name="canvas_image_imported">Immagine importata</string>
+    <string name="canvas_import_error">Errore di importazione</string>
+    <string name="canvas_text_dialog_title">Aggiungi testo</string>
+    <string name="canvas_text_hint">Inserisci il tuo testo…</string>
+    <string name="canvas_text_font">Carattere:</string>
+    <string name="canvas_text_size">Dimensione: %d</string>
+    <string name="canvas_text_bold">Grassetto</string>
+    <string name="canvas_text_italic">Corsivo</string>
+    <string name="canvas_color_picker_title">Scegli un colore</string>
+    <string name="canvas_brush_size_title">Dimensione pennello</string>
+    <string name="canvas_layers">Livelli</string>
+    <string name="canvas_layer_bring_front">Porta in primo piano</string>
+    <string name="canvas_layer_bring_forward">Porta avanti</string>
+    <string name="canvas_layer_send_backward">Manda indietro</string>
+    <string name="canvas_layer_send_back">Manda in fondo</string>
+    <string name="canvas_layer_no_selection">Seleziona prima un oggetto</string>
+    <string name="canvas_undo">Annulla</string>
+    <string name="canvas_redo">Ripeti</string>
+    <string name="canvas_delete">Elimina</string>
+    <string name="canvas_undo_action">Azione annullata</string>
+    <string name="canvas_redo_action">Azione ripetuta</string>
+    <string name="canvas_nothing_to_undo">Niente da annullare</string>
+    <string name="canvas_nothing_to_redo">Niente da ripetere</string>
+    <string name="canvas_object_restored">Oggetto ripristinato</string>
+</resources>

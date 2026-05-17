@@ -77,6 +77,7 @@ class SurvivorView @JvmOverloads constructor(
     private val sGameOver  by lazy { ctx.getString(R.string.survivor_game_over) }
     private val sRestart   by lazy { ctx.getString(R.string.survivor_restart) }
     private val sQuit      by lazy { ctx.getString(R.string.survivor_quit) }
+    private val sMenu      by lazy { ctx.getString(R.string.survivor_menu) }
     private val sResume    by lazy { ctx.getString(R.string.survivor_resume) }
     private val sPaused    by lazy { ctx.getString(R.string.survivor_paused) }
     private val sWave      by lazy { ctx.getString(R.string.survivor_wave) }
@@ -263,9 +264,7 @@ class SurvivorView @JvmOverloads constructor(
 
     private fun handleGameOverTouch(ev: MotionEvent) {
         if (ev.action != MotionEvent.ACTION_UP) return
-        val x = ev.x; val y = ev.y
-        if (btnRect1.contains(x, y)) pendingWeaponSelect = true
-        if (btnRect2.contains(x, y)) pendingWeaponSelect = true
+        if (btnRect1.contains(ev.x, ev.y)) pendingWeaponSelect = true
     }
 
     fun requestMenu()  { pendingWeaponSelect = true }
@@ -812,10 +811,22 @@ class SurvivorView @JvmOverloads constructor(
             canvas.drawText("$sBest %d:%02d  ${game.bestKills}☠".format(bs / 60, bs % 60), cx, cy - dp(16f), pText)
         }
         pText.color = Color.WHITE
-        drawTwoButtons(canvas, cx, cy + dp(10f), sRestart, sQuit)
+        drawOneButton(canvas, cx, cy + dp(10f), sMenu)
     }
 
     // ─── Button helper ────────────────────────────────────────────────────────
+
+    private fun drawOneButton(canvas: Canvas, cx: Float, cy: Float, label: String) {
+        val bw = dp(160f); val bh = dp(44f); val by = cy + dp(20f)
+        btnRect1.set(cx - bw / 2f, by, cx + bw / 2f, by + bh)
+        btnRect2.setEmpty()
+        pFill.color = C_BTN_BG
+        canvas.drawRoundRect(btnRect1, dp(10f), dp(10f), pFill)
+        pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = 1.5f
+        canvas.drawRoundRect(btnRect1, dp(10f), dp(10f), pStroke)
+        pText.color = Color.WHITE; pText.textSize = sp(15f)
+        canvas.drawText(label, btnRect1.centerX(), btnRect1.centerY() + sp(5f), pText)
+    }
 
     private fun drawTwoButtons(canvas: Canvas, cx: Float, cy: Float, label1: String, label2: String) {
         val bw = dp(140f); val bh = dp(44f); val gap = dp(20f)

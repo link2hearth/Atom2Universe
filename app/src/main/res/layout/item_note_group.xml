@@ -60,7 +60,7 @@
             android:src="@drawable/ic_more_vert_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_menu"
-            android:tint="#64748B" />
+            app:tint="#64748B" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

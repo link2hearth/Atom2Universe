@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_back">Geri</string>
     <string name="stats_tab_day">Bugün</string>
     <string name="stats_tab_week">Hafta</string>
     <string name="stats_tab_month">Ay</string>

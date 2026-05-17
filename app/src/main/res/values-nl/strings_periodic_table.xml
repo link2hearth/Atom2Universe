@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Periodiek systeem openen</string>
+    <string name="periodic_info_atomic_number">Atoomnummer</string>
+    <string name="periodic_info_mass">Massa</string>
+    <string name="periodic_info_period">Periode</string>
+    <string name="periodic_info_symbol">Symbool</string>
+    <string name="periodic_info_category">Categorie</string>
+    <string name="periodic_info_group">Groep</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Tik op de naam om de beschrijving te zien</string>
+    <string name="periodic_table_title">Periodiek Systeem</string>
+    <string name="periodic_prop_phase">Fase</string>
+    <string name="periodic_prop_density">Dichtheid</string>
+    <string name="periodic_prop_melt">Smeltpunt</string>
+    <string name="periodic_prop_boil">Kookpunt</string>
+    <string name="periodic_prop_block">Orbitaalblok</string>
+    <string name="periodic_prop_electronegativity">Elektronegativiteit</string>
+    <string name="periodic_prop_electron_config">Elektronconfiguratie</string>
+    <string name="periodic_prop_discovered_by">Ontdekt door</string>
+    <string name="periodic_prop_named_by">Benoemd door</string>
+    <string name="periodic_prop_appearance">Uiterlijk</string>
+    <string name="periodic_prop_unknown">Onbekend</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Fysische &amp; chemische eigenschappen</string>
+    <string name="periodic_atom_section_title">Bohr-model</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+</resources>

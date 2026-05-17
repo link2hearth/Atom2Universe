@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_back">Kembali</string>
     <string name="stats_tab_day">Hari ini</string>
     <string name="stats_tab_week">Minggu</string>
     <string name="stats_tab_month">Bulan</string>

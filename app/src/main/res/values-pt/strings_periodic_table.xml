@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Abrir tabela periódica</string>
+    <string name="periodic_info_atomic_number">Número atómico</string>
+    <string name="periodic_info_mass">Massa</string>
+    <string name="periodic_info_period">Período</string>
+    <string name="periodic_info_symbol">Símbolo</string>
+    <string name="periodic_info_category">Categoria</string>
+    <string name="periodic_info_group">Grupo</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Toque no nome para ver a descrição</string>
+    <string name="periodic_table_title">Tabela Periódica</string>
+    <string name="periodic_prop_phase">Fase</string>
+    <string name="periodic_prop_density">Densidade</string>
+    <string name="periodic_prop_melt">Ponto de fusão</string>
+    <string name="periodic_prop_boil">Ponto de ebulição</string>
+    <string name="periodic_prop_block">Bloco orbital</string>
+    <string name="periodic_prop_electronegativity">Eletronegatividade</string>
+    <string name="periodic_prop_electron_config">Config. eletrónica</string>
+    <string name="periodic_prop_discovered_by">Descoberto por</string>
+    <string name="periodic_prop_named_by">Denominado por</string>
+    <string name="periodic_prop_appearance">Aparência</string>
+    <string name="periodic_prop_unknown">Desconhecido</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Propriedades físicas &amp; químicas</string>
+    <string name="periodic_atom_section_title">Modelo de Bohr</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+</resources>

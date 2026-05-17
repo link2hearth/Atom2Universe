@@ -13,10 +13,10 @@ import android.widget.TextView
 import android.view.View
 import android.app.Dialog
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.AudioHubActivity
-import com.Atom2Universe.app.LocaleHelper
+import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.crypto.gacha.GachaRarity
 import com.Atom2Universe.app.crypto.gacha.rarityOf
 import android.animation.Animator
@@ -29,11 +29,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PeriodicTableActivity : AppCompatActivity() {
+class PeriodicTableActivity : ThemedActivity() {
 
-  override fun attachBaseContext(newBase: Context) {
-    super.attachBaseContext(LocaleHelper.applyLocale(newBase))
-  }
   private lateinit var gridLayout: GridLayout
   private lateinit var descriptionProvider: PeriodicElementDescriptionProvider
   private lateinit var collectionStore: PeriodicCollectionStore
@@ -49,6 +46,7 @@ class PeriodicTableActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_periodic_table)
+    enableImmersiveMode()
 
     gridLayout = findViewById(R.id.periodic_grid)
     descriptionProvider = PeriodicElementDescriptionProvider(this)
@@ -328,7 +326,10 @@ class PeriodicTableActivity : AppCompatActivity() {
         contentLayout.addView(buildPropertiesCard(jsonData))
       }
 
-      description.paragraphs.forEach { para ->
+      val textsToDisplay = description.paragraphs.ifEmpty {
+        listOfNotNull(jsonData?.summary?.takeIf { it.isNotBlank() })
+      }
+      textsToDisplay.forEach { para ->
         val paraView = TextView(this).apply {
           text = para
           textSize = 24f
@@ -763,12 +764,10 @@ class PeriodicTableActivity : AppCompatActivity() {
   private fun showRarityDialog(rarity: GachaRarity) {
     val rarityColor = getRarityColor(rarity)
     val key = rarityKey(rarity)
-    val processId = resources.getIdentifier("rarity_${key}_process", "string", packageName)
-    val rangeId   = resources.getIdentifier("rarity_${key}_range",   "string", packageName)
-    val bodyId    = resources.getIdentifier("rarity_${key}_body",    "string", packageName)
-    val process = if (processId != 0) getString(processId) else ""
-    val range   = if (rangeId   != 0) getString(rangeId)   else ""
-    val body    = if (bodyId    != 0) getString(bodyId)    else ""
+    val rarityDesc = descriptionProvider.getRarityDescription(key)
+    val process = rarityDesc?.process ?: ""
+    val range   = rarityDesc?.range   ?: ""
+    val body    = rarityDesc?.body    ?: ""
 
     val dialog = Dialog(this, android.R.style.Theme_DeviceDefault_NoActionBar)
 
