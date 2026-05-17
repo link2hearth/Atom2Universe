@@ -188,6 +188,8 @@
     <string name="stat_wavesurf_altitude">Wave Surf – Altitude max</string>
     <string name="stat_survivor_time">Survivor – Meilleur temps</string>
     <string name="stat_survivor_level">Survivor – Record de kills</string>
+    <string name="stat_match3_best">Métal Match – Meilleur score</string>
+    <string name="stat_match3_best_time">Métal Match – Meilleur temps</string>
     <string name="roulette_title">🎰 Roulette</string>
     <string name="roulette_description">Machine à sous – alignez enseignes et couleurs pour gagner des neutrinos</string>
     <string name="roulette_spin">LANCER</string>

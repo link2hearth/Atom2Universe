@@ -90,7 +90,7 @@
     <string name="survivor_upg_aura_tick">Aura Frequency</string>
     <string name="survivor_upg_aura_tick_desc" formatted="false">+15% aura tick rate</string>
     <string name="survivor_upg_bounce_count">More Bounces</string>
-    <string name="survivor_upg_bounce_count_desc">+2 max bounces</string>
+    <string name="survivor_upg_bounce_count_desc">+1 max bounce</string>
     <string name="survivor_upg_bounce_dmg">Bounce Damage</string>
     <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% bounce damage</string>
     <string name="survivor_upg_bounce_speed">Bounce Speed</string>

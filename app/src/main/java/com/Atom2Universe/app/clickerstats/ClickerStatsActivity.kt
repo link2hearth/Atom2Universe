@@ -132,6 +132,7 @@ class ClickerStatsActivity : ThemedActivity() {
                     getSharedPreferences("reflex_save",      MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("flappy_cat_save",  MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("wave_surf_save",   MODE_PRIVATE).edit { clear() }
+                    getSharedPreferences("match3_save",      MODE_PRIVATE).edit { clear() }
                     // Best score 2048 seulement (la partie en cours est gérée par toggleClicker)
                     getSharedPreferences("game2048_save",    MODE_PRIVATE).edit { remove("best_score") }
                     // Particules : zéro les records en conservant la progression shop
@@ -265,6 +266,15 @@ class ClickerStatsActivity : ThemedActivity() {
             if (svTime > 0f) "%d:%02d".format(svTimeSec / 60, svTimeSec % 60) else "—"
         findViewById<TextView>(R.id.stat_survivor_kills_value).text =
             if (svKills > 0) fmt.format(svKills) else "—"
+
+        val m3 = getSharedPreferences("match3_save", MODE_PRIVATE)
+        val m3Score = m3.getInt("best_score", 0)
+        findViewById<TextView>(R.id.stat_match3_best_value).text = if (m3Score > 0) fmt.format(m3Score) else "—"
+        val m3TimeMs = m3.getLong("best_time_ms", 0L)
+        findViewById<TextView>(R.id.stat_match3_best_time_value).text = if (m3TimeMs > 0L) {
+            val secs = (m3TimeMs / 1000).toInt()
+            "%d:%02d".format(secs / 60, secs % 60)
+        } else "—"
 
         // Particules : Room DB async
         lifecycleScope.launch {

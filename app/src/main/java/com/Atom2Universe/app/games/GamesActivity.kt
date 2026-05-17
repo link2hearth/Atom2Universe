@@ -23,6 +23,7 @@ import com.Atom2Universe.app.games.game2048.Game2048Activity
 import com.Atom2Universe.app.games.particules.ParticulesActivity
 import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
 import com.Atom2Universe.app.games.bigger.BiggerActivity
+import com.Atom2Universe.app.games.match3.Match3Activity
 import com.Atom2Universe.app.games.survivor.SurvivorActivity
 import com.Atom2Universe.app.games.reflex.ReflexActivity
 import com.Atom2Universe.app.games.solitaire.SolitaireActivity
@@ -228,6 +229,15 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_share,
             defaultColorRes = R.color.game_tile_link,
             activityClass = LinkActivity::class.java
+        ),
+        // Match 3
+        HubTile(
+            id = "match3",
+            titleRes = R.string.match3_title,
+            descriptionRes = R.string.match3_description,
+            iconRes = android.R.drawable.ic_menu_slideshow,
+            defaultColorRes = R.color.game_tile_match3,
+            activityClass = Match3Activity::class.java
         ),
         // Bigger (Suika)
         HubTile(

@@ -226,7 +226,7 @@ class SurvivorGame(private val ctx: Context) {
         const val AURA_DMG = 1.5f;  const val AURA_R = 120f
         const val AURA_TICK = 2.5f; const val AURA_SLOW = 0.7f
 
-        const val BOUNCE_DMG = 13f;  const val BOUNCE_RATE = 0.8f
+        const val BOUNCE_DMG = 5f;   const val BOUNCE_RATE = 0.8f
         const val BOUNCE_SPEED = 220f; const val BOUNCE_MAX = 1; const val BOUNCE_R = 7f
 
         const val BOMB_DMG = 20f;   const val BOMB_RATE = 0.5f
@@ -259,6 +259,7 @@ class SurvivorGame(private val ctx: Context) {
     private val hsvBuf = floatArrayOf(0f, 1f, 1f)
 
     private val _killEnemyBullets = HashSet<SEnemyBullet>(16)
+    private var chainReactionInProgress = false
     private val _killEnemies  = HashSet<SEnemy>(32)
     private val _killProj     = HashSet<SProjectile>(32)
     private val _killBouncing = HashSet<SBouncingProj>(8)
@@ -812,11 +813,15 @@ class SurvivorGame(private val ctx: Context) {
         val burnDmg = if (burnLevel > 0) LASER_DMG * 0.5f * (1f + burnLevel * 0.20f) else 0f
         for (tgt in targets) {
             val tdx = tgt.x - player.x; val tdy = tgt.y - player.y
-            if (sqrt(tdx * tdx + tdy * tdy) > range) continue
-            lasers.add(SLaser(player.x, player.y, tgt.x, tgt.y, LASER_DUR, fd, if (tgt == primary) width else width * 0.6f, isCrit))
+            val dist = sqrt(tdx * tdx + tdy * tdy)
+            if (dist > range) continue
+            val endX = player.x + tdx / dist * range
+            val endY = player.y + tdy / dist * range
+            val beamWidth = if (tgt == primary) width else width * 0.6f
+            lasers.add(SLaser(player.x, player.y, endX, endY, LASER_DUR, fd, beamWidth, isCrit))
             for (e in enemies.toList()) {
                 if (e in toKill) continue
-                if (distToSeg(e.x, e.y, player.x, player.y, tgt.x, tgt.y) < e.radius + width / 2f) {
+                if (distToSeg(e.x, e.y, player.x, player.y, endX, endY) < e.radius + beamWidth / 2f) {
                     if (burnLevel > 0) { e.burnDmg = burnDmg; e.burnTimer = 2f }
                     if (hitEnemy(e, fd, isCrit)) toKill.add(e)
                 }
@@ -863,7 +868,7 @@ class SurvivorGame(private val ctx: Context) {
         val d = sqrt(dx * dx + dy * dy).takeIf { it > 0f } ?: return false
         val dmg  = BOUNCE_DMG  * (1f + player.upg("bounce_dmg") * 0.20f)
         val spd  = BOUNCE_SPEED* (1f + player.upg("bounce_speed") * 0.15f)
-        val bnc  = BOUNCE_MAX  + player.upg("bounce_count") * 2
+        val bnc  = BOUNCE_MAX  + player.upg("bounce_count")
         val isCrit = isCrit(); val fd = if (isCrit) dmg * critMult() else dmg
         bouncingProjs.add(SBouncingProj(player.x, player.y, dx / d * spd, dy / d * spd, fd, BOUNCE_R, bnc, isCrit))
         return true
@@ -1233,9 +1238,11 @@ class SurvivorGame(private val ctx: Context) {
         addXp(xp)
         spawnDeathParticles(e)
         val explChance = player.upg("explosion_on_kill") * 0.12f
-        if (explChance > 0f && rng.nextFloat() < explChance) {
+        if (!chainReactionInProgress && explChance > 0f && rng.nextFloat() < explChance) {
             val explDmg = e.maxHp * 0.4f
+            chainReactionInProgress = true
             applyExplosionDamage(e.x, e.y, 90f, explDmg)
+            chainReactionInProgress = false
             explosions.add(SExplosion(e.x, e.y, 90f, 0.4f, 0.4f))
             spawnBurstParticles(e.x, e.y, COL_BOMB_BURST, 8)
         }

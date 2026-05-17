@@ -88,7 +88,7 @@
     <string name="survivor_upg_aura_tick">Fréquence aura</string>
     <string name="survivor_upg_aura_tick_desc" formatted="false">+15% de fréquence des ticks</string>
     <string name="survivor_upg_bounce_count">Rebonds</string>
-    <string name="survivor_upg_bounce_count_desc">+2 rebonds maximum</string>
+    <string name="survivor_upg_bounce_count_desc">+1 rebond maximum</string>
     <string name="survivor_upg_bounce_dmg">Dégâts rebond</string>
     <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% de dégâts</string>
     <string name="survivor_upg_bounce_speed">Vitesse rebond</string>

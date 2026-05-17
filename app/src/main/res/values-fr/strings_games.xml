@@ -30,4 +30,11 @@
     <string name="earth_from_sun_label">Depuis le Soleil</string>
     <string name="gacha_title">GACHA</string>
     <string name="gacha_sun_desc">Soleil gacha</string>
+    <string name="match3_title">Métal Match</string>
+    <string name="match3_description">Puzzle match-3 de métaux</string>
+    <string name="match3_score">Score : %1$d</string>
+    <string name="match3_new_game">Nouveau</string>
+    <string name="match3_game_over">Game Over</string>
+    <string name="match3_time">Temps : %1$s</string>
+    <string name="back_button_desc">Retour</string>
 </resources>
