@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Comics</string>
+    <string name="hub_comics_desc">Lector de PDF, CBZ y carpetas de imagenes</string>
+    <string name="comics_library_title">Biblioteca de comics</string>
+    <string name="comics_library_empty">Aun no hay comics</string>
+    <string name="comics_library_empty_hint">Toca + para agregar tu primer comic</string>
+    <string name="comics_add_title">Agregar un comic</string>
+    <string name="comics_add_pdf">Archivo PDF</string>
+    <string name="comics_add_cbz">Archivo CBZ / ZIP</string>
+    <string name="comics_add_folder">Carpeta de imagenes</string>
+    <string name="comics_delete_title">Eliminar comic</string>
+    <string name="comics_delete_msg">Eliminar \"%s\" de la biblioteca?</string>
+    <string name="comics_delete_confirm">Eliminar</string>
+    <string name="comics_layout_title">Diseno de pagina</string>
+    <string name="comics_layout_full">Pagina completa</string>
+    <string name="comics_layout_half_top">Mitad superior</string>
+    <string name="comics_layout_half_left">Mitad izquierda (manga)</string>
+    <string name="comics_layout_half_right">Mitad derecha (manga)</string>
+    <string name="comics_error_open">No se puede abrir este archivo</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Escanear una carpeta de biblioteca</string>
+    <string name="comics_scanning_title">Escaneando biblioteca…</string>
+    <string name="comics_scanning_found">%d comics encontrados</string>
+    <string name="comics_delete_root_msg">Eliminar \"%s\" y todos sus comics de la biblioteca?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d comic</item>
+        <item quantity="other">%d comics</item>
+    </plurals>
+    <string name="comics_rescan">Reescanear</string>
+    <string name="comics_clear_all">Borrar todo</string>
+    <string name="comics_clear_all_msg">Eliminar todos los comics y bibliotecas de la lista?</string>
+    <string name="comics_rescanning_title">Reescaneando…</string>
+    <string name="comics_toggle_view">Cambiar vista</string>
+</resources>

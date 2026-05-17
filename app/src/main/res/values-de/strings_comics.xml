@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Comics</string>
+    <string name="hub_comics_desc">PDF-, CBZ- und Bildordner-Lesegerät</string>
+    <string name="comics_library_title">Comics-Bibliothek</string>
+    <string name="comics_library_empty">Noch keine Comics</string>
+    <string name="comics_library_empty_hint">Tippen Sie auf +, um Ihren ersten Comic hinzuzufügen</string>
+    <string name="comics_add_title">Comic hinzufügen</string>
+    <string name="comics_add_pdf">PDF-Datei</string>
+    <string name="comics_add_cbz">CBZ / ZIP-Datei</string>
+    <string name="comics_add_folder">Bildordner</string>
+    <string name="comics_delete_title">Comic entfernen</string>
+    <string name="comics_delete_msg">\"%s\" aus der Bibliothek entfernen?</string>
+    <string name="comics_delete_confirm">Entfernen</string>
+    <string name="comics_layout_title">Seitenlayout</string>
+    <string name="comics_layout_full">Ganze Seite</string>
+    <string name="comics_layout_half_top">Obere Hälfte</string>
+    <string name="comics_layout_half_left">Linke Hälfte (Manga)</string>
+    <string name="comics_layout_half_right">Rechte Hälfte (Manga)</string>
+    <string name="comics_error_open">Diese Datei konnte nicht geöffnet werden</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Bibliotheksordner scannen</string>
+    <string name="comics_scanning_title">Bibliothek wird gescannt…</string>
+    <string name="comics_scanning_found">%d Comics gefunden</string>
+    <string name="comics_delete_root_msg">\"%s\" und alle seine Comics aus der Bibliothek entfernen?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d Comic</item>
+        <item quantity="other">%d Comics</item>
+    </plurals>
+    <string name="comics_rescan">Erneut scannen</string>
+    <string name="comics_clear_all">Alle löschen</string>
+    <string name="comics_clear_all_msg">Alle Comics und Bibliotheken aus der Liste entfernen?</string>
+    <string name="comics_rescanning_title">Wird erneut gescannt…</string>
+    <string name="comics_toggle_view">Ansicht wechseln</string>
+</resources>

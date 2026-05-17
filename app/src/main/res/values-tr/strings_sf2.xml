@@ -15,6 +15,7 @@
     <string name="sf2_tap_to_record">Kaydetmek için dokunun</string>
     <string name="sf2_recording">Kaydediliyor…</string>
     <string name="sf2_recording_complete">Kayıt tamamlandı!</string>
+    <string name="sf2_noise_reduced">Arka plan gürültüsü azaltıldı (%1$s dB)</string>
     <string name="sf2_max_duration_reached">Maksimum süreye ulaşıldı</string>
     <string name="sf2_detected_pitch">Algılanan: %1$s (%2$.1f Hz)</string>
     <string name="sf2_pitch_uncertain">Perde belirsiz - C4 varsayılıyor</string>
@@ -72,7 +73,7 @@
     <string name="sf2_sustain_test">Sürdürmek için Basılı Tutun</string>
     <string name="sf2_test_engine">SF2\'yi Test Et</string>
     <string name="sf2_drag_markers_hint">Döngü noktalarını ayarlamak için sarı işaretçileri sürükleyin</string>
-    <string name="sf2_loop_found">Döngü bulundu: %1$dms (%%2$d kalite)</string>
+    <string name="sf2_loop_found">Döngü bulundu: %1$dms (%2$d%% kalite)</string>
     <string name="sf2_no_loop_found">Uygun döngü bulunamadı</string>
     <string name="sf2_loop_disabled_for_preset">Döngü devre dışı (tek seferlik ön ayar)</string>
     <string name="sf2_processing_applied">İşleme uygulandı</string>

@@ -546,4 +546,6 @@ Creane una!</string>
     <string name="practice_current_instrument">%1$d: %2$s</string>
     <string name="practice_recording_filename">Recording_%1$s</string>
     <string name="practice_volume_percent">%1$d%%</string>
+    <string name="midi_root_artist">Senza artista</string>
+    <string name="midi_default_artist">Artista locale</string>
 </resources>

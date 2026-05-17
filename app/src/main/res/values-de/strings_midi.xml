@@ -544,4 +544,6 @@
     <string name="practice_export_success">Exportiert nach %s</string>
     <string name="practice_export_error">Exportfehler: %s</string>
     <string name="practice_export_rendering">Audio wird gerendert…</string>
+    <string name="midi_root_artist">Ohne Künstler</string>
+    <string name="midi_default_artist">Lokaler Künstler</string>
 </resources>

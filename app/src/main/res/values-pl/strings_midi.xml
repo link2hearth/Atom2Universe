@@ -546,4 +546,6 @@
     <string name="practice_export_success">Wyeksportowano do %s</string>
     <string name="practice_export_error">Błąd eksportu: %s</string>
     <string name="practice_export_rendering">Renderowanie audio…</string>
+    <string name="midi_root_artist">Bez wykonawcy</string>
+    <string name="midi_default_artist">Wykonawca lokalny</string>
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Comics</string>
+    <string name="hub_comics_desc">PDF-, CBZ- en afbeeldingenmaplezer</string>
+    <string name="comics_library_title">Comicsbibliotheek</string>
+    <string name="comics_library_empty">Nog geen comics</string>
+    <string name="comics_library_empty_hint">Tik op + om uw eerste comic toe te voegen</string>
+    <string name="comics_add_title">Een comic toevoegen</string>
+    <string name="comics_add_pdf">PDF-bestand</string>
+    <string name="comics_add_cbz">CBZ / ZIP-bestand</string>
+    <string name="comics_add_folder">Afbeeldingenmap</string>
+    <string name="comics_delete_title">Comic verwijderen</string>
+    <string name="comics_delete_msg">\"%s\" uit de bibliotheek verwijderen?</string>
+    <string name="comics_delete_confirm">Verwijderen</string>
+    <string name="comics_layout_title">Pagina-indeling</string>
+    <string name="comics_layout_full">Volledige pagina</string>
+    <string name="comics_layout_half_top">Bovenste helft</string>
+    <string name="comics_layout_half_left">Linkerhelft (manga)</string>
+    <string name="comics_layout_half_right">Rechterhelft (manga)</string>
+    <string name="comics_error_open">Kan dit bestand niet openen</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Een bibliotheekmap scannen</string>
+    <string name="comics_scanning_title">Bibliotheek scannen…</string>
+    <string name="comics_scanning_found">%d comics gevonden</string>
+    <string name="comics_delete_root_msg">\"%s\" en alle comics ervan uit de bibliotheek verwijderen?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d comic</item>
+        <item quantity="other">%d comics</item>
+    </plurals>
+    <string name="comics_rescan">Opnieuw scannen</string>
+    <string name="comics_clear_all">Alles wissen</string>
+    <string name="comics_clear_all_msg">Alle comics en bibliotheken uit de lijst verwijderen?</string>
+    <string name="comics_rescanning_title">Opnieuw scannen…</string>
+    <string name="comics_toggle_view">Weergave wisselen</string>
+</resources>

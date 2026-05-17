@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Комікси</string>
+    <string name="hub_comics_desc">Читач PDF, CBZ та папок із зображеннями</string>
+    <string name="comics_library_title">Бібліотека коміксів</string>
+    <string name="comics_library_empty">Ще немає коміксів</string>
+    <string name="comics_library_empty_hint">Натисніть +, щоб додати перший комікс</string>
+    <string name="comics_add_title">Додати комікс</string>
+    <string name="comics_add_pdf">PDF-файл</string>
+    <string name="comics_add_cbz">CBZ / ZIP-файл</string>
+    <string name="comics_add_folder">Папка із зображеннями</string>
+    <string name="comics_delete_title">Видалити комікс</string>
+    <string name="comics_delete_msg">Видалити \"%s\" з бібліотеки?</string>
+    <string name="comics_delete_confirm">Видалити</string>
+    <string name="comics_layout_title">Макет сторінки</string>
+    <string name="comics_layout_full">Повна сторінка</string>
+    <string name="comics_layout_half_top">Верхня половина</string>
+    <string name="comics_layout_half_left">Ліва половина (манга)</string>
+    <string name="comics_layout_half_right">Права половина (манга)</string>
+    <string name="comics_error_open">Не вдалося відкрити цей файл</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Сканувати папку бібліотеки</string>
+    <string name="comics_scanning_title">Сканування бібліотеки…</string>
+    <string name="comics_scanning_found">Знайдено %d коміксів</string>
+    <string name="comics_delete_root_msg">Видалити \"%s\" та всі його комікси з бібліотеки?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d комікс</item>
+        <item quantity="few">%d комікси</item>
+        <item quantity="many">%d коміксів</item>
+        <item quantity="other">%d коміксів</item>
+    </plurals>
+    <string name="comics_rescan">Повторне сканування</string>
+    <string name="comics_clear_all">Очистити все</string>
+    <string name="comics_clear_all_msg">Видалити всі комікси та бібліотеки зі списку?</string>
+    <string name="comics_rescanning_title">Повторне сканування…</string>
+    <string name="comics_toggle_view">Перемкнути вигляд</string>
+</resources>

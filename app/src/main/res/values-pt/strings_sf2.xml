@@ -15,6 +15,7 @@
     <string name="sf2_tap_to_record">Toque para gravar</string>
     <string name="sf2_recording">Gravando…</string>
     <string name="sf2_recording_complete">Gravação concluída!</string>
+    <string name="sf2_noise_reduced">Ruído de fundo reduzido (%1$s dB)</string>
     <string name="sf2_max_duration_reached">Duração máxima atingida</string>
     <string name="sf2_detected_pitch">Detectado: %1$s (%2$.1f Hz)</string>
     <string name="sf2_pitch_uncertain">Tom incerto - definindo para C4</string>

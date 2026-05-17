@@ -377,4 +377,25 @@
     <string name="music_album_deleted">Album eliminado (%1$d archivos)</string>
     <string name="music_delete_error">Error al eliminar</string>
     <string name="music_delete_permission_required">Se requiere permiso para eliminar este archivo</string>
+    <string name="music_viz_julia_grayscale">Julia Escala de grises</string>
+    <string name="music_viz_penrose">Rombos flotantes</string>
+    <string name="music_viz_penrose_true">Penrose</string>
+    <string name="navidrome_settings">Ajustes de Navidrome</string>
+    <string name="navidrome_server_url">URL del servidor</string>
+    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
+    <string name="navidrome_username">Usuario</string>
+    <string name="navidrome_password">Contrasena</string>
+    <string name="navidrome_test_connection">Probar conexion</string>
+    <string name="navidrome_connected">Conectado correctamente</string>
+    <string name="navidrome_connection_failed">Error de conexion</string>
+    <string name="navidrome_not_configured">Navidrome no configurado</string>
+    <string name="navidrome_loading">Cargando biblioteca Navidrome…</string>
+    <string name="navidrome_browse_desc">Explorar biblioteca Navidrome</string>
+    <string name="music_settings_trusted_wifi">Esta es mi red de casa</string>
+    <string name="music_settings_trusted_wifi_active">Sincronizacion LAN activa en «%1$s»</string>
+    <string name="music_settings_trusted_wifi_inactive">Sincronizacion LAN desactivada en esta red</string>
+    <string name="music_settings_trusted_wifi_no_wifi">No conectado a Wi-Fi</string>
+    <string name="lan_sync_notif_channel">Sincronizacion LAN</string>
+    <string name="lan_sync_notif_title">Sincronizacion A2U</string>
+    <string name="lan_sync_notif_text">Sincronizando historial de escucha con dispositivos cercanos</string>
 </resources>

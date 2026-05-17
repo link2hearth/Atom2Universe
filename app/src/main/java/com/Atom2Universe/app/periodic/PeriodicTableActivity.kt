@@ -2,6 +2,7 @@ package com.Atom2Universe.app.periodic
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.GridLayout
@@ -851,7 +852,9 @@ class PeriodicTableActivity : AppCompatActivity() {
         textSize = 17f
         setTextColor(0xFFE0E0E0.toInt())
         setTextIsSelectable(true)
-        lineHeight = (textSize * 1.55f * resources.displayMetrics.density * resources.configuration.fontScale).toInt()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+          lineHeight = (textSize * 1.55f * resources.displayMetrics.density * resources.configuration.fontScale).toInt()
+        }
       })
     }
 

@@ -15,7 +15,7 @@
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:background="@android:color/transparent"
         android:tint="#AAFFFFFF"
-        android:contentDescription="Retour" />
+        android:contentDescription="@string/back" />
 
 
     <ImageButton
@@ -41,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GACHA"
+            android:text="@string/gacha_title"
             android:textColor="#FFFFD700"
             android:textSize="13sp"
             android:letterSpacing="0.3"
@@ -107,7 +107,7 @@
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_gravity="center"
-            android:contentDescription="Soleil gacha" />
+            android:contentDescription="@string/gacha_sun_desc" />
 
         <!-- Anneau de lueur (pulse) -->
         <View
@@ -290,7 +290,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Appuyez pour continuer"
+            android:text="@string/gacha_press_continue"
             android:textColor="#44FFFFFF"
             android:textSize="10sp"
             android:fontFamily="monospace"

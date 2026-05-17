@@ -74,4 +74,5 @@
     <string name="hub_shortcut_add_message">Use « %1$s » as a quick shortcut on the hub tile?</string>
     <string name="hub_shortcut_exists_message">« %1$s » is already a shortcut. Move to first position (Yes) or remove it (No)?</string>
     <string name="hub_shortcut_added">Shortcut added</string>
+    <string name="periodic_toggle_rarities_desc">Show/hide rarities</string>
 </resources>

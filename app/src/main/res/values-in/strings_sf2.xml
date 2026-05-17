@@ -15,6 +15,7 @@
     <string name="sf2_tap_to_record">Ketuk untuk merekam</string>
     <string name="sf2_recording">Merekam…</string>
     <string name="sf2_recording_complete">Rekaman selesai!</string>
+    <string name="sf2_noise_reduced">Kebisingan latar berkurang (%1$s dB)</string>
     <string name="sf2_max_duration_reached">Durasi maksimum tercapai</string>
     <string name="sf2_detected_pitch">Terdeteksi: %1$s (%2$.1f Hz)</string>
     <string name="sf2_pitch_uncertain">Nada tidak pasti - default ke C4</string>

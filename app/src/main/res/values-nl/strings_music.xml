@@ -377,4 +377,25 @@
     <string name="music_album_deleted">Album verwijderd (%1$d bestanden)</string>
     <string name="music_delete_error">Fout bij verwijderen</string>
     <string name="music_delete_permission_required">Toestemming vereist om dit bestand te verwijderen</string>
+    <string name="music_viz_julia_grayscale">Julia Grijstinten</string>
+    <string name="music_viz_penrose">Zwevende ruiten</string>
+    <string name="music_viz_penrose_true">Penrose</string>
+    <string name="navidrome_settings">Navidrome-instellingen</string>
+    <string name="navidrome_server_url">Server-URL</string>
+    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
+    <string name="navidrome_username">Gebruikersnaam</string>
+    <string name="navidrome_password">Wachtwoord</string>
+    <string name="navidrome_test_connection">Verbinding testen</string>
+    <string name="navidrome_connected">Verbinding geslaagd</string>
+    <string name="navidrome_connection_failed">Verbinding mislukt</string>
+    <string name="navidrome_not_configured">Navidrome niet geconfigureerd</string>
+    <string name="navidrome_loading">Navidrome-bibliotheek laden…</string>
+    <string name="navidrome_browse_desc">Navidrome-bibliotheek verkennen</string>
+    <string name="music_settings_trusted_wifi">Dit is mijn thuisnetwerk</string>
+    <string name="music_settings_trusted_wifi_active">LAN-synchronisatie actief op «%1$s»</string>
+    <string name="music_settings_trusted_wifi_inactive">LAN-synchronisatie uitgeschakeld op dit netwerk</string>
+    <string name="music_settings_trusted_wifi_no_wifi">Niet verbonden met Wi-Fi</string>
+    <string name="lan_sync_notif_channel">LAN-synchronisatie</string>
+    <string name="lan_sync_notif_title">A2U synchronisatie</string>
+    <string name="lan_sync_notif_text">Luistergeschiedenis synchroniseren met nabijgelegen apparaten</string>
 </resources>

@@ -13,6 +13,6 @@
     <string name="stats_top_artists">En çok dinlenen sanatçılar</string>
     <string name="stats_top_albums">En çok dinlenen albümler</string>
     <string name="stats_top_midi">En çok kullanılan MIDI dosyaları</string>
-    <string name="stats_average_score">Ortalama pratik puanı: %.1f%%</string>
+    <string name="stats_average_score">Ortalama pratik puanı</string>
     <string name="stats_no_data">Bu dönem için veri yok</string>
 </resources>

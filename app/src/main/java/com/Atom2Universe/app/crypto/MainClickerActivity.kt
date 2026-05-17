@@ -12,6 +12,7 @@ import kotlin.math.roundToInt
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.RequiresApi
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -1415,6 +1416,7 @@ class MainClickerActivity : ThemedActivity() {
         }.getOrNull()
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun decodeWithImageDecoder(uri: Uri, targetWidth: Int, targetHeight: Int): Bitmap {
         val source = ImageDecoder.createSource(contentResolver, uri)
         return ImageDecoder.decodeBitmap(source) { decoder, info, _ ->

@@ -165,15 +165,6 @@
     <!-- ===== Styles migrés depuis Atom2Universe ===== -->
 
     <!-- Dialog Theme pour les modules migrés -->
-    <style name="Theme.Atom2Univers.Dialog" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:windowMinWidthMajor">90%</item>
-        <item name="android:windowMinWidthMinor">90%</item>
-        <item name="colorPrimary">#FFFFFF</item>
-        <item name="colorOnPrimary">#000000</item>
-        <item name="colorSurface">#1C1C1C</item>
-        <item name="colorOnSurface">#FFFFFF</item>
-    </style>
 
     <!-- Sudoku Number Pad Button -->
     <style name="SudokuPadButton" parent="Widget.MaterialComponents.Button.TextButton">

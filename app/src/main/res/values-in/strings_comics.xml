@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Komik</string>
+    <string name="hub_comics_desc">Pembaca PDF, CBZ, dan folder gambar</string>
+    <string name="comics_library_title">Pustaka Komik</string>
+    <string name="comics_library_empty">Belum ada komik</string>
+    <string name="comics_library_empty_hint">Ketuk + untuk menambahkan komik pertama Anda</string>
+    <string name="comics_add_title">Tambah komik</string>
+    <string name="comics_add_pdf">File PDF</string>
+    <string name="comics_add_cbz">File CBZ / ZIP</string>
+    <string name="comics_add_folder">Folder gambar</string>
+    <string name="comics_delete_title">Hapus komik</string>
+    <string name="comics_delete_msg">Hapus \"%s\" dari pustaka?</string>
+    <string name="comics_delete_confirm">Hapus</string>
+    <string name="comics_layout_title">Tata letak halaman</string>
+    <string name="comics_layout_full">Halaman penuh</string>
+    <string name="comics_layout_half_top">Setengah atas</string>
+    <string name="comics_layout_half_left">Setengah kiri (manga)</string>
+    <string name="comics_layout_half_right">Setengah kanan (manga)</string>
+    <string name="comics_error_open">Tidak dapat membuka file ini</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Pindai folder pustaka</string>
+    <string name="comics_scanning_title">Memindai pustaka…</string>
+    <string name="comics_scanning_found">%d komik ditemukan</string>
+    <string name="comics_delete_root_msg">Hapus \"%s\" dan semua komiknya dari pustaka?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d komik</item>
+        <item quantity="other">%d komik</item>
+    </plurals>
+    <string name="comics_rescan">Pindai ulang</string>
+    <string name="comics_clear_all">Hapus semua</string>
+    <string name="comics_clear_all_msg">Hapus semua komik dan pustaka dari daftar?</string>
+    <string name="comics_rescanning_title">Memindai ulang…</string>
+    <string name="comics_toggle_view">Ganti tampilan</string>
+</resources>

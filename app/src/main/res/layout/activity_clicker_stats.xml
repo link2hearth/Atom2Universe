@@ -22,7 +22,7 @@
             android:src="@android:drawable/ic_media_previous"
             android:background="@android:color/transparent"
             android:tint="#FFFFFF"
-            android:contentDescription="Retour" />
+            android:contentDescription="@string/back" />
 
         <TextView
             android:layout_width="0dp"

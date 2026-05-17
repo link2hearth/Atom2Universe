@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Komiksy</string>
+    <string name="hub_comics_desc">Czytnik PDF, CBZ i folderów z obrazami</string>
+    <string name="comics_library_title">Biblioteka komiksów</string>
+    <string name="comics_library_empty">Brak komiksów</string>
+    <string name="comics_library_empty_hint">Dotknij +, aby dodać pierwszy komiks</string>
+    <string name="comics_add_title">Dodaj komiks</string>
+    <string name="comics_add_pdf">Plik PDF</string>
+    <string name="comics_add_cbz">Plik CBZ / ZIP</string>
+    <string name="comics_add_folder">Folder z obrazami</string>
+    <string name="comics_delete_title">Usuń komiks</string>
+    <string name="comics_delete_msg">Usunąć \"%s\" z biblioteki?</string>
+    <string name="comics_delete_confirm">Usuń</string>
+    <string name="comics_layout_title">Układ strony</string>
+    <string name="comics_layout_full">Pełna strona</string>
+    <string name="comics_layout_half_top">Górna połowa</string>
+    <string name="comics_layout_half_left">Lewa połowa (manga)</string>
+    <string name="comics_layout_half_right">Prawa połowa (manga)</string>
+    <string name="comics_error_open">Nie można otworzyć tego pliku</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Skanuj folder biblioteki</string>
+    <string name="comics_scanning_title">Skanowanie biblioteki…</string>
+    <string name="comics_scanning_found">Znaleziono %d komiksów</string>
+    <string name="comics_delete_root_msg">Usunąć \"%s\" i wszystkie jego komiksy z biblioteki?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d komiks</item>
+        <item quantity="few">%d komiksy</item>
+        <item quantity="many">%d komiksów</item>
+        <item quantity="other">%d komiksów</item>
+    </plurals>
+    <string name="comics_rescan">Przeskanuj ponownie</string>
+    <string name="comics_clear_all">Wyczyść wszystko</string>
+    <string name="comics_clear_all_msg">Usunąć wszystkie komiksy i biblioteki z listy?</string>
+    <string name="comics_rescanning_title">Ponowne skanowanie…</string>
+    <string name="comics_toggle_view">Przełącz widok</string>
+</resources>

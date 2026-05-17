@@ -311,4 +311,5 @@
     <string name="sf2_range_error_end_before_root">La nota finale deve essere ≥ %1$s</string>
     <string name="sf2_seconds_format">%1$ds</string>
     <string name="sf2_recording_duration_format">%1$.1fs / %2$ds</string>
+    <string name="sf2_noise_reduced">Rumore di fondo ridotto (%1$s dB)</string>
 </resources>

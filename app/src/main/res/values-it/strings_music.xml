@@ -448,4 +448,25 @@ Questa azione non può essere annullata.</string>
     <string name="music_play_count_short_format">%1$dx</string>
     <string name="music_artist_album_track_counts">%1$s, %2$s</string>
     <string name="music_album_track_count_with_duration">%1$s - %2$s</string>
+    <string name="music_viz_julia_grayscale">Julia Scala di grigi</string>
+    <string name="music_viz_penrose">Losanghe flottanti</string>
+    <string name="music_viz_penrose_true">Penrose</string>
+    <string name="navidrome_settings">Impostazioni Navidrome</string>
+    <string name="navidrome_server_url">URL server</string>
+    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
+    <string name="navidrome_username">Nome utente</string>
+    <string name="navidrome_password">Password</string>
+    <string name="navidrome_test_connection">Testa connessione</string>
+    <string name="navidrome_connected">Connessione riuscita</string>
+    <string name="navidrome_connection_failed">Connessione fallita</string>
+    <string name="navidrome_not_configured">Navidrome non configurato</string>
+    <string name="navidrome_loading">Caricamento libreria Navidrome…</string>
+    <string name="navidrome_browse_desc">Sfoglia la libreria Navidrome</string>
+    <string name="music_settings_trusted_wifi">Questa è la mia rete domestica</string>
+    <string name="music_settings_trusted_wifi_active">Sync LAN attiva su «%1$s»</string>
+    <string name="music_settings_trusted_wifi_inactive">Sync LAN disattivata su questa rete</string>
+    <string name="music_settings_trusted_wifi_no_wifi">Non connesso al Wi-Fi</string>
+    <string name="lan_sync_notif_channel">Sync LAN</string>
+    <string name="lan_sync_notif_title">Sync A2U</string>
+    <string name="lan_sync_notif_text">Sincronizzazione cronologia ascolti con dispositivi vicini</string>
 </resources>

@@ -377,4 +377,25 @@
     <string name="music_album_deleted">Album gelöscht (%1$d Dateien)</string>
     <string name="music_delete_error">Fehler beim Löschen</string>
     <string name="music_delete_permission_required">Berechtigung zum Löschen dieser Datei erforderlich</string>
+    <string name="music_viz_julia_grayscale">Julia Graustufen</string>
+    <string name="music_viz_penrose">Schwebende Rauten</string>
+    <string name="music_viz_penrose_true">Penrose</string>
+    <string name="navidrome_settings">Navidrome-Einstellungen</string>
+    <string name="navidrome_server_url">Server-URL</string>
+    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
+    <string name="navidrome_username">Benutzername</string>
+    <string name="navidrome_password">Passwort</string>
+    <string name="navidrome_test_connection">Verbindung testen</string>
+    <string name="navidrome_connected">Erfolgreich verbunden</string>
+    <string name="navidrome_connection_failed">Verbindung fehlgeschlagen</string>
+    <string name="navidrome_not_configured">Navidrome nicht konfiguriert</string>
+    <string name="navidrome_loading">Navidrome-Bibliothek wird geladen…</string>
+    <string name="navidrome_browse_desc">Navidrome-Bibliothek durchsuchen</string>
+    <string name="music_settings_trusted_wifi">Dies ist mein Heimnetzwerk</string>
+    <string name="music_settings_trusted_wifi_active">LAN-Sync aktiv auf «%1$s»</string>
+    <string name="music_settings_trusted_wifi_inactive">LAN-Sync in diesem Netzwerk deaktiviert</string>
+    <string name="music_settings_trusted_wifi_no_wifi">Nicht mit WLAN verbunden</string>
+    <string name="lan_sync_notif_channel">LAN-Sync</string>
+    <string name="lan_sync_notif_title">A2U-Sync</string>
+    <string name="lan_sync_notif_text">Hörverlauf mit nahegelegenen Geräten synchronisieren</string>
 </resources>

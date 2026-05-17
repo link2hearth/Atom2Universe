@@ -544,4 +544,6 @@
     <string name="practice_export_success">Geëxporteerd naar %s</string>
     <string name="practice_export_error">Exportfout: %s</string>
     <string name="practice_export_rendering">Audio renderen…</string>
+    <string name="midi_root_artist">Zonder artiest</string>
+    <string name="midi_default_artist">Lokale artiest</string>
 </resources>

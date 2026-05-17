@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Çizgi Romanlar</string>
+    <string name="hub_comics_desc">PDF, CBZ ve resim klasörü okuyucusu</string>
+    <string name="comics_library_title">Çizgi Roman Kütüphanesi</string>
+    <string name="comics_library_empty">Henüz çizgi roman yok</string>
+    <string name="comics_library_empty_hint">İlk çizgi romanınızı eklemek için + düğmesine dokunun</string>
+    <string name="comics_add_title">Çizgi roman ekle</string>
+    <string name="comics_add_pdf">PDF dosyası</string>
+    <string name="comics_add_cbz">CBZ / ZIP dosyası</string>
+    <string name="comics_add_folder">Resim klasörü</string>
+    <string name="comics_delete_title">Çizgi romanı kaldır</string>
+    <string name="comics_delete_msg">\"%s\" kütüphaneden kaldırılsın mı?</string>
+    <string name="comics_delete_confirm">Kaldır</string>
+    <string name="comics_layout_title">Sayfa düzeni</string>
+    <string name="comics_layout_full">Tam sayfa</string>
+    <string name="comics_layout_half_top">Üst yarı</string>
+    <string name="comics_layout_half_left">Sol yarı (manga)</string>
+    <string name="comics_layout_half_right">Sağ yarı (manga)</string>
+    <string name="comics_error_open">Bu dosya açılamıyor</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Kütüphane klasörünü tara</string>
+    <string name="comics_scanning_title">Kütüphane taranıyor…</string>
+    <string name="comics_scanning_found">%d çizgi roman bulundu</string>
+    <string name="comics_delete_root_msg">\"%s\" ve tüm çizgi romanları kütüphaneden kaldırılsın mı?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d çizgi roman</item>
+        <item quantity="other">%d çizgi roman</item>
+    </plurals>
+    <string name="comics_rescan">Yeniden tara</string>
+    <string name="comics_clear_all">Tümünü temizle</string>
+    <string name="comics_clear_all_msg">Tüm çizgi romanlar ve kütüphaneler listeden kaldırılsın mı?</string>
+    <string name="comics_rescanning_title">Yeniden taranıyor…</string>
+    <string name="comics_toggle_view">Görünümü değiştir</string>
+</resources>

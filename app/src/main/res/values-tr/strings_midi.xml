@@ -544,4 +544,6 @@
     <string name="practice_export_success">%s konumuna dışa aktarıldı</string>
     <string name="practice_export_error">Dışa aktarma hatası: %s</string>
     <string name="practice_export_rendering">Ses oluşturuluyor…</string>
+    <string name="midi_root_artist">Sanatçısız</string>
+    <string name="midi_default_artist">Yerel Sanatçı</string>
 </resources>

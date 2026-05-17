@@ -18,7 +18,7 @@
       android:layout_width="40dp"
       android:layout_height="40dp"
       android:src="@drawable/ic_arrow_back"
-      android:contentDescription="Retour"
+      android:contentDescription="@string/back"
       android:background="?attr/selectableItemBackground"
       android:scaleType="centerInside" />
 
@@ -37,7 +37,7 @@
       android:layout_width="40dp"
       android:layout_height="40dp"
       android:src="@android:drawable/ic_menu_view"
-      android:contentDescription="Afficher/cacher les raretés"
+      android:contentDescription="@string/periodic_toggle_rarities_desc"
       android:background="?attr/selectableItemBackground"
       android:scaleType="centerInside"
       android:tint="#FFFFFF" />

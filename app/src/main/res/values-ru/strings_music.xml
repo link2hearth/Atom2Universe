@@ -391,4 +391,25 @@
     <string name="music_album_deleted">Альбом удалён (%1$d файлов)</string>
     <string name="music_delete_error">Ошибка удаления</string>
     <string name="music_delete_permission_required">Требуется разрешение для удаления этого файла</string>
+    <string name="music_viz_julia_grayscale">Julia оттенки серого</string>
+    <string name="music_viz_penrose">Парящие ромбы</string>
+    <string name="music_viz_penrose_true">Пенроуз</string>
+    <string name="navidrome_settings">Настройки Navidrome</string>
+    <string name="navidrome_server_url">URL сервера</string>
+    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
+    <string name="navidrome_username">Имя пользователя</string>
+    <string name="navidrome_password">Пароль</string>
+    <string name="navidrome_test_connection">Проверить соединение</string>
+    <string name="navidrome_connected">Соединение установлено</string>
+    <string name="navidrome_connection_failed">Ошибка подключения</string>
+    <string name="navidrome_not_configured">Navidrome не настроен</string>
+    <string name="navidrome_loading">Загрузка библиотеки Navidrome…</string>
+    <string name="navidrome_browse_desc">Просмотр библиотеки Navidrome</string>
+    <string name="music_settings_trusted_wifi">Это моя домашняя сеть</string>
+    <string name="music_settings_trusted_wifi_active">Синхронизация по LAN активна в сети «%1$s»</string>
+    <string name="music_settings_trusted_wifi_inactive">Синхронизация по LAN отключена в этой сети</string>
+    <string name="music_settings_trusted_wifi_no_wifi">Wi-Fi не подключён</string>
+    <string name="lan_sync_notif_channel">LAN Синхронизация</string>
+    <string name="lan_sync_notif_title">Синхронизация A2U</string>
+    <string name="lan_sync_notif_text">Синхронизация истории прослушивания с соседними устройствами</string>
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Fumetti</string>
+    <string name="hub_comics_desc">Lettore di PDF, CBZ e cartelle di immagini</string>
+    <string name="comics_library_title">Libreria Fumetti</string>
+    <string name="comics_library_empty">Nessun fumetto</string>
+    <string name="comics_library_empty_hint">Tocca + per aggiungere il tuo primo fumetto</string>
+    <string name="comics_add_title">Aggiungi un fumetto</string>
+    <string name="comics_add_pdf">File PDF</string>
+    <string name="comics_add_cbz">File CBZ / ZIP</string>
+    <string name="comics_add_folder">Cartella di immagini</string>
+    <string name="comics_delete_title">Rimuovi fumetto</string>
+    <string name="comics_delete_msg">Rimuovere \"%s\" dalla libreria?</string>
+    <string name="comics_delete_confirm">Rimuovi</string>
+    <string name="comics_layout_title">Layout pagina</string>
+    <string name="comics_layout_full">Pagina intera</string>
+    <string name="comics_layout_half_top">Metà superiore</string>
+    <string name="comics_layout_half_left">Metà sinistra (manga)</string>
+    <string name="comics_layout_half_right">Metà destra (manga)</string>
+    <string name="comics_error_open">Impossibile aprire questo file</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Scansiona una cartella libreria</string>
+    <string name="comics_scanning_title">Scansione libreria…</string>
+    <string name="comics_scanning_found">%d fumetti trovati</string>
+    <string name="comics_delete_root_msg">Rimuovere \"%s\" e tutti i suoi fumetti dalla libreria?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d fumetto</item>
+        <item quantity="other">%d fumetti</item>
+    </plurals>
+    <string name="comics_rescan">Ripeti scansione</string>
+    <string name="comics_clear_all">Cancella tutto</string>
+    <string name="comics_clear_all_msg">Rimuovere tutti i fumetti e le librerie dalla lista?</string>
+    <string name="comics_rescanning_title">Scansione in corso…</string>
+    <string name="comics_toggle_view">Cambia visualizzazione</string>
+</resources>

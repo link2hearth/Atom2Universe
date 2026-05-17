@@ -13,6 +13,6 @@
     <string name="stats_top_artists">Топ исполнителей</string>
     <string name="stats_top_albums">Топ альбомов</string>
     <string name="stats_top_midi">Топ MIDI-файлов</string>
-    <string name="stats_average_score">Средний балл практики: %.1f%%</string>
+    <string name="stats_average_score">Средний балл практики</string>
     <string name="stats_no_data">Нет данных за этот период</string>
 </resources>

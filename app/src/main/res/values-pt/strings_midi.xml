@@ -414,4 +414,136 @@
     <string name="practice_export_success">Exportado para %s</string>
     <string name="practice_export_error">Erro na exportação: %s</string>
     <string name="practice_export_rendering">Renderizando áudio…</string>
+    <string name="midi_root_artist">Sem artista</string>
+    <string name="midi_default_artist">Artista local</string>
+    <string-array name="gm_instruments">
+        <item>Piano de Cauda Acústico</item>
+        <item>Piano Acústico Brilhante</item>
+        <item>Piano de Cauda Elétrico</item>
+        <item>Piano Honky-tonk</item>
+        <item>Piano Elétrico 1</item>
+        <item>Piano Elétrico 2</item>
+        <item>Cravo</item>
+        <item>Clavinet</item>
+        <item>Celesta</item>
+        <item>Glóquenspiel</item>
+        <item>Caixa de Música</item>
+        <item>Vibrafone</item>
+        <item>Marimba</item>
+        <item>Xilofone</item>
+        <item>Sinos Tubulares</item>
+        <item>Salterio</item>
+        <item>Órgão de Tração</item>
+        <item>Órgão Percussivo</item>
+        <item>Órgão Rock</item>
+        <item>Órgão de Igreja</item>
+        <item>Órgão de Palheta</item>
+        <item>Acordeão</item>
+        <item>Harmônica</item>
+        <item>Acordeão de Tango</item>
+        <item>Violão (nylon)</item>
+        <item>Violão (aço)</item>
+        <item>Guitarra Elétrica (jazz)</item>
+        <item>Guitarra Elétrica (limpa)</item>
+        <item>Guitarra Elétrica (muda)</item>
+        <item>Guitarra com Overdrive</item>
+        <item>Guitarra com Distorção</item>
+        <item>Harmônicos de Guitarra</item>
+        <item>Contrabaixo Acústico</item>
+        <item>Contrabaixo Elétrico (dedo)</item>
+        <item>Contrabaixo Elétrico (palheta)</item>
+        <item>Contrabaixo Fretless</item>
+        <item>Slap Bass 1</item>
+        <item>Slap Bass 2</item>
+        <item>Synth Bass 1</item>
+        <item>Synth Bass 2</item>
+        <item>Violino</item>
+        <item>Viola</item>
+        <item>Violoncelo</item>
+        <item>Contrabaixo</item>
+        <item>Cordas Tremolo</item>
+        <item>Cordas Pizzicato</item>
+        <item>Harpa de Orquestra</item>
+        <item>Tímpano</item>
+        <item>Conjunto de Cordas 1</item>
+        <item>Conjunto de Cordas 2</item>
+        <item>Synth Strings 1</item>
+        <item>Synth Strings 2</item>
+        <item>Coro (Aahs)</item>
+        <item>Vozes (Oohs)</item>
+        <item>Voz Synth</item>
+        <item>Golpe de Orquestra</item>
+        <item>Trompete</item>
+        <item>Trombone</item>
+        <item>Tuba</item>
+        <item>Trompete com Surdina</item>
+        <item>Trompa Francesa</item>
+        <item>Seção de Metais</item>
+        <item>Synth Brass 1</item>
+        <item>Synth Brass 2</item>
+        <item>Saxofone Soprano</item>
+        <item>Saxofone Alto</item>
+        <item>Saxofone Tenor</item>
+        <item>Saxofone Barítono</item>
+        <item>Oboé</item>
+        <item>Corne Inglês</item>
+        <item>Fagote</item>
+        <item>Clarinete</item>
+        <item>Piccolo</item>
+        <item>Flauta</item>
+        <item>Flauta Doce</item>
+        <item>Flauta de Pã</item>
+        <item>Garrafa Soprada</item>
+        <item>Shakuhachi</item>
+        <item>Apito</item>
+        <item>Ocarina</item>
+        <item>Lead 1 (quadrada)</item>
+        <item>Lead 2 (dente de serra)</item>
+        <item>Lead 3 (calliope)</item>
+        <item>Lead 4 (chiff)</item>
+        <item>Lead 5 (charang)</item>
+        <item>Lead 6 (voz)</item>
+        <item>Lead 7 (quintas)</item>
+        <item>Lead 8 (baixo + lead)</item>
+        <item>Pad 1 (nova era)</item>
+        <item>Pad 2 (quente)</item>
+        <item>Pad 3 (polysynth)</item>
+        <item>Pad 4 (coro)</item>
+        <item>Pad 5 (arco)</item>
+        <item>Pad 6 (metálico)</item>
+        <item>Pad 7 (halo)</item>
+        <item>Pad 8 (varredura)</item>
+        <item>FX 1 (chuva)</item>
+        <item>FX 2 (trilha sonora)</item>
+        <item>FX 3 (cristal)</item>
+        <item>FX 4 (atmosfera)</item>
+        <item>FX 5 (brilho)</item>
+        <item>FX 6 (duendes)</item>
+        <item>FX 7 (ecos)</item>
+        <item>FX 8 (sci-fi)</item>
+        <item>Sitar</item>
+        <item>Banjo</item>
+        <item>Shamisen</item>
+        <item>Koto</item>
+        <item>Kalimba</item>
+        <item>Gaita de Foles</item>
+        <item>Fiddle</item>
+        <item>Shanai</item>
+        <item>Sineta</item>
+        <item>Agogô</item>
+        <item>Tambores de Aço</item>
+        <item>Bloco de Madeira</item>
+        <item>Taiko</item>
+        <item>Tom Melódico</item>
+        <item>Bateria Synth</item>
+        <item>Prato Reverso</item>
+        <item>Ruído de Trastes</item>
+        <item>Ruído de Respiração</item>
+        <item>Litoral</item>
+        <item>Canto de Pássaro</item>
+        <item>Toque de Telefone</item>
+        <item>Helicóptero</item>
+        <item>Aplausos</item>
+        <item>Tiro</item>
+    </string-array>
 </resources>

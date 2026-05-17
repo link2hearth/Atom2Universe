@@ -6,8 +6,6 @@
     <string name="stats_tab_month">Mês</string>
     <string name="stats_tab_year">Ano</string>
     <string name="stats_total_time">Tempo total de uso</string>
-    <string name="stats_listening_time">Tempo de audição</string>
-    <string name="stats_practice_time">Tempo de prática</string>
     <string name="stats_hours_format">%1$d h %2$d min</string>
     <string name="stats_minutes_format">%1$d min</string>
     <string name="stats_top_artists">Top artistas</string>

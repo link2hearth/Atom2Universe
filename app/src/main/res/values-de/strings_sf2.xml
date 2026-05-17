@@ -15,6 +15,7 @@
     <string name="sf2_tap_to_record">Tippen zum Aufnehmen</string>
     <string name="sf2_recording">Aufnahme läuft…</string>
     <string name="sf2_recording_complete">Aufnahme abgeschlossen!</string>
+    <string name="sf2_noise_reduced">Hintergrundrauschen reduziert (%1$s dB)</string>
     <string name="sf2_max_duration_reached">Maximale Dauer erreicht</string>
     <string name="sf2_detected_pitch">Erkannt: %1$s (%2$.1f Hz)</string>
     <string name="sf2_pitch_uncertain">Tonhöhe unsicher – Standard C4</string>

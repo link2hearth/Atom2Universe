@@ -377,4 +377,25 @@
     <string name="music_album_deleted">Album dihapus (%1$d file)</string>
     <string name="music_delete_error">Kesalahan menghapus</string>
     <string name="music_delete_permission_required">Izin diperlukan untuk menghapus file ini</string>
+    <string name="music_viz_penrose">Belah ketupat melayang</string>
+    <string name="music_viz_penrose_true">Penrose</string>
+    <string name="music_viz_julia_grayscale">Julia Skala Abu-abu</string>
+    <string name="navidrome_settings">Pengaturan Navidrome</string>
+    <string name="navidrome_server_url">URL server</string>
+    <string name="navidrome_server_url_hint">http://192.168.1.172:4533</string>
+    <string name="navidrome_username">Nama pengguna</string>
+    <string name="navidrome_password">Kata sandi</string>
+    <string name="navidrome_test_connection">Uji koneksi</string>
+    <string name="navidrome_connected">Berhasil terhubung</string>
+    <string name="navidrome_connection_failed">Koneksi gagal</string>
+    <string name="navidrome_not_configured">Navidrome belum dikonfigurasi</string>
+    <string name="navidrome_loading">Memuat pustaka Navidrome…</string>
+    <string name="navidrome_browse_desc">Jelajahi pustaka Navidrome</string>
+    <string name="music_settings_trusted_wifi">Ini adalah jaringan rumah saya</string>
+    <string name="music_settings_trusted_wifi_active">Sinkronisasi LAN aktif di «%1$s»</string>
+    <string name="music_settings_trusted_wifi_inactive">Sinkronisasi LAN dinonaktifkan di jaringan ini</string>
+    <string name="music_settings_trusted_wifi_no_wifi">Tidak terhubung ke Wi-Fi</string>
+    <string name="lan_sync_notif_channel">Sinkronisasi LAN</string>
+    <string name="lan_sync_notif_title">Sinkronisasi A2U</string>
+    <string name="lan_sync_notif_text">Menyinkronkan riwayat mendengarkan dengan perangkat terdekat</string>
 </resources>

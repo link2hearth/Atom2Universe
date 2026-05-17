@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Quadrinhos</string>
+    <string name="hub_comics_desc">Leitor de PDF, CBZ e pastas de imagens</string>
+    <string name="comics_library_title">Biblioteca de Quadrinhos</string>
+    <string name="comics_library_empty">Nenhum quadrinho ainda</string>
+    <string name="comics_library_empty_hint">Toque em + para adicionar seu primeiro quadrinho</string>
+    <string name="comics_add_title">Adicionar um quadrinho</string>
+    <string name="comics_add_pdf">Arquivo PDF</string>
+    <string name="comics_add_cbz">Arquivo CBZ / ZIP</string>
+    <string name="comics_add_folder">Pasta de imagens</string>
+    <string name="comics_delete_title">Remover quadrinho</string>
+    <string name="comics_delete_msg">Remover \"%s\" da biblioteca?</string>
+    <string name="comics_delete_confirm">Remover</string>
+    <string name="comics_layout_title">Layout da página</string>
+    <string name="comics_layout_full">Página inteira</string>
+    <string name="comics_layout_half_top">Metade superior</string>
+    <string name="comics_layout_half_left">Metade esquerda (mangá)</string>
+    <string name="comics_layout_half_right">Metade direita (mangá)</string>
+    <string name="comics_error_open">Não foi possível abrir este arquivo</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Verificar uma pasta de biblioteca</string>
+    <string name="comics_scanning_title">Verificando biblioteca…</string>
+    <string name="comics_scanning_found">%d quadrinhos encontrados</string>
+    <string name="comics_delete_root_msg">Remover \"%s\" e todos os seus quadrinhos da biblioteca?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d quadrinho</item>
+        <item quantity="other">%d quadrinhos</item>
+    </plurals>
+    <string name="comics_rescan">Reverificar</string>
+    <string name="comics_clear_all">Limpar tudo</string>
+    <string name="comics_clear_all_msg">Remover todos os quadrinhos e bibliotecas da lista?</string>
+    <string name="comics_rescanning_title">Reverificando…</string>
+    <string name="comics_toggle_view">Alternar visualização</string>
+</resources>

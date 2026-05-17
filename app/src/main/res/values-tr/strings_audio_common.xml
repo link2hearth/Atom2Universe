@@ -12,17 +12,10 @@
     <string name="audio_conflict_title">Ses çalınıyor</string>
     <string name="audio_conflict_message">%1$s zaten çalıyor. Ne dinlemek istersiniz?</string>
     <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
-    <string name="audio_settings_title">Ses ayarları</string>
-    <string name="audio_settings_description">MIDI klavye bağlıyken ses çıkışını yapılandırın.</string>
-    <string name="audio_option_speaker_force">Sesi tablet hoparlörlerinden çıkmaya zorla</string>
-    <string name="audio_option_keyboard_sound">Notalarımı tablette çal (aksi halde klavyede)</string>
-    <string name="audio_settings_help">Yardım</string>
     <string name="audio_hub_title">A2U</string>
     <string name="audio_hub_play_pause">Oynat / Duraklat</string>
     <string name="audio_hub_stop">Durdur</string>
     <string name="audio_hub_no_playback">Oynatma yok</string>
-    <string name="audio_hub_playing">Şu an çalınıyor…</string>
-    <string name="audio_hub_paused">Duraklatıldı</string>
     <string name="audio_hub_radio_title">Web Radyo</string>
     <string name="audio_hub_radio_desc">Binlerce istasyonu dinleyin</string>
     <string name="audio_hub_midi_title">MIDI Oynatıcı</string>
