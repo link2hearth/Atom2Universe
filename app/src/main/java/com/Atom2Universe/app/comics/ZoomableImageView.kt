@@ -197,6 +197,7 @@ class ZoomableImageView @JvmOverloads constructor(
                 lastPanX = cx
                 lastPanY = cy
             }
+            MotionEvent.ACTION_UP -> performClick()
             MotionEvent.ACTION_POINTER_UP -> {
                 // Recalculer sans le doigt qui se lève pour éviter un saut
                 val lifted = event.actionIndex
@@ -207,6 +208,11 @@ class ZoomableImageView @JvmOverloads constructor(
                 if (n > 0) { lastPanX = sx / n; lastPanY = sy / n }
             }
         }
+        return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
         return true
     }
 
