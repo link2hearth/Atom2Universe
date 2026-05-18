@@ -59,6 +59,7 @@ class ComicsTreeActivity : ThemedActivity() {
     private lateinit var recycler: RecyclerView
     private lateinit var emptyView: TextView
     private var allEntries: List<ComicEntry> = emptyList()
+    private var rootId: String = ""
     private var displayMode = MODE_TREE
     private var gridColumns = DEFAULT_COLS
     private var toggleMenuItem: MenuItem? = null
@@ -93,7 +94,7 @@ class ComicsTreeActivity : ThemedActivity() {
         setContentView(R.layout.activity_comics_tree)
         enableImmersiveMode()
 
-        val rootId = intent.getStringExtra(EXTRA_ROOT_ID) ?: run { finish(); return }
+        rootId = intent.getStringExtra(EXTRA_ROOT_ID) ?: run { finish(); return }
         val rootName = intent.getStringExtra(EXTRA_ROOT_NAME) ?: ""
 
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -115,16 +116,24 @@ class ComicsTreeActivity : ThemedActivity() {
                 return false
             }
         })
+    }
 
+    override fun onResume() {
+        super.onResume()
+        loadData()
+    }
+
+    private fun loadData() {
         scope.launch {
+            val scrollState = recycler.layoutManager?.onSaveInstanceState()
             allEntries = withContext(Dispatchers.IO) {
                 ComicsDatabase.getInstance(this@ComicsTreeActivity).comicsDao().getComicsByRoot(rootId)
             }
-            if (allEntries.isEmpty()) {
-                emptyView.visibility = View.VISIBLE
-                return@launch
+            emptyView.visibility = if (allEntries.isEmpty()) View.VISIBLE else View.GONE
+            if (allEntries.isNotEmpty()) {
+                applyDisplayMode()
+                if (scrollState != null) recycler.layoutManager?.onRestoreInstanceState(scrollState)
             }
-            applyDisplayMode()
         }
     }
 

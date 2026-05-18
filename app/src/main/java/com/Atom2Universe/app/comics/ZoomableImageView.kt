@@ -35,24 +35,16 @@ class ZoomableImageView @JvmOverloads constructor(
     var onSwipeRight: (() -> Unit)? = null
     var onTap: (() -> Unit)? = null
 
-    private var isScaling = false
     private var lastPanX = 0f
     private var lastPanY = 0f
 
     private val scaleDetector = ScaleGestureDetector(context,
         object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-                isScaling = true
-                return true
-            }
             override fun onScale(detector: ScaleGestureDetector): Boolean {
                 currentScale = (currentScale * detector.scaleFactor).coerceIn(0.5f, maxScale)
                 clampTranslation()
                 invalidate()
                 return true
-            }
-            override fun onScaleEnd(detector: ScaleGestureDetector) {
-                isScaling = false
             }
         })
 
@@ -70,16 +62,21 @@ class ZoomableImageView @JvmOverloads constructor(
                 return true
             }
             override fun onFling(e1: MotionEvent?, e2: MotionEvent, vx: Float, vy: Float): Boolean {
-                // Swipe page seulement si pas zoomé au-delà du cadrage initial
-                if (currentScale <= 1.1f && e1 != null) {
-                    val dx = e2.x - e1.x
-                    val dy = e2.y - e1.y
-                    if (abs(dx) > 80 && abs(dx) > abs(dy) && abs(vx) > 200f) {
-                        if (dx < 0) onSwipeLeft?.invoke() else onSwipeRight?.invoke()
-                        return true
-                    }
+                if (e1 == null) return false
+                val dx = e2.x - e1.x
+                val dy = e2.y - e1.y
+                if (abs(dx) <= 140 || abs(dx) <= 3f * abs(dy) || abs(vx) <= 600f) return false
+                // Autoriser le changement de page si on est au bord de l'image dans la direction du swipe
+                val bmp = bitmap ?: return false
+                val scaledW = bmp.width * minOf(width / bmp.width.toFloat(), height / bmp.height.toFloat()) * currentScale
+                val maxTx = maxOf(0f, (scaledW - width) / 2f)
+                val atRightEdge = translateX <= -maxTx + 2f
+                val atLeftEdge  = translateX >= maxTx - 2f
+                return when {
+                    dx < 0 && atRightEdge -> { onSwipeLeft?.invoke(); true }
+                    dx > 0 && atLeftEdge  -> { onSwipeRight?.invoke(); true }
+                    else -> false
                 }
-                return false
             }
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 onTap?.invoke()
@@ -185,22 +182,40 @@ class ZoomableImageView @JvmOverloads constructor(
         scaleDetector.onTouchEvent(event)
         gestureDetector.onTouchEvent(event)
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> {
-                lastPanX = event.x
-                lastPanY = event.y
+            MotionEvent.ACTION_DOWN,
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                lastPanX = centroidX(event)
+                lastPanY = centroidY(event)
             }
             MotionEvent.ACTION_MOVE -> {
-                if (!isScaling) {
-                    translateX += event.x - lastPanX
-                    translateY += event.y - lastPanY
-                    clampTranslation()
-                    invalidate()
+                val cx = centroidX(event)
+                val cy = centroidY(event)
+                translateX += cx - lastPanX
+                translateY += cy - lastPanY
+                clampTranslation()
+                invalidate()
+                lastPanX = cx
+                lastPanY = cy
+            }
+            MotionEvent.ACTION_POINTER_UP -> {
+                // Recalculer sans le doigt qui se lève pour éviter un saut
+                val lifted = event.actionIndex
+                var sx = 0f; var sy = 0f; var n = 0
+                for (i in 0 until event.pointerCount) {
+                    if (i != lifted) { sx += event.getX(i); sy += event.getY(i); n++ }
                 }
-                lastPanX = event.x
-                lastPanY = event.y
+                if (n > 0) { lastPanX = sx / n; lastPanY = sy / n }
             }
         }
         return true
+    }
+
+    private fun centroidX(event: MotionEvent): Float {
+        var s = 0f; repeat(event.pointerCount) { s += event.getX(it) }; return s / event.pointerCount
+    }
+
+    private fun centroidY(event: MotionEvent): Float {
+        var s = 0f; repeat(event.pointerCount) { s += event.getY(it) }; return s / event.pointerCount
     }
 
     private fun clampTranslation() {

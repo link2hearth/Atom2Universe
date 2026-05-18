@@ -3,7 +3,10 @@ package com.Atom2Universe.app.comics
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -50,6 +53,12 @@ class ComicsLibraryActivity : ThemedActivity() {
     }
     private val pickFolder = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         if (uri != null) pendingFolderAction?.invoke(uri).also { pendingFolderAction = null }
+    }
+    private val requestStoragePermission = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { _ ->
+        pendingFolderAction = { uri -> addLibraryRoot(uri) }
+        pickFolder.launch(null)
     }
     private var pendingFolderAction: ((Uri) -> Unit)? = null
 
@@ -142,7 +151,7 @@ class ComicsLibraryActivity : ThemedActivity() {
                     0 -> pickFile.launch(arrayOf("application/pdf"))
                     1 -> pickFile.launch(arrayOf("application/zip", "application/x-cbz", "*/*"))
                     2 -> { pendingFolderAction = { uri -> addComicFolder(uri) }; pickFolder.launch(null) }
-                    3 -> { pendingFolderAction = { uri -> addLibraryRoot(uri) }; pickFolder.launch(null) }
+                    3 -> requestLibraryRoot()
                 }
             }
             .show()
@@ -229,6 +238,32 @@ class ComicsLibraryActivity : ThemedActivity() {
 
     // ── Library root (recursive scan) ─────────────────────────────────────
 
+    private fun requestLibraryRoot() {
+        if (android.os.Environment.isExternalStorageManager()) {
+            pendingFolderAction = { uri -> addLibraryRoot(uri) }
+            pickFolder.launch(null)
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.comics_storage_perm_title)
+            .setMessage(R.string.comics_storage_perm_msg)
+            .setPositiveButton(R.string.comics_storage_perm_grant) { _, _ ->
+                val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                        data = Uri.parse("package:$packageName")
+                    }
+                } else {
+                    Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                }
+                requestStoragePermission.launch(intent)
+            }
+            .setNegativeButton(R.string.comics_storage_perm_skip) { _, _ ->
+                pendingFolderAction = { uri -> addLibraryRoot(uri) }
+                pickFolder.launch(null)
+            }
+            .show()
+    }
+
     private fun addLibraryRoot(uri: Uri) {
         contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val (countText, nameText, scanDialog) = buildScanDialog(R.string.comics_scanning_title)
@@ -306,9 +341,11 @@ class ComicsLibraryActivity : ThemedActivity() {
     }
 
     private fun scanLibraryRoot(uri: Uri, existingRootId: String? = null, onFound: (count: Int, lastName: String) -> Unit): Pair<ComicsRootLibrary, List<ComicEntry>> {
-        val rootFile = treeUriToFile(uri)
-        if (rootFile != null && rootFile.isDirectory) {
-            return fastScan(rootFile, uri.toString(), existingRootId, onFound)
+        if (android.os.Environment.isExternalStorageManager()) {
+            val rootFile = treeUriToFile(uri)
+            if (rootFile != null && rootFile.isDirectory) {
+                return fastScan(rootFile, uri.toString(), existingRootId, onFound)
+            }
         }
         val rootDoc = DocumentFile.fromTreeUri(this, uri) ?: return Pair(
             ComicsRootLibrary(name = "Unknown", rootUri = uri.toString()), emptyList()
@@ -371,7 +408,7 @@ class ComicsLibraryActivity : ThemedActivity() {
         return l.endsWith(".jpg") || l.endsWith(".jpeg") || l.endsWith(".png") || l.endsWith(".webp") || l.endsWith(".gif")
     }
 
-    // ── Fallback SAF (pour contenus non-accessibles via File) ──────────────
+    // ── Fallback SAF via ContentResolver (plus rapide que DocumentFile.listFiles) ──
 
     private fun safScan(rootDoc: DocumentFile, rootUriStr: String, existingRootId: String? = null, onFound: (Int, String) -> Unit): Pair<ComicsRootLibrary, List<ComicEntry>> {
         val root = if (existingRootId != null)
@@ -379,31 +416,65 @@ class ComicsLibraryActivity : ThemedActivity() {
         else
             ComicsRootLibrary(name = rootDoc.name ?: "Comics", rootUri = rootUriStr)
         val entries = mutableListOf<ComicEntry>()
-        safScanDir(rootDoc, "", root.id, entries, 0, onFound)
+        val treeUri = Uri.parse(rootUriStr)
+        val rootDocId = try { DocumentsContract.getTreeDocumentId(treeUri) } catch (_: Exception) { null }
+            ?: return Pair(root.copy(comicCount = 0), entries)
+        safScanDirFast(treeUri, rootDocId, rootDoc.name ?: "Comics", "", root.id, entries, 0, onFound)
         return Pair(root.copy(comicCount = entries.size), entries)
     }
 
-    private fun safScanDir(dir: DocumentFile, parentRelPath: String, rootId: String, results: MutableList<ComicEntry>, depth: Int, onFound: (Int, String) -> Unit) {
+    private fun safScanDirFast(
+        treeUri: Uri, dirDocId: String, dirName: String,
+        parentRelPath: String, rootId: String,
+        results: MutableList<ComicEntry>, depth: Int,
+        onFound: (Int, String) -> Unit
+    ) {
         if (depth > 10) return
-        val children = dir.listFiles()
-        val images = children.filter { it.isFile && it.type?.startsWith("image/") == true }
-        val pdfs = children.filter { it.isFile && (it.type == "application/pdf" || it.name?.endsWith(".pdf", true) == true) }
-        val cbzs = children.filter { it.isFile && (it.name?.endsWith(".cbz", true) == true || it.name?.endsWith(".zip", true) == true) }
-        val subDirs = children.filter { it.isDirectory }
-        if (depth > 0 && images.isNotEmpty()) {
-            val e = ComicEntry(title = dir.name ?: "Unknown", sourcePath = dir.uri.toString(), format = "folder", totalPages = images.size, rootId = rootId, relativePath = parentRelPath)
-            results.add(e); onFound(results.size, e.title)
+        val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, dirDocId)
+        val projection = arrayOf(
+            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+            DocumentsContract.Document.COLUMN_MIME_TYPE
+        )
+        var imageCount = 0
+        val subDirs = mutableListOf<Pair<String, String>>()
+        contentResolver.query(childrenUri, projection, null, null, null)?.use { cursor ->
+            val idIdx = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
+            val nameIdx = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+            val mimeIdx = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_MIME_TYPE)
+            while (cursor.moveToNext()) {
+                val docId = cursor.getString(idIdx) ?: continue
+                val name = cursor.getString(nameIdx) ?: continue
+                val mime = cursor.getString(mimeIdx) ?: continue
+                when {
+                    mime == DocumentsContract.Document.MIME_TYPE_DIR -> subDirs.add(docId to name)
+                    mime.startsWith("image/") -> imageCount++
+                    mime == "application/pdf" || name.endsWith(".pdf", true) -> {
+                        val src = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId).toString()
+                        results.add(ComicEntry(title = name.substringBeforeLast("."), sourcePath = src, format = "pdf", totalPages = 0, rootId = rootId, relativePath = parentRelPath))
+                        onFound(results.size, name.substringBeforeLast("."))
+                    }
+                    name.endsWith(".cbz", true) || name.endsWith(".zip", true) -> {
+                        val src = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId).toString()
+                        results.add(ComicEntry(title = name.substringBeforeLast("."), sourcePath = src, format = "cbz", totalPages = 0, rootId = rootId, relativePath = parentRelPath))
+                        onFound(results.size, name.substringBeforeLast("."))
+                    }
+                }
+            }
         }
-        for (f in pdfs) {
-            val e = ComicEntry(title = f.name?.substringBeforeLast(".") ?: "PDF", sourcePath = f.uri.toString(), format = "pdf", totalPages = 0, rootId = rootId, relativePath = parentRelPath)
-            results.add(e); onFound(results.size, e.title)
+        if (depth > 0 && imageCount > 0) {
+            val src = DocumentsContract.buildDocumentUriUsingTree(treeUri, dirDocId).toString()
+            results.add(ComicEntry(title = dirName, sourcePath = src, format = "folder", totalPages = imageCount, rootId = rootId, relativePath = parentRelPath))
+            onFound(results.size, dirName)
         }
-        for (f in cbzs) {
-            val e = ComicEntry(title = f.name?.substringBeforeLast(".") ?: "CBZ", sourcePath = f.uri.toString(), format = "cbz", totalPages = 0, rootId = rootId, relativePath = parentRelPath)
-            results.add(e); onFound(results.size, e.title)
+        val myRel = when {
+            depth == 0 -> ""
+            parentRelPath.isEmpty() -> dirName
+            else -> "$parentRelPath/$dirName"
         }
-        val myRel = if (depth == 0) "" else if (parentRelPath.isEmpty()) (dir.name ?: "") else "$parentRelPath/${dir.name ?: ""}"
-        for (sub in subDirs.sortedBy { it.name }) safScanDir(sub, myRel, rootId, results, depth + 1, onFound)
+        for ((subDocId, subName) in subDirs.sortedBy { it.second }) {
+            safScanDirFast(treeUri, subDocId, subName, myRel, rootId, results, depth + 1, onFound)
+        }
     }
 
     // ── Navigation ────────────────────────────────────────────────────────

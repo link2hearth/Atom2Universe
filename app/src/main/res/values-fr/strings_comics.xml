@@ -31,4 +31,8 @@
     <string name="comics_clear_all_msg">Retirer toutes les BD et bibliothèques de la liste ?</string>
     <string name="comics_rescanning_title">Nouveau scan…</string>
     <string name="comics_toggle_view">Changer l\'affichage</string>
+    <string name="comics_storage_perm_title">Accélérer le scan</string>
+    <string name="comics_storage_perm_msg">L\'accès complet au stockage permet de scanner la bibliothèque beaucoup plus vite. Sans cette permission, le scan utilise une méthode plus lente.\n\nVous pouvez aussi ignorer et scanner quand même.</string>
+    <string name="comics_storage_perm_grant">Accorder l\'accès</string>
+    <string name="comics_storage_perm_skip">Scanner quand même</string>
 </resources>

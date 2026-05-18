@@ -31,4 +31,8 @@
     <string name="comics_clear_all_msg">Remove all comics and libraries from the list?</string>
     <string name="comics_rescanning_title">Rescanning…</string>
     <string name="comics_toggle_view">Toggle view</string>
+    <string name="comics_storage_perm_title">Speed up library scan</string>
+    <string name="comics_storage_perm_msg">Granting full storage access lets the app scan your library much faster. Without it, scanning uses a slower method.\n\nYou can also skip and scan anyway.</string>
+    <string name="comics_storage_perm_grant">Grant access</string>
+    <string name="comics_storage_perm_skip">Scan anyway</string>
 </resources>
