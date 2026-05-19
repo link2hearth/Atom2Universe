@@ -826,6 +826,7 @@ class MusicSettingsActivity : ThemedActivity() {
 
     private fun updateTrustedWifiUI() {
         val networkName = TrustedNetworkManager.getCurrentNetworkName(this)
+        val onWifi      = TrustedNetworkManager.isOnWifi(this)
         val isTrusted   = TrustedNetworkManager.isCurrentNetworkTrusted(this)
 
         // Bloquer le listener pendant la mise à jour programmatique
@@ -843,11 +844,12 @@ class MusicSettingsActivity : ThemedActivity() {
         }
 
         textTrustedWifiStatus.text = when {
-            networkName == null -> getString(R.string.music_settings_trusted_wifi_no_wifi)
-            isTrusted -> getString(R.string.music_settings_trusted_wifi_active, networkName)
+            !onWifi -> getString(R.string.music_settings_trusted_wifi_no_wifi)
+            isTrusted && networkName != null -> getString(R.string.music_settings_trusted_wifi_active, networkName)
+            isTrusted -> getString(R.string.music_settings_trusted_wifi_active, getString(R.string.music_settings_trusted_wifi_unknown_network))
             else -> getString(R.string.music_settings_trusted_wifi_inactive)
         }
-        switchTrustedWifi.isEnabled = networkName != null
+        switchTrustedWifi.isEnabled = onWifi
     }
 
     // ==================== Backup Section ====================

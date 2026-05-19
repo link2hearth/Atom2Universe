@@ -363,4 +363,5 @@
     <string name="music_settings_trusted_wifi_active">LAN sync active on «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">LAN sync disabled on this network</string>
     <string name="music_settings_trusted_wifi_no_wifi">Not connected to Wi-Fi</string>
+    <string name="music_settings_trusted_wifi_unknown_network">Wi-Fi network</string>
 </resources>

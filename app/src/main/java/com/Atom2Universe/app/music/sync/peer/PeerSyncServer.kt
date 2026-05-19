@@ -34,10 +34,11 @@ class PeerSyncServer(private val context: Context, val port: Int = PORT) {
 
     private val running = AtomicBoolean(false)
     private var serverSocket: ServerSocket? = null
-    private val executor = Executors.newCachedThreadPool()
+    private var executor = Executors.newCachedThreadPool()
 
     fun start() {
         if (running.getAndSet(true)) return
+        if (executor.isShutdown) executor = Executors.newCachedThreadPool()
         executor.execute { acceptLoop() }
         Log.i(TAG, "Server started on port $port")
     }

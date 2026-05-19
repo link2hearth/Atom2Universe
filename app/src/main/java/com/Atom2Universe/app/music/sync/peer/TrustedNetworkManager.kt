@@ -36,8 +36,13 @@ object TrustedNetworkManager {
 
     /**
      * Nom lisible du réseau actuel pour l'affichage dans les settings.
+     * Retourne null uniquement si pas du tout connecté en Wi-Fi.
      */
-    fun getCurrentNetworkName(context: Context): String? = getCurrentNetworkId(context)
+    fun getCurrentNetworkName(context: Context): String? {
+        if (!isOnWifi(context)) return null
+        val id = getCurrentNetworkId(context) ?: return null
+        return if (id == FALLBACK_WIFI_ID) null else id
+    }
 
     fun isCurrentNetworkTrusted(context: Context): Boolean {
         val id = getCurrentNetworkId(context) ?: return false
@@ -66,6 +71,9 @@ object TrustedNetworkManager {
 
     // ── Privé ─────────────────────────────────────────────────────────────────
 
+    // Utilisé quand on est sur WiFi mais qu'on ne peut pas lire SSID/networkId (API 33+ sans permission)
+    private const val FALLBACK_WIFI_ID = "__any_wifi__"
+
     private fun getTrustedIds(context: Context): Set<String> =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getStringSet(KEY_TRUSTED, emptySet()) ?: emptySet()
@@ -80,12 +88,25 @@ object TrustedNetworkManager {
         val cm = context.getSystemService(ConnectivityManager::class.java)
         val caps = cm.getNetworkCapabilities(cm.activeNetwork ?: return null) ?: return null
         if (!caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return null
-        val wifiInfo = caps.transportInfo as? WifiInfo ?: return null
-        val ssid = wifiInfo.ssid?.removePrefix("\"")?.removeSuffix("\"")
-        if (!ssid.isNullOrBlank() && ssid != "<unknown ssid>") return ssid
-        // Fallback sans permission de localisation : ID numérique stable du réseau sauvegardé
-        val netId = wifiInfo.networkId
-        return if (netId != -1) "net#$netId" else null
+
+        // transportInfo peut être null sans permission localisation sur API 31+
+        val wifiInfo = caps.transportInfo as? WifiInfo
+        if (wifiInfo != null) {
+            val ssid = wifiInfo.ssid?.removePrefix("\"")?.removeSuffix("\"")
+            if (!ssid.isNullOrBlank() && ssid != "<unknown ssid>") return ssid
+            val netId = wifiInfo.networkId
+            if (netId != -1) return "net#$netId"
+        }
+
+        // Fallback : WifiManager (déprécié API 31 mais networkId ne requiert pas la localisation)
+        @Suppress("DEPRECATION")
+        val wm = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+            ?: return FALLBACK_WIFI_ID
+        @Suppress("DEPRECATION")
+        val info = wm.connectionInfo ?: return FALLBACK_WIFI_ID
+        val netId = info.networkId
+        // Si networkId non disponible (API 33+ sans NEARBY_WIFI_DEVICES), fallback générique
+        return if (netId != -1) "net#$netId" else FALLBACK_WIFI_ID
     }
 
     @Suppress("DEPRECATION")
@@ -96,8 +117,7 @@ object TrustedNetworkManager {
         val info = wm.connectionInfo ?: return null
         val ssid = info.ssid?.removePrefix("\"")?.removeSuffix("\"")
         if (!ssid.isNullOrBlank() && ssid != "<unknown ssid>") return ssid
-        // Fallback : identifiant numérique du réseau sauvegardé
         val netId = info.networkId
-        return if (netId != -1) "net#$netId" else null
+        return if (netId != -1) "net#$netId" else FALLBACK_WIFI_ID
     }
 }

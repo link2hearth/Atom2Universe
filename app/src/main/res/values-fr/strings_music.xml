@@ -370,4 +370,5 @@
     <string name="music_settings_trusted_wifi_active">Sync LAN active sur «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">Sync LAN désactivée sur ce réseau</string>
     <string name="music_settings_trusted_wifi_no_wifi">Aucun Wi-Fi connecté</string>
+    <string name="music_settings_trusted_wifi_unknown_network">réseau Wi-Fi</string>
 </resources>
