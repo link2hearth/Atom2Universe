@@ -82,7 +82,10 @@ object TrustedNetworkManager {
         if (!caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return null
         val wifiInfo = caps.transportInfo as? WifiInfo ?: return null
         val ssid = wifiInfo.ssid?.removePrefix("\"")?.removeSuffix("\"")
-        return if (ssid.isNullOrBlank() || ssid == "<unknown ssid>") null else ssid
+        if (!ssid.isNullOrBlank() && ssid != "<unknown ssid>") return ssid
+        // Fallback sans permission de localisation : ID numérique stable du réseau sauvegardé
+        val netId = wifiInfo.networkId
+        return if (netId != -1) "net#$netId" else null
     }
 
     @Suppress("DEPRECATION")
