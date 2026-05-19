@@ -908,9 +908,9 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcEffectView?.text = getString(R.string.clicker_shop_aps_to_apc_effect, state.apsToApcLevel)
         shopApsToApcCostView?.text   = "${clickerViewModel.apsToApcCost()} ⚛"
 
-        val totalElems = clickerViewModel.getTotalElements()
-        shopElemToNeutrinoStock?.text = getString(R.string.clicker_shop_elem_stock, totalElems)
-        shopElemToNeutrinoBuy?.isEnabled = totalElems >= shopElemToNeutrinoMult_value
+        val tokenBalance = clickerViewModel.getElementTokens()
+        shopElemToNeutrinoStock?.text = getString(R.string.clicker_shop_elem_stock, tokenBalance)
+        shopElemToNeutrinoBuy?.isEnabled = tokenBalance >= shopElemToNeutrinoMult_value
 
         shopStatLifetime?.text    = state.lifetime.toString()
         shopStatApc?.text         = state.perClick.toString()

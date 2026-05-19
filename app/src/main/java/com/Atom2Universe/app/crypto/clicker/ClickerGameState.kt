@@ -11,6 +11,7 @@ data class ClickerGameState(
     val starCoreLevel: Int = 0,
     val gachaTickets: Int = 10,
     val neutrinos: Int = 0,
+    val elementTokens: Int = 0,
     val apcToApsLevel: Int = 0,
     val apsToApcLevel: Int = 0
 )

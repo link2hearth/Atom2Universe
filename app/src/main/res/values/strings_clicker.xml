@@ -149,8 +149,8 @@
     <string name="clicker_neutrino_balance">Balance</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
-    <string name="clicker_shop_elem_to_neutrino_label">Elements → Neutrinos</string>
-    <string name="clicker_shop_elem_stock">%d elements available</string>
+    <string name="clicker_shop_elem_to_neutrino_label">Element tokens → Neutrinos</string>
+    <string name="clicker_shop_elem_stock">%d tokens</string>
     <string name="crypto_pipetap_widget_toggle_desc">Show/hide PipeTap widget</string>
     <string name="crypto_banner_toggle_pipetap_label">Show PipeTap toggle</string>
     <string name="crypto_pipetap_widget_opacity_label">PipeTap widget opacity</string>

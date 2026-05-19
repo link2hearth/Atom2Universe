@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.Atom2Universe.app.crypto.clicker.ClickerDatabase
 import com.Atom2Universe.app.crypto.clicker.ClickerStateEntity
+import com.Atom2Universe.app.crypto.clicker.ElementTokenRepository
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
@@ -102,16 +103,19 @@ object GamesSyncManager {
     // ─── Détection de conflit ─────────────────────────────────────────────────
 
     private fun conflictExists(local: GamesSyncFile, remote: GamesSyncFile): Boolean {
-        // Conflit clicker : atomes différents
+        // Conflit clicker : présence/absence ou valeurs différentes
         val localAtoms  = local.clicker?.atoms
         val remoteAtoms = remote.clicker?.atoms
-        if (localAtoms != null && remoteAtoms != null && localAtoms != remoteAtoms) return true
+        if (localAtoms != remoteAtoms) return true
 
         // Conflit gacha : au moins un élément avec un compte différent
         val localCopies  = local.gacha?.copies  ?: emptyMap()
         val remoteCopies = remote.gacha?.copies ?: emptyMap()
         val allKeys = localCopies.keys + remoteCopies.keys
         if (allKeys.any { (localCopies[it] ?: 0) != (remoteCopies[it] ?: 0) }) return true
+
+        // Conflit tokens éléments
+        if (local.elementTokens != remote.elementTokens) return true
 
         return false
     }
@@ -126,10 +130,13 @@ object GamesSyncManager {
             .associateWith { collectionStore.getCopyCount(it) }
             .filter { it.value > 0 }
 
+        val elementTokens = ElementTokenRepository(appContext).getBalance()
+
         return GamesSyncFile(
-            lastModified = System.currentTimeMillis(),
-            clicker      = clickerEntity?.toSyncData(),
-            gacha        = GachaSyncData(copies)
+            lastModified  = System.currentTimeMillis(),
+            clicker       = clickerEntity?.toSyncData(),
+            gacha         = GachaSyncData(copies),
+            elementTokens = elementTokens
         )
     }
 
@@ -149,6 +156,9 @@ object GamesSyncManager {
             }
             Log.d(TAG, "Collection gacha appliquée (${gachaData.copies.size} éléments)")
         }
+
+        ElementTokenRepository(appContext).setBalance(file.elementTokens)
+        Log.d(TAG, "Tokens éléments appliqués (${file.elementTokens})")
     }
 
     // ─── Helpers Drive ────────────────────────────────────────────────────────

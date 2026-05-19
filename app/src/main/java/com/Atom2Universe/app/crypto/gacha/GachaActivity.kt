@@ -26,6 +26,7 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.AstronomyCalculator
 import com.Atom2Universe.app.crypto.EarthMoonCanvasView
+import com.Atom2Universe.app.crypto.clicker.ElementTokenRepository
 import com.Atom2Universe.app.crypto.clicker.GachaTicketRepository
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import com.Atom2Universe.app.periodic.PeriodicTableActivity
@@ -66,6 +67,7 @@ class GachaActivity : AppCompatActivity() {
 
     private lateinit var collectionStore: PeriodicCollectionStore
     private lateinit var ticketRepository: GachaTicketRepository
+    private lateinit var elementTokenRepo: ElementTokenRepository
     private lateinit var ticketsDisplay: TextView
 
     private var drawMultiplier = 1
@@ -106,6 +108,7 @@ class GachaActivity : AppCompatActivity() {
 
         collectionStore = PeriodicCollectionStore(this)
         ticketRepository = GachaTicketRepository(this)
+        elementTokenRepo = ElementTokenRepository(this)
 
         loadAndDisplayTickets()
 
@@ -212,6 +215,7 @@ class GachaActivity : AppCompatActivity() {
                 val (element, rarity) = rollGacha()
                 val isFirst = !collectionStore.hasEverObtained(element.atomicNumber)
                 val totalCopies = collectionStore.addCopy(element.atomicNumber)
+                elementTokenRepo.addTokens(1)
                 isFirstDiscovery = isFirst
 
                 // Cacher soleil et Terre/Lune dès le début de l'animation
@@ -271,6 +275,7 @@ class GachaActivity : AppCompatActivity() {
                 val (element, rarity) = rollGacha()
                 val isFirst = !collectionStore.hasEverObtained(element.atomicNumber)
                 val totalCopies = collectionStore.addCopy(element.atomicNumber)
+                elementTokenRepo.addTokens(1)
                 MultiDrawResult(element, rarity, isFirst, totalCopies)
             }
 

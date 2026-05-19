@@ -26,6 +26,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     private val statsRepository       = ClickerStatsRepository(application)
     private val offlineRepo           = ClickerOfflineRepository(application)
     private val neutrinoRepo          = NeutrinoRepository(application)
+    private val elementTokenRepo      = ElementTokenRepository(application)
     private val achievementRepository = ClickerAchievementRepository(application)
     private val frenzyManager         = FrenzyManager()
     private val collectionStore       = PeriodicCollectionStore(application)
@@ -111,7 +112,10 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             } else {
                 neutrinoRepo.getBalance()
             }
-            _state.value = recalcedState.copy(neutrinos = neutrinos)
+            _state.value = recalcedState.copy(
+                neutrinos     = neutrinos,
+                elementTokens = elementTokenRepo.getBalance()
+            )
 
             initCompleted = true
         }
@@ -233,6 +237,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         if (resetClicker) {
             _state.value = ClickerGameState()
             neutrinoRepo.setBalance(0)
+            elementTokenRepo.setBalance(0)
         }
     }
 
@@ -368,33 +373,24 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     fun getTotalElements(): Int = collectionStore.getTotalCopies()
 
+    fun getElementTokens(): Int = elementTokenRepo.getBalance()
+
     /**
-     * Convertit [count] copies d'éléments en neutrinos (1:1).
-     * Consomme en priorité les éléments les plus dupliqués.
-     * Retourne le nombre réel de copies dépensées.
+     * Convertit [count] tokens éléments en neutrinos (1:1).
+     * Les copies d'éléments individuels ne sont pas modifiées.
+     * Retourne le nombre réel de tokens dépensés.
      */
     fun buyElementsToNeutrinos(count: Int): Int {
         if (count <= 0) return 0
-        // Trier par copies décroissantes pour dépenser les doublons en premier
-        val available = (1..118)
-            .map { n -> n to collectionStore.getCopyCount(n) }
-            .filter { (_, c) -> c > 0 }
-            .sortedByDescending { (_, c) -> c }
-
-        var remaining = count
-        for ((atomicNumber, _) in available) {
-            while (remaining > 0 && collectionStore.consumeCopy(atomicNumber)) {
-                remaining--
-            }
-            if (remaining == 0) break
-        }
-
-        val spent = count - remaining
+        val spent = minOf(count, elementTokenRepo.getBalance())
         if (spent <= 0) return 0
+        elementTokenRepo.consumeTokens(spent)
 
         val s = _state.value
-        val newNeutrinos = s.neutrinos + spent
-        val newState = recalcProduction(s.copy(neutrinos = newNeutrinos))
+        val newState = recalcProduction(s.copy(
+            neutrinos     = s.neutrinos + spent,
+            elementTokens = elementTokenRepo.getBalance()
+        ))
         _state.value = newState
         viewModelScope.launch { repository.save(newState) }
         neutrinoRepo.addBalance(spent)

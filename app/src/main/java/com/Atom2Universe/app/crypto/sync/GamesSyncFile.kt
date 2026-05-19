@@ -103,23 +103,26 @@ data class GamesSyncFile(
     val version: Int = 1,
     val lastModified: Long,
     val clicker: ClickerSyncData? = null,
-    val gacha: GachaSyncData? = null
+    val gacha: GachaSyncData? = null,
+    val elementTokens: Int = 0
 ) {
     fun toJson(): String = JSONObject().apply {
         put("version", version)
         put("lastModified", lastModified)
         clicker?.let { put("clicker", it.toJson()) }
         gacha?.let { put("gacha", it.toJson()) }
+        put("elementTokens", elementTokens)
     }.toString()
 
     companion object {
         fun fromJson(json: String): GamesSyncFile {
             val j = JSONObject(json)
             return GamesSyncFile(
-                version      = j.optInt("version", 1),
-                lastModified = j.optLong("lastModified", 0L),
-                clicker      = j.optJSONObject("clicker")?.let { ClickerSyncData.fromJson(it) },
-                gacha        = j.optJSONObject("gacha")?.let { GachaSyncData.fromJson(it) }
+                version       = j.optInt("version", 1),
+                lastModified  = j.optLong("lastModified", 0L),
+                clicker       = j.optJSONObject("clicker")?.let { ClickerSyncData.fromJson(it) },
+                gacha         = j.optJSONObject("gacha")?.let { GachaSyncData.fromJson(it) },
+                elementTokens = j.optInt("elementTokens", 0)
             )
         }
     }
