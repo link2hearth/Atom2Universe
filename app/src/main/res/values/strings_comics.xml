@@ -35,4 +35,6 @@
     <string name="comics_storage_perm_msg">Granting full storage access lets the app scan your library much faster. Without it, scanning uses a slower method.\n\nYou can also skip and scan anyway.</string>
     <string name="comics_storage_perm_grant">Grant access</string>
     <string name="comics_storage_perm_skip">Scan anyway</string>
+    <string name="comics_section_root">(Other comics)</string>
+    <string name="comics_series_count">%1$d comics</string>
 </resources>

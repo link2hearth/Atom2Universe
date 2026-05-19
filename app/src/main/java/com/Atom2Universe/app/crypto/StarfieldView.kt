@@ -61,7 +61,7 @@ class StarfieldView @JvmOverloads constructor(
     }
 
     private fun buildStars(w: Int, h: Int) {
-        val rng = Random(42)
+        val rng = Random.Default
         val list = mutableListOf<Star>()
         repeat(28) {
             list.add(Star(

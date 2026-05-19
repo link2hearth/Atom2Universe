@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.text.format.DateUtils
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -22,6 +24,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.documentfile.provider.DocumentFile
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -60,11 +63,22 @@ data class BookEntry(
         get() = if (totalItems > 0) ((lastReadItem.toFloat() / totalItems) * 100).toInt().coerceIn(0, 100) else 0
 }
 
+data class AuthorFolder(
+    val displayName: String,
+    val pathPrefix: String,
+    val bookCount: Int
+)
+
 class BookLibraryActivity : ThemedActivity() {
 
     companion object {
         private const val PREFS_NAME = "books_prefs"
         private const val KEY_LIBRARY = "book_library"
+        private const val KEY_DISPLAY_MODE = "book_display_mode"
+        private const val KEY_GRID_COLS = "book_grid_cols"
+        private const val MODE_LIST = 0
+        private const val MODE_GRID = 1
+        private const val DEFAULT_GRID_COLS = 3
 
         fun loadLibrary(prefs: SharedPreferences): MutableList<BookEntry> {
             val json = prefs.getString(KEY_LIBRARY, "[]") ?: "[]"
@@ -161,6 +175,9 @@ class BookLibraryActivity : ThemedActivity() {
     private lateinit var tabRecentsContainer: View
     private lateinit var tabShelfContainer: View
     private lateinit var shelfRootsContainer: View
+    private lateinit var shelfAuthorsContainer: View
+    private lateinit var shelfAuthorsRecycler: RecyclerView
+    private lateinit var shelfAuthorsEmpty: TextView
     private lateinit var shelfTreeContainer: View
     private lateinit var shelfTreeRecycler: RecyclerView
     private lateinit var shelfTreeEmpty: TextView
@@ -168,6 +185,11 @@ class BookLibraryActivity : ThemedActivity() {
     private var treeCoverScope: CoroutineScope? = null
     private var currentTab = 0
     private var currentRoot: BookShelfRoot? = null
+    private var currentAuthorPath: String? = null
+    private val currentEntries = mutableListOf<BookShelfEntry>()
+    private var displayMode = MODE_LIST
+    private var gridColumns = DEFAULT_GRID_COLS
+    private var toggleMenuItem: MenuItem? = null
     private lateinit var fab: FloatingActionButton
     private lateinit var toolbar: MaterialToolbar
 
@@ -194,6 +216,8 @@ class BookLibraryActivity : ThemedActivity() {
         setContentView(R.layout.activity_book_library)
 
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        displayMode = prefs.getInt(KEY_DISPLAY_MODE, MODE_LIST)
+        gridColumns = prefs.getInt(KEY_GRID_COLS, DEFAULT_GRID_COLS)
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -207,6 +231,9 @@ class BookLibraryActivity : ThemedActivity() {
         tabRecentsContainer = findViewById(R.id.tab_recents_container)
         tabShelfContainer = findViewById(R.id.tab_shelf_container)
         shelfRootsContainer = findViewById(R.id.shelf_roots_container)
+        shelfAuthorsContainer = findViewById(R.id.shelf_authors_container)
+        shelfAuthorsRecycler = findViewById(R.id.shelf_authors_recycler)
+        shelfAuthorsEmpty = findViewById(R.id.shelf_authors_empty)
         shelfTreeContainer = findViewById(R.id.shelf_tree_container)
         shelfTreeRecycler = findViewById(R.id.shelf_tree_recycler)
         shelfTreeEmpty = findViewById(R.id.shelf_tree_empty)
@@ -248,7 +275,21 @@ class BookLibraryActivity : ThemedActivity() {
         refreshBooks()
         if (currentTab == 1) {
             val root = currentRoot
-            if (root != null) openRoot(root) else loadRoots()
+            val authorPath = currentAuthorPath
+            when {
+                root != null && authorPath != null -> {
+                    shelfScope.launch {
+                        val entries = withContext(Dispatchers.IO) {
+                            BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao().getEntriesByRoot(root.id)
+                        }
+                        currentEntries.clear()
+                        currentEntries.addAll(entries)
+                        openAuthorPath(authorPath)
+                    }
+                }
+                root != null -> openRoot(root)
+                else -> loadRoots()
+            }
         }
     }
 
@@ -263,11 +304,67 @@ class BookLibraryActivity : ThemedActivity() {
         if (hasFocus) enableImmersiveMode()
     }
 
+    // ── Menu ──────────────────────────────────────────────────────────────────
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_book_library, menu)
+        toggleMenuItem = menu.findItem(R.id.action_book_toggle_view)
+        tintMenuIcons(menu)
+        updateToggleIcon()
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        toggleMenuItem?.isVisible = currentAuthorPath != null
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_book_toggle_view) {
+            displayMode = if (displayMode == MODE_LIST) MODE_GRID else MODE_LIST
+            prefs.edit { putInt(KEY_DISPLAY_MODE, displayMode) }
+            updateToggleIcon()
+            currentAuthorPath?.let { applyBooksDisplayMode(it) }
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun tintMenuIcons(menu: Menu) {
+        val tv = android.util.TypedValue()
+        theme.resolveAttribute(R.attr.a2uMidiAccent, tv, true)
+        val tint = android.content.res.ColorStateList.valueOf(tv.data)
+        for (i in 0 until menu.size()) {
+            menu.getItem(i).icon?.let { icon ->
+                icon.mutate()
+                androidx.core.graphics.drawable.DrawableCompat.setTintList(icon, tint)
+            }
+        }
+    }
+
+    private fun updateToggleIcon() {
+        toggleMenuItem?.setIcon(
+            if (displayMode == MODE_LIST) R.drawable.ic_view_grid else R.drawable.ic_view_list
+        )
+    }
+
     // ── Navigation ────────────────────────────────────────────────────────────
 
     private fun handleBack() {
-        if (currentRoot != null) showRootsView()
-        else finish()
+        when {
+            currentAuthorPath != null -> {
+                currentAuthorPath = null
+                treeCoverScope?.cancel()
+                treeCoverScope = null
+                shelfTreeRecycler.adapter = null
+                shelfTreeContainer.visibility = View.GONE
+                shelfAuthorsContainer.visibility = View.VISIBLE
+                supportActionBar?.title = currentRoot?.name
+                invalidateOptionsMenu()
+            }
+            currentRoot != null -> showRootsView()
+            else -> finish()
+        }
     }
 
     private fun switchTab(tab: Int) {
@@ -328,55 +425,142 @@ class BookLibraryActivity : ThemedActivity() {
         }
     }
 
-    // ── Bibliothèques : navigation dans l'arborescence ────────────────────────
+    // ── Bibliothèques : navigation niveau auteurs ─────────────────────────────
 
     private fun openRoot(root: BookShelfRoot) {
         currentRoot = root
+        currentAuthorPath = null
         supportActionBar?.title = root.name
         shelfRootsContainer.visibility = View.GONE
-        shelfTreeContainer.visibility = View.VISIBLE
+        shelfAuthorsContainer.visibility = View.VISIBLE
+        shelfTreeContainer.visibility = View.GONE
         fab.visibility = View.GONE
-
-        treeCoverScope?.cancel()
-        treeCoverScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-        val coverScope = treeCoverScope!!
 
         shelfScope.launch {
             val entries = withContext(Dispatchers.IO) {
                 BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao().getEntriesByRoot(root.id)
             }
-            if (entries.isEmpty()) {
-                shelfTreeEmpty.visibility = View.VISIBLE
-                shelfTreeRecycler.visibility = View.GONE
-                return@launch
-            }
-            shelfTreeEmpty.visibility = View.GONE
-            shelfTreeRecycler.visibility = View.VISIBLE
-            val treeAdapter = BookShelfTreeAdapter(
-                context = this@BookLibraryActivity,
+            currentEntries.clear()
+            currentEntries.addAll(entries)
+            showAuthorsForEntries(entries)
+        }
+    }
+
+    private fun showAuthorsForEntries(entries: List<BookShelfEntry>) {
+        if (entries.isEmpty()) {
+            shelfAuthorsEmpty.visibility = View.VISIBLE
+            shelfAuthorsRecycler.visibility = View.GONE
+            return
+        }
+
+        val authorMap = mutableMapOf<String, Int>()
+        var rootBookCount = 0
+        for (entry in entries) {
+            if (entry.relativePath.isEmpty()) { rootBookCount++; continue }
+            val first = entry.relativePath.split("/").first()
+            authorMap[first] = (authorMap[first] ?: 0) + 1
+        }
+
+        // Si aucun sous-dossier, aller directement à la vue livres (bibliothèque plate)
+        if (authorMap.isEmpty()) {
+            openAuthorPath("")
+            return
+        }
+
+        val folders = mutableListOf<AuthorFolder>()
+        if (rootBookCount > 0) {
+            folders.add(AuthorFolder(
+                displayName = getString(R.string.book_shelf_section_root),
+                pathPrefix = "",
+                bookCount = rootBookCount
+            ))
+        }
+        authorMap.entries.sortedBy { it.key }.forEach { (name, count) ->
+            folders.add(AuthorFolder(name, name, count))
+        }
+
+        shelfAuthorsEmpty.visibility = View.GONE
+        shelfAuthorsRecycler.visibility = View.VISIBLE
+        shelfAuthorsRecycler.layoutManager = LinearLayoutManager(this)
+        shelfAuthorsRecycler.adapter = AuthorFoldersAdapter(folders) { folder ->
+            openAuthorPath(folder.pathPrefix)
+        }
+    }
+
+    private fun openAuthorPath(authorPath: String) {
+        currentAuthorPath = authorPath
+        shelfRootsContainer.visibility = View.GONE
+        shelfAuthorsContainer.visibility = View.GONE
+        shelfTreeContainer.visibility = View.VISIBLE
+        fab.visibility = View.GONE
+        invalidateOptionsMenu()
+
+        supportActionBar?.title = when {
+            authorPath.isEmpty() -> getString(R.string.book_shelf_section_root)
+            else -> authorPath.split("/").last()
+        }
+
+        val entries = if (authorPath.isEmpty())
+            currentEntries.filter { it.relativePath.isEmpty() }
+        else
+            currentEntries.filter { it.relativePath == authorPath || it.relativePath.startsWith("$authorPath/") }
+
+        if (entries.isEmpty()) {
+            shelfTreeEmpty.visibility = View.VISIBLE
+            shelfTreeRecycler.visibility = View.GONE
+            return
+        }
+
+        shelfTreeEmpty.visibility = View.GONE
+        shelfTreeRecycler.visibility = View.VISIBLE
+
+        applyBooksDisplayMode(authorPath, entries)
+    }
+
+    private fun applyBooksDisplayMode(authorPath: String, entries: List<BookShelfEntry>? = null) {
+        val bookEntries = entries ?: run {
+            if (authorPath.isEmpty()) currentEntries.filter { it.relativePath.isEmpty() }
+            else currentEntries.filter { it.relativePath == authorPath || it.relativePath.startsWith("$authorPath/") }
+        }
+
+        treeCoverScope?.cancel()
+        treeCoverScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        val coverScope = treeCoverScope!!
+
+        if (displayMode == MODE_GRID) {
+            shelfTreeRecycler.layoutManager = GridLayoutManager(this, gridColumns)
+            shelfTreeRecycler.adapter = BookCoverGridAdapter(
+                entries = bookEntries,
                 scope = coverScope,
-                entries = entries,
                 onBookClick = { entry -> openShelfBook(entry) }
             )
-            shelfTreeRecycler.layoutManager = LinearLayoutManager(this@BookLibraryActivity)
-            shelfTreeRecycler.adapter = treeAdapter
+        } else {
+            shelfTreeRecycler.layoutManager = LinearLayoutManager(this)
+            shelfTreeRecycler.adapter = AuthorBooksAdapter(
+                context = this,
+                scope = coverScope,
+                entries = bookEntries,
+                authorPath = authorPath,
+                onBookClick = { entry -> openShelfBook(entry) }
+            )
         }
     }
 
     private fun showRootsView() {
-        dismissTree()
-        supportActionBar?.title = getString(R.string.hub_books_title)
-        shelfTreeContainer.visibility = View.GONE
-        shelfRootsContainer.visibility = View.VISIBLE
-        fab.setImageResource(R.drawable.ic_add)
-        fab.visibility = View.VISIBLE
-    }
-
-    private fun dismissTree() {
         currentRoot = null
+        currentAuthorPath = null
         treeCoverScope?.cancel()
         treeCoverScope = null
         shelfTreeRecycler.adapter = null
+        shelfAuthorsRecycler.adapter = null
+        currentEntries.clear()
+
+        supportActionBar?.title = getString(R.string.hub_books_title)
+        shelfTreeContainer.visibility = View.GONE
+        shelfAuthorsContainer.visibility = View.GONE
+        shelfRootsContainer.visibility = View.VISIBLE
+        fab.setImageResource(R.drawable.ic_add)
+        fab.visibility = View.VISIBLE
     }
 
     private fun openShelfBook(entry: BookShelfEntry) {
@@ -537,7 +721,7 @@ class BookLibraryActivity : ThemedActivity() {
                 lower.endsWith(".txt") -> "txt"
                 else -> return@forEach
             }
-            val rel = parentRelPath(file.parentFile!!, rootFile)
+            val rel = fileRelPath(file.parentFile!!, rootFile)
             val (title, author) = if (format == "epub") extractEpubTitleAuthor(file) else Pair(file.nameWithoutExtension, "")
             entries.add(BookShelfEntry(
                 title = title.ifEmpty { file.nameWithoutExtension },
@@ -582,9 +766,8 @@ class BookLibraryActivity : ThemedActivity() {
         }
     }
 
-    private fun parentRelPath(dir: File, root: File): String = try {
-        val parent = dir.parentFile ?: return ""
-        if (parent == root) "" else parent.relativeTo(root).path.replace(File.separator, "/")
+    private fun fileRelPath(dir: File, root: File): String = try {
+        if (dir == root) "" else dir.relativeTo(root).path.replace(File.separator, "/")
     } catch (_: Exception) { "" }
 
     private fun extractEpubTitleAuthor(file: File): Pair<String, String> {
@@ -715,95 +898,93 @@ class BookLibraryActivity : ThemedActivity() {
             holder.itemView.setOnLongClickListener { onRootLongClick(root); true }
         }
     }
-}
 
-// ── Tree model ────────────────────────────────────────────────────────────────
+    // ── Adapter : liste des dossiers auteurs ──────────────────────────────────
 
-private data class ShelfFolderNode(
-    val name: String,
-    val path: String,
-    val depth: Int,
-    val subFolders: MutableList<ShelfFolderNode> = mutableListOf(),
-    val books: MutableList<BookShelfEntry> = mutableListOf()
-)
+    inner class AuthorFoldersAdapter(
+        private val folders: List<AuthorFolder>,
+        private val onFolderClick: (AuthorFolder) -> Unit
+    ) : RecyclerView.Adapter<AuthorFoldersAdapter.VH>() {
 
-private sealed class ShelfTreeRow {
-    data class Folder(val name: String, val path: String, val depth: Int, val childCount: Int, var expanded: Boolean = true) : ShelfTreeRow()
-    data class Book(val entry: BookShelfEntry, val depth: Int) : ShelfTreeRow()
-}
-
-private fun buildShelfTree(entries: List<BookShelfEntry>): ShelfFolderNode {
-    val root = ShelfFolderNode("", "", -1)
-    for (entry in entries.sortedWith(compareBy({ it.relativePath }, { it.title }))) {
-        val parts = if (entry.relativePath.isEmpty()) emptyList() else entry.relativePath.split("/")
-        var cur = root
-        for ((i, part) in parts.withIndex()) {
-            val path = parts.take(i + 1).joinToString("/")
-            var child = cur.subFolders.find { it.path == path }
-            if (child == null) {
-                child = ShelfFolderNode(part, path, i)
-                cur.subFolders.add(child)
-            }
-            cur = child
+        inner class VH(view: View) : RecyclerView.ViewHolder(view) {
+            val name: TextView = view.findViewById(R.id.root_name)
+            val count: TextView = view.findViewById(R.id.root_count)
         }
-        cur.books.add(entry)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
+            VH(LayoutInflater.from(parent.context).inflate(R.layout.item_book_shelf_root, parent, false))
+
+        override fun getItemCount() = folders.size
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val folder = folders[position]
+            holder.name.text = folder.displayName
+            holder.count.text = getString(R.string.book_shelf_books_count, folder.bookCount)
+            holder.itemView.setOnClickListener { onFolderClick(folder) }
+        }
     }
-    return root
 }
 
-private fun flattenShelfTree(node: ShelfFolderNode, expandedPaths: Set<String>, result: MutableList<ShelfTreeRow>) {
-    if (node.depth >= 0) {
-        val childCount = node.subFolders.size + node.books.size
-        result.add(ShelfTreeRow.Folder(node.name, node.path, node.depth, childCount, node.path in expandedPaths))
-        if (node.path !in expandedPaths) return
-    }
-    for (sub in node.subFolders.sortedBy { it.name }) flattenShelfTree(sub, expandedPaths, result)
-    val bookDepth = if (node.depth < 0) 0 else node.depth + 1
-    for (book in node.books.sortedBy { it.title }) result.add(ShelfTreeRow.Book(book, bookDepth))
+// ── Author books rows ─────────────────────────────────────────────────────────
+
+private sealed class AuthorBooksRow {
+    data class SectionHeader(val name: String, val bookCount: Int) : AuthorBooksRow()
+    data class BookItem(val entry: BookShelfEntry) : AuthorBooksRow()
 }
 
-// ── Tree adapter ──────────────────────────────────────────────────────────────
+private fun buildAuthorBooksRows(entries: List<BookShelfEntry>, authorPath: String): List<AuthorBooksRow> {
+    val rows = mutableListOf<AuthorBooksRow>()
 
-private class BookShelfTreeAdapter(
+    val directBooks = entries.filter { it.relativePath == authorPath }.sortedBy { it.title }
+    directBooks.forEach { rows.add(AuthorBooksRow.BookItem(it)) }
+
+    val subEntries = entries.filter { it.relativePath != authorPath }
+    if (subEntries.isNotEmpty()) {
+        val subGroups = subEntries.groupBy { entry ->
+            val remainder = if (authorPath.isEmpty()) entry.relativePath
+                            else entry.relativePath.removePrefix("$authorPath/")
+            remainder.split("/").first()
+        }
+        subGroups.keys.sorted().forEach { sectionName ->
+            val sectionBooks = subGroups[sectionName]!!.sortedBy { it.title }
+            rows.add(AuthorBooksRow.SectionHeader(sectionName, sectionBooks.size))
+            sectionBooks.forEach { rows.add(AuthorBooksRow.BookItem(it)) }
+        }
+    }
+
+    return rows
+}
+
+// ── Author books adapter ──────────────────────────────────────────────────────
+
+private class AuthorBooksAdapter(
     private val context: Context,
     private val scope: CoroutineScope,
     entries: List<BookShelfEntry>,
+    authorPath: String,
     private val onBookClick: (BookShelfEntry) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val tree = buildShelfTree(entries)
-    private val expandedPaths = mutableSetOf<String>().also { set ->
-        fun collect(node: ShelfFolderNode) { if (node.depth >= 0) set.add(node.path); node.subFolders.forEach { collect(it) } }
-        collect(tree)
-    }
-    private val rows = mutableListOf<ShelfTreeRow>()
+    private val rows = buildAuthorBooksRows(entries, authorPath)
 
-    init { rebuildRows() }
+    companion object { private const val TYPE_HEADER = 0; private const val TYPE_BOOK = 1 }
 
-    private fun rebuildRows() { rows.clear(); flattenShelfTree(tree, expandedPaths, rows) }
-
-    companion object { private const val TYPE_FOLDER = 0; private const val TYPE_BOOK = 1 }
-
-    override fun getItemViewType(p: Int) = if (rows[p] is ShelfTreeRow.Folder) TYPE_FOLDER else TYPE_BOOK
+    override fun getItemViewType(p: Int) = if (rows[p] is AuthorBooksRow.SectionHeader) TYPE_HEADER else TYPE_BOOK
     override fun getItemCount() = rows.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inf = LayoutInflater.from(parent.context)
-        return if (viewType == TYPE_FOLDER)
-            ShelfFolderVH(inf.inflate(R.layout.item_book_folder_header, parent, false))
+        return if (viewType == TYPE_HEADER)
+            SectionHeaderVH(inf.inflate(R.layout.item_book_folder_header, parent, false))
         else
             ShelfBookVH(inf.inflate(R.layout.item_book_card, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val density = context.resources.displayMetrics.density
         when (val row = rows[position]) {
-            is ShelfTreeRow.Folder -> (holder as ShelfFolderVH).bind(row, density) { path ->
-                if (path in expandedPaths) expandedPaths.remove(path) else expandedPaths.add(path)
-                rebuildRows(); notifyDataSetChanged()
-            }
-            is ShelfTreeRow.Book -> {
-                (holder as ShelfBookVH).bind(row.entry, row.depth, density, scope, context)
+            is AuthorBooksRow.SectionHeader -> (holder as SectionHeaderVH).bind(row)
+            is AuthorBooksRow.BookItem -> {
+                (holder as ShelfBookVH).bind(row.entry, 0, context.resources.displayMetrics.density, scope, context)
                 holder.itemView.setOnClickListener { onBookClick(row.entry) }
             }
         }
@@ -815,20 +996,24 @@ private class BookShelfTreeAdapter(
     }
 }
 
-private class ShelfFolderVH(view: View) : RecyclerView.ViewHolder(view) {
+// ── Section header view holder ────────────────────────────────────────────────
+
+private class SectionHeaderVH(view: View) : RecyclerView.ViewHolder(view) {
     val indent: View = view.findViewById(R.id.folder_indent)
     val name: TextView = view.findViewById(R.id.folder_name)
     val count: TextView = view.findViewById(R.id.folder_count)
     val chevron: ImageView = view.findViewById(R.id.folder_chevron)
 
-    fun bind(row: ShelfTreeRow.Folder, density: Float, onToggle: (String) -> Unit) {
-        indent.layoutParams = indent.layoutParams.also { it.width = ((row.depth * 20) * density).toInt() }
+    fun bind(row: AuthorBooksRow.SectionHeader) {
+        indent.layoutParams = indent.layoutParams.also { it.width = 0 }
         name.text = row.name
-        count.text = "${row.childCount}"
-        chevron.setImageResource(if (row.expanded) R.drawable.ic_chevron_down else R.drawable.ic_chevron_right)
-        itemView.setOnClickListener { onToggle(row.path) }
+        count.text = "${row.bookCount}"
+        chevron.visibility = View.GONE
+        itemView.isClickable = false
     }
 }
+
+// ── Book view holder (shared) ─────────────────────────────────────────────────
 
 private class ShelfBookVH(view: View) : RecyclerView.ViewHolder(view) {
     val cover: ImageView = view.findViewById(R.id.book_cover)
@@ -883,6 +1068,58 @@ private fun formatShelfSize(bytes: Long): String = when {
     bytes < 1024L -> "$bytes B"
     bytes < 1024L * 1024L -> "${bytes / 1024} KB"
     else -> "%.1f MB".format(bytes / (1024f * 1024f))
+}
+
+// ── Cover grid adapter ────────────────────────────────────────────────────────
+
+private class BookCoverGridAdapter(
+    private val entries: List<BookShelfEntry>,
+    private val scope: CoroutineScope,
+    private val onBookClick: (BookShelfEntry) -> Unit
+) : RecyclerView.Adapter<BookCoverGridAdapter.VH>() {
+
+    class VH(view: View) : RecyclerView.ViewHolder(view) {
+        val cover: ImageView = view.findViewById(R.id.book_grid_cover)
+        val title: TextView = view.findViewById(R.id.book_grid_title)
+        var loadJob: Job? = null
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
+        VH(LayoutInflater.from(parent.context).inflate(R.layout.item_book_cover_grid, parent, false))
+
+    override fun getItemCount() = entries.size
+
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val entry = entries[position]
+        val dp = holder.cover.resources.displayMetrics.density
+
+        holder.cover.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        holder.cover.setPadding((20 * dp).toInt(), (20 * dp).toInt(), (20 * dp).toInt(), (20 * dp).toInt())
+        holder.cover.setImageResource(R.drawable.ic_hub_books)
+        holder.cover.setColorFilter(Color.argb(100, 255, 255, 255))
+        holder.title.text = entry.title
+        holder.title.visibility = View.VISIBLE
+
+        holder.loadJob?.cancel()
+        holder.loadJob = scope.launch {
+            val bmp = withContext(Dispatchers.IO) { loadShelfCover(holder.cover.context, entry) }
+            if (bmp != null) {
+                holder.cover.clearColorFilter()
+                holder.cover.scaleType = ImageView.ScaleType.CENTER_CROP
+                holder.cover.setPadding(0, 0, 0, 0)
+                holder.cover.setImageBitmap(bmp)
+                holder.title.visibility = View.GONE
+            }
+        }
+
+        holder.itemView.setOnClickListener { onBookClick(entry) }
+    }
+
+    override fun onViewRecycled(holder: VH) {
+        super.onViewRecycled(holder)
+        holder.loadJob?.cancel()
+        holder.loadJob = null
+    }
 }
 
 // ── Cover loader ──────────────────────────────────────────────────────────────

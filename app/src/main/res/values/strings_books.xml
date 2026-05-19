@@ -50,4 +50,6 @@
     <string name="book_shelf_delete_confirm">Delete this library and all its entries?</string>
     <string name="book_shelf_books_count">%1$d books</string>
     <string name="book_shelf_tree_empty">No books in this library.</string>
+    <string name="book_shelf_section_root">(Other books)</string>
+    <string name="book_toggle_view">Toggle view</string>
 </resources>

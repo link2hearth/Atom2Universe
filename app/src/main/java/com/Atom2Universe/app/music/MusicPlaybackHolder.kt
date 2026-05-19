@@ -504,8 +504,9 @@ object MusicPlaybackHolder {
             }
         }
 
-        // Demander l'audio focus avant de démarrer la lecture
-        AudioFocusManager.requestFocus(audioFocusListener)
+        // Demander l'audio focus avant de démarrer la lecture.
+        // Si le focus est refusé (appel téléphonique en cours, etc.), on n'initialise pas.
+        if (!AudioFocusManager.requestFocus(audioFocusListener)) return
 
         val p = getOrCreatePlayer(context)
 
@@ -562,8 +563,9 @@ object MusicPlaybackHolder {
             appContext = context.applicationContext
         }
 
-        // Demander l'audio focus avant de reprendre
-        AudioFocusManager.requestFocus(audioFocusListener)
+        // Demander l'audio focus avant de reprendre.
+        // Si le focus est refusé (appel téléphonique en cours, etc.), on ne reprend pas.
+        if (!AudioFocusManager.requestFocus(audioFocusListener)) return
 
         // Si le player est null mais qu'on a une queue chargée, initialiser le player
         if (player == null && playlist.isNotEmpty() && currentIndex >= 0) {

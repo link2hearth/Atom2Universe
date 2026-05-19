@@ -23,6 +23,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
 
 class ComicsReaderActivity : ThemedActivity() {
@@ -58,8 +59,9 @@ class ComicsReaderActivity : ThemedActivity() {
 
     private var pdfRenderer: PdfRenderer? = null
     private var pdfFd: ParcelFileDescriptor? = null
-    private var cbzImages: List<ByteArray>? = null
     private var cbzNames: List<String>? = null
+    private var cbzZipFile: ZipFile? = null   // accès aléatoire O(1) par entrée
+    private var cbzPfd: ParcelFileDescriptor? = null  // maintenu ouvert pour /proc/self/fd
     private var folderImages: List<Uri>? = null
 
     private var isLoading = false
@@ -137,6 +139,8 @@ class ComicsReaderActivity : ThemedActivity() {
         scope.cancel()
         pdfRenderer?.close()
         pdfFd?.close()
+        cbzZipFile?.close()
+        cbzPfd?.close()
     }
 
     private fun saveProgress() {
@@ -177,33 +181,54 @@ class ComicsReaderActivity : ThemedActivity() {
     }
 
     private suspend fun setupCbz(uri: Uri) {
-        val named = mutableListOf<Pair<String, ByteArray>>()
+        val names = mutableListOf<String>()
         val ok = withContext(Dispatchers.IO) {
             try {
-                val stream = when (uri.scheme) {
-                    "file" -> java.io.FileInputStream(java.io.File(uri.path!!))
-                    else -> contentResolver.openInputStream(uri)
-                }
-                stream?.use { s ->
-                    val zis = ZipInputStream(s)
-                    var entry = zis.nextEntry
-                    while (entry != null) {
-                        if (!entry.isDirectory && isImageName(entry.name)) {
-                            named.add(entry.name to zis.readBytes())
+                val zf = openZipFileRandom(uri)
+                if (zf != null) {
+                    cbzZipFile = zf
+                    zf.entries().toList()
+                        .filter { !it.isDirectory && isImageName(it.name) }
+                        .sortedWith(Comparator { a, b -> naturalCompare(a.name, b.name) })
+                        .mapTo(names) { it.name }
+                } else {
+                    openCbzStream(uri)?.use { s ->
+                        val zis = ZipInputStream(java.io.BufferedInputStream(s, 65536))
+                        var entry = zis.nextEntry
+                        while (entry != null) {
+                            if (!entry.isDirectory && isImageName(entry.name)) names.add(entry.name)
+                            zis.closeEntry()
+                            entry = zis.nextEntry
                         }
-                        entry = zis.nextEntry
+                        names.sortWith(Comparator { a, b -> naturalCompare(a, b) })
                     }
-                    named.sortWith(Comparator { a, b -> naturalCompare(a.first, b.first) })
                 }
-                true
+                names.isNotEmpty()
             } catch (e: Exception) { false }
         }
         if (!ok) { showError(); return }
-        cbzImages = named.map { it.second }
-        cbzNames = named.map { java.io.File(it.first).name }
-        totalPages = named.size
+        cbzNames = names
+        totalPages = names.size
         initNavigation()
         loadCurrentPage()
+    }
+
+    // ZipFile donne un accès aléatoire O(1) via le répertoire central du ZIP.
+    // Pour les content:// URIs, /proc/self/fd/<n> convertit le FileDescriptor en chemin utilisable.
+    private fun openZipFileRandom(uri: Uri): ZipFile? = try {
+        when (uri.scheme) {
+            "file" -> ZipFile(java.io.File(uri.path!!))
+            else -> {
+                val pfd = contentResolver.openFileDescriptor(uri, "r") ?: return null
+                cbzPfd = pfd
+                ZipFile("/proc/self/fd/${pfd.fd}")
+            }
+        }
+    } catch (_: Exception) { null }
+
+    private fun openCbzStream(uri: Uri): java.io.InputStream? = when (uri.scheme) {
+        "file" -> java.io.FileInputStream(java.io.File(uri.path!!))
+        else -> contentResolver.openInputStream(uri)
     }
 
     private suspend fun setupFolder(uri: Uri) {
@@ -267,7 +292,7 @@ class ComicsReaderActivity : ThemedActivity() {
                 if (uri.scheme == "file") java.io.File(uri.path!!).name
                 else uri.lastPathSegment
             }
-            "cbz" -> cbzNames?.getOrNull(currentPage)
+            "cbz" -> cbzNames?.getOrNull(currentPage)?.let { java.io.File(it).name }
             else -> null
         }
         if (!name.isNullOrBlank()) titleText.text = name
@@ -301,10 +326,28 @@ class ComicsReaderActivity : ThemedActivity() {
     }
 
     private fun renderCbzPage(page: Int): Bitmap? {
-        val images = cbzImages ?: return null
-        if (page >= images.size) return null
+        val names = cbzNames ?: return null
+        if (page >= names.size) return null
+        val target = names[page]
         return try {
-            BitmapFactory.decodeByteArray(images[page], 0, images[page].size)
+            val zf = cbzZipFile
+            if (zf != null) {
+                val entry = zf.getEntry(target) ?: return null
+                zf.getInputStream(entry).use { BitmapFactory.decodeStream(it) }
+            } else {
+                // Fallback streaming si ZipFile n'a pas pu être ouvert
+                openCbzStream(sourceUri ?: return null)?.use { s ->
+                    val zis = ZipInputStream(java.io.BufferedInputStream(s, 65536))
+                    var entry = zis.nextEntry
+                    var result: Bitmap? = null
+                    while (entry != null && result == null) {
+                        if (entry.name == target) result = BitmapFactory.decodeStream(zis)
+                        else zis.closeEntry()
+                        entry = zis.nextEntry
+                    }
+                    result
+                }
+            }
         } catch (e: Exception) { null }
     }
 

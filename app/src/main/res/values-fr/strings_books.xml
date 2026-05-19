@@ -50,4 +50,6 @@
     <string name="book_shelf_delete_confirm">Supprimer cette bibliothèque et tous ses livres ?</string>
     <string name="book_shelf_books_count">%1$d livres</string>
     <string name="book_shelf_tree_empty">Aucun livre dans cette bibliothèque.</string>
+    <string name="book_shelf_section_root">(Autres livres)</string>
+    <string name="book_toggle_view">Changer la vue</string>
 </resources>

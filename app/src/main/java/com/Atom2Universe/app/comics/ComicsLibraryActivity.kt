@@ -374,7 +374,7 @@ class ComicsLibraryActivity : ThemedActivity() {
             when {
                 isImageFile(file.name) -> imageFolders.getOrPut(file.parentFile!!) { mutableListOf() }.add(file)
                 file.name.endsWith(".pdf", true) -> {
-                    val rel = parentRelPath(file.parentFile!!, rootFile)
+                    val rel = fileRelPath(file.parentFile!!, rootFile)
                     entries.add(ComicEntry(title = file.nameWithoutExtension, sourcePath = file.absolutePath, format = "pdf", totalPages = 0, rootId = root.id, relativePath = rel))
                     onFound(entries.size, file.nameWithoutExtension)
                 }
@@ -390,7 +390,7 @@ class ComicsLibraryActivity : ThemedActivity() {
         }
 
         for (cbz in archiveFiles.sortedBy { it.absolutePath }) {
-            val rel = parentRelPath(cbz.parentFile!!, rootFile)
+            val rel = fileRelPath(cbz.parentFile!!, rootFile)
             entries.add(ComicEntry(title = cbz.nameWithoutExtension, sourcePath = cbz.absolutePath, format = "cbz", totalPages = 0, rootId = root.id, relativePath = rel))
             onFound(entries.size, cbz.nameWithoutExtension)
         }
@@ -401,6 +401,10 @@ class ComicsLibraryActivity : ThemedActivity() {
     private fun parentRelPath(dir: java.io.File, root: java.io.File): String = try {
         val parent = dir.parentFile ?: return ""
         if (parent == root) "" else parent.relativeTo(root).path.replace(java.io.File.separator, "/")
+    } catch (_: Exception) { "" }
+
+    private fun fileRelPath(dir: java.io.File, root: java.io.File): String = try {
+        if (dir == root) "" else dir.relativeTo(root).path.replace(java.io.File.separator, "/")
     } catch (_: Exception) { "" }
 
     private fun isImageFile(name: String): Boolean {
@@ -436,6 +440,11 @@ class ComicsLibraryActivity : ThemedActivity() {
             DocumentsContract.Document.COLUMN_DISPLAY_NAME,
             DocumentsContract.Document.COLUMN_MIME_TYPE
         )
+        val myRel = when {
+            depth == 0 -> ""
+            parentRelPath.isEmpty() -> dirName
+            else -> "$parentRelPath/$dirName"
+        }
         var imageCount = 0
         val subDirs = mutableListOf<Pair<String, String>>()
         contentResolver.query(childrenUri, projection, null, null, null)?.use { cursor ->
@@ -451,12 +460,12 @@ class ComicsLibraryActivity : ThemedActivity() {
                     mime.startsWith("image/") -> imageCount++
                     mime == "application/pdf" || name.endsWith(".pdf", true) -> {
                         val src = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId).toString()
-                        results.add(ComicEntry(title = name.substringBeforeLast("."), sourcePath = src, format = "pdf", totalPages = 0, rootId = rootId, relativePath = parentRelPath))
+                        results.add(ComicEntry(title = name.substringBeforeLast("."), sourcePath = src, format = "pdf", totalPages = 0, rootId = rootId, relativePath = myRel))
                         onFound(results.size, name.substringBeforeLast("."))
                     }
                     name.endsWith(".cbz", true) || name.endsWith(".zip", true) -> {
                         val src = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId).toString()
-                        results.add(ComicEntry(title = name.substringBeforeLast("."), sourcePath = src, format = "cbz", totalPages = 0, rootId = rootId, relativePath = parentRelPath))
+                        results.add(ComicEntry(title = name.substringBeforeLast("."), sourcePath = src, format = "cbz", totalPages = 0, rootId = rootId, relativePath = myRel))
                         onFound(results.size, name.substringBeforeLast("."))
                     }
                 }
@@ -466,11 +475,6 @@ class ComicsLibraryActivity : ThemedActivity() {
             val src = DocumentsContract.buildDocumentUriUsingTree(treeUri, dirDocId).toString()
             results.add(ComicEntry(title = dirName, sourcePath = src, format = "folder", totalPages = imageCount, rootId = rootId, relativePath = parentRelPath))
             onFound(results.size, dirName)
-        }
-        val myRel = when {
-            depth == 0 -> ""
-            parentRelPath.isEmpty() -> dirName
-            else -> "$parentRelPath/$dirName"
         }
         for ((subDocId, subName) in subDirs.sortedBy { it.second }) {
             safScanDirFast(treeUri, subDocId, subName, myRel, rootId, results, depth + 1, onFound)

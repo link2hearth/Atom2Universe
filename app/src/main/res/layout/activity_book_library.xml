@@ -107,7 +107,35 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <!-- Niveau 2 : arborescence d'une bibliothèque -->
+            <!-- Niveau 2 : liste des dossiers auteurs -->
+            <FrameLayout
+                android:id="@+id/shelf_authors_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/shelf_authors_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="80dp"
+                    android:clipToPadding="false" />
+
+                <TextView
+                    android:id="@+id/shelf_authors_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="32dp"
+                    android:text="@string/book_shelf_tree_empty"
+                    android:textSize="16sp"
+                    android:alpha="0.5"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Niveau 3 : livres d'un auteur -->
             <FrameLayout
                 android:id="@+id/shelf_tree_container"
                 android:layout_width="match_parent"

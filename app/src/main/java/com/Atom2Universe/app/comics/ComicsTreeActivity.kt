@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +40,12 @@ import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
 import androidx.core.content.edit
 
+data class ComicSeriesFolder(
+    val displayName: String,
+    val pathPrefix: String,
+    val comicCount: Int
+)
+
 class ComicsTreeActivity : ThemedActivity() {
 
     companion object {
@@ -47,7 +54,7 @@ class ComicsTreeActivity : ThemedActivity() {
         private const val PREFS_NAME = "comics_tree_prefs"
         private const val KEY_DISPLAY_MODE = "display_mode"
         private const val KEY_GRID_COLUMNS = "grid_columns"
-        private const val MODE_TREE = 0
+        private const val MODE_LIST = 0
         private const val MODE_GRID = 1
         private const val MIN_COLS = 1
         private const val MAX_COLS = 6
@@ -58,9 +65,17 @@ class ComicsTreeActivity : ThemedActivity() {
     private lateinit var prefs: SharedPreferences
     private lateinit var recycler: RecyclerView
     private lateinit var emptyView: TextView
+    private lateinit var foldersContainer: View
+    private lateinit var foldersRecycler: RecyclerView
+    private lateinit var foldersEmpty: TextView
+    private lateinit var contentContainer: View
     private var allEntries: List<ComicEntry> = emptyList()
+    private var currentFolderPath: String? = null
+    private var currentFilteredEntries: List<ComicEntry> = emptyList()
+    private var hasFolderLevel = false
     private var rootId: String = ""
-    private var displayMode = MODE_TREE
+    private var rootName: String = ""
+    private var displayMode = MODE_LIST
     private var gridColumns = DEFAULT_COLS
     private var toggleMenuItem: MenuItem? = null
     private var scaleFactor = 1f
@@ -95,18 +110,22 @@ class ComicsTreeActivity : ThemedActivity() {
         enableImmersiveMode()
 
         rootId = intent.getStringExtra(EXTRA_ROOT_ID) ?: run { finish(); return }
-        val rootName = intent.getStringExtra(EXTRA_ROOT_NAME) ?: ""
+        rootName = intent.getStringExtra(EXTRA_ROOT_NAME) ?: ""
 
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        displayMode = prefs.getInt(KEY_DISPLAY_MODE, MODE_TREE)
+        displayMode = prefs.getInt(KEY_DISPLAY_MODE, MODE_LIST)
         gridColumns = prefs.getInt(KEY_GRID_COLUMNS, DEFAULT_COLS).coerceIn(MIN_COLS, MAX_COLS)
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.comics_tree_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = rootName
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener { finish() }
+        toolbar.setNavigationOnClickListener { handleBack() }
 
+        foldersContainer = findViewById(R.id.comics_folders_container)
+        foldersRecycler = findViewById(R.id.comics_folders_recycler)
+        foldersEmpty = findViewById(R.id.comics_folders_empty)
+        contentContainer = findViewById(R.id.comics_content_container)
         recycler = findViewById(R.id.comics_tree_recycler)
         emptyView = findViewById(R.id.comics_tree_empty)
 
@@ -116,6 +135,10 @@ class ComicsTreeActivity : ThemedActivity() {
                 return false
             }
         })
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { handleBack() }
+        })
     }
 
     override fun onResume() {
@@ -123,19 +146,119 @@ class ComicsTreeActivity : ThemedActivity() {
         loadData()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    private fun handleBack() {
+        if (hasFolderLevel && currentFolderPath != null) {
+            currentFolderPath = null
+            currentFilteredEntries = emptyList()
+            contentContainer.visibility = View.GONE
+            foldersContainer.visibility = View.VISIBLE
+            supportActionBar?.title = rootName
+            invalidateOptionsMenu()
+        } else {
+            finish()
+        }
+    }
+
+    // ── Chargement des données ────────────────────────────────────────────────
+
     private fun loadData() {
         scope.launch {
-            val scrollState = recycler.layoutManager?.onSaveInstanceState()
             allEntries = withContext(Dispatchers.IO) {
                 ComicsDatabase.getInstance(this@ComicsTreeActivity).comicsDao().getComicsByRoot(rootId)
             }
-            emptyView.visibility = if (allEntries.isEmpty()) View.VISIBLE else View.GONE
-            if (allEntries.isNotEmpty()) {
-                applyDisplayMode()
-                if (scrollState != null) recycler.layoutManager?.onRestoreInstanceState(scrollState)
+            if (allEntries.isEmpty()) {
+                showFoldersContainer()
+                foldersEmpty.visibility = View.VISIBLE
+                foldersRecycler.visibility = View.GONE
+                return@launch
+            }
+            // Si on revient dans un dossier déjà ouvert, le ré-ouvrir
+            val fp = currentFolderPath
+            if (fp != null) {
+                openFolderPath(fp)
+            } else {
+                showFolderLevel(allEntries)
             }
         }
     }
+
+    // ── Niveau 1 : liste des dossiers ─────────────────────────────────────────
+
+    private fun showFolderLevel(entries: List<ComicEntry>) {
+        val folderMap = mutableMapOf<String, Int>()
+        var rootCount = 0
+        for (e in entries) {
+            val rp = e.relativePath ?: ""
+            if (rp.isEmpty()) { rootCount++; continue }
+            val first = rp.split("/").first()
+            folderMap[first] = (folderMap[first] ?: 0) + 1
+        }
+
+        // Pas de sous-dossiers → affichage direct de toutes les BD
+        if (folderMap.isEmpty()) {
+            hasFolderLevel = false
+            currentFolderPath = ""
+            currentFilteredEntries = entries
+            showContentContainer()
+            applyDisplayMode()
+            return
+        }
+
+        hasFolderLevel = true
+        val folders = mutableListOf<ComicSeriesFolder>()
+        if (rootCount > 0) {
+            folders.add(ComicSeriesFolder(getString(R.string.comics_section_root), "", rootCount))
+        }
+        folderMap.entries.sortedBy { it.key }.forEach { (name, count) ->
+            folders.add(ComicSeriesFolder(name, name, count))
+        }
+
+        showFoldersContainer()
+        foldersEmpty.visibility = View.GONE
+        foldersRecycler.visibility = View.VISIBLE
+        foldersRecycler.layoutManager = LinearLayoutManager(this)
+        foldersRecycler.adapter = ComicSeriesFoldersAdapter(folders, getString(R.string.comics_series_count)) { folder ->
+            openFolderPath(folder.pathPrefix)
+        }
+    }
+
+    // ── Niveau 2 : BD d'un dossier ───────────────────────────────────────────
+
+    private fun openFolderPath(path: String) {
+        currentFolderPath = path
+        currentFilteredEntries = if (path.isEmpty()) {
+            allEntries.filter { (it.relativePath ?: "").isEmpty() }
+        } else {
+            allEntries.filter {
+                val rp = it.relativePath ?: ""
+                rp == path || rp.startsWith("$path/")
+            }
+        }
+        supportActionBar?.title = if (path.isEmpty()) getString(R.string.comics_section_root)
+                                   else path.split("/").last()
+        showContentContainer()
+        invalidateOptionsMenu()
+        applyDisplayMode()
+    }
+
+    private fun showFoldersContainer() {
+        foldersContainer.visibility = View.VISIBLE
+        contentContainer.visibility = View.GONE
+    }
+
+    private fun showContentContainer() {
+        foldersContainer.visibility = View.GONE
+        contentContainer.visibility = View.VISIBLE
+    }
+
+    // ── Menu ──────────────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_comics_tree, menu)
@@ -143,6 +266,11 @@ class ComicsTreeActivity : ThemedActivity() {
         updateToggleIcon()
         tintMenuIcons(menu)
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        toggleMenuItem?.isVisible = currentFolderPath != null
+        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun tintMenuIcons(menu: Menu) {
@@ -159,7 +287,7 @@ class ComicsTreeActivity : ThemedActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_toggle_view) {
-            displayMode = if (displayMode == MODE_TREE) MODE_GRID else MODE_TREE
+            displayMode = if (displayMode == MODE_LIST) MODE_GRID else MODE_LIST
             prefs.edit { putInt(KEY_DISPLAY_MODE, displayMode) }
             applyDisplayMode()
             updateToggleIcon()
@@ -168,30 +296,38 @@ class ComicsTreeActivity : ThemedActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scope.cancel()
+    private fun updateToggleIcon() {
+        toggleMenuItem?.setIcon(
+            if (displayMode == MODE_LIST) R.drawable.ic_view_grid else R.drawable.ic_view_list
+        )
     }
 
+    // ── Affichage des BD ──────────────────────────────────────────────────────
+
     private fun applyDisplayMode() {
+        val entries = currentFilteredEntries
+        if (entries.isEmpty()) {
+            emptyView.visibility = View.VISIBLE
+            recycler.visibility = View.GONE
+            return
+        }
+        emptyView.visibility = View.GONE
+        recycler.visibility = View.VISIBLE
+
+        val folderPath = currentFolderPath ?: ""
         if (displayMode == MODE_GRID) {
             recycler.layoutManager = GridLayoutManager(this, gridColumns)
-            recycler.adapter = CoverGridAdapter(allEntries, scope) { entry -> openComic(entry) }
+            recycler.adapter = CoverGridAdapter(entries, scope) { entry -> openComic(entry) }
         } else {
             recycler.layoutManager = LinearLayoutManager(this)
-            recycler.adapter = ComicsTreeAdapter(
+            recycler.adapter = ComicBrowseAdapter(
                 context = this,
                 scope = scope,
-                entries = allEntries,
+                entries = entries,
+                folderPath = folderPath,
                 onComicClick = { entry -> openComic(entry) }
             )
         }
-    }
-
-    private fun updateToggleIcon() {
-        toggleMenuItem?.setIcon(
-            if (displayMode == MODE_TREE) R.drawable.ic_view_grid else R.drawable.ic_view_list
-        )
     }
 
     private fun setGridColumns(cols: Int) {
@@ -210,6 +346,122 @@ class ComicsTreeActivity : ThemedActivity() {
             putExtra(ComicsReaderActivity.EXTRA_COMIC_TITLE, entry.title)
             putExtra(ComicsReaderActivity.EXTRA_COMIC_PAGE, entry.currentPage)
         })
+    }
+}
+
+// ── Adapter : liste des dossiers/séries ──────────────────────────────────────
+
+private class ComicSeriesFoldersAdapter(
+    private val folders: List<ComicSeriesFolder>,
+    private val countFormat: String,
+    private val onFolderClick: (ComicSeriesFolder) -> Unit
+) : RecyclerView.Adapter<ComicSeriesFoldersAdapter.VH>() {
+
+    class VH(view: View) : RecyclerView.ViewHolder(view) {
+        val name: TextView = view.findViewById(R.id.series_folder_name)
+        val count: TextView = view.findViewById(R.id.series_folder_count)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
+        VH(LayoutInflater.from(parent.context).inflate(R.layout.item_comics_series_folder, parent, false))
+
+    override fun getItemCount() = folders.size
+
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val folder = folders[position]
+        holder.name.text = folder.displayName
+        holder.count.text = countFormat.format(folder.comicCount)
+        holder.itemView.setOnClickListener { onFolderClick(folder) }
+    }
+}
+
+// ── Browse rows (BD + sections non-collapsibles) ──────────────────────────────
+
+private sealed class ComicBrowseRow {
+    data class SectionHeader(val name: String, val count: Int) : ComicBrowseRow()
+    data class ComicItem(val entry: ComicEntry) : ComicBrowseRow()
+}
+
+private fun buildBrowseRows(entries: List<ComicEntry>, folderPath: String): List<ComicBrowseRow> {
+    val rows = mutableListOf<ComicBrowseRow>()
+
+    val direct = entries.filter { (it.relativePath ?: "") == folderPath }.sortedBy { it.title }
+    direct.forEach { rows.add(ComicBrowseRow.ComicItem(it)) }
+
+    val sub = entries.filter { (it.relativePath ?: "") != folderPath }
+    if (sub.isNotEmpty()) {
+        val groups = sub.groupBy { entry ->
+            val rp = entry.relativePath ?: ""
+            val remainder = if (folderPath.isEmpty()) rp else rp.removePrefix("$folderPath/")
+            remainder.split("/").first()
+        }
+        groups.keys.sorted().forEach { sectionName ->
+            val sectionComics = groups[sectionName]!!.sortedBy { it.title }
+            rows.add(ComicBrowseRow.SectionHeader(sectionName, sectionComics.size))
+            sectionComics.forEach { rows.add(ComicBrowseRow.ComicItem(it)) }
+        }
+    }
+
+    return rows
+}
+
+// ── Adapter : BD d'un dossier avec sections ───────────────────────────────────
+
+private class ComicBrowseAdapter(
+    private val context: Context,
+    private val scope: CoroutineScope,
+    entries: List<ComicEntry>,
+    folderPath: String,
+    private val onComicClick: (ComicEntry) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val rows = buildBrowseRows(entries, folderPath)
+
+    companion object {
+        private const val TYPE_HEADER = 0
+        private const val TYPE_COMIC = 1
+    }
+
+    override fun getItemViewType(p: Int) = if (rows[p] is ComicBrowseRow.SectionHeader) TYPE_HEADER else TYPE_COMIC
+    override fun getItemCount() = rows.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inf = LayoutInflater.from(parent.context)
+        return if (viewType == TYPE_HEADER)
+            BrowseSectionVH(inf.inflate(R.layout.item_comics_folder_header, parent, false))
+        else
+            ComicVH(inf.inflate(R.layout.item_comic_tile, parent, false))
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val density = context.resources.displayMetrics.density
+        when (val row = rows[position]) {
+            is ComicBrowseRow.SectionHeader -> (holder as BrowseSectionVH).bind(row)
+            is ComicBrowseRow.ComicItem -> {
+                (holder as ComicVH).bind(row.entry, 0, density, scope, context)
+                holder.itemView.setOnClickListener { onComicClick(row.entry) }
+            }
+        }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        (holder as? ComicVH)?.cancelLoad()
+    }
+}
+
+private class BrowseSectionVH(view: View) : RecyclerView.ViewHolder(view) {
+    val indent: View = view.findViewById(R.id.folder_indent)
+    val name: TextView = view.findViewById(R.id.folder_name)
+    val count: TextView = view.findViewById(R.id.folder_count)
+    val chevron: ImageView = view.findViewById(R.id.folder_chevron)
+
+    fun bind(row: ComicBrowseRow.SectionHeader) {
+        indent.layoutParams = indent.layoutParams.also { it.width = 0 }
+        name.text = row.name
+        count.text = "${row.count}"
+        chevron.visibility = View.GONE
+        itemView.isClickable = false
     }
 }
 
@@ -250,143 +502,7 @@ private class CoverGridAdapter(
     }
 }
 
-// ── Tree model ──────────────────────────────────────────────────────────────
-
-private data class FolderNode(
-    val name: String,
-    val path: String,
-    val depth: Int,
-    val subFolders: MutableList<FolderNode> = mutableListOf(),
-    val comics: MutableList<ComicEntry> = mutableListOf()
-)
-
-private sealed class TreeRow {
-    data class Folder(
-        val name: String,
-        val path: String,
-        val depth: Int,
-        val childCount: Int,
-        var expanded: Boolean = true
-    ) : TreeRow()
-
-    data class Comic(val entry: ComicEntry, val depth: Int) : TreeRow()
-}
-
-private fun buildTree(entries: List<ComicEntry>): FolderNode {
-    val root = FolderNode("", "", -1)
-    for (entry in entries.sortedWith(compareBy({ it.relativePath ?: "" }, { it.title }))) {
-        val rp = entry.relativePath ?: ""
-        val parts = if (rp.isEmpty()) emptyList() else rp.split("/")
-        var cur = root
-        for ((i, part) in parts.withIndex()) {
-            val path = parts.take(i + 1).joinToString("/")
-            var child = cur.subFolders.find { it.path == path }
-            if (child == null) {
-                child = FolderNode(part, path, i)
-                cur.subFolders.add(child)
-            }
-            cur = child
-        }
-        cur.comics.add(entry)
-    }
-    return root
-}
-
-private fun flatten(node: FolderNode, expandedPaths: Set<String>, result: MutableList<TreeRow>) {
-    if (node.depth >= 0) {
-        val childCount = node.subFolders.size + node.comics.size
-        result.add(TreeRow.Folder(
-            name = node.name,
-            path = node.path,
-            depth = node.depth,
-            childCount = childCount,
-            expanded = node.path in expandedPaths
-        ))
-        if (node.path !in expandedPaths) return
-    }
-    for (sub in node.subFolders.sortedBy { it.name }) flatten(sub, expandedPaths, result)
-    val comicDepth = if (node.depth < 0) 0 else node.depth + 1
-    for (comic in node.comics.sortedBy { it.title }) result.add(TreeRow.Comic(comic, comicDepth))
-}
-
-// ── Tree adapter ──────────────────────────────────────────────────────────────
-
-private class ComicsTreeAdapter(
-    private val context: Context,
-    private val scope: CoroutineScope,
-    entries: List<ComicEntry>,
-    private val onComicClick: (ComicEntry) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val tree = buildTree(entries)
-    private val expandedPaths = mutableSetOf<String>().also { set ->
-        fun collectPaths(node: FolderNode) {
-            if (node.depth >= 0) set.add(node.path)
-            node.subFolders.forEach { collectPaths(it) }
-        }
-        collectPaths(tree)
-    }
-    private val rows = mutableListOf<TreeRow>()
-
-    init { rebuildRows() }
-
-    private fun rebuildRows() { rows.clear(); flatten(tree, expandedPaths, rows) }
-
-    companion object {
-        private const val TYPE_FOLDER = 0
-        private const val TYPE_COMIC = 1
-    }
-
-    override fun getItemViewType(position: Int) = when (rows[position]) {
-        is TreeRow.Folder -> TYPE_FOLDER
-        is TreeRow.Comic -> TYPE_COMIC
-    }
-
-    override fun getItemCount() = rows.size
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            TYPE_FOLDER -> FolderVH(inflater.inflate(R.layout.item_comics_folder_header, parent, false))
-            else -> ComicVH(inflater.inflate(R.layout.item_comic_tile, parent, false))
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val density = context.resources.displayMetrics.density
-        when (val row = rows[position]) {
-            is TreeRow.Folder -> (holder as FolderVH).bind(row, density) { path ->
-                if (path in expandedPaths) expandedPaths.remove(path) else expandedPaths.add(path)
-                rebuildRows()
-                notifyDataSetChanged()
-            }
-            is TreeRow.Comic -> {
-                (holder as ComicVH).bind(row.entry, row.depth, density, scope, context)
-                holder.itemView.setOnClickListener { onComicClick(row.entry) }
-            }
-        }
-    }
-
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        super.onViewRecycled(holder)
-        (holder as? ComicVH)?.cancelLoad()
-    }
-}
-
-private class FolderVH(view: View) : RecyclerView.ViewHolder(view) {
-    val indent: View = view.findViewById(R.id.folder_indent)
-    val name: TextView = view.findViewById(R.id.folder_name)
-    val count: TextView = view.findViewById(R.id.folder_count)
-    val chevron: ImageView = view.findViewById(R.id.folder_chevron)
-
-    fun bind(row: TreeRow.Folder, density: Float, onToggle: (String) -> Unit) {
-        indent.layoutParams = indent.layoutParams.also { it.width = ((row.depth * 20) * density).toInt() }
-        name.text = row.name
-        count.text = "${row.childCount}"
-        chevron.setImageResource(if (row.expanded) R.drawable.ic_chevron_down else R.drawable.ic_chevron_right)
-        itemView.setOnClickListener { onToggle(row.path) }
-    }
-}
+// ── ComicVH ───────────────────────────────────────────────────────────────────
 
 private class ComicVH(view: View) : RecyclerView.ViewHolder(view) {
     val cover: ImageView = view.findViewById(R.id.comic_tile_cover)
@@ -424,7 +540,7 @@ private class ComicVH(view: View) : RecyclerView.ViewHolder(view) {
     fun cancelLoad() { loadJob?.cancel(); loadJob = null }
 }
 
-// ── Cover thumbnail helper ───────────────────────────────────────────────────
+// ── Cover thumbnail helper ────────────────────────────────────────────────────
 
 private fun loadCover(context: Context, entry: ComicEntry): Bitmap? {
     val cacheFile = File(context.filesDir, "comics_covers/${entry.id}.jpg")
@@ -458,7 +574,10 @@ private fun pdfFirstPage(context: Context, uri: Uri): Bitmap? = try {
         PdfRenderer(fd).use { renderer ->
             if (renderer.pageCount == 0) return null
             renderer.openPage(0).use { page ->
-                val bmp = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+                val scale = 600f / maxOf(page.width, page.height).coerceAtLeast(1)
+                val w = (page.width * scale).toInt().coerceAtLeast(1)
+                val h = (page.height * scale).toInt().coerceAtLeast(1)
+                val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
                 bmp.eraseColor(Color.WHITE)
                 page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                 bmp
@@ -468,18 +587,19 @@ private fun pdfFirstPage(context: Context, uri: Uri): Bitmap? = try {
 } catch (_: Exception) { null }
 
 private fun folderFirstImage(context: Context, uri: Uri): Bitmap? = try {
+    val opts = BitmapFactory.Options().apply { inSampleSize = 4 }
     if (uri.scheme == "file") {
         val dir = File(uri.path ?: return null)
         val first = dir.listFiles()
             ?.filter { it.isFile && isComicImage(it.name) }
             ?.minWithOrNull(Comparator { a, b -> naturalCompare(a.name, b.name) }) ?: return null
-        BitmapFactory.decodeFile(first.path, BitmapFactory.Options().apply { inSampleSize = 2 })
+        BitmapFactory.decodeFile(first.path, opts)
     } else {
         val doc = DocumentFile.fromTreeUri(context, uri) ?: return null
         val first = doc.listFiles()
             .filter { it.isFile && it.type?.startsWith("image/") == true }
             .minWithOrNull(Comparator { a, b -> naturalCompare(a.name ?: "", b.name ?: "") }) ?: return null
-        context.contentResolver.openInputStream(first.uri)?.use { BitmapFactory.decodeStream(it) }
+        context.contentResolver.openInputStream(first.uri)?.use { BitmapFactory.decodeStream(it, null, opts) }
     }
 } catch (_: Exception) { null }
 
@@ -488,22 +608,39 @@ private fun isComicImage(name: String): Boolean {
     return l.endsWith(".jpg") || l.endsWith(".jpeg") || l.endsWith(".png") || l.endsWith(".webp")
 }
 
-private fun cbzFirstImage(context: Context, uri: Uri): Bitmap? = try {
-    context.contentResolver.openInputStream(uri)?.use { stream ->
-        val zis = ZipInputStream(stream)
-        var entry = zis.nextEntry
-        var result: Bitmap? = null
-        val names = mutableListOf<Pair<String, ByteArray>>()
-        while (entry != null && names.size < 20) {
-            val n = entry.name.lowercase()
-            if (!entry.isDirectory && (n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp"))) {
-                names.add(entry.name to zis.readBytes())
+private fun cbzFirstImage(context: Context, uri: Uri): Bitmap? {
+    return try {
+        // Passe 1 : collecter les noms des entrées images sans lire leurs bytes
+        val imageNames = mutableListOf<String>()
+        context.contentResolver.openInputStream(uri)?.use { stream ->
+            val zis = ZipInputStream(stream)
+            var entry = zis.nextEntry
+            while (entry != null) {
+                val n = entry.name.lowercase()
+                if (!entry.isDirectory && (n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp"))) {
+                    imageNames.add(entry.name)
+                }
+                zis.closeEntry()
+                entry = zis.nextEntry
             }
-            entry = zis.nextEntry
         }
-        names.minWithOrNull(Comparator { a, b -> naturalCompare(a.first, b.first) })?.second?.let { bytes ->
-            result = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        val target = imageNames.minWithOrNull(Comparator { a, b -> naturalCompare(a, b) })
+            ?: return null
+        // Passe 2 : décoder uniquement l'entrée cible avec subsample
+        val opts = BitmapFactory.Options().apply { inSampleSize = 4 }
+        context.contentResolver.openInputStream(uri)?.use { stream ->
+            val zis = ZipInputStream(stream)
+            var entry = zis.nextEntry
+            var result: Bitmap? = null
+            while (entry != null && result == null) {
+                if (entry.name == target) {
+                    result = BitmapFactory.decodeStream(zis, null, opts)
+                } else {
+                    zis.closeEntry()
+                }
+                entry = zis.nextEntry
+            }
+            result
         }
-        result
-    }
-} catch (_: Exception) { null }
+    } catch (_: Exception) { null }
+}

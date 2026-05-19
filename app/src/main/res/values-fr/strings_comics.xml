@@ -35,4 +35,6 @@
     <string name="comics_storage_perm_msg">L\'accès complet au stockage permet de scanner la bibliothèque beaucoup plus vite. Sans cette permission, le scan utilise une méthode plus lente.\n\nVous pouvez aussi ignorer et scanner quand même.</string>
     <string name="comics_storage_perm_grant">Accorder l\'accès</string>
     <string name="comics_storage_perm_skip">Scanner quand même</string>
+    <string name="comics_section_root">(Autres BD)</string>
+    <string name="comics_series_count">%1$d BD</string>
 </resources>
