@@ -19,7 +19,7 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
 
   fun getName(element: PeriodicElement): String {
     val root = loadRoot(context, LocaleHelper.getLanguage(context))
-      ?: loadRoot(context, "fr")
+      ?: loadRoot(context, "en")
       ?: return element.name
     return root.optJSONObject("elements")?.optJSONObject(element.id)?.optString("name", "")
       ?.takeIf { it.isNotEmpty() } ?: element.name
@@ -27,7 +27,7 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
 
   fun getDescription(element: PeriodicElement): ElementDescription {
     val root = loadRoot(context, LocaleHelper.getLanguage(context))
-      ?: loadRoot(context, "fr")
+      ?: loadRoot(context, "en")
       ?: return fallback(element)
     val obj = root.optJSONObject("elements")?.optJSONObject(element.id) ?: return fallback(element)
     val summary = obj.optString("summary", "")
@@ -38,7 +38,7 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
 
   fun getRarityDescription(key: String): RarityDescription? {
     val root = loadRoot(context, LocaleHelper.getLanguage(context))
-      ?: loadRoot(context, "fr")
+      ?: loadRoot(context, "en")
       ?: return null
     val obj = root.optJSONObject("rarities")?.optJSONObject(key) ?: return null
     return RarityDescription(
