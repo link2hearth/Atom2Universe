@@ -359,6 +359,996 @@
         "Guardiano silenzioso, lo zinco si sacrifica per preservare le strutture che protegge — dai metalli agli organismi — incarnando la quieta nobiltà degli elementi modesti ma indispensabili."
       ],
       "name": "Zinco"
+    },
+    "element-031-gallium": {
+      "summary": "Metallo argenteo che quasi si scioglie nel palmo della mano, il gallio è una risorsa rara ormai indispensabile all'optoelettronica moderna.",
+      "paragraphs": [
+        "Simbolo «Ga», numero atomico 31, il gallio è un metallo argenteo e morbido che fonde a soli 29,8 °C. Solido a temperatura ambiente, si liquefa al calore del corpo umano. Scoperto nel 1875 dal chimico francese Paul Emile Lecoq de Boisbaudran tramite spettroscopia, il suo nome deriva dal latino Gallia (Francia). La sua esistenza era stata prevista da Mendeleev, che l'aveva chiamato eka-alluminio.",
+        "Il gallio si forma nelle stelle massive durante le supernovae e attraverso processi di cattura di neutroni nelle giganti rosse. È prodotto sia dal processo-s che dal processo-r, il che spiega i suoi due isotopi stabili, ⁶⁹Ga e ⁷¹Ga. La sua abbondanza cosmica lo colloca come elemento di transizione tra i metalli leggeri e i metalli pesanti della tavola periodica.",
+        "Sulla Terra il gallio è raro: non ha un minerale dedicato e si trova solo in piccole quantità nella bauxite, nella sfalerite e in altri minerali di zinco e alluminio. Si estrae quasi esclusivamente come sottoprodotto della lavorazione dell'alluminio e dello zinco. Le principali riserve si trovano in Cina, Australia e Russia.",
+        "Metallo strategico, il gallio è principalmente impiegato nei semiconduttori come l'arseniuro di gallio (GaAs) e il nitruro di gallio (GaN), utilizzati nei LED ad alta luminosità, nei laser, nei pannelli solari e nell'elettronica ad alta frequenza per smartphone e reti 5G. Senza gallio non esisterebbero i pannelli LED né molti componenti dell'elettronica moderna.",
+        "I principali composti del gallio sono l'arseniuro di gallio (GaAs), il nitruro di gallio (GaN), l'ossido di gallio (Ga₂O₃) e il fosfuro di gallio (GaP). Questi composti sono alla base dell'optoelettronica moderna: LED, laser a semiconduttore, celle fotovoltaiche ad alta efficienza e transistor ad alta mobilità elettronica."
+      ],
+      "name": "Gallio"
+    },
+    "element-032-germanium": {
+      "summary": "Semimetallo previsto da Mendeleev prima della sua scoperta, il germanio è diventato uno dei pilastri dell'elettronica moderna e dell'ottica a infrarossi.",
+      "paragraphs": [
+        "Simbolo «Ge», numero atomico 32, il germanio è un semimetallo fragile e lucente con proprietà intermedie tra i metalli e i non metalli. Fonde a 938 °C ed è un semiconduttore intrinseco. Scoperto nel 1886 dal chimico tedesco Clemens Winkler, fu chiamato germanio in onore della Germania. La sua esistenza era stata prevista da Mendeleev, che l'aveva chiamato eka-silicio.",
+        "Il germanio si forma nelle stelle massive attraverso la fusione del silicio e processi di cattura di neutroni. È prodotto sia dal processo-s nelle giganti AGB che durante le supernovae tramite il processo-r. I suoi isotopi stabili (⁷⁰Ge, ⁷²Ge, ⁷³Ge, ⁷⁴Ge, ⁷⁶Ge) testimoniano la sua formazione cosmica attraverso percorsi nucleosintetici diversi.",
+        "Sulla Terra il germanio è raro (circa 1,5 ppm nella crosta). Non possiede minerali propri significativi: si trova principalmente nella sfalerite, nella germanite e nella renierite, oltre che nei carboni e nelle ceneri di combustione. Si estrae come sottoprodotto della metallurgia dello zinco e dalla lavorazione del carbone. Cina, Russia e USA sono i principali produttori.",
+        "Il germanio fu il primo materiale dei transistor nella storia dell'elettronica (anni '50), prima di essere sostituito dal silicio. Oggi è indispensabile nelle fibre ottiche (come agente drogante per aumentare l'indice di rifrazione), nella visione a infrarossi (finestre e lenti per telecamere termiche), nei rivelatori di raggi gamma ad alta risoluzione e nei pannelli solari ad alta efficienza. È anche usato come catalizzatore nella produzione di PET.",
+        "I composti principali includono il diossido di germanio (GeO₂), usato nella produzione di vetri ottici e fibre ottiche; il tetracloruro di germanio (GeCl₄), precursore per la deposizione chimica da vapore nelle fibre ottiche; e il germanio organico, studiato per applicazioni biomediche. Il germanio metallico di purezza elevatissima è fondamentale per l'elettronica e i rivelatori nucleari."
+      ],
+      "name": "Germanio"
+    },
+    "element-033-arsenic": {
+      "summary": "Semimetallo dalla doppia faccia — veleno storico e componente essenziale dei semiconduttori moderni — l'arsenico è tanto pericoloso quanto tecnologicamente pregiato.",
+      "paragraphs": [
+        "Simbolo «As», numero atomico 33, l'arsenico è un semimetallo grigio fragile che esiste in più forme allotropiche. Sublima a 887 °C senza passare allo stato liquido a pressione normale. Noto dall'antichità, fu isolato nella sua forma metallica nel XIII secolo da Alberto Magno. Il nome deriva dal greco arsenikon, «potente», riflettendo sia la sua tossicità che le sue proprietà tintorie.",
+        "L'arsenico si forma nelle stelle massive attraverso processi di fusione e cattura di neutroni. È prodotto sia dal processo-s nelle giganti rosse che durante le supernovae tramite il processo-r. Il suo unico isotopo stabile è ⁷⁵As. Si trova come prodotto intermedio nelle catene di nucleosintesi stellare che portano ai metalli pesanti.",
+        "Sulla Terra l'arsenico è moderatamente abbondante (circa 1,8 ppm nella crosta). Si trova principalmente nell'arsenopirite (FeAsS), nell'orpiment (As₂S₃) e nel realgar (As₄S₄). È comune nelle regioni vulcaniche e nelle miniere di rame, oro e piombo. La contaminazione naturale delle acque sotterranee da arsenico è un grave problema di salute pubblica in Bangladesh, India e altre regioni.",
+        "Storicamente usato come veleno e pigmento (il verde di Parigi era un arsenico organico), oggi l'arsenico ha applicazioni più nobili. L'arseniuro di gallio (GaAs) è fondamentale per i semiconduttori ad alte prestazioni. L'arsenico è anche usato come conservante del legno (CCA), in alcune leghe metalliche, come agente drogante nel silicio e in certi insetticidi e erbicidi. In medicina, il triossido di arsenico (As₂O₃) è approvato per il trattamento della leucemia acuta promielocitica.",
+        "I composti principali includono il triossido di arsenico (As₂O₃), il pentossido di arsenico (As₂O₅), l'arseniuro di gallio (GaAs) e vari arsenati. L'acido arsenioso e i suoi sali sono altamente tossici e interferiscono con la produzione di ATP nelle cellule, spiegando l'efficacia come veleno. La soglia di tossicità acuta è di pochi milligrammi per chilogrammo di peso corporeo."
+      ],
+      "name": "Arsenico"
+    },
+    "element-034-selenium": {
+      "summary": "Non metallo essenziale in tracce per gli organismi viventi, il selenio svolge un ruolo cruciale in fotovoltaico, elettronica e biologia.",
+      "paragraphs": [
+        "Simbolo «Se», numero atomico 34, il selenio è un non metallo che esiste in più forme allotropiche: selenio grigio cristallino (la forma stabile), selenio rosso amorfo e selenio nero vetroso. Fonde a 221 °C. Scoperto nel 1817 da Jöns Jacob Berzelius, il nome deriva dalla Luna in greco (Selene), in analogia con il tellurio (Terra) scoperto poco prima.",
+        "Il selenio si forma principalmente attraverso il processo-s nelle stelle giganti AGB e il processo-r nelle supernovae. I suoi sei isotopi stabili (⁷⁴Se, ⁷⁶Se, ⁷⁷Se, ⁷⁸Se, ⁸⁰Se, ⁸²Se) testimoniano origini nucleosintetiche diverse. È prodotto anche come sottoprodotto del decadimento radioattivo in certi ambienti stellari.",
+        "Sulla Terra il selenio è raro (circa 0,05 ppm nella crosta). Si trova principalmente nei minerali di solfuro di rame e nei depositi vulcanici. Si estrae quasi esclusivamente come sottoprodotto della raffinazione del rame. Cile, Giappone e Germania sono tra i principali produttori. La sua distribuzione nei suoli varia enormemente, influenzando la salute delle popolazioni locali.",
+        "Il selenio è essenziale per la vita in tracce: fa parte del sito attivo della glutatione perossidasi, un enzima antiossidante. In tecnologia è usato nelle celle fotovoltaiche (come il CIGS, rame-indio-gallio-selenio), nei raddrizzatori di corrente, nelle fotocopiatrici (strato fotoconduttore), nei pigmenti rossi e arancioni per vetri e ceramiche, e nella produzione di acciaio inossidabile. Il diselenuro di molibdeno (MoSe₂) è un lubrificante solido.",
+        "I composti principali includono il diossido di selenio (SeO₂), l'acido selenidroso (H₂Se), il solfuro di selenio (SeS₂) usato negli shampoo antiforfora, e il selenato di sodio (Na₂SeO₄) usato come integratore alimentare. Il selenio metallico ad alta purezza è fondamentale per l'elettronica fotovoltaica."
+      ],
+      "name": "Selenio"
+    },
+    "element-035-brome": {
+      "summary": "Unico alogeno liquido a temperatura ambiente, il bromo è un elemento denso e corrosivo dalle molteplici applicazioni industriali e biologiche.",
+      "paragraphs": [
+        "Simbolo «Br», numero atomico 35, il bromo è un liquido rossastro volatile a temperatura ambiente, denso (3,1 g/cm³) e dall'odore pungente. È uno dei soli due elementi liquidi a temperatura standard (l'altro è il mercurio). Scoperto indipendentemente nel 1826 da Antoine Balard in Francia e da Carl Löwig in Germania, il nome deriva dal greco bromos, «fetore».",
+        "Il bromo si forma principalmente attraverso il processo-s nelle stelle giganti rosse e il processo-r nelle supernovae. Ha due isotopi stabili naturali, ⁷⁹Br e ⁸¹Br, in proporzioni quasi uguali. La sua abbondanza cosmica relativamente elevata rispetto ad altri elementi pesanti è dovuta alla sua posizione favorevole nei percorsi di cattura di neutroni.",
+        "Sulla Terra il bromo è moderatamente abbondante (circa 2,4 ppm nella crosta). È concentrato soprattutto nell'acqua di mare (65 mg/L), nei laghi salati e nei giacimenti evaporitici. Le principali fonti industriali sono il Mar Morto (Israele, Giordania) e i pozzi di salamoia negli USA. Non esiste come elemento puro in natura: si trova sempre come bromuro.",
+        "Il bromo ha applicazioni molto varie. I bromuri di metile erano usati come fumiganti (ora vietati per il loro effetto sull'ozono). I ritardanti di fiamma bromurati (come i PBDE) proteggono materiali plastici e tessili, sebbene siano sempre più regolamentati per ragioni ambientali. I composti organobromici sono usati come pesticidi, disinfettanti dell'acqua e agenti di contrasto in medicina. Il bromuro di argento (AgBr) era fondamentale per la fotografia analogica.",
+        "I composti principali includono il bromuro di idrogeno (HBr), il bromuro di sodio (NaBr), il bromuro di potassio (KBr) usato in fotografia e medicina, e numerosi composti organici bromurati. Il bromo liquido è altamente corrosivo e i suoi vapori sono tossici per le vie respiratorie."
+      ],
+      "name": "Bromo"
+    },
+    "element-036-krypton": {
+      "summary": "Gas nobile discreto e quasi inerte, il cripto è uno strumento di precisione per la metrologia, l'illuminazione e la spettroscopia.",
+      "paragraphs": [
+        "Simbolo «Kr», numero atomico 36, il cripto è un gas nobile incolore e inodore, presente nell'atmosfera in tracce (circa 1,1 ppm). Scoperto nel 1898 da William Ramsay e Morris Travers come residuo dell'evaporazione dell'argon liquido, il nome deriva dal greco kryptos, «nascosto». Dal 1960 al 1983, la lunghezza d'onda della radiazione del cripto-86 fu adottata come definizione ufficiale del metro.",
+        "Il cripto si forma attraverso il processo-s e il processo-r nelle stelle. I suoi sei isotopi stabili (⁷⁸Kr, ⁸⁰Kr, ⁸²Kr, ⁸³Kr, ⁸⁴Kr, ⁸⁶Kr) hanno abbondanze variabili che riflettono diversi percorsi di nucleosintesi. Il cripto-81 radioattivo, con un'emivita di 230.000 anni, è usato come tracer per datare le acque sotterranee antiche.",
+        "Sulla Terra il cripto è presente in piccole quantità nell'atmosfera (1,14 ppm in volume). Si estrae come sottoprodotto della distillazione frazionata dell'aria liquida. La sua abbondanza nell'aria riflette la sua storia cosmologica: essendo un gas nobile, non forma composti stabili che potrebbero trattenerlo nella crosta terrestre.",
+        "Il cripto viene utilizzato nelle lampade fluorescenti ad alta intensità, nelle luci stroboscopiche e in alcune lampade fotografiche. Le miscele cripto-fluoro sono usate nei laser ad eccimeri (KrF) per la litografia UV nella produzione di microchip. In metrologia ottica e spettroscopia serve come riferimento di calibrazione ultrapreciso.",
+        "Il cripto è chimicamente quasi completamente inerte in condizioni normali. Il difluoruro di cripto (KrF₂) è il composto più noto, sintetizzato per la prima volta nel 1963: è un forte ossidante ma si decompone facilmente. Le ricerche su KrF₄ e altri composti restano confinate ai laboratori specializzati. Il cripto non forma composti stabili in condizioni ordinarie."
+      ],
+      "name": "Cripto"
+    },
+    "element-037-rubidium": {
+      "summary": "Metallo alcalino morbido e altamente reattivo, il rubidio è prezioso per gli orologi atomici ultraprecisi e la ricerca in fisica quantistica.",
+      "paragraphs": [
+        "Simbolo «Rb», numero atomico 37, il rubidio è un metallo alcalino morbido, argenteo e altamente reattivo. Si ossida istantaneamente all'aria e reagisce violentemente con l'acqua, producendo idrossido di rubidio e idrogeno. Scoperto nel 1861 da Robert Bunsen e Gustav Kirchhoff tramite spettroscopia, il nome deriva dal latino rubidus, «rosso scuro», in riferimento alle linee rosse del suo spettro.",
+        "Il rubidio si forma principalmente attraverso il processo-s nelle stelle giganti rosse. Ha un isotopo stabile (⁸⁵Rb) e un isotopo debolmente radioattivo (⁸⁷Rb, emivita 49 miliardi di anni), usato in geochimica per la datazione rubidio-stronzio. Il rapporto ⁸⁷Rb/⁸⁶Sr permette di datare rocce molto antiche.",
+        "Sulla Terra il rubidio è relativamente abbondante (circa 90 ppm nella crosta), ma disperso. Si trova nei minerali di potassio come la lepidolite, la pollucite e la carnallite, perché le sue proprietà chimiche sono simili a quelle del potassio. Etiopia, Zimbabwe e Canada hanno i principali giacimenti di lepidolite.",
+        "Il rubidio è usato principalmente negli orologi atomici al rubidio, che sfruttano la transizione iperfine dell'isotopo ⁸⁵Rb a 6,8 GHz. Questi orologi sono fondamentali nei sistemi GPS e nelle telecomunicazioni. In fisica quantistica, il rubidio viene usato per creare condensati di Bose-Einstein. Ha anche applicazioni nelle celle fotoelettriche speciali, nei tubi fotomoltiplicatori e come getter nei tubi sotto vuoto.",
+        "I composti principali includono l'idrossido di rubidio (RbOH), il cloruro di rubidio (RbCl), il carbonato di rubidio (Rb₂CO₃) e il solfato di rubidio (Rb₂SO₄). Il rubidio metallico viene conservato sotto olio minerale o in ampollette sigillate per evitare l'ossidazione. I suoi composti sono chimicamente simili a quelli del cesio e del potassio."
+      ],
+      "name": "Rubidio"
+    },
+    "element-038-strontium": {
+      "summary": "Metallo alcalino-terroso reattivo, lo stronzio è noto per il suo isotopo radioattivo prodotto nelle esplosioni nucleari e per la luminescenza dei suoi composti.",
+      "paragraphs": [
+        "Simbolo «Sr», numero atomico 38, lo stronzio è un metallo alcalino-terroso morbido, argenteo e altamente reattivo. Si ossida rapidamente all'aria e reagisce con l'acqua. Scoperto nel 1790 da Adair Crawford nelle miniere di Strontian, in Scozia (donde il nome), fu isolato nella forma metallica da Humphry Davy nel 1808.",
+        "Lo stronzio si forma principalmente attraverso il processo-s nelle stelle giganti AGB. Ha quattro isotopi stabili (⁸⁴Sr, ⁸⁶Sr, ⁸⁷Sr, ⁸⁸Sr), di cui ⁸⁷Sr è il prodotto del decadimento del rubidio-87 ed è quindi variabile in abbondanza. Il sistema isotopico rubidio-stronzio è uno dei principali strumenti di geocronologia per datare rocce e meteoriti.",
+        "Sulla Terra lo stronzio è moderatamente abbondante (circa 370 ppm nella crosta). Si trova principalmente nella celestite (SrSO₄) e nella strontianite (SrCO₃). Le principali riserve sono in Spagna, Cina, Messico e Iran. Biologicamente, lo stronzio si comporta come il calcio e tende ad accumularsi nelle ossa.",
+        "I composti dello stronzio danno all'aria una fiamma rossa brillante, il che li rende indispensabili nei fuochi d'artificio e nei razzi di segnalazione. Il carbonato di stronzio era usato nei tubi catodici dei televisori. Lo stronzio-90 (⁹⁰Sr), isotopo radioattivo prodotto nelle esplosioni nucleari, è un grave inquinante ambientale per la sua capacità di depositarsi nelle ossa. Il titanato di stronzio (SrTiO₃) è un materiale dielettrico usato nell'elettronica.",
+        "I composti principali includono il carbonato di stronzio (SrCO₃), il nitrato di stronzio Sr(NO₃)₂ usato nei fuochi d'artificio, l'idrossido di stronzio Sr(OH)₂ e il titanato di stronzio SrTiO₃. Lo stronzio-90 viene monitorato come indicatore di contaminazione radioattiva nell'ambiente."
+      ],
+      "name": "Stronzio"
+    },
+    "element-039-yttrium": {
+      "summary": "Metallo di transizione raro ma prezioso, l'ittrio è un componente chiave dei fosfori per schermi, superconduttori e materiali laser.",
+      "paragraphs": [
+        "Simbolo «Y», numero atomico 39, l'ittrio è un metallo di transizione argenteo, duttile e relativamente stabile all'aria grazie a un ossido protettivo. Fonde a 1522 °C. Scoperto nel 1794 dal chimico finlandese Johan Gadolin in un minerale trovato a Ytterby, in Svezia (donde il nome), fu spesso classificato con i lantanidi per le sue proprietà simili.",
+        "L'ittrio si forma principalmente attraverso il processo-s e il processo-r nelle stelle. Ha un unico isotopo stabile, ⁸⁹Y. Si trova nelle stelle di tipo S (giganti rosse ricche di processo-s) e nei resti di supernova. La sua abbondanza cosmica è relativamente bassa, collocandolo tra gli elementi meno abbondanti della tavola.",
+        "Sulla Terra l'ittrio è abbastanza abbondante (circa 33 ppm nella crosta, comparabile allo stagno), ma disperso. Si trova principalmente nei minerali delle terre rare come la xenotime e la gadolinite. Cina, India e Russia sono i principali produttori. Il suo comportamento geochimico lo rende difficile da separare dagli altri lantanidi.",
+        "L'ittrio ha applicazioni fondamentali nella tecnologia moderna. Il granato di ittrio e alluminio (YAG) drogato con neodimio è il materiale usato nei laser Nd:YAG, ampiamente impiegati in chirurgia, lavorazione dei materiali e telemetria. I fosfori a base di ittrio (come YVO₄:Eu e Y₂O₃:Eu) forniscono il rosso brillante negli schermi al plasma e nei LED bianchi. L'ossido di ittrio (Y₂O₃) è un materiale refrattario ad alta temperatura e l'ittrio viene usato nello yttrio-bario-rame-ossido (YBCO), il superconduttore ad alta temperatura più studiato.",
+        "I composti principali includono l'ossido di ittrio (Y₂O₃), il fluoruro di ittrio (YF₃), il granato di ittrio e alluminio (YAG) e i vari fosfori contenenti ittrio. L'ittrio metallico viene usato in leghe speciali per aumentare la resistenza alla corrosione ad alta temperatura."
+      ],
+      "name": "Ittrio"
+    },
+    "element-040-zirconium": {
+      "summary": "Metallo di transizione eccezionalmente resistente alla corrosione, lo zirconio è insostituibile nei reattori nucleari e nelle ceramiche ad alta temperatura.",
+      "paragraphs": [
+        "Simbolo «Zr», numero atomico 40, lo zirconio è un metallo di transizione grigio-argenteo, duro e resistente alla corrosione. Fonde a 1855 °C. Scoperto nel 1789 da Martin Heinrich Klaproth nello zircone (ZrSiO₄) e isolato nella forma metallica da Jöns Jacob Berzelius nel 1824, il nome deriva dall'arabo zarqun, «dorato».",
+        "Lo zirconio si forma principalmente attraverso il processo-s nelle stelle giganti AGB. Ha cinque isotopi stabili (⁹⁰Zr, ⁹¹Zr, ⁹²Zr, ⁹⁴Zr, ⁹⁶Zr). La sua abbondanza relativa nelle stelle di tipo S lo rende un indicatore importante del processo-s nella nucleosintesi stellare. Si trova anche come prodotto di fissione negli esplosivi nucleari.",
+        "Sulla Terra lo zirconio è abbondante (circa 165 ppm nella crosta) e il minerale principale è la zirconia (ZrO₂) e lo zircone (ZrSiO₄). I maggiori produttori sono Australia, Sud Africa, Russia e Cina. Lo zircone gemma è usato come pietra ornamentale e come simulante del diamante (sotto il nome di zirconia cubica quando nella forma stabilizzata).",
+        "La proprietà più importante dello zirconio per l'industria nucleare è la sua bassissima sezione trasversale di cattura dei neutroni termici, il che lo rende ideale per rivestire le barre di combustibile nei reattori nucleari (sotto forma di lega Zircaloy). La zirconia cubica stabilizzata è usata come sostituto del diamante e come rivestimento ceramico per turbine a gas. Lo zirconio è anche usato in leghe refrattarie, come agente deossidante nell'acciaio e nella produzione di ceramiche avanzate.",
+        "I composti principali includono il diossido di zirconio (ZrO₂), usato come materiale ceramico refrattario e in odontoiatria per corone dentali; il tetracloruro di zirconio (ZrCl₄); e vari silicati. La zirconia stabilizzata con ittria (YSZ) è un conduttore ionico usato nelle celle a combustibile a ossido solido (SOFC)."
+      ],
+      "name": "Zirconio"
+    },
+    "element-041-niobium": {
+      "summary": "Metallo di transizione refrattario e duttile, il niobio è insostituibile nelle leghe ad alta resistenza e nei superconduttori industriali.",
+      "paragraphs": [
+        "Simbolo «Nb», numero atomico 41, il niobio è un metallo di transizione grigio argenteo, duttile e refrattario che fonde a 2477 °C. Scoperto nel 1801 da Charles Hatchett nel columbite e a lungo chiamato colombio (Cb) negli USA, il nome niobio fu adottato ufficialmente nel 1950 in onore di Niobe, figlia di Tantalo nella mitologia greca.",
+        "Il niobio si forma principalmente attraverso il processo-s nelle stelle giganti AGB e il processo-r nelle supernovae. Ha un unico isotopo stabile, ⁹³Nb. La sua produzione stellare è legata a quella del molibdeno e dello zirconio, elementi vicini nella tavola periodica.",
+        "Sulla Terra il niobio è moderatamente abbondante (circa 20 ppm nella crosta). Il principale minerale è la columbite-tantalite (coltan), che contiene anche tantalio. Il Brasile detiene oltre il 90% delle riserve mondiali ed è il principale produttore, seguito dal Canada e dall'Australia.",
+        "Il niobio viene aggiunto all'acciaio in piccole quantità (meno dello 0,1%) per aumentarne significativamente la resistenza meccanica, permettendo la costruzione di strutture più leggere. Questa applicazione assorbe circa l'85% della produzione mondiale. Il niobio-titanio (NbTi) e il niobio-stagno (Nb₃Sn) sono i principali materiali superconduttori usati negli acceleratori di particelle, nella risonanza magnetica (MRI) e nei magneti sperimentali a fusione nucleare.",
+        "I composti principali includono il pentossido di niobio (Nb₂O₅), il niobato di litio (LiNbO₃) usato in modulatori elettroottici e nei dispositivi a onde acustiche di superficie (SAW), e vari alogenuri. Il niobio metallico ad alta purezza è fondamentale per i superconduttori RF usati negli acceleratori lineari."
+      ],
+      "name": "Niobio"
+    },
+    "element-042-molybdene": {
+      "summary": "Metallo di transizione con il quarto punto di fusione più alto tra tutti gli elementi, il molibdeno è essenziale nelle leghe ad alta temperatura e come cofattore enzimatico nella fissazione dell'azoto.",
+      "paragraphs": [
+        "Simbolo «Mo», numero atomico 42, il molibdeno è un metallo di transizione grigio argenteo con un punto di fusione eccezionale di 2623 °C. Scoperto nel 1778 da Carl Wilhelm Scheele nella molibdenite e isolato da Peter Jacob Hjelm nel 1781, il nome deriva dal greco molybdos, «piombo», per la somiglianza visiva dei suoi minerali.",
+        "Il molibdeno si forma attraverso il processo-s nelle stelle giganti AGB e il processo-r nelle supernovae. Ha sette isotopi stabili (⁹²Mo–¹⁰⁰Mo), tra cui ⁹²Mo è il più abbondante. La sua nucleosintesi è strettamente legata a quella del rutenio e del niobio.",
+        "Sulla Terra il molibdeno è moderatamente abbondante (circa 1,2 ppm nella crosta). Il principale minerale è la molibdenite (MoS₂). I maggiori produttori sono Cina, USA, Cile e Perù. Si trova spesso associato ai giacimenti di porfido cuprifero.",
+        "Il molibdeno viene principalmente aggiunto agli acciai inossidabili e alle leghe ad alta resistenza per migliorare la resistenza alla corrosione e alle alte temperature. Le leghe Mo-Re sono usate nelle turbine aerospaziali. Il disolfuro di molibdeno (MoS₂) è un eccellente lubrificante solido usato in condizioni estreme. In biologia, il molibdeno è un cofattore essenziale per la nitrogenasi, l'enzima che fissa l'azoto atmosferico, e per la solfito ossidasi.",
+        "I composti principali includono il triossido di molibdeno (MoO₃), il disolfuro di molibdeno (MoS₂), l'esacarbonile di molibdeno Mo(CO)₆ usato come precursore CVD, e i molibdati (come il molibdato di sodio Na₂MoO₄) usati come inibitori della corrosione e come micronutrienti nelle fertilizzazioni agricole."
+      ],
+      "name": "Molibdeno"
+    },
+    "element-043-technetium": {
+      "summary": "Primo elemento prodotto artificialmente, il tecnezio non ha isotopi stabili ma trova un ruolo cruciale nella medicina nucleare come tracciante diagnostico.",
+      "paragraphs": [
+        "Il suo nome viene dal greco technetos, «artificiale», poiché fu il primo elemento prodotto sinteticamente. Il tecnezio (simbolo Tc, numero atomico 43) fu scoperto nel 1937 da Carlo Perrier ed Emilio Segrè nel ciclotrone di Berkeley, colmando un vuoto previsto da Mendeleev. Tutti i suoi isotopi sono radioattivi; il più stabile, il Tc-98, ha un'emivita di 4,2 milioni di anni.",
+        "Il tecnezio si forma nelle stelle attraverso il processo-s e il processo-r, ma decade prima di poter accumularsi stabilmente. La sua presenza nelle stelle giganti rosse di tipo S, rilevata spettroscopicamente, fu la prima prova diretta che la nucleosintesi stellare avviene attivamente nelle stelle viventi. Sulla Terra esiste solo in tracce come prodotto di fissione spontanea dell'uranio.",
+        "Non esistono depositi naturali di tecnezio. Si ottiene principalmente come sottoprodotto della fissione dell'uranio-235 nei reattori nucleari, dove il Tc-99 (emivita 213.000 anni) è prodotto in grandi quantità. La gestione di questo isotopo nell'ambito dei rifiuti nucleari è una sfida significativa.",
+        "Il Tc-99m (tecneziometa-stabile, emivita 6 ore) è il radionuclide più usato nella medicina nucleare mondiale, impiegato in oltre 40 milioni di procedure diagnostiche all'anno per la scintigrafia di cuore, ossa, cervello, fegato e polmoni. La sua produzione richiede l'irradiazione del molibdeno-98 nei reattori e la separazione cromatografica dai generatori Mo/Tc.",
+        "I composti principali in medicina nucleare includono il pertecnetato di sodio (NaTcO₄), il Tc-solfuro colloidale, il Tc-HMPAO (per la perfusione cerebrale) e il Tc-MDP (per la scintigrafia ossea). In chimica fondamentale, i composti del tecnezio con i carbonili e gli alogenuri sono studiati per comprendere le proprietà dei metalli di transizione del secondo periodo."
+      ],
+      "name": "Tecnezio"
+    },
+    "element-044-ruthenium": {
+      "summary": "Metallo del gruppo del platino noto per la sua durezza e catalisi, il rutenio è sempre più prezioso nell'elettronica e nell'energia rinnovabile.",
+      "paragraphs": [
+        "Scoperto nel 1844 dal chimico russo Karl Ernst Claus, prese il nome dalla parola latina per «Russia». Il rutenio (simbolo Ru, numero atomico 44) è un metallo di transizione duro, fragile e argenteo con un punto di fusione di 2334 °C. Appartiene al gruppo del platino (PGM) ed è uno degli elementi più rari della crosta terrestre.",
+        "Il rutenio si forma principalmente attraverso il processo-r nelle supernovae e nelle fusioni di stelle di neutrones. Ha sette isotopi stabili. La sua rarità e le sue proprietà catalitiche uniche riflettono le sue origini in ambienti nucleosintetici estremi.",
+        "Sulla Terra il rutenio è estremamente raro (circa 0,001 ppm nella crosta). Si trova principalmente nei minerali del platino come la laurite e la sperrylite, nonché come sottoprodotto della raffinazione del platino e del nichel. Sud Africa, Russia e Zimbabwe sono i principali produttori.",
+        "Il rutenio viene usato principalmente come catalizzatore in numerose reazioni chimiche industriali (tra cui la sintesi Fischer-Tropsch e la rimozione dell'ammoniaca). Le sue leghe con il platino e il palladio sono usate nei contatti elettrici e nei pennini delle penne stilografiche per la loro durezza. Il tetraossido di rutenio (RuO₄) è un potente ossidante usato in microelettronica. Le celle solari sensibilizzate da coloranti (DSSC) usano complessi di rutenio come fotosensibilizzatori.",
+        "I composti principali includono il tetraossido di rutenio (RuO₄), il tricloruro di rutenio (RuCl₃), il rosso di rutenio (usato in biologia come colorante), e il cis-diaminodicloroplatino (cisplatino), analogo al cui composto di rutenio è studiato come potenziale agente antitumorale. Il bipiridil-rutenio è un fotosensibilizzatore fondamentale per la fotocatalisi."
+      ],
+      "name": "Rutenio"
+    },
+    "element-045-rhodium": {
+      "summary": "Raro e brillante metallo del gruppo del platino, il rodio è insostituibile nelle marmitte catalitiche e tra i metalli più preziosi al mondo.",
+      "paragraphs": [
+        "Simbolo «Rh», numero atomico 45, il rodio è un metallo di transizione bianco-argenteo brillante, duro e altamente riflettente. Fonde a 1964 °C. Scoperto nel 1803 da William Hyde Wollaston nel minerale grezzo del platino, il nome deriva dal greco rhodon, «rosa», per il colore roseo dei suoi sali.",
+        "Il rodio si forma attraverso il processo-r nelle supernovae e nelle fusioni di stelle di neutroni. Ha un unico isotopo stabile, ¹⁰³Rh. La sua estrema rarità riflette le condizioni astronomiche molto specifiche necessarie per la sua produzione.",
+        "Sulla Terra il rodio è uno degli elementi naturali più rari (circa 0,001 ppm nella crosta). Si trova principalmente nei minerali del platino come la sperrylite e come sottoprodotto della lavorazione del platino e del palladio. Il Sud Africa, con i giacimenti del Bushveld Complex, produce circa l'80% del rodio mondiale.",
+        "Il rodio è principalmente usato come componente dei catalizzatori a tre vie nelle marmitte catalitiche delle automobili, dove riduce gli ossidi di azoto (NOₓ) in azoto e ossigeno. Questa applicazione assorbe oltre l'80% della produzione mondiale. Il rodio è anche usato come rivestimento per gioielleria (rodiniatura), come catalizzatore nella sintesi dell'acido acetico (processo Monsanto-BP) e nella produzione di nitro acido per i fertilizzanti.",
+        "I composti principali includono il tricloruro di rodio (RhCl₃), il carbonile di rodio Rh₄(CO)₁₂ usato in catalisi omogenea, e i complessi di Wilkinson [RhCl(PPh₃)₃], catalizzatori fondamentali per l'idrogenazione asimmetrica. Il rodio metallico è anche usato nei riflettori ad alta riflettanza e negli specchi per laser."
+      ],
+      "name": "Rodio"
+    },
+    "element-046-palladium": {
+      "summary": "Metallo del gruppo del platino capace di assorbire enormi quantità di idrogeno, il palladio è insostituibile nella catalisi, nelle marmitte e nella gioielleria.",
+      "paragraphs": [
+        "Simbolo «Pd», numero atomico 46, il palladio è un metallo di transizione bianco-argenteo, duttile e relativamente morbido che fonde a 1555 °C. Scoperto nel 1803 da William Hyde Wollaston, fu chiamato in onore dell'asteroide Pallade, appena scoperto quell'anno.",
+        "Il palladio si forma principalmente attraverso il processo-r nelle supernovae. Ha sei isotopi stabili. La sua produzione stellare è intimamente legata a quella del rodio, del rutenio e dell'argento, tutti prodotti in catene di cattura di neutroni simili.",
+        "Sulla Terra il palladio è raro (circa 0,015 ppm nella crosta). Si trova nei minerali del platino e come sottoprodotto della raffinazione del nichel e del platino. Russia (Norilsk), Sud Africa e Canada sono i principali produttori. Il palladio è anche presente in certi minerali di rame e oro.",
+        "Il palladio ha la straordinaria proprietà di assorbire fino a 900 volte il suo volume di idrogeno allo stato solido, rendendolo prezioso per la purificazione dell'idrogeno e i sistemi di stoccaggio. È il principale metallo dei catalizzatori a tre vie per le automobili (per l'ossidazione di CO e idrocarburi). È anche usato in elettronica (contatti, connettori), odontoiatria, gioielleria (oro bianco al palladio) e in catalisi organica (accoppiamento di Suzuki, Heck, Negishi).",
+        "I composti principali includono il cloruro di palladio (PdCl₂), il nitrato di palladio Pd(NO₃)₂, l'acetato di palladio Pd(OAc)₂ (fondamentale in sintesi organica) e i complessi bis(difenilfosfino)palladio. Il palladio(0) e il palladio(II) sono i due stati ossidativi dominanti nella catalisi organica moderna."
+      ],
+      "name": "Palladio"
+    },
+    "element-047-argent": {
+      "summary": "Il metallo più conduttivo dell'elettricità e del calore, l'argento unisce storia monetaria millenaria a indispensabili applicazioni tecnologiche moderne.",
+      "paragraphs": [
+        "Simbolo «Ag» (dal latino argentum), numero atomico 47, l'argento è un metallo di transizione bianco brillante, morbido, duttile e dall'eccezionale conducibilità elettrica e termica (la più alta tra tutti i metalli). Fonde a 962 °C. Noto dall'antichità, è stato usato come moneta per oltre 4000 anni in quasi tutte le civiltà del mondo.",
+        "L'argento si forma principalmente attraverso il processo-r nelle fusioni di stelle di neutroni e nelle supernovae. Ha due isotopi stabili, ¹⁰⁷Ag e ¹⁰⁹Ag, in proporzioni quasi uguali. La spettroscopia delle stelle di neutroni ha confermato la presenza di argento appena sintetizzato in questi eventi cataclismici.",
+        "Sulla Terra l'argento è raro (circa 0,08 ppm nella crosta). Si trova principalmente in forma nativa e nei minerali argento, argentite (Ag₂S) e clorargirite (AgCl). Si estrae anche come sottoprodotto della lavorazione del rame, del piombo e dello zinco. Messico, Perù, Cina e Russia sono i principali produttori.",
+        "L'argento ha innumerevoli applicazioni. In elettronica è usato nelle paste conduttive, nei contatti, nei circuiti stampati e nelle batterie argento-ossido. In medicina, i suoi composti hanno proprietà antibatteriche (nitrato d'argento AgNO₃, rivestimenti antimicrobici). Il bromuro d'argento (AgBr) fu il materiale fotosensibile fondamentale per la fotografia analogica. È anche usato in specchi, gioielleria, argenteria e come catalizzatore (ossidazione dell'etilene in ossido di etilene).",
+        "I composti principali includono il nitrato d'argento (AgNO₃), il bromuro d'argento (AgBr), il cloruro d'argento (AgCl), l'ossido d'argento (Ag₂O) e i tiosolfati d'argento usati in fotografia. L'argento colloidale e i nanofili d'argento sono studiati per applicazioni antimicrobiche e come elettrodi trasparenti flessibili."
+      ],
+      "name": "Argento"
+    },
+    "element-048-cadmium": {
+      "summary": "Metallo pesante tossico ma tecnologicamente prezioso, il cadmio è al centro delle batterie ricaricabili, dei pigmenti e delle celle solari a film sottile.",
+      "paragraphs": [
+        "Simbolo «Cd», numero atomico 48, il cadmio è un metallo di transizione morbido, malleabile e blu-argenteo che fonde a 321 °C. Scoperto nel 1817 da Friedrich Stromeyer come impurità nell'ossido di zinco, il nome deriva dal greco kadmeia (antico nome della calamina, minerale di zinco). La sua scoperta fu una conseguenza diretta dei controlli di qualità sulle farmacie tedesche.",
+        "Il cadmio si forma principalmente attraverso il processo-s nelle stelle giganti AGB. Ha otto isotopi stabili. È prodotto nelle stesse catene nucleosintetiche dello zinco e del mercurio, e la sua abbondanza cosmica è strettamente correlata a quella di questi due elementi.",
+        "Sulla Terra il cadmio è raro (circa 0,15 ppm nella crosta) e non ha minerali propri significativi. Si trova quasi sempre associato ai minerali di zinco (sfalerite ZnS) e si estrae esclusivamente come sottoprodotto della metallurgia dello zinco. Cina, Corea del Sud e Giappone sono i principali produttori.",
+        "Il cadmio è principalmente usato nelle batterie nichel-cadmio (NiCd), ancora ampiamente impiegate per la loro robustezza e capacità di erogare picchi di corrente elevati. I solfuro e seleniuro di cadmio sono usati come pigmenti gialli, arancioni e rossi nelle plastiche e nei vetri. Il tellururo di cadmio (CdTe) è uno dei principali materiali per le celle solari a film sottile. Il cadmio è anche usato come rivestimento anticorrosione per l'acciaio e come assorbitore di neutroni nei reattori nucleari.",
+        "I composti principali includono il solfuro di cadmio (CdS, pigmento giallo), il seleniuro di cadmio (CdSe, pigmento rosso e quantum dot), il tellururo di cadmio (CdTe, fotovoltaico) e l'ossido di cadmio (CdO). Il cadmio e i suoi composti sono altamente tossici e cancerogeni, il che ha portato alla loro progressiva sostituzione in molte applicazioni."
+      ],
+      "name": "Cadmio"
+    },
+    "element-049-indium": {
+      "summary": "Metallo morbido e raro, l'indio è diventato indispensabile per la produzione di schermi tattili e pannelli piatti grazie all'ossido di indio-stagno.",
+      "paragraphs": [
+        "Simbolo «In», numero atomico 49, l'indio è un metallo morbido, malleabile e lucente che fonde a soli 157 °C. Emette un caratteristico «grido» quando viene piegato (simile allo stagno). Scoperto nel 1863 da Ferdinand Reich e Hieronymus Theodor Richter tramite spettroscopia, il nome deriva dal blu indaco della sua linea spettrale.",
+        "L'indio si forma attraverso il processo-s e il processo-r nelle stelle. Ha due isotopi naturali: ¹¹³In (stabile) e ¹¹⁵In (debolmente radioattivo, emivita 4,4×10¹⁴ anni). La sua abundanza cosmica è molto bassa, collocandolo tra gli elementi più rari della tavola.",
+        "Sulla Terra l'indio è estremamente raro (circa 0,049 ppm nella crosta). Non ha minerali propri e si trova disperso nei minerali di zinco come la sfalerite. Si estrae quasi esclusivamente come sottoprodotto della lavorazione dello zinco. Cina, Corea del Sud e Giappone sono i principali produttori.",
+        "La quasi totalità dell'indio prodotto nel mondo viene usata per fabbricare l'ossido di indio-stagno (ITO), un materiale trasparente e conduttore usato come elettrodo nelle schermi LCD, OLED e touchscreen. È anche usato in leghe a basso punto di fusione, saldature per l'elettronica, rivestimenti galvanici e come semiconduttore (fosfuro di indio InP, nitruro di indio InN) per LED e laser.",
+        "I composti principali includono l'ossido di indio-stagno (ITO, In₂O₃·SnO₂), il fosfuro di indio (InP), il nitruro di gallio-indio (InGaN) usato nei LED blu ed efficienti, e il tricloruro di indio (InCl₃). La ricerca su materiali alternativi all'ITO (come il grafene e i nanotubi di carbonio) è in corso per ridurre la dipendenza dall'indio."
+      ],
+      "name": "Indio"
+    },
+    "element-050-etain": {
+      "summary": "Uno dei primi metalli della civiltà umana, lo stagno è ancora oggi insostituibile nelle leghe, nelle saldature e nella protezione anticorrosione.",
+      "paragraphs": [
+        "Simbolo «Sn» (dal latino stannum), numero atomico 50, lo stagno è un metallo di transizione argenteo, morbido e malleabile che fonde a 232 °C. Esiste in due forme allotropiche principali: lo stagno bianco (β, stabile sopra 13 °C, metallo tipico) e lo stagno grigio (α, polvere non metallica stabile a bassa temperatura). Noto dall'antichità, il bronzo (lega rame-stagno) segnò l'inizio dell'Età del Bronzo circa 3500 anni fa.",
+        "Lo stagno si forma principalmente attraverso il processo-s nelle stelle giganti AGB. Ha dieci isotopi stabili, il numero più alto di qualsiasi elemento, riflettendo la sua posizione «magica» nella fisica nucleare (numero di neutroni 50 è un numero magico). Questa stabilità nucleare eccezionale si riflette nella sua abbondanza relativa.",
+        "Sulla Terra lo stagno è moderatamente abbondante (circa 2,3 ppm nella crosta). Il principale minerale è la cassiterite (SnO₂). Le principali riserve si trovano in Cina, Indonesia, Perù e Bolivia. Storicamente, la Cornovaglia (Inghilterra) era una delle principali fonti nell'antichità.",
+        "Lo stagno è principalmente usato come rivestimento dell'acciaio per produrre lamierino stagnato (barattoli alimentari, imballaggi). Le leghe stagno-piombo erano le saldature standard in elettronica, ora sostituite da saldature senza piombo (stagno-argento-rame) per ragioni ambientali. Il bronzo (Cu-Sn) e il babbitt (Sn-Sb-Cu) sono leghe storiche ancora usate. Lo stagno organico era usato come antiparassitario per le imbarcazioni, ora vietato.",
+        "I composti principali includono il diossido di stagno (SnO₂, usato in vetri conduttori e come pigmento bianco), il cloruro stannoso (SnCl₂, agente riducente), il fluoruro stannoso (SnF₂, nei dentifrici al fluoro) e vari organostanici. Lo stagno-118 è il punto di riferimento per la calibrazione degli spettri RMN del ¹¹⁹Sn."
+      ],
+      "name": "Stagno"
+    },
+    "element-051-antimoine": {
+      "summary": "Semimetallo fragile conosciuto fin dall'antichità, l'antimonio è apprezzato come ritardante di fiamma e nelle leghe per batterie al piombo.",
+      "paragraphs": [
+        "Simbolo «Sb» (dal latino stibium), numero atomico 51, l'antimonio è un semimetallo grigio brillante e fragile che fonde a 631 °C. Esiste in più forme allotropiche; quella stabile è cristallina e metallica. Noto fin dall'antichità come cosmetico (il kohl egizio conteneva solfuro d'antimonio), il suo nome moderno deriva probabilmente dall'arabo ithmid o dal greco antimonos, «ostile alla solitudine» (non si trova mai puro).",
+        "L'antimonio si forma attraverso il processo-s e il processo-r nelle stelle. Ha due isotopi stabili, ¹²¹Sb e ¹²³Sb. La sua produzione stellare è legata a quella del tellurio e dello stagno nei percorsi di cattura di neutroni.",
+        "Sulla Terra l'antimonio è raro (circa 0,2 ppm nella crosta). Il principale minerale è la stibnite (Sb₂S₃). La Cina produce oltre il 70% dell'antimonio mondiale. Si trova anche in minerali di piombo, rame e argento come impurità.",
+        "L'antimonio viene principalmente usato come ritardante di fiamma sotto forma di triossido di antimonio (Sb₂O₃) in plastiche, tessuti e materiali da costruzione. È aggiunto al piombo per indurire le batterie al piombo-acido. In passato era usato in tipi da stampa (lega con piombo e stagno). I composti dell'antimonio sono usati come farmaci antiprotozoari (leishmaniosi) e come catalizzatori nella produzione del PET.",
+        "I composti principali includono il triossido di antimonio (Sb₂O₃, ritardante di fiamma), il pentossido di antimonio (Sb₂O₅), il trisolfuro di antimonio (Sb₂S₃, pigmento storico), il tricloruro di antimonio (SbCl₃) e la stibina (SbH₃, gas tossico). I composti organici dell'antimonio sono studiati come agenti antitumorali e antiparassitari."
+      ],
+      "name": "Antimonio"
+    },
+    "element-052-tellure": {
+      "summary": "Semimetallo raro prodotto dalle supernovae, il tellurio è fondamentale per le celle solari al tellururo di cadmio e per i dischi ottici riscrivibili.",
+      "paragraphs": [
+        "Simbolo «Te», numero atomico 52, il tellurio è un semimetallo argenteo, fragile e lucente che fonde a 450 °C. È chimicamente simile allo zolfo e al selenio. Scoperto nel 1782 da Franz-Joseph Müller von Reichenstein in Transilvania e chiamato così in onore della Terra (Tellus), fu il primo elemento denominato dal nome di un pianeta.",
+        "Il tellurio si forma principalmente attraverso il processo-r nelle supernovae e nelle fusioni di stelle di neutroni. Ha otto isotopi stabili (o quasi stabili). La sua abbondanza cosmica è sorprendentemente alta rispetto alla sua rarità sulla Terra, suggerendo che gran parte si sia dispersa nello spazio durante la formazione del sistema solare.",
+        "Sulla Terra il tellurio è estremamente raro (circa 0,001 ppm nella crosta, più raro dell'oro). Si trova principalmente come impurità nei minerali di rame e oro, e si estrae come sottoprodotto della raffinazione elettrolitica del rame. Giappone, USA e Russia sono i principali produttori.",
+        "Il tellurio è principalmente usato nel tellururo di cadmio (CdTe), materiale attivo di celle solari a film sottile. Il tellururo di bismuto (Bi₂Te₃) è il principale materiale termoelettrico per la refrigerazione Peltier e la generazione di energia da calore di scarto. I dischi DVD-RW e Blu-ray riscrivibili usano leghe di cambiamento di fase contenenti tellurio (GeSbTe). È anche aggiunto all'acciaio e al rame per migliorarne la lavorabilità.",
+        "I composti principali includono il diossido di tellurio (TeO₂), il tellururo di cadmio (CdTe), il tellururo di bismuto (Bi₂Te₃) e il ditelluride di molibdeno (MoTe₂). I composti organici del tellurio (organotellurio) sono studiati per applicazioni in sintesi organica e come antiossidanti."
+      ],
+      "name": "Tellurio"
+    },
+    "element-053-iode": {
+      "summary": "Alogeno viola essenziale alla vita, lo iodio è indispensabile per la funzione tiroidea, la sterilizzazione e la medicina nucleare.",
+      "paragraphs": [
+        "Simbolo «I», numero atomico 53, lo iodio è un alogeno solido a temperatura ambiente, con cristalli grigio-viola metallici che sublimano facilmente producendo vapori viola intensi. Fonde a 114 °C. Scoperto nel 1811 da Bernard Courtois nelle ceneri di alghe marine, il nome deriva dal greco iodes, «violetto». È l'alogeno più pesante con isotopi stabili.",
+        "Lo iodio si forma principalmente attraverso il processo-r nelle supernovae. Ha un unico isotopo stabile, ¹²⁷I. Lo iodio-129 (emivita 15,7 milioni di anni) è usato come tracciante geologico, mentre lo iodio-131 (emivita 8 giorni) è importante in medicina nucleare e fu disperso nell'ambiente durante il disastro di Chernobyl.",
+        "Sulla Terra lo iodio è raro (circa 0,45 ppm nella crosta). Si concentra naturalmente nell'oceano (58 μg/L) e nei giacimenti di salpetro (nitrato di sodio). Il Cile, il Giappone e gli USA sono i principali produttori. La carenza di iodio nei suoli di molte regioni interne causa gozzo endemico nelle popolazioni.",
+        "Lo iodio è essenziale per la sintesi degli ormoni tiroidei (tiroxina T4 e triiodotironina T3). La iodazione del sale da cucina ha praticamente eliminato il gozzo nei paesi sviluppati. In medicina, la soluzione di lugol e la tintura di iodio sono disinfettanti classici. Lo iodio-131 viene usato per il trattamento del tumore alla tiroide. In chimica, lo iodio è un reagente versatile usato in analisi (test dell'amido), sintesi organica e fotografia.",
+        "I composti principali includono l'ioduro di potassio (KI), lo iodato di potassio (KIO₃, iodazione del sale), il pentossido di iodio (I₂O₅), il cloridrato di iodio (ICl) e numerosi composti organici dell'iodio usati come mezzi di contrasto radiologici e agenti farmaceutici."
+      ],
+      "name": "Iodio"
+    },
+    "element-054-xenon": {
+      "summary": "Gas nobile denso e non reattivo, lo xenon è prezioso per l'illuminazione, la propulsione ionica spaziale e la medicina.",
+      "paragraphs": [
+        "Simbolo «Xe», numero atomico 54, lo xenon è un gas nobile incolore, inodore e molto denso (5,9 kg/m³ in condizioni standard). Scoperto nel 1898 da William Ramsay e Morris Travers come residuo pesante dell'evaporazione dell'aria liquida, il nome deriva dal greco xenos, «straniero». È il gas nobile più denso dopo il radon.",
+        "Lo xenon si forma attraverso il processo-s e il processo-r nelle stelle. Ha nove isotopi stabili (¹²⁴Xe–¹³⁶Xe), più di qualsiasi altro elemento ad eccezione dello stagno. Il rapporto isotopico dello xenon nei meteoriti è usato come cronometro cosmico per datare eventi nucleosintetici. Lo xenon-136 è l'isotopo instabile con la più lunga emivita misurata (>2,2×10²¹ anni).",
+        "Sulla Terra lo xenon è presente nell'atmosfera in concentrazioni molto basse (87 ppb in volume). Si estrae per distillazione frazionata dell'aria liquida. La sua produzione mondiale è molto limitata (poche tonnellate/anno), il che lo rende uno dei gas più costosi.",
+        "Lo xenon è usato nelle lampade ad arco allo xenon ad alta intensità (proiettori cinematografici, fari auto, strobosuopi). I laser ad eccimeri XeCl e XeF sono usati in oftalmologia (chirurgia LASIK) e nella fabbricazione di microchip. I motori a propulsione ionica degli satellite usano lo xenon come propellente. In medicina, lo xenon è usato come anestetico generale in alcuni paesi per la sua mancanza di tossicità. Svolge un ruolo cruciale come gas di riempimento negli schermi al plasma.",
+        "I composti dello xenon includono il difluoruro di xenon (XeF₂), il tetrafluoruro di xenon (XeF₄), l'esafluoruro di xenon (XeF₆) e il triossido di xenon (XeO₃). Questi composti sono tra i pochissimi composti stabili di gas nobili; XeF₂ è usato come agente fluorinante selettivo in sintesi organica."
+      ],
+      "name": "Xenon"
+    },
+    "element-055-cesium": {
+      "summary": "Metallo alcalino morbido e altamente reattivo, il cesio è la base degli orologi atomici più precisi al mondo e trova applicazioni nelle trivellazioni petrolifere.",
+      "paragraphs": [
+        "Simbolo «Cs», numero atomico 55, il cesio è un metallo alcalino dorato, morbido e il più reattivo del suo gruppo. Fonde a 28,5 °C, rendendo liquido a temperatura ambiente nei giorni caldi. Reagisce esplosivamente con l'acqua. Scoperto nel 1860 da Robert Bunsen e Gustav Kirchhoff tramite spettroscopia, fu il primo elemento scoperto con questo metodo. Il nome deriva dal latino caesius, «azzurro grigio», per la sua doppia riga spettrale nel blu.",
+        "Il cesio si forma attraverso il processo-s nelle stelle giganti AGB. Ha un unico isotopo stabile, ¹³³Cs. Il cesio-137 (emivita 30 anni), isotopo radioattivo prodotto nella fissione nucleare, è un grave inquinante ambientale nei siti di incidenti nucleari (Chernobyl, Fukushima). La transizione iperfine del cesio-133 a 9,192 GHz definisce ufficialmente il secondo SI dal 1967.",
+        "Sulla Terra il cesio è raro (circa 3 ppm nella crosta). Si trova principalmente nella pollucite, un allumosilicato di cesio. Il Canada (mine di Bernic Lake nel Manitoba) e Zimbabwe posseggono le principali riserve.",
+        "L'applicazione principale del cesio sono gli orologi atomici al cesio, che sfruttano la risonanza a 9,192 GHz dell'isotopo ¹³³Cs per una precisione di 1 secondo ogni 300 milioni di anni. Questi orologi costituiscono il fondamento del GPS, delle reti 5G e di internet. Il formiato di cesio (CsCOOH) viene usato come fluido di perforazione ad alta densità nelle trivellazioni petrolifere. Le cellule fotoelettriche al cesio convertono la luce in elettricità e i tubi fotomoltiplicatori usano catodi al cesio.",
+        "I composti principali includono il cloruro di cesio (CsCl), l'idrossido di cesio (CsOH, la base più forte conosciuta), il carbonato di cesio (Cs₂CO₃), il formiato di cesio (HCOOCs) e vari composti organometallici del cesio usati come basi forti in sintesi."
+      ],
+      "name": "Cesio"
+    },
+    "element-056-barium": {
+      "summary": "Metallo alcalino-terroso reattivo, il bario è indispensabile nella diagnostica per immagini, nelle vernici e nell'industria elettronica.",
+      "paragraphs": [
+        "Simbolo «Ba», numero atomico 56, il bario è un metallo alcalino-terroso argenteo, morbido e reattivo che fonde a 727 °C. Si ossida rapidamente all'aria. Scoperto nel 1772 da Carl Scheele nella barite e isolato da Humphry Davy nel 1808, il nome deriva dal greco barys, «pesante», per la densità del suo minerale principale.",
+        "Il bario si forma principalmente attraverso il processo-s nelle stelle giganti AGB. Ha sette isotopi stabili. Il rapporto isotopico del bario nei meteoriti condritici è usato come segnatura del processo-s nella nucleosintesi stellare. Il bario è prodotto anche nel processo-r durante le supernovae.",
+        "Sulla Terra il bario è abbondante (circa 425 ppm nella crosta). Il principale minerale è la barite (BaSO₄). Cina, India e Marocco sono i principali produttori. Il bario non si trova mai in forma metallica pura in natura.",
+        "Il solfato di bario (BaSO₄) è usato come mezzo di contrasto nelle radiografie del tratto gastrointestinale perché è opaco ai raggi X e biologicamente inerte. Il carbonato di bario (BaCO₃) era usato nei tubi catodici dei televisori per schermare le radiazioni. L'ossido di bario (BaO) è usato nei getter per i tubi sotto vuoto. I composti del bario colorano la fiamma di verde brillante, rendendoli utili nei fuochi d'artificio.",
+        "I composti principali includono il solfato di bario (BaSO₄), il carbonato di bario (BaCO₃), il cloruro di bario (BaCl₂), il titanato di bario (BaTiO₃, importante piezoelettrico e ferroelettrico per capacitatori e sensori) e il nitrato di bario Ba(NO₃)₂ usato nei fuochi d'artificio. L'idrossido di bario Ba(OH)₂ è una base forte usata in chimica analitica."
+      ],
+      "name": "Bario"
+    },
+    "element-057-lanthanum": {
+      "summary": "Capostipite dei lantanidi, il lantanio è una terra rara fondamentale per le batterie ibride, le ottiche avanzate e i catalizzatori.",
+      "paragraphs": [
+        "Simbolo «La», numero atomico 57, il lantanio è un metallo argenteo, morbido e malleabile che fonde a 920 °C. Si ossida rapidamente all'aria. Scoperto nel 1839 da Carl Gustaf Mosander nella cerite, il nome deriva dal greco lanthanein, «nascondersi», riflettendo la difficoltà con cui fu separato dagli altri lantanidi.",
+        "Il lantanio si forma principalmente attraverso il processo-s nelle stelle giganti AGB. Ha due isotopi naturali: ¹³⁹La (stabile, 99,9%) e ¹³⁸La (debolmente radioattivo, emivita 1,05×10¹¹ anni). È il lantanide con la maggiore abbondanza stellare grazie alla sua posizione favorevole nel percorso di cattura di neutroni.",
+        "Sulla Terra il lantanio è relativamente abbondante (circa 39 ppm nella crosta) rispetto ad altri lantanidi. Si trova principalmente nella bastnasite, nella monazite e nella xenotime. Cina, USA, Australia e Russia sono i principali produttori.",
+        "Il lantanio è usato principalmente nelle leghe di metallo mischmetallo per elettrodi negativi delle batterie nichel-metallo idruro (NiMH) nelle auto ibride. L'ossido di lantanio (La₂O₃) migliora la rifrazione e la resistenza alla cristallizzazione dei vetri ottici ad alta densità. Il lantanio è anche usato come catalizzatore nel cracking del petrolio (zeoliti scambiate con lantanio) e nella produzione di celle a combustibile a ossido solido.",
+        "I composti principali includono l'ossido di lantanio (La₂O₃), il cloruro di lantanio (LaCl₃), il nitrato di lantanio La(NO₃)₃, il fluoruro di lantanio (LaF₃) usato nei laser a fluoruro e il lantanio boride (LaB₆) usato come emettitore di elettroni in microscopia elettronica e sorgenti di raggi X."
+      ],
+      "name": "Lantanio"
+    },
+    "element-058-cerium": {
+      "summary": "Il lantanide più abbondante sulla Terra, il cerio è fondamentale per le lucidature, i catalizzatori per automobili e la produzione di acciaio speciale.",
+      "paragraphs": [
+        "Simbolo «Ce», numero atomico 58, il cerio è un metallo argenteo, malleabile e relativamente abbondante che fonde a 798 °C. Si ossida facilmente all'aria. Scoperto nel 1803 contemporaneamente da Jöns Jacob Berzelius e Wilhelm Hisinger in Svezia e da Martin Heinrich Klaproth in Germania, fu chiamato in onore dell'asteroide Cerere, scoperto due anni prima.",
+        "Il cerio si forma attraverso il processo-s nelle stelle giganti AGB. Ha quattro isotopi stabili (¹³⁶Ce, ¹³⁸Ce, ¹⁴⁰Ce, ¹⁴²Ce), di cui ¹⁴⁰Ce è di gran lunga il più abbondante (88,4%). È il lantanide più abbondante cosmicamente.",
+        "Sulla Terra il cerio è sorprendentemente abbondante (circa 66 ppm nella crosta, più comune dello stagno). Si trova principalmente nella bastnasite e nella monazite. Cina, USA e Australia sono i principali produttori.",
+        "Il cerio è principalmente usato come polirit nelle polveri abrasive per lucidare vetri, schermi e superfici ottiche (ossido di cerio CeO₂). È un componente fondamentale dei catalizzatori a tre vie per le automobili, dove il cerio(IV)/cerio(III) funge da serbatoio di ossigeno. Il cerio è anche usato come decolorante nei vetri, come stabilizzante UV nelle plastiche, nelle leghe di mischmetallo e nei ferrocerro (pietre focaie).",
+        "I composti principali includono il diossido di cerio (CeO₂, la ceria), il trisolfuro di cerio (Ce₂S₃, pigmento rosso non tossico), il nitrato di cerio Ce(NO₃)₄, il cloruro di cerio (CeCl₃) e i complessi organici del cerio usati come catalizzatori in sintesi organica (reagente di Imamoto)."
+      ],
+      "name": "Cerio"
+    },
+    "element-059-praseodymium": {
+      "summary": "Lantanide dai sali verdi caratteristici, il praseodimio è essenziale per i magneti permanenti ad alte prestazioni e i vetri protettivi.",
+      "paragraphs": [
+        "Simbolo «Pr», numero atomico 59, il praseodimio è un metallo argenteo, morbido e malleabile che si ossida rapidamente formando uno strato verde. Fonde a 931 °C. Scoperto nel 1885 da Carl Auer von Welsbach separandolo dal didimio, il nome deriva dal greco prasios didymos, «gemello verde», per il colore caratteristico dei suoi sali.",
+        "Il praseodimio si forma attraverso il processo-s nelle stelle giganti AGB. Ha un unico isotopo stabile, ¹⁴¹Pr. La sua produzione stellare è strettamente legata a quella del neodimio nei percorsi di cattura lenta di neutroni.",
+        "Sulla Terra il praseodimio è moderatamente abbondante (circa 9,5 ppm nella crosta). Si trova con gli altri lantanidi nella bastnasite e nella monazite. Cina, Russia e India sono i principali produttori.",
+        "Il praseodimio è principalmente usato nelle leghe di neodimio-ferro-boro (NdFeB) per magneti permanenti, dove migliora la resistenza alla corrosione e riduce il costo sostituendo parzialmente il neodimio. Il didimio (lega Nd-Pr) è usato nei vetri per saldatura e nei vetri fotografi per bloccare la luce arancione. I composti del praseodimio forniscono colori giallo-verdi brillanti nelle ceramiche e nei vetri.",
+        "I composti principali includono l'ossido di praseodimio (Pr₆O₁₁), il cloruro di praseodimio (PrCl₃), il nitruro di praseodimio (PrN) e i silicati contenenti praseodimio usati come pigmenti ceramici. Il praseodimio è anche usato come componente nei laser a fibra ottica dopata con terre rare."
+      ],
+      "name": "Praseodimio"
+    },
+    "element-060-neodymium": {
+      "summary": "Lantanide fondamentale per i magneti permanenti più potenti al mondo, il neodimio è al cuore di motori elettrici, turbine eoliche e altoparlanti.",
+      "paragraphs": [
+        "Simbolo «Nd», numero atomico 60, il neodimio è un metallo argenteo, morbido e reattivo che fonde a 1021 °C. Si ossida rapidamente all'aria. Scoperto nel 1885 da Carl Auer von Welsbach separandolo dal didimio, il nome deriva dal greco neos didymos, «nuovo gemello», in coppia con il praseodimio.",
+        "Il neodimio si forma attraverso il processo-s nelle stelle giganti AGB. Ha sette isotopi naturali, di cui sei stabili e uno (¹⁴⁴Nd) debolmente radioattivo con emivita di 2,29×10¹⁵ anni. È il lantanide con la maggiore produzione attraverso il processo-s nelle stelle di tipo S.",
+        "Sulla Terra il neodimio è relativamente abbondante (circa 41,5 ppm nella crosta). Si trova principalmente nella bastnasite, nella monazite e nella xenotime. La Cina domina la produzione mondiale delle terre rare, incluso il neodimio.",
+        "Il neodimio è principalmente usato nei magneti NdFeB (neodimio-ferro-boro), i magneti permanenti più potenti conosciuti. Questi magneti sono indispensabili nei motori elettrici di veicoli ibridi ed elettrici, nei generatori di turbine eoliche, negli hard disk, negli altoparlanti e in innumerevoli altri dispositivi. Il laser a vetro Nd:YAG (granato di ittrio-alluminio drogato con neodimio) è usato in chirurgia e in applicazioni industriali. I composti del neodimio forniscono colori rosso-violetti nei vetri e nelle ceramiche.",
+        "I composti principali includono l'ossido di neodimio (Nd₂O₃), il cloruro di neodimio (NdCl₃), il fluoruro di neodimio (NdF₃) e la lega NdFeB. Il vetro al neodimio è usato come filtro ottico e per neutralizzare il colore giallo-verde nei vetri al sodio."
+      ],
+      "name": "Neodimio"
+    },
+    "element-061-promethium": {
+      "summary": "L'unico lantanide senza isotopi stabili, il promezio è un elemento esclusivamente artificiale usato in batterie atomiche e sensori.",
+      "paragraphs": [
+        "Simbolo «Pm», numero atomico 61, il promezio è un lantanide radioattivo la cui esistenza era prevista prima della scoperta. Identificato nel 1945 da Marinsky, Glendenin e Coryell tra i prodotti di fissione del reattore di Oak Ridge (USA), fu chiamato in onore di Prometeo, il titano che rubò il fuoco agli dei. Il suo isotopo più stabile, ¹⁴⁵Pm, ha un'emivita di 17,7 anni.",
+        "Il promezio si forma attraverso il processo-r nelle supernovae, ma non persiste: tutti i suoi isotopi decadono troppo rapidamente perché si accumuli in quantità rilevabili. Sulla Terra esiste solo in tracce infinitesimali come prodotto di fissione spontanea dell'uranio-238. Nelle stelle giganti rosse la sua assenza spettroscopica fu per lungo tempo un enigma.",
+        "Sulla Terra il promezio esiste solo in quantità trascurabili nei minerali di uranio. Tutto il promezio utilizzato è prodotto artificialmente nei reattori nucleari per irradiazione del neodimio-145 o come prodotto di fissione dell'uranio-235.",
+        "Il ¹⁴⁷Pm (emivita 2,6 anni) è usato come sorgente beta in batterie atomiche per sonde spaziali, stimolatori cardiaci e indicatori luminescenti. È anche usato come sorgente di raggi X in strumenti di misurazione industriale (misuratori di spessore). Le sue applicazioni rimangono molto specializzate a causa della sua radioattività e breve emivita.",
+        "I composti del promezio sono analoghi a quelli degli altri lantanidi: l'ossido Pm₂O₃, il cloruro PmCl₃ e il nitrato Pm(NO₃)₃ sono stati caratterizzati. Tuttavia, la loro manipolazione richiede strutture di radioprotection specializzate e tutto il promezio deve essere gestito in modo sicuro come rifiuto radioattivo."
+      ],
+      "name": "Promezio"
+    },
+    "element-062-samarium": {
+      "summary": "Lantanide di media abbondanza, il samario è fondamentale per i magneti permanenti ad alta temperatura e le applicazioni nucleari.",
+      "paragraphs": [
+        "Simbolo «Sm», numero atomico 62, il samario è un metallo argenteo, relativamente duro e stabile all'aria con un sottile strato di ossido. Fonde a 1072 °C. Scoperto nel 1879 da Paul-Émile Lecoq de Boisbaudran nella samarskite, fu nominato in onore del colonnello russo Vasili Samarsky-Bykhovets, che aveva reso disponibile il minerale per l'analisi.",
+        "Il samario si forma attraverso il processo-s nelle stelle giganti AGB. Ha sette isotopi naturali, di cui cinque stabili e due (¹⁴⁷Sm e ¹⁴⁸Sm) debolmente radioattivi con emivite di miliardi di anni. Il sistema isotopico samario-neodimio (¹⁴⁷Sm → ¹⁴³Nd) è uno strumento fondamentale per la geocronologia delle rocce mantelliche e dei meteoriti.",
+        "Sulla Terra il samario è moderatamente abbondante (circa 7,9 ppm nella crosta). Si trova con gli altri lantanidi nella bastnasite, nella monazite e nella samarskite. La Cina è il principale produttore.",
+        "Il samario-cobalto (SmCo₅ e Sm₂Co₁₇) è il secondo tipo di magnete permanente più potente dopo il NdFeB. I magneti SmCo mantengono le loro proprietà a temperature più alte (fino a 350 °C) e in ambienti corrosivi, rendendoli preferiti nell'aerospazio e nelle applicazioni militari. Il samario-149 è un eccellente assorbitore di neutroni nei reattori nucleari. Il cloruro di samario (SmCl₂) è un agente riducente usato in sintesi organica.",
+        "I composti principali includono l'ossido di samario (Sm₂O₃), il cloruro di samario(II) (SmCl₂), il cloruro di samario(III) (SmCl₃) e i silicati di samario. Il reagente di Kagan (SmI₂, ioduro di samario(II)) è un potente agente riducente a un elettrone molto usato in sintesi organica totale."
+      ],
+      "name": "Samario"
+    },
+    "element-063-europium": {
+      "summary": "Lantanide con le più intense proprietà di luminescenza, l'europio è insostituibile nei fosfori per schermi e nelle banconote di sicurezza.",
+      "paragraphs": [
+        "Simbolo «Eu», numero atomico 63, l'europio è un metallo argenteo, morbido e il più reattivo dei lantanidi. Si ossida rapidamente all'aria e reagisce con l'acqua. Fonde a 826 °C. Scoperto nel 1901 da Eugène-Anatole Demarçay, fu chiamato in onore dell'Europa. È l'unico lantanide che può esistere stabilmente sia nello stato di ossidazione +2 che +3.",
+        "L'europio si forma attraverso il processo-s nelle stelle giganti AGB. Ha due isotopi stabili, ¹⁵¹Eu e ¹⁵³Eu. La sua abbondanza cosmica è relativamente bassa rispetto ai lantanidi adiacenti a causa di una sezione d'urto di cattura di neutroni molto elevata che può consumarlo nel processo-s.",
+        "Sulla Terra l'europio è raro (circa 2,1 ppm nella crosta). Si trova con gli altri lantanidi nella bastnasite e nella monazite. La Cina domina la produzione mondiale.",
+        "L'europio ha proprietà luminescenti eccezionali. L'europio(III) emette luce rossa brillante nei fosfori, mentre l'europio(II) emette luce blu. Questi fosfori sono fondamentali nei tubi al neon, negli schermi al plasma, nelle lampade fluorescenti e nei LED bianchi. Le banconote in euro contengono composti dell'europio come misura di sicurezza anticontraffazione (fluorescenza invisibile sotto UV). L'europio-153 è usato come assorbitore di neutroni nei reattori.",
+        "I composti principali includono l'ossido di europio (Eu₂O₃), il cloruro di europio(III) (EuCl₃), il bromuro di europio(II) (EuBr₂) e i complessi chelati dell'europio usati come sonde fluorescenti in biologia cellulare e nei saggi immunologici (TRFIA)."
+      ],
+      "name": "Europio"
+    },
+    "element-064-gadolinium": {
+      "summary": "Lantanide con il più alto momento magnetico tra tutti gli elementi, il gadolinio è insostituibile come mezzo di contrasto per la risonanza magnetica.",
+      "paragraphs": [
+        "Simbolo «Gd», numero atomico 64, il gadolinio è un metallo argenteo, duttile e ferromagnetico a temperature inferiori a 20 °C (temperatura di Curie). Fonde a 1313 °C. Scoperto nel 1880 da Jean Charles Galissard de Marignac nella gadolinite, fu chiamato in onore del mineralogista finlandese Johan Gadolin.",
+        "Il gadolinio si forma attraverso il processo-s nelle stelle giganti AGB. Ha sette isotopi stabili (¹⁵²Gd–¹⁶⁰Gd), di cui ¹⁵⁸Gd è il più abbondante. Il gadolinio-157 ha la più alta sezione d'urto di cattura di neutroni termici di qualsiasi nucleo stabile conosciuto, rendendolo eccezionale come assorbitore in fisica nucleare.",
+        "Sulla Terra il gadolinio è moderatamente abbondante (circa 6,2 ppm nella crosta). Si trova con gli altri lantanidi nella bastnasite, nella monazite e nella gadolinite. Cina, USA e Australia sono i principali produttori.",
+        "Il gadolinio è principalmente usato come agente di contrasto per la risonanza magnetica (MRI) sotto forma di chelati gadolinico (Gd-DTPA, Gd-DOTA). Il gadolinio è paramagnetico e accorcia i tempi di rilassamento dei protoni nelle regioni dove si accumula, migliorando il contrasto delle immagini. È anche usato come assorbitore di neutroni nei reattori nucleari, come componente nei materiali magneto-refrigeratori e nelle leghe per apparecchi elettronici.",
+        "I composti principali includono l'ossido di gadolinio (Gd₂O₃), il cloruro di gadolinio(III) (GdCl₃), il Gd-DTPA (acido gadopentetico, mezzo di contrasto MRI), il Gd-DOTA (mezzo di contrasto ciclico) e il gadolinio gallium garnet (GGG, Gd₃Ga₅O₁₂) usato come substrato per memorie a bolle magnetiche."
+      ],
+      "name": "Gadolinio"
+    },
+    "element-065-terbium": {
+      "summary": "Lantanide con straordinarie proprietà magnetostrittive e di luminescenza verde, il terbio è fondamentale nei magneti e nelle lampade fluorescenti.",
+      "paragraphs": [
+        "Simbolo «Tb», numero atomico 65, il terbio è un metallo argenteo, morbido e malleabile che si ossida lentamente all'aria. Fonde a 1356 °C. Scoperto nel 1843 da Carl Gustaf Mosander nella gadolinite di Ytterby (Svezia), fu chiamato in onore di quella cittadina, insieme all'ittrio, erbio e itterbio.",
+        "Il terbio si forma attraverso il processo-s nelle stelle giganti AGB. Ha un unico isotopo stabile, ¹⁵⁹Tb. È tra i lantanidi meno abbondanti cosmicamente a causa della sua sezione d'urto di cattura di neutroni.",
+        "Sulla Terra il terbio è raro (circa 1,2 ppm nella crosta). Si trova con gli altri lantanidi nella bastnasite, nella monazite e nella gadolinite. La Cina è il principale produttore, con riserve anche in India e Australia.",
+        "Il terbio è principalmente usato come drogante nei fosfori verdi per schermi e lampade fluorescenti (fosforo verde TB-MgAl₁₁O₁₉). Il terfenolo-D (Tb₀,₃Dy₀,₇Fe₂), una lega di terbio, disprosio e ferro, è il materiale magnetostrittivo gigante più usato: cambia dimensione in risposta a un campo magnetico, applicazione in attuatori sonar, trasduttori e microcircuiti. Il terbio è anche usato nelle leghe magneto-ottiche per l'archiviazione dei dati.",
+        "I composti principali includono l'ossido di terbio (Tb₄O₇), il cloruro di terbio(III) (TbCl₃), il fluoruro di terbio (TbF₃) e il terbio-doped yttrium aluminium garnet (Tb:YAG) usato come rotatore di Faraday nei laser ad alta potenza."
+      ],
+      "name": "Terbio"
+    },
+    "element-066-dysprosium": {
+      "summary": "Lantanide con il più alto momento magnetico, il disprosio è essenziale per migliorare le prestazioni ad alta temperatura dei magneti NdFeB.",
+      "paragraphs": [
+        "Simbolo «Dy», numero atomico 66, il disprosio è un metallo argenteo e relativamente morbido che fonde a 1412 °C. Si ossida lentamente in aria. Scoperto nel 1886 da Paul-Émile Lecoq de Boisbaudran dopo un processo di separazione estenuante, il nome deriva dal greco dysprositos, «difficile da raggiungere».",
+        "Il disprosio si forma attraverso il processo-s nelle stelle giganti AGB. Ha sette isotopi stabili (¹⁵⁶Dy–¹⁶⁴Dy), di cui ¹⁶⁴Dy è il più abbondante. La sua abbondanza cosmologica è una delle più alte tra i lantanidi pesanti.",
+        "Sulla Terra il disprosio è abbastanza abbondante tra i lantanidi pesanti (circa 5,2 ppm nella crosta). Si trova con gli altri lantanidi nella bastnasite, monazite e xenotime. La Cina produce la quasi totalità del disprosio mondiale.",
+        "Il disprosio viene principalmente aggiunto ai magneti NdFeB per aumentarne la coercitività ad alta temperatura, permettendo l'uso nei motori elettrici e nei generatori di turbine eoliche. Senza aggiunta di disprosio, i magneti NdFeB perdono proprietà magnetiche sopra 150 °C. È anche usato nei laser a stato solido (Dy:YAG) e come assorbitore di neutroni nei reattori. Il fosfuro di disprosio è un semiconduttore studiato per applicazioni a bassa temperatura.",
+        "I composti principali includono l'ossido di disprosio (Dy₂O₃), il cloruro di disprosio(III) (DyCl₃), il fluoruro di disprosio (DyF₃) e le leghe Dy-Fe usate come materiaux magneto-ottici per archiviazione ottica."
+      ],
+      "name": "Disprosio"
+    },
+    "element-067-holmium": {
+      "summary": "Lantanide con il più alto momento magnetico intrinseco, l'olmio trova applicazione come polo magnetico di precisione e nei laser medici.",
+      "paragraphs": [
+        "Simbolo «Ho», numero atomico 67, l'olmio è un metallo argenteo, morbido e malleabile che fonde a 1474 °C. Si ossida lentamente all'aria. Scoperto nel 1878 da Marc Delafontaine e Louis Soret (e indipendentemente da Per Teodor Cleve), fu chiamato in onore di Stoccolma (Holmia in latino).",
+        "L'olmio si forma attraverso il processo-s nelle stelle giganti AGB. Ha un unico isotopo stabile, ¹⁶⁵Ho. Possiede il più alto momento magnetico di qualsiasi elemento (10,6 μB), rendendolo eccezionale in alcune applicazioni di fisica del magnetismo.",
+        "Sulla Terra l'olmio è moderatamente abbondante tra i lantanidi (circa 1,4 ppm nella crosta). Si trova con gli altri lantanidi nella monazite, nella bastnasite e nella gadolinite. Cina, USA e Australia sono le principali fonti.",
+        "L'olmio è principalmente usato nei laser Ho:YAG e Ho:YSGG, emettenti a 2,1 μm (infrarosso vicino), largamente usati in chirurgia urologica, ortopedica e cardiaca per la loro precisa interazione con i tessuti biologici acquosi. L'olmio è anche usato come polo magnetico nei magneti di precisione, come assorbitore di neutroni nei reattori e come dopante nelle fibre ottiche amplificatrici.",
+        "I composti principali includono l'ossido di olmio (Ho₂O₃, di colore giallo), il cloruro di olmio(III) (HoCl₃), il fluoruro di olmio (HoF₃) e l'olmio-YAG (Ho:Y₃Al₅O₁₂), il materiale laser medico più importante dell'olmio."
+      ],
+      "name": "Olmio"
+    },
+    "element-068-erbium": {
+      "summary": "Lantanide dai sali rosa caratteristici, l'erbio è fondamentale come amplificatore nelle fibre ottiche che portano internet in tutto il mondo.",
+      "paragraphs": [
+        "Simbolo «Er», numero atomico 68, l'erbio è un metallo argenteo, morbido e stabile all'aria più degli altri lantanidi leggeri. Funde a 1529 °C. I suoi sali e ossidi hanno un colore rosa caratteristico. Scoperto nel 1842 da Carl Gustaf Mosander nella gadolinite di Ytterby, fu chiamato come il terbio in onore di quella cittadina svedese.",
+        "L'erbio si forma attraverso il processo-s nelle stelle giganti AGB. Ha sei isotopi stabili (¹⁶²Er–¹⁷⁰Er), di cui ¹⁶⁶Er è il più abbondante. La sua produzione stellare è strettamente correlata a quella dell'itterbio e del tullio nei percorsi di cattura di neutroni.",
+        "Sulla Terra l'erbio è moderatamente abbondante tra i lantanidi pesanti (circa 3,5 ppm nella crosta). Si trova nella monazite, nella bastnasite e nella xenotime. La Cina è il principale produttore.",
+        "L'applicazione più importante dell'erbio è negli amplificatori a fibra ottica drogata con erbio (EDFA). L'erbio(III) emette a 1550 nm (la finestra di trasmissione minima delle fibre di silice) quando eccitato da una pompa laser a 980 nm o 1480 nm. Questi amplificatori sono fondamentali per le reti in fibra ottica a lunga distanza che supportano internet globale. L'erbio è anche usato nei laser Er:YAG (2940 nm) in chirurgia dermatologica e dentale, e come colorante rosa nei vetri e nelle ceramiche.",
+        "I composti principali includono l'ossido di erbio (Er₂O₃, rosa), il cloruro di erbio(III) (ErCl₃), il fluoruro di erbio (ErF₃) e l'erbio-YAG (Er:Y₃Al₅O₁₂). Le fibre ottiche drogate con erbio (EDF) sono la base degli amplificatori EDFA delle reti a banda larga."
+      ],
+      "name": "Erbio"
+    },
+    "element-069-thulium": {
+      "summary": "Il lantanide più raro nella crosta terrestre, il tulio trova applicazione nei laser portatili e come sorgente di raggi X.",
+      "paragraphs": [
+        "Simbolo «Tm», numero atomico 69, il tulio è un metallo argenteo brillante, il più morbido dei lantanidi, che fonde a 1545 °C. Si ossida lentamente all'aria. Scoperto nel 1879 da Per Teodor Cleve nello stesso campione in cui identificò l'olmio, il nome deriva da Thule, antico nome mitologico della Scandinavia.",
+        "Il tulio si forma attraverso il processo-s nelle stelle giganti AGB. Ha un unico isotopo stabile, ¹⁶⁹Tm. È il secondo lantanide più raro dopo il promezio (radioattivo), il che riflette la sua posizione nel percorso di cattura di neutroni dove la sezione d'urto è sfavorevole.",
+        "Sulla Terra il tulio è raro (circa 0,52 ppm nella crosta). Si trova con gli altri lantanidi pesanti nella monazite, bastnasite e xenotime. Cina, USA e Australia sono le principali fonti.",
+        "Il tulio è usato principalmente nei laser portatili a stato solido (laser al tulio), che emettono nell'infrarosso a 2 μm e trovano applicazione in chirurgia (urologia, oncologia), comunicazioni atmosferiche e rilevamento LIDAR. Il tulio-170 radioattivo (emivita 128 giorni) è usato come sorgente portatile di raggi X in radiografia industriale e medica. È anche usato come drogante nei fosfori ad alta efficienza.",
+        "I composti principali includono l'ossido di tulio (Tm₂O₃), il cloruro di tulio(III) (TmCl₃), il fluoruro di tulio (TmF₃) e il tulio-YAG (Tm:YAG), il cristallo laser a 2 μm. L'ossido di tulio è leggermente verde."
+      ],
+      "name": "Tulio"
+    },
+    "element-070-ytterbium": {
+      "summary": "Lantanide stabile con proprietà elettroniche uniche, l'itterbio è fondamentale negli orologi ottici più precisi e nei laser industriali.",
+      "paragraphs": [
+        "Simbolo «Yb», numero atomico 70, l'itterbio è un metallo argenteo e morbido che fonde a 824 °C. Esiste in tre forme allotropiche. Scoperto nel 1878 da Jean Charles Galissard de Marignac nella gadolinite di Ytterby, fu chiamato in onore di quella cittadina svedese, la fonte originale di numerosi lantanidi.",
+        "L'itterbio si forma attraverso il processo-s nelle stelle giganti AGB. Ha sette isotopi stabili (¹⁶⁸Yb–¹⁷⁶Yb), il che lo rende uno dei lantanidi più abbondanti attraverso il processo-s. La sua abbondanza cosmica è superiore a quella di molti altri lantanidi pesanti.",
+        "Sulla Terra l'itterbio è abbastanza abbondante tra i lantanidi (circa 3,2 ppm nella crosta). Si trova nella monazite, bastnasite e xenotime. Cina, USA e Australia sono i principali produttori.",
+        "L'itterbio è principalmente usato nei laser a fibra ottica drogata Yb (laser Yb:fiber), che operano intorno a 1030–1080 nm con altissima efficienza (fino all'80%) e alta potenza media. Questi laser sono fondamentali nell'industria per il taglio, la saldatura e la marcatura laser di metalli. Gli orologi ottici all'itterbio (che usano la transizione a 518 THz) sono tra i più precisi al mondo, 100 volte più precisi degli orologi al cesio. L'itterbio è anche usato come indicatore di pressione in chimica ad alta pressione.",
+        "I composti principali includono l'ossido di itterbio (Yb₂O₃), il cloruro di itterbio(III) (YbCl₃), il fluoruro di itterbio (YbF₃) e i complessi chelati dell'itterbio usati come agenti di contrasto nei raggi X. L'Yb:YAG è un cristallo laser solido ad alta efficienza."
+      ],
+      "name": "Itterbio"
+    },
+    "element-071-lutetium": {
+      "summary": "Il più pesante e denso dei lantanidi, il lutezio è il più stabile chimicamente e trova applicazioni nei tomografi PET e nei catalizzatori.",
+      "paragraphs": [
+        "Simbolo «Lu», numero atomico 71, il lutezio è un metallo argenteo, duro e denso che fonde a 1663 °C. È il lantanide con il punto di fusione più alto e il raggio atomico più piccolo. Scoperto nel 1907 contemporaneamente da Georges Urbain in Francia, Carl Auer von Welsbach in Austria e Charles James negli USA, il nome deriva da Lutetia, il nome latino di Parigi.",
+        "Il lutezio si forma attraverso il processo-s nelle stelle giganti AGB. Ha due isotopi naturali: ¹⁷⁵Lu (stabile, 97,4%) e ¹⁷⁶Lu (debolmente radioattivo, emivita 3,76×10¹⁰ anni). Il sistema ¹⁷⁶Lu–¹⁷⁶Hf è uno strumento geocronologico per datare rocce metamorfiche e mantellari.",
+        "Sulla Terra il lutezio è raro (circa 0,56 ppm nella crosta). Si trova con gli altri lantanidi pesanti nella monazite, bastnasite e xenotime. È il più costoso dei lantanidi comuni. Cina, USA e Australia sono i principali produttori.",
+        "Il lutezio è principalmente usato come cristallo scintillatore (lutetio silicato Ls:Ce, LYSO) nei rivelatori dei tomografi a emissione di positroni (PET). È anche usato come catalizzatore nel cracking del petrolio e nella polimerizzazione. L'ossido di lutezio è usato come materiale dielettrico ad alta costante nei gate dei transistor avanzati e come materiale refrattario. Il ¹⁷⁷Lu radioattivo è promettente per la radioterapia dei tumori neuroendocrini.",
+        "I composti principali includono l'ossido di lutezio (Lu₂O₃), il cloruro di lutezio (LuCl₃), il fluoruro di lutezio (LuF₃) e il silicato di lutezio drogato con cerio (Lu₂SiO₅:Ce o LSO), il principale cristallo scintillatore nei tomografi PET moderni."
+      ],
+      "name": "Lutezio"
+    },
+    "element-072-hafnium": {
+      "summary": "Metallo di transizione denso e refrattario scoperto tardi per la sua somiglianza con lo zirconio, l'afnio è insostituibile nei reattori nucleari e nei transistor avanzati.",
+      "paragraphs": [
+        "Simbolo «Hf», numero atomico 72, l'afnio è un metallo di transizione argenteo lucente, duttile e refrattario che fonde a 2233 °C. Scoperto nel 1923 da Dirk Coster e George de Hevesy a Copenaghen (Hafnia in latino), fu il secondo penultimo elemento stabile scoperto. È quasi identico allo zirconio chimicamente, il che rese la sua scoperta particolarmente difficile.",
+        "L'afnio si forma principalmente attraverso il processo-s nelle stelle giganti AGB. Ha sei isotopi stabili (¹⁷⁴Hf–¹⁸⁰Hf). Il sistema ¹⁸²Hf–¹⁸²W (afnio-tungsteno) è un cronometro cosmochimico per datare la formazione dei nuclei planetari entro pochi milioni di anni dalla formazione del sistema solare.",
+        "Sulla Terra l'afnio è moderatamente abbondante (circa 5,8 ppm nella crosta) ma difficile da separare dallo zirconio. Si trova principalmente nella zirconia e nella zircone (ZrSiO₄). Australia e Sud Africa sono le principali fonti.",
+        "L'afnio è principalmente usato nei reattori nucleari come assorbitore di neutroni termici (barre di controllo) grazie alla sua altissima sezione d'urto e alla sua resistenza alla corrosione. Il diossido di afnio (HfO₂, la hafnia) ha una costante dielettrica molto alta e viene usato come gate dielettrico nei transistor CMOS avanzati (nodi a 22 nm e oltre) per sostituire il diossido di silicio. L'afnio è anche usato in elettrodi per plasma e in superleghe per le turbine.",
+        "I composti principali includono il diossido di afnio (HfO₂, costante dielettrica ~25), il tetracloruro di afnio (HfCl₄), il carburo di afnio (HfC, materiale più refrattario conosciuto) e i silicati di afnio (HfSiO₄) usati nei gate dielettric dei microprocessori Intel, AMD e TSMC."
+      ],
+      "name": "Afnio"
+    },
+    "element-073-tantalum": {
+      "summary": "Metallo refrattario biocompatibile e altamente resistente alla corrosione, il tantalio è insostituibile nell'elettronica portatile e negli impianti medici.",
+      "paragraphs": [
+        "Simbolo «Ta», numero atomico 73, il tantalio è un metallo di transizione grigio-blu, duro, duttile e altamente refrattario che fonde a 3017 °C. Scoperto nel 1802 da Anders Gustaf Ekeberg in Scandinavia, fu chiamato in onore di Tantalo della mitologia greca per la frustrazione incontrata nel dissolverlo negli acidi. È quasi inattaccabile dall'acido cloridrico e dall'acido nitrico a temperatura ambiente.",
+        "Il tantalio si forma attraverso il processo-s e il processo-r nelle stelle. Ha due isotopi naturali: ¹⁸¹Ta (stabile, 99,99%) e ¹⁸⁰Ta (quasi stabile, emivita >10¹⁵ anni). Il ¹⁸⁰Ta è l'unico isotopo quasi stabile noto che si trova in natura con abbondanza molto bassa.",
+        "Sulla Terra il tantalio è raro (circa 2 ppm nella crosta). Il principale minerale è la columbite-tantalite (coltan). L'Australia, il Brasile, il Congo (DRC) e il Mozambico sono le principali fonti. Il Congo fornisce una quota significativa e la sua estrazione è stata controversa per finanziamento di conflitti armati.",
+        "Il tantalio è principalmente usato nei condensatori al tantalio, componenti fondamentali negli smartphone, laptop e dispositivi elettronici portatili per la loro alta capacità e piccole dimensioni. Il carburo di tantalio (TaC) è un materiale estremamente duro usato nelle punte da taglio. Il tantalio metallico è usato negli impianti biomedici (protesi ossee, stent coronarici) per la sua biocompatibilità e resistenza alla corrosione nei fluidi corporei.",
+        "I composti principali includono il pentossido di tantalio (Ta₂O₅, dielettrico ad alta k), il carburo di tantalio (TaC, materiale refrattario), il pentacloruro di tantalio (TaCl₅) e il litio tantalato (LiTaO₃) usato in modulatori elettroottici e in filtri SAW."
+      ],
+      "name": "Tantalio"
+    },
+    "element-074-tungstene": {
+      "summary": "Con il punto di fusione più alto di qualsiasi metallo, il tungsteno è insostituibile nei filamenti delle lampadine, nelle punte da taglio e nei blindaggi.",
+      "paragraphs": [
+        "Simbolo «W» (dal tedesco Wolfram), numero atomico 74, il tungsteno è un metallo di transizione grigio acciaio, molto duro e denso (19,3 g/cm³) con il punto di fusione più alto di tutti i metalli (3422 °C). Il simbolo W proviene dal tedesco Wolfram. Scoperto nel 1781 da Carl Wilhelm Scheele come acido wolframico e isolato nel 1783 dai fratelli spagnoli Elhuyar, il nome italiano «tungsteno» deriva dal svedese tung sten, «pietra pesante».",
+        "Il tungsteno si forma attraverso il processo-s e il processo-r nelle stelle. Ha cinque isotopi stabili (¹⁸⁰W–¹⁸⁶W), di cui ¹⁸⁴W è il più abbondante. Il tungsteno-184 è anche il prodotto finale del decadimento dell'osmio e del renio in alcune catene nucleosinteriche.",
+        "Sulla Terra il tungsteno è moderatamente abbondante (circa 1,25 ppm nella crosta). I principali minerali sono la wolframite [(Fe,Mn)WO₄] e la scheelite [CaWO₄]. La Cina produce oltre il 85% del tungsteno mondiale.",
+        "Il tungsteno è principalmente usato nella produzione di carburo di tungsteno (WC) per utensili da taglio, punte da trapano e frese ad alta durezza. I filamenti delle lampadine a incandescenza erano di tungsteno. Le leghe dense di tungsteno sono usate nei blindaggi penetranti e nei bilanciamenti di precisione. Il tungsteno è anche usato negli elettrodi TIG per la saldatura, nelle leghe ad alta temperatura per le turbine aerospaziali e come rivestimento anti-usura.",
+        "I composti principali includono il carburo di tungsteno (WC, il materiale più usato nelle punte da taglio), il triossido di tungsteno (WO₃, materiale cromoelettrochimico), il disolfuro di tungsteno (WS₂, lubrificante solido) e il poliossotungstato (POM, catalizzatore e materiale farmaceutico)."
+      ],
+      "name": "Tungsteno"
+    },
+    "element-075-rhenium": {
+      "summary": "Uno degli ultimi elementi stabili scoperti, il renio possiede un punto di fusione record e è fondamentale nelle superleghe per turbine a gas.",
+      "paragraphs": [
+        "Simbolo «Re», numero atomico 75, il renio è un metallo di transizione grigio argenteo, molto duro e denso (21,0 g/cm³) con il secondo punto di fusione più alto dei metalli (3186 °C). Scoperto nel 1925 da Walter Noddack, Ida Tacke e Otto Berg tramite spettroscopia, fu chiamato in onore del Reno (Rhenus in latino). Fu uno degli ultimi elementi stabili ad essere identificato.",
+        "Il renio si forma attraverso il processo-r nelle supernovae e nelle fusioni di stelle di neutroni. Ha due isotopi naturali: ¹⁸⁵Re (stabile) e ¹⁸⁷Re (debolmente radioattivo, emivita 4,12×10¹⁰ anni). Il sistema ¹⁸⁷Re–¹⁸⁷Os è un cronometro geocosmochimico fondamentale.",
+        "Sulla Terra il renio è uno degli elementi più rari (circa 0,0007 ppm nella crosta). Si trova come impurità nei minerali di molibdeno, in particolare nella molibdenite (MoS₂). Si estrae esclusivamente come sottoprodotto della lavorazione del molibdeno nel rame porfiritico. Cile, USA, Kazakhstan e Polonia sono i principali produttori.",
+        "Il renio è principalmente usato nelle superleghe a base di nichel per le pale delle turbine a gas di aerei e centrali elettriche. Piccole aggiunte di renio (3–6%) migliorano drasticamente la resistenza alla deformazione ad alta temperatura. I catalizzatori al platino-renio sono fondamentali per la produzione di benzina ad alto ottano nelle raffinerie petrolifere. Il filamento di tungsteno-renio è usato nelle sonde termiche ad altissima temperatura.",
+        "I composti principali includono il perossido di renio (Re₂O₇), il tetrossido di renio (ReO₄⁻, l'ione perrenato), il tricarbonile di renio e i complessi di renio(I) usati in chimica organometallica. Il renio-186 e il renio-188 radioattivi sono studiati come agenti terapeutici in oncologia (radioterapia interna)."
+      ],
+      "name": "Renio"
+    },
+    "element-076-osmium": {
+      "summary": "Il metallo naturale più denso conosciuto, l'osmio è insostituibile in leghe ultra-dure e come catalizzatore per la sintesi organica.",
+      "paragraphs": [
+        "Simbolo «Os», numero atomico 76, l'osmio è un metallo di transizione blu-grigio, molto duro, fragile e il più denso dei metalli naturali (22,59 g/cm³). Fonde a 3033 °C. Scoperto nel 1803 da Smithson Tennant nel residuo di platino grezzo, il nome deriva dal greco osmé, «odore», per il caratteristico odore pungente del suo tetraossido (OsO₄).",
+        "L'osmio si forma attraverso il processo-r nelle supernovae e nelle fusioni di stelle di neutroni. Ha sette isotopi stabili (¹⁸⁴Os–¹⁹²Os). Il sistema ¹⁸⁷Re–¹⁸⁷Os è un cronometro geocosmochimico fondamentale per datare eventi geologici e meteoriti.",
+        "Sulla Terra l'osmio è uno dei metalli più rari della crosta (circa 0,001 ppm). Si trova nei minerali del platino, principalmente come lega con iridio (la osmiridio). Il Sud Africa, la Russia e il Canada sono le principali fonti.",
+        "L'osmio è usato principalmente nelle leghe ultra-dure con iridio, platino e rutenio per punte di strumenti di scrittura, perni di bussole e contatti elettrici che richiedono estrema durezza e resistenza all'usura. Il tetraossido di osmio (OsO₄) è un potente agente ossidante usato in microscopia elettronica per colorare campioni biologici (colorazione dei doppi legami carbonio-carbonio) e come reagente di diidrossilazione in sintesi organica.",
+        "I composti principali includono il tetraossido di osmio (OsO₄, altamente tossico), l'esafluoruro di osmio (OsF₆), i carbonili di osmio e il rosso di osmio (complesso ammino usato in biologia). Il complesso [Os(bipy)₃]²⁺ è usato come fotosensibilizzatore in fotocatalisi e in sensori elettrochimici."
+      ],
+      "name": "Osmio"
+    },
+    "element-077-iridium": {
+      "summary": "Il metallo più resistente alla corrosione conosciuto, l'iridio è fondamentale per le candele di accensione ad alte prestazioni e il mantenimento degli standard internazionali.",
+      "paragraphs": [
+        "Simbolo «Ir», numero atomico 77, l'iridio è un metallo di transizione bianco-argenteo, molto duro, denso (22,56 g/cm³) e il più resistente alla corrosione tra tutti i metalli. Fonde a 2446 °C. Scoperto nel 1803 da Smithson Tennant nel residuo di platino grezzo, il nome deriva dal latino iris (arcobaleno) per i molti colori dei suoi composti.",
+        "L'iridio si forma principalmente attraverso il processo-r nelle supernovae. Ha due isotopi stabili, ¹⁹¹Ir e ¹⁹³Ir. L'anomalia dello strato di iridio al confine Cretaceo-Paleogene (KPg boundary, 66 milioni di anni fa) è la principale prova dell'impatto di un asteroide ricco di iridio che causò l'estinzione dei dinosauri.",
+        "Sulla Terra l'iridio è uno dei metalli più rari della crosta (circa 0,001 ppm). Si trova nei minerali del platino e come osmiridio. Sud Africa e Russia sono le principali fonti.",
+        "L'iridio è usato come componente di leghe ultra-dure con il platino per gli elettrodi delle candele ad alto rendimento e per gli erogatori degli ugelli dei razzi. Il kilogrammo campione internazionale (IPK, sostituito nel 2019 dalla ridefinizione del SI) era in lega platino-iridio (90% Pt, 10% Ir). L'iridio-192 radioattivo è usato in brachiterapia e radiografia industriale. Le leghe Ir-Re sono usate nei filamenti dei satelliti meteorologici.",
+        "I composti principali includono il tricloruro di iridio (IrCl₃), il tetraossido di iridio (IrO₂), i complessi del ciclopentadienile (Cp*Ir) usati in catalisi C-H e i complessi di Crabtree [Ir(COD)(py)(PCy₃)]PF₆, potenti catalizzatori per l'idrogenazione omogenea."
+      ],
+      "name": "Iridio"
+    },
+    "element-078-platinum": {
+      "summary": "Il metallo nobile più prezioso dopo l'oro, il platino è indispensabile nelle marmitte catalitiche, nella gioielleria e in numerose sintesi chimiche.",
+      "paragraphs": [
+        "Simbolo «Pt», numero atomico 78, il platino è un metallo di transizione bianco-argenteo, duttile e altamente resistente alla corrosione. Fonde a 1768 °C. Conosciuto dalle civiltà precolombiane dell'America del Sud, fu portato in Europa dagli spagnoli nel XVI secolo. Il nome deriva dallo spagnolo platina (piccolo argento), perché i conquistadores lo consideravano argento impuro.",
+        "Il platino si forma principalmente attraverso il processo-r nelle supernovae e nelle fusioni di stelle di neutroni. Ha sei isotopi stabili (¹⁹⁰Pt–¹⁹⁸Pt). La sua rarità sulla Terra rispetto alla sua abbondanza cosmica suggerisce che gran parte sia sprofondata nel nucleo terrestre durante la formazione planetaria.",
+        "Sulla Terra il platino è molto raro (circa 0,005 ppm nella crosta). Si trova principalmente nei depositi di solfuro di nichel-rame (come Sudbury e Norilsk) e nei placers alluvionali. Il Sud Africa (Bushveld Complex) produce circa il 75% del platino mondiale.",
+        "Il platino è principalmente usato nei catalizzatori a tre vie per le automobili, dove ossida il monossido di carbonio e gli idrocarburi incombusti. È fondamentale nella produzione di acido nitrico (processo Ostwald), nell'idrogenazione degli oli vegetali e nella riduzione dell'ossigeno nelle celle a combustibile a membrane polimeriche (PEMFC). In gioielleria, il platino è apprezzato per la sua lucentezza duratura. Il cisplatino (Pt) è un farmaco antitumorale fondamentale.",
+        "I composti principali includono il cisplatino (cis-[Pt(NH₃)₂Cl₂], chemioterapico), l'acido cloroplatinoso (H₂PtCl₆), il diossido di platino (PtO₂, catalizzatore di Adams), i complessi carbonilici di platino e i complessi N-eterociclici usati in catalisi omogenea e in OLED fosforescenti."
+      ],
+      "name": "Platino"
+    },
+    "element-079-gold": {
+      "summary": "Metallo nobile per eccellenza, l'oro unisce storia monetaria millenaria a indispensabili applicazioni nell'elettronica di precisione e nella medicina.",
+      "paragraphs": [
+        "Simbolo «Au» (dal latino aurum), numero atomico 79, l'oro è un metallo di transizione giallo brillante, molto duttile e malleabile, il più duttile tra i metalli. Fonde a 1064 °C. Non si ossida né corrode in condizioni normali, il che lo rende l'unico metallo di questo colore naturale. Conosciuto da tutte le civiltà umane sin dalla preistoria, è stato usato come moneta per oltre 5000 anni.",
+        "L'oro si forma attraverso il processo-r nelle fusioni di stelle di neutroni e nelle supernovae. La prima prova diretta fu l'osservazione dell'emissione di oro nella chilonovae GW170817 nel 2017. Ogni atomo di oro sulla Terra è stato creato in una catastrofe cosmica milioni di anni prima della formazione del sistema solare.",
+        "Sulla Terra l'oro è raro (circa 0,004 ppm nella crosta). Si trova principalmente in forma nativa nelle vene di quarzo, nei placers alluvionali e come impurità nei minerali di solfuro. Sud Africa, Russia, Australia, Cina e Canada sono i principali produttori. Si ritiene che la maggior parte dell'oro terrestre si sia concentrata nel nucleo durante la formazione del pianeta.",
+        "L'oro ha innumerevoli applicazioni. In elettronica è usato per contatti elettrici, fili di connessione nei chip e rivestimenti anticorrosione per la sua conducibilità perfetta e non-reattività. In medicina appare in certi trattamenti antinfiammatori, in impianti dentali e in nanomedicina come vettore per farmaci e termoterapia. In ottica, i sottili film d'oro riflettono l'infrarosso, usati nelle visiere degli astronauti e nei satelliti. In gioielleria e monete rimane il simbolo universale di purezza e permanenza.",
+        "I composti principali includono il cloruro d'oro(III) (AuCl₃), il tetracloroaurato di sodio (Na[AuCl₄]) usato in chimica analitica e catalisi, l'oro colloidale nelle nanotecnologie e i complessi aurotiomalato di sodio (farmaci antireumatici). Le nanoparticelle d'oro (AuNPs) trovano applicazione in biosensori, diagnostica e come nanocatalizzatori."
+      ],
+      "name": "Oro"
+    },
+    "element-080-mercure": {
+      "summary": "Unico metallo liquido a temperatura ambiente, il mercurio è affascinante ma pericoloso, simbolo della doppia natura della scienza tra scoperta e rischio.",
+      "paragraphs": [
+        "Simbolo «Hg» (dal latino hydrargyrum, «argento liquido»), numero atomico 80, il mercurio è un metallo argenteo liquido a temperatura ambiente, denso (13,53 g/cm³), volatile e buon conduttore di elettricità. Noto dall'antichità, compare in scritture cinesi e indiane antiche ed era spesso associato al dio romano Mercurio per la sua mobilità e lucentezza.",
+        "Il mercurio si forma nelle stelle massive attraverso il processo-s e il processo-r. Risulta dai cicli di nucleosintesi degli elementi pesanti, insieme all'oro e al piombo. Le tracce trovate in alcuni meteoriti mostrano che faceva già parte della nebulosa protosolare. La sua relativa scarsità sulla Terra riflette la volatilità dell'elemento durante la formazione del pianeta.",
+        "Sulla Terra il mercurio è raro (circa 0,08 ppm nella crosta). Si trova principalmente come cinabro (HgS), un solfuro rosso brillante e il principale minerale sfruttato sin dall'antichità. I giacimenti più famosi si trovano ad Almadén (Spagna) e Idria (Slovenia), due luoghi sfruttati per oltre 2000 anni. Il mercurio si ottiene riscaldando il cinabro, che libera il metallo come vapore condensato.",
+        "Il mercurio ha avuto a lungo una grande importanza industriale e scientifica. È stato usato nei termometri, barometri, lampade a scarica e interruttori grazie alla sua fluidità ed espansione regolare. In chimica forma amalgame (leghe con altri metalli), specialmente per l'estrazione dell'oro o per i restauri dentali, applicazioni ora abbandonate per la sua tossicità. Ha anche svolto un ruolo importante in metrologia ed elettricità. Oggi i suoi usi sono strettamente regolamentati.",
+        "Il solfuro di mercurio (HgS) esiste in due forme: rossa (cinabro) e nera (metacinabro). Il cloruro di mercurio(II) (HgCl₂) e il cloruro di mercurio(I) (Hg₂Cl₂) erano usati in medicina ma ora vietati. I composti organomercurici (come il metilmercurio) sono noti per la loro alta tossicità: si bioaccumulano e causano gravi disturbi neurologici, come dimostrò tragicamente il disastro di Minamata in Giappone.",
+        "Il mercurio è un elemento con due facce: affascinante per la sua bellezza e singolarità fisica, ma pericoloso per la sua chimica. Metallo liquido che simboleggiava l'agilità per gli antichi, si è rivelato un veleno furtivo per gli esseri viventi. Nato dalle stelle ed estratto dal cinabro rosso, ha accompagnato la storia umana come specchio del nostro rapporto con la materia, tra dominio ed eccesso."
+      ],
+      "name": "Mercurio"
+    },
+    "element-081-thallium": {
+      "summary": "Metallo pesante altamente tossico nato dal processo-s, il tallio sopravvive oggi in nicchie controllate dell'ottica e della medicina nucleare.",
+      "paragraphs": [
+        "Simbolo «Tl», numero atomico 81, il tallio è un metallo grigio-bluastro, morbido, malleabile e che fonde a 304 °C. Si ossida rapidamente in aria. Scoperto nel 1861 dal chimico britannico William Crookes tramite spettroscopia, il nome deriva dal greco thallos, «germoglio verde», per la brillante riga verde del suo spettro. Fu uno dei primi elementi scoperti tramite analisi spettrale.",
+        "Il tallio si produce nelle supernovae e nelle collisioni di stelle di neutroni attraverso il processo lento di cattura di neutroni (processo-s). I suoi isotopi naturali, ²⁰³Tl e ²⁰⁵Tl, sono stabili, ma il tallio radioattivo (come ²⁰¹Tl) viene usato come tracciante medico. La sua presenza nei meteoriti metallici e pietrosi attesta la sua formazione cosmica.",
+        "Sulla Terra il tallio è raro (0,7 ppm nella crosta). Si trova principalmente nei minerali di rame, piombo e zinco. Si ottiene generalmente come sottoprodotto metallurgico della raffinazione di piombo e zinco.",
+        "Il tallio ha avuto molti usi, ora in gran parte abbandonati per la sua estrema tossicità. Era impiegato nei veleni per topi e insetticidi fino agli anni '70. In ottica, i suoi composti servivano per vetri ad alto indice e cristalli infrarossi. In medicina nucleare, il ²⁰¹Tl viene usato per la scintigrafia cardiaca perché si comporta come il potassio nel corpo.",
+        "I composti principali includono il solfato di tallio (Tl₂SO₄), un tempo famigerato come veleno, il cloruro di tallio (TlCl) e gli alogenuri misti come TlBrI usati in optoelettronica. Tutti questi composti richiedono una manipolazione rigorosa."
+      ],
+      "name": "Tallio"
+    },
+    "element-082-plomb": {
+      "summary": "Metallo stellare ancestrale, il piombo rimane utile ma strettamente regolamentato per una tossicità che ha segnato la storia umana.",
+      "paragraphs": [
+        "Simbolo «Pb» (dal latino plumbum), numero atomico 82, il piombo è un metallo grigio-bluastro, molto denso (11,34 g/cm³), morbido, malleabile e facile da fondere (a soli 327 °C). Noto dalla preistoria, fu tra i primi metalli sfruttati dall'uomo. La sua bassa reattività chimica e facilità di fusione lo resero materiale preferito per tubi, pigmenti e armi, finché non ne fu compresa la tossicità.",
+        "Il piombo è uno dei metalli pesanti prodotti naturalmente alla fine delle catene di decadimento radioattivo di uranio e torio, e anche attraverso il processo-s nelle stelle giganti rosse. È uno degli «elementi terminali» della nucleosintesi stellare. Il piombo stabile (²⁰⁴Pb, ²⁰⁶Pb, ²⁰⁷Pb, ²⁰⁸Pb) registra le età nucleari dell'universo.",
+        "Sulla Terra il piombo è moderatamente abbondante (circa 14 ppm nella crosta), principalmente come galena (PbS). Si trova anche in cerussite (PbCO₃) e anglesite (PbSO₄). I maggiori depositi sono in Australia, Cina e Perù. È uno dei metalli più estratti della storia.",
+        "Il piombo è stato usato in idraulica, coperture, munizioni e batterie piombo-acido, ancora ampiamente usate nei veicoli. Il suo potere schermante contro le radiazioni lo rende materiale protettivo preferito in laboratori e ospedali. In passato compariva anche nelle vernici, nei tubi domestici e nella benzina con piombo (per aumentare il numero di ottano), usi ora vietati.",
+        "I composti principali includono il diossido di piombo (PbO₂), il carbonato di piombo (PbCO₃) e il cromato di piombo (PbCrO₄), un tempo usati come pigmenti. Il tetraetilpiombo (Pb(C₂H₅)₄), additivo della benzina, fu un'innovazione industriale ma anche una catastrofe ambientale."
+      ],
+      "name": "Piombo"
+    },
+    "element-083-bismuth": {
+      "summary": "Lucente ma gentile, il bismuto è un metallo pesante con cristalli iridescenti, chimica benigna ed espansione al solidificarsi che lo rendono unico tra gli elementi densi.",
+      "paragraphs": [
+        "Simbolo «Bi», numero atomico 83, il bismuto è un metallo bianco-argenteo con iridescenza rosata, denso (9,78 g/cm³), fragile e cattivo conduttore. Fonde a 271 °C e si espande solidificando, comportamento raro condiviso con l'acqua. Noto dal Medioevo e a lungo confuso con stagno e piombo, fu riconosciuto come elemento distinto nel XVI secolo da Georgius Agricola.",
+        "Il bismuto segna il termine della nucleosintesi stellare. Si forma attraverso il processo-s nelle giganti rosse ed è tra gli ultimi elementi quasi stabili prima della radioattività spontanea. Il suo isotopo principale, ²⁰⁹Bi, è debolmente radioattivo con emivita superiore a 10¹⁹ anni, oltre un miliardo di volte l'età dell'universo.",
+        "Sulla Terra il bismuto è scarso (circa 0,2 ppm nella crosta) e di solito compare con minerali di piombo, rame e argento. La Cina è il principale produttore. Nonostante l'alta densità e la parentela chimica con metalli tossici, il bismuto è biocompatibile e non bioaccumulabile.",
+        "Il bismuto sostituisce facilmente il piombo in leghe a basso punto di fusione, munizioni non tossiche, saldature elettroniche e vetri ottici speciali. Il subsalicilato di bismuto tratta i disturbi gastrointestinali. La sua espansione al solidificarsi lo rende prezioso nelle leghe fusibili per dispositivi di sicurezza termica. I cristalli iridescenti a gradini sono diventati icone dell'arte e della divulgazione scientifica.",
+        "I composti principali includono il subsalicilato di bismuto, l'ossido di bismuto(III) (Bi₂O₃) e i subnitrati (BiONO₃) usati in farmacia. Il pentacloruro di bismuto (BiCl₅) e il tribromuro (BiBr₃) compaiono nella sintesi organica."
+      ],
+      "name": "Bismuto"
+    },
+    "element-084-polonium": {
+      "summary": "Sfuggente e formidabile, il polonio è un metallo ultra-raro la cui intensa radioattività unisce catastrofi stellari agli albori della scienza nucleare.",
+      "paragraphs": [
+        "Simbolo «Po», numero atomico 84, il polonio è un metallo morbido e argenteo, estremamente raro e altamente radioattivo. Tutti i suoi isotopi sono instabili; il più stabile, ²¹⁰Po, ha un'emivita di 138 giorni. Marie Curie lo chiamò in onore della sua Polonia natale, rendendo la sua scoperta il primo elemento identificato esclusivamente attraverso la radioattività.",
+        "Il polonio si forma nelle supernovae e negli ambienti di stelle di neutroni attraverso il processo-r. Sulla Terra sorge anche come prodotto di decadimento di uranio e radon. Effimero per natura, si genera continuamente nelle rocce radioattive ma scompare quasi immediatamente.",
+        "Su tutto il pianeta, il polonio esiste solo in tracce, dell'ordine di pochi centinaia di microgrammi in tutta la crosta in qualsiasi momento. Si trova nei minerali di uranio e torio, dai quali si isola con complesse procedure radiochimica. In laboratorio si produce irradiando bismuto con neutroni. La sua intensa radioattività alfa lo rende pericoloso anche in quantità microscopiche.",
+        "Gli usi civili del polonio sono estremamente limitati. Alimenta alcuni generatori termoelettrici a radioisotopi (RTG) e ha servito in sorgenti antistatiche. La sua manipolazione è strettamente regolamentata poiché inalare o ingerire quantità minime è letale.",
+        "I composti del polonio sono pochi e poco studiati per ragioni di sicurezza. Include il diossido di polonio (PoO₂) e vari alogenuri (PoCl₂, PoCl₄). La chimica assomiglia a quella del tellurio e del bismuto."
+      ],
+      "name": "Polonio"
+    },
+    "element-085-astate": {
+      "summary": "Simbolo «At», numero atomico 85, l'astato è un alogeno radioattivo la cui chimica si colloca tra lo iodio e il tellurio.",
+      "paragraphs": [
+        "È solido a temperatura ambiente e probabilmente un metalloide, condizione singolare per un alogeno. Scoperto nel 1940 all'Università di Berkeley da Dale R. Corson, K. R. MacKenzie ed Emilio Segrè, fu chiamato astato dal greco astatos, «instabile». Ogni isotopo è radioattivo e nessuno ha un'emivita superiore a poche ore.",
+        "L'astato si forma nelle supernovae e nelle collisioni di stelle di neutroni durante il processo-r, ma decade immediatamente in elementi più stabili come bismuto o polonio. Sulla Terra si ricrea continuamente in quantità infinitesimali per il decadimento naturale di uranio e torio, ma volatilizza o si trasforma quasi istantaneamente.",
+        "L'astato è l'elemento di occorrenza naturale più raro della crosta terrestre: in qualsiasi momento il pianeta ne contiene in totale solo circa un microgrammo. In laboratorio si produce artificialmente bombardando bismuto con particelle alfa per ottenere l'isotopo ²¹¹At (emivita 7,2 ore).",
+        "L'astato non ha applicazioni industriali o chimiche convenzionali, ma è di grande interesse in medicina nucleare. Il ²¹¹At, emettitore alfa, è studiato per terapie mirate contro il cancro (TAT, terapia alfa mirata). Il suo vantaggio è un potere distruttivo altamente localizzato capace di uccidere cellule tumorali senza danneggiare i tessuti sani vicini.",
+        "I composti dell'astato sono poco noti, ma sono stati identificati alcuni alogenuri (AtCl, AtBr, AtI) e il acido astatonico (HAtO₃). L'astato forma anche legami covalenti stabili con certi metalli pesanti. La maggior parte delle sue proprietà chimiche è dedotta da calcoli teorici."
+      ],
+      "name": "Astato"
+    },
+    "element-086-radon": {
+      "summary": "Simbolo «Rn», numero atomico 86, il radon è un gas nobile pesante, radioattivo e incolore.",
+      "paragraphs": [
+        "A differenza dei suoi cugini stabili come argon o xenon, è instabile e decade emettendo particelle radioattive. Raramente menzionato nella vita quotidiana, è presente sulla Terra e a volte nelle nostre case, dove può rappresentare un rischio per la salute.",
+        "Come gli altri gas nobili pesanti, il radon ha le sue origini nella nucleosintesi stellare ed eventi catastrofici come le supernovae. Si distingue per la sua instabilità: tutti i suoi isotopi sono radioattivi, quindi il radon cosmico scompare rapidamente e deve essere continuamente rigenerato dal decadimento di elementi più pesanti.",
+        "Sulla Terra il radon si produce naturalmente per il decadimento radioattivo di uranio e torio presenti nelle rocce e nei suoli. L'isotopo più stabile e comune è il radon-222, con emivita di circa 3,8 giorni. Filtra dal sottosuolo, specialmente nelle regioni granitiche o vulcaniche, e può accumularsi in spazi chiusi (case, scantinati, miniere). I suoi prodotti di decadimento radioattivi possono essere inalati e contribuire al cancro del polmone.",
+        "A causa della sua radioattività, il radon non ha usi industriali comuni. È stato usato in passato in medicina, notevolmente nelle prime forme di radioterapia. Il radon è ancora oggetto di studio in geologia (può tracciare la presenza di uranio) e in sismologia.",
+        "Come gli altri gas nobili, il radon è in gran parte inerte. In condizioni sperimentali può formare pochi composti rari come il difluoruro di radon (RnF₂). In pratica rimane un gas monoatomico, sfuggente ed effimero."
+      ],
+      "name": "Radon"
+    },
+    "element-087-francium": {
+      "summary": "Metallo alcalino tanto raro quanto effimero, il francio è un elemento radioattivo nato dal radio che scompare in pochi minuti.",
+      "paragraphs": [
+        "Simbolo «Fr», numero atomico 87, il francio è un metallo alcalino altamente radioattivo, affine al cesio e al rubidio. La sua esistenza è così fugace che non è mai stato osservato nessun campione macroscopico. Scoperto nel 1939 al laboratorio Curie dalla fisica Marguerite Perey, ex assistente di Marie Curie, fu chiamato francio in tributo alla Francia. È l'ultimo elemento scoperto in natura.",
+        "Il francio si forma solo fuggevolmente nelle supernovae e nelle reazioni di fissione naturale di torio e uranio. Appartiene alla catena di decadimento dell'attinio: ogni atomo di francio nasce dal radio e si trasforma in astato o radon dopo pochi minuti. Nell'universo esiste solo come tracce momentanee.",
+        "Sulla Terra il francio è uno degli elementi più rari: si stima che non esistano più di 20-30 grammi nell'intera crosta in qualsiasi momento. La sua breve emivita (22 minuti per l'isotopo più stabile, ²²³Fr) impedisce qualsiasi accumulo.",
+        "Il francio non ha applicazioni industriali o mediche. È studiato esclusivamente in fisica atomica per testare modelli di struttura elettronica relativistica e le simmetrie fondamentali dell'interazione debole. Esperimenti su poche migliaia di atomi intrappolati con laser hanno affinato le previsioni teoriche.",
+        "Nessun composto stabile del francio è mai stato isolato. Per analogia con i vicini, si prevedono ioni Fr⁺ e sali come il cloruro di francio (FrCl) o l'idrossido di francio (FrOH), ancora più basici di quelli del cesio."
+      ],
+      "name": "Francio"
+    },
+    "element-088-radium": {
+      "summary": "Metallo alcalino-terroso estremamente radioattivo, il radio brilla di uno splendore storico tra le scoperte dei Curie e i rischi per la salute.",
+      "paragraphs": [
+        "Simbolo «Ra», numero atomico 88, il radio è un metallo alcalino-terroso bianco-argenteo che brilla quando appena isolato ma si scurisce in aria per la formazione di un ossido. Altamente radioattivo e chimicamente vicino al bario e al calcio. Scoperto nel 1898 da Pierre e Marie Curie dalla pechblenda (uraninite), fu isolato nella forma metallica nel 1910 da Marie Curie e André Debierne. Il nome deriva dal latino radius, «raggio».",
+        "Il radio è un prodotto transitorio del decadimento di uranio e torio. Nelle stelle massive si forma durante il processo-r, ma non dura mai a lungo: i suoi isotopi decadono rapidamente verso radon, francio e piombo.",
+        "Sulla Terra il radio è raro (circa 1 parte per 10¹² di uranio), presente solo in tracce nei minerali di uranio, specialmente nella pechblenda. L'isotopo più stabile, ²²⁶Ra, ha un'emivita di 1600 anni.",
+        "Il radio fu dapprima celebrato come una meraviglia scientifica. La sua luminescenza spontanea portò al suo uso nelle vernici fosforescenti per orologi e strumenti militari nel primo '900. Fu anche usato nelle prime radioterapie prima di essere sostituito dal cobalto-60. Oggi non ha più usi industriali comuni. Il radio emette spontaneamente radon (²²²Rn), un gas nobile radioattivo che si accumula nelle rocce.",
+        "I composti del radio sono analoghi a quelli del bario: cloruro di radio (RaCl₂), bromuro (RaBr₂), carbonato (RaCO₃) e solfato (RaSO₄). Tutti sono altamente radioattivi e luminescenti."
+      ],
+      "name": "Radio"
+    },
+    "element-089-actinium": {
+      "summary": "Attinide raro e intensamente radioattivo, l'attinio unisce la nucleosintesi stellare alle terapie nucleari più mirate.",
+      "paragraphs": [
+        "Simbolo «Ac», numero atomico 89, l'attinio è un metallo attinide argenteo-grigio scoperto da André-Louis Debierne all'inizio del XX secolo. Presente solo in tracce nella crosta terrestre, fu tra i primi elementi radioattivi identificati dopo uranio e torio.",
+        "Cosmicamente, l'attinio è forgiato dai processi di cattura di neutroni in ambienti stellari estremi. Sulla Terra compare solo in quantità infinitesimali nei minerali di uranio e torio, dove appare come prodotto intermedio in certe catene di decadimento.",
+        "I suoi usi rimangono rari e strettamente regolamentati. L'isotopo ²²⁵Ac, con emivita di circa dieci giorni, è studiato come sorgente per la terapia alfa mirata contro certi tumori, mentre il ²²⁷Ac serve ancora occasionalmente come sorgente di neutroni.",
+        "Chimicamente, l'attinio adotta quasi esclusivamente lo stato di ossidazione +3 in soluzione, imitando i lantanidi trivalenti. Composti come Ac₂O₃, AcCl₃ o Ac(NO₃)₃ illuminano la chimica degli attinidi.",
+        "L'attinio è quindi sia un prezioso testimone delle reazioni stellari che uno strumento di ricerca all'avanguardia, ma la sua estrema radioattività impone protocolli radiologici rigorosi."
+      ],
+      "name": "Attinio"
+    },
+    "element-090-thorium": {
+      "summary": "Attinide grigio-argenteo a radioattività naturale, il torio coniuga origini stellari con la promessa del ciclo di combustibile torio-uranio.",
+      "paragraphs": [
+        "Simbolo «Th», numero atomico 90, il torio è un metallo attinide grigio-argenteo, malleabile e duttile. Il suo isotopo dominante ²³²Th ha un'emivita di circa 14 miliardi di anni, conferendogli una presenza diffusa ma persistente nella crosta terrestre.",
+        "Cosmicamente si forgia in eventi di cattura rapida di neutroni (processo-r) come supernovae o fusioni di stelle di neutroni. Sulla Terra è presente sin dalla formazione planetaria, concentrandosi in minerali pesanti come la monazite e la thorite.",
+        "Storicamente il torio fu usato nelle reticelle delle lampade a gas, nei vetri ottici ad alto indice e in certi elettrodi per la saldatura. Oggi il suo principale interesse risiede nel ciclo di combustibile torio-uranio-233, esplorato per reattori nucleari più sicuri e abbondanti.",
+        "Chimicamente il torio favorisce lo stato di ossidazione +4 in soluzione e forma composti come ThO₂, Th(NO₃)₄ e ThCl₄. Il diossido di torio è notevole per il suo punto di fusione estremamente alto e la sua stabilità.",
+        "Come attinide antico e contemporaneo, il torio richiede protocolli di manipolazione adattati alla sua radioattività. Il suo potenziale energetico fertile continua a guidare la ricerca sui combustibili nucleari alternativi."
+      ],
+      "name": "Torio"
+    },
+    "element-091-protactinium": {
+      "summary": "Attinide denso e altamente radioattivo, il protoattinio è un elemento di ricerca che emerge come prodotto transitorio delle catene di decadimento dell'uranio.",
+      "paragraphs": [
+        "Simbolo «Pa», numero atomico 91, il protoattinio è un metallo attinide grigio-argenteo il cui isotopo naturale più abbondante, ²³¹Pa, ha un'emivita di circa 32.760 anni.",
+        "Ha origine in eventi di cattura rapida di neutroni in ambienti stellari prima di essere intrappolato nel materiale primordiale del Sistema Solare. Nella crosta terrestre sorge principalmente dalle catene di decadimento di uranio e torio.",
+        "A causa della sua scarsità, tossicità e radioattività, il protoattinio non ha praticamente nessun uso industriale. È studiato nella ricerca nucleare come tracciante e come intermedio nei cicli di combustibile torio-uranio.",
+        "La sua chimica è dominata dallo stato di ossidazione +5, sebbene gli stati +4, +3 e +2 compaiano in condizioni specifiche. I composti caratterizzati in laboratorio includono Pa₂O₅, PaO₂ e vari alogenuri e nitrati.",
+        "Elemento raro ma scientificamente prezioso, il protoattinio illumina le serie di decadimento naturali e certe tecniche di datazione."
+      ],
+      "name": "Protoattinio"
+    },
+    "element-092-uranium": {
+      "summary": "Metallo pesante e naturalmente radioattivo, l'uranio alimenta l'energia nucleare richiedendo al contempo severi controlli di sicurezza e gestione dei rifiuti.",
+      "paragraphs": [
+        "Simbolo «U», numero atomico 92, l'uranio è un metallo denso con leggera lucentezza metallica e radioattività intrinseca. I suoi isotopi dominanti ²³⁸U e ²³⁵U hanno emivite di 4,47×10⁹ e 7,04×10⁸ anni rispettivamente, rendendolo un tracciante geologico di lunga durata.",
+        "Cosmicamente, l'uranio è forgiato attraverso il processo-r in ambienti stellari estremi, supernovae o fusioni di stelle di neutroni. Sulla Terra è presente sin dalla nascita del pianeta, con una media di circa 2,8 ppm nella crosta.",
+        "Il suo uso più importante è energetico: dopo arricchimento per aumentare la frazione di ²³⁵U, alimenta la grande maggioranza dei reattori nucleari commerciali. Compare anche nelle armi nucleari, in certi blindaggi di uranio impoverito e nelle catene di irradiazione che producono isotopi medici o industriali.",
+        "Chimicamente, l'uranio è un metallo reattivo che adotta comunemente gli stati U⁴⁺ e UO₂²⁺ (uranile). Compare come diossido di uranio UO₂, la forma standard del combustibile, oltre ad altri ossidi, nitrati e fluoruri; l'esafluoruro UF₆ è la forma gassosa usata per l'arricchimento.",
+        "Elemento a duplice natura, l'uranio è simultaneamente una risorsa energetica e una fonte di rischio radiologico, ambientale e geopolitico che richiede solide salvaguardie. Le riserve note sono sufficienti per il parco attuale e previsto di reattori."
+      ],
+      "name": "Uranio"
+    },
+    "element-093-neptunium": {
+      "summary": "Metallo transuranico argenteo e radioattivo, il nettunio collega la chimica dell'uranio con la nascita del plutonio nel ciclo nucleare.",
+      "paragraphs": [
+        "Simbolo «Np», numero atomico 93, il nettunio è un metallo denso e radioattivo con modesta malleabilità. Primo elemento transuranico identificato, fu scoperto nel 1940 a Berkeley da Edwin McMillan e Philip Abelson. Il suo isotopo più stabile ²³⁷Np ha un'emivita di circa 2,14 milioni di anni.",
+        "Cosmicamente può formarsi per catture di neutroni in ambienti stellari, ma le sue brevi emivite impediscono qualsiasi accumulo primordiale. Sulla Terra è principalmente artificiale, prodotto irradiando uranio nei reattori tramite la catena ²³⁸U → ²³⁹Np → ²³⁹Pu.",
+        "Il nettunio non ha applicazioni industriali di massa, ma svolge un ruolo scientifico significativo. Serve come materiale di riferimento per studi di radioprotection e chimica degli attinidi, come precursore del plutonio-238 usato nei generatori radioisotopici per sonde spaziali.",
+        "Chimicamente adotta stati di ossidazione multipli da +3 a +7. Forma ossidi come NpO₂, alogenuri come NpF₆ e NpCl₄, e complessi analoghi a quelli di uranio e plutonio.",
+        "Come primo anello della serie dei transuranidi, il nettunio illumina la transizione tra l'uranio sorgente e il plutonio che genera."
+      ],
+      "name": "Nettunio"
+    },
+    "element-094-plutonium": {
+      "summary": "Attinide denso e altamente radioattivo, il plutonio incarna sfide globali in energia, strategia militare e sicurezza.",
+      "paragraphs": [
+        "Simbolo «Pu», numero atomico 94, il plutonio è un metallo attinide denso che appare argenteo in forma metallica ma viene comunemente manipolato come ossidi. I suoi isotopi principali ²³⁹Pu (emivita ≈ 24.110 anni) e ²³⁸Pu (emivita ≈ 87,7 anni) mostrano intensa radioattività.",
+        "Scoperto e isolato nei primi anni '40 dai team di Glenn Seaborg e Edwin McMillan, il plutonio compare solo in tracce naturali. È principalmente prodotto nei reattori nucleari per cattura di neutroni sull'²³⁸U: ²³⁸U → ²³⁹Np → ²³⁹Pu.",
+        "I suoi usi sono nettamente contrapposti: il ²³⁹Pu è un isotopo fissile centrale nelle armi nucleari e nel combustibile MOX, mentre il ²³⁸Pu alimenta i generatori termoelettrici a radioisotopi per l'esplorazione spaziale.",
+        "Chimicamente, il plutonio abbraccia vari stati di ossidazione (principalmente da +3 a +6) e forma un'ampia gamma di composti: il diossido di plutonio PuO₂, la forma stabile per combustibile e stoccaggio, alogenuri, nitrati e complessi in soluzione.",
+        "Strategico ma problematico, il plutonio concentra un immenso potenziale energetico e distruttivo insieme a importanti sfide di sicurezza, gestione dei rifiuti e diplomazia."
+      ],
+      "name": "Plutonio"
+    },
+    "element-095-americium": {
+      "summary": "Attinide sintetico, argenteo e radioattivo, l'americio combina applicazioni mirate con esigenti richieste di radioprotection.",
+      "paragraphs": [
+        "Simbolo «Am», numero atomico 95, l'americio è un attinide sintetico di aspetto argenteo quando ridotto a metallo. Gli isotopi dominanti ²⁴¹Am (emivita ≈ 432 anni) e ²⁴³Am (emivita ≈ 7.370 anni) lo rendono un elemento altamente radioattivo, scarso in natura ma abbondante come sottoprodotto dei reattori.",
+        "Scoperto nel 1944 dal team di Glenn Seaborg e chiamato in onore del continente americano, l'americio sorge principalmente per catture successive di neutroni su plutonio e altri attinidi nei reattori.",
+        "Nonostante la sua radiotossicità, il ²⁴¹Am alimenta usi reali: sorgenti ionizzanti nei rilevatori di fumo, sorgenti di neutroni Am-Be per calibrazione, prospezione industriale e geofisica, oltre a ruoli nella ricerca di chimica degli attinidi.",
+        "Chimicamente l'americio favorisce lo stato di ossidazione +3 in soluzione, formando composti come Am₂O₃, AmO₂, nitrati e alogenuri. La sua chimica, affine a quella dei lantanidi, è fondamentale per gli studi di separazione degli attinidi.",
+        "Elemento tipicamente antropogenico, l'americio consente strumenti specializzati richiedendo al contempo rigorose salvaguardie sanitarie contro i rischi di inalazione o ingestione."
+      ],
+      "name": "Americio"
+    },
+    "element-096-curium": {
+      "summary": "Attinide sintetico denso e altamente radioattivo, il curio onora i Curie servendo sia come fonte energetica che come strumento di ricerca.",
+      "paragraphs": [
+        "Scoperto nel 1944 da Glenn Seaborg, Ralph James e Albert Ghiorso all'Università di California, Berkeley, il curio (simbolo Cm, numero atomico 96) è un metallo attinide argenteo e denso, più duro dell'americio, con isotopi notevoli come ²⁴²Cm, ²⁴⁴Cm e ²⁴⁸Cm.",
+        "Assente dalla crosta terrestre, il curio si produce artificialmente nei reattori nucleari attraverso catture successive di neutroni su plutonio e americio seguite da decadimenti beta.",
+        "I suoi usi sono altamente specializzati: il ²⁴⁴Cm e il ²⁴²Cm hanno alimentato i primi generatori termoelettrici a radioisotopi delle sonde NASA, e le sue emissioni alfa e di neutroni lo rendono prezioso in laboratorio.",
+        "Chimicamente il curio adotta più spesso lo stato di ossidazione +3, formando ossidi, alogenuri, nitrati e complessi acquosi che aiutano gli scienziati a comprendere i cicli del combustibile nucleare.",
+        "Come pietra miliare tra gli attinidi sintetici, il curio incarna sia la promessa che le sfide della moderna chimica nucleare."
+      ],
+      "name": "Curio"
+    },
+    "element-097-berkelium": {
+      "summary": "Attinide artificiale raro, il berkelio è apprezzato come trampolino scientifico verso elementi più pesanti.",
+      "paragraphs": [
+        "Identificato nel 1949 dal team di Glenn T. Seaborg all'Università di California, Berkeley, il berkelio (simbolo Bk, numero atomico 97) è un metallo attinide radioattivo, argenteo e malleabile. Il suo isotopo più stabile, ²⁴⁷Bk, ha un'emivita di circa 1.380 anni.",
+        "Completamente sintetico, è prodotto in reattori ad alto flusso per catture successive di neutroni su curio o americio seguite da decadimenti beta.",
+        "Le sue applicazioni sono principalmente scientifiche: come precursore del californio, il berkelio-249 ha consentito la sintesi di elementi superpesanti come il tennessine.",
+        "Chimicamente favorisce lo stato di ossidazione +3, formando ossidi come Bk₂O₃, alogenuri come BkCl₃ o BkF₃, e complessi acquosi.",
+        "Prodotto in pochi laboratori specializzati, il berkelio rimane uno strumento scientifico fondamentale per creare elementi più pesanti."
+      ],
+      "name": "Berkelio"
+    },
+    "element-098-californium": {
+      "summary": "Il californio è un attinide sintetico ultra-raro apprezzato come sorgente compatta di neutroni nonostante il costo elevato e i rischi radiologici.",
+      "paragraphs": [
+        "Simbolo «Cf», numero atomico 98, il californio è un attinide transuranico sintetico. È altamente radioattivo ed esiste solo attraverso la produzione umana in quantità estremamente limitate. Il ²⁵²Cf è l'isotopo più usato industrialmente, mentre il ²⁵¹Cf è il più stabile (emivita ≈ 898 anni).",
+        "Sulla Terra è interamente prodotto per prolungata irradiazione di neutroni su attinidi in reattori ad alto flusso o sintetizzato in acceleratori. Fu creato per la prima volta a Berkeley nel 1950.",
+        "La proprietà più sfruttata è l'emissione di neutroni del ²⁵²Cf. Questo lo rende prezioso come sorgente portatile di neutroni per radiografia neutronica, analisi per attivazione neutronica, rilevamento di minerali e idrocarburi e avviamento di reattori.",
+        "Chimicamente si comporta come gli altri attinidi pesanti, adottando preferibilmente lo stato di ossidazione +3 in soluzione e formando ossidi (Cf₂O₃), alogenuri e nitrati in laboratorio.",
+        "Il californio è un materiale di nicchia di alto valore scientifico e tecnologico: prodotto in quantità minime, serve come sorgente di neutroni indispensabile in diversi domini industriali e scientifici."
+      ],
+      "name": "Californio"
+    },
+    "element-099-einsteinium": {
+      "summary": "Nato dalle esplosioni nucleari, l'einstenio è un attinide sintetico riservato alla ricerca fondamentale sugli attinidi pesanti.",
+      "paragraphs": [
+        "Simbolo «Es», numero atomico 99, l'einstenio è un metallo attinide argenteo e radioattivo prodotto artificialmente in quantità molto ridotte. Scoperto nel 1952 nelle ceneri della prima esplosione termonucleare americana (Ivy Mike), il suo isotopo più stabile è il ²⁵²Es con emivita di circa 471 giorni.",
+        "L'einstenio non si trova naturalmente sulla Terra; è completamente sintetico. Si forma in esplosioni nucleari o in reattori con flussi di neutroni estremamente alti.",
+        "Le applicazioni sono essenzialmente scientifiche. La sua intensa radioattività e la produzione minuscola (pochi microgrammi al massimo) lo limitano alla ricerca sugli attinidi pesanti e alla sintesi di elementi superpesanti: l'einstenio fu usato per produrre il mendelevio (101).",
+        "Adotta principalmente lo stato di ossidazione +3 in soluzione, formando ossidi (Es₂O₃), alogenuri e complessi. Per via della forte emissione alfa, si autoriscalda a temperatura ambiente.",
+        "L'einstenio è un simbolo della scienza nucleare del XX secolo: nato nel fuoco di un'esplosione termonucleare e nominato in onore di Albert Einstein."
+      ],
+      "name": "Einstenio"
+    },
+    "element-100-fermium": {
+      "summary": "Attinide sintetico nato dal test termonucleare Ivy Mike, il fermio onora Enrico Fermi ed esiste solo come isotopi altamente radioattivi.",
+      "paragraphs": [
+        "Simbolo Fm, numero atomico 100, il fermio è un metallo attinide radioattivo scoperto nel 1952 nelle ceneri dell'esplosione termonucleare Ivy Mike insieme all'einstenio, e nominato in onore di Enrico Fermi. Il suo isotopo più stabile, ²⁵⁷Fm, ha un'emivita di circa 100 giorni.",
+        "Compare solo quando esplosioni nucleari o la prolungata irradiazione di neutroni su curio o plutonio in reattori ad alto flusso innescano catture successive di neutroni e decadimenti beta.",
+        "Come l'einstenio, non ha uso industriale o medico: vengono prodotte solo quantità minime, destinate principalmente alla ricerca fondamentale sugli attinidi pesanti.",
+        "La sua chimica è dominata dallo stato di ossidazione +3, formando composti come Fm₂O₃ o FmCl₃; l'intensa radioattività scalda perfino i campioni più piccoli.",
+        "Nato in condizioni estreme e assente in natura, il fermio incarna la pura curiosità scientifica estendendo la comprensione umana della materia oltre ciò che la Terra offre."
+      ],
+      "name": "Fermio"
+    },
+    "element-101-mendelevium": {
+      "summary": "Creato atomo per atomo nel 1955 a Berkeley, il mendelevio onora Dmitri Mendeleev e sopravvive solo come fugaci tracce radioattive.",
+      "paragraphs": [
+        "Simbolo Md, numero atomico 101, il mendelevio è un metallo attinide radioattivo scoperto nel 1955 all'Università di California, Berkeley dal team di Albert Ghiorso con Glenn Seaborg. Il suo isotopo più stabile, ²⁵⁸Md, ha un'emivita di circa 51 giorni.",
+        "Questo elemento puramente artificiale si produce bombardando einstenio-253 con ioni di elio (⁴He) in un acceleratore di particelle, un esperimento pietra miliare che creò un nuovo elemento atomo per atomo.",
+        "Le sue applicazioni sono confinate alla ricerca: fabbricato in milionesimi di grammo, il mendelevio aiuta a studiare la stabilità nucleare e la chimica degli attinidi estremi.",
+        "La sua chimica è dominata dallo stato di ossidazione +3, sebbene stati +2 siano stati osservati, suggerendo comportamento simile ai lantanidi.",
+        "Come omaggio all'architetto della tavola periodica, il mendelevio simboleggia la combinazione di previsione e scoperta al cuore dell'esplorazione atomica moderna."
+      ],
+      "name": "Mendelevio"
+    },
+    "element-102-nobelium": {
+      "summary": "Attinide transuranico artificiale in onore di Alfred Nobel, il nobelio esiste solo come atomi altamente radioattivi creati in laboratorio.",
+      "paragraphs": [
+        "Il nobelio (simbolo No, numero atomico 102) è un attinide transuranico artificiale riconosciuto ufficialmente nel 1966 e nominato in onore di Alfred Nobel. Tutti gli isotopi noti sono instabili con emivite che vanno da millisecondi a poche ore.",
+        "Il nobelio non ha occorrenza naturale: viene prodotto in laboratori tramite reazioni di fusione o per irradiazione in reattori ad altissimo flusso, ottenendo solo quantità irrisorie.",
+        "Non ha applicazioni industriali né tecnologiche; la produzione limitata e l'intensa radioattività lo confinano alla ricerca fondamentale.",
+        "I pochi studi chimici indicano un comportamento simile agli altri attinidi pesanti con stato di ossidazione +3 dominante; solo composti semplici come alogenuri o ossidi sono stati indagati.",
+        "Il nobelio rimane un elemento di laboratorio, altro traguardo nell'esplorazione degli attinidi e della struttura nucleare."
+      ],
+      "name": "Nobelio"
+    },
+    "element-103-lawrencium": {
+      "summary": "L'ultimo attinide, il laurenzio è un elemento transuranico artificiale nominato in onore di Ernest O. Lawrence.",
+      "paragraphs": [
+        "Il laurenzio (simbolo Lr, numero atomico 103) è un elemento transuranico artificiale radioattivo e l'ultimo membro ufficiale della serie degli attinidi. Fu sintetizzato per la prima volta nei primi anni '60 a Berkeley e nominato in onore del ciclotrone inventore Ernest O. Lawrence.",
+        "Non esiste in natura; si crea fondendo ioni leggeri con bersagli pesanti negli acceleratori o per irradiazione intensa di attinidi in reattori specializzati.",
+        "Non ha ruolo industriale e serve puramente come strumento di ricerca per sondare la chimica e la fisica degli elementi superpesanti.",
+        "La sua chimica rimane in gran parte inesplorata per la sua estrema scarsità; si prevede tuttavia che favorisca uno stato di ossidazione +3 in soluzione.",
+        "Come traguardo simbolico dedicato a un pioniere degli acceleratori, il laurenzio segna il confine tra la chimica classica e lo studio di nuclei ed elettroni in condizioni estreme."
+      ],
+      "name": "Laurenzio"
+    },
+    "element-104-rutherfordium": {
+      "summary": "Elemento superpesante completamente artificiale, il rutherfordio spinge la chimica dei metalli di transizione alle frontiere della fisica nucleare.",
+      "paragraphs": [
+        "Simbolo «Rf», numero atomico 104, il rutherfordio è un elemento superpesante confermato nel 1997 e nominato in onore del fisico Ernest Rutherford, pioniere della scienza nucleare.",
+        "Non esiste naturalmente: ogni atomo viene prodotto in laboratorio collidendo nuclei pesanti. I suoi isotopi sopravvivono solo da pochi secondi a diversi minuti.",
+        "Appartenente al gruppo del titanio e dello zirconio, il rutherfordio si comporta come un tipico metallo di transizione secondo esperimenti condotti su meri atomi.",
+        "Come primo rappresentante della serie degli elementi superpesanti, unisce la chimica familiare dei metalli di transizione all'esplorazione degli effetti relativistici che governano i nuclei più massicci."
+      ],
+      "name": "Rutherfordio"
+    },
+    "element-105-dubnium": {
+      "summary": "Elemento superpesante sintetico confermato nel 1997, il dubnio onora la città scientifica russa di Dubna.",
+      "paragraphs": [
+        "Il dubnio, simbolo «Db» e numero atomico 105, è un elemento superpesante confermato nel 1997. Prende il nome dalla città scientifica di Dubna in Russia, sede dell'Istituto Congiunto per la Ricerca Nucleare.",
+        "È un elemento sintetico prodotto bombardando nuclei pesanti in un acceleratore di particelle. I suoi isotopi decadono entro pochi secondi.",
+        "Il dubnio appartiene alla famiglia dei metalli di transizione del gruppo del tantalio e del niobio. Studi chimici limitati hanno confermato questo comportamento.",
+        "Il dubnio segna un'importante pietra miliare nella ricerca internazionale sugli elementi pesanti."
+      ],
+      "name": "Dubnio"
+    },
+    "element-106-seaborgium": {
+      "summary": "Confermato nel 1993, il seaborgio onora il chimico Glenn T. Seaborg ed estende brevemente la chimica dei metalli di transizione oltre l'uranio.",
+      "paragraphs": [
+        "Il seaborgio, simbolo «Sg» e numero atomico 106, è un elemento superpesante confermato nel 1993. Rende omaggio al chimico americano Glenn T. Seaborg.",
+        "È un elemento artificiale ottenuto per fusione nucleare di nuclei pesanti. Tutti i suoi isotopi sono instabili, con emivite da pochi millisecondi a circa un minuto.",
+        "Il seaborgio appartiene al gruppo del tungsteno e del molibdeno. Pochi esperimenti chimici hanno confermato che condivide alcune delle loro proprietà.",
+        "Il seaborgio è uno dei pochi elementi superpesanti la cui chimica è stata brevemente osservata."
+      ],
+      "name": "Seaborgio"
+    },
+    "element-107-bohrium": {
+      "summary": "Elemento superpesante completamente sintetico, il bohrio onora Niels Bohr.",
+      "paragraphs": [
+        "Il bohrio, simbolo «Bh» e numero atomico 107, è un elemento superpesante confermato nel 1981. Fu nominato in onore del fisico danese Niels Bohr.",
+        "È un elemento artificiale creato negli acceleratori di particelle fondendo nuclei pesanti. I suoi isotopi hanno emivite brevissime, dell'ordine di un secondo o meno.",
+        "Il bohrio appartiene al gruppo del manganese. La sua radioattività impedisce qualsiasi studio chimico approfondito.",
+        "Il bohrio collega simbolicamente i fondamenti della teoria quantistica all'esplorazione attuale della materia."
+      ],
+      "name": "Bohrio"
+    },
+    "element-108-hassium": {
+      "summary": "Elemento superpesante artificiale scoperto nell'Assia, l'hassio esiste solo in laboratorio nonostante proprietà coerenti con il suo gruppo.",
+      "paragraphs": [
+        "L'hassio, simbolo «Hs» e numero atomico 108, è un elemento superpesante confermato nel 1984. Prende il nome dallo stato tedesco dell'Assia.",
+        "È artificiale, prodotto negli acceleratori di particelle fondendo nuclei pesanti. I suoi isotopi hanno emivite da millisecondi a pochi minuti.",
+        "L'hassio appartiene al gruppo dei metalli del ferro (gruppo 8). Esperimenti limitati suggeriscono che si comporti come un metallo di transizione e possa formare ossidi volatili.",
+        "L'hassio conferma che persino gli elementi superpesanti possono mostrare proprietà chimiche coerenti con la loro posizione nella tavola."
+      ],
+      "name": "Hassio"
+    },
+    "element-109-meitnerium": {
+      "summary": "Elemento superpesante sintetico scoperto nel 1982, il meitnerio onora la fisica Lise Meitner.",
+      "paragraphs": [
+        "Il meitnerio, simbolo Mt e numero atomico 109, è un elemento superpesante confermato nel 1982. Fu nominato in onore della fisica Lise Meitner, co-scopritrice della fissione nucleare.",
+        "È un elemento sintetico prodotto bombardando nuclei pesanti in un acceleratore. Gli isotopi osservati decadono in millisecondi.",
+        "Classificato accanto al cobalto e all'iridio, ci si aspetta che sia un metallo di transizione denso e pesante. La sua vita è troppo breve per studi chimici diretti.",
+        "Il meitnerio è un tributo a una figura capitale della fisica nucleare."
+      ],
+      "name": "Meitnerio"
+    },
+    "element-110-darmstadtium": {
+      "summary": "Scoperto nel 1994, il darmstadtio porta il nome della città tedesca dove fu creato.",
+      "paragraphs": [
+        "Il darmstadtio, simbolo Ds e numero atomico 110, è un elemento superpesante confermato nel 1994. Fu nominato in onore di Darmstadt, Germania, dove fu scoperto al Centro GSI Helmholtz per la Ricerca sugli Ioni Pesanti.",
+        "È un elemento artificiale prodotto in laboratorio fondendo nuclei pesanti. I suoi isotopi noti hanno emivite da millisecondi a circa un secondo.",
+        "Classificato tra i metalli di transizione del gruppo del nichel e del platino, potrebbe condividere alcune delle loro proprietà.",
+        "Il darmstadtio è un elemento di breve vita che mette in mostra i risultati della fisica nucleare moderna."
+      ],
+      "name": "Darmstadtio"
+    },
+    "element-111-roentgenium": {
+      "summary": "Elemento superpesante sintetico nominato in onore di Wilhelm Röntgen, il roentgenio sopravvive solo millisecondi in laboratorio.",
+      "paragraphs": [
+        "Scoperto nel 2004, il roentgenio (Rg, numero atomico 111) è un elemento superpesante nominato in onore di Wilhelm Röntgen, il fisico che scoprì i raggi X.",
+        "Completamente sintetico, è prodotto bombardando nuclei pesanti negli acceleratori. Gli isotopi creati decadono entro pochi millisecondi.",
+        "Il roentgenio si trova nella stessa colonna dell'oro e dell'argento nella tavola periodica, suggerendo proprietà metalliche simili.",
+        "Prodotto puro di laboratorio, simboleggia principalmente i limiti attuali della sintesi nucleare."
+      ],
+      "name": "Roentgenio"
+    },
+    "element-112-copernicium": {
+      "summary": "Il copernicio è un elemento superpesante dedicato a Niccolò Copernico che esiste solo fuggevolmente negli acceleratori.",
+      "paragraphs": [
+        "Riconosciuto ufficialmente nel 2009, il copernicio (Cn, numero atomico 112) rende omaggio all'astronomo Niccolò Copernico.",
+        "È prodotto artificialmente fondendo nuclei pesanti negli acceleratori. Anche i suoi isotopi più stabili durano solo pochi minuti.",
+        "Classificato accanto al mercurio, potrebbe condividere certe proprietà metalliche, ma la sua estrema rarità e radioattività impediscono l'osservazione diretta.",
+        "Come traguardo sperimentale, il copernicio serve principalmente come marcatore scientifico."
+      ],
+      "name": "Copernicio"
+    },
+    "element-113-nihonium": {
+      "summary": "Il nihonio è un elemento superpesante sintetico scoperto da un team giapponese, il primo elemento trovato in Asia.",
+      "paragraphs": [
+        "Il nihonio, simbolo Nh e numero atomico 113, è un elemento superpesante riconosciuto ufficialmente nel 2016. Il nome viene da Nihon, la parola giapponese per «Giappone».",
+        "È un elemento artificiale prodotto bombardando bismuto con nuclei di zinco. I suoi isotopi noti hanno emivite da millisecondi a pochi secondi.",
+        "Classificato accanto al tallio, potrebbe condividere alcune proprietà dei metalli pesanti, ma nessun esperimento chimico diretto è ancora conclusivo.",
+        "Il nihonio è il primo elemento scoperto in Asia e marca un importante traguardo nell'esplorazione degli elementi superpesanti."
+      ],
+      "name": "Nihonio"
+    },
+    "element-114-flerovium": {
+      "summary": "Il flerovio è un elemento superpesante sintetico nominato in onore del Laboratorio Flerov.",
+      "paragraphs": [
+        "Il flerovio, simbolo Fl e numero atomico 114, è un elemento superpesante riconosciuto ufficialmente nel 2012. Prende il nome dal Laboratorio Flerov delle Reazioni Nucleari.",
+        "È sintetico, creato collidendo nuclei pesanti negli acceleratori. I suoi isotopi noti hanno emivite di solo pochi secondi.",
+        "Classificato con il carbonio e il piombo nella tavola, la sua chimica rimane ipotetica per via dell'instabilità.",
+        "Il flerovio è una pietra miliare nella comprensione dei limiti della materia."
+      ],
+      "name": "Flerovio"
+    },
+    "element-115-moscovium": {
+      "summary": "Elemento superpesante sintetico 115 nominato in onore della regione di Mosca.",
+      "paragraphs": [
+        "Il moscovio, simbolo Mc e numero atomico 115, è un elemento superpesante riconosciuto ufficialmente nel 2016. Prende il nome dalla regione di Mosca.",
+        "È un elemento sintetico prodotto in laboratorio per fusione nucleare di nuclei pesanti. Gli isotopi osservati hanno emivite molto brevi, generalmente inferiori a mezzo secondo.",
+        "Classificato nella famiglia dei pnictogeni (come azoto e bismuto), potrebbe condividere alcune delle loro proprietà.",
+        "Il moscovio incarna la ricerca di elementi superpesanti: un frammento di materia che esiste solo per un istante."
+      ],
+      "name": "Moscovio"
+    },
+    "element-116-livermorium": {
+      "summary": "Elemento superpesante sintetico 116 dedicato al Lawrence Livermore National Laboratory.",
+      "paragraphs": [
+        "Il livermorio, simbolo Lv e numero atomico 116, è un elemento superpesante. Il suo nome onora il Lawrence Livermore National Laboratory (USA), che contribuì a confermarne la scoperta nel 2011.",
+        "È un elemento artificiale prodotto in laboratorio per collisioni nucleari tra nuclei pesanti. I suoi isotopi noti hanno emivite dell'ordine di un secondo o meno.",
+        "In teoria appartiene alla famiglia dei calcogeni (come ossigeno e zolfo), ma la sua instabilità impedisce qualsiasi studio chimico diretto.",
+        "Effimero e sfuggente, il livermorio sopravvive solo pochi istanti dopo la sua creazione."
+      ],
+      "name": "Livermorio"
+    },
+    "element-117-tennesse": {
+      "summary": "Elemento 117, simbolo Ts, è un alogeno superpesante creato solo in laboratorio dalla scoperta nel 2010.",
+      "paragraphs": [
+        "Sintetizzato nel 2010 da una collaborazione russo-americana, onora lo stato del Tennessee e il Oak Ridge National Laboratory.",
+        "Il tennessio non esiste naturalmente: è troppo instabile per persistere nel cosmo e viene creato bombardando berkelio-249 con ioni di calcio-48.",
+        "Sulla Terra sono stati prodotti solo pochi atomi negli acceleratori nucleari. Gli isotopi osservati (²⁹³Ts e ²⁹⁴Ts) decadono in meno di un secondo per emissione alfa.",
+        "Non ha usi pratici; invece il tennessio aiuta a sondare i limiti della stabilità nucleare e la struttura della tavola periodica nella caccia alla teorizzata «isola di stabilità».",
+        "Nessun composto è stato ancora osservato, ma i modelli prevedono una chimica alogenica insolita, potenzialmente meno reattiva e più «metallica» per via della massa e degli effetti relativistici.",
+        "Effimero e prodotto dall'uomo, il tennessio è una pietra miliare scientifica."
+      ],
+      "name": "Tennessio"
+    },
+    "element-118-oganesson": {
+      "summary": "Elemento 118, simbolo Og, è un gas nobile ultramassiccio la cui fugace esistenza è stata confermata solo in laboratorio.",
+      "paragraphs": [
+        "Scoperto tra il 2002 e il 2006 da un team russo-americano, onora il fisico Yuri Oganessian ed è notevole per la sua estrema instabilità.",
+        "Assente dall'universo osservabile, l'oganessone decade in meno di un millisecondo e viene prodotto bombardando californio-249 con ioni di calcio-48.",
+        "Nessun deposito terrestre lo contiene; solo pochi atomi sintetizzati in strutture specializzate attestano la sua presenza prima che scompaiano.",
+        "Senza applicazioni pratiche, l'oganessone serve ai ricercatori che sondano i limiti della stabilità nucleare.",
+        "Nessun composto è stato rilevato, ma i calcoli teorici suggeriscono una chimica dei gas nobili più ricca del previsto, con possibili molecole come OgF₂.",
+        "Come frontiera attuale della tavola periodica, l'oganessone mostra che la materia ha ancora territori inesplorati."
+      ],
+      "name": "Oganessone"
+    }
+  },
+  "rarities": {
+    "commun": {
+      "process": "Nucleosintesi del Big Bang",
+      "range": "Elementi 1–2 · H, He",
+      "body": "Nati nei primi 3 minuti dopo il Big Bang, idrogeno ed elio rappresentano circa il 99% di tutta la materia visibile dell'universo. Man mano che il giovane universo si espandeva e raffreddava da miliardi di gradi, protoni e neutroni si assemblavano nei primi nuclei atomici, quasi esclusivamente idrogeno ed elio, con tracce di litio."
+    },
+    "essentiel": {
+      "process": "Spallazione cosmica",
+      "range": "Elementi 3–5 · Li, Be, B",
+      "body": "Questi tre elementi sono troppo fragili per sopravvivere all'interno delle stelle: le reazioni di fusione li distruggono più in fretta di quanto possano formarsi. Si producono quando i raggi cosmici che viaggiano a velocità prossime a quella della luce collidono con atomi più pesanti (carbonio, ossigeno, azoto) che derivano nello spazio interstellare, frammentandoli in elementi più leggeri. Questo processo, chiamato spallazione, è raro e inefficiente, motivo per cui Li, Be e B sono tra gli elementi meno abbondanti del cosmo."
+    },
+    "stellaire": {
+      "process": "Fusione stellare",
+      "range": "Elementi 6–14 · C a Si",
+      "body": "Forgiati nei nuclei delle stelle attraverso cicli successivi di combustione: l'idrogeno si fonde in elio, l'elio in carbonio e ossigeno, il carbonio in neon e magnesio, e così via fino al silicio. Ogni stadio richiede una stella più massiccia e più calda, rilasciando energia colossale. Il carbonio e l'ossigeno prodotti qui formano la colonna vertebrale molecolare di tutta la chimica organica e della vita. Quando queste stelle muoiono, disperdono questi elementi per tutta la galassia."
+    },
+    "mythique": {
+      "process": "Combustione del silicio – Picco del ferro",
+      "range": "Elementi 15–28 · P a Ni",
+      "body": "I prodotti finali della fusione stellare. Nei nuclei delle stelle più massicce, la combustione del silicio produce gli elementi del picco del ferro: cromo, manganese, ferro, cobalto e nichel. La fusione si ferma qui: il ferro-56 e il nichel-62 hanno la più alta energia di legame per nucleone, il che significa che fonderli ulteriormente consumerebbe energia anziché rilasciarla. Senza pressione verso l'esterno per contrastare la gravità, queste stelle collassano ed esplodono come supernovae."
+    },
+    "singulier": {
+      "process": "Cattura di neutroni – Supernovae",
+      "range": "Elementi 29–92 · Cu a U",
+      "body": "Oltre il picco del ferro, la sola fusione stellare non può costruire questi elementi: richiedono la cattura di neutroni. Il processo-s lento, che si svolge nel corso di migliaia di anni nelle stelle giganti AGB, aggiunge gradualmente neutroni per formare argento, stagno, bario e piombo. Il processo-r violento, innescato in una frazione di secondo durante le fusioni di stelle di neutroni e le supernovae, forgia gli atomi più pesanti: oro, platino, uranio. Ogni atomo d'oro sulla Terra è nato in una catastrofe cosmica."
+    },
+    "irreel": {
+      "process": "Sintetico – Nessun isotopo stabile",
+      "range": "Tc (43), Pm (61) – Elementi 93–118",
+      "body": "Il tecnezio (43) e il promezio (61) non hanno isotopi stabili e non si trovano naturalmente sulla Terra: qualsiasi quantità formata nelle stelle antiche è decaduta da tempo. Gli elementi dal 93 al 118 esistono solo perché gli esseri umani li hanno creati negli acceleratori di particelle, sparando nuclei atomici l'uno contro l'altro a enormi velocità. Molti sopravvivono solo microsecondi prima di decadere. L'oganessone (118), l'elemento confermato più pesante, ha richiesto 1,1 bilioni di collisioni per produrre solo 3 atomi, sintetizzato per la prima volta nel 2002."
     }
   }
 }

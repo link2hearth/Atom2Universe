@@ -36,6 +36,7 @@
 
     <!-- Visualizer mode selector (in toolbar) - HorizontalScrollView optimisé -->
     <HorizontalScrollView
+        android:id="@+id/visualizer_modes_scroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scrollbars="none"
