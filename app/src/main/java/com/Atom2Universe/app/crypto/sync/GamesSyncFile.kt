@@ -96,6 +96,86 @@ data class GachaSyncData(
     }
 }
 
+// ─── Tickets gacha ───────────────────────────────────────────────────────────
+
+data class GachaTicketSyncData(
+    val totalTickets: Int,
+    val lastTicketAwardMs: Long
+) {
+    fun toJson(): JSONObject = JSONObject().apply {
+        put("totalTickets", totalTickets)
+        put("lastTicketAwardMs", lastTicketAwardMs)
+    }
+
+    companion object {
+        fun fromJson(j: JSONObject) = GachaTicketSyncData(
+            totalTickets      = j.optInt("totalTickets", 0),
+            lastTicketAwardMs = j.optLong("lastTicketAwardMs", 0L)
+        )
+    }
+}
+
+// ─── Stats de jeux ────────────────────────────────────────────────────────────
+
+data class GameStatsSyncData(
+    val solitairePlayed: Int = 0,
+    val solitaireWon: Int = 0,
+    val colorStackHardPlayed: Int = 0,
+    val colorStackHardWon: Int = 0,
+    val colorStackHardBestMs: Long = 0L,
+    val sudokuPlayed: Int = 0,
+    val sudokuWon: Int = 0,
+    val chessPlayed: Int = 0,
+    val chessWon: Int = 0,
+    val draughtsPlayed: Int = 0,
+    val draughtsWon: Int = 0,
+    val game2048Played: Int = 0,
+    val game2048Won: Int = 0,
+    val blackjackPlayed: Int = 0,
+    val blackjackWon: Int = 0,
+    val pipeTapHardWon: Int = 0
+) {
+    fun toJson(): JSONObject = JSONObject().apply {
+        put("solitairePlayed",      solitairePlayed)
+        put("solitaireWon",         solitaireWon)
+        put("colorStackHardPlayed", colorStackHardPlayed)
+        put("colorStackHardWon",    colorStackHardWon)
+        put("colorStackHardBestMs", colorStackHardBestMs)
+        put("sudokuPlayed",         sudokuPlayed)
+        put("sudokuWon",            sudokuWon)
+        put("chessPlayed",          chessPlayed)
+        put("chessWon",             chessWon)
+        put("draughtsPlayed",       draughtsPlayed)
+        put("draughtsWon",          draughtsWon)
+        put("game2048Played",       game2048Played)
+        put("game2048Won",          game2048Won)
+        put("blackjackPlayed",      blackjackPlayed)
+        put("blackjackWon",         blackjackWon)
+        put("pipeTapHardWon",       pipeTapHardWon)
+    }
+
+    companion object {
+        fun fromJson(j: JSONObject) = GameStatsSyncData(
+            solitairePlayed      = j.optInt("solitairePlayed", 0),
+            solitaireWon         = j.optInt("solitaireWon", 0),
+            colorStackHardPlayed = j.optInt("colorStackHardPlayed", 0),
+            colorStackHardWon    = j.optInt("colorStackHardWon", 0),
+            colorStackHardBestMs = j.optLong("colorStackHardBestMs", 0L),
+            sudokuPlayed         = j.optInt("sudokuPlayed", 0),
+            sudokuWon            = j.optInt("sudokuWon", 0),
+            chessPlayed          = j.optInt("chessPlayed", 0),
+            chessWon             = j.optInt("chessWon", 0),
+            draughtsPlayed       = j.optInt("draughtsPlayed", 0),
+            draughtsWon          = j.optInt("draughtsWon", 0),
+            game2048Played       = j.optInt("game2048Played", 0),
+            game2048Won          = j.optInt("game2048Won", 0),
+            blackjackPlayed      = j.optInt("blackjackPlayed", 0),
+            blackjackWon         = j.optInt("blackjackWon", 0),
+            pipeTapHardWon       = j.optInt("pipeTapHardWon", 0)
+        )
+    }
+}
+
 // ─── Fichier racine ───────────────────────────────────────────────────────────
 // Pour ajouter un nouveau module : ajouter un champ nullable + entrées toJson/fromJson.
 
@@ -104,7 +184,9 @@ data class GamesSyncFile(
     val lastModified: Long,
     val clicker: ClickerSyncData? = null,
     val gacha: GachaSyncData? = null,
-    val elementTokens: Int = 0
+    val elementTokens: Int = 0,
+    val gachaTickets: GachaTicketSyncData? = null,
+    val gameStats: GameStatsSyncData? = null
 ) {
     fun toJson(): String = JSONObject().apply {
         put("version", version)
@@ -112,6 +194,8 @@ data class GamesSyncFile(
         clicker?.let { put("clicker", it.toJson()) }
         gacha?.let { put("gacha", it.toJson()) }
         put("elementTokens", elementTokens)
+        gachaTickets?.let { put("gachaTickets", it.toJson()) }
+        gameStats?.let { put("gameStats", it.toJson()) }
     }.toString()
 
     companion object {
@@ -122,7 +206,9 @@ data class GamesSyncFile(
                 lastModified  = j.optLong("lastModified", 0L),
                 clicker       = j.optJSONObject("clicker")?.let { ClickerSyncData.fromJson(it) },
                 gacha         = j.optJSONObject("gacha")?.let { GachaSyncData.fromJson(it) },
-                elementTokens = j.optInt("elementTokens", 0)
+                elementTokens = j.optInt("elementTokens", 0),
+                gachaTickets  = j.optJSONObject("gachaTickets")?.let { GachaTicketSyncData.fromJson(it) },
+                gameStats     = j.optJSONObject("gameStats")?.let { GameStatsSyncData.fromJson(it) }
             )
         }
     }

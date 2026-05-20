@@ -41,8 +41,30 @@ class GameStatsRepository(context: Context) {
         game2048Played       = prefs.getInt("game2048_played", 0),
         game2048Won          = prefs.getInt("game2048_won", 0),
         blackjackPlayed      = prefs.getInt("blackjack_played", 0),
-        blackjackWon         = prefs.getInt("blackjack_won", 0)
+        blackjackWon         = prefs.getInt("blackjack_won", 0),
+        pipeTapHardWon       = prefs.getInt("pipetap_hard_won", 0)
     )
+
+    fun save(stats: GameStats) {
+        prefs.edit()
+            .putInt("solitaire_played",        stats.solitairePlayed)
+            .putInt("solitaire_won",           stats.solitaireWon)
+            .putInt("colorstack_hard_played",  stats.colorStackHardPlayed)
+            .putInt("colorstack_hard_won",     stats.colorStackHardWon)
+            .putLong("colorstack_hard_best_ms",stats.colorStackHardBestMs)
+            .putInt("sudoku_played",           stats.sudokuPlayed)
+            .putInt("sudoku_won",              stats.sudokuWon)
+            .putInt("chess_played",            stats.chessPlayed)
+            .putInt("chess_won",               stats.chessWon)
+            .putInt("draughts_played",         stats.draughtsPlayed)
+            .putInt("draughts_won",            stats.draughtsWon)
+            .putInt("game2048_played",         stats.game2048Played)
+            .putInt("game2048_won",            stats.game2048Won)
+            .putInt("blackjack_played",        stats.blackjackPlayed)
+            .putInt("blackjack_won",           stats.blackjackWon)
+            .putInt("pipetap_hard_won",        stats.pipeTapHardWon)
+            .apply()
+    }
 
     fun recordSolitaireStarted() = increment("solitaire_played")
     fun recordSolitaireWon()     = increment("solitaire_won")

@@ -5,6 +5,9 @@ import android.util.Log
 import com.Atom2Universe.app.crypto.clicker.ClickerDatabase
 import com.Atom2Universe.app.crypto.clicker.ClickerStateEntity
 import com.Atom2Universe.app.crypto.clicker.ElementTokenRepository
+import com.Atom2Universe.app.crypto.clicker.GachaTicketStateEntity
+import com.Atom2Universe.app.crypto.clicker.GameStats
+import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
@@ -117,13 +120,20 @@ object GamesSyncManager {
         // Conflit tokens éléments
         if (local.elementTokens != remote.elementTokens) return true
 
+        // Conflit tickets gacha
+        if (local.gachaTickets?.totalTickets != remote.gachaTickets?.totalTickets) return true
+
+        // Conflit stats de jeux
+        if (local.gameStats != remote.gameStats) return true
+
         return false
     }
 
     // ─── Construction de l'état local ────────────────────────────────────────
 
     private suspend fun buildLocalSyncFile(): GamesSyncFile {
-        val clickerEntity = ClickerDatabase.getInstance(appContext).dao().load()
+        val db = ClickerDatabase.getInstance(appContext)
+        val clickerEntity = db.dao().load()
 
         val collectionStore = PeriodicCollectionStore(appContext)
         val copies = (1..118)
@@ -132,11 +142,38 @@ object GamesSyncManager {
 
         val elementTokens = ElementTokenRepository(appContext).getBalance()
 
+        val ticketEntity = db.gachaTicketDao().load()
+        val gachaTickets = ticketEntity?.let {
+            GachaTicketSyncData(totalTickets = it.totalTickets, lastTicketAwardMs = it.lastTicketAwardMs)
+        }
+
+        val rawStats = GameStatsRepository(appContext).load()
+        val gameStats = GameStatsSyncData(
+            solitairePlayed      = rawStats.solitairePlayed,
+            solitaireWon         = rawStats.solitaireWon,
+            colorStackHardPlayed = rawStats.colorStackHardPlayed,
+            colorStackHardWon    = rawStats.colorStackHardWon,
+            colorStackHardBestMs = rawStats.colorStackHardBestMs,
+            sudokuPlayed         = rawStats.sudokuPlayed,
+            sudokuWon            = rawStats.sudokuWon,
+            chessPlayed          = rawStats.chessPlayed,
+            chessWon             = rawStats.chessWon,
+            draughtsPlayed       = rawStats.draughtsPlayed,
+            draughtsWon          = rawStats.draughtsWon,
+            game2048Played       = rawStats.game2048Played,
+            game2048Won          = rawStats.game2048Won,
+            blackjackPlayed      = rawStats.blackjackPlayed,
+            blackjackWon         = rawStats.blackjackWon,
+            pipeTapHardWon       = rawStats.pipeTapHardWon
+        )
+
         return GamesSyncFile(
             lastModified  = System.currentTimeMillis(),
             clicker       = clickerEntity?.toSyncData(),
             gacha         = GachaSyncData(copies),
-            elementTokens = elementTokens
+            elementTokens = elementTokens,
+            gachaTickets  = gachaTickets,
+            gameStats     = gameStats
         )
     }
 
@@ -159,6 +196,37 @@ object GamesSyncManager {
 
         ElementTokenRepository(appContext).setBalance(file.elementTokens)
         Log.d(TAG, "Tokens éléments appliqués (${file.elementTokens})")
+
+        file.gachaTickets?.let { t ->
+            ClickerDatabase.getInstance(appContext).gachaTicketDao().save(
+                GachaTicketStateEntity(id = 0, totalTickets = t.totalTickets, lastTicketAwardMs = t.lastTicketAwardMs)
+            )
+            Log.d(TAG, "Tickets gacha appliqués (${t.totalTickets})")
+        }
+
+        file.gameStats?.let { s ->
+            GameStatsRepository(appContext).save(
+                GameStats(
+                    solitairePlayed      = s.solitairePlayed,
+                    solitaireWon         = s.solitaireWon,
+                    colorStackHardPlayed = s.colorStackHardPlayed,
+                    colorStackHardWon    = s.colorStackHardWon,
+                    colorStackHardBestMs = s.colorStackHardBestMs,
+                    sudokuPlayed         = s.sudokuPlayed,
+                    sudokuWon            = s.sudokuWon,
+                    chessPlayed          = s.chessPlayed,
+                    chessWon             = s.chessWon,
+                    draughtsPlayed       = s.draughtsPlayed,
+                    draughtsWon          = s.draughtsWon,
+                    game2048Played       = s.game2048Played,
+                    game2048Won          = s.game2048Won,
+                    blackjackPlayed      = s.blackjackPlayed,
+                    blackjackWon         = s.blackjackWon,
+                    pipeTapHardWon       = s.pipeTapHardWon
+                )
+            )
+            Log.d(TAG, "Stats de jeux appliquées")
+        }
     }
 
     // ─── Helpers Drive ────────────────────────────────────────────────────────
