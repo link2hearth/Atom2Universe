@@ -4,15 +4,16 @@ import kotlin.random.Random
 
 class HexRunnerGame {
     companion object {
-        const val NUM_FACES = 6
         const val NUM_RINGS = 12
         const val ROTATION_MS = 180L
         const val BASE_SPEED = 0.0008f // rings per millisecond (~1.25 s/ring at start)
         private const val MAX_STREAK = 3 // max consecutive rings a face stays solid
     }
 
-    class Ring {
-        val solid = BooleanArray(NUM_FACES)
+    var numFaces = 6
+
+    inner class Ring {
+        val solid = BooleanArray(numFaces)
     }
 
     var playerFaceIndex = 0; private set
@@ -28,8 +29,7 @@ class HexRunnerGame {
     var isRunning = false; private set
     var bestScore = 0L; private set
 
-    // Per-face consecutive-solid streak counter — used to prevent same pattern sticking too long
-    private val faceStreaks = IntArray(NUM_FACES)
+    private var faceStreaks = IntArray(numFaces)
 
     /** Snapshot of rings that were successfully crossed — consumed by HexRunnerView for the fly-out animation. */
     class PassedRingSnapshot(val solid: BooleanArray)
@@ -54,7 +54,7 @@ class HexRunnerGame {
         rotationFrom = 0
         isGameOver = false
         isRunning = true
-        faceStreaks.fill(0)
+        faceStreaks = IntArray(numFaces)
         justPassedRings.clear()
         rings.clear()
         repeat(NUM_RINGS) { i ->
@@ -86,8 +86,8 @@ class HexRunnerGame {
             // Guarantee at least one reachable face (within 1 rotation) is solid
             val adj = setOf(
                 playerFaceIndex,
-                (playerFaceIndex + 1) % NUM_FACES,
-                (playerFaceIndex + NUM_FACES - 1) % NUM_FACES
+                (playerFaceIndex + 1) % numFaces,
+                (playerFaceIndex + numFaces - 1) % numFaces
             )
             if (adj.none { next.solid[it] }) next.solid[adj.random()] = true
             rings.addLast(next)
@@ -102,29 +102,29 @@ class HexRunnerGame {
         ring.solid.fill(false)
 
         val minSolid = when {
-            grace || score < 12_000L -> 4
-            score < 35_000L -> 3
-            else -> 2
+            grace || score < 12_000L -> numFaces - 2
+            score < 35_000L -> numFaces / 2
+            else -> numFaces / 3
         }
 
         // Faces that have been solid too many times in a row are temporarily blocked
         val blocked: Set<Int> = if (grace) emptySet()
-            else (0 until NUM_FACES).filter { faceStreaks[it] >= MAX_STREAK }.toSet()
+            else (0 until numFaces).filter { faceStreaks[it] >= MAX_STREAK }.toSet()
 
         // Prefer faces that are "due" for a change (lower streak = higher weight)
-        val candidates = (0 until NUM_FACES).sortedBy { faceStreaks[it] }.toMutableList()
+        val candidates = (0 until numFaces).sortedBy { faceStreaks[it] }.toMutableList()
         // Remove blocked faces but keep them as fallback if we can't reach minSolid otherwise
         val preferred = candidates.filter { it !in blocked }
         val fallback  = candidates.filter { it in blocked }
 
-        val count = Random.nextInt(minSolid, NUM_FACES)
+        val count = Random.nextInt(minSolid.coerceAtLeast(1), numFaces)
 
         // Fill from preferred first, then fallback only if needed
-        val pool = (preferred.shuffled() + fallback).take(NUM_FACES)
+        val pool = (preferred.shuffled() + fallback).take(numFaces)
         pool.take(count).forEach { ring.solid[it] = true }
 
         // Update streaks
-        for (f in 0 until NUM_FACES) {
+        for (f in 0 until numFaces) {
             faceStreaks[f] = if (ring.solid[f]) faceStreaks[f] + 1 else 0
         }
     }
@@ -132,14 +132,14 @@ class HexRunnerGame {
     fun rotateLeft() {
         if (rotationProgress < 1f) return
         rotationFrom = playerFaceIndex
-        playerFaceIndex = (playerFaceIndex + 1) % NUM_FACES
+        playerFaceIndex = (playerFaceIndex + 1) % numFaces
         rotationProgress = 0f
     }
 
     fun rotateRight() {
         if (rotationProgress < 1f) return
         rotationFrom = playerFaceIndex
-        playerFaceIndex = (playerFaceIndex + NUM_FACES - 1) % NUM_FACES
+        playerFaceIndex = (playerFaceIndex + numFaces - 1) % numFaces
         rotationProgress = 0f
     }
 }

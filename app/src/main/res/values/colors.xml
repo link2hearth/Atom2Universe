@@ -166,6 +166,7 @@
     <color name="game_tile_particules">#6A1B9A</color>
     <color name="game_tile_colorstack">#880E4F</color>
     <color name="game_tile_pipetap">#004D40</color>
+    <color name="game_tile_circles">#2E1065</color>
     <color name="game_tile_starbridges">#1E0A5E</color>
     <color name="game_tile_memory">#311B92</color>
     <color name="game_tile_quiz">#33691E</color>

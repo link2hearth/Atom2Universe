@@ -9,6 +9,8 @@
     <string name="hex_runner_game_over">PERDU</string>
     <string name="hex_runner_score_label">Temps : %1$s</string>
     <string name="hex_runner_best_label">Meilleur : %1$s</string>
+    <string name="hex_runner_shape_hexagon">HEXAGONE</string>
+    <string name="hex_runner_shape_octagon">OCTOGONE</string>
     <!-- Tuile hub -->
     <string name="hex_runner_hub_title">Hex Runner</string>
     <string name="hex_runner_hub_desc">Survie dans un tunnel hexagonal en rotation</string>

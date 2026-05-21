@@ -50,6 +50,16 @@
             android:layout_marginBottom="40dp" />
 
         <Button
+            android:id="@+id/hex_btn_mode_start"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#111122"
+            android:textColor="#00E5C0"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="24dp" />
+
+        <Button
             android:id="@+id/hex_btn_start"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
@@ -106,6 +116,16 @@
             android:textSize="15sp"
             android:fontFamily="monospace"
             android:layout_marginBottom="40dp" />
+
+        <Button
+            android:id="@+id/hex_btn_mode_gameover"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#111122"
+            android:textColor="#00E5C0"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="24dp" />
 
         <Button
             android:id="@+id/hex_btn_restart"

@@ -16,7 +16,10 @@ class HexRunnerView @JvmOverloads constructor(
 
     @Volatile private var running = false
     @Volatile private var pendingStart = false
+    @Volatile private var pendingNumFaces = 6
     private var thread: Thread? = null
+
+    private val outgoingRings = ArrayDeque<HexRunnerGame.PassedRingSnapshot>(7)
 
     private var lastSwipeX = 0f
 
@@ -32,8 +35,6 @@ class HexRunnerView @JvmOverloads constructor(
 
     private val colBg         = Color.parseColor("#070710")
     private val colSolid      = intArrayOf(0, 229, 192)
-    private val colGap        = intArrayOf(30, 160, 50)
-    private val colDanger     = intArrayOf(220, 50, 50)
     private val colCenter     = Color.parseColor("#0D1A28")
     private val colPlayer     = Color.WHITE
     private val colPlayerGlow = Color.parseColor("#5500E5C0")
@@ -63,6 +64,8 @@ class HexRunnerView @JvmOverloads constructor(
             if (pendingStart) {
                 pendingStart = false
                 gameOverFired = false
+                outgoingRings.clear()
+                game.numFaces = pendingNumFaces
                 game.start()
             }
             if (game.isRunning) {
@@ -73,7 +76,10 @@ class HexRunnerView @JvmOverloads constructor(
                 }
             }
 
-            while (game.justPassedRings.isNotEmpty()) game.justPassedRings.removeFirst()
+            while (game.justPassedRings.isNotEmpty()) {
+                outgoingRings.addFirst(game.justPassedRings.removeFirst())
+                if (outgoingRings.size > 6) outgoingRings.removeLast()
+            }
 
             val canvas = holder.lockCanvas()
             if (canvas != null) try { drawGame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
@@ -83,7 +89,8 @@ class HexRunnerView @JvmOverloads constructor(
         }
     }
 
-    fun startGame() {
+    fun startGame(numFaces: Int) {
+        pendingNumFaces = numFaces
         pendingStart = true
     }
 
@@ -119,7 +126,7 @@ class HexRunnerView @JvmOverloads constructor(
 
         for (i in (N - 1) downTo 0) {
             val fInner = ringFrac(i, N)
-            val fOuter = if (i == 0) 1f else ringFrac(i - 1, N)
+            val fOuter = if (i == 0) 1f + game.scrollProgress / N else ringFrac(i - 1, N)
             val rInner = perspR(fInner, pR, minR)
             val rOuter = perspR(fOuter, pR, minR)
             if (rInner >= rOuter) continue
@@ -127,7 +134,7 @@ class HexRunnerView @JvmOverloads constructor(
             val ring      = game.getRing(i)
             val proximity = fInner.coerceIn(0f, 1f)
 
-            for (face in 0 until HexRunnerGame.NUM_FACES) {
+            for (face in 0 until game.numFaces) {
                 buildTrap(face, rInner, rOuter, cx, cy, angle)
                 paint.style = Paint.Style.FILL
                 val isGapFace = !ring.solid[face]
@@ -147,17 +154,46 @@ class HexRunnerView @JvmOverloads constructor(
             }
         }
 
+        // Anneaux sortants : continuent de défiler au-delà de pR jusqu'en dehors de l'écran
+        val maxR = sqrt(cx * cx + cy * cy)
+        for (k in outgoingRings.indices) {
+            val fInner = (game.scrollProgress + N + k) / N
+            val fOuter = (game.scrollProgress + N + k + 1) / N
+            val rInner = perspR(fInner, pR, minR)
+            val rOuter = perspR(fOuter, pR, minR)
+            if (rInner > maxR) break
+            val snapshot = outgoingRings[k]
+            for (face in 0 until game.numFaces) {
+                buildTrap(face, rInner, rOuter, cx, cy, angle)
+                paint.style = Paint.Style.FILL
+                paint.color = Color.argb(230, colSolid[0], colSolid[1], colSolid[2])
+                canvas.drawPath(path, paint)
+                paint.style       = Paint.Style.STROKE
+                paint.strokeWidth = 1f
+                paint.color = Color.argb(90, 0, 160, 130)
+                canvas.drawPath(path, paint)
+                if (!snapshot.solid[face]) {
+                    val rBandOuter = rInner + (rOuter - rInner) * 0.22f
+                    buildTrap(face, rInner, rBandOuter, cx, cy, angle)
+                    paint.style = Paint.Style.FILL
+                    paint.color = Color.argb(240, 210, 30, 30)
+                    canvas.drawPath(path, paint)
+                }
+            }
+        }
+
         paint.style       = Paint.Style.STROKE
         paint.strokeWidth = 3f
         paint.color = Color.argb(100, 0, 200, 170)
-        drawHexOutline(canvas, cx, cy, pR, angle)
+        drawPolygonOutline(canvas, cx, cy, pR, angle)
 
         drawPlayer(canvas, cx, cy, pR, angle)
         drawHUD(canvas, cx)
     }
 
     private fun drawPlayer(canvas: Canvas, cx: Float, cy: Float, pR: Float, hexAngleDeg: Double) {
-        val faceMidRad = rad(60.0 + game.playerFaceIndex * 60.0 + 30.0 + hexAngleDeg)
+        val faceDeg    = 360.0 / game.numFaces
+        val faceMidRad = rad((game.playerFaceIndex + 1.5) * faceDeg + hexAngleDeg)
         val r  = pR * 0.91f
         val px = cx + r * cos(faceMidRad)
         val py = cy + r * sin(faceMidRad)
@@ -191,8 +227,9 @@ class HexRunnerView @JvmOverloads constructor(
         faceIdx: Int, rInner: Float, rOuter: Float,
         cx: Float, cy: Float, hexAngleDeg: Double
     ) {
-        val a1 = rad(60.0 + faceIdx * 60.0 + hexAngleDeg)
-        val a2 = rad(60.0 + (faceIdx + 1) * 60.0 + hexAngleDeg)
+        val faceDeg = 360.0 / game.numFaces
+        val a1 = rad((faceIdx + 1) * faceDeg + hexAngleDeg)
+        val a2 = rad((faceIdx + 2) * faceDeg + hexAngleDeg)
         path.reset()
         path.moveTo(cx + rInner * cos(a1), cy + rInner * sin(a1))
         path.lineTo(cx + rInner * cos(a2), cy + rInner * sin(a2))
@@ -201,10 +238,11 @@ class HexRunnerView @JvmOverloads constructor(
         path.close()
     }
 
-    private fun drawHexOutline(canvas: Canvas, cx: Float, cy: Float, r: Float, hexAngleDeg: Double) {
+    private fun drawPolygonOutline(canvas: Canvas, cx: Float, cy: Float, r: Float, hexAngleDeg: Double) {
+        val faceDeg = 360.0 / game.numFaces
         path.reset()
-        for (v in 0 until 6) {
-            val a = rad(60.0 + v * 60.0 + hexAngleDeg)
+        for (v in 0 until game.numFaces) {
+            val a = rad((v + 1) * faceDeg + hexAngleDeg)
             if (v == 0) path.moveTo(cx + r * cos(a), cy + r * sin(a))
             else        path.lineTo(cx + r * cos(a), cy + r * sin(a))
         }
@@ -228,13 +266,14 @@ class HexRunnerView @JvmOverloads constructor(
         (game.scrollProgress + N - 1 - i).toFloat() / N
 
     private fun perspR(f: Float, pR: Float, minR: Float): Float {
-        val t = f.coerceIn(0f, 1f)
+        val t = f.coerceAtLeast(0f)
         return minR + (pR - minR) * t * t * t
     }
 
     private fun computeHexAngle(): Double {
-        val target = -game.playerFaceIndex * 60.0
-        val from   = -game.rotationFrom   * 60.0
+        val faceDeg = 360.0 / game.numFaces
+        val target = -game.playerFaceIndex * faceDeg
+        val from   = -game.rotationFrom   * faceDeg
         var delta  = target - from
         while (delta >  180.0) delta -= 360.0
         while (delta < -180.0) delta += 360.0

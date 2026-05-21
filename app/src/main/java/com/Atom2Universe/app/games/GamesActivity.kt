@@ -16,6 +16,7 @@ import com.Atom2Universe.app.games.starswar.StarsWarActivity
 import com.Atom2Universe.app.games.wavesurf.WaveSurfActivity
 import com.Atom2Universe.app.games.hexrunner.HexRunnerActivity
 import com.Atom2Universe.app.games.memory.MemoryActivity
+import com.Atom2Universe.app.games.circles.CirclesActivity
 import com.Atom2Universe.app.games.pipetap.PipeTapActivity
 import com.Atom2Universe.app.games.starbridges.StarBridgesActivity
 import com.Atom2Universe.app.quiz.QuizActivity
@@ -214,6 +215,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_pipetap,
             activityClass = PipeTapActivity::class.java
+        ),
+        HubTile(
+            id = "circles",
+            titleRes = R.string.circles_hub_title,
+            descriptionRes = R.string.circles_hub_desc,
+            iconRes = android.R.drawable.ic_menu_rotate,
+            defaultColorRes = R.color.game_tile_circles,
+            activityClass = CirclesActivity::class.java
         ),
         HubTile(
             id = "starbridges",
