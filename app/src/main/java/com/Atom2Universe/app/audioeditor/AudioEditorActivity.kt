@@ -2,8 +2,10 @@ package com.Atom2Universe.app.audioeditor
 
 import android.Manifest
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -149,6 +151,14 @@ class AudioEditorActivity : ThemedActivity() {
     private var lastWaveformUpdateTime = 0L
     private val waveformUpdateThrottleMs = 50L
 
+    private val micStopReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == MicRecordingService.ACTION_STOP_FROM_NOTIFICATION) {
+                viewModel.stopRecording()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
@@ -160,8 +170,23 @@ class AudioEditorActivity : ThemedActivity() {
         setupListeners()
         observeViewModel()
 
+        val filter = IntentFilter(MicRecordingService.ACTION_STOP_FROM_NOTIFICATION)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(micStopReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("UnspecifiedRegisterReceiverFlag")
+            registerReceiver(micStopReceiver, filter)
+        }
+
         // Check if there's a saved project and show choice dialog
         checkForSavedProject()
+    }
+
+    override fun onDestroy() {
+        try {
+            unregisterReceiver(micStopReceiver)
+        } catch (_: Exception) {}
+        super.onDestroy()
     }
 
     private fun checkForSavedProject() {

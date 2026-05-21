@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/startup_background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/dictaphone_header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/a2uMidiAccent"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="12dp">
+
+        <ImageButton
+            android:id="@+id/dictaphone_btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="@android:color/white"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:text="@string/dictaphone_title"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dictaphone_btn_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:background="@drawable/dictaphone_quality_bg"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <!-- Recording zone -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <!-- Timer -->
+        <TextView
+            android:id="@+id/dictaphone_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:visibility="invisible" />
+
+        <!-- Amplitude bar -->
+        <ProgressBar
+            android:id="@+id/dictaphone_amplitude"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="8dp"
+            android:layout_marginTop="12dp"
+            android:max="100"
+            android:progressTint="?attr/a2uMidiAccent"
+            android:visibility="invisible" />
+
+        <!-- Record button -->
+        <ImageButton
+            android:id="@+id/dictaphone_btn_record"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/dictaphone_record_button_bg"
+            android:src="@drawable/ic_mic"
+            android:tint="@android:color/white"
+            android:contentDescription="@string/dictaphone_action_record" />
+
+        <!-- Status text (Saving…) -->
+        <TextView
+            android:id="@+id/dictaphone_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- Stop button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dictaphone_btn_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/dictaphone_action_stop"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/startup_button_background" />
+
+    <!-- Recordings list header -->
+    <TextView
+        android:id="@+id/dictaphone_recordings_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:text="@string/dictaphone_recordings_title"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="13sp"
+        android:textAllCaps="true" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/dictaphone_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:text="@string/dictaphone_recordings_empty"
+        android:textColor="@color/startup_text_secondary"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dictaphone_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
+
+</LinearLayout>

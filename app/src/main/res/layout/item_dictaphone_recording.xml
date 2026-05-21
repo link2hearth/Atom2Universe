@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="8dp"
+    android:gravity="center_vertical">
+
+    <ImageButton
+        android:id="@+id/dictaphone_item_play"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_play"
+        android:tint="?attr/a2uMidiAccent"
+        android:contentDescription="@string/dictaphone_action_play" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp">
+
+        <TextView
+            android:id="@+id/dictaphone_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="15sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/dictaphone_item_meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/dictaphone_item_rename"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_edit"
+        android:tint="@color/startup_text_secondary"
+        android:contentDescription="@string/dictaphone_action_rename" />
+
+    <ImageButton
+        android:id="@+id/dictaphone_item_delete"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_delete"
+        android:tint="@color/startup_text_secondary"
+        android:contentDescription="@string/dictaphone_action_delete" />
+
+</LinearLayout>

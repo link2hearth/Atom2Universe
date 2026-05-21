@@ -19,6 +19,8 @@
       # Doit correspondre exactement au SERVICE_TYPE dans PeerDiscoveryManager.kt
       # Format : la partie entre underscores, ex. "a2u" → _a2u._tcp
       - SERVICE_NAME=a2u
+      # Fuseau horaire du conteneur (pour que les logs affichent l'heure locale)
+      - TZ=Europe/Paris
 
 volumes:
   musicsync_data:

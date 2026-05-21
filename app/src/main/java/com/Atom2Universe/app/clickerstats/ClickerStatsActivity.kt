@@ -133,6 +133,7 @@ class ClickerStatsActivity : ThemedActivity() {
                     getSharedPreferences("flappy_cat_save",  MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("wave_surf_save",   MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("match3_save",      MODE_PRIVATE).edit { clear() }
+                    GameStatsRepository(this).resetHexRunnerBestTime()
                     // Best score 2048 seulement (la partie en cours est gérée par toggleClicker)
                     getSharedPreferences("game2048_save",    MODE_PRIVATE).edit { remove("best_score") }
                     // Particules : zéro les records en conservant la progression shop
@@ -274,6 +275,12 @@ class ClickerStatsActivity : ThemedActivity() {
         findViewById<TextView>(R.id.stat_match3_best_time_value).text = if (m3TimeMs > 0L) {
             val secs = (m3TimeMs / 1000).toInt()
             "%d:%02d".format(secs / 60, secs % 60)
+        } else "—"
+
+        val hrBestMs = gameStats.hexRunnerBestMs
+        findViewById<TextView>(R.id.stat_hexrunner_best_value).text = if (hrBestMs > 0L) {
+            val secs = (hrBestMs / 1000).toInt()
+            if (secs >= 60) "%d:%02d".format(secs / 60, secs % 60) else "$secs s"
         } else "—"
 
         // Particules : Room DB async

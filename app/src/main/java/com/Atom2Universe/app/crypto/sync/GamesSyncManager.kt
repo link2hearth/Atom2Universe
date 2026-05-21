@@ -164,7 +164,8 @@ object GamesSyncManager {
             game2048Won          = rawStats.game2048Won,
             blackjackPlayed      = rawStats.blackjackPlayed,
             blackjackWon         = rawStats.blackjackWon,
-            pipeTapHardWon       = rawStats.pipeTapHardWon
+            pipeTapHardWon       = rawStats.pipeTapHardWon,
+            hexRunnerBestMs      = rawStats.hexRunnerBestMs
         )
 
         return GamesSyncFile(
@@ -222,7 +223,8 @@ object GamesSyncManager {
                     game2048Won          = s.game2048Won,
                     blackjackPlayed      = s.blackjackPlayed,
                     blackjackWon         = s.blackjackWon,
-                    pipeTapHardWon       = s.pipeTapHardWon
+                    pipeTapHardWon       = s.pipeTapHardWon,
+                    hexRunnerBestMs      = s.hexRunnerBestMs
                 )
             )
             Log.d(TAG, "Stats de jeux appliquées")

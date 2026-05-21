@@ -175,6 +175,7 @@
     <color name="game_tile_survivor">#0D1A0D</color>
     <color name="game_tile_bigger">#1A0D2E</color>
     <color name="game_tile_match3">#2E1A3E</color>
+    <color name="game_tile_hexrunner">#003D33</color>
     <color name="category_alkali_metal">#B87070</color>
     <color name="category_alkaline_earth_metal">#C48A5C</color>
     <color name="category_transition_metal">#A89A6E</color>
@@ -201,6 +202,7 @@
     <color name="audio_hub_tile_audio">#0277BD</color>
     <color name="audio_hub_tile_books">#4E342E</color>
     <color name="audio_hub_tile_comics">#4A148C</color>
+    <color name="audio_hub_tile_dictaphone">#37474F</color>
 
     <!-- The Line game -->
     <color name="the_line_active">#1E40AF</color>

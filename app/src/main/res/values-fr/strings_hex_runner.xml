@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Runner dans un tunnel hexagonal</string>
+    <string name="hex_runner_instructions">Glisse à gauche ou à droite pour pivoter le tunnel.\nÉvite les vides — survive le plus longtemps possible.</string>
+    <string name="hex_runner_btn_start">DÉMARRER</string>
+    <string name="hex_runner_btn_restart">REJOUER</string>
+    <string name="hex_runner_btn_back">RETOUR</string>
+    <string name="hex_runner_game_over">PERDU</string>
+    <string name="hex_runner_score_label">Temps : %1$s</string>
+    <string name="hex_runner_best_label">Meilleur : %1$s</string>
+    <!-- Tuile hub -->
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Survie dans un tunnel hexagonal en rotation</string>
+</resources>

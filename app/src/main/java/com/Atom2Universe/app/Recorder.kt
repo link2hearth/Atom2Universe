@@ -34,7 +34,7 @@ class Recorder(
 ) {
 
     private var recordJob: Job? = null
-    private var onRecordingFinished: (() -> Unit)? = null
+    private var onRecordingFinished: ((hadError: Boolean) -> Unit)? = null
     @Volatile
     private var latestMetadata: TrackMetadata? = null
 
@@ -45,7 +45,7 @@ class Recorder(
     private var keepRecording = false
     private val musicFolderName = "A2U_Radio"
 
-    fun startRecording(streamUrl: String, metadata: TrackMetadata?, onFinished: (() -> Unit)? = null): Boolean {
+    fun startRecording(streamUrl: String, metadata: TrackMetadata?, onFinished: ((hadError: Boolean) -> Unit)? = null): Boolean {
         if (recordJob?.isActive == true) {
             Log.d(TAG, "Recording already in progress, ignoring start request")
             return false
@@ -56,9 +56,9 @@ class Recorder(
         onRecordingFinished = onFinished
 
         recordJob = scope.launch {
-            recordStream(streamUrl)
+            val hadError = recordStream(streamUrl)
             withContext(NonCancellable) {
-                onRecordingFinished?.invoke()
+                onRecordingFinished?.invoke(hadError)
                 onRecordingFinished = null
             }
             recordJob = null
@@ -88,7 +88,7 @@ class Recorder(
         scope.cancel()
     }
 
-    private suspend fun recordStream(streamUrl: String) {
+    private suspend fun recordStream(streamUrl: String): Boolean {
         val request = Request.Builder()
             .get()
             .url(streamUrl)
@@ -98,8 +98,9 @@ class Recorder(
         var metadataSnapshot = latestMetadata
         var segment = createNewSegment(segmentMetadataVersion, metadataSnapshot) ?: run {
             keepRecording = false
-            return
+            return true // impossible de créer le segment (stockage plein ?)
         }
+        var hadError = false
 
         try {
             client.newCall(request).execute().use { response ->
@@ -119,7 +120,8 @@ class Recorder(
                         metadataSnapshot = latestMetadata
                         segment = createNewSegment(segmentMetadataVersion, metadataSnapshot) ?: run {
                             keepRecording = false
-                            return
+                            hadError = true
+                            return@use
                         }
                     }
 
@@ -134,6 +136,7 @@ class Recorder(
         } catch (cancel: CancellationException) {
             segment.wasSuccessful = segment.bytesWritten > 0
         } catch (error: Exception) {
+            hadError = true
             segment.wasSuccessful = false
             if (error !is IOException) {
                 Log.w(TAG, "Recording failed", error)
@@ -143,6 +146,7 @@ class Recorder(
         } finally {
             finalizeSegment(segment, wasSuccessful = segment.wasSuccessful)
         }
+        return hadError
     }
 
     private fun createNewSegment(versionSnapshot: Long, metadataSnapshot: TrackMetadata?): RecordingSegment? {

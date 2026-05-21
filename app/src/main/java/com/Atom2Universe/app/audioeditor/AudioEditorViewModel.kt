@@ -1355,6 +1355,7 @@ class AudioEditorViewModel(application: Application) : AndroidViewModel(applicat
                             is AudioRecorder.RecordingState.Error -> {
                                 _isRecording.value = false
                                 _errorMessage.value = state.message
+                                MicRecordingService.stop(app)
                             }
                             is AudioRecorder.RecordingState.Idle -> {
                                 // Ignore idle state - we already set _isRecording = true
@@ -1369,6 +1370,7 @@ class AudioEditorViewModel(application: Application) : AndroidViewModel(applicat
 
         // Start recording (this is now synchronous, starts thread internally)
         audioRecorder.startRecording()
+        MicRecordingService.start(app)
     }
 
     /**
@@ -1376,6 +1378,7 @@ class AudioEditorViewModel(application: Application) : AndroidViewModel(applicat
      */
     fun stopRecording() {
         audioRecorder.stopRecording()
+        MicRecordingService.stop(app)
     }
 
     /**
@@ -1385,6 +1388,7 @@ class AudioEditorViewModel(application: Application) : AndroidViewModel(applicat
         recordingCollectorJob?.cancel()
         recordingCollectorJob = null
         audioRecorder.cancelRecording()
+        MicRecordingService.stop(app)
         _isRecording.value = false
         _recordingAmplitude.value = 0f
         _recordingDurationMs.value = 0L
@@ -1413,6 +1417,7 @@ class AudioEditorViewModel(application: Application) : AndroidViewModel(applicat
         // Stop any ongoing recording
         if (_isRecording.value == true) {
             audioRecorder.cancelRecording()
+            MicRecordingService.stop(app)
         }
 
         // Save project state before ViewModel is cleared

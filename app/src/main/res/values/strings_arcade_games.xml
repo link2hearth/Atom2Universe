@@ -170,6 +170,7 @@
     <string name="stat_survivor_level">Survivor – Most kills</string>
     <string name="stat_match3_best">Metal Match – Best score</string>
     <string name="stat_match3_best_time">Metal Match – Best time</string>
+    <string name="stat_hexrunner_best">Hex Runner – Best time</string>
     <string name="clicker_stats_title">Game Stats</string>
     <string name="stat_section_wins">Victories</string>
     <string name="stat_section_records">Records</string>

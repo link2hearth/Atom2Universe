@@ -133,7 +133,8 @@ data class GameStatsSyncData(
     val game2048Won: Int = 0,
     val blackjackPlayed: Int = 0,
     val blackjackWon: Int = 0,
-    val pipeTapHardWon: Int = 0
+    val pipeTapHardWon: Int = 0,
+    val hexRunnerBestMs: Long = 0L
 ) {
     fun toJson(): JSONObject = JSONObject().apply {
         put("solitairePlayed",      solitairePlayed)
@@ -152,6 +153,7 @@ data class GameStatsSyncData(
         put("blackjackPlayed",      blackjackPlayed)
         put("blackjackWon",         blackjackWon)
         put("pipeTapHardWon",       pipeTapHardWon)
+        put("hexRunnerBestMs",      hexRunnerBestMs)
     }
 
     companion object {
@@ -171,7 +173,8 @@ data class GameStatsSyncData(
             game2048Won          = j.optInt("game2048Won", 0),
             blackjackPlayed      = j.optInt("blackjackPlayed", 0),
             blackjackWon         = j.optInt("blackjackWon", 0),
-            pipeTapHardWon       = j.optInt("pipeTapHardWon", 0)
+            pipeTapHardWon       = j.optInt("pipeTapHardWon", 0),
+            hexRunnerBestMs      = j.optLong("hexRunnerBestMs", 0L)
         )
     }
 }

@@ -354,6 +354,12 @@
                 <TextView style="@style/StatLabel" android:text="@string/stat_match3_best_time" />
                 <TextView android:id="@+id/stat_match3_best_time_value" style="@style/StatValue" android:text="—" />
             </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_hexrunner_best" />
+                <TextView android:id="@+id/stat_hexrunner_best_value" style="@style/StatValue" android:text="—" />
+            </LinearLayout>
 
         </LinearLayout>
 

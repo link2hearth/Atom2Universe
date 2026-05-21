@@ -1,7 +1,9 @@
 package com.Atom2Universe.app.radio
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -27,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.AudioPlaybackManager
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.RadioRecordingService
 import com.Atom2Universe.app.Recorder
 import com.Atom2Universe.app.SaveCore
 import com.Atom2Universe.app.ThemedActivity
@@ -89,6 +92,14 @@ class RadioActivity : ThemedActivity(), RadioPlaybackHolder.PlayerListener {
     @Volatile  // Bug 4.16: Thread-safety pour latestMetadata
     private var latestMetadata: TrackMetadata? = null
 
+    private val recordingStopReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == RadioRecordingService.ACTION_STOP_FROM_NOTIFICATION) {
+                stopRecording(showStatus = true)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
@@ -122,11 +133,22 @@ class RadioActivity : ThemedActivity(), RadioPlaybackHolder.PlayerListener {
         applyConfigState()
         loadFilters()
         updatePlayerUi()
+
+        val filter = IntentFilter(RadioRecordingService.ACTION_STOP_FROM_NOTIFICATION)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(recordingStopReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("UnspecifiedRegisterReceiverFlag")
+            registerReceiver(recordingStopReceiver, filter)
+        }
     }
 
     override fun onDestroy() {
         // Bug 4.8: Utiliser try-finally pour garantir le nettoyage des listeners même en cas de crash
         // Bug 4.11: S'assurer que recorderScope est cancelled
+        try {
+            unregisterReceiver(recordingStopReceiver)
+        } catch (_: Exception) {}
         try {
             // Ne release PAS le player - il est géré par RadioPlaybackHolder
             // On retire juste le listener pour éviter les fuites mémoire
@@ -137,6 +159,9 @@ class RadioActivity : ThemedActivity(), RadioPlaybackHolder.PlayerListener {
             } finally {
                 recorderScope.cancel()
             }
+        }
+        if (isRecording) {
+            RadioRecordingService.stop(applicationContext)
         }
         super.onDestroy()
     }
@@ -276,20 +301,26 @@ class RadioActivity : ThemedActivity(), RadioPlaybackHolder.PlayerListener {
                     // Démarré depuis la notification - lancer l'enregistrement réel
                     val station = selectedStation ?: RadioPlaybackHolder.getCurrentStation()
                     if (station != null) {
-                        val started = recorder.startRecording(station.url, latestMetadata) {
+                        val started = recorder.startRecording(station.url, latestMetadata) { hadError ->
                             runOnUiThread {
                                 setRecordingState(false)
                                 RadioPlaybackHolder.setRecordingState(this, false)
+                                RadioRecordingService.stop(applicationContext)
+                                if (hadError) {
+                                    Toast.makeText(this, getString(R.string.radio_recording_error_storage), Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
                         if (started) {
                             setRecordingState(true)
                             updatePlayerStatus(getString(R.string.radio_player_status_recording))
+                            RadioRecordingService.start(applicationContext, station.name)
                         }
                     }
                 } else {
                     // Arrêté depuis la notification
                     recorder.stopRecording()
+                    RadioRecordingService.stop(applicationContext)
                     setRecordingState(false)
                     updatePlayerStatus(getString(R.string.radio_player_status_recording_stopped))
                 }
@@ -585,10 +616,14 @@ class RadioActivity : ThemedActivity(), RadioPlaybackHolder.PlayerListener {
             updatePlayerStatus(getString(R.string.radio_player_status_idle))
             return
         }
-        val started = recorder.startRecording(station.url, latestMetadata) {
+        val started = recorder.startRecording(station.url, latestMetadata) { hadError ->
             runOnUiThread {
                 setRecordingState(false)
                 RadioPlaybackHolder.setRecordingState(this, false)
+                RadioRecordingService.stop(applicationContext)
+                if (hadError) {
+                    Toast.makeText(this, getString(R.string.radio_recording_error_storage), Toast.LENGTH_LONG).show()
+                }
             }
         }
         if (!started) {
@@ -597,11 +632,13 @@ class RadioActivity : ThemedActivity(), RadioPlaybackHolder.PlayerListener {
         setRecordingState(true)
         RadioPlaybackHolder.setRecordingState(this, true)
         updatePlayerStatus(getString(R.string.radio_player_status_recording))
+        RadioRecordingService.start(applicationContext, station.name)
         playSelectedStation(forceReload = false)
     }
 
     private fun stopRecording(showStatus: Boolean) {
         recorder.stopRecording()
+        RadioRecordingService.stop(applicationContext)
         setRecordingState(false)
         RadioPlaybackHolder.setRecordingState(this, false)
         if (showStatus) {

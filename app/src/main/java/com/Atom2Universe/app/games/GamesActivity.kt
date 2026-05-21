@@ -14,6 +14,7 @@ import com.Atom2Universe.app.clickerstats.ClickerStatsActivity
 import com.Atom2Universe.app.games.link.LinkActivity
 import com.Atom2Universe.app.games.starswar.StarsWarActivity
 import com.Atom2Universe.app.games.wavesurf.WaveSurfActivity
+import com.Atom2Universe.app.games.hexrunner.HexRunnerActivity
 import com.Atom2Universe.app.games.memory.MemoryActivity
 import com.Atom2Universe.app.games.pipetap.PipeTapActivity
 import com.Atom2Universe.app.games.starbridges.StarBridgesActivity
@@ -172,6 +173,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_wavesurf,
             activityClass = WaveSurfActivity::class.java
+        ),
+        HubTile(
+            id = "hexrunner",
+            titleRes = R.string.hex_runner_hub_title,
+            descriptionRes = R.string.hex_runner_hub_desc,
+            iconRes = android.R.drawable.ic_menu_rotate,
+            defaultColorRes = R.color.game_tile_hexrunner,
+            activityClass = HexRunnerActivity::class.java
         ),
         // Puzzle
         HubTile(

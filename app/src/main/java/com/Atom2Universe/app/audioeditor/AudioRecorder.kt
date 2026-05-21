@@ -217,6 +217,12 @@ class AudioRecorder(private val context: Context) {
 
         } catch (e: Exception) {
             Log.e(TAG, "Error writing audio data", e)
+            isRecording.set(false)
+            try {
+                audioRecord?.stop()
+                audioRecord?.release()
+                audioRecord = null
+            } catch (_: Exception) {}
             _recordingState.value = RecordingState.Error(
                 context.getString(com.Atom2Universe.app.R.string.audio_editor_error_write, e.message ?: "")
             )

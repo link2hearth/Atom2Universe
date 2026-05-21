@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <com.Atom2Universe.app.games.hexrunner.HexRunnerView
+        android:id="@+id/hex_runner_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Start overlay -->
+    <LinearLayout
+        android:id="@+id/hex_overlay_start"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#C0070710">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_title"
+            android:textColor="#00E5C0"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_subtitle"
+            android:textColor="#556677"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:paddingHorizontal="40dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_instructions"
+            android:textColor="#778899"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:paddingHorizontal="40dp"
+            android:layout_marginBottom="40dp" />
+
+        <Button
+            android:id="@+id/hex_btn_start"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_btn_start"
+            android:backgroundTint="#00E5C0"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/hex_btn_back_start"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_btn_back"
+            android:backgroundTint="#222233"
+            android:textColor="#AAAAAA" />
+
+    </LinearLayout>
+
+    <!-- Game Over overlay -->
+    <LinearLayout
+        android:id="@+id/hex_overlay_game_over"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#C0070710"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_game_over"
+            android:textColor="#EE3333"
+            android:textSize="38sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="28dp" />
+
+        <TextView
+            android:id="@+id/hex_tv_final_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#CCDDCC"
+            android:textSize="20sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/hex_tv_best_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#556655"
+            android:textSize="15sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="40dp" />
+
+        <Button
+            android:id="@+id/hex_btn_restart"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_btn_restart"
+            android:backgroundTint="#00E5C0"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/hex_btn_back_gameover"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hex_runner_btn_back"
+            android:backgroundTint="#222233"
+            android:textColor="#AAAAAA" />
+
+    </LinearLayout>
+
+</FrameLayout>

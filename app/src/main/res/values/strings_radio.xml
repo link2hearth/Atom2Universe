@@ -55,4 +55,11 @@
     <string name="radio_results_empty">No stations to display.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d kbps</string>
+    <string name="radio_recording_channel_name">Radio Recording</string>
+    <string name="radio_recording_channel_description">Keeps radio recording running in background</string>
+    <string name="radio_recording_notif_title">Recording radio</string>
+    <string name="radio_recording_notif_text">Recording: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Recording in progress…</string>
+    <string name="radio_recording_action_stop_notif">Stop recording</string>
+    <string name="radio_recording_error_storage">Recording stopped: not enough storage space.</string>
 </resources>

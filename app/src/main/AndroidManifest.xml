@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
@@ -183,6 +185,13 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
 
+        <!-- Dictaphone -->
+        <activity
+            android:name=".dictaphone.DictaphoneActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+
         <!-- Audio Editor -->
         <activity
             android:name=".audioeditor.AudioEditorActivity"
@@ -319,6 +328,11 @@
             android:theme="@style/Theme.A2U" />
         <activity
             android:name=".games.wavesurf.WaveSurfActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
+            android:name=".games.hexrunner.HexRunnerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
@@ -466,6 +480,16 @@
             android:name=".radio.RadioForegroundService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
+
+        <service
+            android:name=".RadioRecordingService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <service
+            android:name=".audioeditor.MicRecordingService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
 
         <service
             android:name=".music.MusicForegroundService"

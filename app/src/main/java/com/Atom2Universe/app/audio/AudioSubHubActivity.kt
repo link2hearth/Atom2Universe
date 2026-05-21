@@ -3,6 +3,7 @@ package com.Atom2Universe.app.audio
 import android.content.Intent
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audioeditor.AudioEditorActivity
+import com.Atom2Universe.app.dictaphone.DictaphoneActivity
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.midi.ui.MidiPlayerActivity
@@ -69,6 +70,14 @@ class AudioSubHubActivity : BaseHubActivity() {
             iconRes = R.drawable.ic_stats,
             defaultColorRes = R.color.audio_hub_tile_stats,
             activityClass = StatsActivity::class.java
+        ),
+        HubTile(
+            id = "dictaphone",
+            titleRes = R.string.audio_hub_dictaphone_title,
+            descriptionRes = R.string.audio_hub_dictaphone_desc,
+            iconRes = R.drawable.ic_mic,
+            defaultColorRes = R.color.audio_hub_tile_dictaphone,
+            activityClass = DictaphoneActivity::class.java
         )
     )
 
