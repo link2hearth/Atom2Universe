@@ -1217,14 +1217,19 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     private fun replayStateEvents(upToMs: Long) {
         val synth = synthesizer ?: return
 
-        // Track final state for each channel
+        // Track final state for each channel (-1 = not set by file, keep synthesizer default)
         val finalProgram = IntArray(16) { 0 }
         val finalPitchBend = IntArray(16) { 8192 }  // Center value (no bend)
-        val finalVolume = IntArray(16) { 100 }      // Default volume
+        val finalVolume = IntArray(16) { 100 }
         val finalPan = IntArray(16) { 64 }          // Center pan
-        val finalExpression = IntArray(16) { 127 }  // Full expression
-        val finalModulation = IntArray(16) { 0 }    // No modulation
+        val finalExpression = IntArray(16) { 127 }
+        val finalModulation = IntArray(16) { 0 }
         val finalSustain = BooleanArray(16) { false }
+        val finalSoftPedal = BooleanArray(16) { false }
+        val finalBankMsb = IntArray(16) { -1 }      // -1 = not set by file
+        val finalBankLsb = IntArray(16) { -1 }
+        val finalReverbSend = IntArray(16) { -1 }
+        val finalChorusSend = IntArray(16) { -1 }
 
         // Scan timeline to find final state at seek position
         for (event in midiTimeline) {
@@ -1239,11 +1244,16 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 }
                 MidiEventType.CONTROL_CHANGE -> {
                     when (event.data1) {
-                        7 -> finalVolume[event.channel] = event.data2      // Volume
-                        10 -> finalPan[event.channel] = event.data2        // Pan
-                        11 -> finalExpression[event.channel] = event.data2 // Expression
-                        1 -> finalModulation[event.channel] = event.data2  // Modulation
-                        64 -> finalSustain[event.channel] = event.data2 >= 64 // Sustain pedal
+                        1  -> finalModulation[event.channel] = event.data2
+                        7  -> finalVolume[event.channel] = event.data2
+                        10 -> finalPan[event.channel] = event.data2
+                        11 -> finalExpression[event.channel] = event.data2
+                        32 -> finalBankLsb[event.channel] = event.data2
+                        64 -> finalSustain[event.channel] = event.data2 >= 64
+                        67 -> finalSoftPedal[event.channel] = event.data2 >= 64
+                        91 -> finalReverbSend[event.channel] = event.data2
+                        93 -> finalChorusSend[event.channel] = event.data2
+                        Sf2Synthesizer.CC_BANK_SELECT_MSB -> finalBankMsb[event.channel] = event.data2
                     }
                 }
                 else -> {}
@@ -1252,13 +1262,20 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
         // Apply final state to all channels
         for (channel in 0 until 16) {
+            // Bank select must be applied before programChange so the preset lookup uses the right bank
+            if (finalBankMsb[channel] >= 0) synth.controlChange(channel, Sf2Synthesizer.CC_BANK_SELECT_MSB, finalBankMsb[channel])
+            if (finalBankLsb[channel] >= 0) synth.controlChange(channel, Sf2Synthesizer.CC_BANK_SELECT_LSB, finalBankLsb[channel])
             synth.programChange(channel, finalProgram[channel])
             synth.pitchBend(channel, finalPitchBend[channel])
-            synth.controlChange(channel, 7, finalVolume[channel])
-            synth.controlChange(channel, 10, finalPan[channel])
-            synth.controlChange(channel, 11, finalExpression[channel])
-            synth.controlChange(channel, 1, finalModulation[channel])
-            synth.controlChange(channel, 64, if (finalSustain[channel]) 127 else 0)
+            synth.controlChange(channel, Sf2Synthesizer.CC_VOLUME, finalVolume[channel])
+            synth.controlChange(channel, Sf2Synthesizer.CC_PAN, finalPan[channel])
+            synth.controlChange(channel, Sf2Synthesizer.CC_EXPRESSION, finalExpression[channel])
+            synth.controlChange(channel, Sf2Synthesizer.CC_MODULATION, finalModulation[channel])
+            synth.controlChange(channel, Sf2Synthesizer.CC_SUSTAIN_PEDAL, if (finalSustain[channel]) 127 else 0)
+            synth.controlChange(channel, Sf2Synthesizer.CC_SOFT_PEDAL, if (finalSoftPedal[channel]) 127 else 0)
+            // Only override reverb/chorus if the file explicitly set them; otherwise keep synthesizer defaults
+            if (finalReverbSend[channel] >= 0) synth.controlChange(channel, Sf2Synthesizer.CC_REVERB, finalReverbSend[channel])
+            if (finalChorusSend[channel] >= 0) synth.controlChange(channel, Sf2Synthesizer.CC_CHORUS, finalChorusSend[channel])
         }
     }
 

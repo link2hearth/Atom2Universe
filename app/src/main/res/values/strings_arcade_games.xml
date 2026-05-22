@@ -213,4 +213,27 @@
     <string name="the_line_diff_simple">Simple</string>
     <string name="the_line_diff_multi">Multi</string>
     <string name="the_line_widget_cancel">✕ Cancel</string>
+
+    <!-- Escape the Labyrinth -->
+    <string name="escape_title">Escape the Labyrinth</string>
+    <string name="escape_description">Sneak through the maze, collect all orbs, reach the exit</string>
+    <string name="escape_back">Back</string>
+    <string name="escape_diff_easy">Easy</string>
+    <string name="escape_diff_medium">Medium</string>
+    <string name="escape_diff_hard">Hard</string>
+    <string name="escape_btn_new">New</string>
+    <string name="escape_turns_label_zero">Turn 0</string>
+    <string name="escape_turns_label">Turn %1$d</string>
+    <string name="escape_turns_prefix">Turn </string>
+    <string name="escape_orbs_label">Orbs %1$d/%2$d</string>
+    <string name="escape_status_generating">Generating maze…</string>
+    <string name="escape_status_gen_error">Generation failed. Try again.</string>
+    <string name="escape_status_ready">Collect all orbs, then reach the exit!</string>
+    <string name="escape_status_playing">Turn %1$d — %2$d/%3$d orbs collected</string>
+    <string name="escape_status_reach_exit">All orbs collected! Reach the exit!</string>
+    <string name="escape_status_missing_orbs">%1$d orb(s) still missing!</string>
+    <string name="escape_status_wall">Path blocked.</string>
+    <string name="escape_status_caught">Spotted after %1$d turns! Tap to retry.</string>
+    <string name="escape_status_win">Escaped in %1$d turns (optimal: %2$d). Tap to play again.</string>
+    <string name="escape_status_win_perfect">Perfect escape in %1$d turns! Tap to play again.</string>
 </resources>

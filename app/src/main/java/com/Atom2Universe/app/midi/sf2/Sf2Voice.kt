@@ -126,14 +126,6 @@ class Sf2Voice(
     // Low-pass resonant filter (SF2 timbre filter)
     private val filter = BiquadFilter(sampleRate)
 
-    // Anti-aliasing filters (prevent aliasing when pitching samples up)
-    // First stage: always used when pitching up
-    private val antiAliasFilter1 = BiquadFilter(sampleRate)
-    // Second stage: used for aggressive pitch-up (> 2x) for steeper rolloff
-    private val antiAliasFilter2 = BiquadFilter(sampleRate)
-    private var antiAliasEnabled = false
-    private var antiAliasSteep = false  // True when using both filter stages
-
     // LFOs for modulation
     private val vibratoLfo = Lfo(sampleRate)
     private val modulationLfo = Lfo(sampleRate)
@@ -273,48 +265,6 @@ class Sf2Voice(
                         .coerceIn(BiquadFilter.MIN_FC_HZ, sampleRate / 2f - 100f)
                     filter.setParametersImmediate(newFcHz, filter.getQ())
                 }
-            }
-        }
-
-        // Configure anti-aliasing filters based on playback rate
-        // When pitching UP (playbackRate > 1), high frequencies in the sample
-        // would exceed Nyquist and alias into audible "BRRRR" distortion
-        // Solution: Low-pass filter at (Nyquist / playbackRate) before interpolation
-        antiAliasFilter1.reset()
-        antiAliasFilter2.reset()
-
-        // Enable anti-aliasing for any significant pitch shift
-        // Pitch up: prevent aliasing (high frequencies fold back)
-        // Pitch down: less critical but helps with clarity
-        antiAliasEnabled = playbackRate > 1.05  // Lower threshold for better quality
-        antiAliasSteep = playbackRate > 1.8     // More aggressive for high transpositions
-
-        if (antiAliasEnabled) {
-            val nyquist = sampleRate / 2f
-            // Calculate anti-alias cutoff: lower for higher playback rates
-            // Adaptive safety factor for very high transpositions
-            // FIXED: Lower minimum cutoff from 800Hz to 200Hz for extreme transpositions
-            // FIXED: Better upper bound calculation
-            val safetyFactor = when {
-                playbackRate > 3.0 -> 0.6f
-                playbackRate > 2.2 -> 0.7f
-                else -> 0.8f
-            }
-            val idealCutoff = nyquist / playbackRate.toFloat() * safetyFactor
-            val antiAliasCutoff = idealCutoff.coerceIn(200f, nyquist * 0.95f)
-
-            // First stage - always used, Q=0.707 for Butterworth (maximally flat)
-            antiAliasFilter1.setParametersImmediate(antiAliasCutoff, 0.707f)
-
-            // Second stage - for steep rolloff on high pitch-up
-            // Use slightly lower cutoff on second stage for steeper overall rolloff
-            if (antiAliasSteep) {
-                val cutoff2 = if (playbackRate > 2.5) {
-                    antiAliasCutoff * 0.8f
-                } else {
-                    antiAliasCutoff * 0.9f
-                }
-                antiAliasFilter2.setParametersImmediate(cutoff2, 0.707f)
             }
         }
 
@@ -533,9 +483,10 @@ class Sf2Voice(
             smoothedPitchBend += pbCoeff * (pitchBendSemitones - smoothedPitchBend)
 
             // Pitch modulation (combined: vibrato LFO + mod LFO + mod wheel + mod envelope + pitch bend)
+            // channelModulation is pre-scaled to semitones (rawCC1 × depthRange), so multiply by 100 for cents.
             val modWheelVibratoCents = if (channelModulation > 0f) {
                 val lfoSource = if (vibLfoValue != 0f) vibLfoValue else modLfoValue
-                lfoSource * channelModulation * 50f
+                lfoSource * channelModulation * 100f
             } else 0f
             val totalPitchModCents = vibLfoValue * vibLfoToPitchCents +
                     modLfoValue * modLfoToPitchCents +
@@ -577,14 +528,6 @@ class Sf2Voice(
             for (i in offset until blockEnd) {
                 // Sample interpolation (cubic or linear depending on quality mode)
                 var sample = getSampleInterpolated(sf2File, reg)
-
-                // Anti-aliasing filters (per-sample, IIR state-dependent)
-                if (antiAliasEnabled) {
-                    sample = antiAliasFilter1.process(sample)
-                    if (antiAliasSteep) {
-                        sample = antiAliasFilter2.process(sample)
-                    }
-                }
 
                 // SF2 low-pass timbre filter (per-sample, IIR state-dependent)
                 sample = filter.process(sample)
@@ -969,10 +912,6 @@ class Sf2Voice(
         exclusiveClass = 0
         envelope.reset()
         filter.reset()
-        antiAliasFilter1.reset()
-        antiAliasFilter2.reset()
-        antiAliasEnabled = false
-        antiAliasSteep = false
         vibratoLfo.reset()
         modulationLfo.reset()
         vibLfoToPitchCents = 0

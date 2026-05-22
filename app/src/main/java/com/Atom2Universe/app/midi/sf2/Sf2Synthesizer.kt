@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.midi.sf2
 
+import android.util.Log
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.exp
@@ -21,9 +22,12 @@ class Sf2Synthesizer(
     maxVoices: Int = 128
 ) {
     companion object {
+        private const val TAG = "Sf2Synthesizer"
+
         // MIDI Control Change numbers
         const val CC_BANK_SELECT_MSB = 0
         const val CC_MODULATION = 1
+        const val CC_BREATH = 2
         const val CC_VOLUME = 7
         const val CC_PAN = 10
         const val CC_EXPRESSION = 11
@@ -31,6 +35,8 @@ class Sf2Synthesizer(
         const val CC_DATA_ENTRY_MSB = 6
         const val CC_DATA_ENTRY_LSB = 38
         const val CC_SUSTAIN_PEDAL = 64
+        const val CC_SOSTENUTO_PEDAL = 66
+        const val CC_SOFT_PEDAL = 67
         const val CC_REVERB = 91
         const val CC_CHORUS = 93
         const val CC_RPN_LSB = 100
@@ -42,6 +48,9 @@ class Sf2Synthesizer(
         // Default pitch bend range in semitones
         const val DEFAULT_PITCH_BEND_RANGE = 2
 
+        // Default modulation depth range in semitones (GM2 spec: ±0.5 semitone at CC1=127)
+        const val DEFAULT_MOD_DEPTH_SEMITONES = 0.5f
+
         // Number of MIDI channels
         const val NUM_CHANNELS = 16
 
@@ -51,6 +60,9 @@ class Sf2Synthesizer(
         // Maximum sustained notes per channel before we start releasing oldest ones
         // Prevents sustain pedal from causing infinite voice buildup
         private const val MAX_SUSTAINED_NOTES_PER_CHANNEL = 24
+
+        // Soft pedal attenuates velocity of new noteOn events (GM spec ≈ 2/3)
+        private const val SOFT_PEDAL_ATTENUATION = 0.67f
     }
 
     // Voice pool (thread-safe access via voiceLock)
@@ -101,8 +113,8 @@ class Sf2Synthesizer(
     private val channelSustain = BooleanArray(NUM_CHANNELS) { false }
     private val channelPitchBend = FloatArray(NUM_CHANNELS) { 0f }
     private val channelModulation = FloatArray(NUM_CHANNELS) { 0f }
-    private val channelReverbSend = FloatArray(NUM_CHANNELS) { 0.4f }  // Default 40% reverb send
-    private val channelChorusSend = FloatArray(NUM_CHANNELS) { 0f }  // Default 0% chorus send
+    private val channelReverbSend = FloatArray(NUM_CHANNELS) { if (it == PERCUSSION_CHANNEL) 0.15f else 0.4f }
+    private val channelChorusSend = FloatArray(NUM_CHANNELS) { 0f }
 
     // Smoothed controller values (anti-zipper for volume/pan/expression)
     private val smoothedChannelVolume = FloatArray(NUM_CHANNELS) { 1f }
@@ -135,8 +147,8 @@ class Sf2Synthesizer(
     private val channelModulationSnapB = FloatArray(NUM_CHANNELS) { 0f }
     private val channelModulationSnapshotRef = AtomicReference(channelModulationSnapA)
 
-    private val channelReverbSendSnapA = FloatArray(NUM_CHANNELS) { 0.4f }
-    private val channelReverbSendSnapB = FloatArray(NUM_CHANNELS) { 0.4f }
+    private val channelReverbSendSnapA = FloatArray(NUM_CHANNELS) { if (it == PERCUSSION_CHANNEL) 0.15f else 0.4f }
+    private val channelReverbSendSnapB = FloatArray(NUM_CHANNELS) { if (it == PERCUSSION_CHANNEL) 0.15f else 0.4f }
     private val channelReverbSendSnapshotRef = AtomicReference(channelReverbSendSnapA)
 
     private val channelChorusSendSnapA = FloatArray(NUM_CHANNELS) { 0f }
@@ -149,8 +161,21 @@ class Sf2Synthesizer(
     private var reverbAutoAllowed = false
     private var chorusAutoAllowed = false
 
-    // Per-channel pitch bend range in semitones (default ±2, configurable via RPN 0)
+    // Per-channel pitch bend range in semitones (default ±2, configurable via RPN 0,0)
     private val channelPitchBendRange = IntArray(NUM_CHANNELS) { DEFAULT_PITCH_BEND_RANGE }
+
+    // Raw 14-bit pitch bend value per channel (needed to recompute snapshot when tuning changes)
+    private val channelRawPitchBend = IntArray(NUM_CHANNELS) { 8192 }  // 8192 = center (no bend)
+
+    // Per-channel tuning offsets (RPN 0,1 and 0,2)
+    private val channelFineTuning = IntArray(NUM_CHANNELS) { 0 }    // cents, -100..+99
+    private val channelCoarseTuning = IntArray(NUM_CHANNELS) { 0 }  // semitones, -64..+63
+
+    // Per-channel modulation depth range in semitones (RPN 0,5 — default GM2 = 0.5 semitone)
+    private val channelModDepthSemitones = FloatArray(NUM_CHANNELS) { DEFAULT_MOD_DEPTH_SEMITONES }
+
+    // Raw CC#1 modulation value (0.0-1.0) stored separately so depth range can scale it
+    private val channelRawModulation = FloatArray(NUM_CHANNELS) { 0f }
 
     // RPN (Registered Parameter Number) state machine per channel
     // RPN is set by CC101 (MSB) then CC100 (LSB), then CC6/CC38 set the value
@@ -173,6 +198,19 @@ class Sf2Synthesizer(
     // Sustained notes (notes held by sustain pedal)
     // Using LinkedHashSet to maintain insertion order for oldest-first release
     private val sustainedNotes = Array(NUM_CHANNELS) { linkedSetOf<Int>() }
+
+    // Keys currently physically held (key-down) — used by sostenuto pedal logic
+    private val heldKeys = Array(NUM_CHANNELS) { hashSetOf<Int>() }
+
+    // Notes captured by the sostenuto pedal (held only for notes depressed at pedal press)
+    private val sostenutoNotes = Array(NUM_CHANNELS) { hashSetOf<Int>() }
+
+    // Per-channel pedal state
+    private val channelSostenuto = BooleanArray(NUM_CHANNELS) { false }
+    private val channelSoftPedal = BooleanArray(NUM_CHANNELS) { false }
+
+    // Log each unknown CC number once to avoid spam
+    private val loggedUnknownCcs = mutableSetOf<Int>()
 
     // Rendering protection: prevents concurrent voice modification during parallel render.
     // When isRendering is true, external MIDI events (from UI/hybrid threads) are queued
@@ -275,23 +313,29 @@ class Sf2Synthesizer(
 
         val bank: Int
         val program: Int
+        val effectiveVelocity: Int
         synchronized(voiceLock) {
             bank = channelBank[channel]
             program = channelProgram[channel]
+            heldKeys[channel].add(safeNote)
+            // Soft pedal attenuates velocity of new notes (key-down only, not retroactive)
+            effectiveVelocity = if (channelSoftPedal[channel])
+                (safeVelocity * SOFT_PEDAL_ATTENUATION).toInt().coerceAtLeast(1)
+            else safeVelocity
         }
 
         // Find matching regions for this note (outside lock - read-only on sf2File)
-        val regions = sf2File.getRegions(bank, program, safeNote, safeVelocity)
+        val regions = sf2File.getRegions(bank, program, safeNote, effectiveVelocity)
 
         if (regions.isNotEmpty()) {
-            triggerRegions(channel, safeNote, safeVelocity, regions)
+            triggerRegions(channel, safeNote, effectiveVelocity, regions)
             return
         }
 
         // Fallback logic for when no regions found
-        val fallbackRegions = findFallbackRegions(channel, bank, program, safeNote, safeVelocity)
+        val fallbackRegions = findFallbackRegions(channel, bank, program, safeNote, effectiveVelocity)
         if (fallbackRegions.isNotEmpty()) {
-            triggerRegions(channel, safeNote, safeVelocity, fallbackRegions)
+            triggerRegions(channel, safeNote, effectiveVelocity, fallbackRegions)
         }
         // Note: We silently ignore notes with no regions to reduce log spam
     }
@@ -435,7 +479,9 @@ class Sf2Synthesizer(
         val safeNote = note.coerceIn(0, 127)
 
         synchronized(voiceLock) {
-            // If sustain pedal is held, add to sustained notes
+            heldKeys[channel].remove(safeNote)
+
+            // Sustain pedal takes priority: defer release
             if (channelSustain[channel]) {
                 sustainedNotes[channel].add(safeNote)
 
@@ -446,6 +492,11 @@ class Sf2Synthesizer(
                     sustainedNotes[channel].remove(oldest)
                     voicePool.releaseVoices(channel, oldest)
                 }
+                return
+            }
+
+            // Sostenuto holds only notes that were depressed when the pedal was pressed
+            if (channelSostenuto[channel] && safeNote in sostenutoNotes[channel]) {
                 return
             }
 
@@ -497,10 +548,18 @@ class Sf2Synthesizer(
         synchronized(voiceLock) {
             when (controller) {
                 CC_MODULATION -> {
-                    // Modulation wheel: 0 = no modulation, 127 = maximum
-                    // Normalized to 0.0-1.0 for use as vibrato depth multiplier
-                    channelModulation[channel] = safeValue / 127f
+                    // Store raw 0-1 value and pre-scale by modulation depth range.
+                    // The snapshot holds "depth in semitones" so Sf2Voice multiplies by 100 to get cents.
+                    channelRawModulation[channel] = safeValue / 127f
+                    channelModulation[channel] = channelRawModulation[channel] * channelModDepthSemitones[channel]
                     swapSnapshot(channelModulation, channelModulationSnapshotRef, channelModulationSnapA, channelModulationSnapB)
+                }
+                CC_BREATH -> {
+                    // Breath controller: used by wind instruments as a dynamic controller.
+                    // Treated identically to CC#11 (Expression) — multiplicative volume factor.
+                    // Note: does NOT affect channelRawModulation, only volume envelope.
+                    channelExpression[channel] = safeValue / 127f
+                    swapSnapshot(channelExpression, channelExpressionSnapshotRef, channelExpressionSnapA, channelExpressionSnapB)
                 }
                 CC_DATA_ENTRY_MSB -> {
                     // Data Entry MSB: sets the value for the currently selected RPN/NRPN
@@ -537,6 +596,21 @@ class Sf2Synthesizer(
                     }
                     channelSustain[channel] = sustained
                 }
+                CC_SOSTENUTO_PEDAL -> {
+                    val engaged = safeValue >= 64
+                    if (engaged && !channelSostenuto[channel]) {
+                        // Capture only notes that are physically held at this moment
+                        sostenutoNotes[channel].clear()
+                        sostenutoNotes[channel].addAll(heldKeys[channel])
+                    } else if (!engaged && channelSostenuto[channel]) {
+                        releaseSostenutoNotes(channel)
+                    }
+                    channelSostenuto[channel] = engaged
+                }
+                CC_SOFT_PEDAL -> {
+                    // Soft pedal attenuates velocity of new noteOn events only (not retroactive)
+                    channelSoftPedal[channel] = safeValue >= 64
+                }
                 CC_REVERB -> {
                     // Per-channel reverb send level (0 = dry, 127 = full reverb)
                     channelReverbSend[channel] = safeValue / 127f
@@ -567,13 +641,17 @@ class Sf2Synthesizer(
                 }
                 CC_RPN_LSB -> {
                     channelRpnLsb[channel] = safeValue
+                    // RPN 127,127 = Null RPN (both bytes received) — handled in handleDataEntry
                 }
                 CC_RPN_MSB -> {
                     channelRpnMsb[channel] = safeValue
+                    // RPN 127,127 = Null RPN — no special action needed here,
+                    // handleDataEntry checks for 127,127 before processing data entry
                 }
                 CC_ALL_SOUND_OFF -> {
                     voicePool.stopChannel(channel)
                     sustainedNotes[channel].clear()
+                    sostenutoNotes[channel].clear()
                 }
                 CC_RESET_ALL_CONTROLLERS -> {
                     resetChannelControllers(channel)
@@ -581,6 +659,12 @@ class Sf2Synthesizer(
                 CC_ALL_NOTES_OFF -> {
                     voicePool.releaseChannel(channel)
                     sustainedNotes[channel].clear()
+                    sostenutoNotes[channel].clear()
+                }
+                else -> {
+                    if (loggedUnknownCcs.add(controller)) {
+                        Log.d(TAG, "CC#$controller not implemented (first occurrence: ch $channel val $safeValue)")
+                    }
                 }
             }
         }
@@ -607,13 +691,8 @@ class Sf2Synthesizer(
         val safeValue = value.coerceIn(0, 16383)
 
         synchronized(voiceLock) {
-            // BUG FIX 1.12: Utiliser Double pour le calcul de pitch bend pour eviter
-            // la perte de precision apres 1000+ bends (~5 cents d'erreur avec Float).
-            // La division 14-bit (0-16383) par 8192 necessite plus de precision que Float32.
-            val range = channelPitchBendRange[channel]
-            val pitchBendDouble = ((safeValue - 8192).toDouble() / 8192.0) * range
-            channelPitchBend[channel] = pitchBendDouble.toFloat()
-            swapSnapshot(channelPitchBend, channelPitchBendSnapshotRef, channelPitchBendSnapA, channelPitchBendSnapB)
+            channelRawPitchBend[channel] = safeValue
+            recomputePitchSnapshot(channel)
         }
     }
 
@@ -816,26 +895,71 @@ class Sf2Synthesizer(
         }
     }
 
-    /**
-     * Handles RPN Data Entry (CC6/CC38).
-     * Called from within synchronized block, no extra sync needed.
-     * Currently supports:
-     *   RPN 0,0 = Pitch Bend Sensitivity (semitones via MSB, cents via LSB)
-     */
+    // Recomputes the pitch bend snapshot from raw bend + tuning offsets.
+    // BUG FIX 1.12: Double precision avoids ~5-cent drift after 1000+ bend events.
+    // Must be called from within voiceLock.
+    private fun recomputePitchSnapshot(channel: Int) {
+        val raw = channelRawPitchBend[channel]
+        val range = channelPitchBendRange[channel]
+        val tuningCents = channelCoarseTuning[channel] * 100f + channelFineTuning[channel]
+        val bendSemitones = ((raw - 8192).toDouble() / 8192.0 * range).toFloat()
+        channelPitchBend[channel] = bendSemitones + tuningCents / 100f
+        swapSnapshot(channelPitchBend, channelPitchBendSnapshotRef, channelPitchBendSnapA, channelPitchBendSnapB)
+    }
+
+    // Recomputes the modulation snapshot from raw CC#1 value × current depth range.
+    // Must be called from within voiceLock.
+    private fun recomputeModulationSnapshot(channel: Int) {
+        channelModulation[channel] = channelRawModulation[channel] * channelModDepthSemitones[channel]
+        swapSnapshot(channelModulation, channelModulationSnapshotRef, channelModulationSnapA, channelModulationSnapB)
+    }
+
+    // Handles RPN Data Entry (CC6/CC38). Must be called from within voiceLock.
     private fun handleDataEntry(channel: Int, value: Int, isLsb: Boolean) {
         val rpnMsb = channelRpnMsb[channel]
         val rpnLsb = channelRpnLsb[channel]
 
-        // RPN 127,127 = null (no RPN selected) — ignore data entry
+        // RPN 127,127 = Null RPN — ignore data entry (prevents accidental parameter changes)
         if (rpnMsb == 127 && rpnLsb == 127) return
 
-        // RPN 0,0 = Pitch Bend Sensitivity
-        if (rpnMsb == 0 && rpnLsb == 0) {
-            if (!isLsb) {
-                // MSB = semitones (0-24 is typical range, clamp to 24 for safety)
-                channelPitchBendRange[channel] = value.coerceIn(0, 24)
+        when {
+            // RPN 0,0 = Pitch Bend Sensitivity
+            // MSB = semitones (0–24); LSB = cents (ignored, sub-semitone)
+            rpnMsb == 0 && rpnLsb == 0 -> {
+                if (!isLsb) channelPitchBendRange[channel] = value.coerceIn(0, 24)
+                recomputePitchSnapshot(channel)
             }
-            // LSB = cents (0-99), we ignore sub-semitone precision for simplicity
+
+            // RPN 0,1 = Fine Tuning
+            // MSB: 64=0 cents, 0=-100 cents, 127=+99.2 cents (each step ≈ 1.5625 cents)
+            // LSB: sub-cent precision (< 0.02 cents), ignored
+            rpnMsb == 0 && rpnLsb == 1 -> {
+                if (!isLsb) {
+                    channelFineTuning[channel] = ((value - 64) * 100) / 64
+                }
+                recomputePitchSnapshot(channel)
+            }
+
+            // RPN 0,2 = Coarse Tuning
+            // MSB: 64=0 semitones, each step = 1 semitone (-64..+63)
+            rpnMsb == 0 && rpnLsb == 2 -> {
+                if (!isLsb) {
+                    channelCoarseTuning[channel] = (value - 64).coerceIn(-64, 63)
+                }
+                recomputePitchSnapshot(channel)
+            }
+
+            // RPN 0,5 = Modulation Depth Range
+            // MSB = whole semitones; LSB = fractional (100/128 cents per step ≈ 0.78 cents)
+            rpnMsb == 0 && rpnLsb == 5 -> {
+                if (!isLsb) {
+                    channelModDepthSemitones[channel] = value.toFloat()
+                } else {
+                    val wholeSemitones = channelModDepthSemitones[channel].toInt()
+                    channelModDepthSemitones[channel] = wholeSemitones + value * (100f / 128f) / 100f
+                }
+                recomputeModulationSnapshot(channel)
+            }
         }
     }
 
@@ -847,6 +971,17 @@ class Sf2Synthesizer(
         sustainedNotes[channel].clear()
     }
 
+    // Releases sostenuto-held notes that are no longer physically depressed.
+    // Called from within synchronized blocks, no extra sync needed.
+    private fun releaseSostenutoNotes(channel: Int) {
+        for (note in sostenutoNotes[channel]) {
+            if (note !in heldKeys[channel]) {
+                voicePool.releaseVoices(channel, note)
+            }
+        }
+        sostenutoNotes[channel].clear()
+    }
+
     // Note: resetChannelControllers is called from within synchronized blocks, no extra sync needed
     private fun resetChannelControllers(channel: Int) {
         channelVolume[channel] = 1f
@@ -855,12 +990,21 @@ class Sf2Synthesizer(
         channelSustain[channel] = false
         channelPitchBend[channel] = 0f
         channelModulation[channel] = 0f
-        channelReverbSend[channel] = 0.4f  // Default 40% reverb send
+        channelReverbSend[channel] = if (channel == PERCUSSION_CHANNEL) 0.15f else 0.4f
         channelChorusSend[channel] = 0f    // Default 0% chorus send
         channelPitchBendRange[channel] = DEFAULT_PITCH_BEND_RANGE
+        channelRawPitchBend[channel] = 8192
+        channelFineTuning[channel] = 0
+        channelCoarseTuning[channel] = 0
+        channelModDepthSemitones[channel] = DEFAULT_MOD_DEPTH_SEMITONES
+        channelRawModulation[channel] = 0f
         channelRpnMsb[channel] = 127      // Null RPN
         channelRpnLsb[channel] = 127
+        channelSostenuto[channel] = false
+        channelSoftPedal[channel] = false
         sustainedNotes[channel].clear()
+        sostenutoNotes[channel].clear()
+        heldKeys[channel].clear()
     }
 
     /**

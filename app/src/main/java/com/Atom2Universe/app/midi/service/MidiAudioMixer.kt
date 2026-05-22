@@ -44,11 +44,7 @@ object MidiAudioMixer {
     // Volume par canal (0.0 à 1.0)
     private val channelVolumes = FloatArray(16) { 1.0f }
 
-    // Réduction spéciale pour certains canaux "bruyants" (ex: drums sur canal 9)
-    private val channelBoost = FloatArray(16) { 1.0f }.apply {
-        // Canal 9 (drums) souvent trop fort
-        this[9] = 0.85f
-    }
+    private val channelBoost = FloatArray(16) { if (it == 9) 1.15f else 1.0f }
 
     // Statistiques (pour debug/ajustement)
     private var processedEvents = 0L
@@ -121,7 +117,7 @@ object MidiAudioMixer {
         setPreset(NormalizationPreset.MEDIUM)
         for (i in 0..15) {
             channelVolumes[i] = 1.0f
-            channelBoost[i] = if (i == 9) 0.85f else 1.0f
+            channelBoost[i] = if (i == 9) 1.15f else 1.0f
         }
         processedEvents = 0
         clippedEvents = 0

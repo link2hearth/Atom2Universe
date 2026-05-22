@@ -132,18 +132,29 @@ static fn_fluid_player_set_tempo p_fluid_player_set_tempo = nullptr;
 static bool loadFluidSynthLibrary() {
     if (g_initialized) return true;
 
-    // Try different library names
-    const char* libNames[] = {
-        "libfluidsynth.so",
-        "libfluidsynth-assetloader.so",
-        nullptr
-    };
+    // Primary: find the library already loaded in the process by the Kotlin-side
+    // System.loadLibrary("fluidsynth") call. RTLD_NOLOAD returns a handle without
+    // re-loading — it succeeds only if the library is already in the process namespace.
+    g_libHandle = dlopen("libfluidsynth.so", RTLD_NOLOAD | RTLD_NOW);
+    if (g_libHandle) {
+        LOGI("Found libfluidsynth.so already loaded in process (RTLD_NOLOAD)");
+    }
 
-    for (int i = 0; libNames[i] != nullptr; i++) {
-        g_libHandle = dlopen(libNames[i], RTLD_NOW);
-        if (g_libHandle) {
-            LOGI("Loaded FluidSynth library: %s", libNames[i]);
-            break;
+    // Fallback: try to load from disk (works when extractNativeLibs=true or
+    // when the library is on LD_LIBRARY_PATH)
+    if (!g_libHandle) {
+        const char* libNames[] = {
+            "libfluidsynth.so",
+            "libfluidsynth-assetloader.so",
+            nullptr
+        };
+        for (int i = 0; libNames[i] != nullptr; i++) {
+            g_libHandle = dlopen(libNames[i], RTLD_NOW);
+            if (g_libHandle) {
+                LOGI("Loaded FluidSynth library: %s", libNames[i]);
+                break;
+            }
+            LOGD("dlopen(%s) failed: %s", libNames[i], dlerror());
         }
     }
 
@@ -217,14 +228,14 @@ extern "C" {
 // ==================== Library Loading JNI ====================
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_nativeLoadLibrary(JNIEnv*, jclass) {
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_nativeLoadLibrary(JNIEnv*, jclass) {
     return loadFluidSynthLibrary() ? JNI_TRUE : JNI_FALSE;
 }
 
 // ==================== Settings ====================
 
 JNIEXPORT jlong JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newSettings(JNIEnv*, jclass) {
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_newSettings(JNIEnv*, jclass) {
     if (!g_initialized || !p_new_fluid_settings) return 0;
 
     fluid_settings_t *settings = p_new_fluid_settings();
@@ -248,7 +259,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newSettings(JNIEnv*, jc
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deleteSettings(JNIEnv*, jclass, jlong settingsHandle) {
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_deleteSettings(JNIEnv*, jclass, jlong settingsHandle) {
     if (settingsHandle == 0 || !p_delete_fluid_settings) return;
     fluid_settings_t *settings = reinterpret_cast<fluid_settings_t*>(settingsHandle);
     p_delete_fluid_settings(settings);
@@ -256,7 +267,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deleteSettings(JNIEnv*,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setSettingStr(JNIEnv *env, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_setSettingStr(JNIEnv *env, jclass,
         jlong settingsHandle, jstring name, jstring value) {
     if (settingsHandle == 0 || !p_fluid_settings_setstr) return JNI_FALSE;
     fluid_settings_t *settings = reinterpret_cast<fluid_settings_t*>(settingsHandle);
@@ -273,7 +284,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setSettingStr(JNIEnv *e
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setSettingInt(JNIEnv *env, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_setSettingInt(JNIEnv *env, jclass,
         jlong settingsHandle, jstring name, jint value) {
     if (settingsHandle == 0 || !p_fluid_settings_setint) return JNI_FALSE;
     fluid_settings_t *settings = reinterpret_cast<fluid_settings_t*>(settingsHandle);
@@ -286,7 +297,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setSettingInt(JNIEnv *e
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setSettingNum(JNIEnv *env, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_setSettingNum(JNIEnv *env, jclass,
         jlong settingsHandle, jstring name, jdouble value) {
     if (settingsHandle == 0 || !p_fluid_settings_setnum) return JNI_FALSE;
     fluid_settings_t *settings = reinterpret_cast<fluid_settings_t*>(settingsHandle);
@@ -301,7 +312,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setSettingNum(JNIEnv *e
 // ==================== Synth ====================
 
 JNIEXPORT jlong JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newSynth(JNIEnv*, jclass, jlong settingsHandle) {
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_newSynth(JNIEnv*, jclass, jlong settingsHandle) {
     if (settingsHandle == 0 || !p_new_fluid_synth) {
         LOGE("Cannot create synth: settings handle is null or library not loaded");
         return 0;
@@ -320,7 +331,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newSynth(JNIEnv*, jclas
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deleteSynth(JNIEnv*, jclass, jlong synthHandle) {
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_deleteSynth(JNIEnv*, jclass, jlong synthHandle) {
     if (synthHandle == 0 || !p_delete_fluid_synth) return;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
     p_delete_fluid_synth(synth);
@@ -330,7 +341,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deleteSynth(JNIEnv*, jc
 // ==================== SoundFont ====================
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_sfLoad(JNIEnv *env, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_sfLoad(JNIEnv *env, jclass,
         jlong synthHandle, jstring path, jboolean resetPresets) {
     if (synthHandle == 0 || !p_fluid_synth_sfload) return -1;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -352,7 +363,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_sfLoad(JNIEnv *env, jcl
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_sfUnload(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_sfUnload(JNIEnv*, jclass,
         jlong synthHandle, jint sfId, jboolean resetPresets) {
     if (synthHandle == 0 || !p_fluid_synth_sfunload) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -364,7 +375,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_sfUnload(JNIEnv*, jclas
 // ==================== MIDI Events ====================
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_noteOn(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_noteOn(JNIEnv*, jclass,
         jlong synthHandle, jint channel, jint note, jint velocity) {
     if (synthHandle == 0 || !p_fluid_synth_noteon) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -374,7 +385,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_noteOn(JNIEnv*, jclass,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_noteOff(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_noteOff(JNIEnv*, jclass,
         jlong synthHandle, jint channel, jint note) {
     if (synthHandle == 0 || !p_fluid_synth_noteoff) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -384,7 +395,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_noteOff(JNIEnv*, jclass
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_programChange(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_programChange(JNIEnv*, jclass,
         jlong synthHandle, jint channel, jint program) {
     if (synthHandle == 0 || !p_fluid_synth_program_change) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -394,7 +405,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_programChange(JNIEnv*, 
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_bankSelect(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_bankSelect(JNIEnv*, jclass,
         jlong synthHandle, jint channel, jint bank) {
     if (synthHandle == 0 || !p_fluid_synth_bank_select) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -404,7 +415,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_bankSelect(JNIEnv*, jcl
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_cc(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_cc(JNIEnv*, jclass,
         jlong synthHandle, jint channel, jint controller, jint value) {
     if (synthHandle == 0 || !p_fluid_synth_cc) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -414,7 +425,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_cc(JNIEnv*, jclass,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_pitchBend(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_pitchBend(JNIEnv*, jclass,
         jlong synthHandle, jint channel, jint value) {
     if (synthHandle == 0 || !p_fluid_synth_pitch_bend) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -424,7 +435,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_pitchBend(JNIEnv*, jcla
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_allNotesOff(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_allNotesOff(JNIEnv*, jclass,
         jlong synthHandle, jint channel) {
     if (synthHandle == 0 || !p_fluid_synth_all_notes_off) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -434,7 +445,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_allNotesOff(JNIEnv*, jc
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_allSoundOff(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_allSoundOff(JNIEnv*, jclass,
         jlong synthHandle, jint channel) {
     if (synthHandle == 0 || !p_fluid_synth_all_sounds_off) return JNI_FALSE;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -444,7 +455,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_allSoundOff(JNIEnv*, jc
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_systemReset(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_systemReset(JNIEnv*, jclass,
         jlong synthHandle) {
     if (synthHandle == 0 || !p_fluid_synth_system_reset) return;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -454,7 +465,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_systemReset(JNIEnv*, jc
 // ==================== Synth Parameters ====================
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setGain(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_setGain(JNIEnv*, jclass,
         jlong synthHandle, jfloat gain) {
     if (synthHandle == 0 || !p_fluid_synth_set_gain) return;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -462,7 +473,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setGain(JNIEnv*, jclass
 }
 
 JNIEXPORT jfloat JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_getGain(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_getGain(JNIEnv*, jclass,
         jlong synthHandle) {
     if (synthHandle == 0 || !p_fluid_synth_get_gain) return 0.0f;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -470,7 +481,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_getGain(JNIEnv*, jclass
 }
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_getPolyphony(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_getPolyphony(JNIEnv*, jclass,
         jlong synthHandle) {
     if (synthHandle == 0 || !p_fluid_synth_get_polyphony) return 0;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -478,7 +489,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_getPolyphony(JNIEnv*, j
 }
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_getActiveVoiceCount(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_getActiveVoiceCount(JNIEnv*, jclass,
         jlong synthHandle) {
     if (synthHandle == 0 || !p_fluid_synth_get_active_voice_count) return 0;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -488,7 +499,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_getActiveVoiceCount(JNI
 // ==================== Reverb ====================
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setReverbOn(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_setReverbOn(JNIEnv*, jclass,
         jlong synthHandle, jboolean on) {
     if (synthHandle == 0) return;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -500,7 +511,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setReverbOn(JNIEnv*, jc
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setReverb(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_setReverb(JNIEnv*, jclass,
         jlong synthHandle, jdouble roomSize, jdouble damping, jdouble width, jdouble level) {
     if (synthHandle == 0 || !p_fluid_synth_set_reverb) return;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -510,7 +521,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setReverb(JNIEnv*, jcla
 // ==================== Chorus ====================
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setChorusOn(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_setChorusOn(JNIEnv*, jclass,
         jlong synthHandle, jboolean on) {
     if (synthHandle == 0) return;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -524,7 +535,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_setChorusOn(JNIEnv*, jc
 // ==================== Audio Rendering ====================
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_writeStereoShort(JNIEnv *env, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_writeStereoShort(JNIEnv *env, jclass,
         jlong synthHandle, jshortArray buffer, jint offset, jint frames) {
     if (synthHandle == 0 || !p_fluid_synth_write_s16) return -1;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -543,7 +554,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_writeStereoShort(JNIEnv
 }
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_writeStereoFloat(JNIEnv *env, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_writeStereoFloat(JNIEnv *env, jclass,
         jlong synthHandle, jfloatArray leftBuffer, jfloatArray rightBuffer, jint frames) {
     if (synthHandle == 0 || !p_fluid_synth_write_float) return -1;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -570,7 +581,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_writeStereoFloat(JNIEnv
 // ==================== Audio Driver ====================
 
 JNIEXPORT jlong JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newAudioDriver(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_newAudioDriver(JNIEnv*, jclass,
         jlong settingsHandle, jlong synthHandle) {
     if (settingsHandle == 0 || synthHandle == 0 || !p_new_fluid_audio_driver) return 0;
 
@@ -588,7 +599,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newAudioDriver(JNIEnv*,
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deleteAudioDriver(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_deleteAudioDriver(JNIEnv*, jclass,
         jlong driverHandle) {
     if (driverHandle == 0 || !p_delete_fluid_audio_driver) return;
     fluid_audio_driver_t *driver = reinterpret_cast<fluid_audio_driver_t*>(driverHandle);
@@ -599,7 +610,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deleteAudioDriver(JNIEn
 // ==================== MIDI Player ====================
 
 JNIEXPORT jlong JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newPlayer(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_newPlayer(JNIEnv*, jclass,
         jlong synthHandle) {
     if (synthHandle == 0 || !p_new_fluid_player) return 0;
     fluid_synth_t *synth = reinterpret_cast<fluid_synth_t*>(synthHandle);
@@ -615,7 +626,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_newPlayer(JNIEnv*, jcla
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deletePlayer(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_deletePlayer(JNIEnv*, jclass,
         jlong playerHandle) {
     if (playerHandle == 0 || !p_delete_fluid_player) return;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -624,7 +635,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_deletePlayer(JNIEnv*, j
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerAdd(JNIEnv *env, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerAdd(JNIEnv *env, jclass,
         jlong playerHandle, jstring midiPath) {
     if (playerHandle == 0 || !p_fluid_player_add) return JNI_FALSE;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -640,7 +651,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerAdd(JNIEnv *env, 
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerPlay(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerPlay(JNIEnv*, jclass,
         jlong playerHandle) {
     if (playerHandle == 0 || !p_fluid_player_play) return JNI_FALSE;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -650,7 +661,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerPlay(JNIEnv*, jcl
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerStop(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerStop(JNIEnv*, jclass,
         jlong playerHandle) {
     if (playerHandle == 0 || !p_fluid_player_stop) return;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -658,7 +669,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerStop(JNIEnv*, jcl
 }
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerGetStatus(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerGetStatus(JNIEnv*, jclass,
         jlong playerHandle) {
     if (playerHandle == 0 || !p_fluid_player_get_status) return -1;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -666,7 +677,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerGetStatus(JNIEnv*
 }
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerSeek(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerSeek(JNIEnv*, jclass,
         jlong playerHandle, jint ticks) {
     if (playerHandle == 0 || !p_fluid_player_seek) return -1;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -674,7 +685,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerSeek(JNIEnv*, jcl
 }
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerGetCurrentTick(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerGetCurrentTick(JNIEnv*, jclass,
         jlong playerHandle) {
     if (playerHandle == 0 || !p_fluid_player_get_current_tick) return -1;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -682,7 +693,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerGetCurrentTick(JN
 }
 
 JNIEXPORT jint JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerGetTotalTicks(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerGetTotalTicks(JNIEnv*, jclass,
         jlong playerHandle) {
     if (playerHandle == 0 || !p_fluid_player_get_total_ticks) return -1;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -690,7 +701,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerGetTotalTicks(JNI
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerSetLoop(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerSetLoop(JNIEnv*, jclass,
         jlong playerHandle, jint loops) {
     if (playerHandle == 0 || !p_fluid_player_set_loop) return;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -698,7 +709,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerSetLoop(JNIEnv*, 
 }
 
 JNIEXPORT void JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerSetTempo(JNIEnv*, jclass,
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_playerSetTempo(JNIEnv*, jclass,
         jlong playerHandle, jint tempoType, jdouble tempo) {
     if (playerHandle == 0 || !p_fluid_player_set_tempo) return;
     fluid_player_t *player = reinterpret_cast<fluid_player_t*>(playerHandle);
@@ -708,7 +719,7 @@ Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_playerSetTempo(JNIEnv*,
 // ==================== Utility ====================
 
 JNIEXPORT jstring JNICALL
-Java_com_myapp_kindears_midi_fluidsynth_FluidSynthNative_getVersion(JNIEnv *env, jclass) {
+Java_com_Atom2Universe_app_midi_fluidsynth_FluidSynthNative_getVersion(JNIEnv *env, jclass) {
     char version[64];
     snprintf(version, sizeof(version), "%d.%d.%d",
              FLUIDSYNTH_VERSION_MAJOR,

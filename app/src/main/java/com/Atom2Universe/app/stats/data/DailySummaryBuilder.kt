@@ -52,7 +52,9 @@ class DailySummaryBuilder(
         val date = LocalDate.ofEpochDay(epochDay.toLong())
 
         val musicSessions = sessions.filter { it.moduleType == StatsRepository.MODULE_MUSIC }
-        val midiSessions = sessions.filter { it.moduleType == StatsRepository.MODULE_MIDI }
+        val midiSessions = sessions.filter {
+            it.moduleType == StatsRepository.MODULE_MIDI || it.moduleType == StatsRepository.MODULE_MIDI_PRACTICE
+        }
         val radioSessions = sessions.filter { it.moduleType == StatsRepository.MODULE_RADIO }
 
         val musicDuration = musicSessions.sumOf { it.durationMs }

@@ -213,4 +213,27 @@
     <string name="the_line_diff_simple">Simple</string>
     <string name="the_line_diff_multi">Multi</string>
     <string name="the_line_widget_cancel">✕ Annuler</string>
+
+    <!-- Escape the Labyrinth -->
+    <string name="escape_title">Escape the Labyrinth</string>
+    <string name="escape_description">Faufilez-vous dans le labyrinthe, collectez les orbes, atteignez la sortie</string>
+    <string name="escape_back">Retour</string>
+    <string name="escape_diff_easy">Facile</string>
+    <string name="escape_diff_medium">Moyen</string>
+    <string name="escape_diff_hard">Difficile</string>
+    <string name="escape_btn_new">Nouveau</string>
+    <string name="escape_turns_label_zero">Tour 0</string>
+    <string name="escape_turns_label">Tour %1$d</string>
+    <string name="escape_turns_prefix">Tour </string>
+    <string name="escape_orbs_label">Orbes %1$d/%2$d</string>
+    <string name="escape_status_generating">Génération du labyrinthe…</string>
+    <string name="escape_status_gen_error">Génération échouée. Réessayez.</string>
+    <string name="escape_status_ready">Collectez tous les orbes, puis atteignez la sortie !</string>
+    <string name="escape_status_playing">Tour %1$d — %2$d/%3$d orbes collectés</string>
+    <string name="escape_status_reach_exit">Tous les orbes collectés ! Atteignez la sortie !</string>
+    <string name="escape_status_missing_orbs">%1$d orbe(s) manquant(s) !</string>
+    <string name="escape_status_wall">Passage bloqué.</string>
+    <string name="escape_status_caught">Repéré après %1$d tours ! Tapez pour rejouer.</string>
+    <string name="escape_status_win">Évasion en %1$d tours (optimal : %2$d). Tapez pour rejouer.</string>
+    <string name="escape_status_win_perfect">Évasion parfaite en %1$d tours ! Tapez pour rejouer.</string>
 </resources>

@@ -109,7 +109,7 @@ interface UsageSessionDao {
     @Query("""
         SELECT midiFileName, SUM(durationMs) as totalDuration
         FROM usage_sessions
-        WHERE moduleType = 'midi'
+        WHERE moduleType IN ('midi', 'midi_practice')
         AND midiFileName IS NOT NULL
         AND midiFileName != ''
         AND startTimestamp >= :startDate
@@ -134,7 +134,7 @@ interface UsageSessionDao {
     @Query("""
         SELECT AVG(practiceScore)
         FROM usage_sessions
-        WHERE moduleType = 'midi'
+        WHERE moduleType = 'midi_practice'
         AND practiceScore IS NOT NULL
         AND startTimestamp >= :startDate
         AND endTimestamp <= :endDate

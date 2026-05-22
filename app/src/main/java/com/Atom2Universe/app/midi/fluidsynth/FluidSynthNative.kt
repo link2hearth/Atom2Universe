@@ -25,13 +25,22 @@ object FluidSynthNative {
         if (isLoaded) return true
 
         return try {
-            // First load our JNI wrapper
+            // Pre-load libfluidsynth.so via the Android ClassLoader so it is in the process
+            // address space before dlopen is called from native code.
+            // Without this, dlopen("libfluidsynth.so") fails on modern Android because the
+            // bionic linker does not search inside the APK — it only resolves names that are
+            // already loaded or present on LD_LIBRARY_PATH (which points to extracted libs only).
+            System.loadLibrary("fluidsynth")
+            android.util.Log.i("FluidSynthNative", "Pre-loaded libfluidsynth.so")
+
+            // Load the JNI wrapper that uses dlopen/dlsym to bind FluidSynth symbols
             System.loadLibrary("fluidsynth_jni")
             android.util.Log.i("FluidSynthNative", "Loaded fluidsynth_jni wrapper")
 
-            // Then load FluidSynth library via dlopen
+            // dlopen("libfluidsynth.so") inside nativeLoadLibrary() now finds the
+            // already-loaded library in the process namespace
             if (!nativeLoadLibrary()) {
-                android.util.Log.w("FluidSynthNative", "FluidSynth library not available")
+                android.util.Log.w("FluidSynthNative", "FluidSynth symbol binding failed")
                 return false
             }
 
@@ -39,9 +48,7 @@ object FluidSynthNative {
             android.util.Log.i("FluidSynthNative", "FluidSynth loaded successfully, version: ${getVersion()}")
             true
         } catch (_: UnsatisfiedLinkError) {
-            // This is expected if FluidSynth native library is not included in the build
-            // Log at debug level to avoid alarming users
-            android.util.Log.d("FluidSynthNative", "FluidSynth native library not available")
+            android.util.Log.d("FluidSynthNative", "FluidSynth native library not available on this device")
             false
         }
     }

@@ -184,8 +184,13 @@ object StatsTracker {
             return
         }
 
+        val moduleType = if (session.isPracticeMode)
+            StatsRepository.MODULE_MIDI_PRACTICE
+        else
+            StatsRepository.MODULE_MIDI
+
         val usageSession = UsageSessionEntity(
-            moduleType = StatsRepository.MODULE_MIDI,
+            moduleType = moduleType,
             startTimestamp = session.startTimestamp,
             endTimestamp = endTimestamp,
             durationMs = durationMs,
@@ -194,7 +199,7 @@ object StatsTracker {
         )
 
         saveSession(usageSession)
-        Log.d(TAG, "Ended MIDI session: duration ${durationMs / 1000}s")
+        Log.d(TAG, "Ended MIDI session ($moduleType): duration ${durationMs / 1000}s")
     }
 
     fun pauseMidiSession() {

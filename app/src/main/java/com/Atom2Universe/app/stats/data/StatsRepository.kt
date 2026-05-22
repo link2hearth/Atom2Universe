@@ -24,6 +24,7 @@ class StatsRepository(context: Context) {
     companion object {
         const val MODULE_MUSIC = "music"
         const val MODULE_MIDI = "midi"
+        const val MODULE_MIDI_PRACTICE = "midi_practice"
         const val MODULE_RADIO = "radio"
     }
 
@@ -42,18 +43,25 @@ class StatsRepository(context: Context) {
     }
 
     /**
-     * Récupère la durée totale de pratique MIDI pour une période.
-     * Combine les sessions d'écoute MIDI et les sessions de practice.
+     * Récupère la durée totale d'écoute MIDI simple (hors entraînement) pour une période.
+     */
+    suspend fun getMidiListeningTime(startDate: Long, endDate: Long): Long = withContext(Dispatchers.IO) {
+        usageSessionDao.getTotalDurationByModule(MODULE_MIDI, startDate, endDate)
+    }
+
+    /**
+     * Récupère la durée totale de pratique/entraînement MIDI pour une période.
+     * Combine les sessions MODULE_MIDI_PRACTICE et les résultats de la table practice.
      */
     suspend fun getMidiPracticeTime(startDate: Long, endDate: Long): Long = withContext(Dispatchers.IO) {
-        // Sessions d'écoute MIDI normales
-        val listeningTime = usageSessionDao.getTotalDurationByModule(MODULE_MIDI, startDate, endDate)
+        // Sessions d'entraînement trackées par StatsTracker (MODULE_MIDI_PRACTICE uniquement)
+        val practiceSessionTime = usageSessionDao.getTotalDurationByModule(MODULE_MIDI_PRACTICE, startDate, endDate)
 
-        // Sessions de practice (depuis MidiDatabase)
+        // Résultats détaillés de practice depuis MidiDatabase (scores, exercices)
         val practiceSessions = practiceSessionDao.getSessionsBetween(startDate, endDate)
         val practiceTime = practiceSessions.sumOf { it.sessionDurationMs }
 
-        listeningTime + practiceTime
+        practiceSessionTime + practiceTime
     }
 
     /**
@@ -78,11 +86,11 @@ class StatsRepository(context: Context) {
     }
 
     /**
-     * Récupère le top des fichiers MIDI les plus travaillés.
-     * Combine les sessions d'écoute et de practice.
+     * Récupère le top des fichiers MIDI les plus écoutés/travaillés.
+     * Combine lectures simples, entraînements et résultats de practice.
      */
     suspend fun getTopMidiFiles(startDate: Long, endDate: Long, limit: Int = 5): List<MidiFileStats> = withContext(Dispatchers.IO) {
-        // Stats depuis les sessions d'écoute
+        // Stats depuis les sessions d'écoute et d'entraînement (les deux types)
         val listeningStats = usageSessionDao.getTopMidiFiles(startDate, endDate, limit * 2)
 
         // Stats depuis les sessions de practice (grouper par fichier)

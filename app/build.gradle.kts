@@ -93,8 +93,7 @@ android {
         jniLibs {
             pickFirsts += listOf(
                 "lib/arm64-v8a/libc++_shared.so",
-                "lib/arm64-v8a/liboboe.so",
-                "lib/arm64-v8a/libfluidsynth.so"
+                "lib/arm64-v8a/liboboe.so"
             )
         }
         resources {
