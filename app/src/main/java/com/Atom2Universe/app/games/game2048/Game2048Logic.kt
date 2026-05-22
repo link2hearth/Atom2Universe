@@ -165,6 +165,40 @@ class Game2048Logic(var size: Int = 4) {
         return true
     }
 
+    /**
+     * Mode quantique : fusionne deux cases adjacentes spécifiques (coûte un joker).
+     * Retourne true si la fusion a eu lieu.
+     */
+    fun mergeAdjacentCells(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): Boolean {
+        if (!quantumMode || gameOver) return false
+        if (fromRow !in 0 until size || fromCol !in 0 until size) return false
+        if (toRow !in 0 until size || toCol !in 0 until size) return false
+        if (kotlin.math.abs(toRow - fromRow) + kotlin.math.abs(toCol - fromCol) != 1) return false
+        val fromIdx = fromRow * size + fromCol
+        val toIdx = toRow * size + toCol
+        val fromVal = board[fromIdx]
+        val toVal = board[toIdx]
+        if (fromVal == 0 || toVal == 0) return false
+        if (jokers <= 0) return false
+
+        val merged = fromVal + toVal
+        board[toIdx] = merged
+        board[fromIdx] = 0
+        jokers--
+        nextMoveIsJoker = false
+        score += merged
+        moves++
+        bestTile = board.maxOrNull() ?: 0
+
+        if (!hasWon) {
+            hasWon = board.any { it == quantumTarget }
+        }
+
+        spawnTile()
+        checkGameOver()
+        return true
+    }
+
     /** Vérifie si aucun mouvement n'est possible. */
     private fun checkGameOver() {
         if (board.any { it == 0 }) return  // Case vide = pas game over

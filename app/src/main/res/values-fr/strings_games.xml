@@ -37,4 +37,21 @@
     <string name="match3_game_over">Game Over</string>
     <string name="match3_time">Temps : %1$s</string>
     <string name="back_button_desc">Retour</string>
+
+    <!-- Othello -->
+    <string name="othello_title">Othello</string>
+    <string name="othello_hub_desc">Jeu de plateau stratégique reversi</string>
+    <string name="othello_score">Noirs : %1$d · Blancs : %2$d</string>
+    <string name="othello_status_your_turn">À vous de jouer (Blancs)</string>
+    <string name="othello_status_black_turn">Au tour des Noirs</string>
+    <string name="othello_status_white_turn">Au tour des Blancs</string>
+    <string name="othello_status_ai_thinking">L\'IA réfléchit…</string>
+    <string name="othello_status_invalid">Coup invalide. Choisissez une case surlignée.</string>
+    <string name="othello_status_game_over">Partie terminée — Noirs %1$d · Blancs %2$d. %3$s</string>
+    <string name="othello_result_black">Victoire des Noirs !</string>
+    <string name="othello_result_white">Victoire des Blancs !</string>
+    <string name="othello_result_draw">Égalité !</string>
+    <string name="othello_mode_solo">Solo vs IA</string>
+    <string name="othello_mode_duo">2 Joueurs</string>
+    <string name="othello_new_game">Nouvelle partie</string>
 </resources>

@@ -11,6 +11,9 @@ import kotlin.math.min
 /**
  * Vue Canvas du plateau 2048.
  * Dessine les cellules vides et les tuiles, détecte les swipes.
+ *
+ * En mode quantique, détecte aussi le glissement doigt d'une case vers une case adjacente
+ * pour déclencher onCellMerge (fusion ciblée coûtant un joker).
  */
 class Game2048View @JvmOverloads constructor(
     context: Context,
@@ -19,6 +22,7 @@ class Game2048View @JvmOverloads constructor(
 
     interface SwipeListener {
         fun onSwipe(direction: Game2048Logic.Direction)
+        fun onCellMerge(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int) {}
     }
 
     var swipeListener: SwipeListener? = null
@@ -44,7 +48,6 @@ class Game2048View @JvmOverloads constructor(
         2048 to Color.parseColor("#EDC22E")
     )
 
-    // Couleurs du texte selon la valeur
     private val darkTextValues = setOf(2, 4)
 
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -53,6 +56,17 @@ class Game2048View @JvmOverloads constructor(
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         textAlign = Paint.Align.CENTER
+    }
+    private val density = context.resources.displayMetrics.density
+    private val dragHighlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = Color.WHITE
+        strokeWidth = 4f * density
+    }
+    private val dragTargetPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = Color.parseColor("#7C3AED")
+        strokeWidth = 4f * density
     }
 
     private val GRID_BG_COLOR = Color.parseColor("#BBADA0")
@@ -64,14 +78,21 @@ class Game2048View @JvmOverloads constructor(
     private var gap = 0f
     private var cornerRadius = 0f
 
-    // Détection de swipe
-    // Seuils en dp pour être cohérents quelle que soit la densité d'écran
-    private val density = context.resources.displayMetrics.density
-    private val SWIPE_THRESHOLD = 20f * density        // 20dp — gestes courts acceptés
-    private val SWIPE_VELOCITY_THRESHOLD = 80f * density  // 80dp/s — vitesse minimale légère
+    // État du drag quantique
+    private var dragSourceRow = -1
+    private var dragSourceCol = -1
+    private var dragHoverRow = -1
+    private var dragHoverCol = -1
+    private var touchDownX = 0f
+    private var touchDownY = 0f
+
+    // Seuils de swipe en dp
+    private val SWIPE_THRESHOLD = 20f * density
+    private val SWIPE_VELOCITY_THRESHOLD = 80f * density
+    // Distance max pour qu'un mouvement soit considéré comme un drag ciblé (pas un swipe)
+    private val DRAG_MAX_DIST = 2.2f  // en unités cellSize (calculé après onSizeChanged)
 
     private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
-
         override fun onFling(
             e1: MotionEvent?,
             e2: MotionEvent,
@@ -84,13 +105,10 @@ class Game2048View @JvmOverloads constructor(
             val absDx = kotlin.math.abs(dx)
             val absDy = kotlin.math.abs(dy)
 
-            // Rejeter si le déplacement est trop petit dans les deux axes
             if (absDx < SWIPE_THRESHOLD && absDy < SWIPE_THRESHOLD) return false
-            // Rejeter si trop lent dans les deux axes
             if (kotlin.math.abs(velocityX) < SWIPE_VELOCITY_THRESHOLD &&
                 kotlin.math.abs(velocityY) < SWIPE_VELOCITY_THRESHOLD) return false
 
-            // Direction : l'axe dominant gagne (tolérance 45°)
             val direction = if (absDx >= absDy) {
                 if (dx > 0) Game2048Logic.Direction.RIGHT else Game2048Logic.Direction.LEFT
             } else {
@@ -102,7 +120,6 @@ class Game2048View @JvmOverloads constructor(
     })
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        // Le plateau est toujours carré, limité par la plus petite dimension
         val w = MeasureSpec.getSize(widthMeasureSpec)
         val h = MeasureSpec.getSize(heightMeasureSpec)
         val side = min(w, h)
@@ -132,11 +149,9 @@ class Game2048View @JvmOverloads constructor(
         val n = g.size
         val side = min(width, height).toFloat()
 
-        // Fond du plateau
         bgPaint.color = GRID_BG_COLOR
         canvas.drawRoundRect(0f, 0f, side, side, cornerRadius * 1.5f, cornerRadius * 1.5f, bgPaint)
 
-        // Cellules vides
         cellPaint.color = CELL_COLOR
         for (row in 0 until n) {
             for (col in 0 until n) {
@@ -145,7 +160,6 @@ class Game2048View @JvmOverloads constructor(
             }
         }
 
-        // Tuiles
         for (row in 0 until n) {
             for (col in 0 until n) {
                 val value = g.board[row * n + col]
@@ -161,6 +175,27 @@ class Game2048View @JvmOverloads constructor(
 
                 val textY = rect.centerY() - (textPaint.descent() + textPaint.ascent()) / 2f
                 canvas.drawText(value.toString(), rect.centerX(), textY, textPaint)
+            }
+        }
+
+        // Surbrillance de la case source du drag quantique
+        if (dragSourceRow >= 0 && dragSourceCol >= 0) {
+            canvas.drawRoundRect(
+                cellRect(dragSourceRow, dragSourceCol),
+                cornerRadius, cornerRadius, dragHighlightPaint
+            )
+        }
+
+        // Surbrillance de la case destination survolée (si adjacente)
+        if (dragHoverRow >= 0 && dragHoverCol >= 0 &&
+            (dragHoverRow != dragSourceRow || dragHoverCol != dragSourceCol)) {
+            val dr = kotlin.math.abs(dragHoverRow - dragSourceRow)
+            val dc = kotlin.math.abs(dragHoverCol - dragSourceCol)
+            if (dr + dc == 1) {
+                canvas.drawRoundRect(
+                    cellRect(dragHoverRow, dragHoverCol),
+                    cornerRadius, cornerRadius, dragTargetPaint
+                )
             }
         }
     }
@@ -180,10 +215,108 @@ class Game2048View @JvmOverloads constructor(
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-            parent?.requestDisallowInterceptTouchEvent(true)
+    private fun hitTestRow(y: Float): Int {
+        val g = game ?: return -1
+        for (row in 0 until g.size) {
+            val top = gap + row * (cellSize + gap)
+            if (y >= top && y <= top + cellSize) return row
         }
+        return -1
+    }
+
+    private fun hitTestCol(x: Float): Int {
+        val g = game ?: return -1
+        for (col in 0 until g.size) {
+            val left = gap + col * (cellSize + gap)
+            if (x >= left && x <= left + cellSize) return col
+        }
+        return -1
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val g = game
+        val jokerReady = g?.quantumMode == true && g.nextMoveIsJoker
+
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                parent?.requestDisallowInterceptTouchEvent(true)
+                touchDownX = event.x
+                touchDownY = event.y
+
+                if (jokerReady && g != null) {
+                    val r = hitTestRow(event.y)
+                    val c = hitTestCol(event.x)
+                    if (r >= 0 && c >= 0 && g.board[r * g.size + c] != 0) {
+                        dragSourceRow = r
+                        dragSourceCol = c
+                        dragHoverRow = r
+                        dragHoverCol = c
+                        invalidate()
+                    }
+                }
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                if (dragSourceRow >= 0 && cellSize > 0f) {
+                    val dx = event.x - touchDownX
+                    val dy = event.y - touchDownY
+                    // Si le doigt s'éloigne trop, c'est un swipe → abandonner le drag ciblé
+                    if (kotlin.math.abs(dx) > cellSize * DRAG_MAX_DIST ||
+                        kotlin.math.abs(dy) > cellSize * DRAG_MAX_DIST) {
+                        dragSourceRow = -1
+                        dragSourceCol = -1
+                        dragHoverRow = -1
+                        dragHoverCol = -1
+                        invalidate()
+                    } else {
+                        // Mettre à jour la case survolée pour le retour visuel
+                        val hr = hitTestRow(event.y)
+                        val hc = hitTestCol(event.x)
+                        if (hr != dragHoverRow || hc != dragHoverCol) {
+                            dragHoverRow = hr
+                            dragHoverCol = hc
+                            invalidate()
+                        }
+                    }
+                }
+            }
+
+            MotionEvent.ACTION_UP -> {
+                val srcRow = dragSourceRow
+                val srcCol = dragSourceCol
+                dragSourceRow = -1
+                dragSourceCol = -1
+                dragHoverRow = -1
+                dragHoverCol = -1
+                invalidate()
+
+                if (srcRow >= 0 && srcCol >= 0) {
+                    val endRow = hitTestRow(event.y)
+                    val endCol = hitTestCol(event.x)
+                    if (endRow >= 0 && endCol >= 0) {
+                        val dr = kotlin.math.abs(endRow - srcRow)
+                        val dc = kotlin.math.abs(endCol - srcCol)
+                        val totalDist = kotlin.math.sqrt(
+                            ((event.x - touchDownX) * (event.x - touchDownX) +
+                             (event.y - touchDownY) * (event.y - touchDownY)).toDouble()
+                        ).toFloat()
+                        if (dr + dc == 1 && cellSize > 0f && totalDist < cellSize * DRAG_MAX_DIST) {
+                            swipeListener?.onCellMerge(srcRow, srcCol, endRow, endCol)
+                            return true  // Consommé — pas de swipe
+                        }
+                    }
+                }
+            }
+
+            MotionEvent.ACTION_CANCEL -> {
+                dragSourceRow = -1
+                dragSourceCol = -1
+                dragHoverRow = -1
+                dragHoverCol = -1
+                invalidate()
+            }
+        }
+
         gestureDetector.onTouchEvent(event)
         return true
     }

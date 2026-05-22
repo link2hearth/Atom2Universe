@@ -37,4 +37,21 @@
     <string name="match3_game_over">Oyun Bitti</string>
     <string name="match3_time">Süre: %1$s</string>
     <string name="back_button_desc">Geri</string>
+
+    <!-- Othello -->
+    <string name="othello_title">Othello</string>
+    <string name="othello_hub_desc">Klasik reversi strateji oyunu</string>
+    <string name="othello_score">Siyah: %1$d · Beyaz: %2$d</string>
+    <string name="othello_status_your_turn">Sıra sende (Beyaz)</string>
+    <string name="othello_status_black_turn">Siyah\'ın sırası</string>
+    <string name="othello_status_white_turn">Beyaz\'ın sırası</string>
+    <string name="othello_status_ai_thinking">YZ düşünüyor…</string>
+    <string name="othello_status_invalid">Geçersiz hamle. Vurgulanan bir hücre seç.</string>
+    <string name="othello_status_game_over">Oyun bitti — Siyah %1$d · Beyaz %2$d. %3$s</string>
+    <string name="othello_result_black">Siyah kazandı!</string>
+    <string name="othello_result_white">Beyaz kazandı!</string>
+    <string name="othello_result_draw">Beraberlik!</string>
+    <string name="othello_mode_solo">Solo vs YZ</string>
+    <string name="othello_mode_duo">2 Oyuncu</string>
+    <string name="othello_new_game">Yeni oyun</string>
 </resources>

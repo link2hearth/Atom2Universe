@@ -37,4 +37,21 @@
     <string name="match3_game_over">Game Over</string>
     <string name="match3_time">Zeit: %1$s</string>
     <string name="back_button_desc">Zurück</string>
+
+    <!-- Othello -->
+    <string name="othello_title">Othello</string>
+    <string name="othello_hub_desc">Klassisches Reversi-Strategiespiel</string>
+    <string name="othello_score">Schwarz: %1$d · Weiß: %2$d</string>
+    <string name="othello_status_your_turn">Du bist dran (Weiß)</string>
+    <string name="othello_status_black_turn">Schwarz ist dran</string>
+    <string name="othello_status_white_turn">Weiß ist dran</string>
+    <string name="othello_status_ai_thinking">KI denkt nach…</string>
+    <string name="othello_status_invalid">Ungültiger Zug. Wähle eine markierte Zelle.</string>
+    <string name="othello_status_game_over">Spiel vorbei — Schwarz %1$d · Weiß %2$d. %3$s</string>
+    <string name="othello_result_black">Schwarz gewinnt!</string>
+    <string name="othello_result_white">Weiß gewinnt!</string>
+    <string name="othello_result_draw">Unentschieden!</string>
+    <string name="othello_mode_solo">Solo vs KI</string>
+    <string name="othello_mode_duo">2 Spieler</string>
+    <string name="othello_new_game">Neues Spiel</string>
 </resources>

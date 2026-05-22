@@ -9,6 +9,7 @@ import com.Atom2Universe.app.games.roulette.RouletteActivity
 import com.Atom2Universe.app.games.theline.TheLineActivity
 import com.Atom2Universe.app.games.chess.ChessActivity
 import com.Atom2Universe.app.games.draughts.DraughtsActivity
+import com.Atom2Universe.app.games.othello.OthelloActivity
 import com.Atom2Universe.app.games.flappycat.FlappyCatActivity
 import com.Atom2Universe.app.clickerstats.ClickerStatsActivity
 import com.Atom2Universe.app.games.link.LinkActivity
@@ -117,6 +118,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_draughts,
             activityClass = DraughtsActivity::class.java
+        ),
+        HubTile(
+            id = "othello",
+            titleRes = R.string.othello_title,
+            descriptionRes = R.string.othello_hub_desc,
+            iconRes = android.R.drawable.ic_menu_sort_by_size,
+            defaultColorRes = R.color.game_tile_othello,
+            activityClass = OthelloActivity::class.java
         ),
         // Cartes & mémoire
         HubTile(

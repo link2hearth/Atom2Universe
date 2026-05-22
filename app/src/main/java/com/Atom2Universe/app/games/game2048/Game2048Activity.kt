@@ -107,7 +107,6 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
             val size = if (quantumMode && game.size == 3) 4 else game.size
             updateTargetSpinner(size)
             jokerButton.visibility = if (quantumMode) View.VISIBLE else View.GONE
-            game.nextMoveIsJoker = false
             refreshJokerButton()
         }
 
@@ -247,7 +246,7 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
         }
     }
 
-    // ── Affichage du bouton joker ─────────────────────────────────────────────
+    // ── Affichage du compteur de jokers ──────────────────────────────────────
 
     private fun refreshJokerButton() {
         if (!quantumMode) {
@@ -273,6 +272,28 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
 
         val moved = game.move(direction)
         if (!moved) return
+
+        if (game.score > bestScore) {
+            bestScore = game.score
+            saveBestScore()
+        }
+
+        boardView.refresh()
+        updateDisplays()
+        refreshJokerButton()
+        saveCurrent()
+
+        when {
+            game.hasWon && !game.gameOver -> onWin()
+            game.gameOver -> onGameOver()
+        }
+    }
+
+    override fun onCellMerge(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int) {
+        if (game.gameOver) return
+
+        val merged = game.mergeAdjacentCells(fromRow, fromCol, toRow, toCol)
+        if (!merged) return
 
         if (game.score > bestScore) {
             bestScore = game.score
