@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Dictafoon</string>
+    <string name="dictaphone_action_record">Opnemen</string>
+    <string name="dictaphone_action_stop">Stoppen</string>
+    <string name="dictaphone_action_play">Afspelen</string>
+    <string name="dictaphone_action_rename">Hernoemen</string>
+    <string name="dictaphone_action_delete">Verwijderen</string>
+    <string name="dictaphone_recordings_title">Opnamen</string>
+    <string name="dictaphone_recordings_empty">Nog geen opnamen. Tik op de microfoon om te beginnen.</string>
+    <string name="dictaphone_status_saving">Opslaan…</string>
+    <string name="dictaphone_rename_title">Opname hernoemen</string>
+    <string name="dictaphone_delete_title">Opname verwijderen</string>
+    <string name="dictaphone_delete_message">\"%1$s\" verwijderen?</string>
+    <string name="dictaphone_delete_confirm">Verwijderen</string>
+    <string name="audio_hub_dictaphone_title">Dictafoon</string>
+    <string name="audio_hub_dictaphone_desc">Spraakrecorder opgeslagen in Muziek</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Runner dalam terowongan heksagonal</string>
+    <string name="hex_runner_instructions">Geser kiri atau kanan untuk memutar terowongan.\nHindari celah — bertahan selama mungkin.</string>
+    <string name="hex_runner_btn_start">MULAI</string>
+    <string name="hex_runner_btn_restart">COBA LAGI</string>
+    <string name="hex_runner_btn_back">KEMBALI</string>
+    <string name="hex_runner_game_over">GAME OVER</string>
+    <string name="hex_runner_score_label">Waktu: %1$s</string>
+    <string name="hex_runner_best_label">Terbaik: %1$s</string>
+    <string name="hex_runner_shape_hexagon">HEXAGON</string>
+    <string name="hex_runner_shape_octagon">OKTAGON</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Bertahan di terowongan heksagonal berputar</string>
+</resources>

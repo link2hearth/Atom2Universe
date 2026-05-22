@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Diktiergerät</string>
+    <string name="dictaphone_action_record">Aufnehmen</string>
+    <string name="dictaphone_action_stop">Stopp</string>
+    <string name="dictaphone_action_play">Abspielen</string>
+    <string name="dictaphone_action_rename">Umbenennen</string>
+    <string name="dictaphone_action_delete">Löschen</string>
+    <string name="dictaphone_recordings_title">Aufnahmen</string>
+    <string name="dictaphone_recordings_empty">Noch keine Aufnahmen. Mikrofon antippen zum Starten.</string>
+    <string name="dictaphone_status_saving">Speichern…</string>
+    <string name="dictaphone_rename_title">Aufnahme umbenennen</string>
+    <string name="dictaphone_delete_title">Aufnahme löschen</string>
+    <string name="dictaphone_delete_message">„%1$s" löschen?</string>
+    <string name="dictaphone_delete_confirm">Löschen</string>
+    <string name="audio_hub_dictaphone_title">Diktiergerät</string>
+    <string name="audio_hub_dictaphone_desc">Sprachrekorder in Musik gespeichert</string>
+</resources>

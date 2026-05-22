@@ -55,4 +55,11 @@
     <string name="radio_player_status_format_error">Formato audio non supportato.</string>
     <string name="radio_notification_permission_missing">Permesso notifiche non concesso. La riproduzione funzionerà ma senza controlli nella notifica.</string>
     <string name="radio_status_offline">Nessuna connessione internet.</string>
+    <string name="radio_recording_channel_name">Registrazione radio</string>
+    <string name="radio_recording_channel_description">Mantiene la registrazione radio in background</string>
+    <string name="radio_recording_notif_title">Registrazione radio</string>
+    <string name="radio_recording_notif_text">Registrazione: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Registrazione in corso…</string>
+    <string name="radio_recording_action_stop_notif">Interrompi registrazione</string>
+    <string name="radio_recording_error_storage">Registrazione interrotta: spazio di archiviazione insufficiente.</string>
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Runner in een zeshoekige tunnel</string>
+    <string name="hex_runner_instructions">Veeg links of rechts om de tunnel te draaien.\nVermijd de gaten — overleef zo lang mogelijk.</string>
+    <string name="hex_runner_btn_start">STARTEN</string>
+    <string name="hex_runner_btn_restart">OPNIEUW</string>
+    <string name="hex_runner_btn_back">TERUG</string>
+    <string name="hex_runner_game_over">GAME OVER</string>
+    <string name="hex_runner_score_label">Tijd: %1$s</string>
+    <string name="hex_runner_best_label">Beste: %1$s</string>
+    <string name="hex_runner_shape_hexagon">HEXAGOON</string>
+    <string name="hex_runner_shape_octagon">OCTAGON</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Overleef in een draaiende zeshoekige tunnel</string>
+</resources>

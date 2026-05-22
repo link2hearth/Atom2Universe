@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Altıgen tünelde koşucu</string>
+    <string name="hex_runner_instructions">Tüneli döndürmek için sola veya sağa kaydırın.\nBoşluklardan kaçının — mümkün olduğunca uzun süre hayatta kalın.</string>
+    <string name="hex_runner_btn_start">BAŞLA</string>
+    <string name="hex_runner_btn_restart">TEKRAR</string>
+    <string name="hex_runner_btn_back">GERİ</string>
+    <string name="hex_runner_game_over">OYUN BİTTİ</string>
+    <string name="hex_runner_score_label">Süre: %1$s</string>
+    <string name="hex_runner_best_label">En iyi: %1$s</string>
+    <string name="hex_runner_shape_hexagon">ALTIGEN</string>
+    <string name="hex_runner_shape_octagon">SEKİZGEN</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Dönen altıgen tünelde hayatta kal</string>
+</resources>

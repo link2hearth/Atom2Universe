@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Бігун у шестикутному тунелі</string>
+    <string name="hex_runner_instructions">Проведіть вліво або вправо, щоб повернути тунель.\nУникайте провалів — виживайте якомога довше.</string>
+    <string name="hex_runner_btn_start">СТАРТ</string>
+    <string name="hex_runner_btn_restart">ЩЕ РАЗ</string>
+    <string name="hex_runner_btn_back">НАЗАД</string>
+    <string name="hex_runner_game_over">ГРА ЗАКІНЧЕНА</string>
+    <string name="hex_runner_score_label">Час: %1$s</string>
+    <string name="hex_runner_best_label">Найкращий: %1$s</string>
+    <string name="hex_runner_shape_hexagon">ШЕСТИКУТНИК</string>
+    <string name="hex_runner_shape_octagon">ВОСЬМИКУТНИК</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Виживіть у шестикутному тунелі, що обертається</string>
+</resources>

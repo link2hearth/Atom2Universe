@@ -29,7 +29,7 @@
             android:src="@android:drawable/ic_media_previous"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/escape_back"
-            android:tint="#AACCFF" />
+            app:tint="#AACCFF" />
 
         <TextView
             android:layout_width="0dp"

@@ -35,4 +35,5 @@
     <string name="hub_shortcut_add_message">« %1$s » gebruiken als snelkoppeling op de hubtegel?</string>
     <string name="hub_shortcut_exists_message">« %1$s » is al een snelkoppeling. Naar eerste positie verplaatsen (Ja) of verwijderen (Nee)?</string>
     <string name="hub_shortcut_added">Snelkoppeling toegevoegd</string>
+    <string name="periodic_toggle_rarities_desc">Zeldzaamheden tonen/verbergen</string>
 </resources>

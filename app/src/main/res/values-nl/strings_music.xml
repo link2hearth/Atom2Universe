@@ -363,4 +363,5 @@
     <string name="music_settings_trusted_wifi_active">LAN-synchronisatie actief op «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">LAN-synchronisatie uitgeschakeld op dit netwerk</string>
     <string name="music_settings_trusted_wifi_no_wifi">Niet verbonden met Wi-Fi</string>
+    <string name="music_settings_trusted_wifi_unknown_network">Wi-Fi-netwerk</string>
 </resources>

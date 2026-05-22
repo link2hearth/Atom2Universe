@@ -239,7 +239,7 @@ class ComicsLibraryActivity : ThemedActivity() {
     // ── Library root (recursive scan) ─────────────────────────────────────
 
     private fun requestLibraryRoot() {
-        if (android.os.Environment.isExternalStorageManager()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && android.os.Environment.isExternalStorageManager()) {
             pendingFolderAction = { uri -> addLibraryRoot(uri) }
             pickFolder.launch(null)
             return
@@ -341,7 +341,7 @@ class ComicsLibraryActivity : ThemedActivity() {
     }
 
     private fun scanLibraryRoot(uri: Uri, existingRootId: String? = null, onFound: (count: Int, lastName: String) -> Unit): Pair<ComicsRootLibrary, List<ComicEntry>> {
-        if (android.os.Environment.isExternalStorageManager()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && android.os.Environment.isExternalStorageManager()) {
             val rootFile = treeUriToFile(uri)
             if (rootFile != null && rootFile.isDirectory) {
                 return fastScan(rootFile, uri.toString(), existingRootId, onFound)

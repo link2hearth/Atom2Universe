@@ -55,4 +55,11 @@
     <string name="radio_results_empty">Tidak ada stasiun untuk ditampilkan.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d kbps</string>
+    <string name="radio_recording_channel_name">Rekaman Radio</string>
+    <string name="radio_recording_channel_description">Menjaga rekaman radio berjalan di latar belakang</string>
+    <string name="radio_recording_notif_title">Merekam radio</string>
+    <string name="radio_recording_notif_text">Merekam: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Perekaman sedang berlangsung…</string>
+    <string name="radio_recording_action_stop_notif">Hentikan rekaman</string>
+    <string name="radio_recording_error_storage">Rekaman dihentikan: ruang penyimpanan tidak cukup.</string>
 </resources>

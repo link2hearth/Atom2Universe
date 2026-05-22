@@ -1,7 +1,9 @@
 package com.Atom2Universe.app.dictaphone
 
+import android.Manifest
 import android.content.ContentValues
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
@@ -10,6 +12,7 @@ import android.os.Build
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.io.File
@@ -53,6 +56,10 @@ class DictaphoneRecorder(private val context: Context) {
 
     fun startRecording(quality: Quality): Boolean {
         if (_state.value is State.Recording) return false
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            _state.value = State.Error("RECORD_AUDIO permission not granted")
+            return false
+        }
         currentQuality = quality
         return when (quality) {
             Quality.M4A -> startM4A()
@@ -143,6 +150,7 @@ class DictaphoneRecorder(private val context: Context) {
 
     // ──────────────── WAV ────────────────
 
+    @android.annotation.SuppressLint("MissingPermission")
     private fun startWav(): Boolean {
         val minBuf = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, ENCODING)
         if (minBuf <= 0) { _state.value = State.Error("AudioRecord not supported"); return false }

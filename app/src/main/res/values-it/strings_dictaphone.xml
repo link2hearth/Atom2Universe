@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Dittafono</string>
+    <string name="dictaphone_action_record">Registra</string>
+    <string name="dictaphone_action_stop">Stop</string>
+    <string name="dictaphone_action_play">Riproduci</string>
+    <string name="dictaphone_action_rename">Rinomina</string>
+    <string name="dictaphone_action_delete">Elimina</string>
+    <string name="dictaphone_recordings_title">Registrazioni</string>
+    <string name="dictaphone_recordings_empty">Nessuna registrazione. Tocca il microfono per iniziare.</string>
+    <string name="dictaphone_status_saving">Salvataggio…</string>
+    <string name="dictaphone_rename_title">Rinomina registrazione</string>
+    <string name="dictaphone_delete_title">Elimina registrazione</string>
+    <string name="dictaphone_delete_message">Eliminare «%1$s»?</string>
+    <string name="dictaphone_delete_confirm">Elimina</string>
+    <string name="audio_hub_dictaphone_title">Dittafono</string>
+    <string name="audio_hub_dictaphone_desc">Registratore vocale salvato in Musica</string>
+</resources>

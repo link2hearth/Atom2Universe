@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Runner w sześciokątnym tunelu</string>
+    <string name="hex_runner_instructions">Przesuń w lewo lub prawo, aby obrócić tunel.\nUnikaj luk — przeżyj jak najdłużej.</string>
+    <string name="hex_runner_btn_start">START</string>
+    <string name="hex_runner_btn_restart">PONÓW</string>
+    <string name="hex_runner_btn_back">WRÓĆ</string>
+    <string name="hex_runner_game_over">KONIEC GRY</string>
+    <string name="hex_runner_score_label">Czas: %1$s</string>
+    <string name="hex_runner_best_label">Najlepszy: %1$s</string>
+    <string name="hex_runner_shape_hexagon">SZEŚCIOKĄT</string>
+    <string name="hex_runner_shape_octagon">OŚMIOKĄT</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Przeżyj w obracającym się sześciokątnym tunelu</string>
+</resources>

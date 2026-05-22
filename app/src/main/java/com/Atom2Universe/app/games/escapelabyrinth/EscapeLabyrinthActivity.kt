@@ -180,7 +180,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
             MoveOutcome.WIN -> {
                 val lvl = currentLevel!!
                 tvStatus.text = if (play.turn <= lvl.solveTurns)
-                    getString(R.string.escape_status_win_perfect, play.turn, lvl.solveTurns)
+                    getString(R.string.escape_status_win_perfect, play.turn)
                 else
                     getString(R.string.escape_status_win, play.turn, lvl.solveTurns)
                 setInputEnabled(false)
@@ -207,7 +207,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
         tvStatus.text = if (collected < total)
             getString(R.string.escape_status_playing, play.turn, collected, total)
         else
-            getString(R.string.escape_status_reach_exit, play.turn)
+            getString(R.string.escape_status_reach_exit)
     }
 
     // ── View refresh ─────────────────────────────────────────────────────────

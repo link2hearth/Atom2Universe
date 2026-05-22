@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Бегун в шестиугольном тоннеле</string>
+    <string name="hex_runner_instructions">Проведите влево или вправо, чтобы повернуть тоннель.\nИзбегайте провалов — выживайте как можно дольше.</string>
+    <string name="hex_runner_btn_start">СТАРТ</string>
+    <string name="hex_runner_btn_restart">ЕЩЁ РАЗ</string>
+    <string name="hex_runner_btn_back">НАЗАД</string>
+    <string name="hex_runner_game_over">ИГРА ОКОНЧЕНА</string>
+    <string name="hex_runner_score_label">Время: %1$s</string>
+    <string name="hex_runner_best_label">Лучший: %1$s</string>
+    <string name="hex_runner_shape_hexagon">ШЕСТИУГОЛЬНИК</string>
+    <string name="hex_runner_shape_octagon">ВОСЬМИУГОЛЬНИК</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Выживите во вращающемся шестиугольном тоннеле</string>
+</resources>

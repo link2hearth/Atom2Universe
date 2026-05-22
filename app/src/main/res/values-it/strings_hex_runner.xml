@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Runner in un tunnel esagonale</string>
+    <string name="hex_runner_instructions">Scorri a sinistra o destra per ruotare il tunnel.\nEvita i vuoti — sopravvivi il più a lungo possibile.</string>
+    <string name="hex_runner_btn_start">INIZIA</string>
+    <string name="hex_runner_btn_restart">RIPROVA</string>
+    <string name="hex_runner_btn_back">INDIETRO</string>
+    <string name="hex_runner_game_over">GAME OVER</string>
+    <string name="hex_runner_score_label">Tempo: %1$s</string>
+    <string name="hex_runner_best_label">Migliore: %1$s</string>
+    <string name="hex_runner_shape_hexagon">ESAGONO</string>
+    <string name="hex_runner_shape_octagon">OTTAGONO</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Sopravvivi in un tunnel esagonale rotante</string>
+</resources>

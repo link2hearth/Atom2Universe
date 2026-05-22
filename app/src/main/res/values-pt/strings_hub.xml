@@ -35,4 +35,5 @@
     <string name="hub_shortcut_add_message">Usar « %1$s » como atalho rápido no bloco do hub?</string>
     <string name="hub_shortcut_exists_message">« %1$s » já é um atalho. Mover para a primeira posição (Sim) ou removê-lo (Não)?</string>
     <string name="hub_shortcut_added">Atalho adicionado</string>
+    <string name="periodic_toggle_rarities_desc">Mostrar/ocultar raridades</string>
 </resources>

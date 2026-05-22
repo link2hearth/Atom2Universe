@@ -377,4 +377,5 @@
     <string name="music_settings_trusted_wifi_active">Synchronizacja LAN aktywna w sieci «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">Synchronizacja LAN wyłączona w tej sieci</string>
     <string name="music_settings_trusted_wifi_no_wifi">Brak połączenia z Wi-Fi</string>
+    <string name="music_settings_trusted_wifi_unknown_network">sieć Wi-Fi</string>
 </resources>

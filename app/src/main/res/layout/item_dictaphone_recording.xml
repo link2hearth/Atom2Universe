@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -13,7 +14,7 @@
         android:layout_height="44dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_play"
-        android:tint="?attr/a2uMidiAccent"
+        app:tint="?attr/a2uMidiAccent"
         android:contentDescription="@string/dictaphone_action_play" />
 
     <LinearLayout
@@ -48,7 +49,7 @@
         android:layout_height="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_edit"
-        android:tint="@color/startup_text_secondary"
+        app:tint="@color/startup_text_secondary"
         android:contentDescription="@string/dictaphone_action_rename" />
 
     <ImageButton
@@ -57,7 +58,7 @@
         android:layout_height="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_delete"
-        android:tint="@color/startup_text_secondary"
+        app:tint="@color/startup_text_secondary"
         android:contentDescription="@string/dictaphone_action_delete" />
 
 </LinearLayout>

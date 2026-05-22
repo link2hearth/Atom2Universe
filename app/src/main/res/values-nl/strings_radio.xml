@@ -55,4 +55,11 @@
     <string name="radio_results_empty">Geen zenders om weer te geven.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d kbps</string>
+    <string name="radio_recording_channel_name">Radio-opname</string>
+    <string name="radio_recording_channel_description">Houdt radio-opname actief op de achtergrond</string>
+    <string name="radio_recording_notif_title">Radio opnemen</string>
+    <string name="radio_recording_notif_text">Opname: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Opname bezig…</string>
+    <string name="radio_recording_action_stop_notif">Opname stoppen</string>
+    <string name="radio_recording_error_storage">Opname gestopt: onvoldoende opslagruimte.</string>
 </resources>

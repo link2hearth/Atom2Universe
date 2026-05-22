@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Диктофон</string>
+    <string name="dictaphone_action_record">Записати</string>
+    <string name="dictaphone_action_stop">Стоп</string>
+    <string name="dictaphone_action_play">Відтворити</string>
+    <string name="dictaphone_action_rename">Перейменувати</string>
+    <string name="dictaphone_action_delete">Видалити</string>
+    <string name="dictaphone_recordings_title">Записи</string>
+    <string name="dictaphone_recordings_empty">Немає записів. Натисніть на мікрофон, щоб почати.</string>
+    <string name="dictaphone_status_saving">Збереження…</string>
+    <string name="dictaphone_rename_title">Перейменувати запис</string>
+    <string name="dictaphone_delete_title">Видалити запис</string>
+    <string name="dictaphone_delete_message">Видалити «%1$s»?</string>
+    <string name="dictaphone_delete_confirm">Видалити</string>
+    <string name="audio_hub_dictaphone_title">Диктофон</string>
+    <string name="audio_hub_dictaphone_desc">Диктофон, збережений у Музиці</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Diktafon</string>
+    <string name="dictaphone_action_record">Rekam</string>
+    <string name="dictaphone_action_stop">Berhenti</string>
+    <string name="dictaphone_action_play">Putar</string>
+    <string name="dictaphone_action_rename">Ganti nama</string>
+    <string name="dictaphone_action_delete">Hapus</string>
+    <string name="dictaphone_recordings_title">Rekaman</string>
+    <string name="dictaphone_recordings_empty">Belum ada rekaman. Ketuk mikrofon untuk memulai.</string>
+    <string name="dictaphone_status_saving">Menyimpan…</string>
+    <string name="dictaphone_rename_title">Ganti nama rekaman</string>
+    <string name="dictaphone_delete_title">Hapus rekaman</string>
+    <string name="dictaphone_delete_message">Hapus \"%1$s\"?</string>
+    <string name="dictaphone_delete_confirm">Hapus</string>
+    <string name="audio_hub_dictaphone_title">Diktafon</string>
+    <string name="audio_hub_dictaphone_desc">Perekam suara disimpan di Musik</string>
+</resources>

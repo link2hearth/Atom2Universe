@@ -55,4 +55,11 @@
     <string name="radio_results_empty">Keine Sender vorhanden.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d kbps</string>
+    <string name="radio_recording_channel_name">Radioaufnahme</string>
+    <string name="radio_recording_channel_description">Hält die Radioaufnahme im Hintergrund aktiv</string>
+    <string name="radio_recording_notif_title">Radioaufnahme läuft</string>
+    <string name="radio_recording_notif_text">Aufnahme: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Aufnahme läuft…</string>
+    <string name="radio_recording_action_stop_notif">Aufnahme stoppen</string>
+    <string name="radio_recording_error_storage">Aufnahme gestoppt: Nicht genug Speicherplatz.</string>
 </resources>

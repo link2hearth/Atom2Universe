@@ -377,4 +377,5 @@
     <string name="music_settings_trusted_wifi_active">LAN-синхронізація активна в «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">LAN-синхронізацію вимкнено в цій мережі</string>
     <string name="music_settings_trusted_wifi_no_wifi">Не підключено до Wi-Fi</string>
+    <string name="music_settings_trusted_wifi_unknown_network">мережа Wi-Fi</string>
 </resources>

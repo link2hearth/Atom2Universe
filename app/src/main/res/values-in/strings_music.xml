@@ -363,4 +363,5 @@
     <string name="music_settings_trusted_wifi_active">Sinkronisasi LAN aktif di «%1$s»</string>
     <string name="music_settings_trusted_wifi_inactive">Sinkronisasi LAN dinonaktifkan di jaringan ini</string>
     <string name="music_settings_trusted_wifi_no_wifi">Tidak terhubung ke Wi-Fi</string>
+    <string name="music_settings_trusted_wifi_unknown_network">Jaringan Wi-Fi</string>
 </resources>

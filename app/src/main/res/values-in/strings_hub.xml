@@ -35,4 +35,5 @@
     <string name="hub_shortcut_add_message">Gunakan « %1$s » sebagai pintasan cepat di ubin hub?</string>
     <string name="hub_shortcut_exists_message">« %1$s » sudah menjadi pintasan. Pindahkan ke posisi pertama (Ya) atau hapus (Tidak)?</string>
     <string name="hub_shortcut_added">Pintasan ditambahkan</string>
+    <string name="periodic_toggle_rarities_desc">Tampilkan/sembunyikan kelangkaan</string>
 </resources>

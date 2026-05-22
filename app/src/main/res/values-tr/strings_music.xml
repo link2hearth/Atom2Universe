@@ -363,4 +363,5 @@
     <string name="music_settings_trusted_wifi_active">«%1$s» üzerinde LAN senkronizasyonu etkin</string>
     <string name="music_settings_trusted_wifi_inactive">Bu ağda LAN senkronizasyonu devre dışı</string>
     <string name="music_settings_trusted_wifi_no_wifi">Wi-Fi\'a bağlı değil</string>
+    <string name="music_settings_trusted_wifi_unknown_network">Wi-Fi ağı</string>
 </resources>

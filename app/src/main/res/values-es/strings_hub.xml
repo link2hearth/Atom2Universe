@@ -35,4 +35,5 @@
     <string name="hub_shortcut_add_message">Usar « %1$s » como acceso rapido en el mosaico del hub?</string>
     <string name="hub_shortcut_exists_message">« %1$s » ya es un acceso rapido. Mover a la primera posicion (Si) o eliminarlo (No)?</string>
     <string name="hub_shortcut_added">Acceso rapido agregado</string>
+    <string name="periodic_toggle_rarities_desc">Mostrar/ocultar rarezas</string>
 </resources>

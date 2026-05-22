@@ -55,4 +55,11 @@
     <string name="radio_results_empty">Gösterilecek istasyon yok.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d kbps</string>
+    <string name="radio_recording_channel_name">Radyo Kaydı</string>
+    <string name="radio_recording_channel_description">Radyo kaydını arka planda çalıştırır</string>
+    <string name="radio_recording_notif_title">Radyo kaydediliyor</string>
+    <string name="radio_recording_notif_text">Kaydediliyor: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Kayıt devam ediyor…</string>
+    <string name="radio_recording_action_stop_notif">Kaydı durdur</string>
+    <string name="radio_recording_error_storage">Kayıt durdu: yeterli depolama alanı yok.</string>
 </resources>

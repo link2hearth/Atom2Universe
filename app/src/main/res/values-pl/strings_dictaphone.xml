@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Dyktafon</string>
+    <string name="dictaphone_action_record">Nagraj</string>
+    <string name="dictaphone_action_stop">Zatrzymaj</string>
+    <string name="dictaphone_action_play">Odtwórz</string>
+    <string name="dictaphone_action_rename">Zmień nazwę</string>
+    <string name="dictaphone_action_delete">Usuń</string>
+    <string name="dictaphone_recordings_title">Nagrania</string>
+    <string name="dictaphone_recordings_empty">Brak nagrań. Dotknij mikrofonu, aby rozpocząć.</string>
+    <string name="dictaphone_status_saving">Zapisywanie…</string>
+    <string name="dictaphone_rename_title">Zmień nazwę nagrania</string>
+    <string name="dictaphone_delete_title">Usuń nagranie</string>
+    <string name="dictaphone_delete_message">Usunąć „%1$s"?</string>
+    <string name="dictaphone_delete_confirm">Usuń</string>
+    <string name="audio_hub_dictaphone_title">Dyktafon</string>
+    <string name="audio_hub_dictaphone_desc">Rejestrator głosu zapisany w Muzyce</string>
+</resources>

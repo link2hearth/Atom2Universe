@@ -55,4 +55,11 @@
     <string name="radio_results_empty">Nenhuma estação para exibir.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d kbps</string>
+    <string name="radio_recording_channel_name">Gravação de rádio</string>
+    <string name="radio_recording_channel_description">Mantém a gravação de rádio em execução em segundo plano</string>
+    <string name="radio_recording_notif_title">Gravando rádio</string>
+    <string name="radio_recording_notif_text">Gravando: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Gravação em andamento…</string>
+    <string name="radio_recording_action_stop_notif">Parar gravação</string>
+    <string name="radio_recording_error_storage">Gravação interrompida: espaço de armazenamento insuficiente.</string>
 </resources>

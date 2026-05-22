@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Runner en un túnel hexagonal</string>
+    <string name="hex_runner_instructions">Desliza izquierda o derecha para girar el túnel.\nEvita los huecos — sobrevive el mayor tiempo posible.</string>
+    <string name="hex_runner_btn_start">EMPEZAR</string>
+    <string name="hex_runner_btn_restart">REINTENTAR</string>
+    <string name="hex_runner_btn_back">VOLVER</string>
+    <string name="hex_runner_game_over">FIN DEL JUEGO</string>
+    <string name="hex_runner_score_label">Tiempo: %1$s</string>
+    <string name="hex_runner_best_label">Mejor: %1$s</string>
+    <string name="hex_runner_shape_hexagon">HEXÁGONO</string>
+    <string name="hex_runner_shape_octagon">OCTÁGONO</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Sobrevive en un túnel hexagonal giratorio</string>
+</resources>

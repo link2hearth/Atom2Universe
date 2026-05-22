@@ -35,4 +35,5 @@
     <string name="hub_shortcut_add_message">Використати «%1$s» як швидке посилання на плитці хабу?</string>
     <string name="hub_shortcut_exists_message">«%1$s» вже є посиланням. Перемістити на першу позицію (Так) або видалити (Ні)?</string>
     <string name="hub_shortcut_added">Посилання додано</string>
+    <string name="periodic_toggle_rarities_desc">Показати/приховати рідкості</string>
 </resources>

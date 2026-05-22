@@ -55,4 +55,11 @@
     <string name="radio_results_empty">Brak stacji do wyświetlenia.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d kbps</string>
+    <string name="radio_recording_channel_name">Nagrywanie radia</string>
+    <string name="radio_recording_channel_description">Utrzymuje nagrywanie radia w tle</string>
+    <string name="radio_recording_notif_title">Nagrywanie radia</string>
+    <string name="radio_recording_notif_text">Nagrywanie: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Nagrywanie w toku…</string>
+    <string name="radio_recording_action_stop_notif">Zatrzymaj nagrywanie</string>
+    <string name="radio_recording_error_storage">Nagrywanie zatrzymane: za mało miejsca na dysku.</string>
 </resources>

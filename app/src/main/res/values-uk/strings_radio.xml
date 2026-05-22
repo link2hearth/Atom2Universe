@@ -55,4 +55,11 @@
     <string name="radio_results_empty">Немає станцій для відображення.</string>
     <string name="radio_meta_country_language">%1$s · %2$s</string>
     <string name="radio_meta_bitrate">%1$d кбіт/с</string>
+    <string name="radio_recording_channel_name">Запис радіо</string>
+    <string name="radio_recording_channel_description">Підтримує запис радіо у фоновому режимі</string>
+    <string name="radio_recording_notif_title">Запис радіо</string>
+    <string name="radio_recording_notif_text">Запис: %1$s</string>
+    <string name="radio_recording_notif_text_generic">Запис триває…</string>
+    <string name="radio_recording_action_stop_notif">Зупинити запис</string>
+    <string name="radio_recording_error_storage">Запис зупинено: недостатньо місця на пристрої.</string>
 </resources>

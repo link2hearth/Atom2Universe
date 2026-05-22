@@ -37,6 +37,7 @@ class HexRunnerActivity : ThemedActivity() {
         btnModeStart   = findViewById(R.id.hex_btn_mode_start)
         btnModeGameOver = findViewById(R.id.hex_btn_mode_gameover)
 
+        setupBackNavigation()
         numFaces = prefs.getInt("num_faces", 6)
 
         val gameStatsRepo = GameStatsRepository(this)
@@ -85,9 +86,10 @@ class HexRunnerActivity : ThemedActivity() {
         btnModeGameOver.text = label
     }
 
-    @Deprecated("Use onBackPressedDispatcher")
-    override fun onBackPressed() {
-        finish()
+    private fun setupBackNavigation() {
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { finish() }
+        })
     }
 
     private fun formatTime(secs: Long): String {

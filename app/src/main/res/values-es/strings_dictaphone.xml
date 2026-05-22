@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Dictáfono</string>
+    <string name="dictaphone_action_record">Grabar</string>
+    <string name="dictaphone_action_stop">Detener</string>
+    <string name="dictaphone_action_play">Reproducir</string>
+    <string name="dictaphone_action_rename">Renombrar</string>
+    <string name="dictaphone_action_delete">Eliminar</string>
+    <string name="dictaphone_recordings_title">Grabaciones</string>
+    <string name="dictaphone_recordings_empty">Sin grabaciones. Toca el micrófono para comenzar.</string>
+    <string name="dictaphone_status_saving">Guardando…</string>
+    <string name="dictaphone_rename_title">Renombrar grabación</string>
+    <string name="dictaphone_delete_title">Eliminar grabación</string>
+    <string name="dictaphone_delete_message">¿Eliminar «%1$s»?</string>
+    <string name="dictaphone_delete_confirm">Eliminar</string>
+    <string name="audio_hub_dictaphone_title">Dictáfono</string>
+    <string name="audio_hub_dictaphone_desc">Grabadora de voz guardada en Música</string>
+</resources>

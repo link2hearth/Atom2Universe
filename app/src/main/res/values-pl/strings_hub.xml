@@ -35,4 +35,5 @@
     <string name="hub_shortcut_add_message">Użyć « %1$s » jako szybkiego skrótu na kafelku?</string>
     <string name="hub_shortcut_exists_message">« %1$s » jest już skrótem. Przenieść na pierwszą pozycję (Tak) lub usunąć (Nie)?</string>
     <string name="hub_shortcut_added">Skrót dodany</string>
+    <string name="periodic_toggle_rarities_desc">Pokaż/ukryj rzadkości</string>
 </resources>
