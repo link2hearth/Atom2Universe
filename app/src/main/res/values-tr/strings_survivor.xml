@@ -21,29 +21,29 @@
     <string name="survivor_best">En İyi</string>
     <string name="survivor_boss">PATRON!</string>
     <string name="survivor_upg_speed">Hız</string>
-    <string name="survivor_upg_speed_desc">+25 hareket hızı</string>
+    <string name="survivor_upg_speed_desc">Hareket hızı bonusu</string>
     <string name="survivor_upg_max_hp">Maksimum Can</string>
-    <string name="survivor_upg_max_hp_desc">+20 maks HP ve tam iyileşme</string>
+    <string name="survivor_upg_max_hp_desc">Maks HP artışı ve tam iyileşme</string>
     <string name="survivor_upg_life_steal">Can Çalma</string>
-    <string name="survivor_upg_life_steal_desc">+2% isabet başına can çalma</string>
+    <string name="survivor_upg_life_steal_desc">İsabet başına can çalma</string>
     <string name="survivor_upg_regen">Yenileme</string>
-    <string name="survivor_upg_regen_desc">+1 HP/saniye</string>
+    <string name="survivor_upg_regen_desc">Saniye başına HP yenileme</string>
     <string name="survivor_upg_armor">Zırh</string>
-    <string name="survivor_upg_armor_desc" formatted="false">+5% hasar azaltma</string>
+    <string name="survivor_upg_armor_desc">Hasar azaltma bonusu</string>
     <string name="survivor_upg_crit">Kritik Vuruş</string>
-    <string name="survivor_upg_crit_desc" formatted="false">+5% kritik hasar verme şansı (x1.5 taban)</string>
+    <string name="survivor_upg_crit_desc">Kritik vuruş şansı bonusu</string>
     <string name="survivor_upg_crit_mult">Kritik Çarpan</string>
-    <string name="survivor_upg_crit_mult_desc">+0.5 kritik hasar çarpanına</string>
+    <string name="survivor_upg_crit_mult_desc">Kritik hasar çarpanı bonusu</string>
     <string name="survivor_upg_revive">Diriliş</string>
-    <string name="survivor_upg_revive_desc">+1 ölümde otomatik diriliş</string>
+    <string name="survivor_upg_revive_desc">Ölümde otomatik diriliş</string>
     <string name="survivor_upg_xp_bonus">XP Artışı</string>
-    <string name="survivor_upg_xp_bonus_desc">+10% kazanılan XP</string>
+    <string name="survivor_upg_xp_bonus_desc">XP kazanım bonusu</string>
     <string name="survivor_upg_shield">Kalkan</string>
-    <string name="survivor_upg_shield_desc">+25 maks kalkan</string>
+    <string name="survivor_upg_shield_desc">Maks kalkan artışı</string>
     <string name="survivor_upg_thorns">Dikenler</string>
-    <string name="survivor_upg_thorns_desc">Kalkan, emilen hasarın %15\'ini yakın düşmanlara yansıtır</string>
+    <string name="survivor_upg_thorns_desc">Kalkan, emilen hasarı yakın düşmanlara yansıtır</string>
     <string name="survivor_upg_explosion_on_kill">Zincir Reaksiyon</string>
-    <string name="survivor_upg_explosion_on_kill_desc" formatted="false">+12% öldürülen düşmanın patlama şansı</string>
+    <string name="survivor_upg_explosion_on_kill_desc">Öldürülen düşmanın patlama şansı</string>
     <string name="survivor_upg_unlock_laser">Lazer Işını</string>
     <string name="survivor_upg_unlock_laser_desc">Kilit Aç: en yakın düşmana lazer ateşle</string>
     <string name="survivor_upg_unlock_aura">Hasar Aurası</string>
@@ -59,83 +59,83 @@
     <string name="survivor_upg_proj_count">+1 Mermi</string>
     <string name="survivor_upg_proj_count_desc">Her atışta bir ek mermi ateşle</string>
     <string name="survivor_upg_proj_dmg">Mermi Hasarı</string>
-    <string name="survivor_upg_proj_dmg_desc">+20% mermi hasarı</string>
+    <string name="survivor_upg_proj_dmg_desc">Mermi hasarı bonusu</string>
     <string name="survivor_upg_proj_rate">Ateş Hızı</string>
-    <string name="survivor_upg_proj_rate_desc">+10% mermi ateş hızı</string>
+    <string name="survivor_upg_proj_rate_desc">Mermi ateş hızı bonusu</string>
     <string name="survivor_upg_proj_speed">Mermi Hızı</string>
-    <string name="survivor_upg_proj_speed_desc">+15% mermi hızı</string>
+    <string name="survivor_upg_proj_speed_desc">Mermi hızı bonusu</string>
     <string name="survivor_upg_proj_pen">Delme</string>
-    <string name="survivor_upg_proj_pen_desc">Mermi başına +1 düşman deler</string>
+    <string name="survivor_upg_proj_pen_desc">Mermi ek düşmanları deler</string>
     <string name="survivor_upg_proj_range">Mermi Menzili</string>
-    <string name="survivor_upg_proj_range_desc">+20% mermi menzili</string>
+    <string name="survivor_upg_proj_range_desc">Mermi menzili bonusu</string>
     <string name="survivor_upg_proj_fork">Çatallanma Atışı</string>
-    <string name="survivor_upg_proj_fork_desc">Mermiler çarpışmada ikiye bölünür</string>
+    <string name="survivor_upg_proj_fork_desc">Mermiler çarpışmada bölünür</string>
     <string name="survivor_upg_poison">Zehir</string>
     <string name="survivor_upg_poison_desc">Mermiler zehir DoT uygular (yığılabilir)</string>
     <string name="survivor_upg_laser_range">Lazer Menzili</string>
-    <string name="survivor_upg_laser_range_desc">+20% lazer menzili</string>
+    <string name="survivor_upg_laser_range_desc">Lazer menzili bonusu</string>
     <string name="survivor_upg_laser_dmg">Lazer Hasarı</string>
-    <string name="survivor_upg_laser_dmg_desc">+20% lazer hasarı</string>
+    <string name="survivor_upg_laser_dmg_desc">Lazer hasarı bonusu</string>
     <string name="survivor_upg_laser_burn">Yanma</string>
-    <string name="survivor_upg_laser_burn_desc" formatted="false">Lazer düşmanları tutuşturur: +20% yanma DoT hasarı 2s boyunca</string>
+    <string name="survivor_upg_laser_burn_desc">Lazer düşmanları tutuşturur, zaman içinde yanma hasarı verir</string>
     <string name="survivor_upg_laser_rate">Lazer Ateş Hızı</string>
-    <string name="survivor_upg_laser_rate_desc">+15% lazer ateş hızı</string>
+    <string name="survivor_upg_laser_rate_desc">Lazer ateş hızı bonusu</string>
     <string name="survivor_upg_laser_multi">Çoklu Lazer</string>
-    <string name="survivor_upg_laser_multi_desc">+1 ek paralel lazer</string>
+    <string name="survivor_upg_laser_multi_desc">Ek bir paralel lazer ekler</string>
     <string name="survivor_upg_aura_radius">Aura Yarıçapı</string>
-    <string name="survivor_upg_aura_radius_desc" formatted="false">+15% aura yarıçapı</string>
+    <string name="survivor_upg_aura_radius_desc">Aura yarıçapı bonusu</string>
     <string name="survivor_upg_aura_dmg">Aura Hasarı</string>
-    <string name="survivor_upg_aura_dmg_desc" formatted="false">+20% aura DPS</string>
+    <string name="survivor_upg_aura_dmg_desc">Aura hasarı bonusu</string>
     <string name="survivor_upg_aura_slow">Aura Yavaşlatma</string>
-    <string name="survivor_upg_aura_slow_desc" formatted="false">+5% auradaki düşman yavaşlatma</string>
+    <string name="survivor_upg_aura_slow_desc">Auradaki düşman yavaşlatmasını artırır</string>
     <string name="survivor_upg_aura_tick">Aura Frekansı</string>
-    <string name="survivor_upg_aura_tick_desc" formatted="false">+15% aura vuruş hızı</string>
+    <string name="survivor_upg_aura_tick_desc">Aura frekansı bonusu</string>
     <string name="survivor_upg_bounce_count">Daha Fazla Sekme</string>
-    <string name="survivor_upg_bounce_count_desc">+1 maks sekme</string>
+    <string name="survivor_upg_bounce_count_desc">Sekme sayısını artırır</string>
     <string name="survivor_upg_bounce_dmg">Sekme Hasarı</string>
-    <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% sekme hasarı</string>
+    <string name="survivor_upg_bounce_dmg_desc">Sekme hasarı bonusu</string>
     <string name="survivor_upg_bounce_speed">Sekme Hızı</string>
-    <string name="survivor_upg_bounce_speed_desc" formatted="false">+15% sekme mermi hızı</string>
+    <string name="survivor_upg_bounce_speed_desc">Sekme hızı bonusu</string>
     <string name="survivor_upg_bounce_rate">Sekme Ateş Hızı</string>
-    <string name="survivor_upg_bounce_rate_desc" formatted="false">+10% sekme ateş hızı</string>
+    <string name="survivor_upg_bounce_rate_desc">Sekme ateş hızı bonusu</string>
     <string name="survivor_upg_bomb_radius">Patlama Yarıçapı</string>
-    <string name="survivor_upg_bomb_radius_desc" formatted="false">+10% patlama yarıçapı</string>
+    <string name="survivor_upg_bomb_radius_desc">Patlama yarıçapı bonusu</string>
     <string name="survivor_upg_bomb_dmg">Bomba Hasarı</string>
-    <string name="survivor_upg_bomb_dmg_desc" formatted="false">+20% bomba hasarı</string>
+    <string name="survivor_upg_bomb_dmg_desc">Bomba hasarı bonusu</string>
     <string name="survivor_upg_bomb_rate">Bomba Ateş Hızı</string>
-    <string name="survivor_upg_bomb_rate_desc" formatted="false">+10% bomba ateş hızı</string>
+    <string name="survivor_upg_bomb_rate_desc">Bomba atış hızı bonusu</string>
     <string name="survivor_upg_bomb_multi">Çoklu Bomba</string>
-    <string name="survivor_upg_bomb_multi_desc">Her atışta +1 bomba</string>
+    <string name="survivor_upg_bomb_multi_desc">Her atışta ek bomba</string>
     <string name="survivor_upg_bomb_residue">Kalıntı</string>
-    <string name="survivor_upg_bomb_residue_desc">Patlamalar 2s toksik bölge bırakır, bomba hasarının 1/5\'ini her 0.5s\'de verir</string>
+    <string name="survivor_upg_bomb_residue_desc">Patlamalar kalıcı toksik bölge bırakır</string>
     <string name="survivor_upg_bomb_residue_duration">Kalıntı Süresi</string>
-    <string name="survivor_upg_bomb_residue_duration_desc">Seviye başına +0.5s kalıntı bölgesi süresi</string>
+    <string name="survivor_upg_bomb_residue_duration_desc">Kalıntı bölgesi süresini artırır</string>
     <string name="survivor_upg_chain_dmg">Şimşek Hasarı</string>
-    <string name="survivor_upg_chain_dmg_desc">Seviye başına +1 hasar</string>
+    <string name="survivor_upg_chain_dmg_desc">Şimşek hasarı bonusu</string>
     <string name="survivor_upg_chain_bounces">Daha Fazla Zincir</string>
-    <string name="survivor_upg_chain_bounces_desc">+1 ek zincir atlaması</string>
+    <string name="survivor_upg_chain_bounces_desc">Ek zincir atlaması</string>
     <string name="survivor_upg_chain_rate">Şimşek Ateş Hızı</string>
-    <string name="survivor_upg_chain_rate_desc">+10% şimşek ateş hızı</string>
+    <string name="survivor_upg_chain_rate_desc">Şimşek ateş hızı bonusu</string>
     <string name="survivor_upg_chain_range">Şimşek Menzili</string>
-    <string name="survivor_upg_chain_range_desc">Seviye başına +50 menzil (maks 800)</string>
+    <string name="survivor_upg_chain_range_desc">Şimşek menzili bonusu</string>
     <string name="survivor_upg_chain_split">Zincir Ayrılması</string>
-    <string name="survivor_upg_chain_split_desc">Her düşmanda şimşeği çatallamak için seviye başına +10% şans (maks %50)</string>
+    <string name="survivor_upg_chain_split_desc">Her düşmanda şimşeği çatallama şansı</string>
     <string name="survivor_upg_orbital_count">+1 Yörüngeli</string>
     <string name="survivor_upg_orbital_count_desc">Bir yörüngeli küre daha ekle</string>
     <string name="survivor_upg_orbital_dmg">Yörüngeli Hasar</string>
-    <string name="survivor_upg_orbital_dmg_desc">+20% yörüngeli mermi hasarı</string>
+    <string name="survivor_upg_orbital_dmg_desc">Yörüngeli hasar bonusu</string>
     <string name="survivor_upg_orbital_speed">Yörüngeli Hız</string>
-    <string name="survivor_upg_orbital_speed_desc">+30% yörüngeli dönüş hızı</string>
+    <string name="survivor_upg_orbital_speed_desc">Yörüngeli dönüş hızı bonusu</string>
     <string name="survivor_upg_orbital_rate">Yörüngeli Ateş Hızı</string>
-    <string name="survivor_upg_orbital_rate_desc" formatted="false">+15% yörüngeli ateş hızı</string>
+    <string name="survivor_upg_orbital_rate_desc">Yörüngeli ateş hızı bonusu</string>
     <string name="survivor_upg_orbital_multi">+1 Yörüngeli Atış</string>
-    <string name="survivor_upg_orbital_multi_desc">Her küre bir ek mermi ateşler</string>
+    <string name="survivor_upg_orbital_multi_desc">Her küre ek mermiler ateşler</string>
     <string name="survivor_upg_orbital_frag">Yörüngeli Parçalanma</string>
-    <string name="survivor_upg_orbital_frag_desc">Yörüngeli mermiler çarpışmada ikiye bölünür</string>
+    <string name="survivor_upg_orbital_frag_desc">Yörüngeli mermiler çarpışmada bölünür</string>
     <string name="survivor_upg_orbital_poison">Yörüngeli Zehir</string>
     <string name="survivor_upg_orbital_poison_desc">Yörüngeli mermiler zehir DoT uygular</string>
     <string name="survivor_upg_orbital_burn">Yörüngeli Yanma</string>
-    <string name="survivor_upg_orbital_burn_desc">Yörüngeli mermiler düşmanları 2s tutuşturur</string>
+    <string name="survivor_upg_orbital_burn_desc">Yörüngeli mermiler düşmanları tutuşturur</string>
     <string name="survivor_select_weapon">Başlangıç silahınızı seçin</string>
     <string name="survivor_weapon_chain_lightning">Zincir Şimşeği</string>
     <string name="survivor_weapon_orbital">Yörüngeli</string>

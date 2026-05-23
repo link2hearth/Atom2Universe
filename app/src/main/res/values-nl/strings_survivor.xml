@@ -21,29 +21,29 @@
     <string name="survivor_best">Beste</string>
     <string name="survivor_boss">BAAS!</string>
     <string name="survivor_upg_speed">Snelheid</string>
-    <string name="survivor_upg_speed_desc">+25 bewegingssnelheid</string>
+    <string name="survivor_upg_speed_desc">Bonus bewegingssnelheid</string>
     <string name="survivor_upg_max_hp">Max. leven</string>
-    <string name="survivor_upg_max_hp_desc">+20 max. leven en volledig herstel</string>
+    <string name="survivor_upg_max_hp_desc">Max. leven verhogen en volledig herstel</string>
     <string name="survivor_upg_life_steal">Levenstelen</string>
-    <string name="survivor_upg_life_steal_desc">+2% levenstelen per treffer</string>
+    <string name="survivor_upg_life_steal_desc">Levenstelen per treffer</string>
     <string name="survivor_upg_regen">Regeneratie</string>
-    <string name="survivor_upg_regen_desc">+1 LP per seconde</string>
+    <string name="survivor_upg_regen_desc">LP-regeneratie per seconde</string>
     <string name="survivor_upg_armor">Pantser</string>
-    <string name="survivor_upg_armor_desc" formatted="false">+5% schadebeperking</string>
+    <string name="survivor_upg_armor_desc">Bonus schadebeperking</string>
     <string name="survivor_upg_crit">Kritieke treffer</string>
-    <string name="survivor_upg_crit_desc" formatted="false">+5% kans op kritieke schade (x1.5 basis)</string>
+    <string name="survivor_upg_crit_desc">Bonus kans op kritieke treffer</string>
     <string name="survivor_upg_crit_mult">Kritieke vermenigvuldiger</string>
-    <string name="survivor_upg_crit_mult_desc">+0.5 op kritieke schade vermenigvuldiger</string>
+    <string name="survivor_upg_crit_mult_desc">Bonus kritieke schade vermenigvuldiger</string>
     <string name="survivor_upg_revive">Heropleving</string>
-    <string name="survivor_upg_revive_desc">+1 automatische heropleving bij dood</string>
+    <string name="survivor_upg_revive_desc">Automatische heropleving bij dood</string>
     <string name="survivor_upg_xp_bonus">XP-bonus</string>
-    <string name="survivor_upg_xp_bonus_desc">+10% verdiende XP</string>
+    <string name="survivor_upg_xp_bonus_desc">Bonus XP-winst</string>
     <string name="survivor_upg_shield">Schild</string>
-    <string name="survivor_upg_shield_desc">+25 max. schild</string>
+    <string name="survivor_upg_shield_desc">Max. schild verhogen</string>
     <string name="survivor_upg_thorns">Doorns</string>
-    <string name="survivor_upg_thorns_desc">Schild kaatst 15% van geabsorbeerde schade terug naar nabije vijanden</string>
+    <string name="survivor_upg_thorns_desc">Schild kaatst geabsorbeerde schade terug naar nabije vijanden</string>
     <string name="survivor_upg_explosion_on_kill">Kettingreactie</string>
-    <string name="survivor_upg_explosion_on_kill_desc" formatted="false">+12% kans dat een gedode vijand explodeert</string>
+    <string name="survivor_upg_explosion_on_kill_desc">Kans dat een gedode vijand explodeert</string>
     <string name="survivor_upg_unlock_laser">Laserstraal</string>
     <string name="survivor_upg_unlock_laser_desc">Ontgrendelen: schiet een laser op de dichtstbijzijnde vijand</string>
     <string name="survivor_upg_unlock_aura">Schadeaura</string>
@@ -59,83 +59,83 @@
     <string name="survivor_upg_proj_count">+1 Projectiel</string>
     <string name="survivor_upg_proj_count_desc">Schiet een extra projectiel per schot</string>
     <string name="survivor_upg_proj_dmg">Projectielschade</string>
-    <string name="survivor_upg_proj_dmg_desc">+20% projectielschade</string>
+    <string name="survivor_upg_proj_dmg_desc">Bonus projectielschade</string>
     <string name="survivor_upg_proj_rate">Vuursnelheid</string>
-    <string name="survivor_upg_proj_rate_desc">+10% vuursnelheid</string>
+    <string name="survivor_upg_proj_rate_desc">Bonus vuursnelheid</string>
     <string name="survivor_upg_proj_speed">Projectielsnelheid</string>
-    <string name="survivor_upg_proj_speed_desc">+15% projectielsnelheid</string>
+    <string name="survivor_upg_proj_speed_desc">Bonus projectielsnelheid</string>
     <string name="survivor_upg_proj_pen">Penetratie</string>
-    <string name="survivor_upg_proj_pen_desc">+1 doorboorde vijand per projectiel</string>
+    <string name="survivor_upg_proj_pen_desc">Projectiel doorboort extra vijanden</string>
     <string name="survivor_upg_proj_range">Projectielbereik</string>
-    <string name="survivor_upg_proj_range_desc">+20% projectielbereik</string>
+    <string name="survivor_upg_proj_range_desc">Bonus projectielbereik</string>
     <string name="survivor_upg_proj_fork">Gespleten schot</string>
-    <string name="survivor_upg_proj_fork_desc">Projectielen splitsen bij impact in 2</string>
+    <string name="survivor_upg_proj_fork_desc">Projectielen splitsen bij impact</string>
     <string name="survivor_upg_poison">Gif</string>
     <string name="survivor_upg_poison_desc">Projectielen brengen gif DoT aan (stapelbaar)</string>
     <string name="survivor_upg_laser_range">Laserbereik</string>
-    <string name="survivor_upg_laser_range_desc">+20% laserbereik</string>
+    <string name="survivor_upg_laser_range_desc">Bonus laserbereik</string>
     <string name="survivor_upg_laser_dmg">Laserschade</string>
-    <string name="survivor_upg_laser_dmg_desc">+20% laserschade</string>
+    <string name="survivor_upg_laser_dmg_desc">Bonus laserschade</string>
     <string name="survivor_upg_laser_burn">Brandwond</string>
-    <string name="survivor_upg_laser_burn_desc" formatted="false">Laser steekt vijanden in brand: +20% brand DoT in 2s</string>
+    <string name="survivor_upg_laser_burn_desc">Laser steekt vijanden in brand en verursacht brandschade over tijd</string>
     <string name="survivor_upg_laser_rate">Lasercadans</string>
-    <string name="survivor_upg_laser_rate_desc">+15% laservuursnelheid</string>
+    <string name="survivor_upg_laser_rate_desc">Bonus laservuursnelheid</string>
     <string name="survivor_upg_laser_multi">Multi-laser</string>
-    <string name="survivor_upg_laser_multi_desc">+1 extra parallelle laser</string>
+    <string name="survivor_upg_laser_multi_desc">Voegt een extra parallelle laser toe</string>
     <string name="survivor_upg_aura_radius">Aurastraal</string>
-    <string name="survivor_upg_aura_radius_desc" formatted="false">+15% aurastraal</string>
+    <string name="survivor_upg_aura_radius_desc">Bonus aurastraal</string>
     <string name="survivor_upg_aura_dmg">Auraschade</string>
-    <string name="survivor_upg_aura_dmg_desc" formatted="false">+20% aura DPS</string>
+    <string name="survivor_upg_aura_dmg_desc">Bonus auraschade</string>
     <string name="survivor_upg_aura_slow">Auraverlangzaming</string>
-    <string name="survivor_upg_aura_slow_desc" formatted="false">+5% verlangzaming vijanden in aura</string>
+    <string name="survivor_upg_aura_slow_desc">Verhoogt de verlangzaming van vijanden in de aura</string>
     <string name="survivor_upg_aura_tick">Aurafrequentie</string>
-    <string name="survivor_upg_aura_tick_desc" formatted="false">+15% aura tick frequentie</string>
+    <string name="survivor_upg_aura_tick_desc">Bonus aurafrequentie</string>
     <string name="survivor_upg_bounce_count">Meer stuiters</string>
-    <string name="survivor_upg_bounce_count_desc">+1 max. stuiter</string>
+    <string name="survivor_upg_bounce_count_desc">Verhoogt het aantal stuiters</string>
     <string name="survivor_upg_bounce_dmg">Stuiteerschade</string>
-    <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% stuiteerschade</string>
+    <string name="survivor_upg_bounce_dmg_desc">Bonus stuiteerschade</string>
     <string name="survivor_upg_bounce_speed">Stuitersnelheid</string>
-    <string name="survivor_upg_bounce_speed_desc" formatted="false">+15% stuiterprojectielsnelheid</string>
+    <string name="survivor_upg_bounce_speed_desc">Bonus stuitersnelheid</string>
     <string name="survivor_upg_bounce_rate">Stuitercadans</string>
-    <string name="survivor_upg_bounce_rate_desc" formatted="false">+10% stuitervuursnelheid</string>
+    <string name="survivor_upg_bounce_rate_desc">Bonus stuitervuursnelheid</string>
     <string name="survivor_upg_bomb_radius">Explosiestraal</string>
-    <string name="survivor_upg_bomb_radius_desc" formatted="false">+10% explosiestraal</string>
+    <string name="survivor_upg_bomb_radius_desc">Bonus explosiestraal</string>
     <string name="survivor_upg_bomb_dmg">Bomschade</string>
-    <string name="survivor_upg_bomb_dmg_desc" formatted="false">+20% bomschade</string>
+    <string name="survivor_upg_bomb_dmg_desc">Bonus bomschade</string>
     <string name="survivor_upg_bomb_rate">Bomcadans</string>
-    <string name="survivor_upg_bomb_rate_desc" formatted="false">+10% gooicadans</string>
+    <string name="survivor_upg_bomb_rate_desc">Bonus gooicadans</string>
     <string name="survivor_upg_bomb_multi">Multi-bom</string>
-    <string name="survivor_upg_bomb_multi_desc">+1 bom per gooi</string>
+    <string name="survivor_upg_bomb_multi_desc">Extra bom per gooi</string>
     <string name="survivor_upg_bomb_residue">Residu</string>
-    <string name="survivor_upg_bomb_residue_desc">Explosies laten een giftige zone van 2s achter die 1/5 van de bomschade elke 0,5s aanricht</string>
+    <string name="survivor_upg_bomb_residue_desc">Explosies laten een aanhoudende giftige zone achter</string>
     <string name="survivor_upg_bomb_residue_duration">Residuduur</string>
-    <string name="survivor_upg_bomb_residue_duration_desc">+0,5s zoneduur per level</string>
+    <string name="survivor_upg_bomb_residue_duration_desc">Verhoogt de duur van de residuzone</string>
     <string name="survivor_upg_chain_dmg">Bliksemschade</string>
-    <string name="survivor_upg_chain_dmg_desc">+1 schade per level</string>
+    <string name="survivor_upg_chain_dmg_desc">Bonus bliksemschade</string>
     <string name="survivor_upg_chain_bounces">Meer ketens</string>
-    <string name="survivor_upg_chain_bounces_desc">+1 extra ketenstap</string>
+    <string name="survivor_upg_chain_bounces_desc">Extra ketenstap</string>
     <string name="survivor_upg_chain_rate">Bliksemcadans</string>
-    <string name="survivor_upg_chain_rate_desc" formatted="false">+10% bliksemvuursnelheid</string>
+    <string name="survivor_upg_chain_rate_desc">Bonus bliksemvuursnelheid</string>
     <string name="survivor_upg_chain_range">Bliksembereik</string>
-    <string name="survivor_upg_chain_range_desc">+50 bereik per level (max. 800)</string>
+    <string name="survivor_upg_chain_range_desc">Bonus bliksembereik</string>
     <string name="survivor_upg_chain_split">Bliksemopsplitsing</string>
-    <string name="survivor_upg_chain_split_desc">+10% kans per level op opsplitsing bij elke vijand (max. 50%)</string>
+    <string name="survivor_upg_chain_split_desc">Kans op opsplitsing van bliksem bij elke vijand</string>
     <string name="survivor_upg_orbital_count">+1 Orbitaal</string>
     <string name="survivor_upg_orbital_count_desc">Voegt nog een orbitale bol toe</string>
     <string name="survivor_upg_orbital_dmg">Orbitale schade</string>
-    <string name="survivor_upg_orbital_dmg_desc">+20% orbitale schade</string>
+    <string name="survivor_upg_orbital_dmg_desc">Bonus orbitale schade</string>
     <string name="survivor_upg_orbital_speed">Orbitale snelheid</string>
-    <string name="survivor_upg_orbital_speed_desc">+30% orbitale rotatiesnelheid</string>
+    <string name="survivor_upg_orbital_speed_desc">Bonus orbitale rotatiesnelheid</string>
     <string name="survivor_upg_orbital_rate">Orbitale cadans</string>
-    <string name="survivor_upg_orbital_rate_desc" formatted="false">+15% orbitale vuursnelheid</string>
+    <string name="survivor_upg_orbital_rate_desc">Bonus orbitale vuursnelheid</string>
     <string name="survivor_upg_orbital_multi">+1 Orbitaal schot</string>
-    <string name="survivor_upg_orbital_multi_desc">Elke bol schiet een extra projectiel</string>
+    <string name="survivor_upg_orbital_multi_desc">Elke bol schiet extra projectielen</string>
     <string name="survivor_upg_orbital_frag">Orbitale fragmentatie</string>
-    <string name="survivor_upg_orbital_frag_desc">Orbitale projectielen splitsen bij impact in 2</string>
+    <string name="survivor_upg_orbital_frag_desc">Orbitale projectielen splitsen bij impact</string>
     <string name="survivor_upg_orbital_poison">Orbitaal gif</string>
     <string name="survivor_upg_orbital_poison_desc">Orbitale projectielen brengen een gif DoT aan</string>
     <string name="survivor_upg_orbital_burn">Orbitale brandwond</string>
-    <string name="survivor_upg_orbital_burn_desc">Orbitale projectielen steken vijanden 2s in brand</string>
+    <string name="survivor_upg_orbital_burn_desc">Orbitale projectielen steken vijanden in brand</string>
     <string name="survivor_select_weapon">Kies je beginwapen</string>
     <string name="survivor_weapon_chain_lightning">Kettingbliksem</string>
     <string name="survivor_weapon_orbital">Orbitaal</string>

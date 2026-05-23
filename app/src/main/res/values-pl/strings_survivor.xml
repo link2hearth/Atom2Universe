@@ -21,29 +21,29 @@
     <string name="survivor_best">Najlepszy</string>
     <string name="survivor_boss">BOSS!</string>
     <string name="survivor_upg_speed">Prędkość</string>
-    <string name="survivor_upg_speed_desc">+25 prędkości ruchu</string>
+    <string name="survivor_upg_speed_desc">Bonus prędkości ruchu</string>
     <string name="survivor_upg_max_hp">Maks. życie</string>
-    <string name="survivor_upg_max_hp_desc">+20 maks. życia i pełne leczenie</string>
+    <string name="survivor_upg_max_hp_desc">Zwiększenie maks. życia i pełne leczenie</string>
     <string name="survivor_upg_life_steal">Kradzież życia</string>
-    <string name="survivor_upg_life_steal_desc">+2% kradzieży życia za trafienie</string>
+    <string name="survivor_upg_life_steal_desc">Kradzież życia za trafienie</string>
     <string name="survivor_upg_regen">Regeneracja</string>
-    <string name="survivor_upg_regen_desc">+1 PŻ na sekundę</string>
+    <string name="survivor_upg_regen_desc">Regeneracja PŻ na sekundę</string>
     <string name="survivor_upg_armor">Zbroja</string>
-    <string name="survivor_upg_armor_desc">+5% redukcji obrażeń</string>
+    <string name="survivor_upg_armor_desc">Bonus redukcji obrażeń</string>
     <string name="survivor_upg_crit">Cios krytyczny</string>
-    <string name="survivor_upg_crit_desc" formatted="false">+5% szansy na obrażenia krytyczne (x1.5 baza)</string>
+    <string name="survivor_upg_crit_desc">Bonus szansy na cios krytyczny</string>
     <string name="survivor_upg_crit_mult">Mnożnik krytyczny</string>
-    <string name="survivor_upg_crit_mult_desc">+0.5 do mnożnika obrażeń krytycznych</string>
+    <string name="survivor_upg_crit_mult_desc">Bonus mnożnika obrażeń krytycznych</string>
     <string name="survivor_upg_revive">Wskrzeszenie</string>
-    <string name="survivor_upg_revive_desc">+1 automatyczne wskrzeszenie po śmierci</string>
+    <string name="survivor_upg_revive_desc">Automatyczne wskrzeszenie po śmierci</string>
     <string name="survivor_upg_xp_bonus">Bonus XP</string>
-    <string name="survivor_upg_xp_bonus_desc">+10% zdobytego XP</string>
+    <string name="survivor_upg_xp_bonus_desc">Bonus zdobywania XP</string>
     <string name="survivor_upg_shield">Tarcza</string>
-    <string name="survivor_upg_shield_desc">+25 maks. tarczy</string>
+    <string name="survivor_upg_shield_desc">Zwiększenie maks. tarczy</string>
     <string name="survivor_upg_thorns">Kolce</string>
-    <string name="survivor_upg_thorns_desc">Tarcza odbija 15% pochłoniętych obrażeń na pobliskich wrogów</string>
+    <string name="survivor_upg_thorns_desc">Tarcza odbija pochłonięte obrażenia na pobliskich wrogów</string>
     <string name="survivor_upg_explosion_on_kill">Reakcja łańcuchowa</string>
-    <string name="survivor_upg_explosion_on_kill_desc" formatted="false">+12% szansy na eksplozję zabitego wroga</string>
+    <string name="survivor_upg_explosion_on_kill_desc">Szansa na eksplozję zabitego wroga</string>
     <string name="survivor_upg_unlock_laser">Promień laserowy</string>
     <string name="survivor_upg_unlock_laser_desc">Odblokuj: strzela laserem w najbliższego wroga</string>
     <string name="survivor_upg_unlock_aura">Aura obrażeń</string>
@@ -59,83 +59,83 @@
     <string name="survivor_upg_proj_count">+1 Pocisk</string>
     <string name="survivor_upg_proj_count_desc">Strzela dodatkowym pociskiem na strzał</string>
     <string name="survivor_upg_proj_dmg">Obrażenia pocisku</string>
-    <string name="survivor_upg_proj_dmg_desc">+20% obrażeń pocisku</string>
+    <string name="survivor_upg_proj_dmg_desc">Bonus obrażeń pocisku</string>
     <string name="survivor_upg_proj_rate">Szybkostrzelność</string>
-    <string name="survivor_upg_proj_rate_desc" formatted="false">+10% szybkostrzelności</string>
+    <string name="survivor_upg_proj_rate_desc">Bonus szybkostrzelności</string>
     <string name="survivor_upg_proj_speed">Prędkość pocisku</string>
-    <string name="survivor_upg_proj_speed_desc">+15% prędkości pocisku</string>
+    <string name="survivor_upg_proj_speed_desc">Bonus prędkości pocisku</string>
     <string name="survivor_upg_proj_pen">Penetracja</string>
-    <string name="survivor_upg_proj_pen_desc">+1 przebity wróg na pocisk</string>
+    <string name="survivor_upg_proj_pen_desc">Pocisk przebija dodatkowych wrogów</string>
     <string name="survivor_upg_proj_range">Zasięg pocisku</string>
-    <string name="survivor_upg_proj_range_desc">+20% zasięgu pocisku</string>
+    <string name="survivor_upg_proj_range_desc">Bonus zasięgu pocisku</string>
     <string name="survivor_upg_proj_fork">Rozwidlony strzał</string>
-    <string name="survivor_upg_proj_fork_desc">Pociski dzielą się na 2 przy uderzeniu</string>
+    <string name="survivor_upg_proj_fork_desc">Pociski dzielą się przy uderzeniu</string>
     <string name="survivor_upg_poison">Trucizna</string>
     <string name="survivor_upg_poison_desc">Pociski nakładają truciznę DoT (kumulowalna)</string>
     <string name="survivor_upg_laser_range">Zasięg lasera</string>
-    <string name="survivor_upg_laser_range_desc">+20% zasięgu lasera</string>
+    <string name="survivor_upg_laser_range_desc">Bonus zasięgu lasera</string>
     <string name="survivor_upg_laser_dmg">Obrażenia lasera</string>
-    <string name="survivor_upg_laser_dmg_desc">+20% obrażeń lasera</string>
+    <string name="survivor_upg_laser_dmg_desc">Bonus obrażeń lasera</string>
     <string name="survivor_upg_laser_burn">Oparzenie</string>
-    <string name="survivor_upg_laser_burn_desc" formatted="false">Laser podpala wrogów: +20% DoT oparzenia w 2s</string>
+    <string name="survivor_upg_laser_burn_desc">Laser podpala wrogów, zadając obrażenia od oparzenia w czasie</string>
     <string name="survivor_upg_laser_rate">Kadencja lasera</string>
-    <string name="survivor_upg_laser_rate_desc" formatted="false">+15% szybkostrzelności lasera</string>
+    <string name="survivor_upg_laser_rate_desc">Bonus szybkostrzelności lasera</string>
     <string name="survivor_upg_laser_multi">Multi-laser</string>
-    <string name="survivor_upg_laser_multi_desc">+1 dodatkowy równoległy laser</string>
+    <string name="survivor_upg_laser_multi_desc">Dodaje dodatkowy równoległy laser</string>
     <string name="survivor_upg_aura_radius">Promień aury</string>
-    <string name="survivor_upg_aura_radius_desc" formatted="false">+15% promienia aury</string>
+    <string name="survivor_upg_aura_radius_desc">Bonus promienia aury</string>
     <string name="survivor_upg_aura_dmg">Obrażenia aury</string>
-    <string name="survivor_upg_aura_dmg_desc" formatted="false">+20% DPS aury</string>
+    <string name="survivor_upg_aura_dmg_desc">Bonus obrażeń aury</string>
     <string name="survivor_upg_aura_slow">Spowolnienie aury</string>
-    <string name="survivor_upg_aura_slow_desc" formatted="false">+5% spowolnienia wrogów w aurze</string>
+    <string name="survivor_upg_aura_slow_desc">Zwiększa spowolnienie wrogów w aurze</string>
     <string name="survivor_upg_aura_tick">Częstotliwość aury</string>
-    <string name="survivor_upg_aura_tick_desc" formatted="false">+15% częstotliwości ticków aury</string>
+    <string name="survivor_upg_aura_tick_desc">Bonus częstotliwości aury</string>
     <string name="survivor_upg_bounce_count">Więcej odbić</string>
-    <string name="survivor_upg_bounce_count_desc">+1 maks. odbicie</string>
+    <string name="survivor_upg_bounce_count_desc">Zwiększa liczbę odbić</string>
     <string name="survivor_upg_bounce_dmg">Obrażenia odbicia</string>
-    <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% obrażeń odbicia</string>
+    <string name="survivor_upg_bounce_dmg_desc">Bonus obrażeń odbicia</string>
     <string name="survivor_upg_bounce_speed">Prędkość odbicia</string>
-    <string name="survivor_upg_bounce_speed_desc" formatted="false">+15% prędkości odbijającego pocisku</string>
+    <string name="survivor_upg_bounce_speed_desc">Bonus prędkości odbicia</string>
     <string name="survivor_upg_bounce_rate">Kadencja odbicia</string>
-    <string name="survivor_upg_bounce_rate_desc" formatted="false">+10% szybkostrzelności odbijającego</string>
+    <string name="survivor_upg_bounce_rate_desc">Bonus szybkostrzelności odbijającego</string>
     <string name="survivor_upg_bomb_radius">Promień eksplozji</string>
-    <string name="survivor_upg_bomb_radius_desc" formatted="false">+10% promienia eksplozji</string>
+    <string name="survivor_upg_bomb_radius_desc">Bonus promienia eksplozji</string>
     <string name="survivor_upg_bomb_dmg">Obrażenia bomby</string>
-    <string name="survivor_upg_bomb_dmg_desc" formatted="false">+20% obrażeń bomby</string>
+    <string name="survivor_upg_bomb_dmg_desc">Bonus obrażeń bomby</string>
     <string name="survivor_upg_bomb_rate">Kadencja bomby</string>
-    <string name="survivor_upg_bomb_rate_desc" formatted="false">+10% kadencji rzucania</string>
+    <string name="survivor_upg_bomb_rate_desc">Bonus kadencji rzucania</string>
     <string name="survivor_upg_bomb_multi">Multi-bomba</string>
-    <string name="survivor_upg_bomb_multi_desc">+1 bomba na rzut</string>
+    <string name="survivor_upg_bomb_multi_desc">Dodatkowa bomba na rzut</string>
     <string name="survivor_upg_bomb_residue">Pozostałość</string>
-    <string name="survivor_upg_bomb_residue_desc">Eksplozje zostawiają toksyczną strefę 2s zadającą 1/5 obrażeń bomby co 0,5s</string>
+    <string name="survivor_upg_bomb_residue_desc">Eksplozje zostawiają trwałą toksyczną strefę</string>
     <string name="survivor_upg_bomb_residue_duration">Czas trwania pozostałości</string>
-    <string name="survivor_upg_bomb_residue_duration_desc">+0,5s czasu trwania strefy na poziom</string>
+    <string name="survivor_upg_bomb_residue_duration_desc">Zwiększa czas trwania strefy pozostałości</string>
     <string name="survivor_upg_chain_dmg">Obrażenia błyskawicy</string>
-    <string name="survivor_upg_chain_dmg_desc">+1 obrażeń na poziom</string>
+    <string name="survivor_upg_chain_dmg_desc">Bonus obrażeń błyskawicy</string>
     <string name="survivor_upg_chain_bounces">Więcej łańcuchów</string>
-    <string name="survivor_upg_chain_bounces_desc">+1 dodatkowy skok łańcucha</string>
+    <string name="survivor_upg_chain_bounces_desc">Dodatkowy skok łańcucha</string>
     <string name="survivor_upg_chain_rate">Kadencja błyskawicy</string>
-    <string name="survivor_upg_chain_rate_desc" formatted="false">+10% szybkostrzelności błyskawicy</string>
+    <string name="survivor_upg_chain_rate_desc">Bonus szybkostrzelności błyskawicy</string>
     <string name="survivor_upg_chain_range">Zasięg błyskawicy</string>
-    <string name="survivor_upg_chain_range_desc">+50 zasięgu na poziom (maks. 800)</string>
+    <string name="survivor_upg_chain_range_desc">Bonus zasięgu błyskawicy</string>
     <string name="survivor_upg_chain_split">Rozwidlenie błyskawicy</string>
-    <string name="survivor_upg_chain_split_desc">+10% szansy na poziom na rozwidlenie błyskawicy przy każdym wrogu (maks. 50%)</string>
+    <string name="survivor_upg_chain_split_desc">Szansa na rozwidlenie błyskawicy przy każdym wrogu</string>
     <string name="survivor_upg_orbital_count">+1 Orbita</string>
     <string name="survivor_upg_orbital_count_desc">Dodaje kolejną orbitalną kulę</string>
     <string name="survivor_upg_orbital_dmg">Obrażenia orbitalne</string>
-    <string name="survivor_upg_orbital_dmg_desc">+20% obrażeń orbitalnych</string>
+    <string name="survivor_upg_orbital_dmg_desc">Bonus obrażeń orbitalnych</string>
     <string name="survivor_upg_orbital_speed">Prędkość orbitalna</string>
-    <string name="survivor_upg_orbital_speed_desc">+30% prędkości obrotu orbitalnego</string>
+    <string name="survivor_upg_orbital_speed_desc">Bonus prędkości obrotu orbitalnego</string>
     <string name="survivor_upg_orbital_rate">Kadencja orbitalna</string>
-    <string name="survivor_upg_orbital_rate_desc" formatted="false">+15% kadencji strzelania orbitalnego</string>
+    <string name="survivor_upg_orbital_rate_desc">Bonus kadencji strzelania orbitalnego</string>
     <string name="survivor_upg_orbital_multi">+1 Strzał orbitalny</string>
-    <string name="survivor_upg_orbital_multi_desc">Każda kula strzela dodatkowym pociskiem</string>
+    <string name="survivor_upg_orbital_multi_desc">Każda kula strzela dodatkowymi pociskami</string>
     <string name="survivor_upg_orbital_frag">Fragmentacja orbitalna</string>
-    <string name="survivor_upg_orbital_frag_desc">Pociski orbitalne dzielą się na 2 przy uderzeniu</string>
+    <string name="survivor_upg_orbital_frag_desc">Pociski orbitalne dzielą się przy uderzeniu</string>
     <string name="survivor_upg_orbital_poison">Trucizna orbitalna</string>
     <string name="survivor_upg_orbital_poison_desc">Pociski orbitalne nakładają truciznę DoT</string>
     <string name="survivor_upg_orbital_burn">Oparzenie orbitalne</string>
-    <string name="survivor_upg_orbital_burn_desc">Pociski orbitalne podpalają wrogów na 2s</string>
+    <string name="survivor_upg_orbital_burn_desc">Pociski orbitalne podpalają wrogów</string>
     <string name="survivor_select_weapon">Wybierz broń początkową</string>
     <string name="survivor_weapon_chain_lightning">Łańcuchowe błyskawice</string>
     <string name="survivor_weapon_orbital">Orbitalny</string>

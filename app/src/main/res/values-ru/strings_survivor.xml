@@ -21,29 +21,29 @@
     <string name="survivor_best">Рекорд</string>
     <string name="survivor_boss">БОСС!</string>
     <string name="survivor_upg_speed">Скорость</string>
-    <string name="survivor_upg_speed_desc">+25 скорости передвижения</string>
+    <string name="survivor_upg_speed_desc">Бонус скорости передвижения</string>
     <string name="survivor_upg_max_hp">Макс. здоровье</string>
-    <string name="survivor_upg_max_hp_desc">+20 макс. здоровья и полное восстановление</string>
+    <string name="survivor_upg_max_hp_desc">Увеличение макс. здоровья и полное восстановление</string>
     <string name="survivor_upg_life_steal">Вампиризм</string>
-    <string name="survivor_upg_life_steal_desc">+2% вампиризма за удар</string>
+    <string name="survivor_upg_life_steal_desc">Вампиризм за удар</string>
     <string name="survivor_upg_regen">Регенерация</string>
-    <string name="survivor_upg_regen_desc">+1 ОЗ в секунду</string>
+    <string name="survivor_upg_regen_desc">Регенерация ОЗ в секунду</string>
     <string name="survivor_upg_armor">Броня</string>
-    <string name="survivor_upg_armor_desc">+5% снижения урона</string>
+    <string name="survivor_upg_armor_desc">Бонус снижения урона</string>
     <string name="survivor_upg_crit">Критический удар</string>
-    <string name="survivor_upg_crit_desc" formatted="false">+5% шанс критического урона (x1.5 база)</string>
+    <string name="survivor_upg_crit_desc">Бонус шанса критического удара</string>
     <string name="survivor_upg_crit_mult">Критический множитель</string>
-    <string name="survivor_upg_crit_mult_desc">+0.5 к множителю критического урона</string>
+    <string name="survivor_upg_crit_mult_desc">Бонус множителя критического урона</string>
     <string name="survivor_upg_revive">Воскрешение</string>
-    <string name="survivor_upg_revive_desc">+1 автоматическое воскрешение при гибели</string>
+    <string name="survivor_upg_revive_desc">Автоматическое воскрешение при гибели</string>
     <string name="survivor_upg_xp_bonus">Бонус XP</string>
-    <string name="survivor_upg_xp_bonus_desc">+10% получаемого XP</string>
+    <string name="survivor_upg_xp_bonus_desc">Бонус получаемого XP</string>
     <string name="survivor_upg_shield">Щит</string>
-    <string name="survivor_upg_shield_desc">+25 макс. щита</string>
+    <string name="survivor_upg_shield_desc">Увеличение макс. щита</string>
     <string name="survivor_upg_thorns">Шипы</string>
-    <string name="survivor_upg_thorns_desc">Щит отражает 15% поглощённого урона на ближних врагов</string>
+    <string name="survivor_upg_thorns_desc">Щит отражает поглощённый урон на ближних врагов</string>
     <string name="survivor_upg_explosion_on_kill">Цепная реакция</string>
-    <string name="survivor_upg_explosion_on_kill_desc" formatted="false">+12% шанс взрыва убитого врага</string>
+    <string name="survivor_upg_explosion_on_kill_desc">Шанс взрыва убитого врага</string>
     <string name="survivor_upg_unlock_laser">Лазерный луч</string>
     <string name="survivor_upg_unlock_laser_desc">Разблокировать: стреляет лазером в ближайшего врага</string>
     <string name="survivor_upg_unlock_aura">Аура урона</string>
@@ -59,83 +59,83 @@
     <string name="survivor_upg_proj_count">+1 Снаряд</string>
     <string name="survivor_upg_proj_count_desc">Стреляет дополнительным снарядом за выстрел</string>
     <string name="survivor_upg_proj_dmg">Урон снаряда</string>
-    <string name="survivor_upg_proj_dmg_desc">+20% урона снаряда</string>
+    <string name="survivor_upg_proj_dmg_desc">Бонус урона снаряда</string>
     <string name="survivor_upg_proj_rate">Скорострельность</string>
-    <string name="survivor_upg_proj_rate_desc">+10% скорострельности</string>
+    <string name="survivor_upg_proj_rate_desc">Бонус скорострельности</string>
     <string name="survivor_upg_proj_speed">Скорость снаряда</string>
-    <string name="survivor_upg_proj_speed_desc">+15% скорости снаряда</string>
+    <string name="survivor_upg_proj_speed_desc">Бонус скорости снаряда</string>
     <string name="survivor_upg_proj_pen">Пробитие</string>
-    <string name="survivor_upg_proj_pen_desc">+1 пробитый враг на снаряд</string>
+    <string name="survivor_upg_proj_pen_desc">Снаряд пробивает дополнительных врагов</string>
     <string name="survivor_upg_proj_range">Дальность снаряда</string>
-    <string name="survivor_upg_proj_range_desc">+20% дальности снаряда</string>
+    <string name="survivor_upg_proj_range_desc">Бонус дальности снаряда</string>
     <string name="survivor_upg_proj_fork">Раздвоенный выстрел</string>
-    <string name="survivor_upg_proj_fork_desc">Снаряды делятся на 2 при ударе</string>
+    <string name="survivor_upg_proj_fork_desc">Снаряды делятся при ударе</string>
     <string name="survivor_upg_poison">Яд</string>
     <string name="survivor_upg_poison_desc">Снаряды накладывают яд DoT (суммируется)</string>
     <string name="survivor_upg_laser_range">Дальность лазера</string>
-    <string name="survivor_upg_laser_range_desc">+20% дальности лазера</string>
+    <string name="survivor_upg_laser_range_desc">Бонус дальности лазера</string>
     <string name="survivor_upg_laser_dmg">Урон лазера</string>
-    <string name="survivor_upg_laser_dmg_desc">+20% урона лазера</string>
+    <string name="survivor_upg_laser_dmg_desc">Бонус урона лазера</string>
     <string name="survivor_upg_laser_burn">Ожог</string>
-    <string name="survivor_upg_laser_burn_desc" formatted="false">Лазер поджигает врагов: +20% DoT ожога за 2с</string>
+    <string name="survivor_upg_laser_burn_desc">Лазер поджигает врагов, нанося урон от ожога со временем</string>
     <string name="survivor_upg_laser_rate">Кадence лазера</string>
-    <string name="survivor_upg_laser_rate_desc">+15% скорострельности лазера</string>
+    <string name="survivor_upg_laser_rate_desc">Бонус скорострельности лазера</string>
     <string name="survivor_upg_laser_multi">Мульти-лазер</string>
-    <string name="survivor_upg_laser_multi_desc">+1 дополнительный параллельный лазер</string>
+    <string name="survivor_upg_laser_multi_desc">Добавляет дополнительный параллельный лазер</string>
     <string name="survivor_upg_aura_radius">Радиус ауры</string>
-    <string name="survivor_upg_aura_radius_desc" formatted="false">+15% радиуса ауры</string>
+    <string name="survivor_upg_aura_radius_desc">Бонус радиуса ауры</string>
     <string name="survivor_upg_aura_dmg">Урон ауры</string>
-    <string name="survivor_upg_aura_dmg_desc" formatted="false">+20% DPS ауры</string>
+    <string name="survivor_upg_aura_dmg_desc">Бонус урона ауры</string>
     <string name="survivor_upg_aura_slow">Замедление ауры</string>
-    <string name="survivor_upg_aura_slow_desc" formatted="false">+5% замедления врагов в ауре</string>
+    <string name="survivor_upg_aura_slow_desc">Увеличивает замедление врагов в ауре</string>
     <string name="survivor_upg_aura_tick">Частота ауры</string>
-    <string name="survivor_upg_aura_tick_desc" formatted="false">+15% частоты тиков ауры</string>
+    <string name="survivor_upg_aura_tick_desc">Бонус частоты ауры</string>
     <string name="survivor_upg_bounce_count">Больше рикошетов</string>
-    <string name="survivor_upg_bounce_count_desc">+1 макс. рикошет</string>
+    <string name="survivor_upg_bounce_count_desc">Увеличивает количество рикошетов</string>
     <string name="survivor_upg_bounce_dmg">Урон рикошета</string>
-    <string name="survivor_upg_bounce_dmg_desc" formatted="false">+20% урона рикошета</string>
+    <string name="survivor_upg_bounce_dmg_desc">Бонус урона рикошета</string>
     <string name="survivor_upg_bounce_speed">Скорость рикошета</string>
-    <string name="survivor_upg_bounce_speed_desc" formatted="false">+15% скорости рикошетного снаряда</string>
+    <string name="survivor_upg_bounce_speed_desc">Бонус скорости рикошета</string>
     <string name="survivor_upg_bounce_rate">Кадence рикошета</string>
-    <string name="survivor_upg_bounce_rate_desc" formatted="false">+10% скорострельности рикошета</string>
+    <string name="survivor_upg_bounce_rate_desc">Бонус скорострельности рикошета</string>
     <string name="survivor_upg_bomb_radius">Радиус взрыва</string>
-    <string name="survivor_upg_bomb_radius_desc" formatted="false">+10% радиуса взрыва</string>
+    <string name="survivor_upg_bomb_radius_desc">Бонус радиуса взрыва</string>
     <string name="survivor_upg_bomb_dmg">Урон бомбы</string>
-    <string name="survivor_upg_bomb_dmg_desc" formatted="false">+20% урона бомбы</string>
+    <string name="survivor_upg_bomb_dmg_desc">Бонус урона бомбы</string>
     <string name="survivor_upg_bomb_rate">Кадence бомбы</string>
-    <string name="survivor_upg_bomb_rate_desc" formatted="false">+10% кадence броска</string>
+    <string name="survivor_upg_bomb_rate_desc">Бонус частоты бросков</string>
     <string name="survivor_upg_bomb_multi">Мульти-бомба</string>
-    <string name="survivor_upg_bomb_multi_desc">+1 бомба за бросок</string>
+    <string name="survivor_upg_bomb_multi_desc">Дополнительная бомба за бросок</string>
     <string name="survivor_upg_bomb_residue">Остаток</string>
-    <string name="survivor_upg_bomb_residue_desc">Взрывы оставляют токсичную зону на 2с, наносящую 1/5 урона бомбы каждые 0,5с</string>
+    <string name="survivor_upg_bomb_residue_desc">Взрывы оставляют стойкую токсичную зону</string>
     <string name="survivor_upg_bomb_residue_duration">Длительность остатка</string>
-    <string name="survivor_upg_bomb_residue_duration_desc">+0,5с длительности зоны за уровень</string>
+    <string name="survivor_upg_bomb_residue_duration_desc">Увеличивает длительность зоны остатка</string>
     <string name="survivor_upg_chain_dmg">Урон молнии</string>
-    <string name="survivor_upg_chain_dmg_desc">+1 урона за уровень</string>
+    <string name="survivor_upg_chain_dmg_desc">Бонус урона молнии</string>
     <string name="survivor_upg_chain_bounces">Больше цепей</string>
-    <string name="survivor_upg_chain_bounces_desc">+1 дополнительный прыжок цепи</string>
+    <string name="survivor_upg_chain_bounces_desc">Дополнительный прыжок цепи</string>
     <string name="survivor_upg_chain_rate">Кадence молнии</string>
-    <string name="survivor_upg_chain_rate_desc">+10% скорострельности молнии</string>
+    <string name="survivor_upg_chain_rate_desc">Бонус скорострельности молнии</string>
     <string name="survivor_upg_chain_range">Дальность молнии</string>
-    <string name="survivor_upg_chain_range_desc">+50 дальности за уровень (макс. 800)</string>
+    <string name="survivor_upg_chain_range_desc">Бонус дальности молнии</string>
     <string name="survivor_upg_chain_split">Раздвоение молнии</string>
-    <string name="survivor_upg_chain_split_desc">+10% шанс за уровень раздвоения молнии у каждого врага (макс. 50%)</string>
+    <string name="survivor_upg_chain_split_desc">Шанс раздвоения молнии у каждого врага</string>
     <string name="survivor_upg_orbital_count">+1 Орбиталь</string>
     <string name="survivor_upg_orbital_count_desc">Добавляет ещё один орбитальный шар</string>
     <string name="survivor_upg_orbital_dmg">Орбитальный урон</string>
-    <string name="survivor_upg_orbital_dmg_desc">+20% орбитального урона</string>
+    <string name="survivor_upg_orbital_dmg_desc">Бонус орбитального урона</string>
     <string name="survivor_upg_orbital_speed">Орбитальная скорость</string>
-    <string name="survivor_upg_orbital_speed_desc">+30% скорости орбитального вращения</string>
+    <string name="survivor_upg_orbital_speed_desc">Бонус скорости орбитального вращения</string>
     <string name="survivor_upg_orbital_rate">Орбитальная кадence</string>
-    <string name="survivor_upg_orbital_rate_desc" formatted="false">+15% орбитальной скорострельности</string>
+    <string name="survivor_upg_orbital_rate_desc">Бонус орбитальной скорострельности</string>
     <string name="survivor_upg_orbital_multi">+1 Орбитальный выстрел</string>
-    <string name="survivor_upg_orbital_multi_desc">Каждый шар стреляет дополнительным снарядом</string>
+    <string name="survivor_upg_orbital_multi_desc">Каждый шар стреляет дополнительными снарядами</string>
     <string name="survivor_upg_orbital_frag">Орбитальная фрагментация</string>
-    <string name="survivor_upg_orbital_frag_desc">Орбитальные снаряды делятся на 2 при ударе</string>
+    <string name="survivor_upg_orbital_frag_desc">Орбитальные снаряды делятся при ударе</string>
     <string name="survivor_upg_orbital_poison">Орбитальный яд</string>
     <string name="survivor_upg_orbital_poison_desc">Орбитальные снаряды накладывают яд DoT</string>
     <string name="survivor_upg_orbital_burn">Орбитальный ожог</string>
-    <string name="survivor_upg_orbital_burn_desc">Орбитальные снаряды поджигают врагов на 2с</string>
+    <string name="survivor_upg_orbital_burn_desc">Орбитальные снаряды поджигают врагов</string>
     <string name="survivor_select_weapon">Выберите начальное оружие</string>
     <string name="survivor_weapon_chain_lightning">Цепная молния</string>
     <string name="survivor_weapon_orbital">Орбитальный</string>

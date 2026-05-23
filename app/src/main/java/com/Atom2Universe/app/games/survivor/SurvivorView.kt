@@ -383,9 +383,9 @@ class SurvivorView @JvmOverloads constructor(
             // Rayon visuel pulsant pour les FAST (sans toucher au rayon de collision)
             val drawR = if (e.type == EnemyType.FAST) e.radius * (0.87f + pulseFast * 0.26f) else e.radius
 
-            // Halo
-            pGlow.color = col and 0x44FFFFFF.toInt()
-            canvas.drawCircle(sx, sy, drawR * 1.4f, pGlow)
+            // Halo (pFill simple — pGlow/BlurMaskFilter trop coûteux sur N centaines d'ennemis)
+            pFill.color = col and 0x44FFFFFF.toInt()
+            canvas.drawCircle(sx, sy, drawR * 1.4f, pFill)
 
             // Corps — forme selon le type
             pFill.color = col

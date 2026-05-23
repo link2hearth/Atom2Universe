@@ -220,10 +220,10 @@ class SurvivorGame(private val ctx: Context) {
         const val PROJ_DMG = 5f;    const val PROJ_RATE = 2f
         const val PROJ_SPEED = 300f; const val PROJ_R = 4f; const val PROJ_LIFE = 2f
 
-        const val LASER_DMG = 4f;   const val LASER_RATE = 1f
+        const val LASER_DMG = 5f;   const val LASER_RATE = 1f
         const val LASER_RANGE = 250f; const val LASER_W = 6f; const val LASER_DUR = 0.4f
 
-        const val AURA_DMG = 1.5f;  const val AURA_R = 120f
+        const val AURA_DMG = 3f;    const val AURA_R = 120f
         const val AURA_TICK = 2.5f; const val AURA_SLOW = 0.7f
 
         const val BOUNCE_DMG = 5f;   const val BOUNCE_RATE = 0.8f
@@ -236,7 +236,7 @@ class SurvivorGame(private val ctx: Context) {
         const val RESIDUE_TICK_INTERVAL = 0.5f
         const val RESIDUE_TICK_FRACTION = 0.2f
 
-        const val CHAIN_DMG = 2f;   const val CHAIN_RATE = 1.2f
+        const val CHAIN_DMG = 5f;   const val CHAIN_RATE = 1.2f
         const val CHAIN_RANGE = 300f
 
         const val ORB_RADIUS = 60f;    const val ORB_SPEED = 2.5f
@@ -261,12 +261,15 @@ class SurvivorGame(private val ctx: Context) {
     private val _killEnemyBullets = HashSet<SEnemyBullet>(16)
     private var chainReactionInProgress = false
     private val _killEnemies  = HashSet<SEnemy>(32)
+    private val _killExplosion = HashSet<SEnemy>(16)
     private val _killProj     = HashSet<SProjectile>(32)
     private val _killBouncing = HashSet<SBouncingProj>(8)
     private val _killBombs    = HashSet<SBomb>(8)
     private val _killExpl     = HashSet<SExplosion>(8)
     private val _killResidue  = HashSet<SResidue>(8)
     private var separationFrame = 0
+    private val enemySnapshot  = ArrayList<SEnemy>(128)
+    private var lifeStealFactor = 0f
 
     private val catalog: List<UpgradeOption> by lazy {
         listOf(
@@ -346,6 +349,7 @@ class SurvivorGame(private val ctx: Context) {
             weapons.clear(); weapons.add(startWeapon)
             weaponCds.clear()
         }
+        lifeStealFactor = 0f
         enemies.clear(); enemyBullets.clear(); projectiles.clear(); lasers.clear()
         chainLightnings.clear(); bouncingProjs.clear(); bombs.clear(); explosions.clear(); residues.clear()
         particles.clear(); dmgNums.clear(); orbitalPositions.clear()
@@ -374,6 +378,7 @@ class SurvivorGame(private val ctx: Context) {
 
         updateDpsWindow(eff)
         movePlayer(eff, jx, jy)
+        enemySnapshot.clear(); enemySnapshot.addAll(enemies)
         regenShield(eff)
         regenHp(eff)
         updateEnemies(eff)
@@ -539,6 +544,7 @@ class SurvivorGame(private val ctx: Context) {
     }
 
     private fun separateEnemies() {
+        if (enemies.size > 100) return
         if (++separationFrame % 3 != 0) return
         val list = enemies
         val n = list.size
@@ -565,8 +571,8 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun updateDoTs(dt: Float) {
         val toKill = _killEnemies.also { it.clear() }
-        for (e in enemies.toList()) {
-            if (e in toKill) continue
+        for (e in enemySnapshot) {
+            if (e.hp <= 0f || e in toKill) continue
             if (e.burnTimer > 0f) {
                 e.burnTimer -= dt
                 if (hitEnemy(e, e.burnDmg * dt, false)) { toKill.add(e); continue }
@@ -598,8 +604,7 @@ class SurvivorGame(private val ctx: Context) {
             e.erraticCd = 0.15f + rng.nextFloat() * 0.35f
         }
         val dx = px - e.x; val dy = py - e.y
-        val d = sqrt(dx * dx + dy * dy)
-        if (d > 0f) {
+        if (dx * dx + dy * dy > 0f) {
             val angle = atan2(dy, dx) + e.erraticOffset
             val spd = e.baseSpeed * e.slowFactor
             e.x += cos(angle) * spd * dt; e.y += sin(angle) * spd * dt
@@ -639,7 +644,7 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun updateEnemyBullets(dt: Float) {
         val dead = _killEnemyBullets.also { it.clear() }
-        for (b in enemyBullets.toList()) {
+        for (b in enemyBullets) {
             b.x += b.vx * dt; b.y += b.vy * dt; b.lifetime -= dt
             if (b.lifetime <= 0f) dead.add(b)
         }
@@ -779,7 +784,7 @@ class SurvivorGame(private val ctx: Context) {
         val t = nearestEnemy() ?: return false
         val dx = t.x - player.x; val dy = t.y - player.y
         val d = sqrt(dx * dx + dy * dy).takeIf { it > 0f } ?: return false
-        val dmg = PROJ_DMG * (1f + player.upg("proj_dmg") * 0.20f)
+        val dmg = PROJ_DMG * (1f + player.upg("proj_dmg") * 0.30f)
         val spd = PROJ_SPEED * (1f + player.upg("proj_speed") * 0.15f)
         val r   = PROJ_R
         val lt  = PROJ_LIFE * (1f + player.upg("proj_range") * 0.20f)
@@ -802,15 +807,15 @@ class SurvivorGame(private val ctx: Context) {
         val sorted = enemies.sortedBy { e -> (e.x - player.x).let { it * it } + (e.y - player.y).let { it * it } }
         val primary = sorted.firstOrNull() ?: return false
         val dx = primary.x - player.x; val dy = primary.y - player.y
-        if (sqrt(dx * dx + dy * dy) > range) return false
-        val dmg   = LASER_DMG * (1f + player.upg("laser_dmg") * 0.20f)
+        if (dx * dx + dy * dy > range * range) return false
+        val dmg   = LASER_DMG * (1f + player.upg("laser_dmg") * 0.30f)
         val width = LASER_W   * (1f + player.upg("laser_width") * 0.25f)
         val multi = 1 + player.upg("laser_multi")
         val isCrit = isCrit(); val fd = if (isCrit) dmg * critMult() else dmg
         val targets = sorted.take(multi)
         val toKill = _killEnemies.also { it.clear() }
         val burnLevel = player.upg("laser_burn")
-        val burnDmg = if (burnLevel > 0) LASER_DMG * 0.5f * (1f + burnLevel * 0.20f) else 0f
+        val burnDmg = if (burnLevel > 0) LASER_DMG * 0.5f * (1f + burnLevel * 0.30f) else 0f
         for (tgt in targets) {
             val tdx = tgt.x - player.x; val tdy = tgt.y - player.y
             val dist = sqrt(tdx * tdx + tdy * tdy)
@@ -819,8 +824,8 @@ class SurvivorGame(private val ctx: Context) {
             val endY = player.y + tdy / dist * range
             val beamWidth = if (tgt == primary) width else width * 0.6f
             lasers.add(SLaser(player.x, player.y, endX, endY, LASER_DUR, fd, beamWidth, isCrit))
-            for (e in enemies.toList()) {
-                if (e in toKill) continue
+            for (e in enemySnapshot) {
+                if (e.hp <= 0f || e in toKill) continue
                 if (distToSeg(e.x, e.y, player.x, player.y, endX, endY) < e.radius + beamWidth / 2f) {
                     if (burnLevel > 0) { e.burnDmg = burnDmg; e.burnTimer = 2f }
                     if (hitEnemy(e, fd, isCrit)) toKill.add(e)
@@ -833,7 +838,7 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun fireChainLightning(): Boolean {
         if (enemies.isEmpty()) return false
-        val dmg = CHAIN_DMG + player.upg("chain_dmg") * 1f
+        val dmg = CHAIN_DMG * (1f + player.upg("chain_dmg") * 0.30f)
         val chains = 2 + player.upg("chain_bounces")
         val isCrit = isCrit(); val fd = if (isCrit) dmg * critMult() else dmg
         val toKill = _killEnemies.also { it.clear() }
@@ -866,7 +871,7 @@ class SurvivorGame(private val ctx: Context) {
         val t = nearestEnemy() ?: return false
         val dx = t.x - player.x; val dy = t.y - player.y
         val d = sqrt(dx * dx + dy * dy).takeIf { it > 0f } ?: return false
-        val dmg  = BOUNCE_DMG  * (1f + player.upg("bounce_dmg") * 0.20f)
+        val dmg  = BOUNCE_DMG  * (1f + player.upg("bounce_dmg") * 0.30f)
         val spd  = BOUNCE_SPEED* (1f + player.upg("bounce_speed") * 0.15f)
         val bnc  = BOUNCE_MAX  + player.upg("bounce_count")
         val isCrit = isCrit(); val fd = if (isCrit) dmg * critMult() else dmg
@@ -878,7 +883,7 @@ class SurvivorGame(private val ctx: Context) {
         val t = nearestEnemy() ?: return false
         val dx = t.x - player.x; val dy = t.y - player.y
         val d = sqrt(dx * dx + dy * dy).takeIf { it > 0f } ?: return false
-        val dmg  = BOMB_DMG   * (1f + player.upg("bomb_dmg") * 0.20f)
+        val dmg  = BOMB_DMG   * (1f + player.upg("bomb_dmg") * 0.30f)
         val expl = BOMB_EXPL_R* (1f + player.upg("bomb_radius") * 0.10f)
         val cnt  = 1 + player.upg("bomb_multi")
         val isCrit = isCrit(); val fd = if (isCrit) dmg * critMult() else dmg
@@ -896,16 +901,17 @@ class SurvivorGame(private val ctx: Context) {
     private fun fireAura(dt: Float) {
         if (!player.weapons.contains(WeaponType.AURA)) return
         val radius   = AURA_R    * (1f + player.upg("aura_radius") * 0.15f)
-        val dmg      = AURA_DMG  * (1f + player.upg("aura_dmg") * 0.20f)
+        val dmg      = AURA_DMG  * (1f + player.upg("aura_dmg") * 0.30f)
         val tickRate = AURA_TICK * (1f + player.upg("aura_tick") * 0.15f)
         val slowF    = (AURA_SLOW - player.upg("aura_slow") * 0.05f).coerceAtLeast(0.3f)
         auraCd -= dt
         if (auraCd > 0f) return
         auraCd = 1f / tickRate
         val toKill = _killEnemies.also { it.clear() }
-        for (e in enemies.toList()) {
+        for (e in enemySnapshot) {
+            if (e.hp <= 0f) continue
             val dx = e.x - player.x; val dy = e.y - player.y
-            if (sqrt(dx * dx + dy * dy) <= radius + e.radius) {
+            if (dx * dx + dy * dy <= (radius + e.radius) * (radius + e.radius)) {
                 e.slowFactor = slowF; e.slowCd = 1f
                 if (hitEnemy(e, dmg, false)) toKill.add(e)
             }
@@ -920,7 +926,7 @@ class SurvivorGame(private val ctx: Context) {
         orbitalPositions.clear()
         val count    = 2 + player.upg("orbital_count")
         val speed    = ORB_SPEED + player.upg("orbital_speed") * 0.3f
-        val dmg      = ORB_PROJ_DMG * (1f + player.upg("orbital_dmg") * 0.20f)
+        val dmg      = ORB_PROJ_DMG * (1f + player.upg("orbital_dmg") * 0.30f)
         val fireRate = ORB_FIRE_RATE * (1f + player.upg("orbital_rate") * 0.15f)
         val multi    = 1 + player.upg("orbital_multi")
         val toKill   = _killEnemies.also { it.clear() }
@@ -947,10 +953,10 @@ class SurvivorGame(private val ctx: Context) {
                 // Dégâts au contact
                 orbitalContactCds[i] = (orbitalContactCds[i] - dt).coerceAtLeast(-1f)
                 if (orbitalContactCds[i] <= 0f) {
-                    for (e in enemies.toList()) {
-                        if (e in toKill) continue
+                    for (e in enemySnapshot) {
+                        if (e.hp <= 0f || e in toKill) continue
                         val cdx = e.x - ox; val cdy = e.y - oy
-                        if (sqrt(cdx * cdx + cdy * cdy) < e.radius + ORB_R) {
+                        if (cdx * cdx + cdy * cdy < (e.radius + ORB_R) * (e.radius + ORB_R)) {
                             if (hitEnemy(e, dmg, false)) toKill.add(e)
                             orbitalContactCds[i] = ORB_CONTACT_CD
                             break
@@ -984,15 +990,15 @@ class SurvivorGame(private val ctx: Context) {
         val dead   = _killProj.also { it.clear() }
         val toKill = _killEnemies.also { it.clear() }
         val poisonLevel = player.upg("poison")
-        val poisonDmgBase = if (poisonLevel > 0) PROJ_DMG * 0.4f * (1f + poisonLevel * 0.20f) else 0f
-        val enemySnap = enemies.toList()
+        val poisonDmgBase = if (poisonLevel > 0) PROJ_DMG * 0.4f * (1f + poisonLevel * 0.30f) else 0f
         for (p in projectiles.toList()) {
             p.x += p.vx * dt; p.y += p.vy * dt; p.lifetime -= dt
             if (p.lifetime <= 0f) { dead.add(p); continue }
-            for (e in enemySnap) {
+            for (e in enemySnapshot) {
+                if (e.hp <= 0f) continue
                 if (e in toKill) continue
                 val dx = e.x - p.x; val dy = e.y - p.y
-                if (sqrt(dx * dx + dy * dy) < e.radius + p.radius) {
+                if (dx * dx + dy * dy < (e.radius + p.radius) * (e.radius + p.radius)) {
                     if (!p.isOrbital && poisonLevel > 0) {
                         e.poisonDmg = (e.poisonDmg + poisonDmgBase).coerceAtMost(poisonDmgBase * 3f)
                         e.poisonTimer = 3f
@@ -1001,12 +1007,12 @@ class SurvivorGame(private val ctx: Context) {
                     if (p.isOrbital) {
                         val op = player.upg("orbital_poison")
                         if (op > 0) {
-                            val pd = ORB_PROJ_DMG * 0.4f * (1f + op * 0.20f)
+                            val pd = ORB_PROJ_DMG * 0.4f * (1f + op * 0.30f)
                             e.poisonDmg = (e.poisonDmg + pd).coerceAtMost(pd * 3f)
                             e.poisonTimer = 3f; if (e.poisonTickCd <= 0f) e.poisonTickCd = 0.5f
                         }
                         val ob = player.upg("orbital_burn")
-                        if (ob > 0) { e.burnDmg = ORB_PROJ_DMG * 0.5f * (1f + ob * 0.20f); e.burnTimer = 2f }
+                        if (ob > 0) { e.burnDmg = ORB_PROJ_DMG * 0.5f * (1f + ob * 0.30f); e.burnTimer = 2f }
                     }
                     if (hitEnemy(e, p.damage, p.isCrit)) toKill.add(e)
                     p.penetration--
@@ -1044,12 +1050,12 @@ class SurvivorGame(private val ctx: Context) {
     private fun updateBouncingProjs(dt: Float) {
         val dead   = _killBouncing.also { it.clear() }
         val toKill = _killEnemies.also { it.clear() }
-        for (b in bouncingProjs.toList()) {
+        for (b in bouncingProjs) {
             b.x += b.vx * dt; b.y += b.vy * dt
             val dx = b.x - player.x; val dy = b.y - player.y
-            if (sqrt(dx * dx + dy * dy) > SPAWN_DIST * 2) { dead.add(b); continue }
-            for (e in enemies) {
-                if (e in b.hitSet || e in toKill) continue
+            if (dx * dx + dy * dy > 4f * SPAWN_DIST * SPAWN_DIST) { dead.add(b); continue }
+            for (e in enemySnapshot) {
+                if (e.hp <= 0f || e in b.hitSet || e in toKill) continue
                 val ex = e.x - b.x; val ey = e.y - b.y
                 if (ex * ex + ey * ey < (e.radius + b.radius) * (e.radius + b.radius)) {
                     b.hitSet.add(e)
@@ -1078,13 +1084,14 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun updateBombs(dt: Float) {
         val dead = _killBombs.also { it.clear() }
-        for (b in bombs.toList()) {
+        for (b in bombs) {
             b.x += b.vx * dt; b.y += b.vy * dt; b.lifetime -= dt
             var explode = b.lifetime <= 0f
             if (!explode) {
-                for (e in enemies.toList()) {
+                for (e in enemySnapshot) {
+                    if (e.hp <= 0f) continue
                     val dx = e.x - b.x; val dy = e.y - b.y
-                    if (sqrt(dx * dx + dy * dy) < e.radius + b.radius) { explode = true; break }
+                    if (dx * dx + dy * dy < (e.radius + b.radius) * (e.radius + b.radius)) { explode = true; break }
                 }
             }
             if (explode) {
@@ -1102,11 +1109,11 @@ class SurvivorGame(private val ctx: Context) {
     }
 
     private fun applyExplosionDamage(x: Float, y: Float, radius: Float, damage: Float) {
-        val toKill = _killEnemies.also { it.clear() }
-        for (e in enemies.toList()) {
-            if (e in toKill) continue
+        val toKill = _killExplosion.also { it.clear() }
+        for (e in enemySnapshot) {
+            if (e.hp <= 0f || e in toKill) continue
             val dx = e.x - x; val dy = e.y - y
-            if (sqrt(dx * dx + dy * dy) < radius + e.radius) {
+            if (dx * dx + dy * dy < (radius + e.radius) * (radius + e.radius)) {
                 if (hitEnemy(e, damage, false)) toKill.add(e)
             }
         }
@@ -1115,7 +1122,7 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun updateExplosions(dt: Float) {
         val dead = _killExpl.also { it.clear() }
-        for (ex in explosions.toList()) {
+        for (ex in explosions) {
             ex.life -= dt
             if (ex.life <= 0f) dead.add(ex)
         }
@@ -1124,17 +1131,17 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun updateResidues(dt: Float) {
         val dead = _killResidue.also { it.clear() }
-        for (res in residues.toList()) {
+        for (res in residues) {
             res.duration -= dt
             if (res.duration <= 0f) { dead.add(res); continue }
             res.tickTimer -= dt
             if (res.tickTimer <= 0f) {
                 res.tickTimer += RESIDUE_TICK_INTERVAL
                 val toKill = _killEnemies.also { it.clear() }
-                for (e in enemies.toList()) {
-                    if (e in toKill) continue
+                for (e in enemySnapshot) {
+                    if (e.hp <= 0f || e in toKill) continue
                     val dx = e.x - res.x; val dy = e.y - res.y
-                    if (sqrt(dx * dx + dy * dy) < res.radius + e.radius) {
+                    if (dx * dx + dy * dy < (res.radius + e.radius) * (res.radius + e.radius)) {
                         if (hitEnemy(e, res.tickDamage, false)) toKill.add(e)
                     }
                 }
@@ -1196,9 +1203,10 @@ class SurvivorGame(private val ctx: Context) {
             if (thornsLevel > 0 && absorbed > 0f) {
                 val thornsDmg = absorbed * thornsLevel * 0.15f
                 val toKill = _killEnemies.also { it.clear() }
-                for (e in enemies.toList()) {
+                for (e in enemySnapshot) {
+                    if (e.hp <= 0f) continue
                     val dx = e.x - player.x; val dy = e.y - player.y
-                    if (sqrt(dx * dx + dy * dy) < 150f) {
+                    if (dx * dx + dy * dy < 22500f) {
                         if (hitEnemy(e, thornsDmg, false)) toKill.add(e)
                     }
                 }
@@ -1219,13 +1227,15 @@ class SurvivorGame(private val ctx: Context) {
     private fun hitEnemy(e: SEnemy, dmg: Float, isCrit: Boolean): Boolean {
         e.hp -= dmg
         dpsAccum += dmg
-        if (dmg >= 0.5f)
+        if (dmg >= 0.5f && dmgNums.size < 60)
             dmgNums.add(SDmgNum(e.x + rng.nextFloat() * 20f - 10f, e.y - e.radius, -60f, dmg.toInt().toString(), 0.8f, isCrit))
-        val ls = player.upg("lifeSteal") * 0.10f
+        val ls = lifeStealFactor
         if (ls > 0f && player.lifeStealCd <= 0f) {
             val heal = (dmg * ls).coerceAtMost(player.maxHp * 0.05f)
-            player.hp = (player.hp + heal).coerceAtMost(player.maxHp)
-            player.lifeStealCd = 0.2f
+            if (heal >= 0.5f && player.hp < player.maxHp) {
+                player.hp = (player.hp + heal).coerceAtMost(player.maxHp)
+                player.lifeStealCd = 0.2f
+            }
         }
         if (e.hp <= 0f) { onEnemyKill(e); return true }
         return false
@@ -1288,6 +1298,7 @@ class SurvivorGame(private val ctx: Context) {
             "maxHp"                -> { player.maxHp += 20f; player.hp = player.maxHp }
             "shield"               -> { player.maxShield += 25f; player.shield = player.maxShield }
             "revive"               -> player.revivesLeft++
+            "lifeSteal"            -> lifeStealFactor = player.upg("lifeSteal") * 0.10f
             "speed"                -> player.speed = 180f + player.upg("speed") * 25f
             "unlock_laser"         -> player.weapons.add(WeaponType.LASER)
             "unlock_aura"          -> player.weapons.add(WeaponType.AURA)
