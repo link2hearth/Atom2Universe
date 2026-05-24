@@ -479,7 +479,15 @@ object EscapeLabyrinthGame {
     // ── Vision template construction ─────────────────────────────────────────
 
     private fun buildVisionTemplates(guard: Guard, size: Int, grid: Array<Array<TileType>>): Guard {
-        val tH = size * 2 - 1; val tW = size * 2 - 1
+        // Précalculer cos²(halfAngle) une fois : évite acos + sqrt par rayon candidat.
+        // Le vecteur direction (dirX, dirY) est toujours unitaire (N/S/E/W), donc magA = 1.
+        val cosHA = cos(guard.halfAngle * (PI / 180.0)).toFloat()
+        val cosHASq = cosHA * cosHA
+
+        // Buffer réutilisable pour Bresenham (max ~4*visionRange points en tile-space)
+        val bRow = IntArray(guard.visionRange * 4 + 4)
+        val bCol = IntArray(guard.visionRange * 4 + 4)
+
         val templates = guard.path.map { seg ->
             val dirX = seg.dir.dc.toFloat(); val dirY = seg.dir.dr.toFloat()
             val rays = mutableListOf<VisionRay>()
@@ -487,14 +495,19 @@ object EscapeLabyrinthGame {
                 for (dx in -guard.visionRange..guard.visionRange) {
                     if (dx == 0 && dy == 0) continue
                     if (max(abs(dx), abs(dy)) > guard.visionRange) continue
-                    val angle = angleDeg(dirX, dirY, dx.toFloat(), dy.toFloat())
-                    if (angle > guard.halfAngle) continue
+                    // Vérification du cône sans acos ni sqrt :
+                    // dot > 0 élimine les cellules derrière le garde ;
+                    // dot² >= cos²(halfAngle) * |b|² remplace acos(dot/|b|) <= halfAngle.
+                    val dot = dirX * dx + dirY * dy
+                    if (dot <= 0f) continue
+                    val magBSq = (dx * dx + dy * dy).toFloat()
+                    if (dot * dot < cosHASq * magBSq) continue
                     val tr = seg.row + dy; val tc = seg.col + dx
                     if (tr !in 0 until size || tc !in 0 until size) continue
-                    val tilePath = bresenhamTiles(seg.row, seg.col, tr, tc)
+                    val pathLen = bresenhamTilesInto(seg.row, seg.col, tr, tc, bRow, bCol)
                     rays.add(VisionRay(tr, tc,
-                        tilePath.map { it.first }.toIntArray(),
-                        tilePath.map { it.second }.toIntArray()))
+                        bRow.copyOfRange(0, pathLen),
+                        bCol.copyOfRange(0, pathLen)))
                 }
             }
             rays.sortBy { max(abs(it.targetRow - seg.row), abs(it.targetCol - seg.col)) }
@@ -505,29 +518,22 @@ object EscapeLabyrinthGame {
         return guard.copy(templates = templates, visionUnion = union)
     }
 
-    private fun angleDeg(ax: Float, ay: Float, bx: Float, by: Float): Float {
-        val dot = ax * bx + ay * by
-        val magA = sqrt(ax * ax + ay * ay).coerceAtLeast(1e-6f)
-        val magB = sqrt(bx * bx + by * by).coerceAtLeast(1e-6f)
-        return acos((dot / (magA * magB)).coerceIn(-1f, 1f)) * (180f / PI.toFloat())
-    }
-
-    /** Bresenham line in tile-space. Returns list of (tileRow, tileCol), excluding start. */
-    private fun bresenhamTiles(r0: Int, c0: Int, r1: Int, c1: Int): List<Pair<Int, Int>> {
+    /** Bresenham en tile-space : écrit dans les tableaux de sortie, retourne le nombre de points. */
+    private fun bresenhamTilesInto(r0: Int, c0: Int, r1: Int, c1: Int, rowOut: IntArray, colOut: IntArray): Int {
         var x = c0 * 2; var y = r0 * 2
         val x1 = c1 * 2; val y1 = r1 * 2
         val dx = abs(x1 - x); val dy = -abs(y1 - y)
         val sx = if (x < x1) 1 else -1; val sy = if (y < y1) 1 else -1
         var err = dx + dy
-        val result = mutableListOf<Pair<Int, Int>>()
+        var count = 0
         while (true) {
-            if (!(x == c0 * 2 && y == r0 * 2)) result.add(y to x)
+            if (!(x == c0 * 2 && y == r0 * 2)) { rowOut[count] = y; colOut[count] = x; count++ }
             if (x == x1 && y == y1) break
             val e2 = 2 * err
             if (e2 >= dy) { err += dy; x += sx }
             if (e2 <= dx) { err += dx; y += sy }
         }
-        return result
+        return count
     }
 
     // ── Bonus orb placement ──────────────────────────────────────────────────
@@ -574,56 +580,87 @@ object EscapeLabyrinthGame {
     // ── BFS validation (confirms level is solvable) ──────────────────────────
 
     private fun validateLevel(level: Level): Int? {
+        val size = level.cellH
         val allMask = (1 shl level.bonuses.size) - 1
         val sr = level.start.first; val sc = level.start.second
+        val exitIdx = level.exit.first * size + level.exit.second
 
-        data class St(val r: Int, val c: Int, val ph: Int, val mask: Int, val turns: Int)
+        // Vision pré-encodée par phase en BooleanArray[cellIdx] — évite Set<String>.contains() en boucle
+        val visionArr = Array(level.guardCycle) { ph ->
+            val vis = guardVisionAt(level, ph)
+            BooleanArray(size * size) { idx -> vis.contains(cellKey(idx / size, idx % size)) }
+        }
 
-        val visited = mutableSetOf("$sr,$sc|0|0")
+        // Adjacence pré-encodée : canMove[r][c][0..3] = N/S/W/E praticable
+        val canMove = Array(size) { r -> Array(size) { c ->
+            val nb = level.adj[r][c]
+            BooleanArray(4).also { a ->
+                a[0] = r > 0 && nb.contains(cellKey(r - 1, c))
+                a[1] = r < size - 1 && nb.contains(cellKey(r + 1, c))
+                a[2] = c > 0 && nb.contains(cellKey(r, c - 1))
+                a[3] = c < size - 1 && nb.contains(cellKey(r, c + 1))
+            }
+        }}
+
+        // Bonus pré-encodé par cellIdx (-1 si absent)
+        val bonusByIdx = IntArray(size * size) { -1 }
+        level.bonuses.forEach { b -> bonusByIdx[b.row * size + b.col] = b.id }
+
+        // Clé d'état Long : 9 bits cellIdx | 33 bits phase | 6 bits mask — zéro allocation String
+        fun stateKey(cellIdx: Int, ph: Int, mask: Int): Long =
+            cellIdx.toLong() or (ph.toLong() shl 9) or (mask.toLong() shl 42)
+
+        data class St(val cellIdx: Int, val ph: Int, val mask: Int, val turns: Int)
+
+        val startIdx = sr * size + sc
+        val visited = HashSet<Long>(MAX_SOLVE_STATES * 2)
+        visited.add(stateKey(startIdx, 0, 0))
         val queue = ArrayDeque<St>()
-        queue.addLast(St(sr, sc, 0, 0, 0))
-        val bonusIdx = level.bonuses.associateBy({ it.key() }, { it.id })
+        queue.addLast(St(startIdx, 0, 0, 0))
+
+        val drs = intArrayOf(-1, 1, 0, 0)  // N S W E
+        val dcs = intArrayOf(0, 0, -1, 1)
 
         while (queue.isNotEmpty()) {
             val s = queue.removeFirst()
             if (s.turns > MAX_SOLVE_TURNS) continue
             if (visited.size > MAX_SOLVE_STATES) return null
-            if (s.r == level.exit.first && s.c == level.exit.second && s.mask == allMask) return s.turns
 
+            val r = s.cellIdx / size; val c = s.cellIdx % size
             val nextPh = (s.ph + 1) % level.guardCycle
             val curGs = level.guardStates[s.ph]
             val nxtGs = level.guardStates[nextPh]
-            val vision = guardVisionAt(level, nextPh)
+            val vision = visionArr[nextPh]
 
-            for ((dr, dc) in arrayOf(0 to 0, -1 to 0, 1 to 0, 0 to -1, 0 to 1)) {
-                val tr = s.r + dr; val tc = s.c + dc
-                if (dr == 0 && dc == 0) {
-                    // wait — check guard doesn't step on player
-                    var coll = false
-                    for (g in nxtGs) if (g.row == s.r && g.col == s.c) { coll = true; break }
-                    if (coll) continue
-                    if (vision.contains(cellKey(s.r, s.c))) continue
-                } else {
-                    if (tr !in 0 until level.cellH || tc !in 0 until level.cellW) continue
-                    if (!level.adj[s.r][s.c].contains(cellKey(tr, tc))) continue
-                    var coll = false
-                    for (i in nxtGs.indices) {
-                        val nxt = nxtGs[i]; val prv = curGs.getOrNull(i)
-                        if (nxt.row == tr && nxt.col == tc) { coll = true; break }
-                        if (prv != null && prv.row == tr && prv.col == tc &&
-                            nxt.row == s.r && nxt.col == s.c) { coll = true; break }
-                    }
-                    if (coll) continue
-                    if (vision.contains(cellKey(tr, tc))) continue
+            // ── Attente sur place ────────────────────────────────────────
+            var coll = false
+            for (g in nxtGs) if (g.row == r && g.col == c) { coll = true; break }
+            if (!coll && !vision[s.cellIdx]) {
+                val newMask = if (bonusByIdx[s.cellIdx] >= 0) s.mask or (1 shl bonusByIdx[s.cellIdx]) else s.mask
+                if (s.cellIdx == exitIdx && newMask == allMask) return s.turns + 1
+                val key = stateKey(s.cellIdx, nextPh, newMask)
+                if (visited.add(key)) queue.addLast(St(s.cellIdx, nextPh, newMask, s.turns + 1))
+            }
+
+            // ── Déplacement N/S/W/E ──────────────────────────────────────
+            for (di in 0..3) {
+                if (!canMove[r][c][di]) continue
+                val tr = r + drs[di]; val tc = c + dcs[di]
+                val tIdx = tr * size + tc
+                coll = false
+                for (i in nxtGs.indices) {
+                    val nxt = nxtGs[i]
+                    if (nxt.row == tr && nxt.col == tc) { coll = true; break }
+                    val prv = curGs.getOrNull(i)
+                    if (prv != null && prv.row == tr && prv.col == tc &&
+                        nxt.row == r && nxt.col == c) { coll = true; break }
                 }
-                val fr = if (dr == 0 && dc == 0) s.r else tr
-                val fc = if (dr == 0 && dc == 0) s.c else tc
-                val newMask = bonusIdx[cellKey(fr, fc)]?.let { s.mask or (1 shl it) } ?: s.mask
-                val stKey = "$fr,$fc|$nextPh|$newMask"
-                if (!visited.contains(stKey)) {
-                    visited.add(stKey)
-                    queue.addLast(St(fr, fc, nextPh, newMask, s.turns + 1))
-                }
+                if (coll) continue
+                if (vision[tIdx]) continue
+                val newMask = if (bonusByIdx[tIdx] >= 0) s.mask or (1 shl bonusByIdx[tIdx]) else s.mask
+                if (tIdx == exitIdx && newMask == allMask) return s.turns + 1
+                val key = stateKey(tIdx, nextPh, newMask)
+                if (visited.add(key)) queue.addLast(St(tIdx, nextPh, newMask, s.turns + 1))
             }
         }
         return null

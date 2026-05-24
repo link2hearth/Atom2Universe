@@ -73,20 +73,13 @@ object LrcParser {
 
     /**
      * Trouve l'index de la ligne active pour un temps donné.
+     * Recherche binaire O(log n) — la liste doit être triée par timeMs (garantie par parse()).
      */
     fun getCurrentLineIndex(lines: List<LyricLine>, currentTimeMs: Long): Int {
         if (lines.isEmpty()) return -1
-
-        // Trouver la dernière ligne dont le timestamp est <= currentTimeMs
-        var index = -1
-        for (i in lines.indices) {
-            if (lines[i].timeMs <= currentTimeMs) {
-                index = i
-            } else {
-                break
-            }
-        }
-
-        return index
+        val idx = lines.binarySearchBy(currentTimeMs) { it.timeMs }
+        // idx >= 0 : correspondance exacte
+        // idx < 0 : point d'insertion ip = -idx - 1, on veut ip - 1 = -idx - 2
+        return if (idx >= 0) idx else (-idx - 2).coerceAtLeast(-1)
     }
 }

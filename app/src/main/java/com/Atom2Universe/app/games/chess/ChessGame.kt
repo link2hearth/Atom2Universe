@@ -7,6 +7,21 @@ import kotlin.math.abs
  */
 class ChessGame {
 
+    companion object {
+        private val KNIGHT_OFFSETS: List<Pair<Int, Int>> = listOf(
+            -2 to -1, -2 to 1, -1 to -2, -1 to 2,
+            1 to -2, 1 to 2, 2 to -1, 2 to 1
+        )
+        private val DIAG_DIRS: List<Pair<Int, Int>> = listOf(-1 to -1, -1 to 1, 1 to -1, 1 to 1)
+        private val ORTHO_DIRS: List<Pair<Int, Int>> = listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
+        private val QUEEN_DIRS: List<Pair<Int, Int>> = listOf(
+            -1 to -1, -1 to 0, -1 to 1,
+            0 to -1, 0 to 1,
+            1 to -1, 1 to 0, 1 to 1
+        )
+        private val PAWN_COL_OFFSETS = intArrayOf(-1, 1)
+    }
+
     // Plateau 8×8 (row 0 = rang 8, row 7 = rang 1)
     private val board = Array<Array<Piece?>>(8) { arrayOfNulls(8) }
 
@@ -192,7 +207,7 @@ class ChessGame {
         }
 
         // Captures diagonales
-        for (colOffset in listOf(-1, 1)) {
+        for (colOffset in PAWN_COL_OFFSETS) {
             val captureSquare = Square(square.row + direction, square.col + colOffset)
             if (captureSquare.isValid()) {
                 val target = getPieceAt(captureSquare)
@@ -226,12 +241,8 @@ class ChessGame {
      */
     private fun generateKnightMoves(square: Square, piece: Piece): List<Move> {
         val moves = mutableListOf<Move>()
-        val knightOffsets = listOf(
-            Pair(-2, -1), Pair(-2, 1), Pair(-1, -2), Pair(-1, 2),
-            Pair(1, -2), Pair(1, 2), Pair(2, -1), Pair(2, 1)
-        )
 
-        for ((rowOffset, colOffset) in knightOffsets) {
+        for ((rowOffset, colOffset) in KNIGHT_OFFSETS) {
             val target = Square(square.row + rowOffset, square.col + colOffset)
             if (target.isValid()) {
                 val targetPiece = getPieceAt(target)
@@ -283,28 +294,21 @@ class ChessGame {
      * Génère les coups possibles pour un fou
      */
     private fun generateBishopMoves(square: Square, piece: Piece): List<Move> {
-        val diagonals = listOf(Pair(-1, -1), Pair(-1, 1), Pair(1, -1), Pair(1, 1))
-        return generateSlidingMoves(square, piece, diagonals)
+        return generateSlidingMoves(square, piece, DIAG_DIRS)
     }
 
     /**
      * Génère les coups possibles pour une tour
      */
     private fun generateRookMoves(square: Square, piece: Piece): List<Move> {
-        val orthogonals = listOf(Pair(-1, 0), Pair(1, 0), Pair(0, -1), Pair(0, 1))
-        return generateSlidingMoves(square, piece, orthogonals)
+        return generateSlidingMoves(square, piece, ORTHO_DIRS)
     }
 
     /**
      * Génère les coups possibles pour une dame
      */
     private fun generateQueenMoves(square: Square, piece: Piece): List<Move> {
-        val allDirections = listOf(
-            Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
-            Pair(0, -1), Pair(0, 1),
-            Pair(1, -1), Pair(1, 0), Pair(1, 1)
-        )
-        return generateSlidingMoves(square, piece, allDirections)
+        return generateSlidingMoves(square, piece, QUEEN_DIRS)
     }
 
     /**
@@ -382,7 +386,7 @@ class ChessGame {
     private fun isSquareAttacked(square: Square, byColor: PieceColor): Boolean {
         // Vérifier les attaques de pions
         val pawnDirection = if (byColor == PieceColor.WHITE) -1 else 1
-        for (colOffset in listOf(-1, 1)) {
+        for (colOffset in PAWN_COL_OFFSETS) {
             val pawnSquare = Square(square.row - pawnDirection, square.col + colOffset)
             if (pawnSquare.isValid()) {
                 val piece = getPieceAt(pawnSquare)
@@ -393,11 +397,7 @@ class ChessGame {
         }
 
         // Vérifier les attaques de cavaliers
-        val knightMoves = listOf(
-            -2 to -1, -2 to 1, -1 to -2, -1 to 2,
-            1 to -2, 1 to 2, 2 to -1, 2 to 1
-        )
-        for ((rowOffset, colOffset) in knightMoves) {
+        for ((rowOffset, colOffset) in KNIGHT_OFFSETS) {
             val knightSquare = Square(square.row + rowOffset, square.col + colOffset)
             if (knightSquare.isValid()) {
                 val piece = getPieceAt(knightSquare)
@@ -408,8 +408,7 @@ class ChessGame {
         }
 
         // Vérifier les attaques en diagonale (fou, dame)
-        val diagonalDirections = listOf(-1 to -1, -1 to 1, 1 to -1, 1 to 1)
-        for ((rowDir, colDir) in diagonalDirections) {
+        for ((rowDir, colDir) in DIAG_DIRS) {
             var distance = 1
             while (true) {
                 val targetSquare = Square(square.row + rowDir * distance, square.col + colDir * distance)
@@ -428,8 +427,7 @@ class ChessGame {
         }
 
         // Vérifier les attaques orthogonales (tour, dame)
-        val orthogonalDirections = listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
-        for ((rowDir, colDir) in orthogonalDirections) {
+        for ((rowDir, colDir) in ORTHO_DIRS) {
             var distance = 1
             while (true) {
                 val targetSquare = Square(square.row + rowDir * distance, square.col + colDir * distance)
@@ -468,7 +466,7 @@ class ChessGame {
     /**
      * Vérifie si le roi d'une couleur est en échec
      */
-    private fun isKingInCheck(color: PieceColor): Boolean {
+    internal fun isKingInCheck(color: PieceColor): Boolean {
         val kingSquare = findKing(color) ?: return false
         return isSquareAttacked(kingSquare, color.opposite())
     }
@@ -805,5 +803,58 @@ class ChessGame {
         copy.moveHistory.clear();    copy.moveHistory.addAll(moveHistory)
         copy.capturedPieces.clear(); copy.capturedPieces.addAll(capturedPieces)
         return copy
+    }
+
+    /**
+     * Clone léger pour la recherche IA : ne copie pas moveHistory ni capturedPieces.
+     * isCheckmate et isStalemate ne sont pas copiés car l'IA les détermine via getAllLegalMoves.
+     */
+    internal fun cloneForSearch(): ChessGame {
+        val copy = ChessGame()
+        for (row in 0..7) {
+            for (col in 0..7) {
+                copy.board[row][col] = board[row][col]
+            }
+        }
+        copy.currentTurn             = currentTurn
+        copy.enPassantTarget         = enPassantTarget
+        copy.whiteKingMoved          = whiteKingMoved
+        copy.blackKingMoved          = blackKingMoved
+        copy.whiteRookKingsideMoved  = whiteRookKingsideMoved
+        copy.whiteRookQueensideMoved = whiteRookQueensideMoved
+        copy.blackRookKingsideMoved  = blackRookKingsideMoved
+        copy.blackRookQueensideMoved = blackRookQueensideMoved
+        copy.isInCheck               = isInCheck
+        return copy
+    }
+
+    /**
+     * Exécute un coup sans re-valider la légalité ni mettre à jour moveHistory/capturedPieces.
+     * Réservé à la recherche IA : le coup doit venir d'getAllLegalMoves (déjà légal).
+     * isInCheck est mis à jour ; isCheckmate/isStalemate sont laissés à false car l'IA
+     * détecte le mat/pat via getAllLegalMoves().isEmpty().
+     */
+    internal fun makeMoveUnchecked(move: Move) {
+        val piece = board[move.from.row][move.from.col] ?: return
+
+        board[move.to.row][move.to.col] = if (move.promotionType != null) {
+            Piece(move.promotionType, piece.color)
+        } else {
+            piece
+        }
+        board[move.from.row][move.from.col] = null
+
+        if (move.isCastling) executeCastling(move)
+        if (move.isEnPassant) board[move.from.row][move.to.col] = null
+
+        enPassantTarget = if (piece.type == PieceType.PAWN && abs(move.to.row - move.from.row) == 2) {
+            Square((move.from.row + move.to.row) / 2, move.from.col)
+        } else null
+
+        updateCastlingRights(move)
+        currentTurn = currentTurn.opposite()
+        isInCheck = isKingInCheck(currentTurn)
+        isCheckmate = false
+        isStalemate = false
     }
 }

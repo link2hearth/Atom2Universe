@@ -546,7 +546,8 @@ class SurvivorView @JvmOverloads constructor(
 
     private fun drawOrbital(canvas: Canvas, wx: (Float) -> Float, wy: (Float) -> Float) {
         if (!game.player.weapons.contains(WeaponType.ORBITAL)) return
-        for ((ox, oy) in game.orbitalPositions) {
+        for (i in 0 until game.orbitalCount) {
+            val ox = game.orbXY[i * 2]; val oy = game.orbXY[i * 2 + 1]
             val sx = wx(ox); val sy = wy(oy)
             pGlow.color = Color.argb(60, 170, 221, 255)
             canvas.drawCircle(sx, sy, SurvivorGame.ORB_R * 2.2f, pGlow)

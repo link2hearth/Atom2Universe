@@ -191,29 +191,27 @@ class KarballoAdapter(
             val key2Find = board.getKey()
 
             try {
-                val bookIs = context.assets.open("chess/book.bin")
-                val dataInputStream = DataInputStream(BufferedInputStream(bookIs))
+                DataInputStream(BufferedInputStream(context.assets.open("chess/book.bin"))).use { dataInputStream ->
+                    while (true) {
+                        val key = dataInputStream.readLong()
+                        if (key == key2Find) {
+                            val moveInt = dataInputStream.readShort().toInt()
+                            val weight = dataInputStream.readShort().toInt()
+                            dataInputStream.readInt() // Unused learn field
 
-                while (true) {
-                    val key = dataInputStream.readLong()
-                    if (key == key2Find) {
-                        val moveInt = dataInputStream.readShort().toInt()
-                        val weight = dataInputStream.readShort().toInt()
-                        dataInputStream.readInt() // Unused learn field
-
-                        val move = karballo.Move.getFromString(board, int2MoveString(moveInt), true)
-                        // Ajouter seulement si légal
-                        if (board.getLegalMove(move) != karballo.Move.NONE) {
-                            moves.add(move)
-                            weights.add(weight)
-                            totalWeight += weight.toLong()
+                            val move = karballo.Move.getFromString(board, int2MoveString(moveInt), true)
+                            if (board.getLegalMove(move) != karballo.Move.NONE) {
+                                moves.add(move)
+                                weights.add(weight)
+                                totalWeight += weight.toLong()
+                            }
+                        } else {
+                            dataInputStream.skipBytes(8)
                         }
-                    } else {
-                        dataInputStream.skipBytes(8)
                     }
                 }
             } catch (e: Exception) {
-                // Fin du fichier ou erreur de lecture
+                // EOFException normale en fin de fichier ; autres erreurs ignorées
             }
         }
 

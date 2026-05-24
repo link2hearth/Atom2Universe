@@ -180,7 +180,9 @@ class SurvivorGame(private val ctx: Context) {
     val residues = mutableListOf<SResidue>()
     val particles = mutableListOf<SParticle>()
     val dmgNums = mutableListOf<SDmgNum>()
-    val orbitalPositions = mutableListOf<Pair<Float, Float>>()
+    // Positions des orbitales (x0,y0, x1,y1, ...) — FloatArray évite 20 Pair/frame à 60fps
+    val orbXY = FloatArray(40)
+    var orbitalCount = 0
     val formations = mutableListOf<SFormation>()
 
     var screenW = 1080f
@@ -353,7 +355,7 @@ class SurvivorGame(private val ctx: Context) {
         lifeStealFactor = 0f
         enemies.clear(); enemyBullets.clear(); projectiles.clear(); lasers.clear()
         chainLightnings.clear(); bouncingProjs.clear(); bombs.clear(); explosions.clear(); residues.clear()
-        particles.clear(); dmgNums.clear(); orbitalPositions.clear()
+        particles.clear(); dmgNums.clear(); orbitalCount = 0
         orbitalFireCds.fill(0f); orbitalContactCds.fill(0f)
         formations.clear()
         formationCd = 55f
@@ -806,15 +808,17 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun fireLaser(): Boolean {
         val range = LASER_RANGE * (1f + player.upg("laser_range") * 0.20f)
-        val sorted = enemies.sortedBy { e -> (e.x - player.x).let { it * it } + (e.y - player.y).let { it * it } }
-        val primary = sorted.firstOrNull() ?: return false
+        val rangeSq = range * range
+        val multi = 1 + player.upg("laser_multi")
+        val distSq = { e: SEnemy -> (e.x - player.x).let { it * it } + (e.y - player.y).let { it * it } }
+        val primary = if (multi == 1) enemies.minByOrNull(distSq) ?: return false
+                      else enemies.sortedBy(distSq).firstOrNull() ?: return false
         val dx = primary.x - player.x; val dy = primary.y - player.y
-        if (dx * dx + dy * dy > range * range) return false
+        if (dx * dx + dy * dy > rangeSq) return false
         val dmg   = LASER_DMG * (1f + player.upg("laser_dmg") * 0.30f)
         val width = LASER_W
-        val multi = 1 + player.upg("laser_multi")
         val isCrit = isCrit(); val fd = if (isCrit) dmg * critMult() else dmg
-        val targets = sorted.take(multi)
+        val targets = if (multi == 1) listOf(primary) else enemies.sortedBy(distSq).take(multi)
         val toKill = _killEnemies.also { it.clear() }
         val burnLevel = player.upg("laser_burn")
         val burnDmg = if (burnLevel > 0) LASER_DMG * 0.5f * (1f + burnLevel * 0.30f) else 0f
@@ -925,7 +929,7 @@ class SurvivorGame(private val ctx: Context) {
 
     private fun updateOrbital(dt: Float) {
         if (!player.weapons.contains(WeaponType.ORBITAL)) return
-        orbitalPositions.clear()
+        orbitalCount = 0
         val count    = 2 + player.upg("orbital_count")
         val speed    = ORB_SPEED + player.upg("orbital_speed") * 0.3f
         val dmg      = ORB_PROJ_DMG * (1f + player.upg("orbital_dmg") * 0.30f)
@@ -950,7 +954,7 @@ class SurvivorGame(private val ctx: Context) {
                 val angle = survivalTime * ringSpeed + j * (2f * PI.toFloat() / ringCount)
                 val ox = player.x + cos(angle) * orbRadius
                 val oy = player.y + sin(angle) * orbRadius
-                orbitalPositions.add(Pair(ox, oy))
+                val oi = orbitalCount * 2; orbXY[oi] = ox; orbXY[oi + 1] = oy; orbitalCount++
 
                 // Dégâts au contact
                 orbitalContactCds[i] = (orbitalContactCds[i] - dt).coerceAtLeast(-1f)

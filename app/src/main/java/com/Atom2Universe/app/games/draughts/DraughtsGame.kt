@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.games.draughts
 
-class DraughtsGame {
+class DraughtsGame private constructor(initBoard: Boolean) {
 
     // board[row][col], seules les cases (row+col)%2==1 sont jouables
     // row 0 = haut (côté noir initial), row 9 = bas (côté blanc initial)
@@ -11,7 +11,9 @@ class DraughtsGame {
     var winner: DraughtsPieceColor? = null
     var moveCount = 0
 
-    init { newGame() }
+    constructor() : this(true)
+
+    init { if (initBoard) newGame() }
 
     fun newGame() {
         for (r in 0..9) for (c in 0..9) board[r][c] = null
@@ -97,12 +99,14 @@ class DraughtsGame {
             val piece = board[r][c] ?: continue
             if (piece.color != color) continue
             val pos = DraughtsPos(r, c)
-            val tempBoard = copyBoardArray(board)
-            tempBoard[r][c] = null
+            // Backtracking: temporarily remove piece from starting square so king slides
+            // can pass through it, then restore. Eliminates the 10×10 board copy per piece.
+            board[r][c] = null
             if (piece.isKing())
-                findKingCaptures(piece, pos, tempBoard, emptySet(), pos, emptyList(), moves)
+                findKingCaptures(piece, pos, board, emptySet(), pos, emptyList(), moves)
             else
-                findPawnCaptures(piece, pos, tempBoard, emptySet(), pos, emptyList(), moves)
+                findPawnCaptures(piece, pos, board, emptySet(), pos, emptyList(), moves)
+            board[r][c] = piece
         }
         return moves
     }
@@ -127,8 +131,9 @@ class DraughtsGame {
             if (boardState[landPos.row][landPos.col] != null) continue
 
             foundAny = true
-            val newBoard = copyBoardArray(boardState)
-            newBoard[midPos.row][midPos.col] = null
+            // Backtracking: mutate boardState in-place, recurse, then restore.
+            // Eliminates the 10×10 copyBoardArray() per capture branch.
+            boardState[midPos.row][midPos.col] = null
             val newCaptured = captured + midPos
             val newAnimPath = animPath + (landPos to midPos)
 
@@ -139,13 +144,15 @@ class DraughtsGame {
                 results.add(DraughtsMove(moveFrom, landPos, newCaptured.toList(), isPromotion = true, animPath = newAnimPath))
             } else {
                 val subResults = mutableListOf<DraughtsMove>()
-                findPawnCaptures(piece, landPos, newBoard, newCaptured, moveFrom, newAnimPath, subResults)
+                findPawnCaptures(piece, landPos, boardState, newCaptured, moveFrom, newAnimPath, subResults)
                 if (subResults.isEmpty()) {
                     results.add(DraughtsMove(moveFrom, landPos, newCaptured.toList(), animPath = newAnimPath))
                 } else {
                     results.addAll(subResults)
                 }
             }
+
+            boardState[midPos.row][midPos.col] = midPiece  // Restore
         }
         if (!foundAny && captured.isNotEmpty()) {
             results.add(DraughtsMove(moveFrom, currentPos, captured.toList(), animPath = animPath))
@@ -172,18 +179,19 @@ class DraughtsGame {
             if (enemyPiece.color == piece.color) continue
             if (enemyPos in captured) continue
 
-            // Toutes les cases d'atterrissage possibles après la pièce ennemie
+            // Backtracking: remove enemy once for all landing squares in this direction,
+            // then restore. Eliminates N copyBoardArray() calls (N = landing squares).
+            boardState[enemyPos.row][enemyPos.col] = null
+            val newCaptured = captured + enemyPos
+
             r += dr; c += dc
             while (r in 0..9 && c in 0..9 && boardState[r][c] == null) {
                 val landPos = DraughtsPos(r, c)
                 foundAny = true
-                val newBoard = copyBoardArray(boardState)
-                newBoard[enemyPos.row][enemyPos.col] = null
-                val newCaptured = captured + enemyPos
                 val newAnimPath = animPath + (landPos to enemyPos)
 
                 val subResults = mutableListOf<DraughtsMove>()
-                findKingCaptures(piece, landPos, newBoard, newCaptured, moveFrom, newAnimPath, subResults)
+                findKingCaptures(piece, landPos, boardState, newCaptured, moveFrom, newAnimPath, subResults)
                 if (subResults.isEmpty()) {
                     results.add(DraughtsMove(moveFrom, landPos, newCaptured.toList(), animPath = newAnimPath))
                 } else {
@@ -191,6 +199,8 @@ class DraughtsGame {
                 }
                 r += dr; c += dc
             }
+
+            boardState[enemyPos.row][enemyPos.col] = enemyPiece  // Restore
         }
         if (!foundAny && captured.isNotEmpty()) {
             results.add(DraughtsMove(moveFrom, currentPos, captured.toList(), animPath = animPath))
@@ -229,7 +239,7 @@ class DraughtsGame {
         board.sumOf { row -> row.count { it?.color == color && it.isKing() } }
 
     fun clone(): DraughtsGame {
-        val copy = DraughtsGame()
+        val copy = DraughtsGame(false)  // Skip newGame() — board overwritten immediately below
         for (r in 0..9) for (c in 0..9) copy.board[r][c] = board[r][c]
         copy.currentTurn = currentTurn
         copy.isGameOver = isGameOver
@@ -274,9 +284,6 @@ class DraughtsGame {
         isGameOver = false; winner = null; moveCount = 0
         checkGameOver()
     }
-
-    private fun copyBoardArray(src: Array<Array<DraughtsPiece?>>): Array<Array<DraughtsPiece?>> =
-        Array(10) { r -> Array(10) { c -> src[r][c] } }
 
     companion object {
         val DIAGONALS = listOf(-1 to -1, -1 to 1, 1 to -1, 1 to 1)

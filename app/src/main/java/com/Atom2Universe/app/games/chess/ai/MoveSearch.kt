@@ -10,6 +10,14 @@ class MoveSearch(
     private val game: ChessGame,
     private val transpositionTable: TranspositionTable
 ) {
+    companion object {
+        // Bornes sûres pour éviter l'overflow lors des négations negamax (-Int.MIN_VALUE overflow)
+        private const val NEG_INF = -100_000
+        private const val POS_INF = 100_000
+        // Fréquence du check temporel : 1 fois toutes les 256 nœuds
+        private const val TIME_CHECK_MASK = 0xFF
+    }
+
     private var searchStartTime = 0L
     private var timeLimitMs = 0L
     private var nodesSearched = 0
@@ -33,7 +41,7 @@ class MoveSearch(
         this.searchCancelled = false
 
         var bestMove: Move? = null
-        var bestScore = Int.MIN_VALUE
+        var bestScore = NEG_INF
 
         val legalMoves = game.getAllLegalMoves(game.currentTurn)
         if (legalMoves.isEmpty()) return null
@@ -44,25 +52,17 @@ class MoveSearch(
         for ((index, move) in orderedMoves.withIndex()) {
             if (isTimeExpired() || searchCancelled) break
 
-            // Cloner le jeu et faire le coup
-            val gameCopy = game.clone()
-            gameCopy.makeMove(move)
+            val gameCopy = game.cloneForSearch()
+            gameCopy.makeMoveUnchecked(move)
 
-            // Chercher la meilleure réponse de l'adversaire
-            val score = -alphaBeta(
-                gameCopy,
-                depth - 1,
-                Int.MIN_VALUE,
-                Int.MAX_VALUE,
-                game.currentTurn.opposite()
-            )
+            // bestScore sert de fenêtre alpha à la racine pour élaguer les coups frères
+            val score = -alphaBeta(gameCopy, depth - 1, NEG_INF, -bestScore)
 
             if (score > bestScore) {
                 bestScore = score
                 bestMove = move
             }
 
-            // Callback de progression
             progressCallback?.invoke((index + 1) * 100 / orderedMoves.size)
         }
 
@@ -70,19 +70,18 @@ class MoveSearch(
     }
 
     /**
-     * Algorithme Minimax avec élagage alpha-beta
-     * @return Score de la position (du point de vue de maximizingColor)
+     * Algorithme Minimax avec élagage alpha-beta (negamax)
+     * @return Score de la position du point de vue du joueur actuel (currentTurn)
      */
     private fun alphaBeta(
         game: ChessGame,
         depth: Int,
         alpha: Int,
-        beta: Int,
-        maximizingColor: PieceColor
+        beta: Int
     ): Int {
         nodesSearched++
 
-        if (isTimeExpired() || searchCancelled) return 0
+        if ((nodesSearched and TIME_CHECK_MASK) == 0 && (isTimeExpired() || searchCancelled)) return 0
 
         // Vérifier la table de transposition
         val hash = ZobristHash.compute(game)
@@ -95,42 +94,32 @@ class MoveSearch(
             }
         }
 
-        // Conditions terminales
         if (depth == 0) {
-            return quiescence(game, alpha, beta, maximizingColor)
-        }
-
-        if (game.isGameOver()) {
-            return if (game.isCheckmate) {
-                // Échec et mat : très mauvais pour le joueur actuel
-                if (game.currentTurn == maximizingColor) -20000 + (4 - depth) * 100
-                else 20000 - (4 - depth) * 100
-            } else {
-                // Pat : match nul
-                0
-            }
+            return quiescence(game, alpha, beta)
         }
 
         val legalMoves = game.getAllLegalMoves(game.currentTurn)
-        if (legalMoves.isEmpty()) return 0
+
+        // Mat ou pat : getAllLegalMoves est déjà appelé, pas besoin de updateGameStatus
+        if (legalMoves.isEmpty()) {
+            return if (game.isInCheck) -(20000 - depth * 100) else 0
+        }
 
         var currentAlpha = alpha
-        var currentBeta = beta
-        var bestScore = Int.MIN_VALUE
+        var bestScore = NEG_INF
         var bestMove: Move? = null
 
         val orderedMoves = orderMoves(legalMoves)
 
         for (move in orderedMoves) {
-            val gameCopy = game.clone()
-            gameCopy.makeMove(move)
+            val gameCopy = game.cloneForSearch()
+            gameCopy.makeMoveUnchecked(move)
 
             val score = -alphaBeta(
                 gameCopy,
                 depth - 1,
-                -currentBeta,
-                -currentAlpha,
-                maximizingColor
+                -beta,
+                -currentAlpha
             )
 
             if (score > bestScore) {
@@ -139,7 +128,7 @@ class MoveSearch(
             }
 
             currentAlpha = max(currentAlpha, score)
-            if (currentAlpha >= currentBeta) {
+            if (currentAlpha >= beta) {
                 // Coupure beta
                 transpositionTable.store(
                     hash, depth, score, bestMove, ScoreType.LOWER_BOUND
@@ -166,35 +155,32 @@ class MoveSearch(
     private fun quiescence(
         game: ChessGame,
         alpha: Int,
-        beta: Int,
-        maximizingColor: PieceColor
+        beta: Int
     ): Int {
-        // Évaluation statique de la position
+        val allMoves = game.getAllLegalMoves(game.currentTurn)
+
+        // Mat ou pat détecté dans la quiescence (position terminale à l'horizon)
+        if (allMoves.isEmpty()) {
+            return if (game.isInCheck) -20000 else 0
+        }
+
         val standPat = BoardEvaluator.evaluate(game)
 
-        // Ajuster le score selon la perspective
-        val adjustedScore = if (game.currentTurn == maximizingColor) {
-            standPat
-        } else {
-            -standPat
-        }
+        // Convertir en score du joueur actuel : l'évaluateur retourne toujours du point de vue des blancs
+        val adjustedScore = if (game.currentTurn == PieceColor.WHITE) standPat else -standPat
 
         if (adjustedScore >= beta) return beta
         var currentAlpha = max(alpha, adjustedScore)
 
-        // Rechercher seulement les captures pour stabiliser la position
-        val captureMoves = game.getAllLegalMoves(game.currentTurn)
-            .filter { it.capturedPiece != null }
-
-        val orderedCaptures = orderMoves(captureMoves)
+        val orderedCaptures = orderMoves(allMoves.filter { it.capturedPiece != null })
 
         for (move in orderedCaptures) {
-            if (isTimeExpired() || searchCancelled) break
+            if ((nodesSearched and TIME_CHECK_MASK) == 0 && (isTimeExpired() || searchCancelled)) break
 
-            val gameCopy = game.clone()
-            gameCopy.makeMove(move)
+            val gameCopy = game.cloneForSearch()
+            gameCopy.makeMoveUnchecked(move)
 
-            val score = -quiescence(gameCopy, -beta, -currentAlpha, maximizingColor)
+            val score = -quiescence(gameCopy, -beta, -currentAlpha)
 
             if (score >= beta) return beta
             currentAlpha = max(currentAlpha, score)

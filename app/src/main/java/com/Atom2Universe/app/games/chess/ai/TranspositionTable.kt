@@ -24,41 +24,32 @@ data class TranspositionEntry(
 )
 
 /**
- * Table de transposition pour mémoriser les positions déjà évaluées
- * Utilise le hachage Zobrist pour identifier les positions
+ * Table de transposition pour mémoriser les positions déjà évaluées.
+ * Tableau fixe indexé par (hash & mask) — accès O(1) sans allocation ni éviction O(n).
+ * sizePow2 doit être une puissance de 2 (défaut 65536 ≈ 2 Mo).
  */
-class TranspositionTable(private val maxSize: Int = 4000) {
-    private val table = mutableMapOf<Long, TranspositionEntry>()
+class TranspositionTable(sizePow2: Int = 65536) {
+    private val mask = (sizePow2 - 1).toLong()
+    private val table = arrayOfNulls<TranspositionEntry>(sizePow2)
 
-    /**
-     * Stocke une entrée dans la table
-     */
     fun store(hash: Long, depth: Int, score: Int, bestMove: Move?, flag: ScoreType) {
-        // Stratégie d'éviction simple : si la table est pleine, retirer une entrée aléatoire
-        if (table.size >= maxSize && !table.containsKey(hash)) {
-            val keyToRemove = table.keys.random()
-            table.remove(keyToRemove)
+        val index = (hash and mask).toInt()
+        val existing = table[index]
+        // Remplace si : slot vide, même position, ou recherche plus profonde
+        if (existing == null || existing.zobristHash == hash || depth >= existing.depth) {
+            table[index] = TranspositionEntry(hash, depth, score, bestMove, flag)
         }
-
-        table[hash] = TranspositionEntry(hash, depth, score, bestMove, flag)
     }
 
-    /**
-     * Recherche une entrée dans la table
-     */
-    fun probe(hash: Long): TranspositionEntry? = table[hash]
-
-    /**
-     * Vide la table
-     */
-    fun clear() {
-        table.clear()
+    fun probe(hash: Long): TranspositionEntry? {
+        val index = (hash and mask).toInt()
+        val entry = table[index] ?: return null
+        return if (entry.zobristHash == hash) entry else null
     }
 
-    /**
-     * Retourne la taille actuelle de la table
-     */
-    fun size(): Int = table.size
+    fun clear() = table.fill(null)
+
+    fun size(): Int = table.count { it != null }
 }
 
 /**

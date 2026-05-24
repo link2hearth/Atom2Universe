@@ -9,16 +9,6 @@ import com.Atom2Universe.app.games.chess.*
  */
 object BoardEvaluator {
 
-    // Valeurs des pièces en centipawns
-    private val PIECE_VALUES = mapOf(
-        PieceType.PAWN to 100,
-        PieceType.KNIGHT to 320,
-        PieceType.BISHOP to 330,
-        PieceType.ROOK to 500,
-        PieceType.QUEEN to 900,
-        PieceType.KING to 20000
-    )
-
     // Tables pièce-case pour bonus positionnel (perspective des blancs)
     // Les noirs utilisent les mêmes tables inversées (row 7 - row)
 
@@ -105,9 +95,7 @@ object BoardEvaluator {
             for (col in 0..7) {
                 val piece = game.getPieceAt(row, col)
                 if (piece != null) {
-                    val pieceValue = PIECE_VALUES[piece.type] ?: 0
-                    val positionalBonus = getPositionalBonus(piece, row, col)
-                    val totalValue = pieceValue + positionalBonus
+                    val totalValue = piece.type.value + getPositionalBonus(piece, row, col)
 
                     if (piece.color == PieceColor.WHITE) {
                         score += totalValue

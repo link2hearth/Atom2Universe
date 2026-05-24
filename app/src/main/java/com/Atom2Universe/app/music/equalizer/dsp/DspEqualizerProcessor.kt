@@ -94,7 +94,6 @@ class DspEqualizerProcessor : AudioProcessor {
             val gainDb = level / 100.0
             bandGains[bandIndex] = gainDb.coerceIn(-12.0, 12.0)
 
-            // Reconfigure the filter
             bandFilters[bandIndex].configure(
                 sampleRate,
                 BAND_FREQUENCIES[bandIndex],
@@ -103,6 +102,7 @@ class DspEqualizerProcessor : AudioProcessor {
             )
 
             updatePreGain()
+            rebuildActiveFiltersCache()
         }
     }
 
@@ -139,6 +139,7 @@ class DspEqualizerProcessor : AudioProcessor {
                 )
             }
             updatePreGain()
+            rebuildActiveFiltersCache()
         }
     }
 
@@ -196,6 +197,8 @@ class DspEqualizerProcessor : AudioProcessor {
         lock.withLock {
             bandFilters.forEach { it.reset() }
             bassBoostFilter.reset()
+            prevLeft = 0.0
+            prevRight = 0.0
         }
     }
 
@@ -239,14 +242,13 @@ class DspEqualizerProcessor : AudioProcessor {
         sampleRate = inputAudioFormat.sampleRate
         channelCount = inputAudioFormat.channelCount
 
-        // Reconfigure all filters for new sample rate
         lock.withLock {
             for (i in 0 until BAND_COUNT) {
                 bandFilters[i].configure(sampleRate, BAND_FREQUENCIES[i], bandGains[i], BAND_Q)
             }
-            // Bass boost
             val bassBoostDb = bassBoostStrength / 1000.0 * 12.0
             bassBoostFilter.configureLowShelf(sampleRate, BASS_BOOST_FREQUENCY, bassBoostDb, 0.7)
+            rebuildActiveFiltersCache()
         }
 
         Log.d(TAG, "Configured: sampleRate=$sampleRate, channels=$channelCount, encoding=$encoding")
@@ -310,7 +312,7 @@ class DspEqualizerProcessor : AudioProcessor {
             val bassActive = bassBoostStrength > 0
             val virtActive = virtualizerStrength > 0 && channelCount == 2
             val virtAmount = virtualizerStrength / 1000.0 * 0.3
-            val activeFilters = buildActiveFilterList()
+            val activeFilters = activeFiltersCache
 
             for (frame in 0 until frameCount) {
                 for (channel in 0 until channelCount) {
@@ -347,7 +349,7 @@ class DspEqualizerProcessor : AudioProcessor {
             val bassActive = bassBoostStrength > 0
             val virtActive = virtualizerStrength > 0 && channelCount == 2
             val virtAmount = virtualizerStrength / 1000.0 * 0.3
-            val activeFilters = buildActiveFilterList()
+            val activeFilters = activeFiltersCache
 
             for (frame in 0 until frameCount) {
                 for (channel in 0 until channelCount) {
@@ -370,17 +372,20 @@ class DspEqualizerProcessor : AudioProcessor {
         output.position(output.position() + sampleCount * 4)
     }
 
-    private fun buildActiveFilterList(): List<BiquadFilter> {
+    private fun rebuildActiveFiltersCache() {
         val list = ArrayList<BiquadFilter>(BAND_COUNT)
         for (i in 0 until BAND_COUNT) {
             if (!bandFilters[i].isPassthrough()) list.add(bandFilters[i])
         }
-        return list
+        activeFiltersCache = list
     }
 
     // State for virtualizer (simple stereo widening)
     private var prevLeft = 0.0
     private var prevRight = 0.0
+
+    // Cached list of active (non-passthrough) filters — rebuilt uniquement quand les gains changent
+    private var activeFiltersCache: List<BiquadFilter> = emptyList()
 
     /**
      * Simple stereo widening effect.
@@ -452,7 +457,6 @@ class DspEqualizerProcessor : AudioProcessor {
         sampleRate = 44100
         channelCount = 2
 
-        // Reset all band gains
         lock.withLock {
             bandGains.fill(0.0)
             for (i in 0 until BAND_COUNT) {
@@ -461,6 +465,7 @@ class DspEqualizerProcessor : AudioProcessor {
             bassBoostStrength = 0
             virtualizerStrength = 0
             preGain = 1.0
+            activeFiltersCache = emptyList()
         }
     }
 }
