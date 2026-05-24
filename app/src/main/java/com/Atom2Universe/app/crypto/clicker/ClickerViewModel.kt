@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber
+import com.Atom2Universe.app.crypto.gacha.completedRarityCount
+import com.Atom2Universe.app.crypto.gacha.frenzyChanceForCompletedRarities
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
@@ -51,6 +53,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     @Volatile private var initCompleted = false
 
     private var cachedElementBonuses: ElementBonuses? = null
+    private var cachedFrenzyChance: Double? = null
 
     private var apsJob: Job? = null
 
@@ -171,7 +174,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
                 val deltaMs = (nowMs - lastTickMs).coerceIn(0L, 2_000L)
                 lastTickMs  = nowMs
 
-                val tickResult = frenzyManager.tick(nowMs, deltaMs)
+                val tickResult = frenzyManager.tick(nowMs, deltaMs, getFrenzyChance())
 
                 var s = _state.value
                 if (!s.perSecond.isZero()) {
@@ -494,11 +497,16 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     fun refreshElementBonuses() {
         cachedElementBonuses = null
+        cachedFrenzyChance = null
         _state.value = recalcProduction(_state.value)
     }
 
     private fun getElementBonuses(): ElementBonuses =
         cachedElementBonuses ?: ElementBonusEngine.compute(collectionStore).also { cachedElementBonuses = it }
+
+    private fun getFrenzyChance(): Double =
+        cachedFrenzyChance ?: frenzyChanceForCompletedRarities(completedRarityCount(collectionStore))
+            .also { cachedFrenzyChance = it }
 
     private fun recalcProduction(
         state: ClickerGameState,

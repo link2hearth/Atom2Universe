@@ -14,6 +14,17 @@
     <string name="stars_war_description">Shoot\'em up — survivez aux vagues !</string>
     <string name="stars_war_paused">En pause</string>
     <string name="achievement_unlocked_header">Succès débloqué !</string>
+    <string name="gacha_rarity_commun">Commun</string>
+    <string name="gacha_rarity_essentiel">Essentiel</string>
+    <string name="gacha_rarity_stellaire">Stellaire</string>
+    <string name="gacha_rarity_mythique">Mythique</string>
+    <string name="gacha_rarity_singulier">Singulier</string>
+    <string name="gacha_rarity_irreel">Irréel</string>
+    <string name="clicker_collections_section">Bonus de raretés</string>
+    <string name="clicker_collection_frenzy_unlock">Frénésies débloquées · 1 %/s</string>
+    <string name="clicker_collection_frenzy_chance">%d %%/s de frénésie</string>
+    <string name="clicker_collection_frenzy_max">10 %%/s de frénésie ✦ MAX</string>
+    <string name="clicker_collection_locked_hint">Compléter %s d\'abord</string>
     <string name="clicker_achievements_section">Succès</string>
     <string name="achievement_human_cell_name">Échelle : cellule humaine</string>
     <string name="achievement_human_cell_flavor">l\'équivalent d\'une cellule humaine « moyenne »</string>

@@ -206,18 +206,22 @@ class MainClickerActivity : ThemedActivity() {
     private var shopGodFingerLevelView: TextView? = null
     private var shopGodFingerPriceView: TextView? = null
     private var shopGodFingerMultBtn: Button? = null
+    private var shopGodFingerBuyBtn: Button? = null
     private var shopStarCoreLevelView: TextView? = null
     private var shopStarCorePriceView: TextView? = null
     private var shopStarCoreMultBtn: Button? = null
+    private var shopStarCoreBuyBtn: Button? = null
 
     // Neutrinos dans le shop
     private var shopNeutrinoBalance: TextView? = null
     private var shopApcToApsLevelView: TextView? = null
     private var shopApcToApsEffectView: TextView? = null
     private var shopApcToApsCostView: TextView? = null
+    private var shopApcToApsBuyBtn: Button? = null
     private var shopApsToApcLevelView: TextView? = null
     private var shopApsToApcEffectView: TextView? = null
     private var shopApsToApcCostView: TextView? = null
+    private var shopApsToApcBuyBtn: Button? = null
     private var shopElemToNeutrinoStock: TextView? = null
     private var shopElemToNeutrinoMult: Button? = null
     private var shopElemToNeutrinoBuy: Button? = null
@@ -245,6 +249,10 @@ class MainClickerActivity : ThemedActivity() {
     private val shopFactoryEffectViews = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
     private val shopFactoryPriceViews  = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
     private val shopFactoryBuyBtns     = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, Button>()
+
+    // Collections de raretés dans le shop
+    private var shopCollectionsProgress: TextView? = null
+    private var shopRarityCollectionsContainer: LinearLayout? = null
 
     // Succès dans le shop
     private var shopAchievementProgress: TextView? = null
@@ -715,6 +723,9 @@ class MainClickerActivity : ThemedActivity() {
         shopStatProdApc        = view.findViewById(R.id.shop_stat_prod_apc)
         shopStatProdAps        = view.findViewById(R.id.shop_stat_prod_aps)
         shopProdBar            = view.findViewById(R.id.shop_prod_bar)
+        shopCollectionsProgress        = view.findViewById(R.id.shop_collections_progress)
+        shopRarityCollectionsContainer = view.findViewById(R.id.shop_rarity_collections_container)
+        buildRarityCollectionsShopItems()
         shopAchievementProgress   = view.findViewById(R.id.shop_achievement_progress)
         shopAchievementsContainer = view.findViewById(R.id.shop_achievements_container)
         buildAchievementShopItems()
@@ -730,16 +741,20 @@ class MainClickerActivity : ThemedActivity() {
             shopStarCoreMultBtn?.text = "×$shopStarCoreMult"
             updateShopViews(clickerViewModel.state.value)
         }
-        view.findViewById<Button>(R.id.shop_god_finger_buy).setOnClickListener {
+        shopGodFingerBuyBtn = view.findViewById(R.id.shop_god_finger_buy)
+        shopGodFingerBuyBtn?.setOnClickListener {
             clickerViewModel.buyUpgrade("godFinger", shopGodFingerMult)
         }
-        view.findViewById<Button>(R.id.shop_star_core_buy).setOnClickListener {
+        shopStarCoreBuyBtn = view.findViewById(R.id.shop_star_core_buy)
+        shopStarCoreBuyBtn?.setOnClickListener {
             clickerViewModel.buyUpgrade("starCore", shopStarCoreMult)
         }
-        view.findViewById<Button>(R.id.shop_apc_to_aps_buy).setOnClickListener {
+        shopApcToApsBuyBtn = view.findViewById(R.id.shop_apc_to_aps_buy)
+        shopApcToApsBuyBtn?.setOnClickListener {
             clickerViewModel.buyApcToAps()
         }
-        view.findViewById<Button>(R.id.shop_aps_to_apc_buy).setOnClickListener {
+        shopApsToApcBuyBtn = view.findViewById(R.id.shop_aps_to_apc_buy)
+        shopApsToApcBuyBtn?.setOnClickListener {
             clickerViewModel.buyApsToApc()
         }
         shopElemToNeutrinoMult?.setOnClickListener {
@@ -767,16 +782,20 @@ class MainClickerActivity : ThemedActivity() {
             shopGodFingerLevelView = null
             shopGodFingerPriceView = null
             shopGodFingerMultBtn   = null
+            shopGodFingerBuyBtn    = null
             shopStarCoreLevelView  = null
             shopStarCorePriceView  = null
             shopStarCoreMultBtn    = null
+            shopStarCoreBuyBtn     = null
             shopNeutrinoBalance    = null
             shopApcToApsLevelView  = null
             shopApcToApsEffectView = null
             shopApcToApsCostView   = null
+            shopApcToApsBuyBtn     = null
             shopApsToApcLevelView  = null
             shopApsToApcEffectView = null
             shopApsToApcCostView   = null
+            shopApsToApcBuyBtn     = null
             shopElemToNeutrinoStock = null
             shopElemToNeutrinoMult  = null
             shopElemToNeutrinoBuy   = null
@@ -793,8 +812,10 @@ class MainClickerActivity : ThemedActivity() {
             shopStatProdApc        = null
             shopStatProdAps        = null
             shopProdBar            = null
-            shopAchievementProgress   = null
-            shopAchievementsContainer = null
+            shopCollectionsProgress        = null
+            shopRarityCollectionsContainer = null
+            shopAchievementProgress        = null
+            shopAchievementsContainer      = null
             shopFactoryCountViews.clear()
             shopFactoryEffectViews.clear()
             shopFactoryPriceViews.clear()
@@ -889,12 +910,27 @@ class MainClickerActivity : ThemedActivity() {
             textCol.setPadding(dp8, 0, 0, 0)
             textCol.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
 
+            val nameRow = LinearLayout(this)
+            nameRow.orientation = LinearLayout.HORIZONTAL
+            nameRow.gravity = android.view.Gravity.CENTER_VERTICAL
+
             val nameView = TextView(this)
             nameView.text     = getString(factoryNameRes(type))
             nameView.setTextColor(0xFFE2E8F0.toInt())
             nameView.textSize = 16f
             nameView.typeface = android.graphics.Typeface.MONOSPACE
-            textCol.addView(nameView)
+            nameRow.addView(nameView)
+
+            val countView = TextView(this)
+            countView.text     = "×0"
+            countView.setTextColor(0xFF94A3B8.toInt())
+            countView.textSize = 13f
+            countView.typeface = android.graphics.Typeface.MONOSPACE
+            countView.setPadding(dp8, 0, 0, 0)
+            shopFactoryCountViews[type] = countView
+            nameRow.addView(countView)
+
+            textCol.addView(nameRow)
 
             val effectView = TextView(this)
             effectView.text     = ""
@@ -905,15 +941,6 @@ class MainClickerActivity : ThemedActivity() {
             textCol.addView(effectView)
 
             row.addView(textCol)
-
-            val countView = TextView(this)
-            countView.text     = "×0"
-            countView.setTextColor(0xFF94A3B8.toInt())
-            countView.textSize = 15f
-            countView.typeface = android.graphics.Typeface.MONOSPACE
-            countView.setPadding(0, 0, dp8, 0)
-            shopFactoryCountViews[type] = countView
-            row.addView(countView)
 
             val priceView = TextView(this)
             priceView.text     = "—"
@@ -983,6 +1010,94 @@ class MainClickerActivity : ThemedActivity() {
             com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON ->
                 String.format(java.util.Locale.US, "×%.2f", 1.0 + count * 0.20)
         }
+    }
+
+    private fun buildRarityCollectionsShopItems() {
+        val container = shopRarityCollectionsContainer ?: return
+        container.removeAllViews()
+
+        val dp = resources.displayMetrics.density
+        val dp1  = dp.toInt()
+        val dp8  = (dp * 8).toInt()
+        val dp12 = (dp * 12).toInt()
+
+        val rarities = com.Atom2Universe.app.crypto.gacha.GachaRarity.entries
+        var completedCount = 0
+        var previousComplete = true
+
+        for ((index, rarity) in rarities.withIndex()) {
+            val atomicNumbers = com.Atom2Universe.app.crypto.gacha.atomicNumbersOf(rarity)
+            val total  = atomicNumbers.size
+            val owned  = atomicNumbers.count { periodicStore.hasElement(it) }
+            val isComplete = owned == total
+            val isLocked   = !previousComplete
+
+            // Séparateur
+            val divider = View(this)
+            divider.setBackgroundColor(0x1A_FFFFFF)
+            val divParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp1)
+            divParams.topMargin    = dp8
+            divParams.bottomMargin = dp8
+            container.addView(divider, divParams)
+
+            // Ligne
+            val row = LinearLayout(this)
+            row.orientation = LinearLayout.HORIZONTAL
+            row.gravity = android.view.Gravity.CENTER_VERTICAL
+
+            // Icône
+            val icon = TextView(this)
+            icon.text     = if (isLocked) "🔒" else if (isComplete) "✅" else "○"
+            icon.textSize = 18f
+            icon.setPadding(0, 0, dp12, 0)
+            row.addView(icon)
+
+            // Texte (nom + bonus)
+            val textBlock = LinearLayout(this)
+            textBlock.orientation = LinearLayout.VERTICAL
+            textBlock.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+
+            val nameView = TextView(this)
+            nameView.text      = getString(rarity.nameRes)
+            nameView.textSize  = 13f
+            nameView.setTextColor(if (isLocked) 0xFF475569.toInt() else rarity.color)
+            nameView.typeface  = android.graphics.Typeface.MONOSPACE
+            textBlock.addView(nameView)
+
+            val bonusView = TextView(this)
+            bonusView.text = when {
+                isLocked  -> getString(R.string.clicker_collection_locked_hint, getString(rarities[index - 1].nameRes))
+                index == 0                  -> getString(R.string.clicker_collection_frenzy_unlock)
+                index == rarities.size - 1  -> getString(R.string.clicker_collection_frenzy_max)
+                else -> getString(R.string.clicker_collection_frenzy_chance, index + 1)
+            }
+            bonusView.textSize = 11f
+            bonusView.setTextColor(if (isLocked) 0xFF334155.toInt() else 0xFF94A3B8.toInt())
+            bonusView.typeface = android.graphics.Typeface.MONOSPACE
+            textBlock.addView(bonusView)
+
+            row.addView(textBlock)
+
+            // Progression
+            val progressView = TextView(this)
+            progressView.text = "$owned/$total"
+            progressView.textSize = 11f
+            progressView.setTextColor(when {
+                isLocked   -> 0xFF334155.toInt()
+                isComplete -> 0xFF22C55E.toInt()
+                else       -> 0xFF94A3B8.toInt()
+            })
+            progressView.typeface = android.graphics.Typeface.MONOSPACE
+            progressView.setPadding(dp8, 0, 0, 0)
+            row.addView(progressView)
+
+            container.addView(row)
+
+            if (isComplete) completedCount++
+            previousComplete = isComplete
+        }
+
+        shopCollectionsProgress?.text = "$completedCount/${rarities.size}"
     }
 
     private fun buildAchievementShopItems() {
@@ -1055,22 +1170,44 @@ class MainClickerActivity : ThemedActivity() {
     private fun updateShopViews(state: ClickerGameState) {
         val fmt = java.text.NumberFormat.getNumberInstance(java.util.Locale.FRENCH)
 
+        val godFingerCost = clickerViewModel.shopCost("godFinger", shopGodFingerMult)
         shopGodFingerLevelView?.text = getString(R.string.clicker_shop_level, state.godFingerLevel)
-        shopGodFingerPriceView?.text = clickerViewModel.shopCost("godFinger", shopGodFingerMult).toString()
-        shopStarCoreLevelView?.text  = getString(R.string.clicker_shop_level, state.starCoreLevel)
-        shopStarCorePriceView?.text  = clickerViewModel.shopCost("starCore", shopStarCoreMult).toString()
+        shopGodFingerPriceView?.text = godFingerCost.toString()
+        shopGodFingerBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            if (!godFingerCost.greaterThan(state.atoms)) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+        )
 
+        val starCoreCost = clickerViewModel.shopCost("starCore", shopStarCoreMult)
+        shopStarCoreLevelView?.text  = getString(R.string.clicker_shop_level, state.starCoreLevel)
+        shopStarCorePriceView?.text  = starCoreCost.toString()
+        shopStarCoreBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            if (!starCoreCost.greaterThan(state.atoms)) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+        )
+
+        val apcToApsCost = clickerViewModel.apcToApsCost()
         shopNeutrinoBalance?.text    = state.neutrinos.toString()
         shopApcToApsLevelView?.text  = getString(R.string.clicker_shop_level, state.apcToApsLevel)
         shopApcToApsEffectView?.text = getString(R.string.clicker_shop_apc_to_aps_effect, state.apcToApsLevel)
-        shopApcToApsCostView?.text   = "${clickerViewModel.apcToApsCost()} ⚛"
+        shopApcToApsCostView?.text   = "$apcToApsCost ⚛"
+        shopApcToApsBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            if (state.neutrinos >= apcToApsCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+        )
+
+        val apsToApcCost = clickerViewModel.apsToApcCost()
         shopApsToApcLevelView?.text  = getString(R.string.clicker_shop_level, state.apsToApcLevel)
         shopApsToApcEffectView?.text = getString(R.string.clicker_shop_aps_to_apc_effect, state.apsToApcLevel)
-        shopApsToApcCostView?.text   = "${clickerViewModel.apsToApcCost()} ⚛"
+        shopApsToApcCostView?.text   = "$apsToApcCost ⚛"
+        shopApsToApcBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            if (state.neutrinos >= apsToApcCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+        )
 
         val tokenBalance = clickerViewModel.getElementTokens()
         shopElemToNeutrinoStock?.text = getString(R.string.clicker_shop_elem_stock, tokenBalance)
-        shopElemToNeutrinoBuy?.isEnabled = tokenBalance >= shopElemToNeutrinoMult_value
+        val canBuyTokens = tokenBalance >= shopElemToNeutrinoMult_value
+        shopElemToNeutrinoBuy?.isEnabled = canBuyTokens
+        shopElemToNeutrinoBuy?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            if (canBuyTokens) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+        )
 
         shopStatLifetime?.text    = state.lifetime.toString()
         shopStatApc?.text         = state.perClick.toString()

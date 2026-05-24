@@ -370,7 +370,7 @@ class GachaActivity : AppCompatActivity() {
         }
         card.findViewById<TextView>(R.id.mini_name).text = element.localizedName(this)
         card.findViewById<TextView>(R.id.mini_rarity).apply {
-            text = rarity.label.uppercase()
+            text = getString(rarity.nameRes).uppercase()
             setTextColor(rarity.color)
         }
         if (count > 1) {
@@ -421,7 +421,7 @@ class GachaActivity : AppCompatActivity() {
         resultSymbol.text   = element.symbol
         resultName.text     = element.localizedName(this)
         resultMass.text     = element.atomicMass.toString()
-        resultRarity.text   = rarity.label.uppercase()
+        resultRarity.text   = getString(rarity.nameRes).uppercase()
         resultCategory.text = categoryLabel(element.category)
         resultCopies.text   = getString(R.string.gacha_result_copies_count, totalCopies)
 

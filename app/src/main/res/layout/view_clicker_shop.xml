@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/crypto_widget_background">
@@ -33,7 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Niv. 0"
+                tools:text="Niv. 0"
                 android:textColor="#E2E8F0"
                 android:textSize="16sp"
                 android:fontFamily="monospace"
@@ -101,7 +102,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Niv. 0"
+                tools:text="Niv. 0"
                 android:textColor="#E2E8F0"
                 android:textSize="16sp"
                 android:fontFamily="monospace"
@@ -222,7 +223,7 @@
                     android:id="@+id/shop_apc_to_aps_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Niv. 0"
+                    tools:text="Niv. 0"
                     android:textColor="#E2E8F0"
                     android:textSize="16sp"
                     android:fontFamily="monospace" />
@@ -290,7 +291,7 @@
                     android:id="@+id/shop_aps_to_apc_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Niv. 0"
+                    tools:text="Niv. 0"
                     android:textColor="#E2E8F0"
                     android:textSize="16sp"
                     android:fontFamily="monospace" />
@@ -366,7 +367,7 @@
                     android:id="@+id/shop_elem_to_neutrino_stock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0 éléments"
+                    tools:text="0 éléments"
                     android:textColor="#94A3B8"
                     android:textSize="12sp"
                     android:fontFamily="monospace" />
@@ -545,6 +546,49 @@
             <TextView android:id="@+id/shop_stat_prod_aps" style="@style/ShopStatValue"
                 android:text="—" android:textColor="#4CAF50" />
         </LinearLayout>
+
+        <!-- ── Séparateur section collections ──────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2D3748"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/clicker_collections_section"
+                android:textColor="#64748B"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/shop_collections_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/6"
+                android:textColor="#64748B"
+                android:textSize="11sp"
+                android:fontFamily="monospace" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shop_rarity_collections_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
         <!-- ── Séparateur section succès ────────────────────────────────────────── -->
         <View

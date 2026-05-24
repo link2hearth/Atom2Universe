@@ -2,7 +2,6 @@ package com.Atom2Universe.app.crypto.clicker
 
 import kotlin.math.pow
 
-private const val SPAWN_CHANCE_PER_SEC = 0.01
 private const val EFFECT_DURATION_MS   = 30_000L
 const val FRENZY_MULTIPLIER            = 2.0
 
@@ -34,7 +33,7 @@ class FrenzyManager {
 
     private var state = InternalFrenzyState()
 
-    fun tick(nowMs: Long, deltaMs: Long): FrenzyTickResult {
+    fun tick(nowMs: Long, deltaMs: Long, spawnChancePerSec: Double): FrenzyTickResult {
         var s = state
         var changed = false
         var apcTriggered = 0
@@ -58,12 +57,12 @@ class FrenzyManager {
             var newPc = s.perClick
             var newPs = s.perSecond
             repeat(attempts) {
-                if (Math.random() < SPAWN_CHANCE_PER_SEC) {
+                if (spawnChancePerSec > 0.0 && Math.random() < spawnChancePerSec) {
                     newPc = newPc.copy(instances = newPc.instances + FrenzyInstance(nowMs + EFFECT_DURATION_MS))
                     apcTriggered++
                     changed = true
                 }
-                if (Math.random() < SPAWN_CHANCE_PER_SEC) {
+                if (spawnChancePerSec > 0.0 && Math.random() < spawnChancePerSec) {
                     newPs = newPs.copy(instances = newPs.instances + FrenzyInstance(nowMs + EFFECT_DURATION_MS))
                     apsTriggered++
                     changed = true

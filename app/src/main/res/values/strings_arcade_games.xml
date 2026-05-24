@@ -14,6 +14,17 @@
     <string name="stars_war_description">Space shooter — survive the waves!</string>
     <string name="stars_war_paused">Paused</string>
     <string name="achievement_unlocked_header">Achievement unlocked!</string>
+    <string name="gacha_rarity_commun">Common</string>
+    <string name="gacha_rarity_essentiel">Essential</string>
+    <string name="gacha_rarity_stellaire">Stellar</string>
+    <string name="gacha_rarity_mythique">Mythic</string>
+    <string name="gacha_rarity_singulier">Singular</string>
+    <string name="gacha_rarity_irreel">Unreal</string>
+    <string name="clicker_collections_section">Rarity Bonuses</string>
+    <string name="clicker_collection_frenzy_unlock">Frenzies unlocked · 1%/s</string>
+    <string name="clicker_collection_frenzy_chance">%d%%/s frenzy chance</string>
+    <string name="clicker_collection_frenzy_max">10%%/s frenzy chance ✦ MAX</string>
+    <string name="clicker_collection_locked_hint">Complete %s first</string>
     <string name="clicker_achievements_section">Achievements</string>
     <string name="achievement_human_cell_name">Scale: human cell</string>
     <string name="achievement_human_cell_flavor">the equivalent of an average human cell</string>
