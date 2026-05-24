@@ -29,6 +29,11 @@ class NotesRepository(
 
     suspend fun getNoteById(noteId: Long): Note? = noteDao.getNoteById(noteId)
 
+    suspend fun getNoteByTitle(title: String): Note? = noteDao.getNoteByTitle(title)
+
+    suspend fun getNotesByTagExcluding(tagId: Long, excludeNoteId: Long): List<NoteWithTags> =
+        noteDao.getNotesByTagExcluding(tagId, excludeNoteId)
+
     suspend fun insertNote(note: Note): Long = noteDao.insertNote(note)
 
     suspend fun updateNote(note: Note) = noteDao.updateNote(note)
@@ -100,6 +105,8 @@ class NotesRepository(
     fun getAllTagsWithCount(): Flow<List<TagWithCount>> = tagDao.getAllTagsWithCount()
 
     suspend fun getTagById(tagId: Long): Tag? = tagDao.getTagById(tagId)
+
+    suspend fun getTagByName(name: String): Tag? = tagDao.getTagByName(name)
 
     suspend fun getAllTagsList(): List<Tag> = tagDao.getAllTagsList()
 

@@ -78,6 +78,7 @@ class BookReaderActivity : ThemedActivity() {
         const val EXTRA_BOOK_URI = "extra_book_uri"
         private const val MENU_THEME = 2
         private const val MENU_FONT = 3
+        private const val MENU_BOOKMARKS = 4
         private const val DEFAULT_FONT_SIZE = 16f
         private val AVAILABLE_FONTS = listOf(
             "alamain1.ttf" to "Alamain",
@@ -233,6 +234,9 @@ class BookReaderActivity : ThemedActivity() {
     private var currentTypeface: Typeface = Typeface.DEFAULT
     private val typefaceCache = mutableMapOf<String, Typeface>()
 
+    // ── Bookmarks ─────────────────────────────────────────────────────────────
+    private val bookmarkData = mutableMapOf<Int, String>() // itemIndex → text snippet
+
     // ── Auto-hide des barres ──────────────────────────────────────────────────
     private var barsActive = false   // true dès qu'un livre est ouvert
     private var barsVisible = true
@@ -323,17 +327,86 @@ class BookReaderActivity : ThemedActivity() {
     // ── Menu ──────────────────────────────────────────────────────────────────
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menu.add(0, MENU_THEME, 0, R.string.book_reader_theme)
+        menu.add(0, MENU_BOOKMARKS, 0, R.string.book_reader_bookmarks)
+            .setIcon(R.drawable.ic_star_filled_24)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        menu.add(0, MENU_THEME, 1, R.string.book_reader_theme)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-        menu.add(0, MENU_FONT, 1, R.string.book_reader_font_picker_title)
+        menu.add(0, MENU_FONT, 2, R.string.book_reader_font_picker_title)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.findItem(MENU_BOOKMARKS)?.icon?.setTint(currentTheme.toolbarText)
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        MENU_BOOKMARKS -> { showBookmarksList(); true }
         MENU_THEME -> { savePosition(); showThemePicker(); true }
         MENU_FONT -> { showFontPicker(); true }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    // ── Bookmarks ─────────────────────────────────────────────────────────────
+
+    private fun bookmarkKey(uri: Uri) = "bm_${uri.toString().hashCode()}"
+
+    private fun loadBookmarks(uri: Uri) {
+        bookmarkData.clear()
+        val set = prefs.getStringSet(bookmarkKey(uri), emptySet()) ?: emptySet()
+        for (entry in set) {
+            val tabIdx = entry.indexOf('\t')
+            if (tabIdx < 1) continue
+            val idx = entry.substring(0, tabIdx).toIntOrNull() ?: continue
+            bookmarkData[idx] = entry.substring(tabIdx + 1)
+        }
+    }
+
+    private fun saveBookmarks(uri: Uri) {
+        val set = bookmarkData.entries.mapTo(mutableSetOf()) { "${it.key}\t${it.value}" }
+        prefs.edit { putStringSet(bookmarkKey(uri), set) }
+    }
+
+    fun toggleBookmark(itemIndex: Int, text: String) {
+        val uri = currentUri ?: return
+        if (bookmarkData.containsKey(itemIndex)) {
+            bookmarkData.remove(itemIndex)
+            Toast.makeText(this, R.string.book_reader_bookmark_removed, Toast.LENGTH_SHORT).show()
+        } else {
+            bookmarkData[itemIndex] = text.take(150).replace('\t', ' ')
+            Toast.makeText(this, R.string.book_reader_bookmark_added, Toast.LENGTH_SHORT).show()
+        }
+        saveBookmarks(uri)
+        paragraphAdapter?.setBookmarks(bookmarkData.keys.toSet())
+    }
+
+    private fun showBookmarksList() {
+        if (currentViewType != ViewType.EPUB && currentViewType != ViewType.TXT) return
+        if (bookmarkData.isEmpty()) {
+            Toast.makeText(this, R.string.book_reader_no_bookmarks, Toast.LENGTH_SHORT).show()
+            return
+        }
+        val sorted = bookmarkData.entries.sortedBy { it.key }
+        val labels = sorted.map { "★  ${it.value}" }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.book_reader_bookmarks)
+            .setItems(labels) { _, which ->
+                val itemIdx = sorted[which].key
+                txtRecycler.post {
+                    (txtRecycler.layoutManager as? LinearLayoutManager)
+                        ?.scrollToPositionWithOffset(itemIdx, dp(32))
+                }
+            }
+            .setNeutralButton(R.string.book_reader_bookmarks_clear) { _, _ ->
+                bookmarkData.clear()
+                currentUri?.let { saveBookmarks(it) }
+                paragraphAdapter?.setBookmarks(emptySet())
+                Toast.makeText(this, R.string.book_reader_bookmarks_cleared, Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     // ── Sélecteur de thème ────────────────────────────────────────────────────
@@ -414,6 +487,7 @@ class BookReaderActivity : ThemedActivity() {
         toolbar.setTitleTextColor(t.toolbarText)
         toolbar.navigationIcon?.setTint(t.toolbarText)
         toolbar.overflowIcon?.setTint(t.toolbarText)
+        invalidateOptionsMenu()
         contentContainer.setBackgroundColor(t.bg1)
         bottomBar.setBackgroundColor(t.bottomBg)
         bottomDivider.setBackgroundColor(
@@ -823,6 +897,7 @@ class BookReaderActivity : ThemedActivity() {
         toolbar.title = title
         currentUri = uri
         currentFileSize = getFileSize(uri)
+        loadBookmarks(uri)
         prefs.edit {
             putString(KEY_CURRENT_URI, uri.toString())
             putString(KEY_CURRENT_TITLE, title)
@@ -866,6 +941,7 @@ class BookReaderActivity : ThemedActivity() {
             val items = paragraphs.map { EpubItem.Paragraph(it) }
             val adapter = ParagraphAdapter(items, currentTheme, paragraphDistinction, currentTypeface, currentFontSize)
             paragraphAdapter = adapter
+            adapter.setBookmarks(bookmarkData.keys.toSet())
             val lm = LinearLayoutManager(this@BookReaderActivity)
             txtRecycler.layoutManager = lm
             txtRecycler.clearOnScrollListeners()
@@ -941,6 +1017,7 @@ class BookReaderActivity : ThemedActivity() {
             ))
             val adapter = ParagraphAdapter(content.items, currentTheme, paragraphDistinction, currentTypeface, currentFontSize)
             paragraphAdapter = adapter
+            adapter.setBookmarks(bookmarkData.keys.toSet())
             val lm = LinearLayoutManager(this@BookReaderActivity)
             txtRecycler.layoutManager = lm
             txtRecycler.clearOnScrollListeners()
@@ -1063,8 +1140,15 @@ class BookReaderActivity : ThemedActivity() {
                     val text = decodeHtmlEntities(inner.replace(Regex("<[^>]+>"), ""))
                         .replace(Regex("\\s+"), " ").trim()
                     if (text.isNotEmpty()) { out.add(EpubItem.Heading(text, level)); found = true }
+                } else if (tagName == "p") {
+                    // <p> : <br> = saut typographique, garder en un seul paragraphe
+                    val text = decodeHtmlEntities(
+                        inner.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
+                             .replace(Regex("<[^>]+>"), "")
+                    ).replace(Regex("\\s+"), " ").trim()
+                    if (text.length > 3) { out.add(EpubItem.Paragraph(text)); found = true }
                 } else {
-                    // Regular block — split at <br> then by line
+                    // div/figure : <br> = séparateur de lignes
                     val withBreaks = inner.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n")
                     val raw = decodeHtmlEntities(withBreaks.replace(Regex("<[^>]+>"), ""))
                     val lines = raw.split("\n")
@@ -1396,6 +1480,7 @@ class BookReaderActivity : ThemedActivity() {
         private var cursorParagraph = -1   // paragraph index
         private var highlightStart = -1
         private var highlightEnd = -1
+        private var bookmarkedItems = setOf<Int>() // item indices
 
         private val TYPE_TEXT = 0; private val TYPE_IMAGE = 1; private val TYPE_CHAPTER = 2
 
@@ -1450,6 +1535,17 @@ class BookReaderActivity : ThemedActivity() {
                     if (ttsState == TtsState.PLAYING) speakParagraph(paraIdx)
                     return true
                 }
+                override fun onLongPress(e: MotionEvent) {
+                    val itemPos = holder.bindingAdapterPosition
+                    if (itemPos == RecyclerView.NO_POSITION) return
+                    val item = items[itemPos]
+                    val text = when (item) {
+                        is EpubItem.Paragraph -> item.text
+                        is EpubItem.Heading -> item.text
+                        else -> return
+                    }
+                    toggleBookmark(itemPos, text)
+                }
             })
             tv.setOnTouchListener { _, event -> gd.onTouchEvent(event); false }
             return holder
@@ -1467,6 +1563,7 @@ class BookReaderActivity : ThemedActivity() {
                 is EpubItem.Heading -> {
                     val h = holder as TextHolder
                     val paraIdx = itemToParagraphIdx[position] ?: 0
+                    val isBookmarked = bookmarkedItems.contains(position)
                     val scale = when (item.level) { 1 -> 1.75f; 2 -> 1.45f; 3 -> 1.25f; 4 -> 1.12f; else -> 1.05f }
                     val topPad = when (item.level) { 1 -> dp(20); 2 -> dp(16); else -> dp(12) }
                     h.tv.setPadding(dp(16), topPad, dp(16), dp(6))
@@ -1481,11 +1578,11 @@ class BookReaderActivity : ThemedActivity() {
                             applyWordHighlight(h.tv, item.text, highlightStart, highlightEnd)
                         }
                         position == cursorItemIdx -> {
-                            h.tv.text = item.text
+                            applyBookmarkPrefix(h.tv, item.text, isBookmarked)
                             h.tv.setBackgroundColor(ColorUtils.blendARGB(theme.bg1, theme.readingBg, 0.35f))
                         }
                         else -> {
-                            h.tv.text = item.text
+                            applyBookmarkPrefix(h.tv, item.text, isBookmarked)
                             h.tv.setBackgroundColor(theme.bg1)
                         }
                     }
@@ -1493,6 +1590,7 @@ class BookReaderActivity : ThemedActivity() {
                 is EpubItem.Paragraph -> {
                     val h = holder as TextHolder
                     val paraIdx = itemToParagraphIdx[position] ?: 0
+                    val isBookmarked = bookmarkedItems.contains(position)
                     h.tv.setPadding(dp(16), dp(12), dp(16), dp(12))
                     h.tv.typeface = typeface
                     h.tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeSp)
@@ -1505,12 +1603,12 @@ class BookReaderActivity : ThemedActivity() {
                             applyWordHighlight(h.tv, item.text, highlightStart, highlightEnd)
                         }
                         position == cursorItemIdx -> {
-                            h.tv.text = item.text
+                            applyBookmarkPrefix(h.tv, item.text, isBookmarked)
                             val base = if (useDistinction) theme.paragraphBg(paraIdx) else theme.bg1
                             h.tv.setBackgroundColor(ColorUtils.blendARGB(base, theme.readingBg, 0.35f))
                         }
                         else -> {
-                            h.tv.text = item.text
+                            applyBookmarkPrefix(h.tv, item.text, isBookmarked)
                             h.tv.setBackgroundColor(if (useDistinction) theme.paragraphBg(paraIdx) else theme.bg1)
                         }
                     }
@@ -1583,6 +1681,22 @@ class BookReaderActivity : ThemedActivity() {
 
         fun updateFont(tf: Typeface, sizeSp: Float) {
             typeface = tf; textSizeSp = sizeSp; notifyItemRangeChanged(0, items.size)
+        }
+
+        fun setBookmarks(indices: Set<Int>) {
+            bookmarkedItems = indices.toSet()
+            notifyItemRangeChanged(0, items.size)
+        }
+
+        private fun applyBookmarkPrefix(tv: TextView, text: String, isBookmarked: Boolean) {
+            if (!isBookmarked) { tv.text = text; return }
+            val full = "★  $text"
+            val s = android.text.SpannableString(full)
+            s.setSpan(
+                android.text.style.ForegroundColorSpan(0xFFFFC107.toInt()),
+                0, 1, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            tv.text = s
         }
     }
 

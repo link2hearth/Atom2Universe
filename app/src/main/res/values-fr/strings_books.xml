@@ -52,4 +52,10 @@
     <string name="book_shelf_tree_empty">Aucun livre dans cette bibliothèque.</string>
     <string name="book_shelf_section_root">(Autres livres)</string>
     <string name="book_toggle_view">Changer la vue</string>
+    <string name="book_reader_bookmarks">Marque-pages</string>
+    <string name="book_reader_no_bookmarks">Aucun marque-page. Appuyez longuement sur un paragraphe pour en ajouter un.</string>
+    <string name="book_reader_bookmark_added">Marque-page ajouté</string>
+    <string name="book_reader_bookmark_removed">Marque-page supprimé</string>
+    <string name="book_reader_bookmarks_clear">Tout effacer</string>
+    <string name="book_reader_bookmarks_cleared">Tous les marque-pages effacés</string>
 </resources>

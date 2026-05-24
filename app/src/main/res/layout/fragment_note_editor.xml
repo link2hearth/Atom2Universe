@@ -80,6 +80,38 @@
                 android:background="#1E293B"
                 android:visibility="gone" />
 
+            <!-- Backlinks section -->
+            <LinearLayout
+                android:id="@+id/backlinks_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="24dp"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#1E293B" />
+
+                <TextView
+                    android:id="@+id/backlinks_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="#64748B"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.08" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/backlinks_chip_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

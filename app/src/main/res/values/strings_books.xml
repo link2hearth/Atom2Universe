@@ -52,4 +52,10 @@
     <string name="book_shelf_tree_empty">No books in this library.</string>
     <string name="book_shelf_section_root">(Other books)</string>
     <string name="book_toggle_view">Toggle view</string>
+    <string name="book_reader_bookmarks">Bookmarks</string>
+    <string name="book_reader_no_bookmarks">No bookmarks yet. Long-press a paragraph to add one.</string>
+    <string name="book_reader_bookmark_added">Bookmark added</string>
+    <string name="book_reader_bookmark_removed">Bookmark removed</string>
+    <string name="book_reader_bookmarks_clear">Clear all</string>
+    <string name="book_reader_bookmarks_cleared">All bookmarks cleared</string>
 </resources>

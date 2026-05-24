@@ -268,6 +268,7 @@ class BookLibraryActivity : ThemedActivity() {
 
         switchTab(0)
         refreshBooks()
+        installFreeBooksIfNeeded()
     }
 
     override fun onResume() {
@@ -784,6 +785,51 @@ class BookLibraryActivity : ThemedActivity() {
             }
         } catch (_: Exception) {}
         return Pair(title, author)
+    }
+
+    // ── Bibliothèque "Free" intégrée ──────────────────────────────────────────
+
+    private fun installFreeBooksIfNeeded() {
+        if (prefs.getBoolean("free_books_installed", false)) return
+        shelfScope.launch {
+            withContext(Dispatchers.IO) {
+                val destDir = File(filesDir, "free_books").also { it.mkdirs() }
+                data class AssetBook(val asset: String, val title: String, val author: String)
+                val books = listOf(
+                    AssetBook("books/Alice_in_Wonderland_EN.epub",             "Alice in Wonderland",           "Lewis Carroll"),
+                    AssetBook("books/Alice_au_pays_des_merveilles_FR.epub",    "Alice au pays des merveilles",  "Lewis Carroll"),
+                    AssetBook("books/The_Time_Machine_EN.epub",                "The Time Machine",              "H.G. Wells"),
+                    AssetBook("books/La_Machine_a_explorer_le_temps_FR.epub",  "La Machine à explorer le temps","H.G. Wells")
+                )
+                val dao = BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao()
+                val rootId = "free_library_root"
+                val root = BookShelfRoot(
+                    id = rootId,
+                    name = "Free",
+                    rootUri = destDir.absolutePath,
+                    bookCount = books.size
+                )
+                dao.insertRoot(root)
+                val entries = books.mapNotNull { b ->
+                    val destFile = File(destDir, b.asset.substringAfterLast("/"))
+                    try {
+                        assets.open(b.asset).use { ins ->
+                            FileOutputStream(destFile).use { out -> ins.copyTo(out) }
+                        }
+                    } catch (_: Exception) { return@mapNotNull null }
+                    BookShelfEntry(
+                        title = b.title,
+                        author = b.author,
+                        sourcePath = destFile.absolutePath,
+                        format = "epub",
+                        fileSize = destFile.length(),
+                        rootId = rootId
+                    )
+                }
+                dao.insertEntries(entries)
+                prefs.edit { putBoolean("free_books_installed", true) }
+            }
+        }
     }
 
     // ── Utilitaires ───────────────────────────────────────────────────────────

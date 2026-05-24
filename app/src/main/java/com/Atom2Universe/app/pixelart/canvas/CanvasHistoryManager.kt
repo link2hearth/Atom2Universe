@@ -269,7 +269,9 @@ class CanvasHistoryManager(context: Context) {
     /**
      * Sérialise un objet canvas en JSON
      */
-    fun serializeObject(obj: CanvasObject): String {
+    fun serializeObject(obj: CanvasObject): String = serializeObjectToJson(obj).toString()
+
+    private fun serializeObjectToJson(obj: CanvasObject): JSONObject {
         val json = JSONObject()
 
         // Propriétés communes
@@ -296,7 +298,7 @@ class CanvasHistoryManager(context: Context) {
             is ImageObject -> serializeImageObject(obj, json)
         }
 
-        return json.toString()
+        return json
     }
 
     private fun serializeShapeObject(obj: ShapeObject, json: JSONObject) {
@@ -376,7 +378,7 @@ class CanvasHistoryManager(context: Context) {
     fun serializeAllObjects(objects: List<CanvasObject>): String {
         val array = JSONArray()
         for (obj in objects) {
-            array.put(JSONObject(serializeObject(obj)))
+            array.put(serializeObjectToJson(obj))
         }
         return array.toString()
     }
@@ -386,7 +388,15 @@ class CanvasHistoryManager(context: Context) {
      */
     fun deserializeObject(jsonStr: String): CanvasObject? {
         return try {
-            val json = JSONObject(jsonStr)
+            deserializeObjectFromJson(JSONObject(jsonStr))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun deserializeObjectFromJson(json: JSONObject): CanvasObject? {
+        return try {
             val type = CanvasObjectType.valueOf(json.getString("type"))
 
             val obj: CanvasObject = when (type) {
@@ -538,7 +548,7 @@ class CanvasHistoryManager(context: Context) {
             val array = JSONArray(jsonStr)
             for (i in 0 until array.length()) {
                 val objJson = array.getJSONObject(i)
-                deserializeObject(objJson.toString())?.let { objects.add(it) }
+                deserializeObjectFromJson(objJson)?.let { objects.add(it) }
             }
         } catch (e: Exception) {
             e.printStackTrace()

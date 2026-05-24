@@ -137,6 +137,23 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
         }
     }
 
+    // ─── Wiki navigation ──────────────────────────────────────────────────────
+
+    suspend fun getOrCreateNoteForTag(tagName: String): Long {
+        val existing = repository.getNoteByTitle(tagName)
+        if (existing != null) return existing.id
+        val now = System.currentTimeMillis()
+        return repository.insertNote(
+            Note(title = tagName, content = "", contentPlainText = "",
+                dateCreated = now, dateModified = now)
+        )
+    }
+
+    suspend fun getBacklinksForNote(noteTitle: String, noteId: Long): List<NoteWithTags> {
+        val tag = repository.getTagByName(noteTitle) ?: return emptyList()
+        return repository.getNotesByTagExcluding(tag.id, noteId)
+    }
+
     // ─── Backup helpers ───────────────────────────────────────────────────────
 
     val repositoryRef: NotesRepository get() = repository

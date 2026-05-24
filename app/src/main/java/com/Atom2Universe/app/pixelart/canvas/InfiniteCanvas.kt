@@ -432,6 +432,7 @@ class InfiniteCanvas @JvmOverloads constructor(
     fun bringToFront(obj: CanvasObject) {
         val maxZIndex = objects.maxOfOrNull { it.zIndex } ?: 0
         obj.zIndex = maxZIndex + 1
+        objects.sortBy { it.zIndex }
         invalidate()
     }
 
@@ -454,6 +455,7 @@ class InfiniteCanvas @JvmOverloads constructor(
             // Déjà au sommet, juste incrémenter
             obj.zIndex++
         }
+        objects.sortBy { it.zIndex }
         invalidate()
     }
 
@@ -476,6 +478,7 @@ class InfiniteCanvas @JvmOverloads constructor(
             // Déjà tout en bas, juste décrémenter
             obj.zIndex = (obj.zIndex - 1).coerceAtLeast(0)
         }
+        objects.sortBy { it.zIndex }
         invalidate()
     }
 
@@ -489,6 +492,7 @@ class InfiniteCanvas @JvmOverloads constructor(
         if (obj.zIndex == 0) {
             objects.filter { it != obj }.forEach { it.zIndex++ }
         }
+        objects.sortBy { it.zIndex }
         invalidate()
     }
 
@@ -496,10 +500,10 @@ class InfiniteCanvas @JvmOverloads constructor(
      * Test de collision pour trouver un objet sous un point
      */
     fun hitTest(worldX: Float, worldY: Float): CanvasObject? {
-        // Parcourir du plus haut zIndex au plus bas
+        // Parcourir du plus haut zIndex au plus bas (liste maintenue triée)
         return objects
             .filter { it.visible && !it.locked }
-            .sortedByDescending { it.zIndex }
+            .asReversed()
             .firstOrNull { it.contains(worldX, worldY) }
     }
 
@@ -945,8 +949,8 @@ class InfiniteCanvas @JvmOverloads constructor(
         // Calculer les bounds visibles pour le culling
         val visible = getVisibleWorldBounds()
 
-        // Dessiner les objets (triés par zIndex)
-        for (obj in objects.sortedBy { it.zIndex }) {
+        // Dessiner les objets (liste maintenue triée par zIndex)
+        for (obj in objects) {
             if (obj.visible && obj.intersects(visible)) {
                 obj.draw(canvas, objectPaint, obj == selectedObject)
 
@@ -1059,8 +1063,8 @@ class InfiniteCanvas @JvmOverloads constructor(
         // Translation pour que le contenu commence à (0,0)
         exportCanvas.translate(-minX, -minY)
 
-        // Dessiner les objets
-        for (obj in objects.filter { it.visible }.sortedBy { it.zIndex }) {
+        // Dessiner les objets (liste maintenue triée par zIndex)
+        for (obj in objects.filter { it.visible }) {
             obj.draw(exportCanvas, objectPaint, false)
         }
 

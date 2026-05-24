@@ -30,6 +30,9 @@ interface TagDao {
     @Query("SELECT * FROM tags ORDER BY sortOrder ASC, name ASC")
     suspend fun getAllTagsList(): List<Tag>
 
+    @Query("SELECT * FROM tags WHERE LOWER(name) = LOWER(:name) LIMIT 1")
+    suspend fun getTagByName(name: String): Tag?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTag(tag: Tag): Long
 

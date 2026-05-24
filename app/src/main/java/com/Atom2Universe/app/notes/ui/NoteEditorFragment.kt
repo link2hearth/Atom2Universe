@@ -36,6 +36,9 @@ class NoteEditorFragment : Fragment() {
     private lateinit var tagsChipGroup: ChipGroup
     private lateinit var sourceEditor: EditText
     private lateinit var voicePreview: TextView
+    private lateinit var backlinksSection: android.view.View
+    private lateinit var backlinksHeader: TextView
+    private lateinit var backlinksChipGroup: ChipGroup
     private var showSource = false
 
     private val sttManager by lazy { SpeechToTextManager(requireContext()) }
@@ -66,6 +69,9 @@ class NoteEditorFragment : Fragment() {
         richEditor = view.findViewById(R.id.note_rich_editor)
         sourceEditor = view.findViewById(R.id.note_source_editor)
         voicePreview = view.findViewById(R.id.note_voice_preview)
+        backlinksSection = view.findViewById(R.id.backlinks_section)
+        backlinksHeader = view.findViewById(R.id.backlinks_header)
+        backlinksChipGroup = view.findViewById(R.id.backlinks_chip_group)
 
         richEditor.setFontSizeSp(prefs.fontSize)
         richEditor.setFontFamily(prefs.fontFamily)
@@ -102,6 +108,7 @@ class NoteEditorFragment : Fragment() {
         richEditor.setMarkdownContent(noteWithTags.note.content)
         sourceEditor.setText(noteWithTags.note.content)
         refreshTagChips(noteWithTags.tags)
+        lifecycleScope.launch { loadBacklinks(noteWithTags.note.title, noteWithTags.note.id) }
     }
 
     private fun refreshTagChips(tags: List<Tag>) {
@@ -110,6 +117,7 @@ class NoteEditorFragment : Fragment() {
             val chip = Chip(requireContext()).apply {
                 text = tag.name
                 isCloseIconVisible = true
+                setOnClickListener { navigateToTagNote(tag.name) }
                 setOnCloseIconClickListener {
                     currentTagIds.remove(tag.id)
                     tagsChipGroup.removeView(this)
@@ -125,6 +133,41 @@ class NoteEditorFragment : Fragment() {
             setOnClickListener { showAddTagDialog() }
         }
         tagsChipGroup.addView(addChip)
+    }
+
+    private fun navigateToTagNote(tagName: String) {
+        lifecycleScope.launch {
+            autoSaveJob?.cancel()
+            saveNote()
+            val targetId = notesActivity.viewModel.getOrCreateNoteForTag(tagName)
+            notesActivity.navigateToNoteEditor(noteId = targetId)
+        }
+    }
+
+    private suspend fun loadBacklinks(noteTitle: String, noteId: Long) {
+        if (noteTitle.isBlank()) return
+        val backlinks = notesActivity.viewModel.getBacklinksForNote(noteTitle, noteId)
+        if (backlinks.isEmpty()) {
+            backlinksSection.visibility = android.view.View.GONE
+            return
+        }
+        backlinksHeader.text = getString(R.string.notes_backlinks_header, backlinks.size)
+        backlinksChipGroup.removeAllViews()
+        backlinks.forEach { noteWithTags ->
+            val chip = Chip(requireContext()).apply {
+                text = noteWithTags.note.title.ifBlank { getString(R.string.notes_untitled) }
+                isCloseIconVisible = false
+                setOnClickListener {
+                    lifecycleScope.launch {
+                        autoSaveJob?.cancel()
+                        saveNote()
+                        notesActivity.navigateToNoteEditor(noteId = noteWithTags.note.id)
+                    }
+                }
+            }
+            backlinksChipGroup.addView(chip)
+        }
+        backlinksSection.visibility = android.view.View.VISIBLE
     }
 
     private fun showAddTagDialog() {

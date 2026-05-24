@@ -80,6 +80,9 @@ interface NoteDao {
     """)
     suspend fun searchNotes(query: String): List<NoteWithTags>
 
+    @Query("SELECT * FROM notes WHERE LOWER(title) = LOWER(:title) LIMIT 1")
+    suspend fun getNoteByTitle(title: String): Note?
+
     // Search by tag
     @Transaction
     @Query("""
@@ -89,6 +92,15 @@ interface NoteDao {
         ORDER BY notes.dateModified DESC
     """)
     fun getNotesByTag(tagId: Long): Flow<List<NoteWithTags>>
+
+    @Transaction
+    @Query("""
+        SELECT notes.* FROM notes
+        INNER JOIN note_tags ON notes.id = note_tags.noteId
+        WHERE note_tags.tagId = :tagId AND notes.id != :excludeNoteId
+        ORDER BY notes.dateModified DESC
+    """)
+    suspend fun getNotesByTagExcluding(tagId: Long, excludeNoteId: Long): List<NoteWithTags>
 
     // Backup
     @Query("SELECT * FROM notes")

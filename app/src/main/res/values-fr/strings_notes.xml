@@ -108,4 +108,5 @@
     <string name="notes_edit_category">Modifier la catégorie</string>
     <string name="hub_notes_title">Notes</string>
     <string name="hub_notes_desc">Prenez des notes et gérez vos idées</string>
+    <string name="notes_backlinks_header">Mentionné dans (%d)</string>
 </resources>
