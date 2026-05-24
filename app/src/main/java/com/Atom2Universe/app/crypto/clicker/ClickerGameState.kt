@@ -13,5 +13,6 @@ data class ClickerGameState(
     val neutrinos: Int = 0,
     val elementTokens: Int = 0,
     val apcToApsLevel: Int = 0,
-    val apsToApcLevel: Int = 0
+    val apsToApcLevel: Int = 0,
+    val factoryCounts: Map<FactoryType, Int> = emptyMap()
 )

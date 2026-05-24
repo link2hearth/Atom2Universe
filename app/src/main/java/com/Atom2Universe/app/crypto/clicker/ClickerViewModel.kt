@@ -28,6 +28,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     private val neutrinoRepo          = NeutrinoRepository(application)
     private val elementTokenRepo      = ElementTokenRepository(application)
     private val achievementRepository = ClickerAchievementRepository(application)
+    private val factoryRepo           = FactoryRepository(application)
     private val frenzyManager         = FrenzyManager()
     private val collectionStore       = PeriodicCollectionStore(application)
 
@@ -93,7 +94,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             } else loaded
 
             offlineRepo.save(now)
-            val recalcedState = recalcProduction(withGain)
+            val recalcedState = recalcProduction(withGain.copy(factoryCounts = factoryRepo.getAllCounts()))
             _state.value = recalcedState
             stats = statsRepository.load()
             if (!offlineInitGain.isZero()) {
@@ -235,6 +236,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             stats = ClickerStats()
         }
         if (resetClicker) {
+            factoryRepo.reset()
             _state.value = ClickerGameState()
             neutrinoRepo.setBalance(0)
             elementTokenRepo.setBalance(0)
@@ -423,6 +425,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             if (elem.multApc > 0.0) baseApc = baseApc.multiplyNumber(1.0 + elem.multApc)
             base = base.add(baseApc.multiplyNumber(state.apcToApsLevel * 0.01))
         }
+        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts)
+        if (factoryApsBonus > 0.0) base = base.multiplyNumber(1.0 + factoryApsBonus)
         return base
     }
 
@@ -437,11 +441,11 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun apcToApsCost(): Int = _state.value.apcToApsLevel + 1
+    fun apcToApsCost(): Int = (_state.value.apcToApsLevel + 1).coerceAtMost(50)
 
     fun buyApcToAps() {
         val s = _state.value
-        val cost = s.apcToApsLevel + 1
+        val cost = (s.apcToApsLevel + 1).coerceAtMost(50)
         if (s.neutrinos < cost) return
         val afterPurchase = s.copy(
             neutrinos = s.neutrinos - cost,
@@ -453,11 +457,11 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch { repository.save(newState) }
     }
 
-    fun apsToApcCost(): Int = _state.value.apsToApcLevel + 1
+    fun apsToApcCost(): Int = (_state.value.apsToApcLevel + 1).coerceAtMost(50)
 
     fun buyApsToApc() {
         val s = _state.value
-        val cost = s.apsToApcLevel + 1
+        val cost = (s.apsToApcLevel + 1).coerceAtMost(50)
         if (s.neutrinos < cost) return
         val afterPurchase = s.copy(
             neutrinos = s.neutrinos - cost,
@@ -466,6 +470,25 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         val newState = recalcProduction(afterPurchase)
         _state.value = newState
         neutrinoRepo.setBalance(afterPurchase.neutrinos)
+        viewModelScope.launch { repository.save(newState) }
+    }
+
+    fun factoryCost(type: FactoryType): LayeredNumber =
+        FactoryEngine.cost(type, _state.value.factoryCounts[type] ?: 0)
+
+    fun buyFactory(type: FactoryType) {
+        val s = _state.value
+        val cost = FactoryEngine.cost(type, s.factoryCounts[type] ?: 0)
+        if (cost.greaterThan(s.atoms)) return
+        factoryRepo.increment(type)
+        val newCounts = factoryRepo.getAllCounts()
+        val afterPurchase = s.copy(
+            atoms = s.atoms.subtract(cost),
+            factoryCounts = newCounts
+        )
+        attributeSpending(cost)
+        val newState = recalcProduction(afterPurchase)
+        _state.value = newState
         viewModelScope.launch { repository.save(newState) }
     }
 
@@ -507,6 +530,12 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         if (state.apsToApcLevel > 0) {
             perClick = perClick.add(basePerSecond.multiplyNumber(state.apsToApcLevel * 0.01))
         }
+
+        // Multiplicateurs usines (après conversions, avant frénésie)
+        val factoryApcBonus = FactoryEngine.computeApcBonus(state.factoryCounts)
+        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts)
+        if (factoryApcBonus > 0.0) perClick  = perClick.multiplyNumber(1.0 + factoryApcBonus)
+        if (factoryApsBonus > 0.0) perSecond = perSecond.multiplyNumber(1.0 + factoryApsBonus)
 
         // Multiplicateurs frénésie
         val apcMult = frenzyManager.getMultiplier(FrenzyType.PER_CLICK,  nowMs)

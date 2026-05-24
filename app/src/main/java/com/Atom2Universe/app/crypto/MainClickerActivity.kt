@@ -240,6 +240,12 @@ class MainClickerActivity : ThemedActivity() {
 
     // Stats jeux dans le shop
 
+    // Usines dans le shop
+    private val shopFactoryCountViews  = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
+    private val shopFactoryEffectViews = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
+    private val shopFactoryPriceViews  = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
+    private val shopFactoryBuyBtns     = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, Button>()
+
     // Succès dans le shop
     private var shopAchievementProgress: TextView? = null
     private var shopAchievementsContainer: LinearLayout? = null
@@ -712,6 +718,7 @@ class MainClickerActivity : ThemedActivity() {
         shopAchievementProgress   = view.findViewById(R.id.shop_achievement_progress)
         shopAchievementsContainer = view.findViewById(R.id.shop_achievements_container)
         buildAchievementShopItems()
+        buildFactoryShopItems(view.findViewById(R.id.shop_factories_container))
 
         shopGodFingerMultBtn?.setOnClickListener {
             shopGodFingerMult = cycleShopMultiplier(shopGodFingerMult)
@@ -788,6 +795,10 @@ class MainClickerActivity : ThemedActivity() {
             shopProdBar            = null
             shopAchievementProgress   = null
             shopAchievementsContainer = null
+            shopFactoryCountViews.clear()
+            shopFactoryEffectViews.clear()
+            shopFactoryPriceViews.clear()
+            shopFactoryBuyBtns.clear()
             shopDialog = null
         }
         shopDialog = dialog
@@ -822,6 +833,155 @@ class MainClickerActivity : ThemedActivity() {
                 .setInterpolator(android.view.animation.AccelerateInterpolator())
                 .withEndAction { toast.visibility = View.INVISIBLE }
                 .start()
+        }
+    }
+
+    private fun buildFactoryShopItems(container: LinearLayout) {
+        shopFactoryCountViews.clear()
+        shopFactoryEffectViews.clear()
+        shopFactoryPriceViews.clear()
+        shopFactoryBuyBtns.clear()
+        container.removeAllViews()
+
+        val dp      = resources.displayMetrics.density
+        val dp1     = dp.toInt()
+        val dp6     = (6 * dp).toInt()
+        val dp8     = (8 * dp).toInt()
+        val dp14    = (14 * dp).toInt()
+        val dp28    = (28 * dp).toInt()
+        val dp36    = (36 * dp).toInt()
+
+        val orderedByPair = listOf(
+            com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_ACCELERATOR,
+            com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_INJECTOR,
+            com.Atom2Universe.app.crypto.clicker.FactoryType.FUSION_REACTOR,
+            com.Atom2Universe.app.crypto.clicker.FactoryType.PLASMA_CATALYST,
+            com.Atom2Universe.app.crypto.clicker.FactoryType.HADRON_COLLIDER,
+            com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON
+        )
+        for ((index, type) in orderedByPair.withIndex()) {
+            if (index > 0) {
+                val isPairBoundary = index % 2 == 0
+                val sep = View(this)
+                sep.setBackgroundColor(if (isPairBoundary) (0x2D3748 or 0xFF000000.toInt()) else (0x1E293B or 0xFF000000.toInt()))
+                val sepP = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp1)
+                sepP.topMargin    = if (isPairBoundary) dp8 else 0
+                sepP.bottomMargin = if (isPairBoundary) dp14 else dp8
+                container.addView(sep, sepP)
+            }
+
+            val row = LinearLayout(this)
+            row.orientation = LinearLayout.HORIZONTAL
+            row.gravity     = android.view.Gravity.CENTER_VERTICAL
+            val rowP = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            rowP.bottomMargin = if (index % 2 == 0) dp6 else dp14
+            row.layoutParams = rowP
+
+            val icon = TextView(this)
+            icon.text     = factoryIcon(type)
+            icon.textSize = 22f
+            icon.gravity  = android.view.Gravity.CENTER
+            icon.layoutParams = LinearLayout.LayoutParams(dp28, LinearLayout.LayoutParams.WRAP_CONTENT)
+            row.addView(icon)
+
+            val textCol = LinearLayout(this)
+            textCol.orientation = LinearLayout.VERTICAL
+            textCol.setPadding(dp8, 0, 0, 0)
+            textCol.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+
+            val nameView = TextView(this)
+            nameView.text     = getString(factoryNameRes(type))
+            nameView.setTextColor(0xFFE2E8F0.toInt())
+            nameView.textSize = 16f
+            nameView.typeface = android.graphics.Typeface.MONOSPACE
+            textCol.addView(nameView)
+
+            val effectView = TextView(this)
+            effectView.text     = ""
+            effectView.setTextColor(0xFF94A3B8.toInt())
+            effectView.textSize = 12f
+            effectView.typeface = android.graphics.Typeface.MONOSPACE
+            shopFactoryEffectViews[type] = effectView
+            textCol.addView(effectView)
+
+            row.addView(textCol)
+
+            val countView = TextView(this)
+            countView.text     = "×0"
+            countView.setTextColor(0xFF94A3B8.toInt())
+            countView.textSize = 15f
+            countView.typeface = android.graphics.Typeface.MONOSPACE
+            countView.setPadding(0, 0, dp8, 0)
+            shopFactoryCountViews[type] = countView
+            row.addView(countView)
+
+            val priceView = TextView(this)
+            priceView.text     = "—"
+            priceView.setTextColor(0xFF94A3B8.toInt())
+            priceView.textSize = 15f
+            priceView.typeface = android.graphics.Typeface.MONOSPACE
+            priceView.setPadding(0, 0, dp6, 0)
+            shopFactoryPriceViews[type] = priceView
+            row.addView(priceView)
+
+            val buyBtn = Button(this)
+            buyBtn.text     = getString(R.string.clicker_shop_buy)
+            buyBtn.textSize = 13f
+            buyBtn.setTextColor(0xFFFFFFFF.toInt())
+            buyBtn.setPadding(dp14, 0, dp14, 0)
+            buyBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp36)
+            buyBtn.backgroundTintList = android.content.res.ColorStateList.valueOf(factoryButtonColor(type))
+            buyBtn.setOnClickListener { clickerViewModel.buyFactory(type) }
+            shopFactoryBuyBtns[type] = buyBtn
+            row.addView(buyBtn)
+
+            container.addView(row)
+        }
+    }
+
+    private fun factoryIcon(type: com.Atom2Universe.app.crypto.clicker.FactoryType) = when (type) {
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_ACCELERATOR -> "⚡"
+        com.Atom2Universe.app.crypto.clicker.FactoryType.FUSION_REACTOR     -> "♨"
+        com.Atom2Universe.app.crypto.clicker.FactoryType.HADRON_COLLIDER    -> "⊕"
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_INJECTOR    -> "⇑"
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PLASMA_CATALYST    -> "≈"
+        com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON        -> "↺"
+    }
+
+    private fun factoryNameRes(type: com.Atom2Universe.app.crypto.clicker.FactoryType) = when (type) {
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_ACCELERATOR -> R.string.clicker_factory_proton_accel_name
+        com.Atom2Universe.app.crypto.clicker.FactoryType.FUSION_REACTOR     -> R.string.clicker_factory_fusion_reactor_name
+        com.Atom2Universe.app.crypto.clicker.FactoryType.HADRON_COLLIDER    -> R.string.clicker_factory_hadron_collider_name
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_INJECTOR    -> R.string.clicker_factory_proton_injector_name
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PLASMA_CATALYST    -> R.string.clicker_factory_plasma_catalyst_name
+        com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON        -> R.string.clicker_factory_synchrotron_name
+    }
+
+    private fun factoryButtonColor(type: com.Atom2Universe.app.crypto.clicker.FactoryType) = when (type) {
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_ACCELERATOR -> 0xFFD97706.toInt()
+        com.Atom2Universe.app.crypto.clicker.FactoryType.FUSION_REACTOR     -> 0xFF1D4ED8.toInt()
+        com.Atom2Universe.app.crypto.clicker.FactoryType.HADRON_COLLIDER    -> 0xFF7C3AED.toInt()
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_INJECTOR    -> 0xFF92400E.toInt()
+        com.Atom2Universe.app.crypto.clicker.FactoryType.PLASMA_CATALYST    -> 0xFF1E3A8A.toInt()
+        com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON        -> 0xFF4C1D95.toInt()
+    }
+
+    private fun factoryEffectText(
+        type: com.Atom2Universe.app.crypto.clicker.FactoryType,
+        counts: Map<com.Atom2Universe.app.crypto.clicker.FactoryType, Int>
+    ): String {
+        val count = counts[type] ?: 0
+        return when (type) {
+            com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_ACCELERATOR ->
+                getString(R.string.clicker_factory_effect_apc, count * 10)
+            com.Atom2Universe.app.crypto.clicker.FactoryType.FUSION_REACTOR ->
+                getString(R.string.clicker_factory_effect_aps, count * 10)
+            com.Atom2Universe.app.crypto.clicker.FactoryType.HADRON_COLLIDER ->
+                getString(R.string.clicker_factory_effect_mixed, count * 15, count * 5)
+            com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_INJECTOR,
+            com.Atom2Universe.app.crypto.clicker.FactoryType.PLASMA_CATALYST,
+            com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON ->
+                String.format(java.util.Locale.US, "×%.2f", 1.0 + count * 0.20)
         }
     }
 
@@ -929,6 +1089,16 @@ class MainClickerActivity : ThemedActivity() {
 
         updateProductionBar(stats)
 
+        for (type in com.Atom2Universe.app.crypto.clicker.FactoryType.values()) {
+            val count = state.factoryCounts[type] ?: 0
+            val affordable = !clickerViewModel.factoryCost(type).greaterThan(state.atoms)
+            shopFactoryCountViews[type]?.text  = "×$count"
+            shopFactoryEffectViews[type]?.text = factoryEffectText(type, state.factoryCounts)
+            shopFactoryPriceViews[type]?.text  = clickerViewModel.factoryCost(type).toString()
+            shopFactoryBuyBtns[type]?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                if (affordable) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+            )
+        }
     }
 
     private fun snapToStep(value: Int, step: Int = 5): Float =

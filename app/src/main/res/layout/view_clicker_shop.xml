@@ -143,6 +143,31 @@
 
         </LinearLayout>
 
+        <!-- ── Section Usines ───────────────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2D3748"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clicker_factory_section"
+            android:textColor="#64748B"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:id="@+id/shop_factories_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
         <!-- ── Section Neutrinos ─────────────────────────────────────────────── -->
         <View
             android:layout_width="match_parent"

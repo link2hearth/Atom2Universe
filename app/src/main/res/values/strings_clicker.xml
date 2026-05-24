@@ -132,6 +132,16 @@
 </plurals>
     <string name="crypto_label_banner_opacity">Banner opacity</string>
     <string name="crypto_label_decimals">Decimals (e.g. 1.23e6)</string>
+    <string name="clicker_factory_section">Particle Factories</string>
+    <string name="clicker_factory_proton_accel_name">Proton Accelerator</string>
+    <string name="clicker_factory_fusion_reactor_name">Fusion Reactor</string>
+    <string name="clicker_factory_hadron_collider_name">Hadron Collider</string>
+    <string name="clicker_factory_proton_injector_name">Proton Injector</string>
+    <string name="clicker_factory_plasma_catalyst_name">Plasma Catalyst</string>
+    <string name="clicker_factory_synchrotron_name">Synchrotron</string>
+    <string name="clicker_factory_effect_apc">+%d%% APC</string>
+    <string name="clicker_factory_effect_aps">+%d%% APS</string>
+    <string name="clicker_factory_effect_mixed">+%1$d%% APS  +%2$d%% APC</string>
     <string name="clicker_shop_buy">Buy</string>
     <string name="clicker_shop_level">Lv. %d</string>
     <string name="clicker_shop_stats_title">Statistics</string>
