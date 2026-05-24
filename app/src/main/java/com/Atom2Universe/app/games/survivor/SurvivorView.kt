@@ -86,6 +86,7 @@ class SurvivorView @JvmOverloads constructor(
     private val sBoss      by lazy { ctx.getString(R.string.survivor_boss) }
     private val sTitle        by lazy { ctx.getString(R.string.survivor_title) }
     private val sSelectWeapon by lazy { ctx.getString(R.string.survivor_select_weapon) }
+    private val sRevived      by lazy { ctx.getString(R.string.survivor_revived) }
 
     // Paints
     private val pFill  = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
@@ -303,6 +304,7 @@ class SurvivorView @JvmOverloads constructor(
                 drawHUD(canvas)
                 drawJoystick(canvas)
                 if (game.bossWarning > 0f) drawBossWarning(canvas)
+                if (game.reviveFlashTimer > 0f) drawReviveFlash(canvas)
                 if (game.phase == GamePhase.LEVEL_UP) drawLevelUp(canvas)
                 if (game.phase == GamePhase.PAUSED)   drawPaused(canvas)
             }
@@ -587,7 +589,6 @@ class SurvivorView @JvmOverloads constructor(
     private fun drawDmgNums(canvas: Canvas, wx: (Float) -> Float, wy: (Float) -> Float) {
         for (n in game.dmgNums) {
             val alpha = ((n.life / 0.8f) * 255).toInt().coerceIn(0, 255)
-            pText.alpha = alpha
             pText.textSize = if (n.isCrit) sp(18f) else sp(14f)
             pText.color = if (n.isCrit) Color.YELLOW else Color.WHITE
             pText.alpha = alpha
@@ -630,6 +631,16 @@ class SurvivorView @JvmOverloads constructor(
             canvas.drawRect(rx, hpTop + barH - shFill, rx + barW, hpTop + barH, pFill)
         }
 
+        // Revive icons — bottom-left above HP bar base
+        if (p.revivesLeft > 0) {
+            pText.textSize = sp(14f)
+            pText.textAlign = Paint.Align.LEFT
+            val heartStr = "❤".repeat(p.revivesLeft)
+            pText.color = Color.argb(220, 255, 255, 255)
+            canvas.drawText(heartStr, barMargin + barW + dp(4f), hpTop + barH - dp(4f), pText)
+            pText.textAlign = Paint.Align.CENTER
+        }
+
     }
 
     // ─── Joystick ─────────────────────────────────────────────────────────────
@@ -642,6 +653,20 @@ class SurvivorView @JvmOverloads constructor(
         canvas.drawCircle(joyCenterX, joyCenterY, JOY_OUTER_R, pStroke)
         pFill.color = Color.argb(150, 255, 255, 255)
         canvas.drawCircle(joyKnobX, joyKnobY, JOY_INNER_R, pFill)
+    }
+
+    // ─── Revive flash ─────────────────────────────────────────────────────────
+
+    private fun drawReviveFlash(canvas: Canvas) {
+        val t = game.reviveFlashTimer
+        val alpha = ((t / 2.5f) * 180).toInt().coerceIn(0, 180)
+        pFill.color = Color.argb(alpha, 255, 255, 255)
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
+        val textAlpha = ((t / 2.5f) * 255).toInt().coerceIn(0, 255)
+        pText.color = Color.argb(textAlpha, 255, 230, 80)
+        pText.textSize = sp(42f)
+        pText.textAlign = Paint.Align.CENTER
+        canvas.drawText(sRevived, width / 2f, height / 2f, pText)
     }
 
     // ─── Boss warning ─────────────────────────────────────────────────────────
@@ -730,7 +755,7 @@ class SurvivorView @JvmOverloads constructor(
         val cx = width / 2f
         pText.color = Color.WHITE; pText.textSize = sp(28f)
         canvas.drawText(sLevelUp, cx, dp(70f), pText)
-        pText.textSize = sp(14f); pText.color = Color.parseColor("#AAAAAA")
+        pText.textSize = sp(14f); pText.color = C_GRAY
         canvas.drawText(sChoose, cx, dp(100f), pText)
 
         val cardW = (width * 0.82f)

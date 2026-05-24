@@ -20,6 +20,7 @@
     <string name="survivor_kills">Kills</string>
     <string name="survivor_best">Best</string>
     <string name="survivor_boss">BOSS!</string>
+    <string name="survivor_revived">✦ REVIVED! ✦</string>
     <string name="survivor_upg_speed">Speed</string>
     <string name="survivor_upg_speed_desc">Movement speed bonus</string>
     <string name="survivor_upg_max_hp">Max Health</string>

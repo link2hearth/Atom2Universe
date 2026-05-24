@@ -200,6 +200,7 @@ class SurvivorGame(private val ctx: Context) {
     var formationCd = 55f
     var pendingLevelUps = 0
     var resumeRampTimer = 0f
+    var reviveFlashTimer = 0f
 
     // Suivi DPS joueur (fenêtre glissante de 5s)
     var playerDps = 0f
@@ -359,7 +360,7 @@ class SurvivorGame(private val ctx: Context) {
         playerDps = 0f; dpsAccum = 0f; dpsWindowCd = 5f
         wave = 1; survivalTime = 0f; spawnCd = 0f
         waveCd = WAVE_DUR; bossCd = BOSS_INTERVAL; auraCd = 0f; bossWarning = 0f
-        pendingUpgrades = null; pendingLevelUps = 0; resumeRampTimer = 0f
+        pendingUpgrades = null; pendingLevelUps = 0; resumeRampTimer = 0f; reviveFlashTimer = 0f
     }
 
     // ─── Update ───────────────────────────────────────────────────────────────
@@ -375,6 +376,7 @@ class SurvivorGame(private val ctx: Context) {
 
         survivalTime += eff
         if (bossWarning > 0f) bossWarning -= eff
+        if (reviveFlashTimer > 0f) reviveFlashTimer -= eff
 
         updateDpsWindow(eff)
         movePlayer(eff, jx, jy)
@@ -809,7 +811,7 @@ class SurvivorGame(private val ctx: Context) {
         val dx = primary.x - player.x; val dy = primary.y - player.y
         if (dx * dx + dy * dy > range * range) return false
         val dmg   = LASER_DMG * (1f + player.upg("laser_dmg") * 0.30f)
-        val width = LASER_W   * (1f + player.upg("laser_width") * 0.25f)
+        val width = LASER_W
         val multi = 1 + player.upg("laser_multi")
         val isCrit = isCrit(); val fd = if (isCrit) dmg * critMult() else dmg
         val targets = sorted.take(multi)
@@ -991,7 +993,10 @@ class SurvivorGame(private val ctx: Context) {
         val toKill = _killEnemies.also { it.clear() }
         val poisonLevel = player.upg("poison")
         val poisonDmgBase = if (poisonLevel > 0) PROJ_DMG * 0.4f * (1f + poisonLevel * 0.30f) else 0f
-        for (p in projectiles.toList()) {
+        // Itération indexée jusqu'à la taille initiale : les forks ajoutés pendant la boucle sont ignorés (traités à la prochaine frame)
+        val initialProjCount = projectiles.size
+        for (pi in 0 until initialProjCount) {
+            val p = projectiles[pi]
             p.x += p.vx * dt; p.y += p.vy * dt; p.lifetime -= dt
             if (p.lifetime <= 0f) { dead.add(p); continue }
             for (e in enemySnapshot) {
@@ -1217,7 +1222,7 @@ class SurvivorGame(private val ctx: Context) {
         }
         player.iframeCd = IFRAME
         if (player.hp <= 0f) {
-            if (player.revivesLeft > 0) { player.revivesLeft--; player.hp = player.maxHp * 0.3f; player.iframeCd = 2f }
+            if (player.revivesLeft > 0) { player.revivesLeft--; player.hp = player.maxHp * 0.3f; player.iframeCd = 2f; reviveFlashTimer = 2.5f }
             else { if (survivalTime > bestTime) bestTime = survivalTime; if (player.kills > bestKills) bestKills = player.kills; phase = GamePhase.GAME_OVER }
         }
     }

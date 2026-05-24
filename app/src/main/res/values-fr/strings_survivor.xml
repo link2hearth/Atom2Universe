@@ -18,6 +18,7 @@
     <string name="survivor_menu">MENU</string>
     <string name="survivor_best">Meilleur</string>
     <string name="survivor_boss">BOSS !</string>
+    <string name="survivor_revived">✦ RESSUSCITÉ ! ✦</string>
     <string name="survivor_upg_speed">Vitesse</string>
     <string name="survivor_upg_speed_desc">Bonus de vitesse de déplacement</string>
     <string name="survivor_upg_max_hp">Vie max</string>
