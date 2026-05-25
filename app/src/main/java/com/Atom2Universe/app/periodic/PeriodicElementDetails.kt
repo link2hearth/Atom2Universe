@@ -57,7 +57,7 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
     fun loadRoot(context: Context, lang: String): JSONObject? {
       cache[lang]?.let { return it }
       val json = try {
-        context.assets.open("periodic_descriptions_$lang.json").bufferedReader().readText()
+        context.assets.open("Elements/periodic_descriptions_$lang.json").bufferedReader().readText()
       } catch (e: Exception) {
         return null
       }
