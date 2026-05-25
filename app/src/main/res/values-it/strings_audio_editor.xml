@@ -77,4 +77,9 @@
     <string name="audio_editor_error_no_data">Nessun dato registrato</string>
     <string name="audio_editor_error_write">Errore di scrittura: %1$s</string>
     <string name="audio_editor_track_number">%1$d</string>
+    <string name="mic_recording_action_stop_notif">Ferma registrazione</string>
+    <string name="mic_recording_channel_description">Mantiene attiva la registrazione del microfono in background</string>
+    <string name="mic_recording_channel_name">Registrazione microfono</string>
+    <string name="mic_recording_notif_text">Registrazione microfono attiva</string>
+    <string name="mic_recording_notif_title">Registrazione in corso</string>
 </resources>

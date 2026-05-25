@@ -172,4 +172,14 @@
     <string name="crypto_the_line_widget_toggle_desc">Tampilkan/sembunyikan widget The Line</string>
     <string name="crypto_the_line_widget_opacity_label">Opasitas widget The Line</string>
     <string name="crypto_banner_toggle_the_line_label">Tampilkan tombol The Line</string>
+    <string name="clicker_factory_effect_apc">+%d%% APC</string>
+    <string name="clicker_factory_effect_aps">+%d%% APS</string>
+    <string name="clicker_factory_effect_mixed">+%1$d%% APS  +%2$d%% APC</string>
+    <string name="clicker_factory_fusion_reactor_name">Reaktor Fusi</string>
+    <string name="clicker_factory_hadron_collider_name">Hadron Collider</string>
+    <string name="clicker_factory_plasma_catalyst_name">Katalis Plasma</string>
+    <string name="clicker_factory_proton_accel_name">Akselerator Proton</string>
+    <string name="clicker_factory_proton_injector_name">Injektor Proton</string>
+    <string name="clicker_factory_section">Pabrik Partikel</string>
+    <string name="clicker_factory_synchrotron_name">Sinkrotron</string>
 </resources>

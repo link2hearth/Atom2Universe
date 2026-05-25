@@ -146,4 +146,5 @@
     <string name="survivor_weapon_desc_bomb">Wirft Bomben, die beim Aufprall explodieren</string>
     <string name="survivor_weapon_desc_chain_lightning">Blitz, der zwischen Feinden springt</string>
     <string name="survivor_weapon_desc_orbital">Kugeln, die um dich kreisen und auf Feinde schießen</string>
+    <string name="survivor_revived">✦ WIEDERBELEBT! ✦</string>
 </resources>

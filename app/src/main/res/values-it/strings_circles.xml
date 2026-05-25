@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Indietro</string>
+    <string name="circles_btn_again">Gioca ancora</string>
+    <string name="circles_btn_hint">Suggerimento</string>
+    <string name="circles_btn_new">Nuovo</string>
+    <string name="circles_btn_next">Livello successivo</string>
+    <string name="circles_btn_restart">Ricomincia</string>
+    <string name="circles_diff_easy">Facile</string>
+    <string name="circles_diff_hard">Difficile</string>
+    <string name="circles_diff_medium">Medio</string>
+    <string name="circles_hint_default">Hai bisogno di aiuto? Tocca Suggerimento per giocare automaticamente la mossa migliore. Usare il suggerimento disabilita la ricompensa.</string>
+    <string name="circles_hint_solved">Puzzle risolto! Iniziane uno nuovo per continuare.</string>
+    <string name="circles_hint_used">Suggerimento usato — nessuna ricompensa per questo puzzle.</string>
+    <string name="circles_hub_desc">Ruota gli anelli per allineare tutti i colori</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Mosse:</string>
+    <string name="circles_label_reward">Ricompensa:</string>
+    <string name="circles_label_seed">Seed:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d neutrino/i!</string>
+    <string name="circles_toast_reward_disabled">Circles: nessuna ricompensa — suggerimento usato.</string>
+    <string name="circles_win_message">Sincronizzato in %1$d mossa/e!</string>
+    <string name="circles_win_title">Risolto!</string>
+</resources>

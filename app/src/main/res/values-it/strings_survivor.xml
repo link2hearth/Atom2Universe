@@ -146,4 +146,5 @@
     <string name="survivor_weapon_desc_bomb">Lancia bombe che esplodono all\'impatto</string>
     <string name="survivor_weapon_desc_chain_lightning">Fulmine che salta tra i nemici</string>
     <string name="survivor_weapon_desc_orbital">Sfere che orbitano attorno a te e sparano ai nemici</string>
+    <string name="survivor_revived">✦ RINATO! ✦</string>
 </resources>

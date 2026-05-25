@@ -46,4 +46,12 @@
     <string name="book_shelf_delete_confirm">Eliminare questa libreria e tutte le sue voci?</string>
     <string name="book_shelf_books_count">%1$d libri</string>
     <string name="book_shelf_tree_empty">Nessun libro in questa libreria.</string>
+    <string name="book_reader_bookmark_added">Segnalibro aggiunto</string>
+    <string name="book_reader_bookmark_removed">Segnalibro rimosso</string>
+    <string name="book_reader_bookmarks">Segnalibri</string>
+    <string name="book_reader_bookmarks_clear">Cancella tutti</string>
+    <string name="book_reader_bookmarks_cleared">Tutti i segnalibri eliminati</string>
+    <string name="book_reader_no_bookmarks">Nessun segnalibro. Tieni premuto su un paragrafo per aggiungerne uno.</string>
+    <string name="book_shelf_section_root">(Altri libri)</string>
+    <string name="book_toggle_view">Cambia visualizzazione</string>
 </resources>

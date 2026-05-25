@@ -172,4 +172,14 @@
     <string name="crypto_the_line_widget_toggle_desc">The Line widget göster/gizle</string>
     <string name="crypto_the_line_widget_opacity_label">The Line widget saydamlığı</string>
     <string name="crypto_banner_toggle_the_line_label">The Line geçişini göster</string>
+    <string name="clicker_factory_effect_apc">+%d%% APC</string>
+    <string name="clicker_factory_effect_aps">+%d%% APS</string>
+    <string name="clicker_factory_effect_mixed">+%1$d%% APS  +%2$d%% APC</string>
+    <string name="clicker_factory_fusion_reactor_name">Füzyon Reaktörü</string>
+    <string name="clicker_factory_hadron_collider_name">Hadron Çarpıştırıcısı</string>
+    <string name="clicker_factory_plasma_catalyst_name">Plazma Katalizörü</string>
+    <string name="clicker_factory_proton_accel_name">Proton Hızlandırıcı</string>
+    <string name="clicker_factory_proton_injector_name">Proton Enjektörü</string>
+    <string name="clicker_factory_section">Parçacık Fabrikaları</string>
+    <string name="clicker_factory_synchrotron_name">Sinkrotron</string>
 </resources>

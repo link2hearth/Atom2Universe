@@ -146,4 +146,5 @@
     <string name="survivor_weapon_desc_bomb">Rzuca bombami, które eksplodują przy uderzeniu</string>
     <string name="survivor_weapon_desc_chain_lightning">Błyskawica skacząca między wrogami</string>
     <string name="survivor_weapon_desc_orbital">Kule krążące wokół ciebie i strzelające do wrogów</string>
+    <string name="survivor_revived">✦ WSKRZESZONY! ✦</string>
 </resources>

@@ -31,4 +31,10 @@
     <string name="comics_clear_all_msg">Hapus semua komik dan pustaka dari daftar?</string>
     <string name="comics_rescanning_title">Memindai ulang…</string>
     <string name="comics_toggle_view">Ganti tampilan</string>
+    <string name="comics_section_root">(Komik lainnya)</string>
+    <string name="comics_series_count">%1$d komik</string>
+    <string name="comics_storage_perm_grant">Berikan akses</string>
+    <string name="comics_storage_perm_msg">Akses penyimpanan penuh memungkinkan pemindaian perpustakaan jauh lebih cepat.\n\nAnda juga dapat melewati dan tetap memindai.</string>
+    <string name="comics_storage_perm_skip">Pindai saja</string>
+    <string name="comics_storage_perm_title">Percepat pemindaian perpustakaan</string>
 </resources>

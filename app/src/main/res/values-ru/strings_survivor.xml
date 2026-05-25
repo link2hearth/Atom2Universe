@@ -146,4 +146,5 @@
     <string name="survivor_weapon_desc_bomb">Бросает бомбы, взрывающиеся при ударе</string>
     <string name="survivor_weapon_desc_chain_lightning">Молния, прыгающая между врагами</string>
     <string name="survivor_weapon_desc_orbital">Шары, вращающиеся вокруг вас и стреляющие во врагов</string>
+    <string name="survivor_revived">✦ ВОЗРОЖДЁН! ✦</string>
 </resources>

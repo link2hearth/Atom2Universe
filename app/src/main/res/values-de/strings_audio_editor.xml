@@ -77,4 +77,9 @@
     <string name="audio_editor_error_generic">Fehler: %1$s</string>
     <string name="audio_editor_error_no_data">Keine Daten aufgenommen</string>
     <string name="audio_editor_error_write">Schreibfehler: %1$s</string>
+    <string name="mic_recording_action_stop_notif">Aufnahme stoppen</string>
+    <string name="mic_recording_channel_description">Hält die Mikrofonaufnahme im Hintergrund aktiv</string>
+    <string name="mic_recording_channel_name">Mikrofonaufnahme</string>
+    <string name="mic_recording_notif_text">Mikrofonaufnahme ist aktiv</string>
+    <string name="mic_recording_notif_title">Aufnahme läuft</string>
 </resources>

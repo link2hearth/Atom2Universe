@@ -108,4 +108,5 @@
     <string name="notes_edit_category">Categorie bewerken</string>
     <string name="hub_notes_title">Notities</string>
     <string name="hub_notes_desc">Notities maken en ideeën beheren</string>
+    <string name="notes_backlinks_header">Vermeld in (%d)</string>
 </resources>

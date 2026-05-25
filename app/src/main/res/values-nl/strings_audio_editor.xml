@@ -77,4 +77,9 @@
     <string name="audio_editor_error_generic">Fout: %1$s</string>
     <string name="audio_editor_error_no_data">Geen gegevens opgenomen</string>
     <string name="audio_editor_error_write">Schrijffout: %1$s</string>
+    <string name="mic_recording_action_stop_notif">Opname stoppen</string>
+    <string name="mic_recording_channel_description">Houdt microfoonopname actief op de achtergrond</string>
+    <string name="mic_recording_channel_name">Microfoonopname</string>
+    <string name="mic_recording_notif_text">Microfoonopname actief</string>
+    <string name="mic_recording_notif_title">Opname bezig</string>
 </resources>

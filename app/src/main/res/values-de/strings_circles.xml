@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Zurück</string>
+    <string name="circles_btn_again">Nochmal spielen</string>
+    <string name="circles_btn_hint">Hinweis</string>
+    <string name="circles_btn_new">Neu</string>
+    <string name="circles_btn_next">Nächstes Level</string>
+    <string name="circles_btn_restart">Neustart</string>
+    <string name="circles_diff_easy">Einfach</string>
+    <string name="circles_diff_hard">Schwer</string>
+    <string name="circles_diff_medium">Mittel</string>
+    <string name="circles_hint_default">Brauchst du Hilfe? Tippe auf Hinweis, um den besten Zug automatisch zu spielen. Hinweise deaktivieren die Belohnung.</string>
+    <string name="circles_hint_solved">Rätsel gelöst! Starte ein neues, um fortzufahren.</string>
+    <string name="circles_hint_used">Hinweis benutzt – keine Belohnung für dieses Rätsel.</string>
+    <string name="circles_hub_desc">Drehe die Ringe, um alle Farben auszurichten</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Züge:</string>
+    <string name="circles_label_reward">Belohnung:</string>
+    <string name="circles_label_seed">Seed:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d Neutrino(s)!</string>
+    <string name="circles_toast_reward_disabled">Circles: keine Belohnung – Hinweis wurde benutzt.</string>
+    <string name="circles_win_message">Synchronisiert in %1$d Zug/Zügen!</string>
+    <string name="circles_win_title">Gelöst!</string>
+</resources>

@@ -77,4 +77,9 @@
     <string name="audio_editor_error_generic">Помилка: %1$s</string>
     <string name="audio_editor_error_no_data">Немає записаних даних</string>
     <string name="audio_editor_error_write">Помилка запису: %1$s</string>
+    <string name="mic_recording_action_stop_notif">Зупинити запис</string>
+    <string name="mic_recording_channel_description">Підтримує запис мікрофона у фоновому режимі</string>
+    <string name="mic_recording_channel_name">Запис мікрофона</string>
+    <string name="mic_recording_notif_text">Запис мікрофона активний</string>
+    <string name="mic_recording_notif_title">Запис триває</string>
 </resources>

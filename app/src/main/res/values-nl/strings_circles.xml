@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Terug</string>
+    <string name="circles_btn_again">Opnieuw spelen</string>
+    <string name="circles_btn_hint">Hint</string>
+    <string name="circles_btn_new">Nieuw</string>
+    <string name="circles_btn_next">Volgend niveau</string>
+    <string name="circles_btn_restart">Opnieuw starten</string>
+    <string name="circles_diff_easy">Makkelijk</string>
+    <string name="circles_diff_hard">Moeilijk</string>
+    <string name="circles_diff_medium">Gemiddeld</string>
+    <string name="circles_hint_default">Hulp nodig? Tik op Hint om automatisch de beste zet te spelen. Het gebruik van een hint schakelt de beloning uit.</string>
+    <string name="circles_hint_solved">Puzzel opgelost! Start een nieuwe om door te gaan.</string>
+    <string name="circles_hint_used">Hint gebruikt — geen beloning voor dit puzzel.</string>
+    <string name="circles_hub_desc">Draai de ringen om alle kleuren uit te lijnen</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Zetten:</string>
+    <string name="circles_label_reward">Beloning:</string>
+    <string name="circles_label_seed">Seed:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d neutrino(\'s)!</string>
+    <string name="circles_toast_reward_disabled">Circles: geen beloning — hint werd gebruikt.</string>
+    <string name="circles_win_message">Gesynchroniseerd in %1$d zet(ten)!</string>
+    <string name="circles_win_title">Opgelost!</string>
+</resources>

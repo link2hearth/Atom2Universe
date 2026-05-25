@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Volver</string>
+    <string name="circles_btn_again">Jugar de nuevo</string>
+    <string name="circles_btn_hint">Pista</string>
+    <string name="circles_btn_new">Nuevo</string>
+    <string name="circles_btn_next">Siguiente nivel</string>
+    <string name="circles_btn_restart">Reiniciar</string>
+    <string name="circles_diff_easy">Fácil</string>
+    <string name="circles_diff_hard">Difícil</string>
+    <string name="circles_diff_medium">Medio</string>
+    <string name="circles_hint_default">¿Necesitas ayuda? Toca Pista para jugar automáticamente el mejor movimiento. Usar pista desactiva la recompensa.</string>
+    <string name="circles_hint_solved">¡Puzzle resuelto! Empieza uno nuevo para continuar.</string>
+    <string name="circles_hint_used">Pista usada — sin recompensa para este puzzle.</string>
+    <string name="circles_hub_desc">Gira los anillos para alinear todos los colores</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Movimientos:</string>
+    <string name="circles_label_reward">Recompensa:</string>
+    <string name="circles_label_seed">Semilla:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d neutrino(s)!</string>
+    <string name="circles_toast_reward_disabled">Circles: sin recompensa — se usó la pista.</string>
+    <string name="circles_win_message">¡Sincronizado en %1$d movimiento(s)!</string>
+    <string name="circles_win_title">¡Resuelto!</string>
+</resources>

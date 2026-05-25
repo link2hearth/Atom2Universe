@@ -33,4 +33,10 @@
     <string name="comics_clear_all_msg">Видалити всі комікси та бібліотеки зі списку?</string>
     <string name="comics_rescanning_title">Повторне сканування…</string>
     <string name="comics_toggle_view">Перемкнути вигляд</string>
+    <string name="comics_section_root">(Інші комікси)</string>
+    <string name="comics_series_count">%1$d коміксів</string>
+    <string name="comics_storage_perm_grant">Надати доступ</string>
+    <string name="comics_storage_perm_msg">Повний доступ до сховища дозволяє значно швидше сканувати бібліотеку.\n\nМожна пропустити і все одно сканувати.</string>
+    <string name="comics_storage_perm_skip">Сканувати в будь-якому разі</string>
+    <string name="comics_storage_perm_title">Прискорити сканування бібліотеки</string>
 </resources>

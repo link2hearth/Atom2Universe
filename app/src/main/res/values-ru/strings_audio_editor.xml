@@ -77,4 +77,9 @@
     <string name="audio_editor_error_generic">Ошибка: %1$s</string>
     <string name="audio_editor_error_no_data">Данные не записаны</string>
     <string name="audio_editor_error_write">Ошибка записи: %1$s</string>
+    <string name="mic_recording_action_stop_notif">Остановить запись</string>
+    <string name="mic_recording_channel_description">Поддерживает запись микрофона в фоновом режиме</string>
+    <string name="mic_recording_channel_name">Запись микрофона</string>
+    <string name="mic_recording_notif_text">Запись с микрофона активна</string>
+    <string name="mic_recording_notif_title">Запись идёт</string>
 </resources>

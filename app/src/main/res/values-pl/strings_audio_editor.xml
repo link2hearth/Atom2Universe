@@ -77,4 +77,9 @@
     <string name="audio_editor_error_generic">Błąd: %1$s</string>
     <string name="audio_editor_error_no_data">Nie nagrano żadnych danych</string>
     <string name="audio_editor_error_write">Błąd zapisu: %1$s</string>
+    <string name="mic_recording_action_stop_notif">Zatrzymaj nagrywanie</string>
+    <string name="mic_recording_channel_description">Utrzymuje nagrywanie mikrofonu w tle</string>
+    <string name="mic_recording_channel_name">Nagrywanie mikrofonu</string>
+    <string name="mic_recording_notif_text">Nagrywanie mikrofonu aktywne</string>
+    <string name="mic_recording_notif_title">Nagrywanie w toku</string>
 </resources>

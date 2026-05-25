@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Kembali</string>
+    <string name="circles_btn_again">Main lagi</string>
+    <string name="circles_btn_hint">Petunjuk</string>
+    <string name="circles_btn_new">Baru</string>
+    <string name="circles_btn_next">Level berikutnya</string>
+    <string name="circles_btn_restart">Mulai ulang</string>
+    <string name="circles_diff_easy">Mudah</string>
+    <string name="circles_diff_hard">Sulit</string>
+    <string name="circles_diff_medium">Sedang</string>
+    <string name="circles_hint_default">Butuh bantuan? Ketuk Petunjuk untuk memainkan langkah terbaik secara otomatis. Menggunakan petunjuk menonaktifkan hadiah.</string>
+    <string name="circles_hint_solved">Teka-teki selesai! Mulai yang baru untuk melanjutkan.</string>
+    <string name="circles_hint_used">Petunjuk digunakan — tidak ada hadiah untuk teka-teki ini.</string>
+    <string name="circles_hub_desc">Putar cincin untuk menyelaraskan semua warna</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Langkah:</string>
+    <string name="circles_label_reward">Hadiah:</string>
+    <string name="circles_label_seed">Seed:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d neutrino!</string>
+    <string name="circles_toast_reward_disabled">Circles: tidak ada hadiah — petunjuk digunakan.</string>
+    <string name="circles_win_message">Tersinkronisasi dalam %1$d langkah!</string>
+    <string name="circles_win_title">Selesai!</string>
+</resources>

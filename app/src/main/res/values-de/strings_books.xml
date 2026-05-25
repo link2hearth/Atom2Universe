@@ -46,4 +46,12 @@
     <string name="book_shelf_delete_confirm">Diese Bibliothek und alle ihre Einträge löschen?</string>
     <string name="book_shelf_books_count">%1$d Bücher</string>
     <string name="book_shelf_tree_empty">Keine Bücher in dieser Bibliothek.</string>
+    <string name="book_reader_bookmark_added">Lesezeichen hinzugefügt</string>
+    <string name="book_reader_bookmark_removed">Lesezeichen entfernt</string>
+    <string name="book_reader_bookmarks">Lesezeichen</string>
+    <string name="book_reader_bookmarks_clear">Alle löschen</string>
+    <string name="book_reader_bookmarks_cleared">Alle Lesezeichen gelöscht</string>
+    <string name="book_reader_no_bookmarks">Noch keine Lesezeichen. Lang drücken auf einen Absatz, um eines hinzuzufügen.</string>
+    <string name="book_shelf_section_root">(Andere Bücher)</string>
+    <string name="book_toggle_view">Ansicht wechseln</string>
 </resources>

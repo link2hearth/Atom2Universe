@@ -46,4 +46,12 @@
     <string name="book_shelf_delete_confirm">Usunąć tę bibliotekę i wszystkie jej wpisy?</string>
     <string name="book_shelf_books_count">%1$d książek</string>
     <string name="book_shelf_tree_empty">Brak książek w tej bibliotece.</string>
+    <string name="book_reader_bookmark_added">Zakładka dodana</string>
+    <string name="book_reader_bookmark_removed">Zakładka usunięta</string>
+    <string name="book_reader_bookmarks">Zakładki</string>
+    <string name="book_reader_bookmarks_clear">Wyczyść wszystko</string>
+    <string name="book_reader_bookmarks_cleared">Wszystkie zakładki usunięte</string>
+    <string name="book_reader_no_bookmarks">Brak zakładek. Przytrzymaj akapit, aby dodać.</string>
+    <string name="book_shelf_section_root">(Inne książki)</string>
+    <string name="book_toggle_view">Zmień widok</string>
 </resources>

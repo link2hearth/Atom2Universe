@@ -31,4 +31,10 @@
     <string name="comics_clear_all_msg">Alle comics en bibliotheken uit de lijst verwijderen?</string>
     <string name="comics_rescanning_title">Opnieuw scannen…</string>
     <string name="comics_toggle_view">Weergave wisselen</string>
+    <string name="comics_section_root">(Andere strips)</string>
+    <string name="comics_series_count">%1$d strips</string>
+    <string name="comics_storage_perm_grant">Toegang verlenen</string>
+    <string name="comics_storage_perm_msg">Volledige opslagtoegang maakt het scannen van de bibliotheek veel sneller.\n\nJe kunt ook overslaan en toch scannen.</string>
+    <string name="comics_storage_perm_skip">Toch scannen</string>
+    <string name="comics_storage_perm_title">Bibliotheekscan versnellen</string>
 </resources>

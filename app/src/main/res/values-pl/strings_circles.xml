@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Wróć</string>
+    <string name="circles_btn_again">Zagraj ponownie</string>
+    <string name="circles_btn_hint">Podpowiedź</string>
+    <string name="circles_btn_new">Nowy</string>
+    <string name="circles_btn_next">Następny poziom</string>
+    <string name="circles_btn_restart">Restart</string>
+    <string name="circles_diff_easy">Łatwy</string>
+    <string name="circles_diff_hard">Trudny</string>
+    <string name="circles_diff_medium">Średni</string>
+    <string name="circles_hint_default">Potrzebujesz pomocy? Dotknij Podpowiedź, aby automatycznie zagrać najlepszy ruch. Użycie podpowiedzi wyłącza nagrodę.</string>
+    <string name="circles_hint_solved">Zagadka rozwiązana! Rozpocznij nową, aby kontynuować.</string>
+    <string name="circles_hint_used">Podpowiedź użyta — brak nagrody za tę zagadkę.</string>
+    <string name="circles_hub_desc">Obracaj pierścienie, aby wyrównać wszystkie kolory</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Ruchy:</string>
+    <string name="circles_label_reward">Nagroda:</string>
+    <string name="circles_label_seed">Seed:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d neutrino!</string>
+    <string name="circles_toast_reward_disabled">Circles: brak nagrody — użyto podpowiedzi.</string>
+    <string name="circles_win_message">Zsynchronizowano w %1$d ruch(ach)!</string>
+    <string name="circles_win_title">Rozwiązano!</string>
+</resources>

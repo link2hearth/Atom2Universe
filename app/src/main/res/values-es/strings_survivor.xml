@@ -146,4 +146,5 @@
     <string name="survivor_weapon_desc_bomb">Lanza bombas que explotan al impactar</string>
     <string name="survivor_weapon_desc_chain_lightning">Rayo que salta entre enemigos</string>
     <string name="survivor_weapon_desc_orbital">Orbes que orbitan a tu alrededor y disparan a enemigos</string>
+    <string name="survivor_revived">✦ ¡REVIVIDO! ✦</string>
 </resources>

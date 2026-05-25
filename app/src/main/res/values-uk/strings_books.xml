@@ -46,4 +46,12 @@
     <string name="book_shelf_delete_confirm">Видалити цю бібліотеку та всі її записи?</string>
     <string name="book_shelf_books_count">%1$d книг</string>
     <string name="book_shelf_tree_empty">У цій бібліотеці немає книг.</string>
+    <string name="book_reader_bookmark_added">Закладку додано</string>
+    <string name="book_reader_bookmark_removed">Закладку видалено</string>
+    <string name="book_reader_bookmarks">Закладки</string>
+    <string name="book_reader_bookmarks_clear">Очистити все</string>
+    <string name="book_reader_bookmarks_cleared">Усі закладки видалено</string>
+    <string name="book_reader_no_bookmarks">Закладок ще немає. Довге натискання на абзац — додати закладку.</string>
+    <string name="book_shelf_section_root">(Інші книги)</string>
+    <string name="book_toggle_view">Змінити вигляд</string>
 </resources>

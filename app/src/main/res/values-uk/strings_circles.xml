@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Назад</string>
+    <string name="circles_btn_again">Грати знову</string>
+    <string name="circles_btn_hint">Підказка</string>
+    <string name="circles_btn_new">Новий</string>
+    <string name="circles_btn_next">Наступний рівень</string>
+    <string name="circles_btn_restart">Перезапуск</string>
+    <string name="circles_diff_easy">Легкий</string>
+    <string name="circles_diff_hard">Важкий</string>
+    <string name="circles_diff_medium">Середній</string>
+    <string name="circles_hint_default">Потрібна допомога? Натисніть «Підказка», щоб зіграти найкращий хід автоматично. Підказка вимикає нагороду.</string>
+    <string name="circles_hint_solved">Головоломку розгадано! Починайте нову, щоб продовжити.</string>
+    <string name="circles_hint_used">Підказку використано — нагороди немає.</string>
+    <string name="circles_hub_desc">Обертайте кільця, щоб вирівняти всі кольори</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Ходи:</string>
+    <string name="circles_label_reward">Нагорода:</string>
+    <string name="circles_label_seed">Сід:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d нейтрино!</string>
+    <string name="circles_toast_reward_disabled">Circles: нагороди немає — підказку використано.</string>
+    <string name="circles_win_message">Синхронізовано за %1$d хід(ів)!</string>
+    <string name="circles_win_title">Розгадано!</string>
+</resources>

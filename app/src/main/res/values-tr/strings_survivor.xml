@@ -146,4 +146,5 @@
     <string name="survivor_weapon_desc_bomb">Çarpma anında patlayan bombalar atar</string>
     <string name="survivor_weapon_desc_chain_lightning">Düşmanlar arasında zincirleme yapan şimşek</string>
     <string name="survivor_weapon_desc_orbital">Etrafınızda dönen ve düşmanlara ateş eden küreler</string>
+    <string name="survivor_revived">✦ YENİDEN DOĞDU! ✦</string>
 </resources>

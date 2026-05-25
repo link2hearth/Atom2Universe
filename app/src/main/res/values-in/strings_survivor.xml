@@ -146,4 +146,5 @@
     <string name="survivor_weapon_desc_bomb">Melempar bom yang meledak saat benturan</string>
     <string name="survivor_weapon_desc_chain_lightning">Petir yang melompat antar musuh</string>
     <string name="survivor_weapon_desc_orbital">Bola yang mengorbit di sekitarmu dan menembak musuh</string>
+    <string name="survivor_revived">✦ DIHIDUPKAN KEMBALI! ✦</string>
 </resources>

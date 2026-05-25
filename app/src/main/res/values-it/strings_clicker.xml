@@ -172,4 +172,14 @@
     <string name="crypto_the_line_widget_toggle_desc">Mostra/nascondi widget The Line</string>
     <string name="crypto_the_line_widget_opacity_label">Opacità widget The Line</string>
     <string name="crypto_banner_toggle_the_line_label">Mostra pulsante The Line</string>
+    <string name="clicker_factory_effect_apc">+%d%% APC</string>
+    <string name="clicker_factory_effect_aps">+%d%% APS</string>
+    <string name="clicker_factory_effect_mixed">+%1$d%% APS  +%2$d%% APC</string>
+    <string name="clicker_factory_fusion_reactor_name">Reattore a fusione</string>
+    <string name="clicker_factory_hadron_collider_name">Collisore di adroni</string>
+    <string name="clicker_factory_plasma_catalyst_name">Catalizzatore al plasma</string>
+    <string name="clicker_factory_proton_accel_name">Acceleratore di protoni</string>
+    <string name="clicker_factory_proton_injector_name">Iniettore di protoni</string>
+    <string name="clicker_factory_section">Fabbriche di particelle</string>
+    <string name="clicker_factory_synchrotron_name">Sincrotrone</string>
 </resources>

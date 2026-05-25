@@ -31,4 +31,10 @@
     <string name="comics_clear_all_msg">Tüm çizgi romanlar ve kütüphaneler listeden kaldırılsın mı?</string>
     <string name="comics_rescanning_title">Yeniden taranıyor…</string>
     <string name="comics_toggle_view">Görünümü değiştir</string>
+    <string name="comics_section_root">(Diğer çizgi romanlar)</string>
+    <string name="comics_series_count">%1$d çizgi roman</string>
+    <string name="comics_storage_perm_grant">Erişim ver</string>
+    <string name="comics_storage_perm_msg">Tam depolama erişimi, uygulamanın kitaplığını çok daha hızlı taramasını sağlar.\n\nAtlayıp yine de tarayabilirsin.</string>
+    <string name="comics_storage_perm_skip">Yine de tara</string>
+    <string name="comics_storage_perm_title">Kitaplık taramasını hızlandır</string>
 </resources>

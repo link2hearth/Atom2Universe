@@ -77,4 +77,9 @@
     <string name="audio_editor_error_generic">Hata: %1$s</string>
     <string name="audio_editor_error_no_data">Veri kaydedilmedi</string>
     <string name="audio_editor_error_write">Yazma hatası: %1$s</string>
+    <string name="mic_recording_action_stop_notif">Kaydı durdur</string>
+    <string name="mic_recording_channel_description">Mikrofon kaydını arka planda çalışır durumda tutar</string>
+    <string name="mic_recording_channel_name">Mikrofon Kaydı</string>
+    <string name="mic_recording_notif_text">Mikrofon kaydı aktif</string>
+    <string name="mic_recording_notif_title">Kayıt devam ediyor</string>
 </resources>

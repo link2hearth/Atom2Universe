@@ -46,4 +46,12 @@
     <string name="book_shelf_delete_confirm">Deze bibliotheek en alle vermeldingen verwijderen?</string>
     <string name="book_shelf_books_count">%1$d boeken</string>
     <string name="book_shelf_tree_empty">Geen boeken in deze bibliotheek.</string>
+    <string name="book_reader_bookmark_added">Bladwijzer toegevoegd</string>
+    <string name="book_reader_bookmark_removed">Bladwijzer verwijderd</string>
+    <string name="book_reader_bookmarks">Bladwijzers</string>
+    <string name="book_reader_bookmarks_clear">Alles wissen</string>
+    <string name="book_reader_bookmarks_cleared">Alle bladwijzers verwijderd</string>
+    <string name="book_reader_no_bookmarks">Nog geen bladwijzers. Houd een alinea ingedrukt om er een toe te voegen.</string>
+    <string name="book_shelf_section_root">(Andere boeken)</string>
+    <string name="book_toggle_view">Weergave wisselen</string>
 </resources>

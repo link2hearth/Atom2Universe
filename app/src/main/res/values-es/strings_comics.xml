@@ -31,4 +31,10 @@
     <string name="comics_clear_all_msg">Eliminar todos los comics y bibliotecas de la lista?</string>
     <string name="comics_rescanning_title">Reescaneando…</string>
     <string name="comics_toggle_view">Cambiar vista</string>
+    <string name="comics_section_root">(Otros cómics)</string>
+    <string name="comics_series_count">%1$d cómics</string>
+    <string name="comics_storage_perm_grant">Conceder acceso</string>
+    <string name="comics_storage_perm_msg">El acceso completo al almacenamiento permite escanear la biblioteca mucho más rápido.\n\nTambién puedes omitir y escanear de todas formas.</string>
+    <string name="comics_storage_perm_skip">Escanear de todas formas</string>
+    <string name="comics_storage_perm_title">Acelerar escaneo de biblioteca</string>
 </resources>

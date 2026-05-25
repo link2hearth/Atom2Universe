@@ -46,4 +46,12 @@
     <string name="book_shelf_delete_confirm">Hapus pustaka ini dan semua entrinya?</string>
     <string name="book_shelf_books_count">%1$d buku</string>
     <string name="book_shelf_tree_empty">Tidak ada buku di pustaka ini.</string>
+    <string name="book_reader_bookmark_added">Penanda ditambahkan</string>
+    <string name="book_reader_bookmark_removed">Penanda dihapus</string>
+    <string name="book_reader_bookmarks">Penanda</string>
+    <string name="book_reader_bookmarks_clear">Hapus semua</string>
+    <string name="book_reader_bookmarks_cleared">Semua penanda dihapus</string>
+    <string name="book_reader_no_bookmarks">Belum ada penanda. Tekan lama paragraf untuk menambahkan.</string>
+    <string name="book_shelf_section_root">(Buku lainnya)</string>
+    <string name="book_toggle_view">Ganti tampilan</string>
 </resources>

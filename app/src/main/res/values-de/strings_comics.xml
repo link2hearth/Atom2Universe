@@ -31,4 +31,10 @@
     <string name="comics_clear_all_msg">Alle Comics und Bibliotheken aus der Liste entfernen?</string>
     <string name="comics_rescanning_title">Wird erneut gescannt…</string>
     <string name="comics_toggle_view">Ansicht wechseln</string>
+    <string name="comics_section_root">(Andere Comics)</string>
+    <string name="comics_series_count">%1$d Comics</string>
+    <string name="comics_storage_perm_grant">Zugriff gewähren</string>
+    <string name="comics_storage_perm_msg">Vollständiger Speicherzugriff ermöglicht deutlich schnelleres Scannen der Bibliothek. Ohne ihn wird eine langsamere Methode verwendet.\n\nDu kannst auch überspringen und trotzdem scannen.</string>
+    <string name="comics_storage_perm_skip">Trotzdem scannen</string>
+    <string name="comics_storage_perm_title">Bibliotheksscan beschleunigen</string>
 </resources>

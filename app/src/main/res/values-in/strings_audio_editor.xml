@@ -77,4 +77,9 @@
     <string name="audio_editor_error_generic">Kesalahan: %1$s</string>
     <string name="audio_editor_error_no_data">Tidak ada data direkam</string>
     <string name="audio_editor_error_write">Kesalahan tulis: %1$s</string>
+    <string name="mic_recording_action_stop_notif">Hentikan rekaman</string>
+    <string name="mic_recording_channel_description">Menjaga rekaman mikrofon tetap berjalan di latar belakang</string>
+    <string name="mic_recording_channel_name">Rekaman Mikrofon</string>
+    <string name="mic_recording_notif_text">Rekaman mikrofon aktif</string>
+    <string name="mic_recording_notif_title">Sedang merekam</string>
 </resources>

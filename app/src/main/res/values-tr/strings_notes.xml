@@ -108,4 +108,5 @@
     <string name="notes_edit_category">Kategoriyi düzenle</string>
     <string name="hub_notes_title">Notlar</string>
     <string name="hub_notes_desc">Not alın ve fikirlerinizi yönetin</string>
+    <string name="notes_backlinks_header">Şurada geçiyor (%d)</string>
 </resources>

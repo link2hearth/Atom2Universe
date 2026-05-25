@@ -31,4 +31,10 @@
     <string name="comics_clear_all_msg">Rimuovere tutti i fumetti e le librerie dalla lista?</string>
     <string name="comics_rescanning_title">Scansione in corso…</string>
     <string name="comics_toggle_view">Cambia visualizzazione</string>
+    <string name="comics_section_root">(Altri fumetti)</string>
+    <string name="comics_series_count">%1$d fumetti</string>
+    <string name="comics_storage_perm_grant">Concedi accesso</string>
+    <string name="comics_storage_perm_msg">L\'accesso completo allo spazio di archiviazione permette di scansionare la libreria molto più velocemente.\n\nPuoi anche saltare e scansionare comunque.</string>
+    <string name="comics_storage_perm_skip">Scansiona comunque</string>
+    <string name="comics_storage_perm_title">Accelera la scansione della libreria</string>
 </resources>

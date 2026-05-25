@@ -31,4 +31,10 @@
     <string name="comics_clear_all_msg">Remover todos os quadrinhos e bibliotecas da lista?</string>
     <string name="comics_rescanning_title">Reverificando…</string>
     <string name="comics_toggle_view">Alternar visualização</string>
+    <string name="comics_section_root">(Outros quadrinhos)</string>
+    <string name="comics_series_count">%1$d quadrinhos</string>
+    <string name="comics_storage_perm_grant">Conceder acesso</string>
+    <string name="comics_storage_perm_msg">Acesso total ao armazenamento permite escanear a biblioteca muito mais rápido.\n\nVocê também pode pular e escanear mesmo assim.</string>
+    <string name="comics_storage_perm_skip">Escanear mesmo assim</string>
+    <string name="comics_storage_perm_title">Acelerar escaneamento</string>
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_back">Voltar</string>
+    <string name="circles_btn_again">Jogar novamente</string>
+    <string name="circles_btn_hint">Dica</string>
+    <string name="circles_btn_new">Novo</string>
+    <string name="circles_btn_next">Próximo nível</string>
+    <string name="circles_btn_restart">Reiniciar</string>
+    <string name="circles_diff_easy">Fácil</string>
+    <string name="circles_diff_hard">Difícil</string>
+    <string name="circles_diff_medium">Médio</string>
+    <string name="circles_hint_default">Precisa de ajuda? Toque em Dica para jogar o melhor movimento automaticamente. Usar dica desativa a recompensa.</string>
+    <string name="circles_hint_solved">Quebra-cabeça resolvido! Inicie um novo para continuar.</string>
+    <string name="circles_hint_used">Dica usada — sem recompensa para este quebra-cabeça.</string>
+    <string name="circles_hub_desc">Gire os anéis para alinhar todas as cores</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_label_moves">Movimentos:</string>
+    <string name="circles_label_reward">Recompensa:</string>
+    <string name="circles_label_seed">Seed:</string>
+    <string name="circles_title">Circles</string>
+    <string name="circles_toast_reward">Circles: +%1$d neutrino(s)!</string>
+    <string name="circles_toast_reward_disabled">Circles: sem recompensa — dica foi usada.</string>
+    <string name="circles_win_message">Sincronizado em %1$d movimento(s)!</string>
+    <string name="circles_win_title">Resolvido!</string>
+</resources>

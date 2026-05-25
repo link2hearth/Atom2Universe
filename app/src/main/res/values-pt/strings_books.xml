@@ -46,4 +46,12 @@
     <string name="book_shelf_delete_confirm">Excluir esta biblioteca e todas as suas entradas?</string>
     <string name="book_shelf_books_count">%1$d livros</string>
     <string name="book_shelf_tree_empty">Nenhum livro nesta biblioteca.</string>
+    <string name="book_reader_bookmark_added">Marcador adicionado</string>
+    <string name="book_reader_bookmark_removed">Marcador removido</string>
+    <string name="book_reader_bookmarks">Marcadores</string>
+    <string name="book_reader_bookmarks_clear">Limpar tudo</string>
+    <string name="book_reader_bookmarks_cleared">Todos os marcadores removidos</string>
+    <string name="book_reader_no_bookmarks">Nenhum marcador ainda. Pressione longo em um parágrafo para adicionar.</string>
+    <string name="book_shelf_section_root">(Outros livros)</string>
+    <string name="book_toggle_view">Alternar visualização</string>
 </resources>
