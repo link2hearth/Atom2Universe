@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="midi_nav_library">Βιβλιοθήκη</string>
+    <string name="midi_nav_playlists">Λίστες αναπαραγωγής</string>
+    <string name="midi_nav_now_playing">Τώρα παίζει</string>
+    <string name="midi_nav_practice">Εξάσκηση</string>
+    <string name="midi_no_track_playing">Κανένα κομμάτι σε αναπαραγωγή</string>
+    <string name="midi_folder_scan_complete">Σάρωση ολοκληρώθηκε: %1$d αρχεία MIDI βρέθηκαν</string>
+    <string name="midi_library_empty">Δεν υπάρχουν αρχεία MIDI. Επιλέξτε φάκελο για σάρωση.</string>
+    <string name="midi_select_soundfont">Συνθεσιοποιητής</string>
+    <string name="midi_select_folder">Επιλογή φακέλου MIDI</string>
+    <string name="midi_refresh_library">Ανανέωση βιβλιοθήκης</string>
+    <string name="midi_clear_library">Εκκαθάριση βιβλιοθήκης</string>
+    <string name="midi_clear_library_confirm">Είστε σίγουροι ότι θέλετε να εκκαθαρίσετε ολόκληρη τη βιβλιοθήκη MIDI;</string>
+    <string name="midi_library_cleared">Η βιβλιοθήκη εκκαθαρίστηκε</string>
+    <string name="midi_library_refreshing">Ανανέωση βιβλιοθήκης…</string>
+    <string name="midi_action_previous">Προηγούμενο</string>
+    <string name="midi_action_next">Επόμενο</string>
+    <string name="midi_action_shuffle">Τυχαία αναπαραγωγή</string>
+    <string name="midi_action_repeat">Επανάληψη</string>
+    <string name="midi_shuffle_scope_title">Εύρος τυχαίας αναπαραγωγής</string>
+    <string name="midi_shuffle_scope_current">Τρέχον άλμπουμ/φάκελος</string>
+    <string name="midi_shuffle_scope_artist">Τρέχων καλλιτέχνης (όλα τα άλμπουμ)</string>
+    <string name="midi_shuffle_scope_library">Ολόκληρη η βιβλιοθήκη</string>
+    <string name="midi_channels_active">Ενεργά κομμάτια</string>
+    <string name="midi_no_channels">Δεν εντοπίστηκαν κομμάτια</string>
+    <string name="midi_mute_track">Σίγαση κομματιού</string>
+    <string name="midi_unmute_track">Κατάργηση σίγασης κομματιού</string>
+    <string name="midi_toggle_keyboard">Εμφάνιση/απόκρυψη πληκτρολογίου</string>
+    <string name="midi_practice_mode">Λειτουργία εξάσκησης</string>
+    <string name="midi_refresh_keyboards">Ανανέωση πληκτρολογίων</string>
+    <string name="midi_keyboards_refreshed">Τα πληκτρολόγια ανανεώθηκαν</string>
+    <string name="midi_two_hands_practice">Εξάσκηση με δύο χέρια</string>
+    <string name="midi_favorite">Αγαπημένο</string>
+    <string name="midi_added_to_favorites">Προστέθηκε στα αγαπημένα</string>
+    <string name="midi_removed_from_favorites">Αφαιρέθηκε από τα αγαπημένα</string>
+    <string name="midi_create_playlist">Νέα λίστα αναπαραγωγής</string>
+    <string name="midi_playlist_name_hint">Όνομα λίστας αναπαραγωγής</string>
+    <string name="midi_create">Δημιουργία</string>
+    <string name="midi_cancel">Ακύρωση</string>
+    <string name="midi_playlist_name_empty">Το όνομα δεν μπορεί να είναι κενό</string>
+    <string name="midi_playlist_created">Λίστα αναπαραγωγής δημιουργήθηκε: %1$s</string>
+    <string name="midi_rename">Μετονομασία</string>
+    <string name="midi_delete">Διαγραφή</string>
+    <string name="midi_rename_playlist">Μετονομασία λίστας αναπαραγωγής</string>
+    <string name="midi_playlist_renamed">Η λίστα αναπαραγωγής μετονομάστηκε</string>
+    <string name="midi_delete_playlist">Διαγραφή λίστας αναπαραγωγής</string>
+    <string name="midi_delete_playlist_confirm">Διαγραφή λίστας αναπαραγωγής «%1$s»;</string>
+    <string name="midi_playlist_deleted">Η λίστα αναπαραγωγής διαγράφηκε</string>
+    <string name="midi_clear_playlist">Εκκαθάριση λίστας αναπαραγωγής</string>
+    <string name="midi_clear_playlist_confirm">Εκκαθάριση όλων των κομματιών από τη «%1$s»;</string>
+    <string name="midi_clear">Εκκαθάριση</string>
+    <string name="midi_playlist_cleared">Η λίστα αναπαραγωγής εκκαθαρίστηκε</string>
+    <plurals name="midi_track_count">
+        <item quantity="one">%d κομμάτι</item>
+        <item quantity="other">%d κομμάτια</item>
+    </plurals>
+    <string name="midi_playlists_empty">Δεν υπάρχουν λίστες αναπαραγωγής.\nΔημιουργήστε μία!</string>
+    <string name="midi_playlist_empty">Αυτή η λίστα αναπαραγωγής είναι κενή.</string>
+    <string name="midi_shuffle_play">Τυχαία αναπαραγωγή</string>
+    <string name="midi_remove_from_playlist">Αφαίρεση από τη λίστα αναπαραγωγής</string>
+    <string name="midi_track_removed">Το κομμάτι αφαιρέθηκε</string>
+    <string name="midi_add_to_playlist">Προσθήκη σε λίστα αναπαραγωγής</string>
+    <string name="midi_add_to_playlist_title">Προσθήκη «%1$s»</string>
+    <string name="midi_new_playlist">+ Νέα λίστα αναπαραγωγής</string>
+    <string name="midi_loading_playlists">Φόρτωση…</string>
+    <string name="midi_track_added_to_playlist">Προστέθηκε στη %1$s</string>
+    <string name="midi_track_already_in_playlist">Υπάρχει ήδη σε αυτή τη λίστα</string>
+    <string name="midi_track_info">Πληροφορίες</string>
+    <string name="midi_info_loading">Ανάλυση αρχείου…</string>
+    <string name="midi_scan_loading_title">Σάρωση…</string>
+    <string name="midi_scan_loading_progress">%1$d / %2$d αρχεία</string>
+    <string name="midi_scan_loading_counting">Καταμέτρηση αρχείων…</string>
+    <string name="midi_audio_settings">Ρυθμίσεις ήχου</string>
+    <string name="midi_audio_normalization">Κανονικοποίηση έντασης</string>
+    <string name="midi_audio_normalization_desc">Μειώνει τις κορυφές έντασης για αποφυγή κορεσμού</string>
+    <string name="midi_audio_master_gain">Κύρια ένταση</string>
+    <string name="midi_audio_reverb">Αντήχηση</string>
+    <string name="midi_reverb_off">Απενεργοποιημένη</string>
+    <string name="midi_reverb_large_hall">Μεγάλη αίθουσα</string>
+    <string name="midi_reverb_hall">Αίθουσα</string>
+    <string name="midi_reverb_chamber">Θάλαμος</string>
+    <string name="midi_reverb_room">Δωμάτιο</string>
+    <string name="midi_sf2_settings">Μηχανή SF2</string>
+    <string name="midi_sf2_settings_desc">Ρυθμίσεις προσαρμοσμένου συνθεσιοποιητή SoundFont</string>
+    <string name="midi_sf2_velocity_curve">Καμπύλη ταχύτητας</string>
+    <string name="midi_sf2_velocity_linear">Γραμμικό</string>
+    <string name="midi_sf2_velocity_linear_desc">Άμεση αντιστοίχιση (επίπεδη απόκριση)</string>
+    <string name="midi_sf2_velocity_concave">Κοίλο</string>
+    <string name="midi_sf2_velocity_concave_desc">Περισσότερος έλεγχος σε χαμηλές ταχύτητες (συνιστάται)</string>
+    <string name="midi_sf2_velocity_soft">Απαλό</string>
+    <string name="midi_sf2_velocity_soft_desc">Πολύ ήπιο σε χαμηλές ταχύτητες (εκφραστικό πιάνο)</string>
+    <string name="midi_sf2_velocity_hard">Σκληρό</string>
+    <string name="midi_sf2_velocity_hard_desc">Επιθετική απόκριση (τύμπανα, δυναμικοί ήχοι)</string>
+    <string name="midi_eq_title">Ισοσταθμιστής</string>
+    <string name="midi_eq_preset_flat">Επίπεδο</string>
+    <string name="midi_eq_preset_rock">Rock</string>
+    <string name="midi_eq_preset_jazz">Jazz</string>
+    <string name="midi_eq_preset_piano">Πιάνο</string>
+    <string name="midi_eq_preset_bass">Ενίσχυση μπάσου</string>
+    <string name="midi_player_not_connected">Ο αναπαραγωγέας δεν είναι συνδεδεμένος</string>
+    <string name="midi_no_track_current">Δεν υπάρχει τρέχον κομμάτι</string>
+    <string name="midi_no_tracks_found">Δεν βρέθηκαν κομμάτια</string>
+    <string name="midi_error_message">Σφάλμα: %1$s</string>
+    <string name="midi_service_not_connected">Η υπηρεσία αναπαραγωγής δεν είναι συνδεδεμένη</string>
+    <string name="midi_importing_soundfont">Εισαγωγή SoundFont…</string>
+    <string name="midi_scanning_folder">Σάρωση φακέλου MIDI…</string>
+    <string name="midi_synthesizer_selection">Συνθεσιοποιητής</string>
+    <string name="midi_synth_sonivox">Sonivox (ενσωματωμένο)</string>
+    <string name="midi_synth_sonivox_desc">Ελαφρύς ενσωματωμένος συνθεσιοποιητής με ήχους General MIDI. Δεν απαιτούνται εξωτερικά αρχεία.</string>
+    <string name="midi_synth_sf2_tip">💡 Συμβουλή: Για καλύτερα αποτελέσματα, χρησιμοποιήστε ένα ποιοτικό αρχείο SF2 με δείγματα 44kHz. Προτιμήστε SoundFont μεταξύ 100 και 500 MB ανάλογα με τη συσκευή σας. Μικρά συμπιεσμένα SoundFont ενδέχεται να έχουν προβλήματα ήχου σε γρήγορα αποσπάσματα.</string>
+    <string name="midi_synth_import_sf2">Εισαγωγή SF2</string>
+    <string name="midi_synth_change_sf2">Αλλαγή SF2</string>
+    <string name="midi_synth_remove_sf2">Αφαίρεση</string>
+    <string name="midi_synth_switched_sonivox">Μετάβαση στον συνθεσιοποιητή Sonivox</string>
+    <string name="midi_synth_switched_sf2">Μετάβαση στο SoundFont: %1$s</string>
+    <string name="midi_synth_sf2_removed">Το SoundFont αφαιρέθηκε</string>
+    <string name="midi_synth_hybrid">Υβριδικό (SF2 + Sonivox)</string>
+    <string name="midi_synth_switched_hybrid">Μετάβαση στη λειτουργία Υβριδικού με %1$d όργανα SF2</string>
+    <string name="midi_synth_fluidsynth">FluidSynth</string>
+    <string name="midi_synth_fluidsynth_desc">Αναγνωρισμένη μηχανή σύνθεσης ανοικτού κώδικα. Εισαγόμενη ως εγγενής βιβλιοθήκη.</string>
+    <string name="midi_synth_switched_fluidsynth">Μετάβαση στο FluidSynth: %1$s</string>
+    <string name="midi_synth_sf2_engines_header">Μηχανές SoundFont</string>
+    <string name="midi_synth_sf2_engines_subtitle">Απαιτούν αρχείο SoundFont (.sf2)</string>
+    <string name="midi_synth_a2u">A2U (Πειραματικό)</string>
+    <string name="midi_synth_a2u_desc">Ενσωματωμένη μηχανή σύνθεσης, φτιαγμένη για αυτήν την εφαρμογή.</string>
+    <string name="midi_synth_active_badge">ΕΝΕΡΓΟ</string>
+    <string name="midi_synth_no_soundfont">Δεν έχει εισαχθεί SoundFont</string>
+    <string name="midi_synth_soundfont_section">SoundFont</string>
+    <string name="midi_synth_hybrid_mode">Υβριδική λειτουργία</string>
+    <string name="practice_marker_added">Δείκτης προστέθηκε: %1$s</string>
+    <string name="practice_marker_position">Θέση δείκτη: %1$s</string>
+    <string name="practice_accompaniment">Συνοδεία</string>
+    <string name="practice_i_play">Παίζω εγώ</string>
+    <string name="practice_keyboard_leds">LED πληκτρολογίου</string>
+    <string name="practice_mute_led_sound">Σίγαση ήχου LED</string>
+    <string name="practice_mute_internal_synth">Σίγαση εσωτερικού συνθ. για νότες πληκτρολογίου</string>
+    <string name="practice_speed">Ταχύτητα</string>
+    <string name="practice_speed_min">0,1x</string>
+    <string name="practice_speed_max">1,0x</string>
+    <string name="practice_time_zero">0:00</string>
+    <string name="practice_time_remaining">-%1$s</string>
+    <string name="practice_free_mode">Ελεύθερο παίξιμο</string>
+    <string name="practice_left_hand_only">Μόνο αριστερό χέρι</string>
+    <string name="practice_right_hand_only">Μόνο δεξί χέρι</string>
+    <string name="practice_both_hands">Και τα δύο χέρια</string>
+    <string name="practice_left_hand_sound">Ήχος αριστερού χεριού</string>
+    <string name="practice_right_hand_sound">Ήχος δεξιού χεριού</string>
+    <string name="practice_both_hands_sound">Ήχος και των δύο χεριών</string>
+    <string name="practice_octave_down">Μείωση οκτάβας</string>
+    <string name="practice_octave_up">Αύξηση οκτάβας</string>
+    <string name="practice_less_octaves">Λιγότερες οκτάβες</string>
+    <string name="practice_more_octaves">Περισσότερες οκτάβες</string>
+    <string name="practice_octave_count">%d οκτ.</string>
+    <string name="practice_current_instrument">%1$d: %2$s</string>
+    <string name="practice_select_instrument">Επιλογή οργάνου</string>
+    <string name="practice_sf2_load_error">Αδύνατη η φόρτωση SF2 SoundFont. Ελέγξτε τις ρυθμίσεις συνθεσιοποιητή.</string>
+    <string name="practice_wait_mode">Λειτουργία αναμονής</string>
+    <string name="practice_sheet_music">Παρτιτούρα</string>
+    <string name="practice_recording_enabled">Εγγραφή εξάσκησης ενεργοποιήθηκε</string>
+    <string name="practice_recording_enabled_cleared">Εγγραφή εξάσκησης ενεργοποιήθηκε (προηγούμενη λήψη διαγράφηκε)</string>
+    <string name="practice_recording_filename">Εγγραφή_%1$s</string>
+    <string name="practice_volume_percent">%1$d%%</string>
+    <string name="practice_countdown">Καθυστέρηση εκκίνησης</string>
+    <string name="practice_countdown_title">Καθυστέρηση εκκίνησης</string>
+    <string name="practice_countdown_description">Ρυθμίστε την καθυστέρηση πριν την έναρξη του MIDI</string>
+    <string name="practice_countdown_seconds">%d δευτερόλεπτα</string>
+    <string name="practice_countdown_disabled">Απενεργοποιημένο</string>
+    <string name="practice_countdown_start_on_play">Εκκίνηση όταν αρχίσω να παίζω</string>
+    <string name="practice_countdown_start_on_play_desc">Το MIDI θα ξεκινήσει μόλις παίξετε την πρώτη σας νότα</string>
+    <string name="practice_countdown_active">Εκκίνηση σε %d…</string>
+    <string name="practice_countdown_waiting">Αναμονή για να παίξετε…</string>
+    <string name="practice_countdown_cancelled">Αντίστροφη μέτρηση ακυρώθηκε</string>
+    <string name="practice_recording_disabled">Εγγραφή εξάσκησης απενεργοποιήθηκε</string>
+    <string name="practice_wait_mode_enabled">Λειτουργία αναμονής ενεργοποιήθηκε</string>
+    <string name="practice_wait_mode_disabled">Λειτουργία αναμονής απενεργοποιήθηκε</string>
+    <string name="practice_switch_to_free_mode_title">Μετάβαση στο Ελεύθερο παίξιμο;</string>
+    <string name="practice_switch_to_free_mode_message">Αυτό θα αφαιρέσει το τρέχον αρχείο MIDI. Μπορείτε να το ξαναφορτώσετε από τη βιβλιοθήκη.</string>
+    <string name="practice_switch_confirm">Μετάβαση</string>
+    <string name="practice_accompaniment_disabled_in_wait_mode">Ενορχήστρωση απενεργοποιημένη στη λειτουργία αναμονής</string>
+    <string name="practice_hold_duration_validation">Επαλήθευση κρατημένης νότας</string>
+    <string name="practice_hold_duration_enabled">Επαλήθευση κράτησης ενεργοποιήθηκε</string>
+    <string name="practice_hold_duration_disabled">Επαλήθευση κράτησης απενεργοποιήθηκε</string>
+    <string name="practice_timing_tolerance">Ανοχή χρονισμού</string>
+    <string name="practice_timing_tolerance_strict">Αυστηρό (30ms)</string>
+    <string name="practice_timing_tolerance_normal">Κανονικό (60ms)</string>
+    <string name="practice_timing_tolerance_relaxed">Χαλαρό (120ms)</string>
+    <string name="practice_timing_tolerance_very_relaxed">Πολύ χαλαρό (200ms)</string>
+    <string name="practice_visual_style">Οπτικό στυλ</string>
+    <string name="practice_scoring_display">Εμφάνιση βαθμολογίας</string>
+    <string name="practice_scoring_display_title">Εμφάνιση βαθμολογίας</string>
+    <string name="practice_scoring_preset_encouragement">Ενθάρρυνση</string>
+    <string name="practice_scoring_preset_full">Πλήρη στατιστικά</string>
+    <string name="practice_scoring_preset_minimal">Ελάχιστο</string>
+    <string name="practice_scoring_preset_custom">Προσαρμοσμένο</string>
+    <string name="practice_scoring_show_score">Βαθμολογία</string>
+    <string name="practice_scoring_show_accuracy">Ακρίβεια</string>
+    <string name="practice_scoring_show_streak">Τρέχουσα σειρά</string>
+    <string name="practice_scoring_show_best_streak">Καλύτερη σειρά</string>
+    <string name="practice_scoring_show_good_notes">Καλές νότες</string>
+    <string name="practice_scoring_show_perfect_notes">Τέλειες νότες</string>
+    <string name="practice_scoring_show_missed_notes">Χαμένες νότες</string>
+    <string name="practice_scoring_show_combo">Πολλαπλασιαστής combo</string>
+    <string name="practice_scoring_show_grade">Βαθμός</string>
+    <string name="practice_scoring_compact">Συμπαγής λειτουργία</string>
+    <string name="practice_scoring_animations">Κινούμενα σχέδια</string>
+    <string name="practice_scoring_streak_popups">Αναδυόμενα σειράς</string>
+    <string name="practice_scoring_disabled">Εμφάνιση βαθμολογίας απενεργοποιήθηκε</string>
+    <string name="practice_scoring_config_saved">Εμφάνιση βαθμολογίας ενημερώθηκε</string>
+    <string name="practice_results_title">Συνεδρία ολοκληρώθηκε</string>
+    <string name="practice_results_accuracy">Ακρίβεια</string>
+    <string name="practice_results_perfect">Τέλειες νότες</string>
+    <string name="practice_results_good">Καλές νότες</string>
+    <string name="practice_results_missed">Χαμένες νότες</string>
+    <string name="practice_results_wrong">Λάθος νότες</string>
+    <string name="practice_results_best_streak">Καλύτερη σειρά</string>
+    <string name="practice_results_close">Κλείσιμο</string>
+    <string name="midi_keyboard_connected">Πληκτρολόγιο MIDI συνδέθηκε</string>
+    <string name="midi_keyboard_settings">Ρυθμίσεις πληκτρολογίου MIDI</string>
+    <string name="midi_keyboard_info_section">Πληροφορίες</string>
+    <string name="midi_keyboard_config_section">Διαμόρφωση</string>
+    <string name="midi_keyboard_name">Όνομα</string>
+    <string name="midi_keyboard_manufacturer">Κατασκευαστής</string>
+    <string name="midi_keyboard_connection">Σύνδεση</string>
+    <string name="midi_keyboard_connection_usb">USB</string>
+    <string name="midi_keyboard_connection_bluetooth">Bluetooth</string>
+    <string name="midi_keyboard_connection_virtual">Εικονική</string>
+    <string name="midi_keyboard_ports">Θύρες</string>
+    <string name="midi_keyboard_ports_format">%1$d εισόδους / %2$d εξόδους</string>
+    <string name="midi_keyboard_led_channel">Κανάλι LED</string>
+    <string name="midi_keyboard_octave_offset">Μετατόπιση οκτάβας LED</string>
+    <string name="midi_keyboard_octave_offset_desc">Μετατόπιση νοτών LED για αντιστοίχιση με το εύρος πληκτρολογίου σας</string>
+    <string name="midi_keyboard_octave_minus">Χαμηλότερη οκτάβα</string>
+    <string name="midi_keyboard_octave_plus">Υψηλότερη οκτάβα</string>
+    <string name="gm_instrument_unknown">Άγνωστο</string>
+    <string name="gm_drum_channel">Τύμπανα</string>
+    <string name="gm_percussion_format">Κρουστά %d</string>
+    <string name="gm_category_piano">Πιάνο</string>
+    <string name="gm_category_chromatic_percussion">Χρωματικά κρουστά</string>
+    <string name="gm_category_organ">Εκκλησιαστικό όργανο</string>
+    <string name="gm_category_guitar">Κιθάρα</string>
+    <string name="gm_category_bass">Μπάσο</string>
+    <string name="gm_category_strings">Έγχορδα</string>
+    <string name="gm_category_ensemble">Σύνολο</string>
+    <string name="gm_category_brass">Χάλκινα</string>
+    <string name="gm_category_reed">Γλωσσίδι</string>
+    <string name="gm_category_pipe">Αυλοί</string>
+    <string name="gm_category_synth_lead">Synth Lead</string>
+    <string name="gm_category_synth_pad">Synth Pad</string>
+    <string name="gm_category_synth_fx">Synth FX</string>
+    <string name="gm_category_ethnic">Εθνικά</string>
+    <string name="gm_category_percussive">Κρουστά</string>
+    <string name="gm_category_sound_fx">Ηχητικά εφέ</string>
+    <string name="gm_category_other">Άλλα</string>
+    <string name="gm_drum_35">Ακουστικό μπάσο τύμπανο</string>
+    <string name="gm_drum_36">Μπάσο τύμπανο 1</string>
+    <string name="gm_drum_37">Side Stick</string>
+    <string name="gm_drum_38">Ακουστικό Snare</string>
+    <string name="gm_drum_39">Παλαμάκι</string>
+    <string name="gm_drum_40">Ηλεκτρικό Snare</string>
+    <string name="gm_drum_41">Χαμηλό Floor Tom</string>
+    <string name="gm_drum_42">Κλειστό Hi-Hat</string>
+    <string name="gm_drum_43">Υψηλό Floor Tom</string>
+    <string name="gm_drum_44">Pedal Hi-Hat</string>
+    <string name="gm_drum_45">Χαμηλό Tom</string>
+    <string name="gm_drum_46">Ανοιχτό Hi-Hat</string>
+    <string name="gm_drum_47">Χαμηλό-Μεσαίο Tom</string>
+    <string name="gm_drum_48">Υψηλό-Μεσαίο Tom</string>
+    <string name="gm_drum_49">Crash Cymbal 1</string>
+    <string name="gm_drum_50">Υψηλό Tom</string>
+    <string name="gm_drum_51">Ride Cymbal 1</string>
+    <string name="gm_drum_52">Κινεζικό Cymbal</string>
+    <string name="gm_drum_53">Ride Bell</string>
+    <string name="gm_drum_54">Ταμπουρίνο</string>
+    <string name="gm_drum_55">Splash Cymbal</string>
+    <string name="gm_drum_56">Αγελαδάρι</string>
+    <string name="gm_drum_57">Crash Cymbal 2</string>
+    <string name="gm_drum_58">Vibraslap</string>
+    <string name="gm_drum_59">Ride Cymbal 2</string>
+    <string name="gm_drum_60">Υψηλό Bongo</string>
+    <string name="gm_drum_61">Χαμηλό Bongo</string>
+    <string name="gm_drum_62">Αμβλύ Υψηλό Conga</string>
+    <string name="gm_drum_63">Ανοιχτό Υψηλό Conga</string>
+    <string name="gm_drum_64">Χαμηλό Conga</string>
+    <string name="gm_drum_65">Υψηλό Timbale</string>
+    <string name="gm_drum_66">Χαμηλό Timbale</string>
+    <string name="gm_drum_67">Υψηλό Agogo</string>
+    <string name="gm_drum_68">Χαμηλό Agogo</string>
+    <string name="gm_drum_69">Cabasa</string>
+    <string name="gm_drum_70">Maracas</string>
+    <string name="gm_drum_71">Κοντό σφύριγμα</string>
+    <string name="gm_drum_72">Μακρύ σφύριγμα</string>
+    <string name="gm_drum_73">Κοντό Guiro</string>
+    <string name="gm_drum_74">Μακρύ Guiro</string>
+    <string name="gm_drum_75">Claves</string>
+    <string name="gm_drum_76">Υψηλό Woodblock</string>
+    <string name="gm_drum_77">Χαμηλό Woodblock</string>
+    <string name="gm_drum_78">Αμβλύ Cuica</string>
+    <string name="gm_drum_79">Ανοιχτό Cuica</string>
+    <string name="gm_drum_80">Αμβλύ Τρίγωνο</string>
+    <string name="gm_drum_81">Ανοιχτό Τρίγωνο</string>
+    <string-array name="gm_instruments">
+        <item>Ακουστικό Grand Πιάνο</item>
+        <item>Φωτεινό Ακουστικό Πιάνο</item>
+        <item>Ηλεκτρικό Grand Πιάνο</item>
+        <item>Honky-tonk Πιάνο</item>
+        <item>Ηλεκτρικό Πιάνο 1</item>
+        <item>Ηλεκτρικό Πιάνο 2</item>
+        <item>Τσέμπαλο</item>
+        <item>Clavinet</item>
+        <item>Celesta</item>
+        <item>Glockenspiel</item>
+        <item>Μουσικό κουτί</item>
+        <item>Vibraphone</item>
+        <item>Marimba</item>
+        <item>Ξυλόφωνο</item>
+        <item>Σωληνοειδείς καμπάνες</item>
+        <item>Dulcimer</item>
+        <item>Drawbar Organ</item>
+        <item>Κρουστό Organ</item>
+        <item>Rock Organ</item>
+        <item>Εκκλησιαστικό Organ</item>
+        <item>Reed Organ</item>
+        <item>Ακορντεόν</item>
+        <item>Αρμόνικα</item>
+        <item>Tango Ακορντεόν</item>
+        <item>Ακουστική κιθάρα (νάιλον)</item>
+        <item>Ακουστική κιθάρα (ατσάλι)</item>
+        <item>Ηλεκτρική κιθάρα (jazz)</item>
+        <item>Ηλεκτρική κιθάρα (clean)</item>
+        <item>Ηλεκτρική κιθάρα (muted)</item>
+        <item>Overdrive κιθάρα</item>
+        <item>Distortion κιθάρα</item>
+        <item>Αρμονικά κιθάρας</item>
+        <item>Ακουστικό μπάσο</item>
+        <item>Ηλεκτρικό μπάσο (δάχτυλο)</item>
+        <item>Ηλεκτρικό μπάσο (πένα)</item>
+        <item>Fretless μπάσο</item>
+        <item>Slap μπάσο 1</item>
+        <item>Slap μπάσο 2</item>
+        <item>Synth μπάσο 1</item>
+        <item>Synth μπάσο 2</item>
+        <item>Βιολί</item>
+        <item>Βιόλα</item>
+        <item>Τσέλο</item>
+        <item>Κοντραμπάσο</item>
+        <item>Tremolo έγχορδα</item>
+        <item>Pizzicato έγχορδα</item>
+        <item>Ορχηστρική άρπα</item>
+        <item>Τύμπανα</item>
+        <item>Σύνολο εγχόρδων 1</item>
+        <item>Σύνολο εγχόρδων 2</item>
+        <item>Synth έγχορδα 1</item>
+        <item>Synth έγχορδα 2</item>
+        <item>Χορωδία Ααχ</item>
+        <item>Φωνή Ουου</item>
+        <item>Synth φωνή</item>
+        <item>Ορχηστρικό χτύπημα</item>
+        <item>Τρομπέτα</item>
+        <item>Τρομπόνι</item>
+        <item>Τούμπα</item>
+        <item>Σιωπηλή τρομπέτα</item>
+        <item>Γαλλικό κόρνο</item>
+        <item>Τμήμα χαλκών</item>
+        <item>Synth χαλκά 1</item>
+        <item>Synth χαλκά 2</item>
+        <item>Σοπράνο σαξόφωνο</item>
+        <item>Άλτο σαξόφωνο</item>
+        <item>Τενόρο σαξόφωνο</item>
+        <item>Βαρύτονο σαξόφωνο</item>
+        <item>Όμποε</item>
+        <item>Αγγλικό κόρνο</item>
+        <item>Φαγκότο</item>
+        <item>Κλαρινέτο</item>
+        <item>Πίκολο</item>
+        <item>Φλάουτο</item>
+        <item>Ρεκόρντερ</item>
+        <item>Φλάουτο Pan</item>
+        <item>Φυσητό μπουκάλι</item>
+        <item>Shakuhachi</item>
+        <item>Σφύριχτρα</item>
+        <item>Ocarina</item>
+        <item>Lead 1 (τετράγωνο)</item>
+        <item>Lead 2 (πριονωτό)</item>
+        <item>Lead 3 (calliope)</item>
+        <item>Lead 4 (chiff)</item>
+        <item>Lead 5 (charang)</item>
+        <item>Lead 6 (φωνή)</item>
+        <item>Lead 7 (πέμπτες)</item>
+        <item>Lead 8 (μπάσο + lead)</item>
+        <item>Pad 1 (new age)</item>
+        <item>Pad 2 (ζεστό)</item>
+        <item>Pad 3 (polysynth)</item>
+        <item>Pad 4 (χορωδία)</item>
+        <item>Pad 5 (τόξο)</item>
+        <item>Pad 6 (μεταλλικό)</item>
+        <item>Pad 7 (halo)</item>
+        <item>Pad 8 (sweep)</item>
+        <item>FX 1 (βροχή)</item>
+        <item>FX 2 (soundtrack)</item>
+        <item>FX 3 (κρύσταλλο)</item>
+        <item>FX 4 (ατμόσφαιρα)</item>
+        <item>FX 5 (φωτεινότητα)</item>
+        <item>FX 6 (goblins)</item>
+        <item>FX 7 (ηχώ)</item>
+        <item>FX 8 (sci-fi)</item>
+        <item>Sitar</item>
+        <item>Banjo</item>
+        <item>Shamisen</item>
+        <item>Koto</item>
+        <item>Kalimba</item>
+        <item>Γκάιντα</item>
+        <item>Fiddle</item>
+        <item>Shanai</item>
+        <item>Tinkle Bell</item>
+        <item>Agogo</item>
+        <item>Τύμπανα ατσαλιού</item>
+        <item>Woodblock</item>
+        <item>Taiko τύμπανο</item>
+        <item>Melodic Tom</item>
+        <item>Synth τύμπανο</item>
+        <item>Αντίστροφο Cymbal</item>
+        <item>Θόρυβος δαχτυλίδι κιθάρας</item>
+        <item>Θόρυβος αναπνοής</item>
+        <item>Θαλάσσια ακτή</item>
+        <item>Κελάηδημα πουλιού</item>
+        <item>Ήχος τηλεφώνου</item>
+        <item>Ελικόπτερο</item>
+        <item>Χειροκρότημα</item>
+        <item>Πυροβολισμός</item>
+    </string-array>
+    <string name="practice_record">Εγγραφή</string>
+    <string name="practice_no_notes_recorded">Δεν εγγράφηκαν νότες</string>
+    <string name="practice_recording_max_duration">Η εγγραφή σταμάτησε - μέγιστη διάρκεια (30 λεπτά)</string>
+    <string name="practice_export_title">Εξαγωγή εγγραφής</string>
+    <string name="practice_export_filename">Όνομα αρχείου</string>
+    <string name="practice_export_format_midi">MIDI (.mid)</string>
+    <string name="practice_export_format_wav">WAV (.wav)</string>
+    <string name="practice_export_format_wav_disabled">WAV (.wav) - απαιτεί SF2 SoundFont</string>
+    <string name="practice_export_button">Εξαγωγή</string>
+    <string name="practice_export_success">Εξαγωγή σε %s</string>
+    <string name="practice_export_error">Σφάλμα εξαγωγής: %s</string>
+</resources>

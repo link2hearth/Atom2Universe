@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Τώρα παίζει</string>
+    <string name="audio_notification_unknown_artist">Άγνωστος καλλιτέχνης</string>
+    <string name="audio_action_pause">Παύση</string>
+    <string name="audio_action_play">Αναπαραγωγή</string>
+    <string name="audio_action_stop">Διακοπή</string>
+    <string name="audio_action_dismiss">Απόρριψη</string>
+    <string name="audio_source_radio">Ραδιόφωνο</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Μουσική</string>
+    <string name="audio_conflict_title">Ήχος σε αναπαραγωγή</string>
+    <string name="audio_conflict_message">Το %1$s παίζει ήδη. Τι θέλετε να ακούσετε;</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Αναπαραγωγή / Παύση</string>
+    <string name="audio_hub_stop">Διακοπή</string>
+    <string name="audio_hub_no_playback">Χωρίς αναπαραγωγή</string>
+    <string name="audio_hub_radio_title">Web Radio</string>
+    <string name="audio_hub_radio_desc">Ακούστε χιλιάδες σταθμούς</string>
+    <string name="audio_hub_midi_title">Αναπαραγωγέας MIDI</string>
+    <string name="audio_hub_midi_desc">Αρχεία MIDI με σύνθεση SCC</string>
+    <string name="audio_hub_music_title">Αναπαραγωγέας Μουσικής</string>
+    <string name="audio_hub_music_desc">Η μουσική σας βιβλιοθήκη</string>
+    <string name="audio_hub_editor_title">Επεξεργαστής Ήχου</string>
+    <string name="audio_hub_editor_desc">Κόψτε τα αρχεία ήχου σας</string>
+    <string name="audio_hub_stats_title">Στατιστικά</string>
+    <string name="audio_hub_stats_desc">Οι ακουστικές σας ανακεφαλαιώσεις</string>
+</resources>

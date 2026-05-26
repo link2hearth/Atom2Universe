@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Τρέξιμο σε εξαγωνική σήραγγα</string>
+    <string name="hex_runner_instructions">Σύρετε αριστερά ή δεξιά για να περιστρέψετε τη σήραγγα.\nΑποφύγετε τα κενά — επιβιώστε όσο το δυνατόν περισσότερο.</string>
+    <string name="hex_runner_btn_start">ΈΝΑΡΞΗ</string>
+    <string name="hex_runner_btn_restart">ΕΠΑΝΕΚΚΙΝΗΣΗ</string>
+    <string name="hex_runner_btn_back">ΠΙΣΩ</string>
+    <string name="hex_runner_game_over">ΤΕΛΟΣ ΠΑΙΧΝΙΔΙΟΥ</string>
+    <string name="hex_runner_score_label">Χρόνος: %1$s</string>
+    <string name="hex_runner_best_label">Καλύτερος: %1$s</string>
+    <string name="hex_runner_shape_hexagon">ΕΞΑΓΩΝΟ</string>
+    <string name="hex_runner_shape_octagon">ΟΚΤΑΓΩΝΟ</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Επιβιώστε σε μια περιστρεφόμενη εξαγωνική σήραγγα</string>
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Κόμικς</string>
+    <string name="hub_comics_desc">Αναγνώστης PDF, CBZ και φακέλων εικόνων</string>
+    <string name="comics_library_title">Βιβλιοθήκη Κόμικς</string>
+    <string name="comics_library_empty">Δεν υπάρχουν κόμικς ακόμα</string>
+    <string name="comics_add_title">Προσθήκη κόμικ</string>
+    <string name="comics_add_pdf">Αρχείο PDF</string>
+    <string name="comics_add_cbz">Αρχείο CBZ / ZIP</string>
+    <string name="comics_add_folder">Φάκελος εικόνων</string>
+    <string name="comics_delete_title">Αφαίρεση κόμικ</string>
+    <string name="comics_delete_msg">Αφαίρεση \"%s\" από τη βιβλιοθήκη;</string>
+    <string name="comics_delete_confirm">Αφαίρεση</string>
+    <string name="comics_layout_title">Διάταξη σελίδας</string>
+    <string name="comics_layout_full">Πλήρης σελίδα</string>
+    <string name="comics_layout_half_top">Πάνω μισό</string>
+    <string name="comics_layout_half_left">Αριστερό μισό (manga)</string>
+    <string name="comics_layout_half_right">Δεξί μισό (manga)</string>
+    <string name="comics_error_open">Αδύνατο το άνοιγμα αυτού του αρχείου</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Σάρωση φακέλου βιβλιοθήκης</string>
+    <string name="comics_scanning_title">Σάρωση βιβλιοθήκης…</string>
+    <string name="comics_scanning_found">%d κόμικς βρέθηκαν</string>
+    <string name="comics_delete_root_msg">Αφαίρεση \"%s\" και όλων των κόμικς του από τη βιβλιοθήκη;</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d κόμικ</item>
+        <item quantity="other">%d κόμικς</item>
+    </plurals>
+    <string name="comics_rescan">Επανασάρωση</string>
+    <string name="comics_clear_all">Εκκαθάριση όλων</string>
+    <string name="comics_clear_all_msg">Αφαίρεση όλων των κόμικς και βιβλιοθηκών από τη λίστα;</string>
+    <string name="comics_rescanning_title">Επανασάρωση…</string>
+    <string name="comics_toggle_view">Εναλλαγή προβολής</string>
+    <string name="comics_storage_perm_title">Επιτάχυνση σάρωσης βιβλιοθήκης</string>
+    <string name="comics_storage_perm_msg">Η εκχώρηση πλήρους πρόσβασης αποθήκευσης επιτρέπει στην εφαρμογή να σαρώνει τη βιβλιοθήκη σας πολύ πιο γρήγορα. Χωρίς αυτήν, η σάρωση χρησιμοποιεί πιο αργή μέθοδο.\n\nΜπορείτε επίσης να παραλείψετε και να σαρώσετε ούτως ή άλλως.</string>
+    <string name="comics_storage_perm_grant">Εκχώρηση πρόσβασης</string>
+    <string name="comics_storage_perm_skip">Σάρωση ούτως ή άλλως</string>
+    <string name="comics_section_root">(Άλλα κόμικς)</string>
+    <string name="comics_series_count">%1$d κόμικς</string>
+</resources>

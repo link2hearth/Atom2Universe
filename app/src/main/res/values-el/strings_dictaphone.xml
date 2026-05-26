@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Δικτάφωνο</string>
+    <string name="dictaphone_action_record">Εγγραφή</string>
+    <string name="dictaphone_action_stop">Διακοπή</string>
+    <string name="dictaphone_action_play">Αναπαραγωγή</string>
+    <string name="dictaphone_action_rename">Μετονομασία</string>
+    <string name="dictaphone_action_delete">Διαγραφή</string>
+    <string name="dictaphone_recordings_title">Εγγραφές</string>
+    <string name="dictaphone_recordings_empty">Δεν υπάρχουν εγγραφές ακόμα. Πατήστε το μικρόφωνο για να ξεκινήσετε.</string>
+    <string name="dictaphone_status_saving">Αποθήκευση…</string>
+    <string name="dictaphone_rename_title">Μετονομασία εγγραφής</string>
+    <string name="dictaphone_delete_title">Διαγραφή εγγραφής</string>
+    <string name="dictaphone_delete_message">Διαγραφή \"%1$s\";</string>
+    <string name="dictaphone_delete_confirm">Διαγραφή</string>
+    <string name="audio_hub_dictaphone_title">Δικτάφωνο</string>
+    <string name="audio_hub_dictaphone_desc">Φωνητική εγγραφή αποθηκευμένη στη Μουσική</string>
+</resources>

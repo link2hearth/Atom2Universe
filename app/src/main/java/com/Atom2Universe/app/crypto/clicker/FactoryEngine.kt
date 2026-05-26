@@ -5,7 +5,7 @@ import kotlin.math.pow
 
 internal object FactoryEngine {
 
-    private const val PRICE_SCALE = 1.25
+    private const val PRICE_SCALE = 1.35
 
     fun cost(type: FactoryType, currentCount: Int): LayeredNumber {
         val price = type.basePrice * PRICE_SCALE.pow(currentCount)

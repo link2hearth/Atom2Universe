@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Δημιουργικός Καμβάς</string>
+    <string name="canvas_fit_content">Προσαρμογή περιεχομένου</string>
+    <string name="canvas_toggle_grid">Πλέγμα</string>
+    <string name="canvas_menu">Μενού</string>
+    <string name="canvas_tool_pan">Μετακίνηση</string>
+    <string name="canvas_tool_select">Επιλογή</string>
+    <string name="canvas_tool_draw">Σχεδίαση</string>
+    <string name="canvas_tool_shape">Σχήμα</string>
+    <string name="canvas_tool_text">Κείμενο</string>
+    <string name="canvas_tool_image">Εικόνα</string>
+    <string name="canvas_menu_new">Νέος καμβάς</string>
+    <string name="canvas_menu_export">Εξαγωγή</string>
+    <string name="canvas_menu_delete_selected">Διαγραφή επιλογής</string>
+    <string name="canvas_menu_clear_all">Εκκαθάριση όλων</string>
+    <string name="canvas_new_created">Νέος καμβάς δημιουργήθηκε</string>
+    <string name="canvas_exported">Ο καμβάς εξήχθη</string>
+    <string name="canvas_empty">Κενός καμβάς</string>
+    <string name="canvas_object_deleted">Αντικείμενο διαγράφηκε</string>
+    <string name="canvas_cleared">Ο καμβάς εκκαθαρίστηκε</string>
+    <string name="canvas_selected">Επιλέχθηκε: %1$s</string>
+    <string name="canvas_image_imported">Εικόνα εισήχθη</string>
+    <string name="canvas_import_error">Σφάλμα εισαγωγής</string>
+    <string name="canvas_text_dialog_title">Προσθήκη κειμένου</string>
+    <string name="canvas_text_hint">Εισάγετε το κείμενό σας…</string>
+    <string name="canvas_text_font">Γραμματοσειρά:</string>
+    <string name="canvas_text_size">Μέγεθος: %d</string>
+    <string name="canvas_text_bold">Έντονο</string>
+    <string name="canvas_text_italic">Πλάγιο</string>
+    <string name="canvas_color_picker_title">Επιλογή χρώματος</string>
+    <string name="canvas_brush_size_title">Μέγεθος πινέλου</string>
+    <string name="canvas_layers">Επίπεδα</string>
+    <string name="canvas_layer_bring_front">Μπρος στη σειρά</string>
+    <string name="canvas_layer_bring_forward">Ένα επίπεδο εμπρός</string>
+    <string name="canvas_layer_send_backward">Ένα επίπεδο πίσω</string>
+    <string name="canvas_layer_send_back">Πίσω στη σειρά</string>
+    <string name="canvas_layer_no_selection">Επιλέξτε πρώτα αντικείμενο</string>
+    <string name="canvas_undo">Αναίρεση</string>
+    <string name="canvas_redo">Επαναφορά</string>
+    <string name="canvas_delete">Διαγραφή</string>
+    <string name="canvas_undo_action">Ενέργεια αναιρέθηκε</string>
+    <string name="canvas_redo_action">Ενέργεια επαναφέρθηκε</string>
+    <string name="canvas_nothing_to_undo">Τίποτα να αναιρεθεί</string>
+    <string name="canvas_nothing_to_redo">Τίποτα να επαναφερθεί</string>
+    <string name="canvas_object_restored">Αντικείμενο επαναφέρθηκε</string>
+</resources>

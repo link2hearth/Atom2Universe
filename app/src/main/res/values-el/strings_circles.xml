@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_title">Circles</string>
+    <string name="circles_back">Πίσω</string>
+    <string name="circles_diff_easy">Εύκολο</string>
+    <string name="circles_diff_medium">Μέτριο</string>
+    <string name="circles_diff_hard">Δύσκολο</string>
+    <string name="circles_label_seed">Σπόρος:</string>
+    <string name="circles_label_moves">Κινήσεις:</string>
+    <string name="circles_label_reward">Ανταμοιβή:</string>
+    <string name="circles_btn_new">Νέο</string>
+    <string name="circles_btn_restart">Επανεκκίνηση</string>
+    <string name="circles_btn_hint">Υπόδειξη</string>
+    <string name="circles_btn_again">Παίξτε ξανά</string>
+    <string name="circles_btn_next">Επόμενο επίπεδο</string>
+    <string name="circles_win_title">Λύθηκε!</string>
+    <string name="circles_win_message">Συγχρονίστηκε σε %1$d κίνηση(-εις)!</string>
+    <string name="circles_hint_default">Χρειάζεστε βοήθεια; Πατήστε Υπόδειξη για αυτόματη βέλτιστη κίνηση. Η χρήση υπόδειξης απενεργοποιεί την ανταμοιβή.</string>
+    <string name="circles_hint_used">Χρησιμοποιήθηκε υπόδειξη — δεν υπάρχει ανταμοιβή για αυτό το παζλ.</string>
+    <string name="circles_hint_solved">Παζλ λύθηκε! Ξεκινήστε νέο για να συνεχίσετε.</string>
+    <string name="circles_toast_reward">Circles: +%1$d νετρίνο(-α)!</string>
+    <string name="circles_toast_reward_disabled">Circles: δεν υπάρχει ανταμοιβή — χρησιμοποιήθηκε υπόδειξη.</string>
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_hub_desc">Περιστρέψτε τα δαχτυλίδια για να ευθυγραμμίσετε όλα τα χρώματα</string>
+</resources>

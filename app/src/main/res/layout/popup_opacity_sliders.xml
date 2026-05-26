@@ -115,6 +115,31 @@
         android:stepSize="1"
         android:visibility="gone" />
 
+    <!-- Toggle format des nombres (alpha vs scientifique) -->
+    <LinearLayout
+        android:id="@+id/popup_toggle4_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/popup_toggle4_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#94A3B8"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/popup_toggle4_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:showText="false" />
+    </LinearLayout>
+
     <!-- Toggle optionnel (atome animé, etc.) -->
     <LinearLayout
         android:id="@+id/popup_toggle_container"

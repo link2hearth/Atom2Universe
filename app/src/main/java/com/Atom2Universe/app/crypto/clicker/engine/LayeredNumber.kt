@@ -61,6 +61,7 @@ class LayeredNumber {
         const val LOG_DIFF_LIMIT = 15.0
         const val EPSILON = 1e-12
         var mantissaFractionDigits = 2
+        var useAlphaFormat: Boolean = false
 
         fun zero() = LayeredNumber(0.0)
         fun one() = LayeredNumber(1.0)
@@ -386,9 +387,12 @@ class LayeredNumber {
         "mantissa" to mantissa, "exponent" to exponent, "value" to value
     )
 
-    // ─── Affichage (port exact du JS) ────────────────────────────────────────
+    // ─── Affichage ────────────────────────────────────────────────────────────
 
-    override fun toString(): String {
+    override fun toString(): String =
+        if (useAlphaFormat) toAlphaString() else toScientificString()
+
+    fun toScientificString(): String {
         if (sign == 0) return "0"
         if (layer == 0) {
             if (abs(exponent) < 6) {
@@ -407,6 +411,36 @@ class LayeredNumber {
         val expText = formatExponent(value)
         val prefix = if (sign < 0) "-" else ""
         return "${prefix}10^${expText}"
+    }
+
+    fun toAlphaString(): String {
+        if (sign == 0) return "0"
+        val prefix = if (sign < 0) "-" else ""
+        if (layer == 1) {
+            val expText = formatExponent(value)
+            return "${prefix}10^${expText}"
+        }
+        val logVal = log10(mantissa) + exponent
+        if (!logVal.isFinite() || logVal < 6.0) {
+            val numeric = sign * mantissa * 10.0.pow(exponent)
+            val absolute = abs(numeric)
+            return if (absolute >= 1) numeric.toLong().toString()
+                   else String.format(Locale.US, "%.2f", numeric)
+        }
+        val idx = floor((logVal - 6.0) / 3.0).toInt()
+        val rem = (logVal - 6.0) - idx * 3.0
+        val m = 10.0.pow(rem)
+        val digits = mantissaFractionDigits
+        val mantissaStr = String.format(Locale.US, "%.${digits}f", m)
+        return "$prefix$mantissaStr${indexToAlphaSuffix(idx)}"
+    }
+
+    private fun indexToAlphaSuffix(index: Int): String {
+        if (index < 26) return ('a' + index).toString()
+        val i = index - 26
+        if (i < 676) return "${('a' + i / 26)}${('a' + i % 26)}"
+        val j = i - 676
+        return "${('a' + j / 676)}${('a' + (j / 26) % 26)}${('a' + j % 26)}"
     }
 
     fun format() = toString()

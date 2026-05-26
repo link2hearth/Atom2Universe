@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Πίσω</string>
+    <string name="hub_toggle_view">Εναλλαγή προβολής</string>
+    <string name="hub_edit_mode">Λειτουργία επεξεργασίας</string>
+    <string name="hub_confirm_edit">Τέλος επεξεργασίας</string>
+    <string name="notification_channel_audio_name">Αναπαραγωγή ήχου</string>
+    <string name="notification_channel_audio_description">Διατηρεί την αναπαραγωγή ήχου σε λειτουργία παρασκηνίου.</string>
+    <string name="hub_edit_tile">Επεξεργασία πλακιδίου</string>
+    <string name="hub_change_language">Αλλαγή γλώσσας</string>
+    <string name="hub_select_language">Επιλογή γλώσσας</string>
+    <string name="hub_settings">Ρυθμίσεις</string>
+    <string name="confirm_return_menu_title">Επιβεβαίωση</string>
+    <string name="confirm_return_menu_message">Θέλετε πραγματικά να επιστρέψετε στο κύριο μενού;</string>
+    <string name="confirm_return_menu_yes">Ναι</string>
+    <string name="confirm_return_menu_no">Όχι</string>
+    <string name="main_hub_clicker_stats_desc">Στατιστικά clicker ατόμων</string>
+    <string name="hub_games_title">Παιχνίδια</string>
+    <string name="hub_games_desc">Mini-games: σκάκι, sudoku, σολιτέρ…</string>
+    <string name="hub_clicker_title">Clicker</string>
+    <string name="hub_clicker_desc">Idle crypto clicker με gacha</string>
+    <string name="hub_creative_title">Δημιουργίες</string>
+    <string name="hub_creative_desc">Pixel art και επεξεργαστής καμβά</string>
+    <string name="banner_label_earth">Γη</string>
+    <string name="banner_label_chess">Σκάκι</string>
+    <string name="banner_label_draughts">Πούλι</string>
+    <string name="banner_label_blackjack">BlackJack</string>
+    <string name="banner_label_pipetap">PipeTap</string>
+    <string name="banner_label_music">Μουσική</string>
+    <string name="hub_audio_title">Ήχος</string>
+    <string name="hub_audio_desc">Μουσική, MIDI, ραδιόφωνο και εργαλεία ήχου</string>
+    <string name="audio_sub_hub_title">Ήχος</string>
+    <string name="audio_sub_hub_subtitle">Μουσική, MIDI, ραδιόφωνο και εργαλεία</string>
+    <string name="hub_shortcut_add_title">Γρήγορη συντόμευση</string>
+    <string name="hub_shortcut_add_message">Χρήση « %1$s » ως γρήγορη συντόμευση στο πλακίδιο κεντρικής οθόνης;</string>
+    <string name="hub_shortcut_exists_message">« %1$s » είναι ήδη συντόμευση. Μετακίνηση στην πρώτη θέση (Ναι) ή αφαίρεση (Όχι);</string>
+    <string name="hub_shortcut_added">Η συντόμευση προστέθηκε</string>
+    <string name="periodic_toggle_rarities_desc">Εμφάνιση/απόκρυψη σπανιότητας</string>
+</resources>

@@ -132,6 +132,7 @@
 </plurals>
     <string name="crypto_label_banner_opacity">Banner opacity</string>
     <string name="crypto_label_decimals">Decimals (e.g. 1.23e6)</string>
+    <string name="crypto_label_alpha_format">Game format (e.g. 1.23a)</string>
     <string name="clicker_factory_section">Particle Factories</string>
     <string name="clicker_factory_proton_accel_name">Proton Accelerator</string>
     <string name="clicker_factory_fusion_reactor_name">Fusion Reactor</string>

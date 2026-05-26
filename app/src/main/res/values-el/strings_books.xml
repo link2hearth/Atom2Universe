@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_books_title">Βιβλία</string>
+    <string name="hub_books_desc">Αναγνώστης EPUB, PDF και κειμένου</string>
+    <string name="hub_reading_title">Ανάγνωση</string>
+    <string name="hub_reading_desc">Βιβλία και κόμικς</string>
+    <string name="reading_hub_title">Ανάγνωση</string>
+    <string name="reading_hub_subtitle">Βιβλία και κόμικς</string>
+    <string name="book_reader_title">Αναγνώστης</string>
+    <string name="book_reader_no_book">Δεν υπάρχει ανοιχτό βιβλίο</string>
+    <string name="book_reader_open">Άνοιγμα βιβλίου</string>
+    <string name="book_reader_page_of">%1$d / %2$d</string>
+    <string name="book_reader_theme">Θέμα ανάγνωσης</string>
+    <string name="book_reader_theme_dark">Σκοτεινό</string>
+    <string name="book_reader_theme_light">Φωτεινό</string>
+    <string name="book_reader_theme_sepia">Σέπια</string>
+    <string name="book_reader_theme_sky">Ουρανί</string>
+    <string name="book_reader_theme_mint">Μέντα</string>
+    <string name="book_reader_theme_forest">Δάσος</string>
+    <string name="book_reader_theme_pastel">Παστέλ</string>
+    <string name="book_reader_para_distinction">Διάκριση παραγράφου</string>
+    <string name="book_reader_voice">Φωνή</string>
+    <string name="book_reader_voice_default">Προεπιλογή</string>
+    <string name="book_reader_tts_not_ready">TTS μη έτοιμο</string>
+    <string name="book_reader_error">Αδύνατο το άνοιγμα αυτού του αρχείου</string>
+    <string name="book_reader_font_picker_title">Γραμματοσειρές</string>
+    <string name="book_reader_font_default">Προεπιλογή (σύστημα)</string>
+    <string name="book_reader_font_size">Μέγεθος: %1$d sp</string>
+    <string name="book_reader_font_preview_text">Η γρήγορη καφέ αλεπού πηδά πάνω από τον τεμπέλη σκύλο.\n\nΗ ανάγνωση είναι ένα ταξίδι σε άλλους κόσμους και άλλα μυαλά.</string>
+
+    <string name="book_library_empty">Δεν υπάρχουν βιβλία ακόμα</string>
+    <string name="book_library_empty_hint">Πατήστε + για να προσθέσετε το πρώτο σας βιβλίο</string>
+    <string name="book_library_add">Προσθήκη βιβλίου</string>
+    <string name="book_library_author_unknown">Άγνωστος συγγραφέας</string>
+    <string name="book_library_delete">Αφαίρεση</string>
+    <string name="book_library_delete_confirm">Αφαίρεση αυτού του βιβλίου από τη βιβλιοθήκη σας;</string>
+    <string name="book_tab_recents">Πρόσφατα</string>
+    <string name="book_tab_shelf">Βιβλιοθήκες</string>
+
+    <string name="book_shelf_title">Βιβλιοθήκες</string>
+    <string name="book_shelf_empty">Δεν υπάρχει βιβλιοθήκη ακόμα.\nΠατήστε + για να προσθέσετε φάκελο.</string>
+    <string name="book_shelf_add_library">Προσθήκη βιβλιοθήκης</string>
+    <string name="book_shelf_scanning_title">Σάρωση…</string>
+    <string name="book_shelf_rescanning_title">Επανασάρωση…</string>
+    <string name="book_shelf_scanning_found">%1$d βιβλία βρέθηκαν</string>
+    <string name="book_shelf_options_rescan">Επανασάρωση</string>
+    <string name="book_shelf_options_delete">Διαγραφή βιβλιοθήκης</string>
+    <string name="book_shelf_delete_confirm">Διαγραφή αυτής της βιβλιοθήκης και όλων των καταχωρήσεών της;</string>
+    <string name="book_shelf_books_count">%1$d βιβλία</string>
+    <string name="book_shelf_tree_empty">Δεν υπάρχουν βιβλία σε αυτή τη βιβλιοθήκη.</string>
+    <string name="book_shelf_section_root">(Άλλα βιβλία)</string>
+    <string name="book_toggle_view">Εναλλαγή προβολής</string>
+    <string name="book_reader_bookmarks">Σελιδοδείκτες</string>
+    <string name="book_reader_no_bookmarks">Δεν υπάρχουν σελιδοδείκτες ακόμα. Πατήστε παρατεταμένα σε παράγραφο για να προσθέσετε.</string>
+    <string name="book_reader_bookmark_added">Σελιδοδείκτης προστέθηκε</string>
+    <string name="book_reader_bookmark_removed">Σελιδοδείκτης αφαιρέθηκε</string>
+    <string name="book_reader_bookmarks_clear">Εκκαθάριση όλων</string>
+    <string name="book_reader_bookmarks_cleared">Όλοι οι σελιδοδείκτες διαγράφηκαν</string>
+</resources>

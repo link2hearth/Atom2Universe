@@ -55,6 +55,7 @@ object MainClickerPreferences {
     private const val KEY_CLICKER_OPACITY_PERCENT = "clicker_opacity_percent"
     private const val KEY_CLICKER_HEIGHT_DP = "clicker_height_dp"
     private const val KEY_CLICKER_DECIMAL_DIGITS = "clicker_decimal_digits"
+    private const val KEY_CLICKER_ALPHA_FORMAT = "clicker_alpha_format"
     private const val KEY_ATOM_SPRING_ENABLED = "atom_spring_enabled"
     private const val KEY_ATOM_SPRING_INDEX = "atom_spring_index"
     private const val KEY_ATOM_LOW_ANIMATION = "atom_low_animation"
@@ -130,6 +131,13 @@ object MainClickerPreferences {
 
     fun setClickerDecimalDigits(context: Context, digits: Int) {
         prefs(context).edit { putInt(KEY_CLICKER_DECIMAL_DIGITS, digits) }
+    }
+
+    fun isClickerAlphaFormat(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_CLICKER_ALPHA_FORMAT, false)
+
+    fun setClickerAlphaFormat(context: Context, enabled: Boolean) {
+        prefs(context).edit { putBoolean(KEY_CLICKER_ALPHA_FORMAT, enabled) }
     }
 
     fun isAtomSpringEnabled(context: Context): Boolean =

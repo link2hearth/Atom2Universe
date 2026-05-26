@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Άνοιγμα περιοδικού πίνακα</string>
+    <string name="periodic_info_atomic_number">Ατομικός αριθμός</string>
+    <string name="periodic_info_mass">Μάζα</string>
+    <string name="periodic_info_period">Περίοδος</string>
+    <string name="periodic_info_symbol">Σύμβολο</string>
+    <string name="periodic_info_category">Κατηγορία</string>
+    <string name="periodic_info_group">Ομάδα</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Πατήστε το όνομα για να δείτε την περιγραφή</string>
+    <string name="periodic_table_title">Περιοδικός Πίνακας</string>
+
+    <string name="periodic_prop_phase">Φάση</string>
+    <string name="periodic_prop_density">Πυκνότητα</string>
+    <string name="periodic_prop_melt">Σημείο τήξης</string>
+    <string name="periodic_prop_boil">Σημείο βρασμού</string>
+    <string name="periodic_prop_block">Τροχιακό μπλοκ</string>
+    <string name="periodic_prop_electronegativity">Ηλεκτραρνητικότητα</string>
+    <string name="periodic_prop_electron_config">Ηλεκτρ. διάταξη</string>
+    <string name="periodic_prop_discovered_by">Ανακαλύφθηκε από</string>
+    <string name="periodic_prop_named_by">Ονομάστηκε από</string>
+    <string name="periodic_prop_appearance">Εμφάνιση</string>
+    <string name="periodic_prop_unknown">Άγνωστο</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Φυσικές &amp; Χημικές Ιδιότητες</string>
+    <string name="periodic_atom_section_title">Μοντέλο Bohr</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+</resources>

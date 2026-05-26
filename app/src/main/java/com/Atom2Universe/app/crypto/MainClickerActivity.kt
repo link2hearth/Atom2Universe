@@ -536,6 +536,8 @@ class MainClickerActivity : ThemedActivity() {
         }
         com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.mantissaFractionDigits =
             MainClickerPreferences.getClickerDecimalDigits(this)
+        com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.useAlphaFormat =
+            MainClickerPreferences.isClickerAlphaFormat(this)
         clickerToggle.setOnCheckedChangeListener { _, isChecked ->
             MainClickerPreferences.setClickerEnabled(this, isChecked)
             clickerBannerView.visibility = if (isChecked) View.VISIBLE else View.GONE
@@ -2158,6 +2160,18 @@ class MainClickerActivity : ThemedActivity() {
             MainClickerPreferences.setClickerDecimalDigits(this, d)
             com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.mantissaFractionDigits = d
             val3.text = "$d"
+        }
+
+        // Toggle format alphabétique (1.23a)
+        val toggle4Container = popupView.findViewById<View>(R.id.popup_toggle4_container)
+        val toggle4Label = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle4_label)
+        val toggle4Switch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle4_switch)
+        toggle4Container.visibility = View.VISIBLE
+        toggle4Label.text = getString(R.string.crypto_label_alpha_format)
+        toggle4Switch.isChecked = MainClickerPreferences.isClickerAlphaFormat(this)
+        toggle4Switch.setOnCheckedChangeListener { _, isChecked ->
+            MainClickerPreferences.setClickerAlphaFormat(this, isChecked)
+            com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.useAlphaFormat = isChecked
         }
 
         // Toggle atome animé
