@@ -351,11 +351,6 @@ class ClickerBannerView @JvmOverloads constructor(
         }
 
         if (needsVertical) {
-            // Boutons gacha et shop remontés sur leurs lignes respectives (APC/APS)
-            val btnShift = -(heightDp * density / 4f)
-            gachaButton.translationY = btnShift
-            shopButton.translationY  = btnShift
-            // Autoriser lapin et tortue à déborder hors de leurs conteneurs
             mainRow.clipChildren  = false
             mainRow.clipToPadding = false
             leftSide.clipChildren  = false
@@ -363,8 +358,6 @@ class ClickerBannerView @JvmOverloads constructor(
             rightSide.clipChildren  = false
             rightSide.clipToPadding = false
         } else {
-            gachaButton.translationY = 0f
-            shopButton.translationY  = 0f
             mainRow.clipChildren  = true
             mainRow.clipToPadding = true
             leftSide.clipChildren  = true
@@ -461,20 +454,18 @@ class ClickerBannerView @JvmOverloads constructor(
 
         updateTurtlePosition(apsFx.size)
 
-        // ── Sous-ligne globale ─────────────────────────────────────────────────
-        val showSubrow = apcActive || inGrace || apsFx.isNotEmpty()
-        frenzySubrow.visibility = if (showSubrow) VISIBLE else GONE
+        // La sous-ligne est toujours visible (contient les boutons Gacha/Shop)
     }
 
     // ── Tortue (frénésie APS) ─────────────────────────────────────────────────
     // apsFxCount = nombre de stacks actifs → mult = 2^stacks (x2, x4, x8, x16+)
-    // Courbe quadratique : steps = 0..4 → fraction = (steps/4)² → translation vers la gauche
-    // Max à x16 : -(width/3)
+    // Courbe quadratique : steps = 0..5 → fraction = (steps/5)² → translation vers la gauche
+    // Max à x32 : -(width/6)
     private fun updateTurtlePosition(apsFxCount: Int) {
         if (!isVerticalMode || width == 0) return
-        val steps = apsFxCount.coerceIn(0, 4).toFloat()   // 0=aucune, 1=×2, 2=×4, 3=×8, 4=×16+
-        val fraction = (steps / 4f) * (steps / 4f)        // 0, 0.0625, 0.25, 0.5625, 1.0
-        val targetTx = -fraction * (width / 3f)
+        val steps = apsFxCount.coerceIn(0, 5).toFloat()   // 0=aucune, 1=×2, 2=×4, 3=×8, 4=×16, 5=×32+
+        val fraction = (steps / 5f) * (steps / 5f)        // 0, 0.04, 0.16, 0.36, 0.64, 1.0
+        val targetTx = -fraction * (width / 6f) * 0.8f
         if (targetTx == lastTurtleTargetTx) return
         lastTurtleTargetTx = targetTx
         turtleView.animate()

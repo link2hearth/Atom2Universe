@@ -43,20 +43,6 @@
 
         </LinearLayout>
 
-        <!-- Bouton Gacha ☀ (72dp fixe, entre APC et atomes) -->
-        <Button
-            android:id="@+id/clicker_gacha_btn"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:text="☀"
-            android:textSize="20sp"
-            android:textColor="#FFD700"
-            android:textStyle="bold"
-            android:padding="0dp"
-            android:background="@android:color/transparent"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
-
         <!-- Atomes (centre, weight=1.4) -->
         <LinearLayout
             android:id="@+id/clicker_atoms_container"
@@ -79,21 +65,6 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
-
-        <!-- Bouton shop $ (72dp fixe) -->
-        <Button
-            android:id="@+id/clicker_shop_btn"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:text="$"
-            android:textSize="17sp"
-            android:textColor="#FFD700"
-            android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:padding="0dp"
-            android:background="@android:color/transparent"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
 
         <!-- Tortue + APS (droite, weight=1) -->
         <LinearLayout
@@ -125,86 +96,136 @@
 
     </LinearLayout>
 
-    <!-- ── Sous-ligne frénésies : deux boîtes compactes séparées ── -->
+    <!-- ── Sous-ligne frénésies + boutons Gacha/Shop ── -->
     <LinearLayout
         android:id="@+id/frenzy_subrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:gravity="center_vertical">
 
         <!-- Boîte APC (gauche, compacte) : ×mult  timer  clics -->
         <LinearLayout
-            android:id="@+id/frenzy_apc_box"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="start|center_vertical"
-            android:background="@color/crypto_banner_background"
-            android:paddingStart="16dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp">
+            android:gravity="start|center_vertical">
 
-            <TextView
-                android:id="@+id/frenzy_apc_mult"
+            <LinearLayout
+                android:id="@+id/frenzy_apc_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="×2"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:background="@color/crypto_banner_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
 
-            <TextView
-                android:id="@+id/frenzy_apc_timer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="  30s"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:layout_marginStart="6dp" />
+                <TextView
+                    android:id="@+id/frenzy_apc_mult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="×2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/frenzy_apc_clicks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="  0"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:layout_marginStart="6dp" />
+                <TextView
+                    android:id="@+id/frenzy_apc_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  30s"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:layout_marginStart="6dp" />
+
+                <TextView
+                    android:id="@+id/frenzy_apc_clicks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:layout_marginStart="6dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Spacer flexible au centre -->
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <!-- Boîte APS (droite, compacte) : ×mult -->
+        <!-- Boutons Gacha ☀ et Shop $ (centre) -->
         <LinearLayout
-            android:id="@+id/frenzy_aps_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end|center_vertical"
-            android:background="@color/crypto_banner_background"
-            android:paddingEnd="16dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp">
+            android:gravity="center">
 
-            <TextView
-                android:id="@+id/frenzy_aps_mult"
+            <Button
+                android:id="@+id/clicker_gacha_btn"
+                android:layout_width="60dp"
+                android:layout_height="32dp"
+                android:text="☀"
+                android:textSize="17sp"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:minWidth="0dp"
+                android:minHeight="0dp" />
+
+            <Button
+                android:id="@+id/clicker_shop_btn"
+                android:layout_width="60dp"
+                android:layout_height="32dp"
+                android:text="$"
+                android:textSize="17sp"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+
+        <!-- Boîte APS (droite, compacte) : ×mult -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end|center_vertical">
+
+            <LinearLayout
+                android:id="@+id/frenzy_aps_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="×2"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="end|center_vertical"
+                android:background="@color/crypto_banner_background"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
+
+                <TextView
+                    android:id="@+id/frenzy_aps_mult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="×2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

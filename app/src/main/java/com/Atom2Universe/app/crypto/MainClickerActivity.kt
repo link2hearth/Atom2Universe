@@ -541,7 +541,7 @@ class MainClickerActivity : ThemedActivity() {
         clickerToggle.setOnCheckedChangeListener { _, isChecked ->
             MainClickerPreferences.setClickerEnabled(this, isChecked)
             clickerBannerView.visibility = if (isChecked) View.VISIBLE else View.GONE
-            atomSpringView.visibility = if (isChecked) View.VISIBLE else View.GONE
+            atomSpringView.visibility = if (isChecked && MainClickerPreferences.isAtomSpringEnabled(this)) View.VISIBLE else View.GONE
             if (isChecked) clickerViewModel.startGameLoop() else clickerViewModel.stopGameLoop()
         }
 

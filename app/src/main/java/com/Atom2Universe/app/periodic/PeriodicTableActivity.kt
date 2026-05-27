@@ -386,6 +386,7 @@ class PeriodicTableActivity : ThemedActivity() {
         ViewGroup.LayoutParams.MATCH_PARENT
       )
       dialog.show()
+      dialog.window?.decorView?.alpha = 0f
 
       // Re-mesurer le contenu sans contrainte de hauteur pour obtenir la taille naturelle,
       // puis forcer la fenêtre à cette taille (plafonnée à 88 % de l'écran).
@@ -407,6 +408,7 @@ class PeriodicTableActivity : ThemedActivity() {
           )
           scrollView.requestLayout()
         }
+        dialog.window?.decorView?.alpha = 1f
       }
     }
   }
@@ -905,6 +907,7 @@ class PeriodicTableActivity : ThemedActivity() {
       ViewGroup.LayoutParams.MATCH_PARENT
     )
     dialog.show()
+    dialog.window?.decorView?.alpha = 0f
 
     scrollView.post {
       val widthSpec = View.MeasureSpec.makeMeasureSpec(scrollView.width, View.MeasureSpec.EXACTLY)
@@ -922,6 +925,7 @@ class PeriodicTableActivity : ThemedActivity() {
         )
         scrollView.requestLayout()
       }
+      dialog.window?.decorView?.alpha = 1f
     }
   }
 
