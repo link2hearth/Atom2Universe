@@ -34,11 +34,28 @@ class PeriodicTableActivity : ThemedActivity() {
   private lateinit var gridLayout: GridLayout
   private lateinit var descriptionProvider: PeriodicElementDescriptionProvider
   private lateinit var collectionStore: PeriodicCollectionStore
-  private var selectedElementView: LinearLayout? = null
   private var selectedElement: PeriodicElement? = null
   private var lastSelectedElementCell: LinearLayout? = null
   private var launchedFromGacha: Boolean = false
   private var selectedElementCopiesView: TextView? = null
+
+  // Info panel views
+  private var panelSymbolBox: LinearLayout? = null
+  private var panelNumberText: TextView? = null
+  private var panelSymbolText: TextView? = null
+  private var panelMassText: TextView? = null
+  private var panelNameText: TextView? = null
+  private var panelCategoryText: TextView? = null
+  private var panelAppearanceText: TextView? = null
+  private var propPhaseVal: TextView? = null
+  private var propBlockVal: TextView? = null
+  private var propShellsVal: TextView? = null
+  private var propConfigVal: TextView? = null
+  private var propEnegVal: TextView? = null
+  private var propDensityVal: TextView? = null
+  private var propMeltVal: TextView? = null
+  private var propBoilVal: TextView? = null
+  private var propDiscoveredVal: TextView? = null
 
   private val rarityCornerViews = mutableListOf<View>()
   private var rarityVisible = true
@@ -59,7 +76,7 @@ class PeriodicTableActivity : ThemedActivity() {
 
     findViewById<ImageButton>(R.id.toggle_rarity_button).setOnClickListener {
       rarityVisible = !rarityVisible
-      val targetVisibility = if (rarityVisible) View.VISIBLE else View.INVISIBLE
+        if (rarityVisible) View.VISIBLE else View.INVISIBLE
       rarityCornerViews.forEach { corner ->
         // Ne montrer que les coins déjà débloqués (tag = true si possédé)
         if (rarityVisible && corner.tag == true) corner.visibility = View.VISIBLE
@@ -80,122 +97,150 @@ class PeriodicTableActivity : ThemedActivity() {
     return (dp * resources.displayMetrics.density).toInt()
   }
 
-  private fun createInfoLine(label: String, value: String): LinearLayout {
-    return LinearLayout(this).apply {
-      orientation = LinearLayout.VERTICAL
-      layoutParams = LinearLayout.LayoutParams(
-        LinearLayout.LayoutParams.MATCH_PARENT,
-        LinearLayout.LayoutParams.WRAP_CONTENT
-      )
-      setPadding(0, 0, 0, 8)
-
-      val labelView = TextView(this@PeriodicTableActivity).apply {
-        text = label
-        textSize = 12f
-        setTextColor(0xFFB0B0B0.toInt())
-      }
-      addView(labelView)
-
-      val valueView = TextView(this@PeriodicTableActivity).apply {
-        text = value
-        textSize = 18f
-        setTextColor(0xFFFFFFFF.toInt())
-        setTypeface(null, android.graphics.Typeface.BOLD)
-      }
-      addView(valueView)
-
-      tag = Pair(labelView, valueView)
-    }
-  }
-
   private fun createInfoPanel() {
-    selectedElementView = LinearLayout(this).apply {
+    val MP = LinearLayout.LayoutParams.MATCH_PARENT
+    val WC = LinearLayout.LayoutParams.WRAP_CONTENT
+
+    val panel = LinearLayout(this).apply {
       orientation = LinearLayout.VERTICAL
-      setPadding(16, 16, 16, 16)
-
-      // En-tête : nom + copies gacha
-      val headerRow = LinearLayout(this@PeriodicTableActivity).apply {
-        orientation = LinearLayout.HORIZONTAL
-        layoutParams = LinearLayout.LayoutParams(
-          LinearLayout.LayoutParams.MATCH_PARENT,
-          LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        setPadding(0, 0, 0, 12)
-      }
-
-      val nameView = TextView(this@PeriodicTableActivity).apply {
-        textSize = 28f
-        setTextColor(0xFFFFFFFF.toInt())
-        setTypeface(null, android.graphics.Typeface.BOLD)
-        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        setOnClickListener { showDescriptionDialog() }
-      }
-      headerRow.addView(nameView)
-
-      selectedElementCopiesView = TextView(this@PeriodicTableActivity).apply {
-        text = getString(R.string.periodic_info_copies_badge, 0)
-        textSize = 11f
-        setTextColor(0xCCFFFFFF.toInt())
-        setPadding(10, 6, 10, 6)
-        background = resources.getDrawable(R.drawable.gacha_rarity_badge, null)
-      }
-      headerRow.addView(selectedElementCopiesView)
-      addView(headerRow)
-
-      // Container pour les deux colonnes
-      val infosContainer = LinearLayout(this@PeriodicTableActivity).apply {
-        orientation = LinearLayout.HORIZONTAL
-        layoutParams = LinearLayout.LayoutParams(
-          LinearLayout.LayoutParams.MATCH_PARENT,
-          LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        // Colonne gauche
-        val leftColumn = LinearLayout(this@PeriodicTableActivity).apply {
-          orientation = LinearLayout.VERTICAL
-          layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-
-          addView(createInfoLine(getString(R.string.periodic_info_atomic_number), ""))
-          addView(createInfoLine(getString(R.string.periodic_info_mass), ""))
-          addView(createInfoLine(getString(R.string.periodic_info_period), ""))
-        }
-        addView(leftColumn)
-
-        // Colonne droite
-        val rightColumn = LinearLayout(this@PeriodicTableActivity).apply {
-          orientation = LinearLayout.VERTICAL
-          layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-          setPadding(16, 0, 0, 0)
-
-          addView(createInfoLine(getString(R.string.periodic_info_symbol), ""))
-          addView(createInfoLine(getString(R.string.periodic_info_category), ""))
-          addView(createInfoLine(getString(R.string.periodic_info_group), ""))
-        }
-        addView(rightColumn)
-      }
-      addView(infosContainer)
-
-      // Texte d'aide
-      val hintView = TextView(this@PeriodicTableActivity).apply {
-        text = getString(R.string.periodic_info_hint)
-        textSize = 11f
-        setTextColor(0xFFB0B0B0.toInt())
-        setPadding(0, 12, 0, 0)
-      }
-      addView(hintView)
+      setPadding(dpToPx(10), dpToPx(10), dpToPx(10), dpToPx(10))
     }
+
+    // ── Top row : symbol box + name block + copies ───────────────────────
+    val topRow = LinearLayout(this).apply {
+      orientation = LinearLayout.HORIZONTAL
+      gravity = android.view.Gravity.CENTER_VERTICAL
+      layoutParams = LinearLayout.LayoutParams(MP, WC)
+        .also { it.setMargins(0, 0, 0, dpToPx(8)) }
+    }
+
+    panelSymbolBox = LinearLayout(this).apply {
+      orientation = LinearLayout.VERTICAL
+      gravity = android.view.Gravity.CENTER
+      val s = dpToPx(58)
+      layoutParams = LinearLayout.LayoutParams(s, s)
+        .also { it.setMargins(0, 0, dpToPx(10), 0) }
+      background = resources.getDrawable(R.drawable.element_background, null)
+      background.setTint(0xFF3A3A4A.toInt())
+    }
+    panelNumberText = TextView(this).apply {
+      textSize = 9f; setTextColor(0xCCFFFFFF.toInt())
+    }
+    panelSymbolText = TextView(this).apply {
+      textSize = 22f; setTextColor(0xFFFFFFFF.toInt())
+      setTypeface(null, Typeface.BOLD)
+    }
+    panelMassText = TextView(this).apply {
+      textSize = 8f; setTextColor(0xAAFFFFFF.toInt())
+    }
+    listOf(panelNumberText!!, panelSymbolText!!, panelMassText!!).forEach { panelSymbolBox!!.addView(it) }
+    topRow.addView(panelSymbolBox)
+
+    val nameBlock = LinearLayout(this).apply {
+      orientation = LinearLayout.VERTICAL
+      layoutParams = LinearLayout.LayoutParams(0, WC, 1f)
+        .also { it.setMargins(0, 0, dpToPx(6), 0) }
+    }
+    panelNameText = TextView(this).apply {
+      textSize = 15f; setTextColor(0xFF9999FF.toInt())
+      setTypeface(null, Typeface.BOLD)
+      setOnClickListener { showDescriptionDialog() }
+    }
+    panelCategoryText = TextView(this).apply {
+      textSize = 10f; setTextColor(0xFFAAAAAA.toInt())
+    }
+    panelAppearanceText = TextView(this).apply {
+      textSize = 10f; setTextColor(0xFF888888.toInt())
+      setTypeface(null, Typeface.ITALIC)
+    }
+    listOf(panelNameText!!, panelCategoryText!!, panelAppearanceText!!).forEach { nameBlock.addView(it) }
+    topRow.addView(nameBlock)
+
+    selectedElementCopiesView = TextView(this).apply {
+      text = getString(R.string.periodic_info_copies_badge, 0)
+      textSize = 11f; setTextColor(0xCCFFFFFF.toInt())
+      setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(4))
+      background = resources.getDrawable(R.drawable.gacha_rarity_badge, null)
+    }
+    topRow.addView(selectedElementCopiesView)
+    panel.addView(topRow)
+
+    // ── Separator ──────────────────────────────────────────────────────────
+    panel.addView(View(this).apply {
+      setBackgroundColor(0xFF2A2A3A.toInt())
+      layoutParams = LinearLayout.LayoutParams(MP, dpToPx(1))
+        .also { it.setMargins(0, 0, 0, dpToPx(8)) }
+    })
+
+    // ── Properties grid (3 cols × 3 rows) ─────────────────────────────────
+    fun makePropCell(labelRes: Int): Pair<LinearLayout, TextView> {
+      val valView = TextView(this).apply {
+        text = "—"; textSize = 11f
+        setTextColor(0xFFEEEEFF.toInt()); setTypeface(null, Typeface.BOLD)
+      }
+      val cell = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        layoutParams = LinearLayout.LayoutParams(0, WC, 1f)
+          .also { it.setMargins(0, 0, dpToPx(3), dpToPx(4)) }
+        setBackgroundColor(0xFF1A1A2A.toInt())
+        setPadding(dpToPx(5), dpToPx(4), dpToPx(5), dpToPx(4))
+        addView(TextView(this@PeriodicTableActivity).apply {
+          setText(labelRes); textSize = 9f
+          setTextColor(0xFF7777AA.toInt()); isAllCaps = true
+        })
+        addView(valView)
+      }
+      return cell to valView
+    }
+
+    fun makeRow(vararg cells: LinearLayout): LinearLayout =
+      LinearLayout(this).apply {
+        orientation = LinearLayout.HORIZONTAL
+        layoutParams = LinearLayout.LayoutParams(MP, WC)
+        cells.forEach { addView(it) }
+      }
+
+    val (phaseCell,      phaseV)      = makePropCell(R.string.periodic_prop_phase)
+    val (blockCell,      blockV)      = makePropCell(R.string.periodic_prop_block)
+    val (shellsCell,     shellsV)     = makePropCell(R.string.periodic_prop_shells)
+    val (configCell,     configV)     = makePropCell(R.string.periodic_prop_electron_config)
+    val (enegCell,       enegV)       = makePropCell(R.string.periodic_prop_electronegativity)
+    val (densityCell,    densityV)    = makePropCell(R.string.periodic_prop_density)
+    val (meltCell,       meltV)       = makePropCell(R.string.periodic_prop_melt)
+    val (boilCell,       boilV)       = makePropCell(R.string.periodic_prop_boil)
+    val (discoveredCell, discoveredV) = makePropCell(R.string.periodic_prop_discovered_by)
+
+    propPhaseVal = phaseV; propBlockVal = blockV; propShellsVal = shellsV
+    propConfigVal = configV; propEnegVal = enegV; propDensityVal = densityV
+    propMeltVal = meltV; propBoilVal = boilV; propDiscoveredVal = discoveredV
+
+    val propsGrid = LinearLayout(this).apply {
+      orientation = LinearLayout.VERTICAL
+      layoutParams = LinearLayout.LayoutParams(MP, WC)
+    }
+    propsGrid.addView(makeRow(phaseCell, blockCell, shellsCell))
+    propsGrid.addView(makeRow(configCell, enegCell, densityCell))
+    propsGrid.addView(makeRow(meltCell, boilCell, discoveredCell))
+    panel.addView(propsGrid)
+
+    // ── Hint ───────────────────────────────────────────────────────────────
+    panel.addView(TextView(this).apply {
+      setText(R.string.periodic_info_hint); textSize = 10f
+      setTextColor(0xFF555577.toInt())
+      setPadding(0, dpToPx(6), 0, 0)
+    })
 
     val scrollView = ScrollView(this).apply {
       isVerticalScrollBarEnabled = false
       overScrollMode = ScrollView.OVER_SCROLL_NEVER
       background = resources.getDrawable(R.drawable.element_background, null)
-      background.setTint(0xFF3A3A3A.toInt())
+      background.setTint(0xFF1A1A2E.toInt())
     }
-    scrollView.addView(selectedElementView)
+    scrollView.addView(panel)
 
     val params = GridLayout.LayoutParams().apply {
-      columnSpec = GridLayout.spec(2, 10)  // Colonnes 3 à 12
-      rowSpec = GridLayout.spec(0, 3)      // Lignes 1 à 3
+      columnSpec = GridLayout.spec(2, 10)
+      rowSpec = GridLayout.spec(0, 3)
       width = dpToPx(70 * 10 - 6)
       height = dpToPx(70 * 3 - 3)
       setMargins(1, 1, 1, 1)
@@ -206,52 +251,43 @@ class PeriodicTableActivity : ThemedActivity() {
   private fun updateInfoPanel(element: PeriodicElement, cellView: LinearLayout) {
     selectedElement = element
 
-    // Réinitialiser le cell précédemment sélectionné
-    lastSelectedElementCell?.let { prevCell ->
-      val prevElement = prevCell.tag as? PeriodicElement
-      prevElement?.let {
-        val prevColor = getCategoryColor(it.category)
-        prevCell.background.setTint(prevColor)
-      }
+    lastSelectedElementCell?.let { prev ->
+      (prev.tag as? PeriodicElement)?.let { prev.background.setTint(getCategoryColor(it.category)) }
     }
-
-    // Appliquer la couleur grise au cell sélectionné
     cellView.tag = element
-    cellView.background.setTint(0xFF555555.toInt())  // Gris sélectionné
+    cellView.background.setTint(0xFF555555.toInt())
     lastSelectedElementCell = cellView
 
-    selectedElementView?.let { view ->
-      val headerRow = view.getChildAt(0) as LinearLayout
-      val nameView = headerRow.getChildAt(0) as TextView
-      val infosContainer = view.getChildAt(1) as LinearLayout
-      val leftColumn = infosContainer.getChildAt(0) as LinearLayout
-      val rightColumn = infosContainer.getChildAt(1) as LinearLayout
+    val dash = "—"
+    val catColor = getCategoryColor(element.category)
 
-      nameView.text = element.localizedName(this@PeriodicTableActivity)
+    panelSymbolBox?.background?.setTint(catColor)
+    panelNumberText?.text = element.atomicNumber.toString()
+    panelSymbolText?.text = element.symbol
+    panelMassText?.text   = "%.3f".format(element.atomicMass)
+    panelNameText?.text   = element.localizedName(this)
+    panelCategoryText?.text = element.category.replace("-", " ")
+      .replaceFirstChar { it.uppercase() }
 
-      // Colonne gauche
-      updateInfoValue(leftColumn.getChildAt(0), element.atomicNumber.toString())
-      updateInfoValue(leftColumn.getChildAt(1), "%.3f".format(element.atomicMass))
-      updateInfoValue(leftColumn.getChildAt(2), element.period.toString())
+    selectedElementCopiesView?.text = getString(
+      R.string.periodic_info_copies_badge,
+      collectionStore.getCopyCount(element.atomicNumber)
+    )
 
-      // Colonne droite
-      updateInfoValue(rightColumn.getChildAt(0), element.symbol)
-      updateInfoValue(rightColumn.getChildAt(1), element.category)
-      updateInfoValue(rightColumn.getChildAt(2), element.group.toString())
-      selectedElementCopiesView?.text = getString(
-        R.string.periodic_info_copies_badge,
-        collectionStore.getCopyCount(element.atomicNumber)
-      )
+    val json = PeriodicElementJsonRepository.get(element.atomicNumber)
+    val appearance = json?.appearance
+    panelAppearanceText?.text = appearance ?: ""
+    panelAppearanceText?.visibility = if (appearance != null) View.VISIBLE else View.GONE
 
-    }
-  }
-
-  private fun updateInfoValue(infoLine: android.view.View, value: String) {
-    val pair = infoLine.tag as? Pair<*, *>
-    pair?.let {
-      val valueView = it.second as? TextView
-      valueView?.text = value
-    }
+    propPhaseVal?.text      = json?.phase ?: dash
+    propBlockVal?.text      = json?.block?.uppercase() ?: dash
+    propShellsVal?.text     = json?.shells?.joinToString(" · ") ?: dash
+    propConfigVal?.text     = json?.electronConfiguration ?: dash
+    propEnegVal?.text       = json?.electronegativityPauling?.let { "%.2f".format(it) } ?: dash
+    propDensityVal?.text    = json?.density?.let { "%.3f g/cm³".format(it) } ?: dash
+    propMeltVal?.text       = json?.melt?.let { "${it.toInt()} K" } ?: dash
+    propBoilVal?.text       = json?.boil?.let { "${it.toInt()} K" } ?: dash
+    propDiscoveredVal?.text = json?.discoveredBy ?: dash
   }
 
   private fun showDescriptionDialog() {
@@ -291,7 +327,7 @@ class PeriodicTableActivity : ThemedActivity() {
         text = "${element.atomicNumber} • ${element.symbol} • ${element.localizedName(this@PeriodicTableActivity)}"
         textSize = 20f
         setTextColor(0xFFFFFFFF.toInt())
-        setTypeface(null, android.graphics.Typeface.BOLD)
+        setTypeface(null, Typeface.BOLD)
       }
       header.addView(titleView)
       rootLayout.addView(header)
@@ -606,7 +642,7 @@ class PeriodicTableActivity : ThemedActivity() {
         text = getString(R.string.periodic_prop_properties_title)
         textSize = 13f
         setTextColor(0xFF8888AA.toInt())
-        setTypeface(null, android.graphics.Typeface.BOLD)
+        setTypeface(null, Typeface.BOLD)
         setPadding(0, 0, 0, dpToPx(12))
         isAllCaps = true
         letterSpacing = 0.1f
@@ -673,7 +709,7 @@ class PeriodicTableActivity : ThemedActivity() {
         text = value
         textSize = 15f
         setTextColor(0xFFE8E8F0.toInt())
-        setTypeface(null, android.graphics.Typeface.BOLD)
+        setTypeface(null, Typeface.BOLD)
       }
       addView(valueView)
     }
@@ -698,12 +734,12 @@ class PeriodicTableActivity : ThemedActivity() {
 
   // Positions col/row 1-indexées : (1,8)(2,8)(3,8) / (1,9)(2,9)(3,9)
   private val legendPositions = listOf(
-    GachaRarity.COMMUN    to Pair(1, 8),
-    GachaRarity.ESSENTIEL to Pair(2, 8),
-    GachaRarity.STELLAIRE to Pair(3, 8),
-    GachaRarity.MYTHIQUE  to Pair(1, 9),
-    GachaRarity.SINGULIER to Pair(2, 9),
-    GachaRarity.IRREEL    to Pair(3, 9)
+    GachaRarity.PRIMORDIAL  to Pair(1, 8),
+    GachaRarity.FUSION      to Pair(2, 8),
+    GachaRarity.SUPERNOVA   to Pair(3, 8),
+    GachaRarity.NEUTRONIQUE to Pair(1, 9),
+    GachaRarity.SPALLATION  to Pair(2, 9),
+    GachaRarity.SYNTHETIQUE to Pair(3, 9)
   )
 
   private fun addLegendCells() {
@@ -753,12 +789,12 @@ class PeriodicTableActivity : ThemedActivity() {
   }
 
   private fun rarityKey(rarity: GachaRarity) = when (rarity) {
-    GachaRarity.COMMUN    -> "commun"
-    GachaRarity.ESSENTIEL -> "essentiel"
-    GachaRarity.STELLAIRE -> "stellaire"
-    GachaRarity.MYTHIQUE  -> "mythique"
-    GachaRarity.SINGULIER -> "singulier"
-    GachaRarity.IRREEL    -> "irreel"
+    GachaRarity.PRIMORDIAL  -> "primordial"
+    GachaRarity.FUSION      -> "fusion"
+    GachaRarity.SUPERNOVA   -> "supernova"
+    GachaRarity.NEUTRONIQUE -> "neutronique"
+    GachaRarity.SPALLATION  -> "spallation"
+    GachaRarity.SYNTHETIQUE -> "synthetique"
   }
 
   private fun showRarityDialog(rarity: GachaRarity) {
@@ -799,7 +835,7 @@ class PeriodicTableActivity : ThemedActivity() {
       text = rarity.label
       textSize = 22f
       setTextColor(rarityColor)
-      setTypeface(null, android.graphics.Typeface.BOLD)
+      setTypeface(null, Typeface.BOLD)
     }
     header.addView(titleView)
     rootLayout.addView(header)
@@ -831,7 +867,7 @@ class PeriodicTableActivity : ThemedActivity() {
         text = process
         textSize = 18f
         setTextColor(rarityColor)
-        setTypeface(null, android.graphics.Typeface.BOLD)
+        setTypeface(null, Typeface.BOLD)
         setPadding(0, 0, 0, dpToPx(6))
       })
     }
@@ -928,7 +964,7 @@ class PeriodicTableActivity : ThemedActivity() {
       text = element.symbol
       textSize = 24f
       setTextColor(0xFFFFFFFF.toInt())
-      setTypeface(null, android.graphics.Typeface.BOLD)
+      setTypeface(null, Typeface.BOLD)
     }
     cell.addView(symbolView)
 
@@ -954,12 +990,12 @@ class PeriodicTableActivity : ThemedActivity() {
   }
 
   private fun getRarityColor(rarity: GachaRarity): Int = when (rarity) {
-    GachaRarity.COMMUN    -> getColor(R.color.rarity_commun)
-    GachaRarity.ESSENTIEL -> getColor(R.color.rarity_essentiel)
-    GachaRarity.STELLAIRE -> getColor(R.color.rarity_stellaire)
-    GachaRarity.MYTHIQUE  -> getColor(R.color.rarity_mythique)
-    GachaRarity.SINGULIER -> getColor(R.color.rarity_singulier)
-    GachaRarity.IRREEL    -> getColor(R.color.rarity_irreel)
+    GachaRarity.PRIMORDIAL  -> getColor(R.color.rarity_commun)
+    GachaRarity.FUSION      -> getColor(R.color.rarity_stellaire)
+    GachaRarity.SUPERNOVA   -> getColor(R.color.rarity_mythique)
+    GachaRarity.NEUTRONIQUE -> getColor(R.color.rarity_singulier)
+    GachaRarity.SPALLATION  -> getColor(R.color.rarity_essentiel)
+    GachaRarity.SYNTHETIQUE -> getColor(R.color.rarity_irreel)
   }
 
   private fun getRarityCornerColor(atomicNumber: Int): Int =

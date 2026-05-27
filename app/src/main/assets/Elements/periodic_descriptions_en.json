@@ -1386,32 +1386,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Big Bang Nucleosynthesis",
       "range": "Elements 1–2 · H, He",
       "body": "Born in the first 3 minutes after the Big Bang, hydrogen and helium account for roughly 99% of all visible matter in the universe. As the young universe expanded and cooled from billions of degrees, protons and neutrons assembled into the first atomic nuclei — almost exclusively hydrogen and helium, with trace amounts of lithium."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Cosmic Spallation",
       "range": "Elements 3–5 · Li, Be, B",
       "body": "These three elements are too fragile to survive inside stars — fusion reactions destroy them faster than they can be made. They form when cosmic rays travelling at near-light speed slam into heavier atoms (carbon, oxygen, nitrogen) drifting through interstellar space, fragmenting them into lighter elements. This process, called spallation, is rare and inefficient, which is why Li, Be and B are among the least abundant elements in the cosmos."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Stellar Fusion",
       "range": "Elements 6–14 · C to Si",
       "body": "Forged in the cores of stars through successive burning cycles: hydrogen fuses into helium, helium into carbon and oxygen, carbon into neon and magnesium, and so on up to silicon. Each stage requires a more massive and hotter star, releasing colossal energy. The carbon and oxygen produced here form the molecular backbone of all organic chemistry and life. When these stars die, they scatter these elements across the galaxy."
     },
-    "mythique": {
+    "supernova": {
       "process": "Silicon Burning — Iron Peak",
       "range": "Elements 15–28 · P to Ni",
       "body": "The end products of stellar fusion. In the cores of the most massive stars, silicon burning produces the iron-peak elements — chromium, manganese, iron, cobalt and nickel. Fusion stops here: iron-56 and nickel-62 have the highest binding energy per nucleon, meaning fusing them further would consume energy rather than release it. With no outward pressure to counter gravity, these stars collapse and explode as supernovae."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Neutron Capture · Supernovæ",
       "range": "Elements 29–92 · Cu to U",
       "body": "Beyond the iron peak, stellar fusion alone cannot build these elements — they require neutron capture. The slow s-process, unfolding over thousands of years in giant AGB stars, gradually adds neutrons to form silver, tin, barium and lead. The violent r-process, triggered in a fraction of a second during neutron star mergers and supernovæ, forges the heaviest atoms: gold, platinum, uranium. Every atom of gold on Earth was born in a cosmic catastrophe."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Synthetic · No Stable Isotopes",
       "range": "Tc (43), Pm (61) · Elements 93–118",
       "body": "Technetium (43) and promethium (61) have no stable isotopes and do not occur naturally on Earth — any amount formed in ancient stars has long since decayed. Elements 93 to 118 exist only because humans created them in particle accelerators, firing atomic nuclei at each other at enormous speeds. Many survive for only microseconds before decaying. Oganesson (118), the heaviest confirmed element, required 1.1 trillion collisions to produce just 3 atoms, first synthesised in 2002."

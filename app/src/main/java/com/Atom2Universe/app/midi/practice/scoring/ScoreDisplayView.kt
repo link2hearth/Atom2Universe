@@ -108,15 +108,15 @@ class ScoreDisplayView @JvmOverloads constructor(
         removeAllViews()
 
         if (!config.scoringEnabled || !config.hasVisibleMetrics()) {
-            visibility = View.GONE
+            visibility = GONE
             return
         }
 
-        visibility = View.VISIBLE
+        visibility = VISIBLE
 
         val textSize = if (config.compactMode) 12f else 14f
         val valueSizeLarge = if (config.compactMode) 16f else 20f
-        val spacing = if (config.compactMode) 2 else 4
+        if (config.compactMode) 2 else 4
 
         // Score
         if (config.showScore) {
@@ -250,7 +250,7 @@ class ScoreDisplayView @JvmOverloads constructor(
             setTextColor(accentColor)
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            visibility = View.GONE
+            visibility = GONE
             alpha = 0f
         }
         // Popup will be shown overlaid, not in this layout
@@ -383,7 +383,7 @@ class ScoreDisplayView @JvmOverloads constructor(
         // This would show an overlay popup like "10 STREAK!"
         // For now, just flash the streak value
         streakValue?.let { view ->
-            val originalColor = view.currentTextColor
+            view.currentTextColor
             view.setTextColor(accentColor)
             view.animate()
                 .scaleX(1.5f)

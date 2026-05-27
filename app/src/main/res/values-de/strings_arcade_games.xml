@@ -238,11 +238,11 @@
     <string name="escape_turns_label">Zug %1$d</string>
     <string name="escape_turns_label_zero">Zug 0</string>
     <string name="escape_turns_prefix">Zug </string>
-    <string name="gacha_rarity_commun">Gewöhnlich</string>
-    <string name="gacha_rarity_essentiel">Essentiell</string>
-    <string name="gacha_rarity_irreel">Unwirklich</string>
-    <string name="gacha_rarity_mythique">Mythisch</string>
-    <string name="gacha_rarity_singulier">Einzigartig</string>
-    <string name="gacha_rarity_stellaire">Stellar</string>
+    <string name="gacha_rarity_primordial">Primordial</string>
+    <string name="gacha_rarity_fusion">Fusion</string>
+    <string name="gacha_rarity_supernova">Supernova</string>
+    <string name="gacha_rarity_neutronique">Neutronisch</string>
+    <string name="gacha_rarity_spallation">Spallation</string>
+    <string name="gacha_rarity_synthetique">Synthetisch</string>
     <string name="stat_hexrunner_best">Hex Runner – Bestzeit</string>
 </resources>

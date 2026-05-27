@@ -226,12 +226,12 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
 
     // ── Persistence ───────────────────────────────────────────────────────────────
     private fun saveGame() {
-        getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+        getSharedPreferences(PREFS, MODE_PRIVATE).edit()
             .putString(KEY_SAVE, game.serialize()).apply()
     }
 
     private fun loadGame(): Boolean {
-        val json = getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_SAVE, null) ?: return false
+        val json = getSharedPreferences(PREFS, MODE_PRIVATE).getString(KEY_SAVE, null) ?: return false
         return game.deserialize(json)
     }
 }

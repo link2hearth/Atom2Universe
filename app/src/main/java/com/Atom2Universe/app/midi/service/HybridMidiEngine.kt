@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.midi.service
+﻿package com.Atom2Universe.app.midi.service
 
 import android.content.Context
 import android.net.Uri
@@ -53,7 +53,7 @@ class HybridMidiEngine(
     private var useSf2ForDrums: Boolean = false     // Whether channel 9 uses SF2
 
     // Channel state
-    private val channelProgram = IntArray(16) { 0 }  // Current program for each channel
+    private val channelProgram = IntArray(16)  // Current program for each channel
     private val channelRouting = Array(16) { SynthTarget.SONIVOX }  // Current routing
 
     // MIDI playback
@@ -913,11 +913,11 @@ class HybridMidiEngine(
         // This avoids sending hundreds of intermediate events which can cause issues
 
         // Track final state for each channel
-        val finalProgram = IntArray(16) { 0 }
+        val finalProgram = IntArray(16)
         val finalPitchBend = IntArray(16) { 8192 }  // Center = 8192
         val finalVolume = IntArray(16) { 100 }      // CC7 default
         val finalExpression = IntArray(16) { 127 }  // CC11 default
-        val finalModulation = IntArray(16) { 0 }    // CC1 default
+        val finalModulation = IntArray(16)    // CC1 default
         val finalPan = IntArray(16) { 64 }          // CC10 center
         val finalSustain = BooleanArray(16) { false } // CC64
 

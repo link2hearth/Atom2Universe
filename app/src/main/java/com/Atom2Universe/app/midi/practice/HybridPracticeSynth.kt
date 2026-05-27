@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.midi.practice
+﻿package com.Atom2Universe.app.midi.practice
 
 import android.util.Log
 
@@ -32,7 +32,7 @@ class HybridPracticeSynth(
 
     // Per-channel routing and program tracking
     private val channelRouting = Array(16) { SynthTarget.SONIVOX }
-    private val channelProgram = IntArray(16) { 0 }
+    private val channelProgram = IntArray(16)
 
     override fun initialize(): Boolean {
         Log.d(TAG, "initialize: sf2Programs=$sf2Programs, useSf2ForDrums=$useSf2ForDrums")

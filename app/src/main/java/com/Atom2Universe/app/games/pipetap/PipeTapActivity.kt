@@ -59,7 +59,7 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
         enableImmersiveMode()
         setContentView(R.layout.activity_pipetap)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         gameView  = findViewById(R.id.pipetap_game_view)
         movesText = findViewById(R.id.pipetap_moves)

@@ -45,7 +45,7 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
         enableImmersiveMode()
         setContentView(R.layout.activity_color_stack)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         colorStackView = findViewById(R.id.color_stack_game_view)
         movesText = findViewById(R.id.color_stack_moves)

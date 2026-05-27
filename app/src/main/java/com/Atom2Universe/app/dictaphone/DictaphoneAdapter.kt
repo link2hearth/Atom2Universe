@@ -43,7 +43,7 @@ class DictaphoneAdapter(
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName: TextView = itemView.findViewById(R.id.dictaphone_item_name)
         private val tvMeta: TextView = itemView.findViewById(R.id.dictaphone_item_meta)
         private val btnPlay: ImageButton = itemView.findViewById(R.id.dictaphone_item_play)

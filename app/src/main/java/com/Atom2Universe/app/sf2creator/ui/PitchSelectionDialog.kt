@@ -158,19 +158,21 @@ class PitchSelectionDialog(
         octaveSpinner.setSelection(octave + 1) // +1 because OCTAVES starts at -1
 
         // Listen for changes
-        noteSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        noteSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 updateSelectedNote()
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
 
-        octaveSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        octaveSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 updateSelectedNote()
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
+        }
     }
 
     private fun setupKeyboard() {

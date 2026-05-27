@@ -761,7 +761,7 @@ class SolitaireView @JvmOverloads constructor(
 
     private fun handleDrop(x: Float, y: Float) {
         val sourcePileType = dragSourcePileType ?: return
-        val g = game ?: return
+        game ?: return
 
         // Find drop target
         // Check foundations

@@ -158,9 +158,9 @@ class FloatingWebWidget @JvmOverloads constructor(
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 if (newProgress < 100) {
                     progressBar.progress = newProgress
-                    progressBar.visibility = View.VISIBLE
+                    progressBar.visibility = VISIBLE
                 } else {
-                    progressBar.visibility = View.GONE
+                    progressBar.visibility = GONE
                 }
             }
         }
@@ -176,7 +176,7 @@ class FloatingWebWidget @JvmOverloads constructor(
         urlBar.setText(url)
         backBtn.alpha = 0.4f
         webView.loadUrl(url)
-        visibility = View.VISIBLE
+        visibility = VISIBLE
         bringToFront()
     }
 
@@ -184,15 +184,15 @@ class FloatingWebWidget @JvmOverloads constructor(
         isExpanded = !isExpanded
         if (isExpanded) {
             // Passer en plein écran
-            val widgetLp = layoutParams as FrameLayout.LayoutParams
-            widgetLp.width   = ViewGroup.LayoutParams.MATCH_PARENT
-            widgetLp.height  = ViewGroup.LayoutParams.MATCH_PARENT
+            val widgetLp = layoutParams as LayoutParams
+            widgetLp.width   = LayoutParams.MATCH_PARENT
+            widgetLp.height  = LayoutParams.MATCH_PARENT
             widgetLp.gravity = Gravity.NO_GRAVITY
             layoutParams = widgetLp
 
-            card.layoutParams = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+            card.layoutParams = LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT
             )
             translationX = 0f
             translationY = 0f
@@ -202,13 +202,13 @@ class FloatingWebWidget @JvmOverloads constructor(
             expandBtn.text = "⤡"
         } else {
             // Restaurer la taille originale
-            val widgetLp = layoutParams as FrameLayout.LayoutParams
-            widgetLp.width   = ViewGroup.LayoutParams.WRAP_CONTENT
-            widgetLp.height  = ViewGroup.LayoutParams.WRAP_CONTENT
+            val widgetLp = layoutParams as LayoutParams
+            widgetLp.width   = LayoutParams.WRAP_CONTENT
+            widgetLp.height  = LayoutParams.WRAP_CONTENT
             widgetLp.gravity = Gravity.CENTER
             layoutParams = widgetLp
 
-            card.layoutParams = FrameLayout.LayoutParams(cardOriginalWidth, cardOriginalHeight)
+            card.layoutParams = LayoutParams(cardOriginalWidth, cardOriginalHeight)
             expandBtn.text = "⤢"
         }
     }
@@ -229,16 +229,16 @@ class FloatingWebWidget @JvmOverloads constructor(
     fun dismiss() {
         if (isExpanded) {
             isExpanded = false
-            val widgetLp = layoutParams as FrameLayout.LayoutParams
-            widgetLp.width   = ViewGroup.LayoutParams.WRAP_CONTENT
-            widgetLp.height  = ViewGroup.LayoutParams.WRAP_CONTENT
+            val widgetLp = layoutParams as LayoutParams
+            widgetLp.width   = LayoutParams.WRAP_CONTENT
+            widgetLp.height  = LayoutParams.WRAP_CONTENT
             widgetLp.gravity = Gravity.CENTER
             layoutParams = widgetLp
-            card.layoutParams = FrameLayout.LayoutParams(cardOriginalWidth, cardOriginalHeight)
+            card.layoutParams = LayoutParams(cardOriginalWidth, cardOriginalHeight)
             expandBtn.text = "⤢"
         }
         webView.stopLoading()
-        visibility = View.GONE
+        visibility = GONE
     }
 
     fun onPause()   { webView.onPause() }

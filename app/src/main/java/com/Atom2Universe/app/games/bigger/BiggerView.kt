@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.core.graphics.toColorInt
 
 class BiggerView @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null
@@ -25,26 +26,26 @@ class BiggerView @JvmOverloads constructor(
 
     // Couleurs par tier (1 → 1024)
     private val TIER_FILL = intArrayOf(
-        Color.parseColor("#DFF5E0"), // 1   vert pâle
-        Color.parseColor("#66BB6A"), // 2   vert
-        Color.parseColor("#FFEE58"), // 4   jaune
-        Color.parseColor("#FFA726"), // 8   orange
-        Color.parseColor("#FF7043"), // 16  rouge-orangé
-        Color.parseColor("#EF5350"), // 32  rouge
-        Color.parseColor("#EC407A"), // 64  rose
-        Color.parseColor("#AB47BC"), // 128 violet
-        Color.parseColor("#5C6BC0"), // 256 indigo
-        Color.parseColor("#29B6F6"), // 512 bleu clair
-        Color.parseColor("#FFD700"), // 1024 or
+        "#DFF5E0".toColorInt(), // 1   vert pâle
+        "#66BB6A".toColorInt(), // 2   vert
+        "#FFEE58".toColorInt(), // 4   jaune
+        "#FFA726".toColorInt(), // 8   orange
+        "#FF7043".toColorInt(), // 16  rouge-orangé
+        "#EF5350".toColorInt(), // 32  rouge
+        "#EC407A".toColorInt(), // 64  rose
+        "#AB47BC".toColorInt(), // 128 violet
+        "#5C6BC0".toColorInt(), // 256 indigo
+        "#29B6F6".toColorInt(), // 512 bleu clair
+        "#FFD700".toColorInt(), // 1024 or
     )
     private val TIER_TEXT = intArrayOf(
-        Color.parseColor("#1B5E20"),
-        Color.parseColor("#1B5E20"),
-        Color.parseColor("#4E342E"),
-        Color.parseColor("#BF360C"),
+        "#1B5E20".toColorInt(),
+        "#1B5E20".toColorInt(),
+        "#4E342E".toColorInt(),
+        "#BF360C".toColorInt(),
         Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE,
-        Color.parseColor("#0D47A1"),
-        Color.parseColor("#4E342E"),
+        "#0D47A1".toColorInt(),
+        "#4E342E".toColorInt(),
     )
 
     // Paints — alloués une seule fois
@@ -71,14 +72,14 @@ class BiggerView @JvmOverloads constructor(
     }
     private val pHudBg = Paint().apply { color = Color.argb(210, 12, 12, 22) }
     private val pHudLabel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textAlign = Paint.Align.CENTER; textSize = 10f * dp; color = Color.parseColor("#777777")
+        textAlign = Paint.Align.CENTER; textSize = 10f * dp; color = "#777777".toColorInt()
     }
     private val pHudVal = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
         typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
     }
     private val pHudStats = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textAlign = Paint.Align.RIGHT; textSize = 9f * dp; color = Color.parseColor("#555566")
+        textAlign = Paint.Align.RIGHT; textSize = 9f * dp; color = "#555566".toColorInt()
     }
     private val pOverBg = Paint().apply { color = Color.argb(210, 8, 8, 18) }
     private val pOverTitle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -86,14 +87,14 @@ class BiggerView @JvmOverloads constructor(
         typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
     }
     private val pOverMsg = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textAlign = Paint.Align.CENTER; textSize = 13f * dp; color = Color.parseColor("#AAAAAA")
+        textAlign = Paint.Align.CENTER; textSize = 13f * dp; color = "#AAAAAA".toColorInt()
     }
     private val pOverStats = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textAlign = Paint.Align.CENTER; textSize = 12f * dp; color = Color.parseColor("#666677")
+        textAlign = Paint.Align.CENTER; textSize = 12f * dp; color = "#666677".toColorInt()
     }
-    private val pBtn = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#252535") }
+    private val pBtn = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#252535".toColorInt() }
     private val pBtnBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE; strokeWidth = 2f; color = Color.parseColor("#4455AA")
+        style = Paint.Style.STROKE; strokeWidth = 2f; color = "#4455AA".toColorInt()
     }
     private val pBtnText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER; textSize = 15f * dp; color = Color.WHITE
@@ -169,7 +170,7 @@ class BiggerView @JvmOverloads constructor(
     // ─── Rendu ────────────────────────────────────────────────────────────────
 
     private fun drawFrame(canvas: Canvas) {
-        canvas.drawColor(Color.parseColor("#0C0C14"))
+        canvas.drawColor("#0C0C14".toColorInt())
 
         val bw = game.boardWidth
         val bh = game.boardHeight
@@ -259,7 +260,7 @@ class BiggerView @JvmOverloads constructor(
         val cx = w / 2f; val cy = h * 0.38f
 
         val victory = game.result == GameResult.VICTORY
-        pOverTitle.color = if (victory) Color.parseColor("#FFD700") else Color.parseColor("#FF5555")
+        pOverTitle.color = if (victory) "#FFD700".toColorInt() else "#FF5555".toColorInt()
         canvas.drawText(if (victory) "Objectif atteint !" else "Bac saturé", cx, cy, pOverTitle)
 
         canvas.drawText(

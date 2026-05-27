@@ -10,7 +10,7 @@ object TheLineGenerator {
     fun generate(mode: TheLineMode, difficulty: TheLineDifficulty): TheLinePuzzle? {
         val sizes = difficulty.gridSizes
         val (width, height) = sizes[Random.nextInt(sizes.size)]
-        val totalCells = width * height
+        width * height
 
         val holeMax = if (mode == TheLineMode.MULTI)
             minOf(difficulty.holeMax, maxOf(difficulty.holeMin, 3))

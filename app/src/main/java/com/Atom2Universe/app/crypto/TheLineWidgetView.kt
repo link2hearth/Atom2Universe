@@ -98,7 +98,7 @@ class TheLineWidgetView @JvmOverloads constructor(
 
         resultOverlay.setOnClickListener { /* absorb */ }
         findViewById<TextView>(R.id.the_line_widget_btn_new_game).setOnClickListener {
-            resultOverlay.visibility = View.GONE
+            resultOverlay.visibility = GONE
             openResetOverlay()
         }
         findViewById<TextView>(R.id.the_line_widget_btn_reset).setOnClickListener {
@@ -109,19 +109,19 @@ class TheLineWidgetView @JvmOverloads constructor(
         btnModeMulti.setOnClickListener  { setPendingMode(TheLineMode.MULTI) }
 
         findViewById<TextView>(R.id.the_line_widget_diff_easy).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame(TheLineDifficulty.EASY)
         }
         findViewById<TextView>(R.id.the_line_widget_diff_medium).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame(TheLineDifficulty.MEDIUM)
         }
         findViewById<TextView>(R.id.the_line_widget_diff_hard).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame(TheLineDifficulty.HARD)
         }
         findViewById<TextView>(R.id.the_line_widget_reset_cancel).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
         }
 
         boardView.onBoardChanged = {
@@ -138,7 +138,7 @@ class TheLineWidgetView @JvmOverloads constructor(
     private fun openResetOverlay() {
         pendingMode = game.mode
         updateModeButtons()
-        resetOverlay.visibility = View.VISIBLE
+        resetOverlay.visibility = VISIBLE
     }
 
     private fun setPendingMode(mode: TheLineMode) {
@@ -202,7 +202,7 @@ class TheLineWidgetView @JvmOverloads constructor(
     }
 
     private fun showResultOverlay() {
-        resultOverlay.visibility = View.VISIBLE
+        resultOverlay.visibility = VISIBLE
     }
 
     private fun startNewGame(diff: TheLineDifficulty) {
@@ -221,8 +221,8 @@ class TheLineWidgetView @JvmOverloads constructor(
     }
 
     private fun generateAndLoad() {
-        loadingView.visibility = View.VISIBLE
-        boardView.visibility = View.INVISIBLE
+        loadingView.visibility = VISIBLE
+        boardView.visibility = INVISIBLE
         val mode = game.mode
         val diff = game.difficulty
         Thread {
@@ -232,8 +232,8 @@ class TheLineWidgetView @JvmOverloads constructor(
                     game.loadPuzzle(puzzle)
                     boardView.loadGame(game)
                 }
-                loadingView.visibility = View.GONE
-                boardView.visibility = View.VISIBLE
+                loadingView.visibility = GONE
+                boardView.visibility = VISIBLE
             }
         }.start()
     }
@@ -246,8 +246,8 @@ class TheLineWidgetView @JvmOverloads constructor(
     }
 
     fun reload() {
-        resultOverlay.visibility = View.GONE
-        resetOverlay.visibility = View.GONE
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         game.difficulty = TheLineDifficulty.entries.find { it.name == prefs.getString(KEY_DIFFICULTY, null) }
             ?: TheLineDifficulty.EASY

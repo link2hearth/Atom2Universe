@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 public class WavTagReader {
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav");
 
-    private String loggingName;
+    private final String loggingName;
 
     public WavTagReader(String loggingName) {
         this.loggingName = loggingName;

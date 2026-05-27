@@ -159,9 +159,7 @@ object MusicTagMigrationManager {
 
         return try {
             val audioFile = AudioFileIO.read(file)
-            val tag = audioFile.tag
-
-            when (tag) {
+            when (val tag = audioFile.tag) {
                 is ID3v22Tag -> {
                     // Upgrader ID3v2.2 vers ID3v2.3
                     Log.d(TAG, "Upgrading ID3v2.2 to ID3v2.3: $filePath")
@@ -227,9 +225,7 @@ object MusicTagMigrationManager {
                 }
 
                 val audioFile = AudioFileIO.read(file)
-                val tag = audioFile.tag
-
-                when (tag) {
+                when (val tag = audioFile.tag) {
                     is ID3v22Tag -> id3v22Count++
                     is ID3v23Tag -> id3v23Count++
                     is AbstractID3v2Tag -> {

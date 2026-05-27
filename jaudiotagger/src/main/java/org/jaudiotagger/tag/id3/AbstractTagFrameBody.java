@@ -142,7 +142,7 @@ public abstract class AbstractTagFrameBody extends AbstractTagItem
         {
             if ((object.toString() != null) && (object.toString().length() > 0))
             {
-                str += (object.getIdentifier() + "=\"" + object.toString() + "\"; ");
+                str += (object.getIdentifier() + "=\"" + object + "\"; ");
             }
         }
         return str;
@@ -163,7 +163,7 @@ public abstract class AbstractTagFrameBody extends AbstractTagItem
         {
             if ((object.toString() != null) && (object.toString().length() > 0))
             {
-                str += (object.getIdentifier() + " = " + object.toString() + "\n");
+                str += (object.getIdentifier() + " = " + object + "\n");
             }
         }
         return str;

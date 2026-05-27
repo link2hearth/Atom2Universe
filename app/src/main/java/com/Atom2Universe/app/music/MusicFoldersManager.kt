@@ -81,7 +81,7 @@ object MusicFoldersManager {
     fun getPathFromUri(context: Context, uriString: String): String? {
         return try {
             val uri = Uri.parse(uriString)
-            val documentFile = DocumentFile.fromTreeUri(context, uri)
+            DocumentFile.fromTreeUri(context, uri)
 
             // Essaie d'extraire le chemin depuis l'URI
             val docId = uri.lastPathSegment ?: return null

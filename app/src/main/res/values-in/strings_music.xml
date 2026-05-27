@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="music_player_title">Musik</string>
     <string name="music_empty_library">Tidak ada file audio ditemukan</string>
@@ -22,15 +22,12 @@
     <string name="music_track_summary_with_year">%1$s • %2$s - %3$s</string>
     <string name="music_track_summary_no_year">%1$s - %2$s</string>
     <plurals name="music_artist_count">
-        <item quantity="one">%d artis</item>
         <item quantity="other">%d artis</item>
     </plurals>
     <plurals name="music_album_count">
-        <item quantity="one">%d album</item>
         <item quantity="other">%d album</item>
     </plurals>
     <plurals name="music_track_count_plural">
-        <item quantity="one">%d lagu</item>
         <item quantity="other">%d lagu</item>
     </plurals>
     <string name="music_refresh">Segarkan</string>
@@ -39,8 +36,8 @@
     <string name="music_refresh_complete">Lengkap (+ statistik POPM)</string>
     <string name="music_add_folder">Tambah folder</string>
     <string name="music_settings">Pengaturan</string>
-    <string name="music_scanning">Memindai...</string>
-    <string name="music_loading_stats">Memuat statistik...</string>
+    <string name="music_scanning">Memindai…</string>
+    <string name="music_loading_stats">Memuat statistik…</string>
     <string name="music_add_to_favorites">Tambahkan ke favorit</string>
     <string name="music_added_to_favorites">Ditambahkan ke favorit</string>
     <string name="music_removed_from_favorites">Dihapus dari favorit</string>
@@ -84,11 +81,9 @@
     <string name="music_add_new">Tambah baru</string>
     <string name="music_cancel">Batal</string>
     <plurals name="music_folders_removed">
-        <item quantity="one">%d folder dihapus</item>
         <item quantity="other">%d folder dihapus</item>
     </plurals>
     <plurals name="music_new_tracks_detected">
-        <item quantity="one">%d lagu baru terdeteksi</item>
         <item quantity="other">%d lagu baru terdeteksi</item>
     </plurals>
     <string name="music_edit_tags">Edit tag</string>
@@ -145,11 +140,11 @@
     <string name="music_settings_sync_pending_popm_confirm">Ini akan menulis semua pembaruan jumlah diputar dan rating yang tertunda ke file MP3 Anda.\n\n%1$d file untuk diperbarui.</string>
     <string name="music_settings_sync_pending_popm_none">Tidak ada pembaruan tertunda.\n\nSemua jumlah diputar dan rating Anda sudah disinkronkan ke file MP3 Anda.</string>
     <string name="music_settings_sync_pending_popm_start">Sinkronkan sekarang</string>
-    <string name="music_settings_sync_pending_popm_progress">Menyinkronkan tag...</string>
+    <string name="music_settings_sync_pending_popm_progress">Menyinkronkan tag…</string>
     <string name="music_settings_sync_pending_popm_complete">Tag berhasil disinkronkan</string>
     <string name="music_settings_tag_migration_title">Migrasi tag ID3</string>
     <string name="music_settings_tag_migration_confirm">Operasi ini akan menganalisis pustaka Anda dan mengonversi tag ID3v2.2 usang ke ID3v2.3.\n\nIni akan memperbaiki masalah kompatibilitas dengan metadata POPM.\n\nProgres akan ditampilkan per artis.</string>
-    <string name="music_settings_tag_migration_analyzing">Menganalisis pustaka...</string>
+    <string name="music_settings_tag_migration_analyzing">Menganalisis pustaka…</string>
     <string name="music_settings_tag_migration_analysis_result">Hasil analisis:\n\n• %1$d file dengan ID3v2.2 (untuk dimigrasi)\n• %2$d file dengan ID3v2.3\n• %3$d file dengan ID3v2.4\n\nApakah Anda ingin memulai migrasi?</string>
     <string name="music_settings_tag_migration_no_migration_needed">Semua file Anda sudah menggunakan format tag yang kompatibel (ID3v2.3 atau lebih tinggi).\n\nTidak perlu migrasi.</string>
     <string name="music_settings_tag_migration_progress_title">Migrasi sedang berlangsung</string>
@@ -285,11 +280,9 @@
     <string name="music_browse_search_desc">Cari lagu, artis, album</string>
     <string name="music_browse_folders">Folder</string>
     <plurals name="music_folder_count">
-        <item quantity="one">%d folder</item>
         <item quantity="other">%d folder</item>
     </plurals>
     <plurals name="music_subfolder_count">
-        <item quantity="one">%d subfolder</item>
         <item quantity="other">%d subfolder</item>
     </plurals>
     <string name="music_search_hint">Cari…</string>

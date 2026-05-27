@@ -238,11 +238,11 @@
     <string name="escape_turns_label">Turno %1$d</string>
     <string name="escape_turns_label_zero">Turno 0</string>
     <string name="escape_turns_prefix">Turno </string>
-    <string name="gacha_rarity_commun">Comune</string>
-    <string name="gacha_rarity_essentiel">Essenziale</string>
-    <string name="gacha_rarity_irreel">Irreale</string>
-    <string name="gacha_rarity_mythique">Mitico</string>
-    <string name="gacha_rarity_singulier">Singolare</string>
-    <string name="gacha_rarity_stellaire">Stellare</string>
+    <string name="gacha_rarity_primordial">Primordiale</string>
+    <string name="gacha_rarity_fusion">Fusione</string>
+    <string name="gacha_rarity_supernova">Supernova</string>
+    <string name="gacha_rarity_neutronique">Neutronico</string>
+    <string name="gacha_rarity_spallation">Spallazione</string>
+    <string name="gacha_rarity_synthetique">Sintetico</string>
     <string name="stat_hexrunner_best">Hex Runner – Tempo migliore</string>
 </resources>

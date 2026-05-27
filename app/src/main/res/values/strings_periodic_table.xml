@@ -16,6 +16,7 @@
     <string name="periodic_prop_melt">Melting point</string>
     <string name="periodic_prop_boil">Boiling point</string>
     <string name="periodic_prop_block">Orbital block</string>
+    <string name="periodic_prop_shells">Electron shells</string>
     <string name="periodic_prop_electronegativity">Electronegativity</string>
     <string name="periodic_prop_electron_config">Electron config.</string>
     <string name="periodic_prop_discovered_by">Discovered by</string>

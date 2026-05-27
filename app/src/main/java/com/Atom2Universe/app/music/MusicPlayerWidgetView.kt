@@ -215,11 +215,11 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
     private fun fadeControls(show: Boolean) {
         if (show == controlsVisible) return
         controlsVisible = show
-        if (show) controlsView.visibility = View.VISIBLE
+        if (show) controlsView.visibility = VISIBLE
         controlsView.animate()
             .alpha(if (show) 1f else 0f)
             .setDuration(FADE_DURATION_MS)
-            .withEndAction { if (!show) controlsView.visibility = View.INVISIBLE }
+            .withEndAction { if (!show) controlsView.visibility = INVISIBLE }
             .start()
     }
 
@@ -278,8 +278,8 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
     }
 
     private fun showVisualizerFallback(active: Boolean) {
-        visualizerView.visibility = if (active) View.VISIBLE else View.GONE
-        bgView.visibility = if (active) View.GONE else View.VISIBLE
+        visualizerView.visibility = if (active) VISIBLE else GONE
+        bgView.visibility = if (active) GONE else VISIBLE
     }
 
     private fun releaseVisualizer() {
@@ -330,11 +330,11 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         lyricsJob?.cancel()
         lyricsJob = scope.launch {
             // Afficher un état de chargement
-            lyricsOverlay.visibility = View.VISIBLE
-            lyricsScrollView.visibility = View.GONE
-            lyricsSyncLine.visibility = View.GONE
+            lyricsOverlay.visibility = VISIBLE
+            lyricsScrollView.visibility = GONE
+            lyricsSyncLine.visibility = GONE
             lyricsSyncLine.text = "…"
-            lyricsSyncLine.visibility = View.VISIBLE
+            lyricsSyncLine.visibility = VISIBLE
             lyricsVisible = true
             lyricsBtn.setTextColor(0xFF3B82F6.toInt())
 
@@ -352,16 +352,16 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
                 isSyncedLyrics = true
                 lyricsLines = LrcParser.parse(lyrics)
                 lastSyncedLineIdx = -1
-                lyricsSyncLine.visibility = View.VISIBLE
-                lyricsScrollView.visibility = View.GONE
+                lyricsSyncLine.visibility = VISIBLE
+                lyricsScrollView.visibility = GONE
                 // Afficher la ligne courante immédiatement
                 updateSyncedLyrics(MusicPlaybackHolder.getPosition())
             } else {
                 isSyncedLyrics = false
                 lyricsLines = null
                 lyricsTextView.text = lyrics
-                lyricsScrollView.visibility = View.VISIBLE
-                lyricsSyncLine.visibility = View.GONE
+                lyricsScrollView.visibility = VISIBLE
+                lyricsSyncLine.visibility = GONE
             }
         }
     }
@@ -372,7 +372,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         isSyncedLyrics = false
         lyricsLines = null
         lastSyncedLineIdx = -1
-        lyricsOverlay.visibility = View.GONE
+        lyricsOverlay.visibility = GONE
         lyricsBtn.setTextColor(0xFF64748B.toInt())
     }
 
@@ -447,7 +447,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
                 "%02d".format(position + 1)
             view.findViewById<TextView>(R.id.viz_item_name).text = name
             val checkView = view.findViewById<TextView>(R.id.viz_item_check)
-            checkView.visibility = if (mode == currentVizMode) View.VISIBLE else View.INVISIBLE
+            checkView.visibility = if (mode == currentVizMode) VISIBLE else INVISIBLE
             view.setBackgroundColor(
                 if (mode == currentVizMode) 0x22_3B_82_F6.toInt() else 0x00_00_00_00
             )
@@ -485,12 +485,12 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
 
     private fun updateTrackUi(track: MusicTrack?) {
         if (track == null) {
-            noMusicView.visibility = View.VISIBLE
+            noMusicView.visibility = VISIBLE
             trackTitle.text = ""
             trackArtist.text = ""
             return
         }
-        noMusicView.visibility = View.GONE
+        noMusicView.visibility = GONE
         trackTitle.text = track.title
         trackTitle.isSelected = true
         trackArtist.text = track.artist

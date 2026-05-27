@@ -13,13 +13,13 @@ data class ElementBonuses(
 
 object ElementBonusEngine {
     // Attribution des bonus par rareté :
-    //   H (#1)        → flat +1 APC/copie
-    //   He (#2)       → flat +1 APS/copie
-    //   ESSENTIEL     → ×mult APC  +0.01%/copie
-    //   STELLAIRE     → ×mult APS  +0.01%/copie
-    //   MYTHIQUE      → ×mult APC  +0.1%/copie
-    //   SINGULIER     → ×mult APS  +0.1%/copie
-    //   IRRÉEL        → ×mult APC+APS +0.1%/copie chacun
+    //   H (#1)          → flat +1 APC/copie
+    //   He (#2)         → flat +1 APS/copie
+    //   FUSION          → ×mult APS  +0.01%/copie
+    //   SUPERNOVA       → ×mult APC  +0.1%/copie
+    //   NEUTRONIQUE     → ×mult APS  +0.1%/copie
+    //   SPALLATION      → ×mult APC  +0.01%/copie
+    //   SYNTHETIQUE     → ×mult APC+APS +0.1%/copie chacun
 
     private const val BONUS_LOW  = 0.0001  // 0.01%
     private const val BONUS_HIGH = 0.001   // 0.1%
@@ -38,11 +38,11 @@ object ElementBonusEngine {
                 1 -> flatApc += copies
                 2 -> flatAps += copies
                 else -> when (rarityOf(atomicNum)) {
-                    GachaRarity.ESSENTIEL -> multApc += copies * BONUS_LOW
-                    GachaRarity.STELLAIRE -> multAps += copies * BONUS_LOW
-                    GachaRarity.MYTHIQUE  -> multApc += copies * BONUS_HIGH
-                    GachaRarity.SINGULIER -> multAps += copies * BONUS_HIGH
-                    GachaRarity.IRREEL    -> {
+                    GachaRarity.FUSION      -> multAps += copies * BONUS_LOW
+                    GachaRarity.SUPERNOVA   -> multApc += copies * BONUS_HIGH
+                    GachaRarity.NEUTRONIQUE -> multAps += copies * BONUS_HIGH
+                    GachaRarity.SPALLATION  -> multApc += copies * BONUS_LOW
+                    GachaRarity.SYNTHETIQUE -> {
                         multApc += copies * BONUS_HIGH
                         multAps += copies * BONUS_HIGH
                     }

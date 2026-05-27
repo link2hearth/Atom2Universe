@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.midi.sf2
+﻿package com.Atom2Universe.app.midi.sf2
 
 /**
  * EQ graphique 10 bandes pour le pipeline audio SF2.
@@ -20,7 +20,7 @@ class MidiEqualizerEngine(private val sampleRate: Int) {
 
     var enabled = false
 
-    private val bandGainsDb = FloatArray(BAND_COUNT) { 0f }
+    private val bandGainsDb = FloatArray(BAND_COUNT)
     private val filtersLeft  = Array(BAND_COUNT) { MidiEqBiquadFilter() }
     private val filtersRight = Array(BAND_COUNT) { MidiEqBiquadFilter() }
 

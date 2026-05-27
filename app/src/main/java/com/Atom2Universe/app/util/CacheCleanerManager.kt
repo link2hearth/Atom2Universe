@@ -304,13 +304,9 @@ class CacheCleanerManager(private val context: Context) {
 
         // Vérification par parent directory
         val parentName = file.parentFile?.name
-        if (parentName != null && referencedFiles.any { ref ->
+        return parentName != null && referencedFiles.any { ref ->
             ref.contains(parentName) && ref.contains(fileName)
-        }) {
-            return true
         }
-
-        return false
     }
 
     /**

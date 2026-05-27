@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Şimdi temizle</string>
     <string name="settings_cleanup_enabled">✅ Otomatik temizleme etkinleştirildi</string>
     <string name="settings_cleanup_disabled">❌ Otomatik temizleme devre dışı bırakıldı</string>
-    <string name="settings_cleanup_in_progress">🧹 Temizleme devam ediyor...</string>
-    <string name="settings_cleanup_analyzing">Dosyalar analiz ediliyor...</string>
+    <string name="settings_cleanup_in_progress">🧹 Temizleme devam ediyor…</string>
+    <string name="settings_cleanup_analyzing">Dosyalar analiz ediliyor…</string>
     <string name="settings_cleanup_no_orphans">✅ Yetim dosya bulunamadı</string>
     <string name="settings_cleanup_nothing_to_clean">Temizlenecek bir şey yok</string>
     <string name="settings_cleanup_error">❌ Temizleme sırasında hata</string>

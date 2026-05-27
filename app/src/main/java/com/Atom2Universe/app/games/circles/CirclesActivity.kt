@@ -50,7 +50,7 @@ class CirclesActivity : ThemedActivity() {
         setContentView(R.layout.activity_circles)
         enableImmersiveMode()
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         gameView   = findViewById(R.id.circles_game_view)
         tvSeed     = findViewById(R.id.circles_tv_seed)

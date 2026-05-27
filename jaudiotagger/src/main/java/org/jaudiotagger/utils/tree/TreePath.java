@@ -39,7 +39,7 @@ import java.util.Vector;
  * @author Scott Violet
  * @author Philip Milne
  */
-public class TreePath extends Object implements Serializable {
+public class TreePath implements Serializable {
     /** Path representing the parent, null if lastPathComponent represents
      * the root. */
     private TreePath           parentPath;

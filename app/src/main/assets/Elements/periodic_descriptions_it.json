@@ -1320,32 +1320,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Nucleosintesi del Big Bang",
       "range": "Elementi 1–2 · H, He",
       "body": "Nati nei primi 3 minuti dopo il Big Bang, idrogeno ed elio rappresentano circa il 99% di tutta la materia visibile dell'universo. Man mano che il giovane universo si espandeva e raffreddava da miliardi di gradi, protoni e neutroni si assemblavano nei primi nuclei atomici, quasi esclusivamente idrogeno ed elio, con tracce di litio."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Spallazione cosmica",
       "range": "Elementi 3–5 · Li, Be, B",
       "body": "Questi tre elementi sono troppo fragili per sopravvivere all'interno delle stelle: le reazioni di fusione li distruggono più in fretta di quanto possano formarsi. Si producono quando i raggi cosmici che viaggiano a velocità prossime a quella della luce collidono con atomi più pesanti (carbonio, ossigeno, azoto) che derivano nello spazio interstellare, frammentandoli in elementi più leggeri. Questo processo, chiamato spallazione, è raro e inefficiente, motivo per cui Li, Be e B sono tra gli elementi meno abbondanti del cosmo."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Fusione stellare",
       "range": "Elementi 6–14 · C a Si",
       "body": "Forgiati nei nuclei delle stelle attraverso cicli successivi di combustione: l'idrogeno si fonde in elio, l'elio in carbonio e ossigeno, il carbonio in neon e magnesio, e così via fino al silicio. Ogni stadio richiede una stella più massiccia e più calda, rilasciando energia colossale. Il carbonio e l'ossigeno prodotti qui formano la colonna vertebrale molecolare di tutta la chimica organica e della vita. Quando queste stelle muoiono, disperdono questi elementi per tutta la galassia."
     },
-    "mythique": {
+    "supernova": {
       "process": "Combustione del silicio – Picco del ferro",
       "range": "Elementi 15–28 · P a Ni",
       "body": "I prodotti finali della fusione stellare. Nei nuclei delle stelle più massicce, la combustione del silicio produce gli elementi del picco del ferro: cromo, manganese, ferro, cobalto e nichel. La fusione si ferma qui: il ferro-56 e il nichel-62 hanno la più alta energia di legame per nucleone, il che significa che fonderli ulteriormente consumerebbe energia anziché rilasciarla. Senza pressione verso l'esterno per contrastare la gravità, queste stelle collassano ed esplodono come supernovae."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Cattura di neutroni – Supernovae",
       "range": "Elementi 29–92 · Cu a U",
       "body": "Oltre il picco del ferro, la sola fusione stellare non può costruire questi elementi: richiedono la cattura di neutroni. Il processo-s lento, che si svolge nel corso di migliaia di anni nelle stelle giganti AGB, aggiunge gradualmente neutroni per formare argento, stagno, bario e piombo. Il processo-r violento, innescato in una frazione di secondo durante le fusioni di stelle di neutroni e le supernovae, forgia gli atomi più pesanti: oro, platino, uranio. Ogni atomo d'oro sulla Terra è nato in una catastrofe cosmica."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Sintetico – Nessun isotopo stabile",
       "range": "Tc (43), Pm (61) – Elementi 93–118",
       "body": "Il tecnezio (43) e il promezio (61) non hanno isotopi stabili e non si trovano naturalmente sulla Terra: qualsiasi quantità formata nelle stelle antiche è decaduta da tempo. Gli elementi dal 93 al 118 esistono solo perché gli esseri umani li hanno creati negli acceleratori di particelle, sparando nuclei atomici l'uno contro l'altro a enormi velocità. Molti sopravvivono solo microsecondi prima di decadere. L'oganessone (118), l'elemento confermato più pesante, ha richiesto 1,1 bilioni di collisioni per produrre solo 3 atomi, sintetizzato per la prima volta nel 2002."

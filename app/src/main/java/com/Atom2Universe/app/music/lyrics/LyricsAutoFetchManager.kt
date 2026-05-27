@@ -135,9 +135,7 @@ object LyricsAutoFetchManager {
             // Pas de paroles, lancer la recherche en ligne
             Log.d(TAG, "→ Fetching lyrics online for: ${track.title}")
 
-            val result = LyricsManager.fetchLyricsOnline(track)
-
-            when (result) {
+            when (val result = LyricsManager.fetchLyricsOnline(track)) {
                 is LyricsResult.Success -> {
                     Log.d(TAG, "✓ Found lyrics from ${result.source} for: ${track.title}")
 
@@ -184,9 +182,7 @@ object LyricsAutoFetchManager {
                 }
 
                 Log.d(TAG, "Prefetching lyrics for next track: ${nextTrack.title} by ${nextTrack.artist}")
-                val result = LyricsManager.fetchLyricsOnline(nextTrack)
-
-                when (result) {
+                when (val result = LyricsManager.fetchLyricsOnline(nextTrack)) {
                     is LyricsResult.Success -> Log.d(TAG, "✓ Prefetch success (${result.source}): ${nextTrack.title}")
                     is LyricsResult.NotFound -> Log.d(TAG, "✗ Prefetch: no lyrics found for: ${nextTrack.title}")
                     is LyricsResult.RateLimited -> Log.w(TAG, "⚠ Prefetch rate limited: ${nextTrack.title}")

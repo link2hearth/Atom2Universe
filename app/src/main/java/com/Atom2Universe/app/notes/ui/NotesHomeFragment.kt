@@ -152,8 +152,7 @@ class NotesHomeFragment : Fragment() {
 
     private fun exportBackup(uri: Uri) {
         lifecycleScope.launch {
-            val result = backupManager.exportFullBackup(uri)
-            val msg = when (result) {
+            val msg = when (val result = backupManager.exportFullBackup(uri)) {
                 is NotesBackupManager.BackupResult.Success -> result.message
                 is NotesBackupManager.BackupResult.Error -> result.message
             }
@@ -174,8 +173,7 @@ class NotesHomeFragment : Fragment() {
 
     private fun importBackup(uri: Uri, mode: NotesBackupManager.ImportMode) {
         lifecycleScope.launch {
-            val result = backupManager.importFullBackup(uri, mode)
-            val msg = when (result) {
+            val msg = when (val result = backupManager.importFullBackup(uri, mode)) {
                 is NotesBackupManager.BackupResult.Success -> result.message
                 is NotesBackupManager.BackupResult.Error -> result.message
             }

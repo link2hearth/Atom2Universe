@@ -169,9 +169,7 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
             setLoading(true)
             statusText.text = getString(R.string.lyrics_searching)
 
-            val result = LyricsManager.fetchLyricsOnline(track, forceRefresh = true)
-
-            when (result) {
+            when (val result = LyricsManager.fetchLyricsOnline(track, forceRefresh = true)) {
                 is com.Atom2Universe.app.music.lyrics.api.LyricsResult.Success -> {
                     lyricsText.setText(result.lyrics)
                     statusText.text = getString(R.string.lyrics_found_from, result.source)

@@ -13,7 +13,7 @@
     <string name="midi_clear_library">Hapus pustaka</string>
     <string name="midi_clear_library_confirm">Apakah Anda yakin ingin menghapus seluruh pustaka MIDI?</string>
     <string name="midi_library_cleared">Pustaka dihapus</string>
-    <string name="midi_library_refreshing">Menyegarkan pustaka...</string>
+    <string name="midi_library_refreshing">Menyegarkan pustaka…</string>
     <string name="midi_action_previous">Sebelumnya</string>
     <string name="midi_action_next">Berikutnya</string>
     <string name="midi_action_shuffle">Acak</string>
@@ -52,7 +52,6 @@
     <string name="midi_clear">Kosongkan</string>
     <string name="midi_playlist_cleared">Daftar putar dikosongkan</string>
     <plurals name="midi_track_count">
-        <item quantity="one">%d lagu</item>
         <item quantity="other">%d lagu</item>
     </plurals>
     <string name="midi_playlists_empty">Tidak ada daftar putar.\nBuat satu!</string>
@@ -63,14 +62,14 @@
     <string name="midi_add_to_playlist">Tambahkan ke daftar putar</string>
     <string name="midi_add_to_playlist_title">Tambahkan \"%1$s\"</string>
     <string name="midi_new_playlist">+ Daftar putar baru</string>
-    <string name="midi_loading_playlists">Memuat...</string>
+    <string name="midi_loading_playlists">Memuat…</string>
     <string name="midi_track_added_to_playlist">Ditambahkan ke %1$s</string>
     <string name="midi_track_already_in_playlist">Sudah ada di daftar putar ini</string>
     <string name="midi_track_info">Informasi</string>
-    <string name="midi_info_loading">Menganalisis file...</string>
-    <string name="midi_scan_loading_title">Memindai...</string>
+    <string name="midi_info_loading">Menganalisis file…</string>
+    <string name="midi_scan_loading_title">Memindai…</string>
     <string name="midi_scan_loading_progress">%1$d / %2$d file</string>
-    <string name="midi_scan_loading_counting">Menghitung file...</string>
+    <string name="midi_scan_loading_counting">Menghitung file…</string>
     <string name="midi_audio_settings">Pengaturan audio</string>
     <string name="midi_audio_normalization">Normalisasi volume</string>
     <string name="midi_audio_normalization_desc">Mengurangi puncak volume untuk menghindari distorsi</string>
@@ -103,8 +102,8 @@
     <string name="midi_no_tracks_found">Tidak ada lagu ditemukan</string>
     <string name="midi_error_message">Kesalahan: %1$s</string>
     <string name="midi_service_not_connected">Layanan pemutaran tidak terhubung</string>
-    <string name="midi_importing_soundfont">Mengimpor SoundFont...</string>
-    <string name="midi_scanning_folder">Memindai folder MIDI...</string>
+    <string name="midi_importing_soundfont">Mengimpor SoundFont…</string>
+    <string name="midi_scanning_folder">Memindai folder MIDI…</string>
     <string name="midi_synthesizer_selection">Synthesizer</string>
     <string name="midi_synth_sonivox">Sonivox (bawaan)</string>
     <string name="midi_synth_sonivox_desc">Synthesizer bawaan ringan dengan suara General MIDI. Tidak memerlukan file eksternal.</string>

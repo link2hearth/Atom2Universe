@@ -16,6 +16,7 @@
     <string name="periodic_prop_melt">Schmelzpunkt</string>
     <string name="periodic_prop_boil">Siedepunkt</string>
     <string name="periodic_prop_block">Orbitalblock</string>
+    <string name="periodic_prop_shells">Elektronenschalen</string>
     <string name="periodic_prop_electronegativity">Elektronegativität</string>
     <string name="periodic_prop_electron_config">Elektronenkonfiguration</string>
     <string name="periodic_prop_discovered_by">Entdeckt von</string>

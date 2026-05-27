@@ -1384,32 +1384,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Nucleosíntesis del Big Bang",
       "range": "Elementos 1–2 · H, He",
       "body": "Nacidos en los primeros 3 minutos tras el Big Bang, el hidrógeno y el helio representan aproximadamente el 99 % de toda la materia visible del universo. A medida que el joven universo se expandía y enfriaba desde miles de millones de grados, protones y neutrones se ensamblaron en los primeros núcleos atómicos, casi exclusivamente hidrógeno y helio, con trazas de litio."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Espallación cósmica",
       "range": "Elementos 3–5 · Li, Be, B",
       "body": "Estos tres elementos son demasiado frágiles para sobrevivir en el interior de las estrellas: las reacciones de fusión los destruyen más deprisa de lo que pueden formarse. Se producen cuando los rayos cósmicos que viajan a velocidades cercanas a la de la luz colisionan con átomos más pesados (carbono, oxígeno, nitrógeno) que derivan por el espacio interestelar, fragmentándolos en elementos más ligeros. Este proceso, llamado espallación, es raro e ineficiente, razón por la que Li, Be y B se encuentran entre los elementos menos abundantes del cosmos."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Fusión estelar",
       "range": "Elementos 6–14 · C a Si",
       "body": "Forjados en los núcleos de las estrellas mediante ciclos sucesivos de combustión: el hidrógeno se fusiona en helio, el helio en carbono y oxígeno, el carbono en neón y magnesio, y así sucesivamente hasta el silicio. Cada etapa requiere una estrella más masiva y más caliente, liberando energía colosal. El carbono y el oxígeno producidos aquí forman la columna vertebral molecular de toda la química orgánica y la vida. Cuando estas estrellas mueren, dispersan estos elementos por toda la galaxia."
     },
-    "mythique": {
+    "supernova": {
       "process": "Quema de silicio – Pico del hierro",
       "range": "Elementos 15–28 · P a Ni",
       "body": "Los productos finales de la fusión estelar. En los núcleos de las estrellas más masivas, la quema de silicio produce los elementos del pico del hierro: cromo, manganeso, hierro, cobalto y níquel. La fusión se detiene aquí: el hierro-56 y el níquel-62 tienen la mayor energía de enlace por nucleón, lo que significa que fusionarlos consumiría energía en lugar de liberarla. Sin presión hacia afuera para contrarrestar la gravedad, estas estrellas colapsan y explotan como supernovas."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Captura de neutrones – Supernovas",
       "range": "Elementos 29–92 · Cu a U",
       "body": "Más allá del pico del hierro, la fusión estelar por sí sola no puede construir estos elementos: requieren captura de neutrones. El proceso-s lento, que se desarrolla a lo largo de miles de años en estrellas gigantes AGB, añade neutrones gradualmente para formar plata, estaño, bario y plomo. El proceso-r violento, desencadenado en una fracción de segundo durante fusiones de estrellas de neutrones y supernovas, forja los átomos más pesados: oro, platino, uranio. Cada átomo de oro en la Tierra nació en una catástrofe cósmica."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Sintético – Sin isótopos estables",
       "range": "Tc (43), Pm (61) – Elementos 93–118",
       "body": "El tecnecio (43) y el prometio (61) no tienen isótopos estables y no se encuentran naturalmente en la Tierra: cualquier cantidad formada en estrellas antiguas se ha desintegrado hace mucho tiempo. Los elementos del 93 al 118 solo existen porque los seres humanos los crearon en aceleradores de partículas, disparando núcleos atómicos entre sí a enormes velocidades. Muchos sobreviven solo microsegundos antes de desintegrarse. El oganesón (118), el elemento confirmado más pesado, requirió 1,1 billones de colisiones para producir apenas 3 átomos, sintetizado por primera vez en 2002."

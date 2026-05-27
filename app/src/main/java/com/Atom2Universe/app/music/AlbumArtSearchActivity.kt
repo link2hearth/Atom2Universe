@@ -217,7 +217,7 @@ class AlbumArtSearchActivity : ThemedActivity() {
                         Log.d(TAG, "Download and compression successful: $compressedPath")
                         val resultIntent = Intent()
                         resultIntent.putExtra(RESULT_IMAGE_PATH, compressedPath)
-                        setResult(Activity.RESULT_OK, resultIntent)
+                        setResult(RESULT_OK, resultIntent)
                         finish()
                     } else {
                         Toast.makeText(this@AlbumArtSearchActivity, R.string.music_download_error, Toast.LENGTH_SHORT).show()

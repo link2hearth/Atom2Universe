@@ -111,7 +111,7 @@ class AudioEditorActivity : ThemedActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         try {
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 result.data?.data?.let { uri ->
                     val displayName = getFileName(uri)
                     viewModel.loadAudioFile(uri, displayName)
@@ -127,7 +127,7 @@ class AudioEditorActivity : ThemedActivity() {
     private val exportFileLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             result.data?.data?.let { uri ->
                 pendingExportFormat?.let { format ->
                     performExport(uri, format)

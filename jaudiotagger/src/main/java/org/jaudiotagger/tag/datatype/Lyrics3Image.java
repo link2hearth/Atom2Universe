@@ -220,7 +220,7 @@ public class Lyrics3Image extends AbstractDataType
 
         if (time != null)
         {
-            str += (", timestamp = " + time.toString());
+            str += (", timestamp = " + time);
         }
 
         return str + "\n";

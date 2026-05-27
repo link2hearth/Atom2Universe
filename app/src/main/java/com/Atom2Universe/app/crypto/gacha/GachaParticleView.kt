@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.crypto.gacha
+﻿package com.Atom2Universe.app.crypto.gacha
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -28,7 +28,7 @@ class GachaParticleView @JvmOverloads constructor(
     private var effectCompleted = false
     private var falloutActive = false
     private var falloutStartMs = 0L
-    private var rarity: GachaRarity = GachaRarity.COMMUN
+    private var rarity: GachaRarity = GachaRarity.PRIMORDIAL
     private var categoryColor: Int = 0xFFFFFFFF.toInt()
     private var animator: ValueAnimator? = null
 
@@ -59,7 +59,7 @@ class GachaParticleView @JvmOverloads constructor(
     )
 
     data class LightningPath(
-        val offsets: FloatArray = FloatArray(8) { 0f },
+        val offsets: FloatArray = FloatArray(8),
         var color: Int = Color.WHITE,
         var originX: Float = 0f,
         var originY: Float = 0f,
@@ -95,16 +95,16 @@ class GachaParticleView @JvmOverloads constructor(
     // ── Durées totales ────────────────────────────────────────────────────────
 
     private fun totalDuration(r: GachaRarity): Long = when (r) {
-        GachaRarity.COMMUN    -> 2200L
-        GachaRarity.ESSENTIEL -> BASE_MS + 2800L
-        GachaRarity.STELLAIRE -> BASE_MS + 3200L
-        GachaRarity.MYTHIQUE  -> BASE_MS + 3800L
-        GachaRarity.SINGULIER -> BASE_MS + 4500L
-        GachaRarity.IRREEL    -> BASE_MS + 5500L
+        GachaRarity.PRIMORDIAL  -> 2200L
+        GachaRarity.FUSION      -> BASE_MS + 2800L
+        GachaRarity.SUPERNOVA   -> BASE_MS + 3200L
+        GachaRarity.NEUTRONIQUE -> BASE_MS + 3800L
+        GachaRarity.SPALLATION  -> BASE_MS + 4500L
+        GachaRarity.SYNTHETIQUE -> BASE_MS + 5500L
     }
 
     private fun basePhaseEnd(r: GachaRarity): Float =
-        if (r == GachaRarity.COMMUN) 1f else BASE_MS.toFloat() / totalDuration(r)
+        if (r == GachaRarity.PRIMORDIAL) 1f else BASE_MS.toFloat() / totalDuration(r)
 
     // ── API publique ──────────────────────────────────────────────────────────
 
@@ -209,12 +209,12 @@ class GachaParticleView @JvmOverloads constructor(
     private fun generateParticles() {
         particles.clear()
         val count = when (rarity) {
-            GachaRarity.COMMUN    -> 0
-            GachaRarity.ESSENTIEL -> 80
-            GachaRarity.STELLAIRE -> 100
-            GachaRarity.MYTHIQUE  -> 130
-            GachaRarity.SINGULIER -> 160
-            GachaRarity.IRREEL    -> 200
+            GachaRarity.PRIMORDIAL  -> 0
+            GachaRarity.FUSION      -> 80
+            GachaRarity.SUPERNOVA   -> 100
+            GachaRarity.NEUTRONIQUE -> 130
+            GachaRarity.SPALLATION  -> 160
+            GachaRarity.SYNTHETIQUE -> 200
         }
         val pool = rarityColors(rarity)
         repeat(count) {
@@ -264,29 +264,29 @@ class GachaParticleView @JvmOverloads constructor(
     }
 
     private fun rarityColors(r: GachaRarity): List<Int> = when (r) {
-        GachaRarity.COMMUN    -> RAINBOW
-        GachaRarity.ESSENTIEL -> listOf(
-            0xFF00FF88.toInt(), 0xFF00FF44.toInt(), 0xFF00CC66.toInt(),
-            0xFFAAFFCC.toInt(), 0xFF44FFAA.toInt(), 0xFFCCFF88.toInt(),
-            0xFF88FFCC.toInt(), 0xFFFFFFCC.toInt()
-        )
-        GachaRarity.STELLAIRE -> listOf(
+        GachaRarity.PRIMORDIAL  -> RAINBOW
+        GachaRarity.FUSION      -> listOf(
             0xFF00CCFF.toInt(), 0xFF00AAFF.toInt(), 0xFF44DDFF.toInt(),
             0xFFAAEEFF.toInt(), 0xFFFFFFFF.toInt(), 0xFF88CCFF.toInt(),
             0xFF0066FF.toInt(), 0xFFCCEEFF.toInt(), 0xFF4400FF.toInt()
         )
-        GachaRarity.MYTHIQUE  -> listOf(
+        GachaRarity.SUPERNOVA   -> listOf(
             0xFFFFCC00.toInt(), 0xFFFF8800.toInt(), 0xFFFFEE44.toInt(),
             0xFFFF6600.toInt(), 0xFFFFDD88.toInt(), 0xFFFFFFAA.toInt(),
             0xFFFF4400.toInt(), 0xFFFFBB00.toInt(), 0xFFFFFFFF.toInt()
         )
-        GachaRarity.SINGULIER -> listOf(
+        GachaRarity.NEUTRONIQUE -> listOf(
             0xFFFF55FF.toInt(), 0xFFFF00CC.toInt(), 0xFF9955FF.toInt(),
             0xFF00FFFF.toInt(), 0xFFFFFF00.toInt(), 0xFFFF4444.toInt(),
             0xFF44FFFF.toInt(), 0xFFFF44FF.toInt(), 0xFF8844FF.toInt(),
             0xFFFFFFFF.toInt(), 0xFF00FF88.toInt(), 0xFF8800FF.toInt()
         )
-        GachaRarity.IRREEL    -> listOf(
+        GachaRarity.SPALLATION  -> listOf(
+            0xFF00FF88.toInt(), 0xFF00FF44.toInt(), 0xFF00CC66.toInt(),
+            0xFFAAFFCC.toInt(), 0xFF44FFAA.toInt(), 0xFFCCFF88.toInt(),
+            0xFF88FFCC.toInt(), 0xFFFFFFCC.toInt()
+        )
+        GachaRarity.SYNTHETIQUE -> listOf(
             0xFFFF3333.toInt(), 0xFFFF6600.toInt(), 0xFFFFFFFF.toInt(),
             0xFFCC00FF.toInt(), 0xFFFF0088.toInt(), 0xFF8800FF.toInt(),
             0xFFFF00FF.toInt(), 0xFFFF8800.toInt(), 0xFF00FFFF.toInt(),
@@ -309,14 +309,14 @@ class GachaParticleView @JvmOverloads constructor(
         drawBaseExplosion(canvas, cx, cy, progressBase, progress)
         drawCategoryAura(canvas, cx, cy, progress, totalDuration(rarity))
 
-        if (rarity != GachaRarity.COMMUN && progress > bpe) {
+        if (rarity != GachaRarity.PRIMORDIAL && progress > bpe) {
             val ps = (progress - bpe) / (1f - bpe)
             when (rarity) {
-                GachaRarity.ESSENTIEL -> drawEssentiel(canvas, cx, cy, w, h, ps)
-                GachaRarity.STELLAIRE -> drawStellaire(canvas, cx, cy, w, h, ps)
-                GachaRarity.MYTHIQUE  -> drawMythique(canvas, cx, cy, w, h, ps)
-                GachaRarity.SINGULIER -> drawSingulier(canvas, cx, cy, w, h, ps)
-                GachaRarity.IRREEL    -> drawIrreel(canvas, cx, cy, w, h, ps)
+                GachaRarity.FUSION      -> drawFusion(canvas, cx, cy, w, h, ps)
+                GachaRarity.SUPERNOVA   -> drawSupernova(canvas, cx, cy, w, h, ps)
+                GachaRarity.NEUTRONIQUE -> drawNeutronique(canvas, cx, cy, w, h, ps)
+                GachaRarity.SPALLATION  -> drawSpallation(canvas, cx, cy, w, h, ps)
+                GachaRarity.SYNTHETIQUE -> drawSynthetique(canvas, cx, cy, w, h, ps)
                 else -> {}
             }
         }
@@ -366,9 +366,9 @@ class GachaParticleView @JvmOverloads constructor(
         }
     }
 
-    // ── ESSENTIEL ─────────────────────────────────────────────────────────────
+    // ── SPALLATION ────────────────────────────────────────────────────────────
 
-    private fun drawEssentiel(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
+    private fun drawSpallation(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
         drawCenterBloom(canvas, cx, cy, 160f + p * 240f, 0xFF33FF99.toInt(), (0.24f * (1f - p * 0.5f)).coerceIn(0f, 0.3f))
 
         // 3 anneaux verts successifs
@@ -441,9 +441,9 @@ class GachaParticleView @JvmOverloads constructor(
         }
     }
 
-    // ── STELLAIRE ─────────────────────────────────────────────────────────────
+    // ── FUSION ────────────────────────────────────────────────────────────────
 
-    private fun drawStellaire(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
+    private fun drawFusion(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
         drawCenterBloom(canvas, cx, cy, 220f + p * 280f, 0xFF33CCFF.toInt(), (0.22f * (1f - p * 0.4f)).coerceIn(0f, 0.3f))
 
         // Flash cyan initial
@@ -532,9 +532,9 @@ class GachaParticleView @JvmOverloads constructor(
         }
     }
 
-    // ── MYTHIQUE ──────────────────────────────────────────────────────────────
+    // ── SUPERNOVA ─────────────────────────────────────────────────────────────
 
-    private fun drawMythique(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
+    private fun drawSupernova(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
         drawCenterBloom(canvas, cx, cy, 190f + p * 260f, 0xFFFFAA33.toInt(), (0.28f * (1f - p * 0.35f)).coerceIn(0f, 0.35f))
 
         // Phase 1 (0→35%) : tremblement + fond rouge/or progressif
@@ -620,9 +620,9 @@ class GachaParticleView @JvmOverloads constructor(
         }
     }
 
-    // ── SINGULIER ─────────────────────────────────────────────────────────────
+    // ── NEUTRONIQUE ───────────────────────────────────────────────────────────
 
-    private fun drawSingulier(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
+    private fun drawNeutronique(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
         drawCenterBloom(canvas, cx, cy, 210f + p * 320f, 0xFFAA33FF.toInt(), (0.26f * (1f - p * 0.25f)).coerceIn(0f, 0.35f))
 
         // Phase 1 (0→25%) : 1 éclair aléatoire + halo violet
@@ -709,9 +709,9 @@ class GachaParticleView @JvmOverloads constructor(
         }
     }
 
-    // ── IRRÉEL ────────────────────────────────────────────────────────────────
+    // ── SYNTHÉTIQUE ───────────────────────────────────────────────────────────
 
-    private fun drawIrreel(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
+    private fun drawSynthetique(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float, p: Float) {
         drawCenterBloom(canvas, cx, cy, 260f + p * 420f, 0xFFFF3355.toInt(), (0.24f * (1f - p * 0.2f)).coerceIn(0f, 0.34f))
 
         // Phase 1 (0→18%) : fond rouge progressif + premier flash

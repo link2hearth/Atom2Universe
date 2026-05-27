@@ -829,10 +829,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         }
 
         try {
-            if (audioRenderer?.start() != true) {
-                return false
-            }
-            return true
+            return audioRenderer?.start() == true
         } catch (_: Exception) {
             return false
         }

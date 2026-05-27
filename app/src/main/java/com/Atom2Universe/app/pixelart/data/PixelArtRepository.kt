@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.pixelart.data
+﻿package com.Atom2Universe.app.pixelart.data
 
 import android.content.Context
 import android.graphics.Color
@@ -260,7 +260,7 @@ class PixelArtRepository(context: Context) {
             )
 
             // Créer une frame vide (transparente)
-            val emptyPixelData = IntArray(width * height) { Color.TRANSPARENT }
+            val emptyPixelData = IntArray(width * height)
             val frame = PixelArtFrame(
                 projectId = 0,
                 frameIndex = 0,

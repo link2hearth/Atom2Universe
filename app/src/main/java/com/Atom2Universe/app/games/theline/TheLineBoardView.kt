@@ -111,7 +111,7 @@ class TheLineBoardView @JvmOverloads constructor(
         for ((_, path) in g.paths) {
             if (path.sequence.size < 2) continue
             paintLine.color = path.colorValue
-            val linePath = android.graphics.Path()
+            val linePath = Path()
             val first = path.sequence[0]
             linePath.moveTo(cellCenterX(first.x), cellCenterY(first.y))
             for (i in 1 until path.sequence.size) {
@@ -167,7 +167,7 @@ class TheLineBoardView @JvmOverloads constructor(
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val g = game ?: return false
-        val p = g.puzzle ?: return false
+        g.puzzle ?: return false
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {

@@ -15,6 +15,7 @@
     <string name="periodic_prop_melt">Ponto de fusão</string>
     <string name="periodic_prop_boil">Ponto de ebulição</string>
     <string name="periodic_prop_block">Bloco orbital</string>
+    <string name="periodic_prop_shells">Camadas eletrônicas</string>
     <string name="periodic_prop_electronegativity">Eletronegatividade</string>
     <string name="periodic_prop_electron_config">Config. eletrónica</string>
     <string name="periodic_prop_discovered_by">Descoberto por</string>

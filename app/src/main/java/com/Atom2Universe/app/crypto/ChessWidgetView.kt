@@ -98,12 +98,12 @@ class ChessWidgetView @JvmOverloads constructor(
         resultText = findViewById(R.id.chess_result_text)
 
         resultOverlay.setOnClickListener {
-            resultOverlay.visibility = View.GONE
+            resultOverlay.visibility = GONE
         }
 
         // Bouton reset : affiche l'overlay de sélection de difficulté
         findViewById<TextView>(R.id.chess_btn_reset).setOnClickListener {
-            difficultyOverlay.visibility = View.VISIBLE
+            difficultyOverlay.visibility = VISIBLE
         }
 
         // Boutons de l'overlay
@@ -120,7 +120,7 @@ class ChessWidgetView @JvmOverloads constructor(
             startNewGame(ChessDifficulty.TWO_PLAYER)
         }
         findViewById<TextView>(R.id.chess_diff_cancel).setOnClickListener {
-            difficultyOverlay.visibility = View.GONE
+            difficultyOverlay.visibility = GONE
         }
 
         reload()
@@ -196,8 +196,8 @@ class ChessWidgetView @JvmOverloads constructor(
 
     // ── Nouvelle partie avec difficulté choisie ───────────────────────────────
     private fun startNewGame(newDifficulty: ChessDifficulty) {
-        difficultyOverlay.visibility = View.GONE
-        resultOverlay.visibility = View.GONE
+        difficultyOverlay.visibility = GONE
+        resultOverlay.visibility = GONE
 
         ai?.cancel()
         ai = null
@@ -383,7 +383,7 @@ class ChessWidgetView @JvmOverloads constructor(
         }
         resultText.text = label
         resultText.setTextColor(color)
-        resultOverlay.visibility = View.VISIBLE
+        resultOverlay.visibility = VISIBLE
         if (playerWon) {
             val reward = when (difficulty) {
                 ChessDifficulty.TRAINING -> 10

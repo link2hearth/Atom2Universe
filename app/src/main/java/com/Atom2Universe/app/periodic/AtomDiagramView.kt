@@ -6,6 +6,7 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
 import kotlin.math.*
+import androidx.core.graphics.toColorInt
 
 class AtomDiagramView @JvmOverloads constructor(
     context: Context,
@@ -36,11 +37,11 @@ class AtomDiagramView @JvmOverloads constructor(
         color = Color.argb(90, 255, 150, 70)
     }
     private val protonPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FF7733")
+        color = "#FF7733".toColorInt()
         style = Paint.Style.FILL
     }
     private val neutronPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#DDE0EE")
+        color = "#DDE0EE".toColorInt()
         style = Paint.Style.FILL
     }
     private val particleHighlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -56,7 +57,7 @@ class AtomDiagramView @JvmOverloads constructor(
         pathEffect = DashPathEffect(floatArrayOf(6f, 5f), 0f)
     }
     private val electronPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#78D8FF")
+        color = "#78D8FF".toColorInt()
         style = Paint.Style.FILL
     }
     private val electronGlowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -88,7 +89,7 @@ class AtomDiagramView @JvmOverloads constructor(
 
         nucleusBgPaint.shader = RadialGradient(
             cx, cy, nucleusR,
-            intArrayOf(Color.parseColor("#2C1A0C"), Color.parseColor("#0C0808")),
+            intArrayOf("#2C1A0C".toColorInt(), "#0C0808".toColorInt()),
             floatArrayOf(0.1f, 1f),
             Shader.TileMode.CLAMP
         )

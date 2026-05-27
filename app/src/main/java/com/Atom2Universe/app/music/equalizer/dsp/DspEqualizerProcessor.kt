@@ -285,8 +285,7 @@ class DspEqualizerProcessor : AudioProcessor {
             return
         }
 
-        val encoding = inputFormat.encoding
-        when (encoding) {
+        when (val encoding = inputFormat.encoding) {
             C.ENCODING_PCM_16BIT -> processInt16(inputBuffer, outputBuffer)
             C.ENCODING_PCM_FLOAT -> processFloat32(inputBuffer, outputBuffer)
             else -> {

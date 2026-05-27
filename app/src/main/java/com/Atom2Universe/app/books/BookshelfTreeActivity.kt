@@ -368,7 +368,7 @@ private fun loadPdfCover(context: Context, uri: Uri): Bitmap? = try {
                 val w = (page.width * scale).toInt().coerceAtLeast(1)
                 val h = (page.height * scale).toInt().coerceAtLeast(1)
                 val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-                bmp.eraseColor(android.graphics.Color.WHITE)
+                bmp.eraseColor(Color.WHITE)
                 page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                 bmp
             }

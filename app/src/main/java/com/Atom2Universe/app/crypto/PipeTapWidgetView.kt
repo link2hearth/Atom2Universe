@@ -89,16 +89,16 @@ class PipeTapWidgetView @JvmOverloads constructor(
             stopTimer()
             pendingDifficulty = game.difficulty
             updateNewGameChips()
-            newGamePanel.visibility = View.VISIBLE
+            newGamePanel.visibility = VISIBLE
         }
 
         findViewById<MaterialButton>(R.id.pipetap_widget_btn_cancel).setOnClickListener {
-            newGamePanel.visibility = View.GONE
+            newGamePanel.visibility = GONE
             if (!game.solved) startTimer()
         }
 
         findViewById<MaterialButton>(R.id.pipetap_widget_btn_confirm).setOnClickListener {
-            newGamePanel.visibility = View.GONE
+            newGamePanel.visibility = GONE
             startNewGame(pendingDifficulty)
         }
 
@@ -135,7 +135,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
                 textSize = 9f
                 setPadding(dp4 * 2, 0, dp4 * 2, 0)
                 val params = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT,
                     (20 * context.resources.displayMetrics.density).toInt()
                 )
                 params.setMargins(dp4 / 2, 0, dp4 / 2, 0)
@@ -163,12 +163,12 @@ class PipeTapWidgetView @JvmOverloads constructor(
     // ── Game ──────────────────────────────────────────────────────────────────────
     private fun showWinOverlay() {
         winMovesText.text = "${game.moves} mvt"
-        winOverlay.visibility = View.VISIBLE
+        winOverlay.visibility = VISIBLE
     }
 
     private fun startNewGame(diff: PipeTapDifficulty) {
         stopTimer()
-        winOverlay.visibility = View.GONE
+        winOverlay.visibility = GONE
         game.newGame(diff)
         gameView.game = game
         gameView.refresh()
@@ -248,9 +248,9 @@ class PipeTapWidgetView @JvmOverloads constructor(
         handler.removeCallbacks(timerRunnable)
         timerRunning = false
         if (game.solved) {
-            winOverlay.visibility = View.VISIBLE
+            winOverlay.visibility = VISIBLE
         } else {
-            winOverlay.visibility = View.GONE
+            winOverlay.visibility = GONE
             startTimer()
         }
         gameView.refresh()

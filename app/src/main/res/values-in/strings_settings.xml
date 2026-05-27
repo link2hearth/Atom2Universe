@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Bersihkan sekarang</string>
     <string name="settings_cleanup_enabled">✅ Pembersihan otomatis diaktifkan</string>
     <string name="settings_cleanup_disabled">❌ Pembersihan otomatis dinonaktifkan</string>
-    <string name="settings_cleanup_in_progress">🧹 Pembersihan sedang berlangsung...</string>
-    <string name="settings_cleanup_analyzing">Menganalisis file...</string>
+    <string name="settings_cleanup_in_progress">🧹 Pembersihan sedang berlangsung…</string>
+    <string name="settings_cleanup_analyzing">Menganalisis file…</string>
     <string name="settings_cleanup_no_orphans">✅ Tidak ada file yatim yang ditemukan</string>
     <string name="settings_cleanup_nothing_to_clean">Tidak ada yang perlu dibersihkan</string>
     <string name="settings_cleanup_error">❌ Kesalahan saat pembersihan</string>

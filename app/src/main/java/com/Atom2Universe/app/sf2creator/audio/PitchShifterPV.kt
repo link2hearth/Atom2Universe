@@ -485,10 +485,10 @@ class PitchShifterPV(
         val n = real.size
 
         // Step 1: Conjugate the input (negate imaginary)
-        val conjImag = FloatArray(n) { -imag[it] }
+        FloatArray(n) { -imag[it] }
 
         // Step 2: Apply forward FFT to the conjugated input
-        val (resultReal, resultImag) = fft(real.copyOf().also { r ->
+        val (_, _) = fft(real.copyOf().also { r ->
             // Actually we need to do FFT on the complex conjugate
             // So we pass real as-is, and negated imag
         })

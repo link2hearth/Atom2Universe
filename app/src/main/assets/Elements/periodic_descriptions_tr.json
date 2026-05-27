@@ -1382,32 +1382,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Büyük Patlama Nükleosentezi",
       "range": "Elementler 1–2 · H, He",
       "body": "Büyük Patlama'nın ilk 3 dakikasında doğan hidrojen ve helyum, evrende görünür maddenin yaklaşık %99'unu oluşturur. Genç evren milyarlarca dereceden genişleyip soğurken protonlar ve nötronlar ilk atom çekirdeklerini oluşturdu — neredeyse tamamen hidrojen ve helyum, lityum ise yalnızca iz miktarlarda."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Kozmik Spalasyon",
       "range": "Elementler 3–5 · Li, Be, B",
       "body": "Bu üç element yıldızların içinde hayatta kalamayacak kadar kırılgandır — füzyon tepkimeleri onları üretilmekten daha hızlı yok eder. Işık hızına yakın bir hızla seyahat eden kozmik ışınlar, yıldızlararası uzayda sürüklenen daha ağır atomlara (karbon, oksijen, azot) çarptığında ve onları daha hafif elementlere parçaladığında oluşurlar. Spalasyon adı verilen bu süreç nadir ve verimsizdir; bu nedenle Li, Be ve B evrendeki en az bol elementler arasında yer alır."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Yıldız Füzyonu",
       "range": "Elementler 6–14 · C'den Si'ye",
       "body": "Yıldızların çekirdeklerinde birbirini izleyen yanma döngüleriyle sentezlenir: hidrojen helyuma, helyum karbon ve oksijene, karbon neon ve magnezyuma füzyon yapar ve silisyuma kadar devam eder. Her aşama daha kütleli ve daha sıcak bir yıldız gerektirir; muazzam enerji serbest bırakır. Burada üretilen karbon ve oksijen, tüm organik kimyanın ve yaşamın moleküler omurgasını oluşturur. Bu yıldızlar öldüğünde bu elementleri galaksiye dağıtır."
     },
-    "mythique": {
+    "supernova": {
       "process": "Silisyum Yanması — Demir Tepe",
       "range": "Elementler 15–28 · P'den Ni'ye",
       "body": "Yıldız füzyonunun son ürünleri. En kütleli yıldızların çekirdeklerinde silisyum yanması demir tepe elementlerini üretir — krom, manganez, demir, kobalt ve nikel. Füzyon burada durur: demir-56 ve nikel-62 nükleon başına en yüksek bağlanma enerjisine sahiptir; daha fazla füzyon enerji salmak yerine tüketir. Yerçekimine karşı dışa doğru basınç kalmayınca bu yıldızlar çöker ve süpernova olarak patlar."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Nötron Yakalanması · Süpernova",
       "range": "Elementler 29–92 · Cu'dan U'ya",
       "body": "Demir tepesinin ötesinde yalnızca yıldız füzyonu bu elementleri inşa edemez — nötron yakalanması gerektirir. Dev AGB yıldızlarında binlerce yıl boyunca gerçekleşen yavaş s-süreci, gümüş, kalay, baryum ve kurşun oluşturmak için kademeli olarak nötron ekler. Nötron yıldızı birleşmeleri ve süpernovalar sırasında bir saniyenin küçük bir kesrinde tetiklenen şiddetli r-süreci, en ağır atomları dövüyor: altın, platin, uranyum. Dünya'daki her altın atomu kozmik bir felaketten doğmuştur."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Sentetik · Kararlı İzotop Yok",
       "range": "Tc (43), Pm (61) · Elementler 93–118",
       "body": "Teknesyum (43) ve prometyum (61) kararlı izotoplara sahip değildir ve Dünya'da doğal olarak bulunmaz — eski yıldızlarda oluşan her miktar çok önce bozunmuştur. 93 ile 118 arasındaki elementler yalnızca insanlar onları parçacık hızlandırıcılarında, atom çekirdeklerini birbirine muazzam hızlarda fırlatarak ürettiği için mevcuttur. Pek çoğu bozunmadan önce yalnızca mikrosaniyeler hayatta kalır. En ağır onaylanmış element olan oganeson (118), ilk kez 2002'de sentezlenerek yalnızca 3 atom üretmek için 1,1 trilyon çarpışma gerektirdi."

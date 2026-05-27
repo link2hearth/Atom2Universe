@@ -10,9 +10,9 @@
     <string name="hybrid_selection_summary">%1$d instrumentos usan SF2%2$s</string>
     <string name="hybrid_selection_summary_format">%1$d instrumentos usan SF2%2$s</string>
     <string name="expand">Expandir</string>
-    <string name="widget_description">Widget de control de audio para Musica, Radio y MIDI</string>
+    <string name="widget_description">Widget de control de audio para Música, Radio y MIDI</string>
     <string name="widget_no_track">Sin reproduccion</string>
-    <string name="widget_album_art">Caratula del album</string>
+    <string name="widget_album_art">Caratula del álbum</string>
     <string name="widget_play_pause">Reproducir / Pausar</string>
     <string name="widget_next">Siguiente</string>
     <string name="widget_previous">Anterior</string>

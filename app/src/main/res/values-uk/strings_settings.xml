@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Увімкнути сповіщення</string>
     <string name="permission_notification_message">A2U потребує доступу до сповіщень для відображення елементів керування відтворенням на екрані блокування та в рядку стану (радіо, музика).\n\nБез цього дозволу фонове відтворення все одно працюватиме, але керувати ним поза додатком не вийде.</string>
@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Очистити зараз</string>
     <string name="settings_cleanup_enabled">✅ Автоматичне очищення увімкнено</string>
     <string name="settings_cleanup_disabled">❌ Автоматичне очищення вимкнено</string>
-    <string name="settings_cleanup_in_progress">🧹 Очищення виконується...</string>
-    <string name="settings_cleanup_analyzing">Аналіз файлів...</string>
+    <string name="settings_cleanup_in_progress">🧹 Очищення виконується…</string>
+    <string name="settings_cleanup_analyzing">Аналіз файлів…</string>
     <string name="settings_cleanup_no_orphans">✅ Осиротілі файли не знайдено</string>
     <string name="settings_cleanup_nothing_to_clean">Нічого очищати</string>
     <string name="settings_cleanup_error">❌ Помилка під час очищення</string>

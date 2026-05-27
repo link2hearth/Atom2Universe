@@ -65,7 +65,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
         enableImmersiveMode()
         setContentView(getLayoutResId())
 
-        hubPrefs = getSharedPreferences(getPrefsName(), Context.MODE_PRIVATE)
+        hubPrefs = getSharedPreferences(getPrefsName(), MODE_PRIVATE)
 
         initViews()
         setupBackButton()
@@ -292,7 +292,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
     }
 
     private fun isAlreadyShortcut(parentPrefsName: String, parentTileId: String, activityClassName: String): Boolean {
-        val parentPrefs = getSharedPreferences(parentPrefsName, Context.MODE_PRIVATE)
+        val parentPrefs = getSharedPreferences(parentPrefsName, MODE_PRIVATE)
         val current = parentPrefs.getString(KEY_QUICK_ACCESS, null) ?: return false
         return current.split(";").any { entry ->
             val parts = entry.split(":", limit = 4)
@@ -307,7 +307,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
         activityClassName: String,
         colorHex: String
     ) {
-        val parentPrefs = getSharedPreferences(parentPrefsName, Context.MODE_PRIVATE)
+        val parentPrefs = getSharedPreferences(parentPrefsName, MODE_PRIVATE)
         val current = parentPrefs.getString(KEY_QUICK_ACCESS, null)
         val allEntries = current?.split(";")?.filter { it.isNotEmpty() } ?: emptyList()
 
@@ -335,7 +335,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
         parentTileId: String,
         activityClassName: String
     ) {
-        val parentPrefs = getSharedPreferences(parentPrefsName, Context.MODE_PRIVATE)
+        val parentPrefs = getSharedPreferences(parentPrefsName, MODE_PRIVATE)
         val current = parentPrefs.getString(KEY_QUICK_ACCESS, null) ?: return
 
         val newEntries = current.split(";").filter { entry ->

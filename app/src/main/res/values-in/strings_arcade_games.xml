@@ -238,11 +238,11 @@
     <string name="escape_turns_label">Giliran %1$d</string>
     <string name="escape_turns_label_zero">Giliran 0</string>
     <string name="escape_turns_prefix">Giliran </string>
-    <string name="gacha_rarity_commun">Umum</string>
-    <string name="gacha_rarity_essentiel">Esensial</string>
-    <string name="gacha_rarity_irreel">Tidak Nyata</string>
-    <string name="gacha_rarity_mythique">Mitik</string>
-    <string name="gacha_rarity_singulier">Singular</string>
-    <string name="gacha_rarity_stellaire">Stellar</string>
+    <string name="gacha_rarity_primordial">Primordial</string>
+    <string name="gacha_rarity_fusion">Fusi</string>
+    <string name="gacha_rarity_supernova">Supernova</string>
+    <string name="gacha_rarity_neutronique">Neutronik</string>
+    <string name="gacha_rarity_spallation">Spallasi</string>
+    <string name="gacha_rarity_synthetique">Sintetik</string>
     <string name="stat_hexrunner_best">Hex Runner – Waktu terbaik</string>
 </resources>

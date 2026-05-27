@@ -209,11 +209,7 @@ class SoundFontManager(
 
                 // Vérifie "sfbk" format identifier
                 val sfbk = String(header, 8, 4, Charsets.US_ASCII)
-                if (sfbk != "sfbk") {
-                    return@withContext false
-                }
-
-                return@withContext true
+                return@withContext sfbk == "sfbk"
             }
 
         } catch (e: Exception) {

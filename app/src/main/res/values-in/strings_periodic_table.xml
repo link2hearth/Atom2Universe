@@ -16,6 +16,7 @@
     <string name="periodic_prop_melt">Titik lebur</string>
     <string name="periodic_prop_boil">Titik didih</string>
     <string name="periodic_prop_block">Blok orbital</string>
+    <string name="periodic_prop_shells">Kulit elektron</string>
     <string name="periodic_prop_electronegativity">Elektronegativitas</string>
     <string name="periodic_prop_electron_config">Konfigurasi elektron</string>
     <string name="periodic_prop_discovered_by">Ditemukan oleh</string>

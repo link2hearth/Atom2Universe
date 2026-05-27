@@ -89,7 +89,7 @@ class NoteColorPickerDialog(
                 val hex = s?.toString()?.trim() ?: return
                 if (hex.length == 6) {
                     try {
-                        val color = Color.parseColor("#$hex")
+                        Color.parseColor("#$hex")
                         applyHexColor("#$hex")
                     } catch (_: Exception) {}
                 }

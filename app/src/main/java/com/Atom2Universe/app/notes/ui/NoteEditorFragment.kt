@@ -36,7 +36,7 @@ class NoteEditorFragment : Fragment() {
     private lateinit var tagsChipGroup: ChipGroup
     private lateinit var sourceEditor: EditText
     private lateinit var voicePreview: TextView
-    private lateinit var backlinksSection: android.view.View
+    private lateinit var backlinksSection: View
     private lateinit var backlinksHeader: TextView
     private lateinit var backlinksChipGroup: ChipGroup
     private var showSource = false
@@ -148,7 +148,7 @@ class NoteEditorFragment : Fragment() {
         if (noteTitle.isBlank()) return
         val backlinks = notesActivity.viewModel.getBacklinksForNote(noteTitle, noteId)
         if (backlinks.isEmpty()) {
-            backlinksSection.visibility = android.view.View.GONE
+            backlinksSection.visibility = View.GONE
             return
         }
         backlinksHeader.text = getString(R.string.notes_backlinks_header, backlinks.size)
@@ -167,7 +167,7 @@ class NoteEditorFragment : Fragment() {
             }
             backlinksChipGroup.addView(chip)
         }
-        backlinksSection.visibility = android.view.View.VISIBLE
+        backlinksSection.visibility = View.VISIBLE
     }
 
     private fun showAddTagDialog() {
@@ -203,7 +203,7 @@ class NoteEditorFragment : Fragment() {
     }
 
     private fun showCreateTagInlineDialog() {
-        val input = android.widget.EditText(requireContext()).apply {
+        val input = EditText(requireContext()).apply {
             hint = getString(R.string.notes_tag_name_hint)
             setPadding(48, 24, 48, 8)
         }
@@ -308,7 +308,7 @@ class NoteEditorFragment : Fragment() {
     }
 
     private fun showFontSizeDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(android.R.layout.activity_list_item, null)
+        LayoutInflater.from(requireContext()).inflate(android.R.layout.activity_list_item, null)
         val seekBar = SeekBar(requireContext()).apply {
             max = 34; progress = prefs.fontSize - 14
         }

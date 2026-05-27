@@ -85,9 +85,7 @@ object MusicWidgetController {
      * Retourne l'état actuel du widget.
      */
     fun getCurrentState(context: Context): WidgetState {
-        val source = getActiveSource()
-
-        return when (source) {
+        return when (val source = getActiveSource()) {
             ActiveSource.MUSIC -> {
                 val track = MusicPlaybackHolder.getCurrentTrack()
                 WidgetState(

@@ -502,9 +502,7 @@ class MusicSettingsActivity : ThemedActivity() {
                 Toast.makeText(this@MusicSettingsActivity, R.string.lyrics_api_test_no_urls, Toast.LENGTH_SHORT).show()
                 return@launch
             }
-            val result = GenericLyricsApiClient(config).testConnection()
-
-            val message = when (result) {
+            val message = when (val result = GenericLyricsApiClient(config).testConnection()) {
                 is ApiTestResult.Success -> getString(R.string.lyrics_api_test_success, apiName)
                 is ApiTestResult.RateLimited -> getString(R.string.lyrics_api_test_rate_limited, apiName)
                 is ApiTestResult.UnknownHost -> getString(R.string.lyrics_api_test_unknown_host, apiName)
@@ -961,7 +959,7 @@ class MusicSettingsActivity : ThemedActivity() {
             setPadding(48, 32, 48, 0)
         }
 
-        val editText = com.google.android.material.textfield.TextInputEditText(inputLayout.context).apply {
+        val editText = TextInputEditText(inputLayout.context).apply {
             inputType = android.text.InputType.TYPE_CLASS_TEXT
         }
         inputLayout.addView(editText)
@@ -979,10 +977,10 @@ class MusicSettingsActivity : ThemedActivity() {
             positiveButton.isEnabled = false
 
             // Enable button only when correct word is typed
-            editText.addTextChangedListener(object : android.text.TextWatcher {
+            editText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: android.text.Editable?) {
+                override fun afterTextChanged(s: Editable?) {
                     positiveButton.isEnabled = s.toString().equals(confirmWord, ignoreCase = true)
                 }
             })

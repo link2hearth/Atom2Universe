@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Nu opschonen</string>
     <string name="settings_cleanup_enabled">✅ Automatische opschoning ingeschakeld</string>
     <string name="settings_cleanup_disabled">❌ Automatische opschoning uitgeschakeld</string>
-    <string name="settings_cleanup_in_progress">🧹 Opschoning bezig...</string>
-    <string name="settings_cleanup_analyzing">Bestanden analyseren...</string>
+    <string name="settings_cleanup_in_progress">🧹 Opschoning bezig…</string>
+    <string name="settings_cleanup_analyzing">Bestanden analyseren…</string>
     <string name="settings_cleanup_no_orphans">✅ Geen verweesde bestanden gevonden</string>
     <string name="settings_cleanup_nothing_to_clean">Niets op te schonen</string>
     <string name="settings_cleanup_error">❌ Fout tijdens opschoning</string>

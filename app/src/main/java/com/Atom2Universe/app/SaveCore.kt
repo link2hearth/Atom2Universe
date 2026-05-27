@@ -99,7 +99,7 @@ class SaveCore(context: Context) {
         }
     }
 
-    fun transaction(action: SaveCoreTransaction.() -> Unit): String? {
+    fun transaction(action: SaveCoreTransaction.() -> Unit): String {
         synchronized(saveLock) {
             val payload = loadJsonObjectLocked() ?: JSONObject()
             val transaction = SaveCoreTransaction(payload)

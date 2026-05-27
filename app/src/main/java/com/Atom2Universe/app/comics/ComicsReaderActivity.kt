@@ -167,7 +167,7 @@ class ComicsReaderActivity : ThemedActivity() {
         val ok = withContext(Dispatchers.IO) {
             try {
                 pdfFd = when (uri.scheme) {
-                    "file" -> android.os.ParcelFileDescriptor.open(java.io.File(uri.path!!), android.os.ParcelFileDescriptor.MODE_READ_ONLY)
+                    "file" -> ParcelFileDescriptor.open(java.io.File(uri.path!!), ParcelFileDescriptor.MODE_READ_ONLY)
                     else -> contentResolver.openFileDescriptor(uri, "r")
                 }
                 pdfRenderer = PdfRenderer(pdfFd!!)

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -587,7 +588,7 @@ public class ID3v23Tag extends AbstractID3v2Tag
         }
 
         readFrames(bufferWithoutHeader, size);
-        logger.config(getLoggingFilename() + ":Loaded Frames,there are:" + frameMap.keySet().size());
+        logger.config(getLoggingFilename() + ":Loaded Frames,there are:" + frameMap.size());
 
     }
 
@@ -820,7 +821,7 @@ public class ID3v23Tag extends AbstractID3v2Tag
         int padding = 0;
         if(currentTagSize > 0)
         {
-            int sizeIncPadding = calculateTagSize(bodyByteBuffer.length + TAG_HEADER_LENGTH, (int) currentTagSize);
+            int sizeIncPadding = calculateTagSize(bodyByteBuffer.length + TAG_HEADER_LENGTH, currentTagSize);
             padding = sizeIncPadding - (bodyByteBuffer.length + TAG_HEADER_LENGTH);
             logger.config(getLoggingFilename() + ":Padding:"+padding);
         }
@@ -1013,14 +1014,7 @@ public class ID3v23Tag extends AbstractID3v2Tag
         }
         else
         {
-            try
-            {
-                body.setObjectValue(DataTypes.OBJ_PICTURE_DATA,artwork.getImageUrl().getBytes("ISO-8859-1"));
-            }
-            catch(UnsupportedEncodingException uoe)
-            {
-                throw new RuntimeException(uoe.getMessage());
-            }
+            body.setObjectValue(DataTypes.OBJ_PICTURE_DATA,artwork.getImageUrl().getBytes(StandardCharsets.ISO_8859_1));
             body.setObjectValue(DataTypes.OBJ_PICTURE_TYPE, artwork.getPictureType());
             body.setObjectValue(DataTypes.OBJ_MIME_TYPE, FrameBodyAPIC.IMAGE_IS_URL);
             body.setObjectValue(DataTypes.OBJ_DESCRIPTION, "");

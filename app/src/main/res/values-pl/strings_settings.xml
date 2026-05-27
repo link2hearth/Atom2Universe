@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Wyczyść teraz</string>
     <string name="settings_cleanup_enabled">✅ Automatyczne czyszczenie włączone</string>
     <string name="settings_cleanup_disabled">❌ Automatyczne czyszczenie wyłączone</string>
-    <string name="settings_cleanup_in_progress">🧹 Czyszczenie w toku...</string>
-    <string name="settings_cleanup_analyzing">Analizowanie plików...</string>
+    <string name="settings_cleanup_in_progress">🧹 Czyszczenie w toku…</string>
+    <string name="settings_cleanup_analyzing">Analizowanie plików…</string>
     <string name="settings_cleanup_no_orphans">✅ Nie znaleziono osieroconych plików</string>
     <string name="settings_cleanup_nothing_to_clean">Nic do wyczyszczenia</string>
     <string name="settings_cleanup_error">❌ Błąd podczas czyszczenia</string>

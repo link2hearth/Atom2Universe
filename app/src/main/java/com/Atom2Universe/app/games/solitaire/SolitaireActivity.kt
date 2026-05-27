@@ -247,7 +247,7 @@ class SolitaireActivity : AppCompatActivity(), SolitaireView.OnGameActionListene
 
         // If we have a selection, try to move to this location
         if (game.selectedCards.isNotEmpty()) {
-            val targetCard = pile.getOrNull(cardIndex)
+            pile.getOrNull(cardIndex)
 
             // Try to move to tableau
             if (pileType == PileType.TABLEAU) {

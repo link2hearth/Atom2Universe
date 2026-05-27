@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="back">Atras</string>
     <string name="hub_toggle_view">Cambiar vista</string>
@@ -26,14 +26,14 @@
     <string name="banner_label_draughts">Damas</string>
     <string name="banner_label_blackjack">BlackJack</string>
     <string name="banner_label_pipetap">PipeTap</string>
-    <string name="banner_label_music">Musica</string>
+    <string name="banner_label_music">Música</string>
     <string name="hub_audio_title">Audio</string>
-    <string name="hub_audio_desc">Musica, MIDI, radio y herramientas de audio</string>
+    <string name="hub_audio_desc">Música, MIDI, radio y herramientas de audio</string>
     <string name="audio_sub_hub_title">Audio</string>
-    <string name="audio_sub_hub_subtitle">Musica, MIDI, radio y herramientas</string>
-    <string name="hub_shortcut_add_title">Acceso rapido</string>
-    <string name="hub_shortcut_add_message">Usar « %1$s » como acceso rapido en el mosaico del hub?</string>
-    <string name="hub_shortcut_exists_message">« %1$s » ya es un acceso rapido. Mover a la primera posicion (Si) o eliminarlo (No)?</string>
-    <string name="hub_shortcut_added">Acceso rapido agregado</string>
+    <string name="audio_sub_hub_subtitle">Música, MIDI, radio y herramientas</string>
+    <string name="hub_shortcut_add_title">Acceso rápido</string>
+    <string name="hub_shortcut_add_message">Usar « %1$s » como acceso rápido en el mosaico del hub?</string>
+    <string name="hub_shortcut_exists_message">« %1$s » ya es un acceso rápido. Mover a la primera posicion (Si) o eliminarlo (No)?</string>
+    <string name="hub_shortcut_added">Acceso rápido agregado</string>
     <string name="periodic_toggle_rarities_desc">Mostrar/ocultar rarezas</string>
 </resources>

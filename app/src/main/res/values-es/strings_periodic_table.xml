@@ -16,6 +16,7 @@
     <string name="periodic_prop_melt">Punto de fusión</string>
     <string name="periodic_prop_boil">Punto de ebullición</string>
     <string name="periodic_prop_block">Bloque orbital</string>
+    <string name="periodic_prop_shells">Capas electrónicas</string>
     <string name="periodic_prop_electronegativity">Electronegatividad</string>
     <string name="periodic_prop_electron_config">Config. electrónica</string>
     <string name="periodic_prop_discovered_by">Descubierto por</string>

@@ -84,22 +84,22 @@ class BlackjackWidgetView @JvmOverloads constructor(
 
         // Clic sur l'overlay de résultat → fermer et revenir au DEAL
         resultOverlay.setOnClickListener {
-            resultOverlay.visibility = View.GONE
+            resultOverlay.visibility = GONE
             showBettingUI()
             bjView.refresh()
         }
 
         // Reset
         findViewById<TextView>(R.id.bj_widget_btn_reset).setOnClickListener {
-            resultOverlay.visibility = View.GONE
-            resetOverlay.visibility = View.VISIBLE
+            resultOverlay.visibility = GONE
+            resetOverlay.visibility = VISIBLE
         }
         findViewById<TextView>(R.id.bj_widget_reset_confirm).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame()
         }
         findViewById<TextView>(R.id.bj_widget_reset_cancel).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
         }
 
         // Cycle de mise : FREE → 1 → 2 → 5 → 10 → 25 → FREE …
@@ -188,8 +188,8 @@ class BlackjackWidgetView @JvmOverloads constructor(
     private fun showBettingUI() {
         val dealArea = findViewById<View>(R.id.bj_widget_deal_area)
         val actionArea = findViewById<View>(R.id.bj_widget_action_area)
-        dealArea?.visibility = View.VISIBLE
-        actionArea?.visibility = View.GONE
+        dealArea?.visibility = VISIBLE
+        actionArea?.visibility = GONE
 
         syncBalanceFromRepo()
         updateNeutrinoDisplay()
@@ -207,15 +207,15 @@ class BlackjackWidgetView @JvmOverloads constructor(
     private fun showActionUI() {
         val dealArea = findViewById<View>(R.id.bj_widget_deal_area)
         val actionArea = findViewById<View>(R.id.bj_widget_action_area)
-        dealArea?.visibility = View.GONE
-        actionArea?.visibility = View.VISIBLE
+        dealArea?.visibility = GONE
+        actionArea?.visibility = VISIBLE
     }
 
     // ── Game logic ────────────────────────────────────────────────────────────────
     private fun startNewGame() {
         handler.removeCallbacksAndMessages(null)
-        resultOverlay.visibility = View.GONE
-        resetOverlay.visibility = View.GONE
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         syncBalanceFromRepo()
         betLevelIndex = 0
         updateBetCycleButton()
@@ -258,8 +258,8 @@ class BlackjackWidgetView @JvmOverloads constructor(
     private fun scheduleDealerStep() {
         val dealArea = findViewById<View>(R.id.bj_widget_deal_area)
         val actionArea = findViewById<View>(R.id.bj_widget_action_area)
-        dealArea?.visibility = View.GONE
-        actionArea?.visibility = View.GONE
+        dealArea?.visibility = GONE
+        actionArea?.visibility = GONE
 
         handler.postDelayed({
             val done = game.dealerStep()
@@ -309,7 +309,7 @@ class BlackjackWidgetView @JvmOverloads constructor(
 
         resultText.text = rText
         resultText.setTextColor(rColor)
-        resultOverlay.visibility = View.VISIBLE
+        resultOverlay.visibility = VISIBLE
         bjView.refresh()
         updateNeutrinoDisplay()
     }
@@ -327,8 +327,8 @@ class BlackjackWidgetView @JvmOverloads constructor(
     // ── Appelé par MainClickerActivity quand le widget devient visible ─────────────
     fun reload() {
         handler.removeCallbacksAndMessages(null)
-        resultOverlay.visibility = View.GONE
-        resetOverlay.visibility = View.GONE
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         syncBalanceFromRepo()
         bjView.game = game
         showBettingUI()

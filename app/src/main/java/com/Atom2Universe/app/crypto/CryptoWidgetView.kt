@@ -139,7 +139,7 @@ class CryptoWidgetView @JvmOverloads constructor(
     }
 
     fun setEurUsdEnabled(enabled: Boolean) {
-        eurUsdLine.visibility = if (enabled) View.VISIBLE else View.GONE
+        eurUsdLine.visibility = if (enabled) VISIBLE else GONE
     }
 
     fun applyBackgroundOpacity(opacityPercent: Int) {

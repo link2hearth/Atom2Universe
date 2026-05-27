@@ -166,11 +166,11 @@ class EarthMoonWidgetView @JvmOverloads constructor(
     }
 
     private fun setButtonsVisible(visible: Boolean) {
-        val v = if (visible) View.VISIBLE else View.INVISIBLE
+        val v = if (visible) VISIBLE else INVISIBLE
         prevBtn.visibility = v
         nextBtn.visibility = v
         val isFixedLocation = views[currentViewIndex] == EarthMoonCanvasView.CameraView.FIXED_LOCATION
-        val locV = if (visible && isFixedLocation) View.VISIBLE else View.INVISIBLE
+        val locV = if (visible && isFixedLocation) VISIBLE else INVISIBLE
         locationPrevBtn.visibility = locV
         locationNextBtn.visibility = locV
     }

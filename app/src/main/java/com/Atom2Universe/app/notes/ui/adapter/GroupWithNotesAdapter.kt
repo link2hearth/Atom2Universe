@@ -83,7 +83,7 @@ class GroupWithNotesAdapter(
         }
     }
 
-    inner class EmptyVH(view: View) : RecyclerView.ViewHolder(view)
+    class EmptyVH(view: View) : RecyclerView.ViewHolder(view)
 
     companion object {
         const val TYPE_GROUP = 0

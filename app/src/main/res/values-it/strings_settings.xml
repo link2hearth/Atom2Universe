@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Abilita notifiche</string>
     <string name="permission_notification_message">A2U ha bisogno dell\'accesso alle notifiche per visualizzare i controlli di riproduzione nella schermata di blocco e nella barra di stato (radio, musica).\n\nSenza questa autorizzazione, la riproduzione in background funzionerà comunque, ma non potrai controllarla dall\'esterno dell\'app.</string>
@@ -129,8 +129,8 @@ Il microfono non viene usato per altri scopi. Nessun audio viene registrato, tra
     <string name="settings_cleanup_now_button">🧹 Pulisci ora</string>
     <string name="settings_cleanup_enabled">✅ Pulizia automatica attivata</string>
     <string name="settings_cleanup_disabled">❌ Pulizia automatica disattivata</string>
-    <string name="settings_cleanup_in_progress">🧹 Pulizia in corso...</string>
-    <string name="settings_cleanup_analyzing">Analisi dei file...</string>
+    <string name="settings_cleanup_in_progress">🧹 Pulizia in corso…</string>
+    <string name="settings_cleanup_analyzing">Analisi dei file…</string>
     <string name="settings_cleanup_no_orphans">✅ Nessun file orfano trovato</string>
     <string name="settings_cleanup_nothing_to_clean">Niente da pulire</string>
     <string name="settings_cleanup_error">❌ Errore durante la pulizia</string>

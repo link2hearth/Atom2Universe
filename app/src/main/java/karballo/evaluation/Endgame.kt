@@ -47,7 +47,7 @@ object Endgame {
 
             if (blackMaterial == 0 && whiteMaterial == 2 && whiteKnights == 1 && whiteBishops == 1 || //
                     whiteMaterial == 0 && blackMaterial == 2 && blackKnights == 1 && blackBishops == 1) {
-                return Endgame.endgameKBNK(board, whiteMaterial > blackMaterial)
+                return endgameKBNK(board, whiteMaterial > blackMaterial)
             }
             if (whiteMaterial == 1 && blackMaterial == 1) {
                 if (whiteRooks == 1 && blackRooks == 1) {
@@ -64,7 +64,7 @@ object Endgame {
             //
 
             if (whiteNoPawnMaterial == 0 && blackNoPawnMaterial == 0) {
-                return Endgame.endgameKPK(board, whiteMaterial > blackMaterial)
+                return endgameKPK(board, whiteMaterial > blackMaterial)
             }
 
             // Only with a non-pawn piece
@@ -93,7 +93,7 @@ object Endgame {
         //
         if (blackMaterial == 0 && (whiteBishops >= 2 || whiteRooks > 0 || whiteQueens > 0) || //
                 whiteMaterial == 0 && (whiteBishops >= 2 || blackRooks > 0 || blackQueens > 0)) {
-            return Endgame.endgameKXK(board, whiteMaterial > blackMaterial, whiteKnights + blackKnights, whiteBishops + blackBishops, whiteRooks + blackRooks, whiteQueens + blackQueens)
+            return endgameKXK(board, whiteMaterial > blackMaterial, whiteKnights + blackKnights, whiteBishops + blackBishops, whiteRooks + blackRooks, whiteQueens + blackQueens)
         }
 
         if (whiteRooks == 1 && blackRooks == 1 &&

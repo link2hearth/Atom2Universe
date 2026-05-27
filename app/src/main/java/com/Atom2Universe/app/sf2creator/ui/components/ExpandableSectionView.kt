@@ -53,7 +53,7 @@ class ExpandableSectionView @JvmOverloads constructor(
         contentContainer = findViewById(R.id.section_content)
 
         // Initially collapsed
-        contentContainer.visibility = View.GONE
+        contentContainer.visibility = GONE
         arrowIcon.rotation = 0f
 
         // Header click toggles expansion
@@ -132,7 +132,7 @@ class ExpandableSectionView @JvmOverloads constructor(
     /**
      * Add a view to the content area with layout params.
      */
-    fun addContentView(view: View, params: ViewGroup.LayoutParams) {
+    fun addContentView(view: View, params: LayoutParams) {
         contentContainer.addView(view, params)
     }
 
@@ -161,7 +161,7 @@ class ExpandableSectionView @JvmOverloads constructor(
         if (animate) {
             animateExpansion(expanded)
         } else {
-            contentContainer.visibility = if (expanded) View.VISIBLE else View.GONE
+            contentContainer.visibility = if (expanded) VISIBLE else GONE
             arrowIcon.rotation = if (expanded) 180f else 0f
         }
     }
@@ -182,7 +182,7 @@ class ExpandableSectionView @JvmOverloads constructor(
      * Set reset button visibility.
      */
     fun setResetButtonVisible(visible: Boolean) {
-        resetButton.visibility = if (visible) View.VISIBLE else View.GONE
+        resetButton.visibility = if (visible) VISIBLE else GONE
     }
 
     /**
@@ -190,7 +190,7 @@ class ExpandableSectionView @JvmOverloads constructor(
      */
     fun setOnResetClickListener(listener: () -> Unit) {
         onResetClickListener = listener
-        resetButton.visibility = View.VISIBLE
+        resetButton.visibility = VISIBLE
     }
 
     private fun animateExpansion(expand: Boolean) {
@@ -209,7 +209,7 @@ class ExpandableSectionView @JvmOverloads constructor(
 
         // Animate content visibility
         if (expand) {
-            contentContainer.visibility = View.VISIBLE
+            contentContainer.visibility = VISIBLE
             contentContainer.alpha = 0f
             contentContainer.animate()
                 .alpha(1f)
@@ -220,7 +220,7 @@ class ExpandableSectionView @JvmOverloads constructor(
                 .alpha(0f)
                 .setDuration(animationDuration)
                 .withEndAction {
-                    contentContainer.visibility = View.GONE
+                    contentContainer.visibility = GONE
                 }
                 .start()
         }

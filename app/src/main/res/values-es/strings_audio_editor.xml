@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="audio_editor_title">Editor de audio</string>
     <string name="audio_editor_toggle_visual">Alternar forma de onda/espectrograma</string>
-    <string name="audio_editor_no_file">Ningun archivo cargado</string>
+    <string name="audio_editor_no_file">Ningún archivo cargado</string>
     <string name="audio_editor_no_tracks">Sin pistas - Abre o graba audio</string>
     <string name="audio_editor_time_zero">00:00</string>
     <string name="audio_editor_hint">Toca para posicionar | Manten presionado para seleccionar | Doble toque para seleccionar todo</string>
@@ -67,7 +67,7 @@
     <string name="audio_editor_metadata">Metadatos (opcional)</string>
     <string name="audio_editor_metadata_title">Titulo</string>
     <string name="audio_editor_metadata_artist">Artista</string>
-    <string name="audio_editor_metadata_album">Album</string>
+    <string name="audio_editor_metadata_album">álbum</string>
     <string name="audio_editor_metadata_year">Ano</string>
     <string name="audio_editor_recording_name">Grabacion %1$d</string>
     <string name="audio_editor_error_no_permission">Permiso de grabacion no otorgado</string>

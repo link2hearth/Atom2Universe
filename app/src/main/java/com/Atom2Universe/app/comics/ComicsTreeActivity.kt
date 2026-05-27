@@ -112,7 +112,7 @@ class ComicsTreeActivity : ThemedActivity() {
         rootId = intent.getStringExtra(EXTRA_ROOT_ID) ?: run { finish(); return }
         rootName = intent.getStringExtra(EXTRA_ROOT_NAME) ?: ""
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         displayMode = prefs.getInt(KEY_DISPLAY_MODE, MODE_LIST)
         gridColumns = prefs.getInt(KEY_GRID_COLUMNS, DEFAULT_COLS).coerceIn(MIN_COLS, MAX_COLS)
 

@@ -433,7 +433,7 @@ class WaveSurfView @JvmOverloads constructor(
     }
 
     private fun saveRecords() {
-        val prefs = context.getSharedPreferences("wave_surf_save", android.content.Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences("wave_surf_save", Context.MODE_PRIVATE)
         val prevSpeed = prefs.getInt("best_speed", 0)
         val prevAlt   = prefs.getInt("best_altitude", 0)
         val newSpeed  = sessionBestSpeed.toInt()

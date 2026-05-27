@@ -1723,8 +1723,7 @@ object CloudSyncManager {
             val isPrimary = BackupManager.isPrimaryDevice(appContext)
             if (isPrimary) {
                 Log.d(TAG, "This device is primary, performing backup...")
-                val result = BackupManager.performBackup(appContext)
-                when (result) {
+                when (val result = BackupManager.performBackup(appContext)) {
                     is BackupManager.BackupResult.Success -> {
                         Log.d(TAG, "Backup completed successfully")
                     }

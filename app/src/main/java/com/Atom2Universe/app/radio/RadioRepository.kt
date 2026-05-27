@@ -409,7 +409,7 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
                             if (totalCharsRead * 4 > MAX_RESPONSE_SIZE_BYTES) {
                                 throw IllegalStateException("Response exceeded max size during streaming")
                             }
-                            builder.append(buffer, 0, charsRead)
+                            builder.appendRange(buffer, 0, charsRead)
                         }
                         builder.toString()
                     }

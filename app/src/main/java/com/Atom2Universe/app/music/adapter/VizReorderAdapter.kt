@@ -18,7 +18,7 @@ class VizReorderAdapter(
 
     var touchHelper: ItemTouchHelper? = null
 
-    inner class VH(view: View) : RecyclerView.ViewHolder(view) {
+    class VH(view: View) : RecyclerView.ViewHolder(view) {
         val position: TextView = view.findViewById(R.id.viz_position)
         val name: TextView = view.findViewById(R.id.viz_name)
         val handle: ImageView = view.findViewById(R.id.drag_handle)

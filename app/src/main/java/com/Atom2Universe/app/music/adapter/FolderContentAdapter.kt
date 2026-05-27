@@ -165,7 +165,7 @@ class FolderContentAdapter(
 
     // ========== TRACK VIEW HOLDERS ==========
 
-    inner class TrackListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TrackListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.track_title)
         private val artistText: TextView = itemView.findViewById(R.id.track_artist)
         private val durationText: TextView = itemView.findViewById(R.id.track_duration)
@@ -187,7 +187,7 @@ class FolderContentAdapter(
         }
     }
 
-    inner class TrackCompactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TrackCompactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.track_title)
         private val artistText: TextView = itemView.findViewById(R.id.track_artist)
         private val durationText: TextView = itemView.findViewById(R.id.track_duration)

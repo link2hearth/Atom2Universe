@@ -45,7 +45,7 @@ public class FlacTagReader {
     // Logger Object
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
 
-    private VorbisCommentReader vorbisCommentReader = new VorbisCommentReader();
+    private final VorbisCommentReader vorbisCommentReader = new VorbisCommentReader();
 
 
     public FlacTag read(File file) throws CannotReadException, IOException {
@@ -74,7 +74,7 @@ public class FlacTagReader {
                 }
 
                 if (logger.isLoggable(Level.CONFIG)) {
-                    logger.config(file.getPath() + " Reading MetadataBlockHeader:" + mbh.toString() + " ending at " + fc.position());
+                    logger.config(file.getPath() + " Reading MetadataBlockHeader:" + mbh + " ending at " + fc.position());
                 }
 
                 //Is it one containing some sort of metadata, therefore interested in it?

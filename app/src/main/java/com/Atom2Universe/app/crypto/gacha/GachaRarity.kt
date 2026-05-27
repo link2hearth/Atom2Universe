@@ -12,31 +12,31 @@ enum class GachaRarity(
     val weight: Int,
     @StringRes val nameRes: Int
 ) {
-    COMMUN("Commun",    0xFFCCCCCC, 400, R.string.gacha_rarity_commun),
-    ESSENTIEL("Essentiel", 0xFF00CC66, 250, R.string.gacha_rarity_essentiel),
-    STELLAIRE("Stellaire", 0xFF00BBFF, 180, R.string.gacha_rarity_stellaire),
-    MYTHIQUE("Mythique",   0xFFFFCC00, 100, R.string.gacha_rarity_mythique),
-    SINGULIER("Singulier", 0xFFFF55FF,  50, R.string.gacha_rarity_singulier),
-    IRREEL("Irréel",       0xFFFF3333,  20, R.string.gacha_rarity_irreel);
+    PRIMORDIAL("Primordial",   0xFFCCCCCC,  75, R.string.gacha_rarity_primordial),
+    FUSION("Fusion",           0xFF00BBFF,  10, R.string.gacha_rarity_fusion),
+    SUPERNOVA("Supernova",     0xFFFFCC00,   7, R.string.gacha_rarity_supernova),
+    NEUTRONIQUE("Neutronique", 0xFFFF55FF,   5, R.string.gacha_rarity_neutronique),
+    SPALLATION("Spallation",   0xFF00CC66,   1, R.string.gacha_rarity_spallation),
+    SYNTHETIQUE("Synthétique", 0xFFFF3333,   2, R.string.gacha_rarity_synthetique);
 
     val color: Int get() = colorHex.toInt()
 }
 
 private val RARITY_MAP: Map<Int, GachaRarity> = buildMap {
-    listOf(1, 2).forEach { put(it, GachaRarity.COMMUN) }
-    listOf(3, 4, 5).forEach { put(it, GachaRarity.ESSENTIEL) }
-    (6..14).forEach { put(it, GachaRarity.STELLAIRE) }
-    (15..28).forEach { put(it, GachaRarity.MYTHIQUE) }
-    (29..42).forEach { put(it, GachaRarity.SINGULIER) }
-    put(43, GachaRarity.IRREEL)   // Technétium
-    (44..60).forEach { put(it, GachaRarity.SINGULIER) }
-    put(61, GachaRarity.IRREEL)   // Prométhium
-    (62..92).forEach { put(it, GachaRarity.SINGULIER) }
-    (93..118).forEach { put(it, GachaRarity.IRREEL) }
+    listOf(1, 2).forEach { put(it, GachaRarity.PRIMORDIAL) }
+    listOf(3, 4, 5).forEach { put(it, GachaRarity.SPALLATION) }
+    (6..14).forEach { put(it, GachaRarity.FUSION) }
+    (15..28).forEach { put(it, GachaRarity.SUPERNOVA) }
+    (29..42).forEach { put(it, GachaRarity.NEUTRONIQUE) }
+    put(43, GachaRarity.SYNTHETIQUE)   // Technétium
+    (44..60).forEach { put(it, GachaRarity.NEUTRONIQUE) }
+    put(61, GachaRarity.SYNTHETIQUE)   // Prométhium
+    (62..92).forEach { put(it, GachaRarity.NEUTRONIQUE) }
+    (93..118).forEach { put(it, GachaRarity.SYNTHETIQUE) }
 }
 
 fun rarityOf(atomicNumber: Int): GachaRarity =
-    RARITY_MAP[atomicNumber] ?: GachaRarity.SINGULIER
+    RARITY_MAP[atomicNumber] ?: GachaRarity.NEUTRONIQUE
 
 fun atomicNumbersOf(rarity: GachaRarity): List<Int> =
     RARITY_MAP.entries.filter { it.value == rarity }.map { it.key }.sorted()

@@ -1384,32 +1384,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Nukleosintesis Big Bang",
       "range": "Unsur 1–2 · H, He",
       "body": "Lahir dalam 3 menit pertama setelah Big Bang, hidrogen dan helium menyumbang sekitar 99% dari semua materi terlihat di alam semesta. Saat alam semesta muda mengembang dan mendingin dari miliaran derajat, proton dan neutron berkumpul membentuk inti atom pertama — hampir sepenuhnya hidrogen dan helium, dengan jumlah kecil litium."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Spalasi Kosmik",
       "range": "Unsur 3–5 · Li, Be, B",
       "body": "Ketiga unsur ini terlalu rapuh untuk bertahan di dalam bintang — reaksi fusi menghancurkannya lebih cepat daripada bisa dibuat. Mereka terbentuk ketika sinar kosmik yang melaju mendekati kecepatan cahaya menghantam atom-atom yang lebih berat (karbon, oksigen, nitrogen) yang melayang di ruang antarbintang, memecahnya menjadi unsur-unsur yang lebih ringan. Proses ini, yang disebut spalasi, langka dan tidak efisien, itulah mengapa Li, Be, dan B termasuk di antara unsur-unsur paling langka di kosmos."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Fusi Bintang",
       "range": "Unsur 6–14 · C hingga Si",
       "body": "Ditempa di inti bintang melalui siklus pembakaran berturut-turut: hidrogen bergabung menjadi helium, helium menjadi karbon dan oksigen, karbon menjadi neon dan magnesium, dan seterusnya hingga silikon. Setiap tahap membutuhkan bintang yang lebih masif dan lebih panas, melepaskan energi yang luar biasa. Karbon dan oksigen yang dihasilkan di sini membentuk tulang punggung molekuler dari semua kimia organik dan kehidupan. Ketika bintang-bintang ini mati, mereka menyebarkan unsur-unsur ini ke seluruh galaksi."
     },
-    "mythique": {
+    "supernova": {
       "process": "Pembakaran Silikon — Puncak Besi",
       "range": "Unsur 15–28 · P hingga Ni",
       "body": "Produk akhir fusi bintang. Di inti bintang paling masif, pembakaran silikon menghasilkan unsur-unsur puncak besi — kromium, mangan, besi, kobalt, dan nikel. Fusi berhenti di sini: besi-56 dan nikel-62 memiliki energi ikat per nukleon tertinggi, artinya melebur lebih lanjut akan mengonsumsi energi daripada melepaskannya. Tanpa tekanan keluar untuk melawan gravitasi, bintang-bintang ini runtuh dan meledak sebagai supernova."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Penangkapan Neutron · Supernova",
       "range": "Unsur 29–92 · Cu hingga U",
       "body": "Di luar puncak besi, fusi bintang saja tidak dapat membangun unsur-unsur ini — mereka membutuhkan penangkapan neutron. Proses-s yang lambat, berlangsung selama ribuan tahun di bintang raksasa AGB, secara bertahap menambahkan neutron untuk membentuk perak, timah, barium, dan timbal. Proses-r yang dahsyat, dipicu dalam sepersekian detik selama tabrakan bintang neutron dan supernova, menempa atom-atom terberat: emas, platina, uranium. Setiap atom emas di Bumi lahir dalam malapetaka kosmis."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Sintetis · Tidak Ada Isotop Stabil",
       "range": "Tc (43), Pm (61) · Unsur 93–118",
       "body": "Teknesium (43) dan promesium (61) tidak memiliki isotop stabil dan tidak terjadi secara alami di Bumi — jumlah apapun yang terbentuk di bintang kuno telah lama meluruh. Unsur 93 hingga 118 hanya ada karena manusia menciptakannya dalam akselerator partikel, menembakkan inti atom satu sama lain dengan kecepatan luar biasa. Banyak yang bertahan hanya mikrodetik sebelum meluruh. Oganeson (118), unsur yang dikonfirmasi paling berat, membutuhkan 1,1 triliun tumbukan untuk menghasilkan hanya 3 atom, pertama kali disintesis pada 2002."

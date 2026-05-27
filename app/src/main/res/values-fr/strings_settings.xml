@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Activer les notifications</string>
     <string name="permission_notification_message">A2U a besoin d\'accéder aux notifications pour afficher les contrôles de lecture sur l\'écran de verrouillage et dans la barre de statut (radio, musique).\n\nSans cette permission, la lecture en arrière-plan fonctionnera quand même, mais vous ne pourrez pas la contrôler depuis l\'extérieur de l\'application.</string>
@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Nettoyer maintenant</string>
     <string name="settings_cleanup_enabled">✅ Nettoyage automatique activé</string>
     <string name="settings_cleanup_disabled">❌ Nettoyage automatique désactivé</string>
-    <string name="settings_cleanup_in_progress">🧹 Nettoyage en cours...</string>
-    <string name="settings_cleanup_analyzing">Analyse des fichiers...</string>
+    <string name="settings_cleanup_in_progress">🧹 Nettoyage en cours…</string>
+    <string name="settings_cleanup_analyzing">Analyse des fichiers…</string>
     <string name="settings_cleanup_no_orphans">✅ Aucun fichier orphelin trouvé</string>
     <string name="settings_cleanup_nothing_to_clean">Aucun fichier à nettoyer</string>
     <string name="settings_cleanup_error">❌ Erreur lors du nettoyage</string>

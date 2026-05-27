@@ -238,11 +238,11 @@
     <string name="escape_turns_label">Beurt %1$d</string>
     <string name="escape_turns_label_zero">Beurt 0</string>
     <string name="escape_turns_prefix">Beurt </string>
-    <string name="gacha_rarity_commun">Gewoon</string>
-    <string name="gacha_rarity_essentiel">Essentieel</string>
-    <string name="gacha_rarity_irreel">Onwerkelijk</string>
-    <string name="gacha_rarity_mythique">Mythisch</string>
-    <string name="gacha_rarity_singulier">Uniek</string>
-    <string name="gacha_rarity_stellaire">Stellair</string>
+    <string name="gacha_rarity_primordial">Primordiaal</string>
+    <string name="gacha_rarity_fusion">Fusie</string>
+    <string name="gacha_rarity_supernova">Supernova</string>
+    <string name="gacha_rarity_neutronique">Neutronisch</string>
+    <string name="gacha_rarity_spallation">Spallatie</string>
+    <string name="gacha_rarity_synthetique">Synthetisch</string>
     <string name="stat_hexrunner_best">Hex Runner – Beste tijd</string>
 </resources>

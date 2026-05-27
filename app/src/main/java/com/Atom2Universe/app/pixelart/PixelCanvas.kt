@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.pixelart
+﻿package com.Atom2Universe.app.pixelart
 
 import android.content.Context
 import android.graphics.*
@@ -171,7 +171,7 @@ class PixelCanvas @JvmOverloads constructor(
     private var canvasHeight = 32
 
     // The actual pixel data (ARGB)
-    private var pixelData: IntArray = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+    private var pixelData: IntArray = IntArray(canvasWidth * canvasHeight)
 
     // Bitmap for rendering
     private var canvasBitmap: Bitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888)
@@ -1084,7 +1084,7 @@ class PixelCanvas @JvmOverloads constructor(
 
         // Restore current frame
         currentFrameIndex = snapshot.currentFrameIndex.coerceIn(0, frames.lastIndex)
-        pixelData = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+        pixelData = IntArray(canvasWidth * canvasHeight)
         frames[currentFrameIndex].pixelData.copyInto(pixelData)
 
         // Recreate canvas bitmap
@@ -2247,10 +2247,10 @@ class PixelCanvas @JvmOverloads constructor(
             // High zoom + small canvas: draw detailed checkerboard using tile shader
             if (checkerboardTile == null) {
                 checkerboardTile = createCheckerboardTile()
-                checkerboardShader.shader = android.graphics.BitmapShader(
+                checkerboardShader.shader = BitmapShader(
                     checkerboardTile!!,
-                    android.graphics.Shader.TileMode.REPEAT,
-                    android.graphics.Shader.TileMode.REPEAT
+                    Shader.TileMode.REPEAT,
+                    Shader.TileMode.REPEAT
                 )
             }
             updateCheckerboardAlpha()
@@ -3154,7 +3154,7 @@ class PixelCanvas @JvmOverloads constructor(
 
         clipboardWidth = maxX - minX + 1
         clipboardHeight = maxY - minY + 1
-        clipboardData = IntArray(clipboardWidth * clipboardHeight) { Color.TRANSPARENT }
+        clipboardData = IntArray(clipboardWidth * clipboardHeight)
 
         // Copier les pixels de la forme avec la couleur primaire
         for ((px, py) in pendingShapePixels) {
@@ -3553,7 +3553,7 @@ class PixelCanvas @JvmOverloads constructor(
         saveCurrentFrameData()
 
         // Create new blank frame
-        val newPixelData = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+        val newPixelData = IntArray(canvasWidth * canvasHeight)
         val newFrame = Frame(nextFrameId++, newPixelData)
 
         // Insert after current frame
@@ -3791,10 +3791,10 @@ class PixelCanvas @JvmOverloads constructor(
             // High zoom: use tiled checkerboard
             if (checkerboardTile == null) {
                 checkerboardTile = createCheckerboardTile()
-                checkerboardShader.shader = android.graphics.BitmapShader(
+                checkerboardShader.shader = BitmapShader(
                     checkerboardTile!!,
-                    android.graphics.Shader.TileMode.REPEAT,
-                    android.graphics.Shader.TileMode.REPEAT
+                    Shader.TileMode.REPEAT,
+                    Shader.TileMode.REPEAT
                 )
             }
             updateCheckerboardAlpha()
@@ -4466,7 +4466,7 @@ class PixelCanvas @JvmOverloads constructor(
 
         // For stacked frames, we accumulate pixels
         val accumulatedPixels = if (stackFrames) {
-            IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+            IntArray(canvasWidth * canvasHeight)
         } else null
 
         for (frame in frameList) {
@@ -4634,7 +4634,7 @@ class PixelCanvas @JvmOverloads constructor(
 
         for (row in 0 until rows) {
             for (col in 0 until cols) {
-                val newPixelData = IntArray(newFrameWidth * newFrameHeight) { Color.TRANSPARENT }
+                val newPixelData = IntArray(newFrameWidth * newFrameHeight)
 
                 // Copy pixels from the region
                 for (y in 0 until newFrameHeight) {
@@ -4670,7 +4670,7 @@ class PixelCanvas @JvmOverloads constructor(
 
         // Reset to first frame
         currentFrameIndex = 0
-        pixelData = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+        pixelData = IntArray(canvasWidth * canvasHeight)
         frames[0].pixelData.copyInto(pixelData)
 
         // Recreate canvas bitmap
@@ -4713,7 +4713,7 @@ class PixelCanvas @JvmOverloads constructor(
         }
 
         // Create new pixel data from bitmap
-        val newPixelData = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+        val newPixelData = IntArray(canvasWidth * canvasHeight)
         val srcWidth = min(importedBitmap.width, canvasWidth)
         val srcHeight = min(importedBitmap.height, canvasHeight)
 
@@ -4840,7 +4840,7 @@ class PixelCanvas @JvmOverloads constructor(
 
             // If no frames were loaded, create a blank one
             if (frames.isEmpty()) {
-                frames.add(Frame(nextFrameId++, IntArray(newWidth * newHeight) { Color.TRANSPARENT }))
+                frames.add(Frame(nextFrameId++, IntArray(newWidth * newHeight)))
             }
 
             // Apply settings
@@ -4945,7 +4945,7 @@ class PixelCanvas @JvmOverloads constructor(
 
             // If no frames were loaded, create a blank one
             if (frames.isEmpty()) {
-                frames.add(Frame(nextFrameId++, IntArray(width * height) { Color.TRANSPARENT }))
+                frames.add(Frame(nextFrameId++, IntArray(width * height)))
             }
 
             // Apply settings
@@ -4990,7 +4990,7 @@ class PixelCanvas @JvmOverloads constructor(
         // Notify history manager of new canvas size for adaptive optimization
         historyManager?.setCanvasSize(canvasWidth, canvasHeight)
 
-        pixelData = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+        pixelData = IntArray(canvasWidth * canvasHeight)
         canvasBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888)
 
         // Scale bitmap if needed (if it was coerced)
@@ -5037,7 +5037,7 @@ class PixelCanvas @JvmOverloads constructor(
         // Notify history manager of new canvas size for adaptive optimization
         historyManager?.setCanvasSize(canvasWidth, canvasHeight)
 
-        pixelData = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+        pixelData = IntArray(canvasWidth * canvasHeight)
         canvasBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888)
 
         frames.clear()
@@ -5082,7 +5082,7 @@ class PixelCanvas @JvmOverloads constructor(
 
             // Resize all frames (crop/extend without scaling)
             for (frame in frames) {
-                val newPixelData = IntArray(newWidth * newHeight) { Color.TRANSPARENT }
+                val newPixelData = IntArray(newWidth * newHeight)
 
                 // Copy existing pixels
                 for (y in 0 until min(canvasHeight, newHeight)) {
@@ -5189,7 +5189,7 @@ class PixelCanvas @JvmOverloads constructor(
             id = nextLayerId++,
             name = name,
             type = LayerType.PIXEL,
-            pixelData = IntArray(canvasWidth * canvasHeight) { Color.TRANSPARENT }
+            pixelData = IntArray(canvasWidth * canvasHeight)
         )
         layers.add(newLayer)
         currentLayerIndex = layers.size - 1
@@ -5410,7 +5410,7 @@ class PixelCanvas @JvmOverloads constructor(
      * Draws all visible layers on the canvas.
      */
     private fun drawLayers(canvas: Canvas) {
-        for ((index, layer) in layers.withIndex()) {
+        for ((_, layer) in layers.withIndex()) {
             if (!layer.visible) continue
 
             val layerPaint = Paint().apply {

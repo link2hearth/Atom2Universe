@@ -127,7 +127,7 @@ class ThemeSelectionDialog(
             )
         }
 
-        val (bgTop, bgBottom) = theme.getBackgroundColors()
+        val (bgTop, _) = theme.getBackgroundColors()
         val previewColors = listOf(
             bgTop,
             theme.getNoteColor(0),  // C

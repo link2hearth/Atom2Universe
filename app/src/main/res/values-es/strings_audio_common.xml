@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="audio_notification_title">Reproduciendo</string>
     <string name="audio_notification_unknown_artist">Artista desconocido</string>
@@ -8,7 +8,7 @@
     <string name="audio_action_dismiss">Cerrar</string>
     <string name="audio_source_radio">Radio</string>
     <string name="audio_source_midi">MIDI</string>
-    <string name="audio_source_music">Musica</string>
+    <string name="audio_source_music">Música</string>
     <string name="audio_conflict_title">Audio en curso</string>
     <string name="audio_conflict_message">%1$s ya esta en reproduccion. Que deseas escuchar?</string>
     <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
@@ -20,7 +20,7 @@
     <string name="audio_hub_radio_desc">Escucha miles de emisoras</string>
     <string name="audio_hub_midi_title">Reproductor MIDI</string>
     <string name="audio_hub_midi_desc">Archivos MIDI con sintesis SCC</string>
-    <string name="audio_hub_music_title">Reproductor de musica</string>
+    <string name="audio_hub_music_title">Reproductor de Música</string>
     <string name="audio_hub_music_desc">Tu biblioteca musical</string>
     <string name="audio_hub_editor_title">Editor de audio</string>
     <string name="audio_hub_editor_desc">Recorta tus archivos de audio</string>

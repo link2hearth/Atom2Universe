@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.music.view
+﻿package com.Atom2Universe.app.music.view
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -88,10 +88,10 @@ class AudioVisualizerView @JvmOverloads constructor(
         // PERFORMANCE: Lookup tables pour sin/cos (évite les calculs à chaque frame)
         private const val TABLE_SIZE = 360
         private val SIN_TABLE = FloatArray(TABLE_SIZE) { i ->
-            kotlin.math.sin(i * Math.PI * 2 / TABLE_SIZE).toFloat()
+            sin(i * Math.PI * 2 / TABLE_SIZE).toFloat()
         }
         private val COS_TABLE = FloatArray(TABLE_SIZE) { i ->
-            kotlin.math.cos(i * Math.PI * 2 / TABLE_SIZE).toFloat()
+            cos(i * Math.PI * 2 / TABLE_SIZE).toFloat()
         }
 
         // Constantes pour les visualisations
@@ -166,7 +166,7 @@ class AudioVisualizerView @JvmOverloads constructor(
     private var fftSize = 0
 
     // PERFORMANCE: Données lissées pour transitions fluides
-    private val smoothedFft = FloatArray(128) { 0f }
+    private val smoothedFft = FloatArray(128)
     private val smoothedWaveform = FloatArray(256) { 0.5f }
 
     // === PAINTS PRÉ-ALLOUÉS (évite allocations dans onDraw) ===
@@ -352,11 +352,11 @@ class AudioVisualizerView @JvmOverloads constructor(
     )
     private val flyingDiamonds = ArrayList<FlyingDiamond>(50)
     private var lastBeatTime = 0f  // Pour éviter trop de beats rapprochés
-    private var bassHistory = FloatArray(10) { 0f }  // Historique des niveaux de basse
+    private var bassHistory = FloatArray(10)  // Historique des niveaux de basse
     private var bassHistoryIndex = 0
 
     // Fire columns heights
-    private val fireHeights = FloatArray(FIRE_COLUMNS) { 0f }
+    private val fireHeights = FloatArray(FIRE_COLUMNS)
 
     // === DONNÉES POUR DELAUNAY_MESH ===
     private data class MeshPoint(
@@ -2357,7 +2357,7 @@ class AudioVisualizerView @JvmOverloads constructor(
 
     // === MODE 13: JULIA - Fractale de Julia animée ===
     private var juliaPhase = 0f
-    private var juliaBitmap: android.graphics.Bitmap? = null
+    private var juliaBitmap: Bitmap? = null
     private val juliaResolution = 180 // Résolution optimisée (était 200)
     private val juliaMaxIterations = 48 // Réduit de 64 à 48 pour meilleures perfs
     private val juliaPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -2411,10 +2411,10 @@ class AudioVisualizerView @JvmOverloads constructor(
             // Créer/recréer le bitmap si nécessaire
             if (juliaBitmap == null || juliaBitmap!!.width != juliaResolution || juliaBitmap!!.height != juliaResolution) {
                 juliaBitmap?.recycle()
-                juliaBitmap = android.graphics.Bitmap.createBitmap(
+                juliaBitmap = Bitmap.createBitmap(
                     juliaResolution,
                     juliaResolution,
-                    android.graphics.Bitmap.Config.ARGB_8888
+                    Bitmap.Config.ARGB_8888
                 )
             }
 
@@ -2496,7 +2496,7 @@ class AudioVisualizerView @JvmOverloads constructor(
     }
 
     // === MODE 15: JULIA_GRAYSCALE - Fractale de Julia en nuances de gris (gratuit) ===
-    private var juliaGrayBitmap: android.graphics.Bitmap? = null
+    private var juliaGrayBitmap: Bitmap? = null
     private val juliaGrayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isFilterBitmap = true
     }
@@ -2540,10 +2540,10 @@ class AudioVisualizerView @JvmOverloads constructor(
             // Créer/recréer le bitmap si nécessaire
             if (juliaGrayBitmap == null || juliaGrayBitmap!!.width != juliaResolution || juliaGrayBitmap!!.height != juliaResolution) {
                 juliaGrayBitmap?.recycle()
-                juliaGrayBitmap = android.graphics.Bitmap.createBitmap(
+                juliaGrayBitmap = Bitmap.createBitmap(
                     juliaResolution,
                     juliaResolution,
-                    android.graphics.Bitmap.Config.ARGB_8888
+                    Bitmap.Config.ARGB_8888
                 )
             }
 
@@ -2627,7 +2627,7 @@ class AudioVisualizerView @JvmOverloads constructor(
     // === MODE 14: MANDELBROT_ZOOM - Zoom hypnotique avec polynômes de Bernstein ===
     // Coloring par polynômes de Bernstein: dégradés mathématiquement lisses, zéro clignotement
     // Ref: solarianprogrammer.com/2013/02/28/mandelbrot-set-cpp-11/
-    private var mandelbrotBitmap: android.graphics.Bitmap? = null
+    private var mandelbrotBitmap: Bitmap? = null
     private val mandelbrotResolution = 180
     private val mandelbrotPixels = IntArray(mandelbrotResolution * mandelbrotResolution)
     private var mandelbrotZoom = 200.0
@@ -2695,9 +2695,9 @@ class AudioVisualizerView @JvmOverloads constructor(
 
         if (mandelbrotBitmap == null || mandelbrotBitmap!!.width != mandelbrotResolution) {
             mandelbrotBitmap?.recycle()
-            mandelbrotBitmap = android.graphics.Bitmap.createBitmap(
+            mandelbrotBitmap = Bitmap.createBitmap(
                 mandelbrotResolution, mandelbrotResolution,
-                android.graphics.Bitmap.Config.ARGB_8888
+                Bitmap.Config.ARGB_8888
             )
         }
 
@@ -2743,7 +2743,7 @@ class AudioVisualizerView @JvmOverloads constructor(
                     // Polynômes de Bernstein: noir→bleu→vert→jaune→orange→noir
                     // Boucle avec frac() → bandes de couleur lisses le long du bord
                     val raw = smoothIter * 0.04 + colorOff
-                    val t = raw - kotlin.math.floor(raw)
+                    val t = raw - floor(raw)
                     val ti = 1.0 - t
 
                     val r = (9.0 * ti * t * t * t * 255.0).toInt()
@@ -3039,7 +3039,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         val h = height.toFloat()
         val cx = w / 2f
         val cy = h / 2f
-        val maxDist = sqrt(cx * cx + cy * cy)
+        sqrt(cx * cx + cy * cy)
         val ringRadius = minOf(w, h) * 0.22f
 
         // Calcul de l'amplitude audio
@@ -3168,7 +3168,7 @@ class AudioVisualizerView @JvmOverloads constructor(
             if (ri > 0) currentRingR = rSum / ri
         }
         // Mur légèrement en retrait pour que les billes ne dépassent pas les sommets de l'anneau
-        val wallRadius = currentRingR * 0.88f
+        currentRingR * 0.88f
 
         // === Mise à jour positions : anneau (volume) vs billes (physique) vs grille (basses) ===
         for (pt in meshPoints) {
@@ -3278,7 +3278,7 @@ class AudioVisualizerView @JvmOverloads constructor(
             val gy = (a.y + b.y + c.y) / 3f
             val ringDist = sqrt((gx - cx) * (gx - cx) + (gy - cy) * (gy - cy))
             // Proximité normalisée à l'anneau (1 = sur l'anneau, 0 = loin)
-            val nearRing = (1f - (kotlin.math.abs(ringDist - ringRadius) / (ringRadius * 0.6f)).coerceIn(0f, 1f))
+            val nearRing = (1f - (abs(ringDist - ringRadius) / (ringRadius * 0.6f)).coerceIn(0f, 1f))
 
             val alpha = (12 + nearRing * 35f + amplitude * 28f).toInt().coerceIn(8, 75)
             if (grayscale) {

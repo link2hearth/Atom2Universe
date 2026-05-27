@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sf2_creator_title">Creador/Editor de SF2 (Experimental)</string>
     <string name="sf2_creator_desc">Crea SoundFonts a partir de grabaciones</string>
@@ -8,14 +8,14 @@
     <string name="sf2_step_record_title">Grabar muestra</string>
     <string name="sf2_step_edit_title">Editar muestra</string>
     <string name="sf2_step_export_title">Crear SoundFont</string>
-    <string name="sf2_record_instructions">Graba cualquier sonido (maximo 5 segundos). La muestra grabada sera reproducible en todo el teclado.</string>
+    <string name="sf2_record_instructions">Graba cualquier sonido (máximo 5 segundos). La muestra grabada será reproducible en todo el teclado.</string>
     <string name="sf2_countdown_value_default">3s</string>
     <string name="sf2_max_duration_value_default">5s</string>
     <string name="sf2_record_duration_default">0.0s / 5.0s</string>
     <string name="sf2_recording">Grabando…</string>
     <string name="sf2_recording_complete">Grabacion completada!</string>
     <string name="sf2_noise_reduced">Ruido de fondo reducido (%1$s dB)</string>
-    <string name="sf2_max_duration_reached">Duracion maxima alcanzada</string>
+    <string name="sf2_max_duration_reached">Duracion máxima alcanzada</string>
     <string name="sf2_detected_pitch">Detectado: %1$s (%2$.1f Hz)</string>
     <string name="sf2_pitch_uncertain">Tono incierto - usando C4 por defecto</string>
     <string name="sf2_record">Grabar</string>
@@ -64,8 +64,8 @@
     <string name="sf2_auto_loop">Agregar bucle</string>
     <string name="sf2_no_loop">Sin bucle</string>
     <string name="sf2_adsr_preset">Tipo de envolvente</string>
-    <string name="sf2_adsr_description">Controla como aparece y desaparece el sonido. Piano = decaimiento rapido, Organo = sostenido, Pad = desvanecimiento lento.</string>
-    <string name="sf2_loop_hint">Region de bucle: el sonido se repite aqui mientras se mantiene una nota en el reproductor MIDI</string>
+    <string name="sf2_adsr_description">Controla como aparece y desaparece el sonido. Piano = decaimiento rápido, Órgano = sostenido, Pad = desvanecimiento lento.</string>
+    <string name="sf2_loop_hint">Region de bucle: el sonido se repite aquí mientras se mantiene una nota en el reproductor MIDI</string>
     <string name="sf2_sustain_test">Mantener para sostener</string>
     <string name="sf2_drag_markers_hint">Arrastra los marcadores amarillos para ajustar los puntos de bucle</string>
     <string name="sf2_processing_applied">Procesamiento aplicado</string>
@@ -172,7 +172,7 @@
     <string name="sf2_delete_preset">Eliminar preset</string>
     <string name="sf2_delete_preset_confirm">Eliminar el preset \"%1$s\" y todas sus muestras?</string>
     <string name="sf2_preset_deleted">Preset eliminado</string>
-    <string name="sf2_cannot_delete_last_preset">No se puede eliminar el ultimo preset</string>
+    <string name="sf2_cannot_delete_last_preset">No se puede eliminar el último preset</string>
     <string name="sf2_import">Importar SF2</string>
     <string name="sf2_import_title">Importar SoundFont</string>
     <string name="sf2_import_button">Importar seleccionados</string>
@@ -204,7 +204,7 @@
     <string name="sf2_has_loop">· Bucle</string>
     <string name="sf2_copy_preset">Copiar preset</string>
     <string name="sf2_copy_sample">Copiar muestra</string>
-    <string name="sf2_paste_here">Pegar aqui</string>
+    <string name="sf2_paste_here">Pegar aquí</string>
     <string name="sf2_copied">Copiado al portapapeles</string>
     <string name="sf2_pasted">%d elemento(s) pegado(s)</string>
     <string name="sf2_paste_program">Pegar programa</string>
@@ -219,7 +219,7 @@
     <string name="sf2_delete_program">Eliminar programa</string>
     <string name="sf2_delete_program_confirm">Eliminar el programa \"%1$s\" y todos sus instrumentos?</string>
     <string name="sf2_program_deleted">Programa eliminado</string>
-    <string name="sf2_cannot_delete_last_program">No se puede eliminar el ultimo programa</string>
+    <string name="sf2_cannot_delete_last_program">No se puede eliminar el último programa</string>
     <string name="sf2_program_instruments">%d instrumento(s)</string>
     <string name="sf2_instruments_label">Instrumentos</string>
     <string name="sf2_add_instrument">Agregar instrumento</string>
@@ -258,15 +258,15 @@
     <string name="sf2_section_reset_toast">Seccion restablecida a valores predeterminados</string>
     <string name="sf2_vel_range_title">Rango de velocidad</string>
     <string name="sf2_vel_range_hint">Establece el rango de velocidad al que responde esta muestra</string>
-    <string name="sf2_vel_start_label">Velocidad minima</string>
-    <string name="sf2_vel_end_label">Velocidad maxima</string>
+    <string name="sf2_vel_start_label">Velocidad mínima</string>
+    <string name="sf2_vel_end_label">Velocidad máxima</string>
     <string name="sf2_vel_full_range">Rango completo (todas las velocidades)</string>
-    <string name="sf2_vel_single">Velocidad unica: %1$d</string>
+    <string name="sf2_vel_single">Velocidad única: %1$d</string>
     <string name="sf2_vel_narrow_range">Reducido: %1$d – %2$d</string>
     <string name="sf2_vel_range_desc">Rango: %1$d – %2$d</string>
     <string name="sf2_countdown_delay">Cuenta regresiva</string>
     <string name="sf2_countdown_none">Desactivado</string>
-    <string name="sf2_max_duration">Duracion maxima</string>
+    <string name="sf2_max_duration">Duracion máxima</string>
     <string name="sf2_seconds_format">%1$ds</string>
     <string name="sf2_recording_duration_format">%1$.1fs / %2$ds</string>
     <string name="sf2_countdown_waiting">Grabacion en %1$d…</string>

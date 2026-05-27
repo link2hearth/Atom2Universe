@@ -1,4 +1,4 @@
-package com.Atom2Universe.app.midi.analyzer
+﻿package com.Atom2Universe.app.midi.analyzer
 
 import android.content.Context
 import android.net.Uri
@@ -363,9 +363,9 @@ class MidiFileAnalyzer(private val context: Context) {
         val timedChanges = mutableListOf<RequiredInstruments.TimedProgramChange>()
 
         // Track bank select per channel (default bank 0)
-        val channelBankMSB = IntArray(16) { 0 }  // CC#0 Bank Select MSB
-        val channelBankLSB = IntArray(16) { 0 }  // CC#32 Bank Select LSB
-        val channelProgram = IntArray(16) { 0 }  // Current program per channel
+        val channelBankMSB = IntArray(16)  // CC#0 Bank Select MSB
+        val channelBankLSB = IntArray(16)  // CC#32 Bank Select LSB
+        val channelProgram = IntArray(16)  // Current program per channel
         val channelHasNotes = BooleanArray(16) { false }
 
         // Calculate timing info
@@ -521,9 +521,9 @@ class MidiFileAnalyzer(private val context: Context) {
         val timeline = InstrumentTimeline()
 
         // Track bank select per channel (default bank 0)
-        val channelBankMSB = IntArray(16) { 0 }
-        val channelBankLSB = IntArray(16) { 0 }
-        val channelProgram = IntArray(16) { 0 }
+        val channelBankMSB = IntArray(16)
+        val channelBankLSB = IntArray(16)
+        val channelProgram = IntArray(16)
         val channelHasNotes = BooleanArray(16) { false }
 
         // Active notes tracking for duration calculation

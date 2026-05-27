@@ -91,12 +91,12 @@ class ColorStackWidgetView @JvmOverloads constructor(
         colorStackView.listener = this
 
         // Tap résultat overlay → fermer
-        resultOverlay.setOnClickListener { resultOverlay.visibility = View.GONE }
+        resultOverlay.setOnClickListener { resultOverlay.visibility = GONE }
 
         // Bouton "Nouvelle partie" dans l'overlay victoire → ouvre le sélecteur
         findViewById<TextView>(R.id.color_stack_btn_new_game).setOnClickListener {
-            resultOverlay.visibility = View.GONE
-            resetOverlay.visibility = View.VISIBLE
+            resultOverlay.visibility = GONE
+            resetOverlay.visibility = VISIBLE
         }
 
         // Bouton undo (↩) dans le header
@@ -109,26 +109,26 @@ class ColorStackWidgetView @JvmOverloads constructor(
 
         // Bouton reset (↺) dans le header → ouvre le sélecteur de difficulté
         findViewById<TextView>(R.id.color_stack_btn_reset).setOnClickListener {
-            resetOverlay.visibility = View.VISIBLE
+            resetOverlay.visibility = VISIBLE
         }
 
         // Boutons de difficulté dans l'overlay
         findViewById<TextView>(R.id.color_stack_diff_easy).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame(ColorStackGame.Difficulty.EASY)
         }
         findViewById<TextView>(R.id.color_stack_diff_medium).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame(ColorStackGame.Difficulty.MEDIUM)
         }
         findViewById<TextView>(R.id.color_stack_diff_hard).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame(ColorStackGame.Difficulty.HARD)
         }
 
         // Overlay reset : annuler
         findViewById<TextView>(R.id.color_stack_reset_cancel).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
         }
 
         val headerArea = findViewById<FrameLayout>(R.id.color_stack_header_area)
@@ -182,8 +182,8 @@ class ColorStackWidgetView @JvmOverloads constructor(
     }
 
     private fun startNewGame(diff: ColorStackGame.Difficulty) {
-        resultOverlay.visibility = View.GONE
-        resetOverlay.visibility = View.GONE
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         game.newGame(diff)
         colorStackView.game = game
         colorStackView.refresh()
@@ -204,7 +204,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
             colorStackView.refresh()
             if (game.solved) {
                 resultText.text = "🎉 Trié !"
-                resultOverlay.visibility = View.VISIBLE
+                resultOverlay.visibility = VISIBLE
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit { remove(KEY_SAVE) }
                 when (game.difficulty) {
@@ -235,8 +235,8 @@ class ColorStackWidgetView @JvmOverloads constructor(
     }
 
     fun reload() {
-        resultOverlay.visibility = View.GONE
-        resetOverlay.visibility = View.GONE
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         val json = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_SAVE, null)
         val restored = json != null && game.deserialize(json)

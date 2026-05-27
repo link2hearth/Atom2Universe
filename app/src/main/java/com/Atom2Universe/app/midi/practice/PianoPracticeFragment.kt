@@ -3606,7 +3606,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         // Pop back to exit practice mode
         parentFragmentManager.popBackStack()
         // Tell the activity to switch to the specified tab
-        (activity as? com.Atom2Universe.app.midi.ui.MidiPlayerActivity)?.selectTab(tabIndex)
+        (activity as? MidiPlayerActivity)?.selectTab(tabIndex)
     }
 
     /**

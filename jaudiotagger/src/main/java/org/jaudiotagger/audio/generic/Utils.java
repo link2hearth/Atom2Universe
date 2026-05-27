@@ -89,7 +89,7 @@ public class Utils {
     public static long getLongLE(final ByteBuffer b, final int start, final int end) {
         long number = 0;
         for (int i = 0; i < (end - start + 1); i++) {
-            number += ((b.get(start + i) & 0xFF) << i * 8);
+            number += ((long) (b.get(start + i) & 0xFF) << i * 8);
         }
 
         return number;
@@ -250,7 +250,7 @@ public class Utils {
     public static String getString(final ByteBuffer buffer, final Charset encoding) {
         final byte[] b = new byte[buffer.remaining()];
         buffer.get(b);
-        return new String(b, 0, b.length, encoding);
+        return new String(b, encoding);
     }
 
     /**
@@ -412,7 +412,7 @@ public class Utils {
      * @return
      */
     public static long u(final int n) {
-        return n & 0xffffffffl;
+        return n & 0xffffffffL;
     }
 
     /**
@@ -499,9 +499,6 @@ public class Utils {
      * @return true if length is an odd number
      */
     public static boolean isOddLength(long length) {
-        if ((length & 1) != 0) {
-            return true;
-        }
-        return false;
+        return (length & 1) != 0;
     }
 }

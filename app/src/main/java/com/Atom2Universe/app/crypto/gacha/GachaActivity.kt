@@ -360,7 +360,7 @@ class GachaActivity : AppCompatActivity() {
         isAnimating = false
     }
 
-    private fun inflateMiniCard(element: PeriodicElement, rarity: GachaRarity, count: Int, isFirst: Boolean): android.view.View {
+    private fun inflateMiniCard(element: PeriodicElement, rarity: GachaRarity, count: Int, isFirst: Boolean): View {
         val card = layoutInflater.inflate(R.layout.gacha_mini_card, multiResultContainer, false)
 
         card.findViewById<TextView>(R.id.mini_number).text = "#${element.atomicNumber}"

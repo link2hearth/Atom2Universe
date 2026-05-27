@@ -108,24 +108,24 @@ object Move {
 
     // Pawn push to 7 or 8th rank
     fun isPawnPush(move: Int): Boolean {
-        return Move.getPieceMoved(move) == Piece.PAWN && (Move.getToIndex(move) < 16 || Move.getToIndex(move) > 47)
+        return getPieceMoved(move) == Piece.PAWN && (getToIndex(move) < 16 || getToIndex(move) > 47)
     }
 
     // Pawn push to 6, 7 or 8th rank
     fun isPawnPush678(move: Int): Boolean {
-        return Move.getPieceMoved(move) == Piece.PAWN && if (Move.getFromIndex(move) < Move.getToIndex(move)) Move.getToIndex(move) >= 40 else Move.getToIndex(move) < 24
+        return getPieceMoved(move) == Piece.PAWN && if (getFromIndex(move) < getToIndex(move)) getToIndex(move) >= 40 else getToIndex(move) < 24
     }
 
     // Pawn push to 5, 6, 7 or 8th rank
     fun isPawnPush5678(move: Int): Boolean {
-        return Move.getPieceMoved(move) == Piece.PAWN && if (Move.getFromIndex(move) < Move.getToIndex(move)) Move.getToIndex(move) >= 32 else Move.getToIndex(move) < 32
+        return getPieceMoved(move) == Piece.PAWN && if (getFromIndex(move) < getToIndex(move)) getToIndex(move) >= 32 else getToIndex(move) < 32
     }
 
     /**
      * Checks if this move is a promotion
      */
     fun isPromotion(move: Int): Boolean {
-        return Move.getMoveType(move) >= TYPE_PROMOTION_QUEEN
+        return getMoveType(move) >= TYPE_PROMOTION_QUEEN
     }
 
     fun getPiecePromoted(move: Int): Int {
@@ -147,11 +147,11 @@ object Move {
      * @return
      */
     fun isTactical(move: Int): Boolean {
-        return Move.isCapture(move) || Move.isPromotion(move)
+        return isCapture(move) || isPromotion(move)
     }
 
     fun isCastling(move: Int): Boolean {
-        return Move.getMoveType(move) == TYPE_KINGSIDE_CASTLING || Move.getMoveType(move) == TYPE_QUEENSIDE_CASTLING
+        return getMoveType(move) == TYPE_KINGSIDE_CASTLING || getMoveType(move) == TYPE_QUEENSIDE_CASTLING
     }
 
     /**
@@ -165,9 +165,9 @@ object Move {
     fun getFromString(board: Board, move: String, verifyValidMove: Boolean): Int {
         var m = move
         if (NULL_STRING == m) {
-            return Move.NULL
+            return NULL
         } else if ("" == m || NONE_STRING == m) {
-            return Move.NONE
+            return NONE
         }
 
         var fromIndex: Int
@@ -295,7 +295,7 @@ object Move {
             if ((to and if (turn) board.blacks else board.whites) != 0L) {
                 capture = true
             }
-            var moveInt = Move.genMove(fromIndex, toIndex, pieceMoved, capture, check, moveType)
+            var moveInt = genMove(fromIndex, toIndex, pieceMoved, capture, check, moveType)
             if (verifyValidMove) {
                 moveInt = board.getLegalMove(moveInt)
                 if (moveInt != NONE) {
@@ -316,14 +316,14 @@ object Move {
      * @return
      */
     fun toString(move: Int): String {
-        if (move == Move.NONE) {
+        if (move == NONE) {
             return NONE_STRING
-        } else if (move == Move.NULL) {
+        } else if (move == NULL) {
             return NULL_STRING
         }
         val sb = StringBuilder()
-        sb.append(BitboardUtils.index2Algebraic(Move.getFromIndex(move)))
-        sb.append(BitboardUtils.index2Algebraic(Move.getToIndex(move)))
+        sb.append(BitboardUtils.index2Algebraic(getFromIndex(move)))
+        sb.append(BitboardUtils.index2Algebraic(getToIndex(move)))
         if (isPromotion(move)) {
             sb.append(PIECE_LETTERS_LOWERCASE[getPiecePromoted(move)])
         }
@@ -331,23 +331,23 @@ object Move {
     }
 
     fun toStringExt(move: Int): String {
-        if (move == Move.NONE) {
+        if (move == NONE) {
             return NONE_STRING
-        } else if (move == Move.NULL) {
+        } else if (move == NULL) {
             return NULL_STRING
-        } else if (Move.getMoveType(move) == TYPE_KINGSIDE_CASTLING) {
-            return if (Move.isCheck(move)) "O-O+" else "O-O"
-        } else if (Move.getMoveType(move) == TYPE_QUEENSIDE_CASTLING) {
-            return if (Move.isCheck(move)) "O-O-O+" else "O-O-O"
+        } else if (getMoveType(move) == TYPE_KINGSIDE_CASTLING) {
+            return if (isCheck(move)) "O-O+" else "O-O"
+        } else if (getMoveType(move) == TYPE_QUEENSIDE_CASTLING) {
+            return if (isCheck(move)) "O-O-O+" else "O-O-O"
         }
 
         val sb = StringBuilder()
         if (getPieceMoved(move) != Piece.PAWN) {
             sb.append(PIECE_LETTERS_UPPERCASE[getPieceMoved(move)])
         }
-        sb.append(BitboardUtils.index2Algebraic(Move.getFromIndex(move)))
+        sb.append(BitboardUtils.index2Algebraic(getFromIndex(move)))
         sb.append(if (isCapture(move)) 'x' else '-')
-        sb.append(BitboardUtils.index2Algebraic(Move.getToIndex(move)))
+        sb.append(BitboardUtils.index2Algebraic(getToIndex(move)))
         if (isPromotion(move)) {
             sb.append(PIECE_LETTERS_LOWERCASE[getPiecePromoted(move)])
         }
@@ -367,9 +367,9 @@ object Move {
      * @return
      */
     fun toSan(board: Board, move: Int): String {
-        if (move == Move.NONE) {
+        if (move == NONE) {
             return NONE_STRING
-        } else if (move == Move.NULL) {
+        } else if (move == NULL) {
             return NULL_STRING
         }
         board.generateLegalMoves()
@@ -395,18 +395,18 @@ object Move {
             }
         }
         if (!isLegal) {
-            return Move.NONE_STRING
-        } else if (Move.getMoveType(move) == TYPE_KINGSIDE_CASTLING) {
-            return if (Move.isCheck(move)) "O-O+" else "O-O"
-        } else if (Move.getMoveType(move) == TYPE_QUEENSIDE_CASTLING) {
-            return if (Move.isCheck(move)) "O-O-O+" else "O-O-O"
+            return NONE_STRING
+        } else if (getMoveType(move) == TYPE_KINGSIDE_CASTLING) {
+            return if (isCheck(move)) "O-O+" else "O-O"
+        } else if (getMoveType(move) == TYPE_QUEENSIDE_CASTLING) {
+            return if (isCheck(move)) "O-O-O+" else "O-O-O"
         }
 
         val sb = StringBuilder()
         if (getPieceMoved(move) != Piece.PAWN) {
             sb.append(PIECE_LETTERS_UPPERCASE[getPieceMoved(move)])
         }
-        val fromSq = BitboardUtils.index2Algebraic(Move.getFromIndex(move))
+        val fromSq = BitboardUtils.index2Algebraic(getFromIndex(move))
 
         if (isCapture(move) && getPieceMoved(move) == Piece.PAWN) {
             disambiguate = true
@@ -425,7 +425,7 @@ object Move {
         if (isCapture(move)) {
             sb.append("x")
         }
-        sb.append(BitboardUtils.index2Algebraic(Move.getToIndex(move)))
+        sb.append(BitboardUtils.index2Algebraic(getToIndex(move)))
         if (isPromotion(move)) {
             sb.append("=")
             sb.append(PIECE_LETTERS_UPPERCASE[getPiecePromoted(move)])
@@ -438,7 +438,7 @@ object Move {
 
     fun printMoves(moves: IntArray, from: Int, to: Int) {
         for (i in from..to - 1) {
-            print(Move.toStringExt(moves[i]))
+            print(toStringExt(moves[i]))
             print(" ")
         }
         println()

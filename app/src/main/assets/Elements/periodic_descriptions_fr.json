@@ -1386,32 +1386,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Nucléosynthèse du Big Bang",
       "range": "Éléments 1–2 · H, He",
       "body": "Nés dans les 3 premières minutes après le Big Bang, l'hydrogène et l'hélium représentent environ 99 % de toute la matière visible de l'univers. À mesure que le jeune univers s'est dilaté et refroidi depuis plusieurs milliards de degrés, les protons et les neutrons se sont assemblés pour former les premiers noyaux atomiques — presque exclusivement de l'hydrogène et de l'hélium, avec des traces de lithium."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Spallation cosmique",
       "range": "Éléments 3–5 · Li, Be, B",
       "body": "Ces trois éléments sont trop fragiles pour survivre à l'intérieur des étoiles — les réactions de fusion les détruisent plus vite qu'ils ne peuvent être fabriqués. Ils se forment lorsque des rayons cosmiques voyageant à des vitesses proches de celle de la lumière percutent des atomes plus lourds (carbone, oxygène, azote) dérivant dans l'espace interstellaire, les fragmentant en éléments plus légers. Ce processus, appelé spallation, est rare et inefficace, ce qui explique que Li, Be et B comptent parmi les éléments les moins abondants du cosmos."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Fusion stellaire",
       "range": "Éléments 6–14 · C à Si",
       "body": "Forgés au cœur des étoiles par des cycles de combustion successifs : l'hydrogène fusionne en hélium, l'hélium en carbone et oxygène, le carbone en néon et magnésium, et ainsi de suite jusqu'au silicium. Chaque étape nécessite une étoile plus massive et plus chaude, et libère une énergie colossale. Le carbone et l'oxygène produits ici constituent l'ossature moléculaire de toute la chimie organique et de la vie. Quand ces étoiles meurent, elles dispersent ces éléments dans la galaxie."
     },
-    "mythique": {
+    "supernova": {
       "process": "Combustion du silicium — Pic du fer",
       "range": "Éléments 15–28 · P à Ni",
       "body": "Les produits finaux de la fusion stellaire. Dans le cœur des étoiles les plus massives, la combustion du silicium produit les éléments du pic du fer — chrome, manganèse, fer, cobalt et nickel. La fusion s'arrête ici : le fer-56 et le nickel-62 ont l'énergie de liaison par nucléon la plus élevée, ce qui signifie que les fusionner davantage consommerait de l'énergie au lieu d'en libérer. Sans pression vers l'extérieur pour contrer la gravité, ces étoiles s'effondrent et explosent en supernova."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Capture de neutrons · Supernovæ",
       "range": "Éléments 29–92 · Cu à U",
       "body": "Au-delà du pic du fer, la fusion stellaire seule ne peut pas construire ces éléments — ils nécessitent la capture de neutrons. Le processus s lent, qui se déroule sur des milliers d'années dans les étoiles géantes AGB, ajoute progressivement des neutrons pour former l'argent, l'étain, le baryum et le plomb. Le processus r violent, déclenché en une fraction de seconde lors de collisions d'étoiles à neutrons et de supernovæ, forge les atomes les plus lourds : or, platine, uranium. Chaque atome d'or sur Terre est né d'une catastrophe cosmique."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Synthétiques · Sans isotopes stables",
       "range": "Tc (43), Pm (61) · Éléments 93–118",
       "body": "Le technétium (43) et le prométhium (61) n'ont aucun isotope stable et ne se trouvent pas naturellement sur Terre — toute quantité formée dans les étoiles anciennes s'est désintégrée depuis longtemps. Les éléments 93 à 118 n'existent que parce que des humains les ont créés dans des accélérateurs de particules, en propulsant des noyaux atomiques les uns contre les autres à des vitesses énormes. Beaucoup ne survivent que quelques microsecondes avant de se désintégrer. L'oganesson (118), l'élément le plus lourd confirmé, a nécessité 1 100 milliards de collisions pour produire seulement 3 atomes, synthétisé pour la première fois en 2002."

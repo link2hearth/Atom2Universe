@@ -129,7 +129,7 @@ object MidiAudioMixer {
      * @param midiBytes Les bytes MIDI originaux
      * @return Les bytes MIDI avec velocity ajustée, ou null si l'événement doit être ignoré
      */
-    fun processMidiEvent(midiBytes: ByteArray): ByteArray? {
+    fun processMidiEvent(midiBytes: ByteArray): ByteArray {
         if (midiBytes.isEmpty()) return midiBytes
 
         val status = midiBytes[0].toInt() and 0xFF
@@ -138,7 +138,7 @@ object MidiAudioMixer {
         // Traiter seulement les Note On (0x90) avec velocity > 0
         if (type == 0x90 && midiBytes.size >= 3) {
             val channel = status and 0x0F
-            val note = midiBytes[1].toInt() and 0x7F
+            midiBytes[1].toInt() and 0x7F
             val originalVelocity = midiBytes[2].toInt() and 0x7F
 
             // Si velocity = 0, c'est un Note Off déguisé, ne pas traiter

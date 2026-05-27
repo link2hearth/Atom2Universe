@@ -209,7 +209,7 @@ class FullPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener 
         setContentView(R.layout.activity_full_player)
 
         // Initialiser les SharedPreferences
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         initViews()
         setupToolbar()
@@ -1082,10 +1082,10 @@ class FullPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener 
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.PENROSE_TRUE)
         }
 
-        findViewById<android.widget.ImageView>(R.id.btn_reorder_visuals)?.setOnClickListener {
+        findViewById<ImageView>(R.id.btn_reorder_visuals)?.setOnClickListener {
             showVizReorderDialog()
         }
-        findViewById<android.widget.ImageView>(R.id.btn_reorder_visuals_fs)?.setOnClickListener {
+        findViewById<ImageView>(R.id.btn_reorder_visuals_fs)?.setOnClickListener {
             showVizReorderDialog()
         }
     }
@@ -2166,7 +2166,7 @@ class FullPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener 
 
         // Setup touch listener pour afficher/masquer les contrôles
         visualizerFullscreen.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 toggleFullscreenControls()
             }
             true

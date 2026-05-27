@@ -4365,7 +4365,7 @@ class MusicPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener
                     artist = navAlbum.artist,
                     albumArtUri = navAlbum.coverArtId?.let {
                         navidromeApiClient?.buildCoverArtUrl(it)?.let { url ->
-                            android.net.Uri.parse(url)
+                            Uri.parse(url)
                         }
                     },
                     year = navAlbum.year,
@@ -4391,7 +4391,7 @@ class MusicPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener
                     artist = navAlbum.artist,
                     albumArtUri = navAlbum.coverArtId?.let {
                         client.buildCoverArtUrl(it).let { url ->
-                            android.net.Uri.parse(url)
+                            Uri.parse(url)
                         }
                     },
                     year = navAlbum.year,

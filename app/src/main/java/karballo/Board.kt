@@ -66,7 +66,7 @@ class Board {
      * It also computes the zobrist key
      */
     fun startPosition() {
-        fen = Companion.FEN_START_POSITION
+        fen = FEN_START_POSITION
     }
 
     /**
@@ -74,8 +74,8 @@ class Board {
      * http://en.wikipedia.org/wiki/Chess960_numbering_scheme
      */
     fun startPosition(chess960Position: Int) {
-        val base = Companion.CHESS960_START_POSITIONS_BISHOPS[chess960Position and 0x0f]
-        val otherPieces = Companion.CHESS960_START_POSITIONS[chess960Position.ushr(4)]
+        val base = CHESS960_START_POSITIONS_BISHOPS[chess960Position and 0x0f]
+        val otherPieces = CHESS960_START_POSITIONS[chess960Position.ushr(4)]
         val oSB = StringBuilder()
         var j = 0
         for (i in 0..7) {
@@ -117,10 +117,10 @@ class Board {
     fun canCastleKingSide(color: Int, ai: AttacksInfo): Long {
         if (if (color == Color.W) whiteKingsideCastling else blackKingsideCastling) {
             val rookOrigin = castlingRooks[if (color == Color.W) 0 else 2]
-            val rookDestiny = Board.CASTLING_ROOK_DESTINY_SQUARE[if (color == Color.W) 0 else 2]
+            val rookDestiny = CASTLING_ROOK_DESTINY_SQUARE[if (color == Color.W) 0 else 2]
             val rookRoute = BitboardUtils.getHorizontalLine(rookDestiny, rookOrigin) and rookOrigin.inv()
             val kingOrigin = kings and if (color == Color.W) whites else blacks
-            val kingDestiny = Board.CASTLING_KING_DESTINY_SQUARE[if (color == Color.W) 0 else 2]
+            val kingDestiny = CASTLING_KING_DESTINY_SQUARE[if (color == Color.W) 0 else 2]
             val kingRoute = BitboardUtils.getHorizontalLine(kingOrigin, kingDestiny) and kingOrigin.inv()
 
             if (whites or blacks and (kingRoute or rookRoute) and rookOrigin.inv() and kingOrigin.inv() == 0L && ai.attackedSquaresAlsoPinned[1 - color] and kingRoute == 0L) {
@@ -137,10 +137,10 @@ class Board {
     fun canCastleQueenSide(color: Int, ai: AttacksInfo): Long {
         if (if (color == Color.W) whiteQueensideCastling else blackQueensideCastling) {
             val rookOrigin = castlingRooks[if (color == Color.W) 1 else 3]
-            val rookDestiny = Board.CASTLING_ROOK_DESTINY_SQUARE[if (color == Color.W) 1 else 3]
+            val rookDestiny = CASTLING_ROOK_DESTINY_SQUARE[if (color == Color.W) 1 else 3]
             val rookRoute = BitboardUtils.getHorizontalLine(rookOrigin, rookDestiny) and rookOrigin.inv()
             val kingOrigin = kings and if (color == Color.W) whites else blacks
-            val kingDestiny = Board.CASTLING_KING_DESTINY_SQUARE[if (color == Color.W) 1 else 3]
+            val kingDestiny = CASTLING_KING_DESTINY_SQUARE[if (color == Color.W) 1 else 3]
             val kingRoute = BitboardUtils.getHorizontalLine(kingDestiny, kingOrigin) and kingOrigin.inv()
 
             if (whites or blacks and (kingRoute or rookRoute) and rookOrigin.inv() and kingOrigin.inv() == 0L && ai.attackedSquaresAlsoPinned[1 - color] and kingRoute == 0L) {
@@ -399,8 +399,7 @@ class Board {
             val possibleCastlingRookSquares = longArrayOf(0, 0, 0, 0)
 
             for (k in 0..castlings.length - 1) {
-                val c = castlings[k]
-                when (c) {
+                when (val c = castlings[k]) {
                     'K' -> possibleCastlingRookSquares[0] = whiteKingLateralSquares[0]
                     'Q' -> possibleCastlingRookSquares[1] = whiteKingLateralSquares[1]
                     'k' -> possibleCastlingRookSquares[2] = whiteKingLateralSquares[2]
@@ -940,7 +939,7 @@ class Board {
         if (ai.boardKey == getKey()
                 && ai.attackedSquares[them] and Move.getToSquare(move) == 0L
                 && ai.mayPin[them] and Move.getFromSquare(move) == 0L) {
-            return if (Move.isCapture(move)) Board.SEE_PIECE_VALUES[Move.getPieceCaptured(this, move)] else 0
+            return if (Move.isCapture(move)) SEE_PIECE_VALUES[Move.getPieceCaptured(this, move)] else 0
         } else {
             return see(move)
         }

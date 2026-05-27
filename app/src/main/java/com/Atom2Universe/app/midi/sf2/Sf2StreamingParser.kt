@@ -337,7 +337,7 @@ class Sf2StreamingParser {
      */
     private fun buildAllPresetsForMmap(metadata: Sf2Metadata): Map<String, Sf2Preset> {
         val presetMap = mutableMapOf<String, Sf2Preset>()
-        val (instrumentZones, instrumentGlobals) = buildInstrumentZonesMetadata(metadata)
+        val (instrumentZones, _) = buildInstrumentZonesMetadata(metadata)
 
         val count = max(0, metadata.presetHeaders.size - 1)
 
@@ -561,7 +561,7 @@ class Sf2StreamingParser {
         sampleData: SparseSampleData
     ): Map<String, Sf2Preset> {
         val presetMap = mutableMapOf<String, Sf2Preset>()
-        val (instrumentZones, instrumentGlobals) = buildInstrumentZonesMetadata(metadata)
+        val (instrumentZones, _) = buildInstrumentZonesMetadata(metadata)
 
         val count = max(0, metadata.presetHeaders.size - 1)
 
@@ -630,7 +630,7 @@ class Sf2StreamingParser {
         remappedHeaders: List<Sf2SampleHeader>
     ): Map<String, Sf2Preset> {
         val presetMap = mutableMapOf<String, Sf2Preset>()
-        val (instrumentZones, instrumentGlobals) = buildInstrumentZonesWithHeaders(metadata, remappedHeaders)
+        val (instrumentZones, _) = buildInstrumentZonesWithHeaders(metadata, remappedHeaders)
 
         val count = max(0, metadata.presetHeaders.size - 1)
 
@@ -743,7 +743,7 @@ class Sf2StreamingParser {
         sampleData: ShortArray
     ): Map<String, Sf2Preset> {
         val presetMap = mutableMapOf<String, Sf2Preset>()
-        val (instrumentZones, instrumentGlobals) = buildInstrumentZonesMetadata(metadata)
+        val (instrumentZones, _) = buildInstrumentZonesMetadata(metadata)
 
         val count = max(0, metadata.presetHeaders.size - 1)
 

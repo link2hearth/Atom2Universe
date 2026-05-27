@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_comics_title">Komik</string>
     <string name="hub_comics_desc">Pembaca PDF, CBZ, dan folder gambar</string>
@@ -23,7 +23,6 @@
     <string name="comics_scanning_found">%d komik ditemukan</string>
     <string name="comics_delete_root_msg">Hapus \"%s\" dan semua komiknya dari pustaka?</string>
     <plurals name="comics_root_count">
-        <item quantity="one">%d komik</item>
         <item quantity="other">%d komik</item>
     </plurals>
     <string name="comics_rescan">Pindai ulang</string>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_reset_button">Atur ulang</string>
     <string name="stats_reset_confirm_title">Apa yang ingin Anda atur ulang?</string>
@@ -127,7 +127,6 @@
     <string name="crypto_settings_screen_section">Tampilan</string>
     <string name="crypto_image_center_label">Pusatkan gambar</string>
     <plurals name="news_count">
-        <item quantity="one">%d artikel</item>
         <item quantity="other">%d artikel</item>
     </plurals>
     <string name="crypto_label_banner_opacity">Opasitas banner</string>

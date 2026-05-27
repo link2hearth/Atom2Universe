@@ -231,7 +231,7 @@ class Sf2Writer {
                 writer.writeChunkId("sfbk")
 
                 // Write LIST 'INFO'
-                val infoListStart = writer.getPosition()
+                writer.getPosition()
                 writer.writeChunkId("LIST")
                 val infoSizePos = writer.getPosition()
                 writer.writeUInt32(0) // Placeholder

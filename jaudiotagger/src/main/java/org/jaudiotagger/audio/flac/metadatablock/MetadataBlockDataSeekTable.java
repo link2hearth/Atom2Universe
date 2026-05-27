@@ -35,7 +35,7 @@ import java.nio.channels.FileChannel;
  */
 public class MetadataBlockDataSeekTable implements MetadataBlockData
 {
-    private ByteBuffer data;
+    private final ByteBuffer data;
 
     public MetadataBlockDataSeekTable(MetadataBlockHeader header, FileChannel fc) throws IOException
     {

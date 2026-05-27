@@ -300,7 +300,7 @@ class InstrumentTimeline {
      */
     fun getSnapshot(positionMs: Long, lookaheadMs: Long = DEFAULT_LOOKAHEAD_MS): InstrumentSnapshot {
         // Active instruments (currently playing on channels)
-        val activeInstruments = getInstrumentsForTimeRange(0, positionMs)
+        getInstrumentsForTimeRange(0, positionMs)
             .toMutableSet()
 
         // Recalculate based on actual channel state at position

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -388,7 +389,7 @@ public class ID3v22Tag extends AbstractID3v2Tag
             bufferWithoutHeader = ID3Unsynchronization.synchronize(bufferWithoutHeader);
         }
         readFrames(bufferWithoutHeader, size);
-        logger.config(getLoggingFilename() + ":" + "Loaded Frames,there are:" + frameMap.keySet().size());
+        logger.config(getLoggingFilename() + ":" + "Loaded Frames,there are:" + frameMap.size());
     }
 
     /**
@@ -582,7 +583,7 @@ public class ID3v22Tag extends AbstractID3v2Tag
         int padding = 0;
         if(currentTagSize > 0)
         {
-            int sizeIncPadding = calculateTagSize(bodyByteBuffer.length + TAG_HEADER_LENGTH, (int) currentTagSize);
+            int sizeIncPadding = calculateTagSize(bodyByteBuffer.length + TAG_HEADER_LENGTH, currentTagSize);
             padding = sizeIncPadding - (bodyByteBuffer.length + TAG_HEADER_LENGTH);
         }
         ByteBuffer headerBuffer = writeHeaderToBuffer(padding, bodyByteBuffer.length);
@@ -813,14 +814,7 @@ public class ID3v22Tag extends AbstractID3v2Tag
         }
         else
         {
-            try
-            {
-                body.setObjectValue(DataTypes.OBJ_PICTURE_DATA,artwork.getImageUrl().getBytes("ISO-8859-1"));
-            }
-            catch(UnsupportedEncodingException uoe)
-            {
-                throw new RuntimeException(uoe.getMessage());
-            }
+            body.setObjectValue(DataTypes.OBJ_PICTURE_DATA,artwork.getImageUrl().getBytes(StandardCharsets.ISO_8859_1));
             body.setObjectValue(DataTypes.OBJ_PICTURE_TYPE, artwork.getPictureType());
             body.setObjectValue(DataTypes.OBJ_IMAGE_FORMAT, FrameBodyAPIC.IMAGE_IS_URL);
             body.setObjectValue(DataTypes.OBJ_DESCRIPTION, "");

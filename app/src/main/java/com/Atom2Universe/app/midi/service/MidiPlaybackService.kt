@@ -354,10 +354,6 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         return true
     }
 
-    override fun onRebind(intent: Intent?) {
-        super.onRebind(intent)
-    }
-
     // === MediaSession Setup ===
 
     private fun setupMediaSession() {

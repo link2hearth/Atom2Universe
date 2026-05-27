@@ -108,7 +108,7 @@
     <string name="midi_synthesizer_selection">Sentezleyici</string>
     <string name="midi_synth_sonivox">Sonivox (yerleşik)</string>
     <string name="midi_synth_sonivox_desc">Genel MIDI sesleri olan hafif yerleşik sentezleyici. Harici dosya gerekmez.</string>
-    <string name="midi_synth_sf2_tip">İpucu: En iyi sonuç için 44kHz örnekli kaliteli SF2 dosyası kullanın. Cihazınıza bağlı olarak 100-500 MB arası SoundFont\'ları tercih edin. Küçük sıkıştırılmış SoundFont\'lar hızlı pasajlarda ses sorunlarına neden olabilir.</string>
+    <string name="midi_synth_sf2_tip">İpucu: En iyi sonuç için 44kHz örnekli kaliteli SF2 dosyası kullanın. Cihazınıza bağlı olarak 100–500 MB arası SoundFont\'ları tercih edin. Küçük sıkıştırılmış SoundFont\'lar hızlı pasajlarda ses sorunlarına neden olabilir.</string>
     <string name="midi_synth_import_sf2">SF2 İçe Aktar</string>
     <string name="midi_synth_change_sf2">SF2 Değiştir</string>
     <string name="midi_synth_remove_sf2">Kaldır</string>

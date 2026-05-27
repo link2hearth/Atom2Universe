@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Enable notifications</string>
     <string name="permission_notification_message">A2U needs notification access to display playback controls on the lock screen and status bar (radio, music).\n\nWithout it, background playback will still work but you won\'t be able to control it from outside the app.</string>
@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Clean now</string>
     <string name="settings_cleanup_enabled">✅ Automatic cleanup enabled</string>
     <string name="settings_cleanup_disabled">❌ Automatic cleanup disabled</string>
-    <string name="settings_cleanup_in_progress">🧹 Cleaning in progress...</string>
-    <string name="settings_cleanup_analyzing">Analyzing files...</string>
+    <string name="settings_cleanup_in_progress">🧹 Cleaning in progress…</string>
+    <string name="settings_cleanup_analyzing">Analyzing files…</string>
     <string name="settings_cleanup_no_orphans">✅ No orphaned files found</string>
     <string name="settings_cleanup_nothing_to_clean">Nothing to clean</string>
     <string name="settings_cleanup_error">❌ Error during cleanup</string>

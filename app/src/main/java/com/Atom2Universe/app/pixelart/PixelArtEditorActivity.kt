@@ -2579,7 +2579,7 @@ class PixelArtEditorActivity : AppCompatActivity() {
     }
 
     private fun loadPalette() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val paletteString = prefs.getString(PALETTE_KEY, null)
 
         customPalette.clear()
@@ -2598,7 +2598,7 @@ class PixelArtEditorActivity : AppCompatActivity() {
     }
 
     private fun savePalette() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val paletteString = customPalette.joinToString(",")
         prefs.edit { putString(PALETTE_KEY, paletteString) }
     }
@@ -2718,7 +2718,7 @@ class PixelArtEditorActivity : AppCompatActivity() {
     // ============== Multiple Palette Management ==============
 
     private fun loadAllPalettes() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         savedPalettes.clear()
 
         // Load palette name
@@ -2746,7 +2746,7 @@ class PixelArtEditorActivity : AppCompatActivity() {
     }
 
     private fun saveAllPalettes() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         // Save current palette name
         prefs.edit { putString(CURRENT_PALETTE_NAME_KEY, currentPaletteName) }

@@ -238,11 +238,11 @@
     <string name="escape_turns_label">Tura %1$d</string>
     <string name="escape_turns_label_zero">Tura 0</string>
     <string name="escape_turns_prefix">Tura </string>
-    <string name="gacha_rarity_commun">Pospolity</string>
-    <string name="gacha_rarity_essentiel">Zasadniczy</string>
-    <string name="gacha_rarity_irreel">Nierealny</string>
-    <string name="gacha_rarity_mythique">Mityczny</string>
-    <string name="gacha_rarity_singulier">Wyjątkowy</string>
-    <string name="gacha_rarity_stellaire">Gwiezdny</string>
+    <string name="gacha_rarity_primordial">Pierwotny</string>
+    <string name="gacha_rarity_fusion">Fuzja</string>
+    <string name="gacha_rarity_supernova">Supernowa</string>
+    <string name="gacha_rarity_neutronique">Neutronowy</string>
+    <string name="gacha_rarity_spallation">Spalacja</string>
+    <string name="gacha_rarity_synthetique">Syntetyczny</string>
     <string name="stat_hexrunner_best">Hex Runner – Najlepszy czas</string>
 </resources>

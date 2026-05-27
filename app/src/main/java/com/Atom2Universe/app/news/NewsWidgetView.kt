@@ -49,7 +49,7 @@ class NewsWidgetView @JvmOverloads constructor(
     private val hiddenStack = ArrayDeque<NewsArticle>()
 
     private val unhideHideRunnable = Runnable {
-        btnUnhide.visibility = View.GONE
+        btnUnhide.visibility = GONE
     }
     private fun scheduleUnhideButtonHide() {
         handler.removeCallbacks(unhideHideRunnable)
@@ -73,7 +73,7 @@ class NewsWidgetView @JvmOverloads constructor(
     private var widgetState = WidgetState.LOADING
 
     private fun updateSelfVisibility() {
-        visibility = if (toggleEnabled && widgetState != WidgetState.EMPTY) View.VISIBLE else View.GONE
+        visibility = if (toggleEnabled && widgetState != WidgetState.EMPTY) VISIBLE else GONE
     }
 
     fun setToggleEnabled(enabled: Boolean) {
@@ -189,7 +189,7 @@ class NewsWidgetView @JvmOverloads constructor(
         fetchJob?.cancel()
         hiddenStack.clear()
         cancelUnhideButtonHide()
-        btnUnhide.visibility = View.GONE
+        btnUnhide.visibility = GONE
         fetchJob = scope.launch {
             widgetState = WidgetState.LOADING
             showStatus(context.getString(R.string.news_widget_loading))
@@ -267,9 +267,9 @@ class NewsWidgetView @JvmOverloads constructor(
         val article = visibleArticles.getOrNull(currentIndex) ?: return
         titleView.text = article.title
         metaView.text  = buildMeta(article)
-        titleView.visibility  = View.VISIBLE
-        metaView.visibility   = View.VISIBLE
-        statusView.visibility = View.GONE
+        titleView.visibility  = VISIBLE
+        metaView.visibility   = VISIBLE
+        statusView.visibility = GONE
         widgetState = WidgetState.HAS_ARTICLES
         updateSelfVisibility()
     }
@@ -281,7 +281,7 @@ class NewsWidgetView @JvmOverloads constructor(
         val banned = NewsPreferences.getBannedWords(context)
         val hidden = NewsPreferences.getHiddenIds(context).keys
         visibleArticles = NewsRepository.filterVisible(hidden, banned)
-        btnUnhide.visibility = View.VISIBLE
+        btnUnhide.visibility = VISIBLE
         scheduleUnhideButtonHide()
         if (visibleArticles.isEmpty()) {
             widgetState = WidgetState.EMPTY
@@ -301,10 +301,10 @@ class NewsWidgetView @JvmOverloads constructor(
         val hidden = NewsPreferences.getHiddenIds(context).keys
         visibleArticles = NewsRepository.filterVisible(hidden, banned)
         if (hiddenStack.isNotEmpty()) {
-            btnUnhide.visibility = View.VISIBLE
+            btnUnhide.visibility = VISIBLE
             scheduleUnhideButtonHide()
         } else {
-            btnUnhide.visibility = View.GONE
+            btnUnhide.visibility = GONE
             cancelUnhideButtonHide()
         }
         if (visibleArticles.isEmpty()) {
@@ -336,10 +336,10 @@ class NewsWidgetView @JvmOverloads constructor(
     // ── Status ────────────────────────────────────────────────────────────────
 
     private fun showStatus(text: String) {
-        titleView.visibility  = View.GONE
-        metaView.visibility   = View.GONE
+        titleView.visibility  = GONE
+        metaView.visibility   = GONE
         statusView.text       = text
-        statusView.visibility = View.VISIBLE
+        statusView.visibility = VISIBLE
     }
 
     // ── Meta ──────────────────────────────────────────────────────────────────

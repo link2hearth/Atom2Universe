@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Включить уведомления</string>
     <string name="permission_notification_message">A2U нуждается в доступе к уведомлениям для отображения элементов управления воспроизведением на экране блокировки и в строке состояния (радио, музыка).\n\nБез этого разрешения фоновое воспроизведение всё равно будет работать, но управлять им вне приложения не получится.</string>
@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Очистить сейчас</string>
     <string name="settings_cleanup_enabled">✅ Автоматическая очистка включена</string>
     <string name="settings_cleanup_disabled">❌ Автоматическая очистка отключена</string>
-    <string name="settings_cleanup_in_progress">🧹 Очистка выполняется...</string>
-    <string name="settings_cleanup_analyzing">Анализ файлов...</string>
+    <string name="settings_cleanup_in_progress">🧹 Очистка выполняется…</string>
+    <string name="settings_cleanup_analyzing">Анализ файлов…</string>
     <string name="settings_cleanup_no_orphans">✅ Осиротевшие файлы не найдены</string>
     <string name="settings_cleanup_nothing_to_clean">Нечего очищать</string>
     <string name="settings_cleanup_error">❌ Ошибка при очистке</string>

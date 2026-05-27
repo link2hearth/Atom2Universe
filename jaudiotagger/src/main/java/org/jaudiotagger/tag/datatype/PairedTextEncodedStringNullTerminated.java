@@ -208,7 +208,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
      */
     public static class ValuePairs
     {
-        private List<Pair> mapping = new ArrayList<Pair>();
+        private final List<Pair> mapping = new ArrayList<Pair>();
 
         public ValuePairs()
         {

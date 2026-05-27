@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="radio_title">Radio</string>
     <string name="radio_notification_channel_name">Pemutaran Radio</string>
     <string name="radio_notification_channel_description">Menjaga pemutaran radio di latar belakang</string>
     <string name="radio_notification_title">Radio diputar</string>
     <string name="radio_status_idle">Masukkan kata kunci untuk mulai mencari.</string>
-    <string name="radio_status_loading">Mencari stasiun...</string>
+    <string name="radio_status_loading">Mencari stasiun…</string>
     <string name="radio_status_loaded">%1$d stasiun ditemukan.</string>
     <string name="radio_status_empty">Tidak ada stasiun ditemukan.</string>
     <string name="radio_status_error">Pencarian gagal. Silakan coba lagi.</string>
-    <string name="radio_status_filters_loading">Memuat filter...</string>
+    <string name="radio_status_filters_loading">Memuat filter…</string>
     <string name="radio_status_filters_error">Tidak dapat memuat filter.</string>
     <string name="radio_status_disabled">Modul radio dinonaktifkan.</string>
     <string name="radio_player_status_idle">Pilih stasiun untuk mulai memutar.</string>
@@ -17,10 +17,10 @@
     <string name="radio_player_status_paused">Pemutaran dijeda</string>
     <string name="radio_player_status_stopped">Pemutaran dihentikan</string>
     <string name="radio_player_status_error">Tidak dapat memutar streaming.</string>
-    <string name="radio_player_status_reconnecting">Koneksi terputus. Menghubungkan kembali...</string>
+    <string name="radio_player_status_reconnecting">Koneksi terputus. Menghubungkan kembali…</string>
     <string name="radio_player_status_network_error">Kesalahan jaringan. Periksa koneksi Anda.</string>
     <string name="radio_player_status_format_error">Format audio tidak didukung.</string>
-    <string name="radio_player_status_recording">Merekam...</string>
+    <string name="radio_player_status_recording">Merekam…</string>
     <string name="radio_player_status_recording_stopped">Rekaman dihentikan.</string>
     <string name="radio_notification_permission_missing">Izin notifikasi tidak diberikan. Pemutaran akan berjalan tanpa kontrol di notifikasi.</string>
     <string name="radio_status_offline">Tidak ada koneksi internet.</string>
@@ -49,7 +49,7 @@
     <string name="radio_favorite_added">Stasiun ditambahkan ke favorit.</string>
     <string name="radio_favorite_removed">Stasiun dihapus dari favorit.</string>
     <string name="radio_search_title">Cari</string>
-    <string name="radio_search_placeholder">Nama stasiun...</string>
+    <string name="radio_search_placeholder">Nama stasiun…</string>
     <string name="radio_filter_any_country">Semua negara</string>
     <string name="radio_filter_any_language">Semua bahasa</string>
     <string name="radio_results_empty">Tidak ada stasiun untuk ditampilkan.</string>

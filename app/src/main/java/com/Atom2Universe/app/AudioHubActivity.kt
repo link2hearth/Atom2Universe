@@ -165,7 +165,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         enableImmersiveMode()
         setContentView(R.layout.activity_audio_hub)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         // Restore state after locale change recreation
         if (savedInstanceState != null) {

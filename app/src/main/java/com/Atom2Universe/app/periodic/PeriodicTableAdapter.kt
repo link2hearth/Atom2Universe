@@ -15,7 +15,7 @@ import com.Atom2Universe.app.crypto.gacha.rarityOf
 class PeriodicTableAdapter(
   private val context: Context,
   private val elements: List<PeriodicElement>,
-  private val collectionStore: com.Atom2Universe.app.periodic.PeriodicCollectionStore,
+  private val collectionStore: PeriodicCollectionStore,
   private val onElementClick: (PeriodicElement) -> Unit
 ) : RecyclerView.Adapter<PeriodicTableAdapter.ElementViewHolder>() {
 
@@ -59,12 +59,12 @@ class PeriodicTableAdapter(
     }
 
     private fun getRarityColor(rarity: GachaRarity): Int = when (rarity) {
-      GachaRarity.COMMUN -> context.getColor(R.color.rarity_commun)
-      GachaRarity.ESSENTIEL -> context.getColor(R.color.rarity_essentiel)
-      GachaRarity.STELLAIRE -> context.getColor(R.color.rarity_stellaire)
-      GachaRarity.MYTHIQUE -> context.getColor(R.color.rarity_mythique)
-      GachaRarity.SINGULIER -> context.getColor(R.color.rarity_singulier)
-      GachaRarity.IRREEL -> context.getColor(R.color.rarity_irreel)
+      GachaRarity.PRIMORDIAL  -> context.getColor(R.color.rarity_commun)
+      GachaRarity.FUSION      -> context.getColor(R.color.rarity_stellaire)
+      GachaRarity.SUPERNOVA   -> context.getColor(R.color.rarity_mythique)
+      GachaRarity.NEUTRONIQUE -> context.getColor(R.color.rarity_singulier)
+      GachaRarity.SPALLATION  -> context.getColor(R.color.rarity_essentiel)
+      GachaRarity.SYNTHETIQUE -> context.getColor(R.color.rarity_irreel)
     }
   }
 

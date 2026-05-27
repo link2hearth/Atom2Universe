@@ -1015,7 +1015,6 @@ class Sf2PatchExporter(
         raf.writeInt(0) // Placeholder
 
         var currentSampleIndex = 0
-        var sampleDataOffset = 0L
 
         // Write original samples
         for (sample in originalSamples) {
@@ -1429,7 +1428,6 @@ class Sf2PatchExporter(
         raf.writeBytes("shdr")
         raf.writeInt(0)
 
-        var sampleDataOffset = 0L
         for (sample in samples) {
             if (sample.index in deletedSamples) continue
 

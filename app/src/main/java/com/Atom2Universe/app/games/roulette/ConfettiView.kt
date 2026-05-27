@@ -36,7 +36,7 @@ class ConfettiView @JvmOverloads constructor(
 
     // ── Types de particules ───────────────────────────────────────────────
 
-    private abstract inner class Particle {
+    private abstract class Particle {
         abstract var x: Float; abstract var y: Float; abstract var alpha: Float
         abstract fun update(); abstract fun draw(canvas: Canvas); abstract fun isDead(): Boolean
     }

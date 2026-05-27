@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_comics_title">Comics</string>
-    <string name="hub_comics_desc">Lector de PDF, CBZ y carpetas de imagenes</string>
+    <string name="hub_comics_desc">Lector de PDF, CBZ y carpetas de imágenes</string>
     <string name="comics_library_title">Biblioteca de comics</string>
     <string name="comics_library_empty">Aun no hay comics</string>
     <string name="comics_add_title">Agregar un comic</string>
     <string name="comics_add_pdf">Archivo PDF</string>
     <string name="comics_add_cbz">Archivo CBZ / ZIP</string>
-    <string name="comics_add_folder">Carpeta de imagenes</string>
+    <string name="comics_add_folder">Carpeta de imágenes</string>
     <string name="comics_delete_title">Eliminar comic</string>
     <string name="comics_delete_msg">Eliminar \"%s\" de la biblioteca?</string>
     <string name="comics_delete_confirm">Eliminar</string>
-    <string name="comics_layout_title">Diseno de pagina</string>
-    <string name="comics_layout_full">Pagina completa</string>
+    <string name="comics_layout_title">Diseno de página</string>
+    <string name="comics_layout_full">página completa</string>
     <string name="comics_layout_half_top">Mitad superior</string>
     <string name="comics_layout_half_left">Mitad izquierda (manga)</string>
     <string name="comics_layout_half_right">Mitad derecha (manga)</string>

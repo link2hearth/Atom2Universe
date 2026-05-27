@@ -85,10 +85,10 @@ class DraughtsWidgetView @JvmOverloads constructor(
         resultOverlay = findViewById(R.id.draughts_result_overlay)
         resultText = findViewById(R.id.draughts_result_text)
 
-        resultOverlay.setOnClickListener { resultOverlay.visibility = View.GONE }
+        resultOverlay.setOnClickListener { resultOverlay.visibility = GONE }
 
         findViewById<TextView>(R.id.draughts_btn_reset).setOnClickListener {
-            difficultyOverlay.visibility = View.VISIBLE
+            difficultyOverlay.visibility = VISIBLE
         }
         findViewById<TextView>(R.id.draughts_diff_training).setOnClickListener {
             startNewGame(DraughtsDifficulty.TRAINING)
@@ -103,7 +103,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
             startNewGame(DraughtsDifficulty.TWO_PLAYER)
         }
         findViewById<TextView>(R.id.draughts_diff_cancel).setOnClickListener {
-            difficultyOverlay.visibility = View.GONE
+            difficultyOverlay.visibility = GONE
         }
 
         reload()
@@ -164,8 +164,8 @@ class DraughtsWidgetView @JvmOverloads constructor(
 
     // ── Nouvelle partie ───────────────────────────────────────────────────────
     private fun startNewGame(newDifficulty: DraughtsDifficulty) {
-        difficultyOverlay.visibility = View.GONE
-        resultOverlay.visibility = View.GONE
+        difficultyOverlay.visibility = GONE
+        resultOverlay.visibility = GONE
         ai?.cancel(); ai = null
         difficulty = newDifficulty
         aiThinking = false
@@ -314,7 +314,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
         }
         resultText.text = label
         resultText.setTextColor(color)
-        resultOverlay.visibility = View.VISIBLE
+        resultOverlay.visibility = VISIBLE
 
         if (playerWon) {
             val reward = when (difficulty) {

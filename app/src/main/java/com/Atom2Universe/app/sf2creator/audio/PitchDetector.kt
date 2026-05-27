@@ -195,7 +195,7 @@ class PitchDetector {
      * Uses harmonic product spectrum for better fundamental detection.
      */
     private fun findFundamentalFrequency(magnitudes: FloatArray, sampleRate: Int): PitchResult {
-        val binToFreq = { bin: Int -> bin * sampleRate.toFloat() / FFT_SIZE }
+        { bin: Int -> bin * sampleRate.toFloat() / FFT_SIZE }
         val freqToBin = { freq: Float -> (freq * FFT_SIZE / sampleRate).toInt() }
 
         // Calculate frequency range bins

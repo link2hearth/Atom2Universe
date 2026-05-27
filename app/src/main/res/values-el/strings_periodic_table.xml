@@ -16,6 +16,7 @@
     <string name="periodic_prop_melt">Σημείο τήξης</string>
     <string name="periodic_prop_boil">Σημείο βρασμού</string>
     <string name="periodic_prop_block">Τροχιακό μπλοκ</string>
+    <string name="periodic_prop_shells">Ηλεκτρονικά στρώματα</string>
     <string name="periodic_prop_electronegativity">Ηλεκτραρνητικότητα</string>
     <string name="periodic_prop_electron_config">Ηλεκτρ. διάταξη</string>
     <string name="periodic_prop_discovered_by">Ανακαλύφθηκε από</string>

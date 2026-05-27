@@ -99,7 +99,7 @@ class Game2048WidgetView @JvmOverloads constructor(
         // Bouton ↺ → afficher/masquer l'overlay de difficulté
         findViewById<TextView>(R.id.game2048_btn_reset).setOnClickListener {
             difficultyOverlay.visibility =
-                if (difficultyOverlay.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                if (difficultyOverlay.visibility == VISIBLE) GONE else VISIBLE
         }
 
         // Boutons de l'overlay de difficulté
@@ -120,7 +120,7 @@ class Game2048WidgetView @JvmOverloads constructor(
             startNewGame(s, t, q, jk, countStat = true)
         }
         // Drag depuis le header — headerArea et le bouton reset
-        val dragListener = View.OnTouchListener { _, event ->
+        val dragListener = OnTouchListener { _, event ->
             handleHeaderTouch(event)
             event.action == MotionEvent.ACTION_UP && isDragging
         }
@@ -226,7 +226,7 @@ class Game2048WidgetView @JvmOverloads constructor(
 
     // ── Nouvelle partie ───────────────────────────────────────────────────────
     private fun startNewGame(size: Int, target: Int, quantumTarget: Int = 0, jokers: Int = 0, countStat: Boolean = false) {
-        difficultyOverlay.visibility = View.GONE
+        difficultyOverlay.visibility = GONE
         val isQuantum = quantumTarget > 0
         game.newGame(size, target, isQuantum, quantumTarget, jokers)
         boardView.game = game

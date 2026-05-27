@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Activar notificaciones</string>
     <string name="permission_notification_message">A2U necesita acceso a las notificaciones para mostrar los controles de reproducción en la pantalla de bloqueo y en la barra de estado (radio, música).\n\nSin este permiso, la reproducción en segundo plano seguirá funcionando, pero no podrá controlarla desde fuera de la aplicación.</string>
@@ -8,7 +8,7 @@
     <string name="permission_dialog_later">Mas tarde</string>
     <string name="permission_rationale_message">Sin acceso a los archivos de audio, A2U no puede mostrar tu biblioteca musical ni reproducir tus pistas.\n\nPor favor, otorga el permiso para usar la aplicacion.</string>
     <string name="permission_denied_title">Permiso denegado</string>
-    <string name="permission_denied_message">Puedes otorgar el permiso mas tarde desde los ajustes de la aplicacion cuando entres al reproductor de Musica o MIDI.</string>
+    <string name="permission_denied_message">Puedes otorgar el permiso mas tarde desde los ajustes de la aplicacion cuando entres al reproductor de Música o MIDI.</string>
     <string name="sleep_timer_title">Detener en…</string>
     <string name="sleep_timer_hours">Horas</string>
     <string name="sleep_timer_minutes">Minutos</string>
@@ -22,7 +22,7 @@
     <string name="eq_apply_to">Aplicar a</string>
     <string name="eq_global">Global</string>
     <string name="eq_track">Pista</string>
-    <string name="eq_album">Album</string>
+    <string name="eq_album">álbum</string>
     <string name="eq_artist">Artista</string>
     <string name="eq_bass_short">Graves</string>
     <string name="eq_virtual_short">3D</string>
@@ -35,21 +35,21 @@
     <string name="eq_preset_name_empty">El nombre no puede estar vacio</string>
     <string name="eq_cannot_delete_system">No se pueden eliminar los preajustes del sistema</string>
     <string name="eq_override_track">EQ: %1$s (Pista)</string>
-    <string name="eq_override_album">EQ: %1$s (Album)</string>
+    <string name="eq_override_album">EQ: %1$s (álbum)</string>
     <string name="eq_override_artist">EQ: %1$s (Artista)</string>
     <string name="eq_override_global">EQ: %1$s</string>
     <string name="eq_override_cleared_track">Personalizacion de pista eliminada</string>
-    <string name="eq_override_cleared_album">Personalizacion de album eliminada</string>
+    <string name="eq_override_cleared_album">Personalizacion de álbum eliminada</string>
     <string name="eq_override_cleared_artist">Personalizacion de artista eliminada</string>
     <string name="eq_delete_confirm">Eliminar preajuste \"%1$s\"?</string>
     <string name="settings_title">Ajustes</string>
     <string name="settings_audio_section">Audio</string>
     <string name="settings_auto_resume_title">Reanudar automaticamente tras interrupcion</string>
-    <string name="settings_auto_resume_summary">Reanudar automaticamente la reproduccion despues de una llamada u otra interrupcion</string>
+    <string name="settings_auto_resume_summary">Reanudar automaticamente la reproduccion después de una llamada u otra interrupcion</string>
     <string name="settings_appearance_section">Apariencia</string>
     <string name="settings_theme_title">Tema</string>
     <string name="settings_system_bars_title">Mostrar barras del sistema</string>
-    <string name="settings_system_bars_summary">Muestra la barra de estado y la barra de navegacion. Cuando esta desactivado, desliza desde los bordes para revelarlas. Nota: algunos dispositivos pueden seguir mostrando las barras segun la version de Android y la configuracion del fabricante.</string>
+    <string name="settings_system_bars_summary">Muestra la barra de estado y la barra de navegacion. Cuando esta desactivado, desliza desde los bordes para revelarlas. Nota: algunos dispositivos pueden seguir mostrando las barras según la version de Android y la configuracion del fabricante.</string>
     <string name="settings_storage_section">Almacenamiento</string>
     <string name="settings_auto_cleanup_title">Limpieza automática</string>
     <string name="settings_auto_cleanup_summary">Eliminar automáticamente los archivos huérfanos al iniciar</string>
@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Limpiar ahora</string>
     <string name="settings_cleanup_enabled">✅ Limpieza automática activada</string>
     <string name="settings_cleanup_disabled">❌ Limpieza automática desactivada</string>
-    <string name="settings_cleanup_in_progress">🧹 Limpieza en curso...</string>
-    <string name="settings_cleanup_analyzing">Analizando archivos...</string>
+    <string name="settings_cleanup_in_progress">🧹 Limpieza en curso…</string>
+    <string name="settings_cleanup_analyzing">Analizando archivos…</string>
     <string name="settings_cleanup_no_orphans">✅ No se encontraron archivos huérfanos</string>
     <string name="settings_cleanup_nothing_to_clean">Nada que limpiar</string>
     <string name="settings_cleanup_error">❌ Error durante la limpieza</string>
@@ -73,15 +73,15 @@
     <string name="atom_banner_height_value">%1$d dp</string>
     <string name="atom_low_animation">Animacion reducida</string>
     <string name="atom_bigger_image">Imagen mas grande</string>
-    <string name="atom_custom_folder_pick">Imagenes personalizadas: elegir carpeta…</string>
-    <string name="atom_custom_folder_change">Imagenes personalizadas: cambiar carpeta…</string>
-    <string name="atom_custom_folder_clear">Restablecer imagenes predeterminadas</string>
+    <string name="atom_custom_folder_pick">imágenes personalizadas: elegir carpeta…</string>
+    <string name="atom_custom_folder_change">imágenes personalizadas: cambiar carpeta…</string>
+    <string name="atom_custom_folder_clear">Restablecer imágenes predeterminadas</string>
     <string name="atom_custom_folder_pick_new">Elegir una nueva carpeta</string>
     <string name="about_title">Acerca de</string>
     <string name="about_version_format">Version %1$s (build %2$d)</string>
     <string name="about_version_unknown">Version desconocida</string>
     <string name="about_description_title">Acerca de A2U</string>
-    <string name="about_description">A2U es un centro de audio completo para Android, que combina multiples funciones de audio en una sola aplicacion:\n\n• Reproductor de musica con gestion de biblioteca, listas de reproduccion, favoritos, edicion de etiquetas ID3 y sincronizacion en la nube\n• Reproductor MIDI con sintesis SoundFont, modo practica con notas cayendo y soporte para teclado externo\n• Radio Web con emisoras y favoritos\n• Editor de audio para recortar y edicion basica\n• Creador/editor de SoundFont SF2 completo</string>
+    <string name="about_description">A2U es un centro de audio completo para Android, que combina multiples funciones de audio en una sola aplicacion:\n\n• Reproductor de Música con gestion de biblioteca, listas de reproduccion, favoritos, edicion de etiquetas ID3 y sincronizacion en la nube\n• Reproductor MIDI con sintesis SoundFont, modo practica con notas cayendo y soporte para teclado externo\n• Radio Web con emisoras y favoritos\n• Editor de audio para recortar y edicion basica\n• Creador/editor de SoundFont SF2 completo</string>
     <string name="about_credits_title">Agradecimientos</string>
     <string name="about_credits_subtitle">A2U utiliza las siguientes bibliotecas de codigo abierto:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
@@ -95,14 +95,14 @@
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
     <string name="about_credit_ffmpeg_desc">Por Arthenica - Envoltorio FFmpeg para plataformas moviles, usado para procesamiento de audio. Licencia LGPL 3.0.</string>
     <string name="about_credit_exoplayer_name">Media3 ExoPlayer</string>
-    <string name="about_credit_exoplayer_desc">Por Google - Potente reproductor multimedia para Android, usado para reproduccion de musica y radio. Licencia Apache 2.0.</string>
+    <string name="about_credit_exoplayer_desc">Por Google - Potente reproductor multimedia para Android, usado para reproduccion de Música y radio. Licencia Apache 2.0.</string>
     <string name="about_credit_okhttp_name">OkHttp</string>
     <string name="about_credit_okhttp_desc">Por Square - Cliente HTTP para solicitudes de red. Licencia Apache 2.0.</string>
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Por la comunidad FluidSynth — Sintetizador de software en tiempo real basado en la especificación SoundFont 2. Licencia LGPL 2.1.</string>
     <string name="about_license_notice">Todas las bibliotecas se usan en cumplimiento con sus respectivas licencias.\nGracias a todos los contribuidores de codigo abierto!</string>
     <string name="about_privacy_title">Privacidad y permisos</string>
-    <string name="about_privacy_microphone">A2U solicita acceso al microfono para dos propositos especificos:\n\n• Grabar audio en el Editor de audio y el Creador de SoundFont\n• Visualizacion de espectro de frecuencias en tiempo real en el Reproductor de musica (la app escucha la salida de audio para mostrar las curvas de frecuencia)\n\nEl microfono nunca se usa para ningun otro proposito. Ningun audio se graba, transmite o almacena sin tu accion explicita en el Editor de audio o el Creador de SoundFont.</string>
+    <string name="about_privacy_microphone">A2U solicita acceso al microfono para dos propositos especificos:\n\n• Grabar audio en el Editor de audio y el Creador de SoundFont\n• Visualizacion de espectro de frecuencias en tiempo real en el Reproductor de Música (la app escucha la salida de audio para mostrar las curvas de frecuencia)\n\nEl microfono nunca se usa para ningún otro proposito. Ningún audio se graba, transmite o almacena sin tu acción explicita en el Editor de audio o el Creador de SoundFont.</string>
     <string name="color_settings_title">Ajustes de color</string>
     <string name="color_settings_desc">Personaliza los colores para canales e instrumentos MIDI.</string>
     <string name="color_settings_channels">Canales MIDI</string>

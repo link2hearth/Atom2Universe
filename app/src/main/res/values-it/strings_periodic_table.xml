@@ -15,6 +15,7 @@
     <string name="periodic_prop_melt">Punto di fusione</string>
     <string name="periodic_prop_boil">Punto di ebollizione</string>
     <string name="periodic_prop_block">Blocco orbitale</string>
+    <string name="periodic_prop_shells">Livelli elettronici</string>
     <string name="periodic_prop_electronegativity">Elettronegatività</string>
     <string name="periodic_prop_electron_config">Config. elettronica</string>
     <string name="periodic_prop_discovered_by">Scoperto da</string>

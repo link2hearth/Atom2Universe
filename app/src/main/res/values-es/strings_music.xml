@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="music_player_title">Musica</string>
+    <string name="music_player_title">Música</string>
     <string name="music_empty_library">No se encontraron archivos de audio</string>
     <string name="music_now_playing">Reproduciendo ahora</string>
     <string name="music_play_pause">Reproducir/Pausar</string>
@@ -14,7 +14,7 @@
     <string name="music_grant_permission">Permitir</string>
     <string name="music_permission_denied">Permiso denegado. No se puede acceder a la biblioteca musical.</string>
     <string name="music_artist">Artista</string>
-    <string name="music_album_art">Caratula del album</string>
+    <string name="music_album_art">Caratula del álbum</string>
     <string name="music_open">Abrir</string>
     <string name="music_stats_format">%1$d artistas, %2$d albums, %3$d pistas</string>
     <string name="music_album_info_format">%1$s - %2$s\n%3$s</string>
@@ -26,7 +26,7 @@
         <item quantity="other">%d artistas</item>
     </plurals>
     <plurals name="music_album_count">
-        <item quantity="one">%d album</item>
+        <item quantity="one">%d álbum</item>
         <item quantity="other">%d albums</item>
     </plurals>
     <plurals name="music_track_count_plural">
@@ -34,7 +34,7 @@
         <item quantity="other">%d pistas</item>
     </plurals>
     <string name="music_refresh">Actualizar</string>
-    <string name="music_refresh_fast">Rapido (MediaStore)</string>
+    <string name="music_refresh_fast">rápido (MediaStore)</string>
     <string name="music_refresh_deep">Profundo (+ etiquetas ID3)</string>
     <string name="music_refresh_complete">Completo (+ estadisticas POPM)</string>
     <string name="music_add_folder">Agregar carpeta</string>
@@ -51,12 +51,12 @@
     <string name="music_track_info">Informacion</string>
     <string name="music_info_title">Titulo: %1$s</string>
     <string name="music_info_artist">Artista: %1$s</string>
-    <string name="music_info_album">Album: %1$s</string>
+    <string name="music_info_album">álbum: %1$s</string>
     <string name="music_info_duration">Duracion: %1$s</string>
     <string name="music_info_year">Ano: %1$d</string>
     <string name="music_info_track_number">Pista: %1$d</string>
     <string name="music_info_section_basic">Informacion basica</string>
-    <string name="music_info_section_technical">Informacion tecnica</string>
+    <string name="music_info_section_technical">Informacion técnica</string>
     <string name="music_info_section_stats">Estadisticas</string>
     <string name="music_info_section_file">Archivo</string>
     <string name="music_info_format">Formato: %1$s</string>
@@ -94,8 +94,8 @@
     <string name="music_edit_tags">Editar etiquetas</string>
     <string name="music_tag_title">Titulo</string>
     <string name="music_tag_artist">Artista</string>
-    <string name="music_tag_album_artist">Artista del album</string>
-    <string name="music_tag_album">Album</string>
+    <string name="music_tag_album_artist">Artista del álbum</string>
+    <string name="music_tag_album">álbum</string>
     <string name="music_tag_year">Ano</string>
     <string name="music_tag_track_number">Pista #</string>
     <string name="music_tag_disc_number">Disco #</string>
@@ -104,9 +104,9 @@
     <string name="music_tags_pending">Pista en reproduccion. Los cambios se aplicaran cuando termine la reproduccion.</string>
     <string name="music_tags_read_error">No se pueden leer las etiquetas</string>
     <string name="music_tags_save">Guardar</string>
-    <string name="music_play_album">Reproducir album</string>
-    <string name="music_shuffle_album">Album en aleatorio</string>
-    <string name="music_edit_album_tags">Editar etiquetas del album</string>
+    <string name="music_play_album">Reproducir álbum</string>
+    <string name="music_shuffle_album">álbum en aleatorio</string>
+    <string name="music_edit_album_tags">Editar etiquetas del álbum</string>
     <string name="music_album_tags_saved">Etiquetas actualizadas en %1$d/%2$d pistas</string>
     <string name="music_edit_folder_tags">Editar etiquetas: %1$s</string>
     <string name="music_folder_tags_saved">Etiquetas actualizadas en %1$d/%2$d pistas</string>
@@ -116,7 +116,7 @@
     <string name="music_write_permission_message">Para editar etiquetas MP3, la aplicacion necesita permiso de acceso a todos los archivos. Por favor, habilitalo en los ajustes.</string>
     <string name="music_open_settings">Abrir ajustes</string>
     <string name="music_auto_track_number_title">Numeros de pista detectados</string>
-    <string name="music_auto_track_number_message">Este album contiene %1$d pistas sin numero de pista, pero los nombres de archivo comienzan con numeros.\n\nDeseas escribir automaticamente estos numeros en las etiquetas ID3?</string>
+    <string name="music_auto_track_number_message">Este álbum contiene %1$d pistas sin numero de pista, pero los nombres de archivo comienzan con numeros.\n\nDeseas escribir automaticamente estos numeros en las etiquetas ID3?</string>
     <string name="music_auto_track_number_apply">Aplicar</string>
     <string name="music_auto_track_number_later">Mas tarde</string>
     <string name="music_auto_track_number_never">No preguntar de nuevo</string>
@@ -143,12 +143,12 @@
     <string name="music_settings_sync_pending_popm">Aplicar etiquetas pendientes</string>
     <string name="music_settings_sync_pending_popm_desc">Escribir contadores y calificaciones en archivos MP3</string>
     <string name="music_settings_sync_pending_popm_confirm">Esto escribira todas las actualizaciones pendientes de contadores y calificaciones en tus archivos MP3.\n\n%1$d archivo(s) por actualizar.</string>
-    <string name="music_settings_sync_pending_popm_none">No hay actualizaciones pendientes.\n\nTodos tus contadores y calificaciones ya estan sincronizados con tus archivos MP3.</string>
+    <string name="music_settings_sync_pending_popm_none">No hay actualizaciones pendientes.\n\nTodos tus contadores y calificaciones ya están sincronizados con tus archivos MP3.</string>
     <string name="music_settings_sync_pending_popm_start">Sincronizar ahora</string>
     <string name="music_settings_sync_pending_popm_progress">Sincronizando etiquetas…</string>
     <string name="music_settings_sync_pending_popm_complete">Etiquetas sincronizadas correctamente</string>
     <string name="music_settings_tag_migration_title">Migracion de etiquetas ID3</string>
-    <string name="music_settings_tag_migration_confirm">Esta operacion analizara tu biblioteca y convertira las etiquetas ID3v2.2 obsoletas a ID3v2.3.\n\nEsto corregira problemas de compatibilidad con metadatos POPM.\n\nEl progreso se mostrara artista por artista.</string>
+    <string name="music_settings_tag_migration_confirm">Esta operación analizara tu biblioteca y convertira las etiquetas ID3v2.2 obsoletas a ID3v2.3.\n\nEsto corregira problemas de compatibilidad con metadatos POPM.\n\nEl progreso se mostrara artista por artista.</string>
     <string name="music_settings_tag_migration_analyzing">Analizando biblioteca…</string>
     <string name="music_settings_tag_migration_analysis_result">Resultado del analisis:\n\n• %1$d archivos con ID3v2.2 (a migrar)\n• %2$d archivos con ID3v2.3\n• %3$d archivos con ID3v2.4\n\nDeseas iniciar la migracion?</string>
     <string name="music_settings_tag_migration_no_migration_needed">Todos tus archivos ya usan un formato de etiquetas compatible (ID3v2.3 o superior).\n\nNo se necesita migracion.</string>
@@ -172,14 +172,14 @@
     <string name="music_settings_sync_error">Error en la sincronizacion: %1$s</string>
     <string name="music_settings_reset_play_counts">Restablecer contadores de reproduccion</string>
     <string name="music_settings_reset_play_counts_title">Restablecer contadores?</string>
-    <string name="music_settings_reset_play_counts_message">Esto:\n\n• Eliminara todos los archivos delta de la nube\n• Restablecera los contadores solo a reproducciones locales\n• Eliminara las reproducciones sincronizadas de otros dispositivos\n\nEjecuta esto en TODOS los dispositivos afectados, comenzando por el dispositivo principal.\n\nEsta accion no se puede deshacer.</string>
+    <string name="music_settings_reset_play_counts_message">Esto:\n\n• Eliminara todos los archivos delta de la nube\n• Restablecera los contadores solo a reproducciones locales\n• Eliminara las reproducciones sincronizadas de otros dispositivos\n\nEjecuta esto en TODOS los dispositivos afectados, comenzando por el dispositivo principal.\n\nEsta acción no se puede deshacer.</string>
     <string name="music_settings_reset_play_counts_confirm">Restablecer</string>
     <string name="music_settings_reset_in_progress">Restableciendo…</string>
     <string name="music_settings_reset_success">Restablecimiento completo: %1$d archivos en la nube eliminados, %2$d contadores restablecidos</string>
     <string name="music_settings_reset_error">Error al restablecer: %1$s</string>
     <string name="music_settings_delete_cloud_data">Eliminar datos de la nube</string>
     <string name="music_settings_delete_cloud_data_title">Eliminar todos los datos de la nube?</string>
-    <string name="music_settings_delete_cloud_data_warning">Esto eliminara permanentemente TODOS tus datos de A2U de Google Drive:\n\n• Contadores de reproduccion\n• Favoritos\n• Listas de reproduccion\n• Letras\n• Imagenes de artistas\n• Todos los datos de respaldo\n\nTus datos locales en este dispositivo NO se veran afectados.\n\nEsta accion no se puede deshacer.</string>
+    <string name="music_settings_delete_cloud_data_warning">Esto eliminara permanentemente TODOS tus datos de A2U de Google Drive:\n\n• Contadores de reproduccion\n• Favoritos\n• Listas de reproduccion\n• Letras\n• imágenes de artistas\n• Todos los datos de respaldo\n\nTus datos locales en este dispositivo NO se veran afectados.\n\nEsta acción no se puede deshacer.</string>
     <string name="music_settings_delete_cloud_data_continue">Continuar</string>
     <string name="music_settings_delete_cloud_data_confirm_title">Confirmar eliminacion</string>
     <string name="music_settings_delete_cloud_data_confirm_message">Para confirmar, escribe \"%1$s\" a continuacion:</string>
@@ -205,11 +205,11 @@
     <string name="music_settings_primary_device_set">Este dispositivo es ahora el dispositivo principal</string>
     <string name="music_settings_primary_device_unset">Estado de dispositivo principal eliminado</string>
     <string name="music_backup_found_title">Respaldo encontrado!</string>
-    <string name="music_backup_found_message">Se encontro un respaldo en tu cuenta de Google:\n\n• %1$d contadores de reproduccion\n• %2$d favoritos (pistas + albums)\n• %3$d listas de reproduccion\n• %4$d imagenes de artistas\n• %5$d letras\n\nCreado %6$s\ndesde \"%7$s\"\n\nDeseas restaurarlo?</string>
+    <string name="music_backup_found_message">Se encontro un respaldo en tu cuenta de Google:\n\n• %1$d contadores de reproduccion\n• %2$d favoritos (pistas + albums)\n• %3$d listas de reproduccion\n• %4$d imágenes de artistas\n• %5$d letras\n\nCreado %6$s\ndesde \"%7$s\"\n\nDeseas restaurarlo?</string>
     <string name="music_backup_restore">Restaurar</string>
     <string name="music_backup_ignore">Ignorar</string>
     <string name="music_restore_summary_title">Restauracion completa</string>
-    <string name="music_restore_summary_message">Restaurados:\n• %1$d contadores de reproduccion\n• %2$d favoritos de pistas\n• %3$d favoritos de albums\n• %4$d personalizaciones de artistas\n• %5$d listas de reproduccion\n• %6$d imagenes de artistas\n• %7$d letras</string>
+    <string name="music_restore_summary_message">Restaurados:\n• %1$d contadores de reproduccion\n• %2$d favoritos de pistas\n• %3$d favoritos de albums\n• %4$d personalizaciones de artistas\n• %5$d listas de reproduccion\n• %6$d imágenes de artistas\n• %7$d letras</string>
     <string name="music_artist_display_mode">Modo de visualizacion</string>
     <string name="music_display_mode_list">Modo lista</string>
     <string name="music_display_mode_compact">Modo compacto</string>
@@ -279,7 +279,7 @@
     <string name="music_toggle_album_art">Mostrar/ocultar caratula</string>
     <string name="music_fullscreen">Entrar en pantalla completa</string>
     <string name="music_exit_fullscreen">Salir de pantalla completa</string>
-    <string name="music_browse_album_artists">Artistas de album</string>
+    <string name="music_browse_album_artists">Artistas de álbum</string>
     <string name="music_browse_all_albums">Todos los albums</string>
     <string name="music_browse_search">Buscar</string>
     <string name="music_browse_search_desc">Buscar pistas, artistas, albums</string>
@@ -327,24 +327,24 @@
     <string name="music_browse_favorite_albums">Albums favoritos</string>
     <string name="music_add_album_to_favorites">Agregar a favoritos</string>
     <string name="music_remove_album_from_favorites">Quitar de favoritos</string>
-    <string name="music_album_added_to_favorites">Album agregado a favoritos</string>
-    <string name="music_album_removed_from_favorites">Album eliminado de favoritos</string>
+    <string name="music_album_added_to_favorites">álbum agregado a favoritos</string>
+    <string name="music_album_removed_from_favorites">álbum eliminado de favoritos</string>
     <string name="music_album_track_count_with_duration">%1$s - %2$s</string>
     <string name="music_unknown_title">Desconocido</string>
     <string name="music_unknown_artist">Artista desconocido</string>
-    <string name="music_unknown_album">Album desconocido</string>
-    <string name="music_notification_channel_name">Reproduccion de musica</string>
-    <string name="music_notification_channel_desc">Controles del reproductor de musica</string>
+    <string name="music_unknown_album">álbum desconocido</string>
+    <string name="music_notification_channel_name">Reproduccion de Música</string>
+    <string name="music_notification_channel_desc">Controles del reproductor de Música</string>
     <string name="music_action_play">Reproducir</string>
     <string name="music_action_pause">Pausar</string>
     <string name="music_action_stop">Detener</string>
     <string name="music_playback_error">Error de reproduccion: %1$s</string>
     <string name="music_delete_file">Eliminar archivo</string>
-    <string name="music_delete_album">Eliminar album</string>
-    <string name="music_confirm_delete_track">Deseas eliminar permanentemente \"%1$s\"?\n\nEsta accion no se puede deshacer.</string>
-    <string name="music_confirm_delete_album">Deseas eliminar permanentemente el album \"%1$s\" y sus %2$d pistas?\n\nEsta accion no se puede deshacer.</string>
+    <string name="music_delete_album">Eliminar álbum</string>
+    <string name="music_confirm_delete_track">Deseas eliminar permanentemente \"%1$s\"?\n\nEsta acción no se puede deshacer.</string>
+    <string name="music_confirm_delete_album">Deseas eliminar permanentemente el álbum \"%1$s\" y sus %2$d pistas?\n\nEsta acción no se puede deshacer.</string>
     <string name="music_track_deleted">Archivo eliminado</string>
-    <string name="music_album_deleted">Album eliminado (%1$d archivos)</string>
+    <string name="music_album_deleted">álbum eliminado (%1$d archivos)</string>
     <string name="music_delete_error">Error al eliminar</string>
     <string name="music_viz_julia_grayscale">Julia Escala de grises</string>
     <string name="music_viz_penrose">Rombos flotantes</string>

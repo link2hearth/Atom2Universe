@@ -3,6 +3,7 @@ package com.Atom2Universe.app.pixelart
 import android.graphics.Bitmap
 import android.graphics.Color
 import java.io.OutputStream
+import androidx.core.graphics.scale
 
 /**
  * Encodes a series of Bitmaps into an animated GIF.
@@ -163,7 +164,7 @@ class AnimatedGifEncoder {
         val w = image?.width ?: return
         val h = image?.height ?: return
         if (w != width || h != height) {
-            val temp = Bitmap.createScaledBitmap(image!!, width, height, false)
+            val temp = image!!.scale(width, height, false)
             image = temp
         }
         pixels = ByteArray(3 * width * height)

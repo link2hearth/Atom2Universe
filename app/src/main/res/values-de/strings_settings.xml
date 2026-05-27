@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Benachrichtigungen aktivieren</string>
     <string name="permission_notification_message">A2U benötigt Zugriff auf Benachrichtigungen, um Wiedergabe-Steuerungen auf dem Sperrbildschirm und in der Statusleiste anzuzeigen (Radio, Musik).\n\nOhne diese Berechtigung funktioniert die Hintergrundwiedergabe trotzdem, aber Sie können sie nicht von außerhalb der App steuern.</string>
@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Jetzt bereinigen</string>
     <string name="settings_cleanup_enabled">✅ Automatische Bereinigung aktiviert</string>
     <string name="settings_cleanup_disabled">❌ Automatische Bereinigung deaktiviert</string>
-    <string name="settings_cleanup_in_progress">🧹 Bereinigung läuft...</string>
-    <string name="settings_cleanup_analyzing">Dateien werden analysiert...</string>
+    <string name="settings_cleanup_in_progress">🧹 Bereinigung läuft…</string>
+    <string name="settings_cleanup_analyzing">Dateien werden analysiert…</string>
     <string name="settings_cleanup_no_orphans">✅ Keine verwaisten Dateien gefunden</string>
     <string name="settings_cleanup_nothing_to_clean">Nichts zu bereinigen</string>
     <string name="settings_cleanup_error">❌ Fehler bei der Bereinigung</string>

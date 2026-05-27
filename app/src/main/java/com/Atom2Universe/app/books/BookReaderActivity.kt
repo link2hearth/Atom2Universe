@@ -254,7 +254,7 @@ class BookReaderActivity : ThemedActivity() {
         enableImmersiveMode()
         setContentView(R.layout.activity_book_reader)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         currentTheme = ReadingTheme.entries.getOrElse(prefs.getInt(KEY_THEME, 0)) { ReadingTheme.DARK }
         paragraphDistinction = prefs.getBoolean(KEY_DISTINCTION, true)
         ttsSpeed = prefs.getFloat(KEY_TTS_SPEED, 1.0f)
@@ -1356,7 +1356,7 @@ class BookReaderActivity : ThemedActivity() {
     private fun getFileSize(uri: Uri): Long = try {
         contentResolver.query(uri, null, null, null, null)?.use { c ->
             if (c.moveToFirst()) {
-                val idx = c.getColumnIndex(android.provider.OpenableColumns.SIZE)
+                val idx = c.getColumnIndex(OpenableColumns.SIZE)
                 if (idx >= 0) c.getLong(idx) else 0L
             } else 0L
         } ?: 0L
@@ -1538,8 +1538,7 @@ class BookReaderActivity : ThemedActivity() {
                 override fun onLongPress(e: MotionEvent) {
                     val itemPos = holder.bindingAdapterPosition
                     if (itemPos == RecyclerView.NO_POSITION) return
-                    val item = items[itemPos]
-                    val text = when (item) {
+                    val text = when (val item = items[itemPos]) {
                         is EpubItem.Paragraph -> item.text
                         is EpubItem.Heading -> item.text
                         else -> return
@@ -1562,7 +1561,7 @@ class BookReaderActivity : ThemedActivity() {
                 is EpubItem.Image -> (holder as ImageHolder).iv.setImageBitmap(item.bitmap)
                 is EpubItem.Heading -> {
                     val h = holder as TextHolder
-                    val paraIdx = itemToParagraphIdx[position] ?: 0
+                    itemToParagraphIdx[position] ?: 0
                     val isBookmarked = bookmarkedItems.contains(position)
                     val scale = when (item.level) { 1 -> 1.75f; 2 -> 1.45f; 3 -> 1.25f; 4 -> 1.12f; else -> 1.05f }
                     val topPad = when (item.level) { 1 -> dp(20); 2 -> dp(16); else -> dp(12) }
@@ -1691,10 +1690,10 @@ class BookReaderActivity : ThemedActivity() {
         private fun applyBookmarkPrefix(tv: TextView, text: String, isBookmarked: Boolean) {
             if (!isBookmarked) { tv.text = text; return }
             val full = "★  $text"
-            val s = android.text.SpannableString(full)
+            val s = SpannableString(full)
             s.setSpan(
                 android.text.style.ForegroundColorSpan(0xFFFFC107.toInt()),
-                0, 1, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             tv.text = s
         }

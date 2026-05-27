@@ -276,7 +276,7 @@ class Sf2WriterHybrid {
                 writeChunkId(raf, "sfbk")
 
                 // === 2. Write LIST 'INFO' (always regenerated) ===
-                val infoStart = raf.filePointer
+                raf.filePointer
                 writeChunkId(raf, "LIST")
                 val infoSizePos = raf.filePointer
                 writeUInt32(raf, 0) // Placeholder

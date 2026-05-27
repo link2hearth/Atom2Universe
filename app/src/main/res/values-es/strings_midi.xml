@@ -19,7 +19,7 @@
     <string name="midi_action_shuffle">Aleatorio</string>
     <string name="midi_action_repeat">Repetir</string>
     <string name="midi_shuffle_scope_title">Alcance del modo aleatorio</string>
-    <string name="midi_shuffle_scope_current">Album/carpeta actual</string>
+    <string name="midi_shuffle_scope_current">álbum/carpeta actual</string>
     <string name="midi_shuffle_scope_artist">Artista actual (todos los albums)</string>
     <string name="midi_shuffle_scope_library">Toda la biblioteca</string>
     <string name="midi_channels_active">Pistas activas</string>
@@ -79,7 +79,7 @@
     <string name="midi_reverb_off">Desactivado</string>
     <string name="midi_reverb_large_hall">Salon grande</string>
     <string name="midi_reverb_hall">Salon</string>
-    <string name="midi_reverb_chamber">Camara</string>
+    <string name="midi_reverb_chamber">Cámara</string>
     <string name="midi_reverb_room">Habitacion</string>
     <string name="midi_sf2_settings">Motor SF2</string>
     <string name="midi_sf2_settings_desc">Ajustes del sintetizador SoundFont personalizado</string>
@@ -108,7 +108,7 @@
     <string name="midi_synthesizer_selection">Sintetizador</string>
     <string name="midi_synth_sonivox">Sonivox (integrado)</string>
     <string name="midi_synth_sonivox_desc">Sintetizador ligero integrado con sonidos General MIDI. No requiere archivos externos.</string>
-    <string name="midi_synth_sf2_tip">Consejo: Para mejores resultados, usa un archivo SF2 de calidad con muestras de 44kHz. Prefiere SoundFonts entre 100 y 500 MB segun tu dispositivo. Los SoundFonts pequenos y comprimidos pueden tener problemas de audio en pasajes rapidos.</string>
+    <string name="midi_synth_sf2_tip">Consejo: Para mejores resultados, usa un archivo SF2 de calidad con muestras de 44kHz. Prefiere SoundFonts entre 100 y 500 MB según tu dispositivo. Los SoundFonts pequenos y comprimidos pueden tener problemas de audio en pasajes rapidos.</string>
     <string name="midi_synth_import_sf2">Importar SF2</string>
     <string name="midi_synth_change_sf2">Cambiar SF2</string>
     <string name="midi_synth_remove_sf2">Eliminar</string>
@@ -125,7 +125,7 @@
     <string name="midi_synth_a2u">A2U (Experimental)</string>
     <string name="midi_synth_a2u_desc">Motor de sintesis integrado, creado para esta aplicacion.</string>
     <string name="midi_synth_active_badge">ACTIVO</string>
-    <string name="midi_synth_no_soundfont">Ningun SoundFont importado</string>
+    <string name="midi_synth_no_soundfont">Ningún SoundFont importado</string>
     <string name="midi_synth_soundfont_section">SoundFont</string>
     <string name="midi_synth_hybrid_mode">Modo hibrido</string>
     <string name="practice_marker_added">Marcador agregado: %1$s</string>
@@ -191,7 +191,7 @@
     <string name="practice_scoring_display_title">Visualizacion de puntuacion</string>
     <string name="practice_scoring_preset_encouragement">Animo</string>
     <string name="practice_scoring_preset_full">Estadisticas completas</string>
-    <string name="practice_scoring_preset_minimal">Minimo</string>
+    <string name="practice_scoring_preset_minimal">Mínimo</string>
     <string name="practice_scoring_preset_custom">Personalizado</string>
     <string name="practice_scoring_show_score">Puntuacion</string>
     <string name="practice_scoring_show_accuracy">Precision</string>
@@ -237,7 +237,7 @@
     <string name="gm_percussion_format">Percusion %d</string>
     <string name="gm_category_piano">Piano</string>
     <string name="gm_category_chromatic_percussion">Percusion cromatica</string>
-    <string name="gm_category_organ">Organo</string>
+    <string name="gm_category_organ">Órgano</string>
     <string name="gm_category_guitar">Guitarra</string>
     <string name="gm_category_bass">Bajo</string>
     <string name="gm_category_strings">Cuerdas</string>
@@ -310,17 +310,17 @@
         <item>Clavinet</item>
         <item>Celesta</item>
         <item>Glockenspiel</item>
-        <item>Caja de musica</item>
+        <item>Caja de Música</item>
         <item>Vibrafono</item>
         <item>Marimba</item>
         <item>Xilofono</item>
         <item>Campanas tubulares</item>
         <item>Dulcimer</item>
-        <item>Organo de barras</item>
-        <item>Organo percusivo</item>
-        <item>Organo rock</item>
-        <item>Organo de iglesia</item>
-        <item>Organo de lengüeta</item>
+        <item>Órgano de barras</item>
+        <item>Órgano percusivo</item>
+        <item>Órgano rock</item>
+        <item>Órgano de iglesia</item>
+        <item>Órgano de lengüeta</item>
         <item>Acordeon</item>
         <item>Armonica</item>
         <item>Acordeon de tango</item>
@@ -403,7 +403,7 @@
         <item>FX 5 (brillo)</item>
         <item>FX 6 (duendes)</item>
         <item>FX 7 (ecos)</item>
-        <item>FX 8 (ciencia ficcion)</item>
+        <item>FX 8 (ciencia ficción)</item>
         <item>Sitar</item>
         <item>Banjo</item>
         <item>Shamisen</item>
@@ -431,7 +431,7 @@
     </string-array>
     <string name="practice_record">Grabar</string>
     <string name="practice_no_notes_recorded">No se grabaron notas</string>
-    <string name="practice_recording_max_duration">Grabacion detenida — duracion maxima alcanzada (30 min)</string>
+    <string name="practice_recording_max_duration">Grabacion detenida — duracion máxima alcanzada (30 min)</string>
     <string name="practice_export_title">Exportar grabacion</string>
     <string name="practice_export_filename">Nombre del archivo</string>
     <string name="practice_export_format_midi">MIDI (.mid)</string>

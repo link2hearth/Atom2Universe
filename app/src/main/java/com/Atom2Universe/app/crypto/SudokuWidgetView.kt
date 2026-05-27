@@ -106,7 +106,7 @@ class SudokuWidgetView @JvmOverloads constructor(
         digitRow = findViewById(R.id.sudoku_digit_row)
 
         resultOverlay.setOnClickListener {
-            resultOverlay.visibility = View.GONE
+            resultOverlay.visibility = GONE
         }
 
         btnUndo = findViewById(R.id.sudoku_btn_undo)
@@ -140,7 +140,7 @@ class SudokuWidgetView @JvmOverloads constructor(
 
         // Bouton reset → afficher l'overlay de sélection de difficulté
         findViewById<TextView>(R.id.sudoku_btn_reset).setOnClickListener {
-            difficultyOverlay.visibility = View.VISIBLE
+            difficultyOverlay.visibility = VISIBLE
         }
 
         // Boutons de l'overlay
@@ -154,7 +154,7 @@ class SudokuWidgetView @JvmOverloads constructor(
             startNewGame(SudokuDifficulty.HARD)
         }
         findViewById<TextView>(R.id.sudoku_diff_cancel).setOnClickListener {
-            difficultyOverlay.visibility = View.GONE
+            difficultyOverlay.visibility = GONE
         }
 
         // Header : drag depuis les boutons ou la zone vide
@@ -162,7 +162,7 @@ class SudokuWidgetView @JvmOverloads constructor(
         // On retourne true sur ACTION_UP uniquement quand on glisse, pour empêcher
         // le click du bouton de se déclencher après un drag.
         val headerArea = findViewById<LinearLayout>(R.id.sudoku_header_area)
-        val dragListener = View.OnTouchListener { _, event ->
+        val dragListener = OnTouchListener { _, event ->
             handleHeaderTouch(event)
             event.action == MotionEvent.ACTION_UP && isDragging
         }
@@ -235,8 +235,8 @@ class SudokuWidgetView @JvmOverloads constructor(
 
     // ── Nouvelle partie avec difficulté choisie ───────────────────────────────
     private fun startNewGame(difficulty: SudokuDifficulty) {
-        difficultyOverlay.visibility = View.GONE
-        resultOverlay.visibility = View.GONE
+        difficultyOverlay.visibility = GONE
+        resultOverlay.visibility = GONE
         currentDifficulty = difficulty
         undoStack.clear()
         redoStack.clear()
@@ -331,7 +331,7 @@ class SudokuWidgetView @JvmOverloads constructor(
             resultText.text = context.getString(R.string.sudoku_result_failure)
             resultText.setTextColor(Color.parseColor("#EF4444"))
         }
-        resultOverlay.visibility = View.VISIBLE
+        resultOverlay.visibility = VISIBLE
     }
 
     // ── Undo / Redo ───────────────────────────────────────────────────────────

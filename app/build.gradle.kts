@@ -27,6 +27,7 @@ android {
         resourceConfigurations += listOf(
             "en",  // Anglais (défaut)
             "fr",  // Français
+            "el",  // Grec
             "de",  // Allemand
             "es",  // Espagnol
             "it",  // Italien

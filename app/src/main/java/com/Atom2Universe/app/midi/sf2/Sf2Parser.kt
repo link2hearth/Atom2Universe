@@ -422,7 +422,7 @@ class Sf2Parser {
 
                 val instrumentIndex = zoneData.instrumentIndex
                 val instZones = instrumentZones.getOrNull(instrumentIndex) ?: emptyList()
-                val instGlobal = instrumentGlobals.getOrNull(instrumentIndex)
+                instrumentGlobals.getOrNull(instrumentIndex)
                     ?: Sf2ZoneData.createDefaults()
 
                 // Diagnostic: warn if instrument not found or has no zones

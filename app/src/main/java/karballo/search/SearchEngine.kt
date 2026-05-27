@@ -40,7 +40,7 @@ open class SearchEngine(var config: Config) {
 
     val board: Board = Board()
     private var observer: SearchObserver? = null
-    lateinit private var evaluator: Evaluator
+    private lateinit var evaluator: Evaluator
     lateinit var tt: TranspositionTable
         private set
     var nodes: Array<Node>

@@ -238,11 +238,11 @@
     <string name="escape_turns_label">Хід %1$d</string>
     <string name="escape_turns_label_zero">Хід 0</string>
     <string name="escape_turns_prefix">Хід </string>
-    <string name="gacha_rarity_commun">Звичайний</string>
-    <string name="gacha_rarity_essentiel">Основний</string>
-    <string name="gacha_rarity_irreel">Нереальний</string>
-    <string name="gacha_rarity_mythique">Міфічний</string>
-    <string name="gacha_rarity_singulier">Унікальний</string>
-    <string name="gacha_rarity_stellaire">Зоряний</string>
+    <string name="gacha_rarity_primordial">Першопочатковий</string>
+    <string name="gacha_rarity_fusion">Синтез</string>
+    <string name="gacha_rarity_supernova">Наднова</string>
+    <string name="gacha_rarity_neutronique">Нейтронний</string>
+    <string name="gacha_rarity_spallation">Спаляція</string>
+    <string name="gacha_rarity_synthetique">Синтетичний</string>
     <string name="stat_hexrunner_best">Hex Runner – Найкращий час</string>
 </resources>

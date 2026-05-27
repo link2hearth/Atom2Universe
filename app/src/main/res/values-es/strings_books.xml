@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_books_title">Libros</string>
     <string name="hub_books_desc">Lector de EPUB, PDF y texto</string>
@@ -7,7 +7,7 @@
     <string name="reading_hub_title">Lectura</string>
     <string name="reading_hub_subtitle">Libros y comics</string>
     <string name="book_reader_title">Lector</string>
-    <string name="book_reader_no_book">Ningun libro abierto</string>
+    <string name="book_reader_no_book">Ningún libro abierto</string>
     <string name="book_reader_open">Abrir un libro</string>
     <string name="book_reader_page_of">%1$d / %2$d</string>
     <string name="book_reader_theme">Tema de lectura</string>
@@ -26,7 +26,7 @@
     <string name="book_reader_font_picker_title">Fuentes</string>
     <string name="book_reader_font_default">Predeterminada (sistema)</string>
     <string name="book_reader_font_size">Tamano: %1$d sp</string>
-    <string name="book_reader_font_preview_text">El rapido zorro marron salta sobre el perro perezoso.\n\nLeer es un viaje a otros mundos y otras mentes.</string>
+    <string name="book_reader_font_preview_text">El rápido zorro marron salta sobre el perro perezoso.\n\nLeer es un viaje a otros mundos y otras mentes.</string>
     <string name="book_library_empty">Aun no hay libros</string>
     <string name="book_library_empty_hint">Toca + para agregar tu primer libro</string>
     <string name="book_library_add">Agregar un libro</string>

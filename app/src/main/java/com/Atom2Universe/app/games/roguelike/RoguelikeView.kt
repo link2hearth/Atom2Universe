@@ -152,9 +152,7 @@ class RoguelikeView @JvmOverloads constructor(
 
                 val l = tileLeft(tx); val t = tileTop(ty)
                 val rect = RectF(l, t, l + tileSize, t + tileSize)
-                val tile = lv.tiles[ty][tx]
-
-                when (tile) {
+                when (val tile = lv.tiles[ty][tx]) {
                     TileType.WALL -> {
                         if (wallSprites.isNotEmpty()) {
                             val path = wallSprites[variantIndex(tx, ty, wallSprites.size)]

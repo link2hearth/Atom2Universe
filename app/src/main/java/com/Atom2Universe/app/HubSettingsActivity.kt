@@ -58,7 +58,7 @@ class HubSettingsActivity : ThemedActivity() {
         enableImmersiveMode()
         setContentView(R.layout.activity_hub_settings)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         setupViews()
         loadSettings()

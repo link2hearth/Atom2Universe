@@ -240,7 +240,7 @@ class MainClickerActivity : ThemedActivity() {
     private var shopStatPlayTime: TextView? = null
     private var shopStatProdApc: TextView? = null
     private var shopStatProdAps: TextView? = null
-    private var shopProdBar: android.widget.LinearLayout? = null
+    private var shopProdBar: LinearLayout? = null
 
     // Stats jeux dans le shop
 
@@ -472,7 +472,7 @@ class MainClickerActivity : ThemedActivity() {
         clickerBannerView = findViewById(R.id.clicker_banner)
         clickerBannerView.onShopClick = { showShopDialog() }
         clickerBannerView.onGachaClick = {
-            startActivity(android.content.Intent(this, com.Atom2Universe.app.crypto.gacha.GachaActivity::class.java))
+            startActivity(Intent(this, com.Atom2Universe.app.crypto.gacha.GachaActivity::class.java))
         }
         clickerBannerView.onAtomsClick = {
             val atomVisualActive = clickerToggle.isChecked && MainClickerPreferences.isAtomSpringEnabled(this)
@@ -895,7 +895,7 @@ class MainClickerActivity : ThemedActivity() {
 
             val row = LinearLayout(this)
             row.orientation = LinearLayout.HORIZONTAL
-            row.gravity     = android.view.Gravity.CENTER_VERTICAL
+            row.gravity     = Gravity.CENTER_VERTICAL
             val rowP = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             rowP.bottomMargin = if (index % 2 == 0) dp6 else dp14
             row.layoutParams = rowP
@@ -903,7 +903,7 @@ class MainClickerActivity : ThemedActivity() {
             val icon = TextView(this)
             icon.text     = factoryIcon(type)
             icon.textSize = 22f
-            icon.gravity  = android.view.Gravity.CENTER
+            icon.gravity  = Gravity.CENTER
             icon.layoutParams = LinearLayout.LayoutParams(dp28, LinearLayout.LayoutParams.WRAP_CONTENT)
             row.addView(icon)
 
@@ -914,7 +914,7 @@ class MainClickerActivity : ThemedActivity() {
 
             val nameRow = LinearLayout(this)
             nameRow.orientation = LinearLayout.HORIZONTAL
-            nameRow.gravity = android.view.Gravity.CENTER_VERTICAL
+            nameRow.gravity = Gravity.CENTER_VERTICAL
 
             val nameView = TextView(this)
             nameView.text     = getString(factoryNameRes(type))
@@ -1045,7 +1045,7 @@ class MainClickerActivity : ThemedActivity() {
             // Ligne
             val row = LinearLayout(this)
             row.orientation = LinearLayout.HORIZONTAL
-            row.gravity = android.view.Gravity.CENTER_VERTICAL
+            row.gravity = Gravity.CENTER_VERTICAL
 
             // Icône
             val icon = TextView(this)
@@ -1128,7 +1128,7 @@ class MainClickerActivity : ThemedActivity() {
             // Ligne principale
             val row = LinearLayout(this)
             row.orientation = LinearLayout.HORIZONTAL
-            row.gravity = android.view.Gravity.CENTER_VERTICAL
+            row.gravity = Gravity.CENTER_VERTICAL
 
             val icon = TextView(this)
             icon.text = if (unlocked) "🏆" else "🔒"
@@ -1283,12 +1283,12 @@ class MainClickerActivity : ThemedActivity() {
             return ap to (100.0 - ap)
         }
         fun fmtPct(v: Double, hasData: Boolean) = if (!hasData) "—" else "${"%.1f".format(v)} %"
-        fun applyBar(bar: android.widget.LinearLayout?, wA: Float, wB: Float) {
+        fun applyBar(bar: LinearLayout?, wA: Float, wB: Float) {
             bar ?: return
             val vA = bar.getChildAt(0)
             val vB = bar.getChildAt(1)
-            (vA.layoutParams as android.widget.LinearLayout.LayoutParams).weight = wA
-            (vB.layoutParams as android.widget.LinearLayout.LayoutParams).weight = wB
+            (vA.layoutParams as LinearLayout.LayoutParams).weight = wA
+            (vB.layoutParams as LinearLayout.LayoutParams).weight = wB
             vA.layoutParams = vA.layoutParams
             vB.layoutParams = vB.layoutParams
         }
@@ -2164,8 +2164,8 @@ class MainClickerActivity : ThemedActivity() {
 
         // Toggle format alphabétique (1.23a)
         val toggle4Container = popupView.findViewById<View>(R.id.popup_toggle4_container)
-        val toggle4Label = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle4_label)
-        val toggle4Switch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle4_switch)
+        val toggle4Label = popupView.findViewById<TextView>(R.id.popup_toggle4_label)
+        val toggle4Switch = popupView.findViewById<SwitchCompat>(R.id.popup_toggle4_switch)
         toggle4Container.visibility = View.VISIBLE
         toggle4Label.text = getString(R.string.crypto_label_alpha_format)
         toggle4Switch.isChecked = MainClickerPreferences.isClickerAlphaFormat(this)
@@ -2176,8 +2176,8 @@ class MainClickerActivity : ThemedActivity() {
 
         // Toggle atome animé
         val toggleContainer = popupView.findViewById<View>(R.id.popup_toggle_container)
-        val toggleLabel = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle_label)
-        val toggleSwitch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle_switch)
+        val toggleLabel = popupView.findViewById<TextView>(R.id.popup_toggle_label)
+        val toggleSwitch = popupView.findViewById<SwitchCompat>(R.id.popup_toggle_switch)
         toggleContainer.visibility = View.VISIBLE
         toggleLabel.text = getString(R.string.atom_animated)
         toggleSwitch.isChecked = MainClickerPreferences.isAtomSpringEnabled(this)
@@ -2188,8 +2188,8 @@ class MainClickerActivity : ThemedActivity() {
 
         // Toggle animation réduite
         val toggle2Container = popupView.findViewById<View>(R.id.popup_toggle2_container)
-        val toggle2Label = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle2_label)
-        val toggle2Switch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle2_switch)
+        val toggle2Label = popupView.findViewById<TextView>(R.id.popup_toggle2_label)
+        val toggle2Switch = popupView.findViewById<SwitchCompat>(R.id.popup_toggle2_switch)
         toggle2Container.visibility = View.VISIBLE
         toggle2Label.text = getString(R.string.atom_low_animation)
         toggle2Switch.isChecked = MainClickerPreferences.isAtomLowAnimation(this)
@@ -2200,8 +2200,8 @@ class MainClickerActivity : ThemedActivity() {
 
         // Toggle image agrandie
         val toggle3Container = popupView.findViewById<View>(R.id.popup_toggle3_container)
-        val toggle3Label = popupView.findViewById<android.widget.TextView>(R.id.popup_toggle3_label)
-        val toggle3Switch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_toggle3_switch)
+        val toggle3Label = popupView.findViewById<TextView>(R.id.popup_toggle3_label)
+        val toggle3Switch = popupView.findViewById<SwitchCompat>(R.id.popup_toggle3_switch)
         toggle3Container.visibility = View.VISIBLE
         toggle3Label.text = getString(R.string.atom_bigger_image)
         toggle3Switch.isChecked = MainClickerPreferences.isAtomBiggerImage(this)
@@ -2519,10 +2519,10 @@ class MainClickerActivity : ThemedActivity() {
 
         // ─── Sync Google Drive ───────────────────────────────────────────────
         val syncBtn    = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.settings_sync_games_btn)
-        val syncStatus = view.findViewById<android.widget.TextView>(R.id.settings_sync_status)
+        val syncStatus = view.findViewById<TextView>(R.id.settings_sync_status)
         syncBtn.setOnClickListener {
             syncBtn.isEnabled = false
-            syncStatus.visibility = android.view.View.VISIBLE
+            syncStatus.visibility = View.VISIBLE
             syncStatus.text = getString(R.string.games_sync_in_progress)
             lifecycleScope.launch {
                 when (val result = com.Atom2Universe.app.crypto.sync.GamesSyncManager.syncGames()) {
@@ -2555,7 +2555,7 @@ class MainClickerActivity : ThemedActivity() {
         local: com.Atom2Universe.app.crypto.sync.GamesSyncFile,
         remote: com.Atom2Universe.app.crypto.sync.GamesSyncFile
     ) {
-        val conflictDialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        val conflictDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.dialog_games_sync_conflict, null)
 
         fun fillCard(
@@ -2707,14 +2707,14 @@ class MainClickerActivity : ThemedActivity() {
             refreshValue.text = refreshIntervalShortLabel(interval)
         }
 
-        val minimalSwitch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_crypto_minimal_switch)
+        val minimalSwitch = popupView.findViewById<SwitchCompat>(R.id.popup_crypto_minimal_switch)
         minimalSwitch.isChecked = MainClickerPreferences.isCryptoWidgetMinimal(this)
         minimalSwitch.setOnCheckedChangeListener { _, isChecked ->
             MainClickerPreferences.setCryptoWidgetMinimal(this, isChecked)
             applyCryptoWidgetMinimal(isChecked)
         }
 
-        val eurSwitch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_crypto_eur_switch)
+        val eurSwitch = popupView.findViewById<SwitchCompat>(R.id.popup_crypto_eur_switch)
         eurSwitch.isChecked = MainClickerPreferences.isCryptoWidgetEur(this)
         eurSwitch.setOnCheckedChangeListener { _, isChecked ->
             MainClickerPreferences.setCryptoWidgetEur(this, isChecked)
@@ -2722,7 +2722,7 @@ class MainClickerActivity : ThemedActivity() {
         }
 
         val comparisonValue = popupView.findViewById<TextView>(R.id.popup_crypto_comparison_value)
-        val comparisonSlider = popupView.findViewById<com.google.android.material.slider.Slider>(R.id.popup_crypto_comparison_slider)
+        val comparisonSlider = popupView.findViewById<Slider>(R.id.popup_crypto_comparison_slider)
         val currentWindowIndex = MainClickerPreferences.getCryptoComparisonWindowIndex(this)
         comparisonSlider.value = currentWindowIndex.toFloat()
         comparisonValue.text = CryptoComparisonWindow.fromIndex(currentWindowIndex).label
@@ -2735,7 +2735,7 @@ class MainClickerActivity : ThemedActivity() {
             comparisonValue.text = comparisonWindow.label
         }
 
-        val eurUsdSwitch = popupView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.popup_crypto_eurusd_switch)
+        val eurUsdSwitch = popupView.findViewById<SwitchCompat>(R.id.popup_crypto_eurusd_switch)
         eurUsdSwitch.isChecked = MainClickerPreferences.isCryptoEurUsdEnabled(this)
         eurUsdSwitch.setOnCheckedChangeListener { _, isChecked ->
             MainClickerPreferences.setCryptoEurUsdEnabled(this, isChecked)
@@ -2918,7 +2918,7 @@ class MainClickerActivity : ThemedActivity() {
 
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
             val dragHandle: ImageView = v.findViewById(R.id.banner_item_drag_handle)
-            val label: android.widget.TextView = v.findViewById(R.id.banner_item_label)
+            val label: TextView = v.findViewById(R.id.banner_item_label)
             val switch: SwitchMaterial = v.findViewById(R.id.banner_item_switch)
         }
 

@@ -347,7 +347,7 @@ class Sf2Importer(private val context: Context) {
                         }
 
                         // Import each sample/zone for this instrument
-                        for ((sampleZoneIndex, zone) in sf2Instrument.zones.withIndex()) {
+                        for ((_, zone) in sf2Instrument.zones.withIndex()) {
                             val sample = parseResult.samples.getOrNull(zone.sampleIndex) ?: continue
 
                             // Determine root note

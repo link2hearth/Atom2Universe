@@ -238,11 +238,11 @@
     <string name="escape_turns_label">Tur %1$d</string>
     <string name="escape_turns_label_zero">Tur 0</string>
     <string name="escape_turns_prefix">Tur </string>
-    <string name="gacha_rarity_commun">Sıradan</string>
-    <string name="gacha_rarity_essentiel">Temel</string>
-    <string name="gacha_rarity_irreel">Gerçek Dışı</string>
-    <string name="gacha_rarity_mythique">Efsanevi</string>
-    <string name="gacha_rarity_singulier">Tekil</string>
-    <string name="gacha_rarity_stellaire">Yıldızsal</string>
+    <string name="gacha_rarity_primordial">İlksel</string>
+    <string name="gacha_rarity_fusion">Füzyon</string>
+    <string name="gacha_rarity_supernova">Süpernova</string>
+    <string name="gacha_rarity_neutronique">Nötronik</string>
+    <string name="gacha_rarity_spallation">Spallasyon</string>
+    <string name="gacha_rarity_synthetique">Sentetik</string>
     <string name="stat_hexrunner_best">Hex Runner – En iyi süre</string>
 </resources>

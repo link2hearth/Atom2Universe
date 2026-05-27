@@ -341,7 +341,7 @@ class BlackjackView @JvmOverloads constructor(
         val cardBottom = height - dp(68f)
 
         for ((idx, player) in g.players.withIndex()) {
-            val hand = player.currentHand ?: continue
+            player.currentHand ?: continue
             val cx = playerAreaCenterX(idx, numPlayers)
             val isActive = g.phase == GamePhase.PLAYER_TURNS && idx == g.activePlayerIndex
 

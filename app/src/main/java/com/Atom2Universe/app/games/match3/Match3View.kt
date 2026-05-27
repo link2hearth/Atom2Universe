@@ -593,7 +593,7 @@ class Match3View @JvmOverloads constructor(
         isProcessing = true
         timerValue = 0f
         handler.removeCallbacksAndMessages(null)
-        val prefs = context.getSharedPreferences("match3_save", android.content.Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences("match3_save", Context.MODE_PRIVATE)
         gameElapsedMs = if (gameStartUptimeMs > 0L) SystemClock.uptimeMillis() - gameStartUptimeMs else 0L
         val elapsedMs = gameElapsedMs
         prefs.edit().apply {

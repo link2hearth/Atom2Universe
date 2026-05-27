@@ -308,10 +308,10 @@ class ClickerBannerView @JvmOverloads constructor(
         apsText.textSize   = baseApcApsSp * scale
 
         val spritePx = (baseSpriteHeightDp * scale * density).toInt()
-        rabbitView.layoutParams = (rabbitView.layoutParams as ViewGroup.LayoutParams).also {
+        rabbitView.layoutParams = (rabbitView.layoutParams as LayoutParams).also {
             it.height = spritePx; it.width = spritePx
         }
-        turtleView.layoutParams = (turtleView.layoutParams as ViewGroup.LayoutParams).also {
+        turtleView.layoutParams = (turtleView.layoutParams as LayoutParams).also {
             it.height = spritePx; it.width = spritePx * 3
         }
 
@@ -325,7 +325,7 @@ class ClickerBannerView @JvmOverloads constructor(
 
         val needsVertical = heightDp >= 90
         isVerticalMode = needsVertical
-        val orientation = if (needsVertical) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
+        val orientation = if (needsVertical) VERTICAL else HORIZONTAL
         leftSide.orientation = orientation
         rightSide.orientation = orientation
 
@@ -342,7 +342,7 @@ class ClickerBannerView @JvmOverloads constructor(
         }
 
         // Ajuster la gravity
-        if (orientation == LinearLayout.VERTICAL) {
+        if (orientation == VERTICAL) {
             leftSide.gravity = android.view.Gravity.START or android.view.Gravity.TOP
             rightSide.gravity = android.view.Gravity.END or android.view.Gravity.TOP
         } else {
@@ -428,25 +428,25 @@ class ClickerBannerView @JvmOverloads constructor(
                 val secsLeft = (apcFx.max() - nowMs) / 1000f
                 frenzyApcMult.text    = "×${lastApcMult}"
                 frenzyApcTimer.text   = "  ${secsLeft.toInt()}s"
-                frenzyApcTimer.visibility = View.VISIBLE
+                frenzyApcTimer.visibility = VISIBLE
                 frenzyApcClicks.text  = "  ${lastApcClicks}"
                 frenzyApcBox.alpha    = 1f
-                frenzyApcBox.visibility = View.VISIBLE
+                frenzyApcBox.visibility = VISIBLE
             }
             inGrace -> {
                 // Fade de alpha 1→0 sur 5 secondes après expiry
                 val remaining = (apcGraceEndMs - nowMs).coerceAtLeast(0L)
                 val alpha     = (remaining / 5_000f).coerceIn(0f, 1f)
                 frenzyApcMult.text    = "×${lastApcMult}"
-                frenzyApcTimer.visibility = View.GONE
+                frenzyApcTimer.visibility = GONE
                 frenzyApcClicks.text  = "  ${lastApcClicks}"
                 frenzyApcBox.alpha    = alpha
-                frenzyApcBox.visibility = View.VISIBLE
+                frenzyApcBox.visibility = VISIBLE
             }
             else -> {
                 apcGraceEndMs = 0L
                 frenzyApcBox.alpha    = 1f   // reset pour le prochain usage
-                frenzyApcBox.visibility = View.INVISIBLE
+                frenzyApcBox.visibility = INVISIBLE
             }
         }
 
@@ -454,16 +454,16 @@ class ClickerBannerView @JvmOverloads constructor(
         if (apsFx.isNotEmpty()) {
             val mult = 1 shl apsFx.size
             frenzyApsMult.text      = "×${mult}"
-            frenzyApsBox.visibility = View.VISIBLE
+            frenzyApsBox.visibility = VISIBLE
         } else {
-            frenzyApsBox.visibility = View.INVISIBLE
+            frenzyApsBox.visibility = INVISIBLE
         }
 
         updateTurtlePosition(apsFx.size)
 
         // ── Sous-ligne globale ─────────────────────────────────────────────────
         val showSubrow = apcActive || inGrace || apsFx.isNotEmpty()
-        frenzySubrow.visibility = if (showSubrow) View.VISIBLE else View.GONE
+        frenzySubrow.visibility = if (showSubrow) VISIBLE else GONE
     }
 
     // ── Tortue (frénésie APS) ─────────────────────────────────────────────────

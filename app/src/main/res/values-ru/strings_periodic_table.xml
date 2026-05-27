@@ -15,6 +15,7 @@
     <string name="periodic_prop_melt">Температура плавления</string>
     <string name="periodic_prop_boil">Температура кипения</string>
     <string name="periodic_prop_block">Орбитальный блок</string>
+    <string name="periodic_prop_shells">Электронные оболочки</string>
     <string name="periodic_prop_electronegativity">Электроотрицательность</string>
     <string name="periodic_prop_electron_config">Электронная конфигурация</string>
     <string name="periodic_prop_discovered_by">Открыт</string>

@@ -86,7 +86,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString {
         CharsetDecoder decoder = getCorrectDecoder(inBuffer);
         CoderResult coderResult = decoder.decode(inBuffer, outBuffer, true);
         if (coderResult.isError()) {
-            logger.warning("Decoding error:" + coderResult.toString());
+            logger.warning("Decoding error:" + coderResult);
         }
         decoder.flush(outBuffer);
         outBuffer.flip();

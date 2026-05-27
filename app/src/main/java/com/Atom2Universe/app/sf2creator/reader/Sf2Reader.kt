@@ -154,7 +154,7 @@ class Sf2Reader {
                     return null
                 }
 
-                val fileSize = readUInt32(raf)
+                readUInt32(raf)
                 val format = readChunkId(raf)
                 if (format != SFBK) {
                     Log.e(TAG, "Not an SF2 file: $format")
@@ -327,7 +327,7 @@ class Sf2Reader {
                     return null
                 }
 
-                val fileSize = readUInt32(raf)
+                readUInt32(raf)
                 val format = readChunkId(raf)
                 if (format != SFBK) {
                     Log.e(TAG, "Not an SF2 file: $format")

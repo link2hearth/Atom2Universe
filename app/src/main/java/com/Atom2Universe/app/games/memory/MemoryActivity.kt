@@ -77,7 +77,7 @@ class MemoryActivity : AppCompatActivity() {
         enableImmersiveMode()
         setContentView(R.layout.activity_memory)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         recyclerView = findViewById(R.id.memory_recycler)
         flipsText    = findViewById(R.id.memory_flips)
         timeText     = findViewById(R.id.memory_time)

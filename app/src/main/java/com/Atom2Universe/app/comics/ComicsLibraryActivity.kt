@@ -301,7 +301,7 @@ class ComicsLibraryActivity : ThemedActivity() {
         val container = android.widget.LinearLayout(this).apply {
             orientation = android.widget.LinearLayout.VERTICAL
             gravity = android.view.Gravity.CENTER; setPadding(48, 36, 48, 0)
-            addView(android.widget.ProgressBar(this@ComicsLibraryActivity).apply { isIndeterminate = true })
+            addView(ProgressBar(this@ComicsLibraryActivity).apply { isIndeterminate = true })
             addView(countText); addView(nameText)
         }
         val dialog = AlertDialog.Builder(this).setTitle(titleRes).setView(container).setCancelable(false).create()
@@ -329,7 +329,7 @@ class ComicsLibraryActivity : ThemedActivity() {
 
     private fun treeUriToFile(uri: Uri): java.io.File? {
         return try {
-            val docId = android.provider.DocumentsContract.getTreeDocumentId(uri) ?: return null
+            val docId = DocumentsContract.getTreeDocumentId(uri) ?: return null
             val parts = docId.split(":")
             if (parts.size < 2) return null
             val base = when (parts[0].lowercase()) {

@@ -330,7 +330,7 @@ data class Sf2Region(
 
             // For sparse data, we don't have the total data length upfront
             // We use the sample header's end position as the upper bound
-            val headerEnd = sampleHeader.end
+            sampleHeader.end
 
             // Calculate sample boundaries with offsets
             val start = max(0L, sampleHeader.start + zone.startOffset)

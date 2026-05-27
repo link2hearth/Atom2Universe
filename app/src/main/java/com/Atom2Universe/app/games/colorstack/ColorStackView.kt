@@ -77,7 +77,7 @@ class ColorStackView @JvmOverloads constructor(
         if (cols == 0 || width == 0 || height == 0) return
 
         val padH = 10f * density
-        val padV = 8f * density
+        8f * density
         val colGap = 5f * density
         val tokenPadH = 3f * density
         val tokenPadV = 1.5f * density

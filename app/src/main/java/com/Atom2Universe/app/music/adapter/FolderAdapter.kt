@@ -111,7 +111,6 @@ class FolderAdapter(
      * Builds the info text showing subfolder and track counts.
      */
     private fun buildInfoText(folder: Folder): String {
-        val context = null // Will be set from itemView
         val parts = mutableListOf<String>()
 
         if (folder.subfolderCount > 0) {

@@ -717,7 +717,7 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
 
     private fun showSavePresetDialog() {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_save_preset, null)
-        val tilPresetName = dialogView.findViewById<TextInputLayout>(R.id.tilPresetName)
+        dialogView.findViewById<TextInputLayout>(R.id.tilPresetName)
         val editPresetName = dialogView.findViewById<TextInputEditText>(R.id.editPresetName)
 
         MaterialAlertDialogBuilder(requireContext())

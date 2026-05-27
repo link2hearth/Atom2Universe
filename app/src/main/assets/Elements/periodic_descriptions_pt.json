@@ -1385,32 +1385,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Nucleossíntese do Big Bang",
       "range": "Elementos 1–2 · H, He",
       "body": "Nascidos nos primeiros 3 minutos após o Big Bang, o hidrogênio e o hélio representam cerca de 99% de toda a matéria visível do universo. Enquanto o jovem universo se expandia e esfriava a partir de bilhões de graus, prótons e nêutrons se juntaram nos primeiros núcleos atômicos — quase exclusivamente hidrogênio e hélio, com traços de lítio."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Espalhamento Cósmico",
       "range": "Elementos 3–5 · Li, Be, B",
       "body": "Esses três elementos são frágeis demais para sobreviver dentro das estrelas — as reações de fusão os destroem mais rápido do que podem ser formados. Surgem quando raios cósmicos viajando a velocidades próximas à da luz colidem com átomos mais pesados (carbono, oxigênio, nitrogênio) à deriva no espaço interestelar, fragmentando-os em elementos mais leves. Esse processo, chamado de espalhamento (spallation), é raro e ineficiente, razão pela qual Li, Be e B estão entre os elementos menos abundantes do cosmos."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Fusão Estelar",
       "range": "Elementos 6–14 · C a Si",
       "body": "Forjados nos núcleos das estrelas por ciclos sucessivos de combustão: o hidrogênio se funde em hélio, o hélio em carbono e oxigênio, o carbono em neônio e magnésio, e assim por diante até o silício. Cada estágio requer uma estrela mais massiva e mais quente, liberando energia colossal. O carbono e o oxigênio produzidos aqui formam a espinha dorsal molecular de toda a química orgânica e da vida. Quando essas estrelas morrem, espalham esses elementos pela galáxia."
     },
-    "mythique": {
+    "supernova": {
       "process": "Combustão do Silício — Pico do Ferro",
       "range": "Elementos 15–28 · P a Ni",
       "body": "Os produtos finais da fusão estelar. Nos núcleos das estrelas mais massivas, a combustão do silício produz os elementos do pico do ferro — cromo, manganês, ferro, cobalto e níquel. A fusão para aqui: o ferro-56 e o níquel-62 têm a maior energia de ligação por nêutron, o que significa que fundi-los consumiria energia em vez de liberá-la. Sem pressão para contrariar a gravidade, essas estrelas colapsam e explodem como supernovas."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Captura de Nêutrons · Supernovas",
       "range": "Elementos 29–92 · Cu a U",
       "body": "Além do pico do ferro, a fusão estelar sozinha não pode construir esses elementos — eles exigem captura de nêutrons. O processo-s lento, que se desenrola ao longo de milhares de anos em estrelas AGB gigantes, adiciona gradualmente nêutrons para formar prata, estanho, bário e chumbo. O violento processo-r, desencadeado em fração de segundo durante fusões de estrelas de nêutrons e supernovas, forja os átomos mais pesados: ouro, platina, urânio. Cada átomo de ouro na Terra nasceu em uma catástrofe cósmica."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Sintético · Sem Isótopos Estáveis",
       "range": "Tc (43), Pm (61) · Elementos 93–118",
       "body": "O tecnécio (43) e o promécio (61) não possuem isótopos estáveis e não ocorrem naturalmente na Terra — qualquer quantidade formada em antigas estrelas há muito decaiu. Os elementos 93 a 118 existem apenas porque os humanos os criaram em aceleradores de partículas, disparando núcleos atômicos uns contra os outros a velocidades enormes. Muitos sobrevivem por apenas microssegundos antes de decair. O oganessônio (118), o elemento confirmado mais pesado, exigiu 1,1 trilhão de colisões para produzir apenas 3 átomos, sintetizados pela primeira vez em 2002."

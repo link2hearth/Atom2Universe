@@ -98,25 +98,25 @@ class SolitaireWidgetView @JvmOverloads constructor(
 
         // Clic sur l'overlay résultat → le fermer
         resultOverlay.setOnClickListener {
-            resultOverlay.visibility = View.GONE
+            resultOverlay.visibility = GONE
         }
 
         // Bouton reset → afficher l'overlay de confirmation
         // Pas de touch listener → pas de conflit avec le drag du header
         findViewById<TextView>(R.id.solitaire_btn_new_game).setOnClickListener {
-            resultOverlay.visibility = View.GONE
-            resetOverlay.visibility = View.VISIBLE
+            resultOverlay.visibility = GONE
+            resetOverlay.visibility = VISIBLE
         }
 
         // Overlay reset : confirmer
         findViewById<TextView>(R.id.solitaire_reset_confirm).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
             startNewGame()
         }
 
         // Overlay reset : annuler
         findViewById<TextView>(R.id.solitaire_reset_cancel).setOnClickListener {
-            resetOverlay.visibility = View.GONE
+            resetOverlay.visibility = GONE
         }
 
         // Header : drag uniquement (pas d'ouverture d'activité au tap)
@@ -186,8 +186,8 @@ class SolitaireWidgetView @JvmOverloads constructor(
 
     // ── Nouvelle partie ───────────────────────────────────────────────────────
     private fun startNewGame() {
-        resultOverlay.visibility = View.GONE
-        resetOverlay.visibility = View.GONE
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         isGameWon = false
         moves = 0
         game.newGame()
@@ -316,7 +316,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
             isGameWon = true
             resultText.text = context.getString(R.string.solitaire_status_won_short)
             resultText.setTextColor(Color.parseColor("#22C55E"))
-            resultOverlay.visibility = View.VISIBLE
+            resultOverlay.visibility = VISIBLE
             solitaireView.startVictoryAnimation()
             NeutrinoRepository(context).addBalance(5)
             GameStatsRepository(context).recordSolitaireWon()
@@ -340,8 +340,8 @@ class SolitaireWidgetView @JvmOverloads constructor(
 
     // ── Chargement depuis Room DB ─────────────────────────────────────────────
     fun reload(scope: CoroutineScope) {
-        resultOverlay.visibility = View.GONE
-        resetOverlay.visibility = View.GONE
+        resultOverlay.visibility = GONE
+        resetOverlay.visibility = GONE
         scope.launch {
             val save = runCatching {
                 SolitaireDatabase.getInstance(context).solitaireDao().getSave()

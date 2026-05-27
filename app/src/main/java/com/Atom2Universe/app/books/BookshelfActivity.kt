@@ -375,7 +375,7 @@ private class RootsAdapter(
     private val onRootLongClick: (BookShelfRoot) -> Unit
 ) : RecyclerView.Adapter<RootsAdapter.VH>() {
 
-    inner class VH(view: View) : RecyclerView.ViewHolder(view) {
+    class VH(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.root_name)
         val count: TextView = view.findViewById(R.id.root_count)
     }

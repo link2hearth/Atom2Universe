@@ -233,7 +233,7 @@ class SamplePreloader(
      */
     private fun loadPresetsIncremental(presets: List<Sf2PresetKey>): Sf2File? {
         synchronized(sampleDataLock) {
-            val parser = Sf2StreamingParser()
+            Sf2StreamingParser()
 
             // Find sample IDs needed for these presets
             val requiredSampleIds = mutableSetOf<Int>()
@@ -435,7 +435,7 @@ class SamplePreloader(
      * Build presets for currently loaded samples
      */
     private fun buildPresetsForLoaded(newPresets: List<Sf2PresetKey>) {
-        val parser = Sf2StreamingParser()
+        Sf2StreamingParser()
 
         for (preset in newPresets) {
             if (currentPresetMap.containsKey("${preset.bank}:${preset.program}")) continue
@@ -670,7 +670,7 @@ class SamplePreloader(
 
         // Check for instruments to unload (optional, for memory savings)
         // Only unload if we're running low on memory
-        val usedMemoryMB = compactSampleData.size.toLong() * 2 / 1024 / 1024
+        compactSampleData.size.toLong() * 2 / 1024 / 1024
         val availableMB = getAvailableMemoryMB()
         if (availableMB < MEMORY_SAFETY_MARGIN_MB * 2) {
             checkAndUnload(position)

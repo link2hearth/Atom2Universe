@@ -15,6 +15,7 @@
     <string name="periodic_prop_melt">Temperatura topnienia</string>
     <string name="periodic_prop_boil">Temperatura wrzenia</string>
     <string name="periodic_prop_block">Blok orbitalny</string>
+    <string name="periodic_prop_shells">Powłoki elektronowe</string>
     <string name="periodic_prop_electronegativity">Elektroujemność</string>
     <string name="periodic_prop_electron_config">Konfiguracja elektr.</string>
     <string name="periodic_prop_discovered_by">Odkryty przez</string>

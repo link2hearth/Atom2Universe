@@ -82,7 +82,7 @@ class CanvasEditorActivity : AppCompatActivity(), InfiniteCanvasListener {
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             result.data?.data?.let { uri ->
                 importImage(uri)
             }
@@ -533,8 +533,8 @@ class CanvasEditorActivity : AppCompatActivity(), InfiniteCanvasListener {
         // Créer la PopupWindow
         val popupWindow = android.widget.PopupWindow(
             gridLayout,
-            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
-            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
             true
         ).apply {
             elevation = 16f
@@ -806,8 +806,8 @@ class CanvasEditorActivity : AppCompatActivity(), InfiniteCanvasListener {
                 }
 
                 val isSelected = color == currentColor
-                val drawable = android.graphics.drawable.GradientDrawable().apply {
-                    shape = android.graphics.drawable.GradientDrawable.OVAL
+                val drawable = GradientDrawable().apply {
+                    shape = GradientDrawable.OVAL
                     setColor(color)
                     setStroke(
                         if (isSelected) 6 else 2,
@@ -826,7 +826,7 @@ class CanvasEditorActivity : AppCompatActivity(), InfiniteCanvasListener {
             gridLayout.addView(colorView)
         }
 
-        val scrollView = android.widget.ScrollView(this).apply {
+        val scrollView = ScrollView(this).apply {
             addView(gridLayout)
         }
 

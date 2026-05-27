@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="notes_action_delete">Eliminar</string>
     <string name="notes_action_cancel">Cancelar</string>
@@ -48,8 +48,8 @@
     <string name="notes_tag_name_hint">Nombre de la etiqueta</string>
     <string name="notes_add_tag">Agregar una etiqueta</string>
     <string name="notes_delete_tag_title">Eliminar etiqueta</string>
-    <string name="notes_create_category">Nueva categoria</string>
-    <string name="notes_delete_category_title">Eliminar categoria</string>
+    <string name="notes_create_category">Nueva categoría</string>
+    <string name="notes_delete_category_title">Eliminar categoría</string>
     <string name="notes_link_text_hint">Texto del enlace</string>
     <string name="notes_link_url_hint">URL (https://…)</string>
     <string name="notes_search_hint">Buscar notas, etiquetas…</string>
@@ -70,7 +70,7 @@
     <string name="notes_group_color">Color del grupo</string>
     <string name="notes_moved_to_group">Nota movida a \"%1$s\"</string>
     <string name="notes_title_hint">Titulo</string>
-    <string name="notes_content_hint">Escribe tu nota aqui…</string>
+    <string name="notes_content_hint">Escribe tu nota aquí…</string>
     <string name="notes_toggle_source">Modo fuente</string>
     <string name="notes_format_bold">Negrita</string>
     <string name="notes_format_italic">Cursiva</string>
@@ -88,7 +88,7 @@
     <string name="notes_delete">Eliminar</string>
     <string name="notes_menu">Menu</string>
     <string name="notes_sort">Ordenar</string>
-    <string name="notes_uncategorized">Sin categoria</string>
+    <string name="notes_uncategorized">Sin categoría</string>
     <string name="notes_text_color_mode">Color del texto</string>
     <string name="notes_text_auto">Automatico</string>
     <string name="notes_text_white">Blanco</string>
@@ -105,7 +105,7 @@
     <string name="notes_groups_empty">Sin grupos. Crea uno!</string>
     <string name="notes_favorites_empty">No hay notas favoritas</string>
     <string name="notes_tags_empty">Sin etiquetas. Crea una!</string>
-    <string name="notes_edit_category">Editar categoria</string>
+    <string name="notes_edit_category">Editar categoría</string>
     <string name="hub_notes_title">Notas</string>
     <string name="hub_notes_desc">Toma notas y gestiona tus ideas</string>
     <string name="notes_backlinks_header">Mencionado en (%d)</string>

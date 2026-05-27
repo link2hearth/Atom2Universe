@@ -103,11 +103,9 @@ object MusicTagEditor {
             // MUTEX GLOBAL: Protège contre les écritures concurrentes de POPM et USLT
             fileWriteMutex.withLock {
                 val audioFile = AudioFileIO.read(file)
-                val tag = audioFile.tagOrCreateAndSetDefault
-
                 // Convertir en ID3v2.3 si nécessaire
                 // ID3v2.2 utilise des frame IDs de 3 bytes, incompatible avec POPM (4 bytes)
-                val id3Tag: AbstractID3v2Tag = when (tag) {
+                val id3Tag: AbstractID3v2Tag = when (val tag = audioFile.tagOrCreateAndSetDefault) {
                     is ID3v22Tag -> {
                         // Upgrader ID3v2.2 vers ID3v2.3
                         Log.d(TAG, "Upgrading ID3v2.2 to ID3v2.3 for: $filePath")
@@ -826,10 +824,8 @@ object MusicTagEditor {
             // MUTEX GLOBAL: Protège contre les écritures concurrentes de POPM et USLT
             fileWriteMutex.withLock {
                 val audioFile = AudioFileIO.read(file)
-                val tag = audioFile.tagOrCreateAndSetDefault
-
                 // Convertir en ID3v2.3 si nécessaire (même pattern que POPM)
-                val id3Tag: AbstractID3v2Tag = when (tag) {
+                val id3Tag: AbstractID3v2Tag = when (val tag = audioFile.tagOrCreateAndSetDefault) {
                     is ID3v22Tag -> {
                         Log.d(TAG, "Upgrading ID3v2.2 to ID3v2.3 for: $filePath")
                         val newTag = ID3v23Tag(tag as AbstractTag)

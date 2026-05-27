@@ -1387,32 +1387,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Oerknal-nucleosynthese",
       "range": "Elementen 1–2 · H, He",
       "body": "Geboren in de eerste 3 minuten na de Oerknal, zijn waterstof en helium samen goed voor ongeveer 99% van alle zichtbare materie in het heelal. Terwijl het jonge heelal uitzette en afkoelde vanuit miljarden graden, kwamen protonen en neutronen samen tot de eerste atoomkernen — bijna uitsluitend waterstof en helium, met spoorhoeveelheden lithium."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Kosmische spallatie",
       "range": "Elementen 3–5 · Li, Be, B",
       "body": "Deze drie elementen zijn te fragiel om in sterren te overleven — fusie-reacties vernietigen ze sneller dan ze kunnen worden gevormd. Ze ontstaan wanneer kosmische stralen die bijna met lichtsnelheid reizen, botsen op zwaardere atomen (koolstof, zuurstof, stikstof) die door de interstellaire ruimte drijven en ze fragmenteren tot lichtere elementen. Dit proces, spallatie genaamd, is zeldzaam en inefficiënt, wat verklaart waarom Li, Be en B tot de minst abundante elementen in de kosmos behoren."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Stellaire fusie",
       "range": "Elementen 6–14 · C tot Si",
       "body": "Gesmeed in de kernen van sterren via opeenvolgende verbrandingscycli: waterstof fuseert tot helium, helium tot koolstof en zuurstof, koolstof tot neon en magnesium, enzovoort tot silicium. Elke fase vereist een massievere en hetere ster en geeft kolossale energie vrij. Het koolstof en zuurstof dat hier wordt geproduceerd vormt de moleculaire ruggengraat van alle organische chemie en het leven. Wanneer deze sterren sterven, verspreiden zij deze elementen door de melkweg."
     },
-    "mythique": {
+    "supernova": {
       "process": "Siliciumverbranding — IJzerpiek",
       "range": "Elementen 15–28 · P tot Ni",
       "body": "De eindproducten van stellaire fusie. In de kernen van de meest massieve sterren produceert siliciumverbranding de ijzerpiek-elementen — chroom, mangaan, ijzer, kobalt en nikkel. Fusie stopt hier: ijzer-56 en nikkel-62 hebben de hoogste bindingsenergie per nucleon, wat betekent dat verder fuseren energie zou verbruiken in plaats van vrijgeven. Zonder uitwaartse druk om de zwaartekracht te compenseren, storten deze sterren in en exploderen als supernova's."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Neutronenvangst · Supernova's",
       "range": "Elementen 29–92 · Cu tot U",
       "body": "Voorbij de ijzerpiek kan stellaire fusie alleen deze elementen niet opbouwen — ze vereisen neutronenvangst. Het trage s-proces, dat zich over duizenden jaren ontvouwt in reuzen-AGB-sterren, voegt geleidelijk neutronen toe om zilver, tin, barium en lood te vormen. Het gewelddadige r-proces, in een fractie van een seconde getriggerd tijdens botsingen van neutronensterren en supernova's, smeedt de zwaarste atomen: goud, platina, uranium. Elk atoom goud op aarde werd geboren in een kosmische catastrofe."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Synthetisch · Geen stabiele isotopen",
       "range": "Tc (43), Pm (61) · Elementen 93–118",
       "body": "Technetium (43) en promethium (61) hebben geen stabiele isotopen en komen niet van nature op aarde voor — elke hoeveelheid gevormd in oude sterren is al lang vervallen. Elementen 93 tot 118 bestaan alleen omdat mensen ze hebben gecreëerd in deeltjesversnellers, waarbij atoomkernen op enorme snelheden op elkaar worden afgevuurd. Velen overleven slechts microseconden voordat ze vervallen. Oganesson (118), het zwaarste bevestigde element, vereiste 1,1 biljoen botsingen om slechts 3 atomen te produceren, voor het eerst gesynthetiseerd in 2002."

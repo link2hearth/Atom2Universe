@@ -5,6 +5,7 @@
     <string name="periodic_prop_melt">Point de fusion</string>
     <string name="periodic_prop_boil">Point d\'ébullition</string>
     <string name="periodic_prop_block">Bloc orbital</string>
+    <string name="periodic_prop_shells">Couches électroniques</string>
     <string name="periodic_prop_electronegativity">Électronégativité</string>
     <string name="periodic_prop_electron_config">Config. électronique</string>
     <string name="periodic_prop_discovered_by">Découvert par</string>

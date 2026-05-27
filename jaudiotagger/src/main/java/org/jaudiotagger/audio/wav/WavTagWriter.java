@@ -50,7 +50,7 @@ import static org.jaudiotagger.audio.iff.IffHeaderChunk.SIZE_LENGTH;
  */
 public class WavTagWriter {
     //For logging
-    private String loggingName;
+    private final String loggingName;
 
     public WavTagWriter(String loggingName) {
         this.loggingName = loggingName;

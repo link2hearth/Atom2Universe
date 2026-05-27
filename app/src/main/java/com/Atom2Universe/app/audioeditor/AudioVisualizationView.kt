@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import kotlin.math.min
+import androidx.core.graphics.toColorInt
 
 /**
  * Versatile audio visualization view supporting multiple render modes.
@@ -56,14 +57,14 @@ class AudioVisualizationView @JvmOverloads constructor(
         style = Paint.Style.STROKE
     }
     private val bgPaint = Paint().apply {
-        color = Color.parseColor("#1A1A1A")
+        color = "#1A1A1A".toColorInt()
     }
 
     // Gradient colors for bars
     private val gradientColors = intArrayOf(
-        Color.parseColor("#4CAF50"),  // Green (low freq)
-        Color.parseColor("#FFEB3B"),  // Yellow (mid freq)
-        Color.parseColor("#FF5722")   // Orange/Red (high freq)
+        "#4CAF50".toColorInt(),  // Green (low freq)
+        "#FFEB3B".toColorInt(),  // Yellow (mid freq)
+        "#FF5722".toColorInt()   // Orange/Red (high freq)
     )
 
     // Path for smooth curve
@@ -241,8 +242,8 @@ class AudioVisualizationView @JvmOverloads constructor(
         val shader = LinearGradient(
             0f, 0f, 0f, height.toFloat(),
             intArrayOf(
-                Color.parseColor("#804CAF50"),
-                Color.parseColor("#2000FF00")
+                "#804CAF50".toColorInt(),
+                "#2000FF00".toColorInt()
             ),
             null,
             Shader.TileMode.CLAMP

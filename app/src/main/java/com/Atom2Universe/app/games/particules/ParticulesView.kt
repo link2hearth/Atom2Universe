@@ -1560,7 +1560,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             Shape.PILL -> canvas.drawRoundRect(rect, rect.height() / 2f, rect.height() / 2f, pBrick)
             Shape.DIAMOND -> {
                 val cx = rect.centerX(); val cy = rect.centerY()
-                val hw = rect.width() / 2f; val hh = rect.height() / 2f
+                rect.width() / 2f; rect.height() / 2f
                 brickPath.rewind()
                 brickPath.moveTo(cx, rect.top)
                 brickPath.lineTo(rect.right, cy)
@@ -1570,8 +1570,8 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 canvas.drawPath(brickPath, pBrick)
             }
             Shape.HEX -> {
-                val cx = rect.centerX(); val cy = rect.centerY()
-                val hw = rect.width() / 2f; val hh = rect.height() / 2f
+                rect.centerX(); val cy = rect.centerY()
+                rect.width() / 2f; rect.height() / 2f
                 val inset = rect.width() * 0.22f
                 brickPath.rewind()
                 brickPath.moveTo(rect.left + inset, rect.top)

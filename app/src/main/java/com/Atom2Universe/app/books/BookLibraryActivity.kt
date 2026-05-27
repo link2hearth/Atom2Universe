@@ -215,7 +215,7 @@ class BookLibraryActivity : ThemedActivity() {
         enableImmersiveMode()
         setContentView(R.layout.activity_book_library)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         displayMode = prefs.getInt(KEY_DISPLAY_MODE, MODE_LIST)
         gridColumns = prefs.getInt(KEY_GRID_COLS, DEFAULT_GRID_COLS)
 
@@ -677,7 +677,7 @@ class BookLibraryActivity : ThemedActivity() {
         val container = android.widget.LinearLayout(this).apply {
             orientation = android.widget.LinearLayout.VERTICAL
             gravity = android.view.Gravity.CENTER; setPadding(48, 36, 48, 0)
-            addView(android.widget.ProgressBar(this@BookLibraryActivity).apply { isIndeterminate = true })
+            addView(ProgressBar(this@BookLibraryActivity).apply { isIndeterminate = true })
             addView(countText); addView(nameText)
         }
         val dialog = AlertDialog.Builder(this).setTitle(titleRes).setView(container).setCancelable(false).create()
@@ -701,7 +701,10 @@ class BookLibraryActivity : ThemedActivity() {
 
     private fun scanLibraryRoot(uri: Uri, existingRootId: String? = null, onFound: (Int, String) -> Unit): Pair<BookShelfRoot, List<BookShelfEntry>> {
         val rootFile = treeUriToFile(uri)
-        if (rootFile != null && rootFile.isDirectory) return fastScan(rootFile, uri.toString(), existingRootId, onFound)
+        if (rootFile != null && rootFile.isDirectory && rootFile.canRead() && rootFile.listFiles() != null) {
+            val result = fastScan(rootFile, uri.toString(), existingRootId, onFound)
+            if (result.second.isNotEmpty()) return result
+        }
         val rootDoc = DocumentFile.fromTreeUri(this, uri)
             ?: return Pair(BookShelfRoot(name = "Unknown", rootUri = uri.toString()), emptyList())
         return safScan(rootDoc, uri.toString(), existingRootId, onFound)
@@ -720,6 +723,11 @@ class BookLibraryActivity : ThemedActivity() {
                 lower.endsWith(".epub") -> "epub"
                 lower.endsWith(".pdf") -> "pdf"
                 lower.endsWith(".txt") -> "txt"
+                lower.endsWith(".fb2") -> "fb2"
+                lower.endsWith(".mobi") -> "mobi"
+                lower.endsWith(".azw") || lower.endsWith(".azw3") -> "mobi"
+                lower.endsWith(".cbz") -> "cbz"
+                lower.endsWith(".cbr") -> "cbr"
                 else -> return@forEach
             }
             val rel = fileRelPath(file.parentFile!!, rootFile)
@@ -759,6 +767,11 @@ class BookLibraryActivity : ThemedActivity() {
                 lower.endsWith(".epub") -> "epub"
                 lower.endsWith(".pdf") -> "pdf"
                 lower.endsWith(".txt") -> "txt"
+                lower.endsWith(".fb2") -> "fb2"
+                lower.endsWith(".mobi") -> "mobi"
+                lower.endsWith(".azw") || lower.endsWith(".azw3") -> "mobi"
+                lower.endsWith(".cbz") -> "cbz"
+                lower.endsWith(".cbr") -> "cbr"
                 else -> continue
             }
             val title = name.substringBeforeLast(".")
@@ -1225,7 +1238,7 @@ private fun loadShelfPdfCover(context: Context, uri: Uri): Bitmap? = try {
                 val w = (page.width * scale).toInt().coerceAtLeast(1)
                 val h = (page.height * scale).toInt().coerceAtLeast(1)
                 val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-                bmp.eraseColor(android.graphics.Color.WHITE)
+                bmp.eraseColor(Color.WHITE)
                 page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                 bmp
             }

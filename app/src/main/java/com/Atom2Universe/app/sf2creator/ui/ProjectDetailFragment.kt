@@ -819,10 +819,10 @@ class ProjectDetailFragment : Fragment() {
             val nextProgram = repository.getNextAvailableProgramNumber(projectId)
             if (nextProgram == null) {
                 // All program numbers (0-127) are already used
-                android.widget.Toast.makeText(
+                Toast.makeText(
                     requireContext(),
                     "All program numbers (0-127) are already in use. Cannot create more programs.",
-                    android.widget.Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG
                 ).show()
                 return@launch
             }

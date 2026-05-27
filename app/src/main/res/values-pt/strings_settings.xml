@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_notification_title">Ativar notificações</string>
     <string name="permission_notification_message">O A2U precisa de acesso às notificações para exibir os controles de reprodução na tela de bloqueio e na barra de estado (rádio, música).\n\nSem essa permissão, a reprodução em segundo plano ainda funcionará, mas você não poderá controlá-la de fora do aplicativo.</string>
@@ -58,8 +58,8 @@
     <string name="settings_cleanup_now_button">🧹 Limpar agora</string>
     <string name="settings_cleanup_enabled">✅ Limpeza automática ativada</string>
     <string name="settings_cleanup_disabled">❌ Limpeza automática desativada</string>
-    <string name="settings_cleanup_in_progress">🧹 Limpeza em andamento...</string>
-    <string name="settings_cleanup_analyzing">Analisando arquivos...</string>
+    <string name="settings_cleanup_in_progress">🧹 Limpeza em andamento…</string>
+    <string name="settings_cleanup_analyzing">Analisando arquivos…</string>
     <string name="settings_cleanup_no_orphans">✅ Nenhum arquivo órfão encontrado</string>
     <string name="settings_cleanup_nothing_to_clean">Nada para limpar</string>
     <string name="settings_cleanup_error">❌ Erro durante a limpeza</string>

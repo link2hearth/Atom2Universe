@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="notes_action_delete">Hapus</string>
     <string name="notes_action_cancel">Batal</string>
@@ -56,7 +56,6 @@
     <string name="notes_search_empty">Tidak ada hasil</string>
     <string name="notes_search_initial">Masukkan minimal 2 karakter</string>
     <plurals name="notes_search_results">
-        <item quantity="one">%d hasil</item>
         <item quantity="other">%d hasil</item>
     </plurals>
     <string name="notes_move_to_group_title">Pindahkan ke</string>

@@ -15,7 +15,7 @@ object LocaleHelper {
     private const val KEY_LANGUAGE = "app_language"
 
     // Supported languages (alphabetically sorted by display name)
-    val SUPPORTED_LANGUAGES = listOf("in", "de", "en", "es", "fr", "it", "nl", "pl", "pt", "tr", "ru", "uk")
+    val SUPPORTED_LANGUAGES = listOf("in", "de", "el", "en", "es", "fr", "it", "nl", "pl", "pt", "tr", "ru", "uk")
     const val DEFAULT_LANGUAGE = "en"
 
     /**
@@ -77,6 +77,7 @@ object LocaleHelper {
             "pt" -> "Português"
             "es" -> "Español"
             "de" -> "Deutsch"
+            "el" -> "Ελληνικά"
             "pl" -> "Polski"
             "ru" -> "Русский"
             "uk" -> "Українська"
@@ -98,6 +99,7 @@ object LocaleHelper {
             "pt" -> "PT"
             "es" -> "ES"
             "de" -> "DE"
+            "el" -> "EL"
             "pl" -> "PL"
             "ru" -> "RU"
             "uk" -> "UK"

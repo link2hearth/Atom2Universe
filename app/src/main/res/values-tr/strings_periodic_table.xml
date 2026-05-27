@@ -15,6 +15,7 @@
     <string name="periodic_prop_melt">Erime noktası</string>
     <string name="periodic_prop_boil">Kaynama noktası</string>
     <string name="periodic_prop_block">Yörünge bloğu</string>
+    <string name="periodic_prop_shells">Elektron kabukları</string>
     <string name="periodic_prop_electronegativity">Elektronegatiflik</string>
     <string name="periodic_prop_electron_config">Elektron yapısı</string>
     <string name="periodic_prop_discovered_by">Keşfeden</string>

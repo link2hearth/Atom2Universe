@@ -54,9 +54,9 @@ public class FlacInfoReader {
             //Search for StreamInfo Block, but even after we found it we still have to continue through all
             //the metadata blocks so that we can find the start of the audio frames which we need to calculate
             //the bitrate
-            while (isLastBlock == false) {
+            while (!isLastBlock) {
                 MetadataBlockHeader mbh = MetadataBlockHeader.readHeader(fc);
-                logger.info(file.getPath() + " " + mbh.toString());
+                logger.info(file.getPath() + " " + mbh);
                 if (mbh.getBlockType() == BlockType.STREAMINFO) {
                     mbdsi = new MetadataBlockDataStreamInfo(mbh, fc);
                     if (!mbdsi.isValid()) {

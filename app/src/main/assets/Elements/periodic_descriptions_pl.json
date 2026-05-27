@@ -1382,32 +1382,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Nukleosynteza Wielkiego Wybuchu",
       "range": "Pierwiastki 1–2 · H, He",
       "body": "Narodzony w pierwszych 3 minutach po Wielkim Wybuchu, wodór i hel stanowią około 99% całej widocznej materii we wszechświecie. Gdy młody wszechświat rozszerzał się i stygnął z miliardów stopni, protony i neutrony łączyły się w pierwsze jądra atomowe — niemal wyłącznie wodór i hel, ze śladowymi ilościami litu."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Kosmiczne spalowanie",
       "range": "Pierwiastki 3–5 · Li, Be, B",
       "body": "Te trzy pierwiastki są zbyt kruche, by przeżyć wewnątrz gwiazd — reakcje fuzji niszczą je szybciej niż mogą być tworzone. Tworzą się gdy promienie kosmiczne poruszające się z prędkością bliską prędkości światła uderzają w cięższe atomy (węgiel, tlen, azot) dryfujące w przestrzeni międzygwiezdnej, rozbijając je na lżejsze pierwiastki. Ten proces, zwany spalowaniem, jest rzadki i nieefektywny, dlatego Li, Be i B należą do najmniej obfitych pierwiastków w kosmosie."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Synteza gwiazdowa",
       "range": "Pierwiastki 6–14 · C do Si",
       "body": "Wykute w jądrach gwiazd przez kolejne cykle spalania: wodór łączy się w hel, hel w węgiel i tlen, węgiel w neon i magnez, i tak dalej aż do krzemu. Każdy etap wymaga masywniejszej i gorętszej gwiazdy, uwalniając kolosalną energię. Wyprodukowany tu węgiel i tlen tworzą molekularny szkielet całej chemii organicznej i życia. Gdy te gwiazdy umierają, rozsiewa te pierwiastki po galaktyce."
     },
-    "mythique": {
+    "supernova": {
       "process": "Spalanie krzemu — szczyt żelazny",
       "range": "Pierwiastki 15–28 · P do Ni",
       "body": "Końcowe produkty fuzji gwiazdowej. W jądrach najmasywniejszych gwiazd, spalanie krzemu produkuje pierwiastki szczytu żelaznego — chrom, mangan, żelazo, kobalt i nikiel. Fuzja zatrzymuje się tutaj: żelazo-56 i nikiel-62 mają najwyższą energię wiązania na nukleon, co oznacza, że ich dalsze łączenie zużywałoby energię zamiast jej uwalniać. Bez ciśnienia skierowanego na zewnątrz by przeciwdziałać grawitacji, te gwiazdy zapaść się i wybuchają jako supernowe."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Wychwyt neutronów · Supernowe",
       "range": "Pierwiastki 29–92 · Cu do U",
       "body": "Poza szczytem żelaznym, sama fuzja gwiazdowa nie może zbudować tych pierwiastków — wymagają one wychwytu neutronów. Powolny s-proces, rozwijający się przez tysiące lat w olbrzymich gwiazdach AGB, stopniowo dodaje neutrony tworząc srebro, cynę, bar i ołów. Gwałtowny r-proces, wyzwolony w ułamku sekundy podczas zderzeń gwiazd neutronowych i supernowych, kuje najcięższe atomy: złoto, platynę, uran. Każdy atom złota na Ziemi narodził się w kosmicznej katastrofie."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Syntetyczny · Brak stabilnych izotopów",
       "range": "Tc (43), Pm (61) · Pierwiastki 93–118",
       "body": "Technet (43) i promet (61) nie mają stabilnych izotopów i nie występują naturalnie na Ziemi — jakiekolwiek ilości wytworzone w starożytnych gwiazdach dawno się rozpadły. Pierwiastki od 93 do 118 istnieją tylko dlatego, że ludzie stworzyli je w akceleratorach cząstek, strzelając jądrami atomowymi w siebie z ogromną prędkością. Wiele przeżywa jedynie mikrosekundy przed rozpadem. Oganeson (118), najcięższy potwierdzony pierwiastek, wymagał 1,1 biliona zderzeń, by wyprodukować zaledwie 3 atomy, po raz pierwszy zsyntetyzowany w 2002 roku."

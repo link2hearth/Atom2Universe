@@ -182,7 +182,7 @@ class WaveformExtractor(private val context: Context) {
                 }
                 // Bug 2.36: Handle output format changes during extraction
                 outputBufferIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
-                    val newFormat = codec.outputFormat
+                    codec.outputFormat
                     // Bug 2.37: Recalculate estimated total based on actual format
                     // Note: accumulator already handles this gracefully with its bucket approach
                 }

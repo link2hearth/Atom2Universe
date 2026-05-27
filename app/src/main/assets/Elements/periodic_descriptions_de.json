@@ -1384,32 +1384,32 @@
     }
   },
   "rarities": {
-    "commun": {
+    "primordial": {
       "process": "Urknall-Nukleosynthese",
       "range": "Elemente 1–2 · H, He",
       "body": "In den ersten 3 Minuten nach dem Urknall entstanden Wasserstoff und Helium, die zusammen etwa 99 % der gesamten sichtbaren Materie im Universum ausmachen. Als sich das junge Universum ausdehnte und von Milliarden Grad abkühlte, fügten sich Protonen und Neutronen zu ersten Atomkernen zusammen — fast ausschließlich Wasserstoff und Helium, mit Spuren von Lithium."
     },
-    "essentiel": {
+    "spallation": {
       "process": "Kosmische Spallation",
       "range": "Elemente 3–5 · Li, Be, B",
       "body": "Diese drei Elemente sind zu zerbrechlich, um im Inneren von Sternen zu überleben — Fusionsreaktionen zerstören sie schneller, als sie entstehen können. Sie bilden sich, wenn kosmische Strahlen mit nahezu Lichtgeschwindigkeit auf schwerere Atome (Kohlenstoff, Sauerstoff, Stickstoff) im interstellaren Raum treffen und diese in leichtere Elemente zersplittern. Dieser Prozess, Spallation genannt, ist selten und ineffizient, weshalb Li, Be und B zu den am wenigsten häufigen Elementen im Kosmos gehören."
     },
-    "stellaire": {
+    "fusion": {
       "process": "Stellare Fusion",
       "range": "Elemente 6–14 · C bis Si",
       "body": "In den Kernen von Sternen durch sukzessive Verbrennungszyklen geschmiedet: Wasserstoff fusioniert zu Helium, Helium zu Kohlenstoff und Sauerstoff, Kohlenstoff zu Neon und Magnesium und so weiter bis zum Silizium. Jede Stufe erfordert einen massereicheren und heißeren Stern und setzt kolossale Energie frei. Der hier produzierte Kohlenstoff und Sauerstoff bildet das molekulare Rückgrat der gesamten organischen Chemie und des Lebens. Wenn diese Sterne sterben, streuen sie diese Elemente durch die Galaxie."
     },
-    "mythique": {
+    "supernova": {
       "process": "Siliziumverbrennung — Eisengipfel",
       "range": "Elemente 15–28 · P bis Ni",
       "body": "Die Endprodukte der stellaren Fusion. In den Kernen der massereichsten Sterne erzeugt die Siliziumverbrennung die Elemente am Eisengipfel — Chrom, Mangan, Eisen, Kobalt und Nickel. Die Fusion hört hier auf: Eisen-56 und Nickel-62 haben die höchste Bindungsenergie pro Nukleon, was bedeutet, dass ihre Fusion Energie verbrauchen anstatt freisetzen würde. Ohne äußeren Druck, der der Schwerkraft entgegenwirkt, kollabieren diese Sterne und explodieren als Supernovae."
     },
-    "singulier": {
+    "neutronique": {
       "process": "Neutroneneinfang · Supernovæ",
       "range": "Elemente 29–92 · Cu bis U",
       "body": "Jenseits des Eisengipfels kann stellare Fusion allein diese Elemente nicht aufbauen — sie erfordern Neutroneneinfang. Der langsame s-Prozess, der sich über Tausende von Jahren in großen AGB-Sternen entfaltet, fügt schrittweise Neutronen hinzu, um Silber, Zinn, Barium und Blei zu bilden. Der gewaltsame r-Prozess, der in einem Bruchteil einer Sekunde bei Neutronensternverschmelzungen und Supernovae ausgelöst wird, schmiedet die schwersten Atome: Gold, Platin, Uran. Jedes Goldatom auf der Erde wurde in einer kosmischen Katastrophe geboren."
     },
-    "irreel": {
+    "synthetique": {
       "process": "Synthetisch · Keine stabilen Isotope",
       "range": "Tc (43), Pm (61) · Elemente 93–118",
       "body": "Technetium (43) und Promethium (61) haben keine stabilen Isotope und kommen auf der Erde nicht natürlich vor — jede in alten Sternen gebildete Menge ist längst zerfallen. Die Elemente 93 bis 118 existieren nur, weil Menschen sie in Teilchenbeschleunigern erzeugt haben und Atomkerne mit enormer Geschwindigkeit aufeinander abfeuerten. Viele überleben nur Mikrosekunden, bevor sie zerfallen. Oganesson (118), das schwerste bestätigte Element, erforderte 1,1 Billionen Kollisionen, um nur 3 Atome zu erzeugen, erstmals synthetisiert im Jahr 2002."

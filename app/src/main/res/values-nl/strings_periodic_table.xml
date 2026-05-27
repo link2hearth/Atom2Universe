@@ -15,6 +15,7 @@
     <string name="periodic_prop_melt">Smeltpunt</string>
     <string name="periodic_prop_boil">Kookpunt</string>
     <string name="periodic_prop_block">Orbitaalblok</string>
+    <string name="periodic_prop_shells">Elektronenschillen</string>
     <string name="periodic_prop_electronegativity">Elektronegativiteit</string>
     <string name="periodic_prop_electron_config">Elektronconfiguratie</string>
     <string name="periodic_prop_discovered_by">Ontdekt door</string>

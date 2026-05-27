@@ -140,7 +140,7 @@ public class MidiDriver
      *
      * @param byte array of midi events
      */
-    public  native boolean write(byte a[]);
+    public  native boolean write(byte[] a);
 
     /**
      * Set master volume
@@ -178,7 +178,7 @@ public class MidiDriver
      *
      * @param byte array of DLS file data
      */
-    public native boolean loadDLS(byte a[]);
+    public native boolean loadDLS(byte[] a);
 
     // Load midi library
     static
