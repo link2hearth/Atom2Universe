@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Dictafon</string>
+    <string name="dictaphone_action_record">Înregistrare</string>
+    <string name="dictaphone_action_stop">Oprire</string>
+    <string name="dictaphone_action_play">Redare</string>
+    <string name="dictaphone_action_rename">Redenumire</string>
+    <string name="dictaphone_action_delete">Ștergere</string>
+    <string name="dictaphone_recordings_title">Înregistrări</string>
+    <string name="dictaphone_recordings_empty">Nicio înregistrare încă. Apăsați microfonul pentru a începe.</string>
+    <string name="dictaphone_status_saving">Se salvează…</string>
+    <string name="dictaphone_rename_title">Redenumire înregistrare</string>
+    <string name="dictaphone_delete_title">Ștergere înregistrare</string>
+    <string name="dictaphone_delete_message">Ștergeți \"%1$s\"?</string>
+    <string name="dictaphone_delete_confirm">Ștergere</string>
+    <string name="audio_hub_dictaphone_title">Dictafon</string>
+    <string name="audio_hub_dictaphone_desc">Reportofon vocal salvat în Muzică</string>
+</resources>

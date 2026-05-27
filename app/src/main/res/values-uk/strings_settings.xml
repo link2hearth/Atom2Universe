@@ -80,8 +80,8 @@
     <string name="about_title">Про додаток</string>
     <string name="about_version_format">Версія %1$s (збірка %2$d)</string>
     <string name="about_version_unknown">Версія невідома</string>
-    <string name="about_description_title">Про A2U</string>
-    <string name="about_description">A2U — це комплексний аудіохаб для Android, що об\'єднує кілька аудіофункцій в одному додатку:\n\n• Музичний програвач з керуванням бібліотекою, плейлистами, обраним, редагуванням ID3-тегів та хмарною синхронізацією\n• MIDI-програвач з SoundFont-синтезом, режимом практики з падаючими нотами та підтримкою зовнішньої клавіатури\n• Веб-радіо зі станціями та обраним\n• Аудіоредактор для обрізки та базового редагування\n• Повнофункціональний створювач/редактор SoundFont SF2</string>
+    <string name="about_description_title">Про Atom²Universe</string>
+    <string name="about_description">Atom²Universe — Android-додаток «все в одному», що постійно розвивається навколо аудіо, науки, ігор та творчості, і включає наразі:\n\n• Музичний плеєр — бібліотека, плейлисти, еквалайзер DSP, редактор тегів ID3, синхронізація Google Drive, стримінг Navidrome\n• MIDI-плеєр — двигуни Sonivox EAS + FluidSynth SF2, ноти що падають, тренування з USB/Bluetooth-клавіатурою\n• Інтернет-радіо — пряма трансляція з обраними\n• Аудіоредактор — запис, монтаж &amp; ефекти (FFmpeg)\n• Диктофон — запис голосу з менеджером файлів\n• Творець SoundFont SF2 — створюйте власні інструменти\n• 26 Ігор — шахи, судоку, блекджек, пасьянс, 2048 та багато іншого\n• Творчі інструменти — редактор піксельної графіки, нескінченний холст, вікі-нотатки\n• Читання — читалка EPUB &amp; PDF, переглядач коміксів CBZ/CBR\n• Наука — інтерактивна таблиця Менделєєва (118 елементів)\n• Atom Clicker — idle-гра з колекцією гача</string>
     <string name="about_credits_title">Подяки</string>
     <string name="about_credits_subtitle">A2U використовує такі бібліотеки з відкритим кодом:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
@@ -100,6 +100,8 @@
     <string name="about_credit_okhttp_desc">Автор Square — HTTP-клієнт для мережевих запитів. Ліцензія Apache 2.0.</string>
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Спільнота FluidSynth — програмний синтезатор реального часу на основі специфікації SoundFont 2. Ліцензія LGPL 2.1.</string>
+    <string name="about_credit_karballo_name">Karballo</string>
+    <string name="about_credit_karballo_desc">Автор: Alberto Ruibal - Шаховий рушій для Java/Android, використовується для противників ШІ в шаховій грі. Ліцензія MIT.</string>
     <string name="about_license_notice">Усі бібліотеки використовуються відповідно до їхніх ліцензій.\nДякуємо всім учасникам відкритого коду!</string>
     <string name="about_privacy_title">Конфіденційність та дозволи</string>
     <string name="about_privacy_microphone">A2U запитує доступ до мікрофона для двох конкретних цілей:\n\n• Запис аудіо в Аудіоредакторі та Створювачі SoundFont\n• Візуалізація частотного спектру в реальному часі в Музичному програвачі (додаток слухає аудіовихід для відображення частотних кривих)\n\nМікрофон ніколи не використовується для інших цілей. Аудіо не записується, не передається і не зберігається без вашої явної дії в Аудіоредакторі або Створювачі SoundFont.</string>

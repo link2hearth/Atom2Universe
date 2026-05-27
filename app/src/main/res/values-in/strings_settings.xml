@@ -80,8 +80,8 @@
     <string name="about_title">Tentang</string>
     <string name="about_version_format">Versi %1$s (build %2$d)</string>
     <string name="about_version_unknown">Versi tidak diketahui</string>
-    <string name="about_description_title">Tentang A2U</string>
-    <string name="about_description">A2U adalah hub audio lengkap untuk Android, menggabungkan berbagai fitur audio dalam satu aplikasi:\n\n• Pemutar Musik dengan manajemen pustaka, daftar putar, favorit, pengeditan tag ID3, dan sinkronisasi cloud\n• Pemutar MIDI dengan sintesis SoundFont, mode latihan dengan not jatuh, dan dukungan keyboard eksternal\n• Radio Web dengan stasiun dan favorit\n• Editor Audio untuk memotong dan pengeditan dasar\n• Pembuat/editor SoundFont SF2 lengkap</string>
+    <string name="about_description_title">Tentang Atom²Universe</string>
+    <string name="about_description">Atom²Universe adalah aplikasi Android serba-ada yang terus berkembang seputar audio, sains, permainan, dan kreativitas, saat ini mencakup:\n\n• Pemutar Musik — perpustakaan, daftar putar, equalizer DSP, editor tag ID3, sinkronisasi Google Drive, streaming Navidrome\n• Pemutar MIDI — mesin Sonivox EAS + FluidSynth SF2, not jatuh, latihan keyboard USB/Bluetooth\n• Radio Web — streaming internet dengan favorit\n• Editor Audio — perekaman, pemangkasan &amp; efek (FFmpeg)\n• Diktafon — perekam suara dengan manajer file\n• Pembuat SoundFont SF2 — buat instrumen sendiri\n• 26 Permainan — catur, sudoku, blackjack, solitaire, 2048 dan banyak lagi\n• Alat Kreatif — editor pixel art, kanvas tak terbatas, catatan wiki\n• Membaca — pembaca EPUB &amp; PDF, penampil komik CBZ/CBR\n• Sains — tabel periodik interaktif (118 elemen)\n• Atom Clicker — game idle dengan koleksi gacha</string>
     <string name="about_credits_title">Penghargaan</string>
     <string name="about_credits_subtitle">A2U menggunakan pustaka open source berikut:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
@@ -100,6 +100,8 @@
     <string name="about_credit_okhttp_desc">Oleh Square — Klien HTTP untuk permintaan jaringan. Lisensi Apache 2.0.</string>
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Oleh komunitas FluidSynth — Synthesizer perangkat lunak real-time berdasarkan spesifikasi SoundFont 2. Lisensi LGPL 2.1.</string>
+    <string name="about_credit_karballo_name">Karballo</string>
+    <string name="about_credit_karballo_desc">Oleh Alberto Ruibal - Mesin catur untuk Java/Android, digunakan untuk lawan AI dalam permainan catur. Lisensi MIT.</string>
     <string name="about_license_notice">Semua pustaka digunakan sesuai dengan lisensi masing-masing.\nTerima kasih kepada semua kontributor open source!</string>
     <string name="about_privacy_title">Privasi &amp; Izin</string>
     <string name="about_privacy_microphone">A2U meminta akses mikrofon untuk dua tujuan khusus:\n\n• Merekam audio di Editor Audio dan Pembuat SoundFont\n• Visualisasi spektrum frekuensi real-time di Pemutar Musik (aplikasi mendengarkan output audio untuk menampilkan kurva frekuensi)\n\nMikrofon tidak pernah digunakan untuk tujuan lain. Tidak ada audio yang direkam, dikirim, atau disimpan tanpa tindakan eksplisit Anda di Editor Audio atau Pembuat SoundFont.</string>

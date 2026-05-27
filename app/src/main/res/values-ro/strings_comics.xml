@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_comics_title">Benzi desenate</string>
+    <string name="hub_comics_desc">Cititor PDF, CBZ și dosar de imagini</string>
+    <string name="comics_library_title">Bibliotecă benzi desenate</string>
+    <string name="comics_library_empty">Nicio bandă desenată încă</string>
+    <string name="comics_add_title">Adăugare bandă desenată</string>
+    <string name="comics_add_pdf">Fișier PDF</string>
+    <string name="comics_add_cbz">Fișier CBZ / ZIP</string>
+    <string name="comics_add_folder">Dosar de imagini</string>
+    <string name="comics_delete_title">Eliminare bandă desenată</string>
+    <string name="comics_delete_msg">Eliminați \"%s\" din bibliotecă?</string>
+    <string name="comics_delete_confirm">Eliminare</string>
+    <string name="comics_layout_title">Aspect pagină</string>
+    <string name="comics_layout_full">Pagină completă</string>
+    <string name="comics_layout_half_top">Jumătate sus</string>
+    <string name="comics_layout_half_left">Jumătate stânga (manga)</string>
+    <string name="comics_layout_half_right">Jumătate dreapta (manga)</string>
+    <string name="comics_error_open">Imposibil de deschis acest fișier</string>
+    <string name="comics_page_counter">%1$d / %2$d</string>
+    <string name="comics_add_library">Scanare dosar bibliotecă</string>
+    <string name="comics_scanning_title">Se scanează biblioteca…</string>
+    <string name="comics_scanning_found">%d benzi desenate găsite</string>
+    <string name="comics_delete_root_msg">Eliminați \"%s\" și toate benzile sale desenate din bibliotecă?</string>
+    <plurals name="comics_root_count">
+        <item quantity="one">%d bandă desenată</item>
+        <item quantity="other">%d benzi desenate</item>
+    </plurals>
+    <string name="comics_rescan">Rescanare</string>
+    <string name="comics_clear_all">Ștergere tot</string>
+    <string name="comics_clear_all_msg">Eliminați toate benzile desenate și bibliotecile din listă?</string>
+    <string name="comics_rescanning_title">Se rescanează…</string>
+    <string name="comics_toggle_view">Schimbare vizualizare</string>
+    <string name="comics_storage_perm_title">Accelerare scanare bibliotecă</string>
+    <string name="comics_storage_perm_msg">Acordarea accesului complet la stocare permite aplicației să scaneze biblioteca mult mai rapid. Fără acesta, scanarea folosește o metodă mai lentă.\n\nPuteți sări și scana oricum.</string>
+    <string name="comics_storage_perm_grant">Acordare acces</string>
+    <string name="comics_storage_perm_skip">Scanare oricum</string>
+    <string name="comics_section_root">(Alte benzi desenate)</string>
+    <string name="comics_series_count">%1$d benzi desenate</string>
+</resources>

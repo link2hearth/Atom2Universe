@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Înapoi</string>
+    <string name="hub_toggle_view">Schimbare vizualizare</string>
+    <string name="hub_edit_mode">Mod editare</string>
+    <string name="hub_confirm_edit">Editare finalizată</string>
+    <string name="notification_channel_audio_name">Redare audio</string>
+    <string name="notification_channel_audio_description">Menține redarea audio activă în fundal.</string>
+    <string name="hub_edit_tile">Editare placă</string>
+    <string name="hub_change_language">Schimbare limbă</string>
+    <string name="hub_select_language">Selectare limbă</string>
+    <string name="hub_settings">Setări</string>
+    <string name="confirm_return_menu_title">Confirmare</string>
+    <string name="confirm_return_menu_message">Doriți cu adevărat să reveniți la meniul principal?</string>
+    <string name="confirm_return_menu_yes">Da</string>
+    <string name="confirm_return_menu_no">Nu</string>
+    <string name="main_hub_clicker_stats_desc">Statistici clicker atomi</string>
+    <string name="hub_games_title">Jocuri</string>
+    <string name="hub_games_desc">Mini-jocuri: șah, sudoku, solitaire…</string>
+    <string name="hub_clicker_title">Clicker</string>
+    <string name="hub_clicker_desc">Clicker idle cripto cu gacha</string>
+    <string name="hub_creative_title">Creații</string>
+    <string name="hub_creative_desc">Editor pixel art și pânză</string>
+    <string name="banner_label_earth">Pământ</string>
+    <string name="banner_label_chess">Șah</string>
+    <string name="banner_label_draughts">Dame</string>
+    <string name="banner_label_blackjack">BlackJack</string>
+    <string name="banner_label_pipetap">PipeTap</string>
+    <string name="banner_label_music">Muzică</string>
+    <string name="hub_audio_title">Audio</string>
+    <string name="hub_audio_desc">Muzică, MIDI, radio și instrumente audio</string>
+    <string name="audio_sub_hub_title">Audio</string>
+    <string name="audio_sub_hub_subtitle">Muzică, MIDI, radio și instrumente</string>
+    <string name="hub_shortcut_add_title">Scurtătură rapidă</string>
+    <string name="hub_shortcut_add_message">Folosiți « %1$s » ca scurtătură rapidă pe placa hub-ului?</string>
+    <string name="hub_shortcut_exists_message">« %1$s » este deja o scurtătură. Mutați la prima poziție (Da) sau eliminați-o (Nu)?</string>
+    <string name="hub_shortcut_added">Scurtătură adăugată</string>
+    <string name="periodic_toggle_rarities_desc">Afișare/ascundere rarități</string>
+</resources>

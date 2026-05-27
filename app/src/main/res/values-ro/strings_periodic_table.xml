@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gacha_open_periodic_table">Deschidere tabel periodic</string>
+    <string name="periodic_info_atomic_number">Număr atomic</string>
+    <string name="periodic_info_mass">Masă</string>
+    <string name="periodic_info_period">Perioadă</string>
+    <string name="periodic_info_symbol">Simbol</string>
+    <string name="periodic_info_category">Categorie</string>
+    <string name="periodic_info_group">Grupă</string>
+    <string name="periodic_info_copies_badge">x%1$d</string>
+    <string name="periodic_info_hint">Apăsați pe nume pentru a vedea descrierea</string>
+    <string name="periodic_table_title">Tabelul periodic</string>
+
+    <string name="periodic_prop_phase">Fază</string>
+    <string name="periodic_prop_density">Densitate</string>
+    <string name="periodic_prop_melt">Punct de topire</string>
+    <string name="periodic_prop_boil">Punct de fierbere</string>
+    <string name="periodic_prop_block">Bloc orbital</string>
+    <string name="periodic_prop_shells">Straturi electronice</string>
+    <string name="periodic_prop_electronegativity">Electronegativitate</string>
+    <string name="periodic_prop_electron_config">Config. electronică</string>
+    <string name="periodic_prop_discovered_by">Descoperit de</string>
+    <string name="periodic_prop_named_by">Denumit de</string>
+    <string name="periodic_prop_appearance">Aspect</string>
+    <string name="periodic_prop_unknown">Necunoscut</string>
+    <string name="periodic_prop_kelvin_suffix"> K</string>
+    <string name="periodic_prop_density_suffix"> g/cm³</string>
+    <string name="periodic_prop_properties_title">Proprietăți fizice &amp; chimice</string>
+    <string name="periodic_atom_section_title">Model Bohr</string>
+    <string name="periodic_atom_protons">p</string>
+    <string name="periodic_atom_neutrons">n</string>
+    <string name="periodic_atom_electrons">e⁻</string>
+
+</resources>

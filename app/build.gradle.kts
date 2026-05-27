@@ -34,6 +34,7 @@ android {
             "nl",  // Néerlandais
             "pl",  // Polonais
             "pt",  // Portugais
+            "ro",  // Roumain
             "ru",  // Russe
             "tr",  // Turc
             "uk",  // Ukrainien

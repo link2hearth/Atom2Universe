@@ -80,8 +80,8 @@
     <string name="about_title">Σχετικά</string>
     <string name="about_version_format">Έκδοση %1$s (build %2$d)</string>
     <string name="about_version_unknown">Άγνωστη έκδοση</string>
-    <string name="about_description_title">Σχετικά με το A2U</string>
-    <string name="about_description">Το A2U είναι ένα ολοκληρωμένο κέντρο ήχου για Android, που συνδυάζει πολλαπλές λειτουργίες ήχου σε μια εφαρμογή:\n\n• Αναπαραγωγέας Μουσικής με διαχείριση βιβλιοθήκης, λίστες αναπαραγωγής, αγαπημένα, επεξεργασία ετικετών ID3 και συγχρονισμό στο νέφος\n• Αναπαραγωγέας MIDI με σύνθεση SoundFont, λειτουργία εξάσκησης με πτώτουσες νότες και υποστήριξη εξωτερικού πληκτρολογίου\n• Web Radio με σταθμούς και αγαπημένα\n• Επεξεργαστής Ήχου για κόψιμο και βασική επεξεργασία\n• Πλήρης δημιουργός/επεξεργαστής SoundFont SF2</string>
+    <string name="about_description_title">Σχετικά με το Atom²Universe</string>
+    <string name="about_description">Το Atom²Universe είναι μια συνεχώς εξελισσόμενη all-in-one εφαρμογή Android γύρω από ήχο, επιστήμη, παιχνίδια και δημιουργικότητα, που περιλαμβάνει:\n\n• Αναπαραγωγή Μουσικής — βιβλιοθήκη, λίστες αναπαραγωγής, ισοσταθμιστής DSP, επεξεργαστής ετικετών ID3, συγχρονισμός Google Drive, streaming Navidrome\n• Αναπαραγωγή MIDI — κινητήρες Sonivox EAS + FluidSynth SF2, πτώση νοτών, εκπαίδευση πληκτρολογίου USB/Bluetooth\n• Διαδικτυακό Ραδιόφωνο — ζωντανό streaming με αγαπημένα\n• Επεξεργαστής Ήχου — εγγραφή, κόψιμο &amp; εφέ (FFmpeg)\n• Δικτάφωνο — εγγραφή φωνής με διαχείριση αρχείων\n• Δημιουργός SoundFont SF2 — φτιάξτε δικά σας όργανα\n• 26 Παιχνίδια — σκάκι, σουντόκου, blackjack, solitaire, 2048 και πολλά άλλα\n• Δημιουργικά Εργαλεία — επεξεργαστής pixel art, άπειρος καμβάς, σημειώσεις wiki\n• Ανάγνωση — αναγνώστης EPUB &amp; PDF, προβολή comics CBZ/CBR\n• Επιστήμη — διαδραστικός περιοδικός πίνακας (118 στοιχεία)\n• Atom Clicker — idle παιχνίδι με gacha συλλογή</string>
     <string name="about_credits_title">Αναγνωρίσεις</string>
     <string name="about_credits_subtitle">Το A2U χρησιμοποιεί τις ακόλουθες βιβλιοθήκες ανοικτού κώδικα:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
@@ -100,6 +100,8 @@
     <string name="about_credit_okhttp_desc">Από Square - Πελάτης HTTP για αιτήματα δικτύου. Άδεια Apache 2.0.</string>
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Από την κοινότητα FluidSynth - Συνθεσιοποιητής λογισμικού σε πραγματικό χρόνο βασισμένος στην προδιαγραφή SoundFont 2. Άδεια LGPL 2.1.</string>
+    <string name="about_credit_karballo_name">Karballo</string>
+    <string name="about_credit_karballo_desc">Από τον Alberto Ruibal - Κινητήρας σκακιού για Java/Android, χρησιμοποιείται για αντιπάλους ΤΝ στο παιχνίδι σκακιού. Άδεια MIT.</string>
     <string name="about_license_notice">Όλες οι βιβλιοθήκες χρησιμοποιούνται σύμφωνα με τις αντίστοιχες άδειές τους.\nΕυχαριστούμε όλους τους συνεισφέροντες ανοικτού κώδικα!</string>
     <string name="about_privacy_title">Απόρρητο &amp; Άδειες</string>
     <string name="about_privacy_microphone">Η A2U ζητά πρόσβαση στο μικρόφωνο για δύο συγκεκριμένους σκοπούς:\n\n• Εγγραφή ήχου στον Επεξεργαστή Ήχου και στον Δημιουργό SoundFont\n• Οπτικοποίηση φάσματος συχνοτήτων σε πραγματικό χρόνο στον Αναπαραγωγέα Μουσικής (η εφαρμογή ακούει την ηχητική έξοδο για να εμφανίσει τις καμπύλες συχνοτήτων)\n\nΤο μικρόφωνο δεν χρησιμοποιείται ποτέ για άλλο σκοπό. Κανένας ήχος δεν εγγράφεται, μεταδίδεται ή αποθηκεύεται χωρίς τη ρητή ενέργειά σας στον Επεξεργαστή Ήχου ή στον Δημιουργό SoundFont.</string>

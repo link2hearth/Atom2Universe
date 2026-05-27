@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="midi_nav_library">Bibliotecă</string>
+    <string name="midi_nav_playlists">Liste de redare</string>
+    <string name="midi_nav_now_playing">Se redă acum</string>
+    <string name="midi_nav_practice">Practică</string>
+    <string name="midi_no_track_playing">Nicio piesă în redare</string>
+    <string name="midi_folder_scan_complete">Scanare completă: %1$d fișiere MIDI găsite</string>
+    <string name="midi_library_empty">Niciun fișier MIDI. Selectați un dosar pentru scanare.</string>
+    <string name="midi_select_soundfont">Sintetizator</string>
+    <string name="midi_select_folder">Selectare dosar MIDI</string>
+    <string name="midi_refresh_library">Reîmprospătare bibliotecă</string>
+    <string name="midi_clear_library">Ștergere bibliotecă</string>
+    <string name="midi_clear_library_confirm">Sigur doriți să ștergeți întreaga bibliotecă MIDI?</string>
+    <string name="midi_library_cleared">Bibliotecă ștearsă</string>
+    <string name="midi_library_refreshing">Reîmprospătare bibliotecă…</string>
+    <string name="midi_action_previous">Anterior</string>
+    <string name="midi_action_next">Următor</string>
+    <string name="midi_action_shuffle">Amestecare</string>
+    <string name="midi_action_repeat">Repetare</string>
+    <string name="midi_shuffle_scope_title">Domeniu amestecare</string>
+    <string name="midi_shuffle_scope_current">Album/dosar curent</string>
+    <string name="midi_shuffle_scope_artist">Artist curent (toate albumele)</string>
+    <string name="midi_shuffle_scope_library">Întreaga bibliotecă</string>
+    <string name="midi_channels_active">Piste active</string>
+    <string name="midi_no_channels">Nicio pistă detectată</string>
+    <string name="midi_mute_track">Dezactivare pistă</string>
+    <string name="midi_unmute_track">Activare pistă</string>
+    <string name="midi_toggle_keyboard">Afișare/ascundere tastatură</string>
+    <string name="midi_practice_mode">Mod practică</string>
+    <string name="midi_refresh_keyboards">Reîmprospătare tastaturi</string>
+    <string name="midi_keyboards_refreshed">Tastaturi reîmprospătate</string>
+    <string name="midi_two_hands_practice">Practică cu două mâini</string>
+    <string name="midi_favorite">Favorit</string>
+    <string name="midi_added_to_favorites">Adăugat la favorite</string>
+    <string name="midi_removed_from_favorites">Eliminat din favorite</string>
+    <string name="midi_create_playlist">Listă de redare nouă</string>
+    <string name="midi_playlist_name_hint">Numele listei de redare</string>
+    <string name="midi_create">Creare</string>
+    <string name="midi_cancel">Anulare</string>
+    <string name="midi_playlist_name_empty">Numele nu poate fi gol</string>
+    <string name="midi_playlist_created">Listă de redare creată: %1$s</string>
+    <string name="midi_rename">Redenumire</string>
+    <string name="midi_delete">Ștergere</string>
+    <string name="midi_rename_playlist">Redenumire listă de redare</string>
+    <string name="midi_playlist_renamed">Listă de redare redenumită</string>
+    <string name="midi_delete_playlist">Ștergere listă de redare</string>
+    <string name="midi_delete_playlist_confirm">Ștergeți lista de redare \"%1$s\"?</string>
+    <string name="midi_playlist_deleted">Listă de redare ștearsă</string>
+    <string name="midi_clear_playlist">Golire listă de redare</string>
+    <string name="midi_clear_playlist_confirm">Goliți toate pistele din \"%1$s\"?</string>
+    <string name="midi_clear">Golire</string>
+    <string name="midi_playlist_cleared">Listă de redare golită</string>
+    <plurals name="midi_track_count">
+        <item quantity="one">%d pistă</item>
+        <item quantity="other">%d piste</item>
+    </plurals>
+    <string name="midi_playlists_empty">Nicio listă de redare.\nCreați una!</string>
+    <string name="midi_playlist_empty">Această listă de redare este goală.</string>
+    <string name="midi_shuffle_play">Redare aleatorie</string>
+    <string name="midi_remove_from_playlist">Eliminare din lista de redare</string>
+    <string name="midi_track_removed">Pistă eliminată</string>
+    <string name="midi_add_to_playlist">Adăugare în lista de redare</string>
+    <string name="midi_add_to_playlist_title">Adăugare \"%1$s\"</string>
+    <string name="midi_new_playlist">+ Listă de redare nouă</string>
+    <string name="midi_loading_playlists">Se încarcă…</string>
+    <string name="midi_track_added_to_playlist">Adăugat în %1$s</string>
+    <string name="midi_track_already_in_playlist">Deja în această listă de redare</string>
+    <string name="midi_track_info">Informații</string>
+    <string name="midi_info_loading">Analiză fișier…</string>
+    <string name="midi_scan_loading_title">Se scanează…</string>
+    <string name="midi_scan_loading_progress">%1$d / %2$d fișiere</string>
+    <string name="midi_scan_loading_counting">Numărare fișiere…</string>
+    <string name="midi_audio_settings">Setări audio</string>
+    <string name="midi_audio_normalization">Normalizare volum</string>
+    <string name="midi_audio_normalization_desc">Reduce vârfurile de volum pentru a evita distorsiunea</string>
+    <string name="midi_audio_master_gain">Volum principal</string>
+    <string name="midi_audio_reverb">Reverberație</string>
+    <string name="midi_reverb_off">Oprit</string>
+    <string name="midi_reverb_large_hall">Sală mare</string>
+    <string name="midi_reverb_hall">Sală</string>
+    <string name="midi_reverb_chamber">Cameră</string>
+    <string name="midi_reverb_room">Încăpere</string>
+    <string name="midi_sf2_settings">Motor SF2</string>
+    <string name="midi_sf2_settings_desc">Setări sintetizator SoundFont personalizat</string>
+    <string name="midi_sf2_velocity_curve">Curbă viteză</string>
+    <string name="midi_sf2_velocity_linear">Liniară</string>
+    <string name="midi_sf2_velocity_linear_desc">Mapare directă (răspuns plat)</string>
+    <string name="midi_sf2_velocity_concave">Concavă</string>
+    <string name="midi_sf2_velocity_concave_desc">Mai mult control la viteze mici (recomandat)</string>
+    <string name="midi_sf2_velocity_soft">Blândă</string>
+    <string name="midi_sf2_velocity_soft_desc">Foarte blând la viteze mici (pian expresiv)</string>
+    <string name="midi_sf2_velocity_hard">Dură</string>
+    <string name="midi_sf2_velocity_hard_desc">Răspuns agresiv (tobe, sunete puternice)</string>
+    <string name="midi_eq_title">Egalizator</string>
+    <string name="midi_eq_preset_flat">Plat</string>
+    <string name="midi_eq_preset_rock">Rock</string>
+    <string name="midi_eq_preset_jazz">Jazz</string>
+    <string name="midi_eq_preset_piano">Pian</string>
+    <string name="midi_eq_preset_bass">Amplificare bași</string>
+    <string name="midi_player_not_connected">Player neconectat</string>
+    <string name="midi_no_track_current">Nicio pistă curentă</string>
+    <string name="midi_no_tracks_found">Nicio pistă găsită</string>
+    <string name="midi_error_message">Eroare: %1$s</string>
+    <string name="midi_service_not_connected">Serviciu de redare neconectat</string>
+    <string name="midi_importing_soundfont">Import SoundFont…</string>
+    <string name="midi_scanning_folder">Scanare dosar MIDI…</string>
+    <string name="midi_synthesizer_selection">Sintetizator</string>
+    <string name="midi_synth_sonivox">Sonivox (integrat)</string>
+    <string name="midi_synth_sonivox_desc">Sintetizator integrat ușor cu sunete General MIDI. Nu sunt necesare fișiere externe.</string>
+    <string name="midi_synth_sf2_tip">💡 Sfat: Pentru cele mai bune rezultate, folosiți un fișier SF2 de calitate cu mostre la 44kHz. Preferați SoundFont-uri între 100 și 500 MB în funcție de dispozitivul dvs. SoundFont-urile mici comprimate pot cauza probleme audio la pasaje rapide.</string>
+    <string name="midi_synth_import_sf2">Import SF2</string>
+    <string name="midi_synth_change_sf2">Schimbare SF2</string>
+    <string name="midi_synth_remove_sf2">Eliminare</string>
+    <string name="midi_synth_switched_sonivox">Schimbat la sintetizatorul Sonivox</string>
+    <string name="midi_synth_switched_sf2">Schimbat la SoundFont: %1$s</string>
+    <string name="midi_synth_sf2_removed">SoundFont eliminat</string>
+    <string name="midi_synth_hybrid">Hibrid (SF2 + Sonivox)</string>
+    <string name="midi_synth_switched_hybrid">Schimbat la modul hibrid cu %1$d instrumente SF2</string>
+    <string name="midi_synth_fluidsynth">FluidSynth</string>
+    <string name="midi_synth_fluidsynth_desc">Motor de sinteză open-source recunoscut. Importat ca bibliotecă nativă.</string>
+    <string name="midi_synth_switched_fluidsynth">Schimbat la FluidSynth: %1$s</string>
+    <string name="midi_synth_sf2_engines_header">Motoare SoundFont</string>
+    <string name="midi_synth_sf2_engines_subtitle">Necesită un fișier SoundFont (.sf2)</string>
+    <string name="midi_synth_a2u">A2U (Experimental)</string>
+    <string name="midi_synth_a2u_desc">Motor de sinteză integrat, creat pentru această aplicație.</string>
+    <string name="midi_synth_active_badge">ACTIV</string>
+    <string name="midi_synth_no_soundfont">Niciun SoundFont importat</string>
+    <string name="midi_synth_soundfont_section">SoundFont</string>
+    <string name="midi_synth_hybrid_mode">Mod hibrid</string>
+    <string name="practice_marker_added">Marcaj adăugat: %1$s</string>
+    <string name="practice_marker_position">Poziție marcaj: %1$s</string>
+    <string name="practice_accompaniment">Acompaniament</string>
+    <string name="practice_i_play">Eu cânt</string>
+    <string name="practice_keyboard_leds">LED-uri tastatură</string>
+    <string name="practice_mute_led_sound">Dezactivare sunet LED</string>
+    <string name="practice_mute_internal_synth">Dezactivare sintetizator intern pentru notele tastaturii</string>
+    <string name="practice_speed">Viteză</string>
+    <string name="practice_speed_min">0,1x</string>
+    <string name="practice_speed_max">1,0x</string>
+    <string name="practice_time_zero">0:00</string>
+    <string name="practice_time_remaining">-%1$s</string>
+    <string name="practice_free_mode">Cântare liberă</string>
+    <string name="practice_left_hand_only">Doar mâna stângă</string>
+    <string name="practice_right_hand_only">Doar mâna dreaptă</string>
+    <string name="practice_both_hands">Ambele mâini</string>
+    <string name="practice_left_hand_sound">Sunet mâna stângă</string>
+    <string name="practice_right_hand_sound">Sunet mâna dreaptă</string>
+    <string name="practice_both_hands_sound">Sunet ambele mâini</string>
+    <string name="practice_octave_down">Coboare o octavă</string>
+    <string name="practice_octave_up">Urcare o octavă</string>
+    <string name="practice_less_octaves">Mai puține octave</string>
+    <string name="practice_more_octaves">Mai multe octave</string>
+    <string name="practice_octave_count">%d oct.</string>
+    <string name="practice_current_instrument">%1$d: %2$s</string>
+    <string name="practice_select_instrument">Selectare instrument</string>
+    <string name="practice_sf2_load_error">Imposibil de încărcat SoundFont SF2. Verificați setările sintetizatorului.</string>
+    <string name="practice_wait_mode">Mod așteptare</string>
+    <string name="practice_sheet_music">Partitură</string>
+    <string name="practice_recording_enabled">Înregistrare practică activată</string>
+    <string name="practice_recording_enabled_cleared">Înregistrare practică activată (înregistrarea anterioară ștearsă)</string>
+    <string name="practice_recording_filename">Înregistrare_%1$s</string>
+    <string name="practice_volume_percent">%1$d%%</string>
+    <string name="practice_countdown">Întârziere start</string>
+    <string name="practice_countdown_title">Întârziere Start</string>
+    <string name="practice_countdown_description">Ajustați întârzierea înainte ca MIDI-ul să înceapă redarea</string>
+    <string name="practice_countdown_seconds">%d secunde</string>
+    <string name="practice_countdown_disabled">Dezactivat</string>
+    <string name="practice_countdown_start_on_play">Start când încep să cânt</string>
+    <string name="practice_countdown_start_on_play_desc">MIDI-ul va porni imediat ce cântați prima notă</string>
+    <string name="practice_countdown_active">Pornire în %d…</string>
+    <string name="practice_countdown_waiting">Se așteaptă să cântați…</string>
+    <string name="practice_countdown_cancelled">Numărătoare inversă anulată</string>
+    <string name="practice_recording_disabled">Înregistrare practică dezactivată</string>
+    <string name="practice_wait_mode_enabled">Mod așteptare activat</string>
+    <string name="practice_wait_mode_disabled">Mod așteptare dezactivat</string>
+    <string name="practice_switch_to_free_mode_title">Comutare la Cântare Liberă?</string>
+    <string name="practice_switch_to_free_mode_message">Aceasta va descărca fișierul MIDI curent. Îl puteți reîncărca din bibliotecă.</string>
+    <string name="practice_switch_confirm">Comutare</string>
+    <string name="practice_accompaniment_disabled_in_wait_mode">Orchestrație dezactivată în modul așteptare</string>
+    <string name="practice_hold_duration_validation">Validare notă ținută</string>
+    <string name="practice_hold_duration_enabled">Validare ținere activată</string>
+    <string name="practice_hold_duration_disabled">Validare ținere dezactivată</string>
+    <string name="practice_timing_tolerance">Toleranță timing</string>
+    <string name="practice_timing_tolerance_strict">Strict (30ms)</string>
+    <string name="practice_timing_tolerance_normal">Normal (60ms)</string>
+    <string name="practice_timing_tolerance_relaxed">Relaxat (120ms)</string>
+    <string name="practice_timing_tolerance_very_relaxed">Foarte relaxat (200ms)</string>
+    <string name="practice_visual_style">Stil vizual</string>
+    <string name="practice_scoring_display">Afișare punctaj</string>
+    <string name="practice_scoring_display_title">Afișare Punctaj</string>
+    <string name="practice_scoring_preset_encouragement">Încurajare</string>
+    <string name="practice_scoring_preset_full">Statistici complete</string>
+    <string name="practice_scoring_preset_minimal">Minimal</string>
+    <string name="practice_scoring_preset_custom">Personalizat</string>
+    <string name="practice_scoring_show_score">Punctaj</string>
+    <string name="practice_scoring_show_accuracy">Precizie</string>
+    <string name="practice_scoring_show_streak">Serie curentă</string>
+    <string name="practice_scoring_show_best_streak">Cea mai bună serie</string>
+    <string name="practice_scoring_show_good_notes">Note bune</string>
+    <string name="practice_scoring_show_perfect_notes">Note perfecte</string>
+    <string name="practice_scoring_show_missed_notes">Note ratate</string>
+    <string name="practice_scoring_show_combo">Multiplicator combo</string>
+    <string name="practice_scoring_show_grade">Calificativ</string>
+    <string name="practice_scoring_compact">Mod compact</string>
+    <string name="practice_scoring_animations">Animații</string>
+    <string name="practice_scoring_streak_popups">Ferestre serie</string>
+    <string name="practice_scoring_disabled">Afișare punctaj dezactivată</string>
+    <string name="practice_scoring_config_saved">Afișare punctaj actualizată</string>
+    <string name="practice_results_title">Sesiune Completă</string>
+    <string name="practice_results_accuracy">Precizie</string>
+    <string name="practice_results_perfect">Note perfecte</string>
+    <string name="practice_results_good">Note bune</string>
+    <string name="practice_results_missed">Note ratate</string>
+    <string name="practice_results_wrong">Note greșite</string>
+    <string name="practice_results_best_streak">Cea mai bună serie</string>
+    <string name="practice_results_close">Închidere</string>
+    <string name="midi_keyboard_connected">Tastatură MIDI conectată</string>
+    <string name="midi_keyboard_settings">Setări Tastatură MIDI</string>
+    <string name="midi_keyboard_info_section">Informații</string>
+    <string name="midi_keyboard_config_section">Configurare</string>
+    <string name="midi_keyboard_name">Nume</string>
+    <string name="midi_keyboard_manufacturer">Producător</string>
+    <string name="midi_keyboard_connection">Conexiune</string>
+    <string name="midi_keyboard_connection_usb">USB</string>
+    <string name="midi_keyboard_connection_bluetooth">Bluetooth</string>
+    <string name="midi_keyboard_connection_virtual">Virtual</string>
+    <string name="midi_keyboard_ports">Porturi</string>
+    <string name="midi_keyboard_ports_format">%1$d intrări / %2$d ieșiri</string>
+    <string name="midi_keyboard_led_channel">Canal LED</string>
+    <string name="midi_keyboard_octave_offset">Decalaj octavă LED</string>
+    <string name="midi_keyboard_octave_offset_desc">Deplasați notele LED pentru a se potrivi cu gama tastaturii dvs.</string>
+    <string name="midi_keyboard_octave_minus">Octavă mai joasă</string>
+    <string name="midi_keyboard_octave_plus">Octavă mai înaltă</string>
+    <string name="gm_instrument_unknown">Necunoscut</string>
+    <string name="gm_drum_channel">Tobe</string>
+    <string name="gm_percussion_format">Percuție %d</string>
+    <string name="gm_category_piano">Pian</string>
+    <string name="gm_category_chromatic_percussion">Percuție cromatică</string>
+    <string name="gm_category_organ">Orgă</string>
+    <string name="gm_category_guitar">Chitară</string>
+    <string name="gm_category_bass">Bas</string>
+    <string name="gm_category_strings">Coarde</string>
+    <string name="gm_category_ensemble">Ansamblu</string>
+    <string name="gm_category_brass">Alamă</string>
+    <string name="gm_category_reed">Limbă</string>
+    <string name="gm_category_pipe">Fluier</string>
+    <string name="gm_category_synth_lead">Sintetizator solo</string>
+    <string name="gm_category_synth_pad">Sintetizator pad</string>
+    <string name="gm_category_synth_fx">Efecte sintetizator</string>
+    <string name="gm_category_ethnic">Etnic</string>
+    <string name="gm_category_percussive">Percutiv</string>
+    <string name="gm_category_sound_fx">Efecte sonore</string>
+    <string name="gm_category_other">Altele</string>
+    <string name="gm_drum_35">Tobă mare acustică</string>
+    <string name="gm_drum_36">Tobă mare 1</string>
+    <string name="gm_drum_37">Lovitură laterală</string>
+    <string name="gm_drum_38">Tobă mică acustică</string>
+    <string name="gm_drum_39">Bătaie din palme</string>
+    <string name="gm_drum_40">Tobă mică electrică</string>
+    <string name="gm_drum_41">Tom jos podea</string>
+    <string name="gm_drum_42">Hi-Hat închis</string>
+    <string name="gm_drum_43">Tom înalt podea</string>
+    <string name="gm_drum_44">Hi-Hat pedală</string>
+    <string name="gm_drum_45">Tom jos</string>
+    <string name="gm_drum_46">Hi-Hat deschis</string>
+    <string name="gm_drum_47">Tom mediu-jos</string>
+    <string name="gm_drum_48">Tom mediu-înalt</string>
+    <string name="gm_drum_49">Cinel crash 1</string>
+    <string name="gm_drum_50">Tom înalt</string>
+    <string name="gm_drum_51">Cinel ride 1</string>
+    <string name="gm_drum_52">Cinel chinezesc</string>
+    <string name="gm_drum_53">Clopot ride</string>
+    <string name="gm_drum_54">Tamburină</string>
+    <string name="gm_drum_55">Cinel splash</string>
+    <string name="gm_drum_56">Cowbell</string>
+    <string name="gm_drum_57">Cinel crash 2</string>
+    <string name="gm_drum_58">Vibraslap</string>
+    <string name="gm_drum_59">Cinel ride 2</string>
+    <string name="gm_drum_60">Bongo înalt</string>
+    <string name="gm_drum_61">Bongo jos</string>
+    <string name="gm_drum_62">Conga înaltă surdă</string>
+    <string name="gm_drum_63">Conga înaltă deschisă</string>
+    <string name="gm_drum_64">Conga joasă</string>
+    <string name="gm_drum_65">Timbal înalt</string>
+    <string name="gm_drum_66">Timbal jos</string>
+    <string name="gm_drum_67">Agogo înalt</string>
+    <string name="gm_drum_68">Agogo jos</string>
+    <string name="gm_drum_69">Cabasa</string>
+    <string name="gm_drum_70">Maracas</string>
+    <string name="gm_drum_71">Fluier scurt</string>
+    <string name="gm_drum_72">Fluier lung</string>
+    <string name="gm_drum_73">Guiro scurt</string>
+    <string name="gm_drum_74">Guiro lung</string>
+    <string name="gm_drum_75">Claves</string>
+    <string name="gm_drum_76">Woodblock înalt</string>
+    <string name="gm_drum_77">Woodblock jos</string>
+    <string name="gm_drum_78">Cuica surdă</string>
+    <string name="gm_drum_79">Cuica deschisă</string>
+    <string name="gm_drum_80">Triunghi surd</string>
+    <string name="gm_drum_81">Triunghi deschis</string>
+    <string-array name="gm_instruments">
+        <item>Pian cu coadă acustic</item>
+        <item>Pian acustic luminos</item>
+        <item>Pian electric cu coadă</item>
+        <item>Pian Honky-tonk</item>
+        <item>Pian electric 1</item>
+        <item>Pian electric 2</item>
+        <item>Clavecin</item>
+        <item>Clavinet</item>
+        <item>Celestă</item>
+        <item>Glockenspiel</item>
+        <item>Cutie muzicală</item>
+        <item>Vibrafon</item>
+        <item>Marimba</item>
+        <item>Xilofon</item>
+        <item>Clopote tubulare</item>
+        <item>Dulcimer</item>
+        <item>Orgă cu tirant</item>
+        <item>Orgă percutivă</item>
+        <item>Orgă rock</item>
+        <item>Orgă de biserică</item>
+        <item>Orgă cu limbă</item>
+        <item>Acordeon</item>
+        <item>Armonică</item>
+        <item>Acordeon tango</item>
+        <item>Chitară acustică (nylon)</item>
+        <item>Chitară acustică (oțel)</item>
+        <item>Chitară electrică (jazz)</item>
+        <item>Chitară electrică (curată)</item>
+        <item>Chitară electrică (surdă)</item>
+        <item>Chitară overdrive</item>
+        <item>Chitară cu distorsie</item>
+        <item>Armonice chitară</item>
+        <item>Bas acustic</item>
+        <item>Bas electric (deget)</item>
+        <item>Bas electric (pana)</item>
+        <item>Bas fără taste</item>
+        <item>Slap Bas 1</item>
+        <item>Slap Bas 2</item>
+        <item>Bas sintetizat 1</item>
+        <item>Bas sintetizat 2</item>
+        <item>Vioară</item>
+        <item>Violă</item>
+        <item>Violoncel</item>
+        <item>Contrabas</item>
+        <item>Coarde tremolo</item>
+        <item>Coarde pizzicato</item>
+        <item>Harpă orchestrală</item>
+        <item>Timpane</item>
+        <item>Ansamblu coarde 1</item>
+        <item>Ansamblu coarde 2</item>
+        <item>Coarde sintetizate 1</item>
+        <item>Coarde sintetizate 2</item>
+        <item>Cor voci</item>
+        <item>Voci Oh</item>
+        <item>Voce sintetizată</item>
+        <item>Lovitură orchestrală</item>
+        <item>Trompetă</item>
+        <item>Trombon</item>
+        <item>Tubă</item>
+        <item>Trompetă surdă</item>
+        <item>Corn francez</item>
+        <item>Secțiune alamă</item>
+        <item>Alamă sintetizată 1</item>
+        <item>Alamă sintetizată 2</item>
+        <item>Saxofon sopran</item>
+        <item>Saxofon alto</item>
+        <item>Saxofon tenor</item>
+        <item>Saxofon bariton</item>
+        <item>Oboi</item>
+        <item>Corn englezesc</item>
+        <item>Fagot</item>
+        <item>Clarinet</item>
+        <item>Piccolo</item>
+        <item>Flaut</item>
+        <item>Recorder</item>
+        <item>Flaut Pan</item>
+        <item>Sticlă suflată</item>
+        <item>Shakuhachi</item>
+        <item>Fluier</item>
+        <item>Ocarina</item>
+        <item>Lider 1 (pătrat)</item>
+        <item>Lider 2 (ferăstrău)</item>
+        <item>Lider 3 (calliope)</item>
+        <item>Lider 4 (chiff)</item>
+        <item>Lider 5 (charang)</item>
+        <item>Lider 6 (voce)</item>
+        <item>Lider 7 (cvinte)</item>
+        <item>Lider 8 (bas + lider)</item>
+        <item>Pad 1 (new age)</item>
+        <item>Pad 2 (cald)</item>
+        <item>Pad 3 (polysynth)</item>
+        <item>Pad 4 (cor)</item>
+        <item>Pad 5 (cu arcuș)</item>
+        <item>Pad 6 (metalic)</item>
+        <item>Pad 7 (halo)</item>
+        <item>Pad 8 (măturat)</item>
+        <item>FX 1 (ploaie)</item>
+        <item>FX 2 (coloană sonoră)</item>
+        <item>FX 3 (cristal)</item>
+        <item>FX 4 (atmosferă)</item>
+        <item>FX 5 (luminozitate)</item>
+        <item>FX 6 (goblini)</item>
+        <item>FX 7 (ecouri)</item>
+        <item>FX 8 (sci-fi)</item>
+        <item>Sitar</item>
+        <item>Banjo</item>
+        <item>Shamisen</item>
+        <item>Koto</item>
+        <item>Kalimba</item>
+        <item>Cimpoi</item>
+        <item>Fiddle</item>
+        <item>Shanai</item>
+        <item>Clopoțel</item>
+        <item>Agogo</item>
+        <item>Tobe de oțel</item>
+        <item>Woodblock</item>
+        <item>Tobă taiko</item>
+        <item>Tom melodic</item>
+        <item>Tobă sintetizată</item>
+        <item>Cinel inversat</item>
+        <item>Zgomot fret chitară</item>
+        <item>Zgomot respirație</item>
+        <item>Mal de mare</item>
+        <item>Ciripitul păsărilor</item>
+        <item>Sunet telefon</item>
+        <item>Elicopter</item>
+        <item>Aplauze</item>
+        <item>Împușcătură</item>
+    </string-array>
+    <string name="practice_record">Înregistrare</string>
+    <string name="practice_no_notes_recorded">Nicio notă înregistrată</string>
+    <string name="practice_recording_max_duration">Înregistrare oprită - durată maximă atinsă (30 min)</string>
+    <string name="practice_export_title">Export înregistrare</string>
+    <string name="practice_export_filename">Nume fișier</string>
+    <string name="practice_export_format_midi">MIDI (.mid)</string>
+    <string name="practice_export_format_wav">WAV (.wav)</string>
+    <string name="practice_export_format_wav_disabled">WAV (.wav) - necesită SoundFont SF2</string>
+    <string name="practice_export_button">Export</string>
+    <string name="practice_export_success">Exportat în %s</string>
+    <string name="practice_export_error">Eroare la export: %s</string>
+</resources>

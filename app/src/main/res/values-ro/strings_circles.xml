@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_title">Cercuri</string>
+    <string name="circles_back">Înapoi</string>
+    <string name="circles_diff_easy">Ușor</string>
+    <string name="circles_diff_medium">Mediu</string>
+    <string name="circles_diff_hard">Greu</string>
+    <string name="circles_label_seed">Sămânță:</string>
+    <string name="circles_label_moves">Mișcări:</string>
+    <string name="circles_label_reward">Recompensă:</string>
+    <string name="circles_btn_new">Nou</string>
+    <string name="circles_btn_restart">Repornire</string>
+    <string name="circles_btn_hint">Indiciu</string>
+    <string name="circles_btn_again">Joacă din nou</string>
+    <string name="circles_btn_next">Nivelul următor</string>
+    <string name="circles_win_title">Rezolvat!</string>
+    <string name="circles_win_message">Sincronizat în %1$d mișcare(i)!</string>
+    <string name="circles_hint_default">Aveți nevoie de ajutor? Apăsați Indiciu pentru a juca automat cea mai bună mișcare. Folosirea indiciului dezactivează recompensa.</string>
+    <string name="circles_hint_used">Indiciu folosit — nicio recompensă pentru acest puzzle.</string>
+    <string name="circles_hint_solved">Puzzle rezolvat! Începeți unul nou pentru a continua.</string>
+    <string name="circles_toast_reward">Cercuri: +%1$d neutrino(ni)!</string>
+    <string name="circles_toast_reward_disabled">Cercuri: nicio recompensă — indiciu a fost folosit.</string>
+    <string name="circles_hub_title">Cercuri</string>
+    <string name="circles_hub_desc">Rotiți inelele pentru a alinia toate culorile</string>
+</resources>

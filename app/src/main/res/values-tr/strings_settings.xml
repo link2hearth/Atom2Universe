@@ -80,8 +80,8 @@
     <string name="about_title">Hakkında</string>
     <string name="about_version_format">Sürüm %1$s (yapı %2$d)</string>
     <string name="about_version_unknown">Sürüm bilinmiyor</string>
-    <string name="about_description_title">A2U Hakkında</string>
-    <string name="about_description">A2U, birden fazla ses özelliğini tek bir uygulamada birleştiren kapsamlı bir Android ses merkezi:\n\n• Kütüphane yönetimi, çalma listeleri, favoriler, ID3 etiketi düzenleme ve bulut senkronizasyonu ile Müzik Oynatıcı\n• SoundFont sentezi, düşen notalarla pratik modu ve harici klavye desteği ile MIDI Oynatıcı\n• İstasyonlar ve favoriler ile Web Radyo\n• Kırpma ve temel düzenleme için Ses Düzenleyici\n• Tam özellikli SoundFont SF2 oluşturucu/düzenleyici</string>
+    <string name="about_description_title">Atom²Universe Hakkında</string>
+    <string name="about_description">Atom²Universe, ses, bilim, oyunlar ve yaratıcılık etrafında sürekli gelişen hepsi bir arada bir Android uygulamasıdır ve şu anda şunları içermektedir:\n\n• Müzik Çalar — kitaplık, oynatma listeleri, ekolayzır DSP, ID3 etiketi düzenleyici, Google Drive senkronizasyonu, Navidrome akışı\n• MIDI Çalar — Sonivox EAS + FluidSynth SF2 motorları, düşen notalar, USB/Bluetooth klavye antrenmanı\n• Web Radyosu — favorilerle internet akışı\n• Ses Düzenleyici — kayıt, kırpma &amp; efektler (FFmpeg)\n• Diktafon — dosya yöneticili ses kaydedici\n• SF2 SoundFont Oluşturucu — kendi enstrümanlarını yap\n• 26 Oyun — satranç, sudoku, blackjack, solitaire, 2048 ve daha fazlası\n• Yaratıcı Araçlar — piksel sanat editörü, sonsuz tuval, wiki notları\n• Okuma — EPUB &amp; PDF okuyucu, CBZ/CBR çizgi roman görüntüleyici\n• Bilim — etkileşimli periyodik tablo (118 element)\n• Atom Clicker — gacha koleksiyonlu idle oyun</string>
     <string name="about_credits_title">Teşekkürler</string>
     <string name="about_credits_subtitle">A2U aşağıdaki açık kaynak kütüphaneleri kullanır:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
@@ -100,6 +100,8 @@
     <string name="about_credit_okhttp_desc">Square tarafından — Ağ istekleri için HTTP istemcisi. Apache 2.0 Lisansı.</string>
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">FluidSynth topluluğu tarafından — SoundFont 2 spesifikasyonuna dayalı gerçek zamanlı yazılım sentezleyicisi. LGPL 2.1 Lisansı.</string>
+    <string name="about_credit_karballo_name">Karballo</string>
+    <string name="about_credit_karballo_desc">Alberto Ruibal tarafından - Java/Android için satranç motoru, satranç oyununda yapay zeka rakipleri için kullanılır. MIT Lisansı.</string>
     <string name="about_license_notice">Tüm kütüphaneler ilgili lisanslarına uygun olarak kullanılmaktadır.\nTüm açık kaynak katkıda bulunanların emeğine teşekkürler!</string>
     <string name="about_privacy_title">Gizlilik ve İzinler</string>
     <string name="about_privacy_microphone">A2U iki özel amaç için mikrofon erişimi ister:\n\n• Ses Düzenleyicide ve SoundFont Oluşturucuda ses kaydetmek\n• Müzik Oynatıcıda gerçek zamanlı frekans spektrumu görselleştirmesi (uygulama frekans eğrilerini görüntülemek için ses çıkışını dinler)\n\nMikrofon başka hiçbir amaçla kullanılmaz. Ses Düzenleyicide veya SoundFont Oluşturucuda açık eyleminiz olmadan hiçbir ses kaydedilmez, iletilmez veya saklanmaz.</string>

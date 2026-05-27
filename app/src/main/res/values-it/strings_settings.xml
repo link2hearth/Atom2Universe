@@ -49,14 +49,8 @@ Concedi il permesso per usare l’app.</string>
     <string name="about_title">Informazioni</string>
     <string name="about_version_format">Versione %1$s (build %2$d)</string>
     <string name="about_version_unknown">Versione sconosciuta</string>
-    <string name="about_description_title">Informazioni su A2U</string>
-    <string name="about_description">A2U è un hub audio completo per Android che combina più funzioni in un\'unica app:
-
-• Player musicale con gestione libreria, playlist, preferiti, modifica tag ID3 e sincronizzazione cloud
-• Player MIDI con sintesi SoundFont, modalità esercizio con note che cadono e supporto a tastiere esterne
-• Web Radio con stazioni e preferiti
-• Editor audio per tagli e modifiche di base
-• Creatore/editor SoundFont SF2 completo</string>
+    <string name="about_description_title">Informazioni su Atom²Universe</string>
+    <string name="about_description">Atom²Universe è un\'app Android tutto-in-uno in continua evoluzione incentrata su audio, scienza, giochi e creatività, che comprende attualmente:\n\n• Lettore musicale — libreria, playlist, equalizzatore DSP, editor tag ID3, sincronizzazione Google Drive, streaming Navidrome\n• Lettore MIDI — motori Sonivox EAS + FluidSynth SF2, note cadenti, allenamento con tastiera USB/Bluetooth\n• Radio web — streaming internet con preferiti\n• Editor audio — registrazione, taglio &amp; effetti (FFmpeg)\n• Dittafono — registratore vocale con gestore file\n• Creatore di SoundFont SF2 — crea i tuoi strumenti\n• 26 Giochi — scacchi, sudoku, blackjack, solitario, 2048 e molti altri\n• Strumenti creativi — editor pixel art, tela infinita, note wiki\n• Lettura — lettore EPUB &amp; PDF, visualizzatore comics CBZ/CBR\n• Scienza — tavola periodica interattiva (118 elementi)\n• Atom Clicker — gioco idle con raccolta gacha</string>
     <string name="about_credits_title">Ringraziamenti</string>
     <string name="about_credits_subtitle">A2U utilizza le seguenti librerie open source:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
@@ -75,6 +69,8 @@ Concedi il permesso per usare l’app.</string>
     <string name="about_credit_okhttp_desc">Di Square — Client HTTP per richieste di rete. Licenza Apache 2.0.</string>
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Dalla comunità FluidSynth — Sintetizzatore software in tempo reale basato sulla specifica SoundFont 2. Licenza LGPL 2.1.</string>
+    <string name="about_credit_karballo_name">Karballo</string>
+    <string name="about_credit_karballo_desc">Di Alberto Ruibal - Motore per gli scacchi per Java/Android, usato per gli avversari IA nel gioco degli scacchi. Licenza MIT.</string>
     <string name="about_license_notice">Tutte le librerie sono utilizzate nel rispetto delle rispettive licenze.
 Grazie a tutti i contributori open source!</string>
     <string name="about_privacy_title">Privacy &amp; Permessi</string>

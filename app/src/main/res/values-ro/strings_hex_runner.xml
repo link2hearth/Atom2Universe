@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hex_runner_title">HEX RUNNER</string>
+    <string name="hex_runner_subtitle">Alergare într-un tunel hexagonal</string>
+    <string name="hex_runner_instructions">Glisați stânga sau dreapta pentru a roti tunelul.\nEvitați golurile — supraviețuiți cât mai mult posibil.</string>
+    <string name="hex_runner_btn_start">START</string>
+    <string name="hex_runner_btn_restart">REÎNCERCARE</string>
+    <string name="hex_runner_btn_back">ÎNAPOI</string>
+    <string name="hex_runner_game_over">JOC TERMINAT</string>
+    <string name="hex_runner_score_label">Timp: %1$s</string>
+    <string name="hex_runner_best_label">Record: %1$s</string>
+    <string name="hex_runner_shape_hexagon">HEXAGON</string>
+    <string name="hex_runner_shape_octagon">OCTAGON</string>
+    <string name="hex_runner_hub_title">Hex Runner</string>
+    <string name="hex_runner_hub_desc">Supraviețuiți într-un tunel hexagonal rotativ</string>
+</resources>

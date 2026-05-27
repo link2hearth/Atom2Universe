@@ -207,7 +207,7 @@ class GoogleDriveAppDataClient(
                 .setFields("files(id, size)")
                 .execute()
 
-            files.files.sumOf { it.size ?: 0L }.also {
+            files.files.sumOf { it.size?.toLong() ?: 0L }.also {
                 Log.d(TAG, "Storage used: $it bytes")
             }
         } catch (e: Exception) {

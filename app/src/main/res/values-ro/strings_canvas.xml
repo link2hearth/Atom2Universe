@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="canvas_editor_title">Pânză Creativă</string>
+    <string name="canvas_fit_content">Potrivire conținut</string>
+    <string name="canvas_toggle_grid">Grilă</string>
+    <string name="canvas_menu">Meniu</string>
+    <string name="canvas_tool_pan">Panoramare</string>
+    <string name="canvas_tool_select">Selectare</string>
+    <string name="canvas_tool_draw">Desenare</string>
+    <string name="canvas_tool_shape">Formă</string>
+    <string name="canvas_tool_text">Text</string>
+    <string name="canvas_tool_image">Imagine</string>
+    <string name="canvas_menu_new">Pânză nouă</string>
+    <string name="canvas_menu_export">Export</string>
+    <string name="canvas_menu_delete_selected">Ștergere selecție</string>
+    <string name="canvas_menu_clear_all">Ștergere tot</string>
+    <string name="canvas_new_created">Pânză nouă creată</string>
+    <string name="canvas_exported">Pânză exportată</string>
+    <string name="canvas_empty">Pânză goală</string>
+    <string name="canvas_object_deleted">Obiect șters</string>
+    <string name="canvas_cleared">Pânță ștearsă</string>
+    <string name="canvas_selected">Selectat: %1$s</string>
+    <string name="canvas_image_imported">Imagine importată</string>
+    <string name="canvas_import_error">Eroare la import</string>
+    <string name="canvas_text_dialog_title">Adăugare text</string>
+    <string name="canvas_text_hint">Introduceți textul dvs.…</string>
+    <string name="canvas_text_font">Font:</string>
+    <string name="canvas_text_size">Dimensiune: %d</string>
+    <string name="canvas_text_bold">Îngroșat</string>
+    <string name="canvas_text_italic">Cursiv</string>
+    <string name="canvas_color_picker_title">Alegeți o culoare</string>
+    <string name="canvas_brush_size_title">Dimensiune pensulă</string>
+    <string name="canvas_layers">Straturi</string>
+    <string name="canvas_layer_bring_front">Aduce în față</string>
+    <string name="canvas_layer_bring_forward">Avansare</string>
+    <string name="canvas_layer_send_backward">Retragere</string>
+    <string name="canvas_layer_send_back">Trimite în spate</string>
+    <string name="canvas_layer_no_selection">Selectați mai întâi un obiect</string>
+    <string name="canvas_undo">Anulare</string>
+    <string name="canvas_redo">Refacere</string>
+    <string name="canvas_delete">Ștergere</string>
+    <string name="canvas_undo_action">Acțiune anulată</string>
+    <string name="canvas_redo_action">Acțiune refăcută</string>
+    <string name="canvas_nothing_to_undo">Nimic de anulat</string>
+    <string name="canvas_nothing_to_redo">Nimic de refăcut</string>
+    <string name="canvas_object_restored">Obiect restaurat</string>
+</resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_books_title">Cărți</string>
+    <string name="hub_books_desc">Cititor EPUB, PDF și text</string>
+    <string name="hub_reading_title">Lectură</string>
+    <string name="hub_reading_desc">Cărți și benzi desenate</string>
+    <string name="reading_hub_title">Lectură</string>
+    <string name="reading_hub_subtitle">Cărți și benzi desenate</string>
+    <string name="book_reader_title">Cititor</string>
+    <string name="book_reader_no_book">Nicio carte deschisă</string>
+    <string name="book_reader_open">Deschidere carte</string>
+    <string name="book_reader_page_of">%1$d / %2$d</string>
+    <string name="book_reader_theme">Temă de lectură</string>
+    <string name="book_reader_theme_dark">Întunecat</string>
+    <string name="book_reader_theme_light">Luminos</string>
+    <string name="book_reader_theme_sepia">Sepia</string>
+    <string name="book_reader_theme_sky">Albastru cer</string>
+    <string name="book_reader_theme_mint">Verde mentă</string>
+    <string name="book_reader_theme_forest">Pădure</string>
+    <string name="book_reader_theme_pastel">Pastel</string>
+    <string name="book_reader_para_distinction">Distincție paragraf</string>
+    <string name="book_reader_voice">Voce</string>
+    <string name="book_reader_voice_default">Implicit</string>
+    <string name="book_reader_tts_not_ready">TTS nepregătit</string>
+    <string name="book_reader_error">Imposibil de deschis acest fișier</string>
+    <string name="book_reader_font_picker_title">Fonturi</string>
+    <string name="book_reader_font_default">Implicit (sistem)</string>
+    <string name="book_reader_font_size">Dimensiune: %1$d sp</string>
+    <string name="book_reader_font_preview_text">Vulpea rapidă maro sare peste câinele leneș.\n\nLectura este o călătorie în alte lumi și alte minți.</string>
+
+    <string name="book_library_empty">Nicio carte încă</string>
+    <string name="book_library_empty_hint">Apăsați + pentru a adăuga prima carte</string>
+    <string name="book_library_add">Adăugare carte</string>
+    <string name="book_library_author_unknown">Autor necunoscut</string>
+    <string name="book_library_delete">Eliminare</string>
+    <string name="book_library_delete_confirm">Eliminați această carte din bibliotecă?</string>
+    <string name="book_tab_recents">Recente</string>
+    <string name="book_tab_shelf">Biblioteci</string>
+
+    <string name="book_shelf_title">Biblioteci</string>
+    <string name="book_shelf_empty">Nicio bibliotecă încă.\nApăsați + pentru a adăuga un dosar.</string>
+    <string name="book_shelf_add_library">Adăugare bibliotecă</string>
+    <string name="book_shelf_scanning_title">Se scanează…</string>
+    <string name="book_shelf_rescanning_title">Se rescanează…</string>
+    <string name="book_shelf_scanning_found">%1$d cărți găsite</string>
+    <string name="book_shelf_options_rescan">Rescanare</string>
+    <string name="book_shelf_options_delete">Ștergere bibliotecă</string>
+    <string name="book_shelf_delete_confirm">Ștergeți această bibliotecă și toate intrările sale?</string>
+    <string name="book_shelf_books_count">%1$d cărți</string>
+    <string name="book_shelf_tree_empty">Nicio carte în această bibliotecă.</string>
+    <string name="book_shelf_section_root">(Alte cărți)</string>
+    <string name="book_toggle_view">Schimbare vizualizare</string>
+    <string name="book_reader_bookmarks">Marcaje</string>
+    <string name="book_reader_no_bookmarks">Niciun marcaj încă. Apăsați lung un paragraf pentru a adăuga unul.</string>
+    <string name="book_reader_bookmark_added">Marcaj adăugat</string>
+    <string name="book_reader_bookmark_removed">Marcaj eliminat</string>
+    <string name="book_reader_bookmarks_clear">Ștergere toate</string>
+    <string name="book_reader_bookmarks_cleared">Toate marcajele șterse</string>
+</resources>

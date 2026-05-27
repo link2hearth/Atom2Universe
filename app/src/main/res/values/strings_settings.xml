@@ -80,8 +80,8 @@
     <string name="about_title">About</string>
     <string name="about_version_format">Version %1$s (build %2$d)</string>
     <string name="about_version_unknown">Version unknown</string>
-    <string name="about_description_title">About A2U</string>
-    <string name="about_description">A2U is a comprehensive audio hub for Android, combining multiple audio features into a single app:\n\n• Music Player with library management, playlists, favorites, ID3 tag editing, and cloud sync\n• MIDI Player with SoundFont synthesis, practice mode with falling notes, and external keyboard support\n• Web Radio with stations and favorites\n• Audio Editor for trimming and basic editing\n• Full-featured SoundFont SF2 creator/editor</string>
+    <string name="about_description_title">About Atom²Universe</string>
+    <string name="about_description">Atom²Universe is an ever-evolving all-in-one Android app built around audio, science, games and creativity, currently featuring:\n\n• Music Player — library, playlists, equalizer DSP, ID3 tag editor, Google Drive sync, Navidrome streaming\n• MIDI Player — Sonivox EAS + FluidSynth SF2 engines, falling notes, USB/Bluetooth keyboard training\n• Web Radio — internet streaming with favorites\n• Audio Editor — recording, trimming &amp; effects (FFmpeg)\n• Dictaphone — voice recorder with file manager\n• SF2 SoundFont Creator — build your own instruments\n• 26 Games — chess, sudoku, blackjack, solitaire, 2048 and many more\n• Creative Tools — pixel art editor, infinite canvas, wiki-style notes\n• Reading — EPUB &amp; PDF reader, CBZ/CBR comics viewer\n• Science — interactive periodic table (118 elements)\n• Atom Clicker — idle game with gacha collection</string>
     <string name="about_credits_title">Acknowledgments</string>
     <string name="about_credits_subtitle">A2U uses the following open source libraries:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
@@ -100,6 +100,8 @@
     <string name="about_credit_okhttp_desc">By Square - HTTP client for network requests. Apache 2.0 License.</string>
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">By the FluidSynth community - Real-time software synthesizer based on the SoundFont 2 specification. LGPL 2.1 License.</string>
+    <string name="about_credit_karballo_name">Karballo</string>
+    <string name="about_credit_karballo_desc">By Alberto Ruibal - Chess engine for Java/Android, used for AI opponents in the chess game. MIT License.</string>
     <string name="about_license_notice">All libraries are used in compliance with their respective licenses.\nThank you to all the open source contributors!</string>
     <string name="about_privacy_title">Privacy &amp; Permissions</string>
     <string name="about_privacy_microphone">A2U requests microphone access for two specific purposes:\n\n• Recording audio in the Audio Editor and the SoundFont Creator\n• Real-time frequency spectrum visualization in the Music Player (the app listens to the audio output to display the frequency curves)\n\nThe microphone is never used for any other purpose. No audio is recorded, transmitted, or stored without your explicit action in the Audio Editor or SoundFont Creator.</string>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="audio_notification_title">Se redă acum</string>
+    <string name="audio_notification_unknown_artist">Artist necunoscut</string>
+    <string name="audio_action_pause">Pauză</string>
+    <string name="audio_action_play">Redare</string>
+    <string name="audio_action_stop">Oprire</string>
+    <string name="audio_action_dismiss">Închidere</string>
+    <string name="audio_source_radio">Radio</string>
+    <string name="audio_source_midi">MIDI</string>
+    <string name="audio_source_music">Muzică</string>
+    <string name="audio_conflict_title">Audio în redare</string>
+    <string name="audio_conflict_message">%1$s redă deja. Ce doriți să ascultați?</string>
+    <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
+    <string name="audio_hub_title">A2U</string>
+    <string name="audio_hub_play_pause">Redare / Pauză</string>
+    <string name="audio_hub_stop">Oprire</string>
+    <string name="audio_hub_no_playback">Nicio redare</string>
+    <string name="audio_hub_radio_title">Radio Web</string>
+    <string name="audio_hub_radio_desc">Ascultați mii de posturi</string>
+    <string name="audio_hub_midi_title">Player MIDI</string>
+    <string name="audio_hub_midi_desc">Fișiere MIDI cu sinteză SCC</string>
+    <string name="audio_hub_music_title">Player Muzică</string>
+    <string name="audio_hub_music_desc">Biblioteca dvs. muzicală</string>
+    <string name="audio_hub_editor_title">Editor Audio</string>
+    <string name="audio_hub_editor_desc">Tăiați fișierele audio</string>
+    <string name="audio_hub_stats_title">Statistici</string>
+    <string name="audio_hub_stats_desc">Rezumatele dvs. de ascultare</string>
+</resources>

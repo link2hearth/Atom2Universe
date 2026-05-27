@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stats_tab_day">Azi</string>
+    <string name="stats_tab_week">Săptămână</string>
+    <string name="stats_tab_month">Lună</string>
+    <string name="stats_tab_year">An</string>
+    <string name="stats_total_time">Timp total de utilizare</string>
+    <string name="stats_hours_format">%1$d h %2$d min</string>
+    <string name="stats_minutes_format">%1$d min</string>
+    <string name="stats_top_artists">Top artiști</string>
+    <string name="stats_top_albums">Top albume</string>
+    <string name="stats_top_midi">Melodii cel mai mult practicate</string>
+    <string name="stats_average_score">Scor mediu de practică</string>
+    <string name="stats_no_data">Nicio dată pentru această perioadă</string>
+    <string name="stats_tab_calendar">Calendar</string>
+    <string name="stats_calendar_no_data">Nicio activitate în această zi</string>
+    <string name="stats_calendar_music_section">Muzică</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Radio</string>
+    <string name="stats_calendar_tracks_format">%1$d piese, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (scor: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Total: %1$s</string>
+    <string name="gacha_result_copies_count">Copii: x%1$d</string>
+    <string name="gacha_result_copies_placeholder">Copii: x0</string>
+    <string name="gacha_no_tickets">Niciun bilet gacha disponibil! Câștigați 1 bilet la fiecare oră.</string>
+    <string name="gacha_not_enough_tickets_multi">Aveți nevoie de 10 bilete pentru o tragere ×10.</string>
+    <string name="gacha_multi_results_title">REZULTATE</string>
+    <string name="gacha_press_continue">Apăsați pentru a continua</string>
+    <string name="banner_label_the_line">Linie</string>
+    <string name="earth_from_sun_label">De la Soare</string>
+    <string name="gacha_title">GACHA</string>
+    <string name="gacha_sun_desc">Gacha</string>
+    <string name="match3_title">Metal Match</string>
+    <string name="match3_description">Puzzle match-3 cu metale</string>
+    <string name="match3_score">Scor: %1$d</string>
+    <string name="match3_new_game">Nou</string>
+    <string name="match3_game_over">Joc terminat</string>
+    <string name="match3_time">Timp: %1$s</string>
+    <string name="back_button_desc">Înapoi</string>
+
+    <string name="othello_title">Othello</string>
+    <string name="othello_hub_desc">Joc clasic de strategie reversi</string>
+    <string name="othello_score">Negru: %1$d · Alb: %2$d</string>
+    <string name="othello_status_your_turn">Rândul dvs. (Alb)</string>
+    <string name="othello_status_black_turn">Rândul Negrului</string>
+    <string name="othello_status_white_turn">Rândul Albului</string>
+    <string name="othello_status_ai_thinking">IA se gândește…</string>
+    <string name="othello_status_invalid">Mutare invalidă. Alegeți o celulă evidențiată.</string>
+    <string name="othello_status_game_over">Joc terminat — Negru %1$d · Alb %2$d. %3$s</string>
+    <string name="othello_result_black">Negrul câștigă!</string>
+    <string name="othello_result_white">Albul câștigă!</string>
+    <string name="othello_result_draw">Egalitate!</string>
+    <string name="othello_mode_solo">Solo vs IA</string>
+    <string name="othello_mode_duo">2 jucători</string>
+    <string name="othello_new_game">Joc nou</string>
+</resources>
