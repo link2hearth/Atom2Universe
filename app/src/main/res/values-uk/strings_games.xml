@@ -54,4 +54,39 @@
     <string name="othello_mode_solo">Соло vs ШІ</string>
     <string name="othello_mode_duo">2 гравці</string>
     <string name="othello_new_game">Нова гра</string>
+
+    <!-- Fusion -->
+    <string name="fusion_title">СИНТЕЗ</string>
+    <string name="fusion_btn">⚛</string>
+    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
+    <string name="fusion_recipe_pp_name">Протон-протонний ланцюжок</string>
+    <string name="fusion_recipe_triple_alpha_name">Потрійний альфа-процес</string>
+    <string name="fusion_recipe_alpha_capture_name">Альфа-захоплення</string>
+    <string name="fusion_recipe_carbon_fusion_name">Вуглецеве горіння</string>
+    <string name="fusion_recipe_oxygen_fusion_name">Кисневе горіння</string>
+    <string name="fusion_recipe_water_name">Синтез води</string>
+    <string name="fusion_recipe_pp_science">У зоряних ядрах 4 протони зливаються через квантове тунелювання в гелій-4, живлячи зірки мільярди років.</string>
+    <string name="fusion_recipe_triple_alpha_science">Три ядра гелію-4 стикаються через резонанс Хойла, утворюючи ядро вуглецю-12.</string>
+    <string name="fusion_recipe_alpha_capture_science">Ядро гелію-4 зливається з вуглецем-12, утворюючи кисень-16 — найпоширеніший елемент у земній корі.</string>
+    <string name="fusion_recipe_carbon_fusion_science">Два ядра вуглецю-12 зливаються в ядрі масивної зірки, даючи неон-20.</string>
+    <string name="fusion_recipe_oxygen_fusion_science">Два ядра кисню-16 зливаються в ядрі зірки, даючи сірку-32.</string>
+    <string name="fusion_recipe_water_science">Два атоми водню ковалентно зв\'язуються з одним атомом кисню, утворюючи молекулу, що уможливлює життя.</string>
+    <string name="fusion_recipe_pp_game">4 H → He  •  75%%  •  +1%% APS або APC</string>
+    <string name="fusion_recipe_triple_alpha_game">3 He → C  •  45%%  •  +1%% APS або APC</string>
+    <string name="fusion_recipe_alpha_capture_game">He + C → O  •  55%%  •  +1%% APS або APC</string>
+    <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS або APC</string>
+    <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS або APC</string>
+    <string name="fusion_recipe_water_game">2 H + O → H₂O  •  60%%  •  +1%% APS або APC</string>
+    <string name="fusion_locked">🔒 Спочатку завершіть попередній синтез</string>
+    <string name="fusion_stats">%1$d перемог / %2$d спроб</string>
+    <string name="fusion_fuse_btn">СИНТЕЗ</string>
+    <string name="fusion_not_enough_elements">Недостатньо елементів (потрібен +1 запас)</string>
+    <string name="fusion_success">УСПІХ</string>
+    <string name="fusion_fail">НЕВДАЧА</string>
+    <string name="fusion_result_got_element">Отримано: %1$s (%2$s)</string>
+    <string name="fusion_result_got_molecule">H₂O отримано!</string>
+    <string name="fusion_result_consumed">Елементи використані.</string>
+    <string name="fusion_tap_continue">Натисніть для продовження</string>
+    <string name="fusion_next_bonus_aps">Наступна перемога → +1%% APS</string>
+    <string name="fusion_next_bonus_apc">Наступна перемога → +1%% APC</string>
 </resources>

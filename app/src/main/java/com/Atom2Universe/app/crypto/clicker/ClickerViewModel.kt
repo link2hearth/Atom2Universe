@@ -33,6 +33,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     private val factoryRepo           = FactoryRepository(application)
     private val frenzyManager         = FrenzyManager()
     private val collectionStore       = PeriodicCollectionStore(application)
+    private val fusionStore           = com.Atom2Universe.app.crypto.fusion.FusionStore(application)
 
     private val _state = MutableStateFlow(ClickerGameState())
     val state: StateFlow<ClickerGameState> = _state.asStateFlow()
@@ -68,6 +69,25 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
+
+    private val devOpsListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+        when (key) {
+            "atoms_op" -> {
+                val op = prefs.getString("atoms_op", null) ?: return@OnSharedPreferenceChangeListener
+                prefs.edit { remove("atoms_op") }
+                if (!op.startsWith("add_")) return@OnSharedPreferenceChangeListener
+                val n = op.removePrefix("add_").toDoubleOrNull() ?: return@OnSharedPreferenceChangeListener
+                val toAdd = LayeredNumber.one().multiplyNumber(n)
+                val s = _state.value
+                _state.value = s.copy(atoms = s.atoms.add(toAdd), lifetime = s.lifetime.add(toAdd))
+            }
+            "neutrinos_refresh" -> {
+                prefs.edit { remove("neutrinos_refresh") }
+                _state.value = _state.value.copy(neutrinos = neutrinoRepo.getBalance())
+            }
+        }
+    }
+
     private var autoSaveJob: Job? = null
     private var heartbeatJob: Job? = null
     private var ticketCheckJob: Job? = null
@@ -75,6 +95,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     init {
         getApplication<Application>().getSharedPreferences("pending_reset_flags", android.content.Context.MODE_PRIVATE)
             .registerOnSharedPreferenceChangeListener(pendingResetListener)
+        getApplication<Application>().getSharedPreferences("dev_ops_prefs", android.content.Context.MODE_PRIVATE)
+            .registerOnSharedPreferenceChangeListener(devOpsListener)
 
         viewModelScope.launch {
             val loaded = repository.load()
@@ -501,6 +523,10 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         _state.value = recalcProduction(_state.value)
     }
 
+    fun refreshFusionBonuses() {
+        _state.value = recalcProduction(_state.value)
+    }
+
     private fun getElementBonuses(): ElementBonuses =
         cachedElementBonuses ?: ElementBonusEngine.compute(collectionStore).also { cachedElementBonuses = it }
 
@@ -527,6 +553,12 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         // Multiplicateurs éléments (avant frénésie)
         if (elem.multApc > 0.0) perClick  = perClick.multiplyNumber(1.0 + elem.multApc)
         if (elem.multAps > 0.0) perSecond = perSecond.multiplyNumber(1.0 + elem.multAps)
+
+        // Bonus fusion (% accumulés par chaque victoire de fusion)
+        val fusionApc = fusionStore.getBonusMultApc()
+        val fusionAps = fusionStore.getBonusMultAps()
+        if (fusionApc > 0.0) perClick  = perClick.multiplyNumber(1.0 + fusionApc)
+        if (fusionAps > 0.0) perSecond = perSecond.multiplyNumber(1.0 + fusionAps)
 
         // Les deux conversions utilisent les valeurs de base (avant conversion) pour éviter
         // toute dépendance circulaire APC→APS→APC.

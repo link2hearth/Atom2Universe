@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0A0A0A">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#1A0000">
+
+        <ImageButton
+            android:id="@+id/dev_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="@android:color/transparent"
+            android:tint="#AAFFFFFF"
+            android:contentDescription="@string/crypto_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/dev_mode_title"
+            android:textColor="#FF3333"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.3" />
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="14dp"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ── GACHA ─────────────────────────────────── -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dev_gacha_section"
+                android:textColor="#FF3333"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.25"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/dev_roll_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_roll_x1"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/dev_roll_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_roll_x10"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/dev_roll_50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_roll_x50"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C" />
+
+            </LinearLayout>
+
+            <!-- Résultats des tirages -->
+            <LinearLayout
+                android:id="@+id/dev_results_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="#111111"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="6dp"
+                android:minHeight="36dp" />
+
+            <!-- ── Divider ────────────────────────────────── -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#221111"
+                android:layout_marginVertical="14dp" />
+
+            <!-- ── ATOMES ─────────────────────────────────── -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dev_atoms_section"
+                android:textColor="#FF3333"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.25"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/dev_atom_snapshot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:layout_marginBottom="8dp"
+                android:text="—" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/dev_atoms_div10"
+                    android:layout_width="56dp"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_div10"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/dev_atom_amount_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:fontFamily="monospace"
+                    android:text="1" />
+
+                <Button
+                    android:id="@+id/dev_atoms_mul10"
+                    android:layout_width="56dp"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_mul10"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp" />
+
+                <Button
+                    android:id="@+id/dev_atoms_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_add_amount"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C" />
+
+            </LinearLayout>
+
+            <!-- ── Divider ────────────────────────────────── -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#221111"
+                android:layout_marginVertical="14dp" />
+
+            <!-- ── NEUTRINOS ──────────────────────────────── -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dev_neutrinos_section"
+                android:textColor="#FF3333"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.25"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/dev_neutrino_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#AAFFAA"
+                android:textSize="13sp"
+                android:fontFamily="monospace"
+                android:layout_marginBottom="8dp"
+                android:text="—" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/dev_neutrinos_div10"
+                    android:layout_width="56dp"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_div10"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/dev_neutrino_amount_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:fontFamily="monospace"
+                    android:text="10" />
+
+                <Button
+                    android:id="@+id/dev_neutrinos_mul10"
+                    android:layout_width="56dp"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_mul10"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp" />
+
+                <Button
+                    android:id="@+id/dev_neutrinos_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_add_amount"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C" />
+
+            </LinearLayout>
+
+            <!-- ── Divider ────────────────────────────────── -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#221111"
+                android:layout_marginVertical="14dp" />
+
+            <!-- ── TICKETS ────────────────────────────────── -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dev_tickets_section"
+                android:textColor="#FF3333"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.25"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/dev_ticket_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#AAFFAA"
+                android:textSize="14sp"
+                android:fontFamily="monospace"
+                android:layout_marginBottom="8dp"
+                android:text="—" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/dev_tickets_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_add_10_tickets"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/dev_tickets_100"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_add_100_tickets"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C" />
+
+            </LinearLayout>
+
+            <!-- ── Divider ────────────────────────────────── -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#221111"
+                android:layout_marginVertical="14dp" />
+
+            <!-- ── ÉLÉMENTS ───────────────────────────────── -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dev_elements_section"
+                android:textColor="#FF3333"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.25"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/dev_all_elements"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="@string/dev_add_all_elements"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:textColor="?attr/a2uMidiAccent"
+                android:backgroundTint="#1C1C1C"
+                android:layout_marginBottom="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/dev_element_input"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:hint="@string/dev_element_input_hint"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#555555"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:inputType="number"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/dev_add_element_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="@string/dev_add_element_btn"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/a2uMidiAccent"
+                    android:backgroundTint="#1C1C1C" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

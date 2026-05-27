@@ -184,4 +184,25 @@
     <string name="clicker_factory_proton_injector_name">Wtryskiwacz protonów</string>
     <string name="clicker_factory_section">Fabryki cząstek</string>
     <string name="clicker_factory_synchrotron_name">Synchrotron</string>
+    <string name="clicker_shop_stat_fusion_apc">Bonus fuzji APC</string>
+    <string name="clicker_shop_stat_fusion_aps">Bonus fuzji APS</string>
+    <string name="dev_mode_title">⚠ TRYB DEV</string>
+    <string name="dev_atoms_section">ATOMY</string>
+    <string name="dev_neutrinos_section">NEUTRINA</string>
+    <string name="dev_div10">÷10</string>
+    <string name="dev_mul10">×10</string>
+    <string name="dev_add_amount">+</string>
+    <string name="dev_gacha_section">LOSOWANIA GACHA</string>
+    <string name="dev_roll_x1">×1</string>
+    <string name="dev_roll_x10">×10</string>
+    <string name="dev_roll_x50">×50</string>
+    <string name="dev_tickets_section">BILETY</string>
+    <string name="dev_add_10_tickets">+10</string>
+    <string name="dev_add_100_tickets">+100</string>
+    <string name="dev_elements_section">PIERWIASTKI</string>
+    <string name="dev_add_all_elements">+1 każdego</string>
+    <string name="dev_element_input_hint">Liczba atomowa (1–118)</string>
+    <string name="dev_add_element_btn">+5 kopii</string>
+    <string name="dev_element_range_error">Liczba atomowa: 1–118</string>
+    <string name="dev_all_elements_done">+1 kopia wszystkich pierwiastków</string>
 </resources>

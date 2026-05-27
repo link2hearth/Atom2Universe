@@ -461,6 +461,22 @@
 
         <View style="@style/ShopStatDivider" />
 
+        <!-- Bonus fusion APC -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_fusion_apc" />
+            <TextView android:id="@+id/shop_stat_fusion_apc" style="@style/ShopStatValue" android:text="—" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Bonus fusion APS -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_fusion_aps" />
+            <TextView android:id="@+id/shop_stat_fusion_aps" style="@style/ShopStatValue" android:text="—" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
         <!-- Clics totaux -->
         <LinearLayout style="@style/ShopStatRow">
             <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_total_clicks" />

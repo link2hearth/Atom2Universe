@@ -184,4 +184,25 @@
     <string name="clicker_factory_proton_injector_name">Протонний інжектор</string>
     <string name="clicker_factory_section">Фабрики частинок</string>
     <string name="clicker_factory_synchrotron_name">Синхротрон</string>
+    <string name="clicker_shop_stat_fusion_apc">Бонус синтезу APC</string>
+    <string name="clicker_shop_stat_fusion_aps">Бонус синтезу APS</string>
+    <string name="dev_mode_title">⚠ РЕЖИМ РОЗ.</string>
+    <string name="dev_atoms_section">АТОМИ</string>
+    <string name="dev_neutrinos_section">НЕЙТРИНО</string>
+    <string name="dev_div10">÷10</string>
+    <string name="dev_mul10">×10</string>
+    <string name="dev_add_amount">+</string>
+    <string name="dev_gacha_section">ГАЧА-РОЗІГРАШІ</string>
+    <string name="dev_roll_x1">×1</string>
+    <string name="dev_roll_x10">×10</string>
+    <string name="dev_roll_x50">×50</string>
+    <string name="dev_tickets_section">КВИТКИ</string>
+    <string name="dev_add_10_tickets">+10</string>
+    <string name="dev_add_100_tickets">+100</string>
+    <string name="dev_elements_section">ЕЛЕМЕНТИ</string>
+    <string name="dev_add_all_elements">+1 кожного</string>
+    <string name="dev_element_input_hint">Атомний номер (1–118)</string>
+    <string name="dev_add_element_btn">+5 копій</string>
+    <string name="dev_element_range_error">Атомний номер: 1–118</string>
+    <string name="dev_all_elements_done">+1 копія всіх елементів</string>
 </resources>

@@ -32,6 +32,7 @@ class ClickerBannerView @JvmOverloads constructor(
     private val turtleView: TurtleSpriteView
     private val shopButton: Button
     private val gachaButton: Button
+    private val fusionButton: Button
 
     // ── Sides
     private val mainRow: LinearLayout
@@ -50,6 +51,7 @@ class ClickerBannerView @JvmOverloads constructor(
 
     var onShopClick: (() -> Unit)? = null
     var onGachaClick: (() -> Unit)? = null
+    var onFusionClick: (() -> Unit)? = null
     var onAtomsClick: (() -> Unit)? = null
     var onAtomsLongClick: (() -> Unit)? = null
 
@@ -266,6 +268,8 @@ class ClickerBannerView @JvmOverloads constructor(
         shopButton.setOnClickListener { onShopClick?.invoke() }
         gachaButton = findViewById(R.id.clicker_gacha_btn)
         gachaButton.setOnClickListener { onGachaClick?.invoke() }
+        fusionButton = findViewById(R.id.clicker_fusion_btn)
+        fusionButton.setOnClickListener { onFusionClick?.invoke() }
         atomsContainer.setOnClickListener { onAtomsClick?.invoke() }
         atomsContainer.setOnLongClickListener { onAtomsLongClick?.invoke(); true }
 

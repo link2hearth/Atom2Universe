@@ -54,4 +54,39 @@
     <string name="othello_mode_solo">Solo vs IA</string>
     <string name="othello_mode_duo">2 Joueurs</string>
     <string name="othello_new_game">Nouvelle partie</string>
+
+    <!-- Fusion -->
+    <string name="fusion_title">FUSION</string>
+    <string name="fusion_btn">⚛</string>
+    <string name="fusion_molecules_h2o">H₂O : %1$d</string>
+    <string name="fusion_recipe_pp_name">Chaîne proton-proton</string>
+    <string name="fusion_recipe_triple_alpha_name">Processus triple-alpha</string>
+    <string name="fusion_recipe_alpha_capture_name">Capture alpha</string>
+    <string name="fusion_recipe_carbon_fusion_name">Combustion du carbone</string>
+    <string name="fusion_recipe_oxygen_fusion_name">Combustion de l\'oxygène</string>
+    <string name="fusion_recipe_water_name">Synthèse de l\'eau</string>
+    <string name="fusion_recipe_pp_science">Dans les cœurs stellaires, 4 protons fusionnent par effet tunnel quantique en hélium-4, alimentant les étoiles pendant des milliards d\'années.</string>
+    <string name="fusion_recipe_triple_alpha_science">Trois noyaux d\'hélium-4 se percutent via la résonance de Hoyle pour forger un noyau de carbone-12.</string>
+    <string name="fusion_recipe_alpha_capture_science">Un noyau d\'hélium-4 fusionne avec le carbone-12 pour produire l\'oxygène-16, le plus abondant dans la croûte terrestre.</string>
+    <string name="fusion_recipe_carbon_fusion_science">Deux noyaux de carbone-12 fusionnent dans le cœur d\'une étoile massive, produisant du néon-20.</string>
+    <string name="fusion_recipe_oxygen_fusion_science">Deux noyaux d\'oxygène-16 fusionnent dans le cœur d\'une étoile, produisant du soufre-32.</string>
+    <string name="fusion_recipe_water_science">Deux atomes d\'hydrogène s\'unissent par liaison covalente à un atome d\'oxygène, formant la molécule qui rend la vie possible.</string>
+    <string name="fusion_recipe_pp_game">4 H → He  •  75%%  •  +1%% APS ou APC</string>
+    <string name="fusion_recipe_triple_alpha_game">3 He → C  •  45%%  •  +1%% APS ou APC</string>
+    <string name="fusion_recipe_alpha_capture_game">He + C → O  •  55%%  •  +1%% APS ou APC</string>
+    <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS ou APC</string>
+    <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS ou APC</string>
+    <string name="fusion_recipe_water_game">2 H + O → H₂O  •  60%%  •  +1%% APS ou APC</string>
+    <string name="fusion_locked">🔒 Complétez la fusion précédente d\'abord</string>
+    <string name="fusion_stats">%1$d victoires / %2$d essais</string>
+    <string name="fusion_fuse_btn">FUSIONNER</string>
+    <string name="fusion_not_enough_elements">Éléments insuffisants (réserve min. +1)</string>
+    <string name="fusion_success">SUCCÈS</string>
+    <string name="fusion_fail">ÉCHEC</string>
+    <string name="fusion_result_got_element">Obtenu : %1$s (%2$s)</string>
+    <string name="fusion_result_got_molecule">H₂O obtenu !</string>
+    <string name="fusion_result_consumed">Éléments consommés.</string>
+    <string name="fusion_tap_continue">Appuyez pour continuer</string>
+    <string name="fusion_next_bonus_aps">Prochaine victoire → +1% APS</string>
+    <string name="fusion_next_bonus_apc">Prochaine victoire → +1% APC</string>
 </resources>

@@ -378,6 +378,14 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
+        <activity
+            android:name=".clickerstats.DevCheatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".crypto.fusion.FusionActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
 
         <!-- Table Périodique (utilisée par le Gacha) -->
         <activity

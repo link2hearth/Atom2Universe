@@ -158,7 +158,7 @@
 
         </LinearLayout>
 
-        <!-- Boutons Gacha ☀ et Shop $ (centre) -->
+        <!-- Boutons Gacha ☀, Shop $ et Fusion ⚛ (centre) -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
 
             <Button
                 android:id="@+id/clicker_gacha_btn"
-                android:layout_width="60dp"
+                android:layout_width="56dp"
                 android:layout_height="32dp"
                 android:text="☀"
                 android:textSize="17sp"
@@ -180,7 +180,7 @@
 
             <Button
                 android:id="@+id/clicker_shop_btn"
-                android:layout_width="60dp"
+                android:layout_width="56dp"
                 android:layout_height="32dp"
                 android:text="$"
                 android:textSize="17sp"
@@ -191,7 +191,22 @@
                 android:background="@android:color/transparent"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
-                android:layout_marginStart="16dp" />
+                android:layout_marginStart="8dp" />
+
+            <Button
+                android:id="@+id/clicker_fusion_btn"
+                android:layout_width="56dp"
+                android:layout_height="32dp"
+                android:text="@string/fusion_btn"
+                android:textSize="17sp"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:layout_marginStart="8dp" />
 
         </LinearLayout>
 

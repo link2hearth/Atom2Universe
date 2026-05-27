@@ -54,4 +54,39 @@
     <string name="othello_mode_solo">Solo vs AI</string>
     <string name="othello_mode_duo">2 Pemain</string>
     <string name="othello_new_game">Permainan baru</string>
+
+    <!-- Fusion -->
+    <string name="fusion_title">FUSI</string>
+    <string name="fusion_btn">⚛</string>
+    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
+    <string name="fusion_recipe_pp_name">Rantai Proton-Proton</string>
+    <string name="fusion_recipe_triple_alpha_name">Proses Triple-Alpha</string>
+    <string name="fusion_recipe_alpha_capture_name">Tangkapan Alpha</string>
+    <string name="fusion_recipe_carbon_fusion_name">Pembakaran Karbon</string>
+    <string name="fusion_recipe_oxygen_fusion_name">Pembakaran Oksigen</string>
+    <string name="fusion_recipe_water_name">Sintesis Air</string>
+    <string name="fusion_recipe_pp_science">Di inti bintang, 4 proton bergabung melalui terowongan kuantum menjadi helium-4, memberi tenaga pada bintang selama miliaran tahun.</string>
+    <string name="fusion_recipe_triple_alpha_science">Tiga inti helium-4 bertabrakan melalui resonansi Hoyle untuk membentuk inti karbon-12.</string>
+    <string name="fusion_recipe_alpha_capture_science">Inti helium-4 bergabung dengan karbon-12 untuk menghasilkan oksigen-16, unsur paling melimpah di kerak bumi.</string>
+    <string name="fusion_recipe_carbon_fusion_science">Dua inti karbon-12 bergabung di inti bintang masif, menghasilkan neon-20.</string>
+    <string name="fusion_recipe_oxygen_fusion_science">Dua inti oksigen-16 bergabung di inti bintang, menghasilkan belerang-32.</string>
+    <string name="fusion_recipe_water_science">Dua atom hidrogen terikat secara kovalen dengan satu atom oksigen, membentuk molekul yang memungkinkan kehidupan.</string>
+    <string name="fusion_recipe_pp_game">4 H → He  •  75%%  •  +1%% APS atau APC</string>
+    <string name="fusion_recipe_triple_alpha_game">3 He → C  •  45%%  •  +1%% APS atau APC</string>
+    <string name="fusion_recipe_alpha_capture_game">He + C → O  •  55%%  •  +1%% APS atau APC</string>
+    <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS atau APC</string>
+    <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS atau APC</string>
+    <string name="fusion_recipe_water_game">2 H + O → H₂O  •  60%%  •  +1%% APS atau APC</string>
+    <string name="fusion_locked">🔒 Selesaikan fusi sebelumnya terlebih dahulu</string>
+    <string name="fusion_stats">%1$d menang / %2$d percobaan</string>
+    <string name="fusion_fuse_btn">FUSI</string>
+    <string name="fusion_not_enough_elements">Elemen tidak cukup (butuh +1 cadangan)</string>
+    <string name="fusion_success">BERHASIL</string>
+    <string name="fusion_fail">GAGAL</string>
+    <string name="fusion_result_got_element">Diperoleh: %1$s (%2$s)</string>
+    <string name="fusion_result_got_molecule">H₂O diperoleh!</string>
+    <string name="fusion_result_consumed">Elemen dikonsumsi.</string>
+    <string name="fusion_tap_continue">Ketuk untuk melanjutkan</string>
+    <string name="fusion_next_bonus_aps">Kemenangan berikutnya → +1%% APS</string>
+    <string name="fusion_next_bonus_apc">Kemenangan berikutnya → +1%% APC</string>
 </resources>

@@ -22,6 +22,7 @@ import com.Atom2Universe.app.crypto.clicker.GachaTicketRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import com.Atom2Universe.app.util.enableImmersiveMode
+import android.content.Intent
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
@@ -104,6 +105,11 @@ class ClickerStatsActivity : ThemedActivity() {
 
             confirmBtn.setOnClickListener {
                 val word = wordInput.text.toString().trim()
+                if (word == "quark") {
+                    dialog.dismiss()
+                    startActivity(Intent(this, DevCheatActivity::class.java))
+                    return@setOnClickListener
+                }
                 if (word != "reset") return@setOnClickListener
 
                 if (toggleStats.isChecked) {

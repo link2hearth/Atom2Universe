@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="14dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/fusion_tile_bg">
+
+    <!-- Ligne 1 : nom + compteur wins/tries -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tile_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/tile_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#88FFFFFF"
+            android:textSize="11sp"
+            android:fontFamily="monospace" />
+
+    </LinearLayout>
+
+    <!-- Texte scientifique -->
+    <TextView
+        android:id="@+id/tile_science"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#77FFFFFF"
+        android:textSize="11sp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="5dp" />
+
+    <!-- Infos jeu : formule, taux, bonus -->
+    <TextView
+        android:id="@+id/tile_game_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFCC44"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="8dp" />
+
+    <!-- Ligne bouton FUSIONNER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center_vertical"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/tile_locked"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#66FFFFFF"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/tile_fuse_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:backgroundTint="#FFD700"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

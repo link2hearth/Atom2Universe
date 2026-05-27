@@ -71,6 +71,7 @@ import com.Atom2Universe.app.crypto.clicker.ClickerBannerView
 import com.Atom2Universe.app.crypto.clicker.ClickerGameState
 import com.Atom2Universe.app.crypto.clicker.ClickerViewModel
 import androidx.core.content.edit
+import androidx.core.view.isVisible
 
 class MainClickerActivity : ThemedActivity() {
 
@@ -233,6 +234,8 @@ class MainClickerActivity : ThemedActivity() {
     private var shopStatAps: TextView? = null
     private var shopStatElemApc: TextView? = null
     private var shopStatElemAps: TextView? = null
+    private var shopStatFusionApc: TextView? = null
+    private var shopStatFusionAps: TextView? = null
     private var shopStatTotalClicks: TextView? = null
     private var shopStatFrenzies: TextView? = null
     private var shopStatMaxApcClicks: TextView? = null
@@ -264,6 +267,7 @@ class MainClickerActivity : ThemedActivity() {
 
     private val clickerStatsRepo by lazy { com.Atom2Universe.app.crypto.clicker.ClickerStatsRepository(this) }
     private val periodicStore by lazy { com.Atom2Universe.app.periodic.PeriodicCollectionStore(this) }
+    private val fusionStore by lazy { com.Atom2Universe.app.crypto.fusion.FusionStore(this) }
 
     private var refreshJob: Job? = null
     private var backgroundJob: Job? = null
@@ -365,7 +369,7 @@ class MainClickerActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (floatingWebWidget.visibility == View.VISIBLE) {
+                if (floatingWebWidget.isVisible) {
                     if (floatingWebWidget.canGoBack()) floatingWebWidget.goBack()
                     else floatingWebWidget.dismiss()
                     return
@@ -473,6 +477,9 @@ class MainClickerActivity : ThemedActivity() {
         clickerBannerView.onShopClick = { showShopDialog() }
         clickerBannerView.onGachaClick = {
             startActivity(Intent(this, com.Atom2Universe.app.crypto.gacha.GachaActivity::class.java))
+        }
+        clickerBannerView.onFusionClick = {
+            startActivity(Intent(this, com.Atom2Universe.app.crypto.fusion.FusionActivity::class.java))
         }
         clickerBannerView.onAtomsClick = {
             val atomVisualActive = clickerToggle.isChecked && MainClickerPreferences.isAtomSpringEnabled(this)
@@ -613,6 +620,7 @@ class MainClickerActivity : ThemedActivity() {
         }
         clickerViewModel.resumeOfflineGains()
         clickerViewModel.refreshElementBonuses()
+        clickerViewModel.refreshFusionBonuses()
         clickerViewModel.awardGachaTickets()
         clickerViewModel.refreshNeutrinoBalance()
         reloadPreferences()
@@ -717,6 +725,8 @@ class MainClickerActivity : ThemedActivity() {
         shopStatAps            = view.findViewById(R.id.shop_stat_aps)
         shopStatElemApc        = view.findViewById(R.id.shop_stat_elem_apc)
         shopStatElemAps        = view.findViewById(R.id.shop_stat_elem_aps)
+        shopStatFusionApc      = view.findViewById(R.id.shop_stat_fusion_apc)
+        shopStatFusionAps      = view.findViewById(R.id.shop_stat_fusion_aps)
         shopStatTotalClicks    = view.findViewById(R.id.shop_stat_total_clicks)
         shopStatFrenzies       = view.findViewById(R.id.shop_stat_frenzies)
         shopStatMaxApcClicks   = view.findViewById(R.id.shop_stat_max_apc_clicks)
@@ -806,6 +816,8 @@ class MainClickerActivity : ThemedActivity() {
             shopStatAps            = null
             shopStatElemApc        = null
             shopStatElemAps        = null
+            shopStatFusionApc      = null
+            shopStatFusionAps      = null
             shopStatTotalClicks    = null
             shopStatFrenzies       = null
             shopStatMaxApcClicks   = null
@@ -1218,6 +1230,11 @@ class MainClickerActivity : ThemedActivity() {
         val elem = com.Atom2Universe.app.crypto.clicker.ElementBonusEngine.compute(periodicStore)
         shopStatElemApc?.text     = formatElemBonus(elem.flatApc, elem.multApc)
         shopStatElemAps?.text     = formatElemBonus(elem.flatAps, elem.multAps)
+
+        val fusionApc = Math.round(fusionStore.getBonusMultApc() * 100).toInt()
+        val fusionAps = Math.round(fusionStore.getBonusMultAps() * 100).toInt()
+        shopStatFusionApc?.text   = if (fusionApc > 0) "+${fusionApc}%" else "—"
+        shopStatFusionAps?.text   = if (fusionAps > 0) "+${fusionAps}%" else "—"
 
         val stats = clickerViewModel.getStatsSnapshot()
         shopStatTotalClicks?.text  = fmt.format(stats.totalClicks)

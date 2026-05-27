@@ -54,4 +54,39 @@
     <string name="othello_mode_solo">Solo vs AI</string>
     <string name="othello_mode_duo">2 Spelers</string>
     <string name="othello_new_game">Nieuw spel</string>
+
+    <!-- Fusion -->
+    <string name="fusion_title">FUSIE</string>
+    <string name="fusion_btn">⚛</string>
+    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
+    <string name="fusion_recipe_pp_name">Proton-Proton Keten</string>
+    <string name="fusion_recipe_triple_alpha_name">Drievoudig-Alfa Proces</string>
+    <string name="fusion_recipe_alpha_capture_name">Alfa-Invangst</string>
+    <string name="fusion_recipe_carbon_fusion_name">Koolstofverbranding</string>
+    <string name="fusion_recipe_oxygen_fusion_name">Zuurstofverbranding</string>
+    <string name="fusion_recipe_water_name">Watersynthese</string>
+    <string name="fusion_recipe_pp_science">In sterkernen fuseren 4 protonen via kwantumtunneling tot helium-4, waardoor sterren miljarden jaren worden gevoed.</string>
+    <string name="fusion_recipe_triple_alpha_science">Drie helium-4-kernen botsen via de Hoyle-resonantie om een koolstof-12-kern te vormen.</string>
+    <string name="fusion_recipe_alpha_capture_science">Een helium-4-kern fuseert met koolstof-12 om zuurstof-16 te produceren, het meest voorkomende element in de aardkorst.</string>
+    <string name="fusion_recipe_carbon_fusion_science">Twee koolstof-12-kernen smelten samen in de kern van een massieve ster en leveren neon-20 op.</string>
+    <string name="fusion_recipe_oxygen_fusion_science">Twee zuurstof-16-kernen fuseren in een sterkern en produceren zwavel-32.</string>
+    <string name="fusion_recipe_water_science">Twee waterstofatomen binden covalent met één zuurstofatoom en vormen het molecuul dat leven mogelijk maakt.</string>
+    <string name="fusion_recipe_pp_game">4 H → He  •  75%%  •  +1%% APS of APC</string>
+    <string name="fusion_recipe_triple_alpha_game">3 He → C  •  45%%  •  +1%% APS of APC</string>
+    <string name="fusion_recipe_alpha_capture_game">He + C → O  •  55%%  •  +1%% APS of APC</string>
+    <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS of APC</string>
+    <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS of APC</string>
+    <string name="fusion_recipe_water_game">2 H + O → H₂O  •  60%%  •  +1%% APS of APC</string>
+    <string name="fusion_locked">🔒 Voltooi eerst de vorige fusie</string>
+    <string name="fusion_stats">%1$d overwinningen / %2$d pogingen</string>
+    <string name="fusion_fuse_btn">FUSEREN</string>
+    <string name="fusion_not_enough_elements">Niet genoeg elementen (heeft +1 reserve nodig)</string>
+    <string name="fusion_success">SUCCES</string>
+    <string name="fusion_fail">MISLUKT</string>
+    <string name="fusion_result_got_element">Verkregen: %1$s (%2$s)</string>
+    <string name="fusion_result_got_molecule">H₂O verkregen!</string>
+    <string name="fusion_result_consumed">Elementen verbruikt.</string>
+    <string name="fusion_tap_continue">Tik om door te gaan</string>
+    <string name="fusion_next_bonus_aps">Volgende overwinning → +1%% APS</string>
+    <string name="fusion_next_bonus_apc">Volgende overwinning → +1%% APC</string>
 </resources>

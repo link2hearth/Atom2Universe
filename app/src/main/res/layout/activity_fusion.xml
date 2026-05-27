@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Contenu principal -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#0D1226">
+
+            <ImageButton
+                android:id="@+id/fusion_back"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:background="@android:color/transparent"
+                android:tint="#AAFFFFFF"
+                android:contentDescription="@string/back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/fusion_title"
+                android:textColor="#FFD700"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.3" />
+
+            <TextView
+                android:id="@+id/fusion_h2o_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="14dp"
+                android:textColor="#88FFFFFF"
+                android:textSize="11sp"
+                android:fontFamily="monospace" />
+
+        </LinearLayout>
+
+        <!-- Bonus accumulés + prochain -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:background="#0A0A18">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/fusion_bonus_apc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF8822"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:layout_marginEnd="20dp" />
+
+                <TextView
+                    android:id="@+id/fusion_bonus_aps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#44AAFF"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fusion_next_bonus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#55FFFFFF"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+        <!-- Liste des recettes -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:id="@+id/fusion_recipes_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- Overlay d'animation (GONE par défaut) -->
+    <FrameLayout
+        android:id="@+id/fusion_anim_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FF000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Flash de couleur (3-2-1) -->
+        <View
+            android:id="@+id/fusion_flash_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000" />
+
+        <!-- Blob splash du countdown -->
+        <com.Atom2Universe.app.crypto.fusion.FusionSplatView
+            android:id="@+id/fusion_splat_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <!-- Résultat (GONE par défaut) -->
+        <LinearLayout
+            android:id="@+id/fusion_result_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/fusion_result_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="52sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:alpha="0" />
+
+            <TextView
+                android:id="@+id/fusion_result_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#CCFFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="monospace"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:alpha="0" />
+
+            <TextView
+                android:id="@+id/fusion_tap_continue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fusion_tap_continue"
+                android:textColor="#44FFFFFF"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:layout_marginTop="44dp"
+                android:alpha="0" />
+
+        </LinearLayout>
+
+        <!-- Confettis (victoire uniquement) -->
+        <com.Atom2Universe.app.crypto.fusion.FusionConfettiView
+            android:id="@+id/fusion_confetti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false" />
+
+    </FrameLayout>
+
+</FrameLayout>

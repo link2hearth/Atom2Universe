@@ -182,4 +182,25 @@
     <string name="crypto_the_line_widget_toggle_desc">Εμφάνιση/απόκρυψη γραφικού The Line</string>
     <string name="crypto_the_line_widget_opacity_label">Αδιαφάνεια γραφικού The Line</string>
     <string name="crypto_banner_toggle_the_line_label">Εμφάνιση εναλλαγής The Line</string>
+    <string name="clicker_shop_stat_fusion_apc">Μπόνους σύντηξης APC</string>
+    <string name="clicker_shop_stat_fusion_aps">Μπόνους σύντηξης APS</string>
+    <string name="dev_mode_title">⚠ ΛΕΙΤΟΥΡΓΙΑ ΔΟΚ.</string>
+    <string name="dev_atoms_section">ΑΤΟΜΑ</string>
+    <string name="dev_neutrinos_section">ΝΕΤΡΙΝΑ</string>
+    <string name="dev_div10">÷10</string>
+    <string name="dev_mul10">×10</string>
+    <string name="dev_add_amount">+</string>
+    <string name="dev_gacha_section">ΚΛΗΡΩΣΕΙΣ GACHA</string>
+    <string name="dev_roll_x1">×1</string>
+    <string name="dev_roll_x10">×10</string>
+    <string name="dev_roll_x50">×50</string>
+    <string name="dev_tickets_section">TICKETS</string>
+    <string name="dev_add_10_tickets">+10</string>
+    <string name="dev_add_100_tickets">+100</string>
+    <string name="dev_elements_section">ΣΤΟΙΧΕΙΑ</string>
+    <string name="dev_add_all_elements">+1 από κάθε</string>
+    <string name="dev_element_input_hint">Ατομικός αριθμός (1–118)</string>
+    <string name="dev_add_element_btn">+5 αντίγραφα</string>
+    <string name="dev_element_range_error">Ατομικός αριθμός: 1–118</string>
+    <string name="dev_all_elements_done">+1 αντίγραφο όλων των στοιχείων</string>
 </resources>
