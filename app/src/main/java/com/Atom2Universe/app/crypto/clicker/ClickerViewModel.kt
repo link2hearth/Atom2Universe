@@ -31,9 +31,12 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     private val elementTokenRepo      = ElementTokenRepository(application)
     private val achievementRepository = ClickerAchievementRepository(application)
     private val factoryRepo           = FactoryRepository(application)
+    private val bigBangRepo           = BigBangRepository(application)
     private val frenzyManager         = FrenzyManager()
     private val collectionStore       = PeriodicCollectionStore(application)
     private val fusionStore           = com.Atom2Universe.app.crypto.fusion.FusionStore(application)
+
+    private var bigBangEffects = BigBangEngine.computeEffects(bigBangRepo)
 
     private val _state = MutableStateFlow(ClickerGameState())
     val state: StateFlow<ClickerGameState> = _state.asStateFlow()
@@ -262,10 +265,34 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
         if (resetClicker) {
             factoryRepo.reset()
+            bigBangRepo.resetUnlock()
             _state.value = ClickerGameState()
             neutrinoRepo.setBalance(0)
             elementTokenRepo.setBalance(0)
         }
+    }
+
+    fun applyBigBangReset() {
+        bigBangEffects = BigBangEngine.computeEffects(bigBangRepo)
+        bigBangRepo.incrementBigBangCount()
+
+        val s = _state.value
+        val resetState = recalcProduction(
+            ClickerGameState(
+                atoms         = com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.zero(),
+                lifetime      = com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.zero(),
+                godFingerLevel = 0,
+                starCoreLevel  = 0,
+                gachaTickets   = s.gachaTickets,
+                neutrinos      = s.neutrinos,
+                elementTokens  = elementTokenRepo.getBalance(),
+                apcToApsLevel  = s.apcToApsLevel,
+                apsToApcLevel  = s.apsToApcLevel,
+                factoryCounts  = emptyMap()
+            )
+        )
+        _state.value = resetState
+        viewModelScope.launch { repository.save(resetState) }
     }
 
     fun stopGameLoop() {
@@ -540,14 +567,22 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     ): ClickerGameState {
         val elem = getElementBonuses()
 
-        // APC : base 1 + bonus shop + flat éléments (H)
+        // APC : base 1 + bonus shop (avec multiplicateur Big Bang) + flat éléments (H)
         var perClick = LayeredNumber.one()
         val clickBonus = ClickerShopEngine.bonus(state.godFingerLevel)
-        if (!clickBonus.isZero()) perClick = perClick.add(clickBonus)
+        if (!clickBonus.isZero()) {
+            perClick = perClick.add(
+                if (bigBangEffects.godFingerMult != 1.0) clickBonus.multiplyNumber(bigBangEffects.godFingerMult)
+                else clickBonus
+            )
+        }
         if (elem.flatApc > 0) perClick = perClick.add(LayeredNumber(elem.flatApc.toDouble()))
 
-        // APS : bonus shop + flat éléments (He)
-        var perSecond = ClickerShopEngine.bonus(state.starCoreLevel)
+        // APS : bonus shop (avec multiplicateur Big Bang) + flat éléments (He)
+        var perSecond = ClickerShopEngine.bonus(state.starCoreLevel).let {
+            if (!it.isZero() && bigBangEffects.starCoreMult != 1.0) it.multiplyNumber(bigBangEffects.starCoreMult)
+            else it
+        }
         if (elem.flatAps > 0) perSecond = perSecond.add(LayeredNumber(elem.flatAps.toDouble()))
 
         // Multiplicateurs éléments (avant frénésie)
@@ -572,8 +607,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
 
         // Multiplicateurs usines (après conversions, avant frénésie)
-        val factoryApcBonus = FactoryEngine.computeApcBonus(state.factoryCounts)
-        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts)
+        val factoryApcBonus = FactoryEngine.computeApcBonus(state.factoryCounts, bigBangEffects)
+        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts, bigBangEffects)
         if (factoryApcBonus > 0.0) perClick  = perClick.multiplyNumber(1.0 + factoryApcBonus)
         if (factoryApsBonus > 0.0) perSecond = perSecond.multiplyNumber(1.0 + factoryApsBonus)
 

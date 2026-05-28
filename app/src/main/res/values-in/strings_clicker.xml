@@ -148,7 +148,6 @@
     <string name="clicker_neutrino_balance">Saldo</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
-    <string name="clicker_shop_elem_to_neutrino_label">Elemen → Neutrino</string>
     <string name="clicker_shop_elem_stock">%d elemen tersedia</string>
     <string name="crypto_pipetap_widget_toggle_desc">Tampilkan/sembunyikan widget PipeTap</string>
     <string name="crypto_banner_toggle_pipetap_label">Tampilkan tombol PipeTap</string>
@@ -202,4 +201,25 @@
     <string name="dev_add_element_btn">+5 salinan</string>
     <string name="dev_element_range_error">Nomor atom: 1–118</string>
     <string name="dev_all_elements_done">+1 salinan semua elemen</string>
+
+    <string name="big_bang_title">BIG BANG</string>
+    <string name="big_bang_description">Belanjakan token elemen untuk bonus permanen, lalu picu Big Bang. Atom, God Finger, Star Core, dan semua pabrik direset. Selebihnya tetap tersimpan.\n1 token per undian gacha.</string>
+    <string name="big_bang_tokens_balance">%d token</string>
+    <string name="big_bang_pending_summary">%1$d peningkatan · %2$d token</string>
+    <string name="big_bang_reset_warning">Mereset: atom · God Finger · Star Core · pabrik</string>
+    <string name="big_bang_button">💥 BIG BANG</string>
+    <string name="big_bang_btn_open">💥 Big Bang</string>
+    <string name="big_bang_bonus_god_finger">God Finger</string>
+    <string name="big_bang_bonus_star_core">Star Core</string>
+    <string name="big_bang_bonus_proton_accel">Akselerator Proton</string>
+    <string name="big_bang_bonus_fusion_reactor">Reaktor Fusi</string>
+    <string name="big_bang_bonus_hadron_collider">Kolider Hadron</string>
+    <string name="big_bang_bonus_proton_injector">Injektor Proton</string>
+    <string name="big_bang_bonus_plasma_catalyst">Katalis Plasma</string>
+    <string name="big_bang_bonus_synchrotron">Sinkrotron</string>
+    <string name="big_bang_bonus_effect">+%d%% per pembelian</string>
+    <string name="big_bang_bonus_level">Lv. %d</string>
+    <string name="big_bang_bonus_level_arrow">Lv. %1$d → %2$d</string>
+    <string name="big_bang_bonus_cost">%d ⚛</string>
+    <string name="big_bang_not_enough_tokens">Token tidak cukup</string>
 </resources>

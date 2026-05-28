@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
@@ -26,6 +27,8 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.AstronomyCalculator
 import com.Atom2Universe.app.crypto.EarthMoonCanvasView
+import com.Atom2Universe.app.crypto.bigbang.BigBangActivity
+import com.Atom2Universe.app.crypto.clicker.BigBangRepository
 import com.Atom2Universe.app.crypto.clicker.ElementTokenRepository
 import com.Atom2Universe.app.crypto.clicker.GachaTicketRepository
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
@@ -68,7 +71,9 @@ class GachaActivity : AppCompatActivity() {
     private lateinit var collectionStore: PeriodicCollectionStore
     private lateinit var ticketRepository: GachaTicketRepository
     private lateinit var elementTokenRepo: ElementTokenRepository
+    private lateinit var bigBangRepo: BigBangRepository
     private lateinit var ticketsDisplay: TextView
+    private lateinit var bigBangBtn: TextView
 
     private var drawMultiplier = 1
     private lateinit var multiBtn: TextView
@@ -81,6 +86,25 @@ class GachaActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var glowPulseAnimator: ValueAnimator? = null
     private var discoveryAnimator: ValueAnimator? = null
+
+    private val dismissGesture by lazy {
+        GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                if (!isAnimating && (multiResultOverlay.visibility == View.VISIBLE || resultCard.visibility == View.VISIBLE)) {
+                    resetToIdle()
+                    return true
+                }
+                return false
+            }
+        })
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (multiResultOverlay.visibility == View.VISIBLE || resultCard.visibility == View.VISIBLE) {
+            dismissGesture.onTouchEvent(ev)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,11 +130,17 @@ class GachaActivity : AppCompatActivity() {
         multiResultOverlay = findViewById(R.id.gacha_multi_result_overlay)
         multiResultContainer = findViewById(R.id.gacha_multi_result_container)
 
-        collectionStore = PeriodicCollectionStore(this)
+        collectionStore  = PeriodicCollectionStore(this)
         ticketRepository = GachaTicketRepository(this)
         elementTokenRepo = ElementTokenRepository(this)
+        bigBangRepo      = BigBangRepository(this)
 
         loadAndDisplayTickets()
+
+        bigBangBtn = findViewById(R.id.gacha_big_bang_btn)
+        bigBangBtn.setOnClickListener {
+            startActivity(Intent(this, BigBangActivity::class.java))
+        }
 
         findViewById<ImageButton>(R.id.gacha_back).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.gacha_open_periodic).setOnClickListener {
@@ -403,6 +433,18 @@ class GachaActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadAndDisplayTickets()
+        updateBigBangButtonVisibility()
+    }
+
+    private fun updateBigBangButtonVisibility() {
+        if (bigBangRepo.isUnlocked()) {
+            bigBangBtn.visibility = View.VISIBLE
+            return
+        }
+        if (elementTokenRepo.getBalance() >= BigBangRepository.UNLOCK_THRESHOLD) {
+            bigBangRepo.markUnlocked()
+            bigBangBtn.visibility = View.VISIBLE
+        }
     }
 
     private fun loadAndDisplayTickets() {

@@ -151,7 +151,6 @@
     <string name="clicker_neutrino_balance">Баланс</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
-    <string name="clicker_shop_elem_to_neutrino_label">Элементы → Нейтрино</string>
     <string name="clicker_shop_elem_stock">%d элементов доступно</string>
     <string name="crypto_pipetap_widget_toggle_desc">Показать/скрыть виджет PipeTap</string>
     <string name="crypto_banner_toggle_pipetap_label">Показать переключатель PipeTap</string>
@@ -205,4 +204,25 @@
     <string name="dev_add_element_btn">+5 копий</string>
     <string name="dev_element_range_error">Атомный номер: 1–118</string>
     <string name="dev_all_elements_done">+1 копия всех элементов</string>
+
+    <string name="big_bang_title">БОЛЬШОЙ ВЗРЫВ</string>
+    <string name="big_bang_description">Трать токены элементов на постоянные бонусы, затем запусти Большой взрыв. Атомы, Перст Бога, Ядро звезды и все фабрики сбрасываются. Всё остальное сохраняется.\n1 токен за каждый гача-розыгрыш.</string>
+    <string name="big_bang_tokens_balance">%d токенов</string>
+    <string name="big_bang_pending_summary">%1$d улучшений · %2$d токенов</string>
+    <string name="big_bang_reset_warning">Сбрасывает: атомы · Перст Бога · Ядро звезды · фабрики</string>
+    <string name="big_bang_button">💥 БОЛЬШОЙ ВЗРЫВ</string>
+    <string name="big_bang_btn_open">💥 Большой взрыв</string>
+    <string name="big_bang_bonus_god_finger">Перст Бога</string>
+    <string name="big_bang_bonus_star_core">Ядро звезды</string>
+    <string name="big_bang_bonus_proton_accel">Ускоритель протонов</string>
+    <string name="big_bang_bonus_fusion_reactor">Термоядерный реактор</string>
+    <string name="big_bang_bonus_hadron_collider">Адронный коллайдер</string>
+    <string name="big_bang_bonus_proton_injector">Инжектор протонов</string>
+    <string name="big_bang_bonus_plasma_catalyst">Плазменный катализатор</string>
+    <string name="big_bang_bonus_synchrotron">Синхротрон</string>
+    <string name="big_bang_bonus_effect">+%d%% за покупку</string>
+    <string name="big_bang_bonus_level">Ур. %d</string>
+    <string name="big_bang_bonus_level_arrow">Ур. %1$d → %2$d</string>
+    <string name="big_bang_bonus_cost">%d ⚛</string>
+    <string name="big_bang_not_enough_tokens">Недостаточно токенов</string>
 </resources>

@@ -160,7 +160,6 @@
     <string name="clicker_neutrino_balance">Sold</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
-    <string name="clicker_shop_elem_to_neutrino_label">Token-uri elemente → Neutrini</string>
     <string name="clicker_shop_elem_stock">%d token-uri</string>
     <string name="crypto_pipetap_widget_toggle_desc">Afișare/ascundere widget PipeTap</string>
     <string name="crypto_banner_toggle_pipetap_label">Afișare comutator PipeTap</string>
@@ -204,4 +203,25 @@
     <string name="dev_add_element_btn">+5 copii</string>
     <string name="dev_element_range_error">Număr atomic: 1–118</string>
     <string name="dev_all_elements_done">+1 copie din toate elementele</string>
+
+    <string name="big_bang_title">BIG BANG</string>
+    <string name="big_bang_description">Cheltuiește tokeni de elemente pe bonusuri permanente, apoi declanșează Big Bang-ul. Atomii, Degetul Divin, Miezul Stelar și toate fabricile sunt resetate. Restul se păstrează.\n1 token per tragere gacha.</string>
+    <string name="big_bang_tokens_balance">%d tokeni</string>
+    <string name="big_bang_pending_summary">%1$d îmbunătățiri · %2$d tokeni</string>
+    <string name="big_bang_reset_warning">Resetează: atomi · Deget Divin · Miez Stelar · fabrici</string>
+    <string name="big_bang_button">💥 BIG BANG</string>
+    <string name="big_bang_btn_open">💥 Big Bang</string>
+    <string name="big_bang_bonus_god_finger">Deget Divin</string>
+    <string name="big_bang_bonus_star_core">Miez Stelar</string>
+    <string name="big_bang_bonus_proton_accel">Accelerator de Protoni</string>
+    <string name="big_bang_bonus_fusion_reactor">Reactor de Fuziune</string>
+    <string name="big_bang_bonus_hadron_collider">Colizor de Hadroni</string>
+    <string name="big_bang_bonus_proton_injector">Injector de Protoni</string>
+    <string name="big_bang_bonus_plasma_catalyst">Catalizator de Plasmă</string>
+    <string name="big_bang_bonus_synchrotron">Sincrotron</string>
+    <string name="big_bang_bonus_effect">+%d%% per cumpărare</string>
+    <string name="big_bang_bonus_level">Nv. %d</string>
+    <string name="big_bang_bonus_level_arrow">Nv. %1$d → %2$d</string>
+    <string name="big_bang_bonus_cost">%d ⚛</string>
+    <string name="big_bang_not_enough_tokens">Tokeni insuficienți</string>
 </resources>

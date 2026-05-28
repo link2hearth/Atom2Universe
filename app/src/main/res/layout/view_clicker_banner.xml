@@ -167,8 +167,8 @@
 
             <Button
                 android:id="@+id/clicker_gacha_btn"
-                android:layout_width="56dp"
-                android:layout_height="32dp"
+                android:layout_width="60dp"
+                android:layout_height="48dp"
                 android:text="☀"
                 android:textSize="17sp"
                 android:textColor="#FFD700"
@@ -180,8 +180,8 @@
 
             <Button
                 android:id="@+id/clicker_shop_btn"
-                android:layout_width="56dp"
-                android:layout_height="32dp"
+                android:layout_width="60dp"
+                android:layout_height="48dp"
                 android:text="$"
                 android:textSize="17sp"
                 android:textColor="#FFD700"
@@ -191,12 +191,12 @@
                 android:background="@android:color/transparent"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="4dp" />
 
             <Button
                 android:id="@+id/clicker_fusion_btn"
-                android:layout_width="56dp"
-                android:layout_height="32dp"
+                android:layout_width="60dp"
+                android:layout_height="48dp"
                 android:text="@string/fusion_btn"
                 android:textSize="17sp"
                 android:textColor="#FFD700"
@@ -206,7 +206,7 @@
                 android:background="@android:color/transparent"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="4dp" />
 
         </LinearLayout>
 

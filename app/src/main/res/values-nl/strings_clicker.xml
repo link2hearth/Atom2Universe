@@ -149,7 +149,6 @@
     <string name="clicker_neutrino_balance">Saldo</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
-    <string name="clicker_shop_elem_to_neutrino_label">Elementen → Neutrino\'s</string>
     <string name="clicker_shop_elem_stock">%d elementen beschikbaar</string>
     <string name="crypto_pipetap_widget_toggle_desc">PipeTap widget tonen/verbergen</string>
     <string name="crypto_banner_toggle_pipetap_label">PipeTap schakelaar tonen</string>
@@ -203,4 +202,25 @@
     <string name="dev_add_element_btn">+5 kopieën</string>
     <string name="dev_element_range_error">Atoomnummer: 1–118</string>
     <string name="dev_all_elements_done">+1 kopie van alle elementen</string>
+
+    <string name="big_bang_title">BIG BANG</string>
+    <string name="big_bang_description">Geef elementtokens uit aan permanente bonussen en activeer vervolgens de Big Bang. Atomen, Godsvinger, Sterrenkern en alle fabrieken worden gereset. Al het andere blijft behouden.\n1 token per gacha-trekking.</string>
+    <string name="big_bang_tokens_balance">%d tokens</string>
+    <string name="big_bang_pending_summary">%1$d upgrades · %2$d tokens</string>
+    <string name="big_bang_reset_warning">Reset: atomen · Godsvinger · Sterrenkern · fabrieken</string>
+    <string name="big_bang_button">💥 BIG BANG</string>
+    <string name="big_bang_btn_open">💥 Big Bang</string>
+    <string name="big_bang_bonus_god_finger">Godsvinger</string>
+    <string name="big_bang_bonus_star_core">Sterrenkern</string>
+    <string name="big_bang_bonus_proton_accel">Protonenversneller</string>
+    <string name="big_bang_bonus_fusion_reactor">Fusiereactor</string>
+    <string name="big_bang_bonus_hadron_collider">Hadronencollider</string>
+    <string name="big_bang_bonus_proton_injector">Protoneninjector</string>
+    <string name="big_bang_bonus_plasma_catalyst">Plasmakatalysator</string>
+    <string name="big_bang_bonus_synchrotron">Synchrotron</string>
+    <string name="big_bang_bonus_effect">+%d%% per aankoop</string>
+    <string name="big_bang_bonus_level">Nv. %d</string>
+    <string name="big_bang_bonus_level_arrow">Nv. %1$d → %2$d</string>
+    <string name="big_bang_bonus_cost">%d ⚛</string>
+    <string name="big_bang_not_enough_tokens">Onvoldoende tokens</string>
 </resources>

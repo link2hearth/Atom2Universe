@@ -12,27 +12,27 @@ internal object FactoryEngine {
         return LayeredNumber(price)
     }
 
-    fun computeApcBonus(counts: Map<FactoryType, Int>): Double {
+    fun computeApcBonus(counts: Map<FactoryType, Int>, bb: BigBangEffects = BigBangEffects.NONE): Double {
         val accelCount    = counts[FactoryType.PROTON_ACCELERATOR] ?: 0
         val injectorCount = counts[FactoryType.PROTON_INJECTOR]    ?: 0
         val colliderCount = counts[FactoryType.HADRON_COLLIDER]    ?: 0
         val synchCount    = counts[FactoryType.SYNCHROTRON]        ?: 0
-        val accelBonus    = accelCount    * FactoryType.PROTON_ACCELERATOR.bonusApcPerUnit *
-                            (1.0 + injectorCount * FactoryType.PROTON_INJECTOR.boostPerUnit)
-        val colliderBonus = colliderCount * FactoryType.HADRON_COLLIDER.bonusApcPerUnit *
-                            (1.0 + synchCount    * FactoryType.SYNCHROTRON.boostPerUnit)
+        val accelBonus    = accelCount    * FactoryType.PROTON_ACCELERATOR.bonusApcPerUnit * bb.protonAccelMult *
+                            (1.0 + injectorCount * FactoryType.PROTON_INJECTOR.boostPerUnit * bb.protonInjectorMult)
+        val colliderBonus = colliderCount * FactoryType.HADRON_COLLIDER.bonusApcPerUnit * bb.hadronColliderMult *
+                            (1.0 + synchCount    * FactoryType.SYNCHROTRON.boostPerUnit * bb.synchrotronMult)
         return accelBonus + colliderBonus
     }
 
-    fun computeApsBonus(counts: Map<FactoryType, Int>): Double {
+    fun computeApsBonus(counts: Map<FactoryType, Int>, bb: BigBangEffects = BigBangEffects.NONE): Double {
         val reactorCount  = counts[FactoryType.FUSION_REACTOR]  ?: 0
         val catalystCount = counts[FactoryType.PLASMA_CATALYST] ?: 0
         val colliderCount = counts[FactoryType.HADRON_COLLIDER] ?: 0
         val synchCount    = counts[FactoryType.SYNCHROTRON]     ?: 0
-        val reactorBonus  = reactorCount  * FactoryType.FUSION_REACTOR.bonusApsPerUnit *
-                            (1.0 + catalystCount * FactoryType.PLASMA_CATALYST.boostPerUnit)
-        val colliderBonus = colliderCount * FactoryType.HADRON_COLLIDER.bonusApsPerUnit *
-                            (1.0 + synchCount    * FactoryType.SYNCHROTRON.boostPerUnit)
+        val reactorBonus  = reactorCount  * FactoryType.FUSION_REACTOR.bonusApsPerUnit * bb.fusionReactorMult *
+                            (1.0 + catalystCount * FactoryType.PLASMA_CATALYST.boostPerUnit * bb.plasmaCatalystMult)
+        val colliderBonus = colliderCount * FactoryType.HADRON_COLLIDER.bonusApsPerUnit * bb.hadronColliderMult *
+                            (1.0 + synchCount    * FactoryType.SYNCHROTRON.boostPerUnit * bb.synchrotronMult)
         return reactorBonus + colliderBonus
     }
 }

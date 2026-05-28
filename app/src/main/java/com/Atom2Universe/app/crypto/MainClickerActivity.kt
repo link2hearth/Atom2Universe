@@ -223,11 +223,6 @@ class MainClickerActivity : ThemedActivity() {
     private var shopApsToApcEffectView: TextView? = null
     private var shopApsToApcCostView: TextView? = null
     private var shopApsToApcBuyBtn: Button? = null
-    private var shopElemToNeutrinoStock: TextView? = null
-    private var shopElemToNeutrinoMult: Button? = null
-    private var shopElemToNeutrinoBuy: Button? = null
-    private var shopElemToNeutrinoMult_value = 1
-
     // Stats dans le shop
     private var shopStatLifetime: TextView? = null
     private var shopStatApc: TextView? = null
@@ -611,12 +606,17 @@ class MainClickerActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
-        val resetFlags = getSharedPreferences("pending_reset_flags", MODE_PRIVATE)
+        val resetFlags   = getSharedPreferences("pending_reset_flags", MODE_PRIVATE)
         val resetStats   = resetFlags.getBoolean("reset_stats",   false)
         val resetClicker = resetFlags.getBoolean("reset_clicker", false)
+        val resetBigBang = resetFlags.getBoolean("reset_big_bang", false)
         if (resetStats || resetClicker) {
-            resetFlags.edit { clear() }
+            resetFlags.edit { remove("reset_stats"); remove("reset_clicker") }
             clickerViewModel.applyPendingReset(resetStats, resetClicker)
+        }
+        if (resetBigBang) {
+            resetFlags.edit { remove("reset_big_bang") }
+            clickerViewModel.applyBigBangReset()
         }
         clickerViewModel.resumeOfflineGains()
         clickerViewModel.refreshElementBonuses()
@@ -717,9 +717,6 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcLevelView   = view.findViewById(R.id.shop_aps_to_apc_level)
         shopApsToApcEffectView  = view.findViewById(R.id.shop_aps_to_apc_effect)
         shopApsToApcCostView    = view.findViewById(R.id.shop_aps_to_apc_cost)
-        shopElemToNeutrinoStock = view.findViewById(R.id.shop_elem_to_neutrino_stock)
-        shopElemToNeutrinoMult  = view.findViewById(R.id.shop_elem_to_neutrino_mult)
-        shopElemToNeutrinoBuy   = view.findViewById(R.id.shop_elem_to_neutrino_buy)
         shopStatLifetime        = view.findViewById(R.id.shop_stat_lifetime)
         shopStatApc            = view.findViewById(R.id.shop_stat_apc)
         shopStatAps            = view.findViewById(R.id.shop_stat_aps)
@@ -769,16 +766,6 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcBuyBtn?.setOnClickListener {
             clickerViewModel.buyApsToApc()
         }
-        shopElemToNeutrinoMult?.setOnClickListener {
-            shopElemToNeutrinoMult_value = cycleShopMultiplier(shopElemToNeutrinoMult_value)
-            shopElemToNeutrinoMult?.text = "×$shopElemToNeutrinoMult_value"
-            updateShopViews(clickerViewModel.state.value)
-        }
-        shopElemToNeutrinoBuy?.setOnClickListener {
-            clickerViewModel.buyElementsToNeutrinos(shopElemToNeutrinoMult_value)
-            updateShopViews(clickerViewModel.state.value)
-        }
-
         updateShopViews(clickerViewModel.state.value)
 
         val dialog = Dialog(this)
@@ -808,9 +795,6 @@ class MainClickerActivity : ThemedActivity() {
             shopApsToApcEffectView = null
             shopApsToApcCostView   = null
             shopApsToApcBuyBtn     = null
-            shopElemToNeutrinoStock = null
-            shopElemToNeutrinoMult  = null
-            shopElemToNeutrinoBuy   = null
             shopStatLifetime       = null
             shopStatApc            = null
             shopStatAps            = null
@@ -1213,14 +1197,6 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcCostView?.text   = "$apsToApcCost ⚛"
         shopApsToApcBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
             if (state.neutrinos >= apsToApcCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-        )
-
-        val tokenBalance = clickerViewModel.getElementTokens()
-        shopElemToNeutrinoStock?.text = getString(R.string.clicker_shop_elem_stock, tokenBalance)
-        val canBuyTokens = tokenBalance >= shopElemToNeutrinoMult_value
-        shopElemToNeutrinoBuy?.isEnabled = canBuyTokens
-        shopElemToNeutrinoBuy?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (canBuyTokens) 0xFF16A34A.toInt() else 0xFF475569.toInt()
         )
 
         shopStatLifetime?.text    = state.lifetime.toString()

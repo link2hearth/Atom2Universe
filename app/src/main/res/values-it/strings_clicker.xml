@@ -149,7 +149,6 @@
     <string name="clicker_neutrino_balance">Saldo</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
-    <string name="clicker_shop_elem_to_neutrino_label">Elementi → Neutrini</string>
     <string name="clicker_shop_elem_stock">%d elementi disponibili</string>
     <string name="crypto_pipetap_widget_toggle_desc">Mostra/nascondi widget PipeTap</string>
     <string name="crypto_banner_toggle_pipetap_label">Mostra pulsante PipeTap</string>
@@ -203,4 +202,25 @@
     <string name="dev_add_element_btn">+5 copie</string>
     <string name="dev_element_range_error">Numero atomico: 1–118</string>
     <string name="dev_all_elements_done">+1 copia di tutti gli elementi</string>
+
+    <string name="big_bang_title">BIG BANG</string>
+    <string name="big_bang_description">Spendi token degli elementi per bonus permanenti, poi scatena il Big Bang. Atomi, Dito Divino, Nucleo Stellare e tutte le fabbriche vengono azzerati. Tutto il resto viene conservato.\n1 token per estrazione gacha.</string>
+    <string name="big_bang_tokens_balance">%d token</string>
+    <string name="big_bang_pending_summary">%1$d potenziamenti · %2$d token</string>
+    <string name="big_bang_reset_warning">Azzera: atomi · Dito Divino · Nucleo Stellare · fabbriche</string>
+    <string name="big_bang_button">💥 BIG BANG</string>
+    <string name="big_bang_btn_open">💥 Big Bang</string>
+    <string name="big_bang_bonus_god_finger">Dito Divino</string>
+    <string name="big_bang_bonus_star_core">Nucleo Stellare</string>
+    <string name="big_bang_bonus_proton_accel">Acceleratore di Protoni</string>
+    <string name="big_bang_bonus_fusion_reactor">Reattore a Fusione</string>
+    <string name="big_bang_bonus_hadron_collider">Collisore di Adroni</string>
+    <string name="big_bang_bonus_proton_injector">Iniettore di Protoni</string>
+    <string name="big_bang_bonus_plasma_catalyst">Catalizzatore al Plasma</string>
+    <string name="big_bang_bonus_synchrotron">Sincrotrone</string>
+    <string name="big_bang_bonus_effect">+%d%% per acquisto</string>
+    <string name="big_bang_bonus_level">Lv. %d</string>
+    <string name="big_bang_bonus_level_arrow">Lv. %1$d → %2$d</string>
+    <string name="big_bang_bonus_cost">%d ⚛</string>
+    <string name="big_bang_not_enough_tokens">Token insufficienti</string>
 </resources>

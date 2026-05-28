@@ -159,7 +159,6 @@
     <string name="clicker_neutrino_balance">Υπόλοιπο</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
-    <string name="clicker_shop_elem_to_neutrino_label">Μάρκες στοιχείων → Νετρίνα</string>
     <string name="clicker_shop_elem_stock">%d μάρκες</string>
     <string name="crypto_pipetap_widget_toggle_desc">Εμφάνιση/απόκρυψη γραφικού PipeTap</string>
     <string name="crypto_banner_toggle_pipetap_label">Εμφάνιση εναλλαγής PipeTap</string>
@@ -203,4 +202,25 @@
     <string name="dev_add_element_btn">+5 αντίγραφα</string>
     <string name="dev_element_range_error">Ατομικός αριθμός: 1–118</string>
     <string name="dev_all_elements_done">+1 αντίγραφο όλων των στοιχείων</string>
+
+    <string name="big_bang_title">BIG BANG</string>
+    <string name="big_bang_description">Ξόδεψε tokens στοιχείων για μόνιμα μπόνους, μετά ενεργοποίησε το Big Bang. Άτομα, Θεϊκό Δάχτυλο, Πυρήνας Αστεριού και όλα τα εργοστάσια μηδενίζονται. Τα υπόλοιπα διατηρούνται.\n1 token ανά κλήρωση gacha.</string>
+    <string name="big_bang_tokens_balance">%d tokens</string>
+    <string name="big_bang_pending_summary">%1$d αναβαθμίσεις · %2$d tokens</string>
+    <string name="big_bang_reset_warning">Μηδενίζει: άτομα · Θεϊκό Δάχτυλο · Πυρήνας Αστεριού · εργοστάσια</string>
+    <string name="big_bang_button">💥 BIG BANG</string>
+    <string name="big_bang_btn_open">💥 Big Bang</string>
+    <string name="big_bang_bonus_god_finger">Θεϊκό Δάχτυλο</string>
+    <string name="big_bang_bonus_star_core">Πυρήνας Αστεριού</string>
+    <string name="big_bang_bonus_proton_accel">Επιταχυντής Πρωτονίων</string>
+    <string name="big_bang_bonus_fusion_reactor">Αντιδραστήρας Σύντηξης</string>
+    <string name="big_bang_bonus_hadron_collider">Επιταχυντής Αδρονίων</string>
+    <string name="big_bang_bonus_proton_injector">Εγχυτήρας Πρωτονίων</string>
+    <string name="big_bang_bonus_plasma_catalyst">Καταλύτης Πλάσματος</string>
+    <string name="big_bang_bonus_synchrotron">Συγχροτρόνιο</string>
+    <string name="big_bang_bonus_effect">+%d%% ανά αγορά</string>
+    <string name="big_bang_bonus_level">Επ. %d</string>
+    <string name="big_bang_bonus_level_arrow">Επ. %1$d → %2$d</string>
+    <string name="big_bang_bonus_cost">%d ⚛</string>
+    <string name="big_bang_not_enough_tokens">Δεν υπάρχουν αρκετά tokens</string>
 </resources>
