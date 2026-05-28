@@ -65,6 +65,9 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
     private var elapsed = 0f     // temps pour l'effet de pulsation
 
     private val HARDNESS = mapOf(
+        GRASS   to 0.6f,
+        LEAVES  to 0.2f,
+        WOOD    to 2.0f,
         DIRT    to 0.5f,
         GRAVEL  to 0.8f,
         COAL    to 1.5f,
@@ -103,8 +106,8 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
         void main() {
             gl_Position = u_mvp * vec4(a_pos, 1.0);
             v_uv      = a_uv.xy;
-            v_layer   = mod(a_uv.z, 16.0);
-            v_faceDir = floor(a_uv.z / 16.0);
+            v_layer   = mod(a_uv.z, 32.0);
+            v_faceDir = floor(a_uv.z / 32.0);
             v_fog     = clamp((gl_Position.w - 28.0) / 32.0, 0.0, 1.0);
         }
     """.trimIndent()
@@ -190,10 +193,13 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
 
     private fun loadBlockTextures(): Int {
         val files = listOf(
-            "stone.png", "greystone.png", "rock.png", "stone_coal.png",
+            "stone.png", "greystone.png", "greysand.png", "stone_coal.png",
             "stone_gold.png", "stone_diamond.png", "dirt.png", "gravel_stone.png",
             "stone_iron.png", "stone_silver.png", "greystone_ruby.png", "lava.png", "oven.png",
-            "redstone_emerald.png", "stone_browniron.png"
+            "redstone_emerald.png", "stone_browniron.png",
+            "dirt_grass.png", "grass_top.png",
+            "trunk_side.png", "trunk_top.png", "leaves.png",
+            "sand.png", "stone_grass.png", "redsand.png"
         )
         val am = context.assets
         val bitmaps = files.map { BitmapFactory.decodeStream(am.open("Cave World/Tiles/$it")) }
@@ -254,23 +260,31 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
             world.updateAroundPlayer(cx, cy, cz) { chunk -> scheduleChunkBuild(chunk) }
         }
 
-        repeat(4) {
-            val key = world.rebuildQueue.poll() ?: return@repeat
-            val chunk = world.getChunkByKey(key) ?: return@repeat
-            if (!chunk.generated) return@repeat
-            if (!building.add(key)) { world.rebuildQueue.add(key); return@repeat }
+        // Drain + tri par distance → les seams proches du joueur sont résolus en priorité
+        val rebuildBatch = ArrayList<Long>(32)
+        repeat(64) { world.rebuildQueue.poll()?.let { rebuildBatch.add(it) } }
+        rebuildBatch.sortBy { key ->
+            val dx = world.keyToCx(key) - cx; val dy = world.keyToCy(key) - cy; val dz = world.keyToCz(key) - cz
+            dx * dx + dy * dy + dz * dz
+        }
+        var rebuilt = 0
+        for (key in rebuildBatch) {
+            if (rebuilt >= 16) { world.rebuildQueue.add(key); continue }
+            val chunk = world.getChunkByKey(key) ?: continue
+            if (!chunk.generated) { world.rebuildQueue.add(key); continue }
+            if (!building.add(key)) { world.rebuildQueue.add(key); continue }
             chunk.meshDirty = false
             val snapVersion = chunk.version
             scope.launch {
                 val verts = MeshBuilder.build(chunk, world)
-                // Jette le résultat si le chunk a été modifié pendant le build
                 if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
                 building.remove(key)
                 if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
             }
+            rebuilt++
         }
 
-        repeat(4) {
+        repeat(8) {
             val (key, ver, verts) = uploadQueue.poll() ?: return@repeat
             val chunk = world.getChunkByKey(key) ?: return@repeat
             if (chunk.version == ver) meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
@@ -679,11 +693,33 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
         scope.launch(genDispatcher) {
             world.generate(chunk)
             world.markGenerated(chunk)
+
+            // Mesh du chunk lui-même
             val snapVersion = chunk.version
             val verts = MeshBuilder.build(chunk, world)
             if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
             building.remove(key)
             if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
+
+            // Rebuild immédiat des 6 voisins face-à-face qui existent déjà :
+            // évite les seams visibles entre le nouveau chunk et ses voisins pré-existants.
+            val offsets = arrayOf(
+                intArrayOf(1,0,0), intArrayOf(-1,0,0),
+                intArrayOf(0,1,0), intArrayOf(0,-1,0),
+                intArrayOf(0,0,1), intArrayOf(0,0,-1)
+            )
+            for ((dx, dy, dz) in offsets) {
+                val nb = world.getChunk(chunk.cx + dx, chunk.cy + dy, chunk.cz + dz) ?: continue
+                if (!nb.generated) continue
+                val nKey = world.chunkKey(nb.cx, nb.cy, nb.cz)
+                if (!building.add(nKey)) continue   // déjà en cours → skip
+                nb.meshDirty = false
+                val nSnap = nb.version
+                val nVerts = MeshBuilder.build(nb, world)
+                if (nb.version == nSnap) uploadQueue.add(Triple(nKey, nSnap, nVerts))
+                building.remove(nKey)
+                if (nb.meshDirty || nb.version != nSnap) world.rebuildQueue.add(nKey)
+            }
         }
     }
 

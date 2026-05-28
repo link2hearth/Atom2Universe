@@ -30,6 +30,8 @@ class World(private val seed: Long = 42L) {
     fun keyToCz(key: Long): Int { val v = ((key shr 40) and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
 
     fun updateAroundPlayer(pcx: Int, pcy: Int, pcz: Int, onNeedGenerate: (Chunk) -> Unit) {
+        // Collecte puis trie par distance au joueur — les chunks proches génèrent en premier
+        val toGenerate = mutableListOf<Chunk>()
         for (dz in -renderRadius..renderRadius)
         for (dy in -renderRadius..renderRadius)
         for (dx in -renderRadius..renderRadius) {
@@ -38,9 +40,15 @@ class World(private val seed: Long = 42L) {
             if (!chunks.containsKey(key) && inFlight.add(key)) {
                 val chunk = Chunk(cx, cy, cz)
                 chunks[key] = chunk
-                onNeedGenerate(chunk)
+                toGenerate.add(chunk)
             }
         }
+        toGenerate.sortBy { c ->
+            val dx = c.cx - pcx; val dy = c.cy - pcy; val dz = c.cz - pcz
+            dx * dx + dy * dy + dz * dz
+        }
+        toGenerate.forEach(onNeedGenerate)
+
         val toRemove = chunks.entries.filter { (_, chunk) ->
             abs(chunk.cx - pcx) > renderRadius + 1 ||
             abs(chunk.cy - pcy) > renderRadius + 1 ||
@@ -113,49 +121,43 @@ class World(private val seed: Long = 42L) {
         return floatArrayOf(8.5f, 9.62f, 8.5f)
     }
 
-    // ── Génération bruit (conservé) ───────────────────────────────────────────
-    /*
-    fun generate(chunk: Chunk) {
-        val wx = chunk.worldX; val wy = chunk.worldY; val wz = chunk.worldZ
-        for (lz in 0 until CHUNK_SIZE)
-        for (ly in 0 until CHUNK_SIZE)
-        for (lx in 0 until CHUNK_SIZE) {
-            val x = (wx + lx).toDouble()
-            val y = (wy + ly).toDouble()
-            val z = (wz + lz).toDouble()
-            val cave = SimplexNoise.noise(x * 0.04, y * 0.04, z * 0.04) +
-                       0.5 * SimplexNoise.noise(x * 0.09, y * 0.09, z * 0.09) +
-                       0.25 * SimplexNoise.noise(x * 0.18, y * 0.18, z * 0.18)
-            if (cave < 0.15) { chunk.setBlock(lx, ly, lz, AIR); continue }
-            val typeN = SimplexNoise.noise(x * 0.015 + seed, y * 0.015, z * 0.015)
-            val depth = -chunk.cy
-            val block: Byte = when {
-                depth > 4 && typeN > 0.55 -> GOLD
-                typeN > 0.30              -> COAL
-                typeN > -0.10             -> GRANITE
-                typeN > -0.50             -> QUARTZ
-                depth > 2 && typeN < -0.7 -> CRYSTAL
-                else                      -> STONE
-            }
-            chunk.setBlock(lx, ly, lz, block)
-        }
-    }
-    */
-
-    // ── Génération worms + grandes salles ────────────────────────────────────
+    // ── Pipeline de génération ────────────────────────────────────────────────
 
     fun generate(chunk: Chunk) {
-        chunk.blocks.fill(STONE)
+        // 1. Roche de base avec failles géologiques
+        applyRockLayers(chunk)
 
-        // Grandes salles en premier (rayon 1 suffit, sphères max ~18 blocs)
+        // 2. Creusage : grandes salles puis worms (voisinage rayon 1)
         for (dcz in -1..1) for (dcy in -1..1) for (dcx in -1..1)
             carveRoomFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz)
-
-        // Worms (rayon 1, connectent les salles entre elles)
         for (dcz in -1..1) for (dcy in -1..1) for (dcx in -1..1)
             carveWormsFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz)
 
-        applyOres(chunk)
+        // 3. Poches de matériaux (dirt/gravel/sand dans la masse rocheuse)
+        applyPockets(chunk)
+
+        // 4. Veines de minerais (progression radiale)
+        applyOreVeins(chunk)
+
+        // 5. Sol des espaces ouverts (herbe/dirt/gravel/sable) — ≤ 50 chunks du spawn
+        applyFloorSurface(chunk)
+
+        // 6. Arbres sur les blocs GRASS
+        plantTrees(chunk)
+    }
+
+    // ── Roche de base ────────────────────────────────────────────────────────
+
+    // Grandes zones homogènes : STONE dominant (~70 %), GRANITE en îlots (~30 %).
+    // Le QUARTZ n'apparaît que via applyPockets / applyOreVeins, jamais ici.
+    private fun applyRockLayers(chunk: Chunk) {
+        val wx = chunk.worldX; val wy = chunk.worldY; val wz = chunk.worldZ
+        for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+            val x = (wx + lx).toDouble(); val y = (wy + ly).toDouble(); val z = (wz + lz).toDouble()
+            // Pas d'offset seed ici : les zones géologiques sont universelles (même pattern pour toute seed)
+            val nZone = SimplexNoise.noise(x * 0.012, y * 0.012, z * 0.012)
+            chunk.setBlock(lx, ly, lz, if (nZone > 0.20) GRANITE else STONE)
+        }
     }
 
     // ── Grandes salles ────────────────────────────────────────────────────────
@@ -168,7 +170,7 @@ class World(private val seed: Long = 42L) {
     private fun carveRoomFrom(target: Chunk, cx: Int, cy: Int, cz: Int) {
         val rng = chunkRng(cx, cy, cz)
         val forced = (cx == 0 && cy == 0 && cz == 0)
-        if (!forced && rng.nextFloat() > 0.01f) return
+        if (!forced && rng.nextFloat() > 0.006f) return
 
         val rx = (cx * CHUNK_SIZE + CHUNK_SIZE / 2).toFloat()
         val ry = (cy * CHUNK_SIZE + CHUNK_SIZE / 2).toFloat()
@@ -189,13 +191,15 @@ class World(private val seed: Long = 42L) {
         }
     }
 
+    // ── Worms (grottes serpents) ──────────────────────────────────────────────
+
     private fun carveWormsFrom(target: Chunk, cx: Int, cy: Int, cz: Int) {
         val rng = chunkRng(cx, cy, cz)
 
-        // Densité réduite : 50 % de chance de ne rien creuser depuis ce chunk source
+        // 45 % de chance de ne rien creuser depuis ce chunk source
         val wormCount = when {
-            rng.nextFloat() < 0.50f -> 0
-            rng.nextFloat() < 0.85f -> 1
+            rng.nextFloat() < 0.45f -> 0
+            rng.nextFloat() < 0.80f -> 1
             else                    -> 2
         }
         if (wormCount == 0) return
@@ -209,19 +213,22 @@ class World(private val seed: Long = 42L) {
 
             // 80 % fin (r 1.5-2.5 → tunnel 3-5 blocs de large)
             // 20 % large (r 2.5-4.0 → tunnel 5-8 blocs de large)
-            val radius = if (rng.nextFloat() > 0.20f)
+            val baseRadius = if (rng.nextFloat() > 0.20f)
                 1.5f + rng.nextFloat() * 1.0f
             else
                 2.5f + rng.nextFloat() * 1.5f
 
             val length = 100 + rng.nextInt(150)   // 100-250 steps
 
-            // Bornes étendues du chunk cible : évite d'appeler carveInChunk inutilement
-            val bMinX = target.worldX - radius; val bMaxX = target.worldX + CHUNK_SIZE + radius
-            val bMinY = target.worldY - radius; val bMaxY = target.worldY + CHUNK_SIZE + radius
-            val bMinZ = target.worldZ - radius; val bMaxZ = target.worldZ + CHUNK_SIZE + radius
+            val bMinX = target.worldX - baseRadius - 1f; val bMaxX = target.worldX + CHUNK_SIZE + baseRadius + 1f
+            val bMinY = target.worldY - baseRadius - 1f; val bMaxY = target.worldY + CHUNK_SIZE + baseRadius + 1f
+            val bMinZ = target.worldZ - baseRadius - 1f; val bMaxZ = target.worldZ + CHUNK_SIZE + baseRadius + 1f
 
-            repeat(length) {
+            repeat(length) { step ->
+                // Oscillation du rayon : rétrécissements et élargissements naturels
+                val osc = sin(step.toFloat() * 0.18f) * baseRadius * 0.25f
+                val radius = (baseRadius + osc).coerceIn(1.0f, 5.0f)
+
                 if (wx in bMinX..bMaxX && wy in bMinY..bMaxY && wz in bMinZ..bMaxZ)
                     carveInChunk(target, wx, wy, wz, radius)
 
@@ -250,80 +257,151 @@ class World(private val seed: Long = 42L) {
         }
     }
 
-    private fun applyOres(chunk: Chunk) {
+    // ── Poches de matériaux ───────────────────────────────────────────────────
+
+    // Bulles de DIRT / GRAVEL / SAND strictement à l'intérieur de la roche.
+    // On skip tout bloc qui a de l'AIR au-dessus : les parois/sols exposés
+    // sont gérés par applyFloorSurface et ne doivent pas être polluées par les poches.
+    private fun applyPockets(chunk: Chunk) {
         val wx = chunk.worldX; val wy = chunk.worldY; val wz = chunk.worldZ
-        // Distance au spawn en chunks — 3D, toutes directions équivalentes
-        val dist = sqrt((chunk.cx.toLong() * chunk.cx + chunk.cy.toLong() * chunk.cy + chunk.cz.toLong() * chunk.cz).toDouble()).toFloat()
-
         for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
-            if (chunk.blockAt(lx, ly, lz) == AIR) continue
+            val b = chunk.blockAt(lx, ly, lz)
+            if (b == AIR || b == LAVA) continue
+            // Seulement dans la masse rocheuse, jamais sur une surface exposée
+            if (neighborBlock(chunk, lx, ly + 1, lz) == AIR) continue
             val x = (wx + lx).toDouble(); val y = (wy + ly).toDouble(); val z = (wz + lz).toDouble()
-
-            val nRock  = SimplexNoise.noise(x * 0.025 + seed,       y * 0.025, z * 0.025)
-            val nPatch = SimplexNoise.noise(x * 0.07  + seed * 1.5, y * 0.07,  z * 0.07)
-            val nVein  = SimplexNoise.noise(x * 0.05  + seed * 0.7, y * 0.05,  z * 0.05)
-            val nVein2 = SimplexNoise.noise(x * 0.09  - seed * 0.4, y * 0.09,  z * 0.09)
-
-            // Petites poches de lave — rares, réparties dans tout le monde
-            if (nVein > 0.76 && nVein2 > 0.70) { chunk.setBlock(lx, ly, lz, LAVA); continue }
-
-            // Roche de base : noise pur, aucune notion de profondeur ou direction
-            val base: Byte = when {
-                nPatch > 0.58  -> GRAVEL
-                nPatch > 0.22  -> DIRT
-                nRock  > 0.38  -> GRANITE
-                nRock  > -0.05 -> STONE
-                nRock  > -0.42 -> QUARTZ
-                else           -> STONE
+            val nPocket = SimplexNoise.noise(x * 0.065 + seed * 0.003, y * 0.065, z * 0.065)
+            if (nPocket < 0.55) continue
+            val nType = SimplexNoise.noise(x * 0.022 + seed * 0.005, y * 0.022, z * 0.022)
+            val dist = sqrt((chunk.cx.toLong() * chunk.cx + chunk.cy.toLong() * chunk.cy + chunk.cz.toLong() * chunk.cz).toDouble()).toFloat()
+            val pocket: Byte = when {
+                nType > 0.25  -> DIRT
+                nType > -0.20 -> GRAVEL
+                else          -> sandForDist(dist, (wx + lx).toDouble(), (wz + lz).toDouble())
             }
+            chunk.setBlock(lx, ly, lz, pocket)
+        }
+    }
 
-            // Minerais : progression radiale depuis le spawn
-            val ore: Byte? = when {
-                nVein < 0.44 -> null
-                dist < 50f   -> when {
-                    nVein > 0.58 -> COPPER
-                    nVein > 0.50 -> COAL
-                    else         -> null
+    // ── Minerais : budget par chunk ───────────────────────────────────────────
+
+    // Chaque chunk tire un nombre déterministe de blobs d'ore selon sa distance au spawn.
+    // Un blob = random walk de N blocs qui ne pose de l'ore que sur de la roche solide.
+    // Les chunks très creux placeront naturellement moins de blocs (le walk tombe dans du vide).
+    private fun applyOreVeins(chunk: Chunk) {
+        val dist = sqrt((chunk.cx.toLong() * chunk.cx + chunk.cy.toLong() * chunk.cy + chunk.cz.toLong() * chunk.cz).toDouble()).toFloat()
+        val rng = chunkRng(chunk.cx * 11 + 7, chunk.cy * 13 + 3, chunk.cz * 17 + 5)
+
+        when {
+            dist < 50f  -> {
+                repeat(2 + rng.nextInt(2)) { placeOreBlob(chunk, rng, COAL,   4, 7) }
+                if (rng.nextFloat() < 0.5f) placeOreBlob(chunk, rng, COPPER,  3, 5)
+            }
+            dist < 100f -> {
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, COAL,   4, 6) }
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, IRON,   4, 6) }
+                if (rng.nextFloat() < 0.4f) placeOreBlob(chunk, rng, COPPER,  3, 5)
+            }
+            dist < 200f -> {
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, IRON,   4, 6) }
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, SILVER, 3, 5) }
+                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, COAL,   3, 5)
+            }
+            dist < 300f -> {
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, SILVER, 3, 5) }
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, GOLD,   3, 5) }
+                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, IRON,   3, 5)
+            }
+            dist < 450f -> {
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, GOLD,   3, 5) }
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, RUBY,   2, 4) }
+                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, SILVER, 3, 4)
+            }
+            dist < 650f -> {
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, RUBY,    2, 4) }
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, EMERALD, 2, 4) }
+                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, GOLD,   2, 4)
+            }
+            else        -> {
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, EMERALD, 2, 4) }
+                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, CRYSTAL, 2, 3) }
+                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, RUBY,   2, 3)
+            }
+        }
+    }
+
+    // Random walk dans la roche : ne pose de l'ore que sur STONE / GRANITE / QUARTZ.
+    private fun placeOreBlob(chunk: Chunk, rng: Random, ore: Byte, minBlocks: Int, maxBlocks: Int) {
+        var x = rng.nextInt(CHUNK_SIZE)
+        var y = rng.nextInt(CHUNK_SIZE)
+        var z = rng.nextInt(CHUNK_SIZE)
+        val count = minBlocks + rng.nextInt(maxBlocks - minBlocks + 1)
+        repeat(count) {
+            val b = chunk.blockAt(x, y, z)
+            if (b == STONE || b == GRANITE || b == QUARTZ) chunk.setBlock(x, y, z, ore)
+            x = (x + rng.nextInt(3) - 1).coerceIn(0, CHUNK_SIZE - 1)
+            y = (y + rng.nextInt(3) - 1).coerceIn(0, CHUNK_SIZE - 1)
+            z = (z + rng.nextInt(3) - 1).coerceIn(0, CHUNK_SIZE - 1)
+        }
+    }
+
+    // ── Sol des espaces ouverts ───────────────────────────────────────────────
+
+    // Pose GRASS / DIRT / GRAVEL / SAND sur tout bloc solide qui a ≥ 2 blocs d'AIR
+    // au-dessus (espace assez ouvert pour qu'on marche dessus).
+    // neighborBlock gère les bords de chunks (retourne STONE pour chunk inconnu → pas de faux sol).
+    // Actif seulement dans les 50 chunks autour du spawn.
+    private fun applyFloorSurface(chunk: Chunk) {
+        val dist = sqrt((chunk.cx.toLong() * chunk.cx + chunk.cy.toLong() * chunk.cy + chunk.cz.toLong() * chunk.cz).toDouble()).toFloat()
+        if (dist > 50f) return
+
+        val wx = chunk.worldX.toDouble()
+        val wz = chunk.worldZ.toDouble()
+
+        for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) {
+            val b = chunk.blockAt(lx, ly, lz)
+            if (b == AIR || b == LAVA) continue                               // seulement les blocs solides
+            if (neighborBlock(chunk, lx, ly + 1, lz) != AIR) continue        // doit avoir de l'air juste au-dessus
+            if (neighborBlock(chunk, lx, ly + 2, lz) != AIR) continue        // et encore au-dessus (≥ 2 blocs dégagés)
+
+            val x = wx + lx; val z = wz + lz
+            val nType = SimplexNoise.noise(x * 0.09, 0.0, z * 0.09)
+            val terrain: Byte = when {
+                nType > 0.20  -> GRASS
+                nType > -0.10 -> DIRT
+                nType > -0.40 -> GRAVEL
+                else          -> sandForDist(dist, x, z)
+            }
+            chunk.setBlock(lx, ly, lz, terrain)
+        }
+    }
+
+    private fun plantTrees(chunk: Chunk) {
+        val rng = chunkRng(chunk.cx * 7 + 3, chunk.cy, chunk.cz * 13 + 5)
+        for (lz in 2 until CHUNK_SIZE - 2) {
+            for (lx in 2 until CHUNK_SIZE - 2) {
+                if (rng.nextFloat() > 0.04f) continue
+                var grassY = -1
+                for (ly in CHUNK_SIZE - 1 downTo 0) {
+                    if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
                 }
-                dist < 100f  -> when {
-                    nVein > 0.62 -> IRON
-                    nVein > 0.52 -> COAL
-                    nVein > 0.46 -> COPPER
-                    else         -> null
+                if (grassY < 0) continue
+                val trunkH = 3 + rng.nextInt(3)
+                if (grassY + trunkH + 3 >= CHUNK_SIZE) continue
+                var blocked = false
+                for (dy in 1..trunkH + 2) {
+                    if (chunk.blockAt(lx, grassY + dy, lz) != AIR) { blocked = true; break }
                 }
-                dist < 200f  -> when {
-                    nVein > 0.65 -> SILVER
-                    nVein > 0.54 -> IRON
-                    nVein > 0.47 -> COAL
-                    else         -> null
-                }
-                dist < 300f  -> when {
-                    nVein > 0.68 -> GOLD
-                    nVein > 0.57 -> SILVER
-                    nVein > 0.48 -> IRON
-                    else         -> null
-                }
-                dist < 450f  -> when {
-                    nVein > 0.70 -> RUBY
-                    nVein > 0.60 -> GOLD
-                    nVein > 0.50 -> SILVER
-                    else         -> null
-                }
-                dist < 650f  -> when {
-                    nVein > 0.72 -> EMERALD
-                    nVein > 0.63 -> RUBY
-                    nVein > 0.52 -> GOLD
-                    else         -> null
-                }
-                else         -> when {
-                    nVein > 0.76 -> CRYSTAL
-                    nVein > 0.66 -> EMERALD
-                    nVein > 0.55 -> RUBY
-                    else         -> null
+                if (blocked) continue
+                for (dy in 1..trunkH) chunk.setBlock(lx, grassY + dy, lz, WOOD)
+                val topY = grassY + trunkH
+                for (dy in -1..2) for (dz in -2..2) for (dx in -2..2) {
+                    val ly = topY + dy; val lxl = lx + dx; val lzl = lz + dz
+                    if (lxl !in 0 until CHUNK_SIZE || ly !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE) continue
+                    if (dx * dx + dy * dy + dz * dz > 5) continue
+                    if (chunk.blockAt(lxl, ly, lzl) == AIR) chunk.setBlock(lxl, ly, lzl, LEAVES)
                 }
             }
-
-            chunk.setBlock(lx, ly, lz, ore ?: base)
         }
     }
 
@@ -358,6 +436,13 @@ class World(private val seed: Long = 42L) {
 
     // ── Voisinage pour le mesh ────────────────────────────────────────────────
 
+    // SAND < 100 chunks, mix 100-200, REDSAND > 200
+    private fun sandForDist(dist: Float, x: Double, z: Double): Byte = when {
+        dist < 100f -> SAND
+        dist > 200f -> REDSAND
+        else -> if (SimplexNoise.noise(x * 0.05, 0.0, z * 0.05) > 0.0) SAND else REDSAND
+    }
+
     fun neighborBlock(baseChunk: Chunk, lx: Int, ly: Int, lz: Int): Byte {
         if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
             return baseChunk.blockAt(lx, ly, lz)
@@ -367,7 +452,10 @@ class World(private val seed: Long = 42L) {
         val ncx = Math.floorDiv(wx, CHUNK_SIZE)
         val ncy = Math.floorDiv(wy, CHUNK_SIZE)
         val ncz = Math.floorDiv(wz, CHUNK_SIZE)
+        // Un chunk non-généré a blocks=ByteArray=0=AIR — traiter comme STONE pour éviter
+        // que applyFloorSurface place du GRASS sur les bords de chunk (voisin créé mais vide).
         val neighbor = getChunk(ncx, ncy, ncz) ?: return STONE
+        if (!neighbor.generated) return STONE
         return neighbor.blockAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
     }
 }

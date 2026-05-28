@@ -18,6 +18,13 @@ const val LAVA: Byte    = 12
 const val FURNACE: Byte = 13
 const val EMERALD: Byte = 14
 const val COPPER: Byte  = 15
+const val GRASS: Byte   = 16
+const val WOOD: Byte    = 17
+const val LEAVES: Byte  = 18
+const val SAND: Byte    = 19
+const val REDSAND: Byte = 20
+
+data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 
 class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     val blocks = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
@@ -26,6 +33,7 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     @Volatile var meshDirty = false
     @Volatile var pendingVertices: FloatArray? = null
     @Volatile var version = 0   // incrémenté à chaque setBlock → invalide les builds en cours
+    var structureHints: MutableList<StructureHint>? = null
 
     val worldX get() = cx * CHUNK_SIZE
     val worldY get() = cy * CHUNK_SIZE
