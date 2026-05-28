@@ -1,0 +1,32 @@
+package com.Atom2Universe.app.games.caves.world
+
+const val CHUNK_SIZE = 16
+
+const val AIR: Byte    = 0
+const val STONE: Byte  = 1
+const val GRANITE: Byte = 2
+const val QUARTZ: Byte = 3
+const val COAL: Byte   = 4
+const val GOLD: Byte   = 5
+const val CRYSTAL: Byte = 6
+
+class Chunk(val cx: Int, val cy: Int, val cz: Int) {
+    val blocks = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+
+    @Volatile var generated = false
+    @Volatile var meshDirty = false
+    @Volatile var pendingVertices: FloatArray? = null
+
+    val worldX get() = cx * CHUNK_SIZE
+    val worldY get() = cy * CHUNK_SIZE
+    val worldZ get() = cz * CHUNK_SIZE
+
+    fun blockAt(lx: Int, ly: Int, lz: Int): Byte {
+        if (lx !in 0 until CHUNK_SIZE || ly !in 0 until CHUNK_SIZE || lz !in 0 until CHUNK_SIZE) return AIR
+        return blocks[lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE]
+    }
+
+    fun setBlock(lx: Int, ly: Int, lz: Int, type: Byte) {
+        blocks[lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE] = type
+    }
+}

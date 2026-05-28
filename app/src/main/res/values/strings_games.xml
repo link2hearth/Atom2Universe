@@ -89,4 +89,14 @@
     <string name="fusion_tap_continue">Tap to continue</string>
     <string name="fusion_next_bonus_aps">Next win → +1% APS</string>
     <string name="fusion_next_bonus_apc">Next win → +1% APC</string>
+
+    <!-- Cave World -->
+    <string name="cave_title">Cave World</string>
+    <string name="cave_description">Infinite 3D procedural caves</string>
+    <string name="cave_back">Back</string>
+    <string name="cave_hint_move">Left: move</string>
+    <string name="cave_hint_look">Right: look</string>
+    <string name="cave_mode_spectator">Spectator</string>
+    <string name="cave_mode_walk">Walk</string>
+    <string name="cave_jump">JUMP</string>
 </resources>

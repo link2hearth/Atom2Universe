@@ -16,6 +16,7 @@ import com.Atom2Universe.app.games.link.LinkActivity
 import com.Atom2Universe.app.games.starswar.StarsWarActivity
 import com.Atom2Universe.app.games.wavesurf.WaveSurfActivity
 import com.Atom2Universe.app.games.hexrunner.HexRunnerActivity
+import com.Atom2Universe.app.games.caves.CaveActivity
 import com.Atom2Universe.app.games.escapelabyrinth.EscapeLabyrinthActivity
 import com.Atom2Universe.app.games.memory.MemoryActivity
 import com.Atom2Universe.app.games.circles.CirclesActivity
@@ -192,6 +193,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_hexrunner,
             activityClass = HexRunnerActivity::class.java
+        ),
+        HubTile(
+            id = "caves",
+            titleRes = R.string.cave_title,
+            descriptionRes = R.string.cave_description,
+            iconRes = android.R.drawable.ic_menu_mapmode,
+            defaultColorRes = R.color.game_tile_caves,
+            activityClass = CaveActivity::class.java
         ),
         HubTile(
             id = "escape_labyrinth",

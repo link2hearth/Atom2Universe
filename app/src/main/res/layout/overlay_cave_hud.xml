@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Back -->
+    <ImageButton
+        android:id="@+id/cave_btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="8dp"
+        android:background="#55000000"
+        android:contentDescription="@string/cave_back"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:tint="#FFFFFF" />
+
+    <!-- Coordinates (top center) -->
+    <TextView
+        android:id="@+id/cave_tv_coords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="12dp"
+        android:fontFamily="monospace"
+        android:text="0.0  0.0  0.0"
+        android:textColor="#99FFFFFF"
+        android:textSize="11sp" />
+
+    <!-- Mode toggle (top right) -->
+    <Button
+        android:id="@+id/cave_btn_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="8dp"
+        android:background="#55000000"
+        android:paddingHorizontal="12dp"
+        android:text="@string/cave_mode_spectator"
+        android:textColor="#FFFFFF"
+        android:textSize="11sp" />
+
+    <!-- Fly UP / JUMP (right side, above center) — texte changé selon le mode -->
+    <Button
+        android:id="@+id/cave_btn_up"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="72dp"
+        android:background="#55FFFFFF"
+        android:text="▲"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp" />
+
+    <!-- Fly DOWN (right side, below center — masqué en mode marche) -->
+    <Button
+        android:id="@+id/cave_btn_down"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="72dp"
+        android:background="#55FFFFFF"
+        android:text="▼"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp" />
+
+    <!-- Hints (bottom) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="12dp"
+        android:text="@string/cave_hint_move"
+        android:textColor="#55FFFFFF"
+        android:textSize="10sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:text="@string/cave_hint_look"
+        android:textColor="#55FFFFFF"
+        android:textSize="10sp" />
+
+</FrameLayout>
