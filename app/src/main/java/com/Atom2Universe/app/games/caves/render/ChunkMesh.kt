@@ -45,17 +45,17 @@ internal class ChunkMesh {
         ready = true
     }
 
-    fun draw(aPos: Int, aColor: Int) {
+    fun draw(aPos: Int, aUv: Int) {
         if (!ready || vertexCount == 0) return
         val stride = 6 * 4
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vboId)
         GLES30.glEnableVertexAttribArray(aPos)
-        GLES30.glVertexAttribPointer(aPos,   3, GLES30.GL_FLOAT, false, stride, 0)
-        GLES30.glEnableVertexAttribArray(aColor)
-        GLES30.glVertexAttribPointer(aColor, 3, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glVertexAttribPointer(aPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(aUv)
+        GLES30.glVertexAttribPointer(aUv,  3, GLES30.GL_FLOAT, false, stride, 12)
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
         GLES30.glDisableVertexAttribArray(aPos)
-        GLES30.glDisableVertexAttribArray(aColor)
+        GLES30.glDisableVertexAttribArray(aUv)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 

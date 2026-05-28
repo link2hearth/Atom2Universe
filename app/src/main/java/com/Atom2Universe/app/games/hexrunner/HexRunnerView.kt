@@ -34,7 +34,8 @@ class HexRunnerView @JvmOverloads constructor(
     }
 
     private val colBg         = Color.parseColor("#070710")
-    private val colSolid      = intArrayOf(0, 229, 192)
+    private val hsvBuf        = FloatArray(3)
+    @Volatile private var colorTime = 0f
     private val colCenter     = Color.parseColor("#0D1A28")
     private val colPlayer     = Color.WHITE
     private val colPlayerGlow = Color.parseColor("#5500E5C0")
@@ -70,6 +71,7 @@ class HexRunnerView @JvmOverloads constructor(
             }
             if (game.isRunning) {
                 game.update(dtMs)
+                colorTime = (colorTime + dtMs * 0.018f) % 360f
                 if (game.isGameOver && !gameOverFired) {
                     gameOverFired = true
                     onGameOver?.invoke()
@@ -134,15 +136,21 @@ class HexRunnerView @JvmOverloads constructor(
             val ring      = game.getRing(i)
             val proximity = fInner.coerceIn(0f, 1f)
 
+            hsvBuf[0] = (colorTime + fInner * 360f) % 360f
+            hsvBuf[1] = 0.58f
+            hsvBuf[2] = 0.90f
+            val ringRgb = Color.HSVToColor(hsvBuf)
+            val rR = Color.red(ringRgb); val rG = Color.green(ringRgb); val rB = Color.blue(ringRgb)
+
             for (face in 0 until game.numFaces) {
                 buildTrap(face, rInner, rOuter, cx, cy, angle)
                 paint.style = Paint.Style.FILL
                 val isGapFace = !ring.solid[face]
-                paint.color = Color.argb(lerp(40f, 230f, proximity).toInt(), colSolid[0], colSolid[1], colSolid[2])
+                paint.color = Color.argb(lerp(40f, 230f, proximity).toInt(), rR, rG, rB)
                 canvas.drawPath(path, paint)
                 paint.style       = Paint.Style.STROKE
                 paint.strokeWidth = 1f
-                paint.color = Color.argb(lerp(5f, 90f, proximity).toInt(), 0, 160, 130)
+                paint.color = Color.argb(lerp(5f, 90f, proximity).toInt(), rR / 2, rG / 2, rB / 2)
                 canvas.drawPath(path, paint)
                 if (isGapFace) {
                     val rBandOuter = rInner + (rOuter - rInner) * 0.22f
@@ -163,14 +171,19 @@ class HexRunnerView @JvmOverloads constructor(
             val rOuter = perspR(fOuter, pR, minR)
             if (rInner > maxR) break
             val snapshot = outgoingRings[k]
+            hsvBuf[0] = (colorTime + fInner * 360f) % 360f
+            hsvBuf[1] = 0.58f
+            hsvBuf[2] = 0.90f
+            val ringRgb = Color.HSVToColor(hsvBuf)
+            val rR = Color.red(ringRgb); val rG = Color.green(ringRgb); val rB = Color.blue(ringRgb)
             for (face in 0 until game.numFaces) {
                 buildTrap(face, rInner, rOuter, cx, cy, angle)
                 paint.style = Paint.Style.FILL
-                paint.color = Color.argb(230, colSolid[0], colSolid[1], colSolid[2])
+                paint.color = Color.argb(230, rR, rG, rB)
                 canvas.drawPath(path, paint)
                 paint.style       = Paint.Style.STROKE
                 paint.strokeWidth = 1f
-                paint.color = Color.argb(90, 0, 160, 130)
+                paint.color = Color.argb(90, rR / 2, rG / 2, rB / 2)
                 canvas.drawPath(path, paint)
                 if (!snapshot.solid[face]) {
                     val rBandOuter = rInner + (rOuter - rInner) * 0.22f
@@ -181,11 +194,6 @@ class HexRunnerView @JvmOverloads constructor(
                 }
             }
         }
-
-        paint.style       = Paint.Style.STROKE
-        paint.strokeWidth = 3f
-        paint.color = Color.argb(100, 0, 200, 170)
-        drawPolygonOutline(canvas, cx, cy, pR, angle)
 
         drawPlayer(canvas, cx, cy, pR, angle)
         drawHUD(canvas, cx)

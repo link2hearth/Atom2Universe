@@ -16,6 +16,9 @@ class TouchController {
     @Volatile var flyUp = false
     @Volatile var flyDown = false
 
+    // Laser / minage (maintenu enfoncé pour miner)
+    @Volatile var laserActive = false
+
     private var leftId = -1
     private var leftCx = 0f; private var leftCy = 0f
 

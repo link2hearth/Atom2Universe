@@ -6,9 +6,18 @@ const val AIR: Byte    = 0
 const val STONE: Byte  = 1
 const val GRANITE: Byte = 2
 const val QUARTZ: Byte = 3
-const val COAL: Byte   = 4
-const val GOLD: Byte   = 5
+const val COAL: Byte    = 4
+const val GOLD: Byte    = 5
 const val CRYSTAL: Byte = 6
+const val DIRT: Byte    = 7
+const val GRAVEL: Byte  = 8
+const val IRON: Byte    = 9
+const val SILVER: Byte  = 10
+const val RUBY: Byte    = 11
+const val LAVA: Byte    = 12
+const val FURNACE: Byte = 13
+const val EMERALD: Byte = 14
+const val COPPER: Byte  = 15
 
 class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     val blocks = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
@@ -16,6 +25,7 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     @Volatile var generated = false
     @Volatile var meshDirty = false
     @Volatile var pendingVertices: FloatArray? = null
+    @Volatile var version = 0   // incrémenté à chaque setBlock → invalide les builds en cours
 
     val worldX get() = cx * CHUNK_SIZE
     val worldY get() = cy * CHUNK_SIZE

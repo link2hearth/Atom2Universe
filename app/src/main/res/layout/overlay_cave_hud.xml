@@ -15,7 +15,7 @@
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:tint="#FFFFFF" />
 
-    <!-- Coordinates (top center) -->
+    <!-- Coordonnées (haut centre) -->
     <TextView
         android:id="@+id/cave_tv_coords"
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         android:textColor="#99FFFFFF"
         android:textSize="11sp" />
 
-    <!-- Mode toggle (top right) -->
+    <!-- Mode toggle (haut droit) -->
     <Button
         android:id="@+id/cave_btn_mode"
         android:layout_width="wrap_content"
@@ -40,7 +40,58 @@
         android:textColor="#FFFFFF"
         android:textSize="11sp" />
 
-    <!-- Fly UP / JUMP (right side, above center) — texte changé selon le mode -->
+    <!-- Crosshair centre -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="+"
+        android:textColor="#CCFFFFFF"
+        android:textSize="22sp"
+        android:fontFamily="monospace" />
+
+    <!-- Barre de progression minage (centre bas, cachée par défaut) -->
+    <LinearLayout
+        android:id="@+id/cave_mining_panel"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="56dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/cave_tv_mining_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFFFF"
+            android:textSize="11sp"
+            android:layout_marginBottom="4dp" />
+
+        <ProgressBar
+            android:id="@+id/cave_mining_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="#00D4FF" />
+    </LinearLayout>
+
+    <!-- Inventaire (bas centre) -->
+    <TextView
+        android:id="@+id/cave_tv_inventory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:textColor="#AAFFFFFF"
+        android:textSize="11sp"
+        android:fontFamily="monospace"
+        android:text="" />
+
+    <!-- JUMP / FLY UP (droite centre haut) -->
     <Button
         android:id="@+id/cave_btn_up"
         android:layout_width="64dp"
@@ -53,7 +104,7 @@
         android:textColor="#FFFFFF"
         android:textSize="22sp" />
 
-    <!-- Fly DOWN (right side, below center — masqué en mode marche) -->
+    <!-- FLY DOWN (spectateur seulement) -->
     <Button
         android:id="@+id/cave_btn_down"
         android:layout_width="64dp"
@@ -66,23 +117,26 @@
         android:textColor="#FFFFFF"
         android:textSize="22sp" />
 
-    <!-- Hints (bottom) -->
+    <!-- LASER (bas droit) -->
+    <Button
+        android:id="@+id/cave_btn_laser"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:background="#66003366"
+        android:text="@string/cave_laser"
+        android:textColor="#00D4FF"
+        android:textSize="10sp" />
+
+    <!-- Hints (bas) -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="12dp"
         android:text="@string/cave_hint_move"
-        android:textColor="#55FFFFFF"
-        android:textSize="10sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="12dp"
-        android:text="@string/cave_hint_look"
-        android:textColor="#55FFFFFF"
+        android:textColor="#44FFFFFF"
         android:textSize="10sp" />
 
 </FrameLayout>

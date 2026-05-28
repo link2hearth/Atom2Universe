@@ -18,10 +18,13 @@ internal class Camera(var x: Float = 0f, var y: Float = 0f, var z: Float = 0f) {
     private val rgtX get() = cos(Math.toRadians(yaw.toDouble())).toFloat()
     private val rgtZ get() = -sin(Math.toRadians(yaw.toDouble())).toFloat()
 
-    // Full look direction (including pitch) for the view matrix target.
-    private val lookDX get() = cos(Math.toRadians(pitch.toDouble())).toFloat() * sin(Math.toRadians(yaw.toDouble())).toFloat()
-    private val lookDY get() = -sin(Math.toRadians(pitch.toDouble())).toFloat()
-    private val lookDZ get() = cos(Math.toRadians(pitch.toDouble())).toFloat() * cos(Math.toRadians(yaw.toDouble())).toFloat()
+    // Full look direction (including pitch) — exposé pour le raycasting laser.
+    val lookX get() = cos(Math.toRadians(pitch.toDouble())).toFloat() * sin(Math.toRadians(yaw.toDouble())).toFloat()
+    val lookY get() = -sin(Math.toRadians(pitch.toDouble())).toFloat()
+    val lookZ get() = cos(Math.toRadians(pitch.toDouble())).toFloat() * cos(Math.toRadians(yaw.toDouble())).toFloat()
+    private val lookDX get() = lookX
+    private val lookDY get() = lookY
+    private val lookDZ get() = lookZ
 
     fun setProjection(fovDeg: Float, aspect: Float) {
         Matrix.perspectiveM(projMatrix, 0, fovDeg, aspect, 0.1f, 90f)

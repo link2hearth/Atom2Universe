@@ -252,19 +252,78 @@ class World(private val seed: Long = 42L) {
 
     private fun applyOres(chunk: Chunk) {
         val wx = chunk.worldX; val wy = chunk.worldY; val wz = chunk.worldZ
+        // Distance au spawn en chunks — 3D, toutes directions équivalentes
+        val dist = sqrt((chunk.cx.toLong() * chunk.cx + chunk.cy.toLong() * chunk.cy + chunk.cz.toLong() * chunk.cz).toDouble()).toFloat()
+
         for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             if (chunk.blockAt(lx, ly, lz) == AIR) continue
             val x = (wx + lx).toDouble(); val y = (wy + ly).toDouble(); val z = (wz + lz).toDouble()
-            val n = SimplexNoise.noise(x * 0.015 + seed, y * 0.015, z * 0.015)
-            val depth = -chunk.cy
-            chunk.setBlock(lx, ly, lz, when {
-                depth > 4 && n > 0.55 -> GOLD
-                n > 0.30              -> COAL
-                n > -0.10             -> GRANITE
-                n > -0.50             -> QUARTZ
-                depth > 2 && n < -0.7 -> CRYSTAL
-                else                  -> STONE
-            })
+
+            val nRock  = SimplexNoise.noise(x * 0.025 + seed,       y * 0.025, z * 0.025)
+            val nPatch = SimplexNoise.noise(x * 0.07  + seed * 1.5, y * 0.07,  z * 0.07)
+            val nVein  = SimplexNoise.noise(x * 0.05  + seed * 0.7, y * 0.05,  z * 0.05)
+            val nVein2 = SimplexNoise.noise(x * 0.09  - seed * 0.4, y * 0.09,  z * 0.09)
+
+            // Petites poches de lave — rares, réparties dans tout le monde
+            if (nVein > 0.76 && nVein2 > 0.70) { chunk.setBlock(lx, ly, lz, LAVA); continue }
+
+            // Roche de base : noise pur, aucune notion de profondeur ou direction
+            val base: Byte = when {
+                nPatch > 0.58  -> GRAVEL
+                nPatch > 0.22  -> DIRT
+                nRock  > 0.38  -> GRANITE
+                nRock  > -0.05 -> STONE
+                nRock  > -0.42 -> QUARTZ
+                else           -> STONE
+            }
+
+            // Minerais : progression radiale depuis le spawn
+            val ore: Byte? = when {
+                nVein < 0.44 -> null
+                dist < 50f   -> when {
+                    nVein > 0.58 -> COPPER
+                    nVein > 0.50 -> COAL
+                    else         -> null
+                }
+                dist < 100f  -> when {
+                    nVein > 0.62 -> IRON
+                    nVein > 0.52 -> COAL
+                    nVein > 0.46 -> COPPER
+                    else         -> null
+                }
+                dist < 200f  -> when {
+                    nVein > 0.65 -> SILVER
+                    nVein > 0.54 -> IRON
+                    nVein > 0.47 -> COAL
+                    else         -> null
+                }
+                dist < 300f  -> when {
+                    nVein > 0.68 -> GOLD
+                    nVein > 0.57 -> SILVER
+                    nVein > 0.48 -> IRON
+                    else         -> null
+                }
+                dist < 450f  -> when {
+                    nVein > 0.70 -> RUBY
+                    nVein > 0.60 -> GOLD
+                    nVein > 0.50 -> SILVER
+                    else         -> null
+                }
+                dist < 650f  -> when {
+                    nVein > 0.72 -> EMERALD
+                    nVein > 0.63 -> RUBY
+                    nVein > 0.52 -> GOLD
+                    else         -> null
+                }
+                else         -> when {
+                    nVein > 0.76 -> CRYSTAL
+                    nVein > 0.66 -> EMERALD
+                    nVein > 0.55 -> RUBY
+                    else         -> null
+                }
+            }
+
+            chunk.setBlock(lx, ly, lz, ore ?: base)
         }
     }
 
@@ -272,6 +331,29 @@ class World(private val seed: Long = 42L) {
     private fun chunkRng(cx: Int, cy: Int, cz: Int): Random {
         val s = seed xor (chunkKey(cx, cy, cz) * 6364136223846793005L + 1442695040888963407L)
         return Random(s)
+    }
+
+    // ── Modification de blocs (minage) ───────────────────────────────────────
+
+    fun setBlock(wx: Int, wy: Int, wz: Int, type: Byte) {
+        val cx = Math.floorDiv(wx, CHUNK_SIZE)
+        val cy = Math.floorDiv(wy, CHUNK_SIZE)
+        val cz = Math.floorDiv(wz, CHUNK_SIZE)
+        val chunk = getChunk(cx, cy, cz)?.takeIf { it.generated } ?: return
+        chunk.setBlock(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE, type)
+        chunk.version++           // invalide tout build en cours pour ce chunk
+        val key = chunkKey(cx, cy, cz)
+        chunk.meshDirty = true
+        rebuildQueue.add(key)
+        // Face neighbors
+        for ((nx, ny, nz) in arrayOf(
+            intArrayOf(cx-1,cy,cz), intArrayOf(cx+1,cy,cz),
+            intArrayOf(cx,cy-1,cz), intArrayOf(cx,cy+1,cz),
+            intArrayOf(cx,cy,cz-1), intArrayOf(cx,cy,cz+1)
+        )) {
+            val n = getChunk(nx, ny, nz) ?: continue
+            if (n.generated) { n.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)) }
+        }
     }
 
     // ── Voisinage pour le mesh ────────────────────────────────────────────────

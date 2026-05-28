@@ -99,4 +99,20 @@
     <string name="cave_mode_spectator">Spectateur</string>
     <string name="cave_mode_walk">Marche</string>
     <string name="cave_jump">SAUTER</string>
+    <string name="cave_laser">⚡ LASER</string>
+    <string name="cave_block_stone">Pierre</string>
+    <string name="cave_block_granite">Granite</string>
+    <string name="cave_block_quartz">Quartz</string>
+    <string name="cave_block_coal">Charbon</string>
+    <string name="cave_block_gold">Or</string>
+    <string name="cave_block_crystal">Cristal</string>
+    <string name="cave_block_dirt">Terre</string>
+    <string name="cave_block_gravel">Gravier</string>
+    <string name="cave_block_iron">Minerai de fer</string>
+    <string name="cave_block_silver">Minerai d\'argent</string>
+    <string name="cave_block_ruby">Minerai de rubis</string>
+    <string name="cave_block_lava">Lave</string>
+    <string name="cave_block_furnace">Four</string>
+    <string name="cave_block_emerald">Minerai d\'émeraude</string>
+    <string name="cave_block_copper">Minerai de cuivre</string>
 </resources>
