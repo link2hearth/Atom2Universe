@@ -20,6 +20,7 @@ import com.Atom2Universe.app.crypto.clicker.ElementBonusEngine
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.GachaTicketRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.fusion.FusionStore
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import com.Atom2Universe.app.util.enableImmersiveMode
 import android.content.Intent
@@ -74,6 +75,7 @@ class ClickerStatsActivity : ThemedActivity() {
 
         val statsRepository  = ClickerStatsRepository(this)
         val periodicStore    = PeriodicCollectionStore(this)
+        val fusionStore      = FusionStore(this)
         val clickerRepo      = ClickerRepository(this)
         val offlineRepo      = ClickerOfflineRepository(this)
 
@@ -114,11 +116,13 @@ class ClickerStatsActivity : ThemedActivity() {
 
                 if (toggleStats.isChecked) {
                     statsRepository.reset()
-                    GameStatsRepository(this).reset()
-                    getSharedPreferences("clicker_achievements", MODE_PRIVATE).edit { clear() }
                 }
-                if (togglePeriodic.isChecked) periodicStore.reset()
+                if (togglePeriodic.isChecked) {
+                    periodicStore.reset()
+                    fusionStore.reset()
+                }
                 if (toggleClicker.isChecked) {
+                    getSharedPreferences("clicker_achievements", MODE_PRIVATE).edit { clear() }
                     lifecycleScope.launch(kotlinx.coroutines.NonCancellable) {
                         clickerRepo.reset()
                         GachaTicketRepository(this@ClickerStatsActivity).resetTickets()
@@ -134,12 +138,13 @@ class ClickerStatsActivity : ThemedActivity() {
                     getSharedPreferences("pipetap_save",          MODE_PRIVATE).edit { clear() }
                 }
                 if (toggleRecords.isChecked) {
+                    GameStatsRepository(this).reset()
+                    getSharedPreferences("survivor_save",    MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("stars_war_save",   MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("reflex_save",      MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("flappy_cat_save",  MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("wave_surf_save",   MODE_PRIVATE).edit { clear() }
                     getSharedPreferences("match3_save",      MODE_PRIVATE).edit { clear() }
-                    GameStatsRepository(this).resetHexRunnerBestTime()
                     // Best score 2048 seulement (la partie en cours est gérée par toggleClicker)
                     getSharedPreferences("game2048_save",    MODE_PRIVATE).edit { remove("best_score") }
                     // Particules : zéro les records en conservant la progression shop

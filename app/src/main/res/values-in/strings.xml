@@ -63,7 +63,7 @@
     <string name="reset_option_clicker">Progres clicker (atom, pembelian)</string>
     <string name="reset_option_periodic">Koleksi tabel periodik</string>
     <string name="reset_option_records">Rekor permainan</string>
-    <string name="reset_option_stats">Statistik permainan</string>
+    <string name="reset_option_stats">Statistik Clicker</string>
     <string name="stat_apc_frenzies">Frenzy APC</string>
     <string name="stat_aps_frenzies">Frenzy APS</string>
     <string name="stat_element_bonus_apc">Bonus elemen APC</string>

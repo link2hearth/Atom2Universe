@@ -134,7 +134,7 @@
     <string name="stat_production_title">Producție totală</string>
     <string name="stat_production_apc">APC · clicuri manuale</string>
     <string name="stat_production_aps">APS · automat</string>
-    <string name="reset_option_stats">Statistici joc</string>
+    <string name="reset_option_stats">Statistici Clicker</string>
     <string name="reset_option_periodic">Colecție tabel periodic</string>
     <string name="reset_option_clicker">Progres clicker (atomi, achiziții)</string>
     <string name="reset_option_records">Recorduri joc (scoruri maxime)</string>

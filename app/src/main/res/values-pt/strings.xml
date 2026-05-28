@@ -63,7 +63,7 @@
     <string name="reset_option_clicker">Progresso do clicker (átomos, compras)</string>
     <string name="reset_option_periodic">Coleção da tabela periódica</string>
     <string name="reset_option_records">Recordes (pontuações máximas)</string>
-    <string name="reset_option_stats">Estatísticas do jogo</string>
+    <string name="reset_option_stats">Estatísticas do clicker</string>
     <string name="stat_apc_frenzies">Frenzies APC</string>
     <string name="stat_aps_frenzies">Frenzies APS</string>
     <string name="stat_element_bonus_apc">Bônus de elemento APC</string>

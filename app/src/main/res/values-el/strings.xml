@@ -134,7 +134,7 @@
     <string name="stat_production_title">Συνολική παραγωγή</string>
     <string name="stat_production_apc">APC · χειροκίνητα κλικ</string>
     <string name="stat_production_aps">APS · αυτόματο</string>
-    <string name="reset_option_stats">Στατιστικά παιχνιδιού</string>
+    <string name="reset_option_stats">Στατιστικά Clicker</string>
     <string name="reset_option_periodic">Συλλογή περιοδικού πίνακα</string>
     <string name="reset_option_clicker">Εξέλιξη clicker (άτομα, αγορές)</string>
     <string name="reset_option_records">Ρεκόρ παιχνιδιού (υψηλές βαθμολογίες)</string>

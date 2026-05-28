@@ -32,6 +32,8 @@ class FusionStore(context: Context) {
 
     fun nextBonusIsAps(): Boolean = getTotalWins() % 2 == 0
 
+    fun reset() = prefs.edit { clear() }
+
     companion object {
         private const val PREFS_NAME = "fusion_prefs"
         private const val KEY_TOTAL_WINS = "total_wins"

@@ -134,7 +134,7 @@
     <string name="stat_production_title">Production totale</string>
     <string name="stat_production_apc">APC · clics manuels</string>
     <string name="stat_production_aps">APS · automatique</string>
-    <string name="reset_option_stats">Statistiques du jeu</string>
+    <string name="reset_option_stats">Statistiques Clicker</string>
     <string name="reset_option_periodic">Collection du tableau périodique</string>
     <string name="reset_option_clicker">Progression du clicker (atomes, achats)</string>
     <string name="reset_option_records">Records des jeux (meilleurs scores)</string>

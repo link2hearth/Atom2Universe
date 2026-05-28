@@ -63,7 +63,7 @@
     <string name="reset_option_clicker">Clicker-Fortschritt (Atome, Käufe)</string>
     <string name="reset_option_periodic">Periodensystem-Sammlung</string>
     <string name="reset_option_records">Spielrekorde (Highscores)</string>
-    <string name="reset_option_stats">Spielstatistiken</string>
+    <string name="reset_option_stats">Clicker-Statistiken</string>
     <string name="stat_apc_frenzies">APC-Frenzies</string>
     <string name="stat_aps_frenzies">APS-Frenzies</string>
     <string name="stat_element_bonus_apc">APC-Elementbonus</string>

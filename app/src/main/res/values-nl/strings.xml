@@ -63,7 +63,7 @@
     <string name="reset_option_clicker">Clickervoortgang (atomen, aankopen)</string>
     <string name="reset_option_periodic">Periodiek systeemcollectie</string>
     <string name="reset_option_records">Spelrecords</string>
-    <string name="reset_option_stats">Spelstatistieken</string>
+    <string name="reset_option_stats">Clicker-statistieken</string>
     <string name="stat_apc_frenzies">APC-frenzies</string>
     <string name="stat_aps_frenzies">APS-frenzies</string>
     <string name="stat_element_bonus_apc">APC-elementbonus</string>

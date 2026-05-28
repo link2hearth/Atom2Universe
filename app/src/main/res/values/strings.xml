@@ -134,7 +134,7 @@
     <string name="stat_production_title">Lifetime production</string>
     <string name="stat_production_apc">APC · manual clicks</string>
     <string name="stat_production_aps">APS · automatic</string>
-    <string name="reset_option_stats">Game statistics</string>
+    <string name="reset_option_stats">Clicker Statistics</string>
     <string name="reset_option_periodic">Periodic table collection</string>
     <string name="reset_option_clicker">Clicker progression (atoms, purchases)</string>
     <string name="reset_option_records">Game records (high scores)</string>

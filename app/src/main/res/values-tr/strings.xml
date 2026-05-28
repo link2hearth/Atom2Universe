@@ -63,7 +63,7 @@
     <string name="reset_option_clicker">Clicker ilerlemesi (atomlar, satın almalar)</string>
     <string name="reset_option_periodic">Periyodik tablo koleksiyonu</string>
     <string name="reset_option_records">Oyun rekorları</string>
-    <string name="reset_option_stats">Oyun istatistikleri</string>
+    <string name="reset_option_stats">Clicker İstatistikleri</string>
     <string name="stat_apc_frenzies">APC çılgınlıkları</string>
     <string name="stat_aps_frenzies">APS çılgınlıkları</string>
     <string name="stat_element_bonus_apc">APC element bonusu</string>

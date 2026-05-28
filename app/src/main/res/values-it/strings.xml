@@ -63,7 +63,7 @@
     <string name="reset_option_clicker">Progressi clicker (atomi, acquisti)</string>
     <string name="reset_option_periodic">Collezione tavola periodica</string>
     <string name="reset_option_records">Record di gioco</string>
-    <string name="reset_option_stats">Statistiche di gioco</string>
+    <string name="reset_option_stats">Statistiche Clicker</string>
     <string name="stat_apc_frenzies">Frenzies APC</string>
     <string name="stat_aps_frenzies">Frenzies APS</string>
     <string name="stat_element_bonus_apc">Bonus elemento APC</string>

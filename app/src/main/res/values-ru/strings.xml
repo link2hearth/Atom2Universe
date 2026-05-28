@@ -63,7 +63,7 @@
     <string name="reset_option_clicker">Прогресс кликера (атомы, покупки)</string>
     <string name="reset_option_periodic">Коллекция таблицы Менделеева</string>
     <string name="reset_option_records">Игровые рекорды</string>
-    <string name="reset_option_stats">Игровая статистика</string>
+    <string name="reset_option_stats">Статистика кликера</string>
     <string name="stat_apc_frenzies">APC-френзи</string>
     <string name="stat_aps_frenzies">APS-френзи</string>
     <string name="stat_element_bonus_apc">Бонус элемента APC</string>
