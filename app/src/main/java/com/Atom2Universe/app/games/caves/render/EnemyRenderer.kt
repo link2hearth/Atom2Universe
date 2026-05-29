@@ -1,12 +1,13 @@
 package com.Atom2Universe.app.games.caves.render
 
+import android.content.res.AssetManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.opengl.GLES30
 import com.Atom2Universe.app.games.caves.entity.Enemy
-import com.Atom2Universe.app.games.caves.entity.EnemyType
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.*
@@ -27,12 +28,9 @@ internal class EnemyRenderer {
     private var colorVbo  = 0
     private var digitVbo  = 0
 
-    // 5 floats/vtx × 6 vtx/quad × MAX quads
-    private val spV = FloatArray(MAX_ENEMIES * 6 * 5)
-    // 6 floats/vtx × 12 vtx/enemy (2 quads HP bar)
-    private val coV = FloatArray(MAX_ENEMIES * 12 * 6)
-    // 5 floats/vtx × 6 vtx/chiffre × MAX_DIGITS chiffres × MAX enemies
-    private val diV = FloatArray(MAX_ENEMIES * MAX_DIGITS * 6 * 5)
+    private val spV = FloatArray(MAX_VISIBLE * 6 * 5)
+    private val coV = FloatArray(MAX_VISIBLE * 12 * 6)
+    private val diV = FloatArray(MAX_VISIBLE * MAX_DIGITS * 6 * 5)
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
@@ -54,12 +52,14 @@ internal class EnemyRenderer {
         #version 300 es
         precision mediump float;
         uniform sampler2D u_tex;
+        uniform float u_flash;
         in vec2 v_uv;
         in float v_fog;
         out vec4 fragColor;
         void main() {
             vec4 col = texture(u_tex, v_uv);
             if (col.a < 0.1) discard;
+            col.rgb = mix(col.rgb, vec3(1.0, 0.15, 0.15), u_flash * 0.7);
             vec3 fog = vec3(0.008, 0.006, 0.015);
             fragColor = vec4(mix(col.rgb, fog, v_fog), 1.0);
         }
@@ -89,13 +89,16 @@ internal class EnemyRenderer {
 
     // ── Init GL ───────────────────────────────────────────────────────────────
 
-    fun onSurfaceCreated() {
+    private var spriteUFlash = 0
+
+    fun onSurfaceCreated(assets: AssetManager, familyPool: List<String>) {
         spriteShader = ShaderProgram(VERT_SPRITE, FRAG_SPRITE).also {
             it.use()
-            spriteAPos  = it.attrib("a_pos")
-            spriteAUv   = it.attrib("a_uv")
-            spriteUMvp  = it.uniform("u_mvp")
-            spriteUTex  = it.uniform("u_tex")
+            spriteAPos   = it.attrib("a_pos")
+            spriteAUv    = it.attrib("a_uv")
+            spriteUMvp   = it.uniform("u_mvp")
+            spriteUTex   = it.uniform("u_tex")
+            spriteUFlash = it.uniform("u_flash")
         }
         colorShader = ShaderProgram(VERT_COLOR, FRAG_COLOR).also {
             it.use()
@@ -103,7 +106,7 @@ internal class EnemyRenderer {
             colorAColor = it.attrib("a_color")
             colorUMvp   = it.uniform("u_mvp")
         }
-        atlasTex = buildSpriteAtlas()
+        atlasTex = buildSpriteAtlas(assets, familyPool)
         digitTex = buildDigitAtlas()
 
         val ids = IntArray(3); GLES30.glGenBuffers(3, ids, 0)
@@ -120,9 +123,12 @@ internal class EnemyRenderer {
     ) {
         if (enemies.none { it.hp > 0 }) return
 
+        // La matrice view d'Android inverse l'axe X (eye.x = -world.x),
+        // donc le vecteur "droite caméra" monde doit être négé pour pointer
+        // vers la droite écran.
         val yawRad = Math.toRadians(cameraYaw.toDouble())
-        val rightX = cos(yawRad).toFloat()
-        val rightZ = (-sin(yawRad)).toFloat()
+        val rightX = (-cos(yawRad)).toFloat()
+        val rightZ = sin(yawRad).toFloat()
 
         var si = 0; var ci = 0; var di = 0
 
@@ -133,22 +139,26 @@ internal class EnemyRenderer {
             val ey = (e.y - camY).toFloat()
             val ez = (e.z - camZ).toFloat()
 
-            val hw = e.type.spriteWidth  * 0.5f
-            val h  = e.type.spriteHeight
-            val au0 = e.type.ordinal * SPRITE_W.toFloat() / ATLAS_SIZE
-            val au1 = (e.type.ordinal + 1) * SPRITE_W.toFloat() / ATLAS_SIZE
-            val av1 = SPRITE_H.toFloat() / ATLAS_SIZE   // av0 = 0f
+            val scale = e.baseScale
+            val hw = scale * 0.5f
+            val h  = scale
 
-            // ── Sprite billboard ──────────────────────────────────────────────
+            val col = dirFrame(cameraYaw, e.yaw, e.animTime)
+            val row = e.familyRow
+            val au0 = col.toFloat() * SPRITE_SIZE / ATLAS_W
+            val au1 = (col + 1).toFloat() * SPRITE_SIZE / ATLAS_W
+            val av0 = row.toFloat() * SPRITE_SIZE / ATLAS_H
+            val av1 = (row + 1).toFloat() * SPRITE_SIZE / ATLAS_H
+
             fun sv(rx: Float, ry: Float, u: Float, v: Float) {
                 spV[si++] = ex + rightX * rx; spV[si++] = ey + ry; spV[si++] = ez + rightZ * rx
                 spV[si++] = u; spV[si++] = v
             }
-            sv(-hw, h,  au0, 0f); sv(-hw, 0f, au0, av1); sv( hw, 0f, au1, av1)
-            sv(-hw, h,  au0, 0f); sv( hw, 0f, au1, av1); sv( hw, h,  au1, 0f)
+            sv(-hw, h,  au0, av0); sv(-hw, 0f, au0, av1); sv( hw, 0f, au1, av1)
+            sv(-hw, h,  au0, av0); sv( hw, 0f, au1, av1); sv( hw, h,  au1, av0)
 
             // ── HP bar ────────────────────────────────────────────────────────
-            val barW   = e.type.spriteWidth
+            val barW   = scale
             val barY0  = ey + h + 0.12f
             val barY1  = barY0 + 0.14f
             val hpFrac = e.hp.toFloat() / e.maxHp.coerceAtLeast(1)
@@ -160,23 +170,21 @@ internal class EnemyRenderer {
                 coV[ci++] = r; coV[ci++] = g; coV[ci++] = b
             }
             val bx0 = -barW * 0.5f; val bx1 = barW * 0.5f
-            // fond (couleur niveau)
             cv(bx0, barY1, bgR, bgG, bgB); cv(bx0, barY0, bgR, bgG, bgB); cv(bx1, barY0, bgR, bgG, bgB)
             cv(bx0, barY1, bgR, bgG, bgB); cv(bx1, barY0, bgR, bgG, bgB); cv(bx1, barY1, bgR, bgG, bgB)
-            // avant (vert→rouge)
             val gr = 1f - hpFrac; val gg = hpFrac * 0.85f
             cv(bx0, barY1, gr, gg, 0f); cv(bx0, barY0, gr, gg, 0f); cv(fgX1, barY0, gr, gg, 0f)
             cv(bx0, barY1, gr, gg, 0f); cv(fgX1, barY0, gr, gg, 0f); cv(fgX1, barY1, gr, gg, 0f)
 
             // ── Numéro de niveau ──────────────────────────────────────────────
-            val levelStr = e.level.toString()
-            val digitW   = 0.16f
-            val digitH   = 0.22f
+            val levelStr = if (e.isBoss) "BOSS" else e.level.toString()
+            val digitW   = if (e.isBoss) 0.20f else 0.16f
+            val digitH   = if (e.isBoss) 0.28f else 0.22f
             val gap      = 0.02f
             val totalW   = levelStr.length * (digitW + gap) - gap
             val digitY0  = barY1 + 0.06f
             val digitY1  = digitY0 + digitH
-            val (dr, dg, db) = levelDigitColor(e.level)
+            val (dr, dg, db) = if (e.isBoss) Triple(1.0f, 0.6f, 0.0f) else levelDigitColor(e.level)
 
             fun dv(rx: Float, ry: Float, u: Float, v: Float) {
                 diV[di++] = ex + rightX * rx; diV[di++] = ry; diV[di++] = ez + rightZ * rx
@@ -184,7 +192,7 @@ internal class EnemyRenderer {
             }
             var curX = -totalW * 0.5f
             for (ch in levelStr) {
-                val d = ch - '0'
+                val d = if (ch.isDigit()) ch - '0' else 10 + (ch - 'A').coerceIn(0, 5)
                 val du0 = d * DIGIT_W.toFloat() / DIGIT_ATLAS_W
                 val du1 = (d + 1) * DIGIT_W.toFloat() / DIGIT_ATLAS_W
                 dv(curX,          digitY1, du0, 0f)
@@ -202,20 +210,28 @@ internal class EnemyRenderer {
         val digitCount  = di / 5
         if (spriteCount == 0) return
 
-        // ── Draw sprites ──────────────────────────────────────────────────────
-        uploadAndBind(spriteVbo, spV, si)
+        // ── Draw sprites par ennemi (flash individuel) ────────────────────────
         spriteShader?.use()
         GLES30.glUniformMatrix4fv(spriteUMvp, 1, false, vpMatrix, 0)
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, atlasTex)
         GLES30.glUniform1i(spriteUTex, 0)
-        bindSpriteAttribs(); GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, spriteCount)
-        disableSpriteAttribs()
+
+        var vertexOffset = 0
+        for (e in enemies) {
+            if (e.hp <= 0) continue
+            GLES30.glUniform1f(spriteUFlash, e.hitFlash.coerceIn(0f, 1f))
+            uploadAndBind(spriteVbo, spV, vertexOffset * 5, 6 * 5)
+            bindSpriteAttribs()
+            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 6)
+            disableSpriteAttribs()
+            vertexOffset += 6
+        }
 
         // ── Draw HP bars ──────────────────────────────────────────────────────
         if (colorCount > 0) {
             GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL); GLES30.glPolygonOffset(-1f, -1f)
-            uploadAndBind(colorVbo, coV, ci)
+            uploadAndBind(colorVbo, coV, 0, ci)
             colorShader?.use()
             GLES30.glUniformMatrix4fv(colorUMvp, 1, false, vpMatrix, 0)
             bindColorAttribs(); GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, colorCount)
@@ -223,14 +239,15 @@ internal class EnemyRenderer {
             GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
         }
 
-        // ── Draw level numbers ────────────────────────────────────────────────
+        // ── Draw level labels ─────────────────────────────────────────────────
         if (digitCount > 0) {
             GLES30.glEnable(GLES30.GL_BLEND)
             GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
             GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL); GLES30.glPolygonOffset(-2f, -2f)
-            uploadAndBind(digitVbo, diV, di)
+            uploadAndBind(digitVbo, diV, 0, di)
             spriteShader?.use()
             GLES30.glUniformMatrix4fv(spriteUMvp, 1, false, vpMatrix, 0)
+            GLES30.glUniform1f(spriteUFlash, 0f)
             GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, digitTex)
             GLES30.glUniform1i(spriteUTex, 0)
@@ -243,11 +260,24 @@ internal class EnemyRenderer {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
+    // ── Direction / animation ─────────────────────────────────────────────────
+
+    private fun dirFrame(cameraYaw: Float, enemyYaw: Float, animTime: Float): Int {
+        val rel = ((enemyYaw - cameraYaw + 360f) % 360f)
+        val dirBase = when {
+            rel < 45f || rel >= 315f -> 0   // bk
+            rel < 135f               -> 4   // lf
+            rel < 225f               -> 2   // fr
+            else                     -> 6   // rt
+        }
+        return dirBase + ((animTime / ANIM_FRAME_DURATION).toInt() % 2)
+    }
+
     // ── Helpers GL ────────────────────────────────────────────────────────────
 
-    private fun uploadAndBind(vbo: Int, data: FloatArray, floatCount: Int) {
+    private fun uploadAndBind(vbo: Int, data: FloatArray, offset: Int, floatCount: Int) {
         val buf = ByteBuffer.allocateDirect(floatCount * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
-        buf.put(data, 0, floatCount); buf.position(0)
+        buf.put(data, offset, floatCount); buf.position(0)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo)
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, floatCount * 4, buf, GLES30.GL_DYNAMIC_DRAW)
     }
@@ -283,40 +313,86 @@ internal class EnemyRenderer {
     // ── Couleurs selon niveau ─────────────────────────────────────────────────
 
     private fun levelBgColor(level: Int): Triple<Float, Float, Float> = when {
-        level <= 1  -> Triple(0.20f, 0.20f, 0.20f)   // gris
-        level <= 3  -> Triple(0.05f, 0.10f, 0.40f)   // bleu nuit
-        level <= 5  -> Triple(0.05f, 0.30f, 0.05f)   // vert sombre
-        level <= 8  -> Triple(0.35f, 0.30f, 0.00f)   // jaune sombre
-        level <= 11 -> Triple(0.40f, 0.18f, 0.00f)   // orange sombre
-        level <= 14 -> Triple(0.40f, 0.02f, 0.02f)   // rouge sombre
-        else        -> Triple(0.30f, 0.00f, 0.35f)   // violet
+        level <= 1  -> Triple(0.20f, 0.20f, 0.20f)
+        level <= 3  -> Triple(0.05f, 0.10f, 0.40f)
+        level <= 5  -> Triple(0.05f, 0.30f, 0.05f)
+        level <= 8  -> Triple(0.35f, 0.30f, 0.00f)
+        level <= 11 -> Triple(0.40f, 0.18f, 0.00f)
+        level <= 14 -> Triple(0.40f, 0.02f, 0.02f)
+        else        -> Triple(0.30f, 0.00f, 0.35f)
     }
 
     private fun levelDigitColor(level: Int): Triple<Float, Float, Float> = when {
-        level <= 1  -> Triple(0.85f, 0.85f, 0.85f)   // gris clair
-        level <= 3  -> Triple(0.50f, 0.75f, 1.00f)   // bleu clair
-        level <= 5  -> Triple(0.40f, 1.00f, 0.40f)   // vert clair
-        level <= 8  -> Triple(1.00f, 0.95f, 0.20f)   // jaune
-        level <= 11 -> Triple(1.00f, 0.60f, 0.10f)   // orange
-        level <= 14 -> Triple(1.00f, 0.25f, 0.25f)   // rouge
-        else        -> Triple(0.90f, 0.30f, 1.00f)   // violet clair
+        level <= 1  -> Triple(0.85f, 0.85f, 0.85f)
+        level <= 3  -> Triple(0.50f, 0.75f, 1.00f)
+        level <= 5  -> Triple(0.40f, 1.00f, 0.40f)
+        level <= 8  -> Triple(1.00f, 0.95f, 0.20f)
+        level <= 11 -> Triple(1.00f, 0.60f, 0.10f)
+        level <= 14 -> Triple(1.00f, 0.25f, 0.25f)
+        else        -> Triple(0.90f, 0.30f, 1.00f)
     }
 
-    // ── Atlas sprites personnages ─────────────────────────────────────────────
+    // ── Atlas sprites (GIF assets) ────────────────────────────────────────────
 
-    private fun buildSpriteAtlas(): Int {
-        val bmp = Bitmap.createBitmap(ATLAS_SIZE, ATLAS_SIZE, Bitmap.Config.ARGB_8888)
-        val cv = Canvas(bmp); val p = Paint().apply { isAntiAlias = false }
-        drawZombie  (cv, p, 0)
-        drawSkeleton(cv, p, SPRITE_W)
-        drawBat     (cv, p, SPRITE_W * 2)
+    private fun buildSpriteAtlas(assets: AssetManager, familyPool: List<String>): Int {
+        val bmp = Bitmap.createBitmap(ATLAS_W, ATLAS_H, Bitmap.Config.ARGB_8888)
+        val cv = Canvas(bmp)
+        val paint = Paint().apply { isAntiAlias = false }
+
+        for ((row, family) in familyPool.withIndex()) {
+            for ((col, suffix) in FRAME_SUFFIXES.withIndex()) {
+                val path = "Cave World/Tiles/foes/${family}_${suffix}.gif"
+                try {
+                    val stream = assets.open(path)
+                    val raw = BitmapFactory.decodeStream(stream)
+                    stream.close()
+                    if (raw != null) {
+                        val frame = makeWhiteTransparent(raw)
+                        val dst = android.graphics.Rect(
+                            col * SPRITE_SIZE, row * SPRITE_SIZE,
+                            (col + 1) * SPRITE_SIZE, (row + 1) * SPRITE_SIZE
+                        )
+                        cv.drawBitmap(frame, null, dst, paint)
+                        frame.recycle()
+                    }
+                } catch (_: Exception) {
+                    paint.color = 0xFFFF00FF.toInt()
+                    cv.drawRect(
+                        (col * SPRITE_SIZE).toFloat(), (row * SPRITE_SIZE).toFloat(),
+                        ((col + 1) * SPRITE_SIZE).toFloat(), ((row + 1) * SPRITE_SIZE).toFloat(),
+                        paint
+                    )
+                }
+            }
+        }
         return uploadTex2D(bmp, nearest = true)
     }
 
-    // ── Atlas chiffres 0–9 ────────────────────────────────────────────────────
+    // Remplace les pixels blancs/quasi-blancs par du transparent (fond GIF)
+    private fun makeWhiteTransparent(src: Bitmap): Bitmap {
+        val w = src.width; val h = src.height
+        val pixels = IntArray(w * h)
+        src.getPixels(pixels, 0, w, 0, 0, w, h)
+        src.recycle()
+        for (i in pixels.indices) {
+            val c = pixels[i]
+            if ((c shr 24) and 0xFF == 0) continue          // déjà transparent
+            val r = (c shr 16) and 0xFF
+            val g = (c shr 8)  and 0xFF
+            val b =  c         and 0xFF
+            if (r > 230 && g > 230 && b > 230) pixels[i] = 0
+        }
+        val out = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        out.setPixels(pixels, 0, w, 0, 0, w, h)
+        return out
+    }
+
+    // ── Atlas chiffres 0–9 + A–F (pour "BOSS") ───────────────────────────────
 
     private fun buildDigitAtlas(): Int {
-        val bmp = Bitmap.createBitmap(DIGIT_ATLAS_W, DIGIT_ATLAS_H, Bitmap.Config.ARGB_8888)
+        val chars = "0123456789ABCDEF"
+        val atlasW = chars.length * DIGIT_W
+        val bmp = Bitmap.createBitmap(atlasW, DIGIT_ATLAS_H, Bitmap.Config.ARGB_8888)
         val cv = Canvas(bmp)
         val p = Paint().apply {
             isAntiAlias = true
@@ -325,8 +401,8 @@ internal class EnemyRenderer {
             textAlign = Paint.Align.CENTER
             color = 0xFFFFFFFF.toInt()
         }
-        for (d in 0..9) {
-            cv.drawText(d.toString(), (d * DIGIT_W + DIGIT_W * 0.5f), DIGIT_H * 0.82f, p)
+        for ((i, c) in chars.withIndex()) {
+            cv.drawText(c.toString(), (i * DIGIT_W + DIGIT_W * 0.5f), DIGIT_H * 0.82f, p)
         }
         return uploadTex2D(bmp, nearest = false)
     }
@@ -346,84 +422,20 @@ internal class EnemyRenderer {
         return tex
     }
 
-    // ── Pixel art personnages ─────────────────────────────────────────────────
-
-    private fun rect(cv: Canvas, p: Paint, ox: Int, l: Int, t: Int, r: Int, b: Int, col: Int) {
-        p.color = col
-        cv.drawRect((ox + l).toFloat(), t.toFloat(), (ox + r).toFloat(), b.toFloat(), p)
-    }
-
-    private fun drawZombie(cv: Canvas, p: Paint, ox: Int) {
-        fun r(l: Int, t: Int, r: Int, b: Int, c: Int) = rect(cv, p, ox, l, t, r, b, c)
-        r(20, 2, 44,  9,  0xFF3D2B0F.toInt())
-        r(20, 9, 44,  26, 0xFF7BAD4D.toInt())
-        r(24, 13, 30, 19, 0xFFFF2200.toInt()); r(25, 14, 29, 18, 0xFF8B0000.toInt())
-        r(34, 13, 40, 19, 0xFFFF2200.toInt()); r(35, 14, 39, 18, 0xFF8B0000.toInt())
-        r(26, 22, 38, 25, 0xFF3D2B0F.toInt())
-        r(28, 21, 30, 23, 0xFF3D2B0F.toInt()); r(34, 21, 36, 23, 0xFF3D2B0F.toInt())
-        r(28, 26, 36, 30, 0xFF6A9B40.toInt())
-        r(22, 30, 42, 54, 0xFF2A1A0A.toInt()); r(24, 32, 40, 52, 0xFF3A2A10.toInt())
-        r(26, 36, 28, 50, 0xFF1A0A00.toInt()); r(36, 38, 38, 52, 0xFF1A0A00.toInt())
-        r(10, 24, 22, 46, 0xFF7BAD4D.toInt())
-        r(42, 30, 54, 52, 0xFF7BAD4D.toInt())
-        r(22, 54, 42, 58, 0xFF1A0A00.toInt()); r(30, 53, 34, 59, 0xFFAA8800.toInt())
-        r(22, 58, 32, 90, 0xFF1A2B3F.toInt()); r(32, 58, 42, 90, 0xFF253040.toInt())
-        r(20, 88, 32, 95, 0xFF0A0A0A.toInt()); r(32, 88, 44, 95, 0xFF0A0A0A.toInt())
-    }
-
-    private fun drawSkeleton(cv: Canvas, p: Paint, ox: Int) {
-        fun r(l: Int, t: Int, r: Int, b: Int, c: Int) = rect(cv, p, ox, l, t, r, b, c)
-        val BONE = 0xFFE5DEC8.toInt(); val BONE2 = 0xFFB8AF96.toInt()
-        val DARK = 0xFF0A0A0A.toInt(); val GLOW  = 0xFF44AAFF.toInt()
-        r(20, 2, 44, 22, BONE)
-        r(22, 9, 30, 18, DARK); r(23, 10, 29, 17, GLOW)
-        r(34, 9, 42, 18, DARK); r(35, 10, 41, 17, GLOW)
-        r(30, 14, 34, 18, DARK)
-        r(23, 20, 27, 25, BONE); r(28, 20, 32, 25, DARK)
-        r(32, 20, 36, 25, BONE); r(36, 20, 40, 25, DARK); r(40, 20, 43, 25, BONE)
-        r(30, 25, 34, 30, BONE2)
-        r(22, 30, 42, 50, BONE)
-        r(22, 34, 42, 35, DARK); r(22, 39, 42, 40, DARK); r(22, 44, 42, 45, DARK)
-        r(30, 30, 34, 50, BONE2)
-        r(22, 50, 42, 56, BONE); r(26, 52, 38, 54, DARK)
-        r(14, 30, 22, 50, BONE); r(14, 44, 22, 46, BONE2)
-        r(42, 30, 50, 50, BONE); r(42, 44, 50, 46, BONE2)
-        r(12, 48, 16, 58, BONE2)
-        r(22, 56, 32, 78, BONE); r(22, 68, 32, 70, BONE2)
-        r(32, 56, 42, 78, BONE); r(32, 68, 42, 70, BONE2)
-        r(20, 78, 32, 84, BONE2); r(32, 78, 44, 84, BONE2)
-    }
-
-    private fun drawBat(cv: Canvas, p: Paint, ox: Int) {
-        fun r(l: Int, t: Int, r: Int, b: Int, c: Int) = rect(cv, p, ox, l, t, r, b, c)
-        val WING = 0xFF2F1545.toInt(); val WING2 = 0xFF3D1E5C.toInt()
-        val BODY = 0xFF1F0D2E.toInt(); val EYE  = 0xFFFF6600.toInt()
-        val FANG = 0xFFE5DEC8.toInt()
-        r(0, 28, 22, 62, WING); r(2, 22, 18, 28, WING2); r(4, 16, 14, 22, WING2)
-        r(0, 58, 10, 70, WING2)
-        r(42, 28, 64, 62, WING); r(46, 22, 62, 28, WING2); r(50, 16, 60, 22, WING2)
-        r(54, 58, 64, 70, WING2)
-        r(4, 30, 6, 60, WING2); r(10, 30, 12, 58, WING2); r(16, 30, 18, 56, WING2)
-        r(46, 30, 48, 60, WING2); r(52, 30, 54, 58, WING2); r(58, 30, 60, 56, WING2)
-        r(22, 22, 42, 64, BODY)
-        r(22, 6, 42, 26, BODY)
-        r(18, 4, 24, 16, BODY); r(40, 4, 46, 16, BODY)
-        r(20, 2, 24, 6, BODY);  r(40, 2, 44, 6, BODY)
-        r(25, 16, 31, 22, EYE); r(33, 16, 39, 22, EYE)
-        r(27, 24, 30, 30, FANG); r(34, 24, 37, 30, FANG)
-        r(26, 62, 30, 70, BODY); r(34, 62, 38, 70, BODY)
-        r(24, 68, 28, 72, BODY); r(30, 69, 34, 73, BODY); r(36, 68, 40, 72, BODY)
-    }
-
     companion object {
-        private const val ATLAS_SIZE   = 256
-        private const val SPRITE_W     = 64
-        private const val SPRITE_H     = 96
-        private const val DIGIT_ATLAS_W = 160   // 10 chiffres × 16 px
+        private const val SPRITE_SIZE = 32
+        private const val ATLAS_W     = 256   // 8 cols × 32 px
+        private const val ATLAS_H     = 1024  // 32 rows × 32 px
+        private const val ANIM_FRAME_DURATION = 0.35f
+
+        // Ordre des colonnes dans l'atlas : bk1, bk2, fr1, fr2, lf1, lf2, rt1, rt2
+        private val FRAME_SUFFIXES = arrayOf("bk1", "bk2", "fr1", "fr2", "lf1", "lf2", "rt1", "rt2")
+
+        private const val DIGIT_ATLAS_W = 256   // 16 chars × 16 px
         private const val DIGIT_ATLAS_H = 20
-        private const val DIGIT_W      = 16
-        private const val DIGIT_H      = 20
-        private const val MAX_ENEMIES  = 32
-        private const val MAX_DIGITS   = 8      // niveau max affiché : 99 999 999
+        private const val DIGIT_W       = 16
+        private const val DIGIT_H       = 20
+        private const val MAX_VISIBLE   = 32
+        private const val MAX_DIGITS    = 8
     }
 }

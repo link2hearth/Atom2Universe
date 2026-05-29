@@ -4,7 +4,7 @@ import com.Atom2Universe.app.games.caves.world.*
 import kotlin.math.*
 import kotlin.random.Random
 
-internal class EnemyManager(private val world: World) {
+internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     val enemies = ArrayList<Enemy>(32)
 
@@ -12,25 +12,179 @@ internal class EnemyManager(private val world: World) {
     val playerMaxHp = 20
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)? = null
 
-    /** Position du spawn d'origine (en blocs). Fixé une seule fois dans CaveRenderer. */
     var worldSpawnX: Double = 0.0
     var worldSpawnZ: Double = 0.0
 
     private var nextId = 0
-    private var spawnTimer = 5f
+    private val rng = Random(seed xor 0x5A5A5A5A5A5A5A5AL)
+
+    val familyPool: List<String> = ALL_FAMILIES.shuffled(Random(seed)).take(POOL_SIZE)
+
+    // ── État de vague ─────────────────────────────────────────────────────────
+
+    private enum class WavePhase { WAVE, BOSS_WAIT, BOSS, COOLDOWN }
+    private var phase = WavePhase.WAVE
+    private var phaseTimer: Float
+
+    private var waveIndex = 0
+    private var waveFamily = familyPool[0]
+    private var waveFamilyRow = 0
+    private var waveType = EnemyType.ZOMBIE
+    private var waveSize = WAVE_SIZE_MIN + Random(seed + 1L).nextInt(WAVE_SIZE_RANGE)
+    private var waveSpawned = 0
+    private var bossEnemyId = -1
+
+    private var spawnTimer = SPAWN_FIRST_DELAY
     private var playerInvTimer = 0f
+
+    init {
+        phaseTimer = waveSize * SPAWN_INTERVAL
+    }
 
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
         playerInvTimer = (playerInvTimer - dt).coerceAtLeast(0f)
 
-        spawnTimer -= dt
-        if (spawnTimer <= 0f && enemies.size < MAX_ENEMIES) {
-            spawnTimer = SPAWN_INTERVAL
-            trySpawn(px, py, pz)
+        for (e in enemies) if (e.hp > 0) e.animTime += dt
+
+        enemies.removeAll { e ->
+            if (e.hp <= 0) {
+                if (e.id == bossEnemyId) {
+                    bossEnemyId = -1
+                    if (phase == WavePhase.BOSS) {
+                        phase = WavePhase.COOLDOWN
+                        phaseTimer = COOLDOWN_DURATION
+                    }
+                }
+                true
+            } else false
         }
 
-        enemies.removeAll { it.hp <= 0 }
+        phaseTimer -= dt
+
+        when (phase) {
+            WavePhase.WAVE -> {
+                // Spawner les ennemis de la vague toutes les SPAWN_INTERVAL secondes
+                if (waveSpawned < waveSize) {
+                    spawnTimer -= dt
+                    if (spawnTimer <= 0f) {
+                        spawnTimer = SPAWN_INTERVAL
+                        trySpawnWaveEnemy(px, py, pz)
+                    }
+                }
+                // La durée de la vague est écoulée → préparer le boss
+                if (phaseTimer <= 0f) {
+                    phase = WavePhase.BOSS_WAIT
+                    phaseTimer = BOSS_INTRO_DELAY
+                }
+            }
+            WavePhase.BOSS_WAIT -> {
+                if (phaseTimer <= 0f) trySpawnBoss(px, py, pz)
+            }
+            WavePhase.BOSS -> {
+                // Boss timeout : trop long, on passe à la suite
+                if (phaseTimer <= 0f) {
+                    enemies.removeIf { it.id == bossEnemyId }
+                    bossEnemyId = -1
+                    phase = WavePhase.COOLDOWN
+                    phaseTimer = COOLDOWN_DURATION
+                }
+            }
+            WavePhase.COOLDOWN -> {
+                if (phaseTimer <= 0f) {
+                    advanceWave()
+                }
+            }
+        }
+
         for (e in enemies) updateEnemy(e, dt, px, py, pz)
+    }
+
+    private fun advanceWave() {
+        enemies.clear()
+        bossEnemyId = -1
+        waveIndex++
+        val idx = waveIndex % POOL_SIZE
+        waveFamily = familyPool[idx]
+        waveFamilyRow = idx
+        waveType = EnemyType.values()[waveIndex % EnemyType.values().size]
+        waveSize = WAVE_SIZE_MIN + rng.nextInt(WAVE_SIZE_RANGE)
+        waveSpawned = 0
+        spawnTimer = SPAWN_FIRST_DELAY
+        phase = WavePhase.WAVE
+        phaseTimer = waveSize * SPAWN_INTERVAL
+    }
+
+    private fun trySpawnWaveEnemy(px: Double, py: Double, pz: Double) {
+        repeat(20) attempt@{
+            val angle = rng.nextFloat() * 2 * PI.toFloat()
+            val dist = 12.0 + rng.nextFloat() * 24.0   // 12–36 blocs du joueur
+            val sx = px + cos(angle) * dist
+            val sz = pz + sin(angle) * dist
+            // Zone safe : pas de spawn dans les 5 chunks du spawn du monde
+            if (distFromSpawnChunks(sx, sz) < SAFE_ZONE_CHUNKS) return@attempt
+            var sy = py
+            for (dy in -10..10) {
+                val ty = py + dy
+                val bBelow = blockAt(floor(sx).toInt(), floor(ty - 1).toInt(), floor(sz).toInt())
+                val bAt    = blockAt(floor(sx).toInt(), floor(ty).toInt(),     floor(sz).toInt())
+                val bAbove = blockAt(floor(sx).toInt(), floor(ty + 1).toInt(), floor(sz).toInt())
+                if (bBelow != AIR && !isDecoration(bBelow) && bAt == AIR && bAbove == AIR) {
+                    sy = ty; break
+                }
+            }
+            val e = Enemy(nextId++, waveType, sx, sy, sz)
+            e.spriteFamily = waveFamily
+            e.familyRow = waveFamilyRow
+            e.level = computeLevel(sx, sz)
+            e.hp = e.maxHp
+            if (!collides(sx, sy, sz, e)) {
+                enemies.add(e)
+                waveSpawned++
+                return
+            }
+        }
+    }
+
+    private fun trySpawnBoss(px: Double, py: Double, pz: Double) {
+        repeat(30) attempt@{
+            val angle = rng.nextFloat() * 2 * PI.toFloat()
+            val dist = 14.0 + rng.nextFloat() * 20.0   // 14–34 blocs du joueur
+            val sx = px + cos(angle) * dist
+            val sz = pz + sin(angle) * dist
+            if (distFromSpawnChunks(sx, sz) < SAFE_ZONE_CHUNKS) return@attempt
+            var sy = py
+            for (dy in -10..10) {
+                val ty = py + dy
+                val bBelow = blockAt(floor(sx).toInt(), floor(ty - 1).toInt(), floor(sz).toInt())
+                val bAt    = blockAt(floor(sx).toInt(), floor(ty).toInt(),     floor(sz).toInt())
+                val bAbove = blockAt(floor(sx).toInt(), floor(ty + 1).toInt(), floor(sz).toInt())
+                if (bBelow != AIR && !isDecoration(bBelow) && bAt == AIR && bAbove == AIR) {
+                    sy = ty; break
+                }
+            }
+            val e = Enemy(nextId++, EnemyType.ZOMBIE, sx, sy, sz)
+            e.spriteFamily = waveFamily
+            e.familyRow = waveFamilyRow
+            e.isBoss = true
+            e.level = computeLevel(sx, sz).coerceAtLeast(1)
+            e.hp = e.maxHp
+            if (!collides(sx, sy, sz, e)) {
+                bossEnemyId = e.id
+                phase = WavePhase.BOSS
+                phaseTimer = BOSS_MAX_DURATION
+                enemies.add(e)
+                return
+            }
+        }
+        // Boss introuvable → passer directement au cooldown
+        phase = WavePhase.COOLDOWN
+        phaseTimer = COOLDOWN_DURATION
+    }
+
+    private fun distFromSpawnChunks(x: Double, z: Double): Double {
+        val dX = (x - worldSpawnX) / CHUNK_SIZE
+        val dZ = (z - worldSpawnZ) / CHUNK_SIZE
+        return sqrt(dX * dX + dZ * dZ)
     }
 
     private fun updateEnemy(e: Enemy, dt: Float, px: Double, py: Double, pz: Double) {
@@ -43,9 +197,9 @@ internal class EnemyManager(private val world: World) {
         e.state = when (e.state) {
             EnemyState.WANDER -> if (dist < e.type.detectRange) EnemyState.CHASE else EnemyState.WANDER
             EnemyState.CHASE  -> when {
-                dist < e.type.attackRange      -> EnemyState.ATTACK
+                dist < e.type.attackRange       -> EnemyState.ATTACK
                 dist > e.type.detectRange * 1.5 -> EnemyState.WANDER
-                else                            -> EnemyState.CHASE
+                else                             -> EnemyState.CHASE
             }
             EnemyState.ATTACK -> if (dist > e.type.attackRange * 1.5) EnemyState.CHASE else EnemyState.ATTACK
         }
@@ -55,9 +209,9 @@ internal class EnemyManager(private val world: World) {
             EnemyState.WANDER -> {
                 e.wanderTimer -= dt
                 if (e.wanderTimer <= 0f) {
-                    val a = Random.nextFloat() * 2 * PI.toFloat()
+                    val a = rng.nextFloat() * 2 * PI.toFloat()
                     e.wanderDirX = sin(a); e.wanderDirZ = cos(a)
-                    e.wanderTimer = Random.nextFloat() * 3f + 2f
+                    e.wanderTimer = rng.nextFloat() * 3f + 2f
                 }
                 move(e, e.wanderDirX * spd * 0.4, e.wanderDirZ * spd * 0.4)
                 if (e.wanderDirX != 0f || e.wanderDirZ != 0f)
@@ -110,9 +264,9 @@ internal class EnemyManager(private val world: World) {
     private fun collides(ex: Double, ey: Double, ez: Double, e: Enemy): Boolean {
         val r = e.type.radius.toDouble()
         val h = e.type.eyeHeight.toDouble()
-        val x0 = Math.floor(ex - r).toInt();  val x1 = Math.floor(ex + r - 0.01).toInt()
-        val y0 = Math.floor(ey - h - 0.1).toInt(); val y1 = Math.floor(ey).toInt()
-        val z0 = Math.floor(ez - r).toInt();  val z1 = Math.floor(ez + r - 0.01).toInt()
+        val x0 = floor(ex - r).toInt();  val x1 = floor(ex + r - 0.01).toInt()
+        val y0 = floor(ey - h - 0.1).toInt(); val y1 = floor(ey).toInt()
+        val z0 = floor(ez - r).toInt();  val z1 = floor(ez + r - 0.01).toInt()
         for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
             val b = blockAt(bx, by, bz)
             if (b != AIR && !isDecoration(b)) return true
@@ -160,38 +314,8 @@ internal class EnemyManager(private val world: World) {
         playerHpCallback?.invoke(playerHp, playerMaxHp)
     }
 
-    private fun trySpawn(px: Double, py: Double, pz: Double) {
-        repeat(12) attempt@{
-            val angle = Random.nextFloat() * 2 * PI.toFloat()
-            val dist = 10.0 + Random.nextFloat() * 10.0
-            val sx = px + cos(angle) * dist
-            val sz = pz + sin(angle) * dist
-            var sy = py
-            for (dy in -5..5) {
-                val ty = py + dy
-                val bBelow = blockAt(Math.floor(sx).toInt(), Math.floor(ty - 1).toInt(), Math.floor(sz).toInt())
-                val bAt    = blockAt(Math.floor(sx).toInt(), Math.floor(ty).toInt(),     Math.floor(sz).toInt())
-                val bAbove = blockAt(Math.floor(sx).toInt(), Math.floor(ty + 1).toInt(), Math.floor(sz).toInt())
-                if (bBelow != AIR && !isDecoration(bBelow) && bAt == AIR && bAbove == AIR) {
-                    sy = ty; break
-                }
-            }
-            val type = EnemyType.values()[Random.nextInt(EnemyType.values().size)]
-            val e = Enemy(nextId++, type, sx, sy, sz)
-            e.level = computeLevel(sx, sz)
-            e.hp = e.maxHp
-            if (!collides(sx, sy, sz, e)) {
-                enemies.add(e)
-                return
-            }
-        }
-    }
-
-    /** Niveau = floor(distance_en_chunks / 10) + 1, sans plafond. */
     fun computeLevel(blockX: Double, blockZ: Double): Int {
-        val dX = (blockX - worldSpawnX) / CHUNK_SIZE
-        val dZ = (blockZ - worldSpawnZ) / CHUNK_SIZE
-        val distChunks = sqrt(dX * dX + dZ * dZ)
+        val distChunks = distFromSpawnChunks(blockX, blockZ)
         return (distChunks / 10.0).toInt() + 1
     }
 
@@ -216,8 +340,42 @@ internal class EnemyManager(private val world: World) {
     }
 
     companion object {
-        const val MAX_ENEMIES = 16
-        const val SPAWN_INTERVAL = 10f
+        const val POOL_SIZE = 32
+        const val SPAWN_INTERVAL = 10f        // 1 ennemi toutes les 10s
+        const val SPAWN_FIRST_DELAY = 3f
+        const val BOSS_INTRO_DELAY = 3f       // pause avant le boss
+        const val BOSS_MAX_DURATION = 300f    // 5 min max pour tuer le boss
+        const val COOLDOWN_DURATION = 300f    // 5 min entre les vagues
         const val ATTACK_CD = 1.5f
+        const val WAVE_SIZE_MIN = 10
+        const val WAVE_SIZE_RANGE = 11        // taille : 10..20
+        const val SAFE_ZONE_CHUNKS = 5.0      // 5 chunks = 80 blocs de safe zone
+
+        val ALL_FAMILIES = listOf(
+            "amg1", "amg2", "amg3", "amg4",
+            "avt1", "avt2", "avt3", "avt4",
+            "bmg1", "bmg2", "bmg3", "bmg4",
+            "chr1", "dvl1",
+            "ftr1", "ftr2", "ftr3", "ftr4",
+            "gsd1", "isd1", "jli1", "kin1",
+            "knt1", "knt2", "knt3", "knt4",
+            "man1", "man2", "man3", "man4",
+            "mnt1", "mnt2", "mnt3", "mnt4",
+            "mnv1", "mnv2", "mnv3", "mnv4",
+            "mst1", "mst2", "mst3", "mst4",
+            "nja1", "nja2", "nja3", "nja4",
+            "npc1", "npc2", "npc3", "npc4", "npc5", "npc6", "npc7", "npc8", "npc9",
+            "pdn1", "pdn2", "pdn3", "pdn4",
+            "scr1", "scr2", "scr3", "scr4",
+            "skl1",
+            "smr1", "smr2", "smr3", "smr4",
+            "spd1", "syb1",
+            "thf1", "thf2", "thf3", "thf4",
+            "trk1",
+            "wmg1", "wmg2", "wmg3", "wmg4",
+            "wmn1", "wmn2", "wmn3",
+            "wnv1", "wnv2", "wnv3", "wnv4",
+            "ybo1", "ygr1", "zph1"
+        )
     }
 }

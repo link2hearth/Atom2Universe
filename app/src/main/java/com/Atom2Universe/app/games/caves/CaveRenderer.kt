@@ -118,7 +118,7 @@ internal class CaveRenderer(
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
-    private val enemyManager  = EnemyManager(world)
+    private val enemyManager  = EnemyManager(world, worldSeed)
     private val enemyRenderer = EnemyRenderer()
     private var laserEnemyDmgTimer = 0f
 
@@ -222,7 +222,7 @@ internal class CaveRenderer(
         }
 
         blockTexArray = loadBlockTextures()
-        enemyRenderer.onSurfaceCreated()
+        enemyRenderer.onSurfaceCreated(context.assets, enemyManager.familyPool)
         enemyManager.playerHpCallback = { hp, max -> playerHpCallback?.invoke(hp, max) }
 
         val ids = IntArray(1)
