@@ -10,7 +10,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private val inFlight = ConcurrentHashMap.newKeySet<Long>()
 
     val rebuildQueue = ConcurrentLinkedQueue<Long>()
-    val renderRadiusXZ = 10
+    val renderRadiusXZ = 12
     val renderRadiusY  = 5   // couvre cy 0..10 pour un joueur à cy=5 (toute la bande de surface)
 
     private val SURFACE_CY_MAX = 9

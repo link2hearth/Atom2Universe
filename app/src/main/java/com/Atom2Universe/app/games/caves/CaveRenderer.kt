@@ -55,8 +55,8 @@ internal class CaveRenderer(
     private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
     private val lodBuilding    = ConcurrentHashMap.newKeySet<Long>()
     private val lodUploadQueue = ConcurrentLinkedQueue<Pair<Long, FloatArray>>()
-    private val LOD_RADIUS   = 18
-    private val MAX_LOD_TILES = 1800
+    private val LOD_RADIUS   = 90
+    private val MAX_LOD_TILES = 8000
     private val lodCache = worldId?.let {
         LodCache(java.io.File(context.filesDir, "cave_worlds/$it/lod_cache.bin"))
     }
@@ -506,7 +506,7 @@ internal class CaveRenderer(
             playerStats.shootTimers[i] -= dt
             if (playerStats.shootTimers[i] <= 0f) {
                 playerStats.shootTimers[i] = playerStats.fireRate
-                val tx = closest.x; val ty = closest.y - closest.type.eyeHeight * 0.5; val tz = closest.z
+                val tx = closest.x; val ty = closest.y + closest.baseScale * 0.5; val tz = closest.z
                 val dx = tx - camera.x; val dy = ty - camera.y; val dz = tz - camera.z
                 val d = sqrt(dx * dx + dy * dy + dz * dz).coerceAtLeast(0.001)
                 projectiles.add(Projectile(

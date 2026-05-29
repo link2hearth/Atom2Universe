@@ -201,16 +201,16 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 }
                 move(e, e.wanderDirX * spd * 0.4, e.wanderDirZ * spd * 0.4)
                 if (e.wanderDirX != 0f || e.wanderDirZ != 0f)
-                    e.yaw = atan2(-e.wanderDirX, -e.wanderDirZ) * (180f / PI.toFloat())
+                    e.yaw = atan2(e.wanderDirX, e.wanderDirZ) * (180f / PI.toFloat())
             }
             EnemyState.CHASE -> if (dist > 0.1) {
                 val nx = dx / dist; val nz = dz / dist
                 move(e, nx * spd, nz * spd)
-                e.yaw = atan2(-nx.toFloat(), -nz.toFloat()) * (180f / PI.toFloat())
+                e.yaw = atan2(nx.toFloat(), nz.toFloat()) * (180f / PI.toFloat())
             }
             EnemyState.ATTACK -> {
                 if (dist > 0.1)
-                    e.yaw = atan2(-(px - e.x).toFloat(), -(pz - e.z).toFloat()) * (180f / PI.toFloat())
+                    e.yaw = atan2((px - e.x).toFloat(), (pz - e.z).toFloat()) * (180f / PI.toFloat())
                 e.attackCooldown -= dt
                 if (e.attackCooldown <= 0f && playerInvTimer <= 0f) {
                     e.attackCooldown = ATTACK_CD

@@ -22,7 +22,7 @@ internal class Camera(var x: Double = 0.0, var y: Double = 0.0, var z: Double = 
     val lookZ get() = (cos(Math.toRadians(pitch.toDouble())) * cos(Math.toRadians(yaw.toDouble()))).toFloat()
 
     fun setProjection(fovDeg: Float, aspect: Float) {
-        Matrix.perspectiveM(projMatrix, 0, fovDeg, aspect, 0.1f, 500f)
+        Matrix.perspectiveM(projMatrix, 0, fovDeg, aspect, 0.1f, 1500f)
     }
 
     fun update() {
