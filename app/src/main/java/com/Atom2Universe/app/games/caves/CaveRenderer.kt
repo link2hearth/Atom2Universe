@@ -4,9 +4,12 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
+import com.Atom2Universe.app.games.caves.entity.Enemy
+import com.Atom2Universe.app.games.caves.entity.EnemyManager
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
+import com.Atom2Universe.app.games.caves.render.EnemyRenderer
 import com.Atom2Universe.app.games.caves.render.ShaderProgram
 import com.Atom2Universe.app.games.caves.world.*
 import kotlinx.coroutines.*
@@ -29,24 +32,24 @@ internal class CaveRenderer(
 ) : GLSurfaceView.Renderer {
 
     data class SavedState(
-        val x: Float, val y: Float, val z: Float,
+        val x: Double, val y: Double, val z: Double,
         val yaw: Float, val pitch: Float,
         val inventory: Map<Byte, Int>,
         val hotbar: List<Byte?>
     )
 
-    val camera = Camera(8f, 8f, 8f)
+    val camera = Camera(8.0, 8.0, 8.0)
     private val storage = worldId?.let {
         CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
     }
     private val world = World(seed = worldSeed, storage = storage)
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
-    // Triple : (clé chunk, version au moment du build, vertices)
     private val uploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
 
     private var worldShader: ShaderProgram? = null
     private var laserShader: ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wUMvp = 0; private var wUTex = 0
+    private var wUChunkOffset = 0
     private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0
     private var blockTexArray = 0
 
@@ -67,63 +70,82 @@ internal class CaveRenderer(
     @Volatile var pendingMode: PlayerMode? = null
     private var velocityY = 0f
     private var onGround = false
-    private var prevFlyUp = false   // front montant : évite l'auto-jump en hold
+    private var prevFlyUp = false
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
     private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int)
     private var mineTarget: RayHit? = null
-    private var mineDamage = 0f   // 0..1
+    private var mineDamage = 0f
 
     val inventory = mutableMapOf<Byte, Int>()
-    val hotbar    = arrayOfNulls<Byte>(9)   // block types in slots 0-8
+    val hotbar    = arrayOfNulls<Byte>(9)
     var selectedSlot = 0
 
     private var transientVbo = 0
-    private var elapsed = 0f     // temps pour l'effet de pulsation
+    private var elapsed = 0f
 
     private val HARDNESS = mapOf(
-        GRASS   to 0.6f,
-        LEAVES  to 0.2f,
-        WOOD    to 2.0f,
-        DIRT    to 0.5f,
-        GRAVEL  to 0.8f,
-        COAL    to 1.5f,
-        QUARTZ  to 2.5f,
-        STONE   to 3.0f,
-        COPPER  to 2.0f,
-        FURNACE to 3.5f,
-        GRANITE to 4.0f,
-        EMERALD to 5.0f,
-        IRON    to 4.0f,
-        SILVER  to 4.5f,
-        GOLD    to 5.0f,
-        RUBY    to 5.5f,
-        CRYSTAL to 6.0f,
-        LAVA    to 8.0f,
+        GRASS         to 0.6f,
+        LEAVES        to 0.2f,
+        WOOD          to 2.0f,
+        DIRT          to 0.5f,
+        GRAVEL        to 0.8f,
+        COAL          to 1.5f,
+        QUARTZ        to 2.5f,
+        STONE         to 3.0f,
+        COPPER        to 2.0f,
+        FURNACE       to 3.5f,
+        GRANITE       to 4.0f,
+        EMERALD       to 5.0f,
+        IRON          to 4.0f,
+        SILVER        to 4.5f,
+        GOLD          to 5.0f,
+        RUBY          to 5.5f,
+        CRYSTAL       to 6.0f,
+        LAVA          to 8.0f,
+        // Biome blocks
+        ICE           to 0.5f,
+        SNOW          to 0.2f,
+        BRICK_RED     to 4.5f,
+        // Décors : minage instantané
+        ROCK          to 0.1f,
+        ROCK_MOSS     to 0.1f,
+        MUSHROOM_RED  to 0.1f,
+        MUSHROOM_BROWN to 0.1f,
+        MUSHROOM_TAN  to 0.1f,
     )
 
-    // Callbacks vers l'Activity (appelés depuis le thread GL → poster sur UI thread)
+    // ── Ennemis ───────────────────────────────────────────────────────────────
+
+    private val enemyManager  = EnemyManager(world)
+    private val enemyRenderer = EnemyRenderer()
+    private var laserEnemyDmgTimer = 0f
+
     var posCallback: ((String) -> Unit)? = null
     var modeCallback: ((PlayerMode) -> Unit)? = null
     var miningCallback: ((progress: Float, block: Byte?) -> Unit)? = null
     var inventoryCallback: ((Map<Byte, Int>) -> Unit)? = null
     var hotbarCallback: ((slots: Array<Byte?>, selected: Int) -> Unit)? = null
+    var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)? = null
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
-    // World shader — texture array, packed = faceDir*16 + texLayer
+    // Vertices are in chunk-local space (0..CHUNK_SIZE).
+    // u_chunk_offset translates them to camera-relative world space (Floating Origin).
     private val VERT_WORLD = """
         #version 300 es
         in vec3 a_pos;
         in vec3 a_uv;
         uniform mat4 u_mvp;
+        uniform vec3 u_chunk_offset;
         out vec2 v_uv;
         out float v_layer;
         out float v_faceDir;
         out float v_fog;
         void main() {
-            gl_Position = u_mvp * vec4(a_pos, 1.0);
+            vec3 worldPos = a_pos + u_chunk_offset;
+            gl_Position = u_mvp * vec4(worldPos, 1.0);
             v_uv      = a_uv.xy;
             v_layer   = mod(a_uv.z, 32.0);
             v_faceDir = floor(a_uv.z / 32.0);
@@ -142,6 +164,7 @@ internal class CaveRenderer(
         out vec4 fragColor;
         void main() {
             vec4 col = texture(u_tex, vec3(v_uv, v_layer));
+            if (col.a < 0.5) discard;
             float fd = floor(v_faceDir + 0.5);
             float light = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
             vec3 fog = vec3(0.008, 0.006, 0.015);
@@ -149,7 +172,7 @@ internal class CaveRenderer(
         }
     """.trimIndent()
 
-    // Laser shader — vertex colors (laser + highlight)
+    // Laser vertices are already in camera-relative world space.
     private val VERT_LASER = """
         #version 300 es
         in vec3 a_pos;
@@ -185,10 +208,11 @@ internal class CaveRenderer(
 
         worldShader = ShaderProgram(VERT_WORLD, FRAG_WORLD).also {
             it.use()
-            wAPos  = it.attrib("a_pos")
-            wAUv   = it.attrib("a_uv")
-            wUMvp  = it.uniform("u_mvp")
-            wUTex  = it.uniform("u_tex")
+            wAPos         = it.attrib("a_pos")
+            wAUv          = it.attrib("a_uv")
+            wUMvp         = it.uniform("u_mvp")
+            wUTex         = it.uniform("u_tex")
+            wUChunkOffset = it.uniform("u_chunk_offset")
         }
         laserShader = ShaderProgram(VERT_LASER, FRAG_LASER).also {
             it.use()
@@ -198,6 +222,8 @@ internal class CaveRenderer(
         }
 
         blockTexArray = loadBlockTextures()
+        enemyRenderer.onSurfaceCreated()
+        enemyManager.playerHpCallback = { hp, max -> playerHpCallback?.invoke(hp, max) }
 
         val ids = IntArray(1)
         GLES30.glGenBuffers(1, ids, 0)
@@ -213,23 +239,36 @@ internal class CaveRenderer(
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
+            // Calculer le spawn d'origine pour le système de niveaux
+            val spawn = world.findSpawnPoint()
+            enemyManager.worldSpawnX = spawn[0].toDouble()
+            enemyManager.worldSpawnZ = spawn[2].toDouble()
         } else {
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(dx, dy, dz)
             val spawn = world.findSpawnPoint()
-            camera.x = spawn[0]; camera.y = spawn[1]; camera.z = spawn[2]
+            camera.x = spawn[0].toDouble(); camera.y = spawn[1].toDouble(); camera.z = spawn[2].toDouble()
+            enemyManager.worldSpawnX = camera.x
+            enemyManager.worldSpawnZ = camera.z
         }
     }
 
     private fun loadBlockTextures(): Int {
         val files = listOf(
+            // Solides de base (layers 0-22, identiques à avant)
             "stone.png", "greystone.png", "greysand.png", "stone_coal.png",
             "stone_gold.png", "stone_diamond.png", "dirt.png", "gravel_stone.png",
             "stone_iron.png", "stone_silver.png", "greystone_ruby.png", "lava.png", "oven.png",
             "redstone_emerald.png", "stone_browniron.png",
             "dirt_grass.png", "grass_top.png",
             "trunk_side.png", "trunk_top.png", "leaves.png",
-            "sand.png", "stone_grass.png", "redsand.png"
+            "sand.png", "stone_grass.png", "redsand.png",
+            // Nouveaux blocs biome (layers 23-26)
+            "ice.png", "snow.png", "dirt_snow.png", "brick_red.png",
+            // Décors cross-sprite (layers 27-31)
+            "rock.png", "rock_moss.png", "mushroom_red.png", "mushroom_brown.png", "mushroom_tan.png",
+            // Transitions sol biome pour faces latérales STONE (layers 32-33)
+            "stone_sand_side.png", "stone_snow_side.png"
         )
         val am = context.assets
         val bitmaps = files.map { BitmapFactory.decodeStream(am.open("Cave World/Tiles/$it")) }
@@ -281,7 +320,6 @@ internal class CaveRenderer(
 
         elapsed += dt
 
-        // Minage
         updateMining(dt)
 
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
@@ -290,7 +328,6 @@ internal class CaveRenderer(
             world.updateAroundPlayer(cx, cy, cz) { chunk -> scheduleChunkBuild(chunk) }
         }
 
-        // Drain + tri par distance → les seams proches du joueur sont résolus en priorité
         val rebuildBatch = ArrayList<Long>(32)
         repeat(64) { world.rebuildQueue.poll()?.let { rebuildBatch.add(it) } }
         rebuildBatch.sortBy { key ->
@@ -337,9 +374,24 @@ internal class CaveRenderer(
 
         extractFrustumPlanes(camera.vpMatrix)
         for ((key, mesh) in meshes) {
-            if (isChunkInFrustum(world.keyToCx(key), world.keyToCy(key), world.keyToCz(key)))
-                mesh.draw(wAPos, wAUv)
+            val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
+            if (!isChunkInFrustum(kcx, kcy, kcz)) continue
+            // Offset in Double, converted to Float. Since the chunk is within renderRadius
+            // of the camera, this value is always small (<= ~80 blocks) — exact in Float.
+            val offX = (kcx.toDouble() * CHUNK_SIZE - camera.x).toFloat()
+            val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
+            val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
+            GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
+            mesh.draw(wAPos, wAUv)
         }
+
+        // ── Mise à jour + rendu ennemis ───────────────────────────────────────
+        enemyManager.update(dt, camera.x, camera.y, camera.z)
+        enemyRenderer.render(
+            enemyManager.enemies,
+            camera.x, camera.y, camera.z,
+            camera.yaw, camera.vpMatrix
+        )
 
         // ── Rendu laser + highlight (blending additif) ────────────────────────
         renderLaserAndHighlight()
@@ -356,11 +408,37 @@ internal class CaveRenderer(
     private val MINE_REACH = 6
 
     private fun updateMining(dt: Float) {
-        // Pose indépendante du laser — traitée en premier
         if (touch.placeRequested) {
             touch.placeRequested = false
             placeBlock()
         }
+
+        // Vérifier si le laser touche un ennemi en priorité
+        if (touch.laserActive) {
+            val hitEnemy = enemyManager.hitByLaser(
+                camera.x, camera.y, camera.z,
+                camera.lookX, camera.lookY, camera.lookZ,
+                MINE_REACH.toFloat()
+            )
+            if (hitEnemy != null) {
+                // Pointer le laser vers le centre de l'ennemi (pour la visu)
+                mineTarget = RayHit(
+                    Math.floor(hitEnemy.x).toInt(),
+                    Math.floor(hitEnemy.y - hitEnemy.type.eyeHeight * 0.5).toInt(),
+                    Math.floor(hitEnemy.z).toInt(),
+                    0, 0, 0
+                )
+                mineDamage = 0f
+                miningCallback?.invoke(0f, null)
+                laserEnemyDmgTimer -= dt
+                if (laserEnemyDmgTimer <= 0f) {
+                    laserEnemyDmgTimer = 0.22f
+                    enemyManager.damageEnemy(hitEnemy, 1)
+                }
+                return
+            }
+        }
+        laserEnemyDmgTimer = 0f
 
         val target = if (touch.laserActive) raycastBlock() else null
 
@@ -385,7 +463,6 @@ internal class CaveRenderer(
             world.setBlock(bx, by, bz, AIR)
             forceMeshRebuild(bx, by, bz)
             inventory[blockType] = (inventory[blockType] ?: 0) + 1
-            // Auto-fill hotbar si ce type n'y est pas encore
             if (hotbar.none { it == blockType }) {
                 val empty = hotbar.indexOfFirst { it == null }
                 if (empty >= 0) { hotbar[empty] = blockType; hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot) }
@@ -397,7 +474,6 @@ internal class CaveRenderer(
         }
     }
 
-    // Synchrone sur le GL thread : flushPending() de la même frame uploads immédiatement.
     private fun forceMeshRebuild(wx: Int, wy: Int, wz: Int) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
@@ -416,11 +492,12 @@ internal class CaveRenderer(
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
             val verts = MeshBuilder.build(chunk, world)
             meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
-            // flushPending() est appelé plus bas dans onDrawFrame, même frame
         }
     }
 
-    // DDA 3D : retourne le premier bloc solide avec la normale de la face touchée
+    // DDA 3D : retourne le premier bloc solide avec la normale de la face touchée.
+    // camera.x/y/z sont Double; les calculs initiaux se font en Double pour que
+    // la position fractionnaire dans le bloc de départ soit correcte à grande distance.
     private fun raycastBlock(): RayHit? {
         val dirX = camera.lookX; val dirY = camera.lookY; val dirZ = camera.lookZ
 
@@ -434,9 +511,10 @@ internal class CaveRenderer(
         val tDY = if (dirY != 0f) abs(1f / dirY) else Float.MAX_VALUE
         val tDZ = if (dirZ != 0f) abs(1f / dirZ) else Float.MAX_VALUE
 
-        var tMaxX = if (dirX > 0) (bx + 1 - camera.x) * tDX else (camera.x - bx) * tDX
-        var tMaxY = if (dirY > 0) (by + 1 - camera.y) * tDY else (camera.y - by) * tDY
-        var tMaxZ = if (dirZ > 0) (bz + 1 - camera.z) * tDZ else (camera.z - bz) * tDZ
+        // Fraction initiale calculée en Double pour éviter l'erreur de troncature à grande distance
+        var tMaxX = if (dirX > 0) ((bx + 1).toDouble() - camera.x).toFloat() * tDX else (camera.x - bx.toDouble()).toFloat() * tDX
+        var tMaxY = if (dirY > 0) ((by + 1).toDouble() - camera.y).toFloat() * tDY else (camera.y - by.toDouble()).toFloat() * tDY
+        var tMaxZ = if (dirZ > 0) ((bz + 1).toDouble() - camera.z).toFloat() * tDZ else (camera.z - bz.toDouble()).toFloat() * tDZ
 
         var fnx = 0; var fny = 0; var fnz = -1
 
@@ -491,17 +569,19 @@ internal class CaveRenderer(
         GLES30.glDisable(GLES30.GL_BLEND)
     }
 
+    // Laser et highlight en espace caméra-relatif : camera = origine, tout est soustrait.
     private fun buildLaserVerts(target: RayHit): FloatArray {
-        // Centre de la face touchée (pas centre du bloc)
-        val ex = target.bx + 0.5f + target.fnx * 0.5f
-        val ey = target.by + 0.5f + target.fny * 0.5f
-        val ez = target.bz + 0.5f + target.fnz * 0.5f
+        // Centre de la face touchée, en espace caméra-relatif
+        val ex = (target.bx.toDouble() + 0.5 + target.fnx * 0.5 - camera.x).toFloat()
+        val ey = (target.by.toDouble() + 0.5 + target.fny * 0.5 - camera.y).toFloat()
+        val ez = (target.bz.toDouble() + 0.5 + target.fnz * 0.5 - camera.z).toFloat()
 
+        // Source du laser : offset latéral depuis la caméra (camera = origin)
         val yawRad = Math.toRadians(camera.yaw.toDouble()).toFloat()
         val rX = cos(yawRad); val rZ = -sin(yawRad)
-        val sx = camera.x + rX * 0.35f
-        val sy = camera.y - 0.25f
-        val sz = camera.z + rZ * 0.35f
+        val sx = rX * 0.35f
+        val sy = -0.25f
+        val sz = rZ * 0.35f
 
         val ddx = ex - sx; val ddy = ey - sy; val ddz = ez - sz
         val blen = sqrt(ddx*ddx + ddy*ddy + ddz*ddz).coerceAtLeast(0.001f)
@@ -525,7 +605,6 @@ internal class CaveRenderer(
             emit(x0+rvX*hw,y0+rvY*hw,z0+rvZ*hw,r,g,b); emit(x1-rvX*hw,y1-rvY*hw,z1-rvZ*hw,r,g,b); emit(x1+rvX*hw,y1+rvY*hw,z1+rvZ*hw,r,g,b)
         }
 
-        // Waypoints de l'arc principal (zigzag animé haute fréquence)
         val N = 8
         val px = FloatArray(N+1); val py = FloatArray(N+1); val pz = FloatArray(N+1)
         px[0]=sx; py[0]=sy; pz[0]=sz; px[N]=ex; py[N]=ey; pz[N]=ez
@@ -538,10 +617,9 @@ internal class CaveRenderer(
             py[i] = sy+(ey-sy)*t + ruY*wu + rvY*wv
             pz[i] = sz+(ez-sz)*t + ruZ*wu + rvZ*wv
         }
-        for (i in 0 until N) seg(px[i],py[i],pz[i], px[i+1],py[i+1],pz[i+1], 0.022f, 0.04f,0.15f,0.55f)  // glow
-        for (i in 0 until N) seg(px[i],py[i],pz[i], px[i+1],py[i+1],pz[i+1], 0.006f, 0.75f,1.0f,1.0f)    // core
+        for (i in 0 until N) seg(px[i],py[i],pz[i], px[i+1],py[i+1],pz[i+1], 0.022f, 0.04f,0.15f,0.55f)
+        for (i in 0 until N) seg(px[i],py[i],pz[i], px[i+1],py[i+1],pz[i+1], 0.006f, 0.75f,1.0f,1.0f)
 
-        // Arcs secondaires (branches Tesla)
         for (br in 0..1) {
             val si = 2 + br * 3
             val qx = FloatArray(6); val qy = FloatArray(6); val qz = FloatArray(6)
@@ -559,7 +637,6 @@ internal class CaveRenderer(
             for (j in 0..4) seg(qx[j],qy[j],qz[j], qx[j+1],qy[j+1],qz[j+1], 0.005f, 0.2f,0.55f,1.0f)
         }
 
-        // Couronne d'impact sur la face (axes tangents à la normale)
         val fnx = target.fnx.toFloat(); val fny = target.fny.toFloat(); val fnz = target.fnz.toFloat()
         val t1x: Float; val t1y: Float; val t1z: Float
         val t2x: Float; val t2y: Float; val t2z: Float
@@ -585,15 +662,15 @@ internal class CaveRenderer(
         return out.toFloatArray()
     }
 
-    // Faces du bloc ciblé avec intensité variant selon la progression du minage
+    // Faces du bloc ciblé en espace caméra-relatif
     private fun buildHighlightVerts(target: RayHit, progress: Float): FloatArray {
-        val bx = target.bx; val by = target.by; val bz = target.bz
-        val x = bx.toFloat(); val y = by.toFloat(); val z = bz.toFloat()
-        val ep = 0.005f  // légère expansion pour éviter le z-fight
+        val x = (target.bx.toDouble() - camera.x).toFloat()
+        val y = (target.by.toDouble() - camera.y).toFloat()
+        val z = (target.bz.toDouble() - camera.z).toFloat()
+        val ep = 0.005f
         val x0=x-ep; val y0=y-ep; val z0=z-ep
         val x1=x+1+ep; val y1=y+1+ep; val z1=z+1+ep
 
-        // Couleur : cyan faible au début → orange vif à la fin
         val t = progress.coerceIn(0f, 1f)
         val cr = t * 0.9f; val cg = (1f - t) * 0.4f; val cb = (1f - t) * 0.5f
 
@@ -602,17 +679,11 @@ internal class CaveRenderer(
         fun v(px: Float, py: Float, pz: Float) {
             out[i++]=px; out[i++]=py; out[i++]=pz; out[i++]=cr; out[i++]=cg; out[i++]=cb
         }
-        // +Y
         v(x0,y1,z0); v(x1,y1,z0); v(x1,y1,z1); v(x0,y1,z0); v(x1,y1,z1); v(x0,y1,z1)
-        // -Y
         v(x0,y0,z1); v(x1,y0,z1); v(x1,y0,z0); v(x0,y0,z1); v(x1,y0,z0); v(x0,y0,z0)
-        // +X
         v(x1,y0,z1); v(x1,y1,z1); v(x1,y1,z0); v(x1,y0,z1); v(x1,y1,z0); v(x1,y0,z0)
-        // -X
         v(x0,y0,z0); v(x0,y1,z0); v(x0,y1,z1); v(x0,y0,z0); v(x0,y1,z1); v(x0,y0,z1)
-        // +Z
         v(x0,y0,z1); v(x0,y1,z1); v(x1,y1,z1); v(x0,y0,z1); v(x1,y1,z1); v(x1,y0,z1)
-        // -Z
         v(x1,y0,z0); v(x1,y1,z0); v(x0,y1,z0); v(x1,y0,z0); v(x0,y1,z0); v(x0,y0,z0)
         return out
     }
@@ -628,10 +699,11 @@ internal class CaveRenderer(
         frustum[5][0]=m[3]-m[2]; frustum[5][1]=m[7]-m[6];  frustum[5][2]=m[11]-m[10]; frustum[5][3]=m[15]-m[14]
     }
 
+    // AABB du chunk en espace caméra-relatif (camera = origine)
     private fun isChunkInFrustum(cx: Int, cy: Int, cz: Int): Boolean {
-        val x0=(cx*CHUNK_SIZE).toFloat(); val x1=x0+CHUNK_SIZE
-        val y0=(cy*CHUNK_SIZE).toFloat(); val y1=y0+CHUNK_SIZE
-        val z0=(cz*CHUNK_SIZE).toFloat(); val z1=z0+CHUNK_SIZE
+        val x0 = (cx.toDouble() * CHUNK_SIZE - camera.x).toFloat(); val x1 = x0 + CHUNK_SIZE
+        val y0 = (cy.toDouble() * CHUNK_SIZE - camera.y).toFloat(); val y1 = y0 + CHUNK_SIZE
+        val z0 = (cz.toDouble() * CHUNK_SIZE - camera.z).toFloat(); val z1 = z0 + CHUNK_SIZE
         for (p in frustum) {
             val px = if (p[0]>=0f) x1 else x0; val py = if (p[1]>=0f) y1 else y0; val pz = if (p[2]>=0f) z1 else z0
             if (p[0]*px+p[1]*py+p[2]*pz+p[3] < 0f) return false
@@ -653,29 +725,27 @@ internal class CaveRenderer(
         val fX = sin(yawRad).toFloat(); val fZ = cos(yawRad).toFloat()
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
         val hSpeed = if (onGround) 7f * dt else 4f * dt
-        val dx = fX * touch.moveForward * hSpeed - rX * touch.moveRight * hSpeed
-        val dz = fZ * touch.moveForward * hSpeed - rZ * touch.moveRight * hSpeed
+        val dx = (fX * touch.moveForward * hSpeed - rX * touch.moveRight * hSpeed).toDouble()
+        val dz = (fZ * touch.moveForward * hSpeed - rZ * touch.moveRight * hSpeed).toDouble()
 
         if (!collidesAt(camera.x + dx, camera.y, camera.z)) camera.x += dx
         if (!collidesAt(camera.x, camera.y, camera.z + dz)) camera.z += dz
 
-        // Saut sur front montant uniquement (pas en hold)
         val jumpPressed = touch.flyUp && !prevFlyUp
         prevFlyUp = touch.flyUp
         if (jumpPressed && onGround) { velocityY = 10.5f; onGround = false }
 
         velocityY -= 22f * dt
         velocityY = velocityY.coerceAtLeast(-30f)
-        val dy = velocityY * dt
+        val dy = (velocityY * dt).toDouble()
         if (!collidesAt(camera.x, camera.y + dy, camera.z)) {
             camera.y += dy
         } else {
             if (velocityY < 0f) {
-                // Binary search : position d'atterrissage exacte sans entrer dans un bloc
-                var lo = camera.y + dy   // collide
-                var hi = camera.y        // libre
+                var lo = camera.y + dy
+                var hi = camera.y
                 repeat(8) {
-                    val mid = (lo + hi) * 0.5f
+                    val mid = (lo + hi) * 0.5
                     if (collidesAt(camera.x, mid, camera.z)) lo = mid else hi = mid
                 }
                 camera.y = hi
@@ -683,18 +753,19 @@ internal class CaveRenderer(
             velocityY = 0f
         }
 
-        // Détection sol directe : fiable sur terrain irrégulier, indépendante de la vélocité
-        onGround = velocityY <= 0.1f && collidesAt(camera.x, camera.y - 0.1f, camera.z)
+        onGround = velocityY <= 0.1f && collidesAt(camera.x, camera.y - 0.1, camera.z)
     }
 
     // ── Collision ─────────────────────────────────────────────────────────────
 
-    private fun collidesAt(px: Float, py: Float, pz: Float): Boolean {
-        val x0=floorInt(px-0.3f); val x1=floorInt(px+0.29f)
-        val y0=floorInt(py-1.62f); val y1=floorInt(py+0.18f)
-        val z0=floorInt(pz-0.3f); val z1=floorInt(pz+0.29f)
-        for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1)
-            if (worldBlockAt(bx, by, bz) != AIR) return true
+    private fun collidesAt(px: Double, py: Double, pz: Double): Boolean {
+        val x0=floorInt(px-0.3); val x1=floorInt(px+0.29)
+        val y0=floorInt(py-1.62); val y1=floorInt(py+0.18)
+        val z0=floorInt(pz-0.3); val z1=floorInt(pz+0.29)
+        for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
+            val b = worldBlockAt(bx, by, bz)
+            if (b != AIR && !isDecoration(b)) return true
+        }
         return false
     }
 
@@ -705,19 +776,19 @@ internal class CaveRenderer(
         return chunk.blockAt(wx-cx*CHUNK_SIZE, wy-cy*CHUNK_SIZE, wz-cz*CHUNK_SIZE)
     }
 
-    private fun floorInt(f: Float) = floor(f.toDouble()).toInt()
+    private fun floorInt(d: Double) = Math.floor(d).toInt()
 
     // ── Mode switch ───────────────────────────────────────────────────────────
 
     private fun applyModeSwitch(newMode: PlayerMode) {
         if (newMode == PlayerMode.WALK) {
-            val bcx=Math.floorDiv(floorInt(camera.x),CHUNK_SIZE)
-            val bcy=Math.floorDiv(floorInt(camera.y),CHUNK_SIZE)
-            val bcz=Math.floorDiv(floorInt(camera.z),CHUNK_SIZE)
-            val inLoadedSolid = world.getChunk(bcx,bcy,bcz)?.generated==true && collidesAt(camera.x,camera.y,camera.z)
+            val bcx = Math.floorDiv(floorInt(camera.x), CHUNK_SIZE)
+            val bcy = Math.floorDiv(floorInt(camera.y), CHUNK_SIZE)
+            val bcz = Math.floorDiv(floorInt(camera.z), CHUNK_SIZE)
+            val inLoadedSolid = world.getChunk(bcx, bcy, bcz)?.generated == true && collidesAt(camera.x, camera.y, camera.z)
             if (inLoadedSolid) {
                 var safeY = camera.y
-                repeat(64) { if (collidesAt(camera.x, safeY, camera.z)) safeY += 1f }
+                repeat(64) { if (collidesAt(camera.x, safeY, camera.z)) safeY += 1.0 }
                 camera.y = safeY
             }
             velocityY = 0f; onGround = false
@@ -735,15 +806,12 @@ internal class CaveRenderer(
             world.generate(chunk)
             world.markGenerated(chunk)
 
-            // Mesh du chunk lui-même
             val snapVersion = chunk.version
             val verts = MeshBuilder.build(chunk, world)
             if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
             building.remove(key)
             if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
 
-            // Rebuild immédiat des 6 voisins face-à-face qui existent déjà :
-            // évite les seams visibles entre le nouveau chunk et ses voisins pré-existants.
             val offsets = arrayOf(
                 intArrayOf(1,0,0), intArrayOf(-1,0,0),
                 intArrayOf(0,1,0), intArrayOf(0,-1,0),
@@ -753,7 +821,7 @@ internal class CaveRenderer(
                 val nb = world.getChunk(chunk.cx + dx, chunk.cy + dy, chunk.cz + dz) ?: continue
                 if (!nb.generated) continue
                 val nKey = world.chunkKey(nb.cx, nb.cy, nb.cz)
-                if (!building.add(nKey)) continue   // déjà en cours → skip
+                if (!building.add(nKey)) continue
                 nb.meshDirty = false
                 val nSnap = nb.version
                 val nVerts = MeshBuilder.build(nb, world)
@@ -794,9 +862,9 @@ internal class CaveRenderer(
     }
 
     private fun isInsidePlayer(bx: Int, by: Int, bz: Int): Boolean {
-        val x0 = floorInt(camera.x - 0.3f); val x1 = floorInt(camera.x + 0.29f)
-        val y0 = floorInt(camera.y - 1.62f); val y1 = floorInt(camera.y + 0.18f)
-        val z0 = floorInt(camera.z - 0.3f); val z1 = floorInt(camera.z + 0.29f)
+        val x0 = floorInt(camera.x - 0.3); val x1 = floorInt(camera.x + 0.29)
+        val y0 = floorInt(camera.y - 1.62); val y1 = floorInt(camera.y + 0.18)
+        val z0 = floorInt(camera.z - 0.3); val z1 = floorInt(camera.z + 0.29)
         return bx in x0..x1 && by in y0..y1 && bz in z0..z1
     }
 
@@ -806,6 +874,7 @@ internal class CaveRenderer(
         meshes.values.forEach { it.destroy() }
         worldShader?.destroy()
         laserShader?.destroy()
+        enemyRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)
     }

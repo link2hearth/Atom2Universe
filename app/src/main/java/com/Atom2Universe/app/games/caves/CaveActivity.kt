@@ -59,12 +59,20 @@ class CaveActivity : ThemedActivity() {
             FURNACE -> 0xFF555555.toInt()
             EMERALD -> 0xFF50C878.toInt()
             COPPER  -> 0xFFB87333.toInt()
-            GRASS   -> 0xFF55AA33.toInt()
-            WOOD    -> 0xFF8B6914.toInt()
-            LEAVES  -> 0xFF2D6A1F.toInt()
-            SAND    -> 0xFFD4C06A.toInt()
-            REDSAND -> 0xFFCC6633.toInt()
-            else    -> 0xFF444444.toInt()
+            GRASS         -> 0xFF55AA33.toInt()
+            WOOD          -> 0xFF8B6914.toInt()
+            LEAVES        -> 0xFF2D6A1F.toInt()
+            SAND          -> 0xFFD4C06A.toInt()
+            REDSAND       -> 0xFFCC6633.toInt()
+            ICE           -> 0xFFAADDFF.toInt()
+            SNOW          -> 0xFFEEEEFF.toInt()
+            BRICK_RED     -> 0xFFAA3322.toInt()
+            ROCK          -> 0xFF888888.toInt()
+            ROCK_MOSS     -> 0xFF667744.toInt()
+            MUSHROOM_RED  -> 0xFFCC3322.toInt()
+            MUSHROOM_BROWN -> 0xFF886644.toInt()
+            MUSHROOM_TAN  -> 0xFFAA8855.toInt()
+            else          -> 0xFF444444.toInt()
         }
 
         // Convertit position adapter ↔ index dans invSlots[0..35]
@@ -82,6 +90,10 @@ class CaveActivity : ThemedActivity() {
     private var ptrLaser = -1; private var ptrPlace = -1
     private var vBtnUp:    View? = null; private var vBtnDown:  View? = null
     private var vBtnLaser: View? = null; private var vBtnPlace: View? = null
+
+    private var hpBarFg: View? = null
+    private var hpText: TextView? = null
+    private var hpBarMaxWidth = 0
 
     // Hotbar HUD (9 slots + bouton sac)
     private val slotViews   = arrayOfNulls<FrameLayout>(ACTIVE_SIZE)
@@ -105,7 +117,7 @@ class CaveActivity : ThemedActivity() {
 
         worldId = intent.getStringExtra(EXTRA_WORLD_ID)
         val save = worldId?.let { CaveWorldSaveManager.loadWorld(this, it) }
-        val savedState = if (save != null && save.playerY != 0f) {
+        val savedState = if (save != null && save.playerY != 0.0) {
             CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
@@ -181,6 +193,12 @@ class CaveActivity : ThemedActivity() {
         }
         renderer.hotbarCallback = { slots, selected ->
             uiHandler.post { updateHotbarUI(slots, selected) }
+        }
+
+        buildHealthBar(root)
+
+        renderer.playerHpCallback = { hp, maxHp ->
+            uiHandler.post { updateHealthBar(hp, maxHp) }
         }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
@@ -394,6 +412,74 @@ class CaveActivity : ThemedActivity() {
         }
     }
 
+    // ── HP bar ────────────────────────────────────────────────────────────────
+
+    private fun buildHealthBar(root: FrameLayout) {
+        val dp = resources.displayMetrics.density
+        val barWidthPx = (80 * dp).toInt()
+        val barHeightPx = (10 * dp).toInt()
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).also {
+                it.gravity = Gravity.TOP or Gravity.START
+                it.setMargins((12 * dp).toInt(), (48 * dp).toInt(), 0, 0)
+            }
+            setPadding((6 * dp).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE; setColor(0x99000000.toInt()); cornerRadius = 6 * dp
+            }
+        }
+
+        val heartTv = TextView(this).apply {
+            text = "❤"; textSize = 12f; setTextColor(0xFFFF4444.toInt())
+            setPadding(0, 0, (4 * dp).toInt(), 0)
+        }
+
+        // Barre = container relatif avec fond + barre verte par-dessus
+        val barFrame = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(barWidthPx, barHeightPx).also {
+                it.gravity = Gravity.CENTER_VERTICAL
+            }
+        }
+        val barBg = View(this).apply {
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+            background = GradientDrawable().apply { setColor(0x88440000.toInt()); cornerRadius = 3 * dp }
+        }
+        val barFg = View(this).apply {
+            layoutParams = FrameLayout.LayoutParams(barWidthPx, FrameLayout.LayoutParams.MATCH_PARENT)
+            background = GradientDrawable().apply { setColor(0xFF22CC44.toInt()); cornerRadius = 3 * dp }
+        }
+        barFrame.addView(barBg); barFrame.addView(barFg)
+
+        val tv = TextView(this).apply {
+            text = "20/20"; textSize = 9f; setTextColor(Color.WHITE)
+            setPadding((4 * dp).toInt(), 0, 0, 0)
+        }
+
+        container.addView(heartTv); container.addView(barFrame); container.addView(tv)
+        root.addView(container)
+        hpBarFg = barFg; hpText = tv; hpBarMaxWidth = barWidthPx
+    }
+
+    private fun updateHealthBar(hp: Int, maxHp: Int) {
+        val frac = hp.toFloat() / maxHp.coerceAtLeast(1)
+        val fgWidth = (hpBarMaxWidth * frac).toInt().coerceAtLeast(0)
+        hpBarFg?.layoutParams = (hpBarFg?.layoutParams as? FrameLayout.LayoutParams)?.also { it.width = fgWidth }
+        hpBarFg?.requestLayout()
+        hpText?.text = "$hp/$maxHp"
+        (hpBarFg?.background as? GradientDrawable)?.setColor(
+            when {
+                frac > 0.6f -> 0xFF22CC44.toInt()
+                frac > 0.3f -> 0xFFDDAA00.toInt()
+                else        -> 0xFFCC2222.toInt()
+            }
+        )
+    }
+
     // ── Hotbar HUD ────────────────────────────────────────────────────────────
 
     private fun buildHotbarUI(container: LinearLayout) {
@@ -512,8 +598,21 @@ class CaveActivity : ThemedActivity() {
         LAVA    -> getString(R.string.cave_block_lava)
         FURNACE -> getString(R.string.cave_block_furnace)
         EMERALD -> getString(R.string.cave_block_emerald)
-        COPPER  -> getString(R.string.cave_block_copper)
-        else    -> "?"
+        COPPER        -> getString(R.string.cave_block_copper)
+        GRASS         -> getString(R.string.cave_block_grass)
+        WOOD          -> getString(R.string.cave_block_wood)
+        LEAVES        -> getString(R.string.cave_block_leaves)
+        SAND          -> getString(R.string.cave_block_sand)
+        REDSAND       -> getString(R.string.cave_block_redsand)
+        ICE           -> getString(R.string.cave_block_ice)
+        SNOW          -> getString(R.string.cave_block_snow)
+        BRICK_RED     -> getString(R.string.cave_block_brick_red)
+        ROCK          -> getString(R.string.cave_block_rock)
+        ROCK_MOSS     -> getString(R.string.cave_block_rock_moss)
+        MUSHROOM_RED  -> getString(R.string.cave_block_mushroom_red)
+        MUSHROOM_BROWN -> getString(R.string.cave_block_mushroom_brown)
+        MUSHROOM_TAN  -> getString(R.string.cave_block_mushroom_tan)
+        else          -> "?"
     }
 
     private fun applyModeUi(mode: PlayerMode, btnMode: Button, btnUp: Button,
