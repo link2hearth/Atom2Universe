@@ -5,8 +5,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.os.Handler
@@ -29,6 +33,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.games.caves.entity.UpgradeOption
+import com.Atom2Universe.app.games.caves.entity.UpgradeType
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.world.*
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -140,19 +146,26 @@ class CaveActivity : ThemedActivity() {
     private var vBtnUp:    View? = null; private var vBtnDown:  View? = null
     private var vBtnLaser: View? = null; private var vBtnPlace: View? = null
 
+    // ── HP / XP / Shield ──────────────────────────────────────────────────────
     private var hpBarFg: View? = null
     private var hpText: TextView? = null
     private var hpBarMaxWidth = 0
+    private var shieldBarFg: View? = null
+    private var shieldContainer: View? = null
+
+    private var xpBarFg: View? = null
+    private var xpBarMaxWidth = 0
+    private var xpLevelTv: TextView? = null
+
+    private var levelUpOverlay: FrameLayout? = null
 
     private val slotViews   = arrayOfNulls<FrameLayout>(ACTIVE_SIZE)
     private val slotCounts  = arrayOfNulls<TextView>(ACTIVE_SIZE)
     private val slotColors  = arrayOfNulls<View>(ACTIVE_SIZE)
     private lateinit var invOverlay: View
 
-    // Cache des bitmaps de texture (chargées depuis assets)
     private val blockBitmapCache = HashMap<Byte, Bitmap?>()
 
-    // invSlots[0..hotbarBase()-1] = grille   invSlots[hotbarBase()..size-1] = barre active
     private val invSlots = ArrayList<Byte?>()
     private var invSlotsReady = false
     private fun hotbarBase() = (invSlots.size - ACTIVE_SIZE).coerceAtLeast(0)
@@ -188,14 +201,13 @@ class CaveActivity : ThemedActivity() {
         } catch (e: Exception) { null }.also { blockBitmapCache[type] = it }
     }
 
-    /** Drawable texture du bloc (RoundedBitmap si disponible, GradientDrawable sinon). */
     private fun blockDrawable(type: Byte, cornerDp: Float = 4f): Drawable {
         val dp  = resources.displayMetrics.density
         val bmp = blockBitmap(type)
         return if (bmp != null) {
             RoundedBitmapDrawableFactory.create(resources, bmp).apply {
                 cornerRadius = cornerDp * dp
-                isFilterBitmap = false   // rendu pixel art net
+                isFilterBitmap = false
             }
         } else {
             GradientDrawable().apply {
@@ -277,7 +289,12 @@ class CaveActivity : ThemedActivity() {
         renderer.hotbarCallback    = { slots, selected -> uiHandler.post { updateHotbarUI(slots, selected) } }
 
         buildHealthBar(root)
+        buildXpBar(root)
+
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { updateHealthBar(hp, maxHp) } }
+        renderer.shieldCallback   = { cur, max  -> uiHandler.post { updateShieldBar(cur, max) } }
+        renderer.xpCallback       = { xp, xpMax, level -> uiHandler.post { updateXpBar(xp, xpMax, level) } }
+        renderer.levelUpCallback  = { options -> uiHandler.post { showLevelUpDialog(options, root) } }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)
@@ -301,6 +318,278 @@ class CaveActivity : ThemedActivity() {
         buildOverlayActiveBar(invOverlay.findViewById(R.id.cave_inv_active_row))
 
         applyModeUi(PlayerMode.WALK, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace)
+    }
+
+    // ── Barre XP (en haut, pleine largeur) ───────────────────────────────────
+
+    private fun buildXpBar(root: FrameLayout) {
+        val dp = resources.displayMetrics.density
+        val barH = (6 * dp).toInt()
+
+        val barFrame = FrameLayout(this).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, barH
+            ).also { it.gravity = Gravity.TOP }
+        }
+        val barBg = View(this).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            background = GradientDrawable().apply { setColor(0x88000022.toInt()) }
+        }
+        val barFg = View(this).apply {
+            layoutParams = FrameLayout.LayoutParams(0, FrameLayout.LayoutParams.MATCH_PARENT)
+            // Gradient cyan → bleu vif
+            background = GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT,
+                intArrayOf(0xFF00FFEE.toInt(), 0xFF0055FF.toInt())
+            )
+        }
+        barFrame.addView(barBg); barFrame.addView(barFg)
+        root.addView(barFrame)
+        xpBarFg = barFg
+
+        // Texte niveau, centré sur la barre
+        val lvTv = TextView(this).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, barH
+            ).also { it.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL }
+            setTextColor(Color.WHITE)
+            textSize = 7f
+            gravity = Gravity.CENTER
+            text = getString(R.string.cave_player_level, 1)
+        }
+        root.addView(lvTv)
+        xpLevelTv = lvTv
+
+        barFrame.post { xpBarMaxWidth = barFrame.width }
+    }
+
+    private fun updateXpBar(xp: Int, xpMax: Int, level: Int) {
+        if (xpBarMaxWidth == 0) xpBarFg?.parent?.let { (it as? View)?.post { xpBarMaxWidth = (it as View).width } }
+        val frac = xp.toFloat() / xpMax.coerceAtLeast(1)
+        xpBarFg?.layoutParams = (xpBarFg?.layoutParams as? FrameLayout.LayoutParams)?.also {
+            it.width = (xpBarMaxWidth * frac).toInt().coerceAtLeast(0)
+        }
+        xpBarFg?.requestLayout()
+        xpLevelTv?.text = getString(R.string.cave_player_level, level)
+    }
+
+    // ── Dialog Level Up ───────────────────────────────────────────────────────
+
+    private fun showLevelUpDialog(options: List<UpgradeOption>, root: FrameLayout) {
+        levelUpOverlay?.let { root.removeView(it) }
+        val dp = resources.displayMetrics.density
+
+        val overlay = FrameLayout(this).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor(0xBB000011.toInt())
+        }
+        levelUpOverlay = overlay
+
+        // Panel pleine largeur pour que les 3 cartes se répartissent équitablement
+        val panel = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.gravity = Gravity.CENTER }
+            setPadding((16 * dp).toInt(), (20 * dp).toInt(), (16 * dp).toInt(), (20 * dp).toInt())
+        }
+
+        panel.addView(TextView(this).apply {
+            text = getString(R.string.cave_levelup_title)
+            textSize = 22f; setTextColor(0xFFFFDD44.toInt()); gravity = Gravity.CENTER
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        })
+        panel.addView(TextView(this).apply {
+            text = getString(R.string.cave_levelup_subtitle)
+            textSize = 13f; setTextColor(0xAAFFFFFF.toInt()); gravity = Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (16 * dp).toInt() }
+        })
+
+        // Cartes en ligne, chacune avec weight=1 pour occuper 1/3 de la largeur
+        val cardsRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        for (opt in options) {
+            cardsRow.addView(buildUpgradeCard(opt, dp) {
+                renderer.applyUpgrade(opt)
+                root.removeView(overlay)
+                levelUpOverlay = null
+            })
+        }
+        panel.addView(cardsRow)
+        overlay.addView(panel)
+        root.addView(overlay)
+    }
+
+    private fun buildUpgradeCard(opt: UpgradeOption, dp: Float, onClick: () -> Unit): View {
+        val card = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            // weight=1 + width=0 : chaque carte prend exactement 1/3 de la ligne
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                .also { it.setMargins((6 * dp).toInt(), 0, (6 * dp).toInt(), 0) }
+            setPadding((10 * dp).toInt(), (14 * dp).toInt(), (10 * dp).toInt(), (14 * dp).toInt())
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                setColor(if (opt.isRare) 0xCC1A0033.toInt() else 0xCC001122.toInt())
+                cornerRadius = 10 * dp
+                setStroke(
+                    (2 * dp).toInt(),
+                    if (opt.isRare) 0xFFCC44FF.toInt() else 0xFF0088FF.toInt()
+                )
+            }
+            setOnClickListener { onClick() }
+        }
+
+        // Icône / emoji
+        val icon = upgradeIcon(opt.type)
+        card.addView(TextView(this).apply {
+            text = icon; textSize = 28f; gravity = Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (6 * dp).toInt() }
+        })
+
+        // Badge RARE
+        if (opt.isRare) {
+            card.addView(TextView(this).apply {
+                text = getString(R.string.cave_levelup_rare)
+                textSize = 9f; setTextColor(0xFFCC44FF.toInt()); gravity = Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                ).also { it.bottomMargin = (4 * dp).toInt() }
+            })
+        }
+
+        // Nom
+        card.addView(TextView(this).apply {
+            text = upgradeName(opt.type); textSize = 12f
+            setTextColor(Color.WHITE); gravity = Gravity.CENTER
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (4 * dp).toInt() }
+        })
+
+        // Description
+        card.addView(TextView(this).apply {
+            text = upgradeDesc(opt.type); textSize = 10f
+            setTextColor(0xAAFFFFFF.toInt()); gravity = Gravity.CENTER
+        })
+
+        return card
+    }
+
+    private fun upgradeIcon(type: UpgradeType): String = when (type) {
+        UpgradeType.DAMAGE         -> "⚔"
+        UpgradeType.FIRE_RATE      -> "⚡"
+        UpgradeType.MAX_HP         -> "❤"
+        UpgradeType.SHIELD         -> "🛡"
+        UpgradeType.WEAPON_WHITE_SWIRL   -> "○"
+        UpgradeType.WEAPON_BLUE_SQUARE   -> "■"
+        UpgradeType.WEAPON_BLUE_SWIRL    -> "◎"
+        UpgradeType.WEAPON_ORANGE_SQUARE -> "◆"
+        UpgradeType.WEAPON_ORANGE_SWIRL  -> "✦"
+        UpgradeType.WEAPON_RED_SQUARE    -> "▲"
+        UpgradeType.WEAPON_RED_SWIRL     -> "✿"
+    }
+
+    private fun upgradeName(type: UpgradeType): String = getString(when (type) {
+        UpgradeType.DAMAGE                               -> R.string.cave_upgrade_damage_name
+        UpgradeType.FIRE_RATE                            -> R.string.cave_upgrade_fire_rate_name
+        UpgradeType.MAX_HP                               -> R.string.cave_upgrade_max_hp_name
+        UpgradeType.SHIELD                               -> R.string.cave_upgrade_shield_name
+        UpgradeType.WEAPON_WHITE_SWIRL,
+        UpgradeType.WEAPON_BLUE_SQUARE, UpgradeType.WEAPON_BLUE_SWIRL,
+        UpgradeType.WEAPON_ORANGE_SQUARE, UpgradeType.WEAPON_ORANGE_SWIRL,
+        UpgradeType.WEAPON_RED_SQUARE, UpgradeType.WEAPON_RED_SWIRL -> R.string.cave_upgrade_weapon_name
+    })
+
+    private fun upgradeDesc(type: UpgradeType): String = getString(when (type) {
+        UpgradeType.DAMAGE                               -> R.string.cave_upgrade_damage_desc
+        UpgradeType.FIRE_RATE                            -> R.string.cave_upgrade_fire_rate_desc
+        UpgradeType.MAX_HP                               -> R.string.cave_upgrade_max_hp_desc
+        UpgradeType.SHIELD                               -> R.string.cave_upgrade_shield_desc
+        UpgradeType.WEAPON_WHITE_SWIRL,
+        UpgradeType.WEAPON_BLUE_SQUARE, UpgradeType.WEAPON_BLUE_SWIRL,
+        UpgradeType.WEAPON_ORANGE_SQUARE, UpgradeType.WEAPON_ORANGE_SWIRL,
+        UpgradeType.WEAPON_RED_SQUARE, UpgradeType.WEAPON_RED_SWIRL -> R.string.cave_upgrade_weapon_desc
+    })
+
+    // ── HP / Bouclier ─────────────────────────────────────────────────────────
+
+    private fun buildHealthBar(root: FrameLayout) {
+        val dp = resources.displayMetrics.density
+        val bW = (80 * dp).toInt(); val bH = (10 * dp).toInt()
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+                .also { it.gravity = Gravity.TOP or Gravity.START; it.setMargins((12 * dp).toInt(), (18 * dp).toInt(), 0, 0) }
+            setPadding((6 * dp).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
+            background = GradientDrawable().apply { shape = GradientDrawable.RECTANGLE; setColor(0x99000000.toInt()); cornerRadius = 6 * dp }
+        }
+
+        // Ligne HP
+        val hpRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+        val heartTv = TextView(this).apply { text = "❤"; textSize = 12f; setTextColor(0xFFFF4444.toInt()); setPadding(0, 0, (4 * dp).toInt(), 0) }
+        val barFrame = FrameLayout(this).apply { layoutParams = LinearLayout.LayoutParams(bW, bH).also { it.gravity = Gravity.CENTER_VERTICAL } }
+        val barBg = View(this).apply { layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0x88440000.toInt()); cornerRadius = 3 * dp } }
+        val barFg = View(this).apply { layoutParams = FrameLayout.LayoutParams(bW, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0xFF22CC44.toInt()); cornerRadius = 3 * dp } }
+        barFrame.addView(barBg); barFrame.addView(barFg)
+        val tv = TextView(this).apply { text = "20/20"; textSize = 9f; setTextColor(Color.WHITE); setPadding((4 * dp).toInt(), 0, 0, 0) }
+        hpRow.addView(heartTv); hpRow.addView(barFrame); hpRow.addView(tv)
+        container.addView(hpRow)
+        hpBarFg = barFg; hpText = tv; hpBarMaxWidth = bW
+
+        // Ligne Bouclier (cachée par défaut)
+        val shRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
+            visibility = View.GONE
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                .also { it.topMargin = (2 * dp).toInt() }
+        }
+        val shIconTv = TextView(this).apply { text = "🛡"; textSize = 10f; setPadding(0, 0, (3 * dp).toInt(), 0) }
+        val shFrame = FrameLayout(this).apply { layoutParams = LinearLayout.LayoutParams(bW, bH).also { it.gravity = Gravity.CENTER_VERTICAL } }
+        val shBg = View(this).apply { layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0x88002244.toInt()); cornerRadius = 3 * dp } }
+        val shFg = View(this).apply { layoutParams = FrameLayout.LayoutParams(bW, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0xFF0099FF.toInt()); cornerRadius = 3 * dp } }
+        shFrame.addView(shBg); shFrame.addView(shFg)
+        shRow.addView(shIconTv); shRow.addView(shFrame)
+        container.addView(shRow)
+        shieldBarFg = shFg; shieldContainer = shRow
+
+        root.addView(container)
+    }
+
+    private fun updateHealthBar(hp: Int, maxHp: Int) {
+        val frac = hp.toFloat() / maxHp.coerceAtLeast(1)
+        hpBarFg?.layoutParams = (hpBarFg?.layoutParams as? FrameLayout.LayoutParams)?.also { it.width = (hpBarMaxWidth * frac).toInt().coerceAtLeast(0) }
+        hpBarFg?.requestLayout(); hpText?.text = "$hp/$maxHp"
+        (hpBarFg?.background as? GradientDrawable)?.setColor(when { frac > 0.6f -> 0xFF22CC44.toInt(); frac > 0.3f -> 0xFFDDAA00.toInt(); else -> 0xFFCC2222.toInt() })
+    }
+
+    private fun updateShieldBar(current: Int, max: Int) {
+        if (max <= 0) { shieldContainer?.visibility = View.GONE; return }
+        shieldContainer?.visibility = View.VISIBLE
+        val frac = current.toFloat() / max.coerceAtLeast(1)
+        shieldBarFg?.layoutParams = (shieldBarFg?.layoutParams as? FrameLayout.LayoutParams)?.also { it.width = (hpBarMaxWidth * frac).toInt().coerceAtLeast(0) }
+        shieldBarFg?.requestLayout()
     }
 
     // ── Gestion des slots ─────────────────────────────────────────────────────
@@ -327,7 +616,7 @@ class CaveActivity : ThemedActivity() {
         val base = hotbarBase()
         val emptyIdx = (0 until base).firstOrNull { invSlots[it] == null }
         if (emptyIdx != null) invSlots[emptyIdx] = type else invSlots.add(base, type)
-        invSlots.add(base, null)  // maintien du buffer
+        invSlots.add(base, null)
     }
 
     private fun syncHotbar() {
@@ -371,7 +660,6 @@ class CaveActivity : ThemedActivity() {
     private fun openInventory() {
         if (!invSlotsReady) initInvSlots()
 
-        // Taille du panneau : 82% largeur × 84% hauteur, centré
         val w = (resources.displayMetrics.widthPixels  * 0.82f).toInt()
         val h = (resources.displayMetrics.heightPixels * 0.84f).toInt()
         invOverlay.findViewById<LinearLayout>(R.id.cave_inv_panel).layoutParams =
@@ -379,7 +667,6 @@ class CaveActivity : ThemedActivity() {
 
         invOverlay.visibility = View.VISIBLE
 
-        // Différer jusqu'après le premier passage de layout pour que parent.width soit mesuré
         invOverlay.post {
             if (invOverlay.visibility == View.VISIBLE) {
                 refreshGridAdapter()
@@ -417,7 +704,6 @@ class CaveActivity : ThemedActivity() {
         val dp = resources.displayMetrics.density
 
         if (recipe != null) {
-            // Mode recette : affiche le résultat + ingrédients
             infoSpriteView?.background = blockDrawable(recipe.output, 6f)
             infoNameTv?.text  = blockName(recipe.output)
             infoCountTv?.text = "×${recipe.outputCount}"
@@ -645,7 +931,6 @@ class CaveActivity : ThemedActivity() {
                 setStroke(if (isSelRec) (2 * dp).toInt() else 1, if (isSelRec) 0xFFFFDD00.toInt() else 0x33FFFFFF)
             }
 
-            // Ligne ingrédients → résultat
             val row = LinearLayout(holder.root.context).apply {
                 orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -664,7 +949,6 @@ class CaveActivity : ThemedActivity() {
             row.addView(blockLabel(holder.root.context, recipe.output, recipe.outputCount, dp))
             holder.root.addView(row)
 
-            // Bouton fabriquer
             val canCraft = recipe.canCraft(renderer.inventory)
             holder.root.addView(Button(holder.root.context).apply {
                 val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (32 * dp).toInt())
@@ -676,7 +960,6 @@ class CaveActivity : ThemedActivity() {
                 setOnClickListener { doCraft(recipe) }
             })
 
-            // Clic sur la ligne → afficher les détails dans le panneau info
             holder.root.setOnClickListener {
                 selectedRecipe = if (selectedRecipe == recipe) null else recipe
                 notifyDataSetChanged()
@@ -688,7 +971,7 @@ class CaveActivity : ThemedActivity() {
             LinearLayout(ctx).apply {
                 orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                val sq = (44 * dp).toInt()   // tuiles doublées
+                val sq = (44 * dp).toInt()
                 addView(View(ctx).apply {
                     layoutParams = LinearLayout.LayoutParams(sq, sq)
                     background = blockDrawable(type, 4f)
@@ -699,34 +982,6 @@ class CaveActivity : ThemedActivity() {
                     layoutParams = LinearLayout.LayoutParams(sq, LinearLayout.LayoutParams.WRAP_CONTENT)
                 })
             }
-    }
-
-    // ── HP bar ────────────────────────────────────────────────────────────────
-
-    private fun buildHealthBar(root: FrameLayout) {
-        val dp = resources.displayMetrics.density; val bW = (80 * dp).toInt(); val bH = (10 * dp).toInt()
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.gravity = Gravity.TOP or Gravity.START; it.setMargins((12 * dp).toInt(), (48 * dp).toInt(), 0, 0) }
-            setPadding((6 * dp).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
-            background = GradientDrawable().apply { shape = GradientDrawable.RECTANGLE; setColor(0x99000000.toInt()); cornerRadius = 6 * dp }
-        }
-        val heartTv = TextView(this).apply { text = "❤"; textSize = 12f; setTextColor(0xFFFF4444.toInt()); setPadding(0, 0, (4 * dp).toInt(), 0) }
-        val barFrame = FrameLayout(this).apply { layoutParams = LinearLayout.LayoutParams(bW, bH).also { it.gravity = Gravity.CENTER_VERTICAL } }
-        val barBg = View(this).apply { layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0x88440000.toInt()); cornerRadius = 3 * dp } }
-        val barFg = View(this).apply { layoutParams = FrameLayout.LayoutParams(bW, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0xFF22CC44.toInt()); cornerRadius = 3 * dp } }
-        barFrame.addView(barBg); barFrame.addView(barFg)
-        val tv = TextView(this).apply { text = "20/20"; textSize = 9f; setTextColor(Color.WHITE); setPadding((4 * dp).toInt(), 0, 0, 0) }
-        container.addView(heartTv); container.addView(barFrame); container.addView(tv)
-        root.addView(container); hpBarFg = barFg; hpText = tv; hpBarMaxWidth = bW
-    }
-
-    private fun updateHealthBar(hp: Int, maxHp: Int) {
-        val frac = hp.toFloat() / maxHp.coerceAtLeast(1)
-        hpBarFg?.layoutParams = (hpBarFg?.layoutParams as? FrameLayout.LayoutParams)?.also { it.width = (hpBarMaxWidth * frac).toInt().coerceAtLeast(0) }
-        hpBarFg?.requestLayout(); hpText?.text = "$hp/$maxHp"
-        (hpBarFg?.background as? GradientDrawable)?.setColor(when { frac > 0.6f -> 0xFF22CC44.toInt(); frac > 0.3f -> 0xFFDDAA00.toInt(); else -> 0xFFCC2222.toInt() })
     }
 
     // ── Hotbar HUD ────────────────────────────────────────────────────────────
@@ -829,6 +1084,7 @@ class CaveActivity : ThemedActivity() {
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) return super.dispatchTouchEvent(ev)
+        if (levelUpOverlay != null) return super.dispatchTouchEvent(ev)
         val action = ev.actionMasked; val idx = ev.actionIndex; val pid = ev.getPointerId(idx)
         when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {

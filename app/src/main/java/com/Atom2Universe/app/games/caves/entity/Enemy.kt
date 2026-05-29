@@ -33,7 +33,7 @@ internal class Enemy(
 
     val maxHp get() = (if (isBoss) type.maxHp * 8 else type.maxHp) * level
     val scaledDamage get() = (if (isBoss) type.damage * 3 else type.damage) + (level - 1) / 3
-    val scaledSpeed get() = type.speed * (1f + (level - 1) * 0.05f).coerceAtMost(if (isBoss) 1.5f else 2f)
+    val scaledSpeed get() = type.speed * (1f + (level - 1) * 0.10f).coerceAtMost(if (isBoss) 2.0f else 3.0f)
     val baseScale get() = if (isBoss) type.spriteScale * BOSS_SPRITE_SCALE else type.spriteScale
 
     var hp: Int = type.maxHp

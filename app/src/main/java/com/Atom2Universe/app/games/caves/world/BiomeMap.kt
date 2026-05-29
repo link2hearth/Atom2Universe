@@ -2,6 +2,8 @@ package com.Atom2Universe.app.games.caves.world
 
 enum class Biome { DEFAULT, LIMESTONE, GRANITE_ROUGE, MUSHROOM_CAVE, ICE_CAVE }
 
+enum class SurfaceBiome { PLAINS, FOREST, DESERT, ROCKY }
+
 internal object BiomeMap {
 
     // Scale choisie pour des bulles de ~300-600 blocs de rayon (≈ 20-40 chunks).
@@ -39,5 +41,17 @@ internal object BiomeMap {
             if (n > bestVal) { bestVal = n; best = i }
         }
         return Biome.values()[best]
+    }
+
+    fun surfaceBiomeAt(wx: Double, wz: Double, seed: Long): SurfaceBiome {
+        val s = (seed and 0xFFFFF).toDouble() * 0.0001
+        val temp = SimplexNoise.noise(wx * 0.0012 + s + 777.0, wz * 0.0012)
+        val hum  = SimplexNoise.noise(wx * 0.0012 + s + 444.0, wz * 0.0012)
+        return when {
+            temp >  0.30                   -> SurfaceBiome.DESERT
+            temp < -0.25                   -> SurfaceBiome.ROCKY
+            hum  >  0.20 && temp < 0.15   -> SurfaceBiome.FOREST
+            else                           -> SurfaceBiome.PLAINS
+        }
     }
 }

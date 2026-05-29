@@ -150,4 +150,20 @@
     <string name="cave_inv_crafting_header">Fabrication</string>
     <string name="cave_inv_crafting_empty">Aucune recette</string>
     <string name="cave_inv_craft_btn">Fabriquer</string>
+
+    <!-- Cave World — Level Up -->
+    <string name="cave_levelup_title">NIVEAU SUIVANT !</string>
+    <string name="cave_levelup_subtitle">Choisissez une amélioration</string>
+    <string name="cave_levelup_rare">✦ RARE</string>
+    <string name="cave_upgrade_damage_name">+1 Dégâts</string>
+    <string name="cave_upgrade_damage_desc">Les projectiles infligent plus de dégâts</string>
+    <string name="cave_upgrade_fire_rate_name">+Cadence de tir</string>
+    <string name="cave_upgrade_fire_rate_desc">Tire 20% plus vite</string>
+    <string name="cave_upgrade_max_hp_name">+4 PV Max</string>
+    <string name="cave_upgrade_max_hp_desc">Augmente les PV maximum de 4</string>
+    <string name="cave_upgrade_shield_name">+5 Bouclier</string>
+    <string name="cave_upgrade_shield_desc">Absorbe les dégâts avant les PV</string>
+    <string name="cave_upgrade_weapon_name">Nouvelle Arme</string>
+    <string name="cave_upgrade_weapon_desc">Débloque un nouveau type de projectile</string>
+    <string name="cave_player_level">Niv %1$d</string>
 </resources>

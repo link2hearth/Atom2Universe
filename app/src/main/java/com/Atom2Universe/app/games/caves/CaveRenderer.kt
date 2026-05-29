@@ -6,10 +6,15 @@ import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
+import com.Atom2Universe.app.games.caves.entity.Projectile
+import com.Atom2Universe.app.games.caves.entity.PlayerStats
+import com.Atom2Universe.app.games.caves.entity.UpgradeOption
+import com.Atom2Universe.app.games.caves.entity.UpgradeType
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
 import com.Atom2Universe.app.games.caves.render.EnemyRenderer
+import com.Atom2Universe.app.games.caves.render.ProjectileRenderer
 import com.Atom2Universe.app.games.caves.render.ShaderProgram
 import com.Atom2Universe.app.games.caves.world.*
 import kotlinx.coroutines.*
@@ -20,6 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.*
+import kotlin.random.Random
 
 enum class PlayerMode { WALK, SPECTATOR }
 
@@ -46,6 +52,15 @@ internal class CaveRenderer(
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
     private val uploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
 
+    private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
+    private val lodBuilding    = ConcurrentHashMap.newKeySet<Long>()
+    private val lodUploadQueue = ConcurrentLinkedQueue<Pair<Long, FloatArray>>()
+    private val LOD_RADIUS   = 18
+    private val MAX_LOD_TILES = 1800
+    private val lodCache = worldId?.let {
+        LodCache(java.io.File(context.filesDir, "cave_worlds/$it/lod_cache.bin"))
+    }
+
     private var worldShader: ShaderProgram? = null
     private var laserShader: ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wUMvp = 0; private var wUTex = 0
@@ -54,7 +69,8 @@ internal class CaveRenderer(
     private var blockTexArray = 0
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    private val genDispatcher = Dispatchers.Default.limitedParallelism(3)
+    private val genDispatcher  = Dispatchers.Default.limitedParallelism(4)
+    private val meshDispatcher = Dispatchers.Default.limitedParallelism(4)
     private val building = ConcurrentHashMap.newKeySet<Long>()
 
     private var lastCx = Int.MAX_VALUE; private var lastCy = Int.MAX_VALUE; private var lastCz = Int.MAX_VALUE
@@ -62,7 +78,8 @@ internal class CaveRenderer(
 
     private val frustum = Array(6) { FloatArray(4) }
     private var cleanupCounter = 0
-    private val CLEANUP_INTERVAL = 120
+    private val CLEANUP_INTERVAL = 60   // nettoyage plus fréquent (~2s)
+    private val MAX_MESHES = 1200       // cap mémoire : éviction au-delà
     private val TARGET_FRAME_NS = 33_333_333L
 
     // Physique
@@ -104,11 +121,9 @@ internal class CaveRenderer(
         RUBY          to 5.5f,
         CRYSTAL       to 6.0f,
         LAVA          to 8.0f,
-        // Biome blocks
         ICE           to 0.5f,
         SNOW          to 0.2f,
         BRICK_RED     to 4.5f,
-        // Décors : minage instantané
         ROCK          to 0.1f,
         ROCK_MOSS     to 0.1f,
         MUSHROOM_RED  to 0.1f,
@@ -118,21 +133,31 @@ internal class CaveRenderer(
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
-    private val enemyManager  = EnemyManager(world, worldSeed)
-    private val enemyRenderer = EnemyRenderer()
+    private val enemyManager   = EnemyManager(world, worldSeed)
+    private val enemyRenderer  = EnemyRenderer()
+    private val projRenderer   = ProjectileRenderer()
     private var laserEnemyDmgTimer = 0f
 
-    var posCallback: ((String) -> Unit)? = null
-    var modeCallback: ((PlayerMode) -> Unit)? = null
-    var miningCallback: ((progress: Float, block: Byte?) -> Unit)? = null
-    var inventoryCallback: ((Map<Byte, Int>) -> Unit)? = null
-    var hotbarCallback: ((slots: Array<Byte?>, selected: Int) -> Unit)? = null
-    var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)? = null
+    // ── Progression joueur ────────────────────────────────────────────────────
+
+    val playerStats = PlayerStats()
+    private val upgradeRng = Random(System.currentTimeMillis())
+    val projectiles = ArrayList<Projectile>(64)
+
+    @Volatile var gamePaused = false
+
+    var posCallback:      ((String) -> Unit)?                    = null
+    var modeCallback:     ((PlayerMode) -> Unit)?                = null
+    var miningCallback:   ((progress: Float, block: Byte?) -> Unit)? = null
+    var inventoryCallback: ((Map<Byte, Int>) -> Unit)?           = null
+    var hotbarCallback:   ((slots: Array<Byte?>, selected: Int) -> Unit)? = null
+    var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
+    var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
+    var xpCallback:       ((xp: Int, xpMax: Int, level: Int) -> Unit)? = null
+    var levelUpCallback:  ((List<UpgradeOption>) -> Unit)?       = null
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
-    // Vertices are in chunk-local space (0..CHUNK_SIZE).
-    // u_chunk_offset translates them to camera-relative world space (Floating Origin).
     private val VERT_WORLD = """
         #version 300 es
         in vec3 a_pos;
@@ -142,14 +167,12 @@ internal class CaveRenderer(
         out vec2 v_uv;
         out float v_layer;
         out float v_faceDir;
-        out float v_fog;
         void main() {
             vec3 worldPos = a_pos + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
             v_uv      = a_uv.xy;
             v_layer   = mod(a_uv.z, 32.0);
             v_faceDir = floor(a_uv.z / 32.0);
-            v_fog     = clamp((gl_Position.w - 28.0) / 32.0, 0.0, 1.0);
         }
     """.trimIndent()
 
@@ -160,30 +183,25 @@ internal class CaveRenderer(
         in vec2 v_uv;
         in float v_layer;
         in float v_faceDir;
-        in float v_fog;
         out vec4 fragColor;
         void main() {
             vec4 col = texture(u_tex, vec3(v_uv, v_layer));
             if (col.a < 0.5) discard;
             float fd = floor(v_faceDir + 0.5);
             float light = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
-            vec3 fog = vec3(0.008, 0.006, 0.015);
-            fragColor = vec4(mix(col.rgb * light, fog, v_fog), 1.0);
+            fragColor = vec4(col.rgb * light, 1.0);
         }
     """.trimIndent()
 
-    // Laser vertices are already in camera-relative world space.
     private val VERT_LASER = """
         #version 300 es
         in vec3 a_pos;
         in vec3 a_color;
         uniform mat4 u_mvp;
         out vec3 v_color;
-        out float v_fog;
         void main() {
             gl_Position = u_mvp * vec4(a_pos, 1.0);
             v_color = a_color;
-            v_fog   = clamp((gl_Position.w - 28.0) / 32.0, 0.0, 1.0);
         }
     """.trimIndent()
 
@@ -191,18 +209,16 @@ internal class CaveRenderer(
         #version 300 es
         precision mediump float;
         in vec3 v_color;
-        in float v_fog;
         out vec4 fragColor;
         void main() {
-            vec3 fog = vec3(0.008, 0.006, 0.015);
-            fragColor = vec4(mix(v_color, fog, v_fog), 1.0);
+            fragColor = vec4(v_color, 1.0);
         }
     """.trimIndent()
 
     // ── Lifecycle GL ──────────────────────────────────────────────────────────
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES30.glClearColor(0.008f, 0.006f, 0.015f, 1f)
+        GLES30.glClearColor(0.682f, 0.910f, 0.973f, 1f)
         GLES30.glEnable(GLES30.GL_DEPTH_TEST)
         lastFrameNs = System.nanoTime()
 
@@ -223,7 +239,10 @@ internal class CaveRenderer(
 
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets, enemyManager.familyPool)
+        projRenderer.onSurfaceCreated(context.assets)
+
         enemyManager.playerHpCallback = { hp, max -> playerHpCallback?.invoke(hp, max) }
+        enemyManager.shieldCallback   = { cur, max -> shieldCallback?.invoke(cur, max) }
 
         val ids = IntArray(1)
         GLES30.glGenBuffers(1, ids, 0)
@@ -239,15 +258,15 @@ internal class CaveRenderer(
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
-            // Calculer le spawn d'origine pour le système de niveaux
             val spawn = world.findSpawnPoint()
             enemyManager.worldSpawnX = spawn[0].toDouble()
             enemyManager.worldSpawnZ = spawn[2].toDouble()
         } else {
-            for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
-                world.pregenerateChunk(dx, dy, dz)
             val spawn = world.findSpawnPoint()
             camera.x = spawn[0].toDouble(); camera.y = spawn[1].toDouble(); camera.z = spawn[2].toDouble()
+            val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
+            for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
+                world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             enemyManager.worldSpawnX = camera.x
             enemyManager.worldSpawnZ = camera.z
         }
@@ -255,7 +274,6 @@ internal class CaveRenderer(
 
     private fun loadBlockTextures(): Int {
         val files = listOf(
-            // Solides de base (layers 0-22, identiques à avant)
             "stone.png", "greystone.png", "greysand.png", "stone_coal.png",
             "stone_gold.png", "stone_diamond.png", "dirt.png", "gravel_stone.png",
             "stone_iron.png", "stone_silver.png", "greystone_ruby.png", "lava.png", "oven.png",
@@ -263,11 +281,8 @@ internal class CaveRenderer(
             "dirt_grass.png", "grass_top.png",
             "trunk_side.png", "trunk_top.png", "leaves.png",
             "sand.png", "stone_grass.png", "redsand.png",
-            // Nouveaux blocs biome (layers 23-26)
             "ice.png", "snow.png", "dirt_snow.png", "brick_red.png",
-            // Décors cross-sprite (layers 27-31)
             "rock.png", "rock_moss.png", "mushroom_red.png", "mushroom_brown.png", "mushroom_tan.png",
-            // Transitions sol biome pour faces latérales STONE (layers 32-33)
             "stone_sand_side.png", "stone_snow_side.png"
         )
         val am = context.assets
@@ -312,15 +327,21 @@ internal class CaveRenderer(
         camera.yaw   -= dy
         camera.pitch += dp
 
-        when (playerMode) {
-            PlayerMode.SPECTATOR -> updateSpectator(dt)
-            PlayerMode.WALK      -> updateWalk(dt)
+        if (!gamePaused) {
+            when (playerMode) {
+                PlayerMode.SPECTATOR -> updateSpectator(dt)
+                PlayerMode.WALK      -> updateWalk(dt)
+            }
         }
         camera.update()
 
         elapsed += dt
 
-        updateMining(dt)
+        if (!gamePaused) {
+            updateMining(dt)
+            updateAutoShoot(dt)
+            updateProjectiles(dt)
+        }
 
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
         if (cx != lastCx || cy != lastCy || cz != lastCz) {
@@ -328,21 +349,23 @@ internal class CaveRenderer(
             world.updateAroundPlayer(cx, cy, cz) { chunk -> scheduleChunkBuild(chunk) }
         }
 
-        val rebuildBatch = ArrayList<Long>(32)
-        repeat(64) { world.rebuildQueue.poll()?.let { rebuildBatch.add(it) } }
-        rebuildBatch.sortBy { key ->
+        // Drain complet + déduplication : évite que les chunks générés en premier (lointains)
+        // bloquent les proches dans le FIFO. Le tri porte sur TOUS les éléments en attente.
+        val pendingSet = HashSet<Long>()
+        while (true) { pendingSet.add(world.rebuildQueue.poll() ?: break) }
+        val rebuildBatch = pendingSet.sortedBy { key ->
             val dx = world.keyToCx(key) - cx; val dy = world.keyToCy(key) - cy; val dz = world.keyToCz(key) - cz
-            dx * dx + dy * dy + dz * dz
+            dx * dx + dz * dz + dy * dy * 8
         }
         var rebuilt = 0
         for (key in rebuildBatch) {
-            if (rebuilt >= 16) { world.rebuildQueue.add(key); continue }
+            if (rebuilt >= 24) { world.rebuildQueue.add(key); continue }
             val chunk = world.getChunkByKey(key) ?: continue
             if (!chunk.generated) { world.rebuildQueue.add(key); continue }
             if (!building.add(key)) { world.rebuildQueue.add(key); continue }
             chunk.meshDirty = false
             val snapVersion = chunk.version
-            scope.launch {
+            scope.launch(meshDispatcher) {
                 val verts = MeshBuilder.build(chunk, world)
                 if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
                 building.remove(key)
@@ -351,17 +374,60 @@ internal class CaveRenderer(
             rebuilt++
         }
 
-        repeat(8) {
+        repeat(16) {
             val (key, ver, verts) = uploadQueue.poll() ?: return@repeat
             val chunk = world.getChunkByKey(key) ?: return@repeat
-            if (chunk.version == ver) meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+            if (chunk.version == ver) {
+                meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+                if (chunk.cy in 0..9) scheduleLodBuild(chunk.cx, chunk.cz)
+            }
+        }
+        repeat(4) {
+            val (key, verts) = lodUploadQueue.poll() ?: return@repeat
+            lodMeshes.getOrPut(key) { ChunkMesh() }.upload(verts)
         }
         meshes.values.forEach { it.flushPending() }
+        lodMeshes.values.forEach { it.flushPending() }
 
         if (++cleanupCounter >= CLEANUP_INTERVAL) {
             cleanupCounter = 0
+            lodCache?.saveIfDirty(scope)
+            val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             val loadedKeys = world.allChunks().mapTo(HashSet()) { world.chunkKey(it.cx, it.cy, it.cz) }
+            // Supprimer les meshes de chunks déchargés
             meshes.keys.filter { it !in loadedKeys }.forEach { key -> meshes.remove(key)?.destroy() }
+            // Cap mémoire : éviction des meshes distants uniquement.
+            // Les meshes dans la zone full-detail (dx/dz <= renderRadiusXZ) ne sont jamais évincés :
+            // leur éviction forcerait une reconstruction en boucle et ferait clignoter le LOD.
+            if (meshes.size > MAX_MESHES) {
+                val nearR = world.renderRadiusXZ
+                meshes.keys
+                    .filter { key ->
+                        abs(world.keyToCx(key) - pcx) > nearR ||
+                        abs(world.keyToCz(key) - pcz) > nearR
+                    }
+                    .sortedByDescending { key ->
+                        val dx = world.keyToCx(key) - pcx
+                        val dy = world.keyToCy(key) - pcy
+                        val dz = world.keyToCz(key) - pcz
+                        dx * dx + dy * dy * 4 + dz * dz
+                    }
+                    .take(meshes.size - MAX_MESHES)
+                    .forEach { key -> meshes.remove(key)?.destroy() }
+            }
+            // Nettoyage et cap LOD
+            lodMeshes.keys
+                .filter { key -> abs(lodKeyToCx(key) - pcx) > LOD_RADIUS + 4 || abs(lodKeyToCz(key) - pcz) > LOD_RADIUS + 4 }
+                .forEach { key -> lodMeshes.remove(key)?.destroy() }
+            if (lodMeshes.size > MAX_LOD_TILES) {
+                lodMeshes.keys
+                    .sortedByDescending { key ->
+                        val dx = lodKeyToCx(key) - pcx; val dz = lodKeyToCz(key) - pcz
+                        dx * dx + dz * dz
+                    }
+                    .take(lodMeshes.size - MAX_LOD_TILES)
+                    .forEach { key -> lodMeshes.remove(key)?.destroy() }
+            }
         }
 
         // ── Rendu chunks ─────────────────────────────────────────────────────
@@ -376,8 +442,6 @@ internal class CaveRenderer(
         for ((key, mesh) in meshes) {
             val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
             if (!isChunkInFrustum(kcx, kcy, kcz)) continue
-            // Offset in Double, converted to Float. Since the chunk is within renderRadius
-            // of the camera, this value is always small (<= ~80 blocks) — exact in Float.
             val offX = (kcx.toDouble() * CHUNK_SIZE - camera.x).toFloat()
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
@@ -385,22 +449,127 @@ internal class CaveRenderer(
             mesh.draw(wAPos, wAUv)
         }
 
+        // ── Rendu LOD (zones visitées visibles de loin) ───────────────────────
+        // Critère de masquage : mesh VBO présent pour un chunk surface (cy 0..9).
+        // Les meshes de la zone proche ne sont plus évincés par MAX_MESHES → critère stable,
+        // pas de boucle. Le LOD reste visible pendant le gap génération→upload (pas de trou).
+        val columnsWithMesh = meshes.keys.mapTo(HashSet()) { k ->
+            lodKey(world.keyToCx(k), world.keyToCz(k))
+        }
+        for ((key, mesh) in lodMeshes) {
+            if (columnsWithMesh.contains(key)) continue
+            val lcx = lodKeyToCx(key); val lcz = lodKeyToCz(key)
+            if (!isLodColumnInFrustum(lcx, lcz)) continue
+            GLES30.glUniform3f(wUChunkOffset,
+                (lcx.toDouble() * CHUNK_SIZE - camera.x).toFloat(),
+                -camera.y.toFloat(),
+                (lcz.toDouble() * CHUNK_SIZE - camera.z).toFloat())
+            mesh.draw(wAPos, wAUv)
+        }
+
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
-        enemyManager.update(dt, camera.x, camera.y, camera.z)
+        if (!gamePaused) enemyManager.update(dt, camera.x, camera.y, camera.z)
         enemyRenderer.render(
             enemyManager.enemies,
             camera.x, camera.y, camera.z,
             camera.yaw, camera.vpMatrix
         )
 
-        // ── Rendu laser + highlight (blending additif) ────────────────────────
+        // ── Rendu projectiles ─────────────────────────────────────────────────
+        projRenderer.render(projectiles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
+
+        // ── Rendu laser + highlight ───────────────────────────────────────────
         renderLaserAndHighlight()
 
         posCallback?.invoke(camera.posString())
 
-        val elapsed = System.nanoTime() - now
-        val sleepNs = TARGET_FRAME_NS - elapsed
+        val elapsed2 = System.nanoTime() - now
+        val sleepNs = TARGET_FRAME_NS - elapsed2
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
+    }
+
+    // ── Tir automatique ───────────────────────────────────────────────────────
+
+    private fun updateAutoShoot(dt: Float) {
+        val liveEnemies = enemyManager.enemies.filter { it.hp > 0 }
+        if (liveEnemies.isEmpty()) return
+
+        val closest = liveEnemies.minByOrNull { e ->
+            val dx = e.x - camera.x; val dz = e.z - camera.z
+            dx * dx + dz * dz
+        } ?: return
+
+        val dxC = closest.x - camera.x; val dzC = closest.z - camera.z
+        if (dxC * dxC + dzC * dzC > AUTO_SHOOT_RANGE * AUTO_SHOOT_RANGE) return
+
+        for (i in playerStats.weapons.indices) {
+            playerStats.shootTimers[i] -= dt
+            if (playerStats.shootTimers[i] <= 0f) {
+                playerStats.shootTimers[i] = playerStats.fireRate
+                val tx = closest.x; val ty = closest.y - closest.type.eyeHeight * 0.5; val tz = closest.z
+                val dx = tx - camera.x; val dy = ty - camera.y; val dz = tz - camera.z
+                val d = sqrt(dx * dx + dy * dy + dz * dz).coerceAtLeast(0.001)
+                projectiles.add(Projectile(
+                    camera.x, camera.y, camera.z,
+                    dx / d, dy / d, dz / d,
+                    PROJ_SPEED, playerStats.damage, playerStats.weapons[i]
+                ))
+            }
+        }
+    }
+
+    private fun updateProjectiles(dt: Float) {
+        val iter = projectiles.iterator()
+        while (iter.hasNext()) {
+            val p = iter.next()
+            val step = (p.speed * dt).toDouble()
+            p.x += p.dirX * step; p.y += p.dirY * step; p.z += p.dirZ * step
+            p.travelDist += step
+            if (p.travelDist > PROJ_MAX_DIST) { iter.remove(); continue }
+
+            val hit = enemyManager.enemies.find { e ->
+                if (e.hp <= 0) return@find false
+                val r = e.type.radius.toDouble() + 0.3
+                val dx = p.x - e.x; val dy = p.y - e.y; val dz = p.z - e.z
+                dx * dx + dy * dy * 0.5 + dz * dz < r * r
+            }
+            if (hit != null) {
+                val wasAlive = hit.hp > 0
+                enemyManager.damageEnemy(hit, p.damage)
+                if (wasAlive && hit.hp <= 0) handleKill(hit)
+                iter.remove()
+            }
+        }
+    }
+
+    private fun handleKill(e: Enemy) {
+        val xpGain = if (e.isBoss) 5 * e.level else e.level
+        val leveledUp = playerStats.addXp(xpGain)
+        xpCallback?.invoke(playerStats.xp, playerStats.xpToNext, playerStats.level)
+        if (leveledUp) {
+            gamePaused = true
+            val options = playerStats.pickThreeUpgrades(upgradeRng)
+            levelUpCallback?.invoke(options)
+        }
+    }
+
+    fun applyUpgrade(option: UpgradeOption) {
+        playerStats.applyUpgrade(option.type)
+        when (option.type) {
+            UpgradeType.MAX_HP -> {
+                enemyManager.playerMaxHp = playerStats.maxHp
+                enemyManager.playerHp = (enemyManager.playerHp + 4).coerceAtMost(playerStats.maxHp)
+                enemyManager.playerHpCallback?.invoke(enemyManager.playerHp, enemyManager.playerMaxHp)
+            }
+            UpgradeType.SHIELD -> {
+                enemyManager.playerShieldMax = playerStats.shield
+                enemyManager.playerShieldCurrent = (enemyManager.playerShieldCurrent + 5)
+                    .coerceAtMost(playerStats.shield)
+                shieldCallback?.invoke(enemyManager.playerShieldCurrent, enemyManager.playerShieldMax)
+            }
+            else -> {}
+        }
+        gamePaused = false
     }
 
     // ── Minage ────────────────────────────────────────────────────────────────
@@ -413,7 +582,6 @@ internal class CaveRenderer(
             placeBlock()
         }
 
-        // Vérifier si le laser touche un ennemi en priorité
         if (touch.laserActive) {
             val hitEnemy = enemyManager.hitByLaser(
                 camera.x, camera.y, camera.z,
@@ -421,7 +589,6 @@ internal class CaveRenderer(
                 MINE_REACH.toFloat()
             )
             if (hitEnemy != null) {
-                // Pointer le laser vers le centre de l'ennemi (pour la visu)
                 mineTarget = RayHit(
                     Math.floor(hitEnemy.x).toInt(),
                     Math.floor(hitEnemy.y - hitEnemy.type.eyeHeight * 0.5).toInt(),
@@ -433,7 +600,9 @@ internal class CaveRenderer(
                 laserEnemyDmgTimer -= dt
                 if (laserEnemyDmgTimer <= 0f) {
                     laserEnemyDmgTimer = 0.22f
+                    val wasAlive = hitEnemy.hp > 0
                     enemyManager.damageEnemy(hitEnemy, 1)
+                    if (wasAlive && hitEnemy.hp <= 0) handleKill(hitEnemy)
                 }
                 return
             }
@@ -488,12 +657,13 @@ internal class CaveRenderer(
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
             val verts = MeshBuilder.build(chunk, world)
             meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+            if (ncy in 0..9) {
+                lodCache?.invalidate(ncx, ncz)   // heightmap obsolète : forcer la reconstruction
+                scheduleLodBuild(ncx, ncz)
+            }
         }
     }
 
-    // DDA 3D : retourne le premier bloc solide avec la normale de la face touchée.
-    // camera.x/y/z sont Double; les calculs initiaux se font en Double pour que
-    // la position fractionnaire dans le bloc de départ soit correcte à grande distance.
     private fun raycastBlock(): RayHit? {
         val dirX = camera.lookX; val dirY = camera.lookY; val dirZ = camera.lookZ
 
@@ -507,7 +677,6 @@ internal class CaveRenderer(
         val tDY = if (dirY != 0f) abs(1f / dirY) else Float.MAX_VALUE
         val tDZ = if (dirZ != 0f) abs(1f / dirZ) else Float.MAX_VALUE
 
-        // Fraction initiale calculée en Double pour éviter l'erreur de troncature à grande distance
         var tMaxX = if (dirX > 0) ((bx + 1).toDouble() - camera.x).toFloat() * tDX else (camera.x - bx.toDouble()).toFloat() * tDX
         var tMaxY = if (dirY > 0) ((by + 1).toDouble() - camera.y).toFloat() * tDY else (camera.y - by.toDouble()).toFloat() * tDY
         var tMaxZ = if (dirZ > 0) ((bz + 1).toDouble() - camera.z).toFloat() * tDZ else (camera.z - bz.toDouble()).toFloat() * tDZ
@@ -565,19 +734,14 @@ internal class CaveRenderer(
         GLES30.glDisable(GLES30.GL_BLEND)
     }
 
-    // Laser et highlight en espace caméra-relatif : camera = origine, tout est soustrait.
     private fun buildLaserVerts(target: RayHit): FloatArray {
-        // Centre de la face touchée, en espace caméra-relatif
         val ex = (target.bx.toDouble() + 0.5 + target.fnx * 0.5 - camera.x).toFloat()
         val ey = (target.by.toDouble() + 0.5 + target.fny * 0.5 - camera.y).toFloat()
         val ez = (target.bz.toDouble() + 0.5 + target.fnz * 0.5 - camera.z).toFloat()
 
-        // Source du laser : offset latéral depuis la caméra (camera = origin)
         val yawRad = Math.toRadians(camera.yaw.toDouble()).toFloat()
         val rX = cos(yawRad); val rZ = -sin(yawRad)
-        val sx = rX * 0.35f
-        val sy = -0.25f
-        val sz = rZ * 0.35f
+        val sx = rX * 0.35f; val sy = -0.25f; val sz = rZ * 0.35f
 
         val ddx = ex - sx; val ddy = ey - sy; val ddz = ez - sz
         val blen = sqrt(ddx*ddx + ddy*ddy + ddz*ddz).coerceAtLeast(0.001f)
@@ -598,7 +762,7 @@ internal class CaveRenderer(
             emit(x0+ruX*hw,y0+ruY*hw,z0+ruZ*hw,r,g,b); emit(x0-ruX*hw,y0-ruY*hw,z0-ruZ*hw,r,g,b); emit(x1-ruX*hw,y1-ruY*hw,z1-ruZ*hw,r,g,b)
             emit(x0+ruX*hw,y0+ruY*hw,z0+ruZ*hw,r,g,b); emit(x1-ruX*hw,y1-ruY*hw,z1-ruZ*hw,r,g,b); emit(x1+ruX*hw,y1+ruY*hw,z1+ruZ*hw,r,g,b)
             emit(x0+rvX*hw,y0+rvY*hw,z0+rvZ*hw,r,g,b); emit(x0-rvX*hw,y0-rvY*hw,z0-rvZ*hw,r,g,b); emit(x1-rvX*hw,y1-rvY*hw,z1-rvZ*hw,r,g,b)
-            emit(x0+rvX*hw,y0+rvY*hw,z0+rvZ*hw,r,g,b); emit(x1-rvX*hw,y1-rvY*hw,z1-rvZ*hw,r,g,b); emit(x1+rvX*hw,y1+rvY*hw,z1+rvZ*hw,r,g,b)
+            emit(x0+rvX*hw,y0+rvY*hw,z0+rvZ*hw,r,g,b); emit(x1-rvX*hw,y1-rvY*hw,z1-rvZ*hw,r,g,b); emit(x1+rvX*hw,y1+ruY*hw,z1+ruZ*hw,r,g,b)
         }
 
         val N = 8
@@ -638,9 +802,9 @@ internal class CaveRenderer(
         val t2x: Float; val t2y: Float; val t2z: Float
         if (abs(fny) > 0.9f) { t1x=1f; t1y=0f; t1z=0f; t2x=0f; t2y=0f; t2z=1f }
         else {
-            val cx = fny*0f-fnz*1f; val cy = fnz*0f-fnx*0f; val cz = fnx*1f-fny*0f
-            val cl = sqrt(cx*cx+cy*cy+cz*cz).coerceAtLeast(0.001f)
-            t1x=cx/cl; t1y=cy/cl; t1z=cz/cl
+            val cx2 = fny*0f-fnz*1f; val cy2 = fnz*0f-fnx*0f; val cz2 = fnx*1f-fny*0f
+            val cl = sqrt(cx2*cx2+cy2*cy2+cz2*cz2).coerceAtLeast(0.001f)
+            t1x=cx2/cl; t1y=cy2/cl; t1z=cz2/cl
             t2x=fny*t1z-fnz*t1y; t2y=fnz*t1x-fnx*t1z; t2z=fnx*t1y-fny*t1x
         }
         val rot = elapsed * 2.5f
@@ -658,7 +822,6 @@ internal class CaveRenderer(
         return out.toFloatArray()
     }
 
-    // Faces du bloc ciblé en espace caméra-relatif
     private fun buildHighlightVerts(target: RayHit, progress: Float): FloatArray {
         val x = (target.bx.toDouble() - camera.x).toFloat()
         val y = (target.by.toDouble() - camera.y).toFloat()
@@ -684,6 +847,42 @@ internal class CaveRenderer(
         return out
     }
 
+    // ── LOD helpers ──────────────────────────────────────────────────────────
+
+    private fun lodKey(cx: Int, cz: Int): Long =
+        (cx.toLong() and 0xFFFFF) or ((cz.toLong() and 0xFFFFF) shl 20)
+
+    private fun lodKeyToCx(key: Long): Int {
+        val v = (key and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v
+    }
+    private fun lodKeyToCz(key: Long): Int {
+        val v = ((key shr 20) and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v
+    }
+
+    private fun scheduleLodBuild(cx: Int, cz: Int) {
+        val key = lodKey(cx, cz)
+        if (!lodBuilding.add(key)) return
+        scope.launch {
+            val verts = LodBuilder.buildColumn(cx, cz, world, lodCache)
+            if (verts.isNotEmpty()) lodUploadQueue.add(Pair(key, verts))
+            lodBuilding.remove(key)
+        }
+    }
+
+    // Frustum test élargi en Y pour couvrir toute la bande de surface (Y 0..160).
+    private fun isLodColumnInFrustum(cx: Int, cz: Int): Boolean {
+        val x0 = (cx.toDouble() * CHUNK_SIZE - camera.x).toFloat(); val x1 = x0 + CHUNK_SIZE
+        val y0 = -camera.y.toFloat();                                val y1 = y0 + 160f
+        val z0 = (cz.toDouble() * CHUNK_SIZE - camera.z).toFloat(); val z1 = z0 + CHUNK_SIZE
+        for (p in frustum) {
+            val px = if (p[0] >= 0f) x1 else x0
+            val py = if (p[1] >= 0f) y1 else y0
+            val pz = if (p[2] >= 0f) z1 else z0
+            if (p[0]*px + p[1]*py + p[2]*pz + p[3] < 0f) return false
+        }
+        return true
+    }
+
     // ── Frustum culling ───────────────────────────────────────────────────────
 
     private fun extractFrustumPlanes(m: FloatArray) {
@@ -695,7 +894,6 @@ internal class CaveRenderer(
         frustum[5][0]=m[3]-m[2]; frustum[5][1]=m[7]-m[6];  frustum[5][2]=m[11]-m[10]; frustum[5][3]=m[15]-m[14]
     }
 
-    // AABB du chunk en espace caméra-relatif (camera = origine)
     private fun isChunkInFrustum(cx: Int, cy: Int, cz: Int): Boolean {
         val x0 = (cx.toDouble() * CHUNK_SIZE - camera.x).toFloat(); val x1 = x0 + CHUNK_SIZE
         val y0 = (cy.toDouble() * CHUNK_SIZE - camera.y).toFloat(); val y1 = y0 + CHUNK_SIZE
@@ -800,31 +998,9 @@ internal class CaveRenderer(
         if (!building.add(key)) return
         scope.launch(genDispatcher) {
             world.generate(chunk)
-            world.markGenerated(chunk)
-
-            val snapVersion = chunk.version
-            val verts = MeshBuilder.build(chunk, world)
-            if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
+            world.markGenerated(chunk)  // ajoute le chunk + voisins au rebuildQueue
             building.remove(key)
-            if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
-
-            val offsets = arrayOf(
-                intArrayOf(1,0,0), intArrayOf(-1,0,0),
-                intArrayOf(0,1,0), intArrayOf(0,-1,0),
-                intArrayOf(0,0,1), intArrayOf(0,0,-1)
-            )
-            for ((dx, dy, dz) in offsets) {
-                val nb = world.getChunk(chunk.cx + dx, chunk.cy + dy, chunk.cz + dz) ?: continue
-                if (!nb.generated) continue
-                val nKey = world.chunkKey(nb.cx, nb.cy, nb.cz)
-                if (!building.add(nKey)) continue
-                nb.meshDirty = false
-                val nSnap = nb.version
-                val nVerts = MeshBuilder.build(nb, world)
-                if (nb.version == nSnap) uploadQueue.add(Triple(nKey, nSnap, nVerts))
-                building.remove(nKey)
-                if (nb.meshDirty || nb.version != nSnap) world.rebuildQueue.add(nKey)
-            }
+            // Le mesh est construit par le rebuildQueue sur meshDispatcher (frame suivante)
         }
     }
 
@@ -865,13 +1041,21 @@ internal class CaveRenderer(
     }
 
     fun destroy() {
+        lodCache?.shutdown()
         scope.cancel()
         storage?.shutdown()
         meshes.values.forEach { it.destroy() }
         worldShader?.destroy()
         laserShader?.destroy()
         enemyRenderer.destroy()
+        projRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)
+    }
+
+    companion object {
+        private const val AUTO_SHOOT_RANGE = 30.0
+        private const val PROJ_SPEED       = 15f
+        private const val PROJ_MAX_DIST    = 40.0
     }
 }
