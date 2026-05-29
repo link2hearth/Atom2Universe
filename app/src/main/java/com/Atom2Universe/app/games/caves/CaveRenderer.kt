@@ -208,6 +208,8 @@ internal class CaveRenderer(
             camera.yaw = savedState.yaw; camera.pitch = savedState.pitch
             inventory.putAll(savedState.inventory)
             savedState.hotbar.forEachIndexed { i, v -> hotbar[i] = v }
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            inventoryCallback?.invoke(inventory.toMap())
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
@@ -783,7 +785,10 @@ internal class CaveRenderer(
         world.setBlock(px, py, pz, blockType)
         forceMeshRebuild(px, py, pz)
         inventory[blockType] = (inventory[blockType] ?: 1) - 1
-        if ((inventory[blockType] ?: 0) <= 0) inventory.remove(blockType)
+        if ((inventory[blockType] ?: 0) <= 0) {
+            inventory.remove(blockType)
+            for (j in hotbar.indices) { if (hotbar[j] == blockType) hotbar[j] = null }
+        }
         inventoryCallback?.invoke(inventory.toMap())
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }

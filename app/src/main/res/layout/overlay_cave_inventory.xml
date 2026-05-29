@@ -6,63 +6,31 @@
     android:visibility="gone">
 
     <LinearLayout
-        android:layout_width="480dp"
+        android:id="@+id/cave_inv_panel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/midi_surface"
+        android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/cave_inventory_title"
-                android:textColor="@color/midi_text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/cave_inv_hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cave_inventory_hint"
-                android:textColor="@color/midi_text_secondary"
-                android:textSize="11sp" />
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/cave_inv_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="true"
-            android:maxHeight="320dp" />
+        android:padding="10dp">
 
         <TextView
-            android:id="@+id/cave_inv_empty"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:text="@string/cave_inventory_empty"
-            android:textColor="@color/midi_text_secondary"
-            android:textSize="13sp"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/cave_inv_close"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/cave_inventory_close"
-            android:textColor="@color/midi_text_primary" />
+            android:layout_marginBottom="6dp"
+            android:text="@string/cave_inventory_title"
+            android:textColor="@color/midi_text_primary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <!-- Grille unifiée 9×4 : 3 lignes inventaire + 1 ligne active (largeur fixée en code) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cave_inv_recycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
 
     </LinearLayout>
 

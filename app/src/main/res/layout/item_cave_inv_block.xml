@@ -1,35 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:background="?attr/selectableItemBackground"
-    android:padding="10dp">
+    android:layout_height="wrap_content">
 
-    <!-- Couleur du bloc -->
     <View
         android:id="@+id/cave_inv_color"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginEnd="12dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3dp" />
 
-    <!-- Nom du bloc -->
-    <TextView
-        android:id="@+id/cave_inv_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="@color/midi_text_primary"
-        android:textSize="14sp" />
-
-    <!-- Quantité -->
     <TextView
         android:id="@+id/cave_inv_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
         android:fontFamily="monospace"
-        android:textColor="@color/midi_text_secondary"
-        android:textSize="13sp" />
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1"
+        android:textColor="#FFFFFF"
+        android:textSize="9sp"
+        android:textStyle="bold" />
 
-</LinearLayout>
+</FrameLayout>
