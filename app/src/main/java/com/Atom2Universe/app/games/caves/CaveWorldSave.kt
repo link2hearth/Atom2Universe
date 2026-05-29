@@ -14,9 +14,9 @@ data class CaveWorldSave(
     val seed: Long,
     val createdAt: Long,
     var lastPlayedAt: Long,
-    var playerX: Float,
-    var playerY: Float,
-    var playerZ: Float,
+    var playerX: Double,
+    var playerY: Double,
+    var playerZ: Double,
     var playerYaw: Float,
     var playerPitch: Float,
     var inventory: Map<Byte, Int>,
@@ -48,7 +48,7 @@ object CaveWorldSaveManager {
         val save = CaveWorldSave(
             id = id, name = name, seed = seed,
             createdAt = now, lastPlayedAt = now,
-            playerX = 0f, playerY = 0f, playerZ = 0f,
+            playerX = 0.0, playerY = 0.0, playerZ = 0.0,
             playerYaw = 0f, playerPitch = 0f,
             inventory = emptyMap(),
             hotbar = List(9) { null }
@@ -87,9 +87,9 @@ object CaveWorldSaveManager {
             put("seed", save.seed)
             put("createdAt", save.createdAt)
             put("lastPlayedAt", save.lastPlayedAt)
-            put("playerX", save.playerX.toDouble())
-            put("playerY", save.playerY.toDouble())
-            put("playerZ", save.playerZ.toDouble())
+            put("playerX", save.playerX)
+            put("playerY", save.playerY)
+            put("playerZ", save.playerZ)
             put("playerYaw", save.playerYaw.toDouble())
             put("playerPitch", save.playerPitch.toDouble())
             val invJson = JSONObject()
@@ -118,9 +118,9 @@ object CaveWorldSaveManager {
             seed = j.getLong("seed"),
             createdAt = j.getLong("createdAt"),
             lastPlayedAt = j.getLong("lastPlayedAt"),
-            playerX = j.getDouble("playerX").toFloat(),
-            playerY = j.getDouble("playerY").toFloat(),
-            playerZ = j.getDouble("playerZ").toFloat(),
+            playerX = j.getDouble("playerX"),
+            playerY = j.getDouble("playerY"),
+            playerZ = j.getDouble("playerZ"),
             playerYaw = j.getDouble("playerYaw").toFloat(),
             playerPitch = j.getDouble("playerPitch").toFloat(),
             inventory = inventory,

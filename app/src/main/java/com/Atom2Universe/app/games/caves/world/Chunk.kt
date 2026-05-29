@@ -23,6 +23,21 @@ const val WOOD: Byte    = 17
 const val LEAVES: Byte  = 18
 const val SAND: Byte    = 19
 const val REDSAND: Byte = 20
+// Biome blocks
+const val ICE: Byte        = 21
+const val SNOW: Byte       = 22
+const val BRICK_RED: Byte  = 23
+// Decorations (non-solid, cross-sprite rendering)
+const val ROCK: Byte          = 24
+const val ROCK_MOSS: Byte     = 25
+const val MUSHROOM_RED: Byte  = 26
+const val MUSHROOM_BROWN: Byte = 27
+const val MUSHROOM_TAN: Byte  = 28
+
+/** Blocs décoratifs : non-solides, pas de collision, rendu en croix. */
+fun isDecoration(block: Byte) =
+    block == ROCK || block == ROCK_MOSS ||
+    block == MUSHROOM_RED || block == MUSHROOM_BROWN || block == MUSHROOM_TAN
 
 data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 
