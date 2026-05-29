@@ -230,7 +230,16 @@ class CaveActivity : ThemedActivity() {
             CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
-                inventory = save.inventory, hotbar = save.hotbar
+                inventory = save.inventory, hotbar = save.hotbar,
+                playerHp            = save.playerHp,
+                playerLevel         = save.playerLevel,
+                playerXp            = save.playerXp,
+                playerDamage        = save.playerDamage,
+                playerFireRate      = save.playerFireRate,
+                playerMaxHp         = save.playerMaxHp,
+                playerShield        = save.playerShield,
+                playerShieldCurrent = save.playerShieldCurrent,
+                playerWeapons       = save.playerWeapons
             )
         } else null
 
@@ -1037,12 +1046,23 @@ class CaveActivity : ThemedActivity() {
 
     fun saveWorldAsync() {
         val id = worldId ?: return
+        val stats = renderer.playerStats
+        val em    = renderer.enemyManager
         val snap = CaveWorldSave(
             id = id, name = "", seed = 0L, createdAt = 0L,
             lastPlayedAt = System.currentTimeMillis(),
             playerX = renderer.camera.x, playerY = renderer.camera.y, playerZ = renderer.camera.z,
             playerYaw = renderer.camera.yaw, playerPitch = renderer.camera.pitch,
-            inventory = renderer.inventory.toMap(), hotbar = renderer.hotbar.map { it }
+            inventory = renderer.inventory.toMap(), hotbar = renderer.hotbar.map { it },
+            playerHp            = em.playerHp,
+            playerLevel         = stats.level,
+            playerXp            = stats.xp,
+            playerDamage        = stats.damage,
+            playerFireRate      = stats.fireRate,
+            playerMaxHp         = stats.maxHp,
+            playerShield        = stats.shield,
+            playerShieldCurrent = em.playerShieldCurrent,
+            playerWeapons       = stats.weapons.map { "${it.color.name}_${it.variant.name}" }
         )
         lifecycleScope.launch(Dispatchers.IO) { CaveWorldSaveManager.updateFields(this@CaveActivity, snap) }
     }

@@ -23,6 +23,12 @@ class LodCache(private val file: File) {
 
     fun get(cx: Int, cz: Int): Entry? = cache[key(cx, cz)]
 
+    fun cachedColumns(): List<Pair<Int, Int>> = cache.keys.map { k ->
+        val cx = (k and 0xFFFFF).toInt().let { if (it >= 0x80000) it - 0x100000 else it }
+        val cz = ((k shr 20) and 0xFFFFF).toInt().let { if (it >= 0x80000) it - 0x100000 else it }
+        Pair(cx, cz)
+    }
+
     fun put(cx: Int, cz: Int, heights: ShortArray, blocks: ByteArray) {
         cache[key(cx, cz)] = Entry(heights, blocks)
         dirty.set(true)

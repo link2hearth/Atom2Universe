@@ -32,9 +32,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     fun updateAroundPlayer(pcx: Int, pcy: Int, pcz: Int, onNeedGenerate: (Chunk) -> Unit) {
         val toGenerate = mutableListOf<Chunk>()
+        val r2 = renderRadiusXZ * renderRadiusXZ
         for (dz in -renderRadiusXZ..renderRadiusXZ)
         for (dy in -renderRadiusY..renderRadiusY)
         for (dx in -renderRadiusXZ..renderRadiusXZ) {
+            if (dx * dx + dz * dz > r2) continue
             val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
             // Ciel vide entre surface et îles flottantes : aucun contenu, inutile de générer.
             if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
@@ -59,6 +61,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 abs(c.cy - pcy) > renderRadiusY + 2 ||
                 abs(c.cz - pcz) > renderRadiusXZ + 2)
         }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
+    }
+
+    fun abandonChunk(chunk: Chunk) {
+        val key = chunkKey(chunk.cx, chunk.cy, chunk.cz)
+        chunks.remove(key)
+        inFlight.remove(key)
     }
 
     fun markGenerated(chunk: Chunk) {
@@ -732,8 +740,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             return baseChunk.blockAt(lx, ly, lz)
         val wx = baseChunk.worldX + lx; val wy = baseChunk.worldY + ly; val wz = baseChunk.worldZ + lz
         val ncx = Math.floorDiv(wx, CHUNK_SIZE); val ncy = Math.floorDiv(wy, CHUNK_SIZE); val ncz = Math.floorDiv(wz, CHUNK_SIZE)
-        val neighbor = getChunk(ncx, ncy, ncz) ?: return STONE
-        if (!neighbor.generated) return STONE
+        val neighbor = getChunk(ncx, ncy, ncz) ?: return AIR
+        if (!neighbor.generated) return AIR
         return neighbor.blockAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
     }
 }

@@ -10,6 +10,9 @@ import com.Atom2Universe.app.games.caves.entity.Projectile
 import com.Atom2Universe.app.games.caves.entity.PlayerStats
 import com.Atom2Universe.app.games.caves.entity.UpgradeOption
 import com.Atom2Universe.app.games.caves.entity.UpgradeType
+import com.Atom2Universe.app.games.caves.entity.WeaponColor
+import com.Atom2Universe.app.games.caves.entity.WeaponDef
+import com.Atom2Universe.app.games.caves.entity.WeaponVariant
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
@@ -41,7 +44,16 @@ internal class CaveRenderer(
         val x: Double, val y: Double, val z: Double,
         val yaw: Float, val pitch: Float,
         val inventory: Map<Byte, Int>,
-        val hotbar: List<Byte?>
+        val hotbar: List<Byte?>,
+        val playerHp: Int = 20,
+        val playerLevel: Int = 1,
+        val playerXp: Int = 0,
+        val playerDamage: Int = 2,
+        val playerFireRate: Float = 1.5f,
+        val playerMaxHp: Int = 20,
+        val playerShield: Int = 0,
+        val playerShieldCurrent: Int = 0,
+        val playerWeapons: List<String> = listOf("WHITE_SQUARE")
     )
 
     val camera = Camera(8.0, 8.0, 8.0)
@@ -133,7 +145,7 @@ internal class CaveRenderer(
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
-    private val enemyManager   = EnemyManager(world, worldSeed)
+    internal val enemyManager  = EnemyManager(world, worldSeed)
     private val enemyRenderer  = EnemyRenderer()
     private val projRenderer   = ProjectileRenderer()
     private var laserEnemyDmgTimer = 0f
@@ -255,6 +267,32 @@ internal class CaveRenderer(
             savedState.hotbar.forEachIndexed { i, v -> hotbar[i] = v }
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             inventoryCallback?.invoke(inventory.toMap())
+            // Restauration progression joueur
+            playerStats.level    = savedState.playerLevel
+            playerStats.xp       = savedState.playerXp
+            playerStats.xpToNext = playerStats.xpRequired(savedState.playerLevel)
+            playerStats.damage   = savedState.playerDamage
+            playerStats.fireRate = savedState.playerFireRate
+            playerStats.maxHp    = savedState.playerMaxHp
+            playerStats.shield   = savedState.playerShield
+            playerStats.weapons.clear(); playerStats.shootTimers.clear()
+            for (key in savedState.playerWeapons) {
+                val parts = key.split("_")
+                if (parts.size == 2) {
+                    val color   = runCatching { WeaponColor.valueOf(parts[0])   }.getOrNull() ?: continue
+                    val variant = runCatching { WeaponVariant.valueOf(parts[1]) }.getOrNull() ?: continue
+                    playerStats.weapons.add(WeaponDef(color, variant))
+                    playerStats.shootTimers.add(0f)
+                }
+            }
+            if (playerStats.weapons.isEmpty()) {
+                playerStats.weapons.add(WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE))
+                playerStats.shootTimers.add(0f)
+            }
+            enemyManager.playerMaxHp         = savedState.playerMaxHp
+            enemyManager.playerHp            = savedState.playerHp.coerceAtMost(savedState.playerMaxHp)
+            enemyManager.playerShieldMax     = savedState.playerShield
+            enemyManager.playerShieldCurrent = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
@@ -269,6 +307,19 @@ internal class CaveRenderer(
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             enemyManager.worldSpawnX = camera.x
             enemyManager.worldSpawnZ = camera.z
+        }
+        scheduleInitialLodBuilds()
+    }
+
+    private fun scheduleInitialLodBuilds() {
+        val cache = lodCache ?: return
+        val pcx = camera.chunkX(); val pcz = camera.chunkZ()
+        val r = LOD_RADIUS
+        scope.launch {
+            for ((cx, cz) in cache.cachedColumns()) {
+                val dx = cx - pcx; val dz = cz - pcz
+                if (dx * dx + dz * dz <= r * r) scheduleLodBuild(cx, cz)
+            }
         }
     }
 
@@ -997,10 +1048,15 @@ internal class CaveRenderer(
         val key = world.chunkKey(chunk.cx, chunk.cy, chunk.cz)
         if (!building.add(key)) return
         scope.launch(genDispatcher) {
-            world.generate(chunk)
-            world.markGenerated(chunk)  // ajoute le chunk + voisins au rebuildQueue
-            building.remove(key)
-            // Le mesh est construit par le rebuildQueue sur meshDispatcher (frame suivante)
+            try {
+                world.generate(chunk)
+                world.markGenerated(chunk)
+            } catch (_: Exception) {
+                // Libère le chunk pour qu'il puisse être regénéré au prochain passage
+                world.abandonChunk(chunk)
+            } finally {
+                building.remove(key)
+            }
         }
     }
 

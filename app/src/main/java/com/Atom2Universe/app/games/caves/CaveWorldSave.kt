@@ -20,7 +20,17 @@ data class CaveWorldSave(
     var playerYaw: Float,
     var playerPitch: Float,
     var inventory: Map<Byte, Int>,
-    var hotbar: List<Byte?>        // 9 slots, null = vide
+    var hotbar: List<Byte?>,        // 9 slots, null = vide
+    // Progression joueur
+    var playerHp: Int = 20,
+    var playerLevel: Int = 1,
+    var playerXp: Int = 0,
+    var playerDamage: Int = 2,
+    var playerFireRate: Float = 1.5f,
+    var playerMaxHp: Int = 20,
+    var playerShield: Int = 0,
+    var playerShieldCurrent: Int = 0,
+    var playerWeapons: List<String> = listOf("WHITE_SQUARE")  // "COLOR_VARIANT"
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -61,14 +71,23 @@ object CaveWorldSaveManager {
 
     fun updateFields(context: Context, snap: CaveWorldSave) {
         val existing = loadWorld(context, snap.id) ?: return
-        existing.lastPlayedAt = snap.lastPlayedAt
-        existing.playerX      = snap.playerX
-        existing.playerY      = snap.playerY
-        existing.playerZ      = snap.playerZ
-        existing.playerYaw    = snap.playerYaw
-        existing.playerPitch  = snap.playerPitch
-        existing.inventory    = snap.inventory
-        existing.hotbar       = snap.hotbar
+        existing.lastPlayedAt        = snap.lastPlayedAt
+        existing.playerX             = snap.playerX
+        existing.playerY             = snap.playerY
+        existing.playerZ             = snap.playerZ
+        existing.playerYaw           = snap.playerYaw
+        existing.playerPitch         = snap.playerPitch
+        existing.inventory           = snap.inventory
+        existing.hotbar              = snap.hotbar
+        existing.playerHp            = snap.playerHp
+        existing.playerLevel         = snap.playerLevel
+        existing.playerXp            = snap.playerXp
+        existing.playerDamage        = snap.playerDamage
+        existing.playerFireRate      = snap.playerFireRate
+        existing.playerMaxHp         = snap.playerMaxHp
+        existing.playerShield        = snap.playerShield
+        existing.playerShieldCurrent = snap.playerShieldCurrent
+        existing.playerWeapons       = snap.playerWeapons
         persist(context, existing)
     }
 
@@ -98,6 +117,17 @@ object CaveWorldSaveManager {
             val hotbarArr = JSONArray()
             save.hotbar.forEach { v -> hotbarArr.put(v?.toInt() ?: -1) }
             put("hotbar", hotbarArr)
+            put("playerHp", save.playerHp)
+            put("playerLevel", save.playerLevel)
+            put("playerXp", save.playerXp)
+            put("playerDamage", save.playerDamage)
+            put("playerFireRate", save.playerFireRate.toDouble())
+            put("playerMaxHp", save.playerMaxHp)
+            put("playerShield", save.playerShield)
+            put("playerShieldCurrent", save.playerShieldCurrent)
+            val weaponsArr = JSONArray()
+            save.playerWeapons.forEach { weaponsArr.put(it) }
+            put("playerWeapons", weaponsArr)
         }
         saveFile(context, save.id).writeText(json.toString())
     }
@@ -112,6 +142,10 @@ object CaveWorldSaveManager {
                 val v = hotbarArr.getInt(i); if (v < 0) null else v.toByte()
             }
         } else List(9) { null }
+        val weaponsArr = j.optJSONArray("playerWeapons")
+        val weapons: List<String> = if (weaponsArr != null) {
+            (0 until weaponsArr.length()).map { weaponsArr.getString(it) }
+        } else listOf("WHITE_SQUARE")
         return CaveWorldSave(
             id = j.getString("id"),
             name = j.getString("name"),
@@ -124,7 +158,16 @@ object CaveWorldSaveManager {
             playerYaw = j.getDouble("playerYaw").toFloat(),
             playerPitch = j.getDouble("playerPitch").toFloat(),
             inventory = inventory,
-            hotbar = hotbar
+            hotbar = hotbar,
+            playerHp = j.optInt("playerHp", 20),
+            playerLevel = j.optInt("playerLevel", 1),
+            playerXp = j.optInt("playerXp", 0),
+            playerDamage = j.optInt("playerDamage", 2),
+            playerFireRate = j.optDouble("playerFireRate", 1.5).toFloat(),
+            playerMaxHp = j.optInt("playerMaxHp", 20),
+            playerShield = j.optInt("playerShield", 0),
+            playerShieldCurrent = j.optInt("playerShieldCurrent", 0),
+            playerWeapons = weapons
         )
     }
 }

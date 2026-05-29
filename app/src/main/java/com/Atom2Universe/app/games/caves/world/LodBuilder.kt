@@ -66,7 +66,7 @@ internal object LodBuilder {
 
             // +X
             val hPX = if (lx < H - 1) heights[lz * H + lx + 1]
-                      else columnHeight(cx + 1, cz, 0, lz, world)
+                      else adjHeight(cx + 1, cz, 0, lz, world, cache)
             if (hPX != Int.MIN_VALUE && hPX < h) {
                 val yb = (hPX + 1).toFloat()
                 val p = (sideLayer(block) + 4 * 32).toFloat()
@@ -78,7 +78,7 @@ internal object LodBuilder {
 
             // -X
             val hMX = if (lx > 0) heights[lz * H + lx - 1]
-                      else columnHeight(cx - 1, cz, H - 1, lz, world)
+                      else adjHeight(cx - 1, cz, H - 1, lz, world, cache)
             if (hMX != Int.MIN_VALUE && hMX < h) {
                 val yb = (hMX + 1).toFloat()
                 val p = (sideLayer(block) + 4 * 32).toFloat()
@@ -90,7 +90,7 @@ internal object LodBuilder {
 
             // +Z
             val hPZ = if (lz < H - 1) heights[(lz + 1) * H + lx]
-                      else columnHeight(cx, cz + 1, lx, 0, world)
+                      else adjHeight(cx, cz + 1, lx, 0, world, cache)
             if (hPZ != Int.MIN_VALUE && hPZ < h) {
                 val yb = (hPZ + 1).toFloat()
                 val p = (sideLayer(block) + 2 * 32).toFloat()
@@ -102,7 +102,7 @@ internal object LodBuilder {
 
             // -Z
             val hMZ = if (lz > 0) heights[(lz - 1) * H + lx]
-                      else columnHeight(cx, cz - 1, lx, H - 1, world)
+                      else adjHeight(cx, cz - 1, lx, H - 1, world, cache)
             if (hMZ != Int.MIN_VALUE && hMZ < h) {
                 val yb = (hMZ + 1).toFloat()
                 val p = (sideLayer(block) + 3 * 32).toFloat()
@@ -114,6 +114,16 @@ internal object LodBuilder {
         }
 
         return buf.toArray()
+    }
+
+    // Hauteur du voisin : chunk monde en priorité, sinon cache LOD.
+    private fun adjHeight(cx: Int, cz: Int, lx: Int, lz: Int, world: World, cache: LodCache?): Int {
+        val worldH = columnHeight(cx, cz, lx, lz, world)
+        if (worldH != Int.MIN_VALUE) return worldH
+        val entry = cache?.get(cx, cz) ?: return Int.MIN_VALUE
+        val idx = lz * CHUNK_SIZE + lx
+        val h = entry.heights[idx]
+        return if (h == Short.MIN_VALUE) Int.MIN_VALUE else h.toInt()
     }
 
     // Hauteur du bloc le plus haut en (lx, lz) dans la colonne d'un chunk adjacent.
