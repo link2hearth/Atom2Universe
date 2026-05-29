@@ -145,4 +145,9 @@
     <string name="cave_inventory_hint">Appuyez sur un bloc pour l\'assigner au slot sélectionné</string>
     <string name="cave_inventory_empty">Votre inventaire est vide</string>
     <string name="cave_inventory_close">Fermer</string>
+    <string name="cave_inv_info_header">Objet</string>
+    <string name="cave_inv_info_empty">Sélectionne un bloc</string>
+    <string name="cave_inv_crafting_header">Fabrication</string>
+    <string name="cave_inv_crafting_empty">Aucune recette</string>
+    <string name="cave_inv_craft_btn">Fabriquer</string>
 </resources>

@@ -5,32 +5,176 @@
     android:background="#CC000000"
     android:visibility="gone">
 
+    <!-- Taille et position fixées en code (82% × 84% de l'écran, centré) -->
     <LinearLayout
         android:id="@+id/cave_inv_panel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:orientation="horizontal"
         android:background="@color/midi_surface"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="vertical"
         android:padding="10dp">
 
-        <TextView
-            android:layout_width="match_parent"
+        <!-- ===== GAUCHE : info item sélectionné ===== -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:text="@string/cave_inventory_title"
-            android:textColor="@color/midi_text_primary"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:layout_gravity="top"
+            android:layout_weight="1.4"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="8dp">
 
-        <!-- Grille unifiée 9×4 : 3 lignes inventaire + 1 ligne active (largeur fixée en code) -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/cave_inv_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cave_inv_info_header"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="10dp" />
+
+            <View
+                android:id="@+id/cave_inv_info_sprite"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="#55FFFFFF" />
+
+            <TextView
+                android:id="@+id/cave_inv_info_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="@string/cave_inv_info_empty" />
+
+            <TextView
+                android:id="@+id/cave_inv_info_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#CCFFFFFF"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_marginTop="4dp" />
+
+            <!-- Ingrédients (visible quand une recette est sélectionnée) -->
+            <View
+                android:id="@+id/cave_inv_info_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#33FFFFFF"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="6dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/cave_inv_info_ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#AAFFFFFF"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.4"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#44FFFFFF"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <!-- ===== CENTRE : inventaire scrollable + barre active ===== -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cave_inventory_title"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Grille scrollable, remplit l'espace disponible -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cave_inv_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#55FFFFFF"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Barre active : 9 slots en weight, extension de l'inventaire -->
+            <LinearLayout
+                android:id="@+id/cave_inv_active_row"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#44FFFFFF"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <!-- ===== DROITE : crafting ===== -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.8"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cave_inv_crafting_header"
+                android:textColor="@color/midi_text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
+
+            <TextView
+                android:id="@+id/cave_inv_crafting_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cave_inv_crafting_empty"
+                android:textColor="#88FFFFFF"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_marginTop="12dp"
+                android:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cave_inv_crafting_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

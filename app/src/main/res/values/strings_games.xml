@@ -145,4 +145,9 @@
     <string name="cave_inventory_hint">Tap a block to assign it to the selected slot</string>
     <string name="cave_inventory_empty">Your inventory is empty</string>
     <string name="cave_inventory_close">Close</string>
+    <string name="cave_inv_info_header">Item</string>
+    <string name="cave_inv_info_empty">Select a block</string>
+    <string name="cave_inv_crafting_header">Crafting</string>
+    <string name="cave_inv_crafting_empty">No recipes</string>
+    <string name="cave_inv_craft_btn">Craft</string>
 </resources>

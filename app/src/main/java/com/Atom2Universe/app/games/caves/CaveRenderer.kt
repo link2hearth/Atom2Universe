@@ -463,10 +463,6 @@ internal class CaveRenderer(
             world.setBlock(bx, by, bz, AIR)
             forceMeshRebuild(bx, by, bz)
             inventory[blockType] = (inventory[blockType] ?: 0) + 1
-            if (hotbar.none { it == blockType }) {
-                val empty = hotbar.indexOfFirst { it == null }
-                if (empty >= 0) { hotbar[empty] = blockType; hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot) }
-            }
             inventoryCallback?.invoke(inventory.toMap())
             mineTarget = null
             mineDamage = 0f
