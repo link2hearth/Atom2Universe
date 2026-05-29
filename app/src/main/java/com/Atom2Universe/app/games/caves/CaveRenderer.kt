@@ -20,10 +20,26 @@ import kotlin.math.*
 
 enum class PlayerMode { WALK, SPECTATOR }
 
-internal class CaveRenderer(private val context: Context, private val touch: TouchController) : GLSurfaceView.Renderer {
+internal class CaveRenderer(
+    private val context: Context,
+    private val touch: TouchController,
+    private val worldSeed: Long = System.currentTimeMillis(),
+    private val worldId: String? = null,
+    private val savedState: SavedState? = null
+) : GLSurfaceView.Renderer {
+
+    data class SavedState(
+        val x: Float, val y: Float, val z: Float,
+        val yaw: Float, val pitch: Float,
+        val inventory: Map<Byte, Int>,
+        val hotbar: List<Byte?>
+    )
 
     val camera = Camera(8f, 8f, 8f)
-    private val world = World(seed = System.currentTimeMillis())
+    private val storage = worldId?.let {
+        CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
+    }
+    private val world = World(seed = worldSeed, storage = storage)
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
     // Triple : (clé chunk, version au moment du build, vertices)
     private val uploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
@@ -60,6 +76,8 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
     private var mineDamage = 0f   // 0..1
 
     val inventory = mutableMapOf<Byte, Int>()
+    val hotbar    = arrayOfNulls<Byte>(9)   // block types in slots 0-8
+    var selectedSlot = 0
 
     private var transientVbo = 0
     private var elapsed = 0f     // temps pour l'effet de pulsation
@@ -90,6 +108,7 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
     var modeCallback: ((PlayerMode) -> Unit)? = null
     var miningCallback: ((progress: Float, block: Byte?) -> Unit)? = null
     var inventoryCallback: ((Map<Byte, Int>) -> Unit)? = null
+    var hotbarCallback: ((slots: Array<Byte?>, selected: Int) -> Unit)? = null
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
@@ -184,11 +203,20 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
         GLES30.glGenBuffers(1, ids, 0)
         transientVbo = ids[0]
 
-        for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
-            world.pregenerateChunk(dx, dy, dz)
-
-        val spawn = world.findSpawnPoint()
-        camera.x = spawn[0]; camera.y = spawn[1]; camera.z = spawn[2]
+        if (savedState != null) {
+            camera.x = savedState.x; camera.y = savedState.y; camera.z = savedState.z
+            camera.yaw = savedState.yaw; camera.pitch = savedState.pitch
+            inventory.putAll(savedState.inventory)
+            savedState.hotbar.forEachIndexed { i, v -> hotbar[i] = v }
+            val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
+            for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
+                world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
+        } else {
+            for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
+                world.pregenerateChunk(dx, dy, dz)
+            val spawn = world.findSpawnPoint()
+            camera.x = spawn[0]; camera.y = spawn[1]; camera.z = spawn[2]
+        }
     }
 
     private fun loadBlockTextures(): Int {
@@ -326,6 +354,12 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
     private val MINE_REACH = 6
 
     private fun updateMining(dt: Float) {
+        // Pose indépendante du laser — traitée en premier
+        if (touch.placeRequested) {
+            touch.placeRequested = false
+            placeBlock()
+        }
+
         val target = if (touch.laserActive) raycastBlock() else null
 
         if (target == null) {
@@ -349,6 +383,11 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
             world.setBlock(bx, by, bz, AIR)
             forceMeshRebuild(bx, by, bz)
             inventory[blockType] = (inventory[blockType] ?: 0) + 1
+            // Auto-fill hotbar si ce type n'y est pas encore
+            if (hotbar.none { it == blockType }) {
+                val empty = hotbar.indexOfFirst { it == null }
+                if (empty >= 0) { hotbar[empty] = blockType; hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot) }
+            }
             inventoryCallback?.invoke(inventory.toMap())
             mineTarget = null
             mineDamage = 0f
@@ -723,8 +762,42 @@ internal class CaveRenderer(private val context: Context, private val touch: Tou
         }
     }
 
+    fun selectSlot(index: Int) {
+        if (index !in 0..8) return
+        selectedSlot = index
+        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+    }
+
+    private fun placeBlock() {
+        val blockType = hotbar[selectedSlot] ?: return
+        if ((inventory[blockType] ?: 0) <= 0) {
+            hotbar[selectedSlot] = null
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            return
+        }
+        val target = raycastBlock() ?: return
+        val px = target.bx + target.fnx
+        val py = target.by + target.fny
+        val pz = target.bz + target.fnz
+        if (isInsidePlayer(px, py, pz)) return
+        world.setBlock(px, py, pz, blockType)
+        forceMeshRebuild(px, py, pz)
+        inventory[blockType] = (inventory[blockType] ?: 1) - 1
+        if ((inventory[blockType] ?: 0) <= 0) inventory.remove(blockType)
+        inventoryCallback?.invoke(inventory.toMap())
+        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+    }
+
+    private fun isInsidePlayer(bx: Int, by: Int, bz: Int): Boolean {
+        val x0 = floorInt(camera.x - 0.3f); val x1 = floorInt(camera.x + 0.29f)
+        val y0 = floorInt(camera.y - 1.62f); val y1 = floorInt(camera.y + 0.18f)
+        val z0 = floorInt(camera.z - 0.3f); val z1 = floorInt(camera.z + 0.29f)
+        return bx in x0..x1 && by in y0..y1 && bz in z0..z1
+    }
+
     fun destroy() {
         scope.cancel()
+        storage?.shutdown()
         meshes.values.forEach { it.destroy() }
         worldShader?.destroy()
         laserShader?.destroy()

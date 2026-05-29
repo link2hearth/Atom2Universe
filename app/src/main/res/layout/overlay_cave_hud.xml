@@ -1,142 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- Back -->
-    <ImageButton
-        android:id="@+id/cave_btn_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="top|start"
-        android:layout_margin="8dp"
-        android:background="#55000000"
-        android:contentDescription="@string/cave_back"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:tint="#FFFFFF" />
+    <!-- Zone principale (tout sauf hotbar) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <!-- Coordonnées (haut centre) -->
-    <TextView
-        android:id="@+id/cave_tv_coords"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="12dp"
-        android:fontFamily="monospace"
-        android:text="0.0  0.0  0.0"
-        android:textColor="#99FFFFFF"
-        android:textSize="11sp" />
+        <!-- Back -->
+        <ImageButton
+            android:id="@+id/cave_btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="top|start"
+            android:layout_margin="8dp"
+            android:background="#55000000"
+            android:contentDescription="@string/cave_back"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="#FFFFFF" />
 
-    <!-- Mode toggle (haut droit) -->
-    <Button
-        android:id="@+id/cave_btn_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="top|end"
-        android:layout_margin="8dp"
-        android:background="#55000000"
-        android:paddingHorizontal="12dp"
-        android:text="@string/cave_mode_spectator"
-        android:textColor="#FFFFFF"
-        android:textSize="11sp" />
-
-    <!-- Crosshair centre -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="+"
-        android:textColor="#CCFFFFFF"
-        android:textSize="22sp"
-        android:fontFamily="monospace" />
-
-    <!-- Barre de progression minage (centre bas, cachée par défaut) -->
-    <LinearLayout
-        android:id="@+id/cave_mining_panel"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="56dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone">
-
+        <!-- Coordonnées (haut centre) -->
         <TextView
-            android:id="@+id/cave_tv_mining_block"
+            android:id="@+id/cave_tv_coords"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFFFF"
-            android:textSize="11sp"
-            android:layout_marginBottom="4dp" />
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="12dp"
+            android:fontFamily="monospace"
+            android:text="0.0  0.0  0.0"
+            android:textColor="#99FFFFFF"
+            android:textSize="11sp" />
 
-        <ProgressBar
-            android:id="@+id/cave_mining_progress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:max="100"
-            android:progress="0"
-            android:progressTint="#00D4FF" />
-    </LinearLayout>
+        <!-- Mode toggle (haut droit) -->
+        <Button
+            android:id="@+id/cave_btn_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="8dp"
+            android:background="#55000000"
+            android:paddingHorizontal="12dp"
+            android:text="@string/cave_mode_spectator"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp" />
 
-    <!-- Inventaire (bas centre) -->
-    <TextView
-        android:id="@+id/cave_tv_inventory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="16dp"
-        android:textColor="#AAFFFFFF"
-        android:textSize="11sp"
-        android:fontFamily="monospace"
-        android:text="" />
+        <!-- Crosshair centre -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="monospace"
+            android:text="+"
+            android:textColor="#CCFFFFFF"
+            android:textSize="22sp" />
 
-    <!-- JUMP / FLY UP (droite centre haut) -->
-    <Button
-        android:id="@+id/cave_btn_up"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="72dp"
-        android:background="#55FFFFFF"
-        android:text="▲"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp" />
+        <!-- Barre de progression minage (centre bas) -->
+        <LinearLayout
+            android:id="@+id/cave_mining_panel"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-    <!-- FLY DOWN (spectateur seulement) -->
-    <Button
-        android:id="@+id/cave_btn_down"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="72dp"
-        android:background="#55FFFFFF"
-        android:text="▼"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp" />
+            <TextView
+                android:id="@+id/cave_tv_mining_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp" />
 
-    <!-- LASER (bas droit) -->
-    <Button
-        android:id="@+id/cave_btn_laser"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:background="#66003366"
-        android:text="@string/cave_laser"
-        android:textColor="#00D4FF"
-        android:textSize="10sp" />
+            <ProgressBar
+                android:id="@+id/cave_mining_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="#00D4FF" />
+        </LinearLayout>
 
-    <!-- Hints (bas) -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="12dp"
-        android:text="@string/cave_hint_move"
-        android:textColor="#44FFFFFF"
-        android:textSize="10sp" />
+        <!-- JUMP / FLY UP (droite centre haut) -->
+        <Button
+            android:id="@+id/cave_btn_up"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="76dp"
+            android:background="#55FFFFFF"
+            android:text="▲"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
 
-</FrameLayout>
+        <!-- FLY DOWN (spectateur seulement) -->
+        <Button
+            android:id="@+id/cave_btn_down"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="76dp"
+            android:background="#55FFFFFF"
+            android:text="▼"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+
+        <!-- LASER (bas droit) -->
+        <Button
+            android:id="@+id/cave_btn_laser"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="#66003366"
+            android:text="@string/cave_laser"
+            android:textColor="#00D4FF"
+            android:textSize="10sp" />
+
+        <!-- PLACE (à gauche du laser) -->
+        <Button
+            android:id="@+id/cave_btn_place"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="96dp"
+            android:layout_marginBottom="8dp"
+            android:background="#66336600"
+            android:text="@string/cave_place"
+            android:textColor="#88FF44"
+            android:textSize="10sp" />
+
+        <!-- Hint gauche -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="8dp"
+            android:text="@string/cave_hint_move"
+            android:textColor="#44FFFFFF"
+            android:textSize="10sp" />
+
+    </FrameLayout>
+
+    <!-- Hotbar (bas, 60dp) -->
+    <LinearLayout
+        android:id="@+id/cave_hotbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#BB000000"
+        android:orientation="horizontal"
+        android:padding="4dp" />
+
+</LinearLayout>

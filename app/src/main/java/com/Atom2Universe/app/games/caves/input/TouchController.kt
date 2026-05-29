@@ -19,6 +19,9 @@ class TouchController {
     // Laser / minage (maintenu enfoncé pour miner)
     @Volatile var laserActive = false
 
+    // Pose de bloc (1 bloc par appui, consommé par le renderer)
+    @Volatile var placeRequested = false
+
     private var leftId = -1
     private var leftCx = 0f; private var leftCy = 0f
 

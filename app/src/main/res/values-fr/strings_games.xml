@@ -115,4 +115,21 @@
     <string name="cave_block_furnace">Four</string>
     <string name="cave_block_emerald">Minerai d\'émeraude</string>
     <string name="cave_block_copper">Minerai de cuivre</string>
+    <string name="cave_menu_new_world">Nouveau monde</string>
+    <string name="cave_menu_create">Créer</string>
+    <string name="cave_menu_world_name_hint">Nom du monde</string>
+    <string name="cave_menu_seed_hint">Seed (optionnel, aléatoire si vide)</string>
+    <string name="cave_menu_default_name">Mon monde</string>
+    <string name="cave_menu_seed_label">Seed : %1$d</string>
+    <string name="cave_menu_last_played">Dernière session : %1$s</string>
+    <string name="cave_menu_no_worlds">Aucun monde.\nCréez votre premier monde !</string>
+    <string name="cave_menu_delete_world">Supprimer</string>
+    <string name="cave_menu_delete_confirm_title">Supprimer le monde ?</string>
+    <string name="cave_menu_delete_confirm_msg">Supprimer « %1$s » ? Cette action est irréversible.</string>
+    <string name="cave_menu_deleted">Monde supprimé</string>
+    <string name="cave_place">■ POSER</string>
+    <string name="cave_inventory_title">Inventaire</string>
+    <string name="cave_inventory_hint">Appuyez sur un bloc pour l\'assigner au slot sélectionné</string>
+    <string name="cave_inventory_empty">Votre inventaire est vide</string>
+    <string name="cave_inventory_close">Fermer</string>
 </resources>

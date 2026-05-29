@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.math.*
 import kotlin.random.Random
 
-class World(private val seed: Long = 42L) {
+class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null) {
     private val chunks = ConcurrentHashMap<Long, Chunk>()
     private val inFlight = ConcurrentHashMap.newKeySet<Long>()
 
@@ -102,20 +102,21 @@ class World(private val seed: Long = 42L) {
 
     fun findSpawnPoint(): FloatArray {
         val chunk = pregenerateChunk(0, 0, 0)
-        // Scan de haut en bas sur TOUTES les colonnes : premier sol trouvé (air sur solide).
-        // La sphère peut traverser toute la hauteur du chunk sur la colonne centrale,
-        // mais ses bords ont des sols valides sur les colonnes périphériques.
+        // Cherche un espace avec sol solide + 2 blocs d'air (pieds à ly, tête à ly+1).
+        // neighborBlock gère les bords de chunk (les voisins sont déjà pré-générés).
         for (ly in CHUNK_SIZE - 1 downTo 1)
         for (lz in 0 until CHUNK_SIZE)
         for (lx in 0 until CHUNK_SIZE) {
-            if (chunk.blockAt(lx, ly, lz) == AIR && chunk.blockAt(lx, ly - 1, lz) != AIR)
+            if (neighborBlock(chunk, lx, ly,     lz) == AIR &&
+                neighborBlock(chunk, lx, ly + 1, lz) == AIR &&
+                neighborBlock(chunk, lx, ly - 1, lz) != AIR)
                 return floatArrayOf(lx + 0.5f, ly + 1.62f, lz + 0.5f)
         }
-        // Fallback : premier air (le joueur tombe jusqu'au prochain sol)
-        for (ly in CHUNK_SIZE - 1 downTo 0)
+        // Fallback : premier espace de 2 blocs d'air consécutifs
+        for (ly in CHUNK_SIZE - 1 downTo 1)
         for (lz in 0 until CHUNK_SIZE)
         for (lx in 0 until CHUNK_SIZE) {
-            if (chunk.blockAt(lx, ly, lz) == AIR)
+            if (chunk.blockAt(lx, ly, lz) == AIR && chunk.blockAt(lx, ly + 1, lz) == AIR)
                 return floatArrayOf(lx + 0.5f, ly + 1.62f, lz + 0.5f)
         }
         return floatArrayOf(8.5f, 9.62f, 8.5f)
@@ -144,6 +145,9 @@ class World(private val seed: Long = 42L) {
 
         // 6. Arbres sur les blocs GRASS
         plantTrees(chunk)
+
+        // Applique les modifications du joueur par-dessus la génération procédurale
+        storage?.applyDiff(chunk)
     }
 
     // ── Roche de base ────────────────────────────────────────────────────────
@@ -418,11 +422,13 @@ class World(private val seed: Long = 42L) {
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
         val chunk = getChunk(cx, cy, cz)?.takeIf { it.generated } ?: return
-        chunk.setBlock(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE, type)
+        val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
+        chunk.setBlock(lx, ly, lz, type)
         chunk.version++           // invalide tout build en cours pour ce chunk
         val key = chunkKey(cx, cy, cz)
         chunk.meshDirty = true
         rebuildQueue.add(key)
+        storage?.recordChange(cx, cy, cz, lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, type)
         // Face neighbors
         for ((nx, ny, nz) in arrayOf(
             intArrayOf(cx-1,cy,cz), intArrayOf(cx+1,cy,cz),

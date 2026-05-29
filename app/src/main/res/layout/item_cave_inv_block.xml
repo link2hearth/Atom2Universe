@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground"
+    android:padding="10dp">
+
+    <!-- Couleur du bloc -->
+    <View
+        android:id="@+id/cave_inv_color"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Nom du bloc -->
+    <TextView
+        android:id="@+id/cave_inv_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/midi_text_primary"
+        android:textSize="14sp" />
+
+    <!-- Quantité -->
+    <TextView
+        android:id="@+id/cave_inv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:textColor="@color/midi_text_secondary"
+        android:textSize="13sp" />
+
+</LinearLayout>
