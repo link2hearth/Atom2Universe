@@ -102,11 +102,13 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             .registerOnSharedPreferenceChangeListener(devOpsListener)
 
         viewModelScope.launch {
-            val loaded = repository.load()
+            // Capturer lastOnline avant tout appel suspendu : le heartbeatJob démarre en
+            // parallèle et écraserait last_online_ms après son premier tick (1s).
+            val lastOnline = offlineRepo.load()
+            val loaded = repository.load().copy(factoryCounts = factoryRepo.getAllCounts())
 
             // Gain hors-ligne : APS réel (shop + éléments, sans frénésie) × temps écoulé
             val now = System.currentTimeMillis()
-            val lastOnline = offlineRepo.load()
             val elapsedMs = if (lastOnline > 0L) now - lastOnline else 0L
             var offlineInitGain = LayeredNumber.zero()
             val withGain = if (elapsedMs > 5_000L) {
@@ -122,7 +124,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             } else loaded
 
             offlineRepo.save(now)
-            val recalcedState = recalcProduction(withGain.copy(factoryCounts = factoryRepo.getAllCounts()))
+            val recalcedState = recalcProduction(withGain)
             _state.value = recalcedState
             stats = statsRepository.load()
             if (!offlineInitGain.isZero()) {

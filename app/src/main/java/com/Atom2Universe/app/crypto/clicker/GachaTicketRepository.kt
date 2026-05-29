@@ -17,17 +17,12 @@ class GachaTicketRepository(context: Context) {
     suspend fun awardTickets(nowMs: Long): GachaTicketStateEntity {
         val current = load()
         val elapsedMs = if (current.lastTicketAwardMs > 0L) nowMs - current.lastTicketAwardMs else 0L
-        val ticketsEarned = (elapsedMs / (60 * 60 * 1000)).toInt()
-
-        val updated = if (ticketsEarned > 0) {
-            current.copy(
-                totalTickets = current.totalTickets + ticketsEarned,
-                lastTicketAwardMs = nowMs
-            )
-        } else {
-            current
-        }
-
+        val ticketsEarned = (elapsedMs / (60 * 60 * 1000L)).toInt()
+        if (ticketsEarned <= 0) return current
+        val updated = current.copy(
+            totalTickets = current.totalTickets + ticketsEarned,
+            lastTicketAwardMs = current.lastTicketAwardMs + ticketsEarned * (60 * 60 * 1000L)
+        )
         save(updated)
         return updated
     }
