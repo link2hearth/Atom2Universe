@@ -82,12 +82,20 @@ internal class CaveRenderer(
     private var worldShader: ShaderProgram? = null
     private var laserShader: ShaderProgram? = null
     private var starShader:  ShaderProgram? = null
+    private var waterShader: ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wUMvp = 0; private var wUTex = 0
     private var wUChunkOffset = 0; private var wUAmbient = 0
     private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
+    private var wUUnderwater = 0
     private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0
     private var sAPos = 0; private var sABrightness = 0; private var sUMvp = 0
+    private var wWAPos = 0; private var wWAUv = 0; private var wWUMvp = 0
+    private var wWUChunkOffset = 0; private var wWUAmbient = 0
+    private var wWULights = 0; private var wWULightCount = 0; private var wWUTime = 0
     private var blockTexArray = 0
+
+    private val waterMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
+    private val waterUploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
 
     // ── Étoiles ───────────────────────────────────────────────────────────────
     private val STAR_COUNT  = 250
@@ -249,6 +257,7 @@ internal class CaveRenderer(
         uniform vec4 u_lights[32];
         uniform int u_lightCount;
         uniform float u_time;
+        uniform float u_underwater;
         in vec2 v_uv;
         in float v_layer;
         in float v_faceDir;
@@ -271,6 +280,44 @@ internal class CaveRenderer(
             }
             vec3 lighting = max(vec3(u_ambient), torchContrib);
             fragColor = vec4(col.rgb * faceLight * lighting, 1.0);
+            if (u_underwater > 0.5) {
+                fragColor = vec4(fragColor.rgb * vec3(0.18, 0.48, 0.88) * 0.55, 1.0);
+            }
+        }
+    """.trimIndent()
+
+    private val FRAG_WATER = """
+        #version 300 es
+        precision mediump float;
+        uniform float u_ambient;
+        uniform vec4 u_lights[32];
+        uniform int u_lightCount;
+        uniform float u_time;
+        in vec2 v_uv;
+        in float v_layer;
+        in float v_faceDir;
+        in vec3 v_worldPos;
+        out vec4 fragColor;
+        void main() {
+            float wave = 0.5 + 0.5 * sin(v_worldPos.x * 1.1 + u_time * 1.7)
+                                   * sin(v_worldPos.z * 0.85 + u_time * 1.3);
+            vec3 deepColor    = vec3(0.05, 0.28, 0.72);
+            vec3 shallowColor = vec3(0.16, 0.50, 0.90);
+            vec3 baseColor    = mix(deepColor, shallowColor, wave * 0.5 + 0.2);
+            float fd = floor(v_faceDir + 0.5);
+            float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : 0.72;
+            vec3 torchColor = vec3(1.0, 0.72, 0.25);
+            vec3 torchContrib = vec3(0.0);
+            for (int i = 0; i < u_lightCount; i++) {
+                float flicker = 1.0 + 0.015 * sin(u_time * 3.1 + float(i) * 2.1);
+                float radius = 24.0 * u_lights[i].w * flicker;
+                float d = length(v_worldPos - u_lights[i].xyz);
+                float atten = clamp(1.0 - d / radius, 0.0, 1.0);
+                atten = atten * atten;
+                torchContrib = max(torchContrib, atten * u_lights[i].w * torchColor);
+            }
+            vec3 lighting = max(vec3(u_ambient), torchContrib);
+            fragColor = vec4(baseColor * faceLight * lighting, 0.75);
         }
     """.trimIndent()
 
@@ -365,6 +412,18 @@ internal class CaveRenderer(
             wULights      = it.uniform("u_lights[0]")
             wULightCount  = it.uniform("u_lightCount")
             wUTime        = it.uniform("u_time")
+            wUUnderwater  = it.uniform("u_underwater")
+        }
+        waterShader = ShaderProgram(VERT_WORLD, FRAG_WATER).also {
+            it.use()
+            wWAPos         = it.attrib("a_pos")
+            wWAUv          = it.attrib("a_uv")
+            wWUMvp         = it.uniform("u_mvp")
+            wWUChunkOffset = it.uniform("u_chunk_offset")
+            wWUAmbient     = it.uniform("u_ambient")
+            wWULights      = it.uniform("u_lights[0]")
+            wWULightCount  = it.uniform("u_lightCount")
+            wWUTime        = it.uniform("u_time")
         }
         laserShader = ShaderProgram(VERT_LASER, FRAG_LASER).also {
             it.use()
@@ -603,8 +662,12 @@ internal class CaveRenderer(
             val snapVersion = chunk.version
             scope.launch(meshDispatcher) {
                 try {
-                    val verts = MeshBuilder.build(chunk, world)
-                    if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
+                    val verts      = MeshBuilder.build(chunk, world)
+                    val waterVerts = MeshBuilder.buildWater(chunk, world)
+                    if (chunk.version == snapVersion) {
+                        uploadQueue.add(Triple(key, snapVersion, verts))
+                        waterUploadQueue.add(Triple(key, snapVersion, waterVerts))
+                    }
                     if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
                 } catch (_: OutOfMemoryError) {
                     // Heap plein : re-queue pour réessayer quand la pression mémoire baisse
@@ -633,8 +696,17 @@ internal class CaveRenderer(
             lodMeshes.getOrPut(key) { isNew = true; ChunkMesh() }.upload(verts)
             if (isNew) lodGrid.getOrPut(superKey(lodKeyToCx(key), lodKeyToCz(key))) { ArrayList() }.add(key)
         }
+        repeat(16) {
+            val (key, ver, verts) = waterUploadQueue.poll() ?: return@repeat
+            val chunk = world.getChunkByKey(key) ?: return@repeat
+            if (chunk.version == ver) {
+                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+                else waterMeshes.remove(key)?.destroy()
+            }
+        }
         meshes.values.forEach { it.flushPending() }
         lodMeshes.values.forEach { it.flushPending() }
+        waterMeshes.values.forEach { it.flushPending() }
 
         if (++cleanupCounter >= CLEANUP_INTERVAL) {
             cleanupCounter = 0
@@ -644,6 +716,7 @@ internal class CaveRenderer(
             val loadedKeys = allChunks.mapTo(HashSet()) { world.chunkKey(it.cx, it.cy, it.cz) }
             // Supprimer les meshes de chunks déchargés
             meshes.keys.filter { it !in loadedKeys }.forEach { key -> meshes.remove(key)?.destroy() }
+            waterMeshes.keys.filter { it !in loadedKeys }.forEach { key -> waterMeshes.remove(key)?.destroy() }
             // Nettoyer les sources de lumière des chunks déchargés
             if (lightSources.isNotEmpty()) {
                 lightSources.keys.removeAll { (x, y, z) ->
@@ -721,10 +794,12 @@ internal class CaveRenderer(
         GLES30.glDepthMask(true)
 
         // ── Rendu chunks ─────────────────────────────────────────────────────
+        val headUnderwater = isHeadInWater()
         worldShader?.use()
         GLES30.glUniformMatrix4fv(wUMvp, 1, false, camera.vpMatrix, 0)
-        GLES30.glUniform1f(wUAmbient, ambientFor(dayT))
+        GLES30.glUniform1f(wUAmbient, if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT))
         GLES30.glUniform1f(wUTime, elapsed)
+        GLES30.glUniform1f(wUUnderwater, if (headUnderwater) 1f else 0f)
 
         val camX = camera.x; val camY = camera.y; val camZ = camera.z
         if (++lightRefreshCounter >= 3 || lightsDirty) {
@@ -820,6 +895,29 @@ internal class CaveRenderer(
 
         // ── Rendu laser + highlight ───────────────────────────────────────────
         renderLaserAndHighlight()
+
+        // ── Passe eau (blending semi-transparent, après géométrie opaque) ─────
+        val waterAmbient = if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT)
+        waterShader?.use()
+        GLES30.glUniformMatrix4fv(wWUMvp, 1, false, camera.vpMatrix, 0)
+        GLES30.glUniform1f(wWUAmbient, waterAmbient)
+        GLES30.glUniform1f(wWUTime, elapsed)
+        GLES30.glUniform4fv(wWULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
+        GLES30.glUniform1i(wWULightCount, cachedLightCount)
+        GLES30.glEnable(GLES30.GL_BLEND)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+        GLES30.glDepthMask(false)
+        for ((key, mesh) in waterMeshes) {
+            val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
+            if (!isChunkInFrustum(kcx, kcy, kcz)) continue
+            val offX = (kcx.toDouble() * CHUNK_SIZE - camera.x).toFloat()
+            val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
+            val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
+            GLES30.glUniform3f(wWUChunkOffset, offX, offY, offZ)
+            mesh.draw(wWAPos, wWAUv)
+        }
+        GLES30.glDepthMask(true)
+        GLES30.glDisable(GLES30.GL_BLEND)
 
         posCallback?.invoke(camera.posString())
 
@@ -1015,11 +1113,14 @@ internal class CaveRenderer(
         for ((ncx, ncy, ncz) in affectedChunks) {
             val key = world.chunkKey(ncx, ncy, ncz)
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
-            val verts = MeshBuilder.build(chunk, world)
+            val verts      = MeshBuilder.build(chunk, world)
+            val waterVerts = MeshBuilder.buildWater(chunk, world)
             meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+            if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(waterVerts)
+            else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
             if (ncy in 0..9) {
-                lodCache?.invalidate(ncx, ncz)   // heightmap obsolète : forcer la reconstruction
+                lodCache?.invalidate(ncx, ncz)
                 scheduleLodBuild(ncx, ncz)
             }
         }
@@ -1046,7 +1147,7 @@ internal class CaveRenderer(
 
         repeat(MINE_REACH * 4) {
             val b = worldBlockAt(bx, by, bz)
-            if (b != AIR) return RayHit(bx, by, bz, fnx, fny, fnz)
+            if (b != AIR && !isWater(b)) return RayHit(bx, by, bz, fnx, fny, fnz)
             when {
                 tMaxX < tMaxY && tMaxX < tMaxZ -> { fnx = -stepX; fny = 0; fnz = 0; bx += stepX; tMaxX += tDX }
                 tMaxY < tMaxZ                  -> { fnx = 0; fny = -stepY; fnz = 0; by += stepY; tMaxY += tDY }
@@ -1306,10 +1407,15 @@ internal class CaveRenderer(
 
     // ── Cycle jour/nuit ───────────────────────────────────────────────────────
 
+    var dayNightInverted = false
+
+    fun toggleDayNight() { dayNightInverted = !dayNightInverted }
+
     private fun dayFraction(): Float {
         val cal = Calendar.getInstance()
         val sec = cal.get(Calendar.HOUR_OF_DAY) * 3600 + cal.get(Calendar.MINUTE) * 60 + cal.get(Calendar.SECOND)
-        return sec / 86400f
+        val base = sec / 86400f
+        return if (dayNightInverted) (base + 0.5f) % 1f else base
     }
 
     private fun lerpF(a: Float, b: Float, t: Float) = a + (b - a) * t.coerceIn(0f, 1f)
@@ -1511,7 +1617,12 @@ internal class CaveRenderer(
         val yawRad = Math.toRadians(camera.yaw.toDouble())
         val fX = sin(yawRad).toFloat(); val fZ = cos(yawRad).toFloat()
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
-        val hSpeed = if (onGround) 7f * dt else 4f * dt
+        val inWater = isBodyInWater()
+        val hSpeed = when {
+            inWater  -> 3f * dt
+            onGround -> 7f * dt
+            else     -> 4f * dt
+        }
         val dx = (fX * touch.moveForward * hSpeed - rX * touch.moveRight * hSpeed).toDouble()
         val dz = (fZ * touch.moveForward * hSpeed - rZ * touch.moveRight * hSpeed).toDouble()
         val jumpPressed = touch.flyUp && !prevFlyUp
@@ -1519,13 +1630,12 @@ internal class CaveRenderer(
 
         if (!collidesAt(camera.x + dx, camera.y, camera.z)) {
             camera.x += dx
-        } else if (onGround && dx != 0.0 && !collidesAt(camera.x + dx, camera.y + 1.0, camera.z)) {
+        } else if ((onGround || inWater) && dx != 0.0 && !collidesAt(camera.x + dx, camera.y + 1.0, camera.z)) {
             if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
-            // pas de déplacement horizontal : le joueur monte d'abord, puis avance naturellement
         }
         if (!collidesAt(camera.x, camera.y, camera.z + dz)) {
             camera.z += dz
-        } else if (onGround && dz != 0.0 && !collidesAt(camera.x, camera.y + 1.0, camera.z + dz)) {
+        } else if ((onGround || inWater) && dz != 0.0 && !collidesAt(camera.x, camera.y + 1.0, camera.z + dz)) {
             if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
         }
         if (stepUpRemaining > 0.0) {
@@ -1536,10 +1646,25 @@ internal class CaveRenderer(
             } else {
                 stepUpRemaining = 0.0
             }
-            // Physique verticale suspendue pendant l'animation : la gravité reprendrait
-            // sinon le joueur sur le bloc du bas via le binary search de landing.
             velocityY = 0f
             onGround = (stepUpRemaining == 0.0)
+        } else if (inWater) {
+            // Physique eau : gravité réduite, nager vers le haut en appuyant saut
+            if (touch.flyUp) velocityY = (velocityY + 5f * dt).coerceAtMost(3f)
+            velocityY -= 3f * dt
+            velocityY = velocityY.coerceAtLeast(-2f)
+            val dy = (velocityY * dt).toDouble()
+            if (!collidesAt(camera.x, camera.y + dy, camera.z)) {
+                camera.y += dy
+            } else {
+                if (velocityY < 0f) {
+                    var lo = camera.y + dy; var hi = camera.y
+                    repeat(8) { val mid = (lo + hi) * 0.5; if (collidesAt(camera.x, mid, camera.z)) lo = mid else hi = mid }
+                    camera.y = hi
+                }
+                velocityY = 0f
+            }
+            onGround = false
         } else {
             if (jumpPressed && onGround) { velocityY = 10.5f; onGround = false }
 
@@ -1567,13 +1692,23 @@ internal class CaveRenderer(
 
     // ── Collision ─────────────────────────────────────────────────────────────
 
+    private fun isBodyInWater(): Boolean {
+        val bx = floorInt(camera.x); val by = floorInt(camera.y - 0.9); val bz = floorInt(camera.z)
+        return isWater(worldBlockAt(bx, by, bz))
+    }
+
+    private fun isHeadInWater(): Boolean {
+        val bx = floorInt(camera.x); val by = floorInt(camera.y - 0.1); val bz = floorInt(camera.z)
+        return isWater(worldBlockAt(bx, by, bz))
+    }
+
     private fun collidesAt(px: Double, py: Double, pz: Double): Boolean {
         val x0=floorInt(px-0.3); val x1=floorInt(px+0.29)
         val y0=floorInt(py-1.62); val y1=floorInt(py+0.18)
         val z0=floorInt(pz-0.3); val z1=floorInt(pz+0.29)
         for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
             val b = worldBlockAt(bx, by, bz)
-            if (b != AIR && !isDecoration(b)) return true
+            if (b != AIR && !isDecoration(b) && !isWater(b)) return true
         }
         return false
     }
@@ -1665,8 +1800,10 @@ internal class CaveRenderer(
         scope.cancel()
         storage?.shutdown()
         meshes.values.forEach { it.destroy() }
+        waterMeshes.values.forEach { it.destroy() }
         worldShader?.destroy()
         laserShader?.destroy()
+        waterShader?.destroy()
         enemyRenderer.destroy()
         projRenderer.destroy()
         passiveMobRenderer.destroy()

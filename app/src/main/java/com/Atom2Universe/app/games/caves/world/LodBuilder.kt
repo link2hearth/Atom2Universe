@@ -29,7 +29,7 @@ internal object LodBuilder {
                     if (!chunk.generated) continue
                     for (ly in H - 1 downTo 0) {
                         val b = chunk.blockAt(lx, ly, lz)
-                        if (b == AIR || isDecoration(b)) continue
+                        if (b == AIR || isDecoration(b) || isWater(b)) continue
                         heights[idx]   = cy * H + ly
                         topBlocks[idx] = b
                         break
@@ -56,56 +56,56 @@ internal object LodBuilder {
         }
 
         // ── Faces latérales : comble l'écart de hauteur avec les voisins ─────
-        // packed = layer + faceDir*32 ; faceDir 2/3 → lumière 0.72 (côtés Z),
-        //                               faceDir 4   → lumière 0.62 (côtés X)
+        // packed = layer + faceDir*128 (même encodage que MeshBuilder / VERT_WORLD).
+        // faceDir 2/3 → côtés X (lumière 0.72), faceDir 4/5 → côtés Z (lumière 0.62).
         for (lz in 0 until H) for (lx in 0 until H) {
             val h = heights[lz * H + lx]
             if (h == Int.MIN_VALUE) continue
             val block = topBlocks[lz * H + lx]
             val y1 = (h + 1).toFloat()
 
-            // +X
+            // +X  (faceDir 2 → 0.72)
             val hPX = if (lx < H - 1) heights[lz * H + lx + 1]
                       else adjHeight(cx + 1, cz, 0, lz, world, cache)
             if (hPX != Int.MIN_VALUE && hPX < h) {
                 val yb = (hPX + 1).toFloat()
-                val p = (sideLayer(block) + 4 * 32).toFloat()
+                val p = (sideLayer(block) + 2 * 128).toFloat()
                 val x = (lx + 1).toFloat(); val z = lz.toFloat()
                 buf.add6(x, y1, z,    0f, 0f, p); buf.add6(x, y1, z+1f, 1f, 0f, p)
                 buf.add6(x, yb, z+1f, 1f, 1f, p); buf.add6(x, y1, z,    0f, 0f, p)
                 buf.add6(x, yb, z+1f, 1f, 1f, p); buf.add6(x, yb, z,    0f, 1f, p)
             }
 
-            // -X
+            // -X  (faceDir 3 → 0.72)
             val hMX = if (lx > 0) heights[lz * H + lx - 1]
                       else adjHeight(cx - 1, cz, H - 1, lz, world, cache)
             if (hMX != Int.MIN_VALUE && hMX < h) {
                 val yb = (hMX + 1).toFloat()
-                val p = (sideLayer(block) + 4 * 32).toFloat()
+                val p = (sideLayer(block) + 3 * 128).toFloat()
                 val x = lx.toFloat(); val z = lz.toFloat()
                 buf.add6(x, y1, z+1f, 0f, 0f, p); buf.add6(x, y1, z,    1f, 0f, p)
                 buf.add6(x, yb, z,    1f, 1f, p); buf.add6(x, y1, z+1f, 0f, 0f, p)
                 buf.add6(x, yb, z,    1f, 1f, p); buf.add6(x, yb, z+1f, 0f, 1f, p)
             }
 
-            // +Z
+            // +Z  (faceDir 4 → 0.62)
             val hPZ = if (lz < H - 1) heights[(lz + 1) * H + lx]
                       else adjHeight(cx, cz + 1, lx, 0, world, cache)
             if (hPZ != Int.MIN_VALUE && hPZ < h) {
                 val yb = (hPZ + 1).toFloat()
-                val p = (sideLayer(block) + 2 * 32).toFloat()
+                val p = (sideLayer(block) + 4 * 128).toFloat()
                 val x = lx.toFloat(); val z = (lz + 1).toFloat()
                 buf.add6(x+1f, y1, z, 0f, 0f, p); buf.add6(x,    y1, z, 1f, 0f, p)
                 buf.add6(x,    yb, z, 1f, 1f, p); buf.add6(x+1f, y1, z, 0f, 0f, p)
                 buf.add6(x,    yb, z, 1f, 1f, p); buf.add6(x+1f, yb, z, 0f, 1f, p)
             }
 
-            // -Z
+            // -Z  (faceDir 5 → 0.62)
             val hMZ = if (lz > 0) heights[(lz - 1) * H + lx]
                       else adjHeight(cx, cz - 1, lx, H - 1, world, cache)
             if (hMZ != Int.MIN_VALUE && hMZ < h) {
                 val yb = (hMZ + 1).toFloat()
-                val p = (sideLayer(block) + 3 * 32).toFloat()
+                val p = (sideLayer(block) + 5 * 128).toFloat()
                 val x = lx.toFloat(); val z = lz.toFloat()
                 buf.add6(x,    y1, z, 0f, 0f, p); buf.add6(x+1f, y1, z, 1f, 0f, p)
                 buf.add6(x+1f, yb, z, 1f, 1f, p); buf.add6(x,    y1, z, 0f, 0f, p)
@@ -133,7 +133,7 @@ internal object LodBuilder {
             if (!chunk.generated) continue
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
-                if (b == AIR || isDecoration(b)) continue
+                if (b == AIR || isDecoration(b) || isWater(b)) continue
                 return cy * CHUNK_SIZE + ly
             }
         }

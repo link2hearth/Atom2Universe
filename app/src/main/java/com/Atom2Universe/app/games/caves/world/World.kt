@@ -17,6 +17,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private val SURFACE_CY_MAX = 9
     private val ISLAND_CY_MIN  = 625
     private val SURFACE_BASE_Y = 80.0
+    private val SEA_LEVEL      = 74
 
     fun chunkKey(cx: Int, cy: Int, cz: Int): Long =
         (cx.toLong() and 0xFFFFF) or
@@ -139,7 +140,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             for (lz in 0 until CHUNK_SIZE)
             for (lx in 0 until CHUNK_SIZE) {
                 val below = chunk.blockAt(lx, ly - 1, lz)
-                if (chunk.blockAt(lx, ly, lz) == AIR && below != AIR && !isDecoration(below))
+                if (chunk.blockAt(lx, ly, lz) == AIR && below != AIR && !isDecoration(below) && !isWater(below))
                     return floatArrayOf(
                         chunk.worldX + lx + 0.5f,
                         chunk.worldY + ly + 1.62f,
@@ -148,6 +149,34 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             }
         }
         return floatArrayOf(8.5f, surfaceHeight(8.0, 8.0).toFloat() + 1.62f, 8.5f)
+    }
+
+    // ── Puits / failles vers les caves ───────────────────────────────────────
+
+    // Retourne (lx, lz, rayon) du puits pour la colonne (cx,cz), ou null.
+    // Déterministe : le même résultat pour tous les chunks de la colonne.
+    private fun cavePitAt(cx: Int, cz: Int): Triple<Int, Int, Float>? {
+        val rng = chunkRng(cx * 1031 + 17, 9999, cz * 1009 + 31)
+        if (rng.nextFloat() > 0.14f) return null       // ~14% des colonnes ont un puits
+        val lx = 2 + rng.nextInt(12)
+        val lz = 2 + rng.nextInt(12)
+        val radius = 2.5f + rng.nextFloat() * 2.5f     // ouverture 2.5 – 5 blocs
+        return Triple(lx, lz, radius)
+    }
+
+    // Creuse le puits à travers tout le chunk en entonnoir (large en haut, étroit en bas).
+    private fun carveSurfacePit(chunk: Chunk, lx: Int, lz: Int, topRadius: Float) {
+        val wx = (chunk.worldX + lx).toDouble()
+        val wz = (chunk.worldZ + lz).toDouble()
+        val surfH = surfaceHeight(wx, wz).toInt()
+        for (ly in 0 until CHUNK_SIZE) {
+            val worldY = chunk.worldY + ly
+            if (worldY > surfH + 1) continue            // ne dépasse pas la surface
+            val depthBelow = (surfH - worldY + 1).toFloat()
+            // Entonnoir : large en haut, se resserre jusqu'à 1.5 en profondeur
+            val radius = (topRadius - depthBelow * 0.055f).coerceAtLeast(1.5f)
+            carveInChunk(chunk, lx.toFloat() + 0.5f, ly.toFloat() + 0.5f, lz.toFloat() + 0.5f, radius)
+        }
     }
 
     // ── Pipeline de génération ────────────────────────────────────────────────
@@ -196,7 +225,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val wx = (chunk.worldX + lx).toDouble()
             val wz = (chunk.worldZ + lz).toDouble()
             heights[i]   = surfaceHeight(wx, wz).toInt()
-            topBlocks[i] = surfaceTopBlock(sb, wx, wz)
+            topBlocks[i] = if (heights[i] < SEA_LEVEL) SAND else surfaceTopBlock(sb, wx, wz)
         }
 
         // Remplissage des blocs
@@ -213,10 +242,27 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             }
         }
 
-        // Entrée de grotte : un seul worm du chunk directement en-dessous (cy=0 uniquement)
+        // Puits / failles vers les caves (traverse tous les chunks de la colonne)
+        val pit = cavePitAt(chunk.cx, chunk.cz)
+        if (pit != null) carveSurfacePit(chunk, pit.first, pit.second, pit.third)
+
+        // Remplissage eau sous le niveau de la mer
+        for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+            val i = lz * CHUNK_SIZE + lx; val h = heights[i]
+            if (h >= SEA_LEVEL) continue
+            for (ly in 0 until CHUNK_SIZE) {
+                val worldY = wy + ly
+                if (worldY > h && worldY <= SEA_LEVEL) {
+                    chunk.setBlock(lx, ly, lz, WATER)
+                }
+            }
+        }
+
+        // Entrées de grotte : worms depuis cy=-1 et cy=0 pour multiplier les connexions
         if (chunk.cy == 0) {
             val caveB = BiomeMap.biomeAt(chunk.cx, -1, chunk.cz, seed)
             carveWormsFrom(chunk, chunk.cx, -1, chunk.cz, caveB)
+            carveWormsFrom(chunk, chunk.cx,  0, chunk.cz, caveB)
         }
 
         applyOreVeins(chunk, Biome.DEFAULT)
@@ -613,12 +659,31 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     internal fun surfaceHeight(wx: Double, wz: Double): Double {
         val s = (seed and 0xFFFFF).toDouble() * 0.0001
-        // Bruit 2D : ~35% plus rapide que 3D pour le même résultat (y constant)
-        val h0 = SimplexNoise.noise(wx * 0.0015 + s,         wz * 0.0015)        * 32.0
-        val h1 = SimplexNoise.noise(wx * 0.005  + s + 100.0, wz * 0.005)         * 14.0
-        val h2 = SimplexNoise.noise(wx * 0.015  + s + 200.0, wz * 0.015)         *  6.0
-        val h3 = SimplexNoise.noise(wx * 0.050  + s + 300.0, wz * 0.050)         *  2.5
-        return SURFACE_BASE_Y + h0 + h1 + h2 + h3
+
+        // ── Base lisse (comme l'original) ────────────────────────────────────
+        val h0 = SimplexNoise.noise(wx * 0.0015 + s,         wz * 0.0015) * 32.0
+        val h1 = SimplexNoise.noise(wx * 0.005  + s + 100.0, wz * 0.005)  * 14.0
+        val h2 = SimplexNoise.noise(wx * 0.015  + s + 200.0, wz * 0.015)  *  6.0
+        val h3 = SimplexNoise.noise(wx * 0.050  + s + 300.0, wz * 0.050)  *  2.5
+
+        // ── Masque de rugosité 0..1 (zones de ~250 blocs) ────────────────────
+        // Carré → zones lisses majoritaires, rugosité seulement dans les hauts de masque
+        val roughRaw = (SimplexNoise.noise(wx * 0.004 + s + 600.0, wz * 0.004) + 1.0) * 0.5
+        val roughMask = roughRaw * roughRaw   // ≈ 0 dans ~75% des zones, >0.5 dans ~25%
+
+        // Rugosité locale (dénivellés 2-4 blocs) — pondérée par le masque
+        val h4 = SimplexNoise.noise(wx * 0.085 + s + 400.0, wz * 0.085) * 5.5
+        val nRidge = SimplexNoise.noise(wx * 0.022 + s + 500.0, wz * 0.022)
+        val h5 = (abs(nRidge) - 0.45).coerceAtLeast(0.0) * 14.0
+
+        // ── Grandes amplitudes : montagnes géantes et océans (rares ~14% chacun) ──
+        // Très basse fréquence (~1400 blocs par cycle) → features à l'échelle d'un biome
+        val nLarge = SimplexNoise.noise(wx * 0.0007 + s + 700.0, wz * 0.0007)
+        val hLarge = sign(nLarge) * (abs(nLarge) - 0.72).coerceAtLeast(0.0) * 95.0
+        // hLarge ∈ [-27..+27] uniquement dans les zones extrêmes
+
+        return (SURFACE_BASE_Y + h0 + h1 + h2 + h3 + (h4 + h5) * roughMask + hLarge)
+                   .coerceIn(25.0, 148.0)  // plancher océan ~25, plafond montagne 148
     }
 
     private fun surfaceTopBlock(sb: SurfaceBiome, wx: Double, wz: Double): Byte = when (sb) {
@@ -703,7 +768,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             if (rng.nextFloat() > density) continue
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
-                if (b == AIR || isDecoration(b)) continue
+                if (b == AIR || isDecoration(b) || isWater(b)) continue
                 if (ly + 1 >= CHUNK_SIZE || chunk.blockAt(lx, ly + 1, lz) != AIR) break
                 val decor: Byte = when (sb) {
                     SurfaceBiome.ROCKY       -> ROCK

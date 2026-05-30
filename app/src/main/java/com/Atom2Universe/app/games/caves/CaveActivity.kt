@@ -273,6 +273,7 @@ class CaveActivity : ThemedActivity() {
         val tvCoords      = hud.findViewById<TextView>(R.id.cave_tv_coords)
         val btnBack       = hud.findViewById<View>(R.id.cave_btn_back)
         val btnMode       = hud.findViewById<Button>(R.id.cave_btn_mode)
+        val btnDayNight   = hud.findViewById<Button>(R.id.cave_btn_day_night)
         val btnUp         = hud.findViewById<Button>(R.id.cave_btn_up).also    { vBtnUp    = it }
         val btnDown       = hud.findViewById<Button>(R.id.cave_btn_down).also  { vBtnDown  = it }
         val btnLaser      = hud.findViewById<Button>(R.id.cave_btn_laser).also { vBtnLaser = it }
@@ -294,6 +295,10 @@ class CaveActivity : ThemedActivity() {
         btnMode.setOnClickListener {
             renderer.pendingMode =
                 if (renderer.playerMode == PlayerMode.WALK) PlayerMode.SPECTATOR else PlayerMode.WALK
+        }
+        btnDayNight.setOnClickListener {
+            renderer.toggleDayNight()
+            btnDayNight.text = if (renderer.dayNightInverted) "☀" else "🌙"
         }
         renderer.modeCallback = { mode ->
             uiHandler.post { applyModeUi(mode, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace) }

@@ -60,6 +60,9 @@ const val WHEAT4: Byte = 45
 // Biome désert rouge
 const val REDSTONE: Byte = 46  // roche rouge (terracotta), base du biome
 
+// Eau (transparent, non-solide, rendu séparé avec blending)
+const val WATER: Byte = 84
+
 private val DECORATION_TABLE = BooleanArray(256).also { t ->
     for (b in byteArrayOf(ROCK, ROCK_MOSS, MUSHROOM_RED, MUSHROOM_BROWN, MUSHROOM_TAN, TORCH,
                           GRASS_WILD1, GRASS_WILD2, GRASS_WILD3, GRASS_WILD4,
@@ -120,6 +123,13 @@ private val TRANSPARENT_TABLE = BooleanArray(256).also { t ->
 
 /** Blocs transparents : solides mais laissent voir à travers (faces voisines restent visibles). */
 fun isTransparent(block: Byte) = TRANSPARENT_TABLE[block.toInt() and 0xFF]
+
+private val WATER_TABLE = BooleanArray(256).also { t ->
+    t[WATER.toInt() and 0xFF] = true
+}
+
+/** Eau : non-solide, non-décoratif, rendu séparé avec blending. */
+fun isWater(block: Byte) = WATER_TABLE[block.toInt() and 0xFF]
 
 data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 

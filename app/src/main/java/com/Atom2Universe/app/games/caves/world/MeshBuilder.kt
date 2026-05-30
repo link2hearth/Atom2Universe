@@ -28,7 +28,7 @@ internal object MeshBuilder {
         for (ly in 0 until CHUNK_SIZE)
         for (lx in 0 until CHUNK_SIZE) {
             val block = chunk.blockAt(lx, ly, lz)
-            if (block == AIR) continue
+            if (block == AIR || isWater(block)) continue
             val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
 
             if (isDecoration(block)) {
@@ -47,8 +47,8 @@ internal object MeshBuilder {
         return buf.toFloatArray()
     }
 
-    // Voisin "visible" = laisse passer la lumière (air, décor, transparent).
-    private fun isVisible(block: Byte) = block == AIR || isDecoration(block) || isTransparent(block)
+    // Voisin "visible" = laisse passer la lumière (air, décor, transparent, eau).
+    private fun isVisible(block: Byte) = block == AIR || isDecoration(block) || isTransparent(block) || isWater(block)
 
     // Génère la face uniquement si le voisin est visible ET si ce n'est pas le même bloc transparent
     // (évite le Z-fighting entre deux feuilles/vitres adjacentes).
@@ -175,6 +175,42 @@ internal object MeshBuilder {
             add6(x0,y0,z0, 0f,0f, packed); add6(x1,y1,z1, 1f,0f, packed); add6(x2,y2,z2, 1f,1f, packed)
             add6(x0,y0,z0, 0f,0f, packed); add6(x2,y2,z2, 1f,1f, packed); add6(x3,y3,z3, 0f,1f, packed)
         }
+    }
+
+    // Construit le mesh eau d'un chunk : surface (y+0.875) + faces latérales contre l'air.
+    // Rendu séparé avec blending dans CaveRenderer.
+    fun buildWater(chunk: Chunk, world: World): FloatArray {
+        val buf = GrowableFloatArray()
+        for (lz in 0 until CHUNK_SIZE)
+        for (ly in 0 until CHUNK_SIZE)
+        for (lx in 0 until CHUNK_SIZE) {
+            if (chunk.blockAt(lx, ly, lz) != WATER) continue
+            val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
+
+            // Face supérieure : légèrement incrustée (y+0.875), visible uniquement si au-dessus = air
+            val above = world.neighborBlock(chunk, lx, ly + 1, lz)
+            if (above == AIR) {
+                val packed = 0f   // faceDir 0 → éclairage plein
+                buf.quad(x, y+0.875f,z, x+1f,y+0.875f,z, x+1f,y+0.875f,z+1f, x,y+0.875f,z+1f, packed, false)
+            }
+
+            // Face inférieure : visible depuis dessous si voisin est air
+            if (world.neighborBlock(chunk, lx, ly - 1, lz) == AIR) {
+                val packed = 1f * 128f  // faceDir 1 → sous-face
+                buf.quad(x,y,z+1f, x+1f,y,z+1f, x+1f,y,z, x,y,z, packed, false)
+            }
+
+            val sidePacked = 2f * 128f  // faceDir 2 → faces latérales (0.72)
+            if (world.neighborBlock(chunk, lx + 1, ly, lz) == AIR)
+                buf.quad(x+1f,y,z+1f, x+1f,y+0.875f,z+1f, x+1f,y+0.875f,z, x+1f,y,z, sidePacked, true)
+            if (world.neighborBlock(chunk, lx - 1, ly, lz) == AIR)
+                buf.quad(x,y,z, x,y+0.875f,z, x,y+0.875f,z+1f, x,y,z+1f, sidePacked, true)
+            if (world.neighborBlock(chunk, lx, ly, lz + 1) == AIR)
+                buf.quad(x,y,z+1f, x,y+0.875f,z+1f, x+1f,y+0.875f,z+1f, x+1f,y,z+1f, sidePacked, true)
+            if (world.neighborBlock(chunk, lx, ly, lz - 1) == AIR)
+                buf.quad(x+1f,y,z, x+1f,y+0.875f,z, x,y+0.875f,z, x,y,z, sidePacked, true)
+        }
+        return buf.toFloatArray()
     }
 
     private fun GrowableFloatArray.add6(x:Float,y:Float,z:Float, u:Float,v:Float,p:Float) {
