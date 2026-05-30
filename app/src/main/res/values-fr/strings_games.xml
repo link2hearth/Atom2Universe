@@ -143,6 +143,17 @@
     <string name="cave_menu_delete_confirm_msg">Supprimer « %1$s » ? Cette action est irréversible.</string>
     <string name="cave_menu_deleted">Monde supprimé</string>
     <string name="cave_place">■ POSER</string>
+    <string name="cave_menu_controls">Contrôles</string>
+    <string name="cave_controls_editor_title">Configurer les contrôles</string>
+    <string name="cave_controls_save">Sauvegarder</string>
+    <string name="cave_controls_reset">Réinitialiser</string>
+    <string name="cave_controls_reset_confirm">Remettre tous les boutons à leur position et taille par défaut ?</string>
+    <string name="cave_controls_saved">Contrôles sauvegardés</string>
+    <string name="cave_controls_hint">Glissez pour déplacer • Appuyez pour sélectionner</string>
+    <string name="cave_controls_hotbar_mock">— barre d\'objets —</string>
+    <string name="cave_controls_select_hint">Appuyez sur un bouton pour le sélectionner</string>
+    <string name="cave_controls_selected">Sélectionné : %1$s</string>
+    <string name="cave_controls_size">Taille</string>
     <string name="cave_inventory_title">Inventaire</string>
     <string name="cave_inventory_hint">Appuyez sur un bloc pour l\'assigner au slot sélectionné</string>
     <string name="cave_inventory_empty">Votre inventaire est vide</string>

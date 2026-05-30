@@ -30,7 +30,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     fun keyToCy(key: Long): Int { val v = ((key shr 20) and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
     fun keyToCz(key: Long): Int { val v = ((key shr 40) and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
 
-    fun updateAroundPlayer(pcx: Int, pcy: Int, pcz: Int, onNeedGenerate: (Chunk) -> Unit) {
+    fun updateAroundPlayer(pcx: Int, pcy: Int, pcz: Int,
+                           viewDirX: Float = 0f, viewDirZ: Float = 0f,
+                           onNeedGenerate: (Chunk) -> Unit) {
         val toGenerate = mutableListOf<Chunk>()
         val r2 = renderRadiusXZ * renderRadiusXZ
         for (dz in -renderRadiusXZ..renderRadiusXZ)
@@ -49,8 +51,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
         toGenerate.sortBy { c ->
             val dx = c.cx - pcx; val dz = c.cz - pcz; val dy = c.cy - pcy
-            // Priorité horizontale : les chunks au même niveau Y chargent en premier
-            dx * dx + dz * dz + dy * dy * 8
+            val dist = dx * dx + dz * dz + dy * dy * 8
+            // Bonus cône de vision : avance les chunks devant le joueur sans pénaliser les autres
+            val dot = dx * viewDirX + dz * viewDirZ
+            dist - (dot * renderRadiusXZ * 2).toInt()
         }
         toGenerate.forEach(onNeedGenerate)
 

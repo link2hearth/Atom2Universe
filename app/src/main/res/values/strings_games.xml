@@ -143,6 +143,17 @@
     <string name="cave_menu_delete_confirm_msg">Delete \"%1$s\"? This cannot be undone.</string>
     <string name="cave_menu_deleted">World deleted</string>
     <string name="cave_place">■ PLACE</string>
+    <string name="cave_menu_controls">Controls</string>
+    <string name="cave_controls_editor_title">Configure controls</string>
+    <string name="cave_controls_save">Save</string>
+    <string name="cave_controls_reset">Reset</string>
+    <string name="cave_controls_reset_confirm">Reset all buttons to their default position and size?</string>
+    <string name="cave_controls_saved">Controls saved</string>
+    <string name="cave_controls_hint">Drag buttons to reposition • Tap to select</string>
+    <string name="cave_controls_hotbar_mock">— hotbar —</string>
+    <string name="cave_controls_select_hint">Tap a button to select it</string>
+    <string name="cave_controls_selected">Selected: %1$s</string>
+    <string name="cave_controls_size">Size</string>
     <string name="cave_inventory_title">Inventory</string>
     <string name="cave_inventory_hint">Tap a block to assign it to the selected slot</string>
     <string name="cave_inventory_empty">Your inventory is empty</string>

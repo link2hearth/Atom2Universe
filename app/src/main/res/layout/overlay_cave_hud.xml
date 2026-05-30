@@ -6,6 +6,7 @@
 
     <!-- Zone principale (tout sauf hotbar) -->
     <FrameLayout
+        android:id="@+id/cave_game_area"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -86,15 +87,12 @@
                 android:progressTint="#00D4FF" />
         </LinearLayout>
 
-        <!-- JUMP / FLY UP (droite centre haut) -->
+        <!-- JUMP / FLY UP — position appliquée par CaveActivity via CaveControlsPrefs -->
         <Button
             android:id="@+id/cave_btn_up"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="76dp"
-            android:background="#55FFFFFF"
+            android:layout_gravity="top|start"
             android:text="▲"
             android:textColor="#FFFFFF"
             android:textSize="22sp" />
@@ -104,36 +102,28 @@
             android:id="@+id/cave_btn_down"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="76dp"
-            android:background="#55FFFFFF"
+            android:layout_gravity="top|start"
+            android:visibility="gone"
             android:text="▼"
             android:textColor="#FFFFFF"
             android:textSize="22sp" />
 
-        <!-- LASER (bas droit) -->
+        <!-- LASER -->
         <Button
             android:id="@+id/cave_btn_laser"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:background="#66003366"
+            android:layout_gravity="top|start"
             android:text="@string/cave_laser"
             android:textColor="#00D4FF"
             android:textSize="10sp" />
 
-        <!-- PLACE (à gauche du laser) -->
+        <!-- PLACE -->
         <Button
             android:id="@+id/cave_btn_place"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="96dp"
-            android:layout_marginBottom="8dp"
-            android:background="#66336600"
+            android:layout_gravity="top|start"
             android:text="@string/cave_place"
             android:textColor="#88FF44"
             android:textSize="10sp" />

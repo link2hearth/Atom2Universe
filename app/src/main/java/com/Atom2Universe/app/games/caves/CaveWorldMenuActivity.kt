@@ -40,6 +40,9 @@ class CaveWorldMenuActivity : ThemedActivity() {
         findViewById<FloatingActionButton>(R.id.cave_menu_fab_new).setOnClickListener {
             showCreateDialog()
         }
+        findViewById<FloatingActionButton>(R.id.cave_menu_fab_controls).setOnClickListener {
+            startActivity(Intent(this, CaveControlsEditorActivity::class.java))
+        }
     }
 
     override fun onResume() {

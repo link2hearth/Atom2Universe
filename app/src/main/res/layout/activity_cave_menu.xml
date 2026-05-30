@@ -78,4 +78,15 @@
         android:src="@android:drawable/ic_input_add"
         android:contentDescription="@string/cave_menu_new_world" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cave_menu_fab_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="20dp"
+        android:src="@android:drawable/ic_menu_manage"
+        android:contentDescription="@string/cave_menu_controls"
+        app:fabSize="mini"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
+
 </FrameLayout>

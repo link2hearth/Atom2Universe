@@ -12,8 +12,8 @@ internal class Camera(var x: Double = 0.0, var y: Double = 0.0, var z: Double = 
     private val viewMatrix = FloatArray(16)
     private val projMatrix = FloatArray(16)
 
-    private val fwdX get() = sin(Math.toRadians(yaw.toDouble())).toFloat()
-    private val fwdZ get() = cos(Math.toRadians(yaw.toDouble())).toFloat()
+    val fwdX get() = sin(Math.toRadians(yaw.toDouble())).toFloat()
+    val fwdZ get() = cos(Math.toRadians(yaw.toDouble())).toFloat()
     private val rgtX get() = cos(Math.toRadians(yaw.toDouble())).toFloat()
     private val rgtZ get() = -sin(Math.toRadians(yaw.toDouble())).toFloat()
 

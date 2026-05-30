@@ -27,6 +27,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -274,6 +275,13 @@ class CaveActivity : ThemedActivity() {
         val btnDown       = hud.findViewById<Button>(R.id.cave_btn_down).also  { vBtnDown  = it }
         val btnLaser      = hud.findViewById<Button>(R.id.cave_btn_laser).also { vBtnLaser = it }
         val btnPlace      = hud.findViewById<Button>(R.id.cave_btn_place).also { vBtnPlace = it }
+
+        makeCircular(btnUp,    0x55FFFFFF.toInt())
+        makeCircular(btnDown,  0x55FFFFFF.toInt())
+        makeCircular(btnLaser, 0x66003366.toInt())
+        makeCircular(btnPlace, 0x66336600.toInt())
+        applyButtonPositions(hud.findViewById(R.id.cave_game_area))
+
         val miningPanel   = hud.findViewById<LinearLayout>(R.id.cave_mining_panel)
         val tvMiningBlock = hud.findViewById<TextView>(R.id.cave_tv_mining_block)
         val miningBar     = hud.findViewById<ProgressBar>(R.id.cave_mining_progress)
@@ -1001,9 +1009,10 @@ class CaveActivity : ThemedActivity() {
 
     private fun buildHotbarUI(container: LinearLayout) {
         val dp = resources.displayMetrics.density; val sz = (52 * dp).toInt()
+        container.gravity = Gravity.CENTER
         repeat(ACTIVE_SIZE) { i ->
             val slot = FrameLayout(this).apply {
-                layoutParams = LinearLayout.LayoutParams(0, sz, 1f).also { it.setMargins(2, 2, 2, 2) }
+                layoutParams = LinearLayout.LayoutParams(sz, sz).also { it.setMargins(2, 2, 2, 2) }
                 background = slotDrawable(null, false); setOnClickListener { renderer.selectSlot(i) }
             }
             val colorDot = View(this).apply {
@@ -1095,6 +1104,35 @@ class CaveActivity : ThemedActivity() {
         TORCH -> getString(R.string.cave_block_torch)
         PLANK -> getString(R.string.cave_block_plank)
         else -> "?"
+    }
+
+    // ── Boutons action : forme et position ───────────────────────────────────
+
+    private fun makeCircular(btn: Button, bgColor: Int) {
+        btn.background = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(bgColor)
+        }
+    }
+
+    private fun applyButtonPositions(gameArea: FrameLayout) {
+        gameArea.doOnLayout {
+            val w = gameArea.width.toFloat()
+            val h = gameArea.height.toFloat()
+            applyBtnLayout(vBtnUp,    CaveControlsPrefs.Btn.UP,    w, h)
+            applyBtnLayout(vBtnDown,  CaveControlsPrefs.Btn.DOWN,  w, h)
+            applyBtnLayout(vBtnLaser, CaveControlsPrefs.Btn.LASER, w, h)
+            applyBtnLayout(vBtnPlace, CaveControlsPrefs.Btn.PLACE, w, h)
+        }
+    }
+
+    private fun applyBtnLayout(view: View?, btn: CaveControlsPrefs.Btn, parentW: Float, parentH: Float) {
+        view ?: return
+        val dp = resources.displayMetrics.density
+        val sizePx = (CaveControlsPrefs.sizeDp(this, btn) * dp).toInt()
+        view.layoutParams = view.layoutParams.also { it.width = sizePx; it.height = sizePx }
+        view.x = CaveControlsPrefs.xf(this, btn) * parentW - sizePx / 2f
+        view.y = CaveControlsPrefs.yf(this, btn) * parentH - sizePx / 2f
     }
 
     // ── Mode UI ───────────────────────────────────────────────────────────────

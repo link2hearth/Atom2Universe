@@ -113,7 +113,7 @@ internal class CaveRenderer(
     private var cleanupCounter = 0
     private val CLEANUP_INTERVAL = 60   // nettoyage plus fréquent (~2s)
     private val MAX_MESHES = 1200       // cap mémoire : éviction au-delà
-    private val MAX_LIGHTS = 8
+    private val MAX_LIGHTS = 32
     private val lightSources = HashMap<Triple<Int,Int,Int>, Float>()
     private val TARGET_FRAME_NS = 33_333_333L
 
@@ -221,7 +221,7 @@ internal class CaveRenderer(
         precision mediump float;
         uniform sampler2DArray u_tex;
         uniform float u_ambient;
-        uniform vec4 u_lights[8];
+        uniform vec4 u_lights[32];
         uniform int u_lightCount;
         uniform float u_time;
         in vec2 v_uv;
@@ -238,7 +238,7 @@ internal class CaveRenderer(
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
                 float flicker = 1.0 + 0.015 * sin(u_time * 3.1 + float(i) * 2.1);
-                float radius = 14.0 * u_lights[i].w * flicker;
+                float radius = 24.0 * u_lights[i].w * flicker;
                 float d = length(v_worldPos - u_lights[i].xyz);
                 float atten = clamp(1.0 - d / radius, 0.0, 1.0);
                 atten = atten * atten;
@@ -522,7 +522,7 @@ internal class CaveRenderer(
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
         if (cx != lastCx || cy != lastCy || cz != lastCz) {
             lastCx = cx; lastCy = cy; lastCz = cz
-            world.updateAroundPlayer(cx, cy, cz) { chunk -> scheduleChunkBuild(chunk) }
+            world.updateAroundPlayer(cx, cy, cz, camera.fwdX, camera.fwdZ) { chunk -> scheduleChunkBuild(chunk) }
         }
 
         // Drain complet + déduplication : évite que les chunks générés en premier (lointains)
@@ -642,11 +642,13 @@ internal class CaveRenderer(
         val nearLights = lightSources.entries
             .filter { (pos, _) ->
                 val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
-                dx*dx + dy*dy + dz*dz < 32.0 * 32.0
+                dx*dx + dy*dy + dz*dz < 160.0 * 160.0
             }
             .sortedBy { (pos, _) ->
                 val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
-                dx*dx + dy*dy + dz*dz
+                val dist2 = dx*dx + dy*dy + dz*dz
+                val dot = dx * camera.fwdX + dz * camera.fwdZ
+                dist2 - dot * 80.0
             }
             .take(MAX_LIGHTS)
         val lightData = FloatArray(MAX_LIGHTS * 4)
@@ -732,10 +734,11 @@ internal class CaveRenderer(
             if (playerStats.shootTimers[i] <= 0f) {
                 playerStats.shootTimers[i] = playerStats.fireRate
                 val tx = closest.x; val ty = closest.y + closest.baseScale * 0.5; val tz = closest.z
-                val dx = tx - camera.x; val dy = ty - camera.y; val dz = tz - camera.z
+                val spawnY = camera.y + 0.8
+                val dx = tx - camera.x; val dy = ty - spawnY; val dz = tz - camera.z
                 val d = sqrt(dx * dx + dy * dy + dz * dz).coerceAtLeast(0.001)
                 projectiles.add(Projectile(
-                    camera.x, camera.y, camera.z,
+                    camera.x, spawnY, camera.z,
                     dx / d, dy / d, dz / d,
                     PROJ_SPEED, playerStats.damage, playerStats.weapons[i]
                 ))
