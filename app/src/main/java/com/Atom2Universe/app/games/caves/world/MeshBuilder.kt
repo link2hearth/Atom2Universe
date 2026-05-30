@@ -16,6 +16,10 @@ internal object MeshBuilder {
     //   27:rock  28:rock_moss  29:mushroom_red  30:mushroom_brown  31:mushroom_tan
     //  Transitions biome pour faces STONE latérales (rotCW requis) :
     //   32:stone_sand_side  33:stone_snow_side
+    //  Source de lumière :
+    //   34:torch
+    //  Bloc craftable :
+    //   35:plank
 
     fun build(chunk: Chunk, world: World): FloatArray {
         val buf = GrowableFloatArray()
@@ -64,6 +68,7 @@ internal object MeshBuilder {
             ICE       -> 23
             SNOW      -> when (face) { 0 -> 24; 1 -> 6; else -> 25 }
             BRICK_RED -> 26
+            PLANK     -> 35
             else      -> block.toInt() - 1
         }
         // Toutes les faces latérales appliquent rotCW pour que U=horizontal et V=vertical.
@@ -91,10 +96,12 @@ internal object MeshBuilder {
             MUSHROOM_RED   -> 29
             MUSHROOM_BROWN -> 30
             MUSHROOM_TAN   -> 31
+            TORCH          -> 34
             else -> return
         }
         val (margin, h) = when (block) {
             ROCK, ROCK_MOSS -> Pair(0.20f, 0.45f)   // petits cailloux
+            TORCH           -> Pair(0.37f, 0.65f)    // torche fine
             else             -> Pair(0.10f, 0.90f)   // champignons hauts
         }
         val packed = layer.toFloat()  // faceDir=0 → lumière max (top face)

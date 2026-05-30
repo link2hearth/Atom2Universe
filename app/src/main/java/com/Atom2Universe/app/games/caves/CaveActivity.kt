@@ -86,6 +86,8 @@ class CaveActivity : ThemedActivity() {
             MUSHROOM_RED   -> 0xFFCC3322.toInt()
             MUSHROOM_BROWN -> 0xFF886644.toInt()
             MUSHROOM_TAN   -> 0xFFAA8855.toInt()
+            TORCH          -> 0xFFFF9020.toInt()
+            PLANK          -> 0xFFC88237.toInt()
             else           -> 0xFF444444.toInt()
         }
 
@@ -118,7 +120,7 @@ class CaveActivity : ThemedActivity() {
             MUSHROOM_RED   -> "mushroom_red.png"
             MUSHROOM_BROWN -> "mushroom_brown.png"
             MUSHROOM_TAN   -> "mushroom_tan.png"
-            else           -> null
+            else           -> null  // TORCH et PLANK : texture générée en code, pas de fichier asset
         }
 
         private val RECIPES = listOf(
@@ -132,6 +134,8 @@ class CaveActivity : ThemedActivity() {
             CraftingRecipe(listOf(IRON    to 3),            FURNACE,   1),
             CraftingRecipe(listOf(COAL to 4, STONE to 4),  FURNACE,   2),
             CraftingRecipe(listOf(QUARTZ to 2, STONE to 4),BRICK_RED, 8),
+            CraftingRecipe(listOf(WOOD  to 1),              PLANK,     4),
+            CraftingRecipe(listOf(PLANK to 1, COAL to 1),  TORCH,     4),
         )
     }
 
@@ -1088,6 +1092,8 @@ class CaveActivity : ThemedActivity() {
         MUSHROOM_RED -> getString(R.string.cave_block_mushroom_red)
         MUSHROOM_BROWN -> getString(R.string.cave_block_mushroom_brown)
         MUSHROOM_TAN -> getString(R.string.cave_block_mushroom_tan)
+        TORCH -> getString(R.string.cave_block_torch)
+        PLANK -> getString(R.string.cave_block_plank)
         else -> "?"
     }
 

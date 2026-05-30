@@ -128,6 +128,8 @@
     <string name="cave_block_mushroom_red">Champignon rouge</string>
     <string name="cave_block_mushroom_brown">Champignon brun</string>
     <string name="cave_block_mushroom_tan">Champignon beige</string>
+    <string name="cave_block_torch">Torche</string>
+    <string name="cave_block_plank">Planche de bois</string>
     <string name="cave_menu_new_world">Nouveau monde</string>
     <string name="cave_menu_create">Créer</string>
     <string name="cave_menu_world_name_hint">Nom du monde</string>

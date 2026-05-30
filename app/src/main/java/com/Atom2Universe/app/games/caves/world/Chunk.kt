@@ -33,11 +33,14 @@ const val ROCK_MOSS: Byte     = 25
 const val MUSHROOM_RED: Byte  = 26
 const val MUSHROOM_BROWN: Byte = 27
 const val MUSHROOM_TAN: Byte  = 28
+const val TORCH: Byte         = 29
+const val PLANK: Byte         = 30
 
 /** Blocs décoratifs : non-solides, pas de collision, rendu en croix. */
 fun isDecoration(block: Byte) =
     block == ROCK || block == ROCK_MOSS ||
-    block == MUSHROOM_RED || block == MUSHROOM_BROWN || block == MUSHROOM_TAN
+    block == MUSHROOM_RED || block == MUSHROOM_BROWN || block == MUSHROOM_TAN ||
+    block == TORCH
 
 data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 

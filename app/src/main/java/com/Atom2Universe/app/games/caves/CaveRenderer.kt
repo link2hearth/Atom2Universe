@@ -79,6 +79,7 @@ internal class CaveRenderer(
     private var starShader:  ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wUMvp = 0; private var wUTex = 0
     private var wUChunkOffset = 0; private var wUAmbient = 0
+    private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
     private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0
     private var sAPos = 0; private var sABrightness = 0; private var sUMvp = 0
     private var blockTexArray = 0
@@ -112,6 +113,8 @@ internal class CaveRenderer(
     private var cleanupCounter = 0
     private val CLEANUP_INTERVAL = 60   // nettoyage plus fréquent (~2s)
     private val MAX_MESHES = 1200       // cap mémoire : éviction au-delà
+    private val MAX_LIGHTS = 8
+    private val lightSources = HashMap<Triple<Int,Int,Int>, Float>()
     private val TARGET_FRAME_NS = 33_333_333L
 
     // Physique
@@ -162,6 +165,8 @@ internal class CaveRenderer(
         MUSHROOM_RED  to 0.1f,
         MUSHROOM_BROWN to 0.1f,
         MUSHROOM_TAN  to 0.1f,
+        TORCH         to 0.2f,
+        PLANK         to 1.5f,
     )
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
@@ -200,12 +205,14 @@ internal class CaveRenderer(
         out vec2 v_uv;
         out float v_layer;
         out float v_faceDir;
+        out vec3 v_worldPos;
         void main() {
             vec3 worldPos = a_pos + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
             v_uv      = a_uv.xy;
             v_layer   = mod(a_uv.z, 32.0);
             v_faceDir = floor(a_uv.z / 32.0);
+            v_worldPos = worldPos;
         }
     """.trimIndent()
 
@@ -214,16 +221,31 @@ internal class CaveRenderer(
         precision mediump float;
         uniform sampler2DArray u_tex;
         uniform float u_ambient;
+        uniform vec4 u_lights[8];
+        uniform int u_lightCount;
+        uniform float u_time;
         in vec2 v_uv;
         in float v_layer;
         in float v_faceDir;
+        in vec3 v_worldPos;
         out vec4 fragColor;
         void main() {
             vec4 col = texture(u_tex, vec3(v_uv, v_layer));
             if (col.a < 0.5) discard;
             float fd = floor(v_faceDir + 0.5);
-            float light = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
-            fragColor = vec4(col.rgb * light * u_ambient, 1.0);
+            float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
+            vec3 torchColor = vec3(1.0, 0.72, 0.25);
+            vec3 torchContrib = vec3(0.0);
+            for (int i = 0; i < u_lightCount; i++) {
+                float flicker = 1.0 + 0.015 * sin(u_time * 3.1 + float(i) * 2.1);
+                float radius = 14.0 * u_lights[i].w * flicker;
+                float d = length(v_worldPos - u_lights[i].xyz);
+                float atten = clamp(1.0 - d / radius, 0.0, 1.0);
+                atten = atten * atten;
+                torchContrib = max(torchContrib, atten * u_lights[i].w * torchColor);
+            }
+            vec3 lighting = max(vec3(u_ambient), torchContrib);
+            fragColor = vec4(col.rgb * faceLight * lighting, 1.0);
         }
     """.trimIndent()
 
@@ -315,6 +337,9 @@ internal class CaveRenderer(
             wUTex         = it.uniform("u_tex")
             wUChunkOffset = it.uniform("u_chunk_offset")
             wUAmbient     = it.uniform("u_ambient")
+            wULights      = it.uniform("u_lights[0]")
+            wULightCount  = it.uniform("u_lightCount")
+            wUTime        = it.uniform("u_time")
         }
         laserShader = ShaderProgram(VERT_LASER, FRAG_LASER).also {
             it.use()
@@ -405,6 +430,22 @@ internal class CaveRenderer(
         }
     }
 
+    private fun createTorchBitmap(size: Int): android.graphics.Bitmap {
+        val bmp = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bmp)
+        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+        val s = size.toFloat()
+        paint.color = android.graphics.Color.rgb(110, 65, 22)
+        canvas.drawRect(s * 0.38f, s * 0.38f, s * 0.62f, s * 1.0f, paint)
+        paint.color = android.graphics.Color.rgb(220, 95, 15)
+        canvas.drawOval(android.graphics.RectF(s * 0.20f, s * 0.02f, s * 0.80f, s * 0.50f), paint)
+        paint.color = android.graphics.Color.rgb(255, 195, 30)
+        canvas.drawOval(android.graphics.RectF(s * 0.30f, s * 0.08f, s * 0.70f, s * 0.42f), paint)
+        paint.color = android.graphics.Color.rgb(255, 250, 180)
+        canvas.drawOval(android.graphics.RectF(s * 0.40f, s * 0.14f, s * 0.60f, s * 0.32f), paint)
+        return bmp
+    }
+
     private fun loadBlockTextures(): Int {
         val files = listOf(
             "stone.png", "greystone.png", "greysand.png", "stone_coal.png",
@@ -419,8 +460,10 @@ internal class CaveRenderer(
             "stone_sand_side.png", "stone_snow_side.png"
         )
         val am = context.assets
-        val bitmaps = files.map { BitmapFactory.decodeStream(am.open("Cave World/Tiles/$it")) }
+        val bitmaps = files.map { BitmapFactory.decodeStream(am.open("Cave World/Tiles/$it")) }.toMutableList()
         val w = bitmaps[0].width; val h = bitmaps[0].height
+        bitmaps.add(createTorchBitmap(w))                                              // layer 34
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wood_plank.png"))) // layer 35
 
         val ids = IntArray(1)
         GLES30.glGenTextures(1, ids, 0)
@@ -512,6 +555,7 @@ internal class CaveRenderer(
             val chunk = world.getChunkByKey(key) ?: return@repeat
             if (chunk.version == ver) {
                 meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+                refreshChunkLightSources(chunk)
                 if (chunk.cy in 0..9) scheduleLodBuild(chunk.cx, chunk.cz)
             }
         }
@@ -529,6 +573,15 @@ internal class CaveRenderer(
             val loadedKeys = world.allChunks().mapTo(HashSet()) { world.chunkKey(it.cx, it.cy, it.cz) }
             // Supprimer les meshes de chunks déchargés
             meshes.keys.filter { it !in loadedKeys }.forEach { key -> meshes.remove(key)?.destroy() }
+            // Nettoyer les sources de lumière des chunks déchargés
+            if (lightSources.isNotEmpty()) {
+                lightSources.keys.removeAll { (x, y, z) ->
+                    val kcx = Math.floorDiv(x, CHUNK_SIZE)
+                    val kcy = Math.floorDiv(y, CHUNK_SIZE)
+                    val kcz = Math.floorDiv(z, CHUNK_SIZE)
+                    world.chunkKey(kcx, kcy, kcz) !in loadedKeys
+                }
+            }
             // Cap mémoire : éviction des meshes distants uniquement.
             // Les meshes dans la zone full-detail (dx/dz <= renderRadiusXZ) ne sont jamais évincés :
             // leur éviction forcerait une reconstruction en boucle et ferait clignoter le LOD.
@@ -583,6 +636,29 @@ internal class CaveRenderer(
         worldShader?.use()
         GLES30.glUniformMatrix4fv(wUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(wUAmbient, ambientFor(dayT))
+        GLES30.glUniform1f(wUTime, elapsed)
+
+        val camX = camera.x; val camY = camera.y; val camZ = camera.z
+        val nearLights = lightSources.entries
+            .filter { (pos, _) ->
+                val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
+                dx*dx + dy*dy + dz*dz < 32.0 * 32.0
+            }
+            .sortedBy { (pos, _) ->
+                val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
+                dx*dx + dy*dy + dz*dz
+            }
+            .take(MAX_LIGHTS)
+        val lightData = FloatArray(MAX_LIGHTS * 4)
+        nearLights.forEachIndexed { i, (pos, intensity) ->
+            lightData[i*4+0] = (pos.first  + 0.5 - camX).toFloat()
+            lightData[i*4+1] = (pos.second + 0.5 - camY).toFloat()
+            lightData[i*4+2] = (pos.third  + 0.5 - camZ).toFloat()
+            lightData[i*4+3] = intensity
+        }
+        GLES30.glUniform4fv(wULights, nearLights.size.coerceAtLeast(1), lightData, 0)
+        GLES30.glUniform1i(wULightCount, nearLights.size)
+
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D_ARRAY, blockTexArray)
         GLES30.glUniform1i(wUTex, 0)
@@ -788,6 +864,24 @@ internal class CaveRenderer(
         }
     }
 
+    private fun refreshChunkLightSources(chunk: Chunk) {
+        val wx0 = chunk.worldX; val wy0 = chunk.worldY; val wz0 = chunk.worldZ
+        val wxEnd = wx0 + CHUNK_SIZE; val wyEnd = wy0 + CHUNK_SIZE; val wzEnd = wz0 + CHUNK_SIZE
+        lightSources.keys.removeAll { (x, y, z) ->
+            x in wx0 until wxEnd && y in wy0 until wyEnd && z in wz0 until wzEnd
+        }
+        for (ly in 0 until CHUNK_SIZE)
+        for (lz in 0 until CHUNK_SIZE)
+        for (lx in 0 until CHUNK_SIZE) {
+            val intensity = when (chunk.blockAt(lx, ly, lz)) {
+                TORCH -> 1.0f
+                LAVA  -> 0.85f
+                else  -> 0f
+            }
+            if (intensity > 0f) lightSources[Triple(wx0 + lx, wy0 + ly, wz0 + lz)] = intensity
+        }
+    }
+
     private fun forceMeshRebuild(wx: Int, wy: Int, wz: Int) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
@@ -806,6 +900,7 @@ internal class CaveRenderer(
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
             val verts = MeshBuilder.build(chunk, world)
             meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+            refreshChunkLightSources(chunk)
             if (ncy in 0..9) {
                 lodCache?.invalidate(ncx, ncz)   // heightmap obsolète : forcer la reconstruction
                 scheduleLodBuild(ncx, ncz)
