@@ -130,6 +130,12 @@
     <string name="cave_block_mushroom_tan">Champignon beige</string>
     <string name="cave_block_torch">Torche</string>
     <string name="cave_block_plank">Planche de bois</string>
+    <string name="cave_block_wood_plank_white">Planche de bouleau</string>
+    <string name="cave_block_ward_stone">Pierre de garde</string>
+    <string name="cave_wave_incoming">⚔ Vague — %1$d:%2$02d</string>
+    <string name="cave_wave_boss_coming">☠ Boss ! — %1$d:%2$02d</string>
+    <string name="cave_wave_timer">⏱ %1$d:%2$02d</string>
+    <string name="cave_zone_level">Niv %1$d</string>
     <string name="cave_menu_new_world">Nouveau monde</string>
     <string name="cave_menu_create">Créer</string>
     <string name="cave_menu_world_name_hint">Nom du monde</string>

@@ -30,7 +30,9 @@ data class CaveWorldSave(
     var playerMaxHp: Int = 20,
     var playerShield: Int = 0,
     var playerShieldCurrent: Int = 0,
-    var playerWeapons: List<String> = listOf("WHITE_SQUARE")  // "COLOR_VARIANT"
+    var playerWeapons: List<String> = listOf("WHITE_SQUARE"),  // "COLOR_VARIANT"
+    var waveTimer: Float = 0f,
+    var wardStonePositions: List<Pair<Double, Double>> = emptyList()
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -88,6 +90,8 @@ object CaveWorldSaveManager {
         existing.playerShield        = snap.playerShield
         existing.playerShieldCurrent = snap.playerShieldCurrent
         existing.playerWeapons       = snap.playerWeapons
+        existing.waveTimer           = snap.waveTimer
+        existing.wardStonePositions  = snap.wardStonePositions
         persist(context, existing)
     }
 
@@ -128,6 +132,12 @@ object CaveWorldSaveManager {
             val weaponsArr = JSONArray()
             save.playerWeapons.forEach { weaponsArr.put(it) }
             put("playerWeapons", weaponsArr)
+            put("waveTimer", save.waveTimer.toDouble())
+            val wardArr = JSONArray()
+            save.wardStonePositions.forEach { (x, z) ->
+                wardArr.put(JSONObject().apply { put("x", x); put("z", z) })
+            }
+            put("wardStonePositions", wardArr)
         }
         saveFile(context, save.id).writeText(json.toString())
     }
@@ -146,6 +156,13 @@ object CaveWorldSaveManager {
         val weapons: List<String> = if (weaponsArr != null) {
             (0 until weaponsArr.length()).map { weaponsArr.getString(it) }
         } else listOf("WHITE_SQUARE")
+        val wardArr2 = j.optJSONArray("wardStonePositions")
+        val wardStones: List<Pair<Double, Double>> = if (wardArr2 != null) {
+            (0 until wardArr2.length()).mapNotNull { i ->
+                val o = wardArr2.optJSONObject(i) ?: return@mapNotNull null
+                Pair(o.getDouble("x"), o.getDouble("z"))
+            }
+        } else emptyList()
         return CaveWorldSave(
             id = j.getString("id"),
             name = j.getString("name"),
@@ -167,7 +184,9 @@ object CaveWorldSaveManager {
             playerMaxHp = j.optInt("playerMaxHp", 20),
             playerShield = j.optInt("playerShield", 0),
             playerShieldCurrent = j.optInt("playerShieldCurrent", 0),
-            playerWeapons = weapons
+            playerWeapons = weapons,
+            waveTimer = j.optDouble("waveTimer", 0.0).toFloat(),
+            wardStonePositions = wardStones
         )
     }
 }

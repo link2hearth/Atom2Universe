@@ -61,7 +61,14 @@ const val WHEAT4: Byte = 45
 const val REDSTONE: Byte = 46  // roche rouge (terracotta), base du biome
 
 // Eau (transparent, non-solide, rendu séparé avec blending)
-const val WATER: Byte = 84
+const val WATER:      Byte = 84  // source permanente (placée par joueur ou générée)
+const val WATER_FLOW: Byte = 86  // eau qui coule (générée par simulation, temporaire)
+
+// Planches de bouleau blanc (crafté depuis WOOD_WHITE)
+const val WOOD_PLANK_WHITE: Byte = 85
+
+// Bloc de garde (posé par le joueur après avoir tué un boss — crée une zone safe)
+const val WARD_STONE: Byte = 87
 
 private val DECORATION_TABLE = BooleanArray(256).also { t ->
     for (b in byteArrayOf(ROCK, ROCK_MOSS, MUSHROOM_RED, MUSHROOM_BROWN, MUSHROOM_TAN, TORCH,
@@ -125,11 +132,20 @@ private val TRANSPARENT_TABLE = BooleanArray(256).also { t ->
 fun isTransparent(block: Byte) = TRANSPARENT_TABLE[block.toInt() and 0xFF]
 
 private val WATER_TABLE = BooleanArray(256).also { t ->
-    t[WATER.toInt() and 0xFF] = true
+    t[WATER.toInt()      and 0xFF] = true
+    t[WATER_FLOW.toInt() and 0xFF] = true
 }
 
 /** Eau : non-solide, non-décoratif, rendu séparé avec blending. */
 fun isWater(block: Byte) = WATER_TABLE[block.toInt() and 0xFF]
+
+private val FALLING_TABLE = BooleanArray(256).also { t ->
+    for (b in byteArrayOf(SAND, REDSAND, GRAVEL, GRAVEL_DIRT))
+        t[b.toInt() and 0xFF] = true
+}
+
+/** Blocs soumis à la gravité : tombent dans l'air sous eux. */
+fun isFalling(block: Byte) = FALLING_TABLE[block.toInt() and 0xFF]
 
 data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 

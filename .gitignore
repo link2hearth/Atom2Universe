@@ -43,3 +43,4 @@ CLAUDE.md
 app/src/main/assets/billing*.json
 app/src/main/assets/billing*.properties
 play-billing*.json
+/app/src/main/assets/Cave World/Pokemon/

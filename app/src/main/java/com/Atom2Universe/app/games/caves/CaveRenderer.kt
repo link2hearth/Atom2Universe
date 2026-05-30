@@ -56,7 +56,9 @@ internal class CaveRenderer(
         val playerMaxHp: Int = 20,
         val playerShield: Int = 0,
         val playerShieldCurrent: Int = 0,
-        val playerWeapons: List<String> = listOf("WHITE_SQUARE")
+        val playerWeapons: List<String> = listOf("WHITE_SQUARE"),
+        val waveTimer: Float = 0f,
+        val wardStonePositions: List<Pair<Double, Double>> = emptyList()
     )
 
     val camera = Camera(8.0, 8.0, 8.0)
@@ -156,8 +158,22 @@ internal class CaveRenderer(
 
     private var transientVbo = 0
     private var elapsed = 0f
+    private var waterTickAccum   = 0f
+    private var gravityTickAccum = 0f
+
+    private class FallingBlock(val type: Byte, val wx: Int, val wy: Int, val wz: Int) {
+        var timer = 0f
+        val done  get() = timer >= DURATION
+        // ease-in (accélération naturelle) : commence lent, finit vite
+        val visualY get() = wy.toFloat() - (timer / DURATION).let { it * it }
+        companion object { const val DURATION = 0.2f }
+    }
+    private val fallingBlocks = mutableListOf<FallingBlock>()
+    private var fallingVbo = 0
 
     private val HARDNESS = mapOf(
+        WATER      to 0.3f,
+        WATER_FLOW to 0.01f,
         GRASS         to 0.6f,
         LEAVES        to 0.2f,
         WOOD          to 2.0f,
@@ -196,8 +212,9 @@ internal class CaveRenderer(
         WHEAT1        to 0.05f, WHEAT2      to 0.05f,  WHEAT3      to 0.05f, WHEAT4      to 0.05f,
         REDSTONE      to 4.0f,
         LEAVES_ORANGE to 0.2f,
-        WOOD_WHITE    to 2.0f,
-        LEAVES_FALL   to 0.2f,
+        WOOD_WHITE       to 2.0f,
+        LEAVES_FALL      to 0.2f,
+        WOOD_PLANK_WHITE to 1.5f,
     ) + (COTTON_AMBER.toInt()..COTTON_YELLOW.toInt()).associate { it.toByte() to 0.8f }
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
@@ -445,8 +462,12 @@ internal class CaveRenderer(
         projRenderer.onSurfaceCreated(context.assets)
         passiveMobRenderer.onSurfaceCreated(context.assets)
 
-        enemyManager.playerHpCallback = { hp, max -> playerHpCallback?.invoke(hp, max) }
-        enemyManager.shieldCallback   = { cur, max -> shieldCallback?.invoke(cur, max) }
+        enemyManager.playerHpCallback  = { hp, max -> playerHpCallback?.invoke(hp, max) }
+        enemyManager.shieldCallback    = { cur, max -> shieldCallback?.invoke(cur, max) }
+        enemyManager.bossRewardCallback = {
+            inventory[WARD_STONE] = (inventory[WARD_STONE] ?: 0) + 1
+            inventoryCallback?.invoke(inventory.toMap())
+        }
 
         val ids = IntArray(1)
         GLES30.glGenBuffers(1, ids, 0)
@@ -485,6 +506,8 @@ internal class CaveRenderer(
             enemyManager.playerHp            = savedState.playerHp.coerceAtMost(savedState.playerMaxHp)
             enemyManager.playerShieldMax     = savedState.playerShield
             enemyManager.playerShieldCurrent = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
+            enemyManager.waveTimer           = savedState.waveTimer
+            savedState.wardStonePositions.forEach { (x, z) -> enemyManager.wardStoneZones.add(Pair(x, z)) }
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
@@ -517,6 +540,44 @@ internal class CaveRenderer(
                 if (dx * dx + dz * dz <= r * r) scheduleLodBuild(cx, cz)
             }
         }
+    }
+
+    private fun createWardStoneBitmap(size: Int): android.graphics.Bitmap {
+        val bmp = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bmp)
+        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+        val s = size.toFloat()
+        // Base : pierre sombre bleutée
+        paint.color = android.graphics.Color.rgb(35, 30, 70)
+        canvas.drawRect(0f, 0f, s, s, paint)
+        // Veines violettes
+        paint.color = android.graphics.Color.rgb(90, 50, 160)
+        paint.strokeWidth = s * 0.06f; paint.style = android.graphics.Paint.Style.STROKE
+        canvas.drawLine(s * 0.1f, s * 0.3f, s * 0.5f, s * 0.7f, paint)
+        canvas.drawLine(s * 0.6f, s * 0.1f, s * 0.9f, s * 0.6f, paint)
+        canvas.drawLine(s * 0.2f, s * 0.8f, s * 0.7f, s * 0.4f, paint)
+        // Cristal central lumineux
+        paint.style = android.graphics.Paint.Style.FILL
+        paint.color = android.graphics.Color.rgb(150, 90, 255)
+        val cx = s * 0.5f; val cy = s * 0.45f
+        val path = android.graphics.Path().apply {
+            moveTo(cx, cy - s * 0.22f)
+            lineTo(cx + s * 0.14f, cy)
+            lineTo(cx, cy + s * 0.22f)
+            lineTo(cx - s * 0.14f, cy)
+            close()
+        }
+        canvas.drawPath(path, paint)
+        paint.color = android.graphics.Color.rgb(210, 170, 255)
+        val pathInner = android.graphics.Path().apply {
+            moveTo(cx, cy - s * 0.12f)
+            lineTo(cx + s * 0.07f, cy)
+            lineTo(cx, cy + s * 0.12f)
+            lineTo(cx - s * 0.07f, cy)
+            close()
+        }
+        canvas.drawPath(pathInner, paint)
+        return bmp
     }
 
     private fun createTorchBitmap(size: Int): android.graphics.Bitmap {
@@ -583,6 +644,8 @@ internal class CaveRenderer(
                "mint","navy","olive","orange","peach","pink","purple","red","rose","salmon",
                "silver","sky","tan","teal","turquoise","violet","white","yellow")
             .forEach { name -> bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cotton/cotton_$name.png"))) }
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wood_plank_white.png")))  // 94
+        bitmaps.add(createWardStoneBitmap(w))                                                       // 95
 
         val ids = IntArray(1)
         GLES30.glGenTextures(1, ids, 0)
@@ -631,6 +694,18 @@ internal class CaveRenderer(
         camera.update()
 
         elapsed += dt
+
+        waterTickAccum += dt
+        if (waterTickAccum >= 0.25f) {
+            waterTickAccum = 0f
+            world.tickWater(64)
+        }
+
+        gravityTickAccum += dt
+        if (gravityTickAccum >= 0.1f) {
+            gravityTickAccum = 0f
+            world.tickFalling(64)
+        }
 
         if (!gamePaused) {
             updateMining(dt)
@@ -745,7 +820,7 @@ internal class CaveRenderer(
                     heap.offer(key)
                     if (heap.size > toEvict) heap.poll()
                 }
-                while (heap.isNotEmpty()) meshes.remove(heap.poll())?.destroy()
+                while (heap.isNotEmpty()) meshes.remove(heap.poll()!!)?.destroy()
             }
             // Lazy scan : reconstruire les chunks proches visibles qui n'ont plus de mesh
             // (suite à une éviction ou à un OOM lors d'un précédent build).
@@ -771,7 +846,7 @@ internal class CaveRenderer(
                     compareBy { key -> val dx = lodKeyToCx(key) - pcx; val dz = lodKeyToCz(key) - pcz; dx*dx + dz*dz })
                 for (key in lodMeshes.keys) { lodHeap.offer(key); if (lodHeap.size > toEvictLod) lodHeap.poll() }
                 while (lodHeap.isNotEmpty()) {
-                    val key = lodHeap.poll()
+                    val key = lodHeap.poll()!!
                     lodMeshes.remove(key)?.also { it.destroy(); lodGridRemove(key) }
                 }
             }
@@ -895,6 +970,9 @@ internal class CaveRenderer(
 
         // ── Rendu laser + highlight ───────────────────────────────────────────
         renderLaserAndHighlight()
+
+        // ── Blocs en chute (rendu avec world shader encore actif) ────────────
+        drawFallingBlocks(dt)
 
         // ── Passe eau (blending semi-transparent, après géométrie opaque) ─────
         val waterAmbient = if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT)
@@ -1070,8 +1148,19 @@ internal class CaveRenderer(
         if (mineDamage >= 1f) {
             world.setBlock(bx, by, bz, AIR)
             forceMeshRebuild(bx, by, bz)
-            inventory[blockType] = (inventory[blockType] ?: 0) + 1
-            inventoryCallback?.invoke(inventory.toMap())
+            world.enqueueIfFalling(bx, by + 1, bz)
+            when (blockType) {
+                WATER      -> { world.onWaterSourceRemoved(bx, by, bz)
+                                inventory[blockType] = (inventory[blockType] ?: 0) + 1
+                                inventoryCallback?.invoke(inventory.toMap()) }
+                WATER_FLOW -> { /* eau qui coule : pas de drop, pas de re-simulation */ }
+                WARD_STONE -> { enemyManager.wardStoneZones.removeAll { (wx, wz) ->
+                                    wx.toInt() == bx && wz.toInt() == bz }
+                                inventory[blockType] = (inventory[blockType] ?: 0) + 1
+                                inventoryCallback?.invoke(inventory.toMap()) }
+                else       -> { inventory[blockType] = (inventory[blockType] ?: 0) + 1
+                                inventoryCallback?.invoke(inventory.toMap()) }
+            }
             mineTarget = null
             mineDamage = 0f
             miningCallback?.invoke(0f, null)
@@ -1157,6 +1246,100 @@ internal class CaveRenderer(
             if (t > MINE_REACH) return null
         }
         return null
+    }
+
+    // ── Blocs en chute libre (animation 200ms) ───────────────────────────────
+
+    private fun fallingLayer(type: Byte): Int = when (type) {
+        SAND        -> 20
+        REDSAND     -> 22
+        GRAVEL_DIRT -> 42
+        else        -> (type.toInt() and 0xFF) - 1   // GRAVEL (8) → 7
+    }
+
+    private fun drawFallingBlocks(dt: Float) {
+        // Récupérer les nouvelles animations lancées par tickFalling
+        while (true) {
+            val item = world.pendingFallingBlocks.poll() ?: break
+            fallingBlocks.add(FallingBlock(item[3].toByte(), item[0], item[1], item[2]))
+        }
+        if (fallingBlocks.isEmpty()) return
+
+        // Mettre à jour les timers ; poser les blocs qui ont atterri
+        val iter = fallingBlocks.iterator()
+        while (iter.hasNext()) {
+            val fb = iter.next()
+            fb.timer = minOf(fb.timer + dt, FallingBlock.DURATION)
+            if (fb.done) {
+                world.onFallingBlockLanded(fb.wx, fb.wy - 1, fb.wz, fb.type)
+                world.enqueueIfFalling(fb.wx, fb.wy - 1, fb.wz)
+                forceMeshRebuild(fb.wx, fb.wy - 1, fb.wz)
+                iter.remove()
+            }
+        }
+        if (fallingBlocks.isEmpty()) return
+
+        // Construire la géométrie (5 faces par bloc : top + 4 côtés)
+        val floatsPerBlock = 5 * 6 * 6   // 5 faces × 6 sommets × 6 floats
+        val verts = FloatArray(fallingBlocks.size * floatsPerBlock)
+        var vi = 0
+        val camX = camera.x.toFloat(); val camY = camera.y.toFloat(); val camZ = camera.z.toFloat()
+
+        fun v(x: Float, y: Float, z: Float, u: Float, v: Float, p: Float) {
+            verts[vi++] = x - camX; verts[vi++] = y - camY; verts[vi++] = z - camZ
+            verts[vi++] = u; verts[vi++] = v; verts[vi++] = p
+        }
+
+        for (fb in fallingBlocks) {
+            val bx = fb.wx.toFloat(); val bz = fb.wz.toFloat(); val by = fb.visualY
+            val L = fallingLayer(fb.type).toFloat()
+            // Top (face 0)
+            val p0 = L
+            v(bx,   by+1f, bz,   0f,0f,p0); v(bx+1f,by+1f,bz,  1f,0f,p0); v(bx+1f,by+1f,bz+1f,1f,1f,p0)
+            v(bx,   by+1f, bz,   0f,0f,p0); v(bx+1f,by+1f,bz+1f,1f,1f,p0); v(bx,  by+1f,bz+1f,0f,1f,p0)
+            // Est +X (face 2, rotCW)
+            val p2 = 2f*128f+L
+            v(bx+1f,by,  bz+1f,0f,1f,p2); v(bx+1f,by+1f,bz+1f,0f,0f,p2); v(bx+1f,by+1f,bz,1f,0f,p2)
+            v(bx+1f,by,  bz+1f,0f,1f,p2); v(bx+1f,by+1f,bz,   1f,0f,p2); v(bx+1f,by,  bz,1f,1f,p2)
+            // Ouest -X (face 3, rotCW)
+            val p3 = 3f*128f+L
+            v(bx,  by,  bz,   0f,1f,p3); v(bx,  by+1f,bz,   0f,0f,p3); v(bx,  by+1f,bz+1f,1f,0f,p3)
+            v(bx,  by,  bz,   0f,1f,p3); v(bx,  by+1f,bz+1f,1f,0f,p3); v(bx,  by,  bz+1f,1f,1f,p3)
+            // Nord +Z (face 4, rotCW)
+            val p4 = 4f*128f+L
+            v(bx,  by,  bz+1f,0f,1f,p4); v(bx,  by+1f,bz+1f,0f,0f,p4); v(bx+1f,by+1f,bz+1f,1f,0f,p4)
+            v(bx,  by,  bz+1f,0f,1f,p4); v(bx+1f,by+1f,bz+1f,1f,0f,p4); v(bx+1f,by,  bz+1f,1f,1f,p4)
+            // Sud -Z (face 5, rotCW)
+            val p5 = 5f*128f+L
+            v(bx+1f,by,  bz,  0f,1f,p5); v(bx+1f,by+1f,bz,  0f,0f,p5); v(bx,  by+1f,bz,  1f,0f,p5)
+            v(bx+1f,by,  bz,  0f,1f,p5); v(bx,  by+1f,bz,   1f,0f,p5); v(bx,  by,  bz,  1f,1f,p5)
+        }
+
+        val vertCount = vi / 6
+
+        // Upload dans un VBO dédié et dessiner avec le world shader (déjà actif)
+        if (fallingVbo == 0) { val ids = IntArray(1); GLES30.glGenBuffers(1, ids, 0); fallingVbo = ids[0] }
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, fallingVbo)
+        val buf = java.nio.ByteBuffer.allocateDirect(vi * 4)
+            .order(java.nio.ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(verts, 0, vi); buf.position(0)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, vi * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+
+        val stride = 24   // 6 floats × 4 bytes
+        GLES30.glUniform3f(wUChunkOffset, 0f, 0f, 0f)
+        GLES30.glEnableVertexAttribArray(wAPos)
+        GLES30.glVertexAttribPointer(wAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(wAUv)
+        GLES30.glVertexAttribPointer(wAUv,  3, GLES30.GL_FLOAT, false, stride, 12)
+
+        // Polygon offset : pousse l'entité légèrement vers la caméra pour éviter le z-fighting
+        // avec l'ancien chunk mesh pendant sa reconstruction (dure quelques frames).
+        GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL)
+        GLES30.glPolygonOffset(-1f, -1f)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertCount)
+        GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
+
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     // ── Rendu laser + highlight ───────────────────────────────────────────────
@@ -1779,6 +1962,9 @@ internal class CaveRenderer(
         if (isInsidePlayer(px, py, pz)) return
         world.setBlock(px, py, pz, blockType)
         forceMeshRebuild(px, py, pz)
+        if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))
+        if (blockType == WATER) world.onWaterSourcePlaced(px, py, pz)
+        if (isFalling(blockType)) world.enqueueIfFalling(px, py, pz)
         inventory[blockType] = (inventory[blockType] ?: 1) - 1
         if ((inventory[blockType] ?: 0) <= 0) {
             inventory.remove(blockType)

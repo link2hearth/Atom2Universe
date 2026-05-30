@@ -86,9 +86,11 @@ internal object MeshBuilder {
                 isSide && (above == REDSAND || above == SAND || above == AIR) -> 55
                 else -> 54
             }
-            LEAVES_ORANGE -> 56
-            WOOD_WHITE    -> if (face <= 1) 58 else 57
-            LEAVES_FALL   -> 59
+            LEAVES_ORANGE    -> 56
+            WOOD_WHITE       -> if (face <= 1) 58 else 57
+            LEAVES_FALL      -> 59
+            WOOD_PLANK_WHITE -> 94
+            WARD_STONE       -> 95
             in COTTON_AMBER..COTTON_YELLOW -> block.toInt() + 10  // layers 60–93
             else          -> block.toInt() - 1
         }
@@ -184,7 +186,7 @@ internal object MeshBuilder {
         for (lz in 0 until CHUNK_SIZE)
         for (ly in 0 until CHUNK_SIZE)
         for (lx in 0 until CHUNK_SIZE) {
-            if (chunk.blockAt(lx, ly, lz) != WATER) continue
+            if (!isWater(chunk.blockAt(lx, ly, lz))) continue
             val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
 
             // Face supérieure : légèrement incrustée (y+0.875), visible uniquement si au-dessus = air

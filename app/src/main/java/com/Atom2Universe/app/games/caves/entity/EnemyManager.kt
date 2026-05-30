@@ -25,11 +25,16 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     val familyPool: List<String> = ALL_FAMILIES.shuffled(Random(seed)).take(POOL_SIZE)
 
-    // ── État de vague ─────────────────────────────────────────────────────────
+    // ── Timer de vague (0 → WAVE_DURATION secondes) ───────────────────────────
 
-    private enum class WavePhase { WAVE, BOSS_WAIT, BOSS, COOLDOWN }
-    private var phase = WavePhase.WAVE
-    private var phaseTimer: Float
+    var waveTimer: Float = 0f
+    var waveTimerActive: Boolean = false
+    val wardStoneZones: MutableList<Pair<Double, Double>> = mutableListOf()
+
+    var timerCallback:       ((elapsed: Float, active: Boolean, zoneLevel: Int) -> Unit)? = null
+    var bossRewardCallback:  (() -> Unit)? = null
+
+    // ── État de la vague courante ─────────────────────────────────────────────
 
     private var waveIndex = 0
     private var waveFamily = familyPool[0]
@@ -38,18 +43,16 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     private var waveSize = WAVE_SIZE_MIN + Random(seed + 1L).nextInt(WAVE_SIZE_RANGE)
     private var waveSpawned = 0
     private var bossEnemyId = -1
+    private var bossSpawnedThisCycle = false
+    private var bossRewardGiven = false
 
     private var spawnTimer = SPAWN_FIRST_DELAY
     private var playerInvTimer = 0f
 
-    init {
-        phaseTimer = waveSize * SPAWN_INTERVAL
-    }
-
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
         playerInvTimer = (playerInvTimer - dt).coerceAtLeast(0f)
 
-        // Recharge bouclier après délai
+        // Recharge bouclier
         if (playerShieldMax > 0 && playerShieldCurrent < playerShieldMax) {
             shieldRechargeTimer -= dt
             if (shieldRechargeTimer <= 0f) {
@@ -60,57 +63,54 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
         for (e in enemies) if (e.hp > 0) e.animTime += dt
 
+        // Nettoyage des ennemis morts + récompense boss
         enemies.removeAll { e ->
             if (e.hp <= 0) {
-                if (e.id == bossEnemyId) {
+                if (e.id == bossEnemyId && !bossRewardGiven) {
+                    bossRewardGiven = true
                     bossEnemyId = -1
-                    if (phase == WavePhase.BOSS) {
-                        phase = WavePhase.COOLDOWN
-                        phaseTimer = COOLDOWN_DURATION
-                    }
+                    bossRewardCallback?.invoke()
                 }
                 true
             } else false
         }
 
-        phaseTimer -= dt
+        // ── Timer ────────────────────────────────────────────────────────────
+        val inSafe = isInSafeZone(px, pz)
+        waveTimerActive = !inSafe
 
-        when (phase) {
-            WavePhase.WAVE -> {
-                if (waveSpawned < waveSize) {
-                    spawnTimer -= dt
-                    if (spawnTimer <= 0f) {
-                        spawnTimer = SPAWN_INTERVAL
-                        trySpawnWaveEnemy(px, py, pz)
-                    }
-                }
-                if (phaseTimer <= 0f) {
-                    phase = WavePhase.BOSS_WAIT
-                    phaseTimer = BOSS_INTRO_DELAY
-                }
+        if (waveTimerActive) {
+            waveTimer += dt
+            if (waveTimer >= WAVE_DURATION) {
+                waveTimer = 0f
+                advanceCycle()
             }
-            WavePhase.BOSS_WAIT -> {
-                if (phaseTimer <= 0f) trySpawnBoss(px, py, pz)
+        }
+        timerCallback?.invoke(waveTimer, waveTimerActive, computeLevel(px, pz))
+
+        // ── Spawn de mobs dans la fenêtre 0-SPAWN_WINDOW ─────────────────────
+        if (waveTimerActive && waveTimer < SPAWN_WINDOW && waveSpawned < waveSize) {
+            spawnTimer -= dt
+            if (spawnTimer <= 0f) {
+                spawnTimer = SPAWN_INTERVAL
+                trySpawnWaveEnemy(px, py, pz)
             }
-            WavePhase.BOSS -> {
-                if (phaseTimer <= 0f) {
-                    enemies.removeIf { it.id == bossEnemyId }
-                    bossEnemyId = -1
-                    phase = WavePhase.COOLDOWN
-                    phaseTimer = COOLDOWN_DURATION
-                }
-            }
-            WavePhase.COOLDOWN -> {
-                if (phaseTimer <= 0f) advanceWave()
-            }
+        }
+
+        // ── Spawn du boss à BOSS_SPAWN_TIME ──────────────────────────────────
+        if (waveTimerActive && waveTimer >= BOSS_SPAWN_TIME && !bossSpawnedThisCycle) {
+            bossSpawnedThisCycle = true
+            trySpawnBoss(px, py, pz)
         }
 
         for (e in enemies) updateEnemy(e, dt, px, py, pz)
     }
 
-    private fun advanceWave() {
+    private fun advanceCycle() {
         enemies.clear()
         bossEnemyId = -1
+        bossSpawnedThisCycle = false
+        bossRewardGiven = false
         waveIndex++
         val idx = waveIndex % POOL_SIZE
         waveFamily = familyPool[idx]
@@ -119,24 +119,23 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         waveSize = WAVE_SIZE_MIN + rng.nextInt(WAVE_SIZE_RANGE)
         waveSpawned = 0
         spawnTimer = SPAWN_FIRST_DELAY
-        phase = WavePhase.WAVE
-        phaseTimer = waveSize * SPAWN_INTERVAL
     }
 
-    // Spawn libre : pas de contrainte de terrain, pas en-dessous du joueur
+    // Spawn directement à côté du joueur (3-6 blocs), état CHASE immédiat
     private fun trySpawnWaveEnemy(px: Double, py: Double, pz: Double) {
         repeat(20) {
             val angle = rng.nextFloat() * 2 * PI.toFloat()
-            val dist  = 12.0 + rng.nextFloat() * 4.0
+            val dist  = 3.0 + rng.nextFloat() * 3.0
             val sx = px + cos(angle) * dist
             val sz = pz + sin(angle) * dist
-            if (distFromSpawnChunks(sx, sz) < SAFE_ZONE_CHUNKS) return@repeat
-            val sy = py + rng.nextFloat() * 10f - 2f
+            if (!canSpawnAt(sx, sz)) return@repeat
+            val sy = py + rng.nextFloat() * 2f - 0.5f
             val e = Enemy(nextId++, waveType, sx, sy, sz)
             e.spriteFamily = waveFamily
             e.familyRow    = waveFamilyRow
             e.level        = computeLevel(sx, sz)
             e.hp           = e.maxHp
+            e.state        = EnemyState.CHASE
             enemies.add(e)
             waveSpawned++
             return
@@ -146,25 +145,41 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     private fun trySpawnBoss(px: Double, py: Double, pz: Double) {
         repeat(30) {
             val angle = rng.nextFloat() * 2 * PI.toFloat()
-            val dist  = 12.0 + rng.nextFloat() * 4.0
+            val dist  = 5.0 + rng.nextFloat() * 3.0
             val sx = px + cos(angle) * dist
             val sz = pz + sin(angle) * dist
-            if (distFromSpawnChunks(sx, sz) < SAFE_ZONE_CHUNKS) return@repeat
-            val sy = py + rng.nextFloat() * 10f - 2f
+            if (!canSpawnAt(sx, sz)) return@repeat
+            val sy = py + rng.nextFloat() * 2f - 0.5f
             val e = Enemy(nextId++, EnemyType.ZOMBIE, sx, sy, sz)
             e.spriteFamily = waveFamily
             e.familyRow    = waveFamilyRow
             e.isBoss       = true
             e.level        = computeLevel(sx, sz).coerceAtLeast(1)
             e.hp           = e.maxHp
-            bossEnemyId = e.id
-            phase       = WavePhase.BOSS
-            phaseTimer  = BOSS_MAX_DURATION
+            e.state        = EnemyState.CHASE
+            bossEnemyId    = e.id
             enemies.add(e)
             return
         }
-        phase      = WavePhase.COOLDOWN
-        phaseTimer = COOLDOWN_DURATION
+    }
+
+    private fun isInSafeZone(px: Double, pz: Double): Boolean {
+        if (distFromSpawnChunks(px, pz) < SAFE_ZONE_CHUNKS) return true
+        return wardStoneZones.any { (wx, wz) ->
+            val dX = (px - wx) / CHUNK_SIZE
+            val dZ = (pz - wz) / CHUNK_SIZE
+            sqrt(dX * dX + dZ * dZ) < WARD_SAFE_RADIUS
+        }
+    }
+
+    private fun canSpawnAt(sx: Double, sz: Double): Boolean {
+        if (distFromSpawnChunks(sx, sz) < SAFE_ZONE_CHUNKS) return false
+        if (wardStoneZones.any { (wx, wz) ->
+            val dX = (sx - wx) / CHUNK_SIZE
+            val dZ = (sz - wz) / CHUNK_SIZE
+            sqrt(dX * dX + dZ * dZ) < WARD_SAFE_RADIUS
+        }) return false
+        return true
     }
 
     private fun distFromSpawnChunks(x: Double, z: Double): Double {
@@ -230,12 +245,10 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         }
 
         if (e.type.flies) {
-            // Les volants flottent vers la hauteur du joueur
             val targetVY = ((py - 0.9 - e.y) * 4.0).coerceIn(-8.0, 8.0)
             e.velY += (targetVY - e.velY) * (dt * 4.0)
             e.y += e.velY * dt
         } else {
-            // Gravité + snap au sol pour les mobs terrestres
             e.velY = (e.velY - GRAVITY * dt).coerceAtLeast(MAX_FALL.toDouble())
             val newY = e.y + e.velY * dt
             val ground = world.groundBelow(e.x, e.z, newY + 1.0)
@@ -250,7 +263,6 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         }
     }
 
-    // Déplacement sans collision bloc — les mobs traversent les murs
     private fun move(e: Enemy, dx: Double, dz: Double) {
         e.x += dx
         e.z += dz
@@ -313,19 +325,21 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     }
 
     companion object {
-        const val POOL_SIZE            = 32
-        const val SPAWN_INTERVAL       = 10f
-        const val SPAWN_FIRST_DELAY    = 3f
-        const val BOSS_INTRO_DELAY     = 3f
-        const val BOSS_MAX_DURATION    = 300f
-        const val COOLDOWN_DURATION    = 300f
-        const val ATTACK_CD            = 1.5f
-        const val WAVE_SIZE_MIN        = 10
-        const val WAVE_SIZE_RANGE      = 11
-        const val SAFE_ZONE_CHUNKS     = 5.0
+        const val POOL_SIZE             = 32
+        const val SPAWN_INTERVAL        = 8f
+        const val SPAWN_FIRST_DELAY     = 1f
+        const val ATTACK_CD             = 1.5f
+        const val WAVE_SIZE_MIN         = 8
+        const val WAVE_SIZE_RANGE       = 8
+        const val SAFE_ZONE_CHUNKS      = 5.0
+        const val WARD_SAFE_RADIUS      = 5.0   // chunks, même rayon que spawn safe
         const val SHIELD_RECHARGE_DELAY = 10f
-        const val GRAVITY   = 20f
-        const val MAX_FALL  = -20f
+        const val GRAVITY               = 20f
+        const val MAX_FALL              = -20f
+
+        const val WAVE_DURATION  = 300f   // 5 minutes par cycle
+        const val SPAWN_WINDOW   = 45f    // mobs dans les 45 premières secondes
+        const val BOSS_SPAWN_TIME = 45f   // boss spawn à 45s
 
         val ALL_FAMILIES = listOf(
             "amg1", "amg2", "amg3", "amg4",

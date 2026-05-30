@@ -130,6 +130,12 @@
     <string name="cave_block_mushroom_tan">Tan Mushroom</string>
     <string name="cave_block_torch">Torch</string>
     <string name="cave_block_plank">Wood Plank</string>
+    <string name="cave_block_wood_plank_white">Birch Plank</string>
+    <string name="cave_block_ward_stone">Ward Stone</string>
+    <string name="cave_wave_incoming">⚔ Wave — %1$d:%2$02d</string>
+    <string name="cave_wave_boss_coming">☠ Boss! — %1$d:%2$02d</string>
+    <string name="cave_wave_timer">⏱ %1$d:%2$02d</string>
+    <string name="cave_zone_level">Lvl %1$d</string>
     <string name="cave_menu_new_world">New World</string>
     <string name="cave_menu_create">Create</string>
     <string name="cave_menu_world_name_hint">World name</string>

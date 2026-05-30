@@ -132,23 +132,100 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     fun findSpawnPoint(): FloatArray {
         val approxCy = (surfaceHeight(8.0, 8.0) / CHUNK_SIZE).toInt()
+
+        // Prégenère les chunks dans le rayon de recherche
+        for (dcy in 0 downTo -2) for (dcz in -1..1) for (dcx in -1..1)
+            pregenerateChunk(dcx, (approxCy + dcy).coerceIn(0, SURFACE_CY_MAX), dcz)
+
+        // Cherche un sol solide (non eau) dans un carré 32×32 centré sur (8,8)
         for (dcy in 0 downTo -2) {
             val cyCand = approxCy + dcy
             if (cyCand !in 0..SURFACE_CY_MAX) continue
-            val chunk = pregenerateChunk(0, cyCand, 0)
-            for (ly in CHUNK_SIZE - 1 downTo 1)
-            for (lz in 0 until CHUNK_SIZE)
-            for (lx in 0 until CHUNK_SIZE) {
-                val below = chunk.blockAt(lx, ly - 1, lz)
-                if (chunk.blockAt(lx, ly, lz) == AIR && below != AIR && !isDecoration(below) && !isWater(below))
-                    return floatArrayOf(
-                        chunk.worldX + lx + 0.5f,
-                        chunk.worldY + ly + 1.62f,
-                        chunk.worldZ + lz + 0.5f
-                    )
+            for (dz in -16..16) for (dx in -16..16) {
+                val wx = 8 + dx; val wz = 8 + dz
+                val chx = Math.floorDiv(wx, CHUNK_SIZE)
+                val chz = Math.floorDiv(wz, CHUNK_SIZE)
+                val chunk = getChunk(chx, cyCand, chz) ?: continue
+                val lx = wx - chx * CHUNK_SIZE
+                val lz = wz - chz * CHUNK_SIZE
+                for (ly in CHUNK_SIZE - 1 downTo 1) {
+                    val below = chunk.blockAt(lx, ly - 1, lz)
+                    if (chunk.blockAt(lx, ly, lz) == AIR
+                        && below != AIR && !isDecoration(below) && !isWater(below))
+                        return floatArrayOf(wx + 0.5f, chunk.worldY + ly + 1.62f, wz + 0.5f)
+                }
             }
         }
-        return floatArrayOf(8.5f, surfaceHeight(8.0, 8.0).toFloat() + 1.62f, 8.5f)
+
+        // Aucun sol solide trouvé → île artificielle
+        return buildSpawnIsland()
+    }
+
+    /** Construit une petite île avec un arbre au niveau de la mer et retourne la position de spawn. */
+    private fun buildSpawnIsland(): FloatArray {
+        val ox = 8; val oz = 8
+        val topY = SEA_LEVEL  // surface de l'île au niveau de la mer
+
+        // Prégenère tous les chunks couverts par l'île et l'arbre
+        val botCy = Math.floorDiv(topY - 4, CHUNK_SIZE)
+        val treeCy = Math.floorDiv(topY + 9, CHUNK_SIZE)
+        for (cy in botCy..treeCy) for (dcz in -1..1) for (dcx in -1..1)
+            pregenerateChunk(dcx, cy, dcz)
+
+        // Île 5×5 : 2 couches de pierre, 1 de terre, 1 d'herbe
+        for (dz in -2..2) for (dx in -2..2) {
+            val wx = ox + dx; val wz = oz + dz
+            setBlockRaw(wx, topY - 3, wz, STONE)
+            setBlockRaw(wx, topY - 2, wz, STONE)
+            setBlockRaw(wx, topY - 1, wz, DIRT)
+            setBlockRaw(wx, topY,     wz, GRASS)
+            // Efface l'eau au-dessus de l'île (WATER_FLOW peut occuper ces cases)
+            for (dy in 1..9) {
+                if (isWater(rawBlockAt(wx, topY + dy, wz))) setBlockRaw(wx, topY + dy, wz, AIR)
+            }
+        }
+
+        // Tronc (hauteur 4)
+        val trunkBase = topY + 1
+        for (dy in 0..3) setBlockRaw(ox, trunkBase + dy, oz, WOOD)
+
+        // Feuilles : couronne 5×5 sur 2 couches + couronne 3×3 + sommet 1×1
+        val lf = trunkBase + 3
+        for (dz in -2..2) for (dx in -2..2) {
+            setBlockRawIfAir(ox + dx, lf,     oz + dz, LEAVES)
+            setBlockRawIfAir(ox + dx, lf + 1, oz + dz, LEAVES)
+        }
+        for (dz in -1..1) for (dx in -1..1) setBlockRawIfAir(ox + dx, lf + 2, oz + dz, LEAVES)
+        setBlockRawIfAir(ox, lf + 3, oz, LEAVES)
+
+        return floatArrayOf(ox + 0.5f, topY + 1 + 1.62f, oz + 0.5f)
+    }
+
+    // Lit un bloc en coordonnées monde sans générer de chunk
+    private fun rawBlockAt(wx: Int, wy: Int, wz: Int): Byte {
+        val cx = Math.floorDiv(wx, CHUNK_SIZE)
+        val cy = Math.floorDiv(wy, CHUNK_SIZE)
+        val cz = Math.floorDiv(wz, CHUNK_SIZE)
+        val chunk = getChunk(cx, cy, cz) ?: return AIR
+        return chunk.blockAt(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE)
+    }
+
+    // Place un bloc directement (bypass "generated" check, pour construction au spawn)
+    private fun setBlockRaw(wx: Int, wy: Int, wz: Int, type: Byte) {
+        val cx = Math.floorDiv(wx, CHUNK_SIZE)
+        val cy = Math.floorDiv(wy, CHUNK_SIZE)
+        val cz = Math.floorDiv(wz, CHUNK_SIZE)
+        val chunk = getChunk(cx, cy, cz) ?: return
+        chunk.setBlock(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE, type)
+        chunk.version++; chunk.meshDirty = true
+        val key = chunkKey(cx, cy, cz)
+        rebuildQueue.add(key)
+        storage?.recordChange(cx, cy, cz,
+            (wx - cx * CHUNK_SIZE) + (wy - cy * CHUNK_SIZE) * CHUNK_SIZE + (wz - cz * CHUNK_SIZE) * CHUNK_SIZE * CHUNK_SIZE, type)
+    }
+
+    private fun setBlockRawIfAir(wx: Int, wy: Int, wz: Int, type: Byte) {
+        if (rawBlockAt(wx, wy, wz) == AIR) setBlockRaw(wx, wy, wz, type)
     }
 
     // ── Puits / failles vers les caves ───────────────────────────────────────
@@ -1087,6 +1164,155 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val n = getChunk(nx, ny, nz) ?: continue
             if (n.generated) { n.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)) }
         }
+    }
+
+    // ── Simulation eau ────────────────────────────────────────────────────────
+
+    // Niveau de propagation pour chaque WATER_FLOW (0 = même niveau que la source, 1-7 = distance horizontale)
+    private val waterFlowLevels = java.util.concurrent.ConcurrentHashMap<Long, Byte>()
+    // File d'attente de propagation : IntArray(4) = [wx, wy, wz, level]
+    val waterSpreadQueue = ConcurrentLinkedQueue<IntArray>()
+
+    private fun waterKey(wx: Int, wy: Int, wz: Int): Long =
+        (wx.toLong() and 0x3FFFFF) or
+        ((wy.toLong() and 0x3FFFFF) shl 22) or
+        ((wz.toLong() and 0x3FFFFF) shl 44)
+
+    /** Appelé quand le joueur pose un bloc WATER source. Lance la propagation. */
+    fun onWaterSourcePlaced(wx: Int, wy: Int, wz: Int) {
+        waterFlowLevels.remove(waterKey(wx, wy, wz))
+        waterSpreadQueue.add(intArrayOf(wx, wy, wz, 0))
+    }
+
+    /** Appelé quand le joueur retire un bloc WATER source. Retire les WATER_FLOW connectés. */
+    fun onWaterSourceRemoved(wx: Int, wy: Int, wz: Int) {
+        val toRemove = ArrayDeque<IntArray>()
+        val seen = HashSet<Long>()
+        val sourcesToRequeue = mutableListOf<IntArray>()
+
+        // BFS depuis les voisins du bloc retiré
+        val startDirs = arrayOf(
+            intArrayOf(0,-1,0), intArrayOf(0,1,0),
+            intArrayOf(1,0,0),  intArrayOf(-1,0,0),
+            intArrayOf(0,0,1),  intArrayOf(0,0,-1)
+        )
+        for (d in startDirs) {
+            val nx = wx + d[0]; val ny = wy + d[1]; val nz = wz + d[2]
+            val k = waterKey(nx, ny, nz)
+            if (!seen.add(k)) continue
+            when (blockAt(nx, ny, nz)) {
+                WATER_FLOW -> toRemove.add(intArrayOf(nx, ny, nz))
+                WATER      -> sourcesToRequeue.add(intArrayOf(nx, ny, nz, 0))
+            }
+        }
+
+        // BFS vers le bas et horizontal pour collecter tous les WATER_FLOW connectés
+        val spreadDirs = arrayOf(
+            intArrayOf(0,-1,0),
+            intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1)
+        )
+        var i = 0
+        while (i < toRemove.size) {
+            val (x, y, z) = toRemove[i].let { Triple(it[0], it[1], it[2]) }
+            i++
+            for (d in spreadDirs) {
+                val nx = x + d[0]; val ny = y + d[1]; val nz = z + d[2]
+                val k = waterKey(nx, ny, nz)
+                if (!seen.add(k)) continue
+                when (blockAt(nx, ny, nz)) {
+                    WATER_FLOW -> toRemove.add(intArrayOf(nx, ny, nz))
+                    WATER      -> sourcesToRequeue.add(intArrayOf(nx, ny, nz, 0))
+                }
+            }
+        }
+
+        // Retirer tous les blocs de flux collectés
+        for (pos in toRemove) {
+            val (x, y, z) = Triple(pos[0], pos[1], pos[2])
+            if (blockAt(x, y, z) == WATER_FLOW) {
+                setBlock(x, y, z, AIR)
+                waterFlowLevels.remove(waterKey(x, y, z))
+            }
+        }
+
+        // Re-lancer la propagation depuis les sources voisines (pour reboucher si besoin)
+        for (src in sourcesToRequeue) waterSpreadQueue.add(src)
+    }
+
+    /** Propage l'eau depuis la file. Appelé chaque tick (~0.25s) depuis le renderer. */
+    fun tickWater(maxOps: Int = 64) {
+        repeat(maxOps) {
+            val item = waterSpreadQueue.poll() ?: return
+            val wx = item[0]; val wy = item[1]; val wz = item[2]; val level = item[3]
+
+            val currentBlock = blockAt(wx, wy, wz)
+            if (!isWater(currentBlock)) return@repeat
+
+            // Tenter de couler vers le bas d'abord (sans incrémenter le niveau)
+            val belowBlock = blockAt(wx, wy - 1, wz)
+            if (belowBlock == AIR) {
+                val key = waterKey(wx, wy - 1, wz)
+                val existing = waterFlowLevels[key]?.toInt()?.and(0xFF)
+                if (existing == null || existing > level) {
+                    setBlock(wx, wy - 1, wz, WATER_FLOW)
+                    waterFlowLevels[key] = level.toByte()
+                    waterSpreadQueue.add(intArrayOf(wx, wy - 1, wz, level))
+                }
+                return@repeat  // coule vers le bas → pas de propagation horizontale ici
+            }
+
+            // Pas de chute possible : propager horizontalement (niveau + 1, max 7)
+            if (level >= 7) return@repeat
+            val nextLevel = level + 1
+            for (d in arrayOf(intArrayOf(1,0), intArrayOf(-1,0), intArrayOf(0,1), intArrayOf(0,-1))) {
+                val nx = wx + d[0]; val nz = wz + d[1]
+                if (blockAt(nx, wy, nz) == AIR) {
+                    val key = waterKey(nx, wy, nz)
+                    val existing = waterFlowLevels[key]?.toInt()?.and(0xFF)
+                    if (existing == null || existing > nextLevel) {
+                        setBlock(nx, wy, nz, WATER_FLOW)
+                        waterFlowLevels[key] = nextLevel.toByte()
+                        waterSpreadQueue.add(intArrayOf(nx, wy, nz, nextLevel))
+                    }
+                }
+            }
+        }
+    }
+
+    // ── Simulation gravité (sable, gravier…) ─────────────────────────────────
+
+    val gravityQueue         = ConcurrentLinkedQueue<IntArray>()  // entrée : positions à vérifier
+    val pendingFallingBlocks = ConcurrentLinkedQueue<IntArray>()  // sortie : [wx, wy, wz, type] → animation CaveRenderer
+    private val fallingDest  = ConcurrentHashMap.newKeySet<Long>() // destinations réservées (évite les collisions)
+
+    /** Vérifie si (wx,wy,wz) est un bloc soumis à la gravité et l'enfile si oui. */
+    fun enqueueIfFalling(wx: Int, wy: Int, wz: Int) {
+        if (isFalling(blockAt(wx, wy, wz))) gravityQueue.add(intArrayOf(wx, wy, wz))
+    }
+
+    /**
+     * Lance les animations de chute (retire le bloc du monde, réserve la destination).
+     * Le renderer anime visuellement et appelle [onFallingBlockLanded] à l'atterrissage.
+     */
+    fun tickFalling(maxOps: Int = 64) {
+        repeat(maxOps) {
+            val item = gravityQueue.poll() ?: return
+            val wx = item[0]; val wy = item[1]; val wz = item[2]
+            val block = blockAt(wx, wy, wz)
+            if (!isFalling(block)) return@repeat
+            val destKey = waterKey(wx, wy - 1, wz)
+            if (blockAt(wx, wy - 1, wz) != AIR || fallingDest.contains(destKey)) return@repeat
+            setBlock(wx, wy, wz, AIR)        // retire du monde immédiatement
+            fallingDest.add(destKey)          // réserve la case d'atterrissage
+            pendingFallingBlocks.add(intArrayOf(wx, wy, wz, block.toInt() and 0xFF))
+            enqueueIfFalling(wx, wy + 1, wz) // le bloc au-dessus suit
+        }
+    }
+
+    /** Appelé par le renderer quand l'animation d'un bloc se termine. */
+    fun onFallingBlockLanded(wx: Int, wy: Int, wz: Int, type: Byte) {
+        fallingDest.remove(waterKey(wx, wy, wz))
+        setBlock(wx, wy, wz, type)
     }
 
     // ── Requêtes de bloc / sol pour les entités ───────────────────────────────

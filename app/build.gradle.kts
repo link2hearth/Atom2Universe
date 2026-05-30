@@ -27,6 +27,7 @@ android {
         // Déclarer explicitement toutes les langues supportées pour l'AAB
         resourceConfigurations += listOf(
             "en",  // Anglais (défaut)
+            
             "fr",  // Français
             "el",  // Grec
             "de",  // Allemand

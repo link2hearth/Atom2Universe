@@ -263,7 +263,7 @@ internal class EnemyRenderer {
     // ── Direction / animation ─────────────────────────────────────────────────
 
     private fun dirFrame(cameraYaw: Float, enemyYaw: Float, animTime: Float): Int {
-        val rel = ((enemyYaw - cameraYaw + 360f) % 360f)
+        val rel = ((enemyYaw - cameraYaw) % 360f + 360f) % 360f
         val dirBase = when {
             rel < 45f || rel >= 315f -> 0   // bk
             rel < 135f               -> 4   // lf
