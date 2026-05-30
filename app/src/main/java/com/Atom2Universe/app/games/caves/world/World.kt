@@ -10,8 +10,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private val inFlight = ConcurrentHashMap.newKeySet<Long>()
 
     val rebuildQueue = ConcurrentLinkedQueue<Long>()
-    val renderRadiusXZ = 12
-    val renderRadiusY  = 5   // couvre cy 0..10 pour un joueur à cy=5 (toute la bande de surface)
+    val renderRadiusXZ     = 12  // rayon XZ commun aux deux modes
+    val renderRadiusYSurface = 5  // plage Y en surface (cylindre) — identique à avant
+    val renderRadiusCave   = 7   // rayon de la sphère souterrain
 
     private val SURFACE_CY_MAX = 9
     private val ISLAND_CY_MIN  = 625
@@ -34,21 +35,39 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                            viewDirX: Float = 0f, viewDirZ: Float = 0f,
                            onNeedGenerate: (Chunk) -> Unit) {
         val toGenerate = mutableListOf<Chunk>()
-        val r2 = renderRadiusXZ * renderRadiusXZ
-        for (dz in -renderRadiusXZ..renderRadiusXZ)
-        for (dy in -renderRadiusY..renderRadiusY)
-        for (dx in -renderRadiusXZ..renderRadiusXZ) {
-            if (dx * dx + dz * dz > r2) continue
-            val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
-            // Ciel vide entre surface et îles flottantes : aucun contenu, inutile de générer.
-            if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
-            val key = chunkKey(cx, cy, cz)
-            if (!chunks.containsKey(key) && inFlight.add(key)) {
-                val chunk = Chunk(cx, cy, cz)
-                chunks[key] = chunk
-                toGenerate.add(chunk)
+        val isSurface = pcy >= 0
+
+        if (isSurface) {
+            // Cylindre : disque XZ + plage Y fixe — simple et stable
+            val rxz = renderRadiusXZ; val ry = renderRadiusYSurface
+            val rxz2 = rxz * rxz
+            for (dz in -rxz..rxz)
+            for (dy in -ry..ry)
+            for (dx in -rxz..rxz) {
+                if (dx * dx + dz * dz > rxz2) continue
+                val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
+                if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
+                val key = chunkKey(cx, cy, cz)
+                if (!chunks.containsKey(key) && inFlight.add(key)) {
+                    val chunk = Chunk(cx, cy, cz); chunks[key] = chunk; toGenerate.add(chunk)
+                }
+            }
+        } else {
+            // Sphère : rayon uniforme en souterrain
+            val r = renderRadiusCave; val r2 = r * r
+            for (dz in -r..r)
+            for (dy in -r..r)
+            for (dx in -r..r) {
+                if (dx * dx + dy * dy + dz * dz > r2) continue
+                val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
+                if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
+                val key = chunkKey(cx, cy, cz)
+                if (!chunks.containsKey(key) && inFlight.add(key)) {
+                    val chunk = Chunk(cx, cy, cz); chunks[key] = chunk; toGenerate.add(chunk)
+                }
             }
         }
+
         toGenerate.sortBy { c ->
             val dx = c.cx - pcx; val dz = c.cz - pcz; val dy = c.cy - pcy
             val dist = dx * dx + dz * dz + dy * dy * 8
@@ -58,13 +77,20 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
         toGenerate.forEach(onNeedGenerate)
 
-        chunks.entries.filter { (_, c) ->
-            // Ne jamais décharger un chunk en cours de génération (inFlight = génération en cours)
-            !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) && (
-                abs(c.cx - pcx) > renderRadiusXZ + 2 ||
-                abs(c.cy - pcy) > renderRadiusY + 2 ||
-                abs(c.cz - pcz) > renderRadiusXZ + 2)
-        }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
+        // Déchargement : bounding-box cylindre en surface, sphère en souterrain
+        if (isSurface) {
+            val rxz = renderRadiusXZ + 2; val ry = renderRadiusYSurface + 2
+            chunks.entries.filter { (_, c) ->
+                !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) && (
+                    abs(c.cx - pcx) > rxz || abs(c.cy - pcy) > ry || abs(c.cz - pcz) > rxz)
+            }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
+        } else {
+            val unloadR2 = (renderRadiusCave + 2).let { it * it }
+            chunks.entries.filter { (_, c) ->
+                val dx = c.cx - pcx; val dy = c.cy - pcy; val dz = c.cz - pcz
+                !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) && dx * dx + dy * dy + dz * dz > unloadR2
+            }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
+        }
     }
 
     fun abandonChunk(chunk: Chunk) {
@@ -137,8 +163,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     private fun generateCave(chunk: Chunk) {
-        val biome = BiomeMap.biomeAt(chunk.cx, chunk.cy, chunk.cz, seed)
-        applyRockLayers(chunk, biome)
+        val bb = BiomeMap.biomeBlendAt(chunk.cx, chunk.cy, chunk.cz, seed)
+        val biome = bb.primary
+        applyRockLayers(chunk, bb)
         carveVoidHalls(chunk)
         for (dcz in -1..1) for (dcy in -1..1) for (dcx in -1..1)
             carveRoomFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz, biome)
@@ -146,9 +173,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             carveWormsFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz, biome)
         applyPockets(chunk, biome)
         applyOreVeins(chunk, biome)
-        applyFloorSurface(chunk, biome)
+        applyFloorSurface(chunk, bb)
         plantTrees(chunk, biome)
-        applyDecorations(chunk, biome)
+        applyDecorations(chunk, bb)
     }
 
     private fun generateSurface(chunk: Chunk) {
@@ -194,7 +221,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
         applyOreVeins(chunk, Biome.DEFAULT)
         plantSurfaceTrees(chunk, sb)
+        plantBirchTrees(chunk, sb)
+        plantSurfaceBushes(chunk, sb)
         applySurfaceDecorations(chunk, sb)
+        applySurfaceVegetation(chunk, sb)
+        placeStructuresInChunk(chunk, sb)
     }
 
     private fun generateIsland(chunk: Chunk) {
@@ -242,20 +273,28 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Roche de base ─────────────────────────────────────────────────────────
 
-    private fun applyRockLayers(chunk: Chunk, biome: Biome) {
+    private fun applyRockLayers(chunk: Chunk, bb: BiomeBlend) {
         val wx = chunk.worldX; val wy = chunk.worldY; val wz = chunk.worldZ
+        // Seuil de bruit : décalé en zone de transition pour lisser la frontière (±blend/2)
+        val blendOffset = bb.blend * 0.09f  // décale progressivement le seuil → "marbling"
         for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             val x = (wx + lx).toDouble(); val y = (wy + ly).toDouble(); val z = (wz + lz).toDouble()
-            val nZone = SimplexNoise.noise(x * 0.012, y * 0.012, z * 0.012)
-            val block: Byte = when (biome) {
-                Biome.DEFAULT        -> if (nZone > 0.20) GRANITE else STONE
-                Biome.LIMESTONE      -> if (nZone > 0.40) QUARTZ  else STONE
-                Biome.GRANITE_ROUGE  -> if (nZone > 0.30) BRICK_RED else GRANITE
-                Biome.MUSHROOM_CAVE  -> STONE
-                Biome.ICE_CAVE       -> if (nZone > -0.08) ICE else STONE
-            }
+            val nZone = SimplexNoise.noise(x * 0.012, y * 0.012, z * 0.012).toFloat()
+            // En zone de transition : on mélange primary et secondary via le même seuil décalé
+            val blockPrimary: Byte = rockBlock(bb.primary,   nZone)
+            val blockSecondary: Byte = rockBlock(bb.secondary, nZone + blendOffset)
+            // On choisit secondary si nZone < (blend - 0.5) pour créer des veines progressives
+            val block = if (bb.blend > 0.01f && nZone < bb.blend - 0.5f) blockSecondary else blockPrimary
             chunk.setBlock(lx, ly, lz, block)
         }
+    }
+
+    private fun rockBlock(biome: Biome, n: Float): Byte = when (biome) {
+        Biome.DEFAULT       -> if (n > 0.20f) GRANITE   else STONE
+        Biome.LIMESTONE     -> if (n > 0.40f) QUARTZ    else STONE
+        Biome.GRANITE_ROUGE -> if (n > 0.30f) BRICK_RED else GRANITE
+        Biome.MUSHROOM_CAVE -> STONE
+        Biome.ICE_CAVE      -> if (n > -0.08f) ICE      else STONE
     }
 
     // ── Grandes salles ────────────────────────────────────────────────────────
@@ -464,9 +503,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Sol des espaces ouverts ───────────────────────────────────────────────
 
-    private fun applyFloorSurface(chunk: Chunk, biome: Biome) {
+    private fun applyFloorSurface(chunk: Chunk, bb: BiomeBlend) {
+        val biome = bb.primary
         val dist = chunkDist(chunk)
-        // Le biome DEFAULT n'applique ses sols herbus que près du spawn
         if (biome == Biome.DEFAULT && dist > 50f) return
 
         val wx = chunk.worldX.toDouble(); val wz = chunk.worldZ.toDouble()
@@ -478,7 +517,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             if (neighborBlock(chunk, lx, ly + 2, lz) != AIR) continue
 
             val x = wx + lx; val z = wz + lz
-            val terrain: Byte = when (biome) {
+            // En zone de transition (blend élevé), intercaler aléatoirement le sol secondaire
+            val useSecondary = bb.blend > 0.05f &&
+                SimplexNoise.noise(x * 0.07 + 555.0, 0.0, z * 0.07) < bb.blend.toDouble() - 0.5
+            val activeBiome = if (useSecondary) bb.secondary else biome
+
+            val terrain: Byte = when (activeBiome) {
                 Biome.DEFAULT -> {
                     val nType = SimplexNoise.noise(x * 0.09, 0.0, z * 0.09)
                     when {
@@ -535,14 +579,16 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Décorations (cross-sprites) ───────────────────────────────────────────
 
-    private fun applyDecorations(chunk: Chunk, biome: Biome) {
+    private fun applyDecorations(chunk: Chunk, bb: BiomeBlend) {
+        val biome = bb.primary
         if (biome != Biome.LIMESTONE && biome != Biome.MUSHROOM_CAVE) return
         val rng = chunkRng(chunk.cx * 19 + 11, chunk.cy * 7 + 3, chunk.cz * 23 + 17)
-        val density = if (biome == Biome.LIMESTONE) 0.12f else 0.16f
+        // En zone de transition, réduire la densité progressivement (fondu sortant)
+        val baseDensity = if (biome == Biome.LIMESTONE) 0.12f else 0.16f
+        val density = baseDensity * (1f - bb.blend * 0.75f)
 
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             if (rng.nextFloat() > density) continue
-            // Cherche le premier sol : bloc solide avec au moins 1 bloc d'air au-dessus
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
                 if (b == AIR || isDecoration(b)) continue
@@ -576,27 +622,39 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     private fun surfaceTopBlock(sb: SurfaceBiome, wx: Double, wz: Double): Byte = when (sb) {
-        SurfaceBiome.DESERT -> if (SimplexNoise.noise(wx * 0.04 + 400.0, wz * 0.04) > 0.2) REDSAND else SAND
-        SurfaceBiome.ROCKY  -> if (SimplexNoise.noise(wx * 0.07 + 500.0, wz * 0.07) > 0.0) GRANITE else STONE
-        SurfaceBiome.PLAINS -> if (SimplexNoise.noise(wx * 0.035 + 600.0, wz * 0.035) > 0.50) SAND else GRASS
-        SurfaceBiome.FOREST -> GRASS
+        SurfaceBiome.DESERT      -> if (SimplexNoise.noise(wx * 0.04 + 400.0, wz * 0.04) > 0.2) REDSAND else SAND
+        SurfaceBiome.ROCKY       -> if (SimplexNoise.noise(wx * 0.07 + 500.0, wz * 0.07) > 0.0) GRANITE else STONE
+        SurfaceBiome.PLAINS      -> if (SimplexNoise.noise(wx * 0.035 + 600.0, wz * 0.035) > 0.50) SAND else GRASS
+        SurfaceBiome.FOREST      -> GRASS
+        SurfaceBiome.BIRCH_FOREST -> GRASS
+        SurfaceBiome.RED_DESERT  -> {
+            val n = SimplexNoise.noise(wx * 0.04 + 800.0, wz * 0.04)
+            when {
+                n > 0.45 -> SAND        // petits patches de sable normal
+                n > 0.30 -> GRAVEL_DIRT // petits patches de terre graveleuse
+                else     -> REDSAND     // sable rouge (base)
+            }
+        }
     }
 
     private fun surfaceDirtBlock(sb: SurfaceBiome): Byte = when (sb) {
-        SurfaceBiome.DESERT -> SAND
-        SurfaceBiome.ROCKY  -> STONE
-        else                -> DIRT
+        SurfaceBiome.DESERT     -> SAND
+        SurfaceBiome.ROCKY      -> STONE
+        SurfaceBiome.RED_DESERT -> REDSAND   // sous-couche rouge
+        else                    -> DIRT
     }
 
     private fun surfaceStoneBlock(sb: SurfaceBiome): Byte = when (sb) {
-        SurfaceBiome.ROCKY -> GRANITE
-        else               -> STONE
+        SurfaceBiome.ROCKY      -> GRANITE
+        SurfaceBiome.RED_DESERT -> REDSTONE  // roche de base rouge
+        else                    -> STONE
     }
 
     // ── Surface : arbres groupés en forêts ────────────────────────────────────
 
     private fun plantSurfaceTrees(chunk: Chunk, sb: SurfaceBiome) {
-        if (sb == SurfaceBiome.DESERT || sb == SurfaceBiome.ROCKY) return
+        if (sb == SurfaceBiome.DESERT || sb == SurfaceBiome.ROCKY ||
+            sb == SurfaceBiome.RED_DESERT || sb == SurfaceBiome.BIRCH_FOREST) return
 
         val rng = chunkRng(chunk.cx * 7 + 3, chunk.cy + 100, chunk.cz * 13 + 5)
         val clusterN = SimplexNoise.noise(
@@ -634,9 +692,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     private fun applySurfaceDecorations(chunk: Chunk, sb: SurfaceBiome) {
         val density = when (sb) {
-            SurfaceBiome.DESERT -> 0.07f
-            SurfaceBiome.ROCKY  -> 0.05f
-            else                -> 0.01f
+            SurfaceBiome.DESERT      -> 0.07f
+            SurfaceBiome.ROCKY       -> 0.05f
+            SurfaceBiome.RED_DESERT  -> 0.04f
+            SurfaceBiome.BIRCH_FOREST -> 0.02f
+            else                     -> 0.01f
         }
         val rng = chunkRng(chunk.cx * 19 + 11, chunk.cy * 7 + 3, chunk.cz * 23 + 17)
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
@@ -646,13 +706,183 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 if (b == AIR || isDecoration(b)) continue
                 if (ly + 1 >= CHUNK_SIZE || chunk.blockAt(lx, ly + 1, lz) != AIR) break
                 val decor: Byte = when (sb) {
-                    SurfaceBiome.ROCKY  -> ROCK
-                    SurfaceBiome.FOREST -> ROCK_MOSS
-                    else                -> if (rng.nextFloat() > 0.5f) ROCK else ROCK_MOSS
+                    SurfaceBiome.ROCKY       -> ROCK
+                    SurfaceBiome.FOREST      -> ROCK_MOSS
+                    SurfaceBiome.RED_DESERT  -> ROCK
+                    SurfaceBiome.BIRCH_FOREST -> ROCK_MOSS
+                    else                     -> if (rng.nextFloat() > 0.5f) ROCK else ROCK_MOSS
                 }
                 chunk.setBlock(lx, ly + 1, lz, decor)
                 break
             }
+        }
+    }
+
+    // ── Arbustes (feuilles orange transparentes) ─────────────────────────────
+
+    // ── Bouleaux (BIRCH_FOREST) ───────────────────────────────────────────────
+
+    private fun plantBirchTrees(chunk: Chunk, sb: SurfaceBiome) {
+        if (sb != SurfaceBiome.BIRCH_FOREST) return
+        val rng = chunkRng(chunk.cx * 23 + 11, chunk.cy + 400, chunk.cz * 43 + 7)
+
+        for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
+            if (rng.nextFloat() > 0.07f) continue
+
+            var grassY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0)
+                if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
+            if (grassY < 0) continue
+
+            // Tronc 8–12, taillé à la hauteur disponible dans le chunk
+            val maxTrunk = CHUNK_SIZE - grassY - 5   // 4 pour les feuilles du haut + 1 de marge
+            val trunkH = (8 + rng.nextInt(5)).coerceAtMost(maxTrunk)
+            if (trunkH < 6) continue
+
+            // Vérifier espace libre pour le tronc
+            var blocked = false
+            for (dy in 1..trunkH + 1)
+                if (chunk.blockAt(lx, grassY + dy, lz) != AIR) { blocked = true; break }
+            if (blocked) continue
+
+            // Tronc
+            for (dy in 1..trunkH) chunk.setBlock(lx, grassY + dy, lz, WOOD_WHITE)
+
+            val topY = grassY + trunkH
+
+            // Gros patch de feuilles au sommet (sphère rayon 2–3)
+            val topR = 2 + rng.nextInt(2)
+            for (dy in -topR..(topR + 1)) for (dz in -topR..topR) for (dx in -topR..topR) {
+                if (dx * dx + (dy - 1) * (dy - 1) + dz * dz > topR * topR) continue
+                val ly = topY + dy; val lx2 = lx + dx; val lz2 = lz + dz
+                if (lx2 !in 0 until CHUNK_SIZE || ly !in 0 until CHUNK_SIZE || lz2 !in 0 until CHUNK_SIZE) continue
+                if (chunk.blockAt(lx2, ly, lz2) == AIR) chunk.setBlock(lx2, ly, lz2, LEAVES_FALL)
+            }
+
+            // Petits patches irréguliers au 1/3 et 2/3 du tronc
+            for (patchFrac in listOf(trunkH / 3, 2 * trunkH / 3)) {
+                val pY = grassY + patchFrac
+                if (pY !in 0 until CHUNK_SIZE) continue
+                for (dz in -2..2) for (dx in -2..2) {
+                    if (abs(dx) + abs(dz) > 2 || (dx == 0 && dz == 0)) continue
+                    if (rng.nextFloat() > 0.55f) continue
+                    val lx2 = lx + dx; val lz2 = lz + dz
+                    if (lx2 in 0 until CHUNK_SIZE && lz2 in 0 until CHUNK_SIZE &&
+                        chunk.blockAt(lx2, pY, lz2) == AIR)
+                        chunk.setBlock(lx2, pY, lz2, LEAVES_FALL)
+                }
+            }
+        }
+    }
+
+    private fun plantSurfaceBushes(chunk: Chunk, sb: SurfaceBiome) {
+        val density = when (sb) {
+            SurfaceBiome.RED_DESERT   -> 0.04f
+            SurfaceBiome.BIRCH_FOREST -> 0.05f
+            else                      -> return
+        }
+        val rng = chunkRng(chunk.cx * 41 + 17, chunk.cy + 300, chunk.cz * 53 + 29)
+
+        for (lz in 1 until CHUNK_SIZE - 1) for (lx in 1 until CHUNK_SIZE - 1) {
+            if (rng.nextFloat() > density) continue
+
+            // Cherche la surface selon le biome
+            var surfaceY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0) {
+                val b = chunk.blockAt(lx, ly, lz)
+                val isGround = when (sb) {
+                    SurfaceBiome.RED_DESERT   -> b == REDSAND || b == SAND || b == GRAVEL_DIRT
+                    SurfaceBiome.BIRCH_FOREST -> b == GRASS
+                    else -> false
+                }
+                if (isGround) {
+                    if (ly + 3 < CHUNK_SIZE && chunk.blockAt(lx, ly + 1, lz) == AIR) surfaceY = ly
+                    break
+                }
+            }
+            if (surfaceY < 0) continue
+
+            val fullBush = rng.nextFloat() > 0.40f
+            if (fullBush) {
+                for ((dx, dz) in listOf(0 to 0, 1 to 0, -1 to 0, 0 to 1, 0 to -1)) {
+                    val bx = lx + dx; val bz = lz + dz
+                    if (bx in 0 until CHUNK_SIZE && bz in 0 until CHUNK_SIZE &&
+                        chunk.blockAt(bx, surfaceY + 1, bz) == AIR)
+                        chunk.setBlock(bx, surfaceY + 1, bz, LEAVES_ORANGE)
+                }
+                if (chunk.blockAt(lx, surfaceY + 2, lz) == AIR)
+                    chunk.setBlock(lx, surfaceY + 2, lz, LEAVES_ORANGE)
+            } else {
+                chunk.setBlock(lx, surfaceY + 1, lz, LEAVES_ORANGE)
+            }
+        }
+    }
+
+    // ── Végétation de surface (herbes folles + blé sauvage) ──────────────────
+
+    private fun applySurfaceVegetation(chunk: Chunk, sb: SurfaceBiome) {
+        if (sb == SurfaceBiome.ROCKY || sb == SurfaceBiome.RED_DESERT) return
+        val rng  = chunkRng(chunk.cx * 31 + 7, chunk.cy + 200, chunk.cz * 37 + 13)
+        val wx0  = chunk.worldX.toDouble()
+        val wz0  = chunk.worldZ.toDouble()
+
+        for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+            if (lz + 1 >= CHUNK_SIZE) continue  // sécurité bord de chunk
+
+            // Premier bloc GRASS avec AIR libre au-dessus
+            var grassY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0) {
+                val b = chunk.blockAt(lx, ly, lz)
+                if (b == AIR || isDecoration(b)) continue
+                if (b == GRASS && ly + 1 < CHUNK_SIZE && chunk.blockAt(lx, ly + 1, lz) == AIR)
+                    grassY = ly
+                break
+            }
+            if (grassY < 0) continue
+
+            val wx = wx0 + lx; val wz = wz0 + lz
+
+            // ── Herbes folles ─────────────────────────────────────────────────
+            val clusterN = SimplexNoise.noise(wx * 0.09 + 300.0, wz * 0.09)
+            val grassChance = when (sb) {
+                SurfaceBiome.PLAINS       -> 0.22f
+                SurfaceBiome.FOREST       -> 0.28f
+                SurfaceBiome.BIRCH_FOREST -> 0.24f
+                SurfaceBiome.DESERT       -> 0.05f
+                else                      -> 0f
+            }
+            if (clusterN > 0.10 && rng.nextFloat() < grassChance) {
+                val decor: Byte = when (sb) {
+                    SurfaceBiome.DESERT -> if (rng.nextFloat() > 0.5f) GRASS_TAN else GRASS_BROWN
+                    SurfaceBiome.FOREST -> when (rng.nextInt(4)) {
+                        0    -> GRASS_BROWN; 1 -> GRASS_TAN
+                        else -> if (rng.nextFloat() > 0.5f) GRASS_WILD1 else GRASS_WILD2
+                    }
+                    SurfaceBiome.BIRCH_FOREST -> when (rng.nextInt(3)) {
+                        0    -> GRASS_BROWN; 1 -> GRASS_TAN; else -> GRASS_WILD3
+                    }
+                    else -> when (rng.nextInt(6)) {
+                        0 -> GRASS_WILD1; 1 -> GRASS_WILD2; 2 -> GRASS_WILD3
+                        3 -> GRASS_WILD4; 4 -> GRASS_BROWN;  else -> GRASS_TAN
+                    }
+                }
+                chunk.setBlock(lx, grassY + 1, lz, decor)
+                continue  // herbe posée → pas de blé au même endroit
+            }
+
+            // ── Blé sauvage (PLAINS uniquement, en patches denses) ───────────
+            if (sb != SurfaceBiome.PLAINS) continue
+            val wheatN = SimplexNoise.noise(wx * 0.045 + 500.0, wz * 0.045)
+            if (wheatN < 0.40 || rng.nextFloat() > 0.55f) continue
+            // Stage basé sur un bruit lent → zones de maturité cohérentes
+            val maturity = SimplexNoise.noise(wx * 0.018 + 700.0, wz * 0.018)
+            val wheat: Byte = when {
+                maturity >  0.30 -> WHEAT4
+                maturity >  0.00 -> WHEAT3
+                maturity > -0.30 -> WHEAT2
+                else             -> WHEAT1
+            }
+            chunk.setBlock(lx, grassY + 1, lz, wheat)
         }
     }
 
@@ -690,6 +920,63 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 if (dx * dx + dy * dy + dz * dz <= round2) target.setBlock(lx, ly, lz, AIR)
             }
         }
+    }
+
+    // ── Structures (maisons, ruines…) ────────────────────────────────────────
+
+    // Espacement : cellule de 10 chunks (~160 blocs), 50 % de chance par cellule.
+    private val STRUCT_SUPER = 10
+
+    private fun placeStructuresInChunk(chunk: Chunk, @Suppress("UNUSED_PARAMETER") sb: SurfaceBiome) {
+        val scx = Math.floorDiv(chunk.cx, STRUCT_SUPER)
+        val scz = Math.floorDiv(chunk.cz, STRUCT_SUPER)
+        for (dscz in -1..1) for (dscx in -1..1) {
+            val sx = scx + dscx; val sz = scz + dscz
+            val rng = structRng(sx, sz)
+            if (rng.nextFloat() > 0.50f) continue
+
+            // Position d'origine de la structure (coin bas-gauche, en coordonnées chunk)
+            val originCx = sx * STRUCT_SUPER + 1 + rng.nextInt(STRUCT_SUPER - 2)
+            val originCz = sz * STRUCT_SUPER + 1 + rng.nextInt(STRUCT_SUPER - 2)
+
+            // Biome à l'emplacement de la structure (pas celui du chunk courant)
+            val originWx = originCx * CHUNK_SIZE
+            val originWz = originCz * CHUNK_SIZE
+            val originSb = BiomeMap.surfaceBiomeAt(
+                (originWx + 7).toDouble(), (originWz + 7).toDouble(), seed)
+            val structDef = when (originSb) {
+                SurfaceBiome.PLAINS, SurfaceBiome.FOREST,
+                SurfaceBiome.BIRCH_FOREST                                        -> StructureData.HOUSE_WOOD
+                SurfaceBiome.ROCKY, SurfaceBiome.DESERT, SurfaceBiome.RED_DESERT -> StructureData.RUINS_STONE
+            }
+
+            // Y = surface au centre de la structure
+            val originWy = surfaceHeight(
+                (originWx + structDef.sizeX / 2).toDouble(),
+                (originWz + structDef.sizeZ / 2).toDouble()
+            ).toInt() + 1
+
+            // Test d'intersection avec ce chunk (AABB)
+            if (chunk.worldX + CHUNK_SIZE <= originWx) continue
+            if (chunk.worldX >= originWx + structDef.sizeX) continue
+            if (chunk.worldZ + CHUNK_SIZE <= originWz) continue
+            if (chunk.worldZ >= originWz + structDef.sizeZ) continue
+            if (chunk.worldY + CHUNK_SIZE <= originWy) continue
+            if (chunk.worldY >= originWy + structDef.sizeY) continue
+
+            // Appliquer les blocs qui tombent dans ce chunk
+            for (blk in structDef.blocks) {
+                val wx = originWx + blk[0]; val wy = originWy + blk[1]; val wz = originWz + blk[2]
+                val lx = wx - chunk.worldX; val ly = wy - chunk.worldY; val lz = wz - chunk.worldZ
+                if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
+                    chunk.setBlock(lx, ly, lz, blk[3].toByte())
+            }
+        }
+    }
+
+    private fun structRng(sx: Int, sz: Int): Random {
+        val s = seed xor (sx.toLong() * 987654321L xor sz.toLong() * 123456789L)
+        return Random(s * 6364136223846793005L + 1442695040888963407L)
     }
 
     private fun superCellRng(sx: Int, sz: Int): Random {
@@ -735,6 +1022,29 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val n = getChunk(nx, ny, nz) ?: continue
             if (n.generated) { n.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)) }
         }
+    }
+
+    // ── Requêtes de bloc / sol pour les entités ───────────────────────────────
+
+    fun blockAt(wx: Int, wy: Int, wz: Int): Byte {
+        val cx = Math.floorDiv(wx, CHUNK_SIZE)
+        val cy = Math.floorDiv(wy, CHUNK_SIZE)
+        val cz = Math.floorDiv(wz, CHUNK_SIZE)
+        val chunk = getChunk(cx, cy, cz) ?: return AIR
+        if (!chunk.generated) return AIR
+        return chunk.blockAt(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE)
+    }
+
+    // Retourne la coordonnée Y du dessus du premier bloc solide sous (wx, wz)
+    // en partant de floor(fromY) vers le bas. Null si rien dans la plage.
+    fun groundBelow(wx: Double, wz: Double, fromY: Double, maxSearch: Int = 16): Double? {
+        val bx = Math.floor(wx).toInt()
+        val bz = Math.floor(wz).toInt()
+        val startY = Math.floor(fromY).toInt()
+        for (by in startY downTo startY - maxSearch) {
+            if (blockAt(bx, by, bz) != AIR) return (by + 1).toDouble()
+        }
+        return null
     }
 
     // ── Voisinage pour le mesh ────────────────────────────────────────────────

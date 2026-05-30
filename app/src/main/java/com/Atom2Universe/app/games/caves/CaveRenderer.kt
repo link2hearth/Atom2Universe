@@ -16,7 +16,9 @@ import com.Atom2Universe.app.games.caves.entity.WeaponVariant
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
+import com.Atom2Universe.app.games.caves.entity.PassiveMobManager
 import com.Atom2Universe.app.games.caves.render.EnemyRenderer
+import com.Atom2Universe.app.games.caves.render.PassiveMobRenderer
 import com.Atom2Universe.app.games.caves.render.ProjectileRenderer
 import com.Atom2Universe.app.games.caves.render.ShaderProgram
 import com.Atom2Universe.app.games.caves.world.*
@@ -68,8 +70,11 @@ internal class CaveRenderer(
     private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
     private val lodBuilding    = ConcurrentHashMap.newKeySet<Long>()
     private val lodUploadQueue = ConcurrentLinkedQueue<Pair<Long, FloatArray>>()
+    private val lodUploadQueueSize = java.util.concurrent.atomic.AtomicInteger(0)
     private val LOD_RADIUS   = 90
     private val MAX_LOD_TILES = 8000
+    private val LOD_SUPER    = 8                           // 8×8 = 64 colonnes par super-tuile
+    private val lodGrid      = HashMap<Long, ArrayList<Long>>() // super-tuile → liste de clés LOD
     private val lodCache = worldId?.let {
         LodCache(java.io.File(context.filesDir, "cave_worlds/$it/lod_cache.bin"))
     }
@@ -102,8 +107,8 @@ internal class CaveRenderer(
     private val billboardBuf = ByteBuffer.allocateDirect(6 * 5 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    private val genDispatcher  = Dispatchers.Default.limitedParallelism(4)
-    private val meshDispatcher = Dispatchers.Default.limitedParallelism(4)
+    private val genDispatcher  = Dispatchers.Default.limitedParallelism(2)
+    private val meshDispatcher = Dispatchers.Default.limitedParallelism(2)
     private val building = ConcurrentHashMap.newKeySet<Long>()
 
     private var lastCx = Int.MAX_VALUE; private var lastCy = Int.MAX_VALUE; private var lastCz = Int.MAX_VALUE
@@ -115,6 +120,12 @@ internal class CaveRenderer(
     private val MAX_MESHES = 1200       // cap mémoire : éviction au-delà
     private val MAX_LIGHTS = 32
     private val lightSources = HashMap<Triple<Int,Int,Int>, Float>()
+    private val lightData = FloatArray(MAX_LIGHTS * 4)       // réutilisé chaque frame
+    private var cachedLightCount = 0
+    private var lightRefreshCounter = 0
+    private var lightsDirty = true
+    private var lastLightCamX = 0.0; private var lastLightCamY = 0.0; private var lastLightCamZ = 0.0
+    private val columnsWithMesh = HashSet<Long>(2048)        // réutilisé chaque frame
     private val TARGET_FRAME_NS = 33_333_333L
 
     // Physique
@@ -167,13 +178,27 @@ internal class CaveRenderer(
         MUSHROOM_TAN  to 0.1f,
         TORCH         to 0.2f,
         PLANK         to 1.5f,
-    )
+        BRICK_GREY    to 3.0f,
+        CACTUS        to 0.4f,
+        GLASS         to 0.3f,
+        GRAVEL_DIRT   to 0.5f,
+        TABLE         to 1.5f,
+        GRASS_WILD1   to 0.05f, GRASS_WILD2 to 0.05f, GRASS_WILD3 to 0.05f, GRASS_WILD4 to 0.05f,
+        GRASS_BROWN   to 0.05f, GRASS_TAN   to 0.05f,
+        WHEAT1        to 0.05f, WHEAT2      to 0.05f,  WHEAT3      to 0.05f, WHEAT4      to 0.05f,
+        REDSTONE      to 4.0f,
+        LEAVES_ORANGE to 0.2f,
+        WOOD_WHITE    to 2.0f,
+        LEAVES_FALL   to 0.2f,
+    ) + (COTTON_AMBER.toInt()..COTTON_YELLOW.toInt()).associate { it.toByte() to 0.8f }
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
-    internal val enemyManager  = EnemyManager(world, worldSeed)
-    private val enemyRenderer  = EnemyRenderer()
-    private val projRenderer   = ProjectileRenderer()
+    internal val enemyManager      = EnemyManager(world, worldSeed)
+    private val enemyRenderer      = EnemyRenderer()
+    private val projRenderer       = ProjectileRenderer()
+    internal val passiveMobManager = PassiveMobManager(world, worldSeed)
+    private val passiveMobRenderer = PassiveMobRenderer()
     private var laserEnemyDmgTimer = 0f
 
     // ── Progression joueur ────────────────────────────────────────────────────
@@ -210,8 +235,8 @@ internal class CaveRenderer(
             vec3 worldPos = a_pos + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
             v_uv      = a_uv.xy;
-            v_layer   = mod(a_uv.z, 32.0);
-            v_faceDir = floor(a_uv.z / 32.0);
+            v_layer   = mod(a_uv.z, 128.0);
+            v_faceDir = floor(a_uv.z / 128.0);
             v_worldPos = worldPos;
         }
     """.trimIndent()
@@ -359,6 +384,7 @@ internal class CaveRenderer(
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets, enemyManager.familyPool)
         projRenderer.onSurfaceCreated(context.assets)
+        passiveMobRenderer.onSurfaceCreated(context.assets)
 
         enemyManager.playerHpCallback = { hp, max -> playerHpCallback?.invoke(hp, max) }
         enemyManager.shieldCallback   = { cur, max -> shieldCallback?.invoke(cur, max) }
@@ -404,16 +430,20 @@ internal class CaveRenderer(
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             val spawn = world.findSpawnPoint()
-            enemyManager.worldSpawnX = spawn[0].toDouble()
-            enemyManager.worldSpawnZ = spawn[2].toDouble()
+            enemyManager.worldSpawnX      = spawn[0].toDouble()
+            enemyManager.worldSpawnZ      = spawn[2].toDouble()
+            passiveMobManager.worldSpawnX = spawn[0].toDouble()
+            passiveMobManager.worldSpawnZ = spawn[2].toDouble()
         } else {
             val spawn = world.findSpawnPoint()
             camera.x = spawn[0].toDouble(); camera.y = spawn[1].toDouble(); camera.z = spawn[2].toDouble()
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
-            enemyManager.worldSpawnX = camera.x
-            enemyManager.worldSpawnZ = camera.z
+            enemyManager.worldSpawnX      = camera.x
+            enemyManager.worldSpawnZ      = camera.z
+            passiveMobManager.worldSpawnX = camera.x
+            passiveMobManager.worldSpawnZ = camera.z
         }
         scheduleInitialLodBuilds()
     }
@@ -462,8 +492,38 @@ internal class CaveRenderer(
         val am = context.assets
         val bitmaps = files.map { BitmapFactory.decodeStream(am.open("Cave World/Tiles/$it")) }.toMutableList()
         val w = bitmaps[0].width; val h = bitmaps[0].height
-        bitmaps.add(createTorchBitmap(w))                                              // layer 34
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wood_plank.png"))) // layer 35
+        bitmaps.add(createTorchBitmap(w))                                                       // 34
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wood_plank.png")))     // 35
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/brick_grey.png")))     // 36
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cactus_side.png")))    // 37
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cactus_top.png")))     // 38
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cactus_inside.png")))  // 39
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/glass.png")))          // 40
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/glass_frame.png")))    // 41
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/gravel_dirt.png")))    // 42
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/table.png")))          // 43
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass1.png")))         // 44
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass2.png")))         // 45
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass3.png")))         // 46
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass4.png")))         // 47
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass_brown.png")))    // 48
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass_tan.png")))      // 49
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage1.png")))   // 50
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage2.png")))   // 51
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage3.png")))   // 52
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage4.png")))   // 53
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/redstone.png")))        // 54
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/redstone_sand.png")))         // 55
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/leaves_orange_transparent.png"))) // 56
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/trunk_white_side.png")))          // 57
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/trunk_white_top.png")))           // 58
+        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/leaves_orange.png")))             // 59
+        // Cotton — 34 couleurs, layers 60–93, ordre alphabétique = ordre des IDs
+        listOf("amber","black","blue","brown","coral","crimson","cyan","dark_green",
+               "gold","green","hot_pink","indigo","lavender","light_blue","lime","magenta",
+               "mint","navy","olive","orange","peach","pink","purple","red","rose","salmon",
+               "silver","sky","tan","teal","turquoise","violet","white","yellow")
+            .forEach { name -> bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cotton/cotton_$name.png"))) }
 
         val ids = IntArray(1)
         GLES30.glGenTextures(1, ids, 0)
@@ -535,17 +595,24 @@ internal class CaveRenderer(
         }
         var rebuilt = 0
         for (key in rebuildBatch) {
-            if (rebuilt >= 24) { world.rebuildQueue.add(key); continue }
+            if (rebuilt >= 16) { world.rebuildQueue.add(key); continue }
             val chunk = world.getChunkByKey(key) ?: continue
             if (!chunk.generated) { world.rebuildQueue.add(key); continue }
             if (!building.add(key)) { world.rebuildQueue.add(key); continue }
             chunk.meshDirty = false
             val snapVersion = chunk.version
             scope.launch(meshDispatcher) {
-                val verts = MeshBuilder.build(chunk, world)
-                if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
-                building.remove(key)
-                if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
+                try {
+                    val verts = MeshBuilder.build(chunk, world)
+                    if (chunk.version == snapVersion) uploadQueue.add(Triple(key, snapVersion, verts))
+                    if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
+                } catch (_: OutOfMemoryError) {
+                    // Heap plein : re-queue pour réessayer quand la pression mémoire baisse
+                    chunk.meshDirty = true
+                    world.rebuildQueue.add(key)
+                } finally {
+                    building.remove(key)
+                }
             }
             rebuilt++
         }
@@ -559,9 +626,12 @@ internal class CaveRenderer(
                 if (chunk.cy in 0..9) scheduleLodBuild(chunk.cx, chunk.cz)
             }
         }
-        repeat(4) {
+        repeat(16) {
             val (key, verts) = lodUploadQueue.poll() ?: return@repeat
-            lodMeshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+            lodUploadQueueSize.decrementAndGet()
+            var isNew = false
+            lodMeshes.getOrPut(key) { isNew = true; ChunkMesh() }.upload(verts)
+            if (isNew) lodGrid.getOrPut(superKey(lodKeyToCx(key), lodKeyToCz(key))) { ArrayList() }.add(key)
         }
         meshes.values.forEach { it.flushPending() }
         lodMeshes.values.forEach { it.flushPending() }
@@ -570,7 +640,8 @@ internal class CaveRenderer(
             cleanupCounter = 0
             lodCache?.saveIfDirty(scope)
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
-            val loadedKeys = world.allChunks().mapTo(HashSet()) { world.chunkKey(it.cx, it.cy, it.cz) }
+            val allChunks = world.allChunks()
+            val loadedKeys = allChunks.mapTo(HashSet()) { world.chunkKey(it.cx, it.cy, it.cz) }
             // Supprimer les meshes de chunks déchargés
             meshes.keys.filter { it !in loadedKeys }.forEach { key -> meshes.remove(key)?.destroy() }
             // Nettoyer les sources de lumière des chunks déchargés
@@ -582,37 +653,54 @@ internal class CaveRenderer(
                     world.chunkKey(kcx, kcy, kcz) !in loadedKeys
                 }
             }
-            // Cap mémoire : éviction des meshes distants uniquement.
-            // Les meshes dans la zone full-detail (dx/dz <= renderRadiusXZ) ne sont jamais évincés :
-            // leur éviction forcerait une reconstruction en boucle et ferait clignoter le LOD.
+            // Cap mémoire : éviction des meshes distants uniquement (jamais de re-queue immédiate
+            // pour éviter une boucle éviction→rebuild→éviction qui sature le heap).
             if (meshes.size > MAX_MESHES) {
+                val toEvict = meshes.size - MAX_MESHES
                 val nearR = world.renderRadiusXZ
-                meshes.keys
-                    .filter { key ->
-                        abs(world.keyToCx(key) - pcx) > nearR ||
-                        abs(world.keyToCz(key) - pcz) > nearR
-                    }
-                    .sortedByDescending { key ->
+                // Min-heap de taille toEvict : conserve les toEvict clés les plus éloignées
+                // sans trier toute la liste → O(n log toEvict) au lieu de O(n log n).
+                val heap = java.util.PriorityQueue<Long>(toEvict + 1,
+                    compareBy { key ->
                         val dx = world.keyToCx(key) - pcx
                         val dy = world.keyToCy(key) - pcy
                         val dz = world.keyToCz(key) - pcz
                         dx * dx + dy * dy * 4 + dz * dz
-                    }
-                    .take(meshes.size - MAX_MESHES)
-                    .forEach { key -> meshes.remove(key)?.destroy() }
+                    })
+                for (key in meshes.keys) {
+                    if (abs(world.keyToCx(key) - pcx) <= nearR && abs(world.keyToCz(key) - pcz) <= nearR) continue
+                    heap.offer(key)
+                    if (heap.size > toEvict) heap.poll()
+                }
+                while (heap.isNotEmpty()) meshes.remove(heap.poll())?.destroy()
             }
+            // Lazy scan : reconstruire les chunks proches visibles qui n'ont plus de mesh
+            // (suite à une éviction ou à un OOM lors d'un précédent build).
+            val nearR = world.renderRadiusXZ
+            allChunks
+                .filter { c ->
+                    c.generated && !c.meshDirty &&
+                    abs(c.cx - pcx) <= nearR && abs(c.cz - pcz) <= nearR &&
+                    !building.contains(world.chunkKey(c.cx, c.cy, c.cz)) &&
+                    !meshes.containsKey(world.chunkKey(c.cx, c.cy, c.cz))
+                }
+                .forEach { c ->
+                    c.meshDirty = true
+                    world.rebuildQueue.add(world.chunkKey(c.cx, c.cy, c.cz))
+                }
             // Nettoyage et cap LOD
             lodMeshes.keys
                 .filter { key -> abs(lodKeyToCx(key) - pcx) > LOD_RADIUS + 4 || abs(lodKeyToCz(key) - pcz) > LOD_RADIUS + 4 }
-                .forEach { key -> lodMeshes.remove(key)?.destroy() }
+                .forEach { key -> lodMeshes.remove(key)?.also { it.destroy(); lodGridRemove(key) } }
             if (lodMeshes.size > MAX_LOD_TILES) {
-                lodMeshes.keys
-                    .sortedByDescending { key ->
-                        val dx = lodKeyToCx(key) - pcx; val dz = lodKeyToCz(key) - pcz
-                        dx * dx + dz * dz
-                    }
-                    .take(lodMeshes.size - MAX_LOD_TILES)
-                    .forEach { key -> lodMeshes.remove(key)?.destroy() }
+                val toEvictLod = lodMeshes.size - MAX_LOD_TILES
+                val lodHeap = java.util.PriorityQueue<Long>(toEvictLod + 1,
+                    compareBy { key -> val dx = lodKeyToCx(key) - pcx; val dz = lodKeyToCz(key) - pcz; dx*dx + dz*dz })
+                for (key in lodMeshes.keys) { lodHeap.offer(key); if (lodHeap.size > toEvictLod) lodHeap.poll() }
+                while (lodHeap.isNotEmpty()) {
+                    val key = lodHeap.poll()
+                    lodMeshes.remove(key)?.also { it.destroy(); lodGridRemove(key) }
+                }
             }
         }
 
@@ -639,27 +727,39 @@ internal class CaveRenderer(
         GLES30.glUniform1f(wUTime, elapsed)
 
         val camX = camera.x; val camY = camera.y; val camZ = camera.z
-        val nearLights = lightSources.entries
-            .filter { (pos, _) ->
-                val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
-                dx*dx + dy*dy + dz*dz < 160.0 * 160.0
+        if (++lightRefreshCounter >= 3 || lightsDirty) {
+            lightRefreshCounter = 0
+            lightsDirty = false
+            cachedLightCount = 0
+            lightData.fill(0f)
+            lightSources.entries
+                .filter { (pos, _) ->
+                    val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
+                    dx*dx + dy*dy + dz*dz < 160.0 * 160.0
+                }
+                .sortedBy { (pos, _) ->
+                    val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
+                    dx*dx + dy*dy + dz*dz - (dx * camera.fwdX + dz * camera.fwdZ) * 80.0
+                }
+                .take(MAX_LIGHTS)
+                .forEachIndexed { i, (pos, intensity) ->
+                    lightData[i*4+0] = (pos.first  + 0.5 - camX).toFloat()
+                    lightData[i*4+1] = (pos.second + 0.5 - camY).toFloat()
+                    lightData[i*4+2] = (pos.third  + 0.5 - camZ).toFloat()
+                    lightData[i*4+3] = intensity
+                    cachedLightCount = i + 1
+                }
+        } else {
+            // Recaler les offsets caméra sans recalculer le tri
+            for (i in 0 until cachedLightCount) {
+                lightData[i*4+0] -= (camX - lastLightCamX).toFloat()
+                lightData[i*4+1] -= (camY - lastLightCamY).toFloat()
+                lightData[i*4+2] -= (camZ - lastLightCamZ).toFloat()
             }
-            .sortedBy { (pos, _) ->
-                val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
-                val dist2 = dx*dx + dy*dy + dz*dz
-                val dot = dx * camera.fwdX + dz * camera.fwdZ
-                dist2 - dot * 80.0
-            }
-            .take(MAX_LIGHTS)
-        val lightData = FloatArray(MAX_LIGHTS * 4)
-        nearLights.forEachIndexed { i, (pos, intensity) ->
-            lightData[i*4+0] = (pos.first  + 0.5 - camX).toFloat()
-            lightData[i*4+1] = (pos.second + 0.5 - camY).toFloat()
-            lightData[i*4+2] = (pos.third  + 0.5 - camZ).toFloat()
-            lightData[i*4+3] = intensity
         }
-        GLES30.glUniform4fv(wULights, nearLights.size.coerceAtLeast(1), lightData, 0)
-        GLES30.glUniform1i(wULightCount, nearLights.size)
+        lastLightCamX = camX; lastLightCamY = camY; lastLightCamZ = camZ
+        GLES30.glUniform4fv(wULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
+        GLES30.glUniform1i(wULightCount, cachedLightCount)
 
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D_ARRAY, blockTexArray)
@@ -680,19 +780,32 @@ internal class CaveRenderer(
         // Critère de masquage : mesh VBO présent pour un chunk surface (cy 0..9).
         // Les meshes de la zone proche ne sont plus évincés par MAX_MESHES → critère stable,
         // pas de boucle. Le LOD reste visible pendant le gap génération→upload (pas de trou).
-        val columnsWithMesh = meshes.keys.mapTo(HashSet()) { k ->
-            lodKey(world.keyToCx(k), world.keyToCz(k))
+        columnsWithMesh.clear()
+        meshes.keys.forEach { k -> columnsWithMesh.add(lodKey(world.keyToCx(k), world.keyToCz(k))) }
+        // Itère par super-tuiles (8×8 colonnes) : ~125 tests frustum au lieu de 8000.
+        for ((sk, keys) in lodGrid) {
+            val scx = superKeyToCx(sk) * LOD_SUPER
+            val scz = superKeyToCz(sk) * LOD_SUPER
+            if (!isLodSuperTileInFrustum(scx, scz)) continue
+            for (key in keys) {
+                if (columnsWithMesh.contains(key)) continue
+                val mesh = lodMeshes[key] ?: continue
+                val lcx = lodKeyToCx(key); val lcz = lodKeyToCz(key)
+                GLES30.glUniform3f(wUChunkOffset,
+                    (lcx.toDouble() * CHUNK_SIZE - camera.x).toFloat(),
+                    -camera.y.toFloat(),
+                    (lcz.toDouble() * CHUNK_SIZE - camera.z).toFloat())
+                mesh.draw(wAPos, wAUv)
+            }
         }
-        for ((key, mesh) in lodMeshes) {
-            if (columnsWithMesh.contains(key)) continue
-            val lcx = lodKeyToCx(key); val lcz = lodKeyToCz(key)
-            if (!isLodColumnInFrustum(lcx, lcz)) continue
-            GLES30.glUniform3f(wUChunkOffset,
-                (lcx.toDouble() * CHUNK_SIZE - camera.x).toFloat(),
-                -camera.y.toFloat(),
-                (lcz.toDouble() * CHUNK_SIZE - camera.z).toFloat())
-            mesh.draw(wAPos, wAUv)
-        }
+
+        // ── Mobs passifs ──────────────────────────────────────────────────────
+        if (!gamePaused) passiveMobManager.update(dt, camera.x, camera.y, camera.z)
+        passiveMobRenderer.render(
+            passiveMobManager.mobs,
+            camera.x, camera.y, camera.z,
+            camera.vpMatrix, ambientFor(dayT)
+        )
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
         if (!gamePaused) enemyManager.update(dt, camera.x, camera.y, camera.z)
@@ -868,6 +981,7 @@ internal class CaveRenderer(
     }
 
     private fun refreshChunkLightSources(chunk: Chunk) {
+        lightsDirty = true
         val wx0 = chunk.worldX; val wy0 = chunk.worldY; val wz0 = chunk.worldZ
         val wxEnd = wx0 + CHUNK_SIZE; val wyEnd = wy0 + CHUNK_SIZE; val wzEnd = wz0 + CHUNK_SIZE
         lightSources.keys.removeAll { (x, y, z) ->
@@ -1111,9 +1225,47 @@ internal class CaveRenderer(
         if (!lodBuilding.add(key)) return
         scope.launch {
             val verts = LodBuilder.buildColumn(cx, cz, world, lodCache)
-            if (verts.isNotEmpty()) lodUploadQueue.add(Pair(key, verts))
+            if (verts.isNotEmpty() && lodUploadQueueSize.get() < 64) {
+                lodUploadQueueSize.incrementAndGet()
+                lodUploadQueue.add(Pair(key, verts))
+            } else if (verts.isNotEmpty()) {
+                // Queue saturée : on relibère le verrou pour replanifier plus tard
+                lodBuilding.remove(key)
+                return@launch
+            }
             lodBuilding.remove(key)
         }
+    }
+
+    // ── Super-tuiles LOD ──────────────────────────────────────────────────────
+
+    private fun superKey(lcx: Int, lcz: Int): Long {
+        val scx = Math.floorDiv(lcx, LOD_SUPER); val scz = Math.floorDiv(lcz, LOD_SUPER)
+        return (scx.toLong() and 0xFFFFF) or ((scz.toLong() and 0xFFFFF) shl 20)
+    }
+    private fun superKeyToCx(sk: Long): Int { val v = (sk and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
+    private fun superKeyToCz(sk: Long): Int { val v = ((sk shr 20) and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
+
+    private fun lodGridRemove(key: Long) {
+        val sk = superKey(lodKeyToCx(key), lodKeyToCz(key))
+        val list = lodGrid[sk] ?: return
+        list.remove(key)
+        if (list.isEmpty()) lodGrid.remove(sk)
+    }
+
+    // Frustum test sur une boîte 8×8 chunks (couvre toute la bande de surface Y 0..160).
+    private fun isLodSuperTileInFrustum(scx: Int, scz: Int): Boolean {
+        val w = (LOD_SUPER * CHUNK_SIZE).toFloat()
+        val x0 = (scx.toDouble() * CHUNK_SIZE - camera.x).toFloat(); val x1 = x0 + w
+        val y0 = -camera.y.toFloat();                                  val y1 = y0 + 160f
+        val z0 = (scz.toDouble() * CHUNK_SIZE - camera.z).toFloat();  val z1 = z0 + w
+        for (p in frustum) {
+            val px = if (p[0] >= 0f) x1 else x0
+            val py = if (p[1] >= 0f) y1 else y0
+            val pz = if (p[2] >= 0f) z1 else z0
+            if (p[0]*px + p[1]*py + p[2]*pz + p[3] < 0f) return false
+        }
+        return true
     }
 
     // Frustum test élargi en Y pour couvrir toute la bande de surface (Y 0..160).
@@ -1463,8 +1615,8 @@ internal class CaveRenderer(
             try {
                 world.generate(chunk)
                 world.markGenerated(chunk)
-            } catch (_: Exception) {
-                // Libère le chunk pour qu'il puisse être regénéré au prochain passage
+            } catch (_: Throwable) {
+                // Libère le chunk (OOM inclus) pour qu'il puisse être regénéré
                 world.abandonChunk(chunk)
             } finally {
                 building.remove(key)
@@ -1517,6 +1669,7 @@ internal class CaveRenderer(
         laserShader?.destroy()
         enemyRenderer.destroy()
         projRenderer.destroy()
+        passiveMobRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)
     }

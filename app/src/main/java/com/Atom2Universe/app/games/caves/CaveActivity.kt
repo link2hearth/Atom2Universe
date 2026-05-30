@@ -36,6 +36,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.games.caves.entity.UpgradeOption
 import com.Atom2Universe.app.games.caves.entity.UpgradeType
+import com.Atom2Universe.app.games.caves.input.GamepadController
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.world.*
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -142,7 +143,8 @@ class CaveActivity : ThemedActivity() {
 
     private lateinit var glView: GLSurfaceView
     private lateinit var renderer: CaveRenderer
-    private val touch = TouchController()
+    private val touch   = TouchController()
+    private val gamepad = GamepadController(touch)
     private val uiHandler = Handler(Looper.getMainLooper())
     private var worldId: String? = null
 
@@ -1142,6 +1144,20 @@ class CaveActivity : ThemedActivity() {
             PlayerMode.SPECTATOR -> { btnMode.text = getString(R.string.cave_mode_spectator); btnUp.text = "▲"; btnDown.visibility = View.VISIBLE; btnLaser.visibility = View.GONE; btnPlace.visibility = View.GONE }
             PlayerMode.WALK      -> { btnMode.text = getString(R.string.cave_mode_walk); btnUp.text = getString(R.string.cave_jump); btnDown.visibility = View.GONE; btnLaser.visibility = View.VISIBLE; btnPlace.visibility = View.VISIBLE }
         }
+    }
+
+    // ── Manette ───────────────────────────────────────────────────────────────
+
+    override fun onGenericMotionEvent(event: android.view.MotionEvent): Boolean =
+        gamepad.onGenericMotion(event) || super.onGenericMotionEvent(event)
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        val consumed = when (event.action) {
+            android.view.KeyEvent.ACTION_DOWN -> gamepad.onKeyDown(event.keyCode)
+            android.view.KeyEvent.ACTION_UP   -> gamepad.onKeyUp(event.keyCode)
+            else -> false
+        }
+        return consumed || super.dispatchKeyEvent(event)
     }
 
     // ── Touch multipoint ─────────────────────────────────────────────────────

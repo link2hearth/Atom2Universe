@@ -32,17 +32,31 @@ internal class ChunkMesh {
             vboId = ids[0]
         }
 
-        val buf = ByteBuffer.allocateDirect(verts.size * 4)
-            .order(ByteOrder.nativeOrder())
-            .asFloatBuffer()
-            .also { it.put(verts); it.position(0) }
+        val byteSize = verts.size * 4
+        val bb = sharedUploadBuffer(byteSize)
+        val floatBuf = bb.asFloatBuffer()
+        floatBuf.put(verts)
+        floatBuf.position(0)
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vboId)
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, verts.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, byteSize, floatBuf, GLES30.GL_DYNAMIC_DRAW)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
 
         vertexCount = verts.size / 6  // x,y,z,r,g,b
         ready = true
+    }
+
+    companion object {
+        // Un seul ByteBuffer partagé — flushPending est toujours appelé depuis le thread GL.
+        private var sharedBuf: ByteBuffer? = null
+        private fun sharedUploadBuffer(byteSize: Int): ByteBuffer {
+            val cur = sharedBuf
+            return if (cur != null && cur.capacity() >= byteSize) {
+                cur.clear(); cur
+            } else {
+                ByteBuffer.allocateDirect(byteSize).order(ByteOrder.nativeOrder()).also { sharedBuf = it }
+            }
+        }
     }
 
     fun draw(aPos: Int, aUv: Int) {

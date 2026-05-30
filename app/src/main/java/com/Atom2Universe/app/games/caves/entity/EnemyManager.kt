@@ -229,10 +229,25 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             }
         }
 
-        // Tous les ennemis flottent vers la hauteur du joueur (pas de gravité, traverse les murs)
-        val targetVY = ((py - 0.9 - e.y) * 4.0).coerceIn(-8.0, 8.0)
-        e.velY += (targetVY - e.velY) * (dt * 4.0)
-        e.y += e.velY * dt
+        if (e.type.flies) {
+            // Les volants flottent vers la hauteur du joueur
+            val targetVY = ((py - 0.9 - e.y) * 4.0).coerceIn(-8.0, 8.0)
+            e.velY += (targetVY - e.velY) * (dt * 4.0)
+            e.y += e.velY * dt
+        } else {
+            // Gravité + snap au sol pour les mobs terrestres
+            e.velY = (e.velY - GRAVITY * dt).coerceAtLeast(MAX_FALL.toDouble())
+            val newY = e.y + e.velY * dt
+            val ground = world.groundBelow(e.x, e.z, newY + 1.0)
+            if (ground != null && newY < ground) {
+                e.y = ground
+                e.velY = 0.0
+                e.onGround = true
+            } else {
+                e.y = newY
+                e.onGround = ground != null && newY <= ground + 0.1
+            }
+        }
     }
 
     // Déplacement sans collision bloc — les mobs traversent les murs
@@ -309,6 +324,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         const val WAVE_SIZE_RANGE      = 11
         const val SAFE_ZONE_CHUNKS     = 5.0
         const val SHIELD_RECHARGE_DELAY = 10f
+        const val GRAVITY   = 20f
+        const val MAX_FALL  = -20f
 
         val ALL_FAMILIES = listOf(
             "amg1", "amg2", "amg3", "amg4",

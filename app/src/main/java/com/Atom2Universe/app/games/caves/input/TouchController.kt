@@ -76,9 +76,19 @@ class TouchController {
         }
     }
 
+    // Axes du stick droit manette (mis à jour par GamepadController, -1..1)
+    @Volatile var gamepadRightX = 0f
+    @Volatile var gamepadRightY = 0f
+
     fun consumeDeltas(): Pair<Float, Float> {
-        val dy = deltaYaw; val dp = deltaPitch
+        val dy = deltaYaw + gamepadRightX * GAMEPAD_CAM_SPEED
+        val dp = deltaPitch + gamepadRightY * GAMEPAD_CAM_SPEED
         deltaYaw = 0f; deltaPitch = 0f
         return Pair(dy, dp)
+    }
+
+    companion object {
+        // Degrés de rotation par frame à pleine déflexion du stick (~240°/s à 30 fps)
+        const val GAMEPAD_CAM_SPEED = 8f
     }
 }

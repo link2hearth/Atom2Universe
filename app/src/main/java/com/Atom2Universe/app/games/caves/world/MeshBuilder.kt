@@ -37,18 +37,26 @@ internal object MeshBuilder {
             }
 
             val above = world.neighborBlock(chunk, lx, ly + 1, lz)
-            if (isVisible(above))                                        addFace(buf, x, y, z, 0, block, above)
-            if (isVisible(world.neighborBlock(chunk, lx, ly - 1, lz)))  addFace(buf, x, y, z, 1, block, AIR)
-            if (isVisible(world.neighborBlock(chunk, lx + 1, ly, lz)))  addFace(buf, x, y, z, 2, block, above)
-            if (isVisible(world.neighborBlock(chunk, lx - 1, ly, lz)))  addFace(buf, x, y, z, 3, block, above)
-            if (isVisible(world.neighborBlock(chunk, lx, ly, lz + 1)))  addFace(buf, x, y, z, 4, block, above)
-            if (isVisible(world.neighborBlock(chunk, lx, ly, lz - 1)))  addFace(buf, x, y, z, 5, block, above)
+            if (shouldRenderFace(block, above))                                        addFace(buf, x, y, z, 0, block, above)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly - 1, lz)))  addFace(buf, x, y, z, 1, block, AIR)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx + 1, ly, lz)))  addFace(buf, x, y, z, 2, block, above)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx - 1, ly, lz)))  addFace(buf, x, y, z, 3, block, above)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1)))  addFace(buf, x, y, z, 4, block, above)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1)))  addFace(buf, x, y, z, 5, block, above)
         }
         return buf.toFloatArray()
     }
 
-    // Un voisin est "visible" (laisse passer la lumière) si c'est de l'air ou un décor.
-    private fun isVisible(block: Byte) = block == AIR || isDecoration(block)
+    // Voisin "visible" = laisse passer la lumière (air, décor, transparent).
+    private fun isVisible(block: Byte) = block == AIR || isDecoration(block) || isTransparent(block)
+
+    // Génère la face uniquement si le voisin est visible ET si ce n'est pas le même bloc transparent
+    // (évite le Z-fighting entre deux feuilles/vitres adjacentes).
+    private fun shouldRenderFace(block: Byte, neighbor: Byte): Boolean {
+        if (!isVisible(neighbor)) return false
+        if (isTransparent(block) && block == neighbor) return false
+        return true
+    }
 
     private fun addFace(buf: GrowableFloatArray, x: Float, y: Float, z: Float, face: Int, block: Byte, above: Byte) {
         val isSide = face > 1
@@ -67,16 +75,29 @@ internal object MeshBuilder {
             REDSAND   -> 22
             ICE       -> 23
             SNOW      -> when (face) { 0 -> 24; 1 -> 6; else -> 25 }
-            BRICK_RED -> 26
-            PLANK     -> 35
-            else      -> block.toInt() - 1
+            BRICK_RED   -> 26
+            PLANK       -> 35
+            BRICK_GREY  -> 36
+            CACTUS      -> when (face) { 0 -> 38; 1 -> 39; else -> 37 }
+            GLASS       -> 41
+            GRAVEL_DIRT -> 42
+            TABLE       -> when (face) { 0 -> 43; 1 -> 18; else -> 17 }
+            REDSTONE    -> when {
+                isSide && (above == REDSAND || above == SAND || above == AIR) -> 55
+                else -> 54
+            }
+            LEAVES_ORANGE -> 56
+            WOOD_WHITE    -> if (face <= 1) 58 else 57
+            LEAVES_FALL   -> 59
+            in COTTON_AMBER..COTTON_YELLOW -> block.toInt() + 10  // layers 60–93
+            else          -> block.toInt() - 1
         }
         // Toutes les faces latérales appliquent rotCW pour que U=horizontal et V=vertical.
         // Sans ça, le mapping v0→v1 suit l'axe Y (vertical) et toutes les textures apparaissent
         // tournées 90°. Les textures de transition (dirt_grass, stone_grass, etc.) bénéficient
         // automatiquement du même traitement.
         val rotCW = isSide
-        val packed = face * 32f + layer.toFloat()
+        val packed = face * 128f + layer.toFloat()
         when (face) {
             0 -> buf.quad(x,y+1,z,  x+1,y+1,z,  x+1,y+1,z+1, x,y+1,z+1, packed, false)
             1 -> buf.quad(x,y,z+1,  x+1,y,z+1,  x+1,y,z,     x,y,z,     packed, false)
@@ -97,12 +118,28 @@ internal object MeshBuilder {
             MUSHROOM_BROWN -> 30
             MUSHROOM_TAN   -> 31
             TORCH          -> 34
+            GRASS_WILD1    -> 44
+            GRASS_WILD2    -> 45
+            GRASS_WILD3    -> 46
+            GRASS_WILD4    -> 47
+            GRASS_BROWN    -> 48
+            GRASS_TAN      -> 49
+            WHEAT1         -> 50
+            WHEAT2         -> 51
+            WHEAT3         -> 52
+            WHEAT4         -> 53
             else -> return
         }
         val (margin, h) = when (block) {
-            ROCK, ROCK_MOSS -> Pair(0.20f, 0.45f)   // petits cailloux
-            TORCH           -> Pair(0.37f, 0.65f)    // torche fine
-            else             -> Pair(0.10f, 0.90f)   // champignons hauts
+            ROCK, ROCK_MOSS                                          -> Pair(0.20f, 0.45f)
+            TORCH                                                    -> Pair(0.37f, 0.65f)
+            GRASS_WILD1, GRASS_WILD2, GRASS_WILD3, GRASS_WILD4,
+            GRASS_BROWN, GRASS_TAN                                   -> Pair(0.08f, 0.75f)
+            WHEAT1 -> Pair(0.12f, 0.30f)
+            WHEAT2 -> Pair(0.10f, 0.50f)
+            WHEAT3 -> Pair(0.08f, 0.70f)
+            WHEAT4 -> Pair(0.06f, 0.90f)
+            else   -> Pair(0.10f, 0.90f)
         }
         val packed = layer.toFloat()  // faceDir=0 → lumière max (top face)
 
@@ -144,7 +181,7 @@ internal object MeshBuilder {
         add(x); add(y); add(z); add(u); add(v); add(p)
     }
 
-    private class GrowableFloatArray(capacity: Int = 32768) {
+    private class GrowableFloatArray(capacity: Int = 16384) {
         private var data = FloatArray(capacity)
         private var size = 0
         fun add(v: Float) {
