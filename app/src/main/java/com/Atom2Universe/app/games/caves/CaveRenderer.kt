@@ -23,6 +23,7 @@ import com.Atom2Universe.app.games.caves.world.*
 import kotlinx.coroutines.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.util.Calendar
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.microedition.khronos.egl.EGLConfig
@@ -75,10 +76,29 @@ internal class CaveRenderer(
 
     private var worldShader: ShaderProgram? = null
     private var laserShader: ShaderProgram? = null
+    private var starShader:  ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wUMvp = 0; private var wUTex = 0
-    private var wUChunkOffset = 0
+    private var wUChunkOffset = 0; private var wUAmbient = 0
     private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0
+    private var sAPos = 0; private var sABrightness = 0; private var sUMvp = 0
     private var blockTexArray = 0
+
+    // ── Étoiles ───────────────────────────────────────────────────────────────
+    private val STAR_COUNT  = 250
+    private val STAR_RADIUS = 120f
+    private val starDirs    = FloatArray(STAR_COUNT * 3)
+    private val starVerts   = FloatArray(STAR_COUNT * 4)
+    private var starVbo     = 0
+    private var starVertsBuf: java.nio.FloatBuffer? = null
+
+    // ── Soleil / Lune ─────────────────────────────────────────────────────────
+    private var billboardShader: ShaderProgram? = null
+    private var bAPos = 0; private var bAUv = 0; private var bUMvp = 0
+    private var bUTex = 0; private var bUAlpha = 0; private var bUMask = 0
+    private var sunTex  = 0
+    private var moonTex = 0
+    private var billboardVbo = 0
+    private val billboardBuf = ByteBuffer.allocateDirect(6 * 5 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val genDispatcher  = Dispatchers.Default.limitedParallelism(4)
@@ -100,6 +120,7 @@ internal class CaveRenderer(
     private var velocityY = 0f
     private var onGround = false
     private var prevFlyUp = false
+    private var stepUpRemaining = 0.0
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
@@ -192,6 +213,7 @@ internal class CaveRenderer(
         #version 300 es
         precision mediump float;
         uniform sampler2DArray u_tex;
+        uniform float u_ambient;
         in vec2 v_uv;
         in float v_layer;
         in float v_faceDir;
@@ -201,7 +223,7 @@ internal class CaveRenderer(
             if (col.a < 0.5) discard;
             float fd = floor(v_faceDir + 0.5);
             float light = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
-            fragColor = vec4(col.rgb * light, 1.0);
+            fragColor = vec4(col.rgb * light * u_ambient, 1.0);
         }
     """.trimIndent()
 
@@ -227,6 +249,57 @@ internal class CaveRenderer(
         }
     """.trimIndent()
 
+    private val VERT_STAR = """
+        #version 300 es
+        in vec3 a_pos;
+        in float a_brightness;
+        uniform mat4 u_mvp;
+        out float v_brightness;
+        void main() {
+            gl_Position = u_mvp * vec4(a_pos, 1.0);
+            gl_PointSize = 2.5;
+            v_brightness = a_brightness;
+        }
+    """.trimIndent()
+
+    private val FRAG_STAR = """
+        #version 300 es
+        precision mediump float;
+        in float v_brightness;
+        out vec4 fragColor;
+        void main() {
+            fragColor = vec4(v_brightness, v_brightness, v_brightness, 1.0);
+        }
+    """.trimIndent()
+
+    private val VERT_BILLBOARD = """
+        #version 300 es
+        in vec3 a_pos;
+        in vec2 a_uv;
+        uniform mat4 u_mvp;
+        out vec2 v_uv;
+        void main() {
+            gl_Position = u_mvp * vec4(a_pos, 1.0);
+            v_uv = a_uv;
+        }
+    """.trimIndent()
+
+    private val FRAG_BILLBOARD = """
+        #version 300 es
+        precision mediump float;
+        uniform sampler2D u_tex;
+        uniform float u_alpha;
+        uniform float u_mask;
+        in vec2 v_uv;
+        out vec4 fragColor;
+        void main() {
+            if (u_mask > 0.5 && length(v_uv - vec2(0.5)) > 0.5) discard;
+            vec4 col = texture(u_tex, v_uv);
+            if (col.a < 0.05) discard;
+            fragColor = vec4(col.rgb, col.a * u_alpha);
+        }
+    """.trimIndent()
+
     // ── Lifecycle GL ──────────────────────────────────────────────────────────
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -241,6 +314,7 @@ internal class CaveRenderer(
             wUMvp         = it.uniform("u_mvp")
             wUTex         = it.uniform("u_tex")
             wUChunkOffset = it.uniform("u_chunk_offset")
+            wUAmbient     = it.uniform("u_ambient")
         }
         laserShader = ShaderProgram(VERT_LASER, FRAG_LASER).also {
             it.use()
@@ -248,6 +322,14 @@ internal class CaveRenderer(
             lAColor = it.attrib("a_color")
             lUMvp   = it.uniform("u_mvp")
         }
+        starShader = ShaderProgram(VERT_STAR, FRAG_STAR).also {
+            it.use()
+            sAPos        = it.attrib("a_pos")
+            sABrightness = it.attrib("a_brightness")
+            sUMvp        = it.uniform("u_mvp")
+        }
+        initStars()
+        initSkyBodies()
 
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets, enemyManager.familyPool)
@@ -481,10 +563,26 @@ internal class CaveRenderer(
             }
         }
 
-        // ── Rendu chunks ─────────────────────────────────────────────────────
+        // ── Cycle jour/nuit ───────────────────────────────────────────────────
+        val dayT = dayFraction()
+        val (skyR, skyG, skyB) = skyColorFor(dayT)
+        GLES30.glClearColor(skyR, skyG, skyB, 1f)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
+
+        // ── Corps célestes (avant le terrain — depth mask off pour laisser le terrain gagner) ──
+        GLES30.glDepthMask(false)
+        GLES30.glEnable(GLES30.GL_BLEND)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+        renderSkyBody(sunTex,  sunAngleFor(dayT),  12f, sunAlphaFor(dayT),  false)
+        renderSkyBody(moonTex, moonAngleFor(dayT),  8f, moonAlphaFor(dayT), true)
+        renderStars(starsAlphaFor(dayT))
+        GLES30.glDisable(GLES30.GL_BLEND)
+        GLES30.glDepthMask(true)
+
+        // ── Rendu chunks ─────────────────────────────────────────────────────
         worldShader?.use()
         GLES30.glUniformMatrix4fv(wUMvp, 1, false, camera.vpMatrix, 0)
+        GLES30.glUniform1f(wUAmbient, ambientFor(dayT))
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D_ARRAY, blockTexArray)
         GLES30.glUniform1i(wUTex, 0)
@@ -956,6 +1054,200 @@ internal class CaveRenderer(
         return true
     }
 
+    // ── Cycle jour/nuit ───────────────────────────────────────────────────────
+
+    private fun dayFraction(): Float {
+        val cal = Calendar.getInstance()
+        val sec = cal.get(Calendar.HOUR_OF_DAY) * 3600 + cal.get(Calendar.MINUTE) * 60 + cal.get(Calendar.SECOND)
+        return sec / 86400f
+    }
+
+    private fun lerpF(a: Float, b: Float, t: Float) = a + (b - a) * t.coerceIn(0f, 1f)
+
+    private fun skyColorFor(t: Float): Triple<Float, Float, Float> {
+        // couleurs clés : nuit / aube / jour / crépuscule / nuit
+        val night  = Triple(0.010f, 0.015f, 0.060f)
+        val dawn1  = Triple(0.350f, 0.130f, 0.050f)
+        val dawn2  = Triple(0.980f, 0.520f, 0.180f)
+        val day    = Triple(0.682f, 0.910f, 0.973f)
+        val dusk2  = Triple(0.980f, 0.480f, 0.150f)
+        val dusk1  = Triple(0.300f, 0.090f, 0.060f)
+
+        fun lerp3(a: Triple<Float,Float,Float>, b: Triple<Float,Float,Float>, f: Float) =
+            Triple(lerpF(a.first,b.first,f), lerpF(a.second,b.second,f), lerpF(a.third,b.third,f))
+
+        return when {
+            t < 0.208f -> night                                         // 00h–05h
+            t < 0.250f -> lerp3(night, dawn1, (t-0.208f)/0.042f)       // 05h–06h
+            t < 0.281f -> lerp3(dawn1, dawn2, (t-0.250f)/0.031f)       // 06h–06h45
+            t < 0.313f -> lerp3(dawn2, day,   (t-0.281f)/0.032f)       // 06h45–07h30
+            t < 0.708f -> day                                           // 07h30–17h
+            t < 0.740f -> lerp3(day,   dusk2, (t-0.708f)/0.032f)       // 17h–17h45
+            t < 0.771f -> lerp3(dusk2, dusk1, (t-0.740f)/0.031f)       // 17h45–18h30
+            t < 0.833f -> lerp3(dusk1, night, (t-0.771f)/0.062f)       // 18h30–20h
+            else       -> night                                         // 20h–00h
+        }
+    }
+
+    private fun ambientFor(t: Float): Float = when {
+        t < 0.208f -> 0.08f
+        t < 0.313f -> lerpF(0.08f, 1.00f, (t-0.208f)/0.105f)
+        t < 0.708f -> 1.00f
+        t < 0.833f -> lerpF(1.00f, 0.08f, (t-0.708f)/0.125f)
+        else       -> 0.08f
+    }
+
+    private fun starsAlphaFor(t: Float): Float = when {
+        t < 0.208f -> 1.00f
+        t < 0.271f -> lerpF(1.00f, 0.00f, (t-0.208f)/0.063f)
+        t < 0.740f -> 0.00f
+        t < 0.792f -> lerpF(0.00f, 1.00f, (t-0.740f)/0.052f)
+        else       -> 1.00f
+    }
+
+    private fun sunAngleFor(t: Float): Float  = ((t - 0.25f) / 0.5f * PI.toFloat()).coerceIn(0f, PI.toFloat())
+    private fun moonAngleFor(t: Float): Float = sunAngleFor((t + 0.5f) % 1.0f)
+
+    private fun sunAlphaFor(t: Float): Float = when {
+        t < 0.21f || t > 0.79f -> 0f
+        t < 0.27f -> (t - 0.21f) / 0.06f
+        t < 0.73f -> 1f
+        else      -> (0.79f - t) / 0.06f
+    }
+
+    private fun moonAlphaFor(t: Float): Float {
+        val mt = (t + 0.5f) % 1.0f
+        return when {
+            mt < 0.21f || mt > 0.79f -> 0f
+            mt < 0.27f -> (mt - 0.21f) / 0.06f
+            mt < 0.73f -> 1f
+            else       -> (0.79f - mt) / 0.06f
+        }
+    }
+
+    private fun loadSkyTexture(assetPath: String): Int {
+        val ids = IntArray(1); GLES30.glGenTextures(1, ids, 0); val texId = ids[0]
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId)
+        val bmp = BitmapFactory.decodeStream(context.assets.open(assetPath))
+        val buf = ByteBuffer.allocateDirect(bmp.width * bmp.height * 4).order(ByteOrder.nativeOrder())
+        bmp.copyPixelsToBuffer(buf); buf.position(0)
+        GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, bmp.width, bmp.height, 0, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, buf)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
+        bmp.recycle()
+        return texId
+    }
+
+    private fun initSkyBodies() {
+        billboardShader = ShaderProgram(VERT_BILLBOARD, FRAG_BILLBOARD).also {
+            it.use()
+            bAPos   = it.attrib("a_pos")
+            bAUv    = it.attrib("a_uv")
+            bUMvp   = it.uniform("u_mvp")
+            bUTex   = it.uniform("u_tex")
+            bUAlpha = it.uniform("u_alpha")
+            bUMask  = it.uniform("u_mask")
+        }
+        sunTex  = loadSkyTexture("Assets/Image/Sun.png")
+        moonTex = loadSkyTexture("Assets/Image/FullMoon2010.png")
+        val ids = IntArray(1); GLES30.glGenBuffers(1, ids, 0); billboardVbo = ids[0]
+    }
+
+    private fun renderSkyBody(texId: Int, angle: Float, halfSize: Float, alpha: Float, maskCircle: Boolean) {
+        if (alpha <= 0f) return
+        val sh = billboardShader ?: return
+
+        // Floating origin : la caméra est à (0,0,0) en repère OpenGL.
+        // Les positions sont donc directement relatives à l'origine.
+        val cx = cos(angle).toFloat() * STAR_RADIUS
+        val cy = sin(angle).toFloat() * STAR_RADIUS
+        val cz = 0f
+
+        val yawRad   = Math.toRadians(camera.yaw.toDouble()).toFloat()
+        val pitchRad = Math.toRadians(camera.pitch.toDouble()).toFloat()
+
+        // Vecteur right caméra (horizontal, indépendant du pitch)
+        val rX =  cos(yawRad) * halfSize
+        val rZ = -sin(yawRad) * halfSize
+
+        // Vecteur up caméra tenant compte du pitch (pitch > 0 = regard vers le bas)
+        // Dérivé de setLookAtM(0,0,0, lookX,lookY,lookZ, 0,1,0)
+        val uX = sin(pitchRad) * sin(yawRad) * halfSize
+        val uY = cos(pitchRad) * halfSize
+        val uZ = sin(pitchRad) * cos(yawRad) * halfSize
+
+        val v = floatArrayOf(
+            cx-rX-uX, cy-uY, cz-rZ-uZ,  0f, 1f,  // BL
+            cx+rX-uX, cy-uY, cz+rZ-uZ,  1f, 1f,  // BR
+            cx+rX+uX, cy+uY, cz+rZ+uZ,  1f, 0f,  // TR
+            cx-rX-uX, cy-uY, cz-rZ-uZ,  0f, 1f,  // BL
+            cx+rX+uX, cy+uY, cz+rZ+uZ,  1f, 0f,  // TR
+            cx-rX+uX, cy+uY, cz-rZ+uZ,  0f, 0f,  // TL
+        )
+        billboardBuf.position(0); billboardBuf.put(v); billboardBuf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, billboardVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, v.size * 4, billboardBuf, GLES30.GL_DYNAMIC_DRAW)
+
+        sh.use()
+        GLES30.glUniformMatrix4fv(bUMvp, 1, false, camera.vpMatrix, 0)
+        GLES30.glUniform1f(bUAlpha, alpha)
+        GLES30.glUniform1f(bUMask, if (maskCircle) 1f else 0f)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId)
+        GLES30.glUniform1i(bUTex, 0)
+
+        val stride = 5 * 4
+        GLES30.glEnableVertexAttribArray(bAPos)
+        GLES30.glVertexAttribPointer(bAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(bAUv)
+        GLES30.glVertexAttribPointer(bAUv, 2, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 6)
+        GLES30.glDisableVertexAttribArray(bAPos)
+        GLES30.glDisableVertexAttribArray(bAUv)
+    }
+
+    private fun initStars() {
+        val rng = Random(0xBEEFCAFEL)
+        var i = 0
+        repeat(STAR_COUNT) {
+            val cosTheta = rng.nextFloat()
+            val sinTheta = sqrt(1f - cosTheta * cosTheta)
+            val phi = rng.nextFloat() * 2f * PI.toFloat()
+            starDirs[i++] = sinTheta * cos(phi) * STAR_RADIUS
+            starDirs[i++] = cosTheta * STAR_RADIUS
+            starDirs[i++] = sinTheta * sin(phi) * STAR_RADIUS
+        }
+        val buf = ByteBuffer.allocateDirect(STAR_COUNT * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        starVertsBuf = buf
+        val ids = IntArray(1); GLES30.glGenBuffers(1, ids, 0); starVbo = ids[0]
+    }
+
+    private fun renderStars(alpha: Float) {
+        if (alpha <= 0f) return
+        val sh = starShader ?: return
+        // Floating origin : positions relatives à l'origine (= caméra en repère OpenGL)
+        for (i in 0 until STAR_COUNT) {
+            starVerts[i*4+0] = starDirs[i*3+0]
+            starVerts[i*4+1] = starDirs[i*3+1]
+            starVerts[i*4+2] = starDirs[i*3+2]
+            starVerts[i*4+3] = alpha
+        }
+        val buf = starVertsBuf ?: return
+        buf.position(0); buf.put(starVerts); buf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, starVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, STAR_COUNT * 4 * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        sh.use()
+        GLES30.glUniformMatrix4fv(sUMvp, 1, false, camera.vpMatrix, 0)
+        val stride = 4 * 4
+        GLES30.glEnableVertexAttribArray(sAPos)
+        GLES30.glVertexAttribPointer(sAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(sABrightness)
+        GLES30.glVertexAttribPointer(sABrightness, 1, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_POINTS, 0, STAR_COUNT)
+        GLES30.glDisableVertexAttribArray(sAPos)
+        GLES30.glDisableVertexAttribArray(sABrightness)
+    }
+
     // ── Mouvement ─────────────────────────────────────────────────────────────
 
     private fun updateSpectator(dt: Float) {
@@ -972,33 +1264,55 @@ internal class CaveRenderer(
         val hSpeed = if (onGround) 7f * dt else 4f * dt
         val dx = (fX * touch.moveForward * hSpeed - rX * touch.moveRight * hSpeed).toDouble()
         val dz = (fZ * touch.moveForward * hSpeed - rZ * touch.moveRight * hSpeed).toDouble()
-
-        if (!collidesAt(camera.x + dx, camera.y, camera.z)) camera.x += dx
-        if (!collidesAt(camera.x, camera.y, camera.z + dz)) camera.z += dz
-
         val jumpPressed = touch.flyUp && !prevFlyUp
         prevFlyUp = touch.flyUp
-        if (jumpPressed && onGround) { velocityY = 10.5f; onGround = false }
 
-        velocityY -= 22f * dt
-        velocityY = velocityY.coerceAtLeast(-30f)
-        val dy = (velocityY * dt).toDouble()
-        if (!collidesAt(camera.x, camera.y + dy, camera.z)) {
-            camera.y += dy
-        } else {
-            if (velocityY < 0f) {
-                var lo = camera.y + dy
-                var hi = camera.y
-                repeat(8) {
-                    val mid = (lo + hi) * 0.5
-                    if (collidesAt(camera.x, mid, camera.z)) lo = mid else hi = mid
-                }
-                camera.y = hi
-            }
-            velocityY = 0f
+        if (!collidesAt(camera.x + dx, camera.y, camera.z)) {
+            camera.x += dx
+        } else if (onGround && dx != 0.0 && !collidesAt(camera.x + dx, camera.y + 1.0, camera.z)) {
+            if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
+            // pas de déplacement horizontal : le joueur monte d'abord, puis avance naturellement
         }
+        if (!collidesAt(camera.x, camera.y, camera.z + dz)) {
+            camera.z += dz
+        } else if (onGround && dz != 0.0 && !collidesAt(camera.x, camera.y + 1.0, camera.z + dz)) {
+            if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
+        }
+        if (stepUpRemaining > 0.0) {
+            val rise = minOf(stepUpRemaining, 12.0 * dt)
+            if (!collidesAt(camera.x, camera.y + rise, camera.z)) {
+                camera.y += rise
+                stepUpRemaining -= rise
+            } else {
+                stepUpRemaining = 0.0
+            }
+            // Physique verticale suspendue pendant l'animation : la gravité reprendrait
+            // sinon le joueur sur le bloc du bas via le binary search de landing.
+            velocityY = 0f
+            onGround = (stepUpRemaining == 0.0)
+        } else {
+            if (jumpPressed && onGround) { velocityY = 10.5f; onGround = false }
 
-        onGround = velocityY <= 0.1f && collidesAt(camera.x, camera.y - 0.1, camera.z)
+            velocityY -= 22f * dt
+            velocityY = velocityY.coerceAtLeast(-30f)
+            val dy = (velocityY * dt).toDouble()
+            if (!collidesAt(camera.x, camera.y + dy, camera.z)) {
+                camera.y += dy
+            } else {
+                if (velocityY < 0f) {
+                    var lo = camera.y + dy
+                    var hi = camera.y
+                    repeat(8) {
+                        val mid = (lo + hi) * 0.5
+                        if (collidesAt(camera.x, mid, camera.z)) lo = mid else hi = mid
+                    }
+                    camera.y = hi
+                }
+                velocityY = 0f
+            }
+
+            onGround = velocityY <= 0.1f && collidesAt(camera.x, camera.y - 0.1, camera.z)
+        }
     }
 
     // ── Collision ─────────────────────────────────────────────────────────────
