@@ -157,6 +157,7 @@ class CaveActivity : ThemedActivity() {
     private val gamepad = GamepadController(touch)
     private val uiHandler = Handler(Looper.getMainLooper())
     private var worldId: String? = null
+    private var ambientMusic: CaveAmbientMusic? = null
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
@@ -367,6 +368,8 @@ class CaveActivity : ThemedActivity() {
         buildOverlayActiveBar(invOverlay.findViewById(R.id.cave_inv_active_row))
 
         applyModeUi(PlayerMode.WALK, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace)
+
+        ambientMusic = CaveAmbientMusic(this, lifecycleScope)
     }
 
     // ── Barre XP (en haut, pleine largeur) ───────────────────────────────────
@@ -1217,10 +1220,10 @@ class CaveActivity : ThemedActivity() {
         touch.onTouch(ev, glView.width); return super.dispatchTouchEvent(ev)
     }
 
-    override fun onResume()  { super.onResume();  glView.onResume() }
-    override fun onPause()   { super.onPause();   glView.onPause(); saveWorld() }
+    override fun onResume()  { super.onResume();  glView.onResume(); ambientMusic?.resume() }
+    override fun onPause()   { super.onPause();   glView.onPause();  ambientMusic?.pause(); saveWorld() }
     override fun onDestroy() {
-        super.onDestroy(); renderer.destroy()
+        super.onDestroy(); renderer.destroy(); ambientMusic?.destroy()
         blockBitmapCache.values.forEach { it?.recycle() }
         blockBitmapCache.clear()
     }
