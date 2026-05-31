@@ -159,6 +159,9 @@ internal class CaveRenderer(
     private var elapsed = 0f
     private var waterTickAccum   = 0f
     private var gravityTickAccum = 0f
+    private var walkPhase  = 0f   // phase de balancement (rad), avance seulement quand le joueur marche
+    private var walkLastX  = 0.0  // position précédente pour détecter le mouvement
+    private var walkLastZ  = 0.0
 
     private class FallingBlock(val type: Byte, val wx: Int, val wy: Int, val wz: Int) {
         var timer = 0f
@@ -998,7 +1001,7 @@ internal class CaveRenderer(
         projRenderer.render(projectiles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
 
         // ── Boîte joueur (TPS) ────────────────────────────────────────────────
-        drawPlayerBox()
+        drawPlayerBox(dt)
 
         // ── Rendu laser + highlight ───────────────────────────────────────────
         renderLaserAndHighlight()
@@ -1585,49 +1588,141 @@ internal class CaveRenderer(
 
     // ── Boîte joueur (vue 3ème personne) ────────────────────────────────────
 
-    private fun drawPlayerBox() {
+    private fun drawPlayerBox(dt: Float) {
         if (!camera.thirdPerson) return
 
-        // Position du joueur en repère caméra (floating origin)
+        // Position joueur (floating origin)
         val px = (camera.playerX - camera.x).toFloat()
         val py = (camera.playerY - camera.y).toFloat()
         val pz = (camera.playerZ - camera.z).toFloat()
 
-        val hw = 0.3f              // demi-largeur
-        val yFeet = py - 1.62f   // pieds
-        val yHead = py - 0.02f   // sommet boîte 1.6 blocs, sous le point d'orbite
+        // Repère local orienté dans la direction de marche du joueur
+        val fwdX = camera.fwdX; val fwdZ = camera.fwdZ
+        val rgtX = -fwdZ;       val rgtZ =  fwdX
 
-        val x0 = px - hw; val x1 = px + hw
-        val y0 = yFeet;   val y1 = yHead
-        val z0 = pz - hw; val z1 = pz + hw
+        fun wx(r: Float, f: Float) = px + r * rgtX + f * fwdX
+        fun wz(r: Float, f: Float) = pz + r * rgtZ + f * fwdZ
 
-        val r = 0.30f; val g = 0.30f; val b = 0.30f
+        // Avance la phase de marche uniquement quand le joueur se déplace
+        val pdx = camera.playerX - walkLastX; val pdz = camera.playerZ - walkLastZ
+        if (pdx * pdx + pdz * pdz > 1e-6) walkPhase = (walkPhase + dt * 7.5f) % (2f * Math.PI.toFloat())
+        walkLastX = camera.playerX; walkLastZ = camera.playerZ
 
-        val verts = FloatArray(6 * 6 * 6)   // 6 faces × 6 sommets × 6 floats
-        var i = 0
-        fun v(vx: Float, vy: Float, vz: Float) {
-            verts[i++] = vx; verts[i++] = vy; verts[i++] = vz
-            verts[i++] = r;  verts[i++] = g;  verts[i++] = b
+        val sinW = kotlin.math.sin(walkPhase)
+        val legSwing = 0.38f * sinW   // jambes : ~22° d'amplitude
+        val armSwing = 0.28f * sinW   // bras   : ~16° d'amplitude
+
+        val yFeet     = py - 1.62f
+        val yWaist    = yFeet + 0.72f
+        val yShoulder = yFeet + 1.35f
+        val yTop      = yFeet + 1.80f
+
+        // 6 parties × 6 faces × 6 sommets × 6 floats
+        val verts = FloatArray(6 * 6 * 6 * 6)
+        var vi = 0
+        fun v(vx: Float, vy: Float, vz: Float, cr: Float, cg: Float, cb: Float) {
+            verts[vi++] = vx; verts[vi++] = vy; verts[vi++] = vz
+            verts[vi++] = cr; verts[vi++] = cg; verts[vi++] = cb
         }
-        // Top
-        v(x0,y1,z0); v(x1,y1,z0); v(x1,y1,z1); v(x0,y1,z0); v(x1,y1,z1); v(x0,y1,z1)
-        // Bottom
-        v(x0,y0,z1); v(x1,y0,z1); v(x1,y0,z0); v(x0,y0,z1); v(x1,y0,z0); v(x0,y0,z0)
-        // East +X
-        v(x1,y0,z1); v(x1,y1,z1); v(x1,y1,z0); v(x1,y0,z1); v(x1,y1,z0); v(x1,y0,z0)
-        // West -X
-        v(x0,y0,z0); v(x0,y1,z0); v(x0,y1,z1); v(x0,y0,z0); v(x0,y1,z1); v(x0,y0,z1)
-        // North +Z
-        v(x0,y0,z1); v(x0,y1,z1); v(x1,y1,z1); v(x0,y0,z1); v(x1,y1,z1); v(x1,y0,z1)
-        // South -Z
-        v(x1,y0,z0); v(x1,y1,z0); v(x0,y1,z0); v(x1,y0,z0); v(x0,y1,z0); v(x0,y0,z0)
 
-        val buf = ByteBuffer.allocateDirect(verts.size * 4)
+        // ── Boîte statique ───────────────────────────────────────────────────
+        fun box(rMin: Float, rMax: Float, yMin: Float, yMax: Float, fMin: Float, fMax: Float,
+                cr: Float, cg: Float, cb: Float) {
+            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr,cg,cb)
+            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr,cg,cb)
+            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr,cg,cb)
+            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr,cg,cb)
+            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr,cg,cb)
+            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr,cg,cb)
+            val b = 0.50f
+            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*b,cg*b,cb*b)
+            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*b,cg*b,cb*b)
+            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*b,cg*b,cb*b)
+            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*b,cg*b,cb*b)
+            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*b,cg*b,cb*b)
+            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*b,cg*b,cb*b)
+            val rs = 0.78f
+            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*rs,cg*rs,cb*rs)
+            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr*rs,cg*rs,cb*rs)
+            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr*rs,cg*rs,cb*rs)
+            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*rs,cg*rs,cb*rs)
+            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr*rs,cg*rs,cb*rs)
+            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*rs,cg*rs,cb*rs)
+            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*rs,cg*rs,cb*rs)
+            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr*rs,cg*rs,cb*rs)
+            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr*rs,cg*rs,cb*rs)
+            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*rs,cg*rs,cb*rs)
+            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr*rs,cg*rs,cb*rs)
+            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*rs,cg*rs,cb*rs)
+            val fs = 0.88f
+            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*fs,cg*fs,cb*fs)
+            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr*fs,cg*fs,cb*fs)
+            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr*fs,cg*fs,cb*fs)
+            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*fs,cg*fs,cb*fs)
+            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr*fs,cg*fs,cb*fs)
+            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*fs,cg*fs,cb*fs)
+            val bk = 0.62f
+            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*bk,cg*bk,cb*bk)
+            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr*bk,cg*bk,cb*bk)
+            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr*bk,cg*bk,cb*bk)
+            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*bk,cg*bk,cb*bk)
+            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr*bk,cg*bk,cb*bk)
+            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*bk,cg*bk,cb*bk)
+        }
+
+        // ── Membre avec balancement (rotation autour du pivot supérieur) ──────
+        // swing > 0 → membre part vers l'avant, swing < 0 → vers l'arrière
+        fun swingLimb(rMin: Float, rMax: Float, yPivot: Float, yBot: Float,
+                      fMin: Float, fMax: Float, swing: Float,
+                      cr: Float, cg: Float, cb: Float) {
+            val c = kotlin.math.cos(swing); val s = kotlin.math.sin(swing)
+            // Rotation dans le plan (Y, fwd) autour de yPivot
+            fun yW(y: Float, f: Float) = yPivot + (y - yPivot) * c + f * s
+            fun fW(y: Float, f: Float) = -(y - yPivot) * s + f * c
+            fun vt(r: Float, y: Float, f: Float, sh: Float) {
+                val fw = fW(y, f); val yw = yW(y, f)
+                v(wx(r, fw), yw, wz(r, fw), cr * sh, cg * sh, cb * sh)
+            }
+            // Top
+            vt(rMin,yPivot,fMin,1.00f); vt(rMax,yPivot,fMin,1.00f); vt(rMax,yPivot,fMax,1.00f)
+            vt(rMin,yPivot,fMin,1.00f); vt(rMax,yPivot,fMax,1.00f); vt(rMin,yPivot,fMax,1.00f)
+            // Bottom
+            vt(rMin,yBot,fMax,0.50f); vt(rMax,yBot,fMax,0.50f); vt(rMax,yBot,fMin,0.50f)
+            vt(rMin,yBot,fMax,0.50f); vt(rMax,yBot,fMin,0.50f); vt(rMin,yBot,fMin,0.50f)
+            // Right +r
+            vt(rMax,yBot,fMax,0.78f); vt(rMax,yPivot,fMax,0.78f); vt(rMax,yPivot,fMin,0.78f)
+            vt(rMax,yBot,fMax,0.78f); vt(rMax,yPivot,fMin,0.78f); vt(rMax,yBot,fMin,0.78f)
+            // Left -r
+            vt(rMin,yBot,fMin,0.78f); vt(rMin,yPivot,fMin,0.78f); vt(rMin,yPivot,fMax,0.78f)
+            vt(rMin,yBot,fMin,0.78f); vt(rMin,yPivot,fMax,0.78f); vt(rMin,yBot,fMax,0.78f)
+            // Front +fwd
+            vt(rMin,yBot,fMax,0.88f); vt(rMin,yPivot,fMax,0.88f); vt(rMax,yPivot,fMax,0.88f)
+            vt(rMin,yBot,fMax,0.88f); vt(rMax,yPivot,fMax,0.88f); vt(rMax,yBot,fMax,0.88f)
+            // Back -fwd
+            vt(rMax,yBot,fMin,0.62f); vt(rMax,yPivot,fMin,0.62f); vt(rMin,yPivot,fMin,0.62f)
+            vt(rMax,yBot,fMin,0.62f); vt(rMin,yPivot,fMin,0.62f); vt(rMin,yBot,fMin,0.62f)
+        }
+
+        // Tête (statique)
+        box(-0.225f,  0.225f, yShoulder, yTop,            -0.225f, 0.225f, 0.85f, 0.72f, 0.60f)
+        // Torse (statique)
+        box(-0.22f,   0.22f,  yWaist,   yShoulder,        -0.15f,  0.15f,  0.38f, 0.42f, 0.68f)
+        // Bras gauche — swing opposé à la jambe gauche (naturel)
+        swingLimb(-0.37f, -0.25f, yShoulder, yShoulder - 0.60f, -0.12f, 0.12f, -armSwing, 0.38f, 0.42f, 0.68f)
+        // Bras droit — swing opposé à la jambe droite
+        swingLimb( 0.25f,  0.37f, yShoulder, yShoulder - 0.60f, -0.12f, 0.12f,  armSwing, 0.38f, 0.42f, 0.68f)
+        // Jambe gauche
+        swingLimb(-0.22f, -0.02f, yWaist, yFeet, -0.15f, 0.15f,  legSwing, 0.22f, 0.26f, 0.48f)
+        // Jambe droite — toujours opposé à la jambe gauche
+        swingLimb( 0.02f,  0.22f, yWaist, yFeet, -0.15f, 0.15f, -legSwing, 0.22f, 0.26f, 0.48f)
+
+        val floatCount = vi
+        val buf = ByteBuffer.allocateDirect(floatCount * 4)
             .order(ByteOrder.nativeOrder()).asFloatBuffer()
-        buf.put(verts); buf.position(0)
+        buf.put(verts, 0, floatCount); buf.position(0)
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, playerBoxVbo)
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, verts.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, floatCount * 4, buf, GLES30.GL_DYNAMIC_DRAW)
 
         laserShader?.use()
         GLES30.glUniformMatrix4fv(lUMvp, 1, false, camera.vpMatrix, 0)
@@ -1637,7 +1732,7 @@ internal class CaveRenderer(
         GLES30.glVertexAttribPointer(lAPos,   3, GLES30.GL_FLOAT, false, stride, 0)
         GLES30.glEnableVertexAttribArray(lAColor)
         GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, verts.size / 6)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, floatCount / 6)
         GLES30.glDisableVertexAttribArray(lAPos)
         GLES30.glDisableVertexAttribArray(lAColor)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
