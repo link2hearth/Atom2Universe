@@ -85,11 +85,11 @@
     <string name="about_credits_title">Αναγνωρίσεις</string>
     <string name="about_credits_subtitle">Το A2U χρησιμοποιεί τις ακόλουθες βιβλιοθήκες ανοικτού κώδικα:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">Από τον Bill Farmer - Περιτύλιγμα οδηγού MIDI Android για Sonivox EAS. Άδεια Apache 2.0.</string>
+    <string name="about_credit_mididriver_desc">Από τον Bill Farmer - Περιτύλιγμα οδηγού MIDI Android για Sonivox EAS. Άδεια Apache 2.0.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">Από Sonic Network Inc. - Μηχανή σύνθεσης ενσωματωμένου ήχου για αναπαραγωγή MIDI. Άδεια Apache 2.0.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">Από τον Raphaël Slinckx κ.ά. - Βιβλιοθήκη Java για ανάγνωση και εγγραφή μεταδεδομένων ηχητικών αρχείων (ετικέτες ID3). Άδεια LGPL.</string>
+    <string name="about_credit_jaudiotagger_desc">Από τον Raphaël Slinckx κ.ά. - Βιβλιοθήκη Java για ανάγνωση και εγγραφή μεταδεδομένων ηχητικών αρχείων (ετικέτες ID3). Άδεια LGPL.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">Από LeffelMania - Αναλυτής αρχείων MIDI για Android. Άδεια Apache 2.0.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Από την κοινότητα FluidSynth - Συνθεσιοποιητής λογισμικού σε πραγματικό χρόνο βασισμένος στην προδιαγραφή SoundFont 2. Άδεια LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">Από τον Alberto Ruibal - Κινητήρας σκακιού για Java/Android, χρησιμοποιείται για αντιπάλους ΤΝ στο παιχνίδι σκακιού. Άδεια MIT.</string>
+    <string name="about_credit_karballo_desc">Από τον Alberto Ruibal - Κινητήρας σκακιού για Java/Android, χρησιμοποιείται για αντιπάλους ΤΝ στο παιχνίδι σκακιού. Άδεια MIT.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Ευχαριστούμε τον Kevin MacLeod για την ελεύθερη κοινοποίηση της μουσικής του, επιτρέποντας τη συμπερίληψή της σε αυτήν την εφαρμογή.\nΆδεια: Creative Commons Αναφορά 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Σχεδιάστηκε από τον Link2Hearth · Αναπτύχθηκε με Claude (Anthropic)</string>
     <string name="about_license_notice">Όλες οι βιβλιοθήκες χρησιμοποιούνται σύμφωνα με τις αντίστοιχες άδειές τους.\nΕυχαριστούμε όλους τους συνεισφέροντες ανοικτού κώδικα!</string>
     <string name="about_privacy_title">Απόρρητο &amp; Άδειες</string>
     <string name="about_privacy_microphone">Η A2U ζητά πρόσβαση στο μικρόφωνο για δύο συγκεκριμένους σκοπούς:\n\n• Εγγραφή ήχου στον Επεξεργαστή Ήχου και στον Δημιουργό SoundFont\n• Οπτικοποίηση φάσματος συχνοτήτων σε πραγματικό χρόνο στον Αναπαραγωγέα Μουσικής (η εφαρμογή ακούει την ηχητική έξοδο για να εμφανίσει τις καμπύλες συχνοτήτων)\n\nΤο μικρόφωνο δεν χρησιμοποιείται ποτέ για άλλο σκοπό. Κανένας ήχος δεν εγγράφεται, μεταδίδεται ή αποθηκεύεται χωρίς τη ρητή ενέργειά σας στον Επεξεργαστή Ήχου ή στον Δημιουργό SoundFont.</string>

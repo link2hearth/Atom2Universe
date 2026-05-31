@@ -85,11 +85,11 @@
     <string name="about_credits_title">Подяки</string>
     <string name="about_credits_subtitle">A2U використовує такі бібліотеки з відкритим кодом:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">Автор Bill Farmer — обгортка Android MIDI-драйвера для Sonivox EAS. Ліцензія Apache 2.0.</string>
+    <string name="about_credit_mididriver_desc">Автор Bill Farmer — обгортка Android MIDI-драйвера для Sonivox EAS. Ліцензія Apache 2.0.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">Автор Sonic Network Inc. — рушій вбудованого аудіосинтезу для відтворення MIDI. Ліцензія Apache 2.0.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">Автори Raphaël Slinckx та ін. — Java-бібліотека для читання та запису метаданих аудіофайлів (ID3-теги). Ліцензія LGPL.</string>
+    <string name="about_credit_jaudiotagger_desc">Автори Raphaël Slinckx та ін. — Java-бібліотека для читання та запису метаданих аудіофайлів (ID3-теги). Ліцензія LGPL.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">Автор LeffelMania — парсер MIDI-файлів для Android. Ліцензія Apache 2.0.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Спільнота FluidSynth — програмний синтезатор реального часу на основі специфікації SoundFont 2. Ліцензія LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">Автор: Alberto Ruibal - Шаховий рушій для Java/Android, використовується для противників ШІ в шаховій грі. Ліцензія MIT.</string>
+    <string name="about_credit_karballo_desc">Автор: Alberto Ruibal - Шаховий рушій для Java/Android, використовується для противників ШІ в шаховій грі. Ліцензія MIT.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Дякуємо Кевіну МакЛеоду за вільне поширення своєї музики, що дозволяє включити її до цього додатку.\nЛіцензія: Creative Commons Attribution 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Задумано Link2Hearth · Розроблено з Claude (Anthropic)</string>
     <string name="about_license_notice">Усі бібліотеки використовуються відповідно до їхніх ліцензій.\nДякуємо всім учасникам відкритого коду!</string>
     <string name="about_privacy_title">Конфіденційність та дозволи</string>
     <string name="about_privacy_microphone">A2U запитує доступ до мікрофона для двох конкретних цілей:\n\n• Запис аудіо в Аудіоредакторі та Створювачі SoundFont\n• Візуалізація частотного спектру в реальному часі в Музичному програвачі (додаток слухає аудіовихід для відображення частотних кривих)\n\nМікрофон ніколи не використовується для інших цілей. Аудіо не записується, не передається і не зберігається без вашої явної дії в Аудіоредакторі або Створювачі SoundFont.</string>

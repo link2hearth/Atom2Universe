@@ -53,6 +53,7 @@ internal class Enemy(
     var attackCooldown = 0f
     var yaw = 0f
     var hitFlash = 0f
+    var stuckTimer = 0f
 
     companion object {
         const val BOSS_SPRITE_SCALE = 2.2f

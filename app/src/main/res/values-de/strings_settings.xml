@@ -85,11 +85,11 @@
     <string name="about_credits_title">Danksagungen</string>
     <string name="about_credits_subtitle">A2U verwendet die folgenden Open-Source-Bibliotheken:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">Von Bill Farmer — Android-MIDI-Treiber-Wrapper für Sonivox EAS. Apache-2.0-Lizenz.</string>
+    <string name="about_credit_mididriver_desc">Von Bill Farmer — Android-MIDI-Treiber-Wrapper für Sonivox EAS. Apache-2.0-Lizenz.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">Von Sonic Network Inc. — Eingebettete Audiosynthese-Engine für MIDI-Wiedergabe. Apache-2.0-Lizenz.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">Von Raphaël Slinckx et al. — Java-Bibliothek zum Lesen und Schreiben von Audiodatei-Metadaten (ID3-Tags). LGPL-Lizenz.</string>
+    <string name="about_credit_jaudiotagger_desc">Von Raphaël Slinckx et al. — Java-Bibliothek zum Lesen und Schreiben von Audiodatei-Metadaten (ID3-Tags). LGPL-Lizenz.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">Von LeffelMania — MIDI-Datei-Parser für Android. Apache-2.0-Lizenz.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Von der FluidSynth-Community — Echtzeit-Software-Synthesizer basierend auf der SoundFont-2-Spezifikation. LGPL-2.1-Lizenz.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">Von Alberto Ruibal - Schach-Engine für Java/Android, verwendet für KI-Gegner im Schachspiel. MIT-Lizenz.</string>
+    <string name="about_credit_karballo_desc">Von Alberto Ruibal - Schach-Engine für Java/Android, verwendet für KI-Gegner im Schachspiel. MIT-Lizenz.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Vielen Dank an Kevin MacLeod dafür, dass er seine Musik frei teilt, was es ermöglicht, sie in dieser App einzusetzen.\nLizenz: Creative Commons Namensnennung 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Entworfen von Link2Hearth · Entwickelt mit Claude (Anthropic)</string>
     <string name="about_license_notice">Alle Bibliotheken werden in Übereinstimmung mit ihren jeweiligen Lizenzen verwendet.\nVielen Dank an alle Open-Source-Mitwirkenden!</string>
     <string name="about_privacy_title">Datenschutz &amp; Berechtigungen</string>
     <string name="about_privacy_microphone">A2U fordert Mikrofonzugriff für zwei spezifische Zwecke an:\n\n• Audioaufnahme im Audio-Editor und SoundFont-Ersteller\n• Echtzeit-Frequenzspektrum-Visualisierung im Musik-Player (die App hört die Audioausgabe, um die Frequenzkurven anzuzeigen)\n\nDas Mikrofon wird niemals für andere Zwecke verwendet. Kein Audio wird aufgezeichnet, übertragen oder gespeichert, ohne dass Sie im Audio-Editor oder SoundFont-Ersteller ausdrücklich handeln.</string>

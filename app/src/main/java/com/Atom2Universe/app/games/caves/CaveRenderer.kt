@@ -154,6 +154,7 @@ internal class CaveRenderer(
     var selectedSlot = 0
 
     private var transientVbo = 0
+    private var playerBoxVbo = 0
     private var elapsed = 0f
     private var waterTickAccum   = 0f
     private var gravityTickAccum = 0f
@@ -463,11 +464,13 @@ internal class CaveRenderer(
             inventoryCallback?.invoke(inventory.toMap())
         }
 
-        val ids = IntArray(1)
-        GLES30.glGenBuffers(1, ids, 0)
+        val ids = IntArray(2)
+        GLES30.glGenBuffers(2, ids, 0)
         transientVbo = ids[0]
+        playerBoxVbo = ids[1]
 
         if (savedState != null) {
+            camera.playerX = savedState.x; camera.playerY = savedState.y; camera.playerZ = savedState.z
             camera.x = savedState.x; camera.y = savedState.y; camera.z = savedState.z
             camera.yaw = savedState.yaw; camera.pitch = savedState.pitch
             inventory.putAll(savedState.inventory)
@@ -509,7 +512,8 @@ internal class CaveRenderer(
             enemyManager.worldSpawnZ      = spawn[2].toDouble()
         } else {
             val spawn = world.findSpawnPoint()
-            camera.x = spawn[0].toDouble(); camera.y = spawn[1].toDouble(); camera.z = spawn[2].toDouble()
+            camera.playerX = spawn[0].toDouble(); camera.playerY = spawn[1].toDouble(); camera.playerZ = spawn[2].toDouble()
+            camera.x = camera.playerX; camera.y = camera.playerY; camera.z = camera.playerZ
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
@@ -681,6 +685,7 @@ internal class CaveRenderer(
             }
         }
         camera.update()
+        adjustTpsCamera()
 
         elapsed += dt
 
@@ -940,7 +945,7 @@ internal class CaveRenderer(
         }
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
-        if (!gamePaused) enemyManager.update(dt, camera.x, camera.y, camera.z)
+        if (!gamePaused) enemyManager.update(dt, camera.playerX, camera.playerY, camera.playerZ)
         enemyRenderer.render(
             enemyManager.enemies,
             camera.x, camera.y, camera.z,
@@ -949,6 +954,9 @@ internal class CaveRenderer(
 
         // ── Rendu projectiles ─────────────────────────────────────────────────
         projRenderer.render(projectiles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
+
+        // ── Boîte joueur (TPS) ────────────────────────────────────────────────
+        drawPlayerBox()
 
         // ── Rendu laser + highlight ───────────────────────────────────────────
         renderLaserAndHighlight()
@@ -993,11 +1001,11 @@ internal class CaveRenderer(
         if (liveEnemies.isEmpty()) return
 
         val closest = liveEnemies.minByOrNull { e ->
-            val dx = e.x - camera.x; val dz = e.z - camera.z
+            val dx = e.x - camera.playerX; val dz = e.z - camera.playerZ
             dx * dx + dz * dz
         } ?: return
 
-        val dxC = closest.x - camera.x; val dzC = closest.z - camera.z
+        val dxC = closest.x - camera.playerX; val dzC = closest.z - camera.playerZ
         if (dxC * dxC + dzC * dzC > AUTO_SHOOT_RANGE * AUTO_SHOOT_RANGE) return
 
         for (i in playerStats.weapons.indices) {
@@ -1005,11 +1013,11 @@ internal class CaveRenderer(
             if (playerStats.shootTimers[i] <= 0f) {
                 playerStats.shootTimers[i] = playerStats.fireRate
                 val tx = closest.x; val ty = closest.y + closest.baseScale * 0.5; val tz = closest.z
-                val spawnY = camera.y + 0.8
-                val dx = tx - camera.x; val dy = ty - spawnY; val dz = tz - camera.z
+                val spawnY = camera.playerY + 0.8
+                val dx = tx - camera.playerX; val dy = ty - spawnY; val dz = tz - camera.playerZ
                 val d = sqrt(dx * dx + dy * dy + dz * dz).coerceAtLeast(0.001)
                 projectiles.add(Projectile(
-                    camera.x, spawnY, camera.z,
+                    camera.playerX, spawnY, camera.playerZ,
                     dx / d, dy / d, dz / d,
                     PROJ_SPEED, playerStats.damage, playerStats.weapons[i]
                 ))
@@ -1082,9 +1090,10 @@ internal class CaveRenderer(
         }
 
         if (touch.laserActive) {
+            val laserOriginY = if (camera.thirdPerson) camera.playerY + Camera.TPP_ORBIT_DY else camera.y
             val hitEnemy = enemyManager.hitByLaser(
-                camera.x, camera.y, camera.z,
-                camera.lookX, camera.lookY, camera.lookZ,
+                camera.x, laserOriginY, camera.z,
+                camera.aimX, camera.aimY, camera.aimZ,
                 MINE_REACH.toFloat()
             )
             if (hitEnemy != null) {
@@ -1198,11 +1207,16 @@ internal class CaveRenderer(
     }
 
     private fun raycastBlock(): RayHit? {
-        val dirX = camera.lookX.toDouble()
-        val dirY = camera.lookY.toDouble()
-        val dirZ = camera.lookZ.toDouble()
+        val dirX = camera.aimX.toDouble()
+        val dirY = camera.aimY.toDouble()
+        val dirZ = camera.aimZ.toDouble()
 
-        var bx = floorInt(camera.x); var by = floorInt(camera.y); var bz = floorInt(camera.z)
+        // En TPS le ray part du point d'orbite (aligné avec la croix : caméra→orbite→bloc).
+        val startX = if (camera.thirdPerson) camera.playerX else camera.x
+        val startY = if (camera.thirdPerson) camera.playerY + Camera.TPP_ORBIT_DY else camera.y
+        val startZ = if (camera.thirdPerson) camera.playerZ else camera.z
+
+        var bx = floorInt(startX); var by = floorInt(startY); var bz = floorInt(startZ)
 
         val stepX = if (dirX > 0) 1 else -1
         val stepY = if (dirY > 0) 1 else -1
@@ -1212,9 +1226,9 @@ internal class CaveRenderer(
         val tDY = if (dirY != 0.0) 1.0 / Math.abs(dirY) else Double.MAX_VALUE
         val tDZ = if (dirZ != 0.0) 1.0 / Math.abs(dirZ) else Double.MAX_VALUE
 
-        var tMaxX = if (dirX > 0) (bx + 1 - camera.x) * tDX else (camera.x - bx) * tDX
-        var tMaxY = if (dirY > 0) (by + 1 - camera.y) * tDY else (camera.y - by) * tDY
-        var tMaxZ = if (dirZ > 0) (bz + 1 - camera.z) * tDZ else (camera.z - bz) * tDZ
+        var tMaxX = if (dirX > 0) (bx + 1 - startX) * tDX else (startX - bx) * tDX
+        var tMaxY = if (dirY > 0) (by + 1 - startY) * tDY else (startY - by) * tDY
+        var tMaxZ = if (dirZ > 0) (bz + 1 - startZ) * tDZ else (startZ - bz) * tDZ
 
         var fnx = 0; var fny = 0; var fnz = -1
         val reach = MINE_REACH.toDouble()
@@ -1375,9 +1389,17 @@ internal class CaveRenderer(
         val ey = (target.by.toDouble() + 0.5 + target.fny * 0.5 - camera.y).toFloat()
         val ez = (target.bz.toDouble() + 0.5 + target.fnz * 0.5 - camera.z).toFloat()
 
-        val yawRad = Math.toRadians(camera.yaw.toDouble()).toFloat()
-        val rX = cos(yawRad); val rZ = -sin(yawRad)
-        val sx = rX * 0.35f; val sy = -0.25f; val sz = rZ * 0.35f
+        // En TPS : laser depuis le point d'orbite (aligné avec la croix).
+        // En FPS : depuis la "main droite" du joueur comme avant.
+        val sx: Float; val sy: Float; val sz: Float
+        if (camera.thirdPerson) {
+            val d = Camera.TPP_DIST.toFloat()
+            sx = camera.aimX * d; sy = camera.aimY * d; sz = camera.aimZ * d
+        } else {
+            val yawRad = Math.toRadians(camera.yaw.toDouble()).toFloat()
+            val rX = cos(yawRad); val rZ = -sin(yawRad)
+            sx = rX * 0.35f; sy = -0.25f; sz = rZ * 0.35f
+        }
 
         val ddx = ex - sx; val ddy = ey - sy; val ddz = ez - sz
         val blen = sqrt(ddx*ddx + ddy*ddy + ddz*ddz).coerceAtLeast(0.001f)
@@ -1481,6 +1503,102 @@ internal class CaveRenderer(
         v(x0,y0,z1); v(x0,y1,z1); v(x1,y1,z1); v(x0,y0,z1); v(x1,y1,z1); v(x1,y0,z1)
         v(x1,y0,z0); v(x1,y1,z0); v(x0,y1,z0); v(x1,y0,z0); v(x0,y1,z0); v(x0,y0,z0)
         return out
+    }
+
+    // ── Collision caméra TPS ─────────────────────────────────────────────────
+
+    private fun adjustTpsCamera() {
+        if (!camera.thirdPerson) return
+        val headX = camera.playerX
+        val headY = camera.playerY + Camera.TPP_ORBIT_DY
+        val headZ = camera.playerZ
+
+        val dx = camera.x - headX
+        val dy = camera.y - headY
+        val dz = camera.z - headZ
+        val maxDist = sqrt(dx * dx + dy * dy + dz * dz)
+        if (maxDist < 0.1) return
+        val nx = dx / maxDist; val ny = dy / maxDist; val nz = dz / maxDist
+
+        // Avance pas à pas de la tête vers l'œil idéal ; stoppe au premier bloc solide.
+        var safeDist = maxDist
+        val steps = 16
+        for (i in 1..steps) {
+            val t = i * maxDist / steps
+            val b = worldBlockAt(floorInt(headX + nx * t), floorInt(headY + ny * t), floorInt(headZ + nz * t))
+            if (b != AIR && !isWater(b) && !isDecoration(b)) {
+                safeDist = ((i - 1) * maxDist / steps).coerceAtLeast(0.4)
+                break
+            }
+        }
+
+        if (safeDist < maxDist - 0.05) {
+            camera.applyCollision(
+                headX + nx * safeDist,
+                headY + ny * safeDist,
+                headZ + nz * safeDist
+            )
+        }
+    }
+
+    // ── Boîte joueur (vue 3ème personne) ────────────────────────────────────
+
+    private fun drawPlayerBox() {
+        if (!camera.thirdPerson) return
+
+        // Position du joueur en repère caméra (floating origin)
+        val px = (camera.playerX - camera.x).toFloat()
+        val py = (camera.playerY - camera.y).toFloat()
+        val pz = (camera.playerZ - camera.z).toFloat()
+
+        val hw = 0.3f              // demi-largeur
+        val yFeet = py - 1.62f   // pieds
+        val yHead = py - 0.02f   // sommet boîte 1.6 blocs, sous le point d'orbite
+
+        val x0 = px - hw; val x1 = px + hw
+        val y0 = yFeet;   val y1 = yHead
+        val z0 = pz - hw; val z1 = pz + hw
+
+        val r = 0.30f; val g = 0.30f; val b = 0.30f
+
+        val verts = FloatArray(6 * 6 * 6)   // 6 faces × 6 sommets × 6 floats
+        var i = 0
+        fun v(vx: Float, vy: Float, vz: Float) {
+            verts[i++] = vx; verts[i++] = vy; verts[i++] = vz
+            verts[i++] = r;  verts[i++] = g;  verts[i++] = b
+        }
+        // Top
+        v(x0,y1,z0); v(x1,y1,z0); v(x1,y1,z1); v(x0,y1,z0); v(x1,y1,z1); v(x0,y1,z1)
+        // Bottom
+        v(x0,y0,z1); v(x1,y0,z1); v(x1,y0,z0); v(x0,y0,z1); v(x1,y0,z0); v(x0,y0,z0)
+        // East +X
+        v(x1,y0,z1); v(x1,y1,z1); v(x1,y1,z0); v(x1,y0,z1); v(x1,y1,z0); v(x1,y0,z0)
+        // West -X
+        v(x0,y0,z0); v(x0,y1,z0); v(x0,y1,z1); v(x0,y0,z0); v(x0,y1,z1); v(x0,y0,z1)
+        // North +Z
+        v(x0,y0,z1); v(x0,y1,z1); v(x1,y1,z1); v(x0,y0,z1); v(x1,y1,z1); v(x1,y0,z1)
+        // South -Z
+        v(x1,y0,z0); v(x1,y1,z0); v(x0,y1,z0); v(x1,y0,z0); v(x0,y1,z0); v(x0,y0,z0)
+
+        val buf = ByteBuffer.allocateDirect(verts.size * 4)
+            .order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(verts); buf.position(0)
+
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, playerBoxVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, verts.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+
+        laserShader?.use()
+        GLES30.glUniformMatrix4fv(lUMvp, 1, false, camera.vpMatrix, 0)
+
+        val stride = 6 * 4
+        GLES30.glEnableVertexAttribArray(lAPos)
+        GLES30.glVertexAttribPointer(lAPos,   3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(lAColor)
+        GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, verts.size / 6)
+        GLES30.glDisableVertexAttribArray(lAPos)
+        GLES30.glDisableVertexAttribArray(lAColor)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     // ── LOD helpers ──────────────────────────────────────────────────────────
@@ -1802,20 +1920,20 @@ internal class CaveRenderer(
         val jumpPressed = touch.flyUp && !prevFlyUp
         prevFlyUp = touch.flyUp
 
-        if (!collidesAt(camera.x + dx, camera.y, camera.z)) {
-            camera.x += dx
-        } else if ((onGround || inWater) && dx != 0.0 && !collidesAt(camera.x + dx, camera.y + 1.0, camera.z)) {
+        if (!collidesAt(camera.playerX + dx, camera.playerY, camera.playerZ)) {
+            camera.playerX += dx
+        } else if ((onGround || inWater) && dx != 0.0 && !collidesAt(camera.playerX + dx, camera.playerY + 1.0, camera.playerZ)) {
             if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
         }
-        if (!collidesAt(camera.x, camera.y, camera.z + dz)) {
-            camera.z += dz
-        } else if ((onGround || inWater) && dz != 0.0 && !collidesAt(camera.x, camera.y + 1.0, camera.z + dz)) {
+        if (!collidesAt(camera.playerX, camera.playerY, camera.playerZ + dz)) {
+            camera.playerZ += dz
+        } else if ((onGround || inWater) && dz != 0.0 && !collidesAt(camera.playerX, camera.playerY + 1.0, camera.playerZ + dz)) {
             if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
         }
         if (stepUpRemaining > 0.0) {
             val rise = minOf(stepUpRemaining, 12.0 * dt)
-            if (!collidesAt(camera.x, camera.y + rise, camera.z)) {
-                camera.y += rise
+            if (!collidesAt(camera.playerX, camera.playerY + rise, camera.playerZ)) {
+                camera.playerY += rise
                 stepUpRemaining -= rise
             } else {
                 stepUpRemaining = 0.0
@@ -1828,13 +1946,13 @@ internal class CaveRenderer(
             velocityY -= 3f * dt
             velocityY = velocityY.coerceAtLeast(-2f)
             val dy = (velocityY * dt).toDouble()
-            if (!collidesAt(camera.x, camera.y + dy, camera.z)) {
-                camera.y += dy
+            if (!collidesAt(camera.playerX, camera.playerY + dy, camera.playerZ)) {
+                camera.playerY += dy
             } else {
                 if (velocityY < 0f) {
-                    var lo = camera.y + dy; var hi = camera.y
-                    repeat(8) { val mid = (lo + hi) * 0.5; if (collidesAt(camera.x, mid, camera.z)) lo = mid else hi = mid }
-                    camera.y = hi
+                    var lo = camera.playerY + dy; var hi = camera.playerY
+                    repeat(8) { val mid = (lo + hi) * 0.5; if (collidesAt(camera.playerX, mid, camera.playerZ)) lo = mid else hi = mid }
+                    camera.playerY = hi
                 }
                 velocityY = 0f
             }
@@ -1845,34 +1963,34 @@ internal class CaveRenderer(
             velocityY -= 22f * dt
             velocityY = velocityY.coerceAtLeast(-30f)
             val dy = (velocityY * dt).toDouble()
-            if (!collidesAt(camera.x, camera.y + dy, camera.z)) {
-                camera.y += dy
+            if (!collidesAt(camera.playerX, camera.playerY + dy, camera.playerZ)) {
+                camera.playerY += dy
             } else {
                 if (velocityY < 0f) {
-                    var lo = camera.y + dy
-                    var hi = camera.y
+                    var lo = camera.playerY + dy
+                    var hi = camera.playerY
                     repeat(8) {
                         val mid = (lo + hi) * 0.5
-                        if (collidesAt(camera.x, mid, camera.z)) lo = mid else hi = mid
+                        if (collidesAt(camera.playerX, mid, camera.playerZ)) lo = mid else hi = mid
                     }
-                    camera.y = hi
+                    camera.playerY = hi
                 }
                 velocityY = 0f
             }
 
-            onGround = velocityY <= 0.1f && collidesAt(camera.x, camera.y - 0.1, camera.z)
+            onGround = velocityY <= 0.1f && collidesAt(camera.playerX, camera.playerY - 0.1, camera.playerZ)
         }
     }
 
     // ── Collision ─────────────────────────────────────────────────────────────
 
     private fun isBodyInWater(): Boolean {
-        val bx = floorInt(camera.x); val by = floorInt(camera.y - 0.9); val bz = floorInt(camera.z)
+        val bx = floorInt(camera.playerX); val by = floorInt(camera.playerY - 0.9); val bz = floorInt(camera.playerZ)
         return isWater(worldBlockAt(bx, by, bz))
     }
 
     private fun isHeadInWater(): Boolean {
-        val bx = floorInt(camera.x); val by = floorInt(camera.y - 0.1); val bz = floorInt(camera.z)
+        val bx = floorInt(camera.playerX); val by = floorInt(camera.playerY - 0.1); val bz = floorInt(camera.playerZ)
         return isWater(worldBlockAt(bx, by, bz))
     }
 
@@ -1900,14 +2018,14 @@ internal class CaveRenderer(
 
     private fun applyModeSwitch(newMode: PlayerMode) {
         if (newMode == PlayerMode.WALK) {
-            val bcx = Math.floorDiv(floorInt(camera.x), CHUNK_SIZE)
-            val bcy = Math.floorDiv(floorInt(camera.y), CHUNK_SIZE)
-            val bcz = Math.floorDiv(floorInt(camera.z), CHUNK_SIZE)
-            val inLoadedSolid = world.getChunk(bcx, bcy, bcz)?.generated == true && collidesAt(camera.x, camera.y, camera.z)
+            val bcx = Math.floorDiv(floorInt(camera.playerX), CHUNK_SIZE)
+            val bcy = Math.floorDiv(floorInt(camera.playerY), CHUNK_SIZE)
+            val bcz = Math.floorDiv(floorInt(camera.playerZ), CHUNK_SIZE)
+            val inLoadedSolid = world.getChunk(bcx, bcy, bcz)?.generated == true && collidesAt(camera.playerX, camera.playerY, camera.playerZ)
             if (inLoadedSolid) {
-                var safeY = camera.y
-                repeat(64) { if (collidesAt(camera.x, safeY, camera.z)) safeY += 1.0 }
-                camera.y = safeY
+                var safeY = camera.playerY
+                repeat(64) { if (collidesAt(camera.playerX, safeY, camera.playerZ)) safeY += 1.0 }
+                camera.playerY = safeY
             }
             velocityY = 0f; onGround = false
         }
@@ -2014,9 +2132,9 @@ internal class CaveRenderer(
     }
 
     private fun isInsidePlayer(bx: Int, by: Int, bz: Int): Boolean {
-        val x0 = floorInt(camera.x - 0.3); val x1 = floorInt(camera.x + 0.29)
-        val y0 = floorInt(camera.y - 1.62); val y1 = floorInt(camera.y + 0.18)
-        val z0 = floorInt(camera.z - 0.3); val z1 = floorInt(camera.z + 0.29)
+        val x0 = floorInt(camera.playerX - 0.3); val x1 = floorInt(camera.playerX + 0.29)
+        val y0 = floorInt(camera.playerY - 1.62); val y1 = floorInt(camera.playerY + 0.18)
+        val z0 = floorInt(camera.playerZ - 0.3); val z1 = floorInt(camera.playerZ + 0.29)
         return bx in x0..x1 && by in y0..y1 && bz in z0..z1
     }
 
@@ -2033,6 +2151,7 @@ internal class CaveRenderer(
         projRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)
+        if (playerBoxVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(playerBoxVbo), 0)
     }
 
     companion object {

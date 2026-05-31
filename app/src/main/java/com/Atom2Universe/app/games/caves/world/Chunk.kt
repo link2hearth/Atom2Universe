@@ -70,6 +70,10 @@ const val WOOD_PLANK_WHITE: Byte = 85
 // Bloc de garde (posé par le joueur après avoir tué un boss — crée une zone safe)
 const val WARD_STONE: Byte = 87
 
+// Items-outils (pas de rendu en monde, interaction spéciale)
+const val BUCKET_EMPTY: Byte = 88  // seau vide — clic-placer sur WATER → BUCKET_FULL
+const val BUCKET_FULL:  Byte = 89  // seau plein — clic-placer sur AIR  → WATER source + BUCKET_EMPTY
+
 private val DECORATION_TABLE = BooleanArray(256).also { t ->
     for (b in byteArrayOf(ROCK, ROCK_MOSS, MUSHROOM_RED, MUSHROOM_BROWN, MUSHROOM_TAN, TORCH,
                           GRASS_WILD1, GRASS_WILD2, GRASS_WILD3, GRASS_WILD4,

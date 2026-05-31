@@ -85,11 +85,11 @@
     <string name="about_credits_title">Penghargaan</string>
     <string name="about_credits_subtitle">A2U menggunakan pustaka open source berikut:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">Oleh Bill Farmer — Wrapper driver MIDI Android untuk Sonivox EAS. Lisensi Apache 2.0.</string>
+    <string name="about_credit_mididriver_desc">Oleh Bill Farmer — Wrapper driver MIDI Android untuk Sonivox EAS. Lisensi Apache 2.0.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">Oleh Sonic Network Inc. — Mesin Embedded Audio Synthesis untuk pemutaran MIDI. Lisensi Apache 2.0.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">Oleh Raphaël Slinckx dkk. — Pustaka Java untuk membaca dan menulis metadata file audio (tag ID3). Lisensi LGPL.</string>
+    <string name="about_credit_jaudiotagger_desc">Oleh Raphaël Slinckx dkk. — Pustaka Java untuk membaca dan menulis metadata file audio (tag ID3). Lisensi LGPL.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">Oleh LeffelMania — Parser file MIDI untuk Android. Lisensi Apache 2.0.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Oleh komunitas FluidSynth — Synthesizer perangkat lunak real-time berdasarkan spesifikasi SoundFont 2. Lisensi LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">Oleh Alberto Ruibal - Mesin catur untuk Java/Android, digunakan untuk lawan AI dalam permainan catur. Lisensi MIT.</string>
+    <string name="about_credit_karballo_desc">Oleh Alberto Ruibal - Mesin catur untuk Java/Android, digunakan untuk lawan AI dalam permainan catur. Lisensi MIT.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Terima kasih kepada Kevin MacLeod atas ketersediaannya berbagi musiknya secara gratis, sehingga memungkinkan musik tersebut disertakan dalam aplikasi ini.\nLisensi: Creative Commons Attribution 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Dirancang oleh Link2Hearth · Dikembangkan dengan Claude (Anthropic)</string>
     <string name="about_license_notice">Semua pustaka digunakan sesuai dengan lisensi masing-masing.\nTerima kasih kepada semua kontributor open source!</string>
     <string name="about_privacy_title">Privasi &amp; Izin</string>
     <string name="about_privacy_microphone">A2U meminta akses mikrofon untuk dua tujuan khusus:\n\n• Merekam audio di Editor Audio dan Pembuat SoundFont\n• Visualisasi spektrum frekuensi real-time di Pemutar Musik (aplikasi mendengarkan output audio untuk menampilkan kurva frekuensi)\n\nMikrofon tidak pernah digunakan untuk tujuan lain. Tidak ada audio yang direkam, dikirim, atau disimpan tanpa tindakan eksplisit Anda di Editor Audio atau Pembuat SoundFont.</string>

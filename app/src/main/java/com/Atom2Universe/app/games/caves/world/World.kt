@@ -1168,10 +1168,30 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Simulation eau ────────────────────────────────────────────────────────
 
-    // Niveau de propagation pour chaque WATER_FLOW (0 = même niveau que la source, 1-7 = distance horizontale)
+    // Niveau de propagation pour chaque WATER_FLOW (0 = même niveau que la source, 1-8 = distance horizontale)
     private val waterFlowLevels = java.util.concurrent.ConcurrentHashMap<Long, Byte>()
-    // File d'attente de propagation : IntArray(4) = [wx, wy, wz, level]
+    // File de propagation : IntArray(4) = [wx, wy, wz, level]
     val waterSpreadQueue = ConcurrentLinkedQueue<IntArray>()
+    // File de vidange : IntArray(3) = [wx, wy, wz] — blocs WATER_FLOW à vérifier/supprimer vague par vague
+    private val waterDrainQueue = ConcurrentLinkedQueue<IntArray>()
+
+    /** Niveau de flux d'un bloc d'eau : 0 = source, 1-8 = flux horizontal. */
+    fun waterFlowLevel(wx: Int, wy: Int, wz: Int): Int =
+        when (blockAt(wx, wy, wz)) {
+            WATER      -> 0
+            WATER_FLOW -> waterFlowLevels[waterKey(wx, wy, wz)]?.toInt()?.and(0xFF) ?: 0
+            else       -> 0
+        }
+
+    /**
+     * Variante sans blockAt redondant : le type est déjà connu (appelé depuis buildWater).
+     * WATER → niveau 0 sans aucun accès hashmap. WATER_FLOW → lookup hashmap minimal.
+     */
+    fun waterFlowLevelKnown(blockType: Byte, wx: Int, wy: Int, wz: Int): Int = when (blockType) {
+        WATER      -> 0
+        WATER_FLOW -> waterFlowLevels[waterKey(wx, wy, wz)]?.toInt()?.and(0xFF) ?: 0
+        else       -> 0
+    }
 
     private fun waterKey(wx: Int, wy: Int, wz: Int): Long =
         (wx.toLong() and 0x3FFFFF) or
@@ -1182,73 +1202,123 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     fun onWaterSourcePlaced(wx: Int, wy: Int, wz: Int) {
         waterFlowLevels.remove(waterKey(wx, wy, wz))
         waterSpreadQueue.add(intArrayOf(wx, wy, wz, 0))
+        checkFlowPromotion(wx, wy, wz)
     }
 
-    /** Appelé quand le joueur retire un bloc WATER source. Retire les WATER_FLOW connectés. */
-    fun onWaterSourceRemoved(wx: Int, wy: Int, wz: Int) {
-        val toRemove = ArrayDeque<IntArray>()
-        val seen = HashSet<Long>()
-        val sourcesToRequeue = mutableListOf<IntArray>()
+    /**
+     * Enfile les WATER_FLOW voisins horizontaux éligibles à la promotion en source
+     * (≥2 sources adjacentes — règle L/I-shape de Minecraft).
+     * Non récursive : la promotion effective se fait dans tickWater au tick suivant,
+     * évitant tout blocage du thread GL en cas de large plan d'eau adjacent.
+     */
+    private fun checkFlowPromotion(wx: Int, wy: Int, wz: Int) {
+        val hDirs = arrayOf(intArrayOf(1,0), intArrayOf(-1,0), intArrayOf(0,1), intArrayOf(0,-1))
+        for (d in hDirs) {
+            val nx = wx + d[0]; val nz = wz + d[1]
+            if (blockAt(nx, wy, nz) != WATER_FLOW) continue
+            var srcAdj = 0
+            for (sd in hDirs) { if (blockAt(nx + sd[0], wy, nz + sd[1]) == WATER) srcAdj++ }
+            if (srcAdj >= 2) waterSpreadQueue.add(intArrayOf(nx, wy, nz, 0))
+        }
+    }
 
-        // BFS depuis les voisins du bloc retiré
-        val startDirs = arrayOf(
+    /**
+     * Appelé quand le joueur retire un bloc WATER source.
+     * Lance une vidange animée vague par vague via [waterDrainQueue] (traité dans [tickDrain]).
+     * Les sources voisines restantes sont re-propagées pour reboucher si besoin.
+     */
+    fun onWaterSourceRemoved(wx: Int, wy: Int, wz: Int) {
+        val allDirs = arrayOf(
             intArrayOf(0,-1,0), intArrayOf(0,1,0),
             intArrayOf(1,0,0),  intArrayOf(-1,0,0),
             intArrayOf(0,0,1),  intArrayOf(0,0,-1)
         )
-        for (d in startDirs) {
+        for (d in allDirs) {
             val nx = wx + d[0]; val ny = wy + d[1]; val nz = wz + d[2]
-            val k = waterKey(nx, ny, nz)
-            if (!seen.add(k)) continue
             when (blockAt(nx, ny, nz)) {
-                WATER_FLOW -> toRemove.add(intArrayOf(nx, ny, nz))
-                WATER      -> sourcesToRequeue.add(intArrayOf(nx, ny, nz, 0))
+                WATER_FLOW -> waterDrainQueue.add(intArrayOf(nx, ny, nz))
+                WATER      -> waterSpreadQueue.add(intArrayOf(nx, ny, nz, 0))
             }
         }
+    }
 
-        // BFS vers le bas et horizontal pour collecter tous les WATER_FLOW connectés
-        val spreadDirs = arrayOf(
-            intArrayOf(0,-1,0),
-            intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1)
+    /**
+     * Supprime l'eau qui coule vague par vague après retrait d'une source.
+     * Chaque vague retire les WATER_FLOW sans source adjacente et enfile leurs voisins.
+     * Résultat : l'eau "recule" visuellement d'un bloc par tick (~0.25 s).
+     */
+    fun tickDrain(maxOps: Int = 512) {
+        val wave = ArrayList<IntArray>(64)
+        while (wave.size < maxOps) { wave.add(waterDrainQueue.poll() ?: break) }
+        if (wave.isEmpty()) return
+
+        val allDirs = arrayOf(
+            intArrayOf(0,-1,0), intArrayOf(0,1,0),
+            intArrayOf(1,0,0),  intArrayOf(-1,0,0),
+            intArrayOf(0,0,1),  intArrayOf(0,0,-1)
         )
-        var i = 0
-        while (i < toRemove.size) {
-            val (x, y, z) = toRemove[i].let { Triple(it[0], it[1], it[2]) }
-            i++
-            for (d in spreadDirs) {
-                val nx = x + d[0]; val ny = y + d[1]; val nz = z + d[2]
-                val k = waterKey(nx, ny, nz)
-                if (!seen.add(k)) continue
-                when (blockAt(nx, ny, nz)) {
-                    WATER_FLOW -> toRemove.add(intArrayOf(nx, ny, nz))
-                    WATER      -> sourcesToRequeue.add(intArrayOf(nx, ny, nz, 0))
+        val seen = HashSet<Long>()
+        for (item in wave) {
+            val wx = item[0]; val wy = item[1]; val wz = item[2]
+            val k = waterKey(wx, wy, wz)
+            if (!seen.add(k)) continue
+            if (blockAt(wx, wy, wz) != WATER_FLOW) continue
+
+            // Ce bloc est-il encore alimenté par une source directement adjacente ?
+            var hasSource = false
+            for (d in allDirs) {
+                if (blockAt(wx + d[0], wy + d[1], wz + d[2]) == WATER) { hasSource = true; break }
+            }
+
+            if (!hasSource) {
+                setBlock(wx, wy, wz, AIR)
+                waterFlowLevels.remove(k)
+                // Propager la vidange aux voisins WATER_FLOW
+                for (d in allDirs) {
+                    val nx = wx + d[0]; val ny = wy + d[1]; val nz = wz + d[2]
+                    val nk = waterKey(nx, ny, nz)
+                    if (!seen.contains(nk) && blockAt(nx, ny, nz) == WATER_FLOW)
+                        waterDrainQueue.add(intArrayOf(nx, ny, nz))
                 }
             }
         }
-
-        // Retirer tous les blocs de flux collectés
-        for (pos in toRemove) {
-            val (x, y, z) = Triple(pos[0], pos[1], pos[2])
-            if (blockAt(x, y, z) == WATER_FLOW) {
-                setBlock(x, y, z, AIR)
-                waterFlowLevels.remove(waterKey(x, y, z))
-            }
-        }
-
-        // Re-lancer la propagation depuis les sources voisines (pour reboucher si besoin)
-        for (src in sourcesToRequeue) waterSpreadQueue.add(src)
     }
 
-    /** Propage l'eau depuis la file. Appelé chaque tick (~0.25s) depuis le renderer. */
-    fun tickWater(maxOps: Int = 64) {
-        repeat(maxOps) {
-            val item = waterSpreadQueue.poll() ?: return
+    /**
+     * Propage l'eau par vagues BFS : snapshot de la file courante → traitement complet →
+     * les nouvelles cases générées entrent dans la file pour le tick suivant.
+     * Résultat : l'eau avance visuellement d'une couche par tick (~0.25 s).
+     */
+    fun tickWater(maxOps: Int = 512) {
+        val hDirs = arrayOf(intArrayOf(1,0), intArrayOf(-1,0), intArrayOf(0,1), intArrayOf(0,-1))
+
+        // Drain de la vague courante dans un snapshot (les add() ci-dessous alimentent le tick suivant)
+        val wave = ArrayList<IntArray>(waterSpreadQueue.size.coerceAtLeast(8))
+        while (wave.size < maxOps) { wave.add(waterSpreadQueue.poll() ?: break) }
+        if (wave.isEmpty()) return
+
+        for (item in wave) {
             val wx = item[0]; val wy = item[1]; val wz = item[2]; val level = item[3]
 
             val currentBlock = blockAt(wx, wy, wz)
-            if (!isWater(currentBlock)) return@repeat
+            if (!isWater(currentBlock)) continue
 
-            // Tenter de couler vers le bas d'abord (sans incrémenter le niveau)
+            // WATER_FLOW : promotion en source si ≥2 sources adjacentes
+            if (currentBlock == WATER_FLOW) {
+                var srcAdj = 0
+                for (d in hDirs) { if (blockAt(wx + d[0], wy, wz + d[1]) == WATER) srcAdj++ }
+                if (srcAdj >= 2) {
+                    setBlock(wx, wy, wz, WATER)
+                    waterFlowLevels.remove(waterKey(wx, wy, wz))
+                    waterSpreadQueue.add(intArrayOf(wx, wy, wz, 0))
+                    continue
+                }
+            }
+
+            // WATER source : vérifier si des WATER_FLOW voisins peuvent être promus (L/I-shape)
+            if (currentBlock == WATER) checkFlowPromotion(wx, wy, wz)
+
+            // Chute verticale (priorité absolue, niveau conservé)
             val belowBlock = blockAt(wx, wy - 1, wz)
             if (belowBlock == AIR) {
                 val key = waterKey(wx, wy - 1, wz)
@@ -1258,18 +1328,34 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     waterFlowLevels[key] = level.toByte()
                     waterSpreadQueue.add(intArrayOf(wx, wy - 1, wz, level))
                 }
-                return@repeat  // coule vers le bas → pas de propagation horizontale ici
+                continue
             }
 
-            // Pas de chute possible : propager horizontalement (niveau + 1, max 7)
-            if (level >= 7) return@repeat
+            // Propagation horizontale (max 8 blocs)
+            if (level >= 8) continue
             val nextLevel = level + 1
-            for (d in arrayOf(intArrayOf(1,0), intArrayOf(-1,0), intArrayOf(0,1), intArrayOf(0,-1))) {
+
+            // Priorité aux directions menant à un dénivellé
+            val dirsWithDrop = hDirs.filter { d ->
                 val nx = wx + d[0]; val nz = wz + d[1]
-                if (blockAt(nx, wy, nz) == AIR) {
-                    val key = waterKey(nx, wy, nz)
-                    val existing = waterFlowLevels[key]?.toInt()?.and(0xFF)
-                    if (existing == null || existing > nextLevel) {
+                blockAt(nx, wy, nz) == AIR && blockAt(nx, wy - 1, nz) == AIR
+            }
+            val targets = if (dirsWithDrop.isNotEmpty()) dirsWithDrop else hDirs.toList()
+
+            for (d in targets) {
+                val nx = wx + d[0]; val nz = wz + d[1]
+                if (blockAt(nx, wy, nz) != AIR) continue
+                val key = waterKey(nx, wy, nz)
+                val existing = waterFlowLevels[key]?.toInt()?.and(0xFF)
+                if (existing == null || existing > nextLevel) {
+                    var srcAdj = 0
+                    for (sd in hDirs) { if (blockAt(nx + sd[0], wy, nz + sd[1]) == WATER) srcAdj++ }
+                    if (srcAdj >= 2) {
+                        setBlock(nx, wy, nz, WATER)
+                        waterFlowLevels.remove(key)
+                        waterSpreadQueue.add(intArrayOf(nx, wy, nz, 0))
+                        checkFlowPromotion(nx, wy, nz)
+                    } else {
                         setBlock(nx, wy, nz, WATER_FLOW)
                         waterFlowLevels[key] = nextLevel.toByte()
                         waterSpreadQueue.add(intArrayOf(nx, wy, nz, nextLevel))

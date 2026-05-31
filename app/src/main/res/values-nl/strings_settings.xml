@@ -85,11 +85,11 @@
     <string name="about_credits_title">Erkenningen</string>
     <string name="about_credits_subtitle">A2U maakt gebruik van de volgende open source-bibliotheken:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">Door Bill Farmer — Android MIDI-driverwrapper voor Sonivox EAS. Apache 2.0-licentie.</string>
+    <string name="about_credit_mididriver_desc">Door Bill Farmer — Android MIDI-driverwrapper voor Sonivox EAS. Apache 2.0-licentie.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">Door Sonic Network Inc. — Embedded Audio Synthesis-engine voor MIDI-weergave. Apache 2.0-licentie.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">Door Raphaël Slinckx e.a. — Java-bibliotheek voor het lezen en schrijven van audiobestandsmetadata (ID3-tags). LGPL-licentie.</string>
+    <string name="about_credit_jaudiotagger_desc">Door Raphaël Slinckx e.a. — Java-bibliotheek voor het lezen en schrijven van audiobestandsmetadata (ID3-tags). LGPL-licentie.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">Door LeffelMania — MIDI-bestandsparser voor Android. Apache 2.0-licentie.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Door de FluidSynth-gemeenschap — Realtime software-synthesizer gebaseerd op de SoundFont 2-specificatie. LGPL 2.1-licentie.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">Door Alberto Ruibal - Schaakmotor voor Java/Android, gebruikt voor AI-tegenstanders in het schaakspel. MIT-licentie.</string>
+    <string name="about_credit_karballo_desc">Door Alberto Ruibal - Schaakmotor voor Java/Android, gebruikt voor AI-tegenstanders in het schaakspel. MIT-licentie.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Dank aan Kevin MacLeod voor het vrijelijk delen van zijn muziek, waardoor het mogelijk is deze in deze app op te nemen.\nLicentie: Creative Commons Naamsvermelding 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Ontworpen door Link2Hearth · Ontwikkeld met Claude (Anthropic)</string>
     <string name="about_license_notice">Alle bibliotheken worden gebruikt in overeenstemming met hun respectievelijke licenties.\nDank aan alle open source-bijdragers!</string>
     <string name="about_privacy_title">Privacy &amp; Machtigingen</string>
     <string name="about_privacy_microphone">A2U vraagt microfoontoegang voor twee specifieke doeleinden:\n\n• Audio opnemen in de Audio-editor en de SoundFont Creator\n• Realtime frequentiespectrum visualisatie in de Muziekspeler (de app luistert naar de audio-uitvoer om de frequentiecurven weer te geven)\n\nDe microfoon wordt nooit voor andere doeleinden gebruikt. Er wordt geen audio opgenomen, verzonden of opgeslagen zonder uw expliciete actie in de Audio-editor of SoundFont Creator.</string>

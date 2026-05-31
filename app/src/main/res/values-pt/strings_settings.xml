@@ -85,11 +85,11 @@
     <string name="about_credits_title">Agradecimentos</string>
     <string name="about_credits_subtitle">O A2U utiliza as seguintes bibliotecas de código aberto:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">Por Bill Farmer — Wrapper de driver MIDI para Android para Sonivox EAS. Licença Apache 2.0.</string>
+    <string name="about_credit_mididriver_desc">Por Bill Farmer — Wrapper de driver MIDI para Android para Sonivox EAS. Licença Apache 2.0.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">Por Sonic Network Inc. — Motor de síntese de áudio embutido para reprodução MIDI. Licença Apache 2.0.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">Por Raphaël Slinckx et al. — Biblioteca Java para leitura e escrita de metadados de arquivos de áudio (tags ID3). Licença LGPL.</string>
+    <string name="about_credit_jaudiotagger_desc">Por Raphaël Slinckx et al. — Biblioteca Java para leitura e escrita de metadados de arquivos de áudio (tags ID3). Licença LGPL.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">Por LeffelMania — Parser de arquivos MIDI para Android. Licença Apache 2.0.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Pela comunidade FluidSynth — Sintetizador de software em tempo real baseado na especificação SoundFont 2. Licença LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">Por Alberto Ruibal - Motor de xadrez para Java/Android, usado para adversários de IA no jogo de xadrez. Licença MIT.</string>
+    <string name="about_credit_karballo_desc">Por Alberto Ruibal - Motor de xadrez para Java/Android, usado para adversários de IA no jogo de xadrez. Licença MIT.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Obrigado a Kevin MacLeod por partilhar a sua música gratuitamente, tornando possível incluí-la nesta aplicação.\nLicença: Creative Commons Atribuição 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Concebido por Link2Hearth · Desenvolvido com Claude (Anthropic)</string>
     <string name="about_license_notice">Todas as bibliotecas são utilizadas em conformidade com suas respectivas licenças.\nObrigado a todos os contribuidores de código aberto!</string>
     <string name="about_privacy_title">Privacidade e Permissões</string>
     <string name="about_privacy_microphone">O A2U solicita acesso ao microfone para dois propósitos específicos:\n\n• Gravação de áudio no Editor de Áudio e no Criador de SoundFont\n• Visualização de espectro de frequência em tempo real no Reprodutor de Música (o aplicativo escuta a saída de áudio para exibir as curvas de frequência)\n\nO microfone nunca é usado para nenhum outro propósito. Nenhum áudio é gravado, transmitido ou armazenado sem sua ação explícita no Editor de Áudio ou no Criador de SoundFont.</string>

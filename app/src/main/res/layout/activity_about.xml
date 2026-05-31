@@ -53,6 +53,17 @@
             android:textColor="@color/startup_text_secondary"
             android:textSize="14sp" />
 
+        <!-- Credits author line -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:text="@string/about_credit_by"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp"
+            android:textStyle="italic" />
+
         <!-- Description card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -140,7 +151,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/about_credit_mididriver_desc"
                         android:textColor="@color/startup_text_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:autoLink="web"
+                        android:linksClickable="true" />
 
                 </LinearLayout>
 
@@ -188,7 +201,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/about_credit_jaudiotagger_desc"
                         android:textColor="@color/startup_text_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:autoLink="web"
+                        android:linksClickable="true" />
 
                 </LinearLayout>
 
@@ -332,7 +347,35 @@
                         android:layout_height="wrap_content"
                         android:text="@string/about_credit_karballo_desc"
                         android:textColor="@color/startup_text_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:autoLink="web"
+                        android:linksClickable="true" />
+
+                </LinearLayout>
+
+                <!-- Kevin MacLeod -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_credit_kevinmacleod_name"
+                        android:textColor="@color/startup_text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_credit_kevinmacleod_desc"
+                        android:textColor="@color/startup_text_secondary"
+                        android:textSize="12sp"
+                        android:autoLink="web"
+                        android:linksClickable="true" />
 
                 </LinearLayout>
 
@@ -382,11 +425,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"
             android:text="@string/about_license_notice"
             android:textColor="@color/startup_text_secondary"
             android:textSize="12sp"
             android:textAlignment="center" />
+
+        <!-- Contact -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/about_contact"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="12sp"
+            android:autoLink="email"
+            android:linksClickable="true" />
 
     </LinearLayout>
 

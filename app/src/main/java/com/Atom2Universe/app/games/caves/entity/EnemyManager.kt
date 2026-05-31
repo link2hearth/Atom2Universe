@@ -48,27 +48,29 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
         for (e in enemies) if (e.hp > 0) e.animTime += dt
 
-        // Nettoyage des ennemis morts + récompense boss
+        // Despawn ennemis trop loin (> DESPAWN_CHUNKS) ou morts
+        val despawnDist2 = (DESPAWN_CHUNKS * CHUNK_SIZE).toDouble().let { it * it }
         enemies.removeAll { e ->
             if (e.hp <= 0) {
                 if (e.id == bossEnemyId && !bossRewardGiven) {
-                    bossRewardGiven = true
-                    bossEnemyId = -1
+                    bossRewardGiven = true; bossEnemyId = -1
                     bossRewardCallback?.invoke()
                 }
-                true
-            } else false
+                return@removeAll true
+            }
+            val dx = e.x - px; val dz = e.z - pz
+            dx * dx + dz * dz > despawnDist2
         }
 
-        // ── Spawn ambiant ─────────────────────────────────────────────────────
+        // ── Spawn ambiant organique ───────────────────────────────────────────
         val nearbyCount = enemies.count { e ->
             val dx = e.x - px; val dz = e.z - pz
-            dx * dx + dz * dz <= SPAWN_MAX_CHUNKS * CHUNK_SIZE.toDouble().let { it * it }
+            dx * dx + dz * dz <= (SPAWN_MAX_CHUNKS * CHUNK_SIZE).toDouble().let { it * it }
         }
         if (!isInSafeZone(px, pz) && nearbyCount < MAX_ENEMIES_NEARBY) {
             spawnCooldown -= dt
             if (spawnCooldown <= 0f) {
-                spawnCooldown = SPAWN_INTERVAL
+                spawnCooldown = SPAWN_INTERVAL + rng.nextFloat() * SPAWN_JITTER
                 tryAmbientSpawn(px, py, pz)
             }
         }
@@ -80,13 +82,13 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         val spawnBoss = bossEnemyId == -1 && rng.nextFloat() < BOSS_CHANCE
         val minDist = SPAWN_MIN_CHUNKS * CHUNK_SIZE.toDouble()
         val maxDist = SPAWN_MAX_CHUNKS * CHUNK_SIZE.toDouble()
-        repeat(30) {
+        repeat(20) {
             val angle = rng.nextDouble() * 2 * PI
             val dist  = minDist + rng.nextDouble() * (maxDist - minDist)
             val sx = px + cos(angle) * dist
             val sz = pz + sin(angle) * dist
             if (!canSpawnAt(sx, sz)) return@repeat
-            val sy = py + rng.nextDouble() * 2.0 - 0.5
+            val sy = findSpawnGround(sx, sz, py) ?: return@repeat
             val familyIdx = rng.nextInt(POOL_SIZE)
             val e = Enemy(nextId++, EnemyType.values()[rng.nextInt(EnemyType.values().size)], sx, sy, sz)
             e.spriteFamily = familyPool[familyIdx]
@@ -94,21 +96,33 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             e.level        = computeLevel(sx, sz).coerceAtLeast(1)
             e.isBoss       = spawnBoss
             e.hp           = e.maxHp
-            e.state        = EnemyState.WANDER
-            if (spawnBoss) {
-                bossEnemyId     = e.id
-                bossRewardGiven = false
-            }
+            e.state        = EnemyState.CHASE
+            if (spawnBoss) { bossEnemyId = e.id; bossRewardGiven = false }
             enemies.add(e)
             return
         }
     }
 
+    // Trouve le premier sol solide non-eau sous (sx, sz) avec 2 blocs d'air au-dessus.
+    private fun findSpawnGround(sx: Double, sz: Double, nearY: Double): Double? {
+        val bx = Math.floor(sx).toInt()
+        val bz = Math.floor(sz).toInt()
+        val startY = (nearY + 8.0).toInt()
+        for (by in startY downTo startY - 40) {
+            val b = world.blockAt(bx, by, bz)
+            if (b == AIR || isWater(b) || isDecoration(b)) continue
+            // Sol solide trouvé : vérifier 2 blocs d'air libres au-dessus
+            val a1 = world.blockAt(bx, by + 1, bz)
+            val a2 = world.blockAt(bx, by + 2, bz)
+            if (a1 == AIR && a2 == AIR) return (by + 1).toDouble()
+        }
+        return null
+    }
+
     private fun isInSafeZone(px: Double, pz: Double): Boolean {
         if (distFromSpawnChunks(px, pz) < SAFE_ZONE_CHUNKS) return true
         return wardStoneZones.any { (wx, wz) ->
-            val dX = (px - wx) / CHUNK_SIZE
-            val dZ = (pz - wz) / CHUNK_SIZE
+            val dX = (px - wx) / CHUNK_SIZE; val dZ = (pz - wz) / CHUNK_SIZE
             sqrt(dX * dX + dZ * dZ) < WARD_SAFE_RADIUS
         }
     }
@@ -116,31 +130,28 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     private fun canSpawnAt(sx: Double, sz: Double): Boolean {
         if (distFromSpawnChunks(sx, sz) < SAFE_ZONE_CHUNKS) return false
         if (wardStoneZones.any { (wx, wz) ->
-            val dX = (sx - wx) / CHUNK_SIZE
-            val dZ = (sz - wz) / CHUNK_SIZE
+            val dX = (sx - wx) / CHUNK_SIZE; val dZ = (sz - wz) / CHUNK_SIZE
             sqrt(dX * dX + dZ * dZ) < WARD_SAFE_RADIUS
         }) return false
         return true
     }
 
     private fun distFromSpawnChunks(x: Double, z: Double): Double {
-        val dX = (x - worldSpawnX) / CHUNK_SIZE
-        val dZ = (z - worldSpawnZ) / CHUNK_SIZE
+        val dX = (x - worldSpawnX) / CHUNK_SIZE; val dZ = (z - worldSpawnZ) / CHUNK_SIZE
         return sqrt(dX * dX + dZ * dZ)
     }
 
     private fun updateEnemy(e: Enemy, dt: Float, px: Double, py: Double, pz: Double) {
         if (e.hitFlash > 0f) e.hitFlash -= dt
 
-        val dx = px - e.x
-        val dz = pz - e.z
+        val dx = px - e.x; val dz = pz - e.z
         val dist = sqrt(dx * dx + dz * dz)
 
         e.state = when (e.state) {
             EnemyState.WANDER -> if (dist < e.type.detectRange) EnemyState.CHASE else EnemyState.WANDER
             EnemyState.CHASE  -> when {
                 dist < e.type.attackRange       -> EnemyState.ATTACK
-                dist > e.type.detectRange * 1.5 -> EnemyState.WANDER
+                dist > e.type.detectRange * 2.0 -> EnemyState.WANDER
                 else                             -> EnemyState.CHASE
             }
             EnemyState.ATTACK -> if (dist > e.type.attackRange * 1.5) EnemyState.CHASE else EnemyState.ATTACK
@@ -149,6 +160,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         val spd = e.scaledSpeed.toDouble() * dt
         when (e.state) {
             EnemyState.WANDER -> {
+                e.stuckTimer = 0f
                 e.wanderTimer -= dt
                 if (e.wanderTimer <= 0f) {
                     val a = rng.nextFloat() * 2 * PI.toFloat()
@@ -160,11 +172,25 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                     e.yaw = atan2(e.wanderDirX, e.wanderDirZ) * (180f / PI.toFloat())
             }
             EnemyState.CHASE -> if (dist > 0.1) {
-                val nx = dx / dist; val nz = dz / dist
+                var nx = (dx / dist).toFloat()
+                var nz = (dz / dist).toFloat()
+
+                // Si bloqué depuis trop longtemps, appliquer une perturbation perpendiculaire
+                if (e.stuckTimer > 1.2f) {
+                    val sign = if ((e.stuckTimer * 3).toInt() % 2 == 0) 1f else -1f
+                    val px2 = -nz * sign * 0.7f; val pz2 = nx * sign * 0.7f
+                    nx = (nx + px2); nz = (nz + pz2)
+                    val len = sqrt(nx * nx + nz * nz).coerceAtLeast(0.001f)
+                    nx /= len; nz /= len
+                }
+
+                val prevX = e.x; val prevZ = e.z
                 move(e, nx * spd, nz * spd)
-                e.yaw = atan2(nx.toFloat(), nz.toFloat()) * (180f / PI.toFloat())
+                if (e.x == prevX && e.z == prevZ) e.stuckTimer += dt else e.stuckTimer = 0f
+                e.yaw = atan2(nx, nz) * (180f / PI.toFloat())
             }
             EnemyState.ATTACK -> {
+                e.stuckTimer = 0f
                 if (dist > 0.1)
                     e.yaw = atan2((px - e.x).toFloat(), (pz - e.z).toFloat()) * (180f / PI.toFloat())
                 e.attackCooldown -= dt
@@ -185,6 +211,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             }
         }
 
+        // ── Gravité (sol = bloc solide non-eau) ──────────────────────────────
         if (e.type.flies) {
             val targetVY = ((py - 0.9 - e.y) * 4.0).coerceIn(-8.0, 8.0)
             e.velY += (targetVY - e.velY) * (dt * 4.0)
@@ -192,21 +219,66 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         } else {
             e.velY = (e.velY - GRAVITY * dt).coerceAtLeast(MAX_FALL.toDouble())
             val newY = e.y + e.velY * dt
-            val ground = world.groundBelow(e.x, e.z, newY + 1.0)
+            val ground = solidGroundBelow(e.x, e.z, newY + 1.0)
             if (ground != null && newY < ground) {
-                e.y = ground
-                e.velY = 0.0
-                e.onGround = true
+                e.y = ground; e.velY = 0.0; e.onGround = true
             } else {
-                e.y = newY
-                e.onGround = ground != null && newY <= ground + 0.1
+                e.y = newY; e.onGround = ground != null && newY <= ground + 0.1
             }
         }
     }
 
+    // Déplacement horizontal avec collision + step-up d'un bloc.
     private fun move(e: Enemy, dx: Double, dz: Double) {
-        e.x += dx
-        e.z += dz
+        val r = e.type.radius.toDouble()
+        val footY = Math.floor(e.y).toInt()
+        val headY = footY + 1
+
+        // Axe X
+        if (dx != 0.0) {
+            val tx = Math.floor(e.x + dx + if (dx > 0) r else -r).toInt()
+            val zMin = Math.floor(e.z - r + 0.05).toInt()
+            val zMax = Math.floor(e.z + r - 0.05).toInt()
+            val freeX = (zMin..zMax).all { bz -> isFreeForMob(tx, footY, bz) && isFreeForMob(tx, headY, bz) }
+            val stepX = !freeX && e.onGround &&
+                (zMin..zMax).all { bz -> isFreeForMob(tx, footY + 1, bz) && isFreeForMob(tx, headY + 1, bz) }
+            when {
+                freeX  -> e.x += dx
+                stepX  -> { e.y += 1.0; e.x += dx; e.velY = 0.0 }
+            }
+        }
+
+        // Axe Z
+        if (dz != 0.0) {
+            val tz = Math.floor(e.z + dz + if (dz > 0) r else -r).toInt()
+            val xMin = Math.floor(e.x - r + 0.05).toInt()
+            val xMax = Math.floor(e.x + r - 0.05).toInt()
+            val fy2 = Math.floor(e.y).toInt(); val hy2 = fy2 + 1
+            val freeZ = (xMin..xMax).all { bx -> isFreeForMob(bx, fy2, tz) && isFreeForMob(bx, hy2, tz) }
+            val stepZ = !freeZ && e.onGround &&
+                (xMin..xMax).all { bx -> isFreeForMob(bx, fy2 + 1, tz) && isFreeForMob(bx, hy2 + 1, tz) }
+            when {
+                freeZ -> e.z += dz
+                stepZ -> { e.y += 1.0; e.z += dz; e.velY = 0.0 }
+            }
+        }
+    }
+
+    // Un bloc est libre pour un mob s'il est air, eau ou décoration.
+    private fun isFreeForMob(bx: Int, by: Int, bz: Int): Boolean {
+        val b = world.blockAt(bx, by, bz)
+        return b == AIR || isWater(b) || isDecoration(b)
+    }
+
+    // Sol solide = premier bloc ni air, ni eau, ni décoration.
+    private fun solidGroundBelow(wx: Double, wz: Double, fromY: Double): Double? {
+        val bx = Math.floor(wx).toInt(); val bz = Math.floor(wz).toInt()
+        val startY = Math.floor(fromY).toInt()
+        for (by in startY downTo startY - 24) {
+            val b = world.blockAt(bx, by, bz)
+            if (b != AIR && !isWater(b) && !isDecoration(b)) return (by + 1).toDouble()
+        }
+        return null
     }
 
     fun hitByLaser(
@@ -214,16 +286,13 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         ddx: Float, ddy: Float, ddz: Float,
         maxDist: Float
     ): Enemy? {
-        var closest: Enemy? = null
-        var closestT = maxDist.toDouble()
+        var closest: Enemy? = null; var closestT = maxDist.toDouble()
         for (e in enemies) {
             if (e.hp <= 0) continue
             val r = e.type.radius.toDouble()
-            val t = rayAABB(
-                ox, oy, oz, ddx, ddy, ddz,
+            val t = rayAABB(ox, oy, oz, ddx, ddy, ddz,
                 e.x - r, e.y - e.type.eyeHeight, e.z - r,
-                e.x + r, e.y + 0.1, e.z + r
-            ) ?: continue
+                e.x + r, e.y + 0.1, e.z + r) ?: continue
             if (t < closestT) { closestT = t; closest = e }
         }
         return closest
@@ -255,8 +324,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         fun axis(o: Double, d: Float, lo: Double, hi: Double): Boolean {
             if (d == 0f) return o in lo..hi
             val t1 = (lo - o) / d; val t2 = (hi - o) / d
-            tMin = maxOf(tMin, minOf(t1, t2))
-            tMax = minOf(tMax, maxOf(t1, t2))
+            tMin = maxOf(tMin, minOf(t1, t2)); tMax = minOf(tMax, maxOf(t1, t2))
             return tMax >= tMin
         }
         if (!axis(ox, ddx, minX, maxX)) return null
@@ -274,11 +342,13 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         const val GRAVITY               = 20f
         const val MAX_FALL              = -20f
 
-        const val SPAWN_INTERVAL       = 4f   // secondes entre tentatives de spawn
-        const val MAX_ENEMIES_NEARBY   = 15   // plafond d'ennemis dans le rayon de spawn
-        const val SPAWN_MIN_CHUNKS     = 2    // distance min de spawn (en chunks)
-        const val SPAWN_MAX_CHUNKS     = 4    // distance max de spawn (en chunks)
-        const val BOSS_CHANCE      = 0.01f  // 1% de chance par tentative de spawn
+        const val SPAWN_INTERVAL       = 5f    // secondes entre spawns
+        const val SPAWN_JITTER         = 3f    // variation aléatoire de l'intervalle
+        const val MAX_ENEMIES_NEARBY   = 10    // plafond dans le rayon de spawn
+        const val SPAWN_MIN_CHUNKS     = 2     // distance min (chunks)
+        const val SPAWN_MAX_CHUNKS     = 4     // distance max (chunks)
+        const val DESPAWN_CHUNKS       = 6     // distance de despawn (chunks)
+        const val BOSS_CHANCE          = 0.01f
 
         val ALL_FAMILIES = listOf(
             "amg1", "amg2", "amg3", "amg4",

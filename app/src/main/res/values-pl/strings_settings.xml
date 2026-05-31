@@ -85,11 +85,11 @@
     <string name="about_credits_title">Podziękowania</string>
     <string name="about_credits_subtitle">A2U wykorzystuje następujące biblioteki open source:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">Autor: Bill Farmer — Wrapper sterownika MIDI dla Sonivox EAS na Androida. Licencja Apache 2.0.</string>
+    <string name="about_credit_mididriver_desc">Autor: Bill Farmer — Wrapper sterownika MIDI dla Sonivox EAS na Androida. Licencja Apache 2.0.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">Autor: Sonic Network Inc. — Wbudowany silnik syntezy audio do odtwarzania MIDI. Licencja Apache 2.0.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">Autorzy: Raphaël Slinckx i in. — Biblioteka Java do odczytu i zapisu metadanych plików audio (tagi ID3). Licencja LGPL.</string>
+    <string name="about_credit_jaudiotagger_desc">Autorzy: Raphaël Slinckx i in. — Biblioteka Java do odczytu i zapisu metadanych plików audio (tagi ID3). Licencja LGPL.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">Autor: LeffelMania — Parser plików MIDI dla Androida. Licencja Apache 2.0.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">Autor: społeczność FluidSynth — Syntezator programowy czasu rzeczywistego oparty na specyfikacji SoundFont 2. Licencja LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">Autor: Alberto Ruibal - Silnik szachowy dla Java/Android, używany do przeciwników SI w grze w szachy. Licencja MIT.</string>
+    <string name="about_credit_karballo_desc">Autor: Alberto Ruibal - Silnik szachowy dla Java/Android, używany do przeciwników SI w grze w szachy. Licencja MIT.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Dziękujemy Kevinowi MacLeodowi za bezpłatne udostępnianie swojej muzyki, co umożliwia jej włączenie do tej aplikacji.\nLicencja: Creative Commons Uznanie autorstwa 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Zaprojektowane przez Link2Hearth · Opracowane z Claude (Anthropic)</string>
     <string name="about_license_notice">Wszystkie biblioteki są używane zgodnie z ich licencjami.\nDziękujemy wszystkim współtwórcom open source!</string>
     <string name="about_privacy_title">Prywatność i uprawnienia</string>
     <string name="about_privacy_microphone">A2U prosi o dostęp do mikrofonu w dwóch konkretnych celach:\n\n• Nagrywanie audio w Edytorze audio i Kreatorze SoundFont\n• Wizualizacja spektrum częstotliwości w czasie rzeczywistym w Odtwarzaczu muzyki (aplikacja nasłuchuje wyjścia audio, aby wyświetlić krzywe częstotliwości)\n\nMikrofon nigdy nie jest używany do innych celów. Żadne audio nie jest nagrywane, przesyłane ani przechowywane bez Twojego wyraźnego działania w Edytorze audio lub Kreatorze SoundFont.</string>

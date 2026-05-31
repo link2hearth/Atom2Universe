@@ -286,6 +286,7 @@ class CaveActivity : ThemedActivity() {
         val btnBack       = hud.findViewById<View>(R.id.cave_btn_back)
         val btnMode       = hud.findViewById<Button>(R.id.cave_btn_mode)
         val btnDayNight   = hud.findViewById<Button>(R.id.cave_btn_day_night)
+        val btnCamera     = hud.findViewById<Button>(R.id.cave_btn_camera)
 
         val btnUp         = hud.findViewById<Button>(R.id.cave_btn_up).also    { vBtnUp    = it }
         val btnDown       = hud.findViewById<Button>(R.id.cave_btn_down).also  { vBtnDown  = it }
@@ -313,6 +314,13 @@ class CaveActivity : ThemedActivity() {
             renderer.toggleDayNight()
             btnDayNight.text = if (renderer.dayNightInverted) "☀" else "🌙"
         }
+        btnCamera.setOnClickListener {
+            glView.queueEvent {
+                renderer.camera.thirdPerson = !renderer.camera.thirdPerson
+            }
+            btnCamera.alpha = if (renderer.camera.thirdPerson) 1.0f else 0.5f
+        }
+        btnCamera.alpha = 0.5f
         renderer.modeCallback = { mode ->
             uiHandler.post { applyModeUi(mode, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace) }
         }
@@ -1084,7 +1092,7 @@ class CaveActivity : ThemedActivity() {
         val snap = CaveWorldSave(
             id = id, name = "", seed = 0L, createdAt = 0L,
             lastPlayedAt = System.currentTimeMillis(),
-            playerX = renderer.camera.x, playerY = renderer.camera.y, playerZ = renderer.camera.z,
+            playerX = renderer.camera.playerX, playerY = renderer.camera.playerY, playerZ = renderer.camera.playerZ,
             playerYaw = renderer.camera.yaw, playerPitch = renderer.camera.pitch,
             inventory = renderer.inventory.toMap(), hotbar = renderer.hotbar.map { it },
             playerHp            = em.playerHp,

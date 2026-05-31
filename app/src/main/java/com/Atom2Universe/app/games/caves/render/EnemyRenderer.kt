@@ -131,9 +131,12 @@ internal class EnemyRenderer {
         val rightZ = sin(yawRad).toFloat()
 
         var si = 0; var ci = 0; var di = 0
+        var count = 0
 
         for (e in enemies) {
             if (e.hp <= 0) continue
+            if (count >= MAX_VISIBLE) break
+            count++
 
             val ex = (e.x - camX).toFloat()
             val ey = (e.y - camY).toFloat()

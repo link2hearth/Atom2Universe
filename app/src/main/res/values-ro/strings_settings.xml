@@ -85,11 +85,11 @@
     <string name="about_credits_title">Mulțumiri</string>
     <string name="about_credits_subtitle">A2U folosește următoarele biblioteci open source:</string>
     <string name="about_credit_mididriver_name">MidiDriver</string>
-    <string name="about_credit_mididriver_desc">De Bill Farmer - Wrapper driver MIDI Android pentru Sonivox EAS. Licență Apache 2.0.</string>
+    <string name="about_credit_mididriver_desc">De Bill Farmer - Wrapper driver MIDI Android pentru Sonivox EAS. Licență Apache 2.0.\nhttps://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_credit_sonivox_name">Sonivox EAS</string>
     <string name="about_credit_sonivox_desc">De Sonic Network Inc. - Motor de sinteză audio incorporat pentru redarea MIDI. Licență Apache 2.0.</string>
     <string name="about_credit_jaudiotagger_name">JAudioTagger</string>
-    <string name="about_credit_jaudiotagger_desc">De Raphaël Slinckx et al. - Bibliotecă Java pentru citirea și scrierea metadatelor fișierelor audio (etichete ID3). Licență LGPL.</string>
+    <string name="about_credit_jaudiotagger_desc">De Raphaël Slinckx et al. - Bibliotecă Java pentru citirea și scrierea metadatelor fișierelor audio (etichete ID3). Licență LGPL.\nhttps://www.gnu.org/licenses/lgpl.html</string>
     <string name="about_credit_midilib_name">android-midi-lib</string>
     <string name="about_credit_midilib_desc">De LeffelMania - Parser fișiere MIDI pentru Android. Licență Apache 2.0.</string>
     <string name="about_credit_ffmpeg_name">FFmpeg-kit</string>
@@ -101,7 +101,10 @@
     <string name="about_credit_fluidsynth_name">FluidSynth</string>
     <string name="about_credit_fluidsynth_desc">De comunitatea FluidSynth - Sintetizator software în timp real bazat pe specificația SoundFont 2. Licență LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
-    <string name="about_credit_karballo_desc">De Alberto Ruibal - Motor de șah pentru Java/Android, folosit pentru adversarii IA în jocul de șah. Licență MIT.</string>
+    <string name="about_credit_karballo_desc">De Alberto Ruibal - Motor de șah pentru Java/Android, folosit pentru adversarii IA în jocul de șah. Licență MIT.\nhttps://opensource.org/licenses/MIT</string>
+    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
+    <string name="about_credit_kevinmacleod_desc">Mulțumim lui Kevin MacLeod pentru că își împarte muzica în mod gratuit, permițând includerea acesteia în această aplicație.\nLicență: Creative Commons Atribuire 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
+    <string name="about_credit_by">Conceput de Link2Hearth · Dezvoltat cu Claude (Anthropic)</string>
     <string name="about_license_notice">Toate bibliotecile sunt folosite în conformitate cu licențele respective.\nMulțumiri tuturor contribuitorilor open source!</string>
     <string name="about_privacy_title">Confidențialitate &amp; Permisiuni</string>
     <string name="about_privacy_microphone">A2U solicită acces la microfon pentru două scopuri specifice:\n\n• Înregistrarea audio în Editorul Audio și Creatorul SoundFont\n• Vizualizarea spectrului de frecvențe în timp real în Playerul de muzică (aplicația ascultă ieșirea audio pentru a afișa curbele de frecvență)\n\nMicrofonul nu este niciodată folosit în alt scop. Niciun audio nu este înregistrat, transmis sau stocat fără acțiunea dvs. explicită în Editorul Audio sau Creatorul SoundFont.</string>
