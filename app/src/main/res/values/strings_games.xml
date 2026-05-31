@@ -94,6 +94,10 @@
     <string name="cave_title">Cave World</string>
     <string name="cave_description">Infinite 3D procedural caves</string>
     <string name="cave_back">Back</string>
+    <string name="cave_quit_title">Quit game?</string>
+    <string name="cave_quit_message">The game will be saved before quitting.</string>
+    <string name="cave_quit_confirm">Quit</string>
+    <string name="cave_quit_cancel">Cancel</string>
     <string name="cave_hint_move">Left: move</string>
     <string name="cave_hint_look">Right: look</string>
     <string name="cave_mode_spectator">Spectator</string>

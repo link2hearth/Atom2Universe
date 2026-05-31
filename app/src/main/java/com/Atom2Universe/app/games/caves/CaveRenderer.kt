@@ -2251,19 +2251,17 @@ internal class CaveRenderer(
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
 
-    /**
-     * Échange un seau dans l'inventaire/hotbar : retire 1×[from], ajoute 1×[to].
-     * Si le slot sélectionné se vide, il reçoit automatiquement le nouveau type.
-     */
     private fun swapBucketInInventory(from: Byte, to: Byte) {
-        inventory[from] = (inventory[from] ?: 1) - 1
-        if ((inventory[from] ?: 0) <= 0) {
-            inventory.remove(from)
+        val newFromCount = (inventory[from] ?: 1) - 1
+        if (newFromCount <= 0) inventory.remove(from) else inventory[from] = newFromCount
+        inventory[to] = (inventory[to] ?: 0) + 1
+        // Toujours remplacer dans le slot actif — le seau reste à la même position
+        hotbar[selectedSlot] = to
+        if (newFromCount <= 0) {
             for (j in hotbar.indices) {
-                if (hotbar[j] == from) hotbar[j] = if (j == selectedSlot) to else null
+                if (j != selectedSlot && hotbar[j] == from) hotbar[j] = null
             }
         }
-        inventory[to] = (inventory[to] ?: 0) + 1
         inventoryCallback?.invoke(inventory.toMap())
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }

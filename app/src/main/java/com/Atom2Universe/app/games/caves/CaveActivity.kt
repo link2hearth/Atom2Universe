@@ -1,7 +1,10 @@
 package com.Atom2Universe.app.games.caves
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.ClipData
 import android.content.Context
+import androidx.activity.OnBackPressedCallback
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -15,12 +18,18 @@ import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.DragEvent
 import android.view.Gravity
+import android.view.InputDevice
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -43,6 +52,7 @@ import com.Atom2Universe.app.games.caves.world.*
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private data class CraftingRecipe(
     val ingredients: List<Pair<Byte, Int>>,
@@ -161,6 +171,10 @@ class CaveActivity : ThemedActivity() {
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
+    private var vBtnBack: View? = null
+    private var vBtnCamera: Button? = null
+    private var vHudControls: View? = null
+    private var hudTouchButtonsVisible = true
     private var vBtnUp:    View? = null; private var vBtnDown:  View? = null
     private var vBtnLaser: View? = null; private var vBtnPlace: View? = null
 
@@ -241,6 +255,7 @@ class CaveActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
+        forceImmersiveMode()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         worldId = intent.getStringExtra(EXTRA_WORLD_ID)
@@ -284,10 +299,11 @@ class CaveActivity : ThemedActivity() {
         root.addView(hud)
 
         val tvCoords      = hud.findViewById<TextView>(R.id.cave_tv_coords)
-        val btnBack       = hud.findViewById<View>(R.id.cave_btn_back)
+        val btnBack       = hud.findViewById<View>(R.id.cave_btn_back).also { vBtnBack = it }
         val btnMode       = hud.findViewById<Button>(R.id.cave_btn_mode)
         val btnDayNight   = hud.findViewById<Button>(R.id.cave_btn_day_night)
-        val btnCamera     = hud.findViewById<Button>(R.id.cave_btn_camera)
+        val btnCamera     = hud.findViewById<Button>(R.id.cave_btn_camera).also { vBtnCamera = it }
+        vHudControls      = hud.findViewById(R.id.cave_hud_controls)
 
         val btnUp         = hud.findViewById<Button>(R.id.cave_btn_up).also    { vBtnUp    = it }
         val btnDown       = hud.findViewById<Button>(R.id.cave_btn_down).also  { vBtnDown  = it }
@@ -306,7 +322,10 @@ class CaveActivity : ThemedActivity() {
         val hotbarLayout  = hud.findViewById<LinearLayout>(R.id.cave_hotbar)
 
         buildHotbarUI(hotbarLayout)
-        btnBack.setOnClickListener { finish() }
+        btnBack.setOnClickListener { showQuitConfirmation() }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { showQuitConfirmation() }
+        })
         btnMode.setOnClickListener {
             renderer.pendingMode =
                 if (renderer.playerMode == PlayerMode.WALK) PlayerMode.SPECTATOR else PlayerMode.WALK
@@ -646,6 +665,36 @@ class CaveActivity : ThemedActivity() {
 
     // ── Gestion des slots ─────────────────────────────────────────────────────
 
+    private var dragSourceIdx = -1
+
+    private fun startSlotDrag(view: View, idx: Int) {
+        if (invSlots.getOrNull(idx) == null) return
+        dragSourceIdx = idx
+        val clip = ClipData.newPlainText("slot", idx.toString())
+        view.startDragAndDrop(clip, View.DragShadowBuilder(view), idx, 0)
+    }
+
+    private fun makeSlotDragListener(idxProvider: () -> Int): View.OnDragListener =
+        View.OnDragListener { v, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED  -> true
+                DragEvent.ACTION_DRAG_ENTERED  -> { v.alpha = 0.55f; true }
+                DragEvent.ACTION_DRAG_EXITED   -> { v.alpha = 1f; true }
+                DragEvent.ACTION_DROP          -> {
+                    v.alpha = 1f
+                    val target = idxProvider()
+                    if (dragSourceIdx >= 0 && target != dragSourceIdx) {
+                        swapSlots(dragSourceIdx, target)
+                        dragSourceIdx = -1
+                        refreshGridAdapter(); updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                    }
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENDED    -> { v.alpha = 1f; dragSourceIdx = -1; true }
+                else -> false
+            }
+        }
+
     private fun initInvSlots() {
         invSlots.clear()
         val hotbarTypes = (0 until ACTIVE_SIZE).mapNotNull { i ->
@@ -666,9 +715,14 @@ class CaveActivity : ThemedActivity() {
 
     private fun addNewType(type: Byte) {
         val base = hotbarBase()
-        val emptyIdx = (0 until base).firstOrNull { invSlots[it] == null }
-        if (emptyIdx != null) invSlots[emptyIdx] = type else invSlots.add(base, type)
-        invSlots.add(base, null)
+        // Hotbar d'abord (style Minecraft)
+        val hotbarSlot = (base until base + ACTIVE_SIZE).firstOrNull { invSlots.getOrNull(it) == null }
+        if (hotbarSlot != null) { invSlots[hotbarSlot] = type; return }
+        // Grille ensuite
+        val gridSlot = (0 until base).firstOrNull { invSlots[it] == null }
+        if (gridSlot != null) { invSlots[gridSlot] = type; return }
+        // Expansion si tout est plein
+        invSlots.add(base, type)
     }
 
     private fun syncHotbar() {
@@ -696,7 +750,15 @@ class CaveActivity : ThemedActivity() {
                 if ((inv[t] ?: 0) <= 0) invSlots[i] = null
             }
             val existing = invSlots.filterNotNull().toSet()
-            for ((type, count) in inv) if (count > 0 && type !in existing) addNewType(type)
+            val base = hotbarBase()
+            for ((type, count) in inv) {
+                if (count > 0 && type !in existing) {
+                    // Si le renderer a déjà placé ce type en hotbar (ex : transformation seau), sync en place
+                    val hotbarIdx = renderer.hotbar.indexOfFirst { it == type }
+                    val directSlot = if (hotbarIdx >= 0) base + hotbarIdx else -1
+                    if (directSlot in invSlots.indices) invSlots[directSlot] = type else addNewType(type)
+                }
+            }
             if (selectedSlotIdx >= invSlots.size) selectedSlotIdx = -1
             syncHotbar()
             if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) {
@@ -718,6 +780,9 @@ class CaveActivity : ThemedActivity() {
             FrameLayout.LayoutParams(w, h).also { it.gravity = Gravity.CENTER }
 
         invOverlay.visibility = View.VISIBLE
+        // Curseur gamepad sur le premier slot de la hotbar
+        invGpZone   = InvGpZone.HOTBAR
+        invGpCursor = hotbarBase()
 
         invOverlay.post {
             if (invOverlay.visibility == View.VISIBLE) {
@@ -732,6 +797,8 @@ class CaveActivity : ThemedActivity() {
     private fun closeInventory() {
         selectedSlotIdx = -1
         selectedRecipe  = null
+        invGpZone       = InvGpZone.HOTBAR
+        invGpCursor     = 0
         invOverlay.visibility = View.GONE
     }
 
@@ -837,6 +904,8 @@ class CaveActivity : ThemedActivity() {
             container.addView(frame)
             overlayActiveFrames[i] = frame; overlayActiveColors[i] = colorDot; overlayActiveCounts[i] = countTv
             frame.setOnClickListener { onOverlayActiveSlotClick(i) }
+            frame.setOnLongClickListener { startSlotDrag(it, hotbarBase() + i); true }
+            frame.setOnDragListener(makeSlotDragListener { hotbarBase() + i })
         }
     }
 
@@ -865,8 +934,9 @@ class CaveActivity : ThemedActivity() {
             val type  = invSlots.getOrNull(invIdx)
             val count = if (type != null) renderer.inventory[type] ?: 0 else 0
             val eff   = if (count > 0) type else null
-            val isSel = invIdx == selectedSlotIdx
-            overlayActiveFrames[i]?.background = overlaySlotDrawable(isSel)
+            val isSel    = invIdx == selectedSlotIdx
+            val isCursor = invGpZone == InvGpZone.HOTBAR && invIdx == invGpCursor
+            overlayActiveFrames[i]?.background = overlaySlotDrawable(isSel, isCursor)
             overlayActiveColors[i]?.background = if (eff != null) blockDrawable(eff, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
             overlayActiveCounts[i]?.text = if (eff != null) count.toString() else ""
@@ -880,13 +950,13 @@ class CaveActivity : ThemedActivity() {
         }
     }
 
-    private fun overlaySlotDrawable(selected: Boolean): GradientDrawable {
+    private fun overlaySlotDrawable(selected: Boolean, cursor: Boolean = false): GradientDrawable {
         val dp = resources.displayMetrics.density
         return GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
-            setColor(if (selected) 0x33FFDD00.toInt() else 0x66FFFFFF.toInt())
-            setStroke(if (selected) (2 * dp).toInt() else (1 * dp).toInt(),
-                if (selected) 0xFFFFDD00.toInt() else 0xAAFFFFFF.toInt())
+            setColor(when { selected -> 0x33FFDD00.toInt(); cursor -> 0x3300DDFF.toInt(); else -> 0x66FFFFFF.toInt() })
+            setStroke(if (selected || cursor) (2 * dp).toInt() else (1 * dp).toInt(),
+                when { selected -> 0xFFFFDD00.toInt(); cursor -> 0xFF00DDFF.toInt(); else -> 0xAAFFFFFF.toInt() })
             cornerRadius = 4 * dp
         }
     }
@@ -918,11 +988,12 @@ class CaveActivity : ThemedActivity() {
             val isSel = position == selectedSlotIdx
             val dp    = resources.displayMetrics.density
 
+            val isCursor = invGpZone == InvGpZone.GRID && position == invGpCursor
             holder.itemView.background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                setColor(when { isSel -> 0x33FFDD00.toInt(); type != null -> 0x55FFFFFF.toInt(); else -> 0x44FFFFFF.toInt() })
-                setStroke(if (isSel) (2 * dp).toInt() else (1 * dp).toInt(),
-                    if (isSel) 0xFFFFDD00.toInt() else 0x88FFFFFF.toInt())
+                setColor(when { isSel -> 0x33FFDD00.toInt(); isCursor -> 0x3300DDFF.toInt(); type != null -> 0x55FFFFFF.toInt(); else -> 0x44FFFFFF.toInt() })
+                setStroke(if (isSel || isCursor) (2 * dp).toInt() else (1 * dp).toInt(),
+                    when { isSel -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); else -> 0x88FFFFFF.toInt() })
                 cornerRadius = 4 * dp
             }
 
@@ -949,6 +1020,13 @@ class CaveActivity : ThemedActivity() {
                     }
                 }
             }
+            holder.itemView.setOnLongClickListener {
+                val pos = holder.bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) { startSlotDrag(it, pos); true } else false
+            }
+            holder.itemView.setOnDragListener(makeSlotDragListener {
+                holder.bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: -1
+            })
         }
     }
 
@@ -975,12 +1053,14 @@ class CaveActivity : ThemedActivity() {
             val recipe  = recipes[position]
             val dp      = resources.displayMetrics.density
             val isSelRec = recipe == selectedRecipe
+            val isCursor = invGpZone == InvGpZone.CRAFTING && position == invGpCursor
             holder.root.removeAllViews()
             holder.root.background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                setColor(if (isSelRec) 0x33FFDD00.toInt() else 0x22FFFFFF)
+                setColor(when { isSelRec -> 0x33FFDD00.toInt(); isCursor -> 0x3300DDFF.toInt(); else -> 0x22FFFFFF })
                 cornerRadius = 6 * dp
-                setStroke(if (isSelRec) (2 * dp).toInt() else 1, if (isSelRec) 0xFFFFDD00.toInt() else 0x33FFFFFF)
+                setStroke(if (isSelRec || isCursor) (2 * dp).toInt() else 1,
+                    when { isSelRec -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); else -> 0x33FFFFFF })
             }
 
             val row = LinearLayout(holder.root.context).apply {
@@ -1088,11 +1168,11 @@ class CaveActivity : ThemedActivity() {
 
     // ── Save ──────────────────────────────────────────────────────────────────
 
-    fun saveWorldAsync() {
-        val id = worldId ?: return
+    private fun buildSaveSnap(): CaveWorldSave? {
+        val id    = worldId ?: return null
         val stats = renderer.playerStats
         val em    = renderer.enemyManager
-        val snap = CaveWorldSave(
+        return CaveWorldSave(
             id = id, name = "", seed = 0L, createdAt = 0L,
             lastPlayedAt = System.currentTimeMillis(),
             playerX = renderer.camera.playerX, playerY = renderer.camera.playerY, playerZ = renderer.camera.playerZ,
@@ -1109,10 +1189,72 @@ class CaveActivity : ThemedActivity() {
             playerWeapons       = stats.weapons.map { "${it.color.name}_${it.variant.name}" },
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList()
         )
+    }
+
+    fun saveWorldAsync() {
+        val snap = buildSaveSnap() ?: return
         lifecycleScope.launch(Dispatchers.IO) { CaveWorldSaveManager.updateFields(this@CaveActivity, snap) }
     }
 
+    private suspend fun saveWorldNow() {
+        val snap = buildSaveSnap() ?: return
+        withContext(Dispatchers.IO) { CaveWorldSaveManager.updateFields(this@CaveActivity, snap) }
+    }
+
     private fun saveWorld() = saveWorldAsync()
+
+    private fun showQuitConfirmation() {
+        val dp = resources.displayMetrics.density
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                setColor(0xFF111122.toInt())
+                cornerRadius = 12 * dp
+                setStroke((1 * dp).toInt(), 0x55FFFFFF.toInt())
+            }
+            val p = (20 * dp).toInt()
+            setPadding(p, p, p, (10 * dp).toInt())
+        }
+        root.addView(TextView(this).apply {
+            text = getString(R.string.cave_quit_title)
+            setTextColor(Color.WHITE)
+            textSize = 17f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (8 * dp).toInt() }
+        })
+        root.addView(TextView(this).apply {
+            text = getString(R.string.cave_quit_message)
+            setTextColor(0xCCFFFFFF.toInt())
+            textSize = 13f
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (18 * dp).toInt() }
+        })
+        val btnRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.END
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+        root.addView(btnRow)
+        val dialog = AlertDialog.Builder(this).setView(root).create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        btnRow.addView(Button(this).apply {
+            text = getString(R.string.cave_quit_cancel)
+            setTextColor(0xAAFFFFFF.toInt())
+            setBackgroundColor(Color.TRANSPARENT)
+            setOnClickListener { dialog.dismiss() }
+        })
+        btnRow.addView(Button(this).apply {
+            text = getString(R.string.cave_quit_confirm)
+            setTextColor(0xFFFF5555.toInt())
+            setBackgroundColor(Color.TRANSPARENT)
+            setOnClickListener { dialog.dismiss(); lifecycleScope.launch { saveWorldNow(); finish() } }
+        })
+        dialog.show()
+    }
 
     // ── Noms de blocs ─────────────────────────────────────────────────────────
 
@@ -1180,15 +1322,190 @@ class CaveActivity : ThemedActivity() {
         }
     }
 
+    // ── Mode immersif forcé ───────────────────────────────────────────────────
+
+    private fun forceImmersiveMode() {
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            hide(WindowInsetsCompat.Type.systemBars())
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) forceImmersiveMode()
+    }
+
+    // ── Visibilité boutons HUD (touch vs manette) ─────────────────────────────
+
+    private fun setHudButtonsVisible(visible: Boolean) {
+        if (hudTouchButtonsVisible == visible) return
+        hudTouchButtonsVisible = visible
+        val a = if (visible) 1f else 0f
+        listOf(vBtnBack, vBtnUp, vBtnDown, vBtnLaser, vBtnPlace).forEach { v ->
+            v?.alpha = a; v?.isEnabled = visible
+        }
+        vHudControls?.alpha = a
+        (vHudControls as? ViewGroup)?.let { g ->
+            for (i in 0 until g.childCount) { g.getChildAt(i).alpha = a; g.getChildAt(i).isEnabled = visible }
+        }
+    }
+
+    // ── Navigation inventaire manette ────────────────────────────────────────
+
+    private enum class InvGpZone { GRID, HOTBAR, CRAFTING }
+    private var invGpZone       = InvGpZone.HOTBAR
+    private var invGpCursor     = 0   // index invSlots (GRID/HOTBAR) ou index recette (CRAFTING)
+    private var invGpLastMoveMs = 0L
+    private val INV_GP_REPEAT_MS = 170L
+
+    private fun moveInvCursor(dx: Int, dy: Int) {
+        val base = hotbarBase()
+        when (invGpZone) {
+            InvGpZone.GRID -> {
+                val newIdx = invGpCursor + dx + dy * GRID_COLS
+                when {
+                    newIdx < 0      -> invGpCursor = (invGpCursor % GRID_COLS).coerceAtMost((base - 1).coerceAtLeast(0))
+                    newIdx >= base  -> { invGpZone = InvGpZone.HOTBAR; invGpCursor = (base + invGpCursor % GRID_COLS).coerceAtMost(base + ACTIVE_SIZE - 1) }
+                    else            -> invGpCursor = newIdx
+                }
+            }
+            InvGpZone.HOTBAR -> {
+                val rel = invGpCursor - base
+                when {
+                    dy < 0 && base > 0 -> { invGpZone = InvGpZone.GRID; invGpCursor = (((base - 1) / GRID_COLS) * GRID_COLS + rel).coerceAtMost(base - 1) }
+                    dx < 0 -> invGpCursor = base + (rel - 1 + ACTIVE_SIZE) % ACTIVE_SIZE
+                    dx > 0 -> invGpCursor = base + (rel + 1) % ACTIVE_SIZE
+                }
+            }
+            InvGpZone.CRAFTING -> {
+                val count = craftingAdapter?.itemCount ?: 0
+                if (count > 0) {
+                    invGpCursor = (invGpCursor + dy + count) % count
+                    craftingRecyclerView?.scrollToPosition(invGpCursor)
+                }
+            }
+        }
+        refreshInvGpCursorUi()
+    }
+
+    private fun exitCraftingZone() {
+        invGpZone = InvGpZone.HOTBAR
+        invGpCursor = hotbarBase()
+        selectedRecipe = null
+        refreshGridAdapter(); updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+    }
+
+    private fun handleInvGamepadMotion(event: MotionEvent): Boolean {
+        if (event.source and InputDevice.SOURCE_JOYSTICK != InputDevice.SOURCE_JOYSTICK) return false
+        val now = System.currentTimeMillis()
+        if (now - invGpLastMoveMs < INV_GP_REPEAT_MS) return true
+        val sx = event.getAxisValue(MotionEvent.AXIS_X); val sy = event.getAxisValue(MotionEvent.AXIS_Y)
+        val hx = event.getAxisValue(MotionEvent.AXIS_HAT_X); val hy = event.getAxisValue(MotionEvent.AXIS_HAT_Y)
+        val rawX = if (sx != 0f) sx else hx; val rawY = if (sy != 0f) sy else hy
+        val dx = when { rawX < -0.5f -> -1; rawX > 0.5f -> 1; else -> 0 }
+        val dy = when { rawY < -0.5f -> -1; rawY > 0.5f -> 1; else -> 0 }
+        if (dx == 0 && dy == 0) return true
+        invGpLastMoveMs = now
+        moveInvCursor(dx, dy)
+        return true
+    }
+
+    private fun handleInvGamepadKey(keyCode: Int): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_BUTTON_Y -> {
+                if (invGpZone == InvGpZone.CRAFTING) { exitCraftingZone() }
+                else {
+                    if (invSlots.getOrNull(invGpCursor) != null) {
+                        selectedSlotIdx = invGpCursor
+                        invGpZone = InvGpZone.CRAFTING; invGpCursor = 0
+                        updateInfoPanel(); updateCraftingList()
+                        craftingRecyclerView?.scrollToPosition(0)
+                        craftingAdapter?.notifyDataSetChanged()
+                    }
+                }
+                true
+            }
+            KeyEvent.KEYCODE_BUTTON_A -> {
+                if (invGpZone == InvGpZone.CRAFTING) {
+                    craftingAdapter?.recipes?.getOrNull(invGpCursor)?.let { doCraft(it) }
+                } else {
+                    when {
+                        selectedSlotIdx == invGpCursor -> {
+                            selectedSlotIdx = -1
+                            refreshGridAdapter(); updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                        }
+                        selectedSlotIdx >= 0 -> {
+                            swapSlots(selectedSlotIdx, invGpCursor); selectedSlotIdx = -1
+                            refreshGridAdapter(); updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                        }
+                        invSlots.getOrNull(invGpCursor) != null -> {
+                            selectedSlotIdx = invGpCursor; selectedRecipe = null
+                            refreshGridAdapter(); updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                        }
+                    }
+                }
+                true
+            }
+            KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BACK -> {
+                when {
+                    invGpZone == InvGpZone.CRAFTING -> exitCraftingZone()
+                    selectedSlotIdx >= 0 -> {
+                        selectedSlotIdx = -1
+                        refreshGridAdapter(); updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                    }
+                    else -> closeInventory()
+                }
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT  -> { invGpLastMoveMs = 0; moveInvCursor(-1,  0); true }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> { invGpLastMoveMs = 0; moveInvCursor( 1,  0); true }
+            KeyEvent.KEYCODE_DPAD_UP    -> { invGpLastMoveMs = 0; moveInvCursor( 0, -1); true }
+            KeyEvent.KEYCODE_DPAD_DOWN  -> { invGpLastMoveMs = 0; moveInvCursor( 0,  1); true }
+            else -> false
+        }
+    }
+
+    private fun refreshInvGpCursorUi() {
+        refreshGridAdapter(); updateActiveBarOverlay(); craftingAdapter?.notifyDataSetChanged()
+    }
+
     // ── Manette ───────────────────────────────────────────────────────────────
 
-    override fun onGenericMotionEvent(event: android.view.MotionEvent): Boolean =
-        gamepad.onGenericMotion(event) || super.onGenericMotionEvent(event)
+    override fun onGenericMotionEvent(event: android.view.MotionEvent): Boolean {
+        if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE)
+            return handleInvGamepadMotion(event)
+        if (event.source and InputDevice.SOURCE_JOYSTICK == InputDevice.SOURCE_JOYSTICK)
+            setHudButtonsVisible(false)
+        return gamepad.onGenericMotion(event) || super.onGenericMotionEvent(event)
+    }
 
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) {
+            if (event.action == KeyEvent.ACTION_DOWN && handleInvGamepadKey(event.keyCode)) return true
+            if (event.action == KeyEvent.ACTION_UP) return true  // bloque les key-up pendant l'inventaire
+            return super.dispatchKeyEvent(event)
+        }
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            if (KeyEvent.isGamepadButton(event.keyCode)) setHudButtonsVisible(false)
+            when (event.keyCode) {
+                // Y ouvre l'inventaire
+                KeyEvent.KEYCODE_BUTTON_Y  -> { openInventory(); return true }
+                // L1 / R1 : naviguer la hotbar
+                KeyEvent.KEYCODE_BUTTON_L1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot - 1 + 9) % 9) }; return true }
+                KeyEvent.KEYCODE_BUTTON_R1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot + 1) % 9) }; return true }
+                // X : basculer vue FPS / TPS
+                KeyEvent.KEYCODE_BUTTON_X  -> {
+                    val newTps = !renderer.camera.thirdPerson
+                    glView.queueEvent { renderer.camera.thirdPerson = newTps }
+                    vBtnCamera?.alpha = if (newTps) 1.0f else 0.5f
+                    return true
+                }
+            }
+        }
         val consumed = when (event.action) {
-            android.view.KeyEvent.ACTION_DOWN -> gamepad.onKeyDown(event.keyCode)
-            android.view.KeyEvent.ACTION_UP   -> gamepad.onKeyUp(event.keyCode)
+            KeyEvent.ACTION_DOWN -> gamepad.onKeyDown(event.keyCode)
+            KeyEvent.ACTION_UP   -> gamepad.onKeyUp(event.keyCode)
             else -> false
         }
         return consumed || super.dispatchKeyEvent(event)
@@ -1197,6 +1514,7 @@ class CaveActivity : ThemedActivity() {
     // ── Touch multipoint ─────────────────────────────────────────────────────
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) setHudButtonsVisible(true)
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) return super.dispatchTouchEvent(ev)
         if (levelUpOverlay != null) return super.dispatchTouchEvent(ev)
         val action = ev.actionMasked; val idx = ev.actionIndex; val pid = ev.getPointerId(idx)
@@ -1220,7 +1538,7 @@ class CaveActivity : ThemedActivity() {
         touch.onTouch(ev, glView.width); return super.dispatchTouchEvent(ev)
     }
 
-    override fun onResume()  { super.onResume();  glView.onResume(); ambientMusic?.resume() }
+    override fun onResume()  { super.onResume();  glView.onResume(); ambientMusic?.resume(); forceImmersiveMode() }
     override fun onPause()   { super.onPause();   glView.onPause();  ambientMusic?.pause(); saveWorld() }
     override fun onDestroy() {
         super.onDestroy(); renderer.destroy(); ambientMusic?.destroy()

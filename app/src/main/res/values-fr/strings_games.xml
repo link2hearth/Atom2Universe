@@ -94,6 +94,10 @@
     <string name="cave_title">Cave World</string>
     <string name="cave_description">Grottes 3D procédurales infinies</string>
     <string name="cave_back">Retour</string>
+    <string name="cave_quit_title">Quitter la partie ?</string>
+    <string name="cave_quit_message">La partie sera sauvegardée avant de quitter.</string>
+    <string name="cave_quit_confirm">Quitter</string>
+    <string name="cave_quit_cancel">Annuler</string>
     <string name="cave_hint_move">Gauche : déplacer</string>
     <string name="cave_hint_look">Droite : regarder</string>
     <string name="cave_mode_spectator">Spectateur</string>

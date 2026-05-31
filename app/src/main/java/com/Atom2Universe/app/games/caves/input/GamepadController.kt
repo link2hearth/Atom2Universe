@@ -14,9 +14,12 @@ import kotlin.math.abs
  *   A               → sauter / monter (spectateur)
  *   B               → descendre (spectateur)
  *   RT (gâchette D) → laser / miner
- *   RB (bouton D)   → poser un bloc
+ *   LT (gâchette G) → poser un bloc
+ *   R1 / L1         → naviguer hotbar droite / gauche
  */
 class GamepadController(private val touch: TouchController) {
+
+    private var ltWasAboveThreshold = false
 
     fun onGenericMotion(event: MotionEvent): Boolean {
         if (event.source and InputDevice.SOURCE_JOYSTICK != InputDevice.SOURCE_JOYSTICK) return false
@@ -26,26 +29,34 @@ class GamepadController(private val touch: TouchController) {
         touch.gamepadRightX =  axis(event, MotionEvent.AXIS_Z)
         touch.gamepadRightY =  axis(event, MotionEvent.AXIS_RZ)
 
-        // RT : AXIS_RTRIGGER sur la plupart des manettes, AXIS_GAS en fallback
+        // RT : laser/miner
         val rt = maxOf(
             event.getAxisValue(MotionEvent.AXIS_RTRIGGER),
             event.getAxisValue(MotionEvent.AXIS_GAS)
         )
         touch.laserActive = rt > TRIGGER_THRESHOLD
 
+        // LT : poser un bloc (front montant uniquement)
+        val lt = maxOf(
+            event.getAxisValue(MotionEvent.AXIS_LTRIGGER),
+            event.getAxisValue(MotionEvent.AXIS_BRAKE)
+        )
+        val ltAbove = lt > TRIGGER_THRESHOLD
+        if (ltAbove && !ltWasAboveThreshold) touch.placeRequested = true
+        ltWasAboveThreshold = ltAbove
+
         return true
     }
 
     fun onKeyDown(keyCode: Int): Boolean = when (keyCode) {
-        KeyEvent.KEYCODE_BUTTON_A  -> { touch.flyUp         = true;  true }
-        KeyEvent.KEYCODE_BUTTON_B  -> { touch.flyDown       = true;  true }
-        KeyEvent.KEYCODE_BUTTON_R1 -> { touch.placeRequested = true; true }
+        KeyEvent.KEYCODE_BUTTON_A -> { touch.flyUp   = true; true }
+        KeyEvent.KEYCODE_BUTTON_B -> { touch.flyDown = true; true }
         else -> false
     }
 
     fun onKeyUp(keyCode: Int): Boolean = when (keyCode) {
-        KeyEvent.KEYCODE_BUTTON_A  -> { touch.flyUp   = false; true }
-        KeyEvent.KEYCODE_BUTTON_B  -> { touch.flyDown = false; true }
+        KeyEvent.KEYCODE_BUTTON_A -> { touch.flyUp   = false; true }
+        KeyEvent.KEYCODE_BUTTON_B -> { touch.flyDown = false; true }
         else -> false
     }
 
