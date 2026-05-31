@@ -179,58 +179,35 @@ internal object MeshBuilder {
         }
     }
 
-    // Construit le mesh eau d'un chunk avec hauteurs par niveau de flux (style Minecraft).
-    // Rendu séparé avec blending dans CaveRenderer.
+    // Construit le mesh eau d'un chunk. Surface toujours plate (topH = 1.0) :
+    // élimine les lookups hashmap waterFlowLevel et homogénéise visuellement la surface des océans.
+    // La physique (niveaux de flux) reste fonctionnelle pour la simulation, mais n'affecte plus le rendu.
     fun buildWater(chunk: Chunk, world: World): FloatArray {
         val buf = GrowableFloatArray()
         for (lz in 0 until CHUNK_SIZE)
         for (ly in 0 until CHUNK_SIZE)
         for (lx in 0 until CHUNK_SIZE) {
-            val blockType = chunk.blockAt(lx, ly, lz)
-            if (!isWater(blockType)) continue
+            if (!isWater(chunk.blockAt(lx, ly, lz))) continue
             val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
-            val wx = chunk.worldX + lx; val wy = chunk.worldY + ly; val wz = chunk.worldZ + lz
+            val packed = 0f
 
-            // Niveau connu sans second blockAt (blockType déjà récupéré ci-dessus)
-            val level = world.waterFlowLevelKnown(blockType, wx, wy, wz).coerceIn(0, 8)
-            val above = world.neighborBlock(chunk, lx, ly + 1, lz)
-            val topH = if (isWater(above)) 1.0f else 0.125f + (8 - level) * 0.09375f
+            if (world.neighborBlock(chunk, lx, ly + 1, lz) == AIR)
+                buf.quad(x, y+1f,z, x+1f,y+1f,z, x+1f,y+1f,z+1f, x,y+1f,z+1f, packed, false)
 
-            val packed = 0f  // faceLight=1.0 uniforme (eau translucide)
-
-            // Face supérieure
-            if (above == AIR) {
-                buf.quad(x, y+topH,z, x+1f,y+topH,z, x+1f,y+topH,z+1f, x,y+topH,z+1f, packed, false)
-            }
-
-            // Face inférieure
-            if (world.neighborBlock(chunk, lx, ly - 1, lz) == AIR) {
+            if (world.neighborBlock(chunk, lx, ly - 1, lz) == AIR)
                 buf.quad(x,y,z+1f, x+1f,y,z+1f, x+1f,y,z, x,y,z, packed, false)
-            }
 
-            // topH voisin sans blockAt redondant : WATER → 0.875 direct, WATER_FLOW → hashmap minimal
-            // Court-circuit immédiat pour WATER (cas fréquent dans un océan) : aucun accès hashmap
-            fun nbTopH(nb: Byte, nbWx: Int, nbWy: Int, nbWz: Int): Float = when (nb) {
-                WATER      -> 0.875f
-                WATER_FLOW -> 0.125f + (8 - (world.waterFlowLevelKnown(nb, nbWx, nbWy, nbWz).coerceIn(0, 8))) * 0.09375f
-                else       -> 0f
-            }
+            if (world.neighborBlock(chunk, lx + 1, ly, lz) == AIR)
+                buf.quad(x+1f,y,z+1f, x+1f,y+1f,z+1f, x+1f,y+1f,z, x+1f,y,z, packed, true)
 
-            val nbE = world.neighborBlock(chunk, lx + 1, ly, lz)
-            if (nbE == AIR || (isWater(nbE) && nbTopH(nbE, wx+1, wy, wz) < topH))
-                buf.quad(x+1f,y,z+1f, x+1f,y+topH,z+1f, x+1f,y+topH,z, x+1f,y,z, packed, true)
+            if (world.neighborBlock(chunk, lx - 1, ly, lz) == AIR)
+                buf.quad(x,y,z, x,y+1f,z, x,y+1f,z+1f, x,y,z+1f, packed, true)
 
-            val nbW = world.neighborBlock(chunk, lx - 1, ly, lz)
-            if (nbW == AIR || (isWater(nbW) && nbTopH(nbW, wx-1, wy, wz) < topH))
-                buf.quad(x,y,z, x,y+topH,z, x,y+topH,z+1f, x,y,z+1f, packed, true)
+            if (world.neighborBlock(chunk, lx, ly, lz + 1) == AIR)
+                buf.quad(x,y,z+1f, x,y+1f,z+1f, x+1f,y+1f,z+1f, x+1f,y,z+1f, packed, true)
 
-            val nbS = world.neighborBlock(chunk, lx, ly, lz + 1)
-            if (nbS == AIR || (isWater(nbS) && nbTopH(nbS, wx, wy, wz+1) < topH))
-                buf.quad(x,y,z+1f, x,y+topH,z+1f, x+1f,y+topH,z+1f, x+1f,y,z+1f, packed, true)
-
-            val nbN = world.neighborBlock(chunk, lx, ly, lz - 1)
-            if (nbN == AIR || (isWater(nbN) && nbTopH(nbN, wx, wy, wz-1) < topH))
-                buf.quad(x+1f,y,z, x+1f,y+topH,z, x,y+topH,z, x,y,z, packed, true)
+            if (world.neighborBlock(chunk, lx, ly, lz - 1) == AIR)
+                buf.quad(x+1f,y,z, x+1f,y+1f,z, x,y+1f,z, x,y,z, packed, true)
         }
         return buf.toFloatArray()
     }

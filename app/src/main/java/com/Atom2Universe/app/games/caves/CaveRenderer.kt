@@ -93,8 +93,9 @@ internal class CaveRenderer(
     private var wWULights = 0; private var wWULightCount = 0; private var wWUTime = 0
     private var blockTexArray = 0
 
-    private val waterMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
-    private val waterUploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
+    private val waterMeshes         = ConcurrentHashMap<Long, ChunkMesh>()
+    private val waterUploadQueue    = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
+    private val waterOnlyUploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
 
     // ── Étoiles ───────────────────────────────────────────────────────────────
     private val STAR_COUNT  = 250
@@ -692,7 +693,7 @@ internal class CaveRenderer(
         waterTickAccum += dt
         if (waterTickAccum >= 0.25f) {
             waterTickAccum = 0f
-            world.tickWater()
+            world.tickWater(playerX = camera.x.toInt(), playerZ = camera.z.toInt())
             world.tickDrain()
         }
 
@@ -729,7 +730,9 @@ internal class CaveRenderer(
             if (!chunk.generated) { world.rebuildQueue.add(key); continue }
             if (!building.add(key)) { world.rebuildQueue.add(key); continue }
             chunk.meshDirty = false
-            val snapVersion = chunk.version
+            chunk.waterMeshDirty = false
+            val snapVersion  = chunk.version
+            val snapWaterVer = chunk.waterVersion
             scope.launch(meshDispatcher) {
                 try {
                     val verts      = MeshBuilder.build(chunk, world)
@@ -739,6 +742,7 @@ internal class CaveRenderer(
                         waterUploadQueue.add(Triple(key, snapVersion, waterVerts))
                     }
                     if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
+                    if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
                 } catch (_: OutOfMemoryError) {
                     // Heap plein : re-queue pour réessayer quand la pression mémoire baisse
                     chunk.meshDirty = true
@@ -748,6 +752,36 @@ internal class CaveRenderer(
                 }
             }
             rebuilt++
+        }
+
+        // Rebuilds eau seuls : ne reconstruit que buildWater(), évite build() solide inutile
+        val pendingWaterSet = HashSet<Long>()
+        while (true) { pendingWaterSet.add(world.waterRebuildQueue.poll() ?: break) }
+        pendingWaterSet -= pendingSet  // les chunks déjà en rebuild solide reconstruisent l'eau aussi
+        val waterBatch = pendingWaterSet.sortedBy { key ->
+            val dx = world.keyToCx(key) - cx; val dy = world.keyToCy(key) - cy; val dz = world.keyToCz(key) - cz
+            dx * dx + dz * dz + dy * dy * 8
+        }
+        var waterRebuilt = 0
+        for (key in waterBatch) {
+            if (waterRebuilt >= 8) { world.waterRebuildQueue.add(key); continue }
+            val chunk = world.getChunkByKey(key) ?: continue
+            if (!chunk.generated) { world.waterRebuildQueue.add(key); continue }
+            if (!building.add(key)) { world.waterRebuildQueue.add(key); continue }
+            chunk.waterMeshDirty = false
+            val snapWaterVer = chunk.waterVersion
+            scope.launch(meshDispatcher) {
+                try {
+                    val waterVerts = MeshBuilder.buildWater(chunk, world)
+                    if (chunk.waterVersion == snapWaterVer) {
+                        waterOnlyUploadQueue.add(Triple(key, snapWaterVer, waterVerts))
+                    }
+                    if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
+                } finally {
+                    building.remove(key)
+                }
+            }
+            waterRebuilt++
         }
 
         repeat(16) {
@@ -770,6 +804,14 @@ internal class CaveRenderer(
             val (key, ver, verts) = waterUploadQueue.poll() ?: return@repeat
             val chunk = world.getChunkByKey(key) ?: return@repeat
             if (chunk.version == ver) {
+                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+                else waterMeshes.remove(key)?.destroy()
+            }
+        }
+        repeat(8) {
+            val (key, ver, verts) = waterOnlyUploadQueue.poll() ?: return@repeat
+            val chunk = world.getChunkByKey(key) ?: return@repeat
+            if (chunk.waterVersion == ver) {
                 if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(verts)
                 else waterMeshes.remove(key)?.destroy()
             }

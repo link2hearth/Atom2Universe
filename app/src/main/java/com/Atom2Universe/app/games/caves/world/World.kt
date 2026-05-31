@@ -10,6 +10,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private val inFlight = ConcurrentHashMap.newKeySet<Long>()
 
     val rebuildQueue = ConcurrentLinkedQueue<Long>()
+    val waterRebuildQueue = ConcurrentLinkedQueue<Long>()
     val renderRadiusXZ     = 12  // rayon XZ commun aux deux modes
     val renderRadiusYSurface = 5  // plage Y en surface (cylindre) — identique à avant
     val renderRadiusCave   = 7   // rayon de la sphère souterrain
@@ -1168,6 +1169,31 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Simulation eau ────────────────────────────────────────────────────────
 
+    // Variante de setBlock réservée à la simulation eau : ne marque que waterMeshDirty/waterRebuildQueue.
+    // Les faces solides adjacentes à l'eau restent visibles (isWater == isVisible), donc le mesh solide
+    // n'a pas besoin d'être reconstruit quand l'eau change — seul le mesh eau doit l'être.
+    private fun setWaterBlock(wx: Int, wy: Int, wz: Int, type: Byte) {
+        val cx = Math.floorDiv(wx, CHUNK_SIZE)
+        val cy = Math.floorDiv(wy, CHUNK_SIZE)
+        val cz = Math.floorDiv(wz, CHUNK_SIZE)
+        val chunk = getChunk(cx, cy, cz)?.takeIf { it.generated } ?: return
+        val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
+        chunk.setBlock(lx, ly, lz, type)
+        chunk.waterVersion++
+        val key = chunkKey(cx, cy, cz)
+        chunk.waterMeshDirty = true
+        waterRebuildQueue.add(key)
+        storage?.recordChange(cx, cy, cz, lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, type)
+        for ((nx, ny, nz) in arrayOf(
+            intArrayOf(cx-1,cy,cz), intArrayOf(cx+1,cy,cz),
+            intArrayOf(cx,cy-1,cz), intArrayOf(cx,cy+1,cz),
+            intArrayOf(cx,cy,cz-1), intArrayOf(cx,cy,cz+1)
+        )) {
+            val n = getChunk(nx, ny, nz) ?: continue
+            if (n.generated) { n.waterMeshDirty = true; waterRebuildQueue.add(chunkKey(nx, ny, nz)) }
+        }
+    }
+
     // Niveau de propagation pour chaque WATER_FLOW (0 = même niveau que la source, 1-8 = distance horizontale)
     private val waterFlowLevels = java.util.concurrent.ConcurrentHashMap<Long, Byte>()
     // File de propagation : IntArray(4) = [wx, wy, wz, level]
@@ -1271,7 +1297,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             }
 
             if (!hasSource) {
-                setBlock(wx, wy, wz, AIR)
+                setWaterBlock(wx, wy, wz, AIR)
                 waterFlowLevels.remove(k)
                 // Propager la vidange aux voisins WATER_FLOW
                 for (d in allDirs) {
@@ -1289,7 +1315,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      * les nouvelles cases générées entrent dans la file pour le tick suivant.
      * Résultat : l'eau avance visuellement d'une couche par tick (~0.25 s).
      */
-    fun tickWater(maxOps: Int = 512) {
+    // Rayon XZ max (en blocs) de simulation eau autour du joueur.
+    // Les items hors rayon sont consommés sans propagation : évite de remplir indéfiniment
+    // les caves sous un océan alors que le joueur est loin.
+    private val WATER_SIM_RADIUS_SQ = 96 * 96
+
+    fun tickWater(maxOps: Int = 512, playerX: Int = 0, playerZ: Int = 0) {
         val hDirs = arrayOf(intArrayOf(1,0), intArrayOf(-1,0), intArrayOf(0,1), intArrayOf(0,-1))
 
         // Drain de la vague courante dans un snapshot (les add() ci-dessous alimentent le tick suivant)
@@ -1300,6 +1331,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         for (item in wave) {
             val wx = item[0]; val wy = item[1]; val wz = item[2]; val level = item[3]
 
+            // Ne simuler que dans le rayon du joueur — les items lointains sont consommés et ignorés.
+            // La physique reprend automatiquement dès que le joueur s'approche et que de nouveaux
+            // items sont enfilés (onWaterSourcePlaced / ticks adjacents).
+            val dx = wx - playerX; val dz = wz - playerZ
+            if (dx * dx + dz * dz > WATER_SIM_RADIUS_SQ) continue
+
             val currentBlock = blockAt(wx, wy, wz)
             if (!isWater(currentBlock)) continue
 
@@ -1308,7 +1345,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 var srcAdj = 0
                 for (d in hDirs) { if (blockAt(wx + d[0], wy, wz + d[1]) == WATER) srcAdj++ }
                 if (srcAdj >= 2) {
-                    setBlock(wx, wy, wz, WATER)
+                    setWaterBlock(wx, wy, wz, WATER)
                     waterFlowLevels.remove(waterKey(wx, wy, wz))
                     waterSpreadQueue.add(intArrayOf(wx, wy, wz, 0))
                     continue
@@ -1324,7 +1361,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val key = waterKey(wx, wy - 1, wz)
                 val existing = waterFlowLevels[key]?.toInt()?.and(0xFF)
                 if (existing == null || existing > level) {
-                    setBlock(wx, wy - 1, wz, WATER_FLOW)
+                    setWaterBlock(wx, wy - 1, wz, WATER_FLOW)
                     waterFlowLevels[key] = level.toByte()
                     waterSpreadQueue.add(intArrayOf(wx, wy - 1, wz, level))
                 }
@@ -1351,12 +1388,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     var srcAdj = 0
                     for (sd in hDirs) { if (blockAt(nx + sd[0], wy, nz + sd[1]) == WATER) srcAdj++ }
                     if (srcAdj >= 2) {
-                        setBlock(nx, wy, nz, WATER)
+                        setWaterBlock(nx, wy, nz, WATER)
                         waterFlowLevels.remove(key)
                         waterSpreadQueue.add(intArrayOf(nx, wy, nz, 0))
                         checkFlowPromotion(nx, wy, nz)
                     } else {
-                        setBlock(nx, wy, nz, WATER_FLOW)
+                        setWaterBlock(nx, wy, nz, WATER_FLOW)
                         waterFlowLevels[key] = nextLevel.toByte()
                         waterSpreadQueue.add(intArrayOf(nx, wy, nz, nextLevel))
                     }

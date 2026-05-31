@@ -158,8 +158,10 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
 
     @Volatile var generated = false
     @Volatile var meshDirty = false
+    @Volatile var waterMeshDirty = false
     @Volatile var pendingVertices: FloatArray? = null
-    @Volatile var version = 0   // incrémenté à chaque setBlock → invalide les builds en cours
+    @Volatile var version = 0       // incrémenté à chaque setBlock → invalide les builds en cours
+    @Volatile var waterVersion = 0  // incrémenté à chaque setWaterBlock → invalide les builds eau
     var structureHints: MutableList<StructureHint>? = null
 
     val worldX get() = cx * CHUNK_SIZE
