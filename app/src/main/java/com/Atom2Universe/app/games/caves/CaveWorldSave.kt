@@ -31,7 +31,8 @@ data class CaveWorldSave(
     var playerShield: Int = 0,
     var playerShieldCurrent: Int = 0,
     var playerWeapons: List<String> = listOf("WHITE_SQUARE"),  // "COLOR_VARIANT"
-    var wardStonePositions: List<Pair<Double, Double>> = emptyList()
+    var wardStonePositions: List<Pair<Double, Double>> = emptyList(),
+    var isCreative: Boolean = false
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -90,6 +91,7 @@ object CaveWorldSaveManager {
         existing.playerShieldCurrent = snap.playerShieldCurrent
         existing.playerWeapons       = snap.playerWeapons
         existing.wardStonePositions  = snap.wardStonePositions
+        existing.isCreative          = snap.isCreative
         persist(context, existing)
     }
 
@@ -135,6 +137,7 @@ object CaveWorldSaveManager {
                 wardArr.put(JSONObject().apply { put("x", x); put("z", z) })
             }
             put("wardStonePositions", wardArr)
+            put("isCreative", save.isCreative)
         }
         saveFile(context, save.id).writeText(json.toString())
     }
@@ -182,7 +185,8 @@ object CaveWorldSaveManager {
             playerShield = j.optInt("playerShield", 0),
             playerShieldCurrent = j.optInt("playerShieldCurrent", 0),
             playerWeapons = weapons,
-            wardStonePositions = wardStones
+            wardStonePositions = wardStones,
+            isCreative = j.optBoolean("isCreative", false)
         )
     }
 }

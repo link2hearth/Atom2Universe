@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
@@ -101,10 +102,11 @@ class CaveWorldMenuActivity : ThemedActivity() {
     private inner class WorldAdapter : RecyclerView.Adapter<WorldAdapter.VH>() {
 
         inner class VH(view: View) : RecyclerView.ViewHolder(view) {
-            val name:   TextView    = view.findViewById(R.id.cave_world_name)
-            val seed:   TextView    = view.findViewById(R.id.cave_world_seed)
-            val date:   TextView    = view.findViewById(R.id.cave_world_date)
-            val delete: ImageButton = view.findViewById(R.id.cave_world_delete)
+            val name:     TextView    = view.findViewById(R.id.cave_world_name)
+            val seed:     TextView    = view.findViewById(R.id.cave_world_seed)
+            val date:     TextView    = view.findViewById(R.id.cave_world_date)
+            val creative: SwitchCompat = view.findViewById(R.id.cave_world_creative)
+            val delete:   ImageButton = view.findViewById(R.id.cave_world_delete)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
@@ -117,6 +119,12 @@ class CaveWorldMenuActivity : ThemedActivity() {
             holder.name.text = save.name
             holder.seed.text = getString(R.string.cave_menu_seed_label, save.seed)
             holder.date.text = getString(R.string.cave_menu_last_played, save.formattedLastPlayed())
+            holder.creative.setOnCheckedChangeListener(null)
+            holder.creative.isChecked = save.isCreative
+            holder.creative.setOnCheckedChangeListener { _, checked ->
+                save.isCreative = checked
+                CaveWorldSaveManager.updateWorld(this@CaveWorldMenuActivity, save)
+            }
             holder.itemView.setOnClickListener { launchWorld(save) }
             holder.delete.setOnClickListener   { showDeleteDialog(save) }
         }

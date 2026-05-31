@@ -139,6 +139,7 @@ internal class CaveRenderer(
     // Physique
     var playerMode = PlayerMode.WALK
     @Volatile var pendingMode: PlayerMode? = null
+    var isCreative = false
     private var velocityY = 0f
     private var onGround = false
     private var prevFlyUp = false
@@ -1187,15 +1188,12 @@ internal class CaveRenderer(
             world.enqueueIfFalling(bx, by + 1, bz)
             when (blockType) {
                 WATER      -> { world.onWaterSourceRemoved(bx, by, bz)
-                                inventory[blockType] = (inventory[blockType] ?: 0) + 1
-                                inventoryCallback?.invoke(inventory.toMap()) }
+                                if (!isCreative) { inventory[blockType] = (inventory[blockType] ?: 0) + 1; inventoryCallback?.invoke(inventory.toMap()) } }
                 WATER_FLOW -> { /* eau qui coule : pas de drop, pas de re-simulation */ }
                 WARD_STONE -> { enemyManager.wardStoneZones.removeAll { (wx, wz) ->
                                     wx.toInt() == bx && wz.toInt() == bz }
-                                inventory[blockType] = (inventory[blockType] ?: 0) + 1
-                                inventoryCallback?.invoke(inventory.toMap()) }
-                else       -> { inventory[blockType] = (inventory[blockType] ?: 0) + 1
-                                inventoryCallback?.invoke(inventory.toMap()) }
+                                if (!isCreative) { inventory[blockType] = (inventory[blockType] ?: 0) + 1; inventoryCallback?.invoke(inventory.toMap()) } }
+                else       -> { if (!isCreative) { inventory[blockType] = (inventory[blockType] ?: 0) + 1; inventoryCallback?.invoke(inventory.toMap()) } }
             }
             mineTarget = null
             mineDamage = 0f
@@ -2242,16 +2240,25 @@ internal class CaveRenderer(
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))
         if (blockType == WATER) world.onWaterSourcePlaced(px, py, pz)
         if (isFalling(blockType)) world.enqueueIfFalling(px, py, pz)
-        inventory[blockType] = (inventory[blockType] ?: 1) - 1
-        if ((inventory[blockType] ?: 0) <= 0) {
-            inventory.remove(blockType)
-            for (j in hotbar.indices) { if (hotbar[j] == blockType) hotbar[j] = null }
+        if (!isCreative) {
+            inventory[blockType] = (inventory[blockType] ?: 1) - 1
+            if ((inventory[blockType] ?: 0) <= 0) {
+                inventory.remove(blockType)
+                for (j in hotbar.indices) { if (hotbar[j] == blockType) hotbar[j] = null }
+            }
         }
         inventoryCallback?.invoke(inventory.toMap())
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
 
     private fun swapBucketInInventory(from: Byte, to: Byte) {
+        if (isCreative) {
+            inventory[to] = (inventory[to] ?: 0) + 1
+            hotbar[selectedSlot] = to
+            inventoryCallback?.invoke(inventory.toMap())
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            return
+        }
         val newFromCount = (inventory[from] ?: 1) - 1
         if (newFromCount <= 0) inventory.remove(from) else inventory[from] = newFromCount
         inventory[to] = (inventory[to] ?: 0) + 1

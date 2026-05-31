@@ -43,6 +43,15 @@
 
     </LinearLayout>
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/cave_world_creative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/cave_menu_creative"
+        android:textSize="11sp"
+        android:textColor="@color/midi_text_secondary" />
+
     <ImageButton
         android:id="@+id/cave_world_delete"
         android:layout_width="36dp"

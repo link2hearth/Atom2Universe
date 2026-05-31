@@ -31,10 +31,13 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     private var bossEnemyId    = -1
     private var bossRewardGiven = false
 
+    var isCreative = false
+
     private var spawnCooldown = SPAWN_INTERVAL
     private var playerInvTimer = 0f
 
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
+        if (isCreative) { enemies.clear(); return }
         playerInvTimer = (playerInvTimer - dt).coerceAtLeast(0f)
 
         // Recharge bouclier
