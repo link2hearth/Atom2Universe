@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.games.caves.entity.EnemyManager
+
 import com.Atom2Universe.app.games.caves.entity.UpgradeOption
 import com.Atom2Universe.app.games.caves.entity.UpgradeType
 import com.Atom2Universe.app.games.caves.input.GamepadController
@@ -93,6 +93,8 @@ class CaveActivity : ThemedActivity() {
             PLANK            -> 0xFFC88237.toInt()
             WOOD_PLANK_WHITE -> 0xFFD4BFA0.toInt()
             WARD_STONE       -> 0xFF8844FF.toInt()
+            BUCKET_EMPTY     -> 0xFFB87832.toInt()
+            BUCKET_FULL      -> 0xFF3A7BCC.toInt()
             else             -> 0xFF444444.toInt()
         }
 
@@ -126,6 +128,8 @@ class CaveActivity : ThemedActivity() {
             MUSHROOM_BROWN -> "mushroom_brown.png"
             MUSHROOM_TAN     -> "mushroom_tan.png"
             WOOD_PLANK_WHITE -> "wood_plank_white.png"
+            BUCKET_EMPTY     -> "Items/bucket.png"
+            BUCKET_FULL      -> "Items/bucket_full.png"
             else             -> null  // TORCH et PLANK : texture générée en code, pas de fichier asset
         }
 
@@ -143,6 +147,7 @@ class CaveActivity : ThemedActivity() {
             CraftingRecipe(listOf(WOOD       to 1),          PLANK,           4),
             CraftingRecipe(listOf(WOOD_WHITE to 1),          WOOD_PLANK_WHITE, 4),
             CraftingRecipe(listOf(PLANK to 1, COAL to 1),   TORCH,            4),
+            CraftingRecipe(listOf(PLANK to 3),               BUCKET_EMPTY,     1),
         )
     }
 
@@ -208,8 +213,9 @@ class CaveActivity : ThemedActivity() {
     private fun blockBitmap(type: Byte): Bitmap? {
         if (blockBitmapCache.containsKey(type)) return blockBitmapCache[type]
         val name = blockTextureName(type) ?: return null.also { blockBitmapCache[type] = null }
+        val assetPath = if (name.startsWith("Items/")) "Cave World/$name" else "Cave World/Tiles/$name"
         return try {
-            assets.open("Cave World/Tiles/$name").use { BitmapFactory.decodeStream(it) }
+            assets.open(assetPath).use { BitmapFactory.decodeStream(it) }
         } catch (e: Exception) { null }.also { blockBitmapCache[type] = it }
     }
 
@@ -252,7 +258,6 @@ class CaveActivity : ThemedActivity() {
                 playerShield           = save.playerShield,
                 playerShieldCurrent    = save.playerShieldCurrent,
                 playerWeapons          = save.playerWeapons,
-                waveTimer              = save.waveTimer,
                 wardStonePositions     = save.wardStonePositions
             )
         } else null
@@ -281,6 +286,7 @@ class CaveActivity : ThemedActivity() {
         val btnBack       = hud.findViewById<View>(R.id.cave_btn_back)
         val btnMode       = hud.findViewById<Button>(R.id.cave_btn_mode)
         val btnDayNight   = hud.findViewById<Button>(R.id.cave_btn_day_night)
+
         val btnUp         = hud.findViewById<Button>(R.id.cave_btn_up).also    { vBtnUp    = it }
         val btnDown       = hud.findViewById<Button>(R.id.cave_btn_down).also  { vBtnDown  = it }
         val btnLaser      = hud.findViewById<Button>(R.id.cave_btn_laser).also { vBtnLaser = it }
@@ -330,8 +336,6 @@ class CaveActivity : ThemedActivity() {
         renderer.shieldCallback   = { cur, max  -> uiHandler.post { updateShieldBar(cur, max) } }
         renderer.xpCallback       = { xp, xpMax, level -> uiHandler.post { updateXpBar(xp, xpMax, level) } }
         renderer.levelUpCallback  = { options -> uiHandler.post { showLevelUpDialog(options, root) } }
-
-        buildWaveTimerHud(root)
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)
@@ -568,51 +572,6 @@ class CaveActivity : ThemedActivity() {
         UpgradeType.WEAPON_ORANGE_SQUARE, UpgradeType.WEAPON_ORANGE_SWIRL,
         UpgradeType.WEAPON_RED_SQUARE, UpgradeType.WEAPON_RED_SWIRL -> R.string.cave_upgrade_weapon_desc
     })
-
-    // ── Chrono de vague ───────────────────────────────────────────────────────
-
-    private var waveTimerTv: TextView? = null
-
-    private fun buildWaveTimerHud(root: FrameLayout) {
-        val dp = resources.displayMetrics.density
-        val tv = TextView(this).apply {
-            textSize = 15f
-            setTextColor(0xFFFFDD55.toInt())
-            setShadowLayer(3f * dp, 0f, 0f, 0xFF000000.toInt())
-            visibility = View.GONE
-            setPadding((8 * dp).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
-        }
-        root.addView(tv, FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        ).also { lp ->
-            lp.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            lp.topMargin = (28 * dp).toInt()
-        })
-        waveTimerTv = tv
-
-        renderer.enemyManager.timerCallback = { elapsed, active, zoneLevel ->
-            uiHandler.post {
-                val lvlStr = getString(R.string.cave_zone_level, zoneLevel)
-                tv.text = if (!active) {
-                    lvlStr
-                } else {
-                    val remaining = (EnemyManager.WAVE_DURATION - elapsed).toInt().coerceAtLeast(0)
-                    val min = remaining / 60; val sec = remaining % 60
-                    val timerStr = when {
-                        elapsed < EnemyManager.SPAWN_WINDOW ->
-                            getString(R.string.cave_wave_incoming, min, sec)
-                        elapsed < EnemyManager.BOSS_SPAWN_TIME + 5f ->
-                            getString(R.string.cave_wave_boss_coming, min, sec)
-                        else ->
-                            getString(R.string.cave_wave_timer, min, sec)
-                    }
-                    "$timerStr  $lvlStr"
-                }
-                tv.visibility = View.VISIBLE
-            }
-        }
-    }
 
     // ── HP / Bouclier ─────────────────────────────────────────────────────────
 
@@ -1137,7 +1096,6 @@ class CaveActivity : ThemedActivity() {
             playerShield        = stats.shield,
             playerShieldCurrent = em.playerShieldCurrent,
             playerWeapons       = stats.weapons.map { "${it.color.name}_${it.variant.name}" },
-            waveTimer           = renderer.enemyManager.waveTimer,
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList()
         )
         lifecycleScope.launch(Dispatchers.IO) { CaveWorldSaveManager.updateFields(this@CaveActivity, snap) }
@@ -1167,7 +1125,9 @@ class CaveActivity : ThemedActivity() {
         TORCH -> getString(R.string.cave_block_torch)
         PLANK -> getString(R.string.cave_block_plank)
         WOOD_PLANK_WHITE -> getString(R.string.cave_block_wood_plank_white)
-        WARD_STONE -> getString(R.string.cave_block_ward_stone)
+        WARD_STONE   -> getString(R.string.cave_block_ward_stone)
+        BUCKET_EMPTY -> getString(R.string.cave_item_bucket_empty)
+        BUCKET_FULL  -> getString(R.string.cave_item_bucket_full)
         else -> "?"
     }
 

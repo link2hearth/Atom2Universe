@@ -25,28 +25,13 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     val familyPool: List<String> = ALL_FAMILIES.shuffled(Random(seed)).take(POOL_SIZE)
 
-    // ── Timer de vague (0 → WAVE_DURATION secondes) ───────────────────────────
-
-    var waveTimer: Float = 0f
-    var waveTimerActive: Boolean = false
     val wardStoneZones: MutableList<Pair<Double, Double>> = mutableListOf()
 
-    var timerCallback:       ((elapsed: Float, active: Boolean, zoneLevel: Int) -> Unit)? = null
-    var bossRewardCallback:  (() -> Unit)? = null
-
-    // ── État de la vague courante ─────────────────────────────────────────────
-
-    private var waveIndex = 0
-    private var waveFamily = familyPool[0]
-    private var waveFamilyRow = 0
-    private var waveType = EnemyType.ZOMBIE
-    private var waveSize = WAVE_SIZE_MIN + Random(seed + 1L).nextInt(WAVE_SIZE_RANGE)
-    private var waveSpawned = 0
-    private var bossEnemyId = -1
-    private var bossSpawnedThisCycle = false
+    var bossRewardCallback: (() -> Unit)? = null
+    private var bossEnemyId    = -1
     private var bossRewardGiven = false
 
-    private var spawnTimer = SPAWN_FIRST_DELAY
+    private var spawnCooldown = SPAWN_INTERVAL
     private var playerInvTimer = 0f
 
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
@@ -75,89 +60,45 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             } else false
         }
 
-        // ── Timer ────────────────────────────────────────────────────────────
-        val inSafe = isInSafeZone(px, pz)
-        waveTimerActive = !inSafe
-
-        if (waveTimerActive) {
-            waveTimer += dt
-            if (waveTimer >= WAVE_DURATION) {
-                waveTimer = 0f
-                advanceCycle()
-            }
+        // ── Spawn ambiant ─────────────────────────────────────────────────────
+        val nearbyCount = enemies.count { e ->
+            val dx = e.x - px; val dz = e.z - pz
+            dx * dx + dz * dz <= SPAWN_MAX_CHUNKS * CHUNK_SIZE.toDouble().let { it * it }
         }
-        timerCallback?.invoke(waveTimer, waveTimerActive, computeLevel(px, pz))
-
-        // ── Spawn de mobs dans la fenêtre 0-SPAWN_WINDOW ─────────────────────
-        if (waveTimerActive && waveTimer < SPAWN_WINDOW && waveSpawned < waveSize) {
-            spawnTimer -= dt
-            if (spawnTimer <= 0f) {
-                spawnTimer = SPAWN_INTERVAL
-                trySpawnWaveEnemy(px, py, pz)
+        if (!isInSafeZone(px, pz) && nearbyCount < MAX_ENEMIES_NEARBY) {
+            spawnCooldown -= dt
+            if (spawnCooldown <= 0f) {
+                spawnCooldown = SPAWN_INTERVAL
+                tryAmbientSpawn(px, py, pz)
             }
-        }
-
-        // ── Spawn du boss à BOSS_SPAWN_TIME ──────────────────────────────────
-        if (waveTimerActive && waveTimer >= BOSS_SPAWN_TIME && !bossSpawnedThisCycle) {
-            bossSpawnedThisCycle = true
-            trySpawnBoss(px, py, pz)
         }
 
         for (e in enemies) updateEnemy(e, dt, px, py, pz)
     }
 
-    private fun advanceCycle() {
-        enemies.clear()
-        bossEnemyId = -1
-        bossSpawnedThisCycle = false
-        bossRewardGiven = false
-        waveIndex++
-        val idx = waveIndex % POOL_SIZE
-        waveFamily = familyPool[idx]
-        waveFamilyRow = idx
-        waveType = EnemyType.values()[waveIndex % EnemyType.values().size]
-        waveSize = WAVE_SIZE_MIN + rng.nextInt(WAVE_SIZE_RANGE)
-        waveSpawned = 0
-        spawnTimer = SPAWN_FIRST_DELAY
-    }
-
-    // Spawn directement à côté du joueur (3-6 blocs), état CHASE immédiat
-    private fun trySpawnWaveEnemy(px: Double, py: Double, pz: Double) {
-        repeat(20) {
-            val angle = rng.nextFloat() * 2 * PI.toFloat()
-            val dist  = 3.0 + rng.nextFloat() * 3.0
-            val sx = px + cos(angle) * dist
-            val sz = pz + sin(angle) * dist
-            if (!canSpawnAt(sx, sz)) return@repeat
-            val sy = py + rng.nextFloat() * 2f - 0.5f
-            val e = Enemy(nextId++, waveType, sx, sy, sz)
-            e.spriteFamily = waveFamily
-            e.familyRow    = waveFamilyRow
-            e.level        = computeLevel(sx, sz)
-            e.hp           = e.maxHp
-            e.state        = EnemyState.CHASE
-            enemies.add(e)
-            waveSpawned++
-            return
-        }
-    }
-
-    private fun trySpawnBoss(px: Double, py: Double, pz: Double) {
+    private fun tryAmbientSpawn(px: Double, py: Double, pz: Double) {
+        val spawnBoss = bossEnemyId == -1 && rng.nextFloat() < BOSS_CHANCE
+        val minDist = SPAWN_MIN_CHUNKS * CHUNK_SIZE.toDouble()
+        val maxDist = SPAWN_MAX_CHUNKS * CHUNK_SIZE.toDouble()
         repeat(30) {
-            val angle = rng.nextFloat() * 2 * PI.toFloat()
-            val dist  = 5.0 + rng.nextFloat() * 3.0
+            val angle = rng.nextDouble() * 2 * PI
+            val dist  = minDist + rng.nextDouble() * (maxDist - minDist)
             val sx = px + cos(angle) * dist
             val sz = pz + sin(angle) * dist
             if (!canSpawnAt(sx, sz)) return@repeat
-            val sy = py + rng.nextFloat() * 2f - 0.5f
-            val e = Enemy(nextId++, EnemyType.ZOMBIE, sx, sy, sz)
-            e.spriteFamily = waveFamily
-            e.familyRow    = waveFamilyRow
-            e.isBoss       = true
+            val sy = py + rng.nextDouble() * 2.0 - 0.5
+            val familyIdx = rng.nextInt(POOL_SIZE)
+            val e = Enemy(nextId++, EnemyType.values()[rng.nextInt(EnemyType.values().size)], sx, sy, sz)
+            e.spriteFamily = familyPool[familyIdx]
+            e.familyRow    = familyIdx
             e.level        = computeLevel(sx, sz).coerceAtLeast(1)
+            e.isBoss       = spawnBoss
             e.hp           = e.maxHp
-            e.state        = EnemyState.CHASE
-            bossEnemyId    = e.id
+            e.state        = EnemyState.WANDER
+            if (spawnBoss) {
+                bossEnemyId     = e.id
+                bossRewardGiven = false
+            }
             enemies.add(e)
             return
         }
@@ -326,20 +267,18 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     companion object {
         const val POOL_SIZE             = 32
-        const val SPAWN_INTERVAL        = 8f
-        const val SPAWN_FIRST_DELAY     = 1f
         const val ATTACK_CD             = 1.5f
-        const val WAVE_SIZE_MIN         = 8
-        const val WAVE_SIZE_RANGE       = 8
         const val SAFE_ZONE_CHUNKS      = 5.0
-        const val WARD_SAFE_RADIUS      = 5.0   // chunks, même rayon que spawn safe
+        const val WARD_SAFE_RADIUS      = 5.0
         const val SHIELD_RECHARGE_DELAY = 10f
         const val GRAVITY               = 20f
         const val MAX_FALL              = -20f
 
-        const val WAVE_DURATION  = 300f   // 5 minutes par cycle
-        const val SPAWN_WINDOW   = 45f    // mobs dans les 45 premières secondes
-        const val BOSS_SPAWN_TIME = 45f   // boss spawn à 45s
+        const val SPAWN_INTERVAL       = 4f   // secondes entre tentatives de spawn
+        const val MAX_ENEMIES_NEARBY   = 15   // plafond d'ennemis dans le rayon de spawn
+        const val SPAWN_MIN_CHUNKS     = 2    // distance min de spawn (en chunks)
+        const val SPAWN_MAX_CHUNKS     = 4    // distance max de spawn (en chunks)
+        const val BOSS_CHANCE      = 0.01f  // 1% de chance par tentative de spawn
 
         val ALL_FAMILIES = listOf(
             "amg1", "amg2", "amg3", "amg4",

@@ -16,9 +16,7 @@ import com.Atom2Universe.app.games.caves.entity.WeaponVariant
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
-import com.Atom2Universe.app.games.caves.entity.PassiveMobManager
 import com.Atom2Universe.app.games.caves.render.EnemyRenderer
-import com.Atom2Universe.app.games.caves.render.PassiveMobRenderer
 import com.Atom2Universe.app.games.caves.render.ProjectileRenderer
 import com.Atom2Universe.app.games.caves.render.ShaderProgram
 import com.Atom2Universe.app.games.caves.world.*
@@ -57,7 +55,6 @@ internal class CaveRenderer(
         val playerShield: Int = 0,
         val playerShieldCurrent: Int = 0,
         val playerWeapons: List<String> = listOf("WHITE_SQUARE"),
-        val waveTimer: Float = 0f,
         val wardStonePositions: List<Pair<Double, Double>> = emptyList()
     )
 
@@ -222,8 +219,6 @@ internal class CaveRenderer(
     internal val enemyManager      = EnemyManager(world, worldSeed)
     private val enemyRenderer      = EnemyRenderer()
     private val projRenderer       = ProjectileRenderer()
-    internal val passiveMobManager = PassiveMobManager(world, worldSeed)
-    private val passiveMobRenderer = PassiveMobRenderer()
     private var laserEnemyDmgTimer = 0f
 
     // ── Progression joueur ────────────────────────────────────────────────────
@@ -460,7 +455,6 @@ internal class CaveRenderer(
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets, enemyManager.familyPool)
         projRenderer.onSurfaceCreated(context.assets)
-        passiveMobRenderer.onSurfaceCreated(context.assets)
 
         enemyManager.playerHpCallback  = { hp, max -> playerHpCallback?.invoke(hp, max) }
         enemyManager.shieldCallback    = { cur, max -> shieldCallback?.invoke(cur, max) }
@@ -506,7 +500,6 @@ internal class CaveRenderer(
             enemyManager.playerHp            = savedState.playerHp.coerceAtMost(savedState.playerMaxHp)
             enemyManager.playerShieldMax     = savedState.playerShield
             enemyManager.playerShieldCurrent = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
-            enemyManager.waveTimer           = savedState.waveTimer
             savedState.wardStonePositions.forEach { (x, z) -> enemyManager.wardStoneZones.add(Pair(x, z)) }
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
@@ -514,8 +507,6 @@ internal class CaveRenderer(
             val spawn = world.findSpawnPoint()
             enemyManager.worldSpawnX      = spawn[0].toDouble()
             enemyManager.worldSpawnZ      = spawn[2].toDouble()
-            passiveMobManager.worldSpawnX = spawn[0].toDouble()
-            passiveMobManager.worldSpawnZ = spawn[2].toDouble()
         } else {
             val spawn = world.findSpawnPoint()
             camera.x = spawn[0].toDouble(); camera.y = spawn[1].toDouble(); camera.z = spawn[2].toDouble()
@@ -524,8 +515,6 @@ internal class CaveRenderer(
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             enemyManager.worldSpawnX      = camera.x
             enemyManager.worldSpawnZ      = camera.z
-            passiveMobManager.worldSpawnX = camera.x
-            passiveMobManager.worldSpawnZ = camera.z
         }
         scheduleInitialLodBuilds()
     }
@@ -698,7 +687,8 @@ internal class CaveRenderer(
         waterTickAccum += dt
         if (waterTickAccum >= 0.25f) {
             waterTickAccum = 0f
-            world.tickWater(64)
+            world.tickWater()
+            world.tickDrain()
         }
 
         gravityTickAccum += dt
@@ -948,14 +938,6 @@ internal class CaveRenderer(
                 mesh.draw(wAPos, wAUv)
             }
         }
-
-        // ── Mobs passifs ──────────────────────────────────────────────────────
-        if (!gamePaused) passiveMobManager.update(dt, camera.x, camera.y, camera.z)
-        passiveMobRenderer.render(
-            passiveMobManager.mobs,
-            camera.x, camera.y, camera.z,
-            camera.vpMatrix, ambientFor(dayT)
-        )
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
         if (!gamePaused) enemyManager.update(dt, camera.x, camera.y, camera.z)
@@ -1216,7 +1198,9 @@ internal class CaveRenderer(
     }
 
     private fun raycastBlock(): RayHit? {
-        val dirX = camera.lookX; val dirY = camera.lookY; val dirZ = camera.lookZ
+        val dirX = camera.lookX.toDouble()
+        val dirY = camera.lookY.toDouble()
+        val dirZ = camera.lookZ.toDouble()
 
         var bx = floorInt(camera.x); var by = floorInt(camera.y); var bz = floorInt(camera.z)
 
@@ -1224,26 +1208,34 @@ internal class CaveRenderer(
         val stepY = if (dirY > 0) 1 else -1
         val stepZ = if (dirZ > 0) 1 else -1
 
-        val tDX = if (dirX != 0f) abs(1f / dirX) else Float.MAX_VALUE
-        val tDY = if (dirY != 0f) abs(1f / dirY) else Float.MAX_VALUE
-        val tDZ = if (dirZ != 0f) abs(1f / dirZ) else Float.MAX_VALUE
+        val tDX = if (dirX != 0.0) 1.0 / Math.abs(dirX) else Double.MAX_VALUE
+        val tDY = if (dirY != 0.0) 1.0 / Math.abs(dirY) else Double.MAX_VALUE
+        val tDZ = if (dirZ != 0.0) 1.0 / Math.abs(dirZ) else Double.MAX_VALUE
 
-        var tMaxX = if (dirX > 0) ((bx + 1).toDouble() - camera.x).toFloat() * tDX else (camera.x - bx.toDouble()).toFloat() * tDX
-        var tMaxY = if (dirY > 0) ((by + 1).toDouble() - camera.y).toFloat() * tDY else (camera.y - by.toDouble()).toFloat() * tDY
-        var tMaxZ = if (dirZ > 0) ((bz + 1).toDouble() - camera.z).toFloat() * tDZ else (camera.z - bz.toDouble()).toFloat() * tDZ
+        var tMaxX = if (dirX > 0) (bx + 1 - camera.x) * tDX else (camera.x - bx) * tDX
+        var tMaxY = if (dirY > 0) (by + 1 - camera.y) * tDY else (camera.y - by) * tDY
+        var tMaxZ = if (dirZ > 0) (bz + 1 - camera.z) * tDZ else (camera.z - bz) * tDZ
 
         var fnx = 0; var fny = 0; var fnz = -1
+        val reach = MINE_REACH.toDouble()
 
         repeat(MINE_REACH * 4) {
             val b = worldBlockAt(bx, by, bz)
             if (b != AIR && !isWater(b)) return RayHit(bx, by, bz, fnx, fny, fnz)
             when {
-                tMaxX < tMaxY && tMaxX < tMaxZ -> { fnx = -stepX; fny = 0; fnz = 0; bx += stepX; tMaxX += tDX }
-                tMaxY < tMaxZ                  -> { fnx = 0; fny = -stepY; fnz = 0; by += stepY; tMaxY += tDY }
-                else                           -> { fnx = 0; fny = 0; fnz = -stepZ; bz += stepZ; tMaxZ += tDZ }
+                tMaxX <= tMaxY && tMaxX <= tMaxZ -> {
+                    if (tMaxX > reach) return null
+                    fnx = -stepX; fny = 0; fnz = 0; bx += stepX; tMaxX += tDX
+                }
+                tMaxY <= tMaxZ -> {
+                    if (tMaxY > reach) return null
+                    fnx = 0; fny = -stepY; fnz = 0; by += stepY; tMaxY += tDY
+                }
+                else -> {
+                    if (tMaxZ > reach) return null
+                    fnx = 0; fny = 0; fnz = -stepZ; bz += stepZ; tMaxZ += tDZ
+                }
             }
-            val t = minOf(tMaxX - tDX, tMaxY - tDY, tMaxZ - tDZ)
-            if (t > MINE_REACH) return null
         }
         return null
     }
@@ -1283,15 +1275,14 @@ internal class CaveRenderer(
         val floatsPerBlock = 5 * 6 * 6   // 5 faces × 6 sommets × 6 floats
         val verts = FloatArray(fallingBlocks.size * floatsPerBlock)
         var vi = 0
-        val camX = camera.x.toFloat(); val camY = camera.y.toFloat(); val camZ = camera.z.toFloat()
-
         fun v(x: Float, y: Float, z: Float, u: Float, v: Float, p: Float) {
-            verts[vi++] = x - camX; verts[vi++] = y - camY; verts[vi++] = z - camZ
+            verts[vi++] = x; verts[vi++] = y; verts[vi++] = z
             verts[vi++] = u; verts[vi++] = v; verts[vi++] = p
         }
 
         for (fb in fallingBlocks) {
-            val bx = fb.wx.toFloat(); val bz = fb.wz.toFloat(); val by = fb.visualY
+            val bx = (fb.wx - camera.x).toFloat(); val bz = (fb.wz - camera.z).toFloat()
+            val by = (fb.visualY.toDouble() - camera.y).toFloat()
             val L = fallingLayer(fb.type).toFloat()
             // Top (face 0)
             val p0 = L
@@ -1955,6 +1946,37 @@ internal class CaveRenderer(
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             return
         }
+
+        // Seau vide : raycast ignorant l'eau → l'eau est dans la position de face adjacente
+        if (blockType == BUCKET_EMPTY) {
+            val target = raycastBlock() ?: return
+            // Le rayon traverse l'eau ; la source est dans la case côté joueur (face normale)
+            val wx = target.bx + target.fnx
+            val wy = target.by + target.fny
+            val wz = target.bz + target.fnz
+            if (world.blockAt(wx, wy, wz) != WATER) return
+            world.setBlock(wx, wy, wz, AIR)
+            world.onWaterSourceRemoved(wx, wy, wz)
+            forceMeshRebuild(wx, wy, wz)
+            swapBucketInInventory(BUCKET_EMPTY, BUCKET_FULL)
+            return
+        }
+
+        // Seau plein : poser une source d'eau et récupérer un seau vide
+        if (blockType == BUCKET_FULL) {
+            val target = raycastBlock() ?: return
+            val px = target.bx + target.fnx
+            val py = target.by + target.fny
+            val pz = target.bz + target.fnz
+            if (isInsidePlayer(px, py, pz)) return
+            if (world.blockAt(px, py, pz) != AIR) return
+            world.setBlock(px, py, pz, WATER)
+            world.onWaterSourcePlaced(px, py, pz)
+            forceMeshRebuild(px, py, pz)
+            swapBucketInInventory(BUCKET_FULL, BUCKET_EMPTY)
+            return
+        }
+
         val target = raycastBlock() ?: return
         val px = target.bx + target.fnx
         val py = target.by + target.fny
@@ -1970,6 +1992,23 @@ internal class CaveRenderer(
             inventory.remove(blockType)
             for (j in hotbar.indices) { if (hotbar[j] == blockType) hotbar[j] = null }
         }
+        inventoryCallback?.invoke(inventory.toMap())
+        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+    }
+
+    /**
+     * Échange un seau dans l'inventaire/hotbar : retire 1×[from], ajoute 1×[to].
+     * Si le slot sélectionné se vide, il reçoit automatiquement le nouveau type.
+     */
+    private fun swapBucketInInventory(from: Byte, to: Byte) {
+        inventory[from] = (inventory[from] ?: 1) - 1
+        if ((inventory[from] ?: 0) <= 0) {
+            inventory.remove(from)
+            for (j in hotbar.indices) {
+                if (hotbar[j] == from) hotbar[j] = if (j == selectedSlot) to else null
+            }
+        }
+        inventory[to] = (inventory[to] ?: 0) + 1
         inventoryCallback?.invoke(inventory.toMap())
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
@@ -1992,7 +2031,6 @@ internal class CaveRenderer(
         waterShader?.destroy()
         enemyRenderer.destroy()
         projRenderer.destroy()
-        passiveMobRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)
     }

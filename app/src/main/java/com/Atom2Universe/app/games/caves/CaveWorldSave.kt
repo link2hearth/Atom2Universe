@@ -31,7 +31,6 @@ data class CaveWorldSave(
     var playerShield: Int = 0,
     var playerShieldCurrent: Int = 0,
     var playerWeapons: List<String> = listOf("WHITE_SQUARE"),  // "COLOR_VARIANT"
-    var waveTimer: Float = 0f,
     var wardStonePositions: List<Pair<Double, Double>> = emptyList()
 ) {
     fun formattedLastPlayed(): String {
@@ -90,7 +89,6 @@ object CaveWorldSaveManager {
         existing.playerShield        = snap.playerShield
         existing.playerShieldCurrent = snap.playerShieldCurrent
         existing.playerWeapons       = snap.playerWeapons
-        existing.waveTimer           = snap.waveTimer
         existing.wardStonePositions  = snap.wardStonePositions
         persist(context, existing)
     }
@@ -132,7 +130,6 @@ object CaveWorldSaveManager {
             val weaponsArr = JSONArray()
             save.playerWeapons.forEach { weaponsArr.put(it) }
             put("playerWeapons", weaponsArr)
-            put("waveTimer", save.waveTimer.toDouble())
             val wardArr = JSONArray()
             save.wardStonePositions.forEach { (x, z) ->
                 wardArr.put(JSONObject().apply { put("x", x); put("z", z) })
@@ -185,7 +182,6 @@ object CaveWorldSaveManager {
             playerShield = j.optInt("playerShield", 0),
             playerShieldCurrent = j.optInt("playerShieldCurrent", 0),
             playerWeapons = weapons,
-            waveTimer = j.optDouble("waveTimer", 0.0).toFloat(),
             wardStonePositions = wardStones
         )
     }
