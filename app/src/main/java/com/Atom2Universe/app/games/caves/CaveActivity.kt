@@ -27,6 +27,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -286,6 +287,11 @@ class CaveActivity : ThemedActivity() {
 
         val root = FrameLayout(this)
         setContentView(root)
+        // Forcer zéro padding sur le contenu système : le renderer OpenGL occupe tout l'écran
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
+            view.setPadding(0, 0, 0, 0)
+            WindowInsetsCompat.CONSUMED
+        }
 
         glView = GLSurfaceView(this).apply {
             setEGLContextClientVersion(3)

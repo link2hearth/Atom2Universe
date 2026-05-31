@@ -213,7 +213,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
         // ── Gravité (sol = bloc solide non-eau) ──────────────────────────────
         if (e.type.flies) {
-            val targetVY = ((py - 0.9 - e.y) * 4.0).coerceIn(-8.0, 8.0)
+            val groundY = solidGroundBelow(e.x, e.z, e.y + 2.0) ?: (e.y - 8.0)
+            val hoverTarget = groundY + BAT_HOVER_HEIGHT
+            val targetVY = ((hoverTarget - e.y) * 4.0).coerceIn(-8.0, 8.0)
             e.velY += (targetVY - e.velY) * (dt * 4.0)
             e.y += e.velY * dt
         } else {
@@ -231,7 +233,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     // Déplacement horizontal avec collision + step-up d'un bloc.
     private fun move(e: Enemy, dx: Double, dz: Double) {
         val r = e.type.radius.toDouble()
-        val footY = Math.floor(e.y).toInt()
+        // +0.002 évite qu'une valeur comme 64.9999 (au lieu de 65.0) traite le bloc sol comme footY
+        val footY = Math.floor(e.y + 0.002).toInt()
         val headY = footY + 1
 
         // Axe X
@@ -244,7 +247,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 (zMin..zMax).all { bz -> isFreeForMob(tx, footY + 1, bz) && isFreeForMob(tx, headY + 1, bz) }
             when {
                 freeX  -> e.x += dx
-                stepX  -> { e.y += 1.0; e.x += dx; e.velY = 0.0 }
+                stepX  -> { e.velY = STEP_UP_VEL; e.x += dx }
             }
         }
 
@@ -253,13 +256,13 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             val tz = Math.floor(e.z + dz + if (dz > 0) r else -r).toInt()
             val xMin = Math.floor(e.x - r + 0.05).toInt()
             val xMax = Math.floor(e.x + r - 0.05).toInt()
-            val fy2 = Math.floor(e.y).toInt(); val hy2 = fy2 + 1
+            val fy2 = Math.floor(e.y + 0.002).toInt(); val hy2 = fy2 + 1
             val freeZ = (xMin..xMax).all { bx -> isFreeForMob(bx, fy2, tz) && isFreeForMob(bx, hy2, tz) }
             val stepZ = !freeZ && e.onGround &&
                 (xMin..xMax).all { bx -> isFreeForMob(bx, fy2 + 1, tz) && isFreeForMob(bx, hy2 + 1, tz) }
             when {
                 freeZ -> e.z += dz
-                stepZ -> { e.y += 1.0; e.z += dz; e.velY = 0.0 }
+                stepZ -> { e.velY = STEP_UP_VEL; e.z += dz }
             }
         }
     }
@@ -341,6 +344,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         const val SHIELD_RECHARGE_DELAY = 10f
         const val GRAVITY               = 20f
         const val MAX_FALL              = -20f
+        const val STEP_UP_VEL           = 7.0   // vitesse verticale initiale pour monter une marche
+        const val BAT_HOVER_HEIGHT      = 0.4f  // hauteur au-dessus du sol (chauves-souris)
 
         const val SPAWN_INTERVAL       = 5f    // secondes entre spawns
         const val SPAWN_JITTER         = 3f    // variation aléatoire de l'intervalle
