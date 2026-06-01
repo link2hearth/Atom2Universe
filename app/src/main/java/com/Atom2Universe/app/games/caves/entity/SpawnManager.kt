@@ -11,7 +11,6 @@ internal class SpawnManager(
     private val world: World,
     private val worldSeed: Long,
     private val enemies: ArrayList<Enemy>,
-    private val familyPool: List<String>,
     private val wardStoneZones: List<Pair<Double, Double>>,
     seed: Long
 ) {
@@ -65,17 +64,15 @@ internal class SpawnManager(
             val sy = findSpawnGround(sx, sz, py) ?: return@repeat
 
             val biome = biomeAt(sx, sy, sz)
-            val depth = depthChunksAt(sy)
-            val eligible = MobRegistry.allEligibleFor(biome, depth)
+            val zone  = computeLevel(sx, sz).coerceAtLeast(1)
+            val eligible = MobRegistry.allEligibleFor(biome, zone)
                 .ifEmpty { MobRegistry.all().toList() }
                 .ifEmpty { return }
 
             val def = eligible[rng.nextInt(eligible.size)]
-            val familyIdx = rng.nextInt(familyPool.size.coerceAtLeast(1))
             val e = Enemy(nextId++, def, sx, sy, sz)
-            e.spriteFamily = familyPool.getOrElse(familyIdx) { "" }
-            e.familyRow    = familyIdx
-            e.level        = computeLevel(sx, sz).coerceAtLeast(1)
+            e.spriteSheet = def.spriteSheet
+            e.level       = zone
             e.isBoss       = spawnBoss
             e.hp           = e.maxHp
             e.state        = EnemyState.CHASE
@@ -142,9 +139,6 @@ internal class SpawnManager(
             BiomeMap.biomeAt(chunkX, chunkY, chunkZ, worldSeed).name.lowercase()
         }
     }
-
-    private fun depthChunksAt(sy: Double): Int =
-        (-Math.floorDiv(sy.toInt(), CHUNK_SIZE)).coerceAtLeast(0)
 
     companion object {
         const val SAFE_ZONE_CHUNKS  = 5.0

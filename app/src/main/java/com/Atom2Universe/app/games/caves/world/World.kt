@@ -1087,11 +1087,16 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val originWz = originCz * CHUNK_SIZE
             val originSb = BiomeMap.surfaceBiomeAt(
                 (originWx + 7).toDouble(), (originWz + 7).toDouble(), seed)
-            val structDef = when (originSb) {
+            val biomeStructDef = when (originSb) {
                 SurfaceBiome.PLAINS, SurfaceBiome.FOREST,
                 SurfaceBiome.BIRCH_FOREST                                        -> StructureData.HOUSE_WOOD
                 SurfaceBiome.ROCKY, SurfaceBiome.DESERT, SurfaceBiome.RED_DESERT -> StructureData.RUINS_STONE
             }
+            // 30 % de chance d'utiliser une structure joueur si disponible
+            val userList = StructureRegistry.userStructures
+            val structDef = if (userList.isNotEmpty() && rng.nextFloat() < 0.30f)
+                userList[rng.nextInt(userList.size)]
+            else biomeStructDef
 
             // Y = surface au centre de la structure
             val originWy = surfaceHeight(

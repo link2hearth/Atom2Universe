@@ -4,7 +4,10 @@ import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.opengl.GLES30
 import com.Atom2Universe.app.games.caves.entity.Enemy
@@ -22,8 +25,9 @@ internal class EnemyRenderer {
     private var colorAPos  = 0; private var colorAColor = 0
     private var colorUMvp  = 0
 
-    private var atlasTex  = 0
     private var digitTex  = 0
+    private val texCache  = HashMap<String, Int>()
+    private var assetMgr: android.content.res.AssetManager? = null
     private var spriteVbo = 0
     private var colorVbo  = 0
     private var digitVbo  = 0
@@ -91,7 +95,9 @@ internal class EnemyRenderer {
 
     private var spriteUFlash = 0
 
-    fun onSurfaceCreated(assets: AssetManager, familyPool: List<String>) {
+    fun onSurfaceCreated(assets: AssetManager) {
+        assetMgr = assets
+        texCache.clear()
         spriteShader = ShaderProgram(VERT_SPRITE, FRAG_SPRITE).also {
             it.use()
             spriteAPos   = it.attrib("a_pos")
@@ -106,7 +112,6 @@ internal class EnemyRenderer {
             colorAColor = it.attrib("a_color")
             colorUMvp   = it.uniform("u_mvp")
         }
-        atlasTex = buildSpriteAtlas(assets, familyPool)
         digitTex = buildDigitAtlas()
 
         val ids = IntArray(3); GLES30.glGenBuffers(3, ids, 0)
@@ -146,12 +151,12 @@ internal class EnemyRenderer {
             val hw = scale * 0.5f
             val h  = scale
 
-            val col = dirFrame(cameraYaw, e.yaw, e.animTime)
-            val row = e.familyRow
-            val au0 = col.toFloat() * SPRITE_SIZE / ATLAS_W
-            val au1 = (col + 1).toFloat() * SPRITE_SIZE / ATLAS_W
-            val av0 = row.toFloat() * SPRITE_SIZE / ATLAS_H
-            val av1 = (row + 1).toFloat() * SPRITE_SIZE / ATLAS_H
+            val row = dirRow(cameraYaw, e.yaw)
+            val col = ((e.animTime / ANIM_FRAME_DURATION).toInt() % 4)
+            val au0 = col / 4f
+            val au1 = (col + 1) / 4f
+            val av0 = row / 4f
+            val av1 = (row + 1) / 4f
 
             fun sv(rx: Float, ry: Float, u: Float, v: Float) {
                 spV[si++] = ex + rightX * rx; spV[si++] = ey + ry; spV[si++] = ez + rightZ * rx
@@ -213,16 +218,18 @@ internal class EnemyRenderer {
         val digitCount  = di / 5
         if (spriteCount == 0) return
 
-        // ── Draw sprites par ennemi (flash individuel) ────────────────────────
+        // ── Draw sprites par ennemi (texture + flash individuels) ────────────
         spriteShader?.use()
         GLES30.glUniformMatrix4fv(spriteUMvp, 1, false, vpMatrix, 0)
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, atlasTex)
         GLES30.glUniform1i(spriteUTex, 0)
 
         var vertexOffset = 0
         for (e in enemies) {
             if (e.hp <= 0) continue
+            val sheetName = if (e.isBoss) "${e.spriteSheet}s" else e.spriteSheet
+            val texId = getOrLoadTex("Cave World/Pokemon/$sheetName.png", sheetName)
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId)
             GLES30.glUniform1f(spriteUFlash, e.hitFlash.coerceIn(0f, 1f))
             uploadAndBind(spriteVbo, spV, vertexOffset * 5, 6 * 5)
             bindSpriteAttribs()
@@ -267,15 +274,126 @@ internal class EnemyRenderer {
 
     // ── Direction / animation ─────────────────────────────────────────────────
 
-    private fun dirFrame(cameraYaw: Float, enemyYaw: Float, animTime: Float): Int {
+    /** Retourne la ligne (0-3) dans le sprite sheet 4×4.
+     *  Row 0 = face caméra, 1 = profil gauche, 2 = profil droit, 3 = dos. */
+    private fun dirRow(cameraYaw: Float, enemyYaw: Float): Int {
         val rel = ((enemyYaw - cameraYaw) % 360f + 360f) % 360f
-        val dirBase = when {
-            rel < 45f || rel >= 315f -> 0   // bk
-            rel < 135f               -> 4   // lf
-            rel < 225f               -> 2   // fr
-            else                     -> 6   // rt
+        return when {
+            rel < 45f || rel >= 315f -> 3   // dos (s'éloigne)
+            rel < 135f               -> 2   // profil droit visible
+            rel < 225f               -> 0   // face (vient vers la caméra)
+            else                     -> 1   // profil gauche visible
         }
-        return dirBase + ((animTime / ANIM_FRAME_DURATION).toInt() % 2)
+    }
+
+    // ── Cache textures par chemin ─────────────────────────────────────────────
+
+    private fun getOrLoadTex(path: String, sheetName: String): Int {
+        texCache[path]?.let { return it }
+        val assets = assetMgr ?: return 0
+        val id = try {
+            val stream = assets.open(path)
+            val bmp = BitmapFactory.decodeStream(stream)
+            stream.close()
+            uploadTex2D(bmp, nearest = true)
+        } catch (_: Exception) {
+            placeholderTex(sheetName)
+        }
+        texCache[path] = id
+        return id
+    }
+
+    // ── Slime procédural (fallback sans assets) ───────────────────────────────
+
+    /** Génère un sprite sheet 4×4 de slime animé.
+     *  Couleur dérivée du nom du sheet → une teinte unique par mob. */
+    private fun placeholderTex(sheetName: String): Int {
+        val cell = SLIME_CELL
+        val bmp  = Bitmap.createBitmap(cell * 4, cell * 4, Bitmap.Config.ARGB_8888)
+        val cv   = Canvas(bmp)
+        val color = slimeColor(sheetName)
+
+        // 4 directions × 4 frames — slime rond, même visuel dans toutes les directions
+        // Frames : légère animation de bounce (écrasé/étiré)
+        val scaleX = floatArrayOf(0.72f, 0.76f, 0.72f, 0.68f)
+        val scaleY = floatArrayOf(0.68f, 0.64f, 0.68f, 0.72f)
+
+        for (row in 0..3) {
+            for (col in 0..3) {
+                drawSlimeCell(cv, col * cell, row * cell, cell, color, scaleX[col], scaleY[col])
+            }
+        }
+        return uploadTex2D(bmp, nearest = true)
+    }
+
+    private fun drawSlimeCell(cv: Canvas, ox: Int, oy: Int, cell: Int, color: Int,
+                               sx: Float, sy: Float) {
+        val cx = ox + cell * 0.5f
+        val cy = oy + cell * 0.62f     // légèrement vers le bas
+        val rw = cell * sx * 0.5f
+        val rh = cell * sy * 0.5f
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        // ── Ombre portée ──────────────────────────────────────────────────────
+        paint.color = Color.argb(60, 0, 0, 0)
+        cv.drawOval(RectF(cx - rw * 0.9f, oy + cell * 0.88f,
+                          cx + rw * 0.9f, oy + cell * 0.96f), paint)
+
+        // ── Corps principal ───────────────────────────────────────────────────
+        paint.color = color
+        val bodyPath = Path().apply {
+            // Haut arrondi, bas légèrement aplati avec deux petits pics
+            val top  = cy - rh
+            val bot  = cy + rh * 0.85f
+            val left = cx - rw
+            val right= cx + rw
+            moveTo(cx, top)
+            cubicTo(right + rw * 0.15f, top, right, cy - rh * 0.2f, right, cy)
+            cubicTo(right, bot - rh * 0.1f, cx + rw * 0.45f, bot - rh * 0.3f, cx + rw * 0.15f, bot)
+            cubicTo(cx + rw * 0.05f, bot + rh * 0.18f, cx - rw * 0.05f, bot + rh * 0.18f, cx - rw * 0.15f, bot)
+            cubicTo(cx - rw * 0.45f, bot - rh * 0.3f, left, bot - rh * 0.1f, left, cy)
+            cubicTo(left, cy - rh * 0.2f, cx - rw * 0.15f - rw * 0.15f, top, cx, top)
+            close()
+        }
+        cv.drawPath(bodyPath, paint)
+
+        // ── Reflet (brillance) ────────────────────────────────────────────────
+        paint.color = Color.argb(90, 255, 255, 255)
+        cv.drawOval(RectF(cx - rw * 0.28f, cy - rh * 0.7f,
+                          cx + rw * 0.08f, cy - rh * 0.2f), paint)
+
+        // ── Yeux ──────────────────────────────────────────────────────────────
+        val eyeY  = cy - rh * 0.1f
+        val eyeRw = rw * 0.18f
+        val eyeRh = rh * 0.22f
+        val eyeOff= rw * 0.28f
+
+        paint.color = Color.WHITE
+        cv.drawOval(RectF(cx - eyeOff - eyeRw, eyeY - eyeRh, cx - eyeOff + eyeRw, eyeY + eyeRh), paint)
+        cv.drawOval(RectF(cx + eyeOff - eyeRw, eyeY - eyeRh, cx + eyeOff + eyeRw, eyeY + eyeRh), paint)
+
+        paint.color = Color.argb(220, 20, 10, 30)
+        val pR = eyeRw * 0.55f
+        cv.drawOval(RectF(cx - eyeOff - pR, eyeY - pR, cx - eyeOff + pR, eyeY + pR), paint)
+        cv.drawOval(RectF(cx + eyeOff - pR, eyeY - pR, cx + eyeOff + pR, eyeY + pR), paint)
+
+        // Petit reflet dans la pupille
+        paint.color = Color.argb(180, 255, 255, 255)
+        val sr = pR * 0.38f
+        cv.drawOval(RectF(cx - eyeOff - pR * 0.3f - sr, eyeY - pR * 0.4f - sr,
+                          cx - eyeOff - pR * 0.3f + sr, eyeY - pR * 0.4f + sr), paint)
+        cv.drawOval(RectF(cx + eyeOff - pR * 0.3f - sr, eyeY - pR * 0.4f - sr,
+                          cx + eyeOff - pR * 0.3f + sr, eyeY - pR * 0.4f + sr), paint)
+    }
+
+    /** Couleur HSV saturée dérivée du hash du nom de sheet → teinte unique par mob. */
+    private fun slimeColor(sheet: String): Int {
+        val h = sheet.fold(0) { acc, c -> acc * 31 + c.code }
+        val hue        = ((h and 0x7FFFFFFF) % 360).toFloat()
+        val saturation = 0.65f + (((h shr 8) and 0xFF) / 255f) * 0.25f  // 0.65–0.90
+        val value      = 0.75f + (((h shr 16) and 0xFF) / 255f) * 0.20f  // 0.75–0.95
+        return Color.HSVToColor(floatArrayOf(hue, saturation, value))
     }
 
     // ── Helpers GL ────────────────────────────────────────────────────────────
@@ -310,7 +428,8 @@ internal class EnemyRenderer {
 
     fun destroy() {
         spriteShader?.destroy(); colorShader?.destroy()
-        val texIds = intArrayOf(atlasTex, digitTex).filter { it != 0 }.toIntArray()
+        val texIds = (texCache.values + listOf(digitTex)).filter { it != 0 }.toIntArray()
+        texCache.clear()
         if (texIds.isNotEmpty()) GLES30.glDeleteTextures(texIds.size, texIds, 0)
         GLES30.glDeleteBuffers(3, intArrayOf(spriteVbo, colorVbo, digitVbo), 0)
     }
@@ -335,61 +454,6 @@ internal class EnemyRenderer {
         level <= 11 -> Triple(1.00f, 0.60f, 0.10f)
         level <= 14 -> Triple(1.00f, 0.25f, 0.25f)
         else        -> Triple(0.90f, 0.30f, 1.00f)
-    }
-
-    // ── Atlas sprites (GIF assets) ────────────────────────────────────────────
-
-    private fun buildSpriteAtlas(assets: AssetManager, familyPool: List<String>): Int {
-        val bmp = Bitmap.createBitmap(ATLAS_W, ATLAS_H, Bitmap.Config.ARGB_8888)
-        val cv = Canvas(bmp)
-        val paint = Paint().apply { isAntiAlias = false }
-
-        for ((row, family) in familyPool.withIndex()) {
-            for ((col, suffix) in FRAME_SUFFIXES.withIndex()) {
-                val path = "Cave World/Tiles/foes/${family}_${suffix}.gif"
-                try {
-                    val stream = assets.open(path)
-                    val raw = BitmapFactory.decodeStream(stream)
-                    stream.close()
-                    if (raw != null) {
-                        val frame = makeWhiteTransparent(raw)
-                        val dst = android.graphics.Rect(
-                            col * SPRITE_SIZE, row * SPRITE_SIZE,
-                            (col + 1) * SPRITE_SIZE, (row + 1) * SPRITE_SIZE
-                        )
-                        cv.drawBitmap(frame, null, dst, paint)
-                        frame.recycle()
-                    }
-                } catch (_: Exception) {
-                    paint.color = 0xFFFF00FF.toInt()
-                    cv.drawRect(
-                        (col * SPRITE_SIZE).toFloat(), (row * SPRITE_SIZE).toFloat(),
-                        ((col + 1) * SPRITE_SIZE).toFloat(), ((row + 1) * SPRITE_SIZE).toFloat(),
-                        paint
-                    )
-                }
-            }
-        }
-        return uploadTex2D(bmp, nearest = true)
-    }
-
-    // Remplace les pixels blancs/quasi-blancs par du transparent (fond GIF)
-    private fun makeWhiteTransparent(src: Bitmap): Bitmap {
-        val w = src.width; val h = src.height
-        val pixels = IntArray(w * h)
-        src.getPixels(pixels, 0, w, 0, 0, w, h)
-        src.recycle()
-        for (i in pixels.indices) {
-            val c = pixels[i]
-            if ((c shr 24) and 0xFF == 0) continue          // déjà transparent
-            val r = (c shr 16) and 0xFF
-            val g = (c shr 8)  and 0xFF
-            val b =  c         and 0xFF
-            if (r > 230 && g > 230 && b > 230) pixels[i] = 0
-        }
-        val out = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        out.setPixels(pixels, 0, w, 0, 0, w, h)
-        return out
     }
 
     // ── Atlas chiffres 0–9 + A–F (pour "BOSS") ───────────────────────────────
@@ -428,13 +492,8 @@ internal class EnemyRenderer {
     }
 
     companion object {
-        private const val SPRITE_SIZE = 32
-        private const val ATLAS_W     = 256   // 8 cols × 32 px
-        private const val ATLAS_H     = 1024  // 32 rows × 32 px
         private const val ANIM_FRAME_DURATION = 0.35f
-
-        // Ordre des colonnes dans l'atlas : bk1, bk2, fr1, fr2, lf1, lf2, rt1, rt2
-        private val FRAME_SUFFIXES = arrayOf("bk1", "bk2", "fr1", "fr2", "lf1", "lf2", "rt1", "rt2")
+        private const val SLIME_CELL = 48   // px par cellule du sheet 4×4 de fallback
 
         private const val DIGIT_ATLAS_W = 256   // 16 chars × 16 px
         private const val DIGIT_ATLAS_H = 20

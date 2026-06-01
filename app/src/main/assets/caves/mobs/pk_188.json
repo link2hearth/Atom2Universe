@@ -1,0 +1,23 @@
+﻿{
+  "id": "pk_188",
+  "hp_base": 29,
+  "damage_base": 6,
+  "speed": 2.688,
+  "attack_range": 1.6,
+  "detect_range": 12.0,
+  "eye_height": 1.7,
+  "radius": 0.4,
+  "sprite_scale": 0.85,
+  "hp_scale_per_level": 1.4,
+  "hp_scale_cap": 20.0,
+  "damage_scale_per_3lvl": 1,
+  "speed_scale_per_level": 0.08,
+  "biomes": ["any"],
+  "sprite_sheet": "188",
+  "spawn_zone_min": 187,
+  "spawn_zone_max": 189,
+  "loot_table": "default_loot",
+  "behavior": "aggressive",
+  "boss_eligible": true,
+  "xp_base": 188
+}

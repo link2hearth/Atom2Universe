@@ -5,13 +5,14 @@ import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
+import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.node.GameEvent
-import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.ItemRegistry
 import com.Atom2Universe.app.games.caves.node.LootNode
 import com.Atom2Universe.app.games.caves.node.LootTableRegistry
 import com.Atom2Universe.app.games.caves.node.MobRegistry
+import com.Atom2Universe.app.games.caves.node.PhysicsNode
 import com.Atom2Universe.app.games.caves.node.PlayerNode
 import com.Atom2Universe.app.games.caves.entity.Projectile
 import com.Atom2Universe.app.games.caves.entity.PlayerStats
@@ -69,7 +70,7 @@ internal class CaveRenderer(
     private val storage = worldId?.let {
         CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
     }
-    private val world = World(seed = worldSeed, storage = storage)
+    internal val world = World(seed = worldSeed, storage = storage)
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
     private val uploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
 
@@ -147,10 +148,7 @@ internal class CaveRenderer(
     var playerMode = PlayerMode.WALK
     @Volatile var pendingMode: PlayerMode? = null
     var isCreative = false
-    private var velocityY = 0f
-    private var onGround = false
-    private var prevFlyUp = false
-    private var stepUpRemaining = 0.0
+    private val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
@@ -181,51 +179,6 @@ internal class CaveRenderer(
     private val fallingBlocks = mutableListOf<FallingBlock>()
     private var fallingVbo = 0
 
-    private val HARDNESS = mapOf(
-        WATER      to 0.3f,
-        WATER_FLOW to 0.01f,
-        GRASS         to 0.6f,
-        LEAVES        to 0.2f,
-        WOOD          to 2.0f,
-        DIRT          to 0.5f,
-        GRAVEL        to 0.8f,
-        COAL          to 1.5f,
-        QUARTZ        to 2.5f,
-        STONE         to 3.0f,
-        COPPER        to 2.0f,
-        FURNACE       to 3.5f,
-        GRANITE       to 4.0f,
-        EMERALD       to 5.0f,
-        IRON          to 4.0f,
-        SILVER        to 4.5f,
-        GOLD          to 5.0f,
-        RUBY          to 5.5f,
-        CRYSTAL       to 6.0f,
-        LAVA          to 8.0f,
-        ICE           to 0.5f,
-        SNOW          to 0.2f,
-        BRICK_RED     to 4.5f,
-        ROCK          to 0.1f,
-        ROCK_MOSS     to 0.1f,
-        MUSHROOM_RED  to 0.1f,
-        MUSHROOM_BROWN to 0.1f,
-        MUSHROOM_TAN  to 0.1f,
-        TORCH         to 0.2f,
-        PLANK         to 1.5f,
-        BRICK_GREY    to 3.0f,
-        CACTUS        to 0.4f,
-        GLASS         to 0.3f,
-        GRAVEL_DIRT   to 0.5f,
-        TABLE         to 1.5f,
-        GRASS_WILD1   to 0.05f, GRASS_WILD2 to 0.05f, GRASS_WILD3 to 0.05f, GRASS_WILD4 to 0.05f,
-        GRASS_BROWN   to 0.05f, GRASS_TAN   to 0.05f,
-        WHEAT1        to 0.05f, WHEAT2      to 0.05f,  WHEAT3      to 0.05f, WHEAT4      to 0.05f,
-        REDSTONE      to 4.0f,
-        LEAVES_ORANGE to 0.2f,
-        WOOD_WHITE       to 2.0f,
-        LEAVES_FALL      to 0.2f,
-        WOOD_PLANK_WHITE to 1.5f,
-    ) + (COTTON_AMBER.toInt()..COTTON_YELLOW.toInt()).associate { it.toShort() to 0.8f }
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
@@ -244,6 +197,11 @@ internal class CaveRenderer(
     val projectiles = ArrayList<Projectile>(64)
 
     @Volatile var gamePaused = false
+
+    // ── Outil de capture de structure (mode créatif) ──────────────────────────
+    @Volatile var structCornerA: Triple<Int, Int, Int>? = null
+    @Volatile var structCornerB: Triple<Int, Int, Int>? = null
+    val currentLookAtBlock: Triple<Int, Int, Int>? get() = mineTarget?.let { Triple(it.bx, it.by, it.bz) }
 
     var posCallback:      ((String) -> Unit)?                    = null
     var modeCallback:     ((PlayerMode) -> Unit)?                = null
@@ -472,7 +430,7 @@ internal class CaveRenderer(
         ItemRegistry.load(context.assets)
         LootTableRegistry.load(context.assets)
         blockTexArray = loadBlockTextures()
-        enemyRenderer.onSurfaceCreated(context.assets, enemyManager.familyPool)
+        enemyRenderer.onSurfaceCreated(context.assets)
         projRenderer.onSurfaceCreated(context.assets)
 
         playerNode.onHpChanged     = { hp, max -> playerHpCallback?.invoke(hp, max) }
@@ -990,6 +948,9 @@ internal class CaveRenderer(
         // ── Rendu laser + highlight ───────────────────────────────────────────
         renderLaserAndHighlight()
 
+        // ── Boîte de sélection structure (mode créatif) ───────────────────────
+        drawStructureSelection()
+
         // ── Blocs en chute (rendu avec world shader encore actif) ────────────
         drawFallingBlocks(dt)
 
@@ -1141,7 +1102,7 @@ internal class CaveRenderer(
         mineTarget = target
 
         val blockType = worldBlockAt(bx, by, bz)
-        val hardness = HARDNESS[blockType] ?: 3f
+        val hardness = BlockRegistry.getHardness(blockType)
         mineDamage += dt / hardness
 
         miningCallback?.invoke(mineDamage, blockType)
@@ -1263,13 +1224,6 @@ internal class CaveRenderer(
 
     // ── Blocs en chute libre (animation 200ms) ───────────────────────────────
 
-    private fun fallingLayer(type: Short): Int = when (type) {
-        SAND        -> 20
-        REDSAND     -> 22
-        GRAVEL_DIRT -> 42
-        else        -> (type.toInt() and 0xFF) - 1   // GRAVEL (8) → 7
-    }
-
     private fun drawFallingBlocks(dt: Float) {
         // Récupérer les nouvelles animations lancées par tickFalling
         while (true) {
@@ -1304,7 +1258,7 @@ internal class CaveRenderer(
         for (fb in fallingBlocks) {
             val bx = (fb.wx - camera.x).toFloat(); val bz = (fb.wz - camera.z).toFloat()
             val by = (fb.visualY.toDouble() - camera.y).toFloat()
-            val L = fallingLayer(fb.type).toFloat()
+            val L = (BlockRegistry.get(fb.type)?.layerTop ?: 0).toFloat()
             // Top (face 0)
             val p0 = L
             v(bx,   by+1f, bz,   0f,0f,p0); v(bx+1f,by+1f,bz,  1f,0f,p0); v(bx+1f,by+1f,bz+1f,1f,1f,p0)
@@ -1352,6 +1306,65 @@ internal class CaveRenderer(
         GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+    }
+
+    // ── Boîte de sélection structure ─────────────────────────────────────────
+
+    private fun drawStructureSelection() {
+        val a = structCornerA ?: return
+        val b = structCornerB ?: return
+        val minX = minOf(a.first, b.first); val maxX = maxOf(a.first, b.first) + 1
+        val minY = minOf(a.second, b.second); val maxY = maxOf(a.second, b.second) + 1
+        val minZ = minOf(a.third, b.third); val maxZ = maxOf(a.third, b.third) + 1
+
+        val ep = 0.03f
+        val x0 = (minX - ep - camera.x).toFloat(); val x1 = (maxX + ep - camera.x).toFloat()
+        val y0 = (minY - ep - camera.y).toFloat(); val y1 = (maxY + ep - camera.y).toFloat()
+        val z0 = (minZ - ep - camera.z).toFloat(); val z1 = (maxZ + ep - camera.z).toFloat()
+
+        // Arêtes d'une boîte = 12 segments, chaque segment = 2 triangles quad de width hw
+        val hw = 0.028f
+        val cr = 0.2f; val cg = 1.0f; val cb = 0.4f  // vert translucide
+        val out = ArrayList<Float>(12 * 6 * 2 * 6)
+        fun seg(ax: Float, ay: Float, az: Float, bx: Float, by: Float, bz: Float) {
+            val ddx = bx - ax; val ddy = by - ay; val ddz = bz - az
+            val len = sqrt(ddx*ddx + ddy*ddy + ddz*ddz).coerceAtLeast(0.001f)
+            val fx = ddx/len; val fy = ddy/len; val fz = ddz/len
+            val upX = if (abs(fy) < 0.9f) 0f else 1f; val upY = if (abs(fy) < 0.9f) 1f else 0f
+            var ruX = fy*0f-fz*upY; var ruY = fz*upX-fx*0f; var ruZ = fx*upY-fy*upX
+            val rl = sqrt(ruX*ruX+ruY*ruY+ruZ*ruZ).coerceAtLeast(0.001f); ruX/=rl; ruY/=rl; ruZ/=rl
+            val rvX = ruY*fz-ruZ*fy; val rvY = ruZ*fx-ruX*fz; val rvZ = ruX*fy-ruY*fx
+            fun v(px:Float,py:Float,pz:Float){out.add(px);out.add(py);out.add(pz);out.add(cr);out.add(cg);out.add(cb)}
+            v(ax+ruX*hw,ay+ruY*hw,az+ruZ*hw); v(ax-ruX*hw,ay-ruY*hw,az-ruZ*hw); v(bx-ruX*hw,by-ruY*hw,bz-ruZ*hw)
+            v(ax+ruX*hw,ay+ruY*hw,az+ruZ*hw); v(bx-ruX*hw,by-ruY*hw,bz-ruZ*hw); v(bx+ruX*hw,by+ruY*hw,bz+ruZ*hw)
+            v(ax+rvX*hw,ay+rvY*hw,az+rvZ*hw); v(ax-rvX*hw,ay-rvY*hw,az-rvZ*hw); v(bx-rvX*hw,by-rvY*hw,bz-rvZ*hw)
+            v(ax+rvX*hw,ay+rvY*hw,az+rvZ*hw); v(bx-rvX*hw,by-rvY*hw,bz-rvZ*hw); v(bx+rvX*hw,by+ruY*hw,bz+ruZ*hw)
+        }
+        // 12 arêtes de la boîte
+        seg(x0,y0,z0, x1,y0,z0); seg(x0,y0,z1, x1,y0,z1)
+        seg(x0,y1,z0, x1,y1,z0); seg(x0,y1,z1, x1,y1,z1)
+        seg(x0,y0,z0, x0,y0,z1); seg(x1,y0,z0, x1,y0,z1)
+        seg(x0,y1,z0, x0,y1,z1); seg(x1,y1,z0, x1,y1,z1)
+        seg(x0,y0,z0, x0,y1,z0); seg(x1,y0,z0, x1,y1,z0)
+        seg(x0,y0,z1, x0,y1,z1); seg(x1,y0,z1, x1,y1,z1)
+
+        val verts = out.toFloatArray()
+        val buf = ByteBuffer.allocateDirect(verts.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(verts); buf.position(0)
+
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, transientVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, verts.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        laserShader?.use()
+        GLES30.glUniformMatrix4fv(lUMvp, 1, false, camera.vpMatrix, 0)
+        GLES30.glEnable(GLES30.GL_BLEND); GLES30.glBlendFunc(GLES30.GL_ONE, GLES30.GL_ONE)
+        GLES30.glDepthMask(false)
+        val stride = 6 * 4
+        GLES30.glEnableVertexAttribArray(lAPos); GLES30.glVertexAttribPointer(lAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(lAColor); GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, verts.size / 6)
+        GLES30.glDisableVertexAttribArray(lAPos); GLES30.glDisableVertexAttribArray(lAColor)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+        GLES30.glDepthMask(true); GLES30.glDisable(GLES30.GL_BLEND)
     }
 
     // ── Rendu laser + highlight ───────────────────────────────────────────────
@@ -2008,101 +2021,22 @@ internal class CaveRenderer(
         val yawRad = Math.toRadians(camera.yaw.toDouble())
         val fX = sin(yawRad).toFloat(); val fZ = cos(yawRad).toFloat()
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
-        val inWater = isBodyInWater()
-        val hSpeed = when {
-            inWater  -> 3f * dt
-            onGround -> 7f * dt
-            else     -> 4f * dt
-        }
-        val dx = (fX * touch.moveForward * hSpeed - rX * touch.moveRight * hSpeed).toDouble()
-        val dz = (fZ * touch.moveForward * hSpeed - rZ * touch.moveRight * hSpeed).toDouble()
-        val jumpPressed = touch.flyUp && !prevFlyUp
-        prevFlyUp = touch.flyUp
-
-        if (!collidesAt(camera.playerX + dx, camera.playerY, camera.playerZ)) {
-            camera.playerX += dx
-        } else if ((onGround || inWater) && dx != 0.0 && !collidesAt(camera.playerX + dx, camera.playerY + 1.0, camera.playerZ)) {
-            if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
-        }
-        if (!collidesAt(camera.playerX, camera.playerY, camera.playerZ + dz)) {
-            camera.playerZ += dz
-        } else if ((onGround || inWater) && dz != 0.0 && !collidesAt(camera.playerX, camera.playerY + 1.0, camera.playerZ + dz)) {
-            if (stepUpRemaining == 0.0) stepUpRemaining = 1.0
-        }
-        if (stepUpRemaining > 0.0) {
-            val rise = minOf(stepUpRemaining, 12.0 * dt)
-            if (!collidesAt(camera.playerX, camera.playerY + rise, camera.playerZ)) {
-                camera.playerY += rise
-                stepUpRemaining -= rise
-            } else {
-                stepUpRemaining = 0.0
-            }
-            velocityY = 0f
-            onGround = (stepUpRemaining == 0.0)
-        } else if (inWater) {
-            // Physique eau : gravité réduite, nager vers le haut en appuyant saut
-            if (touch.flyUp) velocityY = (velocityY + 5f * dt).coerceAtMost(3f)
-            velocityY -= 3f * dt
-            velocityY = velocityY.coerceAtLeast(-2f)
-            val dy = (velocityY * dt).toDouble()
-            if (!collidesAt(camera.playerX, camera.playerY + dy, camera.playerZ)) {
-                camera.playerY += dy
-            } else {
-                if (velocityY < 0f) {
-                    var lo = camera.playerY + dy; var hi = camera.playerY
-                    repeat(8) { val mid = (lo + hi) * 0.5; if (collidesAt(camera.playerX, mid, camera.playerZ)) lo = mid else hi = mid }
-                    camera.playerY = hi
-                }
-                velocityY = 0f
-            }
-            onGround = false
-        } else {
-            if (jumpPressed && onGround) { velocityY = 10.5f; onGround = false }
-
-            velocityY -= 22f * dt
-            velocityY = velocityY.coerceAtLeast(-30f)
-            val dy = (velocityY * dt).toDouble()
-            if (!collidesAt(camera.playerX, camera.playerY + dy, camera.playerZ)) {
-                camera.playerY += dy
-            } else {
-                if (velocityY < 0f) {
-                    var lo = camera.playerY + dy
-                    var hi = camera.playerY
-                    repeat(8) {
-                        val mid = (lo + hi) * 0.5
-                        if (collidesAt(camera.playerX, mid, camera.playerZ)) lo = mid else hi = mid
-                    }
-                    camera.playerY = hi
-                }
-                velocityY = 0f
-            }
-
-            onGround = velocityY <= 0.1f && collidesAt(camera.playerX, camera.playerY - 0.1, camera.playerZ)
-        }
+        val (newX, newY, newZ) = physics.updateWalk(
+            dt,
+            camera.playerX, camera.playerY, camera.playerZ,
+            fX, fZ, rX, rZ,
+            touch.moveForward, touch.moveRight, touch.flyUp
+        )
+        camera.playerX = newX; camera.playerY = newY; camera.playerZ = newZ
     }
 
-    // ── Collision ─────────────────────────────────────────────────────────────
+    // ── Collision (délégation vers PhysicsNode) ───────────────────────────────
 
-    private fun isBodyInWater(): Boolean {
-        val bx = floorInt(camera.playerX); val by = floorInt(camera.playerY - 0.9); val bz = floorInt(camera.playerZ)
-        return isWater(worldBlockAt(bx, by, bz))
-    }
+    private fun isHeadInWater(): Boolean =
+        physics.isHeadInWater(camera.playerX, camera.playerY, camera.playerZ)
 
-    private fun isHeadInWater(): Boolean {
-        val bx = floorInt(camera.playerX); val by = floorInt(camera.playerY - 0.1); val bz = floorInt(camera.playerZ)
-        return isWater(worldBlockAt(bx, by, bz))
-    }
-
-    private fun collidesAt(px: Double, py: Double, pz: Double): Boolean {
-        val x0=floorInt(px-0.3); val x1=floorInt(px+0.29)
-        val y0=floorInt(py-1.62); val y1=floorInt(py+0.18)
-        val z0=floorInt(pz-0.3); val z1=floorInt(pz+0.29)
-        for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
-            val b = worldBlockAt(bx, by, bz)
-            if (b != AIR && !isDecoration(b) && !isWater(b)) return true
-        }
-        return false
-    }
+    private fun collidesAt(px: Double, py: Double, pz: Double): Boolean =
+        physics.collidesAt(px, py, pz)
 
     private fun worldBlockAt(wx: Int, wy: Int, wz: Int): Short {
         val cx = Math.floorDiv(wx, CHUNK_SIZE); val cy = Math.floorDiv(wy, CHUNK_SIZE); val cz = Math.floorDiv(wz, CHUNK_SIZE)
@@ -2120,13 +2054,14 @@ internal class CaveRenderer(
             val bcx = Math.floorDiv(floorInt(camera.playerX), CHUNK_SIZE)
             val bcy = Math.floorDiv(floorInt(camera.playerY), CHUNK_SIZE)
             val bcz = Math.floorDiv(floorInt(camera.playerZ), CHUNK_SIZE)
-            val inLoadedSolid = world.getChunk(bcx, bcy, bcz)?.generated == true && collidesAt(camera.playerX, camera.playerY, camera.playerZ)
+            val inLoadedSolid = world.getChunk(bcx, bcy, bcz)?.generated == true &&
+                                collidesAt(camera.playerX, camera.playerY, camera.playerZ)
             if (inLoadedSolid) {
                 var safeY = camera.playerY
                 repeat(64) { if (collidesAt(camera.playerX, safeY, camera.playerZ)) safeY += 1.0 }
                 camera.playerY = safeY
             }
-            velocityY = 0f; onGround = false
+            physics.reset()
         }
         playerMode = newMode
         modeCallback?.invoke(newMode)

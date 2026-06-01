@@ -15,12 +15,23 @@ internal object BlockRegistry {
     private val waterTable = BooleanArray(65536)
     private val fallingTable = BooleanArray(65536)
 
+    // Tables de layers pré-calculées après buildTextureAtlas()
+    private val layerTopTable       = IntArray(65536)
+    private val layerBottomTable    = IntArray(65536)
+    private val layerSideTable      = IntArray(65536)
+    private val layerSideGrassTable = IntArray(65536)
+    private val layerSideSandTable  = IntArray(65536)
+    private val layerSideSnowTable  = IntArray(65536)
+
     // Textures uniques ordonnées → index = couche GL dans la texture array
     private val textureOrder = mutableListOf<String>()
     private val textureIndexMap = HashMap<String, Int>()
 
     // Textures générées par le renderer (ex: torch, ward_stone)
     private val generatedProviders = HashMap<String, (Int) -> Bitmap>()
+
+    // Copies des faces top pour l'UI — stockées avant le recycle GL dans CaveRenderer
+    private val topBitmapById = HashMap<Short, Bitmap>()
 
     fun load(assets: AssetManager) {
         if (defs.isNotEmpty()) return
@@ -43,6 +54,12 @@ internal object BlockRegistry {
     }
 
     fun buildTextureAtlas(assets: AssetManager, tileSize: Int): List<Bitmap> {
+        // Réinitialise l'état texture pour chaque reconstruction (recréation de surface GL)
+        textureIndexMap.clear()
+        textureOrder.clear()
+        topBitmapById.values.forEach { it.recycle() }
+        topBitmapById.clear()
+
         val bitmaps = mutableListOf<Bitmap>()
 
         fun register(name: String): Int {
@@ -68,6 +85,18 @@ internal object BlockRegistry {
             def.layerSideGrass = def.textureSideGrass?.let { register(it) } ?: def.layerSide
             def.layerSideSand  = def.textureSideSand?.let  { register(it) } ?: def.layerSide
             def.layerSideSnow  = def.textureSideSnow?.let  { register(it) } ?: def.layerSide
+
+            val idx = def.id.toInt() and 0xFFFF
+            layerTopTable[idx]       = def.layerTop
+            layerBottomTable[idx]    = def.layerBottom
+            layerSideTable[idx]      = def.layerSide
+            layerSideGrassTable[idx] = def.layerSideGrass
+            layerSideSandTable[idx]  = def.layerSideSand
+            layerSideSnowTable[idx]  = def.layerSideSnow
+
+            // Copie indépendante pour l'UI : survivra au recycle GL dans CaveRenderer
+            val src = bitmaps[def.layerTop]
+            topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
         }
 
         return bitmaps
@@ -85,23 +114,24 @@ internal object BlockRegistry {
     // face : 0=dessus, 1=dessous, 2-5=côtés
     // above : bloc voisin au-dessus (pour les transitions de biome sur les côtés)
     fun getLayerForFace(id: Short, face: Int, above: Short): Int {
-        val def = defs[id] ?: return 0
-        if (face == 1) return def.layerBottom
-        if (face == 0) return def.layerTop
-        // Faces latérales : sélection selon le voisin du dessus
-        if (above == 4000.toShort() || above == 4001.toShort()) return def.layerSideSand   // SAND, REDSAND
-        if (above == 5001.toShort() || above == 5000.toShort()) return def.layerSideSnow   // SNOW, ICE
-        if (above == 0.toShort()) return def.layerSideGrass                                // AIR
-        return def.layerSide
+        val idx = id.toInt() and 0xFFFF
+        if (face == 1) return layerBottomTable[idx]
+        if (face == 0) return layerTopTable[idx]
+        if (above == 4000.toShort() || above == 4001.toShort()) return layerSideSandTable[idx]
+        if (above == 5001.toShort() || above == 5000.toShort()) return layerSideSnowTable[idx]
+        if (above == 0.toShort()) return layerSideGrassTable[idx]
+        return layerSideTable[idx]
     }
 
-    fun getLayerForDecoration(id: Short): Int = defs[id]?.layerTop ?: 0
+    fun getLayerForDecoration(id: Short): Int = layerTopTable[id.toInt() and 0xFFFF]
 
     fun getColor(id: Short): Int = defs[id]?.color ?: 0xFF444444.toInt()
 
     fun getHardness(id: Short): Float = defs[id]?.hardness ?: 1f
 
     fun getTextureTop(id: Short): String? = defs[id]?.textureTop
+
+    fun getBitmap(id: Short): Bitmap? = topBitmapById[id]
 
     fun getSpriteMargin(id: Short): Float = defs[id]?.spriteMargin ?: 0.10f
 

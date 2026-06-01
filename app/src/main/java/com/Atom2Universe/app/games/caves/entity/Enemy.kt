@@ -13,8 +13,7 @@ internal class Enemy(
     var z: Double
 ) {
     var level: Int = 1
-    var spriteFamily: String = ""
-    var familyRow: Int = 0
+    var spriteSheet: String = ""
     var isBoss: Boolean = false
     var animTime: Float = 0f
 

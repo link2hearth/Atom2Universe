@@ -11,17 +11,14 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     val enemies = ArrayList<Enemy>(32)
 
-    val familyPool: List<String> = ALL_FAMILIES.shuffled(Random(seed)).take(POOL_SIZE)
-
     val wardStoneZones: MutableList<Pair<Double, Double>> = mutableListOf()
 
     val spawnManager = SpawnManager(
-        world        = world,
-        worldSeed    = seed,
-        enemies      = enemies,
-        familyPool   = familyPool,
+        world          = world,
+        worldSeed      = seed,
+        enemies        = enemies,
         wardStoneZones = wardStoneZones,
-        seed         = seed
+        seed           = seed
     )
 
     var player: PlayerNode? = null
@@ -246,39 +243,11 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     }
 
     companion object {
-        const val POOL_SIZE    = 32
-        const val ATTACK_CD    = 1.5f
-        const val GRAVITY      = 20f
-        const val MAX_FALL     = -20f
-        const val STEP_UP_VEL  = 7.0
+        const val ATTACK_CD      = 1.5f
+        const val GRAVITY        = 20f
+        const val MAX_FALL       = -20f
+        const val STEP_UP_VEL    = 7.0
         const val DESPAWN_CHUNKS = 6
-
-        val ALL_FAMILIES = listOf(
-            "amg1", "amg2", "amg3", "amg4",
-            "avt1", "avt2", "avt3", "avt4",
-            "bmg1", "bmg2", "bmg3", "bmg4",
-            "chr1", "dvl1",
-            "ftr1", "ftr2", "ftr3", "ftr4",
-            "gsd1", "isd1", "jli1", "kin1",
-            "knt1", "knt2", "knt3", "knt4",
-            "man1", "man2", "man3", "man4",
-            "mnt1", "mnt2", "mnt3", "mnt4",
-            "mnv1", "mnv2", "mnv3", "mnv4",
-            "mst1", "mst2", "mst3", "mst4",
-            "nja1", "nja2", "nja3", "nja4",
-            "npc1", "npc2", "npc3", "npc4", "npc5", "npc6", "npc7", "npc8", "npc9",
-            "pdn1", "pdn2", "pdn3", "pdn4",
-            "scr1", "scr2", "scr3", "scr4",
-            "skl1",
-            "smr1", "smr2", "smr3", "smr4",
-            "spd1", "syb1",
-            "thf1", "thf2", "thf3", "thf4",
-            "trk1",
-            "wmg1", "wmg2", "wmg3", "wmg4",
-            "wmn1", "wmn2", "wmn3",
-            "wnv1", "wnv2", "wnv3", "wnv4",
-            "ybo1", "ygr1", "zph1"
-        )
     }
 
     // RNG local pour l'IA de wandering (indépendant du spawn)

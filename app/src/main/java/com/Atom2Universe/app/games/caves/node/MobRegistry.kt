@@ -21,10 +21,10 @@ internal object MobRegistry {
     fun get(id: String): MobDef =
         defs[id] ?: error("MobDef '$id' not found — vérifier caves/mobs/$id.json")
 
-    fun allEligibleFor(biome: String, depthChunks: Int): List<MobDef> =
+    fun allEligibleFor(biome: String, zone: Int): List<MobDef> =
         defs.values.filter { def ->
             (def.biomes.isEmpty() || "any" in def.biomes || biome in def.biomes)
-                && depthChunks >= def.minDepthChunks
+                && zone >= def.spawnZoneMin && zone <= def.spawnZoneMax
         }
 
     fun all(): Collection<MobDef> = defs.values

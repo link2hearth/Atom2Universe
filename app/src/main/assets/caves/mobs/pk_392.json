@@ -1,0 +1,23 @@
+﻿{
+  "id": "pk_392",
+  "hp_base": 60,
+  "damage_base": 13,
+  "speed": 2.892,
+  "attack_range": 1.6,
+  "detect_range": 12.0,
+  "eye_height": 1.7,
+  "radius": 0.4,
+  "sprite_scale": 0.85,
+  "hp_scale_per_level": 1.4,
+  "hp_scale_cap": 20.0,
+  "damage_scale_per_3lvl": 1,
+  "speed_scale_per_level": 0.08,
+  "biomes": ["any"],
+  "sprite_sheet": "392",
+  "spawn_zone_min": 391,
+  "spawn_zone_max": 393,
+  "loot_table": "default_loot",
+  "behavior": "aggressive",
+  "boss_eligible": true,
+  "xp_base": 392
+}
