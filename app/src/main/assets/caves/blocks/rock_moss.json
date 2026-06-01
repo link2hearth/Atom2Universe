@@ -1,0 +1,12 @@
+{
+  "id": 2021,
+  "name": "rock_moss",
+  "texture_top": "rock_moss.png",
+  "texture_side": "rock_moss.png",
+  "texture_bottom": "rock_moss.png",
+  "color": "#667744",
+  "hardness": 1.5,
+  "decoration": true,
+  "drop": "rock_moss",
+  "creative_tab": "stone"
+}

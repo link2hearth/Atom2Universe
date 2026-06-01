@@ -1,0 +1,11 @@
+{
+  "id": 9023,
+  "name": "cotton_red",
+  "texture_top": "cotton/cotton_red.png",
+  "texture_side": "cotton/cotton_red.png",
+  "texture_bottom": "cotton/cotton_red.png",
+  "color": "#CC0000",
+  "hardness": 1.0,
+  "drop": "cotton_red",
+  "creative_tab": "cotton"
+}

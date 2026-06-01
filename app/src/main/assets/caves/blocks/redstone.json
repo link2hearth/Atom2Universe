@@ -1,0 +1,11 @@
+{
+  "id": 3008,
+  "name": "redstone",
+  "texture_top": "redstone.png",
+  "texture_side": "redstone.png",
+  "texture_bottom": "redstone.png",
+  "color": "#AA2222",
+  "hardness": 2.5,
+  "drop": "redstone",
+  "creative_tab": "ores"
+}

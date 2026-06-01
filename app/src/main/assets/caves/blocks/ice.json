@@ -1,0 +1,12 @@
+{
+  "id": 5000,
+  "name": "ice",
+  "texture_top": "ice.png",
+  "texture_side": "ice.png",
+  "texture_bottom": "ice.png",
+  "color": "#AADDFF",
+  "hardness": 1.0,
+  "transparent": true,
+  "drop": "ice",
+  "creative_tab": "terrain"
+}

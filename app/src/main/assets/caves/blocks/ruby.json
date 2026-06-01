@@ -1,0 +1,11 @@
+{
+  "id": 3005,
+  "name": "ruby",
+  "texture_top": "greystone_ruby.png",
+  "texture_side": "greystone_ruby.png",
+  "texture_bottom": "greystone_ruby.png",
+  "color": "#CC1111",
+  "hardness": 4.5,
+  "drop": "ruby",
+  "creative_tab": "ores"
+}

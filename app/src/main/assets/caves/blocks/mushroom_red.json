@@ -1,0 +1,12 @@
+{
+  "id": 7010,
+  "name": "mushroom_red",
+  "texture_top": "mushroom_red.png",
+  "texture_side": "mushroom_red.png",
+  "texture_bottom": "mushroom_red.png",
+  "color": "#CC3322",
+  "hardness": 0.3,
+  "decoration": true,
+  "drop": "mushroom_red",
+  "creative_tab": "nature"
+}

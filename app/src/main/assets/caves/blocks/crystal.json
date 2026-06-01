@@ -1,0 +1,11 @@
+{
+  "id": 3007,
+  "name": "crystal",
+  "texture_top": "stone_diamond.png",
+  "texture_side": "stone_diamond.png",
+  "texture_bottom": "stone_diamond.png",
+  "color": "#88FFFF",
+  "hardness": 5.0,
+  "drop": "crystal",
+  "creative_tab": "ores"
+}

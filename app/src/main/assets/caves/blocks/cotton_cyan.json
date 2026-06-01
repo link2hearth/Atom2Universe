@@ -1,0 +1,11 @@
+{
+  "id": 9006,
+  "name": "cotton_cyan",
+  "texture_top": "cotton/cotton_cyan.png",
+  "texture_side": "cotton/cotton_cyan.png",
+  "texture_bottom": "cotton/cotton_cyan.png",
+  "color": "#00CED1",
+  "hardness": 1.0,
+  "drop": "cotton_cyan",
+  "creative_tab": "cotton"
+}

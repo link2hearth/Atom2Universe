@@ -1,0 +1,11 @@
+{
+  "id": 2002,
+  "name": "quartz",
+  "texture_top": "greysand.png",
+  "texture_side": "greysand.png",
+  "texture_bottom": "greysand.png",
+  "color": "#E8E4D0",
+  "hardness": 2.5,
+  "drop": "quartz",
+  "creative_tab": "stone"
+}

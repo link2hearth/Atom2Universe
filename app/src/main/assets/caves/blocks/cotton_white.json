@@ -1,0 +1,11 @@
+{
+  "id": 9032,
+  "name": "cotton_white",
+  "texture_top": "cotton/cotton_white.png",
+  "texture_side": "cotton/cotton_white.png",
+  "texture_bottom": "cotton/cotton_white.png",
+  "color": "#F5F5F5",
+  "hardness": 1.0,
+  "drop": "cotton_white",
+  "creative_tab": "cotton"
+}

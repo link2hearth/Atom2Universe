@@ -1,0 +1,12 @@
+{
+  "id": 7004,
+  "name": "grass_brown",
+  "texture_top": "grass_brown.png",
+  "texture_side": "grass_brown.png",
+  "texture_bottom": "grass_brown.png",
+  "color": "#8B7040",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "",
+  "creative_tab": "nature"
+}

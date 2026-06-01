@@ -1,0 +1,12 @@
+{
+  "id": 6000,
+  "name": "lava",
+  "texture_top": "lava.png",
+  "texture_side": "lava.png",
+  "texture_bottom": "lava.png",
+  "color": "#FF4500",
+  "hardness": 100.0,
+  "light_emission": 15,
+  "drop": "",
+  "creative_tab": "terrain"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 9024,
+  "name": "cotton_rose",
+  "texture_top": "cotton/cotton_rose.png",
+  "texture_side": "cotton/cotton_rose.png",
+  "texture_bottom": "cotton/cotton_rose.png",
+  "color": "#FF007F",
+  "hardness": 1.0,
+  "drop": "cotton_rose",
+  "creative_tab": "cotton"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 9022,
+  "name": "cotton_purple",
+  "texture_top": "cotton/cotton_purple.png",
+  "texture_side": "cotton/cotton_purple.png",
+  "texture_bottom": "cotton/cotton_purple.png",
+  "color": "#800080",
+  "hardness": 1.0,
+  "drop": "cotton_purple",
+  "creative_tab": "cotton"
+}

@@ -1,0 +1,12 @@
+{
+  "id": 2020,
+  "name": "rock",
+  "texture_top": "rock.png",
+  "texture_side": "rock.png",
+  "texture_bottom": "rock.png",
+  "color": "#888888",
+  "hardness": 1.5,
+  "decoration": true,
+  "drop": "rock",
+  "creative_tab": "stone"
+}

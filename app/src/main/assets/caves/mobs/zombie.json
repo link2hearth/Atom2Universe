@@ -17,5 +17,6 @@
   "loot_table": "default_loot",
   "behavior": "aggressive",
   "boss_eligible": true,
-  "xp_base": 1
+  "xp_base": 1,
+  "sprite": "zombie.png"
 }

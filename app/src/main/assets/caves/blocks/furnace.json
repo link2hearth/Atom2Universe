@@ -1,0 +1,11 @@
+{
+  "id": 8000,
+  "name": "furnace",
+  "texture_top": "oven.png",
+  "texture_side": "oven.png",
+  "texture_bottom": "oven.png",
+  "color": "#555555",
+  "hardness": 3.0,
+  "drop": "furnace",
+  "creative_tab": "functional"
+}

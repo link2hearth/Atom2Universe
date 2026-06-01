@@ -1,0 +1,11 @@
+{
+  "id": 9009,
+  "name": "cotton_green",
+  "texture_top": "cotton/cotton_green.png",
+  "texture_side": "cotton/cotton_green.png",
+  "texture_bottom": "cotton/cotton_green.png",
+  "color": "#228B22",
+  "hardness": 1.0,
+  "drop": "cotton_green",
+  "creative_tab": "cotton"
+}

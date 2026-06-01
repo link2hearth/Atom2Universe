@@ -1,0 +1,11 @@
+{
+  "id": 5001,
+  "name": "snow",
+  "texture_top": "snow.png",
+  "texture_side": "dirt_snow.png",
+  "texture_bottom": "dirt.png",
+  "color": "#EEEEFF",
+  "hardness": 0.5,
+  "drop": "snow",
+  "creative_tab": "terrain"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 2001,
+  "name": "granite",
+  "texture_top": "greystone.png",
+  "texture_side": "greystone.png",
+  "texture_bottom": "greystone.png",
+  "color": "#9B7B6A",
+  "hardness": 3.0,
+  "drop": "granite",
+  "creative_tab": "stone"
+}

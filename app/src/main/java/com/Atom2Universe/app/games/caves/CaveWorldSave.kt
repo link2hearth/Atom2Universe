@@ -19,8 +19,8 @@ data class CaveWorldSave(
     var playerZ: Double,
     var playerYaw: Float,
     var playerPitch: Float,
-    var inventory: Map<Byte, Int>,
-    var hotbar: List<Byte?>,        // 9 slots, null = vide
+    var inventory: Map<Short, Int>,
+    var hotbar: List<Short?>,
     // Progression joueur
     var playerHp: Int = 20,
     var playerLevel: Int = 1,
@@ -144,12 +144,12 @@ object CaveWorldSaveManager {
 
     private fun fromJson(j: JSONObject): CaveWorldSave {
         val invJson = j.optJSONObject("inventory") ?: JSONObject()
-        val inventory = mutableMapOf<Byte, Int>()
-        invJson.keys().forEach { k -> inventory[k.toByte()] = invJson.getInt(k) }
+        val inventory = mutableMapOf<Short, Int>()
+        invJson.keys().forEach { k -> inventory[k.toShort()] = invJson.getInt(k) }
         val hotbarArr = j.optJSONArray("hotbar")
-        val hotbar: List<Byte?> = if (hotbarArr != null) {
+        val hotbar: List<Short?> = if (hotbarArr != null) {
             (0 until hotbarArr.length()).map { i ->
-                val v = hotbarArr.getInt(i); if (v < 0) null else v.toByte()
+                val v = hotbarArr.getInt(i); if (v < 0) null else v.toShort()
             }
         } else List(19) { null }
         val weaponsArr = j.optJSONArray("playerWeapons")

@@ -1,0 +1,11 @@
+{
+  "id": 3002,
+  "name": "silver",
+  "texture_top": "stone_silver.png",
+  "texture_side": "stone_silver.png",
+  "texture_bottom": "stone_silver.png",
+  "color": "#C0C0C0",
+  "hardness": 4.0,
+  "drop": "silver",
+  "creative_tab": "ores"
+}

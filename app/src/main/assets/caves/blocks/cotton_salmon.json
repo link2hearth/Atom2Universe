@@ -1,0 +1,11 @@
+{
+  "id": 9025,
+  "name": "cotton_salmon",
+  "texture_top": "cotton/cotton_salmon.png",
+  "texture_side": "cotton/cotton_salmon.png",
+  "texture_bottom": "cotton/cotton_salmon.png",
+  "color": "#FA8072",
+  "hardness": 1.0,
+  "drop": "cotton_salmon",
+  "creative_tab": "cotton"
+}

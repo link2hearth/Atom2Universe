@@ -1,0 +1,11 @@
+{
+  "id": 9020,
+  "name": "cotton_peach",
+  "texture_top": "cotton/cotton_peach.png",
+  "texture_side": "cotton/cotton_peach.png",
+  "texture_bottom": "cotton/cotton_peach.png",
+  "color": "#FFCBA4",
+  "hardness": 1.0,
+  "drop": "cotton_peach",
+  "creative_tab": "cotton"
+}

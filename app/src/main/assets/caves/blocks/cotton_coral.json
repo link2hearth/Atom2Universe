@@ -1,0 +1,11 @@
+{
+  "id": 9004,
+  "name": "cotton_coral",
+  "texture_top": "cotton/cotton_coral.png",
+  "texture_side": "cotton/cotton_coral.png",
+  "texture_bottom": "cotton/cotton_coral.png",
+  "color": "#FF7F50",
+  "hardness": 1.0,
+  "drop": "cotton_coral",
+  "creative_tab": "cotton"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 9012,
+  "name": "cotton_lavender",
+  "texture_top": "cotton/cotton_lavender.png",
+  "texture_side": "cotton/cotton_lavender.png",
+  "texture_bottom": "cotton/cotton_lavender.png",
+  "color": "#E6E6FA",
+  "hardness": 1.0,
+  "drop": "cotton_lavender",
+  "creative_tab": "cotton"
+}

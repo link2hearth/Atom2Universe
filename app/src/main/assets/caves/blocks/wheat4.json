@@ -1,0 +1,12 @@
+{
+  "id": 7023,
+  "name": "wheat4",
+  "texture_top": "wheat_stage4.png",
+  "texture_side": "wheat_stage4.png",
+  "texture_bottom": "wheat_stage4.png",
+  "color": "#DDAA22",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "",
+  "creative_tab": "nature"
+}

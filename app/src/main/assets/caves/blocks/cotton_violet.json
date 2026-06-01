@@ -1,0 +1,11 @@
+{
+  "id": 9031,
+  "name": "cotton_violet",
+  "texture_top": "cotton/cotton_violet.png",
+  "texture_side": "cotton/cotton_violet.png",
+  "texture_bottom": "cotton/cotton_violet.png",
+  "color": "#EE82EE",
+  "hardness": 1.0,
+  "drop": "cotton_violet",
+  "creative_tab": "cotton"
+}

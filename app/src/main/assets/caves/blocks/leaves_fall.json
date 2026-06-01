@@ -1,0 +1,12 @@
+{
+  "id": 1022,
+  "name": "leaves_fall",
+  "texture_top": "leaves_orange_transparent.png",
+  "texture_side": "leaves_orange_transparent.png",
+  "texture_bottom": "leaves_orange_transparent.png",
+  "color": "#CC6622",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_fall",
+  "creative_tab": "wood"
+}

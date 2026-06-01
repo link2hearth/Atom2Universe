@@ -1,0 +1,12 @@
+{
+  "id": 7001,
+  "name": "grass_wild2",
+  "texture_top": "grass2.png",
+  "texture_side": "grass2.png",
+  "texture_bottom": "grass2.png",
+  "color": "#3E8828",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "",
+  "creative_tab": "nature"
+}

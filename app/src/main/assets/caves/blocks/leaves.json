@@ -1,0 +1,11 @@
+{
+  "id": 1020,
+  "name": "leaves",
+  "texture_top": "leaves.png",
+  "texture_side": "leaves.png",
+  "texture_bottom": "leaves.png",
+  "color": "#2D6A1F",
+  "hardness": 0.3,
+  "drop": "leaves",
+  "creative_tab": "wood"
+}

@@ -1,0 +1,12 @@
+{
+  "id": 7012,
+  "name": "mushroom_tan",
+  "texture_top": "mushroom_tan.png",
+  "texture_side": "mushroom_tan.png",
+  "texture_bottom": "mushroom_tan.png",
+  "color": "#AA8855",
+  "hardness": 0.3,
+  "decoration": true,
+  "drop": "mushroom_tan",
+  "creative_tab": "nature"
+}

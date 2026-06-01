@@ -1,0 +1,11 @@
+{
+  "id": 9019,
+  "name": "cotton_orange",
+  "texture_top": "cotton/cotton_orange.png",
+  "texture_side": "cotton/cotton_orange.png",
+  "texture_bottom": "cotton/cotton_orange.png",
+  "color": "#FFA500",
+  "hardness": 1.0,
+  "drop": "cotton_orange",
+  "creative_tab": "cotton"
+}

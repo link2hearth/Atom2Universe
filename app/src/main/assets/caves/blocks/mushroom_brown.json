@@ -1,0 +1,12 @@
+{
+  "id": 7011,
+  "name": "mushroom_brown",
+  "texture_top": "mushroom_brown.png",
+  "texture_side": "mushroom_brown.png",
+  "texture_bottom": "mushroom_brown.png",
+  "color": "#886644",
+  "hardness": 0.3,
+  "decoration": true,
+  "drop": "mushroom_brown",
+  "creative_tab": "nature"
+}

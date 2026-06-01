@@ -1,0 +1,11 @@
+{
+  "id": 3004,
+  "name": "copper",
+  "texture_top": "stone_browniron.png",
+  "texture_side": "stone_browniron.png",
+  "texture_bottom": "stone_browniron.png",
+  "color": "#B87333",
+  "hardness": 3.5,
+  "drop": "copper",
+  "creative_tab": "ores"
+}

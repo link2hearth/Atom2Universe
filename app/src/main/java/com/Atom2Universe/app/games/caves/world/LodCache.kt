@@ -9,12 +9,12 @@ import kotlinx.coroutines.launch
 
 /**
  * Cache persistant des heightmaps LOD (hauteur + type de bloc de surface par cellule).
- * Stocké en binaire : 768 octets par colonne (256×Short hauteur + 256×Byte bloc).
+ * Format binaire : 256×Short hauteur + 256×Short bloc.
  * Short.MIN_VALUE = cellule vide.
  */
 class LodCache(private val file: File) {
 
-    data class Entry(val heights: ShortArray, val blocks: ByteArray)
+    data class Entry(val heights: ShortArray, val blocks: ShortArray)
 
     private val cache = ConcurrentHashMap<Long, Entry>()
     private val dirty = AtomicBoolean(false)
@@ -29,7 +29,7 @@ class LodCache(private val file: File) {
         Pair(cx, cz)
     }
 
-    fun put(cx: Int, cz: Int, heights: ShortArray, blocks: ByteArray) {
+    fun put(cx: Int, cz: Int, heights: ShortArray, blocks: ShortArray) {
         cache[key(cx, cz)] = Entry(heights, blocks)
         dirty.set(true)
     }
@@ -61,7 +61,7 @@ class LodCache(private val file: File) {
                     val cx = dis.readInt(); val cz = dis.readInt()
                     val n = CHUNK_SIZE * CHUNK_SIZE
                     val heights = ShortArray(n) { dis.readShort() }
-                    val blocks  = ByteArray(n)  { dis.readByte()  }
+                    val blocks  = ShortArray(n) { dis.readShort() }
                     cache[key(cx, cz)] = Entry(heights, blocks)
                 }
             }
@@ -80,7 +80,7 @@ class LodCache(private val file: File) {
                     val cz = ((k shr 20) and 0xFFFFF).toInt().let { if (it >= 0x80000) it - 0x100000 else it }
                     dos.writeInt(cx); dos.writeInt(cz)
                     v.heights.forEach { dos.writeShort(it.toInt()) }
-                    v.blocks.forEach  { dos.writeByte(it.toInt())  }
+                    v.blocks.forEach  { dos.writeShort(it.toInt()) }
                 }
             }
         } catch (_: Exception) {}
@@ -88,6 +88,6 @@ class LodCache(private val file: File) {
 
     companion object {
         private const val MAGIC   = 0x4C4F4448   // "LODH"
-        private const val VERSION = 1
+        private const val VERSION = 2            // bumped : blocks sont maintenant Short
     }
 }

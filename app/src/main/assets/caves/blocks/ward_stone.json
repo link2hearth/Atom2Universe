@@ -1,0 +1,11 @@
+{
+  "id": 8004,
+  "name": "ward_stone",
+  "texture_top": "ward_stone.png",
+  "texture_side": "ward_stone.png",
+  "texture_bottom": "ward_stone.png",
+  "color": "#8844FF",
+  "hardness": 5.0,
+  "drop": "ward_stone",
+  "creative_tab": "functional"
+}

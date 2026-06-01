@@ -1,0 +1,11 @@
+{
+  "id": 9018,
+  "name": "cotton_olive",
+  "texture_top": "cotton/cotton_olive.png",
+  "texture_side": "cotton/cotton_olive.png",
+  "texture_bottom": "cotton/cotton_olive.png",
+  "color": "#808000",
+  "hardness": 1.0,
+  "drop": "cotton_olive",
+  "creative_tab": "cotton"
+}

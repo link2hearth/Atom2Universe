@@ -1,0 +1,13 @@
+{
+  "id": 8002,
+  "name": "torch",
+  "texture_top": "Items/torch.png",
+  "texture_side": "Items/torch.png",
+  "texture_bottom": "Items/torch.png",
+  "color": "#FF9020",
+  "hardness": 0.1,
+  "decoration": true,
+  "light_emission": 8,
+  "drop": "torch",
+  "creative_tab": "functional"
+}

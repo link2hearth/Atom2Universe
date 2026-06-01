@@ -1,0 +1,12 @@
+{
+  "id": 8003,
+  "name": "glass",
+  "texture_top": "glass.png",
+  "texture_side": "glass.png",
+  "texture_bottom": "glass.png",
+  "color": "#CCEEFF",
+  "hardness": 1.5,
+  "transparent": true,
+  "drop": "glass",
+  "creative_tab": "functional"
+}

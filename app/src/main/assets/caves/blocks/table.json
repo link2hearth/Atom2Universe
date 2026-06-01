@@ -1,0 +1,11 @@
+{
+  "id": 8001,
+  "name": "table",
+  "texture_top": "table.png",
+  "texture_side": "trunk_side.png",
+  "texture_bottom": "trunk_top.png",
+  "color": "#8B6914",
+  "hardness": 2.0,
+  "drop": "table",
+  "creative_tab": "functional"
+}

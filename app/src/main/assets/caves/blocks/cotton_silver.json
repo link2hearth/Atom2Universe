@@ -1,0 +1,11 @@
+{
+  "id": 9026,
+  "name": "cotton_silver",
+  "texture_top": "cotton/cotton_silver.png",
+  "texture_side": "cotton/cotton_silver.png",
+  "texture_bottom": "cotton/cotton_silver.png",
+  "color": "#C0C0C0",
+  "hardness": 1.0,
+  "drop": "cotton_silver",
+  "creative_tab": "cotton"
+}

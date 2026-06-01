@@ -1,0 +1,11 @@
+{
+  "id": 9015,
+  "name": "cotton_magenta",
+  "texture_top": "cotton/cotton_magenta.png",
+  "texture_side": "cotton/cotton_magenta.png",
+  "texture_bottom": "cotton/cotton_magenta.png",
+  "color": "#FF00FF",
+  "hardness": 1.0,
+  "drop": "cotton_magenta",
+  "creative_tab": "cotton"
+}

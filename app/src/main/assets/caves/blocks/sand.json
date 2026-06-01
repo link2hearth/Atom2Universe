@@ -1,0 +1,12 @@
+{
+  "id": 4000,
+  "name": "sand",
+  "texture_top": "sand.png",
+  "texture_side": "sand.png",
+  "texture_bottom": "sand.png",
+  "color": "#D4C06A",
+  "hardness": 0.8,
+  "falling": true,
+  "drop": "sand",
+  "creative_tab": "terrain"
+}

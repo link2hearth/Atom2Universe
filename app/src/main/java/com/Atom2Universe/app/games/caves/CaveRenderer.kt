@@ -7,6 +7,7 @@ import android.opengl.GLSurfaceView
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
 import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.node.GameEvent
+import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.ItemRegistry
 import com.Atom2Universe.app.games.caves.node.LootNode
 import com.Atom2Universe.app.games.caves.node.LootTableRegistry
@@ -50,8 +51,8 @@ internal class CaveRenderer(
     data class SavedState(
         val x: Double, val y: Double, val z: Double,
         val yaw: Float, val pitch: Float,
-        val inventory: Map<Byte, Int>,
-        val hotbar: List<Byte?>,
+        val inventory: Map<Short, Int>,
+        val hotbar: List<Short?>,
         val playerHp: Int = 20,
         val playerLevel: Int = 1,
         val playerXp: Int = 0,
@@ -157,8 +158,8 @@ internal class CaveRenderer(
     private var mineTarget: RayHit? = null
     private var mineDamage = 0f
 
-    val inventory = mutableMapOf<Byte, Int>()
-    val hotbar    = arrayOfNulls<Byte>(19)
+    val inventory = mutableMapOf<Short, Int>()
+    val hotbar    = arrayOfNulls<Short>(19)
     var selectedSlot = 0
 
     private var transientVbo = 0
@@ -170,7 +171,7 @@ internal class CaveRenderer(
     private var walkLastX  = 0.0  // position précédente pour détecter le mouvement
     private var walkLastZ  = 0.0
 
-    private class FallingBlock(val type: Byte, val wx: Int, val wy: Int, val wz: Int) {
+    private class FallingBlock(val type: Short, val wx: Int, val wy: Int, val wz: Int) {
         var timer = 0f
         val done  get() = timer >= DURATION
         // ease-in (accélération naturelle) : commence lent, finit vite
@@ -224,7 +225,7 @@ internal class CaveRenderer(
         WOOD_WHITE       to 2.0f,
         LEAVES_FALL      to 0.2f,
         WOOD_PLANK_WHITE to 1.5f,
-    ) + (COTTON_AMBER.toInt()..COTTON_YELLOW.toInt()).associate { it.toByte() to 0.8f }
+    ) + (COTTON_AMBER.toInt()..COTTON_YELLOW.toInt()).associate { it.toShort() to 0.8f }
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
@@ -246,9 +247,9 @@ internal class CaveRenderer(
 
     var posCallback:      ((String) -> Unit)?                    = null
     var modeCallback:     ((PlayerMode) -> Unit)?                = null
-    var miningCallback:   ((progress: Float, block: Byte?) -> Unit)? = null
-    var inventoryCallback: ((Map<Byte, Int>) -> Unit)?           = null
-    var hotbarCallback:   ((slots: Array<Byte?>, selected: Int) -> Unit)? = null
+    var miningCallback:   ((progress: Float, block: Short?) -> Unit)? = null
+    var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
+    var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
     var xpCallback:       ((xp: Int, xpMax: Int, level: Int) -> Unit)? = null
@@ -270,8 +271,8 @@ internal class CaveRenderer(
             vec3 worldPos = a_pos + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
             v_uv      = a_uv.xy;
-            v_layer   = mod(a_uv.z, 128.0);
-            v_faceDir = floor(a_uv.z / 128.0);
+            v_layer   = mod(a_uv.z, 4096.0);
+            v_faceDir = floor(a_uv.z / 4096.0);
             v_worldPos = worldPos;
         }
     """.trimIndent()
@@ -620,55 +621,12 @@ internal class CaveRenderer(
     }
 
     private fun loadBlockTextures(): Int {
-        val files = listOf(
-            "stone.png", "greystone.png", "greysand.png", "stone_coal.png",
-            "stone_gold.png", "stone_diamond.png", "dirt.png", "gravel_stone.png",
-            "stone_iron.png", "stone_silver.png", "greystone_ruby.png", "lava.png", "oven.png",
-            "redstone_emerald.png", "stone_browniron.png",
-            "dirt_grass.png", "grass_top.png",
-            "trunk_side.png", "trunk_top.png", "leaves.png",
-            "sand.png", "stone_grass.png", "redsand.png",
-            "ice.png", "snow.png", "dirt_snow.png", "brick_red.png",
-            "rock.png", "rock_moss.png", "mushroom_red.png", "mushroom_brown.png", "mushroom_tan.png",
-            "stone_sand_side.png", "stone_snow_side.png"
-        )
-        val am = context.assets
-        val bitmaps = files.map { BitmapFactory.decodeStream(am.open("Cave World/Tiles/$it")) }.toMutableList()
+        BlockRegistry.registerGeneratedTexture("Items/torch.png") { size -> createTorchBitmap(size) }
+        BlockRegistry.registerGeneratedTexture("ward_stone.png") { size -> createWardStoneBitmap(size) }
+
+        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 32)
+        if (bitmaps.isEmpty()) return 0
         val w = bitmaps[0].width; val h = bitmaps[0].height
-        bitmaps.add(createTorchBitmap(w))                                                       // 34
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wood_plank.png")))     // 35
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/brick_grey.png")))     // 36
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cactus_side.png")))    // 37
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cactus_top.png")))     // 38
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cactus_inside.png")))  // 39
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/glass.png")))          // 40
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/glass_frame.png")))    // 41
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/gravel_dirt.png")))    // 42
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/table.png")))          // 43
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass1.png")))         // 44
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass2.png")))         // 45
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass3.png")))         // 46
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass4.png")))         // 47
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass_brown.png")))    // 48
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/grass_tan.png")))      // 49
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage1.png")))   // 50
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage2.png")))   // 51
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage3.png")))   // 52
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wheat_stage4.png")))   // 53
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/redstone.png")))        // 54
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/redstone_sand.png")))         // 55
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/leaves_orange_transparent.png"))) // 56
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/trunk_white_side.png")))          // 57
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/trunk_white_top.png")))           // 58
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/leaves_orange.png")))             // 59
-        // Cotton — 34 couleurs, layers 60–93, ordre alphabétique = ordre des IDs
-        listOf("amber","black","blue","brown","coral","crimson","cyan","dark_green",
-               "gold","green","hot_pink","indigo","lavender","light_blue","lime","magenta",
-               "mint","navy","olive","orange","peach","pink","purple","red","rose","salmon",
-               "silver","sky","tan","teal","turquoise","violet","white","yellow")
-            .forEach { name -> bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/cotton/cotton_$name.png"))) }
-        bitmaps.add(BitmapFactory.decodeStream(am.open("Cave World/Tiles/wood_plank_white.png")))  // 94
-        bitmaps.add(createWardStoneBitmap(w))                                                       // 95
 
         val ids = IntArray(1)
         GLES30.glGenTextures(1, ids, 0)
@@ -1305,7 +1263,7 @@ internal class CaveRenderer(
 
     // ── Blocs en chute libre (animation 200ms) ───────────────────────────────
 
-    private fun fallingLayer(type: Byte): Int = when (type) {
+    private fun fallingLayer(type: Short): Int = when (type) {
         SAND        -> 20
         REDSAND     -> 22
         GRAVEL_DIRT -> 42
@@ -1316,7 +1274,7 @@ internal class CaveRenderer(
         // Récupérer les nouvelles animations lancées par tickFalling
         while (true) {
             val item = world.pendingFallingBlocks.poll() ?: break
-            fallingBlocks.add(FallingBlock(item[3].toByte(), item[0], item[1], item[2]))
+            fallingBlocks.add(FallingBlock(item[3].toShort(), item[0], item[1], item[2]))
         }
         if (fallingBlocks.isEmpty()) return
 
@@ -2146,7 +2104,7 @@ internal class CaveRenderer(
         return false
     }
 
-    private fun worldBlockAt(wx: Int, wy: Int, wz: Int): Byte {
+    private fun worldBlockAt(wx: Int, wy: Int, wz: Int): Short {
         val cx = Math.floorDiv(wx, CHUNK_SIZE); val cy = Math.floorDiv(wy, CHUNK_SIZE); val cz = Math.floorDiv(wz, CHUNK_SIZE)
         val chunk = world.getChunk(cx, cy, cz) ?: return AIR
         if (!chunk.generated) return AIR
@@ -2257,7 +2215,7 @@ internal class CaveRenderer(
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
 
-    private fun swapBucketInInventory(from: Byte, to: Byte) {
+    private fun swapBucketInInventory(from: Short, to: Short) {
         if (isCreative) {
             inventory[to] = (inventory[to] ?: 0) + 1
             hotbar[selectedSlot] = to

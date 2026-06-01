@@ -1,0 +1,12 @@
+{
+  "id": 6002,
+  "name": "water_flow",
+  "texture_top": "water.png",
+  "texture_side": "water.png",
+  "texture_bottom": "water.png",
+  "color": "#2A6BAA",
+  "hardness": 100.0,
+  "water": true,
+  "drop": "",
+  "creative_tab": "terrain"
+}

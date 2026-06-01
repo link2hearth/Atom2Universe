@@ -1,0 +1,11 @@
+{
+  "id": 9030,
+  "name": "cotton_turquoise",
+  "texture_top": "cotton/cotton_turquoise.png",
+  "texture_side": "cotton/cotton_turquoise.png",
+  "texture_bottom": "cotton/cotton_turquoise.png",
+  "color": "#40E0D0",
+  "hardness": 1.0,
+  "drop": "cotton_turquoise",
+  "creative_tab": "cotton"
+}

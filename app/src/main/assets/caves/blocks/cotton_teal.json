@@ -1,0 +1,11 @@
+{
+  "id": 9029,
+  "name": "cotton_teal",
+  "texture_top": "cotton/cotton_teal.png",
+  "texture_side": "cotton/cotton_teal.png",
+  "texture_bottom": "cotton/cotton_teal.png",
+  "color": "#008080",
+  "hardness": 1.0,
+  "drop": "cotton_teal",
+  "creative_tab": "cotton"
+}

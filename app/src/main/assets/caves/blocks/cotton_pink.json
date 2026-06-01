@@ -1,0 +1,11 @@
+{
+  "id": 9021,
+  "name": "cotton_pink",
+  "texture_top": "cotton/cotton_pink.png",
+  "texture_side": "cotton/cotton_pink.png",
+  "texture_bottom": "cotton/cotton_pink.png",
+  "color": "#FFC0CB",
+  "hardness": 1.0,
+  "drop": "cotton_pink",
+  "creative_tab": "cotton"
+}

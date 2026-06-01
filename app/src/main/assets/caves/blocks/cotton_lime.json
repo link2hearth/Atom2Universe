@@ -1,0 +1,11 @@
+{
+  "id": 9014,
+  "name": "cotton_lime",
+  "texture_top": "cotton/cotton_lime.png",
+  "texture_side": "cotton/cotton_lime.png",
+  "texture_bottom": "cotton/cotton_lime.png",
+  "color": "#32CD32",
+  "hardness": 1.0,
+  "drop": "cotton_lime",
+  "creative_tab": "cotton"
+}

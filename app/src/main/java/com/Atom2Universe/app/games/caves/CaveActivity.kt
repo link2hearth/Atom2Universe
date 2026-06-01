@@ -49,19 +49,14 @@ import com.Atom2Universe.app.games.caves.entity.UpgradeOption
 import com.Atom2Universe.app.games.caves.entity.UpgradeType
 import com.Atom2Universe.app.games.caves.input.GamepadController
 import com.Atom2Universe.app.games.caves.input.TouchController
+import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.CraftDef
+import com.Atom2Universe.app.games.caves.node.CraftRegistry
 import com.Atom2Universe.app.games.caves.world.*
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-private data class CraftingRecipe(
-    val ingredients: List<Pair<Byte, Int>>,
-    val output: Byte,
-    val outputCount: Int
-) {
-    fun canCraft(inv: Map<Byte, Int>) = ingredients.all { (t, n) -> (inv[t] ?: 0) >= n }
-}
 
 class CaveActivity : ThemedActivity() {
 
@@ -70,221 +65,6 @@ class CaveActivity : ThemedActivity() {
         private const val ACTIVE_SIZE  = 19
         private const val GRID_COLS    = 6
         private const val EMPTY_BUFFER = 36
-
-        fun blockColor(type: Byte): Int = when (type) {
-            STONE          -> 0xFF808080.toInt()
-            GRANITE        -> 0xFF9B7B6A.toInt()
-            QUARTZ         -> 0xFFE8E4D0.toInt()
-            COAL           -> 0xFF2C2C2C.toInt()
-            GOLD           -> 0xFFFFD700.toInt()
-            CRYSTAL        -> 0xFF88FFFF.toInt()
-            DIRT           -> 0xFF8B5E3C.toInt()
-            GRAVEL         -> 0xFF9E9E9E.toInt()
-            IRON           -> 0xFFB87333.toInt()
-            SILVER         -> 0xFFC0C0C0.toInt()
-            RUBY           -> 0xFFCC1111.toInt()
-            LAVA           -> 0xFFFF4500.toInt()
-            FURNACE        -> 0xFF555555.toInt()
-            EMERALD        -> 0xFF50C878.toInt()
-            COPPER         -> 0xFFB87333.toInt()
-            GRASS          -> 0xFF55AA33.toInt()
-            WOOD           -> 0xFF8B6914.toInt()
-            LEAVES         -> 0xFF2D6A1F.toInt()
-            SAND           -> 0xFFD4C06A.toInt()
-            REDSAND        -> 0xFFCC6633.toInt()
-            ICE            -> 0xFFAADDFF.toInt()
-            SNOW           -> 0xFFEEEEFF.toInt()
-            BRICK_RED      -> 0xFFAA3322.toInt()
-            ROCK           -> 0xFF888888.toInt()
-            ROCK_MOSS      -> 0xFF667744.toInt()
-            MUSHROOM_RED   -> 0xFFCC3322.toInt()
-            MUSHROOM_BROWN -> 0xFF886644.toInt()
-            MUSHROOM_TAN   -> 0xFFAA8855.toInt()
-            TORCH          -> 0xFFFF9020.toInt()
-            PLANK            -> 0xFFC88237.toInt()
-            WOOD_PLANK_WHITE -> 0xFFD4BFA0.toInt()
-            WARD_STONE       -> 0xFF8844FF.toInt()
-            BUCKET_EMPTY     -> 0xFFB87832.toInt()
-            BUCKET_FULL      -> 0xFF3A7BCC.toInt()
-            BRICK_GREY       -> 0xFF888899.toInt()
-            CACTUS           -> 0xFF3A7A2A.toInt()
-            GLASS            -> 0xFFCCEEFF.toInt()
-            GRAVEL_DIRT      -> 0xFF8B7355.toInt()
-            TABLE            -> 0xFF8B6914.toInt()
-            GRASS_WILD1      -> 0xFF4A9A30.toInt()
-            GRASS_WILD2      -> 0xFF3E8828.toInt()
-            GRASS_WILD3      -> 0xFF527A22.toInt()
-            GRASS_WILD4      -> 0xFF6A9A18.toInt()
-            GRASS_BROWN      -> 0xFF8B7040.toInt()
-            GRASS_TAN        -> 0xFFBBA050.toInt()
-            WHEAT1           -> 0xFF88AA44.toInt()
-            WHEAT2           -> 0xFF99BB44.toInt()
-            WHEAT3           -> 0xFFCCBB44.toInt()
-            WHEAT4           -> 0xFFDDAA22.toInt()
-            REDSTONE         -> 0xFFAA2222.toInt()
-            LEAVES_ORANGE    -> 0xFFCC8833.toInt()
-            WOOD_WHITE       -> 0xFFD4C8A0.toInt()
-            LEAVES_FALL      -> 0xFFCC6622.toInt()
-            COTTON_AMBER     -> 0xFFFFBF00.toInt()
-            COTTON_BLACK     -> 0xFF1A1A1A.toInt()
-            COTTON_BLUE      -> 0xFF3355AA.toInt()
-            COTTON_BROWN     -> 0xFF7B4F2E.toInt()
-            COTTON_CORAL     -> 0xFFFF7F7F.toInt()
-            COTTON_CRIMSON   -> 0xFFDC143C.toInt()
-            COTTON_CYAN      -> 0xFF00AAAA.toInt()
-            COTTON_DARK_GREEN-> 0xFF1A5C1A.toInt()
-            COTTON_GOLD      -> 0xFFFFD700.toInt()
-            COTTON_GREEN     -> 0xFF44AA44.toInt()
-            COTTON_HOT_PINK  -> 0xFFFF69B4.toInt()
-            COTTON_INDIGO    -> 0xFF4B0082.toInt()
-            COTTON_LAVENDER  -> 0xFFBB99DD.toInt()
-            COTTON_LIGHT_BLUE-> 0xFF88BBEE.toInt()
-            COTTON_LIME      -> 0xFF90EE90.toInt()
-            COTTON_MAGENTA   -> 0xFFCC33CC.toInt()
-            COTTON_MINT      -> 0xFF98D8C8.toInt()
-            COTTON_NAVY      -> 0xFF001F5B.toInt()
-            COTTON_OLIVE     -> 0xFF6B6B00.toInt()
-            COTTON_ORANGE    -> 0xFFFF8C00.toInt()
-            COTTON_PEACH     -> 0xFFFFCBA4.toInt()
-            COTTON_PINK      -> 0xFFFF99BB.toInt()
-            COTTON_PURPLE    -> 0xFF7B2FBE.toInt()
-            COTTON_RED       -> 0xFFCC2222.toInt()
-            COTTON_ROSE      -> 0xFFFF66AA.toInt()
-            COTTON_SALMON    -> 0xFFFA8072.toInt()
-            COTTON_SILVER    -> 0xFFBBBBBB.toInt()
-            COTTON_SKY       -> 0xFF88CCFF.toInt()
-            COTTON_TAN       -> 0xFFD2B48C.toInt()
-            COTTON_TEAL      -> 0xFF008080.toInt()
-            COTTON_TURQUOISE -> 0xFF40E0D0.toInt()
-            COTTON_VIOLET    -> 0xFF8B00FF.toInt()
-            COTTON_WHITE     -> 0xFFF0F0F0.toInt()
-            COTTON_YELLOW    -> 0xFFEEEE00.toInt()
-            else             -> 0xFF444444.toInt()
-        }
-
-        fun blockTextureName(type: Byte): String? = when (type) {
-            STONE          -> "stone.png"
-            GRANITE        -> "greystone.png"
-            QUARTZ         -> "greysand.png"
-            COAL           -> "stone_coal.png"
-            GOLD           -> "stone_gold.png"
-            CRYSTAL        -> "stone_diamond.png"
-            DIRT           -> "dirt.png"
-            GRAVEL         -> "gravel_stone.png"
-            IRON           -> "stone_iron.png"
-            SILVER         -> "stone_silver.png"
-            RUBY           -> "greystone_ruby.png"
-            LAVA           -> "lava.png"
-            FURNACE        -> "oven.png"
-            EMERALD        -> "redstone_emerald.png"
-            COPPER         -> "stone_browniron.png"
-            GRASS          -> "grass_top.png"
-            WOOD           -> "trunk_top.png"
-            LEAVES         -> "leaves.png"
-            SAND           -> "sand.png"
-            REDSAND        -> "redsand.png"
-            ICE            -> "ice.png"
-            SNOW           -> "snow.png"
-            BRICK_RED      -> "brick_red.png"
-            ROCK           -> "rock.png"
-            ROCK_MOSS      -> "rock_moss.png"
-            MUSHROOM_RED   -> "mushroom_red.png"
-            MUSHROOM_BROWN -> "mushroom_brown.png"
-            MUSHROOM_TAN     -> "mushroom_tan.png"
-            WOOD_PLANK_WHITE -> "wood_plank_white.png"
-            TORCH            -> "Items/torch.png"
-            PLANK            -> "wood_plank.png"
-            BUCKET_EMPTY     -> "Items/bucket.png"
-            BUCKET_FULL      -> "Items/bucket_full.png"
-            BRICK_GREY       -> "brick_grey.png"
-            CACTUS           -> "cactus_top.png"
-            GLASS            -> "glass.png"
-            GRAVEL_DIRT      -> "gravel_dirt.png"
-            TABLE            -> "table.png"
-            GRASS_WILD1      -> "grass1.png"
-            GRASS_WILD2      -> "grass2.png"
-            GRASS_WILD3      -> "grass3.png"
-            GRASS_WILD4      -> "grass4.png"
-            GRASS_BROWN      -> "grass_brown.png"
-            GRASS_TAN        -> "grass_tan.png"
-            WHEAT1           -> "wheat_stage1.png"
-            WHEAT2           -> "wheat_stage2.png"
-            WHEAT3           -> "wheat_stage3.png"
-            WHEAT4           -> "wheat_stage4.png"
-            REDSTONE         -> "redstone.png"
-            LEAVES_ORANGE    -> "leaves_orange.png"
-            WOOD_WHITE       -> "trunk_white_top.png"
-            LEAVES_FALL      -> "leaves_orange_transparent.png"
-            COTTON_AMBER     -> "cotton/cotton_amber.png"
-            COTTON_BLACK     -> "cotton/cotton_black.png"
-            COTTON_BLUE      -> "cotton/cotton_blue.png"
-            COTTON_BROWN     -> "cotton/cotton_brown.png"
-            COTTON_CORAL     -> "cotton/cotton_coral.png"
-            COTTON_CRIMSON   -> "cotton/cotton_crimson.png"
-            COTTON_CYAN      -> "cotton/cotton_cyan.png"
-            COTTON_DARK_GREEN-> "cotton/cotton_dark_green.png"
-            COTTON_GOLD      -> "cotton/cotton_gold.png"
-            COTTON_GREEN     -> "cotton/cotton_green.png"
-            COTTON_HOT_PINK  -> "cotton/cotton_hot_pink.png"
-            COTTON_INDIGO    -> "cotton/cotton_indigo.png"
-            COTTON_LAVENDER  -> "cotton/cotton_lavender.png"
-            COTTON_LIGHT_BLUE-> "cotton/cotton_light_blue.png"
-            COTTON_LIME      -> "cotton/cotton_lime.png"
-            COTTON_MAGENTA   -> "cotton/cotton_magenta.png"
-            COTTON_MINT      -> "cotton/cotton_mint.png"
-            COTTON_NAVY      -> "cotton/cotton_navy.png"
-            COTTON_OLIVE     -> "cotton/cotton_olive.png"
-            COTTON_ORANGE    -> "cotton/cotton_orange.png"
-            COTTON_PEACH     -> "cotton/cotton_peach.png"
-            COTTON_PINK      -> "cotton/cotton_pink.png"
-            COTTON_PURPLE    -> "cotton/cotton_purple.png"
-            COTTON_RED       -> "cotton/cotton_red.png"
-            COTTON_ROSE      -> "cotton/cotton_rose.png"
-            COTTON_SALMON    -> "cotton/cotton_salmon.png"
-            COTTON_SILVER    -> "cotton/cotton_silver.png"
-            COTTON_SKY       -> "cotton/cotton_sky.png"
-            COTTON_TAN       -> "cotton/cotton_tan.png"
-            COTTON_TEAL      -> "cotton/cotton_teal.png"
-            COTTON_TURQUOISE -> "cotton/cotton_turquoise.png"
-            COTTON_VIOLET    -> "cotton/cotton_violet.png"
-            COTTON_WHITE     -> "cotton/cotton_white.png"
-            COTTON_YELLOW    -> "cotton/cotton_yellow.png"
-            else             -> null
-        }
-
-        val CREATIVE_INVENTORY: Map<Byte, Int> = listOf(
-            STONE, GRANITE, QUARTZ, COAL, GOLD, CRYSTAL, DIRT, GRAVEL, IRON, SILVER, RUBY,
-            FURNACE, EMERALD, COPPER, GRASS, WOOD, LEAVES, SAND, REDSAND, ICE, SNOW,
-            BRICK_RED, BRICK_GREY, ROCK, ROCK_MOSS, MUSHROOM_RED, MUSHROOM_BROWN, MUSHROOM_TAN,
-            TORCH, PLANK, WOOD_PLANK_WHITE, WOOD_WHITE, LEAVES_ORANGE, LEAVES_FALL,
-            CACTUS, GLASS, GRAVEL_DIRT, TABLE, REDSTONE,
-            GRASS_WILD1, GRASS_WILD2, GRASS_WILD3, GRASS_WILD4, GRASS_BROWN, GRASS_TAN,
-            WHEAT1, WHEAT2, WHEAT3, WHEAT4,
-            WARD_STONE, BUCKET_EMPTY,
-            COTTON_AMBER, COTTON_BLACK, COTTON_BLUE, COTTON_BROWN, COTTON_CORAL, COTTON_CRIMSON,
-            COTTON_CYAN, COTTON_DARK_GREEN, COTTON_GOLD, COTTON_GREEN, COTTON_HOT_PINK, COTTON_INDIGO,
-            COTTON_LAVENDER, COTTON_LIGHT_BLUE, COTTON_LIME, COTTON_MAGENTA, COTTON_MINT, COTTON_NAVY,
-            COTTON_OLIVE, COTTON_ORANGE, COTTON_PEACH, COTTON_PINK, COTTON_PURPLE, COTTON_RED,
-            COTTON_ROSE, COTTON_SALMON, COTTON_SILVER, COTTON_SKY, COTTON_TAN, COTTON_TEAL,
-            COTTON_TURQUOISE, COTTON_VIOLET, COTTON_WHITE, COTTON_YELLOW
-        ).associateWith { 1 }
-
-        private val RECIPES = listOf(
-            CraftingRecipe(listOf(STONE   to 4),            BRICK_RED, 4),
-            CraftingRecipe(listOf(SAND    to 2),            QUARTZ,    1),
-            CraftingRecipe(listOf(GRAVEL  to 4),            STONE,     2),
-            CraftingRecipe(listOf(SNOW    to 4),            ICE,       1),
-            CraftingRecipe(listOf(DIRT    to 4),            GRASS,     1),
-            CraftingRecipe(listOf(GRANITE to 4),            ROCK,      4),
-            CraftingRecipe(listOf(WOOD    to 3),            FURNACE,   1),
-            CraftingRecipe(listOf(IRON    to 3),            FURNACE,   1),
-            CraftingRecipe(listOf(COAL to 4, STONE to 4),  FURNACE,   2),
-            CraftingRecipe(listOf(QUARTZ to 2, STONE to 4),BRICK_RED, 8),
-            CraftingRecipe(listOf(WOOD       to 1),          PLANK,           4),
-            CraftingRecipe(listOf(WOOD_WHITE to 1),          WOOD_PLANK_WHITE, 4),
-            CraftingRecipe(listOf(PLANK to 1, COAL to 1),   TORCH,            4),
-            CraftingRecipe(listOf(PLANK to 3),               BUCKET_EMPTY,     1),
-        )
     }
 
     private lateinit var glView: GLSurfaceView
@@ -296,8 +76,8 @@ class CaveActivity : ThemedActivity() {
     private var ambientMusic: CaveAmbientMusic? = null
 
     private var isCreative = false
-    private var survivalInventory: Map<Byte, Int> = emptyMap()
-    private var survivalHotbar: List<Byte?> = List(19) { null }
+    private var survivalInventory: Map<Short, Int> = emptyMap()
+    private var survivalHotbar: List<Short?> = List(19) { null }
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
@@ -326,14 +106,14 @@ class CaveActivity : ThemedActivity() {
     private val slotColors  = arrayOfNulls<View>(ACTIVE_SIZE)
     private lateinit var invOverlay: View
 
-    private val blockBitmapCache = HashMap<Byte, Bitmap?>()
+    private val blockBitmapCache = HashMap<Short, Bitmap?>()
 
-    private val invSlots = ArrayList<Byte?>()
+    private val invSlots = ArrayList<Short?>()
     private var invSlotsReady = false
     private fun hotbarBase() = (invSlots.size - ACTIVE_SIZE).coerceAtLeast(0)
 
     private var selectedSlotIdx = -1
-    private fun selectedType(): Byte? =
+    private fun selectedType(): Short? =
         selectedSlotIdx.takeIf { it in invSlots.indices }?.let { invSlots[it] }
 
     private var invGridAdapter:    InvGridAdapter?  = null
@@ -347,7 +127,7 @@ class CaveActivity : ThemedActivity() {
     private var craftingEmptyTv:       View?        = null
     private var craftingRecyclerView:  RecyclerView? = null
 
-    private var selectedRecipe: CraftingRecipe? = null
+    private var selectedRecipe: CraftDef? = null
 
     private val overlayActiveFrames = arrayOfNulls<FrameLayout>(ACTIVE_SIZE)
     private val overlayActiveColors = arrayOfNulls<View>(ACTIVE_SIZE)
@@ -355,16 +135,16 @@ class CaveActivity : ThemedActivity() {
 
     // ── Textures ──────────────────────────────────────────────────────────────
 
-    private fun blockBitmap(type: Byte): Bitmap? {
+    private fun blockBitmap(type: Short): Bitmap? {
         if (blockBitmapCache.containsKey(type)) return blockBitmapCache[type]
-        val name = blockTextureName(type) ?: return null.also { blockBitmapCache[type] = null }
+        val name = BlockRegistry.getTextureTop(type) ?: return null.also { blockBitmapCache[type] = null }
         val assetPath = if (name.startsWith("Items/")) "Cave World/$name" else "Cave World/Tiles/$name"
         return try {
             assets.open(assetPath).use { BitmapFactory.decodeStream(it) }
         } catch (e: Exception) { null }.also { blockBitmapCache[type] = it }
     }
 
-    private fun blockDrawable(type: Byte, cornerDp: Float = 4f): Drawable {
+    private fun blockDrawable(type: Short, cornerDp: Float = 4f): Drawable {
         val dp  = resources.displayMetrics.density
         val bmp = blockBitmap(type)
         return if (bmp != null) {
@@ -375,7 +155,7 @@ class CaveActivity : ThemedActivity() {
         } else {
             GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                setColor(blockColor(type))
+                setColor(BlockRegistry.getColor(type))
                 cornerRadius = cornerDp * dp
             }
         }
@@ -384,6 +164,8 @@ class CaveActivity : ThemedActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        BlockRegistry.load(assets)
+        CraftRegistry.load(assets)
         enableImmersiveMode()
         forceImmersiveMode()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -399,8 +181,8 @@ class CaveActivity : ThemedActivity() {
             save != null && save.isCreative -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
-                inventory = CREATIVE_INVENTORY,
-                hotbar = CREATIVE_INVENTORY.keys.toList().let { keys -> List(19) { i -> keys.getOrNull(i) } },
+                inventory = BlockRegistry.creativeList().associateWith { 1 },
+                hotbar = BlockRegistry.creativeList().let { keys -> List(19) { i -> keys.getOrNull(i) } },
                 playerHp            = save.playerHp,
                 playerLevel         = save.playerLevel,
                 playerXp            = save.playerXp,
@@ -873,7 +655,7 @@ class CaveActivity : ThemedActivity() {
         syncHotbar()
     }
 
-    private fun addNewType(type: Byte) {
+    private fun addNewType(type: Short) {
         val base = hotbarBase()
         // Hotbar d'abord (style Minecraft)
         val hotbarSlot = (base until base + ACTIVE_SIZE).firstOrNull { invSlots.getOrNull(it) == null }
@@ -899,7 +681,7 @@ class CaveActivity : ThemedActivity() {
 
     // ── Inventaire changed ────────────────────────────────────────────────────
 
-    private fun onInventoryChanged(inv: Map<Byte, Int>) {
+    private fun onInventoryChanged(inv: Map<Short, Int>) {
         for (i in 0 until ACTIVE_SIZE) {
             val t = renderer.hotbar[i] ?: continue
             if ((inv[t] ?: 0) <= 0) renderer.hotbar[i] = null
@@ -964,7 +746,7 @@ class CaveActivity : ThemedActivity() {
 
     private fun refreshGridAdapter() {
         val base = hotbarBase()
-        val gridList: List<Byte?> = if (base > 0) invSlots.subList(0, base).toList() else emptyList()
+        val gridList: List<Short?> = if (base > 0) invSlots.subList(0, base).toList() else emptyList()
         val recycler = invOverlay.findViewById<RecyclerView>(R.id.cave_inv_recycler)
         if (invGridAdapter == null) {
             val adapter = InvGridAdapter(gridList)
@@ -983,9 +765,9 @@ class CaveActivity : ThemedActivity() {
         val dp = resources.displayMetrics.density
 
         if (recipe != null) {
-            infoSpriteView?.background = blockDrawable(recipe.output, 6f)
-            infoNameTv?.text  = blockName(recipe.output)
-            infoCountTv?.text = "×${recipe.outputCount}"
+            infoSpriteView?.background = blockDrawable(recipe.result, 6f)
+            infoNameTv?.text  = blockName(recipe.result)
+            infoCountTv?.text = "×${recipe.resultCount}"
             val ingredientsText = recipe.ingredients.joinToString("\n") { (t, n) -> "${blockName(t)} ×$n" }
             infoIngredientsTv?.text = ingredientsText
             infoDivider?.visibility       = View.VISIBLE
@@ -1013,14 +795,14 @@ class CaveActivity : ThemedActivity() {
     private fun updateCraftingList() {
         val type = selectedType()
         val recipes = if (type == null) emptyList()
-                      else RECIPES.filter { r -> r.ingredients.any { it.first == type } }
+                      else CraftRegistry.all().filter { r -> r.ingredients.any { it.first == type } }
         craftingAdapter?.recipes = recipes
         craftingAdapter?.notifyDataSetChanged()
         craftingEmptyTv?.visibility      = if (recipes.isEmpty()) View.VISIBLE else View.GONE
         craftingRecyclerView?.visibility = if (recipes.isEmpty()) View.GONE    else View.VISIBLE
     }
 
-    private fun doCraft(recipe: CraftingRecipe) {
+    private fun doCraft(recipe: CraftDef) {
         if (!recipe.canCraft(renderer.inventory)) return
         for ((type, need) in recipe.ingredients) {
             val after = (renderer.inventory[type] ?: 0) - need
@@ -1029,9 +811,9 @@ class CaveActivity : ThemedActivity() {
                 for (i in invSlots.indices) { if (invSlots[i] == type) { invSlots[i] = null; break } }
             } else renderer.inventory[type] = after
         }
-        val outType = recipe.output
+        val outType = recipe.result
         val outCurrent = renderer.inventory[outType] ?: 0
-        renderer.inventory[outType] = outCurrent + recipe.outputCount
+        renderer.inventory[outType] = outCurrent + recipe.resultCount
         if (outCurrent == 0 && outType !in invSlots.filterNotNull()) addNewType(outType)
         if (selectedSlotIdx in invSlots.indices && invSlots[selectedSlotIdx] == null) selectedSlotIdx = -1
         syncHotbar(); refreshGridAdapter(); updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
@@ -1123,7 +905,7 @@ class CaveActivity : ThemedActivity() {
 
     // ── Adapter grille inventaire ─────────────────────────────────────────────
 
-    private inner class InvGridAdapter(var items: List<Byte?>) : RecyclerView.Adapter<InvGridAdapter.ItemVH>() {
+    private inner class InvGridAdapter(var items: List<Short?>) : RecyclerView.Adapter<InvGridAdapter.ItemVH>() {
 
         inner class ItemVH(v: View) : RecyclerView.ViewHolder(v) {
             val colorView: View    = v.findViewById(R.id.cave_inv_color)
@@ -1197,7 +979,7 @@ class CaveActivity : ThemedActivity() {
 
     // ── Adapter crafting ──────────────────────────────────────────────────────
 
-    private inner class CraftingAdapter(var recipes: List<CraftingRecipe>)
+    private inner class CraftingAdapter(var recipes: List<CraftDef>)
         : RecyclerView.Adapter<CraftingAdapter.VH>() {
 
         inner class VH(val root: LinearLayout) : RecyclerView.ViewHolder(root)
@@ -1243,7 +1025,7 @@ class CaveActivity : ThemedActivity() {
                 text = "→"; textSize = 14f; setTextColor(0xAAFFFFFF.toInt())
                 setPadding((6 * dp).toInt(), 0, (6 * dp).toInt(), 0)
             })
-            row.addView(blockLabel(holder.root.context, recipe.output, recipe.outputCount, dp))
+            row.addView(blockLabel(holder.root.context, recipe.result, recipe.resultCount, dp))
             holder.root.addView(row)
 
             val canCraft = recipe.canCraft(renderer.inventory)
@@ -1264,7 +1046,7 @@ class CaveActivity : ThemedActivity() {
             }
         }
 
-        private fun blockLabel(ctx: Context, type: Byte, count: Int, dp: Float): LinearLayout =
+        private fun blockLabel(ctx: Context, type: Short, count: Int, dp: Float): LinearLayout =
             LinearLayout(ctx).apply {
                 orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -1309,7 +1091,7 @@ class CaveActivity : ThemedActivity() {
         })
     }
 
-    private fun updateHotbarUI(slots: Array<Byte?>, selected: Int) {
+    private fun updateHotbarUI(slots: Array<Short?>, selected: Int) {
         val dp = resources.displayMetrics.density
         slots.forEachIndexed { i, type ->
             val count = if (type != null) renderer.inventory[type] ?: 0 else 0
@@ -1321,7 +1103,7 @@ class CaveActivity : ThemedActivity() {
         }
     }
 
-    private fun slotDrawable(type: Byte?, selected: Boolean): GradientDrawable {
+    private fun slotDrawable(type: Short?, selected: Boolean): GradientDrawable {
         val dp = resources.displayMetrics.density
         return GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
@@ -1425,7 +1207,7 @@ class CaveActivity : ThemedActivity() {
 
     // ── Noms de blocs ─────────────────────────────────────────────────────────
 
-    private fun blockName(type: Byte): String = when (type) {
+    private fun blockName(type: Short): String = when (type) {
         STONE -> getString(R.string.cave_block_stone); GRANITE -> getString(R.string.cave_block_granite)
         QUARTZ -> getString(R.string.cave_block_quartz); COAL -> getString(R.string.cave_block_coal)
         GOLD -> getString(R.string.cave_block_gold); CRYSTAL -> getString(R.string.cave_block_crystal)

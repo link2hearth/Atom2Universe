@@ -1,0 +1,12 @@
+{
+  "id": 4001,
+  "name": "redsand",
+  "texture_top": "redsand.png",
+  "texture_side": "redsand.png",
+  "texture_bottom": "redsand.png",
+  "color": "#CC6633",
+  "hardness": 0.8,
+  "falling": true,
+  "drop": "redsand",
+  "creative_tab": "terrain"
+}

@@ -1,0 +1,14 @@
+{
+  "id": 2000,
+  "name": "stone",
+  "texture_top": "stone.png",
+  "texture_side": "stone.png",
+  "texture_bottom": "stone.png",
+  "color": "#808080",
+  "hardness": 3.0,
+  "texture_side_grass": "stone_grass.png",
+  "texture_side_sand": "stone_sand_side.png",
+  "texture_side_snow": "stone_snow_side.png",
+  "drop": "stone",
+  "creative_tab": "stone"
+}

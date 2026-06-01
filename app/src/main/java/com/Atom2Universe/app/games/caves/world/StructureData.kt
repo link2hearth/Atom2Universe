@@ -24,18 +24,18 @@ data class StructureDef(
 //  Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-private fun b(id: Byte) = id.toInt()
+private fun b(id: Short) = id.toInt()
 
 /** Génère une rangée pleine sur l'axe X de x0 à x1 (inclus) pour une position (y, z) fixe. */
-private fun rowX(y: Int, z: Int, x0: Int, x1: Int, id: Byte): List<IntArray> =
+private fun rowX(y: Int, z: Int, x0: Int, x1: Int, id: Short): List<IntArray> =
     (x0..x1).map { intArrayOf(it, y, z, b(id)) }
 
 /** Génère une rangée pleine sur l'axe Z de z0 à z1 (inclus) pour une position (x, y) fixe. */
-private fun rowZ(x: Int, y: Int, z0: Int, z1: Int, id: Byte): List<IntArray> =
+private fun rowZ(x: Int, y: Int, z0: Int, z1: Int, id: Short): List<IntArray> =
     (z0..z1).map { intArrayOf(x, y, it, b(id)) }
 
 /** Dalle pleine (XZ) à hauteur y. */
-private fun slab(y: Int, x0: Int, x1: Int, z0: Int, z1: Int, id: Byte): List<IntArray> =
+private fun slab(y: Int, x0: Int, x1: Int, z0: Int, z1: Int, id: Short): List<IntArray> =
     (x0..x1).flatMap { x -> (z0..z1).map { z -> intArrayOf(x, y, z, b(id)) } }
 
 // ─────────────────────────────────────────────────────────────────────────────

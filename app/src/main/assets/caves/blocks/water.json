@@ -1,0 +1,12 @@
+{
+  "id": 6001,
+  "name": "water",
+  "texture_top": "water.png",
+  "texture_side": "water.png",
+  "texture_bottom": "water.png",
+  "color": "#3A7BCC",
+  "hardness": 100.0,
+  "water": true,
+  "drop": "",
+  "creative_tab": "terrain"
+}

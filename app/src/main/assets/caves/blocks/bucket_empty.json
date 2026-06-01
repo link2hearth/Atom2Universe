@@ -1,0 +1,12 @@
+{
+  "id": 10000,
+  "name": "bucket_empty",
+  "texture_top": "Items/bucket.png",
+  "texture_side": "Items/bucket.png",
+  "texture_bottom": "Items/bucket.png",
+  "color": "#B87832",
+  "hardness": 0.0,
+  "decoration": true,
+  "drop": "bucket_empty",
+  "creative_tab": "items"
+}

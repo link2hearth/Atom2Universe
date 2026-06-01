@@ -1,0 +1,11 @@
+{
+  "id": 9002,
+  "name": "cotton_blue",
+  "texture_top": "cotton/cotton_blue.png",
+  "texture_side": "cotton/cotton_blue.png",
+  "texture_bottom": "cotton/cotton_blue.png",
+  "color": "#3355AA",
+  "hardness": 1.0,
+  "drop": "cotton_blue",
+  "creative_tab": "cotton"
+}

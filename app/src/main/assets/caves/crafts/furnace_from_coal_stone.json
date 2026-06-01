@@ -1,0 +1,5 @@
+{
+  "ingredients": [{"id": 3000, "count": 4}, {"id": 2000, "count": 4}],
+  "result": 8000,
+  "result_count": 2
+}

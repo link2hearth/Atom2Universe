@@ -1,0 +1,11 @@
+{
+  "id": 9016,
+  "name": "cotton_mint",
+  "texture_top": "cotton/cotton_mint.png",
+  "texture_side": "cotton/cotton_mint.png",
+  "texture_bottom": "cotton/cotton_mint.png",
+  "color": "#98FF98",
+  "hardness": 1.0,
+  "drop": "cotton_mint",
+  "creative_tab": "cotton"
+}

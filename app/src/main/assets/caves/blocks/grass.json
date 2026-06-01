@@ -1,0 +1,11 @@
+{
+  "id": 101,
+  "name": "grass",
+  "texture_top": "grass_top.png",
+  "texture_side": "dirt_grass.png",
+  "texture_bottom": "dirt.png",
+  "color": "#55AA33",
+  "hardness": 0.8,
+  "drop": "dirt",
+  "creative_tab": "terrain"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 1000,
+  "name": "wood",
+  "texture_top": "trunk_top.png",
+  "texture_side": "trunk_side.png",
+  "texture_bottom": "trunk_top.png",
+  "color": "#8B6914",
+  "hardness": 2.0,
+  "drop": "wood",
+  "creative_tab": "wood"
+}

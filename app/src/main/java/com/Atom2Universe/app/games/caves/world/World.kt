@@ -203,7 +203,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     // Lit un bloc en coordonnées monde sans générer de chunk
-    private fun rawBlockAt(wx: Int, wy: Int, wz: Int): Byte {
+    private fun rawBlockAt(wx: Int, wy: Int, wz: Int): Short {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
@@ -212,7 +212,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     // Place un bloc directement (bypass "generated" check, pour construction au spawn)
-    private fun setBlockRaw(wx: Int, wy: Int, wz: Int, type: Byte) {
+    private fun setBlockRaw(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
@@ -225,7 +225,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             (wx - cx * CHUNK_SIZE) + (wy - cy * CHUNK_SIZE) * CHUNK_SIZE + (wz - cz * CHUNK_SIZE) * CHUNK_SIZE * CHUNK_SIZE, type)
     }
 
-    private fun setBlockRawIfAir(wx: Int, wy: Int, wz: Int, type: Byte) {
+    private fun setBlockRawIfAir(wx: Int, wy: Int, wz: Int, type: Short) {
         if (rawBlockAt(wx, wy, wz) == AIR) setBlockRaw(wx, wy, wz, type)
     }
 
@@ -297,7 +297,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
         // Précalcul du heightmap et des blocs de surface (256 colonnes, 1 passe)
         val heights   = IntArray(CHUNK_SIZE * CHUNK_SIZE)
-        val topBlocks = ByteArray(CHUNK_SIZE * CHUNK_SIZE)
+        val topBlocks = ShortArray(CHUNK_SIZE * CHUNK_SIZE)
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             val i = lz * CHUNK_SIZE + lx
             val wx = (chunk.worldX + lx).toDouble()
@@ -405,15 +405,15 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val x = (wx + lx).toDouble(); val y = (wy + ly).toDouble(); val z = (wz + lz).toDouble()
             val nZone = SimplexNoise.noise(x * 0.012, y * 0.012, z * 0.012).toFloat()
             // En zone de transition : on mélange primary et secondary via le même seuil décalé
-            val blockPrimary: Byte = rockBlock(bb.primary,   nZone)
-            val blockSecondary: Byte = rockBlock(bb.secondary, nZone + blendOffset)
+            val blockPrimary: Short = rockBlock(bb.primary,   nZone)
+            val blockSecondary: Short = rockBlock(bb.secondary, nZone + blendOffset)
             // On choisit secondary si nZone < (blend - 0.5) pour créer des veines progressives
             val block = if (bb.blend > 0.01f && nZone < bb.blend - 0.5f) blockSecondary else blockPrimary
             chunk.setBlock(lx, ly, lz, block)
         }
     }
 
-    private fun rockBlock(biome: Biome, n: Float): Byte = when (biome) {
+    private fun rockBlock(biome: Biome, n: Float): Short = when (biome) {
         Biome.DEFAULT       -> if (n > 0.20f) GRANITE   else STONE
         Biome.LIMESTONE     -> if (n > 0.40f) QUARTZ    else STONE
         Biome.GRANITE_ROUGE -> if (n > 0.30f) BRICK_RED else GRANITE
@@ -525,7 +525,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             if (nPocket < 0.55) continue
             val nType = SimplexNoise.noise(x * 0.022 + seed * 0.005, y * 0.022, z * 0.022)
             val dist = chunkDist(chunk)
-            val pocket: Byte = when (biome) {
+            val pocket: Short = when (biome) {
                 Biome.MUSHROOM_CAVE -> if (nType > 0.0) DIRT else GRAVEL
                 Biome.GRANITE_ROUGE -> GRAVEL
                 else -> when {
@@ -610,7 +610,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
-    private fun placeOreBlob(chunk: Chunk, rng: Random, ore: Byte, minBlocks: Int, maxBlocks: Int) {
+    private fun placeOreBlob(chunk: Chunk, rng: Random, ore: Short, minBlocks: Int, maxBlocks: Int) {
         var x = rng.nextInt(CHUNK_SIZE)
         var y = rng.nextInt(CHUNK_SIZE)
         var z = rng.nextInt(CHUNK_SIZE)
@@ -646,7 +646,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 SimplexNoise.noise(x * 0.07 + 555.0, 0.0, z * 0.07) < bb.blend.toDouble() - 0.5
             val activeBiome = if (useSecondary) bb.secondary else biome
 
-            val terrain: Byte = when (activeBiome) {
+            val terrain: Short = when (activeBiome) {
                 Biome.DEFAULT -> {
                     val nType = SimplexNoise.noise(x * 0.09, 0.0, z * 0.09)
                     when {
@@ -718,7 +718,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 if (b == AIR || isDecoration(b)) continue
                 if (ly + 1 >= CHUNK_SIZE) break
                 if (chunk.blockAt(lx, ly + 1, lz) != AIR) break
-                val decor: Byte = when (biome) {
+                val decor: Short = when (biome) {
                     Biome.LIMESTONE -> if (rng.nextFloat() > 0.45f) ROCK else ROCK_MOSS
                     Biome.MUSHROOM_CAVE -> when {
                         rng.nextFloat() < 0.40f -> MUSHROOM_RED
@@ -764,7 +764,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                    .coerceIn(25.0, 148.0)  // plancher océan ~25, plafond montagne 148
     }
 
-    private fun surfaceTopBlock(sb: SurfaceBiome, wx: Double, wz: Double): Byte = when (sb) {
+    private fun surfaceTopBlock(sb: SurfaceBiome, wx: Double, wz: Double): Short = when (sb) {
         SurfaceBiome.DESERT      -> if (SimplexNoise.noise(wx * 0.04 + 400.0, wz * 0.04) > 0.2) REDSAND else SAND
         SurfaceBiome.ROCKY       -> if (SimplexNoise.noise(wx * 0.07 + 500.0, wz * 0.07) > 0.0) GRANITE else STONE
         SurfaceBiome.PLAINS      -> if (SimplexNoise.noise(wx * 0.035 + 600.0, wz * 0.035) > 0.50) SAND else GRASS
@@ -780,14 +780,14 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
-    private fun surfaceDirtBlock(sb: SurfaceBiome): Byte = when (sb) {
+    private fun surfaceDirtBlock(sb: SurfaceBiome): Short = when (sb) {
         SurfaceBiome.DESERT     -> SAND
         SurfaceBiome.ROCKY      -> STONE
         SurfaceBiome.RED_DESERT -> REDSAND   // sous-couche rouge
         else                    -> DIRT
     }
 
-    private fun surfaceStoneBlock(sb: SurfaceBiome): Byte = when (sb) {
+    private fun surfaceStoneBlock(sb: SurfaceBiome): Short = when (sb) {
         SurfaceBiome.ROCKY      -> GRANITE
         SurfaceBiome.RED_DESERT -> REDSTONE  // roche de base rouge
         else                    -> STONE
@@ -848,7 +848,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val b = chunk.blockAt(lx, ly, lz)
                 if (b == AIR || isDecoration(b) || isWater(b)) continue
                 if (ly + 1 >= CHUNK_SIZE || chunk.blockAt(lx, ly + 1, lz) != AIR) break
-                val decor: Byte = when (sb) {
+                val decor: Short = when (sb) {
                     SurfaceBiome.ROCKY       -> ROCK
                     SurfaceBiome.FOREST      -> ROCK_MOSS
                     SurfaceBiome.RED_DESERT  -> ROCK
@@ -995,7 +995,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 else                      -> 0f
             }
             if (clusterN > 0.10 && rng.nextFloat() < grassChance) {
-                val decor: Byte = when (sb) {
+                val decor: Short = when (sb) {
                     SurfaceBiome.DESERT -> if (rng.nextFloat() > 0.5f) GRASS_TAN else GRASS_BROWN
                     SurfaceBiome.FOREST -> when (rng.nextInt(4)) {
                         0    -> GRASS_BROWN; 1 -> GRASS_TAN
@@ -1019,7 +1019,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             if (wheatN < 0.40 || rng.nextFloat() > 0.55f) continue
             // Stage basé sur un bruit lent → zones de maturité cohérentes
             val maturity = SimplexNoise.noise(wx * 0.018 + 700.0, wz * 0.018)
-            val wheat: Byte = when {
+            val wheat: Short = when {
                 maturity >  0.30 -> WHEAT4
                 maturity >  0.00 -> WHEAT3
                 maturity > -0.30 -> WHEAT2
@@ -1112,7 +1112,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val wx = originWx + blk[0]; val wy = originWy + blk[1]; val wz = originWz + blk[2]
                 val lx = wx - chunk.worldX; val ly = wy - chunk.worldY; val lz = wz - chunk.worldZ
                 if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
-                    chunk.setBlock(lx, ly, lz, blk[3].toByte())
+                    chunk.setBlock(lx, ly, lz, blk[3].toShort())
             }
         }
     }
@@ -1132,7 +1132,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private fun chunkDist(chunk: Chunk) =
         sqrt((chunk.cx.toLong() * chunk.cx + chunk.cy.toLong() * chunk.cy + chunk.cz.toLong() * chunk.cz).toDouble()).toFloat()
 
-    private fun sandForDist(dist: Float, x: Double, z: Double): Byte = when {
+    private fun sandForDist(dist: Float, x: Double, z: Double): Short = when {
         dist < 100f -> SAND
         dist > 200f -> REDSAND
         else -> if (SimplexNoise.noise(x * 0.05, 0.0, z * 0.05) > 0.0) SAND else REDSAND
@@ -1145,7 +1145,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Modification de blocs ─────────────────────────────────────────────────
 
-    fun setBlock(wx: Int, wy: Int, wz: Int, type: Byte) {
+    fun setBlock(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
@@ -1172,7 +1172,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // Variante de setBlock réservée à la simulation eau : ne marque que waterMeshDirty/waterRebuildQueue.
     // Les faces solides adjacentes à l'eau restent visibles (isWater == isVisible), donc le mesh solide
     // n'a pas besoin d'être reconstruit quand l'eau change — seul le mesh eau doit l'être.
-    private fun setWaterBlock(wx: Int, wy: Int, wz: Int, type: Byte) {
+    private fun setWaterBlock(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
@@ -1213,7 +1213,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      * Variante sans blockAt redondant : le type est déjà connu (appelé depuis buildWater).
      * WATER → niveau 0 sans aucun accès hashmap. WATER_FLOW → lookup hashmap minimal.
      */
-    fun waterFlowLevelKnown(blockType: Byte, wx: Int, wy: Int, wz: Int): Int = when (blockType) {
+    fun waterFlowLevelKnown(blockType: Short, wx: Int, wy: Int, wz: Int): Int = when (blockType) {
         WATER      -> 0
         WATER_FLOW -> waterFlowLevels[waterKey(wx, wy, wz)]?.toInt()?.and(0xFF) ?: 0
         else       -> 0
@@ -1433,14 +1433,14 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     /** Appelé par le renderer quand l'animation d'un bloc se termine. */
-    fun onFallingBlockLanded(wx: Int, wy: Int, wz: Int, type: Byte) {
+    fun onFallingBlockLanded(wx: Int, wy: Int, wz: Int, type: Short) {
         fallingDest.remove(waterKey(wx, wy, wz))
         setBlock(wx, wy, wz, type)
     }
 
     // ── Requêtes de bloc / sol pour les entités ───────────────────────────────
 
-    fun blockAt(wx: Int, wy: Int, wz: Int): Byte {
+    fun blockAt(wx: Int, wy: Int, wz: Int): Short {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
@@ -1463,7 +1463,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Voisinage pour le mesh ────────────────────────────────────────────────
 
-    fun neighborBlock(baseChunk: Chunk, lx: Int, ly: Int, lz: Int): Byte {
+    fun neighborBlock(baseChunk: Chunk, lx: Int, ly: Int, lz: Int): Short {
         if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
             return baseChunk.blockAt(lx, ly, lz)
         val wx = baseChunk.worldX + lx; val wy = baseChunk.worldY + ly; val wz = baseChunk.worldZ + lz

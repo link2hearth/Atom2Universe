@@ -1,0 +1,11 @@
+{
+  "id": 2010,
+  "name": "brick_red",
+  "texture_top": "brick_red.png",
+  "texture_side": "brick_red.png",
+  "texture_bottom": "brick_red.png",
+  "color": "#AA3322",
+  "hardness": 3.0,
+  "drop": "brick_red",
+  "creative_tab": "stone"
+}

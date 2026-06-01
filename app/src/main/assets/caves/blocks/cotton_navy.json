@@ -1,0 +1,11 @@
+{
+  "id": 9017,
+  "name": "cotton_navy",
+  "texture_top": "cotton/cotton_navy.png",
+  "texture_side": "cotton/cotton_navy.png",
+  "texture_bottom": "cotton/cotton_navy.png",
+  "color": "#000080",
+  "hardness": 1.0,
+  "drop": "cotton_navy",
+  "creative_tab": "cotton"
+}
