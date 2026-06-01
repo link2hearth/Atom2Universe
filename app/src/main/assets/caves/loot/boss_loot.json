@@ -1,0 +1,7 @@
+{
+  "id": "boss_loot",
+  "rolls": [1, 2],
+  "entries": [
+    { "item": "ward_stone", "weight": 100, "count": [1, 1] }
+  ]
+}

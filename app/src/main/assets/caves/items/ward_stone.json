@@ -1,0 +1,8 @@
+{
+  "id": "ward_stone",
+  "type": "material",
+  "rarity_weights": { "common": 100 },
+  "stats": {},
+  "flags": [],
+  "sprite": "ward_stone"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "default_loot",
+  "rolls": [0, 1],
+  "entries": [
+    { "item": "ward_stone", "weight": 5, "count": [1, 1] }
+  ]
+}

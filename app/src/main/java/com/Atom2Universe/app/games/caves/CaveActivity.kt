@@ -67,7 +67,7 @@ class CaveActivity : ThemedActivity() {
 
     companion object {
         const val EXTRA_WORLD_ID = "cave_world_id"
-        private const val ACTIVE_SIZE  = 9
+        private const val ACTIVE_SIZE  = 19
         private const val GRID_COLS    = 6
         private const val EMPTY_BUFFER = 36
 
@@ -297,7 +297,7 @@ class CaveActivity : ThemedActivity() {
 
     private var isCreative = false
     private var survivalInventory: Map<Byte, Int> = emptyMap()
-    private var survivalHotbar: List<Byte?> = List(9) { null }
+    private var survivalHotbar: List<Byte?> = List(19) { null }
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
@@ -393,14 +393,14 @@ class CaveActivity : ThemedActivity() {
         isCreative = save?.isCreative ?: false
         if (isCreative) {
             survivalInventory = save?.inventory ?: emptyMap()
-            survivalHotbar    = save?.hotbar    ?: List(9) { null }
+            survivalHotbar    = save?.hotbar    ?: List(19) { null }
         }
         val savedState = when {
             save != null && save.isCreative -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
                 inventory = CREATIVE_INVENTORY,
-                hotbar = CREATIVE_INVENTORY.keys.toList().let { keys -> List(9) { i -> keys.getOrNull(i) } },
+                hotbar = CREATIVE_INVENTORY.keys.toList().let { keys -> List(19) { i -> keys.getOrNull(i) } },
                 playerHp            = save.playerHp,
                 playerLevel         = save.playerLevel,
                 playerXp            = save.playerXp,
@@ -1136,7 +1136,6 @@ class CaveActivity : ThemedActivity() {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_cave_inv_block, parent, false)
             view.layoutParams = RecyclerView.LayoutParams(cellSize, cellSize)
-            view.setPadding(2, 2, 2, 2)
             return ItemVH(view)
         }
 
@@ -1151,17 +1150,23 @@ class CaveActivity : ThemedActivity() {
             val isCursor = invGpZone == InvGpZone.GRID && position == invGpCursor
             holder.itemView.background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                setColor(when { isSel -> 0x33FFDD00.toInt(); isCursor -> 0x3300DDFF.toInt(); type != null -> 0x55FFFFFF.toInt(); else -> 0x44FFFFFF.toInt() })
-                setStroke(if (isSel || isCursor) (2 * dp).toInt() else (1 * dp).toInt(),
-                    when { isSel -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); else -> 0x88FFFFFF.toInt() })
-                cornerRadius = 4 * dp
+                setColor(when {
+                    isSel    -> 0x44FFDD00.toInt()
+                    isCursor -> 0x3300DDFF.toInt()
+                    type != null -> 0x28FFFFFF.toInt()
+                    else     -> 0x12FFFFFF.toInt()
+                })
+                setStroke(
+                    if (isSel || isCursor) (2 * dp).toInt() else (1 * dp).toInt(),
+                    when { isSel -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); type != null -> 0x55FFFFFF.toInt(); else -> 0x28FFFFFF.toInt() }
+                )
+                cornerRadius = 5 * dp
             }
 
             holder.colorView.background = if (type != null) blockDrawable(type, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
 
-            holder.countTv.text     = if (type != null) count.toString() else ""
-            holder.countTv.textSize = 11f
+            holder.countTv.text = if (type != null && count > 0) count.toString() else ""
 
             holder.itemView.setOnClickListener {
                 val pos = holder.bindingAdapterPosition
@@ -1340,14 +1345,14 @@ class CaveActivity : ThemedActivity() {
             inventory = if (isCreative) survivalInventory else renderer.inventory.toMap(),
             hotbar = if (isCreative) survivalHotbar else renderer.hotbar.map { it },
             isCreative = isCreative,
-            playerHp            = em.playerHp,
+            playerHp            = renderer.playerNode.hp,
             playerLevel         = stats.level,
             playerXp            = stats.xp,
             playerDamage        = stats.damage,
             playerFireRate      = stats.fireRate,
             playerMaxHp         = stats.maxHp,
             playerShield        = stats.shield,
-            playerShieldCurrent = em.playerShieldCurrent,
+            playerShieldCurrent = renderer.playerNode.shield,
             playerWeapons       = stats.weapons.map { "${it.color.name}_${it.variant.name}" },
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList()
         )
@@ -1708,8 +1713,8 @@ class CaveActivity : ThemedActivity() {
                 // Y ouvre l'inventaire
                 KeyEvent.KEYCODE_BUTTON_Y  -> { openInventory(); return true }
                 // L1 / R1 : naviguer la hotbar
-                KeyEvent.KEYCODE_BUTTON_L1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot - 1 + 9) % 9) }; return true }
-                KeyEvent.KEYCODE_BUTTON_R1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot + 1) % 9) }; return true }
+                KeyEvent.KEYCODE_BUTTON_L1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot - 1 + 19) % 19) }; return true }
+                KeyEvent.KEYCODE_BUTTON_R1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot + 1) % 19) }; return true }
                 // X : basculer vue FPS / TPS
                 KeyEvent.KEYCODE_BUTTON_X  -> {
                     val newTps = !renderer.camera.thirdPerson

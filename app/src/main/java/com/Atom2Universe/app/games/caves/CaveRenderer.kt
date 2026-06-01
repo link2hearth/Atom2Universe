@@ -4,8 +4,14 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
-import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
+import com.Atom2Universe.app.games.caves.node.EventBus
+import com.Atom2Universe.app.games.caves.node.GameEvent
+import com.Atom2Universe.app.games.caves.node.ItemRegistry
+import com.Atom2Universe.app.games.caves.node.LootNode
+import com.Atom2Universe.app.games.caves.node.LootTableRegistry
+import com.Atom2Universe.app.games.caves.node.MobRegistry
+import com.Atom2Universe.app.games.caves.node.PlayerNode
 import com.Atom2Universe.app.games.caves.entity.Projectile
 import com.Atom2Universe.app.games.caves.entity.PlayerStats
 import com.Atom2Universe.app.games.caves.entity.UpgradeOption
@@ -152,7 +158,7 @@ internal class CaveRenderer(
     private var mineDamage = 0f
 
     val inventory = mutableMapOf<Byte, Int>()
-    val hotbar    = arrayOfNulls<Byte>(9)
+    val hotbar    = arrayOfNulls<Byte>(19)
     var selectedSlot = 0
 
     private var transientVbo = 0
@@ -222,6 +228,9 @@ internal class CaveRenderer(
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
+    internal val eventBus           = EventBus()
+    internal val playerNode         = PlayerNode()
+    internal val lootNode           = LootNode(eventBus)
     internal val enemyManager      = EnemyManager(world, worldSeed)
     private val enemyRenderer      = EnemyRenderer()
     private val projRenderer       = ProjectileRenderer()
@@ -458,15 +467,31 @@ internal class CaveRenderer(
         initStars()
         initSkyBodies()
 
+        MobRegistry.load(context.assets)
+        ItemRegistry.load(context.assets)
+        LootTableRegistry.load(context.assets)
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets, enemyManager.familyPool)
         projRenderer.onSurfaceCreated(context.assets)
 
-        enemyManager.playerHpCallback  = { hp, max -> playerHpCallback?.invoke(hp, max) }
-        enemyManager.shieldCallback    = { cur, max -> shieldCallback?.invoke(cur, max) }
-        enemyManager.bossRewardCallback = {
-            inventory[WARD_STONE] = (inventory[WARD_STONE] ?: 0) + 1
-            inventoryCallback?.invoke(inventory.toMap())
+        playerNode.onHpChanged     = { hp, max -> playerHpCallback?.invoke(hp, max) }
+        playerNode.onShieldChanged = { cur, max -> shieldCallback?.invoke(cur, max) }
+        enemyManager.player   = playerNode
+        enemyManager.eventBus = eventBus
+        eventBus.subscribe { event ->
+            if (event !is GameEvent.MobDied) return@subscribe
+            val xpGain = if (event.isBoss) 5 * event.level else event.level
+            val leveledUp = playerStats.addXp(xpGain)
+            xpCallback?.invoke(playerStats.xp, playerStats.xpToNext, playerStats.level)
+            if (leveledUp) {
+                gamePaused = true
+                val options = playerStats.pickThreeUpgrades(upgradeRng)
+                levelUpCallback?.invoke(options)
+            }
+            if (event.isBoss) {
+                inventory[WARD_STONE] = (inventory[WARD_STONE] ?: 0) + 1
+                inventoryCallback?.invoke(inventory.toMap())
+            }
         }
 
         val ids = IntArray(2)
@@ -504,10 +529,10 @@ internal class CaveRenderer(
                 playerStats.weapons.add(WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE))
                 playerStats.shootTimers.add(0f)
             }
-            enemyManager.playerMaxHp         = savedState.playerMaxHp
-            enemyManager.playerHp            = savedState.playerHp.coerceAtMost(savedState.playerMaxHp)
-            enemyManager.playerShieldMax     = savedState.playerShield
-            enemyManager.playerShieldCurrent = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
+            playerNode.maxHp    = savedState.playerMaxHp
+            playerNode.hp       = savedState.playerHp.coerceAtMost(savedState.playerMaxHp)
+            playerNode.maxShield = savedState.playerShield
+            playerNode.shield   = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
             savedState.wardStonePositions.forEach { (x, z) -> enemyManager.wardStoneZones.add(Pair(x, z)) }
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
@@ -1082,43 +1107,26 @@ internal class CaveRenderer(
 
             val hit = enemyManager.enemies.find { e ->
                 if (e.hp <= 0) return@find false
-                val r = e.type.radius.toDouble() + 0.3
+                val r = e.def.radius.toDouble() + 0.3
                 val dx = p.x - e.x; val dy = p.y - e.y; val dz = p.z - e.z
                 dx * dx + dy * dy * 0.5 + dz * dz < r * r
             }
             if (hit != null) {
-                val wasAlive = hit.hp > 0
                 enemyManager.damageEnemy(hit, p.damage)
-                if (wasAlive && hit.hp <= 0) handleKill(hit)
                 iter.remove()
             }
         }
     }
 
-    private fun handleKill(e: Enemy) {
-        val xpGain = if (e.isBoss) 5 * e.level else e.level
-        val leveledUp = playerStats.addXp(xpGain)
-        xpCallback?.invoke(playerStats.xp, playerStats.xpToNext, playerStats.level)
-        if (leveledUp) {
-            gamePaused = true
-            val options = playerStats.pickThreeUpgrades(upgradeRng)
-            levelUpCallback?.invoke(options)
-        }
-    }
 
     fun applyUpgrade(option: UpgradeOption) {
         playerStats.applyUpgrade(option.type)
         when (option.type) {
             UpgradeType.MAX_HP -> {
-                enemyManager.playerMaxHp = playerStats.maxHp
-                enemyManager.playerHp = (enemyManager.playerHp + 4).coerceAtMost(playerStats.maxHp)
-                enemyManager.playerHpCallback?.invoke(enemyManager.playerHp, enemyManager.playerMaxHp)
+                playerNode.setMaxHp(playerStats.maxHp, healDelta = 4)
             }
             UpgradeType.SHIELD -> {
-                enemyManager.playerShieldMax = playerStats.shield
-                enemyManager.playerShieldCurrent = (enemyManager.playerShieldCurrent + 5)
-                    .coerceAtMost(playerStats.shield)
-                shieldCallback?.invoke(enemyManager.playerShieldCurrent, enemyManager.playerShieldMax)
+                playerNode.setMaxShield(playerStats.shield, rechargeDelta = 5)
             }
             else -> {}
         }
@@ -1145,7 +1153,7 @@ internal class CaveRenderer(
             if (hitEnemy != null) {
                 mineTarget = RayHit(
                     Math.floor(hitEnemy.x).toInt(),
-                    Math.floor(hitEnemy.y - hitEnemy.type.eyeHeight * 0.5).toInt(),
+                    Math.floor(hitEnemy.y - hitEnemy.def.eyeHeight * 0.5).toInt(),
                     Math.floor(hitEnemy.z).toInt(),
                     0, 0, 0
                 )
@@ -1154,9 +1162,7 @@ internal class CaveRenderer(
                 laserEnemyDmgTimer -= dt
                 if (laserEnemyDmgTimer <= 0f) {
                     laserEnemyDmgTimer = 0.22f
-                    val wasAlive = hitEnemy.hp > 0
                     enemyManager.damageEnemy(hitEnemy, 1)
-                    if (wasAlive && hitEnemy.hp <= 0) handleKill(hitEnemy)
                 }
                 return
             }
@@ -2187,7 +2193,7 @@ internal class CaveRenderer(
     }
 
     fun selectSlot(index: Int) {
-        if (index !in 0..8) return
+        if (index !in 0..18) return
         selectedSlot = index
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
