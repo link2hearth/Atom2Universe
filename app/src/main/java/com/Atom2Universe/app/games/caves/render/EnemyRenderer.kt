@@ -142,7 +142,7 @@ internal class EnemyRenderer {
             val ey = (e.y - camY).toFloat()
             val ez = (e.z - camZ).toFloat()
 
-            val scale = e.baseScale
+            val scale = e.baseScale * 2f
             val hw = scale * 0.5f
             val h  = scale
 
@@ -233,6 +233,7 @@ internal class EnemyRenderer {
 
         // ── Draw HP bars ──────────────────────────────────────────────────────
         if (colorCount > 0) {
+            GLES30.glDepthFunc(GLES30.GL_LEQUAL)
             GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL); GLES30.glPolygonOffset(-1f, -1f)
             uploadAndBind(colorVbo, coV, 0, ci)
             colorShader?.use()
@@ -240,6 +241,7 @@ internal class EnemyRenderer {
             bindColorAttribs(); GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, colorCount)
             disableColorAttribs()
             GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
+            GLES30.glDepthFunc(GLES30.GL_LESS)
         }
 
         // ── Draw level labels ─────────────────────────────────────────────────

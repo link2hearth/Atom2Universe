@@ -63,7 +63,7 @@ object CaveWorldSaveManager {
             playerX = 0.0, playerY = 0.0, playerZ = 0.0,
             playerYaw = 0f, playerPitch = 0f,
             inventory = emptyMap(),
-            hotbar = List(9) { null }
+            hotbar = List(19) { null }
         )
         persist(context, save)
         return save
@@ -151,7 +151,7 @@ object CaveWorldSaveManager {
             (0 until hotbarArr.length()).map { i ->
                 val v = hotbarArr.getInt(i); if (v < 0) null else v.toByte()
             }
-        } else List(9) { null }
+        } else List(19) { null }
         val weaponsArr = j.optJSONArray("playerWeapons")
         val weapons: List<String> = if (weaponsArr != null) {
             (0 until weaponsArr.length()).map { weaponsArr.getString(it) }
