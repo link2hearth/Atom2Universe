@@ -69,7 +69,9 @@ internal class SpawnManager(
                 .ifEmpty { MobRegistry.all().toList() }
                 .ifEmpty { return }
 
-            val def = eligible[rng.nextInt(eligible.size)]
+            // Sélection déterministe : même zone + même seed = même mob, toujours
+            val zoneRng = Random(worldSeed xor zone.toLong())
+            val def = eligible.sortedBy { it.id }[zoneRng.nextInt(eligible.size)]
             val e = Enemy(nextId++, def, sx, sy, sz)
             e.spriteSheet = def.spriteSheet
             e.level       = zone
