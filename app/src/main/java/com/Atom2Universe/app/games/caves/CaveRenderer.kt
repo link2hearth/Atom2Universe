@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
+import com.Atom2Universe.app.games.caves.entity.ImpactParticle
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.ORIENT_AXIS
 import com.Atom2Universe.app.games.caves.node.ORIENT_FACING
@@ -18,8 +19,6 @@ import com.Atom2Universe.app.games.caves.node.PhysicsNode
 import com.Atom2Universe.app.games.caves.node.PlayerNode
 import com.Atom2Universe.app.games.caves.entity.Projectile
 import com.Atom2Universe.app.games.caves.entity.PlayerStats
-import com.Atom2Universe.app.games.caves.entity.UpgradeOption
-import com.Atom2Universe.app.games.caves.entity.UpgradeType
 import com.Atom2Universe.app.games.caves.entity.WeaponColor
 import com.Atom2Universe.app.games.caves.entity.WeaponDef
 import com.Atom2Universe.app.games.caves.entity.WeaponVariant
@@ -201,8 +200,12 @@ internal class CaveRenderer(
     // ── Progression joueur ────────────────────────────────────────────────────
 
     val playerStats = PlayerStats()
-    private val upgradeRng = Random(System.currentTimeMillis())
     val projectiles = ArrayList<Projectile>(64)
+    private val impactParticles = ArrayList<ImpactParticle>(128)
+
+    private val ROCK_IDS = setOf(2020.toShort(), 2021.toShort())
+    private var rockChargeTime = 0f
+    private val ROCK_CHARGE_MAX = 1.5f
 
     @Volatile var gamePaused = false
 
@@ -219,8 +222,6 @@ internal class CaveRenderer(
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
-    var xpCallback:       ((xp: Int, xpMax: Int, level: Int) -> Unit)? = null
-    var levelUpCallback:  ((List<UpgradeOption>) -> Unit)?       = null
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
@@ -484,13 +485,7 @@ internal class CaveRenderer(
         eventBus.subscribe { event ->
             if (event !is GameEvent.MobDied) return@subscribe
             val xpGain = if (event.isBoss) 5 * event.level else event.level
-            val leveledUp = playerStats.addXp(xpGain)
-            xpCallback?.invoke(playerStats.xp, playerStats.xpToNext, playerStats.level)
-            if (leveledUp) {
-                gamePaused = true
-                val options = playerStats.pickThreeUpgrades(upgradeRng)
-                levelUpCallback?.invoke(options)
-            }
+            playerStats.addXp(xpGain)
             if (event.isBoss) {
                 inventory[WARD_STONE] = (inventory[WARD_STONE] ?: 0) + 1
                 inventoryCallback?.invoke(inventory.toMap())
@@ -514,24 +509,8 @@ internal class CaveRenderer(
             playerStats.level    = savedState.playerLevel
             playerStats.xp       = savedState.playerXp
             playerStats.xpToNext = playerStats.xpRequired(savedState.playerLevel)
-            playerStats.damage   = savedState.playerDamage
-            playerStats.fireRate = savedState.playerFireRate
             playerStats.maxHp    = savedState.playerMaxHp
             playerStats.shield   = savedState.playerShield
-            playerStats.weapons.clear(); playerStats.shootTimers.clear()
-            for (key in savedState.playerWeapons) {
-                val parts = key.split("_")
-                if (parts.size == 2) {
-                    val color   = runCatching { WeaponColor.valueOf(parts[0])   }.getOrNull() ?: continue
-                    val variant = runCatching { WeaponVariant.valueOf(parts[1]) }.getOrNull() ?: continue
-                    playerStats.weapons.add(WeaponDef(color, variant))
-                    playerStats.shootTimers.add(0f)
-                }
-            }
-            if (playerStats.weapons.isEmpty()) {
-                playerStats.weapons.add(WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE))
-                playerStats.shootTimers.add(0f)
-            }
             playerNode.maxHp    = savedState.playerMaxHp
             playerNode.hp       = savedState.playerHp.coerceAtMost(savedState.playerMaxHp)
             playerNode.maxShield = savedState.playerShield
@@ -703,9 +682,10 @@ internal class CaveRenderer(
         }
 
         if (!gamePaused) {
+            updateRockThrow(dt)
             updateMining(dt)
-            updateAutoShoot(dt)
             updateProjectiles(dt)
+            updateImpactParticles(dt)
         }
 
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
@@ -997,8 +977,9 @@ internal class CaveRenderer(
             camera.yaw, camera.vpMatrix
         )
 
-        // ── Rendu projectiles ─────────────────────────────────────────────────
+        // ── Rendu projectiles + particules d'impact ───────────────────────────
         projRenderer.render(projectiles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
+        projRenderer.renderParticles(impactParticles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
 
         // ── Boîte joueur (TPS) ────────────────────────────────────────────────
         drawPlayerBox(dt)
@@ -1042,45 +1023,35 @@ internal class CaveRenderer(
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
     }
 
-    // ── Tir automatique ───────────────────────────────────────────────────────
-
-    private fun updateAutoShoot(dt: Float) {
-        val liveEnemies = enemyManager.enemies.filter { it.hp > 0 }
-        if (liveEnemies.isEmpty()) return
-
-        val closest = liveEnemies.minByOrNull { e ->
-            val dx = e.x - camera.playerX; val dz = e.z - camera.playerZ
-            dx * dx + dz * dz
-        } ?: return
-
-        val dxC = closest.x - camera.playerX; val dzC = closest.z - camera.playerZ
-        if (dxC * dxC + dzC * dzC > AUTO_SHOOT_RANGE * AUTO_SHOOT_RANGE) return
-
-        for (i in playerStats.weapons.indices) {
-            playerStats.shootTimers[i] -= dt
-            if (playerStats.shootTimers[i] <= 0f) {
-                playerStats.shootTimers[i] = playerStats.fireRate
-                val tx = closest.x; val ty = closest.y + closest.baseScale * 0.5; val tz = closest.z
-                val spawnY = camera.playerY + 0.8
-                val dx = tx - camera.playerX; val dy = ty - spawnY; val dz = tz - camera.playerZ
-                val d = sqrt(dx * dx + dy * dy + dz * dz).coerceAtLeast(0.001)
-                projectiles.add(Projectile(
-                    camera.playerX, spawnY, camera.playerZ,
-                    dx / d, dy / d, dz / d,
-                    PROJ_SPEED, playerStats.damage, playerStats.weapons[i]
-                ))
-            }
-        }
-    }
-
-    private fun updateProjectiles(dt: Float) {
+private fun updateProjectiles(dt: Float) {
+        val ROCK_GRAVITY = 12.0
         val iter = projectiles.iterator()
         while (iter.hasNext()) {
             val p = iter.next()
-            val step = (p.speed * dt).toDouble()
-            p.x += p.dirX * step; p.y += p.dirY * step; p.z += p.dirZ * step
-            p.travelDist += step
+            if (p.isRock) {
+                p.velY -= ROCK_GRAVITY * dt
+                p.x += p.dirX * p.speed * dt
+                p.y += p.velY * dt
+                p.z += p.dirZ * p.speed * dt
+                p.travelDist += p.speed.toDouble() * dt
+            } else {
+                val step = (p.speed * dt).toDouble()
+                p.x += p.dirX * step; p.y += p.dirY * step; p.z += p.dirZ * step
+                p.travelDist += step
+            }
             if (p.travelDist > PROJ_MAX_DIST) { iter.remove(); continue }
+
+            if (p.isRock) {
+                val block = worldBlockAt(
+                    Math.floor(p.x).toInt(),
+                    Math.floor(p.y).toInt(),
+                    Math.floor(p.z).toInt()
+                )
+                if (block != AIR && !BlockRegistry.isDecoration(block) && !BlockRegistry.isWater(block)) {
+                    spawnImpact(p.x, p.y, p.z)
+                    iter.remove(); continue
+                }
+            }
 
             val hit = enemyManager.enemies.find { e ->
                 if (e.hp <= 0) return@find false
@@ -1089,26 +1060,87 @@ internal class CaveRenderer(
                 dx * dx + dy * dy * 0.5 + dz * dz < r * r
             }
             if (hit != null) {
+                if (p.isRock) spawnImpact(p.x, p.y, p.z)
                 enemyManager.damageEnemy(hit, p.damage)
                 iter.remove()
             }
         }
     }
 
-
-    fun applyUpgrade(option: UpgradeOption) {
-        playerStats.applyUpgrade(option.type)
-        when (option.type) {
-            UpgradeType.MAX_HP -> {
-                playerNode.setMaxHp(playerStats.maxHp, healDelta = 4)
-            }
-            UpgradeType.SHIELD -> {
-                playerNode.setMaxShield(playerStats.shield, rechargeDelta = 5)
-            }
-            else -> {}
-        }
-        gamePaused = false
+    private fun isRockSelected(): Boolean {
+        val id = hotbar[selectedSlot] ?: return false
+        return id in ROCK_IDS
     }
+
+    private fun isAimingAtRockBlock(): Boolean {
+        val hit = raycastBlock() ?: return false
+        return worldBlockAt(hit.bx, hit.by, hit.bz) in ROCK_IDS
+    }
+
+    private fun updateRockThrow(dt: Float) {
+        if (!isRockSelected()) {
+            rockChargeTime = 0f
+            return
+        }
+        val rt = touch.rtChargeRaw
+        if (rt > 0.3f) {
+            if (isAimingAtRockBlock()) { rockChargeTime = 0f; return }
+            rockChargeTime = (rockChargeTime + dt).coerceAtMost(ROCK_CHARGE_MAX)
+        } else if (rockChargeTime > 0.3f) {
+            val charge = rockChargeTime / ROCK_CHARGE_MAX
+            val speed = 10f + (28f - 10f) * charge
+            val damage = (3 + ((15 - 3) * charge)).toInt()
+            val spawnY = camera.playerY + 0.8
+            val rockWeapon = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
+            projectiles.add(Projectile(
+                camera.playerX, spawnY, camera.playerZ,
+                camera.aimX.toDouble(), camera.aimY.toDouble(), camera.aimZ.toDouble(),
+                speed, damage, rockWeapon, isRock = true
+            ))
+            val blockId = hotbar[selectedSlot]!!
+            val count = (inventory[blockId] ?: 0) - 1
+            if (count <= 0) {
+                inventory.remove(blockId)
+                hotbar[selectedSlot] = null
+            } else {
+                inventory[blockId] = count
+            }
+            inventoryCallback?.invoke(inventory.toMap())
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            rockChargeTime = 0f
+        } else {
+            rockChargeTime = 0f
+        }
+    }
+
+    private fun spawnImpact(x: Double, y: Double, z: Double) {
+        val rng = Random.Default
+        repeat(8) {
+            val angle = rng.nextDouble() * 2.0 * PI
+            val spd = rng.nextFloat() * 2.5f + 0.8f
+            impactParticles.add(ImpactParticle(
+                x.toFloat(), y.toFloat(), z.toFloat(),
+                cos(angle).toFloat() * spd,
+                rng.nextFloat() * 2f + 0.5f,
+                sin(angle).toFloat() * spd,
+                0.45f, 0.45f
+            ))
+        }
+    }
+
+    private fun updateImpactParticles(dt: Float) {
+        val iter = impactParticles.iterator()
+        while (iter.hasNext()) {
+            val p = iter.next()
+            p.lifeRem -= dt
+            if (p.lifeRem <= 0f) { iter.remove(); continue }
+            val age = 1f - p.lifeRem / p.lifeMax
+            p.x += p.vx * dt
+            p.y += (p.vy - 8f * age) * dt
+            p.z += p.vz * dt
+        }
+    }
+
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
@@ -1120,7 +1152,8 @@ internal class CaveRenderer(
             placeBlock()
         }
 
-        if (touch.laserActive) {
+        val laserAllowed = touch.laserActive && (!isRockSelected() || isAimingAtRockBlock())
+        if (laserAllowed) {
             val laserOriginY = if (camera.thirdPerson) camera.playerY + Camera.TPP_ORBIT_DY else camera.y
             val hitEnemy = enemyManager.hitByLaser(
                 camera.x, laserOriginY, camera.z,
@@ -1146,7 +1179,7 @@ internal class CaveRenderer(
         }
         laserEnemyDmgTimer = 0f
 
-        val target = if (touch.laserActive) raycastBlock() else null
+        val target = if (laserAllowed) raycastBlock() else null
 
         if (target == null) {
             mineTarget = null
@@ -1171,17 +1204,30 @@ internal class CaveRenderer(
             world.enqueueIfFalling(bx, by + 1, bz)
             when (blockType) {
                 WATER      -> { world.onWaterSourceRemoved(bx, by, bz)
-                                if (!isCreative) { inventory[blockType] = (inventory[blockType] ?: 0) + 1; inventoryCallback?.invoke(inventory.toMap()) } }
+                                if (!isCreative) collectBlock(blockType) }
                 WATER_FLOW -> { /* eau qui coule : pas de drop, pas de re-simulation */ }
                 WARD_STONE -> { enemyManager.wardStoneZones.removeAll { (wx, wz) ->
                                     wx.toInt() == bx && wz.toInt() == bz }
-                                if (!isCreative) { inventory[blockType] = (inventory[blockType] ?: 0) + 1; inventoryCallback?.invoke(inventory.toMap()) } }
-                else       -> { if (!isCreative) { inventory[blockType] = (inventory[blockType] ?: 0) + 1; inventoryCallback?.invoke(inventory.toMap()) } }
+                                if (!isCreative) collectBlock(blockType) }
+                else       -> { if (!isCreative) collectBlock(blockType) }
             }
+            if (blockType in ROCK_IDS) rockChargeTime = 0f
             mineTarget = null
             mineDamage = 0f
             miningCallback?.invoke(0f, null)
         }
+    }
+
+    private fun collectBlock(blockType: Short) {
+        inventory[blockType] = (inventory[blockType] ?: 0) + 1
+        if (hotbar.none { it == blockType }) {
+            val emptySlot = hotbar.indexOfFirst { it == null }
+            if (emptySlot != -1) {
+                hotbar[emptySlot] = blockType
+                hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            }
+        }
+        inventoryCallback?.invoke(inventory.toMap())
     }
 
     private fun refreshChunkLightSources(chunk: Chunk) {
@@ -2083,11 +2129,12 @@ internal class CaveRenderer(
         val yawRad = Math.toRadians(camera.yaw.toDouble())
         val fX = sin(yawRad).toFloat(); val fZ = cos(yawRad).toFloat()
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
+        val chargeMul = if (rockChargeTime > 0f) 0.55f else 1f
         val (newX, newY, newZ) = physics.updateWalk(
             dt,
             camera.playerX, camera.playerY, camera.playerZ,
             fX, fZ, rX, rZ,
-            touch.moveForward, touch.moveRight, touch.flyUp
+            touch.moveForward * chargeMul, touch.moveRight * chargeMul, touch.flyUp
         )
         camera.playerX = newX; camera.playerY = newY; camera.playerZ = newZ
     }

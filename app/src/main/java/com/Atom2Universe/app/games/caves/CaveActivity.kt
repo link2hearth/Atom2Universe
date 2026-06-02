@@ -267,12 +267,9 @@ class CaveActivity : ThemedActivity() {
         renderer.hotbarCallback    = { slots, selected -> uiHandler.post { hud.updateHotbarUI(slots, selected) } }
 
         hud.buildHealthBar(root)
-        hud.buildXpBar(root)
 
-        renderer.playerHpCallback = { hp, maxHp    -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
-        renderer.shieldCallback   = { cur, max     -> uiHandler.post { hud.updateShieldBar(cur, max) } }
-        renderer.xpCallback       = { xp, xpMax, l -> uiHandler.post { hud.updateXpBar(xp, xpMax, l) } }
-        renderer.levelUpCallback  = { options       -> uiHandler.post { hud.showLevelUpDialog(options, root) } }
+        renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
+        renderer.shieldCallback   = { cur, max   -> uiHandler.post { hud.updateShieldBar(cur, max) } }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)
@@ -346,12 +343,9 @@ class CaveActivity : ThemedActivity() {
             playerHp            = renderer.playerNode.hp,
             playerLevel         = stats.level,
             playerXp            = stats.xp,
-            playerDamage        = stats.damage,
-            playerFireRate      = stats.fireRate,
             playerMaxHp         = stats.maxHp,
             playerShield        = stats.shield,
             playerShieldCurrent = renderer.playerNode.shield,
-            playerWeapons       = stats.weapons.map { "${it.color.name}_${it.variant.name}" },
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList()
         )
     }
@@ -519,7 +513,6 @@ class CaveActivity : ThemedActivity() {
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.actionMasked == MotionEvent.ACTION_DOWN) setHudButtonsVisible(true)
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) return super.dispatchTouchEvent(ev)
-        if (hud.levelUpOverlay != null) return super.dispatchTouchEvent(ev)
         val action = ev.actionMasked; val idx = ev.actionIndex; val pid = ev.getPointerId(idx)
         when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
@@ -527,14 +520,14 @@ class CaveActivity : ThemedActivity() {
                 fun hit(v: View?) = v != null && v.visibility == View.VISIBLE && v.isHitOnScreen(x, y)
                 if (ptrUp    == -1 && hit(vBtnUp))    { ptrUp    = pid; touch.flyUp       = true }
                 if (ptrDown  == -1 && hit(vBtnDown))  { ptrDown  = pid; touch.flyDown     = true }
-                if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true }
+                if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true; touch.rtChargeRaw = 1f }
                 if (ptrPlace == -1 && hit(vBtnPlace)) { ptrPlace = pid; touch.placeRequested = true }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_CANCEL -> {
                 val cancel = action == MotionEvent.ACTION_CANCEL
                 if (pid == ptrUp    || cancel) { ptrUp    = -1; touch.flyUp       = false }
                 if (pid == ptrDown  || cancel) { ptrDown  = -1; touch.flyDown     = false }
-                if (pid == ptrLaser || cancel) { ptrLaser = -1; touch.laserActive = false }
+                if (pid == ptrLaser || cancel) { ptrLaser = -1; touch.laserActive = false; touch.rtChargeRaw = 0f }
                 if (pid == ptrPlace || cancel) { ptrPlace = -1 }
             }
         }

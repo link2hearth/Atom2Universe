@@ -19,6 +19,9 @@ class TouchController {
     // Laser / minage (maintenu enfoncé pour miner)
     @Volatile var laserActive = false
 
+    // Valeur analogique de la gâchette droite (0..1) — utilisée pour la charge du lancer de cailloux
+    @Volatile var rtChargeRaw = 0f
+
     // Pose de bloc (1 bloc par appui, consommé par le renderer)
     @Volatile var placeRequested = false
 

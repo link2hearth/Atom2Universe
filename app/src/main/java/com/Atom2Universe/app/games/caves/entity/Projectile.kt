@@ -5,7 +5,9 @@ internal class Projectile(
     val dirX: Double, val dirY: Double, val dirZ: Double,
     val speed: Float,
     val damage: Int,
-    val weapon: WeaponDef
+    val weapon: WeaponDef,
+    val isRock: Boolean = false
 ) {
     var travelDist = 0.0
+    var velY: Double = dirY * speed.toDouble()
 }

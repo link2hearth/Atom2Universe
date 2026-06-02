@@ -12,8 +12,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.games.caves.entity.UpgradeOption
-import com.Atom2Universe.app.games.caves.entity.UpgradeType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,13 +38,6 @@ internal class CaveHud(private val activity: CaveActivity) {
     var shieldBarFg: View? = null
     var shieldContainer: View? = null
 
-    // ── XP ────────────────────────────────────────────────────────────────────
-    var xpBarFg: View? = null
-    var xpBarMaxWidth = 0
-    var xpLevelTv: TextView? = null
-
-    // ── Level-up overlay ──────────────────────────────────────────────────────
-    var levelUpOverlay: FrameLayout? = null
 
     // ── Hotbar ────────────────────────────────────────────────────────────────
 
@@ -254,166 +245,6 @@ internal class CaveHud(private val activity: CaveActivity) {
         shieldBarFg?.requestLayout()
     }
 
-    // ── Barre XP ──────────────────────────────────────────────────────────────
-
-    fun buildXpBar(root: FrameLayout) {
-        val barH = (6 * dp).toInt()
-        val barFrame = FrameLayout(activity).apply {
-            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, barH)
-                .also { it.gravity = Gravity.TOP }
-        }
-        val barBg = View(activity).apply {
-            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-            background = GradientDrawable().apply { setColor(0x88000022.toInt()) }
-        }
-        val barFg = View(activity).apply {
-            layoutParams = FrameLayout.LayoutParams(0, FrameLayout.LayoutParams.MATCH_PARENT)
-            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xFF00FFEE.toInt(), 0xFF0055FF.toInt()))
-        }
-        barFrame.addView(barBg); barFrame.addView(barFg)
-        root.addView(barFrame)
-        xpBarFg = barFg
-
-        val lvTv = TextView(activity).apply {
-            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, barH)
-                .also { it.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL }
-            setTextColor(Color.WHITE); textSize = 7f; gravity = Gravity.CENTER
-            text = activity.getString(R.string.cave_player_level, 1)
-        }
-        root.addView(lvTv)
-        xpLevelTv = lvTv
-        barFrame.post { xpBarMaxWidth = barFrame.width }
-    }
-
-    fun updateXpBar(xp: Int, xpMax: Int, level: Int) {
-        if (xpBarMaxWidth == 0) xpBarFg?.parent?.let { (it as? View)?.post { xpBarMaxWidth = (it as View).width } }
-        val frac = xp.toFloat() / xpMax.coerceAtLeast(1)
-        xpBarFg?.layoutParams = (xpBarFg?.layoutParams as? FrameLayout.LayoutParams)
-            ?.also { it.width = (xpBarMaxWidth * frac).toInt().coerceAtLeast(0) }
-        xpBarFg?.requestLayout()
-        xpLevelTv?.text = activity.getString(R.string.cave_player_level, level)
-    }
-
-    // ── Dialog Level Up ───────────────────────────────────────────────────────
-
-    fun showLevelUpDialog(options: List<UpgradeOption>, root: FrameLayout) {
-        levelUpOverlay?.let { root.removeView(it) }
-        val overlay = FrameLayout(activity).apply {
-            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-            setBackgroundColor(0xBB000011.toInt())
-        }
-        levelUpOverlay = overlay
-        val panel = LinearLayout(activity).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.gravity = Gravity.CENTER }
-            setPadding((16 * dp).toInt(), (20 * dp).toInt(), (16 * dp).toInt(), (20 * dp).toInt())
-        }
-        panel.addView(TextView(activity).apply {
-            text = activity.getString(R.string.cave_levelup_title)
-            textSize = 22f; setTextColor(0xFFFFDD44.toInt()); gravity = Gravity.CENTER
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        })
-        panel.addView(TextView(activity).apply {
-            text = activity.getString(R.string.cave_levelup_subtitle)
-            textSize = 13f; setTextColor(0xAAFFFFFF.toInt()); gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.bottomMargin = (16 * dp).toInt() }
-        })
-        val cardsRow = LinearLayout(activity).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
-        for (opt in options) {
-            cardsRow.addView(buildUpgradeCard(opt) {
-                activity.renderer.applyUpgrade(opt)
-                root.removeView(overlay)
-                levelUpOverlay = null
-            })
-        }
-        panel.addView(cardsRow)
-        overlay.addView(panel)
-        root.addView(overlay)
-    }
-
-    private fun buildUpgradeCard(opt: UpgradeOption, onClick: () -> Unit): View {
-        val card = LinearLayout(activity).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-                .also { it.setMargins((6 * dp).toInt(), 0, (6 * dp).toInt(), 0) }
-            setPadding((10 * dp).toInt(), (14 * dp).toInt(), (10 * dp).toInt(), (14 * dp).toInt())
-            background = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE
-                setColor(if (opt.isRare) 0xCC1A0033.toInt() else 0xCC001122.toInt())
-                cornerRadius = 10 * dp
-                setStroke((2 * dp).toInt(), if (opt.isRare) 0xFFCC44FF.toInt() else 0xFF0088FF.toInt())
-            }
-            setOnClickListener { onClick() }
-        }
-        card.addView(TextView(activity).apply {
-            text = upgradeIcon(opt.type); textSize = 28f; gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.bottomMargin = (6 * dp).toInt() }
-        })
-        if (opt.isRare) {
-            card.addView(TextView(activity).apply {
-                text = activity.getString(R.string.cave_levelup_rare)
-                textSize = 9f; setTextColor(0xFFCC44FF.toInt()); gravity = Gravity.CENTER
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    .also { it.bottomMargin = (4 * dp).toInt() }
-            })
-        }
-        card.addView(TextView(activity).apply {
-            text = upgradeName(opt.type); textSize = 12f; setTextColor(Color.WHITE); gravity = Gravity.CENTER
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.bottomMargin = (4 * dp).toInt() }
-        })
-        card.addView(TextView(activity).apply {
-            text = upgradeDesc(opt.type); textSize = 10f; setTextColor(0xAAFFFFFF.toInt()); gravity = Gravity.CENTER
-        })
-        return card
-    }
-
-    private fun upgradeIcon(type: UpgradeType): String = when (type) {
-        UpgradeType.DAMAGE               -> "⚔"
-        UpgradeType.FIRE_RATE            -> "⚡"
-        UpgradeType.MAX_HP               -> "❤"
-        UpgradeType.SHIELD               -> "🛡"
-        UpgradeType.WEAPON_WHITE_SWIRL   -> "○"
-        UpgradeType.WEAPON_BLUE_SQUARE   -> "■"
-        UpgradeType.WEAPON_BLUE_SWIRL    -> "◎"
-        UpgradeType.WEAPON_ORANGE_SQUARE -> "◆"
-        UpgradeType.WEAPON_ORANGE_SWIRL  -> "✦"
-        UpgradeType.WEAPON_RED_SQUARE    -> "▲"
-        UpgradeType.WEAPON_RED_SWIRL     -> "✿"
-    }
-
-    private fun upgradeName(type: UpgradeType): String = activity.getString(when (type) {
-        UpgradeType.DAMAGE                               -> R.string.cave_upgrade_damage_name
-        UpgradeType.FIRE_RATE                            -> R.string.cave_upgrade_fire_rate_name
-        UpgradeType.MAX_HP                               -> R.string.cave_upgrade_max_hp_name
-        UpgradeType.SHIELD                               -> R.string.cave_upgrade_shield_name
-        UpgradeType.WEAPON_WHITE_SWIRL,
-        UpgradeType.WEAPON_BLUE_SQUARE, UpgradeType.WEAPON_BLUE_SWIRL,
-        UpgradeType.WEAPON_ORANGE_SQUARE, UpgradeType.WEAPON_ORANGE_SWIRL,
-        UpgradeType.WEAPON_RED_SQUARE, UpgradeType.WEAPON_RED_SWIRL -> R.string.cave_upgrade_weapon_name
-    })
-
-    private fun upgradeDesc(type: UpgradeType): String = activity.getString(when (type) {
-        UpgradeType.DAMAGE                               -> R.string.cave_upgrade_damage_desc
-        UpgradeType.FIRE_RATE                            -> R.string.cave_upgrade_fire_rate_desc
-        UpgradeType.MAX_HP                               -> R.string.cave_upgrade_max_hp_desc
-        UpgradeType.SHIELD                               -> R.string.cave_upgrade_shield_desc
-        UpgradeType.WEAPON_WHITE_SWIRL,
-        UpgradeType.WEAPON_BLUE_SQUARE, UpgradeType.WEAPON_BLUE_SWIRL,
-        UpgradeType.WEAPON_ORANGE_SQUARE, UpgradeType.WEAPON_ORANGE_SWIRL,
-        UpgradeType.WEAPON_RED_SQUARE, UpgradeType.WEAPON_RED_SWIRL -> R.string.cave_upgrade_weapon_desc
-    })
 
     // ── Panneau capture de structure (mode créatif uniquement) ────────────────
 

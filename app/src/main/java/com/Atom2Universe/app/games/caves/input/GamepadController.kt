@@ -29,11 +29,12 @@ class GamepadController(private val touch: TouchController) {
         touch.gamepadRightX =  axis(event, MotionEvent.AXIS_Z)
         touch.gamepadRightY =  axis(event, MotionEvent.AXIS_RZ)
 
-        // RT : laser/miner
+        // RT : laser/miner ou charge lancer de cailloux (selon slot sélectionné)
         val rt = maxOf(
             event.getAxisValue(MotionEvent.AXIS_RTRIGGER),
             event.getAxisValue(MotionEvent.AXIS_GAS)
         )
+        touch.rtChargeRaw = rt
         touch.laserActive = rt > TRIGGER_THRESHOLD
 
         // LT : poser un bloc (front montant uniquement)
