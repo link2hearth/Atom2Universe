@@ -609,8 +609,10 @@ internal class CaveRenderer(
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        GLES30.glViewport(0, 0, width, height)
-        camera.setProjection(70f, width.toFloat() / height.coerceAtLeast(1))
+        val hotbarPx = (60f * context.resources.displayMetrics.density).toInt()
+        val gameH = (height - hotbarPx).coerceAtLeast(1)
+        GLES30.glViewport(0, hotbarPx, width, gameH)
+        camera.setProjection(70f, width.toFloat() / gameH)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -1405,9 +1407,13 @@ internal class CaveRenderer(
     }
 
     private fun buildLaserVerts(target: RayHit): FloatArray {
-        val ex = (target.bx.toDouble() + 0.5 + target.fnx * 0.5 - camera.x).toFloat()
-        val ey = (target.by.toDouble() + 0.5 + target.fny * 0.5 - camera.y).toFloat()
-        val ez = (target.bz.toDouble() + 0.5 + target.fnz * 0.5 - camera.z).toFloat()
+        val dx = target.bx.toDouble() + 0.5 - camera.x
+        val dy = target.by.toDouble() + 0.5 - camera.y
+        val dz = target.bz.toDouble() + 0.5 - camera.z
+        val dist = (dx * camera.aimX + dy * camera.aimY + dz * camera.aimZ).toFloat()
+        val ex = camera.aimX * dist
+        val ey = camera.aimY * dist
+        val ez = camera.aimZ * dist
 
         // En TPS : laser depuis le point d'orbite (aligné avec la croix).
         // En FPS : depuis la "main droite" du joueur comme avant.
