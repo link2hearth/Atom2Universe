@@ -1,0 +1,25 @@
+{
+  "id": "granite_rouge",
+  "noise_offsets": [-800.0, 1200.0, -600.0],
+  "base_block": "brick_red",
+  "secondary_block": "granite",
+  "secondary_noise_threshold": 0.30,
+  "room_chance": 0.002,
+  "worm_zero_chance": 0.65,
+  "pockets_enabled": true,
+  "pocket_blocks": [
+    {"block": "gravel", "noise_min": -99.0}
+  ],
+  "floor_blocks": [
+    {"block": "redsand", "noise_min": -99.0}
+  ],
+  "floor_skip_beyond_dist": 9999,
+  "decoration_density": 0.0,
+  "decoration_blocks": [],
+  "trees_enabled": false,
+  "ores": [
+    {"block": "gold",    "repeat_min": 2, "repeat_max": 4, "min_count": 4, "max_count": 7},
+    {"block": "ruby",    "repeat_min": 2, "repeat_max": 3, "min_count": 3, "max_count": 6},
+    {"block": "emerald", "repeat_min": 0, "repeat_max": 1, "min_count": 2, "max_count": 4, "chance": 0.40}
+  ]
+}

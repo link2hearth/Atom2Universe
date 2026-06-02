@@ -1,0 +1,23 @@
+{
+  "id": "ice_cave",
+  "noise_offsets": [-1300.0, 400.0, -1000.0],
+  "base_block": "ice",
+  "secondary_block": "stone",
+  "secondary_noise_threshold": -0.08,
+  "room_chance": 0.004,
+  "worm_zero_chance": 0.45,
+  "pockets_enabled": false,
+  "pocket_blocks": [],
+  "floor_blocks": [
+    {"block": "snow", "noise_min": -99.0}
+  ],
+  "floor_skip_beyond_dist": 9999,
+  "decoration_density": 0.0,
+  "decoration_blocks": [],
+  "trees_enabled": false,
+  "ores": [
+    {"block": "silver",  "repeat_min": 2, "repeat_max": 3, "min_count": 3, "max_count": 6},
+    {"block": "crystal", "repeat_min": 2, "repeat_max": 3, "min_count": 3, "max_count": 5},
+    {"block": "gold",    "repeat_min": 0, "repeat_max": 1, "min_count": 2, "max_count": 4, "chance": 0.20}
+  ]
+}

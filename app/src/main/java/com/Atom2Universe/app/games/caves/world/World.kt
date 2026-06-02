@@ -269,6 +269,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         storage?.applyDiff(chunk)
     }
 
+    private val defaultCaveBiome: CaveBiomeDef by lazy {
+        BiomeRegistry.caveBiomes.first { it.id == "default" }
+    }
+
     private fun generateCave(chunk: Chunk) {
         val bb = BiomeMap.biomeBlendAt(chunk.cx, chunk.cy, chunk.cz, seed)
         val biome = bb.primary
@@ -343,9 +347,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             carveWormsFrom(chunk, chunk.cx,  0, chunk.cz, caveB)
         }
 
-        applyOreVeins(chunk, Biome.DEFAULT)
-        plantSurfaceTrees(chunk, sb)
-        plantBirchTrees(chunk, sb)
+        applyOreVeins(chunk, defaultCaveBiome)
+        plantSurfaceTreesByType(chunk, sb)
         plantSurfaceBushes(chunk, sb)
         applySurfaceDecorations(chunk, sb)
         applySurfaceVegetation(chunk, sb)
@@ -392,46 +395,30 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val islandSb = BiomeMap.surfaceBiomeAt(
             (chunk.worldX + CHUNK_SIZE / 2).toDouble(),
             (chunk.worldZ + CHUNK_SIZE / 2).toDouble(), seed)
-        plantSurfaceTrees(chunk, islandSb)
+        plantSurfaceTreesByType(chunk, islandSb)
     }
 
     // ── Roche de base ─────────────────────────────────────────────────────────
 
     private fun applyRockLayers(chunk: Chunk, bb: BiomeBlend) {
         val wx = chunk.worldX; val wy = chunk.worldY; val wz = chunk.worldZ
-        // Seuil de bruit : décalé en zone de transition pour lisser la frontière (±blend/2)
-        val blendOffset = bb.blend * 0.09f  // décale progressivement le seuil → "marbling"
+        val blendOffset = bb.blend * 0.09f
         for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             val x = (wx + lx).toDouble(); val y = (wy + ly).toDouble(); val z = (wz + lz).toDouble()
             val nZone = SimplexNoise.noise(x * 0.012, y * 0.012, z * 0.012).toFloat()
-            // En zone de transition : on mélange primary et secondary via le même seuil décalé
-            val blockPrimary: Short = rockBlock(bb.primary,   nZone)
-            val blockSecondary: Short = rockBlock(bb.secondary, nZone + blendOffset)
-            // On choisit secondary si nZone < (blend - 0.5) pour créer des veines progressives
+            val blockPrimary: Short = if (nZone > bb.primary.secondaryNoiseThreshold) bb.primary.secondaryBlock else bb.primary.baseBlock
+            val blockSecondary: Short = if (nZone + blendOffset > bb.secondary.secondaryNoiseThreshold) bb.secondary.secondaryBlock else bb.secondary.baseBlock
             val block = if (bb.blend > 0.01f && nZone < bb.blend - 0.5f) blockSecondary else blockPrimary
             chunk.setBlock(lx, ly, lz, block)
         }
     }
 
-    private fun rockBlock(biome: Biome, n: Float): Short = when (biome) {
-        Biome.DEFAULT       -> if (n > 0.20f) GRANITE   else STONE
-        Biome.LIMESTONE     -> if (n > 0.40f) QUARTZ    else STONE
-        Biome.GRANITE_ROUGE -> if (n > 0.30f) BRICK_RED else GRANITE
-        Biome.MUSHROOM_CAVE -> STONE
-        Biome.ICE_CAVE      -> if (n > -0.08f) ICE      else STONE
-    }
-
     // ── Grandes salles ────────────────────────────────────────────────────────
 
-    private fun carveRoomFrom(target: Chunk, cx: Int, cy: Int, cz: Int, biome: Biome) {
+    private fun carveRoomFrom(target: Chunk, cx: Int, cy: Int, cz: Int, biome: CaveBiomeDef) {
         val rng = chunkRng(cx, cy, cz)
         val forced = (cx == 0 && cy == 0 && cz == 0)
-        val roomChance = when (biome) {
-            Biome.LIMESTONE      -> 0.018f   // cavernes plus ouvertes
-            Biome.GRANITE_ROUGE  -> 0.002f   // roche dense, peu de salles
-            Biome.ICE_CAVE       -> 0.004f   // assez parsemé
-            else                 -> 0.006f
-        }
+        val roomChance = biome.roomChance
         if (!forced && rng.nextFloat() > roomChance) return
 
         val rx = (cx * CHUNK_SIZE + CHUNK_SIZE / 2).toFloat()
@@ -451,13 +438,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Worms ─────────────────────────────────────────────────────────────────
 
-    private fun carveWormsFrom(target: Chunk, cx: Int, cy: Int, cz: Int, biome: Biome) {
+    private fun carveWormsFrom(target: Chunk, cx: Int, cy: Int, cz: Int, biome: CaveBiomeDef) {
         val rng = chunkRng(cx, cy, cz)
-        val zeroChance = when (biome) {
-            Biome.LIMESTONE     -> 0.30f  // plus de tunnels
-            Biome.GRANITE_ROUGE -> 0.65f  // moins de tunnels
-            else                -> 0.45f
-        }
+        val zeroChance = biome.wormZeroChance
         val wormCount = when {
             rng.nextFloat() < zeroChance -> 0
             rng.nextFloat() < 0.80f      -> 1
@@ -513,8 +496,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Poches de matériaux ───────────────────────────────────────────────────
 
-    private fun applyPockets(chunk: Chunk, biome: Biome) {
-        if (biome == Biome.ICE_CAVE) return  // glace et pierre : pas de poches de terre/sable
+    private fun applyPockets(chunk: Chunk, biome: CaveBiomeDef) {
+        if (!biome.pocketsEnabled) return
         val wx = chunk.worldX; val wy = chunk.worldY; val wz = chunk.worldZ
         for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             val b = chunk.blockAt(lx, ly, lz)
@@ -523,90 +506,33 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val x = (wx + lx).toDouble(); val y = (wy + ly).toDouble(); val z = (wz + lz).toDouble()
             val nPocket = SimplexNoise.noise(x * 0.065 + seed * 0.003, y * 0.065, z * 0.065)
             if (nPocket < 0.55) continue
-            val nType = SimplexNoise.noise(x * 0.022 + seed * 0.005, y * 0.022, z * 0.022)
-            val dist = chunkDist(chunk)
-            val pocket: Short = when (biome) {
-                Biome.MUSHROOM_CAVE -> if (nType > 0.0) DIRT else GRAVEL
-                Biome.GRANITE_ROUGE -> GRAVEL
-                else -> when {
-                    nType > 0.25  -> DIRT
-                    nType > -0.20 -> GRAVEL
-                    else          -> sandForDist(dist, (wx + lx).toDouble(), (wz + lz).toDouble())
-                }
-            }
+            val nType = SimplexNoise.noise(x * 0.022 + seed * 0.005, y * 0.022, z * 0.022).toFloat()
+            val pocketBlocks = biome.pocketBlocks
+            if (pocketBlocks.isEmpty()) continue
+            val pocket = pocketBlocks.firstOrNull { nType >= it.noiseMin }?.block
+                ?: pocketBlocks.last().block
             chunk.setBlock(lx, ly, lz, pocket)
         }
     }
 
     // ── Minerais ─────────────────────────────────────────────────────────────
 
-    private fun applyOreVeins(chunk: Chunk, biome: Biome) {
+    private fun applyOreVeins(chunk: Chunk, biome: CaveBiomeDef) {
         val rng = chunkRng(chunk.cx * 11 + 7, chunk.cy * 13 + 3, chunk.cz * 17 + 5)
+        val dist = chunkDist(chunk)
 
-        if (biome != Biome.DEFAULT) {
-            when (biome) {
-                Biome.LIMESTONE -> {
-                    repeat(2 + rng.nextInt(3)) { placeOreBlob(chunk, rng, COAL,    3, 6) }
-                    repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, CRYSTAL, 2, 5) }
-                    if (rng.nextFloat() < 0.35f) placeOreBlob(chunk, rng, QUARTZ,  3, 6)
-                }
-                Biome.GRANITE_ROUGE -> {
-                    repeat(2 + rng.nextInt(3)) { placeOreBlob(chunk, rng, GOLD,    4, 7) }
-                    repeat(2 + rng.nextInt(2)) { placeOreBlob(chunk, rng, RUBY,    3, 6) }
-                    if (rng.nextFloat() < 0.40f) placeOreBlob(chunk, rng, EMERALD, 2, 4)
-                }
-                Biome.MUSHROOM_CAVE -> {
-                    repeat(2 + rng.nextInt(3)) { placeOreBlob(chunk, rng, EMERALD, 3, 6) }
-                    repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, IRON,    3, 5) }
-                    if (rng.nextFloat() < 0.30f) placeOreBlob(chunk, rng, COAL,    3, 5)
-                }
-                Biome.ICE_CAVE -> {
-                    repeat(2 + rng.nextInt(2)) { placeOreBlob(chunk, rng, SILVER,  3, 6) }
-                    repeat(2 + rng.nextInt(2)) { placeOreBlob(chunk, rng, CRYSTAL, 3, 5) }
-                    if (rng.nextFloat() < 0.20f) placeOreBlob(chunk, rng, GOLD,    2, 4)
-                }
-                else -> {}
+        val oreList: List<OreEntry> = when {
+            biome.oreByDistance != null -> {
+                biome.oreByDistance.firstOrNull { dist < it.distMax }?.ores
+                    ?: biome.oreByDistance.last().ores
             }
-            return
+            else -> biome.ores
         }
 
-        // DEFAULT : progression basée sur la distance au spawn
-        val dist = chunkDist(chunk)
-        when {
-            dist < 50f  -> {
-                repeat(2 + rng.nextInt(2)) { placeOreBlob(chunk, rng, COAL,   4, 7) }
-                if (rng.nextFloat() < 0.5f) placeOreBlob(chunk, rng, COPPER,  3, 5)
-            }
-            dist < 100f -> {
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, COAL,   4, 6) }
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, IRON,   4, 6) }
-                if (rng.nextFloat() < 0.4f) placeOreBlob(chunk, rng, COPPER,  3, 5)
-            }
-            dist < 200f -> {
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, IRON,   4, 6) }
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, SILVER, 3, 5) }
-                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, COAL,   3, 5)
-            }
-            dist < 300f -> {
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, SILVER, 3, 5) }
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, GOLD,   3, 5) }
-                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, IRON,   3, 5)
-            }
-            dist < 450f -> {
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, GOLD,   3, 5) }
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, RUBY,   2, 4) }
-                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, SILVER, 3, 4)
-            }
-            dist < 650f -> {
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, RUBY,    2, 4) }
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, EMERALD, 2, 4) }
-                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, GOLD,   2, 4)
-            }
-            else -> {
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, EMERALD, 2, 4) }
-                repeat(1 + rng.nextInt(2)) { placeOreBlob(chunk, rng, CRYSTAL, 2, 3) }
-                if (rng.nextFloat() < 0.3f) placeOreBlob(chunk, rng, RUBY,   2, 3)
-            }
+        for (entry in oreList) {
+            if (entry.chance < 1.0f && rng.nextFloat() >= entry.chance) continue
+            val repeats = entry.repeatMin + if (entry.repeatMax > entry.repeatMin) rng.nextInt(entry.repeatMax - entry.repeatMin + 1) else 0
+            repeat(repeats) { placeOreBlob(chunk, rng, entry.block, entry.minCount, entry.maxCount) }
         }
     }
 
@@ -630,51 +556,30 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private fun applyFloorSurface(chunk: Chunk, bb: BiomeBlend) {
         val biome = bb.primary
         val dist = chunkDist(chunk)
-        if (biome == Biome.DEFAULT && dist > 50f) return
+        if (dist > biome.floorSkipBeyondDist) return
+        val floorBlocks = biome.floorBlocks
+        if (floorBlocks.isEmpty()) return
 
         val wx = chunk.worldX.toDouble(); val wz = chunk.worldZ.toDouble()
-
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) {
             val b = chunk.blockAt(lx, ly, lz)
             if (b == AIR || b == LAVA) continue
             if (neighborBlock(chunk, lx, ly + 1, lz) != AIR) continue
             if (neighborBlock(chunk, lx, ly + 2, lz) != AIR) continue
-
             val x = wx + lx; val z = wz + lz
-            // En zone de transition (blend élevé), intercaler aléatoirement le sol secondaire
             val useSecondary = bb.blend > 0.05f &&
                 SimplexNoise.noise(x * 0.07 + 555.0, 0.0, z * 0.07) < bb.blend.toDouble() - 0.5
-            val activeBiome = if (useSecondary) bb.secondary else biome
-
-            val terrain: Short = when (activeBiome) {
-                Biome.DEFAULT -> {
-                    val nType = SimplexNoise.noise(x * 0.09, 0.0, z * 0.09)
-                    when {
-                        nType > 0.20  -> GRASS
-                        nType > -0.10 -> DIRT
-                        nType > -0.40 -> GRAVEL
-                        else          -> sandForDist(dist, x, z)
-                    }
-                }
-                Biome.LIMESTONE -> {
-                    val nType = SimplexNoise.noise(x * 0.12 + seed * 0.001, 0.0, z * 0.12)
-                    if (nType > 0.10) GRAVEL else STONE
-                }
-                Biome.GRANITE_ROUGE -> REDSAND
-                Biome.MUSHROOM_CAVE -> {
-                    val nType = SimplexNoise.noise(x * 0.10 + seed * 0.002, 0.0, z * 0.10)
-                    if (nType > 0.0) DIRT else GRAVEL
-                }
-                Biome.ICE_CAVE -> SNOW
-            }
+            val activeFloor = if (useSecondary && bb.secondary.floorBlocks.isNotEmpty()) bb.secondary.floorBlocks else floorBlocks
+            val nType = SimplexNoise.noise(x * 0.09 + seed * 0.002, 0.0, z * 0.09).toFloat()
+            val terrain = activeFloor.firstOrNull { nType >= it.noiseMin }?.block ?: activeFloor.last().block
             chunk.setBlock(lx, ly, lz, terrain)
         }
     }
 
     // ── Arbres ────────────────────────────────────────────────────────────────
 
-    private fun plantTrees(chunk: Chunk, biome: Biome) {
-        if (biome != Biome.DEFAULT) return
+    private fun plantTrees(chunk: Chunk, biome: CaveBiomeDef) {
+        if (!biome.treesEnabled) return
         val rng = chunkRng(chunk.cx * 7 + 3, chunk.cy, chunk.cz * 13 + 5)
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
             if (rng.nextFloat() > 0.04f) continue
@@ -705,11 +610,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     private fun applyDecorations(chunk: Chunk, bb: BiomeBlend) {
         val biome = bb.primary
-        if (biome != Biome.LIMESTONE && biome != Biome.MUSHROOM_CAVE) return
+        if (biome.decorationBlocks.isEmpty()) return
         val rng = chunkRng(chunk.cx * 19 + 11, chunk.cy * 7 + 3, chunk.cz * 23 + 17)
-        // En zone de transition, réduire la densité progressivement (fondu sortant)
-        val baseDensity = if (biome == Biome.LIMESTONE) 0.12f else 0.16f
-        val density = baseDensity * (1f - bb.blend * 0.75f)
+        val density = biome.decorationDensity * (1f - bb.blend * 0.75f)
+        if (density <= 0f) return
+        val blocks = biome.decorationBlocks
 
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             if (rng.nextFloat() > density) continue
@@ -718,15 +623,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 if (b == AIR || isDecoration(b)) continue
                 if (ly + 1 >= CHUNK_SIZE) break
                 if (chunk.blockAt(lx, ly + 1, lz) != AIR) break
-                val decor: Short = when (biome) {
-                    Biome.LIMESTONE -> if (rng.nextFloat() > 0.45f) ROCK else ROCK_MOSS
-                    Biome.MUSHROOM_CAVE -> when {
-                        rng.nextFloat() < 0.40f -> MUSHROOM_RED
-                        rng.nextFloat() < 0.55f -> MUSHROOM_BROWN
-                        else                     -> MUSHROOM_TAN
-                    }
-                    else -> break
-                }
+                val decor = blocks[rng.nextInt(blocks.size)]
                 chunk.setBlock(lx, ly + 1, lz, decor)
                 break
             }
@@ -764,49 +661,31 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                    .coerceIn(25.0, 148.0)  // plancher océan ~25, plafond montagne 148
     }
 
-    private fun surfaceTopBlock(sb: SurfaceBiome, wx: Double, wz: Double): Short = when (sb) {
-        SurfaceBiome.DESERT      -> if (SimplexNoise.noise(wx * 0.04 + 400.0, wz * 0.04) > 0.2) REDSAND else SAND
-        SurfaceBiome.ROCKY       -> if (SimplexNoise.noise(wx * 0.07 + 500.0, wz * 0.07) > 0.0) GRANITE else STONE
-        SurfaceBiome.PLAINS      -> if (SimplexNoise.noise(wx * 0.035 + 600.0, wz * 0.035) > 0.50) SAND else GRASS
-        SurfaceBiome.FOREST      -> GRASS
-        SurfaceBiome.BIRCH_FOREST -> GRASS
-        SurfaceBiome.RED_DESERT  -> {
-            val n = SimplexNoise.noise(wx * 0.04 + 800.0, wz * 0.04)
-            when {
-                n > 0.45 -> SAND        // petits patches de sable normal
-                n > 0.30 -> GRAVEL_DIRT // petits patches de terre graveleuse
-                else     -> REDSAND     // sable rouge (base)
-            }
-        }
+    private fun surfaceTopBlock(sb: SurfaceBiomeDef, wx: Double, wz: Double): Short {
+        val n = SimplexNoise.noise(wx * sb.surfaceVarietyScale + sb.surfaceVarietyOffset, wz * sb.surfaceVarietyScale).toFloat()
+        return sb.surfaceBlocks.firstOrNull { n >= it.noiseMin }?.block ?: sb.surfaceBlocks.last().block
     }
 
-    private fun surfaceDirtBlock(sb: SurfaceBiome): Short = when (sb) {
-        SurfaceBiome.DESERT     -> SAND
-        SurfaceBiome.ROCKY      -> STONE
-        SurfaceBiome.RED_DESERT -> REDSAND   // sous-couche rouge
-        else                    -> DIRT
-    }
-
-    private fun surfaceStoneBlock(sb: SurfaceBiome): Short = when (sb) {
-        SurfaceBiome.ROCKY      -> GRANITE
-        SurfaceBiome.RED_DESERT -> REDSTONE  // roche de base rouge
-        else                    -> STONE
-    }
+    private fun surfaceDirtBlock(sb: SurfaceBiomeDef)  = sb.dirtBlock
+    private fun surfaceStoneBlock(sb: SurfaceBiomeDef) = sb.stoneBlock
 
     // ── Surface : arbres groupés en forêts ────────────────────────────────────
 
-    private fun plantSurfaceTrees(chunk: Chunk, sb: SurfaceBiome) {
-        if (sb == SurfaceBiome.DESERT || sb == SurfaceBiome.ROCKY ||
-            sb == SurfaceBiome.RED_DESERT || sb == SurfaceBiome.BIRCH_FOREST) return
+    private fun plantSurfaceTreesByType(chunk: Chunk, sb: SurfaceBiomeDef) {
+        when (sb.treeType) {
+            "oak"   -> plantOakTrees(chunk, sb)
+            "birch" -> plantBirchTrees(chunk, sb)
+        }
+    }
+
+    private fun plantOakTrees(chunk: Chunk, sb: SurfaceBiomeDef) {
+        if (sb.treeDensityBase <= 0f && sb.treeDensityNoiseScale <= 0f) return
 
         val rng = chunkRng(chunk.cx * 7 + 3, chunk.cy + 100, chunk.cz * 13 + 5)
         val clusterN = SimplexNoise.noise(
             (chunk.worldX + 8).toDouble() * 0.007 + 900.0,
             (chunk.worldZ + 8).toDouble() * 0.007)
-        val density = when (sb) {
-            SurfaceBiome.FOREST -> (0.28f + clusterN.toFloat() * 0.22f).coerceIn(0.02f, 0.55f)
-            else                -> (0.04f + clusterN.toFloat() * 0.04f).coerceIn(0.00f, 0.12f)
-        }
+        val density = (sb.treeDensityBase + clusterN.toFloat() * sb.treeDensityNoiseScale).coerceIn(0.00f, 0.55f)
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
             if (rng.nextFloat() > density) continue
@@ -833,44 +712,32 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Surface : décorations ─────────────────────────────────────────────────
 
-    private fun applySurfaceDecorations(chunk: Chunk, sb: SurfaceBiome) {
-        val density = when (sb) {
-            SurfaceBiome.DESERT      -> 0.07f
-            SurfaceBiome.ROCKY       -> 0.05f
-            SurfaceBiome.RED_DESERT  -> 0.04f
-            SurfaceBiome.BIRCH_FOREST -> 0.02f
-            else                     -> 0.01f
-        }
+    private fun applySurfaceDecorations(chunk: Chunk, sb: SurfaceBiomeDef) {
+        if (sb.decorationBlocks.isEmpty()) return
         val rng = chunkRng(chunk.cx * 19 + 11, chunk.cy * 7 + 3, chunk.cz * 23 + 17)
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
-            if (rng.nextFloat() > density) continue
+            if (rng.nextFloat() > sb.decorationDensity) continue
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
                 if (b == AIR || isDecoration(b) || isWater(b)) continue
                 if (ly + 1 >= CHUNK_SIZE || chunk.blockAt(lx, ly + 1, lz) != AIR) break
-                val decor: Short = when (sb) {
-                    SurfaceBiome.ROCKY       -> ROCK
-                    SurfaceBiome.FOREST      -> ROCK_MOSS
-                    SurfaceBiome.RED_DESERT  -> ROCK
-                    SurfaceBiome.BIRCH_FOREST -> ROCK_MOSS
-                    else                     -> if (rng.nextFloat() > 0.5f) ROCK else ROCK_MOSS
-                }
-                chunk.setBlock(lx, ly + 1, lz, decor)
+                chunk.setBlock(lx, ly + 1, lz, sb.decorationBlocks[rng.nextInt(sb.decorationBlocks.size)])
                 break
             }
         }
     }
 
-    // ── Arbustes (feuilles orange transparentes) ─────────────────────────────
+    // ── Arbustes (feuilles transparentes) ────────────────────────────────────
 
-    // ── Bouleaux (BIRCH_FOREST) ───────────────────────────────────────────────
+    // ── Bouleaux ──────────────────────────────────────────────────────────────
 
-    private fun plantBirchTrees(chunk: Chunk, sb: SurfaceBiome) {
-        if (sb != SurfaceBiome.BIRCH_FOREST) return
+    private fun plantBirchTrees(chunk: Chunk, sb: SurfaceBiomeDef) {
+        if (sb.treeDensityBase <= 0f) return
         val rng = chunkRng(chunk.cx * 23 + 11, chunk.cy + 400, chunk.cz * 43 + 7)
+        val density = sb.treeDensityBase
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
-            if (rng.nextFloat() > 0.07f) continue
+            if (rng.nextFloat() > density) continue
 
             var grassY = -1
             for (ly in CHUNK_SIZE - 1 downTo 0)
@@ -918,27 +785,20 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
-    private fun plantSurfaceBushes(chunk: Chunk, sb: SurfaceBiome) {
-        val density = when (sb) {
-            SurfaceBiome.RED_DESERT   -> 0.04f
-            SurfaceBiome.BIRCH_FOREST -> 0.05f
-            else                      -> return
-        }
+    private fun plantSurfaceBushes(chunk: Chunk, sb: SurfaceBiomeDef) {
+        val bushBlock = sb.bushBlock ?: return
+        if (sb.bushDensity <= 0f) return
+        val density = sb.bushDensity
         val rng = chunkRng(chunk.cx * 41 + 17, chunk.cy + 300, chunk.cz * 53 + 29)
+        val surfaceBlockSet = sb.surfaceBlocks.map { it.block }.toSet()
 
         for (lz in 1 until CHUNK_SIZE - 1) for (lx in 1 until CHUNK_SIZE - 1) {
             if (rng.nextFloat() > density) continue
 
-            // Cherche la surface selon le biome
             var surfaceY = -1
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
-                val isGround = when (sb) {
-                    SurfaceBiome.RED_DESERT   -> b == REDSAND || b == SAND || b == GRAVEL_DIRT
-                    SurfaceBiome.BIRCH_FOREST -> b == GRASS
-                    else -> false
-                }
-                if (isGround) {
+                if (b in surfaceBlockSet) {
                     if (ly + 3 < CHUNK_SIZE && chunk.blockAt(lx, ly + 1, lz) == AIR) surfaceY = ly
                     break
                 }
@@ -951,28 +811,26 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     val bx = lx + dx; val bz = lz + dz
                     if (bx in 0 until CHUNK_SIZE && bz in 0 until CHUNK_SIZE &&
                         chunk.blockAt(bx, surfaceY + 1, bz) == AIR)
-                        chunk.setBlock(bx, surfaceY + 1, bz, LEAVES_ORANGE)
+                        chunk.setBlock(bx, surfaceY + 1, bz, bushBlock)
                 }
                 if (chunk.blockAt(lx, surfaceY + 2, lz) == AIR)
-                    chunk.setBlock(lx, surfaceY + 2, lz, LEAVES_ORANGE)
+                    chunk.setBlock(lx, surfaceY + 2, lz, bushBlock)
             } else {
-                chunk.setBlock(lx, surfaceY + 1, lz, LEAVES_ORANGE)
+                chunk.setBlock(lx, surfaceY + 1, lz, bushBlock)
             }
         }
     }
 
     // ── Végétation de surface (herbes folles + blé sauvage) ──────────────────
 
-    private fun applySurfaceVegetation(chunk: Chunk, sb: SurfaceBiome) {
-        if (sb == SurfaceBiome.ROCKY || sb == SurfaceBiome.RED_DESERT) return
+    private fun applySurfaceVegetation(chunk: Chunk, sb: SurfaceBiomeDef) {
         val rng  = chunkRng(chunk.cx * 31 + 7, chunk.cy + 200, chunk.cz * 37 + 13)
         val wx0  = chunk.worldX.toDouble()
         val wz0  = chunk.worldZ.toDouble()
 
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
-            if (lz + 1 >= CHUNK_SIZE) continue  // sécurité bord de chunk
+            if (lz + 1 >= CHUNK_SIZE) continue
 
-            // Premier bloc GRASS avec AIR libre au-dessus
             var grassY = -1
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
@@ -985,39 +843,23 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
             val wx = wx0 + lx; val wz = wz0 + lz
 
-            // ── Herbes folles ─────────────────────────────────────────────────
-            val clusterN = SimplexNoise.noise(wx * 0.09 + 300.0, wz * 0.09)
-            val grassChance = when (sb) {
-                SurfaceBiome.PLAINS       -> 0.22f
-                SurfaceBiome.FOREST       -> 0.28f
-                SurfaceBiome.BIRCH_FOREST -> 0.24f
-                SurfaceBiome.DESERT       -> 0.05f
-                else                      -> 0f
-            }
-            if (clusterN > 0.10 && rng.nextFloat() < grassChance) {
-                val decor: Short = when (sb) {
-                    SurfaceBiome.DESERT -> if (rng.nextFloat() > 0.5f) GRASS_TAN else GRASS_BROWN
-                    SurfaceBiome.FOREST -> when (rng.nextInt(4)) {
-                        0    -> GRASS_BROWN; 1 -> GRASS_TAN
-                        else -> if (rng.nextFloat() > 0.5f) GRASS_WILD1 else GRASS_WILD2
-                    }
-                    SurfaceBiome.BIRCH_FOREST -> when (rng.nextInt(3)) {
-                        0    -> GRASS_BROWN; 1 -> GRASS_TAN; else -> GRASS_WILD3
-                    }
-                    else -> when (rng.nextInt(6)) {
-                        0 -> GRASS_WILD1; 1 -> GRASS_WILD2; 2 -> GRASS_WILD3
-                        3 -> GRASS_WILD4; 4 -> GRASS_BROWN;  else -> GRASS_TAN
-                    }
+            // ── Végétation ─────────────────────────────────────────────────
+            if (sb.vegetationBlocks.isNotEmpty() && sb.vegetationDensity > 0f) {
+                val clusterN = SimplexNoise.noise(wx * 0.09 + 300.0, wz * 0.09)
+                if (clusterN > 0.10 && rng.nextFloat() < sb.vegetationDensity) {
+                    val totalWeight = sb.vegetationBlocks.sumOf { it.weight }
+                    val roll = rng.nextInt(totalWeight)
+                    var acc = 0; var decor = sb.vegetationBlocks[0].block
+                    for (ve in sb.vegetationBlocks) { acc += ve.weight; if (roll < acc) { decor = ve.block; break } }
+                    chunk.setBlock(lx, grassY + 1, lz, decor)
+                    continue
                 }
-                chunk.setBlock(lx, grassY + 1, lz, decor)
-                continue  // herbe posée → pas de blé au même endroit
             }
 
-            // ── Blé sauvage (PLAINS uniquement, en patches denses) ───────────
-            if (sb != SurfaceBiome.PLAINS) continue
+            // ── Blé sauvage ─────────────────────────────────────────────────
+            if (!sb.wheatEnabled) continue
             val wheatN = SimplexNoise.noise(wx * 0.045 + 500.0, wz * 0.045)
             if (wheatN < 0.40 || rng.nextFloat() > 0.55f) continue
-            // Stage basé sur un bruit lent → zones de maturité cohérentes
             val maturity = SimplexNoise.noise(wx * 0.018 + 700.0, wz * 0.018)
             val wheat: Short = when {
                 maturity >  0.30 -> WHEAT4
@@ -1070,7 +912,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // Espacement : cellule de 10 chunks (~160 blocs), 50 % de chance par cellule.
     private val STRUCT_SUPER = 10
 
-    private fun placeStructuresInChunk(chunk: Chunk, @Suppress("UNUSED_PARAMETER") sb: SurfaceBiome) {
+    private fun placeStructuresInChunk(chunk: Chunk, sb: SurfaceBiomeDef) {
         val scx = Math.floorDiv(chunk.cx, STRUCT_SUPER)
         val scz = Math.floorDiv(chunk.cz, STRUCT_SUPER)
         for (dscz in -1..1) for (dscx in -1..1) {
@@ -1087,10 +929,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val originWz = originCz * CHUNK_SIZE
             val originSb = BiomeMap.surfaceBiomeAt(
                 (originWx + 7).toDouble(), (originWz + 7).toDouble(), seed)
-            val biomeStructDef = when (originSb) {
-                SurfaceBiome.PLAINS, SurfaceBiome.FOREST,
-                SurfaceBiome.BIRCH_FOREST                                        -> StructureData.HOUSE_WOOD
-                SurfaceBiome.ROCKY, SurfaceBiome.DESERT, SurfaceBiome.RED_DESERT -> StructureData.RUINS_STONE
+            val biomeStructDef = when (originSb.structureType) {
+                "stone" -> StructureData.RUINS_STONE
+                else    -> StructureData.HOUSE_WOOD
             }
             // 30 % de chance d'utiliser une structure joueur si disponible
             val userList = StructureRegistry.userStructures

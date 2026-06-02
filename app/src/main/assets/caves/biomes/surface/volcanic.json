@@ -1,0 +1,23 @@
+{
+  "id": "volcanic",
+  "noise_offsets": [-700.0, 0.0, -300.0],
+  "surface_blocks": [
+    {"block": "brick_red", "noise_min":  0.40},
+    {"block": "granite",   "noise_min":  0.10},
+    {"block": "redsand",   "noise_min": -99.0}
+  ],
+  "surface_variety_scale": 0.05,
+  "surface_variety_offset": 150.0,
+  "dirt_block": "redsand",
+  "stone_block": "brick_red",
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "bush_density": 0.0,
+  "decoration_density": 0.06,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.0,
+  "vegetation_blocks": [],
+  "wheat_enabled": false,
+  "structure_type": "stone"
+}

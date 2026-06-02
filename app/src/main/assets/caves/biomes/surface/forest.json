@@ -1,0 +1,26 @@
+{
+  "id": "forest",
+  "noise_offsets": [500.0, 0.0, -400.0],
+  "surface_blocks": [
+    {"block": "grass", "noise_min": -99.0}
+  ],
+  "surface_variety_scale": 0.04,
+  "surface_variety_offset": 0.0,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "tree_density_base": 0.28,
+  "tree_density_noise_scale": 0.22,
+  "tree_type": "oak",
+  "bush_density": 0.0,
+  "decoration_density": 0.015,
+  "decoration_blocks": ["rock_moss"],
+  "vegetation_density": 0.28,
+  "vegetation_blocks": [
+    {"block": "grass_brown", "weight": 2},
+    {"block": "grass_tan",   "weight": 2},
+    {"block": "grass_wild1", "weight": 1},
+    {"block": "grass_wild2", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structure_type": "wood"
+}

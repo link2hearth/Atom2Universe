@@ -1,0 +1,28 @@
+{
+  "id": "lava_tubes",
+  "noise_offsets": [900.0, 800.0, -400.0],
+  "base_block": "brick_red",
+  "secondary_block": "granite",
+  "secondary_noise_threshold": 0.45,
+  "room_chance": 0.004,
+  "worm_zero_chance": 0.50,
+  "pockets_enabled": true,
+  "pocket_blocks": [
+    {"block": "redsand", "noise_min":  0.1},
+    {"block": "gravel",  "noise_min": -99.0}
+  ],
+  "floor_blocks": [
+    {"block": "redsand", "noise_min":  0.0},
+    {"block": "gravel",  "noise_min": -99.0}
+  ],
+  "floor_skip_beyond_dist": 9999,
+  "decoration_density": 0.03,
+  "decoration_blocks": ["rock"],
+  "trees_enabled": false,
+  "ores": [
+    {"block": "ruby",    "repeat_min": 3, "repeat_max": 5, "min_count": 3, "max_count": 6},
+    {"block": "gold",    "repeat_min": 2, "repeat_max": 3, "min_count": 3, "max_count": 5},
+    {"block": "emerald", "repeat_min": 1, "repeat_max": 2, "min_count": 2, "max_count": 4},
+    {"block": "coal",    "repeat_min": 1, "repeat_max": 2, "min_count": 3, "max_count": 5}
+  ]
+}

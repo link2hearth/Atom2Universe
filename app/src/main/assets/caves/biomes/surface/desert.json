@@ -1,0 +1,25 @@
+{
+  "id": "desert",
+  "noise_offsets": [-600.0, 0.0, 800.0],
+  "surface_blocks": [
+    {"block": "redsand", "noise_min":  0.20},
+    {"block": "sand",    "noise_min": -99.0}
+  ],
+  "surface_variety_scale": 0.04,
+  "surface_variety_offset": 400.0,
+  "dirt_block": "sand",
+  "stone_block": "stone",
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "bush_density": 0.0,
+  "decoration_density": 0.07,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.05,
+  "vegetation_blocks": [
+    {"block": "grass_tan",   "weight": 2},
+    {"block": "grass_brown", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structure_type": "stone"
+}

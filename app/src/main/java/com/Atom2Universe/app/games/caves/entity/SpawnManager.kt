@@ -151,11 +151,11 @@ internal class SpawnManager(
     private fun biomeAt(wx: Double, sy: Double, wz: Double): String {
         val chunkY = Math.floorDiv(sy.toInt(), CHUNK_SIZE)
         return if (chunkY >= 0) {
-            BiomeMap.surfaceBiomeAt(wx, wz, worldSeed).name.lowercase()
+            BiomeMap.surfaceBiomeAt(wx, wz, worldSeed).id
         } else {
             val chunkX = Math.floorDiv(wx.toInt(), CHUNK_SIZE)
             val chunkZ = Math.floorDiv(wz.toInt(), CHUNK_SIZE)
-            BiomeMap.biomeAt(chunkX, chunkY, chunkZ, worldSeed).name.lowercase()
+            BiomeMap.biomeAt(chunkX, chunkY, chunkZ, worldSeed).id
         }
     }
 

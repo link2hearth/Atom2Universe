@@ -6,8 +6,8 @@
   "texture_bottom": "gravel_dirt.png",
   "color": "#8B7355",
   "hardness": 0.8,
-  "falling": true,
-  "decoration": true,
+  "falling": false,
+  "decoration": false,
   "drop": "gravel_dirt",
   "creative_tab": "terrain"
 }

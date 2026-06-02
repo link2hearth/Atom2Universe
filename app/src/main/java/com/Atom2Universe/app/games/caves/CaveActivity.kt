@@ -111,6 +111,7 @@ class CaveActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BlockRegistry.load(assets)
+        BiomeRegistry.load(assets)
         CraftRegistry.load(assets)
         enableImmersiveMode()
         forceImmersiveMode()

@@ -1,0 +1,28 @@
+{
+  "id": "salt_cavern",
+  "noise_offsets": [1100.0, -300.0, -800.0],
+  "base_block": "quartz",
+  "secondary_block": "stone",
+  "secondary_noise_threshold": 0.55,
+  "room_chance": 0.020,
+  "worm_zero_chance": 0.40,
+  "pockets_enabled": true,
+  "pocket_blocks": [
+    {"block": "gravel", "noise_min":  0.2},
+    {"block": "stone",  "noise_min": -99.0}
+  ],
+  "floor_blocks": [
+    {"block": "gravel", "noise_min":  0.0},
+    {"block": "stone",  "noise_min": -99.0}
+  ],
+  "floor_skip_beyond_dist": 9999,
+  "decoration_density": 0.08,
+  "decoration_blocks": ["rock", "rock_moss"],
+  "trees_enabled": false,
+  "ores": [
+    {"block": "silver",  "repeat_min": 3, "repeat_max": 5, "min_count": 3, "max_count": 6},
+    {"block": "crystal", "repeat_min": 2, "repeat_max": 3, "min_count": 2, "max_count": 5},
+    {"block": "coal",    "repeat_min": 1, "repeat_max": 2, "min_count": 3, "max_count": 5},
+    {"block": "iron",    "repeat_min": 0, "repeat_max": 1, "min_count": 2, "max_count": 4, "chance": 0.30}
+  ]
+}

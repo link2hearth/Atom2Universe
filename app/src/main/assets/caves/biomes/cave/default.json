@@ -1,0 +1,61 @@
+{
+  "id": "default",
+  "noise_offsets": [0.0, 0.0, 0.0],
+  "base_block": "stone",
+  "secondary_block": "granite",
+  "secondary_noise_threshold": 0.20,
+  "room_chance": 0.006,
+  "worm_zero_chance": 0.45,
+  "pockets_enabled": true,
+  "pocket_blocks": [
+    {"block": "dirt",   "noise_min":  0.25},
+    {"block": "gravel", "noise_min": -0.20},
+    {"block": "sand",   "noise_min": -99.0}
+  ],
+  "floor_blocks": [
+    {"block": "grass",  "noise_min":  0.20},
+    {"block": "dirt",   "noise_min": -0.10},
+    {"block": "gravel", "noise_min": -0.40},
+    {"block": "sand",   "noise_min": -99.0}
+  ],
+  "floor_skip_beyond_dist": 50,
+  "decoration_density": 0.0,
+  "decoration_blocks": [],
+  "trees_enabled": true,
+  "ore_by_distance": [
+    {"dist_max":  50, "ores": [
+      {"block": "coal",   "repeat_min": 2, "repeat_max": 3, "min_count": 4, "max_count": 7},
+      {"block": "copper", "repeat_min": 0, "repeat_max": 1, "min_count": 3, "max_count": 5, "chance": 0.50}
+    ]},
+    {"dist_max": 100, "ores": [
+      {"block": "coal",   "repeat_min": 1, "repeat_max": 2, "min_count": 4, "max_count": 6},
+      {"block": "iron",   "repeat_min": 1, "repeat_max": 2, "min_count": 4, "max_count": 6},
+      {"block": "copper", "repeat_min": 0, "repeat_max": 1, "min_count": 3, "max_count": 5, "chance": 0.40}
+    ]},
+    {"dist_max": 200, "ores": [
+      {"block": "iron",   "repeat_min": 1, "repeat_max": 2, "min_count": 4, "max_count": 6},
+      {"block": "silver", "repeat_min": 1, "repeat_max": 2, "min_count": 3, "max_count": 5},
+      {"block": "coal",   "repeat_min": 0, "repeat_max": 1, "min_count": 3, "max_count": 5, "chance": 0.30}
+    ]},
+    {"dist_max": 300, "ores": [
+      {"block": "silver", "repeat_min": 1, "repeat_max": 2, "min_count": 3, "max_count": 5},
+      {"block": "gold",   "repeat_min": 1, "repeat_max": 2, "min_count": 3, "max_count": 5},
+      {"block": "iron",   "repeat_min": 0, "repeat_max": 1, "min_count": 3, "max_count": 5, "chance": 0.30}
+    ]},
+    {"dist_max": 450, "ores": [
+      {"block": "gold",   "repeat_min": 1, "repeat_max": 2, "min_count": 3, "max_count": 5},
+      {"block": "ruby",   "repeat_min": 1, "repeat_max": 2, "min_count": 2, "max_count": 4},
+      {"block": "silver", "repeat_min": 0, "repeat_max": 1, "min_count": 3, "max_count": 4, "chance": 0.30}
+    ]},
+    {"dist_max": 650, "ores": [
+      {"block": "ruby",    "repeat_min": 1, "repeat_max": 2, "min_count": 2, "max_count": 4},
+      {"block": "emerald", "repeat_min": 1, "repeat_max": 2, "min_count": 2, "max_count": 4},
+      {"block": "gold",    "repeat_min": 0, "repeat_max": 1, "min_count": 2, "max_count": 4, "chance": 0.30}
+    ]},
+    {"dist_max": 99999, "ores": [
+      {"block": "emerald", "repeat_min": 1, "repeat_max": 2, "min_count": 2, "max_count": 4},
+      {"block": "crystal", "repeat_min": 1, "repeat_max": 2, "min_count": 2, "max_count": 3},
+      {"block": "ruby",    "repeat_min": 0, "repeat_max": 1, "min_count": 2, "max_count": 3, "chance": 0.30}
+    ]}
+  ]
+}

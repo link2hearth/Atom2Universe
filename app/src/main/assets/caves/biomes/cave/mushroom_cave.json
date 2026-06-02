@@ -1,0 +1,27 @@
+{
+  "id": "mushroom_cave",
+  "noise_offsets": [600.0, -1100.0, 900.0],
+  "base_block": "stone",
+  "secondary_block": "stone",
+  "secondary_noise_threshold": 99.0,
+  "room_chance": 0.006,
+  "worm_zero_chance": 0.45,
+  "pockets_enabled": true,
+  "pocket_blocks": [
+    {"block": "dirt",   "noise_min":  0.0},
+    {"block": "gravel", "noise_min": -99.0}
+  ],
+  "floor_blocks": [
+    {"block": "dirt",   "noise_min":  0.0},
+    {"block": "gravel", "noise_min": -99.0}
+  ],
+  "floor_skip_beyond_dist": 9999,
+  "decoration_density": 0.16,
+  "decoration_blocks": ["mushroom_red", "mushroom_brown", "mushroom_tan"],
+  "trees_enabled": false,
+  "ores": [
+    {"block": "emerald", "repeat_min": 2, "repeat_max": 4, "min_count": 3, "max_count": 6},
+    {"block": "iron",    "repeat_min": 1, "repeat_max": 2, "min_count": 3, "max_count": 5},
+    {"block": "coal",    "repeat_min": 0, "repeat_max": 1, "min_count": 3, "max_count": 5, "chance": 0.30}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rocky",
+  "noise_offsets": [300.0, 0.0, -200.0],
+  "surface_blocks": [
+    {"block": "granite", "noise_min":  0.0},
+    {"block": "stone",   "noise_min": -99.0}
+  ],
+  "surface_variety_scale": 0.07,
+  "surface_variety_offset": 500.0,
+  "dirt_block": "stone",
+  "stone_block": "granite",
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "bush_density": 0.0,
+  "decoration_density": 0.05,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.0,
+  "vegetation_blocks": [],
+  "wheat_enabled": false,
+  "structure_type": "stone"
+}
