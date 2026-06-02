@@ -128,6 +128,7 @@ data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 
 class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     val blocks = ShortArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+    val meta   = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 
     @Volatile var generated = false
     @Volatile var meshDirty = false
@@ -148,5 +149,14 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
 
     fun setBlock(lx: Int, ly: Int, lz: Int, type: Short) {
         blocks[lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE] = type
+    }
+
+    fun metaAt(lx: Int, ly: Int, lz: Int): Byte {
+        if (lx !in 0 until CHUNK_SIZE || ly !in 0 until CHUNK_SIZE || lz !in 0 until CHUNK_SIZE) return 0
+        return meta[lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE]
+    }
+
+    fun setMeta(lx: Int, ly: Int, lz: Int, value: Byte) {
+        meta[lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE] = value
     }
 }

@@ -7,5 +7,6 @@
   "color": "#555555",
   "hardness": 3.0,
   "drop": "furnace",
-  "creative_tab": "functional"
+  "creative_tab": "functional",
+  "orient_mode": "facing"
 }

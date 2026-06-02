@@ -6,6 +6,8 @@ import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.ORIENT_AXIS
+import com.Atom2Universe.app.games.caves.node.ORIENT_FACING
 import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.node.GameEvent
 import com.Atom2Universe.app.games.caves.node.ItemRegistry
@@ -2097,6 +2099,35 @@ internal class CaveRenderer(
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
 
+    // Détermine le meta d'orientation au moment du placement.
+    // AXIS  : axe dérivé de la face cliquée (X si paroi E/W, Z si paroi N/S, Y sinon).
+    // FACING: direction vers le joueur depuis la face cliquée ; sur sol/plafond → yaw caméra.
+    private fun computeOrientMeta(blockType: Short, fnx: Int, fny: Int, fnz: Int): Byte {
+        if (!BlockRegistry.isOrientable(blockType)) return 0
+        return when (BlockRegistry.getOrientMode(blockType)) {
+            ORIENT_AXIS -> when {
+                fnx != 0 -> 1  // paroi E/W → axe X
+                fnz != 0 -> 2  // paroi N/S → axe Z
+                else     -> 0  // sol/plafond → axe Y (défaut)
+            }
+            ORIENT_FACING -> when {
+                fnx > 0  -> 2  // joueur à l'est   → front face Est
+                fnx < 0  -> 3  // joueur à l'ouest → front face Ouest
+                fnz > 0  -> 1  // joueur au sud     → front face Sud
+                fnz < 0  -> 0  // joueur au nord    → front face Nord
+                else -> {      // sol/plafond : orienter vers le joueur via yaw
+                    val fx = camera.fwdX; val fz = camera.fwdZ
+                    if (kotlin.math.abs(fx) > kotlin.math.abs(fz)) {
+                        if (fx > 0) 3 else 2  // joueur regarde Est→front Ouest ; Ouest→Est
+                    } else {
+                        if (fz > 0) 0 else 1  // joueur regarde Sud→front Nord ; Nord→Sud
+                    }
+                }
+            }
+            else -> 0
+        }
+    }
+
     private fun placeBlock() {
         val blockType = hotbar[selectedSlot] ?: return
         if ((inventory[blockType] ?: 0) <= 0) {
@@ -2141,6 +2172,8 @@ internal class CaveRenderer(
         val pz = target.bz + target.fnz
         if (isInsidePlayer(px, py, pz)) return
         world.setBlock(px, py, pz, blockType)
+        val orientMeta = computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        if (orientMeta != 0.toByte()) world.setMeta(px, py, pz, orientMeta)
         forceMeshRebuild(px, py, pz)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))
         if (blockType == WATER) world.onWaterSourcePlaced(px, py, pz)

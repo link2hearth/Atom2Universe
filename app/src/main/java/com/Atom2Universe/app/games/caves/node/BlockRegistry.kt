@@ -19,9 +19,13 @@ internal object BlockRegistry {
     private val layerTopTable       = IntArray(65536)
     private val layerBottomTable    = IntArray(65536)
     private val layerSideTable      = IntArray(65536)
+    private val layerFrontTable     = IntArray(65536)
     private val layerSideGrassTable = IntArray(65536)
     private val layerSideSandTable  = IntArray(65536)
     private val layerSideSnowTable  = IntArray(65536)
+
+    // Table d'orientation
+    private val orientModeTable = ByteArray(65536)
 
     // Textures uniques ordonnées → index = couche GL dans la texture array
     private val textureOrder = mutableListOf<String>()
@@ -46,6 +50,7 @@ internal object BlockRegistry {
             if (def.transparent) transparentTable[idx] = true
             if (def.water) waterTable[idx] = true
             if (def.falling) fallingTable[idx] = true
+            orientModeTable[idx] = def.orientMode
         }
     }
 
@@ -82,6 +87,7 @@ internal object BlockRegistry {
             def.layerTop    = register(def.textureTop)
             def.layerSide   = register(def.textureSide)
             def.layerBottom = register(def.textureBottom)
+            def.layerFront     = def.textureFront?.let { register(it) } ?: def.layerSide
             def.layerSideGrass = def.textureSideGrass?.let { register(it) } ?: def.layerSide
             def.layerSideSand  = def.textureSideSand?.let  { register(it) } ?: def.layerSide
             def.layerSideSnow  = def.textureSideSnow?.let  { register(it) } ?: def.layerSide
@@ -90,6 +96,7 @@ internal object BlockRegistry {
             layerTopTable[idx]       = def.layerTop
             layerBottomTable[idx]    = def.layerBottom
             layerSideTable[idx]      = def.layerSide
+            layerFrontTable[idx]     = def.layerFront
             layerSideGrassTable[idx] = def.layerSideGrass
             layerSideSandTable[idx]  = def.layerSideSand
             layerSideSnowTable[idx]  = def.layerSideSnow
@@ -111,10 +118,21 @@ internal object BlockRegistry {
     fun isWater(block: Short)       = waterTable[block.toInt() and 0xFFFF]
     fun isFalling(block: Short)     = fallingTable[block.toInt() and 0xFFFF]
 
-    // face : 0=dessus, 1=dessous, 2-5=côtés
-    // above : bloc voisin au-dessus (pour les transitions de biome sur les côtés)
-    fun getLayerForFace(id: Short, face: Int, above: Short): Int {
+    // face : 0=dessus, 1=dessous, 2=est(+X), 3=ouest(-X), 4=sud(+Z), 5=nord(-Z)
+    // above : bloc voisin au-dessus (transitions biome côtés)
+    // meta  : octet d'orientation du bloc (0 = défaut)
+    fun getLayerForFace(id: Short, face: Int, above: Short, meta: Byte = 0): Int {
         val idx = id.toInt() and 0xFFFF
+        when (orientModeTable[idx]) {
+            ORIENT_AXIS -> when (meta.toInt()) {
+                1 -> return when (face) { 2, 3 -> layerTopTable[idx]; else -> layerSideTable[idx] }
+                2 -> return when (face) { 4, 5 -> layerTopTable[idx]; else -> layerSideTable[idx] }
+            }
+            ORIENT_FACING -> {
+                val frontFace = when (meta.toInt()) { 0 -> 5; 1 -> 4; 2 -> 2; else -> 3 }
+                if (face == frontFace) return layerFrontTable[idx]
+            }
+        }
         if (face == 1) return layerBottomTable[idx]
         if (face == 0) return layerTopTable[idx]
         if (above == 4000.toShort() || above == 4001.toShort()) return layerSideSandTable[idx]
@@ -122,6 +140,9 @@ internal object BlockRegistry {
         if (above == 0.toShort()) return layerSideGrassTable[idx]
         return layerSideTable[idx]
     }
+
+    fun isOrientable(id: Short): Boolean = orientModeTable[id.toInt() and 0xFFFF] != ORIENT_NONE
+    fun getOrientMode(id: Short): Byte   = orientModeTable[id.toInt() and 0xFFFF]
 
     fun getLayerForDecoration(id: Short): Int = layerTopTable[id.toInt() and 0xFFFF]
 

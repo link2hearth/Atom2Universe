@@ -269,6 +269,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             // sky void : chunk reste AIR (ByteArray initialisé à 0)
         }
         storage?.applyDiff(chunk)
+        storage?.applyMetaDiff(chunk)
     }
 
     private val defaultCaveBiome: CaveBiomeDef by lazy {
@@ -1070,6 +1071,25 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val n = getChunk(nx, ny, nz) ?: continue
             if (n.generated) { n.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)) }
         }
+    }
+
+    fun setMeta(wx: Int, wy: Int, wz: Int, value: Byte) {
+        val cx = Math.floorDiv(wx, CHUNK_SIZE)
+        val cy = Math.floorDiv(wy, CHUNK_SIZE)
+        val cz = Math.floorDiv(wz, CHUNK_SIZE)
+        val chunk = getChunk(cx, cy, cz)?.takeIf { it.generated } ?: return
+        val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
+        chunk.setMeta(lx, ly, lz, value)
+        storage?.recordMetaChange(cx, cy, cz, lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, value)
+    }
+
+    fun metaAt(wx: Int, wy: Int, wz: Int): Byte {
+        val cx = Math.floorDiv(wx, CHUNK_SIZE)
+        val cy = Math.floorDiv(wy, CHUNK_SIZE)
+        val cz = Math.floorDiv(wz, CHUNK_SIZE)
+        val chunk = getChunk(cx, cy, cz) ?: return 0
+        if (!chunk.generated) return 0
+        return chunk.metaAt(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE)
     }
 
     // ── Simulation eau ────────────────────────────────────────────────────────

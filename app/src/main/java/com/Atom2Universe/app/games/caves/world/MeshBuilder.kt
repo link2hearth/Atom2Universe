@@ -19,13 +19,14 @@ internal object MeshBuilder {
                 continue
             }
 
+            val meta  = chunk.metaAt(lx, ly, lz)
             val above = world.neighborBlock(chunk, lx, ly + 1, lz)
-            if (shouldRenderFace(block, above))                                        addFace(buf, x, y, z, 0, block, above)
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly - 1, lz)))  addFace(buf, x, y, z, 1, block, AIR)
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx + 1, ly, lz)))  addFace(buf, x, y, z, 2, block, above)
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx - 1, ly, lz)))  addFace(buf, x, y, z, 3, block, above)
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1)))  addFace(buf, x, y, z, 4, block, above)
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1)))  addFace(buf, x, y, z, 5, block, above)
+            if (shouldRenderFace(block, above))                                        addFace(buf, x, y, z, 0, block, above, meta)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly - 1, lz)))  addFace(buf, x, y, z, 1, block, AIR,  meta)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx + 1, ly, lz)))  addFace(buf, x, y, z, 2, block, above, meta)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx - 1, ly, lz)))  addFace(buf, x, y, z, 3, block, above, meta)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1)))  addFace(buf, x, y, z, 4, block, above, meta)
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1)))  addFace(buf, x, y, z, 5, block, above, meta)
         }
         return buf.toFloatArray()
     }
@@ -39,8 +40,8 @@ internal object MeshBuilder {
         return true
     }
 
-    private fun addFace(buf: GrowableFloatArray, x: Float, y: Float, z: Float, face: Int, block: Short, above: Short) {
-        val layer  = BlockRegistry.getLayerForFace(block, face, above)
+    private fun addFace(buf: GrowableFloatArray, x: Float, y: Float, z: Float, face: Int, block: Short, above: Short, meta: Byte = 0) {
+        val layer  = BlockRegistry.getLayerForFace(block, face, above, meta)
         val rotCW  = face > 1
         val packed = face * 4096f + layer.toFloat()
         when (face) {

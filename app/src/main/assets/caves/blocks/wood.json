@@ -7,5 +7,6 @@
   "color": "#8B6914",
   "hardness": 2.0,
   "drop": "wood",
-  "creative_tab": "wood"
+  "creative_tab": "wood",
+  "orient_mode": "axis"
 }

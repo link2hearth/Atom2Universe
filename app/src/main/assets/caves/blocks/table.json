@@ -7,5 +7,6 @@
   "color": "#8B6914",
   "hardness": 2.0,
   "drop": "table",
-  "creative_tab": "functional"
+  "creative_tab": "functional",
+  "orient_mode": "facing"
 }
