@@ -205,6 +205,8 @@
     <string name="cave_menu_delete_confirm_msg">Delete \"%1$s\"? This cannot be undone.</string>
     <string name="cave_menu_deleted">World deleted</string>
     <string name="cave_place">■ PLACE</string>
+    <string name="cave_map_surface">Surface</string>
+    <string name="cave_map_cave">Cave</string>
     <string name="cave_menu_controls">Controls</string>
     <string name="cave_controls_editor_title">Configure controls</string>
     <string name="cave_controls_save">Save</string>

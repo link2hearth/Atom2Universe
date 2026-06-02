@@ -37,7 +37,12 @@ import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.CraftRegistry
 import com.Atom2Universe.app.games.caves.world.*
 import com.Atom2Universe.app.util.enableImmersiveMode
+import android.widget.ImageView
+import com.Atom2Universe.app.games.caves.render.MinimapRenderer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -75,6 +80,10 @@ class CaveActivity : ThemedActivity() {
 
     internal val hud = CaveHud(this)
     internal val invManager = InventoryManager(this)
+
+    private val minimapRenderer = MinimapRenderer()
+    private var minimapView: ImageView? = null
+    private var minimapJob: Job? = null
 
     // ── Textures ──────────────────────────────────────────────────────────────
 
@@ -190,6 +199,7 @@ class CaveActivity : ThemedActivity() {
         val btnMode       = hudView.findViewById<Button>(R.id.cave_btn_mode)
         val btnDayNight   = hudView.findViewById<Button>(R.id.cave_btn_day_night)
         val btnCamera     = hudView.findViewById<Button>(R.id.cave_btn_camera).also { vBtnCamera = it }
+        minimapView       = hudView.findViewById(R.id.cave_minimap)
         vHudControls      = hudView.findViewById(R.id.cave_hud_controls)
         val btnUp         = hudView.findViewById<Button>(R.id.cave_btn_up).also    { vBtnUp    = it }
         val btnDown       = hudView.findViewById<Button>(R.id.cave_btn_down).also  { vBtnDown  = it }
@@ -224,6 +234,22 @@ class CaveActivity : ThemedActivity() {
             btnCamera.alpha = if (renderer.camera.thirdPerson) 1.0f else 0.5f
         }
         btnCamera.alpha = 0.5f
+
+        val btnMap = hudView.findViewById<Button>(R.id.cave_btn_map)
+        btnMap.alpha = 0.5f
+        btnMap.setOnClickListener {
+            val mapView = minimapView ?: return@setOnClickListener
+            if (mapView.visibility == View.GONE) {
+                mapView.visibility = View.VISIBLE
+                btnMap.alpha = 1.0f
+                startMinimapLoop()
+            } else {
+                mapView.visibility = View.GONE
+                btnMap.alpha = 0.5f
+                minimapJob?.cancel()
+                minimapJob = null
+            }
+        }
         renderer.modeCallback    = { mode -> uiHandler.post { applyModeUi(mode, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace) } }
         renderer.posCallback     = { pos  -> uiHandler.post { tvCoords.text = pos } }
         renderer.miningCallback  = { progress, blockType ->
@@ -280,8 +306,26 @@ class CaveActivity : ThemedActivity() {
         ambientMusic = CaveAmbientMusic(this, lifecycleScope)
     }
 
+    private fun startMinimapLoop() {
+        minimapJob?.cancel()
+        minimapJob = lifecycleScope.launch(Dispatchers.Default) {
+            while (isActive) {
+                val world  = renderer.world
+                val camera = renderer.camera
+                val bmp = minimapRenderer.render(world, camera.playerX, camera.playerY, camera.playerZ, camera.yaw)
+                val label = if (minimapRenderer.isCaveMode) getString(R.string.cave_map_cave)
+                            else getString(R.string.cave_map_surface)
+                withContext(Dispatchers.Main) {
+                    minimapView?.setImageBitmap(bmp)
+                    minimapView?.contentDescription = label
+                }
+                delay(500L)
+            }
+        }
+    }
+
     override fun onResume()  { super.onResume();  glView.onResume(); ambientMusic?.resume(); forceImmersiveMode() }
-    override fun onPause()   { super.onPause();   glView.onPause();  ambientMusic?.pause(); saveWorld() }
+    override fun onPause()   { super.onPause();   glView.onPause();  ambientMusic?.pause(); saveWorld(); minimapJob?.cancel() }
     override fun onDestroy() { super.onDestroy(); renderer.destroy(); ambientMusic?.destroy() }
 
     // ── Save ──────────────────────────────────────────────────────────────────

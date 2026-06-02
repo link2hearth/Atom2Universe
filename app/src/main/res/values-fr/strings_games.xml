@@ -205,6 +205,8 @@
     <string name="cave_menu_delete_confirm_msg">Supprimer « %1$s » ? Cette action est irréversible.</string>
     <string name="cave_menu_deleted">Monde supprimé</string>
     <string name="cave_place">■ POSER</string>
+    <string name="cave_map_surface">Surface</string>
+    <string name="cave_map_cave">Caverne</string>
     <string name="cave_menu_controls">Contrôles</string>
     <string name="cave_controls_editor_title">Configurer les contrôles</string>
     <string name="cave_controls_save">Sauvegarder</string>
