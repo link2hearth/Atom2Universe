@@ -150,10 +150,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val lx = wx - chx * CHUNK_SIZE
                 val lz = wz - chz * CHUNK_SIZE
                 for (ly in CHUNK_SIZE - 1 downTo 1) {
+                    val worldY = chunk.worldY + ly
+                    if (worldY < SEA_LEVEL) continue   // jamais spawner sous la surface de l'eau
                     val below = chunk.blockAt(lx, ly - 1, lz)
                     if (chunk.blockAt(lx, ly, lz) == AIR
                         && below != AIR && !isDecoration(below) && !isWater(below))
-                        return floatArrayOf(wx + 0.5f, chunk.worldY + ly + 1.62f, wz + 0.5f)
+                        return floatArrayOf(wx + 0.5f, worldY + 1.62f, wz + 0.5f)
                 }
             }
         }
@@ -281,7 +283,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         for (dcz in -1..1) for (dcy in -1..1) for (dcx in -1..1)
             carveRoomFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz, biome)
         for (dcz in -1..1) for (dcy in -1..1) for (dcx in -1..1)
-            carveWormsFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz, biome)
+            carveWormsFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz)
+        // Worms de surface qui descendent jusqu'ici
+        for (dcz in -1..1) for (dcx in -1..1)
+            carveVerticalWormsFrom(chunk, chunk.cx + dcx, chunk.cz + dcz)
         applyPockets(chunk, biome)
         applyOreVeins(chunk, biome)
         applyFloorSurface(chunk, bb)
@@ -342,10 +347,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
         // Entrées de grotte : worms depuis cy=-1 et cy=0 pour multiplier les connexions
         if (chunk.cy == 0) {
-            val caveB = BiomeMap.biomeAt(chunk.cx, -1, chunk.cz, seed)
-            carveWormsFrom(chunk, chunk.cx, -1, chunk.cz, caveB)
-            carveWormsFrom(chunk, chunk.cx,  0, chunk.cz, caveB)
+            carveWormsFrom(chunk, chunk.cx, -1, chunk.cz)
+            carveWormsFrom(chunk, chunk.cx,  0, chunk.cz)
         }
+
+        // Worms de surface → cave (descendent sous la surface depuis ce chunk)
+        for (dcz in -1..1) for (dcx in -1..1)
+            carveVerticalWormsFrom(chunk, chunk.cx + dcx, chunk.cz + dcz)
 
         applyOreVeins(chunk, defaultCaveBiome)
         plantSurfaceTreesByType(chunk, sb)
@@ -436,14 +444,19 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
-    // ── Worms ─────────────────────────────────────────────────────────────────
+    // ── Worms de cave (horizontaux) ───────────────────────────────────────────
 
-    private fun carveWormsFrom(target: Chunk, cx: Int, cy: Int, cz: Int, biome: CaveBiomeDef) {
+    // Le biome est calculé depuis le chunk SEED (cx,cy,cz) et non depuis le chunk cible,
+    // pour garantir que tous les chunks qui échantillonnent ce seed voient le même worm.
+    private fun carveWormsFrom(target: Chunk, cx: Int, cy: Int, cz: Int) {
+        val biome = BiomeMap.biomeAt(cx, cy, cz, seed)
         val rng = chunkRng(cx, cy, cz)
         val zeroChance = biome.wormZeroChance
+        // Plus rares : zeroChance biome + 50 % de skip supplémentaire
         val wormCount = when {
             rng.nextFloat() < zeroChance -> 0
-            rng.nextFloat() < 0.80f      -> 1
+            rng.nextFloat() < 0.50f      -> 0
+            rng.nextFloat() < 0.90f      -> 1
             else                          -> 2
         }
         if (wormCount == 0) return
@@ -455,11 +468,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             var yaw   = rng.nextFloat() * 2f * PI.toFloat()
             var pitch = (rng.nextFloat() - 0.5f) * (PI / 3).toFloat()
 
+            // Rayon x2 par rapport à avant
             val baseRadius = if (rng.nextFloat() > 0.20f)
-                1.5f + rng.nextFloat() * 1.0f
+                3.0f + rng.nextFloat() * 2.0f
             else
-                2.5f + rng.nextFloat() * 1.5f
-            val length = 100 + rng.nextInt(150)
+                5.0f + rng.nextFloat() * 3.0f
+            // Longueur doublée
+            val length = 200 + rng.nextInt(200)
 
             val bMinX = target.worldX - baseRadius - 1f; val bMaxX = target.worldX + CHUNK_SIZE + baseRadius + 1f
             val bMinY = target.worldY - baseRadius - 1f; val bMaxY = target.worldY + CHUNK_SIZE + baseRadius + 1f
@@ -467,7 +482,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
             repeat(length) { step ->
                 val osc = sin(step.toFloat() * 0.18f) * baseRadius * 0.25f
-                val radius = (baseRadius + osc).coerceIn(1.0f, 5.0f)
+                val radius = (baseRadius + osc).coerceIn(2.0f, 10.0f)
                 if (wx in bMinX..bMaxX && wy in bMinY..bMaxY && wz in bMinZ..bMaxZ)
                     carveInChunk(target, wx, wy, wz, radius)
                 wx += cos(pitch) * sin(yaw)
@@ -477,6 +492,50 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 pitch += (rng.nextFloat() - 0.5f) * 0.20f
                 pitch  = pitch.coerceIn((-PI / 2.5).toFloat(), (PI / 2.5).toFloat())
             }
+        }
+    }
+
+    // ── Worms de surface → cave (tire-bouchon, percent la surface puis descend ~100 blocs) ─
+
+    private fun carveVerticalWormsFrom(target: Chunk, cx: Int, cz: Int) {
+        val rng = chunkRng(cx * 7919 + 13, 88888, cz * 6271 + 7)
+        if (rng.nextFloat() > 0.12f) return   // ~12 % des colonnes ont un worm de surface
+
+        val startWx = (cx * CHUNK_SIZE + 4 + rng.nextInt(8)).toFloat()
+        val startWz = (cz * CHUNK_SIZE + 4 + rng.nextInt(8)).toFloat()
+        val surfH   = surfaceHeight(startWx.toDouble(), startWz.toDouble()).toFloat()
+        // Évite les entrées sous-marines : eau de génération remplirait le trou
+        if (surfH < SEA_LEVEL + 3) return
+
+        // Départ : 10–18 blocs sous la surface ; le worm monte pour percer, puis descend
+        val startDepth = 10f + rng.nextFloat() * 8f
+        var wx = startWx; var wy = surfH - startDepth; var wz = startWz
+        var yaw = rng.nextFloat() * 2f * PI.toFloat()
+        // Pitch initial vers le haut → va percer la surface dans les 15–30 premiers pas
+        var pitch = (PI / 5.0 + rng.nextDouble() * PI / 8.0).toFloat()
+
+        val baseRadius = 2.0f + rng.nextFloat() * 1.5f
+        val length     = 150 + rng.nextInt(80)            // 150–230 pas ≈ 100+ blocs de descente
+        val uphaseLen  = 15 + rng.nextInt(15)             // durée de la phase montante
+
+        val bMinX = target.worldX - baseRadius - 1f; val bMaxX = target.worldX + CHUNK_SIZE + baseRadius + 1f
+        val bMinY = target.worldY - baseRadius - 1f; val bMaxY = target.worldY + CHUNK_SIZE + baseRadius + 1f
+        val bMinZ = target.worldZ - baseRadius - 1f; val bMaxZ = target.worldZ + CHUNK_SIZE + baseRadius + 1f
+
+        repeat(length) { step ->
+            val osc    = sin(step.toFloat() * 0.20f) * baseRadius * 0.30f
+            val radius = (baseRadius + osc).coerceIn(1.5f, 5.0f)
+            if (wx in bMinX..bMaxX && wy in bMinY..bMaxY && wz in bMinZ..bMaxZ)
+                carveInChunk(target, wx, wy, wz, radius)
+            wx += cos(pitch) * sin(yaw)
+            wy += sin(pitch)
+            wz += cos(pitch) * cos(yaw)
+            // Grand yaw → effet tire-bouchon prononcé
+            yaw += (rng.nextFloat() - 0.5f) * 1.00f
+            // Phase montante → descente progressive via interpolation vers pitch cible
+            val targetPitch = if (step < uphaseLen) (PI / 5).toFloat() else (-PI / 2.5).toFloat()
+            pitch += (targetPitch - pitch) * 0.06f + (rng.nextFloat() - 0.5f) * 0.20f
+            pitch  = pitch.coerceIn((-PI * 0.75).toFloat(), (PI / 2.5).toFloat())
         }
     }
 
