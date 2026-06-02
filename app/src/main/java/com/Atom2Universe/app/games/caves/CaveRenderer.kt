@@ -94,6 +94,7 @@ internal class CaveRenderer(
     private var laserShader: ShaderProgram? = null
     private var starShader:  ShaderProgram? = null
     private var waterShader: ShaderProgram? = null
+    private var lodShader:   ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wUMvp = 0; private var wUTex = 0
     private var wUChunkOffset = 0; private var wUAmbient = 0
     private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
@@ -103,6 +104,8 @@ internal class CaveRenderer(
     private var wWAPos = 0; private var wWAUv = 0; private var wWUMvp = 0
     private var wWUChunkOffset = 0; private var wWUAmbient = 0
     private var wWULights = 0; private var wWULightCount = 0; private var wWUTime = 0
+    private var lodAPos = 0; private var lodARgb = 0; private var lodUMvp = 0
+    private var lodUChunkOffset = 0; private var lodUAmbient = 0
     private var blockTexArray = 0
 
     private val waterMeshes         = ConcurrentHashMap<Long, ChunkMesh>()
@@ -133,6 +136,7 @@ internal class CaveRenderer(
 
     private var lastCx = Int.MAX_VALUE; private var lastCy = Int.MAX_VALUE; private var lastCz = Int.MAX_VALUE
     private var lastFrameNs = 0L
+    private var fpsAccum = 0f; private var fpsFrames = 0   // moyenne FPS sur ~0.5 s
 
     private val frustum = Array(6) { FloatArray(4) }
     private var cleanupCounter = 0
@@ -208,6 +212,7 @@ internal class CaveRenderer(
     val currentLookAtBlock: Triple<Int, Int, Int>? get() = mineTarget?.let { Triple(it.bx, it.by, it.bz) }
 
     var posCallback:      ((String) -> Unit)?                    = null
+    var fpsCallback:      ((Int) -> Unit)?                       = null
     var modeCallback:     ((PlayerMode) -> Unit)?                = null
     var miningCallback:   ((progress: Float, block: Short?) -> Unit)? = null
     var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
@@ -308,6 +313,33 @@ internal class CaveRenderer(
             }
             vec3 lighting = max(vec3(u_ambient), torchContrib);
             fragColor = vec4(baseColor * faceLight * lighting, 0.75);
+        }
+    """.trimIndent()
+
+    // LOD lointain : couleur du bloc (BlockDef.color) au lieu de la texture array.
+    // La lumière de face est déjà multipliée dans a_rgb au build ; le shader n'applique
+    // que l'ambiance jour/nuit. Pas d'échantillonnage de texture → moins cher et plus net de loin.
+    private val VERT_LOD = """
+        #version 300 es
+        in vec3 a_pos;
+        in vec3 a_rgb;
+        uniform mat4 u_mvp;
+        uniform vec3 u_chunk_offset;
+        out vec3 v_rgb;
+        void main() {
+            gl_Position = u_mvp * vec4(a_pos + u_chunk_offset, 1.0);
+            v_rgb = a_rgb;
+        }
+    """.trimIndent()
+
+    private val FRAG_LOD = """
+        #version 300 es
+        precision mediump float;
+        uniform float u_ambient;
+        in vec3 v_rgb;
+        out vec4 fragColor;
+        void main() {
+            fragColor = vec4(v_rgb * u_ambient, 1.0);
         }
     """.trimIndent()
 
@@ -414,6 +446,14 @@ internal class CaveRenderer(
             wWULights      = it.uniform("u_lights[0]")
             wWULightCount  = it.uniform("u_lightCount")
             wWUTime        = it.uniform("u_time")
+        }
+        lodShader = ShaderProgram(VERT_LOD, FRAG_LOD).also {
+            it.use()
+            lodAPos         = it.attrib("a_pos")
+            lodARgb         = it.attrib("a_rgb")
+            lodUMvp         = it.uniform("u_mvp")
+            lodUChunkOffset = it.uniform("u_chunk_offset")
+            lodUAmbient     = it.uniform("u_ambient")
         }
         laserShader = ShaderProgram(VERT_LASER, FRAG_LASER).also {
             it.use()
@@ -621,8 +661,16 @@ internal class CaveRenderer(
 
     override fun onDrawFrame(gl: GL10?) {
         val now = System.nanoTime()
-        val dt = ((now - lastFrameNs) / 1_000_000_000f).coerceIn(0.001f, 0.05f)
+        val rawDt = (now - lastFrameNs) / 1_000_000_000f          // intervalle réel (FPS affiché)
+        val dt = rawDt.coerceIn(0.001f, 0.05f)
         lastFrameNs = now
+
+        // FPS moyenné sur ~0.5 s (utilise l'intervalle réel, sleep inclus → vrai FPS écran)
+        fpsAccum += rawDt; fpsFrames++
+        if (fpsAccum >= 0.5f) {
+            fpsCallback?.invoke((fpsFrames / fpsAccum).roundToInt())
+            fpsAccum = 0f; fpsFrames = 0
+        }
 
         pendingMode?.let { newMode -> pendingMode = null; applyModeSwitch(newMode) }
 
@@ -914,12 +962,16 @@ internal class CaveRenderer(
             mesh.draw(wAPos, wAUv)
         }
 
-        // ── Rendu LOD (zones visitées visibles de loin) ───────────────────────
-        // Critère de masquage : mesh VBO présent pour un chunk surface (cy 0..9).
-        // Les meshes de la zone proche ne sont plus évincés par MAX_MESHES → critère stable,
-        // pas de boucle. Le LOD reste visible pendant le gap génération→upload (pas de trou).
+        // ── Rendu LOD (couleur des blocs, visible de loin) ────────────────────
+        // Shader dédié : couleur plate (BlockDef.color) × ambiance, pas de texture.
+        // Masquage : une colonne ayant un mesh réel (cy quelconque) n'affiche pas son LOD,
+        // évitant le double-rendu près du joueur. Le LOD reste visible pendant le gap
+        // génération→upload (pas de trou).
         columnsWithMesh.clear()
         meshes.keys.forEach { k -> columnsWithMesh.add(lodKey(world.keyToCx(k), world.keyToCz(k))) }
+        lodShader?.use()
+        GLES30.glUniformMatrix4fv(lodUMvp, 1, false, camera.vpMatrix, 0)
+        GLES30.glUniform1f(lodUAmbient, ambientFor(dayT))
         // Itère par super-tuiles (8×8 colonnes) : ~125 tests frustum au lieu de 8000.
         for ((sk, keys) in lodGrid) {
             val scx = superKeyToCx(sk) * LOD_SUPER
@@ -929,11 +981,11 @@ internal class CaveRenderer(
                 if (columnsWithMesh.contains(key)) continue
                 val mesh = lodMeshes[key] ?: continue
                 val lcx = lodKeyToCx(key); val lcz = lodKeyToCz(key)
-                GLES30.glUniform3f(wUChunkOffset,
+                GLES30.glUniform3f(lodUChunkOffset,
                     (lcx.toDouble() * CHUNK_SIZE - camera.x).toFloat(),
                     -camera.y.toFloat(),
                     (lcz.toDouble() * CHUNK_SIZE - camera.z).toFloat())
-                mesh.draw(wAPos, wAUv)
+                mesh.draw(lodAPos, lodARgb)
             }
         }
 
@@ -2229,6 +2281,7 @@ internal class CaveRenderer(
         worldShader?.destroy()
         laserShader?.destroy()
         waterShader?.destroy()
+        lodShader?.destroy()
         enemyRenderer.destroy()
         projRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)

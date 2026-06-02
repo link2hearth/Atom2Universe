@@ -195,6 +195,7 @@ class CaveActivity : ThemedActivity() {
         root.addView(hudView)
 
         val tvCoords      = hudView.findViewById<android.widget.TextView>(R.id.cave_tv_coords)
+        val tvFps         = hudView.findViewById<android.widget.TextView>(R.id.cave_tv_fps)
         val btnBack       = hudView.findViewById<View>(R.id.cave_btn_back).also { vBtnBack = it }
         val btnMode       = hudView.findViewById<Button>(R.id.cave_btn_mode)
         val btnDayNight   = hudView.findViewById<Button>(R.id.cave_btn_day_night)
@@ -252,6 +253,7 @@ class CaveActivity : ThemedActivity() {
         }
         renderer.modeCallback    = { mode -> uiHandler.post { applyModeUi(mode, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace) } }
         renderer.posCallback     = { pos  -> uiHandler.post { tvCoords.text = pos } }
+        renderer.fpsCallback     = { fps  -> uiHandler.post { tvFps.text = "$fps FPS" } }
         renderer.miningCallback  = { progress, blockType ->
             uiHandler.post {
                 if (blockType != null && progress > 0f) {

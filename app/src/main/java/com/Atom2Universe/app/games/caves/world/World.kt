@@ -21,6 +21,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private val ISLAND_CY_MIN  = 625
     private val SURFACE_BASE_Y = 80.0
     private val SEA_LEVEL      = 74
+    // Pas d'échantillonnage du biome (le champ est très basse fréquence) : 1 argmax par cellule
+    // BIOME_STEP×BIOME_STEP au lieu de par bloc. La hauteur reste calculée par bloc.
+    private val BIOME_STEP     = 2
 
     fun chunkKey(cx: Int, cy: Int, cz: Int): Long =
         (cx.toLong() and 0xFFFFF) or
@@ -309,23 +312,30 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val heights   = IntArray(CHUNK_SIZE * CHUNK_SIZE)
         val topBlocks = ShortArray(CHUNK_SIZE * CHUNK_SIZE)
         val capDepth  = IntArray(CHUNK_SIZE * CHUNK_SIZE)   // épaisseur du bloc de surface (neige…)
+        // Biome échantillonné sur une grille BIOME_STEP×BIOME_STEP (1 argmax pour le groupe),
+        // la hauteur reste calculée par bloc (octaves par bloc → relief lisse). surfaceHeight()
+        // applique le même snap pour rester cohérent (structures, spawn, puits).
         val weights   = DoubleArray(biomes.size)
-        for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
-            val i = lz * CHUNK_SIZE + lx
-            val wx = (chunk.worldX + lx).toDouble()
-            val wz = (chunk.worldZ + lz).toDouble()
-            // Un seul passage : biome dominant (blocs) + poids de mélange (hauteur)
-            val dom = BiomeMap.biomeWeights(wx, wz, seed, weights)
-            colBiome[i]  = dom
-            val h = blendedSurfaceHeight(wx, wz, weights).toInt()
-            heights[i]   = h
-            val alt = if (h < SEA_LEVEL) null else altitudeBlock(biomes[dom], wx, wz, h)
-            topBlocks[i] = when {
-                h < SEA_LEVEL -> SAND
-                alt != null   -> alt.block
-                else          -> surfaceNoiseBlock(biomes[dom], wx, wz)
+        for (cz0 in 0 until CHUNK_SIZE step BIOME_STEP) for (cx0 in 0 until CHUNK_SIZE step BIOME_STEP) {
+            val dom = BiomeMap.biomeWeights(
+                (chunk.worldX + cx0).toDouble(), (chunk.worldZ + cz0).toDouble(), seed, weights)
+            val sb = biomes[dom]
+            for (dz in 0 until BIOME_STEP) for (dx in 0 until BIOME_STEP) {
+                val lx = cx0 + dx; val lz = cz0 + dz
+                val i = lz * CHUNK_SIZE + lx
+                colBiome[i] = dom
+                val wx = (chunk.worldX + lx).toDouble()
+                val wz = (chunk.worldZ + lz).toDouble()
+                val h = blendedSurfaceHeight(wx, wz, weights).toInt()
+                heights[i] = h
+                val alt = if (h < SEA_LEVEL) null else altitudeBlock(sb, wx, wz, h)
+                topBlocks[i] = when {
+                    h < SEA_LEVEL -> SAND
+                    alt != null   -> alt.block
+                    else          -> surfaceNoiseBlock(sb, wx, wz)
+                }
+                capDepth[i] = alt?.thickness ?: 1
             }
-            capDepth[i]  = alt?.thickness ?: 1
         }
 
         // Remplissage des blocs : couche de surface (cap) / terre (topsoil) / pierre, par colonne
@@ -709,7 +719,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     internal fun surfaceHeight(wx: Double, wz: Double): Double {
         val w = DoubleArray(BiomeRegistry.surfaceBiomes.size)
-        BiomeMap.biomeWeights(wx, wz, seed, w)
+        // Snap aligné sur la grille BIOME_STEP de generateSurface → même biome, donc même hauteur.
+        val bx = floor(wx / BIOME_STEP) * BIOME_STEP
+        val bz = floor(wz / BIOME_STEP) * BIOME_STEP
+        BiomeMap.biomeWeights(bx, bz, seed, w)
         return blendedSurfaceHeight(wx, wz, w)
     }
 

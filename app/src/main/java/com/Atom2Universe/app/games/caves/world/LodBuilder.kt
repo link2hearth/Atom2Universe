@@ -30,7 +30,16 @@ internal object LodBuilder {
             val chunk = world.getChunk(cx, cy, cz) ?: continue
             if (chunk.generated) loaded.add(chunk)
         }
-        if (loaded.isNotEmpty()) {
+
+        // Le scan 256 cellules + la réécriture du cache ne servent que si les chunks chargés
+        // peuvent DÉPASSER la hauteur déjà mémorisée. Cas courant (terrain plat déjà visité,
+        // ou tout le ring au démarrage) : on saute, et on rebâtit le mesh à partir du cache.
+        var cachedMax = Int.MIN_VALUE
+        if (cached != null) for (h in heights) if (h > cachedMax) cachedMax = h
+        val topLoadedY = if (loaded.isNotEmpty()) loaded[0].cy * H + (H - 1) else Int.MIN_VALUE
+        val canGrow = loaded.isNotEmpty() && (cached == null || topLoadedY > cachedMax)
+
+        if (canGrow) {
             for (lz in 0 until H) for (lx in 0 until H) {
                 val idx = lz * H + lx
                 for (chunk in loaded) {                 // haut → bas : 1er bloc solide = sommet chargé
@@ -45,81 +54,83 @@ internal object LodBuilder {
                     if (hit) break
                 }
             }
-        }
-
-        if (cache != null) {
-            val shortH = ShortArray(H * H) { i ->
-                heights[i].let { if (it == Int.MIN_VALUE) Short.MIN_VALUE else it.toShort() }
+            if (cache != null) {
+                val shortH = ShortArray(H * H) { i ->
+                    heights[i].let { if (it == Int.MIN_VALUE) Short.MIN_VALUE else it.toShort() }
+                }
+                cache.put(cx, cz, shortH, topBlocks.copyOf())
             }
-            cache.put(cx, cz, shortH, topBlocks.copyOf())
         }
 
-        // ── Faces supérieures ────────────────────────────────────────────────
+        // ── Faces supérieures (couleur du bloc, pleine lumière) ───────────────
         for (lz in 0 until H) for (lx in 0 until H) {
             val h = heights[lz * H + lx]
             if (h == Int.MIN_VALUE) continue
-            val p = topLayer(topBlocks[lz * H + lx]).toFloat()   // faceDir=0 → light 1.0
+            val c = BlockRegistry.getColor(topBlocks[lz * H + lx])
+            val r = ((c ushr 16) and 0xFF) / 255f
+            val g = ((c ushr 8)  and 0xFF) / 255f
+            val b =  (c          and 0xFF) / 255f
             val x = lx.toFloat(); val z = lz.toFloat(); val y1 = (h + 1).toFloat()
-            buf.add6(x,    y1, z,    0f, 0f, p); buf.add6(x+1f, y1, z,    1f, 0f, p)
-            buf.add6(x+1f, y1, z+1f, 1f, 1f, p); buf.add6(x,    y1, z,    0f, 0f, p)
-            buf.add6(x+1f, y1, z+1f, 1f, 1f, p); buf.add6(x,    y1, z+1f, 0f, 1f, p)
+            buf.add6(x,    y1, z,    r, g, b); buf.add6(x+1f, y1, z,    r, g, b)
+            buf.add6(x+1f, y1, z+1f, r, g, b); buf.add6(x,    y1, z,    r, g, b)
+            buf.add6(x+1f, y1, z+1f, r, g, b); buf.add6(x,    y1, z+1f, r, g, b)
         }
 
         // ── Faces latérales : comble l'écart de hauteur avec les voisins ─────
-        // packed = layer + faceDir*128 (même encodage que MeshBuilder / VERT_WORLD).
-        // faceDir 2/3 → côtés X (lumière 0.72), faceDir 4/5 → côtés Z (lumière 0.62).
+        // Couleur du bloc × lumière de face (côtés X 0.72, côtés Z 0.62) bakée dans le vertex.
         for (lz in 0 until H) for (lx in 0 until H) {
             val h = heights[lz * H + lx]
             if (h == Int.MIN_VALUE) continue
-            val block = topBlocks[lz * H + lx]
+            val c = BlockRegistry.getColor(topBlocks[lz * H + lx])
+            val br = ((c ushr 16) and 0xFF) / 255f
+            val bg = ((c ushr 8)  and 0xFF) / 255f
+            val bb =  (c          and 0xFF) / 255f
+            val xr = br * 0.72f; val xg = bg * 0.72f; val xb = bb * 0.72f   // côtés X
+            val zr = br * 0.62f; val zg = bg * 0.62f; val zb = bb * 0.62f   // côtés Z
             val y1 = (h + 1).toFloat()
 
-            // +X  (faceDir 2 → 0.72)
+            // +X
             val hPX = if (lx < H - 1) heights[lz * H + lx + 1]
                       else adjHeight(cx + 1, cz, 0, lz, world, cache)
             if (hPX != Int.MIN_VALUE && hPX < h) {
                 val yb = (hPX + 1).toFloat()
-                val p = (sideLayer(block) + 2 * 4096).toFloat()
                 val x = (lx + 1).toFloat(); val z = lz.toFloat()
-                buf.add6(x, y1, z,    0f, 0f, p); buf.add6(x, y1, z+1f, 1f, 0f, p)
-                buf.add6(x, yb, z+1f, 1f, 1f, p); buf.add6(x, y1, z,    0f, 0f, p)
-                buf.add6(x, yb, z+1f, 1f, 1f, p); buf.add6(x, yb, z,    0f, 1f, p)
+                buf.add6(x, y1, z,    xr, xg, xb); buf.add6(x, y1, z+1f, xr, xg, xb)
+                buf.add6(x, yb, z+1f, xr, xg, xb); buf.add6(x, y1, z,    xr, xg, xb)
+                buf.add6(x, yb, z+1f, xr, xg, xb); buf.add6(x, yb, z,    xr, xg, xb)
             }
 
-            // -X  (faceDir 3 → 0.72)
+            // -X
             val hMX = if (lx > 0) heights[lz * H + lx - 1]
                       else adjHeight(cx - 1, cz, H - 1, lz, world, cache)
             if (hMX != Int.MIN_VALUE && hMX < h) {
                 val yb = (hMX + 1).toFloat()
-                val p = (sideLayer(block) + 3 * 4096).toFloat()
                 val x = lx.toFloat(); val z = lz.toFloat()
-                buf.add6(x, y1, z+1f, 0f, 0f, p); buf.add6(x, y1, z,    1f, 0f, p)
-                buf.add6(x, yb, z,    1f, 1f, p); buf.add6(x, y1, z+1f, 0f, 0f, p)
-                buf.add6(x, yb, z,    1f, 1f, p); buf.add6(x, yb, z+1f, 0f, 1f, p)
+                buf.add6(x, y1, z+1f, xr, xg, xb); buf.add6(x, y1, z,    xr, xg, xb)
+                buf.add6(x, yb, z,    xr, xg, xb); buf.add6(x, y1, z+1f, xr, xg, xb)
+                buf.add6(x, yb, z,    xr, xg, xb); buf.add6(x, yb, z+1f, xr, xg, xb)
             }
 
-            // +Z  (faceDir 4 → 0.62)
+            // +Z
             val hPZ = if (lz < H - 1) heights[(lz + 1) * H + lx]
                       else adjHeight(cx, cz + 1, lx, 0, world, cache)
             if (hPZ != Int.MIN_VALUE && hPZ < h) {
                 val yb = (hPZ + 1).toFloat()
-                val p = (sideLayer(block) + 4 * 4096).toFloat()
                 val x = lx.toFloat(); val z = (lz + 1).toFloat()
-                buf.add6(x+1f, y1, z, 0f, 0f, p); buf.add6(x,    y1, z, 1f, 0f, p)
-                buf.add6(x,    yb, z, 1f, 1f, p); buf.add6(x+1f, y1, z, 0f, 0f, p)
-                buf.add6(x,    yb, z, 1f, 1f, p); buf.add6(x+1f, yb, z, 0f, 1f, p)
+                buf.add6(x+1f, y1, z, zr, zg, zb); buf.add6(x,    y1, z, zr, zg, zb)
+                buf.add6(x,    yb, z, zr, zg, zb); buf.add6(x+1f, y1, z, zr, zg, zb)
+                buf.add6(x,    yb, z, zr, zg, zb); buf.add6(x+1f, yb, z, zr, zg, zb)
             }
 
-            // -Z  (faceDir 5 → 0.62)
+            // -Z
             val hMZ = if (lz > 0) heights[(lz - 1) * H + lx]
                       else adjHeight(cx, cz - 1, lx, H - 1, world, cache)
             if (hMZ != Int.MIN_VALUE && hMZ < h) {
                 val yb = (hMZ + 1).toFloat()
-                val p = (sideLayer(block) + 5 * 4096).toFloat()
                 val x = lx.toFloat(); val z = lz.toFloat()
-                buf.add6(x,    y1, z, 0f, 0f, p); buf.add6(x+1f, y1, z, 1f, 0f, p)
-                buf.add6(x+1f, yb, z, 1f, 1f, p); buf.add6(x,    y1, z, 0f, 0f, p)
-                buf.add6(x+1f, yb, z, 1f, 1f, p); buf.add6(x,    yb, z, 0f, 1f, p)
+                buf.add6(x,    y1, z, zr, zg, zb); buf.add6(x+1f, y1, z, zr, zg, zb)
+                buf.add6(x+1f, yb, z, zr, zg, zb); buf.add6(x,    y1, z, zr, zg, zb)
+                buf.add6(x+1f, yb, z, zr, zg, zb); buf.add6(x,    yb, z, zr, zg, zb)
             }
         }
 
@@ -150,14 +161,10 @@ internal object LodBuilder {
         return Int.MIN_VALUE
     }
 
-    private fun topLayer(b: Short): Int = BlockRegistry.getLayerForFace(b, 0, AIR)
-
-    private fun sideLayer(b: Short): Int = BlockRegistry.getLayerForFace(b, 2, AIR)
-
     private class Buf(cap: Int = 8192) {
         private var data = FloatArray(cap); private var n = 0
         fun add(v: Float) { if (n == data.size) data = data.copyOf(n * 2); data[n++] = v }
-        fun add6(x:Float,y:Float,z:Float,u:Float,v:Float,p:Float) { add(x);add(y);add(z);add(u);add(v);add(p) }
+        fun add6(x:Float,y:Float,z:Float,r:Float,g:Float,b:Float) { add(x);add(y);add(z);add(r);add(g);add(b) }
         fun toArray() = data.copyOf(n)
     }
 }

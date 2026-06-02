@@ -23,6 +23,22 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:tint="#FFFFFF" />
 
+        <!-- Compteur FPS (sous le bouton retour) -->
+        <TextView
+            android:id="@+id/cave_tv_fps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="64dp"
+            android:background="#55000000"
+            android:fontFamily="monospace"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:text="-- FPS"
+            android:textColor="#99FFFFFF"
+            android:textSize="11sp" />
+
         <!-- Coordonnées (haut centre) -->
         <TextView
             android:id="@+id/cave_tv_coords"
