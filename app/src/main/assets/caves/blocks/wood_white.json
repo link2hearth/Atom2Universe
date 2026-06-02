@@ -1,9 +1,9 @@
 {
   "id": 1001,
   "name": "wood_white",
-  "texture_top": "trunk_white_top.png",
-  "texture_side": "trunk_white_side.png",
-  "texture_bottom": "trunk_white_top.png",
+  "texture_top": "wood/trunk_white_top.png",
+  "texture_side": "wood/trunk_white_side.png",
+  "texture_bottom": "wood/trunk_white_top.png",
   "color": "#D4C8A0",
   "hardness": 2.0,
   "drop": "wood_white",

@@ -1,9 +1,9 @@
 {
   "id": 3001,
   "name": "iron",
-  "texture_top": "stone_iron.png",
-  "texture_side": "stone_iron.png",
-  "texture_bottom": "stone_iron.png",
+  "texture_top": "Ores/stone_iron.png",
+  "texture_side": "Ores/stone_iron.png",
+  "texture_bottom": "Ores/stone_iron.png",
   "color": "#B87333",
   "hardness": 4.0,
   "drop": "iron",

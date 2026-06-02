@@ -1,0 +1,30 @@
+{
+  "id": "iceberg",
+  "noise_offsets": [2400.0, 0.0, 2300.0],
+  "surface_blocks": [
+    {"block": "blue_ice", "noise_min":  0.30},
+    {"block": "ice",      "noise_min": -99.0}
+  ],
+  "surface_variety_scale": 0.08,
+  "surface_variety_offset": 700.0,
+  "dirt_block": "blue_ice",
+  "stone_block": "blue_ice",
+  "height_base": -40.0,
+  "height_amplitude": 80.0,
+  "height_roughness": 35.0,
+  "topsoil_depth": 0,
+  "height_blocks": [
+    {"block": "blue_ice", "min_height": 60,  "thickness": 999},
+    {"block": "ice",      "min_height": -10, "thickness": 999}
+  ],
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "bush_density": 0.0,
+  "decoration_density": 0.01,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.0,
+  "vegetation_blocks": [],
+  "wheat_enabled": false,
+  "structures": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": 1004,
+  "name": "wood_jungle",
+  "texture_top": "wood/trunk_jungle_top.png",
+  "texture_side": "wood/trunk_jungle_side.png",
+  "texture_bottom": "wood/trunk_jungle_top.png",
+  "color": "#3D5C1A",
+  "hardness": 2.0,
+  "drop": "wood_jungle",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

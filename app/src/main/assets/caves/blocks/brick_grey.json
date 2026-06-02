@@ -1,9 +1,9 @@
 {
   "id": 2011,
   "name": "brick_grey",
-  "texture_top": "brick_grey.png",
-  "texture_side": "brick_grey.png",
-  "texture_bottom": "brick_grey.png",
+  "texture_top": "blocs/brick_grey.png",
+  "texture_side": "blocs/brick_grey.png",
+  "texture_bottom": "blocs/brick_grey.png",
   "color": "#888899",
   "hardness": 3.0,
   "drop": "brick_grey",

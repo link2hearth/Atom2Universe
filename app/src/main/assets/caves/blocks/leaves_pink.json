@@ -1,0 +1,12 @@
+{
+  "id": 1029,
+  "name": "leaves_pink",
+  "texture_top": "wood/leaves_pink.png",
+  "texture_side": "wood/leaves_pink.png",
+  "texture_bottom": "wood/leaves_pink.png",
+  "color": "#FF5599",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_pink",
+  "creative_tab": "wood"
+}

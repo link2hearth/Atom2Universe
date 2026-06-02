@@ -1,0 +1,11 @@
+{
+  "id": 104,
+  "name": "dirt_sand",
+  "texture_top": "blocs/sand_top.png",
+  "texture_side": "blocs/dirt_sand_side.png",
+  "texture_bottom": "blocs/dirt_top.png",
+  "color": "#C2A060",
+  "hardness": 1.5,
+  "drop": "dirt_sand",
+  "creative_tab": "terrain"
+}

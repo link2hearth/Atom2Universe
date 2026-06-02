@@ -1,0 +1,12 @@
+{
+  "id": 1031,
+  "name": "leaves_sapin",
+  "texture_top": "wood/leaves_sapin.png",
+  "texture_side": "wood/leaves_sapin.png",
+  "texture_bottom": "wood/leaves_sapin.png",
+  "color": "#163D09",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_sapin",
+  "creative_tab": "wood"
+}

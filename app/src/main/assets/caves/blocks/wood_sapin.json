@@ -1,0 +1,12 @@
+{
+  "id": 1009,
+  "name": "wood_sapin",
+  "texture_top": "wood/trunk_sapin_top.png",
+  "texture_side": "wood/trunk_sapin_side.png",
+  "texture_bottom": "wood/trunk_sapin_top.png",
+  "color": "#2A1E0B",
+  "hardness": 2.0,
+  "drop": "wood_sapin",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

@@ -1,0 +1,12 @@
+{
+  "id": 1007,
+  "name": "wood_yellow",
+  "texture_top": "wood/trunk_yellow_top.png",
+  "texture_side": "wood/trunk_yellow_side.png",
+  "texture_bottom": "wood/trunk_yellow_top.png",
+  "color": "#FFE633",
+  "hardness": 2.0,
+  "drop": "wood_yellow",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

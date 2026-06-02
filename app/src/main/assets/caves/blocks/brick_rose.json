@@ -1,0 +1,11 @@
+{
+  "id": 2017,
+  "name": "brick_rose",
+  "texture_top": "blocs/brick_rose.png",
+  "texture_side": "blocs/brick_rose.png",
+  "texture_bottom": "blocs/brick_rose.png",
+  "color": "#CC8585",
+  "hardness": 3.5,
+  "drop": "brick_rose",
+  "creative_tab": "terrain"
+}

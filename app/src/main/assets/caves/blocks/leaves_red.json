@@ -1,0 +1,12 @@
+{
+  "id": 1023,
+  "name": "leaves_red",
+  "texture_top": "wood/leaves_red.png",
+  "texture_side": "wood/leaves_red.png",
+  "texture_bottom": "wood/leaves_red.png",
+  "color": "#CC3310",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_red",
+  "creative_tab": "wood"
+}

@@ -17,24 +17,63 @@ const val DIRT:        Short = 100
 const val GRASS:       Short = 101
 const val GRAVEL:      Short = 102
 const val GRAVEL_DIRT: Short = 103
+const val DIRT_SAND:   Short = 104
+const val DIRT_SNOW:   Short = 105
 
 // ── Famille 1000 : Bois ───────────────────────────────────────────────────────
 const val WOOD:            Short = 1000
 const val WOOD_WHITE:      Short = 1001
+const val WOOD_RED:        Short = 1002
+const val WOOD_DARK:       Short = 1003
+const val WOOD_JUNGLE:     Short = 1004
+const val WOOD_BLUE:       Short = 1005
+const val WOOD_PURPLE:     Short = 1006
+const val WOOD_YELLOW:     Short = 1007
+const val WOOD_PINK:       Short = 1008
+const val WOOD_SAPIN:      Short = 1009
 const val PLANK:           Short = 1010
 const val WOOD_PLANK_WHITE:Short = 1011
+const val PLANK_RED:       Short = 1012
+const val PLANK_DARK:      Short = 1013
+const val PLANK_JUNGLE:    Short = 1014
+const val PLANK_BLUE:      Short = 1015
+const val PLANK_PURPLE:    Short = 1016
+const val PLANK_YELLOW:    Short = 1017
+const val PLANK_PINK:      Short = 1018
+const val PLANK_SAPIN:     Short = 1019
 const val LEAVES:          Short = 1020
 const val LEAVES_ORANGE:   Short = 1021
 const val LEAVES_FALL:     Short = 1022
+const val LEAVES_RED:      Short = 1023
+const val LEAVES_DARK:     Short = 1024
+const val LEAVES_JUNGLE:   Short = 1025
+const val LEAVES_BLUE:     Short = 1026
+const val LEAVES_PURPLE:   Short = 1027
+const val LEAVES_YELLOW:   Short = 1028
+const val LEAVES_PINK:     Short = 1029
+const val LEAVES_SAPIN:    Short = 1031
 
 // ── Famille 2000 : Pierre ─────────────────────────────────────────────────────
-const val STONE:     Short = 2000
-const val GRANITE:   Short = 2001
-const val QUARTZ:    Short = 2002
-const val BRICK_RED: Short = 2010
-const val BRICK_GREY:Short = 2011
-const val ROCK:      Short = 2020
-const val ROCK_MOSS: Short = 2021
+const val STONE:               Short = 2000
+const val GRANITE:             Short = 2001
+const val QUARTZ:              Short = 2002
+const val BRICK_RED:           Short = 2010
+const val BRICK_GREY:          Short = 2011
+const val BRICK_TERRACOTTA:    Short = 2012
+const val BRICK_SANDY:         Short = 2013
+const val BRICK_COBALT:        Short = 2014
+const val BRICK_OBSIDIAN:      Short = 2015
+const val BRICK_MOSS:          Short = 2016
+const val BRICK_ROSE:          Short = 2017
+const val ROCK:                Short = 2020
+const val ROCK_MOSS:           Short = 2021
+const val STONE_GRASS:         Short = 2030
+const val STONE_DIRT:          Short = 2031
+const val STONE_SAND:          Short = 2032
+const val STONE_SNOW:          Short = 2033
+const val GREYSAND:            Short = 2050
+const val GREYSTONE:           Short = 2051
+const val GREYSTONE_GREYSAND:  Short = 2052
 
 // ── Famille 3000 : Minerais ───────────────────────────────────────────────────
 const val COAL:     Short = 3000
@@ -48,13 +87,15 @@ const val CRYSTAL:  Short = 3007
 const val REDSTONE: Short = 3008
 
 // ── Famille 4000 : Désert / Sable ─────────────────────────────────────────────
-const val SAND:    Short = 4000
-const val REDSAND: Short = 4001
-const val CACTUS:  Short = 4010
+const val SAND:              Short = 4000
+const val REDSAND:           Short = 4001
+const val REDSTONE_REDSAND:  Short = 4002
+const val CACTUS:            Short = 4010
 
 // ── Famille 5000 : Glace / Neige ──────────────────────────────────────────────
-const val ICE:  Short = 5000
-const val SNOW: Short = 5001
+const val ICE:      Short = 5000
+const val SNOW:     Short = 5001
+const val BLUE_ICE: Short = 5002
 
 // ── Famille 6000 : Liquides ───────────────────────────────────────────────────
 const val LAVA:       Short = 6000
@@ -124,7 +165,10 @@ const val BUCKET_EMPTY: Short = 10000
 const val BUCKET_FULL:  Short = 10001
 
 // ── Propriétés de bloc — délèguent à BlockRegistry après load() ───────────────
-fun isDecoration(block: Short) = BlockRegistry.isDecoration(block)
+fun isDecoration(block: Short)  = BlockRegistry.isDecoration(block)
+fun isWaterlogged(block: Short) = BlockRegistry.isWaterlogged(block)
+fun isWood(block: Short)        = BlockRegistry.isWood(block)
+fun isLeaf(block: Short)        = BlockRegistry.isLeaf(block)
 fun isTransparent(block: Short) = BlockRegistry.isTransparent(block)
 fun isWater(block: Short)       = BlockRegistry.isWater(block)
 fun isFalling(block: Short)     = BlockRegistry.isFalling(block)

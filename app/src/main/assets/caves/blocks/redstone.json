@@ -1,9 +1,9 @@
 {
   "id": 3008,
   "name": "redstone",
-  "texture_top": "redstone.png",
-  "texture_side": "redstone.png",
-  "texture_bottom": "redstone.png",
+  "texture_top": "blocs/redstone_top.png",
+  "texture_side": "blocs/redstone_top.png",
+  "texture_bottom": "blocs/redstone_top.png",
   "color": "#AA2222",
   "hardness": 2.5,
   "drop": "redstone",

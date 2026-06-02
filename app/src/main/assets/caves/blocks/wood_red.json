@@ -1,0 +1,12 @@
+{
+  "id": 1002,
+  "name": "wood_red",
+  "texture_top": "wood/trunk_red_top.png",
+  "texture_side": "wood/trunk_red_side.png",
+  "texture_bottom": "wood/trunk_red_top.png",
+  "color": "#DB7850",
+  "hardness": 2.0,
+  "drop": "wood_red",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

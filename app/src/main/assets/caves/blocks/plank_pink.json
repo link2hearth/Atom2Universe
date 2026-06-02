@@ -1,0 +1,11 @@
+{
+  "id": 1018,
+  "name": "plank_pink",
+  "texture_top": "wood/wood_plank_pink.png",
+  "texture_side": "wood/wood_plank_pink.png",
+  "texture_bottom": "wood/wood_plank_pink.png",
+  "color": "#FF73BF",
+  "hardness": 2.0,
+  "drop": "plank_pink",
+  "creative_tab": "wood"
+}

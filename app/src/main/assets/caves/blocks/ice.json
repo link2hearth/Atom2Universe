@@ -1,9 +1,9 @@
 {
   "id": 5000,
   "name": "ice",
-  "texture_top": "ice.png",
-  "texture_side": "ice.png",
-  "texture_bottom": "ice.png",
+  "texture_top": "blocs/ice_top.png",
+  "texture_side": "blocs/ice_top.png",
+  "texture_bottom": "blocs/ice_top.png",
   "color": "#AADDFF",
   "hardness": 1.0,
   "transparent": true,

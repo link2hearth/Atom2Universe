@@ -1,0 +1,11 @@
+{
+  "id": 2030,
+  "name": "stone_grass",
+  "texture_top": "blocs/grass_top.png",
+  "texture_side": "blocs/stone_grass_side.png",
+  "texture_bottom": "blocs/stone_top.png",
+  "color": "#5A8A3A",
+  "hardness": 3.0,
+  "drop": "stone_grass",
+  "creative_tab": "terrain"
+}

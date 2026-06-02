@@ -1,11 +1,12 @@
 {
   "id": 1020,
   "name": "leaves",
-  "texture_top": "leaves.png",
-  "texture_side": "leaves.png",
-  "texture_bottom": "leaves.png",
+  "texture_top": "wood/leaves_transparent.png",
+  "texture_side": "wood/leaves_transparent.png",
+  "texture_bottom": "wood/leaves_transparent.png",
   "color": "#2D6A1F",
   "hardness": 0.3,
   "drop": "leaves",
-  "creative_tab": "wood"
+  "creative_tab": "wood",
+  "transparent": true
 }

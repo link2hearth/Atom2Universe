@@ -1,9 +1,19 @@
 {
   "id": "savanna",
-  "noise_offsets": [200.0, 0.0, -600.0],
+  "noise_offsets": [
+    200.0,
+    0.0,
+    -600.0
+  ],
   "surface_blocks": [
-    {"block": "grass", "noise_min":  0.3},
-    {"block": "sand",  "noise_min": -99.0}
+    {
+      "block": "grass",
+      "noise_min": 0.3
+    },
+    {
+      "block": "sand",
+      "noise_min": -99.0
+    }
   ],
   "surface_variety_scale": 0.035,
   "surface_variety_offset": 350.0,
@@ -19,18 +29,35 @@
   "tree_max_height": 6,
   "canopy_radius": 3,
   "bush_density": 0.06,
-  "bush_block": "leaves_orange",
+  "bush_block": "leaves_fall",
   "decoration_density": 0.03,
-  "decoration_blocks": ["rock"],
+  "decoration_blocks": [
+    "rock"
+  ],
   "vegetation_density": 0.18,
   "vegetation_blocks": [
-    {"block": "grass_brown", "weight": 3},
-    {"block": "grass_tan",   "weight": 3},
-    {"block": "grass_wild3", "weight": 1},
-    {"block": "grass_wild4", "weight": 1}
+    {
+      "block": "grass_brown",
+      "weight": 3
+    },
+    {
+      "block": "grass_tan",
+      "weight": 3
+    },
+    {
+      "block": "grass_wild3",
+      "weight": 1
+    },
+    {
+      "block": "grass_wild4",
+      "weight": 1
+    }
   ],
   "wheat_enabled": false,
   "structures": [
-    {"name": "ruins_stone", "weight": 1}
+    {
+      "name": "ruins_stone",
+      "weight": 1
+    }
   ]
 }

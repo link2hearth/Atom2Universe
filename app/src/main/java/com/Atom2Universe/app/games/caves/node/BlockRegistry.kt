@@ -10,10 +10,11 @@ internal object BlockRegistry {
     private val defs = HashMap<Short, BlockDef>()
 
     // Tables O(1) pour le hot path du rendu — indexées par id.toInt() and 0xFFFF
-    private val decorationTable = BooleanArray(65536)
+    private val decorationTable  = BooleanArray(65536)
     private val transparentTable = BooleanArray(65536)
-    private val waterTable = BooleanArray(65536)
-    private val fallingTable = BooleanArray(65536)
+    private val waterTable       = BooleanArray(65536)
+    private val fallingTable     = BooleanArray(65536)
+    private val waterloggedTable = BooleanArray(65536)
 
     // Tables de layers pré-calculées après buildTextureAtlas()
     private val layerTopTable       = IntArray(65536)
@@ -46,10 +47,11 @@ internal object BlockRegistry {
             val def = BlockDef.fromJson(JSONObject(json))
             defs[def.id] = def
             val idx = def.id.toInt() and 0xFFFF
-            if (def.decoration) decorationTable[idx] = true
+            if (def.decoration)  decorationTable[idx]  = true
             if (def.transparent) transparentTable[idx] = true
-            if (def.water) waterTable[idx] = true
-            if (def.falling) fallingTable[idx] = true
+            if (def.water)       waterTable[idx]       = true
+            if (def.falling)     fallingTable[idx]     = true
+            if (def.waterlogged) waterloggedTable[idx] = true
             orientModeTable[idx] = def.orientMode
         }
     }
@@ -113,7 +115,10 @@ internal object BlockRegistry {
 
     fun get(id: Short): BlockDef? = defs[id]
 
-    fun isDecoration(block: Short) = decorationTable[block.toInt() and 0xFFFF]
+    fun isDecoration(block: Short)  = decorationTable[block.toInt() and 0xFFFF]
+    fun isWaterlogged(block: Short) = waterloggedTable[block.toInt() and 0xFFFF]
+    fun isWood(block: Short)  = block.toInt() in 1000..1009
+    fun isLeaf(block: Short)  = block.toInt() in 1020..1031
     fun isTransparent(block: Short) = transparentTable[block.toInt() and 0xFFFF]
     fun isWater(block: Short)       = waterTable[block.toInt() and 0xFFFF]
     fun isFalling(block: Short)     = fallingTable[block.toInt() and 0xFFFF]

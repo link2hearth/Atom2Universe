@@ -1,9 +1,19 @@
 {
   "id": "ocean",
-  "noise_offsets": [-1100.0, 0.0, -1300.0],
+  "noise_offsets": [
+    -1100.0,
+    0.0,
+    -1300.0
+  ],
   "surface_blocks": [
-    {"block": "gravel", "noise_min":  0.45},
-    {"block": "sand",   "noise_min": -99.0}
+    {
+      "block": "gravel",
+      "noise_min": 0.45
+    },
+    {
+      "block": "sand",
+      "noise_min": -99.0
+    }
   ],
   "surface_variety_scale": 0.05,
   "surface_variety_offset": 1500.0,
@@ -17,8 +27,11 @@
   "tree_density_noise_scale": 0.0,
   "tree_type": "none",
   "bush_density": 0.0,
-  "decoration_density": 0.0,
-  "decoration_blocks": [],
+  "decoration_density": 0.015,
+  "decoration_blocks": [
+    "rock_moss",
+    "rock"
+  ],
   "vegetation_density": 0.0,
   "vegetation_blocks": [],
   "wheat_enabled": false,

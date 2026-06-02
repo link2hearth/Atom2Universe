@@ -1,9 +1,9 @@
 {
   "id": 5001,
   "name": "snow",
-  "texture_top": "snow.png",
-  "texture_side": "dirt_snow.png",
-  "texture_bottom": "dirt.png",
+  "texture_top": "blocs/snow_top.png",
+  "texture_side": "blocs/snow_top.png",
+  "texture_bottom": "blocs/snow_top.png",
   "color": "#EEEEFF",
   "hardness": 0.5,
   "drop": "snow",

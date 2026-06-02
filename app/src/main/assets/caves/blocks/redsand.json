@@ -1,9 +1,9 @@
 {
   "id": 4001,
   "name": "redsand",
-  "texture_top": "redsand.png",
-  "texture_side": "redsand.png",
-  "texture_bottom": "redsand.png",
+  "texture_top": "blocs/redsand_top.png",
+  "texture_side": "blocs/redsand_top.png",
+  "texture_bottom": "blocs/redsand_top.png",
   "color": "#CC6633",
   "hardness": 0.8,
   "falling": true,

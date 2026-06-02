@@ -1,9 +1,9 @@
 {
   "id": 100,
   "name": "dirt",
-  "texture_top": "dirt.png",
-  "texture_side": "dirt.png",
-  "texture_bottom": "dirt.png",
+  "texture_top": "blocs/dirt_top.png",
+  "texture_side": "blocs/dirt_top.png",
+  "texture_bottom": "blocs/dirt_top.png",
   "color": "#8B5E3C",
   "hardness": 0.8,
   "drop": "dirt",

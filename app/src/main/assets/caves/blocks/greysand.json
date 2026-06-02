@@ -1,0 +1,12 @@
+{
+  "id": 2050,
+  "name": "greysand",
+  "texture_top": "blocs/greysand_top.png",
+  "texture_side": "blocs/greysand_top.png",
+  "texture_bottom": "blocs/greysand_top.png",
+  "color": "#A8A070",
+  "hardness": 3.0,
+  "drop": "greysand",
+  "creative_tab": "terrain",
+  "falling": true
+}

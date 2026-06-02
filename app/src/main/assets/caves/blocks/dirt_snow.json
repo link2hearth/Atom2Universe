@@ -1,0 +1,11 @@
+{
+  "id": 105,
+  "name": "dirt_snow",
+  "texture_top": "blocs/snow_top.png",
+  "texture_side": "blocs/dirt_snow_side.png",
+  "texture_bottom": "blocs/dirt_top.png",
+  "color": "#D8D8D8",
+  "hardness": 1.5,
+  "drop": "dirt_snow",
+  "creative_tab": "terrain"
+}

@@ -1,9 +1,9 @@
 {
   "id": 101,
   "name": "grass",
-  "texture_top": "grass_top.png",
-  "texture_side": "dirt_grass.png",
-  "texture_bottom": "dirt.png",
+  "texture_top": "blocs/grass_top.png",
+  "texture_side": "blocs/dirt_grass_side.png",
+  "texture_bottom": "blocs/dirt_top.png",
   "color": "#55AA33",
   "hardness": 0.8,
   "drop": "dirt",

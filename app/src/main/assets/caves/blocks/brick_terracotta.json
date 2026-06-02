@@ -1,0 +1,11 @@
+{
+  "id": 2012,
+  "name": "brick_terracotta",
+  "texture_top": "blocs/brick_terracotta.png",
+  "texture_side": "blocs/brick_terracotta.png",
+  "texture_bottom": "blocs/brick_terracotta.png",
+  "color": "#C76B38",
+  "hardness": 3.5,
+  "drop": "brick_terracotta",
+  "creative_tab": "terrain"
+}

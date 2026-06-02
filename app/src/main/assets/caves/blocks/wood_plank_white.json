@@ -1,9 +1,9 @@
 {
   "id": 1011,
   "name": "wood_plank_white",
-  "texture_top": "wood_plank_white.png",
-  "texture_side": "wood_plank_white.png",
-  "texture_bottom": "wood_plank_white.png",
+  "texture_top": "wood/wood_plank_white.png",
+  "texture_side": "wood/wood_plank_white.png",
+  "texture_bottom": "wood/wood_plank_white.png",
   "color": "#D4BFA0",
   "hardness": 2.0,
   "drop": "wood_plank_white",

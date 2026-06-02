@@ -1,0 +1,11 @@
+{
+  "id": 2051,
+  "name": "greystone",
+  "texture_top": "blocs/greystone_top.png",
+  "texture_side": "blocs/greystone_top.png",
+  "texture_bottom": "blocs/greystone_top.png",
+  "color": "#787868",
+  "hardness": 3.5,
+  "drop": "greystone",
+  "creative_tab": "terrain"
+}

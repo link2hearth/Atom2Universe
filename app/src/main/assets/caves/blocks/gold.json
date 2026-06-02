@@ -1,9 +1,9 @@
 {
   "id": 3003,
   "name": "gold",
-  "texture_top": "stone_gold.png",
-  "texture_side": "stone_gold.png",
-  "texture_bottom": "stone_gold.png",
+  "texture_top": "Ores/stone_gold.png",
+  "texture_side": "Ores/stone_gold.png",
+  "texture_bottom": "Ores/stone_gold.png",
   "color": "#FFD700",
   "hardness": 4.5,
   "drop": "gold",

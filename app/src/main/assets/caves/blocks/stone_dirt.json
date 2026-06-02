@@ -1,0 +1,11 @@
+{
+  "id": 2031,
+  "name": "stone_dirt",
+  "texture_top": "blocs/dirt_top.png",
+  "texture_side": "blocs/stone_dirt_side.png",
+  "texture_bottom": "blocs/stone_top.png",
+  "color": "#8B6914",
+  "hardness": 3.0,
+  "drop": "stone_dirt",
+  "creative_tab": "terrain"
+}

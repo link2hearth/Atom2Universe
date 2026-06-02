@@ -9,19 +9,59 @@ internal fun blockIdByName(name: String): Short = when (name) {
     "grass"       -> GRASS
     "gravel"      -> GRAVEL
     "gravel_dirt" -> GRAVEL_DIRT
-    "wood"        -> WOOD
-    "wood_white"  -> WOOD_WHITE
-    "plank"       -> PLANK
-    "leaves"      -> LEAVES
+    "dirt_sand"   -> DIRT_SAND
+    "dirt_snow"   -> DIRT_SNOW
+    "wood"         -> WOOD
+    "wood_white"   -> WOOD_WHITE
+    "wood_red"     -> WOOD_RED
+    "wood_dark"    -> WOOD_DARK
+    "wood_jungle"  -> WOOD_JUNGLE
+    "wood_blue"    -> WOOD_BLUE
+    "wood_purple"  -> WOOD_PURPLE
+    "wood_yellow"  -> WOOD_YELLOW
+    "wood_pink"    -> WOOD_PINK
+    "wood_sapin"   -> WOOD_SAPIN
+    "plank_sapin"  -> PLANK_SAPIN
+    "plank"        -> PLANK
+    "plank_red"    -> PLANK_RED
+    "plank_dark"   -> PLANK_DARK
+    "plank_jungle" -> PLANK_JUNGLE
+    "plank_blue"   -> PLANK_BLUE
+    "plank_purple" -> PLANK_PURPLE
+    "plank_yellow" -> PLANK_YELLOW
+    "plank_pink"   -> PLANK_PINK
+    "wood_plank_white" -> WOOD_PLANK_WHITE
+    "leaves"        -> LEAVES
     "leaves_orange" -> LEAVES_ORANGE
-    "leaves_fall" -> LEAVES_FALL
-    "stone"       -> STONE
-    "granite"     -> GRANITE
-    "quartz"      -> QUARTZ
-    "brick_red"   -> BRICK_RED
-    "brick_grey"  -> BRICK_GREY
-    "rock"        -> ROCK
-    "rock_moss"   -> ROCK_MOSS
+    "leaves_fall"   -> LEAVES_FALL
+    "leaves_red"    -> LEAVES_RED
+    "leaves_dark"   -> LEAVES_DARK
+    "leaves_jungle" -> LEAVES_JUNGLE
+    "leaves_blue"   -> LEAVES_BLUE
+    "leaves_purple" -> LEAVES_PURPLE
+    "leaves_yellow" -> LEAVES_YELLOW
+    "leaves_pink"   -> LEAVES_PINK
+    "leaves_sapin"  -> LEAVES_SAPIN
+    "stone"              -> STONE
+    "granite"            -> GRANITE
+    "quartz"             -> QUARTZ
+    "brick_red"        -> BRICK_RED
+    "brick_grey"       -> BRICK_GREY
+    "brick_terracotta" -> BRICK_TERRACOTTA
+    "brick_sandy"      -> BRICK_SANDY
+    "brick_cobalt"     -> BRICK_COBALT
+    "brick_obsidian"   -> BRICK_OBSIDIAN
+    "brick_moss"       -> BRICK_MOSS
+    "brick_rose"       -> BRICK_ROSE
+    "rock"               -> ROCK
+    "rock_moss"          -> ROCK_MOSS
+    "stone_grass"        -> STONE_GRASS
+    "stone_dirt"         -> STONE_DIRT
+    "stone_sand"         -> STONE_SAND
+    "stone_snow"         -> STONE_SNOW
+    "greysand"           -> GREYSAND
+    "greystone"          -> GREYSTONE
+    "greystone_greysand" -> GREYSTONE_GREYSAND
     "coal"        -> COAL
     "iron"        -> IRON
     "silver"      -> SILVER
@@ -31,11 +71,13 @@ internal fun blockIdByName(name: String): Short = when (name) {
     "emerald"     -> EMERALD
     "crystal"     -> CRYSTAL
     "redstone"    -> REDSTONE
-    "sand"        -> SAND
-    "redsand"     -> REDSAND
-    "cactus"      -> CACTUS
-    "ice"         -> ICE
-    "snow"        -> SNOW
+    "sand"              -> SAND
+    "redsand"           -> REDSAND
+    "redstone_redsand"  -> REDSTONE_REDSAND
+    "cactus"            -> CACTUS
+    "ice"      -> ICE
+    "snow"     -> SNOW
+    "blue_ice" -> BLUE_ICE
     "lava"        -> LAVA
     "water"       -> WATER
     "water_flow"  -> WATER_FLOW

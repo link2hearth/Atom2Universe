@@ -776,6 +776,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private fun plantSurfaceTrees(chunk: Chunk, colBiome: IntArray) {
         plantOakTrees(chunk, colBiome)
         plantBirchTrees(chunk, colBiome)
+        plantDarkwoodTrees(chunk, colBiome)
+        plantSapinTrees(chunk, colBiome)
+        plantJungleTrees(chunk, colBiome)
+        plantRedwoodTrees(chunk, colBiome)
+        plantColoredTrees(chunk, colBiome)
     }
 
     private fun plantOakTrees(chunk: Chunk, colBiome: IntArray) {
@@ -823,11 +828,20 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
             if (sb.decorationBlocks.isEmpty()) continue
             if (rng.nextFloat() > sb.decorationDensity) continue
+            val decor = sb.decorationBlocks[rng.nextInt(sb.decorationBlocks.size)]
+            val wl = isWaterlogged(decor)
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
-                if (b == AIR || isDecoration(b) || isWater(b)) continue
-                if (ly + 1 >= CHUNK_SIZE || chunk.blockAt(lx, ly + 1, lz) != AIR) break
-                chunk.setBlock(lx, ly + 1, lz, sb.decorationBlocks[rng.nextInt(sb.decorationBlocks.size)])
+                // Ne jamais poser sur de l'air, une autre décoration, du bois ou des feuilles
+                if (b == AIR || isDecoration(b) || isLeaf(b) || isWood(b)) continue
+                // Ignorer l'eau sauf si la décoration est waterlogged
+                if (isWater(b) && !wl) continue
+                val above = if (ly + 1 < CHUNK_SIZE) chunk.blockAt(lx, ly + 1, lz) else AIR
+                // Sol normal : la case au-dessus doit être vide
+                // Sol waterlogged : la case au-dessus peut être eau ou vide
+                if (above != AIR && !(wl && isWater(above))) break
+                if (ly + 1 >= CHUNK_SIZE) break
+                chunk.setBlock(lx, ly + 1, lz, decor)
                 break
             }
         }
@@ -890,6 +904,271 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                         chunk.blockAt(lx2, pY, lz2) == AIR)
                         chunk.setBlock(lx2, pY, lz2, LEAVES_FALL)
                 }
+            }
+        }
+    }
+
+    // ── Sapin : 1×1, haut (7-12), canopée conique, variante légèrement plus sombre que darkwood ──
+
+    private fun plantSapinTrees(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
+        val rng = chunkRng(chunk.cx * 31 + 17, chunk.cy + 900, chunk.cz * 41 + 19)
+
+        for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            if (sb.treeType != "sapin") continue
+            if (rng.nextFloat() > sb.treeDensityBase) continue
+
+            var grassY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0)
+                if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
+            if (grassY < 0) continue
+
+            val trunkH = sb.treeMinHeight + rng.nextInt((sb.treeMaxHeight - sb.treeMinHeight + 1).coerceAtLeast(1))
+            if (grassY + trunkH + 4 >= CHUNK_SIZE) continue
+
+            var blocked = false
+            for (dy in 1..trunkH + 2)
+                if (chunk.blockAt(lx, grassY + dy, lz) != AIR) { blocked = true; break }
+            if (blocked) continue
+
+            for (dy in 1..trunkH) chunk.setBlock(lx, grassY + dy, lz, WOOD_SAPIN)
+
+            val topY = grassY + trunkH
+            // Canopée conique : étages du bas vers le haut, rayon décroissant
+            val layers = 6
+            for (layer in 0 until layers) {
+                val dy = layer - (layers - 1)
+                val r = (layers - layer).coerceAtLeast(1)
+                for (dz in -r..r) for (dx in -r..r) {
+                    if (dx * dx + dz * dz > r * r) continue
+                    val lxl = lx + dx; val lzl = lz + dz; val lyl = topY + dy
+                    if (lxl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE || lyl !in 0 until CHUNK_SIZE) continue
+                    if (chunk.blockAt(lxl, lyl, lzl) == AIR) chunk.setBlock(lxl, lyl, lzl, LEAVES_SAPIN)
+                }
+            }
+            // Pointe
+            if (topY + 1 < CHUNK_SIZE && chunk.blockAt(lx, topY + 1, lz) == AIR)
+                chunk.setBlock(lx, topY + 1, lz, LEAVES_SAPIN)
+        }
+    }
+
+    // ── Dark Wood : 2×2, court (6-8), canopée large et plate ─────────────────
+
+    private fun plantDarkwoodTrees(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
+        val rng = chunkRng(chunk.cx * 11 + 7, chunk.cy + 500, chunk.cz * 17 + 3)
+
+        for (lz in 2 until CHUNK_SIZE - 3) for (lx in 2 until CHUNK_SIZE - 3) {
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            if (sb.treeType != "darkwood") continue
+            if (rng.nextFloat() > sb.treeDensityBase) continue
+
+            var grassY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0)
+                if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
+            if (grassY < 0) continue
+
+            val trunkH = sb.treeMinHeight + rng.nextInt((sb.treeMaxHeight - sb.treeMinHeight + 1).coerceAtLeast(1))
+            if (grassY + trunkH + 5 >= CHUNK_SIZE) continue
+
+            // Vérifier espace libre pour les 4 colonnes du tronc
+            var blocked = false
+            outer@ for (dz in 0..1) for (dx in 0..1)
+                for (dy in 1..trunkH + 1)
+                    if (chunk.blockAt(lx + dx, grassY + dy, lz + dz) != AIR) { blocked = true; break@outer }
+            if (blocked) continue
+
+            // Tronc 2×2
+            for (dy in 1..trunkH) for (dz in 0..1) for (dx in 0..1)
+                chunk.setBlock(lx + dx, grassY + dy, lz + dz, WOOD_DARK)
+
+            val topY = grassY + trunkH
+
+            // Canopée : grande dalle plate (style dark oak Minecraft)
+            // Couche top+1 : grand carré 7×7 avec coins arrondis
+            // Couche top   : 5×5
+            // Couche top-1 : 3×3 autour du tronc
+            val cx = lx + 0 ; val cz = lz + 0  // coin bas-gauche du tronc
+
+            for ((dy, radius) in listOf(Pair(2, 3), Pair(1, 2), Pair(0, 1))) {
+                val r = radius
+                for (dz in -r..r + 1) for (dx in -r..r + 1) {
+                    // Couper les coins extrêmes pour un look plus naturel
+                    if (abs(dx - 0) == r + 1 && abs(dz - 0) == r + 1) continue
+                    if (abs(dx - 1) == r + 1 && abs(dz - 1) == r + 1) continue
+                    val lxl = cx + dx; val lzl = cz + dz; val lyl = topY + dy
+                    if (lxl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE || lyl !in 0 until CHUNK_SIZE) continue
+                    if (chunk.blockAt(lxl, lyl, lzl) == AIR) chunk.setBlock(lxl, lyl, lzl, LEAVES_DARK)
+                }
+            }
+            // Quelques feuilles qui pendent sous la canopée (dy=-1)
+            for (dz in -1..2) for (dx in -1..2) {
+                if (rng.nextFloat() > 0.45f) continue
+                val lxl = cx + dx; val lzl = cz + dz; val lyl = topY - 1
+                if (lxl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE || lyl !in 0 until CHUNK_SIZE) continue
+                if (chunk.blockAt(lxl, lyl, lzl) == AIR) chunk.setBlock(lxl, lyl, lzl, LEAVES_DARK)
+            }
+        }
+    }
+
+    // ── Jungle : 2×2 haut (12-20) avec branches + variante basse 1×1 (4-7) ──
+
+    private fun plantJungleTrees(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
+        val rng = chunkRng(chunk.cx * 13 + 5, chunk.cy + 600, chunk.cz * 19 + 11)
+
+        for (lz in 2 until CHUNK_SIZE - 3) for (lx in 2 until CHUNK_SIZE - 3) {
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            if (sb.treeType != "jungle" && sb.treeType != "jungle_small") continue
+            if (rng.nextFloat() > sb.treeDensityBase) continue
+
+            val small = sb.treeType == "jungle_small"
+            var grassY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0)
+                if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
+            if (grassY < 0) continue
+
+            val trunkH = sb.treeMinHeight + rng.nextInt((sb.treeMaxHeight - sb.treeMinHeight + 1).coerceAtLeast(1))
+            val canopyR = if (small) 2 else sb.canopyRadius
+            if (grassY + trunkH + canopyR + 2 >= CHUNK_SIZE) continue
+
+            if (small) {
+                // 1×1, vérif simple
+                var blocked = false
+                for (dy in 1..trunkH + 2)
+                    if (chunk.blockAt(lx, grassY + dy, lz) != AIR) { blocked = true; break }
+                if (blocked) continue
+                for (dy in 1..trunkH) chunk.setBlock(lx, grassY + dy, lz, WOOD_JUNGLE)
+            } else {
+                // 2×2, vérif sur les 4 colonnes
+                var blocked = false
+                outer@ for (dz in 0..1) for (dx in 0..1)
+                    for (dy in 1..trunkH + 2)
+                        if (chunk.blockAt(lx + dx, grassY + dy, lz + dz) != AIR) { blocked = true; break@outer }
+                if (blocked) continue
+                for (dy in 1..trunkH) for (dz in 0..1) for (dx in 0..1)
+                    chunk.setBlock(lx + dx, grassY + dy, lz + dz, WOOD_JUNGLE)
+            }
+
+            val topY = grassY + trunkH
+            val rr = canopyR * canopyR + 1
+
+            // Canopée sphérique au sommet
+            for (dy in -canopyR..canopyR) for (dz in -canopyR..canopyR) for (dx in -canopyR..canopyR) {
+                if (dx * dx + dy * dy + dz * dz > rr) continue
+                val ox = if (small) lx else lx + 1
+                val oz = if (small) lz else lz + 1
+                val lxl = ox + dx; val lzl = oz + dz; val lyl = topY + dy
+                if (lxl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE || lyl !in 0 until CHUNK_SIZE) continue
+                if (chunk.blockAt(lxl, lyl, lzl) == AIR) chunk.setBlock(lxl, lyl, lzl, LEAVES_JUNGLE)
+            }
+
+            // Branches intermédiaires (seulement sur les grands arbres)
+            if (!small && trunkH >= 10) {
+                for (branch in 0..1) {
+                    val branchY = grassY + (trunkH * (if (branch == 0) 2 else 3)) / 4
+                    if (branchY !in 0 until CHUNK_SIZE) continue
+                    val bDx = (rng.nextInt(5) - 2)
+                    val bDz = (rng.nextInt(5) - 2)
+                    for (dz in -2..2) for (dx in -2..2) {
+                        if (dx * dx + dz * dz > 5) continue
+                        if (rng.nextFloat() > 0.7f) continue
+                        val lxl = lx + 1 + bDx + dx; val lzl = lz + 1 + bDz + dz
+                        if (lxl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE) continue
+                        if (chunk.blockAt(lxl, branchY, lzl) == AIR) chunk.setBlock(lxl, branchY, lzl, LEAVES_JUNGLE)
+                    }
+                }
+            }
+        }
+    }
+
+    // ── Redwood : 1×1, haut (8-12), canopée conique ───────────────────────────
+
+    private fun plantRedwoodTrees(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
+        val rng = chunkRng(chunk.cx * 17 + 9, chunk.cy + 700, chunk.cz * 23 + 13)
+
+        for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            if (sb.treeType != "redwood") continue
+            if (rng.nextFloat() > sb.treeDensityBase) continue
+
+            var grassY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0)
+                if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
+            if (grassY < 0) continue
+
+            val trunkH = sb.treeMinHeight + rng.nextInt((sb.treeMaxHeight - sb.treeMinHeight + 1).coerceAtLeast(1))
+            if (grassY + trunkH + 4 >= CHUNK_SIZE) continue
+
+            var blocked = false
+            for (dy in 1..trunkH + 2)
+                if (chunk.blockAt(lx, grassY + dy, lz) != AIR) { blocked = true; break }
+            if (blocked) continue
+
+            for (dy in 1..trunkH) chunk.setBlock(lx, grassY + dy, lz, WOOD_RED)
+
+            // Canopée conique : rayon max en bas, réduit vers le sommet
+            val topY = grassY + trunkH
+            val layers = 5
+            for (layer in 0 until layers) {
+                val dy = layer - (layers - 1)   // de -(layers-1) à 0
+                val r = (layers - 1 - layer) + 1  // rayon décroît vers le haut
+                for (dz in -r..r) for (dx in -r..r) {
+                    if (dx * dx + dz * dz > r * r + r / 2) continue
+                    val lxl = lx + dx; val lzl = lz + dz; val lyl = topY + dy
+                    if (lxl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE || lyl !in 0 until CHUNK_SIZE) continue
+                    if (chunk.blockAt(lxl, lyl, lzl) == AIR) chunk.setBlock(lxl, lyl, lzl, LEAVES_RED)
+                }
+            }
+            // Pointe au sommet
+            if (topY + 1 < CHUNK_SIZE && chunk.blockAt(lx, topY + 1, lz) == AIR)
+                chunk.setBlock(lx, topY + 1, lz, LEAVES_RED)
+        }
+    }
+
+    // ── Arbres colorés : 1×1, 5-8 blocs, petite sphère ──────────────────────
+
+    private fun plantColoredTrees(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
+        val rng = chunkRng(chunk.cx * 29 + 13, chunk.cy + 800, chunk.cz * 37 + 7)
+
+        val treeTypeToBlocks = mapOf(
+            "blue"   to Pair(WOOD_BLUE,   LEAVES_BLUE),
+            "purple" to Pair(WOOD_PURPLE, LEAVES_PURPLE),
+            "yellow" to Pair(WOOD_YELLOW, LEAVES_YELLOW),
+            "pink"   to Pair(WOOD_PINK,   LEAVES_PINK),
+        )
+
+        for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            val (woodBlock, leavesBlock) = treeTypeToBlocks[sb.treeType] ?: continue
+            if (rng.nextFloat() > sb.treeDensityBase) continue
+
+            var grassY = -1
+            for (ly in CHUNK_SIZE - 1 downTo 0)
+                if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
+            if (grassY < 0) continue
+
+            val trunkH = sb.treeMinHeight + rng.nextInt((sb.treeMaxHeight - sb.treeMinHeight + 1).coerceAtLeast(1))
+            if (grassY + trunkH + 3 >= CHUNK_SIZE) continue
+
+            var blocked = false
+            for (dy in 1..trunkH + 2)
+                if (chunk.blockAt(lx, grassY + dy, lz) != AIR) { blocked = true; break }
+            if (blocked) continue
+
+            for (dy in 1..trunkH) chunk.setBlock(lx, grassY + dy, lz, woodBlock)
+
+            val topY = grassY + trunkH
+            val r = sb.canopyRadius
+            val rr = r * r + 1
+            for (dy in -1..r) for (dz in -r..r) for (dx in -r..r) {
+                if (dx * dx + (dy - r / 2) * (dy - r / 2) + dz * dz > rr) continue
+                val lxl = lx + dx; val lzl = lz + dz; val lyl = topY + dy
+                if (lxl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE || lyl !in 0 until CHUNK_SIZE) continue
+                if (chunk.blockAt(lxl, lyl, lzl) == AIR) chunk.setBlock(lxl, lyl, lzl, leavesBlock)
             }
         }
     }

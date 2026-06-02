@@ -1,9 +1,9 @@
 {
   "id": 8000,
   "name": "furnace",
-  "texture_top": "stone.png",
-  "texture_side": "stone.png",
-  "texture_bottom": "stone.png",
+  "texture_top": "blocs/stone_top.png",
+  "texture_side": "blocs/stone_top.png",
+  "texture_bottom": "blocs/stone_top.png",
   "texture_front": "oven.png",
   "color": "#555555",
   "hardness": 3.0,

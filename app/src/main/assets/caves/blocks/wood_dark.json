@@ -1,0 +1,12 @@
+{
+  "id": 1003,
+  "name": "wood_dark",
+  "texture_top": "wood/trunk_dark_top.png",
+  "texture_side": "wood/trunk_dark_side.png",
+  "texture_bottom": "wood/trunk_dark_top.png",
+  "color": "#3A2810",
+  "hardness": 2.0,
+  "drop": "wood_dark",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

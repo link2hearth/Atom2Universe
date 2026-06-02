@@ -1,0 +1,12 @@
+{
+  "id": 1008,
+  "name": "wood_pink",
+  "texture_top": "wood/trunk_pink_top.png",
+  "texture_side": "wood/trunk_pink_side.png",
+  "texture_bottom": "wood/trunk_pink_top.png",
+  "color": "#FF73BF",
+  "hardness": 2.0,
+  "drop": "wood_pink",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

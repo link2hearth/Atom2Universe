@@ -1,0 +1,33 @@
+{
+  "id": "dark_forest",
+  "noise_offsets": [1400.0, 0.0, -1100.0],
+  "surface_blocks": [
+    {"block": "grass", "noise_min": -99.0}
+  ],
+  "surface_variety_scale": 0.04,
+  "surface_variety_offset": 0.0,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 3.0,
+  "height_amplitude": 16.0,
+  "height_roughness": 5.0,
+  "tree_density_base": 0.35,
+  "tree_density_noise_scale": 0.15,
+  "tree_type": "darkwood",
+  "tree_min_height": 6,
+  "tree_max_height": 8,
+  "canopy_radius": 3,
+  "bush_density": 0.06,
+  "bush_block": "leaves_dark",
+  "decoration_density": 0.02,
+  "decoration_blocks": ["rock_moss", "mushroom_brown"],
+  "vegetation_density": 0.18,
+  "vegetation_blocks": [
+    {"block": "grass_brown", "weight": 3},
+    {"block": "grass_wild2", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": [
+    {"name": "house_wood", "weight": 1}
+  ]
+}

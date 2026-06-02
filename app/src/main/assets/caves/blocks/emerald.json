@@ -1,9 +1,9 @@
 {
   "id": 3006,
   "name": "emerald",
-  "texture_top": "redstone_emerald.png",
-  "texture_side": "redstone_emerald.png",
-  "texture_bottom": "redstone_emerald.png",
+  "texture_top": "Ores/redstone_emerald.png",
+  "texture_side": "Ores/redstone_emerald.png",
+  "texture_bottom": "Ores/redstone_emerald.png",
   "color": "#50C878",
   "hardness": 4.5,
   "drop": "emerald",

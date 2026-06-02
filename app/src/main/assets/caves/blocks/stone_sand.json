@@ -1,0 +1,11 @@
+{
+  "id": 2032,
+  "name": "stone_sand",
+  "texture_top": "blocs/sand_top.png",
+  "texture_side": "blocs/stone_sand_side.png",
+  "texture_bottom": "blocs/stone_top.png",
+  "color": "#C8B060",
+  "hardness": 3.0,
+  "drop": "stone_sand",
+  "creative_tab": "terrain"
+}

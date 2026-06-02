@@ -1,0 +1,12 @@
+{
+  "id": 1027,
+  "name": "leaves_purple",
+  "texture_top": "wood/leaves_purple.png",
+  "texture_side": "wood/leaves_purple.png",
+  "texture_bottom": "wood/leaves_purple.png",
+  "color": "#8C33FF",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_purple",
+  "creative_tab": "wood"
+}

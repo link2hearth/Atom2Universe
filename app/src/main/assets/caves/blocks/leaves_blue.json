@@ -1,0 +1,12 @@
+{
+  "id": 1026,
+  "name": "leaves_blue",
+  "texture_top": "wood/leaves_blue.png",
+  "texture_side": "wood/leaves_blue.png",
+  "texture_bottom": "wood/leaves_blue.png",
+  "color": "#3370FF",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_blue",
+  "creative_tab": "wood"
+}

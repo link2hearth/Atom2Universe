@@ -1,0 +1,12 @@
+{
+  "id": 1024,
+  "name": "leaves_dark",
+  "texture_top": "wood/leaves_dark.png",
+  "texture_side": "wood/leaves_dark.png",
+  "texture_bottom": "wood/leaves_dark.png",
+  "color": "#206610",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_dark",
+  "creative_tab": "wood"
+}

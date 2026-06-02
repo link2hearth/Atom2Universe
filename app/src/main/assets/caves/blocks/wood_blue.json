@@ -1,0 +1,12 @@
+{
+  "id": 1005,
+  "name": "wood_blue",
+  "texture_top": "wood/trunk_blue_top.png",
+  "texture_side": "wood/trunk_blue_side.png",
+  "texture_bottom": "wood/trunk_blue_top.png",
+  "color": "#4D8CFF",
+  "hardness": 2.0,
+  "drop": "wood_blue",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

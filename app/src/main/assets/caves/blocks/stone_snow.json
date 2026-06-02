@@ -1,0 +1,11 @@
+{
+  "id": 2033,
+  "name": "stone_snow",
+  "texture_top": "blocs/snow_top.png",
+  "texture_side": "blocs/stone_snow_side.png",
+  "texture_bottom": "blocs/stone_top.png",
+  "color": "#C8C8C8",
+  "hardness": 3.0,
+  "drop": "stone_snow",
+  "creative_tab": "terrain"
+}

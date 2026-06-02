@@ -1,0 +1,11 @@
+{
+  "id": 5002,
+  "name": "blue_ice",
+  "texture_top": "blocs/blue_ice_top.png",
+  "texture_side": "blocs/blue_ice_top.png",
+  "texture_bottom": "blocs/blue_ice_top.png",
+  "color": "#73B8FF",
+  "hardness": 2.5,
+  "drop": "blue_ice",
+  "creative_tab": "terrain"
+}

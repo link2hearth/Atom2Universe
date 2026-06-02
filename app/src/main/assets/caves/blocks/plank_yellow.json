@@ -1,0 +1,11 @@
+{
+  "id": 1017,
+  "name": "plank_yellow",
+  "texture_top": "wood/wood_plank_yellow.png",
+  "texture_side": "wood/wood_plank_yellow.png",
+  "texture_bottom": "wood/wood_plank_yellow.png",
+  "color": "#FFE633",
+  "hardness": 2.0,
+  "drop": "plank_yellow",
+  "creative_tab": "wood"
+}

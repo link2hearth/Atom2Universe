@@ -1,0 +1,12 @@
+{
+  "id": 1028,
+  "name": "leaves_yellow",
+  "texture_top": "wood/leaves_yellow.png",
+  "texture_side": "wood/leaves_yellow.png",
+  "texture_bottom": "wood/leaves_yellow.png",
+  "color": "#FFE010",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_yellow",
+  "creative_tab": "wood"
+}

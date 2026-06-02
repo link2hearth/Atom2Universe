@@ -1,0 +1,12 @@
+{
+  "id": 1006,
+  "name": "wood_purple",
+  "texture_top": "wood/trunk_purple_top.png",
+  "texture_side": "wood/trunk_purple_side.png",
+  "texture_bottom": "wood/trunk_purple_top.png",
+  "color": "#A64DFF",
+  "hardness": 2.0,
+  "drop": "wood_purple",
+  "creative_tab": "wood",
+  "orient_mode": "axis"
+}

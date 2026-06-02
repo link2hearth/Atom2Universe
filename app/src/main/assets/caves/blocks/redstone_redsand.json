@@ -1,0 +1,11 @@
+{
+  "id": 4002,
+  "name": "redstone_redsand",
+  "texture_top": "blocs/redsand_top.png",
+  "texture_side": "blocs/redstone_redsand_side.png",
+  "texture_bottom": "blocs/redstone_top.png",
+  "color": "#C85A30",
+  "hardness": 3.0,
+  "drop": "redstone_redsand",
+  "creative_tab": "terrain"
+}

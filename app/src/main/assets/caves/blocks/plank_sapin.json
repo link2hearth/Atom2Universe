@@ -1,0 +1,11 @@
+{
+  "id": 1019,
+  "name": "plank_sapin",
+  "texture_top": "wood/wood_plank_sapin.png",
+  "texture_side": "wood/wood_plank_sapin.png",
+  "texture_bottom": "wood/wood_plank_sapin.png",
+  "color": "#2A1E0B",
+  "hardness": 2.0,
+  "drop": "plank_sapin",
+  "creative_tab": "wood"
+}

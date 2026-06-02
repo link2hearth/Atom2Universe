@@ -1,9 +1,9 @@
 {
   "id": 1021,
   "name": "leaves_orange",
-  "texture_top": "leaves_orange.png",
-  "texture_side": "leaves_orange.png",
-  "texture_bottom": "leaves_orange.png",
+  "texture_top": "wood/leaves_orange_transparent.png",
+  "texture_side": "wood/leaves_orange_transparent.png",
+  "texture_bottom": "wood/leaves_orange_transparent.png",
   "color": "#CC8833",
   "hardness": 0.3,
   "transparent": true,

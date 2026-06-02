@@ -1,0 +1,11 @@
+{
+  "id": 2013,
+  "name": "brick_sandy",
+  "texture_top": "blocs/brick_sandy.png",
+  "texture_side": "blocs/brick_sandy.png",
+  "texture_bottom": "blocs/brick_sandy.png",
+  "color": "#D9BF6B",
+  "hardness": 3.5,
+  "drop": "brick_sandy",
+  "creative_tab": "terrain"
+}

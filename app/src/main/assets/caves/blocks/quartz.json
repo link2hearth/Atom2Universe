@@ -1,9 +1,9 @@
 {
   "id": 2002,
   "name": "quartz",
-  "texture_top": "greysand.png",
-  "texture_side": "greysand.png",
-  "texture_bottom": "greysand.png",
+  "texture_top": "blocs/greysand_top.png",
+  "texture_side": "blocs/greysand_top.png",
+  "texture_bottom": "blocs/greysand_top.png",
   "color": "#E8E4D0",
   "hardness": 2.5,
   "drop": "quartz",

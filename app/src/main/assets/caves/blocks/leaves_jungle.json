@@ -1,0 +1,12 @@
+{
+  "id": 1025,
+  "name": "leaves_jungle",
+  "texture_top": "wood/leaves_jungle.png",
+  "texture_side": "wood/leaves_jungle.png",
+  "texture_bottom": "wood/leaves_jungle.png",
+  "color": "#4DB828",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "leaves_jungle",
+  "creative_tab": "wood"
+}

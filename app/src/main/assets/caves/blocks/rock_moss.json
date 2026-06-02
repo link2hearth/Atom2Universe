@@ -8,5 +8,6 @@
   "hardness": 1.5,
   "decoration": true,
   "drop": "rock_moss",
-  "creative_tab": "stone"
+  "creative_tab": "stone",
+  "waterlogged": true
 }

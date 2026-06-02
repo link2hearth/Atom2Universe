@@ -1,9 +1,9 @@
 {
   "id": 4000,
   "name": "sand",
-  "texture_top": "sand.png",
-  "texture_side": "sand.png",
-  "texture_bottom": "sand.png",
+  "texture_top": "blocs/sand_top.png",
+  "texture_side": "blocs/sand_top.png",
+  "texture_bottom": "blocs/sand_top.png",
   "color": "#D4C06A",
   "hardness": 0.8,
   "falling": true,

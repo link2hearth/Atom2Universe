@@ -1,9 +1,9 @@
 {
   "id": 102,
   "name": "gravel",
-  "texture_top": "gravel_stone.png",
-  "texture_side": "gravel_stone.png",
-  "texture_bottom": "gravel_stone.png",
+  "texture_top": "blocs/gravel_stone_top.png",
+  "texture_side": "blocs/gravel_stone_top.png",
+  "texture_bottom": "blocs/gravel_stone_top.png",
   "color": "#9E9E9E",
   "hardness": 0.8,
   "falling": true,

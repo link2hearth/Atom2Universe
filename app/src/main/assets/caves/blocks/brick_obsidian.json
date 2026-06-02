@@ -1,0 +1,11 @@
+{
+  "id": 2015,
+  "name": "brick_obsidian",
+  "texture_top": "blocs/brick_obsidian.png",
+  "texture_side": "blocs/brick_obsidian.png",
+  "texture_bottom": "blocs/brick_obsidian.png",
+  "color": "#232030",
+  "hardness": 3.5,
+  "drop": "brick_obsidian",
+  "creative_tab": "terrain"
+}

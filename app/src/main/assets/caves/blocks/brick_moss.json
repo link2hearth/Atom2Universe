@@ -1,0 +1,11 @@
+{
+  "id": 2016,
+  "name": "brick_moss",
+  "texture_top": "blocs/brick_moss.png",
+  "texture_side": "blocs/brick_moss.png",
+  "texture_bottom": "blocs/brick_moss.png",
+  "color": "#477A33",
+  "hardness": 3.5,
+  "drop": "brick_moss",
+  "creative_tab": "terrain"
+}
