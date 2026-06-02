@@ -280,9 +280,9 @@ internal class EnemyRenderer {
         val rel = ((enemyYaw - cameraYaw) % 360f + 360f) % 360f
         return when {
             rel < 45f || rel >= 315f -> 3   // dos (s'éloigne)
-            rel < 135f               -> 2   // profil droit visible
+            rel < 135f               -> 1   // profil gauche visible
             rel < 225f               -> 0   // face (vient vers la caméra)
-            else                     -> 1   // profil gauche visible
+            else                     -> 2   // profil droit visible
         }
     }
 

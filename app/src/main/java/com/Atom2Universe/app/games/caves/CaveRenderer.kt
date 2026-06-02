@@ -157,7 +157,7 @@ internal class CaveRenderer(
     private var mineDamage = 0f
 
     val inventory = mutableMapOf<Short, Int>()
-    val hotbar    = arrayOfNulls<Short>(19)
+    val hotbar    = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
     var selectedSlot = 0
 
     private var transientVbo = 0
@@ -463,7 +463,7 @@ internal class CaveRenderer(
             camera.x = savedState.x; camera.y = savedState.y; camera.z = savedState.z
             camera.yaw = savedState.yaw; camera.pitch = savedState.pitch
             inventory.putAll(savedState.inventory)
-            savedState.hotbar.forEachIndexed { i, v -> hotbar[i] = v }
+            savedState.hotbar.take(hotbar.size).forEachIndexed { i, v -> hotbar[i] = v }
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             inventoryCallback?.invoke(inventory.toMap())
             // Restauration progression joueur

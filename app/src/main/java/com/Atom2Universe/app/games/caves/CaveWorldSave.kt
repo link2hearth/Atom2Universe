@@ -151,7 +151,7 @@ object CaveWorldSaveManager {
             (0 until hotbarArr.length()).map { i ->
                 val v = hotbarArr.getInt(i); if (v < 0) null else v.toShort()
             }
-        } else List(19) { null }
+        } else List(CaveActivity.ACTIVE_SIZE) { null }
         val weaponsArr = j.optJSONArray("playerWeapons")
         val weapons: List<String> = if (weaponsArr != null) {
             (0 until weaponsArr.length()).map { weaponsArr.getString(it) }

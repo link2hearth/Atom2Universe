@@ -57,7 +57,12 @@ internal class CaveHud(private val activity: CaveActivity) {
             val slot = FrameLayout(activity).apply {
                 layoutParams = LinearLayout.LayoutParams(sz, sz).also { it.setMargins(2, 2, 2, 2) }
                 background = slotDrawable(null, false)
-                setOnClickListener { activity.renderer.selectSlot(i) }
+                setOnClickListener {
+                    if (activity.invOverlay.visibility == View.VISIBLE)
+                        activity.invManager.onOverlayActiveSlotClick(i)
+                    else
+                        activity.renderer.selectSlot(i)
+                }
             }
             val colorDot = View(activity).apply {
                 layoutParams = FrameLayout.LayoutParams((28 * dp).toInt(), (28 * dp).toInt()).also { it.gravity = Gravity.CENTER }
@@ -100,7 +105,30 @@ internal class CaveHud(private val activity: CaveActivity) {
             cornerRadius = 4 * dp
         }
 
-    // ── Overlay active bar ────────────────────────────────────────────────────
+    // ── Hotbar highlighting pendant l'inventaire ──────────────────────────────
+
+    fun updateHotbarForInventory() {
+        val inv = activity.invManager
+        val base = inv.hotbarBase()
+        for (i in 0 until CaveActivity.ACTIVE_SIZE) {
+            val invIdx = base + i
+            val type  = inv.invSlots.getOrNull(invIdx)
+            val count = if (type != null) activity.renderer.inventory[type] ?: 0 else 0
+            val eff   = if (count > 0) type else null
+            val isSel    = invIdx == inv.selectedSlotIdx
+            val isCursor = inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
+            slotViews[i]?.background  = when {
+                isSel    -> overlaySlotDrawable(selected = true)
+                isCursor -> overlaySlotDrawable(selected = false, cursor = true)
+                else     -> slotDrawable(eff, false)
+            }
+            slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
+                else GradientDrawable().apply { setColor(android.graphics.Color.TRANSPARENT); cornerRadius = 3 * dp }
+            slotCounts[i]?.text = if (eff != null) count.toString() else ""
+        }
+    }
+
+    // ── Overlay active bar (conservé pour compatibilité, non utilisé) ─────────
 
     fun buildOverlayActiveBar(container: LinearLayout) {
         val inv = activity.invManager

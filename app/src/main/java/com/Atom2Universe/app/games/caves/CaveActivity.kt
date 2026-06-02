@@ -45,7 +45,7 @@ class CaveActivity : ThemedActivity() {
 
     companion object {
         const val EXTRA_WORLD_ID = "cave_world_id"
-        const val ACTIVE_SIZE    = 19
+        const val ACTIVE_SIZE    = 9
         const val GRID_COLS      = 6
         const val EMPTY_BUFFER   = 36
     }
@@ -60,7 +60,7 @@ class CaveActivity : ThemedActivity() {
 
     internal var isCreative = false
     private  var survivalInventory: Map<Short, Int> = emptyMap()
-    private  var survivalHotbar: List<Short?> = List(19) { null }
+    private  var survivalHotbar: List<Short?> = List(ACTIVE_SIZE) { null }
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
@@ -122,14 +122,14 @@ class CaveActivity : ThemedActivity() {
         isCreative = save?.isCreative ?: false
         if (isCreative) {
             survivalInventory = save?.inventory ?: emptyMap()
-            survivalHotbar    = save?.hotbar    ?: List(19) { null }
+            survivalHotbar    = save?.hotbar    ?: List(ACTIVE_SIZE) { null }
         }
         val savedState = when {
             save != null && save.isCreative -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
                 inventory = BlockRegistry.creativeList().associateWith { 1 },
-                hotbar = BlockRegistry.creativeList().let { keys -> List(19) { i -> keys.getOrNull(i) } },
+                hotbar = BlockRegistry.creativeList().let { keys -> List(ACTIVE_SIZE) { i -> keys.getOrNull(i) } },
                 playerHp            = save.playerHp,
                 playerLevel         = save.playerLevel,
                 playerXp            = save.playerXp,

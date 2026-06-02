@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.CraftDef
@@ -42,7 +43,6 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     // ── Crafting ──────────────────────────────────────────────────────────────
     var selectedRecipe: CraftDef? = null
-    var invGridAdapter: InvGridAdapter? = null
     var craftingAdapter: CraftingAdapter? = null
 
     // ── Refs views de l'overlay ───────────────────────────────────────────────
@@ -54,17 +54,26 @@ internal class InventoryManager(private val activity: CaveActivity) {
     var craftingEmptyTv: View? = null
     var craftingRecyclerView: RecyclerView? = null
 
+    // ── Pager inventaire ──────────────────────────────────────────────────────
+    var invPager: ViewPager2? = null
+    var pageIndicatorTv: TextView? = null
+    var pagedAdapter: PagedInvPagerAdapter? = null
+    var pageSize = CaveActivity.GRID_COLS * 5
+    var currentPage = 0
+
     // ── Gamepad inventaire ────────────────────────────────────────────────────
     var invGpZone = InvGpZone.HOTBAR
     var invGpCursor = 0
     private var invGpLastMoveMs = 0L
+    private var invGpRightLastMs = 0L
     private val INV_GP_REPEAT_MS = 170L
 
     // ── Init overlay ──────────────────────────────────────────────────────────
 
     fun setupOverlay(invOverlay: View) {
-        invOverlay.setOnClickListener { closeInventory() }
+        invOverlay.findViewById<View>(R.id.cave_inv_dim_area).setOnClickListener { closeInventory() }
         invOverlay.findViewById<View>(R.id.cave_inv_panel).setOnClickListener { /* consomme */ }
+        invOverlay.findViewById<View>(R.id.cave_inv_info_column).setOnClickListener { closeInventory() }
 
         infoSpriteView       = invOverlay.findViewById(R.id.cave_inv_info_sprite)
         infoNameTv           = invOverlay.findViewById(R.id.cave_inv_info_name)
@@ -73,16 +82,40 @@ internal class InventoryManager(private val activity: CaveActivity) {
         infoIngredientsTv    = invOverlay.findViewById(R.id.cave_inv_info_ingredients)
         craftingEmptyTv      = invOverlay.findViewById(R.id.cave_inv_crafting_empty)
         craftingRecyclerView = invOverlay.findViewById(R.id.cave_inv_crafting_recycler)
+        invPager             = invOverlay.findViewById(R.id.cave_inv_pager)
+        pageIndicatorTv      = invOverlay.findViewById(R.id.cave_inv_page_indicator)
 
         val ca = CraftingAdapter(emptyList()).also { craftingAdapter = it }
         craftingRecyclerView?.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = ca
         }
-        invOverlay.findViewById<RecyclerView>(R.id.cave_inv_recycler)
-            .layoutManager = GridLayoutManager(activity, CaveActivity.GRID_COLS)
 
-        hud.buildOverlayActiveBar(invOverlay.findViewById(R.id.cave_inv_active_row))
+        invPager?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                currentPage = position
+                if (invGpZone == InvGpZone.GRID) {
+                    val pageStart = currentPage * pageSize
+                    val pageEnd   = minOf(pageStart + pageSize, hotbarBase()).coerceAtLeast(pageStart + 1)
+                    val localCol  = invGpCursor % CaveActivity.GRID_COLS
+                    invGpCursor   = (pageStart + localCol).coerceAtMost(pageEnd - 1)
+                }
+                updatePageIndicator()
+                pagedAdapter?.notifyDataSetChanged()
+                hud.updateHotbarForInventory()
+            }
+        })
+
+        // Drag-and-drop sur la hotbar réelle pendant l'inventaire
+        for (i in 0 until CaveActivity.ACTIVE_SIZE) {
+            val sv = hud.slotViews[i] ?: continue
+            sv.setOnDragListener(makeSlotDragListener { hotbarBase() + i })
+            sv.setOnLongClickListener {
+                if (activity.invOverlay.visibility == View.VISIBLE) {
+                    startSlotDrag(it, hotbarBase() + i); true
+                } else false
+            }
+        }
     }
 
     // ── Gestion slots ─────────────────────────────────────────────────────────
@@ -147,7 +180,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     if (dragSourceIdx >= 0 && target != dragSourceIdx) {
                         swapSlots(dragSourceIdx, target)
                         dragSourceIdx = -1
-                        refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                     }
                     true
                 }
@@ -180,7 +213,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
             if (selectedSlotIdx >= invSlots.size) selectedSlotIdx = -1
             syncHotbar()
             if (activity.invOverlay.visibility == View.VISIBLE) {
-                refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
             }
         } else {
             renderer.hotbarCallback?.invoke(renderer.hotbar.copyOf(), renderer.selectedSlot)
@@ -191,17 +224,32 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun openInventory() {
         if (!invSlotsReady) initInvSlots()
-        val w = (activity.resources.displayMetrics.widthPixels  * 0.82f).toInt()
-        val h = (activity.resources.displayMetrics.heightPixels * 0.84f).toInt()
-        activity.invOverlay.findViewById<LinearLayout>(R.id.cave_inv_panel).layoutParams =
-            FrameLayout.LayoutParams(w, h).also { it.gravity = Gravity.CENTER }
+        currentPage = 0
         activity.invOverlay.visibility = View.VISIBLE
         invGpZone   = InvGpZone.HOTBAR
         invGpCursor = hotbarBase()
         activity.invOverlay.post {
-            if (activity.invOverlay.visibility == View.VISIBLE) {
-                refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+            if (activity.invOverlay.visibility != View.VISIBLE) return@post
+            // Calcule la taille de page selon l'espace réel du pager
+            invPager?.let { pager ->
+                if (pager.width > 0) {
+                    val cellSize = pager.width / CaveActivity.GRID_COLS
+                    val rows = if (cellSize > 0) (pager.height / cellSize).coerceAtLeast(1) else 5
+                    pageSize = CaveActivity.GRID_COLS * rows
+                }
+                val cellSize = if (pager.width > 0) pager.width / CaveActivity.GRID_COLS
+                               else (52 * activity.resources.displayMetrics.density).toInt()
+                if (pagedAdapter == null) {
+                    pagedAdapter = PagedInvPagerAdapter(cellSize).also { pager.adapter = it }
+                } else {
+                    pagedAdapter!!.cellSize = cellSize
+                    pager.adapter = pagedAdapter
+                }
             }
+            refreshPagedAdapter()
+            hud.updateHotbarForInventory()
+            updateInfoPanel()
+            updateCraftingList()
         }
     }
 
@@ -211,19 +259,22 @@ internal class InventoryManager(private val activity: CaveActivity) {
         invGpZone       = InvGpZone.HOTBAR
         invGpCursor     = 0
         activity.invOverlay.visibility = View.GONE
+        hud.updateHotbarUI(renderer.hotbar, renderer.selectedSlot)
     }
 
-    fun refreshGridAdapter() {
-        val base = hotbarBase()
-        val gridList: List<Short?> = if (base > 0) invSlots.subList(0, base).toList() else emptyList()
-        val recycler = activity.invOverlay.findViewById<RecyclerView>(R.id.cave_inv_recycler)
-        if (invGridAdapter == null) {
-            val adapter = InvGridAdapter(gridList).also { invGridAdapter = it }
-            recycler.adapter = adapter
-        } else {
-            invGridAdapter!!.items = gridList
-            invGridAdapter!!.notifyDataSetChanged()
-        }
+    fun refreshPagedAdapter() {
+        val adapter = pagedAdapter ?: return
+        val pc = pageCount()
+        if (currentPage >= pc) currentPage = (pc - 1).coerceAtLeast(0)
+        adapter.notifyDataSetChanged()
+        invPager?.setCurrentItem(currentPage, false)
+        updatePageIndicator()
+    }
+
+    private fun pageCount() = ((hotbarBase() + pageSize - 1) / pageSize).coerceAtLeast(1)
+
+    private fun updatePageIndicator() {
+        pageIndicatorTv?.text = "${currentPage + 1} / ${pageCount()}"
     }
 
     // ── Panneau info ──────────────────────────────────────────────────────────
@@ -284,26 +335,26 @@ internal class InventoryManager(private val activity: CaveActivity) {
         if (outCurrent == 0 && outType !in invSlots.filterNotNull()) addNewType(outType)
         if (selectedSlotIdx in invSlots.indices && invSlots[selectedSlotIdx] == null) selectedSlotIdx = -1
         syncHotbar()
-        refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
         activity.saveWorldAsync()
     }
 
-    // ── Slot click overlay actif ──────────────────────────────────────────────
+    // ── Slot click hotbar réelle (pendant inventaire) ─────────────────────────
 
     fun onOverlayActiveSlotClick(i: Int) {
         val invIdx = hotbarBase() + i
         when {
             selectedSlotIdx == invIdx -> {
                 selectedSlotIdx = -1
-                hud.updateActiveSlotHighlights(); updateInfoPanel(); updateCraftingList()
+                hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
             }
             selectedSlotIdx >= 0 -> {
                 swapSlots(selectedSlotIdx, invIdx); selectedSlotIdx = -1
-                refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
             }
             invSlots.getOrNull(invIdx) != null -> {
                 selectedSlotIdx = invIdx; selectedRecipe = null
-                hud.updateActiveSlotHighlights(); updateInfoPanel(); updateCraftingList()
+                hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
             }
         }
     }
@@ -312,19 +363,43 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun moveInvCursor(dx: Int, dy: Int) {
         val base = hotbarBase()
+        val cols = CaveActivity.GRID_COLS
         when (invGpZone) {
             InvGpZone.GRID -> {
-                val newIdx = invGpCursor + dx + dy * CaveActivity.GRID_COLS
+                val pageStart = currentPage * pageSize
+                val pageEnd   = minOf(pageStart + pageSize, base).coerceAtLeast(pageStart + 1)
+                val localIdx  = (invGpCursor - pageStart).coerceIn(0, pageEnd - pageStart - 1)
+                val localCol  = localIdx % cols
+                val localRow  = localIdx / cols
+
                 when {
-                    newIdx < 0     -> invGpCursor = (invGpCursor % CaveActivity.GRID_COLS).coerceAtMost((base - 1).coerceAtLeast(0))
-                    newIdx >= base -> { invGpZone = InvGpZone.HOTBAR; invGpCursor = (base + invGpCursor % CaveActivity.GRID_COLS).coerceAtMost(base + CaveActivity.ACTIVE_SIZE - 1) }
-                    else           -> invGpCursor = newIdx
+                    dy < 0 && localRow == 0 -> {
+                        invGpZone   = InvGpZone.HOTBAR
+                        invGpCursor = base + localCol.coerceAtMost(CaveActivity.ACTIVE_SIZE - 1)
+                    }
+                    dy != 0 -> {
+                        val newLocal = localIdx + dy * cols
+                        invGpCursor = (pageStart + newLocal.coerceIn(0, pageEnd - pageStart - 1))
+                    }
+                    dx < 0 && localCol == 0 -> changePage(-1)
+                    dx > 0 && localCol == cols - 1 -> changePage(1)
+                    dx != 0 -> {
+                        val clamped = (pageStart + localRow * cols + (localCol + dx)
+                            .coerceIn(0, cols - 1)).coerceAtMost(pageEnd - 1)
+                        invGpCursor = clamped
+                    }
                 }
             }
             InvGpZone.HOTBAR -> {
                 val rel = invGpCursor - base
                 when {
-                    dy < 0 && base > 0 -> { invGpZone = InvGpZone.GRID; invGpCursor = (((base - 1) / CaveActivity.GRID_COLS) * CaveActivity.GRID_COLS + rel).coerceAtMost(base - 1) }
+                    dy < 0 && base > 0 -> {
+                        invGpZone = InvGpZone.GRID
+                        val pageStart = currentPage * pageSize
+                        val pageEnd   = minOf(pageStart + pageSize, base).coerceAtLeast(pageStart + 1)
+                        val lastRowStart = ((pageEnd - 1) / cols) * cols
+                        invGpCursor = (lastRowStart + rel.coerceAtMost(cols - 1)).coerceAtMost(pageEnd - 1)
+                    }
                     dx < 0 -> invGpCursor = base + (rel - 1 + CaveActivity.ACTIVE_SIZE) % CaveActivity.ACTIVE_SIZE
                     dx > 0 -> invGpCursor = base + (rel + 1) % CaveActivity.ACTIVE_SIZE
                 }
@@ -340,16 +415,42 @@ internal class InventoryManager(private val activity: CaveActivity) {
         refreshInvGpCursorUi()
     }
 
+    fun changePage(delta: Int) {
+        val newPage = (currentPage + delta).coerceIn(0, pageCount() - 1)
+        if (newPage == currentPage) return
+        currentPage = newPage
+        invPager?.setCurrentItem(currentPage, true)
+        if (invGpZone == InvGpZone.GRID) {
+            val pageStart = currentPage * pageSize
+            val pageEnd   = minOf(pageStart + pageSize, hotbarBase()).coerceAtLeast(pageStart + 1)
+            val localCol  = invGpCursor % CaveActivity.GRID_COLS
+            invGpCursor   = (pageStart + localCol).coerceAtMost(pageEnd - 1)
+        }
+        updatePageIndicator()
+        refreshInvGpCursorUi()
+    }
+
     fun exitCraftingZone() {
         invGpZone = InvGpZone.HOTBAR
         invGpCursor = hotbarBase()
         selectedRecipe = null
-        refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
     }
 
     fun handleInvGamepadMotion(event: MotionEvent): Boolean {
         if (event.source and InputDevice.SOURCE_JOYSTICK != InputDevice.SOURCE_JOYSTICK) return false
         val now = System.currentTimeMillis()
+
+        // Stick droit : changement de page
+        val rsx = event.getAxisValue(MotionEvent.AXIS_Z)
+        val rdx = when { rsx < -0.5f -> -1; rsx > 0.5f -> 1; else -> 0 }
+        if (rdx != 0 && now - invGpRightLastMs >= INV_GP_REPEAT_MS) {
+            invGpRightLastMs = now
+            changePage(rdx)
+            return true
+        }
+
+        // Stick gauche / croix : déplacement curseur
         if (now - invGpLastMoveMs < INV_GP_REPEAT_MS) return true
         val sx = event.getAxisValue(MotionEvent.AXIS_X); val sy = event.getAxisValue(MotionEvent.AXIS_Y)
         val hx = event.getAxisValue(MotionEvent.AXIS_HAT_X); val hy = event.getAxisValue(MotionEvent.AXIS_HAT_Y)
@@ -380,18 +481,20 @@ internal class InventoryManager(private val activity: CaveActivity) {
             if (invGpZone == InvGpZone.CRAFTING) {
                 craftingAdapter?.recipes?.getOrNull(invGpCursor)?.let { doCraft(it) }
             } else {
+                val base = hotbarBase()
+                val effectiveIdx = if (invGpZone == InvGpZone.HOTBAR) invGpCursor else invGpCursor
                 when {
-                    selectedSlotIdx == invGpCursor -> {
+                    selectedSlotIdx == effectiveIdx -> {
                         selectedSlotIdx = -1
-                        refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                     }
                     selectedSlotIdx >= 0 -> {
-                        swapSlots(selectedSlotIdx, invGpCursor); selectedSlotIdx = -1
-                        refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                        swapSlots(selectedSlotIdx, effectiveIdx); selectedSlotIdx = -1
+                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                     }
-                    invSlots.getOrNull(invGpCursor) != null -> {
-                        selectedSlotIdx = invGpCursor; selectedRecipe = null
-                        refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                    invSlots.getOrNull(effectiveIdx) != null -> {
+                        selectedSlotIdx = effectiveIdx; selectedRecipe = null
+                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                     }
                 }
             }
@@ -402,7 +505,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 invGpZone == InvGpZone.CRAFTING -> exitCraftingZone()
                 selectedSlotIdx >= 0 -> {
                     selectedSlotIdx = -1
-                    refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                    refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                 }
                 else -> closeInventory()
             }
@@ -416,34 +519,69 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun refreshInvGpCursorUi() {
-        refreshGridAdapter(); hud.updateActiveBarOverlay(); craftingAdapter?.notifyDataSetChanged()
+        pagedAdapter?.notifyDataSetChanged()
+        hud.updateHotbarForInventory()
+        craftingAdapter?.notifyDataSetChanged()
     }
 
-    // ── Adapter grille inventaire ─────────────────────────────────────────────
+    // ── Adapter pager (une page = RecyclerView grille) ────────────────────────
 
-    inner class InvGridAdapter(var items: List<Short?>) : RecyclerView.Adapter<InvGridAdapter.ItemVH>() {
+    inner class PagedInvPagerAdapter(var cellSize: Int) : RecyclerView.Adapter<PagedInvPagerAdapter.PageVH>() {
 
-        inner class ItemVH(v: View) : RecyclerView.ViewHolder(v) {
+        inner class PageVH(val rv: RecyclerView) : RecyclerView.ViewHolder(rv)
+
+        fun pageCount() = ((hotbarBase() + pageSize - 1) / pageSize).coerceAtLeast(1)
+
+        override fun getItemCount() = pageCount()
+
+        override fun onCreateViewHolder(parent: ViewGroup, vt: Int): PageVH {
+            val rv = RecyclerView(parent.context).apply {
+                layoutManager = GridLayoutManager(parent.context, CaveActivity.GRID_COLS)
+                isNestedScrollingEnabled = false
+                overScrollMode = View.OVER_SCROLL_NEVER
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            }
+            return PageVH(rv)
+        }
+
+        override fun onBindViewHolder(holder: PageVH, position: Int) {
+            val start = position * pageSize
+            val slots = (0 until pageSize).map { invSlots.getOrNull(start + it) }
+            holder.rv.adapter = PageSlotAdapter(slots, start, cellSize)
+        }
+    }
+
+    // ── Adapter d'une page de grille ──────────────────────────────────────────
+
+    inner class PageSlotAdapter(
+        val items: List<Short?>,
+        val startIdx: Int,
+        val cellSize: Int
+    ) : RecyclerView.Adapter<PageSlotAdapter.VH>() {
+
+        inner class VH(v: View) : RecyclerView.ViewHolder(v) {
             val colorView: View   = v.findViewById(R.id.cave_inv_color)
             val countTv: TextView = v.findViewById(R.id.cave_inv_count)
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemVH {
-            val dp       = activity.resources.displayMetrics.density
-            val cellSize = if (parent.width > 0) parent.width / CaveActivity.GRID_COLS else (52 * dp).toInt()
+        override fun getItemCount() = items.size
+
+        override fun onCreateViewHolder(parent: ViewGroup, vt: Int): VH {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_cave_inv_block, parent, false)
             view.layoutParams = RecyclerView.LayoutParams(cellSize, cellSize)
-            return ItemVH(view)
+            return VH(view)
         }
 
-        override fun getItemCount() = items.size
-
-        override fun onBindViewHolder(holder: ItemVH, position: Int) {
-            val type  = items.getOrNull(position)
-            val count = if (type != null) renderer.inventory[type] ?: 0 else 0
-            val isSel    = position == selectedSlotIdx
-            val isCursor = invGpZone == InvGpZone.GRID && position == invGpCursor
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val absIdx = startIdx + position
+            val type   = items.getOrNull(position)
+            val count  = if (type != null) renderer.inventory[type] ?: 0 else 0
+            val isSel    = absIdx == selectedSlotIdx
+            val isCursor = invGpZone == InvGpZone.GRID && absIdx == invGpCursor
             val dp = activity.resources.displayMetrics.density
             holder.itemView.background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
@@ -459,26 +597,28 @@ internal class InventoryManager(private val activity: CaveActivity) {
             holder.itemView.setOnClickListener {
                 val pos = holder.bindingAdapterPosition
                 if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+                val aIdx = startIdx + pos
                 when {
-                    selectedSlotIdx == pos -> {
-                        selectedSlotIdx = -1; notifyDataSetChanged(); updateInfoPanel(); updateCraftingList()
+                    selectedSlotIdx == aIdx -> {
+                        selectedSlotIdx = -1
+                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                     }
                     selectedSlotIdx >= 0 -> {
-                        swapSlots(selectedSlotIdx, pos); selectedSlotIdx = -1
-                        refreshGridAdapter(); hud.updateActiveBarOverlay(); updateInfoPanel(); updateCraftingList()
+                        swapSlots(selectedSlotIdx, aIdx); selectedSlotIdx = -1
+                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                     }
                     type != null -> {
-                        selectedSlotIdx = pos; selectedRecipe = null
-                        notifyDataSetChanged(); updateInfoPanel(); updateCraftingList()
+                        selectedSlotIdx = aIdx; selectedRecipe = null
+                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
                     }
                 }
             }
             holder.itemView.setOnLongClickListener {
                 val pos = holder.bindingAdapterPosition
-                if (pos != RecyclerView.NO_POSITION) { startSlotDrag(it, pos); true } else false
+                if (pos != RecyclerView.NO_POSITION) { startSlotDrag(it, startIdx + pos); true } else false
             }
             holder.itemView.setOnDragListener(makeSlotDragListener {
-                holder.bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: -1
+                holder.bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION }?.let { startIdx + it } ?: -1
             })
         }
     }
