@@ -464,24 +464,40 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         } else stats
     }
 
-    // APS sans frénésie : shop + éléments flat + éléments mult + conversion APC→APS
+    // APS sans frénésie : shop + éléments flat + éléments mult + fusion + Big Bang + conversion APC→APS
     // Utilisé pour le gain hors-ligne afin d'éviter de compter la frénésie (30s max)
     private fun computeOfflineAps(state: ClickerGameState): LayeredNumber {
         val elem = getElementBonuses()
-        var base = ClickerShopEngine.bonus(state.starCoreLevel)
-        if (elem.flatAps > 0) base = base.add(LayeredNumber(elem.flatAps.toDouble()))
-        if (elem.multAps > 0.0) base = base.multiplyNumber(1.0 + elem.multAps)
+
+        // APS base (avec Big Bang comme dans recalcProduction)
+        var perSecond = ClickerShopEngine.bonus(state.starCoreLevel).let {
+            if (!it.isZero() && bigBangEffects.starCoreMult != 1.0) it.multiplyNumber(bigBangEffects.starCoreMult)
+            else it
+        }
+        if (elem.flatAps > 0) perSecond = perSecond.add(LayeredNumber(elem.flatAps.toDouble()))
+        if (elem.multAps > 0.0) perSecond = perSecond.multiplyNumber(1.0 + elem.multAps)
+
+        // Bonus fusion APS
+        val fusionAps = fusionStore.getBonusMultAps()
+        if (fusionAps > 0.0) perSecond = perSecond.multiplyNumber(1.0 + fusionAps)
+
+        // Conversion APC→APS (avec fusion APC incluse)
         if (state.apcToApsLevel > 0) {
             var baseApc = LayeredNumber.one()
             val cb = ClickerShopEngine.bonus(state.godFingerLevel)
-            if (!cb.isZero()) baseApc = baseApc.add(cb)
+            if (!cb.isZero()) baseApc = baseApc.add(
+                if (bigBangEffects.godFingerMult != 1.0) cb.multiplyNumber(bigBangEffects.godFingerMult) else cb
+            )
             if (elem.flatApc > 0) baseApc = baseApc.add(LayeredNumber(elem.flatApc.toDouble()))
             if (elem.multApc > 0.0) baseApc = baseApc.multiplyNumber(1.0 + elem.multApc)
-            base = base.add(baseApc.multiplyNumber(state.apcToApsLevel * 0.01))
+            val fusionApc = fusionStore.getBonusMultApc()
+            if (fusionApc > 0.0) baseApc = baseApc.multiplyNumber(1.0 + fusionApc)
+            perSecond = perSecond.add(baseApc.multiplyNumber(state.apcToApsLevel * 0.01))
         }
-        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts)
-        if (factoryApsBonus > 0.0) base = base.multiplyNumber(1.0 + factoryApsBonus)
-        return base
+
+        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts, bigBangEffects)
+        if (factoryApsBonus > 0.0) perSecond = perSecond.multiplyNumber(1.0 + factoryApsBonus)
+        return perSecond
     }
 
     fun refreshNeutrinoBalance() {
