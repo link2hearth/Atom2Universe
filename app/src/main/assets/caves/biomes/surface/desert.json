@@ -9,6 +9,10 @@
   "surface_variety_offset": 400.0,
   "dirt_block": "sand",
   "stone_block": "stone",
+  "height_base": -3.0,
+  "height_amplitude": 14.0,
+  "height_roughness": 3.0,
+  "topsoil_depth": 5,
   "tree_density_base": 0.0,
   "tree_density_noise_scale": 0.0,
   "tree_type": "none",
@@ -21,5 +25,7 @@
     {"block": "grass_brown", "weight": 1}
   ],
   "wheat_enabled": false,
-  "structure_type": "stone"
+  "structures": [
+    {"name": "ruins_stone", "weight": 1}
+  ]
 }

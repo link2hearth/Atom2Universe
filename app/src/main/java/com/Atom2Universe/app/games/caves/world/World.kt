@@ -15,7 +15,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     val renderRadiusYSurface = 5  // plage Y en surface (cylindre) — identique à avant
     val renderRadiusCave   = 7   // rayon de la sphère souterrain
 
-    private val SURFACE_CY_MAX = 9
+    // SURFACE_CY_MAX (bande de surface) est défini dans Chunk.kt, partagé avec LodBuilder et
+    // CaveRenderer. Le coût de streaming reste borné par renderRadiusYSurface : seuls les chunks
+    // dans ±renderRadiusYSurface autour du joueur sont chargés, quelle que soit l'altitude.
     private val ISLAND_CY_MIN  = 625
     private val SURFACE_BASE_Y = 80.0
     private val SEA_LEVEL      = 74
@@ -273,7 +275,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     private val defaultCaveBiome: CaveBiomeDef by lazy {
-        BiomeRegistry.caveBiomes.first { it.id == "default" }
+        BiomeRegistry.caveBiomes.firstOrNull { it.id == "default" }
+            ?: BiomeRegistry.caveBiomes.firstOrNull()
+            ?: error("Aucun biome de cave chargé (caves/biomes/cave manquant ?)")
     }
 
     private fun generateCave(chunk: Chunk) {
@@ -297,35 +301,46 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     private fun generateSurface(chunk: Chunk) {
         val wy = chunk.worldY
+        val biomes = BiomeRegistry.surfaceBiomes
 
-        // Biome calculé une seule fois au centre du chunk (économie ×256 appels noise)
-        val sb     = BiomeMap.surfaceBiomeAt(
-            (chunk.worldX + CHUNK_SIZE / 2).toDouble(),
-            (chunk.worldZ + CHUNK_SIZE / 2).toDouble(), seed)
-        val dirtB  = surfaceDirtBlock(sb)
-        val stoneB = surfaceStoneBlock(sb)
-
-        // Précalcul du heightmap et des blocs de surface (256 colonnes, 1 passe)
+        // Biome échantillonné AU BLOC : les frontières entre biomes suivent le champ de bruit
+        // (courbes organiques) au lieu de s'aligner sur la grille 16×16 des chunks.
+        val colBiome  = IntArray(CHUNK_SIZE * CHUNK_SIZE)
         val heights   = IntArray(CHUNK_SIZE * CHUNK_SIZE)
         val topBlocks = ShortArray(CHUNK_SIZE * CHUNK_SIZE)
+        val capDepth  = IntArray(CHUNK_SIZE * CHUNK_SIZE)   // épaisseur du bloc de surface (neige…)
+        val weights   = DoubleArray(biomes.size)
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             val i = lz * CHUNK_SIZE + lx
             val wx = (chunk.worldX + lx).toDouble()
             val wz = (chunk.worldZ + lz).toDouble()
-            heights[i]   = surfaceHeight(wx, wz).toInt()
-            topBlocks[i] = if (heights[i] < SEA_LEVEL) SAND else surfaceTopBlock(sb, wx, wz)
+            // Un seul passage : biome dominant (blocs) + poids de mélange (hauteur)
+            val dom = BiomeMap.biomeWeights(wx, wz, seed, weights)
+            colBiome[i]  = dom
+            val h = blendedSurfaceHeight(wx, wz, weights).toInt()
+            heights[i]   = h
+            val alt = if (h < SEA_LEVEL) null else altitudeBlock(biomes[dom], wx, wz, h)
+            topBlocks[i] = when {
+                h < SEA_LEVEL -> SAND
+                alt != null   -> alt.block
+                else          -> surfaceNoiseBlock(biomes[dom], wx, wz)
+            }
+            capDepth[i]  = alt?.thickness ?: 1
         }
 
-        // Remplissage des blocs
+        // Remplissage des blocs : couche de surface (cap) / terre (topsoil) / pierre, par colonne
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             val i = lz * CHUNK_SIZE + lx; val h = heights[i]; val top = topBlocks[i]
+            val sb = biomes[colBiome[i]]
+            val dirtB = sb.dirtBlock; val stoneB = sb.stoneBlock
+            val cap = capDepth[i]; val soil = sb.topsoilDepth
             for (ly in 0 until CHUNK_SIZE) {
                 val worldY = wy + ly
                 chunk.setBlock(lx, ly, lz, when {
-                    worldY > h      -> AIR
-                    worldY == h     -> top
-                    worldY >= h - 3 -> dirtB
-                    else            -> stoneB
+                    worldY > h                  -> AIR
+                    worldY > h - cap            -> top
+                    worldY > h - cap - soil     -> dirtB
+                    else                        -> stoneB
                 })
             }
         }
@@ -357,11 +372,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             carveVerticalWormsFrom(chunk, chunk.cx + dcx, chunk.cz + dcz)
 
         applyOreVeins(chunk, defaultCaveBiome)
-        plantSurfaceTreesByType(chunk, sb)
-        plantSurfaceBushes(chunk, sb)
-        applySurfaceDecorations(chunk, sb)
-        applySurfaceVegetation(chunk, sb)
-        placeStructuresInChunk(chunk, sb)
+        plantSurfaceTrees(chunk, colBiome)
+        plantSurfaceBushes(chunk, colBiome)
+        applySurfaceDecorations(chunk, colBiome)
+        applySurfaceVegetation(chunk, colBiome)
+        placeStructuresInChunk(chunk)
     }
 
     private fun generateIsland(chunk: Chunk) {
@@ -401,10 +416,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 break
             }
         }
-        val islandSb = BiomeMap.surfaceBiomeAt(
+        val islandIdx = BiomeMap.surfaceBiomeIndexAt(
             (chunk.worldX + CHUNK_SIZE / 2).toDouble(),
             (chunk.worldZ + CHUNK_SIZE / 2).toDouble(), seed)
-        plantSurfaceTreesByType(chunk, islandSb)
+        plantSurfaceTrees(chunk, IntArray(CHUNK_SIZE * CHUNK_SIZE) { islandIdx })
     }
 
     // ── Roche de base ─────────────────────────────────────────────────────────
@@ -693,78 +708,94 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // ── Surface : heightmap et blocs ─────────────────────────────────────────
 
     internal fun surfaceHeight(wx: Double, wz: Double): Double {
-        val s = (seed and 0xFFFFF).toDouble() * 0.0001
-
-        // ── Base lisse (comme l'original) ────────────────────────────────────
-        val h0 = SimplexNoise.noise(wx * 0.0015 + s,         wz * 0.0015) * 32.0
-        val h1 = SimplexNoise.noise(wx * 0.005  + s + 100.0, wz * 0.005)  * 14.0
-        val h2 = SimplexNoise.noise(wx * 0.015  + s + 200.0, wz * 0.015)  *  6.0
-        val h3 = SimplexNoise.noise(wx * 0.050  + s + 300.0, wz * 0.050)  *  2.5
-
-        // ── Masque de rugosité 0..1 (zones de ~250 blocs) ────────────────────
-        // Carré → zones lisses majoritaires, rugosité seulement dans les hauts de masque
-        val roughRaw = (SimplexNoise.noise(wx * 0.004 + s + 600.0, wz * 0.004) + 1.0) * 0.5
-        val roughMask = roughRaw * roughRaw   // ≈ 0 dans ~75% des zones, >0.5 dans ~25%
-
-        // Rugosité locale (dénivellés 2-4 blocs) — pondérée par le masque
-        val h4 = SimplexNoise.noise(wx * 0.085 + s + 400.0, wz * 0.085) * 5.5
-        val nRidge = SimplexNoise.noise(wx * 0.022 + s + 500.0, wz * 0.022)
-        val h5 = (abs(nRidge) - 0.45).coerceAtLeast(0.0) * 14.0
-
-        // ── Grandes amplitudes : montagnes géantes et océans (rares ~14% chacun) ──
-        // Très basse fréquence (~1400 blocs par cycle) → features à l'échelle d'un biome
-        val nLarge = SimplexNoise.noise(wx * 0.0007 + s + 700.0, wz * 0.0007)
-        val hLarge = sign(nLarge) * (abs(nLarge) - 0.72).coerceAtLeast(0.0) * 95.0
-        // hLarge ∈ [-27..+27] uniquement dans les zones extrêmes
-
-        return (SURFACE_BASE_Y + h0 + h1 + h2 + h3 + (h4 + h5) * roughMask + hLarge)
-                   .coerceIn(25.0, 148.0)  // plancher océan ~25, plafond montagne 148
+        val w = DoubleArray(BiomeRegistry.surfaceBiomes.size)
+        BiomeMap.biomeWeights(wx, wz, seed, w)
+        return blendedSurfaceHeight(wx, wz, w)
     }
 
-    private fun surfaceTopBlock(sb: SurfaceBiomeDef, wx: Double, wz: Double): Short {
+    /**
+     * Hauteur du sol en (wx,wz), pilotée par les paramètres de relief des biomes.
+     * [w] = poids normalisés des biomes (cf. [BiomeMap.biomeWeights]). On mélange `heightBase`,
+     * `heightAmplitude` et `heightRoughness` selon ces poids, puis on applique des octaves de
+     * bruit communes (donc continues d'un biome à l'autre) modulées par l'amplitude mélangée :
+     * pas de falaise aux frontières, mais un biome montagneux culmine très haut, un océan plonge.
+     */
+    private fun blendedSurfaceHeight(wx: Double, wz: Double, w: DoubleArray): Double {
+        val biomes = BiomeRegistry.surfaceBiomes
+        var base = 0.0; var amp = 0.0; var rough = 0.0
+        for (i in biomes.indices) {
+            val wi = w[i]; if (wi == 0.0) continue
+            base  += wi * biomes[i].heightBase
+            amp   += wi * biomes[i].heightAmplitude
+            rough += wi * biomes[i].heightRoughness
+        }
+
+        val s = (seed and 0xFFFFF).toDouble() * 0.0001
+        val nLow  = SimplexNoise.noise(wx * 0.0013 + s,         wz * 0.0013)         // masse continentale
+        val nMid  = SimplexNoise.noise(wx * 0.0060 + s + 120.0, wz * 0.0060)         // collines
+        val nHigh = SimplexNoise.noise(wx * 0.0450 + s + 240.0, wz * 0.0450)         // détail fin
+        val ridge = 1.0 - abs(SimplexNoise.noise(wx * 0.0040 + s + 500.0, wz * 0.0040)) // crêtes 0..1
+
+        val maxY = (SURFACE_CY_MAX + 1) * CHUNK_SIZE - 2.0
+        return (SURFACE_BASE_Y + base
+                + nLow  * amp
+                + nMid  * amp * 0.40
+                + ridge * ridge * amp * 0.55   // épines montagneuses, proportionnelles à l'amplitude
+                + nHigh * rough)
+            .coerceIn(6.0, maxY)
+    }
+
+    /** Entrée d'altitude correspondant à la surface en (wx,wz,h), ou null. Ligne légèrement bruitée. */
+    private fun altitudeBlock(sb: SurfaceBiomeDef, wx: Double, wz: Double, h: Int): HeightBlockEntry? {
+        if (sb.heightBlocks.isEmpty()) return null
+        val hj = h + SimplexNoise.noise(wx * 0.05 + 800.0, wz * 0.05) * 3.0
+        for (hb in sb.heightBlocks) if (hj >= hb.minHeight) return hb
+        return null
+    }
+
+    private fun surfaceNoiseBlock(sb: SurfaceBiomeDef, wx: Double, wz: Double): Short {
         val n = SimplexNoise.noise(wx * sb.surfaceVarietyScale + sb.surfaceVarietyOffset, wz * sb.surfaceVarietyScale).toFloat()
         return sb.surfaceBlocks.firstOrNull { n >= it.noiseMin }?.block ?: sb.surfaceBlocks.last().block
     }
 
-    private fun surfaceDirtBlock(sb: SurfaceBiomeDef)  = sb.dirtBlock
-    private fun surfaceStoneBlock(sb: SurfaceBiomeDef) = sb.stoneBlock
+    // ── Surface : arbres groupés en forêts (biome résolu par colonne) ─────────
 
-    // ── Surface : arbres groupés en forêts ────────────────────────────────────
-
-    private fun plantSurfaceTreesByType(chunk: Chunk, sb: SurfaceBiomeDef) {
-        when (sb.treeType) {
-            "oak"   -> plantOakTrees(chunk, sb)
-            "birch" -> plantBirchTrees(chunk, sb)
-        }
+    private fun plantSurfaceTrees(chunk: Chunk, colBiome: IntArray) {
+        plantOakTrees(chunk, colBiome)
+        plantBirchTrees(chunk, colBiome)
     }
 
-    private fun plantOakTrees(chunk: Chunk, sb: SurfaceBiomeDef) {
-        if (sb.treeDensityBase <= 0f && sb.treeDensityNoiseScale <= 0f) return
-
+    private fun plantOakTrees(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
         val rng = chunkRng(chunk.cx * 7 + 3, chunk.cy + 100, chunk.cz * 13 + 5)
-        val clusterN = SimplexNoise.noise(
-            (chunk.worldX + 8).toDouble() * 0.007 + 900.0,
-            (chunk.worldZ + 8).toDouble() * 0.007)
-        val density = (sb.treeDensityBase + clusterN.toFloat() * sb.treeDensityNoiseScale).coerceIn(0.00f, 0.55f)
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            if (sb.treeType != "oak") continue
+            if (sb.treeDensityBase <= 0f && sb.treeDensityNoiseScale <= 0f) continue
+            val clusterN = SimplexNoise.noise(
+                (chunk.worldX + lx).toDouble() * 0.007 + 900.0,
+                (chunk.worldZ + lz).toDouble() * 0.007)
+            val density = (sb.treeDensityBase + clusterN.toFloat() * sb.treeDensityNoiseScale).coerceIn(0.00f, 0.55f)
             if (rng.nextFloat() > density) continue
             var grassY = -1
             for (ly in CHUNK_SIZE - 1 downTo 0)
                 if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
             if (grassY < 0) continue
-            val trunkH = 3 + rng.nextInt(3)
-            if (grassY + trunkH + 3 >= CHUNK_SIZE) continue
+            val trunkH = sb.treeMinHeight + rng.nextInt((sb.treeMaxHeight - sb.treeMinHeight + 1).coerceAtLeast(1))
+            val r = sb.canopyRadius
+            if (grassY + trunkH + r + 1 >= CHUNK_SIZE) continue
             var blocked = false
             for (dy in 1..(trunkH + 2))
                 if (chunk.blockAt(lx, grassY + dy, lz) != AIR) { blocked = true; break }
             if (blocked) continue
             for (dy in 1..trunkH) chunk.setBlock(lx, grassY + dy, lz, WOOD)
             val topY = grassY + trunkH
-            for (dy in -1..2) for (dz in -2..2) for (dx in -2..2) {
+            val rr = r * r + 1
+            for (dy in -1..r) for (dz in -r..r) for (dx in -r..r) {
                 val lyl = topY + dy; val lxl = lx + dx; val lzl = lz + dz
                 if (lxl !in 0 until CHUNK_SIZE || lyl !in 0 until CHUNK_SIZE || lzl !in 0 until CHUNK_SIZE) continue
-                if (dx*dx + dy*dy + dz*dz > 5) continue
+                if (dx*dx + dy*dy + dz*dz > rr) continue
                 if (chunk.blockAt(lxl, lyl, lzl) == AIR) chunk.setBlock(lxl, lyl, lzl, LEAVES)
             }
         }
@@ -772,10 +803,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Surface : décorations ─────────────────────────────────────────────────
 
-    private fun applySurfaceDecorations(chunk: Chunk, sb: SurfaceBiomeDef) {
-        if (sb.decorationBlocks.isEmpty()) return
+    private fun applySurfaceDecorations(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
         val rng = chunkRng(chunk.cx * 19 + 11, chunk.cy * 7 + 3, chunk.cz * 23 + 17)
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            if (sb.decorationBlocks.isEmpty()) continue
             if (rng.nextFloat() > sb.decorationDensity) continue
             for (ly in CHUNK_SIZE - 1 downTo 0) {
                 val b = chunk.blockAt(lx, ly, lz)
@@ -791,22 +824,25 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Bouleaux ──────────────────────────────────────────────────────────────
 
-    private fun plantBirchTrees(chunk: Chunk, sb: SurfaceBiomeDef) {
-        if (sb.treeDensityBase <= 0f) return
+    private fun plantBirchTrees(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
         val rng = chunkRng(chunk.cx * 23 + 11, chunk.cy + 400, chunk.cz * 43 + 7)
-        val density = sb.treeDensityBase
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
-            if (rng.nextFloat() > density) continue
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
+            if (sb.treeType != "birch") continue
+            if (sb.treeDensityBase <= 0f) continue
+            if (rng.nextFloat() > sb.treeDensityBase) continue
 
             var grassY = -1
             for (ly in CHUNK_SIZE - 1 downTo 0)
                 if (chunk.blockAt(lx, ly, lz) == GRASS) { grassY = ly; break }
             if (grassY < 0) continue
 
-            // Tronc 8–12, taillé à la hauteur disponible dans le chunk
+            // Tronc paramétré par le biome, taillé à la hauteur disponible dans le chunk
             val maxTrunk = CHUNK_SIZE - grassY - 5   // 4 pour les feuilles du haut + 1 de marge
-            val trunkH = (8 + rng.nextInt(5)).coerceAtMost(maxTrunk)
+            val trunkH = (sb.treeMinHeight + rng.nextInt((sb.treeMaxHeight - sb.treeMinHeight + 1).coerceAtLeast(1)))
+                .coerceAtMost(maxTrunk)
             if (trunkH < 6) continue
 
             // Vérifier espace libre pour le tronc
@@ -820,8 +856,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
             val topY = grassY + trunkH
 
-            // Gros patch de feuilles au sommet (sphère rayon 2–3)
-            val topR = 2 + rng.nextInt(2)
+            // Gros patch de feuilles au sommet (sphère, rayon piloté par le biome)
+            val topR = sb.canopyRadius + rng.nextInt(2)
             for (dy in -topR..(topR + 1)) for (dz in -topR..topR) for (dx in -topR..topR) {
                 if (dx * dx + (dy - 1) * (dy - 1) + dz * dz > topR * topR) continue
                 val ly = topY + dy; val lx2 = lx + dx; val lz2 = lz + dz
@@ -845,15 +881,19 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
-    private fun plantSurfaceBushes(chunk: Chunk, sb: SurfaceBiomeDef) {
-        val bushBlock = sb.bushBlock ?: return
-        if (sb.bushDensity <= 0f) return
-        val density = sb.bushDensity
+    private fun plantSurfaceBushes(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
         val rng = chunkRng(chunk.cx * 41 + 17, chunk.cy + 300, chunk.cz * 53 + 29)
-        val surfaceBlockSet = sb.surfaceBlocks.map { it.block }.toSet()
+        val surfaceSets = arrayOfNulls<Set<Short>>(biomes.size)
 
         for (lz in 1 until CHUNK_SIZE - 1) for (lx in 1 until CHUNK_SIZE - 1) {
-            if (rng.nextFloat() > density) continue
+            val bi = colBiome[lz * CHUNK_SIZE + lx]
+            val sb = biomes[bi]
+            val bushBlock = sb.bushBlock ?: continue
+            if (sb.bushDensity <= 0f) continue
+            if (rng.nextFloat() > sb.bushDensity) continue
+            val surfaceBlockSet = surfaceSets[bi]
+                ?: sb.surfaceBlocks.map { it.block }.toSet().also { surfaceSets[bi] = it }
 
             var surfaceY = -1
             for (ly in CHUNK_SIZE - 1 downTo 0) {
@@ -883,13 +923,15 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Végétation de surface (herbes folles + blé sauvage) ──────────────────
 
-    private fun applySurfaceVegetation(chunk: Chunk, sb: SurfaceBiomeDef) {
+    private fun applySurfaceVegetation(chunk: Chunk, colBiome: IntArray) {
+        val biomes = BiomeRegistry.surfaceBiomes
         val rng  = chunkRng(chunk.cx * 31 + 7, chunk.cy + 200, chunk.cz * 37 + 13)
         val wx0  = chunk.worldX.toDouble()
         val wz0  = chunk.worldZ.toDouble()
 
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             if (lz + 1 >= CHUNK_SIZE) continue
+            val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
 
             var grassY = -1
             for (ly in CHUNK_SIZE - 1 downTo 0) {
@@ -972,7 +1014,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // Espacement : cellule de 10 chunks (~160 blocs), 50 % de chance par cellule.
     private val STRUCT_SUPER = 10
 
-    private fun placeStructuresInChunk(chunk: Chunk, sb: SurfaceBiomeDef) {
+    private fun placeStructuresInChunk(chunk: Chunk) {
         val scx = Math.floorDiv(chunk.cx, STRUCT_SUPER)
         val scz = Math.floorDiv(chunk.cz, STRUCT_SUPER)
         for (dscz in -1..1) for (dscx in -1..1) {
@@ -989,15 +1031,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val originWz = originCz * CHUNK_SIZE
             val originSb = BiomeMap.surfaceBiomeAt(
                 (originWx + 7).toDouble(), (originWz + 7).toDouble(), seed)
-            val biomeStructDef = when (originSb.structureType) {
-                "stone" -> StructureData.RUINS_STONE
-                else    -> StructureData.HOUSE_WOOD
-            }
-            // 30 % de chance d'utiliser une structure joueur si disponible
+            // 30 % de chance d'utiliser une structure joueur si disponible, sinon une du biome
             val userList = StructureRegistry.userStructures
             val structDef = if (userList.isNotEmpty() && rng.nextFloat() < 0.30f)
                 userList[rng.nextInt(userList.size)]
-            else biomeStructDef
+            else pickBiomeStructure(originSb, rng) ?: continue
 
             // Y = surface au centre de la structure
             val originWy = surfaceHeight(
@@ -1023,6 +1061,17 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
+    /** Choisit une structure du biome par tirage pondéré, ou null si le biome n'en a pas / nom inconnu. */
+    private fun pickBiomeStructure(sb: SurfaceBiomeDef, rng: Random): StructureDef? {
+        val list = sb.structures
+        if (list.isEmpty()) return null
+        val total = list.sumOf { it.weight }
+        if (total <= 0) return null
+        var roll = rng.nextInt(total)
+        for (e in list) { roll -= e.weight; if (roll < 0) return StructureRegistry.byName(e.name) }
+        return StructureRegistry.byName(list.last().name)
+    }
+
     private fun structRng(sx: Int, sz: Int): Random {
         val s = seed xor (sx.toLong() * 987654321L xor sz.toLong() * 123456789L)
         return Random(s * 6364136223846793005L + 1442695040888963407L)
@@ -1037,12 +1086,6 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     private fun chunkDist(chunk: Chunk) =
         sqrt((chunk.cx.toLong() * chunk.cx + chunk.cy.toLong() * chunk.cy + chunk.cz.toLong() * chunk.cz).toDouble()).toFloat()
-
-    private fun sandForDist(dist: Float, x: Double, z: Double): Short = when {
-        dist < 100f -> SAND
-        dist > 200f -> REDSAND
-        else -> if (SimplexNoise.noise(x * 0.05, 0.0, z * 0.05) > 0.0) SAND else REDSAND
-    }
 
     private fun chunkRng(cx: Int, cy: Int, cz: Int): Random {
         val s = seed xor (chunkKey(cx, cy, cz) * 6364136223846793005L + 1442695040888963407L)

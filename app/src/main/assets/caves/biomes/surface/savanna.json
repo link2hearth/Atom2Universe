@@ -9,9 +9,15 @@
   "surface_variety_offset": 350.0,
   "dirt_block": "dirt",
   "stone_block": "stone",
+  "height_base": 0.0,
+  "height_amplitude": 12.0,
+  "height_roughness": 3.0,
   "tree_density_base": 0.03,
   "tree_density_noise_scale": 0.03,
   "tree_type": "oak",
+  "tree_min_height": 4,
+  "tree_max_height": 6,
+  "canopy_radius": 3,
   "bush_density": 0.06,
   "bush_block": "leaves_orange",
   "decoration_density": 0.03,
@@ -24,5 +30,7 @@
     {"block": "grass_wild4", "weight": 1}
   ],
   "wheat_enabled": false,
-  "structure_type": "stone"
+  "structures": [
+    {"name": "ruins_stone", "weight": 1}
+  ]
 }

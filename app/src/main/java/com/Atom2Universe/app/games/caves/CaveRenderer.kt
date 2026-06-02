@@ -83,6 +83,8 @@ internal class CaveRenderer(
     private val LOD_RADIUS   = 90
     private val MAX_LOD_TILES = 8000
     private val LOD_SUPER    = 8                           // 8×8 = 64 colonnes par super-tuile
+    // Hauteur (blocs) de la bande de surface, pour les bounding-box de frustum LOD.
+    private val SURFACE_BAND_H = ((SURFACE_CY_MAX + 1) * CHUNK_SIZE).toFloat()
     private val lodGrid      = HashMap<Long, ArrayList<Long>>() // super-tuile → liste de clés LOD
     private val lodCache = worldId?.let {
         LodCache(java.io.File(context.filesDir, "cave_worlds/$it/lod_cache.bin"))
@@ -739,7 +741,7 @@ internal class CaveRenderer(
             if (chunk.version == ver) {
                 meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
                 refreshChunkLightSources(chunk)
-                if (chunk.cy in 0..9) scheduleLodBuild(chunk.cx, chunk.cz)
+                if (chunk.cy in 0..SURFACE_CY_MAX) scheduleLodBuild(chunk.cx, chunk.cz)
             }
         }
         repeat(16) {
@@ -1171,7 +1173,7 @@ internal class CaveRenderer(
             if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(waterVerts)
             else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
-            if (ncy in 0..9) {
+            if (ncy in 0..SURFACE_CY_MAX) {
                 lodCache?.invalidate(ncx, ncz)
                 scheduleLodBuild(ncx, ncz)
             }
@@ -1770,7 +1772,7 @@ internal class CaveRenderer(
     private fun isLodSuperTileInFrustum(scx: Int, scz: Int): Boolean {
         val w = (LOD_SUPER * CHUNK_SIZE).toFloat()
         val x0 = (scx.toDouble() * CHUNK_SIZE - camera.x).toFloat(); val x1 = x0 + w
-        val y0 = -camera.y.toFloat();                                  val y1 = y0 + 160f
+        val y0 = -camera.y.toFloat();                                  val y1 = y0 + SURFACE_BAND_H
         val z0 = (scz.toDouble() * CHUNK_SIZE - camera.z).toFloat();  val z1 = z0 + w
         for (p in frustum) {
             val px = if (p[0] >= 0f) x1 else x0
@@ -1781,10 +1783,10 @@ internal class CaveRenderer(
         return true
     }
 
-    // Frustum test élargi en Y pour couvrir toute la bande de surface (Y 0..160).
+    // Frustum test élargi en Y pour couvrir toute la bande de surface (jusqu'aux montagnes).
     private fun isLodColumnInFrustum(cx: Int, cz: Int): Boolean {
         val x0 = (cx.toDouble() * CHUNK_SIZE - camera.x).toFloat(); val x1 = x0 + CHUNK_SIZE
-        val y0 = -camera.y.toFloat();                                val y1 = y0 + 160f
+        val y0 = -camera.y.toFloat();                                val y1 = y0 + SURFACE_BAND_H
         val z0 = (cz.toDouble() * CHUNK_SIZE - camera.z).toFloat(); val z1 = z0 + CHUNK_SIZE
         for (p in frustum) {
             val px = if (p[0] >= 0f) x1 else x0

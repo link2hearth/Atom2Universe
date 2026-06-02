@@ -22,6 +22,10 @@ object StructureRegistry {
     /** Structures créées par le joueur uniquement. */
     val userStructures: List<StructureDef> get() = userDefs.toList()
 
+    /** Retrouve une structure (intégrée ou utilisateur) par son nom, ou null. */
+    fun byName(name: String): StructureDef? =
+        builtIn.firstOrNull { it.name == name } ?: userDefs.firstOrNull { it.name == name }
+
     /** Ajoute immédiatement une structure en mémoire (après sauvegarde en jeu). */
     fun addUserStructure(def: StructureDef) {
         userDefs.removeAll { it.name == def.name }

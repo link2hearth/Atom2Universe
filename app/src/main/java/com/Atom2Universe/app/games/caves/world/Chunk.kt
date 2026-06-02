@@ -4,6 +4,11 @@ import com.Atom2Universe.app.games.caves.node.BlockRegistry
 
 const val CHUNK_SIZE = 16
 
+// Plafond (en chunks) de la bande de surface. Partagé entre World (génération), LodBuilder
+// (scan du heightmap LOD) et CaveRenderer (déclenchement LOD + frustum). Permet aux reliefs
+// hauts (montagnes) d'être générés ET capturés/affichés par le LOD jusqu'à Y ≈ 1023.
+const val SURFACE_CY_MAX = 63
+
 // ── Spécial ──────────────────────────────────────────────────────────────────
 const val AIR: Short = 0
 

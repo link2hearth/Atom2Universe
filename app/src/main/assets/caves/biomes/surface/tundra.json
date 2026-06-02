@@ -9,9 +9,15 @@
   "surface_variety_offset": 200.0,
   "dirt_block": "dirt",
   "stone_block": "stone",
+  "height_base": 8.0,
+  "height_amplitude": 26.0,
+  "height_roughness": 7.0,
   "tree_density_base": 0.02,
   "tree_density_noise_scale": 0.02,
   "tree_type": "birch",
+  "tree_min_height": 6,
+  "tree_max_height": 9,
+  "canopy_radius": 2,
   "bush_density": 0.03,
   "bush_block": "leaves_fall",
   "decoration_density": 0.04,
@@ -22,5 +28,7 @@
     {"block": "grass_brown", "weight": 1}
   ],
   "wheat_enabled": false,
-  "structure_type": "wood"
+  "structures": [
+    {"name": "house_wood", "weight": 1}
+  ]
 }

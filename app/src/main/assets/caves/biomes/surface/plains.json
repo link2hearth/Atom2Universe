@@ -9,9 +9,15 @@
   "surface_variety_offset": 600.0,
   "dirt_block": "dirt",
   "stone_block": "stone",
+  "height_base": 0.0,
+  "height_amplitude": 14.0,
+  "height_roughness": 3.0,
   "tree_density_base": 0.04,
   "tree_density_noise_scale": 0.04,
   "tree_type": "oak",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
   "bush_density": 0.0,
   "decoration_density": 0.01,
   "decoration_blocks": ["rock", "rock_moss"],
@@ -25,5 +31,7 @@
     {"block": "grass_tan",   "weight": 1}
   ],
   "wheat_enabled": true,
-  "structure_type": "wood"
+  "structures": [
+    {"name": "house_wood", "weight": 1}
+  ]
 }

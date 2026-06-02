@@ -70,6 +70,15 @@ data class BlockNoiseEntry(val block: Short, val noiseMin: Float)
 
 data class VegetationEntry(val block: Short, val weight: Int)
 
+/**
+ * Bloc de surface posé au-dessus d'une altitude donnée (ex. neige sur les sommets).
+ * [thickness] = nombre de blocs depuis la surface remplacés par ce bloc (1 = surface seule).
+ */
+data class HeightBlockEntry(val block: Short, val minHeight: Int, val thickness: Int = 1)
+
+/** Structure pouvant apparaître dans un biome, référencée par son nom dans StructureRegistry. */
+data class StructureEntry(val name: String, val weight: Int)
+
 data class CaveBiomeDef(
     val id: String,
     val noiseOffsets: DoubleArray,
@@ -142,9 +151,17 @@ data class SurfaceBiomeDef(
     val surfaceVarietyOffset: Double,
     val dirtBlock: Short,
     val stoneBlock: Short,
+    val heightBase: Double,
+    val heightAmplitude: Double,
+    val heightRoughness: Double,
+    val heightBlocks: List<HeightBlockEntry>,
+    val topsoilDepth: Int,
     val treeDensityBase: Float,
     val treeDensityNoiseScale: Float,
     val treeType: String,
+    val treeMinHeight: Int,
+    val treeMaxHeight: Int,
+    val canopyRadius: Int,
     val bushDensity: Float,
     val bushBlock: Short?,
     val decorationDensity: Float,
@@ -152,7 +169,7 @@ data class SurfaceBiomeDef(
     val vegetationDensity: Float,
     val vegetationBlocks: List<VegetationEntry>,
     val wheatEnabled: Boolean,
-    val structureType: String,
+    val structures: List<StructureEntry>,
 ) {
     companion object {
         fun fromJson(j: JSONObject): SurfaceBiomeDef {
@@ -173,9 +190,22 @@ data class SurfaceBiomeDef(
                 surfaceVarietyOffset = j.optDouble("surface_variety_offset", 0.0),
                 dirtBlock            = parseBlock(j.getString("dirt_block")),
                 stoneBlock           = parseBlock(j.getString("stone_block")),
+                heightBase           = j.optDouble("height_base", 0.0),
+                heightAmplitude      = j.optDouble("height_amplitude", 16.0),
+                heightRoughness      = j.optDouble("height_roughness", 4.0),
+                heightBlocks         = j.optJSONArray("height_blocks")?.let { a ->
+                    (0 until a.length()).map {
+                        val o = a.getJSONObject(it)
+                        HeightBlockEntry(parseBlock(o.getString("block")), o.optInt("min_height", 0), o.optInt("thickness", 1))
+                    }.sortedByDescending { it.minHeight }
+                } ?: emptyList(),
+                topsoilDepth         = j.optInt("topsoil_depth", 3),
                 treeDensityBase      = j.optDouble("tree_density_base", 0.0).toFloat(),
                 treeDensityNoiseScale= j.optDouble("tree_density_noise_scale", 0.0).toFloat(),
                 treeType             = j.optString("tree_type", "none"),
+                treeMinHeight        = j.optInt("tree_min_height", 3),
+                treeMaxHeight        = j.optInt("tree_max_height", 5),
+                canopyRadius         = j.optInt("canopy_radius", 2),
                 bushDensity          = j.optDouble("bush_density", 0.0).toFloat(),
                 bushBlock            = if (bushStr.isNotEmpty()) parseBlock(bushStr) else null,
                 decorationDensity    = j.optDouble("decoration_density", 0.01).toFloat(),
@@ -186,7 +216,12 @@ data class SurfaceBiomeDef(
                     VegetationEntry(parseBlock(o.getString("block")), o.optInt("weight", 1))
                 } } ?: emptyList(),
                 wheatEnabled         = j.optBoolean("wheat_enabled", false),
-                structureType        = j.optString("structure_type", "wood"),
+                structures           = j.optJSONArray("structures")?.let { a ->
+                    (0 until a.length()).map {
+                        val o = a.getJSONObject(it)
+                        StructureEntry(o.getString("name"), o.optInt("weight", 1))
+                    }
+                } ?: emptyList(),
             )
         }
     }

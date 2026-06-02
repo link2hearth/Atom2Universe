@@ -11,39 +11,47 @@ internal object LodBuilder {
         // ── Heightmap ────────────────────────────────────────────────────────
         // Hauteur (absY du bloc le plus haut) et type pour chaque cellule (lx, lz).
         // Int.MIN_VALUE = colonne vide ou non générée.
-        val heights: IntArray
-        val topBlocks: ShortArray
-
+        //
+        // On part du cache (hauteurs déjà vues) puis on fusionne avec les chunks actuellement
+        // chargés en gardant le MAX par cellule : une montagne grandit dans le LOD au fur et à
+        // mesure qu'on l'explore en hauteur, et ne rétrécit pas quand on s'en éloigne (les chunks
+        // hauts se déchargent mais la hauteur mémorisée persiste). Les éditions joueur invalident
+        // le cache (CaveRenderer), forçant une reconstruction propre à partir des chunks chargés.
         val cached = cache?.get(cx, cz)
-        if (cached != null) {
-            heights   = IntArray(H * H) { i ->
-                cached.heights[i].let { h -> if (h == Short.MIN_VALUE) Int.MIN_VALUE else h.toInt() }
-            }
-            topBlocks = cached.blocks
-        } else {
-            heights   = IntArray(H * H) { Int.MIN_VALUE }
-            topBlocks = ShortArray(H * H) { AIR }
+        val heights   = IntArray(H * H) { i ->
+            val c = cached?.heights?.get(i)
+            if (c == null || c == Short.MIN_VALUE) Int.MIN_VALUE else c.toInt()
+        }
+        val topBlocks = ShortArray(H * H) { i -> cached?.blocks?.get(i) ?: AIR }
+
+        // Chunks chargés de la colonne, du plus haut au plus bas (un seul balayage cy).
+        val loaded = ArrayList<Chunk>()
+        for (cy in SURFACE_CY_MAX downTo -2) {
+            val chunk = world.getChunk(cx, cy, cz) ?: continue
+            if (chunk.generated) loaded.add(chunk)
+        }
+        if (loaded.isNotEmpty()) {
             for (lz in 0 until H) for (lx in 0 until H) {
                 val idx = lz * H + lx
-                for (cy in 9 downTo -2) {
-                    if (heights[idx] != Int.MIN_VALUE) break
-                    val chunk = world.getChunk(cx, cy, cz) ?: continue
-                    if (!chunk.generated) continue
+                for (chunk in loaded) {                 // haut → bas : 1er bloc solide = sommet chargé
+                    var hit = false
                     for (ly in H - 1 downTo 0) {
                         val b = chunk.blockAt(lx, ly, lz)
                         if (b == AIR || isDecoration(b) || isWater(b)) continue
-                        heights[idx]   = cy * H + ly
-                        topBlocks[idx] = b
-                        break
+                        val wy = chunk.cy * H + ly
+                        if (wy > heights[idx]) { heights[idx] = wy; topBlocks[idx] = b }
+                        hit = true; break
                     }
+                    if (hit) break
                 }
             }
-            if (cache != null) {
-                val shortH = ShortArray(H * H) { i ->
-                    heights[i].let { if (it == Int.MIN_VALUE) Short.MIN_VALUE else it.toShort() }
-                }
-                cache.put(cx, cz, shortH, topBlocks.copyOf())
+        }
+
+        if (cache != null) {
+            val shortH = ShortArray(H * H) { i ->
+                heights[i].let { if (it == Int.MIN_VALUE) Short.MIN_VALUE else it.toShort() }
             }
+            cache.put(cx, cz, shortH, topBlocks.copyOf())
         }
 
         // ── Faces supérieures ────────────────────────────────────────────────
@@ -130,7 +138,7 @@ internal object LodBuilder {
 
     // Hauteur du bloc le plus haut en (lx, lz) dans la colonne d'un chunk adjacent.
     private fun columnHeight(cx: Int, cz: Int, lx: Int, lz: Int, world: World): Int {
-        for (cy in 9 downTo -2) {
+        for (cy in SURFACE_CY_MAX downTo -2) {
             val chunk = world.getChunk(cx, cy, cz) ?: continue
             if (!chunk.generated) continue
             for (ly in CHUNK_SIZE - 1 downTo 0) {

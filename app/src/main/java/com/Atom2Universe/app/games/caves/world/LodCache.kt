@@ -88,6 +88,6 @@ class LodCache(private val file: File) {
 
     companion object {
         private const val MAGIC   = 0x4C4F4448   // "LODH"
-        private const val VERSION = 2            // bumped : blocks sont maintenant Short
+        private const val VERSION = 3            // bumped : LOD pleine hauteur (montagnes) + fusion max
     }
 }

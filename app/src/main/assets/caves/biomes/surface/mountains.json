@@ -1,26 +1,27 @@
 {
-  "id": "rocky",
-  "noise_offsets": [300.0, 0.0, -200.0],
+  "id": "mountains",
+  "noise_offsets": [1100.0, 0.0, 1200.0],
   "surface_blocks": [
     {"block": "granite", "noise_min":  0.0},
     {"block": "stone",   "noise_min": -99.0}
   ],
-  "surface_variety_scale": 0.07,
-  "surface_variety_offset": 500.0,
+  "surface_variety_scale": 0.06,
+  "surface_variety_offset": 1300.0,
   "dirt_block": "stone",
   "stone_block": "granite",
-  "height_base": 30.0,
-  "height_amplitude": 90.0,
-  "height_roughness": 28.0,
+  "height_base": 130.0,
+  "height_amplitude": 210.0,
+  "height_roughness": 32.0,
   "topsoil_depth": 0,
   "height_blocks": [
-    {"block": "snow", "min_height": 200, "thickness": 2}
+    {"block": "snow", "min_height": 320, "thickness": 3},
+    {"block": "rock", "min_height": 210, "thickness": 2}
   ],
   "tree_density_base": 0.0,
   "tree_density_noise_scale": 0.0,
   "tree_type": "none",
   "bush_density": 0.0,
-  "decoration_density": 0.05,
+  "decoration_density": 0.03,
   "decoration_blocks": ["rock"],
   "vegetation_density": 0.0,
   "vegetation_blocks": [],
