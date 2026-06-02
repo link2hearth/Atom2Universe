@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.caves.entity
 
 import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.node.GameEvent
+import com.Atom2Universe.app.games.caves.node.MobDef
 import com.Atom2Universe.app.games.caves.node.MobRegistry
 import com.Atom2Universe.app.games.caves.world.*
 import kotlin.math.*
@@ -23,6 +24,26 @@ internal class SpawnManager(
     private var bossEnemyId  = -1
     private var bossRewardGiven = false
     private var spawnCooldown = SPAWN_INTERVAL
+
+    // Pool shufflée une fois à l'init selon la seed du monde.
+    // Indexée par zone (modulo taille) → même zone = même mob pour ce monde.
+    private val shuffledPool: List<String> by lazy {
+        MobRegistry.all().map { it.spriteSheet }.shuffled(Random(worldSeed))
+    }
+
+    private fun mobForZone(zone: Int, biome: String): MobDef {
+        // D'abord chercher un override JSON pour ce biome/zone précis
+        val overrides = MobRegistry.allEligibleFor(biome, zone)
+        if (overrides.isNotEmpty()) {
+            val idx = ((worldSeed xor zone.toLong()) and 0x7FFFFFFFFFFFFFFF) % overrides.size
+            return overrides[idx.toInt()]
+        }
+        // Sinon : pool shufflée → index = zone % taille, au pif total selon la seed
+        val pool = shuffledPool
+        if (pool.isEmpty()) return MobRegistry.all().first()
+        val sheet = pool[zone % pool.size]
+        return MobRegistry.all().first { it.spriteSheet == sheet }
+    }
 
     // ── Tick principal ────────────────────────────────────────────────────────
 
@@ -65,13 +86,9 @@ internal class SpawnManager(
 
             val biome = biomeAt(sx, sy, sz)
             val zone  = computeLevel(sx, sz).coerceAtLeast(1)
-            val eligible = MobRegistry.allEligibleFor(biome, zone)
-                .ifEmpty { MobRegistry.all().toList() }
-                .ifEmpty { return }
 
-            // Sélection déterministe : même zone + même seed = même mob, toujours
-            val zoneRng = Random(worldSeed xor zone.toLong())
-            val def = eligible.sortedBy { it.id }[zoneRng.nextInt(eligible.size)]
+            // Pool shufflée une fois par seed — même monde = mêmes mobs partout, au pif total
+            val def = mobForZone(zone, biome)
             val e = Enemy(nextId++, def, sx, sy, sz)
             e.spriteSheet = def.spriteSheet
             e.level       = zone
