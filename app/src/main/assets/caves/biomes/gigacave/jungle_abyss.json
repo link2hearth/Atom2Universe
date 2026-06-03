@@ -1,0 +1,15 @@
+{
+  "id": "jungle_abyss",
+  "noise_offsets": [5000.0, 0.0, -4500.0],
+  "chance": 0.022,
+  "width_min": 80,
+  "width_max": 170,
+  "depth_min": 80,
+  "depth_max": 170,
+  "height_min": 35,
+  "height_max": 60,
+  "floor_biome": "us_jungle",
+  "floor_height_variance": 8.0,
+  "stalactite_density": 0.04,
+  "stalactite_block": "stone"
+}

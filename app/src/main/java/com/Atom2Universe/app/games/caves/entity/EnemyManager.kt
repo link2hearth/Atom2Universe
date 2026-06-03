@@ -29,6 +29,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     var worldSpawnX: Double
         get() = spawnManager.worldSpawnX
         set(v) { spawnManager.worldSpawnX = v }
+    var worldSpawnY: Double
+        get() = spawnManager.worldSpawnY
+        set(v) { spawnManager.worldSpawnY = v }
     var worldSpawnZ: Double
         get() = spawnManager.worldSpawnZ
         set(v) { spawnManager.worldSpawnZ = v }
@@ -219,8 +222,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         player?.applyHeal(amount)
     }
 
-    fun computeLevel(blockX: Double, blockZ: Double): Int =
-        spawnManager.computeLevel(blockX, blockZ)
+    fun computeLevel(blockX: Double, blockY: Double, blockZ: Double): Int =
+        spawnManager.computeLevel(blockX, blockY, blockZ)
 
     private fun rayAABB(
         ox: Double, oy: Double, oz: Double,

@@ -1,0 +1,15 @@
+{
+  "id": "crystal_cathedral",
+  "noise_offsets": [3000.0, 0.0, -2500.0],
+  "chance": 0.020,
+  "width_min": 60,
+  "width_max": 130,
+  "depth_min": 60,
+  "depth_max": 130,
+  "height_min": 28,
+  "height_max": 50,
+  "floor_biome": "us_cave_forest",
+  "floor_height_variance": 5.0,
+  "stalactite_density": 0.14,
+  "stalactite_block": "quartz"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "lava_chasm",
+  "noise_offsets": [4200.0, 0.0, 3800.0],
+  "chance": 0.015,
+  "width_min": 50,
+  "width_max": 100,
+  "depth_min": 50,
+  "depth_max": 100,
+  "height_min": 30,
+  "height_max": 60,
+  "floor_biome": "us_volcanic",
+  "floor_height_variance": 10.0,
+  "stalactite_density": 0.20,
+  "stalactite_block": "brick_red"
+}

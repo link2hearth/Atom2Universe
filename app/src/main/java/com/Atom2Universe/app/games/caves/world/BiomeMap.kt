@@ -81,6 +81,27 @@ internal object BiomeMap {
         return bestIdx
     }
 
+    /**
+     * Biome de giga-grotte pour la supercell (sx, sz) en coordonnées supercell.
+     * Utilise un argmax Simplex à échelle très basse (patches de ~3-4 supercells).
+     */
+    fun gigaCaveBiomeAt(sx: Double, sz: Double, seed: Long): GigaCaveBiomeDef? {
+        val biomes = BiomeRegistry.gigaCaveBiomes
+        if (biomes.isEmpty()) return null
+        val so = (seed and 0x0FFFFFL).toDouble() * 0.001
+        var bestIdx = 0; var bestVal = Double.NEGATIVE_INFINITY
+        for (i in biomes.indices) {
+            val off = biomes[i].noiseOffsets
+            val n = SimplexNoise.noise(
+                sx * 0.40 + off[0] * 0.001 + so,
+                0.0,
+                sz * 0.40 + off[2] * 0.001,
+            )
+            if (n > bestVal) { bestIdx = i; bestVal = n }
+        }
+        return biomes[bestIdx]
+    }
+
     /** Indice du biome souterrain en (wx,wz). Coordonnées décalées pour indépendance spatiale. */
     fun undergroundBiomeIndexAt(wx: Double, wz: Double, seed: Long): Int {
         val ox = wx + US_COORD_OFFSET; val oz = wz - US_COORD_OFFSET * 0.6

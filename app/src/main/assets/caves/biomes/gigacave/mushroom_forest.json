@@ -1,0 +1,15 @@
+{
+  "id": "mushroom_forest_giga",
+  "noise_offsets": [-2800.0, 0.0, 2200.0],
+  "chance": 0.025,
+  "width_min": 70,
+  "width_max": 150,
+  "depth_min": 70,
+  "depth_max": 150,
+  "height_min": 30,
+  "height_max": 55,
+  "floor_biome": "us_forest",
+  "floor_height_variance": 7.0,
+  "stalactite_density": 0.06,
+  "stalactite_block": "stone"
+}

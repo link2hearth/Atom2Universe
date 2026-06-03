@@ -309,9 +309,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val bb = BiomeMap.biomeBlendAt(chunk.cx, chunk.cy, chunk.cz, seed)
         val biome = bb.primary
         applyRockLayers(chunk, bb)
-        carveVoidHalls(chunk)
-        for (dcz in -1..1) for (dcy in -1..1) for (dcx in -1..1)
-            carveRoomFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz, biome)
+        carveGigaCaves(chunk)
         for (dcz in -1..1) for (dcy in -1..1) for (dcx in -1..1)
             carveWormsFrom(chunk, chunk.cx + dcx, chunk.cy + dcy, chunk.cz + dcz)
         // Worms de surface qui descendent jusqu'ici
@@ -543,27 +541,124 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
-    // ── Grandes salles ────────────────────────────────────────────────────────
+    // ── Giga-grottes ─────────────────────────────────────────────────────────
+    // Grandes cavernes ellipsoïdales avec sol habité (biome souterrain) et stalactites.
+    // Supercell 3D : 20×30×20 chunks. Chaque supercell génère au plus une giga-grotte.
 
-    private fun carveRoomFrom(target: Chunk, cx: Int, cy: Int, cz: Int, biome: CaveBiomeDef) {
-        val rng = chunkRng(cx, cy, cz)
-        val forced = (cx == 0 && cy == 0 && cz == 0)
-        val roomChance = biome.roomChance
-        if (!forced && rng.nextFloat() > roomChance) return
+    private fun carveGigaCaves(target: Chunk) {
+        val gigaBiomes = BiomeRegistry.gigaCaveBiomes
+        if (gigaBiomes.isEmpty()) return
 
-        val rx = (cx * CHUNK_SIZE + CHUNK_SIZE / 2).toFloat()
-        val ry = (cy * CHUNK_SIZE + CHUNK_SIZE / 2).toFloat()
-        val rz = (cz * CHUNK_SIZE + CHUNK_SIZE / 2).toFloat()
-        val radius = if (rng.nextFloat() > 0.20f)
-            8f + rng.nextFloat() * 4f
-        else
-            14f + rng.nextFloat() * 4f
-        val r2 = radius * radius
-        val ox = target.worldX.toFloat(); val oy = target.worldY.toFloat(); val oz = target.worldZ.toFloat()
-        for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
-            val dx = ox + lx - rx; val dy = oy + ly - ry; val dz = oz + lz - rz
-            if (dx*dx + dy*dy + dz*dz <= r2) target.setBlock(lx, ly, lz, AIR)
+        val superXZ = 20; val superY = 30
+        val scx = Math.floorDiv(target.cx, superXZ)
+        val scy = Math.floorDiv(target.cy, superY)
+        val scz = Math.floorDiv(target.cz, superXZ)
+
+        for (dscy in -1..1) for (dscz in -1..1) for (dscx in -1..1) {
+            val sx = scx + dscx; val sy = scy + dscy; val sz = scz + dscz
+            if (sy >= 0) continue
+
+            val rng   = gigaCaveRng(sx, sy, sz)
+            val biome = BiomeMap.gigaCaveBiomeAt(sx.toDouble(), sz.toDouble(), seed) ?: continue
+            if (rng.nextFloat() > biome.chance) continue
+
+            val cx = (sx * superXZ + 2 + rng.nextInt(superXZ - 4)).toFloat() * CHUNK_SIZE + CHUNK_SIZE * 0.5f
+            val cy = (sy * superY  + 3 + rng.nextInt(superY  - 6)).toFloat() * CHUNK_SIZE + CHUNK_SIZE * 0.5f
+            val cz = (sz * superXZ + 2 + rng.nextInt(superXZ - 4)).toFloat() * CHUNK_SIZE + CHUNK_SIZE * 0.5f
+
+            if (isUndergroundSurface(Math.floorDiv(cy.toInt(), CHUNK_SIZE))) continue
+
+            val hw = biome.widthMin  + rng.nextFloat() * (biome.widthMax  - biome.widthMin)
+            val hh = biome.heightMin + rng.nextFloat() * (biome.heightMax - biome.heightMin)
+            val hd = biome.depthMin  + rng.nextFloat() * (biome.depthMax  - biome.depthMin)
+
+            val margin = 14f
+            if (target.worldX + CHUNK_SIZE < cx - hw - margin || target.worldX > cx + hw + margin) continue
+            if (target.worldY + CHUNK_SIZE < cy - hh - margin || target.worldY > cy + hh + margin) continue
+            if (target.worldZ + CHUNK_SIZE < cz - hd - margin || target.worldZ > cz + hd + margin) continue
+
+            val ox = target.worldX.toFloat()
+            val oy = target.worldY.toFloat()
+            val oz = target.worldZ.toFloat()
+            val ns = (seed and 0xFFFFF).toDouble() * 0.0001 + sx * 0.07 + sz * 0.13
+
+            val uBiomes   = BiomeRegistry.undergroundBiomes
+            val floorIdx  = uBiomes.indexOfFirst { it.id == biome.floorBiome }
+            val floorDef  = if (floorIdx >= 0) uBiomes[floorIdx] else null
+
+            // 1. Creuse l'ellipsoïde avec bords organiques bruités
+            for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+                val wx = ox + lx; val wy = oy + ly; val wz = oz + lz
+                val dx = (wx - cx) / hw; val dy = (wy - cy) / hh; val dz = (wz - cz) / hd
+                val dist2 = dx * dx + dy * dy + dz * dz
+                if (dist2 > 1.35f) continue
+                val nDisp = SimplexNoise.noise(wx.toDouble() * 0.025 + ns, wy.toDouble() * 0.03, wz.toDouble() * 0.025).toFloat()
+                val limit = 1.0f + nDisp * 0.20f
+                if (dist2 > limit * limit) continue
+                target.setBlock(lx, ly, lz, AIR)
+            }
+
+            // 2. Sol : terrain surface-like au fond de l'ellipsoïde
+            for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+                val wx = ox + lx; val wz = oz + lz
+                val dx = (wx - cx) / hw; val dz = (wz - cz) / hd
+                val xzD2 = dx * dx + dz * dz
+                if (xzD2 >= 0.90f) continue
+
+                val ellipseBot = cy - hh * sqrt(max(0f, 1f - xzD2))
+                val noiseH = SimplexNoise.noise(wx.toDouble() * 0.05 + ns + 333.0, wz.toDouble() * 0.05).toFloat()
+                val floorOffset = ((noiseH * 0.5f + 0.5f) * 0.55f + 0.10f).coerceIn(0.05f, 0.70f)
+                val terrainWorldY = (ellipseBot + biome.floorHeightVariance * floorOffset).toInt()
+
+                for (ly in CHUNK_SIZE - 1 downTo 0) {
+                    val worldY = oy.toInt() + ly
+                    if (worldY > terrainWorldY) continue
+                    val block: Short = when {
+                        worldY == terrainWorldY -> if (floorDef != null) surfaceNoiseBlock(floorDef, wx.toDouble(), wz.toDouble()) else GRASS
+                        floorDef != null && worldY >= terrainWorldY - floorDef.topsoilDepth -> floorDef.dirtBlock
+                        floorDef != null -> floorDef.stoneBlock
+                        else -> STONE
+                    }
+                    target.setBlock(lx, ly, lz, block)
+                }
+            }
+
+            // 3. Stalactites depuis le plafond
+            if (biome.stalactiteDensity > 0f) {
+                for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+                    val wx = ox + lx; val wz = oz + lz
+                    val dx = (wx - cx) / hw; val dz = (wz - cz) / hd
+                    if (dx * dx + dz * dz >= 0.82f) continue
+                    val nStal = SimplexNoise.noise(wx.toDouble() * 0.14 + ns + 888.0, wz.toDouble() * 0.14).toFloat()
+                    if (nStal < 1f - biome.stalactiteDensity * 2.5f) continue
+                    val stalLen = (1 + ((nStal + 1f) * 4f).toInt()).coerceIn(1, 10)
+                    for (ly in CHUNK_SIZE - 2 downTo 1) {
+                        if (target.blockAt(lx, ly, lz) != AIR) continue
+                        if (target.blockAt(lx, ly + 1, lz) == AIR) continue
+                        repeat(stalLen) { dy ->
+                            val sly = ly - dy
+                            if (sly >= 0 && target.blockAt(lx, sly, lz) == AIR)
+                                target.setBlock(lx, sly, lz, biome.stalactiteBlock)
+                        }
+                        break
+                    }
+                }
+            }
+
+            // 4. Végétation et arbres sur le sol
+            if (floorIdx >= 0) {
+                val colBiome = IntArray(CHUNK_SIZE * CHUNK_SIZE) { floorIdx }
+                plantSurfaceTrees(target, colBiome, uBiomes)
+                plantSurfaceBushes(target, colBiome, uBiomes)
+                applySurfaceDecorations(target, colBiome, uBiomes)
+                applySurfaceVegetation(target, colBiome, uBiomes)
+            }
         }
+    }
+
+    private fun gigaCaveRng(sx: Int, sy: Int, sz: Int): Random {
+        val s = seed xor (sx.toLong() * 2654435761L xor sy.toLong() * 2246822519L xor sz.toLong() * 3266489917L)
+        return Random(s * 6364136223846793005L + 1442695040888963407L)
     }
 
     // ── Worms de cave (horizontaux) ───────────────────────────────────────────
@@ -1346,42 +1441,6 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 else             -> WHEAT1
             }
             chunk.setBlock(lx, grassY + 1, lz, wheat)
-        }
-    }
-
-    // ── Grands espaces vides rectangulaires ──────────────────────────────────
-
-    private fun carveVoidHalls(target: Chunk) {
-        val superSize = 25
-        val scx = Math.floorDiv(target.cx, superSize)
-        val scz = Math.floorDiv(target.cz, superSize)
-
-        for (dscz in -1..1) for (dscx in -1..1) {
-            val sx = scx + dscx; val sz = scz + dscz
-            val rng = superCellRng(sx, sz)
-            if (rng.nextFloat() > 0.02f) continue
-
-            val cx = ((sx * superSize + 3 + rng.nextInt(superSize - 6)).toFloat()) * CHUNK_SIZE + CHUNK_SIZE * 0.5f
-            val cy = ((rng.nextInt(9) - 4).toFloat()) * CHUNK_SIZE + CHUNK_SIZE * 0.5f
-            val cz = ((sz * superSize + 3 + rng.nextInt(superSize - 6)).toFloat()) * CHUNK_SIZE + CHUNK_SIZE * 0.5f
-
-            val hw    = 90f + rng.nextFloat() * 150f   // 90–240 blocs demi-largeur X  (≈ 11–30 chunks total)
-            val hh    = 10f + rng.nextFloat() * 14f    // 10–24 blocs demi-hauteur     (très plat)
-            val hd    = 90f + rng.nextFloat() * 150f   // 90–240 blocs demi-profondeur Z
-            val round =  8f + rng.nextFloat() * 10f    // 8–18 blocs d'arrondi aux bords/coins
-
-            if (target.worldX + CHUNK_SIZE < cx - hw - round || target.worldX > cx + hw + round) continue
-            if (target.worldY + CHUNK_SIZE < cy - hh - round || target.worldY > cy + hh + round) continue
-            if (target.worldZ + CHUNK_SIZE < cz - hd - round || target.worldZ > cz + hd + round) continue
-
-            val ox = target.worldX; val oy = target.worldY; val oz = target.worldZ
-            val round2 = round * round
-            for (lz in 0 until CHUNK_SIZE) for (ly in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
-                val dx = max(0f, abs(ox + lx - cx) - hw)
-                val dy = max(0f, abs(oy + ly - cy) - hh)
-                val dz = max(0f, abs(oz + lz - cz) - hd)
-                if (dx * dx + dy * dy + dz * dz <= round2) target.setBlock(lx, ly, lz, AIR)
-            }
         }
     }
 

@@ -1,0 +1,15 @@
+{
+  "id": "ice_palace",
+  "noise_offsets": [-3500.0, 0.0, 4100.0],
+  "chance": 0.018,
+  "width_min": 60,
+  "width_max": 130,
+  "depth_min": 60,
+  "depth_max": 130,
+  "height_min": 25,
+  "height_max": 45,
+  "floor_biome": "us_tundra",
+  "floor_height_variance": 6.0,
+  "stalactite_density": 0.22,
+  "stalactite_block": "blue_ice"
+}

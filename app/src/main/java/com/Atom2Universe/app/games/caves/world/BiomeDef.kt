@@ -185,6 +185,40 @@ data class CaveBiomeDef(
     }
 }
 
+data class GigaCaveBiomeDef(
+    val id: String,
+    val noiseOffsets: DoubleArray,
+    val chance: Float,
+    val widthMin: Float,  val widthMax: Float,
+    val depthMin: Float,  val depthMax: Float,
+    val heightMin: Float, val heightMax: Float,
+    val floorBiome: String,
+    val floorHeightVariance: Float,
+    val stalactiteDensity: Float,
+    val stalactiteBlock: Short,
+) {
+    companion object {
+        fun fromJson(j: JSONObject): GigaCaveBiomeDef {
+            val off = j.getJSONArray("noise_offsets")
+            return GigaCaveBiomeDef(
+                id                  = j.getString("id"),
+                noiseOffsets        = doubleArrayOf(off.getDouble(0), off.getDouble(1), off.getDouble(2)),
+                chance              = j.optDouble("chance", 0.020).toFloat(),
+                widthMin            = j.optDouble("width_min",   60.0).toFloat(),
+                widthMax            = j.optDouble("width_max",  120.0).toFloat(),
+                depthMin            = j.optDouble("depth_min",   60.0).toFloat(),
+                depthMax            = j.optDouble("depth_max",  120.0).toFloat(),
+                heightMin           = j.optDouble("height_min",  25.0).toFloat(),
+                heightMax           = j.optDouble("height_max",  45.0).toFloat(),
+                floorBiome          = j.optString("floor_biome", "us_plains"),
+                floorHeightVariance = j.optDouble("floor_height_variance", 8.0).toFloat(),
+                stalactiteDensity   = j.optDouble("stalactite_density", 0.10).toFloat(),
+                stalactiteBlock     = blockIdByName(j.optString("stalactite_block", "stone")),
+            )
+        }
+    }
+}
+
 data class SurfaceBiomeDef(
     val id: String,
     val noiseOffsets: DoubleArray,

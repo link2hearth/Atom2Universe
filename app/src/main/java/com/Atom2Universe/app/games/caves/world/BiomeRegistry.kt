@@ -8,16 +8,19 @@ internal object BiomeRegistry {
     private val _cave        = mutableListOf<CaveBiomeDef>()
     private val _surface     = mutableListOf<SurfaceBiomeDef>()
     private val _underground = mutableListOf<SurfaceBiomeDef>()
+    private val _gigaCave    = mutableListOf<GigaCaveBiomeDef>()
 
-    val caveBiomes:        List<CaveBiomeDef>    get() = _cave
-    val surfaceBiomes:     List<SurfaceBiomeDef> get() = _surface
-    val undergroundBiomes: List<SurfaceBiomeDef> get() = _underground
+    val caveBiomes:        List<CaveBiomeDef>     get() = _cave
+    val surfaceBiomes:     List<SurfaceBiomeDef>  get() = _surface
+    val undergroundBiomes: List<SurfaceBiomeDef>  get() = _underground
+    val gigaCaveBiomes:    List<GigaCaveBiomeDef> get() = _gigaCave
 
     fun load(assets: AssetManager) {
         if (_cave.isNotEmpty()) return
-        loadDir(assets, "caves/biomes/cave")         { _cave        += CaveBiomeDef.fromJson(it)    }
-        loadDir(assets, "caves/biomes/surface")      { _surface     += SurfaceBiomeDef.fromJson(it) }
-        loadDir(assets, "caves/biomes/underground")  { _underground += SurfaceBiomeDef.fromJson(it) }
+        loadDir(assets, "caves/biomes/cave")         { _cave        += CaveBiomeDef.fromJson(it)     }
+        loadDir(assets, "caves/biomes/surface")      { _surface     += SurfaceBiomeDef.fromJson(it)  }
+        loadDir(assets, "caves/biomes/underground")  { _underground += SurfaceBiomeDef.fromJson(it)  }
+        loadDir(assets, "caves/biomes/gigacave")     { _gigaCave    += GigaCaveBiomeDef.fromJson(it) }
     }
 
     private fun loadDir(assets: AssetManager, dir: String, onDef: (JSONObject) -> Unit) {

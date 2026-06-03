@@ -16,6 +16,7 @@ internal class SpawnManager(
     seed: Long
 ) {
     var worldSpawnX: Double = 0.0
+    var worldSpawnY: Double = 0.0
     var worldSpawnZ: Double = 0.0
     var eventBus: EventBus? = null
 
@@ -85,7 +86,7 @@ internal class SpawnManager(
             val sy = findSpawnGround(sx, sz, py) ?: return@repeat
 
             val biome = biomeAt(sx, sy, sz)
-            val zone  = computeLevel(sx, sz).coerceAtLeast(1)
+            val zone  = computeLevel(sx, sy, sz).coerceAtLeast(1)
 
             // Pool shufflée une fois par seed — même monde = mêmes mobs partout, au pif total
             val def = mobForZone(zone, biome)
@@ -110,8 +111,8 @@ internal class SpawnManager(
     private fun findSpawnGround(sx: Double, sz: Double, nearY: Double): Double? {
         val bx = Math.floor(sx).toInt()
         val bz = Math.floor(sz).toInt()
-        val startY = (nearY + 8.0).toInt()
-        for (by in startY downTo startY - 40) {
+        val startY = (nearY + 20.0).toInt()
+        for (by in startY downTo startY - 120) {
             val b = world.blockAt(bx, by, bz)
             if (b == AIR || isWater(b) || isDecoration(b)) continue
             val a1 = world.blockAt(bx, by + 1, bz)
@@ -143,8 +144,12 @@ internal class SpawnManager(
         return sqrt(dX * dX + dZ * dZ)
     }
 
-    fun computeLevel(blockX: Double, blockZ: Double): Int =
-        (distFromSpawnChunks(blockX, blockZ) / 10.0).toInt() + 1
+    fun computeLevel(blockX: Double, blockY: Double, blockZ: Double): Int {
+        val dX = (blockX - worldSpawnX) / CHUNK_SIZE
+        val dY = (blockY - worldSpawnY) / CHUNK_SIZE
+        val dZ = (blockZ - worldSpawnZ) / CHUNK_SIZE
+        return (sqrt(dX * dX + dY * dY + dZ * dZ) / 10.0).toInt() + 1
+    }
 
     // Identifiant de biome sous forme de chaîne pour MobRegistry.allEligibleFor().
     // En surface → SurfaceBiome.name.lowercase(), en cave → Biome.name.lowercase().
