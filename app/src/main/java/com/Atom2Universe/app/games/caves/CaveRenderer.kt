@@ -536,6 +536,7 @@ internal class CaveRenderer(
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             val spawn = world.findSpawnPoint()
             enemyManager.worldSpawnX      = spawn[0].toDouble()
+            enemyManager.worldSpawnY      = spawn[1].toDouble()
             enemyManager.worldSpawnZ      = spawn[2].toDouble()
         } else {
             val spawn = world.findSpawnPoint()
@@ -545,6 +546,7 @@ internal class CaveRenderer(
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             enemyManager.worldSpawnX = camera.x
+            enemyManager.worldSpawnY = camera.y
             enemyManager.worldSpawnZ = camera.z
             // Donner le laser de minage au joueur dès le départ
             val laserInstance = com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(

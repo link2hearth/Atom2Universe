@@ -27,11 +27,8 @@
   "tree_density_noise_scale": 0.0,
   "tree_type": "none",
   "bush_density": 0.0,
-  "decoration_density": 0.015,
-  "decoration_blocks": [
-    "rock_moss",
-    "rock"
-  ],
+  "decoration_density": 0.0,
+  "decoration_blocks": [],
   "vegetation_density": 0.0,
   "vegetation_blocks": [],
   "wheat_enabled": false,
