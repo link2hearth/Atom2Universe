@@ -1255,13 +1255,16 @@ class ExportFragment : Fragment() {
         val samples = sampleAudio ?: return null
         val name = instrumentNameInput.text.toString().trim().ifEmpty { "Sample" }
 
+        val finalKeyStart = if (keyRangeMode) minOf(keyRangeStart, keyRangeEnd) else rootNote
+        val finalKeyEnd = if (keyRangeMode) maxOf(keyRangeStart, keyRangeEnd) else rootNote
+
         return SampleParams(
             name = name,
             samples = samples,
             sampleRate = 44100,
             rootNote = rootNote,
-            keyRangeStart = if (keyRangeMode) keyRangeStart else rootNote,
-            keyRangeEnd = if (keyRangeMode) keyRangeEnd else rootNote,
+            keyRangeStart = finalKeyStart,
+            keyRangeEnd = finalKeyEnd,
             velRangeStart = velRangeStart,
             velRangeEnd = velRangeEnd,
             loopStart = loopStart,

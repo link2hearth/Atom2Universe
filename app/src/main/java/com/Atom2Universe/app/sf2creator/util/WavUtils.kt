@@ -96,11 +96,16 @@ object WavUtils {
         // Get data size from header (bytes 40-43)
         val dataSize = readInt32LE(header, 40)
 
-        // Read PCM data
+        // Read PCM data (loop to handle streams that return fewer bytes per read)
         val pcmData = ByteArray(dataSize)
-        val bytesRead = inputStream.read(pcmData)
+        var offset = 0
+        while (offset < dataSize) {
+            val n = inputStream.read(pcmData, offset, dataSize - offset)
+            if (n == -1) break
+            offset += n
+        }
 
-        return convertBytesToShorts(pcmData, bytesRead)
+        return convertBytesToShorts(pcmData, offset)
     }
 
     /**
@@ -120,11 +125,16 @@ object WavUtils {
         val bitsPerSample = readInt16LE(header, 34)
         val dataSize = readInt32LE(header, 40)
 
-        // Read PCM data
+        // Read PCM data (loop to handle streams that return fewer bytes per read)
         val pcmData = ByteArray(dataSize)
-        val bytesRead = inputStream.read(pcmData)
+        var offset = 0
+        while (offset < dataSize) {
+            val n = inputStream.read(pcmData, offset, dataSize - offset)
+            if (n == -1) break
+            offset += n
+        }
 
-        val samples = convertBytesToShorts(pcmData, bytesRead) ?: return null
+        val samples = convertBytesToShorts(pcmData, offset) ?: return null
 
         return WavData(
             samples = samples,

@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.sf2creator.data
 
 import android.content.Context
+import android.util.Log
 import com.Atom2Universe.app.sf2creator.data.db.Sf2ProjectDao
 import com.Atom2Universe.app.sf2creator.data.db.Sf2ProjectDatabase
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2InstrumentEntity
@@ -25,6 +26,10 @@ import java.io.File
  * Handles database operations and audio file management.
  */
 class Sf2ProjectRepository(private val context: Context) {
+
+    companion object {
+        private const val TAG = "Sf2ProjectRepository"
+    }
 
     private val database = Sf2ProjectDatabase.getInstance(context)
     private val dao: Sf2ProjectDao = database.projectDao()
@@ -1006,7 +1011,10 @@ class Sf2ProjectRepository(private val context: Context) {
     ): Long = withContext(Dispatchers.IO) {
         // Get the instrument for project ID
         val instrument = dao.getInstrumentById(instrumentId)
-            ?: throw IllegalArgumentException("Instrument not found: $instrumentId")
+        if (instrument == null) {
+            Log.e(TAG, "addSample: instrument not found: $instrumentId")
+            return@withContext -1L
+        }
 
         // Create project sample directory
         val projectDir = File(samplesDir, instrument.projectId.toString())
@@ -1183,7 +1191,10 @@ class Sf2ProjectRepository(private val context: Context) {
     ): Long = withContext(Dispatchers.IO) {
         // Get the instrument for project ID
         val instrument = dao.getInstrumentById(instrumentId)
-            ?: throw IllegalArgumentException("Instrument not found: $instrumentId")
+        if (instrument == null) {
+            Log.e(TAG, "addImportedSample: instrument not found: $instrumentId")
+            return@withContext -1L
+        }
 
         // Create database entry with source reference (no WAV file)
         val sampleEntity = Sf2SampleEntity(

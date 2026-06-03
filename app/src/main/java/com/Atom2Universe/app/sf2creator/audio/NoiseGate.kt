@@ -127,7 +127,6 @@ class NoiseGate(private val sampleRate: Int = 44100) {
         for (i in envelope.indices) {
             val windowStart = (i - windowSize / 2).coerceAtLeast(0)
             val windowEnd = (i + windowSize / 2).coerceAtMost(envelope.lastIndex)
-            windowEnd - windowStart + 1
 
             // Use max in window for gate (peak detection)
             var maxInWindow = 0f
@@ -176,9 +175,6 @@ class NoiseGate(private val sampleRate: Int = 44100) {
         } else {
             0.001f
         }
-
-        // Find peak level
-        levels.lastOrNull() ?: 0f
 
         // Suggest threshold slightly above noise floor
         val suggestedThreshold = if (noiseFloor > 0f) {

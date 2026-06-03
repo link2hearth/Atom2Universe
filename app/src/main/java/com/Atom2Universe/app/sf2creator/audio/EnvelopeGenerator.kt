@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.sf2creator.audio
 
+import com.Atom2Universe.app.BuildConfig
 import kotlin.math.exp
 
 /**
@@ -245,23 +246,21 @@ class EnvelopeGenerator(private val sampleRate: Int = 44100) {
         val noteOnMs = noteOnDurationMs ?: (sampleDurationMs - releaseMs).coerceAtLeast(100)
         val noteOnSamples = (noteOnMs * sampleRate / 1000)
 
-        android.util.Log.d("EnvelopeGenerator", "applyEnvelope: sampleDuration=${sampleDurationMs}ms, noteOnMs=${noteOnMs}ms, noteOnSamples=$noteOnSamples")
-
         val envelope = generateEnvelope(samples.size, noteOnSamples, settings)
 
-        // Log envelope stats for debugging
-        val maxEnv = envelope.maxOrNull() ?: 0f
-        val minEnv = envelope.minOrNull() ?: 0f
-        val midEnv = if (envelope.isNotEmpty()) envelope[envelope.size / 2] else 0f
-        val endEnv = if (envelope.isNotEmpty()) envelope.last() else 0f
-        android.util.Log.d("EnvelopeGenerator", "Envelope: max=$maxEnv, min=$minEnv, mid=$midEnv, end=$endEnv")
-
-        // Log envelope values at specific time points
-        val timePoints = listOf(10, 100, 500, 1000, 2000, 3000)
-        for (ms in timePoints) {
-            val sampleIndex = (ms * sampleRate / 1000).coerceIn(0, envelope.size - 1)
-            if (sampleIndex < envelope.size) {
-                android.util.Log.d("EnvelopeGenerator", "Envelope at ${ms}ms: ${envelope[sampleIndex]}")
+        if (BuildConfig.DEBUG) {
+            android.util.Log.d("EnvelopeGenerator", "applyEnvelope: sampleDuration=${sampleDurationMs}ms, noteOnMs=${noteOnMs}ms, noteOnSamples=$noteOnSamples")
+            val maxEnv = envelope.maxOrNull() ?: 0f
+            val minEnv = envelope.minOrNull() ?: 0f
+            val midEnv = if (envelope.isNotEmpty()) envelope[envelope.size / 2] else 0f
+            val endEnv = if (envelope.isNotEmpty()) envelope.last() else 0f
+            android.util.Log.d("EnvelopeGenerator", "Envelope: max=$maxEnv, min=$minEnv, mid=$midEnv, end=$endEnv")
+            val timePoints = listOf(10, 100, 500, 1000, 2000, 3000)
+            for (ms in timePoints) {
+                val sampleIndex = (ms * sampleRate / 1000).coerceIn(0, envelope.size - 1)
+                if (sampleIndex < envelope.size) {
+                    android.util.Log.d("EnvelopeGenerator", "Envelope at ${ms}ms: ${envelope[sampleIndex]}")
+                }
             }
         }
 
