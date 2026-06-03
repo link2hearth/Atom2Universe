@@ -684,20 +684,23 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             var curYaw   = rng.nextFloat() * 2f * PI.toFloat()
             var curPitch = (rng.nextFloat() - 0.5f) * (PI / 3).toFloat()
 
-            // Rayon suffisant pour se déplacer sans miner
             val baseRadius = if (rng.nextFloat() > 0.20f)
-                3.5f + rng.nextFloat() * 2.0f   // 3.5–5.5 blocs (80 % des tunnels)
+                2.5f + rng.nextFloat() * 1.5f   // 2.5–4.0 blocs (80 % des tunnels)
             else
-                5.5f + rng.nextFloat() * 2.0f   // 5.5–7.5 blocs (20 % — grands couloirs)
-            val mainLength = 220 + rng.nextInt(180)
-            // Chaînage : à la fin du worm, 40 % de chance de continuer depuis sa position
-            val chainCount = if (rng.nextFloat() < 0.40f) 1 else 0
+                4.0f + rng.nextFloat() * 1.5f   // 4.0–5.5 blocs (20 % — couloirs larges)
+            val mainLength = 100 + rng.nextInt(80)
+            // Chaînage : jusqu'à 3 segments, chacun plus court, pour des réseaux denses
+            val chainCount = when {
+                rng.nextFloat() < 0.25f -> 0
+                rng.nextFloat() < 0.50f -> 2
+                else                    -> 1
+            }
 
             repeat(1 + chainCount) { seg ->
-                val segLen = if (seg == 0) mainLength else 120 + rng.nextInt(120)
+                val segLen = if (seg == 0) mainLength else 70 + rng.nextInt(80)
                 repeat(segLen) { step ->
                     val osc    = sin(step.toFloat() * 0.18f) * baseRadius * 0.20f
-                    val radius = (baseRadius + osc).coerceIn(2.5f, 8.5f)
+                    val radius = (baseRadius + osc).coerceIn(2.0f, 6.0f)
                     if (curX in bMinX..bMaxX && curY in bMinY..bMaxY && curZ in bMinZ..bMaxZ)
                         carveInChunk(target, curX, curY, curZ, radius)
                     curX += cos(curPitch) * sin(curYaw)

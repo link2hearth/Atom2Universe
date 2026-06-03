@@ -1,7 +1,7 @@
 {
   "id": "crystal_cathedral",
   "noise_offsets": [3000.0, 0.0, -2500.0],
-  "chance": 0.020,
+  "chance": 0.15,
   "width_min": 60,
   "width_max": 130,
   "depth_min": 60,

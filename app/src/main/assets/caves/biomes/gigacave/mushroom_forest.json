@@ -1,7 +1,7 @@
 {
   "id": "mushroom_forest_giga",
   "noise_offsets": [-2800.0, 0.0, 2200.0],
-  "chance": 0.025,
+  "chance": 0.15,
   "width_min": 70,
   "width_max": 150,
   "depth_min": 70,

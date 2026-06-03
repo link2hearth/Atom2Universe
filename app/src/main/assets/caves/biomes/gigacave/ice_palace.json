@@ -1,7 +1,7 @@
 {
   "id": "ice_palace",
   "noise_offsets": [-3500.0, 0.0, 4100.0],
-  "chance": 0.018,
+  "chance": 0.15,
   "width_min": 60,
   "width_max": 130,
   "depth_min": 60,
