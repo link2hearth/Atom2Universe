@@ -1,0 +1,30 @@
+{
+  "id": "us_volcanic",
+  "noise_offsets": [-700, 0, -300],
+  "surface_blocks": [
+    {"block": "brick_red", "noise_min": 0.4},
+    {"block": "granite", "noise_min": 0.1},
+    {"block": "redsand", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.05,
+  "surface_variety_offset": 150,
+  "dirt_block": "redsand",
+  "stone_block": "brick_red",
+  "height_base": 4.0,
+  "height_amplitude": 15.0,
+  "height_roughness": 5.0,
+  "topsoil_depth": 1,
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
+  "bush_density": 0.0,
+  "decoration_density": 0.06,
+  "decoration_blocks": [],
+  "vegetation_density": 0.0,
+  "vegetation_blocks": [],
+  "wheat_enabled": false,
+  "structures": []
+}

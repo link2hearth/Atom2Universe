@@ -25,6 +25,27 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // BIOME_STEP×BIOME_STEP au lieu de par bloc. La hauteur reste calculée par bloc.
     private val BIOME_STEP     = 2
 
+    // ── Couches souterraines ──────────────────────────────────────────────────
+    // Structure verticale (cy négatif) : cave → surface souterraine → cave → ...
+    // CAVE_PERIOD_CY  : épaisseur totale d'un cycle (cave + surface souterraine)
+    // CAVE_DEPTH_CY   : portion cave du cycle (chunks de roche + worms)
+    // US_HEIGHT_CY    : portion surface souterraine (terrain + ~130 blocs d'air)
+    private val CAVE_PERIOD_CY  = 70
+    private val CAVE_DEPTH_CY   = 60
+    private val US_HEIGHT_CY    = CAVE_PERIOD_CY - CAVE_DEPTH_CY   // = 10 chunks = 160 blocs
+
+    private fun isUndergroundSurface(cy: Int): Boolean {
+        val depth = -cy - 1
+        return (depth % CAVE_PERIOD_CY) >= CAVE_DEPTH_CY
+    }
+
+    // worldY du bas (Y le plus négatif) de la bande de surface souterraine contenant cy.
+    private fun undergroundBandBaseWorldY(cy: Int): Int {
+        val depth   = -cy - 1
+        val cycle   = depth / CAVE_PERIOD_CY
+        return -(cycle * CAVE_PERIOD_CY + CAVE_DEPTH_CY + US_HEIGHT_CY) * CHUNK_SIZE
+    }
+
     fun chunkKey(cx: Int, cy: Int, cz: Int): Long =
         (cx.toLong() and 0xFFFFF) or
         ((cy.toLong() and 0xFFFFF) shl 20) or
@@ -268,9 +289,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     fun generate(chunk: Chunk) {
         when {
-            chunk.cy in 0..SURFACE_CY_MAX -> generateSurface(chunk)
-            chunk.cy < 0                  -> generateCave(chunk)
-            chunk.cy >= ISLAND_CY_MIN     -> generateIsland(chunk)
+            chunk.cy in 0..SURFACE_CY_MAX                           -> generateSurface(chunk)
+            chunk.cy < 0 && isUndergroundSurface(chunk.cy)         -> generateUndergroundSurface(chunk)
+            chunk.cy < 0                                            -> generateCave(chunk)
+            chunk.cy >= ISLAND_CY_MIN                               -> generateIsland(chunk)
             // sky void : chunk reste AIR (ByteArray initialisé à 0)
         }
         storage?.applyDiff(chunk)
@@ -389,6 +411,80 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         placeStructuresInChunk(chunk)
     }
 
+    // ── Surface souterraine ───────────────────────────────────────────────────
+    // Même pipeline que generateSurface mais avec les biomes souterrains.
+    // La bande fait US_HEIGHT_CY chunks (160 blocs). Le terrain occupe les ~2 chunks du bas
+    // (hauteurs relative 2..50 blocs depuis le fond) → ~110 blocs d'air + plafond de roche
+    // formé naturellement par la couche de cave au-dessus.
+
+    private fun blendedUndergroundHeight(wx: Double, wz: Double, w: DoubleArray, bandBaseWorldY: Int): Double {
+        val biomes = BiomeRegistry.undergroundBiomes
+        var base = 0.0; var amp = 0.0; var rough = 0.0
+        for (i in biomes.indices) {
+            val wi = w[i]; if (wi == 0.0) continue
+            base  += wi * biomes[i].heightBase
+            amp   += wi * biomes[i].heightAmplitude
+            rough += wi * biomes[i].heightRoughness
+        }
+        val s = (seed and 0xFFFFF).toDouble() * 0.0001 + 77777.0
+        val nLow  = SimplexNoise.noise(wx * 0.0013 + s,         wz * 0.0013)
+        val nMid  = SimplexNoise.noise(wx * 0.0060 + s + 120.0, wz * 0.0060)
+        val nHigh = SimplexNoise.noise(wx * 0.0450 + s + 240.0, wz * 0.0450)
+        val maxRelH = (US_HEIGHT_CY * CHUNK_SIZE - 110).toDouble()
+        val relH = (8.0 + base + nLow * amp + nMid * amp * 0.40 + nHigh * rough).coerceIn(2.0, maxRelH)
+        return bandBaseWorldY + relH
+    }
+
+    private fun generateUndergroundSurface(chunk: Chunk) {
+        val bandBaseWorldY = undergroundBandBaseWorldY(chunk.cy)
+        val maxTerrainWorldY = bandBaseWorldY + (US_HEIGHT_CY * CHUNK_SIZE - 110)
+        // Chunks entièrement au-dessus du terrain max restent AIR (défaut de Chunk)
+        if (chunk.worldY > maxTerrainWorldY) return
+
+        val wy     = chunk.worldY
+        val uBiomes = BiomeRegistry.undergroundBiomes
+        val colBiome  = IntArray(CHUNK_SIZE * CHUNK_SIZE)
+        val heights   = IntArray(CHUNK_SIZE * CHUNK_SIZE)
+        val topBlocks = ShortArray(CHUNK_SIZE * CHUNK_SIZE)
+        val weights   = DoubleArray(uBiomes.size)
+
+        for (cz0 in 0 until CHUNK_SIZE step BIOME_STEP) for (cx0 in 0 until CHUNK_SIZE step BIOME_STEP) {
+            val dom = BiomeMap.undergroundBiomeWeights(
+                (chunk.worldX + cx0).toDouble(), (chunk.worldZ + cz0).toDouble(), seed, weights)
+            val sb = uBiomes[dom]
+            for (dz in 0 until BIOME_STEP) for (dx in 0 until BIOME_STEP) {
+                val lx = cx0 + dx; val lz = cz0 + dz
+                val i  = lz * CHUNK_SIZE + lx
+                colBiome[i]  = dom
+                val wx = (chunk.worldX + lx).toDouble()
+                val wz = (chunk.worldZ + lz).toDouble()
+                heights[i]   = blendedUndergroundHeight(wx, wz, weights, bandBaseWorldY).toInt()
+                topBlocks[i] = surfaceNoiseBlock(sb, wx, wz)
+            }
+        }
+
+        for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
+            val i = lz * CHUNK_SIZE + lx; val h = heights[i]; val top = topBlocks[i]
+            val sb = uBiomes[colBiome[i]]
+            val soil = sb.topsoilDepth
+            for (ly in 0 until CHUNK_SIZE) {
+                val worldY = wy + ly
+                chunk.setBlock(lx, ly, lz, when {
+                    worldY > h          -> AIR
+                    worldY == h         -> top
+                    worldY >= h - soil  -> sb.dirtBlock
+                    else                -> sb.stoneBlock
+                })
+            }
+        }
+
+        applyOreVeins(chunk, defaultCaveBiome)
+        plantSurfaceTrees(chunk, colBiome, uBiomes)
+        plantSurfaceBushes(chunk, colBiome, uBiomes)
+        applySurfaceDecorations(chunk, colBiome, uBiomes)
+        applySurfaceVegetation(chunk, colBiome, uBiomes)
+    }
+
     private fun generateIsland(chunk: Chunk) {
         val superSize = 30
         val scx = Math.floorDiv(chunk.cx, superSize)
@@ -477,46 +573,45 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private fun carveWormsFrom(target: Chunk, cx: Int, cy: Int, cz: Int) {
         val biome = BiomeMap.biomeAt(cx, cy, cz, seed)
         val rng = chunkRng(cx, cy, cz)
-        val zeroChance = biome.wormZeroChance
-        // Plus rares : zeroChance biome + 50 % de skip supplémentaire
-        val wormCount = when {
-            rng.nextFloat() < zeroChance -> 0
-            rng.nextFloat() < 0.50f      -> 0
-            rng.nextFloat() < 0.90f      -> 1
-            else                          -> 2
-        }
-        if (wormCount == 0) return
+        // Un seul worm par chunk source, sauf 15 % de chance d'en avoir 2
+        if (rng.nextFloat() < biome.wormZeroChance) return
+        val wormCount = if (rng.nextFloat() < 0.15f) 2 else 1
+
+        val bMargin = 11f
+        val bMinX = target.worldX - bMargin; val bMaxX = target.worldX + CHUNK_SIZE + bMargin
+        val bMinY = target.worldY - bMargin; val bMaxY = target.worldY + CHUNK_SIZE + bMargin
+        val bMinZ = target.worldZ - bMargin; val bMaxZ = target.worldZ + CHUNK_SIZE + bMargin
 
         repeat(wormCount) {
-            var wx = (cx * CHUNK_SIZE + rng.nextInt(CHUNK_SIZE)).toFloat()
-            var wy = (cy * CHUNK_SIZE + rng.nextInt(CHUNK_SIZE)).toFloat()
-            var wz = (cz * CHUNK_SIZE + rng.nextInt(CHUNK_SIZE)).toFloat()
-            var yaw   = rng.nextFloat() * 2f * PI.toFloat()
-            var pitch = (rng.nextFloat() - 0.5f) * (PI / 3).toFloat()
+            var curX = (cx * CHUNK_SIZE + rng.nextInt(CHUNK_SIZE)).toFloat()
+            var curY = (cy * CHUNK_SIZE + rng.nextInt(CHUNK_SIZE)).toFloat()
+            var curZ = (cz * CHUNK_SIZE + rng.nextInt(CHUNK_SIZE)).toFloat()
+            var curYaw   = rng.nextFloat() * 2f * PI.toFloat()
+            var curPitch = (rng.nextFloat() - 0.5f) * (PI / 3).toFloat()
 
-            // Rayon x2 par rapport à avant
+            // Rayon suffisant pour se déplacer sans miner
             val baseRadius = if (rng.nextFloat() > 0.20f)
-                3.0f + rng.nextFloat() * 2.0f
+                3.5f + rng.nextFloat() * 2.0f   // 3.5–5.5 blocs (80 % des tunnels)
             else
-                5.0f + rng.nextFloat() * 3.0f
-            // Longueur doublée
-            val length = 200 + rng.nextInt(200)
+                5.5f + rng.nextFloat() * 2.0f   // 5.5–7.5 blocs (20 % — grands couloirs)
+            val mainLength = 220 + rng.nextInt(180)
+            // Chaînage : à la fin du worm, 40 % de chance de continuer depuis sa position
+            val chainCount = if (rng.nextFloat() < 0.40f) 1 else 0
 
-            val bMinX = target.worldX - baseRadius - 1f; val bMaxX = target.worldX + CHUNK_SIZE + baseRadius + 1f
-            val bMinY = target.worldY - baseRadius - 1f; val bMaxY = target.worldY + CHUNK_SIZE + baseRadius + 1f
-            val bMinZ = target.worldZ - baseRadius - 1f; val bMaxZ = target.worldZ + CHUNK_SIZE + baseRadius + 1f
-
-            repeat(length) { step ->
-                val osc = sin(step.toFloat() * 0.18f) * baseRadius * 0.25f
-                val radius = (baseRadius + osc).coerceIn(2.0f, 10.0f)
-                if (wx in bMinX..bMaxX && wy in bMinY..bMaxY && wz in bMinZ..bMaxZ)
-                    carveInChunk(target, wx, wy, wz, radius)
-                wx += cos(pitch) * sin(yaw)
-                wy += sin(pitch)
-                wz += cos(pitch) * cos(yaw)
-                yaw   += (rng.nextFloat() - 0.5f) * 0.45f
-                pitch += (rng.nextFloat() - 0.5f) * 0.20f
-                pitch  = pitch.coerceIn((-PI / 2.5).toFloat(), (PI / 2.5).toFloat())
+            repeat(1 + chainCount) { seg ->
+                val segLen = if (seg == 0) mainLength else 120 + rng.nextInt(120)
+                repeat(segLen) { step ->
+                    val osc    = sin(step.toFloat() * 0.18f) * baseRadius * 0.20f
+                    val radius = (baseRadius + osc).coerceIn(2.5f, 8.5f)
+                    if (curX in bMinX..bMaxX && curY in bMinY..bMaxY && curZ in bMinZ..bMaxZ)
+                        carveInChunk(target, curX, curY, curZ, radius)
+                    curX += cos(curPitch) * sin(curYaw)
+                    curY += sin(curPitch)
+                    curZ += cos(curPitch) * cos(curYaw)
+                    curYaw   += (rng.nextFloat() - 0.5f) * 0.45f
+                    curPitch += (rng.nextFloat() - 0.5f) * 0.20f
+                    curPitch  = curPitch.coerceIn((-PI / 2.5).toFloat(), (PI / 2.5).toFloat())
+                }
             }
         }
     }
@@ -733,8 +828,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      * bruit communes (donc continues d'un biome à l'autre) modulées par l'amplitude mélangée :
      * pas de falaise aux frontières, mais un biome montagneux culmine très haut, un océan plonge.
      */
-    private fun blendedSurfaceHeight(wx: Double, wz: Double, w: DoubleArray): Double {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun blendedSurfaceHeight(wx: Double, wz: Double, w: DoubleArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes): Double {
         var base = 0.0; var amp = 0.0; var rough = 0.0
         for (i in biomes.indices) {
             val wi = w[i]; if (wi == 0.0) continue
@@ -773,18 +867,17 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Surface : arbres groupés en forêts (biome résolu par colonne) ─────────
 
-    private fun plantSurfaceTrees(chunk: Chunk, colBiome: IntArray) {
-        plantOakTrees(chunk, colBiome)
-        plantBirchTrees(chunk, colBiome)
-        plantDarkwoodTrees(chunk, colBiome)
-        plantSapinTrees(chunk, colBiome)
-        plantJungleTrees(chunk, colBiome)
-        plantRedwoodTrees(chunk, colBiome)
-        plantColoredTrees(chunk, colBiome)
+    private fun plantSurfaceTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
+        plantOakTrees(chunk, colBiome, biomes)
+        plantBirchTrees(chunk, colBiome, biomes)
+        plantDarkwoodTrees(chunk, colBiome, biomes)
+        plantSapinTrees(chunk, colBiome, biomes)
+        plantJungleTrees(chunk, colBiome, biomes)
+        plantRedwoodTrees(chunk, colBiome, biomes)
+        plantColoredTrees(chunk, colBiome, biomes)
     }
 
-    private fun plantOakTrees(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantOakTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 7 + 3, chunk.cy + 100, chunk.cz * 13 + 5)
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
@@ -821,8 +914,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Surface : décorations ─────────────────────────────────────────────────
 
-    private fun applySurfaceDecorations(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun applySurfaceDecorations(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 19 + 11, chunk.cy * 7 + 3, chunk.cz * 23 + 17)
         for (lz in 0 until CHUNK_SIZE) for (lx in 0 until CHUNK_SIZE) {
             val sb = biomes[colBiome[lz * CHUNK_SIZE + lx]]
@@ -851,8 +943,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Bouleaux ──────────────────────────────────────────────────────────────
 
-    private fun plantBirchTrees(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantBirchTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 23 + 11, chunk.cy + 400, chunk.cz * 43 + 7)
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
@@ -910,8 +1001,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Sapin : 1×1, haut (7-12), canopée conique, variante légèrement plus sombre que darkwood ──
 
-    private fun plantSapinTrees(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantSapinTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 31 + 17, chunk.cy + 900, chunk.cz * 41 + 19)
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
@@ -955,8 +1045,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Dark Wood : 2×2, court (6-8), canopée large et plate ─────────────────
 
-    private fun plantDarkwoodTrees(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantDarkwoodTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 11 + 7, chunk.cy + 500, chunk.cz * 17 + 3)
 
         for (lz in 2 until CHUNK_SIZE - 3) for (lx in 2 until CHUNK_SIZE - 3) {
@@ -1014,8 +1103,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Jungle : 2×2 haut (12-20) avec branches + variante basse 1×1 (4-7) ──
 
-    private fun plantJungleTrees(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantJungleTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 13 + 5, chunk.cy + 600, chunk.cz * 19 + 11)
 
         for (lz in 2 until CHUNK_SIZE - 3) for (lx in 2 until CHUNK_SIZE - 3) {
@@ -1085,8 +1173,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Redwood : 1×1, haut (8-12), canopée conique ───────────────────────────
 
-    private fun plantRedwoodTrees(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantRedwoodTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 17 + 9, chunk.cy + 700, chunk.cz * 23 + 13)
 
         for (lz in 2 until CHUNK_SIZE - 2) for (lx in 2 until CHUNK_SIZE - 2) {
@@ -1130,8 +1217,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Arbres colorés : 1×1, 5-8 blocs, petite sphère ──────────────────────
 
-    private fun plantColoredTrees(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantColoredTrees(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 29 + 13, chunk.cy + 800, chunk.cz * 37 + 7)
 
         val treeTypeToBlocks = mapOf(
@@ -1173,8 +1259,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
-    private fun plantSurfaceBushes(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun plantSurfaceBushes(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng = chunkRng(chunk.cx * 41 + 17, chunk.cy + 300, chunk.cz * 53 + 29)
         val surfaceSets = arrayOfNulls<Set<Short>>(biomes.size)
 
@@ -1215,8 +1300,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Végétation de surface (herbes folles + blé sauvage) ──────────────────
 
-    private fun applySurfaceVegetation(chunk: Chunk, colBiome: IntArray) {
-        val biomes = BiomeRegistry.surfaceBiomes
+    private fun applySurfaceVegetation(chunk: Chunk, colBiome: IntArray, biomes: List<SurfaceBiomeDef> = BiomeRegistry.surfaceBiomes) {
         val rng  = chunkRng(chunk.cx * 31 + 7, chunk.cy + 200, chunk.cz * 37 + 13)
         val wx0  = chunk.worldX.toDouble()
         val wz0  = chunk.worldZ.toDouble()

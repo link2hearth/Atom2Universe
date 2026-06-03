@@ -5,7 +5,7 @@
   "secondary_block": "stone",
   "secondary_noise_threshold": 0.55,
   "room_chance": 0.020,
-  "worm_zero_chance": 0.40,
+  "worm_zero_chance": 0.30,
   "pockets_enabled": true,
   "pocket_blocks": [
     {"block": "gravel", "noise_min":  0.2},

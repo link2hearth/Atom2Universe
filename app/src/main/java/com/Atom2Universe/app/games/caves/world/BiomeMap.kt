@@ -49,6 +49,10 @@ internal object BiomeMap {
         return BiomeBlend(biomes[bestIdx], biomes[secIdx], blend)
     }
 
+    // Décalage de coordonnées appliqué aux biomes souterrains pour les rendre
+    // spatialement indépendants des biomes de surface situés au-dessus.
+    private const val US_COORD_OFFSET = 55000.0
+
     fun surfaceBiomeAt(wx: Double, wz: Double, seed: Long): SurfaceBiomeDef =
         BiomeRegistry.surfaceBiomes[surfaceBiomeIndexAt(wx, wz, seed)]
 
@@ -75,6 +79,47 @@ internal object BiomeMap {
             if (n > bestVal) { bestIdx = i; bestVal = n }
         }
         return bestIdx
+    }
+
+    /** Indice du biome souterrain en (wx,wz). Coordonnées décalées pour indépendance spatiale. */
+    fun undergroundBiomeIndexAt(wx: Double, wz: Double, seed: Long): Int {
+        val ox = wx + US_COORD_OFFSET; val oz = wz - US_COORD_OFFSET * 0.6
+        val sx = (seed and 0x0FFFFFL).toDouble() * 0.001
+        val px = ox + SimplexNoise.noise(ox * WARP_SCALE + 1700.0, oz * WARP_SCALE) * WARP_AMP
+        val pz = oz + SimplexNoise.noise(ox * WARP_SCALE + 9300.0, oz * WARP_SCALE) * WARP_AMP
+        val biomes = BiomeRegistry.undergroundBiomes
+        var bestIdx = 0; var bestVal = Double.NEGATIVE_INFINITY
+        for (i in biomes.indices) {
+            val off = biomes[i].noiseOffsets
+            val n = SimplexNoise.noise((px + off[0] + sx) * SCALE, 0.0, (pz + off[2]) * SCALE)
+            if (n > bestVal) { bestIdx = i; bestVal = n }
+        }
+        return bestIdx
+    }
+
+    /**
+     * Remplit [wOut] (taille = undergroundBiomes.size) avec les poids normalisés, retourne le
+     * dominant. À utiliser avec blendedUndergroundHeight dans World.
+     */
+    fun undergroundBiomeWeights(wx: Double, wz: Double, seed: Long, wOut: DoubleArray): Int {
+        val ox = wx + US_COORD_OFFSET; val oz = wz - US_COORD_OFFSET * 0.6
+        val sx = (seed and 0x0FFFFFL).toDouble() * 0.001
+        val px = ox + SimplexNoise.noise(ox * WARP_SCALE + 1700.0, oz * WARP_SCALE) * WARP_AMP
+        val pz = oz + SimplexNoise.noise(ox * WARP_SCALE + 9300.0, oz * WARP_SCALE) * WARP_AMP
+        val biomes = BiomeRegistry.undergroundBiomes
+        var nMax = Double.NEGATIVE_INFINITY; var dom = 0
+        for (i in biomes.indices) {
+            val off = biomes[i].noiseOffsets
+            val n = SimplexNoise.noise((px + off[0] + sx) * SCALE, 0.0, (pz + off[2]) * SCALE)
+            wOut[i] = n
+            if (n > nMax) { nMax = n; dom = i }
+        }
+        var sum = 0.0
+        val floor = nMax - HEIGHT_BLEND
+        for (i in biomes.indices) { val t = wOut[i] - floor; val v = if (t > 0.0) t else 0.0; wOut[i] = v; sum += v }
+        if (sum > 0.0) for (i in biomes.indices) wOut[i] /= sum
+        else { for (i in biomes.indices) wOut[i] = 0.0; wOut[dom] = 1.0 }
+        return dom
     }
 
     /**

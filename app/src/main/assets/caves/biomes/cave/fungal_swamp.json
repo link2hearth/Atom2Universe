@@ -5,7 +5,7 @@
   "secondary_block": "dirt",
   "secondary_noise_threshold": 0.10,
   "room_chance": 0.012,
-  "worm_zero_chance": 0.35,
+  "worm_zero_chance": 0.25,
   "pockets_enabled": true,
   "pocket_blocks": [
     {"block": "dirt",   "noise_min":  0.1},

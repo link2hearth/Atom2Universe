@@ -1,0 +1,33 @@
+{
+  "id": "us_magic_forest_pink",
+  "noise_offsets": [2200, 0, -2100],
+  "surface_blocks": [
+    {"block": "grass", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.0,
+  "surface_variety_offset": 0,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 3.0,
+  "height_amplitude": 12.0,
+  "height_roughness": 3.0,
+  "topsoil_depth": 3,
+  "tree_density_base": 0.24,
+  "tree_density_noise_scale": 0.14,
+  "tree_type": "pink",
+  "tree_min_height": 5,
+  "tree_max_height": 8,
+  "canopy_radius": 2,
+  "bush_density": 0.06,
+  "bush_block": "leaves_pink",
+  "decoration_density": 0.02,
+  "decoration_blocks": ["mushroom_red"],
+  "vegetation_density": 0.28,
+  "vegetation_blocks": [
+    {"block": "grass_wild3", "weight": 2},
+    {"block": "grass_wild4", "weight": 2},
+    {"block": "grass_tan", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}

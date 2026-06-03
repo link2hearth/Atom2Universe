@@ -1,0 +1,34 @@
+{
+  "id": "us_jungle",
+  "noise_offsets": [-1400, 0, 1600],
+  "surface_blocks": [
+    {"block": "grass", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.0,
+  "surface_variety_offset": 0,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 2.0,
+  "height_amplitude": 12.0,
+  "height_roughness": 4.0,
+  "topsoil_depth": 3,
+  "tree_density_base": 0.40,
+  "tree_density_noise_scale": 0.10,
+  "tree_type": "jungle",
+  "tree_min_height": 12,
+  "tree_max_height": 20,
+  "canopy_radius": 4,
+  "bush_density": 0.10,
+  "bush_block": "leaves_jungle",
+  "decoration_density": 0.03,
+  "decoration_blocks": ["mushroom_red", "mushroom_tan"],
+  "vegetation_density": 0.40,
+  "vegetation_blocks": [
+    {"block": "grass_wild1", "weight": 2},
+    {"block": "grass_wild2", "weight": 2},
+    {"block": "grass_wild3", "weight": 1},
+    {"block": "grass_wild4", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}
