@@ -227,6 +227,10 @@
     <string name="cave_inv_crafting_header">Fabrication</string>
     <string name="cave_inv_crafting_empty">Aucune recette</string>
     <string name="cave_inv_craft_btn">Fabriquer</string>
+    <string name="cave_inv_sell_header">Vendre</string>
+    <string name="cave_inv_sell_price_label">Valeur</string>
+    <string name="cave_inv_sell_btn">Vendre</string>
+    <string name="cave_inv_sell_ward_stones">ward stones</string>
 
     <!-- Cave World — Level Up -->
     <string name="cave_levelup_title">NIVEAU SUIVANT !</string>

@@ -1,0 +1,12 @@
+﻿{
+  "id": "flail_iron",
+  "type": "weapon",
+  "weapon_type": "flail",
+  "tier": 1,
+  "attack_speed_ms": 900,
+  "rarity_weights": { "common": 70, "magic": 22, "rare": 7, "epic": 1 },
+  "damage_base": [5, 9],
+  "stats": { "multi_hit": [10, 22] },
+  "flags": ["multi_hit"],
+  "sprite": "flail_iron"
+}

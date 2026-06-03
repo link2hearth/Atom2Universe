@@ -1,0 +1,12 @@
+﻿{
+  "id": "axe_silver",
+  "type": "weapon",
+  "weapon_type": "axe",
+  "tier": 3,
+  "attack_speed_ms": 1100,
+  "rarity_weights": { "common": 35, "magic": 30, "rare": 22, "epic": 10, "legendary": 3 },
+  "damage_base": [15, 22],
+  "stats": { "armor_pierce": [25, 48] },
+  "flags": ["armor_pierce"],
+  "sprite": "axe_silver"
+}

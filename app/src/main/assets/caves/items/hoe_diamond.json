@@ -1,0 +1,12 @@
+﻿{
+  "id": "hoe_diamond",
+  "type": "weapon",
+  "weapon_type": "hoe",
+  "tier": 5,
+  "attack_speed_ms": 500,
+  "rarity_weights": { "common": 10, "magic": 20, "rare": 30, "epic": 27, "legendary": 13 },
+  "damage_base": [17, 24],
+  "stats": { "lifesteal": [12, 28] },
+  "flags": ["lifesteal"],
+  "sprite": "hoe_diamond"
+}

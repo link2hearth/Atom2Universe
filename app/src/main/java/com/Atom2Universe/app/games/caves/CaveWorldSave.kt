@@ -1,6 +1,8 @@
 package com.Atom2Universe.app.games.caves
 
 import android.content.Context
+import com.Atom2Universe.app.games.caves.node.ItemInstance
+import com.Atom2Universe.app.games.caves.node.ItemRarity
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -8,7 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-data class CaveWorldSave(
+internal data class CaveWorldSave(
     val id: String,
     val name: String,
     val seed: Long,
@@ -32,7 +34,9 @@ data class CaveWorldSave(
     var playerShieldCurrent: Int = 0,
     var playerWeapons: List<String> = listOf("WHITE_SQUARE"),  // "COLOR_VARIANT"
     var wardStonePositions: List<Pair<Double, Double>> = emptyList(),
-    var isCreative: Boolean = false
+    var isCreative: Boolean = false,
+    // IDs ≥ 10000 → instances d'armes dynamiques
+    var weaponInstances: Map<Short, ItemInstance> = emptyMap()
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -40,7 +44,7 @@ data class CaveWorldSave(
     }
 }
 
-object CaveWorldSaveManager {
+internal object CaveWorldSaveManager {
 
     private fun savesDir(context: Context): File =
         File(context.filesDir, "cave_worlds").also { it.mkdirs() }
@@ -92,6 +96,7 @@ object CaveWorldSaveManager {
         existing.playerWeapons       = snap.playerWeapons
         existing.wardStonePositions  = snap.wardStonePositions
         existing.isCreative          = snap.isCreative
+        existing.weaponInstances     = snap.weaponInstances
         persist(context, existing)
     }
 
@@ -138,6 +143,20 @@ object CaveWorldSaveManager {
             }
             put("wardStonePositions", wardArr)
             put("isCreative", save.isCreative)
+            val wiJson = JSONObject()
+            save.weaponInstances.forEach { (id, inst) ->
+                val o = JSONObject().apply {
+                    put("def_id", inst.defId)
+                    put("rarity", inst.rarity.name)
+                    inst.rolledDamage?.let { put("damage", it) }
+                    val statsJson = JSONObject()
+                    inst.rolledStats.forEach { (k, v) -> statsJson.put(k, v) }
+                    put("stats", statsJson)
+                    put("tier", inst.tier)
+                }
+                wiJson.put(id.toString(), o)
+            }
+            put("weaponInstances", wiJson)
         }
         saveFile(context, save.id).writeText(json.toString())
     }
@@ -163,6 +182,21 @@ object CaveWorldSaveManager {
                 Pair(o.getDouble("x"), o.getDouble("z"))
             }
         } else emptyList()
+        val wiJson = j.optJSONObject("weaponInstances") ?: JSONObject()
+        val weaponInstances = mutableMapOf<Short, ItemInstance>()
+        wiJson.keys().forEach { k ->
+            val o = wiJson.optJSONObject(k) ?: return@forEach
+            val statsJson = o.optJSONObject("stats") ?: JSONObject()
+            val stats = mutableMapOf<String, Int>()
+            statsJson.keys().forEach { sk -> stats[sk] = statsJson.getInt(sk) }
+            weaponInstances[k.toShort()] = ItemInstance(
+                defId        = o.getString("def_id"),
+                rarity       = runCatching { ItemRarity.valueOf(o.getString("rarity")) }.getOrDefault(ItemRarity.COMMON),
+                rolledDamage = if (o.has("damage")) o.getInt("damage") else null,
+                rolledStats  = stats,
+                tier         = o.optInt("tier", 0)
+            )
+        }
         return CaveWorldSave(
             id = j.getString("id"),
             name = j.getString("name"),
@@ -186,7 +220,8 @@ object CaveWorldSaveManager {
             playerShieldCurrent = j.optInt("playerShieldCurrent", 0),
             playerWeapons = weapons,
             wardStonePositions = wardStones,
-            isCreative = j.optBoolean("isCreative", false)
+            isCreative = j.optBoolean("isCreative", false),
+            weaponInstances = weaponInstances
         )
     }
 }

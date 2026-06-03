@@ -178,7 +178,7 @@
                 android:layout_height="match_parent"
                 android:background="#2AFFFFFF" />
 
-            <!-- ===== DROITE : crafting ===== -->
+            <!-- ===== DROITE : crafting / sell ===== -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -187,6 +187,7 @@
                 android:background="@color/midi_surface">
 
                 <TextView
+                    android:id="@+id/cave_inv_right_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/cave_inv_crafting_header"
@@ -224,6 +225,36 @@
                     android:padding="6dp"
                     android:clipToPadding="false"
                     android:visibility="gone" />
+
+                <!-- Panneau Sell (visible uniquement quand une arme est sélectionnée) -->
+                <LinearLayout
+                    android:id="@+id/cave_inv_sell_panel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:padding="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/cave_inv_sell_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#CCFFFFFF"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:layout_marginBottom="12dp" />
+
+                    <Button
+                        android:id="@+id/cave_inv_sell_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:text="@string/cave_inv_sell_btn"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:backgroundTint="#CC8800" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

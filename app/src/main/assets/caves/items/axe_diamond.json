@@ -1,0 +1,12 @@
+﻿{
+  "id": "axe_diamond",
+  "type": "weapon",
+  "weapon_type": "axe",
+  "tier": 5,
+  "attack_speed_ms": 1100,
+  "rarity_weights": { "common": 10, "magic": 20, "rare": 30, "epic": 27, "legendary": 13 },
+  "damage_base": [31, 43],
+  "stats": { "armor_pierce": [35, 70] },
+  "flags": ["armor_pierce"],
+  "sprite": "axe_diamond"
+}

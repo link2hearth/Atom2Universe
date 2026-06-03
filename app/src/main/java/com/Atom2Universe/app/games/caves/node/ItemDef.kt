@@ -15,7 +15,10 @@ internal data class ItemDef(
     val damageBase: ItemStatRange?,
     val stats: Map<String, ItemStatRange>,
     val flags: List<String>,
-    val sprite: String
+    val sprite: String,
+    val tier: Int = 0,                          // 1-5 : iron/bronze/silver/gold/diamond
+    val weaponType: String? = null,             // "sword","axe","hammer","flail","hoe"
+    val attackSpeedMs: Int = 0                  // cooldown attaque en ms (0 = non-arme)
 ) {
     companion object {
         fun fromJson(j: JSONObject): ItemDef {
@@ -49,13 +52,16 @@ internal data class ItemDef(
             }
 
             return ItemDef(
-                id           = j.getString("id"),
-                type         = j.optString("type", "material"),
+                id            = j.getString("id"),
+                type          = j.optString("type", "material"),
                 rarityWeights = rarityWeights,
-                damageBase   = dmgBase,
-                stats        = stats,
-                flags        = flags,
-                sprite       = j.optString("sprite", j.getString("id"))
+                damageBase    = dmgBase,
+                stats         = stats,
+                flags         = flags,
+                sprite        = j.optString("sprite", j.getString("id")),
+                tier          = j.optInt("tier", 0),
+                weaponType    = j.optString("weapon_type").takeIf { it.isNotBlank() },
+                attackSpeedMs = j.optInt("attack_speed_ms", 0)
             )
         }
     }
@@ -66,5 +72,6 @@ internal data class ItemInstance(
     val rarity: ItemRarity,
     val rolledDamage: Int?,
     val rolledStats: Map<String, Int>,
-    val count: Int = 1
+    val count: Int = 1,
+    val tier: Int = 0
 )

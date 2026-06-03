@@ -1,0 +1,12 @@
+﻿{
+  "id": "sword_gold",
+  "type": "weapon",
+  "weapon_type": "sword",
+  "tier": 4,
+  "attack_speed_ms": 700,
+  "rarity_weights": { "common": 20, "magic": 28, "rare": 27, "epic": 18, "legendary": 7 },
+  "damage_base": [16, 23],
+  "stats": { "poison_chance": [15, 35] },
+  "flags": ["poison_chance"],
+  "sprite": "sword_gold"
+}

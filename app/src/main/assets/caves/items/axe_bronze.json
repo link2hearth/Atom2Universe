@@ -1,0 +1,12 @@
+﻿{
+  "id": "axe_bronze",
+  "type": "weapon",
+  "weapon_type": "axe",
+  "tier": 2,
+  "attack_speed_ms": 1100,
+  "rarity_weights": { "common": 50, "magic": 30, "rare": 15, "epic": 4, "legendary": 1 },
+  "damage_base": [10, 15],
+  "stats": { "armor_pierce": [20, 38] },
+  "flags": ["armor_pierce"],
+  "sprite": "axe_bronze"
+}

@@ -1,0 +1,17 @@
+﻿{
+  "id": "loot_t4",
+  "rolls": [1, 1],
+  "entries": [
+    { "item": "ward_stone",   "weight": 3, "count": [1, 1] },
+    { "item": "sword_silver", "weight": 2, "count": [1, 1] },
+    { "item": "axe_silver",   "weight": 2, "count": [1, 1] },
+    { "item": "hammer_silver","weight": 1, "count": [1, 1] },
+    { "item": "flail_silver", "weight": 1, "count": [1, 1] },
+    { "item": "hoe_silver",   "weight": 1, "count": [1, 1] },
+    { "item": "sword_gold",   "weight": 3, "count": [1, 1] },
+    { "item": "axe_gold",     "weight": 3, "count": [1, 1] },
+    { "item": "hammer_gold",  "weight": 2, "count": [1, 1] },
+    { "item": "flail_gold",   "weight": 2, "count": [1, 1] },
+    { "item": "hoe_gold",     "weight": 2, "count": [1, 1] }
+  ]
+}

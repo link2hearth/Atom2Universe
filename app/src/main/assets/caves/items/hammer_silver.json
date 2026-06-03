@@ -1,0 +1,12 @@
+﻿{
+  "id": "hammer_silver",
+  "type": "weapon",
+  "weapon_type": "hammer",
+  "tier": 3,
+  "attack_speed_ms": 1500,
+  "rarity_weights": { "common": 35, "magic": 30, "rare": 22, "epic": 10, "legendary": 3 },
+  "damage_base": [19, 28],
+  "stats": { "stun_chance": [12, 28] },
+  "flags": ["stun_chance"],
+  "sprite": "hammer_silver"
+}

@@ -1,0 +1,12 @@
+﻿{
+  "id": "sword_diamond",
+  "type": "weapon",
+  "weapon_type": "sword",
+  "tier": 5,
+  "attack_speed_ms": 700,
+  "rarity_weights": { "common": 10, "magic": 20, "rare": 30, "epic": 27, "legendary": 13 },
+  "damage_base": [23, 32],
+  "stats": { "poison_chance": [20, 45] },
+  "flags": ["poison_chance"],
+  "sprite": "sword_diamond"
+}

@@ -1,0 +1,12 @@
+﻿{
+  "id": "hoe_iron",
+  "type": "weapon",
+  "weapon_type": "hoe",
+  "tier": 1,
+  "attack_speed_ms": 500,
+  "rarity_weights": { "common": 70, "magic": 22, "rare": 7, "epic": 1 },
+  "damage_base": [3, 5],
+  "stats": { "lifesteal": [4, 10] },
+  "flags": ["lifesteal"],
+  "sprite": "hoe_iron"
+}

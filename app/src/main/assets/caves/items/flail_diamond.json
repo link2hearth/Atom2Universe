@@ -1,0 +1,12 @@
+﻿{
+  "id": "flail_diamond",
+  "type": "weapon",
+  "weapon_type": "flail",
+  "tier": 5,
+  "attack_speed_ms": 900,
+  "rarity_weights": { "common": 10, "magic": 20, "rare": 30, "epic": 27, "legendary": 13 },
+  "damage_base": [27, 37],
+  "stats": { "multi_hit": [28, 55] },
+  "flags": ["multi_hit"],
+  "sprite": "flail_diamond"
+}

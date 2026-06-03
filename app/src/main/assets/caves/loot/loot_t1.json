@@ -1,0 +1,12 @@
+﻿{
+  "id": "loot_t1",
+  "rolls": [0, 1],
+  "entries": [
+    { "item": "ward_stone",   "weight": 10, "count": [1, 1] },
+    { "item": "sword_iron",   "weight": 2,  "count": [1, 1] },
+    { "item": "axe_iron",     "weight": 2,  "count": [1, 1] },
+    { "item": "hammer_iron",  "weight": 2,  "count": [1, 1] },
+    { "item": "flail_iron",   "weight": 2,  "count": [1, 1] },
+    { "item": "hoe_iron",     "weight": 2,  "count": [1, 1] }
+  ]
+}

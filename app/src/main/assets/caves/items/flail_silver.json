@@ -1,0 +1,12 @@
+﻿{
+  "id": "flail_silver",
+  "type": "weapon",
+  "weapon_type": "flail",
+  "tier": 3,
+  "attack_speed_ms": 900,
+  "rarity_weights": { "common": 35, "magic": 30, "rare": 22, "epic": 10, "legendary": 3 },
+  "damage_base": [13, 19],
+  "stats": { "multi_hit": [18, 35] },
+  "flags": ["multi_hit"],
+  "sprite": "flail_silver"
+}

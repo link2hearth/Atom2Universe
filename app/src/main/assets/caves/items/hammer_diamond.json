@@ -1,0 +1,12 @@
+﻿{
+  "id": "hammer_diamond",
+  "type": "weapon",
+  "weapon_type": "hammer",
+  "tier": 5,
+  "attack_speed_ms": 1500,
+  "rarity_weights": { "common": 10, "magic": 20, "rare": 30, "epic": 27, "legendary": 13 },
+  "damage_base": [39, 55],
+  "stats": { "stun_chance": [18, 45] },
+  "flags": ["stun_chance"],
+  "sprite": "hammer_diamond"
+}

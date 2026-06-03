@@ -1,0 +1,12 @@
+﻿{
+  "id": "hoe_gold",
+  "type": "weapon",
+  "weapon_type": "hoe",
+  "tier": 4,
+  "attack_speed_ms": 500,
+  "rarity_weights": { "common": 20, "magic": 28, "rare": 27, "epic": 18, "legendary": 7 },
+  "damage_base": [12, 17],
+  "stats": { "lifesteal": [10, 22] },
+  "flags": ["lifesteal"],
+  "sprite": "hoe_gold"
+}

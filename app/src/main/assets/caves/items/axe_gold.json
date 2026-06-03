@@ -1,0 +1,12 @@
+﻿{
+  "id": "axe_gold",
+  "type": "weapon",
+  "weapon_type": "axe",
+  "tier": 4,
+  "attack_speed_ms": 1100,
+  "rarity_weights": { "common": 20, "magic": 28, "rare": 27, "epic": 18, "legendary": 7 },
+  "damage_base": [22, 31],
+  "stats": { "armor_pierce": [30, 58] },
+  "flags": ["armor_pierce"],
+  "sprite": "axe_gold"
+}

@@ -1,0 +1,12 @@
+﻿{
+  "id": "sword_bronze",
+  "type": "weapon",
+  "weapon_type": "sword",
+  "tier": 2,
+  "attack_speed_ms": 700,
+  "rarity_weights": { "common": 50, "magic": 30, "rare": 15, "epic": 4, "legendary": 1 },
+  "damage_base": [7, 11],
+  "stats": { "poison_chance": [8, 20] },
+  "flags": ["poison_chance"],
+  "sprite": "sword_bronze"
+}

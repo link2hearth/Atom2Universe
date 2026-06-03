@@ -1,0 +1,12 @@
+﻿{
+  "id": "hoe_bronze",
+  "type": "weapon",
+  "weapon_type": "hoe",
+  "tier": 2,
+  "attack_speed_ms": 500,
+  "rarity_weights": { "common": 50, "magic": 30, "rare": 15, "epic": 4, "legendary": 1 },
+  "damage_base": [5, 8],
+  "stats": { "lifesteal": [6, 14] },
+  "flags": ["lifesteal"],
+  "sprite": "hoe_bronze"
+}

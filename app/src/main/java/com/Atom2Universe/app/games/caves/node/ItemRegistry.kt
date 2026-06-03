@@ -20,12 +20,29 @@ internal object ItemRegistry {
 
     fun get(id: String): ItemDef? = defs[id]
 
-    fun rollInstance(defId: String, rng: kotlin.random.Random): ItemInstance? {
+    fun rollInstance(defId: String, rng: kotlin.random.Random, mobLevel: Int = 1): ItemInstance? {
         val def = defs[defId] ?: return null
         val rarity = rollRarity(def.rarityWeights, rng)
-        val damage = def.damageBase?.roll(rng)
-        val stats  = def.stats.mapValues { (_, range) -> range.roll(rng) }
-        return ItemInstance(defId, rarity, damage, stats)
+        val rarityMult = rarityMultiplier(rarity)
+        val levelMult  = 1f + (mobLevel - 1) * 0.08f
+        val damage = def.damageBase?.let { range ->
+            val base = range.roll(rng)
+            (base * levelMult * rarityMult).toInt().coerceAtLeast(1)
+        }
+        val stats = def.stats.mapValues { (_, range) ->
+            val base = range.roll(rng)
+            if (def.type == "weapon") (base * rarityMult).toInt().coerceAtLeast(range.min)
+            else base
+        }
+        return ItemInstance(defId, rarity, damage, stats, tier = def.tier)
+    }
+
+    private fun rarityMultiplier(rarity: ItemRarity) = when (rarity) {
+        ItemRarity.COMMON    -> 1.0f
+        ItemRarity.MAGIC     -> 1.3f
+        ItemRarity.RARE      -> 1.6f
+        ItemRarity.EPIC      -> 2.0f
+        ItemRarity.LEGENDARY -> 2.5f
     }
 
     private fun rollRarity(weights: Map<ItemRarity, Int>, rng: kotlin.random.Random): ItemRarity {

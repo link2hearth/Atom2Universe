@@ -1,0 +1,12 @@
+﻿{
+  "id": "flail_bronze",
+  "type": "weapon",
+  "weapon_type": "flail",
+  "tier": 2,
+  "attack_speed_ms": 900,
+  "rarity_weights": { "common": 50, "magic": 30, "rare": 15, "epic": 4, "legendary": 1 },
+  "damage_base": [9, 13],
+  "stats": { "multi_hit": [15, 28] },
+  "flags": ["multi_hit"],
+  "sprite": "flail_bronze"
+}

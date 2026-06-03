@@ -17,7 +17,7 @@ internal data class LootTable(
     val rollsMax: Int,
     val entries: List<LootEntry>
 ) {
-    fun roll(rng: Random): List<ItemInstance> {
+    fun roll(rng: Random, mobLevel: Int = 1): List<ItemInstance> {
         if (entries.isEmpty()) return emptyList()
         val rolls = rollsMin + rng.nextInt((rollsMax - rollsMin + 1).coerceAtLeast(1))
         val totalWeight = entries.sumOf { it.weight }.coerceAtLeast(1)
@@ -28,7 +28,7 @@ internal data class LootTable(
                 pick -= entry.weight
                 if (pick < 0) {
                     val count = entry.countMin + rng.nextInt((entry.countMax - entry.countMin + 1).coerceAtLeast(1))
-                    val instance = ItemRegistry.rollInstance(entry.itemId, rng)
+                    val instance = ItemRegistry.rollInstance(entry.itemId, rng, mobLevel)
                     if (instance != null) result.add(instance.copy(count = count))
                     break
                 }
@@ -88,9 +88,13 @@ internal class LootNode(
     init {
         bus.subscribe { event ->
             if (event !is GameEvent.MobDied) return@subscribe
-            val mobDef = MobRegistry.get(event.mobDefId)
-            val table = LootTableRegistry.get(mobDef.lootTable) ?: return@subscribe
-            val drops = table.roll(rng)
+            val mobDef  = MobRegistry.get(event.mobDefId)
+            // Les boss utilisent boss_loot, avec fallback sur la table normale si absente
+            val tableId = if (event.isBoss) "boss_loot" else mobDef.lootTable
+            val table   = LootTableRegistry.get(tableId)
+                       ?: LootTableRegistry.get(mobDef.lootTable)
+                       ?: return@subscribe
+            val drops = table.roll(rng, event.level)
             if (drops.isNotEmpty()) onItemsDropped?.invoke(drops)
         }
     }

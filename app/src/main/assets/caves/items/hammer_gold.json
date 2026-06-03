@@ -1,0 +1,12 @@
+﻿{
+  "id": "hammer_gold",
+  "type": "weapon",
+  "weapon_type": "hammer",
+  "tier": 4,
+  "attack_speed_ms": 1500,
+  "rarity_weights": { "common": 20, "magic": 28, "rare": 27, "epic": 18, "legendary": 7 },
+  "damage_base": [28, 39],
+  "stats": { "stun_chance": [15, 35] },
+  "flags": ["stun_chance"],
+  "sprite": "hammer_gold"
+}

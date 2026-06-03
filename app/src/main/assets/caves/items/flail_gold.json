@@ -1,0 +1,12 @@
+﻿{
+  "id": "flail_gold",
+  "type": "weapon",
+  "weapon_type": "flail",
+  "tier": 4,
+  "attack_speed_ms": 900,
+  "rarity_weights": { "common": 20, "magic": 28, "rare": 27, "epic": 18, "legendary": 7 },
+  "damage_base": [19, 27],
+  "stats": { "multi_hit": [22, 45] },
+  "flags": ["multi_hit"],
+  "sprite": "flail_gold"
+}

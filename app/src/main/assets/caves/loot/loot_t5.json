@@ -1,0 +1,16 @@
+﻿{
+  "id": "loot_t5",
+  "rolls": [1, 2],
+  "entries": [
+    { "item": "sword_gold",      "weight": 2, "count": [1, 1] },
+    { "item": "axe_gold",        "weight": 2, "count": [1, 1] },
+    { "item": "hammer_gold",     "weight": 1, "count": [1, 1] },
+    { "item": "flail_gold",      "weight": 1, "count": [1, 1] },
+    { "item": "hoe_gold",        "weight": 1, "count": [1, 1] },
+    { "item": "sword_diamond",   "weight": 3, "count": [1, 1] },
+    { "item": "axe_diamond",     "weight": 3, "count": [1, 1] },
+    { "item": "hammer_diamond",  "weight": 2, "count": [1, 1] },
+    { "item": "flail_diamond",   "weight": 2, "count": [1, 1] },
+    { "item": "hoe_diamond",     "weight": 2, "count": [1, 1] }
+  ]
+}

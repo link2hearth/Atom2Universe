@@ -1,0 +1,12 @@
+﻿{
+  "id": "hammer_bronze",
+  "type": "weapon",
+  "weapon_type": "hammer",
+  "tier": 2,
+  "attack_speed_ms": 1500,
+  "rarity_weights": { "common": 50, "magic": 30, "rare": 15, "epic": 4, "legendary": 1 },
+  "damage_base": [13, 19],
+  "stats": { "stun_chance": [10, 22] },
+  "flags": ["stun_chance"],
+  "sprite": "hammer_bronze"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "sword_iron",
+  "type": "weapon",
+  "weapon_type": "sword",
+  "tier": 1,
+  "attack_speed_ms": 700,
+  "rarity_weights": { "common": 70, "magic": 22, "rare": 7, "epic": 1 },
+  "damage_base": [4, 7],
+  "stats": { "poison_chance": [5, 15] },
+  "flags": ["poison"],
+  "sprite": "sword_iron"
+}

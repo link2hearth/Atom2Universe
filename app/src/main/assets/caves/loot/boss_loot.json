@@ -1,7 +1,22 @@
-{
+﻿{
   "id": "boss_loot",
   "rolls": [1, 2],
   "entries": [
-    { "item": "ward_stone", "weight": 100, "count": [1, 1] }
+    { "item": "ward_stone",      "weight": 3,  "count": [1, 1] },
+    { "item": "sword_silver",    "weight": 3,  "count": [1, 1] },
+    { "item": "axe_silver",      "weight": 3,  "count": [1, 1] },
+    { "item": "hammer_silver",   "weight": 2,  "count": [1, 1] },
+    { "item": "flail_silver",    "weight": 2,  "count": [1, 1] },
+    { "item": "hoe_silver",      "weight": 2,  "count": [1, 1] },
+    { "item": "sword_gold",      "weight": 5,  "count": [1, 1] },
+    { "item": "axe_gold",        "weight": 5,  "count": [1, 1] },
+    { "item": "hammer_gold",     "weight": 4,  "count": [1, 1] },
+    { "item": "flail_gold",      "weight": 4,  "count": [1, 1] },
+    { "item": "hoe_gold",        "weight": 3,  "count": [1, 1] },
+    { "item": "sword_diamond",   "weight": 6,  "count": [1, 1] },
+    { "item": "axe_diamond",     "weight": 6,  "count": [1, 1] },
+    { "item": "hammer_diamond",  "weight": 5,  "count": [1, 1] },
+    { "item": "flail_diamond",   "weight": 5,  "count": [1, 1] },
+    { "item": "hoe_diamond",     "weight": 4,  "count": [1, 1] }
   ]
 }

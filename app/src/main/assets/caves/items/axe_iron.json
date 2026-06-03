@@ -1,0 +1,12 @@
+﻿{
+  "id": "axe_iron",
+  "type": "weapon",
+  "weapon_type": "axe",
+  "tier": 1,
+  "attack_speed_ms": 1100,
+  "rarity_weights": { "common": 70, "magic": 22, "rare": 7, "epic": 1 },
+  "damage_base": [6, 10],
+  "stats": { "armor_pierce": [15, 30] },
+  "flags": ["armor_pierce"],
+  "sprite": "axe_iron"
+}

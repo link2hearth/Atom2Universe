@@ -24,6 +24,8 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.CraftDef
 import com.Atom2Universe.app.games.caves.node.CraftRegistry
+import com.Atom2Universe.app.games.caves.node.ItemRarity
+import com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry
 
 internal enum class InvGpZone { GRID, HOTBAR, CRAFTING }
 
@@ -53,6 +55,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
     var infoIngredientsTv: TextView? = null
     var craftingEmptyTv: View? = null
     var craftingRecyclerView: RecyclerView? = null
+    var rightHeaderTv: TextView? = null
+    var sellPanel: View? = null
+    var sellPriceTv: TextView? = null
+    var sellButton: Button? = null
 
     // ── Pager inventaire ──────────────────────────────────────────────────────
     var invPager: ViewPager2? = null
@@ -82,6 +88,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
         infoIngredientsTv    = invOverlay.findViewById(R.id.cave_inv_info_ingredients)
         craftingEmptyTv      = invOverlay.findViewById(R.id.cave_inv_crafting_empty)
         craftingRecyclerView = invOverlay.findViewById(R.id.cave_inv_crafting_recycler)
+        rightHeaderTv        = invOverlay.findViewById(R.id.cave_inv_right_header)
+        sellPanel            = invOverlay.findViewById(R.id.cave_inv_sell_panel)
+        sellPriceTv          = invOverlay.findViewById(R.id.cave_inv_sell_price)
+        sellButton           = invOverlay.findViewById<Button>(R.id.cave_inv_sell_btn)
+            ?.also { btn -> btn.setOnClickListener { selectedType()?.let { doSell(it) } } }
         invPager             = invOverlay.findViewById(R.id.cave_inv_pager)
         pageIndicatorTv      = invOverlay.findViewById(R.id.cave_inv_page_indicator)
 
@@ -284,6 +295,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val dp = activity.resources.displayMetrics.density
         if (recipe != null) {
             infoSpriteView?.background = activity.blockDrawable(recipe.result, 6f)
+            infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
             infoNameTv?.text  = activity.blockName(recipe.result)
             infoCountTv?.text = "×${recipe.resultCount}"
             infoIngredientsTv?.text = recipe.ingredients.joinToString("\n") { (t, n) -> "${activity.blockName(t)} ×$n" }
@@ -291,33 +303,120 @@ internal class InventoryManager(private val activity: CaveActivity) {
             infoIngredientsTv?.visibility = View.VISIBLE
         } else {
             val type = selectedType()
-            infoDivider?.visibility       = View.GONE
-            infoIngredientsTv?.visibility = View.GONE
-            if (type == null) {
-                infoSpriteView?.background = GradientDrawable().apply {
-                    shape = GradientDrawable.RECTANGLE; setColor(0x33FFFFFF)
-                    cornerRadius = 6 * dp
-                }
-                infoNameTv?.text  = activity.getString(R.string.cave_inv_info_empty)
-                infoCountTv?.text = ""
-            } else {
+            val isWeapon = type != null && WeaponInstanceRegistry.isWeapon(type)
+            if (isWeapon) {
+                val instance = WeaponInstanceRegistry.get(type!!)
+                val def = instance?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }
                 infoSpriteView?.background = activity.blockDrawable(type, 6f)
-                infoNameTv?.text  = activity.blockName(type)
-                infoCountTv?.text = "×${renderer.inventory[type] ?: 0}"
+                val rarityColor = weaponRarityColor(instance?.rarity ?: ItemRarity.COMMON)
+                val rarityLabel = instance?.rarity?.name?.lowercase()?.replaceFirstChar { it.uppercase() } ?: "?"
+                val baseName    = def?.id?.replace('_', ' ')?.split(" ")?.joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } } ?: "Unknown"
+                infoNameTv?.setTextColor(rarityColor)
+                infoNameTv?.text  = "[$rarityLabel]\n$baseName"
+                infoCountTv?.text = ""
+                infoDivider?.visibility = View.VISIBLE
+                val dmg   = instance?.rolledDamage ?: 0
+                val speed = def?.attackSpeedMs?.let { "${it}ms" } ?: ""
+                val extra = instance?.rolledStats?.entries?.joinToString("\n") { (k, v) -> "${k.replace('_', ' ')}: $v%" } ?: ""
+                infoIngredientsTv?.text = buildString {
+                    append("⚔ $dmg dmg")
+                    if (speed.isNotEmpty()) append("  •  $speed")
+                    if (extra.isNotEmpty()) { append("\n"); append(extra) }
+                }
+                infoIngredientsTv?.visibility = View.VISIBLE
+            } else {
+                infoDivider?.visibility       = View.GONE
+                infoIngredientsTv?.visibility = View.GONE
+                if (type == null) {
+                    infoSpriteView?.background = GradientDrawable().apply {
+                        shape = GradientDrawable.RECTANGLE; setColor(0x33FFFFFF)
+                        cornerRadius = 6 * dp
+                    }
+                    infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
+                    infoNameTv?.text  = activity.getString(R.string.cave_inv_info_empty)
+                    infoCountTv?.text = ""
+                } else {
+                    infoSpriteView?.background = activity.blockDrawable(type, 6f)
+                    infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
+                    infoNameTv?.text  = activity.blockName(type)
+                    infoCountTv?.text = "×${renderer.inventory[type] ?: 0}"
+                }
             }
         }
+    }
+
+    private fun weaponRarityColor(rarity: ItemRarity) = when (rarity) {
+        ItemRarity.COMMON    -> 0xFFAAAAAA.toInt()
+        ItemRarity.MAGIC     -> 0xFF4488FF.toInt()
+        ItemRarity.RARE      -> 0xFFFFDD00.toInt()
+        ItemRarity.EPIC      -> 0xFFCC44FF.toInt()
+        ItemRarity.LEGENDARY -> 0xFFFF8800.toInt()
+    }
+
+    private fun weaponSellPrice(id: Short): Int {
+        val inst = WeaponInstanceRegistry.get(id) ?: return 0
+        val tierMult = inst.tier.coerceAtLeast(1) * 5
+        val rarityMult = when (inst.rarity) {
+            ItemRarity.COMMON    -> 1
+            ItemRarity.MAGIC     -> 2
+            ItemRarity.RARE      -> 4
+            ItemRarity.EPIC      -> 8
+            ItemRarity.LEGENDARY -> 15
+        }
+        return tierMult * rarityMult
     }
 
     // ── Crafting ──────────────────────────────────────────────────────────────
 
     fun updateCraftingList() {
         val type = selectedType()
-        val recipes = if (type == null) emptyList()
-                      else CraftRegistry.all().filter { r -> r.ingredients.any { it.first == type } }
-        craftingAdapter?.recipes = recipes
-        craftingAdapter?.notifyDataSetChanged()
-        craftingEmptyTv?.visibility      = if (recipes.isEmpty()) View.VISIBLE else View.GONE
-        craftingRecyclerView?.visibility = if (recipes.isEmpty()) View.GONE    else View.VISIBLE
+        val isWeapon = type != null && WeaponInstanceRegistry.isWeapon(type)
+
+        if (isWeapon) {
+            // Panneau sell
+            rightHeaderTv?.text = activity.getString(R.string.cave_inv_sell_header)
+            craftingEmptyTv?.visibility      = View.GONE
+            craftingRecyclerView?.visibility = View.GONE
+            val price = weaponSellPrice(type!!)
+            val priceLabel = activity.getString(R.string.cave_inv_sell_price_label)
+            val stoneLabel = activity.getString(R.string.cave_inv_sell_ward_stones)
+            sellPriceTv?.text = "$priceLabel: $price $stoneLabel"
+            sellPanel?.visibility = View.VISIBLE
+        } else {
+            // Panneau craft normal
+            rightHeaderTv?.text = activity.getString(R.string.cave_inv_crafting_header)
+            sellPanel?.visibility = View.GONE
+            val recipes = if (type == null) emptyList()
+                          else CraftRegistry.all().filter { r -> r.ingredients.any { it.first == type } }
+            craftingAdapter?.recipes = recipes
+            craftingAdapter?.notifyDataSetChanged()
+            craftingEmptyTv?.visibility      = if (recipes.isEmpty()) View.VISIBLE else View.GONE
+            craftingRecyclerView?.visibility = if (recipes.isEmpty()) View.GONE    else View.VISIBLE
+        }
+    }
+
+    fun doSell(id: Short) {
+        if (!WeaponInstanceRegistry.isWeapon(id)) return
+        val price = weaponSellPrice(id)
+        // Rémunération en ward stones
+        if (price > 0) {
+            val WARD_STONE = com.Atom2Universe.app.games.caves.world.WARD_STONE
+            renderer.inventory[WARD_STONE] = (renderer.inventory[WARD_STONE] ?: 0) + price
+            val existing = invSlots.filterNotNull().toSet()
+            if (WARD_STONE !in existing) addNewType(WARD_STONE)
+        }
+        // Retirer l'arme
+        renderer.inventory.remove(id)
+        for (i in invSlots.indices) { if (invSlots[i] == id) { invSlots[i] = null; break } }
+        for (i in renderer.hotbar.indices) { if (renderer.hotbar[i] == id) renderer.hotbar[i] = null }
+        WeaponInstanceRegistry.free(id)
+        selectedSlotIdx = -1
+        syncHotbar()
+        refreshPagedAdapter()
+        hud.updateHotbarForInventory()
+        updateInfoPanel()
+        updateCraftingList()
+        activity.saveWorldAsync()
     }
 
     fun doCraft(recipe: CraftDef) {
@@ -583,16 +682,21 @@ internal class InventoryManager(private val activity: CaveActivity) {
             val isSel    = absIdx == selectedSlotIdx
             val isCursor = invGpZone == InvGpZone.GRID && absIdx == invGpCursor
             val dp = activity.resources.displayMetrics.density
+            val isWeaponSlot = type != null && WeaponInstanceRegistry.isWeapon(type)
+            val rarityStroke = if (isWeaponSlot && !isSel && !isCursor) {
+                weaponRarityColor(WeaponInstanceRegistry.get(type!!)?.rarity ?: ItemRarity.COMMON)
+            } else null
             holder.itemView.background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 setColor(when { isSel -> 0x44FFDD00.toInt(); isCursor -> 0x3300DDFF.toInt(); type != null -> 0x28FFFFFF.toInt(); else -> 0x12FFFFFF.toInt() })
-                setStroke(if (isSel || isCursor) (2 * dp).toInt() else (1 * dp).toInt(),
-                    when { isSel -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); type != null -> 0x55FFFFFF.toInt(); else -> 0x28FFFFFF.toInt() })
+                val strokeW = if (isSel || isCursor || rarityStroke != null) (2 * dp).toInt() else (1 * dp).toInt()
+                val strokeC = when { isSel -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); rarityStroke != null -> rarityStroke; type != null -> 0x55FFFFFF.toInt(); else -> 0x28FFFFFF.toInt() }
+                setStroke(strokeW, strokeC)
                 cornerRadius = 5 * dp
             }
             holder.colorView.background = if (type != null) activity.blockDrawable(type, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
-            holder.countTv.text = if (type != null && count > 0) count.toString() else ""
+            holder.countTv.text = if (type != null && count > 0 && !isWeaponSlot) count.toString() else ""
 
             holder.itemView.setOnClickListener {
                 val pos = holder.bindingAdapterPosition

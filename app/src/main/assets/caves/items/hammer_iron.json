@@ -1,0 +1,12 @@
+﻿{
+  "id": "hammer_iron",
+  "type": "weapon",
+  "weapon_type": "hammer",
+  "tier": 1,
+  "attack_speed_ms": 1500,
+  "rarity_weights": { "common": 70, "magic": 22, "rare": 7, "epic": 1 },
+  "damage_base": [8, 13],
+  "stats": { "stun_chance": [8, 18] },
+  "flags": ["stun_chance"],
+  "sprite": "hammer_iron"
+}
