@@ -691,6 +691,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
                 synthesizer = Sf2Synthesizer(sf2File!!, SAMPLE_RATE)
                 synthesizer?.masterVolume = volume
+                synthesizer?.setForceSequentialRendering(isScreenOff)
 
                 audioRenderer = AudioRenderer(
                     context = context,

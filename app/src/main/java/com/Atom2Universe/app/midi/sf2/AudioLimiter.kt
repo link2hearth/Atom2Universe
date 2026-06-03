@@ -72,10 +72,6 @@ class AudioLimiter {
     // Smoothed RMS level
     private var rmsLevel = TARGET_RMS
 
-    // Logging for diagnostics (only log significant changes)
-    private var lastLoggedGain = 1.0f
-    private var logCounter = 0
-
     // Enable/disable auto-gain
     var autoGainEnabled = true
 

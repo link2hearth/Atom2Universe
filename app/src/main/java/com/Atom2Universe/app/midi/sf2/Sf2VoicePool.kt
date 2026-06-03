@@ -443,13 +443,24 @@ class Sf2VoicePool(
         val channelCounts = channelCountsBuffer
         channelCounts.fill(0)
 
-        // Count active voices first to determine quality mode
+        // Count active voices to determine quality mode
         for (voice in voices) {
             if (voice.isActive) {
                 count++
                 val channelIndex = voice.channel
                 if (channelIndex in 0 until NUM_CHANNELS) {
                     channelCounts[channelIndex]++
+                }
+            }
+        }
+
+        // EMERGENCY MODE: When approaching max voices, force quickFade on voices ALREADY in release
+        // This is critical for resonant sounds (bells, pads) that accumulate despite release cap
+        // The release cap only affects NEW noteOffs, this handles voices already releasing
+        if (count > EMERGENCY_THRESHOLD) {
+            for (voice in voices) {
+                if (voice.isActive && voice.envelope.stage == EnvelopeGenerator.Stage.RELEASE) {
+                    voice.forceEmergencyFade(EMERGENCY_FADE_SAMPLES)
                 }
             }
         }
@@ -484,21 +495,6 @@ class Sf2VoicePool(
             count > RELEASE_CAP_THRESHOLD
         }
         Sf2Voice.cappedReleaseSamples = CAPPED_RELEASE_SAMPLES
-
-        // EMERGENCY MODE: When approaching max voices, force quickFade on voices ALREADY in release
-        // This is critical for resonant sounds (bells, pads) that accumulate despite release cap
-        // The release cap only affects NEW noteOffs, this handles voices already releasing
-        if (count > EMERGENCY_THRESHOLD) {
-            var releasingCount = 0
-            for (voice in voices) {
-                if (voice.isActive && voice.envelope.stage == EnvelopeGenerator.Stage.RELEASE) {
-                    releasingCount++
-                    // Force emergency fade on voices that have been releasing for a while
-                    // This quickly clears out old resonating sounds
-                    voice.forceEmergencyFade(EMERGENCY_FADE_SAMPLES)
-                }
-            }
-        }
 
         // Calculate voice count-based gain reduction to prevent clipping
         // When many voices play together, reduce each voice's contribution

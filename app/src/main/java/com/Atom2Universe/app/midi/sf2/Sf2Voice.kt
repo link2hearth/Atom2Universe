@@ -67,6 +67,10 @@ class Sf2Voice(
         @Volatile var releaseCapped: Boolean = false
         @Volatile var cappedReleaseSamples: Int = 4800  // ~100ms at 48000Hz
 
+        // Loop handling constants (shared across all voice instances)
+        const val SHORT_LOOP_THRESHOLD = 200
+        const val CROSSFADE_SAMPLES = 32
+
         // Soft saturation threshold (above this, we start compressing)
         private const val SATURATION_THRESHOLD = 0.75f
         // Maximum output after saturation - reduced from 1.2 to 1.0 to prevent downstream issues
@@ -588,11 +592,6 @@ class Sf2Voice(
             offset = blockEnd
         }
     }
-
-    // Crossfade length for short loops (in samples relative to output rate)
-    // This helps smooth transitions in loops < 200 samples
-    private val SHORT_LOOP_THRESHOLD = 200
-    private val CROSSFADE_SAMPLES = 32
 
     /**
      * Gets a sample with interpolation.

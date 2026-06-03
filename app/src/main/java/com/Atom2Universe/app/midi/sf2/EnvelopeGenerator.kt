@@ -81,7 +81,6 @@ class EnvelopeGenerator(
 
     private var sampleCounter: Int = 0
     private var currentLevel: Float = 0f
-    private var releaseStartLevel: Float = 0f
 
     // Coefficients for exponential curves
     private var attackCoeff: Float = 0f
@@ -181,7 +180,6 @@ class EnvelopeGenerator(
 
         stage = Stage.RELEASE
         sampleCounter = 0
-        releaseStartLevel = currentLevel
     }
 
     /**
@@ -200,7 +198,6 @@ class EnvelopeGenerator(
 
         stage = Stage.RELEASE
         sampleCounter = 0
-        releaseStartLevel = currentLevel
     }
 
     /**
@@ -216,7 +213,6 @@ class EnvelopeGenerator(
 
         stage = Stage.RELEASE
         sampleCounter = 0
-        releaseStartLevel = currentLevel
     }
 
     /**
@@ -237,7 +233,6 @@ class EnvelopeGenerator(
             releaseSamples = targetSamples
             releaseCoeff = calculateCoefficient(releaseSamples)
             sampleCounter = 0
-            releaseStartLevel = currentLevel
         }
     }
 
@@ -372,7 +367,6 @@ class EnvelopeGenerator(
         stage = Stage.IDLE
         sampleCounter = 0
         currentLevel = 0f
-        releaseStartLevel = 0f
     }
 
     /**

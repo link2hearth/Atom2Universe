@@ -35,6 +35,7 @@ object Sf2FileCache {
     private var cachedValidationPath: String? = null
     private var cachedValidationResult: Sf2Validator.ValidationResult? = null
     private var cachedValidationWarning: String? = null
+    private var cachedValidationDone: Boolean = false
 
     private val lock = Any()
 
@@ -149,11 +150,6 @@ object Sf2FileCache {
                 return null
             }
 
-            if (cachedMetadataPath == sf2Path) {
-                cachedMetadataPath = null
-                cachedMetadata = null
-            }
-
             try {
                 val parser = Sf2StreamingParser()
 
@@ -199,7 +195,7 @@ object Sf2FileCache {
      */
     fun validateAndGetWarning(sf2Path: String): String? {
         synchronized(lock) {
-            if (cachedValidationPath == sf2Path && cachedValidationWarning != null) {
+            if (cachedValidationPath == sf2Path && cachedValidationDone) {
                 return cachedValidationWarning
             }
 
@@ -221,6 +217,7 @@ object Sf2FileCache {
                 cachedValidationPath = sf2Path
                 cachedValidationResult = result
                 cachedValidationWarning = warning
+                cachedValidationDone = true
 
                 return warning
 
@@ -313,6 +310,7 @@ object Sf2FileCache {
             cachedValidationPath = null
             cachedValidationResult = null
             cachedValidationWarning = null
+            cachedValidationDone = false
         }
     }
 

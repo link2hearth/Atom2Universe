@@ -1005,6 +1005,15 @@ class Sf2Synthesizer(
         sustainedNotes[channel].clear()
         sostenutoNotes[channel].clear()
         heldKeys[channel].clear()
+
+        // Propager les nouvelles valeurs aux snapshots lus par le thread audio
+        swapSnapshot(channelVolume, channelVolumeSnapshotRef, channelVolumeSnapA, channelVolumeSnapB)
+        swapSnapshot(channelPan, channelPanSnapshotRef, channelPanSnapA, channelPanSnapB)
+        swapSnapshot(channelExpression, channelExpressionSnapshotRef, channelExpressionSnapA, channelExpressionSnapB)
+        swapSnapshot(channelPitchBend, channelPitchBendSnapshotRef, channelPitchBendSnapA, channelPitchBendSnapB)
+        swapSnapshot(channelModulation, channelModulationSnapshotRef, channelModulationSnapA, channelModulationSnapB)
+        swapSnapshot(channelReverbSend, channelReverbSendSnapshotRef, channelReverbSendSnapA, channelReverbSendSnapB)
+        swapSnapshot(channelChorusSend, channelChorusSendSnapshotRef, channelChorusSendSnapA, channelChorusSendSnapB)
     }
 
     /**
@@ -1063,6 +1072,8 @@ class Sf2Synthesizer(
             // Clear logged warnings
             loggedMissingPercussion.clear()
             loggedMissingInstruments.clear()
+            loggedBankFallback.clear()
+            loggedPianoFallback.clear()
         } finally {
             isResetting.set(false)
         }
@@ -1076,7 +1087,11 @@ class Sf2Synthesizer(
             voicePool.releaseAll()
             for (ch in 0 until NUM_CHANNELS) {
                 sustainedNotes[ch].clear()
-                channelSustain[ch] = false  // Reset sustain pedal state
+                sostenutoNotes[ch].clear()
+                heldKeys[ch].clear()
+                channelSustain[ch] = false
+                channelSostenuto[ch] = false
+                channelSoftPedal[ch] = false
             }
         }
     }
