@@ -482,8 +482,9 @@ internal class CaveRenderer(
 
         playerNode.onHpChanged     = { hp, max -> playerHpCallback?.invoke(hp, max) }
         playerNode.onShieldChanged = { cur, max -> shieldCallback?.invoke(cur, max) }
-        enemyManager.player   = playerNode
-        enemyManager.eventBus = eventBus
+        enemyManager.player        = playerNode
+        enemyManager.eventBus      = eventBus
+        enemyManager.thornsProvider = { equippedWeaponStat("thorns") }
         eventBus.subscribe { event ->
             if (event !is GameEvent.MobDied) return@subscribe
             val xpGain = if (event.isBoss) 5 * event.level else event.level
@@ -1157,24 +1158,112 @@ private fun updateProjectiles(dt: Float) {
         val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(heldId) ?: return false
         if (weaponAttackCooldown > 0f) return false
         val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
-        val damage = weapon.rolledDamage ?: 1
+        val stats = weapon.rolledStats
+        val baseDamage = weapon.rolledDamage ?: 1
         val range = 2.5
+        val rng = kotlin.random.Random.Default
         var hit = false
+
         for (enemy in enemyManager.enemies) {
             if (enemy.hp <= 0) continue
             val dx = abs(enemy.x - camera.playerX)
             val dy = abs(enemy.y - camera.playerY)
             val dz = abs(enemy.z - camera.playerZ)
-            if (dx <= range + 0.5 && dy <= range + 0.5 && dz <= range + 0.5) {
-                com.Atom2Universe.app.games.caves.node.CombatNode.damageEnemy(enemy, damage)
-                spawnImpact(enemy.x, enemy.y + 1.0, enemy.z)
-                hit = true
+            val inRange = dx <= range + 0.5 && dy <= range + 0.5 && dz <= range + 0.5
+            if (!inRange) continue
+
+            applyWeaponHit(enemy, baseDamage, stats, rng)
+            spawnImpact(enemy.x, enemy.y + 1.0, enemy.z)
+            hit = true
+
+            // Éclaboussure AoE sur les ennemis adjacents
+            val aoeSplash = stats["aoe_splash"] ?: 0
+            if (aoeSplash > 0 && rng.nextInt(100) < aoeSplash) {
+                for (adj in enemyManager.enemies) {
+                    if (adj === enemy || adj.hp <= 0) continue
+                    val ax = abs(adj.x - enemy.x); val az = abs(adj.z - enemy.z)
+                    if (ax < 3.0 && az < 3.0) {
+                        applyWeaponHit(adj, (baseDamage * 0.5f).toInt().coerceAtLeast(1), stats.filterKeys { it == "bleed_chance" || it == "poison_chance" }, rng)
+                    }
+                }
             }
         }
-        val cooldownSec = def.attackSpeedMs.coerceAtLeast(300) / 1000f
-        weaponAttackCooldown = cooldownSec
+
+        val speedBonus = stats["attack_speed"] ?: 0
+        val cooldownMs = def.attackSpeedMs.coerceAtLeast(300) * (1f - speedBonus / 100f)
+        weaponAttackCooldown = (cooldownMs / 1000f).coerceAtLeast(0.2f)
         swingCallback?.invoke()
         return hit
+    }
+
+    private fun applyWeaponHit(
+        enemy: com.Atom2Universe.app.games.caves.entity.Enemy,
+        baseDamage: Int,
+        stats: Map<String, Int>,
+        rng: kotlin.random.Random
+    ) {
+        var dmg = baseDamage
+
+        // Coup critique — multiplie le coup ET les DoTs
+        val critChance = stats["crit_chance"] ?: 0
+        val isCrit = critChance > 0 && rng.nextInt(100) < critChance
+        val critMult = if (isCrit) 2.0f + (stats["crit_dmg"] ?: 0) / 100f else 1.0f
+        if (isCrit) dmg = (dmg * critMult).toInt()
+
+        com.Atom2Universe.app.games.caves.node.CombatNode.damageEnemy(enemy, dmg)
+
+        // Vol de vie (sur les dégâts du coup, post-crit)
+        val lifeSteal = stats["life_steal"] ?: 0
+        if (lifeSteal > 0) {
+            val heal = (dmg * lifeSteal / 100f).toInt().coerceAtLeast(1)
+            enemyManager.player?.applyHeal(heal)
+        }
+
+        // Exécution (ennemi < 20% HP)
+        val execute = stats["execute"] ?: 0
+        if (execute > 0 && enemy.hp > 0) {
+            val threshold = (enemy.maxHp * 0.20f).toInt()
+            if (enemy.hp <= threshold && rng.nextInt(100) < execute) {
+                enemy.hp = 0
+                return
+            }
+        }
+
+        // Saignement : 15% des dégâts de base (scalé par crit), tick 0.5s, durée 3s
+        val bleedChance = stats["bleed_chance"] ?: 0
+        if (bleedChance > 0 && rng.nextInt(100) < bleedChance) {
+            enemy.bleedDamage = (baseDamage * 0.15f * critMult).toInt().coerceAtLeast(1)
+            enemy.bleedTimer = 3f
+            enemy.bleedTickTimer = 0.5f
+        }
+
+        // Poison : 10% des dégâts de base (scalé par crit), tick 0.8s, durée 4s
+        val poisonChance = stats["poison_chance"] ?: 0
+        if (poisonChance > 0 && rng.nextInt(100) < poisonChance) {
+            enemy.poisonDamage = (baseDamage * 0.10f * critMult).toInt().coerceAtLeast(1)
+            enemy.poisonTimer = 4f
+            enemy.poisonTickTimer = 0.8f
+        }
+
+        // Feu : 20% des dégâts de base (scalé par crit), tick rapide 0.3s, durée 2s
+        val fireChance = stats["fire_chance"] ?: 0
+        if (fireChance > 0 && rng.nextInt(100) < fireChance) {
+            enemy.fireDamage = (baseDamage * 0.20f * critMult).toInt().coerceAtLeast(1)
+            enemy.fireTimer = 2f
+            enemy.fireTickTimer = 0.3f
+        }
+
+        // Étourdissement
+        val shockChance = stats["shock_chance"] ?: 0
+        if (shockChance > 0 && rng.nextInt(100) < shockChance) {
+            enemy.shockTimer = 1.5f
+        }
+    }
+
+    internal fun equippedWeaponStat(key: String): Int {
+        val id = hotbar[selectedSlot] ?: return 0
+        if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id)) return 0
+        return com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id)?.rolledStats?.get(key) ?: 0
     }
 
     private fun spawnImpact(x: Double, y: Double, z: Double) {

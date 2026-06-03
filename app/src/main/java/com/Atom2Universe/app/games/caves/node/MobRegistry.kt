@@ -36,7 +36,7 @@ internal object MobRegistry {
     /** Génère un MobDef par défaut depuis le numéro de sprite sheet. */
     private fun buildDef(sheet: String, n: Int): MobDef = MobDef(
         id                 = "pk_${sheet.replace(".", "_")}",
-        hpBase             = maxOf(2, (n * 0.15 + 1).toInt()),
+        hpBase             = 5,          // HP = 5 × level² → ~500 HP au level 10
         damageBase         = maxOf(1, n / 30),
         speed              = (2.5 + min(n * 0.001, 0.8)).toFloat(),
         attackRange        = 1.6,
@@ -44,8 +44,8 @@ internal object MobRegistry {
         eyeHeight          = 1.7f,
         radius             = 0.5f,
         spriteScale        = 0.85f,
-        hpScalePerLevel    = 1.4,
-        hpScaleCap         = 20.0,
+        hpScalePerLevel    = 1.0,        // inutilisé (formule quadratique)
+        hpScaleCap         = 1.0,        // inutilisé
         damageScalePer3Lvl = 1,
         speedScalePerLevel = 0.08f,
         biomes             = listOf("any"),

@@ -231,6 +231,17 @@
     <string name="cave_inv_sell_price_label">Value</string>
     <string name="cave_inv_sell_btn">Sell</string>
     <string name="cave_inv_sell_ward_stones">ward stones</string>
+    <string name="cave_affix_crit_chance">Crit Chance</string>
+    <string name="cave_affix_crit_dmg">Crit Damage</string>
+    <string name="cave_affix_attack_speed">Attack Speed</string>
+    <string name="cave_affix_life_steal">Life Steal</string>
+    <string name="cave_affix_bleed_chance">Bleed Chance</string>
+    <string name="cave_affix_shock_chance">Shock Chance</string>
+    <string name="cave_affix_execute">Execute</string>
+    <string name="cave_affix_aoe_splash">AoE Splash</string>
+    <string name="cave_affix_thorns">Thorns</string>
+    <string name="cave_affix_poison_chance">Poison Chance</string>
+    <string name="cave_affix_fire_chance">Fire Chance</string>
 
     <!-- Cave World — Level Up -->
     <string name="cave_levelup_title">LEVEL UP!</string>

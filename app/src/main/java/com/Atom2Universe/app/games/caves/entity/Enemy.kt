@@ -17,10 +17,8 @@ internal class Enemy(
     var isBoss: Boolean = false
     var animTime: Float = 0f
 
-    private fun scaledHp(): Int {
-        val mult = minOf(def.hpScalePerLevel.pow(level - 1), def.hpScaleCap)
-        return ((def.hpBase * mult) + 0.5).toInt().coerceAtLeast(1)
-    }
+    // HP = hpBase × level² : linéaire au carré, sans cap, calibré à ~500 HP à level 10 (hpBase=5)
+    private fun scaledHp(): Int = (def.hpBase.toLong() * level * level).toInt().coerceAtLeast(1)
     val maxHp get() = if (isBoss) scaledHp() * BOSS_HP_MULT else scaledHp()
     val scaledDamage get() = (if (isBoss) def.damageBase * 3 else def.damageBase) + (level - 1) / 3
     val scaledSpeed get() = def.speed * (1f + (level - 1) * def.speedScalePerLevel).coerceAtMost(if (isBoss) 2.0f else 3.0f)
@@ -37,6 +35,20 @@ internal class Enemy(
     var yaw = 0f
     var hitFlash = 0f
     var stuckTimer = 0f
+
+    // Effets de statut appliqués par les affixes d'arme
+    var bleedTimer: Float = 0f
+    var bleedDamage: Int = 0
+    var bleedTickTimer: Float = 0f
+    var shockTimer: Float = 0f
+
+    var poisonTimer: Float = 0f
+    var poisonDamage: Int = 0
+    var poisonTickTimer: Float = 0f
+
+    var fireTimer: Float = 0f
+    var fireDamage: Int = 0
+    var fireTickTimer: Float = 0f
 
     companion object {
         const val BOSS_SPRITE_SCALE = 2.2f

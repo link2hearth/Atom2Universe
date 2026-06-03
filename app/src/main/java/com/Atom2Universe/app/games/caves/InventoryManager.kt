@@ -317,7 +317,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 infoDivider?.visibility = View.VISIBLE
                 val dmg   = instance?.rolledDamage ?: 0
                 val speed = def?.attackSpeedMs?.let { "${it}ms" } ?: ""
-                val extra = instance?.rolledStats?.entries?.joinToString("\n") { (k, v) -> "${k.replace('_', ' ')}: $v%" } ?: ""
+                val extra = instance?.rolledStats?.entries?.joinToString("\n") { (k, v) ->
+                    val label = affixLabel(k)
+                    val suffix = affixSuffix(k)
+                    "$label: $v$suffix"
+                } ?: ""
                 infoIngredientsTv?.text = buildString {
                     append("⚔ $dmg dmg")
                     if (speed.isNotEmpty()) append("  •  $speed")
@@ -343,6 +347,27 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 }
             }
         }
+    }
+
+    private fun affixLabel(key: String): String = when (key) {
+        "crit_chance"   -> activity.getString(R.string.cave_affix_crit_chance)
+        "crit_dmg"      -> activity.getString(R.string.cave_affix_crit_dmg)
+        "attack_speed"  -> activity.getString(R.string.cave_affix_attack_speed)
+        "life_steal"    -> activity.getString(R.string.cave_affix_life_steal)
+        "bleed_chance"  -> activity.getString(R.string.cave_affix_bleed_chance)
+        "shock_chance"  -> activity.getString(R.string.cave_affix_shock_chance)
+        "execute"       -> activity.getString(R.string.cave_affix_execute)
+        "aoe_splash"    -> activity.getString(R.string.cave_affix_aoe_splash)
+        "thorns"        -> activity.getString(R.string.cave_affix_thorns)
+        "poison_chance" -> activity.getString(R.string.cave_affix_poison_chance)
+        "fire_chance"   -> activity.getString(R.string.cave_affix_fire_chance)
+        else            -> key.replace('_', ' ').split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+    }
+
+    private fun affixSuffix(key: String): String = when (key) {
+        "crit_dmg" -> "%"
+        "thorns"   -> "%"
+        else       -> "%"
     }
 
     private fun weaponRarityColor(rarity: ItemRarity) = when (rarity) {

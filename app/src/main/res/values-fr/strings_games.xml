@@ -231,6 +231,17 @@
     <string name="cave_inv_sell_price_label">Valeur</string>
     <string name="cave_inv_sell_btn">Vendre</string>
     <string name="cave_inv_sell_ward_stones">ward stones</string>
+    <string name="cave_affix_crit_chance">Chance critique</string>
+    <string name="cave_affix_crit_dmg">Dégâts critiques</string>
+    <string name="cave_affix_attack_speed">Vitesse d\'attaque</string>
+    <string name="cave_affix_life_steal">Vol de vie</string>
+    <string name="cave_affix_bleed_chance">Chance de saignement</string>
+    <string name="cave_affix_shock_chance">Chance d\'étourdissement</string>
+    <string name="cave_affix_execute">Exécution</string>
+    <string name="cave_affix_aoe_splash">Éclaboussure</string>
+    <string name="cave_affix_thorns">Épines</string>
+    <string name="cave_affix_poison_chance">Chance de poison</string>
+    <string name="cave_affix_fire_chance">Chance de feu</string>
 
     <!-- Cave World — Level Up -->
     <string name="cave_levelup_title">NIVEAU SUIVANT !</string>

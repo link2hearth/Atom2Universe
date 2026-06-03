@@ -9,7 +9,8 @@ internal sealed class GameEvent {
         val z: Double,
         val level: Int,
         val isBoss: Boolean,
-        val mobDefId: String
+        val mobDefId: String,
+        val mobMaxHp: Int
     ) : GameEvent()
 
     data class BossSpawned(val mobId: Int) : GameEvent()

@@ -66,7 +66,7 @@ internal class SpawnManager(
     fun onEnemyDied(e: Enemy) {
         val wasBoss = e.id == bossEnemyId && !bossRewardGiven
         if (wasBoss) { bossRewardGiven = true; bossEnemyId = -1 }
-        eventBus?.publish(GameEvent.MobDied(e.id, e.x, e.y, e.z, e.level, wasBoss, e.def.id))
+        eventBus?.publish(GameEvent.MobDied(e.id, e.x, e.y, e.z, e.level, wasBoss, e.def.id, e.maxHp))
     }
 
     // ── Spawn ambiant ─────────────────────────────────────────────────────────

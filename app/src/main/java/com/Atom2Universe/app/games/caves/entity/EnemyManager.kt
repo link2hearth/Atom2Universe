@@ -46,6 +46,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     var isCreative = false
 
+    // Fournit les dégâts thorns de l'arme équipée (0 si pas d'épines)
+    var thornsProvider: (() -> Int)? = null
+
     private var playerInvTimer = 0f
 
     // ── Tick principal ────────────────────────────────────────────────────────
@@ -77,6 +80,40 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     private fun updateEnemy(e: Enemy, dt: Float, px: Double, py: Double, pz: Double) {
         if (e.hitFlash > 0f) e.hitFlash -= dt
+
+        // Saignement (tick toutes les 0.5s, 3s)
+        if (e.bleedTimer > 0f) {
+            e.bleedTimer -= dt; e.bleedTickTimer -= dt
+            if (e.bleedTickTimer <= 0f) {
+                e.bleedTickTimer = 0.5f
+                e.hp = (e.hp - e.bleedDamage).coerceAtLeast(0); e.hitFlash = 0.12f
+            }
+            if (e.bleedTimer <= 0f) { e.bleedTimer = 0f; e.bleedDamage = 0; e.bleedTickTimer = 0f }
+        }
+
+        // Poison (tick toutes les 0.8s, 4s — dégâts moindres mais plus durables)
+        if (e.poisonTimer > 0f) {
+            e.poisonTimer -= dt; e.poisonTickTimer -= dt
+            if (e.poisonTickTimer <= 0f) {
+                e.poisonTickTimer = 0.8f
+                e.hp = (e.hp - e.poisonDamage).coerceAtLeast(0); e.hitFlash = 0.10f
+            }
+            if (e.poisonTimer <= 0f) { e.poisonTimer = 0f; e.poisonDamage = 0; e.poisonTickTimer = 0f }
+        }
+
+        // Feu (tick toutes les 0.3s, 2s — dégâts rapides et élevés)
+        if (e.fireTimer > 0f) {
+            e.fireTimer -= dt; e.fireTickTimer -= dt
+            if (e.fireTickTimer <= 0f) {
+                e.fireTickTimer = 0.3f
+                e.hp = (e.hp - e.fireDamage).coerceAtLeast(0); e.hitFlash = 0.18f
+            }
+            if (e.fireTimer <= 0f) { e.fireTimer = 0f; e.fireDamage = 0; e.fireTickTimer = 0f }
+        }
+
+        // Étourdissement
+        if (e.shockTimer > 0f) { e.shockTimer -= dt; return }
+
 
         val dx = px - e.x; val dz = pz - e.z
         val dist = sqrt(dx * dx + dz * dz)
@@ -130,7 +167,14 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                     playerInvTimer = 0.5f
                     val bus = eventBus
                     val p   = player
-                    if (p != null && bus != null) CombatNode.enemyAttacksPlayer(e, p, bus)
+                    if (p != null && bus != null) {
+                        CombatNode.enemyAttacksPlayer(e, p, bus)
+                        val thornsDmg = thornsProvider?.invoke() ?: 0
+                        if (thornsDmg > 0) {
+                            e.hp = (e.hp - thornsDmg).coerceAtLeast(0)
+                            e.hitFlash = 0.15f
+                        }
+                    }
                 }
             }
         }

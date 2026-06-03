@@ -17,7 +17,7 @@ internal data class LootTable(
     val rollsMax: Int,
     val entries: List<LootEntry>
 ) {
-    fun roll(rng: Random, mobLevel: Int = 1): List<ItemInstance> {
+    fun roll(rng: Random, mobLevel: Int = 1, mobMaxHp: Int = 0): List<ItemInstance> {
         if (entries.isEmpty()) return emptyList()
         val rolls = rollsMin + rng.nextInt((rollsMax - rollsMin + 1).coerceAtLeast(1))
         val totalWeight = entries.sumOf { it.weight }.coerceAtLeast(1)
@@ -28,7 +28,7 @@ internal data class LootTable(
                 pick -= entry.weight
                 if (pick < 0) {
                     val count = entry.countMin + rng.nextInt((entry.countMax - entry.countMin + 1).coerceAtLeast(1))
-                    val instance = ItemRegistry.rollInstance(entry.itemId, rng, mobLevel)
+                    val instance = ItemRegistry.rollInstance(entry.itemId, rng, mobLevel, mobMaxHp)
                     if (instance != null) result.add(instance.copy(count = count))
                     break
                 }
@@ -94,7 +94,7 @@ internal class LootNode(
             val table   = LootTableRegistry.get(tableId)
                        ?: LootTableRegistry.get(mobDef.lootTable)
                        ?: return@subscribe
-            val drops = table.roll(rng, event.level)
+            val drops = table.roll(rng, event.level, event.mobMaxHp)
             if (drops.isNotEmpty()) onItemsDropped?.invoke(drops)
         }
     }
