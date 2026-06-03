@@ -42,7 +42,7 @@ internal object MobRegistry {
         attackRange        = 1.6,
         detectRange        = 12.0,
         eyeHeight          = 1.7f,
-        radius             = 0.4f,
+        radius             = 0.5f,
         spriteScale        = 0.85f,
         hpScalePerLevel    = 1.4,
         hpScaleCap         = 20.0,
@@ -52,11 +52,19 @@ internal object MobRegistry {
         spriteSheet        = sheet,
         spawnZoneMin       = maxOf(1, n - 1),
         spawnZoneMax       = n + 1,
-        lootTable          = "default_loot",
+        lootTable          = tierLootTable(maxOf(1, n - 1)),
         behavior           = "aggressive",
         bossEligible       = true,
         xpBase             = n
     )
+
+    private fun tierLootTable(zone: Int) = when {
+        zone < 5  -> "loot_t1"
+        zone < 10 -> "loot_t2"
+        zone < 15 -> "loot_t3"
+        zone < 20 -> "loot_t4"
+        else      -> "loot_t5"
+    }
 
     fun get(id: String): MobDef =
         defs[id] ?: error("MobDef '$id' introuvable")

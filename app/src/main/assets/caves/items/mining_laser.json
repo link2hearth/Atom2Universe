@@ -1,0 +1,12 @@
+{
+  "id": "mining_laser",
+  "type": "weapon",
+  "weapon_type": "mining_laser",
+  "tier": 0,
+  "attack_speed_ms": 0,
+  "rarity_weights": { "common": 100 },
+  "damage_base": [0, 0],
+  "stats": {},
+  "flags": [],
+  "sprite": "fishingPole"
+}

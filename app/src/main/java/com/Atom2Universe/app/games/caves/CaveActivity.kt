@@ -90,7 +90,23 @@ class CaveActivity : ThemedActivity() {
     internal fun blockBitmap(type: Short): Bitmap? = BlockRegistry.getBitmap(type)
 
     internal fun blockDrawable(type: Short, cornerDp: Float = 4f): Drawable {
-        val dp  = resources.displayMetrics.density
+        val dp = resources.displayMetrics.density
+        if (com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(type)) {
+            val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(type)
+            val def = instance?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }
+            val bmp = def?.let {
+                runCatching {
+                    android.graphics.BitmapFactory.decodeStream(assets.open("Cave World/Items/${it.sprite}.png"))
+                }.getOrNull()
+            }
+            return if (bmp != null) {
+                RoundedBitmapDrawableFactory.create(resources, bmp).apply {
+                    cornerRadius = cornerDp * dp; isFilterBitmap = false
+                }
+            } else {
+                GradientDrawable().apply { setColor(0xFF886600.toInt()); cornerRadius = cornerDp * dp }
+            }
+        }
         val bmp = blockBitmap(type)
         return if (bmp != null) {
             RoundedBitmapDrawableFactory.create(resources, bmp).apply {
@@ -133,6 +149,12 @@ class CaveActivity : ThemedActivity() {
             survivalInventory = save?.inventory ?: emptyMap()
             survivalHotbar    = save?.hotbar    ?: List(ACTIVE_SIZE) { null }
         }
+        // Restaurer les instances d'armes AVANT de créer le renderer
+        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
+        save?.weaponInstances?.forEach { (id, inst) ->
+            com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.restore(id, inst)
+        }
+
         val savedState = when {
             save != null && save.isCreative -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
@@ -267,9 +289,11 @@ class CaveActivity : ThemedActivity() {
         renderer.hotbarCallback    = { slots, selected -> uiHandler.post { hud.updateHotbarUI(slots, selected) } }
 
         hud.buildHealthBar(root)
+        hud.buildWeaponInHand(root)
 
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
-        renderer.shieldCallback   = { cur, max   -> uiHandler.post { hud.updateShieldBar(cur, max) } }
+        renderer.shieldCallback   = { cur, max  -> uiHandler.post { hud.updateShieldBar(cur, max) } }
+        renderer.swingCallback    = { uiHandler.post { hud.triggerSwing() } }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)
@@ -325,7 +349,12 @@ class CaveActivity : ThemedActivity() {
 
     override fun onResume()  { super.onResume();  glView.onResume(); ambientMusic?.resume(); forceImmersiveMode() }
     override fun onPause()   { super.onPause();   glView.onPause();  ambientMusic?.pause(); saveWorld(); minimapJob?.cancel() }
-    override fun onDestroy() { super.onDestroy(); renderer.destroy(); ambientMusic?.destroy() }
+    override fun onDestroy() {
+        super.onDestroy()
+        renderer.destroy()
+        ambientMusic?.destroy()
+        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
+    }
 
     // ── Save ──────────────────────────────────────────────────────────────────
 
@@ -346,7 +375,8 @@ class CaveActivity : ThemedActivity() {
             playerMaxHp         = stats.maxHp,
             playerShield        = stats.shield,
             playerShieldCurrent = renderer.playerNode.shield,
-            wardStonePositions  = renderer.enemyManager.wardStoneZones.toList()
+            wardStonePositions  = renderer.enemyManager.wardStoneZones.toList(),
+            weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot()
         )
     }
 

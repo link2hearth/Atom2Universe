@@ -222,6 +222,8 @@ internal class CaveRenderer(
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
+    var swingCallback:    (() -> Unit)?                           = null
+    private var weaponAttackCooldown = 0f
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
@@ -492,6 +494,19 @@ internal class CaveRenderer(
             }
         }
 
+        lootNode.onItemsDropped = { items ->
+            for (item in items) {
+                if (com.Atom2Universe.app.games.caves.node.ItemRegistry.get(item.defId)?.type == "weapon") {
+                    val id = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(item)
+                    inventory[id] = 1
+                    val freeHotbarSlot = hotbar.indexOfFirst { it == null }
+                    if (freeHotbarSlot >= 0) hotbar[freeHotbarSlot] = id
+                }
+            }
+            inventoryCallback?.invoke(inventory.toMap())
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+        }
+
         val ids = IntArray(2)
         GLES30.glGenBuffers(2, ids, 0)
         transientVbo = ids[0]
@@ -529,8 +544,17 @@ internal class CaveRenderer(
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
-            enemyManager.worldSpawnX      = camera.x
-            enemyManager.worldSpawnZ      = camera.z
+            enemyManager.worldSpawnX = camera.x
+            enemyManager.worldSpawnZ = camera.z
+            // Donner le laser de minage au joueur dès le départ
+            val laserInstance = com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(
+                "mining_laser", kotlin.random.Random.Default
+            )
+            if (laserInstance != null) {
+                val laserShortId = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(laserInstance)
+                inventory[laserShortId] = 1
+                hotbar[0] = laserShortId
+            }
         }
         scheduleInitialLodBuilds()
     }
@@ -682,6 +706,7 @@ internal class CaveRenderer(
         }
 
         if (!gamePaused) {
+            if (weaponAttackCooldown > 0f) weaponAttackCooldown = (weaponAttackCooldown - dt).coerceAtLeast(0f)
             updateRockThrow(dt)
             updateMining(dt)
             updateProjectiles(dt)
@@ -1077,9 +1102,19 @@ private fun updateProjectiles(dt: Float) {
         return worldBlockAt(hit.bx, hit.by, hit.bz) in ROCK_IDS
     }
 
+    private fun isMiningLaserSelected(): Boolean {
+        val id = hotbar[selectedSlot] ?: return false
+        if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id)) return false
+        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return false
+        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
+        return def.weaponType == "mining_laser"
+    }
+
     private fun updateRockThrow(dt: Float) {
         if (!isRockSelected()) {
             rockChargeTime = 0f
+            // Attaque mêlée uniquement si l'arme équipée n'est pas le laser de minage
+            if (touch.rtChargeRaw > 0.3f && !isMiningLaserSelected()) tryWeaponMeleeAttack()
             return
         }
         val rt = touch.rtChargeRaw
@@ -1111,6 +1146,33 @@ private fun updateProjectiles(dt: Float) {
         } else {
             rockChargeTime = 0f
         }
+    }
+
+    // Attaque mêlée avec l'arme équipée (déclenché quand pas de caillou sélectionné)
+    internal fun tryWeaponMeleeAttack(): Boolean {
+        val heldId = hotbar[selectedSlot] ?: return false
+        if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(heldId)) return false
+        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(heldId) ?: return false
+        if (weaponAttackCooldown > 0f) return false
+        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
+        val damage = weapon.rolledDamage ?: 1
+        val range = 2.5
+        var hit = false
+        for (enemy in enemyManager.enemies) {
+            if (enemy.hp <= 0) continue
+            val dx = abs(enemy.x - camera.playerX)
+            val dy = abs(enemy.y - camera.playerY)
+            val dz = abs(enemy.z - camera.playerZ)
+            if (dx <= range + 0.5 && dy <= range + 0.5 && dz <= range + 0.5) {
+                com.Atom2Universe.app.games.caves.node.CombatNode.damageEnemy(enemy, damage)
+                spawnImpact(enemy.x, enemy.y + 1.0, enemy.z)
+                hit = true
+            }
+        }
+        val cooldownSec = def.attackSpeedMs.coerceAtLeast(300) / 1000f
+        weaponAttackCooldown = cooldownSec
+        swingCallback?.invoke()
+        return hit
     }
 
     private fun spawnImpact(x: Double, y: Double, z: Double) {
@@ -1152,7 +1214,9 @@ private fun updateProjectiles(dt: Float) {
             placeBlock()
         }
 
-        val laserAllowed = touch.laserActive && (!isRockSelected() || isAimingAtRockBlock())
+        val laserAllowed = touch.laserActive && isMiningLaserSelected() && (!isRockSelected() || isAimingAtRockBlock())
+        // Les blocs rock/rock_moss sont minables sans laser, en visant simplement dessus
+        val rockMineActive = touch.laserActive && !isMiningLaserSelected() && isAimingAtRockBlock()
         if (laserAllowed) {
             val laserOriginY = if (camera.thirdPerson) camera.playerY + Camera.TPP_ORBIT_DY else camera.y
             val hitEnemy = enemyManager.hitByLaser(
@@ -1179,7 +1243,7 @@ private fun updateProjectiles(dt: Float) {
         }
         laserEnemyDmgTimer = 0f
 
-        val target = if (laserAllowed) raycastBlock() else null
+        val target = if (laserAllowed || rockMineActive) raycastBlock() else null
 
         if (target == null) {
             mineTarget = null

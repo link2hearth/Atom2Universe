@@ -78,13 +78,49 @@ internal class CaveHud(private val activity: CaveActivity) {
 
     fun updateHotbarUI(slots: Array<Short?>, selected: Int) {
         slots.forEachIndexed { i, type ->
-            val count = if (type != null) activity.renderer.inventory[type] ?: 0 else 0
-            val eff   = if (count > 0) type else null
-            slotViews[i]?.background = slotDrawable(eff, i == selected)
+            val count    = if (type != null) activity.renderer.inventory[type] ?: 0 else 0
+            val eff      = if (count > 0) type else null
+            val isWeapon = eff != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(eff)
+
+            // Bordure : couleur de rareté pour les armes, blanc standard pour les blocs
+            if (isWeapon) {
+                val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(eff!!)
+                val rc = rarityColor(instance?.rarity ?: com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON)
+                slotViews[i]?.background = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE; setColor(0x44FFFFFF)
+                    setStroke(if (i == selected) (3 * dp).toInt() else (2 * dp).toInt(), rc)
+                    cornerRadius = 4 * dp
+                }
+            } else {
+                slotViews[i]?.background = slotDrawable(eff, i == selected)
+            }
+
             slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
-            slotCounts[i]?.text = if (eff != null) count.toString() else ""
+            // Les armes n'empilent pas → pas de compteur
+            slotCounts[i]?.text = if (eff != null && !isWeapon) count.toString() else ""
         }
+
+        // Arme en main : affiché uniquement si le slot sélectionné contient une arme (pas le laser de minage)
+        val selType = slots.getOrNull(selected)
+        val selInstance = selType?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it) }
+        val selDef = selInstance?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }
+        val isMiningLaser = selDef?.weaponType == "mining_laser"
+        if (selType != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(selType) && !isMiningLaser) {
+            if (selInstance != null) showWeaponInHand(selInstance) else hideWeaponInHand()
+        } else {
+            hideWeaponInHand()
+        }
+    }
+
+    fun triggerSwing() {
+        weaponSwingView?.triggerSwing()
+    }
+
+    private fun hideWeaponInHand() {
+        weaponSwingView?.setWeapon(null)
+        weaponSwingView?.visibility   = View.GONE
+        weaponTooltipView?.visibility = View.GONE
     }
 
     fun slotDrawable(type: Short?, selected: Boolean): GradientDrawable =
@@ -243,6 +279,87 @@ internal class CaveHud(private val activity: CaveActivity) {
         shieldBarFg?.layoutParams = (shieldBarFg?.layoutParams as? FrameLayout.LayoutParams)
             ?.also { it.width = (hpBarMaxWidth * frac).toInt().coerceAtLeast(0) }
         shieldBarFg?.requestLayout()
+    }
+
+    // ── Arme en main (style Minecraft, bas-droite) ────────────────────────────
+
+    private var weaponSwingView: WeaponSwingView? = null
+    private var weaponTooltipView: LinearLayout? = null
+    private var weaponTooltipName: android.widget.TextView? = null
+    private var weaponTooltipStats: android.widget.TextView? = null
+
+    fun buildWeaponInHand(root: FrameLayout) {
+        // Vue animée de swing en bas à droite, avancée vers le centre
+        val swingSize = (200 * dp).toInt()
+        val swingView = WeaponSwingView(activity).apply {
+            layoutParams = FrameLayout.LayoutParams(swingSize, swingSize).also {
+                it.gravity = Gravity.BOTTOM or Gravity.END
+                it.setMargins(0, 0, (180 * dp).toInt(), (40 * dp).toInt())
+            }
+            visibility = View.GONE
+        }
+        root.addView(swingView)
+        weaponSwingView = swingView
+
+        // Nom de l'arme affiché dans la barre hotbar (collé à droite)
+        val tooltip = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.END
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).also {
+                it.gravity = Gravity.BOTTOM or Gravity.END
+                it.setMargins(0, 0, (12 * dp).toInt(), (10 * dp).toInt())
+            }
+            setPadding((10 * dp).toInt(), (4 * dp).toInt(), (10 * dp).toInt(), (4 * dp).toInt())
+            background = GradientDrawable().apply { setColor(0xAA000000.toInt()); cornerRadius = 8 * dp }
+            visibility = View.GONE
+        }
+        val nameTv = android.widget.TextView(activity).apply {
+            textSize = 11f; setTextColor(Color.WHITE)
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            gravity = Gravity.END
+        }
+        val statsTv = android.widget.TextView(activity).apply {
+            textSize = 9f; setTextColor(0xFFCCCCCC.toInt())
+            gravity = Gravity.END
+        }
+        tooltip.addView(nameTv); tooltip.addView(statsTv)
+        root.addView(tooltip)
+        weaponTooltipView = tooltip
+        weaponTooltipName = nameTv
+        weaponTooltipStats = statsTv
+    }
+
+
+    private fun showWeaponInHand(weapon: com.Atom2Universe.app.games.caves.node.ItemInstance) {
+        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return
+        val rarityColor = rarityColor(weapon.rarity)
+
+        // Sprite dans la vue de swing
+        runCatching {
+            val bmp = android.graphics.BitmapFactory.decodeStream(
+                activity.assets.open("Cave World/Items/${def.sprite}.png")
+            )
+            weaponSwingView?.setWeapon(bmp)
+            weaponSwingView?.visibility = View.VISIBLE
+        }.onFailure { weaponSwingView?.visibility = View.GONE }
+
+        // Tooltip
+        val rarityLabel = weapon.rarity.name.lowercase().replaceFirstChar { it.uppercase() }
+        val baseName = def.id.replace('_', ' ').split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+        weaponTooltipName?.setTextColor(rarityColor)
+        weaponTooltipName?.text = "[$rarityLabel] $baseName"
+        val dmg = weapon.rolledDamage ?: 0
+        val extra = weapon.rolledStats.entries.firstOrNull()
+        weaponTooltipStats?.text = if (extra != null) "⚔ $dmg   ${extra.key.replace('_',' ')}: ${extra.value}%" else "⚔ $dmg"
+        weaponTooltipView?.visibility = View.VISIBLE
+    }
+
+    private fun rarityColor(rarity: com.Atom2Universe.app.games.caves.node.ItemRarity) = when (rarity) {
+        com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON    -> 0xFFAAAAAA.toInt()
+        com.Atom2Universe.app.games.caves.node.ItemRarity.MAGIC     -> 0xFF4488FF.toInt()
+        com.Atom2Universe.app.games.caves.node.ItemRarity.RARE      -> 0xFFFFDD00.toInt()
+        com.Atom2Universe.app.games.caves.node.ItemRarity.EPIC      -> 0xFFCC44FF.toInt()
+        com.Atom2Universe.app.games.caves.node.ItemRarity.LEGENDARY -> 0xFFFF8800.toInt()
     }
 
 

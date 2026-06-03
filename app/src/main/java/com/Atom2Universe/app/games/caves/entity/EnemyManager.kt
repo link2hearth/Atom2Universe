@@ -202,10 +202,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         var closest: Enemy? = null; var closestT = maxDist.toDouble()
         for (e in enemies) {
             if (e.hp <= 0) continue
-            val r = e.def.radius.toDouble()
             val t = rayAABB(ox, oy, oz, ddx, ddy, ddz,
-                e.x - r, e.y - e.def.eyeHeight, e.z - r,
-                e.x + r, e.y + 0.1, e.z + r) ?: continue
+                e.x - 0.5, e.y - 0.5, e.z - 0.5,
+                e.x + 0.5, e.y + 0.5, e.z + 0.5) ?: continue
             if (t < closestT) { closestT = t; closest = e }
         }
         return closest
