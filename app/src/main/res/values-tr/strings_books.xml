@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_books_title">Kitaplar</string>
-    <string name="hub_books_desc">EPUB, PDF ve metin okuyucu</string>
+    <string name="hub_books_desc">EPUB ve metin okuyucu</string>
     <string name="hub_reading_title">Okuma</string>
     <string name="hub_reading_desc">Kitaplar ve çizgi romanlar</string>
     <string name="reading_hub_title">Okuma</string>

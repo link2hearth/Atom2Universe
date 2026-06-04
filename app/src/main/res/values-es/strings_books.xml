@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_books_title">Libros</string>
-    <string name="hub_books_desc">Lector de EPUB, PDF y texto</string>
+    <string name="hub_books_desc">Lector de EPUB y texto</string>
     <string name="hub_reading_title">Lectura</string>
     <string name="hub_reading_desc">Libros y comics</string>
     <string name="reading_hub_title">Lectura</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_books_title">Книги</string>
-    <string name="hub_books_desc">Читалка EPUB, PDF и текстовых файлов</string>
+    <string name="hub_books_desc">Читалка EPUB и текстовых файлов</string>
     <string name="hub_reading_title">Чтение</string>
     <string name="hub_reading_desc">Книги и комиксы</string>
     <string name="reading_hub_title">Чтение</string>

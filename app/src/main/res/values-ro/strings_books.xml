@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_books_title">Cărți</string>
-    <string name="hub_books_desc">Cititor EPUB, PDF și text</string>
+    <string name="hub_books_desc">Cititor EPUB și text</string>
     <string name="hub_reading_title">Lectură</string>
     <string name="hub_reading_desc">Cărți și benzi desenate</string>
     <string name="reading_hub_title">Lectură</string>

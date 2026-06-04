@@ -23,8 +23,14 @@ interface ComicsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertComics(comics: List<ComicEntry>)
 
+    @Query("SELECT * FROM comic_entries WHERE sourcePath = :sourcePath LIMIT 1")
+    suspend fun getComicBySource(sourcePath: String): ComicEntry?
+
     @Query("SELECT currentPage FROM comic_entries WHERE id = :id")
     suspend fun getCurrentPage(id: String): Int?
+
+    @Query("UPDATE comic_entries SET totalPages = :total WHERE id = :id")
+    suspend fun updateTotalPages(id: String, total: Int)
 
     @Query("UPDATE comic_entries SET currentPage = :page, lastOpenedAt = :time WHERE id = :id")
     suspend fun updateProgress(id: String, page: Int, time: Long)

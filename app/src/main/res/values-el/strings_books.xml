@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_books_title">Βιβλία</string>
-    <string name="hub_books_desc">Αναγνώστης EPUB, PDF και κειμένου</string>
+    <string name="hub_books_desc">Αναγνώστης EPUB και κειμένου</string>
     <string name="hub_reading_title">Ανάγνωση</string>
     <string name="hub_reading_desc">Βιβλία και κόμικς</string>
     <string name="reading_hub_title">Ανάγνωση</string>

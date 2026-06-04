@@ -454,7 +454,6 @@
                 <data android:scheme="file" />
                 <data android:scheme="content" />
                 <data android:mimeType="application/epub+zip" />
-                <data android:mimeType="application/pdf" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
@@ -468,9 +467,18 @@
 
         <activity
             android:name=".comics.ComicsReaderActivity"
-            android:exported="false"
+            android:exported="true"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
-            android:theme="@style/Theme.A2U" />
+            android:theme="@style/Theme.A2U">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/pdf" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".comics.ComicsTreeActivity"

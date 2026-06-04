@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.comics
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -7,6 +8,7 @@ import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
+import android.provider.OpenableColumns
 import android.view.View
 import android.widget.ImageButton
 import android.widget.SeekBar
@@ -80,16 +82,6 @@ class ComicsReaderActivity : ThemedActivity() {
         btnPrev = findViewById(R.id.btn_prev_page)
         btnNext = findViewById(R.id.btn_next_page)
 
-        comicId = intent.getStringExtra(EXTRA_COMIC_ID)
-        comicFormat = intent.getStringExtra(EXTRA_COMIC_FORMAT) ?: "pdf"
-        val sourcePath = intent.getStringExtra(EXTRA_COMIC_SOURCE) ?: run { finish(); return }
-        // Les entrées scannées via File API utilisent des chemins absolus, pas des URIs
-        sourceUri = if (sourcePath.startsWith("/")) Uri.fromFile(java.io.File(sourcePath)) else Uri.parse(sourcePath)
-        // Page de départ depuis l'intent (sera écrasée par la valeur DB si disponible)
-        currentPage = intent.getIntExtra(EXTRA_COMIC_PAGE, 0)
-
-        titleText.text = intent.getStringExtra(EXTRA_COMIC_TITLE) ?: ""
-
         findViewById<ImageButton>(R.id.btn_comics_back).setOnClickListener { finish() }
         btnPrev.setOnClickListener { navigatePage(-1) }
         btnNext.setOnClickListener { navigatePage(1) }
@@ -110,6 +102,22 @@ class ComicsReaderActivity : ThemedActivity() {
             override fun onStopTrackingTouch(bar: SeekBar) { saveProgress() }
         })
 
+        val sourcePath = intent.getStringExtra(EXTRA_COMIC_SOURCE)
+        if (sourcePath == null) {
+            // Ouverture externe (ex. appli Fichiers) — intent.data contient l'URI du PDF
+            val externalUri = intent.data ?: run { finish(); return }
+            handleExternalIntent(externalUri)
+            return
+        }
+
+        comicId = intent.getStringExtra(EXTRA_COMIC_ID)
+        comicFormat = intent.getStringExtra(EXTRA_COMIC_FORMAT) ?: "pdf"
+        // Les entrées scannées via File API utilisent des chemins absolus, pas des URIs
+        sourceUri = if (sourcePath.startsWith("/")) Uri.fromFile(java.io.File(sourcePath)) else Uri.parse(sourcePath)
+        // Page de départ depuis l'intent (sera écrasée par la valeur DB si disponible)
+        currentPage = intent.getIntExtra(EXTRA_COMIC_PAGE, 0)
+        titleText.text = intent.getStringExtra(EXTRA_COMIC_TITLE) ?: ""
+
         // Lire la page réelle depuis la DB pour ne pas dépendre de l'appelant
         scope.launch {
             val id = comicId
@@ -120,6 +128,39 @@ class ComicsReaderActivity : ThemedActivity() {
                 if (saved != null) currentPage = saved
             }
             setupSource()
+        }
+    }
+
+    private fun handleExternalIntent(uri: Uri) {
+        try { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) } catch (_: Exception) {}
+        comicFormat = "pdf"
+        sourceUri = uri
+        val fileName = contentResolver.query(uri, null, null, null, null)?.use { c ->
+            if (c.moveToFirst()) {
+                val idx = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (idx >= 0) c.getString(idx) else null
+            } else null
+        } ?: uri.lastPathSegment ?: "Document"
+        val title = fileName.substringBeforeLast('.')
+        titleText.text = title
+        val uriStr = uri.toString()
+        scope.launch {
+            val dao = ComicsDatabase.getInstance(this@ComicsReaderActivity).comicsDao()
+            val existing = withContext(Dispatchers.IO) { dao.getComicBySource(uriStr) }
+            if (existing != null) {
+                comicId = existing.id
+                currentPage = existing.currentPage
+            } else {
+                val entry = ComicEntry(title = title, sourcePath = uriStr, format = "pdf", totalPages = 0, rootId = null)
+                comicId = entry.id
+                withContext(Dispatchers.IO) { dao.insertComic(entry) }
+            }
+            setupSource()
+            // Met à jour totalPages maintenant qu'on connaît le compte réel
+            val id = comicId
+            if (id != null && totalPages > 0) {
+                withContext(Dispatchers.IO) { dao.updateTotalPages(id, totalPages) }
+            }
         }
     }
 

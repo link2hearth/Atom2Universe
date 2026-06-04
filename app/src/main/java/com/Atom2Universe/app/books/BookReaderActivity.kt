@@ -7,10 +7,8 @@ import android.os.Build
 import android.graphics.Bitmap
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
-import android.os.ParcelFileDescriptor
 import android.provider.OpenableColumns
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
@@ -212,7 +210,6 @@ class BookReaderActivity : ThemedActivity() {
     private lateinit var toolbar: MaterialToolbar
     private lateinit var contentContainer: FrameLayout
     private lateinit var emptyState: LinearLayout
-    private lateinit var pdfRecycler: RecyclerView
     private lateinit var txtRecycler: RecyclerView
     private lateinit var bottomBar: View
     private lateinit var bottomDivider: View
@@ -222,8 +219,6 @@ class BookReaderActivity : ThemedActivity() {
     private lateinit var pitchBtn: TextView
     private lateinit var voiceBtn: TextView
 
-    private var pdfRenderer: PdfRenderer? = null
-    private var pdfDescriptor: ParcelFileDescriptor? = null
     private var currentUri: Uri? = null
     private var currentViewType = ViewType.EMPTY
     private var paragraphAdapter: ParagraphAdapter? = null
@@ -267,7 +262,6 @@ class BookReaderActivity : ThemedActivity() {
         toolbar = findViewById(R.id.toolbar)
         contentContainer = findViewById(R.id.content_container)
         emptyState = findViewById(R.id.empty_state)
-        pdfRecycler = findViewById(R.id.pdf_recycler)
         txtRecycler = findViewById(R.id.txt_recycler)
         bottomBar = findViewById(R.id.bottom_bar)
         bottomDivider = findViewById(R.id.bottom_divider)
@@ -287,7 +281,6 @@ class BookReaderActivity : ThemedActivity() {
         setupTtsControls()
         startAutoSave()
         attachBarRevealListener(txtRecycler)
-        attachBarRevealListener(pdfRecycler)
         // Toucher la toolbar ou la barre basse remet le compteur à zéro
         toolbar.setOnTouchListener { _, _ -> showBarsTemporarily(); false }
         bottomBar.setOnTouchListener { _, _ -> showBarsTemporarily(); false }
@@ -313,7 +306,6 @@ class BookReaderActivity : ThemedActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        closePdf()
         tts?.stop()
         tts?.shutdown()
         scope.cancel()
@@ -906,7 +898,13 @@ class BookReaderActivity : ThemedActivity() {
         catch (_: Exception) {}
         when {
             isEpub(mimeType, fileName) -> loadEpub(uri)
-            isPdf(mimeType, fileName) -> loadPdf(uri)
+            isPdf(mimeType, fileName) -> {
+                startActivity(Intent(this, com.Atom2Universe.app.comics.ComicsReaderActivity::class.java).apply {
+                    data = uri
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                })
+                finish()
+            }
             else -> loadTxt(uri)
         }
     }
@@ -960,40 +958,6 @@ class BookReaderActivity : ThemedActivity() {
     private fun splitParagraphs(text: String): List<String> =
         text.split(Regex("\r?\n"))
             .map { it.trim() }.filter { it.length > 3 }
-
-    // ── PDF ──────────────────────────────────────────────────────────────────
-
-    private fun loadPdf(uri: Uri) {
-        closePdf()
-        runCatching {
-            pdfDescriptor = contentResolver.openFileDescriptor(uri, "r") ?: return showEmpty()
-            pdfRenderer = PdfRenderer(pdfDescriptor!!)
-        }.onFailure {
-            showEmpty()
-            Toast.makeText(this, R.string.book_reader_error, Toast.LENGTH_SHORT).show()
-            return
-        }
-        val count = pdfRenderer!!.pageCount
-        BookLibraryActivity.updateOrAddBook(prefs, BookEntry(
-            uri = uri.toString(),
-            title = toolbar.title?.toString() ?: getString(R.string.book_reader_title),
-            author = "", coverPath = null, totalItems = count, lastReadItem = 0,
-            format = "PDF", addedAt = System.currentTimeMillis(), lastOpenedAt = System.currentTimeMillis(),
-            fileSize = currentFileSize
-        ))
-        showView(ViewType.PDF)
-        val lm = LinearLayoutManager(this)
-        pdfRecycler.layoutManager = lm
-        pdfRecycler.adapter = PdfPagesAdapter(pdfRenderer!!)
-        pageIndicator.text = getString(R.string.book_reader_page_of, 1, count)
-        pdfRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val page = lm.findFirstVisibleItemPosition() + 1
-                pageIndicator.text = getString(R.string.book_reader_page_of, page, count)
-            }
-        })
-        restorePdfPosition(uri)
-    }
 
     // ── EPUB ─────────────────────────────────────────────────────────────────
 
@@ -1263,12 +1227,6 @@ class BookReaderActivity : ThemedActivity() {
                 }
                 BookLibraryActivity.updateProgress(prefs, uri.toString(), pos, paragraphs.size)
             }
-            ViewType.PDF -> {
-                val lm = pdfRecycler.layoutManager as? LinearLayoutManager ?: return
-                val pos = lm.findFirstVisibleItemPosition()
-                prefs.edit { putInt("${k}_idx", pos) }
-                BookLibraryActivity.updateProgress(prefs, uri.toString(), pos, pdfRenderer?.pageCount ?: 0)
-            }
             ViewType.EMPTY -> {}
         }
     }
@@ -1279,13 +1237,6 @@ class BookReaderActivity : ThemedActivity() {
         if (pos > 0) txtRecycler.post {
             (txtRecycler.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(pos, off)
             ttsCurrentParagraph = paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: 0
-        }
-    }
-
-    private fun restorePdfPosition(uri: Uri) {
-        val pos = prefs.getInt("${posKey(uri)}_idx", 0)
-        if (pos > 0) pdfRecycler.post {
-            (pdfRecycler.layoutManager as? LinearLayoutManager)?.scrollToPosition(pos)
         }
     }
 
@@ -1370,10 +1321,6 @@ class BookReaderActivity : ThemedActivity() {
         file.absolutePath
     }.getOrNull()
 
-    private fun closePdf() {
-        pdfRenderer?.close(); pdfDescriptor?.close(); pdfRenderer = null; pdfDescriptor = null
-    }
-
     // ── Gestion auto-hide des barres ─────────────────────────────────────────
 
     private fun showBarsTemporarily() {
@@ -1424,12 +1371,11 @@ class BookReaderActivity : ThemedActivity() {
     }
 
     private fun showEmpty() = showView(ViewType.EMPTY)
-    private enum class ViewType { EMPTY, PDF, TXT, EPUB }
+    private enum class ViewType { EMPTY, TXT, EPUB }
 
     private fun showView(type: ViewType) {
         currentViewType = type
         emptyState.visibility = if (type == ViewType.EMPTY) View.VISIBLE else View.GONE
-        pdfRecycler.visibility = if (type == ViewType.PDF) View.VISIBLE else View.GONE
         txtRecycler.visibility = if (type == ViewType.TXT || type == ViewType.EPUB) View.VISIBLE else View.GONE
         val hasBook = type != ViewType.EMPTY
         barsActive = hasBook
@@ -1699,32 +1645,6 @@ class BookReaderActivity : ThemedActivity() {
         }
     }
 
-    // ── Adaptateur PDF ────────────────────────────────────────────────────────
-
-    private inner class PdfPagesAdapter(private val renderer: PdfRenderer) :
-        RecyclerView.Adapter<PdfPagesAdapter.PageHolder>() {
-
-        private val screenWidth = resources.displayMetrics.widthPixels
-
-        inner class PageHolder(val image: ImageView) : RecyclerView.ViewHolder(image)
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PageHolder(
-            ImageView(parent.context).apply {
-                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                adjustViewBounds = true
-            }
-        )
-
-        override fun onBindViewHolder(holder: PageHolder, position: Int) {
-            val page = renderer.openPage(position)
-            val h = (screenWidth * page.height.toFloat() / page.width).toInt().coerceAtLeast(1)
-            val bmp = Bitmap.createBitmap(screenWidth, h, Bitmap.Config.ARGB_8888)
-            page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            page.close(); holder.image.setImageBitmap(bmp)
-        }
-
-        override fun getItemCount() = renderer.pageCount
-    }
 }
 
 private val HTML_NAMED_ENTITIES: Map<String, String> = mapOf(

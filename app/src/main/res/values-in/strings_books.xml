@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_books_title">Buku</string>
-    <string name="hub_books_desc">Pembaca EPUB, PDF, dan teks</string>
+    <string name="hub_books_desc">Pembaca EPUB dan teks</string>
     <string name="hub_reading_title">Membaca</string>
     <string name="hub_reading_desc">Buku dan komik</string>
     <string name="reading_hub_title">Membaca</string>
