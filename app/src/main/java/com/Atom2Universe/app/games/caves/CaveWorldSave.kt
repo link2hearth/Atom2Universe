@@ -35,6 +35,11 @@ internal data class CaveWorldSave(
     var playerWeapons: List<String> = listOf("WHITE_SQUARE"),  // "COLOR_VARIANT"
     var wardStonePositions: List<Pair<Double, Double>> = emptyList(),
     var isCreative: Boolean = false,
+    // Compétences RPG (XP cumulatif, niveau calculé à la volée)
+    var skillAthleticsXp:  Int = 0,
+    var skillSpeedXp:      Int = 0,
+    var skillEnduranceXp:  Int = 0,
+    var skillAcrobaticsXp: Int = 0,
     // IDs ≥ 10000 → instances d'armes dynamiques
     var weaponInstances: Map<Short, ItemInstance> = emptyMap()
 ) {
@@ -96,6 +101,10 @@ internal object CaveWorldSaveManager {
         existing.playerWeapons       = snap.playerWeapons
         existing.wardStonePositions  = snap.wardStonePositions
         existing.isCreative          = snap.isCreative
+        existing.skillAthleticsXp    = snap.skillAthleticsXp
+        existing.skillSpeedXp        = snap.skillSpeedXp
+        existing.skillEnduranceXp    = snap.skillEnduranceXp
+        existing.skillAcrobaticsXp   = snap.skillAcrobaticsXp
         existing.weaponInstances     = snap.weaponInstances
         persist(context, existing)
     }
@@ -143,6 +152,10 @@ internal object CaveWorldSaveManager {
             }
             put("wardStonePositions", wardArr)
             put("isCreative", save.isCreative)
+            put("skillAthleticsXp",  save.skillAthleticsXp)
+            put("skillSpeedXp",      save.skillSpeedXp)
+            put("skillEnduranceXp",  save.skillEnduranceXp)
+            put("skillAcrobaticsXp", save.skillAcrobaticsXp)
             val wiJson = JSONObject()
             save.weaponInstances.forEach { (id, inst) ->
                 val o = JSONObject().apply {
@@ -221,6 +234,10 @@ internal object CaveWorldSaveManager {
             playerWeapons = weapons,
             wardStonePositions = wardStones,
             isCreative = j.optBoolean("isCreative", false),
+            skillAthleticsXp  = j.optInt("skillAthleticsXp",  0),
+            skillSpeedXp      = j.optInt("skillSpeedXp",      0),
+            skillEnduranceXp  = j.optInt("skillEnduranceXp",  0),
+            skillAcrobaticsXp = j.optInt("skillAcrobaticsXp", 0),
             weaponInstances = weaponInstances
         )
     }

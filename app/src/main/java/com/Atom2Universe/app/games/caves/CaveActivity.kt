@@ -171,7 +171,11 @@ class CaveActivity : ThemedActivity() {
                 playerShield        = save.playerShield,
                 playerShieldCurrent = save.playerShieldCurrent,
                 playerWeapons       = save.playerWeapons,
-                wardStonePositions  = save.wardStonePositions
+                wardStonePositions  = save.wardStonePositions,
+                skillAthleticsXp    = save.skillAthleticsXp,
+                skillSpeedXp        = save.skillSpeedXp,
+                skillEnduranceXp    = save.skillEnduranceXp,
+                skillAcrobaticsXp   = save.skillAcrobaticsXp
             )
             save != null && save.playerY != 0.0 -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
@@ -186,7 +190,11 @@ class CaveActivity : ThemedActivity() {
                 playerShield        = save.playerShield,
                 playerShieldCurrent = save.playerShieldCurrent,
                 playerWeapons       = save.playerWeapons,
-                wardStonePositions  = save.wardStonePositions
+                wardStonePositions  = save.wardStonePositions,
+                skillAthleticsXp    = save.skillAthleticsXp,
+                skillSpeedXp        = save.skillSpeedXp,
+                skillEnduranceXp    = save.skillEnduranceXp,
+                skillAcrobaticsXp   = save.skillAcrobaticsXp
             )
             else -> null
         }
@@ -295,6 +303,7 @@ class CaveActivity : ThemedActivity() {
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
         renderer.shieldCallback   = { cur, max  -> uiHandler.post { hud.updateShieldBar(cur, max) } }
         renderer.swingCallback    = { uiHandler.post { hud.triggerSwing() } }
+        renderer.sprintCallback   = { active -> uiHandler.post { hud.updateSprintIndicator(active) } }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)
@@ -367,6 +376,7 @@ class CaveActivity : ThemedActivity() {
     private fun buildSaveSnap(): CaveWorldSave? {
         val id    = worldId ?: return null
         val stats = renderer.playerStats
+        val sb    = renderer.skillBook
         return CaveWorldSave(
             id = id, name = "", seed = 0L, createdAt = 0L,
             lastPlayedAt = System.currentTimeMillis(),
@@ -382,6 +392,10 @@ class CaveActivity : ThemedActivity() {
             playerShield        = stats.shield,
             playerShieldCurrent = renderer.playerNode.shield,
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList(),
+            skillAthleticsXp    = sb.athleticsXp,
+            skillSpeedXp        = sb.speedXp,
+            skillEnduranceXp    = sb.enduranceXp,
+            skillAcrobaticsXp   = sb.acrobaticsXp,
             weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot()
         )
     }

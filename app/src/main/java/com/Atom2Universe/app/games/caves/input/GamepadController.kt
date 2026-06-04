@@ -50,8 +50,9 @@ class GamepadController(private val touch: TouchController) {
     }
 
     fun onKeyDown(keyCode: Int): Boolean = when (keyCode) {
-        KeyEvent.KEYCODE_BUTTON_A -> { touch.flyUp   = true; true }
-        KeyEvent.KEYCODE_BUTTON_B -> { touch.flyDown = true; true }
+        KeyEvent.KEYCODE_BUTTON_A      -> { touch.flyUp   = true; true }
+        KeyEvent.KEYCODE_BUTTON_B      -> { touch.flyDown = true; true }
+        KeyEvent.KEYCODE_BUTTON_THUMBL -> { touch.sprintActive = !touch.sprintActive; true }
         else -> false
     }
 

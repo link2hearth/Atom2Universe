@@ -25,6 +25,9 @@ class TouchController {
     // Pose de bloc (1 bloc par appui, consommé par le renderer)
     @Volatile var placeRequested = false
 
+    // Sprint (double-tap joystick gauche, ou toggle L3 manette)
+    @Volatile var sprintActive = false
+
     private var leftId = -1
     private var leftCx = 0f; private var leftCy = 0f
 
@@ -32,6 +35,10 @@ class TouchController {
     private var rightPx = 0f; private var rightPy = 0f
 
     private val JOYSTICK_RADIUS = 120f
+
+    private var leftTapCount = 0
+    private var lastLeftTapMs = 0L
+    private val DOUBLE_TAP_MS = 380L
 
     fun onTouch(event: MotionEvent, screenWidth: Int) {
         val half = screenWidth / 2f
@@ -43,7 +50,20 @@ class TouchController {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 val ex = event.getX(idx); val ey = event.getY(idx)
                 if (ex < half) {
-                    if (leftId == -1) { leftId = pid; leftCx = ex; leftCy = ey }
+                    if (leftId == -1) {
+                        leftId = pid; leftCx = ex; leftCy = ey
+                        val now = System.currentTimeMillis()
+                        if (now - lastLeftTapMs < DOUBLE_TAP_MS) {
+                            leftTapCount++
+                            if (leftTapCount >= 2) {
+                                sprintActive = !sprintActive
+                                leftTapCount = 0
+                            }
+                        } else {
+                            leftTapCount = 1
+                        }
+                        lastLeftTapMs = now
+                    }
                 } else {
                     if (rightId == -1) { rightId = pid; rightPx = ex; rightPy = ey }
                 }

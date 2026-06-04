@@ -37,6 +37,7 @@ internal class CaveHud(private val activity: CaveActivity) {
     var hpBarMaxWidth = 0
     var shieldBarFg: View? = null
     var shieldContainer: View? = null
+    private var sprintIndicator: TextView? = null
 
 
     // ── Hotbar ────────────────────────────────────────────────────────────────
@@ -244,6 +245,19 @@ internal class CaveHud(private val activity: CaveActivity) {
         container.addView(hpRow)
         hpBarFg = barFg; hpText = tv; hpBarMaxWidth = bW
 
+        val sprintTv = TextView(activity).apply {
+            text = "🏃 SPRINT"
+            textSize = 9f
+            setTextColor(0xFF88FFAA.toInt())
+            visibility = View.GONE
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.topMargin = (1 * dp).toInt() }
+        }
+        container.addView(sprintTv)
+        sprintIndicator = sprintTv
+
         val shRow = LinearLayout(activity).apply {
             orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
             visibility = View.GONE
@@ -270,6 +284,10 @@ internal class CaveHud(private val activity: CaveActivity) {
         (hpBarFg?.background as? GradientDrawable)?.setColor(
             when { frac > 0.6f -> 0xFF22CC44.toInt(); frac > 0.3f -> 0xFFDDAA00.toInt(); else -> 0xFFCC2222.toInt() }
         )
+    }
+
+    fun updateSprintIndicator(active: Boolean) {
+        sprintIndicator?.visibility = if (active) View.VISIBLE else View.GONE
     }
 
     fun updateShieldBar(current: Int, max: Int) {

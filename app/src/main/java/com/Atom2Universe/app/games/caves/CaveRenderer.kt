@@ -64,7 +64,11 @@ internal class CaveRenderer(
         val playerShield: Int = 0,
         val playerShieldCurrent: Int = 0,
         val playerWeapons: List<String> = listOf("WHITE_SQUARE"),
-        val wardStonePositions: List<Pair<Double, Double>> = emptyList()
+        val wardStonePositions: List<Pair<Double, Double>> = emptyList(),
+        val skillAthleticsXp:  Int = 0,
+        val skillSpeedXp:      Int = 0,
+        val skillEnduranceXp:  Int = 0,
+        val skillAcrobaticsXp: Int = 0
     )
 
     val camera = Camera(8.0, 8.0, 8.0)
@@ -199,6 +203,9 @@ internal class CaveRenderer(
 
     // ── Progression joueur ────────────────────────────────────────────────────
 
+    val skillBook   = com.Atom2Universe.app.games.caves.entity.SkillBook()
+    // HP max du dernier mob tué — plafond pour les gains d'endurance
+    private var lastKilledMobMaxHp = 20
     val playerStats = PlayerStats()
     val projectiles = ArrayList<Projectile>(64)
     private val impactParticles = ArrayList<ImpactParticle>(128)
@@ -223,6 +230,8 @@ internal class CaveRenderer(
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
     var swingCallback:    (() -> Unit)?                           = null
+    var sprintCallback:       ((Boolean) -> Unit)?                = null
+    var jumpChargeCallback:   ((Float) -> Unit)?                  = null
     private var weaponAttackCooldown = 0f
 
     // ── Shaders ───────────────────────────────────────────────────────────────
@@ -482,6 +491,32 @@ internal class CaveRenderer(
 
         playerNode.onHpChanged     = { hp, max -> playerHpCallback?.invoke(hp, max) }
         playerNode.onShieldChanged = { cur, max -> shieldCallback?.invoke(cur, max) }
+        playerNode.onEnduranceXp   = { xp ->
+            skillBook.enduranceXp += xp
+            val formula = skillBook.computedMaxHp
+            val newMax  = formula.coerceAtMost(lastKilledMobMaxHp)
+            if (newMax > playerNode.maxHp) {
+                playerNode.setMaxHp(newMax)
+                playerStats.maxHp = newMax
+            }
+        }
+
+        physics.skillBook = skillBook
+        physics.onJumped = { skillBook.athleticsXp += 1 }
+        physics.onFallLanded = { fallBlocks ->
+            val sb = skillBook
+            val threshold = sb.fallSafeBlocks
+            if (fallBlocks > threshold) {
+                val damage = ((fallBlocks - threshold) * 2.5).toInt().coerceAtLeast(1)
+                playerNode.applyDamage(damage)
+                val xpGain = ((fallBlocks - threshold) * 10).toInt().coerceAtLeast(1)
+                sb.acrobaticsXp += xpGain
+            } else {
+                // Chute sans dégâts : petit XP acrobatics quand même
+                sb.acrobaticsXp += (fallBlocks * 2).toInt().coerceAtLeast(1)
+            }
+        }
+
         enemyManager.player        = playerNode
         enemyManager.eventBus      = eventBus
         enemyManager.thornsProvider = { equippedWeaponStat("thorns") }
@@ -489,6 +524,8 @@ internal class CaveRenderer(
             if (event !is GameEvent.MobDied) return@subscribe
             val xpGain = if (event.isBoss) 5 * event.level else event.level
             playerStats.addXp(xpGain)
+            // Le dernier mob tué fixe le plafond HP pour les gains d'endurance
+            lastKilledMobMaxHp = event.mobMaxHp.coerceAtLeast(20)
             if (event.isBoss) {
                 inventory[WARD_STONE] = (inventory[WARD_STONE] ?: 0) + 1
                 inventoryCallback?.invoke(inventory.toMap())
@@ -532,6 +569,10 @@ internal class CaveRenderer(
             playerNode.maxShield = savedState.playerShield
             playerNode.shield   = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
             savedState.wardStonePositions.forEach { (x, z) -> enemyManager.wardStoneZones.add(Pair(x, z)) }
+            skillBook.athleticsXp  = savedState.skillAthleticsXp
+            skillBook.speedXp      = savedState.skillSpeedXp
+            skillBook.enduranceXp  = savedState.skillEnduranceXp
+            skillBook.acrobaticsXp = savedState.skillAcrobaticsXp
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
@@ -2280,17 +2321,41 @@ private fun updateProjectiles(dt: Float) {
         if (touch.flyDown) camera.moveVertical(-speed)
     }
 
+    private var speedXpAccum = 0f
+    private var prevSprinting = false
+
     private fun updateWalk(dt: Float) {
         val yawRad = Math.toRadians(camera.yaw.toDouble())
         val fX = sin(yawRad).toFloat(); val fZ = cos(yawRad).toFloat()
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
         val chargeMul = if (rockChargeTime > 0f) 0.55f else 1f
+
+        physics.isSprinting = touch.sprintActive && physics.onGround
+        val nowSprinting = physics.isSprinting
+        if (nowSprinting != prevSprinting) {
+            prevSprinting = nowSprinting
+            sprintCallback?.invoke(nowSprinting)
+        }
+
         val (newX, newY, newZ) = physics.updateWalk(
             dt,
             camera.playerX, camera.playerY, camera.playerZ,
             fX, fZ, rX, rZ,
             touch.moveForward * chargeMul, touch.moveRight * chargeMul, touch.flyUp
         )
+
+        // XP Speed : distance parcourue au sol
+        if (physics.onGround) {
+            val dx = newX - camera.playerX; val dz = newZ - camera.playerZ
+            val dist = sqrt(dx * dx + dz * dz).toFloat()
+            val rate = if (touch.sprintActive) 0.3f else 0.1f
+            speedXpAccum += dist * rate
+            if (speedXpAccum >= 1f) {
+                skillBook.speedXp += speedXpAccum.toInt()
+                speedXpAccum -= speedXpAccum.toInt()
+            }
+        }
+
         camera.playerX = newX; camera.playerY = newY; camera.playerZ = newZ
     }
 
