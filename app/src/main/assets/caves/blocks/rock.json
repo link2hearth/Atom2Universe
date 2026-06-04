@@ -9,5 +9,5 @@
   "decoration": true,
   "drop": "rock",
   "creative_tab": "stone",
-  "waterlogged": true
+  "waterlogged": false
 }

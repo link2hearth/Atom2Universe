@@ -190,15 +190,15 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         return buildSpawnIsland()
     }
 
-    /** Construit une petite île avec un arbre au niveau de la mer et retourne la position de spawn. */
+    /** Construit une petite île rocailleuse au niveau de la mer et retourne la position de spawn. */
     private fun buildSpawnIsland(): FloatArray {
         val ox = 8; val oz = 8
         val topY = SEA_LEVEL  // surface de l'île au niveau de la mer
 
-        // Prégenère tous les chunks couverts par l'île et l'arbre
+        // Prégenère les chunks couverts par l'île
         val botCy = Math.floorDiv(topY - 4, CHUNK_SIZE)
-        val treeCy = Math.floorDiv(topY + 9, CHUNK_SIZE)
-        for (cy in botCy..treeCy) for (dcz in -1..1) for (dcx in -1..1)
+        val topCy = Math.floorDiv(topY + 2, CHUNK_SIZE)
+        for (cy in botCy..topCy) for (dcz in -1..1) for (dcx in -1..1)
             pregenerateChunk(dcx, cy, dcz)
 
         // Île 5×5 : 2 couches de pierre, 1 de terre, 1 d'herbe
@@ -209,23 +209,18 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             setBlockRaw(wx, topY - 1, wz, DIRT)
             setBlockRaw(wx, topY,     wz, GRASS)
             // Efface l'eau au-dessus de l'île (WATER_FLOW peut occuper ces cases)
-            for (dy in 1..9) {
+            for (dy in 1..4) {
                 if (isWater(rawBlockAt(wx, topY + dy, wz))) setBlockRaw(wx, topY + dy, wz, AIR)
             }
         }
 
-        // Tronc (hauteur 4)
-        val trunkBase = topY + 1
-        for (dy in 0..3) setBlockRaw(ox, trunkBase + dy, oz, WOOD)
-
-        // Feuilles : couronne 5×5 sur 2 couches + couronne 3×3 + sommet 1×1
-        val lf = trunkBase + 3
-        for (dz in -2..2) for (dx in -2..2) {
-            setBlockRawIfAir(ox + dx, lf,     oz + dz, LEAVES)
-            setBlockRawIfAir(ox + dx, lf + 1, oz + dz, LEAVES)
-        }
-        for (dz in -1..1) for (dx in -1..1) setBlockRawIfAir(ox + dx, lf + 2, oz + dz, LEAVES)
-        setBlockRawIfAir(ox, lf + 3, oz, LEAVES)
+        // Quelques cailloux éparpillés sur l'île
+        // rock_moss au centre, rocks sur les côtés
+        setBlockRaw(ox,     topY + 1, oz,     ROCK_MOSS)
+        setBlockRaw(ox - 1, topY + 1, oz + 1, ROCK)
+        setBlockRaw(ox + 2, topY + 1, oz - 1, ROCK)
+        setBlockRaw(ox - 2, topY + 1, oz - 2, ROCK_MOSS)
+        setBlockRaw(ox + 1, topY + 1, oz + 2, ROCK)
 
         return floatArrayOf(ox + 0.5f, topY + 1 + 1.62f, oz + 0.5f)
     }
@@ -1024,8 +1019,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val b = chunk.blockAt(lx, ly, lz)
                 // Ne jamais poser sur de l'air, une autre décoration, du bois ou des feuilles
                 if (b == AIR || isDecoration(b) || isLeaf(b) || isWood(b)) continue
-                // Ignorer l'eau sauf si la décoration est waterlogged
-                if (isWater(b) && !wl) continue
+                // Ne jamais poser une décoration non-waterlogged sur ou sous l'eau
+                if (isWater(b) && !wl) break
                 val above = if (ly + 1 < CHUNK_SIZE) chunk.blockAt(lx, ly + 1, lz) else AIR
                 // Sol normal : la case au-dessus doit être vide
                 // Sol waterlogged : la case au-dessus peut être eau ou vide
