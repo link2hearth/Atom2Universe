@@ -1127,7 +1127,7 @@ private fun updateProjectiles(dt: Float) {
         } else if (rockChargeTime > 0.3f) {
             val charge = rockChargeTime / ROCK_CHARGE_MAX
             val speed = 10f + (28f - 10f) * charge
-            val damage = (3 + ((15 - 3) * charge)).toInt()
+            val damage = (2 + ((5 - 2) * charge)).toInt()
             val spawnY = camera.playerY + 0.8
             val rockWeapon = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
             projectiles.add(Projectile(
