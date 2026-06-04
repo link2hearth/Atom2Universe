@@ -50,6 +50,8 @@ internal class Enemy(
     var fireDamage: Int = 0
     var fireTickTimer: Float = 0f
 
+    var alertPlayed: Boolean = false
+
     companion object {
         const val BOSS_SPRITE_SCALE = 2.2f
         const val BOSS_HP_MULT      = 6

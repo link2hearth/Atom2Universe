@@ -16,6 +16,10 @@ internal sealed class GameEvent {
     data class BossSpawned(val mobId: Int) : GameEvent()
 
     data class PlayerHit(val damage: Int) : GameEvent()
+
+    data class MobHit(val isBoss: Boolean) : GameEvent()
+
+    data class MobNearby(val isBoss: Boolean) : GameEvent()
 }
 
 internal class EventBus {

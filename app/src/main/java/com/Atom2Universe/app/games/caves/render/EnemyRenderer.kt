@@ -225,8 +225,11 @@ internal class EnemyRenderer {
         GLES30.glUniform1i(spriteUTex, 0)
 
         var vertexOffset = 0
+        var drawn = 0
         for (e in enemies) {
             if (e.hp <= 0) continue
+            if (drawn >= MAX_VISIBLE) break
+            drawn++
             val sheetName = if (e.isBoss) "${e.spriteSheet}s" else e.spriteSheet
             val texId = getOrLoadTex("Cave World/Pokemon/$sheetName.png", sheetName)
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId)

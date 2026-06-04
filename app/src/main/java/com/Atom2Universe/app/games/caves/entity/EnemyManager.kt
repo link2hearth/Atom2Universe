@@ -115,17 +115,23 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         if (e.shockTimer > 0f) { e.shockTimer -= dt; return }
 
 
-        val dx = px - e.x; val dz = pz - e.z
-        val dist = sqrt(dx * dx + dz * dz)
+        val dx = px - e.x; val dy = py - e.y; val dz = pz - e.z
+        val dist3d = sqrt(dx * dx + dy * dy + dz * dz)
+        val dist    = sqrt(dx * dx + dz * dz)   // XZ pour l'orientation et le déplacement
 
+        val prevState = e.state
         e.state = when (e.state) {
-            EnemyState.WANDER -> if (dist < e.def.detectRange) EnemyState.CHASE else EnemyState.WANDER
+            EnemyState.WANDER -> if (dist3d < e.def.detectRange) EnemyState.CHASE else EnemyState.WANDER
             EnemyState.CHASE  -> when {
-                dist < e.def.attackRange       -> EnemyState.ATTACK
-                dist > e.def.detectRange * 2.0 -> EnemyState.WANDER
-                else                            -> EnemyState.CHASE
+                dist3d < e.def.attackRange       -> EnemyState.ATTACK
+                dist3d > e.def.detectRange * 2.0 -> { e.alertPlayed = false; EnemyState.WANDER }
+                else                              -> EnemyState.CHASE
             }
-            EnemyState.ATTACK -> if (dist > e.def.attackRange * 1.5) EnemyState.CHASE else EnemyState.ATTACK
+            EnemyState.ATTACK -> if (dist3d > e.def.attackRange * 1.5) EnemyState.CHASE else EnemyState.ATTACK
+        }
+        if (prevState == EnemyState.WANDER && e.state == EnemyState.CHASE && !e.alertPlayed) {
+            e.alertPlayed = true
+            eventBus?.publish(com.Atom2Universe.app.games.caves.node.GameEvent.MobNearby(e.isBoss))
         }
 
         val spd = e.scaledSpeed.toDouble() * dt
@@ -260,6 +266,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     fun damageEnemy(e: Enemy, dmg: Int) {
         CombatNode.damageEnemy(e, dmg)
         if (e.state == EnemyState.WANDER) e.state = EnemyState.CHASE
+        eventBus?.publish(com.Atom2Universe.app.games.caves.node.GameEvent.MobHit(e.isBoss))
     }
 
     fun healPlayer(amount: Int) {
