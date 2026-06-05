@@ -42,17 +42,6 @@ enum class FusionRecipe(
         palier = 2,
         unlockParentId = "pp"
     ),
-    ALPHA_CAPTURE(
-        id = "alpha_capture",
-        inputs = listOf(ElementInput(2, 1), ElementInput(6, 1)),
-        output = FusionOutput.Element(8),
-        baseRate = 0.55f,
-        nameRes = R.string.fusion_recipe_alpha_capture_name,
-        scienceRes = R.string.fusion_recipe_alpha_capture_science,
-        gameInfoRes = R.string.fusion_recipe_alpha_capture_game,
-        palier = 2,
-        unlockParentId = "triple_alpha"
-    ),
     CARBON_FUSION(
         id = "carbon_fusion",
         inputs = listOf(ElementInput(6, 2)),
@@ -61,8 +50,19 @@ enum class FusionRecipe(
         nameRes = R.string.fusion_recipe_carbon_fusion_name,
         scienceRes = R.string.fusion_recipe_carbon_fusion_science,
         gameInfoRes = R.string.fusion_recipe_carbon_fusion_game,
-        palier = 2,
+        palier = 3,
         unlockParentId = "triple_alpha"
+    ),
+    ALPHA_CAPTURE(
+        id = "alpha_capture",
+        inputs = listOf(ElementInput(10, 2)),
+        output = FusionOutput.Element(8),
+        baseRate = 0.40f,
+        nameRes = R.string.fusion_recipe_alpha_capture_name,
+        scienceRes = R.string.fusion_recipe_alpha_capture_science,
+        gameInfoRes = R.string.fusion_recipe_alpha_capture_game,
+        palier = 4,
+        unlockParentId = "carbon_fusion"
     ),
     OXYGEN_FUSION(
         id = "oxygen_fusion",
@@ -72,19 +72,19 @@ enum class FusionRecipe(
         nameRes = R.string.fusion_recipe_oxygen_fusion_name,
         scienceRes = R.string.fusion_recipe_oxygen_fusion_science,
         gameInfoRes = R.string.fusion_recipe_oxygen_fusion_game,
-        palier = 2,
+        palier = 5,
         unlockParentId = "alpha_capture"
     ),
     WATER(
         id = "water",
-        inputs = listOf(ElementInput(1, 2), ElementInput(8, 1)),
-        output = FusionOutput.H2O,
-        baseRate = 0.60f,
+        inputs = listOf(ElementInput(16, 2)),
+        output = FusionOutput.Element(26),
+        baseRate = 0.20f,
         nameRes = R.string.fusion_recipe_water_name,
         scienceRes = R.string.fusion_recipe_water_science,
         gameInfoRes = R.string.fusion_recipe_water_game,
-        palier = 3,
-        unlockParentId = "alpha_capture"
+        palier = 6,
+        unlockParentId = "oxygen_fusion"
     );
 
     companion object {
