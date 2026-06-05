@@ -153,6 +153,9 @@
     <color name="crypto_widget_status">#9CA3AF</color>
     <color name="crypto_widget_up">#4ADE80</color>
     <color name="crypto_widget_down">#F87171</color>
+    <color name="crypto_chart_grid">#1E293B</color>
+    <color name="crypto_chart_axis_text">#94A3B8</color>
+    <color name="crypto_chart_crosshair">#CBD5E1</color>
     <color name="game_tile_starswar">#1A237E</color>
     <color name="game_tile_flappycat">#00838F</color>
     <color name="game_tile_blackjack">#1B5E20</color>

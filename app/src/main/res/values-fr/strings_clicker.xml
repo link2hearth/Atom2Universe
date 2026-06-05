@@ -10,6 +10,14 @@
     <string name="crypto_widget_error">Impossible d\'actualiser les prix pour le moment.</string>
     <string name="crypto_widget_btc_label">BTC</string>
     <string name="crypto_widget_eth_label">ETH</string>
+    <string name="crypto_chart_int_1m">1m</string>
+    <string name="crypto_chart_int_5m">5m</string>
+    <string name="crypto_chart_int_15m">15m</string>
+    <string name="crypto_chart_int_1h">1h</string>
+    <string name="crypto_chart_int_4h">4h</string>
+    <string name="crypto_chart_int_1d">1J</string>
+    <string name="crypto_chart_int_1w">1S</string>
+    <string name="crypto_chart_int_1mo">1M</string>
     <string name="crypto_background_settings">Paramètres du fond</string>
     <string name="crypto_earth_widget_toggle_desc">Afficher/masquer le widget Terre-Lune</string>
     <string name="crypto_chess_widget_toggle_desc">Afficher/masquer le widget Échecs</string>

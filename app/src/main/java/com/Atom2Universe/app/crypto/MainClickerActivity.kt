@@ -383,6 +383,7 @@ class MainClickerActivity : ThemedActivity() {
         setContentView(R.layout.activity_main_clicker)
 
         cryptoWidgetView = findViewById(R.id.crypto_widget)
+        cryptoWidgetView.onDoubleTap = { openCryptoChart(CryptoChartActivity.ASSET_BTC) }
         backgroundImageView = findViewById(R.id.main_clicker_background_image)
         starfieldView = findViewById(R.id.main_clicker_starfield)
         earthMoonWidgetView = findViewById(R.id.earth_moon_widget)
@@ -1926,6 +1927,14 @@ class MainClickerActivity : ThemedActivity() {
     private fun onCryptoToggleChanged(enabled: Boolean) {
         MainClickerPreferences.setCryptoWidgetEnabled(this, enabled)
         cryptoWidgetView.visibility = if (enabled) View.VISIBLE else View.GONE
+    }
+
+    private fun openCryptoChart(asset: String) {
+        val intent = Intent(this, CryptoChartActivity::class.java).apply {
+            putExtra(CryptoChartActivity.EXTRA_EUR, useEurCurrency)
+            putExtra(CryptoChartActivity.EXTRA_ASSET, asset)
+        }
+        startActivity(intent)
     }
 
     private fun onEarthToggleChanged(enabled: Boolean) {

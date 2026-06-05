@@ -5,6 +5,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -63,6 +64,9 @@ class CryptoWidgetView @JvmOverloads constructor(
     private var skipNextDragFrame = false
     private val tapThresholdPx = 12f * context.resources.displayMetrics.density
 
+    /** Invoqué sur un double-tap (ouverture du graphique en chandeliers). */
+    var onDoubleTap: (() -> Unit)? = null
+
     private val scaleDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             val nextScale = (currentScale * detector.scaleFactor).coerceIn(minScale, maxScale)
@@ -71,6 +75,13 @@ class CryptoWidgetView @JvmOverloads constructor(
                 scaleX = currentScale
                 scaleY = currentScale
             }
+            return true
+        }
+    })
+
+    private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            onDoubleTap?.invoke()
             return true
         }
     })
@@ -263,6 +274,7 @@ class CryptoWidgetView @JvmOverloads constructor(
     }
 
     private fun handleTouch(event: MotionEvent): Boolean {
+        gestureDetector.onTouchEvent(event)
         scaleDetector.onTouchEvent(event)
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
