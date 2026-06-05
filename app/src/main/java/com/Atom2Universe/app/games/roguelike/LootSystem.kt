@@ -5,11 +5,11 @@ import kotlin.random.Random
 
 // ─── Rareté ────────────────────────────────────────────────────────────────────
 enum class Rarity(val label: String, val colorArgb: Int, val statCount: Int, val mult: Float) {
-    COMMON   ("Commun",     0xFFAAAAAA.toInt(), 1, 1.0f),
-    UNCOMMON ("Peu commun", 0xFF66BB6A.toInt(), 2, 1.4f),
-    RARE     ("Rare",       0xFF42A5F5.toInt(), 3, 1.9f),
-    EPIC     ("Épique",     0xFFCE93D8.toInt(), 4, 2.6f),
-    LEGENDARY("Légendaire", 0xFFFFB74D.toInt(), 4, 3.8f),
+    COMMON   ("Commun",     0xFFAAAAAA.toInt(), 1, 1.00f),
+    UNCOMMON ("Peu commun", 0xFF66BB6A.toInt(), 2, 1.15f),
+    RARE     ("Rare",       0xFF42A5F5.toInt(), 3, 1.35f),
+    EPIC     ("Épique",     0xFFCE93D8.toInt(), 4, 1.60f),
+    LEGENDARY("Légendaire", 0xFFFFB74D.toInt(), 4, 2.20f),
 }
 
 // ─── Stats ──────────────────────────────────────────────────────────────────────
@@ -26,9 +26,9 @@ enum class StatType(val label: String, val isPercent: Boolean) {
 // ─── Matière ────────────────────────────────────────────────────────────────────
 enum class EquipMaterial(val label: String, val tierMult: Float, val minFloor: Int) {
     IRON  ("Fer",    1.0f,  1),
-    GOLD  ("Or",     2.0f,  5),
-    ICE   ("Glace",  3.5f, 15),
-    UNIQUE("Unique", 5.5f, 25),
+    GOLD  ("Or",     1.3f,  5),
+    ICE   ("Glace",  1.8f, 15),
+    UNIQUE("Unique", 2.5f, 25),
 }
 
 // ─── Slots ──────────────────────────────────────────────────────────────────────
@@ -58,7 +58,6 @@ data class Equipment(
 // ─── Système de loot ────────────────────────────────────────────────────────────
 object LootSystem {
 
-    // Stats disponibles par slot
     private val slotStats = mapOf(
         EquipSlot.WEAPON  to listOf(StatType.ATK, StatType.CRIT_CHANCE, StatType.CRIT_DMG),
         EquipSlot.CHEST   to listOf(StatType.MAX_HP, StatType.DEF, StatType.BLOCK),
@@ -69,18 +68,17 @@ object LootSystem {
         EquipSlot.RING    to StatType.values().toList(),
     )
 
-    // Valeurs de base (avant multiplicateurs matière/rareté/étage)
+    // Stats de base réduites — la progression est lente par design
     private val statBase = mapOf(
-        StatType.ATK         to (2f to 6f),
-        StatType.DEF         to (1f to 3f),
-        StatType.MAX_HP      to (8f to 20f),
-        StatType.CRIT_CHANCE to (0.03f to 0.09f),
-        StatType.CRIT_DMG    to (0.10f to 0.30f),
-        StatType.EVASION     to (0.03f to 0.09f),
-        StatType.BLOCK       to (0.05f to 0.15f),
+        StatType.ATK         to (1f to 3f),
+        StatType.DEF         to (1f to 2f),
+        StatType.MAX_HP      to (4f to 10f),
+        StatType.CRIT_CHANCE to (0.02f to 0.06f),
+        StatType.CRIT_DMG    to (0.08f to 0.20f),
+        StatType.EVASION     to (0.02f to 0.06f),
+        StatType.BLOCK       to (0.03f to 0.10f),
     )
 
-    // Pools de sprites par (slot, matière) → liste de (row, col) dans 64x64.png
     private val spritePools: Map<Pair<EquipSlot, EquipMaterial>, List<Pair<Int, Int>>> = buildMap {
         fun rows(vararg rs: Int) = rs.flatMap { r -> (0..15).map { c -> r to c } }
 
@@ -115,14 +113,12 @@ object LootSystem {
 
     // ── API publique ────────────────────────────────────────────────────────────
 
-    /** Tente un drop : retourne null selon la chance de drop calculée. */
     fun tryDrop(floor: Int, rng: Random = Random): Equipment? {
         val chance = (0.18f + floor * 0.004f).coerceAtMost(0.38f)
         if (rng.nextFloat() > chance) return null
         return generate(floor, rng)
     }
 
-    /** Génère un équipement garanti pour un étage donné (boss, shop, etc.). */
     fun generate(floor: Int, rng: Random = Random): Equipment {
         val material = pickMaterial(floor, rng)
         val rarity   = pickRarity(floor, rng)
@@ -168,7 +164,8 @@ object LootSystem {
         slot: EquipSlot, mat: EquipMaterial, rar: Rarity, floor: Int, rng: Random
     ): List<StatRoll> {
         val pool      = slotStats[slot] ?: StatType.values().toList()
-        val floorMult = 1f + floor * 0.07f
+        // +1.5% par étage au lieu de +7% — progression lente et satisfaisante
+        val floorMult = 1f + floor * 0.015f
         return pool.shuffled(rng).take(rar.statCount).map { stat ->
             val (lo, hi) = statBase[stat] ?: (1f to 2f)
             val raw      = lo + rng.nextFloat() * (hi - lo)
@@ -193,8 +190,6 @@ object LootSystem {
         }
         return "$prefix${mat.label} ${slot.label}"
     }
-
-    // ── Utilitaire tirage pondéré ────────────────────────────────────────────────
 
     private fun <T> weighted(list: List<Pair<T, Float>>, rng: Random): T {
         val total = list.sumOf { it.second.toDouble() }.toFloat().coerceAtLeast(0.001f)

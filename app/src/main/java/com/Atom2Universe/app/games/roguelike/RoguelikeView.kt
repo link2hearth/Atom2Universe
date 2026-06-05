@@ -215,13 +215,29 @@ class RoguelikeView @JvmOverloads constructor(
 
     // ── Items consommables ───────────────────────────────────────────────────────
 
+    private fun drawFoodSprite(canvas: Canvas, type: ItemType, rect: RectF) {
+        if (type.spriteRow < 0) {
+            pText.color = type.colorArgb; pText.textSize = rect.height() * 0.65f
+            canvas.drawText(type.symbol.toString(), rect.centerX(), rect.centerY() + rect.height() * 0.2f, pText)
+            return
+        }
+        val sheet = equipSheet() ?: run {
+            pText.color = type.colorArgb; pText.textSize = rect.height() * 0.65f
+            canvas.drawText(type.symbol.toString(), rect.centerX(), rect.centerY() + rect.height() * 0.2f, pText)
+            return
+        }
+        val src = Rect(type.spriteCol * 64, type.spriteRow * 64,
+                       (type.spriteCol + 1) * 64, (type.spriteRow + 1) * 64)
+        canvas.drawBitmap(sheet, src, rect, pSprite)
+    }
+
     private fun drawItems(canvas: Canvas, g: RoguelikeGame) {
         for (item in g.level.items) {
             val tx = item.pos.x; val ty = item.pos.y
             if (!isOnScreen(tx, ty) || !g.level.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
-            pText.color = item.type.colorArgb; pText.textSize = tileSize * 0.65f
-            canvas.drawText(item.type.symbol.toString(), l + tileSize / 2f, t + tileSize * 0.75f, pText)
+            val pad = tileSize * 0.15f
+            drawFoodSprite(canvas, item.type, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad))
         }
     }
 
@@ -374,8 +390,13 @@ class RoguelikeView @JvmOverloads constructor(
         if (g.player.inventory.isNotEmpty()) {
             val r = heartRect()
             canvas.drawCircle(r.centerX(), r.centerY(), r.width() / 2f, pIconBg)
-            pText.color = 0xFFEF5350.toInt(); pText.textSize = r.height() * 0.55f
-            canvas.drawText("♥", r.centerX(), r.centerY() + r.height() * 0.2f, pText)
+            val firstFood = g.player.inventory.firstOrNull { it.type.healAmount > 0 }
+            if (firstFood != null) {
+                drawFoodSprite(canvas, firstFood.type, r.inset(r.width() * 0.18f))
+            } else {
+                pText.color = 0xFFEF5350.toInt(); pText.textSize = r.height() * 0.55f
+                canvas.drawText("♥", r.centerX(), r.centerY() + r.height() * 0.2f, pText)
+            }
             pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 11f; pText.textAlign = Paint.Align.RIGHT
             canvas.drawText("${g.player.inventory.size}", r.right, r.top + sd * 13f, pText)
             pText.textAlign = Paint.Align.CENTER
@@ -415,33 +436,46 @@ class RoguelikeView @JvmOverloads constructor(
      *   [BOOTS]  gap  [RING]
      */
     private fun paperdollSlotRects(paperdoll: RectF): Pair<RectF, Map<EquipSlot, RectF>> {
-        val cell  = minOf(paperdoll.width() / 3.6f, paperdoll.height() / 4.4f)
-        val gap   = cell * 0.15f
+        // Chaque "ligne" occupe cell + labelH en vertical.
+        // Layout 3 cols × 4 lignes + héros centré.
+        // On réserve labelH = cell * 0.25f sous chaque slot pour le texte.
+        val labelFrac = 0.25f
+        val gap       = paperdoll.width() * 0.03f
+        // cell limité par largeur (3 cols + 2 gaps) et hauteur (4 lignes avec labels + gaps)
+        val cellByW   = (paperdoll.width() - gap * 4f) / 3f
+        val cellByH   = (paperdoll.height() - gap * 6f) / (4f * (1f + labelFrac))
+        val cell      = minOf(cellByW, cellByH)
+        val rowStep   = cell * (1f + labelFrac) + gap
+
         val cx    = paperdoll.centerX()
-        val top   = paperdoll.top + gap
+        val top   = paperdoll.top + gap * 2f
+        val leftX = paperdoll.left  + gap
+        val rightX= paperdoll.right - gap - cell
 
-        fun r(col: Float, row: Float) = RectF(
-            cx + (col - 1f) * (cell + gap),
-            top + row * (cell + gap),
-            cx + (col - 1f) * (cell + gap) + cell,
-            top + row * (cell + gap) + cell
-        )
+        fun slot(x: Float, row: Float): RectF {
+            val y = top + row * rowStep
+            return RectF(x, y, x + cell, y + cell)
+        }
+        fun center(row: Float): RectF {        // helmet centré
+            val x = cx - cell / 2f
+            val y = top + row * rowStep
+            return RectF(x, y, x + cell, y + cell)
+        }
 
-        val heroRect = RectF(
-            cx - cell / 2f,
-            top + (cell + gap),
-            cx + cell / 2f,
-            top + (cell + gap) + cell * 2f + gap
-        )
+        // Le héros occupe tout l'espace entre les colonnes gauche et droite
+        val heroX1 = leftX + cell + gap
+        val heroX2 = rightX - gap
+        val heroH  = rowStep * 2f + cell * 0.1f
+        val heroRect = RectF(heroX1, top + rowStep * 0.9f, heroX2, top + rowStep * 0.9f + heroH)
 
         val slots = mapOf(
-            EquipSlot.HELMET  to r(1f, 0f),
-            EquipSlot.WEAPON  to r(0f, 1f),
-            EquipSlot.CHEST   to r(2f, 1f),
-            EquipSlot.OFFHAND to r(0f, 2f),
-            EquipSlot.AMULET  to r(2f, 2f),
-            EquipSlot.BOOTS   to RectF(cx - cell - gap / 2f, top + 3f * (cell + gap), cx - gap / 2f, top + 3f * (cell + gap) + cell),
-            EquipSlot.RING    to RectF(cx + gap / 2f,        top + 3f * (cell + gap), cx + cell + gap / 2f, top + 3f * (cell + gap) + cell),
+            EquipSlot.HELMET  to center(0f),
+            EquipSlot.WEAPON  to slot(leftX,  1f),
+            EquipSlot.CHEST   to slot(rightX, 1f),
+            EquipSlot.OFFHAND to slot(leftX,  2f),
+            EquipSlot.AMULET  to slot(rightX, 2f),
+            EquipSlot.BOOTS   to slot(leftX,  3f),
+            EquipSlot.RING    to slot(rightX, 3f),
         )
         return heroRect to slots
     }
@@ -491,10 +525,17 @@ class RoguelikeView @JvmOverloads constructor(
         val (heroR, slots) = paperdollSlotRects(rect)
         cachedSlotRects = slots  // mis en cache pour le touch handler
 
-        // Sprite héros
+        // Sprite héros — centerInside pour conserver le ratio du bitmap
         val heroBmp = SpriteLoader.load(context.assets, g.heroSpritePath)
-        if (heroBmp != null) canvas.drawBitmap(heroBmp, null, heroR, pSprite)
-        else {
+        if (heroBmp != null) {
+            val bRatio = heroBmp.width.toFloat() / heroBmp.height
+            val rRatio = heroR.width() / heroR.height()
+            val (dw, dh) = if (bRatio > rRatio) heroR.width() to heroR.width() / bRatio
+                           else heroR.height() * bRatio to heroR.height()
+            val dx = heroR.left + (heroR.width() - dw) / 2f
+            val dy = heroR.top  + (heroR.height() - dh) / 2f
+            canvas.drawBitmap(heroBmp, null, RectF(dx, dy, dx + dw, dy + dh), pSprite)
+        } else {
             pText.color = 0xFF00E5FF.toInt(); pText.textSize = heroR.height() * 0.6f
             canvas.drawText("@", heroR.centerX(), heroR.centerY() + heroR.height() * 0.22f, pText)
         }
@@ -530,8 +571,8 @@ class RoguelikeView @JvmOverloads constructor(
             // Label slot (en dessous)
             pText.textAlign = Paint.Align.CENTER
             pText.color = if (isSelected) 0xFF42A5F5.toInt() else 0xFF445566.toInt()
-            pText.textSize = slotR.height() * 0.22f
-            canvas.drawText(slot.label, slotR.centerX(), slotR.bottom + slotR.height() * 0.28f, pText)
+            pText.textSize = slotR.height() * 0.20f
+            canvas.drawText(slot.label, slotR.centerX(), slotR.bottom + slotR.height() * 0.22f, pText)
         }
     }
 

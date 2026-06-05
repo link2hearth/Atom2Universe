@@ -14,10 +14,16 @@ data class Pos(val x: Int, val y: Int) {
     fun manhattan(other: Pos) = abs(x - other.x) + abs(y - other.y)
 }
 
-// ─── Items (consommables uniquement) ───────────────────────────────────────────
-enum class ItemType(val symbol: Char, val label: String, val colorArgb: Int) {
-    HEALTH_POTION('♥', "Potion de vie", 0xFFE53935.toInt()),
-    GOLD         ('$', "Or",            0xFFFFD600.toInt()),
+// ─── Items (consommables) ───────────────────────────────────────────────────────
+enum class ItemType(
+    val symbol: Char, val label: String, val colorArgb: Int,
+    val healAmount: Int,
+    val spriteRow: Int, val spriteCol: Int
+) {
+    FOOD_SMALL ('f', "Pain",   0xFFFFCC80.toInt(), 10, 32, 0),
+    FOOD_MEDIUM('m', "Viande", 0xFFEF9A9A.toInt(), 25, 30, 0),
+    FOOD_LARGE ('s', "Ragoût", 0xFFFF7043.toInt(), 40, 29, 0),
+    GOLD       ('$', "Or",     0xFFFFD600.toInt(),  0,  9, 15),
 }
 
 data class Item(val type: ItemType, var pos: Pos)
@@ -25,22 +31,24 @@ data class Item(val type: ItemType, var pos: Pos)
 // ─── Monstres ───────────────────────────────────────────────────────────────────
 enum class MonsterType(
     val symbol: Char, val label: String, val colorArgb: Int,
-    val baseHp: Int, val baseAtk: Int, val baseDef: Int,
-    val goldReward: Int, val minFloor: Int
+    val baseDef: Int, val goldReward: Int, val minFloor: Int,
+    val hpMult: Float, val atkMult: Float
 ) {
-    RAT     ('r', "Rat",      0xFF8D6E63.toInt(),  6,  2, 0,  2, 1),
-    GOBLIN  ('g', "Gobelin",  0xFF66BB6A.toInt(), 12,  4, 1,  5, 1),
-    SKELETON('S', "Squelette",0xFFECEFF1.toInt(), 16,  5, 2,  8, 2),
-    ORC     ('O', "Orc",      0xFF4CAF50.toInt(), 22,  7, 3, 12, 3),
-    DEMON   ('D', "Démon",    0xFFEF5350.toInt(), 30, 10, 4, 18, 4),
+    RAT     ('r', "Rat",       0xFF8D6E63.toInt(), 0,  2, 1, 0.50f, 0.50f),
+    GOBLIN  ('g', "Gobelin",   0xFF66BB6A.toInt(), 1,  5, 1, 0.75f, 0.75f),
+    SKELETON('S', "Squelette", 0xFFECEFF1.toInt(), 2,  8, 2, 1.00f, 1.00f),
+    ORC     ('O', "Orc",       0xFF4CAF50.toInt(), 3, 12, 3, 1.40f, 1.20f),
+    DEMON   ('D', "Démon",     0xFFEF5350.toInt(), 4, 18, 4, 2.00f, 1.60f),
 }
 
 class Monster(
     val type: MonsterType,
     var pos: Pos,
-    var hp: Int = type.baseHp
+    val scaledHp: Int,
+    val scaledAtk: Int,
 ) {
-    val maxHp: Int = type.baseHp
+    var hp     = scaledHp
+    val maxHp  = scaledHp
     var isAlive = true
     var awake   = false
 }
@@ -53,16 +61,13 @@ class Player(startPos: Pos) {
     var gold   = 0;   var floor = 1
     val inventory = mutableListOf<Item>()
 
-    // Équipement : un slot par type
     val equipped = mutableMapOf<EquipSlot, Equipment>()
 
-    // Barrière
     var barrier         = 0
     var barrierUnlocked = false
     val maxBarrier      get() = if (barrierUnlocked) totalMaxHp / 5 else 0
     var barrierStep     = 0
 
-    // ── Stats dérivées de l'équipement ─────────────────────────────────────────
     private fun equipSum(type: StatType) =
         equipped.values.flatMap { it.stats }
             .filter { it.type == type }
@@ -86,13 +91,13 @@ enum class ShopItem(val cost: Int) {
 
 // ─── Niveau de donjon ──────────────────────────────────────────────────────────
 class DungeonLevel(val w: Int, val h: Int, val floor: Int) {
-    val tiles     = Array(h) { Array(w) { TileType.WALL } }
-    val monsters  = mutableListOf<Monster>()
-    val items     = mutableListOf<Item>()
+    val tiles      = Array(h) { Array(w) { TileType.WALL } }
+    val monsters   = mutableListOf<Monster>()
+    val items      = mutableListOf<Item>()
     val equipDrops = mutableListOf<Pair<Equipment, Pos>>()
-    val visible   = Array(h) { BooleanArray(w) }
-    val explored  = Array(h) { BooleanArray(w) }
-    val theme     = DungeonTheme.ALL.random()
+    val visible    = Array(h) { BooleanArray(w) }
+    val explored   = Array(h) { BooleanArray(w) }
+    val theme      = DungeonTheme.ALL.random()
 
     fun inBounds(x: Int, y: Int)    = x in 0 until w && y in 0 until h
     fun walkable(x: Int, y: Int)    = inBounds(x, y) && tiles[y][x] != TileType.WALL
@@ -102,14 +107,12 @@ class DungeonLevel(val w: Int, val h: Int, val floor: Int) {
     fun hasAliveEnemies()           = monsters.any { it.isAlive }
 }
 
-// ─── Rect helper ───────────────────────────────────────────────────────────────
 private data class Room(val x: Int, val y: Int, val w: Int, val h: Int) {
     fun center()      = Pos(x + w / 2, y + h / 2)
     fun overlaps(o: Room) = x < o.x + o.w && x + w > o.x && y < o.y + o.h && y + h > o.y
     fun randomInner() = Pos(x + 1 + Random.nextInt(maxOf(1, w - 2)), y + 1 + Random.nextInt(maxOf(1, h - 2)))
 }
 
-// ─── Phases ────────────────────────────────────────────────────────────────────
 enum class GamePhase { PLAYING, GAME_OVER }
 
 // ─── Moteur principal ──────────────────────────────────────────────────────────
@@ -122,7 +125,10 @@ class RoguelikeGame {
         const val MAX_INV             = 5
         const val BARRIER_REGEN_STEPS = 8
 
-        fun fromJson(j: org.json.JSONObject): RoguelikeGame {
+        // soin moyen pondéré (50%×10 + 35%×25 + 15%×40 ≈ 20)
+        private const val AVG_FOOD_HEAL = 20f
+
+        fun fromJson(j: JSONObject): RoguelikeGame {
             val game = RoguelikeGame()
             val p    = game.player
 
@@ -137,8 +143,16 @@ class RoguelikeGame {
             game.heroSpritePath = j.getString("heroSprite")
 
             val inv = j.getJSONArray("inventory")
-            for (i in 0 until inv.length())
-                p.inventory.add(Item(ItemType.valueOf(inv.getString(i)), p.pos))
+            for (i in 0 until inv.length()) {
+                val name = inv.getString(i)
+                val type = try {
+                    ItemType.valueOf(name)
+                } catch (_: Exception) {
+                    // compatibilité anciens saves : HEALTH_POTION → FOOD_MEDIUM
+                    if (name == "HEALTH_POTION") ItemType.FOOD_MEDIUM else continue
+                }
+                p.inventory.add(Item(type, p.pos))
+            }
 
             val eq = j.getJSONObject("equipped")
             for (slotName in eq.keys())
@@ -154,21 +168,24 @@ class RoguelikeGame {
         }
     }
 
+    // player créé en premier pour que generateLevel puisse utiliser ses stats
+    var player: Player      = Player(Pos(0, 0))
     var level:  DungeonLevel = generateLevel(1)
-    var player: Player       = Player(firstFloor(level))
     var phase:  GamePhase    = GamePhase.PLAYING
     val log = ArrayDeque<String>()
     var heroSpritePath: String = "Assets/sprites/Dungeon/Heros/paperdoll_example_%02d.png"
         .format(Random.nextInt(1, 30))
 
-    // Équipement en attente de décision (posé sur la case du joueur)
     var pendingEquipDrop: Equipment? = null
 
-    // ── Shop ────────────────────────────────────────────────────────────────────
     var shopOpen = false
     val shopBought = mutableSetOf<ShopItem>()
 
-    init { computeFov(); addLog("Tu descends dans le donjon…") }
+    init {
+        player.pos = firstFloor(level)
+        computeFov()
+        addLog("Tu descends dans le donjon…")
+    }
 
     // ── Actions publiques ───────────────────────────────────────────────────────
 
@@ -221,16 +238,15 @@ class RoguelikeGame {
     fun useItem(index: Int) {
         if (phase != GamePhase.PLAYING) return
         val item = player.inventory.getOrNull(index) ?: return
-        if (item.type == ItemType.HEALTH_POTION) {
-            val gain = player.totalMaxHp - player.hp
-            player.hp = player.totalMaxHp
+        if (item.type.healAmount > 0) {
+            val gain = item.type.healAmount.coerceAtMost(player.totalMaxHp - player.hp)
+            player.hp = min(player.totalMaxHp, player.hp + item.type.healAmount)
             player.inventory.removeAt(index)
-            addLog("Potion bue. +$gain HP. Soins complets !")
+            addLog("${item.type.label} mangé. +$gain HP.")
         }
         endTurn()
     }
 
-    /** Équipe l'item en attente (remplace l'ancien s'il y en a un). */
     fun equipPendingDrop() {
         val equip = pendingEquipDrop ?: return
         player.equipped[equip.slot] = equip
@@ -239,7 +255,6 @@ class RoguelikeGame {
         addLog("${equip.slot.label} équipé : ${equip.label} !")
     }
 
-    /** Ignore le drop en attente. */
     fun ignorePendingDrop() {
         pendingEquipDrop = null
         addLog("Objet laissé au sol.")
@@ -271,18 +286,15 @@ class RoguelikeGame {
     }
 
     private fun meleePlayer(m: Monster) {
-        // Esquive
         if (Random.nextFloat() < player.evasionChance) {
             addLog("${m.type.label} rate ! (Esquive)")
             return
         }
-        var dmg = max(1, m.type.baseAtk - player.def + Random.nextInt(-1, 2))
-        // Blocage
+        var dmg = max(1, m.scaledAtk - player.def + Random.nextInt(-1, 2))
         if (Random.nextFloat() < player.blockChance) {
             dmg = max(1, dmg / 2)
             addLog("${m.type.label} bloqué → -$dmg HP !")
         }
-        // Barrière
         if (player.barrier > 0) {
             val absorbed = min(player.barrier, dmg)
             player.barrier -= absorbed
@@ -334,23 +346,22 @@ class RoguelikeGame {
     private fun checkPickup() {
         val px = player.pos.x; val py = player.pos.y
 
-        // Consommables
         val here = level.items.filter { it.pos.x == px && it.pos.y == py }
         for (it in here) {
-            when (it.type) {
-                ItemType.GOLD -> {
+            when {
+                it.type == ItemType.GOLD -> {
                     val gain = Random.nextInt(3, 12); player.gold += gain
                     level.items.remove(it); addLog("+$gain or !")
                 }
-                ItemType.HEALTH_POTION -> {
+                it.type.healAmount > 0 -> {
                     if (player.inventory.size < MAX_INV) {
-                        player.inventory.add(it); level.items.remove(it); addLog("Potion ramassée.")
+                        player.inventory.add(it); level.items.remove(it)
+                        addLog("${it.type.label} ramassé.")
                     } else addLog("Inventaire plein !")
                 }
             }
         }
 
-        // Équipement : déclenche le popup
         val drop = level.equipDropAt(px, py)
         if (drop != null && pendingEquipDrop == null) {
             level.equipDrops.remove(drop)
@@ -359,14 +370,36 @@ class RoguelikeGame {
     }
 
     private fun maybeDrop(m: Monster) {
-        // ~15 % de chance de potion
-        if (Random.nextFloat() < 0.15f) {
-            level.items.add(Item(ItemType.HEALTH_POTION, m.pos))
+        // 8% chance de lâcher de la nourriture en mourant
+        if (Random.nextFloat() < 0.08f) {
+            val foodType = when (Random.nextFloat()) {
+                in 0f..0.5f  -> ItemType.FOOD_SMALL
+                in 0.5f..0.85f -> ItemType.FOOD_MEDIUM
+                else           -> ItemType.FOOD_LARGE
+            }
+            level.items.add(Item(foodType, m.pos))
             return
         }
-        // Sinon tente un drop d'équipement
         val equip = LootSystem.tryDrop(player.floor) ?: return
         level.equipDrops.add(equip to m.pos)
+    }
+
+    // ── Calcul stats mobs ───────────────────────────────────────────────────────
+
+    private fun computeMobStats(type: MonsterType): Pair<Int, Int> {
+        val p = player
+        // HP : joueur tue en ~5 coups
+        val effectiveDmg = max(1, p.atk - type.baseDef).toFloat()
+        val scaledHp = (5f * effectiveDmg * type.hpMult).roundToInt().coerceAtLeast(3)
+
+        // ATK brute : mob inflige totalMaxHp/20 de dégâts nets après esquive/blocage
+        val netDmgPerHit = p.totalMaxHp / 20f
+        val evadeMult    = (1f - p.evasionChance).coerceAtLeast(0.25f)
+        val blockMult    = (1f - p.blockChance * 0.5f).coerceAtLeast(0.5f)
+        val grossAtk     = netDmgPerHit / (evadeMult * blockMult) + p.def
+        val scaledAtk    = (grossAtk * type.atkMult).roundToInt().coerceAtLeast(1)
+
+        return scaledHp to scaledAtk
     }
 
     // ── FOV ─────────────────────────────────────────────────────────────────────
@@ -421,25 +454,47 @@ class RoguelikeGame {
         val stairPos = shuffled.last().randomInner()
         lv.tiles[stairPos.y][stairPos.x] = TileType.STAIRS_DOWN
 
-        // Monstres
+        // Monstres : stats scalées selon les stats actuelles du joueur
         val eligible = MonsterType.values().filter { it.minFloor <= floor }
-        repeat(6 + floor * 4) {
+        val mobCount = 6 + floor * 4
+        repeat(mobCount) {
             val room = shuffled.drop(1).randomOrNull() ?: shuffled.first()
             val pos  = room.randomInner()
-            if (lv.tiles[pos.y][pos.x] == TileType.FLOOR && lv.monsterAt(pos.x, pos.y) == null)
-                lv.monsters.add(Monster(eligible.random(), pos))
+            if (lv.tiles[pos.y][pos.x] == TileType.FLOOR && lv.monsterAt(pos.x, pos.y) == null) {
+                val type = eligible.random()
+                val (sHp, sAtk) = computeMobStats(type)
+                lv.monsters.add(Monster(type, pos, sHp, sAtk))
+            }
         }
 
-        // Items consommables
-        val itemCount    = 4 + Random.nextInt(5) + maxOf(0, (floor - 3) * 2)
-        val potionWeight = minOf(0.8f, 0.3f + floor * 0.1f)
-        repeat(itemCount) {
+        // Food : quantité calculée pour couvrir 80% des dégâts de l'étage
+        val avgMobAtk = if (lv.monsters.isNotEmpty())
+            lv.monsters.map { it.scaledAtk }.average().toFloat()
+        else 5f
+        val totalExpectedDmg = avgMobAtk * lv.monsters.size * 0.8f
+        val foodCount = (totalExpectedDmg / AVG_FOOD_HEAL).roundToInt().coerceIn(3, 25)
+
+        repeat(foodCount) {
             val room = shuffled.randomOrNull() ?: return@repeat
             val pos  = room.randomInner()
             if (lv.tiles[pos.y][pos.x] == TileType.FLOOR && lv.itemAt(pos.x, pos.y) == null) {
-                val type = if (Random.nextFloat() < potionWeight) ItemType.HEALTH_POTION else ItemType.GOLD
-                lv.items.add(Item(type, pos))
+                val roll = Random.nextFloat()
+                val foodType = when {
+                    roll < 0.50f -> ItemType.FOOD_SMALL
+                    roll < 0.85f -> ItemType.FOOD_MEDIUM
+                    else         -> ItemType.FOOD_LARGE
+                }
+                lv.items.add(Item(foodType, pos))
             }
+        }
+
+        // Or au sol
+        val goldCount = 3 + Random.nextInt(4)
+        repeat(goldCount) {
+            val room = shuffled.randomOrNull() ?: return@repeat
+            val pos  = room.randomInner()
+            if (lv.tiles[pos.y][pos.x] == TileType.FLOOR && lv.itemAt(pos.x, pos.y) == null)
+                lv.items.add(Item(ItemType.GOLD, pos))
         }
 
         return lv
@@ -490,5 +545,4 @@ class RoguelikeGame {
             })
         }
     }
-
 }
