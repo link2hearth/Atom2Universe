@@ -6,7 +6,6 @@ data class ElementInput(val atomicNumber: Int, val count: Int)
 
 sealed class FusionOutput {
     data class Element(val atomicNumber: Int) : FusionOutput()
-    object H2O : FusionOutput()
 }
 
 enum class FusionRecipe(

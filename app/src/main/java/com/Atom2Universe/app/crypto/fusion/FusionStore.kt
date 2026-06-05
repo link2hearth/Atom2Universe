@@ -27,9 +27,6 @@ class FusionStore(context: Context) {
     fun getBonusMultApc(): Double = prefs.getFloat(KEY_BONUS_APC, 0f).toDouble()
     fun getBonusMultAps(): Double = prefs.getFloat(KEY_BONUS_APS, 0f).toDouble()
 
-    fun getMoleculeH2O(): Int = prefs.getInt(KEY_MOLECULE_H2O, 0)
-    fun addMoleculeH2O() = prefs.edit { putInt(KEY_MOLECULE_H2O, getMoleculeH2O() + 1) }
-
     fun nextBonusIsAps(): Boolean = getTotalWins() % 2 == 0
 
     fun reset() = prefs.edit { clear() }
@@ -39,6 +36,5 @@ class FusionStore(context: Context) {
         private const val KEY_TOTAL_WINS = "total_wins"
         private const val KEY_BONUS_APC = "bonus_mult_apc"
         private const val KEY_BONUS_APS = "bonus_mult_aps"
-        private const val KEY_MOLECULE_H2O = "molecule_h2o"
     }
 }

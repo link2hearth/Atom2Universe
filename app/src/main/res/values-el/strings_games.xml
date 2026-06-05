@@ -56,7 +56,6 @@
     <!-- Fusion -->
     <string name="fusion_title">ΣΥΝΤΗΞΗ</string>
     <string name="fusion_btn">⚛</string>
-    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
     <string name="fusion_recipe_pp_name">Αλυσίδα Πρωτονίου-Πρωτονίου</string>
     <string name="fusion_recipe_triple_alpha_name">Διαδικασία Τριπλού-Άλφα</string>
     <string name="fusion_recipe_alpha_capture_name">Καύση Νέον</string>
@@ -82,7 +81,6 @@
     <string name="fusion_success">ΕΠΙΤΥΧΙΑ</string>
     <string name="fusion_fail">ΑΠΟΤΥΧΙΑ</string>
     <string name="fusion_result_got_element">Αποκτήθηκε: %1$s (%2$s)</string>
-    <string name="fusion_result_got_molecule">H₂O αποκτήθηκε!</string>
     <string name="fusion_result_consumed">Στοιχεία καταναλώθηκαν.</string>
     <string name="fusion_tap_continue">Πατήστε για συνέχεια</string>
     <string name="fusion_next_bonus_aps">Επόμενη νίκη → +1%% APS</string>

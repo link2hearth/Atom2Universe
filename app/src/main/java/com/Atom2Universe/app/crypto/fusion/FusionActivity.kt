@@ -38,7 +38,7 @@ class FusionActivity : ThemedActivity() {
     private lateinit var bonusApcText: TextView
     private lateinit var bonusApsText: TextView
     private lateinit var nextBonusText: TextView
-    private lateinit var h2oCountText: TextView
+
 
     private var isAnimating = false
     private val handler = Handler(Looper.getMainLooper())
@@ -73,9 +73,7 @@ class FusionActivity : ThemedActivity() {
         bonusApcText     = findViewById(R.id.fusion_bonus_apc)
         bonusApsText     = findViewById(R.id.fusion_bonus_aps)
         nextBonusText    = findViewById(R.id.fusion_next_bonus)
-        h2oCountText     = findViewById(R.id.fusion_h2o_count)
-
-        findViewById<View>(R.id.fusion_back).setOnClickListener { finish() }
+findViewById<View>(R.id.fusion_back).setOnClickListener { finish() }
         animOverlay.setOnClickListener { if (!isAnimating) closeOverlay() }
 
         buildRecipeTiles()
@@ -93,9 +91,7 @@ class FusionActivity : ThemedActivity() {
         val aps = Math.round(fusionStore.getBonusMultAps() * 100).toInt()
         bonusApcText.text = "+${apc}% APC"
         bonusApsText.text = "+${aps}% APS"
-        val h2o = fusionStore.getMoleculeH2O()
-        h2oCountText.text = if (h2o > 0) getString(R.string.fusion_molecules_h2o, h2o) else ""
-        nextBonusText.text = if (fusionStore.nextBonusIsAps())
+nextBonusText.text = if (fusionStore.nextBonusIsAps())
             getString(R.string.fusion_next_bonus_aps)
         else
             getString(R.string.fusion_next_bonus_apc)
@@ -172,10 +168,8 @@ class FusionActivity : ThemedActivity() {
         val success = Math.random() < recipe.baseRate
 
         if (success) {
-            when (val out = recipe.output) {
-                is FusionOutput.Element -> collectionStore.addCopy(out.atomicNumber)
-                is FusionOutput.H2O    -> fusionStore.addMoleculeH2O()
-            }
+            val out = recipe.output as FusionOutput.Element
+            collectionStore.addCopy(out.atomicNumber)
         }
 
         fusionStore.recordAttempt(recipe, success)
@@ -239,14 +233,9 @@ class FusionActivity : ThemedActivity() {
             resultTitle.text = getString(R.string.fusion_success)
             startRainbowText(resultTitle)
 
-            val detailText = when (val out = recipe.output) {
-                is FusionOutput.Element -> {
-                    val elem = elementsByNumber[out.atomicNumber]
-                    if (elem != null) getString(R.string.fusion_result_got_element, elem.symbol, elem.localizedName(this))
-                    else ""
-                }
-                is FusionOutput.H2O -> getString(R.string.fusion_result_got_molecule)
-            }
+            val out = recipe.output as FusionOutput.Element
+            val elem = elementsByNumber[out.atomicNumber]
+            val detailText = if (elem != null) getString(R.string.fusion_result_got_element, elem.symbol, elem.localizedName(this)) else ""
             resultDetail.text = detailText
             resultDetail.setTextColor(Color.WHITE)
 

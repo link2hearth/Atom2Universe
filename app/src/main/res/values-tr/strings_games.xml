@@ -58,7 +58,6 @@
     <!-- Fusion -->
     <string name="fusion_title">FÜZYON</string>
     <string name="fusion_btn">⚛</string>
-    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
     <string name="fusion_recipe_pp_name">Proton-Proton Zinciri</string>
     <string name="fusion_recipe_triple_alpha_name">Üçlü-Alfa Süreci</string>
     <string name="fusion_recipe_alpha_capture_name">Neon Yanması</string>
@@ -84,7 +83,6 @@
     <string name="fusion_success">BAŞARILI</string>
     <string name="fusion_fail">BAŞARISIZ</string>
     <string name="fusion_result_got_element">Elde edildi: %1$s (%2$s)</string>
-    <string name="fusion_result_got_molecule">H₂O elde edildi!</string>
     <string name="fusion_result_consumed">Elementler tüketildi.</string>
     <string name="fusion_tap_continue">Devam etmek için dokunun</string>
     <string name="fusion_next_bonus_aps">Sonraki galibiyet → +1%% APS</string>

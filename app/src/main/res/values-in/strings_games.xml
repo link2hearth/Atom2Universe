@@ -58,7 +58,6 @@
     <!-- Fusion -->
     <string name="fusion_title">FUSI</string>
     <string name="fusion_btn">⚛</string>
-    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
     <string name="fusion_recipe_pp_name">Rantai Proton-Proton</string>
     <string name="fusion_recipe_triple_alpha_name">Proses Triple-Alpha</string>
     <string name="fusion_recipe_alpha_capture_name">Pembakaran Neon</string>
@@ -84,7 +83,6 @@
     <string name="fusion_success">BERHASIL</string>
     <string name="fusion_fail">GAGAL</string>
     <string name="fusion_result_got_element">Diperoleh: %1$s (%2$s)</string>
-    <string name="fusion_result_got_molecule">H₂O diperoleh!</string>
     <string name="fusion_result_consumed">Elemen dikonsumsi.</string>
     <string name="fusion_tap_continue">Ketuk untuk melanjutkan</string>
     <string name="fusion_next_bonus_aps">Kemenangan berikutnya → +1%% APS</string>

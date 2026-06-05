@@ -58,7 +58,6 @@
     <!-- Fusion -->
     <string name="fusion_title">FUSION</string>
     <string name="fusion_btn">⚛</string>
-    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
     <string name="fusion_recipe_pp_name">Proton-Proton Chain</string>
     <string name="fusion_recipe_triple_alpha_name">Triple-Alpha Process</string>
     <string name="fusion_recipe_alpha_capture_name">Neon Burning</string>
@@ -84,7 +83,6 @@
     <string name="fusion_success">SUCCESS</string>
     <string name="fusion_fail">FAIL</string>
     <string name="fusion_result_got_element">Obtained: %1$s (%2$s)</string>
-    <string name="fusion_result_got_molecule">H₂O obtained!</string>
     <string name="fusion_result_consumed">Elements consumed.</string>
     <string name="fusion_tap_continue">Tap to continue</string>
     <string name="fusion_next_bonus_aps">Next win → +1% APS</string>

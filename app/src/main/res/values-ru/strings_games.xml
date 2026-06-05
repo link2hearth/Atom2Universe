@@ -58,7 +58,6 @@
     <!-- Fusion -->
     <string name="fusion_title">СИНТЕЗ</string>
     <string name="fusion_btn">⚛</string>
-    <string name="fusion_molecules_h2o">H₂O: %1$d</string>
     <string name="fusion_recipe_pp_name">Протон-протонная цепочка</string>
     <string name="fusion_recipe_triple_alpha_name">Тройной альфа-процесс</string>
     <string name="fusion_recipe_alpha_capture_name">Горение неона</string>
@@ -84,7 +83,6 @@
     <string name="fusion_success">УСПЕХ</string>
     <string name="fusion_fail">НЕУДАЧА</string>
     <string name="fusion_result_got_element">Получено: %1$s (%2$s)</string>
-    <string name="fusion_result_got_molecule">H₂O получен!</string>
     <string name="fusion_result_consumed">Элементы использованы.</string>
     <string name="fusion_tap_continue">Нажмите для продолжения</string>
     <string name="fusion_next_bonus_aps">Следующая победа → +1%% APS</string>
