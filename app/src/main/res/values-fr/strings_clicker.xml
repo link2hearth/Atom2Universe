@@ -145,6 +145,7 @@
     <string name="clicker_factory_effect_mixed">+%1$d%% APS  +%2$d%% APC</string>
     <string name="clicker_shop_buy">Acheter</string>
     <string name="clicker_shop_level">Niv. %d</string>
+    <string name="clicker_shop_plus_toggle_desc">Activer le badge \"+\" pour cette amélioration</string>
     <string name="clicker_shop_stats_title">Statistiques</string>
     <string name="clicker_shop_stat_lifetime">Atomes totaux</string>
     <string name="clicker_shop_stat_apc">Par clic</string>

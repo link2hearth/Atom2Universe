@@ -41,6 +41,18 @@
                 android:paddingStart="8dp" />
 
             <TextView
+                android:id="@+id/shop_god_finger_plus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="+"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/clicker_shop_plus_toggle_desc" />
+
+            <TextView
                 android:id="@+id/shop_god_finger_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,6 +119,18 @@
                 android:textSize="16sp"
                 android:fontFamily="monospace"
                 android:paddingStart="8dp" />
+
+            <TextView
+                android:id="@+id/shop_star_core_plus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="+"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/clicker_shop_plus_toggle_desc" />
 
             <TextView
                 android:id="@+id/shop_star_core_price"

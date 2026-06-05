@@ -52,6 +52,7 @@ object MainClickerPreferences {
     private const val KEY_CRYPTO_EURUSD_ENABLED = "crypto_eurusd_enabled"
     private const val KEY_CRYPTO_COMPARISON_MINUTES = "crypto_comparison_minutes"
     private const val KEY_CLICKER_ENABLED = "clicker_enabled"
+    private const val KEY_SHOP_PLUS_PREFIX = "shop_plus_enabled_"
     private const val KEY_CLICKER_OPACITY_PERCENT = "clicker_opacity_percent"
     private const val KEY_CLICKER_HEIGHT_DP = "clicker_height_dp"
     private const val KEY_CLICKER_DECIMAL_DIGITS = "clicker_decimal_digits"
@@ -110,6 +111,17 @@ object MainClickerPreferences {
 
     fun setClickerEnabled(context: Context, enabled: Boolean) {
         prefs(context).edit { putBoolean(KEY_CLICKER_ENABLED, enabled) }
+    }
+
+    /**
+     * Indique si l'amélioration [upgradeId] contribue au badge "+" du bouton boutique
+     * (le "$+" s'allume quand on a assez d'atomes pour l'acheter). Activé par défaut.
+     */
+    fun isShopPlusEnabled(context: Context, upgradeId: String): Boolean =
+        prefs(context).getBoolean(KEY_SHOP_PLUS_PREFIX + upgradeId, true)
+
+    fun setShopPlusEnabled(context: Context, upgradeId: String, enabled: Boolean) {
+        prefs(context).edit { putBoolean(KEY_SHOP_PLUS_PREFIX + upgradeId, enabled) }
     }
 
     fun getClickerOpacityPercent(context: Context): Int =

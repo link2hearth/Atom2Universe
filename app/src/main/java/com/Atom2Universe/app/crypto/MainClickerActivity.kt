@@ -208,10 +208,12 @@ class MainClickerActivity : ThemedActivity() {
     private var shopGodFingerPriceView: TextView? = null
     private var shopGodFingerMultBtn: Button? = null
     private var shopGodFingerBuyBtn: Button? = null
+    private var shopGodFingerPlusView: TextView? = null
     private var shopStarCoreLevelView: TextView? = null
     private var shopStarCorePriceView: TextView? = null
     private var shopStarCoreMultBtn: Button? = null
     private var shopStarCoreBuyBtn: Button? = null
+    private var shopStarCorePlusView: TextView? = null
 
     // Neutrinos dans le shop
     private var shopNeutrinoBalance: TextView? = null
@@ -247,6 +249,7 @@ class MainClickerActivity : ThemedActivity() {
     private val shopFactoryEffectViews = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
     private val shopFactoryPriceViews  = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
     private val shopFactoryBuyBtns     = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, Button>()
+    private val shopFactoryPlusViews   = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
 
     // Collections de raretés dans le shop
     private var shopCollectionsProgress: TextView? = null
@@ -552,10 +555,7 @@ class MainClickerActivity : ThemedActivity() {
                 clickerViewModel.state.collect { state ->
                     if (clickerBannerView.visibility == View.VISIBLE) {
                         clickerBannerView.update(state)
-                        val godCost  = clickerViewModel.shopCost("godFinger", 1)
-                        val starCost = clickerViewModel.shopCost("starCore", 1)
-                        val affordableAtoms = state.atoms.greaterOrEqual(godCost) || state.atoms.greaterOrEqual(starCost)
-                        clickerBannerView.setShopAffordable(affordableAtoms)
+                        clickerBannerView.setShopAffordable(computeShopPlusAffordable(state))
                     }
                     if (shopDialog?.isShowing == true) {
                         updateShopViews(state)
@@ -707,9 +707,13 @@ class MainClickerActivity : ThemedActivity() {
         shopGodFingerLevelView  = view.findViewById(R.id.shop_god_finger_level)
         shopGodFingerPriceView  = view.findViewById(R.id.shop_god_finger_price)
         shopGodFingerMultBtn    = view.findViewById(R.id.shop_god_finger_mult)
+        shopGodFingerPlusView   = view.findViewById(R.id.shop_god_finger_plus)
+        bindShopPlusToggle(shopGodFingerPlusView, "godFinger")
         shopStarCoreLevelView   = view.findViewById(R.id.shop_star_core_level)
         shopStarCorePriceView   = view.findViewById(R.id.shop_star_core_price)
         shopStarCoreMultBtn     = view.findViewById(R.id.shop_star_core_mult)
+        shopStarCorePlusView    = view.findViewById(R.id.shop_star_core_plus)
+        bindShopPlusToggle(shopStarCorePlusView, "starCore")
         shopNeutrinoBalance     = view.findViewById(R.id.shop_neutrino_balance)
         shopApcToApsLevelView   = view.findViewById(R.id.shop_apc_to_aps_level)
         shopApcToApsEffectView  = view.findViewById(R.id.shop_apc_to_aps_effect)
@@ -786,6 +790,8 @@ class MainClickerActivity : ThemedActivity() {
             shopStarCorePriceView  = null
             shopStarCoreMultBtn    = null
             shopStarCoreBuyBtn     = null
+            shopGodFingerPlusView  = null
+            shopStarCorePlusView   = null
             shopNeutrinoBalance    = null
             shopApcToApsLevelView  = null
             shopApcToApsEffectView = null
@@ -818,6 +824,7 @@ class MainClickerActivity : ThemedActivity() {
             shopFactoryEffectViews.clear()
             shopFactoryPriceViews.clear()
             shopFactoryBuyBtns.clear()
+            shopFactoryPlusViews.clear()
             shopDialog = null
         }
         shopDialog = dialog
@@ -860,6 +867,7 @@ class MainClickerActivity : ThemedActivity() {
         shopFactoryEffectViews.clear()
         shopFactoryPriceViews.clear()
         shopFactoryBuyBtns.clear()
+        shopFactoryPlusViews.clear()
         container.removeAllViews()
 
         val dp      = resources.displayMetrics.density
@@ -939,6 +947,20 @@ class MainClickerActivity : ThemedActivity() {
             textCol.addView(effectView)
 
             row.addView(textCol)
+
+            val plusView = TextView(this)
+            plusView.text     = "+"
+            plusView.textSize = 18f
+            plusView.gravity  = Gravity.CENTER
+            plusView.setTypeface(android.graphics.Typeface.MONOSPACE, android.graphics.Typeface.BOLD)
+            plusView.layoutParams = LinearLayout.LayoutParams((32 * dp).toInt(), (32 * dp).toInt())
+            val plusValue = android.util.TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, plusValue, true)
+            plusView.setBackgroundResource(plusValue.resourceId)
+            plusView.contentDescription = getString(R.string.clicker_shop_plus_toggle_desc)
+            shopFactoryPlusViews[type] = plusView
+            bindShopPlusToggle(plusView, type.name)
+            row.addView(plusView)
 
             val priceView = TextView(this)
             priceView.text     = "—"
@@ -1163,6 +1185,47 @@ class MainClickerActivity : ThemedActivity() {
 
             container.addView(row)
         }
+    }
+
+    /**
+     * Lie un toggle "+" d'amélioration : sa couleur reflète l'état sauvegardé, et un appui
+     * bascule la préférence puis réévalue le badge "$+" du bandeau.
+     */
+    private fun bindShopPlusToggle(toggle: TextView?, upgradeId: String) {
+        toggle ?: return
+        applyShopPlusToggleColor(toggle, MainClickerPreferences.isShopPlusEnabled(this, upgradeId))
+        toggle.setOnClickListener {
+            val next = !MainClickerPreferences.isShopPlusEnabled(this, upgradeId)
+            MainClickerPreferences.setShopPlusEnabled(this, upgradeId, next)
+            applyShopPlusToggleColor(toggle, next)
+            refreshShopPlusBadge()
+        }
+    }
+
+    private fun applyShopPlusToggleColor(toggle: TextView, enabled: Boolean) {
+        toggle.setTextColor(if (enabled) 0xFF22C55E.toInt() else 0xFF475569.toInt())
+        toggle.alpha = if (enabled) 1f else 0.5f
+    }
+
+    private fun refreshShopPlusBadge() {
+        if (clickerBannerView.visibility != View.VISIBLE) return
+        clickerBannerView.setShopAffordable(computeShopPlusAffordable(clickerViewModel.state.value))
+    }
+
+    /**
+     * Vrai si au moins une amélioration en atomes dont le toggle "+" est activé est achetable
+     * (doigt créateur, cœur d'étoile, usines). Pilote le badge "$+" du bandeau.
+     */
+    private fun computeShopPlusAffordable(state: ClickerGameState): Boolean {
+        if (MainClickerPreferences.isShopPlusEnabled(this, "godFinger") &&
+            state.atoms.greaterOrEqual(clickerViewModel.shopCost("godFinger", 1))) return true
+        if (MainClickerPreferences.isShopPlusEnabled(this, "starCore") &&
+            state.atoms.greaterOrEqual(clickerViewModel.shopCost("starCore", 1))) return true
+        for (type in com.Atom2Universe.app.crypto.clicker.FactoryType.values()) {
+            if (MainClickerPreferences.isShopPlusEnabled(this, type.name) &&
+                state.atoms.greaterOrEqual(clickerViewModel.factoryCost(type))) return true
+        }
+        return false
     }
 
     private fun updateShopViews(state: ClickerGameState) {
