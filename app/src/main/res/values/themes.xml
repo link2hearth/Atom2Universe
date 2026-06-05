@@ -111,6 +111,13 @@
     <!-- Dialog button style -->
     <style name="Widget.A2U.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/white</item>
+        <item name="rippleColor">@color/white</item>
+    </style>
+
+    <!-- Dialog button style forced white (fallback pour les dialogs sombres) -->
+    <style name="Widget.A2U.Button.TextButton.Dialog.White">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Dialog theme for color pickers - also dark -->
@@ -128,8 +135,9 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">#B3B3B3</item>
         <item name="android:windowBackground">@color/startup_background</item>
-        <item name="buttonBarPositiveButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog</item>
-        <item name="buttonBarNegativeButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog.White</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog.White</item>
+        <item name="android:buttonBarButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog.White</item>
     </style>
 
     <!-- NumberPicker style for dark theme -->
