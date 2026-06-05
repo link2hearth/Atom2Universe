@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.roguelike
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.*
+import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -16,6 +17,9 @@ class RoguelikeActivity : ThemedActivity() {
 
     private var game = RoguelikeGame()
 
+    private val sfx   by lazy { RoguelikeSoundEngine(lifecycleScope) }
+    private val music by lazy { DungeonProceduralMusic(lifecycleScope) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_roguelike)
@@ -28,6 +32,7 @@ class RoguelikeActivity : ThemedActivity() {
 
         btnBack.setOnClickListener { finish() }
 
+        // sfx et music démarrés dans onResume uniquement (évite le double init EAS)
         if (SaveManager.hasSave(this)) {
             showContinueDialog()
         } else {
@@ -58,15 +63,22 @@ class RoguelikeActivity : ThemedActivity() {
 
     override fun onPause() {
         super.onPause()
-        // Sauvegarde uniquement si la partie est en cours (pas sur mort)
-        if (game.phase == GamePhase.PLAYING) {
-            SaveManager.save(this, game)
-        }
+        music.stop()
+        sfx.stop()
+        if (game.phase == GamePhase.PLAYING) SaveManager.save(this, game)
     }
 
     override fun onResume() {
         super.onResume()
         enableImmersiveMode()
+        sfx.start()
+        music.start(game.player.floor)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        music.stop()
+        sfx.stop()
     }
 
     // ── Attache / détache un game ────────────────────────────────────────────────
@@ -74,6 +86,12 @@ class RoguelikeActivity : ThemedActivity() {
     private fun attachGame(g: RoguelikeGame) {
         game          = g
         gameView.game = g
+
+        g.onPlayerAttack = { isCrit -> sfx.onPlayerAttack(isCrit) }
+        g.onPlayerHit    = { sfx.onPlayerHit() }
+        g.onMonsterDied  = { sfx.onMonsterDied() }
+        g.onDescend      = { sfx.onDescend() }
+        g.onFloorChanged = { floor -> music.onFloorChanged(floor) }
 
         gameView.onMove = { dx, dy ->
             g.tryMove(dx, dy); refresh()

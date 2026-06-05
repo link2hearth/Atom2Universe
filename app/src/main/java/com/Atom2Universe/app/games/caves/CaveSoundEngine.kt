@@ -64,7 +64,6 @@ internal class CaveSoundEngine(private val scope: CoroutineScope) {
 
     private fun onMobNearby(isBoss: Boolean) {
         if (isBoss) {
-            // Grondement grave x2 légèrement décalé
             note(36, 70)
             scope.launch { delay(120); note(36, 55) }
         } else {

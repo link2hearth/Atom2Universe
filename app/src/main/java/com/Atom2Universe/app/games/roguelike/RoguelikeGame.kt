@@ -118,6 +118,13 @@ enum class GamePhase { PLAYING, GAME_OVER }
 // ─── Moteur principal ──────────────────────────────────────────────────────────
 class RoguelikeGame {
 
+    // Callbacks audio — branchés par RoguelikeActivity, null par défaut
+    var onPlayerAttack:  ((isCrit: Boolean) -> Unit)? = null
+    var onPlayerHit:     (() -> Unit)?                = null
+    var onMonsterDied:   (() -> Unit)?                = null
+    var onDescend:       (() -> Unit)?                = null
+    var onFloorChanged:  ((floor: Int) -> Unit)?      = null
+
     companion object {
         const val MAP_W               = 40
         const val MAP_H               = 25
@@ -221,7 +228,9 @@ class RoguelikeGame {
     fun closeShopAndDescend() {
         shopOpen = false
         shopBought.clear()
+        onDescend?.invoke()
         tryDescend()
+        onFloorChanged?.invoke(player.floor)
     }
 
     fun tryDescend(): Boolean {
@@ -270,10 +279,12 @@ class RoguelikeGame {
         val base   = max(1, player.atk - m.type.baseDef + Random.nextInt(-1, 2))
         val dmg    = if (isCrit) (base * player.critDmgMult).toInt() else base
         m.hp -= dmg
+        onPlayerAttack?.invoke(isCrit)
         if (m.hp <= 0) {
             m.isAlive = false
             val gld = Random.nextInt(1, m.type.goldReward / 2 + 3)
             player.gold += gld
+            onMonsterDied?.invoke()
             if (isCrit)
                 addLog("CRITIQUE ! ${m.type.label} -$dmg. +$gld or.")
             else
@@ -305,6 +316,7 @@ class RoguelikeGame {
             }
         }
         player.hp -= dmg
+        onPlayerHit?.invoke()
         addLog("${m.type.label} frappe -$dmg ! HP ${player.hp}/${player.totalMaxHp}")
         if (player.hp <= 0) { player.hp = 0; phase = GamePhase.GAME_OVER; addLog("Tu es mort !") }
     }
