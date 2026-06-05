@@ -155,7 +155,8 @@
     <string name="clicker_shop_level">Niv. %d</string>
     <string name="clicker_shop_plus_toggle_desc">Activer le badge \"+\" pour cette amélioration</string>
     <string name="clicker_shop_stats_title">Statistiques</string>
-    <string name="clicker_shop_stat_lifetime">Atomes totaux</string>
+    <string name="clicker_shop_stat_lifetime">Atomes cycle actuel</string>
+    <string name="clicker_shop_stat_all_time_total">Atomes totaux (tous Big Bangs)</string>
     <string name="clicker_shop_stat_apc">Par clic</string>
     <string name="clicker_shop_stat_aps">Par seconde</string>
     <string name="clicker_shop_stat_elem_apc">Bonus éléments APC</string>
@@ -173,6 +174,7 @@
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
     <string name="clicker_shop_elem_stock">%d tokens</string>
     <string name="big_bang_title">BIG BANG</string>
+    <string name="big_bang_title_count">BIG BANG #%d</string>
     <string name="big_bang_description">Dépense tes tokens d\'éléments en bonus permanents, puis déclenche le Big Bang. Atomes, Doigt Créateur, Cœur d\'Étoile et toutes les usines seront remis à zéro. Tout le reste est conservé.\n1 token par tirage gacha.</string>
     <string name="big_bang_tokens_balance">%d tokens</string>
     <string name="big_bang_pending_summary">%1$d améliorations · %2$d tokens</string>

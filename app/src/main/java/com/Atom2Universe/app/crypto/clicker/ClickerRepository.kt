@@ -41,7 +41,12 @@ class ClickerRepository(context: Context) {
         starCoreLevel = starCoreLevel,
         neutrinosCount = neutrinos,
         apcToApsLevel = apcToApsLevel,
-        apsToApcLevel = apsToApcLevel
+        apsToApcLevel = apsToApcLevel,
+        allTimeTotalSign = allTimeTotalAtoms.sign,
+        allTimeTotalLayer = allTimeTotalAtoms.layer,
+        allTimeTotalMantissa = allTimeTotalAtoms.mantissa,
+        allTimeTotalExponent = allTimeTotalAtoms.exponent,
+        allTimeTotalValue = allTimeTotalAtoms.value
     )
 
     private fun ClickerStateEntity.toState() = ClickerGameState(
@@ -54,7 +59,8 @@ class ClickerRepository(context: Context) {
         starCoreLevel = starCoreLevel,
         neutrinos = neutrinosCount,
         apcToApsLevel = apcToApsLevel,
-        apsToApcLevel = apsToApcLevel
+        apsToApcLevel = apsToApcLevel,
+        allTimeTotalAtoms = layered(allTimeTotalSign, allTimeTotalLayer, allTimeTotalMantissa, allTimeTotalExponent, allTimeTotalValue)
     )
 
     private fun layered(sign: Int, layer: Int, mantissa: Double, exponent: Double, value: Double) =

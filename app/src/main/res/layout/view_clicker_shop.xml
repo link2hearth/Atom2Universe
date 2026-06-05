@@ -375,10 +375,18 @@
 
         <!-- ── Lignes de stats ────────────────────────────────────────────────── -->
 
-        <!-- Atomes totaux -->
+        <!-- Atomes totaux cycle actuel -->
         <LinearLayout style="@style/ShopStatRow">
             <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_lifetime" />
             <TextView android:id="@+id/shop_stat_lifetime" style="@style/ShopStatValue" android:text="0" />
+        </LinearLayout>
+
+        <View style="@style/ShopStatDivider" />
+
+        <!-- Atomes totaux tous Big Bangs -->
+        <LinearLayout style="@style/ShopStatRow">
+            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_all_time_total" />
+            <TextView android:id="@+id/shop_stat_all_time_total" style="@style/ShopStatValue" android:text="0" />
         </LinearLayout>
 
         <View style="@style/ShopStatDivider" />

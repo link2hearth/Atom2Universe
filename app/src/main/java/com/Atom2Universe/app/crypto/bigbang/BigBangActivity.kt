@@ -46,6 +46,11 @@ class BigBangActivity : ThemedActivity() {
         pendingSummaryView = findViewById(R.id.big_bang_pending_summary)
         bigBangButton     = findViewById(R.id.big_bang_button)
 
+        val count = bigBangRepo.getBigBangCount()
+        val titleView = findViewById<TextView>(R.id.big_bang_title)
+        titleView.text = if (count == 0) getString(R.string.big_bang_title)
+                         else getString(R.string.big_bang_title_count, count)
+
         findViewById<ImageButton>(R.id.big_bang_back).setOnClickListener { finish() }
 
         val container = findViewById<LinearLayout>(R.id.big_bang_bonus_container)

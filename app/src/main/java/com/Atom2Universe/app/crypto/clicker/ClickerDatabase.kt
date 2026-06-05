@@ -40,7 +40,12 @@ data class ClickerStateEntity(
     val starCoreLevel: Int = 0,
     val neutrinosCount: Int = 0,
     val apcToApsLevel: Int = 0,
-    val apsToApcLevel: Int = 0
+    val apsToApcLevel: Int = 0,
+    val allTimeTotalSign: Int = 0,
+    val allTimeTotalLayer: Int = 0,
+    val allTimeTotalMantissa: Double = 0.0,
+    val allTimeTotalExponent: Double = 0.0,
+    val allTimeTotalValue: Double = 0.0
 )
 
 @Entity(tableName = "gacha_tickets")
@@ -97,7 +102,17 @@ private val MIGRATION_4_5 = object : Migration(4, 5) {
     }
 }
 
-@Database(entities = [ClickerStateEntity::class, GachaTicketStateEntity::class], version = 5, exportSchema = false)
+private val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE clicker_state ADD COLUMN allTimeTotalSign INTEGER NOT NULL DEFAULT 0")
+        database.execSQL("ALTER TABLE clicker_state ADD COLUMN allTimeTotalLayer INTEGER NOT NULL DEFAULT 0")
+        database.execSQL("ALTER TABLE clicker_state ADD COLUMN allTimeTotalMantissa REAL NOT NULL DEFAULT 0.0")
+        database.execSQL("ALTER TABLE clicker_state ADD COLUMN allTimeTotalExponent REAL NOT NULL DEFAULT 0.0")
+        database.execSQL("ALTER TABLE clicker_state ADD COLUMN allTimeTotalValue REAL NOT NULL DEFAULT 0.0")
+    }
+}
+
+@Database(entities = [ClickerStateEntity::class, GachaTicketStateEntity::class], version = 6, exportSchema = false)
 abstract class ClickerDatabase : RoomDatabase() {
     abstract fun dao(): ClickerDao
     abstract fun gachaTicketDao(): GachaTicketDao
@@ -111,7 +126,7 @@ abstract class ClickerDatabase : RoomDatabase() {
                     context.applicationContext,
                     ClickerDatabase::class.java,
                     "clicker_game.db"
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build().also { instance = it }
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6).build().also { instance = it }
             }
     }
 }

@@ -155,7 +155,8 @@
     <string name="clicker_shop_level">Lv. %d</string>
     <string name="clicker_shop_plus_toggle_desc">Toggle the \"+\" badge for this upgrade</string>
     <string name="clicker_shop_stats_title">Statistics</string>
-    <string name="clicker_shop_stat_lifetime">Total atoms</string>
+    <string name="clicker_shop_stat_lifetime">Atoms this cycle</string>
+    <string name="clicker_shop_stat_all_time_total">All-time total atoms</string>
     <string name="clicker_shop_stat_apc">Per click</string>
     <string name="clicker_shop_stat_aps">Per second</string>
     <string name="clicker_shop_stat_elem_apc">Element bonus APC</string>
@@ -173,6 +174,7 @@
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
     <string name="clicker_shop_elem_stock">%d tokens</string>
     <string name="big_bang_title">BIG BANG</string>
+    <string name="big_bang_title_count">BIG BANG #%d</string>
     <string name="big_bang_description">Spend element tokens on permanent bonuses, then trigger the Big Bang. Atoms, God Finger, Star Core and all factories reset. Everything else is kept.\nYou earn 1 token per gacha draw.</string>
     <string name="big_bang_tokens_balance">%d tokens</string>
     <string name="big_bang_pending_summary">%1$d upgrades · %2$d tokens</string>

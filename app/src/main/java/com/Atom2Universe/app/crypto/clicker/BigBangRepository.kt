@@ -19,7 +19,10 @@ class BigBangRepository(context: Context) {
     fun addLevels(bonus: BigBangBonus, count: Int) =
         prefs.edit { putInt(bonus.id, getLevel(bonus) + count) }
 
-    fun resetUnlock() = prefs.edit { putBoolean("unlocked", false) }
+    fun resetUnlock() = prefs.edit {
+        putBoolean("unlocked", false)
+        putInt("big_bang_count", 0)
+    }
 
     fun getBigBangCount(): Int = prefs.getInt("big_bang_count", 0)
 

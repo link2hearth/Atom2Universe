@@ -227,6 +227,7 @@ class MainClickerActivity : ThemedActivity() {
     private var shopApsToApcBuyBtn: Button? = null
     // Stats dans le shop
     private var shopStatLifetime: TextView? = null
+    private var shopStatAllTimeTotal: TextView? = null
     private var shopStatApc: TextView? = null
     private var shopStatAps: TextView? = null
     private var shopStatElemApc: TextView? = null
@@ -723,6 +724,7 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcEffectView  = view.findViewById(R.id.shop_aps_to_apc_effect)
         shopApsToApcCostView    = view.findViewById(R.id.shop_aps_to_apc_cost)
         shopStatLifetime        = view.findViewById(R.id.shop_stat_lifetime)
+        shopStatAllTimeTotal   = view.findViewById(R.id.shop_stat_all_time_total)
         shopStatApc            = view.findViewById(R.id.shop_stat_apc)
         shopStatAps            = view.findViewById(R.id.shop_stat_aps)
         shopStatElemApc        = view.findViewById(R.id.shop_stat_elem_apc)
@@ -803,6 +805,7 @@ class MainClickerActivity : ThemedActivity() {
             shopApsToApcCostView   = null
             shopApsToApcBuyBtn     = null
             shopStatLifetime       = null
+            shopStatAllTimeTotal   = null
             shopStatApc            = null
             shopStatAps            = null
             shopStatElemApc        = null
@@ -1264,6 +1267,7 @@ class MainClickerActivity : ThemedActivity() {
         )
 
         shopStatLifetime?.text    = state.lifetime.toString()
+        shopStatAllTimeTotal?.text = state.allTimeTotalAtoms.add(state.lifetime).toString()
         shopStatApc?.text         = state.perClick.toString()
         shopStatAps?.text         = state.perSecond.toString()
 

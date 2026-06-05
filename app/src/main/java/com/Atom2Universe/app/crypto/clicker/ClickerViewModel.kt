@@ -279,18 +279,20 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         bigBangRepo.incrementBigBangCount()
 
         val s = _state.value
+        val newAllTimeTotal = s.allTimeTotalAtoms.add(s.lifetime)
         val resetState = recalcProduction(
             ClickerGameState(
-                atoms         = com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.zero(),
-                lifetime      = com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.zero(),
-                godFingerLevel = 0,
-                starCoreLevel  = 0,
-                gachaTickets   = s.gachaTickets,
-                neutrinos      = s.neutrinos,
-                elementTokens  = elementTokenRepo.getBalance(),
-                apcToApsLevel  = s.apcToApsLevel,
-                apsToApcLevel  = s.apsToApcLevel,
-                factoryCounts  = emptyMap()
+                atoms             = com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.zero(),
+                lifetime          = com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber.zero(),
+                allTimeTotalAtoms = newAllTimeTotal,
+                godFingerLevel    = 0,
+                starCoreLevel     = 0,
+                gachaTickets      = s.gachaTickets,
+                neutrinos         = s.neutrinos,
+                elementTokens     = elementTokenRepo.getBalance(),
+                apcToApsLevel     = s.apcToApsLevel,
+                apsToApcLevel     = s.apsToApcLevel,
+                factoryCounts     = emptyMap()
             )
         )
         _state.value = resetState
