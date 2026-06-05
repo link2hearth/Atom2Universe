@@ -275,6 +275,15 @@ class StarsWarView @JvmOverloads constructor(
         val bosses: Array<Bitmap?>
     )
 
+    // ── Callbacks audio (branchés depuis StarsWarActivity) ───────────────────
+    var onPlayerShot:     (() -> Unit)? = null
+    var onEnemyDestroyed: (() -> Unit)? = null
+    var onBossDestroyed:  (() -> Unit)? = null
+    var onPlayerHitCb:    (() -> Unit)? = null
+    var onGameOverCb:     (() -> Unit)? = null
+    var onNewWaveCb:      ((Int) -> Unit)? = null
+    var onMeteorPhaseCb:  (() -> Unit)? = null
+
     // ── Touch ─────────────────────────────────────────────────────────────────
     private var dragPointerId = -1
     private var lastTouchX = 0f
@@ -567,6 +576,7 @@ class StarsWarView @JvmOverloads constructor(
                 loadSpriteSet(next)
             }
         }
+        onNewWaveCb?.invoke(n)
         waveNumber = n
         val isBossWave = n % 5 == 0
         waveEnemyCount = if (isBossWave) 6 + n / 5 * 2 else (6 + n * 2).coerceAtMost(24)
@@ -893,6 +903,7 @@ class StarsWarView @JvmOverloads constructor(
                 )
                 waveEnemiesKilled++
                 dead += enemy
+                if (enemy.isBoss) onBossDestroyed?.invoke() else onEnemyDestroyed?.invoke()
                 if (upgradeStacks[UPG_VAMPIRE] > 0 && Random.nextFloat() < 0.05f)
                     playerHp = (playerHp + 1).coerceAtMost(playerMaxHp)
             }
@@ -972,9 +983,11 @@ class StarsWarView @JvmOverloads constructor(
             val offset = (i - (bulletCount - 1) / 2f) * spacing
             playerBullets += Bullet(playerX + offset, playerY - PLAYER_SIZE / 2f, pierceCount)
         }
+        onPlayerShot?.invoke()
     }
 
     private fun startMeteorPhase() {
+        onMeteorPhaseCb?.invoke()
         meteorSessionCount++
         meteors.clear()
         playerBullets.clear()
@@ -1236,12 +1249,14 @@ class StarsWarView @JvmOverloads constructor(
         }
         perfectCycle = false
         playerHp--
+        onPlayerHitCb?.invoke()
         if (playerHp <= 0) { triggerGameOver(); return }
         playerDamageTimer = PLAYER_DAMAGE_COOLDOWN
         playerBlinkTimer = 0f
     }
 
     private fun triggerGameOver() {
+        onGameOverCb?.invoke()
         phase = Phase.GAME_OVER
         val editor = prefs.edit()
         if (score > bestScore) { bestScore = score; newBestScore = true; editor.putInt("best_score", bestScore) }
