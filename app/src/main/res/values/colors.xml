@@ -175,6 +175,7 @@
     <color name="game_tile_quiz">#33691E</color>
     <color name="game_tile_link">#00695C</color>
     <color name="game_tile_wavesurf">#0D2B5E</color>
+    <color name="game_tile_motocross">#3D1A08</color>
     <color name="game_tile_roguelike">#2D1B00</color>
     <color name="game_tile_survivor">#0D1A0D</color>
     <color name="game_tile_bigger">#1A0D2E</color>

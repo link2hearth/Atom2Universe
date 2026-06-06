@@ -247,4 +247,11 @@
     <string name="escape_status_caught">Spotted after %1$d turns! Tap to retry.</string>
     <string name="escape_status_win">Escaped in %1$d turns (optimal: %2$d). Tap to play again.</string>
     <string name="escape_status_win_perfect">Perfect escape in %1$d turns! Tap to play again.</string>
+
+    <!-- Motocross -->
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Ride procedural tracks — left to brake/lean back, right to accelerate/lean forward!</string>
+    <string name="motocross_restart">Restart</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
 </resources>

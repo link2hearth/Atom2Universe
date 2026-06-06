@@ -247,4 +247,11 @@
     <string name="escape_status_caught">Repéré après %1$d tours ! Tapez pour rejouer.</string>
     <string name="escape_status_win">Évasion en %1$d tours (optimal : %2$d). Tapez pour rejouer.</string>
     <string name="escape_status_win_perfect">Évasion parfaite en %1$d tours ! Tapez pour rejouer.</string>
+
+    <!-- Motocross -->
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Pilotez sur des pistes procédurales — gauche pour freiner/pencher, droite pour accélérer !</string>
+    <string name="motocross_restart">Recommencer</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
 </resources>
