@@ -23,4 +23,18 @@
     <string name="gol_preset_lwss">Spaceship</string>
     <string name="gol_preset_label">Presets</string>
     <string name="gol_zoom_hint">Pinch to zoom · Drag to pan · Tap to draw</string>
+
+    <!-- Double Pendulum -->
+    <string name="hub_pendulum_title">Double Pendulum</string>
+    <string name="hub_pendulum_desc">Chaos theory in motion</string>
+    <string name="pendulum_title">Double Pendulum</string>
+    <string name="pendulum_reset">Reset</string>
+    <string name="pendulum_trails">Trails</string>
+    <string name="pendulum_trail_pivot2">Joint</string>
+    <string name="pendulum_trail_tip">Tip</string>
+    <string name="pendulum_count">Pendulums</string>
+    <string name="pendulum_speed">Speed</string>
+    <string name="pendulum_trail_length">Trail</string>
+    <string name="pendulum_gravity">Gravity</string>
+    <string name="pendulum_off">Off</string>
 </resources>

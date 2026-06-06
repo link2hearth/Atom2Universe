@@ -215,6 +215,7 @@
     <color name="audio_hub_tile_science">#00695C</color>
     <color name="science_tile_periodic">#004D40</color>
     <color name="science_tile_game_of_life">#1B5E20</color>
+    <color name="science_tile_pendulum">#1A237E</color>
 
     <!-- The Line game -->
     <color name="the_line_active">#1E40AF</color>

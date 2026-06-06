@@ -6,6 +6,7 @@ import com.Atom2Universe.app.games.gameoflife.GameOfLifeActivity
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.periodic.PeriodicTableActivity
+import com.Atom2Universe.app.science.pendulum.DoublePendulumActivity
 
 class ScienceHubActivity : BaseHubActivity() {
 
@@ -36,20 +37,24 @@ class ScienceHubActivity : BaseHubActivity() {
             iconRes = R.drawable.ic_games,
             defaultColorRes = R.color.science_tile_game_of_life,
             activityClass = GameOfLifeActivity::class.java
+        ),
+        HubTile(
+            id = "double_pendulum",
+            titleRes = R.string.hub_pendulum_title,
+            descriptionRes = R.string.hub_pendulum_desc,
+            iconRes = R.drawable.ic_science,
+            defaultColorRes = R.color.science_tile_pendulum,
+            activityClass = DoublePendulumActivity::class.java
         )
     )
 
     override fun onTileClicked(tile: HubTile) {
         when (tile.id) {
-            "periodic_table" -> {
-                startActivity(
-                    Intent(this, PeriodicTableActivity::class.java)
-                        .putExtra(PeriodicTableActivity.EXTRA_SOURCE, PeriodicTableActivity.SOURCE_SCIENCE)
-                )
-            }
-            else -> {
-                tile.activityClass?.let { startActivity(Intent(this, it)) }
-            }
+            "periodic_table" -> startActivity(
+                Intent(this, PeriodicTableActivity::class.java)
+                    .putExtra(PeriodicTableActivity.EXTRA_SOURCE, PeriodicTableActivity.SOURCE_SCIENCE)
+            )
+            else -> tile.activityClass?.let { startActivity(Intent(this, it)) }
         }
     }
 }

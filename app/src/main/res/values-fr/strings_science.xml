@@ -23,4 +23,18 @@
     <string name="gol_preset_lwss">Vaisseau</string>
     <string name="gol_preset_label">Préréglages</string>
     <string name="gol_zoom_hint">Pince pour zoomer · Glisser pour déplacer · Toucher pour dessiner</string>
+
+    <!-- Double Pendule -->
+    <string name="hub_pendulum_title">Pendule Double</string>
+    <string name="hub_pendulum_desc">La théorie du chaos en mouvement</string>
+    <string name="pendulum_title">Pendule Double</string>
+    <string name="pendulum_reset">Réinitialiser</string>
+    <string name="pendulum_trails">Traînées</string>
+    <string name="pendulum_trail_pivot2">Articulation</string>
+    <string name="pendulum_trail_tip">Extrémité</string>
+    <string name="pendulum_count">Pendules</string>
+    <string name="pendulum_speed">Vitesse</string>
+    <string name="pendulum_trail_length">Traînée</string>
+    <string name="pendulum_gravity">Gravité</string>
+    <string name="pendulum_off">Aucune</string>
 </resources>
