@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_science_title">Science</string>
+    <string name="hub_science_desc">Tableau périodique, simulations…</string>
+    <string name="science_hub_subtitle">Explorer l\'univers</string>
+    <string name="hub_periodic_title">Tableau Périodique</string>
+    <string name="hub_periodic_desc">118 éléments chimiques</string>
+    <string name="hub_game_of_life_title">Jeu de la Vie</string>
+    <string name="hub_game_of_life_desc">Automate cellulaire de Conway</string>
+
+    <!-- Game of Life UI -->
+    <string name="gol_title">Jeu de la Vie</string>
+    <string name="gol_play">Jouer</string>
+    <string name="gol_pause">Pause</string>
+    <string name="gol_clear">Effacer</string>
+    <string name="gol_random">Aléatoire</string>
+    <string name="gol_speed">Vitesse</string>
+    <string name="gol_generation">Gén : %1$d</string>
+    <string name="gol_cells_alive">Vivantes : %1$d</string>
+    <string name="gol_preset_glider">Planeur</string>
+    <string name="gol_preset_pulsar">Pulsar</string>
+    <string name="gol_preset_gosper">Canon de Gosper</string>
+    <string name="gol_preset_lwss">Vaisseau</string>
+    <string name="gol_preset_label">Préréglages</string>
+    <string name="gol_zoom_hint">Pince pour zoomer · Glisser pour déplacer · Toucher pour dessiner</string>
+</resources>

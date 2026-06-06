@@ -503,6 +503,17 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
+        <!-- Hub Science (Tableau périodique, Game of Life…) -->
+        <activity
+            android:name=".science.ScienceHubActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
+            android:name=".games.gameoflife.GameOfLifeActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
         <!-- Sous-hub Audio -->
         <activity
             android:name=".audio.AudioSubHubActivity"

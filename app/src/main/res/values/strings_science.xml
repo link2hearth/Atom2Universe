@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hub_science_title">Science</string>
+    <string name="hub_science_desc">Periodic table, simulations…</string>
+    <string name="science_hub_subtitle">Explore the universe</string>
+    <string name="hub_periodic_title">Periodic Table</string>
+    <string name="hub_periodic_desc">118 chemical elements</string>
+    <string name="hub_game_of_life_title">Game of Life</string>
+    <string name="hub_game_of_life_desc">Conway\'s cellular automaton</string>
+
+    <!-- Game of Life UI -->
+    <string name="gol_title">Game of Life</string>
+    <string name="gol_play">Play</string>
+    <string name="gol_pause">Pause</string>
+    <string name="gol_clear">Clear</string>
+    <string name="gol_random">Random</string>
+    <string name="gol_speed">Speed</string>
+    <string name="gol_generation">Gen: %1$d</string>
+    <string name="gol_cells_alive">Alive: %1$d</string>
+    <string name="gol_preset_glider">Glider</string>
+    <string name="gol_preset_pulsar">Pulsar</string>
+    <string name="gol_preset_gosper">Gosper Gun</string>
+    <string name="gol_preset_lwss">Spaceship</string>
+    <string name="gol_preset_label">Presets</string>
+    <string name="gol_zoom_hint">Pinch to zoom · Drag to pan · Tap to draw</string>
+</resources>

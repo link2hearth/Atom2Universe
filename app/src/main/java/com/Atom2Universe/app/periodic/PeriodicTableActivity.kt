@@ -37,6 +37,7 @@ class PeriodicTableActivity : ThemedActivity() {
   private var selectedElement: PeriodicElement? = null
   private var lastSelectedElementCell: LinearLayout? = null
   private var launchedFromGacha: Boolean = false
+  private var launchedFromScience: Boolean = false
   private var selectedElementCopiesView: TextView? = null
 
   // Info panel views
@@ -68,15 +69,20 @@ class PeriodicTableActivity : ThemedActivity() {
     gridLayout = findViewById(R.id.periodic_grid)
     descriptionProvider = PeriodicElementDescriptionProvider(this)
     collectionStore = PeriodicCollectionStore(this)
-    launchedFromGacha = intent.getStringExtra(EXTRA_SOURCE) == SOURCE_GACHA
+    val source = intent.getStringExtra(EXTRA_SOURCE)
+    launchedFromGacha = source == SOURCE_GACHA
+    launchedFromScience = source == SOURCE_SCIENCE
 
     findViewById<ImageButton>(R.id.back_button).setOnClickListener {
       navigateBack()
     }
 
-    findViewById<ImageButton>(R.id.toggle_rarity_button).setOnClickListener {
+    val toggleRarityButton = findViewById<ImageButton>(R.id.toggle_rarity_button)
+    if (launchedFromScience) {
+      toggleRarityButton.visibility = android.view.View.GONE
+    }
+    toggleRarityButton.setOnClickListener {
       rarityVisible = !rarityVisible
-        if (rarityVisible) View.VISIBLE else View.INVISIBLE
       rarityCornerViews.forEach { corner ->
         // Ne montrer que les coins déjà débloqués (tag = true si possédé)
         if (rarityVisible && corner.tag == true) corner.visibility = View.VISIBLE
@@ -90,6 +96,7 @@ class PeriodicTableActivity : ThemedActivity() {
     }
 
     populatePeriodicTable()
+    if (!launchedFromScience) addLegendCells()
     createInfoPanel()
   }
 
@@ -161,6 +168,7 @@ class PeriodicTableActivity : ThemedActivity() {
       textSize = 11f; setTextColor(0xCCFFFFFF.toInt())
       setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(4))
       background = resources.getDrawable(R.drawable.gacha_rarity_badge, null)
+      visibility = if (launchedFromScience) View.GONE else View.VISIBLE
     }
     topRow.addView(selectedElementCopiesView)
     panel.addView(topRow)
@@ -269,10 +277,12 @@ class PeriodicTableActivity : ThemedActivity() {
     panelCategoryText?.text = element.category.replace("-", " ")
       .replaceFirstChar { it.uppercase() }
 
-    selectedElementCopiesView?.text = getString(
-      R.string.periodic_info_copies_badge,
-      collectionStore.getCopyCount(element.atomicNumber)
-    )
+    if (!launchedFromScience) {
+      selectedElementCopiesView?.text = getString(
+        R.string.periodic_info_copies_badge,
+        collectionStore.getCopyCount(element.atomicNumber)
+      )
+    }
 
     val json = PeriodicElementJsonRepository.get(element.atomicNumber)
     val appearance = json?.appearance
@@ -730,8 +740,6 @@ class PeriodicTableActivity : ThemedActivity() {
       }
       gridLayout.addView(cellView, params)
     }
-
-    addLegendCells()
   }
 
   // Positions col/row 1-indexées : (1,8)(2,8)(3,8) / (1,9)(2,9)(3,9)
@@ -930,7 +938,7 @@ class PeriodicTableActivity : ThemedActivity() {
   }
 
   private fun navigateBack() {
-    if (launchedFromGacha) {
+    if (launchedFromGacha || launchedFromScience) {
       finish()
       return
     }
@@ -975,13 +983,13 @@ class PeriodicTableActivity : ThemedActivity() {
     frameLayout.addView(cell, layoutParams)
 
     // Coin de rareté — visible si jamais obtenu ET toggle activé
-    val owned = collectionStore.hasEverObtained(element.atomicNumber)
+    val owned = if (launchedFromScience) false else collectionStore.hasEverObtained(element.atomicNumber)
     val rarityColor = getRarityCornerColor(element.atomicNumber)
     val cornerSize = dpToPx(25)
     val rarityCorner = View(this)
     rarityCorner.setBackgroundColor(rarityColor)
-    rarityCorner.tag = owned  // true = possédé, utilisé par le toggle
-    rarityCorner.visibility = if (owned && rarityVisible) View.VISIBLE else View.INVISIBLE
+    rarityCorner.tag = owned
+    rarityCorner.visibility = if (!launchedFromScience && owned && rarityVisible) View.VISIBLE else View.INVISIBLE
     val params = FrameLayout.LayoutParams(cornerSize, cornerSize)
     params.gravity = android.view.Gravity.BOTTOM or android.view.Gravity.END
     rarityCorner.layoutParams = params
@@ -1022,6 +1030,7 @@ class PeriodicTableActivity : ThemedActivity() {
   companion object {
     const val EXTRA_SOURCE = "periodic_source"
     const val SOURCE_GACHA = "gacha"
+    const val SOURCE_SCIENCE = "science"
   }
 
 }

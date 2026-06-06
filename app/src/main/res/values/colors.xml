@@ -211,6 +211,11 @@
     <color name="audio_hub_tile_comics">#4A148C</color>
     <color name="audio_hub_tile_dictaphone">#37474F</color>
 
+    <!-- Science hub -->
+    <color name="audio_hub_tile_science">#00695C</color>
+    <color name="science_tile_periodic">#004D40</color>
+    <color name="science_tile_game_of_life">#1B5E20</color>
+
     <!-- The Line game -->
     <color name="the_line_active">#1E40AF</color>
     <color name="the_line_inactive">#1E293B</color>
