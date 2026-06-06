@@ -24,6 +24,7 @@ class DoublePendulumView @JvmOverloads constructor(
     var simSpeed = 1.0           // multiplicateur de vitesse
     var trailLength = 300        // nombre de points conservés par traînée
     var pendulumCount = 8        // nombre de pendules actifs
+    var damping = 0.0            // friction par step (0 = sans friction, 1 = arrêt immédiat)
 
     // ── Toggles traînées ──────────────────────────────────────────────────
     var showTrailPivot1 = false  // articulation haute (= point fixe, pas très intéressant)
@@ -206,6 +207,12 @@ class DoublePendulumView @JvmOverloads constructor(
             omega2 += dt / 6.0 * (k1o2 + 2 * k2o2 + 2 * k3o2 + k4o2)
             theta1 += dt / 6.0 * (k1t1 + 2 * k2t1 + 2 * k3t1 + k4t1)
             theta2 += dt / 6.0 * (k1t2 + 2 * k2t2 + 2 * k3t2 + k4t2)
+
+            if (damping > 0.0) {
+                val retain = 1.0 - damping * dt * 60.0
+                omega1 *= retain.coerceAtLeast(0.0)
+                omega2 *= retain.coerceAtLeast(0.0)
+            }
 
             recordTrails()
         }

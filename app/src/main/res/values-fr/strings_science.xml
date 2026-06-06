@@ -37,6 +37,7 @@
     <string name="pendulum_trail_length">Traînée</string>
     <string name="pendulum_gravity">Gravité</string>
     <string name="pendulum_arm_length">Longueur bras</string>
+    <string name="pendulum_damping">Friction</string>
     <string name="pendulum_off">Aucune</string>
     <string name="pendulum_gravity_pluto">Pluton</string>
     <string name="pendulum_gravity_moon">Lune</string>
