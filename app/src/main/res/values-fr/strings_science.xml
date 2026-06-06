@@ -38,4 +38,13 @@
     <string name="pendulum_gravity">Gravité</string>
     <string name="pendulum_arm_length">Longueur bras</string>
     <string name="pendulum_off">Aucune</string>
+    <string name="pendulum_gravity_pluto">Pluton</string>
+    <string name="pendulum_gravity_moon">Lune</string>
+    <string name="pendulum_gravity_mars">Mars</string>
+    <string name="pendulum_gravity_earth">Terre</string>
+    <string name="pendulum_gravity_uranus">Uranus</string>
+    <string name="pendulum_gravity_saturn">Saturne</string>
+    <string name="pendulum_gravity_neptune">Neptune</string>
+    <string name="pendulum_gravity_jupiter">Jupiter</string>
+    <string name="pendulum_gravity_sun">Soleil</string>
 </resources>

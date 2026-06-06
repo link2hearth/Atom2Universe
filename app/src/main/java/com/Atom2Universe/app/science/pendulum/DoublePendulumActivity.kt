@@ -16,6 +16,22 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 
 class DoublePendulumActivity : ThemedActivity() {
 
+    // Corps célestes : (nom ressource string, gravité m/s²)
+    // L'index 3 = Terre est la valeur par défaut
+    private val gravityPresets by lazy {
+        listOf(
+            getString(R.string.pendulum_gravity_pluto)    to 0.62,
+            getString(R.string.pendulum_gravity_moon)     to 1.62,
+            getString(R.string.pendulum_gravity_mars)     to 3.72,
+            getString(R.string.pendulum_gravity_earth)    to 9.81,
+            getString(R.string.pendulum_gravity_saturn)   to 10.44,
+            getString(R.string.pendulum_gravity_uranus)   to 8.87,
+            getString(R.string.pendulum_gravity_neptune)  to 11.15,
+            getString(R.string.pendulum_gravity_jupiter)  to 24.79,
+            getString(R.string.pendulum_gravity_sun)      to 274.0
+        )
+    }
+
     private lateinit var pendulumView: DoublePendulumView
     private lateinit var playPauseBtn: ImageButton
 
@@ -203,13 +219,57 @@ class DoublePendulumActivity : ThemedActivity() {
             format = { if (it == 0) getString(R.string.pendulum_off) else "${it * 100}" }
         ) { v -> pendulumView.trailLength = v * 100 })
 
-        bar.addView(buildSeekRow(dp,
-            labelRes = R.string.pendulum_gravity,
-            min = 1, max = 30, initial = 10,
-            format = { "${"%.1f".format(it.toFloat())} m/s²" }
-        ) { v -> pendulumView.gravity = v.toDouble() })
+        bar.addView(buildGravityRow(dp))
 
         return bar
+    }
+
+    private fun buildGravityRow(dp: Float): LinearLayout {
+        val earthIndex = 3
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (4 * dp).toInt() }
+        }
+
+        val label = TextView(this).apply {
+            setText(R.string.pendulum_gravity)
+            textSize = 11f
+            setTextColor(0xFF8888AA.toInt())
+            minWidth = (90 * dp).toInt()
+        }
+        row.addView(label)
+
+        val valueText = TextView(this).apply {
+            val (name, g) = gravityPresets[earthIndex]
+            text = "$name (${"%.2f".format(g)} m/s²)"
+            textSize = 11f
+            setTextColor(0xFFCCCCFF.toInt())
+            minWidth = (110 * dp).toInt()
+            gravity = Gravity.END or Gravity.CENTER_VERTICAL
+            setPadding(0, 0, (8 * dp).toInt(), 0)
+        }
+
+        val seek = SeekBar(this).apply {
+            max = gravityPresets.size - 1
+            progress = earthIndex
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
+                    val (name, g) = gravityPresets[progress]
+                    valueText.text = "$name (${"%.2f".format(g)} m/s²)"
+                    pendulumView.gravity = g
+                }
+                override fun onStartTrackingTouch(sb: SeekBar) {}
+                override fun onStopTrackingTouch(sb: SeekBar) {}
+            })
+        }
+        row.addView(seek)
+        row.addView(valueText)
+        return row
     }
 
     private fun buildSeekRow(

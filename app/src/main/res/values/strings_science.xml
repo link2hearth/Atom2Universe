@@ -38,4 +38,13 @@
     <string name="pendulum_gravity">Gravity</string>
     <string name="pendulum_arm_length">Arm length</string>
     <string name="pendulum_off">Off</string>
+    <string name="pendulum_gravity_pluto">Pluto</string>
+    <string name="pendulum_gravity_moon">Moon</string>
+    <string name="pendulum_gravity_mars">Mars</string>
+    <string name="pendulum_gravity_earth">Earth</string>
+    <string name="pendulum_gravity_uranus">Uranus</string>
+    <string name="pendulum_gravity_saturn">Saturn</string>
+    <string name="pendulum_gravity_neptune">Neptune</string>
+    <string name="pendulum_gravity_jupiter">Jupiter</string>
+    <string name="pendulum_gravity_sun">Sun</string>
 </resources>
