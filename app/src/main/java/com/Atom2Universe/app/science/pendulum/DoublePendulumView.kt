@@ -23,6 +23,7 @@ class DoublePendulumView @JvmOverloads constructor(
     var mass = 1.0               // masse des deux bobs
     var simSpeed = 1.0           // multiplicateur de vitesse
     var trailLength = 300        // nombre de points conservés par traînée
+    var pendulumCount = 8        // nombre de pendules actifs
 
     // ── Toggles traînées ──────────────────────────────────────────────────
     var showTrailPivot1 = false  // articulation haute (= point fixe, pas très intéressant)
@@ -75,10 +76,11 @@ class DoublePendulumView @JvmOverloads constructor(
         originX = w / 2f
         originY = h * 0.28f
         scale = h * 0.22f
-        if (pendulums.isEmpty()) reset(8)
+        if (pendulums.isEmpty()) reset(pendulumCount)
     }
 
-    fun reset(count: Int = pendulums.size.coerceAtLeast(8)) {
+    fun reset(count: Int = pendulumCount) {
+        pendulumCount = count
         pendulums.clear()
         val baseAngle = Math.PI * 0.75
         val spread = if (count > 1) 1e-4 else 0.0
@@ -90,6 +92,7 @@ class DoublePendulumView @JvmOverloads constructor(
                 color = PALETTE[i % PALETTE.size]
             ))
         }
+        invalidate()
     }
 
     fun step(dtSeconds: Double) {

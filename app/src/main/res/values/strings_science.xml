@@ -36,5 +36,6 @@
     <string name="pendulum_speed">Speed</string>
     <string name="pendulum_trail_length">Trail</string>
     <string name="pendulum_gravity">Gravity</string>
+    <string name="pendulum_arm_length">Arm length</string>
     <string name="pendulum_off">Off</string>
 </resources>

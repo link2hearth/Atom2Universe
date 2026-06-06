@@ -109,9 +109,7 @@ class DoublePendulumActivity : ThemedActivity() {
             setBackgroundColor(0xFF2A2A4A.toInt())
             gravity = Gravity.CENTER
             setPadding((14 * dp).toInt(), (8 * dp).toInt(), (14 * dp).toInt(), (8 * dp).toInt())
-            setOnClickListener {
-                pendulumView.reset()
-            }
+            setOnClickListener { pendulumView.reset() }
         }
         bar.addView(resetBtn, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
@@ -179,7 +177,19 @@ class DoublePendulumActivity : ThemedActivity() {
             labelRes = R.string.pendulum_count,
             min = 1, max = 12, initial = 8,
             format = { it.toString() }
-        ) { v -> pendulumView.reset(v) })
+        ) { v ->
+            pendulumView.pendulumCount = v
+            pendulumView.reset(v)
+        })
+
+        bar.addView(buildSeekRow(dp,
+            labelRes = R.string.pendulum_arm_length,
+            min = 5, max = 20, initial = 10,
+            format = { "×${"%.1f".format(it / 10f)}" }
+        ) { v ->
+            pendulumView.armLength = v / 10.0
+            pendulumView.reset()
+        })
 
         bar.addView(buildSeekRow(dp,
             labelRes = R.string.pendulum_speed,

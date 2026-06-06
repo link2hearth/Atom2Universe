@@ -36,5 +36,6 @@
     <string name="pendulum_speed">Vitesse</string>
     <string name="pendulum_trail_length">Traînée</string>
     <string name="pendulum_gravity">Gravité</string>
+    <string name="pendulum_arm_length">Longueur bras</string>
     <string name="pendulum_off">Aucune</string>
 </resources>
