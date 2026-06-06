@@ -193,7 +193,7 @@ class DoublePendulumActivity : ThemedActivity() {
 
         bar.addView(buildSeekRow(dp,
             labelRes = R.string.pendulum_speed,
-            min = 1, max = 20, initial = 10,
+            min = 1, max = 13, initial = 10,
             format = { "×${"%.1f".format(it / 10f)}" }
         ) { v -> pendulumView.simSpeed = v / 10.0 })
 
