@@ -217,6 +217,7 @@
     <color name="science_tile_game_of_life">#1B5E20</color>
     <color name="science_tile_pendulum">#1A237E</color>
     <color name="science_tile_nuclide">#4A148C</color>
+    <color name="science_tile_solar">#0D47A1</color>
 
     <!-- Nuclide decay types -->
     <color name="nuclide_stable">#000000</color>

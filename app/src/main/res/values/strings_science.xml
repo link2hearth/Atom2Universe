@@ -71,4 +71,26 @@
     <string name="nuclide_legend_beta_minus">β−</string>
     <string name="nuclide_legend_beta_plus">β+/EC</string>
     <string name="nuclide_legend_fission">SF</string>
+
+    <!-- Solar System -->
+    <string name="hub_solar_title">Solar System</string>
+    <string name="hub_solar_desc">Navigate the solar system in 3D</string>
+    <string name="solar_system_title">Solar System</string>
+    <string name="solar_sun_name">Sun</string>
+    <string name="solar_mode_close">Close</string>
+    <string name="solar_mode_log">Log.</string>
+    <string name="solar_mode_real">Realistic</string>
+    <string name="solar_play_pause">Play / Pause</string>
+    <string name="solar_info_radius">Diameter</string>
+    <string name="solar_info_orbit">Distance (AU)</string>
+    <string name="solar_info_period">Period</string>
+    <string name="solar_info_moons">Moons</string>
+    <string name="solar_info_tilt">Axial tilt</string>
+    <string name="solar_info_km">%1$,.0f km</string>
+    <string name="solar_info_au">%1$.3f AU</string>
+    <string name="solar_info_days">%1$.1f d</string>
+    <string name="solar_info_years">%1$.2f yr</string>
+    <string name="solar_speed_hours">%1$.1f h/s</string>
+    <string name="solar_speed_days">%1$.1f d/s</string>
+    <string name="solar_speed_years">%1$.2f yr/s</string>
 </resources>

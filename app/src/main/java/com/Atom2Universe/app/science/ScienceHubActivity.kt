@@ -8,6 +8,7 @@ import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.periodic.PeriodicTableActivity
 import com.Atom2Universe.app.science.nuclide.NuclideTableActivity
 import com.Atom2Universe.app.science.pendulum.DoublePendulumActivity
+import com.Atom2Universe.app.science.solarsystem.SolarSystemActivity
 
 class ScienceHubActivity : BaseHubActivity() {
 
@@ -54,6 +55,14 @@ class ScienceHubActivity : BaseHubActivity() {
             iconRes = R.drawable.ic_science,
             defaultColorRes = R.color.science_tile_pendulum,
             activityClass = DoublePendulumActivity::class.java
+        ),
+        HubTile(
+            id = "solar_system",
+            titleRes = R.string.hub_solar_title,
+            descriptionRes = R.string.hub_solar_desc,
+            iconRes = R.drawable.ic_science,
+            defaultColorRes = R.color.science_tile_solar,
+            activityClass = SolarSystemActivity::class.java
         )
     )
 
