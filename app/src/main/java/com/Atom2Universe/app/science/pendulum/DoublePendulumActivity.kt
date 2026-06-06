@@ -118,6 +118,20 @@ class DoublePendulumActivity : ThemedActivity() {
         }
         bar.addView(playPauseBtn, LinearLayout.LayoutParams((40 * dp).toInt(), (36 * dp).toInt()))
 
+        val lockBtn = TextView(this).apply {
+            text = "🔓"
+            textSize = 20f
+            gravity = Gravity.CENTER
+            setPadding((6 * dp).toInt(), 0, (6 * dp).toInt(), 0)
+            setOnClickListener {
+                pendulumView.isLocked = !pendulumView.isLocked
+                text = if (pendulumView.isLocked) "🔒" else "🔓"
+            }
+        }
+        bar.addView(lockBtn, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT, (36 * dp).toInt()
+        ))
+
         val resetBtn = TextView(this).apply {
             setText(R.string.pendulum_reset)
             textSize = 13f

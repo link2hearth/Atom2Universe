@@ -8,7 +8,9 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.hypot
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -25,6 +27,11 @@ class DoublePendulumView @JvmOverloads constructor(
     var trailLength = 300        // nombre de points conservés par traînée
     var pendulumCount = 8        // nombre de pendules actifs
     var damping = 0.0            // friction par step (0 = sans friction, 1 = arrêt immédiat)
+    var isLocked = false         // cadenas : ancre fixe, grab des bobs activé
+
+    private var grabbedIndex = -1
+    private var grabbingTip = false
+    private val grabRadiusPx get() = 48f * resources.displayMetrics.density
 
     // ── Toggles traînées ──────────────────────────────────────────────────
     var showTrailPivot1 = false  // articulation haute (= point fixe, pas très intéressant)
@@ -57,6 +64,12 @@ class DoublePendulumView @JvmOverloads constructor(
         color = Color.parseColor("#888899")
         isAntiAlias = true
         style = Paint.Style.FILL
+    }
+    private val grabHighlightPaint = Paint().apply {
+        color = Color.parseColor("#FFFFFF")
+        isAntiAlias = true
+        style = Paint.Style.STROKE
+        strokeWidth = 2.5f
     }
 
     private val PALETTE = intArrayOf(
@@ -100,7 +113,10 @@ class DoublePendulumView @JvmOverloads constructor(
         val dt = dtSeconds * simSpeed
         val steps = if (dt > 0.008) (dt / 0.005).toInt().coerceAtLeast(1) else 1
         val subDt = dt / steps
-        for (p in pendulums) repeat(steps) { p.integrate(subDt, gravity, armLength, mass) }
+        for ((i, p) in pendulums.withIndex()) {
+            if (i == grabbedIndex) continue  // physique suspendue pendant le grab
+            repeat(steps) { p.integrate(subDt, gravity, armLength, mass) }
+        }
         invalidate()
     }
 
@@ -110,7 +126,7 @@ class DoublePendulumView @JvmOverloads constructor(
         // Point d'ancrage fixe
         canvas.drawCircle(originX, originY, 6f, pivotPaint)
 
-        for (p in pendulums) {
+        for ((i, p) in pendulums.withIndex()) {
             val (x1, y1) = worldToScreen(p.x1, p.y1)
             val (x2, y2) = worldToScreen(p.x2, p.y2)
 
@@ -128,6 +144,13 @@ class DoublePendulumView @JvmOverloads constructor(
             bobPaint.color = applyAlpha(p.color, 0.85f)
             canvas.drawCircle(x1, y1, 8f, bobPaint)
             canvas.drawCircle(x2, y2, 10f, bobPaint)
+
+            // Highlight du bob grabé
+            if (i == grabbedIndex) {
+                val (hx, hy) = if (grabbingTip) Pair(x2, y2) else Pair(x1, y1)
+                val hr = if (grabbingTip) 14f else 12f
+                canvas.drawCircle(hx, hy, hr, grabHighlightPaint)
+            }
         }
     }
 
@@ -151,12 +174,65 @@ class DoublePendulumView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-            originX = event.x
-            originY = event.y
-            for (p in pendulums) { p.trailPivot2.clear(); p.trailTip.clear() }
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                if (isLocked) {
+                    tryGrab(event.x, event.y)
+                } else {
+                    originX = event.x
+                    originY = event.y
+                    for (p in pendulums) { p.trailPivot2.clear(); p.trailTip.clear() }
+                }
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (isLocked && grabbedIndex >= 0) {
+                    applyGrab(event.x, event.y)
+                    invalidate()
+                }
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                if (grabbedIndex >= 0) {
+                    // Vitesse nulle à la release : repart de la position posée
+                    pendulums[grabbedIndex].omega1 = 0.0
+                    pendulums[grabbedIndex].omega2 = 0.0
+                    grabbedIndex = -1
+                }
+            }
         }
         return true
+    }
+
+    private fun tryGrab(sx: Float, sy: Float) {
+        var bestDist = grabRadiusPx
+        grabbedIndex = -1
+
+        for ((i, p) in pendulums.withIndex()) {
+            val (tx, ty) = worldToScreen(p.x2, p.y2)
+            val dTip = hypot(sx - tx, sy - ty)
+            if (dTip < bestDist) { bestDist = dTip; grabbedIndex = i; grabbingTip = true }
+
+            val (px, py) = worldToScreen(p.x1, p.y1)
+            val dPivot = hypot(sx - px, sy - py)
+            if (dPivot < bestDist) { bestDist = dPivot; grabbedIndex = i; grabbingTip = false }
+        }
+
+        if (grabbedIndex >= 0) {
+            pendulums[grabbedIndex].trailPivot2.clear()
+            pendulums[grabbedIndex].trailTip.clear()
+        }
+    }
+
+    private fun applyGrab(sx: Float, sy: Float) {
+        val p = pendulums[grabbedIndex]
+        val wx = ((sx - originX) / scale).toDouble()
+        val wy = ((sy - originY) / scale).toDouble()
+        if (grabbingTip) {
+            p.theta2 = atan2(wx - p.x1, wy - p.y1)
+            p.omega2 = 0.0
+        } else {
+            p.theta1 = atan2(wx, wy)
+            p.omega1 = 0.0
+        }
     }
 
     // ── État d'un seul pendule ─────────────────────────────────────────────
