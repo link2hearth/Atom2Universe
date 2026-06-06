@@ -1315,7 +1315,7 @@ class MainClickerActivity : ThemedActivity() {
         return if (minutes > 0) "${minutes}m ${secs}s" else "${secs}s"
     }
 
-    private fun formatElemBonus(flat: Int, mult: Double): String {
+    private fun formatElemBonus(flat: Long, mult: Double): String {
         val parts = mutableListOf<String>()
         if (flat > 0) parts.add("+$flat flat")
         if (mult > 0.0) parts.add("+${"%.2f".format(mult * 100)}%")

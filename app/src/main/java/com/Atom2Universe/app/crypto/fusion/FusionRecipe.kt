@@ -1,11 +1,14 @@
 package com.Atom2Universe.app.crypto.fusion
 
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.gacha.GachaRarity
 
 data class ElementInput(val atomicNumber: Int, val count: Int)
 
 sealed class FusionOutput {
     data class Element(val atomicNumber: Int) : FusionOutput()
+    /** Produit un élément aléatoire parmi la rareté indiquée, en excluant certains numéros atomiques. */
+    data class RandomRarity(val rarity: GachaRarity, val exclude: List<Int> = emptyList()) : FusionOutput()
 }
 
 enum class FusionRecipe(
@@ -74,8 +77,8 @@ enum class FusionRecipe(
         palier = 5,
         unlockParentId = "alpha_capture"
     ),
-    WATER(
-        id = "water",
+    SULFUR_BURNING(
+        id = "water",  // id conservé pour compatibilité saves
         inputs = listOf(ElementInput(16, 2)),
         output = FusionOutput.Element(26),
         baseRate = 0.20f,
@@ -84,6 +87,17 @@ enum class FusionRecipe(
         gameInfoRes = R.string.fusion_recipe_water_game,
         palier = 6,
         unlockParentId = "oxygen_fusion"
+    ),
+    NEUTRON_CAPTURE(
+        id = "neutron_capture",
+        inputs = listOf(ElementInput(26, 3)),
+        output = FusionOutput.RandomRarity(GachaRarity.SUPERNOVA, exclude = listOf(26)),
+        baseRate = 0.12f,
+        nameRes = R.string.fusion_recipe_neutron_capture_name,
+        scienceRes = R.string.fusion_recipe_neutron_capture_science,
+        gameInfoRes = R.string.fusion_recipe_neutron_capture_game,
+        palier = 7,
+        unlockParentId = "water"
     );
 
     companion object {

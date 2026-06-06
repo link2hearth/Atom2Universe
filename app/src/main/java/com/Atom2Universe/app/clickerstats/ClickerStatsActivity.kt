@@ -200,7 +200,7 @@ class ClickerStatsActivity : ThemedActivity() {
     }
 
 
-    private fun formatElementBonus(flat: Int, mult: Double): String {
+    private fun formatElementBonus(flat: Long, mult: Double): String {
         val parts = mutableListOf<String>()
         if (flat > 0) parts.add("+$flat flat")
         if (mult > 0.0) parts.add("+${"%.2f".format(mult * 100)}%")

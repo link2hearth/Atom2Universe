@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.gacha.atomicNumbersOf
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import com.Atom2Universe.app.periodic.getPeriodicElements
 import com.Atom2Universe.app.periodic.localizedName
@@ -167,18 +168,25 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
 
         val success = Math.random() < recipe.baseRate
 
-        if (success) {
-            val out = recipe.output as FusionOutput.Element
-            collectionStore.addCopy(out.atomicNumber)
-        }
+        val resolvedAtomicNumber: Int? = if (success) {
+            val atomicNum = when (val out = recipe.output) {
+                is FusionOutput.Element     -> out.atomicNumber
+                is FusionOutput.RandomRarity -> {
+                    val pool = atomicNumbersOf(out.rarity).filter { it !in out.exclude }
+                    pool.random()
+                }
+            }
+            collectionStore.addCopyFromFusion(atomicNum)
+            atomicNum
+        } else null
 
         fusionStore.recordAttempt(recipe, success)
-        startFusionAnimation(recipe, success)
+        startFusionAnimation(recipe, success, resolvedAtomicNumber)
     }
 
     // ── Animation ─────────────────────────────────────────────────────────────
 
-    private fun startFusionAnimation(recipe: FusionRecipe, success: Boolean) {
+    private fun startFusionAnimation(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null) {
         isAnimating = true
         splatView.hide()
         resultLayout.visibility = View.GONE
@@ -188,11 +196,11 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
         animOverlay.visibility = View.VISIBLE
         animOverlay.alpha = 0f
         animOverlay.animate().alpha(1f).setDuration(150).withEndAction {
-            runCountdown(recipe, success)
+            runCountdown(recipe, success, resolvedAtomicNumber)
         }.start()
     }
 
-    private fun runCountdown(recipe: FusionRecipe, success: Boolean) {
+    private fun runCountdown(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null) {
         val dm = resources.displayMetrics
         val minDim = minOf(dm.widthPixels, dm.heightPixels).toFloat()
         val baseSeed = (System.currentTimeMillis() and 0xFFFFF).toInt()
@@ -207,7 +215,7 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
         fun runStep(index: Int) {
             if (index >= steps.size) {
                 splatView.hide()
-                handler.postDelayed({ showResult(recipe, success) }, 250L)
+                handler.postDelayed({ showResult(recipe, success, resolvedAtomicNumber) }, 250L)
                 return
             }
             val step = steps[index]
@@ -223,7 +231,7 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
         runStep(0)
     }
 
-    private fun showResult(recipe: FusionRecipe, success: Boolean) {
+    private fun showResult(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null) {
         resultLayout.visibility = View.VISIBLE
         resultTitle.alpha = 0f
         resultDetail.alpha = 0f
@@ -233,8 +241,7 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
             resultTitle.text = getString(R.string.fusion_success)
             startRainbowText(resultTitle)
 
-            val out = recipe.output as FusionOutput.Element
-            val elem = elementsByNumber[out.atomicNumber]
+            val elem = resolvedAtomicNumber?.let { elementsByNumber[it] }
             val detailText = if (elem != null) getString(R.string.fusion_result_got_element, elem.symbol, elem.localizedName(this)) else ""
             resultDetail.text = detailText
             resultDetail.setTextColor(Color.WHITE)

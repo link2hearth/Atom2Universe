@@ -13,17 +13,35 @@ class PeriodicCollectionStore(context: Context) {
   fun addCopy(atomicNumber: Int): Int {
     val newCount = getCopyCount(atomicNumber) + 1
     val newMax = maxOf(newCount, getMaxCopyCount(atomicNumber))
+    val newTotal = getTotalEverCount(atomicNumber) + 1
     prefs.edit()
       .putInt(copyKey(atomicNumber), newCount)
       .putInt(maxCopyKey(atomicNumber), newMax)
+      .putInt(totalEverKey(atomicNumber), newTotal)
       .putBoolean(everKey(atomicNumber), true)
       .apply()
     return newCount
   }
 
-  /** Nombre maximum de copies jamais possédées simultanément (ne diminue jamais). Utilisé pour les bonus permanents. */
+  /** Nombre maximum de copies jamais possédées simultanément (ne diminue jamais). */
   fun getMaxCopyCount(atomicNumber: Int): Int =
     prefs.getInt(maxCopyKey(atomicNumber), getCopyCount(atomicNumber))
+
+  /** Nombre total cumulatif de copies jamais obtenues (ne diminue jamais). Utilisé pour les bonus permanents. */
+  fun getTotalEverCount(atomicNumber: Int): Int =
+    prefs.getInt(totalEverKey(atomicNumber), getMaxCopyCount(atomicNumber))
+
+  /** Nombre de copies obtenues spécifiquement via une fusion réussie (ne diminue jamais). */
+  fun getFusionCount(atomicNumber: Int): Int =
+    prefs.getInt(fusionCountKey(atomicNumber), 0)
+
+  /** Ajoute une copie obtenue via fusion : incrémente les compteurs réguliers ET le compteur fusion. */
+  fun addCopyFromFusion(atomicNumber: Int): Int {
+    val regular = addCopy(atomicNumber)
+    val newFusion = getFusionCount(atomicNumber) + 1
+    prefs.edit { putInt(fusionCountKey(atomicNumber), newFusion) }
+    return regular
+  }
 
   fun hasElement(atomicNumber: Int): Boolean = getCopyCount(atomicNumber) > 0
 
@@ -47,6 +65,8 @@ class PeriodicCollectionStore(context: Context) {
 
   private fun copyKey(atomicNumber: Int): String = "element_${atomicNumber}_copies"
   private fun maxCopyKey(atomicNumber: Int): String = "element_${atomicNumber}_max"
+  private fun totalEverKey(atomicNumber: Int): String = "element_${atomicNumber}_total"
+  private fun fusionCountKey(atomicNumber: Int): String = "element_${atomicNumber}_fusion"
   private fun everKey(atomicNumber: Int): String = "element_${atomicNumber}_ever"
 
   fun setCopyCount(atomicNumber: Int, count: Int) {
