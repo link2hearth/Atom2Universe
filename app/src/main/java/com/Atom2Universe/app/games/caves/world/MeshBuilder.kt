@@ -8,8 +8,8 @@ internal object MeshBuilder {
         val buf = GrowableFloatArray()
 
         for (lz in 0 until CHUNK_SIZE)
-        for (ly in 0 until CHUNK_SIZE)
-        for (lx in 0 until CHUNK_SIZE) {
+            for (ly in 0 until CHUNK_SIZE)
+                for (lx in 0 until CHUNK_SIZE) {
             val block = chunk.blockAt(lx, ly, lz)
             if (block == AIR || isWater(block)) continue
             val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
@@ -94,8 +94,8 @@ internal object MeshBuilder {
     fun buildWater(chunk: Chunk, world: World): FloatArray {
         val buf = GrowableFloatArray()
         for (lz in 0 until CHUNK_SIZE)
-        for (ly in 0 until CHUNK_SIZE)
-        for (lx in 0 until CHUNK_SIZE) {
+            for (ly in 0 until CHUNK_SIZE)
+                for (lx in 0 until CHUNK_SIZE) {
             if (!isWater(chunk.blockAt(lx, ly, lz))) continue
             val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
             val packed = 0f

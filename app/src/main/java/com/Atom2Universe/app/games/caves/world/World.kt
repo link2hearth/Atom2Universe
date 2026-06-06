@@ -70,8 +70,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val rxz = renderRadiusXZ; val ry = renderRadiusYSurface
             val rxz2 = rxz * rxz
             for (dz in -rxz..rxz)
-            for (dy in -ry..ry)
-            for (dx in -rxz..rxz) {
+                for (dy in -ry..ry)
+                    for (dx in -rxz..rxz) {
                 if (dx * dx + dz * dz > rxz2) continue
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
                 if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
@@ -84,8 +84,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             // Sphère : rayon uniforme en souterrain
             val r = renderRadiusCave; val r2 = r * r
             for (dz in -r..r)
-            for (dy in -r..r)
-            for (dx in -r..r) {
+                for (dy in -r..r)
+                    for (dx in -r..r) {
                 if (dx * dx + dy * dy + dz * dz > r2) continue
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
                 if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue

@@ -23,14 +23,17 @@
     <string name="music_track_summary_no_year">%1$s - %2$s</string>
     <plurals name="music_artist_count">
         <item quantity="one">%d artist</item>
+        <item quantity="few">%d artiști</item>
         <item quantity="other">%d artiști</item>
     </plurals>
     <plurals name="music_album_count">
         <item quantity="one">%d album</item>
+        <item quantity="few">%d albume</item>
         <item quantity="other">%d albume</item>
     </plurals>
     <plurals name="music_track_count_plural">
         <item quantity="one">%d piesă</item>
+        <item quantity="few">%d piese</item>
         <item quantity="other">%d piese</item>
     </plurals>
     <string name="music_refresh">Reîmprospătare</string>
@@ -85,10 +88,12 @@
     <string name="music_cancel">Anulare</string>
     <plurals name="music_folders_removed">
         <item quantity="one">%d dosar eliminat</item>
+        <item quantity="few">%d dosare eliminate</item>
         <item quantity="other">%d dosare eliminate</item>
     </plurals>
     <plurals name="music_new_tracks_detected">
         <item quantity="one">%d piesă nouă detectată</item>
+        <item quantity="few">%d piese noi detectate</item>
         <item quantity="other">%d piese noi detectate</item>
     </plurals>
     <string name="music_edit_tags">Editare etichete</string>
@@ -276,10 +281,12 @@
     <string name="music_browse_folders">Dosare</string>
     <plurals name="music_folder_count">
         <item quantity="one">%d dosar</item>
+        <item quantity="few">%d dosare</item>
         <item quantity="other">%d dosare</item>
     </plurals>
     <plurals name="music_subfolder_count">
         <item quantity="one">%d subdosar</item>
+        <item quantity="few">%d subdosare</item>
         <item quantity="other">%d subdosare</item>
     </plurals>
     <string name="music_search_hint">Căutare…</string>

@@ -24,6 +24,7 @@
     <string name="comics_delete_root_msg">Eliminați \"%s\" și toate benzile sale desenate din bibliotecă?</string>
     <plurals name="comics_root_count">
         <item quantity="one">%d bandă desenată</item>
+        <item quantity="few">%d benzi desenate</item>
         <item quantity="other">%d benzi desenate</item>
     </plurals>
     <string name="comics_rescan">Rescanare</string>

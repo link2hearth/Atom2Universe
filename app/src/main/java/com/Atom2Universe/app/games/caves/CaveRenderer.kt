@@ -1434,8 +1434,8 @@ private fun updateProjectiles(dt: Float) {
             x in wx0 until wxEnd && y in wy0 until wyEnd && z in wz0 until wzEnd
         }
         for (ly in 0 until CHUNK_SIZE)
-        for (lz in 0 until CHUNK_SIZE)
-        for (lx in 0 until CHUNK_SIZE) {
+            for (lz in 0 until CHUNK_SIZE)
+                for (lx in 0 until CHUNK_SIZE) {
             val intensity = when (chunk.blockAt(lx, ly, lz)) {
                 TORCH -> 1.0f
                 LAVA  -> 0.85f

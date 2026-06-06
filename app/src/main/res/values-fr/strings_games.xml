@@ -85,8 +85,8 @@
     <string name="fusion_result_got_element">Obtenu : %1$s (%2$s)</string>
     <string name="fusion_result_consumed">Éléments consommés.</string>
     <string name="fusion_tap_continue">Appuyez pour continuer</string>
-    <string name="fusion_next_bonus_aps">Prochaine victoire → +1% APS</string>
-    <string name="fusion_next_bonus_apc">Prochaine victoire → +1% APC</string>
+    <string name="fusion_next_bonus_aps">Prochaine victoire → +1%% APS</string>
+    <string name="fusion_next_bonus_apc">Prochaine victoire → +1%% APC</string>
 
     <!-- Cave World -->
     <string name="cave_title">Cave World</string>

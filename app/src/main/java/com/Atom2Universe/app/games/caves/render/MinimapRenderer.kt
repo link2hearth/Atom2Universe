@@ -54,7 +54,7 @@ internal class MinimapRenderer {
         isCaveMode = hasRoofAbove(world, px, py, pz)
 
         for (dz in -RADIUS until RADIUS)
-        for (dx in -RADIUS until RADIUS) {
+            for (dx in -RADIUS until RADIUS) {
             pixels[(dz + RADIUS) * size + (dx + RADIUS)] =
                 if (isCaveMode) columnCave(world, px + dx, pz + dz, py)
                 else            columnSurface(world, px + dx, pz + dz, py)

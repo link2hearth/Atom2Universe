@@ -136,7 +136,7 @@
     <string name="sw_upg_drone_name">Dronă de escortă</string>
     <string name="sw_upg_drone_desc">Însoțitor trage automat</string>
     <string name="sw_upg_vampire_name">Vampir</string>
-    <string name="sw_upg_vampire_desc">5% furt de viață la eliminare</string>
+    <string name="sw_upg_vampire_desc">5%% furt de viață la eliminare</string>
     <string name="sw_upg_nova_name">Puls nova</string>
     <string name="sw_upg_nova_desc">Curățare gloanțe din apropiere</string>
     <string name="sw_meteor_title">✦ PLOAIE DE METEORI ✦</string>

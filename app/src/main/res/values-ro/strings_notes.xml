@@ -57,6 +57,7 @@
     <string name="notes_search_initial">Introduceți cel puțin 2 caractere</string>
     <plurals name="notes_search_results">
         <item quantity="one">%d rezultat</item>
+        <item quantity="few">%d rezultate</item>
         <item quantity="other">%d rezultate</item>
     </plurals>
     <string name="notes_move_to_group_title">Mutare în</string>

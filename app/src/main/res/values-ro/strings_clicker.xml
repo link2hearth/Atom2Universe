@@ -128,6 +128,7 @@
     <string name="crypto_image_center_label">Centrare imagini</string>
     <plurals name="news_count">
         <item quantity="one">%d articol</item>
+        <item quantity="few">%d articole</item>
         <item quantity="other">%d articole</item>
     </plurals>
     <string name="crypto_label_banner_opacity">Opacitate banner</string>

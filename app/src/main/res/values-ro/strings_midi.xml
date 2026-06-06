@@ -53,6 +53,7 @@
     <string name="midi_playlist_cleared">Listă de redare golită</string>
     <plurals name="midi_track_count">
         <item quantity="one">%d pistă</item>
+        <item quantity="few">%d piste</item>
         <item quantity="other">%d piste</item>
     </plurals>
     <string name="midi_playlists_empty">Nicio listă de redare.\nCreați una!</string>
