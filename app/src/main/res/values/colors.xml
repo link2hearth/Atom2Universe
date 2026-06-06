@@ -216,6 +216,17 @@
     <color name="science_tile_periodic">#004D40</color>
     <color name="science_tile_game_of_life">#1B5E20</color>
     <color name="science_tile_pendulum">#1A237E</color>
+    <color name="science_tile_nuclide">#4A148C</color>
+
+    <!-- Nuclide decay types -->
+    <color name="nuclide_stable">#000000</color>
+    <color name="nuclide_alpha">#FFCC00</color>
+    <color name="nuclide_beta_minus">#4FC3F7</color>
+    <color name="nuclide_beta_plus">#EF5350</color>
+    <color name="nuclide_fission">#AB47BC</color>
+    <color name="nuclide_other">#78909C</color>
+    <color name="nuclide_stable_text">#66BB6A</color>
+    <color name="nuclide_radioactive_text">#EF5350</color>
 
     <!-- The Line game -->
     <color name="the_line_active">#1E40AF</color>

@@ -6,6 +6,7 @@ import com.Atom2Universe.app.games.gameoflife.GameOfLifeActivity
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.periodic.PeriodicTableActivity
+import com.Atom2Universe.app.science.nuclide.NuclideTableActivity
 import com.Atom2Universe.app.science.pendulum.DoublePendulumActivity
 
 class ScienceHubActivity : BaseHubActivity() {
@@ -29,6 +30,14 @@ class ScienceHubActivity : BaseHubActivity() {
             iconRes = R.drawable.ic_science,
             defaultColorRes = R.color.science_tile_periodic,
             activityClass = PeriodicTableActivity::class.java
+        ),
+        HubTile(
+            id = "nuclide_table",
+            titleRes = R.string.hub_nuclide_title,
+            descriptionRes = R.string.hub_nuclide_desc,
+            iconRes = R.drawable.ic_science,
+            defaultColorRes = R.color.science_tile_nuclide,
+            activityClass = NuclideTableActivity::class.java
         ),
         HubTile(
             id = "game_of_life",

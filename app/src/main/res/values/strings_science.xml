@@ -48,4 +48,27 @@
     <string name="pendulum_gravity_neptune">Neptune</string>
     <string name="pendulum_gravity_jupiter">Jupiter</string>
     <string name="pendulum_gravity_sun">Sun</string>
+
+    <!-- Nuclide Table -->
+    <string name="hub_nuclide_title">Chart of Nuclides</string>
+    <string name="hub_nuclide_desc">Isotopes, stability, half-lives</string>
+    <string name="nuclide_table_title">Chart of Nuclides</string>
+    <string name="nuclide_hint">Tap a cell to see isotope details\n\nPinch to zoom · Drag to pan</string>
+    <string name="nuclide_detail_element">%1$s-%2$d</string>
+    <string name="nuclide_stable">Stable</string>
+    <string name="nuclide_radioactive">Radioactive</string>
+    <string name="nuclide_halflife_stable">Stable (no decay)</string>
+    <string name="nuclide_halflife_val">T½ = %1$s</string>
+    <string name="nuclide_be_val">%1$.4f MeV/u</string>
+    <string name="nuclide_zn_val">Z=%1$d  N=%2$d</string>
+    <string name="nuclide_label_zn">Z / N</string>
+    <string name="nuclide_label_halflife">Half-life</string>
+    <string name="nuclide_label_decay">Decay mode</string>
+    <string name="nuclide_label_spin">Spin/Parity</string>
+    <string name="nuclide_label_be">Binding energy/A</string>
+    <string name="nuclide_legend_stable">Stable</string>
+    <string name="nuclide_legend_alpha">α</string>
+    <string name="nuclide_legend_beta_minus">β−</string>
+    <string name="nuclide_legend_beta_plus">β+/EC</string>
+    <string name="nuclide_legend_fission">SF</string>
 </resources>
