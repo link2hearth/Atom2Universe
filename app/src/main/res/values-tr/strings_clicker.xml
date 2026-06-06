@@ -135,7 +135,8 @@
     <string name="clicker_shop_buy">Satın Al</string>
     <string name="clicker_shop_level">Sv. %d</string>
     <string name="clicker_shop_stats_title">İstatistikler</string>
-    <string name="clicker_shop_stat_lifetime">Toplam atomlar</string>
+    <string name="clicker_shop_stat_lifetime">Atomlar</string>
+    <string name="clicker_shop_stat_all_time_total">Toplam Atomlar</string>
     <string name="clicker_shop_stat_apc">Tıklama başına</string>
     <string name="clicker_shop_stat_aps">Saniye başına</string>
     <string name="clicker_shop_stat_elem_apc">Element bonusu APC</string>

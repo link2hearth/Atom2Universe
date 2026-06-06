@@ -147,7 +147,8 @@
     <string name="clicker_shop_buy">Cumpărare</string>
     <string name="clicker_shop_level">Niv. %d</string>
     <string name="clicker_shop_stats_title">Statistici</string>
-    <string name="clicker_shop_stat_lifetime">Total atomi</string>
+    <string name="clicker_shop_stat_lifetime">Atomi</string>
+    <string name="clicker_shop_stat_all_time_total">Atomi Totali</string>
     <string name="clicker_shop_stat_apc">Per clic</string>
     <string name="clicker_shop_stat_aps">Per secundă</string>
     <string name="clicker_shop_stat_elem_apc">Bonus element APC</string>

@@ -459,6 +459,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     fun getLifetimeNeutrinos(): Int = neutrinoRepo.getLifetimeNeutrinos()
 
+    fun getBigBangCount(): Int = bigBangRepo.getBigBangCount()
+
     /** Retourne les stats actuelles (snapshot avec temps de jeu en cours). */
     fun getStatsSnapshot(): ClickerStats {
         return if (gameLoopStartMs > 0L) {

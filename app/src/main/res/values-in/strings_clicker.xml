@@ -134,7 +134,8 @@
     <string name="clicker_shop_buy">Beli</string>
     <string name="clicker_shop_level">Lv. %d</string>
     <string name="clicker_shop_stats_title">Statistik</string>
-    <string name="clicker_shop_stat_lifetime">Total atom</string>
+    <string name="clicker_shop_stat_lifetime">Atom</string>
+    <string name="clicker_shop_stat_all_time_total">Total Atom</string>
     <string name="clicker_shop_stat_apc">Per klik</string>
     <string name="clicker_shop_stat_aps">Per detik</string>
     <string name="clicker_shop_stat_elem_apc">Bonus elemen APC</string>

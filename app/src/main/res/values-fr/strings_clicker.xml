@@ -155,8 +155,8 @@
     <string name="clicker_shop_level">Niv. %d</string>
     <string name="clicker_shop_plus_toggle_desc">Activer le badge \"+\" pour cette amélioration</string>
     <string name="clicker_shop_stats_title">Statistiques</string>
-    <string name="clicker_shop_stat_lifetime">Atomes cycle actuel</string>
-    <string name="clicker_shop_stat_all_time_total">Atomes totaux (tous Big Bangs)</string>
+    <string name="clicker_shop_stat_lifetime">Atomes</string>
+    <string name="clicker_shop_stat_all_time_total">Atomes Totaux</string>
     <string name="clicker_shop_stat_apc">Par clic</string>
     <string name="clicker_shop_stat_aps">Par seconde</string>
     <string name="clicker_shop_stat_elem_apc">Bonus éléments APC</string>

@@ -228,6 +228,9 @@ class MainClickerActivity : ThemedActivity() {
     // Stats dans le shop
     private var shopStatLifetime: TextView? = null
     private var shopStatAllTimeTotal: TextView? = null
+    private var shopStatAllTimeRow: View? = null
+    private var shopStatAllTimeDividerTop: View? = null
+    private var shopStatAllTimeDividerBottom: View? = null
     private var shopStatApc: TextView? = null
     private var shopStatAps: TextView? = null
     private var shopStatElemApc: TextView? = null
@@ -723,8 +726,11 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcLevelView   = view.findViewById(R.id.shop_aps_to_apc_level)
         shopApsToApcEffectView  = view.findViewById(R.id.shop_aps_to_apc_effect)
         shopApsToApcCostView    = view.findViewById(R.id.shop_aps_to_apc_cost)
-        shopStatLifetime        = view.findViewById(R.id.shop_stat_lifetime)
-        shopStatAllTimeTotal   = view.findViewById(R.id.shop_stat_all_time_total)
+        shopStatLifetime            = view.findViewById(R.id.shop_stat_lifetime)
+        shopStatAllTimeTotal        = view.findViewById(R.id.shop_stat_all_time_total)
+        shopStatAllTimeRow          = view.findViewById(R.id.shop_stat_all_time_row)
+        shopStatAllTimeDividerTop   = view.findViewById(R.id.shop_stat_all_time_divider_top)
+        shopStatAllTimeDividerBottom = view.findViewById(R.id.shop_stat_all_time_divider_bottom)
         shopStatApc            = view.findViewById(R.id.shop_stat_apc)
         shopStatAps            = view.findViewById(R.id.shop_stat_aps)
         shopStatElemApc        = view.findViewById(R.id.shop_stat_elem_apc)
@@ -804,8 +810,11 @@ class MainClickerActivity : ThemedActivity() {
             shopApsToApcEffectView = null
             shopApsToApcCostView   = null
             shopApsToApcBuyBtn     = null
-            shopStatLifetime       = null
-            shopStatAllTimeTotal   = null
+            shopStatLifetime             = null
+            shopStatAllTimeTotal         = null
+            shopStatAllTimeRow           = null
+            shopStatAllTimeDividerTop    = null
+            shopStatAllTimeDividerBottom = null
             shopStatApc            = null
             shopStatAps            = null
             shopStatElemApc        = null
@@ -1267,6 +1276,11 @@ class MainClickerActivity : ThemedActivity() {
         )
 
         shopStatLifetime?.text    = state.lifetime.toString()
+        val hasHadBigBang = clickerViewModel.getBigBangCount() > 0
+        val allTimeVisibility = if (hasHadBigBang) android.view.View.VISIBLE else android.view.View.GONE
+        shopStatAllTimeRow?.visibility           = allTimeVisibility
+        shopStatAllTimeDividerTop?.visibility    = allTimeVisibility
+        shopStatAllTimeDividerBottom?.visibility = allTimeVisibility
         shopStatAllTimeTotal?.text = state.allTimeTotalAtoms.add(state.lifetime).toString()
         shopStatApc?.text         = state.perClick.toString()
         shopStatAps?.text         = state.perSecond.toString()

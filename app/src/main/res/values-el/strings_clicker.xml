@@ -145,7 +145,8 @@
     <string name="clicker_shop_buy">Αγορά</string>
     <string name="clicker_shop_level">Επ. %d</string>
     <string name="clicker_shop_stats_title">Στατιστικά</string>
-    <string name="clicker_shop_stat_lifetime">Συνολικά άτομα</string>
+    <string name="clicker_shop_stat_lifetime">Άτομα</string>
+    <string name="clicker_shop_stat_all_time_total">Συνολικά Άτομα</string>
     <string name="clicker_shop_stat_apc">Ανά κλικ</string>
     <string name="clicker_shop_stat_aps">Ανά δευτερόλεπτο</string>
     <string name="clicker_shop_stat_elem_apc">Μπόνους στοιχείου APC</string>

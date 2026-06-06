@@ -135,7 +135,8 @@
     <string name="clicker_shop_buy">Kopen</string>
     <string name="clicker_shop_level">Nv. %d</string>
     <string name="clicker_shop_stats_title">Statistieken</string>
-    <string name="clicker_shop_stat_lifetime">Totale atomen</string>
+    <string name="clicker_shop_stat_lifetime">Atomen</string>
+    <string name="clicker_shop_stat_all_time_total">Totale Atomen</string>
     <string name="clicker_shop_stat_apc">Per klik</string>
     <string name="clicker_shop_stat_aps">Per seconde</string>
     <string name="clicker_shop_stat_elem_apc">Element bonus APC</string>

@@ -155,8 +155,8 @@
     <string name="clicker_shop_level">Lv. %d</string>
     <string name="clicker_shop_plus_toggle_desc">Toggle the \"+\" badge for this upgrade</string>
     <string name="clicker_shop_stats_title">Statistics</string>
-    <string name="clicker_shop_stat_lifetime">Atoms this cycle</string>
-    <string name="clicker_shop_stat_all_time_total">All-time total atoms</string>
+    <string name="clicker_shop_stat_lifetime">Atoms</string>
+    <string name="clicker_shop_stat_all_time_total">Total Atoms</string>
     <string name="clicker_shop_stat_apc">Per click</string>
     <string name="clicker_shop_stat_aps">Per second</string>
     <string name="clicker_shop_stat_elem_apc">Element bonus APC</string>

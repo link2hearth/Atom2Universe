@@ -381,15 +381,15 @@
             <TextView android:id="@+id/shop_stat_lifetime" style="@style/ShopStatValue" android:text="0" />
         </LinearLayout>
 
-        <View style="@style/ShopStatDivider" />
+        <View android:id="@+id/shop_stat_all_time_divider_top" style="@style/ShopStatDivider" />
 
         <!-- Atomes totaux tous Big Bangs -->
-        <LinearLayout style="@style/ShopStatRow">
+        <LinearLayout android:id="@+id/shop_stat_all_time_row" style="@style/ShopStatRow">
             <TextView style="@style/ShopStatLabel" android:text="@string/clicker_shop_stat_all_time_total" />
             <TextView android:id="@+id/shop_stat_all_time_total" style="@style/ShopStatValue" android:text="0" />
         </LinearLayout>
 
-        <View style="@style/ShopStatDivider" />
+        <View android:id="@+id/shop_stat_all_time_divider_bottom" style="@style/ShopStatDivider" />
 
         <!-- Par clic -->
         <LinearLayout style="@style/ShopStatRow">

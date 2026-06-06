@@ -135,7 +135,8 @@
     <string name="clicker_shop_buy">Kaufen</string>
     <string name="clicker_shop_level">Lv. %d</string>
     <string name="clicker_shop_stats_title">Statistiken</string>
-    <string name="clicker_shop_stat_lifetime">Gesamtatome</string>
+    <string name="clicker_shop_stat_lifetime">Atome</string>
+    <string name="clicker_shop_stat_all_time_total">Atome Gesamt</string>
     <string name="clicker_shop_stat_apc">Pro Klick</string>
     <string name="clicker_shop_stat_aps">Pro Sekunde</string>
     <string name="clicker_shop_stat_elem_apc">Element-Bonus APC</string>

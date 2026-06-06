@@ -137,7 +137,8 @@
     <string name="clicker_shop_buy">Купить</string>
     <string name="clicker_shop_level">Ур. %d</string>
     <string name="clicker_shop_stats_title">Статистика</string>
-    <string name="clicker_shop_stat_lifetime">Всего атомов</string>
+    <string name="clicker_shop_stat_lifetime">Атомы</string>
+    <string name="clicker_shop_stat_all_time_total">Всего Атомов</string>
     <string name="clicker_shop_stat_apc">За клик</string>
     <string name="clicker_shop_stat_aps">В секунду</string>
     <string name="clicker_shop_stat_elem_apc">Бонус элемента APC</string>
