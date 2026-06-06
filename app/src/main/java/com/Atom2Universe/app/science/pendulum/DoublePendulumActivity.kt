@@ -215,9 +215,9 @@ class DoublePendulumActivity : ThemedActivity() {
 
         bar.addView(buildSeekRow(dp,
             labelRes = R.string.pendulum_damping,
-            min = 0, max = 20, initial = 0,
-            format = { if (it == 0) getString(R.string.pendulum_off) else "${"%.2f".format(it / 100f)}" }
-        ) { v -> pendulumView.damping = v / 100.0 })
+            min = 0, max = 10, initial = 0,
+            format = { if (it == 0) getString(R.string.pendulum_off) else "${"%.3f".format(it / 1000f)}" }
+        ) { v -> pendulumView.damping = v / 1000.0 })
 
         bar.addView(buildSeekRow(dp,
             labelRes = R.string.pendulum_trail_length,
