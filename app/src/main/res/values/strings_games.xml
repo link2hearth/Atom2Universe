@@ -87,6 +87,7 @@
     <string name="fusion_fail">FAIL</string>
     <string name="fusion_result_got_element">Obtained: %1$s (%2$s)</string>
     <string name="fusion_result_consumed">Elements consumed.</string>
+    <string name="fusion_card_dropped">Card obtained: %1$s!</string>
     <string name="fusion_tap_continue">Tap to continue</string>
     <string name="fusion_next_bonus_aps">Next win → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Next win → +1%% APC</string>

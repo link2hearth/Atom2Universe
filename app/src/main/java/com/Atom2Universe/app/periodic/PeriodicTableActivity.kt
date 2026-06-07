@@ -2,23 +2,30 @@ package com.Atom2Universe.app.periodic
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.view.MotionEvent
 import android.view.View
 import android.app.Dialog
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.crypto.gacha.GachaRarity
 import com.Atom2Universe.app.crypto.gacha.rarityOf
+import com.Atom2Universe.app.crypto.StarfieldView
+import com.Atom2Universe.app.crypto.fusion.ElementCard
+import com.Atom2Universe.app.crypto.fusion.ElementCardRepository
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
@@ -34,6 +41,7 @@ class PeriodicTableActivity : ThemedActivity() {
   private lateinit var gridLayout: GridLayout
   private lateinit var descriptionProvider: PeriodicElementDescriptionProvider
   private lateinit var collectionStore: PeriodicCollectionStore
+  private lateinit var cardRepository: ElementCardRepository
   private var selectedElement: PeriodicElement? = null
   private var lastSelectedElementCell: LinearLayout? = null
   private var launchedFromGacha: Boolean = false
@@ -57,6 +65,7 @@ class PeriodicTableActivity : ThemedActivity() {
   private var propMeltVal: TextView? = null
   private var propBoilVal: TextView? = null
   private var propDiscoveredVal: TextView? = null
+  private var panelCardView: ImageView? = null
 
   private val rarityCornerViews = mutableListOf<View>()
   private var rarityVisible = true
@@ -69,6 +78,7 @@ class PeriodicTableActivity : ThemedActivity() {
     gridLayout = findViewById(R.id.periodic_grid)
     descriptionProvider = PeriodicElementDescriptionProvider(this)
     collectionStore = PeriodicCollectionStore(this)
+    cardRepository = ElementCardRepository(this)
     val source = intent.getStringExtra(EXTRA_SOURCE)
     launchedFromGacha = source == SOURCE_GACHA
     launchedFromScience = source == SOURCE_SCIENCE
@@ -162,6 +172,19 @@ class PeriodicTableActivity : ThemedActivity() {
     }
     listOf(panelNameText!!, panelCategoryText!!, panelAppearanceText!!).forEach { nameBlock.addView(it) }
     topRow.addView(nameBlock)
+
+    // Miniature carte (entre le nom et le compteur)
+    panelCardView = ImageView(this).apply {
+      scaleType = ImageView.ScaleType.FIT_CENTER
+      adjustViewBounds = true
+      visibility = View.GONE
+      val cardW = dpToPx(42)
+      val cardH = dpToPx(58)
+      val lp = LinearLayout.LayoutParams(cardW, cardH)
+      lp.setMargins(dpToPx(6), 0, dpToPx(6), 0)
+      layoutParams = lp
+    }
+    topRow.addView(panelCardView)
 
     selectedElementCopiesView = TextView(this).apply {
       text = getString(R.string.periodic_info_copies_badge, 0)
@@ -278,10 +301,28 @@ class PeriodicTableActivity : ThemedActivity() {
       .replaceFirstChar { it.uppercase() }
 
     if (!launchedFromScience) {
-      selectedElementCopiesView?.text = getString(
-        R.string.periodic_info_copies_badge,
-        collectionStore.getCopyCount(element.atomicNumber)
-      )
+      val everCount = collectionStore.getTotalEverCount(element.atomicNumber)
+      selectedElementCopiesView?.text = getString(R.string.periodic_info_copies_badge, everCount)
+    }
+
+    val card = cardRepository.getCardFor(element.atomicNumber)
+    if (card != null) {
+      panelCardView?.apply {
+        visibility = View.VISIBLE
+        try {
+          val bmp = BitmapFactory.decodeStream(assets.open(card.file))
+          setImageBitmap(bmp)
+        } catch (_: Exception) {
+          visibility = View.GONE
+        }
+        setOnClickListener { showCardFullscreen(card) }
+      }
+    } else {
+      panelCardView?.apply {
+        visibility = View.GONE
+        setImageBitmap(null)
+        setOnClickListener(null)
+      }
     }
 
     val json = PeriodicElementJsonRepository.get(element.atomicNumber)
@@ -996,9 +1037,109 @@ class PeriodicTableActivity : ThemedActivity() {
     frameLayout.addView(rarityCorner)
     rarityCornerViews.add(rarityCorner)
 
+    // Indicateur carte : petit carré noir en bas-gauche
+    if (!launchedFromScience && cardRepository.hasCard(element.atomicNumber)) {
+      val dotSize = dpToPx(12)
+      val cardDot = View(this)
+      cardDot.setBackgroundColor(0xFF000000.toInt())
+      val dotParams = FrameLayout.LayoutParams(dotSize, dotSize)
+      dotParams.gravity = android.view.Gravity.BOTTOM or android.view.Gravity.START
+      cardDot.layoutParams = dotParams
+      frameLayout.addView(cardDot)
+    }
+
     frameLayout.setOnClickListener { updateInfoPanel(element, cell) }
     frameLayout.tag = element
     return frameLayout
+  }
+
+  private fun showCardFullscreen(card: ElementCard) {
+    val dialog = Dialog(this, android.R.style.Theme_DeviceDefault_NoActionBar)
+
+    val root = FrameLayout(this).apply {
+      setBackgroundColor(0xFF000000.toInt())
+      layoutParams = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+      )
+    }
+
+    val starfield = StarfieldView(this).apply {
+      layoutParams = FrameLayout.LayoutParams(
+        FrameLayout.LayoutParams.MATCH_PARENT,
+        FrameLayout.LayoutParams.MATCH_PARENT
+      )
+    }
+    root.addView(starfield)
+
+    val cardImage = ImageView(this).apply {
+      scaleType = ImageView.ScaleType.FIT_CENTER
+      adjustViewBounds = true
+      val maxW = (resources.displayMetrics.widthPixels * 0.80).toInt()
+      val maxH = (resources.displayMetrics.heightPixels * 0.75).toInt()
+      layoutParams = FrameLayout.LayoutParams(maxW, maxH).apply {
+        gravity = android.view.Gravity.CENTER
+      }
+      // Départ invisible → animation entrée
+      alpha = 0f
+      scaleX = 0.85f
+      scaleY = 0.85f
+      // Activer la perspective hardware pour le tilt 3D
+      cameraDistance = resources.displayMetrics.density * 8000f
+    }
+
+    try {
+      val bmp = BitmapFactory.decodeStream(assets.open(card.file))
+      cardImage.setImageBitmap(bmp)
+    } catch (_: Exception) {
+      dialog.dismiss()
+      return
+    }
+    root.addView(cardImage)
+
+    // ── Tilt 3D au doigt ─────────────────────────────────────────────────
+    val maxTilt = 18f
+    cardImage.setOnTouchListener { v, event ->
+      when (event.action) {
+        MotionEvent.ACTION_MOVE -> {
+          val cx = v.width / 2f
+          val cy = v.height / 2f
+          val dx = (event.x - cx) / cx
+          val dy = (event.y - cy) / cy
+          v.rotationY = dx * maxTilt
+          v.rotationX = -dy * maxTilt
+        }
+        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+          v.animate()
+            .rotationX(0f).rotationY(0f)
+            .setDuration(350)
+            .setInterpolator(OvershootInterpolator(1.5f))
+            .start()
+        }
+      }
+      true
+    }
+
+    // Fermer en tapant hors de la carte
+    root.setOnClickListener { dialog.dismiss() }
+    cardImage.isClickable = true
+
+    dialog.setContentView(root)
+    dialog.window?.setBackgroundDrawable(
+      android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+    )
+    dialog.window?.setLayout(
+      ViewGroup.LayoutParams.MATCH_PARENT,
+      ViewGroup.LayoutParams.MATCH_PARENT
+    )
+    dialog.show()
+
+    // Animation entrée
+    cardImage.animate()
+      .alpha(1f).scaleX(1f).scaleY(1f)
+      .setDuration(380)
+      .setInterpolator(OvershootInterpolator(1.2f))
+      .start()
   }
 
   private fun getRarityColor(rarity: GachaRarity): Int = when (rarity) {

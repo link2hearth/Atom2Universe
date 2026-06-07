@@ -2,6 +2,7 @@ package com.Atom2Universe.app.crypto.fusion
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Matrix
@@ -9,8 +10,12 @@ import android.graphics.Shader
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.OvershootInterpolator
 import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -26,6 +31,7 @@ class FusionActivity : ThemedActivity() {
 
     private lateinit var fusionStore: FusionStore
     private lateinit var collectionStore: PeriodicCollectionStore
+    private lateinit var cardRepository: ElementCardRepository
 
     private lateinit var recipesContainer: LinearLayout
     private lateinit var animOverlay: View
@@ -39,6 +45,9 @@ class FusionActivity : ThemedActivity() {
     private lateinit var bonusApcText: TextView
     private lateinit var bonusApsText: TextView
     private lateinit var nextBonusText: TextView
+    private lateinit var cardOverlay: FrameLayout
+    private lateinit var cardImageView: ImageView
+    private lateinit var cardTapHint: TextView
 
 
     private var isAnimating = false
@@ -61,6 +70,7 @@ class FusionActivity : ThemedActivity() {
 
         fusionStore = FusionStore(this)
         collectionStore = PeriodicCollectionStore(this)
+        cardRepository = ElementCardRepository(this)
 
         recipesContainer = findViewById(R.id.fusion_recipes_container)
         animOverlay      = findViewById(R.id.fusion_anim_overlay)
@@ -74,7 +84,10 @@ class FusionActivity : ThemedActivity() {
         bonusApcText     = findViewById(R.id.fusion_bonus_apc)
         bonusApsText     = findViewById(R.id.fusion_bonus_aps)
         nextBonusText    = findViewById(R.id.fusion_next_bonus)
-findViewById<View>(R.id.fusion_back).setOnClickListener { finish() }
+        cardOverlay      = findViewById(R.id.fusion_card_overlay)
+        cardImageView    = findViewById(R.id.fusion_card_image)
+        cardTapHint      = findViewById(R.id.fusion_card_tap_hint)
+        findViewById<View>(R.id.fusion_back).setOnClickListener { finish() }
         animOverlay.setOnClickListener { if (!isAnimating) closeOverlay() }
 
         buildRecipeTiles()
@@ -180,13 +193,17 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
             atomicNum
         } else null
 
+        val droppedCard: ElementCard? = if (success) {
+            cardRepository.rollDrop(recipe.id)?.also { cardRepository.markObtained(it.atomicNumber) }
+        } else null
+
         fusionStore.recordAttempt(recipe, success)
-        startFusionAnimation(recipe, success, resolvedAtomicNumber)
+        startFusionAnimation(recipe, success, resolvedAtomicNumber, droppedCard)
     }
 
     // ── Animation ─────────────────────────────────────────────────────────────
 
-    private fun startFusionAnimation(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null) {
+    private fun startFusionAnimation(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null, droppedCard: ElementCard? = null) {
         isAnimating = true
         splatView.hide()
         resultLayout.visibility = View.GONE
@@ -196,11 +213,11 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
         animOverlay.visibility = View.VISIBLE
         animOverlay.alpha = 0f
         animOverlay.animate().alpha(1f).setDuration(150).withEndAction {
-            runCountdown(recipe, success, resolvedAtomicNumber)
+            runCountdown(recipe, success, resolvedAtomicNumber, droppedCard)
         }.start()
     }
 
-    private fun runCountdown(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null) {
+    private fun runCountdown(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null, droppedCard: ElementCard? = null) {
         val dm = resources.displayMetrics
         val minDim = minOf(dm.widthPixels, dm.heightPixels).toFloat()
         val baseSeed = (System.currentTimeMillis() and 0xFFFFF).toInt()
@@ -215,7 +232,13 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
         fun runStep(index: Int) {
             if (index >= steps.size) {
                 splatView.hide()
-                handler.postDelayed({ showResult(recipe, success, resolvedAtomicNumber) }, 250L)
+                handler.postDelayed({
+                    if (droppedCard != null) {
+                        showCardOverlay(droppedCard) { showResult(recipe, success, resolvedAtomicNumber, droppedCard) }
+                    } else {
+                        showResult(recipe, success, resolvedAtomicNumber, droppedCard)
+                    }
+                }, 250L)
                 return
             }
             val step = steps[index]
@@ -231,7 +254,63 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
         runStep(0)
     }
 
-    private fun showResult(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null) {
+    private fun showCardOverlay(card: ElementCard, onDismiss: () -> Unit) {
+        try {
+            val bmp = BitmapFactory.decodeStream(assets.open(card.file))
+            cardImageView.setImageBitmap(bmp)
+        } catch (_: Exception) {
+            onDismiss()
+            return
+        }
+
+        val maxTilt = 18f
+        cardImageView.cameraDistance = resources.displayMetrics.density * 8000f
+        cardImageView.alpha = 0f
+        cardImageView.scaleX = 0.8f
+        cardImageView.scaleY = 0.8f
+        cardTapHint.alpha = 0f
+
+        cardOverlay.visibility = View.VISIBLE
+
+        cardImageView.animate()
+            .alpha(1f).scaleX(1f).scaleY(1f)
+            .setDuration(420)
+            .setInterpolator(OvershootInterpolator(1.2f))
+            .withEndAction {
+                cardTapHint.animate().alpha(1f).setDuration(400).start()
+            }
+            .start()
+
+        cardImageView.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    val cx = v.width / 2f
+                    val cy = v.height / 2f
+                    v.rotationY = ((event.x - cx) / cx) * maxTilt
+                    v.rotationX = -((event.y - cy) / cy) * maxTilt
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    v.animate().rotationX(0f).rotationY(0f)
+                        .setDuration(300).setInterpolator(OvershootInterpolator(1.5f)).start()
+                }
+            }
+            true
+        }
+
+        cardOverlay.setOnClickListener {
+            cardOverlay.animate().alpha(0f).setDuration(200).withEndAction {
+                cardOverlay.visibility = View.GONE
+                cardOverlay.alpha = 1f
+                cardImageView.rotationX = 0f
+                cardImageView.rotationY = 0f
+                cardImageView.setOnTouchListener(null)
+                cardOverlay.setOnClickListener(null)
+                onDismiss()
+            }.start()
+        }
+    }
+
+    private fun showResult(recipe: FusionRecipe, success: Boolean, resolvedAtomicNumber: Int? = null, droppedCard: ElementCard? = null) {
         resultLayout.visibility = View.VISIBLE
         resultTitle.alpha = 0f
         resultDetail.alpha = 0f
@@ -242,8 +321,13 @@ nextBonusText.text = if (fusionStore.nextBonusIsAps())
             startRainbowText(resultTitle)
 
             val elem = resolvedAtomicNumber?.let { elementsByNumber[it] }
-            val detailText = if (elem != null) getString(R.string.fusion_result_got_element, elem.symbol, elem.localizedName(this)) else ""
-            resultDetail.text = detailText
+            val elementLine = if (elem != null) getString(R.string.fusion_result_got_element, elem.symbol, elem.localizedName(this)) else ""
+            val cardLine = if (droppedCard != null) {
+                val cardElem = elementsByNumber[droppedCard.atomicNumber]
+                val cardName = if (cardElem != null) cardElem.localizedName(this) else "#${droppedCard.atomicNumber}"
+                "\n✨ " + getString(R.string.fusion_card_dropped, cardName)
+            } else ""
+            resultDetail.text = elementLine + cardLine
             resultDetail.setTextColor(Color.WHITE)
 
             confettiView.visibility = View.VISIBLE

@@ -1,0 +1,77 @@
+{
+  "fusions": [
+    {
+      "fusionId": "pp",
+      "cardDropRate": 0.05,
+      "cards": [
+        {"atomicNumber": 1, "file": "cartes elements/1 Hydrogene.jpg"},
+        {"atomicNumber": 2, "file": "cartes elements/2 Helium.jpg"}
+      ]
+    },
+    {
+      "fusionId": "triple_alpha",
+      "cardDropRate": 0.08,
+      "cards": [
+        {"atomicNumber": 3, "file": "cartes elements/3 lithium.jpg"},
+        {"atomicNumber": 4, "file": "cartes elements/4 beryllium.jpg"},
+        {"atomicNumber": 5, "file": "cartes elements/5 bore.jpg"},
+        {"atomicNumber": 6, "file": "cartes elements/6 Carbone.jpg"}
+      ]
+    },
+    {
+      "fusionId": "carbon_fusion",
+      "cardDropRate": 0.10,
+      "cards": [
+        {"atomicNumber": 7,  "file": "cartes elements/7 Azote.jpg"},
+        {"atomicNumber": 8,  "file": "cartes elements/8 Oxygene.jpg"},
+        {"atomicNumber": 9,  "file": "cartes elements/9 fluor.jpg"},
+        {"atomicNumber": 10, "file": "cartes elements/10 neon.jpg"}
+      ]
+    },
+    {
+      "fusionId": "alpha_capture",
+      "cardDropRate": 0.10,
+      "cards": [
+        {"atomicNumber": 11, "file": "cartes elements/11 sodium.jpg"},
+        {"atomicNumber": 12, "file": "cartes elements/12 magnesium.jpg"},
+        {"atomicNumber": 13, "file": "cartes elements/13 aluminium.jpg"}
+      ]
+    },
+    {
+      "fusionId": "oxygen_fusion",
+      "cardDropRate": 0.12,
+      "cards": [
+        {"atomicNumber": 14, "file": "cartes elements/14 silicium.jpg"},
+        {"atomicNumber": 15, "file": "cartes elements/15 phosphore.jpg"},
+        {"atomicNumber": 16, "file": "cartes elements/16 sulfur.jpg"},
+        {"atomicNumber": 17, "file": "cartes elements/17 chlore.jpg"},
+        {"atomicNumber": 18, "file": "cartes elements/18 argon.jpg"}
+      ]
+    },
+    {
+      "fusionId": "water",
+      "cardDropRate": 0.15,
+      "cards": [
+        {"atomicNumber": 19, "file": "cartes elements/19 potassium.jpg"},
+        {"atomicNumber": 20, "file": "cartes elements/20 calcium.jpg"},
+        {"atomicNumber": 21, "file": "cartes elements/21 Scandium.jpg"},
+        {"atomicNumber": 22, "file": "cartes elements/22 Titanium.jpg"},
+        {"atomicNumber": 23, "file": "cartes elements/23 vanadium.jpg"},
+        {"atomicNumber": 24, "file": "cartes elements/24 chrome.jpg"},
+        {"atomicNumber": 25, "file": "cartes elements/25 manganese.jpg"},
+        {"atomicNumber": 26, "file": "cartes elements/26 Fer.jpg"}
+      ]
+    },
+    {
+      "fusionId": "neutron_capture",
+      "cardDropRate": 0.20,
+      "cards": [
+        {"atomicNumber": 29, "file": "cartes elements/29 Cuivre.jpg"},
+        {"atomicNumber": 47, "file": "cartes elements/47 Argent.jpg"},
+        {"atomicNumber": 79, "file": "cartes elements/79 Or.jpg"},
+        {"atomicNumber": 80, "file": "cartes elements/80 mercury.jpg"},
+        {"atomicNumber": 94, "file": "cartes elements/94 Plutonium.jpg"}
+      ]
+    }
+  ]
+}

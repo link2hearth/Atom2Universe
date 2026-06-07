@@ -172,6 +172,42 @@
 
         </LinearLayout>
 
+        <!-- Overlay carte gagnée (affiché avant le résultat si drop) -->
+        <FrameLayout
+            android:id="@+id/fusion_card_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF000000"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.Atom2Universe.app.crypto.StarfieldView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/fusion_card_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/fusion_card_tap_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="48dp"
+                android:text="@string/fusion_tap_continue"
+                android:textColor="#44FFFFFF"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:alpha="0" />
+
+        </FrameLayout>
+
         <!-- Confettis (victoire uniquement) -->
         <com.Atom2Universe.app.crypto.fusion.FusionConfettiView
             android:id="@+id/fusion_confetti"
