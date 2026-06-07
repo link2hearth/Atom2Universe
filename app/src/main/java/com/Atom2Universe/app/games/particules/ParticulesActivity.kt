@@ -22,6 +22,7 @@ class ParticulesActivity : AppCompatActivity() {
 
     private lateinit var gameView: ParticulesView
     private lateinit var pauseButton: ImageButton
+    private lateinit var music: ParticulesMusic
     private val db by lazy { ParticulesDatabase.getInstance(applicationContext) }
 
     override fun attachBaseContext(newBase: Context) {
@@ -33,7 +34,11 @@ class ParticulesActivity : AppCompatActivity() {
         enableImmersiveMode()
         setContentView(R.layout.activity_particules)
 
+        music = ParticulesMusic(lifecycleScope)
+        music.start()
+
         gameView = ParticulesView(this)
+        gameView.music = music
         val container = findViewById<FrameLayout>(R.id.particules_container)
         container.addView(gameView)
 
@@ -106,10 +111,17 @@ class ParticulesActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         gameView.pause()
+        music.pause()
         pauseButton.setImageResource(R.drawable.ic_play)
     }
 
     override fun onResume() {
         super.onResume()
+        music.resumeBackground()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        music.stop()
     }
 }

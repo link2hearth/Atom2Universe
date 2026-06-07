@@ -57,6 +57,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     // ── State machine ────────────────────────────────────────────
     enum class State { READY, PLAYING, PAUSED, LIFE_LOST, LEVEL_CLEAR, GAME_OVER, SHOP }
     @Volatile private var state = State.READY
+    var music: ParticulesMusic? = null
 
     // ── Layout ───────────────────────────────────────────────────
     private var W = 1f; private var H = 1f
@@ -1065,6 +1066,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         brick.regenTimer = 0L
         spawnSparks(brick)
         if (brick.hits <= 0) {
+            music?.onBrickDestroyed(brick.type, level)
             bricks.remove(brick)
             combo++
             comboTimer = comboGrace
@@ -1092,6 +1094,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
             if (combo == 5 || combo == 10 || combo == 15) {
                 spawnComboBurst(brick.rect.centerX(), brick.rect.centerY())
+                music?.onCombo(combo)
             }
             if (combo >= 4) addFloatText(brick.rect.centerX(), brick.rect.centerY(),
                 "x${mult} combo ${combo}", brick.baseColor, 1f)
@@ -1104,6 +1107,8 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 BType.EXPLOSIVE -> explode(brick)
                 else -> {}
             }
+        } else {
+            music?.onBrickHit()
         }
     }
 
@@ -1159,6 +1164,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     private fun collectPowerUp(type: PType) {
         addFloatText(paddle.centerX(), paddle.top - 20f, labelFor(type), puColors[type] ?: 0xFFFFFFFF.toInt(), 1f)
+        music?.onPowerUp(type)
         flashWhite = 0.25f
         val stack = meta.shopStackTimers > 0
         when (type) {
@@ -1246,15 +1252,18 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         panicLatched = false; fingerBreakReadyAtMs = 0L
         generateLevel(); resetBallOnPaddle(); syncPaddleWidth()
         state = State.READY
+        music?.onLevelChanged(1)
     }
 
     private fun ballBaseSpeed() = ballBaseSpd * (1.15f).pow(minOf(level - 1, 9).toFloat())
 
     private fun onLevelClear() {
+        music?.onLevelClear()
         val clearedLevel = level
         if (level > meta.highestLevel) meta = meta.copy(highestLevel = level)
         panicLatched = false; fingerBreakReadyAtMs = 0L
         level++
+        music?.onLevelChanged(level)
         ballSpeed = ballBaseSpeed()
         spdMult = 1f
         timerExtend = 0L; timerLaser = 0L; timerSpeed = 0L; timerSlow = 0L
@@ -1290,13 +1299,16 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 secondChanceUsed = true
                 lives = 1
                 addFloatText(W / 2, H / 2, "SECONDE CHANCE !", 0xFFFFE066.toInt(), 1.5f)
+                music?.onLifeLost()
                 state = State.LIFE_LOST
                 resetBallOnPaddle()
                 return
             }
+            music?.onGameOver()
             state = State.GAME_OVER
             commitMeta()
         } else {
+            music?.onLifeLost()
             state = State.LIFE_LOST
             resetBallOnPaddle()
         }
