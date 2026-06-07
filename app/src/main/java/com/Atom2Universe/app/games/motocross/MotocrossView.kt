@@ -97,6 +97,17 @@ class MotocrossView @JvmOverloads constructor(
     private var bestDistM = 0f
     private var accumulator = 0f
 
+    // Dernier meilleur score effectivement sauvegardé (évite les écritures à 120 Hz)
+    private var savedBestDistM = 0f
+
+    // Caméra zoom : résultat mis en cache pour éviter le scan des segments à 60 fps
+    private var cachedZoomTarget = 1f
+    private var lastZoomUpdateX = Float.NaN
+
+    // Paths réutilisés frame après frame (évite les allocations GC à 60 fps)
+    private val trackPath = Path()
+    private val trackLine = Path()
+
     @Volatile private var running = false
     @Volatile private var resetRequested = false
     private var thread: Thread? = null
@@ -226,8 +237,10 @@ class MotocrossView @JvmOverloads constructor(
         while (added < count) {
             var next = pickNextBlock(prevBlock, genY)
             if (next == null) next = pickLandingBlock(prevBlock, genY) ?: START_BLOCK
+            val junctionIdx = if (points.isNotEmpty()) points.size - 1 else 0
             val last = appendBlockPoints(next, trackLength, genY, true) ?: break
-            genY = last[1]; trackLength = last[0]
+            smoothJunctionAt(junctionIdx)
+            genY = points.last()[1]; trackLength = points.last()[0]
             history.add(next.id); if (history.size > 5) history.removeAt(0)
             prevBlock = next
             added++
@@ -236,6 +249,27 @@ class MotocrossView @JvmOverloads constructor(
         rebuildSegments()
         recomputeHighest()
         ensureCheckpoints()
+    }
+
+    /**
+     * Lisse la jonction entre deux blocs en appliquant un lissage Laplacien pondéré
+     * sur les Y des points autour de [junctionIdx]. Les X ne bougent pas.
+     * Plusieurs passes progressives pour un fondu naturel.
+     */
+    private fun smoothJunctionAt(junctionIdx: Int) {
+        val radius = 6
+        val lo = (junctionIdx - radius).coerceAtLeast(1)
+        val hi = (junctionIdx + radius).coerceAtMost(points.size - 2)
+        if (hi <= lo) return
+        repeat(5) {
+            for (i in lo..hi) {
+                val dist = abs(i - junctionIdx).toFloat()
+                val weight = (1f - dist / (radius + 1f)).coerceAtLeast(0f)
+                if (weight < 0.01f) continue
+                val smoothY = (points[i - 1][1] + points[i][1] + points[i + 1][1]) / 3f
+                points[i][1] += (smoothY - points[i][1]) * weight * 0.45f
+            }
+        }
     }
 
     private fun ensureTrackAhead() {
@@ -361,6 +395,7 @@ class MotocrossView @JvmOverloads constructor(
         velX = if (boost) 110f else 0f; velY = 0f; angVel = 0f
         updateWheelData()
         camX = posX; camY = posY - CAM_OFFSET_Y; camZoom = 1f
+        lastZoomUpdateX = Float.NaN  // forcer le recalcul du zoom après respawn
         pendingRespawn = false
     }
 
@@ -624,9 +659,9 @@ class MotocrossView @JvmOverloads constructor(
             angVel += (targetAngular - angVel).coerceIn(-maxDelta, maxDelta)
         }
 
-        velX += (totalForceX / MASS) * dt
-        velY += (totalForceY / MASS) * dt
-        angVel += (totalTorque / BIKE_INERTIA) * dt
+        velX += totalForceX * INV_MASS * dt
+        velY += totalForceY * INV_MASS * dt
+        angVel += totalTorque * INV_INERTIA * dt
 
         velX *= 1f - LINEAR_DAMPING * dt
         velY *= 1f - LINEAR_DAMPING * dt
@@ -646,7 +681,14 @@ class MotocrossView @JvmOverloads constructor(
             val meters = progress * UNIT_TO_METERS
             if (meters > maxDistM) {
                 maxDistM = meters
-                if (maxDistM > bestDistM) { bestDistM = maxDistM; saveBest() }
+                if (maxDistM > bestDistM) {
+                    bestDistM = maxDistM
+                    // Écriture SharedPreferences seulement tous les 10 m de nouveau record
+                    if (bestDistM - savedBestDistM >= BEST_SAVE_INTERVAL_M) {
+                        savedBestDistM = bestDistM
+                        saveBest()
+                    }
+                }
             }
         }
 
@@ -656,10 +698,15 @@ class MotocrossView @JvmOverloads constructor(
         if (posY - WHEEL_RADIUS > fallThreshold) pendingRespawn = true
 
         if (!gameOver) {
-            val normalizedAngle = atan2(sin(angle), cos(angle))
+            var normalizedAngle = angle % TWO_PI_F
+            if (normalizedAngle > PI_F) normalizedAngle -= TWO_PI_F
+            else if (normalizedAngle < -PI_F) normalizedAngle += TWO_PI_F
             val isUpsideDown = abs(normalizedAngle) > (PI_F * 0.75f)
             val falling = velY > 0f
-            if (isUpsideDown && (!airborne || (falling && nearGroundWhileUpsideDown))) gameOver = true
+            if (isUpsideDown && (!airborne || (falling && nearGroundWhileUpsideDown))) {
+                gameOver = true
+                if (bestDistM > savedBestDistM) { savedBestDistM = bestDistM; saveBest() }
+            }
         }
     }
 
@@ -678,8 +725,11 @@ class MotocrossView @JvmOverloads constructor(
     }
 
     private fun computeCameraZoom(targetY: Float): Float {
+        // Recalcul seulement si la caméra a bougé de plus de 80 unités monde
+        if (!lastZoomUpdateX.isNaN() && abs(posX - lastZoomUpdateX) < 80f) return cachedZoomTarget
+        lastZoomUpdateX = posX
         val height = vh / density   // hauteur logique (≈ px CSS du JS)
-        if (height <= 0f) return camZoom
+        if (height <= 0f) return cachedZoomTarget
         val minX = posX - CAM_WINDOW_BEHIND
         val maxX = posX + CAM_WINDOW_AHEAD
         var minY = Float.POSITIVE_INFINITY; var maxY = Float.NEGATIVE_INFINITY
@@ -703,7 +753,8 @@ class MotocrossView @JvmOverloads constructor(
             if (bottomDelta > 0f) allowed = min(allowed, bottomAvail / bottomDelta)
         }
         if (!allowed.isFinite() || allowed <= 0f) allowed = camZoom
-        return allowed.coerceIn(zoomMin, CAM_ZOOM_MAX)
+        cachedZoomTarget = allowed.coerceIn(zoomMin, CAM_ZOOM_MAX)
+        return cachedZoomTarget
     }
 
     // ── Rendu ────────────────────────────────────────────────────────────────────
@@ -768,34 +819,42 @@ class MotocrossView @JvmOverloads constructor(
         val right = camX + halfW + 80f
         val bottom = camY + (vh * (1f - CAM_VERTICAL_ANCHOR)) / scale + 200f
 
-        val path = Path()
-        val line = Path()
+        // Recherche binaire du premier point visible (points triés par X)
+        var lo = 0; var hi = points.size - 1; var startIdx = 0
+        while (lo <= hi) {
+            val mid = (lo + hi) ushr 1
+            if (points[mid][0] < left) { startIdx = mid; lo = mid + 1 } else hi = mid - 1
+        }
+        startIdx = (startIdx - 1).coerceAtLeast(0)
+
+        trackPath.reset()
+        trackLine.reset()
         var started = false
         var firstX = 0f; var lastX = 0f
-        for (p in points) {
-            if (p[0] < left) continue
+        for (i in startIdx until points.size) {
+            val p = points[i]
             if (!started) {
-                path.moveTo(p[0], bottom)
-                path.lineTo(p[0], p[1])
-                line.moveTo(p[0], p[1])
+                trackPath.moveTo(p[0], bottom)
+                trackPath.lineTo(p[0], p[1])
+                trackLine.moveTo(p[0], p[1])
                 firstX = p[0]; started = true
             } else {
-                path.lineTo(p[0], p[1])
-                line.lineTo(p[0], p[1])
+                trackPath.lineTo(p[0], p[1])
+                trackLine.lineTo(p[0], p[1])
             }
             lastX = p[0]
             if (p[0] > right) break
         }
         if (!started) return
-        path.lineTo(lastX, bottom)
-        path.lineTo(firstX, bottom)
-        path.close()
+        trackPath.lineTo(lastX, bottom)
+        trackPath.lineTo(firstX, bottom)
+        trackPath.close()
 
-        canvas.drawPath(path, groundFill)
+        canvas.drawPath(trackPath, groundFill)
 
         // Épaisseur en unités monde : après mise à l'échelle (density*zoom) ≈ 4 px CSS
         trackStroke.strokeWidth = 4f / camZoom
-        canvas.drawPath(line, trackStroke)
+        canvas.drawPath(trackLine, trackStroke)
     }
 
     private fun drawBike(canvas: Canvas) {
@@ -885,9 +944,11 @@ class MotocrossView @JvmOverloads constructor(
 
     private companion object {
         const val PI_F = Math.PI.toFloat()
+        const val TWO_PI_F = PI_F * 2f
 
         // Physique (unités monde, identiques au JS)
         const val MASS = 60f
+        const val INV_MASS = 1f / MASS
         const val GRAVITY = 1200f
         const val BIKE_SCALE = 0.6f
         const val CHASSIS_WIDTH = 108f * BIKE_SCALE
@@ -896,6 +957,7 @@ class MotocrossView @JvmOverloads constructor(
         const val WHEEL_RADIUS = 18f * BIKE_SCALE
         const val WHEEL_VERTICAL_OFFSET = 20f * BIKE_SCALE
         val BIKE_INERTIA = (MASS * (CHASSIS_WIDTH * CHASSIS_WIDTH + CHASSIS_HEIGHT * CHASSIS_HEIGHT)) / 12f
+        val INV_INERTIA = 1f / BIKE_INERTIA
         const val ENGINE_FORCE = 24800f
         const val BRAKE_FORCE = ENGINE_FORCE * 0.9f
         const val GROUND_BRAKE_MULTIPLIER = 1.35f
@@ -919,6 +981,7 @@ class MotocrossView @JvmOverloads constructor(
         const val FRAME_NS = 1_000_000_000L / 60
 
         const val UNIT_TO_METERS = 0.1f / 3f
+        const val BEST_SAVE_INTERVAL_M = 10f
 
         // Boost
         const val BOOST_BASE_DELAY = 1f
