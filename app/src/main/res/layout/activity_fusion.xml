@@ -40,6 +40,16 @@
                 android:fontFamily="monospace"
                 android:letterSpacing="0.3" />
 
+            <TextView
+                android:id="@+id/fusion_btn_mute"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="🔊"
+                android:textSize="20sp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/fusion_mute" />
+
         </LinearLayout>
 
         <!-- Bonus accumulés + prochain -->

@@ -91,6 +91,10 @@
     <string name="fusion_tap_continue">Appuyez pour continuer</string>
     <string name="fusion_next_bonus_aps">Prochaine victoire → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Prochaine victoire → +1%% APC</string>
+    <string name="fusion_fuse_all">⚡ TOUT FUSIONNER (palier 1)</string>
+    <string name="fusion_fuse_all_short">TOUT</string>
+    <string name="fusion_batch_result">%1$d ✓  /  %2$d ✗</string>
+    <string name="fusion_mute">Muet</string>
 
     <!-- Cave World -->
     <string name="cave_title">Cave World</string>

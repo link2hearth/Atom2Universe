@@ -91,6 +91,10 @@
     <string name="fusion_tap_continue">Tap to continue</string>
     <string name="fusion_next_bonus_aps">Next win → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Next win → +1%% APC</string>
+    <string name="fusion_fuse_all">⚡ FUSE ALL (Tier 1)</string>
+    <string name="fusion_fuse_all_short">ALL</string>
+    <string name="fusion_batch_result">%1$d ✓  /  %2$d ✗</string>
+    <string name="fusion_mute">Mute</string>
 
     <!-- Cave World -->
     <string name="cave_title">Cave World</string>
