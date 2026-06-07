@@ -8,6 +8,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -17,28 +19,33 @@ class GameOfLifeView @JvmOverloads constructor(
 ) : View(context, attrs) {
 
     companion object {
-        private const val BASE_CELL_SIZE = 20f
+        private const val BASE_CELL_SIZE = 22f
         private const val MIN_CELL_SIZE = 4f
-        private const val MAX_CELL_SIZE = 60f
+        private const val MAX_CELL_SIZE = 64f
+        private const val GRID_FADE_START = 10f  // en-dessous : pas de grillage
+        private const val GRID_FADE_END   = 22f  // au-dessus : grillage plein
+
+        // Encodage compact (x,y) → Long pour les coordonnées infinies
+        private fun encode(x: Int, y: Int): Long = (x.toLong() shl 32) or (y.toLong() and 0xFFFFFFFFL)
+        private fun decodeX(v: Long): Int = (v ushr 32).toInt()
+        private fun decodeY(v: Long): Int = v.toInt()
     }
 
-    private var cols = 0
-    private var rows = 0
-    private var grid = Array(0) { BooleanArray(0) }
-    private var buffer = Array(0) { BooleanArray(0) }
+    // Grille infinie — seules les cellules vivantes sont stockées
+    private val cells = HashSet<Long>(1024)
+    private val nextCells = HashSet<Long>(1024)
 
+    // Viewport en coordonnées monde (originX = cellule monde à x=0 écran)
     private var cellSize = BASE_CELL_SIZE
-    private var offsetX = 0f
-    private var offsetY = 0f
+    private var originX = 0f   // cellule monde correspondant au bord gauche du canvas
+    private var originY = 0f
 
     // Dessin d'un seul doigt
     private var isDrawing = false
     private var hadMultiTouch = false
     private var drawValue = true
-    private var lastTouchCol = -1
-    private var lastTouchRow = -1
-    // Mémorise l'état original de chaque cellule touchée pour annulation si 2ème doigt
-    private val strokeChanges = mutableListOf<Triple<Int, Int, Boolean>>() // row, col, wasAlive
+    private var lastTouchKey = Long.MIN_VALUE
+    private val strokeChanges = mutableListOf<Pair<Long, Boolean>>() // (key, wasAlive)
 
     // Pan à 2 doigts
     private var lastPanX = 0f
@@ -50,13 +57,12 @@ class GameOfLifeView @JvmOverloads constructor(
         color = Color.parseColor("#7B8CDE")
         isAntiAlias = false
     }
-    private val gridPaint = Paint().apply {
-        color = Color.parseColor("#1A1A2E")
+    private val bgPaint = Paint().apply {
+        color = Color.parseColor("#0D0D1A")
         style = Paint.Style.FILL
     }
     private val linePaint = Paint().apply {
-        color = Color.parseColor("#252540")
-        strokeWidth = 0.5f
+        style = Paint.Style.STROKE
         isAntiAlias = false
     }
 
@@ -64,11 +70,13 @@ class GameOfLifeView @JvmOverloads constructor(
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             val focusX = detector.focusX
             val focusY = detector.focusY
-            val worldX = (focusX - offsetX) / cellSize
-            val worldY = (focusY - offsetY) / cellSize
+            // coordonnée monde du point focal avant zoom
+            val worldX = originX + focusX / cellSize
+            val worldY = originY + focusY / cellSize
             cellSize = (cellSize * detector.scaleFactor).coerceIn(MIN_CELL_SIZE, MAX_CELL_SIZE)
-            offsetX = focusX - worldX * cellSize
-            offsetY = focusY - worldY * cellSize
+            // réancrer le point focal
+            originX = worldX - focusX / cellSize
+            originY = worldY - focusY / cellSize
             invalidate()
             return true
         }
@@ -76,112 +84,136 @@ class GameOfLifeView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        if (cols == 0) initGrid(w, h)
-    }
-
-    private fun initGrid(w: Int, h: Int) {
-        cols = max(80, (w / BASE_CELL_SIZE).toInt() + 20)
-        rows = max(80, (h / BASE_CELL_SIZE).toInt() + 20)
-        grid = Array(rows) { BooleanArray(cols) }
-        buffer = Array(rows) { BooleanArray(cols) }
-        centerView(w, h)
-    }
-
-    private fun centerView(w: Int, h: Int) {
-        offsetX = (w - cols * cellSize) / 2f
-        offsetY = (h - rows * cellSize) / 2f
+        // Centre la vue sur (0,0) la première fois
+        if (originX == 0f && originY == 0f && w > 0 && h > 0) {
+            originX = -(w / cellSize) / 2f
+            originY = -(h / cellSize) / 2f
+        }
     }
 
     fun randomize(density: Float = 0.3f) {
-        for (r in 0 until rows) for (c in 0 until cols) grid[r][c] = Math.random() < density
+        cells.clear()
+        val halfW = ((width / cellSize) / 2f).toInt() + 10
+        val halfH = ((height / cellSize) / 2f).toInt() + 10
+        for (r in -halfH..halfH) {
+            for (c in -halfW..halfW) {
+                if (Math.random() < density) cells.add(encode(c, r))
+            }
+        }
         notifyCount()
         invalidate()
     }
 
     fun clear() {
-        for (r in 0 until rows) grid[r].fill(false)
+        cells.clear()
         notifyCount()
         invalidate()
     }
 
     fun step() {
-        for (r in 0 until rows) {
-            for (c in 0 until cols) {
-                val n = countNeighbors(r, c)
-                buffer[r][c] = if (grid[r][c]) n in 2..3 else n == 3
+        // Compter les voisins de tous les candidats (cellules vivantes + leurs voisins)
+        val neighborCounts = HashMap<Long, Int>(cells.size * 9)
+        for (key in cells) {
+            val x = decodeX(key)
+            val y = decodeY(key)
+            for (dx in -1..1) for (dy in -1..1) {
+                if (dx == 0 && dy == 0) continue
+                val nk = encode(x + dx, y + dy)
+                neighborCounts[nk] = (neighborCounts[nk] ?: 0) + 1
             }
         }
-        val tmp = grid; grid = buffer; buffer = tmp
+        nextCells.clear()
+        for ((key, count) in neighborCounts) {
+            val alive = cells.contains(key)
+            if ((alive && count in 2..3) || (!alive && count == 3)) {
+                nextCells.add(key)
+            }
+        }
+        cells.clear()
+        cells.addAll(nextCells)
+        nextCells.clear()
         notifyCount()
         invalidate()
     }
 
-    private fun countNeighbors(r: Int, c: Int): Int {
-        var count = 0
-        for (dr in -1..1) for (dc in -1..1) {
-            if (dr == 0 && dc == 0) continue
-            if (grid[(r + dr + rows) % rows][(c + dc + cols) % cols]) count++
-        }
-        return count
-    }
-
-    fun countAlive(): Int {
-        var count = 0
-        for (r in 0 until rows) for (c in 0 until cols) if (grid[r][c]) count++
-        return count
-    }
+    fun countAlive(): Int = cells.size
 
     private fun notifyCount() {
-        post { onCellCountChanged?.invoke(countAlive()) }
+        post { onCellCountChanged?.invoke(cells.size) }
     }
 
     fun placePattern(pattern: Array<IntArray>) {
-        val startR = rows / 2 - pattern.size / 2
-        val startC = cols / 2 - (pattern.maxOfOrNull { it.size } ?: 0) / 2
-        for ((r, row) in pattern.withIndex()) for ((c, cell) in row.withIndex()) {
-            grid[(startR + r).coerceIn(0, rows - 1)][(startC + c).coerceIn(0, cols - 1)] = cell == 1
+        val offsetC = -(pattern.maxOfOrNull { it.size } ?: 0) / 2
+        val offsetR = -pattern.size / 2
+        for ((r, row) in pattern.withIndex()) {
+            for ((c, cell) in row.withIndex()) {
+                if (cell != 0) cells.add(encode(c + offsetC, r + offsetR))
+            }
         }
         notifyCount()
         invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), gridPaint)
+        val w = width.toFloat()
+        val h = height.toFloat()
+        canvas.drawRect(0f, 0f, w, h, bgPaint)
 
-        val startC = max(0, ((-offsetX) / cellSize).toInt() - 1)
-        val endC = min(cols - 1, ((width - offsetX) / cellSize).toInt() + 1)
-        val startR = max(0, ((-offsetY) / cellSize).toInt() - 1)
-        val endR = min(rows - 1, ((height - offsetY) / cellSize).toInt() + 1)
+        // Bornes des cellules visibles (en coordonnées monde)
+        val startC = floor(originX).toInt() - 1
+        val endC   = ceil(originX + w / cellSize).toInt() + 1
+        val startR = floor(originY).toInt() - 1
+        val endR   = ceil(originY + h / cellSize).toInt() + 1
 
-        if (cellSize > 8f) {
-            for (c in startC..endC) canvas.drawLine(offsetX + c * cellSize, 0f, offsetX + c * cellSize, height.toFloat(), linePaint)
-            for (r in startR..endR) canvas.drawLine(0f, offsetY + r * cellSize, width.toFloat(), offsetY + r * cellSize, linePaint)
+        // Grillage avec opacité progressive selon le niveau de zoom
+        if (cellSize >= GRID_FADE_START) {
+            val t = ((cellSize - GRID_FADE_START) / max(1f, GRID_FADE_END - GRID_FADE_START)).coerceIn(0f, 1f)
+            val lineAlpha = (60 + t * 90).toInt()  // 60..150 sur 255
+            linePaint.color = Color.argb(lineAlpha, 160, 190, 255)
+            linePaint.strokeWidth = if (cellSize >= GRID_FADE_END) 1f else 0.8f
+
+            for (c in startC..endC) {
+                val px = (c - originX) * cellSize
+                canvas.drawLine(px, 0f, px, h, linePaint)
+            }
+            for (r in startR..endR) {
+                val py = (r - originY) * cellSize
+                canvas.drawLine(0f, py, w, py, linePaint)
+            }
         }
 
-        for (r in startR..endR) for (c in startC..endC) {
-            if (grid[r][c]) {
-                val left = offsetX + c * cellSize + 1f
-                val top = offsetY + r * cellSize + 1f
-                canvas.drawRect(left, top, left + cellSize - 2f, top + cellSize - 2f, cellPaint)
-            }
+        // Cellules vivantes
+        val gap = if (cellSize > 6f) min(1.5f, cellSize * 0.06f) else 0f
+        for (key in cells) {
+            val cx = decodeX(key)
+            val cy = decodeY(key)
+            if (cx < startC || cx > endC || cy < startR || cy > endR) continue
+            val px = (cx - originX) * cellSize + gap
+            val py = (cy - originY) * cellSize + gap
+            canvas.drawRect(px, py, px + cellSize - gap * 2, py + cellSize - gap * 2, cellPaint)
         }
     }
 
-    private fun drawCell(x: Float, y: Float) {
-        val col = ((x - offsetX) / cellSize).toInt()
-        val row = ((y - offsetY) / cellSize).toInt()
-        if (col in 0 until cols && row in 0 until rows && (col != lastTouchCol || row != lastTouchRow)) {
-            strokeChanges.add(Triple(row, col, grid[row][col]))
-            grid[row][col] = drawValue
-            lastTouchCol = col
-            lastTouchRow = row
-            notifyCount()
-            invalidate()
-        }
+    private fun cellAt(screenX: Float, screenY: Float): Long {
+        val cx = floor(originX + screenX / cellSize).toInt()
+        val cy = floor(originY + screenY / cellSize).toInt()
+        return encode(cx, cy)
+    }
+
+    private fun applyDraw(key: Long) {
+        if (key == lastTouchKey) return
+        lastTouchKey = key
+        val wasAlive = cells.contains(key)
+        strokeChanges.add(key to wasAlive)
+        if (drawValue) cells.add(key) else cells.remove(key)
+        notifyCount()
+        invalidate()
     }
 
     private fun revertStroke() {
-        for ((r, c, was) in strokeChanges) grid[r][c] = was
+        for ((key, wasAlive) in strokeChanges) {
+            if (wasAlive) cells.add(key) else cells.remove(key)
+        }
         strokeChanges.clear()
         notifyCount()
         invalidate()
@@ -195,26 +227,16 @@ class GameOfLifeView @JvmOverloads constructor(
                 hadMultiTouch = false
                 strokeChanges.clear()
                 isDrawing = true
-                val col = ((event.x - offsetX) / cellSize).toInt()
-                val row = ((event.y - offsetY) / cellSize).toInt()
-                if (col in 0 until cols && row in 0 until rows) {
-                    drawValue = !grid[row][col]
-                    strokeChanges.add(Triple(row, col, grid[row][col]))
-                    grid[row][col] = drawValue
-                    lastTouchCol = col
-                    lastTouchRow = row
-                    notifyCount()
-                    invalidate()
-                }
+                val key = cellAt(event.x, event.y)
+                drawValue = !cells.contains(key)
+                applyDraw(key)
             }
 
             MotionEvent.ACTION_POINTER_DOWN -> {
-                // 2ème doigt : annule le stroke en cours et passe en mode pan/zoom
                 if (isDrawing) revertStroke()
                 isDrawing = false
                 hadMultiTouch = true
-                lastTouchCol = -1
-                lastTouchRow = -1
+                lastTouchKey = Long.MIN_VALUE
                 if (event.pointerCount >= 2) {
                     lastPanX = (event.getX(0) + event.getX(1)) / 2f
                     lastPanY = (event.getY(0) + event.getY(1)) / 2f
@@ -225,24 +247,21 @@ class GameOfLifeView @JvmOverloads constructor(
                 if (event.pointerCount >= 2) {
                     val midX = (event.getX(0) + event.getX(1)) / 2f
                     val midY = (event.getY(0) + event.getY(1)) / 2f
-                    if (!scaleDetector.isInProgress) {
-                        offsetX += midX - lastPanX
-                        offsetY += midY - lastPanY
-                        invalidate()
-                    }
+                    originX -= (midX - lastPanX) / cellSize
+                    originY -= (midY - lastPanY) / cellSize
+                    invalidate()
                     lastPanX = midX
                     lastPanY = midY
                 } else if (isDrawing && !hadMultiTouch) {
-                    drawCell(event.x, event.y)
+                    applyDraw(cellAt(event.x, event.y))
                 }
             }
 
             MotionEvent.ACTION_POINTER_UP -> {
-                // Retour à 1 doigt : mémoriser sa position pour éviter un saut de pan
                 if (event.pointerCount == 2) {
-                    val remainingIdx = if (event.actionIndex == 0) 1 else 0
-                    lastPanX = event.getX(remainingIdx)
-                    lastPanY = event.getY(remainingIdx)
+                    val idx = if (event.actionIndex == 0) 1 else 0
+                    lastPanX = event.getX(idx)
+                    lastPanY = event.getY(idx)
                 }
             }
 
@@ -250,8 +269,7 @@ class GameOfLifeView @JvmOverloads constructor(
                 isDrawing = false
                 hadMultiTouch = false
                 strokeChanges.clear()
-                lastTouchCol = -1
-                lastTouchRow = -1
+                lastTouchKey = Long.MIN_VALUE
             }
         }
         return true

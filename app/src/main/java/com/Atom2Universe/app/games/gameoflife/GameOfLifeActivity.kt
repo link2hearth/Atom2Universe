@@ -48,8 +48,11 @@ class GameOfLifeActivity : ThemedActivity() {
         gameView.onCellCountChanged = { alive ->
             aliveText.text = getString(R.string.gol_cells_alive, alive)
         }
-        gameView.randomize()
-        updateStats()
+        // Randomise après que la vue soit mesurée pour connaître ses dimensions
+        gameView.post {
+            gameView.randomize()
+            updateStats()
+        }
     }
 
     private fun buildUI(): FrameLayout {
