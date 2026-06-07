@@ -77,6 +77,10 @@ class Match3View @JvmOverloads constructor(
     private var gridLeft = 0f
     private var gridTop  = 0f
 
+    // ── Son ───────────────────────────────────────────────────────────────────
+    private val soundEngine = Match3SoundEngine()
+    private var comboCount  = 0
+
     // ── État ──────────────────────────────────────────────────────────────────
     private var isProcessing = false
     var score = 0; private set
@@ -185,6 +189,7 @@ class Match3View @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (orientationListener.canDetectOrientation()) orientationListener.enable()
+        soundEngine.start()
     }
 
     // ── Chargement ────────────────────────────────────────────────────────────
@@ -418,6 +423,7 @@ class Match3View @JvmOverloads constructor(
 
     // ── Swap ──────────────────────────────────────────────────────────────────
     private fun startSwap(r1: Int, c1: Int, r2: Int, c2: Int) {
+        comboCount = 0
         swapAnimator?.cancel()
         swapAnim = SwapAnim(r1, c1, r2, c2)
         swapProgress = 0f
@@ -481,6 +487,11 @@ class Match3View @JvmOverloads constructor(
     }
 
     private fun processMatches(matches: Set<Pair<Int, Int>>) {
+        // Note pentatonique basée sur la gemme majoritaire du match
+        val dominant = matches.groupBy { (r, c) -> grid[r][c] }.maxBy { it.value.size }.key
+        soundEngine.playMatch(dominant, comboCount)
+        comboCount++
+
         score += matches.size * 10
         onScoreChanged?.invoke(score)
         // +1 sec par match, plafonné au timerMax courant
@@ -562,7 +573,7 @@ class Match3View @JvmOverloads constructor(
 
     private fun checkCascade() {
         val matches = findMatches()
-        if (matches.isNotEmpty()) processMatches(matches) else isProcessing = false
+        if (matches.isNotEmpty()) processMatches(matches) else { comboCount = 0; isProcessing = false }
     }
 
     // ── Reset ─────────────────────────────────────────────────────────────────
@@ -573,6 +584,7 @@ class Match3View @JvmOverloads constructor(
         isProcessing = false
         dragRow = -1; dragCol = -1; swipeTriggered = false
         score = 0
+        comboCount = 0
         timerMax   = TIMER_START
         timerValue = TIMER_START
         timerLastTick = 0L
@@ -626,5 +638,6 @@ class Match3View @JvmOverloads constructor(
         handler.removeCallbacksAndMessages(null)
         swapAnimator?.cancel()
         orientationListener.disable()
+        soundEngine.stop()
     }
 }
