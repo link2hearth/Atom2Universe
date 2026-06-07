@@ -245,4 +245,9 @@
     <string name="gacha_rarity_spallation">Espalação</string>
     <string name="gacha_rarity_synthetique">Sintético</string>
     <string name="stat_hexrunner_best">Hex Runner – Melhor tempo</string>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Pilote pistas procedurais — esquerda para frear/inclinar para trás, direita para acelerar/inclinar para frente!</string>
+    <string name="motocross_restart">Reiniciar</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
 </resources>

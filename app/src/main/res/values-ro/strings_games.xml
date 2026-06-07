@@ -86,4 +86,7 @@
     <string name="fusion_tap_continue">Atingeți pentru a continua</string>
     <string name="fusion_next_bonus_aps">Următoarea victorie → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Următoarea victorie → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Captură de neutroni</string>
+    <string name="fusion_recipe_neutron_capture_science">Dincolo de fier, fuziunea stelară nu mai este exotermică. Elementele mai grele se formează prin captură de neutroni în timpul exploziilor de supernovă — procesul r forjează cobalt, nichel, cupru și altele în milisecunde.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → element Supernovă aleatoriu  •  12%%  •  +1%% APS sau APC</string>
 </resources>

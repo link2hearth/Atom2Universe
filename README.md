@@ -55,12 +55,6 @@ The **Atom2Universe brand** (name, icon, logo, store assets) is not covered by t
 
 ---
 
-## Forks
-
-Forks are welcome. If you publish a fork, you must use your own name, icon, and package name — do not present it as the official Atom2Universe app.
-
----
-
 ## Contact
 
 **contact@atom2universe.com**

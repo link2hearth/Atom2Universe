@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Tippen zum Fortfahren</string>
     <string name="fusion_next_bonus_aps">Nächster Sieg → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Nächster Sieg → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Neutroneneinfang</string>
+    <string name="fusion_recipe_neutron_capture_science">Jenseits des Eisens ist die Sternfusion nicht mehr exotherm. Schwerere Elemente entstehen durch Neutroneneinfang bei Supernovaexplosionen — der r-Prozess schmiedet Kobalt, Nickel, Kupfer und mehr in Millisekunden.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → zufälliges Supernova-Element  •  12%%  •  +1%% APS od. APC</string>
 </resources>

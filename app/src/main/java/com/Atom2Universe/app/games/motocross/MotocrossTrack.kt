@@ -173,7 +173,16 @@ private val PROFILE_TEMPLATES: Map<String, Array<FloatArray>> = mapOf(
     "smoothHump" to tpl(p(0f, 0f), p(0.15f, -0.12f), p(0.35f, -0.45f), p(0.5f, -0.55f), p(0.65f, -0.45f), p(0.85f, -0.12f), p(1f, 0f)),
     "gentleSlalom" to tpl(p(0f, 0f), p(0.12f, -0.15f), p(0.24f, 0.1f), p(0.38f, -0.2f), p(0.52f, 0.15f), p(0.66f, -0.18f), p(0.8f, 0.08f), p(0.92f, -0.06f), p(1f, 0f)),
     "upperPlatform" to tpl(p(0f, 0f), p(0.1f, -0.2f), p(0.2f, -0.55f), p(0.3f, -0.75f), p(0.4f, -0.8f), p(0.6f, -0.8f), p(0.7f, -0.75f), p(0.8f, -0.55f), p(0.9f, -0.2f), p(1f, 0f)),
-    "doubleArch" to tpl(p(0f, 0f), p(0.08f, -0.22f), p(0.18f, -0.38f), p(0.28f, -0.22f), p(0.38f, 0f), p(0.5f, -0.15f), p(0.62f, -0.42f), p(0.72f, -0.38f), p(0.82f, -0.18f), p(0.92f, -0.05f), p(1f, 0f))
+    "doubleArch" to tpl(p(0f, 0f), p(0.08f, -0.22f), p(0.18f, -0.38f), p(0.28f, -0.22f), p(0.38f, 0f), p(0.5f, -0.15f), p(0.62f, -0.42f), p(0.72f, -0.38f), p(0.82f, -0.18f), p(0.92f, -0.05f), p(1f, 0f)),
+    "tripleHump" to tpl(p(0f, 0f), p(0.08f, -0.28f), p(0.17f, -0.68f), p(0.26f, -0.28f), p(0.35f, 0f), p(0.42f, -0.22f), p(0.5f, -0.62f), p(0.58f, -0.22f), p(0.67f, 0f), p(0.74f, -0.28f), p(0.83f, -0.66f), p(0.92f, -0.28f), p(1f, 0f)),
+    "whoop" to tpl(p(0f, 0f), p(0.07f, -0.28f), p(0.14f, 0f), p(0.21f, -0.3f), p(0.28f, 0f), p(0.35f, -0.28f), p(0.42f, 0f), p(0.49f, -0.28f), p(0.56f, 0f), p(0.63f, -0.26f), p(0.7f, 0f), p(0.77f, -0.22f), p(0.84f, 0f), p(0.91f, -0.14f), p(1f, 0f)),
+    "skijump" to tpl(p(0f, 0f), p(0.12f, -0.06f), p(0.24f, -0.18f), p(0.36f, -0.36f), p(0.48f, -0.58f), p(0.6f, -0.76f), p(0.7f, -0.82f), p(0.78f, -0.72f), p(0.86f, -0.38f), p(0.93f, -0.08f), p(1f, 0f)),
+    "ravine" to tpl(p(0f, 0f), p(0.1f, -0.14f), p(0.2f, -0.08f), p(0.3f, 0.12f), p(0.4f, 0.38f), p(0.5f, 0.62f), p(0.6f, 0.38f), p(0.7f, 0.12f), p(0.8f, -0.08f), p(0.9f, -0.12f), p(1f, 0f)),
+    "camelback" to tpl(p(0f, 0f), p(0.09f, -0.18f), p(0.19f, -0.42f), p(0.29f, -0.22f), p(0.39f, 0f), p(0.47f, -0.28f), p(0.57f, -0.72f), p(0.67f, -0.3f), p(0.78f, -0.05f), p(0.9f, -0.08f), p(1f, 0f)),
+    "tableland" to tpl(p(0f, 0f), p(0.1f, -0.32f), p(0.2f, -0.58f), p(0.32f, -0.64f), p(0.5f, -0.64f), p(0.68f, -0.64f), p(0.8f, -0.58f), p(0.9f, -0.32f), p(1f, 0f)),
+    "stepDown" to tpl(p(0f, 0f), p(0.08f, 0.06f), p(0.18f, 0.28f), p(0.28f, 0.42f), p(0.38f, 0.5f), p(0.48f, 0.6f), p(0.58f, 0.72f), p(0.68f, 0.78f), p(0.78f, 0.82f), p(0.88f, 0.6f), p(0.96f, 0.22f), p(1f, 0f)),
+    "sharpPeak" to tpl(p(0f, 0f), p(0.18f, -0.18f), p(0.34f, -0.52f), p(0.5f, -0.92f), p(0.66f, -0.52f), p(0.82f, -0.18f), p(1f, 0f)),
+    "bigAir" to tpl(p(0f, 0f), p(0.1f, -0.1f), p(0.22f, -0.36f), p(0.34f, -0.64f), p(0.44f, -0.84f), p(0.54f, -0.9f), p(0.64f, -0.76f), p(0.74f, -0.5f), p(0.84f, -0.2f), p(0.93f, 0.04f), p(1f, 0f))
 )
 
 internal val START_BLOCK: Block = createBlock("flat/start/01", arrayOf("flat", "easy", "starter"), polyFlat(200f))
@@ -218,7 +227,54 @@ internal val BLOCK_LIBRARY: List<Block> = listOf(
     createProfileBlock("platform/upper/easy/01", arrayOf("platform", "easy"), 400f, "upperPlatform", 45f),
     createProfileBlock("platform/upper/easy/02", arrayOf("platform", "easy"), 560f, "upperPlatform", 55f),
     createProfileBlock("arch/double/easy/01", arrayOf("arch", "easy"), 380f, "doubleArch", 30f),
-    createProfileBlock("arch/double/easy/02", arrayOf("arch", "easy"), 500f, "doubleArch", 40f)
+    createProfileBlock("arch/double/easy/02", arrayOf("arch", "easy"), 500f, "doubleArch", 40f),
+
+    // triple bosse
+    createProfileBlock("hump/triple/easy/01", arrayOf("hump", "easy"), 480f, "tripleHump", 28f),
+    createProfileBlock("hump/triple/normal/01", arrayOf("hump", "normal"), 560f, "tripleHump", 40f),
+    createProfileBlock("hump/triple/hard/01", arrayOf("hump", "hard"), 640f, "tripleHump", 54f),
+
+    // whoops
+    createProfileBlock("whoop/easy/01", arrayOf("whoop", "easy"), 440f, "whoop", 22f),
+    createProfileBlock("whoop/normal/01", arrayOf("whoop", "normal"), 560f, "whoop", 32f),
+    createProfileBlock("whoop/hard/01", arrayOf("whoop", "hard"), 700f, "whoop", 44f),
+    createProfileBlock("whoop/hard/long/01", arrayOf("whoop", "hard"), 900f, "whoop", 50f),
+
+    // tremplin ski-jump
+    createProfileBlock("jump/ski/easy/01", arrayOf("jump", "easy"), 360f, "skijump", 30f),
+    createProfileBlock("jump/ski/normal/01", arrayOf("jump", "normal"), 460f, "skijump", 42f),
+    createProfileBlock("jump/ski/hard/01", arrayOf("jump", "hard"), 560f, "skijump", 56f),
+
+    // ravin
+    createProfileBlock("ravine/easy/01", arrayOf("ravine", "easy"), 340f, "ravine", 32f),
+    createProfileBlock("ravine/normal/01", arrayOf("ravine", "normal"), 420f, "ravine", 48f),
+    createProfileBlock("ravine/hard/01", arrayOf("ravine", "hard"), 520f, "ravine", 64f),
+
+    // dos de chameau
+    createProfileBlock("camel/easy/01", arrayOf("hump", "easy"), 380f, "camelback", 26f),
+    createProfileBlock("camel/normal/01", arrayOf("hump", "normal"), 480f, "camelback", 38f),
+    createProfileBlock("camel/hard/01", arrayOf("hump", "hard"), 580f, "camelback", 52f),
+
+    // tableland (plateau élevé)
+    createProfileBlock("platform/table/easy/01", arrayOf("platform", "easy"), 480f, "tableland", 36f),
+    createProfileBlock("platform/table/normal/01", arrayOf("platform", "normal"), 620f, "tableland", 50f),
+    createProfileBlock("platform/table/hard/01", arrayOf("platform", "hard"), 780f, "tableland", 66f),
+
+    // paliers en descente
+    createProfileBlock("descent/step/easy/01", arrayOf("descent", "easy"), 480f, "stepDown", 38f, -4f),
+    createProfileBlock("descent/step/normal/01", arrayOf("descent", "normal"), 600f, "stepDown", 52f, -6f),
+    createProfileBlock("descent/step/hard/01", arrayOf("descent", "hard"), 740f, "stepDown", 68f, -8f),
+
+    // pic acéré
+    createProfileBlock("peak/sharp/easy/01", arrayOf("peak", "easy"), 320f, "sharpPeak", 32f),
+    createProfileBlock("peak/sharp/normal/01", arrayOf("peak", "normal"), 420f, "sharpPeak", 46f),
+    createProfileBlock("peak/sharp/hard/01", arrayOf("peak", "hard"), 520f, "sharpPeak", 62f),
+
+    // grand saut
+    createProfileBlock("jump/big/easy/01", arrayOf("jump", "easy"), 400f, "bigAir", 30f),
+    createProfileBlock("jump/big/normal/01", arrayOf("jump", "normal"), 520f, "bigAir", 44f),
+    createProfileBlock("jump/big/hard/01", arrayOf("jump", "hard"), 660f, "bigAir", 60f),
+    createProfileBlock("jump/big/hard/long/01", arrayOf("jump", "hard"), 840f, "bigAir", 70f)
 )
 
 internal val TRACK_BLOCKS: List<Block> = BLOCK_LIBRARY.filter { it !== START_BLOCK }

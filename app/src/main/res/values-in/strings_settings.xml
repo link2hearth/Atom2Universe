@@ -137,4 +137,6 @@
     <string name="theme_blue">Biru</string>
     <string name="theme_red">Merah</string>
     <string name="theme_indigo">Nila</string>
+    <string name="about_contact">contact@atom2universe.com</string>
+    <string name="atom_custom_folder_reset">Atur ulang</string>
 </resources>

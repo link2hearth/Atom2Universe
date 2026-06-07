@@ -246,4 +246,9 @@
     <string name="escape_status_caught">Descoperit după %1$d ture! Apăsați pentru a reîncerca.</string>
     <string name="escape_status_win">Evadare în %1$d ture (optim: %2$d). Apăsați pentru a juca din nou.</string>
     <string name="escape_status_win_perfect">Evadare perfectă în %1$d ture! Apăsați pentru a juca din nou.</string>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Conduce pe piste procedurale — stânga pentru frânare/aplecat înapoi, dreapta pentru accelerare/aplecat înainte!</string>
+    <string name="motocross_restart">Repornire</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
 </resources>

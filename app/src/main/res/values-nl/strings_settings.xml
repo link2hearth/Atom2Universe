@@ -137,4 +137,6 @@
     <string name="theme_blue">Blauw</string>
     <string name="theme_red">Rood</string>
     <string name="theme_indigo">Indigo</string>
+    <string name="about_contact">contact@atom2universe.com</string>
+    <string name="atom_custom_folder_reset">Standaard</string>
 </resources>

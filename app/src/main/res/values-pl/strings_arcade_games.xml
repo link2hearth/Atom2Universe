@@ -245,4 +245,9 @@
     <string name="gacha_rarity_spallation">Spalacja</string>
     <string name="gacha_rarity_synthetique">Syntetyczny</string>
     <string name="stat_hexrunner_best">Hex Runner – Najlepszy czas</string>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Jedź po proceduralnych trasach — lewo to hamowanie/pochyl do tyłu, prawo to przyspieszenie/pochyl do przodu!</string>
+    <string name="motocross_restart">Uruchom ponownie</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
 </resources>

@@ -246,4 +246,9 @@
     <string name="escape_status_caught">Εντοπίστηκε μετά από %1$d γύρους! Πατήστε για επανάληψη.</string>
     <string name="escape_status_win">Διέφυγε σε %1$d γύρους (βέλτιστο: %2$d). Πατήστε για νέο παιχνίδι.</string>
     <string name="escape_status_win_perfect">Τέλεια διαφυγή σε %1$d γύρους! Πατήστε για νέο παιχνίδι.</string>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Οδήγησε σε διαδρομές — αριστερά για φρενάρισμα/γείρε πίσω, δεξιά για επιτάχυνση/γείρε μπρος!</string>
+    <string name="motocross_restart">Επανεκκίνηση</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
 </resources>

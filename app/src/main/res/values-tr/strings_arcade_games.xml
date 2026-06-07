@@ -245,4 +245,9 @@
     <string name="gacha_rarity_spallation">Spallasyon</string>
     <string name="gacha_rarity_synthetique">Sentetik</string>
     <string name="stat_hexrunner_best">Hex Runner – En iyi süre</string>
+    <string name="motocross_title">Motokros</string>
+    <string name="motocross_description">Prosedürel pistlerde sür — sol fren/geri yaslan, sağ hızlan/öne yaslan!</string>
+    <string name="motocross_restart">Yeniden başlat</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/s</string>
 </resources>

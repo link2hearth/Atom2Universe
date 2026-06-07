@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Натисніть для продовження</string>
     <string name="fusion_next_bonus_aps">Наступна перемога → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Наступна перемога → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Захоплення нейтронів</string>
+    <string name="fusion_recipe_neutron_capture_science">За межею заліза термоядерний синтез більше не є екзотермічним. Важчі елементи утворюються шляхом захоплення нейтронів під час вибухів наднових — r-процес кує кобальт, нікель, мідь та інші елементи за мілісекунди.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → випадковий елемент Наднової  •  12%%  •  +1%% APS або APC</string>
 </resources>

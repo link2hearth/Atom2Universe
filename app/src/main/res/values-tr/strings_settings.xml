@@ -137,4 +137,6 @@
     <string name="theme_blue">Mavi</string>
     <string name="theme_red">Kırmızı</string>
     <string name="theme_indigo">İndigo</string>
+    <string name="about_contact">contact@atom2universe.com</string>
+    <string name="atom_custom_folder_reset">Sıfırla</string>
 </resources>

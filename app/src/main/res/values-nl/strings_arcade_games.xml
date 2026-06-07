@@ -245,4 +245,9 @@
     <string name="gacha_rarity_spallation">Spallatie</string>
     <string name="gacha_rarity_synthetique">Synthetisch</string>
     <string name="stat_hexrunner_best">Hex Runner – Beste tijd</string>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Rij op procedurele banen — links remmen/achteroverleunen, rechts versnellen/vooroverleunen!</string>
+    <string name="motocross_restart">Opnieuw</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
 </resources>

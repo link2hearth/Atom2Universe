@@ -226,4 +226,15 @@
     <string name="big_bang_bonus_level_arrow">Ур. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
     <string name="big_bang_not_enough_tokens">Недостаточно токенов</string>
+    <string name="big_bang_title_count">БОЛЬШОЙ ВЗРЫВ #%d</string>
+    <string name="clicker_shop_plus_toggle_desc">Показать/скрыть значок "+" для этого улучшения</string>
+    <string name="crypto_chart_int_1m">1м</string>
+    <string name="crypto_chart_int_5m">5м</string>
+    <string name="crypto_chart_int_15m">15м</string>
+    <string name="crypto_chart_int_1h">1ч</string>
+    <string name="crypto_chart_int_4h">4ч</string>
+    <string name="crypto_chart_int_1d">1Д</string>
+    <string name="crypto_chart_int_1w">1Н</string>
+    <string name="crypto_chart_int_1mo">1М</string>
+    <string name="crypto_label_alpha_format">Игровой формат (напр. 1,23a)</string>
 </resources>

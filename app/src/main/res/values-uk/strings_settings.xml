@@ -137,4 +137,6 @@
     <string name="theme_blue">Синя</string>
     <string name="theme_red">Червона</string>
     <string name="theme_indigo">Індиго</string>
+    <string name="about_contact">contact@atom2universe.com</string>
+    <string name="atom_custom_folder_reset">Скинути</string>
 </resources>

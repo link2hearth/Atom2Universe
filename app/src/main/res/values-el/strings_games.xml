@@ -85,4 +85,7 @@
     <string name="fusion_tap_continue">Πατήστε για συνέχεια</string>
     <string name="fusion_next_bonus_aps">Επόμενη νίκη → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Επόμενη νίκη → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Σύλληψη Νετρονίων</string>
+    <string name="fusion_recipe_neutron_capture_science">Πέρα από τον σίδηρο, η αστρική σύντηξη δεν είναι πλέον εξώθερμη. Τα βαρύτερα στοιχεία σχηματίζονται μέσω σύλληψης νετρονίων κατά τις εκρήξεις σουπερνόβα — η διαδικασία r σφυρηλατεί κοβάλτιο, νικέλιο, χαλκό και άλλα σε χιλιοστά του δευτερολέπτου.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → τυχαίο στοιχείο Supernova  •  12%%  •  +1%% APS ή APC</string>
 </resources>

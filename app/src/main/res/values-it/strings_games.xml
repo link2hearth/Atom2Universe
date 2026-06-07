@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Tocca per continuare</string>
     <string name="fusion_next_bonus_aps">Prossima vittoria → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Prossima vittoria → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Cattura di Neutroni</string>
+    <string name="fusion_recipe_neutron_capture_science">Oltre il ferro, la fusione stellare non è più esotermica. Gli elementi più pesanti si formano per cattura di neutroni durante le esplosioni di supernova — il processo r forgia cobalto, nichel, rame e altro in millisecondi.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → elemento Supernova casuale  •  12%%  •  +1%% APS o APC</string>
 </resources>

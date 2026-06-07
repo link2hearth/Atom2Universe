@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Devam etmek için dokunun</string>
     <string name="fusion_next_bonus_aps">Sonraki galibiyet → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Sonraki galibiyet → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Nötron Yakalama</string>
+    <string name="fusion_recipe_neutron_capture_science">Demirin ötesinde yıldız füzyonu artık ekzotermik değildir. Daha ağır elementler, süpernova patlamaları sırasında nötron yakalama yoluyla oluşur — r-süreci milisaniyeler içinde kobalt, nikel, bakır ve daha fazlasını dövüp şekillendirir.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → rastgele Supernova elementi  •  12%%  •  +1%% APS veya APC</string>
 </resources>

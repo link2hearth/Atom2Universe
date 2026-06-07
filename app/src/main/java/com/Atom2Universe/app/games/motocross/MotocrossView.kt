@@ -605,6 +605,18 @@ class MotocrossView @JvmOverloads constructor(
 
         if (frontSteepGrip > 0f && totalTorque > 0f) totalTorque -= GRIP_TORQUE_ASSIST * frontSteepGrip
 
+        // En montée, le poids se déplace vers l'avant pour accrocher la pente
+        if (!airborne) {
+            val avgTy = (cBack.ty + cFront.ty) * 0.5f
+            val climbFactor = (-avgTy).coerceAtLeast(0f)  // positif uniquement en montée
+            if (climbFactor > 0.04f) {
+                val velFwd = (velX * cBack.tx + velY * cBack.ty).coerceAtLeast(0f)
+                val speedFactor = (velFwd / 100f).coerceIn(0f, 1f)
+                val accelFactor = if (accelerateHeld) 1f else 0.45f
+                totalTorque -= CLIMB_WEIGHT_TRANSFER * climbFactor * (0.55f + speedFactor * 0.45f) * accelFactor
+            }
+        }
+
         if (airborne) {
             val rotationInput = if (allowRotationControl) controlDelta.coerceIn(-1f, 1f) else 0f
             val targetAngular = rotationInput * AIR_ROTATION_MAX_SPEED
@@ -921,6 +933,7 @@ class MotocrossView @JvmOverloads constructor(
         const val GRIP_NORMAL_BOOST = 8800f
         const val GRIP_CORRECTION_BOOST = 18f
         const val GRIP_TORQUE_ASSIST = 42000f
+        const val CLIMB_WEIGHT_TRANSFER = 68000f
         const val GRIP_ANG_DAMP_MULT = 1.6f
         const val GRIP_FRICTION_MULT = 1.8f
         const val GRIP_DOWNFORCE = 2200f

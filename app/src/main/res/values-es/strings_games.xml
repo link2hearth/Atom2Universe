@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Toca para continuar</string>
     <string name="fusion_next_bonus_aps">Próxima victoria → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Próxima victoria → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Captura de neutrones</string>
+    <string name="fusion_recipe_neutron_capture_science">Más allá del hierro, la fusión estelar ya no es exotérmica. Los elementos más pesados se forman por captura de neutrones durante las explosiones de supernova — el proceso r forja cobalto, níquel, cobre y más en milisegundos.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → elemento Supernova aleatorio  •  12%%  •  +1%% APS o APC</string>
 </resources>

@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Нажмите для продолжения</string>
     <string name="fusion_next_bonus_aps">Следующая победа → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Следующая победа → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Захват нейтронов</string>
+    <string name="fusion_recipe_neutron_capture_science">За пределами железа термоядерный синтез больше не является экзотермическим. Более тяжёлые элементы образуются при захвате нейтронов во время взрывов сверхновых — r-процесс кует кобальт, никель, медь и другие элементы за миллисекунды.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → случайный элемент Сверхновой  •  12%%  •  +1%% APS или APC</string>
 </resources>

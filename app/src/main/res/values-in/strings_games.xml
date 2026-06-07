@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Ketuk untuk melanjutkan</string>
     <string name="fusion_next_bonus_aps">Kemenangan berikutnya → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Kemenangan berikutnya → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Penangkapan Neutron</string>
+    <string name="fusion_recipe_neutron_capture_science">Di luar besi, fusi bintang tidak lagi eksotermik. Unsur-unsur yang lebih berat terbentuk melalui penangkapan neutron selama ledakan supernova — proses r menempa kobalt, nikel, tembaga, dan lainnya dalam milidetik.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → elemen Supernova acak  •  12%%  •  +1%% APS atau APC</string>
 </resources>

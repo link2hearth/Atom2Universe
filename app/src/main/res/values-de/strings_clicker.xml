@@ -224,4 +224,15 @@
     <string name="big_bang_bonus_level_arrow">Lv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
     <string name="big_bang_not_enough_tokens">Nicht genug Token</string>
+    <string name="big_bang_title_count">BIG BANG #%d</string>
+    <string name="clicker_shop_plus_toggle_desc">"+"-Badge ein-/ausblenden</string>
+    <string name="crypto_chart_int_1m">1m</string>
+    <string name="crypto_chart_int_5m">5m</string>
+    <string name="crypto_chart_int_15m">15m</string>
+    <string name="crypto_chart_int_1h">1h</string>
+    <string name="crypto_chart_int_4h">4h</string>
+    <string name="crypto_chart_int_1d">1T</string>
+    <string name="crypto_chart_int_1w">1W</string>
+    <string name="crypto_chart_int_1mo">1M</string>
+    <string name="crypto_label_alpha_format">Spielformat (z.B. 1,23a)</string>
 </resources>

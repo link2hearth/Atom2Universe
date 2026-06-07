@@ -147,4 +147,6 @@ Il microfono non viene usato per altri scopi. Nessun audio viene registrato, tra
     <string name="atom_custom_folder_change">Immagini personalizzate: cambia cartella…</string>
     <string name="atom_custom_folder_clear">Ripristina immagini predefinite</string>
     <string name="atom_custom_folder_pick_new">Scegli una nuova cartella</string>
+    <string name="about_contact">contact@atom2universe.com</string>
+    <string name="atom_custom_folder_reset">Reimposta</string>
 </resources>

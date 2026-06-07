@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Dotknij, aby kontynuować</string>
     <string name="fusion_next_bonus_aps">Następne zwycięstwo → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Następne zwycięstwo → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Wychwyt neutronów</string>
+    <string name="fusion_recipe_neutron_capture_science">Za żelazem synteza gwiazdowa nie jest już egzotermiczna. Cięższe pierwiastki powstają przez wychwyt neutronów podczas wybuchów supernowych — proces r kuje kobalt, nikiel, miedź i inne w milisekundach.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → losowy element Supernowej  •  12%%  •  +1%% APS lub APC</string>
 </resources>

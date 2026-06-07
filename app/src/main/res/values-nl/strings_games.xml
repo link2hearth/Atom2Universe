@@ -87,4 +87,7 @@
     <string name="fusion_tap_continue">Tik om door te gaan</string>
     <string name="fusion_next_bonus_aps">Volgende overwinning → +1%% APS</string>
     <string name="fusion_next_bonus_apc">Volgende overwinning → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Neutronenopvang</string>
+    <string name="fusion_recipe_neutron_capture_science">Voorbij ijzer is stellaire fusie niet langer exotherm. Zwaardere elementen vormen zich door neutronenopvang tijdens supernovaexplosies — het r-proces smeedt kobalt, nikkel, koper en meer in milliseconden.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → willekeurig Supernova-element  •  12%%  •  +1%% APS of APC</string>
 </resources>

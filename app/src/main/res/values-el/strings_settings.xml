@@ -137,4 +137,6 @@
     <string name="theme_blue">Μπλε</string>
     <string name="theme_red">Κόκκινο</string>
     <string name="theme_indigo">Ινδικό μπλε</string>
+    <string name="about_contact">contact@atom2universe.com</string>
+    <string name="atom_custom_folder_reset">Επαναφορά</string>
 </resources>
