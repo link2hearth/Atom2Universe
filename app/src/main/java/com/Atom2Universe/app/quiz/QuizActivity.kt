@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.quiz
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -73,6 +74,7 @@ class QuizActivity : ThemedActivity() {
     private lateinit var feedbackSection: View
     private lateinit var feedbackResult: TextView
     private lateinit var feedbackExplanation: TextView
+    private lateinit var feedbackSearchButton: MaterialButton
     private lateinit var validateButton: MaterialButton
     private lateinit var nextButton: MaterialButton
 
@@ -153,6 +155,7 @@ class QuizActivity : ThemedActivity() {
         feedbackSection = findViewById(R.id.feedback_section)
         feedbackResult = findViewById(R.id.feedback_result)
         feedbackExplanation = findViewById(R.id.feedback_explanation)
+        feedbackSearchButton = findViewById(R.id.feedback_search_button)
         validateButton = findViewById(R.id.validate_button)
         nextButton = findViewById(R.id.next_button)
 
@@ -711,6 +714,7 @@ class QuizActivity : ThemedActivity() {
                     }
                 )
                 feedbackExplanation.text = question.getExplanation(currentLang)
+                feedbackSearchButton.setOnClickListener { openQuizSearch(question) }
             }
         }
 
@@ -844,6 +848,9 @@ class QuizActivity : ThemedActivity() {
             layoutParams = params
         }
         cardLayout.addView(correctAnswerText)
+
+        // Search button
+        cardLayout.addView(makeSearchButton(question))
 
         mistakesContainer.addView(cardLayout)
     }
@@ -1016,7 +1023,35 @@ class QuizActivity : ThemedActivity() {
             cardLayout.addView(typeIndicator)
         }
 
+        // Search button
+        cardLayout.addView(makeSearchButton(question))
+
         challengeReviewContainer.addView(cardLayout)
+    }
+
+    private fun makeSearchButton(question: Question): MaterialButton {
+        return MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = getString(R.string.quiz_search_google)
+            textSize = 12f
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.topMargin = 12
+            layoutParams = params
+            setOnClickListener { openQuizSearch(question) }
+        }
+    }
+
+    private fun openQuizSearch(question: Question) {
+        val questionText = question.getQuestion(currentLang)
+        val choices = question.getChoices(currentLang)
+        val correctAnswer = choices.getOrNull(question.getCorrectIndex()) ?: ""
+        val answerLabel = getString(R.string.quiz_correct_answer, correctAnswer)
+        startActivity(Intent(this, QuizWebViewActivity::class.java).apply {
+            putExtra(QuizWebViewActivity.EXTRA_QUESTION, questionText)
+            putExtra(QuizWebViewActivity.EXTRA_ANSWER, answerLabel)
+        })
     }
 
 }

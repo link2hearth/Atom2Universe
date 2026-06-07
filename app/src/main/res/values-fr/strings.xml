@@ -110,6 +110,7 @@
     <string name="quiz_challenge_points_plus">+1</string>
     <string name="quiz_challenge_points_zero">0</string>
     <string name="quiz_challenge_points_minus">-1</string>
+    <string name="quiz_search_google">Rechercher sur Google</string>
     <string name="quiz_resume_game_title">Jeu en cours</string>
     <string name="quiz_resume_game_message">Vous avez un jeu %1$s en cours (%2$s questions). Voulez-vous le reprendre ?</string>
     <string name="quiz_resume_game_yes">Reprendre</string>

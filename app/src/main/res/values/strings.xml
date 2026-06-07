@@ -110,6 +110,7 @@
     <string name="quiz_challenge_points_plus">+1</string>
     <string name="quiz_challenge_points_zero">0</string>
     <string name="quiz_challenge_points_minus">-1</string>
+    <string name="quiz_search_google">Search on Google</string>
     <string name="quiz_resume_game_title">Game in progress</string>
     <string name="quiz_resume_game_message">You have a %1$s game in progress (%2$s questions). Do you want to resume it?</string>
     <string name="quiz_resume_game_yes">Resume</string>

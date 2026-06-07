@@ -222,6 +222,11 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
         <activity
+            android:name=".quiz.QuizWebViewActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".games.GamesActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
