@@ -77,6 +77,7 @@
     <string name="atom_custom_folder_change">Images personnalisées : changer de dossier…</string>
     <string name="atom_custom_folder_clear">Revenir aux images par défaut</string>
     <string name="atom_custom_folder_pick_new">Choisir un nouveau dossier</string>
+    <string name="atom_custom_folder_reset">Réinitialiser</string>
     <string name="about_title">À propos</string>
     <string name="about_version_format">Version %1$s (build %2$d)</string>
     <string name="about_version_unknown">Version inconnue</string>

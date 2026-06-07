@@ -2294,39 +2294,28 @@ class MainClickerActivity : ThemedActivity() {
         }
 
         // Bouton sélection dossier images personnalisées pour l'atome
+        val folderRow = popupView.findViewById<View>(R.id.popup_folder_row)
         val folderBtn = popupView.findViewById<Button>(R.id.popup_folder_btn)
-        folderBtn.visibility = View.VISIBLE
+        val folderResetBtn = popupView.findViewById<Button>(R.id.popup_folder_reset_btn)
+        folderRow.visibility = View.VISIBLE
         val hasCustomFolder = MainClickerPreferences.getCustomAtomFolderUri(this) != null
         folderBtn.text = getString(
             if (hasCustomFolder) R.string.atom_custom_folder_change else R.string.atom_custom_folder_pick
         )
+        folderResetBtn.text = getString(R.string.atom_custom_folder_reset)
+        folderResetBtn.visibility = if (hasCustomFolder) View.VISIBLE else View.GONE
         folderBtn.setOnClickListener {
-            if (MainClickerPreferences.getCustomAtomFolderUri(this) != null) {
-                AlertDialog.Builder(this)
-                    .setItems(arrayOf(
-                        getString(R.string.atom_custom_folder_clear),
-                        getString(R.string.atom_custom_folder_pick_new)
-                    )) { _, which ->
-                        if (which == 0) {
-                            MainClickerPreferences.setCustomAtomFolderUri(this, null)
-                            atomSpringView.setCustomImageUris(emptyList())
-                            folderBtn.text = getString(R.string.atom_custom_folder_pick)
-                        } else {
-                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
-                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-                            }
-                            openAtomFolderLauncher.launch(intent)
-                        }
-                    }
-                    .show()
-            } else {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-                }
-                openAtomFolderLauncher.launch(intent)
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
             }
+            openAtomFolderLauncher.launch(intent)
+        }
+        folderResetBtn.setOnClickListener {
+            MainClickerPreferences.setCustomAtomFolderUri(this, null)
+            atomSpringView.setCustomImageUris(emptyList())
+            folderBtn.text = getString(R.string.atom_custom_folder_pick)
+            folderResetBtn.visibility = View.GONE
         }
 
         val popup = PopupWindow(
