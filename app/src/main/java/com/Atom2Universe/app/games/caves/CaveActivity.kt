@@ -61,8 +61,8 @@ class CaveActivity : ThemedActivity() {
     private  val gamepad = GamepadController(touch)
     private  val uiHandler = Handler(Looper.getMainLooper())
     private  var worldId: String? = null
-    private  var ambientMusic: CaveAmbientMusic? = null
     private var soundEngine: CaveSoundEngine? = null
+    private val music by lazy { CaveProceduralMusic(lifecycleScope) }
 
     internal var isCreative = false
     private  var survivalInventory: Map<Short, Int> = emptyMap()
@@ -336,7 +336,6 @@ class CaveActivity : ThemedActivity() {
         }
 
         applyModeUi(if (isCreative) PlayerMode.SPECTATOR else PlayerMode.WALK, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace)
-        ambientMusic = CaveAmbientMusic(this, lifecycleScope)
         soundEngine = CaveSoundEngine(lifecycleScope).also {
             it.start()
             it.subscribe(renderer.eventBus)
@@ -361,13 +360,13 @@ class CaveActivity : ThemedActivity() {
         }
     }
 
-    override fun onResume()  { super.onResume();  glView.onResume(); ambientMusic?.resume(); soundEngine?.start(); forceImmersiveMode() }
-    override fun onPause()   { super.onPause();   glView.onPause();  ambientMusic?.pause(); soundEngine?.stop(); saveWorld(); minimapJob?.cancel() }
+    override fun onResume()  { super.onResume();  glView.onResume(); soundEngine?.resume(); music.resume(); forceImmersiveMode() }
+    override fun onPause()   { super.onPause();   glView.onPause();  music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel() }
     override fun onDestroy() {
         super.onDestroy()
         renderer.destroy()
-        ambientMusic?.destroy()
-        soundEngine?.stop()
+        music.stop()
+        soundEngine?.destroy()
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
     }
 

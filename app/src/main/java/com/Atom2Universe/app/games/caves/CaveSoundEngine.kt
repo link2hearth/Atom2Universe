@@ -37,12 +37,16 @@ internal class CaveSoundEngine(private val scope: CoroutineScope) {
     }
 
     fun start() {
+        if (driver != null) { ready = true; return }
         val d = MidiDriver.getInstance { ready = true }
         driver = d
         d.start()
     }
 
-    fun stop() {
+    fun pause() { ready = false }
+    fun resume() { ready = true }
+
+    fun destroy() {
         ready = false
         driver?.stop()
         driver = null
