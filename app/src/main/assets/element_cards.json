@@ -66,7 +66,7 @@
     },
     {
       "fusionId": "neutron_capture",
-      "cardDropRate": 0.20,
+      "cardDropRate": 0.350,
       "cards": [
         {"atomicNumber": 29, "file": "cartes elements/29 copper.jpg"},
         {"atomicNumber": 30, "file": "cartes elements/30 zinc.jpg"},
