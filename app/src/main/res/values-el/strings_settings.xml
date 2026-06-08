@@ -102,8 +102,6 @@
     <string name="about_credit_fluidsynth_desc">Από την κοινότητα FluidSynth - Συνθεσιοποιητής λογισμικού σε πραγματικό χρόνο βασισμένος στην προδιαγραφή SoundFont 2. Άδεια LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
     <string name="about_credit_karballo_desc">Από τον Alberto Ruibal - Κινητήρας σκακιού για Java/Android, χρησιμοποιείται για αντιπάλους ΤΝ στο παιχνίδι σκακιού. Άδεια MIT.\nhttps://opensource.org/licenses/MIT</string>
-    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
-    <string name="about_credit_kevinmacleod_desc">Ευχαριστούμε τον Kevin MacLeod για την ελεύθερη κοινοποίηση της μουσικής του, επιτρέποντας τη συμπερίληψή της σε αυτήν την εφαρμογή.\nΆδεια: Creative Commons Αναφορά 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
     <string name="about_credit_by">Σχεδιάστηκε από τον Link2Hearth · Αναπτύχθηκε με Claude (Anthropic)</string>
     <string name="about_license_notice">Όλες οι βιβλιοθήκες χρησιμοποιούνται σύμφωνα με τις αντίστοιχες άδειές τους.\nΕυχαριστούμε όλους τους συνεισφέροντες ανοικτού κώδικα!</string>
     <string name="about_privacy_title">Απόρρητο &amp; Άδειες</string>

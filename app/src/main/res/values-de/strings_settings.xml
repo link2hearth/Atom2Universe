@@ -102,8 +102,6 @@
     <string name="about_credit_fluidsynth_desc">Von der FluidSynth-Community — Echtzeit-Software-Synthesizer basierend auf der SoundFont-2-Spezifikation. LGPL-2.1-Lizenz.</string>
     <string name="about_credit_karballo_name">Karballo</string>
     <string name="about_credit_karballo_desc">Von Alberto Ruibal - Schach-Engine für Java/Android, verwendet für KI-Gegner im Schachspiel. MIT-Lizenz.\nhttps://opensource.org/licenses/MIT</string>
-    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
-    <string name="about_credit_kevinmacleod_desc">Vielen Dank an Kevin MacLeod dafür, dass er seine Musik frei teilt, was es ermöglicht, sie in dieser App einzusetzen.\nLizenz: Creative Commons Namensnennung 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
     <string name="about_credit_by">Entworfen von Link2Hearth · Entwickelt mit Claude (Anthropic)</string>
     <string name="about_license_notice">Alle Bibliotheken werden in Übereinstimmung mit ihren jeweiligen Lizenzen verwendet.\nVielen Dank an alle Open-Source-Mitwirkenden!</string>
     <string name="about_privacy_title">Datenschutz &amp; Berechtigungen</string>

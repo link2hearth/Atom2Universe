@@ -102,8 +102,6 @@
     <string name="about_credit_fluidsynth_desc">FluidSynth topluluğu tarafından — SoundFont 2 spesifikasyonuna dayalı gerçek zamanlı yazılım sentezleyicisi. LGPL 2.1 Lisansı.</string>
     <string name="about_credit_karballo_name">Karballo</string>
     <string name="about_credit_karballo_desc">Alberto Ruibal tarafından - Java/Android için satranç motoru, satranç oyununda yapay zeka rakipleri için kullanılır. MIT Lisansı.\nhttps://opensource.org/licenses/MIT</string>
-    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
-    <string name="about_credit_kevinmacleod_desc">Müziğini özgürce paylaşarak bu uygulamada kullanılmasına olanak sağlayan Kevin MacLeod\'a teşekkürler.\nLisans: Creative Commons Atıf 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
     <string name="about_credit_by">Link2Hearth tarafından tasarlandı · Claude (Anthropic) ile geliştirildi</string>
     <string name="about_license_notice">Tüm kütüphaneler ilgili lisanslarına uygun olarak kullanılmaktadır.\nTüm açık kaynak katkıda bulunanların emeğine teşekkürler!</string>
     <string name="about_privacy_title">Gizlilik ve İzinler</string>

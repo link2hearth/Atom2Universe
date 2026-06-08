@@ -71,8 +71,6 @@ Concedi il permesso per usare l’app.</string>
     <string name="about_credit_fluidsynth_desc">Dalla comunità FluidSynth — Sintetizzatore software in tempo reale basato sulla specifica SoundFont 2. Licenza LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
     <string name="about_credit_karballo_desc">Di Alberto Ruibal - Motore per gli scacchi per Java/Android, usato per gli avversari IA nel gioco degli scacchi. Licenza MIT.\nhttps://opensource.org/licenses/MIT</string>
-    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
-    <string name="about_credit_kevinmacleod_desc">Grazie a Kevin MacLeod per condividere liberamente la sua musica, permettendo di includerla in questa applicazione.\nLicenza: Creative Commons Attribuzione 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
     <string name="about_credit_by">Progettato da Link2Hearth · Sviluppato con Claude (Anthropic)</string>
     <string name="about_license_notice">Tutte le librerie sono utilizzate nel rispetto delle rispettive licenze.
 Grazie a tutti i contributori open source!</string>

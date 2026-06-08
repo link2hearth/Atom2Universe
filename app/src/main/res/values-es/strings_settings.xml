@@ -102,8 +102,6 @@
     <string name="about_credit_fluidsynth_desc">Por la comunidad FluidSynth — Sintetizador de software en tiempo real basado en la especificación SoundFont 2. Licencia LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
     <string name="about_credit_karballo_desc">Por Alberto Ruibal - Motor de ajedrez para Java/Android, usado para oponentes de IA en el juego de ajedrez. Licencia MIT.\nhttps://opensource.org/licenses/MIT</string>
-    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
-    <string name="about_credit_kevinmacleod_desc">Gracias a Kevin MacLeod por compartir su música libremente, lo que permite incluirla en esta aplicación.\nLicencia: Creative Commons Atribución 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
     <string name="about_credit_by">Diseñado por Link2Hearth · Desarrollado con Claude (Anthropic)</string>
     <string name="about_license_notice">Todas las bibliotecas se usan en cumplimiento con sus respectivas licencias.\nGracias a todos los contribuidores de codigo abierto!</string>
     <string name="about_privacy_title">Privacidad y permisos</string>

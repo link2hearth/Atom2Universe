@@ -102,8 +102,6 @@
     <string name="about_credit_fluidsynth_desc">Спільнота FluidSynth — програмний синтезатор реального часу на основі специфікації SoundFont 2. Ліцензія LGPL 2.1.</string>
     <string name="about_credit_karballo_name">Karballo</string>
     <string name="about_credit_karballo_desc">Автор: Alberto Ruibal - Шаховий рушій для Java/Android, використовується для противників ШІ в шаховій грі. Ліцензія MIT.\nhttps://opensource.org/licenses/MIT</string>
-    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
-    <string name="about_credit_kevinmacleod_desc">Дякуємо Кевіну МакЛеоду за вільне поширення своєї музики, що дозволяє включити її до цього додатку.\nЛіцензія: Creative Commons Attribution 4.0\nhttp://creativecommons.org/licenses/by/4.0/</string>
     <string name="about_credit_by">Задумано Link2Hearth · Розроблено з Claude (Anthropic)</string>
     <string name="about_license_notice">Усі бібліотеки використовуються відповідно до їхніх ліцензій.\nДякуємо всім учасникам відкритого коду!</string>
     <string name="about_privacy_title">Конфіденційність та дозволи</string>

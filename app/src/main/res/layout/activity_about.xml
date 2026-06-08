@@ -353,31 +353,6 @@
 
                 </LinearLayout>
 
-                <!-- Kevin MacLeod -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_credit_kevinmacleod_name"
-                        android:textColor="@color/startup_text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_credit_kevinmacleod_desc"
-                        android:textColor="@color/startup_text_secondary"
-                        android:textSize="12sp"
-                        android:autoLink="web"
-                        android:linksClickable="true" />
-
-                </LinearLayout>
 
             </LinearLayout>
 

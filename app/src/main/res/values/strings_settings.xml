@@ -103,8 +103,6 @@
     <string name="about_credit_fluidsynth_desc">By the FluidSynth community - Real-time software synthesizer based on the SoundFont 2 specification. LGPL 2.1 License.</string>
     <string name="about_credit_karballo_name">Karballo</string>
     <string name="about_credit_karballo_desc">By Alberto Ruibal - Chess engine for Java/Android, used for AI opponents in the chess game. MIT License.\nhttps://opensource.org/licenses/MIT</string>
-    <string name="about_credit_kevinmacleod_name">Kevin MacLeod – incompetech.com</string>
-    <string name="about_credit_kevinmacleod_desc">Thank you to Kevin MacLeod for sharing his music freely, making it possible to include music in this app.\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/</string>
     <string name="about_credit_by">Designed by Link2Hearth · Developed with Claude (Anthropic)</string>
     <string name="about_contact">contact@atom2universe.com</string>
     <string name="about_license_notice">All libraries are used in compliance with their respective licenses.\nThank you to all the open source contributors!</string>
