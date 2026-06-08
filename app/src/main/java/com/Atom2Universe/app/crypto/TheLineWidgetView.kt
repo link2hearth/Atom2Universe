@@ -20,6 +20,7 @@ import com.Atom2Universe.app.games.theline.TheLineDifficulty
 import com.Atom2Universe.app.games.theline.TheLineGame
 import com.Atom2Universe.app.games.theline.TheLineGenerator
 import com.Atom2Universe.app.games.theline.TheLineMode
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import kotlin.math.hypot
 
 class TheLineWidgetView @JvmOverloads constructor(
@@ -203,6 +204,12 @@ class TheLineWidgetView @JvmOverloads constructor(
 
     private fun showResultOverlay() {
         resultOverlay.visibility = VISIBLE
+        val reward = when (game.difficulty) {
+            TheLineDifficulty.EASY   -> 1
+            TheLineDifficulty.MEDIUM -> 2
+            TheLineDifficulty.HARD   -> 3
+        }
+        NeutrinoRepository(context).addBalance(reward)
     }
 
     private fun startNewGame(diff: TheLineDifficulty) {

@@ -157,9 +157,10 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
                             statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                         }
                         hardGameStartMs = 0L
-                        NeutrinoRepository(this).addBalance(3)
+                        NeutrinoRepository(this).addBalance(7)
                     }
-                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addBalance(1)
+                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addBalance(3)
+                    ColorStackGame.Difficulty.EASY -> NeutrinoRepository(this).addBalance(1)
                     else -> Unit
                 }
             }

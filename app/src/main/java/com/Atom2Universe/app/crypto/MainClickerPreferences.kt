@@ -80,8 +80,8 @@ object MainClickerPreferences {
     private const val KEY_FAVORITES_MODE = "favorites_mode"
 
     val ALL_WIDGET_KEYS = listOf(
-        "clicker", "earth", "chess", "draughts", "sudoku", "2048", "crypto",
-        "news", "solitaire", "blackjack", "color_stack", "music", "pipetap", "the_line"
+        "clicker", "crypto", "news", "earth", "music",
+        "chess", "draughts", "sudoku", "2048", "solitaire", "blackjack", "color_stack", "pipetap", "the_line"
     )
 
     private const val DEFAULT_WIDGET_OPACITY_PERCENT = 100

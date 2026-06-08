@@ -18,6 +18,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import java.io.IOException
 import kotlin.math.*
 import kotlin.random.Random
@@ -136,6 +137,7 @@ class Match3View @JvmOverloads constructor(
     private var timerLastTick = 0L
     private var gameStartUptimeMs = 0L
     private var gameElapsedMs = 0L
+    private var neutrinosEarned = 0
     private var gameOver = false
 
     // Cycle de 20 sec : toutes les couleurs doivent être matchées, sinon timerMax -1
@@ -590,6 +592,7 @@ class Match3View @JvmOverloads constructor(
         timerLastTick = 0L
         gameStartUptimeMs = 0L
         gameElapsedMs = 0L
+        neutrinosEarned = 0
         cycleStartTime = 0L
         matchedColorsInCycle.clear()
         gameOver = false
@@ -607,6 +610,8 @@ class Match3View @JvmOverloads constructor(
         handler.removeCallbacksAndMessages(null)
         val prefs = context.getSharedPreferences("match3_save", Context.MODE_PRIVATE)
         gameElapsedMs = if (gameStartUptimeMs > 0L) SystemClock.uptimeMillis() - gameStartUptimeMs else 0L
+        neutrinosEarned = (gameElapsedMs / 15_000L).toInt()
+        if (neutrinosEarned > 0) NeutrinoRepository(context).addBalance(neutrinosEarned)
         val elapsedMs = gameElapsedMs
         prefs.edit().apply {
             if (score > prefs.getInt("best_score", 0)) putInt("best_score", score)
@@ -630,6 +635,10 @@ class Match3View @JvmOverloads constructor(
             val timeStr = "%d:%02d".format(secs / 60, secs % 60)
             canvas.drawText(context.getString(R.string.match3_time, timeStr),
                 width / 2f, height / 2f + tileSize * 1.7f, paintGameOver)
+        }
+        if (neutrinosEarned > 0) {
+            canvas.drawText(context.getString(R.string.match3_neutrinos, neutrinosEarned),
+                width / 2f, height / 2f + tileSize * 2.6f, paintGameOver)
         }
     }
 

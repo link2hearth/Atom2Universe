@@ -187,10 +187,12 @@ class TheLineActivity : AppCompatActivity() {
         updateLevelDisplay()
         tvMessage.text = getString(R.string.the_line_completed, level)
 
-        if (game.difficulty == TheLineDifficulty.HARD) {
-            val reward = if (game.mode == TheLineMode.MULTI) 2 else 1
-            NeutrinoRepository(this).addBalance(reward)
+        val reward = when (game.difficulty) {
+            TheLineDifficulty.EASY   -> 1
+            TheLineDifficulty.MEDIUM -> 2
+            TheLineDifficulty.HARD   -> 3
         }
+        NeutrinoRepository(this).addBalance(reward)
 
         val r = Runnable {
             pendingAutoNext = null

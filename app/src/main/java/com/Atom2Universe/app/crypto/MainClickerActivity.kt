@@ -685,6 +685,11 @@ class MainClickerActivity : ThemedActivity() {
         super.onStop()
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (bannerExpanded && ev.actionMasked == MotionEvent.ACTION_DOWN) scheduleHideBanner()
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // Appelé seulement si aucune vue enfant n'a consommé l'event.
         if (clickerBannerView.visibility == View.VISIBLE) {
@@ -1422,7 +1427,7 @@ class MainClickerActivity : ThemedActivity() {
 
     private fun scheduleHideBanner() {
         bannerHandler.removeCallbacks(hideBannerRunnable)
-        bannerHandler.postDelayed(hideBannerRunnable, 10_000L)
+        bannerHandler.postDelayed(hideBannerRunnable, 5_000L)
     }
 
     private fun applyBannerTogglesVisibility() {

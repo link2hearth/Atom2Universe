@@ -176,7 +176,7 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     private fun awardReward() {
         if (game.rewardClaimed) return
         game.rewardClaimed = true
-        val reward = game.difficulty.ordinal + 1  // EASY=1, MEDIUM=2, HARD=3, EXPERT=4, MASTER=5
+        val reward = (game.difficulty.ordinal + 1) * 2  // EASY=2, MEDIUM=4, HARD=6, EXPERT=8, MASTER=10
         NeutrinoRepository(this).addBalance(reward)
         GameStatsRepository(this).recordPipeTapHardWon()
     }

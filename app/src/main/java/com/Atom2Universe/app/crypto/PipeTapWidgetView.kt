@@ -110,7 +110,7 @@ class PipeTapWidgetView @JvmOverloads constructor(
                     showWinOverlay()
                     if (!game.rewardClaimed) {
                         game.rewardClaimed = true
-                        val reward = game.difficulty.ordinal + 1
+                        val reward = (game.difficulty.ordinal + 1) * 2
                         NeutrinoRepository(context).addBalance(reward)
                         GameStatsRepository(context).recordPipeTapHardWon()
                     }

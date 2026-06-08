@@ -36,6 +36,7 @@
     <string name="match3_new_game">New</string>
     <string name="match3_game_over">Game Over</string>
     <string name="match3_time">Time: %1$s</string>
+    <string name="match3_neutrinos">⚛ +%1$d neutrinos</string>
     <string name="back_button_desc">Back</string>
 
     <!-- Othello -->
