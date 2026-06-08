@@ -72,6 +72,34 @@
     <string name="nuclide_legend_beta_plus">β+/EC</string>
     <string name="nuclide_legend_fission">SF</string>
 
+    <!-- Reaction-Diffusion (Gray-Scott) -->
+    <string name="hub_reaction_title">Reaction-Diffusion</string>
+    <string name="hub_reaction_desc">Living Turing patterns</string>
+    <string name="rd_title">Reaction-Diffusion</string>
+    <string name="rd_hint">Tap or drag to paint · Pick a preset, then watch it grow</string>
+    <string name="rd_presets">Patterns</string>
+    <string name="rd_palette">Palette</string>
+    <string name="rd_feed">Feed</string>
+    <string name="rd_kill">Kill</string>
+    <string name="rd_speed">Speed</string>
+    <string name="rd_brush">Brush</string>
+    <string name="rd_random">Seed</string>
+    <string name="rd_clear">Reset</string>
+    <string name="rd_preset_coral">Coral</string>
+    <string name="rd_preset_mitosis">Mitosis</string>
+    <string name="rd_preset_maze">Maze</string>
+    <string name="rd_preset_worms">Worms</string>
+    <string name="rd_preset_spots">Spots</string>
+    <string name="rd_preset_waves">Waves</string>
+    <string name="rd_preset_spirals">Spirals</string>
+    <string name="rd_preset_bubbles">Bubbles</string>
+    <string name="rd_palette_inferno">Inferno</string>
+    <string name="rd_palette_ocean">Ocean</string>
+    <string name="rd_palette_acid">Acid</string>
+    <string name="rd_palette_plasma">Plasma</string>
+    <string name="rd_palette_coral">Coral</string>
+    <string name="rd_palette_mono">Mono</string>
+
     <!-- Solar System -->
     <string name="hub_solar_title">Solar System</string>
     <string name="hub_solar_desc">Navigate the solar system in 3D</string>

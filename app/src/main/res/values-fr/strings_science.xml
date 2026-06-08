@@ -72,6 +72,34 @@
     <string name="nuclide_legend_beta_plus">β+/CE</string>
     <string name="nuclide_legend_fission">FS</string>
 
+    <!-- Réaction-Diffusion (Gray-Scott) -->
+    <string name="hub_reaction_title">Réaction-Diffusion</string>
+    <string name="hub_reaction_desc">Motifs de Turing vivants</string>
+    <string name="rd_title">Réaction-Diffusion</string>
+    <string name="rd_hint">Touchez ou glissez pour peindre · Choisissez un motif et regardez-le croître</string>
+    <string name="rd_presets">Motifs</string>
+    <string name="rd_palette">Palette</string>
+    <string name="rd_feed">Apport</string>
+    <string name="rd_kill">Destruction</string>
+    <string name="rd_speed">Vitesse</string>
+    <string name="rd_brush">Pinceau</string>
+    <string name="rd_random">Semer</string>
+    <string name="rd_clear">Réinitialiser</string>
+    <string name="rd_preset_coral">Corail</string>
+    <string name="rd_preset_mitosis">Mitose</string>
+    <string name="rd_preset_maze">Labyrinthe</string>
+    <string name="rd_preset_worms">Vers</string>
+    <string name="rd_preset_spots">Taches</string>
+    <string name="rd_preset_waves">Pulsations</string>
+    <string name="rd_preset_spirals">Spirales</string>
+    <string name="rd_preset_bubbles">Bulles</string>
+    <string name="rd_palette_inferno">Inferno</string>
+    <string name="rd_palette_ocean">Océan</string>
+    <string name="rd_palette_acid">Acide</string>
+    <string name="rd_palette_plasma">Plasma</string>
+    <string name="rd_palette_coral">Corail</string>
+    <string name="rd_palette_mono">Mono</string>
+
     <!-- Système Solaire -->
     <string name="hub_solar_title">Système Solaire</string>
     <string name="hub_solar_desc">Naviguez dans le système solaire en 3D</string>
