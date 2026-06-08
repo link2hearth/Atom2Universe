@@ -626,6 +626,8 @@ class MainClickerActivity : ThemedActivity() {
         clickerViewModel.resumeOfflineGains()
         clickerViewModel.refreshElementBonuses()
         clickerViewModel.refreshFusionBonuses()
+        clickerViewModel.refreshFusionAvailability()
+        clickerBannerView.refreshDrawMultiplier()
         clickerViewModel.awardGachaTickets()
         clickerViewModel.refreshNeutrinoBalance()
         reloadPreferences()

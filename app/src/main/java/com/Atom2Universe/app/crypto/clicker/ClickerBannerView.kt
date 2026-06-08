@@ -49,6 +49,8 @@ class ClickerBannerView @JvmOverloads constructor(
     private val frenzyApsBox: View
     private val frenzyApsMult: TextView
 
+    private var cachedDrawMultiplier: Int = 1
+
     var onShopClick: (() -> Unit)? = null
     var onGachaClick: (() -> Unit)? = null
     var onFusionClick: (() -> Unit)? = null
@@ -241,8 +243,9 @@ class ClickerBannerView @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private val refreshTick = object : Runnable {
         override fun run() {
-            refreshFrenzyDisplay()
-            scheduleRefreshIfNeeded()
+            val nowMs = System.currentTimeMillis()
+            refreshFrenzyDisplay(nowMs)
+            scheduleRefreshIfNeeded(nowMs)
         }
     }
 
@@ -296,7 +299,15 @@ class ClickerBannerView @JvmOverloads constructor(
         atomsText.text = state.atoms.toString()
         apcText.text   = state.perClick.toString()
         apsText.text   = state.perSecond.toString()
-        gachaButton.text = if (state.gachaTickets > 0) "☀+" else "☀"
+        val threshold = if (cachedDrawMultiplier == 10) 10 else 1
+        gachaButton.text = if (state.gachaTickets >= threshold) "☀+" else "☀"
+        fusionButton.text = if (state.isFusionAvailable) "⚛+" else "⚛"
+    }
+
+    fun refreshDrawMultiplier() {
+        cachedDrawMultiplier = context.getSharedPreferences(
+            com.Atom2Universe.app.crypto.gacha.GachaActivity.PREFS_NAME, Context.MODE_PRIVATE
+        ).getInt(com.Atom2Universe.app.crypto.gacha.GachaActivity.KEY_DRAW_MULTIPLIER, 1)
     }
 
     fun onClickRegistered() = rabbitView.registerClick()
@@ -354,20 +365,12 @@ class ClickerBannerView @JvmOverloads constructor(
             rightSide.gravity = android.view.Gravity.END or android.view.Gravity.CENTER_VERTICAL
         }
 
-        if (needsVertical) {
-            mainRow.clipChildren  = false
-            mainRow.clipToPadding = false
-            leftSide.clipChildren  = false
-            leftSide.clipToPadding = false
-            rightSide.clipChildren  = false
-            rightSide.clipToPadding = false
-        } else {
-            mainRow.clipChildren  = true
-            mainRow.clipToPadding = true
-            leftSide.clipChildren  = true
-            leftSide.clipToPadding = true
-            rightSide.clipChildren  = true
-            rightSide.clipToPadding = true
+        val clip = !needsVertical
+        for (v in listOf(mainRow, leftSide, rightSide)) {
+            v.clipChildren  = clip
+            v.clipToPadding = clip
+        }
+        if (!needsVertical) {
             // Réinitialiser la position de la tortue en mode 1 ligne
             turtleView.animate().cancel()
             turtleView.translationX = 0f
@@ -382,13 +385,13 @@ class ClickerBannerView @JvmOverloads constructor(
     fun bindFrenzy(state: FrenzyUiState) {
         currentFrenzy = state
         handler.removeCallbacks(refreshTick)
-        refreshFrenzyDisplay()
-        scheduleRefreshIfNeeded()
+        val nowMs = System.currentTimeMillis()
+        refreshFrenzyDisplay(nowMs)
+        scheduleRefreshIfNeeded(nowMs)
     }
 
-    private fun scheduleRefreshIfNeeded() {
-        val nowMs = System.currentTimeMillis()
-        val s     = currentFrenzy
+    private fun scheduleRefreshIfNeeded(nowMs: Long = System.currentTimeMillis()) {
+        val s         = currentFrenzy
         val apcActive = s.apcEffectExpiries.any { it > nowMs }
         val apsActive = s.apsEffectExpiries.any { it > nowMs }
         val inGrace   = apcGraceEndMs > 0L && nowMs < apcGraceEndMs
@@ -399,8 +402,7 @@ class ClickerBannerView @JvmOverloads constructor(
         }
     }
 
-    private fun refreshFrenzyDisplay() {
-        val nowMs = System.currentTimeMillis()
+    private fun refreshFrenzyDisplay(nowMs: Long = System.currentTimeMillis()) {
         val s     = currentFrenzy
 
         val apcFx    = s.apcEffectExpiries.filter { it > nowMs }

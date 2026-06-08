@@ -519,7 +519,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     fun buyApcToAps() {
         val s = _state.value
-        val cost = (s.apcToApsLevel + 1).coerceAtMost(50)
+        val cost = apcToApsCost()
         if (s.neutrinos < cost) return
         val afterPurchase = s.copy(
             neutrinos = s.neutrinos - cost,
@@ -535,7 +535,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     fun buyApsToApc() {
         val s = _state.value
-        val cost = (s.apsToApcLevel + 1).coerceAtMost(50)
+        val cost = apsToApcCost()
         if (s.neutrinos < cost) return
         val afterPurchase = s.copy(
             neutrinos = s.neutrinos - cost,
@@ -574,6 +574,21 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     fun refreshFusionBonuses() {
         _state.value = recalcProduction(_state.value)
+    }
+
+    fun refreshFusionAvailability() {
+        val available = com.Atom2Universe.app.crypto.fusion.FusionRecipe.values().any { recipe ->
+            val parentDone = recipe.unlockParentId?.let { pid ->
+                com.Atom2Universe.app.crypto.fusion.FusionRecipe.byId(pid)
+                    ?.let { fusionStore.getWins(it) > 0 } ?: false
+            } ?: true
+            parentDone && recipe.inputs.all { input ->
+                collectionStore.getCopyCount(input.atomicNumber) >= input.count + 1
+            }
+        }
+        if (_state.value.isFusionAvailable != available) {
+            _state.value = _state.value.copy(isFusionAvailable = available)
+        }
     }
 
     private fun getElementBonuses(): ElementBonuses =

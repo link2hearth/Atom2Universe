@@ -42,6 +42,11 @@ import kotlin.coroutines.resume
 
 class GachaActivity : AppCompatActivity() {
 
+    companion object {
+        const val PREFS_NAME = "gacha_prefs"
+        const val KEY_DRAW_MULTIPLIER = "draw_multiplier"
+    }
+
     private data class MultiDrawResult(
         val element: PeriodicElement,
         val rarity: GachaRarity,
@@ -155,9 +160,15 @@ class GachaActivity : AppCompatActivity() {
         startGlowPulse()
         startSunRotation()
 
+        drawMultiplier = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY_DRAW_MULTIPLIER, 1)
+        multiBtn.text = if (drawMultiplier == 1) "×1" else "×10"
+
         multiBtn.setOnClickListener {
             drawMultiplier = if (drawMultiplier == 1) 10 else 1
             multiBtn.text = if (drawMultiplier == 1) "×1" else "×10"
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+                .putInt(KEY_DRAW_MULTIPLIER, drawMultiplier).apply()
         }
         multiResultOverlay.setOnClickListener { if (!isAnimating) resetToIdle() }
 
