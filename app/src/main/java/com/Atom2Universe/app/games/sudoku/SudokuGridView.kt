@@ -58,9 +58,11 @@ class SudokuGridView @JvmOverloads constructor(
     private val fixedTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val userTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val errorTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val noteTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // Number colors
     private val numberColors = IntArray(10)
+    private var notes: Array<IntArray> = emptyNotes()
 
     // Alphas indépendants (0-255)
     private var cellBgAlpha = 255
@@ -134,6 +136,12 @@ class SudokuGridView @JvmOverloads constructor(
             textAlign = Paint.Align.CENTER
         }
 
+        noteTextPaint.apply {
+            color = ContextCompat.getColor(context, R.color.startup_text_secondary)
+            textAlign = Paint.Align.CENTER
+            isFakeBoldText = true
+        }
+
         // Number colors (index 0 unused, 1-9 for digits)
         numberColors[0] = ContextCompat.getColor(context, R.color.sudoku_text_user)
         numberColors[1] = ContextCompat.getColor(context, R.color.sudoku_number_1)
@@ -166,6 +174,7 @@ class SudokuGridView @JvmOverloads constructor(
         fixedTextPaint.textSize = textSize
         userTextPaint.textSize = textSize
         errorTextPaint.textSize = textSize
+        noteTextPaint.textSize = cellSize * 0.22f
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -237,7 +246,10 @@ class SudokuGridView @JvmOverloads constructor(
         for (row in 0 until 9) {
             for (col in 0 until 9) {
                 val value = board.getValue(row, col)
-                if (value == 0) continue
+                if (value == 0) {
+                    drawNotes(canvas, row, col)
+                    continue
+                }
 
                 val centerX = col * cellSize + cellSize / 2
                 val centerY = row * cellSize + cellSize / 2
@@ -256,6 +268,32 @@ class SudokuGridView @JvmOverloads constructor(
                 canvas.drawText(value.toString(), centerX, textY, paint)
             }
         }
+    }
+
+    private fun drawNotes(canvas: Canvas, row: Int, col: Int) {
+        val mask = notes[row][col]
+        if (mask == 0) return
+
+        val previousColor = noteTextPaint.color
+        val previousAlpha = noteTextPaint.alpha
+        val noteAlpha = (textAlpha * 0.82f).toInt().coerceIn(0, 255)
+
+        for (number in 1..9) {
+            if (!hasNote(mask, number)) continue
+
+            val noteCol = (number - 1) % 3
+            val noteRow = (number - 1) / 3
+            val centerX = col * cellSize + cellSize * (noteCol + 0.5f) / 3f
+            val centerY = row * cellSize + cellSize * (noteRow + 0.5f) / 3f
+            val textY = centerY - (noteTextPaint.descent() + noteTextPaint.ascent()) / 2
+
+            noteTextPaint.color = numberColors[number]
+            noteTextPaint.alpha = noteAlpha
+            canvas.drawText(number.toString(), centerX, textY, noteTextPaint)
+        }
+
+        noteTextPaint.color = previousColor
+        noteTextPaint.alpha = previousAlpha
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -282,6 +320,7 @@ class SudokuGridView @JvmOverloads constructor(
 
     fun setBoard(newBoard: SudokuBoard) {
         board = newBoard
+        notes = emptyNotes()
         mistakeCells = emptySet()
         showMistakes = false
         clearSelection()
@@ -316,6 +355,7 @@ class SudokuGridView @JvmOverloads constructor(
         if (board.isFixed(selectedRow, selectedCol)) return
 
         board.setValue(selectedRow, selectedCol, value)
+        notes[selectedRow][selectedCol] = 0
         updateHighlights()
         invalidate()
     }
@@ -323,7 +363,64 @@ class SudokuGridView @JvmOverloads constructor(
     fun setValueAt(row: Int, col: Int, value: Int) {
         if (board.isFixed(row, col)) return
         board.setValue(row, col, value)
+        notes[row][col] = 0
         updateHighlights()
+        invalidate()
+    }
+
+    fun toggleNoteAtSelected(number: Int): Boolean {
+        if (!hasSelection()) return false
+        return toggleNoteAt(selectedRow, selectedCol, number)
+    }
+
+    fun toggleNoteAt(row: Int, col: Int, number: Int): Boolean {
+        if (number !in 1..9) return false
+        if (board.isFixed(row, col) || board.getValue(row, col) != 0) return false
+
+        val bit = noteBit(number)
+        notes[row][col] = notes[row][col] xor bit
+        invalidate()
+        return true
+    }
+
+    fun clearNotesAtSelected(): Boolean {
+        if (!hasSelection()) return false
+        return clearNotesAt(selectedRow, selectedCol)
+    }
+
+    fun clearNotesAt(row: Int, col: Int): Boolean {
+        if (notes[row][col] == 0) return false
+        notes[row][col] = 0
+        invalidate()
+        return true
+    }
+
+    fun clearAllNotes(): Boolean {
+        var changed = false
+        for (row in 0 until 9) {
+            for (col in 0 until 9) {
+                if (notes[row][col] != 0) {
+                    notes[row][col] = 0
+                    changed = true
+                }
+            }
+        }
+        if (changed) invalidate()
+        return changed
+    }
+
+    fun getNotesMasks(): Array<IntArray> {
+        return Array(9) { row -> notes[row].copyOf() }
+    }
+
+    fun setNotesMasks(newNotes: Array<IntArray>) {
+        notes = emptyNotes()
+        for (row in 0 until minOf(9, newNotes.size)) {
+            for (col in 0 until minOf(9, newNotes[row].size)) {
+                val value = newNotes[row][col]
+                notes[row][col] = value and VALID_NOTES_MASK
+            }
+        }
         invalidate()
     }
 
@@ -386,5 +483,17 @@ class SudokuGridView @JvmOverloads constructor(
     fun setNumbersAlpha(percent: Int) {
         textAlpha = (percent.coerceIn(0, 100) / 100f * 255f).toInt()
         invalidate()
+    }
+
+    private fun hasNote(mask: Int, number: Int): Boolean {
+        return (mask and noteBit(number)) != 0
+    }
+
+    private fun noteBit(number: Int): Int = 1 shl number
+
+    private fun emptyNotes(): Array<IntArray> = Array(9) { IntArray(9) }
+
+    companion object {
+        private const val VALID_NOTES_MASK = 0b1111111110
     }
 }

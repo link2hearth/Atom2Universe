@@ -16,6 +16,7 @@ data class SudokuSaveEntity(
     val cellsJson: String,
     val solutionJson: String,
     val fixedJson: String,
+    val notesJson: String,
     val elapsedTimeMs: Long,
     val isSolved: Boolean,
     val updatedAt: Long = System.currentTimeMillis()
@@ -25,13 +26,15 @@ data class SudokuSaveEntity(
             board: SudokuBoard,
             difficulty: SudokuDifficulty,
             elapsedTimeMs: Long,
-            isSolved: Boolean
+            isSolved: Boolean,
+            notes: Array<IntArray> = Array(9) { IntArray(9) }
         ): SudokuSaveEntity {
             return SudokuSaveEntity(
                 difficulty = difficulty.name,
                 cellsJson = boardToJson(board.cells),
                 solutionJson = boardToJson(board.solution),
                 fixedJson = fixedToJson(board.fixed),
+                notesJson = boardToJson(notes),
                 elapsedTimeMs = elapsedTimeMs,
                 isSolved = isSolved
             )
@@ -56,6 +59,10 @@ data class SudokuSaveEntity(
             solution = jsonToBoard(solutionJson),
             fixed = jsonToFixed(fixedJson)
         )
+    }
+
+    fun toNotes(): Array<IntArray> {
+        return jsonToBoard(notesJson)
     }
 
     fun toDifficulty(): SudokuDifficulty {

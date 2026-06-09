@@ -8,8 +8,11 @@
     <string name="sudoku_new_game">New game</string>
     <string name="sudoku_check">Check</string>
     <string name="sudoku_clear">Clear</string>
+    <string name="sudoku_validate">Validate</string>
     <string name="sudoku_undo">↩ Undo</string>
     <string name="sudoku_redo">↪ Redo</string>
+    <string name="sudoku_notes">Notes</string>
+    <string name="sudoku_widget_note_icon">✎</string>
     <string name="sudoku_status_generating">Generating…</string>
     <string name="sudoku_status_generated">%1$s grid generated (%2$d clues)</string>
     <string name="sudoku_status_no_error">No errors so far</string>

@@ -60,12 +60,12 @@ class SudokuWidgetView @JvmOverloads constructor(
     private var currentDifficulty = SudokuDifficulty.MEDIUM
     private val ioScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    // ── Undo / Redo ───────────────────────────────────────────────────────────
+    // ── Undo / Notes ──────────────────────────────────────────────────────────
     private data class SudokuAction(val row: Int, val col: Int, val oldValue: Int, val newValue: Int)
     private val undoStack = ArrayDeque<SudokuAction>()
-    private val redoStack = ArrayDeque<SudokuAction>()
     private lateinit var btnUndo: TextView
-    private lateinit var btnRedo: TextView
+    private lateinit var btnNotes: TextView
+    private var notesMode = false
 
     // ── Zoom ──────────────────────────────────────────────────────────────────
     private val minScale = 0.4f
@@ -110,7 +110,10 @@ class SudokuWidgetView @JvmOverloads constructor(
         }
 
         btnUndo = findViewById(R.id.sudoku_btn_undo)
-        btnRedo = findViewById(R.id.sudoku_btn_redo)
+        btnNotes = findViewById(R.id.sudoku_btn_notes)
+        btnNotes.setText(R.string.sudoku_widget_note_icon)
+        btnNotes.setTextColor(Color.parseColor("#A78BFA"))
+        btnNotes.contentDescription = context.getString(R.string.sudoku_notes)
 
         // Rangée de chiffres 1–9
         digitRow.onDigitTapped = { digit ->
@@ -135,8 +138,8 @@ class SudokuWidgetView @JvmOverloads constructor(
         // Bouton Undo (↩) → annuler le dernier coup
         btnUndo.setOnClickListener { undo() }
 
-        // Bouton Redo (↪) → refaire le coup annulé
-        btnRedo.setOnClickListener { redo() }
+        // Bouton Notes : les chiffres posent/retirent des annotations.
+        btnNotes.setOnClickListener { toggleNotesMode() }
 
         // Bouton reset → afficher l'overlay de sélection de difficulté
         findViewById<TextView>(R.id.sudoku_btn_reset).setOnClickListener {
@@ -169,8 +172,9 @@ class SudokuWidgetView @JvmOverloads constructor(
         headerArea.setOnTouchListener(dragListener)
         listOf(
             R.id.sudoku_btn_cancel, R.id.sudoku_btn_validate, R.id.sudoku_btn_verify,
-            R.id.sudoku_btn_undo, R.id.sudoku_btn_redo, R.id.sudoku_btn_reset
+            R.id.sudoku_btn_undo, R.id.sudoku_btn_notes, R.id.sudoku_btn_reset
         ).forEach { id -> findViewById<View>(id).setOnTouchListener(dragListener) }
+        updateActionButtons()
     }
 
     // ── Pinch-zoom : intercepter les gestes 2 doigts avant les enfants ────────
@@ -239,8 +243,8 @@ class SudokuWidgetView @JvmOverloads constructor(
         resultOverlay.visibility = GONE
         currentDifficulty = difficulty
         undoStack.clear()
-        redoStack.clear()
-        updateUndoRedoButtons()
+        notesMode = false
+        updateActionButtons()
         GameStatsRepository(context).recordSudokuStarted()
 
         ioScope.launch {
@@ -302,14 +306,20 @@ class SudokuWidgetView @JvmOverloads constructor(
         if (!sudokuGridView.hasSelection()) return
         val row = sudokuGridView.getSelectedRow()
         val col = sudokuGridView.getSelectedCol()
+        if (notesMode && digit in 1..9) {
+            if (sudokuGridView.toggleNoteAtSelected(digit)) {
+                persistBoard()
+            }
+            return
+        }
+
         val oldValue = sudokuGridView.getBoard().getValue(row, col)
         if (oldValue == digit) return  // Aucun changement, rien à enregistrer
         // Effacer le surlignage des erreurs dès qu'on joue un coup
         sudokuGridView.setShowMistakes(false)
         sudokuGridView.setValueAtSelected(digit)
         undoStack.addLast(SudokuAction(row, col, oldValue, digit))
-        redoStack.clear()
-        updateUndoRedoButtons()
+        updateActionButtons()
         persistBoard()
         checkBoardCompletion()
     }
@@ -334,34 +344,29 @@ class SudokuWidgetView @JvmOverloads constructor(
         resultOverlay.visibility = VISIBLE
     }
 
-    // ── Undo / Redo ───────────────────────────────────────────────────────────
+    // ── Undo / Notes ──────────────────────────────────────────────────────────
     private fun undo() {
         if (undoStack.isEmpty()) return
         val action = undoStack.removeLast()
         sudokuGridView.setShowMistakes(false)
         sudokuGridView.setValueAt(action.row, action.col, action.oldValue)
-        redoStack.addLast(action)
-        updateUndoRedoButtons()
+        updateActionButtons()
         persistBoard()
     }
 
-    private fun redo() {
-        if (redoStack.isEmpty()) return
-        val action = redoStack.removeLast()
-        sudokuGridView.setShowMistakes(false)
-        sudokuGridView.setValueAt(action.row, action.col, action.newValue)
-        undoStack.addLast(action)
-        updateUndoRedoButtons()
-        persistBoard()
+    private fun toggleNotesMode() {
+        notesMode = !notesMode
+        updateActionButtons()
     }
 
-    private fun updateUndoRedoButtons() {
+    private fun updateActionButtons() {
         btnUndo.alpha = if (undoStack.isEmpty()) 0.3f else 1f
-        btnRedo.alpha = if (redoStack.isEmpty()) 0.3f else 1f
+        btnNotes.alpha = if (notesMode) 1f else 0.55f
     }
 
     private fun persistBoard() {
         val board = sudokuGridView.getBoard()
+        val notes = sudokuGridView.getNotesMasks()
         val difficulty = currentDifficulty
         ioScope.launch {
             runCatching {
@@ -369,7 +374,8 @@ class SudokuWidgetView @JvmOverloads constructor(
                     board = board,
                     difficulty = difficulty,
                     elapsedTimeMs = 0L,
-                    isSolved = false
+                    isSolved = false,
+                    notes = notes
                 )
                 SudokuDatabase.getInstance(context).sudokuDao().saveSave(save)
             }
@@ -407,9 +413,12 @@ class SudokuWidgetView @JvmOverloads constructor(
             if (save != null) currentDifficulty = save.toDifficulty()
             withContext(Dispatchers.Main) {
                 sudokuGridView.setBoard(board)
+                if (save != null) {
+                    sudokuGridView.setNotesMasks(save.toNotes())
+                }
                 undoStack.clear()
-                redoStack.clear()
-                updateUndoRedoButtons()
+                notesMode = false
+                updateActionButtons()
             }
         }
     }

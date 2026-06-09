@@ -210,16 +210,14 @@
                 app:strokeColor="@color/sudoku_border_thin" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/pad_redo"
+                android:id="@+id/pad_notes"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
-                android:text="@string/sudoku_redo"
+                android:text="@string/sudoku_notes"
                 android:textColor="@color/startup_text_primary"
-                android:alpha="0.35"
-                android:enabled="false"
                 app:strokeColor="@color/sudoku_border_thin" />
 
             <com.google.android.material.button.MaterialButton
@@ -230,6 +228,17 @@
                 android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
                 android:text="@string/sudoku_clear"
+                android:textColor="@color/startup_text_primary"
+                app:strokeColor="@color/sudoku_border_thin" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pad_validate"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:text="@string/sudoku_validate"
                 android:textColor="@color/startup_text_primary"
                 app:strokeColor="@color/sudoku_border_thin" />
         </LinearLayout>

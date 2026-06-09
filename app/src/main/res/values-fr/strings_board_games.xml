@@ -8,8 +8,11 @@
     <string name="sudoku_new_game">Nouvelle partie</string>
     <string name="sudoku_check">Vérifier</string>
     <string name="sudoku_clear">Effacer</string>
+    <string name="sudoku_validate">Valider</string>
     <string name="sudoku_undo">↩ Annuler</string>
     <string name="sudoku_redo">↪ Refaire</string>
+    <string name="sudoku_notes">Notes</string>
+    <string name="sudoku_widget_note_icon">✎</string>
     <string name="sudoku_status_generating">Génération en cours…</string>
     <string name="sudoku_status_generated">Grille %1$s générée (%2$d indices)</string>
     <string name="sudoku_status_no_error">Aucune erreur pour l\'instant</string>

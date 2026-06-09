@@ -38,15 +38,15 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
     private lateinit var newGameButton: Button
     private lateinit var checkButton: Button
     private lateinit var clearButton: Button
+    private lateinit var validateButton: Button
     private lateinit var undoButton: Button
-    private lateinit var redoButton: Button
+    private lateinit var notesButton: Button
 
     private val numberButtons = mutableListOf<Button>()
 
-    // ── Undo / Redo ───────────────────────────────────────────────────────────
+    // ── Undo ─────────────────────────────────────────────────────────────────
     private data class SudokuAction(val row: Int, val col: Int, val oldValue: Int, val newValue: Int)
     private val undoStack = ArrayDeque<SudokuAction>()
-    private val redoStack = ArrayDeque<SudokuAction>()
 
     private var currentDifficulty = SudokuDifficulty.MEDIUM
     private var elapsedTimeMs: Long = 0
@@ -56,6 +56,7 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
 
     // Selected number for "number first" mode (0 = no number selected)
     private var selectedNumber: Int = 0
+    private var notesMode: Boolean = false
 
     private val timerHandler = Handler(Looper.getMainLooper())
     private val timerRunnable = object : Runnable {
@@ -88,8 +89,9 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         newGameButton = findViewById(R.id.new_game_button)
         checkButton = findViewById(R.id.check_button)
         clearButton = findViewById(R.id.pad_clear)
+        validateButton = findViewById(R.id.pad_validate)
         undoButton = findViewById(R.id.pad_undo)
-        redoButton = findViewById(R.id.pad_redo)
+        notesButton = findViewById(R.id.pad_notes)
 
         // Number pad buttons
         numberButtons.add(findViewById(R.id.pad_1))
@@ -133,9 +135,10 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         checkButton.setOnClickListener { onCheckClicked() }
 
         clearButton.setOnClickListener { onClearClicked() }
+        validateButton.setOnClickListener { onCheckClicked() }
 
         undoButton.setOnClickListener { onUndoClicked() }
-        redoButton.setOnClickListener { onRedoClicked() }
+        notesButton.setOnClickListener { onNotesClicked() }
 
         // Number pad
         numberButtons.forEachIndexed { index, button ->
@@ -176,9 +179,11 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         difficultySpinner.setSelection(SudokuDifficulty.entries.indexOf(currentDifficulty))
 
         gridView.setBoard(save.toBoard())
+        gridView.setNotesMasks(save.toNotes())
         elapsedTimeMs = save.elapsedTimeMs
         isPuzzleSolved = false
         clearHistory()
+        setNotesMode(false)
 
         updateDifficultySettings()
         updateValidation()
@@ -229,6 +234,7 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
             isPuzzleSolved = false
             clearSelectedNumber()
             clearHistory()
+            setNotesMode(false)
 
             updateDifficultySettings()
             startTimer()
@@ -257,6 +263,7 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         } else {
             View.VISIBLE
         }
+        validateButton.visibility = checkButton.visibility
     }
 
     private fun startTimer() {
@@ -283,6 +290,13 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         if (selectedNumber > 0) {
             val board = gridView.getBoard()
             if (!board.isFixed(row, col)) {
+                if (notesMode) {
+                    if (gridView.toggleNoteAt(row, col, selectedNumber)) {
+                        saveGame()
+                    }
+                    return
+                }
+
                 val oldValue = board.getValue(row, col)
                 if (oldValue != selectedNumber) {
                     gridView.setValueAtSelected(selectedNumber)
@@ -300,6 +314,19 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
 
     private fun onNumberClicked(number: Int) {
         if (isPuzzleSolved) return
+
+        if (notesMode) {
+            if (gridView.hasSelection()) {
+                if (gridView.toggleNoteAtSelected(number)) {
+                    saveGame()
+                }
+            } else if (selectedNumber == number) {
+                clearSelectedNumber()
+            } else {
+                selectNumber(number)
+            }
+            return
+        }
 
         if (gridView.hasSelection()) {
             // Mode: Cell selected first -> place number and deselect
@@ -347,6 +374,22 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
                 button.setBackgroundColor(ContextCompat.getColor(this, R.color.sudoku_pad_button_background))
             }
         }
+        notesButton.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                if (notesMode) R.color.sudoku_pad_button_selected else R.color.sudoku_pad_button_background
+            )
+        )
+    }
+
+    private fun onNotesClicked() {
+        if (isPuzzleSolved) return
+        setNotesMode(!notesMode)
+    }
+
+    private fun setNotesMode(enabled: Boolean) {
+        notesMode = enabled
+        updateNumberButtonsHighlight()
     }
 
     private fun onClearClicked() {
@@ -365,6 +408,8 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
             if (oldValue != 0) {
                 gridView.setValueAtSelected(0)
                 recordAction(row, col, oldValue, 0)
+            } else {
+                gridView.clearNotesAtSelected()
             }
             gridView.clearSelection()
             updateValidation()
@@ -455,18 +500,16 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         )
     }
 
-    // ── Undo / Redo ───────────────────────────────────────────────────────────
+    // ── Undo ─────────────────────────────────────────────────────────────────
 
     private fun recordAction(row: Int, col: Int, oldValue: Int, newValue: Int) {
         undoStack.addLast(SudokuAction(row, col, oldValue, newValue))
-        redoStack.clear()
-        updateUndoRedoButtons()
+        updateUndoButton()
     }
 
     private fun clearHistory() {
         undoStack.clear()
-        redoStack.clear()
-        updateUndoRedoButtons()
+        updateUndoButton()
     }
 
     private fun onUndoClicked() {
@@ -474,39 +517,30 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         val action = undoStack.removeLast()
         gridView.setValueAt(action.row, action.col, action.oldValue)
         gridView.clearSelection()
-        redoStack.addLast(action)
-        updateUndoRedoButtons()
+        updateUndoButton()
         updateValidation()
         saveGame()
     }
 
-    private fun onRedoClicked() {
-        if (isPuzzleSolved || redoStack.isEmpty()) return
-        val action = redoStack.removeLast()
-        gridView.setValueAt(action.row, action.col, action.newValue)
-        gridView.clearSelection()
-        undoStack.addLast(action)
-        updateUndoRedoButtons()
-        updateValidation()
-        saveGame()
-    }
-
-    private fun updateUndoRedoButtons() {
+    private fun updateUndoButton() {
         undoButton.isEnabled = undoStack.isNotEmpty()
         undoButton.alpha = if (undoStack.isNotEmpty()) 1f else 0.35f
-        redoButton.isEnabled = redoStack.isNotEmpty()
-        redoButton.alpha = if (redoStack.isNotEmpty()) 1f else 0.35f
     }
 
     private fun saveGame() {
         if (isPuzzleSolved) return
 
+        val board = gridView.getBoard()
+        val notes = gridView.getNotesMasks()
+        val difficulty = currentDifficulty
+        val elapsed = elapsedTimeMs
         lifecycleScope.launch(Dispatchers.IO) {
             val save = SudokuSaveEntity.fromBoard(
-                board = gridView.getBoard(),
-                difficulty = currentDifficulty,
-                elapsedTimeMs = elapsedTimeMs,
-                isSolved = false
+                board = board,
+                difficulty = difficulty,
+                elapsedTimeMs = elapsed,
+                isSolved = false,
+                notes = notes
             )
             database.sudokuDao().saveSave(save)
         }

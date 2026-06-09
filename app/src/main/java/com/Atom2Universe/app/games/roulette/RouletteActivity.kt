@@ -20,6 +20,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
@@ -30,6 +31,7 @@ class RouletteActivity : ThemedActivity() {
 
     private val game = RouletteGame()
     private val handler = Handler(Looper.getMainLooper())
+    private val music by lazy { RouletteProceduralMusic(lifecycleScope) }
     private lateinit var neutrinoRepo: NeutrinoRepository
 
     private lateinit var balanceText: TextView
@@ -173,6 +175,7 @@ class RouletteActivity : ThemedActivity() {
         refreshBalance()
 
         spinning = true
+        music.onSpinStarted()
         updateBetButtons()
         clearHighlights()
         lastWinText.text = ""
@@ -253,12 +256,14 @@ class RouletteActivity : ThemedActivity() {
 
         if (totalMult > 0) {
             val gain = selectedBet * totalMult
+            music.onWin(totalMult)
             balance += gain
             neutrinoRepo.setBalance(balance)
             refreshBalance()
             lastWinText.text = getString(R.string.roulette_last_win, selectedBet, totalMult, gain)
             handler.postDelayed({ showWinOverlay(gain, totalMult, wins.size) }, 400L)
         } else {
+            music.onLose()
             spinning = false
             updateBetButtons()
         }
@@ -411,12 +416,19 @@ class RouletteActivity : ThemedActivity() {
 
     override fun onPause() {
         super.onPause()
+        music.stop()
         handler.removeCallbacksAndMessages(null)
         neutrinoRepo.setBalance(balance)
     }
 
+    override fun onResume() {
+        super.onResume()
+        music.start()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        music.stop()
         handler.removeCallbacksAndMessages(null)
         bitmapCache.values.forEach { if (!it.isRecycled) it.recycle() }
         bitmapCache.clear()

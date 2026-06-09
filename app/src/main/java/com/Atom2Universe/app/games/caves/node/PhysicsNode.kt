@@ -24,8 +24,10 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     private var lastGroundY     = 0.0
     private var prevOnGround    = false
 
-    // Charge du saut
     private var jumpHoldTime = 0f
+    private var jumpHoldMaxTime = 0f
+    private var jumpStartVy = 0.0
+    private var jumpMaxVy = 0.0
 
     companion object {
         private const val GRAVITY        = 24.0   // m/s²
@@ -41,7 +43,6 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         private const val PLAYER_WI      = 0.29
         private const val PLAYER_H_BELOW = 1.62
         private const val PLAYER_H_ABOVE = 0.18
-        const val CHARGE_MAX_SEC         = 1.5f   // durée pour charge max
     }
 
     fun updateWalk(
@@ -64,8 +65,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             coyoteTimer = (coyoteTimer - dt).coerceAtLeast(0f)
         }
 
-        val jumpJustReleased = !jumpPressed && prevJumpPressed
-        prevJumpPressed = jumpPressed
+        val jumpJustPressed = jumpPressed && !prevJumpPressed
 
         // ── Mouvement horizontal ──────────────────────────────────────────────
         val groundSpeed = if (isSprinting) sb?.sprintSpeed ?: com.Atom2Universe.app.games.caves.entity.SkillBook.BASE_SPRINT_SPEED
@@ -120,30 +120,14 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
                 }
                 onGround    = false
                 coyoteTimer = 0f
-                // Annule la charge si on entre dans l'eau
-                if (jumpHoldTime > 0f) { jumpHoldTime = 0f; onJumpChargeChanged?.invoke(0f) }
+                clearJumpHold()
             }
 
             else -> {
                 val canJump = coyoteTimer > 0f && velocityY <= 0.5
 
-                if (canJump && jumpPressed) {
-                    // Accumulation de charge
-                    val prevRatio = jumpHoldTime / CHARGE_MAX_SEC
-                    jumpHoldTime = (jumpHoldTime + dt).coerceAtMost(CHARGE_MAX_SEC)
-                    val newRatio = jumpHoldTime / CHARGE_MAX_SEC
-                    if (abs(newRatio - prevRatio) > 0.005f) onJumpChargeChanged?.invoke(newRatio)
-                }
-
-                val shouldFire = canJump && jumpHoldTime > 0f &&
-                    (jumpJustReleased || (jumpHoldTime >= CHARGE_MAX_SEC) || (coyoteTimer <= dt && !onGround))
-                if (shouldFire) {
-                    fireJump()
-                } else if (!canJump && jumpHoldTime > 0f) {
-                    // Coyote expiré sans pouvoir sauter → réinitialise
-                    jumpHoldTime = 0f
-                    onJumpChargeChanged?.invoke(0f)
-                }
+                if (canJump && jumpPressed && (jumpJustPressed || onGround)) startJump()
+                applyJumpHold(dt, jumpPressed)
 
                 velocityY = (velocityY - GRAVITY * dt).coerceAtLeast(-TERM_VEL)
                 val dy = velocityY * dt
@@ -155,6 +139,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
                     y = binarySearchFloor(x, y, z, dy)
                     velocityY = 0.0
                     onGround  = true
+                    clearJumpHold()
                     if (!prevOnGround) {
                         val fallBlocks = lastGroundY - y
                         if (fallBlocks > 0.5) onFallLanded?.invoke(fallBlocks)
@@ -165,24 +150,52 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             }
         }
 
+        prevJumpPressed = jumpPressed
         prevOnGround = onGround
         return Triple(x, y, z)
     }
 
-    private fun fireJump() {
-        val chargeRatio = (jumpHoldTime / CHARGE_MAX_SEC).coerceIn(0f, 1f)
+    private fun startJump() {
         val sb = skillBook
         val maxBlocks  = sb?.maxJumpBlocks() ?: 1.0
         val minBlocks  = 1.0
-        val blocks     = minBlocks + chargeRatio * (maxBlocks - minBlocks)
-        velocityY      = com.Atom2Universe.app.games.caves.entity.SkillBook.jumpVyForBlocks(blocks)
-        jumpHoldTime   = 0f
-        coyoteTimer    = 0f
-        onGround       = false
-        jumpHoldTime   = 0f
+        clearJumpHold()
+        jumpStartVy    = com.Atom2Universe.app.games.caves.entity.SkillBook.jumpVyForBlocks(minBlocks)
+        jumpMaxVy      = com.Atom2Universe.app.games.caves.entity.SkillBook.jumpVyForBlocks(maxBlocks.coerceAtLeast(minBlocks))
+        jumpHoldMaxTime = if (maxBlocks <= minBlocks + 0.01) 0f
+        else 0.08f + ((maxBlocks - minBlocks) / 19.0).coerceIn(0.0, 1.0).toFloat() * 0.52f
+        velocityY       = jumpStartVy
+        coyoteTimer     = 0f
+        onGround        = false
         onJumped?.invoke()
         onJumpChargeChanged?.invoke(0f)
     }
+
+    private fun applyJumpHold(dt: Float, jumpPressed: Boolean) {
+        if (!jumpPressed || jumpHoldMaxTime <= 0f || jumpHoldTime >= jumpHoldMaxTime || velocityY <= 0.0) {
+            if (!jumpPressed) clearJumpHold()
+            return
+        }
+
+        val prevRatio = jumpHoldRatio()
+        jumpHoldTime = (jumpHoldTime + dt).coerceAtMost(jumpHoldMaxTime)
+        val targetVy = jumpStartVy + (jumpMaxVy - jumpStartVy) * jumpHoldRatio()
+        if (velocityY < targetVy) velocityY = targetVy
+
+        val newRatio = jumpHoldRatio()
+        if (abs(newRatio - prevRatio) > 0.005f) onJumpChargeChanged?.invoke(newRatio)
+    }
+
+    private fun clearJumpHold() {
+        if (jumpHoldTime > 0f || jumpHoldMaxTime > 0f) onJumpChargeChanged?.invoke(0f)
+        jumpHoldTime = 0f
+        jumpHoldMaxTime = 0f
+        jumpStartVy = 0.0
+        jumpMaxVy = 0.0
+    }
+
+    private fun jumpHoldRatio(): Float =
+        if (jumpHoldMaxTime <= 0f) 0f else (jumpHoldTime / jumpHoldMaxTime).coerceIn(0f, 1f)
 
     private fun binarySearchFloor(x: Double, y: Double, z: Double, dy: Double): Double {
         var lo = y + dy; var hi = y
@@ -218,10 +231,10 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         coyoteTimer     = 0f
         stepUpRemaining = 0.0
         lastGroundY     = 0.0
-        jumpHoldTime    = 0f
+        clearJumpHold()
         onJumpChargeChanged?.invoke(0f)
     }
 
     // Ratio de charge courant (0→1), utile pour affichage HUD externe
-    val jumpChargeRatio: Float get() = (jumpHoldTime / CHARGE_MAX_SEC).coerceIn(0f, 1f)
+    val jumpChargeRatio: Float get() = jumpHoldRatio()
 }

@@ -26,6 +26,14 @@ internal class SpawnManager(
     private var bossRewardGiven = false
     private var spawnCooldown = SPAWN_INTERVAL
 
+    private data class SpawnBlock(
+        val x: Double,
+        val y: Double,
+        val z: Double,
+        val biome: String,
+        val zone: Int
+    )
+
     // Pool shufflée une fois à l'init selon la seed du monde.
     // Indexée par zone (modulo taille) → même zone = même mob pour ce monde.
     private val shuffledPool: List<String> by lazy {
@@ -46,6 +54,12 @@ internal class SpawnManager(
         return MobRegistry.all().first { it.spriteSheet == sheet }
     }
 
+    private fun rollMobForSpawn(zone: Int, biome: String): MobDef {
+        val eligible = MobRegistry.allEligibleFor(biome, zone)
+        if (eligible.isNotEmpty()) return eligible[rng.nextInt(eligible.size)]
+        return mobForZone(zone, biome)
+    }
+
     // ── Tick principal ────────────────────────────────────────────────────────
 
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
@@ -57,7 +71,7 @@ internal class SpawnManager(
             spawnCooldown -= dt
             if (spawnCooldown <= 0f) {
                 spawnCooldown = SPAWN_INTERVAL + rng.nextFloat() * SPAWN_JITTER
-                tryAmbientSpawn(px, py, pz)
+                tryAmbientSpawn(px, py, pz, MAX_ENEMIES_NEARBY - nearbyCount)
             }
         }
     }
@@ -71,39 +85,83 @@ internal class SpawnManager(
 
     // ── Spawn ambiant ─────────────────────────────────────────────────────────
 
-    private fun tryAmbientSpawn(px: Double, py: Double, pz: Double) {
-        val spawnBoss = bossEnemyId == -1 && rng.nextFloat() < BOSS_CHANCE
+    private fun tryAmbientSpawn(px: Double, py: Double, pz: Double, spawnSlots: Int) {
+        if (spawnSlots <= 0) return
+
+        val availableBlocks = collectAvailableSpawnBlocks(px, py, pz)
+        if (availableBlocks.isEmpty()) return
+
+        val origin = availableBlocks[rng.nextInt(availableBlocks.size)]
+        val def = rollMobForSpawn(origin.zone, origin.biome)
+        val spawnBoss = bossEnemyId == -1 && def.bossEligible && rng.nextFloat() < BOSS_CHANCE
+        val packSize = if (spawnBoss) 1 else rollPackSize().coerceAtMost(spawnSlots)
+
+        val selected = dispersePack(origin, availableBlocks, packSize)
+        for ((index, block) in selected.withIndex()) {
+            val e = Enemy(nextId++, def, block.x, block.y, block.z)
+            e.spriteSheet = def.spriteSheet
+            e.level       = block.zone
+            e.isBoss      = spawnBoss && index == 0
+            e.hp          = e.maxHp
+            e.state       = EnemyState.CHASE
+
+            if (e.isBoss) {
+                bossEnemyId = e.id; bossRewardGiven = false
+                eventBus?.publish(GameEvent.BossSpawned(e.id))
+            }
+            enemies.add(e)
+        }
+    }
+
+    private fun rollPackSize(): Int = when (rng.nextInt(100)) {
+        in 0 until 45  -> 1
+        in 45 until 75 -> 2
+        in 75 until 93 -> 3
+        else           -> 4
+    }
+
+    private fun collectAvailableSpawnBlocks(px: Double, py: Double, pz: Double): List<SpawnBlock> {
+        val result = ArrayList<SpawnBlock>(MAX_SPAWN_CANDIDATES)
         val minDist = SPAWN_MIN_CHUNKS * CHUNK_SIZE.toDouble()
         val maxDist = SPAWN_MAX_CHUNKS * CHUNK_SIZE.toDouble()
+        repeat(SPAWN_BLOCK_CHECKS) {
+            if (result.size >= MAX_SPAWN_CANDIDATES) return@repeat
 
-        repeat(20) {
             val angle = rng.nextDouble() * 2 * PI
             val dist  = minDist + rng.nextDouble() * (maxDist - minDist)
             val sx = px + cos(angle) * dist
             val sz = pz + sin(angle) * dist
             if (!canSpawnAt(sx, sz)) return@repeat
+            if (isNearExistingEnemy(sx, sz)) return@repeat
 
             val sy = findSpawnGround(sx, sz, py) ?: return@repeat
+            if (!hasSpawnHeadroom(sx, sy, sz)) return@repeat
 
             val biome = biomeAt(sx, sy, sz)
             val zone  = computeLevel(sx, sy, sz).coerceAtLeast(1)
-
-            // Pool shufflée une fois par seed — même monde = mêmes mobs partout, au pif total
-            val def = mobForZone(zone, biome)
-            val e = Enemy(nextId++, def, sx, sy, sz)
-            e.spriteSheet = def.spriteSheet
-            e.level       = zone
-            e.isBoss       = spawnBoss
-            e.hp           = e.maxHp
-            e.state        = EnemyState.CHASE
-
-            if (spawnBoss) {
-                bossEnemyId = e.id; bossRewardGiven = false
-                eventBus?.publish(GameEvent.BossSpawned(e.id))
-            }
-            enemies.add(e)
-            return
+            result.add(SpawnBlock(sx, sy, sz, biome, zone))
         }
+        return result
+    }
+
+    private fun dispersePack(origin: SpawnBlock, blocks: List<SpawnBlock>, count: Int): List<SpawnBlock> {
+        if (count <= 1) return listOf(origin)
+        val selected = ArrayList<SpawnBlock>(count)
+        selected.add(origin)
+
+        val shuffled = blocks.shuffled(rng)
+        for (block in shuffled) {
+            if (selected.size >= count) break
+            if (selected.any { squaredDistanceXZ(it, block) < PACK_MIN_SPACING * PACK_MIN_SPACING }) continue
+            if (squaredDistanceXZ(origin, block) > PACK_DISPERSE_RADIUS * PACK_DISPERSE_RADIUS) continue
+            selected.add(block)
+        }
+
+        for (block in shuffled) {
+            if (selected.size >= count) break
+            if (block !in selected) selected.add(block)
+        }
+        return selected
     }
 
     // ── Helpers terrain ───────────────────────────────────────────────────────
@@ -120,6 +178,31 @@ internal class SpawnManager(
             if (a1 == AIR && a2 == AIR) return (by + 1).toDouble()
         }
         return null
+    }
+
+    private fun hasSpawnHeadroom(sx: Double, sy: Double, sz: Double): Boolean {
+        val bx = Math.floor(sx).toInt()
+        val by = Math.floor(sy).toInt()
+        val bz = Math.floor(sz).toInt()
+        return isFreeForSpawn(bx, by, bz) && isFreeForSpawn(bx, by + 1, bz)
+    }
+
+    private fun isFreeForSpawn(bx: Int, by: Int, bz: Int): Boolean {
+        val b = world.blockAt(bx, by, bz)
+        return b == AIR || isWater(b) || isDecoration(b)
+    }
+
+    private fun isNearExistingEnemy(sx: Double, sz: Double): Boolean =
+        enemies.any { e ->
+            val dx = e.x - sx
+            val dz = e.z - sz
+            dx * dx + dz * dz < MOB_MIN_SPACING * MOB_MIN_SPACING
+        }
+
+    private fun squaredDistanceXZ(a: SpawnBlock, b: SpawnBlock): Double {
+        val dx = a.x - b.x
+        val dz = a.z - b.z
+        return dx * dx + dz * dz
     }
 
     private fun isInSafeZone(px: Double, pz: Double): Boolean {
@@ -173,5 +256,10 @@ internal class SpawnManager(
         const val SPAWN_MIN_CHUNKS  = 2
         const val SPAWN_MAX_CHUNKS  = 4
         const val BOSS_CHANCE       = 0.01f
+        const val SPAWN_BLOCK_CHECKS = 96
+        const val MAX_SPAWN_CANDIDATES = 32
+        const val MOB_MIN_SPACING = 3.0
+        const val PACK_MIN_SPACING = 2.0
+        const val PACK_DISPERSE_RADIUS = 18.0
     }
 }
