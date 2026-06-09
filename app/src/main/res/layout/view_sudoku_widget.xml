@@ -55,7 +55,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="?"
+                android:text="@string/sudoku_widget_verify_icon"
                 android:textColor="#EAB308"
                 android:textSize="14sp"
                 android:textStyle="bold"

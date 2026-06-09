@@ -12,6 +12,7 @@
     <string name="sudoku_undo">↩ Undo</string>
     <string name="sudoku_redo">↪ Redo</string>
     <string name="sudoku_notes">Notes</string>
+    <string name="sudoku_widget_verify_icon">?</string>
     <string name="sudoku_widget_note_icon">✎</string>
     <string name="sudoku_status_generating">Generating…</string>
     <string name="sudoku_status_generated">%1$s grid generated (%2$d clues)</string>

@@ -12,6 +12,7 @@
     <string name="sudoku_undo">↩ Annuler</string>
     <string name="sudoku_redo">↪ Refaire</string>
     <string name="sudoku_notes">Notes</string>
+    <string name="sudoku_widget_verify_icon">?</string>
     <string name="sudoku_widget_note_icon">✎</string>
     <string name="sudoku_status_generating">Génération en cours…</string>
     <string name="sudoku_status_generated">Grille %1$s générée (%2$d indices)</string>
