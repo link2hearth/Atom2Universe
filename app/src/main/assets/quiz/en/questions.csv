@@ -1,0 +1,510 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+1;Géographie;2;What is the capital of Australia?;A) Sydney | B) Melbourne | C) Canberra | D) Perth;C;Australia's capital is Canberra (not Sydney).;Wikidata/Encyclopedia
+2;Chimie;1;What is the chemical symbol for sodium?;A) S | B) So | C) Na | D) Sn;C;Sodium’s symbol is Na (from Latin natrium).;IUPAC/Periodic table
+3;Biologie;2;Where in a plant cell does photosynthesis occur?;A) Nucleus | B) Chloroplast | C) Mitochondrion | D) Ribosome;B;Photosynthesis takes place in chloroplasts.;Biology textbook
+4;Physique;2;What is the SI unit of electric current?;A) Volt | B) Watt | C) Ampere | D) Ohm;C;The SI unit of current is the ampere (A).;BIPM/SI units
+5;Géographie;1;Which is the largest ocean?;A) Atlantic | B) Indian | C) Arctic | D) Pacific;D;The Pacific is the largest ocean by area.;Encyclopedia
+6;Espace;2;In what year did humans first walk on the Moon?;A) 1959 | B) 1969 | C) 1979 | D) 1989;B;" ""Apollo 11 landed in 1969, and astronauts walked on the Moon that year.""";" ""NASA/Apollo"""
+7;Biologie;3;What does the acronym DNA stand for?;A) Deoxyribonucleic acid | B) Ribonucleic acid | C) Normal double nitrogen | D) Nutrient analysis;A;DNA = deoxyribonucleic acid (carrier of genetic information).;Biology textbook
+8;Sciences de la Terre;2;Which gas is most abundant in Earth’s atmosphere?;A) Oxygen | B) Nitrogen | C) Carbon dioxide | D) Argon;B;Nitrogen makes up about 78% of the atmosphere.;NOAA/Encyclopedia
+9;Sciences de la Terre;3;Which instrument records earthquakes?;A) Barometer | B) Thermometer | C) Seismograph | D) Hygrometer;C;A seismograph (or seismometer) measures ground vibrations.;Geoscience textbook
+10;Biologie;2;Which gas is mainly released by plants during photosynthesis?;A) Ozone | B) Oxygen | C) Nitrogen | D) Methane;B;" ""Photosynthesis produces oxygen among its outputs.""";" ""Biology textbook"""
+11;Géographie;1;Which river runs through Paris?;A) Rhine | B) Loire | C) Seine | D) Rhône;C;" ""Paris is crossed by the Seine.""";" ""Wikidata/Encyclopedia"""
+12;Histoire;3;In what year did the Berlin Wall fall?;A) 1979 | B) 1989 | C) 1999 | D) 2009;B;" ""The Berlin Wall fell in 1989.""";" ""History reference"""
+13;Physique;2;At standard atmospheric pressure, at what temperature does water boil?;A) 0°C | B) 50°C | C) 100°C | D) 150°C;C;" ""At 1 atm, water boils at 100°C.""";" ""Physics/Chem textbook"""
+14;Géographie;2;What is the world’s highest mountain (above sea level)?;A) K2 | B) Mont Blanc | C) Everest | D) Kilimanjaro;C;" ""Mount Everest is the highest above sea level.""";" ""Geography reference"""
+15;Espace;1;What is the largest planet in the Solar System?;A) Earth | B) Jupiter | C) Saturn | D) Neptune;B;" ""Jupiter is the largest planet in the Solar System.""";" ""NASA/Solar System"""
+16;Nature;3;Which animal is a mammal that lays eggs?;A) Dolphin | B) Bat | C) Platypus | D) Kangaroo;C;The platypus is a monotreme (an egg-laying mammal).;Biology reference
+17;Culture;2;Who wrote “The Little Prince”?;A) Victor Hugo | B) Antoine de Saint-Exupéry | C) Albert Camus | D) Jules Verne;B;" ""“The Little Prince” was written by Antoine de Saint-Exupéry.""";" ""Literature reference"""
+18;Langue;2;What is the plural of the French word “cheval”?;A) Chevals | B) Chevales | C) Chevaux | D) Chevalx;C;" ""The irregular plural is “chevaux.”""";" ""French grammar"""
+19;Technologie;1;In computing, which two digits are used in binary?;A) 0 and 1 | B) 1 and 2 | C) 2 and 3 | D) 8 and 9;A;" ""Binary uses only 0 and 1.""";" ""CS basics"""
+20;Chimie;2;A solution with pH below 7 is…;A) Basic | B) Acidic | C) Neutral | D) Salty;B;" ""pH < 7 is acidic"; pH = 7 neutral
+21;Géographie;3;Which continent has the largest number of countries?;A) Europe | B) Africa | C) Asia | D) South America;B;" ""Africa has the most countries (about 54).""";" ""UN/Encyclopedia"""
+22;Histoire;3;Who became the first President of France’s Fifth Republic?;A) François Mitterrand | B) Charles de Gaulle | C) Georges Pompidou | D) Valéry Giscard d’Estaing;B;" ""Charles de Gaulle was the first President of the Fifth Republic.""";" ""History reference"""
+23;Espace;1;Which galaxy is the Solar System in?;A) Andromeda | B) Milky Way | C) Sombrero | D) Triangulum;B;" ""The Solar System is in the Milky Way.""";" ""NASA/Astronomy"""
+24;Physique;2;What is the SI unit of force?;A) Joule | B) Pascal | C) Newton | D) Tesla;C;" ""Force is measured in newtons (N).""";" ""BIPM/SI units"""
+25;Biologie;3;How many bones does a typical adult human skeleton have?;A) 106 | B) 206 | C) 306 | D) 406;B;" ""A common reference number is 206 bones in adults.""";" ""Anatomy textbook"""
+26;Géographie;1;What is the imaginary line that separates the Northern and Southern Hemispheres?;A) Tropic of Cancer | B) Greenwich Meridian | C) Equator | D) Polar Circle;C;" ""The equator is latitude 0°.""";" ""Geography basics"""
+27;Chimie;1;Table salt is mainly…;A) Sodium chloride | B) Potassium chloride | C) Calcium carbonate | D) Glucose;A;" ""Table salt is mainly sodium chloride (NaCl).""";" ""Chemistry basics"""
+28;Technologie;2;RAM memory is generally…;A) Non-volatile | B) Volatile | C) Optical memory | D) A hard drive;B;" ""RAM loses data when power is off (volatile).""";" ""Computer basics"""
+29;Nature;2;What is the largest living land animal?;A) Giraffe | B) African elephant | C) Hippopotamus | D) Rhinoceros;B;" ""The African elephant is the largest living land animal.""";" ""Wildlife reference"""
+30;Espace;3;Which object was reclassified as a dwarf planet in 2006?;A) Mars | B) Pluto | C) Venus | D) Mercury;B;" ""In 2006, the IAU reclassified Pluto as a dwarf planet.""";" ""IAU reference"""
+31;Santé/Science;3;The main role of a vaccine is to…;A) Warm the body | B) Stimulate the immune system | C) Replace red blood cells | D) Increase gravity;B;" ""A vaccine trains the immune system to recognize a pathogen.""";" ""WHO/Health reference"""
+32;Géographie;2;What is the largest country in the world by area?;A) Canada | B) China | C) Russia | D) United States;C;" ""Russia is the largest country by area.""";" ""Wikidata/Encyclopedia"""
+33;Chimie;1;Which gas is often used to inflate party balloons?;A) Helium | B) Chlorine | C) Radon | D) Water vapor;A;" ""Helium is light and nonflammable for this use (unlike hydrogen).""";" ""Chemistry reference"""
+34;Maths;2;What is 2 to the power of 10 (2^10)?;A) 256 | B) 512 | C) 1024 | D) 2048;C;" ""2^10 = 1024.""";" ""Math basics"""
+35;Sciences de la Terre;3;An igneous rock typically forms by…;A) Water evaporation | B) Cooling of magma/lava | C) Sand compaction | D) Plant decay;B;" ""Igneous rocks come from cooling and solidifying molten material.""";" ""Geology textbook"""
+36;Biologie;3;In a cell, which organelle produces most ATP?;A) Golgi apparatus | B) Mitochondrion | C) Lysosome | D) Nucleus;B;" ""Mitochondria produce most ATP via cellular respiration.""";" ""Biology textbook"""
+37;Technologie;2;GPS works mainly thanks to…;A) Only 5G towers | B) Satellites | C) Undersea cables | D) Magnets;B;" ""GPS computes position using signals from satellites.""";" ""GNSS reference"""
+38;Histoire;4;In what year was the Magna Carta sealed in England?;A) 1066 | B) 1215 | C) 1492 | D) 1789;B;" ""The Magna Carta dates to 1215.""";" ""History reference"""
+39;Géographie;2;What is Japan’s currency?;A) Won | B) Yuan | C) Yen | D) Ringgit;C;" ""Japan’s currency is the yen.""";" ""Economic reference"""
+40;Physique;3;To convert Celsius to kelvin, you…;A) Multiply by 2 | B) Add 273.15 | C) Subtract 100 | D) Divide by 10;B;" ""K = °C + 273.15 (approx.).""";" ""SI units/Physics"""
+41;Nature;2;Which animal undergoes complete metamorphosis (egg → larva → pupa → adult)?;A) Butterfly | B) Dog | C) Snake | D) Sparrow;A;" ""Butterflies go through caterpillar and pupa stages before adulthood.""";" ""Biology reference"""
+42;Espace;2;About how long does Earth take to orbit the Sun?;A) 24 hours | B) 7 days | C) ~365.25 days | D) 10 years;C;" ""A year is about 365.25 days (close to the tropical year).""";" ""Astronomy reference"""
+43;Physique;3;Sound generally travels fastest in…;A) Vacuum | B) Gases | C) Liquids | D) Solids;D;" ""Sound doesn’t travel in vacuum and is generally fastest in solids.""";" ""Physics reference"""
+44;Chimie;3;Litmus paper turns red when the solution is…;A) Acidic | B) Basic | C) Neutral | D) Sugary;A;" ""Litmus is red in acidic solutions and blue in basic solutions.""";" ""Chemistry basics"""
+45;Géographie;2;What is the largest hot desert in the world?;A) Gobi | B) Sahara | C) Atacama | D) Kalahari;B;" ""The Sahara is the largest hot desert.""";" ""Geography reference"""
+46;Santé/Science;2;Which vitamin is produced by the skin under sunlight?;A) Vitamin A | B) Vitamin C | C) Vitamin D | D) Vitamin K;C;" ""Skin synthesizes vitamin D under UVB exposure.""";" ""Health reference"""
+47;Technologie;3;Who is mainly known for creating the Python programming language?;A) Linus Torvalds | B) Guido van Rossum | C) Dennis Ritchie | D) Tim Berners-Lee;B;" ""Python was created by Guido van Rossum.""";" ""Programming history"""
+48;Culture;1;What is the correct order of solfège notes (in C major)?;A) Do Re Mi Fa Sol La Si | B) Do Mi Re Fa Sol Si La | C) Re Do Mi Fa Sol La Si | D) Do Re Fa Mi Sol La Si;A;" ""The standard order is Do Re Mi Fa Sol La Ti/Si.""";" ""Music basics"""
+49;Géographie;3;Where is the Great Barrier Reef located?;A) South Africa | B) Australia (off Queensland) | C) Brazil | D) Norway;B;" ""The Great Barrier Reef lies off Queensland, Australia.""";" ""Geography reference"""
+50;Climat/Science;3;Which gas is heavily emitted by burning fossil fuels and contributes to the greenhouse effect?;A) Helium | B) Carbon dioxide (CO2) | C) Neon | D) Argon;B;" ""Burning coal, oil, and gas emits large amounts of CO2, a greenhouse gas.""";" ""IPCC/Climate reference"""
+51;Histoire;1;In what year did the French Revolution begin (Storming of the Bastille)?;A) 1776 | B) 1789 | C) 1815 | D) 1848;B;The Storming of the Bastille took place on July 14, 1789.;
+52;Histoire;1;Who was the first Roman emperor?;A) Julius Caesar | B) Augustus | C) Nero | D) Constantine;B;Augustus (Octavian) became the first emperor in 27 BCE.;
+53;Histoire;2;Which treaty ended World War I?;A) Treaty of Tordesillas | B) Treaty of Versailles | C) Treaty of Utrecht | D) Treaty of Rome;B;The Treaty of Versailles was signed in 1919.;
+54;Histoire;1;Which pharaoh is associated with the discovery of his tomb in 1922?;A) Ramesses II | B) Akhenaten | C) Tutankhamun | D) Khufu;C;Howard Carter discovered Tutankhamun’s tomb in 1922.;
+55;Histoire;2;Traditionally, in what year did the Western Roman Empire fall?;A) 395 | B) 476 | C) 622 | D) 800;B;476 is the traditional date for the deposition of Romulus Augustulus.;
+56;Histoire;1;Which explorer’s expedition completed the first circumnavigation of the globe?;A) Christopher Columbus | B) Vasco da Gama | C) Ferdinand Magellan | D) James Cook;C;Magellan’s expedition (completed by Elcano) achieved the first circumnavigation.;
+57;Histoire;2;What event marks the start of the Christian era in the Gregorian calendar?;A) The founding of Rome | B) The birth of Jesus | C) The fall of Rome | D) Charlemagne’s coronation;B;The conventional starting point is the birth of Jesus (the exact historical dating is debated).;
+58;Histoire;2;Which city fell in 1453, marking the end of the Byzantine Empire?;A) Rome | B) Constantinople | C) Alexandria | D) Jerusalem;B;Constantinople was captured by the Ottomans in 1453.;
+59;Histoire;1;Who painted the fresco 'The Last Supper'?;A) Michelangelo | B) Leonardo da Vinci | C) Raphael | D) Titian;B;‘The Last Supper’ is a major work by Leonardo da Vinci.;
+60;Histoire;2;Which 1215 document limited the power of the King of England?;A) Bill of Rights | B) Magna Carta | C) Habeas Corpus Act | D) Act of Union;B;The Magna Carta (1215) imposed limits on royal power.;
+61;Histoire;1;Which empire built Machu Picchu?;A) Aztec | B) Inca | C) Maya | D) Olmec;B;Machu Picchu is a major site of the Inca Empire.;
+62;Histoire;2;Which King of France was nicknamed the 'Sun King'?;A) Louis XIII | B) Louis XIV | C) Louis XV | D) Francis I;B;Louis XIV epitomized absolute monarchy and the 'Sun King' image.;
+63;Histoire;2;Which event officially triggered World War I in 1914?;A) The Battle of the Somme | B) The assassination of Franz Ferdinand | C) The Treaty of Versailles | D) The Russian Revolution;B;The assassination of the archduke in Sarajevo (June 28, 1914) was the triggering event.;
+64;Histoire;1;Which civilization is associated with the Pyramids of Giza?;A) Greek | B) Ancient Egyptian | C) Roman | D) Phoenician;B;The Pyramids of Giza date from Ancient Egypt.;
+65;Histoire;3;Which council (1545–1563) was central to the Catholic Counter-Reformation?;A) Council of Nicaea | B) Council of Trent | C) Council of Chalcedon | D) Lateran Council;B;The Council of Trent shaped the Catholic response to the Protestant Reformation.;
+66;Histoire;2;Which wall symbolized Berlin’s division during the Cold War?;A) Hadrian’s Wall | B) Berlin Wall | C) Great Wall | D) Western Wall;B;The Berlin Wall (1961–1989) symbolized the East–West divide.;
+67;Histoire;1;Which scientist is associated with the heliocentric theory in the Renaissance?;A) Copernicus | B) Newton | C) Pasteur | D) Darwin;A;Copernicus proposed a heliocentric model in the 16th century.;
+68;Histoire;2;Which 1066 battle led to the Norman conquest of England?;A) Agincourt | B) Hastings | C) Waterloo | D) Poitiers;B;The Battle of Hastings (1066) led to William the Conqueror’s victory.;
+69;Histoire;2;Who was the major non-violence figure in India’s independence movement?;A) Nelson Mandela | B) Mahatma Gandhi | C) Winston Churchill | D) Sun Yat-sen;B;Gandhi popularized non-violent resistance (satyagraha).;
+70;Histoire;3;Which 1998 agreement helped bring peace to Northern Ireland?;A) Camp David Accords | B) Good Friday Agreement | C) Maastricht Treaty | D) Dayton Accords;B;The Good Friday Agreement (1998) was a key part of the peace process.;
+71;Histoire;1;Which country originated the ancient Olympic Games?;A) Italy | B) Greece | C) Egypt | D) Persia;B;The ancient Olympics began in Greece, at Olympia.;
+72;Histoire;2;Which empire was led by Genghis Khan in the 13th century?;A) Ottoman Empire | B) Mongol Empire | C) Roman Empire | D) Spanish Empire;B;Genghis Khan founded and expanded the Mongol Empire.;
+73;Histoire;2;Which 1492 event is linked to Christopher Columbus?;A) European arrival in the Americas | B) French Revolution | C) Protestant Reformation | D) Hundred Years’ War;A;Columbus reached the Caribbean in 1492, opening a new phase of European exploration.;
+74;Histoire;3;Which 1804 text codified a major part of civil law in France?;A) Code Noir | B) Civil Code (Napoleonic Code) | C) 1948 Universal Declaration of Human Rights | D) UN Charter;B;The 1804 Civil Code long shaped French civil law.;
+75;Histoire;2;Which conflict mainly pitted Athens against Sparta in the 5th century BCE?;A) Punic Wars | B) Peloponnesian War | C) Greco-Persian Wars | D) Crusades;B;The Peloponnesian War pitted Athens against Sparta.;
+76;Histoire;1;What event is associated with November 11, 1918?;A) Start of World War II | B) Armistice of World War I | C) Fall of the Berlin Wall | D) American Revolution;B;The November 11, 1918 armistice ended the fighting in World War I.;
+77;Histoire;2;Which empire dominated much of South America before the Spanish conquest?;A) Inca | B) Viking | C) Carolingian | D) Assyrian;A;The Inca Empire covered a vast Andean region.;
+78;Histoire;3;Which U.S. plan (1947) aimed to help rebuild Europe after 1945?;A) Dawes Plan | B) Marshall Plan | C) Schlieffen Plan | D) Operation Barbarossa;B;The Marshall Plan funded part of Europe’s reconstruction.;
+79;Histoire;2;Which civilization developed cuneiform writing?;A) Sumerian | B) Inca | C) Viking | D) Celtic;A;Cuneiform emerged in Mesopotamia, notably among the Sumerians.;
+80;Histoire;2;Which Carthaginian commander is famous for crossing the Alps?;A) Caesar | B) Hannibal | C) Alexander the Great | D) Saladin;B;Hannibal crossed the Alps during the Second Punic War.;
+81;Histoire;1;Which country was ruled by tsars before 1917?;A) Russia | B) Japan | C) Brazil | D) Canada;A;Tsars ruled Russia until the 1917 revolution.;
+82;Histoire;3;Which 1884–1885 conference helped organize the colonial partition of Africa among European powers?;A) Berlin Conference | B) Congress of Vienna | C) Yalta Conference | D) Potsdam Conference;A;The Berlin Conference (1884–1885) framed the 'Scramble for Africa'.;
+83;Histoire;2;Which 16th-century religious movement is associated with Martin Luther?;A) Renaissance | B) Protestant Reformation | C) Humanism | D) Romanticism;B;Luther was a major figure of the Protestant Reformation.;
+84;Histoire;2;Which 1783 event ended the American Revolutionary War?;A) Treaty of Paris (1783) | B) Treaty of Versailles (1919) | C) Congress of Vienna | D) Treaty of Troyes;A;The 1783 Treaty of Paris recognized U.S. independence.;
+85;Histoire;1;What is the name of the script used on monuments in Ancient Egypt?;A) Latin alphabet | B) Hieroglyphs | C) Cuneiform | D) Runic;B;Hieroglyphs are the iconic monumental script of Ancient Egypt.;
+86;Histoire;3;Which 1956 event marked a major crisis in Hungary against the USSR?;A) Prague Spring | B) Hungarian Revolution (Budapest uprising) | C) Cuban Missile Crisis | D) Korean War;B;The 1956 Hungarian Revolution was suppressed by the USSR.;
+87;Histoire;2;Who was crowned emperor in Rome in the year 800?;A) Charlemagne | B) Napoleon I | C) Otto I | D) Henry VIII;A;Charlemagne was crowned emperor by Pope Leo III in 800.;
+88;Histoire;1;Which country launched the first artificial satellite, Sputnik 1, in 1957?;A) United States | B) USSR | C) France | D) China;B;Sputnik 1 was launched by the Soviet Union in 1957.;
+89;Histoire;2;What is the name of the war between France and England (1337–1453)?;A) Thirty Years’ War | B) Hundred Years’ War | C) Seven Years’ War | D) War of the Spanish Succession;B;The Hundred Years’ War lasted from 1337 to 1453.;
+90;Histoire;3;Which country saw the Industrial Revolution begin first in the 18th century?;A) Germany | B) United Kingdom | C) Russia | D) Spain;B;The first Industrial Revolution began in the United Kingdom.;
+91;Histoire;2;Which South African leader became a symbol of the fight against apartheid?;A) Nelson Mandela | B) Fidel Castro | C) Charles de Gaulle | D) Mao Zedong;A;Mandela embodied the anti-apartheid struggle and became president in 1994.;
+92;Histoire;1;Which civilization is associated with the Parthenon?;A) Ancient Greek | B) Egyptian | C) Maya | D) Persian;A;The Parthenon is a temple of ancient Athens.;
+93;Histoire;2;Which event marks the end of World War II in Europe?;A) Nazi Germany’s surrender (May 1945) | B) Attack on Pearl Harbor | C) D-Day landings | D) Hiroshima and Nagasaki bombings;A;Germany’s surrender in May 1945 ended the war in Europe.;
+94;Histoire;3;What is the name of the period of economic prosperity in France after 1945 until the 1970s?;A) Belle Époque | B) The 'Trente Glorieuses' | C) Age of Enlightenment | D) The Restoration;B;The 'Trente Glorieuses' refers to strong postwar economic growth.;
+95;Histoire;2;Which medieval African empire is famous for its gold wealth and Mansa Musa?;A) Mali Empire | B) Roman Empire | C) Mongol Empire | D) Ottoman Empire;A;Mansa Musa ruled the Mali Empire, famed for its wealth.;
+96;Histoire;1;Who is associated with the discovery of penicillin in 1928?;A) Marie Curie | B) Alexander Fleming | C) Louis Pasteur | D) Gregor Mendel;B;Fleming observed penicillin’s antibacterial effect in 1928.;
+97;Histoire;2;Which dynasty began ruling France with Hugh Capet?;A) Merovingians | B) Carolingians | C) Capetians | D) Plantagenets;C;Hugh Capet founded the Capetian dynasty in 987.;
+98;Histoire;3;Which 1957 treaty founded the European Economic Community (EEC)?;A) Treaty of Rome | B) Treaty of Lisbon | C) Maastricht Treaty | D) Schengen Agreement;A;The Treaty of Rome (1957) created the EEC.;
+99;Histoire;2;Which 1969 event is linked to Neil Armstrong?;A) Wright brothers’ first flight | B) First step on the Moon | C) Fall of the Berlin Wall | D) Invention of the Internet;B;Neil Armstrong was the first human to walk on the Moon in 1969.;
+100;Histoire;3;Which empire was ruled by Suleiman the Magnificent in the 16th century?;A) Ottoman Empire | B) Byzantine Empire | C) British Empire | D) Austro-Hungarian Empire;A;Suleiman the Magnificent was a major sultan of the Ottoman Empire.;
+103;Géographie;1;On which continent is the Sahara Desert located?;A) Asia | B) Africa | C) Europe | D) South America;B;The Sahara is the large hot desert of North Africa.;
+105;Géographie;1;Which ocean borders the west coast of South America?;A) Atlantic | B) Pacific | C) Indian | D) Arctic;B;South America’s west coast faces the Pacific Ocean.;
+106;Géographie;2;What is the highest peak in Africa?;A) Mount Kenya | B) Kilimanjaro | C) Mount Elbrus | D) Aconcagua;B;Kilimanjaro (Tanzania) is Africa’s highest point.;
+107;Géographie;1;What is the capital of Japan?;A) Kyoto | B) Tokyo | C) Osaka | D) Sapporo;B;Tokyo is the capital of Japan.;
+108;Géographie;2;Which strait separates Europe and Africa?;A) Bering Strait | B) Strait of Gibraltar | C) Strait of Magellan | D) Bosporus;B;The Strait of Gibraltar connects the Atlantic and the Mediterranean, between Spain and Morocco.;
+109;Géographie;1;In which country is Rio de Janeiro located?;A) Argentina | B) Brazil | C) Mexico | D) Peru;B;Rio de Janeiro is a major city in Brazil.;
+110;Géographie;2;Which mountain range contains Mount Everest?;A) Andes | B) Alps | C) Himalayas | D) Rockies;C;Mount Everest is in the Himalayas.;
+111;Géographie;1;Which sea borders southern metropolitan France?;A) North Sea | B) Baltic Sea | C) Mediterranean Sea | D) Black Sea;C;Southern metropolitan France borders the Mediterranean.;
+112;Géographie;2;What is the longest river in metropolitan France?;A) Seine | B) Loire | C) Rhône | D) Garonne;B;The Loire is the longest river in metropolitan France.;
+113;Géographie;2;What is the capital of Canada?;A) Toronto | B) Vancouver | C) Ottawa | D) Montreal;C;Ottawa is Canada’s capital.;
+114;Géographie;1;How many continents are there on Earth (most common model)?;A) 5 | B) 6 | C) 7 | D) 8;C;The most common model counts 7 continents.;
+115;Géographie;2;Which country is crossed by the Nile and has Cairo as its capital?;A) Egypt | B) Sudan | C) Ethiopia | D) Uganda;A;Cairo is Egypt’s capital, a country crossed by the Nile.;
+116;Géographie;1;What is the capital of Italy?;A) Milan | B) Rome | C) Naples | D) Florence;B;Rome is the capital of Italy.;
+118;Géographie;2;Which country has Reykjavik as its capital?;A) Norway | B) Iceland | C) Finland | D) Ireland;B;Reykjavik is the capital of Iceland.;
+119;Géographie;1;What is the largest island in the world (excluding continents)?;A) Madagascar | B) Greenland | C) Borneo | D) New Guinea;B;Greenland is the largest island.;
+120;Géographie;2;Which country is completely landlocked within South Africa?;A) Lesotho | B) Botswana | C) Namibia | D) Eswatini;A;Lesotho is entirely surrounded by South Africa.;
+121;Géographie;1;What is the capital of Spain?;A) Barcelona | B) Madrid | C) Seville | D) Valencia;B;Madrid is the capital of Spain.;
+122;Géographie;3;Which meridian is the reference for 0° longitude?;A) Paris meridian | B) Greenwich meridian | C) Equator meridian | D) Tropic of Cancer meridian;B;The Greenwich meridian is the reference for 0° longitude.;
+123;Géographie;2;Which country shares the longest land border with the United States?;A) Mexico | B) Canada | C) Cuba | D) Russia;B;The U.S.–Canada border is the longest.;
+124;Géographie;2;What is the lowest point on Earth’s land surface?;A) Lake Titicaca | B) Dead Sea | C) Death Valley | D) Nile Delta;B;The shores of the Dead Sea are the lowest point on land.;
+125;Géographie;1;Which country has Berlin as its capital?;A) Austria | B) Germany | C) Switzerland | D) Netherlands;B;Berlin is the capital of Germany.;
+126;Géographie;2;Which volcano near Naples, Italy, is famous for the eruption of 79 CE?;A) Etna | B) Vesuvius | C) Stromboli | D) Vulcano;B;Vesuvius famously destroyed Pompeii in 79 CE.;
+128;Géographie;1;What is the capital of Brazil?;A) Rio de Janeiro | B) São Paulo | C) Brasília | D) Salvador;C;Brasília is the capital of Brazil.;
+129;Géographie;2;Which country is the most populous in the world (today)?;A) India | B) United States | C) Indonesia | D) Nigeria;A;India is currently the most populous country.;
+130;Géographie;1;What is the largest continent by area?;A) Africa | B) Asia | C) Europe | D) Antarctica;B;Asia is the largest continent.;
+131;Géographie;2;Which sea separates Italy from the Balkans?;A) Adriatic Sea | B) Red Sea | C) Baltic Sea | D) China Sea;A;The Adriatic Sea lies between Italy and the Balkan Peninsula.;
+132;Géographie;2;Which country has Wellington as its capital?;A) Australia | B) New Zealand | C) Ireland | D) Jamaica;B;Wellington is the capital of New Zealand.;
+133;Géographie;1;What is the largest lake in Africa by surface area?;A) Lake Victoria | B) Lake Tanganyika | C) Lake Malawi | D) Lake Chad;A;Lake Victoria is the largest by surface area.;
+134;Géographie;2;Which country shares the Iberian Peninsula with Spain?;A) Portugal | B) Italy | C) Belgium | D) Morocco;A;Portugal occupies the western part of the Iberian Peninsula.;
+135;Géographie;3;What is the name of the imaginary line at 23.5°N latitude?;A) Tropic of Capricorn | B) Tropic of Cancer | C) Arctic Circle | D) Equator;B;The Tropic of Cancer is at about 23.5° north latitude.;
+136;Géographie;1;What is the capital of Turkey?;A) Istanbul | B) Ankara | C) Izmir | D) Bursa;B;Ankara is the capital (Istanbul is the largest city).;
+137;Géographie;2;Which mountain range traditionally separates Europe and Asia in Russia?;A) Ural | B) Andes | C) Atlas | D) Apennines;A;The Ural Mountains are a conventional boundary between Europe and Asia.;
+138;Géographie;2;Which country has the greatest number of official time zones?;A) China | B) France | C) Russia | D) Australia;B;France has 12 official time zones due to its overseas territories, more than Russia (11) or the United States (11).;
+139;Géographie;1;What is the name of the inland salt sea between Israel and Jordan?;A) Aral Sea | B) Dead Sea | C) Caspian Sea | D) Aegean Sea;B;The Dead Sea is a very salty inland sea.;
+140;Géographie;2;What is the largest country in Africa by area?;A) Algeria | B) Nigeria | C) DR Congo | D) Sudan;A;Algeria is Africa’s largest country by area.;
+141;Géographie;1;What is the capital of Argentina?;A) Santiago | B) Buenos Aires | C) Lima | D) Bogotá;B;Buenos Aires is the capital of Argentina.;
+142;Géographie;2;Which river flows through London?;A) Danube | B) Thames | C) Rhine | D) Tagus;B;London is crossed by the River Thames.;
+143;Géographie;1;What is the capital of Norway?;A) Stockholm | B) Oslo | C) Copenhagen | D) Helsinki;B;Oslo is the capital of Norway.;
+144;Géographie;3;Which country controls the Panama Canal (where it is located)?;A) Costa Rica | B) Panama | C) Colombia | D) Mexico;B;The canal is located in Panama and is administered by Panama.;
+145;Géographie;2;What is the capital of Switzerland?;A) Zurich | B) Geneva | C) Bern | D) Lausanne;C;Bern is Switzerland’s federal capital.;
+146;Géographie;2;What is the longest river in Europe?;A) Danube | B) Volga | C) Rhine | D) Po;B;The Volga is the longest river in Europe.;
+147;Géographie;1;What is the capital of Morocco?;A) Casablanca | B) Rabat | C) Marrakesh | D) Fez;B;Rabat is the capital of Morocco.;
+148;Géographie;2;In which country is Shanghai located?;A) China | B) South Korea | C) Vietnam | D) Thailand;A;Shanghai is a major city in China.;
+149;Géographie;3;What is the name of the dense tropical rainforest region in South America?;A) Taiga | B) Amazon Rainforest | C) Serengeti savanna | D) Tundra;B;The Amazon is South America’s vast tropical rainforest.;
+150;Géographie;2;Which country is nicknamed the 'Land of the Rising Sun'?;A) China | B) Japan | C) Philippines | D) India;B;Japan is nicknamed the 'Land of the Rising Sun'.;
+152;Physique;1;What quantity does a thermometer measure?;A) Pressure | B) Temperature | C) Mass | D) Voltage;B;A thermometer measures temperature.;
+153;Physique;1;What is the speed of light in vacuum (approx.)?;A) 3×10^6 m/s | B) 3×10^8 m/s | C) 3×10^10 m/s | D) 3×10^3 m/s;B;Light travels at about 3×10^8 m/s in vacuum.;
+154;Physique;1;What is the force that opposes motion between two contacting surfaces?;A) Buoyant force | B) Friction | C) Gravitation | D) Tension;B;Friction opposes relative motion between surfaces.;
+155;Physique;2;In a circuit, what relationship does Ohm’s law express?;A) P=VI | B) V=RI | C) E=mc² | D) F=ma;B;Ohm’s law relates voltage V, resistance R, and current I: V=RI.;
+156;Physique;2;Which particle carries a negative electric charge?;A) Proton | B) Neutron | C) Electron | D) Photon;C;The electron has a negative charge.;
+157;Physique;2;Which visible color corresponds to the longest wavelength?;A) Violet | B) Blue | C) Green | D) Red;D;In visible light, red has a longer wavelength than violet.;
+158;Physique;2;What phenomenon explains why an object underwater appears closer to the surface?;A) Diffraction | B) Refraction | C) Interference | D) Polarization;B;Refraction bends light rays at the water–air boundary.;
+159;Physique;2;What is the SI unit of energy?;A) Newton | B) Joule | C) Watt | D) Ampere;B;Energy is measured in joules (J).;
+160;Physique;3;In an ideal gas, what happens if you double the temperature (in kelvins) at constant volume?;A) Pressure is halved | B) Pressure doubles | C) Pressure doesn’t change | D) Pressure becomes zero;B;At constant volume, pressure is proportional to absolute temperature (Gay-Lussac’s law).;
+161;Physique;3;Which electromagnetic radiation has the highest photon energy?;A) Radio waves | B) Microwaves | C) X-rays | D) Infrared;C;Higher frequency means higher photon energy (E=hf).;
+162;Physique;3;Which law relates force, mass, and acceleration?;A) Hooke’s law | B) Newton’s 2nd law | C) Coulomb’s law | D) Bernoulli’s principle;B;Newton’s 2nd law: F = m·a.;
+163;Physique;2;In a series circuit, what is the current through each component?;A) It splits | B) It is the same everywhere | C) It is zero | D) It depends only on voltage;B;In series, the current is the same through all elements.;
+164;Physique;2;Which instrument measures atmospheric pressure?;A) Barometer | B) Hygrometer | C) Anemometer | D) Seismometer;A;A barometer measures air pressure.;
+165;Physique;1;Which state of matter is most ordered (microscopically) among these choices?;A) Gas | B) Plasma | C) Liquid | D) Solid;D;Particles in a solid are generally more ordered and less free to move.;
+166;Physique;3;What phenomenon describes the frequency shift due to relative motion of source and observer?;A) Doppler effect | B) Joule effect | C) Hall effect | D) Photoelectric effect;A;The Doppler effect changes perceived frequency when source and observer move relative to each other.;
+167;Physique;2;What is the role of a fuse in an electrical circuit?;A) Increase voltage | B) Store energy | C) Protect against overcurrent | D) Convert AC to DC;C;A fuse melts if current is too high, opening the circuit.;
+168;Physique;2;What is the change from liquid to gas called?;A) Melting | B) Freezing | C) Vaporization | D) Sublimation;C;Vaporization is the transition from liquid to gas.;
+169;Physique;1;Which force pulls objects toward Earth’s center?;A) Magnetic | B) Gravitational | C) Elastic | D) Strong nuclear;B;Gravity attracts masses, pulling objects toward Earth.;
+170;Physique;3;What is the sum of voltages around a loop (Kirchhoff’s voltage law)?;A) Always positive | B) Always negative | C) Equals zero | D) Depends on total resistance;C;The algebraic sum of voltages in a closed loop is zero.;
+171;Physique;2;Which type of lens converges parallel light rays?;A) Diverging lens | B) Converging lens | C) Convex mirror | D) Prism;B;A converging (convex) lens focuses parallel rays.;
+172;Physique;1;Which quantity is measured in watts (W)?;A) Energy | B) Power | C) Force | D) Electric charge;B;The watt is the SI unit of power.;
+173;Physique;3;What is the term for linear momentum in physics?;A) Momentum | B) Inertia | C) Angular momentum | D) Pressure;A;Linear momentum equals p = m·v.;
+174;Physique;2;Does sound travel in a vacuum?;A) Yes, faster | B) Yes, slower | C) No | D) Only at low frequency;C;Sound requires a material medium to propagate.;
+175;Physique;2;What is the main mode of heat transfer in a vacuum?;A) Conduction | B) Convection | C) Radiation | D) Evaporation;C;In a vacuum, only radiation (electromagnetic waves) transfers heat.;
+176;Chimie;1;What is the chemical symbol for oxygen?;A) Ox | B) O | C) Oy | D) Og;B;Oxygen’s symbol is O.;
+177;Chimie;1;What is the pH of a neutral solution at 25°C (approx.)?;A) 0 | B) 7 | C) 14 | D) 1;B;A neutral solution has a pH near 7.;
+178;Chimie;1;What is the chemical process where a substance reacts with oxygen releasing energy?;A) Fermentation | B) Combustion | C) Distillation | D) Sublimation;B;Combustion is a rapid oxidation reaction that releases energy.;
+179;Chimie;2;Which type of bond shares electrons between atoms?;A) Ionic | B) Covalent | C) Metallic | D) Hydrogen;B;A covalent bond involves sharing electrons.;
+180;Chimie;2;Which gas is the most abundant in Earth’s (dry) air?;A) Oxygen (O₂) | B) Nitrogen (N₂) | C) Carbon dioxide (CO₂) | D) Argon (Ar);B;Dry air is mostly nitrogen (~78%).;
+181;Chimie;2;What is the positively charged particle in the center of an atom?;A) Proton | B) Electron | C) Neutron | D) Ion;A;Protons are positively charged and located in the nucleus.;
+182;Chimie;2;What does molar concentration (molarity) measure?;A) Mass per volume | B) Moles of solute per liter of solution | C) Volume per mole | D) Temperature per volume;B;Molarity is moles of solute per liter of solution.;
+183;Chimie;3;Which order reflects increasing acidity: pH 3, pH 7, pH 11?;A) pH 11 > pH 7 > pH 3 | B) pH 3 > pH 7 > pH 11 | C) pH 7 > pH 3 > pH 11 | D) pH 7 > pH 11 > pH 3;B;Lower pH means more acidic: 3 is more acidic than 7, which is more acidic than 11.;
+184;Chimie;2;What are the main products of an acid–base reaction?;A) Salt and water | B) Oxygen and water | C) Acid and base | D) Carbon dioxide;A;An acid–base neutralization typically produces salt and water.;
+185;Chimie;1;Which one is a metal?;A) Helium | B) Sodium | C) Chlorine | D) Sulfur;B;Sodium (Na) is an alkali metal.;
+186;Chimie;2;What is the name of the formula H₂O?;A) Hydrogen peroxide | B) Water | C) Carbon dioxide | D) Ammonia;B;H₂O is the formula for water.;
+187;Chimie;3;What does Avogadro’s number (approx.) represent?;A) Molecules in 1 kg of water | B) Particles in 1 mole | C) Atoms in a proton | D) Moles in 1 liter;B;One mole contains about 6.022×10^23 entities (atoms, molecules, etc.).;
+188;Chimie;2;What is the separation of a mixture based on boiling points called?;A) Filtration | B) Distillation | C) Chromatography | D) Decantation;B;Distillation separates substances using differences in volatility (boiling points).;
+189;Chimie;2;Which ion is responsible for acidity in aqueous solution (school-level)?;A) OH⁻ | B) Na⁺ | C) H⁺ | D) Cl⁻;C;Acidity is associated with H⁺ ions (more precisely H₃O⁺).;
+190;Chimie;1;Which phase change is solid → liquid?;A) Melting | B) Condensation | C) Freezing | D) Sublimation;A;Melting is the transition from solid to liquid.;
+191;Chimie;3;In a redox reaction, what happens during oxidation?;A) Gain of electrons | B) Loss of electrons | C) Gain of protons | D) Loss of neutrons;B;Oxidation = loss of electrons (mnemonic: OIL RIG).;
+192;Chimie;2;Which gas is produced when an acid reacts with a metal like zinc?;A) Hydrogen | B) Nitrogen | C) Ozone | D) Carbon dioxide;A;Acid + metal → salt + hydrogen gas (H₂).;
+193;Chimie;2;Which is an example of a homogeneous mixture?;A) Water + oil | B) Salt water | C) Sand + gravel | D) Orange juice with pulp;B;Salt water is uniform to the eye: a homogeneous mixture.;
+194;Chimie;3;What do you call a substance that speeds up a reaction without being consumed?;A) Solvent | B) Catalyst | C) Limiting reactant | D) Product;B;A catalyst lowers activation energy and is not consumed overall.;
+195;Chimie;1;What is the formula of carbon dioxide?;A) CO | B) CO₂ | C) C₂O | D) O₂C;B;Carbon dioxide has one carbon and two oxygens: CO₂.;
+196;Biologie;1;Which molecule carries genetic information in humans?;A) DNA | B) Glucose | C) Lipid | D) Water;A;DNA (deoxyribonucleic acid) is the main carrier of genetic information.;
+198;Biologie;1;What is the main role of red blood cells?;A) Immune defense | B) Oxygen transport | C) Clotting | D) Digestion;B;Red blood cells transport oxygen via hemoglobin.;
+199;Biologie;2;Which organ is primarily responsible for detoxifying the blood?;A) Heart | B) Liver | C) Stomach | D) Spleen;B;The liver metabolizes and helps remove many substances.;
+200;Biologie;2;Photosynthesis in plants primarily produces:;A) O₂ and glucose | B) CO₂ and water | C) Nitrogen and proteins | D) Ethanol and CO₂;A;Photosynthesis makes glucose and releases oxygen.;
+201;Biologie;2;What is the process of cell division producing two identical daughter cells called?;A) Meiosis | B) Mitosis | C) Fertilization | D) Osmosis;B;Mitosis keeps the chromosome number and produces two identical cells.;
+202;Biologie;2;What type of immunity is obtained after an effective vaccination?;A) Innate immunity | B) Adaptive immunity | C) Plant immunity | D) Mineral immunity;B;Vaccination stimulates adaptive immunity and immune memory.;
+203;Biologie;1;What is the green pigment essential for photosynthesis?;A) Melanin | B) Chlorophyll | C) Hemoglobin | D) Carotene;B;Chlorophyll captures light energy.;
+204;Biologie;2;In which cellular component does translation (protein synthesis) occur?;A) Ribosomes | B) Lysosomes | C) Centrioles | D) Chloroplasts;A;Translation occurs on ribosomes, free or attached to the endoplasmic reticulum.;
+205;Biologie;1;What is the main role of stomata in plants?;A) Absorb water via roots | B) Gas exchange | C) Produce seeds | D) Store starch;B;Stomata regulate CO₂/O₂ exchange and transpiration.;
+206;Biologie;3;Which level of organization is a set of cooperating organs?;A) Cell | B) Tissue | C) System (organ system) | D) Molecule;C;An organ system groups multiple organs to perform a major function.;
+207;Biologie;2;What is the basic unit of the nervous system?;A) Neuron | B) White blood cell | C) Osteocyte | D) Red blood cell;A;A neuron is specialized for transmitting nerve impulses.;
+208;Biologie;2;What is the main function of enzymes?;A) Store energy | B) Speed up chemical reactions | C) Produce DNA | D) Transport oxygen;B;Enzymes are biological catalysts.;
+209;Biologie;1;Which macronutrient is the main source of quick energy for the body?;A) Carbohydrates | B) Proteins | C) Vitamins | D) Minerals;A;Carbohydrates (e.g., glucose) provide readily available energy.;
+210;Biologie;3;What mechanism explains bacterial resistance to antibiotics at the population level?;A) Natural selection | B) Photosynthesis | C) Osmosis | D) Mitosis;A;Antibiotics favor survival and reproduction of resistant bacteria (natural selection).;
+211;Biologie;2;What is the main role of the kidney?;A) Produce sex hormones | B) Filter blood and produce urine | C) Digest lipids | D) Store glucose;B;Kidneys filter blood, regulate water/ions, and produce urine.;
+212;Biologie;2;What is the movement of water across a semipermeable membrane called?;A) Facilitated diffusion | B) Osmosis | C) Endocytosis | D) Fermentation;B;Osmosis is water diffusion across a semipermeable membrane.;
+213;Biologie;1;What is the main constituent of bones?;A) Cellulose | B) Hydroxyapatite (calcium salts) | C) Glycogen | D) Chlorophyll;B;Bones are mineralized largely with hydroxyapatite, rich in calcium and phosphate.;
+214;Biologie;3;In humans, where does most nutrient absorption occur?;A) Stomach | B) Small intestine | C) Esophagus | D) Large intestine;B;Most nutrient absorption occurs in the small intestine.;
+215;Biologie;1;What is the main organ for respiration in humans?;A) Liver | B) Lungs | C) Pancreas | D) Kidneys;B;The lungs perform gas exchange (O₂/CO₂) with the blood.;
+216;Astronomie;1;Which star is at the center of our solar system?;A) Sirius | B) Alpha Centauri | C) The Sun | D) Polaris;C;Our solar system is centered on the Sun.;
+217;Astronomie;1;Which planet is closest to the Sun?;A) Venus | B) Mercury | C) Earth | D) Mars;B;Mercury is the closest planet to the Sun.;
+218;Astronomie;2;What do we call the study of the Universe, stars, and galaxies?;A) Geology | B) Astronomy | C) Botany | D) Oceanography;B;Astronomy studies celestial objects and phenomena in the Universe.;
+219;Astronomie;2;What is a light-year?;A) A time | B) A distance | C) A speed | D) A mass;B;A light-year is the distance light travels in one year.;
+220;Astronomie;2;What causes seasons on Earth?;A) Earth–Sun distance | B) Earth’s axial tilt | C) Moon phases | D) Eclipses;B;Seasons are mainly due to Earth’s axial tilt.;
+221;Astronomie;2;What is the Moon phase when we see almost none of its sunlit side from Earth?;A) Full Moon | B) First quarter | C) New Moon | D) Last quarter;C;At New Moon, the lit side faces the Sun, not Earth.;
+222;Astronomie;3;What is a rapidly rotating neutron star emitting periodic signals?;A) Quasar | B) Pulsar | C) Comet | D) Dwarf planet;B;A pulsar is a neutron star observed via its regular pulses.;
+223;Astronomie;3;What is the main cause of light from stars like the Sun?;A) Chemical combustion | B) Nuclear fission | C) Nuclear fusion | D) Friction with vacuum;C;Stars shine due to nuclear fusion (hydrogen → helium, etc.).;
+225;Astronomie;3;Why do we generally always see the same side of the Moon from Earth?;A) The Moon doesn’t rotate | B) Synchronous rotation (tidal locking) | C) Earth rotates too fast | D) The Moon is hollow;B;The Moon’s rotation period equals its orbital period around Earth.;
+226;Géologie;1;What is Earth’s rigid outer layer (crust + uppermost mantle) called?;A) Core | B) Lithosphere | C) Asthenosphere | D) Mesosphere;B;The lithosphere is the rigid layer divided into plates.;
+227;Géologie;1;What phenomenon is responsible for earthquakes?;A) Erosion | B) Movement of tectonic plates | C) Photosynthesis | D) Tides;B;Earthquakes often result from fault ruptures related to plate motion.;
+228;Géologie;2;Which rock type forms by cooling of magma?;A) Sedimentary | B) Igneous | C) Metamorphic | D) Organic;B;Igneous rocks form from solidification of magma or lava.;
+229;Géologie;2;Which greenhouse gas is naturally most abundant in the atmosphere (by amount)?;A) Water vapor | B) Methane | C) Ozone | D) Nitrous oxide;A;Water vapor is the most abundant greenhouse gas, though highly variable.;
+230;Géologie;2;What do we call the wearing away and transport of rocks by water, wind, or ice?;A) Crystallization | B) Erosion | C) Melting | D) Subduction;B;Erosion is the wearing and transport of materials.;
+231;Géologie;3;What is the approximate age of Earth?;A) 4.5 million years | B) 4.5 billion years | C) 450 billion years | D) 45,000 years;B;Earth’s age is estimated at about 4.54 billion years.;
+232;Géologie;1;Which scale measures earthquake magnitude (common usage)?;A) Beaufort scale | B) Richter scale | C) Kelvin scale | D) Mohs scale;B;In common usage, earthquake magnitude is often referred to with the Richter scale.;
+233;Géologie;2;What is the process where one tectonic plate sinks beneath another called?;A) Divergence | B) Subduction | C) Evaporation | D) Oxidation;B;Subduction is when one lithospheric plate sinks beneath another.;
+234;Géologie;2;Which sedimentary rock is mainly composed of calcium carbonate (CaCO₃)?;A) Granite | B) Limestone | C) Basalt | D) Gneiss;B;Limestone is rich in calcium carbonate.;
+235;Géologie;3;What is the scale that ranks mineral hardness?;A) Celsius | B) Mohs | C) Richter | D) Pascal;B;The Mohs scale ranks hardness from 1 (talc) to 10 (diamond).;
+236;Informatique;1;How many bits are in a byte?;A) 4 | B) 8 | C) 16 | D) 32;B;By modern convention, 1 byte = 8 bits.;
+237;Informatique;1;In binary, what number is 1010₂ in decimal?;A) 8 | B) 9 | C) 10 | D) 12;C;1010₂ = 8 + 2 = 10.;
+238;Informatique;2;Which component primarily executes program instructions in a computer?;A) RAM | B) CPU | C) SSD | D) GPU only;B;The CPU executes machine instructions and coordinates many operations.;
+239;Informatique;2;What does the acronym URL stand for?;A) Universal Resource Locator | B) Uniform Resource Locator | C) Unified Routing Link | D) User Remote Login;B;URL stands for Uniform Resource Locator.;
+240;Informatique;2;What is an algorithm?;A) Hardware component | B) A sequence of steps to solve a problem | C) A computer virus | D) A memory unit;B;An algorithm is a step-by-step defined procedure.;
+241;Informatique;1;Which is an example of an input device?;A) Monitor | B) Printer | C) Keyboard | D) Speaker;C;A keyboard is used to input data and commands.;
+242;Informatique;3;Which protocol is mainly used to encrypt a website’s HTTPS traffic?;A) FTP | B) TLS | C) SMTP | D) SSH;B;HTTPS relies on TLS (formerly SSL) for encryption.;
+243;Informatique;2;Which data structure follows the FIFO principle?;A) Stack | B) Queue | C) Tree | D) Graph;B;FIFO = First In, First Out: that’s a queue.;
+244;Informatique;2;In a computer system, what does RAM mainly do?;A) Permanent storage | B) Temporary storage of data in use | C) Cooling | D) Power supply;B;RAM temporarily holds data and instructions needed for processing.;
+245;Informatique;3;What is the main difference between compilation and interpretation?;A) No difference | B) Compilation translates before execution, interpretation during | C) Interpretation is always faster | D) Compilation needs the Internet;B;"A compiler translates to (often) binary before running; an interpreter executes while parsing.";
+246;Sciences générales;1;What is the main organ of vision in humans?;A) Ear | B) Eye | C) Skin | D) Lung;B;The eye captures light and forms an image on the retina.;
+247;Sciences générales;2;Which instrument allows observing objects too small for the naked eye?;A) Telescope | B) Microscope | C) Barometer | D) Compass;B;A microscope magnifies microscopic objects.;
+248;Sciences générales;2;What is the method of testing hypotheses through observation and experimentation called?;A) Scientific method | B) Astrology | C) Alchemy | D) Divination;A;The scientific method relies on testable hypotheses, measurements, and reproducibility.;
+249;Sciences générales;3;Why are SI units important in science?;A) They make measurements comparable and standardized | B) They make measurements prettier | C) They prevent all errors | D) They replace experiments;A;Standardized units allow results to be compared and reproduced worldwide.;
+250;Sciences générales;2;Which statement best describes a scientific theory?;A) A mere opinion | B) A coherent evidence-supported, testable explanation | C) An unchangeable idea | D) A law without data;B;A scientific theory explains phenomena, is testable, and is supported by a body of evidence.;
+251;Film;1;In Back to the Future, what year does Marty McFly mainly travel to?;A) 1955 | B) 1965 | C) 1975 | D) 1985;A;He spends most of the film in 1955.;
+252;Film;1;What car model is turned into a time machine in Back to the Future?;A) DeLorean DMC-12 | B) Ford Mustang | C) Volkswagen Beetle | D) Pontiac Firebird;A;The time machine is a DeLorean DMC-12.;
+253;Film;1;In Ghostbusters, what is the team’s catchy slogan?;A) Who you gonna call? | B) Gotta catch ’em all! | C) I am the law! | D) To infinity!;A;The slogan is “Who you gonna call?”;
+254;Film;1;What is the name of the small alien in E.T.?;A) E.T. | B) Gizmo | C) ALF | D) Yoda;A;The film simply calls him “E.T.” (Extra-Terrestrial).;
+255;Film;2;In Raiders of the Lost Ark, what object is Indiana Jones searching for?;A) The Holy Grail | B) The Ark of the Covenant | C) The Golden Fleece | D) The One Ring;B;The plot centers on the Ark of the Covenant.;
+256;Film;2;In Blade Runner, what are the artificial humans hunted by Deckard called?;A) Cylons | B) Replicants | C) Clones | D) Synths;B;They are called “replicants.”;
+257;Film;2;In The Terminator, what is the first name of Linda Hamilton’s character?;A) Sarah | B) Ellen | C) Ripley | D) Leah;A;Linda Hamilton plays Sarah Connor.;
+258;Film;2;In Aliens, who commands the Colonial Marines squad at the start of the mission?;A) Hicks | B) Apone | C) Hudson | D) Bishop;B;Sergeant Apone commands the squad at the start.;
+259;Film;1;In Die Hard, which building hosts most of the action?;A) Nakatomi Plaza | B) The Pentagon | C) The Eiffel Tower | D) The Baxter Building;A;The story takes place in Nakatomi Plaza.;
+260;Film;1;What is the name of the mogwai in Gremlins?;A) Gizmo | B) Stripe | C) Mog | D) Spike;A;The mogwai is named Gizmo.;
+261;Film;2;In The Shining, what is the name of the hotel where the Torrance family stays?;A) Overlook | B) Continental | C) Bates | D) Grand Budapest;A;They stay at the Overlook Hotel.;
+262;Film;2;In Scarface, what is the name of Al Pacino’s character?;A) Tony Montana | B) Vito Corleone | C) Michael Corleone | D) Carlito Brigante;A;Al Pacino plays Tony Montana.;
+263;Film;2;In Who Framed Roger Rabbit, what kind of characters coexist with humans?;A) Cartoon characters | B) Vampires | C) Robots | D) Dinosaurs;A;The film blends humans with cartoon characters.;
+264;Film;1;In Top Gun, what is the call sign of Tom Cruise’s character?;A) Maverick | B) Iceman | C) Goose | D) Viper;A;Tom Cruise plays Pete “Maverick” Mitchell.;
+265;Film;1;In The Karate Kid, what is the name of Pat Morita’s mentor character?;A) Mr. Miyagi | B) Mr. Han | C) Sensei Ken | D) Master Lee;A;The mentor is Mr. Miyagi.;
+266;Film;2;In Beetlejuice, how do you summon the mischievous spirit?;A) By saying his name three times | B) By stomping three times | C) By lighting a black candle | D) By singing at midnight;A;You summon him by repeating “Beetlejuice” three times.;
+267;Film;2;In The Princess Bride, which famous line does Inigo Montoya repeat?;" ""A) Hello. My name is Inigo Montoya. You killed my father. Prepare to die. | B) I am your father. | C) I'll be back. | D) Hasta la vista, baby.""";A;It’s his iconic challenge to his father’s killer.;
+268;Film;1;In The Goonies, what is the name of the pirate whose treasure is sought?;A) One-Eyed Willy | B) Blackbeard | C) Davy Jones | D) Long John Silver;A;The kids look for One-Eyed Willy’s treasure.;
+269;Film;2;In The NeverEnding Story, what is the name of the white luckdragon?;A) Falkor | B) Shenron | C) Smaug | D) Drogon;A;The luckdragon is named Falkor.;
+270;Film;2;In Labyrinth (1986), who plays the Goblin King?;A) David Bowie | B) Prince | C) Sting | D) Freddie Mercury;A;The Goblin King is played by David Bowie.;
+271;Série TV;1;In Knight Rider, what is the name of Michael Knight’s intelligent car?;A) KITT | B) KARR | C) KIT | D) KIPS;A;The car is named KITT.;
+272;Série TV;2;In Knight Rider, what is the name of the rival (evil) prototype car?;A) KARR | B) KITT | C) KRON | D) KORB;A;The rival car is called KARR.;
+273;Série TV;2;In The A-Team, what is the first name of “Hannibal” Smith?;A) John | B) George | C) Victor | D) Templeton;A;His full name is John “Hannibal” Smith.;
+274;Série TV;2;In The A-Team, who is afraid of flying and is often knocked out to get on planes?;A) B.A. Baracus | B) Face | C) Murdock | D) Hannibal;A;B.A. Baracus is terrified of flying.;
+275;Série TV;1;In MacGyver, what is the hero’s specialty?;A) Improvising solutions with everyday objects | B) Mind reading | C) Time travel | D) Turning into a werewolf;A;MacGyver survives through ingenuity.;
+276;Série TV;2;In MacGyver, which item became a symbol of his improvisations?;A) A paperclip | B) A lightsaber | C) A magic ring | D) A wand;A;The paperclip is MacGyver’s emblematic item.;
+277;Série TV;2;In Cheers, the bar is located in which city?;A) Boston | B) New York | C) Chicago | D) Seattle;A;Cheers is set in a Boston bar.;
+278;Série TV;1;In ALF, ALF is primarily…?;A) An alien | B) A robot | C) A talking dog | D) A vampire;A;ALF is an alien from Melmac.;
+279;Série TV;2;In Star Trek: The Next Generation, what is the name of the Enterprise-D captain?;A) James T. Kirk | B) Jean-Luc Picard | C) Kathryn Janeway | D) Benjamin Sisko;B;The captain is Jean-Luc Picard.;
+280;Série TV;3;In Dallas, which character is at the center of the “Who shot J.R.?” mystery?;A) J.R. Ewing | B) Bobby Ewing | C) Sue Ellen | D) Cliff Barnes;A;The suspense focuses on the shooting of J.R. Ewing.;
+281;Musique;1;Which Michael Jackson album contains the track Thriller?;A) Thriller | B) Bad | C) Off the Wall | D) Dangerous;A;The song Thriller is on the album Thriller (1982).;
+282;Musique;2;Who released the album Purple Rain?;A) Prince | B) David Bowie | C) Elton John | D) Sting;A;Purple Rain is an album by Prince.;
+283;Musique;2;Which band is behind the hit Take On Me?;" ""A) a-ha | B) ABBA | C) The Police | D) R.E.M.""";A;Take On Me is a hit by a-ha.;
+284;Musique;1;Who sings Like a Virgin?;A) Madonna | B) Cyndi Lauper | C) Whitney Houston | D) Tina Turner;A;Like a Virgin is performed by Madonna.;
+285;Musique;2;Which act sang Sweet Dreams (Are Made of This)?;A) Eurythmics | B) The Cure | C) Blondie | D) The Clash;A;It’s an iconic Eurythmics track.;
+286;Musique;2;Which band released The Final Countdown?;A) Europe | B) Toto | C) Genesis | D) Queen;A;The Final Countdown is a hit by Europe.;
+287;Musique;2;Which British band sang Every Breath You Take?;A) The Police | B) Queen | C) Dire Straits | D) Oasis;A;Every Breath You Take is a The Police song (1983).;
+288;Musique;2;Which artist is behind Never Gonna Give You Up?;A) Rick Astley | B) Bryan Adams | C) Phil Collins | D) Billy Idol;A;Never Gonna Give You Up is sung by Rick Astley.;
+289;Musique;2;Which band released the album Appetite for Destruction?;A) Guns N' Roses | B) AC/DC | C) Metallica | D) Aerosmith;A;Appetite for Destruction is a Guns N' Roses album (1987).;
+290;Musique;2;Which band sang Just Can't Get Enough (1981)?;A) Depeche Mode | B) The Smiths | C) Joy Division | D) Pink Floyd;A;Just Can't Get Enough is a Depeche Mode song.;
+291;Musique;2;Which band sang Livin' on a Prayer?;A) Bon Jovi | B) Journey | C) KISS | D) Aerosmith;A;Livin' on a Prayer is a Bon Jovi hit (1986).;
+292;Musique;2;Which band sang With or Without You?;A) U2 | B) UB40 | C) Blur | D) Dido;A;With or Without You is a U2 song (1987).;
+293;Musique;2;Who is associated with the hit Careless Whisper?;A) George Michael | B) Sting | C) Rod Stewart | D) David Bowie;A;Careless Whisper is associated with George Michael.;
+294;Musique;2;Which band sang Boys Don't Cry?;A) The Cure | B) The Doors | C) The Who | D) The Kinks;A;Boys Don't Cry is associated with The Cure.;
+295;Musique;2;In 1985, Queen boosted public opinion with a legendary performance at which event?;A) Live Aid | B) Woodstock | C) Coachella | D) Glastonbury 1970;A;Queen’s Live Aid set became legendary.;
+296;Musique;2;Which French band sang L'Aventurier?;A) Indochine | B) Téléphone | C) Noir Désir | D) Trust;A;L'Aventurier is a signature Indochine song (1982).;
+297;Musique;2;Which French singer is known for Je te donne (with Michael Jones)?;A) Jean-Jacques Goldman | B) Renaud | C) Michel Sardou | D) Jacques Dutronc;A;Je te donne is a Jean-Jacques Goldman song (1985).;
+298;Musique;2;Which French act released Marcia Baïla?;A) Les Rita Mitsouko | B) Daft Punk | C) Air | D) Justice;A;Marcia Baïla is a hit by Les Rita Mitsouko (1984).;
+299;Musique;3;Which metal band released the album Master of Puppets?;A) Metallica | B) Slayer | C) Megadeth | D) Pantera;A;Master of Puppets is a Metallica album (1986).;
+300;Musique;2;Who sings I Wanna Dance with Somebody (Who Loves Me)?;A) Whitney Houston | B) Cher | C) Diana Ross | D) Aretha Franklin;A;The song is performed by Whitney Houston (1987).;
+301;Animation/Anime;1;In Dragon Ball, what is the name of the monkey-tailed hero?;A) Son Goku | B) Vegeta | C) Piccolo | D) Trunks;A;The protagonist is Son Goku.;
+302;Animation/Anime;1;In Saint Seiya, what is the name of the Pegasus Saint?;A) Seiya | B) Shiryu | C) Hyoga | D) Shun;A;The Pegasus Saint is Seiya.;
+303;Animation/Anime;2;In Fist of the North Star, what is Kenshiro’s martial art called?;A) Hokuto Shinken | B) Hadoken | C) Nanto Seiken | D) Bushido;A;Kenshiro uses Hokuto Shinken.;
+304;Animation/Anime;2;What is the French title of the anime City Hunter?;A) Nicky Larson | B) Cobra | C) Captain Tsubasa | D) Princess Sarah;A;In France, City Hunter is known as Nicky Larson.;
+305;Animation/Anime;2;In Captain Tsubasa, which sport is central to the story?;A) Soccer/football | B) Basketball | C) Baseball | D) Rugby;A;It’s an anime focused on soccer/football.;
+306;Animation/Anime;1;In Transformers, what is the name of the Autobot leader?;A) Optimus Prime | B) Megatron | C) Starscream | D) Soundwave;A;The Autobot leader is Optimus Prime.;
+307;Animation/Anime;2;In Teenage Mutant Ninja Turtles, what is Leonardo’s main weapon?;A) Katanas | B) A bo staff | C) Sais | D) Nunchaku;A;Leonardo wields two katanas.;
+308;Animation/Anime;2;In Inspector Gadget, what is the name of Gadget’s niece in the original version?;A) Sophie | B) Penny | C) Julie | D) Annie;B;In the original version, she’s Penny (often renamed Sophie in French).;
+309;Animation/Anime;2;In DuckTales, what are Donald Duck’s three nephews called in French?;A) Riri, Fifi, Loulou | B) Tick, Tock, Tack | C) Tom, Tim, Tam | D) Huey, Dewey, Louie;A;In French, Huey, Dewey, Louie are called Riri, Fifi, Loulou.;
+310;Animation/Anime;3;In Akira, in which futuristic city does the story take place?;A) Neo-Tokyo | B) Neo-Paris | C) Neo-Seoul | D) Neo-New York;A;Akira is set in Neo-Tokyo.;
+311;Animation/Anime;2;In My Neighbor Totoro, who/what is Totoro?;A) A forest spirit | B) A giant robot | C) A detective | D) A dragon;A;Totoro is a benevolent forest spirit.;
+312;Animation/Anime;2;In Kiki’s Delivery Service, what is the name of Kiki’s cat?;A) Jiji | B) Luna | C) Salem | D) Garfield;A;The black cat is named Jiji.;
+313;Animation/Anime;2;In Space Adventure Cobra, what is special about Cobra’s weapon?;A) A cannon built into his arm | B) A lightsaber | C) A magic bow | D) A talking gun;A;Cobra has a Psychogun built into his arm.;
+314;Animation/Anime;3;In Masters of the Universe, what is the name of He-Man’s main antagonist?;A) Skeletor | B) Shredder | C) Krang | D) Cobra Commander;A;He-Man’s iconic enemy is Skeletor.;
+315;Jeu vidéo;1;On the NES, which plumber is the hero of Super Mario Bros.?;A) Mario | B) Luigi | C) Wario | D) Bowser;A;The main hero is Mario.;
+316;Jeu vidéo;1;In The Legend of Zelda, what is the name of the princess to rescue?;A) Zelda | B) Peach | C) Daisy | D) Sarah;A;The princess is named Zelda.;
+317;Jeu vidéo;2;Which game contains the line “It’s dangerous to go alone! Take this.”?;A) The Legend of Zelda | B) Metroid | C) Tetris | D) Final Fantasy;A;This line appears in the original The Legend of Zelda (1986).;
+318;Jeu vidéo;2;In Metroid, what is the first name of the bounty hunter under the armor?;A) Samus | B) Sarah | C) Saria | D) Selene;A;The main character is Samus Aran.;
+319;Jeu vidéo;2;Which puzzle game created in the 1980s became world-famous?;A) Tetris | B) Sokoban | C) Columns | D) Bomberman;A;Tetris was created in the mid-1980s.;
+320;Jeu vidéo;2;In Mega Man, what is the name of the recurring mad scientist antagonist?;A) Dr. Wily | B) Dr. Robotnik | C) Dr. Doom | D) Dr. Strange;A;The main antagonist is Dr. Wily.;
+321;Jeu vidéo;2;In the arcade Donkey Kong, what is the hero called at the time (before being named Mario)?;A) Jumpman | B) Link | C) Ryu | D) Sonic;A;In Donkey Kong, the character is nicknamed Jumpman.;
+322;Jeu vidéo;3;Which 1980 arcade game features a round character eating pellets?;A) Pac-Man | B) Q*bert | C) Frogger | D) Galaga;A;Pac-Man (1980) is the pellet-eating game.;
+323;Jeu vidéo;2;In Final Fantasy (1987), what are the heroes tied to the crystals called?;A) Warriors of Light | B) Zodiac Knights | C) Time Masters | D) Space Guardians;A;The protagonists are the Warriors of Light.;
+324;Jeu vidéo;3;In the original Street Fighter (1987), which fighter is the main playable hero?;A) Ryu | B) Chun-Li | C) Guile | D) Akuma;A;The original Street Fighter primarily features Ryu.;
+325;BD/Comics;2;In Batman: The Dark Knight Returns (1986), which aging hero returns to action?;A) Batman | B) Spider-Man | C) Daredevil | D) Hellboy;A;The story follows an older Batman returning.;
+326;BD/Comics;3;In Watchmen, which character wears a mask with shifting inkblot patterns?;A) Rorschach | B) Ozymandias | C) Nite Owl | D) The Comedian;A;Rorschach wears the inkblot mask.;
+327;BD/Comics;2;The Teenage Mutant Ninja Turtles are named after which artists?;A) Italian Renaissance masters | B) Romantic writers | C) Astronauts | D) English kings;A;Leonardo, Michelangelo, Donatello, and Raphael are Renaissance masters.;
+328;Culture pop;2;In France, what are the Care Bears called, popular in the 1980s?;A) Les Bisounours | B) Calinours | C) Gummy Bears | D) Teddy Stars;A;Care Bears are known in France as “Bisounours.”;
+329;Film;2;Which Disney animated film (1989) features Ariel, a mermaid?;A) The Little Mermaid | B) Aladdin | C) The Lion King | D) Mulan;A;Ariel is the heroine of The Little Mermaid.;
+330;Culture pop;2;What is the name of the cassette player strongly associated with the 1980s, popularized by Sony?;A) Walkman | B) Discman | C) iPod | D) Zune;A;The Sony Walkman defined the era of portable cassettes.;
+331;Film;2;In Star Wars: The Empire Strikes Back (1980), what does Darth Vader reveal to Luke?;A) That he is his father | B) That he is his brother | C) That he is a clone | D) That he is a droid;A;The famous reveal is that Vader is Luke’s father.;
+332;Film;2;In Star Wars: Return of the Jedi (1983), which character ultimately redeems himself?;A) Darth Vader | B) Jabba | C) Tarkin | D) Boba Fett;A;Anakin/Darth Vader sacrifices himself and is redeemed at the end.;
+333;Film;3;In Ghostbusters (1984), what is the name of the final entity the team confronts?;A) Gozer | B) Vigo | C) Zuul | D) Slimer;A;The main entity is Gozer the Gozerian.;
+334;Film;2;In Gremlins (1984), which rule involves water?;A) Don’t get them wet | B) Don’t give them water | C) Don’t wash them on Sundays | D) Don’t put them in the freezer;A;Getting a mogwai wet triggers reproduction.;
+335;Film;2;In Back to the Future, what is Doc’s full name?;A) Emmett Brown | B) Ernest Brown | C) Edward Brown | D) Ethan Brown;A;Doc’s name is Emmett Brown.;
+336;Film;3;In Blade Runner, what is the test used to detect a replicant called?;A) Voight-Kampff | B) Turing | C) Bechdel | D) Rorschach;A;The empathy test is called Voight-Kampff.;
+337;Film;2;In Rocky IV (1985), what is the name of Rocky’s Soviet opponent?;A) Ivan Drago | B) Viktor Reznov | C) Aleksei Petrov | D) Yuri Boyka;A;Rocky fights boxer Ivan Drago.;
+338;Film;2;In The Breakfast Club (1985), when are the students in detention?;A) A Saturday | B) A Monday | C) A Wednesday | D) A Sunday;A;The film takes place during Saturday detention.;
+339;Série TV;2;In 21 Jump Street (1980s TV series), which actor plays one of the most famous undercover cops?;A) Johnny Depp | B) Tom Hanks | C) Bruce Willis | D) Keanu Reeves;A;Johnny Depp plays Tom Hanson in the series.;
+340;Série TV;2;In Seinfeld (starting in 1989), how did the creators often describe the show?;A) A show about nothing | B) A show about vampires | C) A police show | D) A sci-fi show;A;Seinfeld is often called a “show about nothing”.;
+341;Animation/Anime;2;In Ranma ½ (1989), what triggers Ranma’s transformation?;A) Cold water | B) The full moon | C) A spell | D) A thunder strike;A;Ranma changes with cold water and changes back with hot water.;
+342;Animation/Anime;2;In The Mysterious Cities of Gold, what is the main hero’s name?;A) Esteban | B) Ulysses | C) Remi | D) Captain Harlock;A;The hero is named Esteban.;
+343;Culture pop;2;In France, on which TV channel did Club Dorothée air starting in 1987?;A) TF1 | B) France 2 | C) M6 | D) Canal+;A;Club Dorothée was a flagship show on TF1.;
+344;Culture pop;3;When MTV launched (1981), what was the first music video aired?;A) Video Killed the Radio Star | B) Thriller | C) Take On Me | D) Bohemian Rhapsody;A;MTV’s first video was Video Killed the Radio Star (The Buggles).;
+345;Culture pop;3;Live Aid (1985) had two main concerts in which cities?;A) London and Philadelphia | B) Paris and New York | C) Berlin and Moscow | D) Tokyo and Sydney;A;The main concerts were in London (Wembley) and Philadelphia (JFK Stadium).;
+346;Culture pop;2;In the consumer video format war, which format ultimately dominated over Betamax?;A) VHS | B) LaserDisc | C) Video8 | D) MiniDV;A;VHS became the dominant consumer video format.;
+347;Culture pop;2;In France, what was Minitel mainly used for?;A) Access online services before the Web | B) Watch DVDs | C) Play virtual reality games | D) Broadcast digital TV;A;Minitel provided directories and online services before mass-market Internet.;
+348;Culture pop;3;Who invented the Rubik’s Cube?;A) Ernő Rubik | B) Nikola Tesla | C) Alan Turing | D) Tim Berners-Lee;A;The Rubik’s Cube was invented by Ernő Rubik.;
+349;Jeu vidéo;2;Which company launched the handheld console Game Boy (1989)?;A) Nintendo | B) Sega | C) Atari | D) Sony;A;The Game Boy is a handheld console by Nintendo.;
+350;Culture pop;3;"Apple's 1984"" commercial announced the launch of which computer?""";A) Macintosh | B) Apple II | C) iMac | D) iPhone;A;"The 1984"" ad accompanied the launch of the Macintosh.""";
+351;Maths;1;What is 7 × 8?;A) 54 | B) 56 | C) 58 | D) 63;B;7 × 8 = 56, a basic multiplication to know.;Math basics
+352;Maths;1;What is 12 squared?;A) 124 | B) 144 | C) 132 | D) 156;B;12² = 12 × 12 = 144.;Math basics
+353;Maths;2;What is the square root of 169?;A) 11 | B) 12 | C) 13 | D) 14;C;√169 = 13 because 13 × 13 = 169.;Math basics
+354;Maths;2;What is 3⁴ (3 to the power of 4)?;A) 12 | B) 27 | C) 64 | D) 81;D;3⁴ = 3 × 3 × 3 × 3 = 81.;Math basics
+355;Maths;2;What is the GCD of 24 and 36?;A) 6 | B) 8 | C) 12 | D) 18;C;The greatest common divisor of 24 and 36 is 12.;Math basics
+356;Maths;2;What is the LCM of 4 and 6?;A) 2 | B) 12 | C) 24 | D) 10;B;The least common multiple of 4 and 6 is 12.;Math basics
+357;Maths;1;A triangle with all equal sides is called…;A) Isosceles | B) Right | C) Equilateral | D) Scalene;C;An equilateral triangle has three sides of equal length.;Geometry
+358;Maths;2;How many degrees is the sum of angles in a triangle?;A) 90° | B) 180° | C) 270° | D) 360°;B;The sum of angles in a triangle is always 180°.;Geometry
+359;Maths;2;How many faces does a cube have?;A) 4 | B) 6 | C) 8 | D) 12;B;A cube has 6 square faces.;Geometry
+360;Maths;2;What is the area of a circle with radius 3 (in terms of π)?;A) 6π | B) 9π | C) 12π | D) 3π;B;Area = πr² = π × 3² = 9π.;Geometry
+361;Maths;3;What is the derivative of x³?;A) x² | B) 3x² | C) 3x | D) x⁴/4;B;The derivative of xⁿ is nxⁿ⁻¹, so (x³)' = 3x².;Calculus
+362;Maths;3;What is the antiderivative of 2x?;A) x | B) x² | C) 2x² | D) x² + C;D;∫2x dx = x² + C (constant of integration).;Calculus
+363;Maths;3;In a right triangle, if the legs are 3 and 4, what is the hypotenuse?;A) 5 | B) 6 | C) 7 | D) √7;A;By Pythagoras: √(3² + 4²) = √25 = 5.;Geometry
+364;Maths;2;What is π rounded to two decimal places?;A) 3.12 | B) 3.14 | C) 3.16 | D) 3.18;B;π ≈ 3.14159... so 3.14 when rounded.;Math constants
+365;Maths;3;What is log₁₀(1000)?;A) 2 | B) 3 | C) 4 | D) 10;B;log₁₀(1000) = 3 because 10³ = 1000.;Logarithms
+366;Maths;3;What is sin(90°)?;A) 0 | B) 0.5 | C) 1 | D) √2/2;C;The sine of 90° (or π/2 rad) equals 1.;Trigonometry
+367;Maths;3;What is cos(60°)?;A) 0 | B) 0.5 | C) 1 | D) √3/2;B;cos(60°) = 1/2 = 0.5.;Trigonometry
+368;Maths;2;Which number is both even and prime?;A) 1 | B) 2 | C) 4 | D) 9;B;2 is the only even prime number.;Number theory
+369;Maths;3;How many prime numbers are there between 1 and 10?;A) 3 | B) 4 | C) 5 | D) 6;B;The primes ≤10 are: 2, 3, 5, 7 (4 numbers).;Number theory
+370;Maths;3;What is the formula for the area of a trapezoid?;A) base × height | B) (b₁ + b₂) × h / 2 | C) π × r² | D) side²;B;Area = (sum of parallel bases) × height / 2.;Geometry
+371;Maths;2;If x + 5 = 12, what is x?;A) 5 | B) 7 | C) 12 | D) 17;B;x = 12 - 5 = 7.;Algebra
+372;Maths;2;If 2x = 18, what is x?;A) 6 | B) 9 | C) 16 | D) 36;B;x = 18 / 2 = 9.;Algebra
+373;Maths;3;Solve: x² - 5x + 6 = 0. What are the solutions?;A) x = 1 and x = 6 | B) x = 2 and x = 3 | C) x = -2 and x = -3 | D) x = 5 and x = 1;B;(x-2)(x-3) = 0, so x = 2 or x = 3.;Algebra
+374;Maths;3;What is i² (where i is the imaginary unit)?;A) 1 | B) -1 | C) i | D) 0;B;By definition, i² = -1.;Complex numbers
+375;Maths;3;What is the limit of 1/x as x approaches infinity?;A) 1 | B) ∞ | C) 0 | D) Undefined;C;lim(x→∞) 1/x = 0.;Calculus
+376;Maths;2;What is 5! (5 factorial)?;A) 25 | B) 60 | C) 120 | D) 720;C;5! = 5 × 4 × 3 × 2 × 1 = 120.;Math basics
+377;Maths;3;In an arithmetic sequence with common difference 3 starting at 2, what is the 5th term?;A) 11 | B) 14 | C) 17 | D) 20;B;a₅ = 2 + (5-1)×3 = 2 + 12 = 14.;Sequences
+378;Maths;3;What is the sum of interior angles of a hexagon?;A) 540° | B) 720° | C) 900° | D) 1080°;B;Sum = (n-2) × 180° = (6-2) × 180° = 720°.;Geometry
+379;Maths;2;What percentage is 1/4?;A) 20% | B) 25% | C) 30% | D) 40%;B;1/4 = 0.25 = 25%.;Percentages
+380;Maths;3;How many diagonals does a pentagon have?;A) 3 | B) 4 | C) 5 | D) 6;C;Number of diagonals = n(n-3)/2 = 5(5-3)/2 = 5.;Geometry
+381;Physique;3;What is the order of magnitude of Planck's constant?;A) 10⁻³⁴ J·s | B) 10⁻²³ J·s | C) 10⁻¹⁵ J·s | D) 10⁻⁸ J·s;A;h ≈ 6.626 × 10⁻³⁴ J·s, fundamental in quantum mechanics.;Quantum physics
+382;Physique;3;Which particle carries the electromagnetic force?;A) Gluon | B) Photon | C) Graviton | D) W boson;B;The photon is the mediator boson of the electromagnetic interaction.;Particle physics
+383;Physique;3;What is Einstein's mass-energy equivalence equation?;A) E = mc | B) E = mc² | C) E = m/c² | D) E = m²c;B;E = mc² relates energy to mass by the square of the speed of light.;Relativity
+384;Physique;3;Which principle states we cannot precisely know position and momentum simultaneously?;A) Pauli principle | B) Heisenberg uncertainty principle | C) Equivalence principle | D) Fermat's principle;B;Heisenberg's principle requires ΔxΔp ≥ ℏ/2.;Quantum physics
+385;Physique;3;What is the SI unit of electrical resistance?;A) Farad | B) Henry | C) Ohm | D) Siemens;C;Resistance is measured in ohms (Ω).;Electricity
+386;Physique;3;Which phenomenon allows electrons to cross a classically forbidden potential barrier?;A) Diffraction | B) Quantum tunneling | C) Refraction | D) Polarization;B;Quantum tunneling lets particles pass through classically forbidden barriers.;Quantum physics
+387;Physique;3;Which law describes the force between two electric charges?;A) Faraday's law | B) Coulomb's law | C) Ampère's law | D) Lenz's law;B;Coulomb's law: F = k·q₁q₂/r².;Electrostatics
+388;Physique;3;Which type of radioactivity emits a helium nucleus?;A) Alpha | B) Beta | C) Gamma | D) Neutron;A;Alpha decay emits a ⁴He nucleus (2 protons + 2 neutrons).;Nuclear physics
+389;Physique;3;What is the electric charge of an electron (order of magnitude)?;A) 10⁻¹⁹ C | B) 10⁻¹⁵ C | C) 10⁻²³ C | D) 10⁻⁹ C;A;e ≈ 1.602 × 10⁻¹⁹ C (elementary charge).;Particle physics
+390;Physique;3;What is the name of the hypothetical particle mediating gravity?;A) Photon | B) Gluon | C) Graviton | D) Higgs;C;The graviton is the hypothetical boson of gravitational interaction.;Theoretical physics
+391;Chimie;3;What is the electron configuration of carbon (Z=6)?;A) 1s² 2s² 2p² | B) 1s² 2s² 2p⁴ | C) 1s² 2s¹ 2p³ | D) 1s² 2p⁴;A;Carbon: 1s² 2s² 2p² (6 electrons).;Atomic structure
+392;Chimie;3;What is the molar mass of water H₂O (approx.)?;A) 16 g/mol | B) 18 g/mol | C) 20 g/mol | D) 32 g/mol;B;M(H₂O) = 2×1 + 16 = 18 g/mol.;Chemistry basics
+393;Chimie;3;What type of bond exists between water molecules?;A) Ionic | B) Covalent | C) Hydrogen bond | D) Metallic;C;Hydrogen bonds between water molecules explain its unique properties.;Intermolecular forces
+394;Chimie;3;What is the oxidation state of oxygen in H₂O?;A) +2 | B) -2 | C) 0 | D) -1;B;Oxygen typically has an oxidation state of -2 in oxides.;Oxidation states
+395;Chimie;3;What is the formula of copper(II) sulfate?;A) CuSO₄ | B) Cu₂SO₄ | C) CuS | D) CuSO₃;A;Copper(II) sulfate is CuSO₄.;Chemical formulas
+396;Chimie;3;Which gas is produced at the cathode during water electrolysis?;A) Oxygen | B) Hydrogen | C) Chlorine | D) Nitrogen;B;At the cathode (reduction): 2H₂O + 2e⁻ → H₂ + 2OH⁻.;Electrochemistry
+397;Chimie;3;What is the pH of a 0.001 mol/L HCl solution?;A) 1 | B) 2 | C) 3 | D) 4;C;pH = -log[H⁺] = -log(0.001) = 3.;Acid-base chemistry
+398;Chimie;3;Which element has the symbol Fe?;A) Fluorine | B) Iron | C) Francium | D) Fermium;B;Fe comes from Latin ferrum (iron).;Periodic table
+399;Chimie;3;What is the molecular geometry of methane CH₄?;A) Linear | B) Square planar | C) Tetrahedral | D) Octahedral;C;CH₄ has tetrahedral geometry with 109.5° angles.;Molecular geometry
+400;Chimie;3;What is the IUPAC name of CH₃CH₂OH?;A) Methanol | B) Ethanol | C) Propanol | D) Butanol;B;CH₃CH₂OH is ethanol (2-carbon alcohol).;Organic chemistry
+401;Biologie;3;How many chromosome pairs does a normal human cell have?;A) 22 | B) 23 | C) 24 | D) 46;B;23 pairs (22 autosomes + 1 pair of sex chromosomes).;Genetics
+402;Biologie;3;What is the process of copying DNA called?;A) Transcription | B) Translation | C) Replication | D) Mutation;C;Replication produces an identical copy of DNA.;Molecular biology
+403;Biologie;3;Which codon starts translation (start codon)?;A) AUG | B) UAA | C) UGA | D) UAG;A;AUG codes for methionine and initiates translation.;Molecular biology
+404;Biologie;3;Which enzyme unwinds the DNA double helix during replication?;A) DNA polymerase | B) Helicase | C) Ligase | D) Primase;B;Helicase separates the two DNA strands.;Molecular biology
+405;Biologie;3;What is the end product of glycolysis (per glucose)?;A) 1 pyruvate | B) 2 pyruvates | C) 1 lactate | D) 2 ATP;B;Glycolysis produces 2 pyruvates per glucose molecule.;Biochemistry
+406;Biologie;3;Where does the Krebs cycle occur in a eukaryotic cell?;A) Cytoplasm | B) Nucleus | C) Mitochondrial matrix | D) Endoplasmic reticulum;C;The Krebs cycle occurs in the mitochondrial matrix.;Biochemistry
+407;Biologie;3;What type of molecule is an antibody?;A) Carbohydrate | B) Lipid | C) Protein | D) Nucleic acid;C;Antibodies (immunoglobulins) are proteins.;Immunology
+408;Biologie;3;How many different nitrogenous bases make up DNA?;A) 2 | B) 3 | C) 4 | D) 5;C;Adenine, Thymine, Guanine, Cytosine (A, T, G, C).;Molecular biology
+409;Biologie;3;Which vitamin is essential for blood clotting?;A) Vitamin A | B) Vitamin C | C) Vitamin K | D) Vitamin E;C;Vitamin K is needed for synthesizing clotting factors.;Biochemistry
+410;Biologie;3;Which organelle contains digestive enzymes in the cell?;A) Ribosome | B) Lysosome | C) Peroxisome | D) Golgi;B;Lysosomes contain acid hydrolases.;Cell biology
+411;Physique;3;What is Newton's third law?;A) F = ma | B) Action = Reaction | C) Inertia | D) Conservation of energy;B;Every action has an equal and opposite reaction.;Mechanics
+412;Physique;3;What does G represent in the universal law of gravitation?;A) Gravitational acceleration | B) Universal gravitational constant | C) Earth's gravity | D) Mass;B;G ≈ 6.674 × 10⁻¹¹ N·m²/kg².;Gravitation
+413;Chimie;3;What is Avogadro's number (approx.)?;A) 6.02 × 10²³ | B) 6.02 × 10²⁰ | C) 3.14 × 10²³ | D) 9.81 × 10²³;A;Nₐ ≈ 6.022 × 10²³ mol⁻¹.;Chemistry constants
+414;Biologie;3;Which process produces gametes (sex cells)?;A) Mitosis | B) Meiosis | C) Fertilization | D) Differentiation;B;Meiosis reduces the chromosome number by half.;Cell biology
+415;Physique;3;What is the electromagnetic spectrum in order of increasing frequency?;A) Gamma, X, UV, visible, IR, microwaves, radio | B) Radio, microwaves, IR, visible, UV, X, gamma | C) Visible, UV, IR, X, gamma, radio | D) IR, visible, UV, radio, X, gamma;B;Increasing frequency: radio → microwaves → IR → visible → UV → X → gamma.;Electromagnetic spectrum
+416;Géographie;2;What is the capital of Thailand?;A) Hanoi | B) Bangkok | C) Manila | D) Jakarta;B;Bangkok is the capital and largest city of Thailand.;Asia
+417;Géographie;2;What is the longest river in Asia?;A) Ganges | B) Mekong | C) Yangtze (Chang Jiang) | D) Indus;C;The Yangtze (6,300 km) is the longest river in Asia.;Asia
+418;Géographie;2;What is the capital of Vietnam?;A) Ho Chi Minh City | B) Hanoi | C) Da Nang | D) Hue;B;Hanoi is the capital of Vietnam (Ho Chi Minh City is the largest city).;Asia
+419;Géographie;2;Which country is an archipelago of over 17,000 islands in Southeast Asia?;A) Philippines | B) Malaysia | C) Indonesia | D) Japan;C;Indonesia has over 17,000 islands, the world's largest archipelago.;Asia
+420;Géographie;2;What is the capital of South Korea?;A) Busan | B) Seoul | C) Pyongyang | D) Incheon;B;Seoul is the capital of South Korea.;Asia
+421;Géographie;3;Which strait separates Malaysia from Indonesia (Sumatra)?;A) Strait of Malacca | B) Singapore Strait | C) Sunda Strait | D) Lombok Strait;A;The Strait of Malacca is a major shipping lane between Malaysia and Sumatra.;Asia
+422;Géographie;2;What is the capital of the Philippines?;A) Cebu | B) Manila | C) Davao | D) Quezon City;B;Manila is the capital of the Philippines.;Asia
+423;Géographie;2;Which Central Asian country has Astana (Nur-Sultan) as its capital?;A) Uzbekistan | B) Kazakhstan | C) Turkmenistan | D) Kyrgyzstan;B;Astana is the capital of Kazakhstan.;Asia
+424;Géographie;2;What is the capital of Peru?;A) Bogotá | B) Lima | C) Quito | D) La Paz;B;Lima is the capital of Peru.;South America
+425;Géographie;2;What is the highest peak in South America?;A) Cotopaxi | B) Aconcagua | C) Huascarán | D) Mount Fitz Roy;B;Aconcagua (6,961 m) in Argentina is the highest peak in South America.;South America
+426;Géographie;2;What is the capital of Colombia?;A) Medellín | B) Bogotá | C) Cali | D) Cartagena;B;Bogotá is the capital of Colombia.;South America
+427;Géographie;2;Which South American country is crossed by the equator and has Quito as its capital?;A) Colombia | B) Ecuador | C) Peru | D) Venezuela;B;Ecuador takes its name from the equatorial line that crosses it.;South America
+428;Géographie;2;What is the capital of Chile?;A) Valparaíso | B) Santiago | C) Concepción | D) Antofagasta;B;Santiago is the capital of Chile.;South America
+429;Géographie;3;Which coastal desert is located in northern Chile?;A) Atacama | B) Namib | C) Sonora | D) Kalahari;A;The Atacama Desert is one of the driest in the world.;South America
+430;Géographie;2;What is the capital of Kenya?;A) Lagos | B) Nairobi | C) Dar es Salaam | D) Kampala;B;Nairobi is the capital of Kenya.;Africa
+431;Géographie;2;Which large African lake is shared by Kenya, Tanzania, and Uganda?;A) Lake Tanganyika | B) Lake Victoria | C) Lake Malawi | D) Lake Turkana;B;Lake Victoria is Africa's largest lake by surface area.;Africa
+432;Géographie;2;What is the capital of Ethiopia?;A) Addis Ababa | B) Asmara | C) Djibouti | D) Mogadishu;A;Addis Ababa is the capital of Ethiopia.;Africa
+433;Géographie;2;Which African country has Accra as its capital?;A) Nigeria | B) Ghana | C) Ivory Coast | D) Senegal;B;Accra is the capital of Ghana.;Africa
+434;Géographie;2;What is the capital of Senegal?;A) Bamako | B) Dakar | C) Conakry | D) Abidjan;B;Dakar is the capital of Senegal.;Africa
+435;Géographie;3;Which African river flows through Mali and Nigeria before emptying into the Gulf of Guinea?;A) Congo | B) Niger | C) Zambezi | D) Nile;B;The Niger River flows through several West African countries.;Africa
+436;Géographie;2;What is the capital of Tanzania (legislative)?;A) Dar es Salaam | B) Dodoma | C) Arusha | D) Zanzibar City;B;Dodoma is the official capital of Tanzania.;Africa
+437;Géographie;2;Which island country is located east of Africa in the Indian Ocean?;A) Seychelles | B) Mauritius | C) Madagascar | D) Comoros;C;Madagascar is the 4th largest island in the world.;Africa
+438;Géographie;2;What is the capital of Australia?;A) Sydney | B) Melbourne | C) Canberra | D) Brisbane;C;Canberra was chosen as a compromise capital between Sydney and Melbourne.;Oceania
+439;Géographie;2;Which Oceanian country consists of two main islands (North and South)?;A) Fiji | B) New Zealand | C) Papua New Guinea | D) Samoa;B;New Zealand consists of the North Island and South Island.;Oceania
+440;Géographie;3;What is the highest point in Oceania?;A) Mount Cook | B) Mount Wilhelm | C) Puncak Jaya | D) Mauna Kea;C;Puncak Jaya (4,884 m) in Papua is the highest peak in Oceania.;Oceania
+441;Géographie;2;What is the capital of Fiji?;A) Suva | B) Nadi | C) Apia | D) Port Moresby;A;Suva is the capital of Fiji.;Oceania
+442;Géographie;2;What is the capital of Mexico?;A) Guadalajara | B) Monterrey | C) Mexico City | D) Cancún;C;Mexico City (Ciudad de México) is the capital of Mexico.;Central America
+443;Géographie;2;Which Central American country connects North and South America via an isthmus?;A) Costa Rica | B) Panama | C) Nicaragua | D) Honduras;B;Panama connects the two continents and hosts the famous canal.;Central America
+444;Géographie;2;What is the capital of Cuba?;A) Santiago de Cuba | B) Havana | C) Trinidad | D) Varadero;B;Havana is the capital of Cuba.;Caribbean
+445;Géographie;3;Which Caribbean country shares the island of Hispaniola with the Dominican Republic?;A) Jamaica | B) Haiti | C) Puerto Rico | D) Cuba;B;Haiti occupies the western part of Hispaniola.;Caribbean
+446;Géographie;2;What is the capital of Iran?;A) Isfahan | B) Tehran | C) Shiraz | D) Tabriz;B;Tehran is the capital of Iran.;Middle East
+447;Géographie;2;What is the capital of the United Arab Emirates?;A) Dubai | B) Abu Dhabi | C) Sharjah | D) Doha;B;Abu Dhabi is the capital of UAE (Dubai is the largest city).;Middle East
+448;Géographie;2;Which inland sea is bordered by Russia, Kazakhstan, and Azerbaijan?;A) Black Sea | B) Caspian Sea | C) Aral Sea | D) Dead Sea;B;The Caspian Sea is the world's largest enclosed body of water.;Asia/Europe
+449;Géographie;3;Which small country is landlocked between France and Spain in the Pyrenees?;A) Monaco | B) San Marino | C) Andorra | D) Liechtenstein;C;Andorra is a principality in the Pyrenees.;Europe
+450;Géographie;2;What is the capital of Poland?;A) Kraków | B) Warsaw | C) Gdańsk | D) Wrocław;B;Warsaw is the capital of Poland.;Europe
+451;Film;2;Which actor portrayed Wolverine in 10 Marvel/X-Men films (2000-2024)?;A) Hugh Jackman | B) Chris Hemsworth | C) Ryan Reynolds | D) Patrick Stewart;A;Hugh Jackman holds the Guinness record for longest Marvel superhero portrayal.;Cinema
+452;Film;2;Which Quentin Tarantino film won the Palme d'Or at Cannes in 1994?;A) Reservoir Dogs | B) Pulp Fiction | C) Kill Bill | D) Django Unchained;B;Pulp Fiction won the Palme d'Or at Cannes 1994.;Cinema
+453;Film;2;In Pulp Fiction, which actor plays hitman Vincent Vega?;A) Samuel L. Jackson | B) John Travolta | C) Bruce Willis | D) Tim Roth;B;John Travolta plays Vincent Vega.;Cinema
+454;Film;2;Which 1999 film with Keanu Reeves explores a virtual world called the Matrix?;A) Johnny Mnemonic | B) The Matrix | C) Constantine | D) Speed;B;The Matrix (1999) by the Wachowskis became iconic.;Cinema
+455;Film;2;In Fight Club (1999), which actor plays Tyler Durden?;A) Edward Norton | B) Brad Pitt | C) Jared Leto | D) Meat Loaf;B;Brad Pitt plays Tyler Durden.;Cinema
+456;Film;2;Which director created The Lord of the Rings trilogy (2001-2003)?;A) Peter Jackson | B) Steven Spielberg | C) James Cameron | D) Christopher Nolan;A;Peter Jackson directed the trilogy in New Zealand.;Cinema
+457;Film;2;Which Lord of the Rings film won 11 Oscars?;A) The Two Towers | B) The Fellowship of the Ring | C) The Return of the King | D) The Hobbit;C;The Return of the King (2003) won 11 Oscars including Best Picture.;Cinema
+458;Film;2;Which British actor played James Bond in 7 films (1973-1985)?;A) Sean Connery | B) Roger Moore | C) Daniel Craig | D) Pierce Brosnan;B;Roger Moore holds the record for most Bond films.;Cinema
+459;Film;2;Which Christopher Nolan film (2010) explores nested dreams?;A) Memento | B) Inception | C) Interstellar | D) The Prestige;B;Inception with Leonardo DiCaprio explores dream levels.;Cinema
+460;Film;2;Which actor plays the Joker in The Dark Knight (2008)?;A) Jack Nicholson | B) Heath Ledger | C) Joaquin Phoenix | D) Jared Leto;B;Heath Ledger won a posthumous Oscar for this role.;Cinema
+461;Film;2;What was the first Marvel Cinematic Universe (MCU) film released in 2008?;A) Thor | B) Iron Man | C) Captain America | D) The Avengers;B;Iron Man with Robert Downey Jr. launched the MCU.;Cinema
+462;Film;2;Which Mexican director made Pan's Labyrinth (2006)?;A) Alfonso Cuarón | B) Guillermo del Toro | C) Alejandro G. Iñárritu | D) Robert Rodriguez;B;Guillermo del Toro directed this dark Spanish tale.;Cinema
+463;Film;2;Which actor plays the title role in Forrest Gump (1994)?;A) Tom Cruise | B) Tom Hanks | C) Robin Williams | D) Dustin Hoffman;B;Tom Hanks won the Best Actor Oscar for Forrest Gump.;Cinema
+464;Film;2;Which James Cameron film (1997) was first to exceed one billion dollars?;A) Jurassic Park | B) Titanic | C) Men in Black | D) Avatar;B;Titanic broke all records at the time.;Cinema
+465;Film;2;Which actor plays Captain Jack Sparrow in Pirates of the Caribbean?;A) Orlando Bloom | B) Johnny Depp | C) Geoffrey Rush | D) Keira Knightley;B;Johnny Depp created this iconic character starting in 2003.;Cinema
+466;Film;2;Which Ridley Scott film with Russell Crowe won the 2001 Oscar?;A) Blade Runner | B) Gladiator | C) Black Hawk Down | D) Kingdom of Heaven;B;Gladiator (2000) won 5 Oscars including Best Picture.;Cinema
+467;Film;2;Which South Korean director made Parasite, 2020 Oscar winner?;A) Park Chan-wook | B) Bong Joon-ho | C) Kim Ki-duk | D) Lee Chang-dong;B;Parasite was the first non-English film to win Best Picture.;Cinema
+468;Film;2;Which actor plays Vito Corleone in The Godfather (1972)?;A) Al Pacino | B) Robert De Niro | C) Marlon Brando | D) James Caan;C;Marlon Brando won the Oscar (which he declined) for this role.;Cinema
+469;Film;2;Which French director made Amélie (2001)?;A) Luc Besson | B) Jean-Pierre Jeunet | C) François Ozon | D) Jacques Audiard;B;Jean-Pierre Jeunet directed this film with Audrey Tautou.;Cinema
+470;Film;2;Which French actor starred in Léon and The Fifth Element?;A) Gérard Depardieu | B) Jean Reno | C) Vincent Cassel | D) Omar Sy;B;Jean Reno collaborated multiple times with Luc Besson.;Cinema
+471;Film;2;Which French film with Omar Sy (2011) exceeded 19 million admissions?;A) The Intouchables | B) On the Other Side | C) Samba | D) Two is a Family;A;The Intouchables is France's 2nd biggest box office hit.;Cinema
+472;Film;3;Which Stanley Kubrick film (1968) is a sci-fi masterpiece?;A) A Clockwork Orange | B) 2001: A Space Odyssey | C) The Shining | D) Dr. Strangelove;B;2001: A Space Odyssey revolutionized the genre.;Cinema
+473;Film;2;Which actor played Han Solo in Star Wars (1977-1983)?;A) Mark Hamill | B) Harrison Ford | C) Alec Guinness | D) Billy Dee Williams;B;Harrison Ford played Han Solo in the original trilogy.;Cinema
+474;Film;2;Which actor plays Tony Stark/Iron Man in the MCU?;A) Chris Evans | B) Robert Downey Jr. | C) Chris Hemsworth | D) Mark Ruffalo;B;Robert Downey Jr. played Iron Man from 2008 to 2019.;Cinema
+475;Film;2;Which actor plays Neo in the Matrix trilogy?;A) Laurence Fishburne | B) Keanu Reeves | C) Hugo Weaving | D) Carrie-Anne Moss;B;Keanu Reeves plays Neo, The One.;Cinema
+476;Film;2;Which director created the first Alien (1979)?;A) James Cameron | B) Ridley Scott | C) David Fincher | D) John Carpenter;B;Ridley Scott directed the first Alien.;Cinema
+477;Film;2;Which James Cameron film (2009) is the highest-grossing ever?;A) Titanic | B) Avatar | C) Terminator 2 | D) The Abyss;B;Avatar exceeded $2.9 billion at the box office.;Cinema
+478;Musique;2;What was The Beatles' first studio album, released in 1963?;A) Rubber Soul | B) Please Please Me | C) A Hard Day's Night | D) Help!;B;Please Please Me was released on March 22, 1963.;Music
+479;Musique;2;Which 1967 Beatles album is considered revolutionary?;A) Revolver | B) Sgt. Pepper's Lonely Hearts Club Band | C) The White Album | D) Abbey Road;B;Sgt. Pepper's revolutionized pop music in 1967.;Music
+480;Musique;2;Which Beatles member was assassinated in 1980?;A) Paul McCartney | B) John Lennon | C) George Harrison | D) Ringo Starr;B;John Lennon was killed on December 8, 1980 in New York.;Music
+481;Musique;2;What was Queen's first self-titled album, released in 1973?;A) Queen II | B) Queen | C) Sheer Heart Attack | D) A Night at the Opera;B;The album Queen was released on July 13, 1973.;Music
+482;Musique;2;Which Queen album contains Bohemian Rhapsody?;A) Queen II | B) Sheer Heart Attack | C) A Night at the Opera | D) News of the World;C;A Night at the Opera (1975) contains this legendary track.;Music
+483;Musique;2;Which Queen singer died in 1991?;A) Brian May | B) Freddie Mercury | C) Roger Taylor | D) John Deacon;B;Freddie Mercury died on November 24, 1991.;Music
+484;Musique;2;What was The Cure's first album, released in 1979?;A) Seventeen Seconds | B) Three Imaginary Boys | C) Faith | D) Pornography;B;Three Imaginary Boys was released on May 8, 1979.;Music
+485;Musique;2;Which Nirvana album (1991) contains Smells Like Teen Spirit?;A) Bleach | B) Nevermind | C) In Utero | D) Unplugged in New York;B;Nevermind was released on September 24, 1991.;Music
+486;Musique;2;Which Nirvana singer died in 1994?;A) Dave Grohl | B) Kurt Cobain | C) Krist Novoselic | D) Pat Smear;B;Kurt Cobain died on April 5, 1994.;Music
+487;Musique;2;Which band released The Dark Side of the Moon (1973)?;A) Led Zeppelin | B) Pink Floyd | C) Deep Purple | D) Yes;B;Pink Floyd released this cult album in 1973.;Music
+488;Musique;2;Which British band is known for Stairway to Heaven?;A) The Who | B) Led Zeppelin | C) Deep Purple | D) Black Sabbath;B;Stairway to Heaven is on Led Zeppelin's IV album (1971).;Music
+489;Musique;2;Which Rolling Stones singer has been the band's leader since 1962?;A) Keith Richards | B) Mick Jagger | C) Charlie Watts | D) Ron Wood;B;Mick Jagger is the iconic Rolling Stones singer.;Music
+490;Musique;2;Which legendary guitarist founded The Jimi Hendrix Experience?;A) Eric Clapton | B) Jimi Hendrix | C) Jeff Beck | D) Jimmy Page;B;Jimi Hendrix is considered one of the greatest guitarists.;Music
+491;Musique;2;Which Michael Jackson album (1982) is the best-selling album ever?;A) Bad | B) Thriller | C) Off the Wall | D) Dangerous;B;Thriller has sold over 70 million copies.;Music
+492;Musique;2;Which artist is nicknamed 'The King of Pop'?;A) Elvis Presley | B) Michael Jackson | C) Prince | D) James Brown;B;Michael Jackson received this title in 1989.;Music
+493;Musique;2;Which artist is nicknamed 'The King' (of rock'n'roll)?;A) Chuck Berry | B) Elvis Presley | C) Little Richard | D) Jerry Lee Lewis;B;Elvis Presley is considered the king of rock'n'roll.;Music
+494;Musique;2;Which Irish band released The Joshua Tree (1987)?;A) The Cranberries | B) U2 | C) Thin Lizzy | D) The Pogues;B;U2 released this classic album.;Music
+495;Musique;2;Which band sang Smells Like Teen Spirit?;A) Pearl Jam | B) Nirvana | C) Soundgarden | D) Alice in Chains;B;Nirvana popularized grunge with this track.;Music
+496;Musique;2;Which British band sang Wonderwall (1995)?;A) Blur | B) Oasis | C) Pulp | D) Radiohead;B;Wonderwall is on Oasis's (What's the Story) Morning Glory? album.;Music
+497;Musique;2;Which band released OK Computer (1997)?;A) Blur | B) Radiohead | C) Muse | D) Coldplay;B;Radiohead released this album considered a masterpiece.;Music
+498;Musique;2;Which French duo released Discovery (2001)?;A) Air | B) Daft Punk | C) Justice | D) Phoenix;B;Daft Punk released this album containing One More Time.;Music
+499;Musique;2;Which American band released Appetite for Destruction (1987)?;A) Mötley Crüe | B) Guns N' Roses | C) Bon Jovi | D) Def Leppard;B;This is Guns N' Roses' debut album.;Music
+500;Musique;2;Which American band released Master of Puppets (1986)?;A) Slayer | B) Metallica | C) Megadeth | D) Anthrax;B;Metallica released this legendary thrash metal album.;Music
+501;Musique;2;Which band released Back in Black (1980)?;A) Iron Maiden | B) AC/DC | C) Judas Priest | D) Motörhead;B;AC/DC released this album after Bon Scott's death.;Music
+502;Musique;2;Which singer released the album 21 (2011), selling over 31 million copies?;A) Taylor Swift | B) Adele | C) Beyoncé | D) Rihanna;B;Adele achieved worldwide success with this album.;Music
+503;Musique;2;Which American rapper released The Marshall Mathers LP (2000)?;A) Jay-Z | B) Eminem | C) 50 Cent | D) Dr. Dre;B;Eminem released this hip-hop classic album.;Music
+504;Musique;2;Which British band sang Creep (1992)?;A) Blur | B) Radiohead | C) Oasis | D) Suede;B;Creep is Radiohead's first successful single.;Music
+505;Musique;2;Which singer performed Pour que tu m'aimes encore (1995)?;A) Patricia Kaas | B) Céline Dion | C) Mylène Farmer | D) Vanessa Paradis;B;Céline Dion sang this song written by Jean-Jacques Goldman.;Music
+506;Musique;2;Which French band released Moon Safari (1998)?;A) Daft Punk | B) Air | C) Phoenix | D) Justice;B;Air released this album containing Sexy Boy.;Music
+507;Musique;2;Which French singer is known for Libertine and Désenchantée?;A) Patricia Kaas | B) Mylène Farmer | C) Vanessa Paradis | D) Alizée;B;Mylène Farmer is a French pop icon.;Music
+508;Musique;2;Which British band sang Don't Stop Me Now?;A) The Who | B) Queen | C) Led Zeppelin | D) Pink Floyd;B;Don't Stop Me Now is on Queen's Jazz album (1978).;Music
+509;Musique;2;Which band released Rumours (1977), selling over 40 million copies?;A) Eagles | B) Fleetwood Mac | C) ABBA | D) Bee Gees;B;Fleetwood Mac released this legendary album.;Music
+510;Musique;2;Which Swedish band sang Dancing Queen (1976)?;A) Roxette | B) ABBA | C) Ace of Base | D) Europe;B;ABBA achieved worldwide success with this track.;Music
+511;Musique;2;Which British artist sang Space Oddity (1969)?;A) Elton John | B) David Bowie | C) Rod Stewart | D) Freddie Mercury;B;David Bowie released this track 5 days before Apollo 11.;Music
+512;Musique;2;Which Nirvana drummer founded Foo Fighters?;A) Kurt Cobain | B) Dave Grohl | C) Krist Novoselic | D) Pat Smear;B;Dave Grohl founded Foo Fighters in 1994.;Music
+513;Musique;2;Which band released Hybrid Theory (2000)?;A) Korn | B) Linkin Park | C) Limp Bizkit | D) System of a Down;B;Linkin Park released this nu-metal album selling 30 million.;Music
+514;Musique;2;Which British band sang Yellow (2000)?;A) Muse | B) Coldplay | C) Radiohead | D) Keane;B;Coldplay broke through with this single from Parachutes.;Music
+515;Musique;2;Which American singer is known for Purple Rain (1984)?;A) Michael Jackson | B) Prince | C) Stevie Wonder | D) George Michael;B;Prince released this album and the film of the same name.;Music
+516;Musique;2;Which Seattle band is known for Black Hole Sun (1994)?;A) Nirvana | B) Soundgarden | C) Pearl Jam | D) Alice in Chains;B;Soundgarden released this track on Superunknown.;Music
+517;Musique;2;Which Seattle band released Ten (1991)?;A) Nirvana | B) Pearl Jam | C) Soundgarden | D) Alice in Chains;B;Pearl Jam released this album containing Alive and Jeremy.;Music

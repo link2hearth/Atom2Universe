@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.quiz
 
 import android.content.Context
+import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.quiz.data.Question
 
 /**
@@ -9,9 +10,10 @@ import com.Atom2Universe.app.quiz.data.Question
 class QuizRepository(private val context: Context) {
 
     private var cachedQuestions: List<Question>? = null
+    private val language: String = getSupportedQuizLanguage(context)
 
     /**
-     * Loads all questions from all CSV files in the quiz folder.
+     * Loads all questions from all CSV files in the active language quiz folder.
      * Results are cached after first load.
      */
     fun loadAllQuestions(): List<Question> {
@@ -20,13 +22,13 @@ class QuizRepository(private val context: Context) {
         val questions = mutableListOf<Question>()
 
         try {
-            // List all CSV files in the quiz folder
-            val csvFiles = context.assets.list(QUIZ_FOLDER)
+            // List all CSV files in the active language quiz folder
+            val csvFiles = context.assets.list("$QUIZ_FOLDER/$language")
                 ?.filter { it.endsWith(".csv") }
-                ?: listOf("questions.csv")
+                ?: emptyList()
 
             for (csvFile in csvFiles) {
-                loadQuestionsFromFile("$QUIZ_FOLDER/$csvFile", questions)
+                loadQuestionsFromFile("$QUIZ_FOLDER/$language/$csvFile", questions)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -128,38 +130,32 @@ class QuizRepository(private val context: Context) {
 
     /**
      * Parses a single CSV line into a Question object.
-     * Format: id;category;difficulty;question_fr;question_en;choices_fr;choices_en;correct;explanation_fr;explanation_en;source
+     * Format: id;category;difficulty;question;choices;correct;explanation;source
      */
     private fun parseQuestion(line: String): Question? {
         try {
             val fields = parseCsvLine(line)
-            if (fields.size < 11) return null
+            if (fields.size < 8) return null
 
             val id = fields[0].toIntOrNull() ?: return null
             val category = fields[1]
             val difficulty = fields[2].toIntOrNull() ?: 1
-            val questionFr = fields[3].trim('"')
-            val questionEn = fields[4].trim('"')
-            val choicesFr = parseChoices(fields[5])
-            val choicesEn = parseChoices(fields[6])
-            val correct = fields[7].trim('"').uppercase()
-            val explanationFr = fields[8].trim('"')
-            val explanationEn = fields[9].trim('"')
-            val source = if (fields.size > 10) fields[10].trim('"') else ""
+            val question = fields[3]
+            val choices = parseChoices(fields[4])
+            val correct = fields[5].uppercase()
+            val explanation = fields[6]
+            val source = fields[7]
 
-            if (choicesFr.size != 4 || choicesEn.size != 4) return null
+            if (choices.size != 4) return null
 
             return Question(
                 id = id,
                 category = category,
                 difficulty = difficulty,
-                questionFr = questionFr,
-                questionEn = questionEn,
-                choicesFr = choicesFr,
-                choicesEn = choicesEn,
+                question = question,
+                choices = choices,
                 correctAnswer = correct,
-                explanationFr = explanationFr,
-                explanationEn = explanationEn,
+                explanation = explanation,
                 source = source
             )
         } catch (e: Exception) {
@@ -173,10 +169,9 @@ class QuizRepository(private val context: Context) {
      * and removes the letter prefixes (A), B), C), D))
      */
     private fun parseChoices(choicesStr: String): List<String> {
-        val clean = choicesStr.trim('"')
         // Regex to remove letter prefixes like "A) ", "B) ", etc.
         val letterPrefixRegex = Regex("^[A-Da-d]\\)\\s*")
-        return clean.split("|").map { choice ->
+        return choicesStr.split("|").map { choice ->
             choice.trim().replace(letterPrefixRegex, "")
         }
     }
@@ -188,12 +183,18 @@ class QuizRepository(private val context: Context) {
         val fields = mutableListOf<String>()
         val current = StringBuilder()
         var inQuotes = false
+        var index = 0
 
-        for (char in line) {
+        while (index < line.length) {
+            val char = line[index]
             when {
                 char == '"' -> {
-                    inQuotes = !inQuotes
-                    current.append(char)
+                    if (inQuotes && index + 1 < line.length && line[index + 1] == '"') {
+                        current.append('"')
+                        index++
+                    } else {
+                        inQuotes = !inQuotes
+                    }
                 }
                 char == ';' && !inQuotes -> {
                     fields.add(current.toString())
@@ -201,6 +202,7 @@ class QuizRepository(private val context: Context) {
                 }
                 else -> current.append(char)
             }
+            index++
         }
         fields.add(current.toString())
 
@@ -209,5 +211,20 @@ class QuizRepository(private val context: Context) {
 
     companion object {
         private const val QUIZ_FOLDER = "quiz"
+
+        private fun getSupportedQuizLanguage(context: Context): String {
+            val preferredLanguage = LocaleHelper.getLanguage(context)
+            val availableLanguages = try {
+                context.assets.list(QUIZ_FOLDER)?.toSet().orEmpty()
+            } catch (e: Exception) {
+                emptySet()
+            }
+            return when {
+                preferredLanguage in availableLanguages -> preferredLanguage
+                "fr" in availableLanguages -> "fr"
+                "en" in availableLanguages -> "en"
+                else -> preferredLanguage
+            }
+        }
     }
 }

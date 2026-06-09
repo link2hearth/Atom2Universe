@@ -38,6 +38,7 @@ app/src/main/assets/covers/
 # Claude / notes
 .claude/
 CLAUDE.md
+AGENTS.md
 
 # In-app billing / Play Console sensitive files
 app/src/main/assets/billing*.json

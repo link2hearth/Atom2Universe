@@ -1,0 +1,104 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+630;Géographie;2;Quels deux pays modernes formaient la région appelée Rhodésie ?;A) Togo et Bénin | B) Zambie et Zimbabwe | C) Lesotho et Eswatini | D) Rwanda et Burundi;B;La Rhodésie du Nord est devenue la Zambie, et la Rhodésie du Sud le Zimbabwe.;OpenTDB
+631;Géographie;2;Quelle est la capitale de l'État de Washington aux États-Unis ?;A) Washington D.C. | B) Olympia | C) Seattle | D) Yukon;B;Olympia est la capitale, pas Seattle qui est la plus grande ville.;OpenTDB
+632;Géographie;2;Lequel de ces pays n'est PAS situé en Afrique ?;A) Burkina Faso | B) Suriname | C) Mozambique | D) Algérie;B;Le Suriname est situé en Amérique du Sud.;OpenTDB
+633;Géographie;1;Avec combien de pays le Mexique partage-t-il une frontière ?;A) 2 | B) 3 | C) 4 | D) 1;B;Le Mexique partage des frontières avec les USA, le Guatemala et le Belize.;OpenTDB
+634;Géographie;3;Quel pays est complètement enclavé par l'Afrique du Sud ?;A) Eswatini | B) Lesotho | C) Botswana | D) Zimbabwe;B;Le Lesotho est entièrement entouré par l'Afrique du Sud.;OpenTDB
+635;Géographie;2;Le lac Titicaca est situé entre quels deux pays ?;A) Kenya et Ouganda | B) Pérou et Bolivie | C) Mexique et USA | D) Inde et Bangladesh;B;Le lac Titicaca est le plus haut lac navigable du monde.;OpenTDB
+636;Géographie;1;Quelle est la capitale de l'Indonésie ?;A) Bandung | B) Jakarta | C) Medan | D) Palembang;B;Jakarta est la capitale et plus grande ville d'Indonésie.;OpenTDB
+637;Géographie;3;Comment s'appelle l'isthme reliant l'Amérique du Nord et du Sud ?;A) Isthme de Suez | B) Isthme de Panama | C) Oural | D) Australasie;B;L'isthme de Panama relie les deux Amériques.;OpenTDB
+638;Géographie;2;Les Pyrénées sont situées à la frontière de quels deux pays ?;A) Italie et Suisse | B) France et Espagne | C) Norvège et Suède | D) Russie et Ukraine;B;Les Pyrénées séparent la France de l'Espagne.;OpenTDB
+639;Géographie;1;Quelle ville est la capitale des États-Unis ?;A) Seattle | B) Washington D.C. | C) Albany | D) Los Angeles;B;Washington D.C. est la capitale fédérale depuis 1790.;OpenTDB
+640;Géographie;1;Quel est le plus grand pays du monde ?;A) Canada | B) Russie | C) Chine | D) États-Unis;B;La Russie couvre plus de 17 millions de km².;OpenTDB
+641;Géographie;1;Quel petit pays est situé entre la France et l'Espagne ?;A) Saint-Marin | B) Andorre | C) Vatican | D) Liechtenstein;B;Andorre est une principauté dans les Pyrénées.;OpenTDB
+642;Géographie;2;Quelle est la capitale de la Slovénie ?;A) Maribor | B) Ljubljana | C) Velenje | D) Trbovlje;B;Ljubljana est la capitale et plus grande ville de Slovénie.;OpenTDB
+643;Géographie;1;Dans quelle ville se trouve l'université Harvard ?;A) Providence | B) Cambridge | C) New York | D) Washington D.C.;B;Harvard est située à Cambridge, Massachusetts.;OpenTDB
+644;Géographie;2;Quelle est la capitale de la Nouvelle-Zélande ?;A) Auckland | B) Wellington | C) Christchurch | D) Melbourne;B;Wellington est la capitale, Auckland la plus grande ville.;OpenTDB
+645;Géographie;3;Dans quel pays se trouve Tallinn ?;A) Finlande | B) Estonie | C) Suède | D) Pologne;B;Tallinn est la capitale de l'Estonie.;OpenTDB
+646;Géographie;2;Combien de fuseaux horaires la Russie possède-t-elle ?;A) 8 | B) 11 | C) 5 | D) 2;B;La Russie s'étend sur 11 fuseaux horaires.;OpenTDB
+647;Géographie;2;Quelle est la capitale de la Turquie ?;A) Istanbul | B) Ankara | C) Izmir | D) Bursa;B;Ankara est la capitale depuis 1923, Istanbul la plus grande ville.;OpenTDB
+648;Géographie;1;Quelle région d'Europe de l'Est est associée aux vampires ?;A) Silésie | B) Transylvanie | C) Macédoine | D) Slovaquie;B;La Transylvanie est associée au comte Dracula.;OpenTDB
+649;Géographie;2;Quel pays a trois capitales ?;A) Somalie | B) Afrique du Sud | C) Chine | D) Royaume-Uni;B;Pretoria (administrative), Cape Town (législative), Bloemfontein (judiciaire).;OpenTDB
+650;Géographie;2;Quel est le plus long fleuve d'Europe ?;A) Danube | B) Volga | C) Oural | D) Dniepr;B;La Volga mesure 3 530 km de long.;OpenTDB
+651;Géographie;1;Quelle est la capitale de l'Écosse ?;A) Glasgow | B) Édimbourg | C) Dundee | D) Londres;B;Édimbourg est la capitale depuis le 15e siècle.;OpenTDB
+652;Géographie;1;Quel est le plus petit pays du monde ?;A) Maldives | B) Vatican | C) Monaco | D) Malte;B;Le Vatican ne fait que 0,44 km².;OpenTDB
+653;Géographie;2;Laquelle n'est PAS une capitale ?;A) Le Caire | B) Sydney | C) Moscou | D) Pékin;B;Sydney n'est pas la capitale de l'Australie, c'est Canberra.;OpenTDB
+918;Géographie;3;Où se situe Fort Marlborough ?;A) Singapour | B) Londres | C) Douvres | D) Bengkulu;D;;OpenTDB
+919;Géographie;2;Laquelle de ces localités n'appartient PAS à la nation insulaire du Pacifique Kiribati ?;A) Washington | B) London | C) Urutora | D) Rungata;C;;OpenTDB
+920;Géographie;2;"Frankenmuth, surnommée ""La Petite Bavière"", se trouve dans quel État américain ?";A) Pennsylvanie | B) Virginie | C) Michigan | D) Kentucky;C;;OpenTDB
+921;Géographie;2;Gibraltar est un territoire de quel pays d'Europe occidentale ?;A) Royaume-Uni | B) Espagne | C) France | D) Portugal;A;;OpenTDB
+922;Géographie;2;Quelle est la capitale des Seychelles ?;A) Tripoli | B) Victoria | C) N'Djamena | D) Luanda;B;;OpenTDB
+923;Géographie;1;Quelle est la capitale de l'État de New York ?;A) New York | B) Buffalo | C) Albany | D) Rochester;C;;OpenTDB
+924;Géographie;2;Dans quelle ville se trouve l'Armée de terre cuite ?;A) Pékin | B) Shanghai | C) Xi'an | D) Hong Kong;C;;OpenTDB
+925;Géographie;3;Les îles Moluques (îles aux épices) appartiennent à quel pays ?;A) Fidji | B) Chili | C) Nouvelle-Zélande | D) Indonésie;D;;OpenTDB
+926;Géographie;1;Quelle est la plus grande ville de l'État américain du Tennessee ?;A) Memphis | B) Louxor | C) Thèbes | D) Alexandrie;A;;OpenTDB
+927;Géographie;3;Laquelle de ces plaques tectoniques n'existe PAS ?;A) Plaque nord-américaine | B) Plaque Atlantique | C) Plaque eurasienne | D) Plaque de Nazca;B;;OpenTDB
+2114;Géographie;3;Lequel de ces noms N'EST PAS une province de Chine ?;A) Sichuan | B) Guangdong | C) Yangtze | D) Fujian;C;;OpenTDB
+2115;Géographie;1;Combien d'États américains commencent par la lettre K ?;A) Trois | B) Deux | C) Un | D) Aucun;B;;OpenTDB
+2116;Géographie;2;Un lion brandissant une épée est représenté sur le drapeau national de quel pays ?;A) Albanie | B) Zambie | C) Sri Lanka | D) Moldavie;C;;OpenTDB
+2117;Géographie;2;Combien d'États y a-t-il en Australie ?;A) 5 | B) 8 | C) 6 | D) 7;C;;OpenTDB
+2118;Géographie;1;Laquelle de ces langues N'utilise PAS l'alphabet latin ?;A) Géorgien | B) Swahili | C) Turc | D) Vietnamien;A;;OpenTDB
+2119;Géographie;1;Quelle est la capitale de l'Espagne ?;A) Séville | B) Barcelone | C) Madrid | D) Tolède;C;;OpenTDB
+2120;Géographie;2;Quelle est la capitale de l'Australie ?;A) Canberra | B) Melbourne | C) Sydney | D) Brisbane;A;;OpenTDB
+2121;Géographie;2;Combien de pays sont plus grands que l'Australie ?;A) 6 | B) 3 | C) 4 | D) 5;D;;OpenTDB
+2122;Géographie;2;Quel est le plus petit pays d'Amérique du Sud par superficie ?;A) Uruguay | B) Brésil | C) Chili | D) Suriname;D;;OpenTDB
+2123;Géographie;1;Laquelle de ces langues européennes est classée comme « langue isolat » ?;A) Galicien | B) Basque | C) Maltais | D) Hongrois;B;;OpenTDB
+2124;Géographie;1;Quel est le surnom de l'État américain du Delaware ?;A) Le Cinquantième État | B) Le Deuxième État | C) Le Seizième État | D) Le Premier État;D;;OpenTDB
+2125;Géographie;1;Dans quel pays se trouve la ville de Rio de Janeiro ?;A) Venezuela | B) Chili | C) Pérou | D) Brésil;D;;OpenTDB
+2126;Géographie;1;Quel est le plus grand pays du monde ?;A) Chine | B) Fédération de Russie | C) Brésil | D) Canada;B;;OpenTDB
+2127;Géographie;2;L'atoll Bikini fait partie de quel pays ?;A) Fidji | B) Bahamas | C) Îles Christmas | D) Îles Marshall;D;;OpenTDB
+2128;Géographie;1;Quel est le plus grand pays par superficie à n'avoir qu'un seul fuseau horaire ?;A) Russie | B) Canada | C) Chine | D) Inde;C;;OpenTDB
+2129;Géographie;3;Lequel de ces pays insulaires est situé dans les Caraïbes ?;A) Maldives | B) Seychelles | C) Fidji | D) Barbade;D;;OpenTDB
+2130;Géographie;1;Si le football est appelé « soccer » en Angleterre, comment appelle-t-on le football américain en Angleterre ?;A) Football américain | B) Combball | C) Handball | D) Touchdown;A;;OpenTDB
+2131;Géographie;2;Quelle île des Canaries fut le théâtre d'une des pires catastrophes aériennes de l'histoire avec la collision de deux Boeing 747 ?;A) Ténérife | B) Maui | C) Fuerteventura | D) Grande Canarie;A;;OpenTDB
+2132;Géographie;1;Sur quel continent se trouve la cordillère des Andes ?;A) Afrique | B) Amérique du Sud | C) Europe | D) Asie;B;;OpenTDB
+2133;Géographie;2;Quelle est la capitale de Chypre ?;A) Limassol | B) Larnaca | C) Nicosie | D) Paphos;C;;OpenTDB
+2134;Géographie;2;Où se trouve le mur d'Hadrien ?;A) Carlisle, Angleterre | B) Alexandrie, Égypte | C) Dublin, Irlande | D) Rome, Italie;A;;OpenTDB
+2135;Géographie;2;Lequel de ces noms N'EST PAS une île faisant partie des Philippines ?;A) Java | B) Palawan | C) Luçon | D) Mindanao;A;;OpenTDB
+2136;Géographie;3;Combien de pays bordent le Kirghizistan ?;A) 4 | B) 1 | C) 3 | D) 6;A;;OpenTDB
+2137;Géographie;3;Laquelle de ces villes N'est PAS en Angleterre ?;A) Édimbourg | B) Manchester | C) Southampton | D) Oxford;A;;OpenTDB
+2138;Géographie;2;Quelle est la bonne orthographe de la capitale de la Hongrie ?;A) Bhudapest | B) Budapest | C) Boodapest | D) Budapast;B;;OpenTDB
+2139;Géographie;1;Quelle est la capitale de la Roumanie ?;A) Budapest | B) Bratislava | C) Bucarest | D) Belgrade;C;;OpenTDB
+2140;Géographie;3;Avec quel pays la France partage-t-elle sa plus grande frontière terrestre ?;A) Canada | B) Brésil | C) Espagne | D) Allemagne;B;;OpenTDB
+2141;Géographie;2;Où se trouve le « désert de Sonora » ?;A) Afrique | B) Amérique du Sud | C) Asie | D) Amérique du Nord;D;;OpenTDB
+2142;Géographie;3;Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch est située sur quelle île galloise ?;A) Caldey | B) Anglesey | C) Bardsey | D) Barry;B;;OpenTDB
+2143;Géographie;2;Combien de rivières y a-t-il en Arabie Saoudite ?;A) 2 | B) 1 | C) 0 | D) 3;C;;OpenTDB
+2144;Géographie;3;Quelle ville est la capitale du Michigan ?;A) Détroit | B) Kalamazoo | C) Ann Arbor | D) Lansing;D;;OpenTDB
+2145;Géographie;1;Les Alpes sont une chaîne de montagnes sur quel continent ?;A) Afrique | B) Europe | C) Asie | D) Amérique du Nord;B;;OpenTDB
+2146;Géographie;1;Quel pays abrite la plus grande population japonaise en dehors du Japon ?;A) Chine | B) États-Unis | C) Russie | D) Brésil;D;;OpenTDB
+2147;Géographie;1;La Space Needle se trouve dans quelle ville ?;A) Seattle | B) Los Angeles | C) Toronto | D) Vancouver;A;;OpenTDB
+2148;Géographie;1;Quelle est la ville polonaise connue des Allemands sous le nom de Danzig ?;A) Gdańsk | B) Varsovie | C) Zakopane | D) Poznań;A;;OpenTDB
+2149;Géographie;1;Lequel de ces lieux est un endroit situé en Cornouailles (Angleterre) ?;A) Alicante | B) Lisbonne | C) Barcelone | D) Madrid;C;;OpenTDB
+2150;Géographie;1;Où peut-on trouver les « Marches espagnoles » ?;A) Berlin, Allemagne | B) Rome, Italie | C) Londres, Angleterre | D) Barcelone, Espagne;B;;OpenTDB
+2151;Géographie;3;Quel était le nom originel de Hô Chi Minh-Ville ?;A) Saïgon | B) Angkor Vat | C) Hanoï | D) Dar es Salaam;A;;OpenTDB
+2152;Géographie;2;À Washington, D.C., que signifie le « C » ?;A) Columbia | B) Corinthia | C) City | D) Caledonia;A;;OpenTDB
+2153;Géographie;2;Lequel de ces pays a une capitale commençant par la lettre B ?;A) Jordanie | B) Liban | C) Qatar | D) Koweït;B;;OpenTDB
+2154;Géographie;2;L'Érythrée, devenue le 182e membre de l'ONU en 1993, se situe sur quel continent ?;A) Asie | B) Afrique | C) Europe | D) Amérique du Sud;B;;OpenTDB
+2155;Géographie;2;Quelle est la capitale de l'Estonie ?;A) Tallinn | B) Tartu | C) Riga | D) Helsinki;A;;OpenTDB
+2156;Géographie;2;Quelle est la capitale du Viêt Nam ?;A) Hanoï | B) Hô Chi Minh-Ville | C) Haïphong | D) Da Nang;A;;OpenTDB
+2157;Géographie;2;L'État américain de New York a à peu près autant d'habitants que ?;A) Roumanie | B) Hongrie | C) Allemagne | D) Pologne;A;;OpenTDB
+2158;Géographie;2;Combien de provinces y a-t-il aux Pays-Bas ?;A) 14 | B) 12 | C) 10 | D) 13;B;;OpenTDB
+2159;Géographie;2;Laquelle de ces îles japonaises est la plus grande par superficie ?;A) Iki | B) Odaiba | C) Okinawa | D) Shikoku;D;;OpenTDB
+2160;Géographie;3;Quelle attraction touristique nord-américaine est desservie par la compagnie de croisières « Maid of the Mist » ?;A) Whistler, Colombie-Britannique | B) Chutes du Niagara | C) Parc national de Yosemite | D) Disney World;B;;OpenTDB
+2161;Géographie;1;Laquelle de ces îles japonaises est la plus grande ?;A) Shikoku | B) Hokkaïdo | C) Honshu | D) Kyushu;C;;OpenTDB
+2162;Géographie;3;Lequel des éléments suivants est un château ?;A) Château Elizabeth | B) Château Olivia | C) Château Richard | D) Château Frank;A;;OpenTDB
+2163;Géographie;1;Le pays du Belize borde quel pays ?;A) Kenya | B) Guatemala | C) Pérou | D) Laos;B;;OpenTDB
+2164;Géographie;2;Tous les pays suivants ont des revendications officielles sur un territoire en Antarctique, SAUF :;A) Norvège | B) Australie | C) États-Unis | D) Chili;C;;OpenTDB
+2165;Géographie;3;Quel est le chef-lieu du comté de King County, Washington ?;A) Bellevue | B) Seattle | C) Enumclaw | D) Skykomish;B;;OpenTDB
+2166;Géographie;1;Combien de pays y a-t-il environ dans le monde ?;A) 200 | B) 300 | C) 500 | D) 100;A;;OpenTDB
+2167;Géographie;2;Quelle est la seule nation qui borde à la fois l'Uruguay et le Venezuela ?;A) Brésil | B) Mexique | C) Chili | D) Panama;A;;OpenTDB
+2168;Géographie;2;Les Falaises Blanches de Douvres se trouvent dans quel pays ?;A) Suède | B) États-Unis | C) Pays-Bas | D) Royaume-Uni;D;;OpenTDB
+2169;Géographie;1;Quel est le seul État américain dont le drapeau n'a pas une forme à 4 côtés ?;A) Nouveau-Mexique | B) Ohio | C) Idaho | D) Floride;B;;OpenTDB
+2170;Géographie;1;Lequel de ces anciens États yougoslaves est enclavé (sans accès à la mer) ?;A) Bosnie-Herzégovine | B) Croatie | C) Serbie | D) Monténégro;C;;OpenTDB
+2171;Géographie;1;Dans quelle ville indienne peut-on trouver le Taj Mahal ?;A) Mumbai | B) Thane | C) Agra | D) Faridabad;C;;OpenTDB
+2172;Géographie;3;Bir Tawil, un territoire inhabité non revendiqué par aucun pays, se situe à la frontière de quels deux pays ?;A) Irak et Arabie Saoudite | B) Tchad et Libye | C) Égypte et Soudan | D) Israël et Jordanie;C;;OpenTDB
+2173;Géographie;1;Combien d'États fédéraux l'Allemagne compte-t-elle ?;A) 32 | B) 16 | C) 25 | D) 13;B;;OpenTDB
+2174;Géographie;1;Le corps du Sphinx égyptien était basé sur quel animal ?;A) Chien | B) Taureau | C) Lion | D) Cheval;C;;OpenTDB
+2175;Géographie;1;Où se trouvait l'ancienne cité de Pompéi ?;A) Amérique du Sud | B) Pompilanus | C) Italie | D) Afrique de l'Est;C;;OpenTDB
+2176;Géographie;3;Quel pays ne fait PAS partie de la Scandinavie ?;A) Suède | B) Norvège | C) Danemark | D) Finlande;D;;OpenTDB
+2177;Géographie;2;Quelle est la plus grande île non continentale du monde ?;A) Groenland | B) Madagascar | C) Bornéo | D) Nouvelle-Guinée;A;;OpenTDB
+2178;Géographie;1;Quel pays du Royaume-Uni représente un dragon sur son drapeau ?;A) Irlande du Nord | B) Écosse | C) Angleterre | D) Pays de Galles;D;;OpenTDB
+2179;Géographie;2;Quel événement a conduit le Liechtenstein à ajouter une couronne sur son drapeau ?;A) Le couronnement du prince Johann I Joseph en 1805 | B) Les Jeux olympiques de 1936 | C) La signature de la Constitution du Liechtenstein de 1862 | D) Le décret de Charles VI en 1719;B;;OpenTDB
+2180;Géographie;2;Quelle est la plus haute montagne du monde ?;A) Kangchenjunga | B) Annapurna | C) Mont Everest | D) Mont Godwin-Austen;C;;OpenTDB
+2181;Géographie;2;Dans quel comté anglais trouve-t-on l'Université d'East Anglia ?;A) Cambridgeshire | B) Suffolk | C) Essex | D) Norfolk;D;;OpenTDB
+2182;Géographie;2;Quelle chaîne de montagnes longe la frontière entre l'Espagne et la France ?;A) Alpes | B) Oural | C) Carpates | D) Pyrénées;D;;OpenTDB

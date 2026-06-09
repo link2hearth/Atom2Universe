@@ -1,0 +1,87 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+718;Sports;2;Which team was the 2015-2016 NBA Champions?;A) Golden State Warriors | B) Cleveland Cavaliers | C) Toronto Raptors | D) Oklahoma City Thunder;B;The Cavaliers won after being down 3-1 in the finals.;OpenTDB
+719;Sports;1;In Baseball, how many balls outside the strike zone for a walk?;A) 1 | B) 4 | C) 2 | D) 3;B;Four balls outside the zone allow the batter to walk to first base.;OpenTDB
+720;Sports;1;Which team has won the most Stanley Cups in the NHL?;A) Chicago Blackhawks | B) Montreal Canadiens | C) Toronto Maple Leafs | D) Detroit Red Wings;B;The Canadiens have won 24 Stanley Cups.;OpenTDB
+721;Sports;1;What team did England beat in the 1966 World Cup final?;A) Soviet Union | B) West Germany | C) Portugal | D) Brazil;B;England beat West Germany 4-2 in extra time.;OpenTDB
+722;Sports;1;Which country hosted the 2022 FIFA World Cup?;A) USA | B) Qatar | C) Japan | D) Switzerland;B;Qatar hosted the first World Cup in the Middle East.;OpenTDB
+723;Sports;1;In the 2014 FIFA World Cup, what was the final score Brazil - Germany?;A) 1-5 | B) 1-7 | C) 1-6 | D) 2-6;B;Germany inflicted a historic defeat on Brazil.;OpenTDB
+724;Sports;1;Which NFL team plays for New England?;A) Chiefs | B) Patriots | C) Dolphins | D) 49ers;B;The New England Patriots are based in Foxborough, Massachusetts.;OpenTDB
+725;Sports;1;Which team won 2014 FIFA World Cup in Brazil?;A) Argentina | B) Germany | C) Brazil | D) Netherlands;B;Germany beat Argentina 1-0 in the final.;OpenTDB
+726;Sports;1;How many players are there in an association football/soccer team?;A) 10 | B) 11 | C) 9 | D) 8;B;A football team has 11 players on the field.;OpenTDB
+727;Sports;1;Who did Steven Gerrard win the Champions League with?;A) Real Madrid | B) Liverpool | C) Chelsea | D) Man City;B;Liverpool won the Champions League in 2005.;OpenTDB
+728;Sports;1;The UEFA Champions League features clubs from which continent?;A) South America | B) Europe | C) Africa | D) Asia;B;UEFA organizes European club competitions.;OpenTDB
+729;Sports;1;Which player holds the NHL record of 2,857 points?;A) Mario Lemieux | B) Wayne Gretzky | C) Sidney Crosby | D) Gordie Howe;B;Wayne Gretzky is nicknamed 'The Great One'.;OpenTDB
+730;Sports;1;Which team won the 2015-16 English Premier League?;A) Liverpool | B) Leicester City | C) Chelsea | D) Manchester United;B;Leicester City achieved one of the greatest sporting feats.;OpenTDB
+731;Sports;1;Who won the 2017 Formula One World Drivers' Championship?;A) Sebastian Vettel | B) Lewis Hamilton | C) Nico Rosberg | D) Max Verstappen;B;Lewis Hamilton won his 4th world title.;OpenTDB
+732;Sports;3;What is the full name of the footballer 'Cristiano Ronaldo'?;A) Cristiano Ronaldo los Santos Diego | B) Cristiano Ronaldo dos Santos Aveiro | C) Cristiano Armando Diego Ronaldo | D) Cristiano Luis Armando Ronaldo;B;He was born in Funchal, Madeira, Portugal.;OpenTDB
+733;Sports;2;What country hosted the 2014 Winter Olympics?;A) Canada | B) Russia | C) United States | D) Germany;B;The 2014 Winter Olympics were held in Sochi, Russia.;OpenTDB
+734;Sports;2;Which NBA player won MVP for the 1999-2000 season?;A) Allen Iverson | B) Shaquille O'Neal | C) Kobe Bryant | D) Paul Pierce;B;Shaq led the Lakers to the title that season.;OpenTDB
+735;Sports;1;What is the 'tool' used to hit the white ball in snooker or billiards?;A) Racquet | B) Cue | C) Bat | D) Mallet;B;The cue stick is usually made of wood with a leather tip.;OpenTDB
+736;Sports;1;Which African American helped integrate Major League baseball?;A) Curt Flood | B) Jackie Robinson | C) Roy Campanella | D) Satchel Paige;B;Jackie Robinson joined the Brooklyn Dodgers in 1947.;OpenTDB
+737;Sports;2;How many scoring zones are there on a conventional dart board?;A) 62 | B) 82 | C) 42 | D) 102;B;There are 82 scoring zones on a standard dartboard.;OpenTDB
+908;Sports;1;Who won the UEFA Champions League in 2016?;A) Manchester City F.C. | B) FC Bayern Munich | C) Atletico Madrid | D) Real Madrid C.F.;D;;OpenTDB
+909;Sports;1;Which country won the 2018 FIFA World Cup hosted in Russia?;A) Croatia | B) England | C) Belgium | D) France;D;;OpenTDB
+910;Sports;1;What sport features the terms love, deuce, match and volley?;A) Tennis | B) Curling | C) Basketball | D) Cricket;A;;OpenTDB
+911;Sports;2;The 1988 F1 season had McLaren win all but one race. Which race did they not win?;A) Italian Grand Prix | B) Monaco Grand Prix | C) Brazilian Grand Prix | D) Japanese Grand Prix;A;;OpenTDB
+912;Sports;3;Which Italian footballer told Neuer where he's putting his shot then dragged it wide at UEFA EURO 2016?;A) Giaccherini | B) Pelle | C) Barzagli | D) Insigne;B;;OpenTDB
+913;Sports;1;Which player holds the NHL record of 2,857 points?;A) Wayne Gretzky | B) Gordie Howe | C) Mario Lemieux | D) Sidney Crosby;A;;OpenTDB
+914;Sports;2;What is the oldest team in Major League Baseball?;A) Atlanta Braves | B) Chicago Cubs | C) Cincinnati Reds | D) St. Louis Cardinals;A;;OpenTDB
+915;Sports;2;What is the exact length of one non-curved part in Lane 1 of an Olympic Track?;A) 100m | B) 100yd | C) 109.36yd | D) 84.39m;D;;OpenTDB
+916;Sports;1;What national team won the first UEFA Nations League?;A) England | B) Switzerland | C) Netherlands | D) Portugal;D;;OpenTDB
+917;Sports;2;Who won the 2015 College Football Playoff National Championship?;A) Wisconsin Badgers | B) Ohio State Buckeyes | C) Clemson Tigers | D) Alabama Crimson Tide;B;;OpenTDB
+1794;Sports;2;"The song ""Three Lions"" by the Lightning Seeds was made for which major football event in 1996?";A) Champions League | B) World Cup | C) Confederations Cup | D) European Championships;D;;OpenTDB
+1795;Sports;1;In baseball, how many fouls are an out?;A) 5 | B) 0 | C) 3 | D) 2;B;;OpenTDB
+1796;Sports;1;"This Canadian television sportscaster is known for his ""Hockey Night in Canada"" role.";A) Don McKellar | B) Don Taylor | C) Donald Sutherland | D) Don Cherry;D;;OpenTDB
+1797;Sports;1;Which driver has been the Formula 1 world champion for a record 7 times?;A) Jim Clark | B) Fernando Alonso | C) Ayrton Senna | D) Michael Schumacher;D;;OpenTDB
+1798;Sports;1;Which of these NHL teams originally played in Atlanta?;A) St. Louis Blues | B) Calgary Flames | C) Vancouver Canucks | D) Minnesota Wild;B;;OpenTDB
+1799;Sports;1;Which country hosted the 2020 Summer Olympics?;A) China | B) Germany | C) Australia | D) Japan;D;;OpenTDB
+1800;Sports;3;Who won the 1998 Daytona 500?;A) Michael Waltrip | B) John Anderson | C) Dale Earnhardt | D) Jeff Gordon;C;;OpenTDB
+1801;Sports;2;Hockey player Wayne Gretzky was born in what Canadian province?;A) Quebec | B) Alberta | C) British Columbia | D) Ontario;D;;OpenTDB
+1802;Sports;2;Who is Manchester United's top Premier League goal scorer?;A) Wayne Rooney | B) Sir Bobby Charlton | C) Ryan Giggs | D) David Beckham;A;;OpenTDB
+1803;Sports;2;Which Formula 1 driver switched teams in the middle of the 2017 season?;A) Carlos Sainz Jr. | B) Rio Haryanto | C) Daniil Kvyat | D) Jolyon Palmer;A;;OpenTDB
+1804;Sports;2;Which NBA player won Most Valuable Player for the 1999-2000 season?;A) Paul Pierce | B) Shaquille O'Neal | C) Allen Iverson | D) Kobe Bryant;B;;OpenTDB
+1805;Sports;2;Who won the 1994 San Marino Grand Prix, the race in which Ayrton Senna was killed?;A) Gerhard Berger | B) Mika Häkkinen | C) Michael Schumacher | D) Nicola Larini;C;;OpenTDB
+1806;Sports;2;What city did the Lakers represent before relocating to Los Angeles?;A) Minneapolis | B) Chicago | C) San Francisco | D) Philadelphia;A;;OpenTDB
+1807;Sports;2;Who won the 2011 Stanley Cup?;A) Boston Bruins | B) Toronto Maple Leafs | C) Montreal Canadiens | D) New York Rangers;A;;OpenTDB
+1808;Sports;2;Which of these English football clubs is based in Liverpool?;A) Everton | B) Crystal Palace | C) West Ham United | D) Arsenal;A;;OpenTDB
+1809;Sports;2;What cricketing term denotes a batsman being dismissed with a score of zero?;A) Duck | B) Beamer | C) Carry | D) Bye;A;;OpenTDB
+1810;Sports;1;The Rio 2016 Summer Olympics held its closing ceremony on what date?;A) August 19 | B) August 21 | C) August 23 | D) August 17;B;;OpenTDB
+1811;Sports;3;"What is the full name of the footballer ""Cristiano Ronaldo""?";A) Cristiano Luis Armando Ronaldo | B) Cristiano Ronaldo los Santos Diego | C) Cristiano Ronaldo dos Santos Aveiro | D) Cristiano Armando Diego Ronaldo;C;;OpenTDB
+1812;Sports;1;The UEFA Champions League is an annual club football competition featuring clubs from which continent?;A) Asia | B) Europe | C) Africa | D) South America;B;;OpenTDB
+1813;Sports;2;Edson Arantes do Nascimento is the full name of which legendary football player?;A) Ronaldinho | B) Romário | C) Zico | D) Pelé;D;;OpenTDB
+1814;Sports;2;In what sport does Fanny Chmelar compete for Germany?;A) Gymnastics | B) Skiing | C) Showjumping | D) Swimming;B;;OpenTDB
+1815;Sports;1;Which year did Jenson Button win his first Formula One World Drivers' Championship?;A) 2007 | B) 2010 | C) 2009 | D) 2006;C;;OpenTDB
+1816;Sports;2;What is the nickname of Northampton town's rugby union club?;A) Wasps | B) Harlequins | C) Saracens | D) Saints;D;;OpenTDB
+1817;Sports;3;In Canadian football, scoring a rouge is worth how many points?;A) 4 | B) 1 | C) 3 | D) 2;B;;OpenTDB
+1818;Sports;1;What is the name of Manchester United's home stadium?;A) Anfield | B) St James Park | C) City of Manchester Stadium | D) Old Trafford;D;;OpenTDB
+1819;Sports;2;Which of these jersey numbers has Shaquille O'Neal never worn?;A) 35 | B) 36 | C) 33 | D) 32;A;;OpenTDB
+1820;Sports;3;Which city features all of their professional sports teams' jerseys with the same color scheme?;A) Pittsburgh | B) New York | C) Seattle | D) Tampa Bay;A;;OpenTDB
+1821;Sports;1;When was FC Schalke 04 founded?;A) 2008 | B) 1999 | C) 1904 | D) 1909;C;;OpenTDB
+1822;Sports;2;The F1 season of 1994 is remembered for what tragic event?;A) Verstappen on Fire (Germany) | B) Death of Ayrton Senna (San Marino) | C) Schumacher's Ban (Britain) | D) The Showdown (Australia);B;;OpenTDB
+1823;Sports;2;"Which German sportswear company's logo is the ""Formstripe""?";A) Puma | B) Reebok | C) Nike | D) Adidas;A;;OpenTDB
+1824;Sports;2;Who was the British professional wrestler Shirley Crabtree better known as?;A) Big Daddy | B) Kendo Nagasaki | C) Masambula | D) Giant Haystacks;A;;OpenTDB
+1825;Sports;1;Who won the 2015 Formula 1 World Championship?;A) Nico Rosberg | B) Lewis Hamilton | C) Jenson Button | D) Sebastian Vettel;B;;OpenTDB
+1826;Sports;2;Josh Mansour is part of what NRL team?;A) Sydney Roosters | B) Penrith Panthers | C) Melbourne Storm | D) North Queensland Cowboys;B;;OpenTDB
+1827;Sports;1;How many points did LeBron James score in his first NBA game?;A) 25 | B) 69 | C) 41 | D) 19;A;;OpenTDB
+1828;Sports;2;What is the oldest team in the NFL?;A) Arizona Cardinals | B) New York Giants | C) Green Bay Packers | D) Chicago Bears;A;;OpenTDB
+1829;Sports;1;"Which English football club has the nickname ""The Foxes""?";A) Leicester City | B) West Bromwich Albion | C) Bradford City | D) Northampton Town;A;;OpenTDB
+1830;Sports;1;In baseball, how many times does the ball have to be pitched outside of the strike zone before the batter is walked?;A) 1 | B) 4 | C) 2 | D) 3;B;;OpenTDB
+1831;Sports;3;Which male player won the gold medal of table tennis singles in 2016 Olympics?;A) Zhang Jike (China) | B) Jun Mizutani (Japan) | C) Vladimir Samsonov (Belarus) | D) Ma Long (China);D;;OpenTDB
+1832;Sports;2;Who has played the most tournaments in the German national soccer team?;A) Miroslav Klose | B) Lothar Matthäus | C) Oliver Kahn | D) Philipp Lahm;B;;OpenTDB
+1833;Sports;2;Which car manufacturer won the 2016 24 Hours of Le Mans?;A) Audi | B) Toyota | C) Porsche | D) Ferrari;C;;OpenTDB
+1834;Sports;2;Which soccer team won the Copa América 2015?;A) Chile | B) Paraguay | C) Brazil | D) Argentina;A;;OpenTDB
+1835;Sports;3;"Which English football team is nicknamed ""The Tigers""?";A) Manchester City | B) Hull City | C) Bristol City | D) Cardiff City;B;;OpenTDB
+1836;Sports;2;Which sport is NOT traditionally played during the Mongolian Naadam festival?;A) Horse-Racing | B) Wrestling | C) American Football | D) Archery;C;;OpenTDB
+1837;Sports;3;Who did Drew Brees pass in all time NFL passing yards in 2018?;A) Tom Brady | B) Peyton Manning | C) Dan Marino | D) Joe Montana;B;;OpenTDB
+1838;Sports;2;In what country were the 2014 Winter Olympics held in the town of Sochi?;A) Russia | B) Norway | C) Canada | D) South Korea;A;;OpenTDB
+1839;Sports;2;Who won the Champions League in 1999?;A) Manchester United | B) Barcelona | C) Bayern Munich | D) Liverpool;A;;OpenTDB
+1840;Sports;2;In Formula 1, the Virtual Safety Car was introduced following the fatal crash of which driver?;A) Gilles Villeneuve | B) Ayrton Senna | C) Ronald Ratzenberger | D) Jules Bianchi;D;;OpenTDB
+1841;Sports;2;Which darts player has won the most World Championship titles?;A) Eric Bristow | B) Phil Taylor | C) Raymond van Barneveld | D) Michael van Gerwen;B;;OpenTDB
+1842;Sports;3;Who scored the injury time winning goal in the 1999 UEFA Champions League final between Manchester United and Bayern Munich?;A) Dwight Yorke | B) David Beckham | C) Ole Gunnar Solskjær | D) Andy Cole;C;;OpenTDB
+1843;Sports;3;Which is Kenenisa Bekele's personal best at marathon?;A) 2:01:12 | B) 2:01:51 | C) 2:01:41 | D) 2:01:45;C;;OpenTDB
+1844;Sports;1;Which two teams played in Super Bowl XLII?;A) The Seattle Seahawks & The Denver Broncos | B) The Philadelphia Eagles & The New England Patriots | C) The New York Giants & The New England Patriots | D) The Green Bay Packers & The Pittsburgh Steelers;C;;OpenTDB
+1845;Sports;1;Which country hosted the 2018 FIFA World Cup?;A) United States | B) Russia | C) Saudi Arabia | D) Germany;B;;OpenTDB
+1846;Sports;2;Who has played the most tournaments on the Brazilian national soccer team?;A) Roberto Carlos | B) Ronaldo | C) Cafu | D) Kaká;C;;OpenTDB
+1847;Sports;3;Which year was the third Super Bowl held?;A) 1971 | B) 1970 | C) 1969 | D) 1968;C;;OpenTDB
+1848;Sports;1;How many soccer players should be on the field at the same time?;A) 24 | B) 20 | C) 26 | D) 22;D;;OpenTDB
+1849;Sports;1;Which African American is in part responsible for integrating Major League baseball?;A) Jackie Robinson | B) Satchell Paige | C) Roy Campanella | D) Curt Flood;A;;OpenTDB

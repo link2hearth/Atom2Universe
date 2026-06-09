@@ -1,0 +1,133 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+738;Technologie;2;In CSS, which value CANNOT be used with the 'position' property?;A) static | B) center | C) absolute | D) relative;B;'center' is not a valid value for position.;OpenTDB
+739;Technologie;1;What does CPU stand for?;A) Central Process Unit | B) Central Processing Unit | C) Computer Personal Unit | D) Central Processor Unit;B;CPU stands for Central Processing Unit.;OpenTDB
+740;Technologie;2;Which programming language was developed by Sun Microsystems in 1995?;A) Python | B) Java | C) Solaris OS | D) C++;B;Java was created by James Gosling at Sun.;OpenTDB
+741;Technologie;1;What does GHz stand for?;A) Gigahotz | B) Gigahertz | C) Gigahetz | D) Gigahatz;B;GHz = Gigahertz, a measure of frequency.;OpenTDB
+742;Technologie;1;What does the Prt Sc button do?;A) Nothing | B) Captures the screen and copies to clipboard | C) Saves a .png file | D) Closes all windows;B;Print Screen copies the screen to the clipboard.;OpenTDB
+743;Technologie;1;What does LTS stand for in the software market?;A) Long Taco Service | B) Long Term Support | C) Ludicrous Transfer Speed | D) Ludicrous Turbo Speed;B;LTS = Long Term Support for stable versions.;OpenTDB
+744;Technologie;2;In computing terms, what does CLI stand for?;A) Common Language Input | B) Command Line Interface | C) Control Line Interface | D) Common Language Interface;B;CLI = Command Line Interface.;OpenTDB
+745;Technologie;2;When was the programming language 'C#' released?;A) 1998 | B) 2000 | C) 1999 | D) 2001;B;C# was developed by Microsoft and released in 2000.;OpenTDB
+746;Technologie;2;What does RAID stand for?;A) Rapid Access for Indexed Devices | B) Redundant Array of Independent Disks | C) Range of Applications | D) Randomized Abstract Identification;B;RAID combines multiple disks for redundancy or performance.;OpenTDB
+747;Technologie;1;On Twitter, what was the original character limit for a Tweet?;A) 120 | B) 140 | C) 160 | D) 100;B;The original 140 character limit was doubled in 2017.;OpenTDB
+748;Technologie;1;In 'Hexadecimal', what color would be displayed from '#00FF00'?;A) Red | B) Green | C) Blue | D) Yellow;B;#00FF00 represents pure green (0 red, 255 green, 0 blue).;OpenTDB
+749;Technologie;1;Which hardware device provides an interface for all other devices to communicate?;A) Central Processing Unit | B) Motherboard | C) Hard Disk Drive | D) Random Access Memory;B;The motherboard connects all computer components.;OpenTDB
+750;Technologie;1;Which programming language shares its name with an island in Indonesia?;A) Python | B) Java | C) C | D) Jakarta;B;Java is an Indonesian island famous for its coffee.;OpenTDB
+751;Technologie;1;How many kilobytes in one gigabyte (in decimal)?;A) 1024 | B) 1000000 | C) 1000 | D) 1048576;B;In decimal: 1 GB = 1000 MB = 1,000,000 KB.;OpenTDB
+752;Technologie;1;How many values can a single byte represent?;A) 8 | B) 256 | C) 1 | D) 1024;B;A byte = 8 bits = 2^8 = 256 possible values.;OpenTDB
+753;Technologie;1;Which computer language would you associate Django framework with?;A) C# | B) Python | C) C++ | D) Java;B;Django is a Python web framework created in 2005.;OpenTDB
+754;Technologie;1;In computing, what does LAN stand for?;A) Long Antenna Node | B) Local Area Network | C) Light Access Node | D) Land Address Navigation;B;LAN = Local Area Network.;OpenTDB
+755;Technologie;2;In programming, what do you call functions with the same name but different implementations?;A) Overloading | B) Overriding | C) Abstracting | D) Inheriting;A;Overloading allows multiple signatures for the same function.;OpenTDB
+756;Technologie;2;Whistler was the codename of which Microsoft Operating System?;A) Windows 2000 | B) Windows XP | C) Windows 7 | D) Windows 95;B;Windows XP was called Whistler during development.;OpenTDB
+757;Technologie;2;Unix Time is the number of seconds elapsed since when?;A) July 4, 1976 | B) Midnight, January 1, 1970 | C) Creator's birthday | D) July 4, 1980;B;Unix epoch starts on January 1, 1970 at midnight UTC.;OpenTDB
+888;Technologie;2;The teapot often seen in 3D modeling applications is called what?;A) 3D Teapot | B) Utah Teapot | C) Tennessee Teapot | D) Pixar Teapot;B;;OpenTDB
+889;Technologie;3;Who is the founder of Palantir?;A) Peter Thiel | B) Jack Dorsey | C) Marc Benioff | D) Mark Zuckerberg;A;;OpenTDB
+890;Technologie;1;What does the MP stand for in MP3?;A) Moving Picture | B) Music Player | C) Multi Pass | D) Micro Point;A;;OpenTDB
+891;Technologie;2;When did the online streaming service Mixer launch?;A) 2013 | B) 2011 | C) 2016 | D) 2009;C;;OpenTDB
+892;Technologie;2;How many bits make up the significand of a single precision floating point number?;A) 8 | B) 53 | C) 23 | D) 15;C;;OpenTDB
+893;Technologie;1;What language does Node.js use?;A) Java | B) Java Source | C) Joomla Source Code | D) JavaScript;D;;OpenTDB
+894;Technologie;1;On Twitter, what was the original character limit for a tweet?;A) 120 | B) 140 | C) 160 | D) 100;B;;OpenTDB
+895;Technologie;1;Which programming language shares its name with an island in Indonesia?;A) Java | B) C | C) Python | D) Jakarta;A;;OpenTDB
+896;Technologie;3;What was the first company to use the term Golden Master?;A) IBM | B) Apple | C) Google | D) Microsoft;B;;OpenTDB
+897;Technologie;1;How many values can a single byte represent?;A) 1024 | B) 8 | C) 1 | D) 256;D;;OpenTDB
+1528;Technologie;2;Approximately how many Apple I personal computers were created?;A) 200 | B) 500 | C) 100 | D) 1000;A;;
+1529;Technologie;2;"What does ""LCD"" stand for?";A) Last Common Difference | B) Long Continuous Design | C) Liquid Crystal Display | D) Language Control Design;C;;
+1530;Technologie;2;What did the name of the Tor Anonymity Network orignially stand for?;A) The Only Router | B) The Ominous Router | C) The Orange Router | D) The Onion Router;D;;
+1531;Technologie;1;The series of the Intel HD graphics generation succeeding that of the 5000 and 6000 series (Broadwell) is called:;A) HD Graphics 600 | B) HD Graphics 500 | C) HD Graphics 7000 | D) HD Graphics 700;B;;
+1532;Technologie;3;"What was the first company to use the term ""Golden Master""?";A) Apple | B) Microsoft | C) Google | D) IBM;A;;
+1533;Technologie;3;The internet domain .fm is the country-code top-level domain for which Pacific Ocean island nation?;A) Marshall Islands | B) Tuvalu | C) Micronesia | D) Fiji;C;;
+1534;Technologie;2;What is the correct term for the metal object in between the CPU and the CPU fan within a computer system?;A) CPU Vent | B) Heat Vent | C) Heat Sink | D) Temperature Decipator;C;;
+1535;Technologie;3;Which of the following computer components can be built using only NAND gates?;A) CPU | B) ALU | C) RAM | D) Register;B;;
+1536;Technologie;1;When Gmail first launched, how much storage did it provide for your email?;A) 512MB | B) 5GB | C) 1GB | D) Unlimited;C;;
+1537;Technologie;2;Linus Torvalds created which of these?;A) Wikipedia | B) Linux | C) Python | D) Microsoft Windows;B;;
+1538;Technologie;3;What is the maximum value of a 32-bit signed binary integer?;A) 2,147,483,647 | B) 255 | C) 2048 | D) 9,223,372,036,854,775,807;A;;
+1539;Technologie;2;In computing terms, typically what does CLI stand for?;A) Common Language Input | B) Common Language Interface | C) Control Line Interface | D) Command Line Interface;D;;
+1540;Technologie;3;Which RAID array type is associated with data mirroring?;A) RAID 5 | B) RAID 10 | C) RAID 0 | D) RAID 1;D;;
+1541;Technologie;2;"What does the DOS in Microsoft's first operating system ""MS-DOS"" stand for?";A) Dumb Operating System | B) Disk Operating System | C) Diskless Operating System | D) Driver Oriented System;B;;
+1542;Technologie;3;America Online (AOL) started out as which of these online service providers?;A) Prodigy | B) GEnie | C) CompuServe | D) Quantum Link;D;;
+1543;Technologie;1;What is the code name for the mobile operating system Android 7.0?;A) Ice Cream Sandwich | B) Jelly Bean | C) Marshmallow | D) Nougat;D;;
+1544;Technologie;2;.at is the top-level domain for what country?;A) Angola | B) Austria | C) Australia | D) Argentina;B;;
+1545;Technologie;2;What was the first commerically available computer processor?;A) Intel 486SX | B) Intel 4004 | C) AMD AM386 | D) TMS 1000;B;;
+1546;Technologie;1;Which SQL keyword is used to fetch data from a database?;A) EXEC | B) INDEX | C) SELECT | D) VALUES;C;;
+1547;Technologie;2;How many cores does the Intel i7-6950X have?;A) 12 | B) 4 | C) 10 | D) 8;C;;
+1548;Technologie;2;Which internet company began life as an online bookstore called 'Cadabra'?;A) eBay | B) Shopify | C) Overstock | D) Amazon;D;;
+1549;Technologie;2;While Apple was formed in California, in which western state was Microsoft founded?;A) Colorado | B) New Mexico | C) Washington | D) Arizona;B;;
+1550;Technologie;2;In HTML, which non-standard tag used to be be used to make elements scroll across the viewport?;A) <marquee></marquee> | B) <move></move> | C) <slide></slide> | D) <scroll></scroll>;A;;
+1551;Technologie;2;Whistler was the codename of this Microsoft Operating System.;A) Windows 2000 | B) Windows XP | C) Windows 7 | D) Windows 95;B;;
+1552;Technologie;3;"The acronym ""RIP"" stands for which of these?";A) Regular Interval Processes | B) Routing Information Protocol | C) Runtime Instance Processes | D) Routine Inspection Protocol;B;;
+1553;Technologie;2;Which operating system was released first?;A) Linux | B) Windows | C) OS/2 | D) Mac OS;D;;
+1554;Technologie;3;Dutch computer scientist Mark Overmars is known for creating which game development engine?;A) Construct | B) Torque 2D | C) Stencyl | D) Game Maker;D;;
+1555;Technologie;3;Which data structure does FILO apply to?;A) Queue | B) Stack | C) Heap | D) Tree;B;;
+1556;Technologie;1;According to the International System of Units, how many bytes are in a kilobyte of RAM?;A) 1000 | B) 500 | C) 512 | D) 1024;A;;
+1557;Technologie;3;Which of these is not a key value of Agile software development?;A) Customer collaboration | B) Responding to change | C) Individuals and interactions | D) Comprehensive documentation;D;;
+1558;Technologie;3;The Harvard architecture for micro-controllers added which additional bus?;A) Control | B) Address | C) Instruction | D) Data;C;;
+1559;Technologie;2;On which computer hardware device is the BIOS chip located?;A) Graphics Processing Unit | B) Hard Disk Drive | C) Motherboard | D) Central Processing Unit;C;;
+1560;Technologie;3;Which kind of algorithm is Ron Rivest not famous for creating?;A) Stream cipher | B) Asymmetric encryption | C) Hashing algorithm | D) Secret sharing scheme;D;;
+1561;Technologie;1;What is the name of Layer 7 of the OSI model?;A) Application | B) Network | C) Session | D) Present;A;;
+1562;Technologie;2;What is largely considered the precursor to the USB format?;A) FireWire | B) PS/2 | C) PCIe | D) SVGA;B;;
+1563;Technologie;3;What was the name of the first Bulgarian personal computer?;A) IZOT 1030 | B) Pravetz 82 | C) IMKO-1 | D) Pravetz 8D;C;;
+1564;Technologie;2;Which of these people was NOT a founder of Apple Inc?;A) Jonathan Ive | B) Ronald Wayne | C) Steve Wozniak | D) Steve Jobs;A;;
+1565;Technologie;3;According to DeMorgan's Theorem, the Boolean expression (AB)' is equivalent to:;A) A' + B' | B) A'B' | C) AB' + AB | D) A'B + B'A;A;;
+1566;Technologie;2;Generally, which component of a computer draws the most power?;A) Hard Drive | B) Processor | C) Power Supply | D) Video Card;D;;
+1567;Technologie;2;"In the programming language ""Python"", which of these statements would display the string ""Hello World"" correctly?";"A) printf(""Hello World"") | B) echo ""Hello World"" | C) console.log(""Hello World"") | D) print(""Hello World"")";D;;
+1568;Technologie;3;What is the name of the process that sends one qubit of information using two bits of classical information?;A) Quantum Entanglement | B) Quantum Programming | C) Super Dense Coding | D) Quantum Teleportation;D;;
+1569;Technologie;2;"What is known as ""the brain"" of the Computer?";A) Keyboard | B) Graphics Processing Unit | C) Central Processing Unit | D) Motherboard;C;;
+1570;Technologie;2;The British Rail Class 700, Class 707 and the Class 717 are part of what train family?;A) Aventra | B) Electrostar | C) Desiro City | D) Networker;C;;
+1571;Technologie;2;"Which car manufacturer created the ""Aventador""?";A) Bugatti | B) Lamborghini | C) Ferrari | D) Pagani;B;;
+1572;Technologie;3;What year did the Chevrolet LUV mini truck make its debut?;A) 1982 | B) 1975 | C) 1972 | D) 1973;C;;
+1573;Technologie;2;Which car brand does NOT belong to General Motors?;A) Chevrolet | B) Cadillac | C) Ford | D) Buick;C;;
+1574;Technologie;2;Which Japanese company is the world's largest manufacturer of motorcycles?;A) Honda | B) Suzuki | C) Yamaha | D) Kawasaki;A;;
+1575;Technologie;2;What nickname was given to Air Canada Flight 143 after it ran out of fuel and glided to safety in 1983?;A) Gimli Chaser | B) Gimli Microlight | C) Gimli Glider | D) Gimli Superb;C;;
+1576;Technologie;1;The LS7 engine is how many cubic inches?;A) 427 | B) 364 | C) 346 | D) 376;A;;
+1577;Technologie;3;How much horsepower is produced by the SD40-2 Locomotive?;A) 2,190 | B) 2,578 | C) 3,200 | D) 3,000;D;;
+1578;Technologie;1;Which of the following car manufacturers had a war named after it?;A) Ford | B) Honda | C) Volkswagen | D) Toyota;D;;
+1579;Technologie;2;Which of these cars is NOT considered one of the 5 Modern Supercars by Ferrari?;A) Enzo Ferrari | B) Testarossa | C) F40 | D) 288 GTO;B;;
+1580;Technologie;2;Which supercar company is from Sweden?;A) Bugatti | B) Lamborghini | C) McLaren | D) Koenigsegg;D;;
+1581;Technologie;1;Which Italian city is home of the car manufacturer 'Fiat'?;A) Rome | B) Modena | C) Maranello | D) Turin;D;;
+1582;Technologie;1;Which of these automotive brands originated in Sweden?;A) Mercedes | B) Volvo | C) Lincoln | D) Acura;B;;
+1583;Technologie;3;In 2014, over 6 million General Motors vehicles were recalled due to what critical flaw?;A) Malfunctioning gas pedal | B) Faulty brake pads | C) Breaking fuel lines | D) Faulty ignition switch;D;;
+1584;Technologie;3;Which one of these chassis codes are used by BMW 3-series?;A) F10 | B) E39 | C) E46 | D) E85;C;;
+1585;Technologie;3;Which of the following FIA Rally cars was approved for use in the Group B class first?;A) BMW M1 | B) Lancia Rally 037 | C) Audi Quattro A2 | D) Porsche 911 Turbo;D;;
+1586;Technologie;1;What animal is pictured on the logo of the automobile manufacturer Porsche?;A) Horse | B) Bull | C) Lion | D) Cheetah;A;;
+1587;Technologie;3;Which one of the following is NOT a sub-company of the Volkswagen Group?;A) Opel | B) Bentley | C) Porsche | D) Bugatti;A;;
+1588;Technologie;2;Which animal features on the logo for Abarth, the motorsport division of Fiat?;A) Horse | B) Scorpion | C) Snake | D) Bull;B;;
+1589;Technologie;2;When was Tesla founded?;A) 2005 | B) 2007 | C) 2003 | D) 2008;C;;
+1590;Technologie;3;Which Variable Valve Timing technology is used by BMW?;A) VANOS | B) VVEL | C) MultiAir | D) VVT-iw;A;;
+1591;Technologie;1;The LS1 engine is how many cubic inches?;A) 346 | B) 360 | C) 350 | D) 355;A;;
+1592;Technologie;1;"Which car tire manufacturer is famous for its ""Eagle"" brand of tires, and is the official tire supplier of NASCAR?";A) Goodyear | B) Bridgestone | C) Pirelli | D) Michelin;A;;
+1593;Technologie;1;What are the cylinder-like parts that pump up and down within the engine?;A) Pistons | B) Radiators | C) ABS | D) Leaf Springs;A;;
+1594;Technologie;1;During World War 2, with tank was the most fear by the allies?;A) Mks Matilda II | B) PanzerKampfwagen V Panther | C) Marder III | D) PanzerKampfwagen VI Tiger;B;;
+1595;Technologie;1;What is the fastest road legal car in the world?;A) Pagani Huayra BC | B) Hennessy Venom GT | C) Koenigsegg Agera RS | D) Bugatti Veyron Super Sport;C;;
+1596;Technologie;1;Which of these companies does NOT manufacture motorcycles?;A) Yamaha | B) Toyota | C) Kawasaki | D) Honda;B;;
+1597;Technologie;1;The Italian automaker Lamborghini uses what animal as its logo?;A) Snake | B) Bat | C) Horse | D) Bull;D;;
+1598;Technologie;2;Which country has the international vehicle registration letter 'A'?;A) Armenia | B) Austria | C) Australia | D) Afghanistan;B;;
+1599;Technologie;2;Which of the following vehicles featured a full glass roof at base model?;A) Mercedes-Benz A-Class | B) Chevy Volt | C) Renault Avantime | D) Honda Odyssey;C;;
+1600;Technologie;1;"The term ""battery"" to describe an electrical storage device was coined by?";A) Alessandro Volta | B) Nikola Tesla | C) Luigi Galvani | D) Benjamin Franklin;D;;
+1601;Technologie;2;Out of all of the NASA Space Shuttles, which 2 have been destroyed in disasters?;A) None of the Above | B) Challenger and Columbia | C) Discovery and Endeavour | D) Enterprise and Atlantis;B;;
+1602;Technologie;2;"Which company designed the ""Betamax"" video cassette format?";A) Panasonic | B) Fujitsu | C) LG | D) Sony;D;;
+1603;Technologie;2;Apple's Voice Assistant, Siri, debuted on which iPhone?;A) iPhone 4S | B) iPhone 6S | C) iPhone 3GS | D) iPhone 5S;A;;
+1604;Technologie;1;Which of the following is not a type of computer mouse?;A) Smoothie mouse | B) Drum mouse | C) Trackball mouse | D) Optical mouse;A;;
+1605;Technologie;3;Which of the following is used to measure blood pressure?;A) Ruler | B) Haemoerythrometer | C) Sphygmomanometer | D) Barometer;C;;
+1606;Technologie;2;Who patented a steam engine that produced continuous rotary motion?;A) Albert Einstein | B) James Watt | C) Alessandro Volta | D) Nikola Tesla;B;;
+1607;Technologie;2;This former Air Force and NASA engineer is the inventor of the Super Soaker water gun.;A) Lonnie Johnson | B) Ashitey Trebi-Ollennu | C) Bruce D'Andrade | D) Frances Northcutt;A;;
+1608;Technologie;2;How does a centrifuge separate heavy and light particles?;A) Spinning | B) Sifting | C) Ionizing | D) Vibrating;A;;
+1609;Technologie;1;When was the iPhone released?;A) 2005 | B) 2007 | C) 2004 | D) 2006;B;;
+1610;Technologie;1;Which gaming console is developed by Sony?;A) Atari | B) PlayStation | C) Xbox | D) Nintendo Switch;B;;
+1611;Technologie;1;Which virtual assistant is developed by Amazon?;A) Alexa | B) Siri | C) Cortana | D) Google Assistant;A;;
+1612;Technologie;2;In what year was the Oculus Rift revealed to the public through a Kickstarter campaign?;A) 2012 | B) 2013 | C) 2011 | D) 2010;A;;
+1613;Technologie;1;When was the Tamagotchi digital pet released?;A) 1996 | B) 1990 | C) 1992 | D) 1989;A;;
+1614;Technologie;1;Which buzzword did Apple Inc. use to describe their removal of the headphone jack?;A) Innovation | B) Courage | C) Revolution | D) Bravery;B;;
+1615;Technologie;2;When was the compact disc player first released?;A) 1983 | B) 1981 | C) 1980 | D) 1982;D;;
+1616;Technologie;2;Which company manufactured the iconic TR-808 drum machine?;A) Technics | B) Roland | C) Casio | D) Korg;B;;
+1617;Technologie;1;What does GPS stand for?;A) General Positioning System | B) Global Personal System | C) Global Positioning System | D) General Personal Satellite;C;;
+1618;Technologie;1;What is the SI unit for resistance?;A) Ohms | B) Volts | C) Siemens | D) Ampheres;A;;
+1619;Technologie;3;Who built the first laser?;A) Edith Clarke | B) Theodore Harold Maiman | C) Jack Kilby | D) Nikola Tesla;B;;
+1620;Technologie;2;What are the base station trackers used for the HTC Vive called?;A) Trackers | B) Motion | C) Lighthouse | D) Constellation;C;;
+1621;Technologie;1;What does SSD stand for in the context of computer storage?;A) Software Storage Device | B) Solid State Drive | C) Super Speed Data | D) Secure System Disk;B;;
+1622;Technologie;2;"What is the ""Mitsubishi Wakamaru""?";A) A robot | B) An motorcycle | C) A motorboat | D) A pickup truck;A;;
+1623;Technologie;2;Which company developed the Hololens?;A) Microsoft | B) HTC | C) Oculus | D) Tobii;A;;
+1624;Technologie;1;When did the CD begin to appear on the consumer market?;A) 1962 | B) 1992 | C) 1972 | D) 1982;D;;
+1625;Technologie;2;"Mobile hardware and software company ""Blackberry Limited"" was founded in which country?";A) United Kingdom | B) Canada | C) United States of America | D) Norway;B;;
+1626;Technologie;1;When was the DVD invented?;A) 2000 | B) 1980 | C) 1995 | D) 1990;C;;
+1627;Technologie;1;What round is a classic AK-47 chambered in?;A) 7.62x51mm | B) 5.45x39mm | C) 7.62x39mm | D) 5.56x45mm;C;;
+1628;Technologie;3;Which round does a WW2 M1 Garand fire?;A) 7.62x51mm | B) 7.62 | C) .30-06 | D) .308;C;;
+1629;Technologie;1;What is the name of a simple machine that is made up of a stiff arm that can move freely around a fixed point?;A) Screw | B) Lever | C) Pulley | D) Wedge;B;;

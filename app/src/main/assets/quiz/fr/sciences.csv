@@ -1,0 +1,146 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+581;Chimie;1;Quel est le symbole chimique du mercure ?;A) Me | B) Hg | C) Mc | D) Hy;B;Hg vient du latin 'hydrargyrum' (argent liquide).;OpenTDB
+582;Espace;1;Qu'y a-t-il au centre de notre galaxie ?;A) Un trou de ver | B) Un trou noir | C) Une supernova | D) Un quasar;B;Sagittarius A* est le trou noir supermassif au centre de la Voie Lactée.;OpenTDB
+583;Biologie;1;Quelle est la centrale énergétique de la cellule ?;A) Ribosome | B) Mitochondrie | C) Noyau | D) Cytoplasme;B;Les mitochondries produisent l'ATP, l'énergie cellulaire.;OpenTDB
+584;Sciences de la Terre;3;Quelle extinction massive a été causée par un astéroïde et a éliminé les dinosaures ?;A) Trias-Jurassique | B) Crétacé-Paléogène | C) Permien-Trias | D) Ordovicien-Silurien;B;L'extinction K-Pg s'est produite il y a 66 millions d'années.;OpenTDB
+585;Sciences de la Terre;2;Quel minéral a le numéro le plus bas sur l'échelle de Mohs ?;A) Quartz | B) Talc | C) Diamant | D) Gypse;B;Le talc a une dureté de 1 sur l'échelle de Mohs.;OpenTDB
+586;Physique;2;Quelle est l'unité SI du courant électrique ?;A) Volt | B) Ampère | C) Ohm | D) Watt;B;L'ampère mesure l'intensité du courant électrique.;OpenTDB
+587;Espace;2;De quels deux éléments le Soleil est-il principalement composé ?;A) Hydrogène et Azote | B) Hydrogène et Hélium | C) Carbone et Azote | D) Carbone et Hélium;B;Le Soleil est composé à 74% d'hydrogène et 24% d'hélium.;OpenTDB
+588;Chimie;2;À quel élément correspond Au dans le tableau périodique ?;A) Argent | B) Or | C) Oxygène | D) Nickel;B;Au vient du latin 'aurum' signifiant or.;OpenTDB
+589;Chimie;2;Quelle est la formule chimique de l'ammoniac ?;A) CO2 | B) NH3 | C) NO3 | D) CH4;B;L'ammoniac est composé d'un atome d'azote et trois d'hydrogène.;OpenTDB
+590;Sciences de la Terre;2;Comment s'appelle la couche la plus basse de l'atmosphère terrestre ?;A) Stratosphère | B) Troposphère | C) Mésosphère | D) Thermosphère;B;La troposphère s'étend de 0 à environ 12 km d'altitude.;OpenTDB
+591;Chimie;2;Quel est le symbole de l'étain dans le tableau périodique ?;A) Ti | B) Sn | C) Ni | D) Na;B;Sn vient du latin 'stannum' signifiant étain.;OpenTDB
+592;Biologie;1;Combien de copies de chaque gène les cellules humaines possèdent-elles ?;A) 1 | B) 2 | C) 4 | D) 3;B;Les humains sont diploïdes avec deux copies de chaque gène.;OpenTDB
+593;Physique;1;Quelle est l'unité SI de distance ?;A) Angström | B) Mètre | C) Pied | D) Brasse;B;Le mètre est l'unité de base du système international.;OpenTDB
+594;Biologie;3;Quelle est la toxine la plus puissante connue ?;A) Ricine | B) Toxine botulique | C) Cyanure | D) Amiante;B;La toxine botulique est létale à des doses infimes.;OpenTDB
+595;Sciences;2;Comment s'appelle le biais cognitif où une personne peu compétente se croit supérieure ?;A) Effet Meyers-Briggs | B) Effet Dunning-Kruger | C) Effet Müller-Lyer | D) Effet Freud-Hall;B;L'effet Dunning-Kruger a été décrit en 1999.;OpenTDB
+596;Espace;2;Quel âge a l'univers ?;A) 4,5 milliards d'années | B) 13,8 milliards d'années | C) 7,9 milliards d'années | D) 16,2 milliards d'années;B;L'univers a environ 13,8 milliards d'années.;OpenTDB
+597;Biologie;2;Quels sont les plus petits vaisseaux sanguins du corps humain ?;A) Artérioles | B) Capillaires | C) Veinules | D) Lymphatiques;B;Les capillaires permettent les échanges gazeux avec les tissus.;OpenTDB
+598;Physique;1;Quelle est l'unité SI de masse ?;A) Tonne | B) Kilogramme | C) Livre | D) Gramme;B;Le kilogramme est l'unité de base de masse du SI.;OpenTDB
+599;Biologie;1;Quel os est le plus difficile à casser ?;A) Crâne | B) Fémur | C) Humérus | D) Tibia;B;Le fémur est l'os le plus long et le plus solide du corps.;OpenTDB
+600;Biologie;2;Dans quelle partie du corps se trouve le tibia ?;A) Bras | B) Jambe | C) Main | D) Tête;B;Le tibia est l'os principal de la jambe inférieure.;OpenTDB
+601;Chimie;1;D'après qui l'élément curium a-t-il été nommé ?;A) Le rover Curiosity | B) Marie et Pierre Curie | C) Curious George | D) Stephen Curry;B;Le curium honore Marie et Pierre Curie pour leurs travaux sur la radioactivité.;OpenTDB
+602;Chimie;1;Quel est le premier élément du tableau périodique ?;A) Hélium | B) Hydrogène | C) Oxygène | D) Lithium;B;L'hydrogène a le numéro atomique 1.;OpenTDB
+603;Biologie;3;Botaniquement parlant, lequel de ces fruits n'est PAS une baie ?;A) Myrtille | B) Fraise | C) Banane | D) Raisin;B;La fraise est un faux-fruit, pas une vraie baie.;OpenTDB
+604;Espace;1;Quelle mission Apollo a été la première à se poser sur la Lune ?;A) Apollo 10 | B) Apollo 11 | C) Apollo 9 | D) Apollo 13;B;Apollo 11 s'est posé sur la Lune le 20 juillet 1969.;OpenTDB
+605;Chimie;1;Quelle est la masse atomique du carbone ?;A) 14 | B) 12 | C) 16 | D) 10;B;Le carbone-12 est l'isotope standard avec une masse de 12.;OpenTDB
+606;Sciences;3;La coulrophobie est la peur irrationnelle de quoi ?;A) Cimetières | B) Clowns | C) Aiguilles | D) Tunnels;B;La coulrophobie est une peur intense des clowns.;OpenTDB
+607;Nature;2;Quel est le plus grand organisme vivant connu ?;A) Baleine bleue | B) Armillaire | C) Séquoia | D) Récif corallien;B;L'armillaire (Honey Fungus) peut couvrir des kilomètres carrés.;OpenTDB
+608;Sciences;2;Quand le premier mammifère a-t-il été cloné avec succès ?;A) 2009 | B) 1996 | C) 1999 | D) 1985;B;La brebis Dolly a été clonée en 1996.;OpenTDB
+609;Biologie;1;Que signifie ADN ?;A) Acide désoxyribogénétique | B) Acide désoxyribonucléique | C) Atomes désoxyribogénétiques | D) Acide détoxique;B;L'ADN est le support de l'information génétique.;OpenTDB
+878;Sciences;3;Quelle est l'unité SI standard pour l'intensité lumineuse ?;A) Candela | B) Faraday | C) Coulomb | D) Lumen;A;;OpenTDB
+879;Biologie;3;Comment le gorille des plaines de l'Ouest est-il scientifiquement connu ?;A) Gorilla Gorilla Gorilla | B) Gorilla Beringei Beringei | C) Gorilla Beringei Graueri | D) Gorilla Gorilla Diehli;A;;OpenTDB
+880;Biologie;3;Quelle maladie génétique est causée par un chromosome Y supplémentaire (XYY) ?;A) Syndrome de Klinefelter | B) Trisomie 21 | C) Syndrome de Turner | D) Syndrome de Jacob;D;;OpenTDB
+881;Espace;1;Quelle est la planète la plus chaude du système solaire ?;A) Mercure | B) Mars | C) Vénus | D) Jupiter;C;;OpenTDB
+882;Chimie;3;Sur l'échelle de Scoville, quel est le produit chimique le plus piquant ?;A) Dihydrocapsaïcine | B) Résinifératoxine | C) Capsaïcine | D) Tinyatoxine;B;;OpenTDB
+883;Chimie;3;L'acide isobutylphénylpropanoïque est plus communément connu sous quel nom ?;A) Morphine | B) Aspirine | C) Ibuprofène | D) Kétamine;C;;OpenTDB
+884;Biologie;3;Quel est le nom scientifique de l'hominidé fossile connu sous le nom de Lucy ?;A) Australopithecus Antaris | B) Australopithecus Architeuthis | C) Australopithecus Africanus | D) Australopithecus Afarensis;D;;OpenTDB
+885;Biologie;3;Quel est le nom scientifique de la rotule ?;A) Fémur | B) Omoplate | C) Patella | D) Foramen Magnum;C;;OpenTDB
+886;Biologie;2;Qu'étudie-t-on en entomologie ?;A) Les poissons | B) Les humains | C) Les insectes | D) Le cerveau;C;;OpenTDB
+887;Biologie;2;Le poumon droit humain possède combien de lobes ?;A) 3 | B) 4 | C) 2 | D) 1;A;;OpenTDB
+1357;Sciences;2;Quelle partie de la plante de Marijuana produit la substance psychoactive connue sous le nom de THC ?;A) Motte racinaire | B) Feuilles | C) Fleur femelle | D) Fleur mâle;C;;OpenTDB
+1358;Sciences;1;Quelle est l'unité SI standard pour la température ?;A) Celsius | B) Kelvin | C) Fahrenheit | D) Rankine;B;;OpenTDB
+1359;Sciences;3;Quel satellite Landsat n'a pas réussi à atteindre l'orbite ?;A) Landsat 3 | B) Landsat 5 | C) Landsat 4 | D) Landsat 6;D;;OpenTDB
+1360;Sciences;2;Quelle est la formule moléculaire du composant actif des piments (Capsaïcine) ?;A) C21H23NO3 | B) C6H4Cl2 | C) C13H25NO4 | D) C18H27NO3;D;;OpenTDB
+1361;Sciences;1;Qu'a utilisé Gregor Mendel pour tester les croisements génétiques ?;A) Des perroquets | B) Des chats | C) Des fleurs | D) Des petits pois;D;;OpenTDB
+1362;Sciences;1;Combien d'os y a-t-il dans le corps humain ?;A) 209 | B) 200 | C) 203 | D) 206;D;;OpenTDB
+1363;Sciences;1;Les étoiles sont principalement constituées d'hydrogène et de quel autre gaz ?;A) Hélium | B) Argon | C) Oxygène | D) Azote;A;;OpenTDB
+1364;Sciences;3;Quel est le nom chimique de H2O ?;A) Dioxyde de manganèse | B) Monoxyde de dihydrogène | C) Carbonate de sodium anhydre | D) Chlorure d'ammonium;B;;OpenTDB
+1365;Sciences;3;Dans l'échelle de Scoville, quel est le produit chimique le plus fort ?;A) Dihydrocapsaïcine | B) Capsaïcine | C) Tinyatoxin | D) Resiniferatoxin;D;;OpenTDB
+1366;Sciences;2;Lequel de ces éléments est un type de réflexe d'étirement / réflexe ostéotendineux ?;A) Réflexe de grattage | B) Réflexe nauséeux | C) Réflexe achilléen | D) Réflexe photomoteur;C;;OpenTDB
+1367;Sciences;2;Quelle partie du corps produit l'insuline ?;A) Rein | B) Foie | C) Pancréas | D) Estomac;C;;OpenTDB
+1368;Sciences;1;Lequel des os suivants ne se trouve pas dans la jambe ?;A) Fibula | B) Patella | C) Tibia | D) Radius;D;;OpenTDB
+1369;Sciences;2;Le deutérium est un isotope de quel élément ?;A) Azote | B) Hydrogène | C) Hélium | D) Néon;B;;OpenTDB
+1370;Sciences;2;En aéronautique, les volets et les becs sont utilisés pour contrôler quoi sur un avion ?;A) Poids | B) Traînée | C) Poussée | D) Portance;D;;OpenTDB
+1371;Sciences;3;Lequel des éléments suivants est un muscle majeur du dos ?;A) Triquetrum | B) Trapézium | C) Trapèze | D) Trapézoïde;C;;OpenTDB
+1372;Sciences;1;Quel est le plus long os du corps humain ?;A) Ulna | B) Fibula | C) Fémur | D) Omoplate;C;;OpenTDB
+1373;Sciences;1;Quel est le plus grand animal vivant actuellement sur Terre ?;A) Calmar colossal | B) Baleine bleue | C) Girafe | D) Orque;B;;OpenTDB
+1374;Sciences;2;Que signifie l'acronyme RCR (réanimation cardio-respiratoire), la procédure d'urgence pour assister une personne en arrêt cardiaque ?;A) Taux de prévalence contraceptive | B) Soulagement chronique de la douleur | C) Libération de la douleur cancéreuse | D) Réanimation cardiopulmonaire;D;;OpenTDB
+1375;Sciences;3;L'acide folique est la forme synthétique de quelle vitamine ?;A) Vitamine C | B) Vitamine D | C) Vitamine B | D) Vitamine A;C;;OpenTDB
+1376;Sciences;2;Que représente le losange jaune sur le losange de sécurité NFPA 704 ?;A) Santé | B) Radioactivité | C) Inflammabilité | D) Réactivité;D;;OpenTDB
+1377;Sciences;1;Lequel des éléments suivants n'est pas un groupe du tableau périodique ?;A) Métaux alcalins | B) Halogènes | C) Gaz nobles | D) Fluorines;D;;OpenTDB
+1378;Sciences;1;Quel pourcentage environ de la surface de la Terre est recouvert d'eau ?;A) 70 % | B) 90 % | C) 50 % | D) 30 %;A;;OpenTDB
+1379;Sciences;1;Quel type de roche est créé par une chaleur ET une pression intenses ?;A) Diamant | B) Métamorphique | C) Sédimentaire | D) Ignée;B;;OpenTDB
+1380;Sciences;2;Quelle navette spatiale de la NASA s'est désintégrée lors de sa rentrée atmosphérique le 1er février 2003 ?;A) Columbia | B) Discovery | C) Challenger | D) Endeavour;A;;OpenTDB
+1381;Sciences;1;Qu'est-ce qui est un exemple de pathogène bactérien ?;A) SIDA | B) Rougeole | C) Choléra | D) Teigne;C;;OpenTDB
+1382;Sciences;2;De quel continent sont originellement originaires les patates douces ?;A) Afrique | B) Europe | C) Asie | D) Amérique du Sud;D;;OpenTDB
+1383;Sciences;3;Tous les noms de haplogroupes génétiques humains suivants sont partagés entre le chromosome Y et l'ADN mitochondrial, SAUF :;A) Haplogroupe T | B) Haplogroupe J | C) Haplogroupe L | D) Haplogroupe U;D;;OpenTDB
+1384;Sciences;3;Le gorille de plaine occidental est scientifiquement connu sous le nom de ?;A) Gorilla Beringei Graueri | B) Gorilla Beringei Beringei | C) Gorilla Gorilla Diehli | D) Gorilla Gorilla Gorilla;D;;OpenTDB
+1385;Sciences;2;Quel est le nom du trou noir supermassif au centre de la Voie lactée ?;A) Sagittarius A* | B) Andromède | C) Messier 87 | D) Alpha Centauri;A;;OpenTDB
+1386;Sciences;2;Quelle est la couleur du sang non oxydé ?;A) Violet | B) Rouge | C) Vert | D) Bleu;B;;OpenTDB
+1387;Sciences;2;Qu'est-ce qui cause la maladie de Lyme ?;A) Une bactérie | B) Une amibe | C) Un ver parasite | D) Un virus;A;;OpenTDB
+1388;Sciences;1;Le terme médical pour le nombril est lequel des suivants ?;A) Nevus | B) Nares | C) Umbilicus | D) Paxillus;C;;OpenTDB
+1389;Sciences;2;Quel est le nom du biais cognitif selon lequel une personne peu compétente se surestime dans un domaine particulier ?;A) Effet Meyers-Briggs | B) Effet Freud-Hall | C) Effet Müller-Lyer | D) Effet Dunning-Kruger;D;;OpenTDB
+1390;Sciences;2;Lequel des engins spatiaux suivants n'a jamais touché la Lune ?;A) SMART-1 | B) Mariner 4 | C) Apollo 11 | D) Luna 2;B;;OpenTDB
+1391;Sciences;3;En physique quantique, laquelle de ces particules subatomiques théorisées n'a pas encore été observée ?;A) Boson Z | B) Neutrino tau | C) Gluon | D) Graviton;D;;OpenTDB
+1392;Sciences;2;À quelle profondeur faut-il effectuer un palier de décompression lors d'une plongée sous-marine typique ?;A) 25 pieds / 7,5 mètres | B) 50 pieds / 15 mètres | C) 15 pieds / 5 mètres | D) 75 pieds / 23 mètres;C;;OpenTDB
+1393;Sciences;2;Quelle planète du système solaire est la plus proche du Soleil ?;A) Mercure | B) Vénus | C) Mars | D) Terre;A;;OpenTDB
+1394;Sciences;2;Lequel des éléments suivants n'est PAS un composant électrique passif ?;A) Bobine | B) Résistance | C) Condensateur | D) Transistor;D;;OpenTDB
+1395;Sciences;2;Quel fut le premier être vivant envoyé dans l'espace ?;A) Chien | B) Mouches des fruits | C) Singe | D) Souris;B;;OpenTDB
+1396;Sciences;2;D'où est originaire la race de chien « Chihuahua » ?;A) France | B) Russie | C) Espagne | D) Mexique;D;;OpenTDB
+1397;Sciences;2;Combien de planètes naines officiellement reconnues du système solaire portent le nom de divinités polynésiennes ?;A) 2 | B) 5 | C) 0 | D) 1;A;;OpenTDB
+1398;Sciences;2;Le « Tibia » se trouve dans quelle partie du corps ?;A) Bras | B) Tête | C) Main | D) Jambe;D;;OpenTDB
+1399;Sciences;2;Quel est le numéro atomique de l'élément Strontium ?;A) 47 | B) 73 | C) 38 | D) 11;C;;OpenTDB
+1400;Sciences;3;Que signifie le nom scientifique de la créature marine de la période cambrienne Anomalocaris ?;A) Crabe étrange | B) Crevette anormale | C) Poisson difforme | D) Palourde anomale;B;;OpenTDB
+1401;Sciences;3;La « Théorie du Big Bang » a été théorisée pour la première fois par un prêtre de quelle idéologie religieuse ?;A) Islamique | B) Catholique | C) Juive | D) Chrétienne;B;;OpenTDB
+1402;Sciences;2;L'axiome de la médecine préventive stipule que les personnes à risque ___ pour une maladie doivent être dépistées et que nous devons traiter ___ de ces personnes.;A) faible, toutes | B) faible, certaines | C) élevé, toutes | D) élevé, certaines;A;;OpenTDB
+1403;Sciences;3;Quelle quantité de rayonnement une banane émet-elle ?;A) 0,7 microsievert | B) 0,3 microsievert | C) 0,5 microsievert | D) 0,1 microsievert;D;;OpenTDB
+1404;Sciences;2;Lequel de ces éléments est un type de réflexe d'étirement / réflexe ostéotendineux ?;A) Réflexe nauséeux | B) Réflexe achilléen | C) Réflexe de grattage | D) Réflexe photomoteur;B;;OpenTDB
+1405;Sciences;1;Quel élément a le symbole chimique « Fe » ?;A) Étain | B) Argent | C) Or | D) Fer;D;;OpenTDB
+1406;Sciences;1;Quel est le plus long os du corps humain ?;A) Omoplate | B) Fibula | C) Ulna | D) Fémur;D;;OpenTDB
+1407;Sciences;1;Quel élément a le point de fusion le plus élevé ?;A) Platine | B) Carbone | C) Tungstène | D) Osmium;B;;OpenTDB
+1408;Sciences;3;Quel est le quatrième chiffre de π ?;A) 2 | B) 4 | C) 3 | D) 1;D;;OpenTDB
+1409;Sciences;1;Combien de degrés forment un cercle complet ?;A) 360 | B) 90 | C) 720 | D) 180;A;;OpenTDB
+1410;Sciences;3;Lequel de ces nombres est le plus proche du nombre total d'états possibles pour une machine Enigma standard de l'armée ?;A) 1,58 x 10^18 | B) 1,58 x 10^20 | C) 1,58 x 10^22 | D) 1,58 x 10^24;B;;OpenTDB
+1411;Sciences;2;Quelle est la représentation alphanumérique du nombre imaginaire ?;A) x | B) n | C) e | D) i;D;;OpenTDB
+1412;Sciences;2;Dans une distribution normale, 95 % des données se situent dans combien d'écarts-types de la moyenne ?;A) 4 | B) 1 | C) 2 | D) 3;C;;OpenTDB
+1413;Sciences;2;Lequel des dés suivants n'est pas un solide de Platon ?;A) Dé à 12 faces | B) Dé à 8 faces | C) Dé à 20 faces | D) Dé à 10 faces;D;;OpenTDB
+1414;Sciences;2;Quels sont les nombres de la 5e ligne du triangle de Pascal ?;A) 1 5 10 10 5 1 | B) 1 3 3 1 | C) 1 6 15 20 15 6 1 | D) 1 4 6 4 1;D;;OpenTDB
+1415;Sciences;1;Combien de côtés a un pentagone ?;A) 6 | B) 4 | C) 5 | D) 9;C;;OpenTDB
+1416;Sciences;2;Dans le système hexadécimal, quel nombre vient après 9 ?;A) 10 | B) 16 | C) Le chiffre 0 | D) La lettre A;D;;OpenTDB
+1417;Sciences;3;Quelle est la dérivée de l'accélération par rapport au temps ?;A) Jerk | B) Shift | C) Slide | D) Bump;A;;OpenTDB
+1418;Sciences;1;Combien de côtés a un trapèze ?;A) 4 | B) 5 | C) 6 | D) 3;A;;OpenTDB
+1419;Sciences;3;Combien de zeptomètres y a-t-il dans un femtomètre ?;A) 1 000 000 000 | B) 10 | C) 1 000 000 | D) 1 000;C;;OpenTDB
+1420;Sciences;3;Laquelle de ces choses le mathématicien Leonhard Euler n'a-t-il PAS développée ?;A) Une identité reliant les nombres e, pi et i | B) Une formule reliant les sommets, arêtes et faces d'un graphe | C) Une méthode de résolution d'équations différentielles du premier ordre | D) Une amélioration de la transformée de Fourier rapide;D;;OpenTDB
+1421;Sciences;2;Quel type de fonction est x² + 2x + 1 ?;A) Linéaire | B) Exponentielle | C) Rationnelle | D) Quadratique;D;;OpenTDB
+1422;Sciences;1;Qu'est-ce qui vient après un million, un milliard et un billion ?;A) Quadrillion | B) Sextillion | C) Septillion | D) Quintillion;A;;OpenTDB
+1423;Sciences;3;L'intégration est l'inverse de quelle opération mathématique ?;A) Division | B) Dérivation | C) Multiplication | D) Écart-type;B;;OpenTDB
+1424;Sciences;2;Quel mathématicien a refusé la médaille Fields ?;A) Edward Witten | B) Grigori Perelman | C) Terence Tao | D) Andrew Wiles;B;;OpenTDB
+1425;Sciences;3;La notion d'un « ensemble contenant tous les ensembles qui ne se contiennent pas eux-mêmes » est une idée paradoxale attribuée à quel philosophe anglais ?;A) Bertrand Russell | B) Francis Bacon | C) John Locke | D) Alfred North Whitehead;A;;OpenTDB
+1426;Sciences;2;Combien de livres composent les Éléments de géométrie d'Euclide ?;A) 17 | B) 13 | C) 10 | D) 8;B;;OpenTDB
+1427;Sciences;3;Quel est le seul problème du millénaire qui ait été résolu à ce jour ?;A) Conjecture de Fermat | B) Conjecture de Poincaré | C) Hypothèse de Riemann | D) Problème P vs NP;B;;OpenTDB
+1428;Sciences;1;Quel est l'ordre correct des opérations pour résoudre des équations ?;A) Parenthèses, Exposants, Multiplication, Division, Addition, Soustraction | B) Addition, Multiplication, Division, Soustraction, Addition, Parenthèses | C) L'ordre dans lequel les opérations sont écrites. | D) Parenthèses, Exposants, Addition, Soustraction, Multiplication, Division;A;;OpenTDB
+1429;Sciences;3;Le nombre décimal 31 en hexadécimal serait ?;A) 1B | B) 3D | C) 2E | D) 1F;D;;OpenTDB
+1430;Sciences;2;Une constante mathématique connue sous le nom de « Nombre d'or » est le plus souvent représentée par quelle lettre grecque ?;A) Τ (tau) | B) Ψ (psi) | C) Φ (phi) | D) π (pi);C;;OpenTDB
+1431;Sciences;1;Combien de faces carrées a un cube ?;A) 6 | B) 8 | C) 10 | D) 4;A;;OpenTDB
+1432;Sciences;2;Quelle lettre grecque est utilisée pour signifier la somme (sommation) ?;A) Oméga | B) Alpha | C) Sigma | D) Delta;C;;OpenTDB
+1433;Sciences;2;Dans le plan complexe, multiplier une fonction donnée par i la fait pivoter dans le sens antihoraire de combien de degrés ?;A) 180 | B) 0 | C) 90 | D) 270;C;;OpenTDB
+1434;Sciences;1;Qui a prouvé le dernier théorème de Fermat ?;A) Carl Friedrich Gauss | B) Srinivasa Ramanujan | C) Leonhard Euler | D) Andrew Wiles;D;;OpenTDB
+1435;Sciences;1;Combien de côtés a un heptagone ?;A) 5 | B) 7 | C) 4 | D) 9;B;;OpenTDB
+1436;Sciences;1;En chiffres romains, que représente XL ?;A) 60 | B) 90 | C) 15 | D) 40;D;;OpenTDB
+1437;Sciences;1;Quelle est la formule de l'aire d'une sphère ?;A) 4πr^2 | B) (1/3)πhr^2 | C) (4/3)πr^3 | D) πr^4;C;;OpenTDB
+1438;Sciences;3;Quelle est la formule moléculaire du glucose ?;A) CH4 | B) C6H12O6 | C) C2H4O2 | D) K+;B;;OpenTDB
+1439;Sciences;1;Combien de lois de la thermodynamique existe-t-il ?;A) Trois | B) Cinq | C) Quatre | D) Deux;C;;OpenTDB
+1440;Sciences;2;Quel pourcentage environ de l'atmosphère terrestre est constitué d'oxygène ?;A) 21 % | B) 7 % | C) 54 % | D) 78 %;A;;OpenTDB
+1441;Sciences;3;Un composé organique est considéré comme un alcool s'il possède quel groupe fonctionnel ?;A) Carbonyle | B) Hydroxyle | C) Aldéhyde | D) Alkyle;B;;OpenTDB
+1442;Sciences;1;71 % de la surface de la Terre est composée de;A) Continents | B) Déserts | C) Forêts | D) Eau;D;;OpenTDB
+1443;Sciences;1;Quelle est la composition chimique de l'eau ?;A) C12H6O2 | B) CO2 | C) H2O | D) H;C;;OpenTDB
+1444;Sciences;3;Quel est le nom de l'illusion auditive d'une note qui semble monter indéfiniment ?;A) Illusion de Glissandro | B) Effet McGurck | C) Ton de Shepard | D) Effet Fransen;C;;OpenTDB
+1445;Sciences;2;Lors du vol d'essai du Falcon Heavy, quelle était la seule partie de l'opération qui a échoué ?;A) Déploiement de Starman | B) Allumage et décollage | C) Atterrissage du propulseur central | D) Atterrissage des propulseurs latéraux;C;;OpenTDB
+1446;Sciences;2;Quel élément chimique était initialement connu sous le nom d'Alabamine ?;A) Antimoine | B) Sélénium | C) Astate | D) Molybdène;C;;OpenTDB
+1447;Sciences;3;Qu'est-ce que « Stenoma » ?;A) Un genre de papillons de nuit | B) Un type d'assaisonnement | C) Un stimulant de combat de la Seconde Guerre mondiale | D) Une ville portuaire des Caraïbes;A;;OpenTDB
+1448;Sciences;3;Quel horizon d'un profil de sol est constitué de roche mère ?;A) O | B) D | C) B | D) R;D;;OpenTDB
+1449;Sciences;2;Quel est le numéro atomique de l'uranium ?;A) 235 | B) 92 | C) 167 | D) 17;B;;OpenTDB
+1450;Sciences;1;Combien de planètes composent notre système solaire ?;A) 7 | B) 6 | C) 8 | D) 9;C;;OpenTDB
+1451;Sciences;2;Quel est le symbole chimique du plomb ?;A) Pb | B) Pm | C) Ld | D) Le;A;;OpenTDB
+1452;Sciences;3;Combien de types de quarks existe-t-il dans le modèle standard de la physique ?;A) 3 | B) 4 | C) 6 | D) 2;C;;OpenTDB
+1453;Sciences;2;Quel est le terme médical pour une glycémie basse ?;A) Hypoxie | B) Hypoglycémie | C) Hypothyroïdie | D) Hypothermie;B;;OpenTDB
+1454;Sciences;1;Qu'est-ce qui produit la couleur verte de la plupart des feuilles de plantes ?;A) Rayonnement UV | B) Chlorophylle | C) Réfraction de la lumière | D) Pigments naturels;B;;OpenTDB
+1455;Sciences;2;Le ménisque médial fait partie de quelle articulation du corps humain ?;A) Cheville | B) Genou | C) Épaule | D) Coude;B;;OpenTDB
+1456;Sciences;2;Quel organite cellulaire est connu comme « la centrale énergétique de la cellule » ?;A) Appareil de Golgi | B) Noyau | C) Réticulum endoplasmique | D) Mitochondrie;D;;OpenTDB
+1457;Sciences;1;Qu'est-ce que la « centrale énergétique » de la cellule animale eucaryote ?;A) Noyau | B) Chloroplaste | C) Mitochondrie | D) Réticulum endoplasmique;C;;OpenTDB
+1458;Sciences;2;Quel élément chimique a le point d'ébullition le plus bas ?;A) Azote | B) Néon | C) Hélium | D) Hydrogène;C;;OpenTDB
+1459;Sciences;2;Où la Grande Tempête de 1987 a-t-elle touché terre en premier ?;A) Les Midlands | B) Pays de Galles | C) Cornouailles | D) Surrey;C;;OpenTDB
+1460;Sciences;3;Qu'est-ce qui produit le son d'un battement de cœur ?;A) Contraction des chambres cardiaques | B) Relaxation des chambres cardiaques | C) Sang quittant le cœur | D) Fermeture des valves cardiaques;D;;OpenTDB
+1461;Sciences;3;L'enveloppe gazeuse d'une comète (qui crée la queue) s'appelle comment ?;A) L'ablatif | B) Le refoulement | C) Le sillage | D) La coma;D;;OpenTDB
+1462;Sciences;2;Quelle partie du cerveau tire son nom du grec signifiant « cheval de mer » ?;A) Cervelet | B) Amygdale | C) Thalamus | D) Hippocampe;D;;OpenTDB

@@ -1,0 +1,67 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+654;Nature;2;L'espèce éteinte 'Thylacine' était originaire de quel endroit ?;A) Baloutchistan, Pakistan | B) Tasmanie, Australie | C) Valachie, Roumanie | D) Oregon, USA;B;Le thylacine (tigre de Tasmanie) s'est éteint en 1936.;OpenTDB
+655;Nature;2;Un animal carnivore mange de la viande. Que mange un animal nucivore ?;A) Rien | B) Noix | C) Fruits | D) Algues;B;Nucivore vient du latin 'nux' signifiant noix.;OpenTDB
+656;Nature;2;Quel est le terme courant pour l'encéphalopathie spongiforme bovine (ESB) ?;A) Maladie de Weil | B) Maladie de la vache folle | C) Fièvre de lait | D) Fièvre aphteuse;B;L'ESB est communément appelée maladie de la vache folle.;OpenTDB
+657;Nature;2;Quel est le nom collectif pour un groupe d'ours ?;A) Troupeau | B) Paresse | C) Tribu | D) Balle;B;Un groupe d'ours s'appelle une 'sloth' en anglais.;OpenTDB
+658;Nature;3;Quel est le nom scientifique du loup gris ?;A) Canis Aureus | B) Canis Lupus | C) Canis Latrans | D) Canis Lupus Lycaon;B;Canis lupus est le nom scientifique du loup gris.;OpenTDB
+659;Nature;2;Quel est l'animal le plus rapide ?;A) Aigle royal | B) Faucon pèlerin | C) Guépard | D) Taon;B;Le faucon pèlerin peut atteindre 390 km/h en piqué.;OpenTDB
+660;Nature;1;Comment appelle-t-on un bébé chauve-souris ?;A) Ourson | B) Petit | C) Poussin | D) Chevreau;B;Un bébé chauve-souris s'appelle un 'pup' en anglais.;OpenTDB
+661;Nature;1;Le Kākāpō est un grand perroquet nocturne originaire de quel pays ?;A) Afrique du Sud | B) Nouvelle-Zélande | C) Australie | D) Madagascar;B;Le kākāpō est endémique de Nouvelle-Zélande et en danger critique.;OpenTDB
+662;Nature;2;De quelle couleur est la peau d'un ours polaire ?;A) Blanc | B) Noir | C) Rose | D) Vert;B;La peau des ours polaires est noire sous leur fourrure blanche.;OpenTDB
+663;Nature;2;Comment appelle-t-on une abeille mâle née d'un œuf non fécondé ?;A) Soldat | B) Faux-bourdon | C) Ouvrière | D) Mâle;B;Les faux-bourdons sont les mâles de la ruche.;OpenTDB
+664;Nature;2;Quel est le nom collectif pour un groupe de rats ?;A) Meute | B) Méfait | C) Course | D) Dérive;B;Un groupe de rats s'appelle 'mischief' en anglais.;OpenTDB
+665;Nature;1;Comment s'appelle l'habitat d'un lapin ?;A) Nid | B) Terrier | C) Tanière | D) Drey;B;Les lapins vivent dans des terriers souterrains.;OpenTDB
+666;Nature;2;Le plat Fugu est préparé avec quelle famille de poissons ?;A) Bar | B) Poisson-globe | C) Saumon | D) Maquereau;B;Le fugu est un poisson-globe potentiellement mortel.;OpenTDB
+667;Nature;2;Le cachemire provient de quel type d'animal ?;A) Mouton | B) Chèvre | C) Chameau | D) Lama;B;Le cachemire vient des chèvres cachemire.;OpenTDB
+668;Nature;1;Quel est le nom collectif pour un groupe de corbeaux ?;A) Meute | B) Meurtre | C) Troupeau | D) Vol;B;Un groupe de corbeaux s'appelle 'murder' en anglais.;OpenTDB
+669;Nature;2;Quel est le serpent venimeux le plus long du monde ?;A) Anaconda vert | B) Cobra royal | C) Taïpan | D) Serpent de mer;B;Le cobra royal peut mesurer jusqu'à 5,5 mètres.;OpenTDB
+670;Nature;2;Quel est le nom scientifique de l'ours polaire ?;A) Ours polaire | B) Ursus Maritimus | C) Ursus Spelaeus | D) Ursus Arctos;B;Ursus maritimus signifie 'ours de mer' en latin.;OpenTDB
+671;Nature;1;À quelle classe d'animaux appartiennent les tritons ?;A) Poissons | B) Amphibiens | C) Reptiles | D) Mammifères;B;Les tritons sont des amphibiens de la famille des salamandres.;OpenTDB
+672;Nature;1;Combien de pattes ont les papillons ?;A) 2 | B) 6 | C) 4 | D) 0;B;Comme tous les insectes, les papillons ont 6 pattes.;OpenTDB
+673;Langue;2;Que signifie 'hippopotame' et dans quelle langue ?;A) Cheval de rivière (latin) | B) Cheval de rivière (grec) | C) Gros cochon (grec) | D) Gros cochon (latin);B;'Hippos' (cheval) + 'potamos' (rivière) en grec.;OpenTDB
+674;Nature;1;Hippocampus est le nom latin de quelle créature marine ?;A) Dauphin | B) Hippocampe | C) Baleine | D) Poulpe;B;L'hippocampe tire son nom du grec 'hippos' (cheval) et 'kampos' (monstre marin).;OpenTDB
+938;Nature & Animaux;2;"Que signifie ""hippopotame"" et dans quelle langue ?";A) Gros cochon (grec) | B) Cheval du fleuve (grec) | C) Gros cochon (latin) | D) Cheval du fleuve (latin);B;;OpenTDB
+939;Nature & Animaux;2;Qu'est-ce qu'un natterjack ?;A) Un crapaud | B) Un poisson | C) Un oiseau | D) Un insecte;A;;OpenTDB
+940;Nature & Animaux;2;Laquelle de ces espèces n'est PAS éteinte ?;A) Dragon de Komodo | B) Gazelle d'Arabie | C) Lion de mer du Japon | D) Tigre de Tasmanie;A;;OpenTDB
+941;Nature & Animaux;1;Hippocampus est le nom latin de quelle créature marine ?;A) Baleine | B) Pieuvre | C) Hippocampe | D) Dauphin;C;;OpenTDB
+942;Nature & Animaux;2;Quel est le nom collectif pour un groupe d'ours ?;A) Groupe | B) Tribu | C) Paresse (sloth) | D) Troupeau;C;;OpenTDB
+943;Nature & Animaux;2;Quel est l'oiseau national de Bahreïn ?;A) Colibri | B) Moineau | C) Bulbul | D) Faucon;C;;OpenTDB
+944;Nature & Animaux;2;De quoi sont faites les cornes du rhinocéros ?;A) Os | B) Kératine | C) Ivoire | D) Peau;B;;OpenTDB
+945;Nature & Animaux;2;Quelle proportion de leur poids corporel les loutres de mer mangent-elles chaque jour ?;A) 10 % | B) 45 % | C) 80 % | D) 25 %;D;;OpenTDB
+946;Nature & Animaux;1;Par définition, où vit un animal abyssopélagique ?;A) À l'intérieur d'un arbre | B) Au sommet d'une montagne | C) Au fond de l'océan | D) Dans le désert;C;;OpenTDB
+947;Nature & Animaux;2;Les décapodes sont des crustacés à dix pattes. Lequel de ces animaux n'en est PAS un ?;A) Crevettes | B) Krill | C) Crabes | D) Homards;B;;OpenTDB
+1463;Nature & Animaux;2;Le plat Fugu est préparé à partir de quelle famille de poissons ?;A) Saumon | B) Bar | C) Maquereau | D) Poisson-globe;D;;OpenTDB
+1464;Nature & Animaux;2;Quelle race de chien est l'une des plus anciennes et prospère depuis avant 400 av. J.-C. ?;A) Carlin | B) Bouledogue | C) Boxer | D) Chihuahua;A;;OpenTDB
+1465;Nature & Animaux;2;De quoi sont faites les écailles de tous les serpents et de la plupart des lézards ?;A) Ankyloglossie | B) Épiderme | C) Kératine | D) Ecdysis;C;;OpenTDB
+1466;Nature & Animaux;3;Lequel des noms suivants désigne également la « Poecilotheria Metallica Tarantula » ?;A) Woebegone | B) Silver Stripe | C) Hopper | D) Gooty;D;;OpenTDB
+1467;Nature & Animaux;2;Lequel des serpents suivants n'est PAS venimeux ?;A) Mamba noir | B) Serpent de mer à ventre jaune | C) Krait malais | D) Python réticulé;D;;OpenTDB
+1468;Nature & Animaux;3;Quelle espèce est un « poulet de montagne » ?;A) Cheval | B) Mouche | C) Poulet | D) Grenouille;D;;OpenTDB
+1469;Nature & Animaux;3;À quel embranchement biologique appartiennent tous les mammifères, oiseaux et reptiles ?;A) Placazoa | B) Echinodermata | C) Annelida | D) Chordata;D;;OpenTDB
+1470;Nature & Animaux;2;Les « décapodes » sont un ordre de crustacés à dix pattes. Lequel de ces animaux n'est PAS un décapode ?;A) Krill | B) Crabes | C) Crevettes | D) Homards;A;;OpenTDB
+1471;Nature & Animaux;3;Quel est le nom scientifique de l'aigle à tête blanche ?;A) Haliaeetus Leucocephalus | B) Aquila Chrysaetos | C) Cyanocitta Cristata | D) Tyto Alba;A;;OpenTDB
+1472;Nature & Animaux;3;À quel sous-ordre scientifique appartient la famille Hyaenidae ?;A) Haplorhini | B) Feliformia | C) Ciconiiformes | D) Caniformia;B;;OpenTDB
+1473;Nature & Animaux;3;Quel type de créature est un bonobo ?;A) Grand singe | B) Lion | C) Perroquet | D) Chat sauvage;A;;OpenTDB
+1474;Nature & Animaux;1;Combien de dents a un lapin adulte ?;A) 28 | B) 24 | C) 26 | D) 30;A;;OpenTDB
+1475;Nature & Animaux;3;Lequel de ces animaux n'est PAS un lézard ?;A) Dragon de Komodo | B) Tuatara | C) Iguane vert | D) Monstre de Gila;B;;OpenTDB
+1476;Nature & Animaux;2;Quel est le nom scientifique de l'ours polaire ?;A) Ursus Spelaeus | B) Ursus Maritimus | C) Polar Bear | D) Ursus Arctos;B;;OpenTDB
+1477;Nature & Animaux;2;Quelle est la couleur de la peau d'un ours polaire ?;A) Blanche | B) Rose | C) Noire | D) Verte;C;;OpenTDB
+1478;Nature & Animaux;1;Quelle race de chien est traditionnellement associée aux pompiers ?;A) Grand danois | B) Mastiff | C) Dalmatien | D) Berger allemand;C;;OpenTDB
+1479;Nature & Animaux;3;Quel est le nom scientifique de la perruche ondulée ?;A) Melopsittacus undulatus | B) Pyrrhura molinae | C) Ara macao | D) Nymphicus hollandicus;A;;OpenTDB
+1480;Nature & Animaux;2;Quel est le comportement territorial des alligators ?;A) Ils foncent à toute vitesse vers la menace | B) Frappent le sol avec leur queue | C) Ils mugissent en montrant leur queue et leur cou | D) Ouvrent leurs mâchoires en faisant un bruit de claquement;C;;OpenTDB
+1481;Nature & Animaux;2;Que signifie « hippopotame » et dans quelle langue ?;A) Cochon gras (grec) | B) Cochon gras (latin) | C) Cheval de rivière (grec) | D) Cheval de rivière (latin);C;;OpenTDB
+1482;Nature & Animaux;3;Contrairement à la plupart des salamandres, cette partie d'un triton est plate ?;A) Tête | B) Queue | C) Dents | D) Pieds;B;;OpenTDB
+1483;Nature & Animaux;2;Quel est le nom de la famille dont fait partie le chat domestique ?;A) Felis | B) Felinae | C) Chat | D) Felidae;D;;OpenTDB
+1484;Nature & Animaux;3;Quelle espèce d'ours brun n'est pas éteinte ?;A) Ours de l'Atlas | B) Grizzly de Californie | C) Grizzly du Mexique | D) Ours brun de Syrie;D;;OpenTDB
+1485;Nature & Animaux;3;Quel était le nom du loup d'Éthiopie avant que l'on sache qu'il était apparenté aux loups ?;A) Renard amharique | B) Chacal du Siméon | C) Canis Simiensis | D) Coyote éthiopien;B;;OpenTDB
+1486;Nature & Animaux;2;L'espèce aujourd'hui éteinte « Thylacine » était native de où ?;A) Oregon, États-Unis | B) Tasmanie, Australie | C) Baloutchistan, Pakistan | D) Valachie, Roumanie;B;;OpenTDB
+1487;Nature & Animaux;2;Pour quelle raison une hyène tachetée « rit »-elle ?;A) Épuisement | B) Excitation | C) Nervosité | D) Agressivité;C;;OpenTDB
+1488;Nature & Animaux;2;Quel est le nom scientifique du chimpanzé commun ?;A) Pan paniscus | B) Pan troglodytes | C) Panthera leo | D) Gorilla gorilla;B;;OpenTDB
+1489;Nature & Animaux;1;Quel est l'animal terrestre le plus rapide ?;A) Guépard | B) Pronghorn | C) Gazelle de Thomson | D) Lion;A;;OpenTDB
+1490;Nature & Animaux;3;Lequel de ces organismes est une colonie de polypes et non une méduse ?;A) Guêpe de mer | B) Irukandji | C) Physalie | D) Méduse ortie de mer;C;;OpenTDB
+1491;Nature & Animaux;3;La maladie du dépérissement chronique (CWD) infecte exclusivement les membres de quelle famille animale ?;A) Hominidés | B) Cervidés | C) Félidés | D) Canidés;B;;OpenTDB
+1492;Nature & Animaux;3;À quelle famille scientifique appartient l'oryctérope (aardwolf) ?;A) Canidae | B) Eupleridae | C) Felidae | D) Hyaenidae;D;;OpenTDB
+1493;Nature & Animaux;2;Quel animal a fait l'objet d'une expérience russe de domestication en 1959 ?;A) Ours | B) Renards | C) Alligators | D) Pigeons;B;;OpenTDB
+1494;Nature & Animaux;3;Quel est le nom collectif des vautours ?;A) Gaze (regard) | B) Ambush (embuscade) | C) Building (immeuble) | D) Wake (éveil);D;;OpenTDB
+1495;Nature & Animaux;3;Quel oiseau naît avec des griffes sur ses doigts d'aile ?;A) Cormoran | B) Hoazin | C) Secrétaire | D) Casoar;B;;OpenTDB
+1496;Nature & Animaux;1;Les wombats sont natifs de quel pays ?;A) Nouvelle-Zélande | B) Australie | C) Palaos | D) Papouasie-Nouvelle-Guinée;B;;OpenTDB
+1497;Nature & Animaux;1;Les serpents et les lézards sont connus pour agiter leur langue, ce comportement sert à ?;A) Capter des particules odorantes | B) Menacer d'autres espèces | C) Goûter l'air frais | D) Attirer les femelles;A;;OpenTDB

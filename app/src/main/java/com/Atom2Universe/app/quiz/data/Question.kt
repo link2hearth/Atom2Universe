@@ -1,38 +1,32 @@
 package com.Atom2Universe.app.quiz.data
 
 /**
- * Represents a quiz question with localized content (FR/EN).
+ * Represents a quiz question loaded in the active app language.
  */
 data class Question(
     val id: Int,
     val category: String,
     val difficulty: Int,
-    val questionFr: String,
-    val questionEn: String,
-    val choicesFr: List<String>,
-    val choicesEn: List<String>,
+    val question: String,
+    val choices: List<String>,
     val correctAnswer: String,
-    val explanationFr: String,
-    val explanationEn: String,
+    val explanation: String,
     val source: String
 ) {
     /**
-     * Returns the question text based on the language code.
+     * Returns the question text.
      */
-    fun getQuestion(lang: String): String =
-        if (lang == "en") questionEn else questionFr
+    fun getQuestion(lang: String): String = question
 
     /**
-     * Returns the choices based on the language code.
+     * Returns the choices.
      */
-    fun getChoices(lang: String): List<String> =
-        if (lang == "en") choicesEn else choicesFr
+    fun getChoices(lang: String): List<String> = choices
 
     /**
-     * Returns the explanation based on the language code.
+     * Returns the explanation.
      */
-    fun getExplanation(lang: String): String =
-        if (lang == "en") explanationEn else explanationFr
+    fun getExplanation(lang: String): String = explanation
 
     /**
      * Returns the correct answer index (0-3) based on the correctAnswer letter (A-D).

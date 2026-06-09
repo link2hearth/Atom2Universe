@@ -1,0 +1,166 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+539;Cinéma;2;Quel réalisateur a réalisé le film 'Le Labyrinthe de Pan' ?;A) Alfonso Cuarón | B) Guillermo Del Toro | C) Alejandro González Iñárritu | D) Alejandro Jodorowsky;B;Guillermo Del Toro a réalisé Le Labyrinthe de Pan en 2006.;OpenTDB
+540;Cinéma;3;En quelle année Clint Eastwood a-t-il joué l'inspecteur Harry Callahan dans 'Dirty Harry' ?;A) 1969 | B) 1971 | C) 1975 | D) 1983;B;Dirty Harry est sorti en 1971 avec Clint Eastwood.;OpenTDB
+541;Cinéma;2;Qui a réalisé le film 'Alien' ?;A) Christopher Nolan | B) Ridley Scott | C) Michael Bay | D) James Cameron;B;Ridley Scott a réalisé Alien en 1979.;OpenTDB
+542;Cinéma;1;Quel était le nom de famille de Dorothy dans 'Le Magicien d'Oz' ?;A) Perkins | B) Gale | C) Day | D) Parker;B;Dorothy Gale est le personnage principal du Magicien d'Oz.;OpenTDB
+543;Cinéma;1;Qui a réalisé les films Kill Bill ?;A) Arnold Schwarzenegger | B) Quentin Tarantino | C) David Lean | D) Stanley Kubrick;B;Quentin Tarantino a réalisé Kill Bill Vol. 1 et 2.;OpenTDB
+544;Cinéma;2;Dans le film 'Speed' (1994), quelle est la vitesse minimale du bus pour éviter l'explosion ?;A) 60 mph | B) 50 mph | C) 40 mph | D) 70 mph;B;Le bus doit maintenir une vitesse de 50 mph (80 km/h).;OpenTDB
+545;Cinéma;1;Dans 'Seul au monde', comment s'appelle le meilleur ami du protagoniste sur l'île ?;A) Carson | B) Wilson | C) Jackson | D) Willy;B;Wilson est le ballon de volley-ball qui devient l'ami imaginaire de Chuck.;OpenTDB
+546;Cinéma;1;Qui a joué Samuel Gerard dans 'Le Fugitif' (1993) ?;A) Harrison Ford | B) Tommy Lee Jones | C) Harvey Keitel | D) Martin Landau;B;Tommy Lee Jones a remporté l'Oscar pour ce rôle.;OpenTDB
+547;Cinéma;1;Quel film contient la réplique 'I feel the need... the need for speed!' ?;A) Days of Thunder | B) Top Gun | C) The Color of Money | D) Cocktail;B;Cette réplique culte vient de Top Gun (1986).;OpenTDB
+548;Cinéma;2;Susan Sarandon a attrapé une pneumonie pendant le tournage de quel film ?;A) Thelma et Louise | B) The Rocky Horror Picture Show | C) Dead Man Walking | D) Enchanted;B;Elle a eu une pneumonie à cause des scènes en sous-vêtements mouillés.;OpenTDB
+549;Cinéma;2;Selon Star Wars, quelle est la planète natale de Han Solo ?;A) Tatooine | B) Corellia | C) Naboo | D) Coruscant;B;Han Solo est originaire de Corellia.;OpenTDB
+550;Cinéma;2;Quel acteur a joué le rôle principal dans 'Edward aux mains d'argent' (1990) ?;A) Clint Eastwood | B) Johnny Depp | C) Leonardo DiCaprio | D) Ben Stiller;B;Johnny Depp a joué Edward dans ce film de Tim Burton.;OpenTDB
+551;Cinéma;1;Qui joue Alice dans les films Resident Evil ?;A) Madison Derpe | B) Milla Jovovich | C) Milla Johnson | D) Kim Demp;B;Milla Jovovich a joué Alice dans toute la franchise.;OpenTDB
+552;Cinéma;1;Qui a joué Batman dans le film de Tim Burton en 1989 ?;A) George Clooney | B) Michael Keaton | C) Val Kilmer | D) Adam West;B;Michael Keaton a joué Batman dans les deux films de Tim Burton.;OpenTDB
+553;Cinéma;1;Dans 'Blade Runner', comment appelle-t-on les androïdes humanoïdes ?;A) Cylons | B) Réplicants | C) Synthétiques | D) Skinjobs;B;Les réplicants sont les androïdes créés par Tyrell Corporation.;OpenTDB
+554;Cinéma;1;Quel super-héros a été joué par Michael Keaton, Val Kilmer, George Clooney et Christian Bale ?;A) Superman | B) Batman | C) Iron Man | D) Spiderman;B;Ces quatre acteurs ont tous joué Batman au cinéma.;OpenTDB
+555;Cinéma;2;Quel acteur a joué dans 'Top Gun', 'Jerry Maguire' et 'Né un 4 juillet' ?;A) Kelly McGillis | B) Tom Cruise | C) John Travolta | D) George Clooney;B;Tom Cruise a joué dans ces trois films emblématiques.;OpenTDB
+556;Cinéma;1;Qui a réalisé 'E.T. l'extra-terrestre' (1982) ?;A) Stanley Kubrick | B) Steven Spielberg | C) James Cameron | D) Tim Burton;B;Steven Spielberg a réalisé ce classique du cinéma.;OpenTDB
+557;Cinéma;1;Qui joue Ethan Hunt dans la série de films 'Mission: Impossible' ?;A) Johnny Depp | B) Tom Cruise | C) Sean Connery | D) Pierce Brosnan;B;Tom Cruise joue Ethan Hunt depuis 1996.;OpenTDB
+558;Cinéma;2;Dans 'Terminator' (1984), quel modèle est le Terminator joué par Schwarzenegger ?;A) I-950 | B) T-800 | C) T-888 | D) T-1000;B;Le Terminator original est un T-800 modèle 101.;OpenTDB
+559;Cinéma;1;Daniel Radcliffe est devenu célèbre grâce à quelle franchise ?;A) Ted | B) Harry Potter | C) Spy Kids | D) Pirates des Caraïbes;B;Daniel Radcliffe a joué Harry Potter de 2001 à 2011.;OpenTDB
+560;Cinéma;2;En quelle année le film 'Titanic' de James Cameron est-il sorti ?;A) 1996 | B) 1997 | C) 1998 | D) 1999;B;Titanic est sorti en 1997 et a remporté 11 Oscars.;OpenTDB
+561;Cinéma;3;Que représentait la première image animée de l'histoire ?;A) Une femme en robe | B) Un cheval au galop | C) Un homme marchant | D) Un feu crépitant;B;Eadweard Muybridge a photographié un cheval au galop en 1878.;OpenTDB
+858;Cinema;1;"Qui joue Jack Burton dans le film ""Big Trouble in Little China"" ?";A) John Cusack | B) Patrick Swayze | C) Harrison Ford | D) Kurt Russell;D;;OpenTDB
+859;Cinema;1;Quel est le nom de l'île sur laquelle est construit Jurassic Park ?;A) Isla Pena | B) Isla Muerta | C) Isla Nublar | D) Isla Sorna;C;;OpenTDB
+860;Cinema;2;Quel comédien de stand-up a doublé le perroquet Iago dans Aladdin de Disney (1992) ?;A) Robin Williams | B) Jonathan Freeman | C) Pauly Shore | D) Gilbert Gottfried;D;;OpenTDB
+861;Cinema;1;Dans Spaceballs, que les Spaceballs tentent-ils de voler à la planète Druidia ?;A) Le Schwartz | B) La princesse Lonestar | C) De l'air | D) Des boulettes;C;;OpenTDB
+862;Cinema;1;Qui a réalisé le film La Forme de l'eau (2017) ?;A) Steven Spielberg | B) James Cameron | C) Martin Scorsese | D) Guillermo del Toro;D;;OpenTDB
+863;Cinema;2;Dans John Wick, pourquoi le personnage sort-il de sa retraite ?;A) Il reçoit un coup de poing | B) Il a besoin d'argent | C) Il se fait braquer | D) Son chiot est tué et sa voiture est volée;D;;OpenTDB
+864;Cinema;3;Dans Taxi Driver (1976), combien de pistolets Travis achète-t-il au vendeur ?;A) 6 | B) 2 | C) 4 | D) 1;C;;OpenTDB
+865;Cinema;3;En quelle année Clint Eastwood joue-t-il l'inspecteur Harry Callahan dans Dirty Harry ?;A) 1975 | B) 1969 | C) 1971 | D) 1983;C;;OpenTDB
+866;Cinema;2;"Quelle est la formulation correcte de ""Romanes Eunt Domus"" dans La Vie de Brian des Monty Python ?";A) Romani Ite Domum | B) Roxani Ite Domum | C) Romans Go Home | D) Tomate Ite Domum;A;;OpenTDB
+867;Cinema;2;Quel quarterback américain retraité joue son propre rôle dans Ace Ventura et Little Nicky ?;A) Tom Brady | B) Joe Montana | C) Dan Marino | D) John Elway;C;;OpenTDB
+1147;Cinéma;2;Qui a prêté sa voix au personnage Draco dans le film DragonHeart (1996) ?;Sean Connery|Dennis Quaid|Pete Postlethwaite|Brian Thompson;A;;OpenTDB
+1148;Cinéma;2;"Quel est le nom du personnage joué par Nicolas Cage dans le film ""National Treasure"" ?";Benjamin Franklin Gates|George Washington Swanson|Thomas Jefferson Walker|John Quincy Beckett;A;;OpenTDB
+1149;Cinéma;2;Dans la série Vendredi 13, quel est le prénom de la mère de Jason ?;Angeline|Pamela|Mary|Christine;B;;OpenTDB
+1150;Cinéma;2;"Dans ""Retour vers le futur"", à quelle vitesse la DeLorean du Docteur Brown doit-elle rouler pour voyager dans le temps ?";77 mph|70 mph|100 mph|88 mph;D;;OpenTDB
+1151;Cinéma;2;Dans Mulan (1998), qui est le chef des Huns ?;Fa Zhou|Li Shang|Shan Yu|Chien-Po;C;;OpenTDB
+1152;Cinéma;3;"Dans ""Harry Potter et l'Ordre du Phénix"", pourquoi le cri de Harry après la mort de Sirius Black a-t-il été supprimé ?";Trop douloureux à entendre|Trop violent|Trop fort|Trop brutal;A;;OpenTDB
+1153;Cinéma;3;Dans Big Hero 6, sur quoi les mouvements de Baymax ont-ils été modélisés ?;Des bébés pingouins|Des bébés autruches|Des bébés singes|Des bébés ours;A;;OpenTDB
+1154;Cinéma;2;"Quelle star a joué dans ""Top Gun"", ""Jerry Maguire"" et ""Né le 4 juillet"" ?";John Travolta|George Clooney|Tom Cruise|Kelly McGillis;C;;OpenTDB
+1155;Cinéma;1;"Dans ""Blade Runner"", quel terme désigne les androïdes à apparence humaine ?";Cylons|Skinjobs|Synthétiques|Réplicants;D;;OpenTDB
+1156;Cinéma;1;Dans Avengers: Infinity War, où se trouvait la Pierre de l'Âme ?;Knowhere|Vormir|Asgard|Xandar;B;;OpenTDB
+1157;Cinéma;3;En 2012, quel film a raflé toutes les catégories des 32e Razzie Awards ?;Jack and Jill|Thor|The King's Speech|The Girl with the Dragon Tattoo;A;;OpenTDB
+1158;Cinéma;1;"Dans le film ""Le Lorax"" (2012), qui est l'antagoniste ?";Grammy Norma|The Once-Ler|Aloysius O'Hare|Ted Wiggins;C;;OpenTDB
+1159;Cinéma;1;"Qui joue le marshal adjoint Samuel Gerard dans ""Le Fugitif"" (1993) ?";Harrison Ford|Martin Landau|Tommy Lee Jones|Harvey Keitel;C;;OpenTDB
+1160;Cinéma;2;"Quel artiste musical tient un rôle important dans ""Kingsman : Le Cercle d'or"" (2017) ?";Lady Gaga|Elton John|Rihanna|Justin Bieber;B;;OpenTDB
+1161;Cinéma;1;"Ce film contient la réplique : ""I feel the need... the need for speed!""";Jours de tonnerre|La Couleur de l'argent|Top Gun|Cocktail;C;;OpenTDB
+1162;Cinéma;2;Quel comique a prêté sa voix au perroquet Iago dans Aladdin (1992) ?;Jonathan Freeman|Gilbert Gottfried|Pauly Shore|Robin Williams;B;;OpenTDB
+1163;Cinéma;3;"Dans ""Zoulou"" (1964), quelle chanson la compagnie britannique chante-t-elle avant la bataille finale ?";Men of Harlech|Scotland the Brave|Colonel Bogey March|The British Grenadiers;A;;OpenTDB
+1164;Cinéma;3;"Comment s'appelle la planète dans ""Aliens"" ?";Base Weyland Yutani Corporation|DI-621|FR-838|LV-426;D;;OpenTDB
+1165;Cinéma;2;"Quel est le nom du robot dans le classique de science-fiction de 1951 ""Le Jour où la Terre s'arrêta"" ?";Box|Colossus|Robby|Gort;D;;OpenTDB
+1166;Cinéma;2;Quel film de 1958 mettait Kirk Douglas et Tony Curtis dans les rôles de demi-frères Einar et Eric ?;The Long Ships|Les Vikings|Spartacus|Prince Valiant;B;;OpenTDB
+1167;Cinéma;2;Quelle suite de film a fait mieux au box-office que le film original ?;Speed 2|Son of the Mask|Sin City : J'ai tué pour elle|Toy Story 2;D;;OpenTDB
+1168;Cinéma;2;"En quelle année est sorti le film ""Napoleon Dynamite"" ?";2002|2003|2005|2004;D;;OpenTDB
+1169;Cinéma;2;"Quelle ville le monstre attaque-t-il dans ""Cloverfield"" ?";Orlando|New York|Chicago|Las Vegas;B;;OpenTDB
+1170;Cinéma;1;"Où se déroule le film original ""Vendredi 13"" ?";Packanack|Camp Crystal Lake|Camp Forest Green|Higgins Haven;B;;OpenTDB
+1171;Cinéma;2;"Quel est le nom de famille de Lilo dans ""Lilo et Stitch"" ?";Kuʻulei|Anoaʻi|Pelekai|Kealoha;C;;OpenTDB
+1172;Cinéma;3;"Qu'Alfred Hitchcock utilisait-il comme sang dans ""Psychose"" ?";Du ketchup|Du sirop d'érable|Du sirop de chocolat|Du colorant rouge;C;;OpenTDB
+1173;Cinéma;2;Dans quel film Johnny Depp a-t-il fait ses débuts au cinéma ?;My Bloody Valentine|Vendredi 13|Halloween|Freddy (Les Griffes de la nuit);D;;OpenTDB
+1174;Cinéma;2;Ce trope désigne des personnages secondaires tués pour montrer comment un monstre fonctionne.;Expendables|Red Shirt|Minions|Chair à canon;B;;OpenTDB
+1175;Cinéma;2;"Quelle est l'orthographe correcte du protagoniste de ""L'Histoire sans fin"" (1984) ?";Atreyu|Atraiyu|Atraeyu|Atrayu;A;;OpenTDB
+1176;Cinéma;2;"Dans ""Jurassic World"", quelle société rachète InGen et crée Jurassic World ?";Biology Synthetics Technologies|Masrani Global Corporation|International Genetics Incorporated|International Genetic Technologies;B;;OpenTDB
+1177;Cinéma;1;Daniel Radcliffe est devenu une star mondiale grâce à quelle franchise de films ?;Spy Kids|Harry Potter|Ted|Pirates des Caraïbes;B;;OpenTDB
+1178;Cinéma;2;Pour quel film Leonardo Di Caprio a-t-il remporté son premier Oscar du meilleur acteur ?;Shutter Island|Le Loup de Wall Street|Inception|The Revenant;D;;OpenTDB
+1179;Cinéma;2;"Dans ""Le Magicien d'Oz"" (1939), une substance faisait changer de couleur à un cheval. Laquelle ?";Peinture|Effet CGI|Teinture|Gélatine;D;;OpenTDB
+1180;Cinéma;2;"Qui a réalisé ""Le Silence des agneaux"" (1991) ?";Stanley Kubrick|Jonathan Demme|Frank Darabont|Michael Bay;B;;OpenTDB
+1181;Cinéma;3;"Quel est le nom du supercalculateur dans ""Jurassic Park"" (1993) ?";Thinking Machines CM-5|IBM Blue Gene/Q|Cray X-MP|Cray XK7;A;;OpenTDB
+1182;Cinéma;2;"Dans le reboot de ""Freddy"" (2010), qui joue Freddy Krueger ?";Derek Mears|Gunnar Hansen|Tyler Mane|Jackie Earle Haley;D;;OpenTDB
+1183;Cinéma;1;"Dans ""Spaceballs"", que les Spaceballs tentent-ils de voler à la planète Druidia ?";Des boulettes de viande|Le Schwartz|L'air|La princesse Lonestar;C;;OpenTDB
+1184;Cinéma;1;Quel super-héros a été interprété par Michael Keaton, Val Kilmer, George Clooney et Christian Bale ?;Spider-Man|Superman|Batman|Iron Man;C;;OpenTDB
+1185;Cinéma;2;"Qui prête sa voix à Blu dans le film d'animation ""Rio"" (2011) ?";Zach Galifianakis|Jonah Hill|Michael Cera|Jesse Eisenberg;D;;OpenTDB
+1186;Cinéma;2;"Quelle est la marque et le modèle des véhicules de visite dans ""Jurassic Park"" (1993) ?";Ford Explorer XLT 1992|Jeep Wrangler YJ Sahar 1992|Toyota Land Cruiser 1992|Mercedes Classe M;A;;OpenTDB
+1187;Cinéma;1;"Qui joue Ethan Hunt dans la série de films ""Mission : Impossible"" ?";Pierce Brosnan|Tom Cruise|Sean Connery|Johnny Depp;B;;OpenTDB
+1188;Cinéma;2;Qui a composé la bande originale du premier Blade Runner ?;Enya|Kitaro|Vangelis|Yanni;C;;OpenTDB
+1189;Cinéma;2;"Dans ""Charlie et la chocolaterie"" (1971), qui joue Willy Wonka ?";Gene Wilder|Peter Ostrum|Johnny Depp|Shia LaBeouf;A;;OpenTDB
+1190;Cinéma;2;"Quel acteur joue l'antagoniste principal dans ""Tower Heist"" (2011) ?";Alan Alda|Alec Baldwin|Kevin Nealon|Eddie Murphy;A;;OpenTDB
+1191;Cinéma;2;Dans Tron : l'Héritage, Kevin Flynn a écrit un programme pour créer le système parfait. Quel est son nom ?;Tron|MCP|Quorra|Clu;D;;OpenTDB
+1192;Cinéma;1;"Dans ""Mean Girls"", qui a des seins capables de prédire la pluie ?";Cady Heron|Janice Ian|Gretchen Weiners|Karen Smith;D;;OpenTDB
+1193;Cinéma;2;"Quelle chanson de Queen joue lors de la scène de combat finale de ""Hardcore Henry"" ?";Another One Bites the Dust|We Will Rock You|Brighton Rock|Don't Stop Me Now;D;;OpenTDB
+1194;Cinéma;1;Lequel de ces films ne se déroule PAS à Los Angeles ?;Predator 2|Terminator|RoboCop|Blade Runner;C;;OpenTDB
+1195;Cinéma;2;"Comment s'appelait le chien qui jouait Toto dans ""Le Magicien d'Oz"" (1939) ?";Teddy|Toto|Terry|Tommy;C;;OpenTDB
+1196;Cinéma;3;Quel fut le premier film d'Alfred Hitchcock tourné en couleur ?;Rebecca|La Corde|Psychose|Sueurs froides;B;;OpenTDB
+1197;Cinéma;1;Lequel de ces acteurs n'a joué qu'une seule fois dans un film de Tarantino ?;Christoph Waltz|Harvey Keitel|John Travolta|Samuel L. Jackson;C;;OpenTDB
+1198;Cinéma;2;"Quel chanteur célèbre Kevin Spacey incarne-t-il dans le film ""Beyond the Sea"" (2004) ?";Dean Martin|Frank Sinatra|Bobby Darin|Louis Armstrong;C;;OpenTDB
+1199;Cinéma;2;Quel film d'animation Steven Lisberger a-t-il réalisé en 1980 avant Tron ?;Animalympics|Taram et le Chaudron Magique|Rox et Rouky|Basil, détective privé;A;;OpenTDB
+1201;Cinéma;3;"Quel est le nom de l'assassin dans le premier film ""Hellboy"" ?";Grigori Efimovich Rasputin|Klaus Werner von Krupt|Karl Ruprecht Kroenen|Ilsa Haupstein;C;;OpenTDB
+1202;Cinéma;1;Quelle célébrité a annoncé sa candidature à la présidence en 2015 ?;Kanye West|Leonardo DiCaprio|Donald Trump|Miley Cyrus;A;;OpenTDB
+1203;Cinéma;2;"Nikki Diamond incarnait quel Gladiateur dans l'émission télévisée ""Gladiators"" (1992) ?";Falcon|Nightshade|Jet|Scorpio;D;;OpenTDB
+1204;Cinéma;3;En quelle année Gabe Newell est-il né ?;1960|1970|1972|1962;D;;OpenTDB
+1205;Cinéma;3;Quelle était la religion de Freddie Mercury ?;Paganisme|Zoroastrisme|Ashurisme|Judaïsme;B;;OpenTDB
+1206;Cinéma;2;"Combien de kilos Chris Pratt a-t-il perdu pour son rôle de Star-Lord dans ""Les Gardiens de la Galaxie"" ?";~14 kg (30 lbs)|~23 kg (50 lbs)|~32 kg (70 lbs)|~27 kg (60 lbs);D;;OpenTDB
+1207;Cinéma;2;Laquelle de ces célébrités n'était PAS membre des Jackson 5 ?;Marlon Jackson|Jermaine Jackson|Tito Jackson|Bo Jackson;D;;OpenTDB
+1208;Cinéma;2;Quand Elvis Presley est-il né ?;13 décembre 1931|8 janvier 1935|17 avril 1938|18 juillet 1940;B;;OpenTDB
+1209;Cinéma;2;S'il était encore en vie, en quelle année Elvis Presley fêterait-il son 100e anniversaire ?;2030|2045|2040|2035;D;;OpenTDB
+1210;Cinéma;2;Sous quel nom Doug Walker est-il connu sur YouTube ?;The Cinema Snob|The Angry Video Game Nerd|The Nostalgia Critic|AngryJoeShow;C;;OpenTDB
+1211;Cinéma;2;Laquelle de ces personnes ne fait PAS partie du groupe comique Mega64 ?;Derrick Acosta|Shawn Chatfield|Rocco Botte|Jon Jafari;D;;OpenTDB
+1212;Cinéma;2;Quelle actrice se nommait en réalité Frances Ethel Gumm ?;Judy Garland|Doris Day|Julie Andrews|Marilyn Monroe;A;;OpenTDB
+1213;Cinéma;2;"En 2014, ce rappeur ayant figuré dans ""Computers"" et ""Body Dance"" a été arrêté pour meurtre.";Bobby Shmurda|Young Thug|DJ Snake|Swae Lee;A;;OpenTDB
+1214;Cinéma;2;Paul McCartney a toujours utilisé son deuxième prénom. Quel est son vrai premier prénom ?;Justin|James|John|Jack;B;;OpenTDB
+1215;Cinéma;3;Dans quelle école du Surrey (Angleterre) Steve Backshall a-t-il étudié ?;Kings International College|Lyndhurst School|Collingwood College|Tomlinscote School;C;;OpenTDB
+1216;Cinéma;3;Qui était la première femme de Donald Trump ?;Ivana Zelníčková|Marla Maples|Nancy Davis|Melania Knauss;A;;OpenTDB
+1217;Cinéma;2;"Quelle personnalité radio se surnomme ""The King of All Media"" ?";Howard Stern|Ryan Seacrest|Rush Limbaugh|Pete Tong;A;;OpenTDB
+1218;Cinéma;2;En quelle année O.J. Simpson a-t-il été acquitté de ses accusations de meurtre ?;1995|1996|1992|1991;A;;OpenTDB
+1219;Cinéma;2;Sous quel pseudonyme James Rolfe est-il connu ?;The Angry Video Game Nerd|PeanutButterGamer|PewDiePie|TotalBiscuit;A;;OpenTDB
+1220;Cinéma;2;Avant de doubler Pearl dans Steven Universe, Deedee Magno Hall faisait partie de quel groupe américain ?;The Pussycat Dolls|The Party|The Weather Girls|The Cheetah Girls;B;;OpenTDB
+1221;Cinéma;2;Quel célèbre joueur des New York Yankees Marilyn Monroe a-t-elle épousé ?;Mason Williams|Tino Martinez|Joe DiMaggio|Babe Ruth;C;;OpenTDB
+1222;Cinéma;1;Quel comédien interprète le personnage Neil Hamburger ?;Todd Glass|Gregg Turkington|Tim Heidecker|Nathan Fielder;B;;OpenTDB
+1223;Cinéma;1;Quelle actrice a épousé Michael Douglas en 2000 ?;Sara Sugarman|Ruth Jones|Pam Ferris|Catherine Zeta-Jones;D;;OpenTDB
+1224;Cinéma;1;Gwyneth Paltrow a une fille prénommée... ?;Dakota|Apple|French|Lily;B;;OpenTDB
+1225;Cinéma;1;Quelle est la cause officielle de la mort de Marilyn Monroe ?;Incendie domestique|Attaque au couteau|Overdose médicamenteuse|Coup de feu;C;;OpenTDB
+1226;Cinéma;1;Aubrey Graham est mieux connu sous le nom de;2 Chainz|Travis Scott|Lil Wayne|Drake;D;;OpenTDB
+1227;Cinéma;2;"Quel est le vrai nom de ""moot"", fondateur du forum 4chan ?";Catie Wayne|Christopher Poole|Allison Harvard|Mark Zuckerberg;B;;OpenTDB
+1228;Cinéma;3;L'excentrique astronome Tycho Brahé gardait quel animal de compagnie ?;Un chien|Une chèvre|Un ours|Un orignal (élan);D;;OpenTDB
+1229;Cinéma;2;Quelle célébrité américaine est morte en 1977 en jouant au golf à La Moraleja, Madrid ?;Bing Crosby|Elvis Presley|Charlie Chaplin|Groucho Marx;A;;OpenTDB
+1230;Cinéma;2;Qu'est-ce qui a poussé Jake Lloyd (Anakin Skywalker dans La Menace fantôme) à arrêter d'acteur ?;Harcèlement scolaire|Casier judiciaire|Nomination au Razzie Award|Racisme;A;;OpenTDB
+1231;Cinéma;3;Quelle est la taille de Tom Cruise ?;1,63 m (5′ 4″)|1,65 m (5′ 5″)|1,70 m (5′ 7″)|1,75 m (5′ 9″);C;;OpenTDB
+1232;Cinéma;1;Quelle est l'identité secrète de Superman dans les comics DC ?;Arthur Curry|Clark Kent|John Jones|Bruce Wayne;B;;OpenTDB
+1233;Cinéma;1;Quelle est la véritable identité de Batman ?;Bruce Wayne|Tony Stark|Clark Kent|Barry Allen;A;;OpenTDB
+1234;Cinéma;3;Dans quelle mise à jour de Homestuck le segment [S] Game Over a-t-il été publié ?;25 octobre 2014|8 avril 2012|28 août 2003|13 avril 2009;A;;OpenTDB
+1235;Cinéma;3;Quelles sont les Trois Vertus de Bionicle ?;Construire, Jouer, Changer|Unité, Devoir, Destinée|Forger, Construire, Combattre|Travailler, Jouer, Vivre;B;;OpenTDB
+1236;Cinema;2;"Dans l'univers pré-Super Genesis du comic ""Sonic the Hedgehog"", quel est le nom du frère de Sally Acorn ?";A) Elias Acorn | B) Frederick Acorn | C) Alexis Acorn | D) Maximillian Acorn;A;;OpenTDB
+1237;Cinema;2;Quel acolyte de Batman est le fils de Talia al Ghul ?;A) Damian Wayne | B) Jason Todd | C) Tim Drake | D) Dick Grayson;A;;OpenTDB
+1238;Cinema;2;Dans Calvin et Hobbes, quel est le prénom du petit ami de la baby-sitter ?;A) Dave | B) Charlie | C) Charles | D) Nathaniel;B;;OpenTDB
+1239;Cinema;2;Dans les comics Marvel, laquelle de ces pierres n'est PAS une pierre d'infinité ?;A) Temps | B) Pouvoir | C) Âme | D) Énergie;D;;OpenTDB
+1240;Cinema;1;"Dans ""Homestuck"", qui est le tuteur de Dave Strider ?";A) Becquerel | B) Bro | C) Halley | D) Doc Scratch;B;;OpenTDB
+1241;Cinema;3;"En quelle année est sorti le premier comic ""The Walking Dead"" ?";A) 2006 | B) 2001 | C) 2003 | D) 1999;C;;OpenTDB
+1242;Cinema;3;En quelle année s'est tenu le premier San Diego Comic-Con ?;A) 1970 | B) 1985 | C) 1990 | D) 2000;A;;OpenTDB
+1243;Cinema;2;Dans les comics, Wonder Woman n'a PAS eu de relation amoureuse avec lequel de ces super-héros ?;A) Steve Trevor | B) Green Arrow | C) Batman | D) Superman;B;;OpenTDB
+1244;Cinema;2;Dans les comics Sonic, quel personnage a pris le commandement de la Légion Noire après l'assassinat de Luger ?;A) Remington | B) Kragok | C) Lien-Da | D) Dimitri;C;;OpenTDB
+1245;Cinema;2;Qui est la deuxième personne à endosser le manteau de Night Owl dans le roman graphique Watchmen ?;A) Nelson Gardner | B) Daniel Dreiberg | C) Hollis Mason | D) Adrian Veidt;B;;OpenTDB
+1246;Cinema;1;"Selon leur surnom traditionnel, quel type de ""duo"" forment Batman et Robin ?";A) Dynamique | B) Dynastique | C) Délirant | D) Dangereux;A;;OpenTDB
+1247;Cinema;3;Mieux connu sous le pseudonyme Logan, quel est le vrai nom de naissance de Wolverine ?;A) James Howlett | B) Logan Wolf | C) Thomas Wilde | D) John Savage;A;;OpenTDB
+1248;Cinema;2;"Quelle est la faiblesse des vampires américains (dans ""American Vampire"" de Scott Snyder) ?";A) L'argent | B) La lumière du soleil | C) Le bois | D) L'or;D;;OpenTDB
+1249;Cinema;2;Quelle désignation est donnée à l'Univers cinématographique Marvel ?;A) Terre-2008 | B) Terre-199999 | C) Terre-10005 | D) Terre-616;B;;OpenTDB
+1250;Cinema;2;Quel est le vrai nom d'Hellboy ?;A) La Main Droite du Destin | B) Azzael | C) Anung Un Rama | D) Ogdru Jahad;C;;OpenTDB
+1251;Cinema;2;"Quel acolyte de ""Green Arrow"" porte habituellement une casquette de baseball ?";A) Black Canary | B) Dick Grayson | C) Roy Harper | D) Emiko Queen;C;;OpenTDB
+1252;Cinema;3;Dans l'univers Hellboy, quel était le nom de naissance d'Abe Sapien ?;A) Landis Pope | B) Sir Edward Grey | C) Langdon Everett Caul | D) Lord Baltimore;C;;OpenTDB
+1253;Cinema;2;"Dans ""Black Hammer"", quelle dimension le Colonel Weird traverse-t-il ?";A) Univers Miroir | B) Para-Zone | C) Zone Fantôme | D) Hyperespace;B;;OpenTDB
+1254;Cinema;2;Qui a inspiré le personnage du Professeur Tournesol dans la série Tintin ?;A) J. Cecil Maby | B) Jacques Piccard | C) Auguste Picard | D) Will Morris;C;;OpenTDB
+1255;Cinema;1;"Ce super-héros Marvel est souvent surnommé ""L'homme sans peur"".";A) Wolverine | B) Hulk | C) Daredevil | D) Thor;C;;OpenTDB
+1256;Cinema;3;"Quels sont les noms des deux ""canon fan trolls"" dans ""Homestuck"" ?";A) Aikter Frekik et Xagrai Ollomu | B) The Wrycrown et Voksea Olkido | C) Grekei Ceknux et Riya Camacho | D) Mierfa Durgas et Nektan Whelan;D;;OpenTDB
+1257;Cinema;3;"Lequel de ces anneaux du ""Lantern Corps"" DC Comics est classé comme Parasitique ?";A) Indigo (Compassion) | B) Jaune (Peur) | C) Blanc (Vie) | D) Vert (Volonté);A;;OpenTDB
+1258;Cinema;3;En quelle année le comic Garfield a-t-il été publié pour la première fois ?;A) 1973 | B) 1988 | C) 1982 | D) 1978;D;;OpenTDB
+1259;Cinema;2;Quel est le nom de famille du personnage Gamzee dans Homestuck ?;A) Makera | B) Makara | C) Makrea | D) Makare;B;;OpenTDB
+1260;Cinema;3;"Dans le webcomic ""Ava's Demon"", sur quel péché le personnage ""Nevy Nervine"" est-il basé ?";A) Colère | B) Luxure | C) Envie | D) Paresse;C;;OpenTDB
+1261;Cinema;2;De quel monde Thor est-il originaire ?;A) Sovengarde | B) Midgard | C) Jotunheim | D) Asgard;D;;OpenTDB
+1262;Cinema;2;Quel est le vrai nom de naissance de Michael Caine ?;A) Morris Coleman | B) Martin Michaels | C) Carl Myers | D) Maurice Micklewhite;D;;OpenTDB
+1263;Cinema;2;"Dans ""Retour vers le futur 2"", Marty et le Docteur Brown voyagent vers quelle date future ?";A) 21 octobre 2015 | B) 20 juillet 2015 | C) 25 janvier 2015 | D) 28 août 2015;A;;OpenTDB
+1264;Cinema;2;"Qui joue Bruce Wayne dans ""The Dark Knight"" (2008) ?";A) Heath Ledger | B) Michael Caine | C) Christian Bale | D) Ron Dean;C;;OpenTDB
+1265;Cinema;1;"Quel nom Tom Hanks donne-t-il à son ballon de volley dans ""Seul au monde"" ?";A) Wilson | B) Jones | C) Friday | D) Billy;A;;OpenTDB
+1266;Cinema;1;"Qui a réalisé le film ""Alien"" ?";A) James Cameron | B) Ridley Scott | C) Christopher Nolan | D) Michael Bay;B;;OpenTDB
+1267;Cinema;1;"Lequel de ces acteurs/actrices ne fait PAS partie du casting de ""Suicide Squad"" (2016) ?";A) Will Smith | B) Jared Leto | C) Scarlett Johansson | D) Margot Robbie;C;;OpenTDB
+1268;Cinema;1;"Dans ""Army of Darkness"" (1992), quel nom Ash donne-t-il à son fusil à double canon ?";A) Boomstick | B) Blastbranch | C) Bloomstick | D) 2-Pump Chump;A;;OpenTDB
+1269;Cinema;2;Velma Kelly et Roxie Hart sont les protagonistes de quel film oscarisé ?;A) Dreamgirls | B) Chicago | C) Cabaret | D) Tout ça... pour ça !;B;;OpenTDB
+1270;Cinema;1;Quel film a été considéré par la critique comme le meilleur film de tous les temps ?;A) Citizen Kane | B) Avatar | C) The Room | D) Le Parrain 2;A;;OpenTDB
+1271;Cinema;1;"Quel est le nom du robot orange et blanc dans ""Star Wars : Le Réveil de la Force"" ?";A) BB-3 | B) BB-8 | C) AA-A | D) R2-D2;B;;OpenTDB
+1272;Cinema;2;"Dans ""Le Seigneur des Anneaux : Les Deux Tours"", où les orques emmènent-ils les hobbits ?";A) Mordor | B) Fondcombe | C) La Moria | D) Isengard;D;;OpenTDB
+1273;Cinema;3;Quel boxeur était célèbre pour frapper le gong dans l'introduction des films J. Arthur Rank ?;A) Bombardier Billy Wells | B) Terry Spinks | C) Don Cockell | D) Freddie Mills;A;;OpenTDB
+1274;Cinema;1;Quel film met en scène un grand esprit ressemblant à un lapin avec des pouvoirs magiques dont celui de faire pousser des arbres ?;A) Alice au pays des merveilles | B) Hop | C) Les Cinq Légendes | D) Mon voisin Totoro;D;;OpenTDB
+1275;Cinema;2;La révélation de Dark Vador à Luke est mythique. Mais laquelle de ces versions est la bonne ?;"A) ""Tu as tort. Je suis ton père."" | B) ""Luke, je suis ton père."" | C) ""La vérité est que je suis ton père."" | D) ""Non. Je suis ton père.""";D;;OpenTDB
+1276;Cinema;2;"Quel est le nom du protagoniste dans le film ""Commando"" (1985) ?";A) Harry Tasker | B) Ben Richards | C) Douglas Quaid | D) John Matrix;D;;OpenTDB
+1277;Cinema;1;"De quelle race était le chien Marley dans le film ""Marley & Moi"" (2008) ?";A) Dalmatien | B) Golden Retriever | C) Labrador Retriever | D) Shiba Inu;C;;OpenTDB
+1278;Cinema;3;"En quelle année Clint Eastwood a-t-il incarné l'inspecteur Harry Callahan dans ""L'Inspecteur Harry"" ?";A) 1969 | B) 1983 | C) 1971 | D) 1975;C;;OpenTDB
+1279;Cinema;3;"Selon l'univers ""Star Wars"", de quelle planète Obi-Wan Kenobi est-il originaire ?";A) Tatooine | B) Alderaan | C) Stewjon | D) Naboo;C;;OpenTDB

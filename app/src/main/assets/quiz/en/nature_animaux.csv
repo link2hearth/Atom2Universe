@@ -1,0 +1,67 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+654;Nature;2;The now extinct species 'Thylacine' was native to where?;A) Baluchistan, Pakistan | B) Tasmania, Australia | C) Wallachia, Romania | D) Oregon, USA;B;The thylacine (Tasmanian tiger) went extinct in 1936.;OpenTDB
+655;Nature;2;A carnivorous animal eats flesh, what does a nucivorous animal eat?;A) Nothing | B) Nuts | C) Fruit | D) Seaweed;B;Nucivorous comes from Latin 'nux' meaning nut.;OpenTDB
+656;Nature;2;What is the common term for bovine spongiform encephalopathy (BSE)?;A) Weil's disease | B) Mad Cow disease | C) Milk fever | D) Foot-and-mouth disease;B;BSE is commonly called Mad Cow disease.;OpenTDB
+657;Nature;2;What is the collective noun for bears?;A) Drove | B) Sloth | C) Tribe | D) Husk;B;A group of bears is called a 'sloth' in English.;OpenTDB
+658;Nature;3;What is the Gray Wolf's scientific name?;A) Canis Aureus | B) Canis Lupus | C) Canis Latrans | D) Canis Lupus Lycaon;B;Canis lupus is the scientific name of the gray wolf.;OpenTDB
+659;Nature;2;What is the fastest animal?;A) Golden Eagle | B) Peregrine Falcon | C) Cheetah | D) Horsefly;B;The peregrine falcon can reach 390 km/h in a dive.;OpenTDB
+660;Nature;1;What do you call a baby bat?;A) Cub | B) Pup | C) Chick | D) Kid;B;A baby bat is called a 'pup' in English.;OpenTDB
+661;Nature;1;The Kākāpō is a large, flightless, nocturnal parrot native to which country?;A) South Africa | B) New Zealand | C) Australia | D) Madagascar;B;The kākāpō is endemic to New Zealand and critically endangered.;OpenTDB
+662;Nature;2;What color is a polar bear's skin?;A) White | B) Black | C) Pink | D) Green;B;Polar bears have black skin under their white fur.;OpenTDB
+663;Nature;2;What is the name for a male bee that comes from an unfertilized egg?;A) Soldier | B) Drone | C) Worker | D) Male;B;Drones are the male bees of the hive.;OpenTDB
+664;Nature;2;What is the collective noun for rats?;A) Pack | B) Mischief | C) Race | D) Drift;B;A group of rats is called a 'mischief' in English.;OpenTDB
+665;Nature;1;What is the name of a rabbit's abode?;A) Nest | B) Burrow | C) Den | D) Drey;B;Rabbits live in underground burrows.;OpenTDB
+666;Nature;2;The dish Fugu is made from what family of fish?;A) Bass | B) Pufferfish | C) Salmon | D) Mackerel;B;Fugu is a potentially deadly pufferfish.;OpenTDB
+667;Nature;2;Cashmere is the wool from which kind of animal?;A) Sheep | B) Goat | C) Camel | D) Llama;B;Cashmere comes from cashmere goats.;OpenTDB
+668;Nature;1;What is the collective noun for a group of crows?;A) Pack | B) Murder | C) Gaggle | D) Herd;B;A group of crows is called a 'murder' in English.;OpenTDB
+669;Nature;2;What is the world's longest venomous snake?;A) Green Anaconda | B) King Cobra | C) Inland Taipan | D) Yellow Bellied Sea Snake;B;The king cobra can reach up to 5.5 meters.;OpenTDB
+670;Nature;2;What is the scientific name for the 'Polar Bear'?;A) Polar Bear | B) Ursus Maritimus | C) Ursus Spelaeus | D) Ursus Arctos;B;Ursus maritimus means 'sea bear' in Latin.;OpenTDB
+671;Nature;1;Which class of animals are newts members of?;A) Fish | B) Amphibian | C) Reptiles | D) Mammals;B;Newts are amphibians of the salamander family.;OpenTDB
+672;Nature;1;How many legs do butterflies have?;A) 2 | B) 6 | C) 4 | D) 0;B;Like all insects, butterflies have 6 legs.;OpenTDB
+673;Langue;2;What does 'hippopotamus' mean and in what language?;A) River Horse (Latin) | B) River Horse (Greek) | C) Fat Pig (Greek) | D) Fat Pig (Latin);B;'Hippos' (horse) + 'potamos' (river) in Greek.;OpenTDB
+674;Nature;1;Hippocampus is the Latin name for which marine creature?;A) Dolphin | B) Seahorse | C) Whale | D) Octopus;B;The seahorse gets its name from Greek 'hippos' (horse) and 'kampos' (sea monster).;OpenTDB
+938;Nature & Animaux;2;What does hippopotamus mean and in what language?;A) Fat Pig (Greek) | B) River Horse (Greek) | C) Fat Pig (Latin) | D) River Horse (Latin);B;;OpenTDB
+939;Nature & Animaux;2;What type of animal is a natterjack?;A) Toad | B) Fish | C) Bird | D) Insect;A;;OpenTDB
+940;Nature & Animaux;2;Which of these species is not extinct?;A) Komodo dragon | B) Saudi gazelle | C) Japanese sea lion | D) Tasmanian tiger;A;;OpenTDB
+941;Nature & Animaux;1;Hippocampus is the Latin name for which marine creature?;A) Whale | B) Octopus | C) Seahorse | D) Dolphin;C;;OpenTDB
+942;Nature & Animaux;2;What is the collective noun for a group of bears?;A) Husk | B) Tribe | C) Sloth | D) Drove;C;;OpenTDB
+943;Nature & Animaux;2;What is the national bird of Bahrain?;A) Hummingbird | B) Sparrow | C) Bulbul | D) Falcon;C;;OpenTDB
+944;Nature & Animaux;2;What are rhino horns made of?;A) Bone | B) Keratin | C) Ivory | D) Skin;B;;OpenTDB
+945;Nature & Animaux;2;About how much of their body weight in food do sea otters eat every day?;A) 10% | B) 45% | C) 80% | D) 25%;D;;OpenTDB
+946;Nature & Animaux;1;By definition, where does an abyssopelagic animal live?;A) Inside a tree | B) On top of a mountain | C) At the bottom of the ocean | D) In the desert;C;;OpenTDB
+947;Nature & Animaux;2;Decapods are ten-footed crustaceans. Which of these are NOT decapods?;A) Shrimp | B) Krill | C) Crabs | D) Lobsters;B;;OpenTDB
+1463;Nature & Animaux;2;The dish Fugu, is made from what family of fish?;A) Salmon | B) Bass | C) Mackerel | D) Pufferfish;D;;OpenTDB
+1464;Nature & Animaux;2;What dog breed is one of the oldest breeds of dog and has flourished since before 400 BCE.;A) Pugs | B) Bulldogs | C) Boxers | D) Chihuahua;A;;OpenTDB
+1465;Nature & Animaux;2;What are the scales on all snakes and most lizards are made of?;A) Ankyloglossia | B) Epidermis | C) Keratin | D) Ecdysis;C;;OpenTDB
+1466;Nature & Animaux;3;"Which of the following is another name for the ""Poecilotheria Metallica Tarantula""?";A) Woebegone | B) Silver Stripe | C) Hopper | D) Gooty;D;;OpenTDB
+1467;Nature & Animaux;2;Which of the following is NOT a venomous snake?;A) Black mamba | B) Yellow bellied sea snake | C) Malayan Krait | D) Reticulated python;D;;OpenTDB
+1468;Nature & Animaux;3;"Which species is a ""mountain chicken""?";A) Horse | B) Fly | C) Chicken | D) Frog;D;;OpenTDB
+1469;Nature & Animaux;3;To which biological phylum do all mammals, birds and reptiles belong?;A) Placazoa | B) Echinodermata | C) Annelida | D) Chordata;D;;OpenTDB
+1470;Nature & Animaux;2;"""Decapods"" are an order of ten-footed crustaceans.  Which of these are NOT decapods?";A) Krill | B) Crabs | C) Shrimp | D) Lobsters;A;;OpenTDB
+1471;Nature & Animaux;3;What is the scientific name for the Bald Eagle?;A) Haliaeetus Leucocephalus | B) Aquila Chrysaetos | C) Cyanocitta Cristata | D) Tyto Alba;A;;OpenTDB
+1472;Nature & Animaux;3;What scientific suborder does the family Hyaenidae belong to?;A) Haplorhini | B) Feliformia | C) Ciconiiformes | D) Caniformia;B;;OpenTDB
+1473;Nature & Animaux;3;What type of creature is a Bonobo?;A) Ape | B) Lion | C) Parrot | D) Wildcat;A;;OpenTDB
+1474;Nature & Animaux;1;How many teeth does an adult rabbit have?;A) 28 | B) 24 | C) 26 | D) 30;A;;OpenTDB
+1475;Nature & Animaux;3;Which of these animals is NOT a lizard?;A) Komodo Dragon | B) Tuatara | C) Green Iguana | D) Gila Monster;B;;OpenTDB
+1476;Nature & Animaux;2;"What is the scientific name for the ""Polar Bear""?";A) Ursus Spelaeus | B) Ursus Maritimus | C) Polar Bear | D) Ursus Arctos;B;;OpenTDB
+1477;Nature & Animaux;2;What color/colour is a polar bear's skin?;A) White | B) Pink | C) Black | D) Green;C;;OpenTDB
+1478;Nature & Animaux;1;Which breed of dog is traditionally associated with firefighters?;A) Great Dane | B) Mastiff | C) Dalmatians | D) German Shepard;C;;OpenTDB
+1479;Nature & Animaux;3;What is the scientific name of the Budgerigar?;A) Melopsittacus undulatus | B) Pyrrhura molinae | C) Ara macao | D) Nymphicus hollandicus;A;;OpenTDB
+1480;Nature & Animaux;2;Which of the following is true when alligators are behaving territorially?;A) They run full force at the threat | B) Slap their tails on the ground | C) They bellow while showing their tail and neck | D) Open their jaws while making a clicking noise;C;;OpenTDB
+1481;Nature & Animaux;2;"What does ""hippopotamus"" mean and in what langauge?";A) Fat Pig (Greek) | B) Fat Pig (Latin) | C) River Horse (Greek) | D) River Horse (Latin);C;;OpenTDB
+1482;Nature & Animaux;3;Unlike on most salamanders, this part of a newt is flat?;A) Head | B) Tail | C) Teeth | D) Feet;B;;OpenTDB
+1483;Nature & Animaux;2;What is the name of the family that the domestic cat is a member of?;A) Felis | B) Felinae | C) Cat | D) Felidae;D;;OpenTDB
+1484;Nature & Animaux;3;Which species of Brown Bear is not extinct?;A) Atlas Bear | B) California Grizzly Bear | C) Mexican Grizzly Bear | D) Syrian Brown Bear;D;;OpenTDB
+1485;Nature & Animaux;3;What was the name of the Ethiopian Wolf before they knew it was related to wolves?;A) Amharic Fox | B) Simien Jackel | C) Canis Simiensis | D) Ethiopian Coyote;B;;OpenTDB
+1486;Nature & Animaux;2;"The now extinct species ""Thylacine"" was native to where?";A) Oregon, United States | B) Tasmania, Australia | C) Baluchistan, Pakistan | D) Wallachia, Romania;B;;OpenTDB
+1487;Nature & Animaux;2;"For what reason would a spotted hyena ""laugh""?";A) Exhaustion | B) Excitement | C) Nervousness | D) Aggression;C;;OpenTDB
+1488;Nature & Animaux;2;What is the scientific name of the Common Chimpanzee?;A) Pan paniscus | B) Pan troglodytes | C) Panthera leo | D) Gorilla gorilla;B;;OpenTDB
+1489;Nature & Animaux;1;What is the fastest  land animal?;A) Cheetah | B) Pronghorn Antelope | C) Thomson’s Gazelle | D) Lion;A;;OpenTDB
+1490;Nature & Animaux;3;Which of these is a colony of polyps and not a jellyfish?;A) Sea Wasp | B) Irukandji | C) Portuguese Man-of-War | D) Sea Nettle;C;;OpenTDB
+1491;Nature & Animaux;3;Chronic Wasting Disease (CWD) exclusively infects members of which family of animals?;A) Hominids | B) Cervids | C) Felids | D) Canids;B;;OpenTDB
+1492;Nature & Animaux;3;What scientific family does the Aardwolf belong to?;A) Canidae | B) Eupleridae | C) Felidae | D) Hyaenidae;D;;OpenTDB
+1493;Nature & Animaux;2;Which animal was part of an Russian domestication experiment in 1959?;A) Bears | B) Foxes | C) Alligators | D) Pigeons;B;;OpenTDB
+1494;Nature & Animaux;3;What is the collective noun for vultures?;A) Gaze | B) Ambush | C) Building | D) Wake;D;;OpenTDB
+1495;Nature & Animaux;3;What bird is born with claws on its wing digits?;A) Cormorant | B) Hoatzin | C) Secretary bird | D) Cassowary;B;;OpenTDB
+1496;Nature & Animaux;1;Wombats are native to which Country?;A) New Zealand | B) Australia | C) Palau | D) Papua New Guinea;B;;OpenTDB
+1497;Nature & Animaux;1;Snakes and lizards are known to flick their tongue, this behavior is to?;A) Capture scent particles | B) Threaten other species | C) Taste the sweet air | D) Attract female mates;A;;OpenTDB

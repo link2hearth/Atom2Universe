@@ -1,0 +1,60 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+675;Mythologie;1;De quelle mythologie vient le dieu Apollon ?;A) Romaine et espagnole | B) Grecque et romaine | C) Grecque et chinoise | D) Grecque, romaine et nordique;B;Apollon est un dieu commun aux mythologies grecque et romaine.;OpenTDB
+676;Mythologie;2;Hel était la fille de quelle figure de la mythologie nordique ?;A) Thor | B) Loki | C) Odin | D) Balder;B;Hel est la fille de Loki et gouverne le royaume des morts.;OpenTDB
+677;Mythologie;3;Dans la mythologie grecque, qui était la fille du roi Minos ?;A) Athéna | B) Ariane | C) Ariel | D) Alana;B;Ariane a aidé Thésée à s'échapper du labyrinthe.;OpenTDB
+678;Mythologie;2;Quel est le nom du dieu grec des forgerons ?;A) Dyntos | B) Héphaïstos | C) Vulcain | D) Artagatus;B;Héphaïstos forgeait les armes des dieux sur l'Olympe.;OpenTDB
+679;Mythologie;2;Un minotaure est mi-humain mi-quoi ?;A) Vache | B) Taureau | C) Cheval | D) Aigle;B;Le Minotaure avait un corps d'homme et une tête de taureau.;OpenTDB
+680;Mythologie;2;Quel est le nom du dieu grec des morts paisibles ?;A) Tartare | B) Thanatos | C) Hadès | D) Moros;B;Thanatos personnifiait la mort douce et paisible.;OpenTDB
+681;Mythologie;1;Qui, dans la mythologie grecque, a mené les Argonautes à la recherche de la Toison d'or ?;A) Castor | B) Jason | C) Dédale | D) Ulysse;B;Jason et les Argonautes ont navigué sur le navire Argo.;OpenTDB
+682;Mythologie;1;Poséidon était le dieu de quoi ?;A) Guerre | B) La Mer | C) Soleil | D) Feu;B;Poséidon régnait sur les mers et les océans.;OpenTDB
+683;Mythologie;1;Quelles créatures mythologiques ont des visages de femmes et des corps de vautours ?;A) Sirènes | B) Harpies | C) Nymphes | D) Lilith;B;Les Harpies étaient des esprits du vent aux griffes acérées.;OpenTDB
+684;Mythologie;1;Dans la plupart des traditions, qui était l'épouse de Zeus ?;A) Aphrodite | B) Héra | C) Athéna | D) Hestia;B;Héra était la déesse du mariage et reine de l'Olympe.;OpenTDB
+685;Mythologie;1;Dans la mythologie grecque, qui est le dieu du vin ?;A) Héphaïstos | B) Dionysos | C) Déméter | D) Apollon;B;Dionysos était aussi le dieu de la fête et de l'ivresse.;OpenTDB
+686;Mythologie;1;Qui était le roi des dieux dans la mythologie grecque antique ?;A) Apollon | B) Zeus | C) Hermès | D) Poséidon;B;Zeus régnait sur l'Olympe et les cieux.;OpenTDB
+687;Mythologie;2;Les corbeaux d'Odin s'appellent 'Huginn' et 'Muninn'. Que signifient leurs noms ?;A) Pouvoir et Paix | B) Pensée et Mémoire | C) Guerre et Savoir | D) Sommeil et Éveil;B;Huginn (pensée) et Muninn (mémoire) rapportaient les nouvelles du monde à Odin.;OpenTDB
+688;Mythologie;3;Dans la mythologie nordique, quel serpent ronge les racines d'Yggdrasil ?;A) Bragi | B) Nídhögg | C) Odin | D) Ymir;B;Nídhögg ronge les racines de l'arbre-monde Yggdrasil.;OpenTDB
+689;Mythologie;2;Quel était le nom grec de Neptune ?;A) Arès | B) Poséidon | C) Zeus | D) Apollon;B;Poséidon (grec) et Neptune (romain) sont le même dieu de la mer.;OpenTDB
+690;Mythologie;1;Quel personnage grec est descendu aux Enfers pour ramener sa femme Eurydice ?;A) Hercule | B) Orphée | C) Persée | D) Dédale;B;Orphée a charmé Hadès avec sa musique.;OpenTDB
+691;Mythologie;3;Quel dieu nordique possède un cheval nommé Sleipnir ?;A) Thor | B) Odin | C) Frigg | D) Balder;B;Sleipnir est un cheval à huit pattes, fils de Loki.;OpenTDB
+692;Mythologie;2;Qui est le fils du dieu Loki ?;A) Odin | B) Fenrir | C) Hel | D) Sigyn;B;Fenrir est le loup géant destiné à tuer Odin lors du Ragnarök.;OpenTDB
+693;Mythologie;2;Qui était le dieu romain du feu ?;A) Apollon | B) Vulcain | C) Jupiter | D) Mercure;B;Vulcain était le forgeron des dieux romains.;OpenTDB
+694;Mythologie;1;Combien de têtes a Cerbère ?;A) 2 | B) 3 | C) 1 | D) 5;B;Cerbère est le chien à trois têtes gardien des Enfers.;OpenTDB
+695;Mythologie;1;Quel dieu grec n'a pas changé de nom à Rome ?;A) Déméter | B) Apollon | C) Zeus | D) Athéna;B;Apollon a gardé son nom grec dans la mythologie romaine.;OpenTDB
+696;Mythologie;1;Quelle créature mythologique est mi-homme mi-cheval ?;A) Minotaure | B) Centaure | C) Pégase | D) Gorgone;B;Les centaures avaient un buste humain et un corps de cheval.;OpenTDB
+697;Mythologie;1;Comment s'appelait le dieu romain de la guerre ?;A) Jupiter | B) Mars | C) Junon | D) Arès;B;Mars était l'équivalent romain d'Arès grec.;OpenTDB
+898;Mythologie;2;Dans la mythologie grecque, qui a tué Achille ?;A) Périclès | B) Hector | C) Paris | D) Hélène;C;;OpenTDB
+899;Mythologie;3;Qui est le dieu mineur protecteur d'arts comme la fabrication du fromage et l'apiculture ?;A) Carmé | B) Autonoé | C) Aristée | D) Céphisso;C;;OpenTDB
+900;Mythologie;1;La marque Nike tire son nom de la déesse grecque de quoi ?;A) L'honneur | B) Le courage | C) La force | D) La victoire;D;;OpenTDB
+901;Mythologie;3;Dans la mythologie nordique, quel serpent ronge les racines de l'arbre Yggdrasil ?;A) Ymir | B) Níðhöggr | C) Odin | D) Bragi;B;;OpenTDB
+902;Mythologie;3;Qui Hippomène a-t-il battu à la course à pied ?;A) Pélée | B) Atalante | C) Jason | D) Thésée;B;;OpenTDB
+903;Mythologie;2;Quel est le nom du premier être humain dans la mythologie nordique ?;A) Ake | B) Ask | C) Asger | D) Asmund;B;;OpenTDB
+904;Mythologie;2;"Quelle divinité grecque a lancé la pomme d'or ""pour la plus belle"" au festin des dieux ?";A) Artémis | B) Hadès | C) Arès | D) Éris;D;;OpenTDB
+905;Mythologie;2;Lequel de ces personnages n'est PAS l'une des Moires grecques ?;A) Clotho | B) Atropos | C) Narcisse | D) Lachésis;C;;OpenTDB
+906;Mythologie;2;Qui est le fils du dieu Loki dans la mythologie nordique ?;A) Sigyn | B) Fenrir | C) Odin | D) Hel;B;;OpenTDB
+907;Mythologie;2;Dans la mythologie nordique, quel est le nom du symbole connu comme l'Arbre de Vie ?;A) Ymir | B) Arbre de la Terre | C) Racines d'Odin | D) Yggdrasil;D;;OpenTDB
+1091;Mythologie;1;"De quelle mythologie est issu le dieu ""Apollon"" ?";A) Grecque et chinoise | B) Grecque, romaine et nordique | C) Romaine et espagnole | D) Grecque et romaine;D;;OpenTDB
+1092;Mythologie;2;Dans la mythologie africaine, Anansi est un filou et conteur qui prend la forme de quel animal ?;A) Chien sauvage | B) Araignée | C) Singe | D) Crocodile;B;;OpenTDB
+1093;Mythologie;2;Héra est la déesse de...;A) Le mariage | B) La guerre | C) L'agriculture | D) La mer;A;;OpenTDB
+1094;Mythologie;2;"Dans la mythologie nordique, quel est le nom du symbole communément appelé ""l'Arbre de Vie"" ?";A) Arbre de la Terre | B) Racines d'Odin | C) Ymir | D) Yggdrasil;D;;OpenTDB
+1095;Mythologie;1;Laquelle de ces créatures mythologiques est décrite comme mi-homme mi-cheval ?;A) Gorgone | B) Minotaure | C) Centaure | D) Pégase;C;;OpenTDB
+1096;Mythologie;1;L'Ankh est le hiéroglyphe égyptien représentant quoi ?;A) Le poison | B) L'amour | C) La vie | D) La haine;C;;OpenTDB
+1097;Mythologie;2;Cette figure mythologique grecque est la déesse de la stratégie guerrière (entre autres).;A) Apollon | B) Artémis | C) Arès | D) Athéna;D;;OpenTDB
+1098;Mythologie;1;Quel personnage de la mythologie grecque voyagea aux Enfers pour ramener son épouse Eurydice ?;A) Orphée | B) Persée | C) Hercule | D) Dédale;A;;OpenTDB
+1099;Mythologie;3;Níðhöggr est une créature mythique de quelle mythologie ?;A) Hindoue | B) Nordique | C) Grecque | D) Égyptienne;B;;OpenTDB
+1100;Mythologie;3;Qui est le dieu égyptien de la reproduction et de la laitue ?;A) Meret | B) Menu | C) Min | D) Mut;C;;OpenTDB
+1101;Mythologie;2;Les Maoris soutiennent que quelle nation insulaire a été fondée par Kupe, qui la découvrit sous un long nuage blanc ?;A) Nouvelle-Zélande | B) Fidji | C) Hawaï | D) Vanuatu;A;;OpenTDB
+1102;Mythologie;2;Dans la mythologie grecque, Perséphone doit retourner aux Enfers car elle avait mangé des graines de quel fruit ?;A) Grenade | B) Orange | C) Figue | D) Tournesol;A;;OpenTDB
+1103;Mythologie;2;Selon le folklore japonais, quel est le plat préféré du Kappa ?;A) Kabocha | B) Nasu | C) Soba | D) Concombres;D;;OpenTDB
+1104;Mythologie;2;Qui est le père d'Icare, qui vola trop près du soleil ?;A) Zeus | B) Persée | C) Minos | D) Dédale;D;;OpenTDB
+1105;Mythologie;1;La marque Nike tire son nom de la déesse grecque de quoi ?;A) La force | B) L'honneur | C) Le courage | D) La victoire;D;;OpenTDB
+1106;Mythologie;1;Quel point faible d'Achille le prince troyen Paris a-t-il exploité ?;A) Le mollet | B) Le dos | C) Le talon | D) Le cou;C;;OpenTDB
+1107;Mythologie;3;Selon le folklore algonquin, comment se transforme-t-on en Wendigo ?;A) En accomplissant un rituel impliquant un meurtre | B) En buvant le sang de nombreux animaux tués | C) En pratiquant le cannibalisme | D) En mutilant excessivement des carcasses d'animaux;C;;OpenTDB
+1108;Mythologie;3;Qui est le dieu mineur protecteur de divers arts comme la fabrication du fromage et l'apiculture ?;A) Céphisso | B) Aristée | C) Autonoé | D) Carmé;B;;OpenTDB
+1109;Mythologie;3;Quelle était la punition de Sisyphe pour sa ruse ?;A) Attaché à un rocher, picorée par des oiseaux pour l'éternité | B) Debout dans un lac d'eau qu'il ne pouvait pas boire | C) Condamné à rouler un rocher sur une colline pour l'éternité | D) Condamné à abattre un arbre qui se régénère après chaque coup;C;;OpenTDB
+1110;Mythologie;1;Quel dieu grec et romain était connu comme le dieu de la musique, la vérité, la prophétie, la guérison et la lumière ?;A) Athéna | B) Artémis | C) Apollon | D) Aphrodite;C;;OpenTDB
+1111;Mythologie;1;Le nom de cette déesse grecque a été choisi pour la planète naine responsable de la discorde sur la classification de Pluton.;A) Éris | B) Cérès | C) Charon | D) Dysnomia;A;;OpenTDB
+1112;Mythologie;1;Quelles créatures mythologiques ont un visage de femme et un corps de vautour ?;A) Nymphes | B) Sirènes | C) Harpies | D) Lilith;C;;OpenTDB
+1113;Mythologie;3;Quelle immense structure est désignée dans la mythologie nordique sous le nom d'Yggdrasil ?;A) Un arbre | B) Un temple | C) Une montagne | D) Un château;A;;OpenTDB
+1114;Mythologie;2;Quel est le nom du sauvage qu'Enkidu... non — que Gilgamesh lie d'amitié pour partir à l'aventure ?;A) Agga | B) Inanna | C) Ishtar | D) Enkidu;D;;OpenTDB
+1115;Mythologie;2;Avec quel animal la reine Pasiphaé s'unit-elle avant de donner naissance au Minotaure ?;A) Un bœuf | B) Un porc | C) Un cheval | D) Un taureau;D;;OpenTDB
+1116;Mythologie;2;"Le dieu nordique Odin a deux corbeaux nommés ""Huginn"" et ""Muninn"". Que signifient leurs noms ?";A) Puissance & Paix | B) Pensée & Mémoire | C) Guerre & Apprentissage | D) Sommeil & Éveil;B;;OpenTDB

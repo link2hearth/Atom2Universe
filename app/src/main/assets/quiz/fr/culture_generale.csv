@@ -1,0 +1,240 @@
+id;category;difficulty;question;choices;correct;explanation;source_hint
+518;Culture;2;Quel vêtement est généralement porté par un Écossais lors d'un mariage ?;A) Jupe | B) Kilt | C) Robe | D) Toge;B;Le kilt est le vêtement traditionnel écossais.;OpenTDB
+519;Culture;1;Qu'expose le musée Madame Tussaud à Londres ?;A) Vêtements de créateurs | B) Sculptures de cire | C) Voitures anciennes | D) Films inédits;B;Le musée Madame Tussaud expose des sculptures de cire de célébrités.;OpenTDB
+520;Culture;2;Quel condiment essentiel est aussi connu comme le raifort japonais ?;A) Wasabi | B) Mentsuyu | C) Karashi | D) Ponzu;A;Le wasabi est appelé raifort japonais en raison de sa saveur piquante similaire.;OpenTDB
+521;Culture;1;Quel est le nom du Nouvel An juif ?;A) Elul | B) Rosh Hashanah | C) Nouvel An | D) Succoss;B;Rosh Hashanah signifie 'tête de l'année' en hébreu.;OpenTDB
+522;Culture;1;Combien d'étoiles figurent sur le drapeau de l'Union européenne ?;A) 10 | B) 12 | C) 14 | D) 16;B;Le drapeau européen a 12 étoiles, symbolisant l'unité et la perfection.;OpenTDB
+523;Culture;1;Quelle boisson alcoolisée est fabriquée à partir de mélasse ?;A) Gin | B) Vodka | C) Rhum | D) Whisky;C;Le rhum est distillé à partir de mélasse ou de jus de canne à sucre.;OpenTDB
+524;Culture;2;Que fabrique et vend un chapelier ?;A) Chaussures | B) Chapeaux | C) Ceintures | D) Chemises;B;Un chapelier (milliner) fabrique et vend des chapeaux.;OpenTDB
+525;Culture;2;De quel type de cancer est décédé Steve Jobs, cofondateur d'Apple ?;A) Os | B) Pancréas | C) Foie | D) Estomac;B;Steve Jobs est décédé d'un cancer du pancréas en 2011.;OpenTDB
+526;Culture;1;Qui est la plus jeune personne à avoir reçu un prix Nobel ?;A) Lawrence Bragg | B) Malala Yousafzai | C) Werner Heisenberg | D) Yasser Arafat;B;Malala Yousafzai a reçu le prix Nobel de la Paix en 2014 à 17 ans.;OpenTDB
+527;Culture;1;Comment les marins appellent-ils l'arrière d'un bateau ?;A) Proue | B) Poupe | C) Tribord | D) Bâbord;B;La poupe (stern) est l'arrière du bateau.;OpenTDB
+528;Culture;1;Quel est le nom de la main de poker contenant un brelan et une paire ?;A) Quinte flush | B) Full | C) Suite | D) Carte haute;B;Un full (full house) combine un brelan et une paire.;OpenTDB
+529;Culture;1;De quelle couleur dit-on qu'une personne inexpérimentée est ?;A) Rouge | B) Vert | C) Bleu | D) Jaune;B;On dit d'une personne inexpérimentée qu'elle est 'verte'.;OpenTDB
+530;Culture;1;Quel pays, hors Japon, compte le plus de personnes d'origine japonaise ?;A) Chine | B) Brésil | C) Corée du Sud | D) États-Unis;B;Le Brésil compte la plus grande communauté japonaise hors Japon.;OpenTDB
+531;Culture;3;Quelle église du Vatican a été conçue en 1503 par des architectes de la Renaissance ?;A) Cathédrale de Catane | B) Basilique Saint-Pierre | C) Basilique Saint-Marc | D) Le Duomo de Florence;B;La Basilique Saint-Pierre a été conçue par Bramante puis Michel-Ange.;OpenTDB
+532;Culture;2;Qu'est-ce qu'un guidon (burgee) ?;A) Une corde | B) Un drapeau | C) Une fenêtre | D) Un type de nourriture;B;Un burgee est un drapeau triangulaire utilisé par les clubs nautiques.;OpenTDB
+533;Culture;2;Quel nom était donné aux dictateurs militaires japonais du 12e au 19e siècle ?;A) Ninja | B) Shogun | C) Samurai | D) Shinobi;B;Les shoguns étaient les dirigeants militaires du Japon féodal.;OpenTDB
+534;Culture;1;Qui est l'auteur de Jurassic Park ?;A) Peter Benchley | B) Michael Crichton | C) Chuck Palahniuk | D) Irvine Welsh;B;Michael Crichton a écrit Jurassic Park en 1990.;OpenTDB
+535;Culture;1;Quelles noix sont utilisées dans la production de massepain ?;A) Cacahuètes | B) Amandes | C) Noix | D) Pistaches;B;Le massepain est fait à base de pâte d'amandes.;OpenTDB
+536;Culture;2;Quel pays roule à gauche ?;A) Allemagne | B) Japon | C) Russie | D) Chine;B;Le Japon, comme le Royaume-Uni, roule à gauche.;OpenTDB
+537;Culture;2;Quel type de bière est la Corona mexicaine ?;A) IPA | B) Pale Lager | C) Pilsner | D) Porter;B;Corona est une bière de type pale lager mexicaine.;OpenTDB
+538;Culture;2;Laquelle n'est PAS une fable d'Ésope ?;A) Le Renard et les Raisins | B) Rox et Rouky | C) Le Lièvre et la Tortue | D) La Grenouille et le Bœuf;B;Rox et Rouky (The Fox and the Hound) est un film Disney, pas une fable d'Ésope.;OpenTDB
+948;Culture Générale;1;Que signifie VR ?;A) Reconnaissance vocale | B) Réalité virtuelle | C) Reconnaissance visuelle | D) Très réel;B;;OpenTDB
+949;Culture Générale;2;"Quel est le mot italien pour ""tomate"" ?";A) Peperoncino | B) Cipolla | C) Aglio | D) Pomodoro;D;;OpenTDB
+950;Culture Générale;1;"Si l'on vous attrape en train de ""goldbricking"", que faites-vous de mal ?";A) Tricher | B) Fumer | C) Paresser | D) Voler;C;;OpenTDB
+951;Culture Générale;3;Dans les systèmes de vol, que signifie l'acronyme TCAS ?;A) Système d'évitement des collisions aériennes | B) Système d'alignement de configuration trafic | C) Système d'abréviation des indicatifs trafic | D) Système d'alerte de communication trafic;A;;OpenTDB
+952;Culture Générale;1;Quel est le nom de la boisson alcoolisée à base de pommes de terre ou de céréales originaire de Pologne et de Russie ?;A) Vodka | B) Saké | C) Rhum | D) Absinthe;A;;OpenTDB
+953;Culture Générale;2;Quel caractère était autrefois considéré comme la 27e lettre de l'alphabet anglais ?;A) Tilde | B) Esperluette | C) Interrobang | D) Pied de mouche;B;;OpenTDB
+954;Culture Générale;1;"Un criminel qui a ""falsifié les livres de compte"" s'est livré à quel comportement illégal ?";A) Extorsion | B) Chantage | C) Blanchiment d'argent | D) Fraude comptable;D;;OpenTDB
+955;Culture Générale;3;Laquelle de ces langues indiennes ne fait PAS partie de la famille indo-européenne ?;A) Hindi | B) Ourdou | C) Pendjabi | D) Tamoul;D;;OpenTDB
+956;Culture Générale;1;Comment appelle-t-on plus communément le périmètre d'un cercle ?;A) Arc | B) Diamètre | C) Circonférence | D) Rayon;C;;OpenTDB
+957;Culture Générale;2;Quelle est la dernière lettre de l'alphabet grec ?;A) Epsilon | B) Mu | C) Kappa | D) Oméga;D;;OpenTDB
+958;Culture Générale;2;À qui appartient le visage en niveaux de gris de l'émoticône Kappa sur Twitch ?;A) John DeSeno | B) Josh DeSeno | C) Justin DeSeno | D) Jimmy DeSeno;B;;OpenTDB
+959;Culture Générale;2;Parmi ces quatre bâtiments, lequel est le plus haut avec 451,9 m ?;A) Al Hamra Tower, Koweït | B) Trump Intl. Hotel & Tower, États-Unis | C) Tours Petronas, Malaisie | D) Tour Zifeng, Chine;C;;OpenTDB
+960;Culture Générale;1;Que signifient les lettres KFC (chaîne de restauration rapide) ?;A) Kibbled Freaky Cow | B) Kiwi Food Cut | C) Kentucky Fried Chicken | D) Kentucky Fresh Cheese;C;;OpenTDB
+961;Culture Générale;1;Quel président américain figure sur le billet d'un dollar ?;A) Thomas Jefferson | B) George Washington | C) Abraham Lincoln | D) Benjamin Franklin;B;;OpenTDB
+962;Culture Générale;2;Dans un jeu de 52 cartes standard, quel est le seul roi sans moustache ?;A) Carreau | B) Pique | C) Cœur | D) Trèfle;C;;OpenTDB
+963;Culture Générale;3;Quel produit la société Nokia vendait-elle à l'origine ?;A) Du papier | B) Des ordinateurs | C) Des processeurs | D) Des téléphones;A;;OpenTDB
+964;Culture Générale;2;"En quelle année le terme ""scientifique"" a-t-il été inventé ?";A) 1942 | B) 1796 | C) 1833 | D) 1933;C;;OpenTDB
+965;Culture Générale;3;"Le mot ""aboulie"" désigne quelle incapacité ?";A) L'incapacité à prendre des décisions | B) Une envie fiévreuse de se déshabiller | C) L'incapacité à se concentrer | D) L'incapacité à se lever;A;;OpenTDB
+966;Culture Générale;2;"Quel est le mot suédois pour ""fenêtre"" ?";A) Hål | B) Ruta | C) Skärm | D) Fönster;D;;OpenTDB
+967;Culture Générale;1;Combien de cartes y a-t-il dans un jeu de cartes standard ?;A) 52 | B) 40 | C) 32 | D) 64;A;;OpenTDB
+968;Culture Générale;1;Quel est le nom du personnage principal de la série Dead Space ?;A) Commander Shepard | B) Capitaine Kirk | C) Ellen Ripley | D) Isaac Clarke;D;;OpenTDB
+969;Culture Générale;1;Quel type d'animal était Harambe, abattu après qu'un enfant soit tombé dans son enclos au zoo de Cincinnati ?;A) Panda | B) Tigre | C) Gorille | D) Crocodile;C;;OpenTDB
+970;Culture Générale;1;Dans quelle chaîne de restauration rapide peut-on commander un Jamocha Shake ?;A) Burger King | B) Wendy's | C) McDonald's | D) Arby's;D;;OpenTDB
+971;Culture Générale;2;Quel mois est le Mois de l'histoire des Noirs aux États-Unis ?;A) Novembre | B) Mai | C) Février | D) Août;C;;OpenTDB
+972;Culture Générale;1;Terry Gilliam était animateur et a travaillé avec quel groupe comique britannique ?;A) The Penny Dreadfuls | B) The League of Gentlemen | C) Monty Python | D) The Goodies;C;;OpenTDB
+973;Culture Générale;2;Quelle montagne possède le plus haut sommet d'Amérique du Sud ?;A) Ojos del Salado, frontière Argentine/Chili | B) Aconcagua, Argentine | C) Monte Pissis, Argentine | D) Huascarán, Pérou;B;;OpenTDB
+974;Culture Générale;3;Quel est le nom commun le plus utilisé en anglais ?;A) Man | B) Water | C) Time | D) Home;C;;OpenTDB
+975;Culture Générale;1;Lequel de ces mots désigne quelque chose fabriqué, distribué ou vendu illégalement ?;A) Bootlace | B) Bootblack | C) Bootstrap | D) Bootleg;D;;OpenTDB
+976;Culture Générale;2;Quel titre portaient les dictateurs militaires japonais qui ont gouverné le pays entre le XIIe et le XIXe siècle ?;A) Samouraï | B) Ninja | C) Shogun | D) Shinobi;C;;OpenTDB
+977;Culture Générale;3;Si vous plantiez des graines de Quercus robur, que pousserait-il ?;A) Des légumes | B) Des céréales | C) Des fleurs | D) Des arbres;D;;OpenTDB
+978;Culture Générale;1;Que les marins appellent-ils l'avant d'un bateau ?;A) Bâbord | B) Proue | C) Poupe | D) Tribord;B;;OpenTDB
+979;Culture Générale;1;Que les marins appellent-ils le côté droit d'un bateau ?;A) Proue | B) Bâbord | C) Tribord | D) Poupe;C;;OpenTDB
+980;Culture Générale;2;Quelle est la monnaie de la Pologne ?;A) Krone | B) Złoty | C) Euro | D) Rouble;B;;OpenTDB
+981;Culture Générale;3;Quel type de chien est 'Handsome Dan', la mascotte de l'Université Yale ?;A) Carlin | B) Yorkshire Terrier | C) Boxer | D) Bulldog;D;;OpenTDB
+982;Culture Générale;2;Qu'est-ce qu'un 'dakimakura' ?;A) Un terme pour décrire deux personnes qui s'aiment | B) Un oreiller de corps | C) Une posture de yoga | D) Un plat chinois à base de poisson;B;;OpenTDB
+983;Culture Générale;1;Le foie gras est une délicatesse française faite de quelle partie d'un canard ou d'une oie ?;A) L'estomac | B) Le cœur | C) Le foie | D) Les intestins;C;;OpenTDB
+984;Culture Générale;3;"Le mot suédois ""Grunka"" signifie quoi en anglais ?";A) Ananas | B) Personnes | C) Lieu | D) Chose;D;;OpenTDB
+985;Culture Générale;2;Parmi ces quatre bâtiments, lequel est le plus haut avec 828 m (2 717 ft) ?;A) Ping An Finance Centre, Chine | B) Burj Khalifa, Émirats arabes unis | C) Lotte World Tower, Corée du Sud | D) Shanghai Tower, Chine;B;;OpenTDB
+986;Culture Générale;2;Lequel de ces bâtiments est un exemple d'architecture Art déco ?;A) Taipei 101 | B) Westendstrasse 1 | C) One Detroit Center | D) Niagara Mohawk Building;D;;OpenTDB
+987;Culture Générale;1;Quel est le nom du groupe antagoniste dans Danganronpa Another Episode: Ultra Despair Girls ?;A) Warriors of Hope | B) The Monokubs | C) Warriors of Despair | D) The Ultimate Despair;A;;OpenTDB
+988;Culture Générale;2;Une statue de Charles Darwin se trouve dans quel musée londonien ?;A) Natural History Museum | B) Tate | C) British Museum | D) Science Museum;A;;OpenTDB
+989;Culture Générale;2;Bob et Mike Bryan étaient connus comme frères dans quel sport ?;A) Football américain | B) Baseball | C) Tennis | D) Basketball;C;;OpenTDB
+990;Culture Générale;3;De Eemhof, Port Zelande et Het Heijderbos sont des villas de vacances appartenant à quelle entreprise ?;A) Keycamp | B) Center Parcs | C) Villa Plus | D) Yelloh Village;B;;OpenTDB
+991;Culture Générale;3;"Les mots ""bungalow"" et ""shampoo"" proviennent des langues de quel pays ?";A) Inde | B) Chine | C) Papouasie-Nouvelle-Guinée | D) Éthiopie;A;;OpenTDB
+992;Culture Générale;2;Le coleslaw est originaire de quel pays européen ?;A) Pays-Bas | B) Danemark | C) Allemagne | D) Royaume-Uni;A;;OpenTDB
+993;Culture Générale;2;Le whisky écossais et le Drambuie composent quel cocktail ?;A) Screwdriver | B) Rusty Nail | C) Manhattan | D) Sex on the Beach;B;;OpenTDB
+994;Culture Générale;3;Lequel de ces termes anatomiques désigne l'extrémité caudale d'une créature ?;A) Proximal | B) Caudal | C) Ventral | D) Coronal;B;;OpenTDB
+995;Culture Générale;1;Quel élément a le symbole chimique Kr ?;A) Krypton | B) Kineticium | C) Curium | D) Kérosine;A;;OpenTDB
+996;Culture Générale;3;Laquelle de ces familles existe dans Les Sims ?;A) La famille Goth | B) La famille Proud | C) La famille Simoleon | D) La Famille;A;;OpenTDB
+997;Culture Générale;2;"L'expression ""accident en attente de se produire"" est un exemple de quelle figure de style ?";A) Idiotisme | B) Analogie | C) Métaphore | D) Comparaison;A;;OpenTDB
+998;Culture Générale;2;En code Morse, quelle lettre est indiquée par 3 points ?;A) O | B) S | C) A | D) C;B;;OpenTDB
+999;Culture Générale;2;Quelle nation produit environ 40 % de la vanille mondiale ?;A) Indonésie | B) Chine | C) Mexique | D) Madagascar;D;;OpenTDB
+1000;Culture Générale;3;"Selon le Code international des signaux, quel pavillon unique signifie ""j'ai besoin d'assistance"" ?";A) Kilo | B) Victor | C) Delta | D) Papa;B;;OpenTDB
+1001;Culture Générale;3;Laquelle de ces entreprises suédoises a été fondée en 1943 ?;A) Lindex | B) H&M | C) IKEA | D) Clas Ohlson;C;;OpenTDB
+1002;Culture Générale;2;Quel est le nombre maximum d'étoiles Michelin qu'un restaurant peut recevoir ?;A) Trois | B) Six | C) Cinq | D) Quatre;A;;OpenTDB
+1003;Culture Générale;3;"Dans ""Battle Cats"", quel est le taux de coup critique de Moneko / MISS Moneko ?";A) 25 % | B) 15 % | C) 10 % | D) 20 %;B;;OpenTDB
+1004;Culture Générale;2;"Selon Sherlock Holmes, ""si vous éliminez l'impossible, ce qui reste doit être la...""";A) Source | B) Réponse | C) Vérité | D) Cause;C;;OpenTDB
+1005;Culture Générale;2;La Médaille Fields est décernée tous les combien d'années ?;A) 3 | B) 4 | C) 5 | D) 6;B;;OpenTDB
+1006;Culture Générale;1;La mascotte de quelle chaîne de restauration rapide est un clown ?;A) McDonald's | B) Burger King | C) Sonic | D) Whataburger;A;;OpenTDB
+1007;Culture Générale;3;Selon les statistiques australiennes 2014-2015, quel pourcentage d'Australiens sont nés à l'étranger ?;A) 28 % | B) 13 % | C) 20 % | D) 7 %;A;;OpenTDB
+1008;Culture Générale;2;Comment les Néerlandais appellent-ils leur langue ?;A) Hollander | B) Dansk | C) Deutsch | D) Nederlands;D;;OpenTDB
+1009;Culture Générale;3;La xanthophobie est la peur de quelle couleur ?;A) Vert | B) Jaune | C) Rouge | D) Bleu;B;;OpenTDB
+1010;Culture Générale;2;La gare d'Amsterdam Centraal est jumelée avec quelle gare ?;A) Frankfurt (Main) Hauptbahnhof | B) Brussels Midi | C) London Liverpool Street | D) Paris Gare du Nord;C;;OpenTDB
+1011;Culture Générale;1;"Si l'on vous attrape en train de ""goldbricking"", que faites-vous de mal ?";A) Fumer | B) Tricher | C) Paresser | D) Voler;C;;OpenTDB
+1012;Culture Générale;1;Quel signe du zodiaque se situe entre la Vierge et le Scorpion ?;A) Capricorne | B) Taureau | C) Balance | D) Gémeaux;C;;OpenTDB
+1013;Culture Générale;3;En linguistique, lequel n'est PAS l'une des Maximes de Grice ?;A) Relation | B) Longueur | C) Manière | D) Qualité;B;;OpenTDB
+1014;Culture Générale;3;Dans les systèmes de vol, que signifie l'acronyme TCAS ?;A) Système d'abréviation des indicatifs trafic | B) Système d'alerte de communication trafic | C) Système d'évitement des collisions aériennes | D) Système d'alignement de configuration trafic;C;;OpenTDB
+1015;Culture Générale;2;"Quel est le nom du célèbre poisson animatronique chantant ""Don't Worry, Be Happy"" ?";A) Singing Fish | B) Sardeen | C) Big Mouth Billy Bass | D) Big Billy Bass;C;;OpenTDB
+1016;Culture Générale;3;En quelle année la reine Elizabeth II est-elle née ?;A) 1929 | B) 1923 | C) 1930 | D) 1926;D;;OpenTDB
+1017;Culture Générale;1;Quelle est la forme du jouet inventé par le professeur hongrois Ernő Rubik ?;A) Cube | B) Pyramide | C) Cylindre | D) Sphère;A;;OpenTDB
+1018;Culture Générale;2;Quelle est la durée de vie moyenne d'une fourmi des jardins ?;A) 1 semaine | B) 3 ans | C) 24 heures | D) 15 ans;D;;OpenTDB
+1019;Culture Générale;1;Lequel de ces présidents ne figure PAS sur le Mont Rushmore ?;A) Theodore Roosevelt | B) John F. Kennedy | C) Thomas Jefferson | D) Abraham Lincoln;B;;OpenTDB
+1020;Culture Générale;1;Lequel de ces codes IATA correspond à l'aéroport de Manchester ?;A) LHR | B) EGCC | C) MAN | D) EGLL;C;;OpenTDB
+1021;Culture Générale;3;Cet entrepreneur ghanéen est un pionnier du microcrédit.;A) Sionne Neely | B) Farida Bedwei | C) Ama Ata Aido | D) Esther Afua Ocloo;D;;OpenTDB
+1022;Culture Générale;2;Un docteur avec un PhD est docteur en quoi ?;A) Psychologie | B) Kinésithérapie | C) Phrénologie | D) Philosophie;D;;OpenTDB
+1023;Culture Générale;2;Frank Lloyd Wright est l'architecte de quel célèbre bâtiment ?;A) Le Guggenheim | B) Sydney Opera House | C) The Space Needle | D) Villa Savoye;A;;OpenTDB
+1024;Culture Générale;2;Quel est le site web le plus visité parmi ces options ?;A) Wikipedia | B) YouTube | C) Google | D) Facebook;C;;OpenTDB
+1025;Culture Générale;1;Autrefois, que gardait-on dans la poche de gousset ?;A) Une montre | B) Des clés | C) De l'argent | D) Un carnet;A;;OpenTDB
+1026;Culture Générale;1;Quel composant du sang forme un bouchon au niveau des blessures ?;A) Plasma sanguin | B) Plaquettes | C) Globules rouges | D) Globules blancs;B;;OpenTDB
+1027;Culture Générale;1;"La société américaine ""Campbell's"" est surtout connue pour quel produit alimentaire ?";A) Boissons gazeuses | B) Chocolat | C) Soupes en conserve | D) Saucisses;C;;OpenTDB
+1028;Culture Générale;3;"Quand ""YouTube"" a-t-il été fondé ?";A) 14 février 2005 | B) 12 septembre 2005 | C) 22 mai 2004 | D) 19 juillet 2009;A;;OpenTDB
+1029;Culture Générale;2;L'astraphobie est la peur irrationnelle de quoi ?;A) La pluie | B) Le tonnerre | C) Le vent | D) La neige;B;;OpenTDB
+1030;Culture Générale;1;Lequel de ces monuments n'est PAS situé à New York ?;A) Lincoln Memorial | B) Empire State Building | C) Central Park | D) Times Square;A;;OpenTDB
+1031;Culture Générale;1;Quelle technologie doit son nom à un souverain du Xe siècle du Danemark et de Norvège ?;A) Wi-Fi | B) Bluetooth | C) GPS | D) Internet;B;;OpenTDB
+1032;Culture Générale;2;Parmi ces quatre bâtiments, lequel est le plus haut avec 541,3 m (1 776 ft) ?;A) Willis Tower, États-Unis | B) Taipei 101, Taïwan | C) Jin Mao Tower, Chine | D) One World Trade Center, États-Unis;D;;OpenTDB
+1033;Culture Générale;2;Quelle attraction de Disneyland a été fermée en 2017 pour être transformée en attraction Guardians of the Galaxy ?;A) Twilight Zone Tower of Terror | B) Pirates of the Caribbean | C) Peter Pan's Flight | D) The Haunted Mansion;A;;OpenTDB
+1034;Culture Générale;1;Lequel de ces animateurs n'est PAS présentateur d'une émission sur NPR ?;A) Peter Sagal | B) Terry Gross | C) Ira Glass | D) Ben Shapiro;D;;OpenTDB
+1035;Culture Générale;1;Quelle entreprise Valve a-t-elle coopéré avec pour créer le Vive ?;A) Google | B) Oculus | C) Razer | D) HTC;D;;OpenTDB
+1036;Culture Générale;1;Lequel de ces jeux de rythme a été développé par Harmonix ?;A) Dance Dance Revolution | B) Meat Beat Mania | C) Guitar Hero Live | D) Rock Band;D;;OpenTDB
+1037;Culture Générale;1;Le Coran est le livre saint de quelle religion abrahamique ?;A) Judaïsme | B) Christianisme | C) Islam | D) Rastafarisme;C;;OpenTDB
+1038;Culture Générale;3;Où à La Corogne (Espagne) se trouve le siège d'Inditex, le plus grand groupe de mode au monde ?;A) Órdenes | B) Mugía | C) Arteixo | D) Sanjenjo;C;;OpenTDB
+1039;Culture Générale;3;"Si quelqu'un vous dit que vous êtes ""olid"", que veut-il dire ?";A) Votre apparence est repoussante. | B) Vous êtes hors de forme. | C) Vous sentez extrêmement mauvais. | D) Vous êtes incompréhensible.;C;;OpenTDB
+1040;Culture Générale;1;"Qui est considéré comme le ""père de la philosophie moderne"" ?";A) Platon | B) René Descartes | C) Albert Einstein | D) Antoine Lavoisier;B;;OpenTDB
+1041;Culture Générale;3;Combien de notes y a-t-il sur un piano à queue standard ?;A) 108 | B) 78 | C) 88 | D) 98;C;;OpenTDB
+1042;Culture Générale;2;"Quel pistolet-mitrailleur américain était surnommé ""Grease Gun"" par les soldats ?";A) M3 | B) Thompson | C) MAC-10 | D) Colt 9mm;A;;OpenTDB
+1043;Culture Générale;3;Selon Fair Works Australia, combien de temps faut-il travailler pour obtenir le Long Service Leave ?;A) 2 ans | B) 7 ans | C) 8 ans | D) 6 mois;B;;OpenTDB
+1044;Culture Générale;2;Quel grand félin a inspiré le nom de la version macOS 2007 ?;A) Panther | B) Tiger | C) Puma | D) Leopard;D;;OpenTDB
+1045;Culture Générale;2;Quelle était la destination du vol disparu MH370 ?;A) Tokyo | B) Pékin | C) Kuala Lumpur | D) Singapour;B;;OpenTDB
+1046;Culture Générale;1;Quel type de couverts convient le mieux pour manger de la soupe ?;A) Fourchette | B) Cuillère | C) Couteau | D) Baguettes;B;;OpenTDB
+1047;Culture Générale;3;"Que signifie la locution latine ""Veni, vidi, vici"" ?";A) Ne rien voir, n'entendre rien, ne rien dire | B) Je suis venu, j'ai vu, j'ai vaincu | C) La vie, la liberté et le bonheur | D) Passé, présent et futur;B;;OpenTDB
+1048;Culture Générale;2;De quoi est vraiment fait le haggis ?;A) Cœur, reins et poumons de mouton | B) Foie, reins et yeux de mouton | C) Cœur, foie et poumons de mouton | D) Mouton entier;C;;OpenTDB
+1049;Culture Générale;1;Quelle société a développé le vocaloid Hatsune Miku ?;A) Crypton Future Media | B) Sony | C) Yamaha Corporation | D) Sega;A;;OpenTDB
+1050;Culture Générale;2;Quelle est la langue officielle de Barcelone en dehors de l'espagnol ?;A) Catalan | B) Galicien | C) Basque | D) Français;A;;OpenTDB
+1051;Culture Générale;1;"Quel est le mot français pour ""poisson"" ?";A) escargot | B) poisson | C) fiche | D) mer;B;;OpenTDB
+1052;Culture Générale;1;Quel jouet à succès de 1983 a provoqué des émeutes dans les magasins ?;A) Transformers | B) Care Bears | C) Cabbage Patch Kids | D) Rubik's Cube;C;;OpenTDB
+1053;Culture Générale;1;Dans Shrek, quel acteur comique double l'Âne ?;A) Bernie Mac | B) Richard Pryor | C) Eddie Murphy | D) Chris Rock;C;;OpenTDB
+1054;Culture Générale;2;"Quel est le mot russe romanisé pour ""hiver"" ?";A) Vesna | B) Leto | C) Zima | D) Osen';C;;OpenTDB
+1055;Culture Générale;3;"La ""néphélococcygie"" est la pratique de quoi ?";A) Nager dans l'eau glacée | B) Dormir les yeux ouverts | C) Briser du verre avec sa voix | D) Trouver des formes dans les nuages;D;;OpenTDB
+1056;Culture Générale;1;"Le service ""Google Drive"" a été lancé quel jour ?";A) 20 janvier 2010 | B) 24 avril 2012 | C) 14 novembre 2008 | D) 12 janvier 2014;B;;OpenTDB
+1057;Culture Générale;2;Quel pays possède le plus de brasseries trappistes ?;A) Pays-Bas | B) États-Unis | C) France | D) Belgique;D;;OpenTDB
+1058;Culture Générale;2;Selon la BBPA, quel est le nom de pub le plus courant au Royaume-Uni ?;A) Royal Oak | B) Red Lion | C) White Hart | D) King's Head;B;;OpenTDB
+1059;Culture Générale;3;Laquelle de ces villes n'a PAS de Monnaie des États-Unis ?;A) West Point, NY | B) San Francisco, CA | C) Philadelphie, PA | D) St. Louis, MO;D;;OpenTDB
+1060;Culture Générale;3;"Dans ""Resident Evil 3"", combien d'emplacements d'inventaire Jill possède-t-elle au début ?";A) 10 | B) 6 | C) 12 | D) 8;D;;OpenTDB
+1061;Culture Générale;2;Quel est le nom de la cuisine indienne cuite sur charbon dans un four en argile ?;A) Tandoori | B) Tika masala | C) Pani puri | D) Biryani;A;;OpenTDB
+1062;Culture Générale;2;"Lequel de ces Nicktoons n'était PAS d'abord un court-métrage dans ""Oh Yeah! Cartoons"" ?";A) Ma vie de robot | B) Les Parrains magiques | C) Danny Phantom | D) ChalkZone;C;;OpenTDB
+1063;Culture Générale;1;Quelle brasserie américaine a mené le pays en ventes en 2015 ?;A) Miller Coors | B) Anheuser Busch | C) Boston Beer Company | D) D. G. Yuengling and Son, Inc;D;;OpenTDB
+1064;Culture Générale;2;"Quel est le mot portugais pour ""Brésil"" ?";A) Brazil | B) Brasil | C) Brasíl | D) Brasilia;B;;OpenTDB
+1065;Culture Générale;1;La trypophobie est la peur de...;A) Groupes de trous | B) Nager en eau profonde | C) Trop manger | D) Parler en public;A;;OpenTDB
+1066;Culture Générale;2;En quelle année le premier Apple iPod a-t-il été présenté ?;A) 1999 | B) 2001 | C) 2000 | D) 1998;B;;OpenTDB
+978;Culture Générale;1;Que les marins appellent-ils l'avant d'un bateau ?;A) Bâbord | B) Proue | C) Poupe | D) Tribord;B;;OpenTDB
+979;Culture Générale;1;Que les marins appellent-ils le côté droit d'un bateau ?;A) Proue | B) Bâbord | C) Tribord | D) Poupe;C;;OpenTDB
+980;Culture Générale;2;Quelle est la monnaie de la Pologne ?;A) Krone | B) Złoty | C) Euro | D) Rouble;B;;OpenTDB
+981;Culture Générale;3;Quel type de chien est 'Handsome Dan', la mascotte de l'Université Yale ?;A) Carlin | B) Yorkshire Terrier | C) Boxer | D) Bulldog;D;;OpenTDB
+982;Culture Générale;2;Qu'est-ce qu'un 'dakimakura' ?;A) Un terme pour décrire deux personnes qui s'aiment | B) Un oreiller de corps | C) Une posture de yoga | D) Un plat chinois à base de poisson;B;;OpenTDB
+983;Culture Générale;1;Le foie gras est une délicatesse française faite de quelle partie d'un canard ou d'une oie ?;A) L'estomac | B) Le cœur | C) Le foie | D) Les intestins;C;;OpenTDB
+984;Culture Générale;3;"Le mot suédois ""Grunka"" signifie quoi en anglais ?";A) Ananas | B) Personnes | C) Lieu | D) Chose;D;;OpenTDB
+985;Culture Générale;2;Parmi ces quatre bâtiments, lequel est le plus haut avec 828 m (2 717 ft) ?;A) Ping An Finance Centre, Chine | B) Burj Khalifa, Émirats arabes unis | C) Lotte World Tower, Corée du Sud | D) Shanghai Tower, Chine;B;;OpenTDB
+986;Culture Générale;2;Lequel de ces bâtiments est un exemple d'architecture Art déco ?;A) Taipei 101 | B) Westendstrasse 1 | C) One Detroit Center | D) Niagara Mohawk Building;D;;OpenTDB
+987;Culture Générale;1;Quel est le nom du groupe antagoniste dans Danganronpa Another Episode: Ultra Despair Girls ?;A) Warriors of Hope | B) The Monokubs | C) Warriors of Despair | D) The Ultimate Despair;A;;OpenTDB
+988;Culture Générale;2;Une statue de Charles Darwin se trouve dans quel musée londonien ?;A) Natural History Museum | B) Tate | C) British Museum | D) Science Museum;A;;OpenTDB
+989;Culture Générale;2;Bob et Mike Bryan étaient connus comme frères dans quel sport ?;A) Football américain | B) Baseball | C) Tennis | D) Basketball;C;;OpenTDB
+990;Culture Générale;3;De Eemhof, Port Zelande et Het Heijderbos sont des villas de vacances appartenant à quelle entreprise ?;A) Keycamp | B) Center Parcs | C) Villa Plus | D) Yelloh Village;B;;OpenTDB
+991;Culture Générale;3;"Les mots ""bungalow"" et ""shampoo"" proviennent des langues de quel pays ?";A) Inde | B) Chine | C) Papouasie-Nouvelle-Guinée | D) Éthiopie;A;;OpenTDB
+992;Culture Générale;2;Le coleslaw est originaire de quel pays européen ?;A) Pays-Bas | B) Danemark | C) Allemagne | D) Royaume-Uni;A;;OpenTDB
+993;Culture Générale;2;Le whisky écossais et le Drambuie composent quel cocktail ?;A) Screwdriver | B) Rusty Nail | C) Manhattan | D) Sex on the Beach;B;;OpenTDB
+994;Culture Générale;3;Lequel de ces termes anatomiques désigne l'extrémité caudale d'une créature ?;A) Proximal | B) Caudal | C) Ventral | D) Coronal;B;;OpenTDB
+995;Culture Générale;1;Quel élément a le symbole chimique Kr ?;A) Krypton | B) Kineticium | C) Curium | D) Kérosine;A;;OpenTDB
+996;Culture Générale;3;Laquelle de ces familles existe dans Les Sims ?;A) La famille Goth | B) La famille Proud | C) La famille Simoleon | D) La Famille;A;;OpenTDB
+997;Culture Générale;2;"L'expression ""accident en attente de se produire"" est un exemple de quelle figure de style ?";A) Idiotisme | B) Analogie | C) Métaphore | D) Comparaison;A;;OpenTDB
+998;Culture Générale;2;En code Morse, quelle lettre est indiquée par 3 points ?;A) O | B) S | C) A | D) C;B;;OpenTDB
+999;Culture Générale;2;Quelle nation produit environ 40 % de la vanille mondiale ?;A) Indonésie | B) Chine | C) Mexique | D) Madagascar;D;;OpenTDB
+1000;Culture Générale;3;"Selon le Code international des signaux, quel pavillon unique signifie ""j'ai besoin d'assistance"" ?";A) Kilo | B) Victor | C) Delta | D) Papa;B;;OpenTDB
+1001;Culture Générale;3;Laquelle de ces entreprises suédoises a été fondée en 1943 ?;A) Lindex | B) H&M | C) IKEA | D) Clas Ohlson;C;;OpenTDB
+1002;Culture Générale;2;Quel est le nombre maximum d'étoiles Michelin qu'un restaurant peut recevoir ?;A) Trois | B) Six | C) Cinq | D) Quatre;A;;OpenTDB
+1003;Culture Générale;3;"Dans ""Battle Cats"", quel est le taux de coup critique de Moneko / MISS Moneko ?";A) 25 % | B) 15 % | C) 10 % | D) 20 %;B;;OpenTDB
+1004;Culture Générale;2;"Selon Sherlock Holmes, ""si vous éliminez l'impossible, ce qui reste doit être la...""";A) Source | B) Réponse | C) Vérité | D) Cause;C;;OpenTDB
+1005;Culture Générale;2;La Médaille Fields est décernée tous les combien d'années ?;A) 3 | B) 4 | C) 5 | D) 6;B;;OpenTDB
+1006;Culture Générale;1;La mascotte de quelle chaîne de restauration rapide est un clown ?;A) McDonald's | B) Burger King | C) Sonic | D) Whataburger;A;;OpenTDB
+1007;Culture Générale;3;Selon les statistiques australiennes 2014-2015, quel pourcentage d'Australiens sont nés à l'étranger ?;A) 28 % | B) 13 % | C) 20 % | D) 7 %;A;;OpenTDB
+1008;Culture Générale;2;Comment les Néerlandais appellent-ils leur langue ?;A) Hollander | B) Dansk | C) Deutsch | D) Nederlands;D;;OpenTDB
+1009;Culture Générale;3;La xanthophobie est la peur de quelle couleur ?;A) Vert | B) Jaune | C) Rouge | D) Bleu;B;;OpenTDB
+1010;Culture Générale;2;La gare d'Amsterdam Centraal est jumelée avec quelle gare ?;A) Frankfurt (Main) Hauptbahnhof | B) Brussels Midi | C) London Liverpool Street | D) Paris Gare du Nord;C;;OpenTDB
+1011;Culture Générale;1;"Si l'on vous attrape en train de ""goldbricking"", que faites-vous de mal ?";A) Fumer | B) Tricher | C) Paresser | D) Voler;C;;OpenTDB
+1012;Culture Générale;1;Quel signe du zodiaque se situe entre la Vierge et le Scorpion ?;A) Capricorne | B) Taureau | C) Balance | D) Gémeaux;C;;OpenTDB
+1013;Culture Générale;3;En linguistique, lequel n'est PAS l'une des Maximes de Grice ?;A) Relation | B) Longueur | C) Manière | D) Qualité;B;;OpenTDB
+1014;Culture Générale;3;Dans les systèmes de vol, que signifie l'acronyme TCAS ?;A) Système d'abréviation des indicatifs trafic | B) Système d'alerte de communication trafic | C) Système d'évitement des collisions aériennes | D) Système d'alignement de configuration trafic;C;;OpenTDB
+1015;Culture Générale;2;"Quel est le nom du célèbre poisson animatronique chantant ""Don't Worry, Be Happy"" ?";A) Singing Fish | B) Sardeen | C) Big Mouth Billy Bass | D) Big Billy Bass;C;;OpenTDB
+1016;Culture Générale;3;En quelle année la reine Elizabeth II est-elle née ?;A) 1929 | B) 1923 | C) 1930 | D) 1926;D;;OpenTDB
+1017;Culture Générale;1;Quelle est la forme du jouet inventé par le professeur hongrois Ernő Rubik ?;A) Cube | B) Pyramide | C) Cylindre | D) Sphère;A;;OpenTDB
+1018;Culture Générale;2;Quelle est la durée de vie moyenne d'une fourmi des jardins ?;A) 1 semaine | B) 3 ans | C) 24 heures | D) 15 ans;D;;OpenTDB
+1019;Culture Générale;1;Lequel de ces présidents ne figure PAS sur le Mont Rushmore ?;A) Theodore Roosevelt | B) John F. Kennedy | C) Thomas Jefferson | D) Abraham Lincoln;B;;OpenTDB
+1020;Culture Générale;1;Lequel de ces codes IATA correspond à l'aéroport de Manchester ?;A) LHR | B) EGCC | C) MAN | D) EGLL;C;;OpenTDB
+1021;Culture Générale;3;Cet entrepreneur ghanéen est un pionnier du microcrédit.;A) Sionne Neely | B) Farida Bedwei | C) Ama Ata Aido | D) Esther Afua Ocloo;D;;OpenTDB
+1022;Culture Générale;2;Un docteur avec un PhD est docteur en quoi ?;A) Psychologie | B) Kinésithérapie | C) Phrénologie | D) Philosophie;D;;OpenTDB
+1023;Culture Générale;2;Frank Lloyd Wright est l'architecte de quel célèbre bâtiment ?;A) Le Guggenheim | B) Sydney Opera House | C) The Space Needle | D) Villa Savoye;A;;OpenTDB
+1024;Culture Générale;2;Quel est le site web le plus visité parmi ces options ?;A) Wikipedia | B) YouTube | C) Google | D) Facebook;C;;OpenTDB
+1025;Culture Générale;1;Autrefois, que gardait-on dans la poche de gousset ?;A) Une montre | B) Des clés | C) De l'argent | D) Un carnet;A;;OpenTDB
+1026;Culture Générale;1;Quel composant du sang forme un bouchon au niveau des blessures ?;A) Plasma sanguin | B) Plaquettes | C) Globules rouges | D) Globules blancs;B;;OpenTDB
+1027;Culture Générale;1;"La société américaine ""Campbell's"" est surtout connue pour quel produit alimentaire ?";A) Boissons gazeuses | B) Chocolat | C) Soupes en conserve | D) Saucisses;C;;OpenTDB
+1028;Culture Générale;3;"Quand ""YouTube"" a-t-il été fondé ?";A) 14 février 2005 | B) 12 septembre 2005 | C) 22 mai 2004 | D) 19 juillet 2009;A;;OpenTDB
+1029;Culture Générale;2;L'astraphobie est la peur irrationnelle de quoi ?;A) La pluie | B) Le tonnerre | C) Le vent | D) La neige;B;;OpenTDB
+1030;Culture Générale;1;Lequel de ces monuments n'est PAS situé à New York ?;A) Lincoln Memorial | B) Empire State Building | C) Central Park | D) Times Square;A;;OpenTDB
+1031;Culture Générale;1;Quelle technologie doit son nom à un souverain du Xe siècle du Danemark et de Norvège ?;A) Wi-Fi | B) Bluetooth | C) GPS | D) Internet;B;;OpenTDB
+1032;Culture Générale;2;Parmi ces quatre bâtiments, lequel est le plus haut avec 541,3 m (1 776 ft) ?;A) Willis Tower, États-Unis | B) Taipei 101, Taïwan | C) Jin Mao Tower, Chine | D) One World Trade Center, États-Unis;D;;OpenTDB
+1033;Culture Générale;2;Quelle attraction de Disneyland a été fermée en 2017 pour être transformée en attraction Guardians of the Galaxy ?;A) Twilight Zone Tower of Terror | B) Pirates of the Caribbean | C) Peter Pan's Flight | D) The Haunted Mansion;A;;OpenTDB
+1034;Culture Générale;1;Lequel de ces animateurs n'est PAS présentateur d'une émission sur NPR ?;A) Peter Sagal | B) Terry Gross | C) Ira Glass | D) Ben Shapiro;D;;OpenTDB
+1035;Culture Générale;1;Quelle entreprise Valve a-t-elle coopéré avec pour créer le Vive ?;A) Google | B) Oculus | C) Razer | D) HTC;D;;OpenTDB
+1036;Culture Générale;1;Lequel de ces jeux de rythme a été développé par Harmonix ?;A) Dance Dance Revolution | B) Meat Beat Mania | C) Guitar Hero Live | D) Rock Band;D;;OpenTDB
+1037;Culture Générale;1;Le Coran est le livre saint de quelle religion abrahamique ?;A) Judaïsme | B) Christianisme | C) Islam | D) Rastafarisme;C;;OpenTDB
+1038;Culture Générale;3;Où à La Corogne (Espagne) se trouve le siège d'Inditex, le plus grand groupe de mode au monde ?;A) Órdenes | B) Mugía | C) Arteixo | D) Sanjenjo;C;;OpenTDB
+1039;Culture Générale;3;"Si quelqu'un vous dit que vous êtes ""olid"", que veut-il dire ?";A) Votre apparence est repoussante. | B) Vous êtes hors de forme. | C) Vous sentez extrêmement mauvais. | D) Vous êtes incompréhensible.;C;;OpenTDB
+1040;Culture Générale;1;"Qui est considéré comme le ""père de la philosophie moderne"" ?";A) Platon | B) René Descartes | C) Albert Einstein | D) Antoine Lavoisier;B;;OpenTDB
+1041;Culture Générale;3;Combien de notes y a-t-il sur un piano à queue standard ?;A) 108 | B) 78 | C) 88 | D) 98;C;;OpenTDB
+1042;Culture Générale;2;"Quel pistolet-mitrailleur américain était surnommé ""Grease Gun"" par les soldats ?";A) M3 | B) Thompson | C) MAC-10 | D) Colt 9mm;A;;OpenTDB
+1043;Culture Générale;3;Selon Fair Works Australia, combien de temps faut-il travailler pour obtenir le Long Service Leave ?;A) 2 ans | B) 7 ans | C) 8 ans | D) 6 mois;B;;OpenTDB
+1044;Culture Générale;2;Quel grand félin a inspiré le nom de la version macOS 2007 ?;A) Panther | B) Tiger | C) Puma | D) Leopard;D;;OpenTDB
+1045;Culture Générale;2;Quelle était la destination du vol disparu MH370 ?;A) Tokyo | B) Pékin | C) Kuala Lumpur | D) Singapour;B;;OpenTDB
+1046;Culture Générale;1;Quel type de couverts convient le mieux pour manger de la soupe ?;A) Fourchette | B) Cuillère | C) Couteau | D) Baguettes;B;;OpenTDB
+1047;Culture Générale;3;"Que signifie la locution latine ""Veni, vidi, vici"" ?";A) Ne rien voir, n'entendre rien, ne rien dire | B) Je suis venu, j'ai vu, j'ai vaincu | C) La vie, la liberté et le bonheur | D) Passé, présent et futur;B;;OpenTDB
+1048;Culture Générale;2;De quoi est vraiment fait le haggis ?;A) Cœur, reins et poumons de mouton | B) Foie, reins et yeux de mouton | C) Cœur, foie et poumons de mouton | D) Mouton entier;C;;OpenTDB
+1049;Culture Générale;1;Quelle société a développé le vocaloid Hatsune Miku ?;A) Crypton Future Media | B) Sony | C) Yamaha Corporation | D) Sega;A;;OpenTDB
+1050;Culture Générale;2;Quelle est la langue officielle de Barcelone en dehors de l'espagnol ?;A) Catalan | B) Galicien | C) Basque | D) Français;A;;OpenTDB
+1051;Culture Générale;1;"Quel est le mot français pour ""poisson"" ?";A) escargot | B) poisson | C) fiche | D) mer;B;;OpenTDB
+1052;Culture Générale;1;Quel jouet à succès de 1983 a provoqué des émeutes dans les magasins ?;A) Transformers | B) Care Bears | C) Cabbage Patch Kids | D) Rubik's Cube;C;;OpenTDB
+1053;Culture Générale;1;Dans Shrek, quel acteur comique double l'Âne ?;A) Bernie Mac | B) Richard Pryor | C) Eddie Murphy | D) Chris Rock;C;;OpenTDB
+1054;Culture Générale;2;"Quel est le mot russe romanisé pour ""hiver"" ?";A) Vesna | B) Leto | C) Zima | D) Osen';C;;OpenTDB
+1055;Culture Générale;3;"La ""néphélococcygie"" est la pratique de quoi ?";A) Nager dans l'eau glacée | B) Dormir les yeux ouverts | C) Briser du verre avec sa voix | D) Trouver des formes dans les nuages;D;;OpenTDB
+1056;Culture Générale;1;"Le service ""Google Drive"" a été lancé quel jour ?";A) 20 janvier 2010 | B) 24 avril 2012 | C) 14 novembre 2008 | D) 12 janvier 2014;B;;OpenTDB
+1057;Culture Générale;2;Quel pays possède le plus de brasseries trappistes ?;A) Pays-Bas | B) États-Unis | C) France | D) Belgique;D;;OpenTDB
+1058;Culture Générale;2;Selon la BBPA, quel est le nom de pub le plus courant au Royaume-Uni ?;A) Royal Oak | B) Red Lion | C) White Hart | D) King's Head;B;;OpenTDB
+1059;Culture Générale;3;Laquelle de ces villes n'a PAS de Monnaie des États-Unis ?;A) West Point, NY | B) San Francisco, CA | C) Philadelphie, PA | D) St. Louis, MO;D;;OpenTDB
+1060;Culture Générale;3;"Dans ""Resident Evil 3"", combien d'emplacements d'inventaire Jill possède-t-elle au début ?";A) 10 | B) 6 | C) 12 | D) 8;D;;OpenTDB
+1061;Culture Générale;2;Quel est le nom de la cuisine indienne cuite sur charbon dans un four en argile ?;A) Tandoori | B) Tika masala | C) Pani puri | D) Biryani;A;;OpenTDB
+1062;Culture Générale;2;"Lequel de ces Nicktoons n'était PAS d'abord un court-métrage dans ""Oh Yeah! Cartoons"" ?";A) Ma vie de robot | B) Les Parrains magiques | C) Danny Phantom | D) ChalkZone;C;;OpenTDB
+1063;Culture Générale;1;Quelle brasserie américaine a mené le pays en ventes en 2015 ?;A) Miller Coors | B) Anheuser Busch | C) Boston Beer Company | D) D. G. Yuengling and Son, Inc;D;;OpenTDB
+1064;Culture Générale;2;"Quel est le mot portugais pour ""Brésil"" ?";A) Brazil | B) Brasil | C) Brasíl | D) Brasilia;B;;OpenTDB
+1065;Culture Générale;1;La trypophobie est la peur de...;A) Groupes de trous | B) Nager en eau profonde | C) Trop manger | D) Parler en public;A;;OpenTDB
+1066;Culture Générale;2;En quelle année le premier Apple iPod a-t-il été présenté ?;A) 1999 | B) 2001 | C) 2000 | D) 1998;B;;OpenTDB
+2414;Culture Générale;2;Quel pays est surnommé le pays du Soleil-Levant ?;A) La Norvège | B) Le Japon | C) Le Canada | D) Le Chili;B;Le Japon est associé au Soleil-Levant dans son nom et ses symboles.;Codex
+2415;Culture Générale;2;Quelle pièce du jeu d'échecs peut se déplacer en forme de L ?;A) Le fou | B) Le cavalier | C) La tour | D) Le pion;B;Le cavalier est la seule pièce qui se déplace en L.;Codex
+2416;Culture Générale;2;Quelle ville italienne est célèbre pour ses canaux et ses gondoles ?;A) Milan | B) Naples | C) Venise | D) Turin;C;Venise est connue pour ses canaux et ses gondoles.;Codex
+2417;Culture Générale;3;Quel animal mythologique renaît de ses cendres ?;A) Le dragon | B) Le sphinx | C) Le griffon | D) Le phénix;D;Le phénix est associé au cycle de mort et de renaissance par le feu.;Codex
+2418;Culture Générale;3;Quelle langue ancienne est à l'origine de nombreux mots scientifiques comme aquarium ou maximum ?;A) Le latin | B) Le morse | C) Le japonais | D) Le gaélique;A;Le latin a fortement marqué le vocabulaire scientifique européen.;Codex
+2419;Culture Générale;3;Quel terme désigne un mot qui se lit de la même façon dans les deux sens ?;A) Un anagramme | B) Un acronyme | C) Un palindrome | D) Un pléonasme;C;Un palindrome conserve le même ordre de lettres en lecture inversée.;Codex
+2420;Culture Générale;2;Quel monument parisien a été construit pour l'Exposition universelle de 1889 ?;A) L'Arc de Triomphe | B) La tour Eiffel | C) Le Panthéon | D) Notre-Dame de Paris;B;La tour Eiffel a été inaugurée pour l'Exposition universelle de 1889.;Codex
+2421;Culture Générale;3;Quelle couleur obtient-on généralement en mélangeant du bleu et du jaune en peinture ?;A) Violet | B) Vert | C) Rouge | D) Gris;B;En peinture, bleu et jaune donnent généralement du vert.;Codex
+2422;Culture Générale;3;Dans la mythologie grecque, qui a donné son nom au complexe lié à l'amour du fils pour sa mère ?;A) Narcisse | B) Oedipe | C) Icare | D) Orphée;B;Le complexe d'Oedipe fait référence au mythe d'Oedipe.;Codex
+2423;Culture Générale;3;Quelle discipline étudie les monnaies et les médailles ?;A) La numismatique | B) La calligraphie | C) L'ornithologie | D) La spéléologie;A;La numismatique étudie les monnaies et médailles.;Codex
