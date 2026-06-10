@@ -26,6 +26,7 @@ import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import com.Atom2Universe.app.periodic.getPeriodicElements
 import com.Atom2Universe.app.periodic.localizedName
 import com.Atom2Universe.app.util.enableImmersiveMode
+import kotlin.math.roundToInt
 
 class FusionActivity : ThemedActivity() {
 
@@ -149,7 +150,7 @@ class FusionActivity : ThemedActivity() {
         tile.tag = recipe.id
         tile.findViewById<TextView>(R.id.tile_name).text = getString(recipe.nameRes)
         tile.findViewById<TextView>(R.id.tile_science).text = getString(recipe.scienceRes)
-        tile.findViewById<TextView>(R.id.tile_game_info).text = getString(recipe.gameInfoRes)
+        tile.findViewById<TextView>(R.id.tile_game_info).text = buildGameInfoText(recipe)
         refreshTileState(tile, recipe)
         tile.findViewById<Button>(R.id.tile_fuse_btn).setOnClickListener {
             if (!isAnimating) attemptFusion(recipe)
@@ -157,6 +158,22 @@ class FusionActivity : ThemedActivity() {
         tile.findViewById<Button>(R.id.tile_fuse_all_btn).setOnClickListener {
             if (!isAnimating) fuseAll(recipe)
         }
+    }
+
+    private fun buildGameInfoText(recipe: FusionRecipe): String {
+        val inputs = recipe.inputs.joinToString(" + ") { "${it.count} ${elementSymbol(it.atomicNumber)}" }
+        val output = when (val out = recipe.output) {
+            is FusionOutput.Element      -> elementSymbol(out.atomicNumber)
+            is FusionOutput.RandomRarity -> getString(R.string.fusion_game_info_random_output, getString(out.rarity.nameRes))
+        }
+        val rate = "${(recipe.baseRate * 100).roundToInt()}%"
+        val bonus = getString(R.string.fusion_game_info_bonus)
+        return "$inputs → $output  •  $rate  •  $bonus"
+    }
+
+    private fun elementSymbol(atomicNumber: Int): String = when (atomicNumber) {
+        1 -> "H"; 2 -> "He"; 6 -> "C"; 8 -> "O"; 10 -> "Ne"; 16 -> "S"; 26 -> "Fe"
+        else -> "#$atomicNumber"
     }
 
     private fun refreshTileState(tile: View, recipe: FusionRecipe) {

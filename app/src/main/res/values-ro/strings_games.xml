@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Azi</string>
     <string name="stats_tab_week">Săptămână</string>
@@ -75,7 +75,9 @@
     <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS sau APC</string>
     <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS sau APC</string>
     <string name="fusion_recipe_water_game">2 S → Fe  •  20%%  •  +1%% APS sau APC</string>
-    <string name="fusion_locked">🔒 Completați mai întâi fuziunea anterioară</string>
+    <string name="fusion_game_info_bonus">+1% APS sau APC</string>
+    <string name="fusion_game_info_random_output">%s aleatoriu</string>
+        <string name="fusion_locked">🔒 Completați mai întâi fuziunea anterioară</string>
     <string name="fusion_stats">%1$d victorii / %2$d încercări</string>
     <string name="fusion_fuse_btn">FUZIONEAZĂ</string>
     <string name="fusion_not_enough_elements">Elemente insuficiente (necesită +1 rezervă)</string>

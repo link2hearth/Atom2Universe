@@ -613,6 +613,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
                 else clickBonus
             )
         }
+        val bdApcShopBase = perClick
         if (elem.flatApc > 0) perClick = perClick.add(LayeredNumber(elem.flatApc.toDouble()))
 
         // APS : bonus shop (avec multiplicateur Big Bang) + flat éléments (He)
@@ -620,6 +621,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             if (!it.isZero() && bigBangEffects.starCoreMult != 1.0) it.multiplyNumber(bigBangEffects.starCoreMult)
             else it
         }
+        val bdApsShopBase = perSecond
         if (elem.flatAps > 0) perSecond = perSecond.add(LayeredNumber(elem.flatAps.toDouble()))
 
         // Multiplicateurs éléments (avant frénésie)
@@ -655,7 +657,24 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         if (apcMult != 1.0) perClick  = perClick.multiplyNumber(apcMult)
         if (apsMult != 1.0) perSecond = perSecond.multiplyNumber(apsMult)
 
-        return state.copy(perClick = perClick, perSecond = perSecond)
+        val breakdown = ProductionBreakdown(
+            apcShopBase    = bdApcShopBase,
+            apcElemFlat    = elem.flatApc.toLong(),
+            apcElemMult    = elem.multApc,
+            apcFusionMult  = fusionApc,
+            apcConvFromAps = if (state.apsToApcLevel > 0) basePerSecond.multiplyNumber(state.apsToApcLevel * 0.01) else LayeredNumber.zero(),
+            apcFactoryMult = factoryApcBonus,
+            apcFrenzyMult  = apcMult,
+            apsShopBase    = bdApsShopBase,
+            apsElemFlat    = elem.flatAps.toLong(),
+            apsElemMult    = elem.multAps,
+            apsFusionMult  = fusionAps,
+            apsConvFromApc = if (state.apcToApsLevel > 0) basePerClick.multiplyNumber(state.apcToApsLevel * 0.01) else LayeredNumber.zero(),
+            apsFactoryMult = factoryApsBonus,
+            apsFrenzyMult  = apsMult,
+        )
+
+        return state.copy(perClick = perClick, perSecond = perSecond, breakdown = breakdown)
     }
 
     private fun checkAchievements(lifetime: LayeredNumber, emitEvents: Boolean) {

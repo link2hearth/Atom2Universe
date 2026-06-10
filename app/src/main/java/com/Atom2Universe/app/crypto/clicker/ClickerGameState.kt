@@ -16,5 +16,6 @@ data class ClickerGameState(
     val apcToApsLevel: Int = 0,
     val apsToApcLevel: Int = 0,
     val factoryCounts: Map<FactoryType, Int> = emptyMap(),
-    val isFusionAvailable: Boolean = false
+    val isFusionAvailable: Boolean = false,
+    val breakdown: ProductionBreakdown = ProductionBreakdown(),
 )

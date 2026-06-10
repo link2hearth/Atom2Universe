@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Heute</string>
     <string name="stats_tab_week">Woche</string>
@@ -76,7 +76,9 @@
     <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS od. APC</string>
     <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS od. APC</string>
     <string name="fusion_recipe_water_game">2 S → Fe  •  20%%  •  +1%% APS od. APC</string>
-    <string name="fusion_locked">🔒 Schließen Sie zuerst die vorherige Fusion ab</string>
+    <string name="fusion_game_info_bonus">+1% APS oder APC</string>
+    <string name="fusion_game_info_random_output">zufälliges %s</string>
+        <string name="fusion_locked">🔒 Schließen Sie zuerst die vorherige Fusion ab</string>
     <string name="fusion_stats">%1$d Siege / %2$d Versuche</string>
     <string name="fusion_fuse_btn">FUSIONIEREN</string>
     <string name="fusion_not_enough_elements">Nicht genug Elemente (mind. +1 Reserve)</string>

@@ -98,6 +98,8 @@
     <string name="fusion_recipe_neutron_capture_name">Capture de neutrons</string>
     <string name="fusion_recipe_neutron_capture_science">Au-delà du fer, la fusion stellaire n\'est plus exothermique. Les éléments plus lourds se forment par capture de neutrons lors des explosions de supernova — le processus r forge cobalt, nickel, cuivre et plus encore en quelques millisecondes.</string>
     <string name="fusion_recipe_neutron_capture_game">3 Fe → élément Supernova aléatoire  •  12%%  •  +1%% APS ou APC</string>
+    <string name="fusion_game_info_bonus">+1% APS ou APC</string>
+    <string name="fusion_game_info_random_output">%s aléatoire</string>
     <string name="fusion_locked">🔒 Complétez la fusion précédente d\'abord</string>
     <string name="fusion_stats">%1$d victoires / %2$d essais</string>
     <string name="fusion_fuse_btn">FUSIONNER</string>

@@ -233,10 +233,34 @@ class MainClickerActivity : ThemedActivity() {
     private var shopStatAllTimeDividerBottom: View? = null
     private var shopStatApc: TextView? = null
     private var shopStatAps: TextView? = null
-    private var shopStatElemApc: TextView? = null
-    private var shopStatElemAps: TextView? = null
-    private var shopStatFusionApc: TextView? = null
-    private var shopStatFusionAps: TextView? = null
+    private var bdApcShopBaseRow: View? = null
+    private var bdApcShopBase: TextView? = null
+    private var bdApcElemFlatRow: View? = null
+    private var bdApcElemFlat: TextView? = null
+    private var bdApcElemMultRow: View? = null
+    private var bdApcElemMult: TextView? = null
+    private var bdApcFusionMultRow: View? = null
+    private var bdApcFusionMult: TextView? = null
+    private var bdApcConvRow: View? = null
+    private var bdApcConv: TextView? = null
+    private var bdApcFactoryMultRow: View? = null
+    private var bdApcFactoryMult: TextView? = null
+    private var bdApcFrenzyMultRow: View? = null
+    private var bdApcFrenzyMult: TextView? = null
+    private var bdApsShopBaseRow: View? = null
+    private var bdApsShopBase: TextView? = null
+    private var bdApsElemFlatRow: View? = null
+    private var bdApsElemFlat: TextView? = null
+    private var bdApsElemMultRow: View? = null
+    private var bdApsElemMult: TextView? = null
+    private var bdApsFusionMultRow: View? = null
+    private var bdApsFusionMult: TextView? = null
+    private var bdApsConvRow: View? = null
+    private var bdApsConv: TextView? = null
+    private var bdApsFactoryMultRow: View? = null
+    private var bdApsFactoryMult: TextView? = null
+    private var bdApsFrenzyMultRow: View? = null
+    private var bdApsFrenzyMult: TextView? = null
     private var shopStatTotalClicks: TextView? = null
     private var shopStatFrenzies: TextView? = null
     private var shopStatMaxApcClicks: TextView? = null
@@ -740,10 +764,34 @@ class MainClickerActivity : ThemedActivity() {
         shopStatAllTimeDividerBottom = view.findViewById(R.id.shop_stat_all_time_divider_bottom)
         shopStatApc            = view.findViewById(R.id.shop_stat_apc)
         shopStatAps            = view.findViewById(R.id.shop_stat_aps)
-        shopStatElemApc        = view.findViewById(R.id.shop_stat_elem_apc)
-        shopStatElemAps        = view.findViewById(R.id.shop_stat_elem_aps)
-        shopStatFusionApc      = view.findViewById(R.id.shop_stat_fusion_apc)
-        shopStatFusionAps      = view.findViewById(R.id.shop_stat_fusion_aps)
+        bdApcShopBaseRow       = view.findViewById(R.id.bd_apc_shop_base_row)
+        bdApcShopBase          = view.findViewById(R.id.bd_apc_shop_base)
+        bdApcElemFlatRow       = view.findViewById(R.id.bd_apc_elem_flat_row)
+        bdApcElemFlat          = view.findViewById(R.id.bd_apc_elem_flat)
+        bdApcElemMultRow       = view.findViewById(R.id.bd_apc_elem_mult_row)
+        bdApcElemMult          = view.findViewById(R.id.bd_apc_elem_mult)
+        bdApcFusionMultRow     = view.findViewById(R.id.bd_apc_fusion_mult_row)
+        bdApcFusionMult        = view.findViewById(R.id.bd_apc_fusion_mult)
+        bdApcConvRow           = view.findViewById(R.id.bd_apc_conv_row)
+        bdApcConv              = view.findViewById(R.id.bd_apc_conv)
+        bdApcFactoryMultRow    = view.findViewById(R.id.bd_apc_factory_mult_row)
+        bdApcFactoryMult       = view.findViewById(R.id.bd_apc_factory_mult)
+        bdApcFrenzyMultRow     = view.findViewById(R.id.bd_apc_frenzy_mult_row)
+        bdApcFrenzyMult        = view.findViewById(R.id.bd_apc_frenzy_mult)
+        bdApsShopBaseRow       = view.findViewById(R.id.bd_aps_shop_base_row)
+        bdApsShopBase          = view.findViewById(R.id.bd_aps_shop_base)
+        bdApsElemFlatRow       = view.findViewById(R.id.bd_aps_elem_flat_row)
+        bdApsElemFlat          = view.findViewById(R.id.bd_aps_elem_flat)
+        bdApsElemMultRow       = view.findViewById(R.id.bd_aps_elem_mult_row)
+        bdApsElemMult          = view.findViewById(R.id.bd_aps_elem_mult)
+        bdApsFusionMultRow     = view.findViewById(R.id.bd_aps_fusion_mult_row)
+        bdApsFusionMult        = view.findViewById(R.id.bd_aps_fusion_mult)
+        bdApsConvRow           = view.findViewById(R.id.bd_aps_conv_row)
+        bdApsConv              = view.findViewById(R.id.bd_aps_conv)
+        bdApsFactoryMultRow    = view.findViewById(R.id.bd_aps_factory_mult_row)
+        bdApsFactoryMult       = view.findViewById(R.id.bd_aps_factory_mult)
+        bdApsFrenzyMultRow     = view.findViewById(R.id.bd_aps_frenzy_mult_row)
+        bdApsFrenzyMult        = view.findViewById(R.id.bd_aps_frenzy_mult)
         shopStatTotalClicks    = view.findViewById(R.id.shop_stat_total_clicks)
         shopStatFrenzies       = view.findViewById(R.id.shop_stat_frenzies)
         shopStatMaxApcClicks   = view.findViewById(R.id.shop_stat_max_apc_clicks)
@@ -824,10 +872,20 @@ class MainClickerActivity : ThemedActivity() {
             shopStatAllTimeDividerBottom = null
             shopStatApc            = null
             shopStatAps            = null
-            shopStatElemApc        = null
-            shopStatElemAps        = null
-            shopStatFusionApc      = null
-            shopStatFusionAps      = null
+            bdApcShopBaseRow = null; bdApcShopBase = null
+            bdApcElemFlatRow = null; bdApcElemFlat = null
+            bdApcElemMultRow = null; bdApcElemMult = null
+            bdApcFusionMultRow = null; bdApcFusionMult = null
+            bdApcConvRow = null; bdApcConv = null
+            bdApcFactoryMultRow = null; bdApcFactoryMult = null
+            bdApcFrenzyMultRow = null; bdApcFrenzyMult = null
+            bdApsShopBaseRow = null; bdApsShopBase = null
+            bdApsElemFlatRow = null; bdApsElemFlat = null
+            bdApsElemMultRow = null; bdApsElemMult = null
+            bdApsFusionMultRow = null; bdApsFusionMult = null
+            bdApsConvRow = null; bdApsConv = null
+            bdApsFactoryMultRow = null; bdApsFactoryMult = null
+            bdApsFrenzyMultRow = null; bdApsFrenzyMult = null
             shopStatTotalClicks    = null
             shopStatFrenzies       = null
             shopStatMaxApcClicks   = null
@@ -1291,15 +1349,7 @@ class MainClickerActivity : ThemedActivity() {
         shopStatAllTimeTotal?.text = state.allTimeTotalAtoms.add(state.lifetime).toString()
         shopStatApc?.text         = state.perClick.toString()
         shopStatAps?.text         = state.perSecond.toString()
-
-        val elem = com.Atom2Universe.app.crypto.clicker.ElementBonusEngine.compute(periodicStore)
-        shopStatElemApc?.text     = formatElemBonus(elem.flatApc, elem.multApc)
-        shopStatElemAps?.text     = formatElemBonus(elem.flatAps, elem.multAps)
-
-        val fusionApc = Math.round(fusionStore.getBonusMultApc() * 100).toInt()
-        val fusionAps = Math.round(fusionStore.getBonusMultAps() * 100).toInt()
-        shopStatFusionApc?.text   = if (fusionApc > 0) "+${fusionApc}%" else "—"
-        shopStatFusionAps?.text   = if (fusionAps > 0) "+${fusionAps}%" else "—"
+        updateProductionBreakdown(state.breakdown)
 
         val stats = clickerViewModel.getStatsSnapshot()
         shopStatTotalClicks?.text  = fmt.format(stats.totalClicks)
@@ -1334,6 +1384,73 @@ class MainClickerActivity : ThemedActivity() {
         val minutes  = totalSec / 60
         val secs     = totalSec % 60
         return if (minutes > 0) "${minutes}m ${secs}s" else "${secs}s"
+    }
+
+    private fun updateProductionBreakdown(bd: com.Atom2Universe.app.crypto.clicker.ProductionBreakdown) {
+        val gone    = android.view.View.GONE
+        val visible = android.view.View.VISIBLE
+
+        bdApcShopBase?.text = bd.apcShopBase.toString()
+
+        val apcFlatVisible = bd.apcElemFlat > 0
+        bdApcElemFlatRow?.visibility = if (apcFlatVisible) visible else gone
+        if (apcFlatVisible) bdApcElemFlat?.text = "+${com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber(bd.apcElemFlat.toDouble())}"
+
+        val apcElemVisible = bd.apcElemMult > 0.0
+        bdApcElemMultRow?.visibility = if (apcElemVisible) visible else gone
+        if (apcElemVisible) bdApcElemMult?.text = formatBdPct(bd.apcElemMult)
+
+        val apcFusionVisible = bd.apcFusionMult > 0.0
+        bdApcFusionMultRow?.visibility = if (apcFusionVisible) visible else gone
+        if (apcFusionVisible) bdApcFusionMult?.text = formatBdPct(bd.apcFusionMult)
+
+        val apcConvVisible = !bd.apcConvFromAps.isZero()
+        bdApcConvRow?.visibility = if (apcConvVisible) visible else gone
+        if (apcConvVisible) bdApcConv?.text = "+${bd.apcConvFromAps}"
+
+        val apcFactoryVisible = bd.apcFactoryMult > 0.0
+        bdApcFactoryMultRow?.visibility = if (apcFactoryVisible) visible else gone
+        if (apcFactoryVisible) bdApcFactoryMult?.text = formatBdPct(bd.apcFactoryMult)
+
+        val apcFrenzyVisible = bd.apcFrenzyMult > 1.0
+        bdApcFrenzyMultRow?.visibility = if (apcFrenzyVisible) visible else gone
+        if (apcFrenzyVisible) bdApcFrenzyMult?.text = "×${"%.1f".format(bd.apcFrenzyMult)}"
+
+        bdApsShopBase?.text = if (bd.apsShopBase.isZero()) "0" else bd.apsShopBase.toString()
+
+        val apsFlatVisible = bd.apsElemFlat > 0
+        bdApsElemFlatRow?.visibility = if (apsFlatVisible) visible else gone
+        if (apsFlatVisible) bdApsElemFlat?.text = "+${com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber(bd.apsElemFlat.toDouble())}"
+
+        val apsElemVisible = bd.apsElemMult > 0.0
+        bdApsElemMultRow?.visibility = if (apsElemVisible) visible else gone
+        if (apsElemVisible) bdApsElemMult?.text = formatBdPct(bd.apsElemMult)
+
+        val apsFusionVisible = bd.apsFusionMult > 0.0
+        bdApsFusionMultRow?.visibility = if (apsFusionVisible) visible else gone
+        if (apsFusionVisible) bdApsFusionMult?.text = formatBdPct(bd.apsFusionMult)
+
+        val apsConvVisible = !bd.apsConvFromApc.isZero()
+        bdApsConvRow?.visibility = if (apsConvVisible) visible else gone
+        if (apsConvVisible) bdApsConv?.text = "+${bd.apsConvFromApc}"
+
+        val apsFactoryVisible = bd.apsFactoryMult > 0.0
+        bdApsFactoryMultRow?.visibility = if (apsFactoryVisible) visible else gone
+        if (apsFactoryVisible) bdApsFactoryMult?.text = formatBdPct(bd.apsFactoryMult)
+
+        val apsFrenzyVisible = bd.apsFrenzyMult > 1.0
+        bdApsFrenzyMultRow?.visibility = if (apsFrenzyVisible) visible else gone
+        if (apsFrenzyVisible) bdApsFrenzyMult?.text = "×${"%.1f".format(bd.apsFrenzyMult)}"
+    }
+
+    private fun formatBdPct(ratio: Double): String {
+        val pct = ratio * 100.0
+        return when {
+            pct >= 1_000_000.0 -> "+${"%.0f".format(pct / 1_000_000)}M%"
+            pct >= 1_000.0     -> "+${"%.0f".format(pct / 1_000)}k%"
+            pct >= 100.0       -> "+${"%.0f".format(pct)}%"
+            else               -> "+${"%.1f".format(pct)}%"
+        }
     }
 
     private fun formatElemBonus(flat: Long, mult: Double): String {

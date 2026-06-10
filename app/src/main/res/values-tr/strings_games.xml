@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Bugün</string>
     <string name="stats_tab_week">Hafta</string>
@@ -76,7 +76,9 @@
     <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS veya APC</string>
     <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS veya APC</string>
     <string name="fusion_recipe_water_game">2 S → Fe  •  20%%  •  +1%% APS veya APC</string>
-    <string name="fusion_locked">🔒 Önce önceki füzyonu tamamlayın</string>
+    <string name="fusion_game_info_bonus">+1% APS veya APC</string>
+    <string name="fusion_game_info_random_output">rastgele %s</string>
+        <string name="fusion_locked">🔒 Önce önceki füzyonu tamamlayın</string>
     <string name="fusion_stats">%1$d galibiyet / %2$d deneme</string>
     <string name="fusion_fuse_btn">FÜZYON</string>
     <string name="fusion_not_enough_elements">Yeterli element yok (+1 rezerv gerekli)</string>
