@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:textColor="#FFFFFF" />
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/minesweeper_score_diff"
+            android:textStyle="bold"
+            android:textColor="#AAAAAA"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="@string/minesweeper_score_best"
+            android:textStyle="bold"
+            android:textColor="#AAAAAA"
+            android:textSize="13sp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444444"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Row EASY -->
+    <LinearLayout android:id="@+id/row_easy"
+        android:layout_width="match_parent" android:layout_height="36dp"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/lbl_easy"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:textSize="15sp" android:textColor="#FFFFFF" />
+        <TextView android:id="@+id/time_easy"
+            android:layout_width="90dp" android:layout_height="wrap_content"
+            android:textSize="15sp" android:textColor="#FFFFFF"
+            android:fontFamily="monospace" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Row NORMAL -->
+    <LinearLayout android:id="@+id/row_normal"
+        android:layout_width="match_parent" android:layout_height="36dp"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/lbl_normal"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:textSize="15sp" android:textColor="#FFFFFF" />
+        <TextView android:id="@+id/time_normal"
+            android:layout_width="90dp" android:layout_height="wrap_content"
+            android:textSize="15sp" android:textColor="#FFFFFF"
+            android:fontFamily="monospace" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Row MEDIUM -->
+    <LinearLayout android:id="@+id/row_medium"
+        android:layout_width="match_parent" android:layout_height="36dp"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/lbl_medium"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:textSize="15sp" android:textColor="#FFFFFF" />
+        <TextView android:id="@+id/time_medium"
+            android:layout_width="90dp" android:layout_height="wrap_content"
+            android:textSize="15sp" android:textColor="#FFFFFF"
+            android:fontFamily="monospace" android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Row HARD -->
+    <LinearLayout android:id="@+id/row_hard"
+        android:layout_width="match_parent" android:layout_height="36dp"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/lbl_hard"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:textSize="15sp" android:textColor="#FFFFFF" />
+        <TextView android:id="@+id/time_hard"
+            android:layout_width="90dp" android:layout_height="wrap_content"
+            android:textSize="15sp" android:textColor="#FFFFFF"
+            android:fontFamily="monospace" android:gravity="end" />
+    </LinearLayout>
+
+</LinearLayout>

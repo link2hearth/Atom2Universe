@@ -39,6 +39,24 @@
     <string name="match3_neutrinos">⚛ +%1$d neutrinos</string>
     <string name="back_button_desc">Retour</string>
 
+    <!-- Minesweeper -->
+    <string name="minesweeper_title">Démineur</string>
+    <string name="minesweeper_description">Classique du déminage</string>
+    <string name="minesweeper_diff_easy">Facile · 10 mines</string>
+    <string name="minesweeper_diff_normal">Normal · 20 mines</string>
+    <string name="minesweeper_diff_medium">Moyen · 40 mines</string>
+    <string name="minesweeper_diff_hard">Difficile · 80 mines</string>
+    <string name="minesweeper_new_game">Nouvelle partie</string>
+    <string name="minesweeper_mines">Mines</string>
+    <string name="minesweeper_timer">Chrono</string>
+    <string name="minesweeper_won">Gagné ! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Gagné ! 🏆 Nouveau record !  %1$s</string>
+    <string name="minesweeper_lost">Boom ! 💥  Partie terminée</string>
+    <string name="minesweeper_score_diff">Difficulté</string>
+    <string name="minesweeper_score_best">Meilleur temps</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Nouvelle partie</string>
+
     <!-- Othello -->
     <string name="othello_title">Othello</string>
     <string name="othello_hub_desc">Jeu de plateau stratégique reversi</string>

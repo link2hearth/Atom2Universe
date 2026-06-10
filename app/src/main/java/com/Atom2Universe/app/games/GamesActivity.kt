@@ -34,6 +34,7 @@ import com.Atom2Universe.app.games.survivor.SurvivorActivity
 import com.Atom2Universe.app.games.reflex.ReflexActivity
 import com.Atom2Universe.app.games.solitaire.SolitaireActivity
 import com.Atom2Universe.app.games.sudoku.SudokuActivity
+import com.Atom2Universe.app.games.minesweeper.MinesweeperActivity
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
 
@@ -235,6 +236,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_dialog_dialer,
             defaultColorRes = R.color.game_tile_sudoku,
             activityClass = SudokuActivity::class.java
+        ),
+        HubTile(
+            id = "minesweeper",
+            titleRes = R.string.minesweeper_title,
+            descriptionRes = R.string.minesweeper_description,
+            iconRes = android.R.drawable.ic_menu_info_details,
+            defaultColorRes = R.color.game_tile_minesweeper,
+            activityClass = MinesweeperActivity::class.java
         ),
         HubTile(
             id = "colorstack",
