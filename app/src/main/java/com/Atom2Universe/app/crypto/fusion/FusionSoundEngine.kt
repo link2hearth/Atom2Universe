@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.crypto.fusion
 
-import org.billthefarmer.mididriver.MidiDriver
+import com.Atom2Universe.app.crypto.sound.SharedSonivoxDriver
 
 /**
  * Sons procéduraux pour la séquence de fusion via Sonivox EAS.
@@ -12,16 +12,21 @@ import org.billthefarmer.mididriver.MidiDriver
  *
  * Séquence : playCountdownStep(0) → playCountdownStep(1) → playCountdownStep(2)
  *   puis  playWin() / playFail() / playSpecialCard() → playWin()
+ *
+ * Passe par [SharedSonivoxDriver] (comptage de références) : libérer le moteur
+ * en quittant la fusion ne doit pas couper le son du clicker sous-jacent.
  */
 class FusionSoundEngine {
 
     var muted = false
 
-    private var driver: MidiDriver? = null
+    private var acquired = false
     private var ready = false
 
     fun start() {
-        val d = MidiDriver.getInstance {
+        if (acquired) return
+        acquired = true
+        SharedSonivoxDriver.acquire {
             ready = true
             programChange(0, 55)   // Orchestra Hit — coups percussifs du compte à rebours
             programChange(1, 56)   // Trumpet — fanfare victoire
@@ -31,14 +36,13 @@ class FusionSoundEngine {
             controlChange(2, 7, 108)
             controlChange(9, 7, 110)
         }
-        driver = d
-        d.start()
     }
 
     fun stop() {
+        if (!acquired) return
+        acquired = false
         ready = false
-        driver?.stop()
-        driver = null
+        SharedSonivoxDriver.release()
     }
 
     // ── Compte à rebours (3 splats) ────────────────────────────────────────────
@@ -110,7 +114,7 @@ class FusionSoundEngine {
     // ── Bas niveau ────────────────────────────────────────────────────────────
 
     private fun perc(note: Int, vel: Int) =
-        driver?.queueEvent(byteArrayOf(0x99.toByte(), note.toByte(), vel.toByte()))
+        SharedSonivoxDriver.queueEvent(byteArrayOf(0x99.toByte(), note.toByte(), vel.toByte()))
 
     private fun percDelayed(note: Int, vel: Int, delayMs: Long) = Thread {
         try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
@@ -118,28 +122,27 @@ class FusionSoundEngine {
     }.start()
 
     private fun noteOnOff(ch: Int, note: Int, vel: Int, durationMs: Long) {
-        val d = driver ?: return
-        d.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
+        if (!ready) return
+        SharedSonivoxDriver.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
         Thread {
             try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
-            if (ready) d.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
+            if (ready) SharedSonivoxDriver.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
         }.start()
     }
 
     private fun noteDelayed(ch: Int, note: Int, vel: Int, durationMs: Long, delayMs: Long) {
-        val d = driver ?: return
         Thread {
             try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
             if (!ready) return@Thread
-            d.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
+            SharedSonivoxDriver.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))
             try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
-            if (ready) d.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
+            if (ready) SharedSonivoxDriver.queueEvent(byteArrayOf((0x80 or ch).toByte(), note.toByte(), 0))
         }.start()
     }
 
     private fun programChange(ch: Int, prog: Int) =
-        driver?.queueEvent(byteArrayOf((0xC0 or ch).toByte(), prog.toByte()))
+        SharedSonivoxDriver.queueEvent(byteArrayOf((0xC0 or ch).toByte(), prog.toByte()))
 
     private fun controlChange(ch: Int, cc: Int, value: Int) =
-        driver?.queueEvent(byteArrayOf((0xB0 or ch).toByte(), cc.toByte(), value.toByte()))
+        SharedSonivoxDriver.queueEvent(byteArrayOf((0xB0 or ch).toByte(), cc.toByte(), value.toByte()))
 }
