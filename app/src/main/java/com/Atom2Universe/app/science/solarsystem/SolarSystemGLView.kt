@@ -66,7 +66,7 @@ class SolarSystemGLView(context: Context) : GLSurfaceView(context) {
                     val dx = event.x - prevX
                     val dy = event.y - prevY
                     renderer.cameraYaw -= dx * 0.4f
-                    renderer.cameraPitch = (renderer.cameraPitch + dy * 0.4f).coerceIn(5f, 88f)
+                    renderer.cameraPitch = (renderer.cameraPitch + dy * 0.4f).coerceIn(-88f, 88f)
                     prevX = event.x; prevY = event.y
                 }
             }
@@ -126,7 +126,7 @@ class SolarSystemGLView(context: Context) : GLSurfaceView(context) {
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             renderer.cameraDistance = (renderer.cameraDistance / detector.scaleFactor)
-                .coerceIn(1.5f, 600f)
+                .coerceIn(renderer.minZoomDistance, 600f)
             return true
         }
     }

@@ -118,6 +118,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     private var sunTexId = 0; private var ringsTexId = 0; private var moonTexId = 0
 
     // ── Matrices ──────────────────────────────────────────────────
+    private var screenAspect = 1f
     private val proj = FloatArray(16); private val view = FloatArray(16)
     private val pv = FloatArray(16); private val model = FloatArray(16)
     private val mvp = FloatArray(16); private val tmp = FloatArray(16)
@@ -149,6 +150,14 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     var onPlanetTapped: ((Int) -> Unit)? = null       // -1 = Sun
     var onPlanetLongPressed: ((Int) -> Unit)? = null  // -1 = Sun
 
+    /** Distance minimum de zoom adaptée au mode courant. */
+    val minZoomDistance: Float
+        get() = when {
+            targetModeBlend >= 2f -> 0.005f
+            targetModeBlend >= 1f -> lerp(1.5f, 0.005f, targetModeBlend - 1f)
+            else -> 1.5f
+        }
+
     /** Distance caméra recommandée pour focaliser sur cette planète. */
     fun recommendedDistance(planetIdx: Int): Float {
         if (planetIdx < 0) return when {
@@ -157,7 +166,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         }
         val p = SolarSystemData.planets[planetIdx]
         val pr = OrbitalCalculator.getPlanetRadius(p, targetModeBlend)
-        return (pr * 12f).coerceAtLeast(2f)
+        return (pr * 12f).coerceAtLeast(minZoomDistance)
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -175,8 +184,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     override fun onSurfaceChanged(gl: GL10?, w: Int, h: Int) {
         GLES20.glViewport(0, 0, w, h)
         screenW = w.toFloat(); screenH = h.toFloat()
-        val aspect = w.toFloat() / h.toFloat()
-        Matrix.perspectiveM(proj, 0, 45f, aspect, 0.1f, 2000f)
+        screenAspect = w.toFloat() / h.toFloat()
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -196,18 +204,26 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         }
 
         // Mise à jour du centre d'orbite (suivi de la planète focalisée)
-        val targetCX: Float; val targetCZ: Float
+        val targetCX: Float; val targetCY: Float; val targetCZ: Float
         if (focusPlanetIdx in 0..7) {
             targetCX = planetWorldPos[focusPlanetIdx][0]
+            targetCY = planetWorldPos[focusPlanetIdx][1]
             targetCZ = planetWorldPos[focusPlanetIdx][2]
         } else {
-            targetCX = 0f; targetCZ = 0f
+            targetCX = 0f; targetCY = 0f; targetCZ = 0f
         }
         val lerpT = (6f * dtSec).coerceIn(0f, 1f)
         orbitCenter[0] += (targetCX - orbitCenter[0]) * lerpT
+        orbitCenter[1] += (targetCY - orbitCenter[1]) * lerpT
         orbitCenter[2] += (targetCZ - orbitCenter[2]) * lerpT
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+
+        // Projection dynamique : ratio near/far ≈ 200 000 constant quelle que soit l'échelle,
+        // ce qui évite le clipping et les artefacts de depth buffer en vue réaliste.
+        val near = (cameraDistance * 0.005f).coerceAtLeast(0.000001f)
+        val far  = (near * 200000f).coerceIn(200f, 10000f)
+        Matrix.perspectiveM(proj, 0, 45f, screenAspect, near, far)
 
         buildViewMatrix()
         Matrix.multiplyMM(pv, 0, proj, 0, view, 0)
@@ -244,20 +260,20 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         SolarSystemData.planets.forEach { planet ->
             val orbitR = OrbitalCalculator.getOrbitRadius(planet, blend)
             val planetR = OrbitalCalculator.getPlanetRadius(planet, blend)
-            val orbitAngle = Math.toRadians(OrbitalCalculator.orbitAngleDeg(planet, elapsedSimDays).toDouble()).toFloat()
             val selfRot = OrbitalCalculator.selfRotationDeg(planet, elapsedSimDays)
-
-            val wx = orbitR * cos(orbitAngle)
-            val wz = orbitR * sin(orbitAngle)
+            val pos3D = OrbitalCalculator.orbitPosition3D(planet, orbitR, elapsedSimDays)
+            val wx = pos3D[0]; val wy = pos3D[1]; val wz = pos3D[2]
 
             planetWorldPos[planet.id][0] = wx
-            planetWorldPos[planet.id][1] = 0f
+            planetWorldPos[planet.id][1] = wy
             planetWorldPos[planet.id][2] = wz
 
-            // Sphère planète
+            // Sphère planète — axe orienté dans le repère écliptique :
+            // azimut (longitude du pôle) puis obliquité, puis rotation propre autour de l'axe.
             Matrix.setIdentityM(model, 0)
-            Matrix.translateM(model, 0, wx, 0f, wz)
-            Matrix.rotateM(model, 0, -planet.axialTiltDeg, 0f, 0f, 1f)
+            Matrix.translateM(model, 0, wx, wy, wz)
+            Matrix.rotateM(model, 0, 90f - planet.axisEclLonDeg, 0f, 1f, 0f)
+            Matrix.rotateM(model, 0, planet.axisObliquityEclDeg, 1f, 0f, 0f)
             Matrix.rotateM(model, 0, selfRot, 0f, 1f, 0f)
             Matrix.scaleM(model, 0, planetR, planetR, planetR)
             Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
@@ -273,34 +289,23 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
             drawSphere(pPos, pUV, pNorm)
 
             // Anneaux de Saturne
-            if (planet.hasRings) renderRings(planet, wx, wz, planetR, sunPos)
+            if (planet.hasRings) renderRings(planet, wx, wy, wz, planetR, sunPos)
 
             // Lune de la Terre
             if (planet.id == 2 && planet.moons.isNotEmpty()) {
-                renderMoon(planet.moons[0], wx, wz, orbitR, planetR, blend, sunPos)
+                renderMoon(planet.moons[0], wx, wy, wz, orbitR, planetR, blend, sunPos)
             }
         }
     }
 
-    private fun renderRings(planet: PlanetDef, cx: Float, cz: Float, planetR: Float, sunPos: FloatArray) {
+    private fun renderRings(planet: PlanetDef, cx: Float, cy: Float, cz: Float, planetR: Float, sunPos: FloatArray) {
         val innerR = planetR * planet.ringsInnerFactor
         val outerR = planetR * planet.ringsOuterFactor
 
         Matrix.setIdentityM(model, 0)
-        Matrix.translateM(model, 0, cx, 0f, cz)
-        Matrix.rotateM(model, 0, planet.axialTiltDeg, 1f, 0f, 0f)
-        Matrix.scaleM(model, 0, 1f, 1f, 1f)
-        Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
-
-        // Rebuild ring geometry for this scale dynamically — use pre-built unit ring, scale in shader
-        // Actually we stored a unit ring (inner=innerR,outer=outerR at build time).
-        // We rebuild it each frame since innerR/outerR change with blend.
-        // To avoid rebuilding, we store them at planet.ringsInnerFactor and scale via model.
-        // Solution: pre-build ring with inner=innerFactor, outer=outerFactor (relative to 1 unit radius),
-        // then scale model by planetR.
-        Matrix.setIdentityM(model, 0)
-        Matrix.translateM(model, 0, cx, 0f, cz)
-        Matrix.rotateM(model, 0, planet.axialTiltDeg, 1f, 0f, 0f)
+        Matrix.translateM(model, 0, cx, cy, cz)
+        Matrix.rotateM(model, 0, 90f - planet.axisEclLonDeg, 0f, 1f, 0f)
+        Matrix.rotateM(model, 0, planet.axisObliquityEclDeg, 1f, 0f, 0f)
         Matrix.scaleM(model, 0, planetR, planetR, planetR)
         Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
 
@@ -322,18 +327,18 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glDepthMask(true)
     }
 
-    private fun renderMoon(moon: MoonDef, earthX: Float, earthZ: Float,
+    private fun renderMoon(moon: MoonDef, earthX: Float, earthY: Float, earthZ: Float,
                             earthOrbitR: Float, earthR: Float, blend: Float, sunPos: FloatArray) {
+        val moonR = OrbitalCalculator.getMoonRadius(moon, earthR)
         val moonOrbitR = OrbitalCalculator.getMoonOrbitRadius(moon, earthOrbitR, earthR, blend)
-        val moonR = OrbitalCalculator.getMoonRadius(moon, blend)
         val moonAngle = Math.toRadians(OrbitalCalculator.moonAngleDeg(moon, elapsedSimDays).toDouble()).toFloat()
         val mx = earthX + moonOrbitR * cos(moonAngle)
         val mz = earthZ + moonOrbitR * sin(moonAngle)
 
-        moonWorldPos[0] = mx; moonWorldPos[1] = 0f; moonWorldPos[2] = mz
+        moonWorldPos[0] = mx; moonWorldPos[1] = earthY; moonWorldPos[2] = mz
 
         Matrix.setIdentityM(model, 0)
-        Matrix.translateM(model, 0, mx, 0f, mz)
+        Matrix.translateM(model, 0, mx, earthY, mz)
         Matrix.scaleM(model, 0, moonR, moonR, moonR)
         Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
 
@@ -359,7 +364,13 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
         SolarSystemData.planets.forEach { planet ->
             val r = OrbitalCalculator.getOrbitRadius(planet, blend)
+            // Inclinaison du plan orbital : rotation autour de l'axe du nœud ascendant
+            val omegaRad = Math.toRadians(planet.ascendingNodeDeg.toDouble()).toFloat()
+            val nodeAxisX = cos(omegaRad); val nodeAxisZ = sin(omegaRad)
             Matrix.setIdentityM(model, 0)
+            // Signe négatif : la rotation Rodrigues autour du nœud donne Y = -r·sin(u)·sin(i),
+            // mais la formule orbitale 3D donne Y = +r·sin(u)·sin(i). On inverse pour coïncider.
+            Matrix.rotateM(model, 0, -planet.orbitalInclinationDeg, nodeAxisX, 0f, nodeAxisZ)
             Matrix.scaleM(model, 0, r, 1f, r)
             Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
             GLES20.glUniformMatrix4fv(lMVP, 1, false, mvp, 0)

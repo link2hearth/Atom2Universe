@@ -1,16 +1,18 @@
 package com.Atom2Universe.app.science.solarsystem
 
 import android.app.DatePickerDialog
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
+import android.view.Menu
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.SeekBar
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.Atom2Universe.app.R
@@ -20,14 +22,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
-import kotlin.math.pow
 
 class SolarSystemActivity : ThemedActivity() {
 
     private lateinit var glView: SolarSystemGLView
     private lateinit var btnPlayPause: ImageButton
     private lateinit var tvSpeed: TextView
-    private lateinit var seekSpeed: SeekBar
+    private lateinit var speedSlider: StepSpeedSlider
     private lateinit var btnModeClose: TextView
     private lateinit var btnModeLog: TextView
     private lateinit var btnModeReal: TextView
@@ -38,10 +39,13 @@ class SolarSystemActivity : ThemedActivity() {
     private lateinit var tvPlanetPeriod: TextView
     private lateinit var tvPlanetMoons: TextView
     private lateinit var tvPlanetTilt: TextView
-    private lateinit var tvFocusLabel: TextView
     private lateinit var tvDate: TextView
+    private lateinit var btnBodySelector: TextView
+    private lateinit var btnSystemSwitch: ImageButton
 
-    private val refDate: LocalDate = LocalDate.now()  // elapsedSimDays=0 = aujourd'hui
+    // Époque fixe J2000.0 — elapsedSimDays est le nombre de jours depuis cette date.
+    // Les initialAngleDeg dans PlanetData correspondent aux longitudes héliocentrique à J2000.
+    private val J2000: LocalDate = LocalDate.of(2000, 1, 1)
     private val dateHandler = Handler(Looper.getMainLooper())
     private val dateFmt: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
     private val dateUpdater = object : Runnable {
@@ -53,6 +57,23 @@ class SolarSystemActivity : ThemedActivity() {
 
     private var selectedPlanetIdx = -2  // -2=rien, -1=Soleil, 0..7=planète
     private var currentMode = ProportionMode.CLOSE
+    private var lastActiveStep = DEFAULT_STEP
+
+    companion object {
+        // 11 positions : -5 … 0 (pause) … +5
+        val SPEED_STEPS = doubleArrayOf(
+            -30.4375, -7.0, -3.0, -1.0, -1.0/24,
+            0.0,
+            1.0/24, 1.0, 3.0, 7.0, 30.4375
+        )
+        val STEP_LABELS = arrayOf(
+            "−1 mois/s", "−1 sem/s", "−3 j/s", "−1 j/s", "−1 h/s",
+            "⏸",
+            "+1 h/s", "+1 j/s", "+3 j/s", "+1 sem/s", "+1 mois/s"
+        )
+        const val PAUSE_STEP    = 5
+        const val DEFAULT_STEP  = 6    // +1 h/s
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,28 +107,47 @@ class SolarSystemActivity : ThemedActivity() {
             background = null
             setOnClickListener { finish() }
         }
-        val tvTitle = TextView(this).apply {
-            text = getString(R.string.solar_system_title)
-            textSize = 18f
-            setTextColor(Color.WHITE)
+        // Bouton date (centre, remplace le titre)
+        tvDate = TextView(this).apply {
+            textSize = 13f
+            setTextColor(0xFFDDEEFF.toInt())
             gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            setPadding(dp(8), dp(4), dp(8), dp(4))
+            setBackgroundColor(0x33FFFFFF)
+            setOnClickListener { showDatePicker() }
         }
-        // Label focus (ex. "⊙ Earth") avec clic pour retour Soleil
-        tvFocusLabel = TextView(this).apply {
+        // Bouton bascule vers la vue Terre-Lune — icône du mode courant (système solaire)
+        btnSystemSwitch = ImageButton(this).apply {
+            setImageBitmap(loadAssetBitmap("Assets/sprites/ministar.png"))
+            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+            background = null
+            setPadding(dp(3), dp(3), dp(3), dp(3))
+            setOnClickListener {
+                val intent = android.content.Intent(this@SolarSystemActivity, EarthMoonActivity::class.java)
+                intent.putExtra(EarthMoonActivity.EXTRA_ELAPSED_DAYS, glView.renderer.elapsedSimDays)
+                startActivity(intent)
+            }
+        }
+        // Dropdown sélection de l'astre en focus
+        btnBodySelector = TextView(this).apply {
             textSize = 12f
             setTextColor(0xFFFFDD88.toInt())
-            setPadding(dp(8), dp(3), dp(8), dp(3))
-            setBackgroundColor(0x99000000.toInt())
-            visibility = View.GONE
-            setOnClickListener { resetFocus() }
+            gravity = Gravity.CENTER
+            setPadding(dp(8), dp(4), dp(8), dp(4))
+            setBackgroundColor(0x33FFFFFF)
+            setOnClickListener { showBodySelector() }
         }
 
         topBar.addView(btnBack, LinearLayout.LayoutParams(dp(40), dp(40)))
-        topBar.addView(tvTitle)
-        topBar.addView(tvFocusLabel, LinearLayout.LayoutParams(
+        topBar.addView(tvDate, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply { leftMargin = dp(6); rightMargin = dp(6) })
+        topBar.addView(View(this), LinearLayout.LayoutParams(0, dp(1), 1f))  // spacer flexible
+        topBar.addView(btnSystemSwitch, LinearLayout.LayoutParams(dp(36), dp(36))
+            .apply { rightMargin = dp(6) })
+        topBar.addView(btnBodySelector, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, dp(32)
-        ).apply { gravity = Gravity.CENTER_VERTICAL })
+        ))
 
         val topParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT
@@ -173,19 +213,6 @@ class SolarSystemActivity : ThemedActivity() {
             setBackgroundColor(0xBB000000.toInt())
         }
 
-        // Chip date — tappable, ouvre le DatePicker
-        tvDate = TextView(this).apply {
-            textSize = 13f
-            setTextColor(0xFFDDEEFF.toInt())
-            gravity = Gravity.CENTER
-            setPadding(dp(12), dp(5), dp(12), dp(5))
-            setBackgroundColor(0x33FFFFFF)
-            setOnClickListener { showDatePicker() }
-        }
-        bottomPanel.addView(tvDate, LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-        ).apply { bottomMargin = dp(8) })
-
         // Sélecteur de mode
         val modeRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -211,8 +238,10 @@ class SolarSystemActivity : ThemedActivity() {
             setColorFilter(Color.WHITE)
             background = null
         }
-        seekSpeed = SeekBar(this).apply {
-            max = 100; progress = 35   // ≈ 1 j/s au démarrage
+        speedSlider = StepSpeedSlider(this).apply {
+            stepCount = SPEED_STEPS.size
+            centerStep = PAUSE_STEP
+            setStep(DEFAULT_STEP)
         }
         tvSpeed = TextView(this).apply {
             textSize = 11f
@@ -221,7 +250,7 @@ class SolarSystemActivity : ThemedActivity() {
             minWidth = dp(80)
         }
         timeRow.addView(btnPlayPause, LinearLayout.LayoutParams(dp(40), dp(40)))
-        timeRow.addView(seekSpeed, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+        timeRow.addView(speedSlider, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
             leftMargin = dp(8); rightMargin = dp(8)
         })
         timeRow.addView(tvSpeed, LinearLayout.LayoutParams(dp(80), LinearLayout.LayoutParams.WRAP_CONTENT))
@@ -233,27 +262,31 @@ class SolarSystemActivity : ThemedActivity() {
         root.addView(bottomPanel, bottomParams)
 
         setContentView(root)
-        glView.renderer.speedDaysPerSec = progressToSpeed(seekSpeed.progress)
-        updateSpeedLabel(seekSpeed.progress)
+        glView.renderer.elapsedSimDays = ChronoUnit.DAYS.between(J2000, LocalDate.now()).toDouble()
+        glView.renderer.speedDaysPerSec = SPEED_STEPS[DEFAULT_STEP]
+        updateSpeedLabel(DEFAULT_STEP)
         updateModeButtons()
+        updateBodySelectorLabel(-1)  // Soleil par défaut
     }
 
     private fun setupListeners() {
         btnPlayPause.setOnClickListener {
-            glView.renderer.paused = !glView.renderer.paused
-            btnPlayPause.setImageResource(
-                if (glView.renderer.paused) R.drawable.ic_play else R.drawable.ic_pause
-            )
+            if (speedSlider.step == PAUSE_STEP) {
+                // Reprendre à la dernière vitesse active
+                speedSlider.setStep(lastActiveStep)
+                applyStep(lastActiveStep)
+            } else {
+                // Mettre en pause
+                lastActiveStep = speedSlider.step
+                speedSlider.setStep(PAUSE_STEP)
+                applyStep(PAUSE_STEP)
+            }
         }
 
-        seekSpeed.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(sb: SeekBar, p: Int, user: Boolean) {
-                glView.renderer.speedDaysPerSec = progressToSpeed(p)
-                updateSpeedLabel(p)
-            }
-            override fun onStartTrackingTouch(sb: SeekBar) {}
-            override fun onStopTrackingTouch(sb: SeekBar) {}
-        })
+        speedSlider.onStepChanged = { p ->
+            if (p != PAUSE_STEP) lastActiveStep = p
+            applyStep(p)
+        }
 
         btnModeClose.setOnClickListener { setMode(ProportionMode.CLOSE) }
         btnModeLog.setOnClickListener   { setMode(ProportionMode.COMPRESSED) }
@@ -264,25 +297,33 @@ class SolarSystemActivity : ThemedActivity() {
         }
 
         glView.renderer.onPlanetLongPressed = { idx ->
-            runOnUiThread { updateFocusLabel(idx) }
+            runOnUiThread { updateBodySelectorLabel(idx) }
         }
     }
 
-    private fun resetFocus() {
-        glView.renderer.focusPlanetIdx = -1
+    private fun focusOnBody(idx: Int) {
+        glView.renderer.focusPlanetIdx = idx
         glView.renderer.panX = 0f; glView.renderer.panY = 0f
-        glView.renderer.cameraDistance = glView.renderer.recommendedDistance(-1)
-        updateFocusLabel(-1)
+        glView.renderer.cameraDistance = glView.renderer.recommendedDistance(idx)
+        updateBodySelectorLabel(idx)
     }
 
-    private fun updateFocusLabel(idx: Int) {
-        if (idx < 0) {
-            tvFocusLabel.visibility = View.GONE
-        } else {
-            val name = SolarSystemData.planets[idx].name
-            tvFocusLabel.text = "⊙ $name  ×"
-            tvFocusLabel.visibility = View.VISIBLE
+    private fun updateBodySelectorLabel(idx: Int) {
+        btnBodySelector.text = if (idx < 0)
+            "${getString(R.string.solar_sun_name)} ▾"
+        else
+            "${SolarSystemData.planets[idx].name} ▾"
+    }
+
+    private fun showBodySelector() {
+        val popup = PopupMenu(this, btnBodySelector)
+        popup.menu.add(0, Menu.NONE, 0, getString(R.string.solar_sun_name))
+            .setOnMenuItemClickListener { focusOnBody(-1); true }
+        SolarSystemData.planets.forEach { p ->
+            popup.menu.add(0, p.id, p.id + 1, p.name)
+                .setOnMenuItemClickListener { focusOnBody(p.id); true }
         }
+        popup.show()
     }
 
     private fun setMode(mode: ProportionMode) {
@@ -330,7 +371,7 @@ class SolarSystemActivity : ThemedActivity() {
     }
 
     private fun currentSimDate(): LocalDate =
-        refDate.plusDays(glView.renderer.elapsedSimDays.toLong())
+        J2000.plusDays(glView.renderer.elapsedSimDays.toLong())
 
     private fun updateDateLabel() {
         tvDate.text = "📅  ${currentSimDate().format(dateFmt)}"
@@ -340,25 +381,21 @@ class SolarSystemActivity : ThemedActivity() {
         val d = currentSimDate()
         DatePickerDialog(this, { _, year, month, day ->
             val picked = LocalDate.of(year, month + 1, day)
-            glView.renderer.elapsedSimDays = ChronoUnit.DAYS.between(refDate, picked).toDouble()
+            glView.renderer.elapsedSimDays = ChronoUnit.DAYS.between(J2000, picked).toDouble()
             updateDateLabel()
         }, d.year, d.monthValue - 1, d.dayOfMonth).show()
     }
 
-    // Plage : p=0 → 1 h/s  |  p=100 → 1 an/s  (log scale)
-    private fun progressToSpeed(p: Int): Double {
-        val logMin = Math.log10(1.0 / 24.0)   // 1 heure = 1 seconde
-        val logMax = Math.log10(365.25)        // 1 an    = 1 seconde
-        return Math.pow(10.0, logMin + (logMax - logMin) * p / 100.0)
+    private fun applyStep(p: Int) {
+        val speed = SPEED_STEPS[p]
+        glView.renderer.speedDaysPerSec = speed
+        glView.renderer.paused = (speed == 0.0)
+        btnPlayPause.setImageResource(if (speed == 0.0) R.drawable.ic_play else R.drawable.ic_pause)
+        updateSpeedLabel(p)
     }
 
-    private fun updateSpeedLabel(progress: Int) {
-        val daysPerSec = progressToSpeed(progress)
-        tvSpeed.text = when {
-            daysPerSec < 1.0 -> getString(R.string.solar_speed_hours, daysPerSec * 24.0)
-            daysPerSec < 365.25 -> getString(R.string.solar_speed_days, daysPerSec)
-            else -> getString(R.string.solar_speed_years, daysPerSec / 365.25)
-        }
+    private fun updateSpeedLabel(p: Int) {
+        tvSpeed.text = STEP_LABELS[p]
     }
 
     private fun updateModeButtons() {
@@ -402,6 +439,10 @@ class SolarSystemActivity : ThemedActivity() {
     }
 
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
+
+    private fun loadAssetBitmap(path: String) =
+        try { assets.open(path).use { BitmapFactory.decodeStream(it) } }
+        catch (_: java.io.IOException) { null }
 
     override fun onResume() {
         super.onResume()

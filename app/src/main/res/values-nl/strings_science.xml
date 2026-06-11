@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Wetenschap</string>
     <string name="hub_science_desc">Periodiek systeem, simulaties…</string>
@@ -73,7 +73,7 @@ Knijp om in te zoomen · Slepen om te verplaatsen</string>
     <string name="solar_sun_name">Zon</string>
     <string name="solar_mode_close">Dicht</string>
     <string name="solar_mode_log">Log.</string>
-    <string name="solar_mode_real">Realistisch</string>
+    <string name="solar_mode_real">Semi-realistisch</string>
     <string name="solar_play_pause">Afspelen / Pauze</string>
     <string name="solar_info_radius">Diameter</string>
     <string name="solar_info_orbit">Afstand (AE)</string>

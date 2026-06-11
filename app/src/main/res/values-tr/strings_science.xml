@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Bilim</string>
     <string name="hub_science_desc">Periyodik tablo, simülasyonlar…</string>
@@ -73,7 +73,7 @@ Yakınlaştırmak için sıkıştır · Kaydırmak için sürükle</string>
     <string name="solar_sun_name">Güneş</string>
     <string name="solar_mode_close">Yakın</string>
     <string name="solar_mode_log">Log.</string>
-    <string name="solar_mode_real">Gerçekçi</string>
+    <string name="solar_mode_real">Yarı-gerçekçi</string>
     <string name="solar_play_pause">Oynat / Durdur</string>
     <string name="solar_info_radius">Çap</string>
     <string name="solar_info_orbit">Mesafe (AU)</string>

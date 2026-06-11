@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Science</string>
     <string name="hub_science_desc">Periodic table, simulations…</string>
@@ -107,7 +107,9 @@
     <string name="solar_sun_name">Sun</string>
     <string name="solar_mode_close">Close</string>
     <string name="solar_mode_log">Log.</string>
-    <string name="solar_mode_real">Realistic</string>
+    <string name="solar_mode_real">Semi-realistic</string>
+    <string name="solar_switch_earth_moon">E-M</string>
+    <string name="solar_switch_coming_soon">Earth-Moon view coming soon</string>
     <string name="solar_play_pause">Play / Pause</string>
     <string name="solar_info_radius">Diameter</string>
     <string name="solar_info_orbit">Distance (AU)</string>

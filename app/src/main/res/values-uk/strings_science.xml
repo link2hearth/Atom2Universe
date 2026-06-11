@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Наука</string>
     <string name="hub_science_desc">Таблиця Менделєєва, симуляції…</string>
@@ -73,7 +73,7 @@
     <string name="solar_sun_name">Сонце</string>
     <string name="solar_mode_close">Близько</string>
     <string name="solar_mode_log">Лог.</string>
-    <string name="solar_mode_real">Реалістичний</string>
+    <string name="solar_mode_real">Напівреалістичний</string>
     <string name="solar_play_pause">Старт / Пауза</string>
     <string name="solar_info_radius">Діаметр</string>
     <string name="solar_info_orbit">Відстань (а.о.)</string>

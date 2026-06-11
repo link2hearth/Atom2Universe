@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Nauka</string>
     <string name="hub_science_desc">Układ okresowy, symulacje…</string>
@@ -73,7 +73,7 @@
     <string name="solar_sun_name">Słońce</string>
     <string name="solar_mode_close">Blisko</string>
     <string name="solar_mode_log">Log.</string>
-    <string name="solar_mode_real">Realistyczny</string>
+    <string name="solar_mode_real">Semi-realistyczny</string>
     <string name="solar_play_pause">Start / Pauza</string>
     <string name="solar_info_radius">Średnica</string>
     <string name="solar_info_orbit">Odległość (AU)</string>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Știință</string>
     <string name="hub_science_desc">Tabel periodic, simulări…</string>
@@ -73,7 +73,7 @@ Ciupește pentru zoom · Trage pentru a muta</string>
     <string name="solar_sun_name">Soare</string>
     <string name="solar_mode_close">Aproape</string>
     <string name="solar_mode_log">Log.</string>
-    <string name="solar_mode_real">Realist</string>
+    <string name="solar_mode_real">Semi-realist</string>
     <string name="solar_play_pause">Redare / Pauză</string>
     <string name="solar_info_radius">Diametru</string>
     <string name="solar_info_orbit">Distanță (UA)</string>

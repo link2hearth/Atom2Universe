@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Ciência</string>
     <string name="hub_science_desc">Tabela periódica, simulações…</string>
@@ -73,7 +73,7 @@ Aperte para ampliar · Arraste para mover</string>
     <string name="solar_sun_name">Sol</string>
     <string name="solar_mode_close">Próximo</string>
     <string name="solar_mode_log">Log.</string>
-    <string name="solar_mode_real">Realista</string>
+    <string name="solar_mode_real">Semi-realista</string>
     <string name="solar_play_pause">Reproduzir / Pausar</string>
     <string name="solar_info_radius">Diâmetro</string>
     <string name="solar_info_orbit">Distância (UA)</string>

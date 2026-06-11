@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Επιστήμη</string>
     <string name="hub_science_desc">Περιοδικός πίνακας, προσομοιώσεις…</string>
@@ -73,7 +73,7 @@
     <string name="solar_sun_name">Ήλιος</string>
     <string name="solar_mode_close">Κοντά</string>
     <string name="solar_mode_log">Λογ.</string>
-    <string name="solar_mode_real">Ρεαλιστικό</string>
+    <string name="solar_mode_real">Ημι-ρεαλιστικό</string>
     <string name="solar_play_pause">Αναπαραγωγή / Παύση</string>
     <string name="solar_info_radius">Διάμετρος</string>
     <string name="solar_info_orbit">Απόσταση (AU)</string>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Наука</string>
     <string name="hub_science_desc">Периодическая таблица, симуляции…</string>
@@ -73,7 +73,7 @@
     <string name="solar_sun_name">Солнце</string>
     <string name="solar_mode_close">Близко</string>
     <string name="solar_mode_log">Лог.</string>
-    <string name="solar_mode_real">Реалистичный</string>
+    <string name="solar_mode_real">Полуреалистичный</string>
     <string name="solar_play_pause">Старт / Пауза</string>
     <string name="solar_info_radius">Диаметр</string>
     <string name="solar_info_orbit">Расстояние (а.е.)</string>

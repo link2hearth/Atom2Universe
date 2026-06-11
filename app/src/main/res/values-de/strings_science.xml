@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Wissenschaft</string>
     <string name="hub_science_desc">Periodensystem, Simulationen…</string>
@@ -73,7 +73,7 @@ Zum Zoomen zusammendrücken · Zum Verschieben ziehen</string>
     <string name="solar_sun_name">Sonne</string>
     <string name="solar_mode_close">Nah</string>
     <string name="solar_mode_log">Log.</string>
-    <string name="solar_mode_real">Realistisch</string>
+    <string name="solar_mode_real">Semi-realistisch</string>
     <string name="solar_play_pause">Start / Pause</string>
     <string name="solar_info_radius">Durchmesser</string>
     <string name="solar_info_orbit">Abstand (AE)</string>
