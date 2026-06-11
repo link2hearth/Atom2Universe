@@ -1526,17 +1526,21 @@ class MainClickerActivity : ThemedActivity() {
             val critChancePct = (1 + state.critChanceLevel).toString()
             val critMultVal   = String.format(java.util.Locale.US, "%.1f", 1.5 + state.critDamageLevel * 0.1)
             shopQuarkBalance?.text    = state.quarks.toString()
+            val critChanceMaxed = clickerViewModel.critChanceMaxed()
             shopGamowLevelView?.text  = getString(R.string.clicker_shop_level, state.critChanceLevel)
             shopGamowEffectView?.text = getString(R.string.clicker_crit_chance_effect, critChancePct)
-            shopGamowCostView?.text   = "$gamowCost ☢"
+            shopGamowCostView?.text   = if (critChanceMaxed) getString(R.string.clicker_shop_max) else "$gamowCost ☢"
+            shopGamowBuyBtn?.isEnabled = !critChanceMaxed
             shopGamowBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-                if (state.quarks >= gamowCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+                if (!critChanceMaxed && state.quarks >= gamowCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
             )
+            val critDamageMaxed = clickerViewModel.critDamageMaxed()
             shopFermiLevelView?.text  = getString(R.string.clicker_shop_level, state.critDamageLevel)
             shopFermiEffectView?.text = getString(R.string.clicker_crit_damage_effect, critMultVal)
-            shopFermiCostView?.text   = "$fermiCost ☢"
+            shopFermiCostView?.text   = if (critDamageMaxed) getString(R.string.clicker_shop_max) else "$fermiCost ☢"
+            shopFermiBuyBtn?.isEnabled = !critDamageMaxed
             shopFermiBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-                if (state.quarks >= fermiCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+                if (!critDamageMaxed && state.quarks >= fermiCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
             )
         }
 

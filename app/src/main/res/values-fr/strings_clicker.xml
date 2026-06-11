@@ -180,6 +180,7 @@
     <string name="clicker_crit_section">Coups Critiques</string>
     <string name="clicker_quark_balance">Quarks</string>
     <string name="clicker_crit_chance_effect">%s%% chance de crit</string>
+    <string name="clicker_shop_max">MAX</string>
     <string name="clicker_crit_damage_effect">×%s sur crit</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>

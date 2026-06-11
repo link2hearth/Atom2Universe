@@ -374,6 +374,10 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // Plafond de chance de crit : 25% (= 0.01 + 24 × 0.01).
+    private val maxCritChanceLevel = 24
+    // Plafond de dégâts crit : ×10 = 1000% (= 1.5 + 85 × 0.1).
+    private val maxCritDamageLevel = 85
     private fun critChance(s: ClickerGameState): Double = 0.01 + s.critChanceLevel * 0.01
     private fun critMultiplier(s: ClickerGameState): Double = 1.5 + s.critDamageLevel * 0.1
 
@@ -593,8 +597,15 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     fun critChanceCost(): Int = 50
     fun critDamageCost(): Int = 10
 
+    /** Vrai quand la chance de crit a atteint son plafond (25%). */
+    fun critChanceMaxed(): Boolean = _state.value.critChanceLevel >= maxCritChanceLevel
+
+    /** Vrai quand les dégâts crit ont atteint leur plafond (×10 = 1000%). */
+    fun critDamageMaxed(): Boolean = _state.value.critDamageLevel >= maxCritDamageLevel
+
     fun buyCritChance() {
         val s = _state.value
+        if (s.critChanceLevel >= maxCritChanceLevel) return
         if (s.quarks < critChanceCost()) return
         if (!fusionStore.spendQuarks(critChanceCost())) return
         critRepo.incrementCritChance()
@@ -603,6 +614,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     fun buyCritDamage() {
         val s = _state.value
+        if (s.critDamageLevel >= maxCritDamageLevel) return
         if (s.quarks < critDamageCost()) return
         if (!fusionStore.spendQuarks(critDamageCost())) return
         critRepo.incrementCritDamage()
