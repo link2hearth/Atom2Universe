@@ -18,4 +18,8 @@ data class ClickerGameState(
     val factoryCounts: Map<FactoryType, Int> = emptyMap(),
     val isFusionAvailable: Boolean = false,
     val breakdown: ProductionBreakdown = ProductionBreakdown(),
+    val quarks: Int = 0,
+    val critChanceLevel: Int = 0,
+    val critDamageLevel: Int = 0,
+    val critUnlocked: Boolean = false,
 )

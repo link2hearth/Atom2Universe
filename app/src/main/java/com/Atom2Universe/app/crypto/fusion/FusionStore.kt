@@ -20,8 +20,18 @@ class FusionStore(context: Context) {
                 putInt(KEY_TOTAL_WINS, oldTotalWins + 1)
                 if (toAps) putFloat(KEY_BONUS_APS, (getBonusMultAps() + 0.01).toFloat())
                 else putFloat(KEY_BONUS_APC, (getBonusMultApc() + 0.01).toFloat())
+                putInt(KEY_QUARKS, getQuarks() + 1)
             }
         }
+    }
+
+    fun getQuarks(): Int = prefs.getInt(KEY_QUARKS, 0)
+
+    fun spendQuarks(n: Int): Boolean {
+        val current = getQuarks()
+        if (current < n) return false
+        prefs.edit { putInt(KEY_QUARKS, current - n) }
+        return true
     }
 
     fun getBonusMultApc(): Double = prefs.getFloat(KEY_BONUS_APC, 0f).toDouble()
@@ -36,5 +46,6 @@ class FusionStore(context: Context) {
         private const val KEY_TOTAL_WINS = "total_wins"
         private const val KEY_BONUS_APC = "bonus_mult_apc"
         private const val KEY_BONUS_APS = "bonus_mult_aps"
+        private const val KEY_QUARKS    = "quarks"
     }
 }

@@ -35,6 +35,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     private val frenzyManager         = FrenzyManager()
     private val collectionStore       = PeriodicCollectionStore(application)
     private val fusionStore           = com.Atom2Universe.app.crypto.fusion.FusionStore(application)
+    private val critRepo              = CritRepository(application)
 
     private var bigBangEffects = BigBangEngine.computeEffects(bigBangRepo)
 
@@ -46,6 +47,9 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
 
     private val _achievementUnlocked = MutableSharedFlow<ClickerAchievement>(extraBufferCapacity = 10)
     val achievementUnlocked: SharedFlow<ClickerAchievement> = _achievementUnlocked.asSharedFlow()
+
+    private val _critHit = MutableSharedFlow<Unit>(extraBufferCapacity = 8)
+    val critHit: SharedFlow<Unit> = _critHit.asSharedFlow()
 
     private val unlockedAchievementIds = mutableSetOf<String>()
 
@@ -268,6 +272,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         if (resetClicker) {
             factoryRepo.reset()
             bigBangRepo.resetUnlock()
+            critRepo.reset()
             _state.value = ClickerGameState()
             neutrinoRepo.setBalance(0)
             elementTokenRepo.setBalance(0)
@@ -344,24 +349,33 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     fun registerClick() {
         val nowMs = System.currentTimeMillis()
         val s = _state.value
+        val isCrit = s.critUnlocked && (Math.random() < critChance(s))
+        val gain = if (isCrit) s.perClick.multiplyNumber(critMultiplier(s)) else s.perClick
         _state.value = s.copy(
-            atoms    = s.atoms.add(s.perClick),
-            lifetime = s.lifetime.add(s.perClick)
+            atoms    = s.atoms.add(gain),
+            lifetime = s.lifetime.add(gain)
         )
+        if (isCrit) _critHit.tryEmit(Unit)
 
-        // Mise à jour des stats de clic
         val duringFrenzy = frenzyManager.recordApcClick(nowMs)
         stats = stats.copy(
             totalClicks        = stats.totalClicks + 1,
             clicksDuringFrenzy = if (duringFrenzy) stats.clicksDuringFrenzy + 1 else stats.clicksDuringFrenzy,
-            lifetimeApcAtoms   = stats.lifetimeApcAtoms.add(s.perClick)
+            lifetimeApcAtoms   = stats.lifetimeApcAtoms.add(gain)
         )
         trackCps(nowMs)
 
         if (duringFrenzy) {
             _frenzyUiState.value = frenzyManager.buildUiState(nowMs)
         }
+
+        if (!s.critUnlocked && stats.totalClicks >= 50_000L) {
+            _state.value = _state.value.copy(critUnlocked = true)
+        }
     }
+
+    private fun critChance(s: ClickerGameState): Double = 0.01 + s.critChanceLevel * 0.01
+    private fun critMultiplier(s: ClickerGameState): Double = 1.5 + s.critDamageLevel * 0.1
 
     private fun trackCps(nowMs: Long) {
         recentClickTimes.addLast(nowMs)
@@ -576,6 +590,25 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         _state.value = recalcProduction(_state.value)
     }
 
+    fun critChanceCost(): Int = 50
+    fun critDamageCost(): Int = 10
+
+    fun buyCritChance() {
+        val s = _state.value
+        if (s.quarks < critChanceCost()) return
+        if (!fusionStore.spendQuarks(critChanceCost())) return
+        critRepo.incrementCritChance()
+        _state.value = recalcProduction(s)
+    }
+
+    fun buyCritDamage() {
+        val s = _state.value
+        if (s.quarks < critDamageCost()) return
+        if (!fusionStore.spendQuarks(critDamageCost())) return
+        critRepo.incrementCritDamage()
+        _state.value = recalcProduction(s)
+    }
+
     fun refreshFusionAvailability() {
         val available = com.Atom2Universe.app.crypto.fusion.FusionRecipe.values().any { recipe ->
             val parentDone = recipe.unlockParentId?.let { pid ->
@@ -674,7 +707,15 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             apsFrenzyMult  = apsMult,
         )
 
-        return state.copy(perClick = perClick, perSecond = perSecond, breakdown = breakdown)
+        return state.copy(
+            perClick       = perClick,
+            perSecond      = perSecond,
+            breakdown      = breakdown,
+            quarks         = fusionStore.getQuarks(),
+            critChanceLevel = critRepo.getCritChanceLevel(),
+            critDamageLevel = critRepo.getCritDamageLevel(),
+            critUnlocked   = stats.totalClicks >= 50_000L
+        )
     }
 
     private fun checkAchievements(lifetime: LayeredNumber, emitEvents: Boolean) {

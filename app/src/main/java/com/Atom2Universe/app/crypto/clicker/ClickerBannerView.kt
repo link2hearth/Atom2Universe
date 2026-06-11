@@ -312,6 +312,23 @@ class ClickerBannerView @JvmOverloads constructor(
 
     fun onClickRegistered() = rabbitView.registerClick()
 
+    fun onCritHit() {
+        apcText.animate().cancel()
+        apcText.scaleX = 1f
+        apcText.scaleY = 1f
+        apcText.animate()
+            .scaleX(1.55f).scaleY(1.55f)
+            .setDuration(80)
+            .setInterpolator(android.view.animation.OvershootInterpolator(3f))
+            .withEndAction {
+                apcText.animate()
+                    .scaleX(1f).scaleY(1f)
+                    .setDuration(220)
+                    .setInterpolator(android.view.animation.DecelerateInterpolator())
+                    .start()
+            }.start()
+    }
+
     fun applyOpacity(percent: Int) { alpha = percent / 100f }
 
     fun applySize(heightDp: Int) {

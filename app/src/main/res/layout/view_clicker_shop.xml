@@ -354,6 +354,170 @@
 
         </LinearLayout>
 
+        <!-- ── Section Critique (masquée jusqu'à 50 000 clics) ──────────────── -->
+        <LinearLayout
+            android:id="@+id/shop_crit_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#2D3748"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/clicker_crit_section"
+                android:textColor="#64748B"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Solde quarks -->
+            <LinearLayout style="@style/ShopStatRow">
+                <TextView style="@style/ShopStatLabel" android:text="@string/clicker_quark_balance" />
+                <TextView android:id="@+id/shop_quark_balance" style="@style/ShopStatValue" android:text="0" />
+            </LinearLayout>
+
+            <View style="@style/ShopStatDivider" />
+
+            <!-- Tunnel de Gamow (chance de crit) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:text="⚛"
+                    android:textSize="22sp"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="8dp">
+
+                    <TextView
+                        android:id="@+id/shop_gamow_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#E2E8F0"
+                        android:textSize="16sp"
+                        android:fontFamily="monospace" />
+
+                    <TextView
+                        android:id="@+id/shop_gamow_effect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:fontFamily="monospace" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/shop_gamow_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#94A3B8"
+                    android:textSize="15sp"
+                    android:fontFamily="monospace"
+                    android:paddingEnd="6dp" />
+
+                <Button
+                    android:id="@+id/shop_gamow_buy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="@string/clicker_shop_buy"
+                    android:textSize="13sp"
+                    android:textColor="#FFFFFF"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:backgroundTint="#D97706" />
+
+            </LinearLayout>
+
+            <View style="@style/ShopStatDivider" />
+
+            <!-- Éclat de Fermi (dégâts crit) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:text="⚡"
+                    android:textSize="22sp"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="8dp">
+
+                    <TextView
+                        android:id="@+id/shop_fermi_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#E2E8F0"
+                        android:textSize="16sp"
+                        android:fontFamily="monospace" />
+
+                    <TextView
+                        android:id="@+id/shop_fermi_effect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:fontFamily="monospace" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/shop_fermi_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#94A3B8"
+                    android:textSize="15sp"
+                    android:fontFamily="monospace"
+                    android:paddingEnd="6dp" />
+
+                <Button
+                    android:id="@+id/shop_fermi_buy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="@string/clicker_shop_buy"
+                    android:textSize="13sp"
+                    android:textColor="#FFFFFF"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:backgroundTint="#DC2626" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <!-- ── Séparateur section stats ───────────────────────────────────────── -->
         <View
             android:layout_width="match_parent"
