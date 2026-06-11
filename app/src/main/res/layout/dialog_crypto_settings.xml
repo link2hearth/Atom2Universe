@@ -165,6 +165,28 @@
             android:layout_marginVertical="18dp"
             android:background="?android:attr/listDivider" />
 
+        <!-- ─── Section Sons ─── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/crypto_settings_sound_section"
+            android:textColor="?android:attr/colorAccent"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/settings_clicker_sound_enabled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crypto_clicker_sound_enabled_label" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="18dp"
+            android:background="?android:attr/listDivider" />
+
         <!-- ─── Section Toggles de la bannière ─── -->
         <TextView
             android:layout_width="match_parent"

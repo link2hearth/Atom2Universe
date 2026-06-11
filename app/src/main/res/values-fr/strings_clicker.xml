@@ -36,6 +36,8 @@
     <string name="crypto_background_interval_10m">Toutes les 10 minutes</string>
     <string name="crypto_background_display_label">Fond d\'écran</string>
     <string name="crypto_keep_screen_on_label">Garder écran allumé</string>
+    <string name="crypto_clicker_sound_enabled_label">Son du clic</string>
+    <string name="crypto_settings_sound_section">Son</string>
     <string name="crypto_widget_opacity_label">Opacité du fond</string>
     <string name="crypto_widget_opacity_value">%1$d%%</string>
     <string name="crypto_widget_minimal_label">Mode minimal (sans noms)</string>
@@ -175,6 +177,10 @@
     <string name="clicker_shop_stat_play_time">Temps de jeu</string>
     <string name="clicker_neutrinos_section">Neutrinos</string>
     <string name="clicker_neutrino_balance">Solde</string>
+    <string name="clicker_crit_section">Coups Critiques</string>
+    <string name="clicker_quark_balance">Quarks</string>
+    <string name="clicker_crit_chance_effect">%s%% chance de crit</string>
+    <string name="clicker_crit_damage_effect">×%s sur crit</string>
     <string name="clicker_shop_apc_to_aps_effect">+%d%% APC → APS</string>
     <string name="clicker_shop_aps_to_apc_effect">+%d%% APS → APC</string>
     <string name="clicker_shop_elem_stock">%d tokens</string>

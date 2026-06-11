@@ -139,6 +139,7 @@ class MainClickerActivity : ThemedActivity() {
     private lateinit var floatingWebWidget: FloatingWebWidget
     private lateinit var clickerBannerView: ClickerBannerView
     private lateinit var clickerToggle: SwitchCompat
+    private val clickerSoundEngine = com.Atom2Universe.app.crypto.clicker.ClickerSoundEngine()
     private lateinit var atomSpringView: com.Atom2Universe.app.crypto.clicker.AtomSpringView
     private val clickerViewModel: ClickerViewModel by lazy {
         ViewModelProvider(this)[ClickerViewModel::class.java]
@@ -214,6 +215,18 @@ class MainClickerActivity : ThemedActivity() {
     private var shopStarCoreMultBtn: Button? = null
     private var shopStarCoreBuyBtn: Button? = null
     private var shopStarCorePlusView: TextView? = null
+
+    // Critique dans le shop
+    private var shopCritSection: View? = null
+    private var shopQuarkBalance: TextView? = null
+    private var shopGamowLevelView: TextView? = null
+    private var shopGamowEffectView: TextView? = null
+    private var shopGamowCostView: TextView? = null
+    private var shopGamowBuyBtn: Button? = null
+    private var shopFermiLevelView: TextView? = null
+    private var shopFermiEffectView: TextView? = null
+    private var shopFermiCostView: TextView? = null
+    private var shopFermiBuyBtn: Button? = null
 
     // Neutrinos dans le shop
     private var shopNeutrinoBalance: TextView? = null
@@ -615,6 +628,17 @@ class MainClickerActivity : ThemedActivity() {
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                clickerViewModel.critHit.collect {
+                    if (clickerBannerView.visibility == View.VISIBLE) {
+                        spawnCritAtom(lastCritTouchX, lastCritTouchY)
+                    }
+                    clickerSoundEngine.playCritClick()
+                }
+            }
+        }
+
         setupOpacityLongPress()
         setBannerExpanded(false)
 
@@ -681,9 +705,12 @@ class MainClickerActivity : ThemedActivity() {
             blackjackWidgetView.reload()
         }
         floatingWebWidget.onResume()
+        clickerSoundEngine.start()
+        clickerSoundEngine.muted = !MainClickerPreferences.isClickerSoundEnabled(this)
     }
 
     override fun onPause() {
+        clickerSoundEngine.stop()
         floatingWebWidget.onPause()
         colorStackWidgetView.cancelTimer()
         super.onPause()
@@ -714,6 +741,9 @@ class MainClickerActivity : ThemedActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
+    private var lastCritTouchX = 0f
+    private var lastCritTouchY = 0f
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // Appelé seulement si aucune vue enfant n'a consommé l'event.
         if (clickerBannerView.visibility == View.VISIBLE) {
@@ -722,9 +752,13 @@ class MainClickerActivity : ThemedActivity() {
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN,
                 MotionEvent.ACTION_POINTER_DOWN -> {
+                    val idx = event.actionIndex
+                    lastCritTouchX = event.getX(idx)
+                    lastCritTouchY = event.getY(idx)
                     clickerViewModel.registerClick()
                     clickerBannerView.onClickRegistered()
                     if (atomSpringView.visibility == View.VISIBLE) atomSpringView.registerClick()
+                    clickerSoundEngine.playClick()
                 }
             }
             return true
@@ -750,6 +784,16 @@ class MainClickerActivity : ThemedActivity() {
         shopStarCoreMultBtn     = view.findViewById(R.id.shop_star_core_mult)
         shopStarCorePlusView    = view.findViewById(R.id.shop_star_core_plus)
         bindShopPlusToggle(shopStarCorePlusView, "starCore")
+        shopCritSection         = view.findViewById(R.id.shop_crit_section)
+        shopQuarkBalance        = view.findViewById(R.id.shop_quark_balance)
+        shopGamowLevelView      = view.findViewById(R.id.shop_gamow_level)
+        shopGamowEffectView     = view.findViewById(R.id.shop_gamow_effect)
+        shopGamowCostView       = view.findViewById(R.id.shop_gamow_cost)
+        shopGamowBuyBtn         = view.findViewById(R.id.shop_gamow_buy)
+        shopFermiLevelView      = view.findViewById(R.id.shop_fermi_level)
+        shopFermiEffectView     = view.findViewById(R.id.shop_fermi_effect)
+        shopFermiCostView       = view.findViewById(R.id.shop_fermi_cost)
+        shopFermiBuyBtn         = view.findViewById(R.id.shop_fermi_buy)
         shopNeutrinoBalance     = view.findViewById(R.id.shop_neutrino_balance)
         shopApcToApsLevelView   = view.findViewById(R.id.shop_apc_to_aps_level)
         shopApcToApsEffectView  = view.findViewById(R.id.shop_apc_to_aps_effect)
@@ -834,6 +878,8 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcBuyBtn?.setOnClickListener {
             clickerViewModel.buyApsToApc()
         }
+        shopGamowBuyBtn?.setOnClickListener { clickerViewModel.buyCritChance() }
+        shopFermiBuyBtn?.setOnClickListener  { clickerViewModel.buyCritDamage() }
         updateShopViews(clickerViewModel.state.value)
 
         val dialog = Dialog(this)
@@ -856,6 +902,16 @@ class MainClickerActivity : ThemedActivity() {
             shopStarCoreBuyBtn     = null
             shopGodFingerPlusView  = null
             shopStarCorePlusView   = null
+            shopCritSection        = null
+            shopQuarkBalance       = null
+            shopGamowLevelView     = null
+            shopGamowEffectView    = null
+            shopGamowCostView      = null
+            shopGamowBuyBtn        = null
+            shopFermiLevelView     = null
+            shopFermiEffectView    = null
+            shopFermiCostView      = null
+            shopFermiBuyBtn        = null
             shopNeutrinoBalance    = null
             shopApcToApsLevelView  = null
             shopApcToApsEffectView = null
@@ -907,6 +963,129 @@ class MainClickerActivity : ThemedActivity() {
         }
         shopDialog = dialog
         dialog.show()
+    }
+
+    // ── Popup atome sur clic critique ─────────────────────────────────────────
+
+    private val critAtomFileNames = listOf(
+        "Atom.png", "Atom0.png", "Atom1.png", "Atom2.png", "Atom3.png",
+        "Atom4.png", "Atom5.png", "Atom6.png", "Atom7.png", "Atom8.png",
+        "Atom9.png", "Atom10.png", "Atom11.png"
+    )
+
+    private val critAtomBitmaps: List<android.graphics.Bitmap> by lazy {
+        critAtomFileNames.mapNotNull { name ->
+            try { assets.open("Assets/Image/Atom low/$name").use { android.graphics.BitmapFactory.decodeStream(it) } }
+            catch (_: Exception) { null }
+        }
+    }
+
+    private fun spawnCritAtom(x: Float, y: Float) {
+        val bitmaps = critAtomBitmaps
+        if (bitmaps.isEmpty()) return
+        val bitmap = bitmaps.random()
+
+        val density  = resources.displayMetrics.density
+        val sizePx   = (56 * density).toInt()
+        val rootView = findViewById<ViewGroup>(android.R.id.content)
+        val floorY   = rootView.height.toFloat() - sizePx
+
+        val img = android.widget.ImageView(this)
+        img.setImageBitmap(bitmap)
+        img.layoutParams = ViewGroup.LayoutParams(sizePx, sizePx)
+        img.translationX = x - sizePx / 2f
+        img.translationY = y - sizePx / 2f
+        img.scaleX = 0f
+        img.scaleY = 0f
+        img.alpha  = 1f
+        rootView.addView(img)
+
+        // Physique
+        val gravity     = 900f * density
+        val bounceCoeff = 0.65f
+        val initialVY   = -650f * density
+        val initialVX   = ((Math.random() - 0.5) * 400 * density).toFloat()
+
+        val leftX  = 0f
+        val rightX = rootView.width.toFloat() - sizePx
+
+        var posX  = x - sizePx / 2f
+        var posY  = y - sizePx / 2f
+        var velX  = initialVX
+        var velY  = initialVY
+        var angle = (Math.random() * 360).toFloat()
+        var velAngle = (initialVX / density) * 0.04f
+        var lastMs = -1L
+        val startMs = System.currentTimeMillis()
+        val totalMs = 5000L
+        val fadeMs  = 4000L
+
+        // Phase 1 : pop-in overshoot rapide
+        img.animate()
+            .scaleX(1.35f).scaleY(1.35f)
+            .setDuration(90)
+            .setInterpolator(android.view.animation.OvershootInterpolator(4f))
+            .withEndAction {
+                img.animate()
+                    .scaleX(1f).scaleY(1f)
+                    .setDuration(90)
+                    .withEndAction {
+                        // Phase 2 : boucle physique
+                        android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+                            duration = totalMs
+                            addUpdateListener {
+                                val nowMs = System.currentTimeMillis()
+                                if (lastMs < 0L) { lastMs = nowMs; return@addUpdateListener }
+                                val dt = ((nowMs - lastMs) / 1000.0).toFloat().coerceAtMost(0.05f)
+                                lastMs = nowMs
+
+                                velY += gravity * dt
+                                posX += velX * dt
+                                posY += velY * dt
+
+                                // Sol
+                                if (posY >= floorY) {
+                                    posY = floorY
+                                    velY = -velY * bounceCoeff
+                                    velX *= 0.95f
+                                    velAngle *= 0.7f
+                                    if (kotlin.math.abs(velY) < 30f * density) velY = 0f
+                                }
+                                // Plafond
+                                if (posY <= 0f) {
+                                    posY = 0f
+                                    velY = -velY * bounceCoeff
+                                }
+                                // Mur gauche
+                                if (posX <= leftX) {
+                                    posX = leftX
+                                    velX = -velX * bounceCoeff
+                                }
+                                // Mur droit
+                                if (posX >= rightX) {
+                                    posX = rightX
+                                    velX = -velX * bounceCoeff
+                                }
+
+                                angle += velAngle * dt * 60f
+                                img.translationX = posX
+                                img.translationY = posY
+                                img.rotation = angle
+
+                                val elapsed = nowMs - startMs
+                                if (elapsed > fadeMs) {
+                                    img.alpha = 1f - (elapsed - fadeMs).toFloat() / (totalMs - fadeMs)
+                                }
+                            }
+                            addListener(object : android.animation.AnimatorListenerAdapter() {
+                                override fun onAnimationEnd(animation: android.animation.Animator) {
+                                    rootView.removeView(img)
+                                }
+                            })
+                            start()
+                        }
+                    }.start()
+            }.start()
     }
 
     private fun showAchievementToast(achievement: com.Atom2Universe.app.crypto.clicker.ClickerAchievement) {
@@ -1339,6 +1518,27 @@ class MainClickerActivity : ThemedActivity() {
         shopApsToApcBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
             if (state.neutrinos >= apsToApcCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
         )
+
+        shopCritSection?.visibility = if (state.critUnlocked) View.VISIBLE else View.GONE
+        if (state.critUnlocked) {
+            val gamowCost = clickerViewModel.critChanceCost()
+            val fermiCost = clickerViewModel.critDamageCost()
+            val critChancePct = (1 + state.critChanceLevel).toString()
+            val critMultVal   = String.format(java.util.Locale.US, "%.1f", 1.5 + state.critDamageLevel * 0.1)
+            shopQuarkBalance?.text    = state.quarks.toString()
+            shopGamowLevelView?.text  = getString(R.string.clicker_shop_level, state.critChanceLevel)
+            shopGamowEffectView?.text = getString(R.string.clicker_crit_chance_effect, critChancePct)
+            shopGamowCostView?.text   = "$gamowCost ☢"
+            shopGamowBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                if (state.quarks >= gamowCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+            )
+            shopFermiLevelView?.text  = getString(R.string.clicker_shop_level, state.critDamageLevel)
+            shopFermiEffectView?.text = getString(R.string.clicker_crit_damage_effect, critMultVal)
+            shopFermiCostView?.text   = "$fermiCost ☢"
+            shopFermiBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                if (state.quarks >= fermiCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+            )
+        }
 
         shopStatLifetime?.text    = state.lifetime.toString()
         val hasHadBigBang = clickerViewModel.getBigBangCount() > 0
@@ -2685,6 +2885,10 @@ class MainClickerActivity : ThemedActivity() {
             reloadBackground(force = true)
         }
 
+        setupSwitch(R.id.settings_clicker_sound_enabled,
+            { MainClickerPreferences.isClickerSoundEnabled(this) },
+            { enabled -> MainClickerPreferences.setClickerSoundEnabled(this, enabled); clickerSoundEngine.muted = !enabled }
+        )
         setupSwitch(R.id.settings_keep_screen_on,
             { MainClickerPreferences.isKeepScreenOnEnabled(this) },
             { MainClickerPreferences.setKeepScreenOnEnabled(this, it) },

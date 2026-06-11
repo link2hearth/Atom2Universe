@@ -78,6 +78,7 @@ object MainClickerPreferences {
     private const val KEY_BANNER_TOGGLE_THE_LINE_VISIBLE = "banner_toggle_the_line_visible"
     private const val KEY_BANNER_TOGGLE_ORDER = "banner_toggle_order"
     private const val KEY_FAVORITES_MODE = "favorites_mode"
+    private const val KEY_CLICKER_SOUND_ENABLED = "clicker_sound_enabled"
 
     val ALL_WIDGET_KEYS = listOf(
         "clicker", "crypto", "news", "earth", "music",
@@ -626,5 +627,12 @@ object MainClickerPreferences {
 
     fun setFavoritesModeEnabled(context: Context, enabled: Boolean) {
         prefs(context).edit { putBoolean(KEY_FAVORITES_MODE, enabled) }
+    }
+
+    fun isClickerSoundEnabled(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_CLICKER_SOUND_ENABLED, true)
+
+    fun setClickerSoundEnabled(context: Context, enabled: Boolean) {
+        prefs(context).edit { putBoolean(KEY_CLICKER_SOUND_ENABLED, enabled) }
     }
 }
