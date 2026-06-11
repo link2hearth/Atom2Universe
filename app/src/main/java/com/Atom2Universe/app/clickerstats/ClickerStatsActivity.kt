@@ -16,6 +16,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.ClickerOfflineRepository
 import com.Atom2Universe.app.crypto.clicker.ClickerRepository
 import com.Atom2Universe.app.crypto.clicker.ClickerStatsRepository
+import com.Atom2Universe.app.crypto.clicker.CritRepository
 import com.Atom2Universe.app.crypto.clicker.ElementBonusEngine
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.GachaTicketRepository
@@ -76,6 +77,7 @@ class ClickerStatsActivity : ThemedActivity() {
         val statsRepository  = ClickerStatsRepository(this)
         val periodicStore    = PeriodicCollectionStore(this)
         val fusionStore      = FusionStore(this)
+        val critRepo         = CritRepository(this)
         val clickerRepo      = ClickerRepository(this)
         val offlineRepo      = ClickerOfflineRepository(this)
 
@@ -120,6 +122,9 @@ class ClickerStatsActivity : ThemedActivity() {
                 if (togglePeriodic.isChecked) {
                     periodicStore.reset()
                     fusionStore.reset()
+                    // Les niveaux crit sont achetés avec les quarks (FusionStore) : on les
+                    // remet à zéro ici aussi pour qu'ils ne survivent pas à leur monnaie.
+                    critRepo.reset()
                 }
                 if (toggleClicker.isChecked) {
                     getSharedPreferences("clicker_achievements", MODE_PRIVATE).edit { clear() }
