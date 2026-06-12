@@ -560,6 +560,11 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
+        <activity
+            android:name=".science.boids.BoidsActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
         <!-- Sous-hub Audio -->
         <activity
             android:name=".audio.AudioSubHubActivity"

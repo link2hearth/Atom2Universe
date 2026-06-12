@@ -100,6 +100,42 @@
     <string name="rd_palette_coral">Corail</string>
     <string name="rd_palette_mono">Mono</string>
 
+    <!-- Boids (nuées) -->
+    <string name="hub_boids_title">Boids</string>
+    <string name="hub_boids_desc">Nuées, bancs et essaims — le mouvement émergent</string>
+    <string name="boids_title">Boids</string>
+    <string name="boids_hint">Touchez la nuée : attirez-la, effrayez-la ou posez des obstacles</string>
+    <string name="boids_behaviors">Comportements</string>
+    <string name="boids_colors">Couleurs</string>
+    <string name="boids_options">Options</string>
+    <string name="boids_touch">Tactile</string>
+    <string name="boids_separation">Séparation</string>
+    <string name="boids_alignment">Alignement</string>
+    <string name="boids_cohesion">Cohésion</string>
+    <string name="boids_perception">Perception</string>
+    <string name="boids_speed">Vitesse</string>
+    <string name="boids_count">Boids</string>
+    <string name="boids_scatter">Disperser</string>
+    <string name="boids_preset_starlings">Étourneaux</string>
+    <string name="boids_preset_fish">Banc de poissons</string>
+    <string name="boids_preset_gnats">Moucherons</string>
+    <string name="boids_preset_comets">Comètes</string>
+    <string name="boids_preset_chaos">Chaos</string>
+    <string name="boids_color_direction">Direction</string>
+    <string name="boids_color_speed">Vitesse</string>
+    <string name="boids_color_aurora">Aurore</string>
+    <string name="boids_color_fireflies">Lucioles</string>
+    <string name="boids_opt_trails">Traînées</string>
+    <string name="boids_opt_vision">Vision</string>
+    <string name="boids_opt_predator">Prédateur</string>
+    <string name="boids_touch_attract">Attirer</string>
+    <string name="boids_touch_repel">Repousser</string>
+    <string name="boids_touch_obstacle">Obstacle</string>
+    <string name="boids_touch_clear">Effacer</string>
+    <string name="boids_toggle_panel">Afficher ou masquer les réglages</string>
+    <string name="boids_info_title">Comment fonctionnent les boids ?</string>
+    <string name="boids_info_text">Chaque boid suit trois règles locales, sans aucun chef :\n\n• Séparation — il s\'écarte des voisins trop proches.\n• Alignement — il ajuste son cap sur celui de ses voisins.\n• Cohésion — il se dirige vers le centre de son groupe.\n\nDe ces trois règles simples émergent les nuées d\'étourneaux, les bancs de poissons et les essaims d\'insectes. Jouez avec les curseurs pour voir chaque règle agir, et activez « Vision » pour voir le monde à travers les yeux d\'un boid : son rayon de perception, ses voisins et les trois forces qui le guident.\n\nModèle créé par Craig Reynolds en 1986.</string>
+
     <!-- Système Solaire -->
     <string name="hub_solar_title">Système Solaire</string>
     <string name="hub_solar_desc">Naviguez dans le système solaire en 3D</string>

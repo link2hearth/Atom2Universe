@@ -100,6 +100,42 @@
     <string name="rd_palette_coral">Coral</string>
     <string name="rd_palette_mono">Mono</string>
 
+    <!-- Boids (flocking) -->
+    <string name="hub_boids_title">Boids</string>
+    <string name="hub_boids_desc">Flocks, schools and swarms — emergent motion</string>
+    <string name="boids_title">Boids</string>
+    <string name="boids_hint">Touch the flock: attract it, scare it away or drop obstacles</string>
+    <string name="boids_behaviors">Behaviors</string>
+    <string name="boids_colors">Colors</string>
+    <string name="boids_options">Options</string>
+    <string name="boids_touch">Touch</string>
+    <string name="boids_separation">Separation</string>
+    <string name="boids_alignment">Alignment</string>
+    <string name="boids_cohesion">Cohesion</string>
+    <string name="boids_perception">Perception</string>
+    <string name="boids_speed">Speed</string>
+    <string name="boids_count">Boids</string>
+    <string name="boids_scatter">Scatter</string>
+    <string name="boids_preset_starlings">Starlings</string>
+    <string name="boids_preset_fish">Fish school</string>
+    <string name="boids_preset_gnats">Gnats</string>
+    <string name="boids_preset_comets">Comets</string>
+    <string name="boids_preset_chaos">Chaos</string>
+    <string name="boids_color_direction">Direction</string>
+    <string name="boids_color_speed">Speed</string>
+    <string name="boids_color_aurora">Aurora</string>
+    <string name="boids_color_fireflies">Fireflies</string>
+    <string name="boids_opt_trails">Trails</string>
+    <string name="boids_opt_vision">Vision</string>
+    <string name="boids_opt_predator">Predator</string>
+    <string name="boids_touch_attract">Attract</string>
+    <string name="boids_touch_repel">Repel</string>
+    <string name="boids_touch_obstacle">Obstacle</string>
+    <string name="boids_touch_clear">Clear</string>
+    <string name="boids_toggle_panel">Show or hide controls</string>
+    <string name="boids_info_title">How do boids work?</string>
+    <string name="boids_info_text">Each boid follows three local rules, with no leader:\n\n• Separation — steer away from neighbors that are too close.\n• Alignment — match the average heading of nearby boids.\n• Cohesion — move toward the center of the local group.\n\nFrom these three simple rules emerge starling murmurations, fish schools and insect swarms. Play with the sliders to see each rule at work, and enable “Vision” to see the world through one boid\'s eyes: its perception radius, its neighbors and the three forces steering it.\n\nModel created by Craig Reynolds in 1986.</string>
+
     <!-- Solar System -->
     <string name="hub_solar_title">Solar System</string>
     <string name="hub_solar_desc">Navigate the solar system in 3D</string>
