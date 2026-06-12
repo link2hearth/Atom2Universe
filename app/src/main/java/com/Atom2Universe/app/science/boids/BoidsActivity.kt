@@ -2,14 +2,17 @@ package com.Atom2Universe.app.science.boids
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -22,23 +25,54 @@ class BoidsActivity : ThemedActivity() {
 
     private lateinit var boidsView: BoidsView
     private lateinit var playPauseBtn: ImageButton
-
-    private lateinit var sepSeek: SeekBar
-    private lateinit var aliSeek: SeekBar
-    private lateinit var cohSeek: SeekBar
-    private lateinit var perceptionSeek: SeekBar
-    private lateinit var speedSeek: SeekBar
-    private lateinit var countSeek: SeekBar
-
-    private val presetChips = mutableListOf<TextView>()
-    private val colorChips = mutableListOf<TextView>()
-    private val touchChips = mutableListOf<TextView>()
-    private lateinit var trailsChip: TextView
-    private lateinit var visionChip: TextView
-    private lateinit var predatorChip: TextView
-
+    private lateinit var topBar: LinearLayout
     private lateinit var settingsPanel: ScrollView
     private lateinit var panelToggleIcon: ImageView
+
+    private lateinit var presetBtn: TextView
+    private lateinit var colorBtn: TextView
+    private lateinit var edgeBtn: TextView
+    private lateinit var speciesBtn: TextView
+    private lateinit var touchBtn: TextView
+    private lateinit var trailsBtn: TextView
+    private lateinit var visionBtn: TextView
+    private lateinit var predatorBtn: TextView
+    private lateinit var clearObstaclesBtn: TextView
+
+    private var presetIndex = 0
+    private var colorModeIndex = BoidsView.COLOR_DIRECTION
+    private var touchModeIndex = BoidsView.TOUCH_ATTRACT
+    private var speciesCount = 1
+    private var edgeWalls = true
+
+    private lateinit var sepCtrl: SliderControl
+    private lateinit var aliCtrl: SliderControl
+    private lateinit var cohCtrl: SliderControl
+    private lateinit var perceptionCtrl: SliderControl
+    private lateinit var speedCtrl: SliderControl
+    private lateinit var countCtrl: SliderControl
+
+    /** Bouton-paramètre : affiche « Nom valeur » et ouvre un slider vertical en popup. */
+    private inner class SliderControl(
+        val labelRes: Int,
+        val min: Int,
+        val max: Int,
+        var value: Int,
+        val format: (Int) -> String,
+        val onChange: (Int) -> Unit
+    ) {
+        lateinit var button: TextView
+
+        fun update(v: Int) {
+            value = v.coerceIn(min, max)
+            updateLabel()
+            onChange(value)
+        }
+
+        fun updateLabel() {
+            button.text = getString(R.string.boids_param_value, getString(labelRes), format(value))
+        }
+    }
 
     private data class Preset(
         val nameRes: Int,
@@ -90,11 +124,15 @@ class BoidsActivity : ThemedActivity() {
             setBackgroundColor(0xFF0A0A12.toInt())
         }
 
-        root.addView(buildTopBar(dp), LinearLayout.LayoutParams(
+        topBar = buildTopBar(dp)
+        root.addView(topBar, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         ))
 
         boidsView = BoidsView(this)
+        boidsView.onObstaclesChanged = { n ->
+            clearObstaclesBtn.visibility = if (n > 0) View.VISIBLE else View.GONE
+        }
         root.addView(boidsView, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         ))
@@ -140,7 +178,9 @@ class BoidsActivity : ThemedActivity() {
 
     private fun togglePanel() {
         val collapsed = settingsPanel.visibility == View.VISIBLE
-        settingsPanel.visibility = if (collapsed) View.GONE else View.VISIBLE
+        val visibility = if (collapsed) View.GONE else View.VISIBLE
+        settingsPanel.visibility = visibility
+        topBar.visibility = visibility
         panelToggleIcon.setImageResource(
             if (collapsed) R.drawable.ic_expand_less else R.drawable.ic_expand_more
         )
@@ -187,30 +227,50 @@ class BoidsActivity : ThemedActivity() {
         }
         bar.addView(playPauseBtn, LinearLayout.LayoutParams((40 * dp).toInt(), (36 * dp).toInt()))
 
-        bar.addView(pillBtn(dp, R.string.boids_scatter) { boidsView.scatter() })
+        bar.addView(controlBtn(dp, getString(R.string.boids_reset)) { resetDefaults() }.apply {
+            (layoutParams as LinearLayout.LayoutParams).marginStart = (8 * dp).toInt()
+        })
+
+        bar.addView(controlBtn(dp, getString(R.string.boids_scatter)) { boidsView.scatter() }.apply {
+            (layoutParams as LinearLayout.LayoutParams).marginStart = (8 * dp).toInt()
+        })
 
         return bar
     }
 
-    private fun pillBtn(dp: Float, labelRes: Int, onClick: () -> Unit): TextView {
-        return TextView(this).apply {
-            setText(labelRes)
-            textSize = 12f
-            setTextColor(0xFFCCCCFF.toInt())
-            background = pillBackground(0xFF24243C.toInt())
-            gravity = Gravity.CENTER
-            setPadding((12 * dp).toInt(), (7 * dp).toInt(), (12 * dp).toInt(), (7 * dp).toInt())
-            setOnClickListener { onClick() }
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            ).also { it.marginStart = (8 * dp).toInt() }
-        }
+    /** Alterne entre les deux ambiances par défaut. */
+    private var resetAlt = false
+
+    /**
+     * Restaure un état par défaut, en alternant à chaque appui entre
+     * « Étourneaux » (murs, 1 espèce, attirer) et
+     * « Moucherons » (torique, 2 espèces, repousser).
+     */
+    private fun resetDefaults() {
+        val alt = resetAlt
+        resetAlt = !resetAlt
+        presetIndex = if (alt) 2 else 0
+        applyPreset(presetIndex)
+        speciesCount = if (alt) 2 else 1
+        boidsView.speciesCount = speciesCount
+        speciesBtn.text = speciesLabel()
+        edgeWalls = !alt
+        boidsView.edgeMode = if (edgeWalls) BoidsView.EDGE_WALLS else BoidsView.EDGE_WRAP
+        edgeBtn.text = edgeLabel()
+        touchModeIndex = if (alt) BoidsView.TOUCH_REPEL else BoidsView.TOUCH_ATTRACT
+        boidsView.touchMode = touchModeIndex
+        touchBtn.text = getString(touchNames[touchModeIndex])
+        boidsView.visionEnabled = false
+        setToggle(visionBtn, false)
+        boidsView.setPredatorCount(0)
+        setToggle(predatorBtn, false)
+        boidsView.clearObstacles()
     }
 
     private fun buildBottomBar(dp: Float): LinearLayout {
         val bar = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding((14 * dp).toInt(), (10 * dp).toInt(), (14 * dp).toInt(), (18 * dp).toInt())
+            setPadding((14 * dp).toInt(), (10 * dp).toInt(), (14 * dp).toInt(), (16 * dp).toInt())
             setBackgroundColor(0xFF12121E.toInt())
         }
 
@@ -221,155 +281,89 @@ class BoidsActivity : ThemedActivity() {
             setPadding(0, 0, 0, (8 * dp).toInt())
         })
 
-        bar.addView(sectionLabel(dp, R.string.boids_behaviors))
-        bar.addView(buildPresetRow(dp))
+        // ── Rangée 1 : boutons cycliques + toggles ───────────────────────────
+        val row1 = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
 
-        bar.addView(sectionLabel(dp, R.string.boids_colors))
-        bar.addView(buildColorRow(dp))
+        presetBtn = controlBtn(dp, getString(presets[0].nameRes)) { cyclePreset() }
+        colorBtn = controlBtn(dp, getString(colorNames[colorModeIndex])) { cycleColor() }
+        edgeBtn = controlBtn(dp, edgeLabel()) { cycleEdges() }
+        speciesBtn = controlBtn(dp, speciesLabel()) { cycleSpecies() }
+        touchBtn = controlBtn(dp, getString(touchNames[touchModeIndex])) { cycleTouch() }
+        trailsBtn = controlBtn(dp, getString(R.string.boids_opt_trails)) { toggleTrails() }
+        visionBtn = controlBtn(dp, getString(R.string.boids_opt_vision)) { toggleVision() }
+        predatorBtn = controlBtn(dp, getString(R.string.boids_opt_predator)) { togglePredator() }
+        clearObstaclesBtn = controlBtn(dp, getString(R.string.boids_touch_clear)) {
+            boidsView.clearObstacles()
+        }.apply {
+            background = pillBackground(0xFF402430.toInt())
+            setTextColor(0xFFFFAACC.toInt())
+            visibility = View.GONE
+        }
 
-        bar.addView(sectionLabel(dp, R.string.boids_options))
-        bar.addView(buildOptionsRow(dp))
+        listOf(presetBtn, colorBtn, edgeBtn, speciesBtn, touchBtn,
+            trailsBtn, visionBtn, predatorBtn, clearObstaclesBtn).forEach { row1.addView(it) }
+        setToggle(trailsBtn, false)
+        setToggle(visionBtn, false)
+        setToggle(predatorBtn, false)
 
-        bar.addView(sectionLabel(dp, R.string.boids_touch))
-        bar.addView(buildTouchRow(dp))
+        bar.addView(HorizontalScrollView(this).apply {
+            isHorizontalScrollBarEnabled = false
+            addView(row1)
+        })
 
-        sepSeek = addSeekRow(bar, dp, R.string.boids_separation, 0, 200,
-            (boidsView.separationWeight * 100).toInt(), { "$it%" }) {
-            boidsView.separationWeight = it / 100f
+        // ── Rangée 2 : paramètres à slider popup ─────────────────────────────
+        val row2 = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(0, (8 * dp).toInt(), 0, 0)
         }
-        aliSeek = addSeekRow(bar, dp, R.string.boids_alignment, 0, 200,
-            (boidsView.alignmentWeight * 100).toInt(), { "$it%" }) {
-            boidsView.alignmentWeight = it / 100f
+
+        speedCtrl = SliderControl(R.string.boids_speed, 30, 250,
+            (boidsView.speedFactor * 100).toInt(), { "$it%" }) { boidsView.speedFactor = it / 100f }
+        countCtrl = SliderControl(R.string.boids_count, BoidsView.MIN_BOIDS, BoidsView.MAX_BOIDS,
+            280, { it.toString() }) { boidsView.setBoidCount(it) }
+        cohCtrl = SliderControl(R.string.boids_cohesion, 0, 200,
+            (boidsView.cohesionWeight * 100).toInt(), { "$it%" }) { boidsView.cohesionWeight = it / 100f }
+        aliCtrl = SliderControl(R.string.boids_alignment, 0, 200,
+            (boidsView.alignmentWeight * 100).toInt(), { "$it%" }) { boidsView.alignmentWeight = it / 100f }
+        sepCtrl = SliderControl(R.string.boids_separation, 0, 200,
+            (boidsView.separationWeight * 100).toInt(), { "$it%" }) { boidsView.separationWeight = it / 100f }
+        perceptionCtrl = SliderControl(R.string.boids_perception, 20, 160,
+            boidsView.perceptionDp.toInt(), { it.toString() }) { boidsView.perceptionDp = it.toFloat() }
+
+        listOf(speedCtrl, countCtrl, cohCtrl, aliCtrl, sepCtrl, perceptionCtrl).forEach { ctrl ->
+            ctrl.button = controlBtn(dp, "") { showSliderPopup(ctrl) }
+            ctrl.updateLabel()
+            row2.addView(ctrl.button)
         }
-        cohSeek = addSeekRow(bar, dp, R.string.boids_cohesion, 0, 200,
-            (boidsView.cohesionWeight * 100).toInt(), { "$it%" }) {
-            boidsView.cohesionWeight = it / 100f
-        }
-        perceptionSeek = addSeekRow(bar, dp, R.string.boids_perception, 20, 160,
-            boidsView.perceptionDp.toInt(), { it.toString() }) {
-            boidsView.perceptionDp = it.toFloat()
-        }
-        speedSeek = addSeekRow(bar, dp, R.string.boids_speed, 30, 250,
-            (boidsView.speedFactor * 100).toInt(), { "$it%" }) {
-            boidsView.speedFactor = it / 100f
-        }
-        countSeek = addSeekRow(bar, dp, R.string.boids_count, BoidsView.MIN_BOIDS, BoidsView.MAX_BOIDS,
-            280, { it.toString() }) {
-            boidsView.setBoidCount(it)
-        }
+
+        bar.addView(HorizontalScrollView(this).apply {
+            isHorizontalScrollBarEnabled = false
+            addView(row2)
+        })
 
         return bar
     }
 
-    private fun sectionLabel(dp: Float, res: Int): TextView = TextView(this).apply {
-        setText(res)
-        textSize = 11f
-        setTextColor(0xFF8888AA.toInt())
-        setPadding(0, (4 * dp).toInt(), 0, (4 * dp).toInt())
-    }
-
-    private fun chipRow(dp: Float, build: (LinearLayout) -> Unit): HorizontalScrollView {
-        val scroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
-        val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        build(row)
-        scroll.addView(row)
-        return scroll
-    }
-
-    private fun chip(dp: Float, labelRes: Int, onClick: () -> Unit): TextView = TextView(this).apply {
-        setText(labelRes)
-        textSize = 12f
-        gravity = Gravity.CENTER
-        setPadding((14 * dp).toInt(), (8 * dp).toInt(), (14 * dp).toInt(), (8 * dp).toInt())
-        setOnClickListener { onClick() }
-        layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-        ).also { it.marginEnd = (8 * dp).toInt() }
-    }
-
-    private fun buildPresetRow(dp: Float): HorizontalScrollView = chipRow(dp) { row ->
-        presets.forEachIndexed { index, preset ->
-            val c = chip(dp, preset.nameRes) { applyPreset(index) }
-            presetChips.add(c)
-            row.addView(c)
+    // ── Boutons ──────────────────────────────────────────────────────────────
+    private fun controlBtn(dp: Float, label: CharSequence, onClick: () -> Unit): TextView {
+        return TextView(this).apply {
+            text = label
+            textSize = 13f
+            setTextColor(0xFFCCCCFF.toInt())
+            background = pillBackground(0xFF24243C.toInt())
+            gravity = Gravity.CENTER
+            setPadding((16 * dp).toInt(), (10 * dp).toInt(), (16 * dp).toInt(), (10 * dp).toInt())
+            setOnClickListener { onClick() }
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.marginEnd = (8 * dp).toInt() }
         }
-        highlightSingle(presetChips, 0)
     }
 
-    private fun buildColorRow(dp: Float): HorizontalScrollView = chipRow(dp) { row ->
-        colorNames.forEachIndexed { index, nameRes ->
-            val c = chip(dp, nameRes) { selectColorMode(index) }
-            colorChips.add(c)
-            row.addView(c)
-        }
-        highlightSingle(colorChips, boidsView.colorMode)
-    }
-
-    private fun buildOptionsRow(dp: Float): HorizontalScrollView = chipRow(dp) { row ->
-        trailsChip = chip(dp, R.string.boids_opt_trails) {
-            boidsView.trailsEnabled = !boidsView.trailsEnabled
-            setChipActive(trailsChip, boidsView.trailsEnabled)
-        }
-        visionChip = chip(dp, R.string.boids_opt_vision) {
-            boidsView.visionEnabled = !boidsView.visionEnabled
-            setChipActive(visionChip, boidsView.visionEnabled)
-        }
-        predatorChip = chip(dp, R.string.boids_opt_predator) {
-            val on = !predatorChip.isActivated
-            boidsView.setPredatorCount(if (on) 2 else 0)
-            setChipActive(predatorChip, on)
-        }
-        row.addView(trailsChip)
-        row.addView(visionChip)
-        row.addView(predatorChip)
-        setChipActive(trailsChip, false)
-        setChipActive(visionChip, false)
-        setChipActive(predatorChip, false)
-    }
-
-    private fun buildTouchRow(dp: Float): HorizontalScrollView = chipRow(dp) { row ->
-        touchNames.forEachIndexed { index, nameRes ->
-            val c = chip(dp, nameRes) {
-                boidsView.touchMode = index
-                highlightSingle(touchChips, index)
-            }
-            touchChips.add(c)
-            row.addView(c)
-        }
-        row.addView(chip(dp, R.string.boids_touch_clear) { boidsView.clearObstacles() }.apply {
-            background = pillBackground(0xFF402430.toInt())
-            setTextColor(0xFFFFAACC.toInt())
-        })
-        highlightSingle(touchChips, BoidsView.TOUCH_ATTRACT)
-    }
-
-    private fun applyPreset(index: Int) {
-        val p = presets[index]
-        sepSeek.progress = p.sep
-        aliSeek.progress = p.ali
-        cohSeek.progress = p.coh
-        perceptionSeek.progress = p.perception - 20
-        speedSeek.progress = p.speed - 30
-        countSeek.progress = p.count - BoidsView.MIN_BOIDS
-        boidsView.trailsEnabled = p.trails
-        setChipActive(trailsChip, p.trails)
-        selectColorMode(p.colorMode)
-        highlightSingle(presetChips, index)
-    }
-
-    private fun selectColorMode(index: Int) {
-        boidsView.colorMode = index
-        highlightSingle(colorChips, index)
-    }
-
-    private fun highlightSingle(chips: List<TextView>, index: Int) {
-        chips.forEachIndexed { i, c -> setChipActive(c, i == index) }
-    }
-
-    private fun setChipActive(chipView: TextView, active: Boolean) {
-        chipView.isActivated = active
-        chipView.background = pillBackground(if (active) 0xFF3A3A66.toInt() else 0xFF1C1C30.toInt())
-        chipView.setTextColor(if (active) 0xFFFFFFFF.toInt() else 0xFFAAAACC.toInt())
+    private fun setToggle(btn: TextView, active: Boolean) {
+        btn.isActivated = active
+        btn.background = pillBackground(if (active) 0xFF3A3A66.toInt() else 0xFF1C1C30.toInt())
+        btn.setTextColor(if (active) 0xFFFFFFFF.toInt() else 0xFFAAAACC.toInt())
     }
 
     private fun pillBackground(color: Int): GradientDrawable = GradientDrawable().apply {
@@ -377,57 +371,147 @@ class BoidsActivity : ThemedActivity() {
         setColor(color)
     }
 
-    private fun addSeekRow(
-        parent: LinearLayout,
-        dp: Float,
-        labelRes: Int,
-        min: Int, max: Int, initial: Int,
-        format: (Int) -> String,
-        onChanged: (Int) -> Unit
-    ): SeekBar {
-        val row = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            ).also { it.bottomMargin = (2 * dp).toInt() }
-        }
+    // ── Boutons cycliques ────────────────────────────────────────────────────
+    private fun cyclePreset() {
+        presetIndex = (presetIndex + 1) % presets.size
+        applyPreset(presetIndex)
+    }
 
-        val label = TextView(this).apply {
-            setText(labelRes)
-            textSize = 11f
-            setTextColor(0xFF8888AA.toInt())
-            minWidth = (80 * dp).toInt()
-        }
-        row.addView(label)
+    private fun applyPreset(index: Int) {
+        val p = presets[index]
+        presetBtn.text = getString(p.nameRes)
+        sepCtrl.update(p.sep)
+        aliCtrl.update(p.ali)
+        cohCtrl.update(p.coh)
+        perceptionCtrl.update(p.perception)
+        speedCtrl.update(p.speed)
+        countCtrl.update(p.count)
+        boidsView.trailsEnabled = p.trails
+        setToggle(trailsBtn, p.trails)
+        setColorMode(p.colorMode)
+    }
+
+    private fun cycleColor() {
+        setColorMode((colorModeIndex + 1) % colorNames.size)
+    }
+
+    private fun setColorMode(index: Int) {
+        colorModeIndex = index
+        boidsView.colorMode = index
+        colorBtn.text = getString(colorNames[index])
+    }
+
+    private fun cycleEdges() {
+        edgeWalls = !edgeWalls
+        boidsView.edgeMode = if (edgeWalls) BoidsView.EDGE_WALLS else BoidsView.EDGE_WRAP
+        edgeBtn.text = edgeLabel()
+    }
+
+    private fun edgeLabel(): String = getString(
+        R.string.boids_param_value,
+        getString(R.string.boids_edges),
+        getString(if (edgeWalls) R.string.boids_edge_walls else R.string.boids_edge_wrap)
+    )
+
+    private fun cycleSpecies() {
+        speciesCount = speciesCount % BoidsView.MAX_SPECIES + 1
+        boidsView.speciesCount = speciesCount
+        speciesBtn.text = speciesLabel()
+    }
+
+    private fun speciesLabel(): String = getString(
+        R.string.boids_param_value,
+        getString(R.string.boids_species),
+        speciesCount.toString()
+    )
+
+    private fun cycleTouch() {
+        touchModeIndex = (touchModeIndex + 1) % touchNames.size
+        boidsView.touchMode = touchModeIndex
+        touchBtn.text = getString(touchNames[touchModeIndex])
+    }
+
+    // ── Toggles ──────────────────────────────────────────────────────────────
+    private fun toggleTrails() {
+        boidsView.trailsEnabled = !boidsView.trailsEnabled
+        setToggle(trailsBtn, boidsView.trailsEnabled)
+    }
+
+    private fun toggleVision() {
+        boidsView.visionEnabled = !boidsView.visionEnabled
+        setToggle(visionBtn, boidsView.visionEnabled)
+    }
+
+    private fun togglePredator() {
+        val on = !predatorBtn.isActivated
+        boidsView.setPredatorCount(if (on) 2 else 0)
+        setToggle(predatorBtn, on)
+    }
+
+    // ── Popup à slider vertical ──────────────────────────────────────────────
+    private fun showSliderPopup(ctrl: SliderControl) {
+        val dp = resources.displayMetrics.density
 
         val valueText = TextView(this).apply {
-            text = format(initial)
-            textSize = 11f
-            setTextColor(0xFFCCCCFF.toInt())
-            minWidth = (48 * dp).toInt()
-            gravity = Gravity.END or Gravity.CENTER_VERTICAL
-            setPadding(0, 0, (8 * dp).toInt(), 0)
+            text = ctrl.format(ctrl.value)
+            textSize = 13f
+            setTextColor(0xFFFFFFFF.toInt())
+            gravity = Gravity.CENTER
         }
 
         val seek = SeekBar(this).apply {
-            this.max = max - min
-            progress = (initial - min).coerceIn(0, max - min)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            max = ctrl.max - ctrl.min
+            progress = ctrl.value - ctrl.min
+            rotation = -90f
+            layoutParams = FrameLayout.LayoutParams(
+                (150 * dp).toInt(), FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER
+            )
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
-                    val v = progress + min
-                    valueText.text = format(v)
-                    onChanged(v)
+                    val v = progress + ctrl.min
+                    valueText.text = ctrl.format(v)
+                    ctrl.update(v)
                 }
                 override fun onStartTrackingTouch(sb: SeekBar) {}
                 override fun onStopTrackingTouch(sb: SeekBar) {}
             })
         }
-        row.addView(seek)
-        row.addView(valueText)
-        parent.addView(row)
-        return seek
+
+        val frame = FrameLayout(this).apply {
+            clipChildren = false
+            clipToPadding = false
+            addView(seek)
+        }
+
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            clipChildren = false
+            clipToPadding = false
+            background = GradientDrawable().apply {
+                cornerRadius = 14f * dp
+                setColor(0xF21C1C30.toInt())
+            }
+            setPadding((10 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt())
+            addView(valueText, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ))
+            addView(frame, LinearLayout.LayoutParams(
+                (56 * dp).toInt(), (158 * dp).toInt()
+            ).also { it.topMargin = (4 * dp).toInt() })
+        }
+
+        content.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popup = PopupWindow(content, content.measuredWidth, content.measuredHeight, true).apply {
+            isOutsideTouchable = true
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            elevation = 8f * dp
+        }
+        popup.showAsDropDown(
+            ctrl.button,
+            (ctrl.button.width - content.measuredWidth) / 2,
+            -(content.measuredHeight + ctrl.button.height + (8 * dp).toInt())
+        )
     }
 
     private fun showInfoDialog() {

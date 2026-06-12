@@ -50,8 +50,12 @@ class BoidsView @JvmOverloads constructor(
         const val COLOR_AURORA = 2
         const val COLOR_FIREFLIES = 3
 
+        const val EDGE_WALLS = 0
+        const val EDGE_WRAP = 1
+
         const val MIN_BOIDS = 20
         const val MAX_BOIDS = 400
+        const val MAX_SPECIES = 3
 
         private const val MAX_OBSTACLES = 12
         private const val MAX_PREDATORS = 3
@@ -72,6 +76,13 @@ class BoidsView @JvmOverloads constructor(
     var colorMode = COLOR_DIRECTION
     var touchMode = TOUCH_ATTRACT
     var visionEnabled = false
+    var edgeMode = EDGE_WALLS
+
+    var speciesCount = 1
+        set(value) { field = value.coerceIn(1, MAX_SPECIES) }
+
+    /** Notifié à chaque ajout/suppression d'obstacle avec le nombre courant. */
+    var onObstaclesChanged: ((Int) -> Unit)? = null
 
     var trailsEnabled = false
         set(value) {
@@ -148,6 +159,10 @@ class BoidsView @JvmOverloads constructor(
         Color.HSVToColor(floatArrayOf(it * 5f, 0.72f, 1f))
     }
 
+    private val speciesColors = intArrayOf(
+        0xFF4FC3F7.toInt(), 0xFFFFB74D.toInt(), 0xFFBA68C8.toInt()
+    )
+
     private val sepLabel = context.getString(R.string.boids_separation)
     private val aliLabel = context.getString(R.string.boids_alignment)
     private val cohLabel = context.getString(R.string.boids_cohesion)
@@ -198,6 +213,7 @@ class BoidsView @JvmOverloads constructor(
 
     fun clearObstacles() {
         obstacleCount = 0
+        onObstaclesChanged?.invoke(0)
         if (!running) invalidate()
     }
 
@@ -262,13 +278,20 @@ class BoidsView @JvmOverloads constructor(
 
         val per = perceptionDp * density
         val per2 = per * per
-        val sepR2 = per * per * 0.2f
+        val sepR2 = per2 * 0.2f
+        val sepOtherR2 = per2 * 0.55f
         val maxSpeed = BASE_SPEED_DP * density * speedFactor
         val minSpeed = maxSpeed * 0.45f
         val maxForce = maxSpeed * 3.5f
         val fleeR2 = per * 1.9f * (per * 1.9f)
         val obstacleMargin = 56f * density
         val repelRadius = 220f * density
+        val wallMargin = 90f * density
+        val sc = speciesCount
+        val walls = edgeMode == EDGE_WALLS
+        // « Espace vital » : rayon de contact incompressible, indépendant des curseurs
+        val coreR = 14f * density
+        val coreR2 = coreR * coreR
 
         val captureVision = visionEnabled
         if (captureVision) visionNeighborCount = 0
@@ -278,23 +301,41 @@ class BoidsView @JvmOverloads constructor(
             val yi = y[i]
             val vxi = vx[i]
             val vyi = vy[i]
+            val si = i % sc
             var sepX = 0f; var sepY = 0f
             var aliX = 0f; var aliY = 0f
             var cohX = 0f; var cohY = 0f
+            var coreX = 0f; var coreY = 0f
             var n = 0
             var nSep = 0
+            var nCore = 0
 
             for (j in 0 until count) {
                 if (j == i) continue
                 val dx = x[j] - xi
                 val dy = y[j] - yi
                 val d2 = dx * dx + dy * dy
-                if (d2 >= per2 || d2 < 1e-4f) continue
-                n++
-                aliX += vx[j]; aliY += vy[j]
-                cohX += x[j]; cohY += y[j]
-                if (d2 < sepR2) {
-                    val inv = 1f / d2
+                if (d2 >= per2 || d2 < 1e-6f) continue
+                if (d2 < coreR2) {
+                    val d = sqrt(d2).coerceAtLeast(0.3f * density)
+                    val push = 1f - d / coreR
+                    coreX -= dx / d * push
+                    coreY -= dy / d * push
+                    nCore++
+                }
+                if (sc == 1 || j % sc == si) {
+                    n++
+                    aliX += vx[j]; aliY += vy[j]
+                    cohX += x[j]; cohY += y[j]
+                    if (d2 < sepR2) {
+                        val inv = 1f / d2
+                        sepX -= dx * inv
+                        sepY -= dy * inv
+                        nSep++
+                    }
+                } else if (d2 < sepOtherR2) {
+                    // Les autres espèces repoussent plus fort et de plus loin
+                    val inv = 2f / d2
                     sepX -= dx * inv
                     sepY -= dy * inv
                     nSep++
@@ -313,10 +354,23 @@ class BoidsView @JvmOverloads constructor(
             var ruleCohX = 0f; var ruleCohY = 0f
 
             if (nSep > 0) {
-                steer(sepX, sepY, vxi, vyi, maxSpeed, maxForce)
+                // La séparation peut dominer les autres règles quand ça se densifie
+                steer(sepX, sepY, vxi, vyi, maxSpeed, maxForce * 2f)
                 ruleSepX = steerX * separationWeight
                 ruleSepY = steerY * separationWeight
                 fx += ruleSepX; fy += ruleSepY
+            }
+            if (nCore > 0) {
+                // Répulsion de contact non normalisée : croît avec le chevauchement
+                var cfx = coreX * maxForce * 2.5f
+                var cfy = coreY * maxForce * 2.5f
+                val cl = sqrt(cfx * cfx + cfy * cfy)
+                val cap = maxForce * 3f
+                if (cl > cap) {
+                    cfx = cfx / cl * cap
+                    cfy = cfy / cl * cap
+                }
+                fx += cfx; fy += cfy
             }
             if (n > 0) {
                 steer(aliX, aliY, vxi, vyi, maxSpeed, maxForce)
@@ -381,7 +435,15 @@ class BoidsView @JvmOverloads constructor(
                 }
             }
 
-            // Intégration + bornes de vitesse + monde torique
+            // Évitement des bords (mode Murs) : force progressive à l'approche
+            if (walls) {
+                if (xi < wallMargin) fx += (1f - xi / wallMargin) * maxForce * 1.4f
+                else if (xi > w - wallMargin) fx -= (1f - (w - xi) / wallMargin) * maxForce * 1.4f
+                if (yi < wallMargin) fy += (1f - yi / wallMargin) * maxForce * 1.4f
+                else if (yi > h - wallMargin) fy -= (1f - (h - yi) / wallMargin) * maxForce * 1.4f
+            }
+
+            // Intégration + bornes de vitesse + bords (torique ou murs)
             var nvx = vxi + fx * dt
             var nvy = vyi + fy * dt
             val sp = sqrt(nvx * nvx + nvy * nvy)
@@ -392,12 +454,19 @@ class BoidsView @JvmOverloads constructor(
                 nvx = nvx / sp * minSpeed
                 nvy = nvy / sp * minSpeed
             }
-            vx[i] = nvx
-            vy[i] = nvy
             var nx = xi + nvx * dt
             var ny = yi + nvy * dt
-            if (nx < 0f) nx += w else if (nx >= w) nx -= w
-            if (ny < 0f) ny += h else if (ny >= h) ny -= h
+            if (walls) {
+                if (nx < 1f) { nx = 1f; if (nvx < 0f) nvx = -nvx * 0.5f }
+                else if (nx > w - 1f) { nx = w - 1f; if (nvx > 0f) nvx = -nvx * 0.5f }
+                if (ny < 1f) { ny = 1f; if (nvy < 0f) nvy = -nvy * 0.5f }
+                else if (ny > h - 1f) { ny = h - 1f; if (nvy > 0f) nvy = -nvy * 0.5f }
+            } else {
+                if (nx < 0f) nx += w else if (nx >= w) nx -= w
+                if (ny < 0f) ny += h else if (ny >= h) ny -= h
+            }
+            vx[i] = nvx
+            vy[i] = nvy
             x[i] = nx
             y[i] = ny
         }
@@ -441,12 +510,21 @@ class BoidsView @JvmOverloads constructor(
                 nvx = nvx / sp * predSpeed * 0.4f
                 nvy = nvy / sp * predSpeed * 0.4f
             }
+            var nx = px[p] + nvx * dt
+            var ny = py[p] + nvy * dt
+            if (edgeMode == EDGE_WALLS) {
+                if (nx < 1f) { nx = 1f; if (nvx < 0f) nvx = -nvx }
+                else if (nx > w - 1f) { nx = w - 1f; if (nvx > 0f) nvx = -nvx }
+                if (ny < 1f) { ny = 1f; if (nvy < 0f) nvy = -nvy }
+                else if (ny > h - 1f) { ny = h - 1f; if (nvy > 0f) nvy = -nvy }
+            } else {
+                if (nx < 0f) nx += w else if (nx >= w) nx -= w
+                if (ny < 0f) ny += h else if (ny >= h) ny -= h
+            }
             pvx[p] = nvx
             pvy[p] = nvy
-            px[p] += nvx * dt
-            py[p] += nvy * dt
-            if (px[p] < 0f) px[p] += w else if (px[p] >= w) px[p] -= w
-            if (py[p] < 0f) py[p] += h else if (py[p] >= h) py[p] -= h
+            px[p] = nx
+            py[p] = ny
         }
     }
 
@@ -490,7 +568,7 @@ class BoidsView @JvmOverloads constructor(
             val halo = 6.5f * density
             for (i in 0 until count) {
                 val flicker = 0.6f + 0.4f * sin(time * 3f + phase[i])
-                boidPaint.color = 0xFFFFD54F.toInt()
+                boidPaint.color = colorFor(i)
                 boidPaint.alpha = (40 * flicker).toInt()
                 canvas.drawCircle(x[i], y[i], halo, boidPaint)
                 boidPaint.alpha = (90 + 165 * flicker).toInt().coerceAtMost(255)
@@ -509,7 +587,9 @@ class BoidsView @JvmOverloads constructor(
         }
     }
 
-    private fun colorFor(i: Int): Int = when (colorMode) {
+    private fun colorFor(i: Int): Int = if (speciesCount > 1) {
+        speciesColors[i % speciesCount]
+    } else when (colorMode) {
         COLOR_SPEED -> {
             val maxSpeed = BASE_SPEED_DP * density * speedFactor
             val sp = sqrt(vx[i] * vx[i] + vy[i] * vy[i])
@@ -648,6 +728,7 @@ class BoidsView @JvmOverloads constructor(
                         obstacles[obstacleCount * 3 + 1] = event.y
                         obstacles[obstacleCount * 3 + 2] = 30f * density
                         obstacleCount++
+                        onObstaclesChanged?.invoke(obstacleCount)
                     }
                 } else {
                     touchActive = true

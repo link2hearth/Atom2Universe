@@ -105,10 +105,11 @@
     <string name="hub_boids_desc">Nuées, bancs et essaims — le mouvement émergent</string>
     <string name="boids_title">Boids</string>
     <string name="boids_hint">Touchez la nuée : attirez-la, effrayez-la ou posez des obstacles</string>
-    <string name="boids_behaviors">Comportements</string>
-    <string name="boids_colors">Couleurs</string>
-    <string name="boids_options">Options</string>
-    <string name="boids_touch">Tactile</string>
+    <string name="boids_param_value">%1$s · %2$s</string>
+    <string name="boids_edges">Bords</string>
+    <string name="boids_edge_walls">Murs</string>
+    <string name="boids_edge_wrap">Torique</string>
+    <string name="boids_species">Espèces</string>
     <string name="boids_separation">Séparation</string>
     <string name="boids_alignment">Alignement</string>
     <string name="boids_cohesion">Cohésion</string>
@@ -116,6 +117,7 @@
     <string name="boids_speed">Vitesse</string>
     <string name="boids_count">Boids</string>
     <string name="boids_scatter">Disperser</string>
+    <string name="boids_reset">Réinit.</string>
     <string name="boids_preset_starlings">Étourneaux</string>
     <string name="boids_preset_fish">Banc de poissons</string>
     <string name="boids_preset_gnats">Moucherons</string>
