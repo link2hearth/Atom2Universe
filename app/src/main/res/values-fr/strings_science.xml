@@ -123,4 +123,50 @@
     <string name="solar_speed_hours">%1$.1f h/s</string>
     <string name="solar_speed_days">%1$.1f j/s</string>
     <string name="solar_speed_years">%1$.2f ans/s</string>
+
+    <!-- Échelle cosmique (comparaison d'astres côte à côte) -->
+    <string name="hub_cosmic_title">Échelle cosmique</string>
+    <string name="hub_cosmic_desc">Compare la taille des astres, de la Lune au trou noir supermassif</string>
+    <string name="cosmic_swap">Inverser les côtés</string>
+    <string name="cosmic_mode_scroll">Défilement</string>
+    <string name="cosmic_mode_free">Libre</string>
+    <string name="cosmic_hint_swipe">←  glissez pour parcourir l\'échelle  →</string>
+    <string name="cosmic_label_radius">Rayon %1$s</string>
+    <string name="cosmic_ratio_radius">%1$s ≈ %2$s× le rayon de %3$s</string>
+    <string name="cosmic_ratio_volume">soit ≈ %1$s× en volume</string>
+    <string name="cosmic_ratio_equal">Taille quasi identique</string>
+    <string name="cosmic_cat_planets">Lune &amp; planètes</string>
+    <string name="cosmic_cat_stars">Étoiles</string>
+    <string name="cosmic_cat_blackholes">Trous noirs</string>
+    <string name="cosmic_type_moon">Lune</string>
+    <string name="cosmic_type_rocky">Planète tellurique</string>
+    <string name="cosmic_type_gas">Géante gazeuse</string>
+    <string name="cosmic_type_star">Étoile</string>
+    <string name="cosmic_type_blackhole">Trou noir</string>
+    <string name="cosmic_credits">Texture d\'étoile : SolarSystemScope (CC BY 4.0) · Textures de planètes : NASA</string>
+    <!-- Noms des astres -->
+    <string name="cosmic_name_moon">Lune</string>
+    <string name="cosmic_name_mercury">Mercure</string>
+    <string name="cosmic_name_mars">Mars</string>
+    <string name="cosmic_name_venus">Vénus</string>
+    <string name="cosmic_name_earth">Terre</string>
+    <string name="cosmic_name_neptune">Neptune</string>
+    <string name="cosmic_name_uranus">Uranus</string>
+    <string name="cosmic_name_saturn">Saturne</string>
+    <string name="cosmic_name_jupiter">Jupiter</string>
+    <string name="cosmic_name_sun">Soleil</string>
+    <string name="cosmic_name_sirius">Sirius A</string>
+    <string name="cosmic_name_pollux">Pollux</string>
+    <string name="cosmic_name_arcturus">Arcturus</string>
+    <string name="cosmic_name_aldebaran">Aldébaran</string>
+    <string name="cosmic_name_rigel">Rigel</string>
+    <string name="cosmic_name_antares">Antarès</string>
+    <string name="cosmic_name_betelgeuse">Bételgeuse</string>
+    <string name="cosmic_name_uyscuti">UY Scuti</string>
+    <string name="cosmic_name_stephenson">Stephenson 2-18</string>
+    <string name="cosmic_name_bh_stellar">Trou noir stellaire</string>
+    <string name="cosmic_name_cygx1">Cygnus X-1</string>
+    <string name="cosmic_name_sgra">Sagittarius A*</string>
+    <string name="cosmic_name_m87">M87*</string>
+    <string name="cosmic_name_ton618">TON 618</string>
 </resources>

@@ -123,4 +123,50 @@
     <string name="solar_speed_hours">%1$.1f h/s</string>
     <string name="solar_speed_days">%1$.1f d/s</string>
     <string name="solar_speed_years">%1$.2f yr/s</string>
+
+    <!-- Cosmic scale (side-by-side body comparison) -->
+    <string name="hub_cosmic_title">Cosmic Scale</string>
+    <string name="hub_cosmic_desc">Compare body sizes, from the Moon to a supermassive black hole</string>
+    <string name="cosmic_swap">Swap sides</string>
+    <string name="cosmic_mode_scroll">Scroll</string>
+    <string name="cosmic_mode_free">Free</string>
+    <string name="cosmic_hint_swipe">←  swipe to scroll through the scale  →</string>
+    <string name="cosmic_label_radius">Radius %1$s</string>
+    <string name="cosmic_ratio_radius">%1$s ≈ %2$s× the radius of %3$s</string>
+    <string name="cosmic_ratio_volume">i.e. ≈ %1$s× in volume</string>
+    <string name="cosmic_ratio_equal">Nearly identical size</string>
+    <string name="cosmic_cat_planets">Moon &amp; planets</string>
+    <string name="cosmic_cat_stars">Stars</string>
+    <string name="cosmic_cat_blackholes">Black holes</string>
+    <string name="cosmic_type_moon">Moon</string>
+    <string name="cosmic_type_rocky">Rocky planet</string>
+    <string name="cosmic_type_gas">Gas giant</string>
+    <string name="cosmic_type_star">Star</string>
+    <string name="cosmic_type_blackhole">Black hole</string>
+    <string name="cosmic_credits">Star texture: SolarSystemScope (CC BY 4.0) · Planet textures: NASA</string>
+    <!-- Body names -->
+    <string name="cosmic_name_moon">Moon</string>
+    <string name="cosmic_name_mercury">Mercury</string>
+    <string name="cosmic_name_mars">Mars</string>
+    <string name="cosmic_name_venus">Venus</string>
+    <string name="cosmic_name_earth">Earth</string>
+    <string name="cosmic_name_neptune">Neptune</string>
+    <string name="cosmic_name_uranus">Uranus</string>
+    <string name="cosmic_name_saturn">Saturn</string>
+    <string name="cosmic_name_jupiter">Jupiter</string>
+    <string name="cosmic_name_sun">Sun</string>
+    <string name="cosmic_name_sirius">Sirius A</string>
+    <string name="cosmic_name_pollux">Pollux</string>
+    <string name="cosmic_name_arcturus">Arcturus</string>
+    <string name="cosmic_name_aldebaran">Aldebaran</string>
+    <string name="cosmic_name_rigel">Rigel</string>
+    <string name="cosmic_name_antares">Antares</string>
+    <string name="cosmic_name_betelgeuse">Betelgeuse</string>
+    <string name="cosmic_name_uyscuti">UY Scuti</string>
+    <string name="cosmic_name_stephenson">Stephenson 2-18</string>
+    <string name="cosmic_name_bh_stellar">Stellar black hole</string>
+    <string name="cosmic_name_cygx1">Cygnus X-1</string>
+    <string name="cosmic_name_sgra">Sagittarius A*</string>
+    <string name="cosmic_name_m87">M87*</string>
+    <string name="cosmic_name_ton618">TON 618</string>
 </resources>

@@ -221,6 +221,7 @@
     <color name="science_tile_nuclide">#4A148C</color>
     <color name="science_tile_solar">#0D47A1</color>
     <color name="science_tile_reaction">#006064</color>
+    <color name="science_tile_cosmic">#311B92</color>
 
     <!-- Nuclide decay types -->
     <color name="nuclide_stable">#000000</color>

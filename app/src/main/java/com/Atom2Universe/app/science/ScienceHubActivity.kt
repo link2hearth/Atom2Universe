@@ -8,6 +8,7 @@ import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.periodic.PeriodicTableActivity
 import com.Atom2Universe.app.science.nuclide.NuclideTableActivity
 import com.Atom2Universe.app.science.pendulum.DoublePendulumActivity
+import com.Atom2Universe.app.science.cosmicscale.CosmicScaleActivity
 import com.Atom2Universe.app.science.reaction.ReactionDiffusionActivity
 import com.Atom2Universe.app.science.solarsystem.SolarSystemActivity
 
@@ -72,6 +73,14 @@ class ScienceHubActivity : BaseHubActivity() {
             iconRes = R.drawable.ic_science,
             defaultColorRes = R.color.science_tile_reaction,
             activityClass = ReactionDiffusionActivity::class.java
+        ),
+        HubTile(
+            id = "cosmic_scale",
+            titleRes = R.string.hub_cosmic_title,
+            descriptionRes = R.string.hub_cosmic_desc,
+            iconRes = R.drawable.ic_shape_star,
+            defaultColorRes = R.color.science_tile_cosmic,
+            activityClass = CosmicScaleActivity::class.java
         )
     )
 
