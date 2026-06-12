@@ -49,13 +49,21 @@ class BoidsView @JvmOverloads constructor(
         const val COLOR_SPEED = 1
         const val COLOR_AURORA = 2
         const val COLOR_FIREFLIES = 3
+        const val COLOR_GROUP = 4
 
         const val EDGE_WALLS = 0
         const val EDGE_WRAP = 1
 
+        const val SHAPE_DART = 0
+        const val SHAPE_DOT = 1
+        const val SHAPE_CIRCLE = 2
+        const val SHAPE_STAR = 3
+        /** Valeur spéciale : chaque boid tire une forme stable au hasard. */
+        const val SHAPE_RANDOM = -1
+
         const val MIN_BOIDS = 20
         const val MAX_BOIDS = 400
-        const val MAX_SPECIES = 3
+        const val MAX_SPECIES = 4
 
         private const val MAX_OBSTACLES = 12
         private const val MAX_PREDATORS = 3
@@ -80,6 +88,9 @@ class BoidsView @JvmOverloads constructor(
 
     var speciesCount = 1
         set(value) { field = value.coerceIn(1, MAX_SPECIES) }
+
+    /** Forme de l'espèce 1, signature du comportement actif ([SHAPE_RANDOM] = chaos). */
+    var primaryShape = SHAPE_DART
 
     /** Notifié à chaque ajout/suppression d'obstacle avec le nombre courant. */
     var onObstaclesChanged: ((Int) -> Unit)? = null
@@ -159,9 +170,24 @@ class BoidsView @JvmOverloads constructor(
         Color.HSVToColor(floatArrayOf(it * 5f, 0.72f, 1f))
     }
 
-    private val speciesColors = intArrayOf(
-        0xFF4FC3F7.toInt(), 0xFFFFB74D.toInt(), 0xFFBA68C8.toInt()
-    )
+    /** Nombre de voisins perçus au dernier pas, pour le mode couleur Groupe. */
+    private val groupSize = IntArray(MAX_BOIDS)
+
+    /** Ordre d'attribution des formes aux espèces suivantes. */
+    private val shapeFallback = intArrayOf(SHAPE_DART, SHAPE_DOT, SHAPE_CIRCLE, SHAPE_STAR)
+
+    private val starPath = Path().apply {
+        val outer = 5f * density
+        val inner = 2.1f * density
+        for (k in 0 until 10) {
+            val r = if (k % 2 == 0) outer else inner
+            val a = (k * 36f - 90f) * 0.017453292f
+            val px = r * cos(a)
+            val py = r * sin(a)
+            if (k == 0) moveTo(px, py) else lineTo(px, py)
+        }
+        close()
+    }
 
     private val sepLabel = context.getString(R.string.boids_separation)
     private val aliLabel = context.getString(R.string.boids_alignment)
@@ -346,6 +372,8 @@ class BoidsView @JvmOverloads constructor(
                     visionNeighborCount++
                 }
             }
+
+            groupSize[i] = n
 
             var fx = 0f
             var fy = 0f
@@ -562,34 +590,61 @@ class BoidsView @JvmOverloads constructor(
     }
 
     private fun drawBoids(canvas: Canvas) {
-        boidPaint.style = Paint.Style.FILL
-        if (colorMode == COLOR_FIREFLIES) {
-            val core = 2.4f * density
-            val halo = 6.5f * density
-            for (i in 0 until count) {
-                val flicker = 0.6f + 0.4f * sin(time * 3f + phase[i])
-                boidPaint.color = colorFor(i)
-                boidPaint.alpha = (40 * flicker).toInt()
-                canvas.drawCircle(x[i], y[i], halo, boidPaint)
-                boidPaint.alpha = (90 + 165 * flicker).toInt().coerceAtMost(255)
-                canvas.drawCircle(x[i], y[i], core, boidPaint)
-            }
-            return
-        }
+        val fireflies = colorMode == COLOR_FIREFLIES
+        val dotCore = 2.4f * density
+        val dotHalo = 5f * density
+        val fireflyHalo = 6.5f * density
+        val ringRadius = 3.6f * density
         for (i in 0 until count) {
-            boidPaint.color = colorFor(i)
-            val angle = atan2(vy[i], vx[i]) * 57.2958f
-            canvas.withSave {
-                translate(x[i], y[i])
-                rotate(angle)
-                drawPath(boidPath, boidPaint)
+            val c = colorFor(i)
+            var coreAlpha = 255
+            boidPaint.style = Paint.Style.FILL
+            boidPaint.color = c
+            if (fireflies) {
+                val flicker = 0.6f + 0.4f * sin(time * 3f + phase[i])
+                boidPaint.alpha = (40 * flicker).toInt()
+                canvas.drawCircle(x[i], y[i], fireflyHalo, boidPaint)
+                coreAlpha = (90 + 165 * flicker).toInt().coerceAtMost(255)
+            }
+            when (shapeFor(i)) {
+                SHAPE_DOT -> {
+                    if (!fireflies) {
+                        boidPaint.alpha = 36
+                        canvas.drawCircle(x[i], y[i], dotHalo, boidPaint)
+                    }
+                    boidPaint.alpha = coreAlpha
+                    canvas.drawCircle(x[i], y[i], dotCore, boidPaint)
+                }
+                SHAPE_CIRCLE -> {
+                    strokePaint.color = c
+                    strokePaint.alpha = coreAlpha
+                    strokePaint.strokeWidth = 1.5f * density
+                    strokePaint.pathEffect = null
+                    canvas.drawCircle(x[i], y[i], ringRadius, strokePaint)
+                }
+                SHAPE_STAR -> {
+                    boidPaint.alpha = coreAlpha
+                    val angle = atan2(vy[i], vx[i]) * 57.2958f
+                    canvas.withSave {
+                        translate(x[i], y[i])
+                        rotate(angle)
+                        drawPath(starPath, boidPaint)
+                    }
+                }
+                else -> {
+                    boidPaint.alpha = coreAlpha
+                    val angle = atan2(vy[i], vx[i]) * 57.2958f
+                    canvas.withSave {
+                        translate(x[i], y[i])
+                        rotate(angle)
+                        drawPath(boidPath, boidPaint)
+                    }
+                }
             }
         }
     }
 
-    private fun colorFor(i: Int): Int = if (speciesCount > 1) {
-        speciesColors[i % speciesCount]
-    } else when (colorMode) {
+    private fun colorFor(i: Int): Int = when (colorMode) {
         COLOR_SPEED -> {
             val maxSpeed = BASE_SPEED_DP * density * speedFactor
             val sp = sqrt(vx[i] * vx[i] + vy[i] * vy[i])
@@ -600,11 +655,30 @@ class BoidsView @JvmOverloads constructor(
             lerpColor(0xFF3DDC97.toInt(), 0xFF8A6CF0.toInt(), t)
         }
         COLOR_FIREFLIES -> 0xFFFFD54F.toInt()
+        COLOR_GROUP -> {
+            // Bleu froid isolé → jaune chaud au cœur d'un grand groupe
+            val t = (groupSize[i] / 22f).coerceIn(0f, 1f)
+            lerpColor(0xFF2E5FD0.toInt(), 0xFFFFC83D.toInt(), t)
+        }
         else -> {
             var idx = ((atan2(vy[i], vx[i]) / 6.2832f + 0.5f) * 72f).toInt()
             if (idx < 0) idx = 0 else if (idx > 71) idx = 71
             directionLut[idx]
         }
+    }
+
+    /** Forme du boid [i] : l'espèce 1 porte [primaryShape], les suivantes les formes restantes. */
+    private fun shapeFor(i: Int): Int {
+        if (primaryShape == SHAPE_RANDOM) return (i * 31 + 7) % 4
+        val s = i % speciesCount
+        if (s == 0) return primaryShape
+        var remaining = s
+        for (shape in shapeFallback) {
+            if (shape == primaryShape) continue
+            remaining--
+            if (remaining == 0) return shape
+        }
+        return SHAPE_DART
     }
 
     private fun drawPredators(canvas: Canvas) {

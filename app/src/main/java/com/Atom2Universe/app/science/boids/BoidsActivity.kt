@@ -81,16 +81,17 @@ class BoidsActivity : ThemedActivity() {
         val speed: Int,                               // %
         val count: Int,
         val trails: Boolean,
-        val colorMode: Int
+        val colorMode: Int,
+        val shape: Int                                // forme signature de l'espèce 1
     )
 
     private val presets by lazy {
         listOf(
-            Preset(R.string.boids_preset_starlings, 90, 150, 90, 90, 160, 280, false, BoidsView.COLOR_DIRECTION),
-            Preset(R.string.boids_preset_fish, 120, 100, 150, 70, 90, 250, false, BoidsView.COLOR_SPEED),
-            Preset(R.string.boids_preset_gnats, 70, 5, 130, 50, 120, 120, false, BoidsView.COLOR_FIREFLIES),
-            Preset(R.string.boids_preset_comets, 100, 120, 60, 60, 220, 60, true, BoidsView.COLOR_AURORA),
-            Preset(R.string.boids_preset_chaos, 200, 0, 0, 60, 150, 200, false, BoidsView.COLOR_DIRECTION)
+            Preset(R.string.boids_preset_starlings, 90, 150, 90, 90, 160, 280, false, BoidsView.COLOR_DIRECTION, BoidsView.SHAPE_DART),
+            Preset(R.string.boids_preset_fish, 120, 100, 150, 70, 90, 250, false, BoidsView.COLOR_SPEED, BoidsView.SHAPE_CIRCLE),
+            Preset(R.string.boids_preset_gnats, 70, 5, 130, 50, 120, 120, false, BoidsView.COLOR_FIREFLIES, BoidsView.SHAPE_DOT),
+            Preset(R.string.boids_preset_comets, 100, 120, 60, 60, 220, 60, true, BoidsView.COLOR_AURORA, BoidsView.SHAPE_STAR),
+            Preset(R.string.boids_preset_chaos, 200, 0, 0, 60, 150, 200, false, BoidsView.COLOR_DIRECTION, BoidsView.SHAPE_RANDOM)
         )
     }
 
@@ -99,7 +100,8 @@ class BoidsActivity : ThemedActivity() {
             R.string.boids_color_direction,
             R.string.boids_color_speed,
             R.string.boids_color_aurora,
-            R.string.boids_color_fireflies
+            R.string.boids_color_fireflies,
+            R.string.boids_color_group
         )
     }
 
@@ -244,14 +246,19 @@ class BoidsActivity : ThemedActivity() {
     /**
      * Restaure un état par défaut, en alternant à chaque appui entre
      * « Étourneaux » (murs, 1 espèce, attirer) et
-     * « Moucherons » (torique, 2 espèces, repousser).
+     * « Moucherons » (direction, torique, 4 espèces, repousser, 240 boids).
      */
     private fun resetDefaults() {
         val alt = resetAlt
         resetAlt = !resetAlt
         presetIndex = if (alt) 2 else 0
         applyPreset(presetIndex)
-        speciesCount = if (alt) 2 else 1
+        if (alt) {
+            setColorMode(BoidsView.COLOR_DIRECTION)
+            countCtrl.update(240)
+            cohCtrl.update(185)
+        }
+        speciesCount = if (alt) 4 else 1
         boidsView.speciesCount = speciesCount
         speciesBtn.text = speciesLabel()
         edgeWalls = !alt
@@ -388,6 +395,7 @@ class BoidsActivity : ThemedActivity() {
         countCtrl.update(p.count)
         boidsView.trailsEnabled = p.trails
         setToggle(trailsBtn, p.trails)
+        boidsView.primaryShape = p.shape
         setColorMode(p.colorMode)
     }
 

@@ -127,6 +127,7 @@
     <string name="boids_color_speed">Vitesse</string>
     <string name="boids_color_aurora">Aurore</string>
     <string name="boids_color_fireflies">Lucioles</string>
+    <string name="boids_color_group">Groupe</string>
     <string name="boids_opt_trails">Traînées</string>
     <string name="boids_opt_vision">Vision</string>
     <string name="boids_opt_predator">Prédateur</string>
