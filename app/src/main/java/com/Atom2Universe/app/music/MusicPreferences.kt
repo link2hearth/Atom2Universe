@@ -3,6 +3,7 @@ package com.Atom2Universe.app.music
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.Atom2Universe.app.music.data.AlbumTrackCheckStore
 
 /**
  * Modes d'affichage des artistes
@@ -52,6 +53,13 @@ enum class RootDisplayMode {
 class MusicPreferences(context: Context) {
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val appContext: Context = context.applicationContext
+
+    init {
+        // Pré-charge le cache des albums traités pour que le test synchrone soit
+        // prêt avant le premier affichage d'album.
+        AlbumTrackCheckStore.ensureLoaded(appContext)
+    }
 
     companion object {
         private const val PREFS_NAME = "music_preferences"
@@ -67,7 +75,6 @@ class MusicPreferences(context: Context) {
         private const val KEY_FOLDER_TILE_COLUMNS = "folder_tile_columns"
         private const val KEY_TRACK_DISPLAY_MODE = "track_display_mode"
         private const val KEY_ROOT_DISPLAY_MODE = "root_display_mode"
-        private const val KEY_ALBUMS_TRACK_NUMBER_CHECKED = "albums_track_number_checked"
         private const val KEY_ROOT_OPTION_ORDER = "root_option_order"
         private const val KEY_VISUALIZER_MODES_ORDER = "visualizer_modes_order"
         private const val KEY_HIDDEN_ROOT_OPTIONS = "hidden_root_options"
@@ -420,27 +427,21 @@ class MusicPreferences(context: Context) {
      * Vérifie si un album a déjà été traité pour la proposition de numéros de piste.
      * L'identifiant est construit à partir de l'artiste et du nom de l'album.
      */
-    fun isAlbumTrackNumberChecked(artistName: String, albumName: String): Boolean {
-        val albumId = "$artistName|$albumName"
-        val checkedAlbums = prefs.getStringSet(KEY_ALBUMS_TRACK_NUMBER_CHECKED, emptySet()) ?: emptySet()
-        return albumId in checkedAlbums
-    }
+    fun isAlbumTrackNumberChecked(artistName: String, albumName: String): Boolean =
+        AlbumTrackCheckStore.isChecked(appContext, "$artistName|$albumName")
 
     /**
      * Marque un album comme traité pour la proposition de numéros de piste.
      */
     fun markAlbumTrackNumberChecked(artistName: String, albumName: String) {
-        val albumId = "$artistName|$albumName"
-        val checkedAlbums = prefs.getStringSet(KEY_ALBUMS_TRACK_NUMBER_CHECKED, emptySet())?.toMutableSet() ?: mutableSetOf()
-        checkedAlbums.add(albumId)
-        prefs.edit { putStringSet(KEY_ALBUMS_TRACK_NUMBER_CHECKED, checkedAlbums) }
+        AlbumTrackCheckStore.markChecked(appContext, "$artistName|$albumName")
     }
 
     /**
      * Réinitialise la liste des albums traités (utile pour forcer une nouvelle vérification).
      */
     fun clearAlbumsTrackNumberChecked() {
-        prefs.edit { remove(KEY_ALBUMS_TRACK_NUMBER_CHECKED) }
+        AlbumTrackCheckStore.clear(appContext)
     }
 
     // ========== Equalizer Settings ==========

@@ -2,7 +2,7 @@
   "fusions": [
     {
       "fusionId": "pp",
-      "cardDropRate": 0.05,
+      "cardDropRate": 0.01,
       "cards": [
         {"atomicNumber": 1,  "file": "cartes elements/1 hydrogen.jpg"},
         {"atomicNumber": 2,  "file": "cartes elements/2 helium.jpg"}
@@ -10,7 +10,7 @@
     },
     {
       "fusionId": "triple_alpha",
-      "cardDropRate": 0.08,
+      "cardDropRate": 0.02,
       "cards": [
         {"atomicNumber": 3,  "file": "cartes elements/3 lithium.jpg"},
         {"atomicNumber": 4,  "file": "cartes elements/4 beryllium.jpg"},
@@ -20,7 +20,7 @@
     },
     {
       "fusionId": "carbon_fusion",
-      "cardDropRate": 0.10,
+      "cardDropRate": 0.04,
       "cards": [
         {"atomicNumber": 7,  "file": "cartes elements/7 nitrogen.jpg"},
         {"atomicNumber": 8,  "file": "cartes elements/8 oxygen.jpg"},
@@ -30,7 +30,7 @@
     },
     {
       "fusionId": "alpha_capture",
-      "cardDropRate": 0.10,
+      "cardDropRate": 0.04,
       "cards": [
         {"atomicNumber": 11, "file": "cartes elements/11 sodium.jpg"},
         {"atomicNumber": 12, "file": "cartes elements/12 magnesium.jpg"},
@@ -39,7 +39,7 @@
     },
     {
       "fusionId": "oxygen_fusion",
-      "cardDropRate": 0.12,
+      "cardDropRate": 0.05,
       "cards": [
         {"atomicNumber": 14, "file": "cartes elements/14 silicon.jpg"},
         {"atomicNumber": 15, "file": "cartes elements/15 phosphorus.jpg"},
@@ -50,7 +50,7 @@
     },
     {
       "fusionId": "water",
-      "cardDropRate": 0.15,
+      "cardDropRate": 0.10,
       "cards": [
         {"atomicNumber": 19, "file": "cartes elements/19 potassium.jpg"},
         {"atomicNumber": 20, "file": "cartes elements/20 calcium.jpg"},
@@ -66,7 +66,7 @@
     },
     {
       "fusionId": "neutron_capture",
-      "cardDropRate": 0.350,
+      "cardDropRate": 0.15,
       "cards": [
         {"atomicNumber": 29, "file": "cartes elements/29 copper.jpg"},
         {"atomicNumber": 30, "file": "cartes elements/30 zinc.jpg"},

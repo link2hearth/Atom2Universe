@@ -54,9 +54,10 @@ import com.Atom2Universe.app.music.equalizer.data.EqSettingsDao
         EqAlbumOverride::class,
         EqArtistOverride::class,
         EqSettings::class,
-        ListenEvent::class
+        ListenEvent::class,
+        AlbumTrackCheckEntity::class
     ],
-    version = 14,
+    version = 15,
     exportSchema = false
 )
 abstract class MusicDatabase : RoomDatabase() {
@@ -73,6 +74,7 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract fun eqOverrideDao(): EqOverrideDao
     abstract fun eqSettingsDao(): EqSettingsDao
     abstract fun listenEventDao(): ListenEventDao
+    abstract fun albumTrackCheckDao(): AlbumTrackCheckDao
 
     companion object {
         @Volatile
@@ -508,6 +510,24 @@ abstract class MusicDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Migration 14 -> 15 : Ajout de la table album_track_number_checks.
+         *
+         * Remplace l'ancien StringSet `albums_track_number_checked` des
+         * SharedPreferences (réécrit en entier à chaque album et qui grossissait
+         * avec la bibliothèque). Les données existantes sont importées une seule
+         * fois par AlbumTrackCheckStore au premier accès.
+         */
+        private val MIGRATION_14_15 = object : Migration(14, 15) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS album_track_number_checks (
+                        albumKey TEXT PRIMARY KEY NOT NULL
+                    )
+                """.trimIndent())
+            }
+        }
+
         fun getInstance(context: Context): MusicDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -515,7 +535,7 @@ abstract class MusicDatabase : RoomDatabase() {
                     MusicDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
                     .build()
                 INSTANCE = instance
                 instance

@@ -21,6 +21,7 @@ import com.Atom2Universe.app.crypto.clicker.ElementBonusEngine
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.GachaTicketRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.fusion.ElementCardRepository
 import com.Atom2Universe.app.crypto.fusion.FusionStore
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -122,6 +123,8 @@ class ClickerStatsActivity : ThemedActivity() {
                 if (togglePeriodic.isChecked) {
                     periodicStore.reset()
                     fusionStore.reset()
+                    // Cartes de collection gagnées lors des fusions (prefs séparées de FusionStore).
+                    ElementCardRepository(this).reset()
                     // Les niveaux crit sont achetés avec les quarks (FusionStore) : on les
                     // remet à zéro ici aussi pour qu'ils ne survivent pas à leur monnaie.
                     critRepo.reset()

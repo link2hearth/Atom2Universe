@@ -37,6 +37,8 @@ class ElementCardRepository(context: Context) {
 
     fun getTotalCards(): Int = pools.values.sumOf { it.cards.size }
 
+    fun reset() = prefs.edit { clear() }
+
     // Retourne la définition de la carte pour cet élément si elle est obtenue, null sinon.
     fun getCardFor(atomicNumber: Int): ElementCard? {
         if (!hasCard(atomicNumber)) return null
