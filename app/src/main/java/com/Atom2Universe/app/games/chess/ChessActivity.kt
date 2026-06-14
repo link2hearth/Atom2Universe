@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.chess.ai.ChessAI
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
@@ -387,9 +388,9 @@ class ChessActivity : AppCompatActivity(),
         if (game.isCheckmate && game.currentTurn == PieceColor.BLACK && ai != null) {
             Toast.makeText(this, R.string.chess_victory_title, Toast.LENGTH_SHORT).show()
             val reward = when (currentDifficulty) {
-                ChessDifficulty.TRAINING -> 10
-                ChessDifficulty.STANDARD -> 20
-                ChessDifficulty.EXPERT   -> 50
+                ChessDifficulty.TRAINING -> NeutrinoRewards.CHESS_TRAINING
+                ChessDifficulty.STANDARD -> NeutrinoRewards.CHESS_STANDARD
+                ChessDifficulty.EXPERT   -> NeutrinoRewards.CHESS_EXPERT
                 else -> 0
             }
             if (reward > 0) NeutrinoRepository(this).addBalance(reward)

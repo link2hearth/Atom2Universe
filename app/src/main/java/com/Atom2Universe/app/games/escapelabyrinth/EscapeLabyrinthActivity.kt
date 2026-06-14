@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -179,7 +181,12 @@ class EscapeLabyrinthActivity : ThemedActivity() {
         when (outcome) {
             MoveOutcome.WIN -> {
                 val lvl = currentLevel!!
-                tvStatus.text = if (play.turn <= lvl.solveTurns)
+                val perfect = play.turn <= lvl.solveTurns
+                // EASY=2, MEDIUM=5, HARD=10 ; ×2 si parcours parfait
+                NeutrinoRepository(this).addBalance(
+                    NeutrinoRewards.escape(currentDifficulty.ordinal, perfect)
+                )
+                tvStatus.text = if (perfect)
                     getString(R.string.escape_status_win_perfect, play.turn)
                 else
                     getString(R.string.escape_status_win, play.turn, lvl.solveTurns)

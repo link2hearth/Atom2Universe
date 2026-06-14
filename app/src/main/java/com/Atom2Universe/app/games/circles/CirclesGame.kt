@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.circles
 
 import android.graphics.Color
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.max
@@ -33,11 +34,8 @@ class CirclesGame {
         }
         val COLOR_OFFSETS = intArrayOf(0, 3, 2, 5, 1, 4)
 
-        fun getNeutrinos(difficulty: CirclesDifficulty, ringCount: Int): Int = when (difficulty) {
-            CirclesDifficulty.EASY   -> 1
-            CirclesDifficulty.MEDIUM -> 2
-            CirclesDifficulty.HARD   -> if (ringCount >= 6) 4 else 3
-        }
+        fun getNeutrinos(difficulty: CirclesDifficulty, ringCount: Int): Int =
+            NeutrinoRewards.circles(difficulty.ordinal, ringCount)
     }
 
     data class MoveHint(val ringIndex: Int, val direction: Int)

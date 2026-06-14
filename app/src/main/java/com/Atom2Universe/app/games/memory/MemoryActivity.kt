@@ -24,6 +24,7 @@ import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -278,7 +279,7 @@ class MemoryActivity : AppCompatActivity() {
         winMessage.text = getString(R.string.memory_win_message, game.flips, formatTime(game.elapsedSeconds))
         winOverlay.visibility = View.VISIBLE
         // EASY=+1, NORMAL=+2, MEDIUM=+3, PRO=+4, HARD=+5
-        NeutrinoRepository(this).addBalance(game.difficulty.ordinal + 1)
+        NeutrinoRepository(this).addBalance(NeutrinoRewards.memory(game.difficulty.ordinal))
     }
 
     // ── Bitmap loading ────────────────────────────────────────────────────────────

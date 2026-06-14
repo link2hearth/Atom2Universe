@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SwitchCompat
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import org.json.JSONArray
 import org.json.JSONObject
@@ -318,7 +319,7 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
         val winTarget = if (quantumMode) game.quantumTarget else game.target
         statusText.text = getString(R.string.game2048_status_win, winTarget)
 
-        NeutrinoRepository(this).addBalance(20)
+        NeutrinoRepository(this).addBalance(NeutrinoRewards.GAME2048_WIN)
 
         boardView.postDelayed({
             val qTarget = if (quantumMode) game.quantumTarget else 0

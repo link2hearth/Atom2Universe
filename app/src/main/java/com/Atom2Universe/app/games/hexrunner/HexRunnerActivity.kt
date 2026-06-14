@@ -8,6 +8,8 @@ import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 class HexRunnerActivity : ThemedActivity() {
@@ -56,6 +58,9 @@ class HexRunnerActivity : ThemedActivity() {
                 tvBestScore.text  = getString(R.string.hex_runner_best_label,  formatTime(best))
                 overlayGameOver.visibility = View.VISIBLE
                 gameStatsRepo.recordHexRunnerBestTime(hexView.game.bestScore)
+                // 1 neutrino par tranche de 15 s de jeu (score en ms)
+                val reward = NeutrinoRewards.perTime(hexView.game.score)
+                if (reward > 0) NeutrinoRepository(this).addBalance(reward)
             }
         }
 

@@ -214,7 +214,23 @@
 
         <!-- Solde neutrinos -->
         <LinearLayout style="@style/ShopStatRow">
-            <TextView style="@style/ShopStatLabel" android:text="@string/clicker_neutrino_balance" />
+            <TextView
+                style="@style/ShopStatLabel"
+                android:layout_width="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/clicker_neutrino_balance" />
+            <ImageView
+                android:id="@+id/shop_neutrino_info"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="6dp"
+                android:src="@android:drawable/ic_menu_info_details"
+                android:tint="?attr/a2uMidiAccent"
+                android:contentDescription="@string/neutrino_info_cd" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
             <TextView android:id="@+id/shop_neutrino_balance" style="@style/ShopStatValue" android:text="0" />
         </LinearLayout>
 

@@ -64,12 +64,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.repeatOnLifecycle
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.util.TypedValue
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.crypto.clicker.ClickerBannerView
 import com.Atom2Universe.app.crypto.clicker.ClickerGameState
 import com.Atom2Universe.app.crypto.clicker.ClickerViewModel
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import androidx.core.content.edit
 import androidx.core.view.isVisible
 
@@ -769,6 +772,67 @@ class MainClickerActivity : ThemedActivity() {
 
     // ── Shop du clicker ───────────────────────────────────────────────────────
 
+    /**
+     * Fenêtre récapitulant les récompenses en neutrinos de chaque jeu.
+     * Le contenu est généré à partir de [NeutrinoRewards.summary] : modifier un
+     * montant dans NeutrinoRewards met à jour cet affichage automatiquement.
+     */
+    private fun showNeutrinoRewardsDialog() {
+        val density = resources.displayMetrics.density
+        fun dp(v: Int) = (v * density).toInt()
+
+        val accent = TypedValue().also { theme.resolveAttribute(R.attr.a2uMidiAccent, it, true) }.data
+        val mono = android.graphics.Typeface.MONOSPACE
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(8), dp(20), dp(8))
+        }
+
+        for (entry in NeutrinoRewards.summary(this)) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(0, dp(7), 0, dp(7))
+            }
+            val left = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            left.addView(TextView(this).apply {
+                text = getString(entry.titleRes)
+                setTextColor(0xFFE2E8F0.toInt())
+                textSize = 14f
+                typeface = mono
+            })
+            left.addView(TextView(this).apply {
+                text = getString(entry.noteRes)
+                setTextColor(0xFF64748B.toInt())
+                textSize = 11f
+                typeface = mono
+            })
+            val value = TextView(this).apply {
+                text = entry.value
+                setTextColor(accent)
+                textSize = 14f
+                typeface = mono
+                gravity = Gravity.END
+                setPadding(dp(12), 0, 0, 0)
+            }
+            row.addView(left)
+            row.addView(value)
+            container.addView(row)
+        }
+
+        val scroll = ScrollView(this).apply { addView(container) }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.neutrino_info_title)
+            .setView(scroll)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
     private fun showShopDialog() {
         if (shopDialog?.isShowing == true) return
         clickerViewModel.refreshNeutrinoBalance()
@@ -795,6 +859,7 @@ class MainClickerActivity : ThemedActivity() {
         shopFermiCostView       = view.findViewById(R.id.shop_fermi_cost)
         shopFermiBuyBtn         = view.findViewById(R.id.shop_fermi_buy)
         shopNeutrinoBalance     = view.findViewById(R.id.shop_neutrino_balance)
+        view.findViewById<View>(R.id.shop_neutrino_info)?.setOnClickListener { showNeutrinoRewardsDialog() }
         shopApcToApsLevelView   = view.findViewById(R.id.shop_apc_to_aps_level)
         shopApcToApsEffectView  = view.findViewById(R.id.shop_apc_to_aps_effect)
         shopApcToApsCostView    = view.findViewById(R.id.shop_apc_to_aps_cost)

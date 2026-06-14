@@ -16,6 +16,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.draughts.ai.DraughtsAI
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
@@ -323,9 +324,9 @@ class DraughtsActivity : ThemedActivity(),
         if (winner == DraughtsPieceColor.WHITE) statsRepo.recordDraughtsWon()
         if (winner == DraughtsPieceColor.WHITE && currentDifficulty.hasAI()) {
             val reward = when (currentDifficulty) {
-                DraughtsDifficulty.TRAINING -> 10
-                DraughtsDifficulty.STANDARD -> 20
-                DraughtsDifficulty.EXPERT   -> 50
+                DraughtsDifficulty.TRAINING -> NeutrinoRewards.DRAUGHTS_TRAINING
+                DraughtsDifficulty.STANDARD -> NeutrinoRewards.DRAUGHTS_STANDARD
+                DraughtsDifficulty.EXPERT   -> NeutrinoRewards.DRAUGHTS_EXPERT
                 else -> 0
             }
             if (reward > 0) NeutrinoRepository(this).addBalance(reward)

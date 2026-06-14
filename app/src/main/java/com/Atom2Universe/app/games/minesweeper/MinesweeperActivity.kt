@@ -15,6 +15,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListener {
@@ -133,6 +135,8 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
     override fun onGameWon() {
         stopTimer()
         prefs.clearSavedGame()
+        // EASY=5, NORMAL=10, MEDIUM=15, HARD=20
+        NeutrinoRepository(this).addBalance(NeutrinoRewards.minesweeper(difficulty.ordinal))
         val isNewBest = prefs.isNewBestTime(difficulty, elapsedSecs)
         if (isNewBest) prefs.saveBestTime(difficulty, elapsedSecs)
         val resultText = if (isNewBest)

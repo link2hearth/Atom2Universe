@@ -19,6 +19,7 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
 
@@ -176,7 +177,7 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     private fun awardReward() {
         if (game.rewardClaimed) return
         game.rewardClaimed = true
-        val reward = (game.difficulty.ordinal + 1) * 2  // EASY=2, MEDIUM=4, HARD=6, EXPERT=8, MASTER=10
+        val reward = NeutrinoRewards.pipeTap(game.difficulty.ordinal)  // EASY=2, MEDIUM=4, HARD=6, EXPERT=8, MASTER=10
         NeutrinoRepository(this).addBalance(reward)
         GameStatsRepository(this).recordPipeTapHardWon()
     }

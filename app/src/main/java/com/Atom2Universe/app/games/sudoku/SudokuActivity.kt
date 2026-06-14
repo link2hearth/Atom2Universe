@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.sudoku.data.SudokuDatabase
 import com.Atom2Universe.app.games.sudoku.data.SudokuSaveEntity
 import kotlinx.coroutines.Dispatchers
@@ -478,12 +479,7 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
                 database.sudokuDao().deleteSave()
             }
 
-            val reward = when (currentDifficulty) {
-                SudokuDifficulty.EASY   -> 5
-                SudokuDifficulty.MEDIUM -> 10
-                SudokuDifficulty.HARD   -> 20
-            }
-            NeutrinoRepository(this).addBalance(reward)
+            NeutrinoRepository(this).addBalance(NeutrinoRewards.sudoku(currentDifficulty.ordinal))
 
             Toast.makeText(this, R.string.sudoku_status_solved, Toast.LENGTH_LONG).show()
         }

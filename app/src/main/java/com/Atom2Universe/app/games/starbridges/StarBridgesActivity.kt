@@ -15,6 +15,7 @@ import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
@@ -185,7 +186,7 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
     private fun awardReward() {
         if (game.rewardClaimed || !game.seedWasRandom) { game.rewardClaimed = true; return }
         game.rewardClaimed = true
-        val tickets = when (game.size) { 6 -> 5; 7 -> 10; else -> 15 }
+        val tickets = NeutrinoRewards.starBridges(game.size)
         NeutrinoRepository(this).addBalance(tickets)
     }
 

@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import org.json.JSONArray
 import org.json.JSONObject
@@ -85,7 +87,7 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
         }
         boardView.invalidate()
         updateScore()
-        if (game.gameOver) { showGameOver(); saveCurrent(); return }
+        if (game.gameOver) { showGameOver(awardReward = true); saveCurrent(); return }
         beginTurn()
         saveCurrent()
     }
@@ -108,7 +110,7 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
                 boardView.invalidate()
                 updateScore()
                 if (game.gameOver) {
-                    showGameOver()
+                    showGameOver(awardReward = true)
                 } else {
                     statusText.text = getTurnText()
                     // If AI has to play again (human passed), recurse
@@ -131,10 +133,15 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
         else -> getString(R.string.othello_status_white_turn)
     }
 
-    private fun showGameOver() {
+    private fun showGameOver(awardReward: Boolean = false) {
         cancelAI()
         val (black, white) = game.getScore()
-        val result = when (game.getWinner()) {
+        val winner = game.getWinner()
+        // 15 neutrinos en solo quand le joueur humain (blanc) gagne contre l'IA
+        if (awardReward && isSoloMode && winner == OthelloGame.WHITE) {
+            NeutrinoRepository(this).addBalance(NeutrinoRewards.OTHELLO_WIN)
+        }
+        val result = when (winner) {
             OthelloGame.BLACK -> getString(R.string.othello_result_black)
             OthelloGame.WHITE -> getString(R.string.othello_result_white)
             else -> getString(R.string.othello_result_draw)

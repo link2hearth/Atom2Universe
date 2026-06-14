@@ -14,6 +14,7 @@ import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -187,11 +188,7 @@ class TheLineActivity : AppCompatActivity() {
         updateLevelDisplay()
         tvMessage.text = getString(R.string.the_line_completed, level)
 
-        val reward = when (game.difficulty) {
-            TheLineDifficulty.EASY   -> 1
-            TheLineDifficulty.MEDIUM -> 2
-            TheLineDifficulty.HARD   -> 3
-        }
+        val reward = NeutrinoRewards.theLine(game.difficulty.ordinal)
         NeutrinoRepository(this).addBalance(reward)
 
         val r = Runnable {

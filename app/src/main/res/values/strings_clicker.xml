@@ -246,4 +246,20 @@
     <string name="dev_add_element_btn">+5 copies</string>
     <string name="dev_element_range_error">Atomic number: 1–118</string>
     <string name="dev_all_elements_done">+1 copy of all elements</string>
+
+    <!-- Neutrino rewards info dialog -->
+    <string name="neutrino_info_title">Neutrino rewards</string>
+    <string name="neutrino_info_subtitle">Earn neutrinos by playing the games</string>
+    <string name="neutrino_info_cd">View neutrino rewards</string>
+    <string name="neutrino_info_note_win">per win</string>
+    <string name="neutrino_info_note_solo_win">solo win</string>
+    <string name="neutrino_info_note_difficulty">by difficulty</string>
+    <string name="neutrino_info_note_vs_ai">vs AI, by level</string>
+    <string name="neutrino_info_note_level">per level</string>
+    <string name="neutrino_info_note_size">by board size</string>
+    <string name="neutrino_info_note_pairs">difficulty × pairs</string>
+    <string name="neutrino_info_note_perfect">by difficulty, ×2 if perfect</string>
+    <string name="neutrino_info_note_time">by play time</string>
+    <string name="neutrino_info_note_distance">by distance</string>
+    <string name="neutrino_info_note_betting">by your bet</string>
 </resources>

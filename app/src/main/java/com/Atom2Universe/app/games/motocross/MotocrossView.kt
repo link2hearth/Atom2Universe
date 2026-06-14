@@ -114,6 +114,7 @@ class MotocrossView @JvmOverloads constructor(
     private var lastNs = 0L
 
     var onStats: ((distM: Float, speedKmh: Float) -> Unit)? = null
+    var onGameOver: ((distM: Float) -> Unit)? = null
 
     // ── Assets ────────────────────────────────────────────────────────────────────
 
@@ -706,6 +707,7 @@ class MotocrossView @JvmOverloads constructor(
             if (isUpsideDown && (!airborne || (falling && nearGroundWhileUpsideDown))) {
                 gameOver = true
                 if (bestDistM > savedBestDistM) { savedBestDistM = bestDistM; saveBest() }
+                onGameOver?.invoke(maxDistM)
             }
         }
     }

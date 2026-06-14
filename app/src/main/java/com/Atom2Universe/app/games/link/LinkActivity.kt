@@ -11,6 +11,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
@@ -204,7 +206,14 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
 
     override fun onVictory() {
         updateUI()
+        awardReward()
         showVictoryOverlay()
+    }
+
+    private fun awardReward() {
+        // Base difficulté (EASY=2, MEDIUM=4, HARD=6) × jumelles (FEW ×1, NORMAL ×2, MANY ×3)
+        val reward = NeutrinoRewards.link(game.difficulty.ordinal, game.pairsLevel.ordinal)
+        NeutrinoRepository(this).addBalance(reward)
     }
 
     // --- Victory overlay ---

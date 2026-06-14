@@ -14,6 +14,7 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
 
@@ -157,10 +158,10 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
                             statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                         }
                         hardGameStartMs = 0L
-                        NeutrinoRepository(this).addBalance(7)
+                        NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
                     }
-                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addBalance(3)
-                    ColorStackGame.Difficulty.EASY -> NeutrinoRepository(this).addBalance(1)
+                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
+                    ColorStackGame.Difficulty.EASY -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
                     else -> Unit
                 }
             }

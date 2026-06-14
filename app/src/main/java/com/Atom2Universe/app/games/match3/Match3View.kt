@@ -19,6 +19,7 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import java.io.IOException
 import kotlin.math.*
 import kotlin.random.Random
@@ -610,7 +611,7 @@ class Match3View @JvmOverloads constructor(
         handler.removeCallbacksAndMessages(null)
         val prefs = context.getSharedPreferences("match3_save", Context.MODE_PRIVATE)
         gameElapsedMs = if (gameStartUptimeMs > 0L) SystemClock.uptimeMillis() - gameStartUptimeMs else 0L
-        neutrinosEarned = (gameElapsedMs / 15_000L).toInt()
+        neutrinosEarned = NeutrinoRewards.perTime(gameElapsedMs)
         if (neutrinosEarned > 0) NeutrinoRepository(context).addBalance(neutrinosEarned)
         val elapsedMs = gameElapsedMs
         prefs.edit().apply {

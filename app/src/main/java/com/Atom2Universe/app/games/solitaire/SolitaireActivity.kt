@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.solitaire.data.SolitaireDatabase
 import com.Atom2Universe.app.games.solitaire.data.SolitaireSaveEntity
 import kotlinx.coroutines.Dispatchers
@@ -384,7 +385,7 @@ class SolitaireActivity : AppCompatActivity(), SolitaireView.OnGameActionListene
             database.solitaireDao().deleteSave()
         }
 
-        NeutrinoRepository(this).addBalance(20)
+        NeutrinoRepository(this).addBalance(NeutrinoRewards.SOLITAIRE_WIN)
 
         // Start victory animation
         gameView.startVictoryAnimation()
