@@ -57,6 +57,10 @@ object NeutrinoRewards {
     fun theLine(difficultyOrdinal: Int) = difficultyOrdinal + 1
     private val THELINE_VALUES get() = (0 until 3).map { theLine(it) }
 
+    // ── Sokoban : EASY/MEDIUM/HARD/EXPERT (par niveau résolu) ──────────────────
+    private val SOKOBAN_VALUES = intArrayOf(2, 4, 7, 12)
+    fun sokoban(difficultyOrdinal: Int) = SOKOBAN_VALUES[difficultyOrdinal]
+
     // ── StarBridges : selon la taille de la grille ─────────────────────────────
     fun starBridges(size: Int) = when (size) { 6 -> 5; 7 -> 10; else -> 15 }
 
@@ -118,6 +122,7 @@ object NeutrinoRewards {
                 R.string.neutrino_info_note_size
             ),
             Entry(R.string.the_line_title, list(THELINE_VALUES), R.string.neutrino_info_note_level),
+            Entry(R.string.sokoban_title, list(SOKOBAN_VALUES.toList()), R.string.neutrino_info_note_level),
             Entry(
                 R.string.link_title,
                 "${linkBase(0)}/${linkBase(1)}/${linkBase(2)} × ${linkMultiplier(0)}/${linkMultiplier(1)}/${linkMultiplier(2)}",

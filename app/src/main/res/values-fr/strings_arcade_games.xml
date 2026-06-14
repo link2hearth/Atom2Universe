@@ -254,4 +254,22 @@
     <string name="motocross_restart">Recommencer</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+
+    <!-- Sokoban -->
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Pousse chaque caisse sur une cible</string>
+    <string name="sokoban_back">Retour</string>
+    <string name="sokoban_diff_easy">Facile</string>
+    <string name="sokoban_diff_medium">Moyen</string>
+    <string name="sokoban_diff_hard">Difficile</string>
+    <string name="sokoban_diff_expert">Expert</string>
+    <string name="sokoban_hint">Pousse chaque caisse sur une cible. Les caisses se poussent, jamais ne se tirent.</string>
+    <string name="sokoban_moves">Coups : %1$d</string>
+    <string name="sokoban_pushes">Poussées : %1$d</string>
+    <string name="sokoban_best">Record : %1$d</string>
+    <string name="sokoban_solved">Résolu en %1$d coups ! Record : %2$d</string>
+    <string name="sokoban_error">Impossible de générer un niveau. Réessaie.</string>
+    <string name="sokoban_undo">Annuler</string>
+    <string name="sokoban_reset">Recommencer</string>
+    <string name="sokoban_new">Nouveau</string>
 </resources>

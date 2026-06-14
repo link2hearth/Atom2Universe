@@ -254,4 +254,22 @@
     <string name="motocross_restart">Restart</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+
+    <!-- Sokoban -->
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Push every box onto a target</string>
+    <string name="sokoban_back">Back</string>
+    <string name="sokoban_diff_easy">Easy</string>
+    <string name="sokoban_diff_medium">Medium</string>
+    <string name="sokoban_diff_hard">Hard</string>
+    <string name="sokoban_diff_expert">Expert</string>
+    <string name="sokoban_hint">Push every box onto a target. Boxes only push, never pull.</string>
+    <string name="sokoban_moves">Moves: %1$d</string>
+    <string name="sokoban_pushes">Pushes: %1$d</string>
+    <string name="sokoban_best">Best: %1$d</string>
+    <string name="sokoban_solved">Solved in %1$d moves! Best: %2$d</string>
+    <string name="sokoban_error">Could not generate a level. Try again.</string>
+    <string name="sokoban_undo">Undo</string>
+    <string name="sokoban_reset">Restart</string>
+    <string name="sokoban_new">New</string>
 </resources>

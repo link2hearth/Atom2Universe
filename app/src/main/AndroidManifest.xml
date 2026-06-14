@@ -337,6 +337,11 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
         <activity
+            android:name=".games.sokoban.SokobanActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".games.starswar.StarsWarActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"

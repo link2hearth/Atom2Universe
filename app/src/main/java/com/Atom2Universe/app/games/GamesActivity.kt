@@ -7,6 +7,7 @@ import com.Atom2Universe.app.crypto.MainClickerActivity
 import com.Atom2Universe.app.games.blackjack.BlackjackActivity
 import com.Atom2Universe.app.games.roulette.RouletteActivity
 import com.Atom2Universe.app.games.theline.TheLineActivity
+import com.Atom2Universe.app.games.sokoban.SokobanActivity
 import com.Atom2Universe.app.games.chess.ChessActivity
 import com.Atom2Universe.app.games.draughts.DraughtsActivity
 import com.Atom2Universe.app.games.othello.OthelloActivity
@@ -284,6 +285,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_edit,
             defaultColorRes = R.color.the_line_active,
             activityClass = TheLineActivity::class.java
+        ),
+        HubTile(
+            id = "sokoban",
+            titleRes = R.string.sokoban_title,
+            descriptionRes = R.string.sokoban_description,
+            iconRes = android.R.drawable.ic_menu_sort_by_size,
+            defaultColorRes = R.color.game_tile_sokoban,
+            activityClass = SokobanActivity::class.java
         ),
         HubTile(
             id = "link",

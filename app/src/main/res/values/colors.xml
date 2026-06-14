@@ -238,4 +238,9 @@
     <color name="the_line_active">#1E40AF</color>
     <color name="the_line_inactive">#1E293B</color>
 
+    <!-- Sokoban game -->
+    <color name="sokoban_active">#0E7490</color>
+    <color name="sokoban_inactive">#1E293B</color>
+    <color name="game_tile_sokoban">#0E5C5C</color>
+
 </resources>

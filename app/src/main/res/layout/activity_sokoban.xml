@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0F172A">
+
+    <!-- Top bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp">
+
+        <ImageButton
+            android:id="@+id/sokoban_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/sokoban_back"
+            app:tint="#94A3B8" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sokoban_title"
+            android:textColor="#E2E8F0"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/sokoban_best"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/a2uMidiAccent"
+            android:textSize="13sp"
+            android:paddingHorizontal="8dp"
+            tools:text="Best: 24" />
+    </LinearLayout>
+
+    <!-- Difficulty buttons -->
+    <LinearLayout
+        android:id="@+id/sokoban_diff_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="6dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/sokoban_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#94A3B8"
+        android:textSize="13sp"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="4dp"
+        tools:text="Push every box onto a target." />
+
+    <!-- Board -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.Atom2Universe.app.games.sokoban.SokobanBoardView
+            android:id="@+id/sokoban_board"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp" />
+
+        <ProgressBar
+            android:id="@+id/sokoban_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Stats -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="4dp">
+
+        <TextView
+            android:id="@+id/sokoban_moves"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#64748B"
+            android:textSize="13sp"
+            tools:text="Moves: 0" />
+
+        <TextView
+            android:id="@+id/sokoban_pushes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#64748B"
+            android:textSize="13sp"
+            tools:text="Pushes: 0" />
+    </LinearLayout>
+
+    <!-- D-pad -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingTop="4dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sokoban_up"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="60dp"
+            android:layout_height="52dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="▲"
+            android:textColor="#E2E8F0" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sokoban_left"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="60dp"
+                android:layout_height="52dp"
+                android:layout_marginEnd="6dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="◀"
+                android:textColor="#E2E8F0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sokoban_down"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="60dp"
+                android:layout_height="52dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="▼"
+                android:textColor="#E2E8F0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sokoban_right"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="60dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="6dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="▶"
+                android:textColor="#E2E8F0" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sokoban_btn_undo"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sokoban_undo"
+            android:textColor="?attr/a2uMidiAccent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sokoban_btn_reset"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sokoban_reset"
+            android:textColor="?attr/a2uMidiAccent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sokoban_btn_new"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sokoban_new"
+            android:textColor="?attr/a2uMidiAccent" />
+    </LinearLayout>
+</LinearLayout>
