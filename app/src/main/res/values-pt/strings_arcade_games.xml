@@ -250,4 +250,20 @@
     <string name="motocross_restart">Reiniciar</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Empurre cada caixa até um alvo</string>
+    <string name="sokoban_back">Voltar</string>
+    <string name="sokoban_diff_easy">Fácil</string>
+    <string name="sokoban_diff_medium">Médio</string>
+    <string name="sokoban_diff_hard">Difícil</string>
+    <string name="sokoban_diff_expert">Especialista</string>
+    <string name="sokoban_hint">Empurre cada caixa até um alvo. As caixas só se empurram, nunca se puxam.</string>
+    <string name="sokoban_moves">Movimentos: %1$d</string>
+    <string name="sokoban_pushes">Empurrões: %1$d</string>
+    <string name="sokoban_best">Recorde: %1$d</string>
+    <string name="sokoban_solved">Resolvido em %1$d movimentos! Recorde: %2$d</string>
+    <string name="sokoban_error">Não foi possível gerar um nível. Tente novamente.</string>
+    <string name="sokoban_undo">Desfazer</string>
+    <string name="sokoban_reset">Recomeçar</string>
+    <string name="sokoban_new">Novo</string>
 </resources>

@@ -251,4 +251,20 @@
     <string name="motocross_restart">Επανεκκίνηση</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Σπρώξτε κάθε κιβώτιο σε έναν στόχο</string>
+    <string name="sokoban_back">Πίσω</string>
+    <string name="sokoban_diff_easy">Εύκολο</string>
+    <string name="sokoban_diff_medium">Μεσαίο</string>
+    <string name="sokoban_diff_hard">Δύσκολο</string>
+    <string name="sokoban_diff_expert">Ειδικός</string>
+    <string name="sokoban_hint">Σπρώξτε κάθε κιβώτιο σε έναν στόχο. Τα κιβώτια μόνο σπρώχνονται, ποτέ δεν τραβιούνται.</string>
+    <string name="sokoban_moves">Κινήσεις: %1$d</string>
+    <string name="sokoban_pushes">Σπρωξιές: %1$d</string>
+    <string name="sokoban_best">Ρεκόρ: %1$d</string>
+    <string name="sokoban_solved">Λύθηκε σε %1$d κινήσεις! Ρεκόρ: %2$d</string>
+    <string name="sokoban_error">Δεν ήταν δυνατή η δημιουργία πίστας. Δοκιμάστε ξανά.</string>
+    <string name="sokoban_undo">Αναίρεση</string>
+    <string name="sokoban_reset">Επανεκκίνηση</string>
+    <string name="sokoban_new">Νέο</string>
 </resources>

@@ -139,4 +139,5 @@
     <string name="quiz_resume_game_no">Nuova partita</string>
     <string name="quiz_restore_failed">Impossibile ripristinare la partita</string>
     <string name="quiz_no_questions">Nessuna domanda disponibile</string>
+    <string name="quiz_search_google">Cerca su Google</string>
 </resources>

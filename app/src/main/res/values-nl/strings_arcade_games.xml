@@ -250,4 +250,20 @@
     <string name="motocross_restart">Opnieuw</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Duw elke kist op een doel</string>
+    <string name="sokoban_back">Terug</string>
+    <string name="sokoban_diff_easy">Makkelijk</string>
+    <string name="sokoban_diff_medium">Gemiddeld</string>
+    <string name="sokoban_diff_hard">Moeilijk</string>
+    <string name="sokoban_diff_expert">Expert</string>
+    <string name="sokoban_hint">Duw elke kist op een doel. Kisten kun je alleen duwen, nooit trekken.</string>
+    <string name="sokoban_moves">Zetten: %1$d</string>
+    <string name="sokoban_pushes">Duwen: %1$d</string>
+    <string name="sokoban_best">Record: %1$d</string>
+    <string name="sokoban_solved">Opgelost in %1$d zetten! Record: %2$d</string>
+    <string name="sokoban_error">Kon geen niveau genereren. Probeer opnieuw.</string>
+    <string name="sokoban_undo">Ongedaan maken</string>
+    <string name="sokoban_reset">Opnieuw beginnen</string>
+    <string name="sokoban_new">Nieuw</string>
 </resources>

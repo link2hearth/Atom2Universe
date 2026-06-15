@@ -58,7 +58,7 @@ object NeutrinoRewards {
     private val THELINE_VALUES get() = (0 until 3).map { theLine(it) }
 
     // ── Sokoban : EASY/MEDIUM/HARD/EXPERT (par niveau résolu) ──────────────────
-    private val SOKOBAN_VALUES = intArrayOf(2, 4, 7, 12)
+    private val SOKOBAN_VALUES = intArrayOf(1, 2, 4, 5)
     fun sokoban(difficultyOrdinal: Int) = SOKOBAN_VALUES[difficultyOrdinal]
 
     // ── StarBridges : selon la taille de la grille ─────────────────────────────

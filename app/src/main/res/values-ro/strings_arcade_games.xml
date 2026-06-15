@@ -251,4 +251,20 @@
     <string name="motocross_restart">Repornire</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Împinge fiecare ladă pe o țintă</string>
+    <string name="sokoban_back">Înapoi</string>
+    <string name="sokoban_diff_easy">Ușor</string>
+    <string name="sokoban_diff_medium">Mediu</string>
+    <string name="sokoban_diff_hard">Greu</string>
+    <string name="sokoban_diff_expert">Expert</string>
+    <string name="sokoban_hint">Împinge fiecare ladă pe o țintă. Lăzile pot fi doar împinse, niciodată trase.</string>
+    <string name="sokoban_moves">Mutări: %1$d</string>
+    <string name="sokoban_pushes">Împingeri: %1$d</string>
+    <string name="sokoban_best">Record: %1$d</string>
+    <string name="sokoban_solved">Rezolvat în %1$d mutări! Record: %2$d</string>
+    <string name="sokoban_error">Nu s-a putut genera un nivel. Încearcă din nou.</string>
+    <string name="sokoban_undo">Anulează</string>
+    <string name="sokoban_reset">Reîncepe</string>
+    <string name="sokoban_new">Nou</string>
 </resources>

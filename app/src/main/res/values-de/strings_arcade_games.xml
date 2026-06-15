@@ -250,4 +250,20 @@
     <string name="motocross_restart">Neustart</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Schiebe jede Kiste auf ein Ziel</string>
+    <string name="sokoban_back">Zurück</string>
+    <string name="sokoban_diff_easy">Leicht</string>
+    <string name="sokoban_diff_medium">Mittel</string>
+    <string name="sokoban_diff_hard">Schwer</string>
+    <string name="sokoban_diff_expert">Experte</string>
+    <string name="sokoban_hint">Schiebe jede Kiste auf ein Ziel. Kisten lassen sich nur schieben, niemals ziehen.</string>
+    <string name="sokoban_moves">Züge: %1$d</string>
+    <string name="sokoban_pushes">Schübe: %1$d</string>
+    <string name="sokoban_best">Bestwert: %1$d</string>
+    <string name="sokoban_solved">In %1$d Zügen gelöst! Bestwert: %2$d</string>
+    <string name="sokoban_error">Level konnte nicht erzeugt werden. Versuche es erneut.</string>
+    <string name="sokoban_undo">Rückgängig</string>
+    <string name="sokoban_reset">Neu starten</string>
+    <string name="sokoban_new">Neu</string>
 </resources>

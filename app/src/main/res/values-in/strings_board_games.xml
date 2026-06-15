@@ -211,4 +211,8 @@
     <string name="solitaire_confirm">✓ Konfirmasi</string>
     <string name="solitaire_cancel">✕ Batal</string>
     <string name="sudoku_widget_cancel">✕ Batal</string>
+    <string name="sudoku_validate">Validasi</string>
+    <string name="sudoku_notes">Catatan</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
 </resources>

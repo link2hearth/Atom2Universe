@@ -250,4 +250,20 @@
     <string name="motocross_restart">Ricomincia</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Spingi ogni cassa su un bersaglio</string>
+    <string name="sokoban_back">Indietro</string>
+    <string name="sokoban_diff_easy">Facile</string>
+    <string name="sokoban_diff_medium">Medio</string>
+    <string name="sokoban_diff_hard">Difficile</string>
+    <string name="sokoban_diff_expert">Esperto</string>
+    <string name="sokoban_hint">Spingi ogni cassa su un bersaglio. Le casse si spingono soltanto, non si tirano mai.</string>
+    <string name="sokoban_moves">Mosse: %1$d</string>
+    <string name="sokoban_pushes">Spinte: %1$d</string>
+    <string name="sokoban_best">Record: %1$d</string>
+    <string name="sokoban_solved">Risolto in %1$d mosse! Record: %2$d</string>
+    <string name="sokoban_error">Impossibile generare un livello. Riprova.</string>
+    <string name="sokoban_undo">Annulla</string>
+    <string name="sokoban_reset">Ricomincia</string>
+    <string name="sokoban_new">Nuovo</string>
 </resources>

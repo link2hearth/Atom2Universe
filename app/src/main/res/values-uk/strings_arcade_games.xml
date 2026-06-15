@@ -250,4 +250,20 @@
     <string name="motocross_restart">Почати знову</string>
     <string name="motocross_hud_distance">%1$d м</string>
     <string name="motocross_hud_speed">%1$d км/год</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Штовхайте кожну скриню на ціль</string>
+    <string name="sokoban_back">Назад</string>
+    <string name="sokoban_diff_easy">Легко</string>
+    <string name="sokoban_diff_medium">Середньо</string>
+    <string name="sokoban_diff_hard">Важко</string>
+    <string name="sokoban_diff_expert">Експерт</string>
+    <string name="sokoban_hint">Штовхайте кожну скриню на ціль. Скрині можна лише штовхати, ніколи не тягнути.</string>
+    <string name="sokoban_moves">Ходи: %1$d</string>
+    <string name="sokoban_pushes">Поштовхи: %1$d</string>
+    <string name="sokoban_best">Рекорд: %1$d</string>
+    <string name="sokoban_solved">Розв\'язано за %1$d ходів! Рекорд: %2$d</string>
+    <string name="sokoban_error">Не вдалося згенерувати рівень. Спробуйте ще раз.</string>
+    <string name="sokoban_undo">Скасувати</string>
+    <string name="sokoban_reset">Почати спочатку</string>
+    <string name="sokoban_new">Новий</string>
 </resources>

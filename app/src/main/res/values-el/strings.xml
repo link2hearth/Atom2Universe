@@ -139,4 +139,5 @@
     <string name="reset_option_clicker">Εξέλιξη clicker (άτομα, αγορές)</string>
     <string name="reset_option_records">Ρεκόρ παιχνιδιού (υψηλές βαθμολογίες)</string>
     <string name="stats_reset_word_hint">Πληκτρολογήστε «reset» για επιβεβαίωση</string>
+    <string name="quiz_search_google">Αναζήτηση στο Google</string>
 </resources>

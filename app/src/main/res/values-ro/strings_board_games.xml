@@ -211,4 +211,8 @@
     <string name="solitaire_confirm">✓ Confirmare</string>
     <string name="solitaire_cancel">✕ Anulare</string>
     <string name="sudoku_widget_cancel">✕ Anulare</string>
+    <string name="sudoku_validate">Validează</string>
+    <string name="sudoku_notes">Notițe</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
 </resources>

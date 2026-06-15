@@ -139,4 +139,5 @@
     <string name="quiz_resume_game_no">Permainan baru</string>
     <string name="quiz_restore_failed">Tidak dapat memulihkan permainan</string>
     <string name="quiz_no_questions">Tidak ada pertanyaan tersedia</string>
+    <string name="quiz_search_google">Cari di Google</string>
 </resources>

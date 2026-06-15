@@ -211,4 +211,8 @@
     <string name="solitaire_confirm">✓ Onayla</string>
     <string name="solitaire_cancel">✕ İptal</string>
     <string name="sudoku_widget_cancel">✕ İptal</string>
+    <string name="sudoku_validate">Doğrula</string>
+    <string name="sudoku_notes">Notlar</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
 </resources>

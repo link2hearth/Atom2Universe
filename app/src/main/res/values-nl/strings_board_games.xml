@@ -211,4 +211,8 @@
     <string name="solitaire_confirm">✓ Bevestigen</string>
     <string name="solitaire_cancel">✕ Annuleren</string>
     <string name="sudoku_widget_cancel">✕ Annuleren</string>
+    <string name="sudoku_validate">Bevestigen</string>
+    <string name="sudoku_notes">Notities</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
 </resources>

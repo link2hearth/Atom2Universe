@@ -139,4 +139,5 @@
     <string name="reset_option_clicker">Progres clicker (atomi, achiziții)</string>
     <string name="reset_option_records">Recorduri joc (scoruri maxime)</string>
     <string name="stats_reset_word_hint">Tastați „reset" pentru a confirma</string>
+    <string name="quiz_search_google">Caută pe Google</string>
 </resources>

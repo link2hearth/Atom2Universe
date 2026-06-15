@@ -139,4 +139,5 @@
     <string name="quiz_resume_game_no">Нова гра</string>
     <string name="quiz_restore_failed">Не вдалося відновити гру</string>
     <string name="quiz_no_questions">Немає доступних запитань</string>
+    <string name="quiz_search_google">Шукати в Google</string>
 </resources>

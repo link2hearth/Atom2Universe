@@ -250,4 +250,20 @@
     <string name="motocross_restart">Yeniden başlat</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/s</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Her kutuyu bir hedefe it</string>
+    <string name="sokoban_back">Geri</string>
+    <string name="sokoban_diff_easy">Kolay</string>
+    <string name="sokoban_diff_medium">Orta</string>
+    <string name="sokoban_diff_hard">Zor</string>
+    <string name="sokoban_diff_expert">Uzman</string>
+    <string name="sokoban_hint">Her kutuyu bir hedefe it. Kutular yalnızca itilir, asla çekilmez.</string>
+    <string name="sokoban_moves">Hamle: %1$d</string>
+    <string name="sokoban_pushes">İtme: %1$d</string>
+    <string name="sokoban_best">En iyi: %1$d</string>
+    <string name="sokoban_solved">%1$d hamlede çözüldü! En iyi: %2$d</string>
+    <string name="sokoban_error">Seviye oluşturulamadı. Tekrar dene.</string>
+    <string name="sokoban_undo">Geri al</string>
+    <string name="sokoban_reset">Yeniden başlat</string>
+    <string name="sokoban_new">Yeni</string>
 </resources>

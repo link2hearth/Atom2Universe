@@ -250,4 +250,20 @@
     <string name="motocross_restart">Начать заново</string>
     <string name="motocross_hud_distance">%1$d м</string>
     <string name="motocross_hud_speed">%1$d км/ч</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Толкай каждый ящик на цель</string>
+    <string name="sokoban_back">Назад</string>
+    <string name="sokoban_diff_easy">Лёгкий</string>
+    <string name="sokoban_diff_medium">Средний</string>
+    <string name="sokoban_diff_hard">Сложный</string>
+    <string name="sokoban_diff_expert">Эксперт</string>
+    <string name="sokoban_hint">Толкай каждый ящик на цель. Ящики можно только толкать, тянуть нельзя.</string>
+    <string name="sokoban_moves">Ходы: %1$d</string>
+    <string name="sokoban_pushes">Толчки: %1$d</string>
+    <string name="sokoban_best">Рекорд: %1$d</string>
+    <string name="sokoban_solved">Решено за %1$d ходов! Рекорд: %2$d</string>
+    <string name="sokoban_error">Не удалось создать уровень. Попробуйте снова.</string>
+    <string name="sokoban_undo">Отменить</string>
+    <string name="sokoban_reset">Заново</string>
+    <string name="sokoban_new">Новый</string>
 </resources>

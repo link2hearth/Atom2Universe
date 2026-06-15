@@ -250,4 +250,20 @@
     <string name="motocross_restart">Uruchom ponownie</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Wepchnij każdą skrzynię na pole docelowe</string>
+    <string name="sokoban_back">Wstecz</string>
+    <string name="sokoban_diff_easy">Łatwy</string>
+    <string name="sokoban_diff_medium">Średni</string>
+    <string name="sokoban_diff_hard">Trudny</string>
+    <string name="sokoban_diff_expert">Ekspert</string>
+    <string name="sokoban_hint">Wepchnij każdą skrzynię na pole docelowe. Skrzynie można tylko pchać, nigdy ciągnąć.</string>
+    <string name="sokoban_moves">Ruchy: %1$d</string>
+    <string name="sokoban_pushes">Pchnięcia: %1$d</string>
+    <string name="sokoban_best">Rekord: %1$d</string>
+    <string name="sokoban_solved">Rozwiązano w %1$d ruchach! Rekord: %2$d</string>
+    <string name="sokoban_error">Nie udało się wygenerować poziomu. Spróbuj ponownie.</string>
+    <string name="sokoban_undo">Cofnij</string>
+    <string name="sokoban_reset">Od nowa</string>
+    <string name="sokoban_new">Nowy</string>
 </resources>

@@ -139,4 +139,5 @@
     <string name="quiz_resume_game_no">Neues Spiel</string>
     <string name="quiz_restore_failed">Spiel konnte nicht wiederhergestellt werden</string>
     <string name="quiz_no_questions">Keine Fragen verfügbar</string>
+    <string name="quiz_search_google">Bei Google suchen</string>
 </resources>

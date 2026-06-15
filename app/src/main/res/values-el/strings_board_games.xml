@@ -211,4 +211,8 @@
     <string name="solitaire_confirm">✓ Επιβεβαίωση</string>
     <string name="solitaire_cancel">✕ Ακύρωση</string>
     <string name="sudoku_widget_cancel">✕ Ακύρωση</string>
+    <string name="sudoku_validate">Επικύρωση</string>
+    <string name="sudoku_notes">Σημειώσεις</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
 </resources>

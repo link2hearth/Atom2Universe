@@ -250,4 +250,20 @@
     <string name="motocross_restart">Mulai ulang</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="sokoban_title">Sokoban</string>
+    <string name="sokoban_description">Dorong setiap kotak ke tujuan</string>
+    <string name="sokoban_back">Kembali</string>
+    <string name="sokoban_diff_easy">Mudah</string>
+    <string name="sokoban_diff_medium">Sedang</string>
+    <string name="sokoban_diff_hard">Sulit</string>
+    <string name="sokoban_diff_expert">Ahli</string>
+    <string name="sokoban_hint">Dorong setiap kotak ke tujuan. Kotak hanya bisa didorong, tidak bisa ditarik.</string>
+    <string name="sokoban_moves">Langkah: %1$d</string>
+    <string name="sokoban_pushes">Dorongan: %1$d</string>
+    <string name="sokoban_best">Terbaik: %1$d</string>
+    <string name="sokoban_solved">Selesai dalam %1$d langkah! Terbaik: %2$d</string>
+    <string name="sokoban_error">Tidak dapat membuat level. Coba lagi.</string>
+    <string name="sokoban_undo">Batalkan</string>
+    <string name="sokoban_reset">Mulai ulang</string>
+    <string name="sokoban_new">Baru</string>
 </resources>
