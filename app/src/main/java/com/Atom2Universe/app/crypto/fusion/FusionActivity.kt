@@ -179,7 +179,13 @@ class FusionActivity : ThemedActivity() {
     private fun refreshTileState(tile: View, recipe: FusionRecipe) {
         val wins  = fusionStore.getWins(recipe)
         val tries = fusionStore.getTries(recipe)
-        tile.findViewById<TextView>(R.id.tile_stats).text = getString(R.string.fusion_stats, wins, tries)
+
+        // Haut-droite : inventaire possédé / nécessaire (count + 1 de réserve)
+        val inventoryText = recipe.inputs.joinToString("  ") { input ->
+            val have = collectionStore.getCopyCount(input.atomicNumber)
+            "${elementSymbol(input.atomicNumber)} $have/${input.count} +1"
+        }
+        tile.findViewById<TextView>(R.id.tile_stats).text = inventoryText
 
         val parentDone = recipe.unlockParentId?.let { pid ->
             FusionRecipe.byId(pid)?.let { fusionStore.getWins(it) > 0 } ?: false
@@ -203,8 +209,9 @@ class FusionActivity : ThemedActivity() {
             fuseBtn.alpha = if (hasEnough) 1f else 0.35f
             fuseAllBtn.isEnabled = hasEnough
             fuseAllBtn.alpha = if (hasEnough) 1f else 0.35f
-            lockedText.visibility = if (hasEnough) View.GONE else View.VISIBLE
-            lockedText.text = if (!hasEnough) getString(R.string.fusion_not_enough_elements) else ""
+            // Bas-gauche : compteur victoires / essais quand débloqué
+            lockedText.visibility = View.VISIBLE
+            lockedText.text = getString(R.string.fusion_stats, wins, tries)
         }
     }
 

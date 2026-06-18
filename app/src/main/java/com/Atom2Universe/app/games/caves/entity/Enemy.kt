@@ -13,7 +13,6 @@ internal class Enemy(
     var z: Double
 ) {
     var level: Int = 1
-    var spriteSheet: String = ""
     var isBoss: Boolean = false
     var animTime: Float = 0f
 
@@ -35,6 +34,10 @@ internal class Enemy(
     var yaw = 0f
     var hitFlash = 0f
     var stuckTimer = 0f
+
+    // Recul horizontal quand le joueur inflige des dégâts — vitesse amortie.
+    var knockX = 0.0
+    var knockZ = 0.0
 
     // Effets de statut appliqués par les affixes d'arme
     var bleedTimer: Float = 0f

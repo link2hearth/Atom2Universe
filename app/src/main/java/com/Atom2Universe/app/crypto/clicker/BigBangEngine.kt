@@ -8,10 +8,11 @@ data class BigBangEffects(
     val hadronColliderMult: Double,
     val protonInjectorMult: Double,
     val plasmaCatalystMult: Double,
-    val synchrotronMult: Double
+    val synchrotronMult: Double,
+    val costSlopeDiscountLevel: Int
 ) {
     companion object {
-        val NONE = BigBangEffects(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+        val NONE = BigBangEffects(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0)
     }
 }
 
@@ -24,6 +25,7 @@ object BigBangEngine {
         hadronColliderMult = BigBangBonus.HADRON_COLLIDER.multiplier(repo.getLevel(BigBangBonus.HADRON_COLLIDER)),
         protonInjectorMult = BigBangBonus.PROTON_INJECTOR.multiplier(repo.getLevel(BigBangBonus.PROTON_INJECTOR)),
         plasmaCatalystMult = BigBangBonus.PLASMA_CATALYST.multiplier(repo.getLevel(BigBangBonus.PLASMA_CATALYST)),
-        synchrotronMult    = BigBangBonus.SYNCHROTRON.multiplier(repo.getLevel(BigBangBonus.SYNCHROTRON))
+        synchrotronMult    = BigBangBonus.SYNCHROTRON.multiplier(repo.getLevel(BigBangBonus.SYNCHROTRON)),
+        costSlopeDiscountLevel = repo.getLevel(BigBangBonus.SPACETIME_COMPRESSION)
     )
 }

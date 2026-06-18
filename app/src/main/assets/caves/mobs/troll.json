@@ -1,0 +1,19 @@
+{
+  "id": "troll",
+  "model": "troll",
+  "hp_base": 8,
+  "damage_base": 4,
+  "speed": 2.2,
+  "attack_range": 2.2,
+  "detect_range": 14.0,
+  "eye_height": 2.6,
+  "radius": 0.7,
+  "sprite_scale": 1.30,
+  "biomes": ["any"],
+  "spawn_zone_min": 12,
+  "spawn_zone_max": 22,
+  "loot_table": "loot_t5",
+  "behavior": "aggressive",
+  "boss_eligible": true,
+  "xp_base": 12
+}

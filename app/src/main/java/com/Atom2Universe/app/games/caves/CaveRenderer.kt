@@ -25,6 +25,7 @@ import com.Atom2Universe.app.games.caves.entity.WeaponVariant
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
+import com.Atom2Universe.app.games.caves.render.MobModels
 import com.Atom2Universe.app.games.caves.render.EnemyRenderer
 import com.Atom2Universe.app.games.caves.render.ProjectileRenderer
 import com.Atom2Universe.app.games.caves.render.ShaderProgram
@@ -199,7 +200,6 @@ internal class CaveRenderer(
     internal val enemyManager      = EnemyManager(world, worldSeed)
     private val enemyRenderer      = EnemyRenderer()
     private val projRenderer       = ProjectileRenderer()
-    private var laserEnemyDmgTimer = 0f
 
     // ── Progression joueur ────────────────────────────────────────────────────
 
@@ -213,6 +213,7 @@ internal class CaveRenderer(
     private val ROCK_IDS = setOf(2020.toShort(), 2021.toShort())
     private var rockChargeTime = 0f
     private val ROCK_CHARGE_MAX = 1.5f
+    private val PLAYER_KNOCKBACK = 6.0   // vitesse initiale du recul quand le joueur est touché
 
     @Volatile var gamePaused = false
 
@@ -232,6 +233,7 @@ internal class CaveRenderer(
     var swingCallback:    (() -> Unit)?                           = null
     var sprintCallback:       ((Boolean) -> Unit)?                = null
     var jumpChargeCallback:   ((Float) -> Unit)?                  = null
+    var playerHitCallback:    (() -> Unit)?                       = null
     private var weaponAttackCooldown = 0f
 
     // ── Shaders ───────────────────────────────────────────────────────────────
@@ -521,6 +523,12 @@ internal class CaveRenderer(
         enemyManager.eventBus      = eventBus
         enemyManager.thornsProvider = { equippedWeaponStat("thorns") }
         eventBus.subscribe { event ->
+            if (event is GameEvent.PlayerHit) {
+                // Recul du joueur (dans le sens attaquant → joueur) + flash rouge écran.
+                physics.applyKnockback(event.dirX * PLAYER_KNOCKBACK, event.dirZ * PLAYER_KNOCKBACK)
+                playerHitCallback?.invoke()
+                return@subscribe
+            }
             if (event !is GameEvent.MobDied) return@subscribe
             val xpGain = if (event.isBoss) 5 * event.level else event.level
             playerStats.addXp(xpGain)
@@ -1124,9 +1132,13 @@ private fun updateProjectiles(dt: Float) {
 
             val hit = enemyManager.enemies.find { e ->
                 if (e.hp <= 0) return@find false
-                val r = e.def.radius.toDouble() + 0.3
-                val dx = p.x - e.x; val dy = p.y - e.y; val dz = p.z - e.z
-                dx * dx + dy * dy * 0.5 + dz * dz < r * r
+                // Cylindre de collision aligné sur le modèle voxel visible :
+                // rayon XZ généreux, hauteur des pieds (e.y) jusqu'au sommet réel.
+                val rXZ = e.def.radius.toDouble() + 0.5
+                val dx = p.x - e.x; val dz = p.z - e.z
+                if (dx * dx + dz * dz >= rXZ * rXZ) return@find false
+                val top = MobModels.bodyHeightWorld(e.def.model, e.baseScale).toDouble()
+                p.y >= e.y - 0.25 && p.y <= e.y + top + 0.25
             }
             if (hit != null) {
                 if (p.isRock) spawnImpact(p.x, p.y, p.z)
@@ -1169,10 +1181,18 @@ private fun updateProjectiles(dt: Float) {
             val charge = rockChargeTime / ROCK_CHARGE_MAX
             val speed = 10f + (28f - 10f) * charge
             val damage = (2 + ((5 - 2) * charge)).toInt()
-            val spawnY = camera.playerY + 0.8
+            // Départ depuis la main droite : décalé à droite + un peu en avant,
+            // sous l'œil (l'œil caméra est à playerY) → la pierre part du bas-droite
+            // de l'écran et non du haut.
+            val yawRad = Math.toRadians(camera.yaw.toDouble())
+            val rightX = cos(yawRad); val rightZ = -sin(yawRad)
+            val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
+            val spawnX = camera.playerX + rightX * 0.45 + fwdX * 0.35
+            val spawnZ = camera.playerZ + rightZ * 0.45 + fwdZ * 0.35
+            val spawnY = camera.playerY - 0.25
             val rockWeapon = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
             projectiles.add(Projectile(
-                camera.playerX, spawnY, camera.playerZ,
+                spawnX, spawnY, spawnZ,
                 camera.aimX.toDouble(), camera.aimY.toDouble(), camera.aimZ.toDouble(),
                 speed, damage, rockWeapon, isRock = true
             ))
@@ -1252,6 +1272,7 @@ private fun updateProjectiles(dt: Float) {
         if (isCrit) dmg = (dmg * critMult).toInt()
 
         com.Atom2Universe.app.games.caves.node.CombatNode.damageEnemy(enemy, dmg)
+        enemyManager.knockbackFromPlayer(enemy)
 
         // Vol de vie (sur les dégâts du coup, post-crit)
         val lifeSteal = stats["life_steal"] ?: 0
@@ -1349,32 +1370,7 @@ private fun updateProjectiles(dt: Float) {
         val laserAllowed = touch.laserActive && isMiningLaserSelected() && (!isRockSelected() || isAimingAtRockBlock())
         // Les blocs rock/rock_moss sont minables sans laser, en visant simplement dessus
         val rockMineActive = touch.laserActive && !isMiningLaserSelected() && isAimingAtRockBlock()
-        if (laserAllowed) {
-            val laserOriginY = if (camera.thirdPerson) camera.playerY + Camera.TPP_ORBIT_DY else camera.y
-            val hitEnemy = enemyManager.hitByLaser(
-                camera.x, laserOriginY, camera.z,
-                camera.aimX, camera.aimY, camera.aimZ,
-                MINE_REACH.toFloat()
-            )
-            if (hitEnemy != null) {
-                mineTarget = RayHit(
-                    Math.floor(hitEnemy.x).toInt(),
-                    Math.floor(hitEnemy.y - hitEnemy.def.eyeHeight * 0.5).toInt(),
-                    Math.floor(hitEnemy.z).toInt(),
-                    0, 0, 0
-                )
-                mineDamage = 0f
-                miningCallback?.invoke(0f, null)
-                laserEnemyDmgTimer -= dt
-                if (laserEnemyDmgTimer <= 0f) {
-                    laserEnemyDmgTimer = 0.22f
-                    enemyManager.damageEnemy(hitEnemy, 1)
-                }
-                return
-            }
-        }
-        laserEnemyDmgTimer = 0f
-
+        // Le laser de minage n'affecte que les blocs : aucun dégât aux mobs.
         val target = if (laserAllowed || rockMineActive) raycastBlock() else null
 
         if (target == null) {
@@ -1415,11 +1411,14 @@ private fun updateProjectiles(dt: Float) {
     }
 
     private fun collectBlock(blockType: Short) {
-        inventory[blockType] = (inventory[blockType] ?: 0) + 1
-        if (hotbar.none { it == blockType }) {
+        // Tous les cailloux (normal, moussu/poussiéreux…) donnent un seul et même
+        // caillou → un seul stack dans l'inventaire.
+        val dropType = if (blockType in ROCK_IDS) ROCK else blockType
+        inventory[dropType] = (inventory[dropType] ?: 0) + 1
+        if (hotbar.none { it == dropType }) {
             val emptySlot = hotbar.indexOfFirst { it == null }
             if (emptySlot != -1) {
-                hotbar[emptySlot] = blockType
+                hotbar[emptySlot] = dropType
                 hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             }
         }

@@ -12,6 +12,7 @@ import com.Atom2Universe.app.games.chess.ChessActivity
 import com.Atom2Universe.app.games.draughts.DraughtsActivity
 import com.Atom2Universe.app.games.othello.OthelloActivity
 import com.Atom2Universe.app.games.flappycat.FlappyCatActivity
+import com.Atom2Universe.app.games.hotpotato.HotPotatoActivity
 import com.Atom2Universe.app.clickerstats.ClickerStatsActivity
 import com.Atom2Universe.app.games.link.LinkActivity
 import com.Atom2Universe.app.games.starswar.StarsWarActivity
@@ -172,6 +173,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_flappycat,
             activityClass = FlappyCatActivity::class.java
+        ),
+        HubTile(
+            id = "hotpotato",
+            titleRes = R.string.hot_potato_title,
+            descriptionRes = R.string.hot_potato_description,
+            iconRes = android.R.drawable.ic_menu_compass,
+            defaultColorRes = R.color.game_tile_hotpotato,
+            activityClass = HotPotatoActivity::class.java
         ),
         HubTile(
             id = "reflex",

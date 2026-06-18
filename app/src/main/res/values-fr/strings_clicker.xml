@@ -201,7 +201,9 @@
     <string name="big_bang_bonus_proton_injector">Injecteur de protons</string>
     <string name="big_bang_bonus_plasma_catalyst">Catalyseur plasma</string>
     <string name="big_bang_bonus_synchrotron">Synchrotron</string>
+    <string name="big_bang_bonus_spacetime">Compression de l\'espace-temps</string>
     <string name="big_bang_bonus_effect">+%d%% par achat</string>
+    <string name="big_bang_bonus_effect_spacetime">Ralentit la hausse du prix du Doigt Créateur et du Cœur d\'Étoile</string>
     <string name="big_bang_bonus_level">Niv. %d</string>
     <string name="big_bang_bonus_level_arrow">Niv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>

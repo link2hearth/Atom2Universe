@@ -158,6 +158,7 @@
     <color name="crypto_chart_crosshair">#CBD5E1</color>
     <color name="game_tile_starswar">#1A237E</color>
     <color name="game_tile_flappycat">#00838F</color>
+    <color name="game_tile_hotpotato">#B5462E</color>
     <color name="game_tile_blackjack">#1B5E20</color>
     <color name="game_tile_roulette">#4A0000</color>
     <color name="game_tile_chess">#4E342E</color>

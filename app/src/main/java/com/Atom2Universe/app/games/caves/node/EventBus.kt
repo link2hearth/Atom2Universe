@@ -15,7 +15,8 @@ internal sealed class GameEvent {
 
     data class BossSpawned(val mobId: Int) : GameEvent()
 
-    data class PlayerHit(val damage: Int) : GameEvent()
+    /** [dirX]/[dirZ] : direction horizontale normalisée du recul (de l'attaquant vers le joueur). */
+    data class PlayerHit(val damage: Int, val dirX: Float = 0f, val dirZ: Float = 0f) : GameEvent()
 
     data class MobHit(val isBoss: Boolean) : GameEvent()
 

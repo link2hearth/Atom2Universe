@@ -411,7 +411,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
         val effective = ClickerShopEngine.effectiveBuyAmount(currentLevel, quantity)
         if (effective <= 0) return
-        val cost = ClickerShopEngine.batchCost(currentLevel, effective)
+        val cost = ClickerShopEngine.batchCost(currentLevel, effective, bigBangEffects.costSlopeDiscountLevel)
         if (cost.greaterThan(s.atoms)) return
         val newLevel = currentLevel + effective
         val afterPurchase = when (upgradeId) {
@@ -444,7 +444,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             else        -> return LayeredNumber.zero()
         }
         val effective = ClickerShopEngine.effectiveBuyAmount(currentLevel, quantity)
-        return ClickerShopEngine.batchCost(currentLevel, effective)
+        return ClickerShopEngine.batchCost(currentLevel, effective, bigBangEffects.costSlopeDiscountLevel)
     }
 
     fun getTotalElements(): Int = collectionStore.getTotalCopies()

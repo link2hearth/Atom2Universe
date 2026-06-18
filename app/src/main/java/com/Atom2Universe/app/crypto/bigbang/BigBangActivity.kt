@@ -68,7 +68,11 @@ class BigBangActivity : ThemedActivity() {
 
     private fun setupBonusItem(view: View, bonus: BigBangBonus) {
         view.findViewById<TextView>(R.id.bonus_name).text   = bonusName(bonus)
-        view.findViewById<TextView>(R.id.bonus_effect).text = getString(R.string.big_bang_bonus_effect, bonus.effectPercent)
+        view.findViewById<TextView>(R.id.bonus_effect).text =
+            if (bonus == BigBangBonus.SPACETIME_COMPRESSION)
+                getString(R.string.big_bang_bonus_effect_spacetime)
+            else
+                getString(R.string.big_bang_bonus_effect, bonus.effectPercent)
 
         view.findViewById<Button>(R.id.bonus_minus).setOnClickListener {
             val qty = pendingQty[bonus] ?: 0
@@ -129,6 +133,7 @@ class BigBangActivity : ThemedActivity() {
         BigBangBonus.PROTON_INJECTOR    -> "⚗ " + getString(R.string.big_bang_bonus_proton_injector)
         BigBangBonus.PLASMA_CATALYST    -> "🌡 " + getString(R.string.big_bang_bonus_plasma_catalyst)
         BigBangBonus.SYNCHROTRON        -> "🔄 " + getString(R.string.big_bang_bonus_synchrotron)
+        BigBangBonus.SPACETIME_COMPRESSION -> "🌀 " + getString(R.string.big_bang_bonus_spacetime)
     }
 
     private fun triggerBigBang() {

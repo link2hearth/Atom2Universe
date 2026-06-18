@@ -37,7 +37,7 @@ internal class SpawnManager(
     // Pool shufflée une fois à l'init selon la seed du monde.
     // Indexée par zone (modulo taille) → même zone = même mob pour ce monde.
     private val shuffledPool: List<String> by lazy {
-        MobRegistry.all().map { it.spriteSheet }.shuffled(Random(worldSeed))
+        MobRegistry.all().map { it.id }.shuffled(Random(worldSeed))
     }
 
     private fun mobForZone(zone: Int, biome: String): MobDef {
@@ -50,8 +50,8 @@ internal class SpawnManager(
         // Sinon : pool shufflée → index = zone % taille, au pif total selon la seed
         val pool = shuffledPool
         if (pool.isEmpty()) return MobRegistry.all().first()
-        val sheet = pool[zone % pool.size]
-        return MobRegistry.all().first { it.spriteSheet == sheet }
+        val id = pool[zone % pool.size]
+        return MobRegistry.get(id)
     }
 
     private fun rollMobForSpawn(zone: Int, biome: String): MobDef {
@@ -99,7 +99,6 @@ internal class SpawnManager(
         val selected = dispersePack(origin, availableBlocks, packSize)
         for ((index, block) in selected.withIndex()) {
             val e = Enemy(nextId++, def, block.x, block.y, block.z)
-            e.spriteSheet = def.spriteSheet
             e.level       = block.zone
             e.isBoss      = spawnBoss && index == 0
             e.hp          = e.maxHp

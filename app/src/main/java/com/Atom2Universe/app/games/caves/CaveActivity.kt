@@ -299,11 +299,13 @@ class CaveActivity : ThemedActivity() {
 
         hud.buildHealthBar(root)
         hud.buildWeaponInHand(root)
+        hud.buildDamageFlash(root)
 
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
         renderer.shieldCallback   = { cur, max  -> uiHandler.post { hud.updateShieldBar(cur, max) } }
         renderer.swingCallback    = { uiHandler.post { hud.triggerSwing() } }
         renderer.sprintCallback   = { active -> uiHandler.post { hud.updateSprintIndicator(active) } }
+        renderer.playerHitCallback = { uiHandler.post { hud.flashDamage() } }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)

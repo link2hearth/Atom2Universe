@@ -272,4 +272,20 @@
     <string name="sokoban_undo">Annuler</string>
     <string name="sokoban_reset">Recommencer</string>
     <string name="sokoban_new">Nouveau</string>
+
+    <!-- Hot Potato -->
+    <string name="hot_potato_title">Patate Chaude</string>
+    <string name="hot_potato_description">Fais rebondir la patate, cuis-la à point, puis éjecte-la sur les côtés !</string>
+    <string name="hot_potato_how_to">Tire vers l\'arrière comme un lance-pierre · cuis-la dans la zone verte</string>
+    <string name="hot_potato_tap_to_start">Tape sous la patate pour commencer</string>
+    <string name="hot_potato_tap_to_retry">Tape pour rejouer</string>
+    <string name="hot_potato_tap_to_resume">Tape pour reprendre</string>
+    <string name="hot_potato_game_over">Partie terminée</string>
+    <string name="hot_potato_paused">Pause</string>
+    <string name="hot_potato_score_label">Score</string>
+    <string name="hot_potato_best_label">MEILLEUR</string>
+    <string name="hot_potato_new_best">Nouveau record !</string>
+    <string name="hot_potato_perfect">Parfait !</string>
+    <string name="hot_potato_raw">Pas assez cuite !</string>
+    <string name="hot_potato_burnt">Cramée !</string>
 </resources>

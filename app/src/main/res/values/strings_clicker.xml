@@ -201,7 +201,9 @@
     <string name="big_bang_bonus_proton_injector">Proton Injector</string>
     <string name="big_bang_bonus_plasma_catalyst">Plasma Catalyst</string>
     <string name="big_bang_bonus_synchrotron">Synchrotron</string>
+    <string name="big_bang_bonus_spacetime">Spacetime Compression</string>
     <string name="big_bang_bonus_effect">+%d%% per purchase</string>
+    <string name="big_bang_bonus_effect_spacetime">Slows the price growth of God Finger and Star Core</string>
     <string name="big_bang_bonus_level">Lv. %d</string>
     <string name="big_bang_bonus_level_arrow">Lv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>

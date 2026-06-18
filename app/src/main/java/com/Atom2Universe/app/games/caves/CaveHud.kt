@@ -306,6 +306,38 @@ internal class CaveHud(private val activity: CaveActivity) {
     private var weaponTooltipName: android.widget.TextView? = null
     private var weaponTooltipStats: android.widget.TextView? = null
 
+    // ── Flash rouge de dégât ────────────────────────────────────────────────────
+
+    private var damageFlash: View? = null
+
+    /** Vignette radiale rouge plein écran, transparente au centre, animée en alpha. */
+    fun buildDamageFlash(root: FrameLayout) {
+        val dm = res.displayMetrics
+        val v = View(activity).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+            background = GradientDrawable().apply {
+                gradientType = GradientDrawable.RADIAL_GRADIENT
+                gradientRadius = maxOf(dm.widthPixels, dm.heightPixels) * 0.62f
+                // Centre transparent → bords rouges (vignette)
+                colors = intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, Color.argb(190, 185, 12, 12))
+            }
+            alpha = 0f
+            isClickable = false
+            isFocusable = false
+        }
+        root.addView(v)
+        damageFlash = v
+    }
+
+    /** Déclenche un flash : pleine intensité puis fondu vers 0. */
+    fun flashDamage() {
+        val v = damageFlash ?: return
+        v.animate().cancel()
+        v.alpha = 0.7f
+        v.animate().alpha(0f).setDuration(420).start()
+    }
+
     fun buildWeaponInHand(root: FrameLayout) {
         // Vue animée de swing en bas à droite, avancée vers le centre
         val swingSize = (200 * dp).toInt()

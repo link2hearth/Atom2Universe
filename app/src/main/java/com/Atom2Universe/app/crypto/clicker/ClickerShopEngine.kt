@@ -17,6 +17,16 @@ internal object ClickerShopEngine {
     private val RATIO_B = 9091.0 / 899100.0
     private val RATIO_C = -1.0 / 9890100.0
 
+    // Rabais exponentiel borné (bonus Big Bang « Compression de l'espace-temps ») :
+    // retranche une pente au log du prix au-delà d'un seuil. Borné sous RATIO_B pour
+    // garantir un prix toujours croissant (jamais gratuit), donc le mur subsiste, adouci.
+    private const val DISCOUNT_THRESHOLD = 100        // pas d'effet au niveau <= 100
+    private const val DISCOUNT_STEP = 0.0001          // réduction de pente par niveau Big Bang
+    private const val DISCOUNT_MAX = 0.007            // plafond (< RATIO_B), atteint à 70 niveaux
+
+    private fun slopeReduction(discountLevel: Int): Double =
+        if (discountLevel <= 0) 0.0 else minOf(discountLevel * DISCOUNT_STEP, DISCOUNT_MAX)
+
     private fun effectiveIndex(level: Int): Int {
         val n = level.coerceAtLeast(0)
         if (n <= 0) return 0
@@ -44,25 +54,30 @@ internal object ClickerShopEngine {
         return LayeredNumber(maxOf(1.0, floor(v)))
     }
 
-    private fun logCost(level: Int): Double {
+    private fun logCost(level: Int, discountLevel: Int): Double {
         val idx = effectiveIndex(level)
         if (idx <= 0) return Double.NEGATIVE_INFINITY
         val lb = logBonus(level)
         val lr = RATIO_A + RATIO_B * idx + RATIO_C * idx * idx
-        return lb + lr
+        var lc = lb + lr
+        val sr = slopeReduction(discountLevel)
+        if (sr > 0.0 && level > DISCOUNT_THRESHOLD) {
+            lc -= sr * (level - DISCOUNT_THRESHOLD)
+        }
+        return lc
     }
 
-    fun cost(level: Int): LayeredNumber {
-        val lc = logCost(level)
+    fun cost(level: Int, discountLevel: Int = 0): LayeredNumber {
+        val lc = logCost(level, discountLevel)
         val c = 10.0.pow(lc)
         if (!c.isFinite() || c <= 0) return LayeredNumber.zero()
         return LayeredNumber(maxOf(1.0, floor(c)))
     }
 
-    fun batchCost(fromLevel: Int, quantity: Int): LayeredNumber {
+    fun batchCost(fromLevel: Int, quantity: Int, discountLevel: Int = 0): LayeredNumber {
         var total = LayeredNumber.zero()
         for (i in 0 until quantity) {
-            total = total.add(cost(fromLevel + i + 1))
+            total = total.add(cost(fromLevel + i + 1, discountLevel))
         }
         return total
     }

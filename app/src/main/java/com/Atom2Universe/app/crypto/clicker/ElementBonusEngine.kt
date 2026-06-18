@@ -5,79 +5,67 @@ import com.Atom2Universe.app.crypto.gacha.rarityOf
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 
 data class ElementBonuses(
-    val flatApc: Long,   // H(+1 gacha), C(+10 fusion), O(+100 fusion), SUPERNOVA pair(+1000 fusion)
-    val flatAps: Long,   // He(+1 fusion), Ne(+10 fusion), Fe(+100 fusion), SUPERNOVA impair(+1000 fusion)
-    val multApc: Double, // % accumulé via copies gacha
-    val multAps: Double
+    val flatApc: Long,   // bonus plat APC (copies gacha)
+    val flatAps: Long,   // bonus plat APS (copies gacha)
+    val multApc: Double, // % accumulé APC (copies gacha, débloqué à 100 tirages)
+    val multAps: Double  // % accumulé APS (copies gacha, débloqué à 100 tirages)
 )
 
 object ElementBonusEngine {
-    // Règle : flat = copies obtenues via fusion uniquement (getFusionCount)
-    //         %    = copies obtenues via gacha uniquement (getTotalEverCount - getFusionCount)
+    // Bonus gacha par rareté, déclenché par les tirages (1 tirage = 1 copie).
     //
-    // Chaîne de fusion et bonus flat par copie fusion :
-    //   H  (#1)           → +1 APC  (exception : H vient du gacha uniquement, getTotalEverCount)
-    //   He (#2)           → +1 APS  (fusion)
-    //   C  (#6)           → +10 APC (fusion)
-    //   Ne (#10)          → +10 APS (fusion)
-    //   O  (#8)           → +100 APC (fusion)
-    //   Fe (#26)          → +100 APS (fusion)
-    //   SUPERNOVA Z15–28 pair  → +1000 APC (neutron capture)
-    //   SUPERNOVA Z15–28 impair→ +1000 APS (neutron capture)
+    // Palier 1 — flat, appliqué à CHAQUE copie gacha, toujours :
+    //   rareté 1 PRIMORDIAL  → +1    | rareté 2 FUSION      → +10
+    //   rareté 3 SUPERNOVA   → +10   | rareté 4 NEUTRONIQUE → +100
+    //   rareté 5 SPALLATION  → +100  | rareté 6 SYNTHETIQUE → +1000
     //
-    // Bonus % par rareté (gacha uniquement) :
-    //   FUSION      → ×mult APS  +0.01%/copie
-    //   SUPERNOVA   → ×mult APC  +0.1%/copie
-    //   NEUTRONIQUE → ×mult APS  +0.1%/copie
-    //   SPALLATION  → ×mult APC  +0.01%/copie
-    //   SYNTHETIQUE → ×mult APC+APS +0.1%/copie chacun
+    // Palier 2 — %, appliqué à CHAQUE copie gacha, débloqué une fois >= 100 tirages gacha :
+    //   r1 +0,1% APC | r2 +0,2% APS | r3 +0,2% APC | r4 +0,3% APS | r5 +0,5% APC | r6 +0,5% APS
+    //
+    // Flat et % d'une rareté vont vers la même cible (APC ou APS), en alternance par rareté.
+    // Seules les copies gacha comptent (totalEver - fusion) ; les copies de fusion ont leur
+    // propre bonus via FusionStore.
+    private const val PULL_THRESHOLD = 100
 
-    private const val BONUS_LOW  = 0.0001  // 0.01%
-    private const val BONUS_HIGH = 0.001   // 0.1%
+    private data class RarityBonus(val flat: Long, val pct: Double, val toApc: Boolean)
+
+    private fun rarityBonus(rarity: GachaRarity): RarityBonus = when (rarity) {
+        GachaRarity.PRIMORDIAL  -> RarityBonus(1L,    0.001, toApc = true)
+        GachaRarity.FUSION      -> RarityBonus(10L,   0.002, toApc = false)
+        GachaRarity.SUPERNOVA   -> RarityBonus(10L,   0.002, toApc = true)
+        GachaRarity.NEUTRONIQUE -> RarityBonus(100L,  0.003, toApc = false)
+        GachaRarity.SPALLATION  -> RarityBonus(100L,  0.005, toApc = true)
+        GachaRarity.SYNTHETIQUE -> RarityBonus(1000L, 0.005, toApc = false)
+    }
 
     fun compute(store: PeriodicCollectionStore): ElementBonuses {
+        // Copies gacha cumulées par rareté + total des tirages gacha (pour le seuil).
+        val gachaByRarity = HashMap<GachaRarity, Long>()
+        var totalGachaPulls = 0L
+        for (atomicNum in 1..118) {
+            val total = store.getTotalEverCount(atomicNum).toLong()
+            if (total <= 0L) continue
+            val fusion = store.getFusionCount(atomicNum).toLong()
+            val gacha = (total - fusion).coerceAtLeast(0L)
+            if (gacha <= 0L) continue
+            val rarity = rarityOf(atomicNum)
+            gachaByRarity[rarity] = (gachaByRarity[rarity] ?: 0L) + gacha
+            totalGachaPulls += gacha
+        }
+
+        val pctUnlocked = totalGachaPulls >= PULL_THRESHOLD
+
         var flatApc = 0L
         var flatAps = 0L
         var multApc = 0.0
         var multAps = 0.0
-
-        for (atomicNum in 1..118) {
-            val totalCopies = store.getTotalEverCount(atomicNum).toLong()
-            if (totalCopies <= 0L) continue
-
-            val fusionCopies = store.getFusionCount(atomicNum).toLong()
-            val gachaCopies  = (totalCopies - fusionCopies).coerceAtLeast(0L)
-
-            when (atomicNum) {
-                1  -> flatApc += totalCopies                  // H et He : bonus flat via gacha
-                2  -> flatAps += totalCopies
-                6  -> { flatApc += fusionCopies * 10L;  multAps += gachaCopies * BONUS_LOW  }
-                8  -> { flatApc += fusionCopies * 100L; multApc += gachaCopies * BONUS_LOW  }
-                10 -> { flatAps += fusionCopies * 10L;  multAps += gachaCopies * BONUS_LOW  }
-                26 -> { flatAps += fusionCopies * 100L; multApc += gachaCopies * BONUS_HIGH }
-                else -> {
-                    val rarity = rarityOf(atomicNum)
-                    // Éléments SUPERNOVA Z15–28 (hors 8 et 26 déjà traités) :
-                    // flat +1000 depuis fusion, % depuis gacha
-                    if (rarity == GachaRarity.SUPERNOVA && atomicNum in 15..28) {
-                        if (atomicNum % 2 == 0) flatApc += fusionCopies * 1000L
-                        else                    flatAps += fusionCopies * 1000L
-                        multApc += gachaCopies * BONUS_HIGH
-                    } else {
-                        val copies = totalCopies  // éléments non-chaîne : tous gacha
-                        when (rarity) {
-                            GachaRarity.FUSION      -> multAps += copies * BONUS_LOW
-                            GachaRarity.SUPERNOVA   -> multApc += copies * BONUS_HIGH
-                            GachaRarity.NEUTRONIQUE -> multAps += copies * BONUS_HIGH
-                            GachaRarity.SPALLATION  -> multApc += copies * BONUS_LOW
-                            GachaRarity.SYNTHETIQUE -> {
-                                multApc += copies * BONUS_HIGH
-                                multAps += copies * BONUS_HIGH
-                            }
-                            else -> Unit
-                        }
-                    }
-                }
+        for ((rarity, copies) in gachaByRarity) {
+            val def = rarityBonus(rarity)
+            val flat = copies * def.flat
+            if (def.toApc) flatApc += flat else flatAps += flat
+            if (pctUnlocked) {
+                val pct = copies * def.pct
+                if (def.toApc) multApc += pct else multAps += pct
             }
         }
 

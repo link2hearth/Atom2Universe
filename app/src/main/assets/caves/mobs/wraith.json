@@ -1,0 +1,19 @@
+{
+  "id": "wraith",
+  "model": "wraith",
+  "hp_base": 7,
+  "damage_base": 4,
+  "speed": 2.8,
+  "attack_range": 1.8,
+  "detect_range": 16.0,
+  "eye_height": 1.7,
+  "radius": 0.5,
+  "sprite_scale": 1.00,
+  "biomes": ["any"],
+  "spawn_zone_min": 14,
+  "spawn_zone_max": 99,
+  "loot_table": "loot_t5",
+  "behavior": "aggressive",
+  "boss_eligible": true,
+  "xp_base": 14
+}

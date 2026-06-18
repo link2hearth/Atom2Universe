@@ -1,0 +1,19 @@
+{
+  "id": "goblin",
+  "model": "goblin",
+  "hp_base": 3,
+  "damage_base": 1,
+  "speed": 3.2,
+  "attack_range": 1.5,
+  "detect_range": 12.0,
+  "eye_height": 1.2,
+  "radius": 0.35,
+  "sprite_scale": 0.65,
+  "biomes": ["any"],
+  "spawn_zone_min": 1,
+  "spawn_zone_max": 6,
+  "loot_table": "loot_t1",
+  "behavior": "aggressive",
+  "boss_eligible": true,
+  "xp_base": 2
+}

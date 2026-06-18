@@ -332,6 +332,11 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
         <activity
+            android:name=".games.hotpotato.HotPotatoActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".games.theline.TheLineActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"

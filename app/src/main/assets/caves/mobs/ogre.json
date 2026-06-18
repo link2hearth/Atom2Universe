@@ -1,0 +1,19 @@
+{
+  "id": "ogre",
+  "model": "ogre",
+  "hp_base": 9,
+  "damage_base": 4,
+  "speed": 2.0,
+  "attack_range": 2.2,
+  "detect_range": 12.0,
+  "eye_height": 2.4,
+  "radius": 0.8,
+  "sprite_scale": 1.25,
+  "biomes": ["any"],
+  "spawn_zone_min": 8,
+  "spawn_zone_max": 18,
+  "loot_table": "loot_t4",
+  "behavior": "aggressive",
+  "boss_eligible": true,
+  "xp_base": 9
+}

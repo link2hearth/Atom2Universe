@@ -50,11 +50,14 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     var thornsProvider: (() -> Int)? = null
 
     private var playerInvTimer = 0f
+    private var lastPx = 0.0
+    private var lastPz = 0.0
 
     // ── Tick principal ────────────────────────────────────────────────────────
 
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
         if (isCreative) { enemies.clear(); return }
+        lastPx = px; lastPz = pz
         playerInvTimer = (playerInvTimer - dt).coerceAtLeast(0f)
 
         player?.tickShield(dt)
@@ -111,6 +114,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             if (e.fireTimer <= 0f) { e.fireTimer = 0f; e.fireDamage = 0; e.fireTickTimer = 0f }
         }
 
+        // Recul infligé par le joueur — déplacement amorti, même si étourdi.
+        applyMobKnockback(e, dt)
+
         // Étourdissement
         if (e.shockTimer > 0f) { e.shockTimer -= dt; return }
 
@@ -119,15 +125,19 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         val dist3d = sqrt(dx * dx + dy * dy + dz * dz)
         val dist    = sqrt(dx * dx + dz * dz)   // XZ pour l'orientation et le déplacement
 
+        // Distance de garde souhaitée au centre du joueur : tient compte du rayon
+        // du mob pour que son corps n'entre pas dans la caméra en vue FPS.
+        val keep = keepDist(e)
+
         val prevState = e.state
         e.state = when (e.state) {
             EnemyState.WANDER -> if (dist3d < e.def.detectRange) EnemyState.CHASE else EnemyState.WANDER
             EnemyState.CHASE  -> when {
-                dist3d < e.def.attackRange       -> EnemyState.ATTACK
+                dist3d <= keep + ATTACK_REACH    -> EnemyState.ATTACK
                 dist3d > e.def.detectRange * 2.0 -> { e.alertPlayed = false; EnemyState.WANDER }
                 else                              -> EnemyState.CHASE
             }
-            EnemyState.ATTACK -> if (dist3d > e.def.attackRange * 1.5) EnemyState.CHASE else EnemyState.ATTACK
+            EnemyState.ATTACK -> if (dist3d > keep + 1.5) EnemyState.CHASE else EnemyState.ATTACK
         }
         if (prevState == EnemyState.WANDER && e.state == EnemyState.CHASE && !e.alertPlayed) {
             e.alertPlayed = true
@@ -148,7 +158,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 if (e.wanderDirX != 0f || e.wanderDirZ != 0f)
                     e.yaw = atan2(e.wanderDirX, e.wanderDirZ) * (180f / PI.toFloat())
             }
-            EnemyState.CHASE -> if (dist > 0.1) {
+            EnemyState.CHASE -> if (dist > keep) {
                 var nx = (dx / dist).toFloat()
                 var nz = (dz / dist).toFloat()
                 if (e.stuckTimer > 1.2f) {
@@ -162,28 +172,45 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 move(e, nx * spd, nz * spd)
                 if (e.x == prevX && e.z == prevZ) e.stuckTimer += dt else e.stuckTimer = 0f
                 e.yaw = atan2(nx, nz) * (180f / PI.toFloat())
+            } else {
+                // À distance de garde : reste sur place, fait juste face au joueur.
+                e.stuckTimer = 0f
+                if (dist > 0.1) e.yaw = atan2((dx / dist).toFloat(), (dz / dist).toFloat()) * (180f / PI.toFloat())
             }
             EnemyState.ATTACK -> {
                 e.stuckTimer = 0f
                 if (dist > 0.1)
                     e.yaw = atan2((px - e.x).toFloat(), (pz - e.z).toFloat()) * (180f / PI.toFloat())
-                e.attackCooldown -= dt
-                if (e.attackCooldown <= 0f && playerInvTimer <= 0f) {
-                    e.attackCooldown = ATTACK_CD
-                    playerInvTimer = 0.5f
-                    val bus = eventBus
-                    val p   = player
-                    if (p != null && bus != null) {
-                        CombatNode.enemyAttacksPlayer(e, p, bus)
-                        val thornsDmg = thornsProvider?.invoke() ?: 0
-                        if (thornsDmg > 0) {
-                            e.hp = (e.hp - thornsDmg).coerceAtLeast(0)
-                            e.hitFlash = 0.15f
-                        }
-                    }
+                // Maintien de la distance : si le joueur s'avance dans le mob, il recule.
+                if (dist in 0.1..(keep - 0.4)) {
+                    move(e, (-dx / dist) * spd * 0.8, (-dz / dist) * spd * 0.8)
                 }
             }
         }
+
+        // Attaque : découplée de l'état de déplacement. Dès que le mob est à portée,
+        // le cooldown tourne et il frappe — la séparation entre mobs ne l'empêche plus.
+        e.attackCooldown -= dt
+        if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && playerInvTimer <= 0f) {
+            e.attackCooldown = ATTACK_CD
+            playerInvTimer = 0.5f
+            val bus = eventBus
+            val p   = player
+            if (p != null && bus != null) {
+                // Direction du recul : de l'ennemi vers le joueur, à l'horizontale.
+                val kdx = (px - e.x); val kdz = (pz - e.z)
+                val klen = sqrt(kdx * kdx + kdz * kdz).coerceAtLeast(0.001)
+                CombatNode.enemyAttacksPlayer(e, p, bus, (kdx / klen).toFloat(), (kdz / klen).toFloat())
+                val thornsDmg = thornsProvider?.invoke() ?: 0
+                if (thornsDmg > 0) {
+                    e.hp = (e.hp - thornsDmg).coerceAtLeast(0)
+                    e.hitFlash = 0.15f
+                }
+            }
+        }
+
+        // Séparation : les mobs s'évitent entre eux pour ne pas s'empiler.
+        applySeparation(e, dt)
 
         e.velY = (e.velY - GRAVITY * dt).coerceAtLeast(MAX_FALL.toDouble())
         val newY = e.y + e.velY * dt
@@ -192,6 +219,49 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             e.y = ground; e.velY = 0.0; e.onGround = true
         } else {
             e.y = newY; e.onGround = ground != null && newY <= ground + 0.1
+        }
+    }
+
+    /** Distance XZ à laquelle le mob se tient du centre du joueur (corps hors caméra). */
+    private fun keepDist(e: Enemy): Double =
+        (e.def.radius.toDouble() + PLAYER_STANDOFF).coerceAtLeast(e.def.attackRange)
+
+    /** Donne une impulsion de recul à [e], à l'opposé du joueur (réduite pour les boss). */
+    fun knockbackFromPlayer(e: Enemy, strength: Double = MOB_KNOCKBACK) {
+        val dx = e.x - lastPx; val dz = e.z - lastPz
+        val len = sqrt(dx * dx + dz * dz).coerceAtLeast(0.001)
+        val s = if (e.isBoss) strength * 0.4 else strength
+        e.knockX = dx / len * s
+        e.knockZ = dz / len * s
+    }
+
+    /** Applique le recul amorti de [e] (avec collision via [move]). */
+    private fun applyMobKnockback(e: Enemy, dt: Float) {
+        if (e.knockX == 0.0 && e.knockZ == 0.0) return
+        move(e, e.knockX * dt, e.knockZ * dt)
+        val damp = (KNOCK_DAMP * dt).coerceAtMost(1.0)
+        e.knockX -= e.knockX * damp
+        e.knockZ -= e.knockZ * damp
+        if (abs(e.knockX) < 0.1 && abs(e.knockZ) < 0.1) { e.knockX = 0.0; e.knockZ = 0.0 }
+    }
+
+    /** Repousse [e] des autres mobs trop proches pour éviter l'empilement. */
+    private fun applySeparation(e: Enemy, dt: Float) {
+        var sx = 0.0; var sz = 0.0
+        for (o in enemies) {
+            if (o === e || o.hp <= 0) continue
+            val dx = e.x - o.x; val dz = e.z - o.z
+            val d2 = dx * dx + dz * dz
+            val want = e.def.radius.toDouble() + o.def.radius.toDouble() + SEP_GAP
+            if (d2 in 1e-6..(want * want)) {
+                val d = sqrt(d2)
+                val push = (want - d) / want
+                sx += dx / d * push; sz += dz / d * push
+            }
+        }
+        if (sx != 0.0 || sz != 0.0) {
+            val spd = e.scaledSpeed.toDouble() * dt * SEP_STRENGTH
+            move(e, sx * spd, sz * spd)
         }
     }
 
@@ -247,24 +317,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     // ── API publique ──────────────────────────────────────────────────────────
 
-    fun hitByLaser(
-        ox: Double, oy: Double, oz: Double,
-        ddx: Float, ddy: Float, ddz: Float,
-        maxDist: Float
-    ): Enemy? {
-        var closest: Enemy? = null; var closestT = maxDist.toDouble()
-        for (e in enemies) {
-            if (e.hp <= 0) continue
-            val t = rayAABB(ox, oy, oz, ddx, ddy, ddz,
-                e.x - 0.5, e.y - 0.5, e.z - 0.5,
-                e.x + 0.5, e.y + 0.5, e.z + 0.5) ?: continue
-            if (t < closestT) { closestT = t; closest = e }
-        }
-        return closest
-    }
-
     fun damageEnemy(e: Enemy, dmg: Int) {
         CombatNode.damageEnemy(e, dmg)
+        knockbackFromPlayer(e)
         if (e.state == EnemyState.WANDER) e.state = EnemyState.CHASE
         eventBus?.publish(com.Atom2Universe.app.games.caves.node.GameEvent.MobHit(e.isBoss))
     }
@@ -276,31 +331,18 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     fun computeLevel(blockX: Double, blockY: Double, blockZ: Double): Int =
         spawnManager.computeLevel(blockX, blockY, blockZ)
 
-    private fun rayAABB(
-        ox: Double, oy: Double, oz: Double,
-        ddx: Float, ddy: Float, ddz: Float,
-        minX: Double, minY: Double, minZ: Double,
-        maxX: Double, maxY: Double, maxZ: Double
-    ): Double? {
-        var tMin = 0.0; var tMax = Double.MAX_VALUE
-        fun axis(o: Double, d: Float, lo: Double, hi: Double): Boolean {
-            if (d == 0f) return o in lo..hi
-            val t1 = (lo - o) / d; val t2 = (hi - o) / d
-            tMin = maxOf(tMin, minOf(t1, t2)); tMax = minOf(tMax, maxOf(t1, t2))
-            return tMax >= tMin
-        }
-        if (!axis(ox, ddx, minX, maxX)) return null
-        if (!axis(oy, ddy, minY, maxY)) return null
-        if (!axis(oz, ddz, minZ, maxZ)) return null
-        return if (tMax < 0.0) null else tMin
-    }
-
     companion object {
         const val ATTACK_CD      = 1.5f
         const val GRAVITY        = 20f
         const val MAX_FALL       = -20f
         const val STEP_UP_VEL    = 7.0
         const val DESPAWN_CHUNKS = 6
+        const val ATTACK_REACH    = 0.6    // portée d'attaque au-delà de la distance de garde
+        const val PLAYER_STANDOFF = 1.5    // marge XZ au-delà du rayon du mob (corps hors caméra)
+        const val SEP_GAP         = 0.7    // espace désiré entre les surfaces de deux mobs
+        const val SEP_STRENGTH    = 0.9    // intensité de la force de séparation
+        const val MOB_KNOCKBACK   = 5.0    // vitesse initiale du recul d'un mob touché
+        const val KNOCK_DAMP      = 8.0    // amortissement du recul (par seconde)
     }
 
     // RNG local pour l'IA de wandering (indépendant du spawn)

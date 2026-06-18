@@ -10,6 +10,13 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
     var isSprinting = false
 
+    // Recul horizontal (knockback) quand le joueur est touché — vitesse amortie.
+    private var knockX = 0.0
+    private var knockZ = 0.0
+
+    /** Donne une impulsion de recul (unités/s) ; [vx]/[vz] = direction × force. */
+    fun applyKnockback(vx: Double, vz: Double) { knockX = vx; knockZ = vz }
+
     var skillBook: com.Atom2Universe.app.games.caves.entity.SkillBook? = null
 
     // Callbacks
@@ -43,6 +50,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         private const val PLAYER_WI      = 0.29
         private const val PLAYER_H_BELOW = 1.62
         private const val PLAYER_H_ABOVE = 0.18
+        private const val KNOCK_DAMP     = 8.0    // amortissement du recul (par seconde)
     }
 
     fun updateWalk(
@@ -92,6 +100,18 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         } else if ((onGround || inWater) && dz != 0.0 &&
                    !collidesAt(x, y + STEP_MAX, newZ)) {
             if (stepUpRemaining == 0.0) stepUpRemaining = STEP_MAX
+        }
+
+        // ── Recul (knockback) ─────────────────────────────────────────────────
+        if (knockX != 0.0 || knockZ != 0.0) {
+            val kx = knockX * dt
+            if (!collidesAt(x + kx, y, z)) x += kx
+            val kz = knockZ * dt
+            if (!collidesAt(x, y, z + kz)) z += kz
+            val damp = (KNOCK_DAMP * dt).coerceAtMost(1.0)
+            knockX -= knockX * damp
+            knockZ -= knockZ * damp
+            if (abs(knockX) < 0.1 && abs(knockZ) < 0.1) { knockX = 0.0; knockZ = 0.0 }
         }
 
         // ── Phase verticale ───────────────────────────────────────────────────
@@ -225,6 +245,8 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
     fun reset() {
         velocityY       = 0.0
+        knockX          = 0.0
+        knockZ          = 0.0
         onGround        = false
         prevOnGround    = false
         prevJumpPressed = false

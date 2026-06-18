@@ -115,7 +115,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
     // ── Textures ──────────────────────────────────────────────────
     private val planetTexIds = IntArray(8)
-    private var sunTexId = 0; private var ringsTexId = 0; private var moonTexId = 0
+    private var sunTexId = 0; private var ringsTexId = 0
 
     // ── Matrices ──────────────────────────────────────────────────
     private var screenAspect = 1f
@@ -144,7 +144,6 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
     // ── Planet world positions (set during draw, read by GLView for picking) ──
     val planetWorldPos = Array(8) { FloatArray(3) }
-    val moonWorldPos = FloatArray(3)
     var screenW = 1f; var screenH = 1f
 
     var onPlanetTapped: ((Int) -> Unit)? = null       // -1 = Sun
@@ -290,11 +289,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
             // Anneaux de Saturne
             if (planet.hasRings) renderRings(planet, wx, wy, wz, planetR, sunPos)
-
-            // Lune de la Terre
-            if (planet.id == 2 && planet.moons.isNotEmpty()) {
-                renderMoon(planet.moons[0], wx, wy, wz, orbitR, planetR, blend, sunPos)
-            }
+            // La Lune n'est pas affichée ici : une vue Terre-Lune dédiée (EarthMoonActivity) s'en charge.
         }
     }
 
@@ -325,32 +320,6 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, ringsVertCount)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
         GLES20.glDepthMask(true)
-    }
-
-    private fun renderMoon(moon: MoonDef, earthX: Float, earthY: Float, earthZ: Float,
-                            earthOrbitR: Float, earthR: Float, blend: Float, sunPos: FloatArray) {
-        val moonR = OrbitalCalculator.getMoonRadius(moon, earthR)
-        val moonOrbitR = OrbitalCalculator.getMoonOrbitRadius(moon, earthOrbitR, earthR, blend)
-        val moonAngle = Math.toRadians(OrbitalCalculator.moonAngleDeg(moon, elapsedSimDays).toDouble()).toFloat()
-        val mx = earthX + moonOrbitR * cos(moonAngle)
-        val mz = earthZ + moonOrbitR * sin(moonAngle)
-
-        moonWorldPos[0] = mx; moonWorldPos[1] = earthY; moonWorldPos[2] = mz
-
-        Matrix.setIdentityM(model, 0)
-        Matrix.translateM(model, 0, mx, earthY, mz)
-        Matrix.scaleM(model, 0, moonR, moonR, moonR)
-        Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
-
-        GLES20.glUseProgram(planetProg)
-        GLES20.glUniformMatrix4fv(pMVP, 1, false, mvp, 0)
-        GLES20.glUniformMatrix4fv(pM, 1, false, model, 0)
-        GLES20.glUniform3fv(pSunPos, 1, sunPos, 0)
-        GLES20.glUniform3f(pAmbient, 0.06f, 0.06f, 0.06f)
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, moonTexId)
-        GLES20.glUniform1i(pTex, 0)
-        drawSphere(pPos, pUV, pNorm)
     }
 
     private fun renderOrbits() {
@@ -591,7 +560,6 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         SolarSystemData.planets.forEach { p ->
             planetTexIds[p.id] = loadTex(p.textureAsset, p.fallbackColor)
         }
-        moonTexId = loadTex("textures/moon.jpg", 0xFFCCCCCC.toInt())
         ringsTexId = loadTex("textures/planets/saturn_ring.jpg", 0x88C8B08C.toInt())
     }
 

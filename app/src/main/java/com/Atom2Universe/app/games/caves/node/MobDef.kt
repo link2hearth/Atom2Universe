@@ -17,8 +17,8 @@ internal data class MobDef(
     val damageScalePer3Lvl: Int,
     val speedScalePerLevel: Float,
     val biomes: List<String>,
-    /** Chemin du sprite sheet dans assets, ex: "25" → "Cave World/Pokemon/25.png". La version boss charge "{spriteSheet}s.png". */
-    val spriteSheet: String,
+    /** Id du modèle voxel à rendre (voir [com.Atom2Universe.app.games.caves.render.MobModels]) : "zombie", "skeleton"… */
+    val model: String,
     val spawnZoneMin: Int,
     val spawnZoneMax: Int,
     val lootTable: String,
@@ -46,7 +46,7 @@ internal data class MobDef(
                 damageScalePer3Lvl = j.optInt("damage_scale_per_3lvl", 1),
                 speedScalePerLevel = j.optDouble("speed_scale_per_level", 0.10).toFloat(),
                 biomes             = biomes,
-                spriteSheet        = j.optString("sprite_sheet", "1"),
+                model              = j.optString("model", "slime"),
                 spawnZoneMin       = j.optInt("spawn_zone_min", 1),
                 spawnZoneMax       = j.optInt("spawn_zone_max", Int.MAX_VALUE),
                 lootTable          = j.optString("loot_table", "default_loot"),
