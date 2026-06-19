@@ -33,7 +33,7 @@ import com.Atom2Universe.app.games.caves.world.*
 import kotlinx.coroutines.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.util.Calendar
+
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 import javax.microedition.khronos.egl.EGLConfig
@@ -99,14 +99,14 @@ internal class CaveRenderer(
     private var starShader:  ShaderProgram? = null
     private var waterShader: ShaderProgram? = null
     private var lodShader:   ShaderProgram? = null
-    private var wAPos = 0; private var wAUv = 0; private var wUMvp = 0; private var wUTex = 0
-    private var wUChunkOffset = 0; private var wUAmbient = 0
+    private var wAPos = 0; private var wAUv = 0; private var wASky = 0; private var wUMvp = 0; private var wUTex = 0
+    private var wUChunkOffset = 0; private var wUAmbient = 0; private var wUCaveFloor = 0
     private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
     private var wUUnderwater = 0
     private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0
     private var sAPos = 0; private var sABrightness = 0; private var sUMvp = 0
-    private var wWAPos = 0; private var wWAUv = 0; private var wWUMvp = 0
-    private var wWUChunkOffset = 0; private var wWUAmbient = 0
+    private var wWAPos = 0; private var wWAUv = 0; private var wWASky = 0; private var wWUMvp = 0
+    private var wWUChunkOffset = 0; private var wWUAmbient = 0; private var wWUCaveFloor = 0
     private var wWULights = 0; private var wWULightCount = 0; private var wWUTime = 0
     private var lodAPos = 0; private var lodARgb = 0; private var lodUMvp = 0
     private var lodUChunkOffset = 0; private var lodUAmbient = 0
@@ -136,6 +136,10 @@ internal class CaveRenderer(
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val genDispatcher  = Dispatchers.Default.limitedParallelism(2)
     private val meshDispatcher = Dispatchers.Default.limitedParallelism(2)
+    // Lumière sur un seul thread de fond : le guard atomique garantit qu'un seul batch tourne à la
+    // fois → aucune course sur chunk.light, et le BFS ne touche jamais le thread GL.
+    private val lightDispatcher = Dispatchers.Default.limitedParallelism(1)
+    private val lightWorkerRunning = java.util.concurrent.atomic.AtomicBoolean(false)
     private val building = ConcurrentHashMap.newKeySet<Long>()
 
     private var lastCx = Int.MAX_VALUE; private var lastCy = Int.MAX_VALUE; private var lastCz = Int.MAX_VALUE
@@ -147,6 +151,9 @@ internal class CaveRenderer(
     private val CLEANUP_INTERVAL = 60   // nettoyage plus fréquent (~2s)
     private val MAX_MESHES = 1200       // cap mémoire : éviction au-delà
     private val MAX_LIGHTS = 32
+    // Pénombre : luminosité minimale partout (jamais 100 % noir). Une grotte sans torche reste
+    // juste assez visible pour s'orienter ; une torche fait une vraie différence par-dessus.
+    private val CAVE_FLOOR = 0.07f
     private val lightSources = HashMap<Triple<Int,Int,Int>, Float>()
     private val lightData = FloatArray(MAX_LIGHTS * 4)       // réutilisé chaque frame
     private var cachedLightCount = 0
@@ -242,12 +249,14 @@ internal class CaveRenderer(
         #version 300 es
         in vec3 a_pos;
         in vec3 a_uv;
+        in float a_skyLight;
         uniform mat4 u_mvp;
         uniform vec3 u_chunk_offset;
         out vec2 v_uv;
         out float v_layer;
         out float v_faceDir;
         out vec3 v_worldPos;
+        out float v_skyLight;
         void main() {
             vec3 worldPos = a_pos + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
@@ -255,6 +264,7 @@ internal class CaveRenderer(
             v_layer   = mod(a_uv.z, 4096.0);
             v_faceDir = floor(a_uv.z / 4096.0);
             v_worldPos = worldPos;
+            v_skyLight = a_skyLight;
         }
     """.trimIndent()
 
@@ -263,6 +273,7 @@ internal class CaveRenderer(
         precision mediump float;
         uniform sampler2DArray u_tex;
         uniform float u_ambient;
+        uniform float u_caveFloor;
         uniform vec4 u_lights[32];
         uniform int u_lightCount;
         uniform float u_time;
@@ -271,6 +282,7 @@ internal class CaveRenderer(
         in float v_layer;
         in float v_faceDir;
         in vec3 v_worldPos;
+        in float v_skyLight;
         out vec4 fragColor;
         void main() {
             vec4 col = texture(u_tex, vec3(v_uv, v_layer));
@@ -287,7 +299,10 @@ internal class CaveRenderer(
                 atten = atten * atten;
                 torchContrib = max(torchContrib, atten * u_lights[i].w * torchColor);
             }
-            vec3 lighting = max(vec3(u_ambient), torchContrib);
+            // Lumière du ciel cuite (0..1) × ambiance jour/nuit ; plancher pénombre pour ne jamais
+            // être 100 % noir ; les torches s'ajoutent par-dessus dans les zones non exposées.
+            float sky = v_skyLight * u_ambient;
+            vec3 lighting = max(max(vec3(sky), vec3(u_caveFloor)), torchContrib);
             fragColor = vec4(col.rgb * faceLight * lighting, 1.0);
             if (u_underwater > 0.5) {
                 fragColor = vec4(fragColor.rgb * vec3(0.18, 0.48, 0.88) * 0.55, 1.0);
@@ -299,6 +314,7 @@ internal class CaveRenderer(
         #version 300 es
         precision mediump float;
         uniform float u_ambient;
+        uniform float u_caveFloor;
         uniform vec4 u_lights[32];
         uniform int u_lightCount;
         uniform float u_time;
@@ -306,6 +322,7 @@ internal class CaveRenderer(
         in float v_layer;
         in float v_faceDir;
         in vec3 v_worldPos;
+        in float v_skyLight;
         out vec4 fragColor;
         void main() {
             float wave = 0.5 + 0.5 * sin(v_worldPos.x * 1.1 + u_time * 1.7)
@@ -325,7 +342,8 @@ internal class CaveRenderer(
                 atten = atten * atten;
                 torchContrib = max(torchContrib, atten * u_lights[i].w * torchColor);
             }
-            vec3 lighting = max(vec3(u_ambient), torchContrib);
+            float sky = v_skyLight * u_ambient;
+            vec3 lighting = max(max(vec3(sky), vec3(u_caveFloor)), torchContrib);
             fragColor = vec4(baseColor * faceLight * lighting, 0.75);
         }
     """.trimIndent()
@@ -441,10 +459,12 @@ internal class CaveRenderer(
             it.use()
             wAPos         = it.attrib("a_pos")
             wAUv          = it.attrib("a_uv")
+            wASky         = it.attrib("a_skyLight")
             wUMvp         = it.uniform("u_mvp")
             wUTex         = it.uniform("u_tex")
             wUChunkOffset = it.uniform("u_chunk_offset")
             wUAmbient     = it.uniform("u_ambient")
+            wUCaveFloor   = it.uniform("u_caveFloor")
             wULights      = it.uniform("u_lights[0]")
             wULightCount  = it.uniform("u_lightCount")
             wUTime        = it.uniform("u_time")
@@ -454,9 +474,11 @@ internal class CaveRenderer(
             it.use()
             wWAPos         = it.attrib("a_pos")
             wWAUv          = it.attrib("a_uv")
+            wWASky         = it.attrib("a_skyLight")
             wWUMvp         = it.uniform("u_mvp")
             wWUChunkOffset = it.uniform("u_chunk_offset")
             wWUAmbient     = it.uniform("u_ambient")
+            wWUCaveFloor   = it.uniform("u_caveFloor")
             wWULights      = it.uniform("u_lights[0]")
             wWULightCount  = it.uniform("u_lightCount")
             wWUTime        = it.uniform("u_time")
@@ -589,6 +611,8 @@ internal class CaveRenderer(
             enemyManager.worldSpawnY      = spawn[1].toDouble()
             enemyManager.worldSpawnZ      = spawn[2].toDouble()
         } else {
+            // Nouvelle partie : démarrer à 10h du matin IG (portion jour, 100 000 ms/heure → 4h après 6h).
+            gameTimeMs = NEW_GAME_START_MS
             val spawn = world.findSpawnPoint()
             camera.playerX = spawn[0].toDouble(); camera.playerY = spawn[1].toDouble(); camera.playerZ = spawn[2].toDouble()
             camera.x = camera.playerX; camera.y = camera.playerY; camera.z = camera.playerZ
@@ -743,6 +767,7 @@ internal class CaveRenderer(
         adjustTpsCamera()
 
         elapsed += dt
+        if (!gamePaused) gameTimeMs += (dt * 1_000f).toLong()
 
         waterTickAccum += dt
         if (waterTickAccum >= 0.25f) {
@@ -769,6 +794,15 @@ internal class CaveRenderer(
         if (cx != lastCx || cy != lastCy || cz != lastCz) {
             lastCx = cx; lastCy = cy; lastCz = cz
             world.updateAroundPlayer(cx, cy, cz, camera.fwdX, camera.fwdZ) { chunk -> scheduleChunkBuild(chunk) }
+        }
+
+        // Propagation de lumière sur un thread de fond dédié (jamais sur le thread GL → pas de lag),
+        // et mono-thread via un guard atomique → pas de course, la skylight converge proprement.
+        // Les chunks dont la lumière s'est stabilisée sont mis en file de reconstruction du mesh.
+        if (!world.lightQueue.isEmpty() && lightWorkerRunning.compareAndSet(false, true)) {
+            scope.launch(lightDispatcher) {
+                try { processLightBatch() } finally { lightWorkerRunning.set(false) }
+            }
         }
 
         // Drain complet + déduplication : évite que les chunks générés en premier (lointains)
@@ -844,7 +878,7 @@ internal class CaveRenderer(
             val (key, ver, verts) = uploadQueue.poll() ?: return@repeat
             val chunk = world.getChunkByKey(key) ?: return@repeat
             if (chunk.version == ver) {
-                meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+                meshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
                 refreshChunkLightSources(chunk)
                 if (chunk.cy in 0..SURFACE_CY_MAX) scheduleLodBuild(chunk.cx, chunk.cz)
             }
@@ -853,14 +887,14 @@ internal class CaveRenderer(
             val (key, verts) = lodUploadQueue.poll() ?: return@repeat
             lodUploadQueueSize.decrementAndGet()
             var isNew = false
-            lodMeshes.getOrPut(key) { isNew = true; ChunkMesh() }.upload(verts)
+            lodMeshes.getOrPut(key) { isNew = true; ChunkMesh(6) }.upload(verts)
             if (isNew) lodGrid.getOrPut(superKey(lodKeyToCx(key), lodKeyToCz(key))) { ArrayList() }.add(key)
         }
         repeat(16) {
             val (key, ver, verts) = waterUploadQueue.poll() ?: return@repeat
             val chunk = world.getChunkByKey(key) ?: return@repeat
             if (chunk.version == ver) {
-                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
                 else waterMeshes.remove(key)?.destroy()
             }
         }
@@ -868,7 +902,7 @@ internal class CaveRenderer(
             val (key, ver, verts) = waterOnlyUploadQueue.poll() ?: return@repeat
             val chunk = world.getChunkByKey(key) ?: return@repeat
             if (chunk.waterVersion == ver) {
-                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(verts)
+                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
                 else waterMeshes.remove(key)?.destroy()
             }
         }
@@ -966,6 +1000,7 @@ internal class CaveRenderer(
         worldShader?.use()
         GLES30.glUniformMatrix4fv(wUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(wUAmbient, if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT))
+        GLES30.glUniform1f(wUCaveFloor, CAVE_FLOOR)
         GLES30.glUniform1f(wUTime, elapsed)
         GLES30.glUniform1f(wUUnderwater, if (headUnderwater) 1f else 0f)
 
@@ -1016,7 +1051,7 @@ internal class CaveRenderer(
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
-            mesh.draw(wAPos, wAUv)
+            mesh.draw(wAPos, wAUv, wASky)
         }
 
         // ── Rendu LOD (couleur des blocs, visible de loin) ────────────────────
@@ -1075,6 +1110,7 @@ internal class CaveRenderer(
         waterShader?.use()
         GLES30.glUniformMatrix4fv(wWUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(wWUAmbient, waterAmbient)
+        GLES30.glUniform1f(wWUCaveFloor, CAVE_FLOOR)
         GLES30.glUniform1f(wWUTime, elapsed)
         GLES30.glUniform4fv(wWULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
         GLES30.glUniform1i(wWULightCount, cachedLightCount)
@@ -1088,7 +1124,7 @@ internal class CaveRenderer(
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wWUChunkOffset, offX, offY, offZ)
-            mesh.draw(wWAPos, wWAUv)
+            mesh.draw(wWAPos, wWAUv, wWASky)
         }
         GLES30.glDepthMask(true)
         GLES30.glDisable(GLES30.GL_BLEND)
@@ -1444,6 +1480,60 @@ private fun updateProjectiles(dt: Float) {
         }
     }
 
+    // Offsets voisins par bit de face du masque renvoyé par LightEngine.computeSky.
+    private val LIGHT_FACE_OFFSETS = arrayOf(
+        intArrayOf(0, 1, 0), intArrayOf(0, -1, 0),   // +Y, −Y
+        intArrayOf(1, 0, 0), intArrayOf(-1, 0, 0),   // +X, −X
+        intArrayOf(0, 0, 1), intArrayOf(0, 0, -1)    // +Z, −Z
+    )
+    private val LIGHT_BATCH = 192   // chunks traités par lancement de fond (BFS, sans mesh → bon marché)
+
+    /**
+     * Propagation de la skylight, **découplée du meshing** et exécutée sur un thread de fond dédié
+     * mono-thread (jamais le thread GL) → pas de lag de rendu, pas de course de lecture/écriture de
+     * `chunk.light`, convergence garantie. computeSky (BFS) est bon marché ; on ne reconstruit le
+     * mesh d'un chunk qu'**une fois sa lumière stabilisée** (computeSky renvoie 0). La propagation
+     * aux voisins se fait via la file de lumière, sans toucher au mesh tant que ça bouge encore.
+     */
+    private fun processLightBatch() {
+        var processed = 0
+        while (processed < LIGHT_BATCH) {
+            val key = world.lightQueue.poll() ?: break
+            processed++
+            val chunk = world.getChunkByKey(key)?.takeIf { it.generated } ?: continue
+            val r = LightEngine.computeSky(chunk, world)
+            if (r != 0) {
+                chunk.lightMeshDirty = true            // lumière changée → mesh périmé, on attend le calme
+                chunk.lightBoundaryDirty = chunk.lightBoundaryDirty or (r and 0x3F)   // faces de bord changées
+                for (f in 0 until 6) {
+                    if (r and (1 shl f) == 0) continue
+                    val o = LIGHT_FACE_OFFSETS[f]
+                    val nb = world.getChunk(chunk.cx + o[0], chunk.cy + o[1], chunk.cz + o[2]) ?: continue
+                    if (nb.generated) world.lightQueue.add(world.chunkKey(nb.cx, nb.cy, nb.cz))   // propager la lumière
+                }
+                world.lightQueue.add(key)              // re-vérifier ce chunk jusqu'à stabilisation
+            } else if (chunk.lightMeshDirty) {
+                chunk.lightMeshDirty = false           // stabilisé → un seul rebuild du mesh
+                chunk.meshDirty = true
+                world.rebuildQueue.add(key)
+                // Notre lumière de bord est maintenant finale : les voisins dont le bord partagé a
+                // changé doivent re-mesher (leurs faces de bord échantillonnent notre lumière, sinon
+                // elles restent noires). On ne le fait qu'ici, une fois → pas de churn pendant la convergence.
+                val bd = chunk.lightBoundaryDirty
+                chunk.lightBoundaryDirty = 0
+                for (f in 0 until 6) {
+                    if (bd and (1 shl f) == 0) continue
+                    val o = LIGHT_FACE_OFFSETS[f]
+                    val nb = world.getChunk(chunk.cx + o[0], chunk.cy + o[1], chunk.cz + o[2]) ?: continue
+                    if (nb.generated && !nb.lightMeshDirty) {
+                        nb.meshDirty = true
+                        world.rebuildQueue.add(world.chunkKey(nb.cx, nb.cy, nb.cz))
+                    }
+                }
+            }
+        }
+    }
+
     private fun forceMeshRebuild(wx: Int, wy: Int, wz: Int) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
@@ -1460,10 +1550,11 @@ private fun updateProjectiles(dt: Float) {
         for ((ncx, ncy, ncz) in affectedChunks) {
             val key = world.chunkKey(ncx, ncy, ncz)
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
+            world.lightQueue.add(key)
             val verts      = MeshBuilder.build(chunk, world)
             val waterVerts = MeshBuilder.buildWater(chunk, world)
-            meshes.getOrPut(key) { ChunkMesh() }.upload(verts)
-            if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh() }.upload(waterVerts)
+            meshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
+            if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.upload(waterVerts)
             else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
             if (ncy in 0..SURFACE_CY_MAX) {
@@ -2112,18 +2203,40 @@ private fun updateProjectiles(dt: Float) {
         return true
     }
 
-    // ── Cycle jour/nuit ───────────────────────────────────────────────────────
+    // ── Cycle jour/nuit fictif (20 min jour + 10 min nuit = 30 min total) ────
+    // gameTimeMs : ms de temps de jeu écoulées (ne progresse pas en pause).
+    // t=0.25 = 6h (aube) · t=0.50 = 12h (midi) · t=0.75 = 18h (crépuscule) · t=0.0 = 0h (minuit)
+    // Quarts : 6h=0 ms, 12h=600 000 ms, 18h=1 200 000 ms, 0h=1 500 000 ms
+    private var gameTimeMs: Long = 0L
+    // 10h du matin IG : 6h = 0 ms, et la portion jour avance à 100 000 ms par heure de jeu.
+    private val NEW_GAME_START_MS = 400_000L
 
-    var dayNightInverted = false
+    fun cycleTimeOfDay() {
+        val quarters = longArrayOf(0L, 600_000L, 1_200_000L, 1_500_000L)
+        val cur = gameTimeMs % 1_800_000L
+        val next = quarters.firstOrNull { it > cur } ?: 0L
+        gameTimeMs = gameTimeMs - cur + next
+    }
 
-    fun toggleDayNight() { dayNightInverted = !dayNightInverted }
+    val timeOfDayLabel: String get() {
+        val cur = gameTimeMs % 1_800_000L
+        return when {
+            cur < 600_000L   -> "🌄"
+            cur < 1_200_000L -> "☀"
+            cur < 1_500_000L -> "🌆"
+            else             -> "🌙"
+        }
+    }
 
     private fun dayFraction(): Float {
-        val cal = Calendar.getInstance()
-        val sec = cal.get(Calendar.HOUR_OF_DAY) * 3600 + cal.get(Calendar.MINUTE) * 60 + cal.get(Calendar.SECOND)
-        val base = sec / 86400f
-        return if (dayNightInverted) (base + 0.5f) % 1f else base
+        val gf = (gameTimeMs % 1_800_000L) / 1_800_000f
+        return if (gf < 0.6667f) {
+            0.25f + gf * 0.75f
+        } else {
+            (0.75f + (gf - 0.6667f) * 1.5f) % 1f
+        }
     }
+
 
     private fun lerpF(a: Float, b: Float, t: Float) = a + (b - a) * t.coerceIn(0f, 1f)
 

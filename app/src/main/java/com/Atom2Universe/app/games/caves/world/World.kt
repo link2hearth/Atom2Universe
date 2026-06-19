@@ -11,6 +11,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     val rebuildQueue = ConcurrentLinkedQueue<Long>()
     val waterRebuildQueue = ConcurrentLinkedQueue<Long>()
+    // File de propagation de la skylight (drainée sur le thread GL, séparée du meshing).
+    val lightQueue = ConcurrentLinkedQueue<Long>()
     val renderRadiusXZ     = 12  // rayon XZ commun aux deux modes
     val renderRadiusYSurface = 5  // plage Y en surface (cylindre) — identique à avant
     val renderRadiusCave   = 7   // rayon de la sphère souterrain
@@ -133,6 +135,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         chunk.generated = true
         chunk.meshDirty = true
         rebuildQueue.add(key)
+        lightQueue.add(key)
         val neighbors = arrayOf(
             intArrayOf(chunk.cx-1,chunk.cy,chunk.cz), intArrayOf(chunk.cx+1,chunk.cy,chunk.cz),
             intArrayOf(chunk.cx,chunk.cy-1,chunk.cz), intArrayOf(chunk.cx,chunk.cy+1,chunk.cz),
@@ -140,7 +143,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         )
         for ((nx, ny, nz) in neighbors) {
             val nb = getChunk(nx, ny, nz) ?: continue
-            if (nb.generated) { nb.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)) }
+            if (nb.generated) { nb.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)); lightQueue.add(chunkKey(nx, ny, nz)) }
         }
     }
 
@@ -154,6 +157,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         chunk.generated = true
         chunk.meshDirty = true
         rebuildQueue.add(key)
+        lightQueue.add(key)
         return chunk
     }
 
@@ -1872,5 +1876,37 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val neighbor = getChunk(ncx, ncy, ncz) ?: return AIR
         if (!neighbor.generated) return AIR
         return neighbor.blockAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
+    }
+
+    // ── Lumière du ciel ───────────────────────────────────────────────────────
+
+    // Cache de la hauteur de surface analytique par colonne (déterministe pour une seed donnée,
+    // insensible aux éditions du joueur). Sert d'oracle « ciel ouvert » quand le chunk au-dessus
+    // n'est pas encore chargé. Entrée minuscule (Long→Int) ; croît lentement avec l'exploration.
+    private val surfaceTopCache = ConcurrentHashMap<Long, Int>()
+
+    fun surfaceTopY(wx: Int, wz: Int): Int {
+        val key = (wx.toLong() and 0xFFFFFFFFL) or ((wz.toLong() and 0xFFFFFFFFL) shl 32)
+        surfaceTopCache[key]?.let { return it }
+        val v = surfaceHeight(wx + 0.5, wz + 0.5).toInt()
+        surfaceTopCache[key] = v
+        return v
+    }
+
+    /**
+     * Niveau de lumière du ciel (0..15) au voxel (lx,ly,lz) relatif à [baseChunk], cross-chunk.
+     * Si le chunk visé n'est pas chargé : repli analytique — 15 si le voxel est au-dessus de la
+     * surface (ciel ouvert), 0 sinon. Garde les bords des chunks de surface éclairés avant que le
+     * voisin se charge ; la cascade de LightEngine corrige une fois le voisin disponible.
+     */
+    fun skyLightAt(baseChunk: Chunk, lx: Int, ly: Int, lz: Int): Int {
+        if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
+            return baseChunk.skyAt(lx, ly, lz)
+        val wx = baseChunk.worldX + lx; val wy = baseChunk.worldY + ly; val wz = baseChunk.worldZ + lz
+        val ncx = Math.floorDiv(wx, CHUNK_SIZE); val ncy = Math.floorDiv(wy, CHUNK_SIZE); val ncz = Math.floorDiv(wz, CHUNK_SIZE)
+        val neighbor = getChunk(ncx, ncy, ncz)
+        if (neighbor != null && neighbor.generated)
+            return neighbor.skyAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
+        return if (wy >= surfaceTopY(wx, wz)) 15 else 0
     }
 }

@@ -258,8 +258,8 @@ class CaveActivity : ThemedActivity() {
             renderer.pendingMode = if (renderer.playerMode == PlayerMode.WALK) PlayerMode.SPECTATOR else PlayerMode.WALK
         }
         btnDayNight.setOnClickListener {
-            renderer.toggleDayNight()
-            btnDayNight.text = if (renderer.dayNightInverted) "☀" else "🌙"
+            renderer.cycleTimeOfDay()
+            btnDayNight.text = renderer.timeOfDayLabel
         }
         btnCamera.setOnClickListener {
             glView.queueEvent { renderer.camera.thirdPerson = !renderer.camera.thirdPerson }

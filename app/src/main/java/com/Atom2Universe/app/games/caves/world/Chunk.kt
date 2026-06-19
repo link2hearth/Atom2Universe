@@ -178,9 +178,18 @@ data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     val blocks = ShortArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
     val meta   = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+    // Lumière du ciel par voxel : niveau 0..15 dans le quartet bas (le quartet haut est réservé
+    // à une éventuelle lumière de bloc). Rempli par LightEngine, lu par MeshBuilder.
+    val light  = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 
     @Volatile var generated = false
     @Volatile var meshDirty = false
+    // Mis à true quand la skylight change ; déclenche un unique rebuild du mesh une fois stabilisée
+    // (lu/écrit seulement par le passage de lumière, mono-thread de fond).
+    var lightMeshDirty = false
+    // Masque des faces de bord (0..5) dont la skylight a changé depuis le dernier mesh : à la
+    // stabilisation, on en déduit quels voisins re-mesher (leurs faces de bord nous échantillonnent).
+    var lightBoundaryDirty = 0
     @Volatile var waterMeshDirty = false
     @Volatile var pendingVertices: FloatArray? = null
     @Volatile var version = 0
@@ -207,5 +216,15 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
 
     fun setMeta(lx: Int, ly: Int, lz: Int, value: Byte) {
         meta[lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE] = value
+    }
+
+    fun skyAt(lx: Int, ly: Int, lz: Int): Int {
+        if (lx !in 0 until CHUNK_SIZE || ly !in 0 until CHUNK_SIZE || lz !in 0 until CHUNK_SIZE) return 0
+        return light[lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE].toInt() and 0x0F
+    }
+
+    fun setSky(lx: Int, ly: Int, lz: Int, value: Int) {
+        val i = lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE
+        light[i] = ((light[i].toInt() and 0xF0) or (value and 0x0F)).toByte()
     }
 }
