@@ -71,6 +71,11 @@ object MusicPlaybackHolder {
     var shuffleEnabled: Boolean = false
         private set
 
+    // File de lecture mélangée : indices dans playlist dans l'ordre aléatoire.
+    // shuffleQueuePosition pointe sur la piste courante (0 = première jouée).
+    private var shuffleQueue: List<Int> = emptyList()
+    private var shuffleQueuePosition: Int = 0
+
     var repeatMode: RepeatMode = RepeatMode.OFF
         private set
 
@@ -244,6 +249,8 @@ object MusicPlaybackHolder {
             playlist = tracks.toList()
             currentIndex = -1
             currentPlaylistId = playlistId
+            shuffleQueue = emptyList()
+            shuffleQueuePosition = 0
         }
         listeners.forEach { it.onPlaylistChanged(tracks) }
         saveQueueState()
@@ -436,6 +443,7 @@ object MusicPlaybackHolder {
         val index = playlist.indexOfFirst { it.id == track.id }
         if (index >= 0) {
             currentIndex = index
+            if (shuffleEnabled) buildShuffleQueue()
             playCurrentTrack(context)
         } else {
             // Bug 5.15: Log warning and notify listeners when track not found in playlist
@@ -458,6 +466,7 @@ object MusicPlaybackHolder {
     fun playAtIndex(context: Context, index: Int) {
         if (index in playlist.indices) {
             currentIndex = index
+            if (shuffleEnabled) buildShuffleQueue()
             playCurrentTrack(context)
         }
     }
@@ -639,6 +648,27 @@ object MusicPlaybackHolder {
         }
     }
 
+    private fun buildShuffleQueue() {
+        if (playlist.isEmpty()) {
+            shuffleQueue = emptyList()
+            shuffleQueuePosition = 0
+            return
+        }
+        val current = currentIndex
+        val indices = playlist.indices.toMutableList()
+        indices.shuffle()
+        // La piste courante est placée en position 0 (déjà jouée)
+        if (current in playlist.indices) {
+            val pos = indices.indexOf(current)
+            if (pos != 0) {
+                indices.removeAt(pos)
+                indices.add(0, current)
+            }
+        }
+        shuffleQueue = indices
+        shuffleQueuePosition = 0
+    }
+
     fun skipToNext(context: Context) {
         if (playlist.isEmpty()) return
 
@@ -646,13 +676,27 @@ object MusicPlaybackHolder {
             if (playlist.size == 1) {
                 currentIndex.coerceIn(0, playlist.lastIndex)
             } else {
-                val current = currentIndex
-                val candidates = if (current in playlist.indices) {
-                    playlist.indices.filter { it != current }
-                } else {
-                    playlist.indices.toList()
+                // Reconstruit la file si elle est désynchronisée (ex: playlist modifiée)
+                if (shuffleQueue.size != playlist.size) buildShuffleQueue()
+
+                val nextPos = shuffleQueuePosition + 1
+                when {
+                    nextPos < shuffleQueue.size -> {
+                        shuffleQueuePosition = nextPos
+                        shuffleQueue[nextPos]
+                    }
+                    repeatMode == RepeatMode.ALL -> {
+                        // Tous les titres joués → on re-mélange pour le tour suivant
+                        buildShuffleQueue()
+                        shuffleQueuePosition = minOf(1, shuffleQueue.lastIndex)
+                        shuffleQueue[shuffleQueuePosition]
+                    }
+                    else -> {
+                        // RepeatMode.OFF : tous les titres ont été joués, on s'arrête
+                        stop(context)
+                        return
+                    }
                 }
-                candidates.random()
             }
         } else {
             when (repeatMode) {
@@ -736,6 +780,7 @@ object MusicPlaybackHolder {
 
     fun toggleShuffle(): Boolean {
         shuffleEnabled = !shuffleEnabled
+        if (shuffleEnabled) buildShuffleQueue()
         saveQueueState()
         return shuffleEnabled
     }
