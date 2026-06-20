@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.games.caves.node
 
-internal class PlayerNode(maxHp: Int = 20, maxShield: Int = 0) {
+internal class PlayerNode(maxHp: Int = 50, maxShield: Int = 0) {
 
     var hp: Int = maxHp
     var maxHp: Int = maxHp

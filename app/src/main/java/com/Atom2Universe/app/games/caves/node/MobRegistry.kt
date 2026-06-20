@@ -23,10 +23,11 @@ internal object MobRegistry {
     fun get(id: String): MobDef =
         defs[id] ?: error("MobDef '$id' introuvable")
 
+    // Déblocage permanent : un mob reste éligible dans toutes les zones >= son spawnZoneMin.
     fun allEligibleFor(biome: String, zone: Int): List<MobDef> =
         defs.values.filter { def ->
             (def.biomes.isEmpty() || "any" in def.biomes || biome in def.biomes)
-                && zone >= def.spawnZoneMin && zone <= def.spawnZoneMax
+                && zone >= def.spawnZoneMin
         }
 
     fun all(): Collection<MobDef> = defs.values

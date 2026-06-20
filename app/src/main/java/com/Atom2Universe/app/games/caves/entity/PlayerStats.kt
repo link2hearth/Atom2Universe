@@ -16,7 +16,7 @@ internal class PlayerStats {
     var xp       = 0
     var xpToNext = xpRequired(1)
 
-    var maxHp  = 20
+    var maxHp  = 50
     var shield = 0
 
     fun xpRequired(lvl: Int): Int = (8.0 * lvl.toDouble().pow(1.25)).toInt().coerceAtLeast(1)

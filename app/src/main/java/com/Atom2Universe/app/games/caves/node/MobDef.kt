@@ -20,7 +20,8 @@ internal data class MobDef(
     /** Id du modèle voxel à rendre (voir [com.Atom2Universe.app.games.caves.render.MobModels]) : "zombie", "skeleton"… */
     val model: String,
     val spawnZoneMin: Int,
-    val spawnZoneMax: Int,
+    /** Poids relatif du tirage de spawn : petit mob commun = poids élevé, gros mob = poids faible. */
+    val spawnWeight: Float,
     val lootTable: String,
     val behavior: String,
     val bossEligible: Boolean,
@@ -48,7 +49,7 @@ internal data class MobDef(
                 biomes             = biomes,
                 model              = j.optString("model", "slime"),
                 spawnZoneMin       = j.optInt("spawn_zone_min", 1),
-                spawnZoneMax       = j.optInt("spawn_zone_max", Int.MAX_VALUE),
+                spawnWeight        = j.optDouble("spawn_weight", 1.0).toFloat(),
                 lootTable          = j.optString("loot_table", "default_loot"),
                 behavior           = j.optString("behavior", "aggressive"),
                 bossEligible       = j.optBoolean("boss_eligible", true),

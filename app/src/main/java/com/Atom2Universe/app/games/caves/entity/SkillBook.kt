@@ -22,12 +22,12 @@ class SkillBook {
     // Sprint speed : base 6.5 + 0.10/niveau (6.5 → 16.5 m/s)
     val sprintSpeed: Double get() = BASE_SPRINT_SPEED + speedLevel * 0.10
 
-    // HP calculé par la formule pure : 20 × 1.1^niveau (sans cap externe)
+    // HP calculé par la formule pure : 50 × 1.1^niveau (sans cap externe)
     // Le plafonnement par le dernier mob tué est appliqué dans CaveRenderer.
     val computedMaxHp: Int get() {
-        val raw = 20.0 * Math.pow(1.1, enduranceLevel.toDouble())
+        val raw = 50.0 * Math.pow(1.1, enduranceLevel.toDouble())
         return if (raw.isInfinite() || raw >= Int.MAX_VALUE) Int.MAX_VALUE
-               else raw.toInt().coerceAtLeast(20)
+               else raw.toInt().coerceAtLeast(50)
     }
 
     // Seuil de chute sûre : base 3 blocs + 0.05/niveau acrobatics (3.0 → 8.0)

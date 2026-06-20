@@ -56,8 +56,16 @@ internal class SpawnManager(
 
     private fun rollMobForSpawn(zone: Int, biome: String): MobDef {
         val eligible = MobRegistry.allEligibleFor(biome, zone)
-        if (eligible.isNotEmpty()) return eligible[rng.nextInt(eligible.size)]
-        return mobForZone(zone, biome)
+        if (eligible.isEmpty()) return mobForZone(zone, biome)
+        // Tirage pondéré : petits mobs (poids élevé) fréquents, gros (poids faible) rares.
+        val totalWeight = eligible.sumOf { it.spawnWeight.toDouble() }
+        if (totalWeight <= 0.0) return eligible[rng.nextInt(eligible.size)]
+        var r = rng.nextDouble() * totalWeight
+        for (def in eligible) {
+            r -= def.spawnWeight
+            if (r <= 0.0) return def
+        }
+        return eligible.last()
     }
 
     // ── Tick principal ────────────────────────────────────────────────────────
