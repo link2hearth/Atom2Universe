@@ -143,6 +143,12 @@ internal class CaveRenderer(
     private val lightWorkerRunning = java.util.concurrent.atomic.AtomicBoolean(false)
     private val building = ConcurrentHashMap.newKeySet<Long>()
 
+    // Backstop d'éclairage : chunks maillés alors que la skylight n'était pas encore stabilisée.
+    // Leurs faces ont pu échantillonner une lumière de voisin non-finale (repli analytique trop
+    // clair au lancement). On les re-maille une fois que la cascade de lumière s'est drainée.
+    private val fluxMeshedKeys = ConcurrentHashMap.newKeySet<Long>()
+    private var lightPendingPrev = false
+
     private var lastCx = Int.MAX_VALUE; private var lastCy = Int.MAX_VALUE; private var lastCz = Int.MAX_VALUE
     private var streamNeedsMore = false
     private var streamTickAccum = 0f
@@ -190,6 +196,22 @@ internal class CaveRenderer(
     private var walkPhase  = 0f   // phase de balancement (rad), avance seulement quand le joueur marche
     private var walkLastX  = 0.0  // position précédente pour détecter le mouvement
     private var walkLastZ  = 0.0
+
+    // ── Viewmodel 1re personne (bras + objet tenu) ────────────────────────────
+    // Géométrie construite directement en repère vue (caméra à l'origine, regard −Z) :
+    // projection dédiée vmProj, pas de matrice de vue. Buffer de profondeur vidé avant le
+    // rendu → le bras ne s'enfonce jamais dans le décor.
+    private var vmVbo = 0
+    private val vmProj  = FloatArray(16)
+    private val vmModel = FloatArray(16)
+    private val vmMvp   = FloatArray(16)
+    private val vmTmp   = FloatArray(16)
+    private var swingActive = false
+    private var swingTimer  = 0f
+    private val SWING_DUR = 0.30f
+    private val itemTexCache = HashMap<String, Int>()
+    private val ARM_SKIN   = floatArrayOf(0.85f, 0.66f, 0.52f)   // teinte peau
+    private val ARM_SLEEVE = floatArrayOf(0.30f, 0.55f, 0.85f)   // manche
 
     private class FallingBlock(val type: Short, val wx: Int, val wy: Int, val wz: Int) {
         var timer = 0f
@@ -578,10 +600,11 @@ internal class CaveRenderer(
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
         }
 
-        val ids = IntArray(2)
-        GLES30.glGenBuffers(2, ids, 0)
+        val ids = IntArray(3)
+        GLES30.glGenBuffers(3, ids, 0)
         transientVbo = ids[0]
         playerBoxVbo = ids[1]
+        vmVbo        = ids[2]
 
         if (savedState != null) {
             camera.playerX = savedState.x; camera.playerY = savedState.y; camera.playerZ = savedState.z
@@ -744,6 +767,8 @@ internal class CaveRenderer(
         val gameH = (height - hotbarPx).coerceAtLeast(1)
         GLES30.glViewport(0, hotbarPx, width, gameH)
         camera.setProjection(70f, width.toFloat() / gameH)
+        // Projection dédiée au viewmodel (FOV légèrement plus serré, near rapproché)
+        android.opengl.Matrix.perspectiveM(vmProj, 0, 62f, width.toFloat() / gameH, 0.04f, 12f)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -821,6 +846,23 @@ internal class CaveRenderer(
             }
         }
 
+        // Backstop d'éclairage : quand la cascade de skylight vient de se drainer entièrement
+        // (transition en-cours → drainé), la lumière de tous les chunks chargés est désormais
+        // finale. On re-maille les chunks qui avaient été maillés pendant le flux : ils s'étaient
+        // peut-être figés trop clairs (repli analytique d'un voisin pas encore chargé). Le read
+        // volatile de lightWorkerRunning établit le happens-before avec les écritures de chunk.light.
+        val lightPendingNow = world.hasPendingLight() || lightWorkerRunning.get()
+        if (lightPendingPrev && !lightPendingNow && fluxMeshedKeys.isNotEmpty()) {
+            val it = fluxMeshedKeys.iterator()
+            while (it.hasNext()) {
+                val key = it.next(); it.remove()
+                val chunk = world.getChunkByKey(key)?.takeIf { c -> c.generated } ?: continue
+                chunk.meshDirty = true
+                world.rebuildQueue.add(key)
+            }
+        }
+        lightPendingPrev = lightPendingNow
+
         // Drain complet + déduplication : évite que les chunks générés en premier (lointains)
         // bloquent les proches dans le FIFO. Le tri porte sur TOUS les éléments en attente.
         val pendingSet = HashSet<Long>()
@@ -847,6 +889,10 @@ internal class CaveRenderer(
                         uploadQueue.add(Triple(key, snapVersion, verts))
                         waterUploadQueue.add(Triple(key, snapVersion, waterVerts))
                     }
+                    // Maillé pendant que la skylight converge encore → la lumière des voisins
+                    // (et le repli analytique des voisins non chargés) peut être non-finale.
+                    // On le re-maillera une fois la cascade drainée.
+                    if (world.hasPendingLight() || lightWorkerRunning.get()) fluxMeshedKeys.add(key)
                     if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
                     if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
                 } catch (_: OutOfMemoryError) {
@@ -1145,6 +1191,9 @@ internal class CaveRenderer(
         GLES30.glDepthMask(true)
         GLES30.glDisable(GLES30.GL_BLEND)
 
+        // ── Viewmodel 1re personne (bras + objet tenu) ────────────────────────
+        drawViewmodel(dt)
+
         posCallback?.invoke(camera.posString())
 
         val elapsed2 = System.nanoTime() - now
@@ -1306,6 +1355,7 @@ private fun updateProjectiles(dt: Float) {
         val cooldownMs = def.attackSpeedMs.coerceAtLeast(300) * (1f - speedBonus / 100f)
         weaponAttackCooldown = (cooldownMs / 1000f).coerceAtLeast(0.2f)
         swingCallback?.invoke()
+        startSwing()
         return hit
     }
 
@@ -2122,6 +2172,259 @@ private fun updateProjectiles(dt: Float) {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
+    // ── Viewmodel 1re personne (bras + objet tenu) ────────────────────────────
+
+    /** Déclenche une animation de swing (un coup aller-retour). */
+    internal fun startSwing() { swingActive = true; swingTimer = 0f }
+
+    private fun drawViewmodel(dt: Float) {
+        if (camera.thirdPerson) return
+
+        // ── Animation ─────────────────────────────────────────────────────────
+        // Minage en cours → swing en boucle ; sinon swing one-shot (attaque/pose).
+        val mining = mineTarget != null && !gamePaused
+        if (mining) {
+            swingActive = true
+            swingTimer += dt
+            if (swingTimer > SWING_DUR) swingTimer = 0f
+        } else if (swingActive) {
+            swingTimer += dt
+            if (swingTimer >= SWING_DUR) { swingActive = false; swingTimer = 0f }
+        }
+        val swing = if (swingActive) sin((swingTimer / SWING_DUR) * PI.toFloat()) else 0f
+
+        // ── Matrice du bras (repère vue) ──────────────────────────────────────
+        // Épaule en bas-droite (hors écran), avant-bras qui remonte vers le centre.
+        android.opengl.Matrix.setIdentityM(vmModel, 0)
+        android.opengl.Matrix.translateM(vmModel, 0, 0.50f, -0.70f - 0.03f * swing, -0.78f)
+        android.opengl.Matrix.rotateM(vmModel, 0, 13f, 0f, 0f, 1f)             // penche vers le centre
+        android.opengl.Matrix.rotateM(vmModel, 0, -8f - 48f * swing, 1f, 0f, 0f)  // avant-bras + coup
+        android.opengl.Matrix.rotateM(vmModel, 0, -6f, 0f, 1f, 0f)
+
+        // Profondeur fraîche : le viewmodel se dessine par-dessus le décor, sans s'y enfoncer.
+        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT)
+        GLES30.glEnable(GLES30.GL_DEPTH_TEST)
+        GLES30.glDepthMask(true)
+
+        val held = hotbar[selectedSlot]
+        val isWeapon = held != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(held)
+
+        drawArm(isWeapon)
+
+        if (held != null) {
+            when {
+                isWeapon                     -> drawHeldWeapon(held)
+                BlockRegistry.isDecoration(held) -> drawHeldFlat(held)
+                else                         -> drawHeldBlock(held)
+            }
+        }
+    }
+
+    /**
+     * Bras voxel (manche + peau) dessiné avec le laser shader (couleur plate).
+     * En mode arme/outil ([weapon] = true), on n'affiche qu'une main courte au niveau de la
+     * poignée pour ne pas chevaucher le sprite de l'arme qui remonte au-dessus.
+     */
+    private fun drawArm(weapon: Boolean) {
+        val w = 0.058f
+        // Manche + peau : long avant-bras (blocs/main vide) ou main courte (arme).
+        val sleeveTop = if (weapon) 0.20f else 0.28f
+        val skinTop   = if (weapon) 0.40f else 0.56f
+        val arr = FloatArray(2 * 36 * 6)
+        var o = 0
+        o = vmBox(arr, o, -w, w, 0.00f, sleeveTop, -w, w, ARM_SLEEVE[0], ARM_SLEEVE[1], ARM_SLEEVE[2])
+        o = vmBox(arr, o, -w * 0.88f, w * 0.88f, sleeveTop, skinTop, -w * 0.88f, w * 0.88f, ARM_SKIN[0], ARM_SKIN[1], ARM_SKIN[2])
+
+        android.opengl.Matrix.multiplyMM(vmMvp, 0, vmProj, 0, vmModel, 0)
+        val buf = ByteBuffer.allocateDirect(o * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(arr, 0, o); buf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vmVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, o * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        laserShader?.use()
+        GLES30.glUniformMatrix4fv(lUMvp, 1, false, vmMvp, 0)
+        val stride = 6 * 4
+        GLES30.glEnableVertexAttribArray(lAPos)
+        GLES30.glVertexAttribPointer(lAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(lAColor)
+        GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, o / 6)
+        GLES30.glDisableVertexAttribArray(lAPos)
+        GLES30.glDisableVertexAttribArray(lAColor)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+    }
+
+    /** Boîte colorée (pos3 + couleur3) avec ombrage de face cuit ; renvoie l'offset suivant. */
+    private fun vmBox(a: FloatArray, o0: Int, x0: Float, x1: Float, y0: Float, y1: Float, z0: Float, z1: Float,
+                      r: Float, g: Float, b: Float): Int {
+        var o = o0
+        fun q(ax: Float, ay: Float, az: Float, bx: Float, by: Float, bz: Float,
+              cx: Float, cy: Float, cz: Float, dx: Float, dy: Float, dz: Float, sh: Float) {
+            val cr = r * sh; val cg = g * sh; val cb = b * sh
+            a[o++]=ax;a[o++]=ay;a[o++]=az;a[o++]=cr;a[o++]=cg;a[o++]=cb
+            a[o++]=bx;a[o++]=by;a[o++]=bz;a[o++]=cr;a[o++]=cg;a[o++]=cb
+            a[o++]=cx;a[o++]=cy;a[o++]=cz;a[o++]=cr;a[o++]=cg;a[o++]=cb
+            a[o++]=ax;a[o++]=ay;a[o++]=az;a[o++]=cr;a[o++]=cg;a[o++]=cb
+            a[o++]=cx;a[o++]=cy;a[o++]=cz;a[o++]=cr;a[o++]=cg;a[o++]=cb
+            a[o++]=dx;a[o++]=dy;a[o++]=dz;a[o++]=cr;a[o++]=cg;a[o++]=cb
+        }
+        q(x0,y1,z0, x1,y1,z0, x1,y1,z1, x0,y1,z1, 1.00f)   // +Y
+        q(x0,y0,z1, x1,y0,z1, x1,y0,z0, x0,y0,z0, 0.50f)   // −Y
+        q(x1,y0,z1, x1,y1,z1, x1,y1,z0, x1,y0,z0, 0.78f)   // +X
+        q(x0,y0,z0, x0,y1,z0, x0,y1,z1, x0,y0,z1, 0.78f)   // −X
+        q(x0,y0,z1, x0,y1,z1, x1,y1,z1, x1,y0,z1, 0.92f)   // +Z (face caméra)
+        q(x1,y0,z0, x1,y1,z0, x0,y1,z0, x0,y0,z0, 0.62f)   // −Z
+        return o
+    }
+
+    /** Cube texturé du bloc tenu, présenté en biais dans le poing (world shader). */
+    private fun drawHeldBlock(block: Short) {
+        val s = 0.145f
+        System.arraycopy(vmModel, 0, vmTmp, 0, 16)
+        android.opengl.Matrix.translateM(vmTmp, 0, 0.0f, 0.60f, 0.06f)
+        android.opengl.Matrix.rotateM(vmTmp, 0, -28f, 0f, 1f, 0f)
+        android.opengl.Matrix.rotateM(vmTmp, 0, 20f, 1f, 0f, 0f)
+
+        val arr = FloatArray(36 * 7)
+        var o = 0
+        fun lyr(face: Int) = BlockRegistry.getLayerForFace(block, face, AIR, 0).toFloat()
+        o = vmQuad7(arr, o, -s, s,-s,0f,0f,  s, s,-s,1f,0f,  s, s, s,1f,1f, -s, s, s,0f,1f, 0*4096f+lyr(0))  // top
+        o = vmQuad7(arr, o, -s,-s, s,0f,0f,  s,-s, s,1f,0f,  s,-s,-s,1f,1f, -s,-s,-s,0f,1f, 1*4096f+lyr(1))  // bottom
+        o = vmQuad7(arr, o,  s,-s, s,0f,0f,  s, s, s,1f,0f,  s, s,-s,1f,1f,  s,-s,-s,0f,1f, 2*4096f+lyr(2))  // +X
+        o = vmQuad7(arr, o, -s,-s,-s,0f,0f, -s, s,-s,1f,0f, -s, s, s,1f,1f, -s,-s, s,0f,1f, 3*4096f+lyr(3))  // −X
+        o = vmQuad7(arr, o, -s,-s, s,0f,0f, -s, s, s,1f,0f,  s, s, s,1f,1f,  s,-s, s,0f,1f, 4*4096f+lyr(4))  // +Z
+        o = vmQuad7(arr, o,  s,-s,-s,0f,0f,  s, s,-s,1f,0f, -s, s,-s,1f,1f, -s,-s,-s,0f,1f, 5*4096f+lyr(5))  // −Z
+        drawWorldVm(arr, o, vmTmp)
+    }
+
+    /** Bloc-décoration (fleur, herbe…) tenu à plat dans le poing. */
+    private fun drawHeldFlat(block: Short) {
+        val s = 0.15f
+        val layer = BlockRegistry.getLayerForDecoration(block).toFloat()
+        System.arraycopy(vmModel, 0, vmTmp, 0, 16)
+        android.opengl.Matrix.translateM(vmTmp, 0, 0.0f, 0.58f, 0.06f)
+        android.opengl.Matrix.rotateM(vmTmp, 0, -14f, 0f, 1f, 0f)
+        val arr = FloatArray(6 * 7)
+        val o = vmQuad7(arr, 0, -s,-s,0f,0f,1f,  s,-s,0f,1f,1f,  s, s,0f,1f,0f, -s, s,0f,0f,0f, 0*4096f+layer)
+        drawWorldVm(arr, o, vmTmp)
+    }
+
+    /** Quad (pos3,uv2,packed,sky) pour le world shader ; renvoie l'offset suivant. */
+    private fun vmQuad7(a: FloatArray, o0: Int,
+                        x0: Float, y0: Float, z0: Float, u0: Float, v0: Float,
+                        x1: Float, y1: Float, z1: Float, u1: Float, v1: Float,
+                        x2: Float, y2: Float, z2: Float, u2: Float, v2: Float,
+                        x3: Float, y3: Float, z3: Float, u3: Float, v3: Float,
+                        packed: Float): Int {
+        var o = o0
+        fun vert(x: Float, y: Float, z: Float, u: Float, v: Float) {
+            a[o++]=x;a[o++]=y;a[o++]=z;a[o++]=u;a[o++]=v;a[o++]=packed;a[o++]=1f
+        }
+        vert(x0,y0,z0,u0,v0); vert(x1,y1,z1,u1,v1); vert(x2,y2,z2,u2,v2)
+        vert(x0,y0,z0,u0,v0); vert(x2,y2,z2,u2,v2); vert(x3,y3,z3,u3,v3)
+        return o
+    }
+
+    /** Dessine une géométrie world-shader (atlas de blocs) en pleine lumière fixe. */
+    private fun drawWorldVm(arr: FloatArray, count: Int, model: FloatArray) {
+        android.opengl.Matrix.multiplyMM(vmMvp, 0, vmProj, 0, model, 0)
+        val buf = ByteBuffer.allocateDirect(count * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(arr, 0, count); buf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vmVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, count * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        worldShader?.use()
+        GLES30.glUniformMatrix4fv(wUMvp, 1, false, vmMvp, 0)
+        GLES30.glUniform3f(wUChunkOffset, 0f, 0f, 0f)
+        GLES30.glUniform1f(wUAmbient, 1.0f)
+        GLES30.glUniform1f(wUCaveFloor, 0f)
+        GLES30.glUniform1i(wULightCount, 0)
+        GLES30.glUniform1f(wUTime, elapsed)
+        GLES30.glUniform1f(wUUnderwater, 0f)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D_ARRAY, blockTexArray)
+        GLES30.glUniform1i(wUTex, 0)
+        val stride = 7 * 4
+        GLES30.glEnableVertexAttribArray(wAPos)
+        GLES30.glVertexAttribPointer(wAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(wAUv)
+        GLES30.glVertexAttribPointer(wAUv, 3, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glEnableVertexAttribArray(wASky)
+        GLES30.glVertexAttribPointer(wASky, 1, GLES30.GL_FLOAT, false, stride, 24)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, count / 7)
+        GLES30.glDisableVertexAttribArray(wAPos)
+        GLES30.glDisableVertexAttribArray(wAUv)
+        GLES30.glDisableVertexAttribArray(wASky)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+    }
+
+    /** Arme/outil tenu : sprite 2D du PNG, présenté en diagonale (billboard shader). */
+    private fun drawHeldWeapon(id: Short) {
+        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return
+        val def = ItemRegistry.get(weapon.defId) ?: return
+        val tex = itemTexture(def.sprite)
+        if (tex == 0) return
+
+        val s = 0.30f
+        System.arraycopy(vmModel, 0, vmTmp, 0, 16)
+        // Manche ancré dans le poing, tête/lame redressée vers le haut en diagonale
+        // (roll négatif = redresse la diagonale de la texture vers la verticale),
+        // légèrement inclinée vers l'avant et tournée pour un rendu 3D.
+        android.opengl.Matrix.translateM(vmTmp, 0, 0.0f, 0.52f, 0.05f)
+        android.opengl.Matrix.rotateM(vmTmp, 0, -16f, 1f, 0f, 0f)   // pointe vers l'avant
+        android.opengl.Matrix.rotateM(vmTmp, 0, -12f, 0f, 1f, 0f)   // léger angle 3D
+        android.opengl.Matrix.rotateM(vmTmp, 0, -42f, 0f, 0f, 1f)   // redresse la lame
+        android.opengl.Matrix.multiplyMM(vmMvp, 0, vmProj, 0, vmTmp, 0)
+
+        val v = floatArrayOf(
+            -s,-s,0f, 0f,1f,   s,-s,0f, 1f,1f,   s, s,0f, 1f,0f,
+            -s,-s,0f, 0f,1f,   s, s,0f, 1f,0f,  -s, s,0f, 0f,0f
+        )
+        val buf = ByteBuffer.allocateDirect(v.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(v); buf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vmVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, v.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        GLES30.glEnable(GLES30.GL_BLEND)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+        billboardShader?.use()
+        GLES30.glUniformMatrix4fv(bUMvp, 1, false, vmMvp, 0)
+        GLES30.glUniform1f(bUAlpha, 1f)
+        GLES30.glUniform1f(bUMask, 0f)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, tex)
+        GLES30.glUniform1i(bUTex, 0)
+        val stride = 5 * 4
+        GLES30.glEnableVertexAttribArray(bAPos)
+        GLES30.glVertexAttribPointer(bAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(bAUv)
+        GLES30.glVertexAttribPointer(bAUv, 2, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 6)
+        GLES30.glDisableVertexAttribArray(bAPos)
+        GLES30.glDisableVertexAttribArray(bAUv)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+        GLES30.glDisable(GLES30.GL_BLEND)
+    }
+
+    /** Texture GL d'un sprite d'item (cache par nom ; 0 si introuvable). */
+    private fun itemTexture(sprite: String): Int {
+        itemTexCache[sprite]?.let { return it }
+        val tex = runCatching {
+            val ids = IntArray(1); GLES30.glGenTextures(1, ids, 0); val t = ids[0]
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, t)
+            val bmp = BitmapFactory.decodeStream(context.assets.open("Cave World/Items/$sprite.png"))
+            val b = ByteBuffer.allocateDirect(bmp.width * bmp.height * 4).order(ByteOrder.nativeOrder())
+            bmp.copyPixelsToBuffer(b); b.position(0)
+            GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, bmp.width, bmp.height, 0,
+                GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, b)
+            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST)
+            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST)
+            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE)
+            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE)
+            bmp.recycle()
+            t
+        }.getOrDefault(0)
+        itemTexCache[sprite] = tex
+        return tex
+    }
+
     // ── LOD helpers ──────────────────────────────────────────────────────────
 
     private fun lodKey(cx: Int, cz: Int): Long =
@@ -2578,6 +2881,7 @@ private fun updateProjectiles(dt: Float) {
 
     private fun placeBlock() {
         val blockType = hotbar[selectedSlot] ?: return
+        startSwing()
         if ((inventory[blockType] ?: 0) <= 0) {
             hotbar[selectedSlot] = null
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
@@ -2681,6 +2985,9 @@ private fun updateProjectiles(dt: Float) {
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)
         if (playerBoxVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(playerBoxVbo), 0)
+        if (vmVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(vmVbo), 0)
+        itemTexCache.values.filter { it != 0 }.forEach { GLES30.glDeleteTextures(1, intArrayOf(it), 0) }
+        itemTexCache.clear()
     }
 
     companion object {

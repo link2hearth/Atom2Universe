@@ -384,14 +384,10 @@ internal class CaveHud(private val activity: CaveActivity) {
         val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return
         val rarityColor = rarityColor(weapon.rarity)
 
-        // Sprite dans la vue de swing
-        runCatching {
-            val bmp = android.graphics.BitmapFactory.decodeStream(
-                activity.assets.open("Cave World/Items/${def.sprite}.png")
-            )
-            weaponSwingView?.setWeapon(bmp)
-            weaponSwingView?.visibility = View.VISIBLE
-        }.onFailure { weaponSwingView?.visibility = View.GONE }
+        // Le sprite d'arme est désormais rendu en 3D dans le viewmodel 1re personne
+        // (bras + arme par-dessus la scène GL) ; l'ancienne vue 2D reste masquée.
+        weaponSwingView?.setWeapon(null)
+        weaponSwingView?.visibility = View.GONE
 
         // Tooltip
         val rarityLabel = weapon.rarity.name.lowercase().replaceFirstChar { it.uppercase() }
