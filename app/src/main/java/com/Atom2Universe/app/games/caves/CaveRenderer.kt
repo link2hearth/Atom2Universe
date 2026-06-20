@@ -85,6 +85,7 @@ internal class CaveRenderer(
     private val lodUploadQueue = ConcurrentLinkedQueue<Pair<Long, FloatArray>>()
     private val lodUploadQueueSize = java.util.concurrent.atomic.AtomicInteger(0)
     private val LOD_RADIUS   = 90
+    private val INITIAL_LOD_BUILD_LIMIT = 512
     private val MAX_LOD_TILES = 8000
     private val LOD_SUPER    = 8                           // 8×8 = 64 colonnes par super-tuile
     // Hauteur (blocs) de la bande de surface, pour les bounding-box de frustum LOD.
@@ -143,6 +144,8 @@ internal class CaveRenderer(
     private val building = ConcurrentHashMap.newKeySet<Long>()
 
     private var lastCx = Int.MAX_VALUE; private var lastCy = Int.MAX_VALUE; private var lastCz = Int.MAX_VALUE
+    private var streamNeedsMore = false
+    private var streamTickAccum = 0f
     private var lastFrameNs = 0L
     private var fpsAccum = 0f; private var fpsFrames = 0   // moyenne FPS sur ~0.5 s
 
@@ -640,10 +643,15 @@ internal class CaveRenderer(
         val pcx = camera.chunkX(); val pcz = camera.chunkZ()
         val r = LOD_RADIUS
         scope.launch {
-            for ((cx, cz) in cache.cachedColumns()) {
-                val dx = cx - pcx; val dz = cz - pcz
-                if (dx * dx + dz * dz <= r * r) scheduleLodBuild(cx, cz)
-            }
+            cache.cachedColumns()
+                .mapNotNull { (cx, cz) ->
+                    val dx = cx - pcx; val dz = cz - pcz
+                    val d2 = dx * dx + dz * dz
+                    if (d2 <= r * r) Triple(d2, cx, cz) else null
+                }
+                .sortedBy { it.first }
+                .take(INITIAL_LOD_BUILD_LIMIT)
+                .forEach { (_, cx, cz) -> scheduleLodBuild(cx, cz) }
         }
     }
 
@@ -791,15 +799,23 @@ internal class CaveRenderer(
         }
 
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
-        if (cx != lastCx || cy != lastCy || cz != lastCz) {
+        val movedChunk = cx != lastCx || cy != lastCy || cz != lastCz
+        streamTickAccum += dt
+        if (movedChunk || (streamNeedsMore && streamTickAccum >= 0.08f)) {
+            val batchSize = if (movedChunk) 64 else 24
             lastCx = cx; lastCy = cy; lastCz = cz
-            world.updateAroundPlayer(cx, cy, cz, camera.fwdX, camera.fwdZ) { chunk -> scheduleChunkBuild(chunk) }
+            streamTickAccum = 0f
+            streamNeedsMore = world.updateAroundPlayer(
+                cx, cy, cz,
+                camera.fwdX, camera.fwdZ,
+                maxNewChunks = batchSize
+            ) { chunk -> scheduleChunkBuild(chunk) }
         }
 
         // Propagation de lumière sur un thread de fond dédié (jamais sur le thread GL → pas de lag),
         // et mono-thread via un guard atomique → pas de course, la skylight converge proprement.
         // Les chunks dont la lumière s'est stabilisée sont mis en file de reconstruction du mesh.
-        if (!world.lightQueue.isEmpty() && lightWorkerRunning.compareAndSet(false, true)) {
+        if (world.hasPendingLight() && lightWorkerRunning.compareAndSet(false, true)) {
             scope.launch(lightDispatcher) {
                 try { processLightBatch() } finally { lightWorkerRunning.set(false) }
             }
@@ -1498,7 +1514,7 @@ private fun updateProjectiles(dt: Float) {
     private fun processLightBatch() {
         var processed = 0
         while (processed < LIGHT_BATCH) {
-            val key = world.lightQueue.poll() ?: break
+            val key = world.pollLightKey() ?: break
             processed++
             val chunk = world.getChunkByKey(key)?.takeIf { it.generated } ?: continue
             val r = LightEngine.computeSky(chunk, world)
@@ -1509,10 +1525,10 @@ private fun updateProjectiles(dt: Float) {
                     if (r and (1 shl f) == 0) continue
                     val o = LIGHT_FACE_OFFSETS[f]
                     val nb = world.getChunk(chunk.cx + o[0], chunk.cy + o[1], chunk.cz + o[2]) ?: continue
-                    if (nb.generated) world.lightQueue.add(world.chunkKey(nb.cx, nb.cy, nb.cz))   // propager la lumière
+                    if (nb.generated) world.enqueueLight(nb.cx, nb.cy, nb.cz)   // propager la lumière
                 }
-                world.lightQueue.add(key)              // re-vérifier ce chunk jusqu'à stabilisation
-            } else if (chunk.lightMeshDirty) {
+                world.enqueueLight(key)                // re-vérifier ce chunk jusqu'à stabilisation
+            } else if (chunk.lightMeshDirty || chunk.meshDirty) {
                 chunk.lightMeshDirty = false           // stabilisé → un seul rebuild du mesh
                 chunk.meshDirty = true
                 world.rebuildQueue.add(key)
@@ -1550,7 +1566,6 @@ private fun updateProjectiles(dt: Float) {
         for ((ncx, ncy, ncz) in affectedChunks) {
             val key = world.chunkKey(ncx, ncy, ncz)
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
-            world.lightQueue.add(key)
             val verts      = MeshBuilder.build(chunk, world)
             val waterVerts = MeshBuilder.buildWater(chunk, world)
             meshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)

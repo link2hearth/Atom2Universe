@@ -19,6 +19,8 @@ internal object LightEngine {
 
     private const val N = CHUNK_SIZE
     private const val VOL = N * N * N
+    private val scratchLocal = ThreadLocal.withInitial { ByteArray(VOL) }
+    private val queueLocal = ThreadLocal.withInitial { IntQueue() }
 
     private fun idx(lx: Int, ly: Int, lz: Int) = lx + ly * N + lz * N * N
 
@@ -33,8 +35,10 @@ internal object LightEngine {
     fun computeSky(chunk: Chunk, world: World): Int {
         // Scratch alloué localement : négligeable face au FloatArray du mesh, et computeSky est
         // appelé exclusivement depuis le passage de lumière mono-thread (thread GL).
-        val scratch = ByteArray(VOL)
-        val queue   = IntQueue()
+        val scratch = scratchLocal.get()
+        scratch.fill(0)
+        val queue = queueLocal.get()
+        queue.clear()
 
         // ── Amorçage depuis les six voisins ───────────────────────────────────
         for (lz in 0 until N) for (lx in 0 until N) {
@@ -115,6 +119,10 @@ internal object LightEngine {
         private var head = 0
         private var tail = 0
         fun isNotEmpty() = head != tail
+        fun clear() {
+            head = 0
+            tail = 0
+        }
         fun add(v: Int) {
             if (tail == data.size) {
                 if (head > 0) {

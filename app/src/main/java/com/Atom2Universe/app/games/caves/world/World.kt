@@ -13,6 +13,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     val waterRebuildQueue = ConcurrentLinkedQueue<Long>()
     // File de propagation de la skylight (drainée sur le thread GL, séparée du meshing).
     val lightQueue = ConcurrentLinkedQueue<Long>()
+    private val lightQueued = ConcurrentHashMap.newKeySet<Long>()
     val renderRadiusXZ     = 12  // rayon XZ commun aux deux modes
     val renderRadiusYSurface = 5  // plage Y en surface (cylindre) — identique à avant
     val renderRadiusCave   = 7   // rayon de la sphère souterrain
@@ -57,14 +58,34 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     fun getChunkByKey(key: Long): Chunk? = chunks[key]
     fun allChunks(): Collection<Chunk> = chunks.values
 
+    fun hasPendingLight(): Boolean = lightQueue.isNotEmpty()
+
+    fun enqueueLight(key: Long) {
+        if (lightQueued.add(key)) lightQueue.add(key)
+    }
+
+    fun enqueueLight(cx: Int, cy: Int, cz: Int) = enqueueLight(chunkKey(cx, cy, cz))
+
+    fun pollLightKey(): Long? {
+        val key = lightQueue.poll() ?: return null
+        lightQueued.remove(key)
+        return key
+    }
+
     fun keyToCx(key: Long): Int { val v = (key and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
     fun keyToCy(key: Long): Int { val v = ((key shr 20) and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
     fun keyToCz(key: Long): Int { val v = ((key shr 40) and 0xFFFFF).toInt(); return if (v >= 0x80000) v - 0x100000 else v }
 
-    fun updateAroundPlayer(pcx: Int, pcy: Int, pcz: Int,
-                           viewDirX: Float = 0f, viewDirZ: Float = 0f,
-                           onNeedGenerate: (Chunk) -> Unit) {
-        val toGenerate = mutableListOf<Chunk>()
+    fun updateAroundPlayer(
+        pcx: Int,
+        pcy: Int,
+        pcz: Int,
+        viewDirX: Float = 0f,
+        viewDirZ: Float = 0f,
+        maxNewChunks: Int = Int.MAX_VALUE,
+        onNeedGenerate: (Chunk) -> Unit
+    ): Boolean {
+        val candidates = mutableListOf<ChunkCandidate>()
         val isSurface = pcy >= 0
 
         if (isSurface) {
@@ -78,9 +99,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
                 if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                 val key = chunkKey(cx, cy, cz)
-                if (!chunks.containsKey(key) && inFlight.add(key)) {
-                    val chunk = Chunk(cx, cy, cz); chunks[key] = chunk; toGenerate.add(chunk)
-                }
+                if (!chunks.containsKey(key) && !inFlight.contains(key))
+                    candidates.add(ChunkCandidate(cx, cy, cz, key, streamPriority(dx, dy, dz, viewDirX, viewDirZ)))
             }
         } else {
             // Sphère : rayon uniforme en souterrain
@@ -92,20 +112,22 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
                 if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                 val key = chunkKey(cx, cy, cz)
-                if (!chunks.containsKey(key) && inFlight.add(key)) {
-                    val chunk = Chunk(cx, cy, cz); chunks[key] = chunk; toGenerate.add(chunk)
-                }
+                if (!chunks.containsKey(key) && !inFlight.contains(key))
+                    candidates.add(ChunkCandidate(cx, cy, cz, key, streamPriority(dx, dy, dz, viewDirX, viewDirZ)))
             }
         }
 
-        toGenerate.sortBy { c ->
-            val dx = c.cx - pcx; val dz = c.cz - pcz; val dy = c.cy - pcy
-            val dist = dx * dx + dz * dz + dy * dy * 8
-            // Bonus cône de vision : avance les chunks devant le joueur sans pénaliser les autres
-            val dot = dx * viewDirX + dz * viewDirZ
-            dist - (dot * renderRadiusXZ * 2).toInt()
+        // Stream nearest chunks first, with a small view-direction bonus.
+        candidates.sortBy { it.priority }
+        var scheduled = 0
+        for (c in candidates) {
+            if (scheduled >= maxNewChunks) break
+            if (!inFlight.add(c.key)) continue
+            val chunk = Chunk(c.cx, c.cy, c.cz)
+            chunks[c.key] = chunk
+            onNeedGenerate(chunk)
+            scheduled++
         }
-        toGenerate.forEach(onNeedGenerate)
 
         // Déchargement : bounding-box cylindre en surface, sphère en souterrain
         if (isSurface) {
@@ -121,6 +143,15 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) && dx * dx + dy * dy + dz * dz > unloadR2
             }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
         }
+        return candidates.size > scheduled
+    }
+
+    private data class ChunkCandidate(val cx: Int, val cy: Int, val cz: Int, val key: Long, val priority: Int)
+
+    private fun streamPriority(dx: Int, dy: Int, dz: Int, viewDirX: Float, viewDirZ: Float): Int {
+        val dist = dx * dx + dz * dz + dy * dy * 8
+        val dot = dx * viewDirX + dz * viewDirZ
+        return dist - (dot * renderRadiusXZ * 2).toInt()
     }
 
     fun abandonChunk(chunk: Chunk) {
@@ -134,8 +165,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         inFlight.remove(key)
         chunk.generated = true
         chunk.meshDirty = true
-        rebuildQueue.add(key)
-        lightQueue.add(key)
+        enqueueLight(key)
         val neighbors = arrayOf(
             intArrayOf(chunk.cx-1,chunk.cy,chunk.cz), intArrayOf(chunk.cx+1,chunk.cy,chunk.cz),
             intArrayOf(chunk.cx,chunk.cy-1,chunk.cz), intArrayOf(chunk.cx,chunk.cy+1,chunk.cz),
@@ -143,7 +173,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         )
         for ((nx, ny, nz) in neighbors) {
             val nb = getChunk(nx, ny, nz) ?: continue
-            if (nb.generated) { nb.meshDirty = true; rebuildQueue.add(chunkKey(nx, ny, nz)); lightQueue.add(chunkKey(nx, ny, nz)) }
+            if (nb.generated) {
+                nb.meshDirty = true
+                enqueueLight(nx, ny, nz)
+            }
         }
     }
 
@@ -156,8 +189,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         inFlight.remove(key)
         chunk.generated = true
         chunk.meshDirty = true
-        rebuildQueue.add(key)
-        lightQueue.add(key)
+        enqueueLight(key)
         return chunk
     }
 
@@ -244,12 +276,18 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
         val chunk = getChunk(cx, cy, cz) ?: return
-        chunk.setBlock(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE, type)
+        val lx = wx - cx * CHUNK_SIZE
+        val ly = wy - cy * CHUNK_SIZE
+        val lz = wz - cz * CHUNK_SIZE
+        val old = chunk.blockAt(lx, ly, lz)
+        if (old == type) return
+        chunk.setBlock(lx, ly, lz, type)
         chunk.version++; chunk.meshDirty = true
         val key = chunkKey(cx, cy, cz)
         rebuildQueue.add(key)
+        if (skyPassable(old) != skyPassable(type)) enqueueLightAndNeighbors(cx, cy, cz)
         storage?.recordChange(cx, cy, cz,
-            (wx - cx * CHUNK_SIZE) + (wy - cy * CHUNK_SIZE) * CHUNK_SIZE + (wz - cz * CHUNK_SIZE) * CHUNK_SIZE * CHUNK_SIZE, type)
+            lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, type)
     }
 
     private fun setBlockRawIfAir(wx: Int, wy: Int, wz: Int, type: Short) {
@@ -424,11 +462,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             rough += wi * biomes[i].heightRoughness
         }
         val s = (seed and 0xFFFFF).toDouble() * 0.0001 + 77777.0
-        val nLow  = SimplexNoise.noise(wx * 0.0013 + s,         wz * 0.0013)
-        val nMid  = SimplexNoise.noise(wx * 0.0060 + s + 120.0, wz * 0.0060)
-        val nHigh = SimplexNoise.noise(wx * 0.0450 + s + 240.0, wz * 0.0450)
+        val nLow  = SimplexNoise.noise(wx * 0.0009 + s,         wz * 0.0009)
+        val nMid  = SimplexNoise.noise(wx * 0.0035 + s + 120.0, wz * 0.0035)
+        val nHigh = SimplexNoise.noise(wx * 0.0200 + s + 240.0, wz * 0.0200)
+        val softAmp = amp * 0.42
+        val softRough = rough * 0.28
         val maxRelH = (US_HEIGHT_CY * CHUNK_SIZE - 110).toDouble()
-        val relH = (8.0 + base + nLow * amp + nMid * amp * 0.40 + nHigh * rough).coerceIn(2.0, maxRelH)
+        val relH = (8.0 + base + nLow * softAmp + nMid * softAmp * 0.22 + nHigh * softRough).coerceIn(2.0, maxRelH)
         return bandBaseWorldY + relH
     }
 
@@ -939,14 +979,23 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val nMid  = SimplexNoise.noise(wx * 0.0060 + s + 120.0, wz * 0.0060)         // collines
         val nHigh = SimplexNoise.noise(wx * 0.0450 + s + 240.0, wz * 0.0450)         // détail fin
         val ridge = 1.0 - abs(SimplexNoise.noise(wx * 0.0040 + s + 500.0, wz * 0.0040)) // crêtes 0..1
+        val ruggedness = smoothstep(50.0, 180.0, amp)
+        val softAmp = amp * (0.28 + ruggedness * 0.52)
+        val softRough = rough * (0.22 + ruggedness * 0.35)
+        val peakGate = smoothstep(0.78, 0.97, ridge)
 
         val maxY = (SURFACE_CY_MAX + 1) * CHUNK_SIZE - 2.0
         return (SURFACE_BASE_Y + base
-                + nLow  * amp
-                + nMid  * amp * 0.40
-                + ridge * ridge * amp * 0.55   // épines montagneuses, proportionnelles à l'amplitude
-                + nHigh * rough)
+                + nLow  * softAmp
+                + nMid  * softAmp * 0.22
+                + peakGate * peakGate * amp * ruggedness * 0.38
+                + nHigh * softRough)
             .coerceIn(6.0, maxY)
+    }
+
+    private fun smoothstep(edge0: Double, edge1: Double, value: Double): Double {
+        val t = ((value - edge0) / (edge1 - edge0)).coerceIn(0.0, 1.0)
+        return t * t * (3.0 - 2.0 * t)
     }
 
     /** Entrée d'altitude correspondant à la surface en (wx,wz,h), ou null. Ligne légèrement bruitée. */
@@ -1531,17 +1580,33 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Modification de blocs ─────────────────────────────────────────────────
 
+    private fun skyPassable(block: Short): Boolean =
+        block == AIR || isTransparent(block) || isDecoration(block) || isWater(block) || isLeaf(block)
+
+    private fun enqueueLightAndNeighbors(cx: Int, cy: Int, cz: Int) {
+        enqueueLight(cx, cy, cz)
+        enqueueLight(cx - 1, cy, cz)
+        enqueueLight(cx + 1, cy, cz)
+        enqueueLight(cx, cy - 1, cz)
+        enqueueLight(cx, cy + 1, cz)
+        enqueueLight(cx, cy, cz - 1)
+        enqueueLight(cx, cy, cz + 1)
+    }
+
     fun setBlock(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
         val chunk = getChunk(cx, cy, cz)?.takeIf { it.generated } ?: return
         val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
+        val old = chunk.blockAt(lx, ly, lz)
+        if (old == type) return
         chunk.setBlock(lx, ly, lz, type)
         chunk.version++
         val key = chunkKey(cx, cy, cz)
         chunk.meshDirty = true
         rebuildQueue.add(key)
+        if (skyPassable(old) != skyPassable(type)) enqueueLightAndNeighbors(cx, cy, cz)
         storage?.recordChange(cx, cy, cz, lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, type)
         for ((nx, ny, nz) in arrayOf(
             intArrayOf(cx-1,cy,cz), intArrayOf(cx+1,cy,cz),
