@@ -5,6 +5,11 @@ import android.content.Context
 class GachaTicketRepository(context: Context) {
 
     private val dao = ClickerDatabase.getInstance(context).gachaTicketDao()
+    private val achievementRepo = ClickerAchievementRepository(context.applicationContext)
+
+    /** Tickets gagnés par heure : doublé une fois le succès cyanobactérie débloqué. */
+    private fun ticketsPerHour(): Int =
+        if (ClickerAchievements.CYANOBACTERIA_ID in achievementRepo.loadUnlocked()) 2 else 1
 
     suspend fun load(): GachaTicketStateEntity {
         return dao.load() ?: GachaTicketStateEntity(id = 0, totalTickets = 10, lastTicketAwardMs = System.currentTimeMillis())
@@ -17,11 +22,12 @@ class GachaTicketRepository(context: Context) {
     suspend fun awardTickets(nowMs: Long): GachaTicketStateEntity {
         val current = load()
         val elapsedMs = if (current.lastTicketAwardMs > 0L) nowMs - current.lastTicketAwardMs else 0L
-        val ticketsEarned = (elapsedMs / (60 * 60 * 1000L)).toInt()
-        if (ticketsEarned <= 0) return current
+        val hoursElapsed = (elapsedMs / (60 * 60 * 1000L)).toInt()
+        if (hoursElapsed <= 0) return current
+        val ticketsEarned = hoursElapsed * ticketsPerHour()
         val updated = current.copy(
             totalTickets = current.totalTickets + ticketsEarned,
-            lastTicketAwardMs = current.lastTicketAwardMs + ticketsEarned * (60 * 60 * 1000L)
+            lastTicketAwardMs = current.lastTicketAwardMs + hoursElapsed * (60 * 60 * 1000L)
         )
         save(updated)
         return updated

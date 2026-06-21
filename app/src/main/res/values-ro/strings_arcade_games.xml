@@ -26,6 +26,8 @@
     <string name="clicker_collection_frenzy_max">10%%/s șansă frenezie ✦ MAX</string>
     <string name="clicker_collection_locked_hint">Completați %s mai întâi</string>
     <string name="clicker_achievements_section">Realizări</string>
+    <string name="achievement_cyanobacteria_name">Scară: cianobacterie</string>
+    <string name="achievement_cyanobacteria_flavor">originea vieții pe Pământ · ×2 bilete gacha/h</string>
     <string name="achievement_human_cell_name">Scară: celulă umană</string>
     <string name="achievement_human_cell_flavor">echivalentul unei celule umane medii</string>
     <string name="achievement_sand_grain_name">Scară: bob de nisip</string>

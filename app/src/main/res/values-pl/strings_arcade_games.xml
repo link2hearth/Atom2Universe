@@ -15,6 +15,8 @@
     <string name="stars_war_paused">Pauza</string>
     <string name="achievement_unlocked_header">Osiągnięcie odblokowane!</string>
     <string name="clicker_achievements_section">Osiągnięcia</string>
+    <string name="achievement_cyanobacteria_name">Skala: sinica</string>
+    <string name="achievement_cyanobacteria_flavor">początek życia na Ziemi · ×2 bilety gacha/h</string>
     <string name="achievement_human_cell_name">Skala: komórka ludzka</string>
     <string name="achievement_human_cell_flavor">odpowiednik przeciętnej komórki ludzkiej</string>
     <string name="achievement_sand_grain_name">Skala: ziarno piasku</string>

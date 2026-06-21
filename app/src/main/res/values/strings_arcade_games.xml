@@ -26,6 +26,8 @@
     <string name="clicker_collection_frenzy_max">10%%/s frenzy chance ✦ MAX</string>
     <string name="clicker_collection_locked_hint">Complete %s first</string>
     <string name="clicker_achievements_section">Achievements</string>
+    <string name="achievement_cyanobacteria_name">Scale: cyanobacteria</string>
+    <string name="achievement_cyanobacteria_flavor">at the origin of life on Earth · ×2 gacha tickets/h</string>
     <string name="achievement_human_cell_name">Scale: human cell</string>
     <string name="achievement_human_cell_flavor">the equivalent of an average human cell</string>
     <string name="achievement_sand_grain_name">Scale: grain of sand</string>

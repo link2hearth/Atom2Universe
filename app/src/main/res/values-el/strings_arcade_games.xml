@@ -26,6 +26,8 @@
     <string name="clicker_collection_frenzy_max">10%%/δλ πιθανότητα φρενίτιδας ✦ ΜΕΓΙΣΤΟ</string>
     <string name="clicker_collection_locked_hint">Συμπληρώστε πρώτα %s</string>
     <string name="clicker_achievements_section">Επιτεύγματα</string>
+    <string name="achievement_cyanobacteria_name">Κλίμακα: κυανοβακτήριο</string>
+    <string name="achievement_cyanobacteria_flavor">η απαρχή της ζωής στη Γη · ×2 εισιτήρια gacha/ώρα</string>
     <string name="achievement_human_cell_name">Κλίμακα: ανθρώπινο κύτταρο</string>
     <string name="achievement_human_cell_flavor">αντίστοιχο ενός μέσου ανθρώπινου κυττάρου</string>
     <string name="achievement_sand_grain_name">Κλίμακα: κόκκος άμμου</string>

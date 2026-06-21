@@ -15,6 +15,8 @@
     <string name="stars_war_paused">Em pausa</string>
     <string name="achievement_unlocked_header">Conquista desbloqueada!</string>
     <string name="clicker_achievements_section">Conquistas</string>
+    <string name="achievement_cyanobacteria_name">Escala: cianobactéria</string>
+    <string name="achievement_cyanobacteria_flavor">a origem da vida na Terra · ×2 tickets gacha/h</string>
     <string name="achievement_human_cell_name">Escala: célula humana</string>
     <string name="achievement_human_cell_flavor">o equivalente a uma célula humana média</string>
     <string name="achievement_sand_grain_name">Escala: grão de areia</string>

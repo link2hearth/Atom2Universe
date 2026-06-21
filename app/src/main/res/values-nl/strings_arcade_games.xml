@@ -15,6 +15,8 @@
     <string name="stars_war_paused">Gepauzeerd</string>
     <string name="achievement_unlocked_header">Prestatie ontgrendeld!</string>
     <string name="clicker_achievements_section">Prestaties</string>
+    <string name="achievement_cyanobacteria_name">Schaal: cyanobacterie</string>
+    <string name="achievement_cyanobacteria_flavor">de oorsprong van het leven op aarde · ×2 gacha-tickets/u</string>
     <string name="achievement_human_cell_name">Schaal: menselijke cel</string>
     <string name="achievement_human_cell_flavor">het equivalent van een gemiddelde menselijke cel</string>
     <string name="achievement_sand_grain_name">Schaal: zandkorrel</string>

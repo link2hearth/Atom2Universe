@@ -12,8 +12,12 @@ data class ClickerAchievement(
 )
 
 object ClickerAchievements {
+    /** Succès dont le déblocage double les tickets gacha gagnés par heure (1 → 2). */
+    const val CYANOBACTERIA_ID = "scaleCyanobacteria"
+
     val all: List<ClickerAchievement> by lazy {
         listOf(
+            ClickerAchievement(CYANOBACTERIA_ID,         R.string.achievement_cyanobacteria_name, R.string.achievement_cyanobacteria_flavor, "10^11",   LayeredNumber.fromLayer0(1.0, 11.0)),
             ClickerAchievement("scaleHumanCell",         R.string.achievement_human_cell_name,    R.string.achievement_human_cell_flavor,    "10^14",   LayeredNumber.fromLayer0(1.0, 14.0)),
             ClickerAchievement("scaleSandGrain",         R.string.achievement_sand_grain_name,    R.string.achievement_sand_grain_flavor,    "10^19",   LayeredNumber.fromLayer0(1.0, 19.0)),
             ClickerAchievement("scaleAnt",               R.string.achievement_ant_name,           R.string.achievement_ant_flavor,           "10^20",   LayeredNumber.fromLayer0(1.0, 20.0)),

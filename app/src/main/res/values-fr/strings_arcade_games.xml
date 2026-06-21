@@ -26,6 +26,8 @@
     <string name="clicker_collection_frenzy_max">10 %%/s de frénésie ✦ MAX</string>
     <string name="clicker_collection_locked_hint">Compléter %s d\'abord</string>
     <string name="clicker_achievements_section">Succès</string>
+    <string name="achievement_cyanobacteria_name">Échelle : cyanobactérie</string>
+    <string name="achievement_cyanobacteria_flavor">à l\'origine de la vie sur Terre · ×2 tickets gacha/h</string>
     <string name="achievement_human_cell_name">Échelle : cellule humaine</string>
     <string name="achievement_human_cell_flavor">l\'équivalent d\'une cellule humaine « moyenne »</string>
     <string name="achievement_sand_grain_name">Échelle : grain de sable</string>
