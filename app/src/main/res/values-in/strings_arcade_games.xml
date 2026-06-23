@@ -268,4 +268,32 @@
     <string name="sokoban_undo">Batalkan</string>
     <string name="sokoban_reset">Mulai ulang</string>
     <string name="sokoban_new">Baru</string>
+    <string name="hot_potato_title">Kentang Panas</string>
+    <string name="hot_potato_description">Pantulkan kentangnya, masak pas, lalu lempar ke sisi!</string>
+    <string name="hot_potato_how_to">Tarik ke belakang seperti ketapel untuk meluncurkan · masak sampai zona hijau</string>
+    <string name="hot_potato_tap_to_start">Ketuk di bawah kentang untuk mulai</string>
+    <string name="hot_potato_tap_to_retry">Ketuk untuk coba lagi</string>
+    <string name="hot_potato_tap_to_resume">Ketuk untuk lanjut</string>
+    <string name="hot_potato_game_over">Permainan Selesai</string>
+    <string name="hot_potato_paused">Dijeda</string>
+    <string name="hot_potato_score_label">Skor</string>
+    <string name="hot_potato_best_label">TERBAIK</string>
+    <string name="hot_potato_new_best">Rekor baru!</string>
+    <string name="hot_potato_perfect">Sempurna!</string>
+    <string name="hot_potato_raw">Terlalu mentah!</string>
+    <string name="hot_potato_burnt">Gosong!</string>
+    <!-- Orbit -->
+    <string name="orbite_title">Orbit</string>
+    <string name="orbite_description">Putar elektron, hindari asteroid, dan kumpulkan kuanta energi!</string>
+    <string name="orbite_subtitle">Sekali ketuk membalik arah orbit elektron</string>
+    <string name="orbite_instructions">Hindari puing kosmik yang tertarik ke inti · sapu kuanta hijau untuk merangkai kombo</string>
+    <string name="orbite_btn_start">Mulai</string>
+    <string name="orbite_btn_restart">Ulangi</string>
+    <string name="orbite_btn_back">Kembali</string>
+    <string name="orbite_game_over">Runtuh!</string>
+    <string name="orbite_best_label">TERBAIK %1$s</string>
+    <string name="orbite_final_score">Skor %1$d</string>
+    <string name="orbite_best_score">Terbaik %1$d</string>
+    <string name="orbite_new_best">★ Rekor baru! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

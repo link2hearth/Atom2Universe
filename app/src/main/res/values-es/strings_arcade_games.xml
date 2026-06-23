@@ -268,4 +268,32 @@
     <string name="sokoban_undo">Deshacer</string>
     <string name="sokoban_reset">Reiniciar</string>
     <string name="sokoban_new">Nuevo</string>
+    <string name="hot_potato_title">Patata Caliente</string>
+    <string name="hot_potato_description">Haz rebotar la patata, cocínala en su punto y ¡lánzala por los lados!</string>
+    <string name="hot_potato_how_to">Tira hacia atrás como un tirachinas para lanzar · cocínala hasta la zona verde</string>
+    <string name="hot_potato_tap_to_start">Toca debajo de la patata para empezar</string>
+    <string name="hot_potato_tap_to_retry">Toca para reintentar</string>
+    <string name="hot_potato_tap_to_resume">Toca para continuar</string>
+    <string name="hot_potato_game_over">Fin del juego</string>
+    <string name="hot_potato_paused">En pausa</string>
+    <string name="hot_potato_score_label">Puntos</string>
+    <string name="hot_potato_best_label">MEJOR</string>
+    <string name="hot_potato_new_best">¡Nuevo récord!</string>
+    <string name="hot_potato_perfect">¡Perfecto!</string>
+    <string name="hot_potato_raw">¡Demasiado cruda!</string>
+    <string name="hot_potato_burnt">¡Quemada!</string>
+    <!-- Orbit -->
+    <string name="orbite_title">Órbita</string>
+    <string name="orbite_description">¡Haz girar el electrón, esquiva los asteroides y recoge los cuantos de energía!</string>
+    <string name="orbite_subtitle">Un toque invierte la órbita del electrón</string>
+    <string name="orbite_instructions">Esquiva los restos cósmicos atraídos por el núcleo · barre los cuantos verdes para encadenar combos</string>
+    <string name="orbite_btn_start">Empezar</string>
+    <string name="orbite_btn_restart">Reintentar</string>
+    <string name="orbite_btn_back">Atrás</string>
+    <string name="orbite_game_over">¡Colapso!</string>
+    <string name="orbite_best_label">MEJOR %1$s</string>
+    <string name="orbite_final_score">Puntos %1$d</string>
+    <string name="orbite_best_score">Mejor %1$d</string>
+    <string name="orbite_new_best">★ ¡Nuevo récord! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

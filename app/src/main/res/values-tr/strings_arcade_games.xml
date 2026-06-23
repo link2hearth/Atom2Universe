@@ -268,4 +268,32 @@
     <string name="sokoban_undo">Geri al</string>
     <string name="sokoban_reset">Yeniden başlat</string>
     <string name="sokoban_new">Yeni</string>
+    <string name="hot_potato_title">Sıcak Patates</string>
+    <string name="hot_potato_description">Patatesi zıplat, tam kıvamında pişir ve kenarlardan fırlat!</string>
+    <string name="hot_potato_how_to">Fırlatmak için sapan gibi geri çek · yeşil bölgeye kadar pişir</string>
+    <string name="hot_potato_tap_to_start">Başlamak için patatesin altına dokun</string>
+    <string name="hot_potato_tap_to_retry">Tekrar denemek için dokun</string>
+    <string name="hot_potato_tap_to_resume">Devam etmek için dokun</string>
+    <string name="hot_potato_game_over">Oyun Bitti</string>
+    <string name="hot_potato_paused">Duraklatıldı</string>
+    <string name="hot_potato_score_label">Skor</string>
+    <string name="hot_potato_best_label">EN İYİ</string>
+    <string name="hot_potato_new_best">Yeni rekor!</string>
+    <string name="hot_potato_perfect">Mükemmel!</string>
+    <string name="hot_potato_raw">Çok çiğ!</string>
+    <string name="hot_potato_burnt">Yandı!</string>
+    <!-- Orbit -->
+    <string name="orbite_title">Yörünge</string>
+    <string name="orbite_description">Elektronu döndür, asteroitlerden kaç ve enerji kuantalarını topla!</string>
+    <string name="orbite_subtitle">Tek dokunuş elektronun yörünge yönünü tersine çevirir</string>
+    <string name="orbite_instructions">Çekirdeğe çekilen kozmik enkazdan kaç · combo yapmak için yeşil kuantaları topla</string>
+    <string name="orbite_btn_start">Başla</string>
+    <string name="orbite_btn_restart">Tekrar</string>
+    <string name="orbite_btn_back">Geri</string>
+    <string name="orbite_game_over">Çöktü!</string>
+    <string name="orbite_best_label">EN İYİ %1$s</string>
+    <string name="orbite_final_score">Skor %1$d</string>
+    <string name="orbite_best_score">En iyi %1$d</string>
+    <string name="orbite_new_best">★ Yeni rekor! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

@@ -23,6 +23,7 @@ import com.Atom2Universe.app.games.caves.CaveWorldMenuActivity
 import com.Atom2Universe.app.games.escapelabyrinth.EscapeLabyrinthActivity
 import com.Atom2Universe.app.games.memory.MemoryActivity
 import com.Atom2Universe.app.games.circles.CirclesActivity
+import com.Atom2Universe.app.games.orbite.OrbiteActivity
 import com.Atom2Universe.app.games.pipetap.PipeTapActivity
 import com.Atom2Universe.app.games.starbridges.StarBridgesActivity
 import com.Atom2Universe.app.quiz.QuizActivity
@@ -205,6 +206,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_directions,
             defaultColorRes = R.color.game_tile_motocross,
             activityClass = MotocrossActivity::class.java
+        ),
+        HubTile(
+            id = "orbite",
+            titleRes = R.string.orbite_title,
+            descriptionRes = R.string.orbite_description,
+            iconRes = android.R.drawable.ic_menu_rotate,
+            defaultColorRes = R.color.game_tile_orbite,
+            activityClass = OrbiteActivity::class.java
         ),
         HubTile(
             id = "hexrunner",

@@ -269,4 +269,32 @@
     <string name="sokoban_undo">Anulează</string>
     <string name="sokoban_reset">Reîncepe</string>
     <string name="sokoban_new">Nou</string>
+    <string name="hot_potato_title">Cartof Fierbinte</string>
+    <string name="hot_potato_description">Fă cartoful să sară, gătește-l perfect și aruncă-l pe lateral!</string>
+    <string name="hot_potato_how_to">Trage înapoi ca o praștie pentru a lansa · gătește-l până la zona verde</string>
+    <string name="hot_potato_tap_to_start">Atinge sub cartof pentru a începe</string>
+    <string name="hot_potato_tap_to_retry">Atinge pentru a reîncerca</string>
+    <string name="hot_potato_tap_to_resume">Atinge pentru a continua</string>
+    <string name="hot_potato_game_over">Joc terminat</string>
+    <string name="hot_potato_paused">În pauză</string>
+    <string name="hot_potato_score_label">Scor</string>
+    <string name="hot_potato_best_label">CEL MAI BUN</string>
+    <string name="hot_potato_new_best">Record nou!</string>
+    <string name="hot_potato_perfect">Perfect!</string>
+    <string name="hot_potato_raw">Prea crud!</string>
+    <string name="hot_potato_burnt">Ars!</string>
+    <!-- Orbit -->
+    <string name="orbite_title">Orbită</string>
+    <string name="orbite_description">Pune electronul în mișcare, evită asteroizii și adună cuantele de energie!</string>
+    <string name="orbite_subtitle">O atingere inversează orbita electronului</string>
+    <string name="orbite_instructions">Evită resturile cosmice atrase de nucleu · mătură cuantele verzi pentru a face combo-uri</string>
+    <string name="orbite_btn_start">Start</string>
+    <string name="orbite_btn_restart">Reia</string>
+    <string name="orbite_btn_back">Înapoi</string>
+    <string name="orbite_game_over">Colaps!</string>
+    <string name="orbite_best_label">CEL MAI BUN %1$s</string>
+    <string name="orbite_final_score">Scor %1$d</string>
+    <string name="orbite_best_score">Cel mai bun %1$d</string>
+    <string name="orbite_new_best">★ Record nou! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

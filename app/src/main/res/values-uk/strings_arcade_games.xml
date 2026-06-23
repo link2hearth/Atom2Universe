@@ -268,4 +268,32 @@
     <string name="sokoban_undo">Скасувати</string>
     <string name="sokoban_reset">Почати спочатку</string>
     <string name="sokoban_new">Новий</string>
+    <string name="hot_potato_title">Гаряча картопля</string>
+    <string name="hot_potato_description">Підкидай картоплю, просмаж її як слід і виштовхни з боків!</string>
+    <string name="hot_potato_how_to">Відтягни як рогатку, щоб запустити · просмаж до зеленої зони</string>
+    <string name="hot_potato_tap_to_start">Натисни під картоплею, щоб почати</string>
+    <string name="hot_potato_tap_to_retry">Натисни, щоб повторити</string>
+    <string name="hot_potato_tap_to_resume">Натисни, щоб продовжити</string>
+    <string name="hot_potato_game_over">Гру закінчено</string>
+    <string name="hot_potato_paused">Пауза</string>
+    <string name="hot_potato_score_label">Рахунок</string>
+    <string name="hot_potato_best_label">НАЙКРАЩЕ</string>
+    <string name="hot_potato_new_best">Новий рекорд!</string>
+    <string name="hot_potato_perfect">Ідеально!</string>
+    <string name="hot_potato_raw">Замало просмажена!</string>
+    <string name="hot_potato_burnt">Підгоріла!</string>
+    <!-- Orbit -->
+    <string name="orbite_title">Орбіта</string>
+    <string name="orbite_description">Розкрути електрон, ухиляйся від астероїдів і збирай кванти енергії!</string>
+    <string name="orbite_subtitle">Один дотик змінює напрямок орбіти електрона</string>
+    <string name="orbite_instructions">Ухиляйся від космічного сміття, притягнутого до ядра · збирай зелені кванти для комбо</string>
+    <string name="orbite_btn_start">Старт</string>
+    <string name="orbite_btn_restart">Заново</string>
+    <string name="orbite_btn_back">Назад</string>
+    <string name="orbite_game_over">Колапс!</string>
+    <string name="orbite_best_label">РЕКОРД %1$s</string>
+    <string name="orbite_final_score">Рахунок %1$d</string>
+    <string name="orbite_best_score">Рекорд %1$d</string>
+    <string name="orbite_new_best">★ Новий рекорд! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

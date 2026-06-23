@@ -268,4 +268,32 @@
     <string name="sokoban_undo">Desfazer</string>
     <string name="sokoban_reset">Recomeçar</string>
     <string name="sokoban_new">Novo</string>
+    <string name="hot_potato_title">Batata Quente</string>
+    <string name="hot_potato_description">Faz a batata saltar, cozinha-a no ponto certo e atira-a pelos lados!</string>
+    <string name="hot_potato_how_to">Puxa para trás como uma fisga para lançar · cozinha-a até à zona verde</string>
+    <string name="hot_potato_tap_to_start">Toca sob a batata para começar</string>
+    <string name="hot_potato_tap_to_retry">Toca para tentar de novo</string>
+    <string name="hot_potato_tap_to_resume">Toca para continuar</string>
+    <string name="hot_potato_game_over">Fim de Jogo</string>
+    <string name="hot_potato_paused">Em pausa</string>
+    <string name="hot_potato_score_label">Pontos</string>
+    <string name="hot_potato_best_label">MELHOR</string>
+    <string name="hot_potato_new_best">Novo recorde!</string>
+    <string name="hot_potato_perfect">Perfeito!</string>
+    <string name="hot_potato_raw">Demasiado crua!</string>
+    <string name="hot_potato_burnt">Queimada!</string>
+    <!-- Orbit -->
+    <string name="orbite_title">Órbita</string>
+    <string name="orbite_description">Faz girar o eletrão, desvia-te dos asteroides e recolhe os quanta de energia!</string>
+    <string name="orbite_subtitle">Um toque inverte a órbita do eletrão</string>
+    <string name="orbite_instructions">Desvia-te dos detritos cósmicos atraídos pelo núcleo · varre os quanta verdes para encadear combos</string>
+    <string name="orbite_btn_start">Começar</string>
+    <string name="orbite_btn_restart">Repetir</string>
+    <string name="orbite_btn_back">Voltar</string>
+    <string name="orbite_game_over">Colapso!</string>
+    <string name="orbite_best_label">MELHOR %1$s</string>
+    <string name="orbite_final_score">Pontos %1$d</string>
+    <string name="orbite_best_score">Melhor %1$d</string>
+    <string name="orbite_new_best">★ Novo recorde! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

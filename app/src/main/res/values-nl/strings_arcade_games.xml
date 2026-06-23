@@ -268,4 +268,32 @@
     <string name="sokoban_undo">Ongedaan maken</string>
     <string name="sokoban_reset">Opnieuw beginnen</string>
     <string name="sokoban_new">Nieuw</string>
+    <string name="hot_potato_title">Hete Aardappel</string>
+    <string name="hot_potato_description">Laat de aardappel stuiteren, bak hem precies goed en flits hem langs de zijkanten weg!</string>
+    <string name="hot_potato_how_to">Trek terug als een katapult om te lanceren · bak hem tot de groene zone</string>
+    <string name="hot_potato_tap_to_start">Tik onder de aardappel om te starten</string>
+    <string name="hot_potato_tap_to_retry">Tik om opnieuw te proberen</string>
+    <string name="hot_potato_tap_to_resume">Tik om te hervatten</string>
+    <string name="hot_potato_game_over">Game Over</string>
+    <string name="hot_potato_paused">Gepauzeerd</string>
+    <string name="hot_potato_score_label">Score</string>
+    <string name="hot_potato_best_label">BESTE</string>
+    <string name="hot_potato_new_best">Nieuw record!</string>
+    <string name="hot_potato_perfect">Perfect!</string>
+    <string name="hot_potato_raw">Te rauw!</string>
+    <string name="hot_potato_burnt">Verbrand!</string>
+    <!-- Orbit -->
+    <string name="orbite_title">Orbit</string>
+    <string name="orbite_description">Laat het elektron draaien, ontwijk de asteroïden en verzamel de energiekwanta!</string>
+    <string name="orbite_subtitle">Eén tik keert de baan van het elektron om</string>
+    <string name="orbite_instructions">Ontwijk het kosmische puin dat naar de kern wordt getrokken · veeg de groene kwanta op voor combo’s</string>
+    <string name="orbite_btn_start">Start</string>
+    <string name="orbite_btn_restart">Opnieuw</string>
+    <string name="orbite_btn_back">Terug</string>
+    <string name="orbite_game_over">Ingestort!</string>
+    <string name="orbite_best_label">BESTE %1$s</string>
+    <string name="orbite_final_score">Score %1$d</string>
+    <string name="orbite_best_score">Beste %1$d</string>
+    <string name="orbite_new_best">★ Nieuw record! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

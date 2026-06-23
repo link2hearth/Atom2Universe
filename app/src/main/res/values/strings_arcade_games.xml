@@ -290,4 +290,19 @@
     <string name="hot_potato_perfect">Perfect!</string>
     <string name="hot_potato_raw">Too raw!</string>
     <string name="hot_potato_burnt">Burnt!</string>
+
+    <!-- Orbit -->
+    <string name="orbite_title">Orbit</string>
+    <string name="orbite_description">Spin the electron, dodge the asteroids, harvest the energy quanta!</string>
+    <string name="orbite_subtitle">One tap reverses the electron\'s orbit</string>
+    <string name="orbite_instructions">Dodge the cosmic debris drawn to the nucleus · sweep the green quanta to build combos</string>
+    <string name="orbite_btn_start">Start</string>
+    <string name="orbite_btn_restart">Retry</string>
+    <string name="orbite_btn_back">Back</string>
+    <string name="orbite_game_over">Collapsed!</string>
+    <string name="orbite_best_label">BEST %1$s</string>
+    <string name="orbite_final_score">Score %1$d</string>
+    <string name="orbite_best_score">Best %1$d</string>
+    <string name="orbite_new_best">★ New record! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

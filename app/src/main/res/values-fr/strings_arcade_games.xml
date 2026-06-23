@@ -290,4 +290,19 @@
     <string name="hot_potato_perfect">Parfait !</string>
     <string name="hot_potato_raw">Pas assez cuite !</string>
     <string name="hot_potato_burnt">Cramée !</string>
+
+    <!-- Orbite -->
+    <string name="orbite_title">Orbite</string>
+    <string name="orbite_description">Fais tourner l\'électron, esquive les astéroïdes et capture les quanta d\'énergie !</string>
+    <string name="orbite_subtitle">Une tape inverse le sens de l\'électron</string>
+    <string name="orbite_instructions">Esquive les débris cosmiques attirés par le noyau · balaie les quanta verts pour enchaîner les combos</string>
+    <string name="orbite_btn_start">Démarrer</string>
+    <string name="orbite_btn_restart">Rejouer</string>
+    <string name="orbite_btn_back">Retour</string>
+    <string name="orbite_game_over">Effondrement !</string>
+    <string name="orbite_best_label">RECORD %1$s</string>
+    <string name="orbite_final_score">Score %1$d</string>
+    <string name="orbite_best_score">Record %1$d</string>
+    <string name="orbite_new_best">★ Nouveau record ! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
 </resources>

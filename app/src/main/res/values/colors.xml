@@ -186,6 +186,7 @@
     <color name="game_tile_minesweeper">#4A6741</color>
     <color name="game_tile_othello">#0A3D15</color>
     <color name="game_tile_caves">#1A1209</color>
+    <color name="game_tile_orbite">#0B2A4A</color>
     <color name="category_alkali_metal">#B87070</color>
     <color name="category_alkaline_earth_metal">#C48A5C</color>
     <color name="category_transition_metal">#A89A6E</color>
