@@ -5,6 +5,7 @@ import java.io.DataOutputStream
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
@@ -17,7 +18,6 @@ class CaveWorldChunkStorage(worldDir: File) {
     private val cache     = ConcurrentHashMap<String, ConcurrentHashMap<Int, Short>>()
     // Cache mémoire meta : clé "cx_cy_cz" → (localIndex → metaByte)
     private val metaCache = ConcurrentHashMap<String, ConcurrentHashMap<Int, Byte>>()
-
     private fun cacheKey(cx: Int, cy: Int, cz: Int) = "${cx}_${cy}_${cz}"
     private fun diffFile(cx: Int, cy: Int, cz: Int) = File(diffsDir, "${cx}_${cy}_${cz}.diff")
     private fun metaFile(cx: Int, cy: Int, cz: Int) = File(diffsDir, "${cx}_${cy}_${cz}.meta")
@@ -70,7 +70,9 @@ class CaveWorldChunkStorage(worldDir: File) {
 
     private fun writeMetaDiff(cx: Int, cy: Int, cz: Int, diff: Map<Int, Byte>) {
         runCatching {
-            metaFile(cx, cy, cz).outputStream().buffered().use { os ->
+            val target = metaFile(cx, cy, cz)
+            val temp = File(target.parentFile, "${target.name}.tmp")
+            temp.outputStream().buffered().use { os ->
                 GZIPOutputStream(os).use { gz ->
                     DataOutputStream(gz).use { dout ->
                         dout.writeShort(diff.size)
@@ -80,6 +82,10 @@ class CaveWorldChunkStorage(worldDir: File) {
                         }
                     }
                 }
+            }
+            if (!temp.renameTo(target)) {
+                temp.copyTo(target, overwrite = true)
+                temp.delete()
             }
         }
     }
@@ -110,7 +116,9 @@ class CaveWorldChunkStorage(worldDir: File) {
 
     private fun writeDiff(cx: Int, cy: Int, cz: Int, diff: Map<Int, Short>) {
         runCatching {
-            diffFile(cx, cy, cz).outputStream().buffered().use { os ->
+            val target = diffFile(cx, cy, cz)
+            val temp = File(target.parentFile, "${target.name}.tmp")
+            temp.outputStream().buffered().use { os ->
                 GZIPOutputStream(os).use { gz ->
                     DataOutputStream(gz).use { dout ->
                         dout.writeShort(diff.size)
@@ -121,8 +129,23 @@ class CaveWorldChunkStorage(worldDir: File) {
                     }
                 }
             }
+            if (!temp.renameTo(target)) {
+                temp.copyTo(target, overwrite = true)
+                temp.delete()
+            }
         }
     }
 
-    fun shutdown() { executor.shutdown() }
+    /** Attend les écritures déjà demandées avant de laisser le monde se fermer. */
+    fun flush() {
+        runCatching { executor.submit {}.get() }
+    }
+
+    fun shutdown() {
+        flush()
+        executor.shutdown()
+        runCatching {
+            if (!executor.awaitTermination(3, TimeUnit.SECONDS)) executor.shutdownNow()
+        }
+    }
 }

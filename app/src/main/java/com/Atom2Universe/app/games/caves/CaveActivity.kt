@@ -401,17 +401,23 @@ class CaveActivity : ThemedActivity() {
         )
     }
 
-    fun saveWorldAsync() {
+    fun saveWorldAsync(flushChunks: Boolean = false) {
         val snap = buildSaveSnap() ?: return
-        lifecycleScope.launch(Dispatchers.IO) { CaveWorldSaveManager.updateFields(this@CaveActivity, snap) }
+        lifecycleScope.launch(Dispatchers.IO) {
+            CaveWorldSaveManager.updateFields(this@CaveActivity, snap)
+            if (flushChunks) renderer.flushStorage()
+        }
     }
 
     private suspend fun saveWorldNow() {
         val snap = buildSaveSnap() ?: return
-        withContext(Dispatchers.IO) { CaveWorldSaveManager.updateFields(this@CaveActivity, snap) }
+        withContext(Dispatchers.IO) {
+            CaveWorldSaveManager.updateFields(this@CaveActivity, snap)
+            renderer.flushStorage()
+        }
     }
 
-    private fun saveWorld() = saveWorldAsync()
+    private fun saveWorld() = saveWorldAsync(flushChunks = true)
 
     // ── Confirmation quitter ──────────────────────────────────────────────────
 

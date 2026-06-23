@@ -261,4 +261,6 @@
     <string name="neutrino_info_note_time">in base al tempo di gioco</string>
     <string name="neutrino_info_note_distance">in base alla distanza</string>
     <string name="neutrino_info_note_betting">in base alla puntata</string>
+    <string name="big_bang_bonus_spacetime">Compressione dello spaziotempo</string>
+    <string name="big_bang_bonus_effect_spacetime">Rallenta la crescita del prezzo di Dito Divino e Nucleo Stellare</string>
 </resources>

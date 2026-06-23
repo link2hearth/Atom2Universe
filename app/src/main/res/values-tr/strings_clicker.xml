@@ -261,4 +261,6 @@
     <string name="neutrino_info_note_time">oyun süresine göre</string>
     <string name="neutrino_info_note_distance">mesafeye göre</string>
     <string name="neutrino_info_note_betting">bahsinize göre</string>
+    <string name="big_bang_bonus_spacetime">Uzay-Zaman Sıkıştırması</string>
+    <string name="big_bang_bonus_effect_spacetime">Tanrı Parmağı ve Yıldız Çekirdeği fiyat artışını yavaşlatır</string>
 </resources>

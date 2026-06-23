@@ -805,8 +805,7 @@ internal class CaveRenderer(
         waterTickAccum += dt
         if (waterTickAccum >= 0.25f) {
             waterTickAccum = 0f
-            world.tickWater(playerX = camera.x.toInt(), playerZ = camera.z.toInt())
-            world.tickDrain()
+            world.tickWater()
         }
 
         gravityTickAccum += dt
@@ -2968,6 +2967,11 @@ private fun updateProjectiles(dt: Float) {
         val y0 = floorInt(camera.playerY - 1.62); val y1 = floorInt(camera.playerY + 0.18)
         val z0 = floorInt(camera.playerZ - 0.3); val z1 = floorInt(camera.playerZ + 0.29)
         return bx in x0..x1 && by in y0..y1 && bz in z0..z1
+    }
+
+    /** Utilisé par la sauvegarde de l'activité pour rendre persistantes les modifications de chunks. */
+    fun flushStorage() {
+        storage?.flush()
     }
 
     fun destroy() {

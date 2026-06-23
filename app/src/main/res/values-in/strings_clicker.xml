@@ -260,4 +260,6 @@
     <string name="neutrino_info_note_time">menurut waktu bermain</string>
     <string name="neutrino_info_note_distance">menurut jarak</string>
     <string name="neutrino_info_note_betting">menurut taruhan Anda</string>
+    <string name="big_bang_bonus_spacetime">Kompresi Ruang-Waktu</string>
+    <string name="big_bang_bonus_effect_spacetime">Memperlambat kenaikan harga God Finger dan Star Core</string>
 </resources>

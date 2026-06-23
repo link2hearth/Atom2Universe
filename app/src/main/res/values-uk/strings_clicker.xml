@@ -263,4 +263,6 @@
     <string name="neutrino_info_note_time">залежно від часу гри</string>
     <string name="neutrino_info_note_distance">залежно від відстані</string>
     <string name="neutrino_info_note_betting">залежно від ставки</string>
+    <string name="big_bang_bonus_spacetime">Стиснення простору-часу</string>
+    <string name="big_bang_bonus_effect_spacetime">Уповільнює зростання ціни Перста Бога та Ядра зірки</string>
 </resources>

@@ -261,4 +261,6 @@
     <string name="neutrino_info_note_time">por tempo de jogo</string>
     <string name="neutrino_info_note_distance">por distância</string>
     <string name="neutrino_info_note_betting">pela sua aposta</string>
+    <string name="big_bang_bonus_spacetime">Compressão do espaço-tempo</string>
+    <string name="big_bang_bonus_effect_spacetime">Abranda o aumento de preço do Dedo Divino e do Núcleo Estelar</string>
 </resources>

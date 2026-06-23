@@ -261,4 +261,6 @@
     <string name="neutrino_info_note_time">ανάλογα με τον χρόνο παιχνιδιού</string>
     <string name="neutrino_info_note_distance">ανάλογα με την απόσταση</string>
     <string name="neutrino_info_note_betting">ανάλογα με το ποντάρισμά σας</string>
+    <string name="big_bang_bonus_spacetime">Συμπίεση Χωροχρόνου</string>
+    <string name="big_bang_bonus_effect_spacetime">Επιβραδύνει την αύξηση τιμής για Θεϊκό Δάχτυλο και Πυρήνας Αστεριού</string>
 </resources>

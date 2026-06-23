@@ -261,4 +261,6 @@
     <string name="neutrino_info_note_time">naar speeltijd</string>
     <string name="neutrino_info_note_distance">naar afstand</string>
     <string name="neutrino_info_note_betting">naar je inzet</string>
+    <string name="big_bang_bonus_spacetime">Ruimtetijd-compressie</string>
+    <string name="big_bang_bonus_effect_spacetime">Vertraagt de prijsstijging van Godsvinger en Sterrenkern</string>
 </resources>

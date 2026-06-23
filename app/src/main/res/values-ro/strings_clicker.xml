@@ -262,4 +262,6 @@
     <string name="neutrino_info_note_time">după timpul de joc</string>
     <string name="neutrino_info_note_distance">după distanță</string>
     <string name="neutrino_info_note_betting">după miza ta</string>
+    <string name="big_bang_bonus_spacetime">Compresia spațiu-timp</string>
+    <string name="big_bang_bonus_effect_spacetime">Încetinește creșterea prețului pentru Deget Divin și Miez Stelar</string>
 </resources>

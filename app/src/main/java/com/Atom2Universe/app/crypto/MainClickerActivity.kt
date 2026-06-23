@@ -1667,7 +1667,7 @@ class MainClickerActivity : ThemedActivity() {
 
         val apcElemVisible = bd.apcElemMult > 0.0
         bdApcElemMultRow?.visibility = if (apcElemVisible) visible else gone
-        if (apcElemVisible) bdApcElemMult?.text = formatBdPct(bd.apcElemMult)
+        if (apcElemVisible) bdApcElemMult?.text = formatBdMult(bd.apcElemMult)
 
         val apcFusionVisible = bd.apcFusionMult > 0.0
         bdApcFusionMultRow?.visibility = if (apcFusionVisible) visible else gone
@@ -1693,7 +1693,7 @@ class MainClickerActivity : ThemedActivity() {
 
         val apsElemVisible = bd.apsElemMult > 0.0
         bdApsElemMultRow?.visibility = if (apsElemVisible) visible else gone
-        if (apsElemVisible) bdApsElemMult?.text = formatBdPct(bd.apsElemMult)
+        if (apsElemVisible) bdApsElemMult?.text = formatBdMult(bd.apsElemMult)
 
         val apsFusionVisible = bd.apsFusionMult > 0.0
         bdApsFusionMultRow?.visibility = if (apsFusionVisible) visible else gone
@@ -1722,10 +1722,13 @@ class MainClickerActivity : ThemedActivity() {
         }
     }
 
+    // Bonus élément gacha : affiché en multiplicateur (base 1), pas en %.
+    private fun formatBdMult(ratio: Double): String = "×${"%.2f".format(1.0 + ratio)}"
+
     private fun formatElemBonus(flat: Long, mult: Double): String {
         val parts = mutableListOf<String>()
         if (flat > 0) parts.add("+$flat flat")
-        if (mult > 0.0) parts.add("+${"%.2f".format(mult * 100)}%")
+        if (mult > 0.0) parts.add("×${"%.2f".format(1.0 + mult)}")
         return if (parts.isEmpty()) "—" else parts.joinToString("  ")
     }
 

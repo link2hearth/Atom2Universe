@@ -261,4 +261,6 @@
     <string name="neutrino_info_note_time">je nach Spielzeit</string>
     <string name="neutrino_info_note_distance">je nach Distanz</string>
     <string name="neutrino_info_note_betting">je nach Einsatz</string>
+    <string name="big_bang_bonus_spacetime">Raumzeit-Kompression</string>
+    <string name="big_bang_bonus_effect_spacetime">Verlangsamt den Preisanstieg von Gottfinger und Sternkern</string>
 </resources>
