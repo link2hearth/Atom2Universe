@@ -1194,39 +1194,13 @@ private fun loadShelfCover(context: Context, entry: BookShelfEntry): Bitmap? {
     }
     val uri = if (entry.sourcePath.startsWith("/")) Uri.fromFile(File(entry.sourcePath)) else Uri.parse(entry.sourcePath)
     val bmp = when (entry.format) {
-        "epub" -> loadShelfEpubCover(entry)
+        "epub" -> loadEpubCoverBitmap(context, entry.sourcePath)
         "pdf" -> loadShelfPdfCover(context, uri)
         else -> null
     } ?: return null
     cacheFile.parentFile?.mkdirs()
     try { FileOutputStream(cacheFile).use { bmp.compress(Bitmap.CompressFormat.JPEG, 85, it) } } catch (_: Exception) {}
     return bmp
-}
-
-private fun loadShelfEpubCover(entry: BookShelfEntry): Bitmap? {
-    if (!entry.sourcePath.startsWith("/")) return null
-    return try {
-        ZipFile(File(entry.sourcePath)).use { zip ->
-            val container = zip.getEntry("META-INF/container.xml") ?: return null
-            val containerText = zip.getInputStream(container).readBytes().decodeToString()
-            val opfPath = Regex("""full-path="([^"]+\.opf)"""").find(containerText)?.groupValues?.get(1) ?: return null
-            val opfEntry = zip.getEntry(opfPath) ?: return null
-            val opfText = zip.getInputStream(opfEntry).readBytes().decodeToString()
-            val coverId = Regex("""<meta[^>]+name="cover"[^>]+content="([^"]+)"""").find(opfText)?.groupValues?.get(1)
-                ?: Regex("""<meta[^>]+content="([^"]+)"[^>]+name="cover"""").find(opfText)?.groupValues?.get(1)
-                ?: return null
-            val coverHref = Regex("""<item[^>]+id="$coverId"[^>]+href="([^"]+)"""").find(opfText)?.groupValues?.get(1)
-                ?: Regex("""<item[^>]+href="([^"]+)"[^>]+id="$coverId"""").find(opfText)?.groupValues?.get(1)
-                ?: return null
-            val opfDir = opfPath.substringBeforeLast("/", "")
-            val coverKey = if (opfDir.isEmpty()) coverHref else "$opfDir/$coverHref"
-            val imgEntry = zip.getEntry(coverKey)
-                ?: zip.entries().asSequence().find { it.name.endsWith(coverKey.substringAfterLast("/")) }
-                ?: return null
-            val bytes = zip.getInputStream(imgEntry).readBytes()
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = 2 })
-        }
-    } catch (_: Exception) { null }
 }
 
 private fun loadShelfPdfCover(context: Context, uri: Uri): Bitmap? = try {
