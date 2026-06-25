@@ -271,6 +271,7 @@ class FusionActivity : ThemedActivity() {
 
         var wins   = 0
         var losses = 0
+        val droppedCards = mutableListOf<ElementCard>()
         repeat(maxFusions) {
             for (input in recipe.inputs) repeat(input.count) { collectionStore.consumeCopy(input.atomicNumber) }
             val success = Math.random() < recipe.baseRate
@@ -281,6 +282,12 @@ class FusionActivity : ThemedActivity() {
                         .filter { it !in out.exclude }.random()
                 }
                 collectionStore.addCopyFromFusion(atomicOut)
+                // Drop de carte, comme en fusion individuelle ; markObtained immédiat
+                // pour que les tirages suivants du lot excluent la carte déjà gagnée.
+                cardRepository.rollDrop(recipe.id)?.also {
+                    cardRepository.markObtained(it.atomicNumber)
+                    droppedCards.add(it)
+                }
                 wins++
             } else {
                 losses++
@@ -288,7 +295,7 @@ class FusionActivity : ThemedActivity() {
             fusionStore.recordAttempt(recipe, success)
         }
 
-        startBatchAnimation(wins, losses)
+        startBatchAnimation(wins, losses, droppedCards)
     }
 
     // ── Animations ────────────────────────────────────────────────────────────
@@ -314,7 +321,7 @@ class FusionActivity : ThemedActivity() {
         }.start()
     }
 
-    private fun startBatchAnimation(wins: Int, losses: Int) {
+    private fun startBatchAnimation(wins: Int, losses: Int, droppedCards: List<ElementCard> = emptyList()) {
         isAnimating = true
         splatView.hide()
         resultLayout.visibility = View.GONE
@@ -323,8 +330,21 @@ class FusionActivity : ThemedActivity() {
         animOverlay.visibility = View.VISIBLE
         animOverlay.alpha = 0f
         animOverlay.animate().alpha(1f).setDuration(150).withEndAction {
-            runCountdown { showBatchResult(wins, losses) }
+            runCountdown {
+                showCardsSequentially(droppedCards, 0) {
+                    showBatchResult(wins, losses, droppedCards.size)
+                }
+            }
         }.start()
+    }
+
+    // Affiche les cartes gagnées une par une (tap pour passer à la suivante).
+    private fun showCardsSequentially(cards: List<ElementCard>, index: Int, onDone: () -> Unit) {
+        if (index >= cards.size) {
+            onDone()
+            return
+        }
+        showCardOverlay(cards[index]) { showCardsSequentially(cards, index + 1, onDone) }
     }
 
     private fun runCountdown(onDone: () -> Unit) {
@@ -450,7 +470,7 @@ class FusionActivity : ThemedActivity() {
         animateResultIn()
     }
 
-    private fun showBatchResult(wins: Int, losses: Int) {
+    private fun showBatchResult(wins: Int, losses: Int, cardsWon: Int = 0) {
         resultLayout.visibility = View.VISIBLE
         resultTitle.alpha = 0f; resultDetail.alpha = 0f; tapContinue.alpha = 0f
 
@@ -468,7 +488,11 @@ class FusionActivity : ThemedActivity() {
             resultTitle.paint.shader = null
         }
 
-        resultDetail.text = getString(R.string.fusion_batch_result, wins, losses)
+        val batchLine = getString(R.string.fusion_batch_result, wins, losses)
+        resultDetail.text = if (cardsWon > 0)
+            batchLine + "\n✨ " + getString(R.string.fusion_batch_cards_won, cardsWon)
+        else
+            batchLine
         resultDetail.setTextColor(Color.WHITE)
 
         animateResultIn()
