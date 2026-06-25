@@ -233,6 +233,9 @@ class MainClickerActivity : ThemedActivity() {
 
     // Neutrinos dans le shop
     private var shopNeutrinoBalance: TextView? = null
+    private var shopNeutrinoTicketEffectView: TextView? = null
+    private var shopNeutrinoTicketCostView: TextView? = null
+    private var shopNeutrinoTicketBuyBtn: Button? = null
     private var shopApcToApsLevelView: TextView? = null
     private var shopApcToApsEffectView: TextView? = null
     private var shopApcToApsCostView: TextView? = null
@@ -860,6 +863,10 @@ class MainClickerActivity : ThemedActivity() {
         shopFermiBuyBtn         = view.findViewById(R.id.shop_fermi_buy)
         shopNeutrinoBalance     = view.findViewById(R.id.shop_neutrino_balance)
         view.findViewById<View>(R.id.shop_neutrino_info)?.setOnClickListener { showNeutrinoRewardsDialog() }
+        shopNeutrinoTicketEffectView = view.findViewById(R.id.shop_neutrino_ticket_effect)
+        shopNeutrinoTicketCostView   = view.findViewById(R.id.shop_neutrino_ticket_cost)
+        shopNeutrinoTicketBuyBtn     = view.findViewById(R.id.shop_neutrino_ticket_buy)
+        shopNeutrinoTicketBuyBtn?.setOnClickListener { clickerViewModel.buyNeutrinoTicket() }
         shopApcToApsLevelView   = view.findViewById(R.id.shop_apc_to_aps_level)
         shopApcToApsEffectView  = view.findViewById(R.id.shop_apc_to_aps_effect)
         shopApcToApsCostView    = view.findViewById(R.id.shop_apc_to_aps_cost)
@@ -978,6 +985,9 @@ class MainClickerActivity : ThemedActivity() {
             shopFermiCostView      = null
             shopFermiBuyBtn        = null
             shopNeutrinoBalance    = null
+            shopNeutrinoTicketEffectView = null
+            shopNeutrinoTicketCostView   = null
+            shopNeutrinoTicketBuyBtn     = null
             shopApcToApsLevelView  = null
             shopApcToApsEffectView = null
             shopApcToApsCostView   = null
@@ -1565,6 +1575,13 @@ class MainClickerActivity : ThemedActivity() {
         shopStarCorePriceView?.text  = starCoreCost.toString()
         shopStarCoreBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
             if (!starCoreCost.greaterThan(state.atoms)) 0xFF16A34A.toInt() else 0xFF475569.toInt()
+        )
+
+        val neutrinoTicketCost = clickerViewModel.neutrinoTicketCost()
+        shopNeutrinoTicketEffectView?.text = "$neutrinoTicketCost ⚛ → 1 🎟"
+        shopNeutrinoTicketCostView?.text   = "$neutrinoTicketCost ⚛"
+        shopNeutrinoTicketBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            if (state.neutrinos >= neutrinoTicketCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
         )
 
         val apcToApsCost = clickerViewModel.apcToApsCost()

@@ -23,7 +23,7 @@
     <string name="gacha_result_copies_count">Kopieën: x%1$d</string>
     <string name="gacha_result_copies_placeholder">Kopieën: x0</string>
     <string name="gacha_no_tickets">Geen gacha-tickets beschikbaar! Je verdient elk uur 1 ticket.</string>
-    <string name="gacha_not_enough_tickets_multi">10 tickets nodig voor een ×10-trekking.</string>
+    <string name="gacha_not_enough_tickets_multi">%1$d tickets nodig voor een ×%1$d-trekking.</string>
     <string name="gacha_multi_results_title">RESULTATEN</string>
     <string name="gacha_press_continue">Tik om door te gaan</string>
     <string name="banner_label_the_line">Lijn</string>
@@ -81,7 +81,7 @@
         <string name="fusion_locked">🔒 Voltooi eerst de vorige fusie</string>
     <string name="fusion_stats">%1$d overwinningen / %2$d pogingen</string>
     <string name="fusion_fuse_btn">FUSEREN</string>
-    <string name="fusion_not_enough_elements">Niet genoeg elementen (heeft +1 reserve nodig)</string>
+    <string name="fusion_not_enough_elements">Niet genoeg elementen</string>
     <string name="fusion_success">SUCCES</string>
     <string name="fusion_fail">MISLUKT</string>
     <string name="fusion_result_got_element">Verkregen: %1$s (%2$s)</string>

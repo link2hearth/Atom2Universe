@@ -20,7 +20,7 @@ object ElementBonusEngine {
     //   rareté 5 SPALLATION  → +100  | rareté 6 SYNTHETIQUE → +1000
     //
     // Palier 2 — multiplicateur (base 1, additif), appliqué à CHAQUE copie gacha, dès la 1re :
-    //   r1 +0,01 APC | r2 +0,02 APS | r3 +0,03 APC | r4 +0,05 APS | r5 +0,08 APC | r6 +0,10 APS
+    //   r1 +0,005 APC | r2 +0,01 APS | r3 +0,015 APC | r4 +0,02 APS | r5 +0,025 APC | r6 +0,03 APS
     //   La somme s'ajoute à 1 en aval (base × (1 + mult)) → croît énormément avec le temps.
     //
     // Flat et mult d'une rareté vont vers la même cible (APC ou APS), en alternance par rareté.
@@ -29,12 +29,12 @@ object ElementBonusEngine {
     private data class RarityBonus(val flat: Long, val mult: Double, val toApc: Boolean)
 
     private fun rarityBonus(rarity: GachaRarity): RarityBonus = when (rarity) {
-        GachaRarity.PRIMORDIAL  -> RarityBonus(1L,    0.01, toApc = true)
-        GachaRarity.FUSION      -> RarityBonus(10L,   0.02, toApc = false)
-        GachaRarity.SUPERNOVA   -> RarityBonus(10L,   0.03, toApc = true)
-        GachaRarity.NEUTRONIQUE -> RarityBonus(100L,  0.05, toApc = false)
-        GachaRarity.SPALLATION  -> RarityBonus(100L,  0.08, toApc = true)
-        GachaRarity.SYNTHETIQUE -> RarityBonus(1000L, 0.10, toApc = false)
+        GachaRarity.PRIMORDIAL  -> RarityBonus(1L,    0.005, toApc = true)
+        GachaRarity.FUSION      -> RarityBonus(10L,   0.010, toApc = false)
+        GachaRarity.SUPERNOVA   -> RarityBonus(10L,   0.015, toApc = true)
+        GachaRarity.NEUTRONIQUE -> RarityBonus(100L,  0.020, toApc = false)
+        GachaRarity.SPALLATION  -> RarityBonus(100L,  0.025, toApc = true)
+        GachaRarity.SYNTHETIQUE -> RarityBonus(1000L, 0.030, toApc = false)
     }
 
     fun compute(store: PeriodicCollectionStore): ElementBonuses {

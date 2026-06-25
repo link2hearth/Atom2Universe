@@ -177,6 +177,7 @@
     <string name="clicker_shop_stat_play_time">Temps de jeu</string>
     <string name="clicker_neutrinos_section">Neutrinos</string>
     <string name="clicker_neutrino_balance">Solde</string>
+    <string name="clicker_shop_neutrino_ticket_title">Ticket gacha</string>
     <string name="clicker_crit_section">Coups Critiques</string>
     <string name="clicker_quark_balance">Quarks</string>
     <string name="clicker_crit_chance_effect">%s%% chance de crit</string>

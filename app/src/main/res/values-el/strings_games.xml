@@ -23,7 +23,7 @@
     <string name="gacha_result_copies_count">Αντίγραφα: x%1$d</string>
     <string name="gacha_result_copies_placeholder">Αντίγραφα: x0</string>
     <string name="gacha_no_tickets">Δεν υπάρχουν διαθέσιμα εισιτήρια gacha! Κερδίζετε 1 εισιτήριο κάθε ώρα.</string>
-    <string name="gacha_not_enough_tickets_multi">Χρειάζονται 10 εισιτήρια για κλήρωση ×10.</string>
+    <string name="gacha_not_enough_tickets_multi">Χρειάζονται %1$d εισιτήρια για κλήρωση ×%1$d.</string>
     <string name="gacha_multi_results_title">ΑΠΟΤΕΛΕΣΜΑΤΑ</string>
     <string name="gacha_press_continue">Πατήστε για συνέχεια</string>
     <string name="banner_label_the_line">Γραμμή</string>
@@ -79,7 +79,7 @@
         <string name="fusion_locked">🔒 Ολοκληρώστε πρώτα την προηγούμενη σύντηξη</string>
     <string name="fusion_stats">%1$d νίκες / %2$d προσπάθειες</string>
     <string name="fusion_fuse_btn">ΣΥΝΤΗΞΗ</string>
-    <string name="fusion_not_enough_elements">Ανεπαρκή στοιχεία (χρειάζεται +1 απόθεμα)</string>
+    <string name="fusion_not_enough_elements">Ανεπαρκή στοιχεία</string>
     <string name="fusion_success">ΕΠΙΤΥΧΙΑ</string>
     <string name="fusion_fail">ΑΠΟΤΥΧΙΑ</string>
     <string name="fusion_result_got_element">Αποκτήθηκε: %1$s (%2$s)</string>

@@ -180,10 +180,10 @@ class FusionActivity : ThemedActivity() {
         val wins  = fusionStore.getWins(recipe)
         val tries = fusionStore.getTries(recipe)
 
-        // Haut-droite : inventaire possédé / nécessaire (count + 1 de réserve)
+        // Haut-droite : inventaire possédé / nécessaire
         val inventoryText = recipe.inputs.joinToString("  ") { input ->
             val have = collectionStore.getCopyCount(input.atomicNumber)
-            "${elementSymbol(input.atomicNumber)} $have/${input.count} +1"
+            "${elementSymbol(input.atomicNumber)} $have/${input.count}"
         }
         tile.findViewById<TextView>(R.id.tile_stats).text = inventoryText
 
@@ -192,7 +192,7 @@ class FusionActivity : ThemedActivity() {
         } ?: true
 
         val hasEnough = recipe.inputs.all { input ->
-            collectionStore.getCopyCount(input.atomicNumber) >= input.count + 1
+            collectionStore.getCopyCount(input.atomicNumber) >= input.count
         }
 
         val fuseBtn    = tile.findViewById<Button>(R.id.tile_fuse_btn)
@@ -227,7 +227,7 @@ class FusionActivity : ThemedActivity() {
     // ── Fusion individuelle ───────────────────────────────────────────────────
 
     private fun attemptFusion(recipe: FusionRecipe) {
-        if (!recipe.inputs.all { collectionStore.getCopyCount(it.atomicNumber) >= it.count + 1 }) {
+        if (!recipe.inputs.all { collectionStore.getCopyCount(it.atomicNumber) >= it.count }) {
             Toast.makeText(this, R.string.fusion_not_enough_elements, Toast.LENGTH_SHORT).show()
             return
         }
@@ -259,9 +259,9 @@ class FusionActivity : ThemedActivity() {
     // ── Tout fusionner (palier 1) ─────────────────────────────────────────────
 
     private fun fuseAll(recipe: FusionRecipe) {
-        // Pour chaque input, nombre de fusions possibles = (stock - 1) / count (garde 1 en réserve)
+        // Pour chaque input, nombre de fusions possibles = stock / count
         val maxFusions = recipe.inputs.minOf { input ->
-            (collectionStore.getCopyCount(input.atomicNumber) - 1) / input.count
+            collectionStore.getCopyCount(input.atomicNumber) / input.count
         }
 
         if (maxFusions <= 0) {

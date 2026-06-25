@@ -23,7 +23,7 @@
     <string name="gacha_result_copies_count">Kopya: x%1$d</string>
     <string name="gacha_result_copies_placeholder">Kopya: x0</string>
     <string name="gacha_no_tickets">Kullanılabilir gacha bileti yok! Her saat 1 bilet kazanırsınız.</string>
-    <string name="gacha_not_enough_tickets_multi">×10 çekiliş için 10 bilet gerekli.</string>
+    <string name="gacha_not_enough_tickets_multi">×%1$d çekiliş için %1$d bilet gerekli.</string>
     <string name="gacha_multi_results_title">SONUÇLAR</string>
     <string name="gacha_press_continue">Devam etmek için dokunun</string>
     <string name="banner_label_the_line">Çizgi</string>
@@ -81,7 +81,7 @@
         <string name="fusion_locked">🔒 Önce önceki füzyonu tamamlayın</string>
     <string name="fusion_stats">%1$d galibiyet / %2$d deneme</string>
     <string name="fusion_fuse_btn">FÜZYON</string>
-    <string name="fusion_not_enough_elements">Yeterli element yok (+1 rezerv gerekli)</string>
+    <string name="fusion_not_enough_elements">Yeterli element yok</string>
     <string name="fusion_success">BAŞARILI</string>
     <string name="fusion_fail">BAŞARISIZ</string>
     <string name="fusion_result_got_element">Elde edildi: %1$s (%2$s)</string>

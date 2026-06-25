@@ -23,7 +23,7 @@
     <string name="gacha_result_copies_count">Kopie: x%1$d</string>
     <string name="gacha_result_copies_placeholder">Kopie: x0</string>
     <string name="gacha_no_tickets">Brak biletów gacha! Zdobywasz 1 bilet co godzinę.</string>
-    <string name="gacha_not_enough_tickets_multi">Potrzebujesz 10 biletów na losowanie ×10.</string>
+    <string name="gacha_not_enough_tickets_multi">Potrzebujesz %1$d biletów na losowanie ×%1$d.</string>
     <string name="gacha_multi_results_title">WYNIKI</string>
     <string name="gacha_press_continue">Dotknij, aby kontynuować</string>
     <string name="banner_label_the_line">Linia</string>
@@ -81,7 +81,7 @@
         <string name="fusion_locked">🔒 Najpierw ukończ poprzednią fuzję</string>
     <string name="fusion_stats">%1$d zwycięstw / %2$d prób</string>
     <string name="fusion_fuse_btn">FUZJA</string>
-    <string name="fusion_not_enough_elements">Za mało pierwiastków (potrzeba +1 rezerwy)</string>
+    <string name="fusion_not_enough_elements">Za mało pierwiastków</string>
     <string name="fusion_success">SUKCES</string>
     <string name="fusion_fail">PORAŻKA</string>
     <string name="fusion_result_got_element">Uzyskano: %1$s (%2$s)</string>

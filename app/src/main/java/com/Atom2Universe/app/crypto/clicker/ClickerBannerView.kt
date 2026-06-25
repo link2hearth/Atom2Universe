@@ -299,7 +299,7 @@ class ClickerBannerView @JvmOverloads constructor(
         atomsText.text = state.atoms.toString()
         apcText.text   = state.perClick.toString()
         apsText.text   = state.perSecond.toString()
-        val threshold = if (cachedDrawMultiplier == 10) 10 else 1
+        val threshold = cachedDrawMultiplier.coerceAtLeast(1)
         gachaButton.text = if (state.gachaTickets >= threshold) "☀+" else "☀"
         fusionButton.text = if (state.isFusionAvailable) "⚛+" else "⚛"
     }

@@ -23,7 +23,7 @@
     <string name="gacha_result_copies_count">Copie: x%1$d</string>
     <string name="gacha_result_copies_placeholder">Copie: x0</string>
     <string name="gacha_no_tickets">Nessun ticket gacha disponibile! Guadagni 1 ticket ogni ora.</string>
-    <string name="gacha_not_enough_tickets_multi">Servono 10 ticket per un\'estrazione ×10.</string>
+    <string name="gacha_not_enough_tickets_multi">Servono %1$d ticket per un\'estrazione ×%1$d.</string>
     <string name="gacha_multi_results_title">RISULTATI</string>
     <string name="gacha_press_continue">Tocca per continuare</string>
     <string name="banner_label_the_line">Linea</string>
@@ -81,7 +81,7 @@
         <string name="fusion_locked">🔒 Completa prima la fusione precedente</string>
     <string name="fusion_stats">%1$d vittorie / %2$d tentativi</string>
     <string name="fusion_fuse_btn">FONDERE</string>
-    <string name="fusion_not_enough_elements">Elementi insufficienti (serve +1 riserva)</string>
+    <string name="fusion_not_enough_elements">Elementi insufficienti</string>
     <string name="fusion_success">SUCCESSO</string>
     <string name="fusion_fail">FALLIMENTO</string>
     <string name="fusion_result_got_element">Ottenuto: %1$s (%2$s)</string>

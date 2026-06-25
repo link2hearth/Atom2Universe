@@ -33,6 +33,13 @@ class GachaTicketRepository(context: Context) {
         return updated
     }
 
+    suspend fun addTickets(count: Int): GachaTicketStateEntity {
+        val current = load()
+        val updated = current.copy(totalTickets = (current.totalTickets + count).coerceAtLeast(0))
+        save(updated)
+        return updated
+    }
+
     suspend fun consumeTicket(): GachaTicketStateEntity {
         val current = load()
         val updated = if (current.totalTickets > 0) {

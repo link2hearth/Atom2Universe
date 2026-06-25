@@ -45,6 +45,16 @@ class GachaActivity : AppCompatActivity() {
     companion object {
         const val PREFS_NAME = "gacha_prefs"
         const val KEY_DRAW_MULTIPLIER = "draw_multiplier"
+        const val KEY_TOTAL_DRAWS = "total_draws"
+
+        /** Multiplicateurs de tirage proposés, dans l'ordre de cycle du bouton. */
+        private val MULTIPLIER_CYCLE = listOf(1, 10, 100)
+
+        /**
+         * À partir de ce nombre de tirages cumulés, l'animation multi-tirage ne joue plus
+         * que l'effet de l'élément le plus rare (au lieu d'un effet par rareté).
+         */
+        private const val RAREST_ONLY_ANIMATION_THRESHOLD = 200
     }
 
     private data class MultiDrawResult(
@@ -81,6 +91,7 @@ class GachaActivity : AppCompatActivity() {
     private lateinit var bigBangBtn: TextView
 
     private var drawMultiplier = 1
+    private var totalDraws = 0
     private lateinit var multiBtn: TextView
     private lateinit var multiResultOverlay: FrameLayout
     private lateinit var multiResultContainer: LinearLayout
@@ -160,13 +171,16 @@ class GachaActivity : AppCompatActivity() {
         startGlowPulse()
         startSunRotation()
 
-        drawMultiplier = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getInt(KEY_DRAW_MULTIPLIER, 1)
-        multiBtn.text = if (drawMultiplier == 1) "×1" else "×10"
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        drawMultiplier = prefs.getInt(KEY_DRAW_MULTIPLIER, 1)
+        if (drawMultiplier !in MULTIPLIER_CYCLE) drawMultiplier = 1
+        totalDraws = prefs.getInt(KEY_TOTAL_DRAWS, 0)
+        multiBtn.text = "×$drawMultiplier"
 
         multiBtn.setOnClickListener {
-            drawMultiplier = if (drawMultiplier == 1) 10 else 1
-            multiBtn.text = if (drawMultiplier == 1) "×1" else "×10"
+            val nextIdx = (MULTIPLIER_CYCLE.indexOf(drawMultiplier) + 1) % MULTIPLIER_CYCLE.size
+            drawMultiplier = MULTIPLIER_CYCLE[nextIdx]
+            multiBtn.text = "×$drawMultiplier"
             getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
                 .putInt(KEY_DRAW_MULTIPLIER, drawMultiplier).apply()
         }
@@ -176,7 +190,7 @@ class GachaActivity : AppCompatActivity() {
             when {
                 multiResultOverlay.visibility == View.VISIBLE && !isAnimating -> resetToIdle()
                 resultCard.visibility == View.VISIBLE -> resetToIdle()
-                !isAnimating -> if (drawMultiplier == 10) startMultiGachaDraw() else startGachaDraw()
+                !isAnimating -> if (drawMultiplier > 1) startMultiGachaDraw(drawMultiplier) else startGachaDraw()
             }
         }
         resultCard.setOnClickListener { if (!isAnimating) resetToIdle() }
@@ -257,6 +271,7 @@ class GachaActivity : AppCompatActivity() {
                 val isFirst = !collectionStore.hasEverObtained(element.atomicNumber)
                 val totalCopies = collectionStore.addCopy(element.atomicNumber)
                 elementTokenRepo.addTokens(1)
+                recordDraws(1)
                 isFirstDiscovery = isFirst
 
                 // Cacher soleil et Terre/Lune dès le début de l'animation
@@ -298,27 +313,32 @@ class GachaActivity : AppCompatActivity() {
         }
     }
 
-    private fun startMultiGachaDraw() {
+    private fun startMultiGachaDraw(count: Int) {
         lifecycleScope.launch {
             val ticketState = ticketRepository.awardTickets(System.currentTimeMillis())
-            if (ticketState.totalTickets < 10) {
-                Toast.makeText(this@GachaActivity, R.string.gacha_not_enough_tickets_multi, Toast.LENGTH_SHORT).show()
+            if (ticketState.totalTickets < count) {
+                Toast.makeText(
+                    this@GachaActivity,
+                    getString(R.string.gacha_not_enough_tickets_multi, count),
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@launch
             }
 
             isAnimating = true
 
-            ticketRepository.consumeTickets(10)
+            ticketRepository.consumeTickets(count)
             loadAndDisplayTickets()
 
-            // Roll all 10 results
-            val results = (1..10).map {
+            // Roll all results
+            val results = (1..count).map {
                 val (element, rarity) = rollGacha()
                 val isFirst = !collectionStore.hasEverObtained(element.atomicNumber)
                 val totalCopies = collectionStore.addCopy(element.atomicNumber)
                 elementTokenRepo.addTokens(1)
                 MultiDrawResult(element, rarity, isFirst, totalCopies)
             }
+            recordDraws(count)
 
             // Unique rarities in ascending order (commun → irréel)
             val uniqueRarities = results.map { it.rarity }.distinct().sortedBy { it.ordinal }
@@ -340,8 +360,16 @@ class GachaActivity : AppCompatActivity() {
                     }.start()
             }
 
-            // One animation per unique rarity, lowest first
-            for (rarity in uniqueRarities) {
+            // Au-delà du seuil de tirages cumulés, ne jouer que l'animation de l'élément
+            // le plus rare (ordinal le plus haut). Sinon : une animation par rareté.
+            val raritiesToAnimate = if (totalDraws >= RAREST_ONLY_ANIMATION_THRESHOLD) {
+                listOfNotNull(uniqueRarities.lastOrNull())
+            } else {
+                uniqueRarities
+            }
+
+            // One animation per rarity, lowest first
+            for (rarity in raritiesToAnimate) {
                 val rep = results.first { it.rarity == rarity }
                 val categoryColor = getCategoryColor(rep.element.category)
                 suspendCancellableCoroutine<Unit> { cont ->
@@ -456,6 +484,13 @@ class GachaActivity : AppCompatActivity() {
             bigBangRepo.markUnlocked()
             bigBangBtn.visibility = View.VISIBLE
         }
+    }
+
+    /** Incrémente et persiste le compteur de tirages cumulés. */
+    private fun recordDraws(count: Int) {
+        totalDraws += count
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+            .putInt(KEY_TOTAL_DRAWS, totalDraws).apply()
     }
 
     private fun loadAndDisplayTickets() {

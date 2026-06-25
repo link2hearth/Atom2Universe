@@ -22,6 +22,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.core.content.edit
 
+/** Coût d'échange : neutrinos requis pour 1 ticket gacha à la boutique. */
+private const val NEUTRINOS_PER_TICKET = 10
+
 class ClickerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository            = ClickerRepository(application)
@@ -563,6 +566,26 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         _state.value = newState
         neutrinoRepo.setBalance(afterPurchase.neutrinos)
         viewModelScope.launch { repository.save(newState) }
+    }
+
+    /** Coût en neutrinos d'un ticket gacha acheté à la boutique. */
+    fun neutrinoTicketCost(): Int = NEUTRINOS_PER_TICKET
+
+    /** Échange [NEUTRINOS_PER_TICKET] neutrinos contre 1 ticket gacha. */
+    fun buyNeutrinoTicket() {
+        val s = _state.value
+        val cost = NEUTRINOS_PER_TICKET
+        if (s.neutrinos < cost) return
+        val newState = s.copy(
+            neutrinos = s.neutrinos - cost,
+            gachaTickets = s.gachaTickets + 1
+        )
+        _state.value = newState
+        neutrinoRepo.setBalance(newState.neutrinos)
+        viewModelScope.launch {
+            repository.addGachaTickets(1)
+            repository.save(newState)
+        }
     }
 
     fun factoryCost(type: FactoryType): LayeredNumber =

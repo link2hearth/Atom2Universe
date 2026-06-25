@@ -297,7 +297,7 @@ class BlackjackGame {
                 hand.payoutResult = result
                 when (result) {
                     PayoutResult.WIN -> player.balance += hand.bet
-                    PayoutResult.WIN_BJ -> player.balance += (hand.bet * 1.5f).toInt()
+                    PayoutResult.WIN_BJ -> player.balance += hand.bet * 2
                     PayoutResult.LOSE -> player.balance -= hand.bet
                     PayoutResult.PUSH -> Unit
                 }

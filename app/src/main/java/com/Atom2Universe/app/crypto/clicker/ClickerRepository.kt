@@ -71,6 +71,10 @@ class ClickerRepository(context: Context) {
         ticketRepo.consumeTicket()
     }
 
+    suspend fun addGachaTickets(count: Int): Int {
+        return ticketRepo.addTickets(count).totalTickets
+    }
+
     suspend fun loadGachaTickets(): Int {
         return ticketRepo.awardTickets(System.currentTimeMillis()).totalTickets
     }
