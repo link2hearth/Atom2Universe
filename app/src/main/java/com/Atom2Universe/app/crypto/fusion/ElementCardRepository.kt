@@ -57,7 +57,7 @@ class ElementCardRepository(context: Context) {
     // Retourne la définition de la carte pour cet élément si elle est obtenue, null sinon.
     fun getCardFor(atomicNumber: Int): ElementCard? {
         if (!hasCard(atomicNumber)) return null
-        return pools.values.flatMap { it.cards }.firstOrNull { it.atomicNumber == atomicNumber }
+        return pools.values.flatMap { it.cards }.filter { it.atomicNumber == atomicNumber }.randomOrNull()
     }
 
     private fun loadCounts(): MutableMap<Int, Int> {

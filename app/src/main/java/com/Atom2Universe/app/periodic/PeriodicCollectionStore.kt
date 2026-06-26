@@ -63,6 +63,14 @@ class PeriodicCollectionStore(context: Context) {
   /** Nombre total de copies disponibles sur tous les éléments (1–118). */
   fun getTotalCopies(): Int = (1..118).sumOf { getCopyCount(it) }
 
+  /**
+   * Estimation du nombre total de tirages gacha effectués sur la sauvegarde.
+   * = copies cumulées (jamais décrémentées) moins celles obtenues par fusion.
+   * Permet d'amorcer rétroactivement un compteur de tirages sur une save existante.
+   */
+  fun getTotalGachaDraws(): Int =
+    (1..118).sumOf { getTotalEverCount(it) - getFusionCount(it) }.coerceAtLeast(0)
+
   private fun copyKey(atomicNumber: Int): String = "element_${atomicNumber}_copies"
   private fun maxCopyKey(atomicNumber: Int): String = "element_${atomicNumber}_max"
   private fun totalEverKey(atomicNumber: Int): String = "element_${atomicNumber}_total"

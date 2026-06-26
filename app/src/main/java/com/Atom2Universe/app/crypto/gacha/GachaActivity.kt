@@ -45,7 +45,6 @@ class GachaActivity : AppCompatActivity() {
     companion object {
         const val PREFS_NAME = "gacha_prefs"
         const val KEY_DRAW_MULTIPLIER = "draw_multiplier"
-        const val KEY_TOTAL_DRAWS = "total_draws"
 
         /** Multiplicateurs de tirage proposés, dans l'ordre de cycle du bouton. */
         private val MULTIPLIER_CYCLE = listOf(1, 10, 100)
@@ -91,7 +90,6 @@ class GachaActivity : AppCompatActivity() {
     private lateinit var bigBangBtn: TextView
 
     private var drawMultiplier = 1
-    private var totalDraws = 0
     private lateinit var multiBtn: TextView
     private lateinit var multiResultOverlay: FrameLayout
     private lateinit var multiResultContainer: LinearLayout
@@ -174,7 +172,6 @@ class GachaActivity : AppCompatActivity() {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         drawMultiplier = prefs.getInt(KEY_DRAW_MULTIPLIER, 1)
         if (drawMultiplier !in MULTIPLIER_CYCLE) drawMultiplier = 1
-        totalDraws = prefs.getInt(KEY_TOTAL_DRAWS, 0)
         multiBtn.text = "×$drawMultiplier"
 
         multiBtn.setOnClickListener {
@@ -271,7 +268,6 @@ class GachaActivity : AppCompatActivity() {
                 val isFirst = !collectionStore.hasEverObtained(element.atomicNumber)
                 val totalCopies = collectionStore.addCopy(element.atomicNumber)
                 elementTokenRepo.addTokens(1)
-                recordDraws(1)
                 isFirstDiscovery = isFirst
 
                 // Cacher soleil et Terre/Lune dès le début de l'animation
@@ -338,7 +334,6 @@ class GachaActivity : AppCompatActivity() {
                 elementTokenRepo.addTokens(1)
                 MultiDrawResult(element, rarity, isFirst, totalCopies)
             }
-            recordDraws(count)
 
             // Unique rarities in ascending order (commun → irréel)
             val uniqueRarities = results.map { it.rarity }.distinct().sortedBy { it.ordinal }
@@ -362,7 +357,9 @@ class GachaActivity : AppCompatActivity() {
 
             // Au-delà du seuil de tirages cumulés, ne jouer que l'animation de l'élément
             // le plus rare (ordinal le plus haut). Sinon : une animation par rareté.
-            val raritiesToAnimate = if (totalDraws >= RAREST_ONLY_ANIMATION_THRESHOLD) {
+            // Le total est dérivé directement de la collection (copies cumulées hors
+            // fusion), donc fiable rétroactivement sans compteur séparé.
+            val raritiesToAnimate = if (collectionStore.getTotalGachaDraws() >= RAREST_ONLY_ANIMATION_THRESHOLD) {
                 listOfNotNull(uniqueRarities.lastOrNull())
             } else {
                 uniqueRarities
@@ -484,13 +481,6 @@ class GachaActivity : AppCompatActivity() {
             bigBangRepo.markUnlocked()
             bigBangBtn.visibility = View.VISIBLE
         }
-    }
-
-    /** Incrémente et persiste le compteur de tirages cumulés. */
-    private fun recordDraws(count: Int) {
-        totalDraws += count
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
-            .putInt(KEY_TOTAL_DRAWS, totalDraws).apply()
     }
 
     private fun loadAndDisplayTickets() {
