@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.data.MainClickerDatabase
+import com.Atom2Universe.app.news.NewsPreferences
 import com.Atom2Universe.app.news.NewsWidgetView
 import com.Atom2Universe.app.crypto.data.MainClickerRepository
 import com.Atom2Universe.app.util.applySystemBarsVisibility
@@ -2530,13 +2531,7 @@ class MainClickerActivity : ThemedActivity() {
             showCryptoWidgetPopup(anchor)
         }
         findViewById<TextView>(R.id.main_clicker_label_news).setOnClickListener { anchor ->
-            showOpacityPopup(
-                anchor = anchor,
-                label1 = getString(R.string.crypto_news_widget_opacity_label),
-                getValue1 = { MainClickerPreferences.getNewsWidgetOpacityPercent(this) },
-                setValue1 = { MainClickerPreferences.setNewsWidgetOpacityPercent(this, it) },
-                applyValue1 = { newsWidgetView.applyBackgroundOpacity(it) }
-            )
+            showNewsWidgetPopup(anchor)
         }
         findViewById<TextView>(R.id.main_clicker_label_solitaire).setOnClickListener { anchor ->
             showOpacityPopup(
@@ -3310,6 +3305,68 @@ class MainClickerActivity : ThemedActivity() {
         }
 
         val popup = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        popup.isOutsideTouchable = true
+        popup.elevation = 16f
+        popup.showAsDropDown(anchor, 0, 4)
+    }
+
+    private fun newsRefreshLabel(minutes: Int): String =
+        if (minutes < 60) getString(R.string.crypto_news_refresh_minutes, minutes)
+        else getString(R.string.crypto_news_refresh_hours, minutes / 60)
+
+    private fun showNewsWidgetPopup(anchor: View) {
+        val popupView = layoutInflater.inflate(R.layout.popup_opacity_sliders, null)
+
+        // Slider 1 : opacité du widget
+        val lbl1 = popupView.findViewById<TextView>(R.id.popup_label_1)
+        val val1 = popupView.findViewById<TextView>(R.id.popup_value_1)
+        val slider1 = popupView.findViewById<Slider>(R.id.popup_slider_1)
+
+        lbl1.text = getString(R.string.crypto_news_widget_opacity_label)
+        val currentOpacity = MainClickerPreferences.getNewsWidgetOpacityPercent(this)
+        slider1.value = currentOpacity.toFloat()
+        val1.text = getString(R.string.crypto_widget_opacity_value, currentOpacity)
+        slider1.addOnChangeListener { _, value, fromUser ->
+            if (!fromUser) return@addOnChangeListener
+            val pct = value.roundToInt()
+            MainClickerPreferences.setNewsWidgetOpacityPercent(this, pct)
+            newsWidgetView.applyBackgroundOpacity(pct)
+            val1.text = getString(R.string.crypto_widget_opacity_value, pct)
+        }
+
+        // Slider 2 : intervalle de rafraîchissement (slider à crans)
+        val container2 = popupView.findViewById<View>(R.id.popup_slider2_container)
+        val lbl2 = popupView.findViewById<TextView>(R.id.popup_label_2)
+        val val2 = popupView.findViewById<TextView>(R.id.popup_value_2)
+        val slider2 = popupView.findViewById<Slider>(R.id.popup_slider_2)
+
+        container2.visibility = View.VISIBLE
+        slider2.visibility = View.VISIBLE
+        lbl2.text = getString(R.string.crypto_news_widget_refresh_label)
+
+        val options = NewsPreferences.REFRESH_OPTIONS_MINUTES
+        slider2.valueFrom = 0f
+        slider2.valueTo = (options.size - 1).toFloat()
+        slider2.stepSize = 1f
+        val currentIdx = options.indexOf(NewsPreferences.getRefreshIntervalMinutes(this))
+            .coerceAtLeast(0)
+        slider2.value = currentIdx.toFloat()
+        val2.text = newsRefreshLabel(options[currentIdx])
+        slider2.addOnChangeListener { _, value, fromUser ->
+            if (!fromUser) return@addOnChangeListener
+            val idx = value.roundToInt().coerceIn(0, options.size - 1)
+            val minutes = options[idx]
+            NewsPreferences.setRefreshIntervalMinutes(this, minutes)
+            newsWidgetView.applyRefreshIntervalMinutes(minutes)
+            val2.text = newsRefreshLabel(minutes)
+        }
+
+        val popup = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
         popup.isOutsideTouchable = true
         popup.elevation = 16f
         popup.showAsDropDown(anchor, 0, 4)

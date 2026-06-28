@@ -87,6 +87,9 @@
     <string name="news_search_button">Пошук</string>
     <string name="news_clear_button">Очистити</string>
     <string name="news_refresh_button">Оновити</string>
+    <string name="crypto_news_widget_refresh_label">Інтервал оновлення</string>
+    <string name="crypto_news_refresh_minutes">%1$d хв</string>
+    <string name="crypto_news_refresh_hours">%1$d год</string>
     <string name="news_restore_hidden">Відновити приховані</string>
     <string name="news_open_article">Відкрити</string>
     <string name="news_hide_article">Приховати</string>

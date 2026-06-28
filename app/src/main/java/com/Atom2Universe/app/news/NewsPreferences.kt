@@ -11,7 +11,12 @@ object NewsPreferences {
     private const val KEY_BANNED      = "banned_words"
     private const val KEY_SOURCES     = "enabled_sources"
     private const val KEY_QUERY       = "last_query"
+    private const val KEY_REFRESH_MIN = "refresh_interval_minutes"
     private const val HIDDEN_TTL_MS   = 72L * 3_600_000L  // 72 h
+
+    /** Intervalles de rafraîchissement proposés (en minutes), pour le slider à crans. */
+    val REFRESH_OPTIONS_MINUTES = listOf(15, 30, 45, 60, 120)
+    private const val DEFAULT_REFRESH_MINUTES = 15
 
     private fun prefs(context: Context) =
         context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -83,5 +88,17 @@ object NewsPreferences {
 
     fun setLastQuery(context: Context, query: String) {
         prefs(context).edit { putString(KEY_QUERY, query) }
+    }
+
+    // ── Intervalle de rafraîchissement ────────────────────────────────────────
+
+    fun getRefreshIntervalMinutes(context: Context): Int {
+        val stored = prefs(context).getInt(KEY_REFRESH_MIN, DEFAULT_REFRESH_MINUTES)
+        return if (stored in REFRESH_OPTIONS_MINUTES) stored else DEFAULT_REFRESH_MINUTES
+    }
+
+    fun setRefreshIntervalMinutes(context: Context, minutes: Int) {
+        val value = if (minutes in REFRESH_OPTIONS_MINUTES) minutes else DEFAULT_REFRESH_MINUTES
+        prefs(context).edit { putInt(KEY_REFRESH_MIN, value) }
     }
 }

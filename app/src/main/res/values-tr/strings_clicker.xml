@@ -87,6 +87,9 @@
     <string name="news_search_button">Ara</string>
     <string name="news_clear_button">Temizle</string>
     <string name="news_refresh_button">Yenile</string>
+    <string name="crypto_news_widget_refresh_label">Yenileme aralığı</string>
+    <string name="crypto_news_refresh_minutes">%1$d dk</string>
+    <string name="crypto_news_refresh_hours">%1$d sa</string>
     <string name="news_restore_hidden">Gizlenenleri geri yükle</string>
     <string name="news_open_article">Aç</string>
     <string name="news_hide_article">Gizle</string>

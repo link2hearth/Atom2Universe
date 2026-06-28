@@ -87,6 +87,9 @@
     <string name="news_search_button">Căutare</string>
     <string name="news_clear_button">Ștergere</string>
     <string name="news_refresh_button">Reîmprospătare</string>
+    <string name="crypto_news_widget_refresh_label">Interval de reîmprospătare</string>
+    <string name="crypto_news_refresh_minutes">%1$d min</string>
+    <string name="crypto_news_refresh_hours">%1$d h</string>
     <string name="news_restore_hidden">Restaurare ascunse</string>
     <string name="news_open_article">Deschidere</string>
     <string name="news_hide_article">Ascundere</string>

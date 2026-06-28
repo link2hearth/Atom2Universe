@@ -54,6 +54,9 @@
     <string name="crypto_game2048_widget_toggle_desc">Show/hide 2048 widget</string>
     <string name="crypto_game2048_widget_opacity_label">2048 widget opacity</string>
     <string name="crypto_news_widget_opacity_label">News widget opacity</string>
+    <string name="crypto_news_widget_refresh_label">Refresh interval</string>
+    <string name="crypto_news_refresh_minutes">%1$d min</string>
+    <string name="crypto_news_refresh_hours">%1$d h</string>
     <string name="crypto_background_missing_folder_toast">Choose an image folder first.</string>
     <string name="crypto_background_no_images_toast">No images found in this folder.</string>
     <string name="crypto_background_load_error_toast">Unable to load this image.</string>

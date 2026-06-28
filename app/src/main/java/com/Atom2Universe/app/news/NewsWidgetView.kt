@@ -32,10 +32,13 @@ class NewsWidgetView @JvmOverloads constructor(
 
     companion object {
         private const val ROTATE_INTERVAL_MS = 30_000L
-        private const val FETCH_INTERVAL_MS  = 15 * 60_000L
         const val EXTRA_HIGHLIGHT_ID = "news_highlight_id"
         private val BASE_CARD_COLOR = 0xFF0F172A.toInt()
     }
+
+    // Intervalle de re-fetch, configurable via les réglages du widget (slider à crans).
+    private var fetchIntervalMs: Long =
+        NewsPreferences.getRefreshIntervalMinutes(context) * 60_000L
 
     private val cardView: MaterialCardView
     private val header: FrameLayout
@@ -141,17 +144,23 @@ class NewsWidgetView @JvmOverloads constructor(
     private val fetchRunnable = object : Runnable {
         override fun run() {
             refresh()
-            handler.postDelayed(this, FETCH_INTERVAL_MS)
+            handler.postDelayed(this, fetchIntervalMs)
         }
     }
 
     private fun startPeriodicFetch() {
         handler.removeCallbacks(fetchRunnable)
-        handler.postDelayed(fetchRunnable, FETCH_INTERVAL_MS)
+        handler.postDelayed(fetchRunnable, fetchIntervalMs)
     }
 
     private fun stopPeriodicFetch() {
         handler.removeCallbacks(fetchRunnable)
+    }
+
+    /** Applique un nouvel intervalle de rafraîchissement (en minutes) et reprogramme le cycle. */
+    fun applyRefreshIntervalMinutes(minutes: Int) {
+        fetchIntervalMs = minutes * 60_000L
+        if (toggleEnabled && isAttachedToWindow) startPeriodicFetch()
     }
 
     init {

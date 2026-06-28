@@ -87,6 +87,9 @@
     <string name="news_search_button">Cari</string>
     <string name="news_clear_button">Hapus</string>
     <string name="news_refresh_button">Segarkan</string>
+    <string name="crypto_news_widget_refresh_label">Interval penyegaran</string>
+    <string name="crypto_news_refresh_minutes">%1$d mnt</string>
+    <string name="crypto_news_refresh_hours">%1$d jam</string>
     <string name="news_restore_hidden">Pulihkan yang disembunyikan</string>
     <string name="news_open_article">Buka</string>
     <string name="news_hide_article">Sembunyikan</string>
