@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cosmo_run_title">COSMO RUN</string>
+    <string name="cosmo_run_subtitle">Runner pe 3 benzi în spațiul îndepărtat</string>
+    <string name="cosmo_run_instructions">Glisează la stânga sau la dreapta pentru a schimba banda.\nGlisează în sus (sau atinge) pentru a sări peste bariere.\nEvită asteroizii și adună atomi!</string>
+    <string name="cosmo_run_btn_start">START</string>
+    <string name="cosmo_run_btn_restart">REÎNCEARCĂ</string>
+    <string name="cosmo_run_btn_back">ÎNAPOI</string>
+    <string name="cosmo_run_game_over">GAME OVER</string>
+    <string name="cosmo_run_score_label">Scor: %1$d</string>
+    <string name="cosmo_run_stats_label">%1$d m — ⚛ %2$d atomi</string>
+    <string name="cosmo_run_best_label">Record: %1$d</string>
+    <!-- Hub tile -->
+    <string name="cosmo_run_hub_title">Cosmo Run</string>
+    <string name="cosmo_run_hub_desc">Evită asteroizii într-o cursă spațială pe 3 benzi</string>
+</resources>

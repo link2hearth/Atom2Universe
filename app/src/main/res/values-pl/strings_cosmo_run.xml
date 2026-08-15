@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cosmo_run_title">COSMO RUN</string>
+    <string name="cosmo_run_subtitle">Runner na 3 torach w głębokim kosmosie</string>
+    <string name="cosmo_run_instructions">Przesuń w lewo lub w prawo, aby zmienić tor.\nPrzesuń w górę (lub stuknij), aby przeskoczyć bariery.\nUnikaj asteroid i zbieraj atomy!</string>
+    <string name="cosmo_run_btn_start">START</string>
+    <string name="cosmo_run_btn_restart">JESZCZE RAZ</string>
+    <string name="cosmo_run_btn_back">WSTECZ</string>
+    <string name="cosmo_run_game_over">KONIEC GRY</string>
+    <string name="cosmo_run_score_label">Wynik: %1$d</string>
+    <string name="cosmo_run_stats_label">%1$d m — ⚛ %2$d atomów</string>
+    <string name="cosmo_run_best_label">Rekord: %1$d</string>
+    <!-- Hub tile -->
+    <string name="cosmo_run_hub_title">Cosmo Run</string>
+    <string name="cosmo_run_hub_desc">Unikaj asteroid w kosmicznym biegu na 3 torach</string>
+</resources>
