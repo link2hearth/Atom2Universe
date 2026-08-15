@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cosmo_run_title">COSMO RUN</string>
+    <string name="cosmo_run_subtitle">3-Spuren-Runner im tiefen Weltraum</string>
+    <string name="cosmo_run_instructions">Wische nach links oder rechts, um die Spur zu wechseln.\nWische nach oben (oder tippe), um über Barrieren zu springen.\nWeiche Asteroiden aus und sammle Atome!</string>
+    <string name="cosmo_run_btn_start">START</string>
+    <string name="cosmo_run_btn_restart">NOCHMAL</string>
+    <string name="cosmo_run_btn_back">ZURÜCK</string>
+    <string name="cosmo_run_game_over">GAME OVER</string>
+    <string name="cosmo_run_score_label">Punkte: %1$d</string>
+    <string name="cosmo_run_stats_label">%1$d m — ⚛ %2$d Atome</string>
+    <string name="cosmo_run_best_label">Rekord: %1$d</string>
+    <!-- Hub tile -->
+    <string name="cosmo_run_hub_title">Cosmo Run</string>
+    <string name="cosmo_run_hub_desc">Weiche Asteroiden auf einem 3-Spuren-Weltraumlauf aus</string>
+</resources>

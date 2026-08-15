@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cosmo_run_title">COSMO RUN</string>
+    <string name="cosmo_run_subtitle">Runner à 3 voies dans l\'espace profond</string>
+    <string name="cosmo_run_instructions">Glisse à gauche ou à droite pour changer de voie.\nGlisse vers le haut (ou tape) pour sauter les barrières.\nÉvite les astéroïdes et ramasse les atomes !</string>
+    <string name="cosmo_run_btn_start">JOUER</string>
+    <string name="cosmo_run_btn_restart">REJOUER</string>
+    <string name="cosmo_run_btn_back">RETOUR</string>
+    <string name="cosmo_run_game_over">GAME OVER</string>
+    <string name="cosmo_run_score_label">Score : %1$d</string>
+    <string name="cosmo_run_stats_label">%1$d m — ⚛ %2$d atomes</string>
+    <string name="cosmo_run_best_label">Record : %1$d</string>
+    <!-- Hub tile -->
+    <string name="cosmo_run_hub_title">Cosmo Run</string>
+    <string name="cosmo_run_hub_desc">Esquive les astéroïdes sur une course spatiale à 3 voies</string>
+</resources>

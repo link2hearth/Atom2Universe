@@ -33,6 +33,11 @@ class NeutrinoRepository(context: Context) {
 
     fun getLifetimeNeutrinos(): Int = prefs.getInt("lifetime_neutrinos", 0)
 
+    /** Écriture directe — utilisée par la restauration d'une sauvegarde Drive. */
+    fun setLifetimeNeutrinos(n: Int) {
+        prefs.edit { putInt("lifetime_neutrinos", n.coerceAtLeast(0)) }
+    }
+
     fun reset() {
         prefs.edit { clear() }
     }

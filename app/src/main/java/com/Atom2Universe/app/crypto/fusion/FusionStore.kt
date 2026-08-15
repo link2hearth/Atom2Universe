@@ -39,6 +39,22 @@ class FusionStore(context: Context) {
 
     fun nextBonusIsAps(): Boolean = getTotalWins() % 2 == 0
 
+    /** Écritures directes — utilisées par la restauration d'une sauvegarde Drive. */
+    fun setQuarks(n: Int) = prefs.edit { putInt(KEY_QUARKS, n.coerceAtLeast(0)) }
+
+    fun setTotalWins(n: Int) = prefs.edit { putInt(KEY_TOTAL_WINS, n.coerceAtLeast(0)) }
+
+    fun setBonusMultApc(value: Double) =
+        prefs.edit { putFloat(KEY_BONUS_APC, value.coerceAtLeast(0.0).toFloat()) }
+
+    fun setBonusMultAps(value: Double) =
+        prefs.edit { putFloat(KEY_BONUS_APS, value.coerceAtLeast(0.0).toFloat()) }
+
+    fun setRecipeCounters(recipe: FusionRecipe, tries: Int, wins: Int) = prefs.edit {
+        putInt("${recipe.id}_tries", tries.coerceAtLeast(0))
+        putInt("${recipe.id}_wins",  wins.coerceAtLeast(0))
+    }
+
     fun reset() = prefs.edit { clear() }
 
     companion object {

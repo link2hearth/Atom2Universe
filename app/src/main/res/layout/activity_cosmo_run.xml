@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <com.Atom2Universe.app.games.cosmorun.CosmoRunView
+        android:id="@+id/cosmo_run_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Start overlay -->
+    <LinearLayout
+        android:id="@+id/cosmo_overlay_start"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#C00A0616">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_title"
+            android:textColor="#B388FF"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_subtitle"
+            android:textColor="#6A5A88"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:paddingHorizontal="40dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_instructions"
+            android:textColor="#8878A8"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:paddingHorizontal="40dp"
+            android:layout_marginBottom="40dp" />
+
+        <Button
+            android:id="@+id/cosmo_btn_start"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_btn_start"
+            android:backgroundTint="#B388FF"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/cosmo_btn_back_start"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_btn_back"
+            android:backgroundTint="#222233"
+            android:textColor="#AAAAAA" />
+
+    </LinearLayout>
+
+    <!-- Game Over overlay -->
+    <LinearLayout
+        android:id="@+id/cosmo_overlay_game_over"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#C00A0616"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_game_over"
+            android:textColor="#EE3355"
+            android:textSize="38sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="28dp" />
+
+        <TextView
+            android:id="@+id/cosmo_tv_final_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#DDD0F0"
+            android:textSize="20sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/cosmo_tv_run_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#8878A8"
+            android:textSize="15sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/cosmo_tv_best_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#665A80"
+            android:textSize="15sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="40dp" />
+
+        <Button
+            android:id="@+id/cosmo_btn_restart"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_btn_restart"
+            android:backgroundTint="#B388FF"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/cosmo_btn_back_gameover"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cosmo_run_btn_back"
+            android:backgroundTint="#222233"
+            android:textColor="#AAAAAA" />
+
+    </LinearLayout>
+
+</FrameLayout>

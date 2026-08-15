@@ -32,7 +32,6 @@ class NewsWidgetView @JvmOverloads constructor(
 
     companion object {
         private const val ROTATE_INTERVAL_MS = 30_000L
-        private const val FETCH_INTERVAL_MS  = 15 * 60_000L
         const val EXTRA_HIGHLIGHT_ID = "news_highlight_id"
         private val BASE_CARD_COLOR = 0xFF0F172A.toInt()
     }
@@ -138,20 +137,42 @@ class NewsWidgetView @JvmOverloads constructor(
     }
 
     // ── Re-fetch périodique ───────────────────────────────────────────────────
+
+    private var fetchIntervalMs = NewsFetchInterval.DEFAULT.intervalMs
+    private var fetchScheduled = false
+
     private val fetchRunnable = object : Runnable {
         override fun run() {
+            fetchScheduled = false
             refresh()
-            handler.postDelayed(this, FETCH_INTERVAL_MS)
+            startPeriodicFetch()
         }
     }
 
+    /**
+     * Arme le prochain fetch. Ne réarme pas le compte à rebours s'il tourne déjà :
+     * sans ce garde-fou, chaque onResume de l'activité repoussait l'échéance et le
+     * re-fetch automatique ne tombait jamais.
+     */
     private fun startPeriodicFetch() {
-        handler.removeCallbacks(fetchRunnable)
-        handler.postDelayed(fetchRunnable, FETCH_INTERVAL_MS)
+        if (fetchScheduled) return
+        fetchScheduled = true
+        handler.postDelayed(fetchRunnable, fetchIntervalMs)
     }
 
     private fun stopPeriodicFetch() {
         handler.removeCallbacks(fetchRunnable)
+        fetchScheduled = false
+    }
+
+    /** Change la fréquence des requêtes RSS et réarme le compte à rebours dessus. */
+    fun setFetchIntervalMs(intervalMs: Long) {
+        if (intervalMs == fetchIntervalMs) return
+        fetchIntervalMs = intervalMs
+        if (fetchScheduled) {
+            stopPeriodicFetch()
+            startPeriodicFetch()
+        }
     }
 
     init {

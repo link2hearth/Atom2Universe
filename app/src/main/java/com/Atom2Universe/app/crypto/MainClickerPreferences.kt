@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import kotlin.math.roundToInt
 import androidx.core.content.edit
+import com.Atom2Universe.app.news.NewsFetchInterval
 
 object MainClickerPreferences {
 
@@ -30,6 +31,7 @@ object MainClickerPreferences {
     private const val KEY_GAME2048_WIDGET_OPACITY_PERCENT = "game2048_widget_opacity_percent"
     private const val KEY_NEWS_WIDGET_ENABLED = "news_widget_enabled"
     private const val KEY_NEWS_WIDGET_OPACITY_PERCENT = "news_widget_opacity_percent"
+    private const val KEY_NEWS_FETCH_INTERVAL_INDEX = "news_fetch_interval_index"
     private const val KEY_EARTH_ONLY_MODE = "earth_only_mode"
     private const val KEY_EARTH_SHOW_CLOUDS = "earth_show_clouds"
     private const val KEY_EARTH_SHOW_TERMINATOR = "earth_show_terminator"
@@ -338,6 +340,20 @@ object MainClickerPreferences {
     fun setNewsWidgetOpacityPercent(context: Context, value: Int) {
         prefs(context).edit { putInt(KEY_NEWS_WIDGET_OPACITY_PERCENT, value.coerceIn(0, 100)) }
     }
+
+    /** Index dans [NewsFetchInterval] : fréquence des requêtes RSS du widget News. */
+    fun getNewsFetchIntervalIndex(context: Context): Int =
+        prefs(context).getInt(KEY_NEWS_FETCH_INTERVAL_INDEX, NewsFetchInterval.DEFAULT.ordinal)
+            .coerceIn(0, NewsFetchInterval.entries.size - 1)
+
+    fun setNewsFetchIntervalIndex(context: Context, index: Int) {
+        prefs(context).edit {
+            putInt(KEY_NEWS_FETCH_INTERVAL_INDEX, index.coerceIn(0, NewsFetchInterval.entries.size - 1))
+        }
+    }
+
+    fun getNewsFetchInterval(context: Context): NewsFetchInterval =
+        NewsFetchInterval.fromIndex(getNewsFetchIntervalIndex(context))
 
 
     fun getGame2048WidgetOpacityPercent(context: Context): Int =

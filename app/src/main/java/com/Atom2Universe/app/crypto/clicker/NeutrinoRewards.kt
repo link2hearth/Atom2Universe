@@ -133,7 +133,8 @@ object NeutrinoRewards {
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
-            Entry(R.string.motocross_title, "1 / $METERS_PER_NEUTRINO m", R.string.neutrino_info_note_distance)
+            Entry(R.string.motocross_title, "1 / $METERS_PER_NEUTRINO m", R.string.neutrino_info_note_distance),
+            Entry(R.string.cosmo_run_hub_title, "1 / $METERS_PER_NEUTRINO m", R.string.neutrino_info_note_distance)
         )
     }
 }

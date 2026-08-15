@@ -14,5 +14,9 @@ class FactoryRepository(context: Context) {
     fun increment(type: FactoryType) =
         prefs.edit { putInt(type.id, getCount(type) + 1) }
 
+    /** Écriture directe — utilisée par la restauration d'une sauvegarde Drive. */
+    fun setCount(type: FactoryType, count: Int) =
+        prefs.edit { putInt(type.id, count.coerceAtLeast(0)) }
+
     fun reset() = prefs.edit { clear() }
 }
