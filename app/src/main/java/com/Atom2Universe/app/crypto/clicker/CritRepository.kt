@@ -13,6 +13,10 @@ class CritRepository(context: Context) {
     fun incrementCritChance() = prefs.edit { putInt(KEY_CHANCE_LEVEL, getCritChanceLevel() + 1) }
     fun incrementCritDamage() = prefs.edit { putInt(KEY_DAMAGE_LEVEL, getCritDamageLevel() + 1) }
 
+    /** Écritures directes — utilisées par la restauration d'une sauvegarde Drive. */
+    fun setCritChanceLevel(level: Int) = prefs.edit { putInt(KEY_CHANCE_LEVEL, level.coerceAtLeast(0)) }
+    fun setCritDamageLevel(level: Int) = prefs.edit { putInt(KEY_DAMAGE_LEVEL, level.coerceAtLeast(0)) }
+
     fun reset() = prefs.edit { clear() }
 
     companion object {
