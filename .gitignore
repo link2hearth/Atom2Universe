@@ -39,6 +39,12 @@ app/src/main/assets/covers/
 .claude/
 CLAUDE.md
 AGENTS.md
+logs Claude Code/
+
+# Outils et copies de travail locaux (jamais versionnes : lourds et propres a la machine)
+jadx-tool/
+karballo-master/
+repo backup/
 
 # In-app billing / Play Console sensitive files
 app/src/main/assets/billing*.json
