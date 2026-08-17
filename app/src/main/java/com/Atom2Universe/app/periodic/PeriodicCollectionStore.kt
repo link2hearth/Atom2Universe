@@ -45,9 +45,13 @@ class PeriodicCollectionStore(context: Context) {
 
   fun hasElement(atomicNumber: Int): Boolean = getCopyCount(atomicNumber) > 0
 
-  /** Retourne true si l'élément a déjà été obtenu au moins une fois (ne se réinitialise jamais). */
+  /**
+   * Retourne true si l'élément a déjà été obtenu au moins une fois (ne se réinitialise jamais).
+   * Le repli sur [getTotalEverCount] couvre les anciennes sauvegardes écrites avant l'ajout
+   * du flag "ever" (il retombe lui-même sur le max de copies, puis sur les copies actuelles).
+   */
   fun hasEverObtained(atomicNumber: Int): Boolean =
-    prefs.getBoolean(everKey(atomicNumber), false) || getCopyCount(atomicNumber) > 0
+    prefs.getBoolean(everKey(atomicNumber), false) || getTotalEverCount(atomicNumber) > 0
 
   /**
    * Consomme une copie de l'élément (min 0). Retourne true si une copie était disponible.
@@ -79,6 +83,27 @@ class PeriodicCollectionStore(context: Context) {
 
   fun setCopyCount(atomicNumber: Int, count: Int) {
     prefs.edit { putInt(copyKey(atomicNumber), count) }
+  }
+
+  /**
+   * Réécrit tous les compteurs d'un élément d'un coup (restauration depuis une sauvegarde).
+   *
+   * [totalEver] et [fusionCopies] sont les compteurs permanents qui portent les bonus d'éléments
+   * et de collection de raretés : ils doivent être restaurés tels quels, jamais déduits de
+   * [copies] — un élément entièrement consommé par une fusion a 0 copie mais garde ses bonus.
+   */
+  fun restoreElement(atomicNumber: Int, copies: Int, totalEver: Int, fusionCopies: Int) {
+    val safeCopies = copies.coerceAtLeast(0)
+    // Le total cumulé ne peut pas être inférieur aux copies possédées (save ancienne ou corrompue).
+    val safeTotal = totalEver.coerceAtLeast(safeCopies)
+    prefs.edit {
+      putInt(copyKey(atomicNumber), safeCopies)
+      // maxCopyKey n'est qu'un repli historique pour totalEver, qu'on écrit explicitement ici.
+      putInt(maxCopyKey(atomicNumber), safeCopies)
+      putInt(totalEverKey(atomicNumber), safeTotal)
+      putInt(fusionCountKey(atomicNumber), fusionCopies.coerceAtLeast(0))
+      putBoolean(everKey(atomicNumber), safeTotal > 0)
+    }
   }
 
   fun reset() {

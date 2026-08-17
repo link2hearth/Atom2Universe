@@ -42,14 +42,18 @@ fun atomicNumbersOf(rarity: GachaRarity): List<Int> =
     RARITY_MAP.entries.filter { it.value == rarity }.map { it.key }.sorted()
 
 /**
- * Retourne le nombre de raretés consécutives complètes (au moins 1 copie de chaque élément).
+ * Retourne le nombre de raretés consécutives complètes (chaque élément obtenu au moins une fois).
  * S'arrête à la première rareté incomplète — la rareté n+1 ne compte pas sans la n.
  * Rareté 1 (COMMUN) complète → 1, rareté 2 (ESSENTIEL) aussi → 2, etc.
+ *
+ * On se base sur [PeriodicCollectionStore.hasEverObtained] (et non sur les copies possédées) :
+ * une fois la collection faite, le bonus est acquis définitivement, même si les copies sont
+ * ensuite consommées par une fusion.
  */
 fun completedRarityCount(store: PeriodicCollectionStore): Int {
     var count = 0
     for (rarity in GachaRarity.entries) {
-        if (atomicNumbersOf(rarity).all { store.hasElement(it) }) count++
+        if (atomicNumbersOf(rarity).all { store.hasEverObtained(it) }) count++
         else break
     }
     return count

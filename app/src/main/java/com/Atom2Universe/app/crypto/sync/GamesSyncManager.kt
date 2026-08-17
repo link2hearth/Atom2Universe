@@ -168,10 +168,14 @@ object GamesSyncManager {
         if ((lf?.wins ?: emptyMap<String, Int>()) != (rf?.wins ?: emptyMap<String, Int>())) return true
 
         // Conflit gacha : au moins un élément avec un compte différent
-        val localCopies  = local.gacha?.copies  ?: emptyMap()
-        val remoteCopies = remote.gacha?.copies ?: emptyMap()
-        val allKeys = localCopies.keys + remoteCopies.keys
-        if (allKeys.any { (localCopies[it] ?: 0) != (remoteCopies[it] ?: 0) }) return true
+        if (countsDiffer(local.gacha?.copies, remote.gacha?.copies)) return true
+
+        // Compteurs permanents : absents avant la v3. Les comparer avec une save plus ancienne
+        // ferait remonter un conflit que la résolution ne saurait pas trancher utilement.
+        if (local.version >= 3 && remote.version >= 3) {
+            if (countsDiffer(local.gacha?.totalEver, remote.gacha?.totalEver)) return true
+            if (countsDiffer(local.gacha?.fusionCopies, remote.gacha?.fusionCopies)) return true
+        }
 
         // Conflit tokens éléments
         if (local.elementTokens != remote.elementTokens) return true
@@ -185,6 +189,13 @@ object GamesSyncManager {
         return false
     }
 
+    /** Deux tables atomicNumber → compteur diffèrent ? Une clé absente vaut 0. */
+    private fun countsDiffer(a: Map<Int, Int>?, b: Map<Int, Int>?): Boolean {
+        val left  = a ?: emptyMap()
+        val right = b ?: emptyMap()
+        return (left.keys + right.keys).any { (left[it] ?: 0) != (right[it] ?: 0) }
+    }
+
     // ─── Construction de l'état local ────────────────────────────────────────
 
     private suspend fun buildLocalSyncFile(): GamesSyncFile {
@@ -194,6 +205,15 @@ object GamesSyncManager {
         val collectionStore = PeriodicCollectionStore(appContext)
         val copies = (1..118)
             .associateWith { collectionStore.getCopyCount(it) }
+            .filter { it.value > 0 }
+        // Compteurs permanents : ils portent les bonus d'éléments et de collection de raretés.
+        // Sans eux, une restauration sur un nouvel appareil repartirait des seules copies en
+        // stock et effacerait tous les bonus des éléments consommés par des fusions.
+        val totalEver = (1..118)
+            .associateWith { collectionStore.getTotalEverCount(it) }
+            .filter { it.value > 0 }
+        val fusionCopies = (1..118)
+            .associateWith { collectionStore.getFusionCount(it) }
             .filter { it.value > 0 }
 
         val elementTokens = ElementTokenRepository(appContext).getBalance()
@@ -265,7 +285,7 @@ object GamesSyncManager {
         return GamesSyncFile(
             lastModified  = System.currentTimeMillis(),
             clicker       = clickerEntity?.toSyncData(),
-            gacha         = GachaSyncData(copies),
+            gacha         = GachaSyncData(copies, totalEver, fusionCopies),
             elementTokens = elementTokens,
             gachaTickets  = gachaTickets,
             gameStats     = gameStats,
@@ -361,10 +381,20 @@ object GamesSyncManager {
         file.gacha?.let { gachaData ->
             val store = PeriodicCollectionStore(appContext)
             store.reset()
-            gachaData.copies.forEach { (atomicNumber, count) ->
-                store.setCopyCount(atomicNumber, count)
+            // Union des clés : un élément entièrement consommé par une fusion n'apparaît plus
+            // dans `copies` mais garde des compteurs permanents à restaurer.
+            val atomicNumbers = gachaData.copies.keys +
+                gachaData.totalEver.keys +
+                gachaData.fusionCopies.keys
+            atomicNumbers.forEach { atomicNumber ->
+                store.restoreElement(
+                    atomicNumber = atomicNumber,
+                    copies       = gachaData.copies[atomicNumber] ?: 0,
+                    totalEver    = gachaData.totalEver[atomicNumber] ?: 0,
+                    fusionCopies = gachaData.fusionCopies[atomicNumber] ?: 0
+                )
             }
-            Log.d(TAG, "Collection gacha appliquée (${gachaData.copies.size} éléments)")
+            Log.d(TAG, "Collection gacha appliquée (${atomicNumbers.size} éléments)")
         }
 
         ElementTokenRepository(appContext).setBalance(file.elementTokens)

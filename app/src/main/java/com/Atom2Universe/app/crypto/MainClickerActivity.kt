@@ -1383,7 +1383,9 @@ class MainClickerActivity : ThemedActivity() {
         for ((index, rarity) in rarities.withIndex()) {
             val atomicNumbers = com.Atom2Universe.app.crypto.gacha.atomicNumbersOf(rarity)
             val total  = atomicNumbers.size
-            val owned  = atomicNumbers.count { periodicStore.hasElement(it) }
+            // hasEverObtained : la progression reste acquise même si les copies sont
+            // consommées par une fusion (cf. completedRarityCount).
+            val owned  = atomicNumbers.count { periodicStore.hasEverObtained(it) }
             val isComplete = owned == total
             val isLocked   = !previousComplete
 

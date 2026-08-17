@@ -255,23 +255,43 @@ data class HighScoresSyncData(
 // ─── Gacha ───────────────────────────────────────────────────────────────────
 
 data class GachaSyncData(
-    val copies: Map<Int, Int>   // atomicNumber → nombre de copies
+    /** atomicNumber → copies actuellement possédées (la fusion les consomme). */
+    val copies: Map<Int, Int>,
+    /** atomicNumber → copies cumulées depuis toujours. Ne baisse jamais : porte les bonus d'éléments. */
+    val totalEver: Map<Int, Int> = emptyMap(),
+    /** atomicNumber → copies obtenues via fusion. Exclues des bonus gacha (elles ont les leurs). */
+    val fusionCopies: Map<Int, Int> = emptyMap()
 ) {
     fun toJson(): JSONObject = JSONObject().apply {
-        val copiesObj = JSONObject()
-        copies.forEach { (atomicNumber, count) -> copiesObj.put(atomicNumber.toString(), count) }
-        put("copies", copiesObj)
+        put("copies", intMapToJson(copies))
+        put("totalEver", intMapToJson(totalEver))
+        put("fusionCopies", intMapToJson(fusionCopies))
     }
 
     companion object {
         fun fromJson(j: JSONObject): GachaSyncData {
-            val copiesObj = j.optJSONObject("copies") ?: return GachaSyncData(emptyMap())
-            val copies = mutableMapOf<Int, Int>()
-            copiesObj.keys().forEach { key ->
+            val copies = intMapFromJson(j.optJSONObject("copies"))
+            return GachaSyncData(
+                copies = copies,
+                // Saves v1/v2 : les compteurs permanents n'étaient pas sauvegardés. On repart des
+                // copies possédées — le joueur peut y perdre, mais jamais gagner de bonus indu.
+                totalEver    = j.optJSONObject("totalEver")?.let { intMapFromJson(it) } ?: copies,
+                fusionCopies = intMapFromJson(j.optJSONObject("fusionCopies"))
+            )
+        }
+
+        private fun intMapToJson(map: Map<Int, Int>): JSONObject = JSONObject().apply {
+            map.forEach { (atomicNumber, count) -> put(atomicNumber.toString(), count) }
+        }
+
+        private fun intMapFromJson(obj: JSONObject?): Map<Int, Int> {
+            if (obj == null) return emptyMap()
+            val out = mutableMapOf<Int, Int>()
+            obj.keys().forEach { key ->
                 val n = key.toIntOrNull() ?: return@forEach
-                copies[n] = copiesObj.optInt(key, 0)
+                out[n] = obj.optInt(key, 0)
             }
-            return GachaSyncData(copies)
+            return out
         }
     }
 }
@@ -399,8 +419,12 @@ data class GamesSyncFile(
     }.toString()
 
     companion object {
-        /** v1 = clicker/gacha/tickets/stats. v2 = + usines, Big Bang, crit, succès, neutrinos, records. */
-        const val CURRENT_VERSION = 2
+        /**
+         * v1 = clicker/gacha/tickets/stats. v2 = + usines, Big Bang, crit, succès, neutrinos, records.
+         * v3 = + compteurs gacha permanents (totalEver, fusionCopies) qui portent les bonus d'éléments
+         * et de collection de raretés.
+         */
+        const val CURRENT_VERSION = 3
 
         fun fromJson(json: String): GamesSyncFile {
             val j = JSONObject(json)
