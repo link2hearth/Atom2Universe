@@ -214,13 +214,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">Deget Divin</string>
     <string name="big_bang_bonus_star_core">Miez Stelar</string>
-    <string name="big_bang_bonus_proton_accel">Accelerator de Protoni</string>
-    <string name="big_bang_bonus_fusion_reactor">Reactor de Fuziune</string>
-    <string name="big_bang_bonus_hadron_collider">Colizor de Hadroni</string>
-    <string name="big_bang_bonus_proton_injector">Injector de Protoni</string>
-    <string name="big_bang_bonus_plasma_catalyst">Catalizator de Plasmă</string>
-    <string name="big_bang_bonus_synchrotron">Sincrotron</string>
-    <string name="big_bang_bonus_effect">+%d%% per cumpărare</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Reduce prețul Degetului Divin — cumulabil fără limită</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Reduce prețul Miezului Stelar — cumulabil fără limită</string>
     <string name="big_bang_bonus_level">Nv. %d</string>
     <string name="big_bang_bonus_level_arrow">Nv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -265,6 +260,4 @@
     <string name="neutrino_info_note_time">după timpul de joc</string>
     <string name="neutrino_info_note_distance">după distanță</string>
     <string name="neutrino_info_note_betting">după miza ta</string>
-    <string name="big_bang_bonus_spacetime">Compresia spațiu-timp</string>
-    <string name="big_bang_bonus_effect_spacetime">Încetinește creșterea prețului pentru Deget Divin și Miez Stelar</string>
 </resources>

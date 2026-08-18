@@ -212,13 +212,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">Godsvinger</string>
     <string name="big_bang_bonus_star_core">Sterrenkern</string>
-    <string name="big_bang_bonus_proton_accel">Protonenversneller</string>
-    <string name="big_bang_bonus_fusion_reactor">Fusiereactor</string>
-    <string name="big_bang_bonus_hadron_collider">Hadronencollider</string>
-    <string name="big_bang_bonus_proton_injector">Protoneninjector</string>
-    <string name="big_bang_bonus_plasma_catalyst">Plasmakatalysator</string>
-    <string name="big_bang_bonus_synchrotron">Synchrotron</string>
-    <string name="big_bang_bonus_effect">+%d%% per aankoop</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Verlaagt de prijs van Godsvinger — onbeperkt stapelbaar</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Verlaagt de prijs van Sterrenkern — onbeperkt stapelbaar</string>
     <string name="big_bang_bonus_level">Nv. %d</string>
     <string name="big_bang_bonus_level_arrow">Nv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -264,6 +259,4 @@
     <string name="neutrino_info_note_time">naar speeltijd</string>
     <string name="neutrino_info_note_distance">naar afstand</string>
     <string name="neutrino_info_note_betting">naar je inzet</string>
-    <string name="big_bang_bonus_spacetime">Ruimtetijd-compressie</string>
-    <string name="big_bang_bonus_effect_spacetime">Vertraagt de prijsstijging van Godsvinger en Sterrenkern</string>
 </resources>

@@ -212,13 +212,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">Tanrı Parmağı</string>
     <string name="big_bang_bonus_star_core">Yıldız Çekirdeği</string>
-    <string name="big_bang_bonus_proton_accel">Proton Hızlandırıcı</string>
-    <string name="big_bang_bonus_fusion_reactor">Füzyon Reaktörü</string>
-    <string name="big_bang_bonus_hadron_collider">Hadron Çarpıştırıcısı</string>
-    <string name="big_bang_bonus_proton_injector">Proton Enjektörü</string>
-    <string name="big_bang_bonus_plasma_catalyst">Plazma Katalizörü</string>
-    <string name="big_bang_bonus_synchrotron">Sinkrotron</string>
-    <string name="big_bang_bonus_effect">+%d%% satın alma başına</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Tanrı Parmağı fiyatını düşürür — sınırsız birikir</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Yıldız Çekirdeği fiyatını düşürür — sınırsız birikir</string>
     <string name="big_bang_bonus_level">Sv. %d</string>
     <string name="big_bang_bonus_level_arrow">Sv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -264,6 +259,4 @@
     <string name="neutrino_info_note_time">oyun süresine göre</string>
     <string name="neutrino_info_note_distance">mesafeye göre</string>
     <string name="neutrino_info_note_betting">bahsinize göre</string>
-    <string name="big_bang_bonus_spacetime">Uzay-Zaman Sıkıştırması</string>
-    <string name="big_bang_bonus_effect_spacetime">Tanrı Parmağı ve Yıldız Çekirdeği fiyat artışını yavaşlatır</string>
 </resources>

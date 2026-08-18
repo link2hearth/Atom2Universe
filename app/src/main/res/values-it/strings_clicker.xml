@@ -212,13 +212,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">Dito Divino</string>
     <string name="big_bang_bonus_star_core">Nucleo Stellare</string>
-    <string name="big_bang_bonus_proton_accel">Acceleratore di Protoni</string>
-    <string name="big_bang_bonus_fusion_reactor">Reattore a Fusione</string>
-    <string name="big_bang_bonus_hadron_collider">Collisore di Adroni</string>
-    <string name="big_bang_bonus_proton_injector">Iniettore di Protoni</string>
-    <string name="big_bang_bonus_plasma_catalyst">Catalizzatore al Plasma</string>
-    <string name="big_bang_bonus_synchrotron">Sincrotrone</string>
-    <string name="big_bang_bonus_effect">+%d%% per acquisto</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Riduce il prezzo del Dito Divino — cumulabile senza limiti</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Riduce il prezzo del Nucleo Stellare — cumulabile senza limiti</string>
     <string name="big_bang_bonus_level">Lv. %d</string>
     <string name="big_bang_bonus_level_arrow">Lv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -264,6 +259,4 @@
     <string name="neutrino_info_note_time">in base al tempo di gioco</string>
     <string name="neutrino_info_note_distance">in base alla distanza</string>
     <string name="neutrino_info_note_betting">in base alla puntata</string>
-    <string name="big_bang_bonus_spacetime">Compressione dello spaziotempo</string>
-    <string name="big_bang_bonus_effect_spacetime">Rallenta la crescita del prezzo di Dito Divino e Nucleo Stellare</string>
 </resources>

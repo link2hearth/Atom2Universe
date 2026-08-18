@@ -211,13 +211,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">God Finger</string>
     <string name="big_bang_bonus_star_core">Star Core</string>
-    <string name="big_bang_bonus_proton_accel">Akselerator Proton</string>
-    <string name="big_bang_bonus_fusion_reactor">Reaktor Fusi</string>
-    <string name="big_bang_bonus_hadron_collider">Kolider Hadron</string>
-    <string name="big_bang_bonus_proton_injector">Injektor Proton</string>
-    <string name="big_bang_bonus_plasma_catalyst">Katalis Plasma</string>
-    <string name="big_bang_bonus_synchrotron">Sinkrotron</string>
-    <string name="big_bang_bonus_effect">+%d%% per pembelian</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Menurunkan harga God Finger — bertumpuk tanpa batas</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Menurunkan harga Star Core — bertumpuk tanpa batas</string>
     <string name="big_bang_bonus_level">Lv. %d</string>
     <string name="big_bang_bonus_level_arrow">Lv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -263,6 +258,4 @@
     <string name="neutrino_info_note_time">menurut waktu bermain</string>
     <string name="neutrino_info_note_distance">menurut jarak</string>
     <string name="neutrino_info_note_betting">menurut taruhan Anda</string>
-    <string name="big_bang_bonus_spacetime">Kompresi Ruang-Waktu</string>
-    <string name="big_bang_bonus_effect_spacetime">Memperlambat kenaikan harga God Finger dan Star Core</string>
 </resources>

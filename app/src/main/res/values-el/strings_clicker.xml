@@ -212,13 +212,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">Θεϊκό Δάχτυλο</string>
     <string name="big_bang_bonus_star_core">Πυρήνας Αστεριού</string>
-    <string name="big_bang_bonus_proton_accel">Επιταχυντής Πρωτονίων</string>
-    <string name="big_bang_bonus_fusion_reactor">Αντιδραστήρας Σύντηξης</string>
-    <string name="big_bang_bonus_hadron_collider">Επιταχυντής Αδρονίων</string>
-    <string name="big_bang_bonus_proton_injector">Εγχυτήρας Πρωτονίων</string>
-    <string name="big_bang_bonus_plasma_catalyst">Καταλύτης Πλάσματος</string>
-    <string name="big_bang_bonus_synchrotron">Συγχροτρόνιο</string>
-    <string name="big_bang_bonus_effect">+%d%% ανά αγορά</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Μειώνει την τιμή του Θεϊκού Δαχτύλου — σωρεύεται χωρίς όριο</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Μειώνει την τιμή του Πυρήνα Αστεριού — σωρεύεται χωρίς όριο</string>
     <string name="big_bang_bonus_level">Επ. %d</string>
     <string name="big_bang_bonus_level_arrow">Επ. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -264,6 +259,4 @@
     <string name="neutrino_info_note_time">ανάλογα με τον χρόνο παιχνιδιού</string>
     <string name="neutrino_info_note_distance">ανάλογα με την απόσταση</string>
     <string name="neutrino_info_note_betting">ανάλογα με το ποντάρισμά σας</string>
-    <string name="big_bang_bonus_spacetime">Συμπίεση Χωροχρόνου</string>
-    <string name="big_bang_bonus_effect_spacetime">Επιβραδύνει την αύξηση τιμής για Θεϊκό Δάχτυλο και Πυρήνας Αστεριού</string>
 </resources>

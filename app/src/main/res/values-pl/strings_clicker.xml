@@ -214,13 +214,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">Boski Palec</string>
     <string name="big_bang_bonus_star_core">Rdzeń Gwiazdy</string>
-    <string name="big_bang_bonus_proton_accel">Akcelerator Protonów</string>
-    <string name="big_bang_bonus_fusion_reactor">Reaktor Fuzyjny</string>
-    <string name="big_bang_bonus_hadron_collider">Zderzacz Hadronów</string>
-    <string name="big_bang_bonus_proton_injector">Inżektor Protonów</string>
-    <string name="big_bang_bonus_plasma_catalyst">Katalizator Plazmy</string>
-    <string name="big_bang_bonus_synchrotron">Synchrotron</string>
-    <string name="big_bang_bonus_effect">+%d%% za zakup</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Obniża cenę Boskiego Palca — kumuluje się bez limitu</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Obniża cenę Rdzenia Gwiazdy — kumuluje się bez limitu</string>
     <string name="big_bang_bonus_level">Poz. %d</string>
     <string name="big_bang_bonus_level_arrow">Poz. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -266,6 +261,4 @@
     <string name="neutrino_info_note_time">wg czasu gry</string>
     <string name="neutrino_info_note_distance">wg dystansu</string>
     <string name="neutrino_info_note_betting">wg twojego zakładu</string>
-    <string name="big_bang_bonus_spacetime">Kompresja czasoprzestrzeni</string>
-    <string name="big_bang_bonus_effect_spacetime">Spowalnia wzrost ceny Boskiego Palca i Rdzenia Gwiazdy</string>
 </resources>

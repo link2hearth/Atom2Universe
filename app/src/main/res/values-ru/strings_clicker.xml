@@ -214,13 +214,8 @@
     <string name="big_bang_btn_open">💥 Большой взрыв</string>
     <string name="big_bang_bonus_god_finger">Перст Бога</string>
     <string name="big_bang_bonus_star_core">Ядро звезды</string>
-    <string name="big_bang_bonus_proton_accel">Ускоритель протонов</string>
-    <string name="big_bang_bonus_fusion_reactor">Термоядерный реактор</string>
-    <string name="big_bang_bonus_hadron_collider">Адронный коллайдер</string>
-    <string name="big_bang_bonus_proton_injector">Инжектор протонов</string>
-    <string name="big_bang_bonus_plasma_catalyst">Плазменный катализатор</string>
-    <string name="big_bang_bonus_synchrotron">Синхротрон</string>
-    <string name="big_bang_bonus_effect">+%d%% за покупку</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Снижает цену Перста Бога — складывается без ограничений</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Снижает цену Ядра звезды — складывается без ограничений</string>
     <string name="big_bang_bonus_level">Ур. %d</string>
     <string name="big_bang_bonus_level_arrow">Ур. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
@@ -266,6 +261,4 @@
     <string name="neutrino_info_note_time">по времени игры</string>
     <string name="neutrino_info_note_distance">по дистанции</string>
     <string name="neutrino_info_note_betting">по вашей ставке</string>
-    <string name="big_bang_bonus_spacetime">Сжатие пространства-времени</string>
-    <string name="big_bang_bonus_effect_spacetime">Замедляет рост цены Перста Бога и Ядра звезды</string>
 </resources>
