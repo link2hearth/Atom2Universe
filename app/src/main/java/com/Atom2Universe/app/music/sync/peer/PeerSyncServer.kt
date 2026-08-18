@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.Atom2Universe.app.music.data.MusicDatabase
 import com.Atom2Universe.app.music.sync.DeviceIdentity
+import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
 import com.Atom2Universe.app.music.sync.model.SyncLyricsEntry
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
@@ -100,7 +101,7 @@ class PeerSyncServer(private val context: Context, val port: Int = PORT) {
         val db = MusicDatabase.getInstance(context)
         val (latestEvent, latestLyrics) = runBlocking {
             Pair(
-                db.listenEventDao().getLatestTimestamp() ?: 0L,
+                db.listenEventDao().getLatestTimestampForDevice(deviceId) ?: 0L,
                 db.lyricsDao().getLatestModifiedTimestamp() ?: 0L
             )
         }
@@ -140,22 +141,7 @@ class PeerSyncServer(private val context: Context, val port: Int = PORT) {
                 .getLocalEventsSince(deviceId, since)
                 .take(MAX_EVENTS_PER_REQUEST)
         }
-        val arr = JSONArray()
-        for (e in events) {
-            arr.put(JSONObject().apply {
-                put("uuid", e.uuid)
-                put("trackKey", e.trackKey)
-                put("deviceId", e.deviceId)
-                put("listenedAt", e.listenedAt)
-                put("durationListenedMs", e.durationListenedMs)
-                put("trackDurationMs", e.trackDurationMs)
-                put("title", e.title)
-                put("artist", e.artist)
-                put("album", e.album)
-                put("isMigrated", e.isMigrated)
-            })
-        }
-        return arr.toString()
+        return ListenEventsSyncFile.encodeArray(events).toString()
     }
 
     private fun writeResponse(writer: PrintWriter, code: Int, status: String, body: String) {

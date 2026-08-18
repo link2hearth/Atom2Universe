@@ -1,10 +1,11 @@
 package com.Atom2Universe.app.music.sync.peer
 
 import android.util.Log
-import com.Atom2Universe.app.music.MusicPlayCountManager
 import com.Atom2Universe.app.music.data.ListenEvent
 import com.Atom2Universe.app.music.data.MusicDatabase
+import com.Atom2Universe.app.music.sync.algorithm.ListenEventsMerger
 import com.Atom2Universe.app.music.sync.algorithm.LyricsMerger
+import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
 import com.Atom2Universe.app.music.sync.model.LyricsSyncFile
 import com.Atom2Universe.app.music.sync.model.SyncLyricsEntry
 import kotlinx.coroutines.Dispatchers
@@ -36,8 +37,7 @@ object PeerSyncClient {
                 val peerDeviceId = info.optString("deviceId", "")
 
                 val dao = MusicDatabase.getInstance(context).listenEventDao()
-                val ourLatestFromPeer = dao.getLocalEventsSince(peerDeviceId, 0L)
-                    .maxOfOrNull { it.listenedAt } ?: 0L
+                val ourLatestFromPeer = dao.getLatestTimestampForDevice(peerDeviceId) ?: 0L
 
                 if (peerLatest <= ourLatestFromPeer) {
                     Log.d(TAG, "Peer ${peer.deviceId.take(8)} has nothing new (peer=$peerLatest our=$ourLatestFromPeer)")
@@ -48,20 +48,12 @@ object PeerSyncClient {
                 val events = fetchEvents(peer, since = ourLatestFromPeer)
                 if (events.isEmpty()) return@withContext 0
 
-                // 3. Insérer (déduplication par UUID garantie)
-                val existingUuids = dao.getExistingUuids(events.map { it.uuid }).toHashSet()
-                val newEvents = events.filter { it.uuid !in existingUuids }
-
-                if (newEvents.isEmpty()) return@withContext 0
-
-                if (MusicPlayCountManager.isInitialized()) {
-                    MusicPlayCountManager.insertRemoteEvents(newEvents)
-                } else {
-                    dao.insertAll(newEvents)
+                // 3. Fusionner (déduplication par UUID)
+                val inserted = ListenEventsMerger.merge(context, events)
+                if (inserted > 0) {
+                    Log.i(TAG, "Synced $inserted events from ${peer.host}:${peer.port}")
                 }
-
-                Log.i(TAG, "Synced ${newEvents.size} events from ${peer.host}:${peer.port}")
-                newEvents.size
+                inserted
             } catch (e: Exception) {
                 Log.w(TAG, "Sync failed with ${peer.host}:${peer.port}", e)
                 -1
@@ -147,22 +139,7 @@ object PeerSyncClient {
             val body = conn.inputStream.bufferedReader().readText()
             conn.disconnect()
 
-            val arr = JSONArray(body)
-            (0 until arr.length()).map { i ->
-                val e = arr.getJSONObject(i)
-                ListenEvent(
-                    uuid = e.getString("uuid"),
-                    trackKey = e.getString("trackKey"),
-                    deviceId = e.getString("deviceId"),
-                    listenedAt = e.getLong("listenedAt"),
-                    durationListenedMs = e.getLong("durationListenedMs"),
-                    trackDurationMs = e.getLong("trackDurationMs"),
-                    title = e.getString("title"),
-                    artist = e.getString("artist"),
-                    album = e.getString("album"),
-                    isMigrated = e.optBoolean("isMigrated", false)
-                )
-            }
+            ListenEventsSyncFile.decodeArray(JSONArray(body))
         } catch (e: Exception) {
             Log.w(TAG, "fetchEvents failed for ${peer.host}:${peer.port}", e)
             emptyList()

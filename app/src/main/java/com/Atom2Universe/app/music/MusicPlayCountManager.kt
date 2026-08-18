@@ -10,7 +10,6 @@ import com.Atom2Universe.app.music.data.PlayCountDao
 import com.Atom2Universe.app.music.data.PlayCountEntry
 import com.Atom2Universe.app.music.model.MusicTrack
 import com.Atom2Universe.app.music.sync.DeviceIdentity
-import com.Atom2Universe.app.music.sync.SyncthingManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -196,8 +195,11 @@ object MusicPlayCountManager {
             }
         }
 
-        // Planifier un export Syncthing (débounce 2 min)
-        SyncthingManager.scheduleExport()
+        // Volontairement AUCUNE sync déclenchée ici : écouter de la musique
+        // enchaîne les appels, et chacun replanifiait un travail WorkManager.
+        // Les écoutes partent à la sync nocturne et à l'ouverture de l'app
+        // (CloudSyncManager.syncOnStartup). Seules les actions explicites
+        // — favori, paroles, playlist, EQ — déclenchent une sync immédiate.
 
         return newCount
     }
@@ -465,8 +467,8 @@ object MusicPlayCountManager {
 
     /**
      * Force le rechargement du cache depuis Room.
+     * No-op si le manager n'a pas encore été initialisé (worker de fond).
      */
-    @Suppress("unused")
     suspend fun refreshCache() {
         if (!isInitialized) return
         preloadCache()
@@ -543,30 +545,6 @@ object MusicPlayCountManager {
         val deviceId = DeviceIdentity.getDeviceId(appContext)
         return withContext(Dispatchers.IO) {
             listenEventDao.getLocalEventsSince(deviceId, sinceTimestamp)
-        }
-    }
-
-    /**
-     * Insère des événements reçus d'un autre nœud (déduplication par UUID automatique).
-     */
-    suspend fun insertRemoteEvents(events: List<ListenEvent>) {
-        if (!isInitialized || events.isEmpty()) return
-        withContext(Dispatchers.IO) {
-            listenEventDao.insertAll(events)
-            // Recalculer les play counts depuis le journal pour les tracks concernés
-            val affectedKeys = events.map { it.trackKey }.toSet()
-            cacheMutex.withLock {
-                for (key in affectedKeys) {
-                    val count = listenEventDao.getPlayCount(key)
-                    if (count > 0) {
-                        val current = dao.getByKey(key)
-                        if (current != null && count > current.playCount) {
-                            dao.update(current.copy(playCount = count, updatedAt = System.currentTimeMillis()))
-                            memoryCache[key] = count
-                        }
-                    }
-                }
-            }
         }
     }
 

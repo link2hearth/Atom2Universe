@@ -5,12 +5,10 @@ import android.util.Log
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.Atom2Universe.app.music.MusicPlayCountManager
-import com.Atom2Universe.app.music.data.ListenEvent
-import com.Atom2Universe.app.music.data.MusicDatabase
+import com.Atom2Universe.app.music.sync.algorithm.ListenEventsMerger
+import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -38,8 +36,6 @@ object SyncthingManager {
     private const val KEY_LAST_IMPORT_AT = "last_import_at"
     private const val KEY_LAST_IMPORT_COUNT = "last_import_count"
     private const val WORK_NAME = "a2u_syncthing_sync"
-    private const val FILE_PREFIX = "a2u_events_"
-    private const val FORMAT_VERSION = 1
 
     @Volatile
     private var appContext: Context? = null
@@ -91,20 +87,6 @@ object SyncthingManager {
         Log.d(TAG, "Sync export scheduled (2 min debounce)")
     }
 
-    /**
-     * Planifie un export/import immédiat (sans contrainte réseau).
-     * Utilisé au démarrage de l'app pour récupérer les changements des autres appareils.
-     */
-    fun scheduleImmediateSync() {
-        val ctx = appContext ?: return
-        val request = OneTimeWorkRequestBuilder<SyncExportWorker>().build()
-        WorkManager.getInstance(ctx).enqueueUniqueWork(
-            "${WORK_NAME}_startup",
-            ExistingWorkPolicy.KEEP,
-            request
-        )
-    }
-
     // ==================== Export ====================
 
     /**
@@ -123,38 +105,13 @@ object SyncthingManager {
         }
 
         val deviceId = DeviceIdentity.getDeviceId(context)
-        val events = MusicDatabase.getInstance(context)
-            .listenEventDao()
-            .getLocalEventsSince(deviceId, 0L)
+        val payload = ListenEventsMerger.buildPayload(context, deviceId)
 
-        val eventsArray = JSONArray()
-        for (e in events) {
-            eventsArray.put(JSONObject().apply {
-                put("uuid", e.uuid)
-                put("trackKey", e.trackKey)
-                put("deviceId", e.deviceId)
-                put("listenedAt", e.listenedAt)
-                put("durationListenedMs", e.durationListenedMs)
-                put("trackDurationMs", e.trackDurationMs)
-                put("title", e.title)
-                put("artist", e.artist)
-                put("album", e.album)
-                put("isMigrated", e.isMigrated)
-            })
-        }
-
-        val payload = JSONObject().apply {
-            put("formatVersion", FORMAT_VERSION)
-            put("deviceId", deviceId)
-            put("exportedAt", System.currentTimeMillis())
-            put("events", eventsArray)
-        }
-
-        val file = File(folder, "$FILE_PREFIX$deviceId.json")
-        file.writeText(payload.toString(2))
+        val file = File(folder, ListenEventsSyncFile.filenameFor(deviceId))
+        file.writeText(ListenEventsSyncFile.encode(payload).toString())
 
         prefs(context).edit { putLong(KEY_LAST_EXPORT_AT, System.currentTimeMillis()) }
-        Log.i(TAG, "Exported ${events.size} events → ${file.name}")
+        Log.i(TAG, "Exported ${payload.totalListenCount()} events → ${file.name}")
     }
 
     // ==================== Import ====================
@@ -169,56 +126,25 @@ object SyncthingManager {
         if (!folder.exists()) return@withContext 0
 
         val deviceId = DeviceIdentity.getDeviceId(context)
-        val listenEventDao = MusicDatabase.getInstance(context).listenEventDao()
 
         val otherFiles = folder.listFiles { f ->
-            f.name.startsWith(FILE_PREFIX)
-                    && f.name.endsWith(".json")
-                    && !f.name.contains(deviceId)
+            ListenEventsSyncFile.isForeignEventsFile(f.name, deviceId)
         } ?: return@withContext 0
 
         var totalImported = 0
 
         for (file in otherFiles) {
             try {
-                val root = JSONObject(file.readText())
-                if (root.optInt("formatVersion", 0) != FORMAT_VERSION) {
+                val payload = ListenEventsSyncFile.decode(JSONObject(file.readText()))
+                if (payload == null) {
                     Log.w(TAG, "Unknown format in ${file.name}, skipping")
                     continue
                 }
 
-                val arr = root.getJSONArray("events")
-                val incoming = ArrayList<ListenEvent>(arr.length())
-                for (i in 0 until arr.length()) {
-                    val e = arr.getJSONObject(i)
-                    incoming.add(
-                        ListenEvent(
-                            uuid = e.getString("uuid"),
-                            trackKey = e.getString("trackKey"),
-                            deviceId = e.getString("deviceId"),
-                            listenedAt = e.getLong("listenedAt"),
-                            durationListenedMs = e.getLong("durationListenedMs"),
-                            trackDurationMs = e.getLong("trackDurationMs"),
-                            title = e.getString("title"),
-                            artist = e.getString("artist"),
-                            album = e.getString("album"),
-                            isMigrated = e.optBoolean("isMigrated", false)
-                        )
-                    )
-                }
-
-                // Filtrer les UUIDs déjà présents
-                val known = listenEventDao.getExistingUuids(incoming.map { it.uuid }).toHashSet()
-                val newEvents = incoming.filter { it.uuid !in known }
-
-                if (newEvents.isNotEmpty()) {
-                    if (MusicPlayCountManager.isInitialized()) {
-                        MusicPlayCountManager.insertRemoteEvents(newEvents)
-                    } else {
-                        listenEventDao.insertAll(newEvents)
-                    }
-                    totalImported += newEvents.size
-                    Log.i(TAG, "Imported ${newEvents.size} new events from ${file.name}")
+                val imported = ListenEventsMerger.merge(context, payload)
+                if (imported > 0) {
+                    totalImported += imported
+                    Log.i(TAG, "Imported $imported new events from ${file.name}")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error reading ${file.name}", e)

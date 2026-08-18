@@ -13,8 +13,6 @@ import com.Atom2Universe.app.music.lyrics.data.LyricsEntity
 import com.Atom2Universe.app.music.lyrics.data.LyricsDao
 import com.Atom2Universe.app.music.lyrics.data.PendingLyricsUpdate
 import com.Atom2Universe.app.music.lyrics.data.PendingLyricsUpdateDao
-import com.Atom2Universe.app.music.sync.data.SyncPlayCountDelta
-import com.Atom2Universe.app.music.sync.data.SyncPlayCountDeltaDao
 import com.Atom2Universe.app.music.sync.data.SyncMetadata
 import com.Atom2Universe.app.music.sync.data.SyncMetadataDao
 import com.Atom2Universe.app.music.equalizer.data.EqPreset
@@ -34,7 +32,7 @@ import com.Atom2Universe.app.music.equalizer.data.EqSettingsDao
  * - play_counts: Compteurs d'écoutes (source de vérité)
  * - lyrics_cache: Cache des paroles récupérées
  * - pending_lyrics_updates: Écritures USLT en attente
- * - sync_play_count_deltas: Deltas de lecture pour sync cloud
+ * - listen_events: Journal immuable des écoutes (source de vérité de la sync)
  * - sync_metadata: Etat de la synchronisation cloud
  * - cached_tracks: Cache des pistes scannées pour chargement instantané
  * - pending_tag_edits: Éditions de tags en attente (quand fichier en lecture)
@@ -45,7 +43,6 @@ import com.Atom2Universe.app.music.equalizer.data.EqSettingsDao
         PlayCountEntry::class,
         LyricsEntity::class,
         PendingLyricsUpdate::class,
-        SyncPlayCountDelta::class,
         SyncMetadata::class,
         CachedTrackEntity::class,
         PendingTagEdit::class,
@@ -57,7 +54,7 @@ import com.Atom2Universe.app.music.equalizer.data.EqSettingsDao
         ListenEvent::class,
         AlbumTrackCheckEntity::class
     ],
-    version = 15,
+    version = 16,
     exportSchema = false
 )
 abstract class MusicDatabase : RoomDatabase() {
@@ -66,7 +63,6 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract fun playCountDao(): PlayCountDao
     abstract fun lyricsDao(): LyricsDao
     abstract fun pendingLyricsUpdateDao(): PendingLyricsUpdateDao
-    abstract fun syncPlayCountDeltaDao(): SyncPlayCountDeltaDao
     abstract fun syncMetadataDao(): SyncMetadataDao
     abstract fun cachedTrackDao(): CachedTrackDao
     abstract fun pendingTagEditDao(): PendingTagEditDao
@@ -528,6 +524,20 @@ abstract class MusicDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Migration 15 → 16 : suppression de la table sync_play_count_deltas.
+         *
+         * Les écoutes transitaient par des "deltas" reconstruits à la main, un
+         * système remplacé par le journal listen_events (append-only, dédupliqué
+         * par UUID) qui sert désormais aux trois transports : Google Drive,
+         * dossier Syncthing et sync LAN.
+         */
+        private val MIGRATION_15_16 = object : Migration(15, 16) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP TABLE IF EXISTS sync_play_count_deltas")
+            }
+        }
+
         fun getInstance(context: Context): MusicDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -535,7 +545,7 @@ abstract class MusicDatabase : RoomDatabase() {
                     MusicDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16)
                     .build()
                 INSTANCE = instance
                 instance

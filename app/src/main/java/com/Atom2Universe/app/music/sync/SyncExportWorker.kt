@@ -9,7 +9,7 @@ import androidx.work.WorkerParameters
  * WorkManager worker : exporte les listen_events locaux puis importe
  * ceux des autres appareils depuis le dossier Syncthing.
  * Planifié par SyncthingManager.scheduleExport() (débounce 2 min)
- * et SyncthingManager.scheduleImmediateSync() (démarrage).
+ * et par SyncWorker (sync nocturne et au démarrage de l’app).
  */
 class SyncExportWorker(
     context: Context,

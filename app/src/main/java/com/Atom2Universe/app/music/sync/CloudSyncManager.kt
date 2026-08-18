@@ -16,17 +16,14 @@ import com.Atom2Universe.app.music.MusicFavoritesManager
 import com.Atom2Universe.app.music.MusicPlaylistManager
 import com.Atom2Universe.app.stats.sync.StatsSyncManager
 import com.Atom2Universe.app.music.data.MusicDatabase
-import com.Atom2Universe.app.music.model.MusicTrack
 import com.Atom2Universe.app.music.sync.algorithm.AlbumFavoritesMerger
 import com.Atom2Universe.app.music.sync.algorithm.ArtistFavoritesMerger
 import com.Atom2Universe.app.music.sync.algorithm.FavoritesMerger
 import com.Atom2Universe.app.music.sync.algorithm.LyricsMerger
-import com.Atom2Universe.app.music.sync.algorithm.PlayCountMerger
+import com.Atom2Universe.app.music.sync.algorithm.ListenEventsMerger
 import com.Atom2Universe.app.music.sync.algorithm.PlaylistsMerger
 import com.Atom2Universe.app.music.sync.data.SyncMetadata
 import com.Atom2Universe.app.music.sync.data.SyncMetadataDao
-import com.Atom2Universe.app.music.sync.data.SyncPlayCountDelta
-import com.Atom2Universe.app.music.sync.data.SyncPlayCountDeltaDao
 import com.Atom2Universe.app.music.sync.model.AlbumFavoritesSyncFile
 import com.Atom2Universe.app.music.sync.model.ArtistFavoritesSyncFile
 import com.Atom2Universe.app.music.sync.model.DeviceInfo
@@ -40,8 +37,7 @@ import com.Atom2Universe.app.music.sync.model.SyncFavoriteEntry
 import com.Atom2Universe.app.music.sync.model.SyncLyricsEntry
 import com.Atom2Universe.app.music.sync.model.SyncEqPreset
 import com.Atom2Universe.app.music.sync.model.SyncPlaylistEntry
-import com.Atom2Universe.app.music.sync.model.PlayCountDelta
-import com.Atom2Universe.app.music.sync.model.PlayCountDeltaFile
+import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
 import com.Atom2Universe.app.music.sync.model.SyncManifest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -58,7 +54,8 @@ import java.util.concurrent.TimeUnit
  *
  * Responsibilities:
  * - Manage sync state (enabled, last sync time, device ID)
- * - Track local changes (play count deltas, favorites, lyrics)
+ * - Publier le journal d’écoutes local et importer celui des autres appareils
+ * - Track local changes (favorites, lyrics, playlists, EQ)
  * - Coordinate sync with Google Drive
  * - Schedule nightly sync via WorkManager
  */
@@ -67,6 +64,11 @@ object CloudSyncManager {
     private const val TAG = "CloudSyncManager"
     private const val WORK_NAME = "a2u_cloud_sync"
     private const val WORK_NAME_DEBOUNCED = "a2u_debounced_sync"
+
+    // Empreinte du dernier journal d'écoutes publié, pour ne pas ré-uploader à l'identique
+    private const val PREFS_SYNC_STATE = "a2u_cloud_sync_state"
+    private const val KEY_UPLOADED_EVENTS_COUNT = "uploaded_events_total"
+    private const val KEY_UPLOADED_EVENTS_LATEST = "uploaded_events_latest"
     private const val SYNC_HOUR = 3  // 3 AM
 
     // Instant sync configuration
@@ -75,14 +77,11 @@ object CloudSyncManager {
 
     private lateinit var appContext: Context
     private lateinit var syncMetadataDao: SyncMetadataDao
-    private lateinit var syncDeltaDao: SyncPlayCountDeltaDao
 
     private var isInitialized = false
     // Sync state
     @Volatile
     private var isSyncInProgress = false
-
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
     /**
      * Initializes the CloudSyncManager.
@@ -94,7 +93,6 @@ object CloudSyncManager {
         appContext = context.applicationContext
         val db = MusicDatabase.getInstance(appContext)
         syncMetadataDao = db.syncMetadataDao()
-        syncDeltaDao = db.syncPlayCountDeltaDao()
 
         // Ensure device is registered
         ensureDeviceRegistered()
@@ -136,84 +134,22 @@ object CloudSyncManager {
 
     /**
      * Enables or disables sync.
-     * When enabling for the first time, creates baseline deltas for all existing play counts.
+     *
+     * Aucune "baseline" à construire : les écoutes vivent dans le journal
+     * listen_events, qui contient déjà tout l'historique (la migration
+     * one-shot de MusicPlayCountManager y a converti les earnedPlayCount).
+     * Le premier export publiera donc l'historique complet.
      */
     suspend fun setSyncEnabled(enabled: Boolean) {
-        val wasEnabled = syncMetadataDao.isSyncEnabled() == true
-        val lastSync = syncMetadataDao.getLastSyncTimestamp() ?: 0
-
         syncMetadataDao.setSyncEnabled(enabled)
 
         if (enabled) {
-            // If enabling sync and we've never synced before, create baseline deltas
-            // for all existing play counts so they can be uploaded
-            if (!wasEnabled && lastSync == 0L) {
-                createBaselineDeltas()
-            }
             scheduleNightlySync()
         } else {
             cancelScheduledSync()
             cancelDebouncedSync()
         }
-        Log.d(TAG, "Sync enabled: $enabled (wasEnabled: $wasEnabled, lastSync: $lastSync)")
-    }
-
-    /**
-     * Creates baseline deltas for all existing play counts.
-     * Called ONCE when sync is enabled for the first time to ensure
-     * existing plays can be synced to other devices.
-     *
-     * IMPORTANT: Utilise earnedPlayCount (écoutes sur cet appareil) et NON playCount
-     * (qui inclut les imports POPM). Cela évite le doublement quand un MP3 avec POPM
-     * est copié sur un nouvel appareil.
-     *
-     * NOTE: Cette méthode vérifie le flag baselineDeltasCreated pour s'assurer
-     * qu'elle n'est appelée qu'UNE SEULE FOIS. Sinon, les deltas seraient recréés
-     * à chaque sync (après deleteAll()), causant une multiplication des compteurs.
-     */
-    private suspend fun createBaselineDeltas() = withContext(Dispatchers.IO) {
-        try {
-            // Vérifier si les baseline deltas ont déjà été créés
-            if (syncMetadataDao.areBaselineDeltasCreated() == true) {
-                Log.d(TAG, "Baseline deltas already created, skipping")
-                return@withContext
-            }
-
-            val db = MusicDatabase.getInstance(appContext)
-            val playCountDao = db.playCountDao()
-            // Utilise getAllWithEarnedPlayCount pour n'inclure QUE les écoutes locales
-            val existingCounts = playCountDao.getAllWithEarnedPlayCount()
-
-            if (existingCounts.isEmpty()) {
-                // Même si pas de deltas à créer, marquer comme fait pour éviter rappels inutiles
-                syncMetadataDao.markBaselineDeltasCreated()
-                return@withContext
-            }
-
-            var createdCount = 0
-            for (entry in existingCounts) {
-                val existingDelta = syncDeltaDao.getByKey(entry.metadataKey)
-                if (existingDelta == null && entry.earnedPlayCount > 0) {
-                    syncDeltaDao.insert(
-                        SyncPlayCountDelta(
-                            metadataKey = entry.metadataKey,
-                            title = entry.title,
-                            artist = entry.artist,
-                            album = entry.album,
-                            delta = entry.earnedPlayCount,  // Utilise earnedPlayCount, pas playCount
-                            updatedAt = System.currentTimeMillis()
-                        )
-                    )
-                    createdCount++
-                }
-            }
-
-            // Marquer les baseline deltas comme créés pour ne plus les recréer
-            syncMetadataDao.markBaselineDeltasCreated()
-            Log.d(TAG, "Created baseline deltas for $createdCount tracks (using earnedPlayCount)")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error creating baseline deltas", e)
-        }
+        Log.d(TAG, "Sync enabled: $enabled")
     }
 
     /**
@@ -306,15 +242,6 @@ object CloudSyncManager {
             }
         }
         return target.timeInMillis - now.timeInMillis
-    }
-
-    /**
-     * No-op : les play counts sont désormais tracés via listen_events (SyncthingManager).
-     * Conservé pour compatibilité des appelants existants.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    suspend fun recordPlayCountDelta(metadataKey: String, track: MusicTrack) {
-        // Les écoutes sont maintenant dans listen_events → sync via SyncthingManager
     }
 
     // ==================== Instant Sync Methods ====================
@@ -448,7 +375,6 @@ object CloudSyncManager {
 
             // Phase 1: Download
             downloadManifest(client)
-            val cloudDeltas = downloadNewDeltas(client)
             val cloudFavorites = downloadFavorites(client)
             val cloudLyrics = downloadLyrics(client)
             val cloudEqPresets = downloadEqPresets(client)
@@ -457,7 +383,8 @@ object CloudSyncManager {
             val cloudArtistFavorites = downloadArtistFavorites(client)
 
             // Phase 2: Merge
-            mergePlayCounts(cloudDeltas)
+            val importedEvents = downloadAndMergeListenEvents(client)
+            Log.d(TAG, "Listen events imported: $importedEvents")
             mergeFavorites(cloudFavorites)
             mergeLyrics(cloudLyrics)
             mergeEqPresets(cloudEqPresets)
@@ -470,17 +397,7 @@ object CloudSyncManager {
             Log.d(TAG, "Artist images downloaded: $artistImagesDownloaded")
 
             // Phase 3: Upload
-            // If no deltas but we have LOCAL play counts, create baseline deltas now
-            // Note: on utilise countWithEarnedPlayCount pour ignorer les imports POPM
-            if (syncDeltaDao.count() == 0) {
-                val db = MusicDatabase.getInstance(appContext)
-                val playCountDao = db.playCountDao()
-                if (playCountDao.countWithEarnedPlayCount() > 0) {
-                    createBaselineDeltas()
-                }
-            }
-
-            uploadLocalDeltas(client)
+            uploadListenEvents(client)
             uploadFavorites(client)
             uploadLyrics(client)
             uploadEqPresets(client)
@@ -505,12 +422,6 @@ object CloudSyncManager {
 
             // Phase 4: Backup (if primary device)
             performBackupIfPrimary()
-
-            // Phase 5: Cleanup (weekly)
-            val calendar = Calendar.getInstance()
-            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                cleanupOldDeltaFiles(client)
-            }
 
             // Update sync timestamp
             syncMetadataDao.updateLastSyncTimestamp(System.currentTimeMillis())
@@ -544,37 +455,37 @@ object CloudSyncManager {
     }
 
     /**
-     * Downloads ALL play count delta files from other devices.
+     * Télécharge le journal d'écoutes des AUTRES appareils et le fusionne.
      *
-     * Important:
-     * - Downloads ALL files, not just new ones since last sync
-     * - Excludes delta files from THIS device (only merges OTHER devices' data)
-     * - The merge algorithm is idempotent: earnedPlayCount + total_cloud_deltas
-     *   This prevents double-counting when re-downloading the same files.
+     * Chaque appareil publie un unique fichier a2u_events_[deviceId].json,
+     * réécrit à chaque sync. Comme chaque écoute porte un UUID, la fusion est
+     * une union dédupliquée : re-télécharger le même fichier ne change rien,
+     * et l'ordre des appareils n'a aucune importance.
+     *
+     * @return nombre d'écoutes réellement ajoutées localement
      */
-    private suspend fun downloadNewDeltas(client: GoogleDriveAppDataClient): List<PlayCountDeltaFile> {
-        val currentDeviceId = getDeviceId()
-        val deltaFiles = client.listDeltaFiles()
-        val allDeltas = mutableListOf<PlayCountDeltaFile>()
+    private suspend fun downloadAndMergeListenEvents(client: GoogleDriveAppDataClient): Int {
+        val selfDeviceId = DeviceIdentity.getDeviceId(appContext)
+        val files = client.listFilesWithPrefix(ListenEventsSyncFile.FILE_PREFIX)
+        var imported = 0
 
-        for (filename in deltaFiles) {
+        for (filename in files) {
+            if (!ListenEventsSyncFile.isForeignEventsFile(filename, selfDeviceId)) continue
             try {
                 val content = client.readJsonFile(filename) ?: continue
-                val deltaFile = PlayCountDeltaFile.fromJson(JSONObject(content))
-
-                // Skip our own delta files - we only want OTHER devices' deltas
-                if (deltaFile.deviceId == currentDeviceId) continue
-
-                // Download ALL delta files from other devices (no timestamp filter)
-                // The merge algorithm uses earnedPlayCount + cloud_total which is idempotent
-                allDeltas.add(deltaFile)
+                val payload = ListenEventsSyncFile.decode(JSONObject(content))
+                if (payload == null) {
+                    Log.w(TAG, "Unknown format in $filename, skipping")
+                    continue
+                }
+                imported += ListenEventsMerger.merge(appContext, payload)
             } catch (e: Exception) {
-                Log.e(TAG, "Error parsing delta file: $filename", e)
+                Log.e(TAG, "Error parsing listen events file: $filename", e)
             }
         }
 
-        Log.d(TAG, "Downloaded ${allDeltas.size} delta files from other devices")
-        return allDeltas
+        Log.d(TAG, "Listen events: read ${files.size} device file(s), imported $imported new")
+        return imported
     }
 
     /**
@@ -609,14 +520,6 @@ object CloudSyncManager {
         } else {
             LyricsSyncFile.empty()
         }
-    }
-
-    /**
-     * Merges cloud play counts with local data.
-     */
-    private suspend fun mergePlayCounts(cloudDeltas: List<PlayCountDeltaFile>) {
-        if (cloudDeltas.isEmpty()) return
-        PlayCountMerger.merge(appContext, cloudDeltas)
     }
 
     /**
@@ -876,74 +779,54 @@ object CloudSyncManager {
     }
 
     /**
-     * Uploads local deltas to Google Drive.
-     * IMPORTANT: If a delta file for today already exists, MERGES with it instead of overwriting.
-     * This prevents data loss when syncing multiple times per day.
+     * Publie le journal d'écoutes de CET appareil sur Drive.
+     *
+     * Un seul fichier par appareil, réécrit intégralement à chaque sync
+     * (a2u_events_[deviceId].json). Pas de fichier journalier à accumuler
+     * ni à nettoyer : l'appareil est toujours seul à écrire le sien, donc
+     * aucun conflit d'écriture n'est possible.
      */
-    private suspend fun uploadLocalDeltas(client: GoogleDriveAppDataClient) {
-        val localDeltas = syncDeltaDao.getAll()
-        if (localDeltas.isEmpty()) return
+    private suspend fun uploadListenEvents(client: GoogleDriveAppDataClient) {
+        val deviceId = DeviceIdentity.getDeviceId(appContext)
+        val payload = ListenEventsMerger.buildPayload(appContext, deviceId)
 
-        val deviceId = getDeviceId()
-        val today = dateFormat.format(Date())
-        val filename = PlayCountDeltaFile.generateFilename(deviceId, today)
-
-        // Read existing file for today (if any) to MERGE instead of overwrite
-        val existingDeltas = mutableMapOf<String, PlayCountDelta>()
-        try {
-            val existingContent = client.readJsonFile(filename)
-            if (existingContent != null) {
-                val existingFile = PlayCountDeltaFile.fromJson(JSONObject(existingContent))
-                // Only merge if it's from the same device (safety check)
-                if (existingFile.deviceId == deviceId) {
-                    for (delta in existingFile.deltas) {
-                        existingDeltas[delta.key] = delta
-                    }
-                    Log.d(TAG, "Found existing delta file for today with ${existingDeltas.size} entries, will merge")
-                }
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not read existing delta file (may not exist yet)", e)
+        val total = payload.totalListenCount()
+        if (total == 0L) {
+            Log.d(TAG, "No local listen events to upload")
+            return
         }
 
-        // Merge local deltas with existing ones (ADD the counts)
-        for (localDelta in localDeltas) {
-            val existing = existingDeltas[localDelta.metadataKey]
-            if (existing != null) {
-                // Track already exists in today's file - ADD the deltas
-                existingDeltas[localDelta.metadataKey] = PlayCountDelta(
-                    key = localDelta.metadataKey,
-                    artist = localDelta.artist,
-                    title = localDelta.title,
-                    album = localDelta.album,
-                    delta = existing.delta + localDelta.delta  // SUM!
-                )
-            } else {
-                // New track for today
-                existingDeltas[localDelta.metadataKey] = PlayCountDelta(
-                    key = localDelta.metadataKey,
-                    artist = localDelta.artist,
-                    title = localDelta.title,
-                    album = localDelta.album,
-                    delta = localDelta.delta
-                )
-            }
+        // Le fichier est réécrit en entier à chaque fois : on saute l'upload si le
+        // journal n'a pas bougé depuis la dernière publication. Le journal étant
+        // append-only, le total et la date de la plus récente suffisent à le dire.
+        val latestAt = payload.events.maxOfOrNull { it.listenedAt }
+            ?: payload.archive.maxOfOrNull { it.lastAt }
+            ?: 0L
+        val prefs = appContext.getSharedPreferences(PREFS_SYNC_STATE, Context.MODE_PRIVATE)
+        if (prefs.getLong(KEY_UPLOADED_EVENTS_COUNT, -1L) == total &&
+            prefs.getLong(KEY_UPLOADED_EVENTS_LATEST, -1L) == latestAt
+        ) {
+            Log.d(TAG, "Listen events unchanged since last upload ($total), skipping")
+            return
         }
 
-        val deltaFile = PlayCountDeltaFile(
-            deviceId = deviceId,
-            date = today,
-            createdAt = System.currentTimeMillis(),
-            deltas = existingDeltas.values.toList()
-        )
+        val filename = ListenEventsSyncFile.filenameFor(deviceId)
+        val body = ListenEventsSyncFile.encode(payload).toString()
+        val success = client.writeJsonFile(filename, body)
 
-        val success = client.writeJsonFile(filename, deltaFile.toJson().toString())
-        if (success == true) {
-            syncDeltaDao.deleteAll()
-            syncMetadataDao.updateLastUploadedDeltaDate(today)
-            Log.d(TAG, "Uploaded ${existingDeltas.size} deltas (merged with existing)")
+        if (success) {
+            prefs.edit()
+                .putLong(KEY_UPLOADED_EVENTS_COUNT, total)
+                .putLong(KEY_UPLOADED_EVENTS_LATEST, latestAt)
+                .apply()
+            Log.d(
+                TAG,
+                "Uploaded $total listen events → $filename " +
+                        "(${payload.events.size} détaillées, ${payload.archive.size} morceaux résumés, " +
+                        "${body.length / 1024} Ko)"
+            )
         } else {
-            Log.e(TAG, "Failed to upload deltas")
+            Log.e(TAG, "Failed to upload listen events")
         }
     }
 
@@ -1609,7 +1492,7 @@ object CloudSyncManager {
         updatedDevices[deviceId] = DeviceInfo(
             name = metadata?.deviceName ?: "Unknown",
             lastSeen = System.currentTimeMillis(),
-            lastDeltaDate = metadata?.lastUploadedDeltaDate
+            lastDeltaDate = null  // hérité de l'ancien système de deltas, plus alimenté
         )
 
         val updatedManifest = existing.copy(
@@ -1619,99 +1502,6 @@ object CloudSyncManager {
 
         client.writeJsonFile("sync_manifest.json", updatedManifest.toJson().toString())
         Log.d(TAG, "Updated manifest")
-    }
-
-    /**
-     * Intelligently cleans up old delta files.
-     *
-     * Instead of blindly deleting files older than X days, this method:
-     * 1. Reads the manifest to find all "active" devices (seen in last 60 days)
-     * 2. Finds the MINIMUM lastSeen timestamp among active devices
-     * 3. Only deletes delta files whose createdAt < minimum lastSeen
-     *
-     * This ensures we NEVER delete a delta file that hasn't been merged by all devices.
-     * A device offline for 59 days can still catch up when it reconnects.
-     *
-     * Fallback: If no devices found or error, uses 60 days as safety threshold.
-     */
-    private suspend fun cleanupOldDeltaFiles(client: GoogleDriveAppDataClient) {
-        try {
-            // Read manifest to get device info
-            val manifestJson = client.readJsonFile("sync_manifest.json")
-            val manifest = if (manifestJson != null) {
-                try {
-                    SyncManifest.fromJson(JSONObject(manifestJson))
-                } catch (_: Exception) {
-                    null
-                }
-            } else null
-
-            val now = System.currentTimeMillis()
-            val sixtyDaysMs = 60L * 24 * 60 * 60 * 1000
-
-            // Find active devices (seen in last 60 days)
-            val activeDevices = manifest?.devices?.filter { (_, info) ->
-                (now - info.lastSeen) < sixtyDaysMs
-            } ?: emptyMap()
-
-            if (activeDevices.isEmpty()) {
-                // No active devices found - use fallback (60 days)
-                Log.d(TAG, "No active devices in manifest, using 60-day fallback")
-                val deletedCount = client.deleteOldFiles("playcounts_device_", 60)
-                if (deletedCount > 0) {
-                    Log.d(TAG, "Cleaned up $deletedCount old delta files (fallback)")
-                }
-                return
-            }
-
-            // Find the MINIMUM lastSeen among active devices
-            // This is the safe threshold - all active devices have synced since this time
-            val minLastSeen = activeDevices.values.minOfOrNull { it.lastSeen } ?: 0L
-
-            if (minLastSeen == 0L) {
-                Log.d(TAG, "Could not determine safe cleanup threshold, skipping cleanup")
-                return
-            }
-
-            // List all delta files and check each one
-            val deltaFiles = client.listDeltaFiles()
-            var deletedCount = 0
-
-            for (filename in deltaFiles) {
-                try {
-                    val content = client.readJsonFile(filename) ?: continue
-                    val deltaFile = PlayCountDeltaFile.fromJson(JSONObject(content))
-
-                    // Only delete if createdAt < minLastSeen (all active devices have merged it)
-                    if (deltaFile.createdAt < minLastSeen) {
-                        val deleted = client.deleteFile(filename)
-                        if (deleted) {
-                            deletedCount++
-                            Log.d(TAG, "Deleted delta file: $filename (createdAt=${deltaFile.createdAt} < minLastSeen=$minLastSeen)")
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error checking delta file $filename", e)
-                }
-            }
-
-            if (deletedCount > 0) {
-                Log.d(TAG, "Smart cleanup: deleted $deletedCount delta files (all devices have merged them)")
-            } else {
-                Log.d(TAG, "Smart cleanup: no files to delete (some devices may not have synced yet)")
-            }
-
-            // Also log active device status for debugging
-            Log.d(TAG, "Active devices (${activeDevices.size}): ${activeDevices.keys.joinToString()}")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during smart cleanup", e)
-            // Fallback to simple cleanup on error
-            val deletedCount = client.deleteOldFiles("playcounts_device_", 60)
-            if (deletedCount > 0) {
-                Log.d(TAG, "Fallback cleanup: deleted $deletedCount old delta files")
-            }
-        }
     }
 
     /**
@@ -1751,16 +1541,16 @@ object CloudSyncManager {
     }
 
     /**
-     * Resets play counts after the multiplication bug.
+     * Remet les compteurs d'écoutes à plat après le bug de multiplication.
      *
-     * This function:
-     * 1. Deletes ALL delta files on Google Drive (from all devices)
-     * 2. Resets local playCount to earnedPlayCount (the real local plays)
-     * 3. Clears local delta table
-     * 4. Resets baselineDeltasCreated flag to allow fresh baseline creation
+     * 1. Supprime de Drive les fichiers de l'ANCIEN système de deltas
+     *    (playcounts_device_*.json), qui ne sont plus ni écrits ni lus
+     * 2. Remet playCount = earnedPlayCount (les vraies écoutes locales)
      *
-     * IMPORTANT: Run this on ALL devices that were affected by the bug,
-     * starting with the PRIMARY device.
+     * Les écoutes des autres appareils seront réimportées proprement à la
+     * sync suivante depuis leur journal listen_events.
+     *
+     * IMPORTANT : à lancer sur TOUS les appareils touchés par le bug.
      *
      * @return Result with counts of what was reset
      */
@@ -1793,7 +1583,7 @@ object CloudSyncManager {
             val db = MusicDatabase.getInstance(appContext)
             val playCountDao = db.playCountDao()
 
-            // Step 1: Delete all delta files on Google Drive
+            // Step 1: purge des fichiers de l'ancien système de deltas
             val deltaFiles = driveClient.listDeltaFiles()
             var deletedCloudFiles = 0
             for (filename in deltaFiles) {
@@ -1809,23 +1599,13 @@ object CloudSyncManager {
             val resetCount = beforeCount // All entries were potentially affected
             Log.d(TAG, "Reset $resetCount play count entries to earnedPlayCount")
 
-            // Step 3: Clear local delta table
-            val localDeltaCount = syncDeltaDao.count()
-            syncDeltaDao.deleteAll()
-            Log.d(TAG, "Cleared $localDeltaCount local deltas")
-
-            // Step 4: Reset baselineDeltasCreated flag
-            syncMetadataDao.resetBaselineDeltasCreated()
-            Log.d(TAG, "Reset baselineDeltasCreated flag")
-
-            // Step 5: Update POPM tags in files to match new counts
+            // Step 3: Update POPM tags in files to match new counts
             // (This will be done progressively by MusicPopmSyncManager)
 
             PlayCountResetResult(
                 success = true,
                 deletedCloudFiles = deletedCloudFiles,
-                resetPlayCounts = resetCount,
-                clearedLocalDeltas = localDeltaCount
+                resetPlayCounts = resetCount
             )
 
         } catch (e: Exception) {
@@ -1879,9 +1659,6 @@ object CloudSyncManager {
                 )
             }
 
-            // Also clear local sync deltas since cloud is wiped
-            syncDeltaDao.deleteAll()
-
             // Reset last sync timestamp
             syncMetadataDao.updateLastSyncTimestamp(0)
 
@@ -1920,7 +1697,6 @@ data class PlayCountResetResult(
     val success: Boolean,
     val deletedCloudFiles: Int = 0,
     val resetPlayCounts: Int = 0,
-    val clearedLocalDeltas: Int = 0,
     val errorMessage: String? = null
 )
 
