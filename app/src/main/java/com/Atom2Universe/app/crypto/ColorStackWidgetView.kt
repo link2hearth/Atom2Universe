@@ -200,30 +200,36 @@ class ColorStackWidgetView @JvmOverloads constructor(
     }
 
     override fun onMove(from: Int, to: Int) {
-        if (game.move(from, to)) {
-            colorStackView.refresh()
-            if (game.solved) {
-                resultText.text = "🎉 Trié !"
-                resultOverlay.visibility = VISIBLE
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                    .edit { remove(KEY_SAVE) }
-                when (game.difficulty) {
-                    ColorStackGame.Difficulty.HARD -> {
-                        val statsRepo = GameStatsRepository(context)
-                        statsRepo.recordColorStackHardWon()
-                        if (hardGameStartMs > 0L) {
-                            statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
-                        }
-                        hardGameStartMs = 0L
-                        NeutrinoRepository(context).addBalance(7)
+        if (game.move(from, to)) afterMove()
+    }
+
+    override fun onMoveGroup(from: Int, to: Int) {
+        if (game.moveGroup(from, to) > 0) afterMove()
+    }
+
+    private fun afterMove() {
+        colorStackView.refresh()
+        if (game.solved) {
+            resultText.text = "🎉 Trié !"
+            resultOverlay.visibility = VISIBLE
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit { remove(KEY_SAVE) }
+            when (game.difficulty) {
+                ColorStackGame.Difficulty.HARD -> {
+                    val statsRepo = GameStatsRepository(context)
+                    statsRepo.recordColorStackHardWon()
+                    if (hardGameStartMs > 0L) {
+                        statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                     }
-                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(context).addBalance(3)
-                    ColorStackGame.Difficulty.EASY -> NeutrinoRepository(context).addBalance(1)
-                    else -> Unit
+                    hardGameStartMs = 0L
+                    NeutrinoRepository(context).addBalance(7)
                 }
-            } else {
-                persistGame()
+                ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(context).addBalance(3)
+                ColorStackGame.Difficulty.EASY -> NeutrinoRepository(context).addBalance(1)
+                else -> Unit
             }
+        } else {
+            persistGame()
         }
     }
 

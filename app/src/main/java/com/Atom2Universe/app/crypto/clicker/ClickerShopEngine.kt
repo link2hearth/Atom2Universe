@@ -17,15 +17,16 @@ internal object ClickerShopEngine {
     private val RATIO_B = 9091.0 / 899100.0
     private val RATIO_C = -1.0 / 9890100.0
 
-    // Rabais exponentiel borné (bonus Big Bang « Compression de l'espace-temps ») :
-    // retranche une pente au log du prix au-delà d'un seuil. Borné sous RATIO_B pour
-    // garantir un prix toujours croissant (jamais gratuit), donc le mur subsiste, adouci.
-    private const val DISCOUNT_THRESHOLD = 100        // pas d'effet au niveau <= 100
-    private const val DISCOUNT_STEP = 0.0001          // réduction de pente par niveau Big Bang
-    private const val DISCOUNT_MAX = 0.007            // plafond (< RATIO_B), atteint à 70 niveaux
-
-    private fun slopeReduction(discountLevel: Int): Double =
-        if (discountLevel <= 0) 0.0 else minOf(discountLevel * DISCOUNT_STEP, DISCOUNT_MAX)
+    // Réduction de prix Big Bang ILLIMITÉE : chaque niveau retranche une constante au log
+    // du prix (= divise tout le prix par un facteur fixe). La pente du prix est inchangée
+    // (jamais d'argent infini dans une partie), mais toute la courbe descend, donc le mur
+    // recule d'un nombre fixe de niveaux. Aucun plafond : accumulable sans fin.
+    //
+    // 1 niveau de réduction ⇒ le mur recule de WALL_SHIFT_PER_LEVEL niveaux de shop.
+    // (Le coût/production grimpe d'environ RATIO_B par niveau, donc décaler le log de
+    //  WALL_SHIFT × RATIO_B repousse le mur d'autant de niveaux.)
+    private const val WALL_SHIFT_PER_LEVEL = 10.0
+    private val DISCOUNT_LOG_PER_LEVEL = WALL_SHIFT_PER_LEVEL * RATIO_B
 
     private fun effectiveIndex(level: Int): Int {
         val n = level.coerceAtLeast(0)
@@ -60,9 +61,8 @@ internal object ClickerShopEngine {
         val lb = logBonus(level)
         val lr = RATIO_A + RATIO_B * idx + RATIO_C * idx * idx
         var lc = lb + lr
-        val sr = slopeReduction(discountLevel)
-        if (sr > 0.0 && level > DISCOUNT_THRESHOLD) {
-            lc -= sr * (level - DISCOUNT_THRESHOLD)
+        if (discountLevel > 0) {
+            lc -= DISCOUNT_LOG_PER_LEVEL * discountLevel
         }
         return lc
     }

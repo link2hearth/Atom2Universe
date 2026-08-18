@@ -87,6 +87,9 @@
     <string name="news_search_button">Αναζήτηση</string>
     <string name="news_clear_button">Εκκαθάριση</string>
     <string name="news_refresh_button">Ανανέωση</string>
+    <string name="crypto_news_widget_refresh_label">Διάστημα ανανέωσης</string>
+    <string name="crypto_news_refresh_minutes">%1$d λεπτά</string>
+    <string name="crypto_news_refresh_hours">%1$d ώρ.</string>
     <string name="news_restore_hidden">Επαναφορά κρυφών</string>
     <string name="news_open_article">Άνοιγμα</string>
     <string name="news_hide_article">Απόκρυψη</string>

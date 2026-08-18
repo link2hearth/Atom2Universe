@@ -68,11 +68,10 @@ class BigBangActivity : ThemedActivity() {
 
     private fun setupBonusItem(view: View, bonus: BigBangBonus) {
         view.findViewById<TextView>(R.id.bonus_name).text   = bonusName(bonus)
-        view.findViewById<TextView>(R.id.bonus_effect).text =
-            if (bonus == BigBangBonus.SPACETIME_COMPRESSION)
-                getString(R.string.big_bang_bonus_effect_spacetime)
-            else
-                getString(R.string.big_bang_bonus_effect, bonus.effectPercent)
+        view.findViewById<TextView>(R.id.bonus_effect).text = when (bonus) {
+            BigBangBonus.GOD_FINGER_DISCOUNT -> getString(R.string.big_bang_bonus_effect_god_finger_discount)
+            BigBangBonus.STAR_CORE_DISCOUNT  -> getString(R.string.big_bang_bonus_effect_star_core_discount)
+        }
 
         view.findViewById<Button>(R.id.bonus_minus).setOnClickListener {
             val qty = pendingQty[bonus] ?: 0
@@ -125,15 +124,8 @@ class BigBangActivity : ThemedActivity() {
     private fun totalCost(): Int = pendingQty.entries.sumOf { (bonus, qty) -> bonus.tokenCost * qty }
 
     private fun bonusName(bonus: BigBangBonus): String = when (bonus) {
-        BigBangBonus.GOD_FINGER         -> "☝ " + getString(R.string.big_bang_bonus_god_finger)
-        BigBangBonus.STAR_CORE          -> "⭐ " + getString(R.string.big_bang_bonus_star_core)
-        BigBangBonus.PROTON_ACCELERATOR -> "⚡ " + getString(R.string.big_bang_bonus_proton_accel)
-        BigBangBonus.FUSION_REACTOR     -> "🔥 " + getString(R.string.big_bang_bonus_fusion_reactor)
-        BigBangBonus.HADRON_COLLIDER    -> "💠 " + getString(R.string.big_bang_bonus_hadron_collider)
-        BigBangBonus.PROTON_INJECTOR    -> "⚗ " + getString(R.string.big_bang_bonus_proton_injector)
-        BigBangBonus.PLASMA_CATALYST    -> "🌡 " + getString(R.string.big_bang_bonus_plasma_catalyst)
-        BigBangBonus.SYNCHROTRON        -> "🔄 " + getString(R.string.big_bang_bonus_synchrotron)
-        BigBangBonus.SPACETIME_COMPRESSION -> "🌀 " + getString(R.string.big_bang_bonus_spacetime)
+        BigBangBonus.GOD_FINGER_DISCOUNT -> "☝ " + getString(R.string.big_bang_bonus_god_finger)
+        BigBangBonus.STAR_CORE_DISCOUNT  -> "⭐ " + getString(R.string.big_bang_bonus_star_core)
     }
 
     private fun triggerBigBang() {

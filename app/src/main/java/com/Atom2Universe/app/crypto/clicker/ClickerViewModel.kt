@@ -445,7 +445,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
         val effective = ClickerShopEngine.effectiveBuyAmount(currentLevel, quantity)
         if (effective <= 0) return
-        val cost = ClickerShopEngine.batchCost(currentLevel, effective, bigBangEffects.costSlopeDiscountLevel)
+        val cost = ClickerShopEngine.batchCost(currentLevel, effective, costDiscountLevel(upgradeId))
         if (cost.greaterThan(s.atoms)) return
         val newLevel = currentLevel + effective
         val afterPurchase = when (upgradeId) {
@@ -478,7 +478,14 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             else        -> return LayeredNumber.zero()
         }
         val effective = ClickerShopEngine.effectiveBuyAmount(currentLevel, quantity)
-        return ClickerShopEngine.batchCost(currentLevel, effective, bigBangEffects.costSlopeDiscountLevel)
+        return ClickerShopEngine.batchCost(currentLevel, effective, costDiscountLevel(upgradeId))
+    }
+
+    /** Niveau de réduction de prix Big Bang applicable à l'upgrade du shop ciblé. */
+    private fun costDiscountLevel(upgradeId: String): Int = when (upgradeId) {
+        "godFinger" -> bigBangEffects.godFingerCostDiscountLevel
+        "starCore"  -> bigBangEffects.starCoreCostDiscountLevel
+        else        -> 0
     }
 
     fun getTotalElements(): Int = collectionStore.getTotalCopies()
@@ -525,11 +532,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     private fun computeOfflineAps(state: ClickerGameState): LayeredNumber {
         val elem = getElementBonuses()
 
-        // APS base (avec Big Bang comme dans recalcProduction)
-        var perSecond = ClickerShopEngine.bonus(state.starCoreLevel).let {
-            if (!it.isZero() && bigBangEffects.starCoreMult != 1.0) it.multiplyNumber(bigBangEffects.starCoreMult)
-            else it
-        }
+        // APS base (comme dans recalcProduction)
+        var perSecond = ClickerShopEngine.bonus(state.starCoreLevel)
         if (elem.flatAps > 0) perSecond = perSecond.add(LayeredNumber(elem.flatAps.toDouble()))
         if (elem.multAps > 0.0) perSecond = perSecond.multiplyNumber(1.0 + elem.multAps)
 
@@ -541,9 +545,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         if (state.apcToApsLevel > 0) {
             var baseApc = LayeredNumber.one()
             val cb = ClickerShopEngine.bonus(state.godFingerLevel)
-            if (!cb.isZero()) baseApc = baseApc.add(
-                if (bigBangEffects.godFingerMult != 1.0) cb.multiplyNumber(bigBangEffects.godFingerMult) else cb
-            )
+            if (!cb.isZero()) baseApc = baseApc.add(cb)
             if (elem.flatApc > 0) baseApc = baseApc.add(LayeredNumber(elem.flatApc.toDouble()))
             if (elem.multApc > 0.0) baseApc = baseApc.multiplyNumber(1.0 + elem.multApc)
             val fusionApc = fusionStore.getBonusMultApc()
@@ -551,7 +553,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             perSecond = perSecond.add(baseApc.multiplyNumber(state.apcToApsLevel * 0.01))
         }
 
-        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts, bigBangEffects)
+        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts)
         if (factoryApsBonus > 0.0) perSecond = perSecond.multiplyNumber(1.0 + factoryApsBonus)
         return perSecond
     }
@@ -703,23 +705,17 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     ): ClickerGameState {
         val elem = getElementBonuses()
 
-        // APC : base 1 + bonus shop (avec multiplicateur Big Bang) + flat éléments (H)
+        // APC : base 1 + bonus shop + flat éléments (H)
         var perClick = LayeredNumber.one()
         val clickBonus = ClickerShopEngine.bonus(state.godFingerLevel)
         if (!clickBonus.isZero()) {
-            perClick = perClick.add(
-                if (bigBangEffects.godFingerMult != 1.0) clickBonus.multiplyNumber(bigBangEffects.godFingerMult)
-                else clickBonus
-            )
+            perClick = perClick.add(clickBonus)
         }
         val bdApcShopBase = perClick
         if (elem.flatApc > 0) perClick = perClick.add(LayeredNumber(elem.flatApc.toDouble()))
 
-        // APS : bonus shop (avec multiplicateur Big Bang) + flat éléments (He)
-        var perSecond = ClickerShopEngine.bonus(state.starCoreLevel).let {
-            if (!it.isZero() && bigBangEffects.starCoreMult != 1.0) it.multiplyNumber(bigBangEffects.starCoreMult)
-            else it
-        }
+        // APS : bonus shop + flat éléments (He)
+        var perSecond = ClickerShopEngine.bonus(state.starCoreLevel)
         val bdApsShopBase = perSecond
         if (elem.flatAps > 0) perSecond = perSecond.add(LayeredNumber(elem.flatAps.toDouble()))
 
@@ -745,8 +741,8 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
 
         // Multiplicateurs usines (après conversions, avant frénésie)
-        val factoryApcBonus = FactoryEngine.computeApcBonus(state.factoryCounts, bigBangEffects)
-        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts, bigBangEffects)
+        val factoryApcBonus = FactoryEngine.computeApcBonus(state.factoryCounts)
+        val factoryApsBonus = FactoryEngine.computeApsBonus(state.factoryCounts)
         if (factoryApcBonus > 0.0) perClick  = perClick.multiplyNumber(1.0 + factoryApcBonus)
         if (factoryApsBonus > 0.0) perSecond = perSecond.multiplyNumber(1.0 + factoryApsBonus)
 

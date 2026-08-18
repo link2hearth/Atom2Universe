@@ -87,6 +87,9 @@
     <string name="news_search_button">Suchen</string>
     <string name="news_clear_button">Löschen</string>
     <string name="news_refresh_button">Aktualisieren</string>
+    <string name="crypto_news_widget_refresh_label">Aktualisierungsintervall</string>
+    <string name="crypto_news_refresh_minutes">%1$d min</string>
+    <string name="crypto_news_refresh_hours">%1$d h</string>
     <string name="news_restore_hidden">Ausgeblendete wiederherstellen</string>
     <string name="news_open_article">Öffnen</string>
     <string name="news_hide_article">Ausblenden</string>

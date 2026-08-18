@@ -87,6 +87,9 @@
     <string name="news_search_button">Cerca</string>
     <string name="news_clear_button">Cancella</string>
     <string name="news_refresh_button">Aggiorna</string>
+    <string name="crypto_news_widget_refresh_label">Intervallo di aggiornamento</string>
+    <string name="crypto_news_refresh_minutes">%1$d min</string>
+    <string name="crypto_news_refresh_hours">%1$d h</string>
     <string name="news_restore_hidden">Ripristina nascosti</string>
     <string name="news_open_article">Apri</string>
     <string name="news_hide_article">Nascondi</string>

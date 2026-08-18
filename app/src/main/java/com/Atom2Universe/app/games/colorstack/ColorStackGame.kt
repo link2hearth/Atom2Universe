@@ -65,7 +65,9 @@ class ColorStackGame {
         private set
     var initialBoard: List<List<Token>> = emptyList()
         private set
-    val history: MutableList<Pair<Int, Int>> = mutableListOf()
+    // Chaque entrée : (from, to, nombre de jetons déplacés) — 1 pour un coup simple,
+    // N pour un coup de groupe (long clic). Permet d'annuler un groupe d'un coup.
+    val history: MutableList<Triple<Int, Int, Int>> = mutableListOf()
     var solved = false
         private set
     var moves = 0
@@ -120,16 +122,48 @@ class ColorStackGame {
     fun move(from: Int, to: Int): Boolean {
         if (!canMove(from, to)) return false
         board[to].addLast(board[from].removeAt(board[from].lastIndex))
-        history.add(from to to)
+        history.add(Triple(from, to, 1))
         moves++
         solved = checkSolved()
         return true
     }
 
+    // Nombre de jetons contigus de même couleur au sommet de la colonne.
+    fun topGroupSize(col: Int): Int {
+        if (col < 0 || col >= board.size) return 0
+        val c = board[col]
+        if (c.isEmpty()) return 0
+        val topColor = c.last().colorId
+        var n = 0
+        for (i in c.indices.reversed()) {
+            if (c[i].colorId == topColor) n++ else break
+        }
+        return n
+    }
+
+    // Déplace d'un coup tous les jetons de la couleur du dessus (autant que la cible peut
+    // en accueillir). Compte pour UN seul coup. Retourne le nombre de jetons déplacés (0 si invalide).
+    fun moveGroup(from: Int, to: Int): Int {
+        if (!canMove(from, to)) return 0
+        val groupSize = topGroupSize(from)
+        val free = effectiveCapacity - board[to].size
+        val count = minOf(groupSize, free)
+        if (count <= 0) return 0
+        repeat(count) {
+            board[to].addLast(board[from].removeAt(board[from].lastIndex))
+        }
+        history.add(Triple(from, to, count))
+        moves++
+        solved = checkSolved()
+        return count
+    }
+
     fun undo(): Boolean {
         if (history.isEmpty()) return false
-        val (from, to) = history.removeAt(history.lastIndex)
-        board[from].addLast(board[to].removeAt(board[to].lastIndex))
+        val (from, to, count) = history.removeAt(history.lastIndex)
+        repeat(count) {
+            board[from].addLast(board[to].removeAt(board[to].lastIndex))
+        }
         moves = (moves - 1).coerceAtLeast(0)
         solved = false
         return true
