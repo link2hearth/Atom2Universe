@@ -33,6 +33,7 @@
 | **Hex Runner** | **1 neutrino par tranche de 15 secondes** de jeu (récompensé en fin de partie). |
 | **Match 3** | **1 neutrino par tranche de 15 secondes** de jeu (récompensé en fin de partie). |
 | **Motocross** | **1 neutrino par tranche de 500 m** parcourus (récompensé au game over, distance de la course en cours). |
+| **Cosmo Run** | **1 neutrino par tranche de 500 m** parcourus (récompensé au game over, distance de la course en cours). |
 | **Escape the Labyrinth** | À la sortie atteinte, selon la difficulté : **EASY : 2**, **MEDIUM : 5**, **HARD : 10**. **×2 si parcours parfait** (tours ≤ optimal). |
 
 ### Cas particulier — Clicker

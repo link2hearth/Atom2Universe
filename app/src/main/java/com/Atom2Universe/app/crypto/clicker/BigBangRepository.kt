@@ -28,4 +28,13 @@ class BigBangRepository(context: Context) {
 
     fun incrementBigBangCount() =
         prefs.edit { putInt("big_bang_count", getBigBangCount() + 1) }
+
+    /** Écritures directes — utilisées par la restauration d'une sauvegarde Drive. */
+    fun setUnlocked(unlocked: Boolean) = prefs.edit { putBoolean("unlocked", unlocked) }
+
+    fun setLevel(bonus: BigBangBonus, level: Int) =
+        prefs.edit { putInt(bonus.id, level.coerceAtLeast(0)) }
+
+    fun setBigBangCount(count: Int) =
+        prefs.edit { putInt("big_bang_count", count.coerceAtLeast(0)) }
 }

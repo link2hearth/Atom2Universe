@@ -30,7 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.data.MainClickerDatabase
-import com.Atom2Universe.app.news.NewsPreferences
+import com.Atom2Universe.app.news.NewsFetchInterval
 import com.Atom2Universe.app.news.NewsWidgetView
 import com.Atom2Universe.app.crypto.data.MainClickerRepository
 import com.Atom2Universe.app.util.applySystemBarsVisibility
@@ -491,6 +491,8 @@ class MainClickerActivity : ThemedActivity() {
         game2048Toggle.setOnCheckedChangeListener { _, isChecked -> onGame2048ToggleChanged(isChecked) }
 
         newsToggle.isChecked = MainClickerPreferences.isNewsWidgetEnabled(this)
+        // Avant setToggleEnabled : le premier fetch doit déjà être armé sur la bonne fréquence.
+        newsWidgetView.setFetchIntervalMs(MainClickerPreferences.getNewsFetchInterval(this).intervalMs)
         newsWidgetView.setToggleEnabled(newsToggle.isChecked)
         newsToggle.setOnCheckedChangeListener { _, isChecked -> onNewsToggleChanged(isChecked) }
         newsWidgetView.onOpenUrl = { url -> floatingWebWidget.load(url) }
@@ -1874,6 +1876,7 @@ class MainClickerActivity : ThemedActivity() {
         sudokuWidgetView.applyNumbersOpacity(MainClickerPreferences.getSudokuNumbersOpacityPercent(this))
         game2048WidgetView.applyBackgroundOpacity(MainClickerPreferences.getGame2048WidgetOpacityPercent(this))
         newsWidgetView.applyBackgroundOpacity(MainClickerPreferences.getNewsWidgetOpacityPercent(this))
+        newsWidgetView.setFetchIntervalMs(MainClickerPreferences.getNewsFetchInterval(this).intervalMs)
         solitaireWidgetView.applyBackgroundOpacity(MainClickerPreferences.getSolitaireWidgetOpacityPercent(this))
         blackjackWidgetView.applyBackgroundOpacity(MainClickerPreferences.getBlackjackWidgetOpacityPercent(this))
         colorStackWidgetView.applyBackgroundOpacity(MainClickerPreferences.getColorStackWidgetOpacityPercent(this))
@@ -2531,7 +2534,20 @@ class MainClickerActivity : ThemedActivity() {
             showCryptoWidgetPopup(anchor)
         }
         findViewById<TextView>(R.id.main_clicker_label_news).setOnClickListener { anchor ->
-            showNewsWidgetPopup(anchor)
+            showOpacityPopup(
+                anchor = anchor,
+                label1 = getString(R.string.crypto_news_widget_opacity_label),
+                getValue1 = { MainClickerPreferences.getNewsWidgetOpacityPercent(this) },
+                setValue1 = { MainClickerPreferences.setNewsWidgetOpacityPercent(this, it) },
+                applyValue1 = { newsWidgetView.applyBackgroundOpacity(it) },
+                label3 = getString(R.string.crypto_refresh_interval_section),
+                labels3 = NewsFetchInterval.entries.map { it.shortLabel },
+                getValue3 = { MainClickerPreferences.getNewsFetchIntervalIndex(this) },
+                setValue3 = { MainClickerPreferences.setNewsFetchIntervalIndex(this, it) },
+                applyValue3 = {
+                    newsWidgetView.setFetchIntervalMs(NewsFetchInterval.fromIndex(it).intervalMs)
+                }
+            )
         }
         findViewById<TextView>(R.id.main_clicker_label_solitaire).setOnClickListener { anchor ->
             showOpacityPopup(
@@ -3074,7 +3090,20 @@ class MainClickerActivity : ThemedActivity() {
         fun resolve(chosen: com.Atom2Universe.app.crypto.sync.GamesSyncFile) {
             conflictDialog.dismiss()
             lifecycleScope.launch {
+                // L'ordre est critique. stopGameLoop() se termine par une sauvegarde de
+                // l'état encore en RAM : elle doit partir AVANT que la save choisie ne
+                // soit appliquée, sinon elle l'écraserait aussitôt. Et sans le rechargement
+                // qui suit, l'autosave (toutes les 5 s) réécrirait l'ancienne partie
+                // par-dessus la sauvegarde restaurée.
+                val loopWasRunning = clickerToggle.isChecked
+                clickerViewModel.stopGameLoop()
+
                 val result = com.Atom2Universe.app.crypto.sync.GamesSyncManager.resolveConflict(chosen)
+                if (result is com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Success) {
+                    clickerViewModel.reloadFromDisk()
+                }
+                if (loopWasRunning) clickerViewModel.startGameLoop()
+
                 val msg = if (result is com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Success)
                     getString(R.string.games_sync_success)
                 else
@@ -3310,68 +3339,6 @@ class MainClickerActivity : ThemedActivity() {
         popup.showAsDropDown(anchor, 0, 4)
     }
 
-    private fun newsRefreshLabel(minutes: Int): String =
-        if (minutes < 60) getString(R.string.crypto_news_refresh_minutes, minutes)
-        else getString(R.string.crypto_news_refresh_hours, minutes / 60)
-
-    private fun showNewsWidgetPopup(anchor: View) {
-        val popupView = layoutInflater.inflate(R.layout.popup_opacity_sliders, null)
-
-        // Slider 1 : opacité du widget
-        val lbl1 = popupView.findViewById<TextView>(R.id.popup_label_1)
-        val val1 = popupView.findViewById<TextView>(R.id.popup_value_1)
-        val slider1 = popupView.findViewById<Slider>(R.id.popup_slider_1)
-
-        lbl1.text = getString(R.string.crypto_news_widget_opacity_label)
-        val currentOpacity = MainClickerPreferences.getNewsWidgetOpacityPercent(this)
-        slider1.value = currentOpacity.toFloat()
-        val1.text = getString(R.string.crypto_widget_opacity_value, currentOpacity)
-        slider1.addOnChangeListener { _, value, fromUser ->
-            if (!fromUser) return@addOnChangeListener
-            val pct = value.roundToInt()
-            MainClickerPreferences.setNewsWidgetOpacityPercent(this, pct)
-            newsWidgetView.applyBackgroundOpacity(pct)
-            val1.text = getString(R.string.crypto_widget_opacity_value, pct)
-        }
-
-        // Slider 2 : intervalle de rafraîchissement (slider à crans)
-        val container2 = popupView.findViewById<View>(R.id.popup_slider2_container)
-        val lbl2 = popupView.findViewById<TextView>(R.id.popup_label_2)
-        val val2 = popupView.findViewById<TextView>(R.id.popup_value_2)
-        val slider2 = popupView.findViewById<Slider>(R.id.popup_slider_2)
-
-        container2.visibility = View.VISIBLE
-        slider2.visibility = View.VISIBLE
-        lbl2.text = getString(R.string.crypto_news_widget_refresh_label)
-
-        val options = NewsPreferences.REFRESH_OPTIONS_MINUTES
-        slider2.valueFrom = 0f
-        slider2.valueTo = (options.size - 1).toFloat()
-        slider2.stepSize = 1f
-        val currentIdx = options.indexOf(NewsPreferences.getRefreshIntervalMinutes(this))
-            .coerceAtLeast(0)
-        slider2.value = currentIdx.toFloat()
-        val2.text = newsRefreshLabel(options[currentIdx])
-        slider2.addOnChangeListener { _, value, fromUser ->
-            if (!fromUser) return@addOnChangeListener
-            val idx = value.roundToInt().coerceIn(0, options.size - 1)
-            val minutes = options[idx]
-            NewsPreferences.setRefreshIntervalMinutes(this, minutes)
-            newsWidgetView.applyRefreshIntervalMinutes(minutes)
-            val2.text = newsRefreshLabel(minutes)
-        }
-
-        val popup = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-        popup.isOutsideTouchable = true
-        popup.elevation = 16f
-        popup.showAsDropDown(anchor, 0, 4)
-    }
-
     private fun showOpacityPopup(
         anchor: View,
         label1: String,
@@ -3381,7 +3348,12 @@ class MainClickerActivity : ThemedActivity() {
         label2: String? = null,
         getValue2: (() -> Int)? = null,
         setValue2: ((Int) -> Unit)? = null,
-        applyValue2: ((Int) -> Unit)? = null
+        applyValue2: ((Int) -> Unit)? = null,
+        label3: String? = null,
+        labels3: List<String>? = null,
+        getValue3: (() -> Int)? = null,
+        setValue3: ((Int) -> Unit)? = null,
+        applyValue3: ((Int) -> Unit)? = null
     ) {
         val popupView = layoutInflater.inflate(R.layout.popup_opacity_sliders, null)
 
@@ -3392,6 +3364,10 @@ class MainClickerActivity : ThemedActivity() {
         val lbl2 = popupView.findViewById<TextView>(R.id.popup_label_2)
         val val2 = popupView.findViewById<TextView>(R.id.popup_value_2)
         val slider2 = popupView.findViewById<Slider>(R.id.popup_slider_2)
+        val container3 = popupView.findViewById<View>(R.id.popup_slider3_container)
+        val lbl3 = popupView.findViewById<TextView>(R.id.popup_label_3)
+        val val3 = popupView.findViewById<TextView>(R.id.popup_value_3)
+        val slider3 = popupView.findViewById<Slider>(R.id.popup_slider_3)
 
         lbl1.text = label1
         val current1 = getValue1()
@@ -3418,6 +3394,30 @@ class MainClickerActivity : ThemedActivity() {
                 setValue2(pct)
                 applyValue2(pct)
                 val2.text = getString(R.string.crypto_widget_opacity_value, pct)
+            }
+        }
+
+        // Slider 3 : paliers nommés (fréquence de mise à jour du widget News…).
+        // La plage se déduit de labels3, et la valeur stockée est l'index du palier.
+        if (label3 != null && labels3 != null && labels3.isNotEmpty() &&
+            getValue3 != null && setValue3 != null && applyValue3 != null
+        ) {
+            val lastIndex = labels3.size - 1
+            container3.visibility = View.VISIBLE
+            slider3.visibility = View.VISIBLE
+            slider3.valueFrom = 0f
+            slider3.valueTo = lastIndex.toFloat()
+            slider3.stepSize = 1f
+            lbl3.text = label3
+            val current3 = getValue3().coerceIn(0, lastIndex)
+            slider3.value = current3.toFloat()
+            val3.text = labels3[current3]
+            slider3.addOnChangeListener { _, value, fromUser ->
+                if (!fromUser) return@addOnChangeListener
+                val idx = value.roundToInt().coerceIn(0, lastIndex)
+                setValue3(idx)
+                applyValue3(idx)
+                val3.text = labels3[idx]
             }
         }
 

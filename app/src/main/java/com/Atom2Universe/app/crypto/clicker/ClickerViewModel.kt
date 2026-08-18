@@ -282,6 +282,37 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /**
+     * Recharge l'état depuis le disque après qu'une source externe l'a réécrit —
+     * typiquement la restauration d'une sauvegarde Google Drive. Sans ça, l'état
+     * resté en RAM serait réécrit par-dessus au premier autosave (5 s), exactement
+     * le piège que applyPendingReset() traite pour le chemin de reset.
+     *
+     * Aucun gain hors-ligne n'est crédité : la sauvegarde vient d'être posée, le
+     * temps écoulé n'a pas été joué. Le timestamp est remis à maintenant pour que
+     * startGameLoop() n'en calcule pas non plus au redémarrage de la boucle.
+     */
+    suspend fun reloadFromDisk() {
+        val loaded = repository.load().copy(factoryCounts = factoryRepo.getAllCounts())
+
+        bigBangEffects = BigBangEngine.computeEffects(bigBangRepo)
+        cachedElementBonuses = null
+        cachedFrenzyChance = null
+
+        // Les stats d'abord : recalcProduction() s'en sert pour critUnlocked.
+        stats = statsRepository.load()
+        unlockedAchievementIds.clear()
+        unlockedAchievementIds.addAll(achievementRepository.loadUnlocked())
+
+        _state.value = recalcProduction(loaded).copy(
+            neutrinos     = neutrinoRepo.getBalance(),
+            elementTokens = elementTokenRepo.getBalance()
+        )
+
+        offlineRepo.save(System.currentTimeMillis())
+        initCompleted = true
+    }
+
     fun applyBigBangReset() {
         bigBangEffects = BigBangEngine.computeEffects(bigBangRepo)
         bigBangRepo.incrementBigBangCount()

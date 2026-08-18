@@ -16,8 +16,6 @@ android {
 
     defaultConfig {
         minSdk 24
-        versionCode 129
-        versionName "1.29"
 
         ndk {
             // Uniquement arm64 pour téléphones modernes (réduit la taille de l'APK)
