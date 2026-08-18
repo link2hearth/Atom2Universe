@@ -145,28 +145,34 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
     }
 
     override fun onMove(from: Int, to: Int) {
-        if (game.move(from, to)) {
-            colorStackView.refresh()
-            updateUI()
-            if (game.solved) {
-                statusText.text = getString(R.string.color_stack_status_won)
-                when (game.difficulty) {
-                    ColorStackGame.Difficulty.HARD -> {
-                        val statsRepo = GameStatsRepository(this)
-                        statsRepo.recordColorStackHardWon()
-                        if (hardGameStartMs > 0L) {
-                            statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
-                        }
-                        hardGameStartMs = 0L
-                        NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
+        if (game.move(from, to)) afterMove()
+    }
+
+    override fun onMoveGroup(from: Int, to: Int) {
+        if (game.moveGroup(from, to) > 0) afterMove()
+    }
+
+    private fun afterMove() {
+        colorStackView.refresh()
+        updateUI()
+        if (game.solved) {
+            statusText.text = getString(R.string.color_stack_status_won)
+            when (game.difficulty) {
+                ColorStackGame.Difficulty.HARD -> {
+                    val statsRepo = GameStatsRepository(this)
+                    statsRepo.recordColorStackHardWon()
+                    if (hardGameStartMs > 0L) {
+                        statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                     }
-                    ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
-                    ColorStackGame.Difficulty.EASY -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
-                    else -> Unit
+                    hardGameStartMs = 0L
+                    NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
                 }
+                ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
+                ColorStackGame.Difficulty.EASY -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
+                else -> Unit
             }
-            saveGame()
         }
+        saveGame()
     }
 
     override fun onColumnSelected(col: Int?) {}

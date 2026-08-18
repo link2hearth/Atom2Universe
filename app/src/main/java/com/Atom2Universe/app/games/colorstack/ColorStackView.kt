@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 
@@ -18,6 +19,8 @@ class ColorStackView @JvmOverloads constructor(
     interface OnMoveListener {
         fun onMove(from: Int, to: Int)
         fun onColumnSelected(col: Int?)
+        // Long clic : déplace d'un coup tout le groupe de jetons de la couleur du dessus.
+        fun onMoveGroup(from: Int, to: Int) {}
     }
 
     var game: ColorStackGame? = null
@@ -26,8 +29,20 @@ class ColorStackView @JvmOverloads constructor(
 
     private var selectedColumn: Int? = null
     private var validTargets: List<Int> = emptyList()
+    // Vrai quand la sélection courante a été déclenchée par un long clic (déplacement de groupe).
+    private var bulkMode = false
 
     private val density = context.resources.displayMetrics.density
+
+    // Détection du long clic pour le déplacement de groupe.
+    private var longPressHandled = false
+    private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onLongPress(e: MotionEvent) {
+            val col = columnAt(e.x) ?: return
+            longPressHandled = true
+            handleLongPress(col)
+        }
+    })
 
     private fun neededHeight(availableWidth: Int): Int {
         val g = game ?: return (200 * density).toInt()
@@ -100,6 +115,10 @@ class ColorStackView @JvmOverloads constructor(
             val isSelected = selectedColumn == ci
             val isTarget = ci in validTargets
             val col = g.board[ci]
+            // En mode groupe, tout le groupe du dessus est surligné ; sinon seul le jeton du haut.
+            val highlightCount = if (isSelected) {
+                if (bulkMode) g.topGroupSize(ci) else 1
+            } else 0
             val isSolved = col.size == g.capacity &&
                 col.isNotEmpty() && col.all { it.colorId == col.first().colorId }
 
@@ -138,8 +157,6 @@ class ColorStackView @JvmOverloads constructor(
                 val tBot = colTop + (slotIndex + 1) * slotH - tokenPadV
                 tokenRect.set(colLeft + tokenPadH, tTop, colRight - tokenPadH, tBot)
 
-                val isTopToken = ti == col.size - 1
-
                 // Couleur du jeton
                 tokenPaint.color = Color.parseColor(col[ti].colorHex)
                 canvas.drawRoundRect(tokenRect, tokenCorner, tokenCorner, tokenPaint)
@@ -149,8 +166,8 @@ class ColorStackView @JvmOverloads constructor(
                     tokenRect.top + (tokenRect.bottom - tokenRect.top) * 0.4f)
                 canvas.drawRoundRect(shineRect, tokenCorner, tokenCorner, shinePaint)
 
-                // Contour blanc sur le jeton du haut si colonne sélectionnée
-                if (isSelected && isTopToken) {
+                // Contour blanc sur les jetons surlignés (haut, ou tout le groupe en mode groupe)
+                if (highlightCount > 0 && ti >= col.size - highlightCount) {
                     strokePaint.color = 0xFFFFFFFF.toInt()
                     strokePaint.strokeWidth = 2f * density
                     canvas.drawRoundRect(tokenRect, tokenCorner, tokenCorner, strokePaint)
@@ -160,19 +177,26 @@ class ColorStackView @JvmOverloads constructor(
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action != MotionEvent.ACTION_UP) return true
-        val g = game ?: return true
+    private fun columnAt(x: Float): Int? {
+        val g = game ?: return null
         val cols = g.columnCount
         val padH = 10f * density
         val colGap = 5f * density
         val colW = (width - 2f * padH - (cols - 1) * colGap) / cols
-
-        val tapped = (0 until cols).firstOrNull { ci ->
+        return (0 until cols).firstOrNull { ci ->
             val left = padH + ci * (colW + colGap)
-            event.x >= left && event.x <= left + colW
+            x >= left && x <= left + colW
         }
+    }
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) longPressHandled = false
+        gestureDetector.onTouchEvent(event)
+        if (event.action != MotionEvent.ACTION_UP) return true
+        // Le long clic a déjà tout traité : on ne déclenche pas de tap en plus.
+        if (longPressHandled) return true
+
+        val tapped = columnAt(event.x)
         if (tapped != null) handleColumnTap(tapped) else clearSelection()
         return true
     }
@@ -182,34 +206,46 @@ class ColorStackView @JvmOverloads constructor(
         val sel = selectedColumn
 
         when {
-            sel == null -> {
-                if (g.board[col].isEmpty()) return
-                selectedColumn = col
-                validTargets = g.getValidTargets(col)
-                listener?.onColumnSelected(col)
-                invalidate()
-            }
+            sel == null -> selectColumn(col, bulk = false)
             sel == col -> clearSelection()
             col in validTargets -> {
-                listener?.onMove(sel, col)
+                if (bulkMode) listener?.onMoveGroup(sel, col) else listener?.onMove(sel, col)
                 clearSelection()
             }
-            else -> {
-                // Retaper une autre colonne non-cible → re-sélectionner si non-vide
-                clearSelection()
-                if (g.board[col].isNotEmpty()) {
-                    selectedColumn = col
-                    validTargets = g.getValidTargets(col)
-                    listener?.onColumnSelected(col)
-                    invalidate()
-                }
-            }
+            // Retaper une autre colonne non-cible → re-sélectionner (en mode simple) si non-vide
+            else -> selectColumn(col, bulk = false)
         }
+    }
+
+    // Long clic : sélectionne la colonne en mode groupe. Si une seule cible valide existe,
+    // le déplacement de groupe est effectué immédiatement ; sinon on attend le tap sur la cible.
+    private fun handleLongPress(col: Int) {
+        val g = game ?: return
+        if (g.board[col].isEmpty()) { clearSelection(); return }
+        val targets = g.getValidTargets(col)
+        if (targets.size == 1) {
+            clearSelection()
+            listener?.onMoveGroup(col, targets[0])
+            return
+        }
+        selectColumn(col, bulk = true)
+    }
+
+    private fun selectColumn(col: Int, bulk: Boolean) {
+        val g = game ?: return
+        clearSelection()
+        if (g.board[col].isEmpty()) return
+        selectedColumn = col
+        validTargets = g.getValidTargets(col)
+        bulkMode = bulk
+        listener?.onColumnSelected(col)
+        invalidate()
     }
 
     fun clearSelection() {
         selectedColumn = null
         validTargets = emptyList()
+        bulkMode = false
         listener?.onColumnSelected(null)
         invalidate()
     }

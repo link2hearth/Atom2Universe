@@ -199,15 +199,8 @@
     <string name="big_bang_btn_open">💥 Big Bang</string>
     <string name="big_bang_bonus_god_finger">God Finger</string>
     <string name="big_bang_bonus_star_core">Star Core</string>
-    <string name="big_bang_bonus_proton_accel">Proton Accelerator</string>
-    <string name="big_bang_bonus_fusion_reactor">Fusion Reactor</string>
-    <string name="big_bang_bonus_hadron_collider">Hadron Collider</string>
-    <string name="big_bang_bonus_proton_injector">Proton Injector</string>
-    <string name="big_bang_bonus_plasma_catalyst">Plasma Catalyst</string>
-    <string name="big_bang_bonus_synchrotron">Synchrotron</string>
-    <string name="big_bang_bonus_spacetime">Spacetime Compression</string>
-    <string name="big_bang_bonus_effect">+%d%% per purchase</string>
-    <string name="big_bang_bonus_effect_spacetime">Slows the price growth of God Finger and Star Core</string>
+    <string name="big_bang_bonus_effect_god_finger_discount">Lowers God Finger prices — stacks with no limit</string>
+    <string name="big_bang_bonus_effect_star_core_discount">Lowers Star Core prices — stacks with no limit</string>
     <string name="big_bang_bonus_level">Lv. %d</string>
     <string name="big_bang_bonus_level_arrow">Lv. %1$d → %2$d</string>
     <string name="big_bang_bonus_cost">%d ⚛</string>
