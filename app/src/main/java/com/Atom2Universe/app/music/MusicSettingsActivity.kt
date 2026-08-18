@@ -1154,7 +1154,8 @@ class MusicSettingsActivity : ThemedActivity() {
                             summary.artistCustomizationsRestored,
                             summary.playlistsRestored,
                             summary.artistImagesRestored,
-                            summary.lyricsRestored
+                            summary.lyricsRestored,
+                            summary.listenEventsRestored
                         ))
                         .setPositiveButton(R.string.common_ok, null)
                         .show()

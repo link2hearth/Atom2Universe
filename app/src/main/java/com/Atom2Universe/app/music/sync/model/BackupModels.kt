@@ -399,3 +399,46 @@ data class ArtistImageEntry(
         }
     }
 }
+
+/**
+ * Sauvegarde du journal d'écoutes, tous appareils confondus.
+ *
+ * Contrairement aux compteurs de `playcounts.json` — qui ne sont qu'un total par
+ * morceau — on conserve ici chaque écoute avec sa date réelle. C'est ce qui permet
+ * de restituer l'historique après une réinstallation, et de rendre à l'appareil
+ * restauré sa capacité à publier ses écoutes vers les autres.
+ *
+ * Le fichier est une liste de journaux, un par appareil, chacun au format
+ * d'échange habituel (compact, sans fenêtre ni résumé : une sauvegarde doit être
+ * fidèle). Grouper par appareil préserve l'origine de chaque écoute, dont dépend
+ * la réconciliation à la fusion.
+ *
+ * File: backup/listen_events.json
+ */
+data class ListenEventsBackupFile(
+    val journals: List<ListenEventsSyncFile.Payload>
+) {
+    fun totalListenCount(): Long = journals.sumOf { it.totalListenCount() }
+
+    fun toJson(): JSONObject {
+        return JSONObject().apply {
+            put("version", 1)
+            put("createdAt", System.currentTimeMillis())
+            put("journals", JSONArray().apply {
+                journals.forEach { put(ListenEventsSyncFile.encode(it)) }
+            })
+        }
+    }
+
+    companion object {
+        const val FILENAME = "listen_events.json"
+
+        fun fromJson(json: JSONObject): ListenEventsBackupFile {
+            val array = json.optJSONArray("journals") ?: JSONArray()
+            val journals = (0 until array.length()).mapNotNull { i ->
+                ListenEventsSyncFile.decode(array.getJSONObject(i))
+            }
+            return ListenEventsBackupFile(journals)
+        }
+    }
+}

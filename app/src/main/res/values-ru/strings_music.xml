@@ -219,7 +219,8 @@
     <string name="music_backup_restore">Восстановить</string>
     <string name="music_backup_ignore">Пропустить</string>
     <string name="music_restore_summary_title">Восстановление завершено</string>
-    <string name="music_restore_summary_message">Восстановлено:\n• %1$d счётчиков воспроизведений\n• %2$d избранных треков\n• %3$d избранных альбомов\n• %4$d настроек исполнителей\n• %5$d плейлистов\n• %6$d изображений исполнителей\n• %7$d текстов песен</string>
+    <string name="music_restore_summary_message">Восстановлено:\n• %1$d счётчиков воспроизведений\n• %2$d избранных треков\n• %3$d избранных альбомов\n• %4$d настроек исполнителей\n• %5$d плейлистов\n• %6$d изображений исполнителей\n• %7$d текстов песен
+• %8$d прослушиваний</string>
     <string name="music_artist_display_mode">Режим отображения</string>
     <string name="music_display_mode_list">Список</string>
     <string name="music_display_mode_compact">Компактный</string>

@@ -219,7 +219,8 @@
     <string name="music_backup_restore">Przywróć</string>
     <string name="music_backup_ignore">Ignoruj</string>
     <string name="music_restore_summary_title">Przywracanie zakończone</string>
-    <string name="music_restore_summary_message">Przywrócono:\n• %1$d liczników odtworzeń\n• %2$d ulubionych utworów\n• %3$d ulubionych albumów\n• %4$d personalizacji wykonawców\n• %5$d playlist\n• %6$d zdjęć wykonawców\n• %7$d tekstów utworów</string>
+    <string name="music_restore_summary_message">Przywrócono:\n• %1$d liczników odtworzeń\n• %2$d ulubionych utworów\n• %3$d ulubionych albumów\n• %4$d personalizacji wykonawców\n• %5$d playlist\n• %6$d zdjęć wykonawców\n• %7$d tekstów utworów
+• %8$d odsłuchów</string>
     <string name="music_artist_display_mode">Tryb wyświetlania</string>
     <string name="music_display_mode_list">Tryb listy</string>
     <string name="music_display_mode_compact">Tryb kompaktowy</string>

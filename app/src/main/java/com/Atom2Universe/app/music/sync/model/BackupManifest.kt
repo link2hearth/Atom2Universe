@@ -46,6 +46,7 @@ data class BackupManifest(
  */
 data class BackupContents(
     val playCountsCount: Int = 0,
+    val listenEventsCount: Long = 0,
     val trackFavoritesCount: Int = 0,
     val albumFavoritesCount: Int = 0,
     val artistCustomizationsCount: Int = 0,
@@ -57,6 +58,7 @@ data class BackupContents(
     fun toJson(): JSONObject {
         return JSONObject().apply {
             put("playCountsCount", playCountsCount)
+            put("listenEventsCount", listenEventsCount)
             put("trackFavoritesCount", trackFavoritesCount)
             put("albumFavoritesCount", albumFavoritesCount)
             put("artistCustomizationsCount", artistCustomizationsCount)
@@ -71,6 +73,7 @@ data class BackupContents(
         fun fromJson(json: JSONObject): BackupContents {
             return BackupContents(
                 playCountsCount = json.optInt("playCountsCount", 0),
+                listenEventsCount = json.optLong("listenEventsCount", 0),
                 trackFavoritesCount = json.optInt("trackFavoritesCount", 0),
                 albumFavoritesCount = json.optInt("albumFavoritesCount", 0),
                 artistCustomizationsCount = json.optInt("artistCustomizationsCount", 0),

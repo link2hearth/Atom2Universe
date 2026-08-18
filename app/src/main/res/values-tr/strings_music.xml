@@ -209,7 +209,8 @@
     <string name="music_backup_restore">Geri yükle</string>
     <string name="music_backup_ignore">Yoksay</string>
     <string name="music_restore_summary_title">Geri yükleme tamamlandı</string>
-    <string name="music_restore_summary_message">Geri yüklendi:\n• %1$d çalma sayısı\n• %2$d favori parça\n• %3$d favori albüm\n• %4$d sanatçı özelleştirmesi\n• %5$d çalma listesi\n• %6$d sanatçı görseli\n• %7$d şarkı sözü</string>
+    <string name="music_restore_summary_message">Geri yüklendi:\n• %1$d çalma sayısı\n• %2$d favori parça\n• %3$d favori albüm\n• %4$d sanatçı özelleştirmesi\n• %5$d çalma listesi\n• %6$d sanatçı görseli\n• %7$d şarkı sözü
+• %8$d dinleme</string>
     <string name="music_artist_display_mode">Görüntüleme modu</string>
     <string name="music_display_mode_list">Liste modu</string>
     <string name="music_display_mode_compact">Kompakt mod</string>

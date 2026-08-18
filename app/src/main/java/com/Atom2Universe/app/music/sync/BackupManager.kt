@@ -1,4 +1,4 @@
-﻿package com.Atom2Universe.app.music.sync
+package com.Atom2Universe.app.music.sync
 
 import android.content.Context
 import android.os.Build
@@ -11,6 +11,7 @@ import com.Atom2Universe.app.music.MusicPlaylistManager
 import com.Atom2Universe.app.music.MusicPreferences
 import com.Atom2Universe.app.music.data.MusicDatabase
 import com.Atom2Universe.app.music.data.PlayCountEntry
+import com.Atom2Universe.app.music.sync.algorithm.ListenEventsMerger
 import com.Atom2Universe.app.music.sync.algorithm.LyricsMerger
 import com.Atom2Universe.app.music.sync.model.*
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +67,7 @@ object BackupManager {
      */
     data class RestoreSummary(
         val playCountsRestored: Int,
+        val listenEventsRestored: Int,
         val trackFavoritesRestored: Int,
         val albumFavoritesRestored: Int,
         val artistCustomizationsRestored: Int,
@@ -164,6 +166,7 @@ object BackupManager {
 
             // Collect all data
             val playCountsData = collectPlayCounts(context)
+            val listenEventsData = collectListenEvents(context)
             val albumFavoritesData = collectAlbumFavorites()
             val artistCustomizationsData = collectArtistCustomizations()
             val playlistsData = collectPlaylists()
@@ -176,6 +179,15 @@ object BackupManager {
                 playCountsData.toJson().toString()
             )
             Log.d(TAG, "Uploaded play counts: ${playCountsData.counts.size}")
+
+            val listenEventsBody = listenEventsData.toJson().toString()
+            driveClient.writeJsonFile(ListenEventsBackupFile.FILENAME, listenEventsBody)
+            Log.d(
+                TAG,
+                "Uploaded listen events: ${listenEventsData.totalListenCount()} " +
+                        "from ${listenEventsData.journals.size} device(s), " +
+                        "${listenEventsBody.length / 1024} Ko"
+            )
 
             driveClient.writeJsonFile(
                 AlbumFavoritesBackupFile.FILENAME,
@@ -223,6 +235,7 @@ object BackupManager {
                 deviceName = metadata?.deviceName ?: Build.MODEL ?: "Android Device",
                 contents = BackupContents(
                     playCountsCount = playCountsData.counts.size,
+                    listenEventsCount = listenEventsData.totalListenCount(),
                     trackFavoritesCount = trackFavoritesCount,
                     albumFavoritesCount = albumFavoritesData.favorites.size,
                     artistCustomizationsCount = artistCustomizationsData.customizations.size,
@@ -276,6 +289,7 @@ object BackupManager {
 
             // Download and restore each data type
             var playCountsRestored = 0
+            var listenEventsRestored = 0
             var trackFavoritesRestored = 0
             var albumFavoritesRestored = 0
             var artistCustomizationsRestored = 0
@@ -292,6 +306,18 @@ object BackupManager {
             }
 
             // Restore album favorites
+            // Journal d'écoutes : restauré APRÈS les compteurs. La fusion recalcule
+            // playCount depuis le journal et applique MAX, donc elle ne peut que
+            // confirmer ou compléter les totaux déjà restaurés, jamais les baisser.
+            val listenEventsJson = driveClient.readJsonFile(ListenEventsBackupFile.FILENAME)
+            if (listenEventsJson != null) {
+                val listenEventsFile = ListenEventsBackupFile.fromJson(JSONObject(listenEventsJson))
+                for (journal in listenEventsFile.journals) {
+                    listenEventsRestored += ListenEventsMerger.merge(context, journal)
+                }
+                Log.d(TAG, "Restored $listenEventsRestored listen events")
+            }
+
             val albumFavoritesJson = driveClient.readJsonFile(AlbumFavoritesBackupFile.FILENAME)
             if (albumFavoritesJson != null) {
                 val albumFavoritesFile = AlbumFavoritesBackupFile.fromJson(JSONObject(albumFavoritesJson))
@@ -353,6 +379,7 @@ object BackupManager {
             RestoreResult.Success(
                 RestoreSummary(
                     playCountsRestored = playCountsRestored,
+                    listenEventsRestored = listenEventsRestored,
                     trackFavoritesRestored = trackFavoritesRestored,
                     albumFavoritesRestored = albumFavoritesRestored,
                     artistCustomizationsRestored = artistCustomizationsRestored,
@@ -386,6 +413,19 @@ object BackupManager {
                     lastPlayed = entry.lastPlayed
                 )
             }
+        )
+    }
+
+    /**
+     * Rassemble le journal d'écoutes local, groupé par appareil d'origine.
+     * On sauvegarde aussi les écoutes importées des autres appareils : après une
+     * réinstallation, elles sont ce qui reste de leur historique si eux-mêmes
+     * ont disparu entre-temps.
+     */
+    private suspend fun collectListenEvents(context: Context): ListenEventsBackupFile {
+        val deviceIds = MusicDatabase.getInstance(context).listenEventDao().getKnownDeviceIds()
+        return ListenEventsBackupFile(
+            journals = deviceIds.map { ListenEventsMerger.buildFullPayload(context, it) }
         )
     }
 

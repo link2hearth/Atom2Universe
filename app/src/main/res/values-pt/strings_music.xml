@@ -209,7 +209,8 @@
     <string name="music_backup_restore">Restaurar</string>
     <string name="music_backup_ignore">Ignorar</string>
     <string name="music_restore_summary_title">Restauração concluída</string>
-    <string name="music_restore_summary_message">Restaurado:\n• %1$d contagens de reprodução\n• %2$d faixas favoritas\n• %3$d álbuns favoritos\n• %4$d personalizações de artistas\n• %5$d playlists\n• %6$d imagens de artistas\n• %7$d letras</string>
+    <string name="music_restore_summary_message">Restaurado:\n• %1$d contagens de reprodução\n• %2$d faixas favoritas\n• %3$d álbuns favoritos\n• %4$d personalizações de artistas\n• %5$d playlists\n• %6$d imagens de artistas\n• %7$d letras
+• %8$d audições</string>
     <string name="music_artist_display_mode">Modo de exibição</string>
     <string name="music_display_mode_list">Modo lista</string>
     <string name="music_display_mode_compact">Modo compacto</string>

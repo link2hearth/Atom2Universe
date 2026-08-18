@@ -209,7 +209,8 @@
     <string name="music_backup_restore">Επαναφορά</string>
     <string name="music_backup_ignore">Παράβλεψη</string>
     <string name="music_restore_summary_title">Επαναφορά ολοκληρώθηκε</string>
-    <string name="music_restore_summary_message">Επαναφέρθηκαν:\n• %1$d αριθμοί αναπαραγωγών\n• %2$d αγαπημένα κομμάτια\n• %3$d αγαπημένα άλμπουμ\n• %4$d προσαρμογές καλλιτεχνών\n• %5$d λίστες αναπαραγωγής\n• %6$d εικόνες καλλιτεχνών\n• %7$d στίχοι</string>
+    <string name="music_restore_summary_message">Επαναφέρθηκαν:\n• %1$d αριθμοί αναπαραγωγών\n• %2$d αγαπημένα κομμάτια\n• %3$d αγαπημένα άλμπουμ\n• %4$d προσαρμογές καλλιτεχνών\n• %5$d λίστες αναπαραγωγής\n• %6$d εικόνες καλλιτεχνών\n• %7$d στίχοι
+• %8$d ακροάσεις</string>
     <string name="music_artist_display_mode">Λειτουργία εμφάνισης</string>
     <string name="music_display_mode_list">Λειτουργία λίστας</string>
     <string name="music_display_mode_compact">Συμπαγής λειτουργία</string>

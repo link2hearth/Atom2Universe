@@ -268,7 +268,8 @@ Vuoi ripristinarlo?</string>
 • %4$d personalizzazioni artisti
 • %5$d playlist
 • %6$d immagini artisti
-• %7$d testi</string>
+• %7$d testi
+• %8$d ascolti</string>
     <string name="music_artist_display_mode">Modalità di visualizzazione</string>
     <string name="music_display_mode_list">Modalità elenco</string>
     <string name="music_display_mode_compact">Modalità compatta</string>
