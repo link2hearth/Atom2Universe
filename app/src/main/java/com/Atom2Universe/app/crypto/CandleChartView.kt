@@ -6,6 +6,7 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -26,6 +27,7 @@ import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 /** Une bougie OHLCV issue d'une kline Binance. */
 data class Candle(
@@ -71,10 +73,14 @@ internal fun cryptoPriceDecimals(price: Double): Int {
  * (sur-défilement possible au-delà des données, avec inertie) et en prix (échelle manuelle) ;
  * pincer horizontalement = élargir/rétrécir les bougies, pincer verticalement = les étirer ou
  * les aplatir (zoom de l'échelle de prix) ; double-tap = retour aux dernières bougies avec
- * échelle automatique ; appui long puis glisser = viseur (crosshair) affichant prix + date.
+ * échelle automatique ; appui long puis glisser = viseur (crosshair) affichant prix + date,
+ * qui reste affiché une fois le doigt levé (le déplacement et le zoom le conservent) et ne
+ * se referme que sur un clic.
  *
  * Habillage façon TradingView : ligne pointillée au dernier prix avec bulle sur l'axe,
- * barres de volume en bas, légende OHLC en haut à gauche, quadrillage horizontal et vertical.
+ * barres de volume en bas, légende OHLC en haut à gauche, quadrillage vertical, axe des prix
+ * gradué sur des valeurs rondes qui se resserrent avec le zoom, et prix du plus haut / plus bas
+ * de la fenêtre affichés directement sur le graphe.
  */
 class CandleChartView @JvmOverloads constructor(
     context: Context,
@@ -83,6 +89,15 @@ class CandleChartView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
+        /**
+         * Taille du texte des axes et des bulles, en dp. Les étiquettes de prix et de date
+         * doivent rester lisibles à bout de bras : on est parti de 11 dp, agrandi de 1,5×.
+         */
+        private const val AXIS_TEXT_SP = 16.5f
+
+        /** Notation compacte des grands prix sur l'axe : 108 000 → « 108k », 1 200 000 → « 1,2M ». */
+        private val COMPACT_UNITS = arrayOf(1_000_000.0 to "M", 1_000.0 to "k")
+
         /** Palette des lignes de tendance (indexée par [TrendLine.colorIndex]). */
         val LINE_COLORS = intArrayOf(
             0xFFE2E8F0.toInt(), // blanc cassé
@@ -122,7 +137,7 @@ class CandleChartView @JvmOverloads constructor(
     }
     private val axisTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = axisTextColor
-        textSize = 11f * density
+        textSize = AXIS_TEXT_SP * density
     }
     private val crosshairPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -136,7 +151,13 @@ class CandleChartView @JvmOverloads constructor(
     }
     private val bubbleTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = bubbleTextColor
-        textSize = 11f * density
+        textSize = AXIS_TEXT_SP * density
+    }
+    /** Étiquettes du plus haut / plus bas de la fenêtre, posées directement sur le graphe. */
+    private val extremeTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = axisTextColor
+        textSize = AXIS_TEXT_SP * density
+        typeface = Typeface.DEFAULT_BOLD
     }
     private val lastPricePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -184,7 +205,7 @@ class CandleChartView @JvmOverloads constructor(
     }
 
     private var priceAxisWidth = 64f * density
-    private val timeAxisHeight = 20f * density
+    private val timeAxisHeight = AXIS_TEXT_SP * density + 10f * density
     private val verticalPadding = 12f * density
 
     /** Fraction de la hauteur du graphe réservée aux barres de volume (en bas). */
@@ -193,6 +214,10 @@ class CandleChartView @JvmOverloads constructor(
     private val priceFormat: NumberFormat = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
+        isGroupingUsed = true
+    }
+    /** Format des graduations de l'axe : le nombre de décimales change avec le pas affiché. */
+    private val axisFormat: NumberFormat = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
         isGroupingUsed = true
     }
     private val percentFormat: NumberFormat = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
@@ -211,6 +236,12 @@ class CandleChartView @JvmOverloads constructor(
     private var minLow = 0.0
     private var maxHigh = 0.0
     private var maxVolume = 0.0
+
+    /** Plus haut / plus bas réellement atteints dans la fenêtre affichée, et leurs bougies. */
+    private var visibleHigh = 0.0
+    private var visibleLow = 0.0
+    private var visibleHighIndex = -1
+    private var visibleLowIndex = -1
 
     /** Mapping logarithmique effectif pour la frame courante (échelle log + prix > 0). */
     private var useLogMapping = false
@@ -234,8 +265,15 @@ class CandleChartView @JvmOverloads constructor(
         }
 
     private var crosshairActive = false
-    private var crosshairX = 0f
-    private var crosshairY = 0f
+    /** Vrai tant que le doigt qui a déclenché l'appui long est encore posé (le viseur le suit). */
+    private var crosshairDragging = false
+    /**
+     * Le viseur est ancré sur une bougie et un prix, pas sur une position à l'écran : quand on
+     * déplace ou zoome le graphe, il reste collé à la bougie qu'on avait visée au lieu de
+     * balayer les suivantes.
+     */
+    private var crosshairCandleTime = 0L
+    private var crosshairPrice = 0.0
 
     /** Défilement avec inertie après un fling. */
     private val scroller = OverScroller(context)
@@ -323,6 +361,7 @@ class CandleChartView @JvmOverloads constructor(
             visibleCount = min(defaultVisible.toFloat(), max(1, candles.size).toFloat())
             scrollOffset = (candles.size - visibleCount).coerceAtLeast(0f)
             crosshairActive = false
+            crosshairDragging = false
             autoScale = true
         }
         notifyViewport()
@@ -421,7 +460,7 @@ class CandleChartView @JvmOverloads constructor(
 
     private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
-            if (candles.isEmpty() || crosshairActive) return false
+            if (candles.isEmpty() || crosshairDragging) return false
             val slot = (chartRight() - chartLeft()) / visibleCount
             if (slot <= 0f) return false
             scrollOffset += distanceX / slot
@@ -457,7 +496,7 @@ class CandleChartView @JvmOverloads constructor(
         }
 
         override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-            if (candles.isEmpty() || crosshairActive) return false
+            if (candles.isEmpty() || crosshairDragging) return false
             scroller.abortAnimation()
             lastFlingX = 0
             scroller.fling(0, 0, velocityX.toInt(), 0, Int.MIN_VALUE, Int.MAX_VALUE, 0, 0)
@@ -469,9 +508,21 @@ class CandleChartView @JvmOverloads constructor(
             if (candles.isEmpty()) return
             scroller.abortAnimation()
             crosshairActive = true
-            crosshairX = e.x
-            crosshairY = e.y
+            crosshairDragging = true
+            moveCrosshairTo(e.x, e.y)
+        }
+
+        /**
+         * Clic net : c'est le seul geste qui referme le viseur laissé à l'écran. Glisser ou
+         * pincer pour zoomer le laisse donc en place, ce qui permet de garder un prix repère
+         * sous les yeux pendant qu'on navigue. On attend la confirmation (pas de second
+         * appui) pour ne pas le faire disparaître sur le premier temps d'un double-tap.
+         */
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            if (!crosshairActive) return false
+            crosshairActive = false
             invalidate()
+            return true
         }
 
         override fun onDoubleTap(e: MotionEvent): Boolean {
@@ -626,6 +677,7 @@ class CandleChartView @JvmOverloads constructor(
         drawVolume(canvas)
         drawCandles(canvas)
         if (movingAveragePeriod > 1) drawMovingAverage(canvas)
+        drawExtremeLabels(canvas)
         drawTrendLines(canvas)
         drawLastPriceLine(canvas)
         drawTimeAxis(canvas, timeAnchors)
@@ -639,13 +691,25 @@ class CandleChartView @JvmOverloads constructor(
         val last = lastVisibleIndex()
         var lo = Double.MAX_VALUE
         var hi = -Double.MAX_VALUE
+        var loIndex = first
+        var hiIndex = first
         var vol = 0.0
         for (i in first..last) {
-            lo = min(lo, candles[i].low)
-            hi = max(hi, candles[i].high)
+            if (candles[i].low < lo) {
+                lo = candles[i].low
+                loIndex = i
+            }
+            if (candles[i].high > hi) {
+                hi = candles[i].high
+                hiIndex = i
+            }
             vol = max(vol, candles[i].volume)
         }
         maxVolume = vol
+        visibleLow = lo
+        visibleHigh = hi
+        visibleLowIndex = loIndex
+        visibleHighIndex = hiIndex
 
         if (!autoScale) {
             // Échelle manuelle : la fenêtre de prix est celle définie par le glissement
@@ -717,7 +781,6 @@ class CandleChartView @JvmOverloads constructor(
     }
 
     private fun drawGridAndPriceAxis(canvas: Canvas, timeAnchors: List<Pair<Float, String>>) {
-        val steps = 4
         val left = chartLeft()
         val right = chartRight()
 
@@ -728,19 +791,132 @@ class CandleChartView @JvmOverloads constructor(
             }
         }
 
-        // Lignes horizontales à intervalle régulier en pixels ; le prix de chaque ligne est
-        // recalculé via yToPrice, ce qui reste juste en échelle linéaire comme logarithmique.
-        for (i in 0..steps) {
-            val y = chartTop() + (chartBottom() - chartTop()) * (i.toFloat() / steps)
+        // Lignes horizontales posées sur des prix « ronds » (voir priceTicks).
+        val (ticks, step) = priceTicks()
+        val bubbleHeight = bubbleTextPaint.textSize + 8f * density
+        val lastPriceY = priceToY(candles.last().close)
+        for (price in ticks) {
+            val y = priceToY(price)
+            if (y < chartTop() || y > chartBottom()) continue
             canvas.drawLine(left, y, right, y, gridPaint)
-            val label = priceFormat.format(yToPrice(y))
-            val textY = (y + axisTextPaint.textSize / 2.5f)
-                .coerceIn(chartTop() + axisTextPaint.textSize, chartBottom())
-            canvas.drawText(label, right + 6f * density, textY, axisTextPaint)
+            // Étiquette masquée si elle passerait sous la bulle du dernier prix.
+            if (abs(y - lastPriceY) < bubbleHeight) continue
+            // En log, le pas change à chaque décade : c'est la graduation elle-même qui donne
+            // le nombre de décimales (0,002 → 3 décimales).
+            val label = formatAxisPrice(price, if (useLogMapping) price else step)
+            canvas.drawText(label, right + 6f * density, y + axisTextPaint.textSize / 2.8f, axisTextPaint)
         }
 
         // Séparateur entre le graphe et l'axe des prix.
         canvas.drawLine(right, chartTop(), right, chartBottom(), gridPaint)
+    }
+
+    /**
+     * Prix des graduations horizontales : des valeurs « rondes » (… 1, 2, 2,5, 5, 10, 20 …)
+     * choisies pour remplir la hauteur disponible sans que deux étiquettes se touchent. Le pas
+     * suit donc le zoom : 20k sur tout l'historique de BTC, 2k entre 60k et 85k, 1 $ sur une
+     * tranche de quelques dollars, et 0,50 $ dès qu'il y a la place à l'écran.
+     *
+     * Renvoie les prix et le pas retenu (qui détermine le nombre de décimales des étiquettes).
+     */
+    private fun priceTicks(): Pair<List<Double>, Double> {
+        val top = chartTop()
+        val bottom = chartBottom()
+        // Écart minimal entre deux étiquettes : un peu moins de deux hauteurs de texte, pour
+        // en afficher une bonne dizaine sans qu'elles se touchent.
+        val minSpacing = axisTextPaint.textSize * 1.9f
+        if (bottom - top < minSpacing) return emptyList<Double>() to 1.0
+        val maxTicks = max(3, floor((bottom - top) / minSpacing).toInt())
+        val ticks = ArrayList<Double>(maxTicks + 2)
+        var lastY = Float.MAX_VALUE
+
+        // Échelle log étalée sur plus d'une décade : là les seules valeurs rondes qui gardent
+        // un sens sont les 1 / 2 / 5 de chaque décade (…10k, 20k, 50k, 100k…).
+        if (useLogMapping && logMax - logMin > 1.0) {
+            for (decade in floor(logMin).toInt()..ceil(logMax).toInt()) {
+                for (mantissa in intArrayOf(1, 2, 5)) {
+                    val price = mantissa * 10.0.pow(decade)
+                    if (price < minLow || price > maxHigh) continue
+                    val y = priceToY(price)
+                    if (abs(y - lastY) < minSpacing) continue
+                    ticks.add(price)
+                    lastY = y
+                }
+            }
+            return ticks to 0.0
+        }
+
+        // Cas général (linéaire, et log en dessous de la décade) : un pas constant en prix.
+        // En log, ces mêmes prix ronds restent affichés — c'est seulement leur position à
+        // l'écran qui est logarithmique, d'où l'élagage de ceux qui finiraient collés.
+        val step = niceStep((maxHigh - minLow) / maxTicks)
+        // Multiplication plutôt qu'addition répétée : pas de dérive du type 0,1 + 0,1 + 0,1.
+        val firstMultiple = ceil(minLow / step)
+        var k = 0
+        while (k <= maxTicks + 2) {
+            val value = (firstMultiple + k) * step
+            k++
+            if (value > maxHigh) break
+            if (useLogMapping) {
+                val y = priceToY(value)
+                if (abs(y - lastY) < minSpacing) continue
+                lastY = y
+            }
+            ticks.add(value)
+        }
+        return ticks to step
+    }
+
+    /** Arrondit un pas d'axe à la valeur ronde immédiatement supérieure (1, 2, 2,5, 5 ou 10 × 10ⁿ). */
+    private fun niceStep(raw: Double): Double {
+        if (raw <= 0.0 || raw.isNaN() || raw.isInfinite()) return 1.0
+        val magnitude = 10.0.pow(floor(log10(raw)))
+        val normalized = raw / magnitude
+        val nice = when {
+            normalized <= 1.0 -> 1.0
+            normalized <= 2.0 -> 2.0
+            normalized <= 2.5 -> 2.5
+            normalized <= 5.0 -> 5.0
+            else -> 10.0
+        }
+        return nice * magnitude
+    }
+
+    /**
+     * Nombre de décimales nécessaires pour écrire [step] sans le tronquer : 5000 → 0,
+     * 2,5 → 1, 0,05 → 2. C'est ce qui évite « 1,00 / 1,00 / 1,00 » quand le pas vaut 0,005.
+     */
+    private fun axisDecimals(step: Double): Int {
+        if (step <= 0.0 || step.isNaN() || step.isInfinite()) return 2
+        var scaled = step
+        var decimals = 0
+        while (decimals < 8 && abs(scaled - Math.round(scaled)) > 1e-9 * max(1.0, abs(scaled))) {
+            scaled *= 10.0
+            decimals++
+        }
+        return decimals
+    }
+
+    /**
+     * Étiquette d'axe : notation compacte pour les gros prix (108k, 2M) et juste assez de
+     * décimales pour distinguer deux graduations. La forme compacte n'est retenue que si le pas
+     * tombe rond dans cette unité — sinon (3,4k, 107,5k) le nombre complet reste plus lisible.
+     */
+    private fun formatAxisPrice(value: Double, step: Double): String {
+        var unit = 1.0
+        var suffix = ""
+        val magnitude = abs(value)
+        for ((candidate, candidateSuffix) in COMPACT_UNITS) {
+            if (magnitude >= candidate && axisDecimals(step / candidate) == 0) {
+                unit = candidate
+                suffix = candidateSuffix
+                break
+            }
+        }
+        val decimals = axisDecimals(step / unit)
+        axisFormat.minimumFractionDigits = decimals
+        axisFormat.maximumFractionDigits = decimals
+        return axisFormat.format(value / unit) + suffix
     }
 
     private fun drawVolume(canvas: Canvas) {
@@ -814,6 +990,45 @@ class CandleChartView @JvmOverloads constructor(
     }
 
     /**
+     * Plus haut et plus bas de la fenêtre affichée, signalés par leur seul prix (pas de ligne
+     * ni de pointillé) : on lit d'un coup d'œil les bornes de ce qu'on regarde.
+     */
+    private fun drawExtremeLabels(canvas: Canvas) {
+        if (visibleHighIndex < 0 || visibleLowIndex < 0) return
+        drawExtremeLabel(canvas, visibleHighIndex, visibleHigh, above = true)
+        drawExtremeLabel(canvas, visibleLowIndex, visibleLow, above = false)
+    }
+
+    /** Pastille de prix collée au-dessus de la mèche haute ([above]) ou sous la mèche basse. */
+    private fun drawExtremeLabel(canvas: Canvas, index: Int, price: Double, above: Boolean) {
+        val anchorY = priceToY(price)
+        // En échelle manuelle, l'extrême peut être hors cadre : inutile de l'afficher au bord.
+        if (anchorY < chartTop() || anchorY > chartBottom()) return
+
+        val text = priceFormat.format(price)
+        val padH = 5f * density
+        val padV = 3f * density
+        val boxWidth = extremeTextPaint.measureText(text) + padH * 2
+        val boxHeight = extremeTextPaint.textSize + padV * 2
+        val gap = 6f * density
+        val top = (if (above) anchorY - gap - boxHeight else anchorY + gap)
+            .coerceIn(chartTop(), chartBottom() - boxHeight)
+        val left = (candleCenterX(index) - boxWidth / 2f)
+            .coerceIn(chartLeft(), chartRight() - boxWidth)
+
+        canvas.drawRoundRect(
+            left, top, left + boxWidth, top + boxHeight,
+            3f * density, 3f * density, legendBgPaint
+        )
+        canvas.drawText(
+            text,
+            left + padH,
+            top + boxHeight - padV - extremeTextPaint.descent(),
+            extremeTextPaint
+        )
+    }
+
+    /**
      * Ligne pointillée au dernier prix connu (dernière bougie de l'historique), avec une
      * bulle colorée sur l'axe de droite — vert si la dernière bougie est haussière, rouge
      * sinon. Si le prix sort de la fenêtre visible, la bulle reste collée au bord.
@@ -860,41 +1075,60 @@ class CandleChartView @JvmOverloads constructor(
         }
     }
 
-    private fun crosshairIndex(): Int {
+    /** Accroche le viseur à la bougie et au prix sous le doigt. */
+    private fun moveCrosshairTo(x: Float, y: Float) {
         val slot = (chartRight() - chartLeft()) / visibleCount
-        if (slot <= 0f) return lastVisibleIndex()
-        return floor(scrollOffset + (crosshairX - chartLeft()) / slot).toInt()
-            .coerceIn(firstVisibleIndex(), lastVisibleIndex())
+        val index = if (slot <= 0f) lastVisibleIndex() else {
+            // On borne aux bougies réelles : viser le vide (sur-défilement) accrocherait le
+            // viseur à un instant sans donnée.
+            floor(scrollOffset + (x - chartLeft()) / slot).toInt()
+                .coerceIn(0, candles.size - 1)
+        }
+        crosshairCandleTime = candles[index].openTime
+        crosshairPrice = yToPrice(y.coerceIn(chartTop(), chartBottom()))
+        invalidate()
+    }
+
+    /**
+     * Bougie visée par le viseur, ou -1 s'il est sorti de la fenêtre affichée (le graphe a été
+     * déplacé jusqu'à emmener « sa » bougie hors de l'écran).
+     */
+    private fun crosshairIndex(): Int {
+        if (!crosshairActive || candles.isEmpty()) return -1
+        val index = timeToIndex(crosshairCandleTime).roundToInt()
+        return if (index in firstVisibleIndex()..lastVisibleIndex()) index else -1
     }
 
     private fun drawCrosshair(canvas: Canvas) {
         val left = chartLeft()
         val right = chartRight()
         val index = crosshairIndex()
+        if (index < 0) return
         val candle = candles[index]
         val centerX = candleCenterX(index)
-        // Ligne horizontale libre : elle suit le doigt et la bulle affiche le prix pointé.
-        val y = crosshairY.coerceIn(chartTop(), chartBottom())
-        val pointedPrice = yToPrice(y)
 
         canvas.drawLine(centerX, chartTop(), centerX, chartBottom(), crosshairPaint)
-        canvas.drawLine(left, y, right, y, crosshairPaint)
 
         val padH = 6f * density
         val padV = 4f * density
         val labelHeight = bubbleTextPaint.textSize + padV * 2
 
-        // Bulle de prix sur l'axe de droite.
-        val priceLabel = priceFormat.format(pointedPrice)
-        val priceWidth = bubbleTextPaint.measureText(priceLabel) + padH * 2
-        val bubbleTop = (y - labelHeight / 2f).coerceIn(chartTop(), chartBottom() - labelHeight)
-        canvas.drawRect(right, bubbleTop, right + priceWidth, bubbleTop + labelHeight, crosshairLabelBgPaint)
-        canvas.drawText(
-            priceLabel,
-            right + padH,
-            bubbleTop + labelHeight - padV - bubbleTextPaint.descent(),
-            bubbleTextPaint
-        )
+        // Ligne horizontale + bulle de prix, seulement si le prix visé est encore dans la
+        // fenêtre affichée (un défilement vertical peut l'avoir sorti du cadre).
+        val y = priceToY(crosshairPrice)
+        if (y >= chartTop() && y <= chartBottom()) {
+            canvas.drawLine(left, y, right, y, crosshairPaint)
+            val priceLabel = priceFormat.format(crosshairPrice)
+            val priceWidth = bubbleTextPaint.measureText(priceLabel) + padH * 2
+            val bubbleTop = (y - labelHeight / 2f).coerceIn(chartTop(), chartBottom() - labelHeight)
+            canvas.drawRect(right, bubbleTop, right + priceWidth, bubbleTop + labelHeight, crosshairLabelBgPaint)
+            canvas.drawText(
+                priceLabel,
+                right + padH,
+                bubbleTop + labelHeight - padV - bubbleTextPaint.descent(),
+                bubbleTextPaint
+            )
+        }
 
         // Bulle date en bas, sur l'axe du temps.
         val dateLabel = dateFormat.format(Date(candle.openTime))
@@ -916,7 +1150,7 @@ class CandleChartView @JvmOverloads constructor(
      * Les segments passent à la ligne quand la largeur du graphe ne suffit pas.
      */
     private fun drawLegend(canvas: Canvas) {
-        val index = if (crosshairActive) crosshairIndex() else lastVisibleIndex()
+        val index = crosshairIndex().takeIf { it >= 0 } ?: lastVisibleIndex()
         val candle = candles[index]
         val bullish = candle.close >= candle.open
         val valueColor = if (bullish) upColor else downColor
@@ -1192,18 +1426,14 @@ class CandleChartView @JvmOverloads constructor(
             scroller.abortAnimation()
         }
 
-        // Une fois le viseur activé (appui long), il suit le doigt directement : le GestureDetector
+        // Tant que le doigt de l'appui long est posé, le viseur le suit : le GestureDetector
         // n'émet plus d'onScroll après un long press, on gère donc le déplacement à la main.
-        if (crosshairActive) {
+        if (crosshairDragging) {
             when (event.actionMasked) {
-                MotionEvent.ACTION_MOVE -> {
-                    crosshairX = event.x
-                    crosshairY = event.y
-                    invalidate()
-                }
+                MotionEvent.ACTION_MOVE -> moveCrosshairTo(event.x, event.y)
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    crosshairActive = false
-                    invalidate()
+                    // Doigt levé : le viseur reste affiché là où on l'a laissé.
+                    crosshairDragging = false
                     parent?.requestDisallowInterceptTouchEvent(false)
                 }
             }
