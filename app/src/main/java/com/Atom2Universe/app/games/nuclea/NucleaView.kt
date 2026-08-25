@@ -7,7 +7,9 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.RadialGradient
 import android.graphics.RectF
+import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
@@ -55,6 +57,7 @@ class NucleaView @JvmOverloads constructor(
     private val C_BH_RING1  = Color.parseColor("#FF8A3C")
     private val C_BH_RING2  = Color.parseColor("#9A5CFF")
     private val C_GREEN     = Color.parseColor("#7EF9C8")
+    private val C_AURA      = Color.parseColor("#7EF9C8")
     private val C_STAR_DIM  = Color.parseColor("#3A3A52")
 
     // Corps des atomes : version assombrie de la couleur de tier
@@ -81,6 +84,8 @@ class NucleaView @JvmOverloads constructor(
     @Volatile private var pendingStart = false
     @Volatile private var pendingPhase: NucleaPhase? = null
     @Volatile private var pendingBuyNode = -1
+    @Volatile private var pendingRespec = false
+    @Volatile private var pendingResume = false
 
     // Sticks d'une manette physique (type Xbox) — prioritaires quand le tactile est relâché
     @Volatile private var padMx = 0f
@@ -92,11 +97,14 @@ class NucleaView @JvmOverloads constructor(
 
     private val sTitle        by lazy { ctx.getString(R.string.nuclea_title) }
     private val sTagline      by lazy { ctx.getString(R.string.nuclea_tagline) }
-    private val sTapStart     by lazy { ctx.getString(R.string.nuclea_tap_to_start) }
     private val sConstBtn     by lazy { ctx.getString(R.string.nuclea_constellations) }
     private val sBack         by lazy { ctx.getString(R.string.nuclea_back) }
+    private val sRespec       by lazy { ctx.getString(R.string.nuclea_respec) }
+    private val sRespecOk     by lazy { ctx.getString(R.string.nuclea_respec_confirm) }
+    private val sDetails      by lazy { ctx.getString(R.string.nuclea_details) }
     private val sPaused       by lazy { ctx.getString(R.string.nuclea_paused) }
     private val sResume       by lazy { ctx.getString(R.string.nuclea_resume) }
+    private val sNewGame      by lazy { ctx.getString(R.string.nuclea_new_game) }
     private val sQuit         by lazy { ctx.getString(R.string.nuclea_quit) }
     private val sMenu         by lazy { ctx.getString(R.string.nuclea_menu) }
     private val sGameOver     by lazy { ctx.getString(R.string.nuclea_game_over) }
@@ -116,15 +124,44 @@ class NucleaView @JvmOverloads constructor(
         style = Paint.Style.STROKE
         pathEffect = DashPathEffect(floatArrayOf(8f, 8f), 0f)
     }
+    // Flux de photons : remplissage et bords peints avec un dégradé radial centré
+    // sur le joueur, pour que le cône se dissolve dans le vide au lieu de se couper net.
+    private val pFluxFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val pFluxEdge = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND
+    }
+    private val pFluxWave = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND
+    }
+    private var fluxShRange = -1f
+    private var fluxShColor = 0
+    // Aura du pulsar : bulle dégradée + anneaux d'onde
+    private val pAuraFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val pAuraRing = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND
+    }
+    private var auraShRadius = -1f
     private val fluxPath = Path()
+    private val wavePath = Path()
     private val starPath = Path()
 
     // Rects de boutons
     private val btnRect1 = RectF()
     private val btnRect2 = RectF()
+    private val btnRect3 = RectF()
+    private val resumeBtnRect = RectF()
+    private val newBtnRect = RectF()
     private val constBtnRect = RectF()
+    private val respecBtnRect = RectF()
+    private val infoBtnRect = RectF()
+    /** Panneau « détails » : liste chiffrée des améliorations, à la place du ciel. */
+    private var showInfo = false
+    /** Le bouton de remise à zéro demande confirmation : deuxième appui avant cette date. */
+    private var respecConfirmUntil = -1f
     private val backBtnRect = RectF()
     private val nodeRects = Array(NucleaGame.META_NODES.size) { RectF() }
+    // Positions écran des étoiles de la constellation en cours de dessin (pas d'allocation)
+    private val starBuf = FloatArray(NucleaGame.SHAPES.maxOf { it.mags.size } * 2)
 
     // Étoiles de fond (positions fixes + scintillement)
     private val bgStars by lazy {
@@ -178,12 +215,14 @@ class NucleaView @JvmOverloads constructor(
             animT += dt
 
             if (pendingStart) { pendingStart = false; game.startGame() }
+            if (pendingResume) { pendingResume = false; if (!game.resumeRun()) game.startGame() }
             pendingPhase?.let { ph -> pendingPhase = null; game.phase = ph }
             val node = pendingBuyNode
             if (node >= 0) {
                 pendingBuyNode = -1
                 NucleaGame.META_NODES.getOrNull(node)?.let { game.tryBuyNode(it) }
             }
+            if (pendingRespec) { pendingRespec = false; game.respec() }
 
             // Tactile prioritaire quand un doigt tient le stick, sinon la manette
             val mx = if (moveId >= 0) jmx else padMx
@@ -221,7 +260,7 @@ class NucleaView @JvmOverloads constructor(
     /** Bouton A ou START : valider / pause / reprendre selon la phase. */
     fun onPadConfirm(isStart: Boolean) {
         when (game.phase) {
-            NucleaPhase.MENU -> pendingStart = true
+            NucleaPhase.MENU -> if (game.hasResumableRun()) pendingResume = true else pendingStart = true
             NucleaPhase.PLAYING -> if (isStart) pendingPhase = NucleaPhase.PAUSED
             NucleaPhase.PAUSED -> pendingPhase = NucleaPhase.PLAYING
             NucleaPhase.GAME_OVER -> pendingPhase = NucleaPhase.MENU
@@ -249,13 +288,25 @@ class NucleaView @JvmOverloads constructor(
 
     private fun handleMenuTouch(ev: MotionEvent) {
         if (ev.action != MotionEvent.ACTION_UP) return
-        if (constBtnRect.contains(ev.x, ev.y)) pendingPhase = NucleaPhase.CONSTELLATION
-        else pendingStart = true
+        when {
+            constBtnRect.contains(ev.x, ev.y) -> pendingPhase = NucleaPhase.CONSTELLATION
+            !resumeBtnRect.isEmpty && resumeBtnRect.contains(ev.x, ev.y) -> pendingResume = true
+            newBtnRect.contains(ev.x, ev.y) -> pendingStart = true
+        }
     }
 
     private fun handleConstellationTouch(ev: MotionEvent) {
         if (ev.action != MotionEvent.ACTION_UP) return
         if (backBtnRect.contains(ev.x, ev.y)) { pendingPhase = NucleaPhase.MENU; return }
+        if (infoBtnRect.contains(ev.x, ev.y)) { showInfo = !showInfo; respecConfirmUntil = -1f; return }
+        if (showInfo) { showInfo = false; return }
+        if (!respecBtnRect.isEmpty && respecBtnRect.contains(ev.x, ev.y)) {
+            // Premier appui : on demande confirmation. Deuxième appui dans les 3 s : on applique.
+            if (animT < respecConfirmUntil) { pendingRespec = true; respecConfirmUntil = -1f }
+            else respecConfirmUntil = animT + 3f
+            return
+        }
+        respecConfirmUntil = -1f
         nodeRects.forEachIndexed { i, r ->
             if (!r.isEmpty && r.contains(ev.x, ev.y)) pendingBuyNode = i
         }
@@ -282,22 +333,36 @@ class NucleaView @JvmOverloads constructor(
                 for (i in 0 until ev.pointerCount) {
                     val id = ev.getPointerId(i)
                     if (id == moveId) {
-                        val dx = ev.getX(i) - moveCx; val dy = ev.getY(i) - moveCy
-                        val dist = sqrt(dx * dx + dy * dy)
-                        val clamped = dist.coerceAtMost(JOY_MAX)
-                        val nx = if (dist > 0) dx / dist else 0f
-                        val ny = if (dist > 0) dy / dist else 0f
-                        moveKx = moveCx + nx * clamped; moveKy = moveCy + ny * clamped
-                        jmx = nx * (clamped / JOY_MAX); jmy = ny * (clamped / JOY_MAX)
+                        val fx = ev.getX(i); val fy = ev.getY(i)
+                        var dx = fx - moveCx; var dy = fy - moveCy
+                        var dist = sqrt(dx * dx + dy * dy)
+                        // Stick flottant : passé le rayon max, la base suit le pouce au
+                        // lieu de rester plantée là où le doigt s'est posé.
+                        if (dist > JOY_MAX) {
+                            val over = dist - JOY_MAX
+                            moveCx += dx / dist * over; moveCy += dy / dist * over
+                            dx = fx - moveCx; dy = fy - moveCy
+                            dist = JOY_MAX
+                        }
+                        val nx = if (dist > 0f) dx / dist else 0f
+                        val ny = if (dist > 0f) dy / dist else 0f
+                        moveKx = fx; moveKy = fy
+                        jmx = nx * (dist / JOY_MAX); jmy = ny * (dist / JOY_MAX)
                     }
                     if (id == aimId) {
-                        val dx = ev.getX(i) - aimCx; val dy = ev.getY(i) - aimCy
-                        val dist = sqrt(dx * dx + dy * dy)
-                        val clamped = dist.coerceAtMost(JOY_MAX)
-                        val nx = if (dist > 0) dx / dist else 0f
-                        val ny = if (dist > 0) dy / dist else 0f
-                        aimKx = aimCx + nx * clamped; aimKy = aimCy + ny * clamped
-                        jax = nx * (clamped / JOY_MAX); jay = ny * (clamped / JOY_MAX)
+                        val fx = ev.getX(i); val fy = ev.getY(i)
+                        var dx = fx - aimCx; var dy = fy - aimCy
+                        var dist = sqrt(dx * dx + dy * dy)
+                        if (dist > JOY_MAX) {
+                            val over = dist - JOY_MAX
+                            aimCx += dx / dist * over; aimCy += dy / dist * over
+                            dx = fx - aimCx; dy = fy - aimCy
+                            dist = JOY_MAX
+                        }
+                        val nx = if (dist > 0f) dx / dist else 0f
+                        val ny = if (dist > 0f) dy / dist else 0f
+                        aimKx = fx; aimKy = fy
+                        jax = nx * (dist / JOY_MAX); jay = ny * (dist / JOY_MAX)
                     }
                 }
             }
@@ -311,7 +376,9 @@ class NucleaView @JvmOverloads constructor(
     private fun handlePausedTouch(ev: MotionEvent) {
         if (ev.action != MotionEvent.ACTION_UP) return
         if (btnRect1.contains(ev.x, ev.y)) pendingPhase = NucleaPhase.PLAYING
-        if (btnRect2.contains(ev.x, ev.y)) pendingPhase = NucleaPhase.MENU
+        if (btnRect2.contains(ev.x, ev.y)) pendingStart = true
+        // « Quitter » retourne au menu sans abandonner la partie : elle reste reprenable
+        if (btnRect3.contains(ev.x, ev.y)) pendingPhase = NucleaPhase.MENU
     }
 
     private fun handleGameOverTouch(ev: MotionEvent) {
@@ -376,6 +443,7 @@ class NucleaView @JvmOverloads constructor(
     private fun drawWorld(canvas: Canvas) {
         drawBlackHole(canvas)
         drawFlux(canvas)
+        drawAura(canvas)
         drawShocks(canvas)
         drawMarks(canvas)
         drawMotes(canvas)
@@ -389,7 +457,9 @@ class NucleaView @JvmOverloads constructor(
 
     private fun drawBlackHole(canvas: Canvas) {
         val bh = game.blackHole ?: return
-        val hz = bh.horizon()
+        // Apparition : le trou noir grandit depuis un point pendant sa phase inoffensive
+        val appear = (1f - bh.grace / BlackHole.SPAWN_GRACE).coerceIn(0f, 1f)
+        val hz = bh.horizon() * (0.25f + 0.75f * appear)
         // Halo d'accrétion
         pGlow.color = Color.argb(70, 255, 138, 60)
         canvas.drawCircle(bh.x, bh.y, hz * 1.7f, pGlow)
@@ -410,6 +480,12 @@ class NucleaView @JvmOverloads constructor(
             canvas.restore()
         }
         pStroke.alpha = 255
+        // Anneau qui se resserre pendant l'apparition : indique où il se forme
+        if (bh.grace > 0f) {
+            pDash.color = Color.argb(210, 255, 138, 60)
+            pDash.strokeWidth = dp(2.5f)
+            canvas.drawCircle(bh.x, bh.y, bh.horizon() * (1f + 5f * (1f - appear)), pDash)
+        }
         // Avertissement d'éruption : anneau rouge clignotant sur la zone de danger
         if (bh.pulseWarn > 0f) {
             val dangerR = game.pulseRadius(bh)
@@ -439,32 +515,167 @@ class NucleaView @JvmOverloads constructor(
         val gamma = game.powerActive(PowerUpType.GAMMA)
         val color = when { gamma -> C_FLUX_GAM; magnetic -> C_FLUX_MAG; else -> C_FLUX }
 
-        drawCone(canvas, aimAng, half, range, color)
-        if (game.powerActive(PowerUpType.BINARY))
-            drawCone(canvas, aimAng + PI.toFloat(), half, range, color)
-
-        // Photons qui filent le long du cône (vers l'intérieur en mode magnétique)
-        pFill.color = C_FLUX_CORE
-        for (k in 0 until 12) {
-            val t = ((animT * 1.6f + k * 0.083f) % 1f)
-            val ang = aimAng + fluxJitter[k] * 2f * half * 0.8f
-            val dist = if (magnetic) range * (1f - t) else t * range
-            canvas.drawCircle(game.px + cos(ang) * dist, game.py + sin(ang) * dist,
-                dp(1.6f) * (1f - t * 0.5f), pFill)
-        }
+        ensureFluxShaders(range, color)
+        drawCone(canvas, aimAng, half, range, magnetic)
     }
 
-    private fun drawCone(canvas: Canvas, ang: Float, half: Float, range: Float, color: Int) {
+    /** Onde de répulsion du pulsar : bulle qui pulse tout autour du joueur. */
+    private fun drawAura(canvas: Canvas) {
+        if (game.phase == NucleaPhase.GAME_OVER) return
+        val left = game.powerTimers[PowerUpType.PULSAR.ordinal]
+        if (left <= 0f) return
+        val r = game.auraRadius()
+        if (r != auraShRadius) {
+            auraShRadius = r
+            pAuraFill.shader = RadialGradient(
+                0f, 0f, r,
+                intArrayOf(withA(C_AURA, 0f), withA(C_AURA, 16f), withA(C_AURA, 46f), withA(C_AURA, 10f)),
+                floatArrayOf(0f, 0.5f, 0.88f, 1f), Shader.TileMode.CLAMP
+            )
+        }
+        // Clignote sur la fin pour annoncer l'expiration
+        val expiring = if (left < 2f) (0.55f + 0.45f * sin(animT * 16f)) else 1f
+
+        canvas.save()
+        canvas.translate(game.px, game.py)
+        pAuraFill.alpha = (255 * expiring).toInt().coerceIn(0, 255)
+        canvas.drawCircle(0f, 0f, r, pAuraFill)
+
+        // Deux ondes qui s'écartent du joueur jusqu'au bord de la bulle
+        for (k in 0 until 2) {
+            val t = (animT * 0.9f + k * 0.5f) % 1f
+            val fade = sin(t * PI.toFloat()) * expiring
+            pAuraRing.color = withA(C_AURA, 170f * fade)
+            pAuraRing.strokeWidth = dp(2.2f) * (0.6f + fade * 0.6f)
+            ripplePath(r * (0.15f + 0.85f * t), 0.045f, animT * 2.4f + k)
+            canvas.drawPath(wavePath, pAuraRing)
+        }
+
+        // Liseré extérieur : la limite d'action, légèrement ondulante
+        pAuraRing.color = withA(C_AURA, 130f * expiring)
+        pAuraRing.strokeWidth = dp(1.6f)
+        ripplePath(r, 0.03f, -animT * 1.8f)
+        canvas.drawPath(wavePath, pAuraRing)
+        canvas.restore()
+    }
+
+    /** Cercle légèrement ondulé de rayon [r], écrit dans [wavePath] (aucune allocation). */
+    private fun ripplePath(r: Float, amp: Float, phase: Float) {
+        wavePath.reset()
+        val n = 30
+        for (i in 0..n) {
+            val a = i / n.toFloat() * 2f * PI.toFloat()
+            val rr = r * (1f + amp * sin(a * 5f + phase))
+            val x = cos(a) * rr; val y = sin(a) * rr
+            if (i == 0) wavePath.moveTo(x, y) else wavePath.lineTo(x, y)
+        }
+        wavePath.close()
+    }
+
+    /**
+     * Dégradés du flux : recréés seulement quand la portée ou la couleur change
+     * (jamais dans la boucle de rendu). Ils sont centrés sur (0,0) : le canvas est
+     * translaté sur le joueur avant le dessin, donc le dégradé suit le joueur tout seul.
+     */
+    private fun ensureFluxShaders(range: Float, color: Int) {
+        if (range == fluxShRange && color == fluxShColor) return
+        fluxShRange = range
+        fluxShColor = color
+        val a = Color.alpha(color)
+        pFluxFill.shader = RadialGradient(
+            0f, 0f, range,
+            intArrayOf(withA(color, a * 2.6f), withA(color, a * 1.6f), withA(color, a * 0.7f), withA(color, 0f)),
+            floatArrayOf(0f, 0.32f, 0.72f, 1f), Shader.TileMode.CLAMP
+        )
+        val edge = RadialGradient(
+            0f, 0f, range,
+            intArrayOf(withA(color, a * 5f), withA(color, a * 3f), withA(color, 0f)),
+            floatArrayOf(0f, 0.55f, 1f), Shader.TileMode.CLAMP
+        )
+        pFluxEdge.shader = edge
+        pFluxWave.shader = edge
+    }
+
+    private fun withA(c: Int, alpha: Float) =
+        (c and 0x00FFFFFF) or (alpha.toInt().coerceIn(0, 255) shl 24)
+
+    /**
+     * Demi-ouverture du cône à la distance relative [t] (0 = joueur, 1 = portée max).
+     * Le facteur (0.62 + 0.38·t) donne une silhouette évasée façon pavillon plutôt
+     * qu'un triangle droit, et le sinus fait onduler le bord dans le temps.
+     */
+    private fun coneEdge(t: Float, half: Float, phase: Float) =
+        half * (0.62f + 0.38f * t) * (1f + 0.10f * sin(t * 9f - animT * 5.5f + phase))
+
+    private fun drawCone(canvas: Canvas, ang: Float, half: Float, range: Float, magnetic: Boolean) {
+        canvas.save()
+        canvas.translate(game.px, game.py)
+        canvas.rotate(ang * 57.29578f)
+
+        // ── Silhouette : bord bas ondulant → front d'onde arrondi → bord haut ──
+        val eNeg = coneEdge(1f, half, 0f)
+        val ePos = coneEdge(1f, half, 2.2f)
         fluxPath.reset()
-        fluxPath.moveTo(game.px, game.py)
-        val steps = 8
-        for (i in 0..steps) {
-            val a = ang - half + (2f * half) * i / steps
-            fluxPath.lineTo(game.px + cos(a) * range, game.py + sin(a) * range)
+        fluxPath.moveTo(0f, 0f)
+        val steps = 14
+        for (i in 1..steps) {
+            val t = i / steps.toFloat()
+            val e = -coneEdge(t, half, 0f)
+            fluxPath.lineTo(cos(e) * range * t, sin(e) * range * t)
+        }
+        val arcSteps = 18
+        for (i in 0..arcSteps) {
+            val f = i / arcSteps.toFloat()
+            val e = -eNeg + (eNeg + ePos) * f
+            val r = range * (1f + 0.035f * sin(f * 11f - animT * 6f))
+            fluxPath.lineTo(cos(e) * r, sin(e) * r)
+        }
+        for (i in steps downTo 1) {
+            val t = i / steps.toFloat()
+            val e = coneEdge(t, half, 2.2f)
+            fluxPath.lineTo(cos(e) * range * t, sin(e) * range * t)
         }
         fluxPath.close()
-        pFill.color = color
-        canvas.drawPath(fluxPath, pFill)
+        canvas.drawPath(fluxPath, pFluxFill)
+        pFluxEdge.strokeWidth = dp(1.5f)
+        canvas.drawPath(fluxPath, pFluxEdge)
+
+        // ── Fronts d'onde qui remontent le cône (vers le joueur si magnétique) ──
+        for (k in 0 until 3) {
+            var t = (animT * 0.7f + k / 3f) % 1f
+            if (magnetic) t = 1f - t
+            val fade = sin(t * PI.toFloat())
+            val e = coneEdge(t, half, k * 1.7f)
+            wavePath.reset()
+            val n = 14
+            for (i in 0..n) {
+                val f = i / n.toFloat()
+                val aa = -e + 2f * e * f
+                val rr = range * t * (1f + 0.05f * sin(f * 7f + animT * 4f + k))
+                val x = cos(aa) * rr; val y = sin(aa) * rr
+                if (i == 0) wavePath.moveTo(x, y) else wavePath.lineTo(x, y)
+            }
+            pFluxWave.strokeWidth = dp(2.4f) * (0.5f + fade * 0.8f)
+            pFluxWave.alpha = (215 * fade).toInt().coerceIn(0, 255)
+            canvas.drawPath(wavePath, pFluxWave)
+        }
+        pFluxWave.alpha = 255
+
+        // ── Photons qui filent le long du flux ──
+        pFill.color = C_FLUX_CORE
+        for (k in 0 until 12) {
+            val t = (animT * 1.6f + k * 0.083f) % 1f
+            val e = coneEdge(t, half, k * 0.9f)
+            val aa = fluxJitter[k] * 1.7f * e
+            val dist = (if (magnetic) 1f - t else t) * range
+            canvas.drawCircle(cos(aa) * dist, sin(aa) * dist, dp(1.6f) * (1.2f - t * 0.6f), pFill)
+        }
+
+        // ── Cœur lumineux à la base du flux ──
+        pGlow.color = withA(fluxShColor, 150f)
+        canvas.drawCircle(dp(4f), 0f, dp(7f), pGlow)
+
+        canvas.restore()
     }
 
     private fun drawShocks(canvas: Canvas) {
@@ -529,7 +740,7 @@ class NucleaView @JvmOverloads constructor(
                 PowerUpType.TIME -> "T"
                 PowerUpType.GAMMA -> "γ"
                 PowerUpType.SHIELD -> "◆"
-                PowerUpType.BINARY -> "B"
+                PowerUpType.PULSAR -> "P"
             }
             canvas.drawText(label, p.x, p.y + bob + sp(4.5f), pText)
         }
@@ -666,13 +877,13 @@ class NucleaView @JvmOverloads constructor(
             pFill.color = C_CARD_BG
             canvas.drawCircle(px, py, dp(11f), pFill)
             pStroke.color = C_GREEN; pStroke.strokeWidth = dp(2f)
-            val maxDur = if (t == PowerUpType.BINARY) 12f else 8f
+            val maxDur = if (t == PowerUpType.PULSAR) 12f else 8f
             canvas.drawArc(RectF(px - dp(11f), py - dp(11f), px + dp(11f), py + dp(11f)),
                 -90f, 360f * (left / maxDur).coerceIn(0f, 1f), false, pStroke)
             pText.color = C_GREEN; pText.textSize = sp(11f)
             val label = when (t) {
                 PowerUpType.MAGNETIC -> "M"; PowerUpType.TIME -> "T"; PowerUpType.GAMMA -> "γ"
-                PowerUpType.SHIELD -> "◆"; PowerUpType.BINARY -> "B"
+                PowerUpType.SHIELD -> "◆"; PowerUpType.PULSAR -> "P"
             }
             canvas.drawText(label, px, py + sp(4f), pText)
             px -= dp(28f)
@@ -758,20 +969,64 @@ class NucleaView @JvmOverloads constructor(
         pText.color = C_DUST
         canvas.drawText("✦ ${game.meta.dust}", cx, h * 0.49f + sp(20f), pText)
 
-        // Tap pour démarrer (pulsation)
-        val pulse = (sin(animT * 3f) * 0.5f + 0.5f)
-        pText.color = Color.argb((150 + pulse * 105).toInt(), 255, 255, 255)
-        pText.textSize = sp(17f)
-        canvas.drawText(sTapStart, cx, h * 0.63f, pText)
+        // Boutons : empilés en portrait, alignés sur une rangée en paysage (écran bas)
+        val resumable = game.hasResumableRun()
+        val row = w > h
+        val bh = dp(46f)
+        val bw = if (row) dp(150f) else dp(210f)
+        val bgap = dp(12f)
 
-        // Bouton constellations
-        val bw = dp(210f); val bh = dp(46f)
-        constBtnRect.set(cx - bw / 2f, h * 0.72f, cx + bw / 2f, h * 0.72f + bh)
+        if (row) {
+            val count = if (resumable) 3 else 2
+            val totalW = count * bw + (count - 1) * bgap
+            var bx = cx - totalW / 2f
+            val by = h * 0.70f
+            if (resumable) {
+                resumeBtnRect.set(bx, by, bx + bw, by + bh); bx += bw + bgap
+            } else resumeBtnRect.setEmpty()
+            newBtnRect.set(bx, by, bx + bw, by + bh); bx += bw + bgap
+            constBtnRect.set(bx, by, bx + bw, by + bh)
+        } else {
+            var by = h * (if (resumable) 0.58f else 0.63f)
+            if (resumable) {
+                resumeBtnRect.set(cx - bw / 2f, by, cx + bw / 2f, by + bh)
+                by += bh + dp(30f)
+            } else resumeBtnRect.setEmpty()
+            newBtnRect.set(cx - bw / 2f, by, cx + bw / 2f, by + bh)
+            by += bh + dp(14f)
+            constBtnRect.set(cx - bw / 2f, by, cx + bw / 2f, by + bh)
+        }
+
+        if (resumable) {
+            // Bouton principal : liseré vert qui respire pour attirer l'œil
+            val pulse = (sin(animT * 3f) * 0.5f + 0.5f)
+            pFill.color = C_BTN_BG
+            canvas.drawRoundRect(resumeBtnRect, dp(10f), dp(10f), pFill)
+            pStroke.color = Color.argb((160 + pulse * 95).toInt(), 126, 249, 200)
+            pStroke.strokeWidth = dp(2f)
+            canvas.drawRoundRect(resumeBtnRect, dp(10f), dp(10f), pStroke)
+            pText.color = C_GREEN; pText.textSize = if (row) sp(13.5f) else sp(16f)
+            canvas.drawText("▶ $sResume", resumeBtnRect.centerX(), resumeBtnRect.centerY() + sp(5f), pText)
+            // Rappel de la vague où on s'est arrêté
+            pText.color = C_GRAY; pText.textSize = sp(11.5f)
+            canvas.drawText(
+                ctx().getString(R.string.nuclea_wave_label, game.resumableWave()),
+                resumeBtnRect.centerX(), resumeBtnRect.bottom + sp(15f), pText
+            )
+        }
+
+        pFill.color = C_BTN_BG
+        canvas.drawRoundRect(newBtnRect, dp(10f), dp(10f), pFill)
+        pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = 1.5f
+        canvas.drawRoundRect(newBtnRect, dp(10f), dp(10f), pStroke)
+        pText.color = Color.WHITE; pText.textSize = if (row) sp(13.5f) else sp(15f)
+        canvas.drawText(sNewGame, newBtnRect.centerX(), newBtnRect.centerY() + sp(5f), pText)
+
         pFill.color = C_BTN_BG
         canvas.drawRoundRect(constBtnRect, dp(10f), dp(10f), pFill)
         pStroke.color = C_DUST; pStroke.strokeWidth = 1.5f
         canvas.drawRoundRect(constBtnRect, dp(10f), dp(10f), pStroke)
-        pText.color = C_DUST; pText.textSize = sp(15f)
+        pText.color = C_DUST; pText.textSize = if (row) sp(13.5f) else sp(15f)
         canvas.drawText("✧ $sConstBtn", constBtnRect.centerX(), constBtnRect.centerY() + sp(5f), pText)
     }
 
@@ -795,65 +1050,243 @@ class NucleaView @JvmOverloads constructor(
         pText.color = Color.WHITE; pText.textSize = sp(19f)
         canvas.drawText(sConstBtn, w / 2f + dp(20f), dp(34f), pText)
 
-        // Zone de ciel : nœuds reliés par constellation
-        val skyTop = dp(64f)
-        val skyBottom = h - dp(96f)
-        fun nodeX(n: MetaNode) = n.nx * w
-        fun nodeY(n: MetaNode) = skyTop + n.ny * (skyBottom - skyTop)
-
-        // Lignes entre étoiles d'une même constellation
-        pStroke.strokeWidth = dp(1.5f)
-        for (c in 0 until 3) {
-            val nodes = NucleaGame.META_NODES.filter { it.constellation == c }
-            val complete = game.constellationComplete(c)
-            pStroke.color = if (complete) Color.argb(180, 255, 224, 102) else Color.argb(80, 203, 184, 255)
-            for (i in 0 until nodes.size - 1) {
-                canvas.drawLine(nodeX(nodes[i]), nodeY(nodes[i]), nodeX(nodes[i + 1]), nodeY(nodes[i + 1]), pStroke)
-            }
-        }
-
-        // Étoiles-nœuds
-        NucleaGame.META_NODES.forEachIndexed { i, n ->
-            val x = nodeX(n); val y = nodeY(n)
-            val lvl = game.meta.lvl(n.key)
-            val maxed = lvl >= n.maxLvl
-            val cost = game.nodeCost(n)
-            val affordable = !maxed && game.meta.dust >= cost
-
-            nodeRects[i].set(x - dp(30f), y - dp(30f), x + dp(30f), y + dp(38f))
-
-            val starR = dp(11f)
-            if (maxed) {
-                pGlow.color = Color.argb(120, 255, 224, 102)
-                canvas.drawCircle(x, y, starR * 2f, pGlow)
-            } else if (affordable) {
-                pGlow.color = Color.argb(70, 203, 184, 255)
-                canvas.drawCircle(x, y, starR * 1.7f, pGlow)
-            }
-            setStar(x, y, starR, starR * 0.45f)
-            pFill.color = when {
-                maxed -> C_GOLD
-                lvl > 0 -> C_DUST
-                affordable -> Color.parseColor("#7A6AA8")
-                else -> C_STAR_DIM
-            }
-            canvas.drawPath(starPath, pFill)
-
-            // Label + niveau + coût
-            pText.textSize = sp(10.5f)
-            pText.color = if (maxed || lvl > 0 || affordable) Color.WHITE else C_GRAY
-            canvas.drawText(ctx().getString(n.labelRes), x, y + dp(22f), pText)
-            pText.textSize = sp(10f)
-            if (maxed) {
-                pText.color = C_GOLD
-                canvas.drawText("MAX", x, y + dp(34f), pText)
+        // Bouton « tout réinitialiser » : rembourse la poussière investie
+        val refund = game.respecRefund()
+        val confirming = animT < respecConfirmUntil
+        val label = if (confirming) sRespecOk else "↺ $sRespec"
+        val amount = if (refund > 0L && !confirming) "  +✦$refund" else ""
+        pText.textSize = sp(12.5f)
+        val bw = pText.measureText(label + amount) + dp(24f)
+        respecBtnRect.set(w - dp(12f) - bw, dp(54f), w - dp(12f), dp(96f))
+        if (refund > 0L) {
+            pFill.color = if (confirming) Color.parseColor("#4A2A2A") else C_BTN_BG
+            canvas.drawRoundRect(respecBtnRect, dp(10f), dp(10f), pFill)
+            pStroke.color = if (confirming) C_GAMEOVER else C_BTN_BORDER
+            pStroke.strokeWidth = dp(1.5f)
+            canvas.drawRoundRect(respecBtnRect, dp(10f), dp(10f), pStroke)
+            val ty = respecBtnRect.centerY() + sp(4.5f)
+            if (amount.isEmpty()) {
+                pText.color = if (confirming) C_GAMEOVER else Color.WHITE
+                canvas.drawText(label, respecBtnRect.centerX(), ty, pText)
             } else {
-                pText.color = if (affordable) C_GOLD else C_GRAY
-                canvas.drawText("$lvl/${n.maxLvl}  ✦$cost", x, y + dp(34f), pText)
+                // Libellé blanc + montant remboursé en doré, collés au centre du bouton
+                val lw = pText.measureText(label)
+                val aw = pText.measureText(amount)
+                val x0 = respecBtnRect.centerX() - (lw + aw) / 2f
+                pText.textAlign = Paint.Align.LEFT
+                pText.color = Color.WHITE
+                canvas.drawText(label, x0, ty, pText)
+                pText.color = C_GOLD
+                canvas.drawText(amount, x0 + lw, ty, pText)
+                pText.textAlign = Paint.Align.CENTER
+            }
+        } else {
+            respecBtnRect.setEmpty()
+        }
+
+        // Bouton « i » : bascule entre le ciel et la liste détaillée
+        val infoR = dp(21f)
+        val infoCx = (if (respecBtnRect.isEmpty) w - dp(12f) else respecBtnRect.left - dp(10f)) - infoR
+        val infoCy = dp(54f) + infoR
+        infoBtnRect.set(infoCx - infoR, infoCy - infoR, infoCx + infoR, infoCy + infoR)
+        pFill.color = if (showInfo) C_DUST else C_BTN_BG
+        canvas.drawCircle(infoCx, infoCy, infoR, pFill)
+        pStroke.color = if (showInfo) C_DUST else C_BTN_BORDER
+        pStroke.strokeWidth = dp(1.5f)
+        canvas.drawCircle(infoCx, infoCy, infoR, pStroke)
+        pText.color = if (showInfo) C_CARD_BG else Color.WHITE
+        pText.textSize = sp(16f)
+        canvas.drawText("i", infoCx, infoCy + sp(5.5f), pText)
+
+        // Zone de ciel : chaque constellation est tracée à sa vraie forme
+        val skyTop = dp(104f)
+        val skyBottom = h - dp(96f)
+        val skyH = skyBottom - skyTop
+        val edge = dp(42f)   // marge pour que les libellés ne débordent pas de l'écran
+
+        if (showInfo) {
+            drawInfoPanel(canvas, w, skyTop, skyBottom)
+            drawConstellationBanner(canvas, h)
+            return
+        }
+
+        for (c in 0 until 3) {
+            val sh = NucleaGame.SHAPES[c]
+            val complete = game.constellationComplete(c)
+
+            // Mise à l'échelle uniforme dans le cadre : la forme n'est jamais déformée
+            val panel = if (w > h) sh.panelLand else sh.panel
+            val pl = (panel[0] * w).coerceAtLeast(edge)
+            val pt = skyTop + panel[1] * skyH
+            val pr = (panel[2] * w).coerceAtMost(w - edge)
+            val pb = skyTop + panel[3] * skyH
+            val shW = sh.maxX - sh.minX
+            val shH = sh.maxY - sh.minY
+            val sc = min((pr - pl) / shW, (pb - pt) / shH)
+            val ox = pl + ((pr - pl) - shW * sc) / 2f - sh.minX * sc
+            val oy = pt + ((pb - pt) - shH * sc) / 2f - sh.minY * sc
+            val count = sh.mags.size
+            for (i in 0 until count) {
+                starBuf[i * 2] = sh.stars[i * 2] * sc + ox
+                starBuf[i * 2 + 1] = sh.stars[i * 2 + 1] * sc + oy
+            }
+
+            // Astérisme : les segments réels du dessin céleste
+            pStroke.strokeWidth = dp(1.5f)
+            pStroke.color = if (complete) Color.argb(180, 255, 224, 102) else Color.argb(70, 203, 184, 255)
+            var k = 0
+            while (k < sh.lines.size) {
+                val a = sh.lines[k]; val b = sh.lines[k + 1]
+                canvas.drawLine(starBuf[a * 2], starBuf[a * 2 + 1], starBuf[b * 2], starBuf[b * 2 + 1], pStroke)
+                k += 2
+            }
+
+            // Étoiles décoratives : celles qui ne portent pas d'amélioration
+            for (i in 0 until count) {
+                if (sh.nodeStars.contains(i)) continue
+                val mag = sh.mags[i]
+                val r = dp(1.4f) + dp(2.4f) * mag
+                val x = starBuf[i * 2]; val y = starBuf[i * 2 + 1]
+                pGlow.color = Color.argb((35 + 65 * mag).toInt(), 203, 184, 255)
+                canvas.drawCircle(x, y, r * 2.4f, pGlow)
+                pFill.color = Color.argb((140 + 115 * mag).toInt(), 235, 232, 255)
+                canvas.drawCircle(x, y, r, pFill)
+            }
+
+            // Nom de la constellation, sous son tracé
+            pText.textSize = sp(12f)
+            pText.color = if (complete) C_GOLD else C_GRAY
+            canvas.drawText(
+                ctx().getString(NucleaGame.CONSTELLATION_NAMES[c]),
+                ox + (sh.minX + shW / 2f) * sc,
+                min(oy + sh.maxY * sc + dp(54f), skyBottom - dp(2f)), pText
+            )
+
+            // Étoiles-nœuds : les 3 améliorations, posées sur de vraies étoiles
+            var slot = 0
+            NucleaGame.META_NODES.forEachIndexed { gi, n ->
+                if (n.constellation != c) return@forEachIndexed
+                val star = sh.nodeStars[slot]; slot++
+                val x = starBuf[star * 2]; val y = starBuf[star * 2 + 1]
+                val lvl = game.meta.lvl(n.key)
+                val maxed = lvl >= n.maxLvl
+                val cost = game.nodeCost(n)
+                val affordable = !maxed && game.meta.dust >= cost
+
+                nodeRects[gi].set(x - dp(30f), y - dp(30f), x + dp(30f), y + dp(38f))
+
+                val starR = dp(11f)
+                if (maxed) {
+                    pGlow.color = Color.argb(120, 255, 224, 102)
+                    canvas.drawCircle(x, y, starR * 2f, pGlow)
+                } else if (affordable) {
+                    pGlow.color = Color.argb(70, 203, 184, 255)
+                    canvas.drawCircle(x, y, starR * 1.7f, pGlow)
+                }
+                setStar(x, y, starR, starR * 0.45f)
+                pFill.color = when {
+                    maxed -> C_GOLD
+                    lvl > 0 -> C_DUST
+                    affordable -> Color.parseColor("#7A6AA8")
+                    else -> C_STAR_DIM
+                }
+                canvas.drawPath(starPath, pFill)
+
+                // Label + niveau + coût
+                pText.textSize = sp(10.5f)
+                pText.color = if (maxed || lvl > 0 || affordable) Color.WHITE else C_GRAY
+                canvas.drawText(ctx().getString(n.labelRes), x, y + dp(22f), pText)
+                pText.textSize = sp(10f)
+                if (maxed) {
+                    pText.color = C_GOLD
+                    canvas.drawText("MAX", x, y + dp(34f), pText)
+                } else {
+                    pText.color = if (affordable) C_GOLD else C_GRAY
+                    canvas.drawText("$lvl/${n.maxLvl}  ✦$cost", x, y + dp(34f), pText)
+                }
             }
         }
 
-        // Bandeau bas : bonus de constellation complète
+        drawConstellationBanner(canvas, h)
+    }
+
+    /**
+     * Liste détaillée des améliorations : niveau, effet actuel et effet au niveau suivant.
+     * En paysage les trois constellations passent en colonnes, sinon elles s'empilent.
+     */
+    private fun drawInfoPanel(canvas: Canvas, w: Float, skyTop: Float, skyBottom: Float) {
+        val rowH = dp(24f)
+        val headH = dp(30f)
+        val blockH = headH + 3 * rowH
+        // Empilé si le ciel est assez haut, sinon en trois colonnes (paysage, écran partagé)
+        val cols = if (skyBottom - skyTop >= 3 * blockH + dp(46f)) 1 else 3
+        val panelH = (if (cols == 3) blockH else 3 * blockH) + dp(46f)
+        val panelW = w - dp(24f)
+        val top = skyTop + ((skyBottom - skyTop) - panelH).coerceAtLeast(0f) / 2f
+        val panel = RectF(dp(12f), top, dp(12f) + panelW, top + panelH)
+
+        pFill.color = C_CARD_BG
+        canvas.drawRoundRect(panel, dp(14f), dp(14f), pFill)
+        pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = dp(1.5f)
+        canvas.drawRoundRect(panel, dp(14f), dp(14f), pStroke)
+
+        pText.color = C_DUST; pText.textSize = sp(14f)
+        canvas.drawText(sDetails, panel.centerX(), panel.top + dp(24f), pText)
+
+        val colW = (panelW - dp(20f)) / cols
+        for (c in 0 until 3) {
+            val colX = panel.left + dp(10f) + (if (cols == 3) c * colW else 0f)
+            var y = panel.top + dp(38f) + (if (cols == 3) 0f else c * blockH)
+            val complete = game.constellationComplete(c)
+
+            // Titre de la constellation
+            pTextL.textSize = sp(12.5f)
+            pTextL.color = if (complete) C_GOLD else C_GRAY
+            canvas.drawText(
+                (if (complete) "★ " else "☆ ") + ctx().getString(NucleaGame.CONSTELLATION_NAMES[c]),
+                colX, y + sp(12f), pTextL
+            )
+            y += headH
+
+            for (n in NucleaGame.META_NODES) {
+                if (n.constellation != c) continue
+                val lvl = game.meta.lvl(n.key)
+                val maxed = lvl >= n.maxLvl
+                val baseline = y + sp(11f)
+
+                // Nom de l'amélioration + niveau
+                pTextL.textSize = sp(11.5f)
+                pTextL.color = if (lvl > 0) Color.WHITE else C_GRAY
+                canvas.drawText(ctx().getString(n.labelRes), colX + dp(4f), baseline, pTextL)
+                pTextL.color = C_GRAY
+                canvas.drawText("$lvl/${n.maxLvl}", colX + colW * 0.42f, baseline, pTextL)
+
+                // Effet actuel → effet au niveau suivant (ou coût du prochain niveau)
+                val cur = game.nodeEffect(n.key, lvl)
+                val next = if (maxed) "" else "  →  " + game.nodeEffect(n.key, lvl + 1)
+                val right = colX + colW - dp(12f)
+                pTextL.textAlign = Paint.Align.RIGHT
+                if (maxed) {
+                    pTextL.color = C_GOLD
+                    canvas.drawText(cur, right, baseline, pTextL)
+                } else {
+                    pTextL.color = C_GOLD
+                    canvas.drawText(next, right, baseline, pTextL)
+                    pTextL.color = Color.WHITE
+                    canvas.drawText(cur, right - pTextL.measureText(next), baseline, pTextL)
+                }
+                pTextL.textAlign = Paint.Align.LEFT
+                y += rowH
+            }
+        }
+
+        // Rappel : un appui n'importe où referme le panneau
+        pText.color = C_GRAY; pText.textSize = sp(10.5f)
+        canvas.drawText("✕", panel.right - dp(16f), panel.top + dp(24f), pText)
+    }
+
+    /** Bandeau du bas : rappel des bonus de constellation complète. */
+    private fun drawConstellationBanner(canvas: Canvas, h: Float) {
         var by = h - dp(78f)
         pTextL.textSize = sp(11.5f)
         for (c in 0 until 3) {
@@ -890,7 +1323,27 @@ class NucleaView @JvmOverloads constructor(
         val cx = width / 2f; val cy = height / 2f
         pText.color = Color.WHITE; pText.textSize = sp(28f)
         canvas.drawText(sPaused, cx, cy - dp(60f), pText)
-        drawTwoButtons(canvas, cx, cy, sResume, sQuit)
+        // Reprendre en large, puis Nouvelle partie / Quitter côte à côte
+        val bw = dp(220f); val bh = dp(44f)
+        btnRect1.set(cx - bw / 2f, cy + dp(20f), cx + bw / 2f, cy + dp(20f) + bh)
+        drawButton(canvas, btnRect1, sResume, C_GREEN)
+        val sw = dp(106f); val gap = dp(8f)
+        val y2 = btnRect1.bottom + dp(12f)
+        btnRect2.set(cx - sw - gap / 2f, y2, cx - gap / 2f, y2 + bh)
+        btnRect3.set(cx + gap / 2f, y2, cx + sw + gap / 2f, y2 + bh)
+        drawButton(canvas, btnRect2, sNewGame, Color.WHITE)
+        drawButton(canvas, btnRect3, sQuit, Color.WHITE)
+    }
+
+    private fun drawButton(canvas: Canvas, rect: RectF, label: String, tint: Int) {
+        pFill.color = C_BTN_BG
+        canvas.drawRoundRect(rect, dp(10f), dp(10f), pFill)
+        pStroke.color = if (tint == Color.WHITE) C_BTN_BORDER else tint
+        pStroke.strokeWidth = 1.5f
+        canvas.drawRoundRect(rect, dp(10f), dp(10f), pStroke)
+        pText.color = tint
+        pText.textSize = if (rect.width() < dp(130f)) sp(12.5f) else sp(15f)
+        canvas.drawText(label, rect.centerX(), rect.centerY() + sp(5f), pText)
     }
 
     private fun drawGameOver(canvas: Canvas) {
@@ -931,21 +1384,6 @@ class NucleaView @JvmOverloads constructor(
         canvas.drawRoundRect(btnRect1, dp(10f), dp(10f), pStroke)
         pText.color = Color.WHITE; pText.textSize = sp(15f)
         canvas.drawText(label, btnRect1.centerX(), btnRect1.centerY() + sp(5f), pText)
-    }
-
-    private fun drawTwoButtons(canvas: Canvas, cx: Float, cy: Float, label1: String, label2: String) {
-        val bw = dp(140f); val bh = dp(44f); val gap = dp(20f)
-        val by = cy + dp(20f)
-        btnRect1.set(cx - bw - gap / 2f, by, cx - gap / 2f, by + bh)
-        btnRect2.set(cx + gap / 2f, by, cx + bw + gap / 2f, by + bh)
-        for ((rect, label) in listOf(btnRect1 to label1, btnRect2 to label2)) {
-            pFill.color = C_BTN_BG
-            canvas.drawRoundRect(rect, dp(10f), dp(10f), pFill)
-            pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = 1.5f
-            canvas.drawRoundRect(rect, dp(10f), dp(10f), pStroke)
-            pText.color = Color.WHITE; pText.textSize = sp(15f)
-            canvas.drawText(label, rect.centerX(), rect.centerY() + sp(5f), pText)
-        }
     }
 
     // ─── Util ─────────────────────────────────────────────────────────────────

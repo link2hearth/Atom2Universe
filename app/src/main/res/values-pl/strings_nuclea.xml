@@ -8,6 +8,7 @@
     <string name="nuclea_back">Wstecz</string>
     <string name="nuclea_paused">Pauza</string>
     <string name="nuclea_resume">WZNÓW</string>
+    <string name="nuclea_new_game">NOWA GRA</string>
     <string name="nuclea_quit">WYJDŹ</string>
     <string name="nuclea_menu">MENU</string>
     <string name="nuclea_game_over">GAME OVER</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Dylatacja czasu</string>
     <string name="nuclea_pow_gamma">Promień gamma</string>
     <string name="nuclea_pow_shield">Tarcza kwarkowa</string>
-    <string name="nuclea_pow_binary">Gwiazda podwójna</string>
+    <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_details">Szczegóły</string>
+    <string name="nuclea_respec">Zresetuj</string>
+    <string name="nuclea_respec_confirm">Potwierdzić?</string>
     <string name="nuclea_meta_force">Moc</string>
     <string name="nuclea_meta_width">Szerokość</string>
     <string name="nuclea_meta_reach">Zasięg</string>

@@ -8,6 +8,7 @@
     <string name="nuclea_back">Πίσω</string>
     <string name="nuclea_paused">Παύση</string>
     <string name="nuclea_resume">ΣΥΝΕΧΕΙΑ</string>
+    <string name="nuclea_new_game">ΝΕΟ ΠΑΙΧΝΙΔΙ</string>
     <string name="nuclea_quit">ΕΞΟΔΟΣ</string>
     <string name="nuclea_menu">ΜΕΝΟΥ</string>
     <string name="nuclea_game_over">GAME OVER</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Διαστολή χρόνου</string>
     <string name="nuclea_pow_gamma">Ακτίνα γάμμα</string>
     <string name="nuclea_pow_shield">Ασπίδα κουάρκ</string>
-    <string name="nuclea_pow_binary">Διπλό άστρο</string>
+    <string name="nuclea_pow_pulsar">Πάλσαρ</string>
+    <string name="nuclea_details">Λεπτομέρειες</string>
+    <string name="nuclea_respec">Επαναφορά</string>
+    <string name="nuclea_respec_confirm">Επιβεβαίωση;</string>
     <string name="nuclea_meta_force">Ισχύς</string>
     <string name="nuclea_meta_width">Πλάτος</string>
     <string name="nuclea_meta_reach">Εμβέλεια</string>

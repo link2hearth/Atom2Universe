@@ -8,6 +8,7 @@
     <string name="nuclea_back">Geri</string>
     <string name="nuclea_paused">Duraklatıldı</string>
     <string name="nuclea_resume">DEVAM ET</string>
+    <string name="nuclea_new_game">YENİ OYUN</string>
     <string name="nuclea_quit">ÇIK</string>
     <string name="nuclea_menu">MENÜ</string>
     <string name="nuclea_game_over">OYUN BİTTİ</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Zaman genişlemesi</string>
     <string name="nuclea_pow_gamma">Gama ışını</string>
     <string name="nuclea_pow_shield">Kuark kalkanı</string>
-    <string name="nuclea_pow_binary">Çift yıldız</string>
+    <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_details">Ayrıntılar</string>
+    <string name="nuclea_respec">Sıfırla</string>
+    <string name="nuclea_respec_confirm">Onayla?</string>
     <string name="nuclea_meta_force">Güç</string>
     <string name="nuclea_meta_width">Genişlik</string>
     <string name="nuclea_meta_reach">Menzil</string>

@@ -8,6 +8,7 @@
     <string name="nuclea_back">Înapoi</string>
     <string name="nuclea_paused">Pauză</string>
     <string name="nuclea_resume">CONTINUĂ</string>
+    <string name="nuclea_new_game">JOC NOU</string>
     <string name="nuclea_quit">IEȘI</string>
     <string name="nuclea_menu">MENIU</string>
     <string name="nuclea_game_over">GAME OVER</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Dilatarea timpului</string>
     <string name="nuclea_pow_gamma">Rază gamma</string>
     <string name="nuclea_pow_shield">Scut de quarci</string>
-    <string name="nuclea_pow_binary">Stea binară</string>
+    <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_details">Detalii</string>
+    <string name="nuclea_respec">Resetare</string>
+    <string name="nuclea_respec_confirm">Confirmi?</string>
     <string name="nuclea_meta_force">Putere</string>
     <string name="nuclea_meta_width">Lățime</string>
     <string name="nuclea_meta_reach">Rază</string>

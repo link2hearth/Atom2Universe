@@ -8,6 +8,7 @@
     <string name="nuclea_back">Назад</string>
     <string name="nuclea_paused">Пауза</string>
     <string name="nuclea_resume">ПРОДОВЖИТИ</string>
+    <string name="nuclea_new_game">НОВА ГРА</string>
     <string name="nuclea_quit">ВИЙТИ</string>
     <string name="nuclea_menu">МЕНЮ</string>
     <string name="nuclea_game_over">ГРУ ЗАВЕРШЕНО</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Уповільнення часу</string>
     <string name="nuclea_pow_gamma">Гамма-промінь</string>
     <string name="nuclea_pow_shield">Кварковий щит</string>
-    <string name="nuclea_pow_binary">Подвійна зоря</string>
+    <string name="nuclea_pow_pulsar">Пульсар</string>
+    <string name="nuclea_details">Деталі</string>
+    <string name="nuclea_respec">Скинути</string>
+    <string name="nuclea_respec_confirm">Підтвердити?</string>
     <string name="nuclea_meta_force">Сила</string>
     <string name="nuclea_meta_width">Ширина</string>
     <string name="nuclea_meta_reach">Дальність</string>

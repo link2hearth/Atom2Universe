@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import com.Atom2Universe.app.R
+import org.json.JSONArray
+import org.json.JSONObject
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -22,7 +24,7 @@ import kotlin.random.Random
 
 enum class NucleaPhase { MENU, CONSTELLATION, PLAYING, PAUSED, GAME_OVER }
 
-enum class PowerUpType { MAGNETIC, TIME, GAMMA, SHIELD, BINARY }
+enum class PowerUpType { MAGNETIC, TIME, GAMMA, SHIELD, PULSAR }
 
 class Atom(
     var x: Float, var y: Float,
@@ -74,21 +76,49 @@ class BlackHole(var x: Float, var y: Float, val massNeeded: Int) {
     var spin = 0f
     var pulseTimer = 5f    // temps avant la prochaine éruption
     var pulseWarn = 0f     // > 0 : éruption imminente (avertissement visuel)
+    /** Temps d'apparition : tant qu'il court, le trou noir n'aspire pas et ne blesse pas. */
+    var grace = SPAWN_GRACE
     fun horizon(): Float {
         val growth = if (massNeeded <= 0) 0f else massFed.toFloat() / massNeeded
         return baseHorizon * (1f + growth * 0.45f)
     }
+    companion object { const val SPAWN_GRACE = 1.2f }
 }
 
-/** Nœud de l'arbre méta « constellations » (position normalisée 0..1). */
+/** Nœud de l'arbre méta « constellations » — il est posé sur une vraie étoile du ciel. */
 class MetaNode(
     val key: String,
     val constellation: Int,   // 0 = Orion, 1 = Cassiopée, 2 = Lyre
-    val nx: Float, val ny: Float,
     val maxLvl: Int,
     val baseCost: Int,
     val labelRes: Int
 )
+
+/**
+ * Tracé fidèle d'une constellation. Les coordonnées viennent des ascensions droites
+ * et déclinaisons réelles des étoiles, converties en degrés d'arc projetés
+ * (x = vers l'ouest du ciel, y = vers le sud), donc la forme dessinée est bien
+ * celle qu'on voit dans le ciel — pas trois points au hasard.
+ */
+class ConstellationShape(
+    /** x0, y0, x1, y1, … en degrés d'arc, origine arbitraire. */
+    val stars: FloatArray,
+    /** Éclat 0..1 de chaque étoile (dérivé de sa magnitude) → taille du point. */
+    val mags: FloatArray,
+    /** Paires d'indices d'étoiles reliées par l'astérisme. */
+    val lines: IntArray,
+    /** Étoile qui porte chaque nœud méta, dans l'ordre des META_NODES de la constellation. */
+    val nodeStars: IntArray,
+    /** Cadre d'affichage en portrait : gauche, haut, droite, bas (fractions de la zone de ciel). */
+    val panel: FloatArray,
+    /** Même chose en paysage, où le ciel est large et bas : les trois formes se mettent en colonnes. */
+    val panelLand: FloatArray
+) {
+    val minX = (stars.indices step 2).minOf { stars[it] }
+    val maxX = (stars.indices step 2).maxOf { stars[it] }
+    val minY = (1 until stars.size step 2).minOf { stars[it] }
+    val maxY = (1 until stars.size step 2).maxOf { stars[it] }
+}
 
 /** Progression persistante (poussière d'étoile, constellations, records). */
 class NucleaMeta {
@@ -120,6 +150,8 @@ class NucleaGame(private val ctx: Context) {
 
     companion object {
         const val TIER_COUNT = 7
+        /** Clé des préférences où dort la partie en cours. */
+        const val KEY_RUN = "run_state"
         const val FE = 6
         val SYMBOLS = arrayOf("H", "He", "C", "O", "Ne", "Si", "Fe")
         val TIER_COLORS = intArrayOf(
@@ -136,18 +168,60 @@ class NucleaGame(private val ctx: Context) {
         // Arbre méta : 3 constellations × 3 étoiles
         // Coût d'un niveau = baseCost × (niveau actuel + 1)
         val META_NODES = listOf(
-            // Orion — offense
-            MetaNode("force", 0, 0.18f, 0.30f, 3, 1500, R.string.nuclea_meta_force),
-            MetaNode("width", 0, 0.34f, 0.16f, 3, 1250, R.string.nuclea_meta_width),
-            MetaNode("reach", 0, 0.46f, 0.34f, 3, 1250, R.string.nuclea_meta_reach),
-            // Cassiopée — défense
-            MetaNode("hull", 1, 0.62f, 0.14f, 3, 1500, R.string.nuclea_meta_hull),
-            MetaNode("regen", 1, 0.76f, 0.28f, 2, 2000, R.string.nuclea_meta_regen),
-            MetaNode("shield", 1, 0.88f, 0.12f, 1, 5000, R.string.nuclea_meta_shield),
-            // Lyre — fortune
-            MetaNode("dust", 2, 0.30f, 0.72f, 3, 1500, R.string.nuclea_meta_dust),
-            MetaNode("luck", 2, 0.52f, 0.84f, 3, 1250, R.string.nuclea_meta_luck),
-            MetaNode("heal", 2, 0.70f, 0.68f, 3, 1250, R.string.nuclea_meta_heal)
+            // Orion — offense (Bételgeuse, Bellatrix, Rigel)
+            MetaNode("force", 0, 3, 1500, R.string.nuclea_meta_force),
+            MetaNode("width", 0, 3, 1250, R.string.nuclea_meta_width),
+            MetaNode("reach", 0, 3, 1250, R.string.nuclea_meta_reach),
+            // Cassiopée — défense (Segin, Gamma, Caph)
+            MetaNode("hull", 1, 3, 1500, R.string.nuclea_meta_hull),
+            MetaNode("regen", 1, 2, 2000, R.string.nuclea_meta_regen),
+            MetaNode("shield", 1, 1, 5000, R.string.nuclea_meta_shield),
+            // Lyre — fortune (Véga, Delta, Sulafat)
+            MetaNode("dust", 2, 3, 1500, R.string.nuclea_meta_dust),
+            MetaNode("luck", 2, 3, 1250, R.string.nuclea_meta_luck),
+            MetaNode("heal", 2, 3, 1250, R.string.nuclea_meta_heal)
+        )
+
+        /** Les trois constellations, dans l'ordre des index de MetaNode.constellation. */
+        val SHAPES = arrayOf(
+            // ── Orion : le sablier (tête, deux épaules, la Ceinture, deux pieds) ──
+            // 0 Bételgeuse  1 Meissa  2 Bellatrix  3 Mintaka  4 Alnilam  5 Alnitak
+            // 6 Saiph  7 Rigel
+            ConstellationShape(
+                floatArrayOf(
+                    0.00f, 2.50f,   5.01f, 0.00f,   7.51f, 3.58f,   5.79f, 10.20f,
+                    4.74f, 11.10f,  3.60f, 11.90f,  1.85f, 19.60f, 10.16f, 18.10f
+                ),
+                floatArrayOf(0.90f, 0.35f, 0.60f, 0.50f, 0.62f, 0.58f, 0.48f, 1.00f),
+                intArrayOf(1, 0,  1, 2,  0, 2,  0, 5,  2, 3,  3, 4,  4, 5,  5, 6,  3, 7),
+                intArrayOf(0, 2, 7),
+                floatArrayOf(0.03f, 0.02f, 0.38f, 0.58f),
+                floatArrayOf(0.04f, 0.08f, 0.26f, 0.88f)
+            ),
+            // ── Cassiopée : le W ──
+            // 0 Segin  1 Ruchbah  2 Gamma  3 Schedar  4 Caph
+            ConstellationShape(
+                floatArrayOf(
+                    0.00f, 0.00f,   3.57f, 3.43f,   7.21f, 2.95f,   9.23f, 7.13f,  13.15f, 4.52f
+                ),
+                floatArrayOf(0.45f, 0.55f, 0.75f, 0.72f, 0.70f),
+                intArrayOf(0, 1,  1, 2,  2, 3,  3, 4),
+                intArrayOf(0, 2, 4),
+                floatArrayOf(0.47f, 0.04f, 0.99f, 0.26f),
+                floatArrayOf(0.32f, 0.12f, 0.62f, 0.52f)
+            ),
+            // ── Lyre : Véga posée sur le petit parallélogramme ──
+            // 0 Véga  1 Zêta  2 Delta  3 Sheliak  4 Sulafat
+            ConstellationShape(
+                floatArrayOf(
+                    4.51f, 0.00f,   2.90f, 1.18f,   1.01f, 1.88f,   1.82f, 5.42f,   0.00f, 6.09f
+                ),
+                floatArrayOf(1.00f, 0.32f, 0.30f, 0.45f, 0.50f),
+                intArrayOf(0, 1,  0, 2,  1, 2,  2, 4,  4, 3,  3, 1),
+                intArrayOf(0, 2, 4),
+                floatArrayOf(0.46f, 0.36f, 0.90f, 0.74f),
+                floatArrayOf(0.68f, 0.14f, 0.96f, 0.80f)
+            )
         )
         val CONSTELLATION_NAMES = intArrayOf(
             R.string.nuclea_const_orion, R.string.nuclea_const_cassiopeia, R.string.nuclea_const_lyra
@@ -164,6 +238,15 @@ class NucleaGame(private val ctx: Context) {
     var sound: NucleaSoundEngine? = null
     var onGameOver: (() -> Unit)? = null
     var onMetaChanged: (() -> Unit)? = null   // persistance immédiate (achats, records)
+    var onRunEnded: (() -> Unit)? = null      // la partie est finie : plus rien à reprendre
+
+    /** Une partie est en mémoire : on peut la reprendre depuis le menu. */
+    var runInProgress = false
+        private set
+    /** Partie sérialisée relue au démarrage, tant qu'elle n'a pas été reprise. */
+    private var savedRun: String? = null
+    /** Vague de la partie en attente, pour l'afficher dans le menu sans tout recharger. */
+    private var savedWave = 0
 
     var screenW = 0f
     var screenH = 0f
@@ -234,6 +317,8 @@ class NucleaGame(private val ctx: Context) {
 
     fun fluxHalfAngle(): Float = 0.36f + 0.02f * metaLvl("width")
     fun fluxRange(): Float = u(200f) * (1f + 0.07f * metaLvl("reach"))
+    /** Rayon de l'onde de répulsion du pulsar : un quart de la portée du flux. */
+    fun auraRadius(): Float = fluxRange() * 0.25f
     private fun fluxForce(): Float {
         var f = u(520f) * (1f + 0.08f * metaLvl("force"))
         if (powerActive(PowerUpType.GAMMA)) f *= 2.2f
@@ -270,6 +355,8 @@ class NucleaGame(private val ctx: Context) {
 
         wave = if (constellationComplete(2)) 3 else 1
         startWave()
+        runInProgress = true
+        savedRun = null
         phase = NucleaPhase.PLAYING
     }
 
@@ -282,8 +369,10 @@ class NucleaGame(private val ctx: Context) {
         if (wave % 5 == 0) {
             // Vague boss : trou noir mobile — il faut lui pousser les atomes dedans
             val bossIndex = wave / 5
-            val bh = BlackHole(screenW / 2f, screenH * 0.38f, 16 + (bossIndex - 1) * 10)
-            bh.baseHorizon = u(34f)
+            val horizon = u(34f)
+            val spawn = bossSpawnPos(horizon)
+            val bh = BlackHole(spawn[0], spawn[1], 16 + (bossIndex - 1) * 10)
+            bh.baseHorizon = horizon
             blackHole = bh
             bossBanner = 3f
             bossTrickleTimer = 0.5f
@@ -327,6 +416,7 @@ class NucleaGame(private val ctx: Context) {
         updatePlayer(dt, mx, my, ax, ay)
         updateSpawns(dt)
         applyFlux(atomDt)
+        applyAura(atomDt)
         updateAtoms(atomDt)
         resolveCollisions()
         updateShocks(atomDt)
@@ -355,6 +445,7 @@ class NucleaGame(private val ctx: Context) {
 
         // Attraction du trou noir sur le joueur
         blackHole?.let { bh ->
+            if (bh.grace > 0f) return@let
             val dx = bh.x - px; val dy = bh.y - py
             val d = sqrt(dx * dx + dy * dy).coerceAtLeast(1f)
             val pullRange = min(screenW, screenH) * 0.75f
@@ -412,6 +503,9 @@ class NucleaGame(private val ctx: Context) {
 
     private fun endRun() {
         if (wave > meta.bestWave) meta.bestWave = wave
+        runInProgress = false
+        savedRun = null
+        onRunEnded?.invoke()
         phase = NucleaPhase.GAME_OVER
         sound?.onGameOver()
         onMetaChanged?.invoke()
@@ -485,7 +579,6 @@ class NucleaGame(private val ctx: Context) {
         val magnetic = powerActive(PowerUpType.MAGNETIC)
         val pierce = orionPierce
         val aimAngle = atan2(aimY, aimX)
-        val binary = powerActive(PowerUpType.BINARY)
 
         for (a in atoms) {
             val dx = a.x - px; val dy = a.y - py
@@ -493,18 +586,33 @@ class NucleaGame(private val ctx: Context) {
             if (d > range + a.radius) continue
             val ang = atan2(dy, dx)
 
-            // Cône avant + cône miroir pendant « étoile binaire »
             var frac = 0f
             val diffF = angleDiff(ang, aimAngle)
             if (diffF < half + a.radius / d * 0.5f) frac = 1f
-            else if (binary) {
-                val diffB = angleDiff(ang, aimAngle + PI.toFloat())
-                if (diffB < half + a.radius / d * 0.5f) frac = 1f
-            }
             if (frac <= 0f) continue
 
             val falloff = if (pierce) 1f else (1f - d / (range + a.radius)).coerceIn(0f, 1f).pow(0.7f)
             val push = force * falloff * frac / sqrt(a.mass) * (if (magnetic) -1f else 1f)
+            a.vx += dx / d * push * dt
+            a.vy += dy / d * push * dt
+        }
+    }
+
+    /**
+     * Pulsar : une onde de répulsion permanente tout autour du joueur, courte portée.
+     * Elle pousse toujours vers l'extérieur, même sous champ magnétique (le flux, lui,
+     * aspire) — c'est une bulle défensive pour ne pas se faire coller aux atomes.
+     */
+    private fun applyAura(dt: Float) {
+        if (!powerActive(PowerUpType.PULSAR)) return
+        val r = auraRadius()
+        val force = fluxForce() * 0.85f
+        for (a in atoms) {
+            val dx = a.x - px; val dy = a.y - py
+            val d = sqrt(dx * dx + dy * dy).coerceAtLeast(1f)
+            if (d > r + a.radius) continue
+            val falloff = (1f - (d - a.radius).coerceAtLeast(0f) / r).coerceIn(0f, 1f)
+            val push = force * falloff / sqrt(a.mass)
             a.vx += dx / d * push * dt
             a.vy += dy / d * push * dt
         }
@@ -762,10 +870,43 @@ class NucleaGame(private val ctx: Context) {
     /** Rayon de la zone de danger de l'éruption (partagé avec l'anneau d'avertissement). */
     fun pulseRadius(bh: BlackHole): Float = bh.horizon() + u(90f)
 
+    /**
+     * Point d'apparition du trou noir : jamais collé au joueur, sinon il est aspiré
+     * avant même d'avoir pu bouger (l'attraction dépasse sa vitesse de déplacement).
+     * On part du symétrique du joueur par rapport au centre de l'écran ; si le joueur
+     * campe au centre, on bascule sur le coin le plus éloigné de lui.
+     */
+    private fun bossSpawnPos(horizon: Float): FloatArray {
+        val margin = horizon + u(30f)
+        val minDist = min(screenW, screenH) * 0.5f
+        var bx = (screenW - px).coerceIn(margin, screenW - margin)
+        var by = (screenH - py).coerceIn(margin, screenH - margin)
+        if (dist(bx, by, px, py) < minDist) {
+            var best = -1f
+            for (cx in floatArrayOf(margin, screenW - margin))
+                for (cy in floatArrayOf(margin, screenH - margin)) {
+                    val d = dist(cx, cy, px, py)
+                    if (d > best) { best = d; bx = cx; by = cy }
+                }
+        }
+        return floatArrayOf(bx, by)
+    }
+
+    private fun dist(x1: Float, y1: Float, x2: Float, y2: Float): Float {
+        val dx = x1 - x2; val dy = y1 - y2
+        return sqrt(dx * dx + dy * dy)
+    }
+
     private fun updateBlackHole(dt: Float) {
         val bh = blackHole ?: return
         bh.spin += dt * 2.4f
         val horizon = bh.horizon()
+
+        // Apparition : le temps que le joueur repère où il pop, il ne traque ni n'aspire
+        if (bh.grace > 0f) {
+            bh.grace -= dt
+            return
+        }
 
         // Le trou noir traque lentement le joueur — impossible de camper sur un bord
         run {
@@ -949,14 +1090,14 @@ class NucleaGame(private val ctx: Context) {
             PowerUpType.TIME -> R.string.nuclea_pow_time
             PowerUpType.GAMMA -> R.string.nuclea_pow_gamma
             PowerUpType.SHIELD -> R.string.nuclea_pow_shield
-            PowerUpType.BINARY -> R.string.nuclea_pow_binary
+            PowerUpType.PULSAR -> R.string.nuclea_pow_pulsar
         }
         addFloat(px, py - u(30f), ctx.getString(nameRes), Color.parseColor("#7EF9C8"))
         when (type) {
             PowerUpType.MAGNETIC -> powerTimers[type.ordinal] = 8f
             PowerUpType.TIME -> powerTimers[type.ordinal] = 8f
             PowerUpType.GAMMA -> powerTimers[type.ordinal] = 8f
-            PowerUpType.BINARY -> powerTimers[type.ordinal] = 12f
+            PowerUpType.PULSAR -> powerTimers[type.ordinal] = 12f
             PowerUpType.SHIELD -> shieldCharges = min(shieldCharges + 1, 2)
         }
         sound?.onPowerUp()
@@ -1063,9 +1204,236 @@ class NucleaGame(private val ctx: Context) {
         }
     }
 
+
+    // ─── Sauvegarde d'une partie en cours ─────────────────────────────────────
+    //  Une partie quittée en cours de route est écrite dans les préférences pour
+    //  pouvoir la reprendre exactement là où elle en était. Les positions sont
+    //  enregistrées en fractions de l'écran et les vitesses en « unités », donc
+    //  la reprise fonctionne même si l'écran a changé de taille ou d'orientation.
+
+    /** Y a-t-il une partie à reprendre — en mémoire ou sur le disque ? */
+    fun hasResumableRun() = runInProgress || savedRun != null
+
+    fun loadRun(p: SharedPreferences) {
+        savedRun = p.getString(KEY_RUN, null)
+        savedWave = savedRun?.let {
+            try { JSONObject(it).optInt("wave", 0) } catch (_: Exception) { savedRun = null; 0 }
+        } ?: 0
+    }
+
+    /** Vague de la partie reprenable — celle en mémoire, ou celle qui dort sur le disque. */
+    fun resumableWave() = if (runInProgress) wave else savedWave
+
+    /** Appelé quand on quitte l'appli : mémorise la partie et le record atteint. */
+    fun saveRun(p: SharedPreferences) {
+        if (!runInProgress) return
+        if (wave > meta.bestWave) meta.bestWave = wave
+        val json = try { serializeRun() } catch (_: Exception) { return }
+        savedRun = json
+        savedWave = wave
+        p.edit().putString(KEY_RUN, json).apply()
+        meta.save(p)
+    }
+
+    fun clearSavedRun(p: SharedPreferences) {
+        savedRun = null
+        savedWave = 0
+        p.edit().remove(KEY_RUN).apply()
+    }
+
+    /**
+     * Reprend la partie : celle qui est encore en mémoire si on n'a fait qu'un
+     * passage par le menu, sinon celle relue sur le disque. Le joueur récupère
+     * 1,5 s d'invincibilité pour ne pas se faire toucher pendant qu'il reprend
+     * ses marques.
+     */
+    fun resumeRun(): Boolean {
+        if (!runInProgress) {
+            val json = savedRun ?: return false
+            try { deserializeRun(json) } catch (_: Exception) { savedRun = null; return false }
+            runInProgress = true
+        }
+        // Les bonus de constellation ont pu changer pendant le passage par le menu
+        orionPierce = constellationComplete(0)
+        iframe = maxOf(iframe, 1.5f)
+        waveBanner = 1.2f
+        phase = NucleaPhase.PLAYING
+        return true
+    }
+
+    // Conversions écran ⇄ sauvegarde
+    private fun sx(x: Float) = (x / screenW).toDouble()
+    private fun sy(y: Float) = (y / screenH).toDouble()
+    private fun sv(v: Float) = (v / unit).toDouble()
+    private fun rx(v: Double) = v.toFloat() * screenW
+    private fun ry(v: Double) = v.toFloat() * screenH
+    private fun rv(v: Double) = v.toFloat() * unit
+
+    private fun serializeRun(): String {
+        val o = JSONObject()
+        o.put("v", 1)
+        o.put("wave", wave); o.put("cleared", wavesCleared); o.put("runDust", runDust)
+        o.put("px", sx(px)); o.put("py", sy(py))
+        o.put("hp", hp.toDouble()); o.put("maxHp", maxHp.toDouble())
+        o.put("iframe", iframe.toDouble())
+        o.put("shield", shieldCharges); o.put("revive", reviveLeft)
+        o.put("combo", comboCount); o.put("comboT", comboTimer.toDouble())
+        o.put("inter", intermission.toDouble()); o.put("burst", spawnBurstTimer.toDouble())
+        o.put("decayT", decayCheckTimer.toDouble()); o.put("trickle", bossTrickleTimer.toDouble())
+
+        o.put("power", JSONArray().also { for (t in powerTimers) it.put(t.toDouble()) })
+        o.put("queue", JSONArray().also { for (t in spawnQueue) it.put(t) })
+
+        o.put("atoms", JSONArray().also { arr ->
+            for (a in atoms) arr.put(JSONArray()
+                .put(sx(a.x)).put(sy(a.y)).put(sv(a.vx)).put(sv(a.vy))
+                .put(a.tier).put(if (a.anti) 1 else 0)
+                .put(a.decayTimer.toDouble()).put(a.superTimer.toDouble()))
+        })
+        o.put("marks", JSONArray().also { arr ->
+            for (m in marks) arr.put(JSONArray()
+                .put(sx(m.x)).put(sy(m.y)).put(m.tier).put(if (m.anti) 1 else 0)
+                .put(m.timer.toDouble()))
+        })
+        o.put("motes", JSONArray().also { arr ->
+            for (m in motes) arr.put(JSONArray()
+                .put(sx(m.x)).put(sy(m.y)).put(sv(m.vx)).put(sv(m.vy))
+                .put(m.value).put(m.life.toDouble()))
+        })
+        o.put("hpMotes", JSONArray().also { arr ->
+            for (m in hpMotes) arr.put(JSONArray()
+                .put(sx(m.x)).put(sy(m.y)).put(sv(m.vx)).put(sv(m.vy))
+                .put(m.value).put(m.life.toDouble()))
+        })
+        o.put("powerups", JSONArray().also { arr ->
+            for (p in powerups) arr.put(JSONArray()
+                .put(sx(p.x)).put(sy(p.y)).put(p.type.ordinal)
+                .put(p.life.toDouble()).put(p.phase.toDouble()))
+        })
+        blackHole?.let { bh ->
+            o.put("bh", JSONArray()
+                .put(sx(bh.x)).put(sy(bh.y)).put(bh.massNeeded).put(bh.massFed)
+                .put(bh.spin.toDouble()).put(bh.pulseTimer.toDouble())
+                .put(bh.pulseWarn.toDouble()).put(bh.grace.toDouble()))
+        }
+        return o.toString()
+    }
+
+    private fun deserializeRun(json: String) {
+        val o = JSONObject(json)
+        atoms.clear(); marks.clear(); shocks.clear(); booms.clear()
+        particles.clear(); motes.clear(); hpMotes.clear(); powerups.clear(); floats.clear()
+        spawnQueue.clear(); blackHole = null
+
+        wave = o.getInt("wave"); wavesCleared = o.getInt("cleared"); runDust = o.getLong("runDust")
+        px = rx(o.getDouble("px")); py = ry(o.getDouble("py"))
+        hp = o.getDouble("hp").toFloat(); maxHp = o.getDouble("maxHp").toFloat()
+        iframe = o.getDouble("iframe").toFloat()
+        shieldCharges = o.getInt("shield"); reviveLeft = o.getInt("revive")
+        comboCount = o.getInt("combo"); comboTimer = o.getDouble("comboT").toFloat()
+        intermission = o.getDouble("inter").toFloat()
+        spawnBurstTimer = o.getDouble("burst").toFloat()
+        decayCheckTimer = o.getDouble("decayT").toFloat()
+        bossTrickleTimer = o.getDouble("trickle").toFloat()
+        // Bonus de constellation : relus depuis la méta, ils ont pu changer entre-temps
+        orionPierce = constellationComplete(0)
+        shakeTimer = 0f; superFlash = 0f; bossBanner = 0f; fluxActive = false
+
+        val pw = o.getJSONArray("power")
+        for (i in powerTimers.indices) powerTimers[i] = pw.optDouble(i, 0.0).toFloat()
+        val q = o.getJSONArray("queue")
+        for (i in 0 until q.length()) spawnQueue.add(q.getInt(i))
+
+        val at = o.getJSONArray("atoms")
+        for (i in 0 until at.length()) {
+            val e = at.getJSONArray(i)
+            val a = Atom(rx(e.getDouble(0)), ry(e.getDouble(1)),
+                rv(e.getDouble(2)), rv(e.getDouble(3)), e.getInt(4), e.getInt(5) == 1)
+            a.radius = u(10f + a.tier * 3.2f)
+            a.mass = 2f.pow(a.tier)
+            a.decayTimer = e.getDouble(6).toFloat()
+            a.superTimer = e.getDouble(7).toFloat()
+            atoms.add(a)
+        }
+        val mk = o.getJSONArray("marks")
+        for (i in 0 until mk.length()) {
+            val e = mk.getJSONArray(i)
+            marks.add(SpawnMark(rx(e.getDouble(0)), ry(e.getDouble(1)),
+                e.getInt(2), e.getInt(3) == 1, e.getDouble(4).toFloat()))
+        }
+        for ((key, list) in listOf("motes" to motes, "hpMotes" to hpMotes)) {
+            val arr = o.getJSONArray(key)
+            for (i in 0 until arr.length()) {
+                val e = arr.getJSONArray(i)
+                val m = DustMote(rx(e.getDouble(0)), ry(e.getDouble(1)),
+                    rv(e.getDouble(2)), rv(e.getDouble(3)), e.getInt(4))
+                m.life = e.getDouble(5).toFloat()
+                list.add(m)
+            }
+        }
+        val pu = o.getJSONArray("powerups")
+        for (i in 0 until pu.length()) {
+            val e = pu.getJSONArray(i)
+            val p = PowerUp(rx(e.getDouble(0)), ry(e.getDouble(1)),
+                PowerUpType.entries[e.getInt(2)])
+            p.life = e.getDouble(3).toFloat()
+            p.phase = e.getDouble(4).toFloat()
+            powerups.add(p)
+        }
+        if (o.has("bh")) {
+            val e = o.getJSONArray("bh")
+            val bh = BlackHole(rx(e.getDouble(0)), ry(e.getDouble(1)), e.getInt(2))
+            bh.baseHorizon = u(34f)
+            bh.massFed = e.getInt(3)
+            bh.spin = e.getDouble(4).toFloat()
+            bh.pulseTimer = e.getDouble(5).toFloat()
+            bh.pulseWarn = e.getDouble(6).toFloat()
+            bh.grace = e.getDouble(7).toFloat()
+            blackHole = bh
+        }
+    }
+
     // ─── Constellations (méta) ────────────────────────────────────────────────
 
     fun nodeCost(node: MetaNode): Int = node.baseCost * (meta.lvl(node.key) + 1)
+
+    /**
+     * Effet chiffré d'un nœud à un niveau donné, prêt à afficher dans le panneau de détails.
+     * Les unités sont des symboles (♥ points de vie, ✦ poussière, ◆ bouclier) pour rester
+     * lisibles dans les 14 langues sans traduction.
+     */
+    fun nodeEffect(key: String, lvl: Int): String = when (key) {
+        "force" -> "+${8 * lvl} %"                                    // poussée du flux
+        "width" -> "${(((0.36f + 0.02f * lvl) * 2f) * 57.29578f + 0.5f).toInt()}°"  // ouverture totale du cône
+        "reach" -> "+${7 * lvl} %"                                    // portée du flux
+        "hull"  -> "${100 + 15 * lvl} ♥"                              // points de vie max
+        "regen" -> if (lvl == 0) "0 ♥/s" else "${0.5f * lvl} ♥/s"     // régénération
+        "shield"-> "$lvl ◆"                                           // boucliers au départ
+        "dust"  -> "+${15 * lvl} % ✦"                                 // poussière récoltée
+        "luck"  -> "${7 + 3 * lvl} %"                                 // chance de power-up
+        "heal"  -> "+${15 * lvl} % ♥"                                 // efficacité des soins
+        else    -> ""
+    }
+
+    /**
+     * Poussière déjà investie dans les améliorations. Un niveau i coûte baseCost × i,
+     * donc un nœud au niveau L a coûté baseCost × (1 + 2 + … + L) = baseCost × L(L+1)/2.
+     */
+    fun respecRefund(): Long = META_NODES.sumOf { n ->
+        val l = meta.lvl(n.key).toLong()
+        n.baseCost * l * (l + 1) / 2
+    }
+
+    /** Remet toutes les constellations à zéro et rend l'intégralité de la poussière dépensée. */
+    fun respec(): Boolean {
+        val refund = respecRefund()
+        if (refund <= 0L) return false
+        meta.dust += refund
+        for (n in META_NODES) meta.levels[n.key] = 0
+        sound?.onBuy()
+        onMetaChanged?.invoke()
+        return true
+    }
 
     fun tryBuyNode(node: MetaNode): Boolean {
         val lvl = meta.lvl(node.key)

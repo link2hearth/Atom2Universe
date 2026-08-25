@@ -48,8 +48,10 @@ class NucleaActivity : ThemedActivity() {
 
         val game = gameView.game
         game.meta.load(prefs)
+        game.loadRun(prefs)          // partie laissée en plan lors de la dernière session
         game.sound = sfx
         game.onMetaChanged = { game.meta.save(prefs) }
+        game.onRunEnded = { game.clearSavedRun(prefs) }
         game.onGameOver = {
             // 2 neutrinos par vague terminée
             val reward = NeutrinoRewards.nuclea(game.wavesCleared)
@@ -120,6 +122,9 @@ class NucleaActivity : ThemedActivity() {
         gameView.pause()
         sfx.stop()
         handler.removeCallbacks(titleUpdater)
-        gameView.game.meta.save(prefs)
+        // Une partie en cours est mémorisée (avec le record atteint) pour être reprise
+        val game = gameView.game
+        if (game.runInProgress) game.saveRun(prefs) else game.clearSavedRun(prefs)
+        game.meta.save(prefs)
     }
 }

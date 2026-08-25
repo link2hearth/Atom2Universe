@@ -8,6 +8,7 @@
     <string name="nuclea_back">Terug</string>
     <string name="nuclea_paused">Gepauzeerd</string>
     <string name="nuclea_resume">HERVATTEN</string>
+    <string name="nuclea_new_game">NIEUW SPEL</string>
     <string name="nuclea_quit">STOPPEN</string>
     <string name="nuclea_menu">MENU</string>
     <string name="nuclea_game_over">GAME OVER</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Tijddilatatie</string>
     <string name="nuclea_pow_gamma">Gammastraal</string>
     <string name="nuclea_pow_shield">Quark-schild</string>
-    <string name="nuclea_pow_binary">Dubbelster</string>
+    <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_details">Details</string>
+    <string name="nuclea_respec">Resetten</string>
+    <string name="nuclea_respec_confirm">Bevestigen?</string>
     <string name="nuclea_meta_force">Kracht</string>
     <string name="nuclea_meta_width">Breedte</string>
     <string name="nuclea_meta_reach">Bereik</string>

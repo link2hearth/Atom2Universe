@@ -8,6 +8,7 @@
     <string name="nuclea_back">Kembali</string>
     <string name="nuclea_paused">Dijeda</string>
     <string name="nuclea_resume">LANJUTKAN</string>
+    <string name="nuclea_new_game">GAME BARU</string>
     <string name="nuclea_quit">KELUAR</string>
     <string name="nuclea_menu">MENU</string>
     <string name="nuclea_game_over">GAME OVER</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Dilatasi waktu</string>
     <string name="nuclea_pow_gamma">Sinar gamma</string>
     <string name="nuclea_pow_shield">Perisai quark</string>
-    <string name="nuclea_pow_binary">Bintang biner</string>
+    <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_details">Detail</string>
+    <string name="nuclea_respec">Atur ulang</string>
+    <string name="nuclea_respec_confirm">Konfirmasi?</string>
     <string name="nuclea_meta_force">Daya</string>
     <string name="nuclea_meta_width">Lebar</string>
     <string name="nuclea_meta_reach">Jangkauan</string>

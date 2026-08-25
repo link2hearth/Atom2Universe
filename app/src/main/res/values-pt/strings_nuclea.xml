@@ -8,6 +8,7 @@
     <string name="nuclea_back">Voltar</string>
     <string name="nuclea_paused">Pausado</string>
     <string name="nuclea_resume">CONTINUAR</string>
+    <string name="nuclea_new_game">NOVO JOGO</string>
     <string name="nuclea_quit">SAIR</string>
     <string name="nuclea_menu">MENU</string>
     <string name="nuclea_game_over">GAME OVER</string>
@@ -29,7 +30,10 @@
     <string name="nuclea_pow_time">Dilatação temporal</string>
     <string name="nuclea_pow_gamma">Raio gama</string>
     <string name="nuclea_pow_shield">Escudo de quarks</string>
-    <string name="nuclea_pow_binary">Estrela binária</string>
+    <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_details">Detalhes</string>
+    <string name="nuclea_respec">Redefinir</string>
+    <string name="nuclea_respec_confirm">Confirmar?</string>
     <string name="nuclea_meta_force">Potência</string>
     <string name="nuclea_meta_width">Largura</string>
     <string name="nuclea_meta_reach">Alcance</string>
