@@ -927,6 +927,11 @@ class MainClickerActivity : ThemedActivity() {
         buildAchievementShopItems()
         buildFactoryShopItems(view.findViewById(R.id.shop_factories_container))
 
+        // Le layout est ré-inflaté à chaque ouverture du shop avec le texte statique "×1" :
+        // on resynchronise l'affichage avec le multiplicateur réellement mémorisé.
+        shopGodFingerMultBtn?.text = "×$shopGodFingerMult"
+        shopStarCoreMultBtn?.text  = "×$shopStarCoreMult"
+
         shopGodFingerMultBtn?.setOnClickListener {
             shopGodFingerMult = cycleShopMultiplier(shopGodFingerMult)
             shopGodFingerMultBtn?.text = "×$shopGodFingerMult"
