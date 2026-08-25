@@ -257,5 +257,6 @@
     <string name="neutrino_info_note_perfect">menurut kesulitan, ×2 jika sempurna</string>
     <string name="neutrino_info_note_time">menurut waktu bermain</string>
     <string name="neutrino_info_note_distance">menurut jarak</string>
+    <string name="neutrino_info_note_wave">per gelombang selesai</string>
     <string name="neutrino_info_note_betting">menurut taruhan Anda</string>
 </resources>

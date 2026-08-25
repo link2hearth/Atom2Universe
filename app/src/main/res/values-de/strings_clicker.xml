@@ -258,5 +258,6 @@
     <string name="neutrino_info_note_perfect">je nach Schwierigkeit, ×2 bei perfekt</string>
     <string name="neutrino_info_note_time">je nach Spielzeit</string>
     <string name="neutrino_info_note_distance">je nach Distanz</string>
+    <string name="neutrino_info_note_wave">pro geschaffter Welle</string>
     <string name="neutrino_info_note_betting">je nach Einsatz</string>
 </resources>

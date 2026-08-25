@@ -258,5 +258,6 @@
     <string name="neutrino_info_note_perfect">ανάλογα με τη δυσκολία, ×2 αν τέλειο</string>
     <string name="neutrino_info_note_time">ανάλογα με τον χρόνο παιχνιδιού</string>
     <string name="neutrino_info_note_distance">ανάλογα με την απόσταση</string>
+    <string name="neutrino_info_note_wave">ανά ολοκληρωμένο κύμα</string>
     <string name="neutrino_info_note_betting">ανάλογα με το ποντάρισμά σας</string>
 </resources>

@@ -35,6 +35,7 @@ import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
 import com.Atom2Universe.app.games.bigger.BiggerActivity
 import com.Atom2Universe.app.games.match3.Match3Activity
 import com.Atom2Universe.app.games.survivor.SurvivorActivity
+import com.Atom2Universe.app.games.nuclea.NucleaActivity
 import com.Atom2Universe.app.games.reflex.ReflexActivity
 import com.Atom2Universe.app.games.solitaire.SolitaireActivity
 import com.Atom2Universe.app.games.sudoku.SudokuActivity
@@ -82,6 +83,15 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_survivor,
             activityClass = SurvivorActivity::class.java
+        ),
+        // Nucléa (twin-stick de fusion)
+        HubTile(
+            id = "nuclea",
+            titleRes = R.string.nuclea_title,
+            descriptionRes = R.string.nuclea_description,
+            iconRes = android.R.drawable.ic_menu_rotate,
+            defaultColorRes = R.color.game_tile_nuclea,
+            activityClass = NucleaActivity::class.java
         ),
         // Roguelike
         HubTile(

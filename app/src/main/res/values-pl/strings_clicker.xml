@@ -260,5 +260,6 @@
     <string name="neutrino_info_note_perfect">wg trudności, ×2 za perfekcyjną grę</string>
     <string name="neutrino_info_note_time">wg czasu gry</string>
     <string name="neutrino_info_note_distance">wg dystansu</string>
+    <string name="neutrino_info_note_wave">za ukończoną falę</string>
     <string name="neutrino_info_note_betting">wg twojego zakładu</string>
 </resources>

@@ -77,6 +77,10 @@ object NeutrinoRewards {
     fun link(difficultyOrdinal: Int, pairsOrdinal: Int) =
         linkBase(difficultyOrdinal) * linkMultiplier(pairsOrdinal)
 
+    // ── Nucléa : 2 neutrinos par vague terminée ────────────────────────────────
+    const val NUCLEA_PER_WAVE = 2
+    fun nuclea(wavesCleared: Int) = wavesCleared * NUCLEA_PER_WAVE
+
     // ── Temps de jeu : 1 neutrino par tranche de 15 s ──────────────────────────
     const val SECONDS_PER_NEUTRINO = 15
     fun perTime(elapsedMs: Long) = (elapsedMs / (SECONDS_PER_NEUTRINO * 1000L)).toInt()
@@ -130,6 +134,7 @@ object NeutrinoRewards {
             ),
             Entry(R.string.escape_title, list(ESCAPE_VALUES.toList()), R.string.neutrino_info_note_perfect),
             // Arcade
+            Entry(R.string.nuclea_title, "$NUCLEA_PER_WAVE", R.string.neutrino_info_note_wave),
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),

@@ -260,5 +260,6 @@
     <string name="neutrino_info_note_perfect">по сложности, ×2 при безупречной игре</string>
     <string name="neutrino_info_note_time">по времени игры</string>
     <string name="neutrino_info_note_distance">по дистанции</string>
+    <string name="neutrino_info_note_wave">за пройденную волну</string>
     <string name="neutrino_info_note_betting">по вашей ставке</string>
 </resources>

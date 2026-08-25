@@ -258,5 +258,6 @@
     <string name="neutrino_info_note_perfect">por dificuldade, ×2 se perfeito</string>
     <string name="neutrino_info_note_time">por tempo de jogo</string>
     <string name="neutrino_info_note_distance">por distância</string>
+    <string name="neutrino_info_note_wave">por onda concluída</string>
     <string name="neutrino_info_note_betting">pela sua aposta</string>
 </resources>
