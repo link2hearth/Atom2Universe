@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Παράθυρο σύγκρισης χρωμάτων</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Προσθήκη κρύπτο</string>
+    <string name="crypto_chart_search_title">Προσθήκη κρυπτονομίσματος</string>
+    <string name="crypto_chart_search_hint">Αναζήτηση (π.χ. SOL)</string>
+    <string name="crypto_chart_search_loading">Φόρτωση λίστας συμβόλων…</string>
+    <string name="crypto_chart_search_error">Δεν ήταν δυνατή η φόρτωση της λίστας συμβόλων.</string>
+    <string name="crypto_chart_search_empty">Κανένα αποτέλεσμα</string>
+    <string name="crypto_chart_remove_asset">Αφαίρεση του %1$s από τη λίστα παρακολούθησης;</string>
+    <string name="crypto_chart_ma_off">Απενεργοποιημένη</string>
+    <string name="crypto_chart_add_line">Προσθήκη γραμμής τάσης</string>
     <string name="crypto_earth_widget_opacity_label">Αδιαφάνεια γραφικού Γης</string>
     <string name="crypto_chess_widget_opacity_label">Αδιαφάνεια γραφικού σκακιού</string>
     <string name="crypto_sudoku_widget_opacity_label">Αδιαφάνεια φόντου sudoku</string>

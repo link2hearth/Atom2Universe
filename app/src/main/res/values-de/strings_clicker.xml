@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Farbvergleichsfenster</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Krypto hinzufügen</string>
+    <string name="crypto_chart_search_title">Kryptowährung hinzufügen</string>
+    <string name="crypto_chart_search_hint">Suchen (z. B. SOL)</string>
+    <string name="crypto_chart_search_loading">Symbolliste wird geladen…</string>
+    <string name="crypto_chart_search_error">Symbolliste konnte nicht geladen werden.</string>
+    <string name="crypto_chart_search_empty">Keine Ergebnisse</string>
+    <string name="crypto_chart_remove_asset">%1$s aus der Beobachtungsliste entfernen?</string>
+    <string name="crypto_chart_ma_off">Aus</string>
+    <string name="crypto_chart_add_line">Trendlinie hinzufügen</string>
     <string name="crypto_earth_widget_opacity_label">Erde-Widget-Deckkraft</string>
     <string name="crypto_chess_widget_opacity_label">Schach-Widget-Deckkraft</string>
     <string name="crypto_sudoku_widget_opacity_label">Sudoku-Hintergrund-Deckkraft</string>

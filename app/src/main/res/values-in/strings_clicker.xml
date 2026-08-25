@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Jendela perbandingan warna</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Tambah kripto</string>
+    <string name="crypto_chart_search_title">Tambahkan mata uang kripto</string>
+    <string name="crypto_chart_search_hint">Cari (mis. SOL)</string>
+    <string name="crypto_chart_search_loading">Memuat daftar simbol…</string>
+    <string name="crypto_chart_search_error">Tidak dapat memuat daftar simbol.</string>
+    <string name="crypto_chart_search_empty">Tidak ada hasil</string>
+    <string name="crypto_chart_remove_asset">Hapus %1$s dari daftar pantauan?</string>
+    <string name="crypto_chart_ma_off">Nonaktif</string>
+    <string name="crypto_chart_add_line">Tambahkan garis tren</string>
     <string name="crypto_earth_widget_opacity_label">Opasitas widget Bumi</string>
     <string name="crypto_chess_widget_opacity_label">Opasitas widget Catur</string>
     <string name="crypto_sudoku_widget_opacity_label">Opasitas latar Sudoku</string>

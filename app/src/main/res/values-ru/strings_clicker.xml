@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Окно сравнения цветов</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Добавить криптовалюту</string>
+    <string name="crypto_chart_search_title">Добавить криптовалюту</string>
+    <string name="crypto_chart_search_hint">Поиск (напр. SOL)</string>
+    <string name="crypto_chart_search_loading">Загрузка списка символов…</string>
+    <string name="crypto_chart_search_error">Не удалось загрузить список символов.</string>
+    <string name="crypto_chart_search_empty">Ничего не найдено</string>
+    <string name="crypto_chart_remove_asset">Убрать %1$s из списка отслеживания?</string>
+    <string name="crypto_chart_ma_off">Выкл.</string>
+    <string name="crypto_chart_add_line">Добавить линию тренда</string>
     <string name="crypto_earth_widget_opacity_label">Прозрачность виджета Земли</string>
     <string name="crypto_chess_widget_opacity_label">Прозрачность виджета Шахмат</string>
     <string name="crypto_sudoku_widget_opacity_label">Прозрачность фона Судоку</string>

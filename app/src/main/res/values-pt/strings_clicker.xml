@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Janela de comparação de cores</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Adicionar uma cripto</string>
+    <string name="crypto_chart_search_title">Adicionar uma criptomoeda</string>
+    <string name="crypto_chart_search_hint">Pesquisar (ex.: SOL)</string>
+    <string name="crypto_chart_search_loading">A carregar a lista de símbolos…</string>
+    <string name="crypto_chart_search_error">Não foi possível carregar a lista de símbolos.</string>
+    <string name="crypto_chart_search_empty">Sem resultados</string>
+    <string name="crypto_chart_remove_asset">Remover %1$s da lista de acompanhamento?</string>
+    <string name="crypto_chart_ma_off">Desativada</string>
+    <string name="crypto_chart_add_line">Adicionar uma linha de tendência</string>
     <string name="crypto_earth_widget_opacity_label">Opacidade widget Terra</string>
     <string name="crypto_chess_widget_opacity_label">Opacidade widget Xadrez</string>
     <string name="crypto_sudoku_widget_opacity_label">Opacidade fundo Sudoku</string>

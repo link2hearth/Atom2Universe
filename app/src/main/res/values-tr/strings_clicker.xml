@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Renk karşılaştırma penceresi</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Kripto ekle</string>
+    <string name="crypto_chart_search_title">Kripto para ekle</string>
+    <string name="crypto_chart_search_hint">Ara (örn. SOL)</string>
+    <string name="crypto_chart_search_loading">Sembol listesi yükleniyor…</string>
+    <string name="crypto_chart_search_error">Sembol listesi yüklenemedi.</string>
+    <string name="crypto_chart_search_empty">Sonuç yok</string>
+    <string name="crypto_chart_remove_asset">%1$s izleme listesinden kaldırılsın mı?</string>
+    <string name="crypto_chart_ma_off">Kapalı</string>
+    <string name="crypto_chart_add_line">Trend çizgisi ekle</string>
     <string name="crypto_earth_widget_opacity_label">Dünya widget saydamlığı</string>
     <string name="crypto_chess_widget_opacity_label">Satranç widget saydamlığı</string>
     <string name="crypto_sudoku_widget_opacity_label">Sudoku arka plan saydamlığı</string>

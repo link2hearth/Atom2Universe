@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Kleurvergelijkingsvenster</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Crypto toevoegen</string>
+    <string name="crypto_chart_search_title">Een cryptovaluta toevoegen</string>
+    <string name="crypto_chart_search_hint">Zoeken (bijv. SOL)</string>
+    <string name="crypto_chart_search_loading">Symbolenlijst laden…</string>
+    <string name="crypto_chart_search_error">Kan de symbolenlijst niet laden.</string>
+    <string name="crypto_chart_search_empty">Geen resultaten</string>
+    <string name="crypto_chart_remove_asset">%1$s uit de volglijst verwijderen?</string>
+    <string name="crypto_chart_ma_off">Uit</string>
+    <string name="crypto_chart_add_line">Trendlijn toevoegen</string>
     <string name="crypto_earth_widget_opacity_label">Doorzichtigheid aarde widget</string>
     <string name="crypto_chess_widget_opacity_label">Doorzichtigheid schaken widget</string>
     <string name="crypto_sudoku_widget_opacity_label">Doorzichtigheid sudoku achtergrond</string>

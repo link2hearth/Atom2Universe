@@ -10,16 +10,18 @@ import com.Atom2Universe.app.R
  */
 enum class CryptoCandleInterval(
     @StringRes val labelRes: Int,
-    val binanceInterval: String
+    val binanceInterval: String,
+    /** Durée approximative d'une bougie en millisecondes (le mois est pris à 30 jours). */
+    val approxMillis: Long
 ) {
-    M1(R.string.crypto_chart_int_1m, "1m"),
-    M5(R.string.crypto_chart_int_5m, "5m"),
-    M15(R.string.crypto_chart_int_15m, "15m"),
-    H1(R.string.crypto_chart_int_1h, "1h"),
-    H4(R.string.crypto_chart_int_4h, "4h"),
-    D1(R.string.crypto_chart_int_1d, "1d"),
-    W1(R.string.crypto_chart_int_1w, "1w"),
-    MN1(R.string.crypto_chart_int_1mo, "1M");
+    M1(R.string.crypto_chart_int_1m, "1m", 60_000L),
+    M5(R.string.crypto_chart_int_5m, "5m", 5 * 60_000L),
+    M15(R.string.crypto_chart_int_15m, "15m", 15 * 60_000L),
+    H1(R.string.crypto_chart_int_1h, "1h", 3_600_000L),
+    H4(R.string.crypto_chart_int_4h, "4h", 4 * 3_600_000L),
+    D1(R.string.crypto_chart_int_1d, "1d", 86_400_000L),
+    W1(R.string.crypto_chart_int_1w, "1w", 7 * 86_400_000L),
+    MN1(R.string.crypto_chart_int_1mo, "1M", 30 * 86_400_000L);
 
     companion object {
         const val FETCH_LIMIT = 1000

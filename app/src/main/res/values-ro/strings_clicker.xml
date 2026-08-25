@@ -37,6 +37,15 @@
     <string name="crypto_comparison_label">Fereastră de comparare culori</string>
     <string name="crypto_widget_currency_usd">USD</string>
     <string name="crypto_widget_currency_eur">EUR</string>
+    <string name="crypto_chart_add_asset">Adaugă o cripto</string>
+    <string name="crypto_chart_search_title">Adaugă o criptomonedă</string>
+    <string name="crypto_chart_search_hint">Caută (ex. SOL)</string>
+    <string name="crypto_chart_search_loading">Se încarcă lista de simboluri…</string>
+    <string name="crypto_chart_search_error">Lista de simboluri nu a putut fi încărcată.</string>
+    <string name="crypto_chart_search_empty">Niciun rezultat</string>
+    <string name="crypto_chart_remove_asset">Elimini %1$s din lista de urmărire?</string>
+    <string name="crypto_chart_ma_off">Dezactivată</string>
+    <string name="crypto_chart_add_line">Adaugă o linie de trend</string>
     <string name="crypto_earth_widget_opacity_label">Opacitate widget Pământ</string>
     <string name="crypto_chess_widget_opacity_label">Opacitate widget Șah</string>
     <string name="crypto_sudoku_widget_opacity_label">Opacitate fundal Sudoku</string>

@@ -156,6 +156,7 @@
     <color name="crypto_chart_grid">#1E293B</color>
     <color name="crypto_chart_axis_text">#94A3B8</color>
     <color name="crypto_chart_crosshair">#CBD5E1</color>
+    <color name="crypto_chart_ma">#F59E0B</color>
     <color name="game_tile_starswar">#1A237E</color>
     <color name="game_tile_flappycat">#00838F</color>
     <color name="game_tile_hotpotato">#B5462E</color>
