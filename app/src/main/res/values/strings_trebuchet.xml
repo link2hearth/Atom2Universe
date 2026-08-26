@@ -19,5 +19,5 @@
     <string name="trebuchet_status_flight">Firing…</string>
     <string name="trebuchet_status_result">%1$s m — left the spoon at %2$s m/s, peaked at %3$s m</string>
     <string name="trebuchet_status_backwards">It went backwards! The arm cannot lift that load</string>
-    <string name="trebuchet_specs">Lever %1$s:1 · stored energy %2$d J · arm stops at %3$d°</string>
+    <string name="trebuchet_specs">Lever %1$s:1 · stored energy %2$d J · launch angle %3$d°</string>
 </resources>

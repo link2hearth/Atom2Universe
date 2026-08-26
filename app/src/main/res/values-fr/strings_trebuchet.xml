@@ -19,5 +19,5 @@
     <string name="trebuchet_status_flight">Tir en cours…</string>
     <string name="trebuchet_status_result">%1$s m — sorti de la cuiller à %2$s m/s, culminé à %3$s m</string>
     <string name="trebuchet_status_backwards">Parti en arrière ! Le bras n\'arrive pas à soulever cette charge</string>
-    <string name="trebuchet_specs">Levier %1$s:1 · énergie stockée %2$d J · arrêt du bras à %3$d°</string>
+    <string name="trebuchet_specs">Levier %1$s:1 · énergie %2$d J · tir à %3$d°</string>
 </resources>

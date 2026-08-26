@@ -67,7 +67,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         bindPick(pickFoot) { d -> gameView.game.cycleFoot(d) }
         bindPick(pickRatio) { d -> gameView.game.cycleRatio(d) }
         bindPick(pickWeight) { d -> gameView.game.cycleWeight(d) }
-        bindPick(pickCup) { d -> gameView.game.cycleCupTilt(d) }
+        bindPick(pickCup) { d -> gameView.game.cycleCupCurve(d) }
 
         updateUi()
     }
@@ -149,13 +149,13 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         pickFoot.text = getString(R.string.trebuchet_foot, fmt(cfg.footHeight))
         pickRatio.text = getString(R.string.trebuchet_ratio, fmt(cfg.leverRatio))
         pickWeight.text = getString(R.string.trebuchet_weight, cfg.counterweightMass.toInt())
-        pickCup.text = getString(R.string.trebuchet_cup, cfg.cupTiltDeg.toInt())
+        pickCup.text = getString(R.string.trebuchet_cup, cfg.cupCurveDeg.toInt())
 
         specsText.text = getString(
             R.string.trebuchet_specs,
             fmt(cfg.leverRatio),
             cfg.storedEnergy.toInt(),
-            (-game.stopAngleDeg).toInt()
+            game.launchAngleDeg.toInt()
         )
         bestText.text = if (best > 0f) getString(R.string.trebuchet_best, fmt(best)) else ""
 

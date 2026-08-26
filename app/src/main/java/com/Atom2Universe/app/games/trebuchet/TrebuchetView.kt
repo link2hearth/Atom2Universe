@@ -64,9 +64,9 @@ class TrebuchetView @JvmOverloads constructor(
     private companion object {
         const val FIXED_DT = 1f / 120f
 
-        /** Largeur de monde visible pendant la construction, en mètres. */
-        const val BUILD_VIEW_WIDTH = 13f
-        const val FLIGHT_VIEW_WIDTH = 18f
+        /** Marges autour de la machine, en mètres : la vue suit sa taille. */
+        const val BUILD_VIEW_MARGIN = 7f
+        const val FLIGHT_VIEW_MARGIN = 14f
     }
 
     // ── Palette ───────────────────────────────────────────────────────────────
@@ -233,27 +233,30 @@ class TrebuchetView @JvmOverloads constructor(
 
     private fun updateCamera(dt: Float) {
         if (width == 0) return
+        // Le cadrage suit la taille de la machine : un bras de 8 m ne tient pas
+        // dans la fenêtre qui suffisait à un bras de 4 m.
+        val machineWidth = game.config.beamLength + BUILD_VIEW_MARGIN
         val targetWidth = when (game.phase) {
-            TrebuchetGame.Phase.BUILD -> BUILD_VIEW_WIDTH
+            TrebuchetGame.Phase.BUILD -> machineWidth
             TrebuchetGame.Phase.RESULT ->
-                max(BUILD_VIEW_WIDTH, abs(game.ball.x - TrebuchetRules.FIRING_LINE) + 10f)
-            else -> FLIGHT_VIEW_WIDTH
+                max(machineWidth, abs(game.ball.x - TrebuchetRules.FIRING_LINE) + 14f)
+            else -> game.config.beamLength + FLIGHT_VIEW_MARGIN
         }
         val targetScale = width / targetWidth
         var tx: Float
         var ty: Float
         when (game.phase) {
             TrebuchetGame.Phase.BUILD -> {
-                tx = game.pivotX - 0.8f
-                ty = game.pivotY + 0.6f
+                tx = game.pivotX - game.config.longArm * 0.35f
+                ty = game.pivotY + 0.4f
             }
             TrebuchetGame.Phase.RESULT -> {
                 tx = (TrebuchetRules.FIRING_LINE + game.ball.x) / 2f
-                ty = game.pivotY + 0.6f
+                ty = game.pivotY + 0.4f
             }
             else -> {
-                tx = game.ball.x + 1.5f
-                ty = game.ball.y + 0.5f
+                tx = game.ball.x + 2.5f
+                ty = game.ball.y + 1f
             }
         }
 
@@ -287,9 +290,12 @@ class TrebuchetView @JvmOverloads constructor(
                 if (game.phase != TrebuchetGame.Phase.BUILD) return true
                 val dBall = hypot(wx - game.ball.x, wy - game.ball.y)
                 val dWeight = hypot(wx - game.counterweight.x, wy - game.counterweight.y)
+                // Tolérance exprimée en pixels : sur une grande machine, tout est
+                // plus petit à l'écran et une marge en mètres deviendrait ridicule.
+                val reach = 44f * dp / camScale
                 drag = when {
-                    dBall < 0.5f && dBall <= dWeight -> Drag.BALL
-                    dWeight < 0.6f -> Drag.WEIGHT
+                    dBall < reach && dBall <= dWeight -> Drag.BALL
+                    dWeight < reach + 0.3f -> Drag.WEIGHT
                     else -> Drag.NONE
                 }
             }
@@ -331,7 +337,8 @@ class TrebuchetView @JvmOverloads constructor(
         drawFrameAndPivot(canvas)
         drawBody(canvas, game.beam, pBeam, pEdge)
         drawBody(canvas, game.cupBack, pCup, pEdge)
-        drawBody(canvas, game.cupFront, pCup, pEdge)
+        drawBody(canvas, game.cupFrontBase, pCup, pEdge)
+        drawBody(canvas, game.cupFrontTip, pCup, pEdge)
         drawStopper(canvas)
         if (game.counterweight.inWorld || game.phase == TrebuchetGame.Phase.BUILD) {
             drawBody(canvas, game.counterweight, pWeight, pWeightEdge)
