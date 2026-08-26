@@ -372,6 +372,7 @@ class Arbiter(val a: PhysBody, val b: PhysBody) {
     fun preStep(invDt: Float, impactSpeed: Float) {
         val allowedPenetration = 0.004f
         val biasFactor = 0.22f
+        val maxBiasSpeed = 3f
         val nx = normalX
         val ny = normalY
         val tx = ny
@@ -412,8 +413,17 @@ class Arbiter(val a: PhysBody, val b: PhysBody) {
             val kt = a.invMass + b.invMass + a.invI * rtA * rtA + b.invI * rtB * rtB
             c.massTangent = if (kt > 0f) 1f / kt else 0f
 
-            // Correction douce de l'interpénétration (Baumgarte)
-            c.bias = -biasFactor * invDt * minOf(0f, c.separation + allowedPenetration)
+            // Correction douce de l'interpénétration (Baumgarte), plafonnée.
+            //
+            // Le plafond est indispensable depuis les sous-pas : cette correction
+            // est proportionnelle à 1/dt, donc découper une image en seize la rend
+            // seize fois plus violente. Un boulet coincé dans un angle se faisait
+            // éjecter à 20 m/s — toujours la même vitesse, quelle que soit la
+            // machine, signature d'une correction devenue folle plutôt que d'un
+            // vrai lancer. À pas fixe la valeur reste très en dessous du plafond,
+            // donc rien ne change pour le jeu d'équilibre.
+            c.bias = (-biasFactor * invDt * minOf(0f, c.separation + allowedPenetration))
+                .coerceAtMost(maxBiasSpeed)
 
             // Réapplication des impulsions de l'image précédente
             val px = c.normalImpulse * nx + c.tangentImpulse * tx

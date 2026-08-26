@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trebuchet_title">Trebuchet</string>
+    <string name="trebuchet_description">Build a throwing machine — you never aim, you compute</string>
+    <string name="trebuchet_back">Back</string>
+    <string name="trebuchet_best">Best %1$s m</string>
+
+    <string name="trebuchet_beam">Arm\n%1$s m</string>
+    <string name="trebuchet_foot">Post\n%1$s m</string>
+    <string name="trebuchet_ratio">Lever\n%1$s:1</string>
+    <string name="trebuchet_weight">Weight\n%1$d kg</string>
+    <string name="trebuchet_cup">Spoon\n%1$d°</string>
+
+    <string name="trebuchet_btn_release">Drop the counterweight</string>
+    <string name="trebuchet_btn_adjust">Adjust</string>
+    <string name="trebuchet_btn_reset">Reset</string>
+
+    <string name="trebuchet_status_build">Drag the ball along the arm, drag the counterweight to set how far it falls</string>
+    <string name="trebuchet_status_flight">Firing…</string>
+    <string name="trebuchet_status_result">%1$s m — left the spoon at %2$s m/s, peaked at %3$s m</string>
+    <string name="trebuchet_status_backwards">It went backwards! The arm cannot lift that load</string>
+    <string name="trebuchet_specs">Lever %1$s:1 · stored energy %2$d J · arm stops at %3$d°</string>
+</resources>

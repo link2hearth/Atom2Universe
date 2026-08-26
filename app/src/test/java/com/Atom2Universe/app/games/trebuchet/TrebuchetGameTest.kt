@@ -1,0 +1,122 @@
+package com.Atom2Universe.app.games.trebuchet
+
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+/**
+ * Vérifie la machine de jet : elle doit lancer vers l'avant, réagir aux réglages
+ * du catalogue, et surtout ne jamais partir en vrille numérique.
+ */
+class TrebuchetGameTest {
+
+    private fun machine(
+        beam: Int = 1, foot: Int = 1, ratio: Int = 2, weight: Int = 2,
+        tilt: Int = 0, drop: Float = TrebuchetRules.DROP_MAX, ballAtTip: Boolean = true
+    ) = TrebuchetGame().apply {
+        config.beamIndex = beam
+        config.footIndex = foot
+        config.ratioIndex = ratio
+        config.weightIndex = weight
+        config.cupTiltIndex = tilt
+        config.dropHeight = drop
+        if (ballAtTip) config.ballDistance = 99f     // ramené au bout du bras
+        build()
+    }
+
+    @Test
+    fun `la machine par defaut envoie le boulet devant la ligne de tir`() {
+        val g = machine()
+        val d = g.simulateShot()
+
+        assertTrue("le boulet ne franchit pas la ligne de tir : $d m", d > 5f)
+        assertTrue("le boulet ne quitte pas la cuiller : ${g.launchSpeed} m/s", g.launchSpeed > 3f)
+        assertTrue("le boulet ne monte pas : ${g.peakHeight} m", g.peakHeight > g.pivotY)
+    }
+
+    @Test
+    fun `un contrepoids plus lourd envoie plus loin`() {
+        val light = machine(weight = 0).simulateShot()
+        val heavy = machine(weight = 2).simulateShot()
+
+        assertTrue("25 kg envoie aussi loin que 90 kg : $light contre $heavy", heavy > light + 3f)
+    }
+
+    @Test
+    fun `lacher le contrepoids de plus haut envoie plus loin`() {
+        val low = machine(drop = TrebuchetRules.DROP_MIN).simulateShot()
+        val high = machine(drop = TrebuchetRules.DROP_MAX).simulateShot()
+
+        assertTrue("la hauteur de lâcher ne change rien : $low contre $high", high > low + 0.5f)
+    }
+
+    @Test
+    fun `le cliquet tient le bras jusqu au choc du contrepoids`() {
+        val g = machine()
+        g.release()
+        // Un dixième de seconde après le lâcher, le contrepoids tombe encore et le
+        // bras n'a pas bougé d'un cheveu : sans ce cliquet, le bras s'affaisserait
+        // du côté du boulet et celui-ci roulerait par terre avant le tir.
+        repeat(12) { g.step(1f / 120f) }
+        assertTrue("le bras part avant le choc : ${g.beam.angle}", kotlin.math.abs(g.beam.angle) < 0.01f)
+        assertTrue("le contrepoids ne tombe pas", g.counterweight.vy < -0.5f)
+    }
+
+    @Test
+    fun `larretoir arrete bien le bras`() {
+        val g = machine()
+        g.simulateShot()
+        // Le bras doit finir contre son tampon, à l'angle prévu, et pas avoir fait
+        // un tour complet : c'est cet arrêt qui libère le boulet.
+        val stopped = Math.toRadians(g.stopAngleDeg.toDouble()).toFloat()
+        assertTrue(
+            "le bras ne s'arrête pas à l'arrêtoir : ${g.beam.angle} rad pour un arrêt prévu à $stopped",
+            g.beam.angle > stopped - 0.35f
+        )
+    }
+
+    /**
+     * Le garde-fou le plus important du jeu.
+     *
+     * Toute la mise au point de la machine a consisté à traquer des tirs qui
+     * partaient à 20, puis 400 m/s — jamais de la vraie physique, toujours un
+     * corps coincé quelque part et éjecté par le solveur. Aucune combinaison du
+     * catalogue ne doit pouvoir produire ça.
+     */
+    @Test
+    fun `aucune combinaison du catalogue ne fait exploser la simulation`() {
+        var forward = 0
+        var total = 0
+        var best = 0f
+
+        for (b in TrebuchetRules.BEAM_LENGTHS.indices) {
+            for (r in TrebuchetRules.LEVER_RATIOS.indices) {
+                for (w in TrebuchetRules.COUNTERWEIGHTS.indices) {
+                    for (t in TrebuchetRules.CUP_TILTS_DEG.indices) {
+                        val g = machine(beam = b, ratio = r, weight = w, tilt = t)
+                        val d = g.simulateShot()
+                        total++
+                        if (d > 0f) forward++
+                        if (d > best) best = d
+
+                        assertTrue(
+                            "vitesse aberrante (${g.peakSpeed} m/s) pour bras=$b rapport=$r " +
+                                "poids=$w cuiller=$t",
+                            g.peakSpeed < 25f
+                        )
+                        assertTrue(
+                            "portée aberrante ($d m) pour bras=$b rapport=$r poids=$w cuiller=$t",
+                            d > -25f && d < 60f
+                        )
+                        assertTrue("le tir ne se termine pas", g.phase == TrebuchetGame.Phase.RESULT)
+                    }
+                }
+            }
+        }
+
+        assertTrue("la meilleure machine du catalogue ne porte qu'à $best m", best > 15f)
+        assertTrue(
+            "seules $forward machines sur $total tirent vers l'avant",
+            forward > total / 2
+        )
+    }
+}

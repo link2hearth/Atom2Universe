@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0A1024">
+
+    <!-- Barre supérieure : retour et record -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="12dp"
+        android:background="#101932">
+
+        <ImageButton
+            android:id="@+id/trebuchet_btn_back"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back_24"
+            app:tint="#94A3B8"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/trebuchet_back" />
+
+        <TextView
+            android:id="@+id/trebuchet_specs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:textColor="#8FA6C8"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/trebuchet_best"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#FFD166"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- La scène -->
+    <com.Atom2Universe.app.games.trebuchet.TrebuchetView
+        android:id="@+id/trebuchet_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Message d'état -->
+    <TextView
+        android:id="@+id/trebuchet_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minLines="2"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="6dp"
+        android:textColor="#8FA6C8"
+        android:textSize="12sp" />
+
+    <!-- Le catalogue : un appui fait défiler, un appui long revient en arrière -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingTop="6dp">
+
+        <TextView
+            android:id="@+id/trebuchet_pick_beam"
+            style="@style/TrebuchetPick" />
+
+        <TextView
+            android:id="@+id/trebuchet_pick_foot"
+            style="@style/TrebuchetPick" />
+
+        <TextView
+            android:id="@+id/trebuchet_pick_ratio"
+            style="@style/TrebuchetPick" />
+
+        <TextView
+            android:id="@+id/trebuchet_pick_weight"
+            style="@style/TrebuchetPick" />
+
+        <TextView
+            android:id="@+id/trebuchet_pick_cup"
+            style="@style/TrebuchetPick" />
+
+    </LinearLayout>
+
+    <!-- Boutons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/trebuchet_btn_reset"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/trebuchet_btn_reset"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/trebuchet_btn_fire"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="@string/trebuchet_btn_release"
+            android:textColor="#E2E8F0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

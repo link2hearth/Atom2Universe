@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="trebuchet_title">Trébuchet</string>
+    <string name="trebuchet_description">Construis une machine de jet — on ne vise pas, on calcule</string>
+    <string name="trebuchet_back">Retour</string>
+    <string name="trebuchet_best">Record %1$s m</string>
+
+    <string name="trebuchet_beam">Bras\n%1$s m</string>
+    <string name="trebuchet_foot">Pied\n%1$s m</string>
+    <string name="trebuchet_ratio">Levier\n%1$s:1</string>
+    <string name="trebuchet_weight">Poids\n%1$d kg</string>
+    <string name="trebuchet_cup">Cuiller\n%1$d°</string>
+
+    <string name="trebuchet_btn_release">Lâcher le contrepoids</string>
+    <string name="trebuchet_btn_adjust">Ajuster</string>
+    <string name="trebuchet_btn_reset">Réinitialiser</string>
+
+    <string name="trebuchet_status_build">Fais glisser le boulet le long du bras, et le contrepoids pour régler sa hauteur de chute</string>
+    <string name="trebuchet_status_flight">Tir en cours…</string>
+    <string name="trebuchet_status_result">%1$s m — sorti de la cuiller à %2$s m/s, culminé à %3$s m</string>
+    <string name="trebuchet_status_backwards">Parti en arrière ! Le bras n\'arrive pas à soulever cette charge</string>
+    <string name="trebuchet_specs">Levier %1$s:1 · énergie stockée %2$d J · arrêt du bras à %3$d°</string>
+</resources>

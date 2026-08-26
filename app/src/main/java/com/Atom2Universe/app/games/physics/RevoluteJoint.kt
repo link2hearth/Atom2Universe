@@ -82,6 +82,21 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
             j.setWorldAnchor(worldX, worldY)
             return j
         }
+
+        /**
+         * Soude [a] et [b] : deux pivots en deux points distincts, et il ne reste
+         * plus aucun degré de liberté — même la rotation relative est bloquée.
+         *
+         * C'est le moyen d'assembler une pièce en plusieurs morceaux alors que le
+         * moteur ne connaît qu'une forme par corps : la cuiller du trébuchet, par
+         * exemple, est un rebord soudé au bout du bras. Les deux points doivent
+         * être bien écartés, sinon la soudure a du jeu en rotation.
+         */
+        fun weld(
+            a: PhysBody, b: PhysBody,
+            x1: Float, y1: Float,
+            x2: Float, y2: Float
+        ): Pair<RevoluteJoint, RevoluteJoint> = pin(a, b, x1, y1) to pin(a, b, x2, y2)
     }
 
     /** Recalcule les ancrages locaux d'après un point monde et la pose actuelle. */

@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.physics
 
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -98,20 +99,28 @@ class PhysWorld {
         repeat(n) { step(sub) }
     }
 
-    /** Nombre de sous-pas nécessaires pour que le corps le plus rapide ne traverse rien. */
+    /**
+     * Nombre de sous-pas nécessaires pour que le point le plus rapide du monde ne
+     * traverse rien.
+     *
+     * On compte la **rotation** autant que la translation : un bras de levier qui
+     * fouette a un centre quasiment immobile, mais sa pointe file à plus de 10 m/s.
+     * À ne regarder que la vitesse du centre, le moteur concluait qu'il n'y avait
+     * rien à subdiviser, et la pointe traversait l'arrêtoir d'une image à l'autre.
+     */
     fun subStepsFor(dt: Float): Int {
         var fastest = 0f
         var thinnest = Float.MAX_VALUE
         for (bd in bodies) {
             if (!bd.inWorld) continue
             if (bd.smallestHalfExtent < thinnest) thinnest = bd.smallestHalfExtent
-            if (bd.invMass > 0f) {
-                val s = bd.speedSq
+            if (bd.invMass > 0f || bd.invI > 0f) {
+                val s = sqrt(bd.speedSq) + abs(bd.omega) * bd.boundingRadius
                 if (s > fastest) fastest = s
             }
         }
         if (thinnest == Float.MAX_VALUE || fastest <= 0f) return 1
-        val travel = sqrt(fastest) * dt
+        val travel = fastest * dt
         if (travel <= thinnest) return 1
         return ceil(travel / thinnest).toInt().coerceIn(1, maxSubSteps)
     }
