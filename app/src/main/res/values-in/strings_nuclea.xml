@@ -26,11 +26,17 @@
     <string name="nuclea_new_element">Elemen baru: %1$s!</string>
     <string name="nuclea_supernova">SUPERNOVA!</string>
     <string name="nuclea_pulsar">PULSAR!</string>
+    <string name="nuclea_captured">TERTANGKAP!</string>
+    <string name="nuclea_capture_hint">Tekan cepat untuk lepas!</string>
+    <string name="nuclea_escaped">LOLOS!</string>
+    <string name="nuclea_fission">FISI!</string>
     <string name="nuclea_pow_magnetic">Medan magnet</string>
     <string name="nuclea_pow_time">Dilatasi waktu</string>
     <string name="nuclea_pow_gamma">Sinar gamma</string>
     <string name="nuclea_pow_shield">Perisai quark</string>
     <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_pow_swift">Kecepatan +</string>
+    <string name="nuclea_pow_thrust">Dorongan +</string>
     <string name="nuclea_details">Detail</string>
     <string name="nuclea_respec">Atur ulang</string>
     <string name="nuclea_respec_confirm">Konfirmasi?</string>

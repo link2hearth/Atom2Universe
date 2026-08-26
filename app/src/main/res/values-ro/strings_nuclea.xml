@@ -26,11 +26,17 @@
     <string name="nuclea_new_element">Element nou: %1$s!</string>
     <string name="nuclea_supernova">SUPERNOVĂ!</string>
     <string name="nuclea_pulsar">PULSAR!</string>
+    <string name="nuclea_captured">CAPTURAT!</string>
+    <string name="nuclea_capture_hint">Apasă repetat ca să scapi!</string>
+    <string name="nuclea_escaped">EVADARE!</string>
+    <string name="nuclea_fission">FISIUNE!</string>
     <string name="nuclea_pow_magnetic">Câmp magnetic</string>
     <string name="nuclea_pow_time">Dilatarea timpului</string>
     <string name="nuclea_pow_gamma">Rază gamma</string>
     <string name="nuclea_pow_shield">Scut de quarci</string>
     <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_pow_swift">Viteză +</string>
+    <string name="nuclea_pow_thrust">Împingere +</string>
     <string name="nuclea_details">Detalii</string>
     <string name="nuclea_respec">Resetare</string>
     <string name="nuclea_respec_confirm">Confirmi?</string>

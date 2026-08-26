@@ -26,11 +26,17 @@
     <string name="nuclea_new_element">Yeni element: %1$s!</string>
     <string name="nuclea_supernova">SÜPERNOVA!</string>
     <string name="nuclea_pulsar">PULSAR!</string>
+    <string name="nuclea_captured">YAKALANDIN!</string>
+    <string name="nuclea_capture_hint">Kurtulmak için hızlıca bas!</string>
+    <string name="nuclea_escaped">KAÇIŞ!</string>
+    <string name="nuclea_fission">FİSYON!</string>
     <string name="nuclea_pow_magnetic">Manyetik alan</string>
     <string name="nuclea_pow_time">Zaman genişlemesi</string>
     <string name="nuclea_pow_gamma">Gama ışını</string>
     <string name="nuclea_pow_shield">Kuark kalkanı</string>
     <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_pow_swift">Hız +</string>
+    <string name="nuclea_pow_thrust">İtiş +</string>
     <string name="nuclea_details">Ayrıntılar</string>
     <string name="nuclea_respec">Sıfırla</string>
     <string name="nuclea_respec_confirm">Onayla?</string>

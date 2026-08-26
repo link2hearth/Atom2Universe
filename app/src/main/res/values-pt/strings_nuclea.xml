@@ -26,11 +26,17 @@
     <string name="nuclea_new_element">Novo elemento: %1$s!</string>
     <string name="nuclea_supernova">SUPERNOVA!</string>
     <string name="nuclea_pulsar">PULSAR!</string>
+    <string name="nuclea_captured">CAPTURADO!</string>
+    <string name="nuclea_capture_hint">Toque sem parar para escapar!</string>
+    <string name="nuclea_escaped">FUGA!</string>
+    <string name="nuclea_fission">FISSÃO!</string>
     <string name="nuclea_pow_magnetic">Campo magnético</string>
     <string name="nuclea_pow_time">Dilatação temporal</string>
     <string name="nuclea_pow_gamma">Raio gama</string>
     <string name="nuclea_pow_shield">Escudo de quarks</string>
     <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_pow_swift">Velocidade +</string>
+    <string name="nuclea_pow_thrust">Impulso +</string>
     <string name="nuclea_details">Detalhes</string>
     <string name="nuclea_respec">Redefinir</string>
     <string name="nuclea_respec_confirm">Confirmar?</string>

@@ -117,6 +117,45 @@ class NucleaSoundEngine {
         noteOnOff(CH1, 48, 65, 90)
     }
 
+    /** Rayon cosmique qui part : sifflement court et très aigu. */
+    fun onCosmicRay() {
+        noteOnOff(CH0, 100, 70, 60)
+        noteDelayed(CH0, 93, 55, delayMs = 40)
+    }
+
+    /** Fission : un noyau se casse — cassure sèche et grave. */
+    fun onFission() {
+        perc(39, 105)                 // hand clap
+        noteOnOff(CH1, 45, 85, 180)
+    }
+
+    /** Happé par le trou noir : drone très grave et menaçant. */
+    fun onCaptured() {
+        perc(35, 127)
+        noteOnOff(CH1, 31, 120, 1200)
+        noteDelayed(CH1, 34, 100, delayMs = 300)
+    }
+
+    /** Chaque appui du martèlement : un tic bref, pour sentir qu'on progresse. */
+    fun onMash() {
+        perc(37, 70)
+    }
+
+    /** Évasion réussie : on est recraché, arpège ascendant sec. */
+    fun onEscape() {
+        perc(49, 110)
+        noteOnOff(CH0, 72, 115, 120)
+        noteDelayed(CH0, 79, 115, delayMs = 100)
+        noteDelayed(CH0, 86, 120, delayMs = 200)
+    }
+
+    /** Jet polaire : souffle grave qui part le long de l'axe. */
+    fun onJet() {
+        perc(49, 120)
+        noteOnOff(CH1, 40, 110, 400)
+        noteDelayed(CH1, 47, 95, delayMs = 120)
+    }
+
     fun onBossDefeated() {
         perc(49, 127)
         noteDelayed(CH9, 57, 120, delayMs = 150)

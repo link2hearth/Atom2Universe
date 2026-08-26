@@ -18,6 +18,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -86,6 +87,8 @@ class NucleaView @JvmOverloads constructor(
     @Volatile private var pendingBuyNode = -1
     @Volatile private var pendingRespec = false
     @Volatile private var pendingResume = false
+    /** Appuis de martèlement accumulés par le thread UI, consommés par le thread de jeu. */
+    private val mashCount = java.util.concurrent.atomic.AtomicInteger(0)
 
     // Sticks d'une manette physique (type Xbox) — prioritaires quand le tactile est relâché
     @Volatile private var padMx = 0f
@@ -110,6 +113,8 @@ class NucleaView @JvmOverloads constructor(
     private val sGameOver     by lazy { ctx.getString(R.string.nuclea_game_over) }
     private val sBlackHole    by lazy { ctx.getString(R.string.nuclea_blackhole) }
     private val sBlackHoleHint by lazy { ctx.getString(R.string.nuclea_blackhole_hint) }
+    private val sCaptured     by lazy { ctx.getString(R.string.nuclea_captured) }
+    private val sCaptureHint  by lazy { ctx.getString(R.string.nuclea_capture_hint) }
 
     // ─── Paints ──────────────────────────────────────────────────────────────
 
@@ -144,6 +149,7 @@ class NucleaView @JvmOverloads constructor(
     private val fluxPath = Path()
     private val wavePath = Path()
     private val starPath = Path()
+    private val jetPath = Path()
 
     // Rects de boutons
     private val btnRect1 = RectF()
@@ -224,6 +230,10 @@ class NucleaView @JvmOverloads constructor(
             }
             if (pendingRespec) { pendingRespec = false; game.respec() }
 
+            // Martèlement : on rejoue tous les appuis reçus depuis la frame précédente
+            val mash = mashCount.getAndSet(0)
+            repeat(mash) { game.mashEscape() }
+
             // Tactile prioritaire quand un doigt tient le stick, sinon la manette
             val mx = if (moveId >= 0) jmx else padMx
             val my = if (moveId >= 0) jmy else padMy
@@ -234,6 +244,7 @@ class NucleaView @JvmOverloads constructor(
             if (game.phase != NucleaPhase.PLAYING) {
                 jmx = 0f; jmy = 0f; jax = 0f; jay = 0f
                 moveId = -1; aimId = -1
+                mashCount.set(0)
             }
 
             val canvas = holder.lockCanvas()
@@ -257,11 +268,13 @@ class NucleaView @JvmOverloads constructor(
         padMx = mx; padMy = my; padAx = ax; padAy = ay
     }
 
-    /** Bouton A ou START : valider / pause / reprendre selon la phase. */
+    /** Bouton A ou START : valider / pause / reprendre / se débattre selon la phase. */
     fun onPadConfirm(isStart: Boolean) {
         when (game.phase) {
             NucleaPhase.MENU -> if (game.hasResumableRun()) pendingResume = true else pendingStart = true
+            // Happé par le trou noir : A devient le bouton de martèlement
             NucleaPhase.PLAYING -> if (isStart) pendingPhase = NucleaPhase.PAUSED
+                                   else if (game.captured) mashCount.incrementAndGet()
             NucleaPhase.PAUSED -> pendingPhase = NucleaPhase.PLAYING
             NucleaPhase.GAME_OVER -> pendingPhase = NucleaPhase.MENU
             else -> Unit
@@ -316,6 +329,15 @@ class NucleaView @JvmOverloads constructor(
         val pi = ev.actionIndex
         val pid = ev.getPointerId(pi)
         val px = ev.getX(pi); val py = ev.getY(pi)
+
+        // Capturé : les sticks sont coupés, chaque poser de doigt — n'importe où —
+        // compte comme un appui du martèlement
+        if (game.captured) {
+            if (ev.actionMasked == MotionEvent.ACTION_DOWN ||
+                ev.actionMasked == MotionEvent.ACTION_POINTER_DOWN) mashCount.incrementAndGet()
+            moveId = -1; aimId = -1
+            return
+        }
 
         when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
@@ -405,6 +427,7 @@ class NucleaView @JvmOverloads constructor(
                 canvas.restore()
                 drawHUD(canvas)
                 drawJoysticks(canvas)
+                drawCapture(canvas)
                 drawBanners(canvas)
                 if (game.superFlash > 0f) {
                     pFill.color = Color.argb((game.superFlash / 0.9f * 200).toInt().coerceIn(0, 200), 255, 245, 220)
@@ -449,6 +472,8 @@ class NucleaView @JvmOverloads constructor(
         drawMotes(canvas)
         drawPowerUps(canvas)
         drawAtoms(canvas)
+        drawNeutrons(canvas)
+        drawRays(canvas)
         drawBooms(canvas)
         drawParticles(canvas)
         drawPlayer(canvas)
@@ -460,8 +485,11 @@ class NucleaView @JvmOverloads constructor(
         // Apparition : le trou noir grandit depuis un point pendant sa phase inoffensive
         val appear = (1f - bh.grace / BlackHole.SPAWN_GRACE).coerceIn(0f, 1f)
         val hz = bh.horizon() * (0.25f + 0.75f * appear)
-        // Halo d'accrétion
-        pGlow.color = Color.argb(70, 255, 138, 60)
+        // Halo d'accrétion — éteint et vacillant tant qu'il est sonné par une évasion,
+        // pour qu'on voie d'un coup d'œil que le puits de gravité est coupé
+        val stunned = bh.stun > 0f
+        val haloA = if (stunned) (18 + (sin(animT * 18f) * 0.5f + 0.5f) * 22).toInt() else 70
+        pGlow.color = Color.argb(haloA, 255, 138, 60)
         canvas.drawCircle(bh.x, bh.y, hz * 1.7f, pGlow)
         // Disque noir
         pFill.color = Color.BLACK
@@ -486,13 +514,50 @@ class NucleaView @JvmOverloads constructor(
             pDash.strokeWidth = dp(2.5f)
             canvas.drawCircle(bh.x, bh.y, bh.horizon() * (1f + 5f * (1f - appear)), pDash)
         }
-        // Avertissement d'éruption : anneau rouge clignotant sur la zone de danger
-        if (bh.pulseWarn > 0f) {
-            val dangerR = game.pulseRadius(bh)
-            val flash = (sin(animT * 24f) * 0.5f + 0.5f)
-            pDash.color = Color.argb((90 + flash * 150).toInt(), 255, 110, 60)
-            pDash.strokeWidth = dp(2.5f)
-            canvas.drawCircle(bh.x, bh.y, dangerR, pDash)
+        // Éruption : jet polaire. Pendant l'avertissement on montre les deux faisceaux
+        // en pointillés — les zones perpendiculaires restent sûres, à l'inverse de
+        // l'ancienne onde circulaire qui n'offrait aucune sortie.
+        if (bh.pulseWarn > 0f || bh.jetFlash > 0f) {
+            val reach = max(width, height).toFloat()
+            val half = game.jetHalfWidth()
+            val ux = cos(bh.jetAngle); val uy = sin(bh.jetAngle)
+            // Vecteur perpendiculaire : donne l'épaisseur du faisceau
+            val nxp = -uy * half; val nyp = ux * half
+
+            if (bh.jetFlash > 0f) {
+                // Le jet est parti : faisceau plein qui s'estompe
+                val a = (bh.jetFlash / 0.35f * 210).toInt().coerceIn(0, 210)
+                pFill.color = Color.argb(a, 255, 176, 103)
+                jetPath.rewind()
+                jetPath.moveTo(bh.x - ux * reach + nxp, bh.y - uy * reach + nyp)
+                jetPath.lineTo(bh.x + ux * reach + nxp, bh.y + uy * reach + nyp)
+                jetPath.lineTo(bh.x + ux * reach - nxp, bh.y + uy * reach - nyp)
+                jetPath.lineTo(bh.x - ux * reach - nxp, bh.y - uy * reach - nyp)
+                jetPath.close()
+                canvas.drawPath(jetPath, pFill)
+                pFill.color = Color.argb((a * 0.8f).toInt(), 255, 255, 240)
+                pStroke.color = Color.argb(a, 255, 255, 240); pStroke.strokeWidth = dp(3f)
+                canvas.drawLine(bh.x - ux * reach, bh.y - uy * reach,
+                    bh.x + ux * reach, bh.y + uy * reach, pStroke)
+            } else {
+                // Avertissement : contours clignotants, on a 1,1 s pour dégager
+                val flash = (sin(animT * 24f) * 0.5f + 0.5f)
+                val a = (60 + flash * 90).toInt()
+                pFill.color = Color.argb((a * 0.35f).toInt(), 255, 138, 60)
+                jetPath.rewind()
+                jetPath.moveTo(bh.x - ux * reach + nxp, bh.y - uy * reach + nyp)
+                jetPath.lineTo(bh.x + ux * reach + nxp, bh.y + uy * reach + nyp)
+                jetPath.lineTo(bh.x + ux * reach - nxp, bh.y + uy * reach - nyp)
+                jetPath.lineTo(bh.x - ux * reach - nxp, bh.y - uy * reach - nyp)
+                jetPath.close()
+                canvas.drawPath(jetPath, pFill)
+                pDash.color = Color.argb((90 + flash * 150).toInt(), 255, 110, 60)
+                pDash.strokeWidth = dp(2.5f)
+                for (s in intArrayOf(1, -1)) {
+                    canvas.drawLine(bh.x - ux * reach + nxp * s, bh.y - uy * reach + nyp * s,
+                        bh.x + ux * reach + nxp * s, bh.y + uy * reach + nyp * s, pDash)
+                }
+            }
         }
         // Jauge de masse autour du trou noir
         val frac = bh.massFed.toFloat() / bh.massNeeded
@@ -690,7 +755,7 @@ class NucleaView @JvmOverloads constructor(
     private fun drawMarks(canvas: Canvas) {
         for (m in game.marks) {
             val pulse = (sin(animT * 10f) * 0.5f + 0.5f)
-            val col = if (m.anti) NucleaGame.ANTI_COLOR else NucleaGame.TIER_COLORS[m.tier]
+            val col = if (m.anti) NucleaGame.antiColor(m.antiKind) else NucleaGame.TIER_COLORS[m.tier]
             pDash.color = Color.argb((90 + pulse * 120).toInt(), Color.red(col), Color.green(col), Color.blue(col))
             pDash.strokeWidth = dp(2f)
             canvas.drawCircle(m.x, m.y, dp(14f) + m.timer * dp(10f), pDash)
@@ -735,14 +800,7 @@ class NucleaView @JvmOverloads constructor(
             pStroke.color = C_GREEN; pStroke.strokeWidth = dp(2f)
             canvas.drawCircle(p.x, p.y + bob, r, pStroke)
             pText.color = C_GREEN; pText.textSize = sp(13f)
-            val label = when (p.type) {
-                PowerUpType.MAGNETIC -> "M"
-                PowerUpType.TIME -> "T"
-                PowerUpType.GAMMA -> "γ"
-                PowerUpType.SHIELD -> "◆"
-                PowerUpType.PULSAR -> "P"
-            }
-            canvas.drawText(label, p.x, p.y + bob + sp(4.5f), pText)
+            canvas.drawText(powerLabel(p.type), p.x, p.y + bob + sp(4.5f), pText)
         }
     }
 
@@ -751,7 +809,7 @@ class NucleaView @JvmOverloads constructor(
             // Clignotement pendant la décroissance
             if (a.decayTimer > 0f && (a.decayTimer * 10f).toInt() % 2 == 0) continue
 
-            val col = if (a.anti) NucleaGame.ANTI_COLOR else NucleaGame.TIER_COLORS[a.tier]
+            val col = if (a.anti) NucleaGame.antiColor(a.antiKind) else NucleaGame.TIER_COLORS[a.tier]
             var haloAlpha = 55
             var drawR = a.radius
 
@@ -773,17 +831,85 @@ class NucleaView @JvmOverloads constructor(
             // Anneau
             pStroke.color = col; pStroke.strokeWidth = dp(2f)
             canvas.drawCircle(a.x, a.y, drawR, pStroke)
-            // Symbole
+            // Symbole. Les antiparticules portent le leur (e⁺ positron, p⁻ antiproton) :
+            // c'est ce qui dit au joueur quel bonus il récupérera en les percutant.
             pText.color = col
-            pText.textSize = drawR * 0.85f
-            val sym = NucleaGame.SYMBOLS[a.tier]
-            canvas.drawText(sym, a.x, a.y + drawR * 0.3f, pText)
-            // Antimatière : barre au-dessus du symbole (H̄)
             if (a.anti) {
-                pStroke.strokeWidth = dp(1.5f)
-                val hw = drawR * 0.32f
-                canvas.drawLine(a.x - hw, a.y - drawR * 0.42f, a.x + hw, a.y - drawR * 0.42f, pStroke)
+                pText.textSize = drawR * 0.72f
+                canvas.drawText(NucleaGame.antiSymbol(a.antiKind), a.x, a.y + drawR * 0.28f, pText)
+                // Anneau intérieur en pointillés : signature visuelle de l'antimatière
+                pDash.color = Color.argb(190, Color.red(col), Color.green(col), Color.blue(col))
+                pDash.strokeWidth = dp(1.4f)
+                canvas.drawCircle(a.x, a.y, drawR * 0.72f, pDash)
+            } else {
+                pText.textSize = drawR * 0.85f
+                canvas.drawText(NucleaGame.SYMBOLS[a.tier], a.x, a.y + drawR * 0.3f, pText)
             }
+        }
+    }
+
+    /**
+     * Neutron : bille grise sans anneau coloré (il n'a pas de charge), avec un
+     * halo qui palpite pour se distinguer d'un atome au premier coup d'œil.
+     * Il clignote quand il ne lui reste que 3 s avant de se désintégrer.
+     */
+    private fun drawNeutrons(canvas: Canvas) {
+        val r = dp(7f)
+        for (n in game.neutrons) {
+            // Clignote sur les 2 dernières secondes : il est sur le point de se désintégrer
+            if (n.life < 2f && (n.life * 6f).toInt() % 2 == 0) continue
+            val pulse = sin(animT * 7f + n.x * 0.05f) * 0.5f + 0.5f
+            val col = NucleaGame.NEUTRON_COLOR
+            pGlow.color = Color.argb((50 + pulse * 50).toInt(),
+                Color.red(col), Color.green(col), Color.blue(col))
+            canvas.drawCircle(n.x, n.y, r * 2.2f, pGlow)
+            pFill.color = if (n.hitFlash > 0f) Color.WHITE else Color.parseColor("#5A5F6E")
+            canvas.drawCircle(n.x, n.y, r, pFill)
+            pStroke.color = col; pStroke.strokeWidth = dp(1.6f)
+            canvas.drawCircle(n.x, n.y, r, pStroke)
+            // Le « n » du neutron
+            pText.color = col; pText.textSize = r * 1.25f
+            canvas.drawText("n", n.x, n.y + r * 0.42f, pText)
+        }
+    }
+
+    /**
+     * Rayon cosmique : d'abord une ligne pointillée qui annonce la trajectoire
+     * (0,8 s pour dégager), puis le trait lumineux de la particule elle-même,
+     * dessiné comme une comète — tête brillante et sillage qui s'éteint.
+     */
+    private fun drawRays(canvas: Canvas) {
+        val reach = max(width, height).toFloat() * 2f
+        for (r in game.rays) {
+            if (r.warn > 0f) {
+                // Télégraphe : il se resserre et s'intensifie à l'approche du tir
+                val t = 1f - r.warn / CosmicRay.WARN_TIME
+                val flash = (sin(animT * 26f) * 0.5f + 0.5f)
+                val a = (40 + t * 120 + flash * 60).toInt().coerceIn(0, 255)
+                pDash.color = Color.argb(a, Color.red(NucleaGame.RAY_COLOR),
+                    Color.green(NucleaGame.RAY_COLOR), Color.blue(NucleaGame.RAY_COLOR))
+                pDash.strokeWidth = dp(1.5f) + dp(2f) * t
+                // La ligne visée passe par le point de mire, dans les deux sens
+                val cx = r.x0 + r.dirX * r.span * 0.5f
+                val cy = r.y0 + r.dirY * r.span * 0.5f
+                canvas.drawLine(cx - r.dirX * reach, cy - r.dirY * reach,
+                    cx + r.dirX * reach, cy + r.dirY * reach, pDash)
+                continue
+            }
+            val tailLen = dp(90f)
+            val tx = r.x - r.dirX * tailLen
+            val ty = r.y - r.dirY * tailLen
+            pStroke.color = Color.argb(90, Color.red(NucleaGame.RAY_COLOR),
+                Color.green(NucleaGame.RAY_COLOR), Color.blue(NucleaGame.RAY_COLOR))
+            pStroke.strokeWidth = dp(6f)
+            canvas.drawLine(tx, ty, r.x, r.y, pStroke)
+            pStroke.color = Color.WHITE; pStroke.strokeWidth = dp(2.5f)
+            canvas.drawLine(tx, ty, r.x, r.y, pStroke)
+            pGlow.color = Color.argb(160, Color.red(NucleaGame.RAY_COLOR),
+                Color.green(NucleaGame.RAY_COLOR), Color.blue(NucleaGame.RAY_COLOR))
+            canvas.drawCircle(r.x, r.y, dp(8f), pGlow)
+            pFill.color = Color.WHITE
+            canvas.drawCircle(r.x, r.y, dp(3.5f), pFill)
         }
     }
 
@@ -874,26 +1000,125 @@ class NucleaView @JvmOverloads constructor(
         for (t in PowerUpType.entries) {
             val left = game.powerTimers[t.ordinal]
             if (left <= 0f) continue
+            // Les boosts d'antimatière gardent leur couleur : on relie la pastille
+            // à l'antiparticule qu'on vient de percuter
+            val tint = when (t) {
+                PowerUpType.SWIFT -> NucleaGame.ANTI_COLOR
+                PowerUpType.THRUST -> NucleaGame.ANTI_THRUST_COLOR
+                else -> C_GREEN
+            }
             pFill.color = C_CARD_BG
             canvas.drawCircle(px, py, dp(11f), pFill)
-            pStroke.color = C_GREEN; pStroke.strokeWidth = dp(2f)
-            val maxDur = if (t == PowerUpType.PULSAR) 12f else 8f
+            pStroke.color = tint; pStroke.strokeWidth = dp(2f)
+            val maxDur = NucleaGame.powerMaxDuration(t)
             canvas.drawArc(RectF(px - dp(11f), py - dp(11f), px + dp(11f), py + dp(11f)),
                 -90f, 360f * (left / maxDur).coerceIn(0f, 1f), false, pStroke)
-            pText.color = C_GREEN; pText.textSize = sp(11f)
-            val label = when (t) {
-                PowerUpType.MAGNETIC -> "M"; PowerUpType.TIME -> "T"; PowerUpType.GAMMA -> "γ"
-                PowerUpType.SHIELD -> "◆"; PowerUpType.PULSAR -> "P"
-            }
-            canvas.drawText(label, px, py + sp(4f), pText)
+            pText.color = tint; pText.textSize = sp(11f)
+            canvas.drawText(powerLabel(t), px, py + sp(4f), pText)
             px -= dp(28f)
         }
     }
 
+    /** Pictogramme d'un bonus — mêmes symboles sur la pastille du HUD et au sol. */
+    private fun powerLabel(t: PowerUpType): String = when (t) {
+        PowerUpType.MAGNETIC -> "M"
+        PowerUpType.TIME -> "T"
+        PowerUpType.GAMMA -> "γ"
+        PowerUpType.SHIELD -> "◆"
+        PowerUpType.PULSAR -> "P"
+        PowerUpType.SWIFT -> NucleaGame.antiSymbol(NucleaGame.ANTI_SWIFT)
+        PowerUpType.THRUST -> NucleaGame.antiSymbol(NucleaGame.ANTI_THRUST)
+    }
+
     private fun drawJoysticks(canvas: Canvas) {
         if (game.phase != NucleaPhase.PLAYING) return
+        if (game.captured) return   // pendant la capture on ne pilote plus, on martèle
         if (moveId >= 0) drawStick(canvas, moveCx, moveCy, moveKx, moveKy, Color.WHITE)
         if (aimId >= 0) drawStick(canvas, aimCx, aimCy, aimKx, aimKy, Color.parseColor("#A0DCFF"))
+    }
+
+    /**
+     * Écran de capture : le joueur est happé dans le trou noir. Deux jauges se
+     * font face — la COHÉSION qui se vide toute seule, et l'ÉVASION qu'on remplit
+     * en martelant. Tant que l'évasion gagne la course, on ressort vivant.
+     */
+    private fun drawCapture(canvas: Canvas) {
+        if (!game.captured) return
+        val w = width.toFloat(); val h = height.toFloat()
+
+        // Assombrissement : tout le reste de l'arène passe au second plan
+        pFill.color = Color.argb(120, 0, 0, 0)
+        canvas.drawRect(0f, 0f, w, h, pFill)
+
+        // Spirales de marée qui convergent sur le joueur
+        val kick = (game.captureKick / 0.12f).coerceIn(0f, 1f)
+        pStroke.strokeWidth = dp(1.5f)
+        for (k in 0 until 5) {
+            val base = animT * 3f + k * 1.256f
+            val rr = dp(70f) + dp(40f) * ((animT * 1.6f + k * 0.2f) % 1f)
+            pStroke.color = Color.argb((110 - k * 14).coerceAtLeast(20), 255, 138, 60)
+            canvas.drawArc(
+                RectF(game.px - rr, game.py - rr, game.px + rr, game.py + rr),
+                base * 57.3f % 360f, 110f, false, pStroke
+            )
+        }
+        // Halo qui pulse à chaque appui : le retour visuel du martèlement
+        if (kick > 0f) {
+            pGlow.color = Color.argb((kick * 170).toInt(), 255, 233, 184)
+            canvas.drawCircle(game.px, game.py, dp(26f) + dp(24f) * kick, pGlow)
+        }
+
+        // Titre + consigne
+        pText.color = Color.parseColor("#FF8A3C"); pText.textSize = sp(30f)
+        canvas.drawText(sCaptured, w / 2f, h * 0.2f, pText)
+        val blink = (sin(animT * 8f) * 0.5f + 0.5f)
+        pText.color = Color.argb((160 + blink * 95).toInt(), 255, 255, 255); pText.textSize = sp(15f)
+        canvas.drawText(sCaptureHint, w / 2f, h * 0.2f + sp(26f), pText)
+
+        // Jauge de COHÉSION : le compte à rebours avant l'écrasement
+        val barW = w * 0.62f
+        val barH = dp(14f)
+        val bx = (w - barW) / 2f
+        var by = h * 0.74f
+        val coh = (game.captureCohesion / NucleaGame.CAPTURE_TIME).coerceIn(0f, 1f)
+        pFill.color = Color.argb(180, 30, 10, 10)
+        canvas.drawRect(bx, by, bx + barW, by + barH, pFill)
+        pFill.color = Color.rgb(255, (60 + 150 * coh).toInt(), 60)
+        canvas.drawRect(bx, by, bx + barW * coh, by + barH, pFill)
+        pStroke.color = Color.argb(150, 255, 160, 120); pStroke.strokeWidth = dp(1.5f)
+        canvas.drawRect(bx, by, bx + barW, by + barH, pStroke)
+
+        // Jauge d'ÉVASION : elle monte à chaque appui
+        by += barH + dp(10f)
+        val esc = (game.capturePresses.toFloat() / game.captureNeeded).coerceIn(0f, 1f)
+        pFill.color = Color.argb(180, 10, 25, 30)
+        canvas.drawRect(bx, by, bx + barW, by + barH, pFill)
+        pFill.color = C_GREEN
+        canvas.drawRect(bx, by, bx + barW * esc, by + barH, pFill)
+        pStroke.color = Color.argb(150, 126, 249, 200)
+        canvas.drawRect(bx, by, bx + barW, by + barH, pStroke)
+        pText.color = C_GREEN; pText.textSize = sp(13f)
+        canvas.drawText("${game.capturePresses} / ${game.captureNeeded}",
+            w / 2f, by + barH + sp(16f), pText)
+
+        // Repère de martèlement : un point avec des ondes qui s'échappent, lisible
+        // aussi bien pour un doigt (tapez n'importe où) que pour le bouton A d'une
+        // manette. Il grossit à chaque appui, pour que le martèlement ait du punch.
+        val cy = h * 0.55f
+        val cr = dp(46f) + dp(10f) * kick + dp(4f) * blink
+        pFill.color = Color.argb(70, 255, 233, 184)
+        canvas.drawCircle(w / 2f, cy, cr, pFill)
+        pStroke.color = Color.argb(230, 255, 233, 184); pStroke.strokeWidth = dp(3f)
+        canvas.drawCircle(w / 2f, cy, cr, pStroke)
+        pFill.color = Color.WHITE
+        canvas.drawCircle(w / 2f, cy, dp(11f), pFill)
+        // Ondes concentriques : le geste « tapoter ici »
+        pStroke.strokeWidth = dp(2f)
+        for (k in 0 until 2) {
+            val t = ((animT * 1.8f + k * 0.5f) % 1f)
+            pStroke.color = Color.argb(((1f - t) * 200).toInt(), 255, 233, 184)
+            canvas.drawCircle(w / 2f, cy, dp(14f) + (cr - dp(14f)) * t, pStroke)
+        }
     }
 
     private fun drawStick(canvas: Canvas, cx: Float, cy: Float, kx: Float, ky: Float, tint: Int) {

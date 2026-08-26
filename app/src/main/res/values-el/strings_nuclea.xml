@@ -26,11 +26,17 @@
     <string name="nuclea_new_element">Νέο στοιχείο: %1$s!</string>
     <string name="nuclea_supernova">ΣΟΥΠΕΡΝΟΒΑ!</string>
     <string name="nuclea_pulsar">ΠΑΛΣΑΡ!</string>
+    <string name="nuclea_captured">ΠΑΓΙΔΕΥΤΗΚΕΣ!</string>
+    <string name="nuclea_capture_hint">Πάτα γρήγορα για να ξεφύγεις!</string>
+    <string name="nuclea_escaped">ΔΙΑΦΥΓΗ!</string>
+    <string name="nuclea_fission">ΣΧΑΣΗ!</string>
     <string name="nuclea_pow_magnetic">Μαγνητικό πεδίο</string>
     <string name="nuclea_pow_time">Διαστολή χρόνου</string>
     <string name="nuclea_pow_gamma">Ακτίνα γάμμα</string>
     <string name="nuclea_pow_shield">Ασπίδα κουάρκ</string>
     <string name="nuclea_pow_pulsar">Πάλσαρ</string>
+    <string name="nuclea_pow_swift">Ταχύτητα +</string>
+    <string name="nuclea_pow_thrust">Ώθηση +</string>
     <string name="nuclea_details">Λεπτομέρειες</string>
     <string name="nuclea_respec">Επαναφορά</string>
     <string name="nuclea_respec_confirm">Επιβεβαίωση;</string>

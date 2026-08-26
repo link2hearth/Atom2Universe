@@ -26,11 +26,17 @@
     <string name="nuclea_new_element">Nieuw element: %1$s!</string>
     <string name="nuclea_supernova">SUPERNOVA!</string>
     <string name="nuclea_pulsar">PULSAR!</string>
+    <string name="nuclea_captured">GEVANGEN!</string>
+    <string name="nuclea_capture_hint">Ram op de knop om los te komen!</string>
+    <string name="nuclea_escaped">ONTSNAPT!</string>
+    <string name="nuclea_fission">SPLIJTING!</string>
     <string name="nuclea_pow_magnetic">Magnetisch veld</string>
     <string name="nuclea_pow_time">Tijddilatatie</string>
     <string name="nuclea_pow_gamma">Gammastraal</string>
     <string name="nuclea_pow_shield">Quark-schild</string>
     <string name="nuclea_pow_pulsar">Pulsar</string>
+    <string name="nuclea_pow_swift">Snelheid +</string>
+    <string name="nuclea_pow_thrust">Stuwkracht +</string>
     <string name="nuclea_details">Details</string>
     <string name="nuclea_respec">Resetten</string>
     <string name="nuclea_respec_confirm">Bevestigen?</string>

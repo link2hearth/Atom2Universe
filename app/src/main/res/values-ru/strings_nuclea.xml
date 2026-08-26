@@ -26,11 +26,17 @@
     <string name="nuclea_new_element">Новый элемент: %1$s!</string>
     <string name="nuclea_supernova">СВЕРХНОВАЯ!</string>
     <string name="nuclea_pulsar">ПУЛЬСАР!</string>
+    <string name="nuclea_captured">ЗАХВАЧЕН!</string>
+    <string name="nuclea_capture_hint">Жмите часто, чтобы вырваться!</string>
+    <string name="nuclea_escaped">ПОБЕГ!</string>
+    <string name="nuclea_fission">ДЕЛЕНИЕ!</string>
     <string name="nuclea_pow_magnetic">Магнитное поле</string>
     <string name="nuclea_pow_time">Замедление времени</string>
     <string name="nuclea_pow_gamma">Гамма-луч</string>
     <string name="nuclea_pow_shield">Кварковый щит</string>
     <string name="nuclea_pow_pulsar">Пульсар</string>
+    <string name="nuclea_pow_swift">Скорость +</string>
+    <string name="nuclea_pow_thrust">Толчок +</string>
     <string name="nuclea_details">Подробности</string>
     <string name="nuclea_respec">Сбросить</string>
     <string name="nuclea_respec_confirm">Подтвердить?</string>
