@@ -168,6 +168,24 @@ class PhysBody private constructor(
     var tag: Any? = null
 
     /**
+     * Catégorie du corps : un bit, à choisir par le jeu.
+     *
+     * Avec [collidesWith], elle permet de dire qui touche qui. Deux pièces d'une
+     * machine se chevauchent parfois par construction — l'arrêtoir d'un trébuchet
+     * et son contrepoids occupent le même espace — et un projectile qui retombe sur
+     * sa propre machine finit broyé entre deux pièces bien plus lourdes que lui,
+     * ce qu'aucun solveur de ce genre ne sait résoudre proprement.
+     */
+    var category = 1
+
+    /** Catégories que ce corps accepte de toucher. Par défaut, toutes. */
+    var collidesWith = -1
+
+    /** Vrai si les deux corps acceptent mutuellement de se toucher. */
+    fun collidesWith(other: PhysBody): Boolean =
+        (category and other.collidesWith) != 0 && (other.category and collidesWith) != 0
+
+    /**
      * Somme des impulsions reçues lors de vrais chocs depuis la dernière remise à
      * zéro, en kg·m/s. Sert à faire casser les cibles : c'est le moteur qui la
      * calcule, donc les dégâts sont physiquement honnêtes.

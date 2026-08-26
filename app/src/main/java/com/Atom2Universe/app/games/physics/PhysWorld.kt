@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.physics
 
 import kotlin.math.abs
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -39,7 +40,7 @@ class PhysWorld {
     var impactSpeedThreshold = 0.5f
 
     /** Nombre maximal de sous-pas consentis par image (voir [stepFrame]). */
-    var maxSubSteps = 16
+    var maxSubSteps = 32
 
     private var stamp = 0
 
@@ -94,21 +95,32 @@ class PhysWorld {
      */
     fun stepFrame(dt: Float) {
         if (dt <= 0f) return
-        val n = subStepsFor(dt)
-        val sub = dt / n
-        repeat(n) { step(sub) }
+        // On consomme l'image par tranches, en **recalculant la taille de la
+        // tranche après chacune**. C'est indispensable dès qu'un choc entre en jeu :
+        // le contrepoids d'une machine de jet frappe le bras au milieu de l'image et
+        // le fait passer de zéro à trois tours par seconde. Un découpage décidé une
+        // fois pour toutes au début de l'image aurait taillé les pas pour un bras
+        // immobile, et le reste de l'image se serait joué à pleine vitesse avec des
+        // pas énormes — le boulet traversait sa butée.
+        var remaining = dt
+        var guard = 0
+        while (remaining > 1e-6f && guard < 4 * maxSubSteps) {
+            val h = minOf(remaining, safeStep(dt))
+            step(h)
+            remaining -= h
+            guard++
+        }
     }
 
     /**
-     * Nombre de sous-pas nécessaires pour que le point le plus rapide du monde ne
-     * traverse rien.
+     * Durée pendant laquelle, à l'état actuel, rien ne peut franchir la plus petite
+     * épaisseur du monde.
      *
-     * On compte la **rotation** autant que la translation : un bras de levier qui
-     * fouette a un centre quasiment immobile, mais sa pointe file à plus de 10 m/s.
-     * À ne regarder que la vitesse du centre, le moteur concluait qu'il n'y avait
-     * rien à subdiviser, et la pointe traversait l'arrêtoir d'une image à l'autre.
+     * La vitesse retenue est celle du **point le plus rapide** de chaque corps,
+     * rotation comprise : le centre d'un bras de douze mètres avance lentement
+     * pendant que son extrémité file à vingt mètres par seconde.
      */
-    fun subStepsFor(dt: Float): Int {
+    private fun safeStep(frameDt: Float): Float {
         var fastest = 0f
         var thinnest = Float.MAX_VALUE
         for (bd in bodies) {
@@ -119,11 +131,18 @@ class PhysWorld {
                 if (s > fastest) fastest = s
             }
         }
-        if (thinnest == Float.MAX_VALUE || fastest <= 0f) return 1
-        val travel = fastest * dt
-        if (travel <= thinnest) return 1
-        return ceil(travel / thinnest).toInt().coerceIn(1, maxSubSteps)
+        if (thinnest == Float.MAX_VALUE || fastest <= 0f) return frameDt
+        // Marge de deux : deux corps peuvent se croiser en sens contraire, et leur
+        // rapprochement vaut alors la somme de leurs vitesses.
+        val safe = thinnest * 0.5f / fastest
+        // Le plancher garantit que l'image finit toujours par être consommée, même
+        // face à une vitesse aberrante.
+        return safe.coerceIn(frameDt / maxSubSteps, frameDt)
     }
+
+    /** Nombre de sous-pas que [stepFrame] emploierait pour une image de [dt]. */
+    fun subStepsFor(dt: Float): Int =
+        ceil(dt / safeStep(dt)).toInt().coerceIn(1, maxSubSteps)
 
     fun step(dt: Float) {
         if (dt <= 0f) return
@@ -204,6 +223,7 @@ class PhysWorld {
                 val b = bodies[j]
                 if (!b.inWorld) continue
                 if (a.immovable && b.immovable) continue
+                if (!a.collidesWith(b)) continue
 
                 // Rejet rapide au niveau des corps entiers, avant d'entrer dans
                 // le détail de leurs formes.

@@ -306,7 +306,7 @@ class TrebuchetView @JvmOverloads constructor(
                     // l'abscisse, le jeu se charge de rester dans le domaine permis.
                     Drag.BALL -> game.setBallDistance(game.pivotX - wx)
                     Drag.WEIGHT -> {
-                        val half = TrebuchetRules.counterweightHalfSize(game.config.counterweightMass)
+                        val half = game.config.counterweightHalf
                         val base = game.pivotY + TrebuchetRules.BEAM_HALF_THICKNESS + half
                         game.setDropHeight(wy - base)
                     }
@@ -492,7 +492,7 @@ class TrebuchetView @JvmOverloads constructor(
 
         // Trait entre le contrepoids suspendu et le bras : la hauteur de lâcher.
         val cw = game.counterweight
-        val half = TrebuchetRules.counterweightHalfSize(game.config.counterweightMass)
+        val half = game.config.counterweightHalf
         val topOfBeam = game.pivotY + TrebuchetRules.BEAM_HALF_THICKNESS
         canvas.drawLine(sx(cw.x), sy(cw.y - half), sx(cw.x), sy(topOfBeam), pHandle)
         canvas.drawText(

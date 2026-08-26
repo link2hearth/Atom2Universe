@@ -62,6 +62,9 @@ object TrebuchetRules {
      */
     val LEVER_RATIOS = floatArrayOf(2f, 4f, 6f, 9f)
 
+    /** Longueur minimale du bras court : en deçà, la machine n'est plus crédible. */
+    const val MIN_SHORT_ARM = 0.9f
+
     /** Contrepoids : léger, moyen, lourd. */
     val COUNTERWEIGHTS = floatArrayOf(200f, 400f, 700f)
 
@@ -81,8 +84,8 @@ object TrebuchetRules {
      * creux rigide ne sait pas faire (voir [CUP_CURVES_DEG]). D'ici la fronde, la
      * plage reste donc courte : ce réglage déclenche le tir, il ne le charge pas.
      */
-    const val DROP_MIN = 0.1f
-    const val DROP_MAX = 0.25f
+    const val DROP_MIN = 0.3f
+    const val DROP_MAX = 2.5f
 
     /**
      * Le boulet. Le rapport entre sa masse et celle du contrepoids est ce qui
@@ -109,7 +112,7 @@ object TrebuchetRules {
      * Enfermer le boulet entre deux hautes parois, comme au premier essai,
      * l'empêchait tout simplement de sortir.
      */
-    const val CUP_HALF_WIDTH = 0.045f
+    const val CUP_HALF_WIDTH = 0.07f
 
     /**
      * Jeu laissé au boulet entre les deux rebords. Sans lui l'écart vaut très
@@ -136,7 +139,7 @@ object TrebuchetRules {
      * corde sépare le fait de retenir du fait de lâcher, ce qu'un creux rigide ne
      * sait pas faire.
      */
-    val CUP_CURVES_DEG = intArrayOf(0, 5, 10, 15)
+    val CUP_CURVES_DEG = intArrayOf(0, 15, 30, 45)
 
     /** Position du contrepoids sur le bras court, en fraction de sa longueur. */
     const val SEAT_POSITION = 0.75f
@@ -217,7 +220,20 @@ class MachineConfig {
 
     val beamLength: Float get() = TrebuchetRules.BEAM_LENGTHS[beamIndex]
     val footHeight: Float get() = TrebuchetRules.FOOT_HEIGHTS[footIndex]
-    val leverRatio: Float get() = TrebuchetRules.LEVER_RATIOS[ratioIndex]
+    /**
+     * Rapport de bras effectivement réalisable.
+     *
+     * Un cran très marqué sur un bras court donnerait un bras court ridicule —
+     * cinquante centimètres pour porter sept cents kilos. Le contrepoids y pèse
+     * alors plus de cent fois le boulet à bout portant du pivot, et la simulation
+     * n'a plus rien de crédible : mesuré à 147 m/s en sortie de cuiller. On borne
+     * donc le cran à ce que la longueur du bras permet.
+     */
+    val leverRatio: Float
+        get() = minOf(
+            TrebuchetRules.LEVER_RATIOS[ratioIndex],
+            beamLength / TrebuchetRules.MIN_SHORT_ARM - 1f
+        )
     val counterweightMass: Float get() = TrebuchetRules.COUNTERWEIGHTS[weightIndex]
     val cupCurveDeg: Float get() = TrebuchetRules.CUP_CURVES_DEG[cupCurveIndex].toFloat()
 
@@ -238,6 +254,21 @@ class MachineConfig {
         get() = cupBackGap + 2f * TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT *
             sin(Math.toRadians(cupCurveDeg.toDouble()).toFloat()) * 0.5f
     val beamMass: Float get() = beamLength * TrebuchetRules.BEAM_DENSITY
+
+    /**
+     * Demi-côté du contrepoids, **borné par le bras court qui le porte**.
+     *
+     * Sans cette limite, 700 kg font 1,10 m de large alors qu'un bras court de
+     * rapport 9 sur un bras de 5 m n'en mesure que 0,55 : le contrepoids déborde de
+     * partout, se plante dans l'arrêtoir et dans le sol, et le solveur finit par
+     * expédier le boulet à 1 200 m/s. Une machine dont le contrepoids est plus
+     * large que son bras n'est pas une machine.
+     */
+    val counterweightHalf: Float
+        get() = minOf(
+            TrebuchetRules.counterweightHalfSize(counterweightMass),
+            0.4f * shortArm
+        )
 
     /** Longueur du bras court, du pivot à son extrémité. */
     val shortArm: Float get() = beamLength / (1f + leverRatio)
@@ -296,6 +327,18 @@ class MachineConfig {
 class TrebuchetGame {
 
     enum class Phase { BUILD, DROP, FLIGHT, RESULT }
+
+    private companion object {
+        // Catégories de collision. L'arrêtoir ne doit toucher que le bras, et le
+        // boulet cesse de voir la machine dès qu'il l'a quittée : sinon il retombe
+        // dessus et se fait broyer entre le contrepoids et le bras.
+        const val CAT_GROUND = 1
+        const val CAT_BEAM = 2
+        const val CAT_WEIGHT = 4
+        const val CAT_STOPPER = 8
+        const val CAT_BALL = 16
+        const val MACHINE = CAT_BEAM or CAT_WEIGHT or CAT_STOPPER
+    }
 
     val world = PhysWorld().apply {
         // Plus de passes que le réglage d'origine : le boulet est coincé entre le
@@ -415,6 +458,7 @@ class TrebuchetGame {
             lockPosition = true
             lockRotation = true
             friction = 0.75f
+            category = CAT_GROUND
             refreshMass()
         }
         world.add(ground)
@@ -469,6 +513,7 @@ class TrebuchetGame {
             )
         }.apply {
             friction = 0.75f
+            category = CAT_BEAM
             // Le corps est repéré par son centre de masse : on le place de façon que
             // la planche, elle, tombe exactement où on la veut.
             x = plankCenterX - localOffsetX(0)
@@ -486,13 +531,19 @@ class TrebuchetGame {
         ball = PhysBody.circle(TrebuchetRules.BALL_RADIUS, TrebuchetRules.BALL_MASS).apply {
             friction = 0.7f
             restitution = 0.18f
+            category = CAT_BALL
         }
         world.add(ball)
         placeBall()
 
-        val cwHalf = TrebuchetRules.counterweightHalfSize(config.counterweightMass)
+        val cwHalf = config.counterweightHalf
         counterweight = PhysBody(cwHalf, cwHalf, config.counterweightMass).apply {
             friction = 0.8f
+            category = CAT_WEIGHT
+            // Un contrepoids lourd est plus large qu'un bras court, et vient donc
+            // occuper la place de l'arrêtoir : les faire se percuter n'aurait aucun
+            // sens, l'un est le tampon du bras et l'autre pend dessous.
+            collidesWith = CAT_GROUND or CAT_BEAM or CAT_BALL
             // Tenu en l'air par le joueur : le moteur l'ignore jusqu'au lâcher.
             inWorld = false
         }
@@ -500,6 +551,9 @@ class TrebuchetGame {
         placeCounterweight()
 
         stopper = PhysBody.circle(TrebuchetRules.STOP_RADIUS, 0f).apply {
+            category = CAT_STOPPER
+            // Le tampon n'existe que pour le bras.
+            collidesWith = CAT_BEAM
             lockPosition = true
             lockRotation = true
             friction = 0.9f
@@ -570,7 +624,7 @@ class TrebuchetGame {
 
     /** Suspend le contrepoids au-dessus de l'extrémité du bras court. */
     private fun placeCounterweight() {
-        val half = TrebuchetRules.counterweightHalfSize(config.counterweightMass)
+        val half = config.counterweightHalf
         // Juste au-dessus du berceau, pour qu'il tombe dedans.
         counterweight.x = seatCenterX()
         counterweight.y = pivotY + TrebuchetRules.BEAM_HALF_THICKNESS + half + config.dropHeight
@@ -699,7 +753,7 @@ class TrebuchetGame {
             // correction d'interpénétration lui rend d'un coup une énergie qui ne
             // vient de nulle part. Au banc d'essai, tous les tirs ressortaient à
             // la même vitesse absurde de 21,6 m/s, quel que soit le contrepoids.
-            val half = TrebuchetRules.counterweightHalfSize(config.counterweightMass)
+            val half = config.counterweightHalf
             val gap = (counterweight.y - half) - (pivotY + TrebuchetRules.BEAM_HALF_THICKNESS)
             val closing = -counterweight.vy * dt * 2f
             // Sécurité : si le contrepoids rate le bras, on libère quand même.
@@ -719,6 +773,11 @@ class TrebuchetGame {
             seatWorld(seatProbe)
             if (hypot(ball.x - seatProbe[0], ball.y - seatProbe[1]) > 0.7f) {
                 ballFree = true
+                // Le boulet a quitté la machine : il ne la revoit plus. Sans ça il
+                // lui retombe dessus et se fait écraser entre le contrepoids et le
+                // bras, ce qui l'expédiait à plusieurs milliers de mètres par seconde.
+                ball.collidesWith = ball.collidesWith and MACHINE.inv()
+                world.forgetContacts(ball)
                 launchAngleDeg = Math.toDegrees(
                     kotlin.math.atan2(ball.vy.toDouble(), ball.vx.toDouble())
                 ).toFloat()
