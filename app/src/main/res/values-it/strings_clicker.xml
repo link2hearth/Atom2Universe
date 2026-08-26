@@ -260,6 +260,7 @@
     <string name="neutrino_info_note_win">a vittoria</string>
     <string name="neutrino_info_note_solo_win">vittoria in solitario</string>
     <string name="neutrino_info_note_difficulty">in base alla difficoltà</string>
+    <string name="neutrino_info_note_retry">per difficoltà, −1 per tentativo fallito</string>
     <string name="neutrino_info_note_vs_ai">vs IA, in base al livello</string>
     <string name="neutrino_info_note_level">per livello</string>
     <string name="neutrino_info_note_size">in base alla dimensione</string>

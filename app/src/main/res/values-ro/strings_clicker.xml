@@ -261,6 +261,7 @@
     <string name="neutrino_info_note_win">per victorie</string>
     <string name="neutrino_info_note_solo_win">victorie solo</string>
     <string name="neutrino_info_note_difficulty">după dificultate</string>
+    <string name="neutrino_info_note_retry">după dificultate, −1 pe încercare ratată</string>
     <string name="neutrino_info_note_vs_ai">vs IA, după nivel</string>
     <string name="neutrino_info_note_level">per nivel</string>
     <string name="neutrino_info_note_size">după mărimea tablei</string>

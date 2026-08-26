@@ -28,6 +28,7 @@
 | **Circles** | À la victoire, selon la difficulté : **EASY : 1**, **MEDIUM : 2**, **HARD : 3** (ou **4** si ≥ 6 anneaux). |
 | **StarBridges** | À la victoire (grille aléatoire uniquement), selon la taille : **6×6 : 5**, **7×7 : 10**, **autres : 15**. |
 | **The Line** | À chaque niveau complété, selon la difficulté : **EASY : 1**, **MEDIUM : 2**, **HARD : 3**. |
+| **Équilibre** | À chaque levier équilibré, selon la difficulté : **EASY : 3**, **MEDIUM : 6**, **HARD : 12**. **−1 par essai infructueux** sur le niveau (test raté *ou* interrompu via « Ajuster »), sans jamais descendre sous **1**. |
 | **Minesweeper** | À la victoire, selon la difficulté `(ordinal + 1) × 5` : **EASY : 5**, **NORMAL : 10**, **MEDIUM : 15**, **HARD : 20**. |
 | **Link** | À la victoire : **base difficulté** (EASY 2 / MEDIUM 4 / HARD 6) **× multiplicateur jumelles** (FEW ×1 / NORMAL ×2 / MANY ×3). Ex. : EASY+FEW = 2, HARD+MANY = 18. |
 | **Nucléa** | **2 neutrinos par vague terminée** (`NUCLEA_PER_WAVE`), récompensé au game over. Twin-stick de fusion : la poussière d'étoile est sa monnaie méta interne (constellations), seuls les neutrinos sortent du jeu. |

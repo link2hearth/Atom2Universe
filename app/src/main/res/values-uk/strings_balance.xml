@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Терези</string>
+    <string name="balance_description">Розподіліть тягарці на важелі, щоб він лишився рівним</string>
+    <string name="balance_back">Назад</string>
+    <string name="balance_difficulty_easy">Легко · 3 тягарці</string>
+    <string name="balance_difficulty_medium">Середньо · 5 тягарців</string>
+    <string name="balance_difficulty_hard">Важко · 7 тягарців</string>
+    <string name="balance_level">Рівень %1$d</string>
+    <string name="balance_level_best">Рівень %1$d · рекорд %2$d</string>
+    <string name="balance_btn_test">Відпустити важіль</string>
+    <string name="balance_btn_next">Наступний рівень</string>
+    <string name="balance_btn_adjust">Виправити</string>
+    <string name="balance_btn_reset">Очистити</string>
+    <string name="balance_btn_new">Новий</string>
+    <string name="balance_status_place">Поставте всі тягарці на важіль — середина заборонена</string>
+    <string name="balance_status_ready">Усе готово: відпустіть важіль!</string>
+    <string name="balance_status_testing">Перевірка рівноваги…</string>
+    <string name="balance_status_won">Рівновага! +%1$d нейтрино</string>
+    <string name="balance_status_lost_tilt">Перекіс: %1$s° (допуск %2$s°)</string>
+    <string name="balance_status_lost_fell">Тягарець упав з важеля!</string>
+    <string name="balance_status_lost_tipped">Важіль повністю перекинувся!</string>
+    <string name="balance_notice_dead_zone">Нічого над опорою — середина має лишатися вільною</string>
+    <string name="balance_reward_next">Успіх зараз: %1$d ✦</string>
+</resources>

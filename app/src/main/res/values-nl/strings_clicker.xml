@@ -260,6 +260,7 @@
     <string name="neutrino_info_note_win">per overwinning</string>
     <string name="neutrino_info_note_solo_win">solo-overwinning</string>
     <string name="neutrino_info_note_difficulty">naar moeilijkheid</string>
+    <string name="neutrino_info_note_retry">per moeilijkheid, −1 per mislukte poging</string>
     <string name="neutrino_info_note_vs_ai">tegen AI, naar niveau</string>
     <string name="neutrino_info_note_level">per niveau</string>
     <string name="neutrino_info_note_size">naar bordgrootte</string>

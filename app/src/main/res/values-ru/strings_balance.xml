@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Весы</string>
+    <string name="balance_description">Распределите грузы на рычаге, чтобы он остался ровным</string>
+    <string name="balance_back">Назад</string>
+    <string name="balance_difficulty_easy">Легко · 3 груза</string>
+    <string name="balance_difficulty_medium">Средне · 5 грузов</string>
+    <string name="balance_difficulty_hard">Сложно · 7 грузов</string>
+    <string name="balance_level">Уровень %1$d</string>
+    <string name="balance_level_best">Уровень %1$d · рекорд %2$d</string>
+    <string name="balance_btn_test">Отпустить рычаг</string>
+    <string name="balance_btn_next">Следующий уровень</string>
+    <string name="balance_btn_adjust">Поправить</string>
+    <string name="balance_btn_reset">Очистить</string>
+    <string name="balance_btn_new">Новый</string>
+    <string name="balance_status_place">Поставьте все грузы на рычаг — середина запрещена</string>
+    <string name="balance_status_ready">Всё готово: отпустите рычаг!</string>
+    <string name="balance_status_testing">Проверка равновесия…</string>
+    <string name="balance_status_won">Равновесие! +%1$d нейтрино</string>
+    <string name="balance_status_lost_tilt">Перекос: %1$s° (допуск %2$s°)</string>
+    <string name="balance_status_lost_fell">Груз упал с рычага!</string>
+    <string name="balance_status_lost_tipped">Рычаг полностью перевернулся!</string>
+    <string name="balance_notice_dead_zone">Ничего над опорой — середина должна остаться свободной</string>
+    <string name="balance_reward_next">Успех сейчас: %1$d ✦</string>
+</resources>

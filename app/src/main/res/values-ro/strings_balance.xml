@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Balanță</string>
+    <string name="balance_description">Distribuie greutățile pe pârghie până rămâne orizontală</string>
+    <string name="balance_back">Înapoi</string>
+    <string name="balance_difficulty_easy">Ușor · 3 greutăți</string>
+    <string name="balance_difficulty_medium">Mediu · 5 greutăți</string>
+    <string name="balance_difficulty_hard">Greu · 7 greutăți</string>
+    <string name="balance_level">Nivelul %1$d</string>
+    <string name="balance_level_best">Nivelul %1$d · record %2$d</string>
+    <string name="balance_btn_test">Eliberează pârghia</string>
+    <string name="balance_btn_next">Nivelul următor</string>
+    <string name="balance_btn_adjust">Ajustează</string>
+    <string name="balance_btn_reset">Golește</string>
+    <string name="balance_btn_new">Nou</string>
+    <string name="balance_status_place">Așază toate greutățile pe pârghie — mijlocul este interzis</string>
+    <string name="balance_status_ready">Totul e pus: eliberează pârghia!</string>
+    <string name="balance_status_testing">Se testează echilibrul…</string>
+    <string name="balance_status_won">Echilibrat! +%1$d neutrini</string>
+    <string name="balance_status_lost_tilt">Dezechilibru: %1$s° (toleranță %2$s°)</string>
+    <string name="balance_status_lost_fell">O greutate a căzut de pe pârghie!</string>
+    <string name="balance_status_lost_tipped">Pârghia s-a răsturnat complet!</string>
+    <string name="balance_notice_dead_zone">Nimic deasupra pivotului — mijlocul rămâne liber</string>
+    <string name="balance_reward_next">O reușită acum valorează %1$d ✦</string>
+</resources>

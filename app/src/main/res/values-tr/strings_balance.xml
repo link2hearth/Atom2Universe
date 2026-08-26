@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Terazi</string>
+    <string name="balance_description">Ağırlıkları kaldıraç üzerine dağıt, düz kalana kadar</string>
+    <string name="balance_back">Geri</string>
+    <string name="balance_difficulty_easy">Kolay · 3 ağırlık</string>
+    <string name="balance_difficulty_medium">Orta · 5 ağırlık</string>
+    <string name="balance_difficulty_hard">Zor · 7 ağırlık</string>
+    <string name="balance_level">Seviye %1$d</string>
+    <string name="balance_level_best">Seviye %1$d · rekor %2$d</string>
+    <string name="balance_btn_test">Kaldıracı bırak</string>
+    <string name="balance_btn_next">Sonraki seviye</string>
+    <string name="balance_btn_adjust">Düzelt</string>
+    <string name="balance_btn_reset">Boşalt</string>
+    <string name="balance_btn_new">Yeni</string>
+    <string name="balance_status_place">Tüm ağırlıkları kaldıraca yerleştir — orta bölge yasak</string>
+    <string name="balance_status_ready">Her şey hazır: kaldıracı bırak!</string>
+    <string name="balance_status_testing">Denge test ediliyor…</string>
+    <string name="balance_status_won">Dengede! +%1$d nötrino</string>
+    <string name="balance_status_lost_tilt">Dengesizlik: %1$s° (tolerans %2$s°)</string>
+    <string name="balance_status_lost_fell">Bir ağırlık kaldıraçtan düştü!</string>
+    <string name="balance_status_lost_tipped">Kaldıraç tamamen devrildi!</string>
+    <string name="balance_notice_dead_zone">Mesnedin üstüne bir şey koyma — orta boş kalmalı</string>
+    <string name="balance_reward_next">Şimdi başarmak %1$d ✦ değerinde</string>
+</resources>

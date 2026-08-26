@@ -262,6 +262,7 @@
     <string name="neutrino_info_note_win">за победу</string>
     <string name="neutrino_info_note_solo_win">победа в одиночке</string>
     <string name="neutrino_info_note_difficulty">по сложности</string>
+    <string name="neutrino_info_note_retry">по сложности, −1 за неудачную попытку</string>
     <string name="neutrino_info_note_vs_ai">против ИИ, по уровню</string>
     <string name="neutrino_info_note_level">за уровень</string>
     <string name="neutrino_info_note_size">по размеру поля</string>

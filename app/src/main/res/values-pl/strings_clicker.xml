@@ -262,6 +262,7 @@
     <string name="neutrino_info_note_win">za zwycięstwo</string>
     <string name="neutrino_info_note_solo_win">zwycięstwo solo</string>
     <string name="neutrino_info_note_difficulty">wg trudności</string>
+    <string name="neutrino_info_note_retry">wg trudności, −1 za nieudaną próbę</string>
     <string name="neutrino_info_note_vs_ai">vs SI, wg poziomu</string>
     <string name="neutrino_info_note_level">za poziom</string>
     <string name="neutrino_info_note_size">wg rozmiaru planszy</string>

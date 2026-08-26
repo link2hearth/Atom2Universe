@@ -260,6 +260,7 @@
     <string name="neutrino_info_note_win">por vitória</string>
     <string name="neutrino_info_note_solo_win">vitória solo</string>
     <string name="neutrino_info_note_difficulty">por dificuldade</string>
+    <string name="neutrino_info_note_retry">por dificuldade, −1 por tentativa falhada</string>
     <string name="neutrino_info_note_vs_ai">vs IA, por nível</string>
     <string name="neutrino_info_note_level">por nível</string>
     <string name="neutrino_info_note_size">por tamanho do tabuleiro</string>

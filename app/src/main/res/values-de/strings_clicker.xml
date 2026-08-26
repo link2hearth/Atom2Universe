@@ -260,6 +260,7 @@
     <string name="neutrino_info_note_win">pro Sieg</string>
     <string name="neutrino_info_note_solo_win">Solo-Sieg</string>
     <string name="neutrino_info_note_difficulty">je nach Schwierigkeit</string>
+    <string name="neutrino_info_note_retry">nach Schwierigkeit, −1 pro Fehlversuch</string>
     <string name="neutrino_info_note_vs_ai">gegen KI, je nach Stufe</string>
     <string name="neutrino_info_note_level">pro Level</string>
     <string name="neutrino_info_note_size">je nach Spielfeldgröße</string>

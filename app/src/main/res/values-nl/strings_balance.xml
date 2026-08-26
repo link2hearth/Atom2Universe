@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Balans</string>
+    <string name="balance_description">Verdeel de gewichten over de hefboom tot hij waterpas blijft</string>
+    <string name="balance_back">Terug</string>
+    <string name="balance_difficulty_easy">Makkelijk · 3 gewichten</string>
+    <string name="balance_difficulty_medium">Gemiddeld · 5 gewichten</string>
+    <string name="balance_difficulty_hard">Moeilijk · 7 gewichten</string>
+    <string name="balance_level">Level %1$d</string>
+    <string name="balance_level_best">Level %1$d · record %2$d</string>
+    <string name="balance_btn_test">Hefboom loslaten</string>
+    <string name="balance_btn_next">Volgend level</string>
+    <string name="balance_btn_adjust">Bijstellen</string>
+    <string name="balance_btn_reset">Leegmaken</string>
+    <string name="balance_btn_new">Nieuw</string>
+    <string name="balance_status_place">Leg alle gewichten op de hefboom — het midden is verboden</string>
+    <string name="balance_status_ready">Alles geplaatst: laat de hefboom los!</string>
+    <string name="balance_status_testing">Balans testen…</string>
+    <string name="balance_status_won">In balans! +%1$d neutrino\'s</string>
+    <string name="balance_status_lost_tilt">Uit balans: %1$s° (tolerantie %2$s°)</string>
+    <string name="balance_status_lost_fell">Er is een gewicht van de hefboom gevallen!</string>
+    <string name="balance_status_lost_tipped">De hefboom is helemaal omgeslagen!</string>
+    <string name="balance_notice_dead_zone">Niets boven het draaipunt — houd het midden vrij</string>
+    <string name="balance_reward_next">Nu slagen levert %1$d ✦ op</string>
+</resources>

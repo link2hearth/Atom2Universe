@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Balanza</string>
+    <string name="balance_description">Reparte los pesos sobre la palanca hasta que quede nivelada</string>
+    <string name="balance_back">Atrás</string>
+    <string name="balance_difficulty_easy">Fácil · 3 pesos</string>
+    <string name="balance_difficulty_medium">Medio · 5 pesos</string>
+    <string name="balance_difficulty_hard">Difícil · 7 pesos</string>
+    <string name="balance_level">Nivel %1$d</string>
+    <string name="balance_level_best">Nivel %1$d · récord %2$d</string>
+    <string name="balance_btn_test">Soltar la palanca</string>
+    <string name="balance_btn_next">Siguiente nivel</string>
+    <string name="balance_btn_adjust">Ajustar</string>
+    <string name="balance_btn_reset">Vaciar</string>
+    <string name="balance_btn_new">Nuevo</string>
+    <string name="balance_status_place">Coloca todos los pesos en la palanca: el centro está prohibido</string>
+    <string name="balance_status_ready">¡Todo listo: suelta la palanca!</string>
+    <string name="balance_status_testing">Probando el equilibrio…</string>
+    <string name="balance_status_won">¡Equilibrado! +%1$d neutrinos</string>
+    <string name="balance_status_lost_tilt">Desequilibrio: %1$s° (tolerancia %2$s°)</string>
+    <string name="balance_status_lost_fell">¡Un peso se ha caído de la palanca!</string>
+    <string name="balance_status_lost_tipped">¡La palanca ha volcado por completo!</string>
+    <string name="balance_notice_dead_zone">Nada sobre el pivote: deja libre el centro</string>
+    <string name="balance_reward_next">Acertar ahora vale %1$d ✦</string>
+</resources>

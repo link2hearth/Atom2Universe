@@ -259,6 +259,7 @@
     <string name="neutrino_info_note_win">per kemenangan</string>
     <string name="neutrino_info_note_solo_win">kemenangan solo</string>
     <string name="neutrino_info_note_difficulty">menurut kesulitan</string>
+    <string name="neutrino_info_note_retry">menurut kesulitan, −1 per percobaan gagal</string>
     <string name="neutrino_info_note_vs_ai">lawan AI, menurut level</string>
     <string name="neutrino_info_note_level">per level</string>
     <string name="neutrino_info_note_size">menurut ukuran papan</string>

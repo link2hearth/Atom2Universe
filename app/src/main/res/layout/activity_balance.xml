@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#070B18">
+
+    <!-- Barre supérieure : retour, difficulté, niveau -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="12dp"
+        android:background="#0D1428">
+
+        <ImageButton
+            android:id="@+id/balance_btn_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back_24"
+            app:tint="#94A3B8"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/balance_back" />
+
+        <Spinner
+            android:id="@+id/balance_difficulty_spinner"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp" />
+
+        <TextView
+            android:id="@+id/balance_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#8FA6C8"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <!-- Scène : plateau de poids en haut, balance en bas -->
+    <com.Atom2Universe.app.games.balance.BalanceView
+        android:id="@+id/balance_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Message d'état -->
+    <TextView
+        android:id="@+id/balance_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minLines="2"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="6dp"
+        android:textColor="#8FA6C8"
+        android:textSize="13sp" />
+
+    <!-- Boutons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/balance_btn_new"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/balance_btn_new"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/balance_btn_reset"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/balance_btn_reset"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/balance_btn_test"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="@string/balance_btn_test"
+            android:textColor="#E2E8F0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_widget_arrow"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

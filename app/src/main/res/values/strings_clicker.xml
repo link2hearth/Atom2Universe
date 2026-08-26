@@ -265,6 +265,7 @@
     <string name="neutrino_info_note_win">per win</string>
     <string name="neutrino_info_note_solo_win">solo win</string>
     <string name="neutrino_info_note_difficulty">by difficulty</string>
+    <string name="neutrino_info_note_retry">by difficulty, −1 per failed attempt</string>
     <string name="neutrino_info_note_vs_ai">vs AI, by level</string>
     <string name="neutrino_info_note_level">per level</string>
     <string name="neutrino_info_note_size">by board size</string>

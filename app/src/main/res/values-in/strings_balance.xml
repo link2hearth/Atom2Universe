@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Neraca</string>
+    <string name="balance_description">Sebarkan beban di sepanjang tuas hingga tetap datar</string>
+    <string name="balance_back">Kembali</string>
+    <string name="balance_difficulty_easy">Mudah · 3 beban</string>
+    <string name="balance_difficulty_medium">Sedang · 5 beban</string>
+    <string name="balance_difficulty_hard">Sulit · 7 beban</string>
+    <string name="balance_level">Level %1$d</string>
+    <string name="balance_level_best">Level %1$d · rekor %2$d</string>
+    <string name="balance_btn_test">Lepaskan tuas</string>
+    <string name="balance_btn_next">Level berikutnya</string>
+    <string name="balance_btn_adjust">Sesuaikan</string>
+    <string name="balance_btn_reset">Kosongkan</string>
+    <string name="balance_btn_new">Baru</string>
+    <string name="balance_status_place">Letakkan semua beban di tuas — bagian tengah terlarang</string>
+    <string name="balance_status_ready">Semua siap: lepaskan tuas!</string>
+    <string name="balance_status_testing">Menguji keseimbangan…</string>
+    <string name="balance_status_won">Seimbang! +%1$d neutrino</string>
+    <string name="balance_status_lost_tilt">Tidak seimbang: %1$s° (toleransi %2$s°)</string>
+    <string name="balance_status_lost_fell">Sebuah beban jatuh dari tuas!</string>
+    <string name="balance_status_lost_tipped">Tuas terjungkal sepenuhnya!</string>
+    <string name="balance_notice_dead_zone">Jangan ada beban di atas tumpuan — bagian tengah harus kosong</string>
+    <string name="balance_reward_next">Berhasil sekarang bernilai %1$d ✦</string>
+</resources>

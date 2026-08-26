@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Équilibre</string>
+    <string name="balance_description">Répartissez les poids sur le levier jusqu\'à l\'équilibre</string>
+    <string name="balance_back">Retour</string>
+    <string name="balance_difficulty_easy">Facile · 3 poids</string>
+    <string name="balance_difficulty_medium">Moyen · 5 poids</string>
+    <string name="balance_difficulty_hard">Difficile · 7 poids</string>
+    <string name="balance_level">Niveau %1$d</string>
+    <string name="balance_level_best">Niveau %1$d · record %2$d</string>
+    <string name="balance_btn_test">Relâcher le levier</string>
+    <string name="balance_btn_next">Niveau suivant</string>
+    <string name="balance_btn_adjust">Ajuster</string>
+    <string name="balance_btn_reset">Vider</string>
+    <string name="balance_btn_new">Nouveau</string>
+    <string name="balance_status_place">Posez tous les poids sur le levier — le milieu est interdit</string>
+    <string name="balance_status_ready">Tout est posé : relâchez le levier !</string>
+    <string name="balance_status_testing">Test de l\'équilibre…</string>
+    <string name="balance_status_won">Équilibré ! +%1$d neutrinos</string>
+    <string name="balance_status_lost_tilt">Déséquilibre : %1$s° (tolérance %2$s°)</string>
+    <string name="balance_status_lost_fell">Un poids est tombé du levier !</string>
+    <string name="balance_status_lost_tipped">Le levier a complètement basculé !</string>
+    <string name="balance_notice_dead_zone">Rien sur le pivot — laissez le milieu libre</string>
+    <string name="balance_reward_next">Une réussite maintenant : %1$d ✦</string>
+</resources>

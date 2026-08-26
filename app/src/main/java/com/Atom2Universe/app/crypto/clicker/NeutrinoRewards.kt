@@ -61,6 +61,15 @@ object NeutrinoRewards {
     private val SOKOBAN_VALUES = intArrayOf(1, 2, 4, 5)
     fun sokoban(difficultyOrdinal: Int) = SOKOBAN_VALUES[difficultyOrdinal]
 
+    // ── Équilibre : EASY/MEDIUM/HARD, par niveau réussi ───────────────────────
+    // Chaque test qui n'aboutit pas (raté ou interrompu) retire un neutrino,
+    // sans jamais descendre sous 1 : réfléchir avant de relâcher le levier paie.
+    private val BALANCE_VALUES = intArrayOf(3, 6, 12)
+    const val BALANCE_RETRY_PENALTY = 1
+    fun balance(difficultyOrdinal: Int, failedAttempts: Int = 0) =
+        (BALANCE_VALUES[difficultyOrdinal] - failedAttempts * BALANCE_RETRY_PENALTY)
+            .coerceAtLeast(1)
+
     // ── StarBridges : selon la taille de la grille ─────────────────────────────
     fun starBridges(size: Int) = when (size) { 6 -> 5; 7 -> 10; else -> 15 }
 
@@ -125,6 +134,7 @@ object NeutrinoRewards {
                 "${starBridges(6)} / ${starBridges(7)} / ${starBridges(8)}",
                 R.string.neutrino_info_note_size
             ),
+            Entry(R.string.balance_title, list(BALANCE_VALUES.toList()), R.string.neutrino_info_note_retry),
             Entry(R.string.the_line_title, list(THELINE_VALUES), R.string.neutrino_info_note_level),
             Entry(R.string.sokoban_title, list(SOKOBAN_VALUES.toList()), R.string.neutrino_info_note_level),
             Entry(

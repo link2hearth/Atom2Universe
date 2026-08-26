@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Ζυγαριά</string>
+    <string name="balance_description">Μοιράστε τα βάρη στον μοχλό μέχρι να μείνει οριζόντιος</string>
+    <string name="balance_back">Πίσω</string>
+    <string name="balance_difficulty_easy">Εύκολο · 3 βάρη</string>
+    <string name="balance_difficulty_medium">Μέτριο · 5 βάρη</string>
+    <string name="balance_difficulty_hard">Δύσκολο · 7 βάρη</string>
+    <string name="balance_level">Επίπεδο %1$d</string>
+    <string name="balance_level_best">Επίπεδο %1$d · ρεκόρ %2$d</string>
+    <string name="balance_btn_test">Απελευθέρωση μοχλού</string>
+    <string name="balance_btn_next">Επόμενο επίπεδο</string>
+    <string name="balance_btn_adjust">Διόρθωση</string>
+    <string name="balance_btn_reset">Άδειασμα</string>
+    <string name="balance_btn_new">Νέο</string>
+    <string name="balance_status_place">Τοποθετήστε όλα τα βάρη στον μοχλό — το κέντρο απαγορεύεται</string>
+    <string name="balance_status_ready">Όλα έτοιμα: αφήστε τον μοχλό!</string>
+    <string name="balance_status_testing">Έλεγχος ισορροπίας…</string>
+    <string name="balance_status_won">Ισορροπία! +%1$d νετρίνα</string>
+    <string name="balance_status_lost_tilt">Ανισορροπία: %1$s° (ανοχή %2$s°)</string>
+    <string name="balance_status_lost_fell">Ένα βάρος έπεσε από τον μοχλό!</string>
+    <string name="balance_status_lost_tipped">Ο μοχλός ανατράπηκε τελείως!</string>
+    <string name="balance_notice_dead_zone">Τίποτα πάνω από το στήριγμα — το κέντρο μένει ελεύθερο</string>
+    <string name="balance_reward_next">Επιτυχία τώρα: %1$d ✦</string>
+</resources>

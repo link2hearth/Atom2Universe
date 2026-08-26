@@ -260,6 +260,7 @@
     <string name="neutrino_info_note_win">ανά νίκη</string>
     <string name="neutrino_info_note_solo_win">νίκη σόλο</string>
     <string name="neutrino_info_note_difficulty">ανάλογα με τη δυσκολία</string>
+    <string name="neutrino_info_note_retry">ανά δυσκολία, −1 ανά αποτυχημένη προσπάθεια</string>
     <string name="neutrino_info_note_vs_ai">εναντίον AI, ανά επίπεδο</string>
     <string name="neutrino_info_note_level">ανά επίπεδο</string>
     <string name="neutrino_info_note_size">ανάλογα με το μέγεθος του ταμπλό</string>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Bilancia</string>
+    <string name="balance_description">Distribuisci i pesi sulla leva finché resta in piano</string>
+    <string name="balance_back">Indietro</string>
+    <string name="balance_difficulty_easy">Facile · 3 pesi</string>
+    <string name="balance_difficulty_medium">Medio · 5 pesi</string>
+    <string name="balance_difficulty_hard">Difficile · 7 pesi</string>
+    <string name="balance_level">Livello %1$d</string>
+    <string name="balance_level_best">Livello %1$d · record %2$d</string>
+    <string name="balance_btn_test">Rilascia la leva</string>
+    <string name="balance_btn_next">Livello successivo</string>
+    <string name="balance_btn_adjust">Correggi</string>
+    <string name="balance_btn_reset">Svuota</string>
+    <string name="balance_btn_new">Nuovo</string>
+    <string name="balance_status_place">Metti tutti i pesi sulla leva: il centro è vietato</string>
+    <string name="balance_status_ready">Tutto pronto: rilascia la leva!</string>
+    <string name="balance_status_testing">Prova di equilibrio…</string>
+    <string name="balance_status_won">In equilibrio! +%1$d neutrini</string>
+    <string name="balance_status_lost_tilt">Squilibrio: %1$s° (tolleranza %2$s°)</string>
+    <string name="balance_status_lost_fell">Un peso è caduto dalla leva!</string>
+    <string name="balance_status_lost_tipped">La leva si è ribaltata del tutto!</string>
+    <string name="balance_notice_dead_zone">Niente sul perno: lascia libero il centro</string>
+    <string name="balance_reward_next">Riuscire ora vale %1$d ✦</string>
+</resources>

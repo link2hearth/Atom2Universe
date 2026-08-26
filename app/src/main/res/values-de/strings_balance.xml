@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="balance_title">Waage</string>
+    <string name="balance_description">Verteile die Gewichte auf dem Hebel, bis er waagerecht bleibt</string>
+    <string name="balance_back">Zurück</string>
+    <string name="balance_difficulty_easy">Leicht · 3 Gewichte</string>
+    <string name="balance_difficulty_medium">Mittel · 5 Gewichte</string>
+    <string name="balance_difficulty_hard">Schwer · 7 Gewichte</string>
+    <string name="balance_level">Level %1$d</string>
+    <string name="balance_level_best">Level %1$d · Bestwert %2$d</string>
+    <string name="balance_btn_test">Hebel loslassen</string>
+    <string name="balance_btn_next">Nächstes Level</string>
+    <string name="balance_btn_adjust">Anpassen</string>
+    <string name="balance_btn_reset">Leeren</string>
+    <string name="balance_btn_new">Neu</string>
+    <string name="balance_status_place">Lege alle Gewichte auf den Hebel — die Mitte ist gesperrt</string>
+    <string name="balance_status_ready">Alles platziert: Hebel loslassen!</string>
+    <string name="balance_status_testing">Gleichgewicht wird geprüft…</string>
+    <string name="balance_status_won">Im Gleichgewicht! +%1$d Neutrinos</string>
+    <string name="balance_status_lost_tilt">Schieflage: %1$s° (Toleranz %2$s°)</string>
+    <string name="balance_status_lost_fell">Ein Gewicht ist vom Hebel gefallen!</string>
+    <string name="balance_status_lost_tipped">Der Hebel ist ganz umgekippt!</string>
+    <string name="balance_notice_dead_zone">Nichts über dem Drehpunkt — die Mitte bleibt frei</string>
+    <string name="balance_reward_next">Erfolg jetzt wert: %1$d ✦</string>
+</resources>

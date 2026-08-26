@@ -32,6 +32,7 @@ import com.Atom2Universe.app.games.colorstack.ColorStackActivity
 import com.Atom2Universe.app.games.game2048.Game2048Activity
 import com.Atom2Universe.app.games.particules.ParticulesActivity
 import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
+import com.Atom2Universe.app.games.balance.BalanceActivity
 import com.Atom2Universe.app.games.bigger.BiggerActivity
 import com.Atom2Universe.app.games.match3.Match3Activity
 import com.Atom2Universe.app.games.survivor.SurvivorActivity
@@ -347,6 +348,15 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_slideshow,
             defaultColorRes = R.color.game_tile_match3,
             activityClass = Match3Activity::class.java
+        ),
+        // Équilibre (levier physique)
+        HubTile(
+            id = "balance",
+            titleRes = R.string.balance_title,
+            descriptionRes = R.string.balance_description,
+            iconRes = android.R.drawable.ic_menu_sort_by_size,
+            defaultColorRes = R.color.game_tile_balance,
+            activityClass = BalanceActivity::class.java
         ),
         // Bigger (Suika)
         HubTile(
