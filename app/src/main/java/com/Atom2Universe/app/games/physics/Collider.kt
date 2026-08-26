@@ -1,118 +1,9 @@
-package com.Atom2Universe.app.games.balance
+package com.Atom2Universe.app.games.physics
 
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
-
-/**
- * Mini moteur physique 2D à corps rigides (boîtes orientées), écrit sur mesure
- * pour le jeu d'équilibre.
- *
- * Repère : mètres, axe X vers la droite, axe **Y vers le haut**, origine au pivot
- * de la planche. La vue se charge de convertir en pixels.
- *
- * Le fonctionnement reprend celui de Box2D-Lite, en trois temps à chaque pas :
- *  1. **détection** des contacts entre boîtes (théorème de l'axe séparateur, puis
- *     découpage de la face « incidente » contre la face de référence) ;
- *  2. **résolution** des contacts par impulsions séquentielles (plusieurs passes
- *     qui corrigent tour à tour chaque point de contact) ;
- *  3. **intégration** des positions.
- *
- * Les impulsions sont conservées d'une image à l'autre (« warm starting ») :
- * c'est ce qui rend une pile de briques stable au lieu de trembler.
- */
-
-/** Un corps rigide : une boîte de demi-largeur [halfW] et demi-hauteur [halfH]. */
-class PhysBody(
-    val halfW: Float,
-    val halfH: Float,
-    var mass: Float
-) {
-    companion object {
-        private var nextId = 1
-    }
-
-    /** Identifiant unique, sert de clé pour retrouver les contacts d'une image à l'autre. */
-    val id: Int = nextId++
-
-    // État
-    var x = 0f
-    var y = 0f
-    var angle = 0f
-    var vx = 0f
-    var vy = 0f
-    var omega = 0f
-
-    /** Couple externe appliqué au prochain pas puis remis à zéro (ressort de la planche). */
-    var torque = 0f
-
-    // Masses inverses (0 = infiniment lourd, donc immobile sur cet axe)
-    var invMass = 0f
-        private set
-    var invI = 0f
-        private set
-
-    var friction = 0.55f
-
-    /** Corps ignoré par le moteur (poids encore dans le plateau, ou tenu par le doigt). */
-    var inWorld = true
-
-    /** Translation figée : le sol, et la planche qui ne fait que tourner sur son pivot. */
-    var lockPosition = false
-
-    /** Rotation figée : la planche pendant la phase de pose. */
-    var lockRotation = false
-
-    /** Référence libre vers l'objet de jeu correspondant. */
-    var tag: Any? = null
-
-    /** Moment d'inertie d'une boîte pleine autour de son centre. */
-    val inertia: Float
-        get() = mass * (4f * halfW * halfW + 4f * halfH * halfH) / 12f
-
-    init {
-        refreshMass()
-    }
-
-    /** À rappeler après avoir changé [mass], [lockPosition] ou [lockRotation]. */
-    fun refreshMass() {
-        invMass = if (lockPosition || mass <= 0f) 0f else 1f / mass
-        val i = inertia
-        invI = if (lockRotation || i <= 0f) 0f else 1f / i
-    }
-
-    val immovable: Boolean get() = invMass == 0f && invI == 0f
-
-    /** Rayon du cercle englobant, utilisé pour éliminer vite les paires trop éloignées. */
-    val boundingRadius: Float get() = sqrt(halfW * halfW + halfH * halfH)
-
-    /** Remplit [out] (8 flottants) avec les 4 sommets du corps, en coordonnées monde. */
-    fun corners(out: FloatArray) {
-        val c = cos(angle)
-        val s = sin(angle)
-        val hw = halfW
-        val hh = halfH
-        out[0] = x - hw * c + hh * s; out[1] = y - hw * s - hh * c
-        out[2] = x + hw * c + hh * s; out[3] = y + hw * s - hh * c
-        out[4] = x + hw * c - hh * s; out[5] = y + hw * s + hh * c
-        out[6] = x - hw * c - hh * s; out[7] = y - hw * s + hh * c
-    }
-
-    /** Hauteur du sommet le plus haut du corps (utile pour empiler). */
-    fun topY(): Float {
-        val c = abs(cos(angle))
-        val s = abs(sin(angle))
-        return y + halfW * s + halfH * c
-    }
-
-    /** Demi-largeur de la boîte englobante alignée sur les axes. */
-    fun aabbHalfWidth(): Float {
-        val c = abs(cos(angle))
-        val s = abs(sin(angle))
-        return halfW * c + halfH * s
-    }
-}
 
 /** Un point de contact entre deux corps. */
 class Contact {
@@ -128,6 +19,9 @@ class Contact {
     var massNormal = 0f
     var massTangent = 0f
     var bias = 0f
+
+    /** Vitesse de rebond visée, calculée avant résolution (0 si le choc est mou). */
+    var bounce = 0f
     var rax = 0f
     var ray = 0f
     var rbx = 0f
@@ -144,12 +38,12 @@ class Contact {
 }
 
 /**
- * Détection de collision boîte contre boîte.
+ * Détection de collision entre deux corps, quelles que soient leurs formes.
  *
  * Objet unique avec des tampons réutilisés : le moteur tourne sur un seul thread,
  * donc on évite ainsi toute allocation pendant la simulation.
  */
-internal object BoxCollider {
+internal object Collider {
 
     private val vertsA = FloatArray(8)
     private val vertsB = FloatArray(8)
@@ -168,6 +62,128 @@ internal object BoxCollider {
 
     private var sepValue = 0f
     private var sepIndex = 0
+
+    /** Identifiant de point de contact pour les formes rondes : il n'y en a qu'un. */
+    private const val ROUND_FEATURE = -1
+
+    /**
+     * Calcule les points de contact entre [a] et [b] et les écrit dans [out].
+     * Retourne le nombre de points (0 s'il n'y a pas de collision).
+     */
+    fun collide(a: PhysBody, b: PhysBody, out: Array<Contact>): Int = when {
+        a.shape == Shape.CIRCLE && b.shape == Shape.CIRCLE -> circleCircle(a, b, out)
+        a.shape == Shape.CIRCLE -> circleBox(a, b, out, circleIsA = true)
+        b.shape == Shape.CIRCLE -> circleBox(b, a, out, circleIsA = false)
+        else -> boxBox(a, b, out)
+    }
+
+    // --------------------------- Disque contre disque ---------------------------
+
+    private fun circleCircle(a: PhysBody, b: PhysBody, out: Array<Contact>): Int {
+        val dx = b.x - a.x
+        val dy = b.y - a.y
+        val d2 = dx * dx + dy * dy
+        val r = a.radius + b.radius
+        if (d2 > r * r) return 0
+
+        val d = sqrt(d2)
+        // Deux centres confondus : la direction est arbitraire, mais il en faut une.
+        if (d < 1e-6f) {
+            normalX = 0f; normalY = 1f
+        } else {
+            normalX = dx / d; normalY = dy / d
+        }
+        val c = out[0]
+        c.separation = d - r
+        // Point au milieu du recouvrement, sur la ligne des centres.
+        c.px = a.x + normalX * (a.radius + c.separation * 0.5f)
+        c.py = a.y + normalY * (a.radius + c.separation * 0.5f)
+        c.normalImpulse = 0f
+        c.tangentImpulse = 0f
+        c.feature = ROUND_FEATURE
+        return 1
+    }
+
+    // ---------------------------- Disque contre boîte ----------------------------
+
+    /**
+     * Le principe : on ramène le centre du disque dans le repère de la boîte, on y
+     * cherche le point de la boîte le plus proche, et la normale suit ce segment.
+     *
+     * [circleIsA] dit si le disque est le corps A de la paire : la normale doit
+     * toujours aller de A vers B.
+     */
+    private fun circleBox(
+        circle: PhysBody,
+        box: PhysBody,
+        out: Array<Contact>,
+        circleIsA: Boolean
+    ): Int {
+        val c0 = cos(box.angle)
+        val s0 = sin(box.angle)
+        val dx = circle.x - box.x
+        val dy = circle.y - box.y
+        // Passage dans le repère de la boîte (rotation inverse)
+        val lx = dx * c0 + dy * s0
+        val ly = -dx * s0 + dy * c0
+
+        val clampedX = lx.coerceIn(-box.halfW, box.halfW)
+        val clampedY = ly.coerceIn(-box.halfH, box.halfH)
+
+        val nlx: Float
+        val nly: Float
+        val separation: Float
+
+        if (clampedX == lx && clampedY == ly) {
+            // Centre du disque à l'intérieur de la boîte : on ressort par la face
+            // la plus proche, sinon la normale n'aurait aucune direction définie.
+            val dxEdge = box.halfW - abs(lx)
+            val dyEdge = box.halfH - abs(ly)
+            if (dxEdge < dyEdge) {
+                nlx = if (lx < 0f) -1f else 1f
+                nly = 0f
+                separation = -dxEdge - circle.radius
+            } else {
+                nlx = 0f
+                nly = if (ly < 0f) -1f else 1f
+                separation = -dyEdge - circle.radius
+            }
+        } else {
+            val ox = lx - clampedX
+            val oy = ly - clampedY
+            val dist = sqrt(ox * ox + oy * oy)
+            if (dist > circle.radius) return 0
+            if (dist < 1e-6f) {
+                nlx = 0f; nly = 1f
+            } else {
+                nlx = ox / dist; nly = oy / dist
+            }
+            separation = dist - circle.radius
+        }
+
+        // Normale de la boîte vers le disque, ramenée dans le repère monde.
+        val wnx = nlx * c0 - nly * s0
+        val wny = nlx * s0 + nly * c0
+
+        val c = out[0]
+        c.separation = separation
+        // Point de contact : sur la surface du disque, du côté de la boîte.
+        c.px = circle.x - wnx * circle.radius
+        c.py = circle.y - wny * circle.radius
+        c.normalImpulse = 0f
+        c.tangentImpulse = 0f
+        c.feature = ROUND_FEATURE
+
+        if (circleIsA) {
+            // A = disque, B = boîte : la normale doit pointer vers la boîte.
+            normalX = -wnx; normalY = -wny
+        } else {
+            normalX = wnx; normalY = wny
+        }
+        return 1
+    }
+
+    // ---------------------------- Boîte contre boîte ----------------------------
 
     /**
      * Cherche, parmi les 4 faces du polygone [vr], celle qui sépare le mieux [vi].
@@ -222,11 +238,7 @@ internal object BoxCollider {
         return num
     }
 
-    /**
-     * Calcule les points de contact entre [a] et [b] et les écrit dans [out].
-     * Retourne le nombre de points (0 s'il n'y a pas de collision).
-     */
-    fun collide(a: PhysBody, b: PhysBody, out: Array<Contact>): Int {
+    private fun boxBox(a: PhysBody, b: PhysBody, out: Array<Contact>): Int {
         a.corners(vertsA)
         b.corners(vertsB)
 
@@ -314,7 +326,16 @@ class Arbiter(val a: PhysBody, val b: PhysBody) {
     var normalX = 0f
     var normalY = 0f
     var friction = 0f
+    var restitution = 0f
     var stamp = 0
+
+    /**
+     * Vrai quand les deux corps se sont vraiment percutés à ce pas, par opposition
+     * à un contact qui ne fait que porter un poids. C'est ce qui distingue un boulet
+     * qui frappe un mur d'une caisse tranquillement posée dessus.
+     */
+    var impacting = false
+        private set
 
     /** Reprend les impulsions des contacts précédents quand ils correspondent (warm starting). */
     fun update(fresh: Array<Contact>, freshCount: Int, nx: Float, ny: Float) {
@@ -334,15 +355,48 @@ class Arbiter(val a: PhysBody, val b: PhysBody) {
         normalX = nx
         normalY = ny
         friction = sqrt(a.friction * b.friction)
+        restitution = maxOf(a.restitution, b.restitution)
     }
 
-    fun preStep(invDt: Float) {
+    /** Somme des impulsions normales appliquées au pas écoulé, en kg·m/s. */
+    fun totalNormalImpulse(): Float {
+        var s = 0f
+        for (i in 0 until count) s += contacts[i].normalImpulse
+        return s
+    }
+
+    /**
+     * Prépare la résolution. [impactSpeed] est la vitesse d'approche à partir de
+     * laquelle on considère qu'il y a choc : en dessous, pas de rebond et pas de dégât.
+     */
+    fun preStep(invDt: Float, impactSpeed: Float) {
         val allowedPenetration = 0.004f
         val biasFactor = 0.22f
         val nx = normalX
         val ny = normalY
         val tx = ny
         val ty = -nx
+
+        // Première passe : la vitesse d'approche réelle, mesurée avant que le
+        // solveur ne touche à quoi que ce soit. Elle sert au rebond et aux dégâts.
+        impacting = false
+        for (i in 0 until count) {
+            val c = contacts[i]
+            val rax = c.px - a.x
+            val ray = c.py - a.y
+            val rbx = c.px - b.x
+            val rby = c.py - b.y
+            val dvx = (b.vx - b.omega * rby) - (a.vx - a.omega * ray)
+            val dvy = (b.vy + b.omega * rbx) - (a.vy + a.omega * rax)
+            val vn = dvx * nx + dvy * ny
+            if (vn < -impactSpeed) {
+                impacting = true
+                c.bounce = -restitution * vn
+            } else {
+                c.bounce = 0f
+            }
+        }
+
         for (i in 0 until count) {
             val c = contacts[i]
             c.rax = c.px - a.x; c.ray = c.py - a.y
@@ -384,9 +438,12 @@ class Arbiter(val a: PhysBody, val b: PhysBody) {
             var dvx = (b.vx - b.omega * c.rby) - (a.vx - a.omega * c.ray)
             var dvy = (b.vy + b.omega * c.rbx) - (a.vy + a.omega * c.rax)
 
-            // ── Composante normale : empêche l'interpénétration ──
+            // -- Composante normale : empêche l'interpénétration, et fait rebondir --
             val vn = dvx * nx + dvy * ny
-            var dPn = c.massNormal * (-vn + c.bias)
+            // On prend la plus exigeante des deux corrections, jamais leur somme :
+            // les additionner ajoutait de l'énergie, et une balle rebondissait plus
+            // haut que ne l'autorise son élasticité.
+            var dPn = c.massNormal * (-vn + maxOf(c.bias, c.bounce))
             val newPn = maxOf(c.normalImpulse + dPn, 0f)
             dPn = newPn - c.normalImpulse
             c.normalImpulse = newPn
@@ -397,7 +454,7 @@ class Arbiter(val a: PhysBody, val b: PhysBody) {
             b.vx += b.invMass * px; b.vy += b.invMass * py
             b.omega += b.invI * (c.rbx * py - c.rby * px)
 
-            // ── Composante tangentielle : le frottement, borné par la loi de Coulomb ──
+            // -- Composante tangentielle : le frottement, borné par la loi de Coulomb --
             dvx = (b.vx - b.omega * c.rby) - (a.vx - a.omega * c.ray)
             dvy = (b.vy + b.omega * c.rbx) - (a.vy + a.omega * c.rax)
             val vt = dvx * tx + dvy * ty
@@ -413,115 +470,5 @@ class Arbiter(val a: PhysBody, val b: PhysBody) {
             b.vx += b.invMass * px; b.vy += b.invMass * py
             b.omega += b.invI * (c.rbx * py - c.rby * px)
         }
-    }
-}
-
-/** Le monde physique : la liste des corps et la boucle de simulation. */
-class PhysWorld {
-
-    val bodies = ArrayList<PhysBody>()
-    private val arbiters = HashMap<Long, Arbiter>()
-    private val fresh = Array(2) { Contact() }
-    private val doomed = ArrayList<Long>()
-
-    var gravity = 9.81f
-
-    /** Nombre de passes du solveur : plus il y en a, plus les piles sont stables. */
-    var iterations = 14
-
-    private var stamp = 0
-
-    fun add(body: PhysBody) {
-        bodies.add(body)
-    }
-
-    fun clear() {
-        bodies.clear()
-        arbiters.clear()
-    }
-
-    /** Oublie les contacts mémorisés d'un corps (à faire quand on le téléporte). */
-    fun forgetContacts(body: PhysBody) {
-        doomed.clear()
-        for ((k, arb) in arbiters) if (arb.a === body || arb.b === body) doomed.add(k)
-        for (k in doomed) arbiters.remove(k)
-    }
-
-    fun step(dt: Float) {
-        if (dt <= 0f) return
-        val invDt = 1f / dt
-        stamp++
-
-        broadPhase()
-
-        // 1. Intégration des forces
-        for (bd in bodies) {
-            if (!bd.inWorld) continue
-            if (bd.invMass > 0f) bd.vy -= gravity * dt
-            if (bd.invI > 0f && bd.torque != 0f) bd.omega += bd.invI * bd.torque * dt
-            bd.torque = 0f
-        }
-
-        // 2. Préparation puis résolution itérative des contacts
-        for (arb in arbiters.values) arb.preStep(invDt)
-        repeat(iterations) {
-            for (arb in arbiters.values) arb.applyImpulse()
-        }
-
-        // 3. Intégration des positions + amortissement léger (aide la mise au repos)
-        for (bd in bodies) {
-            if (!bd.inWorld) continue
-            if (bd.invMass > 0f) {
-                bd.x += bd.vx * dt
-                bd.y += bd.vy * dt
-                bd.vx *= 0.999f
-                bd.vy *= 0.999f
-            }
-            if (bd.invI > 0f) {
-                bd.angle += bd.omega * dt
-                bd.omega *= 0.997f
-            }
-        }
-    }
-
-    /** Recherche des paires en contact (O(n²), largement suffisant ici). */
-    private fun broadPhase() {
-        for (i in bodies.indices) {
-            val a = bodies[i]
-            if (!a.inWorld) continue
-            for (j in i + 1 until bodies.size) {
-                val b = bodies[j]
-                if (!b.inWorld) continue
-                if (a.immovable && b.immovable) continue
-
-                val dx = b.x - a.x
-                val dy = b.y - a.y
-                val r = a.boundingRadius + b.boundingRadius
-                val key = pairKey(a, b)
-                if (dx * dx + dy * dy > r * r) {
-                    arbiters.remove(key)
-                    continue
-                }
-
-                val n = BoxCollider.collide(a, b, fresh)
-                if (n > 0) {
-                    val arb = arbiters.getOrPut(key) { Arbiter(a, b) }
-                    arb.update(fresh, n, BoxCollider.normalX, BoxCollider.normalY)
-                    arb.stamp = stamp
-                } else {
-                    arbiters.remove(key)
-                }
-            }
-        }
-        // Nettoyage des contacts qui n'ont pas été revus (corps retirés du monde)
-        doomed.clear()
-        for ((k, arb) in arbiters) if (arb.stamp != stamp) doomed.add(k)
-        for (k in doomed) arbiters.remove(k)
-    }
-
-    private fun pairKey(a: PhysBody, b: PhysBody): Long {
-        val lo = minOf(a.id, b.id).toLong()
-        val hi = maxOf(a.id, b.id).toLong()
-        return (hi shl 32) or lo
     }
 }

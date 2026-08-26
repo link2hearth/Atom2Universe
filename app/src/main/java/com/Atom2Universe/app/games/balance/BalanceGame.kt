@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.balance
 
+import com.Atom2Universe.app.games.physics.PhysBody
+import com.Atom2Universe.app.games.physics.PhysWorld
 import kotlin.math.abs
 import kotlin.math.atan
 import kotlin.math.sign
