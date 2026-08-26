@@ -42,11 +42,22 @@ class TrebuchetGameTest {
     }
 
     @Test
-    fun `lacher le contrepoids de plus haut envoie plus loin`() {
-        val low = machine(drop = TrebuchetRules.DROP_MIN).simulateShot()
-        val high = machine(drop = TrebuchetRules.DROP_MAX).simulateShot()
-
-        assertTrue("la hauteur de lâcher ne change rien : $low contre $high", high > low + 0.5f)
+    fun `le lacher du contrepoids declenche sans desarconner le boulet`() {
+        // La hauteur de lâcher n'est pas une réserve d'énergie, c'est une gâchette.
+        // Lâché de trop haut, le contrepoids frappe le bras au lieu de le pousser :
+        // le bras saute à pleine vitesse en deux degrés et le boulet est éjecté de
+        // sa cuiller comme une balle posée sur une planche qu'on cogne par dessous.
+        // Sur toute la plage autorisée, le tir doit rester un vrai tir.
+        for (drop in listOf(TrebuchetRules.DROP_MIN, TrebuchetRules.DROP_MAX)) {
+            val g = machine(drop = drop)
+            val d = g.simulateShot()
+            assertTrue("à $drop m de lâcher, le tir ne porte que $d m", d > 10f)
+            assertTrue(
+                "à $drop m de lâcher, le boulet part sous ${g.launchAngleDeg}° : il est " +
+                    "désarçonné avant que le bras ait tourné",
+                g.launchAngleDeg < 60f
+            )
+        }
     }
 
     @Test
@@ -101,7 +112,9 @@ class TrebuchetGameTest {
                         all += d to ("bras=${TrebuchetRules.BEAM_LENGTHS[b]} " +
                             "rapport=${TrebuchetRules.LEVER_RATIOS[r]} " +
                             "poids=${TrebuchetRules.COUNTERWEIGHTS[w]} " +
-                            "crochet=${TrebuchetRules.CUP_CURVES_DEG[t]}")
+                            "crochet=${TrebuchetRules.CUP_CURVES_DEG[t]} " +
+                            "| sortie %.1f m/s sous %.0f° (arrêt %.0f°)".format(
+                                g.launchSpeed, g.launchAngleDeg, g.stopAngleDeg))
 
                         assertTrue(
                             "vitesse aberrante (${g.peakSpeed} m/s) pour bras=$b rapport=$r " +

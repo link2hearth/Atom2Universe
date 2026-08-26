@@ -34,35 +34,60 @@ object TrebuchetRules {
      * Tout allonger fait donc grandir la portée deux fois — c'est pour ça que les
      * vraies machines sont énormes.
      */
-    val BEAM_LENGTHS = floatArrayOf(4f, 6f, 8f)
+    val BEAM_LENGTHS = floatArrayOf(5f, 8f, 12f)
 
     /** Un bras plus long est plus lourd : c'est ce qui crée l'optimum de rapport. */
-    const val BEAM_DENSITY = 1.8f
+    const val BEAM_DENSITY = 1.2f
     const val BEAM_HALF_THICKNESS = 0.07f
 
     /**
      * Hauteurs de pied, donc du pivot. Il faut de quoi laisser le bras court
      * descendre jusqu'à l'arrêtoir sans toucher le sol.
      */
-    val FOOT_HEIGHTS = floatArrayOf(2.2f, 3.2f, 4.4f)
-
-    /** Crans du pied le long du bras, exprimés en rapport bras long / bras court. */
-    val LEVER_RATIOS = floatArrayOf(1.5f, 2f, 3f, 4f)
-
-    /** Contrepoids : léger, moyen, lourd. */
-    val COUNTERWEIGHTS = floatArrayOf(120f, 260f, 450f)
-
-    /** Hauteur de lâcher du contrepoids, au-dessus du bras court. */
-    const val DROP_MIN = 0.4f
-    const val DROP_MAX = 2.6f
+    val FOOT_HEIGHTS = floatArrayOf(3f, 4.5f, 6f)
 
     /**
-     * Le boulet. Il est lourd exprès : un projectile trop léger devant son
-     * contrepoids sort à des vitesses folles et part à deux cents mètres, hors du
-     * terrain. Le rapport entre les deux masses est ce qui règle la portée.
+     * Crans du pied le long du bras, exprimés en rapport bras long / bras court.
+     *
+     * C'est **le** réglage qui commande la portée, bien plus que le contrepoids.
+     * Quand celui-ci devient lourd, la vitesse de sortie tend vers une limite qui
+     * ne dépend plus du tout de sa masse :
+     *
+     *     v = racine(2·g·sin(angle d'arrêt)) × bras long / racine(bras court)
+     *
+     * Autrement dit, doubler le contrepoids ne sert presque à rien — son énergie
+     * part dans sa propre inertie — alors que raccourcir le bras court fait
+     * grimper la vitesse. C'est pour ça que les vrais trébuchets ont un
+     * contrepoids énorme collé tout près de l'axe.
      */
-    const val BALL_RADIUS = 0.2f
-    const val BALL_MASS = 14f
+    val LEVER_RATIOS = floatArrayOf(2f, 4f, 6f, 9f)
+
+    /** Contrepoids : léger, moyen, lourd. */
+    val COUNTERWEIGHTS = floatArrayOf(200f, 400f, 700f)
+
+    /**
+     * Hauteur de lâcher du contrepoids, au-dessus du bras court.
+     *
+     * Volontairement très courte : ce réglage **déclenche** le tir, il ne le
+     * charge pas. Lâché de haut, le contrepoids ne pousse pas le bras :
+     * il le **frappe**. Le bras saute alors à pleine vitesse en un ou deux degrés
+     * de rotation, et le boulet, encore au repos, est éjecté de sa cuiller comme
+     * une balle posée sur une planche qu'on frappe par en dessous — il partait à
+     * 33 m/s mais sous 83°, c'est-à-dire droit en l'air. Un lâcher court met la
+     * machine en mouvement sans la cogner, et le boulet reste dans son creux
+     * jusqu'à l'arrêtoir.
+     */
+    const val DROP_MIN = 0.1f
+    const val DROP_MAX = 0.25f
+
+    /**
+     * Le boulet. Le rapport entre sa masse et celle du contrepoids est ce qui
+     * règle la portée : à énergie donnée, la vitesse de sortie varie comme la
+     * racine de ce rapport. C'est le réglage le plus efficace pour décider de la
+     * taille du terrain.
+     */
+    const val BALL_RADIUS = 0.16f
+    const val BALL_MASS = 6f
 
     /**
      * La cuiller. Les deux butées ne se ressemblent pas du tout, parce qu'elles ne
@@ -145,7 +170,7 @@ object TrebuchetRules {
     const val STOP_CLEARANCE = 0.08f
 
     /** Le boulet doit rester sur le bras long, sans chevaucher le pivot. */
-    const val BALL_MIN_FROM_PIVOT = 0.8f
+    const val BALL_MIN_FROM_PIVOT = 1f
 
     const val GRAVITY = 9.81f
 
@@ -153,7 +178,7 @@ object TrebuchetRules {
      * Demi-côté du contrepoids. La masse suit la surface, donc le côté suit la
      * racine : c'est ce qui évite qu'un contrepoids lourd devienne monstrueux.
      */
-    fun counterweightHalfSize(mass: Float): Float = 0.032f * kotlin.math.sqrt(mass)
+    fun counterweightHalfSize(mass: Float): Float = 0.021f * kotlin.math.sqrt(mass)
 }
 
 /**
@@ -575,7 +600,9 @@ class TrebuchetGame {
         if (phase != Phase.BUILD) return
         config.ballDistance = d
         config.clamp()
-        placeBall()
+        // Les butées font partie du bras : déplacer le boulet, c'est refabriquer
+        // la pièce entière, sinon le boulet glisse en laissant sa cuiller derrière.
+        build()
     }
 
     /** Règle la hauteur de lâcher du contrepoids (phase de pose uniquement). */
