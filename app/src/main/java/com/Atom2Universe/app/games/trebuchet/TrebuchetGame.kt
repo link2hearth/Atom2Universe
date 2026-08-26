@@ -68,14 +68,18 @@ object TrebuchetRules {
     /**
      * Hauteur de lâcher du contrepoids, au-dessus du bras court.
      *
-     * Volontairement très courte : ce réglage **déclenche** le tir, il ne le
-     * charge pas. Lâché de haut, le contrepoids ne pousse pas le bras :
-     * il le **frappe**. Le bras saute alors à pleine vitesse en un ou deux degrés
-     * de rotation, et le boulet, encore au repos, est éjecté de sa cuiller comme
-     * une balle posée sur une planche qu'on frappe par en dessous — il partait à
-     * 33 m/s mais sous 83°, c'est-à-dire droit en l'air. Un lâcher court met la
-     * machine en mouvement sans la cogner, et le boulet reste dans son creux
-     * jusqu'à l'arrêtoir.
+     * Lâcher de haut, c'est de l'élan en plus — exactement le principe de la
+     * bascule de cirque, où l'acrobate saute sur la planche au lieu de s'y poser.
+     * Et l'élan marche : au banc d'essai, un lâcher de 2,5 m fait sortir le boulet
+     * à 31 m/s au lieu de 20.
+     *
+     * Mais une bascule de cirque envoie son acrobate **droit en l'air**, et c'est
+     * bien ce que fait un choc : le bras saute à pleine vitesse en un ou deux
+     * degrés de rotation, et le boulet part perpendiculairement au bras — mesuré à
+     * 81°. Récupérer cet élan vers l'avant demanderait une cuiller capable de
+     * retenir le boulet pendant le choc puis de le rendre au bon moment, ce qu'un
+     * creux rigide ne sait pas faire (voir [CUP_CURVES_DEG]). D'ici la fronde, la
+     * plage reste donc courte : ce réglage déclenche le tir, il ne le charge pas.
      */
     const val DROP_MIN = 0.1f
     const val DROP_MAX = 0.25f
@@ -122,28 +126,34 @@ object TrebuchetRules {
      * plus le boulet est retenu longtemps et part tendu ; droite, il s'échappe tôt
      * et monte presque à la verticale.
      *
-     * L'échelle est courte parce qu'un crochet prononcé retient trop : le boulet
-     * est alors lâché après le sommet de la course et se retrouve expédié vers le
-     * sol. Quinze degrés suffisent à couvrir toute la plage utile.
+     * L'échelle est courte, et pas par prudence : mesures à l'appui, une cuiller
+     * rigide est **bistable**. En dessous d'une vingtaine de degrés elle ne retient
+     * rien et le boulet part presque à la verticale ; au-dessus de quarante elle
+     * l'emprisonne et il ne part plus du tout, faisant le tour avec le bras. Entre
+     * les deux, la transition est brutale et il n'existe aucune valeur qui donne un
+     * beau 45°. C'est la limite de fond de ce type de machine, et c'est exactement
+     * pour ça qu'un vrai trébuchet emploie une fronde : une poche au bout d'une
+     * corde sépare le fait de retenir du fait de lâcher, ce qu'un creux rigide ne
+     * sait pas faire.
      */
     val CUP_CURVES_DEG = intArrayOf(0, 5, 10, 15)
 
     /** Position du contrepoids sur le bras court, en fraction de sa longueur. */
     const val SEAT_POSITION = 0.75f
     /** Le rebord côté pivot : juste de quoi bloquer le roulement du début. */
-    const val CUP_BACK_HALF_HEIGHT = 0.07f
+    const val CUP_BACK_HALF_HEIGHT = BALL_RADIUS * 0.55f
 
     /**
      * La butée avant, en deux morceaux.
      *
-     * Le montant est d'équerre avec le bras et monte **juste au-dessus du
-     * boulet** : le coude tombe donc plus haut que lui, et la pointe recourbée ne
-     * peut jamais venir le toucher au repos, quelle que soit la courbure. Un coude
-     * plus bas suffisait à coincer le boulet dès la construction, et le solveur
-     * l'expédiait alors à 280 m/s.
+     * Le montant est d'équerre avec le bras, et son coude tombe **à hauteur du
+     * centre du boulet** : c'est ce qui permet à la pointe de venir se refermer
+     * par-dessus, et donc de retenir le boulet quand le contrepoids frappe fort.
+     * Un coude placé plus haut que le boulet ne le couvrait pas : la pointe
+     * passait à vingt-cinq centimètres au-dessus de lui sans rien retenir.
      */
-    const val CUP_FRONT_BASE_HALF_HEIGHT = BALL_RADIUS + 0.04f
-    const val CUP_FRONT_TIP_HALF_HEIGHT = 0.12f
+    const val CUP_FRONT_BASE_HALF_HEIGHT = BALL_RADIUS * 0.62f
+    const val CUP_FRONT_TIP_HALF_HEIGHT = BALL_RADIUS
     /**
      * Masse des pièces de la cuiller, du même ordre que celle du bras qui les
      * porte : une butée très légère encaisse mal la poussée d'un boulet lancé.
@@ -161,10 +171,15 @@ object TrebuchetRules {
      * le bras s'arrête décide de l'angle de tir. Tous les mangonneaux ont cette
      * pièce, et c'est elle qui deviendra le réglage d'angle de largage.
      *
-     * On cherche l'arrêt le plus incliné qui tienne encore au-dessus du sol :
-     * un pied plus haut autorise un arrêt plus tardif, donc un tir plus tendu.
+     * C'est un **réglage du joueur** : c'est lui qui décide de l'angle du tir. Un
+     * arrêt précoce lâche le boulet haut et court, un arrêt tardif le lâche tendu.
+     * Et il faut l'accorder au crochet : un crochet refermé retient le boulet
+     * au-delà de l'arrêt, donc il faut arrêter le bras plus tôt pour compenser.
+     *
+     * Un arrêt tardif demande un pied haut, sinon le tampon passerait sous terre —
+     * on retombe alors sur le cran praticable le plus proche.
      */
-    val STOP_ANGLES_DEG = intArrayOf(-55, -50, -45, -40, -35, -30, -25, -20)
+    val STOP_ANGLES_DEG = intArrayOf(-30, -40, -50, -60)
     const val STOP_RADIUS = 0.09f
     const val STOP_MIN_DISTANCE = 0.18f
     const val STOP_CLEARANCE = 0.08f
@@ -192,6 +207,7 @@ class MachineConfig {
     var ratioIndex = 2
     var weightIndex = 1
     var cupCurveIndex = 1
+    var stopIndex = 2
 
     /** Hauteur de lâcher au-dessus du bras court. */
     var dropHeight = 0.7f
@@ -205,14 +221,22 @@ class MachineConfig {
     val counterweightMass: Float get() = TrebuchetRules.COUNTERWEIGHTS[weightIndex]
     val cupCurveDeg: Float get() = TrebuchetRules.CUP_CURVES_DEG[cupCurveIndex].toFloat()
 
-    /**
-     * Demi-écart entre les deux butées. Les montants étant d'équerre, il ne dépend
-     * plus de la courbure : seule la pointe se penche, et elle démarre assez haut
-     * pour passer au-dessus du boulet sans le toucher.
-     */
-    val cupHalfGap: Float
+    /** Angle auquel on veut arrêter le bras : le réglage de visée de la machine. */
+    val wantedStopDeg: Float get() = TrebuchetRules.STOP_ANGLES_DEG[stopIndex].toFloat()
+
+    /** Écart du rebord arrière au centre du boulet : il reste d'équerre. */
+    val cupBackGap: Float
         get() = TrebuchetRules.BALL_RADIUS + TrebuchetRules.CUP_HALF_WIDTH +
             TrebuchetRules.CUP_CLEARANCE
+
+    /**
+     * Écart de la butée avant. Elle recule à mesure que sa pointe se referme :
+     * sinon le crochet, qui part du centre du boulet, viendrait le raboter dès la
+     * construction — et un boulet coincé, le solveur l'expédie à 300 m/s.
+     */
+    val cupFrontGap: Float
+        get() = cupBackGap + 2f * TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT *
+            sin(Math.toRadians(cupCurveDeg.toDouble()).toFloat()) * 0.5f
     val beamMass: Float get() = beamLength * TrebuchetRules.BEAM_DENSITY
 
     /** Longueur du bras court, du pivot à son extrémité. */
@@ -234,9 +258,10 @@ class MachineConfig {
         ratioIndex = ratioIndex.coerceIn(0, TrebuchetRules.LEVER_RATIOS.size - 1)
         weightIndex = weightIndex.coerceIn(0, TrebuchetRules.COUNTERWEIGHTS.size - 1)
         cupCurveIndex = cupCurveIndex.coerceIn(0, TrebuchetRules.CUP_CURVES_DEG.size - 1)
+        stopIndex = stopIndex.coerceIn(0, TrebuchetRules.STOP_ANGLES_DEG.size - 1)
         dropHeight = dropHeight.coerceIn(TrebuchetRules.DROP_MIN, TrebuchetRules.DROP_MAX)
         // Il faut laisser la place de la butée avant entre le boulet et la pointe.
-        val room = longArm - cupHalfGap - TrebuchetRules.CUP_HALF_WIDTH
+        val room = longArm - cupFrontGap - TrebuchetRules.CUP_HALF_WIDTH
         ballDistance = ballDistance.coerceIn(
             TrebuchetRules.BALL_MIN_FROM_PIVOT,
             maxOf(TrebuchetRules.BALL_MIN_FROM_PIVOT, room)
@@ -249,6 +274,7 @@ class MachineConfig {
         ratioIndex = o.ratioIndex
         weightIndex = o.weightIndex
         cupCurveIndex = o.cupCurveIndex
+        stopIndex = o.stopIndex
         dropHeight = o.dropHeight
         ballDistance = o.ballDistance
     }
@@ -416,7 +442,8 @@ class TrebuchetGame {
         val plankCenterX = pivotX + (config.shortArm - config.longArm) / 2f
         val top = TrebuchetRules.BEAM_HALF_THICKNESS
         val seatX = -config.ballDistance - (config.shortArm - config.longArm) / 2f
-        val gap = config.cupHalfGap
+        val backGap = config.cupBackGap
+        val frontGap = config.cupFrontGap
         val curve = -Math.toRadians(config.cupCurveDeg.toDouble()).toFloat()
         val kneeY = top + 2f * TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
 
@@ -426,17 +453,17 @@ class TrebuchetGame {
             // le rebord côté pivot, tout bas
             box(
                 TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_BACK_HALF_HEIGHT,
-                seatX + gap, top + TrebuchetRules.CUP_BACK_HALF_HEIGHT
+                seatX + backGap, top + TrebuchetRules.CUP_BACK_HALF_HEIGHT
             )
             // le montant d'équerre de la butée avant
             box(
                 TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT,
-                seatX - gap, top + TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
+                seatX - frontGap, top + TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
             )
             // et sa pointe recourbée, qui part du coude
             box(
                 TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT,
-                seatX - gap + TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT * sin(curve).let { -it },
+                seatX - frontGap + TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT * sin(curve).let { -it },
                 kneeY + TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT * cos(curve),
                 curve
             )
@@ -493,7 +520,11 @@ class TrebuchetGame {
     private fun placeStopper() {
         val ht = TrebuchetRules.BEAM_HALF_THICKNESS
         val rs = TrebuchetRules.STOP_RADIUS
-        for (deg in TrebuchetRules.STOP_ANGLES_DEG) {
+
+        // On part du cran demandé, puis on remonte vers les arrêts plus précoces
+        // si le tampon ne tient pas au-dessus du sol.
+        for (i in config.stopIndex downTo 0) {
+            val deg = TrebuchetRules.STOP_ANGLES_DEG[i]
             val a = Math.toRadians(deg.toDouble()).toFloat()
             val ux = cos(a); val uy = sin(a)
             // Normale du bras à cet angle : sa direction « vers le haut » locale.
@@ -510,16 +541,16 @@ class TrebuchetGame {
             world.forgetContacts(stopper)
             return
         }
-        // Aucun angle ne tient : on pose le tampon au plus près du pivot.
-        val a = Math.toRadians(TrebuchetRules.STOP_ANGLES_DEG.last().toDouble()).toFloat()
-        stopAngleDeg = TrebuchetRules.STOP_ANGLES_DEG.last().toFloat()
+        // Aucun cran ne tient : on pose le tampon au plus près du pivot.
+        val deg = TrebuchetRules.STOP_ANGLES_DEG.first()
+        val a = Math.toRadians(deg.toDouble()).toFloat()
+        stopAngleDeg = deg.toFloat()
         val d = TrebuchetRules.STOP_MIN_DISTANCE
         stopper.x = pivotX + d * cos(a) - (ht + rs) * -sin(a)
         stopper.y = pivotY + d * sin(a) - (ht + rs) * cos(a)
         world.forgetContacts(stopper)
     }
 
-    /** Repose le boulet sur le bras long, à la distance choisie. */
     private fun placeBall() {
         ball.x = pivotX - config.ballDistance
         ball.y = pivotY + TrebuchetRules.BEAM_HALF_THICKNESS + TrebuchetRules.BALL_RADIUS
@@ -574,9 +605,14 @@ class TrebuchetGame {
         config.weightIndex = wrap(config.weightIndex + delta, TrebuchetRules.COUNTERWEIGHTS.size)
     }
 
-    /** Courbure de la butée avant : le réglage de visée de la machine. */
+    /** Courbure de la butée avant : c'est elle qui retient le boulet pendant le choc. */
     fun cycleCupCurve(delta: Int) = changeSetting {
         config.cupCurveIndex = wrap(config.cupCurveIndex + delta, TrebuchetRules.CUP_CURVES_DEG.size)
+    }
+
+    /** Angle d'arrêt du bras : le réglage de visée de la machine. */
+    fun cycleStop(delta: Int) = changeSetting {
+        config.stopIndex = wrap(config.stopIndex + delta, TrebuchetRules.STOP_ANGLES_DEG.size)
     }
 
     /** Repart d'une machine neuve, fantôme compris. */

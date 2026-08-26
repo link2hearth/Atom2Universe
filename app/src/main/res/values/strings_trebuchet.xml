@@ -20,4 +20,6 @@
     <string name="trebuchet_status_result">%1$s m — left the spoon at %2$s m/s, %3$d° above the ground, peaked at %4$s m</string>
     <string name="trebuchet_status_backwards">It went backwards! The arm cannot lift that load</string>
     <string name="trebuchet_specs">Lever %1$s:1 · stored energy %2$d J · arm stops at %3$d°</string>
+    <string name="trebuchet_stop">Stop
+%1$d°</string>
 </resources>

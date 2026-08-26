@@ -95,6 +95,10 @@
             android:id="@+id/trebuchet_pick_cup"
             style="@style/TrebuchetPick" />
 
+        <TextView
+            android:id="@+id/trebuchet_pick_stop"
+            style="@style/TrebuchetPick" />
+
     </LinearLayout>
 
     <!-- Boutons -->

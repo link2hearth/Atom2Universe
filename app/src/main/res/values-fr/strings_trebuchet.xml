@@ -20,4 +20,6 @@
     <string name="trebuchet_status_result">%1$s m — sorti à %2$s m/s sous %3$d°, culminé à %4$s m</string>
     <string name="trebuchet_status_backwards">Parti en arrière ! Le bras n\'arrive pas à soulever cette charge</string>
     <string name="trebuchet_specs">Levier %1$s:1 · énergie %2$d J · arrêt du bras à %3$d°</string>
+    <string name="trebuchet_stop">Arrêt
+%1$d°</string>
 </resources>

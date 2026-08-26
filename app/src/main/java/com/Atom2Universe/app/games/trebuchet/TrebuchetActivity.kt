@@ -32,6 +32,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     private lateinit var pickRatio: TextView
     private lateinit var pickWeight: TextView
     private lateinit var pickCup: TextView
+    private lateinit var pickStop: TextView
     private lateinit var prefs: SharedPreferences
 
     private var best = 0f
@@ -55,6 +56,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         pickRatio = findViewById(R.id.trebuchet_pick_ratio)
         pickWeight = findViewById(R.id.trebuchet_pick_weight)
         pickCup = findViewById(R.id.trebuchet_pick_cup)
+        pickStop = findViewById(R.id.trebuchet_pick_stop)
 
         gameView.listener = this
 
@@ -68,6 +70,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         bindPick(pickRatio) { d -> gameView.game.cycleRatio(d) }
         bindPick(pickWeight) { d -> gameView.game.cycleWeight(d) }
         bindPick(pickCup) { d -> gameView.game.cycleCupCurve(d) }
+        bindPick(pickStop) { d -> gameView.game.cycleStop(d) }
 
         updateUi()
     }
@@ -150,6 +153,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         pickRatio.text = getString(R.string.trebuchet_ratio, fmt(cfg.leverRatio))
         pickWeight.text = getString(R.string.trebuchet_weight, cfg.counterweightMass.toInt())
         pickCup.text = getString(R.string.trebuchet_cup, cfg.cupCurveDeg.toInt())
+        pickStop.text = getString(R.string.trebuchet_stop, (-game.stopAngleDeg).toInt())
 
         specsText.text = getString(
             R.string.trebuchet_specs,

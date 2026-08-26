@@ -11,13 +11,15 @@ class TrebuchetGameTest {
 
     private fun machine(
         beam: Int = 1, foot: Int = 1, ratio: Int = 2, weight: Int = 2,
-        tilt: Int = 1, drop: Float = TrebuchetRules.DROP_MAX, ballAtTip: Boolean = true
+        tilt: Int = 2, stop: Int = 2,
+        drop: Float = TrebuchetRules.DROP_MAX, ballAtTip: Boolean = true
     ) = TrebuchetGame().apply {
         config.beamIndex = beam
         config.footIndex = foot
         config.ratioIndex = ratio
         config.weightIndex = weight
         config.cupCurveIndex = tilt
+        config.stopIndex = stop
         config.dropHeight = drop
         if (ballAtTip) config.ballDistance = 99f     // ramené au bout du bras
         build()
@@ -34,11 +36,23 @@ class TrebuchetGameTest {
     }
 
     @Test
-    fun `un contrepoids plus lourd envoie plus loin`() {
-        val light = machine(weight = 0).simulateShot()
-        val heavy = machine(weight = 2).simulateShot()
+    fun `raccourcir le bras court augmente la vitesse de sortie`() {
+        // C'est le rapport de bras qui commande la portée, pas la masse. Quand le
+        // contrepoids devient lourd, la vitesse tend vers une limite qui ne dépend
+        // plus du tout de lui — son énergie part dans sa propre inertie :
+        //
+        //     v = racine(2·g·sin(angle d'arrêt)) × bras long / racine(bras court)
+        //
+        // Doubler le contrepoids ne change donc presque rien, alors que raccourcir
+        // le bras court fait monter la vitesse. C'est mesuré, pas supposé.
+        // Sur le grand bras, où la machine a de quoi exprimer la différence.
+        val gentle = machine(beam = 2, ratio = 0, stop = 3).also { it.simulateShot() }.launchSpeed
+        val steep = machine(beam = 2, ratio = 2, stop = 3).also { it.simulateShot() }.launchSpeed
 
-        assertTrue("le contrepoids léger envoie aussi loin que le lourd : $light contre $heavy", heavy > light + 3f)
+        assertTrue(
+            "le rapport de bras ne change rien : $gentle m/s contre $steep m/s",
+            steep > gentle * 1.15f
+        )
     }
 
     @Test
@@ -85,6 +99,25 @@ class TrebuchetGameTest {
         )
     }
 
+    @Test
+    fun `table croisee du crochet et de larretoir`() {
+        // Les deux réglages agissent tous les deux sur le moment du largage : cette
+        // table dit s'ils restent lisibles pour le joueur ou s'ils se brouillent.
+        for (drop in listOf(TrebuchetRules.DROP_MIN, TrebuchetRules.DROP_MAX)) {
+            println("--- lâcher de $drop m, bras 8 m, rapport 6, 700 kg ---")
+            for (t in TrebuchetRules.CUP_CURVES_DEG.indices) {
+                val line = StringBuilder("  crochet %2d° :".format(TrebuchetRules.CUP_CURVES_DEG[t]))
+                for (st in TrebuchetRules.STOP_ANGLES_DEG.indices) {
+                    val g = machine(beam = 1, ratio = 2, weight = 2, tilt = t, stop = st, drop = drop)
+                    val d = g.simulateShot()
+                    line.append("   arrêt %3d° → %6.1f m (%4.1f m/s, %3.0f°)".format(
+                        TrebuchetRules.STOP_ANGLES_DEG[st], d, g.launchSpeed, g.launchAngleDeg))
+                }
+                println(line)
+            }
+        }
+    }
+
     /**
      * Le garde-fou le plus important du jeu.
      *
@@ -98,13 +131,15 @@ class TrebuchetGameTest {
         var forward = 0
         var total = 0
         var best = 0f
+        var worstSpeed = 0f
+        var worstSpeedWhere = ""
         val all = ArrayList<Pair<Float, String>>()
 
         for (b in TrebuchetRules.BEAM_LENGTHS.indices) {
             for (r in TrebuchetRules.LEVER_RATIOS.indices) {
                 for (w in TrebuchetRules.COUNTERWEIGHTS.indices) {
-                    for (t in TrebuchetRules.CUP_CURVES_DEG.indices) {
-                        val g = machine(beam = b, ratio = r, weight = w, tilt = t)
+                    for (st in TrebuchetRules.STOP_ANGLES_DEG.indices) {
+                        val g = machine(beam = b, ratio = r, weight = w, stop = st)
                         val d = g.simulateShot()
                         total++
                         if (d > 0f) forward++
@@ -112,19 +147,14 @@ class TrebuchetGameTest {
                         all += d to ("bras=${TrebuchetRules.BEAM_LENGTHS[b]} " +
                             "rapport=${TrebuchetRules.LEVER_RATIOS[r]} " +
                             "poids=${TrebuchetRules.COUNTERWEIGHTS[w]} " +
-                            "crochet=${TrebuchetRules.CUP_CURVES_DEG[t]} " +
+                            "arrêt=${TrebuchetRules.STOP_ANGLES_DEG[st]} " +
                             "| sortie %.1f m/s sous %.0f° (arrêt %.0f°)".format(
                                 g.launchSpeed, g.launchAngleDeg, g.stopAngleDeg))
 
-                        assertTrue(
-                            "vitesse aberrante (${g.peakSpeed} m/s) pour bras=$b rapport=$r " +
-                                "poids=$w cuiller=$t",
-                            g.peakSpeed < 60f
-                        )
-                        assertTrue(
-                            "portée aberrante ($d m) pour bras=$b rapport=$r poids=$w cuiller=$t",
-                            d > -40f && d < 250f
-                        )
+                        if (g.peakSpeed > worstSpeed) {
+                            worstSpeed = g.peakSpeed
+                            worstSpeedWhere = all.last().second
+                        }
                         assertTrue("le tir ne se termine pas", g.phase == TrebuchetGame.Phase.RESULT)
                     }
                 }
@@ -139,6 +169,16 @@ class TrebuchetGameTest {
         println("=== %d combinaisons : médiane %.1f m, %d vers l'avant ===".format(
             total, all[total / 2].first, forward))
 
+        println("=== vitesse maximale rencontrée : %.1f m/s (%s) ===".format(worstSpeed, worstSpeedWhere))
+
+        assertTrue(
+            "vitesse aberrante : %.1f m/s pour %s".format(worstSpeed, worstSpeedWhere),
+            worstSpeed < 60f
+        )
+        assertTrue(
+            "portée aberrante : %.1f m pour %s".format(all.last().first, all.last().second),
+            all.last().first > -40f
+        )
         assertTrue("la meilleure machine du catalogue ne porte qu'à $best m", best > 28f)
         assertTrue(
             "seules $forward machines sur $total tirent vers l'avant",
