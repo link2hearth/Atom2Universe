@@ -155,7 +155,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             R.string.trebuchet_specs,
             fmt(cfg.leverRatio),
             cfg.storedEnergy.toInt(),
-            game.launchAngleDeg.toInt()
+            (-game.stopAngleDeg).toInt()
         )
         bestText.text = if (best > 0f) getString(R.string.trebuchet_best, fmt(best)) else ""
 
@@ -174,6 +174,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
                         R.string.trebuchet_status_result,
                         fmt(game.shotDistance),
                         fmt(game.launchSpeed),
+                        game.launchAngleDeg.toInt(),
                         fmt(game.peakHeight)
                     )
                 }

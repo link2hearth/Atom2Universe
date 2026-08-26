@@ -204,24 +204,31 @@ class PhysWorld {
                 val b = bodies[j]
                 if (!b.inWorld) continue
                 if (a.immovable && b.immovable) continue
-                if (connectedByJoint(a, b)) continue
 
+                // Rejet rapide au niveau des corps entiers, avant d'entrer dans
+                // le détail de leurs formes.
                 val dx = b.x - a.x
                 val dy = b.y - a.y
                 val r = a.boundingRadius + b.boundingRadius
-                val key = pairKey(a, b)
-                if (dx * dx + dy * dy > r * r) {
-                    arbiters.remove(key)
-                    continue
-                }
+                val far = dx * dx + dy * dy > r * r
+                if (connectedByJoint(a, b)) continue
 
-                val n = Collider.collide(a, b, fresh)
-                if (n > 0) {
-                    val arb = arbiters.getOrPut(key) { Arbiter(a, b) }
-                    arb.update(fresh, n, Collider.normalX, Collider.normalY)
-                    arb.stamp = stamp
-                } else {
-                    arbiters.remove(key)
+                for (pa in a.parts.indices) {
+                    for (pb in b.parts.indices) {
+                        val key = pairKey(a, pa, b, pb)
+                        if (far) {
+                            arbiters.remove(key)
+                            continue
+                        }
+                        val n = Collider.collide(a, pa, b, pb, fresh)
+                        if (n > 0) {
+                            val arb = arbiters.getOrPut(key) { Arbiter(a, b, pa, pb) }
+                            arb.update(fresh, n, Collider.normalX, Collider.normalY)
+                            arb.stamp = stamp
+                        } else {
+                            arbiters.remove(key)
+                        }
+                    }
                 }
             }
         }
@@ -240,9 +247,14 @@ class PhysWorld {
         return false
     }
 
-    private fun pairKey(a: PhysBody, b: PhysBody): Long {
-        val lo = minOf(a.id, b.id).toLong()
-        val hi = maxOf(a.id, b.id).toLong()
-        return (hi shl 32) or lo
+    /**
+     * Clé d'un contact : le couple de corps **et** le couple de formes touchées.
+     * Deux formes d'un même corps qui touchent le même voisin doivent avoir chacune
+     * leur propre suivi, sinon leurs impulsions mémorisées se mélangeraient.
+     */
+    private fun pairKey(a: PhysBody, pa: Int, b: PhysBody, pb: Int): Long {
+        val ida = a.id.toLong() and 0xFFFFFF
+        val idb = b.id.toLong() and 0xFFFFFF
+        return (ida shl 40) or (idb shl 16) or ((pa.toLong() and 0xFF) shl 8) or (pb.toLong() and 0xFF)
     }
 }

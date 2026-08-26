@@ -50,11 +50,11 @@ object TrebuchetRules {
     val LEVER_RATIOS = floatArrayOf(1.5f, 2f, 3f, 4f)
 
     /** Contrepoids : léger, moyen, lourd. */
-    val COUNTERWEIGHTS = floatArrayOf(90f, 190f, 340f)
+    val COUNTERWEIGHTS = floatArrayOf(120f, 260f, 450f)
 
     /** Hauteur de lâcher du contrepoids, au-dessus du bras court. */
     const val DROP_MIN = 0.4f
-    const val DROP_MAX = 2.2f
+    const val DROP_MAX = 2.6f
 
     /**
      * Le boulet. Il est lourd exprès : un projectile trop léger devant son
@@ -97,10 +97,11 @@ object TrebuchetRules {
      * plus le boulet est retenu longtemps et part tendu ; droite, il s'échappe tôt
      * et monte presque à la verticale.
      *
-     * Au-delà d'une trentaine de degrés le crochet retient trop : le boulet est
-     * lâché après le sommet de la course et se retrouve expédié vers le sol.
+     * L'échelle est courte parce qu'un crochet prononcé retient trop : le boulet
+     * est alors lâché après le sommet de la course et se retrouve expédié vers le
+     * sol. Quinze degrés suffisent à couvrir toute la plage utile.
      */
-    val CUP_CURVES_DEG = intArrayOf(0, 10, 20, 30)
+    val CUP_CURVES_DEG = intArrayOf(0, 5, 10, 15)
 
     /** Position du contrepoids sur le bras court, en fraction de sa longueur. */
     const val SEAT_POSITION = 0.75f
@@ -268,18 +269,6 @@ class TrebuchetGame {
     lateinit var counterweight: PhysBody
         private set
 
-    /** Rebord côté pivot : ne sert qu'au roulement du début. */
-    lateinit var cupBack: PhysBody
-        private set
-
-    /** Montant d'équerre de la butée avant : c'est lui qui emmène le boulet. */
-    lateinit var cupFrontBase: PhysBody
-        private set
-
-    /** Pointe recourbée de la butée avant : elle décide de l'angle de sortie. */
-    lateinit var cupFrontTip: PhysBody
-        private set
-
     /** Le tampon que le bras vient percuter : c'est lui qui libère le boulet. */
     lateinit var stopper: PhysBody
         private set
@@ -289,37 +278,19 @@ class TrebuchetGame {
         private set
 
     /**
-     * Angle auquel le boulet est lâché, en degrés.
+     * Élévation réelle du tir, en degrés, **mesurée** au moment où le boulet quitte
+     * la cuiller.
      *
-     * C'est le crochet qui le fixe : droit, il laisse filer tôt et le boulet part
-     * en cloche ; recourbé au maximum, il retient jusqu'à l'arrêt du bras et le tir
-     * est tendu. Le bras ne pouvant pas aller au-delà de son arrêtoir, c'est cet
-     * arrêt qui borne le tir le plus tendu possible.
+     * Rien ne la décide à l'avance : elle sort de la forme de la cuiller, de la
+     * vitesse du bras et du moment où la géométrie cesse de retenir le boulet.
      */
-    var releaseAngleDeg = -45f
+    var launchAngleDeg = 0f
         private set
 
-    /** Élévation du tir, en degrés : la vitesse de sortie est perpendiculaire au bras. */
-    val launchAngleDeg: Float get() = 90f + releaseAngleDeg
-
     private lateinit var pivot: RevoluteJoint
-    /**
-     * La liaison qui rend le boulet solidaire du bras jusqu'au largage.
-     *
-     * C'est exactement ce que fait une cuiller — ou la fronde d'un vrai trébuchet :
-     * tant qu'elle tient, le boulet suit le bras ; quand elle lâche, il part avec
-     * la vitesse qu'il avait, et le reste n'est que de la balistique.
-     *
-     * Simuler la cuiller en pièces soudées ne tenait pas la route : le boulet finit
-     * coincé entre le fond, la butée et son crochet, et sous plusieurs centaines de
-     * kilos ce coin-là est plus raide que ce que le solveur sait résoudre — il
-     * l'expédiait à 250 m/s. Une liaison unique entre deux corps lourds, elle, est
-     * parfaitement stable, comme celle qui attrape le contrepoids.
-     */
-    private var ballHold: RevoluteJoint? = null
-
-    /** Décalages des pièces de la cuiller dans le repère du bras (affichage seul). */
-    private val cupLocal = FloatArray(9)
+    /** Position du creux de la cuiller dans le repère du bras, pour voir partir le boulet. */
+    private var seatLocalX = 0f
+    private var seatLocalY = 0f
 
     /**
      * L'attache du contrepoids, créée au moment où il arrive sur le bras.
@@ -363,6 +334,7 @@ class TrebuchetGame {
     private var elapsed = 0f
     private var trailTimer = 0f
     private var ballFree = false
+    private val seatProbe = FloatArray(2)
 
     init {
         build()
@@ -378,7 +350,6 @@ class TrebuchetGame {
     fun build() {
         config.clamp()
         world.clear()
-        ballHold = null
         cwHinge = null
         trail.clear()
         elapsed = 0f
@@ -408,12 +379,48 @@ class TrebuchetGame {
         }
         world.add(post)
 
-        // Le bras : il déborde du pivot du côté long (vers les x négatifs).
-        val beamCenter = pivotX + (config.shortArm - config.longArm) / 2f
-        beam = PhysBody(config.beamLength / 2f, TrebuchetRules.BEAM_HALF_THICKNESS, config.beamMass).apply {
-            x = beamCenter
-            y = pivotY
+        // Le bras et ses deux butées : **une seule pièce rigide**.
+        //
+        // C'est le point qui a tout changé. Tant que les butées étaient des corps
+        // séparés tenus par une soudure approchée, le boulet coincé entre elles et
+        // le fond faisait exploser le solveur : l'effort devait traverser une
+        // liaison molle avant d'atteindre le bras, et le boulet ressortait à
+        // 250 m/s. Assemblées en un seul corps, elles n'ont plus aucun jeu, et le
+        // boulet peut rester libre — c'est la géométrie qui le retient puis le
+        // lâche, plus une règle écrite à la main.
+        val plankCenterX = pivotX + (config.shortArm - config.longArm) / 2f
+        val top = TrebuchetRules.BEAM_HALF_THICKNESS
+        val seatX = -config.ballDistance - (config.shortArm - config.longArm) / 2f
+        val gap = config.cupHalfGap
+        val curve = -Math.toRadians(config.cupCurveDeg.toDouble()).toFloat()
+        val kneeY = top + 2f * TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
+
+        beam = PhysBody.compound(config.beamMass + 3f * TrebuchetRules.CUP_MASS) {
+            // la planche
+            box(config.beamLength / 2f, TrebuchetRules.BEAM_HALF_THICKNESS, 0f, 0f)
+            // le rebord côté pivot, tout bas
+            box(
+                TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_BACK_HALF_HEIGHT,
+                seatX + gap, top + TrebuchetRules.CUP_BACK_HALF_HEIGHT
+            )
+            // le montant d'équerre de la butée avant
+            box(
+                TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT,
+                seatX - gap, top + TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
+            )
+            // et sa pointe recourbée, qui part du coude
+            box(
+                TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT,
+                seatX - gap + TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT * sin(curve).let { -it },
+                kneeY + TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT * cos(curve),
+                curve
+            )
+        }.apply {
             friction = 0.75f
+            // Le corps est repéré par son centre de masse : on le place de façon que
+            // la planche, elle, tombe exactement où on la veut.
+            x = plankCenterX - localOffsetX(0)
+            y = pivotY - localOffsetY(0)
             // Le cliquet : pendant la pose, le bras ne bouge pas du tout.
             lockPosition = true
             lockRotation = true
@@ -423,23 +430,6 @@ class TrebuchetGame {
 
         pivot = RevoluteJoint.pin(beam, post, pivotX, pivotY)
         world.addJoint(pivot)
-
-        cupBack = cradleWall(
-            TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_BACK_HALF_HEIGHT, TrebuchetRules.CUP_MASS
-        )
-        cupFrontBase = cradleWall(
-            TrebuchetRules.CUP_HALF_WIDTH,
-            TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT,
-            TrebuchetRules.CUP_MASS
-        )
-        cupFrontTip = cradleWall(
-            TrebuchetRules.CUP_HALF_WIDTH,
-            TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT,
-            TrebuchetRules.CUP_MASS
-        )
-        world.add(cupBack)
-        world.add(cupFrontBase)
-        world.add(cupFrontTip)
 
         ball = PhysBody.circle(TrebuchetRules.BALL_RADIUS, TrebuchetRules.BALL_MASS).apply {
             friction = 0.7f
@@ -510,68 +500,13 @@ class TrebuchetGame {
         ball.y = pivotY + TrebuchetRules.BEAM_HALF_THICKNESS + TrebuchetRules.BALL_RADIUS
         ball.vx = 0f; ball.vy = 0f; ball.omega = 0f; ball.angle = 0f
         world.forgetContacts(ball)
-
-        ballHold?.let { world.removeJoint(it) }
-        ballHold = RevoluteJoint.pin(ball, beam, ball.x, ball.y).also { world.addJoint(it) }
-
-        // Le crochet décide de combien on retient au-delà du largage le plus tôt.
-        val maxCurve = TrebuchetRules.CUP_CURVES_DEG.last().toFloat()
-        releaseAngleDeg = stopAngleDeg + (maxCurve - config.cupCurveDeg)
-
-        placeCup()
+        // Le bras est horizontal à la pose : le creux se repère par simple écart.
+        seatLocalX = ball.x - beam.x
+        seatLocalY = ball.y - beam.y
     }
 
-    private fun cradleWall(halfW: Float, halfH: Float, mass: Float) =
-        PhysBody(halfW, halfH, mass).apply { friction = 0.85f }
-
-    /**
-     * Pose les trois pièces de la cuiller autour du boulet et retient leur position
-     * dans le repère du bras.
-     *
-     * Elles ne sont plus simulées : c'est la liaison [ballHold] qui tient le boulet.
-     * Elles restent à leur place exacte et suivent le bras, mais le moteur les
-     * ignore — une pièce soudée de plus, c'est une contrainte de plus à faire
-     * exploser pour rien.
-     */
-    private fun placeCup() {
-        val top = pivotY + TrebuchetRules.BEAM_HALF_THICKNESS
-        val gap = config.cupHalfGap
-        val kneeY = top + 2f * TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
-        val curve = -Math.toRadians(config.cupCurveDeg.toDouble()).toFloat()
-
-        // Côté pivot : un simple rebord, d'équerre et très bas.
-        setCupPart(0, cupBack, ball.x + gap, top, 0f)
-        // Côté pointe : le montant reste d'équerre, seule sa pointe crochète.
-        setCupPart(1, cupFrontBase, ball.x - gap, top, 0f)
-        setCupPart(2, cupFrontTip, ball.x - gap, kneeY, curve)
-    }
-
-    private fun setCupPart(slot: Int, wall: PhysBody, baseX: Float, baseY: Float, a: Float) {
-        val nx = -sin(a)
-        val ny = cos(a)
-        wall.angle = a
-        wall.x = baseX + wall.halfH * nx
-        wall.y = baseY + wall.halfH * ny
-        wall.inWorld = false
-        // Position retenue dans le repère du bras, qui est horizontal à la pose.
-        cupLocal[slot * 3] = wall.x - beam.x
-        cupLocal[slot * 3 + 1] = wall.y - beam.y
-        cupLocal[slot * 3 + 2] = a
-    }
-
-    /** Recolle les pièces de la cuiller sur le bras après chaque pas. */
-    private fun syncCup() {
-        val c = cos(beam.angle)
-        val sn = sin(beam.angle)
-        val parts = arrayOf(cupBack, cupFrontBase, cupFrontTip)
-        for (i in parts.indices) {
-            val lx = cupLocal[i * 3]
-            val ly = cupLocal[i * 3 + 1]
-            parts[i].x = beam.x + lx * c - ly * sn
-            parts[i].y = beam.y + lx * sn + ly * c
-            parts[i].angle = beam.angle + cupLocal[i * 3 + 2]
-        }
-    }
+    /** Position actuelle du creux de la cuiller, qui suit le bras. */
+    private fun seatWorld(out: FloatArray) = beam.localToWorld(seatLocalX, seatLocalY, out)
 
     /** Abscisse où le contrepoids se pose sur le bras court. */
     private fun seatCenterX(): Float =
@@ -678,7 +613,6 @@ class TrebuchetGame {
         // lourd : les réappliquer à un bras devenu mobile ferait n'importe quoi.
         world.forgetContacts(beam)
         pivot.reset()
-        ballHold?.reset()
 
         // Le bras attrape le contrepoids à l'endroit exact où il arrive : à partir
         // de là ils ne font plus qu'un, et toute la descente sert à lancer.
@@ -694,16 +628,6 @@ class TrebuchetGame {
 
         world.stepFrame(dt)
         elapsed += dt
-        syncCup()
-
-        // Largage : le bras a atteint l'angle fixé par le crochet.
-        ballHold?.let { hold ->
-            if (beam.angle <= Math.toRadians(releaseAngleDeg.toDouble()).toFloat()) {
-                world.removeJoint(hold)
-                ballHold = null
-                ballFree = true
-            }
-        }
 
         if (phase == Phase.DROP) {
             // Le cliquet lâche juste AVANT que le contrepoids ne touche le bras,
@@ -725,7 +649,18 @@ class TrebuchetGame {
         if (ball.y > peakHeight) peakHeight = ball.y
         // Vitesse de sortie : celle qu'a le boulet quand il quitte le bras, donc
         // la dernière mesurée tant qu'il monte encore au contact de la machine.
-        if (!ballFree) launchSpeed = speed
+        if (!ballFree) {
+            launchSpeed = speed
+            // Le boulet est parti quand il s'est éloigné du creux qui le portait.
+            // Rien ne le décide : on ne fait que constater.
+            seatWorld(seatProbe)
+            if (hypot(ball.x - seatProbe[0], ball.y - seatProbe[1]) > 0.7f) {
+                ballFree = true
+                launchAngleDeg = Math.toDegrees(
+                    kotlin.math.atan2(ball.vy.toDouble(), ball.vx.toDouble())
+                ).toFloat()
+            }
+        }
 
         trailTimer += dt
         if (trailTimer > 0.02f && trail.size < 4000) {

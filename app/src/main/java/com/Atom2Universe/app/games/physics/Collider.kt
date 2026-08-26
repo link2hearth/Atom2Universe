@@ -38,13 +38,53 @@ class Contact {
 }
 
 /**
- * Détection de collision entre deux corps, quelles que soient leurs formes.
+ * Une forme d'un corps, mise à plat en coordonnées monde.
+ *
+ * La détection travaille sur des **formes**, pas sur des corps : un corps peut en
+ * porter plusieurs, et chacune doit être testée séparément.
+ */
+internal class ShapeRef {
+    var shape = Shape.BOX
+    var x = 0f
+    var y = 0f
+    var angle = 0f
+    var halfW = 0f
+    var halfH = 0f
+    var radius = 0f
+
+    fun set(body: PhysBody, part: Int) {
+        val p = body.parts[part]
+        val c = cos(body.angle)
+        val s = sin(body.angle)
+        shape = p.shape
+        x = body.x + p.localX * c - p.localY * s
+        y = body.y + p.localX * s + p.localY * c
+        angle = body.angle + p.localAngle
+        halfW = p.halfW
+        halfH = p.halfH
+        radius = p.radius
+    }
+
+    fun corners(out: FloatArray) {
+        val c = cos(angle)
+        val s = sin(angle)
+        out[0] = x - halfW * c + halfH * s; out[1] = y - halfW * s - halfH * c
+        out[2] = x + halfW * c + halfH * s; out[3] = y + halfW * s - halfH * c
+        out[4] = x + halfW * c - halfH * s; out[5] = y + halfW * s + halfH * c
+        out[6] = x - halfW * c - halfH * s; out[7] = y - halfW * s + halfH * c
+    }
+}
+
+/**
+ * Détection de collision entre deux formes, quelles qu'elles soient.
  *
  * Objet unique avec des tampons réutilisés : le moteur tourne sur un seul thread,
  * donc on évite ainsi toute allocation pendant la simulation.
  */
 internal object Collider {
 
+    private val refA = ShapeRef()
+    private val refB = ShapeRef()
     private val vertsA = FloatArray(8)
     private val vertsB = FloatArray(8)
     private val segIn = FloatArray(4)
@@ -67,19 +107,23 @@ internal object Collider {
     private const val ROUND_FEATURE = -1
 
     /**
-     * Calcule les points de contact entre [a] et [b] et les écrit dans [out].
-     * Retourne le nombre de points (0 s'il n'y a pas de collision).
+     * Calcule les points de contact entre la forme [pa] de [a] et la forme [pb] de
+     * [b], et les écrit dans [out]. Retourne le nombre de points (0 sans collision).
      */
-    fun collide(a: PhysBody, b: PhysBody, out: Array<Contact>): Int = when {
-        a.shape == Shape.CIRCLE && b.shape == Shape.CIRCLE -> circleCircle(a, b, out)
-        a.shape == Shape.CIRCLE -> circleBox(a, b, out, circleIsA = true)
-        b.shape == Shape.CIRCLE -> circleBox(b, a, out, circleIsA = false)
-        else -> boxBox(a, b, out)
+    fun collide(a: PhysBody, pa: Int, b: PhysBody, pb: Int, out: Array<Contact>): Int {
+        refA.set(a, pa)
+        refB.set(b, pb)
+        return when {
+            refA.shape == Shape.CIRCLE && refB.shape == Shape.CIRCLE -> circleCircle(refA, refB, out)
+            refA.shape == Shape.CIRCLE -> circleBox(refA, refB, out, circleIsA = true)
+            refB.shape == Shape.CIRCLE -> circleBox(refB, refA, out, circleIsA = false)
+            else -> boxBox(refA, refB, out)
+        }
     }
 
     // --------------------------- Disque contre disque ---------------------------
 
-    private fun circleCircle(a: PhysBody, b: PhysBody, out: Array<Contact>): Int {
+    private fun circleCircle(a: ShapeRef, b: ShapeRef, out: Array<Contact>): Int {
         val dx = b.x - a.x
         val dy = b.y - a.y
         val d2 = dx * dx + dy * dy
@@ -114,8 +158,8 @@ internal object Collider {
      * toujours aller de A vers B.
      */
     private fun circleBox(
-        circle: PhysBody,
-        box: PhysBody,
+        circle: ShapeRef,
+        box: ShapeRef,
         out: Array<Contact>,
         circleIsA: Boolean
     ): Int {
@@ -238,7 +282,7 @@ internal object Collider {
         return num
     }
 
-    private fun boxBox(a: PhysBody, b: PhysBody, out: Array<Contact>): Int {
+    private fun boxBox(a: ShapeRef, b: ShapeRef, out: Array<Contact>): Int {
         a.corners(vertsA)
         b.corners(vertsB)
 
@@ -318,8 +362,18 @@ internal object Collider {
     }
 }
 
-/** L'ensemble des contacts entre deux corps, conservé d'une image à l'autre. */
-class Arbiter(val a: PhysBody, val b: PhysBody) {
+/**
+ * L'ensemble des contacts entre deux formes, conservé d'une image à l'autre.
+ *
+ * Les impulsions, elles, s'appliquent aux **corps** : c'est leur centre de masse
+ * qui bouge, quelle que soit la forme touchée.
+ */
+class Arbiter(
+    val a: PhysBody,
+    val b: PhysBody,
+    val partA: Int = 0,
+    val partB: Int = 0
+) {
 
     val contacts = Array(2) { Contact() }
     var count = 0

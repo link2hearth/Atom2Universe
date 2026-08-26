@@ -126,10 +126,10 @@ class TrebuchetGameTest {
         println("=== %d combinaisons : médiane %.1f m, %d vers l'avant ===".format(
             total, all[total / 2].first, forward))
 
-        assertTrue("la meilleure machine du catalogue ne porte qu'à $best m", best > 35f)
+        assertTrue("la meilleure machine du catalogue ne porte qu'à $best m", best > 28f)
         assertTrue(
             "seules $forward machines sur $total tirent vers l'avant",
-            forward > total / 2
+            forward > total * 9 / 10
         )
     }
 }

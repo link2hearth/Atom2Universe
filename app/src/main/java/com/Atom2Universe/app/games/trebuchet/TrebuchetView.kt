@@ -144,6 +144,7 @@ class TrebuchetView @JvmOverloads constructor(
 
     private val tmpPath = Path()
     private val corners = FloatArray(8)
+    private val partPose = FloatArray(3)
 
     private val starsX = FloatArray(40)
     private val starsY = FloatArray(40)
@@ -335,10 +336,9 @@ class TrebuchetView @JvmOverloads constructor(
         drawGround(canvas, w, h)
         drawGhost(canvas)
         drawFrameAndPivot(canvas)
-        drawBody(canvas, game.beam, pBeam, pEdge)
-        drawBody(canvas, game.cupBack, pCup, pEdge)
-        drawBody(canvas, game.cupFrontBase, pCup, pEdge)
-        drawBody(canvas, game.cupFrontTip, pCup, pEdge)
+        // Le bras et ses deux butées ne font qu'un seul corps : ses formes se
+        // dessinent l'une après l'autre, la planche d'abord.
+        drawBody(canvas, game.beam, pBeam, pEdge, firstPartPaint = pBeam, otherPartsPaint = pCup)
         drawStopper(canvas)
         if (game.counterweight.inWorld || game.phase == TrebuchetGame.Phase.BUILD) {
             drawBody(canvas, game.counterweight, pWeight, pWeightEdge)
@@ -412,22 +412,42 @@ class TrebuchetView @JvmOverloads constructor(
         )
     }
 
-    private fun drawBody(canvas: Canvas, b: PhysBody, fill: Paint, edge: Paint) {
-        if (b.shape == Shape.CIRCLE) {
-            val cx = sx(b.x)
-            val cy = sy(b.y)
-            val r = b.radius * camScale
+    private fun drawBody(
+        canvas: Canvas,
+        b: PhysBody,
+        fill: Paint,
+        edge: Paint,
+        firstPartPaint: Paint? = null,
+        otherPartsPaint: Paint? = null
+    ) {
+        for (i in b.parts.indices) {
+            val paint = when {
+                i == 0 && firstPartPaint != null -> firstPartPaint
+                i > 0 && otherPartsPaint != null -> otherPartsPaint
+                else -> fill
+            }
+            drawPart(canvas, b, i, paint, edge)
+        }
+    }
+
+    private fun drawPart(canvas: Canvas, b: PhysBody, part: Int, fill: Paint, edge: Paint) {
+        val p = b.parts[part]
+        if (p.shape == Shape.CIRCLE) {
+            b.partWorld(part, partPose)
+            val cx = sx(partPose[0])
+            val cy = sy(partPose[1])
+            val r = p.radius * camScale
             canvas.drawCircle(cx, cy, r, fill)
             canvas.drawCircle(cx, cy, r, edge)
             // Un rayon tracé, pour qu'on voie le boulet rouler.
             canvas.drawLine(
                 cx, cy,
-                cx + r * kotlin.math.cos(b.angle), cy - r * kotlin.math.sin(b.angle),
+                cx + r * kotlin.math.cos(partPose[2]), cy - r * kotlin.math.sin(partPose[2]),
                 edge
             )
             return
         }
-        b.corners(corners)
+        b.partCorners(part, corners)
         tmpPath.reset()
         tmpPath.moveTo(sx(corners[0]), sy(corners[1]))
         for (i in 1 until 4) tmpPath.lineTo(sx(corners[i * 2]), sy(corners[i * 2 + 1]))
