@@ -46,12 +46,26 @@
 
     </LinearLayout>
 
-    <!-- La scène -->
-    <com.Atom2Universe.app.games.trebuchet.TrebuchetView
-        android:id="@+id/trebuchet_view"
+    <!-- La scène, et la bulle à roulettes qui flotte dessus -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <com.Atom2Universe.app.games.trebuchet.TrebuchetView
+            android:id="@+id/trebuchet_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.Atom2Universe.app.games.trebuchet.TrebuchetWheelBubble
+            android:id="@+id/trebuchet_wheels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <!-- Message d'état -->
     <TextView
@@ -66,40 +80,32 @@
         android:textColor="#8FA6C8"
         android:textSize="12sp" />
 
-    <!-- Le catalogue : un appui fait défiler, un appui long revient en arrière -->
-    <LinearLayout
+    <!-- La pièce tenue en main : ce qu'elle vaut, et ce qu'elle échange -->
+    <TextView
+        android:id="@+id/trebuchet_info_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:paddingTop="6dp">
+        android:gravity="center"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="6dp"
+        android:textColor="#FFD166"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/trebuchet_pick_beam"
-            style="@style/TrebuchetPick" />
-
-        <TextView
-            android:id="@+id/trebuchet_pick_post"
-            style="@style/TrebuchetPick" />
-
-        <TextView
-            android:id="@+id/trebuchet_pick_ratio"
-            style="@style/TrebuchetPick" />
-
-        <TextView
-            android:id="@+id/trebuchet_pick_weight"
-            style="@style/TrebuchetPick" />
-
-        <TextView
-            android:id="@+id/trebuchet_pick_hang"
-            style="@style/TrebuchetPick" />
-
-        <TextView
-            android:id="@+id/trebuchet_pick_pin"
-            style="@style/TrebuchetPick" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/trebuchet_info_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minLines="2"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="3dp"
+        android:textColor="#8FA6C8"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <!-- Boutons -->
     <LinearLayout

@@ -28,12 +28,9 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     private lateinit var specsText: TextView
     private lateinit var bestText: TextView
     private lateinit var fireButton: TextView
-    private lateinit var pickBeam: TextView
-    private lateinit var pickPost: TextView
-    private lateinit var pickRatio: TextView
-    private lateinit var pickWeight: TextView
-    private lateinit var pickHang: TextView
-    private lateinit var pickPin: TextView
+    private lateinit var wheels: TrebuchetWheelBubble
+    private lateinit var infoTitle: TextView
+    private lateinit var infoTip: TextView
     private lateinit var prefs: SharedPreferences
 
     private var best = 0f
@@ -52,26 +49,19 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         specsText = findViewById(R.id.trebuchet_specs)
         bestText = findViewById(R.id.trebuchet_best)
         fireButton = findViewById(R.id.trebuchet_btn_fire)
-        pickBeam = findViewById(R.id.trebuchet_pick_beam)
-        pickPost = findViewById(R.id.trebuchet_pick_post)
-        pickRatio = findViewById(R.id.trebuchet_pick_ratio)
-        pickWeight = findViewById(R.id.trebuchet_pick_weight)
-        pickHang = findViewById(R.id.trebuchet_pick_hang)
-        pickPin = findViewById(R.id.trebuchet_pick_pin)
+        infoTitle = findViewById(R.id.trebuchet_info_title)
+        infoTip = findViewById(R.id.trebuchet_info_tip)
+        wheels = findViewById(R.id.trebuchet_wheels)
 
         gameView.listener = this
+        // Les roulettes règlent la même machine que le doigt, et préviennent quand
+        // elles tournent : les deux moyens restent en phase sans se connaître.
+        wheels.game = gameView.game
+        wheels.onValueChanged = { updateUi() }
 
         findViewById<ImageButton>(R.id.trebuchet_btn_back).setOnClickListener { finish() }
         findViewById<TextView>(R.id.trebuchet_btn_reset).setOnClickListener { resetMachine() }
         fireButton.setOnClickListener { onFireButton() }
-
-        // Appui court : valeur suivante. Appui long : valeur précédente.
-        bindPick(pickBeam) { d -> gameView.game.cycleBeam(d) }
-        bindPick(pickPost) { d -> gameView.game.cyclePost(d) }
-        bindPick(pickRatio) { d -> gameView.game.cycleRatio(d) }
-        bindPick(pickWeight) { d -> gameView.game.cycleWeight(d) }
-        bindPick(pickHang) { d -> gameView.game.cycleHang(d) }
-        bindPick(pickPin) { d -> gameView.game.cyclePin(d) }
 
         updateUi()
     }
@@ -86,26 +76,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         gameView.pause()
     }
 
-    private fun bindPick(view: TextView, change: (Int) -> Unit) {
-        view.setOnClickListener { applySetting(change, +1) }
-        view.setOnLongClickListener {
-            applySetting(change, -1)
-            true
-        }
-    }
-
-    /** Un réglage ne se touche qu'en phase de pose : sinon on remet la machine à zéro. */
-    private fun applySetting(change: (Int) -> Unit, delta: Int) {
-        val game = gameView.game
-        synchronized(game) {
-            if (game.phase != TrebuchetGame.Phase.BUILD) game.rebuild()
-            change(delta)
-        }
-        gameView.syncPhase()
-        updateUi()
-    }
-
     private fun resetMachine() {
+        gameView.clearSelection()
         synchronized(gameView.game) { gameView.game.reset() }
         gameView.syncPhase()
         updateUi()
@@ -113,6 +85,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
     private fun onFireButton() {
         val game = gameView.game
+        gameView.clearSelection()
         when (game.phase) {
             TrebuchetGame.Phase.BUILD -> {
                 synchronized(game) { game.release() }
@@ -149,12 +122,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         val game = gameView.game
         val cfg = game.config
 
-        pickBeam.text = getString(R.string.trebuchet_beam, fmt(cfg.beamLength))
-        pickPost.text = getString(R.string.trebuchet_post, fmt(cfg.pivotHeight))
-        pickRatio.text = getString(R.string.trebuchet_ratio, cfg.leverRatio.toInt())
-        pickWeight.text = getString(R.string.trebuchet_weight, cfg.counterweightMass.toInt())
-        pickHang.text = getString(R.string.trebuchet_hang, fmt(cfg.hangLength))
-        pickPin.text = getString(R.string.trebuchet_pin, cfg.pinAngleDeg.toInt())
+        updateInfoBand(cfg)
+        wheels.showFor(gameView.selected)
 
         specsText.text = getString(
             R.string.trebuchet_specs,
@@ -169,6 +138,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             if (building) R.string.trebuchet_btn_release else R.string.trebuchet_btn_adjust
         )
 
+        statusText.visibility =
+            if (gameView.selected == TrebuchetView.Part.NONE) View.VISIBLE else View.GONE
         statusText.text = when (game.phase) {
             TrebuchetGame.Phase.BUILD -> getString(R.string.trebuchet_status_build)
             TrebuchetGame.Phase.RESULT ->
@@ -186,7 +157,44 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
                 }
             else -> getString(R.string.trebuchet_status_flight)
         }
-        statusText.visibility = View.VISIBLE
+    }
+
+    /**
+     * Le bandeau de la pièce tenue en main : son nom, ses valeurs vives, et une
+     * phrase sur ce qu'elle échange contre quoi. Une seule phrase — c'est un jeu, pas
+     * un manuel, et le joueur a la machine sous les yeux pour le reste.
+     */
+    private fun updateInfoBand(cfg: MachineConfig) {
+        val selected = gameView.selected
+        val visible = selected != TrebuchetView.Part.NONE
+        infoTitle.visibility = if (visible) View.VISIBLE else View.GONE
+        infoTip.visibility = if (visible) View.VISIBLE else View.GONE
+        if (!visible) return
+
+        infoTitle.text = when (selected) {
+            TrebuchetView.Part.BEAM ->
+                getString(R.string.trebuchet_sel_beam, fmt(cfg.beamLength), fmt(cfg.leverRatio))
+            TrebuchetView.Part.POST -> getString(R.string.trebuchet_sel_post, fmt(cfg.pivotHeight))
+            TrebuchetView.Part.WEIGHT -> getString(
+                R.string.trebuchet_sel_weight,
+                cfg.counterweightMass.toInt(), fmt(cfg.hangLength)
+            )
+            TrebuchetView.Part.PIN ->
+                getString(R.string.trebuchet_sel_pin, cfg.pinAngleDeg.toInt())
+            TrebuchetView.Part.SLING ->
+                getString(R.string.trebuchet_sel_sling, fmt(cfg.slingLength))
+            TrebuchetView.Part.NONE -> ""
+        }
+        infoTip.setText(
+            when (selected) {
+                TrebuchetView.Part.BEAM -> R.string.trebuchet_tip_beam
+                TrebuchetView.Part.POST -> R.string.trebuchet_tip_post
+                TrebuchetView.Part.WEIGHT -> R.string.trebuchet_tip_weight
+                TrebuchetView.Part.PIN -> R.string.trebuchet_tip_pin
+                TrebuchetView.Part.SLING -> R.string.trebuchet_tip_sling
+                TrebuchetView.Part.NONE -> R.string.trebuchet_status_build
+            }
+        )
     }
 
     private fun fmt(v: Float): String = String.format("%.1f", v)

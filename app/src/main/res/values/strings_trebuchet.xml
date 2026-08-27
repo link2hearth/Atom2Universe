@@ -6,20 +6,34 @@
     <string name="trebuchet_recenter">Double-tap to recentre the view</string>
     <string name="trebuchet_best">Best %1$s m</string>
 
-    <string name="trebuchet_beam">Arm\n%1$s m</string>
-    <string name="trebuchet_post">Post\n%1$s m</string>
-    <string name="trebuchet_ratio">Lever\n%1$d:1</string>
-    <string name="trebuchet_weight">Weight\n%1$d kg</string>
-    <string name="trebuchet_hang">Strap\n%1$s m</string>
-    <string name="trebuchet_pin">Hook\n%1$d°</string>
-
     <string name="trebuchet_btn_release">Trip the trigger</string>
     <string name="trebuchet_btn_adjust">Adjust</string>
     <string name="trebuchet_btn_reset">Reset</string>
 
-    <string name="trebuchet_status_build">Drag the stone along the ground to set the sling length. The hook angle decides when it lets go</string>
+    <string name="trebuchet_status_build">Touch a part of the machine to set it: the beam, the axle, the post, the counterweight, the hook or the stone</string>
     <string name="trebuchet_status_flight">Firing…</string>
     <string name="trebuchet_status_result">%1$s m — released at %2$s m/s, %3$d° above the ground, peaked at %4$s m · efficiency %5$d %%</string>
     <string name="trebuchet_status_backwards">It went backwards! The hook holds the sling too long — stand it up, or shorten the sling</string>
     <string name="trebuchet_specs">Cocked at %1$d° · stored %2$d kJ · sling %3$s m</string>
+    <string name="trebuchet_sel_beam">Beam — %1$s m · lever %2$s:1</string>
+    <string name="trebuchet_sel_post">Post — %1$s m</string>
+    <string name="trebuchet_sel_weight">Counterweight — %1$d kg · strap %2$s m</string>
+    <string name="trebuchet_sel_pin">Release hook — %1$d°</string>
+    <string name="trebuchet_sel_sling">Sling — %1$s m</string>
+    <string name="trebuchet_tip_beam">A long arm whips faster, but hauls its own weight into the air — past a point the beam eats what the counterweight gives. The collar at the axle trades force for speed.</string>
+    <string name="trebuchet_tip_post">A tall post lets the arm plunge deeper, so the counterweight falls from higher: more energy stored, and more travel to give it back.</string>
+    <string name="trebuchet_tip_weight">What counts is the ratio to the stone — real machines ran a hundred to four hundred times it. The strap sets the timing: too short and the weight is as good as bolted on, too long and it pushes late.</string>
+    <string name="trebuchet_tip_pin">Laid flat, the hook holds the loop to the end of the whip and the shot goes out taut. Stood up, it lets go early: the shot climbs, then goes backwards.</string>
+    <string name="trebuchet_tip_sling">A long sling adds radius, so speed — but it takes longer to come round. Past a point the arm is done before the sling is.</string>
+    <string name="trebuchet_dial_beam">Beam</string>
+    <string name="trebuchet_dial_lever">Lever</string>
+    <string name="trebuchet_dial_post">Post</string>
+    <string name="trebuchet_dial_mass">Mass</string>
+    <string name="trebuchet_dial_hang">Strap</string>
+    <string name="trebuchet_dial_pin">Hook</string>
+    <string name="trebuchet_dial_sling">Sling</string>
+    <string name="trebuchet_unit_m">m</string>
+    <string name="trebuchet_unit_deg">°</string>
+    <string name="trebuchet_unit_kg">kg</string>
+    <string name="trebuchet_unit_ratio">:1</string>
 </resources>

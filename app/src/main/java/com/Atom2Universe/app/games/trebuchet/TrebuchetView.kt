@@ -19,9 +19,13 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.Shape
 import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 /**
@@ -47,12 +51,33 @@ class TrebuchetView @JvmOverloads constructor(
         /** Le tir est terminé : l'activité affiche la portée. */
         fun onShotFinished()
 
-        /** Un réglage a bougé au doigt : l'activité rafraîchit ses textes. */
+        /**
+         * Un réglage a bougé au doigt, ou le joueur a pris une autre pièce en main :
+         * l'activité rafraîchit son bandeau. Appelé depuis le thread UI.
+         */
         fun onMachineChanged()
+    }
+
+    /**
+     * Les pièces qu'on peut prendre en main. Une pièce sélectionnée s'éclaire et
+     * sort ses poignées ; les autres se taisent. C'est ce qui permet à deux réglages
+     * de partager un même point de la machine sans jamais se disputer le doigt —
+     * l'axe, par exemple, règle la hauteur du pied ou la position du levier selon
+     * la pièce qu'on tient.
+     */
+    enum class Part { NONE, BEAM, POST, WEIGHT, PIN, SLING }
+
+    /** Ce qu'un doigt posé sur une pièce sélectionnée est en train de régler. */
+    private enum class Grip {
+        NONE, BEAM_LENGTH, LEVER, POST_HEIGHT, CW_MASS, CW_HANG, PIN_ANGLE, SLING_LENGTH
     }
 
     val game = TrebuchetGame()
     var listener: Listener? = null
+
+    /** La pièce tenue en main, ou [Part.NONE]. L'activité la lit pour son bandeau. */
+    var selected = Part.NONE
+        private set
 
     private var thread: Thread? = null
     @Volatile private var running = false
@@ -115,6 +140,39 @@ class TrebuchetView @JvmOverloads constructor(
 
         /** Sous ce déplacement, un doigt posé est un appui, pas un glissement. */
         const val DRAG_SLOP_DP = 9f
+
+        /**
+         * Tolérance de saisie, en dp. En dp et non en mètres : sur une grande machine
+         * tout est plus petit à l'écran, et une marge en mètres deviendrait ridicule.
+         * C'est aussi ce qui rend le zoom utile — zoomé, on règle finement.
+         */
+        const val PICK_REACH_DP = 30f
+
+        /**
+         * … mais jamais plus large que ça, en mètres. Vue de cinq cents mètres, une
+         * tolérance de trente dp couvrirait la machine entière et le doigt
+         * attraperait n'importe quoi.
+         */
+        const val PICK_REACH_MAX = 2f
+
+        /** Longueur du départ prévisualisé, en mètres. Au-delà, il faudra tirer. */
+        const val PREVIEW_METRES = 50f
+
+        /** Ouverture du cône : il s'écarte de six pour cent de ce qu'il parcourt. */
+        const val PREVIEW_SPREAD = 0.06f
+
+        /** Le fantôme ne repart pas à chaque image : huit fois par seconde suffisent. */
+        const val PREVIEW_PERIOD_MS = 120L
+
+        /**
+         * Pas de simulation accordés au fantôme par image. Un départ complet en
+         * demande deux à quatre cents : les jouer d'un bloc ferait sauter l'affichage
+         * à chaque cran de réglage, alors que le joueur a précisément les yeux dessus.
+         */
+        const val PREVIEW_BUDGET = 60
+
+        /** Au-delà, la machine ne largue pas : inutile d'insister. */
+        const val PREVIEW_MAX_STEPS = 480
     }
 
     // ── Palette ──────────────────────────────────────────────────────────────
@@ -193,6 +251,14 @@ class TrebuchetView @JvmOverloads constructor(
         strokeWidth = 2.5f * dp
         color = Color.argb(210, 255, 214, 120)
     }
+    /** Le cône du départ : une nappe qui s'ouvre et s'éteint. */
+    private val pCone = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pConeLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2f * dp
+        color = Color.argb(150, 255, 209, 102)
+        pathEffect = DashPathEffect(floatArrayOf(9f * dp, 7f * dp), 0f)
+    }
     private val pGhost = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2f * dp
@@ -205,6 +271,29 @@ class TrebuchetView @JvmOverloads constructor(
         color = Color.argb(120, 255, 214, 120)
         pathEffect = DashPathEffect(floatArrayOf(5f * dp, 5f * dp), 0f)
     }
+    /** La pièce tenue en main : un liseré ambré, la couleur des cordes. */
+    private val pSelect = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 3f * dp
+        color = "#FFD166".toColorInt()
+    }
+    /** Les poignées qu'on peut tirer. */
+    private val pGrip = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#FFD166".toColorInt() }
+    private val pGripEdge = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2f * dp
+        color = "#3E2723".toColorInt()
+    }
+    /** Les pastilles discrètes qui disent « il y a quelque chose à toucher ici ». */
+    private val pSpot = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(90, 255, 209, 102)
+    }
+    /** Les valeurs chiffrées, écrites au ras de la poignée qui les règle. */
+    private val pValue = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        color = "#FFD166".toColorInt()
+        typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
+    }
     private val pHint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
         color = Color.argb(160, 220, 235, 255)
@@ -216,6 +305,9 @@ class TrebuchetView @JvmOverloads constructor(
     private val tip = FloatArray(2)
     private val butt = FloatArray(2)
     private val pin = FloatArray(2)
+    private val pickTmp = FloatArray(2)
+    private val axisA = FloatArray(2)
+    private val axisB = FloatArray(2)
 
     private val starsX = FloatArray(40)
     private val starsY = FloatArray(40)
@@ -223,7 +315,29 @@ class TrebuchetView @JvmOverloads constructor(
 
     // ── Saisie ───────────────────────────────────────────────────────────────
 
-    private var draggingSling = false
+    /** Le réglage en cours de glissement, et l'écart doigt-valeur au moment où on
+     *  l'a saisi : sans cet écart, attraper une poutre par le milieu la ferait
+     *  sauter à la longueur du point touché. */
+    private var grip = Grip.NONE
+    private var gripOffset = 0f
+
+    /** Le doigt s'est posé dans le vide : s'il n'a pas glissé, il désélectionne. */
+    private var tappedVoid = false
+
+    // ── Prévisualisation ──────────────────────────────────────────────────────
+
+    /**
+     * La machine fantôme : une seconde machine, identique à celle du joueur, qu'on
+     * lâche en coulisse pour voir par où part le boulet. Elle donne le **vrai**
+     * départ — pas une formule — et c'est ce qui fait bouger le cône sous le doigt
+     * quand on incline le crochet.
+     */
+    private val ghostMachine = TrebuchetGame()
+    private var previewPath = FloatArray(0)
+    private var previewArc = FloatArray(0)
+    private var previewSig = 0
+    private var previewAt = 0L
+    private var previewSteps = -1
 
     /** État du geste à un ou deux doigts : centre, écartement, chemin parcouru. */
     private var gestureCount = 0
@@ -287,6 +401,7 @@ class TrebuchetView @JvmOverloads constructor(
                     lastPhase = game.phase
                 }
                 updateCamera(frameDt)
+                updatePreview()
             }
             if (finished) post { listener?.onShotFinished() }
 
@@ -301,6 +416,14 @@ class TrebuchetView @JvmOverloads constructor(
                 holder.unlockCanvasAndPost(canvas)
             }
             Thread.sleep(4)
+        }
+    }
+
+    /** Repose la pièce tenue en main : un tir qui part n'a plus de réglage en cours. */
+    fun clearSelection() {
+        synchronized(game) {
+            selected = Part.NONE
+            grip = Grip.NONE
         }
     }
 
@@ -445,46 +568,42 @@ class TrebuchetView @JvmOverloads constructor(
     // ── Saisie ───────────────────────────────────────────────────────────────
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        var notify = false
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> synchronized(game) {
                 val now = SystemClock.uptimeMillis()
                 val doubleTap = now - lastTapAt < DOUBLE_TAP_MS
                 lastTapAt = now
-                draggingSling = false
+                grip = Grip.NONE
+                tappedVoid = false
                 dragTravel = 0f
                 gestureLocked = false
                 if (doubleTap) {
-                    // Deux appuis rapprochés : on rend le cadrage à la caméra, et le
-                    // doigt qui traîne ensuite ne le lui reprend pas aussitôt.
+                    // Deux appuis rapprochés : on lâche la pièce et on reprend du recul.
+                    // Un seul geste, un seul sens.
+                    if (selected != Part.NONE) {
+                        selected = Part.NONE
+                        notify = true
+                    }
                     manualCam = false
                     gestureLocked = true
-                } else if (game.phase == TrebuchetGame.Phase.BUILD) {
-                    // Tolérance exprimée en pixels : sur une grande machine, tout est
-                    // plus petit à l'écran et une marge en mètres deviendrait ridicule.
-                    val reach = 46f * dp / camScale
-                    draggingSling = hypot(
-                        worldX(event.x) - game.ball.x, worldY(event.y) - game.ball.y
-                    ) < reach
+                } else {
+                    notify = grabAt(worldX(event.x), worldY(event.y))
                 }
                 readPointers(event, -1)
             }
-            // Un deuxième doigt, c'est toujours la caméra : on lâche la fronde.
+            // Un deuxième doigt, c'est toujours la caméra : on lâche le réglage en cours.
             MotionEvent.ACTION_POINTER_DOWN -> synchronized(game) {
-                if (draggingSling) {
-                    draggingSling = false
-                    post { listener?.onMachineChanged() }
+                if (grip != Grip.NONE) {
+                    grip = Grip.NONE
+                    notify = true
                 }
                 readPointers(event, -1)
             }
             MotionEvent.ACTION_MOVE -> synchronized(game) {
-                if (draggingSling) {
-                    // Faire glisser le boulet au sol allonge ou raccourcit la fronde : le
-                    // doigt donne l'abscisse, le jeu se charge de rester dans le domaine
-                    // permis.
-                    game.tipWorld(tip)
-                    game.setSlingLength(
-                        hypot(tip[0] - worldX(event.x), tip[1] - TrebuchetRules.BALL_RADIUS)
-                    )
+                if (grip != Grip.NONE) {
+                    applyGrip(worldX(event.x), worldY(event.y))
+                    notify = true
                 } else {
                     dragCamera(event)
                 }
@@ -494,12 +613,232 @@ class TrebuchetView @JvmOverloads constructor(
                 readPointers(event, event.actionIndex)
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                if (draggingSling) listener?.onMachineChanged()
-                draggingSling = false
+                // Un appui dans le vide qui n'a pas glissé : le joueur pose la pièce.
+                if (tappedVoid && dragTravel < DRAG_SLOP_DP * dp && selected != Part.NONE) {
+                    synchronized(game) { selected = Part.NONE }
+                    notify = true
+                }
+                if (grip != Grip.NONE) notify = true
+                grip = Grip.NONE
+                tappedVoid = false
                 gestureCount = 0
             }
         }
+        // Hors du verrou : l'activité relit la machine pour son bandeau.
+        if (notify) listener?.onMachineChanged()
         return true
+    }
+
+    /**
+     * Un doigt se pose. Trois cas : il tombe sur une poignée de la pièce déjà tenue
+     * et on règle ; il tombe sur une autre pièce et on la prend en main, le même
+     * geste pouvant enchaîner sur son réglage ; il tombe dans le vide, et c'est le
+     * lever du doigt qui dira s'il s'agissait d'une déselection ou du début d'un
+     * glissement de vue.
+     */
+    private fun grabAt(wx: Float, wy: Float): Boolean {
+        if (selected != Part.NONE) {
+            val g = pickGrip(selected, wx, wy)
+            if (g != Grip.NONE) {
+                startGrip(g, wx, wy)
+                return true
+            }
+        }
+        val part = pickPart(wx, wy)
+        if (part == Part.NONE) {
+            tappedVoid = true
+            return false
+        }
+        // Attraper une pièce pendant ou après un tir rebande la machine : c'est ce que
+        // le joueur veut dire. La caméra, elle, ne bouge pas d'un pouce — on ne déplace
+        // pas la vue sous un doigt qui vient de se poser.
+        if (game.phase != TrebuchetGame.Phase.BUILD) {
+            game.rebuild()
+            lastPhase = game.phase
+            camPhase = game.phase
+        }
+        selected = part
+        val g = pickGrip(part, wx, wy)
+        if (g != Grip.NONE) startGrip(g, wx, wy)
+        return true
+    }
+
+    /**
+     * Saisit un réglage en mémorisant l'écart entre la valeur et ce que mesure le
+     * doigt : sans lui, attraper une poutre par le milieu la ferait sauter à la
+     * longueur du point touché.
+     */
+    private fun startGrip(g: Grip, wx: Float, wy: Float) {
+        grip = g
+        gripOffset = gripValue(g) - measureGrip(g, wx, wy)
+    }
+
+    /** La valeur du réglage, dans l'unité où le doigt la mesure. */
+    private fun gripValue(g: Grip): Float {
+        val cfg = game.config
+        return when (g) {
+            Grip.BEAM_LENGTH -> cfg.longArm
+            Grip.LEVER -> cfg.shortArm
+            Grip.POST_HEIGHT -> cfg.pivotHeight
+            Grip.CW_MASS -> cfg.counterweightHalf
+            Grip.CW_HANG -> cfg.hangLength
+            Grip.PIN_ANGLE -> cfg.pinAngleDeg
+            Grip.SLING_LENGTH -> cfg.slingLength
+            Grip.NONE -> 0f
+        }
+    }
+
+    /** Ce que le doigt désigne, dans la même unité que [gripValue]. */
+    private fun measureGrip(g: Grip, wx: Float, wy: Float): Float = when (g) {
+        // Le long de la poutre depuis l'axe : c'est la longueur du bras long.
+        Grip.BEAM_LENGTH -> alongBeam(game.pivotX, game.pivotY, wx, wy)
+        // Le long de la poutre depuis le talon : c'est la longueur du bras court.
+        Grip.LEVER -> {
+            game.buttWorld(pickTmp)
+            alongBeam(pickTmp[0], pickTmp[1], wx, wy)
+        }
+        Grip.POST_HEIGHT -> wy
+        Grip.CW_MASS -> max(abs(wx - game.counterweight.x), abs(wy - game.counterweight.y))
+        Grip.CW_HANG -> {
+            game.buttWorld(pickTmp)
+            pickTmp[1] - wy
+        }
+        Grip.PIN_ANGLE -> pinAngleAt(wx, wy)
+        Grip.SLING_LENGTH -> {
+            game.tipWorld(pickTmp)
+            hypot(pickTmp[0] - wx, pickTmp[1] - TrebuchetRules.BALL_RADIUS)
+        }
+        Grip.NONE -> 0f
+    }
+
+    /**
+     * Pose la valeur désignée par le doigt. Le jeu se charge de la borner : un
+     * réglage borné n'arrête pas le doigt, il arrête la machine.
+     */
+    private fun applyGrip(wx: Float, wy: Float) {
+        val cfg = game.config
+        val v = measureGrip(grip, wx, wy) + gripOffset
+        when (grip) {
+            // Le doigt tient le bras long ; la poutre entière en découle.
+            Grip.BEAM_LENGTH -> game.setBeamLength(v * (1f + cfg.leverRatio) / cfg.leverRatio)
+            // Le doigt fait coulisser la poutre dans son axe : le bras court change,
+            // la longueur totale ne bouge pas.
+            Grip.LEVER -> {
+                val short = v.coerceIn(cfg.beamLength * 0.08f, cfg.beamLength * 0.45f)
+                game.setLeverRatio((cfg.beamLength - short) / short)
+            }
+            Grip.POST_HEIGHT -> game.setPivotHeight(v)
+            // Le côté de la caisse suit la racine de la masse : on remonte au carré.
+            Grip.CW_MASS -> {
+                val side = v.coerceAtLeast(0.01f) / 0.0105f
+                game.setCounterweightMass(side * side)
+            }
+            Grip.CW_HANG -> game.setHangLength(v)
+            Grip.PIN_ANGLE -> game.setPinAngle(v)
+            Grip.SLING_LENGTH -> game.setSlingLength(v)
+            Grip.NONE -> {}
+        }
+    }
+
+    // ── Désignation ───────────────────────────────────────────────────────────
+
+    /** La pièce sous le doigt, la plus petite d'abord : sinon la poutre prend tout. */
+    private fun pickPart(wx: Float, wy: Float): Part {
+        val reach = pickReach()
+        game.pinWorld(pickTmp)
+        if (hypot(wx - pickTmp[0], wy - pickTmp[1]) < reach) return Part.PIN
+        if (hypot(wx - game.ball.x, wy - game.ball.y) < reach + TrebuchetRules.BALL_RADIUS) {
+            return Part.SLING
+        }
+        val cw = game.counterweight
+        val box = game.config.counterweightHalf + reach
+        if (abs(wx - cw.x) < box && abs(wy - cw.y) < box) return Part.WEIGHT
+        if (hypot(wx - game.pivotX, wy - game.pivotY) < reach) return Part.POST
+        if (distanceToBeam(wx, wy) < reach) return Part.BEAM
+        return Part.NONE
+    }
+
+    /**
+     * La poignée visée sur la pièce tenue. C'est ici que deux réglages partagent une
+     * pièce sans se marcher dessus : la poutre s'allonge par sa longueur et se
+     * recentre par son collier, la caisse pend par son corps et s'alourdit par son
+     * coin.
+     */
+    private fun pickGrip(part: Part, wx: Float, wy: Float): Grip {
+        val reach = pickReach()
+        val onAxle = hypot(wx - game.pivotX, wy - game.pivotY) < reach
+        return when (part) {
+            Part.BEAM -> when {
+                onAxle -> Grip.LEVER
+                distanceToBeam(wx, wy) < reach -> Grip.BEAM_LENGTH
+                else -> Grip.NONE
+            }
+            Part.POST -> if (onAxle) Grip.POST_HEIGHT else Grip.NONE
+            Part.WEIGHT -> {
+                val cw = game.counterweight
+                val h = game.config.counterweightHalf
+                when {
+                    hypot(wx - (cw.x + h), wy - (cw.y - h)) < reach -> Grip.CW_MASS
+                    abs(wx - cw.x) < h + reach && abs(wy - cw.y) < h + reach -> Grip.CW_HANG
+                    else -> Grip.NONE
+                }
+            }
+            Part.PIN -> {
+                game.pinWorld(pickTmp)
+                if (hypot(wx - pickTmp[0], wy - pickTmp[1]) < reach) Grip.PIN_ANGLE else Grip.NONE
+            }
+            Part.SLING ->
+                if (hypot(wx - game.ball.x, wy - game.ball.y) < reach + TrebuchetRules.BALL_RADIUS) {
+                    Grip.SLING_LENGTH
+                } else {
+                    Grip.NONE
+                }
+            Part.NONE -> Grip.NONE
+        }
+    }
+
+    /** La tolérance de saisie, en mètres, à l'échelle où l'on regarde. */
+    private fun pickReach(): Float =
+        (PICK_REACH_DP * dp / camScale).coerceAtMost(PICK_REACH_MAX)
+
+    /** Projection du doigt sur l'axe de la poutre, comptée depuis un point donné. */
+    private fun alongBeam(ox: Float, oy: Float, wx: Float, wy: Float): Float {
+        game.buttWorld(axisA)
+        game.tipWorld(axisB)
+        val ux = axisB[0] - axisA[0]
+        val uy = axisB[1] - axisA[1]
+        val len = hypot(ux, uy)
+        if (len < 0.001f) return 0f
+        return ((wx - ox) * ux + (wy - oy) * uy) / len
+    }
+
+    /** Distance du doigt à la poutre, prise sur le segment talon-pointe. */
+    private fun distanceToBeam(wx: Float, wy: Float): Float {
+        game.buttWorld(axisA)
+        game.tipWorld(axisB)
+        val ux = axisB[0] - axisA[0]
+        val uy = axisB[1] - axisA[1]
+        val len2 = ux * ux + uy * uy
+        if (len2 < 0.000001f) return hypot(wx - axisA[0], wy - axisA[1])
+        val t = (((wx - axisA[0]) * ux + (wy - axisA[1]) * uy) / len2).coerceIn(0f, 1f)
+        return hypot(wx - (axisA[0] + t * ux), wy - (axisA[1] + t * uy))
+    }
+
+    /**
+     * L'inclinaison que le doigt donne au crochet, en degrés depuis l'axe du bras.
+     * On repasse dans le repère de la poutre : c'est là que l'angle a un sens, et il
+     * y garde le même quelle que soit la position du bras.
+     */
+    private fun pinAngleAt(wx: Float, wy: Float): Float {
+        val b = game.beam
+        val c = cos(b.angle)
+        val si = sin(b.angle)
+        val dx = wx - b.x
+        val dy = wy - b.y
+        val lx = dx * c + dy * si
+        val ly = -dx * si + dy * c
+        val a = atan2(ly, lx - game.config.beamLength / 2f)
+        return Math.toDegrees(a.toDouble()).toFloat()
     }
 
     /**
@@ -565,6 +904,62 @@ class TrebuchetView @JvmOverloads constructor(
         }
     }
 
+    // ── Prévisualisation ──────────────────────────────────────────────────────
+
+    /**
+     * Rejoue le départ sur la machine fantôme quand celle du joueur a changé.
+     *
+     * Deux garde-fous : on ne rejoue que si un réglage a bougé, et jamais plus de
+     * huit fois par seconde. Un départ coûte quelques centaines de pas de solveur —
+     * rien du tout de temps en temps, beaucoup trop à chaque image.
+     */
+    private fun updatePreview() {
+        if (game.phase != TrebuchetGame.Phase.BUILD) return
+
+        // Un réglage a bougé : on relâche un nouveau fantôme, mais pas plus souvent
+        // que la cadence. Pendant un glissement, la machine change à chaque image.
+        val sig = configSignature(game.config)
+        val now = SystemClock.uptimeMillis()
+        if (sig != previewSig && now - previewAt >= PREVIEW_PERIOD_MS) {
+            previewAt = now
+            previewSig = sig
+            ghostMachine.config.copyFrom(game.config)
+            ghostMachine.build()
+            ghostMachine.release()
+            previewSteps = 0
+        }
+        if (previewSteps < 0) return
+
+        // Le départ se joue par tranches : le fantôme avance de quelques pas, puis
+        // rend la main à l'affichage. La trace précédente reste visible en attendant,
+        // ce qui vaut mieux qu'un cône qui clignote à chaque cran.
+        var budget = PREVIEW_BUDGET
+        while (budget > 0 && previewSteps < PREVIEW_MAX_STEPS &&
+            ghostMachine.phase == TrebuchetGame.Phase.FLIGHT &&
+            ghostMachine.ball.x - TrebuchetRules.FIRING_LINE < PREVIEW_METRES
+        ) {
+            ghostMachine.step(1f / 120f)
+            previewSteps++
+            budget--
+        }
+        if (budget > 0 || previewSteps >= PREVIEW_MAX_STEPS) {
+            previewPath = ghostMachine.startTrace()
+            previewSteps = -1
+        }
+    }
+
+    /** L'empreinte des réglages : deux machines identiques ont la même. */
+    private fun configSignature(c: MachineConfig): Int {
+        var h = c.beamLength.toRawBits()
+        h = h * 31 + c.pivotHeight.toRawBits()
+        h = h * 31 + c.leverRatio.toRawBits()
+        h = h * 31 + c.counterweightMass.toRawBits()
+        h = h * 31 + c.hangLength.toRawBits()
+        h = h * 31 + c.pinAngleDeg.toRawBits()
+        h = h * 31 + c.slingRatio.toRawBits()
+        return h
+    }
+
     // ── Rendu ────────────────────────────────────────────────────────────────
 
     private fun drawFrame(canvas: Canvas) {
@@ -579,6 +974,7 @@ class TrebuchetView @JvmOverloads constructor(
 
         drawGround(canvas, w, h)
         drawGhost(canvas)
+        drawStartCone(canvas)
         drawFrameAndPivot(canvas)
         drawStrap(canvas)
         drawBody(canvas, game.counterweight, pWeight, pWeightEdge)
@@ -587,7 +983,8 @@ class TrebuchetView @JvmOverloads constructor(
         drawSling(canvas)
         drawBody(canvas, game.ball, pBall, pBallEdge)
         drawTrail(canvas)
-        if (game.phase == TrebuchetGame.Phase.BUILD) drawBuildHints(canvas)
+        drawGrabSpots(canvas)
+        drawSelection(canvas)
         drawRecenterHint(canvas)
     }
 
@@ -741,21 +1138,217 @@ class TrebuchetView @JvmOverloads constructor(
         canvas.drawPath(tmpPath, pGhost)
     }
 
-    /** Repères de la phase de pose : ce qu'on peut attraper au doigt. */
-    private fun drawBuildHints(canvas: Canvas) {
-        pHint.textSize = 11f * dp
+    /**
+     * Le cône du départ : la trajectoire de la machine fantôme, épaissie d'autant
+     * qu'elle s'éloigne, et éteinte au bout de cinquante mètres.
+     *
+     * L'ouverture n'est pas une marge d'erreur calculée, c'est une promesse tenue :
+     * le trait central est juste, la nappe autour dit « à peu près par là », et le
+     * fait qu'elle s'ouvre dit « plus loin, je ne sais plus ». Un jeu où l'on ne vise
+     * pas ne doit pas afficher une ligne de mire.
+     */
+    private fun drawStartCone(canvas: Canvas) {
+        if (game.phase != TrebuchetGame.Phase.BUILD) return
+        val t = previewPath
+        val n = t.size / 2
+        if (n < 4) return
 
-        // Cercle discret autour du boulet : on le fait glisser au sol pour régler la
-        // longueur de la fronde.
-        canvas.drawCircle(
-            sx(game.ball.x), sy(game.ball.y),
-            TrebuchetRules.BALL_RADIUS * camScale + 8f * dp, pHandle
+        // Longueur parcourue le long de la trace : c'est elle qui ouvre le cône.
+        if (previewArc.size < n) previewArc = FloatArray(n)
+        previewArc[0] = 0f
+        for (i in 1 until n) {
+            previewArc[i] = previewArc[i - 1] +
+                hypot(t[i * 2] - t[(i - 1) * 2], t[i * 2 + 1] - t[(i - 1) * 2 + 1])
+        }
+
+        // Un bord à l'aller, l'autre au retour : la nappe se referme sur elle-même.
+        tmpPath.reset()
+        for (pass in 0..1) {
+            val side = if (pass == 0) 1f else -1f
+            var i = if (pass == 0) 0 else n - 1
+            while (i in 0 until n) {
+                // La normale se prend sur le segment voisin ; au dernier point, sur le
+                // précédent, faute de suivant.
+                val a = if (i < n - 1) i else i - 1
+                val dx = t[(a + 1) * 2] - t[a * 2]
+                val dy = t[(a + 1) * 2 + 1] - t[a * 2 + 1]
+                val len = hypot(dx, dy).coerceAtLeast(0.0001f)
+                val w = previewArc[i] * PREVIEW_SPREAD * side
+                val px = sx(t[i * 2] - dy / len * w)
+                val py = sy(t[i * 2 + 1] + dx / len * w)
+                if (pass == 0 && i == 0) tmpPath.moveTo(px, py) else tmpPath.lineTo(px, py)
+                i += if (pass == 0) 1 else -1
+            }
+        }
+        tmpPath.close()
+
+        pCone.shader = LinearGradient(
+            sx(t[0]), sy(t[1]), sx(t[(n - 1) * 2]), sy(t[(n - 1) * 2 + 1]),
+            Color.argb(70, 255, 209, 102), Color.argb(0, 255, 209, 102), Shader.TileMode.CLAMP
         )
+        canvas.drawPath(tmpPath, pCone)
+
+        // Le trait central, en pointillés : c'est lui qui est juste.
+        tmpPath.reset()
+        tmpPath.moveTo(sx(t[0]), sy(t[1]))
+        for (i in 1 until n) tmpPath.lineTo(sx(t[i * 2]), sy(t[i * 2 + 1]))
+        canvas.drawPath(tmpPath, pConeLine)
+    }
+
+    /**
+     * Les pastilles de saisie. Sans elles, rien ne dirait que la machine se touche :
+     * une pièce qui se règle doit se voir avant qu'on la prenne en main.
+     */
+    private fun drawGrabSpots(canvas: Canvas) {
+        if (game.phase != TrebuchetGame.Phase.BUILD || selected != Part.NONE) return
+        val r = 4f * dp
+        // Au milieu du bras long, loin de l'axe et de la pointe : les trois repères
+        // de la poutre ne doivent pas se confondre.
         game.tipWorld(tip)
-        canvas.drawText(
-            "%.1f m".format(game.config.slingLength),
-            sx((tip[0] + game.ball.x) / 2f), sy(game.ball.y) - 18f * dp, pHint
+        canvas.drawCircle(
+            sx((tip[0] + game.pivotX) / 2f), sy((tip[1] + game.pivotY) / 2f), r, pSpot
         )
+        canvas.drawCircle(sx(game.pivotX), sy(game.pivotY), r, pSpot)
+        canvas.drawCircle(sx(game.counterweight.x), sy(game.counterweight.y), r, pSpot)
+        game.pinWorld(pin)
+        canvas.drawCircle(sx(pin[0]), sy(pin[1]), r, pSpot)
+        canvas.drawCircle(sx(game.ball.x), sy(game.ball.y), r, pSpot)
+    }
+
+    /**
+     * La pièce tenue en main : son liseré, ses poignées, ses valeurs. La machine
+     * porte les chiffres, le bandeau du bas porte l'explication.
+     */
+    private fun drawSelection(canvas: Canvas) {
+        if (selected == Part.NONE) return
+        pValue.textSize = 12f * dp
+        drawGuide(canvas)
+        val cfg = game.config
+        when (selected) {
+            Part.BEAM -> {
+                drawOutline(canvas, game.beam)
+                game.tipWorld(tip)
+                drawGrip(canvas, tip[0], tip[1])
+                drawValue(canvas, tip[0], tip[1], "%.1f m".format(cfg.beamLength))
+                drawGrip(canvas, game.pivotX, game.pivotY)
+                drawValue(canvas, game.pivotX, game.pivotY, "%.1f:1".format(cfg.leverRatio))
+            }
+            Part.POST -> {
+                // Le montant, du sol à l'axe : c'est lui qu'on étire.
+                canvas.drawLine(
+                    sx(game.pivotX), sy(0f), sx(game.pivotX), sy(game.pivotY), pSelect
+                )
+                drawGrip(canvas, game.pivotX, game.pivotY)
+                drawValue(canvas, game.pivotX, game.pivotY, "%.1f m".format(cfg.pivotHeight))
+            }
+            Part.WEIGHT -> {
+                drawOutline(canvas, game.counterweight)
+                game.buttWorld(butt)
+                val cw = game.counterweight
+                canvas.drawLine(sx(butt[0]), sy(butt[1]), sx(cw.x), sy(cw.y), pSelect)
+                drawGrip(canvas, cw.x, cw.y)
+                drawValue(
+                    canvas, (butt[0] + cw.x) / 2f, (butt[1] + cw.y) / 2f,
+                    "%.1f m".format(cfg.hangLength)
+                )
+                val h = cfg.counterweightHalf
+                drawGrip(canvas, cw.x + h, cw.y - h)
+                drawValue(
+                    canvas, cw.x + h, cw.y - h, "%d kg".format(cfg.counterweightMass.toInt())
+                )
+            }
+            Part.PIN -> {
+                game.pinWorld(pin)
+                drawGrip(canvas, pin[0], pin[1])
+                drawValue(canvas, pin[0], pin[1], "%d°".format(cfg.pinAngleDeg.toInt()))
+            }
+            Part.SLING -> {
+                drawOutline(canvas, game.ball)
+                drawGrip(canvas, game.ball.x, game.ball.y)
+                game.tipWorld(tip)
+                drawValue(
+                    canvas, (tip[0] + game.ball.x) / 2f, game.ball.y,
+                    "%.1f m".format(cfg.slingLength)
+                )
+            }
+            Part.NONE -> {}
+        }
+    }
+
+    /** Le liseré qui dit « c'est cette pièce-là que tu tiens ». */
+    private fun drawOutline(canvas: Canvas, b: PhysBody) {
+        for (i in b.parts.indices) {
+            val part = b.parts[i]
+            if (part.shape == Shape.CIRCLE) {
+                b.partWorld(i, partPose)
+                canvas.drawCircle(
+                    sx(partPose[0]), sy(partPose[1]), part.radius * camScale + 2f * dp, pSelect
+                )
+                continue
+            }
+            b.partCorners(i, corners)
+            tmpPath.reset()
+            tmpPath.moveTo(sx(corners[0]), sy(corners[1]))
+            for (k in 1 until 4) tmpPath.lineTo(sx(corners[k * 2]), sy(corners[k * 2 + 1]))
+            tmpPath.close()
+            canvas.drawPath(tmpPath, pSelect)
+        }
+    }
+
+    /**
+     * Le rail du réglage en cours : un pointillé entre ce qui ne bouge pas et ce que
+     * le doigt tire. Il ne s'affiche que pendant le glissement — c'est le moment où
+     * la question « qu'est-ce que je suis en train de changer ? » se pose.
+     */
+    private fun drawGuide(canvas: Canvas) {
+        if (grip == Grip.NONE) return
+        val cw = game.counterweight
+        val h = game.config.counterweightHalf
+        game.buttWorld(butt)
+        game.tipWorld(tip)
+        game.pinWorld(pin)
+        val ax: Float
+        val ay: Float
+        val bx: Float
+        val by: Float
+        when (grip) {
+            Grip.BEAM_LENGTH -> {
+                ax = game.pivotX; ay = game.pivotY; bx = tip[0]; by = tip[1]
+            }
+            Grip.LEVER -> {
+                ax = butt[0]; ay = butt[1]; bx = game.pivotX; by = game.pivotY
+            }
+            Grip.POST_HEIGHT -> {
+                ax = game.pivotX; ay = 0f; bx = game.pivotX; by = game.pivotY
+            }
+            Grip.CW_MASS -> {
+                ax = cw.x; ay = cw.y; bx = cw.x + h; by = cw.y - h
+            }
+            Grip.CW_HANG -> {
+                ax = butt[0]; ay = butt[1]; bx = cw.x; by = cw.y
+            }
+            Grip.PIN_ANGLE -> {
+                ax = tip[0]; ay = tip[1]; bx = pin[0]; by = pin[1]
+            }
+            Grip.SLING_LENGTH -> {
+                ax = tip[0]; ay = tip[1]; bx = game.ball.x; by = game.ball.y
+            }
+            Grip.NONE -> return
+        }
+        canvas.drawLine(sx(ax), sy(ay), sx(bx), sy(by), pHandle)
+    }
+
+    /** Une poignée : un point qu'on peut tirer. */
+    private fun drawGrip(canvas: Canvas, x: Float, y: Float) {
+        val px = sx(x)
+        val py = sy(y)
+        canvas.drawCircle(px, py, 7f * dp, pGrip)
+        canvas.drawCircle(px, py, 7f * dp, pGripEdge)
+    }
+
+    /** La valeur, posée juste au-dessus de ce qui la règle. */
+    private fun drawValue(canvas: Canvas, x: Float, y: Float, text: String) {
+        canvas.drawText(text, sx(x), sy(y) - 15f * dp, pValue)
     }
 
     /**
