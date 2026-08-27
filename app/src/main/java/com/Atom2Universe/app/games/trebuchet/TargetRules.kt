@@ -1,0 +1,357 @@
+package com.Atom2Universe.app.games.trebuchet
+
+/**
+ * Qui a le droit de toucher qui, sur le champ de tir.
+ *
+ * Les catégories étaient jusqu'ici cachées dans la machine, qui était seule à en
+ * avoir besoin. Les cibles arrivent de l'autre bout du terrain avec les leurs, et
+ * deux jeux de bits qui doivent s'accorder sans se voir finissent toujours par se
+ * contredire : ils vivent donc ici, en un seul endroit.
+ */
+object TrebuchetCategory {
+    const val GROUND = 1
+    const val BEAM = 2
+    const val WEIGHT = 4
+    const val BALL = 8
+    const val TARGET = 16
+    const val DEBRIS = 32
+
+    /**
+     * Ce qu'un boulet **en vol libre** rencontre. Tant qu'il est dans la fronde il
+     * ne connaît que le sol : un boulet traîné sous le bâti n'a aucune raison de
+     * venir cogner sa propre machine, et le laisser faire finissait mal.
+     */
+    const val BALL_FREE_MASK = GROUND or TARGET or DEBRIS
+
+    /** Ce qu'une pierre de la cible rencontre : tout, sauf la machine. */
+    const val TARGET_MASK = GROUND or BALL or TARGET or DEBRIS
+}
+
+/**
+ * Comment un matériau cesse d'exister quand il rompt.
+ *
+ * Ce n'est pas de la décoration : c'est le budget de corps du moteur qui se joue
+ * là. Un bloc qui éclate coûte deux à quatre corps de plus, un bloc qui tombe en
+ * poussière n'en coûte aucun.
+ */
+enum class Rupture {
+    /** Le bloc se fend en morceaux qui restent sur le terrain, et font le tas. */
+    ECLATS,
+
+    /** Le bloc s'effrite et disparaît : le torchis, la terre, le chaume. */
+    POUSSIERE,
+
+    /** Rien ne le casse. Le fer, et le socle d'une construction. */
+    INCASSABLE
+}
+
+/**
+ * De quoi une pierre est faite : sa densité, son adhérence, et surtout sa **vitesse
+ * critique**.
+ *
+ * La vitesse critique se donne en mètres par seconde, et se lit ainsi : *la vitesse à
+ * laquelle ce matériau, lancé contre quelque chose d'immobile, se briserait de
+ * lui-même*. Les points de vie d'un bloc valent donc l'énergie cinétique
+ * correspondante, `½ · masse · vc²`, en joules — et se comparent directement à ce que
+ * le moteur comptabilise dans
+ * [com.Atom2Universe.app.games.physics.PhysBody.impactAccum], qui est l'énergie
+ * réellement dissipée par les chocs. Rien à convertir, rien à inventer : les dégâts
+ * sont ceux que la physique a infligés.
+ *
+ * **Pourquoi une énergie et pas une impulsion.** Le premier modèle comptait des kg·m/s,
+ * et il était irrattrapable : une pierre d'une tonne et demie qui se tasse de six
+ * centimètres délivre autant de quantité de mouvement qu'un boulet de douze kilos lancé
+ * à cent mètres par seconde. Un mur intact se broyait donc tout seul avant le premier
+ * tir. En énergie, le même tassement pèse trois cents joules contre soixante mille pour
+ * le boulet.
+ *
+ * Les valeurs sont calées au banc contre le boulet du jeu — 12 kg, jusqu'à 150 m/s,
+ * soit 60 à 135 kJ dans un coup franc. Une assise de rempart d'une tonne et demie
+ * demande deux coups, un poteau de charpente un seul, et un monolithe de quatre tonnes
+ * quatre ou cinq — mais il se **bascule** bien plus facilement qu'il ne se casse, et
+ * c'est le vrai jeu. Le jour où il faudra percer du gros mur pour de bon, le levier est
+ * le projectile (boulet lourd, boulet explosif), pas cette table.
+ */
+enum class Material(
+    /** Masse volumique en kg/m³. Le monde est plat : on lui suppose 1 m d'épaisseur. */
+    val density: Float,
+    val friction: Float,
+    /**
+     * Élasticité des chocs. **Elle vaut zéro pour tout le monde, et ce n'est pas un
+     * oubli.**
+     *
+     * Mesuré au banc : deux centièmes de rebond — la valeur la plus timide qu'on
+     * puisse écrire — suffisent à empêcher un mur de huit assises de se taire. Les
+     * pierres se renvoient indéfiniment de quoi franchir le seuil de choc, le mur
+     * vibre pour toujours, et `isAtRest` ne dit jamais que le coup est fini. Sans
+     * rebond, le même mur est parfaitement immobile.
+     *
+     * C'est aussi le comportement juste : de la pierre sur de la pierre, ça fait
+     * « toc », ça ne rebondit pas. Le rebond est l'affaire du boulet, que la machine
+     * règle de son côté.
+     */
+    val restitution: Float,
+    /** Vitesse critique, en m/s. Voir la documentation de la classe. */
+    val criticalSpeed: Float,
+    val rupture: Rupture
+) {
+    /** Le chaume d'un toit : ça ne pèse rien et ça ne tient rien. */
+    THATCH(120f, 0.70f, 0f, 3f, Rupture.POUSSIERE),
+
+    /** La glace et le verre : lourds comme de l'eau, fragiles comme du sucre, et ça glisse. */
+    ICE(900f, 0.15f, 0f, 4f, Rupture.ECLATS),
+
+    /** Le torchis et la brique crue : le mur des pauvres, et ça se voit. */
+    COB(1500f, 0.70f, 0f, 6f, Rupture.POUSSIERE),
+
+    /** La terre d'un talus : elle n'éclate pas, elle s'affaisse, et elle adhère à tout. */
+    EARTH(1800f, 0.85f, 0f, 8f, Rupture.POUSSIERE),
+
+    /** Le bois de charpente : le vocabulaire des maisons, des portiques et des cartes. */
+    WOOD(700f, 0.55f, 0f, 9f, Rupture.ECLATS),
+
+    /** La pierre de taille : le gros œuvre. Lourde, tenace, et c'est elle qui fait le tas. */
+    STONE(2400f, 0.65f, 0f, 12f, Rupture.ECLATS),
+
+    /** Le fer : hors de prix, indestructible, et lourd au point d'écraser ce qu'il tient. */
+    IRON(7800f, 0.40f, 0f, 60f, Rupture.INCASSABLE)
+}
+
+/**
+ * Le tempérament des constructions : fidèle à la matière, ou taillé pour le jeu.
+ *
+ * Le mode réaliste est celui de la table des matériaux : de la vraie pierre, de la
+ * vraie densité, et un boulet de douze kilos qui ne peut pas grand-chose contre un
+ * rempart — ce qui est exact, et lent.
+ *
+ * **Le mode arcade n'est pas « la même chose en plus faible ».** Doubler la taille des
+ * pierres en 2D quadruple leur masse, donc leurs points de vie : des pierres deux fois
+ * plus grosses et deux fois moins tenaces seraient **deux fois plus dures** à abattre.
+ * Il faut donc bouger trois curseurs ensemble :
+ *
+ *  - **plus grosses** ([stoneScale]) : chaque coup emporte un morceau qui se voit, et
+ *    une construction coûte quatre fois moins de corps au moteur ;
+ *  - **plus légères** ([densityScale]) : sans ça, un bloc de cinq tonnes ne bougerait
+ *    pas d'un pouce sous un boulet de douze kilos, et il n'y aurait plus rien à
+ *    renverser — or renverser est le plus beau du jeu ;
+ *  - **plus fragiles** ([toughnessScale]) : de quoi qu'un coup franc emporte une
+ *    pierre entière plutôt que de la fêler.
+ *
+ * Réglé pour qu'une assise de rempart parte d'un seul boulet bien placé au lieu d'en
+ * demander deux, tout en pesant assez pour tomber sur ses voisines.
+ */
+enum class TargetStyle(
+    /** Facteur sur la taille des pierres. */
+    val stoneScale: Float,
+    /** Facteur sur la masse volumique. */
+    val densityScale: Float,
+    /** Facteur sur la vitesse critique, donc la racine des points de vie. */
+    val toughnessScale: Float
+) {
+    REALISTE(1f, 1f, 1f),
+    ARCADE(2f, 0.40f, 0.60f)
+}
+
+/**
+ * Les constantes du champ de cibles. Elles ne sont pas choisies au jugé : les deux
+ * premières sortent d'un banc d'essai du moteur, mené avant d'écrire une ligne de
+ * génération.
+ */
+object TargetRules {
+
+    /**
+     * Le tempérament en cours. Voir [TargetStyle].
+     *
+     * C'est un réglage global, et il ne se change pas en cours de partie sans
+     * reconstruire le niveau : la masse et les points de vie d'une pierre sont calculés
+     * une fois pour toutes à sa création.
+     */
+    var style: TargetStyle = TargetStyle.ARCADE
+
+    /**
+     * Épaisseur minimale d'une pièce, en demi-extension : 5 cm, donc une planche de
+     * 10 cm.
+     *
+     * Ce n'est **pas** une question de traversée — les sous-pas adaptatifs du moteur
+     * empêchent déjà un boulet à 150 m/s de passer au travers d'une planche de 8 cm,
+     * c'est mesuré. C'est une question de coût : [com.Atom2Universe.app.games.physics.PhysWorld]
+     * découpe l'image d'après la pièce **la plus mince du monde entier**, machine
+     * comprise. Une seule carte trop fine posée à trois cents mètres ralentit tout
+     * le reste.
+     */
+    const val MIN_HALF_THICKNESS = 0.05f
+
+    /**
+     * Le joint de maçonnerie : 3 mm laissés entre deux pierres voisines.
+     *
+     * Deux blocs posés bord à bord avec un écart **exactement nul** mettent le
+     * détecteur de collision en difficulté : leurs faces sont confondues, et l'axe
+     * séparateur peut aussi bien sortir par le côté que par le haut. Mesuré au banc,
+     * une pierre d'une tonne et demie posée tranquillement décollait à 50 cm/s en se
+     * mettant à tourner, ce qui suffisait à la faire compter comme un choc violent.
+     * Un mur intact se broyait tout seul avant le premier tir.
+     *
+     * Un joint, si mince soit-il, lève l'ambiguïté. Il ne suffit pas à lui seul — les
+     * joints s'additionnent dans une pile, et la pierre du haut d'un mur de huit
+     * assises tombe alors de deux centimètres et demi — c'est pourquoi une
+     * construction se **tasse** ensuite, voir [TargetField.settle].
+     */
+    const val JOINT = 0.003f
+
+    /**
+     * Durée **maximale** du tassement, en secondes de simulation.
+     *
+     * Le tassement s'arrête dès que tout dort ; ce plafond n'est là que pour une
+     * construction qui ne s'endort jamais, laquelle est de toute façon à jeter.
+     */
+    const val SETTLE_SECONDS = 8f
+
+    /**
+     * Déplacement au-delà duquel une pierre n'a pas fait que se tasser : elle est
+     * tombée. Une construction dont une pierre bouge de plus de ça est à jeter.
+     *
+     * Trente centimètres peut sembler large : c'est qu'un affaissement honnête n'est
+     * pas nul. Les joints s'additionnent, et le moteur laisse les corps s'enfoncer de
+     * cinq millimètres les uns dans les autres — un mur de douze assises descend donc
+     * d'une dizaine de centimètres sans que rien n'aille mal. Ce qu'on cherche à
+     * attraper ici, c'est la pierre qui **part**, et celle-là fait des mètres.
+     */
+    const val SETTLE_TOLERANCE = 0.3f
+
+    /**
+     * Ce qu'il doit rester debout pour que la construction compte pour rasée : un
+     * cinquième de sa hauteur d'origine.
+     *
+     * On ne demande pas de détruire tous les blocs — il resterait toujours un bout
+     * de fondation impossible à atteindre, et le joueur tirerait vingt coups pour
+     * rien. On demande de faire descendre la **silhouette** sous une ligne, ce qui
+     * se voit d'un coup d'œil et se dessine à l'écran.
+     */
+    const val RUIN_RATIO = 0.20f
+
+    /**
+     * Marge de part et d'autre de l'emprise, en mètres, à l'intérieur de laquelle
+     * un morceau compte encore dans la ruine.
+     *
+     * Un bloc expédié à trente mètres n'est plus la construction, c'est un caillou
+     * dans un champ : le compter reviendrait à interdire au joueur de gagner parce
+     * qu'il a trop bien tiré.
+     */
+    const val FOOTPRINT_MARGIN = 5f
+
+    /**
+     * Part des points de vie en dessous de laquelle un choc, dans une image, ne fend
+     * rien du tout : une égratignure n'est pas une fêlure.
+     *
+     * Cinq pour cent laisse passer tout ce qui compte et arrête tout ce qui ne compte
+     * pas. Un tremblement de tassement pèse trois kilojoules contre les cinquante d'une
+     * demi-assise, soit six pour cent — juste sous la barre. Un coup de boulet franc en
+     * pèse soixante, soit plus de la moitié d'une assise entière. L'écart entre les deux
+     * est d'un facteur vingt : le seuil n'a pas à être fin.
+     */
+    const val DAMAGE_FLOOR = 0.05f
+
+    /** Nombre maximal de débris vivants. Au-delà, ce qui casse tombe en poussière. */
+    const val MAX_DEBRIS = 50
+
+    /** En dessous de cette demi-taille, un morceau ne vaut plus la peine d'exister. */
+    const val MIN_FRAGMENT_HALF = 0.15f
+
+    /** Vitesse maximale que l'éclatement donne aux morceaux, en m/s. */
+    const val MAX_BURST = 2f
+
+    /** Vitesse maximale qu'un souffle peut donner à un bloc, en m/s. */
+    const val MAX_BLAST_SPEED = 12f
+
+    /**
+     * Budget de corps d'une construction, débris exclus.
+     *
+     * Mesuré au banc : à 240 corps le moteur tient l'image moyenne mais l'image de
+     * l'impact coûte vingt fois plus que les autres, ce qui se voit. À 120 il n'y a
+     * plus rien à voir. Le budget est donc un plafond de génération, pas une limite
+     * technique — et la parade au manque de détail n'est pas d'ajouter des corps,
+     * c'est le bloc composé, qui met plusieurs pierres dans un seul corps.
+     */
+    const val BODY_BUDGET = 130
+
+    /**
+     * Nombre de **corps** qu'on peut empiler à la verticale sans que la pile finisse
+     * par s'écrouler toute seule.
+     *
+     * Attention à ce que ça veut dire, parce que ce n'est pas le nombre d'étages
+     * visibles. C'est le nombre de contacts superposés que le solveur doit tenir. Les
+     * impulsions séquentielles propagent l'effort d'un contact à la fois : plus la pile
+     * est profonde, plus il faut de passes pour que la pierre du bas apprenne ce
+     * qu'elle porte, et passé une certaine profondeur elle ne l'apprend jamais.
+     *
+     * Mesuré, avec les pierres de rempart du jeu :
+     *
+     *  - 16 corps empilés : ça tient aux 16 passes du monde de jeu ;
+     *  - 20 corps : il faut monter à 64 passes, et ça tient de justesse ;
+     *  - 24 corps : rien ne le sauve — ni les passes, ni un joint plus fin, ni un
+     *    enfoncement plus serré, ni un mur trois fois plus large. Le même mur de 24 m
+     *    monté en 48 corps s'affaisse de **quatre mètres** avant de tomber.
+     *
+     * Ce n'est ni une question de hauteur ni de masse : des planches de kapla, légères
+     * et fines, tiennent **moins** haut que la pierre, parce qu'elles font plus de
+     * contacts par mètre.
+     *
+     * La parade n'est donc pas d'empiler moins, c'est d'empiler **moins de corps** —
+     * autrement dit le bloc composé. Le même mur de 24 m monté en 12 corps de quatre
+     * pierres chacun ne s'affaisse plus que de 7 cm et reste parfaitement immobile. Le
+     * joueur voit quarante-huit assises, le moteur en compte douze, et le jour où une
+     * pierre casse elle éclate en ses quatre pierres. C'est très exactement ce pour quoi
+     * [Block.compound] existe.
+     */
+    const val MAX_STACKED_BODIES = 16
+
+    /**
+     * Profondeur d'empilement que les modules se donnent pour cible : la limite dure
+     * est à 16, on construit à 12 pour avoir de la marge quand deux modules se posent
+     * l'un sur l'autre.
+     */
+    const val COMFORTABLE_STACK = 12
+
+    /**
+     * Seuils d'usure des craquelures, de la première fêlure à la pierre sur le point de
+     * rompre. Trois niveaux : la vue en tire trois dessins, et le joueur sait d'un coup
+     * d'œil où il en est sans qu'aucun chiffre ne s'affiche.
+     */
+    val CRACK_THRESHOLDS = floatArrayOf(0.15f, 0.40f, 0.70f)
+
+    /**
+     * Délai au bout duquel les chocs comptent, même si la construction n'a jamais
+     * réussi à s'immobiliser, en secondes.
+     *
+     * Sans lui, une construction qui tremble un peu serait **invulnérable pour
+     * toujours** : le compteur de dégâts n'attend qu'un repos qui ne vient jamais. Le
+     * filet de sécurité est plus important qu'il n'en a l'air — c'est exactement ce
+     * qu'on ne remarque pas en jouant.
+     */
+    const val ARM_TIMEOUT = 4f
+
+    /**
+     * Durée pendant laquelle une construction doit être **restée** immobile avant que
+     * les chocs comptent, en secondes.
+     *
+     * Le repos instantané ne prouve rien : une construction fraîchement chargée a
+     * toutes ses vitesses à zéro et paraît donc parfaitement calme, alors qu'elle n'a
+     * pas encore commencé à s'asseoir.
+     */
+    const val ARM_CALM = 0.6f
+
+    /**
+     * Distance, de part et d'autre de l'emprise, à laquelle la cible se réveille.
+     *
+     * Voir [TargetField.dormant]. Quarante mètres laissent au château plus d'un quart
+     * de seconde pour se remettre debout devant un boulet à cent cinquante mètres par
+     * seconde — largement plus que l'image nécessaire.
+     */
+    const val WATCH_MARGIN = 40f
+
+    /** Temps qu'un petit débris passe immobile avant d'être ramassé, en secondes. */
+    const val DEBRIS_LIFETIME = 3f
+
+    /** Taille en dessous de laquelle un débris immobile finit par être ramassé. */
+    const val DEBRIS_SWEEP_HALF = 0.3f
+}
