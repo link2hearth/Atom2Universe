@@ -3,6 +3,7 @@
     <string name="trebuchet_title">Trebuchet</string>
     <string name="trebuchet_description">Build a throwing machine — you never aim, you compute</string>
     <string name="trebuchet_back">Back</string>
+    <string name="trebuchet_recenter">Double-tap to recentre the view</string>
     <string name="trebuchet_best">Best %1$s m</string>
 
     <string name="trebuchet_beam">Arm\n%1$s m</string>

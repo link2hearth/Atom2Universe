@@ -9,16 +9,19 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Shader
 import android.graphics.Typeface
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.toColorInt
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.Shape
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -28,8 +31,12 @@ import kotlin.random.Random
  * arrivent depuis le thread UI, d'où les blocs `synchronized(game)`.
  *
  * La caméra suit le boulet pendant le vol puis recule pour montrer tout l'arc :
- * une machine bien réglée envoie à plus de deux cents mètres, et c'est justement
- * cette courbe-là qu'on veut voir.
+ * une machine bien réglée envoie à plus de quatre cents mètres, et c'est justement
+ * cette courbe-là qu'on veut voir. Hors du vol, le joueur reprend la main : il
+ * fait défiler la distance au doigt et pince pour zoomer, entre deux butées —
+ * juste derrière la machine et cinq cents mètres devant. Le sol, lui, reste calé
+ * en bas de l'image : on ne monte pas la vue, on dézoome. Un double-appui rend le
+ * cadrage à la caméra.
  */
 class TrebuchetView @JvmOverloads constructor(
     ctx: Context,
@@ -55,12 +62,24 @@ class TrebuchetView @JvmOverloads constructor(
 
     private val dp = resources.displayMetrics.density
 
-    // ── Caméra ────────────────────────────────────────────────────────────────
+    // ── Caméra ───────────────────────────────────────────────────────────────
 
     private var camX = 0f
     private var camY = 2f
     private var camScale = 60f
     private var camReady = false
+
+    /**
+     * Le joueur tient le cadrage. Tant qu'il le tient, la caméra ne bouge plus
+     * toute seule ; un changement de phase le lui reprend, parce qu'au départ d'un
+     * tir c'est le boulet qui commande, et qu'à l'arrivée on veut voir tout l'arc.
+     */
+    private var manualCam = false
+    private var camPhase = TrebuchetGame.Phase.BUILD
+
+    /** Le cadrage ne s'attrape pas en vol : pendant le tir, la caméra suit. */
+    private val cameraFree: Boolean
+        get() = game.phase != TrebuchetGame.Phase.FLIGHT
 
     private companion object {
         const val FIXED_DT = 1f / 120f
@@ -72,11 +91,33 @@ class TrebuchetView @JvmOverloads constructor(
         /** Fenêtre minimale en vol : un boulet rapide doit rester dedans. */
         const val FLIGHT_MIN_WIDTH = 90f
 
-        /** Au-delà, on ne recule plus : la machine deviendrait un point. */
-        const val MAX_VIEW_WIDTH = 300f
+        /** Au-delà, le cadrage automatique ne recule plus. */
+        const val MAX_VIEW_WIDTH = 560f
+
+        /** Butée arrière : juste derrière la pointe du bras bandé, en mètres. */
+        const val PAN_BACK_MARGIN = 6f
+
+        /** Butée avant : le terrain de jeu s'arrête là, en mètres. */
+        const val PAN_FRONT = 500f
+
+        /** Zoom maximal : au plus près, la fenêtre fait cette largeur en mètres. */
+        const val MIN_VIEW_WIDTH = 8f
+
+        /**
+         * Bande de terre gardée sous le sol, en dp — la place des bornes de distance.
+         * En dp et non en mètres : c'est une marge d'affichage, elle n'a aucune raison
+         * de grandir quand on zoome.
+         */
+        const val GROUND_INSET_DP = 34f
+
+        /** Deux appuis rapprochés rendent le cadrage à la caméra. */
+        const val DOUBLE_TAP_MS = 300L
+
+        /** Sous ce déplacement, un doigt posé est un appui, pas un glissement. */
+        const val DRAG_SLOP_DP = 9f
     }
 
-    // ── Palette ───────────────────────────────────────────────────────────────
+    // ── Palette ──────────────────────────────────────────────────────────────
 
     private val bgTop = "#0A1024".toColorInt()
     private val bgBottom = "#16233F".toColorInt()
@@ -180,9 +221,18 @@ class TrebuchetView @JvmOverloads constructor(
     private val starsY = FloatArray(40)
     private val starsR = FloatArray(40)
 
-    // ── Saisie ────────────────────────────────────────────────────────────────
+    // ── Saisie ───────────────────────────────────────────────────────────────
 
     private var draggingSling = false
+
+    /** État du geste à un ou deux doigts : centre, écartement, chemin parcouru. */
+    private var gestureCount = 0
+    private var focusX = 0f
+    private var focusY = 0f
+    private var focusSpread = 0f
+    private var dragTravel = 0f
+    private var gestureLocked = false
+    private var lastTapAt = 0L
 
     init {
         holder.addCallback(this)
@@ -195,7 +245,7 @@ class TrebuchetView @JvmOverloads constructor(
         }
     }
 
-    // ── Cycle de vie ──────────────────────────────────────────────────────────
+    // ── Cycle de vie ─────────────────────────────────────────────────────────
 
     override fun surfaceCreated(holder: SurfaceHolder) = resume()
 
@@ -259,47 +309,69 @@ class TrebuchetView @JvmOverloads constructor(
         synchronized(game) { lastPhase = game.phase }
     }
 
-    // ── Caméra ────────────────────────────────────────────────────────────────
+    // ── Caméra ───────────────────────────────────────────────────────────────
 
     private fun updateCamera(dt: Float) {
         if (width == 0) return
-        // Le cadrage suit la taille de la machine : un bras de 12 m ne tient pas dans
-        // la fenêtre qui suffisait à un bras de 6 m.
-        val machineWidth = game.config.beamLength + game.config.slingLength + BUILD_VIEW_MARGIN
-        val targetWidth = when (game.phase) {
-            TrebuchetGame.Phase.BUILD -> machineWidth
-            // Une fois retombé, on recule pour montrer tout l'arc : c'est le moment
-            // où le joueur juge sa machine.
-            TrebuchetGame.Phase.RESULT ->
-                max(machineWidth, abs(game.ball.x) + 20f).coerceAtMost(MAX_VIEW_WIDTH)
-            // En vol, la fenêtre doit être assez large pour qu'un boulet à soixante
-            // mètres par seconde ne la traverse pas en une demi-seconde.
-            else -> max(machineWidth + FLIGHT_VIEW_MARGIN, FLIGHT_MIN_WIDTH)
+
+        // Chaque changement de phase reprend le cadrage : on veut voir partir le
+        // tir, puis voir l'arc entier, sans avoir à toucher l'écran.
+        if (game.phase != camPhase) {
+            camPhase = game.phase
+            manualCam = false
         }
-        val targetScale = width / targetWidth
+        if (manualCam && cameraFree) {
+            clampCamera()
+            return
+        }
+
+        val cfg = game.config
+        // Le cadrage suit la taille de la machine : un bras de 18 m ne tient pas
+        // dans la fenêtre qui suffisait à un bras de 8 m.
+        val machineWidth = cfg.beamLength + cfg.slingLength + BUILD_VIEW_MARGIN
+        // Et sa hauteur compte autant : couché, le téléphone n'a que deux cents
+        // pixels de haut, et un cadrage réglé sur la seule largeur décapiterait la
+        // machine. C'est là, et seulement là, que portrait et paysage diffèrent.
+        val machineHeight = game.pivotY + cfg.shortArm + cfg.hangLength + 4f
+
+        val targetScale: Float
         val tx: Float
         val ty: Float
         val follow: Float
-        when (game.phase) {
-            TrebuchetGame.Phase.BUILD -> {
+
+        if (game.phase == TrebuchetGame.Phase.FLIGHT) {
+            // En vol, la fenêtre doit être assez large pour qu'un boulet à cent
+            // mètres par seconde ne la traverse pas en une demi-seconde.
+            targetScale = width / max(machineWidth + FLIGHT_VIEW_MARGIN, FLIGHT_MIN_WIDTH)
+            // On vise devant le boulet, d'autant plus loin qu'il va vite : le
+            // cadrage anticipe au lieu de courir après.
+            tx = game.ball.x + game.ball.vx * 0.4f
+            ty = game.ball.y + game.ball.vy * 0.2f
+            follow = 8f
+        } else {
+            val targetWidth: Float
+            val targetHeight: Float
+            if (game.phase == TrebuchetGame.Phase.RESULT) {
+                // Une fois retombé, on recule pour montrer tout l'arc : c'est le
+                // moment où le joueur juge sa machine.
+                targetWidth = max(machineWidth, abs(game.ball.x) + 30f)
+                    .coerceAtMost(MAX_VIEW_WIDTH)
+                targetHeight = max(machineHeight, game.peakHeight + 12f)
+                tx = game.ball.x / 2f
+                follow = 3f
+            } else {
                 // Bandée, la machine s'étale côté arrière : pointe plongée derrière,
                 // fronde couchée dessous. On décale le cadre du même côté.
-                tx = game.pivotX - game.config.longArm * 0.15f
-                ty = game.pivotY * 0.55f
+                targetWidth = machineWidth
+                targetHeight = machineHeight
+                tx = game.pivotX - cfg.longArm * 0.15f
                 follow = 4.5f
             }
-            TrebuchetGame.Phase.RESULT -> {
-                tx = game.ball.x / 2f
-                ty = game.pivotY * 0.6f
-                follow = 3f
-            }
-            else -> {
-                // On vise devant le boulet, d'autant plus loin qu'il va vite : le
-                // cadrage anticipe au lieu de courir après.
-                tx = game.ball.x + game.ball.vx * 0.4f
-                ty = game.ball.y + game.ball.vy * 0.2f
-                follow = 8f
-            }
+            targetScale = min(
+                width / targetWidth,
+                (height - GROUND_INSET_DP * dp) / targetHeight
+            ).coerceIn(minScale(), maxScale())
+            ty = groundCamY(targetScale)
         }
 
         if (!camReady) {
@@ -312,47 +384,188 @@ class TrebuchetView @JvmOverloads constructor(
         camY += (ty - camY) * k
         camScale += (targetScale - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
 
-        // Le sol reste toujours visible : on ne descend pas sous l'horizon.
-        val halfH = height / 2f / camScale
-        val minY = -1f + halfH
-        if (camY < minY) camY = minY
+        if (cameraFree) {
+            clampCamera()
+        } else {
+            // En vol, le boulet peut monter très haut et la caméra le suit : on
+            // interdit seulement de passer sous l'horizon.
+            val minY = -1f + height / 2f / camScale
+            if (camY < minY) camY = minY
+        }
     }
+
+    /**
+     * Les butées du cadrage libre : juste derrière la machine d'un côté, la ligne
+     * des cinq cents mètres de l'autre. La hauteur, elle, ne se règle pas : hors du
+     * vol, le sol est calé en bas de l'image et n'en bouge plus, zoom compris. Une
+     * vue de tir se lit comme une gravure — l'horizon toujours à la même place, et
+     * seule la distance qui défile.
+     */
+    private fun clampCamera() {
+        camScale = camScale.coerceIn(minScale(), maxScale())
+        val halfW = width / 2f / camScale
+
+        val left = panLeft()
+        val right = panRight()
+        camX = if (right - left <= halfW * 2f) {
+            // Dézoom complet : le terrain est plus étroit que la vue, on le centre.
+            (left + right) / 2f
+        } else {
+            camX.coerceIn(left + halfW, right - halfW)
+        }
+        camY = groundCamY(camScale)
+    }
+
+    /**
+     * L'ordonnée de caméra qui pose le sol au bas de l'image, la bande de terre des
+     * bornes de distance gardée dessous. Elle ne dépend que de l'échelle : c'est ce
+     * qui fait qu'un pincement zoome sur le sol au lieu de le faire glisser.
+     */
+    private fun groundCamY(scale: Float) = (height / 2f - GROUND_INSET_DP * dp) / scale
+
+    /** Butée arrière : la pointe du bras bandé plonge de tout le bras long. */
+    private fun panLeft(): Float = game.pivotX - game.config.longArm - PAN_BACK_MARGIN
+
+    /** Butée avant : cinq cents mètres, ou le tir en cours s'il est allé plus loin. */
+    private fun panRight(): Float =
+        max(PAN_FRONT, game.shotDistance + 60f).coerceAtMost(TrebuchetRules.GROUND_RIGHT)
+
+    /** Dézoom maximal : tout le terrain tient dans la largeur de l'écran. */
+    private fun minScale(): Float = width / max(panRight() - panLeft(), MIN_VIEW_WIDTH)
+
+    /** Zoom maximal : de quoi examiner le crochet de largage à la loupe. */
+    private fun maxScale(): Float = width / MIN_VIEW_WIDTH
 
     private fun sx(x: Float) = (x - camX) * camScale + width / 2f
     private fun sy(y: Float) = height / 2f - (y - camY) * camScale
 
-    // ── Saisie ────────────────────────────────────────────────────────────────
+    private fun worldX(px: Float) = (px - width / 2f) / camScale + camX
+    private fun worldY(py: Float) = camY - (py - height / 2f) / camScale
+
+    // ── Saisie ───────────────────────────────────────────────────────────────
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val wx = (event.x - width / 2f) / camScale + camX
-        val wy = camY - (event.y - height / 2f) / camScale
-
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> synchronized(game) {
-                if (game.phase != TrebuchetGame.Phase.BUILD) return true
-                // Tolérance exprimée en pixels : sur une grande machine, tout est plus
-                // petit à l'écran et une marge en mètres deviendrait ridicule.
-                val reach = 46f * dp / camScale
-                draggingSling = hypot(wx - game.ball.x, wy - game.ball.y) < reach
+                val now = SystemClock.uptimeMillis()
+                val doubleTap = now - lastTapAt < DOUBLE_TAP_MS
+                lastTapAt = now
+                draggingSling = false
+                dragTravel = 0f
+                gestureLocked = false
+                if (doubleTap) {
+                    // Deux appuis rapprochés : on rend le cadrage à la caméra, et le
+                    // doigt qui traîne ensuite ne le lui reprend pas aussitôt.
+                    manualCam = false
+                    gestureLocked = true
+                } else if (game.phase == TrebuchetGame.Phase.BUILD) {
+                    // Tolérance exprimée en pixels : sur une grande machine, tout est
+                    // plus petit à l'écran et une marge en mètres deviendrait ridicule.
+                    val reach = 46f * dp / camScale
+                    draggingSling = hypot(
+                        worldX(event.x) - game.ball.x, worldY(event.y) - game.ball.y
+                    ) < reach
+                }
+                readPointers(event, -1)
+            }
+            // Un deuxième doigt, c'est toujours la caméra : on lâche la fronde.
+            MotionEvent.ACTION_POINTER_DOWN -> synchronized(game) {
+                if (draggingSling) {
+                    draggingSling = false
+                    post { listener?.onMachineChanged() }
+                }
+                readPointers(event, -1)
             }
             MotionEvent.ACTION_MOVE -> synchronized(game) {
-                // Faire glisser le boulet au sol allonge ou raccourcit la fronde : le
-                // doigt donne l'abscisse, le jeu se charge de rester dans le domaine
-                // permis.
                 if (draggingSling) {
+                    // Faire glisser le boulet au sol allonge ou raccourcit la fronde : le
+                    // doigt donne l'abscisse, le jeu se charge de rester dans le domaine
+                    // permis.
                     game.tipWorld(tip)
-                    game.setSlingLength(hypot(tip[0] - wx, tip[1] - TrebuchetRules.BALL_RADIUS))
+                    game.setSlingLength(
+                        hypot(tip[0] - worldX(event.x), tip[1] - TrebuchetRules.BALL_RADIUS)
+                    )
+                } else {
+                    dragCamera(event)
                 }
+            }
+            // Un doigt s'en va : on repart de ceux qui restent, sinon la vue saute.
+            MotionEvent.ACTION_POINTER_UP -> synchronized(game) {
+                readPointers(event, event.actionIndex)
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (draggingSling) listener?.onMachineChanged()
                 draggingSling = false
+                gestureCount = 0
             }
         }
         return true
     }
 
-    // ── Rendu ─────────────────────────────────────────────────────────────────
+    /**
+     * Glissement et pincement, d'un seul tenant : l'endroit du terrain posé sous
+     * les doigts y reste. C'est ce qui fait qu'un zoom à deux doigts colle à l'image
+     * au lieu de partir en vrille autour du centre de l'écran.
+     */
+    private fun dragCamera(event: MotionEvent) {
+        val hadPointers = gestureCount > 0
+        val prevX = focusX
+        val prevSpread = focusSpread
+        readPointers(event, -1)
+        if (!hadPointers || gestureCount == 0) return
+
+        // Seul l'écart horizontal compte : un doigt qui monte ne fait rien, ce n'est
+        // pas un début de glissement.
+        dragTravel += abs(focusX - prevX)
+        if (gestureLocked || !cameraFree) return
+        val pinching = gestureCount >= 2 && prevSpread > 1f && focusSpread > 1f
+        if (!pinching && dragTravel < DRAG_SLOP_DP * dp) return
+
+        // L'abscisse du monde visée, mesurée avant de changer d'échelle : c'est elle
+        // qui restera sous les doigts. La hauteur, elle, appartient au sol.
+        val wx = worldX(prevX)
+        if (pinching) {
+            camScale = (camScale * (focusSpread / prevSpread)).coerceIn(minScale(), maxScale())
+        }
+        camX = wx - (focusX - width / 2f) / camScale
+        manualCam = true
+        camReady = true
+        clampCamera()
+    }
+
+    /**
+     * Relève la position moyenne des doigts et leur écartement, en ignorant
+     * éventuellement celui qui est en train de se lever. Au-delà de deux, les doigts
+     * supplémentaires n'apprennent plus rien.
+     */
+    private fun readPointers(event: MotionEvent, skip: Int) {
+        var n = 0
+        var x0 = 0f; var y0 = 0f
+        var x1 = 0f; var y1 = 0f
+        for (i in 0 until event.pointerCount) {
+            if (i == skip) continue
+            if (n == 0) {
+                x0 = event.getX(i); y0 = event.getY(i)
+            } else if (n == 1) {
+                x1 = event.getX(i); y1 = event.getY(i)
+            }
+            n++
+        }
+        gestureCount = min(n, 2)
+        when (gestureCount) {
+            0 -> focusSpread = 0f
+            1 -> {
+                focusX = x0; focusY = y0; focusSpread = 0f
+            }
+            else -> {
+                focusX = (x0 + x1) / 2f
+                focusY = (y0 + y1) / 2f
+                focusSpread = hypot(x0 - x1, y0 - y1)
+            }
+        }
+    }
+
+    // ── Rendu ────────────────────────────────────────────────────────────────
 
     private fun drawFrame(canvas: Canvas) {
         val w = width.toFloat()
@@ -375,6 +588,7 @@ class TrebuchetView @JvmOverloads constructor(
         drawBody(canvas, game.ball, pBall, pBallEdge)
         drawTrail(canvas)
         if (game.phase == TrebuchetGame.Phase.BUILD) drawBuildHints(canvas)
+        drawRecenterHint(canvas)
     }
 
     private fun drawGround(canvas: Canvas, w: Float, h: Float) {
@@ -541,6 +755,20 @@ class TrebuchetView @JvmOverloads constructor(
         canvas.drawText(
             "%.1f m".format(game.config.slingLength),
             sx((tip[0] + game.ball.x) / 2f), sy(game.ball.y) - 18f * dp, pHint
+        )
+    }
+
+    /**
+     * Quand le joueur s'est éloigné au point de perdre la machine de vue, on lui
+     * rappelle comment revenir : rien, à l'écran, ne laisse deviner le double-appui.
+     */
+    private fun drawRecenterHint(canvas: Canvas) {
+        if (!manualCam || !cameraFree) return
+        val px = sx(game.pivotX)
+        if (px > 0f && px < width) return
+        pHint.textSize = 12f * dp
+        canvas.drawText(
+            context.getString(R.string.trebuchet_recenter), width / 2f, 24f * dp, pHint
         )
     }
 }

@@ -3,6 +3,7 @@
     <string name="trebuchet_title">Trébuchet</string>
     <string name="trebuchet_description">Construis une machine de jet — on ne vise pas, on calcule</string>
     <string name="trebuchet_back">Retour</string>
+    <string name="trebuchet_recenter">Double-appui pour recadrer la vue</string>
     <string name="trebuchet_best">Record %1$s m</string>
 
     <string name="trebuchet_beam">Bras\n%1$s m</string>
