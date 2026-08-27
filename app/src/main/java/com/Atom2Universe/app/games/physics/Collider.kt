@@ -18,10 +18,12 @@ class Contact {
     // Pré-calculs du solveur
     var massNormal = 0f
     var massTangent = 0f
-    var bias = 0f
 
     /** Vitesse de rebond visée, calculée avant résolution (0 si le choc est mou). */
     var bounce = 0f
+
+    /** Impulsion accumulée par la passe de position, sur les vitesses fantômes. */
+    var posImpulse = 0f
     var rax = 0f
     var ray = 0f
     var rbx = 0f
@@ -391,6 +393,8 @@ class Arbiter(
     var impacting = false
         private set
 
+    private var posInvDt = 0f
+
     /** Reprend les impulsions des contacts précédents quand ils correspondent (warm starting). */
     fun update(fresh: Array<Contact>, freshCount: Int, nx: Float, ny: Float) {
         for (i in 0 until freshCount) {
@@ -424,9 +428,7 @@ class Arbiter(
      * laquelle on considère qu'il y a choc : en dessous, pas de rebond et pas de dégât.
      */
     fun preStep(invDt: Float, impactSpeed: Float) {
-        val allowedPenetration = 0.004f
-        val biasFactor = 0.22f
-        val maxBiasSpeed = 3f
+        posInvDt = invDt
         val nx = normalX
         val ny = normalY
         val tx = ny
@@ -467,17 +469,7 @@ class Arbiter(
             val kt = a.invMass + b.invMass + a.invI * rtA * rtA + b.invI * rtB * rtB
             c.massTangent = if (kt > 0f) 1f / kt else 0f
 
-            // Correction douce de l'interpénétration (Baumgarte), plafonnée.
-            //
-            // Le plafond est indispensable depuis les sous-pas : cette correction
-            // est proportionnelle à 1/dt, donc découper une image en seize la rend
-            // seize fois plus violente. Un boulet coincé dans un angle se faisait
-            // éjecter à 20 m/s — toujours la même vitesse, quelle que soit la
-            // machine, signature d'une correction devenue folle plutôt que d'un
-            // vrai lancer. À pas fixe la valeur reste très en dessous du plafond,
-            // donc rien ne change pour le jeu d'équilibre.
-            c.bias = (-biasFactor * invDt * minOf(0f, c.separation + allowedPenetration))
-                .coerceAtMost(maxBiasSpeed)
+            c.posImpulse = 0f
 
             // Réapplication des impulsions de l'image précédente
             val px = c.normalImpulse * nx + c.tangentImpulse * tx
@@ -486,6 +478,47 @@ class Arbiter(
             a.omega -= a.invI * (c.rax * py - c.ray * px)
             b.vx += b.invMass * px; b.vy += b.invMass * py
             b.omega += b.invI * (c.rbx * py - c.rby * px)
+        }
+    }
+
+    /**
+     * Une passe de replacement : sépare les corps déjà enfoncés l'un dans l'autre,
+     * en poussant sur les vitesses fantômes.
+     *
+     * C'est la moitié « positions » du solveur. Elle bouge les corps sans jamais
+     * leur donner d'élan, ce qui est exactement ce qu'il faut : un corps qu'on
+     * dégage d'un mur ne doit pas en ressortir lancé.
+     */
+    fun applyPositionImpulse() {
+        val allowedPenetration = 0.005f
+        // L'enfoncement est une longueur : divisé par la durée du pas, il devient
+        // la vitesse fantôme qui le résorbe. Le plafond évite qu'un corps très
+        // enfoncé ne soit dégagé d'un coup de canon.
+        val correctionRate = 0.35f * posInvDt
+        val maxCorrection = 0.2f * posInvDt
+        val nx = normalX
+        val ny = normalY
+        for (i in 0 until count) {
+            val c = contacts[i]
+            val err = ((c.separation + allowedPenetration) * correctionRate)
+                .coerceIn(-maxCorrection, 0f)
+            if (err == 0f && c.posImpulse == 0f) continue
+
+            val dvx = (b.pvx - b.pomega * c.rby) - (a.pvx - a.pomega * c.ray)
+            val dvy = (b.pvy + b.pomega * c.rbx) - (a.pvy + a.pomega * c.rax)
+            val vn = dvx * nx + dvy * ny
+
+            var dP = c.massNormal * (-vn - err)
+            val newP = maxOf(c.posImpulse + dP, 0f)
+            dP = newP - c.posImpulse
+            c.posImpulse = newP
+
+            val px = dP * nx
+            val py = dP * ny
+            a.pvx -= a.invMass * px; a.pvy -= a.invMass * py
+            a.pomega -= a.invI * (c.rax * py - c.ray * px)
+            b.pvx += b.invMass * px; b.pvy += b.invMass * py
+            b.pomega += b.invI * (c.rbx * py - c.rby * px)
         }
     }
 
@@ -504,10 +537,10 @@ class Arbiter(
 
             // -- Composante normale : empêche l'interpénétration, et fait rebondir --
             val vn = dvx * nx + dvy * ny
-            // On prend la plus exigeante des deux corrections, jamais leur somme :
-            // les additionner ajoutait de l'énergie, et une balle rebondissait plus
-            // haut que ne l'autorise son élasticité.
-            var dPn = c.massNormal * (-vn + maxOf(c.bias, c.bounce))
+            // Seul le rebond entre ici. L'enfoncement déjà accumulé, lui, se
+            // rattrape dans la passe de position : le corriger sur les vitesses
+            // réelles reviendrait à créer de l'énergie à chaque image.
+            var dPn = c.massNormal * (-vn + c.bounce)
             val newPn = maxOf(c.normalImpulse + dPn, 0f)
             dPn = newPn - c.normalImpulse
             c.normalImpulse = newPn

@@ -141,6 +141,25 @@ class PhysBody private constructor(
     /** Couple externe appliqué au prochain pas puis remis à zéro (ressort de la planche). */
     var torque = 0f
 
+    /**
+     * Vitesses « fantômes », qui servent uniquement à replacer les corps.
+     *
+     * Un solveur doit faire deux choses : empêcher les corps de s'enfoncer les uns
+     * dans les autres (une affaire de vitesses) et rattraper l'enfoncement déjà
+     * accumulé (une affaire de positions). Tout mélanger revient à pousser sur les
+     * vraies vitesses pour corriger une position — et cette poussée est de
+     * l'énergie créée de toutes pièces. Sur une chaîne de liaisons un peu raide,
+     * elle s'emballe : un boulet sortait à 250 m/s d'une machine qui ne stocke que
+     * dix mille joules.
+     *
+     * Ces vitesses-là ne servent donc qu'au déplacement, et sont remises à zéro à
+     * la fin de chaque pas : la correction bouge les corps sans jamais leur donner
+     * d'élan.
+     */
+    var pvx = 0f
+    var pvy = 0f
+    var pomega = 0f
+
     // Masses inverses (0 = infiniment lourd, donc immobile sur cet axe)
     var invMass = 0f
         private set

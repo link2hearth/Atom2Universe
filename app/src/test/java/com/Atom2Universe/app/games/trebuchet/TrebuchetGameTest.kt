@@ -56,29 +56,27 @@ class TrebuchetGameTest {
     }
 
     @Test
-    fun `lelan du contrepoids donne de la vitesse mais redresse le tir`() {
-        // Le compromis central de la machine, mesuré plutôt que supposé.
+    fun `lelan du contrepoids ne fabrique plus de vitesse imaginaire`() {
+        // Ce test disait autrefois qu'un lâcher de haut donnait 50 % de vitesse en
+        // plus. C'était faux, et la faute en revenait au moteur : il corrigeait les
+        // positions en poussant sur les vraies vitesses, donc chaque choc créait de
+        // l'énergie. Depuis que les corrections passent par des vitesses fantômes,
+        // un choc ne rend que ce qu'il a reçu.
         //
-        // Lâcher le contrepoids de haut, c'est de l'élan en plus — le principe de la
-        // bascule de cirque, où l'acrobate saute sur la planche au lieu de s'y
-        // poser. Et ça marche : la vitesse de sortie grimpe nettement.
-        //
-        // Mais une bascule de cirque envoie son acrobate **droit en l'air**, et un
-        // choc fait exactement ça : le bras saute à pleine vitesse en un ou deux
-        // degrés de rotation, et le boulet part perpendiculairement au bras, donc
-        // presque à la verticale. Prendre de l'élan, c'est donc échanger de la
-        // portée contre de la hauteur — utile pour passer un obstacle, coûteux pour
-        // aller loin.
+        // Reste ce qui est physiquement vrai : un contrepoids lâché de plus haut
+        // arrive plus vite, donc frappe plus fort, mais un choc perd beaucoup, et le
+        // gain sur la vitesse de sortie est modeste.
         val gentle = machine(drop = TrebuchetRules.DROP_MIN).also { it.simulateShot() }
         val violent = machine(drop = TrebuchetRules.DROP_MAX).also { it.simulateShot() }
 
         assertTrue(
-            "l'élan n'apporte aucune vitesse : ${gentle.launchSpeed} contre ${violent.launchSpeed} m/s",
-            violent.launchSpeed > gentle.launchSpeed * 1.5f
+            "l'élan retire de la vitesse : ${gentle.launchSpeed} contre ${violent.launchSpeed} m/s",
+            violent.launchSpeed > gentle.launchSpeed * 0.75f
         )
         assertTrue(
-            "l'élan ne redresse pas le tir : ${gentle.launchAngleDeg}° contre ${violent.launchAngleDeg}°",
-            violent.launchAngleDeg > gentle.launchAngleDeg + 15f
+            "l'élan multiplie la vitesse, ce qu'aucune énergie ne justifie : " +
+                "${gentle.launchSpeed} contre ${violent.launchSpeed} m/s",
+            violent.launchSpeed < gentle.launchSpeed * 2f
         )
     }
 
@@ -209,6 +207,9 @@ class TrebuchetGameTest {
             }
         }
         println("=== meilleure portée à élan dosé : %.1f m ===".format(bestGentle))
-        assertTrue("la meilleure machine du catalogue ne porte qu'à $bestGentle m", bestGentle > 25f)
+        // La barre a baissé le jour où le solveur a cessé de créer de l'énergie :
+        // une partie de la portée d'avant était offerte par le bug, pas par la
+        // machine. C'est la portée honnête de cette géométrie.
+        assertTrue("la meilleure machine du catalogue ne porte qu'à $bestGentle m", bestGentle > 15f)
     }
 }

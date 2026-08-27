@@ -22,15 +22,26 @@ import kotlin.math.sqrt
 class PhysWorld {
 
     val bodies = ArrayList<PhysBody>()
-    val joints = ArrayList<RevoluteJoint>()
+    val joints = ArrayList<Joint>()
     private val arbiters = HashMap<Long, Arbiter>()
     private val fresh = Array(2) { Contact() }
     private val doomed = ArrayList<Long>()
 
     var gravity = 9.81f
 
-    /** Nombre de passes du solveur : plus il y en a, plus les piles sont stables. */
+    /** Nombre de passes du solveur de vitesses : plus il y en a, plus les piles sont stables. */
     var iterations = 14
+
+    /**
+     * Nombre de passes du solveur de **positions**.
+     *
+     * Le moteur résout séparément les vitesses et les positions. Les vitesses
+     * empêchent les corps de s'enfoncer davantage ; les positions rattrapent
+     * l'enfoncement déjà là, en poussant sur des vitesses fantômes qui ne servent
+     * qu'au déplacement. C'est cette séparation qui empêche le solveur de créer de
+     * l'énergie, et c'est ce qui permet à une chaîne de liaisons de tenir.
+     */
+    var positionIterations = 6
 
     /**
      * Vitesse d'approche à partir de laquelle un contact compte comme un choc :
@@ -54,11 +65,11 @@ class PhysWorld {
         joints.removeAll { it.a === body || it.b === body }
     }
 
-    fun addJoint(joint: RevoluteJoint) {
+    fun addJoint(joint: Joint) {
         joints.add(joint)
     }
 
-    fun removeJoint(joint: RevoluteJoint) {
+    fun removeJoint(joint: Joint) {
         joints.remove(joint)
     }
 
@@ -159,11 +170,15 @@ class PhysWorld {
             bd.torque = 0f
         }
 
-        // 2. Préparation puis résolution itérative des contacts et des liaisons
+        // 2. Vitesses : on empêche les corps de s'enfoncer davantage.
         for (arb in arbiters.values) arb.preStep(invDt, impactSpeedThreshold)
         for (j in joints) j.preStep(invDt)
         repeat(iterations) {
             for (arb in arbiters.values) arb.applyImpulse()
+            // Les liaisons sont résolues deux fois par passe : une chaîne de corps
+            // reliés fait circuler l'effort de proche en proche, et c'est le maillon
+            // le plus lent qui décide de la stabilité de l'ensemble.
+            for (j in joints) j.applyImpulse()
             for (j in joints) j.applyImpulse()
         }
 
@@ -175,19 +190,31 @@ class PhysWorld {
             arb.b.impactAccum += p
         }
 
+        // 2 ter. Positions : on rattrape ce qui est déjà enfoncé ou décroché, sur
+        // les vitesses fantômes, qui ne donnent d'élan à personne.
+        for (bd in bodies) {
+            bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
+        }
+        repeat(positionIterations) {
+            for (arb in arbiters.values) arb.applyPositionImpulse()
+            for (j in joints) j.applyPositionImpulse()
+        }
+
         // 3. Intégration des positions + amortissement léger (aide la mise au repos)
         for (bd in bodies) {
             if (!bd.inWorld) continue
+            // La vitesse fantôme s'ajoute au déplacement, jamais à la vitesse.
             if (bd.invMass > 0f) {
-                bd.x += bd.vx * dt
-                bd.y += bd.vy * dt
+                bd.x += (bd.vx + bd.pvx) * dt
+                bd.y += (bd.vy + bd.pvy) * dt
                 bd.vx *= 0.999f
                 bd.vy *= 0.999f
             }
             if (bd.invI > 0f) {
-                bd.angle += bd.omega * dt
+                bd.angle += (bd.omega + bd.pomega) * dt
                 bd.omega *= 0.997f
             }
+            bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
         }
     }
 

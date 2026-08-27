@@ -8,20 +8,11 @@ import kotlin.math.sqrt
  * Une liaison pivot : deux corps sont cloués l'un à l'autre en un point, et ne
  * peuvent plus que tourner autour de ce point.
  *
- * C'est la pièce qui manquait au moteur. Le jeu d'équilibre s'en passait parce
- * que sa planche tourne autour de son propre centre (`lockPosition` suffisait) ;
- * un trébuchet, lui, a son pied **décalé** : bras long d'un côté, bras court de
- * l'autre. Il faut donc ancrer un point quelconque du bras.
- *
- * Pour clouer un corps au décor, il suffit de prendre comme second corps une
- * masse immobile (`lockPosition` + `lockRotation`) : le calcul est le même, ses
- * masses inverses valant zéro.
- *
- * La résolution suit le même principe que les contacts : à chaque passe du
- * solveur on corrige la vitesse relative au point d'ancrage, et l'impulsion est
- * conservée d'une image à l'autre pour que la liaison ne « mollisse » pas.
+ * Pour clouer un corps au décor, il suffit de prendre comme second corps une masse
+ * immobile (`lockPosition` + `lockRotation`) : le calcul est le même, ses masses
+ * inverses valant zéro.
  */
-class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
+class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
 
     /** Point d'ancrage dans le repère de [a]. */
     var localAnchorAX = 0f
@@ -32,26 +23,11 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
     var localAnchorBY = 0f
 
     /**
-     * Liaison active. La mettre à `false` décroche instantanément les deux corps :
-     * c'est comme ça que la fronde du trébuchet lâche son projectile.
-     */
-    var enabled = true
-
-    /**
-     * Faut-il quand même tester la collision entre les deux corps reliés ? Non par
-     * défaut : l'axe d'un trébuchet traverse le bras, les deux se chevauchent donc
-     * forcément, et les laisser se repousser ferait vibrer la machine.
-     */
-    var collideConnected = false
-
-    /**
-     * Souplesse de la liaison. 0 = rigide. Une petite valeur (0,01 à 0,1) donne
-     * un axe qui « travaille » un peu, utile pour amortir un choc violent.
+     * Souplesse de la liaison. 0 = rigide. Une petite valeur (0,01 à 0,1) donne un
+     * axe qui « travaille » un peu, utile pour amortir un choc violent — mais elle
+     * mange aussi le coup de fouet d'une fronde, donc à manier avec parcimonie.
      */
     var softness = 0f
-
-    /** Force du rappel qui recolle les deux ancrages quand ils ont dérivé. */
-    var biasFactor = 0.2f
 
     // Impulsion accumulée, conservée d'une image à l'autre.
     var impulseX = 0f
@@ -62,20 +38,23 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
     // Pré-calculs (matrice de masse effective 2x2, inversée)
     private var m00 = 0f
     private var m01 = 0f
-    private var m10 = 0f
     private var m11 = 0f
     private var rax = 0f
     private var ray = 0f
     private var rbx = 0f
     private var rby = 0f
-    private var biasX = 0f
-    private var biasY = 0f
+    private var errX = 0f
+    private var errY = 0f
+    private var posScale = 0f
     private var solvable = false
 
     companion object {
+        /** Part de l'écart rattrapée à chaque pas par la passe de position. */
+        private const val POSITION_RATE = 0.35f
+
         /**
-         * Cloue [a] et [b] l'un à l'autre au point monde ([worldX], [worldY]),
-         * en calculant les deux ancrages locaux à partir de la pose actuelle.
+         * Cloue [a] et [b] l'un à l'autre au point monde ([worldX], [worldY]), en
+         * calculant les deux ancrages locaux à partir de la pose actuelle.
          */
         fun pin(a: PhysBody, b: PhysBody, worldX: Float, worldY: Float): RevoluteJoint {
             val j = RevoluteJoint(a, b)
@@ -87,10 +66,13 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
          * Soude [a] et [b] : deux pivots en deux points distincts, et il ne reste
          * plus aucun degré de liberté — même la rotation relative est bloquée.
          *
-         * C'est le moyen d'assembler une pièce en plusieurs morceaux alors que le
-         * moteur ne connaît qu'une forme par corps : la cuiller du trébuchet, par
-         * exemple, est un rebord soudé au bout du bras. Les deux points doivent
-         * être bien écartés, sinon la soudure a du jeu en rotation.
+         * Les deux points doivent être **bien écartés**. Deux ancrages distants de
+         * quelques centimètres donnent une soudure numériquement molle, qui laisse
+         * l'assemblage vibrer puis exploser sous forte charge ; les prendre du pied
+         * au sommet de la pièce plutôt que d'un bord à l'autre de son épaisseur
+         * change tout. Pour une pièce faite de plusieurs morceaux, préférer de
+         * toute façon un corps composé (voir [PhysBody.compound]) : aucune liaison,
+         * donc aucun jeu.
          */
         fun weld(
             a: PhysBody, b: PhysBody,
@@ -122,21 +104,27 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
     }
 
     /**
-     * Intensité de l'impulsion encaissée au dernier pas, en kg·m/s. C'est ce que
-     * la liaison a dû encaisser pour tenir : de quoi faire céder une machine trop
+     * Intensité de l'impulsion encaissée au dernier pas, en kg·m/s. C'est ce que la
+     * liaison a dû encaisser pour tenir : de quoi faire céder une machine trop
      * chargée, si on décide un jour que les pièces peuvent casser.
      */
     val reactionImpulse: Float
         get() = sqrt(impulseX * impulseX + impulseY * impulseY)
 
-    /** Oublie l'impulsion mémorisée (après avoir téléporté un corps). */
-    fun reset() {
+    override fun reset() {
         impulseX = 0f
         impulseY = 0f
+        posImpulseX = 0f
+        posImpulseY = 0f
     }
 
-    internal fun preStep(invDt: Float) {
+    private var posImpulseX = 0f
+    private var posImpulseY = 0f
+
+    override fun preStep(invDt: Float) {
         solvable = false
+        posImpulseX = 0f
+        posImpulseY = 0f
         if (!enabled || !a.inWorld || !b.inWorld) return
 
         val ca = cos(a.angle)
@@ -161,14 +149,16 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
         val invDet = 1f / det
         m00 = k11 * invDet
         m01 = -k01 * invDet
-        m10 = -k01 * invDet
         m11 = k00 * invDet
 
-        // Écart entre les deux ancrages : on le résorbe progressivement.
-        val dpx = (b.x + rbx) - (a.x + rax)
-        val dpy = (b.y + rby) - (a.y + ray)
-        biasX = -biasFactor * invDt * dpx
-        biasY = -biasFactor * invDt * dpy
+        // Écart entre les deux ancrages. Il ne sert **qu'**à la passe de position :
+        // le corriger sur les vitesses réelles reviendrait à inventer de l'énergie.
+        errX = (b.x + rbx) - (a.x + rax)
+        errY = (b.y + rby) - (a.y + ray)
+        // Un écart est une longueur ; pour le résorber en un pas il faut le lire
+        // comme une vitesse, donc le diviser par la durée du pas. Le facteur en
+        // rabat une partie : tout corriger d'un coup fait sursauter l'assemblage.
+        posScale = POSITION_RATE * invDt
 
         // Réapplication de l'impulsion de l'image précédente
         a.vx -= a.invMass * impulseX
@@ -181,17 +171,17 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
         solvable = true
     }
 
-    internal fun applyImpulse() {
+    override fun applyImpulse() {
         if (!solvable) return
 
-        // Vitesse relative des deux points d'ancrage
+        // Vitesse relative des deux points d'ancrage : on veut l'annuler.
         val dvx = (b.vx - b.omega * rby) - (a.vx - a.omega * ray)
         val dvy = (b.vy + b.omega * rbx) - (a.vy + a.omega * rax)
 
-        val ex = biasX - dvx - softness * impulseX
-        val ey = biasY - dvy - softness * impulseY
+        val ex = -dvx - softness * impulseX
+        val ey = -dvy - softness * impulseY
         val px = m00 * ex + m01 * ey
-        val py = m10 * ex + m11 * ey
+        val py = m01 * ex + m11 * ey
 
         a.vx -= a.invMass * px
         a.vy -= a.invMass * py
@@ -202,5 +192,28 @@ class RevoluteJoint(val a: PhysBody, val b: PhysBody) {
 
         impulseX += px
         impulseY += py
+    }
+
+    override fun applyPositionImpulse() {
+        if (!solvable) return
+
+        // Même calcul, mais sur les vitesses fantômes et contre l'écart de position.
+        val dvx = (b.pvx - b.pomega * rby) - (a.pvx - a.pomega * ray)
+        val dvy = (b.pvy + b.pomega * rbx) - (a.pvy + a.pomega * rax)
+
+        val ex = -errX * posScale - dvx
+        val ey = -errY * posScale - dvy
+        val px = m00 * ex + m01 * ey
+        val py = m01 * ex + m11 * ey
+
+        a.pvx -= a.invMass * px
+        a.pvy -= a.invMass * py
+        a.pomega -= a.invI * (rax * py - ray * px)
+        b.pvx += b.invMass * px
+        b.pvy += b.invMass * py
+        b.pomega += b.invI * (rbx * py - rby * px)
+
+        posImpulseX += px
+        posImpulseY += py
     }
 }
