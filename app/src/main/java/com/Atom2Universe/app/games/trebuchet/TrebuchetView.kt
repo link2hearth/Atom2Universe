@@ -282,7 +282,9 @@ class TrebuchetView @JvmOverloads constructor(
         val follow: Float
         when (game.phase) {
             TrebuchetGame.Phase.BUILD -> {
-                tx = game.pivotX + game.config.longArm * 0.15f
+                // Bandée, la machine s'étale côté arrière : pointe plongée derrière,
+                // fronde couchée dessous. On décale le cadre du même côté.
+                tx = game.pivotX - game.config.longArm * 0.15f
                 ty = game.pivotY * 0.55f
                 follow = 4.5f
             }

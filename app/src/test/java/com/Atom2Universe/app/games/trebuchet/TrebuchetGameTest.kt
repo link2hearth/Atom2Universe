@@ -72,19 +72,19 @@ class TrebuchetGameTest {
 
     @Test
     fun `le crochet commande langle de tir`() {
-        // Crochet redressé : la fronde le rencontre tôt, le boulet est encore bas et
-        // file devant — tir tendu. Crochet couché : il retient jusqu'au bout du fouet,
-        // le boulet passe par-dessus la pointe et part haut. C'est le seul réglage de
-        // visée de la machine, et il doit être monotone, sinon le joueur ne peut rien
-        // en faire.
+        // Crochet couché : il retient jusqu'au bout du fouet, le boulet passe
+        // par-dessus la pointe et part devant, tendu. Crochet redressé : la fronde le
+        // rencontre tôt, le boulet grimpe encore derrière la machine et part de plus
+        // en plus haut. C'est le seul réglage de visée de la machine, et il doit être
+        // monotone, sinon le joueur ne peut rien en faire.
         val angles = TrebuchetRules.PIN_ANGLES_DEG.indices.map { pin ->
             machine(pin = pin, sling = 0.7f).also { it.simulateShot() }.launchAngleDeg
         }
         println("crochets ${TrebuchetRules.PIN_ANGLES_DEG.toList()} → " +
             angles.joinToString { "%.0f°".format(it) })
 
-        val flat = angles.last()      // crochet le plus redressé
-        val steep = angles.first()    // crochet le plus couché
+        val flat = angles.first()     // crochet le plus couché
+        val steep = angles.last()     // crochet le plus redressé
         assertTrue(
             "le crochet ne redresse pas le tir : %.0f° contre %.0f°".format(flat, steep),
             steep > flat + 15f
@@ -92,7 +92,7 @@ class TrebuchetGameTest {
         for (i in 1 until angles.size) {
             assertTrue(
                 "le crochet n'est pas monotone : ${angles.map { it.toInt() }}",
-                angles[i] <= angles[i - 1] + 6f
+                angles[i] >= angles[i - 1] - 6f
             )
         }
     }
@@ -118,7 +118,9 @@ class TrebuchetGameTest {
         val cocked = g.beam.angle
         g.release()
         repeat(24) { g.step(1f / 120f) }
-        assertTrue("le bras ne démarre pas", g.beam.angle > cocked + 0.01f)
+        // Le contrepoids, levé côté cible, retombe : le bras tourne en sens horaire
+        // et son angle décroît.
+        assertTrue("le bras ne démarre pas", g.beam.angle < cocked - 0.01f)
         assertTrue("le contrepoids ne tombe pas : ${g.counterweight.vy}", g.counterweight.vy < -0.2f)
     }
 
@@ -165,7 +167,7 @@ class TrebuchetGameTest {
     @Test
     fun `table de la chape du contrepoids`() {
         // La chape accorde le pendule du contrepoids sur la rotation du bras.
-        println("--- chape × levier, bras 12 m, crochet 90°, fronde 0,6, 3000 kg ---")
+        println("--- chape × levier, bras 12 m, crochet 45°, fronde 0,6, 3000 kg ---")
         for (h in TrebuchetRules.HANG_RATIOS.indices) {
             val line = StringBuilder("  chape %.1f× :".format(TrebuchetRules.HANG_RATIOS[h]))
             for (r in TrebuchetRules.LEVER_RATIOS.indices) {
@@ -204,9 +206,15 @@ class TrebuchetGameTest {
                     for (w in TrebuchetRules.COUNTERWEIGHTS.indices) {
                         for (h in TrebuchetRules.HANG_RATIOS.indices) {
                             for (pin in TrebuchetRules.PIN_ANGLES_DEG.indices) {
+                                // La fronde suit le crochet : c'est le couplage
+                                // mesuré au banc (un crochet redressé veut une
+                                // fronde longue), et c'est l'accord que le joueur
+                                // fait au doigt. Tester tous les crochets sur une
+                                // fronde unique reviendrait à exiger qu'une machine
+                                // désaccordée tire droit.
                                 val g = machine(
                                     beam = b, post = p, ratio = r, weight = w,
-                                    hang = h, pin = pin
+                                    hang = h, pin = pin, sling = 0.60f + 0.08f * pin
                                 )
                                 // Plafond honnête : toute l'énergie stockée passée au
                                 // boulet, et rien d'autre. Un tir au-delà est de

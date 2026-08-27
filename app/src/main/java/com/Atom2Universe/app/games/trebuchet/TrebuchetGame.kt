@@ -15,7 +15,13 @@ import kotlin.math.sqrt
 
 /**
  * Dimensions du terrain et catalogue de pièces, en mètres (repère physique,
- * Y vers le haut, origine au sol sous le pivot).
+ * Y vers le haut, origine au sol sous le pivot, tir vers les X croissants).
+ *
+ * La machine est orientée **comme sur les gravures** : bandée, la pointe du bras
+ * plonge vers l'**arrière**, la fronde est couchée au sol **sous** la machine, et
+ * le contrepoids est levé du côté de la **cible**. Au tir, le boulet est traîné
+ * sous le bâti, monte en fouettant côté arrière, passe **par-dessus la pointe**
+ * et part vers l'avant — c'est le tour complet du fouet, pas un lancer à plat.
  *
  * La machine est un **vrai trébuchet**, c'est-à-dire les trois pièces que les
  * ingénieurs médiévaux ont fini par trouver, et dont aucune n'est décorative :
@@ -35,8 +41,10 @@ import kotlin.math.sqrt
  * bras, un boulet posé dans une cuiller rigide, et un tampon pour arrêter le bras.
  * Mesuré au banc d'essai, ça sortait à 14 m/s pour 21 m de portée. Le choc
  * gaspillait, la cuiller rigide était bistable, et l'arrêt brutal du bras, qui
- * tenait lieu de largage, jetait le reste. Le même banc donne aujourd'hui 48 m/s et
- * 143 m pour la plus petite machine, 66 m/s et 214 m pour la plus grande.
+ * tenait lieu de largage, jetait le reste. Puis la fronde est arrivée, mais montée
+ * en miroir : la machine larguait tôt, dans la montée du fouet, et plafonnait à
+ * 220 m. Remise dans le sens des gravures, le même banc donne plus de 400 m à la
+ * plus petite machine et plus de 500 m à la plus grande, au-delà de 100 m/s.
  *
  * Le catalogue reste **fixe et toujours entièrement disponible** : c'est au joueur
  * de choisir la bonne combinaison, pas au niveau de lui imposer un stock.
@@ -47,8 +55,8 @@ object TrebuchetRules {
     const val FIRING_LINE = 0f
 
     /** De quoi voir retomber un tir parti en arrière, ce qui arrive vite. */
-    const val GROUND_LEFT = -140f
-    const val GROUND_RIGHT = 420f
+    const val GROUND_LEFT = -260f
+    const val GROUND_RIGHT = 620f
 
     /**
      * Longueurs de bras proposées, en mètres.
@@ -122,32 +130,35 @@ object TrebuchetRules {
      * dès qu'elle passe au-delà, la boucle glisse et le boulet part.
      *
      * L'angle se mesure depuis l'axe du bras, du côté où la fronde traîne. Bandée,
-     * la machine a sa fronde loin en arrière — entre 90 et 145° selon la géométrie —
-     * et le fouet la ramène vers l'axe du bras. Elle croise donc le crochet en
-     * chemin, et le sens est celui-ci, mesuré au banc et non supposé :
+     * la machine a sa fronde loin derrière elle — entre 90 et 145° selon la
+     * géométrie — et le fouet la rabat vers l'axe du bras, qu'elle finit par
+     * prolonger au sommet du tour. Elle croise donc le crochet en chemin, et le
+     * sens est celui-ci, mesuré au banc et non supposé :
      *
+     *  - **crochet couché** (petit angle) : il retient la boucle presque jusqu'au
+     *    bout du fouet. Le boulet passe par-dessus la pointe à pleine vitesse —
+     *    au-delà de quatre-vingt-dix mètres par seconde — et part vers l'avant,
+     *    d'autant plus tendu que le crochet est couché. C'est le coup de trébuchet
+     *    des gravures.
      *  - **crochet redressé** (grand angle) : la fronde le rencontre **tôt**, alors
-     *    que le boulet est encore bas et file vers l'avant. Tir tendu et long.
-     *  - **crochet couché** (petit angle) : il retient la boucle jusqu'au bout du
-     *    fouet. Le boulet y gagne beaucoup de vitesse — jusqu'à soixante mètres par
-     *    seconde — mais il a le temps de passer par-dessus la pointe, et il part de
-     *    plus en plus haut, puis carrément en arrière.
+     *    que le boulet grimpe encore derrière la machine. Le tir part de plus en
+     *    plus haut, puis carrément en arrière, dans les pieds des servants.
      *
      * C'est exactement le réglage que les constructeurs de trébuchets passent leurs
      * journées à limer, et il n'y a rien d'arbitraire dedans : le moment du largage
      * est une **conséquence géométrique** de l'angle de la fronde, mesuré à chaque
      * pas. Les valeurs de la liste ne sont pas choisies au jugé non plus : elles
      * couvrent la plage où le banc d'essai trouve les tirs utiles, laquelle dépend
-     * beaucoup de la longueur de la fronde — une fronde longue veut un crochet
-     * redressé. C'est ce qui lie les deux réglages fins de la machine.
+     * beaucoup de la longueur de la fronde — une fronde courte veut un crochet
+     * couché. C'est ce qui lie les deux réglages fins de la machine.
      */
-    val PIN_ANGLES_DEG = intArrayOf(60, 75, 90, 105, 120)
+    val PIN_ANGLES_DEG = intArrayOf(15, 30, 45, 60, 75)
 
     /**
      * Ce que la fronde doit au minimum balayer avant que la boucle puisse glisser.
      *
-     * Un crochet plus redressé que la fronde ne la retiendrait pas du tout : la
-     * boucle serait déjà du mauvais côté au moment de bander la machine. On le
+     * Un crochet plus redressé que la fronde bandée ne la retiendrait pas du tout :
+     * la boucle serait déjà du mauvais côté au moment de bander la machine. On le
      * couche alors juste assez pour qu'il tienne, plutôt que de larguer le boulet
      * dans les pieds du joueur.
      */
@@ -208,8 +219,14 @@ class MachineConfig {
     var hangIndex = 1
     var pinIndex = 2
 
-    /** Longueur de la fronde, en fraction du bras long. */
-    var slingRatio = 0.6f
+    /**
+     * Longueur de la fronde, en fraction du bras long.
+     *
+     * La valeur de départ est choisie avec le crochet du milieu pour que la
+     * première machine tire une belle cloche par-dessus la pointe — un tir qui
+     * marche, mais que chaque réglage du catalogue peut nettement améliorer.
+     */
+    var slingRatio = 0.65f
 
     val beamLength: Float get() = TrebuchetRules.BEAM_LENGTHS[beamIndex]
     val leverRatio: Float get() = TrebuchetRules.LEVER_RATIOS[ratioIndex]
@@ -301,12 +318,12 @@ class MachineConfig {
  * et la portée est la conséquence de la géométrie choisie. On ne vise jamais.
  *
  * Le déroulé d'un tir :
- *  - **BUILD** — la machine est bandée : le bras long plonge vers l'avant, retenu
- *    par la détente ; le contrepoids pend en l'air derrière ; la fronde est étalée
- *    au sol avec le boulet dedans.
+ *  - **BUILD** — la machine est bandée : le bras long plonge vers l'arrière,
+ *    retenu par la détente ; le contrepoids pend en l'air du côté de la cible ;
+ *    la fronde est étalée au sol sous la machine, avec le boulet dedans.
  *  - **FLIGHT** — la détente lâche. Le contrepoids tombe, le bras fouette, la
- *    fronde traîne le boulet au sol puis le fait tourner, et la boucle quitte le
- *    crochet quand la géométrie le veut.
+ *    fronde traîne le boulet sous le bâti puis le fait tourner par-dessus la
+ *    pointe, et la boucle quitte le crochet quand la géométrie le veut.
  *  - **RESULT** — le boulet est retombé, on mesure.
  *
  * Aucune pièce de la machine n'entre en collision avec une autre : tout se joue par
@@ -328,9 +345,9 @@ class TrebuchetGame {
         const val SHOT_TIMEOUT = 30f
 
         /**
-         * Sécurité : passé ça, la fronde est repartie loin devant la pointe sans que
-         * le crochet ait lâché. Ça ne devrait pas arriver — mais un boulet qui fait
-         * le tour du bras indéfiniment vaut mieux largué que gardé.
+         * Sécurité : passé ça, la fronde a dépassé l'axe du bras de l'autre côté
+         * sans que le crochet ait lâché. Ça ne devrait pas arriver — mais un boulet
+         * qui fait le tour du bras indéfiniment vaut mieux largué que gardé.
          */
         const val RUNAWAY_SLING = 0.6f
     }
@@ -367,8 +384,8 @@ class TrebuchetGame {
      * en radians.
      *
      * Zéro veut dire « la fronde part droit devant la pointe, dans l'axe du bras ».
-     * Bandée, la machine a sa fronde très en arrière — entre -90 et -145° — et le
-     * fouet la ramène vers zéro. C'est cette remontée que le crochet surveille.
+     * Bandée, la machine a sa fronde très en arrière — entre +90 et +145° — et le
+     * fouet la rabat vers zéro. C'est cette descente que le crochet surveille.
      */
     var slingAngle = 0f
         private set
@@ -412,8 +429,10 @@ class TrebuchetGame {
      * Vitesse de la pointe du bras à l'instant du largage, en m/s.
      *
      * C'est la référence qui donne son sens à [launchSpeed] : sans fronde, le boulet
-     * sortirait à cette vitesse-là. Le rapport des deux est le gain du fouet, et il
-     * tourne autour de deux — d'où quatre fois la portée.
+     * sortirait à cette vitesse-là. Le rapport des deux est le gain du fouet : vers
+     * deux pour un largage précoce, et jusqu'à quatre et plus quand la fronde fait
+     * son tour complet par-dessus la pointe — le bras a alors fini de ralentir et
+     * presque tout son élan est passé dans la corde.
      */
     var launchTipSpeed = 0f
         private set
@@ -423,12 +442,12 @@ class TrebuchetGame {
      * celle que le contrepoids a réellement dépensée jusque-là.
      *
      * C'est le chiffre qui dit au joueur si sa machine est bien accordée, et c'est
-     * celui que les constructeurs de trébuchets cherchent à faire monter. Il paraît
-     * bas, et il l'est : quand le contrepoids pèse cinq cents fois le boulet, le
-     * gros de l'énergie sert à faire tourner la charpente et à remonter le bras, pas
-     * à lancer la pierre. Le catalogue va de 3 % pour une machine mal accordée à
-     * 16 % pour la meilleure, et c'est l'ordre de grandeur des vraies machines de ce
-     * gabarit.
+     * celui que les constructeurs de trébuchets cherchent à faire monter. Un tir
+     * largué trop tôt, pendant la montée du fouet, reste vers 15 % : le gros de
+     * l'énergie fait tourner la charpente. Un tir qui prend le fouet complet, la
+     * fronde passant par-dessus la pointe, monte à 40–65 % — et c'est bien la
+     * fourchette des vrais trébuchets, dont la fronde pendulaire est précisément
+     * ce qui récupère l'énergie de la charpente au dernier moment.
      */
     var efficiency = 0f
         private set
@@ -475,9 +494,9 @@ class TrebuchetGame {
     fun pinWorld(out: FloatArray) {
         // On dessine le crochet **tel qu'il lâchera vraiment**, couchage compris :
         // sinon le joueur verrait un ergot qui ne correspond pas au tir qu'il obtient.
-        val a = -releaseAngle
+        val a = releaseAngle
         val len = 0.2f + 0.03f * config.longArm
-        beam.localToWorld(config.beamLength / 2f + len * cos(a), -len * sin(a), out)
+        beam.localToWorld(config.beamLength / 2f + len * cos(a), len * sin(a), out)
     }
 
     /** (Re)monte entièrement la machine d'après [config], et la rebande. */
@@ -518,7 +537,12 @@ class TrebuchetGame {
 
         // Le bras : une simple planche. Plus aucune cuiller ni butée — tout ce que
         // cette géométrie tentait de faire, la fronde le fait mieux.
-        val cock = -Math.toRadians(config.cockAngleDeg.toDouble()).toFloat()
+        //
+        // Bandé, il pointe vers l'arrière **et** vers le bas : π le retourne côté
+        // arrière, l'angle d'armement le fait plonger. Le contrepoids se retrouve
+        // levé du côté de la cible, comme sur les gravures, et le tir passera
+        // par-dessus la pointe.
+        val cock = (PI + Math.toRadians(config.cockAngleDeg.toDouble())).toFloat()
         beam = PhysBody(
             config.beamLength / 2f, TrebuchetRules.BEAM_HALF_THICKNESS, config.beamMass
         ).apply {
@@ -594,15 +618,15 @@ class TrebuchetGame {
     }
 
     /**
-     * Angle auquel le crochet lâchera réellement la boucle, en radians (négatif).
+     * Angle auquel le crochet lâchera réellement la boucle, en radians (positif).
      *
      * C'est l'inclinaison choisie, mais couchée si besoin : un crochet plus redressé
-     * que la fronde ne retiendrait rien du tout.
+     * que la fronde bandée ne retiendrait rien du tout.
      */
     val releaseAngle: Float
-        get() = maxOf(
-            -Math.toRadians(config.pinAngleDeg.toDouble()).toFloat(),
-            slingStartAngle + Math.toRadians(TrebuchetRules.MIN_PIN_SWEEP_DEG.toDouble()).toFloat()
+        get() = minOf(
+            Math.toRadians(config.pinAngleDeg.toDouble()).toFloat(),
+            slingStartAngle - Math.toRadians(TrebuchetRules.MIN_PIN_SWEEP_DEG.toDouble()).toFloat()
         )
 
     /** Repose le bras à son angle d'armement, pivot au bon endroit. */
@@ -627,16 +651,17 @@ class TrebuchetGame {
     }
 
     /**
-     * Pose le boulet au sol, derrière la pointe, à l'endroit exact où la fronde est
-     * juste tendue. La fronde étant une corde, un peu de mou ne gênerait pas, mais un
-     * tir commence mieux sans à-coup.
+     * Pose le boulet au sol, sous la machine, à l'endroit exact où la fronde est
+     * juste tendue — comme dans l'auge des vraies machines, qui court de la pointe
+     * bandée vers le bâti. La fronde étant une corde, un peu de mou ne gênerait
+     * pas, mais un tir commence mieux sans à-coup.
      */
     private fun placeBall() {
         tipWorld(probe)
         val dy = probe[1] - TrebuchetRules.BALL_RADIUS
         val l = config.slingLength
         val dx = sqrt(maxOf(l * l - dy * dy, 0.01f))
-        ball.x = probe[0] - dx
+        ball.x = probe[0] + dx
         ball.y = TrebuchetRules.BALL_RADIUS
         ball.angle = 0f
         ball.vx = 0f; ball.vy = 0f; ball.omega = 0f
@@ -764,7 +789,7 @@ class TrebuchetGame {
         if (!ballFree) {
             launchSpeed = speed
             updateSlingAngle()
-            if (slingAngle >= releaseAngle || slingAngle >= RUNAWAY_SLING) letGo()
+            if (slingAngle <= releaseAngle || slingAngle <= -RUNAWAY_SLING) letGo()
         }
 
         trailTimer += dt
