@@ -36,4 +36,8 @@
     <string name="trebuchet_unit_deg">°</string>
     <string name="trebuchet_unit_kg">kg</string>
     <string name="trebuchet_unit_ratio">:1</string>
+
+    <string name="trebuchet_level">%1$s · %2$d %% rasé · %3$d coup(s)</string>
+    <string name="trebuchet_level_cleared">%1$s — RASÉ en %2$d coup(s) !</string>
+    <string name="trebuchet_btn_next">Site suivant</string>
 </resources>

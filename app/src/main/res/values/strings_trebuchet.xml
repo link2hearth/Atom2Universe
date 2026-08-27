@@ -36,4 +36,9 @@
     <string name="trebuchet_unit_deg">°</string>
     <string name="trebuchet_unit_kg">kg</string>
     <string name="trebuchet_unit_ratio">:1</string>
+
+    <!-- Target site. Other locales fall back here until they are translated. -->
+    <string name="trebuchet_level">%1$s · %2$d %% razed · %3$d shot(s)</string>
+    <string name="trebuchet_level_cleared">%1$s — RAZED in %2$d shot(s)!</string>
+    <string name="trebuchet_btn_next">Next site</string>
 </resources>

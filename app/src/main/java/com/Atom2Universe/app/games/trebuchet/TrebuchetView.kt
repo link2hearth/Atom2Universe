@@ -246,6 +246,58 @@ class TrebuchetView @JvmOverloads constructor(
         strokeCap = Paint.Cap.ROUND
     }
     private val pPivot = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#37474F".toColorInt() }
+    /**
+     * Les peintures de la cible, une par matériau, plus leur trait de contour.
+     *
+     * Elles sont dans le même ordre que [Material], ce qui permet d'aller les chercher
+     * par l'ordinal sans table intermédiaire.
+     */
+    private val targetFills = intArrayOf(
+        "#C9A84C".toColorInt(), // chaume
+        "#A8D8E8".toColorInt(), // glace
+        "#B8916A".toColorInt(), // torchis
+        "#7A6247".toColorInt(), // terre
+        "#8B5E3C".toColorInt(), // bois
+        "#9AA3AB".toColorInt(), // pierre
+        "#54606B".toColorInt()  // fer
+    ).map { c -> Paint(Paint.ANTI_ALIAS_FLAG).apply { color = c } }
+
+    private val targetEdges = intArrayOf(
+        "#9B8038".toColorInt(),
+        "#7FB3C6".toColorInt(),
+        "#8D6B4A".toColorInt(),
+        "#584734".toColorInt(),
+        "#5F3F28".toColorInt(),
+        "#6E767D".toColorInt(),
+        "#39424A".toColorInt()
+    ).map { c ->
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = c
+            style = Paint.Style.STROKE
+            strokeWidth = 1.5f * dp
+        }
+    }
+
+    /** Les fêlures : des traits sombres, d'autant plus nombreux que la pierre a pris. */
+    private val pCrack = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(150, 20, 16, 12)
+        style = Paint.Style.STROKE
+        strokeWidth = 1.6f * dp
+    }
+
+    /** La ligne de ruine : l'énoncé du niveau, en pointillé rouge. */
+    private val pRuin = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = "#FF6B6B".toColorInt()
+        style = Paint.Style.STROKE
+        strokeWidth = 2f * dp
+        pathEffect = DashPathEffect(floatArrayOf(10f * dp, 8f * dp), 0f)
+    }
+
+    private val pRuinLabel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = "#FF9D9D".toColorInt()
+        textSize = 12f * dp
+    }
+
     private val pTrail = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2.5f * dp
@@ -550,8 +602,13 @@ class TrebuchetView @JvmOverloads constructor(
     private fun panLeft(): Float = game.pivotX - game.config.longArm - PAN_BACK_MARGIN
 
     /** Butée avant : cinq cents mètres, ou le tir en cours s'il est allé plus loin. */
-    private fun panRight(): Float =
-        max(PAN_FRONT, game.shotDistance + 60f).coerceAtMost(TrebuchetRules.GROUND_RIGHT)
+    private fun panRight(): Float {
+        // La butée avant doit englober la cible, sinon le joueur ne peut littéralement
+        // pas aller voir ce qu'il est en train de détruire.
+        val cible = game.level?.let { game.targets.right + 40f } ?: 0f
+        return max(max(PAN_FRONT, game.shotDistance + 60f), cible)
+            .coerceAtMost(TrebuchetRules.GROUND_RIGHT)
+    }
 
     /** Dézoom maximal : tout le terrain tient dans la largeur de l'écran. */
     private fun minScale(): Float = width / max(panRight() - panLeft(), MIN_VIEW_WIDTH)
@@ -973,6 +1030,7 @@ class TrebuchetView @JvmOverloads constructor(
         }
 
         drawGround(canvas, w, h)
+        drawTargets(canvas, w)
         drawGhost(canvas)
         drawStartCone(canvas)
         drawFrameAndPivot(canvas)
@@ -1076,6 +1134,71 @@ class TrebuchetView @JvmOverloads constructor(
             sx(tip[0]), sy(tip[1]), sx(game.ball.x), sy(game.ball.y),
             if (game.sling.isSlack) pSlingSlack else pSling
         )
+    }
+
+    /**
+     * La cible : chaque pierre de sa couleur, fêlée selon ce qu'elle a encaissé, et la
+     * ligne de ruine en travers.
+     *
+     * On ne dessine que ce qui traverse l'écran : un site fait cent corps, et le joueur
+     * passe le plus clair de son temps à regarder sa machine, trois cents mètres plus
+     * loin.
+     */
+    private fun drawTargets(canvas: Canvas, w: Float) {
+        val field = game.targets
+        if (field.pieces.isEmpty()) return
+
+        val viewWidth = w / camScale
+        val leftWorld = camX - viewWidth / 2f - 5f
+        val rightWorld = camX + viewWidth / 2f + 5f
+
+        for (p in field.pieces) {
+            val b = p.body
+            if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
+            val i = p.material.ordinal
+            drawBody(canvas, b, targetFills[i], targetEdges[i])
+            if (p.crackLevel > 0) drawCracks(canvas, b, p.crackLevel)
+        }
+
+        // La ligne de ruine, tracée d'un bout à l'autre de l'emprise.
+        val y = sy(field.ruinLine)
+        val x0 = sx(field.left - 3f)
+        val x1 = sx(field.right + 3f)
+        if (x1 > 0f && x0 < w) {
+            canvas.drawLine(x0, y, x1, y, pRuin)
+            canvas.drawText("ligne de ruine", x0 + 4f * dp, y - 6f * dp, pRuinLabel)
+        }
+    }
+
+    /**
+     * Les fêlures d'une pierre entamée : un trait au premier palier, une croix au
+     * deuxième, une étoile au troisième.
+     *
+     * C'est le seul retour que le joueur ait sur un coup qui a porté sans casser, et
+     * sans lui un tir qui enlève la moitié de la vie d'une assise ressemble exactement
+     * à un tir qui n'a rien fait.
+     */
+    private fun drawCracks(canvas: Canvas, b: PhysBody, level: Int) {
+        for (i in b.parts.indices) {
+            val part = b.parts[i]
+            if (part.shape == Shape.CIRCLE) continue
+            b.partWorld(i, partPose)
+            val cx = sx(partPose[0])
+            val cy = sy(partPose[1])
+            val hw = part.halfW * camScale * 0.8f
+            val hh = part.halfH * camScale * 0.8f
+            if (hw < 2f * dp || hh < 2f * dp) continue
+            val a = -partPose[2]
+            canvas.save()
+            canvas.rotate(Math.toDegrees(a.toDouble()).toFloat(), cx, cy)
+            canvas.drawLine(cx - hw, cy - hh * 0.4f, cx + hw * 0.2f, cy + hh, pCrack)
+            if (level >= 2) canvas.drawLine(cx + hw, cy - hh, cx - hw * 0.3f, cy + hh * 0.5f, pCrack)
+            if (level >= 3) {
+                canvas.drawLine(cx - hw, cy + hh * 0.6f, cx + hw, cy + hh * 0.2f, pCrack)
+                canvas.drawLine(cx - hw * 0.2f, cy - hh, cx + hw * 0.4f, cy + hh * 0.3f, pCrack)
+            }
+            canvas.restore()
+        }
     }
 
     private fun drawBody(canvas: Canvas, b: PhysBody, fill: Paint, edge: Paint) {

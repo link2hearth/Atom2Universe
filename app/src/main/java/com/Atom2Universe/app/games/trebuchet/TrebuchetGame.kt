@@ -366,10 +366,13 @@ class TrebuchetGame {
     enum class Phase { BUILD, FLIGHT, RESULT }
 
     private companion object {
-        const val CAT_GROUND = 1
-        const val CAT_BEAM = 2
-        const val CAT_WEIGHT = 4
-        const val CAT_BALL = 8
+        // Les catégories vivent désormais dans [TrebuchetCategory] : les cibles en ont
+        // besoin elles aussi, et deux jeux de bits qui doivent s'accorder sans se voir
+        // finissent toujours par se contredire.
+        const val CAT_GROUND = TrebuchetCategory.GROUND
+        const val CAT_BEAM = TrebuchetCategory.BEAM
+        const val CAT_WEIGHT = TrebuchetCategory.WEIGHT
+        const val CAT_BALL = TrebuchetCategory.BALL
 
         /** Durée maximale d'un tir, en secondes : une parabole de 400 m dure 12 s. */
         const val SHOT_TIMEOUT = 30f
@@ -388,6 +391,19 @@ class TrebuchetGame {
         iterations = 16
     }
     val config = MachineConfig()
+
+    /**
+     * La cible : la construction à raser, et tout ce qui lui arrive.
+     *
+     * Elle vit dans le même monde que la machine, à des centaines de mètres de là. Les
+     * catégories de collision font que les deux ne se rencontrent jamais autrement que
+     * par le boulet.
+     */
+    val targets = TargetField(world)
+
+    /** Le niveau en cours, ou nul en bac à sable (record de portée, sans cible). */
+    var level: TargetLevel? = null
+        private set
 
     var phase = Phase.BUILD
         private set
@@ -548,6 +564,11 @@ class TrebuchetGame {
         efficiency = 0f
         phase = Phase.BUILD
 
+        // Le monde vient d'être vidé pour remonter la machine. La cible, elle, garde
+        // ses corps : le joueur qui allonge sa poutre entre deux tirs ne doit pas voir
+        // le château se reconstruire derrière lui.
+        targets.reattach()
+
         val half = (TrebuchetRules.GROUND_RIGHT - TrebuchetRules.GROUND_LEFT) / 2f
         ground = PhysBody(half, 1f, 0f).apply {
             x = TrebuchetRules.GROUND_LEFT + half
@@ -707,6 +728,27 @@ class TrebuchetGame {
         world.forgetContacts(ball)
     }
 
+    /**
+     * Charge le niveau de la graine donnée, et rebande la machine devant.
+     *
+     * Tout le niveau tient dans cet entier : la sorte de site, sa taille, ses matériaux
+     * et sa distance. Le rejouer, c'est rappeler la même graine.
+     */
+    fun loadLevel(seed: Long) {
+        val lvl = TargetGenerator.generate(seed)
+        level = lvl
+        build()
+        targets.load(lvl.structure)
+        shotCount = 0
+    }
+
+    /** Repart en bac à sable : plus de cible, on ne mesure que la portée. */
+    fun clearLevel() {
+        level = null
+        targets.clear()
+        build()
+    }
+
     /** Rejoue la pose avec les réglages actuels, en gardant le fantôme du tir précédent. */
     fun rebuild() {
         val keep = ghost
@@ -811,6 +853,7 @@ class TrebuchetGame {
         if (phase != Phase.FLIGHT) return
 
         world.stepFrame(dt)
+        targets.update(dt)
         elapsed += dt
 
         val speed = hypot(ball.vx, ball.vy)
@@ -840,7 +883,16 @@ class TrebuchetGame {
         val landed = ballFree &&
             ball.y <= TrebuchetRules.BALL_RADIUS + 0.03f &&
             ball.vy <= 0f
-        if (landed || elapsed > SHOT_TIMEOUT || ball.x > TrebuchetRules.GROUND_RIGHT - 4f) {
+        if (landed && shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
+
+        // Le tir est fini quand le boulet a touché **et** que la cible a fini de
+        // s'écrouler : un château met plusieurs secondes à s'effondrer, et rendre la
+        // main avant reviendrait à cacher au joueur le résultat de son coup.
+        val settled = landed && (level == null || targets.piecesAtRest())
+        val stuck = landed && elapsed > SHOT_TIMEOUT * 0.5f
+        if (settled || stuck || elapsed > SHOT_TIMEOUT ||
+            ball.x > TrebuchetRules.GROUND_RIGHT - 4f
+        ) {
             finishShot()
         }
     }
@@ -862,6 +914,10 @@ class TrebuchetGame {
         // Tout ce qui est déjà dans la trace est la course au sol : le vol commence ici.
         launchTrailIndex = trail.size
         sling.enabled = false
+        // Le boulet n'appartient plus à la machine : c'est **maintenant** qu'il devient
+        // capable de toucher une cible. Le rendre solide plus tôt reviendrait à le
+        // laisser cogner sa propre charpente pendant qu'il est traîné sous le bâti.
+        ball.collidesWith = TrebuchetCategory.BALL_FREE_MASK
         world.forgetContacts(ball)
         launchSpeed = hypot(ball.vx, ball.vy)
         launchAngleDeg = Math.toDegrees(atan2(ball.vy.toDouble(), ball.vx.toDouble())).toFloat()
@@ -881,7 +937,9 @@ class TrebuchetGame {
 
     private fun finishShot() {
         phase = Phase.RESULT
-        shotDistance = ball.x - TrebuchetRules.FIRING_LINE
+        // La portée est celle du **point d'impact**, mesurée à l'atterrissage : après,
+        // le boulet roule, et où il finit sa course n'apprend rien.
+        if (shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
         shotCount++
         if (shotDistance > bestDistance) bestDistance = shotDistance
         ghost = trail.toFloatArray()

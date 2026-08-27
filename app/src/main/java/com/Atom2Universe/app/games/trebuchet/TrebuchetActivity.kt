@@ -21,6 +21,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     private companion object {
         const val PREFS_NAME = "trebuchet_game"
         const val KEY_BEST = "best_distance"
+        const val KEY_SEED = "level_seed"
+        const val KEY_STYLE = "target_style"
     }
 
     private lateinit var gameView: TrebuchetView
@@ -35,6 +37,9 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
     private var best = 0f
 
+    /** La graine du site en cours. Tout le niveau tient dedans. */
+    private var levelSeed = 1L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trebuchet)
@@ -43,6 +48,10 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         best = prefs.getFloat(KEY_BEST, 0f)
+        levelSeed = prefs.getLong(KEY_SEED, 1L)
+        TargetRules.style = runCatching {
+            TargetStyle.valueOf(prefs.getString(KEY_STYLE, null) ?: TargetStyle.ARCADE.name)
+        }.getOrDefault(TargetStyle.ARCADE)
 
         gameView = findViewById(R.id.trebuchet_view)
         statusText = findViewById(R.id.trebuchet_status)
@@ -60,10 +69,19 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         wheels.onValueChanged = { updateUi() }
 
         findViewById<ImageButton>(R.id.trebuchet_btn_back).setOnClickListener { finish() }
-        findViewById<TextView>(R.id.trebuchet_btn_reset).setOnClickListener { resetMachine() }
+        val reset = findViewById<TextView>(R.id.trebuchet_btn_reset)
+        reset.setOnClickListener { resetMachine() }
+        // Appui long : on passe au site suivant sans l'avoir rasé. Indispensable pour
+        // essayer, et sans doute à remplacer par un vrai bouton quand le mode aura
+        // trouvé sa forme.
+        reset.setOnLongClickListener { nextLevel(); true }
         fireButton.setOnClickListener { onFireButton() }
+        // Le bandeau du site sert aussi d'interrupteur entre arcade et réaliste. Le
+        // site se refait au passage : la masse et la solidité d'une pierre sont fixées
+        // à sa naissance, on ne les change pas sous les pieds du joueur.
+        bestText.setOnClickListener { toggleStyle() }
 
-        updateUi()
+        loadLevel(levelSeed)
     }
 
     override fun onResume() {
@@ -76,6 +94,32 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         gameView.pause()
     }
 
+    /** Charge le site de cette graine et rebande la machine devant. */
+    private fun loadLevel(seed: Long) {
+        levelSeed = seed
+        prefs.edit { putLong(KEY_SEED, seed) }
+        gameView.clearSelection()
+        synchronized(gameView.game) { gameView.game.loadLevel(seed) }
+        gameView.syncPhase()
+        updateUi()
+    }
+
+    private fun nextLevel() = loadLevel(levelSeed + 1L)
+
+    /** Passe d'un tempérament à l'autre et refait le site avec. */
+    private fun toggleStyle() {
+        TargetRules.style = when (TargetRules.style) {
+            TargetStyle.ARCADE -> TargetStyle.REALISTE
+            TargetStyle.REALISTE -> TargetStyle.ARCADE
+        }
+        prefs.edit { putString(KEY_STYLE, TargetRules.style.name) }
+        loadLevel(levelSeed)
+    }
+
+    /** Le nom du tempérament, tel qu'il s'affiche. */
+    private fun styleLabel(): String =
+        if (TargetRules.style == TargetStyle.ARCADE) "ARCADE" else "RÉALISTE"
+
     private fun resetMachine() {
         gameView.clearSelection()
         synchronized(gameView.game) { gameView.game.reset() }
@@ -85,6 +129,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
     private fun onFireButton() {
         val game = gameView.game
+        // Site rasé : le bouton ne sert plus qu'à passer au suivant.
+        if (game.level != null && game.targets.cleared) {
+            nextLevel()
+            return
+        }
         gameView.clearSelection()
         when (game.phase) {
             TrebuchetGame.Phase.BUILD -> {
@@ -131,11 +180,32 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             (cfg.storedEnergy / 1000f).toInt(),
             fmt(cfg.slingLength)
         )
-        bestText.text = if (best > 0f) getString(R.string.trebuchet_best, fmt(best)) else ""
+        // La ligne du haut dit où on en est du site ; en bac à sable, elle garde le
+        // record de portée.
+        val lvl = game.level
+        bestText.text = when {
+            lvl != null && game.targets.cleared -> getString(
+                R.string.trebuchet_level_cleared,
+                TargetGenerator.label(lvl), game.shotCount
+            ) + " · " + styleLabel()
+            lvl != null -> getString(
+                R.string.trebuchet_level,
+                TargetGenerator.label(lvl),
+                (game.targets.progress * 100f).toInt(),
+                game.shotCount
+            ) + " · " + styleLabel()
+            best > 0f -> getString(R.string.trebuchet_best, fmt(best))
+            else -> ""
+        }
 
         val building = game.phase == TrebuchetGame.Phase.BUILD
+        val cleared = game.level != null && game.targets.cleared
         fireButton.text = getString(
-            if (building) R.string.trebuchet_btn_release else R.string.trebuchet_btn_adjust
+            when {
+                cleared -> R.string.trebuchet_btn_next
+                building -> R.string.trebuchet_btn_release
+                else -> R.string.trebuchet_btn_adjust
+            }
         )
 
         statusText.visibility =
