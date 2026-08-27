@@ -214,6 +214,21 @@ class PhysBody private constructor(
      */
     var impactAccum = 0f
 
+    /**
+     * Traînée de l'air, en kg/m : la moitié de ρ·Cx·S, tout regroupé.
+     *
+     * La force de traînée vaut ce coefficient fois le carré de la vitesse, et elle
+     * s'oppose au mouvement. Zéro par défaut — le monde est alors vide d'air,
+     * comme avant.
+     *
+     * Elle ne se néglige pas dès qu'un projectile va vite : un boulet de 12 kg et
+     * 16 cm de rayon lancé à 70 m/s encaisse 110 N, soit à peu près sa propre
+     * pesanteur. Sans elle, une machine de jet porte de moitié trop loin et sa
+     * trajectoire est une parabole symétrique de manuel, au lieu de retomber plus
+     * raide qu'elle n'est montée.
+     */
+    var dragFactor = 0f
+
     // ── Raccourcis pour les corps à une seule forme ───────────────────────────
 
     val shape: Shape get() = parts[0].shape

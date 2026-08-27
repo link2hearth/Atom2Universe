@@ -27,8 +27,9 @@ import kotlin.random.Random
  * La simulation tourne sur son propre thread à pas fixe ; les événements tactiles
  * arrivent depuis le thread UI, d'où les blocs `synchronized(game)`.
  *
- * La caméra suit le boulet pendant le vol puis revient cadrer le point de chute :
- * sans elle, une machine qui envoie à vingt mètres tirerait hors de l'écran.
+ * La caméra suit le boulet pendant le vol puis recule pour montrer tout l'arc :
+ * une machine bien réglée envoie à plus de deux cents mètres, et c'est justement
+ * cette courbe-là qu'on veut voir.
  */
 class TrebuchetView @JvmOverloads constructor(
     ctx: Context,
@@ -65,8 +66,14 @@ class TrebuchetView @JvmOverloads constructor(
         const val FIXED_DT = 1f / 120f
 
         /** Marges autour de la machine, en mètres : la vue suit sa taille. */
-        const val BUILD_VIEW_MARGIN = 7f
-        const val FLIGHT_VIEW_MARGIN = 14f
+        const val BUILD_VIEW_MARGIN = 8f
+        const val FLIGHT_VIEW_MARGIN = 18f
+
+        /** Fenêtre minimale en vol : un boulet rapide doit rester dedans. */
+        const val FLIGHT_MIN_WIDTH = 90f
+
+        /** Au-delà, on ne recule plus : la machine deviendrait un point. */
+        const val MAX_VIEW_WIDTH = 300f
     }
 
     // ── Palette ───────────────────────────────────────────────────────────────
@@ -92,15 +99,8 @@ class TrebuchetView @JvmOverloads constructor(
         color = Color.argb(150, 200, 230, 205)
         typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
     }
-    private val pFiringLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        strokeWidth = 2f * dp
-        color = Color.argb(160, 255, 180, 90)
-        pathEffect = DashPathEffect(floatArrayOf(9f * dp, 7f * dp), 0f)
-    }
     private val pFrame = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#6D4C41".toColorInt() }
     private val pBeam = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#A1887F".toColorInt() }
-    private val pCup = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#8D6E63".toColorInt() }
     private val pEdge = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 1.6f * dp
@@ -118,7 +118,34 @@ class TrebuchetView @JvmOverloads constructor(
         strokeWidth = 2f * dp
         color = "#607D8B".toColorInt()
     }
-    private val pStopper = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#C62828".toColorInt() }
+    /** La chape du contrepoids : une élingue d'acier, épaisse. */
+    private val pStrap = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 3f * dp
+        color = "#78909C".toColorInt()
+        strokeCap = Paint.Cap.ROUND
+    }
+    /** La fronde : une corde tressée, claire pour qu'on la suive dans le fouet. */
+    private val pSling = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2.4f * dp
+        color = "#E9C46A".toColorInt()
+        strokeCap = Paint.Cap.ROUND
+    }
+    /** La fronde molle : elle pend, elle ne tire rien. */
+    private val pSlingSlack = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2f * dp
+        color = Color.argb(110, 233, 196, 106)
+        strokeCap = Paint.Cap.ROUND
+    }
+    /** Le crochet de largage : rouge, c'est la pièce qui décide du tir. */
+    private val pPin = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 3.5f * dp
+        color = "#EF5350".toColorInt()
+        strokeCap = Paint.Cap.ROUND
+    }
     private val pPivot = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#37474F".toColorInt() }
     private val pTrail = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -139,12 +166,15 @@ class TrebuchetView @JvmOverloads constructor(
     }
     private val pHint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
-        color = Color.argb(150, 220, 235, 255)
+        color = Color.argb(160, 220, 235, 255)
     }
 
     private val tmpPath = Path()
     private val corners = FloatArray(8)
     private val partPose = FloatArray(3)
+    private val tip = FloatArray(2)
+    private val butt = FloatArray(2)
+    private val pin = FloatArray(2)
 
     private val starsX = FloatArray(40)
     private val starsY = FloatArray(40)
@@ -152,8 +182,7 @@ class TrebuchetView @JvmOverloads constructor(
 
     // ── Saisie ────────────────────────────────────────────────────────────────
 
-    private enum class Drag { NONE, BALL, WEIGHT }
-    private var drag = Drag.NONE
+    private var draggingSling = false
 
     init {
         holder.addCallback(this)
@@ -234,30 +263,40 @@ class TrebuchetView @JvmOverloads constructor(
 
     private fun updateCamera(dt: Float) {
         if (width == 0) return
-        // Le cadrage suit la taille de la machine : un bras de 8 m ne tient pas
-        // dans la fenêtre qui suffisait à un bras de 4 m.
-        val machineWidth = game.config.beamLength + BUILD_VIEW_MARGIN
+        // Le cadrage suit la taille de la machine : un bras de 12 m ne tient pas dans
+        // la fenêtre qui suffisait à un bras de 6 m.
+        val machineWidth = game.config.beamLength + game.config.slingLength + BUILD_VIEW_MARGIN
         val targetWidth = when (game.phase) {
             TrebuchetGame.Phase.BUILD -> machineWidth
+            // Une fois retombé, on recule pour montrer tout l'arc : c'est le moment
+            // où le joueur juge sa machine.
             TrebuchetGame.Phase.RESULT ->
-                max(machineWidth, abs(game.ball.x - TrebuchetRules.FIRING_LINE) + 14f)
-            else -> game.config.beamLength + FLIGHT_VIEW_MARGIN
+                max(machineWidth, abs(game.ball.x) + 20f).coerceAtMost(MAX_VIEW_WIDTH)
+            // En vol, la fenêtre doit être assez large pour qu'un boulet à soixante
+            // mètres par seconde ne la traverse pas en une demi-seconde.
+            else -> max(machineWidth + FLIGHT_VIEW_MARGIN, FLIGHT_MIN_WIDTH)
         }
         val targetScale = width / targetWidth
-        var tx: Float
-        var ty: Float
+        val tx: Float
+        val ty: Float
+        val follow: Float
         when (game.phase) {
             TrebuchetGame.Phase.BUILD -> {
-                tx = game.pivotX - game.config.longArm * 0.35f
-                ty = game.pivotY + 0.4f
+                tx = game.pivotX + game.config.longArm * 0.15f
+                ty = game.pivotY * 0.55f
+                follow = 4.5f
             }
             TrebuchetGame.Phase.RESULT -> {
-                tx = (TrebuchetRules.FIRING_LINE + game.ball.x) / 2f
-                ty = game.pivotY + 0.4f
+                tx = game.ball.x / 2f
+                ty = game.pivotY * 0.6f
+                follow = 3f
             }
             else -> {
-                tx = game.ball.x + 2.5f
-                ty = game.ball.y + 1f
+                // On vise devant le boulet, d'autant plus loin qu'il va vite : le
+                // cadrage anticipe au lieu de courir après.
+                tx = game.ball.x + game.ball.vx * 0.4f
+                ty = game.ball.y + game.ball.vy * 0.2f
+                follow = 8f
             }
         }
 
@@ -266,14 +305,14 @@ class TrebuchetView @JvmOverloads constructor(
             return
         }
         // Suivi souple : la caméra rattrape sa cible sans à-coups.
-        val k = (dt * 4.5f).coerceIn(0f, 1f)
+        val k = (dt * follow).coerceIn(0f, 1f)
         camX += (tx - camX) * k
         camY += (ty - camY) * k
         camScale += (targetScale - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
 
         // Le sol reste toujours visible : on ne descend pas sous l'horizon.
         val halfH = height / 2f / camScale
-        val minY = -0.8f + halfH
+        val minY = -1f + halfH
         if (camY < minY) camY = minY
     }
 
@@ -289,33 +328,23 @@ class TrebuchetView @JvmOverloads constructor(
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> synchronized(game) {
                 if (game.phase != TrebuchetGame.Phase.BUILD) return true
-                val dBall = hypot(wx - game.ball.x, wy - game.ball.y)
-                val dWeight = hypot(wx - game.counterweight.x, wy - game.counterweight.y)
-                // Tolérance exprimée en pixels : sur une grande machine, tout est
-                // plus petit à l'écran et une marge en mètres deviendrait ridicule.
-                val reach = 44f * dp / camScale
-                drag = when {
-                    dBall < reach && dBall <= dWeight -> Drag.BALL
-                    dWeight < reach + 0.3f -> Drag.WEIGHT
-                    else -> Drag.NONE
-                }
+                // Tolérance exprimée en pixels : sur une grande machine, tout est plus
+                // petit à l'écran et une marge en mètres deviendrait ridicule.
+                val reach = 46f * dp / camScale
+                draggingSling = hypot(wx - game.ball.x, wy - game.ball.y) < reach
             }
             MotionEvent.ACTION_MOVE -> synchronized(game) {
-                when (drag) {
-                    // Le boulet ne suit que la longueur du bras : le doigt donne
-                    // l'abscisse, le jeu se charge de rester dans le domaine permis.
-                    Drag.BALL -> game.setBallDistance(game.pivotX - wx)
-                    Drag.WEIGHT -> {
-                        val half = game.config.counterweightHalf
-                        val base = game.pivotY + TrebuchetRules.BEAM_HALF_THICKNESS + half
-                        game.setDropHeight(wy - base)
-                    }
-                    Drag.NONE -> {}
+                // Faire glisser le boulet au sol allonge ou raccourcit la fronde : le
+                // doigt donne l'abscisse, le jeu se charge de rester dans le domaine
+                // permis.
+                if (draggingSling) {
+                    game.tipWorld(tip)
+                    game.setSlingLength(hypot(tip[0] - wx, tip[1] - TrebuchetRules.BALL_RADIUS))
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                if (drag != Drag.NONE) listener?.onMachineChanged()
-                drag = Drag.NONE
+                if (draggingSling) listener?.onMachineChanged()
+                draggingSling = false
             }
         }
         return true
@@ -336,13 +365,11 @@ class TrebuchetView @JvmOverloads constructor(
         drawGround(canvas, w, h)
         drawGhost(canvas)
         drawFrameAndPivot(canvas)
-        // Le bras et ses deux butées ne font qu'un seul corps : ses formes se
-        // dessinent l'une après l'autre, la planche d'abord.
-        drawBody(canvas, game.beam, pBeam, pEdge, firstPartPaint = pBeam, otherPartsPaint = pCup)
-        drawStopper(canvas)
-        if (game.counterweight.inWorld || game.phase == TrebuchetGame.Phase.BUILD) {
-            drawBody(canvas, game.counterweight, pWeight, pWeightEdge)
-        }
+        drawStrap(canvas)
+        drawBody(canvas, game.counterweight, pWeight, pWeightEdge)
+        drawBody(canvas, game.beam, pBeam, pEdge)
+        drawPin(canvas)
+        drawSling(canvas)
         drawBody(canvas, game.ball, pBall, pBallEdge)
         drawTrail(canvas)
         if (game.phase == TrebuchetGame.Phase.BUILD) drawBuildHints(canvas)
@@ -355,11 +382,18 @@ class TrebuchetView @JvmOverloads constructor(
             canvas.drawLine(0f, groundY, w, groundY, pGrass)
         }
 
-        // Graduations tous les 5 m à partir de la ligne de tir.
+        // Graduations à partir du pied de la machine. Le pas s'élargit quand on
+        // recule : à trois cents mètres, une borne tous les dix mètres serait une
+        // bouillie de traits.
         pTickLabel.textSize = 11f * dp
-        val step = 5f
-        val leftWorld = camX - (w / 2f) / camScale
-        val rightWorld = camX + (w / 2f) / camScale
+        val viewWidth = w / camScale
+        val step = when {
+            viewWidth > 180f -> 50f
+            viewWidth > 70f -> 25f
+            else -> 10f
+        }
+        val leftWorld = camX - viewWidth / 2f
+        val rightWorld = camX + viewWidth / 2f
         var d = 0f
         while (TrebuchetRules.FIRING_LINE + d < rightWorld + step) {
             val x = TrebuchetRules.FIRING_LINE + d
@@ -372,10 +406,6 @@ class TrebuchetView @JvmOverloads constructor(
             }
             d += step
         }
-
-        // La ligne de tir : la machine doit rester derrière.
-        val fx = sx(TrebuchetRules.FIRING_LINE)
-        canvas.drawLine(fx, groundY, fx, groundY - 2.2f * camScale, pFiringLine)
     }
 
     /** Le bâti : un A sous le pivot, purement décoratif mais il donne l'échelle. */
@@ -383,8 +413,8 @@ class TrebuchetView @JvmOverloads constructor(
         val px = sx(game.pivotX)
         val py = sy(game.pivotY)
         val groundY = sy(0f)
-        val spread = 0.42f * camScale
-        val legW = max(2f * dp, 0.05f * camScale)
+        val spread = 0.30f * game.pivotY * camScale
+        val legW = max(2f * dp, 0.06f * camScale)
 
         tmpPath.reset()
         tmpPath.moveTo(px - legW, py)
@@ -402,32 +432,41 @@ class TrebuchetView @JvmOverloads constructor(
         tmpPath.close()
         canvas.drawPath(tmpPath, pFrame)
 
-        canvas.drawCircle(px, py, max(3f * dp, 0.09f * camScale), pPivot)
+        canvas.drawCircle(px, py, max(3f * dp, 0.10f * camScale), pPivot)
     }
 
-    private fun drawStopper(canvas: Canvas) {
-        canvas.drawCircle(
-            sx(game.stopper.x), sy(game.stopper.y),
-            TrebuchetRules.STOP_RADIUS * camScale, pStopper
+    /** L'élingue qui suspend le contrepoids sous le bras court. */
+    private fun drawStrap(canvas: Canvas) {
+        game.buttWorld(butt)
+        canvas.drawLine(
+            sx(butt[0]), sy(butt[1]),
+            sx(game.counterweight.x), sy(game.counterweight.y), pStrap
         )
     }
 
-    private fun drawBody(
-        canvas: Canvas,
-        b: PhysBody,
-        fill: Paint,
-        edge: Paint,
-        firstPartPaint: Paint? = null,
-        otherPartsPaint: Paint? = null
-    ) {
-        for (i in b.parts.indices) {
-            val paint = when {
-                i == 0 && firstPartPaint != null -> firstPartPaint
-                i > 0 && otherPartsPaint != null -> otherPartsPaint
-                else -> fill
-            }
-            drawPart(canvas, b, i, paint, edge)
-        }
+    /** Le crochet de largage, planté dans le prolongement de la pointe du bras. */
+    private fun drawPin(canvas: Canvas) {
+        game.tipWorld(tip)
+        game.pinWorld(pin)
+        canvas.drawLine(sx(tip[0]), sy(tip[1]), sx(pin[0]), sy(pin[1]), pPin)
+    }
+
+    /**
+     * La fronde. Tant que la boucle est sur le crochet, elle relie la pointe au
+     * boulet ; molle, elle s'efface, parce qu'une corde molle ne transmet rien et
+     * qu'il faut que ça se voie.
+     */
+    private fun drawSling(canvas: Canvas) {
+        if (game.ballFree) return
+        game.tipWorld(tip)
+        canvas.drawLine(
+            sx(tip[0]), sy(tip[1]), sx(game.ball.x), sy(game.ball.y),
+            if (game.sling.isSlack) pSlingSlack else pSling
+        )
+    }
+
+    private fun drawBody(canvas: Canvas, b: PhysBody, fill: Paint, edge: Paint) {
+        for (i in b.parts.indices) drawPart(canvas, b, i, fill, edge)
     }
 
     private fun drawPart(canvas: Canvas, b: PhysBody, part: Int, fill: Paint, edge: Paint) {
@@ -490,20 +529,16 @@ class TrebuchetView @JvmOverloads constructor(
     private fun drawBuildHints(canvas: Canvas) {
         pHint.textSize = 11f * dp
 
-        // Trait entre le contrepoids suspendu et le bras : la hauteur de lâcher.
-        val cw = game.counterweight
-        val half = game.config.counterweightHalf
-        val topOfBeam = game.pivotY + TrebuchetRules.BEAM_HALF_THICKNESS
-        canvas.drawLine(sx(cw.x), sy(cw.y - half), sx(cw.x), sy(topOfBeam), pHandle)
-        canvas.drawText(
-            "%.1f m".format(game.config.dropHeight),
-            sx(cw.x) + 26f * dp, sy((cw.y - half + topOfBeam) / 2f), pHint
-        )
-
-        // Cercle discret autour du boulet : on peut le faire glisser sur le bras.
+        // Cercle discret autour du boulet : on le fait glisser au sol pour régler la
+        // longueur de la fronde.
         canvas.drawCircle(
             sx(game.ball.x), sy(game.ball.y),
-            TrebuchetRules.BALL_RADIUS * camScale + 7f * dp, pHandle
+            TrebuchetRules.BALL_RADIUS * camScale + 8f * dp, pHandle
+        )
+        game.tipWorld(tip)
+        canvas.drawText(
+            "%.1f m".format(game.config.slingLength),
+            sx((tip[0] + game.ball.x) / 2f), sy(game.ball.y) - 18f * dp, pHint
         )
     }
 }

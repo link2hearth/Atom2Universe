@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.games.physics
 
 import kotlin.math.abs
-import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -52,6 +51,27 @@ class PhysWorld {
 
     /** Nombre maximal de sous-pas consentis par image (voir [stepFrame]). */
     var maxSubSteps = 32
+
+    /**
+     * Amortissement ambiant, en fraction de vitesse perdue **par seconde**.
+     *
+     * Il ne représente rien de physique : c'est une petite friction numérique qui
+     * aide un tas de caisses à finir par se taire, pour que [isAtRest] puisse
+     * déclarer la fin d'un coup. L'air, lui, se modélise pour de bon avec
+     * [PhysBody.dragFactor].
+     *
+     * L'unité compte. C'était autrefois un facteur appliqué **par pas** (0,999),
+     * réglé du temps où une image valait un pas. Depuis les sous-pas adaptatifs, une
+     * image de jeu peut valoir trente-deux pas : le même facteur freinait alors
+     * trente-deux fois plus. Un boulet de trébuchet en vol perdait 38 % de sa vitesse
+     * par seconde et retombait à la moitié de sa portée — un frottement fantôme, dont
+     * l'intensité dépendait de la vitesse de la simulation elle-même.
+     */
+    var linearDamping = 0.05f
+    var angularDamping = 0.3f
+
+    private var linearKeep = 1f
+    private var angularKeep = 1f
 
     private var stamp = 0
 
@@ -136,7 +156,13 @@ class PhysWorld {
         var thinnest = Float.MAX_VALUE
         for (bd in bodies) {
             if (!bd.inWorld) continue
-            if (bd.smallestHalfExtent < thinnest) thinnest = bd.smallestHalfExtent
+            // Un corps que personne ne peut toucher n'a pas à imposer son épaisseur :
+            // l'axe d'une machine de jet fait huit centimètres et ne sert qu'à porter
+            // une liaison, mais il faisait découper l'image en douze sous-pas pour
+            // que rien ne le traverse — alors que rien ne peut le traverser.
+            if (bd.collidesWith != 0 && bd.smallestHalfExtent < thinnest) {
+                thinnest = bd.smallestHalfExtent
+            }
             if (bd.invMass > 0f || bd.invI > 0f) {
                 val s = sqrt(bd.speedSq) + abs(bd.omega) * bd.boundingRadius
                 if (s > fastest) fastest = s
@@ -160,12 +186,31 @@ class PhysWorld {
         val invDt = 1f / dt
         stamp++
 
+        // L'amortissement est donné par seconde : c'est ici qu'il devient un facteur
+        // pour ce pas-ci, quelle que soit sa durée.
+        linearKeep = (1f - linearDamping * dt).coerceIn(0f, 1f)
+        angularKeep = (1f - angularDamping * dt).coerceIn(0f, 1f)
+
         broadPhase()
 
         // 1. Intégration des forces
         for (bd in bodies) {
             if (!bd.inWorld) continue
-            if (bd.invMass > 0f) bd.vy -= gravity * dt
+            if (bd.invMass > 0f) {
+                bd.vy -= gravity * dt
+                // La traînée de l'air : elle s'oppose au mouvement et croît comme
+                // le carré de la vitesse. On la borne à ce qui annule exactement la
+                // vitesse dans le pas : sinon un pas un peu long la renverserait et
+                // l'air pousserait le corps en arrière, ce qui créerait de l'énergie.
+                if (bd.dragFactor > 0f) {
+                    val v = sqrt(bd.speedSq)
+                    if (v > 1e-4f) {
+                        val dv = minOf(bd.dragFactor * v * v * bd.invMass * dt, v)
+                        bd.vx -= dv * bd.vx / v
+                        bd.vy -= dv * bd.vy / v
+                    }
+                }
+            }
             if (bd.invI > 0f && bd.torque != 0f) bd.omega += bd.invI * bd.torque * dt
             bd.torque = 0f
         }
@@ -207,12 +252,12 @@ class PhysWorld {
             if (bd.invMass > 0f) {
                 bd.x += (bd.vx + bd.pvx) * dt
                 bd.y += (bd.vy + bd.pvy) * dt
-                bd.vx *= 0.999f
-                bd.vy *= 0.999f
+                bd.vx *= linearKeep
+                bd.vy *= linearKeep
             }
             if (bd.invI > 0f) {
                 bd.angle += (bd.omega + bd.pomega) * dt
-                bd.omega *= 0.997f
+                bd.omega *= angularKeep
             }
             bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
         }

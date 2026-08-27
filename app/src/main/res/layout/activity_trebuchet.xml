@@ -80,7 +80,7 @@
             style="@style/TrebuchetPick" />
 
         <TextView
-            android:id="@+id/trebuchet_pick_foot"
+            android:id="@+id/trebuchet_pick_post"
             style="@style/TrebuchetPick" />
 
         <TextView
@@ -92,11 +92,11 @@
             style="@style/TrebuchetPick" />
 
         <TextView
-            android:id="@+id/trebuchet_pick_cup"
+            android:id="@+id/trebuchet_pick_hang"
             style="@style/TrebuchetPick" />
 
         <TextView
-            android:id="@+id/trebuchet_pick_stop"
+            android:id="@+id/trebuchet_pick_pin"
             style="@style/TrebuchetPick" />
 
     </LinearLayout>

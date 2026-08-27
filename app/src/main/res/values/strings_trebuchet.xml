@@ -6,20 +6,19 @@
     <string name="trebuchet_best">Best %1$s m</string>
 
     <string name="trebuchet_beam">Arm\n%1$s m</string>
-    <string name="trebuchet_foot">Post\n%1$s m</string>
-    <string name="trebuchet_ratio">Lever\n%1$s:1</string>
+    <string name="trebuchet_post">Post\n%1$s m</string>
+    <string name="trebuchet_ratio">Lever\n%1$d:1</string>
     <string name="trebuchet_weight">Weight\n%1$d kg</string>
-    <string name="trebuchet_cup">Spoon\n%1$d°</string>
+    <string name="trebuchet_hang">Strap\n%1$s m</string>
+    <string name="trebuchet_pin">Hook\n%1$d°</string>
 
-    <string name="trebuchet_btn_release">Drop the counterweight</string>
+    <string name="trebuchet_btn_release">Trip the trigger</string>
     <string name="trebuchet_btn_adjust">Adjust</string>
     <string name="trebuchet_btn_reset">Reset</string>
 
-    <string name="trebuchet_status_build">Drag the ball along the arm, drag the counterweight to set how far it falls</string>
+    <string name="trebuchet_status_build">Drag the stone along the ground to set the sling length. The hook angle decides when it lets go</string>
     <string name="trebuchet_status_flight">Firing…</string>
-    <string name="trebuchet_status_result">%1$s m — left the spoon at %2$s m/s, %3$d° above the ground, peaked at %4$s m</string>
-    <string name="trebuchet_status_backwards">It went backwards! The arm cannot lift that load</string>
-    <string name="trebuchet_specs">Lever %1$s:1 · stored energy %2$d J · arm stops at %3$d°</string>
-    <string name="trebuchet_stop">Stop
-%1$d°</string>
+    <string name="trebuchet_status_result">%1$s m — released at %2$s m/s, %3$d° above the ground, peaked at %4$s m · efficiency %5$d %%</string>
+    <string name="trebuchet_status_backwards">It went backwards! The hook holds the sling too long — stand it up, or shorten the sling</string>
+    <string name="trebuchet_specs">Cocked at %1$d° · stored %2$d kJ · sling %3$s m</string>
 </resources>

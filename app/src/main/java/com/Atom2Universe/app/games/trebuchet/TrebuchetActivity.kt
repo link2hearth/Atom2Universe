@@ -12,8 +12,9 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 /**
- * Le trébuchet : on construit une machine de jet, on lâche le contrepoids, et la
- * portée est la conséquence de la géométrie choisie. On ne vise jamais.
+ * Le trébuchet : on construit une machine de jet, on décroche la détente, et la
+ * portée est la conséquence de la géométrie choisie. On ne vise jamais — on règle
+ * la fronde et le crochet, et la physique fait le reste.
  */
 class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
@@ -28,11 +29,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     private lateinit var bestText: TextView
     private lateinit var fireButton: TextView
     private lateinit var pickBeam: TextView
-    private lateinit var pickFoot: TextView
+    private lateinit var pickPost: TextView
     private lateinit var pickRatio: TextView
     private lateinit var pickWeight: TextView
-    private lateinit var pickCup: TextView
-    private lateinit var pickStop: TextView
+    private lateinit var pickHang: TextView
+    private lateinit var pickPin: TextView
     private lateinit var prefs: SharedPreferences
 
     private var best = 0f
@@ -52,11 +53,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         bestText = findViewById(R.id.trebuchet_best)
         fireButton = findViewById(R.id.trebuchet_btn_fire)
         pickBeam = findViewById(R.id.trebuchet_pick_beam)
-        pickFoot = findViewById(R.id.trebuchet_pick_foot)
+        pickPost = findViewById(R.id.trebuchet_pick_post)
         pickRatio = findViewById(R.id.trebuchet_pick_ratio)
         pickWeight = findViewById(R.id.trebuchet_pick_weight)
-        pickCup = findViewById(R.id.trebuchet_pick_cup)
-        pickStop = findViewById(R.id.trebuchet_pick_stop)
+        pickHang = findViewById(R.id.trebuchet_pick_hang)
+        pickPin = findViewById(R.id.trebuchet_pick_pin)
 
         gameView.listener = this
 
@@ -66,11 +67,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
         // Appui court : valeur suivante. Appui long : valeur précédente.
         bindPick(pickBeam) { d -> gameView.game.cycleBeam(d) }
-        bindPick(pickFoot) { d -> gameView.game.cycleFoot(d) }
+        bindPick(pickPost) { d -> gameView.game.cyclePost(d) }
         bindPick(pickRatio) { d -> gameView.game.cycleRatio(d) }
         bindPick(pickWeight) { d -> gameView.game.cycleWeight(d) }
-        bindPick(pickCup) { d -> gameView.game.cycleCupCurve(d) }
-        bindPick(pickStop) { d -> gameView.game.cycleStop(d) }
+        bindPick(pickHang) { d -> gameView.game.cycleHang(d) }
+        bindPick(pickPin) { d -> gameView.game.cyclePin(d) }
 
         updateUi()
     }
@@ -149,17 +150,17 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         val cfg = game.config
 
         pickBeam.text = getString(R.string.trebuchet_beam, fmt(cfg.beamLength))
-        pickFoot.text = getString(R.string.trebuchet_foot, fmt(cfg.footHeight))
-        pickRatio.text = getString(R.string.trebuchet_ratio, fmt(cfg.leverRatio))
+        pickPost.text = getString(R.string.trebuchet_post, fmt(cfg.pivotHeight))
+        pickRatio.text = getString(R.string.trebuchet_ratio, cfg.leverRatio.toInt())
         pickWeight.text = getString(R.string.trebuchet_weight, cfg.counterweightMass.toInt())
-        pickCup.text = getString(R.string.trebuchet_cup, cfg.cupCurveDeg.toInt())
-        pickStop.text = getString(R.string.trebuchet_stop, (-game.stopAngleDeg).toInt())
+        pickHang.text = getString(R.string.trebuchet_hang, fmt(cfg.hangLength))
+        pickPin.text = getString(R.string.trebuchet_pin, cfg.pinAngleDeg.toInt())
 
         specsText.text = getString(
             R.string.trebuchet_specs,
-            fmt(cfg.leverRatio),
-            cfg.storedEnergy.toInt(),
-            (-game.stopAngleDeg).toInt()
+            cfg.cockAngleDeg.toInt(),
+            (cfg.storedEnergy / 1000f).toInt(),
+            fmt(cfg.slingLength)
         )
         bestText.text = if (best > 0f) getString(R.string.trebuchet_best, fmt(best)) else ""
 
@@ -179,7 +180,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
                         fmt(game.shotDistance),
                         fmt(game.launchSpeed),
                         game.launchAngleDeg.toInt(),
-                        fmt(game.peakHeight)
+                        fmt(game.peakHeight),
+                        (game.efficiency * 100f).toInt()
                     )
                 }
             else -> getString(R.string.trebuchet_status_flight)

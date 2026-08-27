@@ -2,170 +2,244 @@ package com.Atom2Universe.app.games.trebuchet
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.abs
 
 /**
- * Vérifie la machine de jet : elle doit lancer vers l'avant, réagir aux réglages
- * du catalogue, et surtout ne jamais partir en vrille numérique.
+ * Vérifie la machine de jet : elle doit porter comme un vrai trébuchet, réagir
+ * lisiblement à chaque réglage du catalogue, et ne jamais partir en vrille
+ * numérique.
  */
 class TrebuchetGameTest {
 
     private fun machine(
-        beam: Int = 1, foot: Int = 1, ratio: Int = 2, weight: Int = 2,
-        tilt: Int = 2, stop: Int = 2,
-        drop: Float = TrebuchetRules.DROP_MIN, ballAtTip: Boolean = true
+        beam: Int = 1, post: Int = 1, ratio: Int = 1, weight: Int = 1,
+        hang: Int = 1, pin: Int = 2, sling: Float = 0.6f
     ) = TrebuchetGame().apply {
         config.beamIndex = beam
-        config.footIndex = foot
+        config.postIndex = post
         config.ratioIndex = ratio
         config.weightIndex = weight
-        config.cupCurveIndex = tilt
-        config.stopIndex = stop
-        config.dropHeight = drop
-        if (ballAtTip) config.ballDistance = 99f     // ramené au bout du bras
+        config.hangIndex = hang
+        config.pinIndex = pin
+        config.slingRatio = sling
         build()
     }
 
     @Test
-    fun `la machine par defaut envoie le boulet devant la ligne de tir`() {
-        val g = machine()
+    fun `la machine par defaut envoie le boulet loin devant`() {
+        // La machine que le joueur trouve en arrivant, sans avoir rien réglé.
+        val g = TrebuchetGame()
         val d = g.simulateShot()
 
-        assertTrue("le boulet ne franchit pas la ligne de tir : $d m", d > 5f)
-        assertTrue("le boulet ne quitte pas la cuiller : ${g.launchSpeed} m/s", g.launchSpeed > 3f)
+        assertTrue("le boulet ne part pas devant : $d m", d > 60f)
+        assertTrue("le boulet ne quitte pas la fronde : ${g.launchSpeed} m/s", g.launchSpeed > 25f)
+        assertTrue("le crochet n'a pas lâché", g.ballFree)
         assertTrue("le boulet ne monte pas : ${g.peakHeight} m", g.peakHeight > g.pivotY)
     }
 
     @Test
-    fun `raccourcir le bras court augmente la vitesse de sortie`() {
-        // C'est le rapport de bras qui commande la portée, pas la masse. Quand le
-        // contrepoids devient lourd, la vitesse tend vers une limite qui ne dépend
-        // plus du tout de lui — son énergie part dans sa propre inertie :
-        //
-        //     v = racine(2·g·sin(angle d'arrêt)) × bras long / racine(bras court)
-        //
-        // Doubler le contrepoids ne change donc presque rien, alors que raccourcir
-        // le bras court fait monter la vitesse. C'est mesuré, pas supposé.
-        // Sur le grand bras, où la machine a de quoi exprimer la différence.
-        val gentle = machine(beam = 2, ratio = 0, stop = 3).also { it.simulateShot() }.launchSpeed
-        val steep = machine(beam = 2, ratio = 2, stop = 3).also { it.simulateShot() }.launchSpeed
+    fun `une machine plus grande porte plus loin`() {
+        // C'est ce qui donne son sens au catalogue : le bras long fait la vitesse de
+        // pointe, et la fronde la double. Le banc, sur la meilleure combinaison de
+        // chaque taille : 143 m à 8 m de bras, 174 m à 12 m, 214 m à 18 m.
+        val small = machine(beam = 0, post = 2, ratio = 3, weight = 2, hang = 2, pin = 2, sling = 0.85f)
+        val big = machine(beam = 2, post = 2, ratio = 3, weight = 2, hang = 2, pin = 2, sling = 0.85f)
+        val ds = small.simulateShot()
+        val db = big.simulateShot()
 
-        assertTrue(
-            "le rapport de bras ne change rien : $gentle m/s contre $steep m/s",
-            steep > gentle * 1.15f
-        )
+        println("bras 8 m → %.0f m (%.0f m/s) | bras 18 m → %.0f m (%.0f m/s)".format(
+            ds, small.launchSpeed, db, big.launchSpeed))
+        assertTrue("la grande machine ne porte pas plus loin : $ds m contre $db m", db > ds * 1.25f)
     }
 
     @Test
-    fun `lelan du contrepoids ne fabrique plus de vitesse imaginaire`() {
-        // Ce test disait autrefois qu'un lâcher de haut donnait 50 % de vitesse en
-        // plus. C'était faux, et la faute en revenait au moteur : il corrigeait les
-        // positions en poussant sur les vraies vitesses, donc chaque choc créait de
-        // l'énergie. Depuis que les corrections passent par des vitesses fantômes,
-        // un choc ne rend que ce qu'il a reçu.
-        //
-        // Reste ce qui est physiquement vrai : un contrepoids lâché de plus haut
-        // arrive plus vite, donc frappe plus fort, mais un choc perd beaucoup, et le
-        // gain sur la vitesse de sortie est modeste.
-        val gentle = machine(drop = TrebuchetRules.DROP_MIN).also { it.simulateShot() }
-        val violent = machine(drop = TrebuchetRules.DROP_MAX).also { it.simulateShot() }
-
-        assertTrue(
-            "l'élan retire de la vitesse : ${gentle.launchSpeed} contre ${violent.launchSpeed} m/s",
-            violent.launchSpeed > gentle.launchSpeed * 0.75f
-        )
-        assertTrue(
-            "l'élan multiplie la vitesse, ce qu'aucune énergie ne justifie : " +
-                "${gentle.launchSpeed} contre ${violent.launchSpeed} m/s",
-            violent.launchSpeed < gentle.launchSpeed * 2f
-        )
-    }
-
-    @Test
-    fun `le cliquet tient le bras jusqu au choc du contrepoids`() {
-        val g = machine()
-        g.release()
-        // Un dixième de seconde après le lâcher, le contrepoids tombe encore et le
-        // bras n'a pas bougé d'un cheveu : sans ce cliquet, le bras s'affaisserait
-        // du côté du boulet et celui-ci roulerait par terre avant le tir.
-        repeat(12) { g.step(1f / 120f) }
-        assertTrue("le bras part avant le choc : ${g.beam.angle}", kotlin.math.abs(g.beam.angle) < 0.01f)
-        assertTrue("le contrepoids ne tombe pas", g.counterweight.vy < -0.5f)
-    }
-
-    @Test
-    fun `larretoir arrete bien le bras`() {
-        val g = machine()
+    fun `la fronde double la vitesse de la pointe`() {
+        // C'est toute la raison d'être de la fronde : sans elle, le boulet sortirait à
+        // la vitesse de la pointe du bras. Avec elle, il sort à peu près au double,
+        // et c'est ce facteur deux qui quadruple la portée.
+        val g = machine(sling = 0.85f, pin = 2)
         g.simulateShot()
-        // Le bras doit finir contre son tampon, à l'angle prévu, et pas avoir fait
-        // un tour complet : c'est cet arrêt qui libère le boulet.
-        val stopped = Math.toRadians(g.stopAngleDeg.toDouble()).toFloat()
+
+        println("pointe %.1f m/s → boulet %.1f m/s (×%.2f)".format(
+            g.launchTipSpeed, g.launchSpeed, g.launchSpeed / g.launchTipSpeed))
         assertTrue(
-            "le bras ne s'arrête pas à l'arrêtoir : ${g.beam.angle} rad pour un arrêt prévu à $stopped",
-            g.beam.angle > stopped - 0.35f
+            "la fronde n'accélère rien : pointe %.1f m/s, boulet %.1f m/s".format(
+                g.launchTipSpeed, g.launchSpeed
+            ),
+            g.launchSpeed > g.launchTipSpeed * 1.5f
         )
     }
 
     @Test
-    fun `table croisee du crochet et de larretoir`() {
-        // Les deux réglages agissent tous les deux sur le moment du largage : cette
-        // table dit s'ils restent lisibles pour le joueur ou s'ils se brouillent.
-        for (drop in listOf(TrebuchetRules.DROP_MIN, TrebuchetRules.DROP_MAX)) {
-            println("--- lâcher de $drop m, bras 8 m, rapport 6, 700 kg ---")
-            for (t in TrebuchetRules.CUP_CURVES_DEG.indices) {
-                val line = StringBuilder("  crochet %2d° :".format(TrebuchetRules.CUP_CURVES_DEG[t]))
-                for (st in TrebuchetRules.STOP_ANGLES_DEG.indices) {
-                    val g = machine(beam = 1, ratio = 2, weight = 2, tilt = t, stop = st, drop = drop)
-                    val d = g.simulateShot()
-                    line.append("   arrêt %3d° → %6.1f m (%4.1f m/s, %3.0f°)".format(
-                        TrebuchetRules.STOP_ANGLES_DEG[st], d, g.launchSpeed, g.launchAngleDeg))
-                }
-                println(line)
+    fun `le crochet commande langle de tir`() {
+        // Crochet redressé : la fronde le rencontre tôt, le boulet est encore bas et
+        // file devant — tir tendu. Crochet couché : il retient jusqu'au bout du fouet,
+        // le boulet passe par-dessus la pointe et part haut. C'est le seul réglage de
+        // visée de la machine, et il doit être monotone, sinon le joueur ne peut rien
+        // en faire.
+        val angles = TrebuchetRules.PIN_ANGLES_DEG.indices.map { pin ->
+            machine(pin = pin, sling = 0.7f).also { it.simulateShot() }.launchAngleDeg
+        }
+        println("crochets ${TrebuchetRules.PIN_ANGLES_DEG.toList()} → " +
+            angles.joinToString { "%.0f°".format(it) })
+
+        val flat = angles.last()      // crochet le plus redressé
+        val steep = angles.first()    // crochet le plus couché
+        assertTrue(
+            "le crochet ne redresse pas le tir : %.0f° contre %.0f°".format(flat, steep),
+            steep > flat + 15f
+        )
+        for (i in 1 until angles.size) {
+            assertTrue(
+                "le crochet n'est pas monotone : ${angles.map { it.toInt() }}",
+                angles[i] <= angles[i - 1] + 6f
+            )
+        }
+    }
+
+    @Test
+    fun `un contrepoids plus lourd porte plus loin`() {
+        val light = machine(weight = 0).also { it.simulateShot() }.shotDistance
+        val heavy = machine(weight = 2).also { it.simulateShot() }.shotDistance
+
+        assertTrue(
+            "le contrepoids ne change rien : $light m contre $heavy m",
+            heavy > light * 1.25f
+        )
+    }
+
+    @Test
+    fun `la detente tient la machine bandee`() {
+        val g = machine()
+        // Bandée, la machine ne bouge pas : le bras est retenu, le contrepoids pend.
+        repeat(60) { g.step(1f / 120f) }
+        assertTrue("le bras part tout seul : ${g.beam.angle}", g.phase == TrebuchetGame.Phase.BUILD)
+
+        val cocked = g.beam.angle
+        g.release()
+        repeat(24) { g.step(1f / 120f) }
+        assertTrue("le bras ne démarre pas", g.beam.angle > cocked + 0.01f)
+        assertTrue("le contrepoids ne tombe pas : ${g.counterweight.vy}", g.counterweight.vy < -0.2f)
+    }
+
+    @Test
+    fun `le boulet part quand la fronde passe le crochet, pas avant`() {
+        // Le largage n'est pas décrété : c'est la géométrie qui le produit. Ce test
+        // vérifie que l'instant constaté est bien celui où la fronde croise le crochet.
+        val g = machine(pin = 1)
+        g.release()
+        var freedAt = Float.NaN
+        repeat(3000) {
+            val wasFree = g.ballFree
+            g.step(1f / 240f)
+            if (!wasFree && g.ballFree && freedAt.isNaN()) freedAt = g.slingAngle
+        }
+        assertTrue("le crochet n'a jamais lâché", !freedAt.isNaN())
+        assertTrue(
+            "le largage n'est pas au passage du crochet : %.2f rad pour un seuil de %.2f"
+                .format(freedAt, g.releaseAngle),
+            abs(freedAt - g.releaseAngle) < 0.2f
+        )
+    }
+
+    @Test
+    fun `table croisee du crochet et de la fronde`() {
+        // Les deux réglages fins de la machine. Cette table dit s'ils restent lisibles
+        // pour le joueur ou s'ils se brouillent l'un l'autre.
+        println("--- bras 12 m, levier 4:1, pied 0,70, 3000 kg, chape moyenne ---")
+        for (pin in TrebuchetRules.PIN_ANGLES_DEG.indices) {
+            val line = StringBuilder("  crochet %3d° :".format(TrebuchetRules.PIN_ANGLES_DEG[pin]))
+            for (s in listOf(0.3f, 0.45f, 0.6f, 0.75f, 0.9f)) {
+                val g = machine(pin = pin, sling = s)
+                val d = g.simulateShot()
+                line.append(
+                    "  fronde %.2f → %4.0f m (%4.1f m/s, %3.0f°, %2.0f %%)".format(
+                        s, d, g.launchSpeed, g.launchAngleDeg, g.efficiency * 100f
+                    )
+                )
             }
+            println(line)
+        }
+    }
+
+    @Test
+    fun `table de la chape du contrepoids`() {
+        // La chape accorde le pendule du contrepoids sur la rotation du bras.
+        println("--- chape × levier, bras 12 m, crochet 90°, fronde 0,6, 3000 kg ---")
+        for (h in TrebuchetRules.HANG_RATIOS.indices) {
+            val line = StringBuilder("  chape %.1f× :".format(TrebuchetRules.HANG_RATIOS[h]))
+            for (r in TrebuchetRules.LEVER_RATIOS.indices) {
+                val g = machine(hang = h, ratio = r)
+                val d = g.simulateShot()
+                line.append(
+                    "  levier %.0f:1 → %4.0f m (%2.0f %%)".format(
+                        TrebuchetRules.LEVER_RATIOS[r], d, g.efficiency * 100f
+                    )
+                )
+            }
+            println(line)
         }
     }
 
     /**
      * Le garde-fou le plus important du jeu.
      *
-     * Toute la mise au point de la machine a consisté à traquer des tirs qui
-     * partaient à 20, puis 400 m/s — jamais de la vraie physique, toujours un
-     * corps coincé quelque part et éjecté par le solveur. Aucune combinaison du
-     * catalogue ne doit pouvoir produire ça.
+     * Toute la mise au point de la machine précédente avait consisté à traquer des
+     * tirs qui partaient à 250, puis 400 m/s — jamais de la vraie physique, toujours
+     * un corps coincé quelque part et éjecté par le solveur. Aucune combinaison du
+     * catalogue ne doit pouvoir produire ça, et la borne n'est pas arbitraire : c'est
+     * celle que l'énergie stockée autorise.
      */
     @Test
     fun `aucune combinaison du catalogue ne fait exploser la simulation`() {
         var forward = 0
         var total = 0
-        var best = 0f
-        var worstSpeed = 0f
-        var worstSpeedWhere = ""
+        var worstOverspeed = 0f
+        var worstWhere = ""
         val all = ArrayList<Pair<Float, String>>()
 
         for (b in TrebuchetRules.BEAM_LENGTHS.indices) {
-            for (r in TrebuchetRules.LEVER_RATIOS.indices) {
-                for (w in TrebuchetRules.COUNTERWEIGHTS.indices) {
-                    for (st in TrebuchetRules.STOP_ANGLES_DEG.indices) {
-                        // Élan maximum : c'est le cas le plus dur pour le solveur.
-                        val g = machine(
-                            beam = b, ratio = r, weight = w, stop = st,
-                            drop = TrebuchetRules.DROP_MAX
-                        )
-                        val d = g.simulateShot()
-                        total++
-                        if (d > 0f) forward++
-                        if (d > best) best = d
-                        all += d to ("bras=${TrebuchetRules.BEAM_LENGTHS[b]} " +
-                            "rapport=${TrebuchetRules.LEVER_RATIOS[r]} " +
-                            "poids=${TrebuchetRules.COUNTERWEIGHTS[w]} " +
-                            "arrêt=${TrebuchetRules.STOP_ANGLES_DEG[st]} " +
-                            "| sortie %.1f m/s sous %.0f° (arrêt %.0f°)".format(
-                                g.launchSpeed, g.launchAngleDeg, g.stopAngleDeg))
+            for (p in TrebuchetRules.POST_RATIOS.indices) {
+                for (r in TrebuchetRules.LEVER_RATIOS.indices) {
+                    for (w in TrebuchetRules.COUNTERWEIGHTS.indices) {
+                        for (h in TrebuchetRules.HANG_RATIOS.indices) {
+                            for (pin in TrebuchetRules.PIN_ANGLES_DEG.indices) {
+                                val g = machine(
+                                    beam = b, post = p, ratio = r, weight = w,
+                                    hang = h, pin = pin
+                                )
+                                // Plafond honnête : toute l'énergie stockée passée au
+                                // boulet, et rien d'autre. Un tir au-delà est de
+                                // l'énergie que personne n'a fournie.
+                                val ceiling = kotlin.math.sqrt(
+                                    2f * g.config.storedEnergy / TrebuchetRules.BALL_MASS
+                                )
+                                val d = g.simulateShot()
+                                total++
+                                if (d > 0f) forward++
 
-                        if (g.peakSpeed > worstSpeed) {
-                            worstSpeed = g.peakSpeed
-                            worstSpeedWhere = all.last().second
+                                val label = "bras=%.0f pied=%.2f levier=%.0f poids=%.0f chape=%.1f crochet=%d".format(
+                                    TrebuchetRules.BEAM_LENGTHS[b],
+                                    TrebuchetRules.POST_RATIOS[p],
+                                    TrebuchetRules.LEVER_RATIOS[r],
+                                    TrebuchetRules.COUNTERWEIGHTS[w],
+                                    TrebuchetRules.HANG_RATIOS[h],
+                                    TrebuchetRules.PIN_ANGLES_DEG[pin]
+                                ) + " | %.0f m/s sous %.0f° (%.0f %%)".format(
+                                    g.launchSpeed, g.launchAngleDeg, g.efficiency * 100f
+                                )
+                                all += d to label
+                                val over = g.peakSpeed / ceiling
+                                if (over > worstOverspeed) {
+                                    worstOverspeed = over
+                                    worstWhere = label
+                                }
+                                assertTrue(
+                                    "le tir ne se termine pas",
+                                    g.phase == TrebuchetGame.Phase.RESULT
+                                )
+                            }
                         }
-                        assertTrue("le tir ne se termine pas", g.phase == TrebuchetGame.Phase.RESULT)
                     }
                 }
             }
@@ -173,43 +247,31 @@ class TrebuchetGameTest {
 
         all.sortByDescending { it.first }
         println("=== 8 meilleures ===")
-        all.take(8).forEach { println("  %.1f m  %s".format(it.first, it.second)) }
+        all.take(8).forEach { println("  %5.0f m  %s".format(it.first, it.second)) }
         println("=== 4 pires ===")
-        all.takeLast(4).forEach { println("  %.1f m  %s".format(it.first, it.second)) }
-        println("=== %d combinaisons : médiane %.1f m, %d vers l'avant ===".format(
-            total, all[total / 2].first, forward))
-
-        println("=== vitesse maximale rencontrée : %.1f m/s (%s) ===".format(worstSpeed, worstSpeedWhere))
+        all.takeLast(4).forEach { println("  %5.0f m  %s".format(it.first, it.second)) }
+        println(
+            "=== %d combinaisons : médiane %.0f m, %d vers l'avant ===".format(
+                total, all[total / 2].first, forward
+            )
+        )
+        println(
+            "=== pire dépassement du plafond d'énergie : %.2f× (%s) ===".format(
+                worstOverspeed, worstWhere
+            )
+        )
 
         assertTrue(
-            "vitesse aberrante : %.1f m/s pour %s".format(worstSpeed, worstSpeedWhere),
-            worstSpeed < 60f
+            "un tir dépasse l'énergie disponible de %.2f× : %s".format(worstOverspeed, worstWhere),
+            worstOverspeed < 1f
         )
-        assertTrue(
-            "portée aberrante : %.1f m pour %s".format(all.last().first, all.last().second),
-            all.last().first > -40f
-        )
-        // À élan maximum le tir se redresse, donc la portée baisse : ce qu'on
-        // vérifie ici, c'est qu'aucune machine ne part en vrille numérique.
         assertTrue(
             "seules $forward machines sur $total tirent vers l'avant",
-            forward > total * 3 / 4
+            forward > total * 4 / 5
         )
-
-        // Et le catalogue doit savoir porter, une fois l'élan dosé.
-        var bestGentle = 0f
-        for (b in TrebuchetRules.BEAM_LENGTHS.indices) {
-            for (r in TrebuchetRules.LEVER_RATIOS.indices) {
-                for (st in TrebuchetRules.STOP_ANGLES_DEG.indices) {
-                    val d = machine(beam = b, ratio = r, weight = 2, stop = st).simulateShot()
-                    if (d > bestGentle) bestGentle = d
-                }
-            }
-        }
-        println("=== meilleure portée à élan dosé : %.1f m ===".format(bestGentle))
-        // La barre a baissé le jour où le solveur a cessé de créer de l'énergie :
-        // une partie de la portée d'avant était offerte par le bug, pas par la
-        // machine. C'est la portée honnête de cette géométrie.
-        assertTrue("la meilleure machine du catalogue ne porte qu'à $bestGentle m", bestGentle > 15f)
+        assertTrue(
+            "la meilleure machine du catalogue ne porte qu'à %.0f m".format(all.first().first),
+            all.first().first > 150f
+        )
     }
 }

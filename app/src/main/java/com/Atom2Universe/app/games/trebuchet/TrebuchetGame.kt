@@ -1,351 +1,344 @@
 package com.Atom2Universe.app.games.trebuchet
 
+import com.Atom2Universe.app.games.physics.DistanceJoint
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.PhysWorld
 import com.Atom2Universe.app.games.physics.RevoluteJoint
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.asin
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Dimensions du terrain et catalogue de pièces, en mètres (repère physique,
  * Y vers le haut, origine au sol sous le pivot).
  *
- * Le catalogue est **fixe et toujours entièrement disponible** : c'est au joueur
- * de choisir la bonne combinaison selon le terrain, pas au niveau de lui imposer
- * un stock. Les réglages continus (hauteur de lâcher, position du boulet) sont
- * volontairement bornés serré : s'ils couvraient toute la plage, une seule
- * machine suffirait à résoudre tous les niveaux et les crans ne serviraient plus.
+ * La machine est un **vrai trébuchet**, c'est-à-dire les trois pièces que les
+ * ingénieurs médiévaux ont fini par trouver, et dont aucune n'est décorative :
+ *
+ *  1. un **bras** sur un pivot haut, très inégal : bras court côté contrepoids,
+ *     bras long côté projectile ;
+ *  2. un **contrepoids pendulaire**, suspendu à l'extrémité du bras court par une
+ *     chape et non boulonné dessus. Pendu, il tombe presque à la verticale au lieu
+ *     de décrire un arc, et rend donc presque toute sa hauteur ;
+ *  3. une **fronde**, une corde entre la pointe du bras et le boulet, dont une
+ *     extrémité est passée sur un **crochet de largage**. La fronde double le bras
+ *     au dernier moment — le boulet sort environ deux fois plus vite que la pointe —
+ *     et c'est l'inclinaison du crochet qui décide de l'instant du largage, donc de
+ *     l'angle de tir.
+ *
+ * Ce que la machine faisait avant : un contrepoids lâché de haut qui percutait le
+ * bras, un boulet posé dans une cuiller rigide, et un tampon pour arrêter le bras.
+ * Mesuré au banc d'essai, ça sortait à 14 m/s pour 21 m de portée. Le choc
+ * gaspillait, la cuiller rigide était bistable, et l'arrêt brutal du bras, qui
+ * tenait lieu de largage, jetait le reste. Le même banc donne aujourd'hui 48 m/s et
+ * 143 m pour la plus petite machine, 66 m/s et 214 m pour la plus grande.
+ *
+ * Le catalogue reste **fixe et toujours entièrement disponible** : c'est au joueur
+ * de choisir la bonne combinaison, pas au niveau de lui imposer un stock.
  */
 object TrebuchetRules {
 
-    /** La machine tire vers les x positifs : le boulet passe par-dessus le pivot. */
-    const val FIRING_LINE = 3f
+    /** La portée se mesure depuis le pied de la machine. */
+    const val FIRING_LINE = 0f
 
-    const val GROUND_LEFT = -14f
-    const val GROUND_RIGHT = 260f
+    /** De quoi voir retomber un tir parti en arrière, ce qui arrive vite. */
+    const val GROUND_LEFT = -140f
+    const val GROUND_RIGHT = 420f
 
     /**
      * Longueurs de bras proposées, en mètres.
      *
-     * Une machine de jet vit de son élan : la vitesse de sortie vaut oméga fois la
-     * longueur du bras long, et l'énergie disponible vaut le poids du contrepoids
-     * fois la hauteur dont il descend, elle-même proportionnelle au bras court.
-     * Tout allonger fait donc grandir la portée deux fois — c'est pour ça que les
-     * vraies machines sont énormes.
+     * Une machine de jet vit de son élan : la vitesse de la pointe vaut oméga fois
+     * le bras long, et la fronde double encore ça. Mais un bras long est aussi un
+     * bras lourd, qui emporte lui-même une bonne part de l'énergie du contrepoids :
+     * c'est ce qui crée l'optimum, et c'est pour ça que les vraies machines sont
+     * énormes mais pas infinies.
      */
-    val BEAM_LENGTHS = floatArrayOf(5f, 8f, 12f)
-
-    /** Un bras plus long est plus lourd : c'est ce qui crée l'optimum de rapport. */
-    const val BEAM_DENSITY = 1.2f
-    const val BEAM_HALF_THICKNESS = 0.07f
+    val BEAM_LENGTHS = floatArrayOf(8f, 12f, 18f)
 
     /**
-     * Hauteurs de pied, donc du pivot. Il faut de quoi laisser le bras court
-     * descendre jusqu'à l'arrêtoir sans toucher le sol.
+     * Masse du bras par mètre : une poutre de chêne d'une vingtaine de centimètres.
+     *
+     * Elle compte plus qu'on ne croit. Le bras finit sa course dressé, son centre de
+     * masse tout en haut, et cette hauteur-là est de l'énergie que le contrepoids a
+     * payée sans que le boulet en voie la couleur. Il tourne aussi, et sa rotation
+     * emporte autant que celle du boulet quand il est trop lourd.
      */
-    val FOOT_HEIGHTS = floatArrayOf(3f, 4.5f, 6f)
+    const val BEAM_DENSITY = 8f
+    const val BEAM_HALF_THICKNESS = 0.09f
 
     /**
-     * Crans du pied le long du bras, exprimés en rapport bras long / bras court.
+     * Hauteur du pivot, en fraction de la longueur totale du bras.
      *
-     * C'est **le** réglage qui commande la portée, bien plus que le contrepoids.
-     * Quand celui-ci devient lourd, la vitesse de sortie tend vers une limite qui
-     * ne dépend plus du tout de sa masse :
-     *
-     *     v = racine(2·g·sin(angle d'arrêt)) × bras long / racine(bras court)
-     *
-     * Autrement dit, doubler le contrepoids ne sert presque à rien — son énergie
-     * part dans sa propre inertie — alors que raccourcir le bras court fait
-     * grimper la vitesse. C'est pour ça que les vrais trébuchets ont un
-     * contrepoids énorme collé tout près de l'axe.
+     * Elle ne sert pas qu'à faire joli : c'est elle qui décide de **l'angle
+     * d'armement**. Un pivot haut laisse le bras long descendre plus près de la
+     * verticale, donc le contrepoids monte plus haut, donc la machine stocke plus
+     * d'énergie et le bras a plus de course pour la rendre.
      */
-    val LEVER_RATIOS = floatArrayOf(2f, 4f, 6f, 9f)
-
-    /** Longueur minimale du bras court : en deçà, la machine n'est plus crédible. */
-    const val MIN_SHORT_ARM = 0.9f
-
-    /** Contrepoids : léger, moyen, lourd. */
-    val COUNTERWEIGHTS = floatArrayOf(200f, 400f, 700f)
+    val POST_RATIOS = floatArrayOf(0.55f, 0.70f, 0.85f)
 
     /**
-     * Hauteur de lâcher du contrepoids, au-dessus du bras court.
+     * Crans du pivot le long du bras, exprimés en rapport bras long / bras court.
      *
-     * Lâcher de haut, c'est de l'élan en plus — exactement le principe de la
-     * bascule de cirque, où l'acrobate saute sur la planche au lieu de s'y poser.
-     * Et l'élan marche : au banc d'essai, un lâcher de 2,5 m fait sortir le boulet
-     * à 31 m/s au lieu de 20.
-     *
-     * Mais une bascule de cirque envoie son acrobate **droit en l'air**, et c'est
-     * bien ce que fait un choc : le bras saute à pleine vitesse en un ou deux
-     * degrés de rotation, et le boulet part perpendiculairement au bras — mesuré à
-     * 81°. Récupérer cet élan vers l'avant demanderait une cuiller capable de
-     * retenir le boulet pendant le choc puis de le rendre au bon moment, ce qu'un
-     * creux rigide ne sait pas faire (voir [CUP_CURVES_DEG]). D'ici la fronde, la
-     * plage reste donc courte : ce réglage déclenche le tir, il ne le charge pas.
+     * C'est le réglage qui échange la force contre la vitesse. Bras court long : le
+     * contrepoids descend de haut, beaucoup d'énergie, mais le bras tourne
+     * lentement. Bras court ramassé : peu d'énergie, mais un fouet très rapide.
      */
-    const val DROP_MIN = 0.3f
-    const val DROP_MAX = 2.5f
+    val LEVER_RATIOS = floatArrayOf(3f, 4f, 5f, 6f)
 
     /**
-     * Le boulet. Le rapport entre sa masse et celle du contrepoids est ce qui
-     * règle la portée : à énergie donnée, la vitesse de sortie varie comme la
-     * racine de ce rapport. C'est le réglage le plus efficace pour décider de la
-     * taille du terrain.
+     * Contrepoids proposés, en kilogrammes — des tonnes, comme les vraies machines.
+     *
+     * Le rapport qui compte est celui du contrepoids au boulet : les trébuchets
+     * historiques tournaient entre cent et quatre cents fois. En dessous, le boulet
+     * est trop lourd pour la machine, il freine le bras au lieu de se laisser
+     * emporter, et la moitié de l'énergie reste dans la charpente.
      */
+    val COUNTERWEIGHTS = floatArrayOf(1500f, 3000f, 6000f)
+
+    /**
+     * Longueur de la chape qui suspend le contrepoids, en fraction du bras court.
+     *
+     * C'est le réglage de **synchronisation** de la machine. Le contrepoids pendu
+     * est un pendule : il a son propre temps de balancement. Trop courte, la chape
+     * le colle au bras et il se comporte comme s'il y était boulonné — on perd tout
+     * le gain du pendulaire. Trop longue, il balance en retard et le bras est déjà
+     * reparti quand il pousse enfin. Entre les deux, il tombe presque droit et rend
+     * tout ce qu'il a.
+     */
+    val HANG_RATIOS = floatArrayOf(0.5f, 1f, 1.6f)
+
+    /**
+     * Inclinaison du crochet de largage sur l'axe du bras, en degrés — **la visée**.
+     *
+     * La fronde a deux brins. L'un est noué à la pointe du bras et ne la quitte
+     * jamais ; l'autre finit par une boucle simplement posée sur un ergot recourbé,
+     * le crochet. Tant que la fronde tire dans l'axe du crochet, la boucle y reste ;
+     * dès qu'elle passe au-delà, la boucle glisse et le boulet part.
+     *
+     * L'angle se mesure depuis l'axe du bras, du côté où la fronde traîne. Bandée,
+     * la machine a sa fronde loin en arrière — entre 90 et 145° selon la géométrie —
+     * et le fouet la ramène vers l'axe du bras. Elle croise donc le crochet en
+     * chemin, et le sens est celui-ci, mesuré au banc et non supposé :
+     *
+     *  - **crochet redressé** (grand angle) : la fronde le rencontre **tôt**, alors
+     *    que le boulet est encore bas et file vers l'avant. Tir tendu et long.
+     *  - **crochet couché** (petit angle) : il retient la boucle jusqu'au bout du
+     *    fouet. Le boulet y gagne beaucoup de vitesse — jusqu'à soixante mètres par
+     *    seconde — mais il a le temps de passer par-dessus la pointe, et il part de
+     *    plus en plus haut, puis carrément en arrière.
+     *
+     * C'est exactement le réglage que les constructeurs de trébuchets passent leurs
+     * journées à limer, et il n'y a rien d'arbitraire dedans : le moment du largage
+     * est une **conséquence géométrique** de l'angle de la fronde, mesuré à chaque
+     * pas. Les valeurs de la liste ne sont pas choisies au jugé non plus : elles
+     * couvrent la plage où le banc d'essai trouve les tirs utiles, laquelle dépend
+     * beaucoup de la longueur de la fronde — une fronde longue veut un crochet
+     * redressé. C'est ce qui lie les deux réglages fins de la machine.
+     */
+    val PIN_ANGLES_DEG = intArrayOf(60, 75, 90, 105, 120)
+
+    /**
+     * Ce que la fronde doit au minimum balayer avant que la boucle puisse glisser.
+     *
+     * Un crochet plus redressé que la fronde ne la retiendrait pas du tout : la
+     * boucle serait déjà du mauvais côté au moment de bander la machine. On le
+     * couche alors juste assez pour qu'il tienne, plutôt que de larguer le boulet
+     * dans les pieds du joueur.
+     */
+    const val MIN_PIN_SWEEP_DEG = 10f
+
+    /**
+     * Longueur de la fronde, en fraction du bras long. Réglage continu : on fait
+     * glisser le boulet sur le sol pour l'allonger ou la raccourcir.
+     *
+     * Une fronde longue donne plus de rayon donc plus de vitesse, mais met plus de
+     * temps à faire son tour : passé un certain point, le bras a fini sa course
+     * avant que la fronde ait fini la sienne, et le tir part n'importe comment.
+     */
+    const val SLING_MIN_RATIO = 0.25f
+    const val SLING_MAX_RATIO = 0.95f
+
+    /** Le boulet : une belle pierre de taille. */
     const val BALL_RADIUS = 0.16f
-    const val BALL_MASS = 6f
+    const val BALL_MASS = 12f
 
     /**
-     * La cuiller. Les deux butées ne se ressemblent pas du tout, parce qu'elles ne
-     * servent pas à la même chose :
-     *
-     *  - **côté pivot**, un simple rebord, très bas. Il ne sert qu'au tout début,
-     *    quand le bras s'incline et que le boulet roule vers le pivot sous son
-     *    propre poids. Le faire haut ne servait à rien et enfermait le boulet.
-     *  - **côté pointe**, la vraie butée : un montant **toujours d'équerre** avec
-     *    le bras, dont seule la moitié haute se recourbe. Dès que le bras fouette,
-     *    la force centrifuge chasse le boulet vers la pointe et c'est ce montant
-     *    qui le retient et l'emmène ; la courbure de son extrémité décide de la
-     *    façon dont il s'échappe, donc de l'angle du tir.
-     *
-     * Enfermer le boulet entre deux hautes parois, comme au premier essai,
-     * l'empêchait tout simplement de sortir.
+     * Traînée du boulet, en kg/m : la moitié de ρ·Cx·S pour une sphère de ce rayon.
+     * À 70 m/s elle vaut à peu près le poids du boulet — un trébuchet qui porte
+     * loin est une machine dont l'air décide autant que la géométrie.
      */
-    const val CUP_HALF_WIDTH = 0.07f
+    const val BALL_DRAG = 0.023f
 
-    /**
-     * Jeu laissé au boulet entre les deux rebords. Sans lui l'écart vaut très
-     * exactement son diamètre : le boulet est monté serré, le moindre tremblement
-     * du solveur l'enfonce des deux côtés à la fois, et il finit par jaillir de la
-     * cuiller à une vitesse absurde toujours identique.
-     */
-    const val CUP_CLEARANCE = 0.025f
+    /** Garde au sol de la pointe du bras quand la machine est bandée. */
+    const val TIP_CLEARANCE = 0.35f
 
-    /**
-     * Courbure de la pointe de la butée avant, en degrés — le réglage de visée.
-     *
-     * Seule la pointe du montant se recourbe, vers le pivot. Plus elle crochète,
-     * plus le boulet est retenu longtemps et part tendu ; droite, il s'échappe tôt
-     * et monte presque à la verticale.
-     *
-     * L'échelle est courte, et pas par prudence : mesures à l'appui, une cuiller
-     * rigide est **bistable**. En dessous d'une vingtaine de degrés elle ne retient
-     * rien et le boulet part presque à la verticale ; au-dessus de quarante elle
-     * l'emprisonne et il ne part plus du tout, faisant le tour avec le bras. Entre
-     * les deux, la transition est brutale et il n'existe aucune valeur qui donne un
-     * beau 45°. C'est la limite de fond de ce type de machine, et c'est exactement
-     * pour ça qu'un vrai trébuchet emploie une fronde : une poche au bout d'une
-     * corde sépare le fait de retenir du fait de lâcher, ce qu'un creux rigide ne
-     * sait pas faire.
-     */
-    val CUP_CURVES_DEG = intArrayOf(0, 15, 30, 45)
+    /** Garde au sol du contrepoids au plus bas de sa course. */
+    const val CW_CLEARANCE = 0.2f
 
-    /** Position du contrepoids sur le bras court, en fraction de sa longueur. */
-    const val SEAT_POSITION = 0.75f
-    /** Le rebord côté pivot : juste de quoi bloquer le roulement du début. */
-    const val CUP_BACK_HALF_HEIGHT = BALL_RADIUS * 0.55f
-
-    /**
-     * La butée avant, en deux morceaux.
-     *
-     * Le montant est d'équerre avec le bras, et son coude tombe **à hauteur du
-     * centre du boulet** : c'est ce qui permet à la pointe de venir se refermer
-     * par-dessus, et donc de retenir le boulet quand le contrepoids frappe fort.
-     * Un coude placé plus haut que le boulet ne le couvrait pas : la pointe
-     * passait à vingt-cinq centimètres au-dessus de lui sans rien retenir.
-     */
-    const val CUP_FRONT_BASE_HALF_HEIGHT = BALL_RADIUS * 0.62f
-    const val CUP_FRONT_TIP_HALF_HEIGHT = BALL_RADIUS
-    /**
-     * Masse des pièces de la cuiller, du même ordre que celle du bras qui les
-     * porte : une butée très légère encaisse mal la poussée d'un boulet lancé.
-     */
-    const val CUP_MASS = 2f
-
-    /**
-     * L'arrêtoir : le tampon que le bras court vient percuter en fin de course.
-     *
-     * Sans lui la machine ne lâche jamais rien. Une cuiller fermée retient son
-     * boulet tant que la force centrifuge dépasse la pesanteur — le même effet
-     * qu'un seau d'eau qu'on fait tourner à bout de bras : au banc d'essai, le
-     * boulet faisait un tour complet accroché au bras avant d'être renvoyé en
-     * arrière. C'est l'arrêt brutal du bras qui libère le boulet, et l'angle où
-     * le bras s'arrête décide de l'angle de tir. Tous les mangonneaux ont cette
-     * pièce, et c'est elle qui deviendra le réglage d'angle de largage.
-     *
-     * C'est un **réglage du joueur** : c'est lui qui décide de l'angle du tir. Un
-     * arrêt précoce lâche le boulet haut et court, un arrêt tardif le lâche tendu.
-     * Et il faut l'accorder au crochet : un crochet refermé retient le boulet
-     * au-delà de l'arrêt, donc il faut arrêter le bras plus tôt pour compenser.
-     *
-     * Un arrêt tardif demande un pied haut, sinon le tampon passerait sous terre —
-     * on retombe alors sur le cran praticable le plus proche.
-     */
-    val STOP_ANGLES_DEG = intArrayOf(-30, -40, -50, -60)
-    const val STOP_RADIUS = 0.09f
-    const val STOP_MIN_DISTANCE = 0.18f
-    const val STOP_CLEARANCE = 0.08f
-
-    /** Le boulet doit rester sur le bras long, sans chevaucher le pivot. */
-    const val BALL_MIN_FROM_PIVOT = 1f
+    /** Bornes de l'angle d'armement : au-delà la machine n'a plus de sens. */
+    const val MIN_COCK_DEG = 15f
+    const val MAX_COCK_DEG = 70f
 
     const val GRAVITY = 9.81f
 
     /**
-     * Demi-côté du contrepoids. La masse suit la surface, donc le côté suit la
-     * racine : c'est ce qui évite qu'un contrepoids lourd devienne monstrueux.
+     * Demi-côté de la caisse du contrepoids : de la pierre entassée, à peu près deux
+     * tonnes et demie au mètre cube. La masse suit la surface, donc le côté suit la
+     * racine — c'est ce qui évite qu'un contrepoids lourd devienne monstrueux.
      */
-    fun counterweightHalfSize(mass: Float): Float = 0.021f * kotlin.math.sqrt(mass)
+    fun counterweightHalfSize(mass: Float): Float = 0.0105f * sqrt(mass)
 }
 
 /**
- * Les choix du joueur. Tout ce qui définit la machine tient ici, ce qui permet
- * de rejouer un tir à l'identique — et, plus tard, de faire simuler au générateur
- * de niveaux une machine tirée au sort.
+ * Les choix du joueur. Tout ce qui définit la machine tient ici, ce qui permet de
+ * rejouer un tir à l'identique — et, plus tard, de faire simuler au générateur de
+ * niveaux une machine tirée au sort.
  */
 class MachineConfig {
     var beamIndex = 1
-    var footIndex = 1
-    var ratioIndex = 2
+    var postIndex = 1
+    var ratioIndex = 1
     var weightIndex = 1
-    var cupCurveIndex = 1
-    var stopIndex = 2
+    var hangIndex = 1
+    var pinIndex = 2
 
-    /** Hauteur de lâcher au-dessus du bras court. */
-    var dropHeight = 0.7f
-
-    /** Distance du boulet au pivot, sur le bras long. */
-    var ballDistance = 1.5f
+    /** Longueur de la fronde, en fraction du bras long. */
+    var slingRatio = 0.6f
 
     val beamLength: Float get() = TrebuchetRules.BEAM_LENGTHS[beamIndex]
-    val footHeight: Float get() = TrebuchetRules.FOOT_HEIGHTS[footIndex]
-    /**
-     * Rapport de bras effectivement réalisable.
-     *
-     * Un cran très marqué sur un bras court donnerait un bras court ridicule —
-     * cinquante centimètres pour porter sept cents kilos. Le contrepoids y pèse
-     * alors plus de cent fois le boulet à bout portant du pivot, et la simulation
-     * n'a plus rien de crédible : mesuré à 147 m/s en sortie de cuiller. On borne
-     * donc le cran à ce que la longueur du bras permet.
-     */
-    val leverRatio: Float
-        get() = minOf(
-            TrebuchetRules.LEVER_RATIOS[ratioIndex],
-            beamLength / TrebuchetRules.MIN_SHORT_ARM - 1f
-        )
+    val leverRatio: Float get() = TrebuchetRules.LEVER_RATIOS[ratioIndex]
     val counterweightMass: Float get() = TrebuchetRules.COUNTERWEIGHTS[weightIndex]
-    val cupCurveDeg: Float get() = TrebuchetRules.CUP_CURVES_DEG[cupCurveIndex].toFloat()
+    val pinAngleDeg: Float get() = TrebuchetRules.PIN_ANGLES_DEG[pinIndex].toFloat()
 
-    /** Angle auquel on veut arrêter le bras : le réglage de visée de la machine. */
-    val wantedStopDeg: Float get() = TrebuchetRules.STOP_ANGLES_DEG[stopIndex].toFloat()
-
-    /** Écart du rebord arrière au centre du boulet : il reste d'équerre. */
-    val cupBackGap: Float
-        get() = TrebuchetRules.BALL_RADIUS + TrebuchetRules.CUP_HALF_WIDTH +
-            TrebuchetRules.CUP_CLEARANCE
-
-    /**
-     * Écart de la butée avant. Elle recule à mesure que sa pointe se referme :
-     * sinon le crochet, qui part du centre du boulet, viendrait le raboter dès la
-     * construction — et un boulet coincé, le solveur l'expédie à 300 m/s.
-     */
-    val cupFrontGap: Float
-        get() = cupBackGap + 2f * TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT *
-            sin(Math.toRadians(cupCurveDeg.toDouble()).toFloat()) * 0.5f
-    val beamMass: Float get() = beamLength * TrebuchetRules.BEAM_DENSITY
-
-    /**
-     * Demi-côté du contrepoids, **borné par le bras court qui le porte**.
-     *
-     * Sans cette limite, 700 kg font 1,10 m de large alors qu'un bras court de
-     * rapport 9 sur un bras de 5 m n'en mesure que 0,55 : le contrepoids déborde de
-     * partout, se plante dans l'arrêtoir et dans le sol, et le solveur finit par
-     * expédier le boulet à 1 200 m/s. Une machine dont le contrepoids est plus
-     * large que son bras n'est pas une machine.
-     */
-    val counterweightHalf: Float
-        get() = minOf(
-            TrebuchetRules.counterweightHalfSize(counterweightMass),
-            0.4f * shortArm
-        )
-
-    /** Longueur du bras court, du pivot à son extrémité. */
+    /** Longueur du bras court, du pivot à la chape du contrepoids. */
     val shortArm: Float get() = beamLength / (1f + leverRatio)
 
-    /** Longueur du bras long, celui qui porte le boulet. */
+    /** Longueur du bras long, celui qui porte la fronde. */
     val longArm: Float get() = beamLength - shortArm
 
+    /** Hauteur du pivot au-dessus du sol. */
+    val pivotHeight: Float get() = TrebuchetRules.POST_RATIOS[postIndex] * beamLength
+
+    val beamMass: Float get() = beamLength * TrebuchetRules.BEAM_DENSITY
+
+    val counterweightHalf: Float
+        get() = TrebuchetRules.counterweightHalfSize(counterweightMass)
+
     /**
-     * Énergie stockée par le contrepoids, en joules : c'est tout ce que la
-     * machine aura pour lancer. m·g·h, la hauteur étant celle du lâcher.
+     * Angle d'armement : de combien le bras long plonge sous l'horizontale quand la
+     * machine est bandée.
+     *
+     * Il ne se règle pas directement, il **se déduit** : on descend la pointe aussi
+     * bas que le pied le permet sans qu'elle touche terre. Un pied haut donne donc
+     * un armement plus plongeant, et c'est ce qui rend le choix du pied intéressant.
+     */
+    val cockAngleDeg: Float
+        get() {
+            val reach = (pivotHeight - TrebuchetRules.TIP_CLEARANCE) / longArm
+            val deg = Math.toDegrees(asin(reach.coerceIn(0f, 1f).toDouble())).toFloat()
+            return deg.coerceIn(TrebuchetRules.MIN_COCK_DEG, TrebuchetRules.MAX_COCK_DEG)
+        }
+
+    /**
+     * Longueur de la chape, **bornée par la place disponible sous le bras court** :
+     * un contrepoids qui laboure le sol au bas de sa course n'est pas un
+     * contrepoids, et c'est le genre de situation dont aucun solveur ne se remet.
+     */
+    val hangLength: Float
+        get() {
+            val wanted = TrebuchetRules.HANG_RATIOS[hangIndex] * shortArm
+            val room = pivotHeight - shortArm - counterweightHalf - TrebuchetRules.CW_CLEARANCE
+            return wanted.coerceAtMost(maxOf(room, 0.15f)).coerceAtLeast(0.15f)
+        }
+
+    /** Longueur de la fronde, en mètres. */
+    val slingLength: Float get() = slingRatio * longArm
+
+    /**
+     * Énergie stockée, en joules : le poids du contrepoids fois la hauteur dont il
+     * descend entre la position bandée et le bras court à la verticale.
+     *
+     * Le calcul est purement géométrique — la chape n'y change rien, elle descend
+     * d'autant que son point d'accrochage.
      */
     val storedEnergy: Float
-        get() = counterweightMass * TrebuchetRules.GRAVITY * dropHeight
+        get() {
+            val sink = shortArm * (1f + sin(Math.toRadians(cockAngleDeg.toDouble())).toFloat())
+            return counterweightMass * TrebuchetRules.GRAVITY * sink
+        }
 
     fun clamp() {
         beamIndex = beamIndex.coerceIn(0, TrebuchetRules.BEAM_LENGTHS.size - 1)
-        footIndex = footIndex.coerceIn(0, TrebuchetRules.FOOT_HEIGHTS.size - 1)
+        postIndex = postIndex.coerceIn(0, TrebuchetRules.POST_RATIOS.size - 1)
         ratioIndex = ratioIndex.coerceIn(0, TrebuchetRules.LEVER_RATIOS.size - 1)
         weightIndex = weightIndex.coerceIn(0, TrebuchetRules.COUNTERWEIGHTS.size - 1)
-        cupCurveIndex = cupCurveIndex.coerceIn(0, TrebuchetRules.CUP_CURVES_DEG.size - 1)
-        stopIndex = stopIndex.coerceIn(0, TrebuchetRules.STOP_ANGLES_DEG.size - 1)
-        dropHeight = dropHeight.coerceIn(TrebuchetRules.DROP_MIN, TrebuchetRules.DROP_MAX)
-        // Il faut laisser la place de la butée avant entre le boulet et la pointe.
-        val room = longArm - cupFrontGap - TrebuchetRules.CUP_HALF_WIDTH
-        ballDistance = ballDistance.coerceIn(
-            TrebuchetRules.BALL_MIN_FROM_PIVOT,
-            maxOf(TrebuchetRules.BALL_MIN_FROM_PIVOT, room)
+        hangIndex = hangIndex.coerceIn(0, TrebuchetRules.HANG_RATIOS.size - 1)
+        pinIndex = pinIndex.coerceIn(0, TrebuchetRules.PIN_ANGLES_DEG.size - 1)
+        slingRatio = slingRatio.coerceIn(
+            TrebuchetRules.SLING_MIN_RATIO, TrebuchetRules.SLING_MAX_RATIO
         )
     }
 
     fun copyFrom(o: MachineConfig) {
         beamIndex = o.beamIndex
-        footIndex = o.footIndex
+        postIndex = o.postIndex
         ratioIndex = o.ratioIndex
         weightIndex = o.weightIndex
-        cupCurveIndex = o.cupCurveIndex
-        stopIndex = o.stopIndex
-        dropHeight = o.dropHeight
-        ballDistance = o.ballDistance
+        hangIndex = o.hangIndex
+        pinIndex = o.pinIndex
+        slingRatio = o.slingRatio
     }
 }
 
 /**
- * Le jeu du trébuchet : on construit une machine de jet, on lâche le contrepoids,
+ * Le jeu du trébuchet : on construit une machine de jet, on décroche la détente,
  * et la portée est la conséquence de la géométrie choisie. On ne vise jamais.
  *
  * Le déroulé d'un tir :
- *  - **BUILD** — le bras est tenu par un cliquet (rotation bloquée), le boulet
- *    repose dessus, le contrepoids est suspendu au-dessus du bras court.
- *  - **DROP** — le contrepoids est lâché et tombe. Le cliquet tient toujours :
- *    sans lui, le bras s'affaisserait du côté du boulet avant même le choc, et
- *    le boulet roulerait par terre.
- *  - **FLIGHT** — le choc libère le cliquet, le bras fouette, le boulet part.
- *  - **RESULT** — tout s'est immobilisé, on mesure la portée.
+ *  - **BUILD** — la machine est bandée : le bras long plonge vers l'avant, retenu
+ *    par la détente ; le contrepoids pend en l'air derrière ; la fronde est étalée
+ *    au sol avec le boulet dedans.
+ *  - **FLIGHT** — la détente lâche. Le contrepoids tombe, le bras fouette, la
+ *    fronde traîne le boulet au sol puis le fait tourner, et la boucle quitte le
+ *    crochet quand la géométrie le veut.
+ *  - **RESULT** — le boulet est retombé, on mesure.
+ *
+ * Aucune pièce de la machine n'entre en collision avec une autre : tout se joue par
+ * liaisons — un pivot, une chape, une corde. C'est ce qui rend cette machine
+ * incomparablement plus solide que la précédente, où un boulet coincé entre trois
+ * planches finissait éjecté à des centaines de mètres par seconde.
  */
 class TrebuchetGame {
 
-    enum class Phase { BUILD, DROP, FLIGHT, RESULT }
+    enum class Phase { BUILD, FLIGHT, RESULT }
 
     private companion object {
-        // Catégories de collision. L'arrêtoir ne doit toucher que le bras, et le
-        // boulet cesse de voir la machine dès qu'il l'a quittée : sinon il retombe
-        // dessus et se fait broyer entre le contrepoids et le bras.
         const val CAT_GROUND = 1
         const val CAT_BEAM = 2
         const val CAT_WEIGHT = 4
-        const val CAT_STOPPER = 8
-        const val CAT_BALL = 16
-        const val MACHINE = CAT_BEAM or CAT_WEIGHT or CAT_STOPPER
+        const val CAT_BALL = 8
+
+        /** Durée maximale d'un tir, en secondes : une parabole de 400 m dure 12 s. */
+        const val SHOT_TIMEOUT = 30f
+
+        /**
+         * Sécurité : passé ça, la fronde est repartie loin devant la pointe sans que
+         * le crochet ait lâché. Ça ne devrait pas arriver — mais un boulet qui fait
+         * le tour du bras indéfiniment vaut mieux largué que gardé.
+         */
+        const val RUNAWAY_SLING = 0.6f
     }
 
     val world = PhysWorld().apply {
-        // Plus de passes que le réglage d'origine : le boulet est coincé entre le
-        // bras, la butée et son crochet, et sous plusieurs centaines de kilos une
-        // machine lancée. Un solveur trop pressé laisse de l'interpénétration
-        // résiduelle dans ce coin-là, et finit par éjecter le boulet.
-        iterations = 22
+        // Trois liaisons et un contact au sol : le monde est bien plus simple
+        // qu'avant, et n'a plus besoin de vingt-deux passes pour tenir.
+        iterations = 16
     }
     val config = MachineConfig()
 
@@ -354,8 +347,6 @@ class TrebuchetGame {
 
     lateinit var ground: PhysBody
         private set
-    lateinit var post: PhysBody
-        private set
     lateinit var beam: PhysBody
         private set
     lateinit var ball: PhysBody
@@ -363,45 +354,42 @@ class TrebuchetGame {
     lateinit var counterweight: PhysBody
         private set
 
-    /** Le tampon que le bras vient percuter : c'est lui qui libère le boulet. */
-    lateinit var stopper: PhysBody
-        private set
+    private lateinit var post: PhysBody
+    private lateinit var pivot: RevoluteJoint
+    private lateinit var hanger: RevoluteJoint
 
-    /** Angle auquel le bras est arrêté, en degrés (négatif = bras long en l'air). */
-    var stopAngleDeg = -45f
+    /** La fronde : une corde entre la pointe du bras et le boulet. */
+    lateinit var sling: DistanceJoint
         private set
 
     /**
-     * Élévation réelle du tir, en degrés, **mesurée** au moment où le boulet quitte
-     * la cuiller.
+     * Angle de la fronde dans le repère du bras, déroulé pour ne pas sauter à ±π,
+     * en radians.
      *
-     * Rien ne la décide à l'avance : elle sort de la forme de la cuiller, de la
-     * vitesse du bras et du moment où la géométrie cesse de retenir le boulet.
+     * Zéro veut dire « la fronde part droit devant la pointe, dans l'axe du bras ».
+     * Bandée, la machine a sa fronde très en arrière — entre -90 et -145° — et le
+     * fouet la ramène vers zéro. C'est cette remontée que le crochet surveille.
+     */
+    var slingAngle = 0f
+        private set
+
+    /** Angle de la fronde au moment où la machine a été bandée. */
+    var slingStartAngle = 0f
+        private set
+
+    private var prevRawSlingAngle = 0f
+
+    /** Vrai dès que la boucle a quitté le crochet. */
+    var ballFree = false
+        private set
+
+    /**
+     * Élévation réelle du tir, en degrés, **mesurée** à l'instant du largage.
+     * Rien ne la décide à l'avance : elle sort de la vitesse du bras, de celle de
+     * la fronde, et du moment où le crochet cesse de retenir la boucle.
      */
     var launchAngleDeg = 0f
         private set
-
-    private lateinit var pivot: RevoluteJoint
-    /** Position du creux de la cuiller dans le repère du bras, pour voir partir le boulet. */
-    private var seatLocalX = 0f
-    private var seatLocalY = 0f
-
-    /**
-     * L'attache du contrepoids, créée au moment où il arrive sur le bras.
-     *
-     * Un contrepoids simplement posé glisse dès que le bras dépasse l'angle de
-     * frottement — 39° — et tombe par terre : la machine perd ce qui l'entraîne et
-     * le bras se contente d'osciller. Au banc d'essai, la moitié des machines
-     * n'atteignaient même pas l'arrêtoir. Le retenir entre deux parois soudées ne
-     * marche pas non plus : 90 kg lâchés entre deux planches de 1,4 kg, c'est un
-     * rapport de masses que ce genre de solveur ne sait pas tenir, et la machine
-     * partait à 400 m/s.
-     *
-     * On fait donc ce que font les vraies machines : le bras **attrape** le
-     * contrepoids au moment du choc, et ne le lâche plus. Une seule liaison, entre
-     * deux corps lourds tous les deux, et le contrepoids reste libre de pivoter.
-     */
-    private var cwHinge: RevoluteJoint? = null
 
     /** Trajectoire du tir en cours, en couples (x, y). */
     val trail = ArrayList<Float>()
@@ -420,6 +408,31 @@ class TrebuchetGame {
     var launchSpeed = 0f
         private set
 
+    /**
+     * Vitesse de la pointe du bras à l'instant du largage, en m/s.
+     *
+     * C'est la référence qui donne son sens à [launchSpeed] : sans fronde, le boulet
+     * sortirait à cette vitesse-là. Le rapport des deux est le gain du fouet, et il
+     * tourne autour de deux — d'où quatre fois la portée.
+     */
+    var launchTipSpeed = 0f
+        private set
+
+    /**
+     * Rendement du tir : l'énergie emportée par le boulet au largage, rapportée à
+     * celle que le contrepoids a réellement dépensée jusque-là.
+     *
+     * C'est le chiffre qui dit au joueur si sa machine est bien accordée, et c'est
+     * celui que les constructeurs de trébuchets cherchent à faire monter. Il paraît
+     * bas, et il l'est : quand le contrepoids pèse cinq cents fois le boulet, le
+     * gros de l'énergie sert à faire tourner la charpente et à remonter le bras, pas
+     * à lancer la pierre. Le catalogue va de 3 % pour une machine mal accordée à
+     * 16 % pour la meilleure, et c'est l'ordre de grandeur des vraies machines de ce
+     * gabarit.
+     */
+    var efficiency = 0f
+        private set
+
     var shotCount = 0
         private set
     var bestDistance = 0f
@@ -427,28 +440,55 @@ class TrebuchetGame {
 
     private var elapsed = 0f
     private var trailTimer = 0f
-    private var ballFree = false
-    private val seatProbe = FloatArray(2)
+    private var cwStartY = 0f
+    private val probe = FloatArray(2)
 
     init {
         build()
     }
 
-    // ── Construction de la machine ────────────────────────────────────────────
+    // ── Géométrie de la machine ───────────────────────────────────────────────
 
     /** Position du pivot dans le monde. */
     val pivotX: Float get() = 0f
-    val pivotY: Float get() = config.footHeight
+    val pivotY: Float get() = config.pivotHeight
 
-    /** (Re)monte entièrement la machine d'après [config], et repasse en pose. */
+    /**
+     * Décalage du pivot dans le repère du bras.
+     *
+     * Le bras est une planche homogène, donc son centre de masse est son milieu
+     * géométrique ; le pivot, lui, est très décentré. Le repère local du bras a son
+     * axe X dirigé **vers la pointe**.
+     */
+    private val pivotLocalX: Float get() = -(config.longArm - config.shortArm) / 2f
+
+    /** Position monde de la pointe du bras, dans [out]. */
+    fun tipWorld(out: FloatArray) = beam.localToWorld(config.beamLength / 2f, 0f, out)
+
+    /** Position monde de l'extrémité du bras court, dans [out]. */
+    fun buttWorld(out: FloatArray) = beam.localToWorld(-config.beamLength / 2f, 0f, out)
+
+    /**
+     * Position monde de la pointe du crochet, dans [out]. Purement décorative, mais
+     * elle montre au joueur ce que règle l'inclinaison du crochet.
+     */
+    fun pinWorld(out: FloatArray) {
+        // On dessine le crochet **tel qu'il lâchera vraiment**, couchage compris :
+        // sinon le joueur verrait un ergot qui ne correspond pas au tir qu'il obtient.
+        val a = -releaseAngle
+        val len = 0.2f + 0.03f * config.longArm
+        beam.localToWorld(config.beamLength / 2f + len * cos(a), -len * sin(a), out)
+    }
+
+    /** (Re)monte entièrement la machine d'après [config], et la rebande. */
     fun build() {
         config.clamp()
         world.clear()
-        cwHinge = null
         trail.clear()
         elapsed = 0f
         trailTimer = 0f
         ballFree = false
+        efficiency = 0f
         phase = Phase.BUILD
 
         val half = (TrebuchetRules.GROUND_RIGHT - TrebuchetRules.GROUND_LEFT) / 2f
@@ -457,180 +497,151 @@ class TrebuchetGame {
             y = -1f
             lockPosition = true
             lockRotation = true
-            friction = 0.75f
+            friction = 0.55f
             category = CAT_GROUND
             refreshMass()
         }
         world.add(ground)
 
-        // Le pied : un corps immobile qui sert d'axe. Le fût est purement décoratif,
-        // c'est ce petit corps-ci qui tient le bras.
-        post = PhysBody(0.07f, 0.07f, 0f).apply {
+        // Le pied : un corps immobile qui sert d'axe. Le bâti dessiné en dessous est
+        // décoratif, c'est ce petit corps-ci qui tient le bras.
+        post = PhysBody(0.08f, 0.08f, 0f).apply {
             x = pivotX
             y = pivotY
             lockPosition = true
             lockRotation = true
+            category = CAT_BEAM
+            collidesWith = 0
             refreshMass()
         }
         world.add(post)
 
-        // Le bras et ses deux butées : **une seule pièce rigide**.
-        //
-        // C'est le point qui a tout changé. Tant que les butées étaient des corps
-        // séparés tenus par une soudure approchée, le boulet coincé entre elles et
-        // le fond faisait exploser le solveur : l'effort devait traverser une
-        // liaison molle avant d'atteindre le bras, et le boulet ressortait à
-        // 250 m/s. Assemblées en un seul corps, elles n'ont plus aucun jeu, et le
-        // boulet peut rester libre — c'est la géométrie qui le retient puis le
-        // lâche, plus une règle écrite à la main.
-        val plankCenterX = pivotX + (config.shortArm - config.longArm) / 2f
-        val top = TrebuchetRules.BEAM_HALF_THICKNESS
-        val seatX = -config.ballDistance - (config.shortArm - config.longArm) / 2f
-        val backGap = config.cupBackGap
-        val frontGap = config.cupFrontGap
-        val curve = -Math.toRadians(config.cupCurveDeg.toDouble()).toFloat()
-        val kneeY = top + 2f * TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
-
-        beam = PhysBody.compound(config.beamMass + 3f * TrebuchetRules.CUP_MASS) {
-            // la planche
-            box(config.beamLength / 2f, TrebuchetRules.BEAM_HALF_THICKNESS, 0f, 0f)
-            // le rebord côté pivot, tout bas
-            box(
-                TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_BACK_HALF_HEIGHT,
-                seatX + backGap, top + TrebuchetRules.CUP_BACK_HALF_HEIGHT
-            )
-            // le montant d'équerre de la butée avant
-            box(
-                TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT,
-                seatX - frontGap, top + TrebuchetRules.CUP_FRONT_BASE_HALF_HEIGHT
-            )
-            // et sa pointe recourbée, qui part du coude
-            box(
-                TrebuchetRules.CUP_HALF_WIDTH, TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT,
-                seatX - frontGap + TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT * sin(curve).let { -it },
-                kneeY + TrebuchetRules.CUP_FRONT_TIP_HALF_HEIGHT * cos(curve),
-                curve
-            )
-        }.apply {
-            friction = 0.75f
+        // Le bras : une simple planche. Plus aucune cuiller ni butée — tout ce que
+        // cette géométrie tentait de faire, la fronde le fait mieux.
+        val cock = -Math.toRadians(config.cockAngleDeg.toDouble()).toFloat()
+        beam = PhysBody(
+            config.beamLength / 2f, TrebuchetRules.BEAM_HALF_THICKNESS, config.beamMass
+        ).apply {
+            angle = cock
             category = CAT_BEAM
-            // Le corps est repéré par son centre de masse : on le place de façon que
-            // la planche, elle, tombe exactement où on la veut.
-            x = plankCenterX - localOffsetX(0)
-            y = pivotY - localOffsetY(0)
-            // Le cliquet : pendant la pose, le bras ne bouge pas du tout.
+            // Le bras ne touche rien : son axe lui suffit, et un contact contre le
+            // sol ou le contrepoids ne ferait que gêner.
+            collidesWith = 0
+            // La détente : bandée, la machine ne bouge pas d'un cheveu.
             lockPosition = true
             lockRotation = true
-            refreshMass()
         }
+        placeBeam()
         world.add(beam)
 
         pivot = RevoluteJoint.pin(beam, post, pivotX, pivotY)
         world.addJoint(pivot)
 
+        // Le contrepoids, pendu à l'extrémité du bras court par une chape.
+        //
+        // C'est le point qui change tout par rapport à la machine précédente, où le
+        // contrepoids était lâché de haut sur le bras. Un contrepoids boulonné décrit
+        // un arc et finit sa course en poussant de travers ; pendu, il tombe presque
+        // droit et rend presque toute sa hauteur.
+        counterweight = PhysBody(
+            config.counterweightHalf, config.counterweightHalf, config.counterweightMass
+        ).apply {
+            friction = 0.6f
+            category = CAT_WEIGHT
+            collidesWith = CAT_GROUND
+        }
+        placeCounterweight()
+        world.add(counterweight)
+
+        // La chape est ancrée **au-dessus** du contrepoids, à la longueur voulue :
+        // une liaison pivot accepte n'importe quel point du repère du corps, même
+        // hors de sa matière, et c'est exactement ce qu'est une élingue.
+        hanger = RevoluteJoint(counterweight, beam).also {
+            it.localAnchorAX = 0f
+            it.localAnchorAY = config.hangLength
+            it.localAnchorBX = -config.beamLength / 2f
+            it.localAnchorBY = 0f
+            world.addJoint(it)
+        }
+
         ball = PhysBody.circle(TrebuchetRules.BALL_RADIUS, TrebuchetRules.BALL_MASS).apply {
-            friction = 0.7f
-            restitution = 0.18f
+            // Un vrai trébuchet fait rouler son boulet dans une auge lisse : le
+            // traîner sur la terre battue mangerait une partie de la course.
+            friction = 0.2f
+            restitution = 0.1f
+            dragFactor = TrebuchetRules.BALL_DRAG
             category = CAT_BALL
+            // Le boulet ne connaît que le sol : la fronde le relie au bras, il n'a
+            // aucune raison de venir cogner la machine.
+            collidesWith = CAT_GROUND
         }
         world.add(ball)
         placeBall()
 
-        val cwHalf = config.counterweightHalf
-        counterweight = PhysBody(cwHalf, cwHalf, config.counterweightMass).apply {
-            friction = 0.8f
-            category = CAT_WEIGHT
-            // Un contrepoids lourd est plus large qu'un bras court, et vient donc
-            // occuper la place de l'arrêtoir : les faire se percuter n'aurait aucun
-            // sens, l'un est le tampon du bras et l'autre pend dessous.
-            collidesWith = CAT_GROUND or CAT_BEAM or CAT_BALL
-            // Tenu en l'air par le joueur : le moteur l'ignore jusqu'au lâcher.
-            inWorld = false
+        tipWorld(probe)
+        sling = DistanceJoint.between(
+            beam, probe[0], probe[1],
+            ball, ball.x, ball.y,
+            rope = true
+        ).also {
+            it.length = config.slingLength
+            world.addJoint(it)
         }
-        world.add(counterweight)
-        placeCounterweight()
 
-        stopper = PhysBody.circle(TrebuchetRules.STOP_RADIUS, 0f).apply {
-            category = CAT_STOPPER
-            // Le tampon n'existe que pour le bras.
-            collidesWith = CAT_BEAM
-            lockPosition = true
-            lockRotation = true
-            friction = 0.9f
-            refreshMass()
-        }
-        world.add(stopper)
-        placeStopper()
+        slingStartAngle = measureSlingAngle()
+        slingAngle = slingStartAngle
+        prevRawSlingAngle = slingStartAngle
     }
 
     /**
-     * Installe l'arrêtoir sous le bras court, à l'endroit exact où celui-ci le
-     * touchera à l'angle voulu.
+     * Angle auquel le crochet lâchera réellement la boucle, en radians (négatif).
      *
-     * On essaie les inclinaisons de la plus tardive à la plus précoce et on garde
-     * la première qui laisse le tampon au-dessus du sol : avec un pied bas et un
-     * bras court très long, l'arrêt tardif passerait sous terre.
+     * C'est l'inclinaison choisie, mais couchée si besoin : un crochet plus redressé
+     * que la fronde ne retiendrait rien du tout.
      */
-    private fun placeStopper() {
-        val ht = TrebuchetRules.BEAM_HALF_THICKNESS
-        val rs = TrebuchetRules.STOP_RADIUS
+    val releaseAngle: Float
+        get() = maxOf(
+            -Math.toRadians(config.pinAngleDeg.toDouble()).toFloat(),
+            slingStartAngle + Math.toRadians(TrebuchetRules.MIN_PIN_SWEEP_DEG.toDouble()).toFloat()
+        )
 
-        // On part du cran demandé, puis on remonte vers les arrêts plus précoces
-        // si le tampon ne tient pas au-dessus du sol.
-        for (i in config.stopIndex downTo 0) {
-            val deg = TrebuchetRules.STOP_ANGLES_DEG[i]
-            val a = Math.toRadians(deg.toDouble()).toFloat()
-            val ux = cos(a); val uy = sin(a)
-            // Normale du bras à cet angle : sa direction « vers le haut » locale.
-            val nx = -sin(a); val ny = cos(a)
-
-            // Distance maximale le long du bras qui garde le tampon au-dessus du sol.
-            val dMax = (pivotY - TrebuchetRules.STOP_CLEARANCE - rs - (ht + rs) * ny) / -uy
-            val d = minOf(0.8f * config.shortArm, dMax)
-            if (d < TrebuchetRules.STOP_MIN_DISTANCE) continue
-
-            stopAngleDeg = deg.toFloat()
-            stopper.x = pivotX + d * ux - (ht + rs) * nx
-            stopper.y = pivotY + d * uy - (ht + rs) * ny
-            world.forgetContacts(stopper)
-            return
-        }
-        // Aucun cran ne tient : on pose le tampon au plus près du pivot.
-        val deg = TrebuchetRules.STOP_ANGLES_DEG.first()
-        val a = Math.toRadians(deg.toDouble()).toFloat()
-        stopAngleDeg = deg.toFloat()
-        val d = TrebuchetRules.STOP_MIN_DISTANCE
-        stopper.x = pivotX + d * cos(a) - (ht + rs) * -sin(a)
-        stopper.y = pivotY + d * sin(a) - (ht + rs) * cos(a)
-        world.forgetContacts(stopper)
+    /** Repose le bras à son angle d'armement, pivot au bon endroit. */
+    private fun placeBeam() {
+        val c = cos(beam.angle)
+        val s = sin(beam.angle)
+        beam.x = pivotX - pivotLocalX * c
+        beam.y = pivotY - pivotLocalX * s
+        beam.vx = 0f; beam.vy = 0f; beam.omega = 0f
+        beam.refreshMass()
+        world.forgetContacts(beam)
     }
 
-    private fun placeBall() {
-        ball.x = pivotX - config.ballDistance
-        ball.y = pivotY + TrebuchetRules.BEAM_HALF_THICKNESS + TrebuchetRules.BALL_RADIUS
-        ball.vx = 0f; ball.vy = 0f; ball.omega = 0f; ball.angle = 0f
-        world.forgetContacts(ball)
-        // Le bras est horizontal à la pose : le creux se repère par simple écart.
-        seatLocalX = ball.x - beam.x
-        seatLocalY = ball.y - beam.y
-    }
-
-    /** Position actuelle du creux de la cuiller, qui suit le bras. */
-    private fun seatWorld(out: FloatArray) = beam.localToWorld(seatLocalX, seatLocalY, out)
-
-    /** Abscisse où le contrepoids se pose sur le bras court. */
-    private fun seatCenterX(): Float =
-        pivotX + maxOf(0.22f, config.shortArm * TrebuchetRules.SEAT_POSITION)
-
-    /** Suspend le contrepoids au-dessus de l'extrémité du bras court. */
+    /** Suspend le contrepoids sous l'extrémité du bras court, chape à la verticale. */
     private fun placeCounterweight() {
-        val half = config.counterweightHalf
-        // Juste au-dessus du berceau, pour qu'il tombe dedans.
-        counterweight.x = seatCenterX()
-        counterweight.y = pivotY + TrebuchetRules.BEAM_HALF_THICKNESS + half + config.dropHeight
-        counterweight.vx = 0f; counterweight.vy = 0f; counterweight.omega = 0f
+        buttWorld(probe)
+        counterweight.x = probe[0]
+        counterweight.y = probe[1] - config.hangLength
         counterweight.angle = 0f
+        counterweight.vx = 0f; counterweight.vy = 0f; counterweight.omega = 0f
         world.forgetContacts(counterweight)
+    }
+
+    /**
+     * Pose le boulet au sol, derrière la pointe, à l'endroit exact où la fronde est
+     * juste tendue. La fronde étant une corde, un peu de mou ne gênerait pas, mais un
+     * tir commence mieux sans à-coup.
+     */
+    private fun placeBall() {
+        tipWorld(probe)
+        val dy = probe[1] - TrebuchetRules.BALL_RADIUS
+        val l = config.slingLength
+        val dx = sqrt(maxOf(l * l - dy * dy, 0.01f))
+        ball.x = probe[0] - dx
+        ball.y = TrebuchetRules.BALL_RADIUS
+        ball.angle = 0f
+        ball.vx = 0f; ball.vy = 0f; ball.omega = 0f
+        ball.collidesWith = CAT_GROUND
+        world.forgetContacts(ball)
     }
 
     /** Rejoue la pose avec les réglages actuels, en gardant le fantôme du tir précédent. */
@@ -647,8 +658,8 @@ class TrebuchetGame {
         config.beamIndex = wrap(config.beamIndex + delta, TrebuchetRules.BEAM_LENGTHS.size)
     }
 
-    fun cycleFoot(delta: Int) = changeSetting {
-        config.footIndex = wrap(config.footIndex + delta, TrebuchetRules.FOOT_HEIGHTS.size)
+    fun cyclePost(delta: Int) = changeSetting {
+        config.postIndex = wrap(config.postIndex + delta, TrebuchetRules.POST_RATIOS.size)
     }
 
     fun cycleRatio(delta: Int) = changeSetting {
@@ -659,14 +670,14 @@ class TrebuchetGame {
         config.weightIndex = wrap(config.weightIndex + delta, TrebuchetRules.COUNTERWEIGHTS.size)
     }
 
-    /** Courbure de la butée avant : c'est elle qui retient le boulet pendant le choc. */
-    fun cycleCupCurve(delta: Int) = changeSetting {
-        config.cupCurveIndex = wrap(config.cupCurveIndex + delta, TrebuchetRules.CUP_CURVES_DEG.size)
+    /** Longueur de la chape : c'est le réglage de synchronisation du contrepoids. */
+    fun cycleHang(delta: Int) = changeSetting {
+        config.hangIndex = wrap(config.hangIndex + delta, TrebuchetRules.HANG_RATIOS.size)
     }
 
-    /** Angle d'arrêt du bras : le réglage de visée de la machine. */
-    fun cycleStop(delta: Int) = changeSetting {
-        config.stopIndex = wrap(config.stopIndex + delta, TrebuchetRules.STOP_ANGLES_DEG.size)
+    /** Inclinaison du crochet de largage : le réglage de visée de la machine. */
+    fun cyclePin(delta: Int) = changeSetting {
+        config.pinIndex = wrap(config.pinIndex + delta, TrebuchetRules.PIN_ANGLES_DEG.size)
     }
 
     /** Repart d'une machine neuve, fantôme compris. */
@@ -678,34 +689,22 @@ class TrebuchetGame {
 
     private inline fun changeSetting(apply: () -> Unit) {
         apply()
-        // Changer de bras peut rendre la position du boulet impossible : on la
-        // ramène dans le domaine valide plutôt que de refuser le réglage.
         rebuild()
     }
 
     private fun wrap(v: Int, size: Int) = ((v % size) + size) % size
 
-    /** Déplace le boulet le long du bras long (phase de pose uniquement). */
-    fun setBallDistance(d: Float) {
+    /** Règle la longueur de la fronde, en mètres (phase de pose uniquement). */
+    fun setSlingLength(metres: Float) {
         if (phase != Phase.BUILD) return
-        config.ballDistance = d
+        config.slingRatio = metres / config.longArm
         config.clamp()
-        // Les butées font partie du bras : déplacer le boulet, c'est refabriquer
-        // la pièce entière, sinon le boulet glisse en laissant sa cuiller derrière.
         build()
-    }
-
-    /** Règle la hauteur de lâcher du contrepoids (phase de pose uniquement). */
-    fun setDropHeight(h: Float) {
-        if (phase != Phase.BUILD) return
-        config.dropHeight = h
-        config.clamp()
-        placeCounterweight()
     }
 
     // ── Le tir ───────────────────────────────────────────────────────────────
 
-    /** Lâche le contrepoids : le reste n'est plus que de la physique. */
+    /** Décroche la détente : à partir de là, tout n'est plus que de la physique. */
     fun release() {
         if (phase != Phase.BUILD) return
         trail.clear()
@@ -716,83 +715,110 @@ class TrebuchetGame {
         peakHeight = ball.y
         peakSpeed = 0f
         launchSpeed = 0f
-        counterweight.inWorld = true
-        world.clearImpacts()
-        phase = Phase.DROP
-    }
+        launchTipSpeed = 0f
+        launchAngleDeg = 0f
+        efficiency = 0f
+        cwStartY = counterweight.y
 
-    /** Libère le cliquet : le bras est désormais libre de tourner sur son axe. */
-    private fun releaseCatch() {
+        // Le bras n'est plus tenu que par son axe.
         beam.lockPosition = false
         beam.lockRotation = false
         beam.refreshMass()
-        // Les impulsions mémorisées ont été calculées contre un bras infiniment
-        // lourd : les réappliquer à un bras devenu mobile ferait n'importe quoi.
-        world.forgetContacts(beam)
         pivot.reset()
+        hanger.reset()
+        sling.reset()
 
-        // Le bras attrape le contrepoids à l'endroit exact où il arrive : à partir
-        // de là ils ne font plus qu'un, et toute la descente sert à lancer.
-        cwHinge = RevoluteJoint.pin(counterweight, beam, counterweight.x, counterweight.y).also {
-            world.addJoint(it)
-        }
-
+        slingStartAngle = measureSlingAngle()
+        slingAngle = slingStartAngle
+        prevRawSlingAngle = slingStartAngle
+        world.clearImpacts()
         phase = Phase.FLIGHT
     }
 
+    /**
+     * Angle brut de la fronde dans le repère du bras, dans (-π, π].
+     *
+     * Zéro veut dire « la fronde part droit devant la pointe, dans l'axe du bras » ;
+     * π veut dire « elle revient vers le pivot ». C'est cette valeur, déroulée, que
+     * le crochet surveille.
+     */
+    private fun measureSlingAngle(): Float {
+        tipWorld(probe)
+        val dx = ball.x - probe[0]
+        val dy = ball.y - probe[1]
+        val c = cos(beam.angle)
+        val s = sin(beam.angle)
+        return atan2(-dx * s + dy * c, dx * c + dy * s)
+    }
+
     fun step(dt: Float) {
-        if (phase == Phase.BUILD || phase == Phase.RESULT) return
+        if (phase != Phase.FLIGHT) return
 
         world.stepFrame(dt)
         elapsed += dt
 
-        if (phase == Phase.DROP) {
-            // Le cliquet lâche juste AVANT que le contrepoids ne touche le bras,
-            // et non au moment du choc. Si le contrepoids percute un bras encore
-            // figé, il s'y enfonce ; en libérant le bras l'image d'après, la
-            // correction d'interpénétration lui rend d'un coup une énergie qui ne
-            // vient de nulle part. Au banc d'essai, tous les tirs ressortaient à
-            // la même vitesse absurde de 21,6 m/s, quel que soit le contrepoids.
-            val half = config.counterweightHalf
-            val gap = (counterweight.y - half) - (pivotY + TrebuchetRules.BEAM_HALF_THICKNESS)
-            val closing = -counterweight.vy * dt * 2f
-            // Sécurité : si le contrepoids rate le bras, on libère quand même.
-            if (gap <= maxOf(0.02f, closing) || elapsed > 2.5f) releaseCatch()
-            return
-        }
-
         val speed = hypot(ball.vx, ball.vy)
         if (speed > peakSpeed) peakSpeed = speed
         if (ball.y > peakHeight) peakHeight = ball.y
-        // Vitesse de sortie : celle qu'a le boulet quand il quitte le bras, donc
-        // la dernière mesurée tant qu'il monte encore au contact de la machine.
+
         if (!ballFree) {
             launchSpeed = speed
-            // Le boulet est parti quand il s'est éloigné du creux qui le portait.
-            // Rien ne le décide : on ne fait que constater.
-            seatWorld(seatProbe)
-            if (hypot(ball.x - seatProbe[0], ball.y - seatProbe[1]) > 0.7f) {
-                ballFree = true
-                // Le boulet a quitté la machine : il ne la revoit plus. Sans ça il
-                // lui retombe dessus et se fait écraser entre le contrepoids et le
-                // bras, ce qui l'expédiait à plusieurs milliers de mètres par seconde.
-                ball.collidesWith = ball.collidesWith and MACHINE.inv()
-                world.forgetContacts(ball)
-                launchAngleDeg = Math.toDegrees(
-                    kotlin.math.atan2(ball.vy.toDouble(), ball.vx.toDouble())
-                ).toFloat()
-            }
+            updateSlingAngle()
+            if (slingAngle >= releaseAngle || slingAngle >= RUNAWAY_SLING) letGo()
         }
 
         trailTimer += dt
-        if (trailTimer > 0.02f && trail.size < 4000) {
+        if (trailTimer > 0.02f && trail.size < 6000) {
             trailTimer = 0f
             trail.add(ball.x)
             trail.add(ball.y)
         }
 
-        val landed = world.isAtRest() || elapsed > 14f || ball.x > TrebuchetRules.GROUND_RIGHT - 2f
-        if (landed) finishShot()
+        // Le tir se mesure au **point d'impact**, comme une portée d'artillerie : ce
+        // qui compte est là où le boulet frappe, pas où il finit de rouler. Un boulet
+        // qui touche à quarante mètres par seconde rebondit et roule encore cent
+        // mètres, ce qui n'apprend rien au joueur sur sa machine.
+        //
+        // On n'attend pas non plus que la machine s'immobilise : le bras balance au
+        // bout de sa chape pendant de longues secondes après le tir.
+        val landed = ballFree &&
+            ball.y <= TrebuchetRules.BALL_RADIUS + 0.03f &&
+            ball.vy <= 0f
+        if (landed || elapsed > SHOT_TIMEOUT || ball.x > TrebuchetRules.GROUND_RIGHT - 4f) {
+            finishShot()
+        }
+    }
+
+    /** Suit l'angle de la fronde en le déroulant, pour qu'il ne saute pas à ±π. */
+    private fun updateSlingAngle() {
+        val raw = measureSlingAngle()
+        var d = raw - prevRawSlingAngle
+        val twoPi = 2f * PI.toFloat()
+        while (d > PI) d -= twoPi
+        while (d < -PI) d += twoPi
+        prevRawSlingAngle = raw
+        slingAngle += d
+    }
+
+    /** La boucle quitte le crochet : le boulet n'appartient plus à la machine. */
+    private fun letGo() {
+        ballFree = true
+        sling.enabled = false
+        world.forgetContacts(ball)
+        launchSpeed = hypot(ball.vx, ball.vy)
+        launchAngleDeg = Math.toDegrees(atan2(ball.vy.toDouble(), ball.vx.toDouble())).toFloat()
+        // La pointe du bras décrit un cercle autour du pivot : sa vitesse est le
+        // produit de la rotation du bras par la longueur du bras long.
+        launchTipSpeed = abs(beam.omega) * config.longArm
+
+        // Rendement : ce que le boulet emporte, sur ce que le contrepoids a dépensé
+        // pour le lui donner.
+        val spent = config.counterweightMass * TrebuchetRules.GRAVITY * (cwStartY - counterweight.y)
+        efficiency = if (spent > 1f) {
+            0.5f * TrebuchetRules.BALL_MASS * launchSpeed * launchSpeed / spent
+        } else {
+            0f
+        }
     }
 
     private fun finishShot() {
@@ -809,13 +835,14 @@ class TrebuchetGame {
      * Joue un tir complet le plus vite possible et rend la portée obtenue.
      *
      * Sert aux tests, et servira surtout au générateur de niveaux : on tire une
-     * machine au hasard dans le catalogue, on regarde où elle envoie le boulet,
-     * et on pose la cible là. Le niveau est faisable par construction.
+     * machine au hasard dans le catalogue, on regarde où elle envoie le boulet, et on
+     * pose la cible là. Le niveau est faisable par construction.
      */
     fun simulateShot(dt: Float = 1f / 120f): Float {
         release()
         var guard = 0
-        while (phase != Phase.RESULT && guard < 4000) {
+        val maxSteps = (SHOT_TIMEOUT / dt).toInt() + 10
+        while (phase != Phase.RESULT && guard < maxSteps) {
             step(dt)
             guard++
         }

@@ -6,20 +6,19 @@
     <string name="trebuchet_best">Record %1$s m</string>
 
     <string name="trebuchet_beam">Bras\n%1$s m</string>
-    <string name="trebuchet_foot">Pied\n%1$s m</string>
-    <string name="trebuchet_ratio">Levier\n%1$s:1</string>
+    <string name="trebuchet_post">Pied\n%1$s m</string>
+    <string name="trebuchet_ratio">Levier\n%1$d:1</string>
     <string name="trebuchet_weight">Poids\n%1$d kg</string>
-    <string name="trebuchet_cup">Cuiller\n%1$d°</string>
+    <string name="trebuchet_hang">Chape\n%1$s m</string>
+    <string name="trebuchet_pin">Crochet\n%1$d°</string>
 
-    <string name="trebuchet_btn_release">Lâcher le contrepoids</string>
+    <string name="trebuchet_btn_release">Décrocher la détente</string>
     <string name="trebuchet_btn_adjust">Ajuster</string>
     <string name="trebuchet_btn_reset">Réinitialiser</string>
 
-    <string name="trebuchet_status_build">Fais glisser le boulet le long du bras, et le contrepoids pour régler sa hauteur de chute</string>
+    <string name="trebuchet_status_build">Fais glisser le boulet au sol pour régler la longueur de la fronde. C\'est l\'angle du crochet qui décide du moment du largage</string>
     <string name="trebuchet_status_flight">Tir en cours…</string>
-    <string name="trebuchet_status_result">%1$s m — sorti à %2$s m/s sous %3$d°, culminé à %4$s m</string>
-    <string name="trebuchet_status_backwards">Parti en arrière ! Le bras n\'arrive pas à soulever cette charge</string>
-    <string name="trebuchet_specs">Levier %1$s:1 · énergie %2$d J · arrêt du bras à %3$d°</string>
-    <string name="trebuchet_stop">Arrêt
-%1$d°</string>
+    <string name="trebuchet_status_result">%1$s m — largué à %2$s m/s sous %3$d°, culminé à %4$s m · rendement %5$d %%</string>
+    <string name="trebuchet_status_backwards">Parti en arrière ! Le crochet retient la fronde trop longtemps : redresse-le, ou raccourcis la fronde</string>
+    <string name="trebuchet_specs">Armé à %1$d° · %2$d kJ en réserve · fronde %3$s m</string>
 </resources>
