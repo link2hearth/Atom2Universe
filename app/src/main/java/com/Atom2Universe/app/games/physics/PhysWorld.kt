@@ -22,7 +22,24 @@ class PhysWorld {
 
     val bodies = ArrayList<PhysBody>()
     val joints = ArrayList<Joint>()
-    private val arbiters = HashMap<Long, Arbiter>()
+    /**
+     * Les contacts suivis d'une image à l'autre.
+     *
+     * **Le rangement compte, et il doit être celui de l'insertion.** Les impulsions
+     * séquentielles corrigent les contacts l'un après l'autre : changer leur ordre
+     * change le résultat. Or la clé d'un contact est faite des identifiants des corps,
+     * qui viennent d'un compteur global jamais remis à zéro — une table de hachage
+     * ordinaire les range donc dans un ordre qui dépend du **nombre de corps créés
+     * depuis le lancement de l'application**. Deux fois le même tir, dans la même
+     * partie, ne donnaient pas le même effondrement : mesuré, deux mètres d'écart sur
+     * une pierre.
+     *
+     * Rien de tout ça n'est visible dans un bac à sable, et tout le devient dès qu'un
+     * niveau doit être reproductible à partir de sa graine. Une table à ordre d'insertion
+     * range les contacts dans l'ordre où la détection les a trouvés, qui ne dépend que
+     * de l'ordre des corps dans le monde.
+     */
+    private val arbiters = LinkedHashMap<Long, Arbiter>()
     private val fresh = Array(2) { Contact() }
     private val doomed = ArrayList<Long>()
 
@@ -48,6 +65,21 @@ class PhysWorld {
      * par terre s'abîmerait toute seule sous son propre poids et tremblerait.
      */
     var impactSpeedThreshold = 0.5f
+
+    /**
+     * Enfoncement que la passe de position laisse subsister, en mètres.
+     *
+     * Un solveur d'impulsions a besoin d'un peu de recouvrement pour savoir qu'il y a
+     * contact : s'il séparait les corps jusqu'au contact exact, il passerait son temps
+     * à osciller entre « touche » et « touche pas ». Cinq millimètres est la valeur
+     * classique, et elle ne se voit pas sur une caisse posée par terre.
+     *
+     * Elle se voit en revanche sur une **pile**, où elle s'additionne : un mur de vingt
+     * assises s'enfonce de dix centimètres dans lui-même, s'affaisse de travers, et
+     * finit par s'écrouler tout seul. C'est la raison pour laquelle un jeu de cibles
+     * empilées peut vouloir la resserrer, au prix de quelques passes de plus.
+     */
+    var allowedPenetration = 0.005f
 
     /** Nombre maximal de sous-pas consentis par image (voir [stepFrame]). */
     var maxSubSteps = 32
@@ -216,7 +248,12 @@ class PhysWorld {
         }
 
         // 2. Vitesses : on empêche les corps de s'enfoncer davantage.
-        for (arb in arbiters.values) arb.preStep(invDt, impactSpeedThreshold)
+        // On **mesure d'abord tous les contacts, puis on les prépare** : la reprise des
+        // impulsions de l'image précédente bouscule les vitesses le temps d'un pas, et
+        // un contact mesuré après elle croirait à un choc violent là où rien ne bouge.
+        // Voir [Arbiter.measure].
+        for (arb in arbiters.values) arb.measure(impactSpeedThreshold)
+        for (arb in arbiters.values) arb.preStep(invDt)
         for (j in joints) j.preStep(invDt)
         repeat(iterations) {
             for (arb in arbiters.values) arb.applyImpulse()
@@ -230,7 +267,9 @@ class PhysWorld {
         // 2 bis. Comptabilisation des chocs, pour les cibles qui doivent casser.
         for (arb in arbiters.values) {
             if (!arb.impacting) continue
-            val p = arb.totalNormalImpulse()
+            // L'énergie du **choc seul**, sans le poids que le contact porte par
+            // ailleurs : voir [Arbiter.impactEnergy].
+            val p = arb.impactEnergy
             arb.a.impactAccum += p
             arb.b.impactAccum += p
         }
@@ -241,7 +280,7 @@ class PhysWorld {
             bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
         }
         repeat(positionIterations) {
-            for (arb in arbiters.values) arb.applyPositionImpulse()
+            for (arb in arbiters.values) arb.applyPositionImpulse(allowedPenetration)
             for (j in joints) j.applyPositionImpulse()
         }
 

@@ -205,12 +205,14 @@ class PhysBody private constructor(
         (category and other.collidesWith) != 0 && (other.category and collidesWith) != 0
 
     /**
-     * Somme des impulsions reçues lors de vrais chocs depuis la dernière remise à
-     * zéro, en kg·m/s. Sert à faire casser les cibles : c'est le moteur qui la
-     * calcule, donc les dégâts sont physiquement honnêtes.
+     * Énergie reçue lors de vrais chocs depuis la dernière remise à zéro, en joules.
+     * Sert à faire casser les cibles : c'est le moteur qui la calcule, donc les dégâts
+     * sont physiquement honnêtes.
      *
-     * Les contacts au repos n'y contribuent pas (voir [Arbiter.impacting]), sinon
-     * une caisse posée par terre se « détruirait » toute seule sous son propre poids.
+     * Les contacts au repos n'y contribuent pas (voir [Arbiter.impacting]), et le poids
+     * porté par un contact n'y contribue pas non plus (voir [Arbiter.impactEnergy]) :
+     * sans ces deux précautions, une caisse posée par terre se « détruirait » toute
+     * seule sous son propre poids, et un mur sous celui de ses propres assises.
      */
     var impactAccum = 0f
 

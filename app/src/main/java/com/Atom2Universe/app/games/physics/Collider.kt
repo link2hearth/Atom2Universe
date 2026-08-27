@@ -22,6 +22,13 @@ class Contact {
     /** Vitesse de rebond visée, calculée avant résolution (0 si le choc est mou). */
     var bounce = 0f
 
+    /**
+     * Vitesse d'approche des deux corps en ce point, mesurée avant toute résolution,
+     * et comptée positive quand ils se rapprochent. C'est elle qui dit s'il y a choc,
+     * et de quelle violence.
+     */
+    var approach = 0f
+
     /** Impulsion accumulée par la passe de position, sur les vitesses fantômes. */
     var posImpulse = 0f
     var rax = 0f
@@ -393,6 +400,33 @@ class Arbiter(
     var impacting = false
         private set
 
+    /**
+     * Énergie du **choc seul**, en joules : celle que le rapprochement des deux corps
+     * dissipe, et rien d'autre.
+     *
+     * Deux décisions tiennent dans cette ligne, et les deux ont coûté un banc d'essai.
+     *
+     * D'abord, on ne compte **pas l'impulsion totale du contact**. Un contact fait
+     * deux métiers à la fois : porter un poids et encaisser un choc, et dans une
+     * construction le poids porté est de très loin le plus gros terme. Une assise du
+     * bas qui supporte sept assises de pierre voit passer seize cents kg·m/s par image
+     * rien que pour les tenir ; les compter revenait à faire payer à une pierre le mur
+     * qu'elle soutient, et le mur se broyait tout seul.
+     *
+     * Ensuite, on compte une **énergie** et non une quantité de mouvement. C'est le
+     * point le moins évident et le plus important. En quantité de mouvement, une pierre
+     * d'une tonne et demie qui se tasse de six centimètres délivre neuf cents kg·m/s,
+     * soit exactement autant qu'un boulet de douze kilos lancé à cent mètres par
+     * seconde — arithmétiquement vrai, et absurde comme modèle de casse. En énergie,
+     * la même pierre pèse trois cents joules contre soixante mille pour le boulet :
+     * deux cents fois moins, ce qui est l'ordre de grandeur que le bon sens attend.
+     *
+     * La valeur retenue est celle d'un choc parfaitement mou : la moitié de la masse
+     * effective du contact fois le carré de la vitesse d'approche.
+     */
+    var impactEnergy = 0f
+        private set
+
     private var posInvDt = 0f
 
     /** Reprend les impulsions des contacts précédents quand ils correspondent (warm starting). */
@@ -427,38 +461,41 @@ class Arbiter(
      * Prépare la résolution. [impactSpeed] est la vitesse d'approche à partir de
      * laquelle on considère qu'il y a choc : en dessous, pas de rebond et pas de dégât.
      */
-    fun preStep(invDt: Float, impactSpeed: Float) {
-        posInvDt = invDt
+    /**
+     * Mesure ce que ce contact **subit**, avant que le solveur n'ait touché à quoi que
+     * ce soit : vitesse d'approche, rebond visé, et énergie du choc.
+     *
+     * **Cette passe doit être faite pour tous les contacts avant que le moindre ne soit
+     * résolu**, et c'est pour ça qu'elle est séparée de [preStep]. La reprise des
+     * impulsions de l'image précédente — le warm starting — rend aux corps, d'un coup,
+     * tout l'effort qui tient la pile. Elle s'applique contact par contact, si bien
+     * qu'entre le premier et le dernier les corps portent des vitesses transitoires
+     * énormes, qui seront annulées à la fin du pas mais qui existent bel et bien entre
+     * deux.
+     *
+     * Tant que les deux choses étaient faites dans la même boucle, un contact mesuré
+     * tard voyait donc son voisin arriver à trois mètres par seconde alors que rien ne
+     * bougeait. Une tour de pierre, dont les contacts du bas portent quarante tonnes,
+     * s'infligeait ainsi quatorze kilojoules par image, indéfiniment, et se fêlait sans
+     * que personne ne l'ait touchée. Plus l'ouvrage était lourd, plus il se détruisait
+     * vite — le symptôme le plus trompeur de toute cette histoire.
+     */
+    fun measure(impactSpeed: Float) {
         val nx = normalX
         val ny = normalY
         val tx = ny
         val ty = -nx
 
-        // Première passe : la vitesse d'approche réelle, mesurée avant que le
-        // solveur ne touche à quoi que ce soit. Elle sert au rebond et aux dégâts.
         impacting = false
-        for (i in 0 until count) {
-            val c = contacts[i]
-            val rax = c.px - a.x
-            val ray = c.py - a.y
-            val rbx = c.px - b.x
-            val rby = c.py - b.y
-            val dvx = (b.vx - b.omega * rby) - (a.vx - a.omega * ray)
-            val dvy = (b.vy + b.omega * rbx) - (a.vy + a.omega * rax)
-            val vn = dvx * nx + dvy * ny
-            if (vn < -impactSpeed) {
-                impacting = true
-                c.bounce = -restitution * vn
-            } else {
-                c.bounce = 0f
-            }
-        }
-
+        impactEnergy = 0f
         for (i in 0 until count) {
             val c = contacts[i]
             c.rax = c.px - a.x; c.ray = c.py - a.y
             c.rbx = c.px - b.x; c.rby = c.py - b.y
 
+            // Masses effectives du contact : elles ne dépendent que des positions et
+            // des masses, donc rien n'empêche de les calculer ici, et l'énergie du choc
+            // en a besoin.
             val rnA = c.rax * ny - c.ray * nx
             val rnB = c.rbx * ny - c.rby * nx
             val kn = a.invMass + b.invMass + a.invI * rnA * rnA + b.invI * rnB * rnB
@@ -469,9 +506,39 @@ class Arbiter(
             val kt = a.invMass + b.invMass + a.invI * rtA * rtA + b.invI * rtB * rtB
             c.massTangent = if (kt > 0f) 1f / kt else 0f
 
-            c.posImpulse = 0f
+            val dvx = (b.vx - b.omega * c.rby) - (a.vx - a.omega * c.ray)
+            val dvy = (b.vy + b.omega * c.rbx) - (a.vy + a.omega * c.rax)
+            val vn = dvx * nx + dvy * ny
+            c.approach = if (vn < 0f) -vn else 0f
+            if (vn < -impactSpeed) {
+                impacting = true
+                c.bounce = -restitution * vn
+            } else {
+                c.bounce = 0f
+            }
 
-            // Réapplication des impulsions de l'image précédente
+            // La part « choc » de l'énergie : celle que dissiperait l'arrêt du
+            // rapprochement. On retranche le seuil plutôt que de le franchir d'un coup,
+            // sinon un contact qui l'effleure infligerait tout ce qu'un choc franc inflige.
+            val over = c.approach - impactSpeed
+            if (over > 0f) impactEnergy += 0.5f * c.massNormal * over * over
+        }
+    }
+
+    /**
+     * Prépare la résolution : rend aux corps les impulsions de l'image précédente.
+     *
+     * À n'appeler qu'après que [measure] a été passé sur **tous** les contacts du monde.
+     */
+    fun preStep(invDt: Float) {
+        posInvDt = invDt
+        val nx = normalX
+        val ny = normalY
+        val tx = ny
+        val ty = -nx
+        for (i in 0 until count) {
+            val c = contacts[i]
+            c.posImpulse = 0f
             val px = c.normalImpulse * nx + c.tangentImpulse * tx
             val py = c.normalImpulse * ny + c.tangentImpulse * ty
             a.vx -= a.invMass * px; a.vy -= a.invMass * py
@@ -489,8 +556,7 @@ class Arbiter(
      * leur donner d'élan, ce qui est exactement ce qu'il faut : un corps qu'on
      * dégage d'un mur ne doit pas en ressortir lancé.
      */
-    fun applyPositionImpulse() {
-        val allowedPenetration = 0.005f
+    fun applyPositionImpulse(allowedPenetration: Float) {
         // L'enfoncement est une longueur : divisé par la durée du pas, il devient
         // la vitesse fantôme qui le résorbe. Le plafond évite qu'un corps très
         // enfoncé ne soit dégagé d'un coup de canon.
