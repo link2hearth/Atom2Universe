@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.games.trebuchet
 
 import android.content.Context
-import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -267,6 +266,12 @@ class TrebuchetView @JvmOverloads constructor(
          * lourd s'arrêtait donc en pleine montée et ne montrait rien de son vol.
          */
         const val PREVIEW_MAX_STEPS = 1400
+
+        /** Graine du décor en bac à sable, où il n'y a pas de niveau pour en fournir une. */
+        const val SANDBOX_DECOR_SEED = 424242L
+
+        /** Temps minimal entre deux vagues de fuyards, en secondes. */
+        const val VILLAGER_PANIC_COOLDOWN = 1.1f
     }
 
     // ── Palette ──────────────────────────────────────────────────────────────
@@ -297,13 +302,69 @@ class TrebuchetView @JvmOverloads constructor(
     /** La flamme d'un feu : un halo chaud, refait quand sa teinte change. */
     private val pFlame = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    /** Les nuages, et leur flou de coton. */
+    /**
+     * Les nuages, et leur flou de coton.
+     *
+     * **Pas de [BlurMaskFilter].** La surface se peint sur un canevas logiciel —
+     * [holder.lockCanvas][SurfaceHolder.lockCanvas] et non `lockHardwareCanvas` — et un
+     * flou gaussien y coûte une vraie convolution, pixel par pixel, à chacune des
+     * soixante boules dessinées par image. C'est ce qui faisait ramer le jeu pendant
+     * un tir, précisément quand la caméra recule et que les nuages grandissent à
+     * l'écran. Le contour cotonneux vient à la place d'un nuancier radial — le même
+     * principe que la flamme d'une torche, voir [drawLights] — qui dégrade en douceur
+     * du centre au bord sans jamais convoluer un seul pixel.
+     */
     private val clouds = CloudField()
-    private val pCloud = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        maskFilter = BlurMaskFilter(10f * dp, BlurMaskFilter.Blur.NORMAL)
-    }
+    private val pCloud = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var cloudTint = 0
     private var flameTint = 0
     private var flameShaderR = 0f
+
+    /** Les oiseaux : ils volent bas, sous les nuages, et se couchent avec le jour. */
+    private val birds = BirdField()
+    private val pBird = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 1.6f * dp
+        strokeCap = Paint.Cap.ROUND
+        color = Color.argb(200, 40, 38, 46)
+    }
+
+    /**
+     * Le décor et ses habitants — arbres, buissons, touffes d'herbe, et les gens
+     * qui fuient quand on démolit leur maison. Reconstruits à chaque nouveau site,
+     * voir [updateDecor].
+     */
+    private var vegetation = VegetationField(1L, Terrain.FLAT, 0f, 0f)
+    private val villagers = VillagerField()
+    private var decorReady = false
+    private var lastLevelForDecor: TargetLevel? = null
+    private var lastPieceBroken = 0
+    private var villagerCooldown = 0f
+
+    /** Horloge réelle, pour le balancement des plantes et le vol des oiseaux — pas
+     *  l'heure du jeu, qui court soixante-douze fois plus vite et se remonte à la main. */
+    private var ambientClock = 0f
+
+    private val pFoliage = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#2E5233".toColorInt() }
+    private val pFoliageLight = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#3E6B43".toColorInt() }
+    private val pTrunk = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2.4f * dp
+        strokeCap = Paint.Cap.ROUND
+        color = "#4E342E".toColorInt()
+    }
+    private val pTuft = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2f * dp
+        strokeCap = Paint.Cap.ROUND
+        color = "#3E6B43".toColorInt()
+    }
+    private val pVillager = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2f * dp
+        strokeCap = Paint.Cap.ROUND
+        color = Color.argb(215, 40, 32, 28)
+    }
 
     /**
      * Les peintures du **décor**, celles que la nuit assombrit.
@@ -320,6 +381,10 @@ class TrebuchetView @JvmOverloads constructor(
         ArrayList<Paint>().apply {
             add(pGround); add(pGrass); add(pCrack)
             addAll(targetFills); addAll(targetEdges)
+            // La végétation s'éteint avec le jour comme le reste du sol. Les oiseaux
+            // et les fuyards, eux, restent des silhouettes nues : une teinte de nuit
+            // sur un contour déjà sombre ne changerait rien qu'on puisse voir.
+            add(pFoliage); add(pFoliageLight); add(pTrunk); add(pTuft)
         }
     }
 
@@ -674,6 +739,9 @@ class TrebuchetView @JvmOverloads constructor(
                 // aux stries, lesquelles pointaient à gauche par vent debout tout en
                 // filant à droite.
                 clouds.update(frameDt, game.wind.vx)
+                birds.update(frameDt, game.wind.vx)
+                ambientClock += frameDt
+                updateDecor(frameDt)
                 updatePreview()
             }
             if (finished) post { listener?.onShotFinished() }
@@ -1317,6 +1385,43 @@ class TrebuchetView @JvmOverloads constructor(
         }
     }
 
+    // ── Décor et fuyards ─────────────────────────────────────────────────────
+
+    /**
+     * Reconstruit la végétation et repart d'un terrain neuf quand le site change,
+     * puis fait déguerpir quelques habitants si une pierre vient de céder.
+     *
+     * La comparaison se fait sur **l'identité** du niveau, pas sur sa graine : le
+     * bac à sable n'en a aucune, et deux parties de bac à sable qui se suivent
+     * doivent recevoir un décor tout aussi neuf que deux niveaux différents.
+     */
+    private fun updateDecor(dt: Float) {
+        val level = game.level
+        if (!decorReady || level !== lastLevelForDecor) {
+            lastLevelForDecor = level
+            decorReady = true
+            val seed = level?.seed ?: SANDBOX_DECOR_SEED
+            vegetation = VegetationField(seed, game.terrain, game.targets.left, game.targets.right)
+            villagers.reset(seed, game.terrain, game.targets.left, game.targets.right)
+            lastPieceBroken = 0
+            villagerCooldown = 0f
+        }
+
+        // Une pierre de plus a cédé depuis la dernière image : quelqu'un panique.
+        // La vague se limite dans le temps — sans quoi un mur qui s'effondre pierre
+        // par pierre viderait tout le village d'un coup, dix habitants pour un seul
+        // choc.
+        val broken = game.targets.pieceBroken
+        if (broken > lastPieceBroken && villagerCooldown <= 0f) {
+            val alarmX = game.ball.x.coerceIn(game.targets.left, game.targets.right)
+            villagers.panic(alarmX)
+            villagerCooldown = VILLAGER_PANIC_COOLDOWN
+        }
+        lastPieceBroken = broken
+        villagerCooldown = (villagerCooldown - dt).coerceAtLeast(0f)
+        villagers.update(dt)
+    }
+
     // ── Prévisualisation ──────────────────────────────────────────────────────
 
     /**
@@ -1403,7 +1508,9 @@ class TrebuchetView @JvmOverloads constructor(
         // des constructions, ce qui ne coûte qu'un filtre partagé.
         applyNight()
         drawGround(canvas, w, h)
+        drawVegetation(canvas, w, h)
         drawTargets(canvas, w)
+        drawVillagers(canvas, w, h)
         // Les feux se posent **après** le décor qu'ils éclairent et avant la machine :
         // une torche doit poser sa flaque de lumière sur le mur qui la porte, pas
         // derrière lui.
@@ -1499,6 +1606,122 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     /**
+     * La végétation : des touffes, des buissons et des arbres, plantés une fois
+     * pour toutes par [updateDecor] et rejoués ici à chaque image.
+     *
+     * Elle balance avec **le** vent du jeu et pas avec une horloge à elle : par vent
+     * calme, rien ne bouge, et c'est ce même vent — [TrebuchetGame.wind] — qui fait
+     * déjà dériver les nuages et la traînée du boulet. Une seule brise pour tout le
+     * monde plutôt qu'une deuxième inventée pour l'occasion.
+     */
+    private fun drawVegetation(canvas: Canvas, w: Float, h: Float) {
+        val windSway = (game.wind.vx / 12f).coerceIn(-1f, 1f)
+        for (p in vegetation.plants) {
+            val px = sx(p.x)
+            if (px < -80f || px > w + 80f) continue
+            val groundPy = sy(p.groundY)
+            if (groundPy < -40f || groundPy > h + 200f) continue
+
+            val sway = sin(ambientClock * 0.7f + p.swayPhase) * windSway
+            when (p.kind) {
+                VegetationField.Kind.TUFT -> drawTuft(canvas, p, px, groundPy, sway)
+                VegetationField.Kind.BUSH -> drawBush(canvas, p, px, groundPy, sway)
+                VegetationField.Kind.TREE -> drawTree(canvas, p, px, groundPy, sway)
+            }
+        }
+    }
+
+    /** Trois brins qui penchent chacun un peu différemment, et tous un peu plus au vent. */
+    private fun drawTuft(
+        canvas: Canvas, p: VegetationField.Plant, px: Float, groundPy: Float, sway: Float
+    ) {
+        val lenPx = p.size * camScale
+        if (lenPx < 1.2f) return
+        for (i in 0 until 3) {
+            val lean = (p.puffs[i] * 0.6f + sway * 1.3f).coerceIn(-1.6f, 1.6f)
+            val bx = (i - 1) * lenPx * 0.28f
+            canvas.drawLine(
+                px + bx, groundPy,
+                px + bx + lean * lenPx * 0.55f, groundPy - lenPx,
+                pTuft
+            )
+        }
+    }
+
+    /** Un tas de boules posé au sol, comme un petit nuage qui aurait pris racine. */
+    private fun drawBush(
+        canvas: Canvas, p: VegetationField.Plant, px: Float, groundPy: Float, sway: Float
+    ) {
+        val sizePx = p.size * camScale
+        if (sizePx < 1.5f) return
+        val cx = px + sway * sizePx * 0.15f
+        val cy = groundPy - sizePx * 0.5f
+        var i = 0
+        while (i < p.puffs.size) {
+            val paint = if (i == 0) pFoliageLight else pFoliage
+            canvas.drawCircle(cx + p.puffs[i] * sizePx, cy + p.puffs[i + 1] * sizePx, p.puffs[i + 2] * sizePx, paint)
+            i += 3
+        }
+    }
+
+    /** Un tronc, et son feuillage qui balance un peu plus que lui : la cime bouge, pas les racines. */
+    private fun drawTree(
+        canvas: Canvas, p: VegetationField.Plant, px: Float, groundPy: Float, sway: Float
+    ) {
+        val stemPx = p.stem * camScale
+        val sizePx = p.size * camScale
+        if (stemPx + sizePx < 2f) return
+        val topX = px + sway * stemPx * 0.12f
+        val topY = groundPy - stemPx
+        canvas.drawLine(px, groundPy, topX, topY, pTrunk)
+        val canopyCx = topX + sway * sizePx * 0.25f
+        val canopyCy = topY - sizePx * 0.35f
+        var i = 0
+        while (i < p.puffs.size) {
+            val paint = if (i == 0) pFoliageLight else pFoliage
+            canvas.drawCircle(
+                canopyCx + p.puffs[i] * sizePx, canopyCy + p.puffs[i + 1] * sizePx, p.puffs[i + 2] * sizePx, paint
+            )
+            i += 3
+        }
+    }
+
+    /**
+     * Les fuyards : de petites silhouettes qui courent, jambes en ciseaux.
+     *
+     * Ils gardent leur taille d'humain quel que soit le mode — voir la note de
+     * [VillagerField] — donc ils paraissent minuscules à côté d'un château arcade
+     * deux fois trop grand. C'est voulu : ce n'est pas eux qui ont changé de taille.
+     */
+    private fun drawVillagers(canvas: Canvas, w: Float, h: Float) {
+        val list = villagers.list
+        if (list.isEmpty()) return
+        for (v in list) {
+            val px = sx(v.x)
+            if (px < -40f || px > w + 40f) continue
+            val groundPy = sy(villagers.groundY(v.x))
+            if (groundPy < -40f || groundPy > h + 40f) continue
+            val hpx = v.height * camScale
+            // Trop petit pour qu'un trait de plus se voie : inutile d'insister.
+            if (hpx < 3f) continue
+
+            // Penchés en avant, dans le sens où ils fuient — toujours vers la droite,
+            // loin de la machine, voir [VillagerField].
+            val lean = hpx * 0.16f
+            val headX = px + lean
+            val headY = groundPy - hpx
+            val hipY = groundPy - hpx * 0.52f
+
+            canvas.drawCircle(headX, headY + hpx * 0.08f, hpx * 0.08f, pVillager)
+            canvas.drawLine(headX, headY + hpx * 0.16f, px, hipY, pVillager)
+
+            val stride = sin(ambientClock * 10f + v.legPhase) * hpx * 0.24f
+            canvas.drawLine(px, hipY, px + stride, groundPy, pVillager)
+            canvas.drawLine(px, hipY, px - stride * 0.7f, groundPy, pVillager)
+        }
+    }
+
+    /**
      * Le ciel : le dégradé de l'heure, les étoiles, le Soleil et la Lune.
      *
      * Le dégradé se refabrique quand **la couleur** change et pas seulement quand la
@@ -1533,6 +1756,8 @@ class TrebuchetView @JvmOverloads constructor(
         // Les nuages passent **devant** les astres : c'est ce qui les met au ciel
         // plutôt que sur un mur peint derrière lui.
         drawClouds(canvas, w, h)
+        // Et les oiseaux devant les nuages : ils volent plus bas, donc plus près.
+        drawBirds(canvas, w, h)
     }
 
     /**
@@ -1551,7 +1776,20 @@ class TrebuchetView @JvmOverloads constructor(
     private fun drawClouds(canvas: Canvas, w: Float, h: Float) {
         // Le blanc n'entre que pour moitié : au-delà, un nuage de nuit redevient une
         // tache claire, et l'illusion tombe.
-        pCloud.color = SkyState.mix(sky.horizon, 0xFFFFFFFF.toInt(), 0.5f)
+        //
+        // Le nuancier ne se refabrique que si cette teinte change — voir la note de
+        // [pCloud] — et c'est bon marché : elle ne bouge qu'avec l'heure du ciel, pas
+        // à chaque image.
+        val tint = SkyState.mix(sky.horizon, 0xFFFFFFFF.toInt(), 0.5f)
+        if (tint != cloudTint) {
+            cloudTint = tint
+            pCloud.shader = RadialGradient(
+                0f, 0f, 1f,
+                intArrayOf(tint, tint and 0x00FFFFFF),
+                floatArrayOf(0f, 1f),
+                Shader.TileMode.CLAMP
+            )
+        }
         pCloud.alpha = (0.55f * 255f).toInt()
 
         val demi = w / 2f / camScale
@@ -1570,14 +1808,55 @@ class TrebuchetView @JvmOverloads constructor(
             val cx = sx(x)
             var i = 0
             while (i < c.puffs.size) {
-                canvas.drawCircle(
-                    cx + c.puffs[i] * taille,
-                    cy + c.puffs[i + 1] * taille,
-                    c.puffs[i + 2] * taille,
-                    pCloud
-                )
+                val r = c.puffs[i + 2] * taille
+                if (r < 0.5f) { i += 3; continue }
+                // Le nuancier est bâti en rayon unitaire à l'origine : une échelle et
+                // une translation du canevas le posent où il faut, sans jamais y
+                // toucher lui-même. C'est ce qui évite de refabriquer un nuancier par
+                // boule — il y en a jusqu'à soixante par image.
+                canvas.save()
+                canvas.translate(cx + c.puffs[i] * taille, cy + c.puffs[i + 1] * taille)
+                canvas.scale(r, r)
+                canvas.drawCircle(0f, 0f, 1f, pCloud)
+                canvas.restore()
                 i += 3
             }
+        }
+    }
+
+    /**
+     * Les oiseaux : deux traits qui montent et retombent, comme des ailes.
+     *
+     * Même logique de bande qui se reboucle que [drawClouds], en plus court —
+     * [BirdField.SPAN] tient dans ce qu'on voit sans jamais montrer deux fois le
+     * même oiseau, puisqu'ils volent bas et près, pas à l'échelle du paysage entier.
+     */
+    private fun drawBirds(canvas: Canvas, w: Float, h: Float) {
+        // Ils se couchent avec le jour : c'est une opacité, pas un arrêt du vol —
+        // voir la note de [BirdField].
+        if (sky.light <= 0.02f) return
+        pBird.alpha = (sky.light * 200f).toInt().coerceIn(0, 255)
+
+        val demi = w / 2f / camScale
+        for (b in birds.birds) {
+            var x = b.x
+            x -= floor((x - camX + BirdField.SPAN / 2f) / BirdField.SPAN) * BirdField.SPAN
+            if (x < camX - demi - b.span * 6f || x > camX + demi + b.span * 6f) continue
+
+            val spanPx = b.span * camScale
+            // Trop petit pour se voir : inutile de tracer deux traits d'un demi-pixel.
+            if (spanPx < 1.5f) continue
+
+            val bob = sin(ambientClock * 0.9f + b.bobPhase) * b.span * 1.4f
+            val cy = sy(b.altitude + bob)
+            if (cy > h + spanPx * 3f || cy < -spanPx * 3f) continue
+            val cx = sx(x)
+
+            // Le battement : les pointes montent et retombent, pas le corps.
+            val flap = sin(ambientClock * b.flapRate * 6.2832f + b.flapPhase) * 0.5f + 0.5f
+            val liftPx = spanPx * (0.15f + 0.55f * flap)
+            canvas.drawLine(cx, cy, cx - spanPx, cy - liftPx, pBird)
+            canvas.drawLine(cx, cy, cx + spanPx, cy - liftPx, pBird)
         }
     }
 

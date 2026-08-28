@@ -201,6 +201,84 @@ class CloudField(seed: Long = 7L, count: Int = 9) {
 }
 
 /**
+ * Les oiseaux : quelques silhouettes qui traversent le ciel bas, sous les nuages.
+ *
+ * **Ils ne dérivent pas dans le vent, ils volent dedans.** Un nuage est un paquet
+ * de vapeur porté par l'air ; un oiseau garde sa propre allure et lutte contre un
+ * vent contraire au lieu de reculer avec lui. C'est pour ça que [Bird.cruiseSpeed]
+ * n'emprunte le vent qu'en petite part, et garde son signe propre — la moitié des
+ * oiseaux vont vers la droite, l'autre vers la gauche, alors que tous les nuages
+ * d'un même ciel filent ensemble.
+ *
+ * Ils se couchent avec le jour : c'est [SkyState.light] qui décide de leur
+ * visibilité, à la vue de le lire, pas à eux de s'arrêter de voler pour de vrai —
+ * un oiseau qui continuerait son vol sous une opacité nulle reprendrait sa place
+ * exacte au matin, sans code de plus.
+ */
+class BirdField(seed: Long = 13L, count: Int = 7) {
+
+    /** Un oiseau : son altitude, son envergure, et l'allure qui lui est propre. */
+    class Bird internal constructor(
+        /** Altitude, en mètres au-dessus du sol — basse, sous les nuages. */
+        val altitude: Float,
+        /** Demi-envergure, en mètres. */
+        val span: Float,
+        /** Vitesse de croisière, en m/s, signée : le sens de vol ne dépend pas du vent. */
+        val cruiseSpeed: Float,
+        /** Battements par seconde, propre à chaque oiseau — sans ça ils battent en cadence. */
+        val flapRate: Float,
+        val flapPhase: Float,
+        val bobPhase: Float
+    ) {
+        var x = 0f
+            internal set
+    }
+
+    val birds: List<Bird> = run {
+        val rng = Random(seed)
+        List(count) { index ->
+            val versLaDroite = rng.nextBoolean()
+            Bird(
+                altitude = MIN_ALTITUDE + rng.nextFloat() * (MAX_ALTITUDE - MIN_ALTITUDE),
+                span = MIN_SPAN + rng.nextFloat() * (MAX_SPAN - MIN_SPAN),
+                cruiseSpeed = (CRUISE_MIN + rng.nextFloat() * (CRUISE_MAX - CRUISE_MIN)) *
+                    (if (versLaDroite) 1f else -1f),
+                flapRate = 2.2f + rng.nextFloat() * 1.6f,
+                flapPhase = rng.nextFloat() * 6.2832f,
+                bobPhase = rng.nextFloat() * 6.2832f
+            ).apply { x = (index + 0.5f) / count * SPAN }
+        }
+    }
+
+    /**
+     * Fait avancer les oiseaux. [windX] ne compte que pour un quart : voir la note de
+     * classe, un vol n'est pas une dérive.
+     */
+    fun update(dt: Float, windX: Float) {
+        for (b in birds) {
+            var x = b.x + (b.cruiseSpeed + windX * 0.25f) * dt
+            x -= kotlin.math.floor(x / SPAN) * SPAN
+            b.x = x
+        }
+    }
+
+    companion object {
+        /** Largeur de la bande où les oiseaux tournent — bien plus courte que celle des
+         * nuages : ils volent bas et près, pas de quoi couvrir tout le champ de tir. */
+        const val SPAN = 260f
+
+        const val MIN_ALTITUDE = 10f
+        const val MAX_ALTITUDE = 90f
+
+        const val MIN_SPAN = 0.35f
+        const val MAX_SPAN = 0.6f
+
+        const val CRUISE_MIN = 6f
+        const val CRUISE_MAX = 12f
+    }
+}
+
+/**
  * Le ciel à un instant donné : où sont les astres, de quelle couleur est l'air, et
  * combien il fait clair.
  *
