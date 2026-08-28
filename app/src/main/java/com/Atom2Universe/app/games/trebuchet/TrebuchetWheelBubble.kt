@@ -49,7 +49,16 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val label: Int,
         val unit: Int,
         val intDigits: Int,
-        val decimals: Int
+        val decimals: Int,
+        /**
+         * Vrai pour la roulette qui fait défiler des **mots** au lieu de chiffres.
+         *
+         * Elle se manœuvre exactement comme les autres — on la pousse du doigt, un
+         * appui vaut un cran — et c'est tout l'intérêt : le joueur a déjà appris le
+         * geste sur les six premières lignes, il n'a rien de neuf à comprendre pour
+         * changer de projectile.
+         */
+        val choice: Boolean = false
     ) {
         BEAM(R.string.trebuchet_dial_beam, R.string.trebuchet_unit_m, 2, 1),
         LEVER(R.string.trebuchet_dial_lever, R.string.trebuchet_unit_ratio, 1, 1),
@@ -57,10 +66,21 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         MASS(R.string.trebuchet_dial_mass, R.string.trebuchet_unit_kg, 5, 0),
         HANG(R.string.trebuchet_dial_hang, R.string.trebuchet_unit_m, 2, 1),
         PIN(R.string.trebuchet_dial_pin, R.string.trebuchet_unit_deg, 2, 0),
-        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 1);
+        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 1),
+        SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 0, choice = true);
 
         val digits: Int get() = intDigits + decimals
     }
+
+    /** Le nom court d'un projectile, tel qu'il défile dans la roulette. */
+    private fun shotName(kind: Projectile): String = context.getString(
+        when (kind) {
+            Projectile.BOULET -> R.string.trebuchet_shot_ball
+            Projectile.LOURD -> R.string.trebuchet_shot_heavy
+            Projectile.FRAGMENTATION -> R.string.trebuchet_shot_cluster
+            Projectile.BOMBE -> R.string.trebuchet_shot_bomb
+        }
+    )
 
     private val dp = resources.displayMetrics.density
 
@@ -77,6 +97,9 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         const val CELL_H_DP = 38f
         const val GAP_DP = 3f
         const val DOT_W_DP = 9f
+
+        /** Marge de part et d'autre du mot le plus long, dans sa cellule. */
+        const val CHOICE_PAD_DP = 10f
     }
 
     // ── Encres ────────────────────────────────────────────────────────────────
@@ -105,6 +128,16 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     }
     private val pUnit = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#8FA6C8".toColorInt() }
     private val pDot = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#FFD166".toColorInt() }
+    private val pChoice = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        color = "#FFD166".toColorInt()
+        typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
+    }
+    private val pChoiceDim = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        color = Color.argb(70, 255, 209, 102)
+        typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
+    }
 
     private val rect = RectF()
 
@@ -113,6 +146,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     private var dials = emptyList<Dial>()
     private var labelWidth = 0f
     private var unitWidth = 0f
+    private var choiceWidth = 0f
 
     // ── Saisie ────────────────────────────────────────────────────────────────
 
@@ -132,6 +166,8 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         pDigitDim.textSize = 20f * dp
         pLabel.textSize = 12f * dp
         pUnit.textSize = 12f * dp
+        pChoice.textSize = 14f * dp
+        pChoiceDim.textSize = 14f * dp
     }
 
     /**
@@ -155,18 +191,33 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         TrebuchetView.Part.POST -> listOf(Dial.POST)
         TrebuchetView.Part.WEIGHT -> listOf(Dial.MASS, Dial.HANG)
         TrebuchetView.Part.PIN -> listOf(Dial.PIN)
-        TrebuchetView.Part.SLING -> listOf(Dial.SLING)
+        // La fronde et ce qu'on met dedans : c'est la même pièce sous le doigt, donc
+        // c'est la même fenêtre.
+        TrebuchetView.Part.SLING -> listOf(Dial.SLING, Dial.SHOT)
         TrebuchetView.Part.NONE -> emptyList()
     }
 
     private fun measureLabels() {
         labelWidth = 0f
         unitWidth = 0f
+        choiceWidth = 0f
         for (d in dials) {
             labelWidth = maxOf(labelWidth, pLabel.measureText(context.getString(d.label)))
             unitWidth = maxOf(unitWidth, pUnit.measureText(context.getString(d.unit)))
+            if (!d.choice) continue
+            // La cellule des mots tient le plus long d'entre eux, sinon la bulle
+            // changerait de largeur à chaque cran tourné.
+            for (k in Projectile.entries) {
+                choiceWidth = maxOf(choiceWidth, pChoice.measureText(shotName(k)))
+            }
+            choiceWidth += 2f * CHOICE_PAD_DP * dp
         }
     }
+
+    /** Largeur, en pixels, de la cellule d'une roulette : chiffres ou mots. */
+    private fun cellsWidth(d: Dial): Float =
+        if (d.choice) choiceWidth
+        else d.digits * (CELL_W_DP + GAP_DP) * dp + (if (d.decimals > 0) DOT_W_DP * dp else 0f)
 
     // ── Mesure ────────────────────────────────────────────────────────────────
 
@@ -175,9 +226,8 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             setMeasuredDimension(0, 0)
             return
         }
-        var widest = 0
-        for (d in dials) widest = maxOf(widest, d.digits)
-        val cells = widest * (CELL_W_DP + GAP_DP) * dp + DOT_W_DP * dp
+        var cells = 0f
+        for (d in dials) cells = maxOf(cells, cellsWidth(d))
         val w = PAD_DP * 2f * dp + labelWidth + 8f * dp + cells + 8f * dp + unitWidth
         val h = PAD_DP * 2f * dp + dials.size * ROW_DP * dp
         setMeasuredDimension(w.roundToInt(), h.roundToInt())
@@ -203,8 +253,12 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 mid + pLabel.textSize * 0.36f, pLabel
             )
 
-            val digits = digitsOf(d, value(g, d))
             var x = PAD_DP * dp + labelWidth + 8f * dp
+            if (d.choice) {
+                drawChoice(canvas, x, mid, row)
+                continue
+            }
+            val digits = digitsOf(d, value(g, d))
             for (col in 0 until d.digits) {
                 // Le point décimal s'insère à sa place, sans roulette : il ne se règle
                 // pas, il se lit.
@@ -220,6 +274,38 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 mid + pUnit.textSize * 0.36f, pUnit
             )
         }
+    }
+
+    /**
+     * La roulette des mots : le projectile choisi, et ses voisins qui arrivent.
+     *
+     * Elle est dessinée exactement comme une roulette de chiffres — même cellule, même
+     * défilement, même estompage des voisins — parce que c'en est une. Seul le contenu
+     * change : des noms au lieu de chiffres, et une cellule assez large pour les tenir.
+     */
+    private fun drawChoice(canvas: Canvas, x: Float, mid: Float, row: Int) {
+        val h = CELL_H_DP * dp
+        rect.set(x, mid - h / 2f, x + choiceWidth, mid + h / 2f)
+        canvas.drawRoundRect(rect, 4f * dp, 4f * dp, pCell)
+
+        val kinds = Projectile.entries
+        val cur = kinds.indexOf(game?.config?.projectile ?: Projectile.BOULET)
+        val rolling = row == turnRow && turnCol == 0
+        val offset = if (rolling) turnOffset else 0f
+        val step = STEP_DP * dp
+        val cx = x + choiceWidth / 2f
+        val base = mid + pChoice.textSize * 0.36f
+
+        canvas.save()
+        canvas.clipRect(rect)
+        for (k in -1..1) {
+            val i = ((cur + k) % kinds.size + kinds.size) % kinds.size
+            canvas.drawText(
+                shotName(kinds[i]), cx, base + k * step + offset,
+                if (k == 0 && abs(offset) < step / 2f) pChoice else pChoiceDim
+            )
+        }
+        canvas.restore()
     }
 
     /** Une roulette : le chiffre tenu, et ceux qui l'encadrent, coupés par la cellule. */
@@ -317,6 +403,10 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             val top = (PAD_DP + row * ROW_DP) * dp
             if (y < top || y > top + ROW_DP * dp) continue
             var cx = PAD_DP * dp + labelWidth + 8f * dp
+            if (d.choice) {
+                if (x >= cx && x <= cx + choiceWidth) return row shl 8
+                continue
+            }
             for (col in 0 until d.digits) {
                 if (d.decimals > 0 && col == d.intDigits) cx += DOT_W_DP * dp
                 if (x >= cx && x <= cx + CELL_W_DP * dp) return (row shl 8) or col
@@ -338,6 +428,16 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val g = game ?: return
         if (turnRow !in dials.indices) return
         val d = dials[turnRow]
+        if (d.choice) {
+            // Les projectiles tournent en rond : après le dernier vient le premier.
+            val kinds = Projectile.entries
+            val i = kinds.indexOf(g.config.projectile)
+            val next = ((i + delta) % kinds.size + kinds.size) % kinds.size
+            synchronized(g) { g.setProjectile(kinds[next]) }
+            onValueChanged?.invoke()
+            invalidate()
+            return
+        }
         if (turnCol < 0 || turnCol >= d.digits) return
 
         // Le poids de la colonne tenue : tourner les dizaines, c'est ajouter dix.
@@ -361,6 +461,8 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             Dial.HANG -> hangLength
             Dial.PIN -> pinAngleDeg
             Dial.SLING -> slingLength
+            // Le projectile n'est pas un nombre : sa roulette ne passe jamais par ici.
+            Dial.SHOT -> 0f
         }
     }
 
@@ -374,6 +476,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 Dial.HANG -> g.setHangLength(v)
                 Dial.PIN -> g.setPinAngle(v)
                 Dial.SLING -> g.setSlingLength(v)
+                Dial.SHOT -> Unit
             }
         }
     }

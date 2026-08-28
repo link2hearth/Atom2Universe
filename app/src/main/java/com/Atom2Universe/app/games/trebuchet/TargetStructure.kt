@@ -368,7 +368,14 @@ class Structure(val blocks: List<Block>, val name: String = "") {
         // générateur de la trancher en rasant le niveau pour voir. Une formule plus
         // ambitieuse a été essayée ici et refusait des courtines parfaitement jouables
         // à cause d'un merlon un peu large.
-        val thickest = blocks.maxOf { it.rubbleThickness() }
+        //
+        // Seules les pierres qui **laissent** quelque chose comptent : ce qui tombe en
+        // poussière — le torchis d'un hourdis, le chaume d'un toit — disparaît sans
+        // rien poser au sol, et un hourdis d'arcade un peu haut faisait refuser des
+        // hameaux parfaitement jouables.
+        val thickest = blocks
+            .filter { it.material.rupture != Rupture.POUSSIERE }
+            .maxOfOrNull { it.rubbleThickness() } ?: 0f
         if (ruinLine < thickest) {
             out += "construction trop basse pour ses pierres : ligne de ruine à " +
                 "${"%.2f".format(ruinLine)} m, une seule pierre couchée en fait " +

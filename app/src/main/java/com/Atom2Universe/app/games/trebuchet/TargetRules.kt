@@ -25,6 +25,25 @@ object TrebuchetCategory {
 
     /** Ce qu'une pierre de la cible rencontre : tout, sauf la machine. */
     const val TARGET_MASK = GROUND or BALL or TARGET or DEBRIS
+
+    /**
+     * Ce qu'un projectile rencontre vraiment, une fois le tempérament du jeu consulté.
+     *
+     * En arcade, **il ignore les gravats**, et c'est la moitié de la promesse de la
+     * traversée. Mesuré au banc : un boulet à cent dix mètres par seconde entrait dans
+     * une maison, emportait un poteau, ressortait à cent sept — et se faisait arrêter
+     * net, l'image suivante, par un éclat de ce même poteau tombé devant lui. Il
+     * passait de 107 à 14 m/s contre un morceau de bois déjà cassé.
+     *
+     * Un débris ne peut pas se casser — c'est la règle qui garantit qu'un effondrement
+     * laisse un **tas**, et donc que le niveau reste gagnable. Mais un obstacle
+     * incassable est aussi un obstacle infranchissable : la traversée ne peut rien pour
+     * un projectile arrêté par quelque chose qui n'a plus de points de vie à lui faire
+     * payer. On le laisse donc passer au travers du gravier, ce qui est arcade, lisible,
+     * et surtout la seule chose qui marche.
+     */
+    fun projectileMask(): Int =
+        if (TargetRules.style.pierce > 0f) GROUND or TARGET else BALL_FREE_MASK
 }
 
 /**
@@ -127,29 +146,75 @@ enum class Material(
  * **Le mode arcade n'est pas « la même chose en plus faible ».** Doubler la taille des
  * pierres en 2D quadruple leur masse, donc leurs points de vie : des pierres deux fois
  * plus grosses et deux fois moins tenaces seraient **deux fois plus dures** à abattre.
- * Il faut donc bouger trois curseurs ensemble :
+ * Il faut donc bouger les curseurs ensemble :
  *
  *  - **plus grosses** ([stoneScale]) : chaque coup emporte un morceau qui se voit, et
  *    une construction coûte quatre fois moins de corps au moteur ;
+ *  - **plus épaisses** ([detailScale]) : le curseur des pièces qui ne sont pas des
+ *    assises — poteaux, poutres, toits, merlons, tonneaux. Il est plus doux que celui
+ *    des pierres, parce qu'une charpente épaissie au même facteur remplirait la
+ *    maison ;
  *  - **plus légères** ([densityScale]) : sans ça, un bloc de cinq tonnes ne bougerait
  *    pas d'un pouce sous un boulet de douze kilos, et il n'y aurait plus rien à
  *    renverser — or renverser est le plus beau du jeu ;
  *  - **plus fragiles** ([toughnessScale]) : de quoi qu'un coup franc emporte une
  *    pierre entière plutôt que de la fêler.
  *
- * Réglé pour qu'une assise de rempart parte d'un seul boulet bien placé au lieu d'en
- * demander deux, tout en pesant assez pour tomber sur ses voisines.
+ * **Le second curseur est né d'un oubli, et il vaut la peine d'être raconté.** La
+ * première version ne réglait que la taille des assises. Or la moitié des sites du jeu
+ * sont des hameaux, et une maison n'a pas d'assises : elle a des poteaux, des poutres
+ * et un toit, tous donnés en mètres fixes. Les hameaux d'arcade sortaient donc
+ * **exactement identiques** aux hameaux réalistes, à la masse près — le joueur
+ * changeait de mode et ne voyait rien changer. Toute mesure en mètres qui décrit une
+ * pièce de construction doit passer par [TargetRules.detail] ou [TargetRules.stone] ;
+ * une constante nue est un morceau du décor qui a oublié dans quel jeu il est.
+ *
+ * Réglé pour qu'une assise de rempart d'arcade — trois mètres sur un et demi, contre
+ * un mètre vingt sur cinquante en réaliste — parte d'un seul boulet bien placé, tout
+ * en pesant assez pour tomber sur ses voisines.
  */
 enum class TargetStyle(
-    /** Facteur sur la taille des pierres. */
+    /**
+     * Facteur sur la taille du **site entier** : la largeur et la hauteur de chaque
+     * module, et par conséquent tout ce qu'il contient.
+     *
+     * C'est le curseur qui manquait, et c'est le seul que le joueur voie vraiment.
+     * Grossir les pierres à l'intérieur d'un château de taille inchangée ne change que
+     * le nombre de joints — de loin, à trois cents mètres, ça ne se remarque pas. Ce
+     * qui se remarque, c'est la silhouette : un château deux fois plus haut se voit
+     * immédiatement, et ses planches font quatre mètres au lieu de deux.
+     */
+    val siteScale: Float,
+    /** Facteur sur la taille des pierres d'appareil, **à site égal** : assises, merlons. */
     val stoneScale: Float,
+    /**
+     * Facteur sur l'épaisseur, **à site égal**, des pièces qui ne sont pas des
+     * assises : poteaux, poutres, hauteur d'étage, toits, socles de tour, tonneaux.
+     */
+    val detailScale: Float,
     /** Facteur sur la masse volumique. */
     val densityScale: Float,
     /** Facteur sur la vitesse critique, donc la racine des points de vie. */
-    val toughnessScale: Float
+    val toughnessScale: Float,
+    /**
+     * De 0 à 1 : ce que le projectile récupère de son élan quand il **casse** ce
+     * qu'il touche. C'est le curseur du « ça passe au travers ».
+     *
+     * À zéro, la physique décide seule, et elle est impitoyable : un boulet de douze
+     * kilos qui percute une pierre de trois tonnes repart en arrière, même si la pierre
+     * se brise. C'est exact — c'est aussi tout ce qu'on ne veut pas voir en arcade, où
+     * un boulet doit **entrer** dans la construction et en ressortir de l'autre côté.
+     *
+     * À un, le projectile ne paie que ce qu'il a détruit : on lui rend sa vitesse le
+     * long de sa trajectoire d'avant le choc, amputée de l'énergie exacte des points de
+     * vie qu'il vient d'emporter. Il ne gagne jamais d'énergie — il ne perd que la
+     * bonne — et il ne récupère rien s'il n'a rien cassé. Un boulet qui cogne sans
+     * casser rebondit dans les deux modes.
+     */
+    val pierce: Float
 ) {
-    REALISTE(1f, 1f, 1f),
-    ARCADE(2f, 0.40f, 0.60f)
+    REALISTE(1f, 1f, 1f, 1f, 1f, 0f),
+    ARCADE(2f, 2.6f, 1.6f, 0.07f, 0.26f, 1f)
 }
 
 /**
@@ -167,6 +232,31 @@ object TargetRules {
      * une fois pour toutes à sa création.
      */
     var style: TargetStyle = TargetStyle.ARCADE
+
+    /**
+     * Une longueur de pierre d'appareil, à l'échelle du tempérament en cours.
+     *
+     * Toute dimension d'assise ou de merlon passe par ici. C'est la seule façon de ne
+     * pas se retrouver avec un module qui ignore le mode arcade — voir la mésaventure
+     * des hameaux racontée dans [TargetStyle].
+     */
+    fun stone(metres: Float): Float = metres * style.siteScale * style.stoneScale
+
+    /**
+     * Une épaisseur de charpente ou d'ornement, à l'échelle du tempérament en cours.
+     *
+     * Plus douce que [stone] : un poteau grossi autant qu'une assise mangerait la
+     * travée qu'il est censé encadrer.
+     */
+    fun detail(metres: Float): Float = metres * style.siteScale * style.detailScale
+
+    /**
+     * Une dimension d'ensemble : l'emprise d'un module, l'écart entre deux modules.
+     *
+     * C'est le seul curseur qui change la **silhouette** du site, et c'est donc le seul
+     * que le joueur remarque de loin.
+     */
+    fun site(metres: Float): Float = metres * style.siteScale
 
     /**
      * Épaisseur minimale d'une pièce, en demi-extension : 5 cm, donc une planche de
@@ -348,6 +438,16 @@ object TargetRules {
      * seconde — largement plus que l'image nécessaire.
      */
     const val WATCH_MARGIN = 40f
+
+    /**
+     * Marge, en mètres, autour d'un projectile, dans laquelle une pierre qui se brise
+     * lui est attribuée.
+     *
+     * Elle s'ajoute au chemin parcouru dans l'image : à cent cinquante mètres par
+     * seconde, un boulet franchit deux mètres et demi entre deux images, et la pierre
+     * qu'il vient d'emporter est déjà loin derrière lui quand on regarde.
+     */
+    const val PIERCE_REACH = 1.5f
 
     /** Temps qu'un petit débris passe immobile avant d'être ramassé, en secondes. */
     const val DEBRIS_LIFETIME = 3f

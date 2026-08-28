@@ -62,11 +62,11 @@ object Masonry {
         if (width <= 0.05f || height <= 0.05f) return out
         val j = TargetRules.JOINT
 
-        // Le tempérament du jeu décide de la taille des pierres : en arcade, elles sont
-        // deux fois plus grosses, ce qui rend chaque coup lisible et divise par quatre
-        // le nombre de corps.
-        val sw = stoneWidth * TargetRules.style.stoneScale
-        val sh = stoneHeight * TargetRules.style.stoneScale
+        // Le tempérament du jeu décide de la taille des pierres : en arcade, elles font
+        // deux fois et demie la pierre réelle, ce qui rend chaque coup lisible et divise
+        // par six le nombre de corps.
+        val sw = TargetRules.stone(stoneWidth)
+        val sh = TargetRules.stone(stoneHeight)
         val courses = max(1, (height / sh).roundToInt())
         val courseH = height / courses
         var cols = max(1, (width / sw).roundToInt())
@@ -160,14 +160,17 @@ object Masonry {
         left: Float,
         bottom: Float,
         width: Float,
-        height: Float = 0.9f,
+        height: Float = TargetRules.detail(0.9f),
         merlonWidth: Float = 0.8f,
         gapWidth: Float = 0.6f
     ): List<Block> {
         val out = ArrayList<Block>()
-        val scale = TargetRules.style.stoneScale
-        val mw = merlonWidth * scale
-        val gw = gapWidth * scale
+        // Un merlon est une pierre d'appareil : il grandit comme une assise. Sa
+        // **hauteur**, elle, suit le curseur doux — un merlon aussi haut que large
+        // n'est plus un créneau, c'est un second mur posé sur le premier, et il
+        // dépasserait à lui seul la ligne de ruine.
+        val mw = TargetRules.stone(merlonWidth)
+        val gw = TargetRules.stone(gapWidth)
         val pitch = mw + gw
         // On veut commencer et finir par un merlon : il en faut un de plus que de créneaux.
         val count = max(2, ((width + gw) / pitch).roundToInt())
@@ -209,7 +212,7 @@ object Masonry {
         bottom: Float,
         width: Float,
         rise: Float,
-        thickness: Float = 0.18f
+        thickness: Float = TargetRules.detail(0.18f)
     ): Block {
         val halfW = width / 2f
         val slope = hypot(halfW, rise)
@@ -260,12 +263,14 @@ object TargetModules {
         material: Material = Material.STONE,
         bodyBudget: Int = DEFAULT_MODULE_BUDGET
     ): List<Block> {
-        val merlonH = 0.9f
+        val merlonH = TargetRules.detail(0.9f)
         val walkway = (height - merlonH).coerceAtLeast(1f)
+        // Donnée en pierre réelle : c'est [Masonry.wall] qui la met à l'échelle du
+        // tempérament, et il ne faut surtout pas l'y mettre deux fois.
         val stoneH = if (rng.nextBoolean()) 0.5f else 0.6f
         val out = ArrayList<Block>()
-        // Les merlons se paient sur le budget : il en faut un tous les mètre et demi.
-        val merlonCount = (width / 1.4f).toInt() + 1
+        // Les merlons se paient sur le budget : il en faut un par pas de merlon.
+        val merlonCount = (width / TargetRules.stone(1.4f)).toInt() + 1
         out += Masonry.wall(
             material, left, 0f, width, walkway,
             stoneWidth = 1.2f, stoneHeight = stoneH,
@@ -296,11 +301,11 @@ object TargetModules {
         bodyBudget: Int = DEFAULT_MODULE_BUDGET
     ): List<Block> {
         val out = ArrayList<Block>()
-        val plinthH = 0.6f
-        val corbelH = 0.45f
-        val merlonH = 0.9f
+        val plinthH = TargetRules.detail(0.6f)
+        val corbelH = TargetRules.detail(0.45f)
+        val merlonH = TargetRules.detail(0.9f)
         val shaftH = (height - plinthH - corbelH - merlonH).coerceAtLeast(1.5f)
-        val overhang = 0.22f
+        val overhang = TargetRules.detail(0.22f)
 
         // Le socle : une assise plus large, qui assied la tour.
         out += Masonry.wall(
@@ -345,14 +350,24 @@ object TargetModules {
         roofMaterial: Material = Material.THATCH
     ): List<Block> {
         val out = ArrayList<Block>()
-        val postW = 0.32f
-        val beamH = 0.35f
-        val rise = (width * 0.35f).coerceIn(0.8f, 2.2f)
-        val storeyH = 2.3f
+        // Toute la charpente est à l'échelle du tempérament. C'est ce qui manquait à la
+        // première version du mode arcade : un hameau n'a que des maisons, donc aucune
+        // assise, et il sortait identique dans les deux modes.
+        val postW = TargetRules.detail(0.32f)
+        val beamH = TargetRules.detail(0.35f)
+        val rise = (width * 0.35f).coerceIn(TargetRules.detail(0.8f), TargetRules.detail(2.2f))
+        // La hauteur d'étage est une dimension de **site**, pas une épaisseur : elle
+        // suit donc le curseur d'ensemble et pas celui des charpentes. Réglée sur le
+        // curseur doux, elle donnait des étages de sept mètres, un seul par maison, et
+        // des maisons qui ne remplissaient plus leur emprise — le site était deux fois
+        // plus large sans être deux fois plus haut.
+        val storeyH = TargetRules.site(2.3f)
         val storeys = ((height - rise) / storeyH).toInt().coerceIn(1, 3)
         // Un poteau de refend dès que la maison est large, sinon le linteau porte sur
-        // rien et l'étage du dessus repose sur du vide.
-        val middlePost = width > 4f
+        // rien et l'étage du dessus repose sur du vide. Le seuil suit l'épaisseur des
+        // poteaux : en arcade ils portent seuls une façade que le mode réaliste doit
+        // refendre.
+        val middlePost = width > TargetRules.detail(4f)
 
         var y = 0f
         repeat(storeys) { s ->
@@ -376,6 +391,11 @@ object TargetModules {
                 val bay = rng.nextInt(bays)
                 val bayW = (width - (bays + 1) * postW) / bays
                 val bayLeft = left + postW + bay * (bayW + postW)
+                //
+                // Sa hauteur est plafonnée court, et ce plafond ne suit **pas** le
+                // tempérament : l'épaisseur d'un gravat vaut le plus petit côté de sa
+                // pièce, et un hourdis aussi haut que large dépasserait à lui seul la
+                // ligne de ruine, rendant le hameau impossible à raser.
                 out += Block.laid(
                     Material.COB,
                     bayLeft + TargetRules.JOINT,
@@ -410,7 +430,12 @@ object TargetModules {
         if (count <= 0 || width <= 0.5f) return out
         val step = width / count
         for (i in 0 until count) {
-            val r = 0.28f + rng.nextFloat() * 0.14f
+            // Un tonneau d'arcade est un gros tonneau — mais jamais au point de
+            // chevaucher son voisin : deux corps posés l'un dans l'autre se repoussent
+            // violemment dès la première image.
+            val r = TargetRules.detail(0.28f + rng.nextFloat() * 0.14f)
+                .coerceAtMost(step / 2f - TargetRules.JOINT)
+                .coerceAtLeast(TargetRules.MIN_HALF_THICKNESS)
             out += Block.circle(material, left + step * (i + 0.5f), bottom + r, r, Role.PROP)
         }
         return out

@@ -194,7 +194,13 @@ object TrebuchetRules {
     const val SLING_MIN_RATIO = 0.25f
     const val SLING_MAX_RATIO = 0.95f
 
-    /** Le boulet : une belle pierre de taille. */
+    /**
+     * Le boulet de référence : une belle pierre de taille.
+     *
+     * Ce sont les chiffres de [Projectile.BOULET], recopiés ici parce que toute la
+     * documentation de la machine et tous les bancs d'essai s'y réfèrent. Le tir, lui,
+     * lit le projectile choisi et non ces constantes.
+     */
     const val BALL_RADIUS = 0.16f
     const val BALL_MASS = 12f
 
@@ -260,6 +266,15 @@ class MachineConfig {
 
     /** Longueur de la fronde, en fraction du bras long. */
     var slingRatio = 0.65f
+
+    /**
+     * Ce qu'on a mis dans la fronde.
+     *
+     * C'est un réglage comme les autres, et il est ici pour la même raison que les
+     * autres : un tir se rejoue à l'identique à partir de cette classe seule. Il est
+     * aussi le seul qui change la **masse lancée**, donc l'accord de toute la machine.
+     */
+    var projectile = Projectile.BOULET
 
     /** Longueur du bras court, du pivot à la chape du contrepoids. */
     val shortArm: Float get() = beamLength / (1f + leverRatio)
@@ -340,6 +355,7 @@ class MachineConfig {
         hangLength = o.hangLength
         pinAngleDeg = o.pinAngleDeg
         slingRatio = o.slingRatio
+        projectile = o.projectile
     }
 }
 
@@ -383,6 +399,19 @@ class TrebuchetGame {
          * qui fait le tour du bras indéfiniment vaut mieux largué que gardé.
          */
         const val RUNAWAY_SLING = 0.6f
+
+        /** Écart donné au dernier éclat d'un paquet qui se défait, en m/s. */
+        const val SHARD_SPREAD = 2f
+
+        /**
+         * Choc, en joules, à partir duquel une bombe se déclenche.
+         *
+         * Volontairement bas : une bombe qui effleure un toit de chaume doit partir
+         * aussi. Cinquante joules, c'est un boulet de douze kilos à trois mètres par
+         * seconde — bien en dessous de tout ce qui ressemble à un impact, et bien
+         * au-dessus du frottement d'un corps qui roule.
+         */
+        const val BLAST_TRIGGER = 50f
     }
 
     val world = PhysWorld().apply {
@@ -450,6 +479,21 @@ class TrebuchetGame {
     /** Vrai dès que la boucle a quitté le crochet. */
     var ballFree = false
         private set
+
+    /**
+     * Les **autres** morceaux d'un projectile qui s'est séparé en vol.
+     *
+     * Le premier éclat garde la place de [ball] : c'est lui qui porte la trace, la
+     * caméra et la mesure de portée, et tout le reste du jeu continue de ne connaître
+     * qu'un boulet. Ceux-ci sont les quatre autres, et la vue les dessine pareil.
+     */
+    val shards = ArrayList<PhysBody>(8)
+
+    /** Vrai quand le paquet s'est déjà défait : on ne se sépare qu'une fois. */
+    private var split = false
+
+    /** Vrai quand la bombe a déjà soufflé : on n'explose qu'une fois. */
+    private var blown = false
 
     /**
      * Où commence le vol libre dans [trail], ou -1 tant que la boucle n'a pas quitté
@@ -591,6 +635,10 @@ class TrebuchetGame {
         ballFree = false
         efficiency = 0f
         phase = Phase.BUILD
+        shards.clear()
+        split = false
+        blown = false
+        targets.forgetPiercers()
 
         // Le monde vient d'être vidé pour remonter la machine. La cible, elle, garde
         // ses corps : le joueur qui allonge sa poutre entre deux tirs ne doit pas voir
@@ -675,12 +723,12 @@ class TrebuchetGame {
             world.addJoint(it)
         }
 
-        ball = PhysBody.circle(TrebuchetRules.BALL_RADIUS, TrebuchetRules.BALL_MASS).apply {
+        ball = PhysBody.circle(config.projectile.radius, config.projectile.mass).apply {
             // Un vrai trébuchet fait rouler son boulet dans une auge lisse : le
             // traîner sur la terre battue mangerait une partie de la course.
             friction = 0.2f
             restitution = 0.1f
-            dragFactor = TrebuchetRules.BALL_DRAG
+            dragFactor = config.projectile.drag
             category = CAT_BALL
             // Le boulet ne connaît que le sol : la fronde le relie au bras, il n'a
             // aucune raison de venir cogner la machine.
@@ -745,11 +793,11 @@ class TrebuchetGame {
      */
     private fun placeBall() {
         tipWorld(probe)
-        val dy = probe[1] - TrebuchetRules.BALL_RADIUS
+        val dy = probe[1] - config.projectile.radius
         val l = config.slingLength
         val dx = sqrt(maxOf(l * l - dy * dy, 0.01f))
         ball.x = probe[0] + dx
-        ball.y = TrebuchetRules.BALL_RADIUS
+        ball.y = config.projectile.radius
         ball.angle = 0f
         ball.vx = 0f; ball.vy = 0f; ball.omega = 0f
         ball.collidesWith = CAT_GROUND
@@ -817,6 +865,15 @@ class TrebuchetGame {
     }
 
     /**
+     * Change ce qu'il y a dans la fronde, et rebande la machine dessus.
+     *
+     * La machine est **remontée**, pas seulement rechargée : le boulet est un corps du
+     * moteur, avec sa masse et son rayon, et on ne change pas la masse d'un corps déjà
+     * pris dans une liaison sans que la fronde s'en aperçoive.
+     */
+    fun setProjectile(kind: Projectile) = editSetting { config.projectile = kind }
+
+    /**
      * Pose une valeur et rebande la machine dessus. Toucher un réglage pendant un
      * tir le reprend donc à zéro : c'est ce que le joueur veut dire en attrapant
      * une pièce, et le fantôme du tir précédent, lui, reste affiché.
@@ -848,6 +905,9 @@ class TrebuchetGame {
         efficiency = 0f
         launchTrailIndex = -1
         cwStartY = counterweight.y
+        split = false
+        blown = false
+        targets.forgetPiercers()
 
         // Le bras n'est plus tenu que par son axe.
         beam.lockPosition = false
@@ -883,9 +943,20 @@ class TrebuchetGame {
     fun step(dt: Float) {
         if (phase != Phase.FLIGHT) return
 
+        // L'élan d'avant le choc, gardé pour la traversée : une fois le pas simulé, il
+        // est perdu, et c'est justement lui qu'on veut rendre au projectile qui casse.
+        rememberMomentum()
+
         world.stepFrame(dt)
+        // Le choc du projectile se lit **avant** la cible : c'est elle qui remet les
+        // compteurs d'impact à zéro, une fois les dégâts appliqués.
+        val hit = ballFree && ball.impactAccum > BLAST_TRIGGER
         targets.update(dt)
         elapsed += dt
+
+        pierceThrough(dt)
+        if (!blown) explodeOnImpact(hit)
+        if (!split) splitInFlight()
 
         val speed = hypot(ball.vx, ball.vy)
         if (speed > peakSpeed) peakSpeed = speed
@@ -911,7 +982,7 @@ class TrebuchetGame {
         // On n'attend pas non plus que la machine s'immobilise : le bras balance au
         // bout de sa chape pendant de longues secondes après le tir.
         val landed = ballFree &&
-            ball.y <= TrebuchetRules.BALL_RADIUS + 0.03f &&
+            ball.y <= ball.boundingRadius + 0.03f &&
             ball.vy <= 0f
         if (landed && shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
 
@@ -924,6 +995,164 @@ class TrebuchetGame {
             ball.x > TrebuchetRules.GROUND_RIGHT - 4f
         ) {
             finishShot()
+        }
+    }
+
+    // ── Ce que le projectile fait de sa vie ──────────────────────────────────
+
+    /**
+     * Élan de chaque projectile au début de l'image : vitesse en x, en y, et énergie.
+     *
+     * Un tableau plutôt que des objets : il y a jusqu'à cinq éclats, relus soixante
+     * fois par seconde pendant tout un vol, et une allocation par image serait du
+     * travail donné au ramasse-miettes exactement pendant l'impact.
+     */
+    private var momentum = FloatArray(3 * 8)
+
+    private fun rememberMomentum() {
+        if (!ballFree) return
+        val n = 1 + shards.size
+        if (momentum.size < 3 * n) momentum = FloatArray(3 * n)
+        for (i in 0 until n) {
+            val b = if (i == 0) ball else shards[i - 1]
+            momentum[3 * i] = b.vx
+            momentum[3 * i + 1] = b.vy
+            momentum[3 * i + 2] = 0.5f * b.mass * (b.vx * b.vx + b.vy * b.vy)
+        }
+    }
+
+    /**
+     * La traversée : un projectile ne paie que ce qu'il a détruit.
+     *
+     * La physique, laissée seule, fait rebondir un boulet de douze kilos sur une pierre
+     * de trois tonnes **même quand la pierre se brise** — le choc est résolu avant que
+     * la pierre ne meure, et l'impulsion, elle, ne sait pas que sa cible n'existera
+     * plus dans un dixième de seconde. C'est exact, et c'est tout ce qu'on ne veut pas
+     * voir en arcade : ça cogne, ça casse, et ça repart en arrière.
+     *
+     * On remet donc le projectile dans l'axe qu'il avait avant le choc, avec l'énergie
+     * qu'il avait **moins celle des points de vie qu'il vient d'emporter**. Trois
+     * garde-fous font que ce n'est pas de la triche gratuite :
+     *
+     *  - il ne récupère rien s'il n'a **rien cassé** : cogner sans casser rebondit,
+     *    dans les deux modes ;
+     *  - il ne dépasse jamais l'énergie qu'il avait au début de l'image, donc le moteur
+     *    ne crée pas d'énergie — la règle d'or de cette physique ;
+     *  - on ne le relance que si la physique l'a laissé **plus lent** que ça, sinon on
+     *    ne touche à rien.
+     *
+     * Et le curseur [TargetStyle.pierce] vaut zéro en réaliste, où le rebond honnête
+     * est précisément ce qu'on est venu voir.
+     */
+    private fun pierceThrough(dt: Float) {
+        if (!ballFree) return
+        val refund = TargetRules.style.pierce
+        if (refund <= 0f) return
+        val n = 1 + shards.size
+        for (i in 0 until n) {
+            val b = if (i == 0) ball else shards[i - 1]
+            val cost = targets.pierceCost(b)
+            if (cost <= 0f) continue
+            val vx0 = momentum[3 * i]
+            val vy0 = momentum[3 * i + 1]
+            val v0 = hypot(vx0, vy0)
+            if (v0 < 1f) continue
+            val left = (momentum[3 * i + 2] - cost).coerceAtLeast(0f)
+            val wanted = sqrt(2f * left / b.mass)
+            val now = hypot(b.vx, b.vy)
+            if (wanted <= now) continue
+            val v = now + (wanted - now) * refund
+            b.wake()
+            b.vx = vx0 / v0 * v
+            b.vy = vy0 / v0 * v
+            // Les contacts gardent leurs impulsions d'une image à l'autre : sans les
+            // oublier, le solveur retiendrait le projectile contre une pierre qui n'est
+            // déjà plus là.
+            world.forgetContacts(b)
+        }
+    }
+
+    /**
+     * La bombe : elle rend tout d'un coup, là où elle touche.
+     *
+     * Le déclencheur est l'énergie que le moteur vient de dissiper dans le corps —
+     * autrement dit un vrai choc, et pas un frôlement. Le seuil est bas : une bombe
+     * qui touche du chaume doit exploser aussi.
+     *
+     * Elle ne disparaît pas ensuite, elle **s'éteint** : le tir se mesure au point
+     * d'impact du projectile, et le faire disparaître priverait le joueur de sa portée.
+     * Elle finit sa course comme un caillou, sans plus rien pouvoir toucher que le sol.
+     */
+    private fun explodeOnImpact(hit: Boolean) {
+        if (!ballFree) return
+        val kind = config.projectile
+        if (kind.blastEnergy <= 0f) return
+        if (!hit && ball.y > kind.radius + 0.03f) return
+        blown = true
+        targets.blast(ball.x, ball.y, kind.blastEnergy, kind.blastRadiusNow)
+        ball.collidesWith = TrebuchetCategory.GROUND
+        world.forgetContacts(ball)
+    }
+
+    /**
+     * Le paquet se défait, une fois passé le sommet de la cloche.
+     *
+     * Le repère est la **hauteur**, pas le temps : une machine bien accordée envoie son
+     * projectile à quarante mètres, une machine molle à dix, et un délai en secondes
+     * ferait s'ouvrir le paquet au ras du sol dans un cas et bien trop haut dans
+     * l'autre. À trente pour cent de la descente, les éclats ont la place de s'écarter
+     * sans avoir le temps de se disperser.
+     *
+     * Ils partent en éventail **autour de la trajectoire**, pas au hasard : l'écart est
+     * perpendiculaire à la vitesse, symétrique, et proportionnel à rien du tout — deux
+     * mètres par seconde suffisent à couvrir un front de maisons depuis vingt mètres de
+     * haut.
+     */
+    private fun splitInFlight() {
+        if (!ballFree || blown) return
+        val kind = config.projectile
+        if (kind.shards <= 1) return
+        if (ball.vy > 0f) return
+        val floor = ball.y - kind.radius
+        if (floor > peakHeight * (1f - kind.splitFraction)) return
+
+        split = true
+        val v = hypot(ball.vx, ball.vy)
+        if (v < 1f) return
+        // Perpendiculaire à la trajectoire, normée.
+        val px = -ball.vy / v
+        val py = ball.vx / v
+        val m = kind.shardMass()
+        val r = kind.radius / sqrt(kind.shards.toFloat())
+
+        val x0 = ball.x
+        val y0 = ball.y
+        val vx0 = ball.vx
+        val vy0 = ball.vy
+        world.remove(ball)
+        targets.forgetPiercers()
+        shards.clear()
+
+        for (k in 0 until kind.shards) {
+            // Étalés symétriquement : -2, -1, 0, +1, +2 pour cinq éclats.
+            val rank = k - (kind.shards - 1) / 2f
+            val spread = SHARD_SPREAD * rank
+            val b = PhysBody.circle(r, m).apply {
+                // On les écarte aussi dans l'espace, sinon ils naissent les uns dans
+                // les autres et se repoussent violemment à la première image.
+                x = x0 + px * rank * 3f * r
+                y = y0 + py * rank * 3f * r
+                vx = vx0 + px * spread
+                vy = vy0 + py * spread
+                friction = 0.2f
+                restitution = 0.1f
+                dragFactor = kind.drag * (r / kind.radius) * (r / kind.radius)
+                category = TrebuchetCategory.BALL
+                collidesWith = TrebuchetCategory.projectileMask()
+            }
+            world.add(b)
+            targets.trackPiercer(b)
+            if (k == 0) ball = b else shards.add(b)
         }
     }
 
@@ -947,8 +1176,10 @@ class TrebuchetGame {
         // Le boulet n'appartient plus à la machine : c'est **maintenant** qu'il devient
         // capable de toucher une cible. Le rendre solide plus tôt reviendrait à le
         // laisser cogner sa propre charpente pendant qu'il est traîné sous le bâti.
-        ball.collidesWith = TrebuchetCategory.BALL_FREE_MASK
+        ball.collidesWith = TrebuchetCategory.projectileMask()
         world.forgetContacts(ball)
+        // À partir d'ici, la cible saura ce que ce corps-là casse lui-même.
+        targets.trackPiercer(ball)
         launchSpeed = hypot(ball.vx, ball.vy)
         launchAngleDeg = Math.toDegrees(atan2(ball.vy.toDouble(), ball.vx.toDouble())).toFloat()
         // La pointe du bras décrit un cercle autour du pivot : sa vitesse est le
@@ -959,7 +1190,7 @@ class TrebuchetGame {
         // pour le lui donner.
         val spent = config.counterweightMass * TrebuchetRules.GRAVITY * (cwStartY - counterweight.y)
         efficiency = if (spent > 1f) {
-            0.5f * TrebuchetRules.BALL_MASS * launchSpeed * launchSpeed / spent
+            0.5f * ball.mass * launchSpeed * launchSpeed / spent
         } else {
             0f
         }

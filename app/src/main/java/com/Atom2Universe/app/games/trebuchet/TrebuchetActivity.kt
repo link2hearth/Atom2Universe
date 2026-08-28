@@ -252,7 +252,10 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             TrebuchetView.Part.PIN ->
                 getString(R.string.trebuchet_sel_pin, cfg.pinAngleDeg.toInt())
             TrebuchetView.Part.SLING ->
-                getString(R.string.trebuchet_sel_sling, fmt(cfg.slingLength))
+                getString(
+                    R.string.trebuchet_sel_sling_shot,
+                    fmt(cfg.slingLength), getString(shotLabel(cfg.projectile))
+                )
             TrebuchetView.Part.NONE -> ""
         }
         infoTip.setText(
@@ -268,4 +271,12 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     }
 
     private fun fmt(v: Float): String = String.format("%.1f", v)
+
+    /** Le nom du projectile chargé, tel qu'il s'affiche dans le bandeau. */
+    private fun shotLabel(kind: Projectile): Int = when (kind) {
+        Projectile.BOULET -> R.string.trebuchet_shot_ball
+        Projectile.LOURD -> R.string.trebuchet_shot_heavy
+        Projectile.FRAGMENTATION -> R.string.trebuchet_shot_cluster
+        Projectile.BOMBE -> R.string.trebuchet_shot_bomb
+    }
 }

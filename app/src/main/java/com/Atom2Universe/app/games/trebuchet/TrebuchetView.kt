@@ -771,7 +771,7 @@ class TrebuchetView @JvmOverloads constructor(
         Grip.PIN_ANGLE -> pinAngleAt(wx, wy)
         Grip.SLING_LENGTH -> {
             game.tipWorld(pickTmp)
-            hypot(pickTmp[0] - wx, pickTmp[1] - TrebuchetRules.BALL_RADIUS)
+            hypot(pickTmp[0] - wx, pickTmp[1] - game.config.projectile.radius)
         }
         Grip.NONE -> 0f
     }
@@ -812,7 +812,7 @@ class TrebuchetView @JvmOverloads constructor(
         val reach = pickReach()
         game.pinWorld(pickTmp)
         if (hypot(wx - pickTmp[0], wy - pickTmp[1]) < reach) return Part.PIN
-        if (hypot(wx - game.ball.x, wy - game.ball.y) < reach + TrebuchetRules.BALL_RADIUS) {
+        if (hypot(wx - game.ball.x, wy - game.ball.y) < reach + game.config.projectile.radius) {
             return Part.SLING
         }
         val cw = game.counterweight
@@ -853,7 +853,7 @@ class TrebuchetView @JvmOverloads constructor(
                 if (hypot(wx - pickTmp[0], wy - pickTmp[1]) < reach) Grip.PIN_ANGLE else Grip.NONE
             }
             Part.SLING ->
-                if (hypot(wx - game.ball.x, wy - game.ball.y) < reach + TrebuchetRules.BALL_RADIUS) {
+                if (hypot(wx - game.ball.x, wy - game.ball.y) < reach + game.config.projectile.radius) {
                     Grip.SLING_LENGTH
                 } else {
                     Grip.NONE
@@ -1054,6 +1054,9 @@ class TrebuchetView @JvmOverloads constructor(
         drawPin(canvas)
         drawSling(canvas)
         drawBody(canvas, game.ball, pBall, pBallEdge)
+        // Les éclats d'un paquet qui s'est défait : rien ne les distingue du boulet,
+        // sinon qu'ils sont plusieurs et plus petits.
+        for (i in game.shards.indices) drawBody(canvas, game.shards[i], pBall, pBallEdge)
         drawTrail(canvas)
         drawGrabSpots(canvas)
         drawSelection(canvas)

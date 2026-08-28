@@ -110,6 +110,70 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
     private var debrisCount = 0
 
     /**
+     * Les projectiles qu'on suit, et ce que chacun a détruit dans la dernière image.
+     *
+     * Deux listes parallèles plutôt qu'une table : il y en a au plus une poignée, elles
+     * sont relues à chaque image de vol, et une table de hachage y ferait des déchets
+     * au pire moment. Le jeu y inscrit ses boulets ; le champ y répond « celui-ci vient
+     * d'emporter tant de joules de pierre », et le jeu en fait ce qu'il veut — voir
+     * [TargetStyle.pierce].
+     */
+    private val piercers = ArrayList<PhysBody>(8)
+    private val pierceCosts = ArrayList<Float>(8)
+
+    /** Déclare un projectile : on saura désormais ce qu'il casse lui-même. */
+    fun trackPiercer(body: PhysBody) {
+        if (piercers.contains(body)) return
+        piercers.add(body)
+        pierceCosts.add(0f)
+    }
+
+    /** Oublie tous les projectiles suivis. À faire entre deux tirs. */
+    fun forgetPiercers() {
+        piercers.clear()
+        pierceCosts.clear()
+    }
+
+    /**
+     * Ce que ce projectile a détruit dans la dernière image, en joules — c'est-à-dire
+     * les points de vie qu'il restait aux pierres qu'il vient d'achever.
+     *
+     * Zéro s'il n'a rien cassé, ce qui est le cas le plus fréquent : une pierre fêlée
+     * ne compte pas, seule la rupture compte.
+     */
+    fun pierceCost(body: PhysBody): Float {
+        val i = piercers.indexOf(body)
+        return if (i < 0) 0f else pierceCosts[i]
+    }
+
+    /**
+     * Attribue une pierre rompue au projectile qui l'a achevée, s'il y en a un.
+     *
+     * On cherche le plus proche, et la portée de recherche tient compte du chemin
+     * parcouru dans l'image : sans ça, un boulet rapide serait toujours trop loin de ce
+     * qu'il vient de casser. Une pierre écrasée par l'effondrement d'une tour n'est
+     * attribuée à personne, et c'est exactement ce qu'on veut : le boulet ne doit pas
+     * être remboursé d'une ruine qu'il a seulement déclenchée.
+     */
+    private fun creditPiercer(p: TargetPiece, cost: Float, dt: Float) {
+        if (cost <= 0f) return
+        var best = -1
+        var bestD = Float.MAX_VALUE
+        for (i in piercers.indices) {
+            val b = piercers[i]
+            if (!b.inWorld) continue
+            val d = hypot(b.x - p.body.x, b.y - p.body.y)
+            val reach = b.boundingRadius + p.body.boundingRadius +
+                hypot(b.vx, b.vy) * dt + TargetRules.PIERCE_REACH
+            if (d <= reach && d < bestD) {
+                bestD = d
+                best = i
+            }
+        }
+        if (best >= 0) pierceCosts[best] = pierceCosts[best] + cost
+    }
+
+    /**
      * Vrai une fois que la construction s'est posée et que les chocs comptent.
      *
      * Voir [update] : avant ça, ils sont ignorés — et passé
@@ -288,14 +352,23 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         updateDormancy()
         if (dormant) return
 
+        for (i in pierceCosts.indices) pierceCosts[i] = 0f
+
         var someBroke = false
         for (p in live) {
             if (p.debris) continue
             if (p.material.rupture == Rupture.INCASSABLE) continue
             val impact = p.body.impactAccum
             if (impact <= p.maxHp * TargetRules.DAMAGE_FLOOR) continue
+            // Ce qu'il lui restait de vie est exactement ce que son bourreau a dû payer
+            // pour l'achever. Le surplus du coup, lui, n'est pas perdu : il repart avec
+            // le projectile, et c'est tout le principe de la traversée.
+            val reste = p.hp
             p.hp -= impact
-            if (p.hp <= 0f) someBroke = true
+            if (p.hp <= 0f) {
+                someBroke = true
+                creditPiercer(p, reste, dt)
+            }
         }
         world.clearImpacts()
 

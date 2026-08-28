@@ -57,8 +57,8 @@ object TargetGenerator {
     const val MIN_DISTANCE = 100f
     const val MAX_DISTANCE = 500f
 
-    /** Espace laissé entre deux modules voisins. */
-    private const val GAP = 0.5f
+    /** Espace laissé entre deux modules voisins, à l'échelle du site. */
+    private val gap: Float get() = TargetRules.site(0.5f)
 
     /** Nombre de graines dérivées qu'on essaie avant de se contenter de ce qu'on a. */
     private const val MAX_ATTEMPTS = 4
@@ -130,18 +130,23 @@ object TargetGenerator {
         val blocks = ArrayList<Block>()
         var x = 0f
         for (p in pieces) {
+            // Le plan est écrit en mètres réels — une maison de cinq mètres, une tour de
+            // douze — et c'est le tempérament qui décide de la taille à laquelle on la
+            // bâtit. Un plan n'a pas à savoir dans quel mode il est joué.
+            val w = TargetRules.site(p.width)
+            val h = TargetRules.site(p.height)
             val module = when (p.module) {
-                ModuleKind.TOWER -> TargetModules.tower(rng, x, p.width, p.height, p.material, budget)
-                ModuleKind.WALL -> TargetModules.curtainWall(rng, x, p.width, p.height, p.material, budget)
-                ModuleKind.HOUSE -> TargetModules.house(rng, x, p.width, p.height)
-                ModuleKind.PROPS -> TargetModules.props(rng, x, 0f, p.width, 2 + rng.nextInt(2))
+                ModuleKind.TOWER -> TargetModules.tower(rng, x, w, h, p.material, budget)
+                ModuleKind.WALL -> TargetModules.curtainWall(rng, x, w, h, p.material, budget)
+                ModuleKind.HOUSE -> TargetModules.house(rng, x, w, h)
+                ModuleKind.PROPS -> TargetModules.props(rng, x, 0f, w, 2 + rng.nextInt(2))
             }
             if (module.isEmpty()) continue
             blocks += module
             // On avance d'après l'emprise **réelle** : le socle d'une tour déborde, et
             // deux centimètres de chevauchement suffisent à faire s'entre-broyer deux
             // modules dès la première image.
-            x = Structure(module).right + GAP
+            x = Structure(module).right + gap
         }
         return Structure(blocks, kind.name.lowercase())
     }
