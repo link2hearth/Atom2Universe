@@ -663,6 +663,9 @@ class TrebuchetView @JvmOverloads constructor(
                     grip = Grip.NONE
                     notify = true
                 }
+                // Et on lève le verrou posé par une sélection : le premier doigt vient
+                // peut-être de prendre une pièce, mais deux doigts veulent la caméra.
+                gestureLocked = false
                 readPointers(event, -1)
             }
             MotionEvent.ACTION_MOVE -> synchronized(game) {
@@ -695,11 +698,21 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     /**
-     * Un doigt se pose. Trois cas : il tombe sur une poignée de la pièce déjà tenue
-     * et on règle ; il tombe sur une autre pièce et on la prend en main, le même
-     * geste pouvant enchaîner sur son réglage ; il tombe dans le vide, et c'est le
-     * lever du doigt qui dira s'il s'agissait d'une déselection ou du début d'un
-     * glissement de vue.
+     * Un doigt se pose. Trois cas : il tombe sur une poignée de la pièce **déjà tenue**
+     * et on règle ; il tombe sur une autre pièce et on la prend en main, sans rien
+     * régler ; il tombe dans le vide, et c'est le lever du doigt qui dira s'il
+     * s'agissait d'une déselection ou du début d'un glissement de vue.
+     *
+     * **Prendre une pièce en main ne la règle pas, et c'est le point important.** Le
+     * même geste faisait les deux : on touchait la poutre, la fenêtre de réglage
+     * s'ouvrait, et les quelques millimètres que le doigt parcourt toujours avant de se
+     * relever changeaient déjà sa longueur. Le joueur voyait donc sa machine bouger
+     * avant même d'avoir demandé quoi que ce soit, et devait la remettre comme elle
+     * était avant de pouvoir la régler pour de bon.
+     *
+     * Il faut désormais deux gestes, et c'est ce qu'on attend d'une sélection : le
+     * premier prend la pièce, le second l'étire. Les poignées sont dessinées entre les
+     * deux, donc on sait où poser le doigt.
      */
     private fun grabAt(wx: Float, wy: Float): Boolean {
         if (selected != Part.NONE) {
@@ -723,8 +736,10 @@ class TrebuchetView @JvmOverloads constructor(
             camPhase = game.phase
         }
         selected = part
-        val g = pickGrip(part, wx, wy)
-        if (g != Grip.NONE) startGrip(g, wx, wy)
+        // Le geste s'arrête là : ni réglage, ni glissement de vue. Un appui qui prend
+        // une pièce en main ne fait que ça, quoi que le doigt fasse ensuite avant de se
+        // relever.
+        gestureLocked = true
         return true
     }
 
