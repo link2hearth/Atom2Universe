@@ -48,6 +48,42 @@ class TrebuchetLibraryTest {
         assertEquals(cfg.pinAngleDeg, c.pinAngleDeg, 1e-3f)
         assertEquals(cfg.slingRatio, c.slingRatio, 1e-3f)
         assertEquals(cfg.projectile, c.projectile)
+        assertEquals(cfg.bombSticks, c.bombSticks)
+    }
+
+    /**
+     * **Une machine enregistrée avant que la charge n'existe se recharge encore.**
+     *
+     * C'est la promesse que le format s'est donnée : il grandit par la droite, et le
+     * seuil de rejet ne bouge pas. Une ligne à neuf champs — celles qu'a écrites la
+     * version d'avant — reste parfaitement valable et récupère la charge par défaut,
+     * laquelle a justement été choisie pour redonner la bombe telle qu'elle était. Le
+     * joueur qui met à jour le jeu ne voit rien changer à ses machines, ce qui est la
+     * seule façon honnête d'ajouter un réglage à un jeu déjà joué.
+     */
+    @Test
+    fun `une machine d avant la charge se relit avec la charge par defaut`() {
+        val ancienne = "Vieille Berthe\t14.0\t9.0\t5.0\t5400.0\t1.7\t38.0\t0.72\tBOMBE\n"
+        val relu = MachineLibrary.decode(ancienne)
+
+        assertEquals("la ligne à neuf champs a été jetée", 1, relu.size)
+        assertEquals("Vieille Berthe", relu[0].name)
+        assertEquals(Projectile.BOMBE, relu[0].config.projectile)
+        assertEquals(
+            "une machine d'avant la charge devrait retrouver la bombe d'origine",
+            Projectile.DEFAULT_STICKS, relu[0].config.bombSticks
+        )
+        assertEquals(
+            "et donc peser exactement ce qu'elle pesait",
+            14f, relu[0].config.shotMass, 1e-3f
+        )
+    }
+
+    @Test
+    fun `la charge fait le tour de l enregistrement`() {
+        val cfg = machine().apply { bombSticks = 12 }
+        val relu = MachineLibrary.decode(MachineLibrary.encode(listOf(MachinePreset("Pétard", cfg))))
+        assertEquals(12, relu[0].config.bombSticks)
     }
 
     @Test

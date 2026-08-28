@@ -27,23 +27,28 @@ object TrebuchetCategory {
     const val TARGET_MASK = GROUND or BALL or TARGET or DEBRIS
 
     /**
-     * Ce qu'un projectile rencontre vraiment, une fois le tempérament du jeu consulté.
+     * Ce qu'un projectile rencontre vraiment : **tout**, gravats compris.
      *
-     * En arcade, **il ignore les gravats**, et c'est la moitié de la promesse de la
-     * traversée. Mesuré au banc : un boulet à cent dix mètres par seconde entrait dans
-     * une maison, emportait un poteau, ressortait à cent sept — et se faisait arrêter
-     * net, l'image suivante, par un éclat de ce même poteau tombé devant lui. Il
-     * passait de 107 à 14 m/s contre un morceau de bois déjà cassé.
+     * Ça n'a pas toujours été le cas, et l'histoire mérite d'être écrite parce qu'elle
+     * explique pourquoi la règle est revenue à la plus simple des deux.
      *
-     * Un débris ne peut pas se casser — c'est la règle qui garantit qu'un effondrement
-     * laisse un **tas**, et donc que le niveau reste gagnable. Mais un obstacle
-     * incassable est aussi un obstacle infranchissable : la traversée ne peut rien pour
-     * un projectile arrêté par quelque chose qui n'a plus de points de vie à lui faire
-     * payer. On le laisse donc passer au travers du gravier, ce qui est arcade, lisible,
-     * et surtout la seule chose qui marche.
+     * Un débris était autrefois **incassable pour toujours**. Or un obstacle incassable
+     * est aussi un obstacle infranchissable : la traversée ([TargetStyle.pierce]) ne
+     * sait rendre son élan à un projectile que s'il a **payé** ce qu'il a détruit, et
+     * elle ne pouvait donc rien pour un boulet arrêté par quelque chose qui n'avait plus
+     * de points de vie à lui faire payer. Mesuré au banc à l'époque : un boulet à cent
+     * dix mètres par seconde entrait dans une maison, emportait un poteau, ressortait à
+     * cent sept — et se faisait arrêter net, l'image suivante, par un éclat de ce même
+     * poteau tombé devant lui. De 107 à 14 m/s contre un morceau de bois déjà cassé. La
+     * rustine avait été de retirer les gravats du masque en arcade : le boulet les
+     * traversait comme s'ils n'existaient pas.
+     *
+     * Depuis que les gravats ont des paliers de destruction ([RUBBLE_TOUGHNESS]), ils
+     * ont de nouveau des points de vie, donc un prix. Le boulet les écarte, les broie et
+     * repart avec ce qui lui reste — ce qui est à la fois plus juste et plus lisible que
+     * de les ignorer. Le masque n'a donc plus de raison de dépendre du tempérament.
      */
-    fun projectileMask(): Int =
-        if (TargetRules.style.pierce > 0f) GROUND or TARGET else BALL_FREE_MASK
+    fun projectileMask(): Int = BALL_FREE_MASK
 }
 
 /**
@@ -450,6 +455,61 @@ object TargetRules {
     /** En dessous de cette demi-taille, un morceau ne vaut plus la peine d'exister. */
     const val MIN_FRAGMENT_HALF = 0.15f
 
+    /**
+     * Dernier palier de rupture qui laisse encore des corps derrière lui.
+     *
+     * Une pierre se casse en éclats (palier 1), les éclats en morceaux (2), les morceaux
+     * en grains (3) — et un grain qui casse ne laisse plus rien qu'une bouffée de
+     * poussière. Trois paliers solides, c'est ce que le budget de corps sait payer, et
+     * c'est déjà « un tas de poussière si on s'acharne » : les grains sont assez petits
+     * pour que le ménage les ramasse au bout de [DEBRIS_LIFETIME] passées immobiles.
+     *
+     * La subdivision s'arrête de toute façon d'elle-même à [MIN_FRAGMENT_HALF] : un
+     * morceau trop petit pour être refendu tombe en poussière avant d'atteindre le
+     * dernier palier. Le compte des paliers est donc un plafond, pas un programme.
+     */
+    const val LAST_SOLID_TIER = 3
+
+    /**
+     * Ce que vaut la vie d'un gravat, en multiple de celle qu'aurait un bloc neuf de la
+     * même taille et du même matériau.
+     *
+     * Un gravat a besoin d'être un peu plus tenace que la matière neuve, sans quoi un
+     * effondrement se pulvérise lui-même : les points de vie valent `½·m·vc²` et
+     * l'énergie d'une chute vaut `m·g·h`, la masse se simplifie, et **tout morceau qui
+     * tombe de plus de `vc²/2g` se brise, quelle que soit sa taille** — un mètre et demi
+     * en arcade. Sans facteur, les gravats se recassent en tombant, puis leurs gravats
+     * aussi, et le site part en fumée sans qu'on l'ait visé.
+     *
+     * **Mais ce facteur se lit par le haut, pas par le bas, et c'est ce qui a été
+     * compris de travers du premier coup.** Un bloc se casse en quatre ou cinq morceaux
+     * qui se partagent sa masse : à facteur `f`, chaque morceau coûte `f/n` de ce qu'a
+     * coûté son parent, et le tas entier `f` fois. Réglé à sept, un éclat devenait
+     * **plus cher que la pierre dont il venait** — le boulet ouvrait le mur, se heurtait
+     * à ses propres débris, et s'arrêtait dedans à trois mètres. C'est la panne exacte
+     * que la traversée était censée guérir, revenue par la porte de derrière.
+     *
+     * À deux et demi, un éclat coûte la moitié de son parent, un morceau le huitième :
+     * **le boulet s'enfonce de plus en plus facilement à mesure qu'il broie**, ce qui
+     * est la bonne sensation, et le tas entier coûte deux fois et demie le mur d'origine
+     * à réduire en poussière. On s'acharne, et ça paie.
+     */
+    const val RUBBLE_TOUGHNESS = 2.5f
+
+    /**
+     * Profondeur sous le point le plus bas du relief au-delà de laquelle une pierre est
+     * réputée **sortie du monde**, en mètres.
+     *
+     * Elle se compte à partir du sol et non de zéro, et ça n'a l'air de rien : le jour
+     * où les sites ont pu se poser au fond d'un vallon, le ménage a commencé à ramasser
+     * des villages entiers. Un site à huit mètres sous le niveau de la machine passait
+     * sous l'ancienne barre fixe, et disparaissait — pas au chargement, où la cible dort
+     * et où le ménage ne tourne pas, mais à la seconde où le premier boulet la
+     * réveillait. Trente et une pierres, vingt-trois après le réveil, et un seul pour
+     * cent de dégâts pour l'expliquer.
+     */
+    const val FALL_OUT_DEPTH = 15f
+
     /** Vitesse maximale que l'éclatement donne aux morceaux, en m/s. */
     const val MAX_BURST = 2f
 
@@ -467,10 +527,35 @@ object TargetRules {
      * qu'elle communique se divise par la masse : la charpente s'envole, la muraille
      * bouge à peine, et c'est très exactement l'image qu'on a en tête.
      *
-     * Neuf cents pascals-secondes donnent six mètres par seconde à une assise de
+     * Neuf cents pascals-secondes donnaient six mètres par seconde à une assise de
      * rempart d'arcade et onze à un poteau de maison, ce qui se voit sans être absurde.
+     *
+     * **Et ne faisait rien du tout en réaliste, ce qui a mis longtemps à se voir.** La
+     * poussée vaut `impulsion / (densité × densityScale)` : l'aire du bloc se simplifie,
+     * et il ne reste que la matière et le tempérament. Neuf cents pascals-secondes
+     * poussaient donc une pierre d'arcade à 5,4 m/s et la même pierre réaliste — quatorze
+     * fois plus lourde à volume égal, puisque c'est tout ce que fait `densityScale` — à
+     * **38 centimètres par seconde**. Le joueur envoyait bombe sur bombe dans un château
+     * de pierre et ne voyait rien bouger, ce qui était la stricte vérité.
+     *
+     * La constante est donc devenue une **impulsion de référence** que [blastImpulse]
+     * remet à l'échelle du tempérament, exactement comme [site], [stone] et [detail] le
+     * font des longueurs. C'est la même leçon que celle racontée dans [TargetStyle] à
+     * propos des hameaux : toute constante qui décrit un effet de jeu doit passer par le
+     * curseur, sinon elle décrit un seul des deux jeux.
      */
-    const val BLAST_IMPULSE = 900f
+    const val BLAST_IMPULSE = 12_900f
+
+    /**
+     * L'impulsion d'un souffle, à l'échelle du tempérament en cours.
+     *
+     * Réglée pour qu'une explosion pousse une pierre donnée **à la même vitesse dans les
+     * deux modes** — cinq mètres et demi par seconde. Ce n'est pas gommer la différence
+     * entre les modes : à l'intérieur d'un mode, une charpente vole toujours bien plus
+     * loin qu'une muraille, puisque leurs densités diffèrent. Ce qu'on retire, c'est le
+     * handicap de quatorze pour un que le réaliste s'infligeait sans que ce soit voulu.
+     */
+    fun blastImpulse(): Float = BLAST_IMPULSE * style.densityScale
 
     /**
      * Budget de corps d'une construction, débris exclus.

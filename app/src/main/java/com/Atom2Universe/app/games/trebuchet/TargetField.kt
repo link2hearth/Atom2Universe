@@ -19,14 +19,34 @@ import kotlin.random.Random
 class TargetPiece internal constructor(
     val block: Block,
     val body: PhysBody,
-    /** Vrai si cette pierre est née d'une rupture, et non de la construction d'origine. */
-    val debris: Boolean
+    /**
+     * À quelle génération de rupture cette pierre appartient.
+     *
+     * Zéro pour une pierre de la construction d'origine, un pour un éclat, deux pour un
+     * morceau, trois pour un grain. C'est ce compteur qui a remplacé le booléen
+     * « débris » : il disait seulement *si* une pierre était née d'une rupture, jamais
+     * *de combien de ruptures*, et il n'y avait donc aucun moyen d'écrire « on peut
+     * encore casser ça, mais pas indéfiniment ».
+     */
+    val tier: Int
 ) {
     val material: Material get() = block.material
     val role: Role get() = block.role
 
-    val maxHp: Float = block.hp
-    var hp: Float = block.hp
+    /** Vrai si cette pierre est née d'une rupture, et non de la construction d'origine. */
+    val debris: Boolean get() = tier > 0
+
+    /**
+     * Points de vie, en joules — et un gravat en a **sept fois plus** qu'un bloc neuf de
+     * la même taille.
+     *
+     * Ce n'est pas une faveur faite au gravier, c'est ce qui empêche un effondrement de
+     * se pulvériser lui-même. Voir [TargetRules.RUBBLE_TOUGHNESS], où le calcul est
+     * fait.
+     */
+    val maxHp: Float =
+        block.hp * (if (tier > 0) TargetRules.RUBBLE_TOUGHNESS else 1f)
+    var hp: Float = maxHp
         internal set
 
     /** Là où on l'a posée. C'est de là qu'on mesure si elle a été renversée. */
@@ -121,6 +141,28 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
 
     /** Toutes les pierres encore sur le terrain, construction et débris confondus. */
     val pieces: List<TargetPiece> get() = live
+
+    /**
+     * Le relief sur lequel la construction est posée.
+     *
+     * Le champ de cibles ne s'en sert que pour une chose — savoir à quelle profondeur
+     * une pierre est réputée sortie du monde — mais cette chose-là compte : sans lui, le
+     * plancher est une constante, et un site bâti au fond d'un vallon passe dessous.
+     * Il arrive avec la construction, dans [load], pour qu'on ne puisse pas l'oublier.
+     */
+    var terrain: Terrain = Terrain.FLAT
+        private set
+
+    /**
+     * Prévenu quand une pierre disparaît sans rien laisser : dernier palier, morceau
+     * trop petit, ou budget de gravier saturé.
+     *
+     * C'est un crochet et non un appel direct aux effets, parce que le champ de cibles
+     * ne connaît ni la vue ni le jeu — et qu'il doit rester utilisable dans un test sans
+     * qu'aucune particule n'existe. Les arguments sont le point et le rayon de ce qui
+     * vient de s'en aller.
+     */
+    var onDust: ((Float, Float, Float) -> Unit)? = null
 
     /** Hauteur de la silhouette au moment où la construction a été posée. */
     var baseHeight = 0f
@@ -289,8 +331,9 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
 
     // ── Pose et dépose ────────────────────────────────────────────────────────
 
-    fun load(structure: Structure) {
+    fun load(structure: Structure, terrain: Terrain = Terrain.FLAT) {
         clear()
+        this.terrain = terrain
         baseHeight = structure.baseHeight
         left = structure.left
         right = structure.right
@@ -303,7 +346,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         armingTimer = 0f
         calmTimer = 0f
         dormant = false
-        for (b in structure.blocks) spawn(b, debris = false)
+        for (b in structure.blocks) spawn(b, tier = 0)
     }
 
     fun clear() {
@@ -339,7 +382,8 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         }
     }
 
-    private fun spawn(b: Block, debris: Boolean): TargetPiece {
+    private fun spawn(b: Block, tier: Int): TargetPiece {
+        val debris = tier > 0
         // Toujours par le constructeur composé, même pour une seule forme : c'est le
         // seul qui sache placer une forme tournée dans son corps, et il recentre sur
         // le centre de masse exactement comme [Block] l'a fait de son côté.
@@ -362,7 +406,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         }
         body.refreshMass()
 
-        val piece = TargetPiece(b, body, debris)
+        val piece = TargetPiece(b, body, tier)
         body.tag = piece
         world.add(body)
         live.add(piece)
@@ -430,7 +474,8 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
 
         var someBroke = false
         for (p in live) {
-            if (p.debris) continue
+            // Les gravats prennent des coups comme le reste : c'est ce qui permet au
+            // projectile de les payer, donc de les écarter au lieu de les traverser.
             if (p.material.rupture == Rupture.INCASSABLE) continue
             val impact = p.body.impactAccum
             if (impact <= p.maxHp * TargetRules.DAMAGE_FLOOR) continue
@@ -529,7 +574,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         y: Float,
         energy: Float,
         radius: Float,
-        impulse: Float = TargetRules.BLAST_IMPULSE
+        impulse: Float = TargetRules.blastImpulse()
     ) {
         if (radius <= 0f) return
         wake()
@@ -559,7 +604,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             p.body.vx += nx * dv
             p.body.vy += ny * dv
 
-            if (p.debris || p.material.rupture == Rupture.INCASSABLE) continue
+            if (p.material.rupture == Rupture.INCASSABLE) continue
             p.hp -= e
             if (p.hp <= 0f) someBroke = true
         }
@@ -584,17 +629,46 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
 
     // ── La rupture ────────────────────────────────────────────────────────────
 
+    /**
+     * Casse tout ce qui n'a plus de vie, et le remplace par la génération suivante.
+     *
+     * Une pierre descend d'un palier à chaque rupture : entière, puis éclats, puis
+     * morceaux, puis grains. Trois choses l'arrêtent, et elles finissent toutes de la
+     * même façon — une bouffée de poussière et plus rien :
+     *
+     *  - le **dernier palier** ([TargetRules.LAST_SOLID_TIER]) : un grain qui casse ne
+     *    laisse pas de plus petit grain ;
+     *  - la **taille** : [fragmentsOf] refuse de refendre ce qui est déjà trop petit ;
+     *  - le **budget** : au-delà de [TargetRules.MAX_DEBRIS] corps, le gravier coûte
+     *    plus cher qu'il ne rapporte.
+     *
+     * Que les trois se terminent en poussière plutôt qu'en disparition muette est ce qui
+     * rend la limite invisible : le joueur voit toujours quelque chose se passer, et il
+     * ne saura jamais laquelle des trois vient de s'appliquer.
+     */
     private fun breakDead() {
         dead.clear()
         for (p in live) if (p.broken) dead.add(p)
         for (p in dead) {
             if (!p.debris) pieceBroken++
-            val shards = if (p.material.rupture == Rupture.ECLATS) fragmentsOf(p) else emptyList()
+            val suivant = p.tier + 1
+            val shards =
+                if (p.material.rupture == Rupture.ECLATS && suivant <= TargetRules.LAST_SOLID_TIER) {
+                    fragmentsOf(p)
+                } else {
+                    emptyList()
+                }
+            val x = p.body.x
+            val y = p.body.y
+            val r = p.body.boundingRadius
             removePiece(p)
             // Le budget se vérifie **après** avoir retiré le bloc rompu : casser une
             // pierre en deux ne coûte qu'un corps de plus, pas deux.
-            if (shards.isEmpty() || debrisCount + shards.size > TargetRules.MAX_DEBRIS) continue
-            spawnShards(p, shards)
+            if (shards.isEmpty() || debrisCount + shards.size > TargetRules.MAX_DEBRIS) {
+                onDust?.invoke(x, y, r)
+                continue
+            }
+            spawnShards(p, shards, suivant)
         }
         dead.clear()
     }
@@ -605,7 +679,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         if (p.debris) debrisCount--
     }
 
-    private fun spawnShards(parent: TargetPiece, shards: List<Block>) {
+    private fun spawnShards(parent: TargetPiece, shards: List<Block>, tier: Int) {
         // Le petit jaillissement des morceaux se paie sur les **dégâts en trop** :
         // le coup a fait plus que nécessaire, et ce surplus part dans les éclats. Le
         // moteur a pour règle de ne jamais créer d'énergie, et ce n'est pas au jeu de
@@ -613,7 +687,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         val overkill = (-parent.hp).coerceAtLeast(0f)
         val burst = minOf(sqrt(2f * overkill / parent.body.mass), TargetRules.MAX_BURST)
         for (s in shards) {
-            val piece = spawn(s, debris = true)
+            val piece = spawn(s, tier)
             val rx = s.x - parent.body.x
             val ry = s.y - parent.body.y
             // Vitesse du point correspondant sur le bloc d'origine, rotation comprise.
@@ -625,9 +699,6 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
                 piece.body.vx += burst * rx / d
                 piece.body.vy += burst * ry / d
             }
-            // Un débris ne se casse plus : on lui donne des points de vie hors de
-            // portée plutôt qu'un cas particulier de plus dans la boucle de dégâts.
-            piece.hp = Float.MAX_VALUE
         }
     }
 
@@ -714,7 +785,11 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         dead.clear()
         for (p in live) {
             val b = p.body
-            if (b.y < -5f || b.x < TrebuchetRules.GROUND_LEFT || b.x > TrebuchetRules.GROUND_RIGHT) {
+            // « Sorti du monde » se mesure sous **le sol**, pas sous zéro : un site au
+            // fond d'un vallon est huit mètres plus bas que la machine, et il n'est pas
+            // pour autant tombé de la carte.
+            val plancher = terrain.lowest - TargetRules.FALL_OUT_DEPTH
+            if (b.y < plancher || b.x < TrebuchetRules.GROUND_LEFT || b.x > TrebuchetRules.GROUND_RIGHT) {
                 dead.add(p)
                 continue
             }
@@ -815,7 +890,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             // monde jetable, qu'au premier chargement sous les yeux du joueur.
             for (b in terrain.bodies(friction = 0.7f)) w.add(b)
             val field = TargetField(w)
-            field.load(structure)
+            field.load(structure, terrain)
             // On tasse **sans dégâts** : à ce stade personne n'a encore tiré, et les
             // petits chocs du tassement ne sont pas des coups.
             //

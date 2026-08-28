@@ -38,6 +38,8 @@
     <string name="trebuchet_unit_ratio">:1</string>
     <string name="trebuchet_dial_shot">Shot</string>
     <string name="trebuchet_unit_none"></string>
+    <string name="trebuchet_dial_charge">Charge</string>
+    <string name="trebuchet_unit_sticks">sticks</string>
     <string name="trebuchet_shot_ball">Stone</string>
     <string name="trebuchet_shot_heavy">Boulder</string>
     <string name="trebuchet_shot_cluster">Cluster</string>

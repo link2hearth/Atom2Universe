@@ -297,6 +297,27 @@ class MachineConfig {
      */
     var projectile = Projectile.BOULET
 
+    /**
+     * Combien de bâtons de poudre dans la bombe.
+     *
+     * Sans effet sur les autres projectiles, qui n'ont pas de charge. Sur la bombe, il
+     * agit sur **les deux bouts à la fois** : plus de poudre fait un souffle plus large
+     * et plus dur, et une bombe plus lourde, donc un tir plus court. C'est le seul
+     * réglage du jeu dont on ne peut pas dire s'il faut le monter ou le descendre sans
+     * savoir à quelle distance on tire.
+     */
+    var bombSticks = Projectile.DEFAULT_STICKS
+
+    /**
+     * La masse réellement lancée : celle du projectile, sa charge comprise.
+     *
+     * Tout ce qui a besoin de savoir ce que la machine soulève passe par ici, et par
+     * rien d'autre. La masse d'une bombe n'est plus une constante de la table, et un
+     * seul endroit qui l'aurait oublié suffirait à faire diverger la balistique de ce
+     * que le joueur voit.
+     */
+    val shotMass: Float get() = projectile.massFor(bombSticks)
+
     /** Longueur du bras court, du pivot à la chape du contrepoids. */
     val shortArm: Float get() = beamLength / (1f + leverRatio)
 
@@ -366,6 +387,7 @@ class MachineConfig {
         slingRatio = slingRatio.coerceIn(
             TrebuchetRules.SLING_MIN_RATIO, TrebuchetRules.SLING_MAX_RATIO
         )
+        bombSticks = bombSticks.coerceIn(Projectile.MIN_STICKS, Projectile.MAX_STICKS)
     }
 
     fun copyFrom(o: MachineConfig) {
@@ -377,6 +399,7 @@ class MachineConfig {
         pinAngleDeg = o.pinAngleDeg
         slingRatio = o.slingRatio
         projectile = o.projectile
+        bombSticks = o.bombSticks
     }
 }
 
@@ -508,7 +531,11 @@ class TrebuchetGame {
             effects.skyTop = value
         }
 
-    val targets = TargetField(world)
+    val targets = TargetField(world).apply {
+        // La poussière du dernier palier de destruction. Le champ de cibles ne connaît
+        // pas les effets — c'est le jeu qui les lui prête, une fois, ici.
+        onDust = { x, y, r -> effects.dust(x, y, r) }
+    }
 
     /**
      * Le vent du moment. Il vient du niveau, donc de sa graine.
@@ -859,7 +886,7 @@ class TrebuchetGame {
             world.addJoint(it)
         }
 
-        ball = PhysBody.circle(config.projectile.radius, config.projectile.mass).apply {
+        ball = PhysBody.circle(config.projectile.radius, config.shotMass).apply {
             // Un vrai trébuchet fait rouler son boulet dans une auge lisse : le
             // traîner sur la terre battue mangerait une partie de la course.
             friction = 0.2f
@@ -954,7 +981,7 @@ class TrebuchetGame {
         terrain = lvl.terrain
         effects.groundAt = { x -> lvl.terrain.heightAt(x) }
         build()
-        targets.load(lvl.structure)
+        targets.load(lvl.structure, lvl.terrain)
         shotCount = 0
         celebrated = false
         effects.clear()
@@ -1057,6 +1084,11 @@ class TrebuchetGame {
      * pris dans une liaison sans que la fronde s'en aperçoive.
      */
     fun setProjectile(kind: Projectile) = editSetting { config.projectile = kind }
+
+    /** Combien de bâtons de poudre on met dans la bombe. */
+    fun setBombSticks(n: Int) = editSetting {
+        config.bombSticks = n.coerceIn(Projectile.MIN_STICKS, Projectile.MAX_STICKS)
+    }
 
     /**
      * Pose une valeur et rebande la machine dessus. Toucher un réglage pendant un
@@ -1270,11 +1302,17 @@ class TrebuchetGame {
     private fun explodeOnImpact(hit: Boolean) {
         if (!ballFree) return
         val kind = config.projectile
-        if (kind.blastEnergy <= 0f) return
-        if (!hit && ball.y > kind.radius + 0.03f) return
+        if (!kind.explosive) return
+        // Une bombe qui n'a rien cogné d'assez dur part quand même **en touchant le
+        // sol** — et le sol, depuis qu'il y a du relief, n'est pas à zéro. Comparée à
+        // une altitude absolue, cette condition-ci ne se réalisait jamais sur un site
+        // perché : la bombe roulait sur son plateau jusqu'à la fin du tir sans exploser.
+        // C'est la même faute que celle de la détection d'atterrissage, au même endroit
+        // du raisonnement.
+        if (!hit && ball.y > terrain.heightAt(ball.x) + kind.radius + 0.03f) return
         blown = true
-        val r = kind.blastRadiusNow
-        targets.blast(ball.x, ball.y, kind.blastEnergy, r)
+        val r = kind.blastRadiusFor(config.bombSticks)
+        targets.blast(ball.x, ball.y, kind.blastEnergyFor(config.bombSticks), r)
         effects.explosion(ball.x, ball.y, r)
         ball.collidesWith = TrebuchetCategory.GROUND
         world.forgetContacts(ball)

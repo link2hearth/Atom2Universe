@@ -108,7 +108,12 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         // cran de dix centimètres — on ne va pas de six mètres à sept en appuyant cent
         // fois — et c'est la roulette des centièmes qui fait le travail de précision.
         SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 2, 0.1f),
-        SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 0, 1f, choice = true);
+        SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 0, 1f, choice = true),
+
+        // La charge de la bombe, en bâtons. Trois chiffres parce qu'on va jusqu'à cent
+        // vingt, et un cran de cinq : le joueur cherche « un peu plus » ou « beaucoup
+        // plus », jamais quarante-six bâtons plutôt que quarante-cinq.
+        CHARGE(R.string.trebuchet_dial_charge, R.string.trebuchet_unit_sticks, 3, 0, 5f);
 
         val digits: Int get() = intDigits + decimals
     }
@@ -344,7 +349,17 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         TrebuchetView.Part.PIN -> listOf(Dial.PIN)
         // La fronde et ce qu'on met dedans : c'est la même pièce sous le doigt, donc
         // c'est la même fenêtre.
-        TrebuchetView.Part.SLING -> listOf(Dial.SLING, Dial.SHOT)
+        //
+        // La charge n'apparaît que si on a chargé une bombe, et c'est le seul réglage du
+        // jeu qui va et vient. Une ligne « bâtons » affichée en permanence serait une
+        // ligne morte trois fois sur quatre ; affichée au moment où elle veut dire
+        // quelque chose, elle se remarque et s'explique toute seule.
+        TrebuchetView.Part.SLING ->
+            if (game?.config?.projectile?.explosive == true) {
+                listOf(Dial.SLING, Dial.SHOT, Dial.CHARGE)
+            } else {
+                listOf(Dial.SLING, Dial.SHOT)
+            }
         TrebuchetView.Part.NONE -> emptyList()
     }
 
@@ -804,6 +819,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             Dial.SLING -> slingLength
             // Le projectile n'est pas un nombre : sa roulette ne passe jamais par ici.
             Dial.SHOT -> 0f
+            Dial.CHARGE -> bombSticks.toFloat()
         }
     }
 
@@ -818,6 +834,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 Dial.PIN -> g.setPinAngle(v)
                 Dial.SLING -> g.setSlingLength(v)
                 Dial.SHOT -> Unit
+                Dial.CHARGE -> g.setBombSticks(v.roundToInt())
             }
         }
     }

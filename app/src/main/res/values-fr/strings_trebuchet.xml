@@ -38,6 +38,8 @@
     <string name="trebuchet_unit_ratio">:1</string>
     <string name="trebuchet_dial_shot">Projectile</string>
     <string name="trebuchet_unit_none"></string>
+    <string name="trebuchet_dial_charge">Charge</string>
+    <string name="trebuchet_unit_sticks">bâtons</string>
     <string name="trebuchet_shot_ball">Boulet</string>
     <string name="trebuchet_shot_heavy">Bloc lourd</string>
     <string name="trebuchet_shot_cluster">Fragmentation</string>

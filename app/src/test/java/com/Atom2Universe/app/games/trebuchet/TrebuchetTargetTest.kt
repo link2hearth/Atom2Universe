@@ -223,28 +223,87 @@ class TrebuchetTargetTest {
         assertTrue("le bloc chaîné n'a pas éclaté en trois : $shards", shards == 3)
     }
 
+    /**
+     * Un gravat a des points de vie, et il finit par céder.
+     *
+     * C'est l'inverse exact de ce que ce banc affirmait avant : un débris recevait
+     * `hp = Float.MAX_VALUE`, il était incassable pour toujours, et le test vérifiait
+     * que le tas ne diminuait jamais. La règle a changé parce que l'incassable était
+     * aussi de l'infranchissable — voir [TrebuchetCategory.projectileMask].
+     *
+     * On mesure ici la **règle**, pas le spectacle : les paliers successifs de
+     * broyage demandent des pierres assez grosses pour être refendues plusieurs fois,
+     * et les pierres de ce banc-ci — 1,20 m sur 0,50, la maçonnerie réelle — sont déjà
+     * à un cheveu de [TargetRules.MIN_FRAGMENT_HALF]. Leur premier éclat part droit en
+     * poussière. La descente complète des trois paliers se vérifie donc sur le banc
+     * d'arcade, où les pierres font deux fois et demie ce format.
+     */
     @Test
-    fun `les debris ne se cassent plus`() {
+    fun `un gravat a des points de vie et finit par ceder`() {
         val w = world()
         val f = TargetField(w)
-        f.load(Structure(listOf(stoneCourse(20f, 0f)), "assise"))
+        f.load(wall(20f, 10))
         arm(w, f)
-        // Deux coups pour venir à bout d'une tonne et demie : c'est le réglage voulu.
         repeat(2) {
-            w.fireBall(14f, 0.25f, 150f)
+            w.fireBall(14f, 0.9f, 150f)
             run(w, f, 1.2f)
         }
-        val shards = f.pieces.filter { it.debris }
-        assertTrue("rien n'a éclaté", shards.isNotEmpty())
-
-        // On tire encore trois fois dans le tas : il doit s'entasser, pas s'évaporer.
-        repeat(3) {
-            w.fireBall(14f, 0.25f, 150f)
-            run(w, f, 1.5f)
+        val gravats = f.pieces.filter { it.debris }
+        assertTrue("rien n'a éclaté", gravats.isNotEmpty())
+        for (p in gravats) {
+            assertTrue("un gravat est encore invulnérable", p.maxHp < Float.MAX_VALUE)
+            assertEquals(
+                "un gravat ne vaut pas la ténacité annoncée",
+                p.block.hp * TargetRules.RUBBLE_TOUGHNESS, p.maxHp, 1e-2f
+            )
         }
+
+        // Un souffle sur le tas, puis une demi-seconde seulement : bien en dessous de
+        // [TargetRules.DEBRIS_LIFETIME], pour que ce soit le souffle qui ait fait le
+        // travail et non le ménage.
+        //
+        // On suit les gravats **nommément** et on ne les compte pas : le même souffle
+        // casse aussi des pierres neuves, qui laissent à leur tour des morceaux, et le
+        // compte global monte alors qu'il devrait descendre. Ce qu'on veut savoir est si
+        // ces gravats-**ci** ont cédé.
+        val avant = f.pieces.filter { it.debris }
+        f.blast(21f, 1f, 200_000f, 12f)
+        run(w, f, 0.5f)
+        val survivants = f.pieces.count { it in avant }
+        println("GRAVAT vulnérable : ${avant.size} morceaux visés, $survivants survivants")
         assertTrue(
-            "les débris se sont pulvérisés : ${f.pieces.count { it.debris }}",
-            f.pieces.count { it.debris } >= shards.size
+            "le souffle n'a rien pu contre le tas : ${avant.size} puis $survivants",
+            survivants < avant.size
+        )
+    }
+
+    /**
+     * Un effondrement **ne broie pas ses propres gravats**, et c'est ce qui sépare la
+     * ruine méritée de la ruine gratuite.
+     *
+     * Les points de vie valent `½·m·vc²`, l'énergie d'une chute `m·g·h` : la masse se
+     * simplifie, et sans [TargetRules.RUBBLE_TOUGHNESS] tout morceau tombant de plus
+     * d'un mètre et demi se recasserait — puis ses morceaux aussi. Un mur qu'on fait
+     * tomber partirait en fumée tout seul.
+     */
+    @Test
+    fun `un effondrement ne broie pas ses propres gravats`() {
+        val w = world()
+        val f = TargetField(w)
+        f.load(wall(20f, 10))
+        arm(w, f)
+
+        // Un seul coup au pied : le mur se plie et s'écroule sur lui-même. Tout ce qui
+        // casse ensuite casse **par la chute**, et pas par le boulet.
+        w.fireBall(14f, 0.4f, 150f)
+        run(w, f, 5f)
+
+        val paliers = f.pieces.filter { it.debris }.groupingBy { it.tier }.eachCount()
+        println("CHUTE paliers des gravats = $paliers, cassé=${"%.0f".format(f.brokenRatio * 100)}%")
+        val profond = f.pieces.count { it.tier >= 3 }
+        assertTrue(
+            "l'effondrement s'est pulvérisé tout seul : $paliers",
+            profond == 0
         )
     }
 
@@ -360,11 +419,16 @@ class TrebuchetTargetTest {
         val w = world()
         val f = TargetField(w)
         f.load(wall(20f, 12))
-        repeat(8) {
-            f.blast(21f, 2f, 600_000f, 30f)
+        // Deux souffles plus mesurés, là où il y en avait huit énormes. Depuis que les
+        // gravats se cassent aussi, huit souffles ne rasent plus le mur : ils le
+        // réduisent en poussière, et il ne reste plus de tas à mesurer. Ce n'est pas ce
+        // que ce test cherche à savoir — il demande si un tas **qui reste** empêche
+        // encore de gagner, et il lui faut donc un tas.
+        repeat(2) {
+            f.blast(21f, 2f, 80_000f, 30f)
             run(w, f, 1f)
         }
-        run(w, f, 3f)
+        run(w, f, 1f)
         println(
             "GRAVATS ${"%.2f".format(f.ruinHeight())} m de tas, " +
                 "${f.pieces.count { it.debris }} morceaux au sol, rasé=${f.cleared}"

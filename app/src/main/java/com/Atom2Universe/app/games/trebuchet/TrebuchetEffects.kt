@@ -508,6 +508,31 @@ class TrebuchetEffects(seed: Long = 1L) {
         }
     }
 
+    /**
+     * La bouffée d'une pierre qui s'en va en poussière.
+     *
+     * Elle ne monte pas comme la fumée d'une explosion : de la pierre broyée, c'est
+     * lourd, ça retombe et ça s'étale au sol. D'où une vitesse basse, très peu de
+     * hauteur, et une vie courte — on veut un nuage qui se pose, pas un panache.
+     *
+     * C'est le seul signe que le joueur a du dernier palier de destruction. Sans elle,
+     * un tas qu'on s'acharne à broyer ne ferait que **disparaître**, ce qui se lit comme
+     * un bug et non comme une victoire.
+     */
+    fun dust(x: Float, y: Float, radius: Float) {
+        val r = radius.coerceIn(0.2f, 3f)
+        val n = (5f + r * 4f).toInt().coerceIn(5, 14)
+        repeat(n) {
+            val a = rng.nextFloat() * 2f * PI.toFloat()
+            val v = 0.6f + rng.nextFloat() * 2.2f * r
+            val s = spawn(Puff.SMOKE, x, y, cos(a) * v, -sin(a) * v * 0.35f) ?: return@repeat
+            s.tint = TINT_SMOKE
+            s.size = r * (0.25f + rng.nextFloat() * 0.35f)
+            s.maxLife = 0.5f + rng.nextFloat() * 0.9f
+            s.life = s.maxLife
+        }
+    }
+
     /** Une poignée d'étincelles au point d'impact : le boulet qui mord la pierre. */
     fun impact(x: Float, y: Float, force: Float) {
         val n = (4 + force * 12f).toInt().coerceIn(4, 26)

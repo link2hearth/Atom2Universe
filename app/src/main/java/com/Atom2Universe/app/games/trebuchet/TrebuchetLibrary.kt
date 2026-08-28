@@ -35,11 +35,18 @@ class MachinePreset(name: String, config: MachineConfig) {
  *
  * Le format est une ligne par machine, des valeurs séparées par des tabulations :
  *
- *     nom ⇥ poutre ⇥ pied ⇥ levier ⇥ masse ⇥ chape ⇥ crochet ⇥ fronde ⇥ projectile
+ *     nom ⇥ poutre ⇥ pied ⇥ levier ⇥ masse ⇥ chape ⇥ crochet ⇥ fronde ⇥ projectile ⇥ charge
  *
- * Ni JSON ni sérialisation : neuf champs plats se relisent à l'œil dans un fichier de
+ * Ni JSON ni sérialisation : dix champs plats se relisent à l'œil dans un fichier de
  * préférences, se réparent à la main, et ne demandent aucune bibliothèque qu'il faudrait
  * ensuite doubler dans les tests.
+ *
+ * **Le dixième champ est arrivé après les neuf premiers, et la relecture en tient
+ * compte.** Une ligne écrite avant que la charge de la bombe n'existe s'arrête au
+ * projectile ; elle reste parfaitement valable, et se relit avec la charge par défaut —
+ * laquelle a justement été choisie pour redonner la bombe d'avant. C'est le seul
+ * compromis à tenir quand on ajoute un réglage à un jeu déjà joué : le format grandit
+ * par la droite, et le seuil de rejet ne bouge pas.
  */
 object MachineLibrary {
 
@@ -65,7 +72,8 @@ object MachineLibrary {
             append(c.hangLength).append(SEP)
             append(c.pinAngleDeg).append(SEP)
             append(c.slingRatio).append(SEP)
-            append(c.projectile.name)
+            append(c.projectile.name).append(SEP)
+            append(c.bombSticks)
             append('\n')
         }
     }
@@ -96,6 +104,9 @@ object MachineLibrary {
             cfg.pinAngleDeg = f[6].toFloatOrNull() ?: continue
             cfg.slingRatio = f[7].toFloatOrNull() ?: continue
             cfg.projectile = runCatching { Projectile.valueOf(f[8]) }.getOrDefault(Projectile.BOULET)
+            // Le champ que les anciennes lignes n'ont pas : absent, il vaut la charge
+            // par défaut, celle qui redonne la bombe telle qu'elle était.
+            cfg.bombSticks = f.getOrNull(9)?.toIntOrNull() ?: Projectile.DEFAULT_STICKS
             // Une machine relue est bornée comme une machine réglée : rien ne garantit
             // que ce texte-là décrive quelque chose qui tienne debout.
             cfg.clamp()

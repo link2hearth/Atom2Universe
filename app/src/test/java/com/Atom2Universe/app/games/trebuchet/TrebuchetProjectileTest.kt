@@ -274,4 +274,104 @@ class TrebuchetProjectileTest {
             g.targets.brokenRatio > 0.2f
         )
     }
+
+    /**
+     * **Une bombe fait quelque chose à un château de pierre, dans les deux modes.**
+     *
+     * Le test qui manquait, et son absence a coûté une panne que le joueur a trouvée
+     * avant nous : il envoyait bombe sur bombe dans un château réaliste et ne voyait
+     * strictement rien se passer. Deux causes empilées — un souffle calibré sur les
+     * masses d'arcade, et une charge de quarante-cinq kilojoules qui ne venait de nulle
+     * part — et aucun test pour les dénoncer, parce que tous les bancs de la bombe
+     * tiraient sur un hameau de bois.
+     *
+     * On tire donc sur ce qu'il y a de plus dur, et on demande peu : que quelque chose
+     * bouge et que quelque chose casse. Le réaliste a le droit d'être lent, il n'a pas
+     * le droit d'être inerte.
+     */
+    @Test
+    fun `une bombe entame un chateau dans les deux modes`() {
+        for (style in listOf(TargetStyle.REALISTE, TargetStyle.ARCADE)) {
+            TargetRules.style = style
+            val g = TrebuchetGame()
+            g.config.projectile = Projectile.BOMBE
+            g.loadLevel(15L)
+            val f = g.targets
+            val poses = f.pieces.map { it.body to Pair(it.body.x, it.body.y) }
+
+            repeat(6) {
+                g.rebuild()
+                g.release()
+                repeat(90) { g.step(1f / 60f) }
+                // La bombe **arrive de l'extérieur**, comme dans le jeu : posée à
+                // l'intérieur de la construction pendant que la cible est en veille,
+                // elle en ressort simplement écartée, sans le choc franc qui la
+                // déclenche — et le banc mesurait alors le vide.
+                g.ball.x = f.left - 10f
+                g.ball.y = g.terrain.heightAt(f.left) + 8f
+                g.ball.vx = 25f
+                g.ball.vy = -5f
+                g.world.forgetContacts(g.ball)
+                repeat(300) { g.step(1f / 60f) }
+            }
+
+            var bouge = 0f
+            for ((b, p0) in poses) bouge = maxOf(bouge, hypot(b.x - p0.first, b.y - p0.second))
+            println(
+                "CHÂTEAU $style, six bombes : ${"%.0f".format(f.brokenRatio * 100)}% cassé, " +
+                    "score ${"%.2f".format(f.score)}, pierre la plus déplacée ${"%.1f".format(bouge)} m"
+            )
+            assertTrue(
+                "$style : six bombes n'ont rien déplacé du château (${"%.2f".format(bouge)} m)",
+                bouge > 1f
+            )
+            assertTrue(
+                "$style : six bombes n'ont rien entamé du château",
+                f.score > 0.05f
+            )
+        }
+    }
+
+    /**
+     * La charge est un **arbitrage**, pas un curseur : plus de poudre, plus de dégâts,
+     * mais une bombe plus lourde qui part moins loin.
+     *
+     * C'est la seule chose qui empêche le réglage d'être décoratif. Un réglage de
+     * puissance sans contrepartie se pousse à fond une fois pour toutes, et le joueur n'y
+     * revient jamais.
+     */
+    @Test
+    fun `une grosse charge frappe plus fort et vole moins loin`() {
+        TargetRules.style = TargetStyle.ARCADE
+
+        fun portee(sticks: Int): Float {
+            val g = TrebuchetGame()
+            g.config.projectile = Projectile.BOMBE
+            g.setBombSticks(sticks)
+            g.clearLevel()
+            return g.simulateShot()
+        }
+
+        val leger = portee(Projectile.MIN_STICKS)
+        val lourd = portee(Projectile.MAX_STICKS)
+        val kind = Projectile.BOMBE
+        println(
+            "CHARGE ${Projectile.MIN_STICKS} bâton = ${"%.1f".format(kind.massFor(Projectile.MIN_STICKS))} kg " +
+                "→ ${"%.0f".format(leger)} m, souffle ${"%.0f".format(kind.blastEnergyFor(Projectile.MIN_STICKS) / 1000f)} kJ " +
+                "sur ${"%.1f".format(kind.blastRadiusFor(Projectile.MIN_STICKS))} m ; " +
+                "${Projectile.MAX_STICKS} bâtons = ${"%.1f".format(kind.massFor(Projectile.MAX_STICKS))} kg " +
+                "→ ${"%.0f".format(lourd)} m, souffle ${"%.0f".format(kind.blastEnergyFor(Projectile.MAX_STICKS) / 1000f)} kJ " +
+                "sur ${"%.1f".format(kind.blastRadiusFor(Projectile.MAX_STICKS))} m"
+        )
+        assertTrue("une bombe chargée à ras bord ne vole pas moins loin : $leger contre $lourd", lourd < leger)
+        assertTrue(
+            "une grosse charge ne souffle pas plus fort",
+            kind.blastEnergyFor(Projectile.MAX_STICKS) > kind.blastEnergyFor(Projectile.MIN_STICKS)
+        )
+        // Et la charge de référence redonne la bombe d'avant le réglage, au gramme et au
+        // joule près : c'est ce qui garantit qu'aucune machine enregistrée ne change de
+        // comportement.
+        assertEquals(14f, kind.massFor(Projectile.DEFAULT_STICKS), 0.01f)
+        assertEquals(400_000f, kind.blastEnergyFor(Projectile.DEFAULT_STICKS), 2_000f)
+    }
 }

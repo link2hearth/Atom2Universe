@@ -283,4 +283,84 @@ class TrebuchetTerrainTest {
             )
         }
     }
+
+    /**
+     * **Un site au fond d'un vallon n'est pas ramassé par le ménage.**
+     *
+     * Le champ de cibles jette ce qui est « sorti du monde », et cette barre-là était
+     * une constante : cinq mètres sous zéro. Le jour où les sites ont pu se bâtir dans
+     * un creux, ils sont passés dessous. Le piège est qu'on ne voyait rien au
+     * chargement — une cible au repos est **en veille**, et le ménage ne tourne pas
+     * pendant qu'elle dort. Le village ne disparaissait qu'à la seconde où le premier
+     * boulet le réveillait : trente et une pierres, vingt-trois après le réveil, et huit
+     * pour cent de dégâts pour l'expliquer.
+     *
+     * D'où [TargetRules.FALL_OUT_DEPTH], qui se compte à partir du **sol** et non de
+     * zéro, et d'où ce test, qui réveille exprès la cible sans lui faire de mal.
+     */
+    @Test
+    fun `un site au fond d un vallon survit au reveil`() {
+        var graine = -1L
+        for (seed in 1L..120L) {
+            if (TargetGenerator.generate(seed).shape == TerrainShape.VALLON) {
+                graine = seed
+                break
+            }
+        }
+        assertTrue("aucun vallon en 120 graines : le test ne teste plus rien", graine > 0)
+
+        val g = TrebuchetGame()
+        g.loadLevel(graine)
+        val avant = g.targets.pieces.size
+        val creux = g.terrain.lowest
+        repeat(120) { g.step(1f / 60f) }
+
+        // On réveille la cible sans la toucher : un boulet posé devant elle, immobile,
+        // suffit — le champ de veille fait quarante mètres.
+        g.release()
+        repeat(60) { g.step(1f / 60f) }
+        g.ball.x = g.targets.left - 12f
+        g.ball.y = g.terrain.heightAt(g.targets.left - 12f) + 1f
+        g.ball.vx = 0f
+        g.ball.vy = 0f
+        g.world.forgetContacts(g.ball)
+        repeat(180) { g.step(1f / 60f) }
+
+        println(
+            "VALLON graine $graine : creux à ${"%.1f".format(creux)} m, " +
+                "$avant pierres -> ${g.targets.pieces.size}, " +
+                "abîmé ${"%.1f".format(g.targets.brokenRatio * 100)}%, " +
+                "endormie=${g.targets.dormant}"
+        )
+        assertTrue("le vallon testé n'est pas un creux : $creux", creux < -2f)
+        assertEquals(
+            "graine $graine : le site s'est abîmé alors qu'on ne l'a pas touché",
+            0f, g.targets.brokenRatio, 1e-4f
+        )
+        assertEquals(
+            "graine $graine : le ménage a ramassé le site au fond du vallon",
+            avant, g.targets.pieces.size
+        )
+    }
+
+    @Test
+    fun `le plancher du monde suit le relief`() {
+        // La même règle, prise par le petit bout : une pierre posée au fond d'un creux
+        // est sous zéro sans être tombée de la carte.
+        val creux = Terrain(
+            listOf(
+                TerrainNode(-50f, 0f), TerrainNode(-20f, 0f),
+                TerrainNode(-10f, -10f), TerrainNode(30f, -10f)
+            )
+        )
+        val w = PhysWorld().apply { iterations = 12 }
+        for (b in creux.bodies()) w.add(b)
+        val f = TargetField(w)
+        f.load(
+            Structure(listOf(Block.laid(Material.STONE, 0f, -10f, 2f, 1f)), "pierre"),
+            creux
+        )
+        repeat(300) { w.stepFrame(1f / 60f); f.update(1f / 60f) }
+        assertEquals("la pierre du creux a été ramassée", 1, f.pieces.size)
+    }
 }

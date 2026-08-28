@@ -6,6 +6,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.hypot
 import kotlin.random.Random
 
 /**
@@ -268,5 +269,106 @@ class TrebuchetStyleTest {
                 f.ruinHeight() > 0.95f * s.baseHeight
             )
         }
+    }
+
+    /**
+     * **Les trois paliers de broyage**, sur le seul banc où ils tiennent tous.
+     *
+     * Une pierre se casse en éclats, les éclats en morceaux, les morceaux en grains, et
+     * un grain qui casse ne laisse qu'une bouffée de poussière. La descente complète
+     * demande des pierres assez grosses pour être refendues trois fois de suite avant de
+     * passer sous [TargetRules.MIN_FRAGMENT_HALF] : les assises d'arcade, deux fois et
+     * demie la pierre réelle, sont exactement ça. En réaliste, le premier éclat est déjà
+     * au plancher — c'est mesuré, et c'est pour ça que ce test-ci vit ici.
+     *
+     * On relève le palier le plus profond **atteint** et non celui qui reste à la fin :
+     * les grains sont petits, et le ménage les ramasse au bout de quelques secondes
+     * d'immobilité. C'est le voyage qu'on mesure, pas la destination.
+     */
+    @Test
+    fun `en arcade un tas se broie jusqu au grain`() {
+        TargetRules.style = TargetStyle.ARCADE
+        val s = TargetField.settle(
+            Structure(
+                TargetModules.curtainWall(
+                    Random(5), 20f, TargetRules.site(10f), TargetRules.site(8f)
+                ),
+                "courtine"
+            )
+        )
+        val w = world()
+        val f = TargetField(w)
+        f.load(s)
+        repeat(120) { w.stepFrame(1f / 60f); f.update(1f / 60f) }
+
+        var palier = 0
+        var gravatsMax = 0
+        repeat(10) {
+            val b = w.fireBall(4f, TargetRules.site(2f), 150f)
+            f.trackPiercer(b)
+            repeat(120) {
+                w.stepFrame(1f / 60f)
+                f.update(1f / 60f)
+                palier = maxOf(palier, f.pieces.maxOfOrNull { p -> p.tier } ?: 0)
+                gravatsMax = maxOf(gravatsMax, f.pieces.count { p -> p.debris })
+            }
+        }
+        println(
+            "BROYAGE arcade : palier le plus profond=$palier, " +
+                "gravats au plus fort=$gravatsMax, " +
+                "détruit=${"%.0f".format(f.brokenRatio * 100)}%"
+        )
+        assertTrue("le tas n'est jamais descendu au grain : palier $palier", palier >= 3)
+        assertTrue(
+            "le budget de gravats a été dépassé : $gravatsMax",
+            gravatsMax <= TargetRules.MAX_DEBRIS
+        )
+    }
+
+    /**
+     * **Un souffle pousse une pierre à la même vitesse dans les deux modes.**
+     *
+     * C'est le test qui manquait, et son absence a coûté une panne que le joueur a
+     * trouvée avant nous : il envoyait bombe sur bombe dans un château de pierre et ne
+     * voyait rien bouger.
+     *
+     * La poussée d'un souffle vaut `impulsion / (densité × densityScale)` — l'aire du
+     * bloc se simplifie, et il ne reste que la matière et le tempérament. L'impulsion
+     * étant une constante nue calibrée sur l'arcade, le réaliste héritait d'une poussée
+     * **quatorze fois plus faible**, soit trente-huit centimètres par seconde : la
+     * stricte immobilité. C'est la mésaventure des hameaux racontée dans [TargetStyle],
+     * rejouée à l'identique sur une autre constante.
+     *
+     * Ce test ne compare pas des dégâts — le réaliste a parfaitement le droit d'être
+     * plus dur — il compare une **poussée**, qui n'a aucune raison de dépendre du mode.
+     */
+    @Test
+    fun `un souffle pousse autant dans les deux modes`() {
+        fun poussee(style: TargetStyle): Float {
+            TargetRules.style = style
+            val w = world()
+            val f = TargetField(w)
+            val assise = Block.laid(
+                Material.STONE, 20f, 0f,
+                TargetRules.stone(1.2f), TargetRules.stone(0.5f)
+            )
+            f.load(Structure(listOf(assise), "assise"))
+            repeat(60) { w.stepFrame(1f / 60f); f.update(1f / 60f) }
+            val p = f.pieces.first()
+            f.blast(p.body.x, p.body.y, 45_000f, TargetRules.site(6f))
+            return hypot(p.body.vx, p.body.vy)
+        }
+
+        val reel = poussee(TargetStyle.REALISTE)
+        val arcade = poussee(TargetStyle.ARCADE)
+        println(
+            "SOUFFLE une assise part à ${"%.2f".format(reel)} m/s en réaliste, " +
+                "${"%.2f".format(arcade)} m/s en arcade"
+        )
+        assertTrue("le souffle ne pousse rien en réaliste : $reel m/s", reel > 3f)
+        assertEquals(
+            "le souffle ne pousse pas pareil selon le mode : $reel contre $arcade",
+            arcade, reel, 0.2f
+        )
     }
 }

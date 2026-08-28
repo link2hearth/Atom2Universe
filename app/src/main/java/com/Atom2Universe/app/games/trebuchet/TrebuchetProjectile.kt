@@ -23,7 +23,14 @@ import kotlin.math.PI
  *    l'endroit où elle touche.
  */
 enum class Projectile(
-    /** Masse, en kilogrammes. */
+    /**
+     * Masse, en kilogrammes — **pour ce qui n'emporte pas de charge**.
+     *
+     * Elle vaut zéro pour la bombe, et ce n'est pas un oubli : sa masse dépend du nombre
+     * de bâtons qu'on y met, et rien ne peut la connaître sans le savoir. Tout ce qui
+     * veut la masse réellement lancée passe par [massFor] — ou mieux, par
+     * `MachineConfig.shotMass`, qui sait déjà combien de bâtons sont chargés.
+     */
     val mass: Float,
     /** Rayon, en mètres. */
     val radius: Float,
@@ -38,9 +45,17 @@ enum class Projectile(
      * joueur n'a plus rien à viser.
      */
     val splitFraction: Float = 0f,
-    /** Énergie de l'explosion à l'impact, en joules. Zéro pour ce qui n'explose pas. */
-    val blastEnergy: Float = 0f,
-    /** Rayon de l'explosion, en mètres **de site réaliste** — voir [blastRadiusNow]. */
+    /**
+     * Masse de l'enveloppe seule, en kilogrammes, pour ce qui porte une charge.
+     *
+     * La masse d'une bombe n'est pas une constante : c'est l'enveloppe **plus la
+     * poudre**, et la poudre se règle. Voir [massFor].
+     */
+    val casing: Float = 0f,
+    /**
+     * Rayon de l'explosion à la charge de référence, en mètres **de site réaliste** —
+     * voir [blastRadiusFor]. Zéro pour ce qui n'explose pas.
+     */
     private val blastRadiusBase: Float = 0f
 ) {
     /** La belle pierre de taille : l'étalon, et celui avec lequel on apprend la machine. */
@@ -71,14 +86,15 @@ enum class Projectile(
      * tir mou qui touche juste vaut mieux qu'un tir tendu qui frôle. C'est le
      * projectile de celui qui sait viser mais dont la machine n'est pas accordée.
      *
-     * Son souffle **renverse** plus qu'il ne pulvérise, et c'est ce qui a changé depuis
-     * la première version. Elle valait alors quatre-vingt-dix kilojoules de dégâts purs
-     * sur douze mètres : tout ce qui se trouvait dans le cercle disparaissait, ce qui
-     * était spectaculaire une fois et faux tout le temps. Une explosion, ça pousse — la
-     * moitié de l'énergie, donc, et une impulsion qui envoie la charpente en l'air
-     * pendant que la muraille se contente de basculer.
+     * Son souffle **renverse** autant qu'il pulvérise : une impulsion qui envoie la
+     * charpente en l'air pendant que la muraille se contente de basculer, et une énergie
+     * qui fend ce qui est trop lourd pour bouger.
+     *
+     * C'est le seul projectile dont la **masse n'est pas écrite ici** : elle vaut
+     * l'enveloppe plus la poudre, et la poudre se règle en bâtons. Voir [massFor] et
+     * [DEFAULT_STICKS].
      */
-    BOMBE(14f, 0.21f, blastEnergy = 45_000f, blastRadiusBase = 6f);
+    BOMBE(0f, 0.21f, casing = 5f, blastRadiusBase = 6f);
 
     /**
      * Traînée, en kg/m : la moitié de ρ·Cx·S pour une sphère de ce rayon.
@@ -88,14 +104,54 @@ enum class Projectile(
      */
     val drag: Float get() = (0.5f * 1.2f * 0.47f * PI * radius * radius).toFloat()
 
+    /** Vrai pour ce qui porte une charge, et dont la masse dépend donc du réglage. */
+    val explosive: Boolean get() = blastRadiusBase > 0f
+
     /**
-     * Rayon du souffle à l'échelle du site en cours.
+     * Masse lancée, la charge comprise.
      *
-     * Une bombe doit faire un trou qui se voit, et « qui se voit » se mesure en
-     * pierres, pas en mètres : en arcade les pierres font six mètres de front, donc le
-     * souffle doit faire six mètres de plus.
+     * Pour tout le reste du catalogue c'est la constante de la table. Pour la bombe,
+     * c'est l'enveloppe plus les bâtons — et **c'est délibérément un arbitrage** : une
+     * grosse charge est une bombe lourde, qui part moins vite et retombe plus court. Un
+     * réglage de puissance qui ne coûterait rien serait un réglage qu'on pousse à fond
+     * une fois pour toutes et qu'on ne retouche jamais.
      */
-    val blastRadiusNow: Float get() = TargetRules.site(blastRadiusBase)
+    fun massFor(sticks: Int): Float =
+        if (explosive) casing + sticks.coerceAtLeast(0) * STICK_MASS else mass
+
+    /**
+     * Énergie que le souffle dépose dans **une** pierre au point zéro, en joules.
+     *
+     * Ce n'est pas ce que la charge libère, et la nuance est tout le sujet. Neuf kilos
+     * de poudre libèrent vingt-sept mégajoules, quand la vie entière d'un château
+     * réaliste en vaut trente-cinq : une bombe qui rendrait sa chimie effacerait le site
+     * d'un coup. Ce qui compte est **ce qui entre dans la pierre** : le souffle part en
+     * sphère, une face d'un mètre carré à un mètre de la charge en intercepte huit pour
+     * cent, à trois mètres moins d'un, et sur cette part-là seule une fraction se paie
+     * en travail de rupture. D'où [BLAST_COUPLING], de l'ordre du pour cent.
+     *
+     * Le choix de l'explosif, lui, ne change presque rien : le TNT vaut 4,2 MJ/kg, la
+     * dynamite 5 à 7,5, et le plafond des explosifs classiques tourne autour de 6 à 7.
+     * Un facteur deux, là où le couplage en vaut cent.
+     */
+    fun blastEnergyFor(sticks: Int): Float =
+        if (explosive) sticks.coerceAtLeast(0) * STICK_ENERGY * BLAST_COUPLING else 0f
+
+    /**
+     * Rayon du souffle, à l'échelle du site en cours et de la charge emportée.
+     *
+     * Deux mises à l'échelle, pour deux raisons différentes. Celle du **site** parce
+     * qu'une bombe doit faire un trou qui se voit, et que « qui se voit » se mesure en
+     * pierres et pas en mètres : en arcade les pierres font six mètres de front, donc le
+     * souffle doit faire six mètres de plus. Celle de la **charge** parce qu'un volume
+     * grandit comme le cube de son rayon : quadrupler la poudre n'agrandit le cercle que
+     * de moitié. Un bâton fait 1,7 m, quarante-cinq en font 6, cent en font 7,8.
+     */
+    fun blastRadiusFor(sticks: Int): Float {
+        if (!explosive) return 0f
+        val part = (sticks.coerceAtLeast(1).toFloat() / DEFAULT_STICKS).toDouble()
+        return TargetRules.site(blastRadiusBase) * Math.cbrt(part).toFloat()
+    }
 
     /**
      * Masse de **chaque** éclat, celle du paquet étant donnée.
@@ -109,4 +165,34 @@ enum class Projectile(
      */
     fun shardMass(): Float =
         if (TargetRules.style == TargetStyle.ARCADE) mass else mass / shards
+
+    companion object {
+
+        /** Masse d'un bâton, en kilogrammes : deux cents grammes, comme un vrai. */
+        const val STICK_MASS = 0.2f
+
+        /** Ce qu'un bâton libère, en joules : 200 g de TNT à 4,18 MJ/kg. */
+        const val STICK_ENERGY = 836_000f
+
+        /**
+         * Part de l'énergie libérée qui finit en travail de rupture dans une pierre au
+         * point zéro. Voir [blastEnergyFor], où le raisonnement est fait.
+         */
+        const val BLAST_COUPLING = 0.0106f
+
+        /**
+         * La charge par défaut, et celle qui sert de référence au rayon.
+         *
+         * Quarante-cinq bâtons ne sont pas un chiffre rond par hasard : ils redonnent
+         * **exactement** la bombe d'avant le réglage — quatorze kilos, quatre cents
+         * kilojoules, six mètres de rayon. Une machine enregistrée avant que la charge
+         * n'existe se recharge donc sans changer de comportement, et c'est la seule
+         * façon honnête d'ajouter un réglage à un jeu déjà joué.
+         */
+        const val DEFAULT_STICKS = 45
+
+        /** Bornes de la charge : d'un pétard à un baril. */
+        const val MIN_STICKS = 1
+        const val MAX_STICKS = 120
+    }
 }
