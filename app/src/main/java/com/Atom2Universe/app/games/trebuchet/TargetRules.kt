@@ -142,6 +142,16 @@ enum class Material(
     /** La pierre de taille : le gros œuvre. Lourde, tenace, et c'est elle qui fait le tas. */
     STONE(2400f, 0.65f, 0f, 12f, Rupture.ECLATS, masonry = true),
 
+    /**
+     * Le grès : la pierre des pyramides et des temples. Un peu plus légère que la
+     * pierre de taille, sensiblement plus tendre, et elle glisse moins.
+     *
+     * Elle existe pour une raison de jeu autant que de couleur : une pyramide de pierre
+     * de taille serait une montagne qu'on ne raye pas, alors qu'un même volume de grès
+     * s'entame au troisième coup. C'est ce qui rend une nécropole jouable.
+     */
+    SANDSTONE(2200f, 0.72f, 0f, 10f, Rupture.ECLATS, masonry = true),
+
     /** Le fer : hors de prix, indestructible, et lourd au point d'écraser ce qu'il tient. */
     IRON(7800f, 0.40f, 0f, 60f, Rupture.INCASSABLE, masonry = true)
 }

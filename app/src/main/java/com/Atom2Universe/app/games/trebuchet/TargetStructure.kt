@@ -351,7 +351,7 @@ class Structure(val blocks: List<Block>, val name: String = "") {
      * doit pouvoir **essayer** une graine, voir ce qui ne va pas, et recommencer. Une
      * construction n'est pas fausse, elle est ratée, et ça se rattrape.
      */
-    fun problems(): List<String> {
+    fun problems(terrain: Terrain = Terrain.FLAT): List<String> {
         val out = ArrayList<String>()
         if (blocks.isEmpty()) {
             out += "construction vide"
@@ -387,7 +387,7 @@ class Structure(val blocks: List<Block>, val name: String = "") {
                 "le niveau serait impossible"
         }
         for ((i, b) in blocks.withIndex()) {
-            if (b.bottom() < -0.05f) out += "bloc $i enterré"
+            if (b.bottom() < terrain.heightAt(b.x) - 0.05f) out += "bloc $i enterré"
             for (p in b.parts) {
                 if (p.halfW < TargetRules.MIN_HALF_THICKNESS ||
                     p.halfH < TargetRules.MIN_HALF_THICKNESS

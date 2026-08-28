@@ -295,6 +295,15 @@ class TrebuchetEffects(seed: Long = 1L) {
      * tant — corrigée d'un dixième parce que l'air en mange une part, et la mèche est
      * réglée sur le temps de montée. Voir [Puff.SHELL] pour le freinage.
      */
+    /**
+     * L'altitude du sol, que le jeu renseigne quand le terrain n'est pas plat.
+     *
+     * Une fusée part **du sol**, et depuis qu'il y a des collines ce n'est plus zéro
+     * partout. Sans ça, un bouquet tiré devant une butte de quinze mètres jaillirait du
+     * flanc de la butte, ce qui se voit tout de suite.
+     */
+    var groundAt: (Float) -> Float = { 0f }
+
     fun rocket(x: Float, ground: Float = 0f, apex: Float = 55f + rng.nextFloat() * 35f) {
         val h = apex.coerceIn(15f, 1200f)
         val speed = speedFor(h)
@@ -556,7 +565,11 @@ class TrebuchetEffects(seed: Long = 1L) {
         for (i in 0 until pendingCount) {
             if (pendingAt[i] <= showClock) {
                 // La part de ciel devient une hauteur ici, avec le cadrage du moment.
-                rocket(pendingX[i], apex = skyTop.coerceIn(40f, 700f) * pendingH[i])
+                rocket(
+                    pendingX[i],
+                    ground = groundAt(pendingX[i]),
+                    apex = skyTop.coerceIn(40f, 700f) * pendingH[i]
+                )
             } else {
                 pendingAt[kept] = pendingAt[i]
                 pendingX[kept] = pendingX[i]

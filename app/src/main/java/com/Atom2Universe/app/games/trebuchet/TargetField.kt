@@ -796,6 +796,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
          */
         fun settle(
             structure: Structure,
+            terrain: Terrain = Terrain.FLAT,
             seconds: Float = TargetRules.SETTLE_SECONDS,
             dt: Float = 1f / 120f
         ): Structure {
@@ -807,18 +808,12 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
                 // place s'endorment et ne coûtent plus rien aux secondes suivantes.
                 sleepEnabled = true
             }
-            val half = structure.width / 2f + 20f
-            w.add(
-                PhysBody(half, 1f, 0f).apply {
-                    x = (structure.left + structure.right) / 2f
-                    y = -1f
-                    lockPosition = true
-                    lockRotation = true
-                    friction = 0.7f
-                    category = TrebuchetCategory.GROUND
-                    refreshMass()
-                }
-            )
+            // On tasse sur **le vrai relief**, et pas sur un sol plat qu'on relèverait
+            // ensuite. C'est la seule façon de savoir ce que fait un tonneau posé au
+            // bord d'un plateau : sur un sol plat il ne bouge pas, sur le vrai terrain
+            // il dévale le talus — et mieux vaut qu'il le fasse maintenant, dans un
+            // monde jetable, qu'au premier chargement sous les yeux du joueur.
+            for (b in terrain.bodies(friction = 0.7f)) w.add(b)
             val field = TargetField(w)
             field.load(structure)
             // On tasse **sans dégâts** : à ce stade personne n'a encore tiré, et les

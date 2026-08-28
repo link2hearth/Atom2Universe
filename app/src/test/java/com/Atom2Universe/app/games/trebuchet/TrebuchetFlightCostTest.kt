@@ -36,7 +36,11 @@ class TrebuchetFlightCostTest {
             frames++
             if (g.targets.dormant) dormantFrames++
         }
-        val corps = g.world.bodies.count { it.inWorld }
+        // On ne compte pas le sol : depuis qu'il y a du relief, le terrain vaut jusqu'à
+        // une dizaine de dalles immobiles, et elles ne coûtent rien — elles ne bougent
+        // pas, elles ne se testent pas entre elles, et le moteur les saute. Ce qu'on
+        // surveille ici, ce sont les pierres.
+        val corps = g.world.bodies.count { it.inWorld && it.category != TrebuchetCategory.GROUND }
         println(
             "VOL château : $dormantFrames/$frames images en veille, " +
                 "corps actifs=$corps, image moyenne=${total / maxOf(frames, 1) / 1000} µs"
@@ -107,7 +111,18 @@ class TrebuchetFlightCostTest {
         // Le boulet arrive en visant la construction, à la vitesse d'un tir juste.
         val f = g.targets
         g.ball.x = f.left - TargetRules.WATCH_MARGIN + 2f
-        g.ball.y = f.baseHeight * 0.5f
+        // On vise **deux mètres au-dessus du plus haut relief du parcours**, et non une
+        // altitude absolue : depuis que les sites s'étagent, la moitié de la hauteur de
+        // silhouette d'un bourg perché tombe soit dans le flanc de la butte, soit
+        // au-dessus des toits. Deux mètres au-dessus du sol le plus haut, c'est un tir
+        // qui rase et qui touche, quel que soit le terrain.
+        var sol = g.terrain.heightAt(g.ball.x)
+        var scan = g.ball.x
+        while (scan <= f.left) {
+            sol = maxOf(sol, g.terrain.heightAt(scan))
+            scan += 1f
+        }
+        g.ball.y = sol + 2f
         g.ball.vx = 130f
         g.ball.vy = 0f
         g.world.forgetContacts(g.ball)

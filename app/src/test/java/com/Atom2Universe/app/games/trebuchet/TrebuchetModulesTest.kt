@@ -303,4 +303,130 @@ class TrebuchetModulesTest {
             a.indices.all { kotlin.math.abs(a[it].y - autre[it].y) < 1e-6f }
         assertTrue("deux graines donnent la même tour au millimètre", !identique)
     }
+
+    // ── Le second catalogue au banc ───────────────────────────────────────────
+    //
+    // Les neuf pièces arrivées avec le relief. Chacune passe exactement le même
+    // examen que les quatre premières : ne pas bouger au tassement, ne pas s'abîmer
+    // toute seule, et ne pas s'affaisser. C'est un test par module et non un test qui
+    // les balaie tous, parce qu'un module qui casse doit se nommer dans le rapport
+    // d'échec sans qu'on ait à ouvrir le code.
+
+    @Test
+    fun `un moulin tient debout`() {
+        // La croix d'ailes est le seul corps du jeu dont la masse est perchée au-dessus
+        // de tout le reste, et posée sur rien. Si elle doit verser, c'est ici.
+        checkStands("moulin", Structure(TargetModules.windmill(Random(11), 20f, 4.5f, 14f), "moulin"))
+    }
+
+    @Test
+    fun `une pyramide tient debout`() {
+        checkStands(
+            "pyramide",
+            Structure(TargetModules.pyramid(Random(12), 20f, 12f, 8.5f), "pyramide")
+        )
+    }
+
+    @Test
+    fun `un amphitheatre tient debout`() {
+        checkStands(
+            "amphithéâtre",
+            Structure(TargetModules.arena(Random(13), 20f, 16f, 10f), "amphithéâtre")
+        )
+    }
+
+    @Test
+    fun `un temple tient debout`() {
+        // Les colonnes sont libres, et l'architrave ne repose que sur elles. Une seule
+        // colonne trop élancée, ou un linteau qui déborde d'une seule, et tout descend.
+        checkStands("temple", Structure(TargetModules.temple(Random(14), 20f, 11f, 9f), "temple"))
+    }
+
+    @Test
+    fun `un aqueduc tient debout`() {
+        checkStands(
+            "aqueduc",
+            Structure(TargetModules.aqueduct(Random(15), 20f, 12f, 11f), "aqueduc")
+        )
+    }
+
+    @Test
+    fun `un grenier sur pilotis tient debout`() {
+        checkStands(
+            "grenier",
+            Structure(TargetModules.granary(Random(16), 20f, 5.5f, 9f), "grenier")
+        )
+    }
+
+    @Test
+    fun `un immeuble tient debout`() {
+        checkStands("immeuble", Structure(TargetModules.insula(Random(17), 20f, 4.5f, 11f), "immeuble"))
+    }
+
+    @Test
+    fun `une grange tient debout`() {
+        checkStands("grange", Structure(TargetModules.barn(Random(18), 20f, 10f, 6f), "grange"))
+    }
+
+    @Test
+    fun `une palissade tient debout`() {
+        checkStands(
+            "palissade",
+            Structure(TargetModules.palisade(Random(19), 20f, 8f, 3.5f), "palissade")
+        )
+    }
+
+    @Test
+    fun `un moulin decoiffe perd ses ailes et pas sa tour`() {
+        // Ce que le module promet : la croix part d'un coup au sommet, et le fût reste
+        // planté. Un moulin qui s'écroulerait en entier au premier tir haut serait une
+        // tour ordinaire déguisée.
+        //
+        // **En arcade, et c'est le seul test de ce banc qui change de mode.** Le reste
+        // du fichier mesure la maçonnerie réelle, où un boulet de douze kilos ne
+        // déplace pas quatre tonnes de charpente — c'est exact, et ça ne dit rien du
+        // module. Ce qu'on veut vérifier ici est une promesse de jeu, elle se vérifie
+        // donc dans le mode où le jeu se joue.
+        TargetRules.style = TargetStyle.ARCADE
+        val s = Structure(TargetModules.windmill(Random(11), 20f, 4.5f, 14f), "moulin")
+        val (w, f) = stand(s)
+        val avant = f.ruinHeight()
+        val pierresAvant = f.pieces.size
+
+        // Un boulet au ras du sommet, là où est la croix.
+        w.fireBall(2f, avant - 1.2f, 120f)
+        run(w, f, 4f)
+
+        val apres = f.ruinHeight()
+        println(
+            "MOULIN crête ${"%.2f".format(avant)} -> ${"%.2f".format(apres)}, " +
+                "pierres $pierresAvant -> ${f.pieces.size}, " +
+                "abîmé ${"%.0f".format(f.brokenRatio * 100)}%"
+        )
+        assertTrue("le moulin a gardé son chapeau : $avant -> $apres", apres < avant - 1f)
+        // Le fût compte au moins la moitié de la hauteur : s'il ne reste rien, ce n'est
+        // pas un décoiffage, c'est une démolition.
+        assertTrue("le fût est parti avec : $apres", apres > avant * 0.4f)
+    }
+
+    @Test
+    fun `un temple abattu laisse des tambours`() {
+        // La promesse du bloc composé : une colonne debout coûte un corps, une colonne
+        // abattue en rend trois ou quatre. Ce test vérifie qu'on ne paie le détail
+        // qu'au moment où le joueur l'a mérité — en arcade, pour la même raison que le
+        // moulin ci-dessus.
+        TargetRules.style = TargetStyle.ARCADE
+        val s = Structure(TargetModules.temple(Random(14), 20f, 11f, 9f), "temple")
+        val (w, f) = stand(s)
+        val corpsDebout = f.pieces.size
+
+        w.fireBall(2f, 2.5f, 145f)
+        run(w, f, 5f)
+
+        println(
+            "TEMPLE corps debout=$corpsDebout, après le tir=${f.pieces.size}, " +
+                "abîmé ${"%.0f".format(f.brokenRatio * 100)}%"
+        )
+        assertTrue("le temple n'a rien senti", f.brokenRatio > 0f)
+    }
 }

@@ -15,16 +15,31 @@ enum class SiteKind {
     CHATEAU,
 
     /** Une seule grosse tour, flanquée de deux murets. Haute et têtue. */
-    DONJON
+    DONJON,
+
+    /** Un village palissadé : des maisons, une grange, et de quoi ranger le grain. */
+    VILLAGE,
+
+    /** Un moulin et ce qui vit autour. Le chapeau à ailes est la vraie cible. */
+    MOULIN,
+
+    /** Une ville de pierre : des immeubles et des greniers, un par palier. Le croquis. */
+    BOURG,
+
+    /** Un temple, un amphithéâtre, un aqueduc. Que de la pierre taillée. */
+    CITE_ANTIQUE,
+
+    /** Des pyramides de grès. Rien ne bascule : tout se casse, gradin par gradin. */
+    NECROPOLE
 }
 
 /**
- * Un niveau prêt à jouer : une construction posée à sa distance, et la graine qui l'a
- * produite.
+ * Un niveau prêt à jouer : un relief, une construction posée dessus à sa distance, et
+ * la graine qui a produit les deux.
  *
- * Tout est dans la graine — la sorte de site, sa taille, ses matériaux, et la distance
- * à laquelle il attend. Un niveau se rejoue donc à l'identique, se partage en un entier,
- * et se réengendre sans être stocké.
+ * Tout est dans la graine — la sorte de site, sa taille, ses matériaux, la forme du
+ * terrain, et la distance à laquelle il attend. Un niveau se rejoue donc à l'identique,
+ * se partage en un entier, et se réengendre sans être stocké.
  */
 class TargetLevel(
     val seed: Long,
@@ -33,19 +48,30 @@ class TargetLevel(
     val distance: Float,
     /** Le vent qui souffle sur ce site-là. Il sort de la même graine. */
     val wind: Wind,
-    /** La construction, déjà tassée et posée à sa distance. */
-    val structure: Structure
+    /** La construction, déjà tassée, soulevée sur ses plateaux et posée à sa distance. */
+    val structure: Structure,
+    /** Le relief, prolongé à plat d'un bout à l'autre du monde. */
+    val terrain: Terrain,
+    /** La forme du relief, pour l'écran de fin de niveau. */
+    val shape: TerrainShape
 )
 
 /**
  * Le générateur de niveaux.
  *
- * Le principe est celui d'une **enfilade** : vu de profil, un site n'a pas de cour, il a
- * une succession de pièces posées côte à côte le long du sol. On tire une sorte de site,
- * on en déduit la liste des modules et leur silhouette, on les pose l'un après l'autre
- * d'après leur emprise réelle, et on tasse le tout.
+ * Le principe est celui d'une **enfilade à étages**. Vu de profil, un site n'a pas de
+ * cour : il a des groupes de bâtiments posés côte à côte, chaque groupe sur son propre
+ * plateau, et les plateaux sont à des altitudes différentes. On tire une sorte de site,
+ * on en déduit les groupes de modules, on demande au relief un plateau par groupe assez
+ * large pour le porter, on bâtit chaque groupe à plat puis on le soulève à l'altitude
+ * de son plateau, et on tasse le tout.
  *
- * La validation est délibérément **légère** : on vérifie que la construction ne
+ * **Rien ne se bâtit jamais sur une pente.** C'est la décision qui rend tout le reste
+ * possible sans réécrire une ligne de maçonnerie : les modules continuent de croire que
+ * le sol est à zéro, le tassement se fait sur le vrai relief, et la validation ne
+ * change pas.
+ *
+ * La validation reste délibérément **légère** : on vérifie que la construction ne
  * s'écroule pas toute seule au tassement, et c'est tout. Savoir si un tas de gravats
  * précis peut passer sous une ligne précise demanderait de raser le niveau par
  * simulation à chaque graine, ce qui coûte cher pour une question dont la réponse est
@@ -57,7 +83,7 @@ object TargetGenerator {
     const val MIN_DISTANCE = 100f
     const val MAX_DISTANCE = 500f
 
-    /** Espace laissé entre deux modules voisins, à l'échelle du site. */
+    /** Espace laissé entre deux modules voisins d'un même groupe, à l'échelle du site. */
     private val gap: Float get() = TargetRules.site(0.5f)
 
     /** Nombre de graines dérivées qu'on essaie avant de se contenter de ce qu'on a. */
@@ -66,9 +92,9 @@ object TargetGenerator {
     /**
      * Fabrique le niveau de la graine [seed].
      *
-     * La distance, elle, ne dépend que de la graine et pas des essais : deux joueurs
-     * avec la même graine tirent sur la même cible, à la même distance, quoi qu'il
-     * arrive ensuite.
+     * La distance et la sorte de site ne dépendent que de la graine et pas des essais :
+     * deux joueurs avec la même graine tirent sur la même cible, à la même distance,
+     * quoi qu'il arrive ensuite.
      */
     fun generate(seed: Long): TargetLevel {
         val head = Random(seed)
@@ -76,13 +102,19 @@ object TargetGenerator {
         val kind = kindFor(seed)
 
         var best: Structure? = null
+        var bestTerrain: Terrain? = null
+        var bestShape = TerrainShape.PLAINE
         var bestDrift = Float.MAX_VALUE
         for (attempt in 0 until MAX_ATTEMPTS) {
-            val draft = draw(Random(seed * 31L + attempt * 7919L), kind)
-            val settled = TargetField.settle(draft)
+            val rng = Random(seed * 31L + attempt * 7919L)
+            val shape = shapeFor(rng, kind)
+            val (draft, terrain) = draw(rng, kind, shape, distance)
+            val settled = TargetField.settle(draft, terrain)
             val drift = TargetField.drift(draft, settled)
-            if (draft.problems().isEmpty() && drift < TargetRules.SETTLE_TOLERANCE) {
+            if (draft.problems(terrain).isEmpty() && drift < TargetRules.SETTLE_TOLERANCE) {
                 best = settled
+                bestTerrain = terrain
+                bestShape = shape
                 break
             }
             // On garde quand même le moins mauvais : mieux vaut un niveau un peu bancal
@@ -90,12 +122,22 @@ object TargetGenerator {
             if (drift < bestDrift) {
                 bestDrift = drift
                 best = settled
+                bestTerrain = terrain
+                bestShape = shape
             }
         }
         val site = best!!
+        // Le site a été bâti et tassé dans son repère local, relief compris. On déplace
+        // maintenant **les deux ensemble** jusqu'à la distance de tir : c'est ce qui
+        // garantit que la construction tombe au centimètre près sur sa distance
+        // annoncée sans jamais glisser de ses plateaux.
+        val dx = distance - site.left
         return TargetLevel(
             seed, kind, distance, Wind.forSeed(seed),
-            site.translated(distance - site.left)
+            site.translated(dx),
+            bestTerrain!!.translated(dx)
+                .extended(TrebuchetRules.GROUND_LEFT, TrebuchetRules.GROUND_RIGHT),
+            bestShape
         )
     }
 
@@ -105,56 +147,183 @@ object TargetGenerator {
      * Ce n'est pas un tirage au sort, et c'est délibéré. Un boulet de douze kilos fait
      * 2,5 % de dégâts à un château de six cents tonnes : commencer par là, c'est
      * demander cinquante coups avant le premier niveau réussi. La suite monte donc
-     * doucement — quelques hameaux de bois, puis des fermes, un donjon, et le château
-     * en récompense — et se répète ensuite en boucle, chaque tour donnant des sites
-     * différents puisque la graine, elle, continue d'avancer.
+     * doucement — quelques hameaux de bois, puis des fermes, des villages, un donjon,
+     * et les gros morceaux de pierre en récompense — et se répète ensuite en boucle,
+     * chaque tour donnant des sites différents puisque la graine, elle, continue
+     * d'avancer.
      */
     private fun kindFor(seed: Long): SiteKind {
         val ladder = arrayOf(
             SiteKind.HAMEAU,
             SiteKind.HAMEAU,
             SiteKind.FERME,
-            SiteKind.HAMEAU,
+            SiteKind.VILLAGE,
             SiteKind.FERME,
+            SiteKind.MOULIN,
             SiteKind.DONJON,
+            SiteKind.BOURG,
+            SiteKind.VILLAGE,
             SiteKind.FERME,
+            SiteKind.CITE_ANTIQUE,
+            SiteKind.DONJON,
+            SiteKind.NECROPOLE,
+            SiteKind.BOURG,
             SiteKind.CHATEAU
         )
         val i = ((seed - 1L) % ladder.size).toInt()
         return ladder[if (i < 0) i + ladder.size else i]
     }
 
-    // ── Le plan ───────────────────────────────────────────────────────────────
+    /**
+     * Le relief d'un site.
+     *
+     * Chaque sorte de site a ses reliefs plausibles, et le tirage se fait dedans. Ce
+     * n'est pas de la couleur locale : une nécropole en terrasses est un escalier de
+     * pyramides, et c'est une image ; un château dans un vallon serait une cible qu'on
+     * ne voit pas, et c'est une frustration. Les reliefs qui **cachent** le site sont
+     * réservés aux sites bas ; ceux qui le **surélèvent** aux sites hauts, dont la
+     * silhouette pardonne d'être encore montée.
+     */
+    private fun shapeFor(rng: Random, kind: SiteKind): TerrainShape {
+        val choix = when (kind) {
+            SiteKind.HAMEAU -> arrayOf(
+                TerrainShape.PLAINE, TerrainShape.PLAINE,
+                TerrainShape.TERRASSES, TerrainShape.COLLINE, TerrainShape.VALLON
+            )
 
-    /** Dessine un site entier, le pied gauche à zéro. */
-    private fun draw(rng: Random, kind: SiteKind): Structure {
-        val pieces = plan(rng, kind)
-        val budget = (TargetRules.BODY_BUDGET / pieces.size).coerceAtLeast(10)
-        val blocks = ArrayList<Block>()
-        var x = 0f
-        for (p in pieces) {
-            // Le plan est écrit en mètres réels — une maison de cinq mètres, une tour de
-            // douze — et c'est le tempérament qui décide de la taille à laquelle on la
-            // bâtit. Un plan n'a pas à savoir dans quel mode il est joué.
-            val w = TargetRules.site(p.width)
-            val h = TargetRules.site(p.height)
-            val module = when (p.module) {
-                ModuleKind.TOWER -> TargetModules.tower(rng, x, w, h, p.material, budget)
-                ModuleKind.WALL -> TargetModules.curtainWall(rng, x, w, h, p.material, budget)
-                ModuleKind.HOUSE -> TargetModules.house(rng, x, w, h)
-                ModuleKind.PROPS -> TargetModules.props(rng, x, 0f, w, 2 + rng.nextInt(2))
-            }
-            if (module.isEmpty()) continue
-            blocks += module
-            // On avance d'après l'emprise **réelle** : le socle d'une tour déborde, et
-            // deux centimètres de chevauchement suffisent à faire s'entre-broyer deux
-            // modules dès la première image.
-            x = Structure(module).right + gap
+            SiteKind.FERME -> arrayOf(
+                TerrainShape.PLAINE, TerrainShape.COLLINE,
+                TerrainShape.CRETE, TerrainShape.TERRASSES
+            )
+
+            SiteKind.VILLAGE -> arrayOf(
+                TerrainShape.TERRASSES, TerrainShape.TERRASSES,
+                TerrainShape.PLAINE, TerrainShape.GRADINS, TerrainShape.VALLON
+            )
+
+            SiteKind.MOULIN -> arrayOf(
+                // Un moulin est sur une butte, c'est même à ça qu'on le reconnaît.
+                TerrainShape.MESA, TerrainShape.TERRASSES,
+                TerrainShape.CRETE, TerrainShape.PLAINE
+            )
+
+            SiteKind.BOURG -> arrayOf(
+                TerrainShape.TERRASSES, TerrainShape.TERRASSES,
+                TerrainShape.GRADINS, TerrainShape.MESA
+            )
+
+            SiteKind.CITE_ANTIQUE -> arrayOf(
+                TerrainShape.PLAINE, TerrainShape.TERRASSES,
+                TerrainShape.MESA, TerrainShape.CRETE
+            )
+
+            SiteKind.NECROPOLE -> arrayOf(
+                TerrainShape.PLAINE, TerrainShape.TERRASSES,
+                TerrainShape.GRADINS, TerrainShape.MESA
+            )
+
+            SiteKind.DONJON -> arrayOf(
+                TerrainShape.MESA, TerrainShape.PLAINE,
+                TerrainShape.CRETE, TerrainShape.COLLINE
+            )
+
+            SiteKind.CHATEAU -> arrayOf(
+                TerrainShape.MESA, TerrainShape.CRETE,
+                TerrainShape.PLAINE, TerrainShape.COLLINE
+            )
         }
-        return Structure(blocks, kind.name.lowercase())
+        return choix[rng.nextInt(choix.size)]
     }
 
-    private enum class ModuleKind { TOWER, WALL, HOUSE, PROPS }
+    // ── Le plan ───────────────────────────────────────────────────────────────
+
+    /**
+     * Dessine un site entier avec son relief, le premier plateau commençant à zéro.
+     *
+     * L'ordre compte : on ne peut pas demander un plateau avant de savoir ce qui va
+     * dessus, et on ne peut pas bâtir avant de savoir à quelle altitude on bâtit. On
+     * estime donc d'abord l'emprise de chaque groupe, on demande le relief, puis on
+     * bâtit pour de bon en soulevant chaque groupe sur son plateau.
+     */
+    private fun draw(
+        rng: Random,
+        kind: SiteKind,
+        shape: TerrainShape,
+        distance: Float
+    ): Pair<Structure, Terrain> {
+        val groupes = plan(rng, kind)
+        val total = groupes.sumOf { it.size }.coerceAtLeast(1)
+        val budget = (TargetRules.BODY_BUDGET / total).coerceAtLeast(10)
+
+        // L'emprise **estimée** d'un groupe : la somme des largeurs du plan, plus les
+        // écarts, plus une marge. Un module rend souvent un peu plus large que ce qu'on
+        // lui a demandé — le socle d'une tour déborde, les ailes d'un moulin encore
+        // plus — et un plateau trop juste ferait poser un pied dans le vide.
+        val emprises = groupes.map { groupe ->
+            var w = 0f
+            for (p in groupe) w += TargetRules.site(p.width) + gap
+            (w * 1.12f + TargetRules.site(1.5f)).coerceAtLeast(TargetRules.site(3f))
+        }
+
+        // La longueur de terrain réservée devant le site : c'est là qu'une colline a le
+        // droit de se dresser. On en prend une bonne part du trajet, sans jamais
+        // remonter jusque sous la machine.
+        val approche = (distance * 0.45f).coerceIn(60f, 180f)
+        val relief = Terrain.plan(rng, shape, emprises, approche)
+
+        val blocks = ArrayList<Block>()
+        for ((gi, groupe) in groupes.withIndex()) {
+            val pad = relief.pads.getOrNull(gi) ?: continue
+            var x = pad.left
+            for (p in groupe) {
+                // Le plan est écrit en mètres réels — une maison de cinq mètres, une
+                // tour de douze — et c'est le tempérament qui décide de la taille à
+                // laquelle on la bâtit. Un plan n'a pas à savoir dans quel mode il est
+                // joué.
+                val w = TargetRules.site(p.width)
+                val h = TargetRules.site(p.height)
+                val module = build(rng, p, x, w, h, budget)
+                if (module.isEmpty()) continue
+                // On soulève le module sur son plateau. C'est tout ce que le relief
+                // coûte à la maçonnerie : une translation.
+                for (b in module) blocks += b.translated(0f, pad.y)
+                // Et on avance d'après l'emprise **réelle** : deux centimètres de
+                // chevauchement suffisent à faire s'entre-broyer deux modules dès la
+                // première image.
+                x = Structure(module).right + gap
+            }
+        }
+        return Structure(blocks, kind.name.lowercase()) to relief.terrain
+    }
+
+    /** Pose un module d'après sa fiche. */
+    private fun build(
+        rng: Random,
+        slot: Slot,
+        x: Float,
+        w: Float,
+        h: Float,
+        budget: Int
+    ): List<Block> = when (slot.module) {
+        ModuleKind.TOWER -> TargetModules.tower(rng, x, w, h, slot.material, budget)
+        ModuleKind.WALL -> TargetModules.curtainWall(rng, x, w, h, slot.material, budget)
+        ModuleKind.HOUSE -> TargetModules.house(rng, x, w, h)
+        ModuleKind.PROPS -> TargetModules.props(rng, x, 0f, w, 2 + rng.nextInt(2))
+        ModuleKind.WINDMILL -> TargetModules.windmill(rng, x, w, h, slot.material)
+        ModuleKind.PYRAMID -> TargetModules.pyramid(rng, x, w, h, slot.material, budget)
+        ModuleKind.ARENA -> TargetModules.arena(rng, x, w, h, slot.material, budget)
+        ModuleKind.TEMPLE -> TargetModules.temple(rng, x, w, h, slot.material)
+        ModuleKind.AQUEDUCT -> TargetModules.aqueduct(rng, x, w, h, slot.material)
+        ModuleKind.GRANARY -> TargetModules.granary(rng, x, w, h)
+        ModuleKind.INSULA -> TargetModules.insula(rng, x, w, h, slot.material)
+        ModuleKind.BARN -> TargetModules.barn(rng, x, w, h)
+        ModuleKind.PALISADE -> TargetModules.palisade(rng, x, w, h)
+    }
+
+    private enum class ModuleKind {
+        TOWER, WALL, HOUSE, PROPS,
+        WINDMILL, PYRAMID, ARENA, TEMPLE, AQUEDUCT, GRANARY, INSULA, BARN, PALISADE
+    }
 
     private class Slot(
         val module: ModuleKind,
@@ -164,58 +333,195 @@ object TargetGenerator {
     )
 
     /**
-     * La liste des modules d'un site, dans l'ordre.
+     * Les groupes de modules d'un site, dans l'ordre.
      *
      * C'est ici que se joue la **silhouette**, et elle est écrite à la main plutôt que
      * tirée au sort : une enfilade aléatoire donne un profil en dents de scie qui ne
      * ressemble à rien. Un château a ses tours aux extrémités et son corps de logis au
      * milieu ; un hameau est bas et régulier ; un donjon est un pic.
+     *
+     * **Un groupe est une unité de terrain.** Tout ce qui est dans le même groupe
+     * partage un plateau, et se touche donc du coude ; deux groupes sont séparés par un
+     * talus, une falaise, ou simplement du terrain plat. Un château est un seul groupe
+     * parce qu'un château est un seul bâtiment ; un village en compte autant qu'il a de
+     * maisons, et c'est ce qui lui donne son escalier.
      */
-    private fun plan(rng: Random, kind: SiteKind): List<Slot> {
+    private fun plan(rng: Random, kind: SiteKind): List<List<Slot>> {
         fun between(a: Float, b: Float) = a + rng.nextFloat() * (b - a)
         val stone = if (rng.nextFloat() < 0.25f) Material.COB else Material.STONE
 
         return when (kind) {
             SiteKind.HAMEAU -> {
                 val n = 2 + rng.nextInt(3)
-                (0 until n).map {
-                    Slot(ModuleKind.HOUSE, between(4f, 7f), between(5.5f, 9f))
-                } + Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                val groupes = ArrayList<List<Slot>>(n)
+                for (i in 0 until n) {
+                    val maison = Slot(ModuleKind.HOUSE, between(4f, 7f), between(5.5f, 9f))
+                    // Le dernier hameau a ses tonneaux : c'est le seul du site à rouler.
+                    groupes += if (i == n - 1) {
+                        listOf(maison, Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f))
+                    } else {
+                        listOf(maison)
+                    }
+                }
+                groupes
             }
 
             SiteKind.FERME -> listOf(
-                Slot(ModuleKind.WALL, between(5f, 8f), between(4f, 6f), stone),
-                Slot(ModuleKind.HOUSE, between(4.5f, 6.5f), between(6f, 8.5f)),
-                Slot(ModuleKind.TOWER, between(3f, 4f), between(8f, 12f), stone),
-                Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                listOf(
+                    Slot(ModuleKind.WALL, between(5f, 8f), between(4f, 6f), stone),
+                    Slot(ModuleKind.HOUSE, between(4.5f, 6.5f), between(6f, 8.5f))
+                ),
+                listOf(
+                    Slot(ModuleKind.BARN, between(7f, 10f), between(5f, 6.5f), Material.WOOD),
+                    Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                ),
+                listOf(Slot(ModuleKind.TOWER, between(3f, 4f), between(8f, 12f), stone))
             )
 
             SiteKind.CHATEAU -> {
                 val hauteurTours = between(11f, 16f)
                 val hauteurMurs = hauteurTours * between(0.5f, 0.68f)
-                listOf(
+                // Un château est un seul bâtiment : un seul plateau. Ce qui varie, c'est
+                // ce qu'on lui met devant — une basse-cour, sur son propre palier.
+                val corps = listOf(
                     Slot(ModuleKind.TOWER, between(3.5f, 4.5f), hauteurTours, stone),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
                     Slot(ModuleKind.HOUSE, between(4.5f, 6f), hauteurMurs + between(0f, 2f)),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
                     Slot(ModuleKind.TOWER, between(4f, 5f), hauteurTours + between(1f, 4f), stone)
                 )
+                if (rng.nextFloat() < 0.6f) {
+                    listOf(
+                        listOf(
+                            Slot(ModuleKind.PALISADE, between(6f, 9f), between(3f, 4.5f)),
+                            Slot(ModuleKind.BARN, between(6f, 8f), between(4.5f, 6f))
+                        ),
+                        corps
+                    )
+                } else {
+                    listOf(corps)
+                }
             }
 
             SiteKind.DONJON -> listOf(
-                Slot(ModuleKind.WALL, between(4f, 7f), between(3.5f, 5f), stone),
-                Slot(ModuleKind.TOWER, between(4.5f, 6f), between(15f, 22f), stone),
-                Slot(ModuleKind.WALL, between(4f, 7f), between(3.5f, 5f), stone),
-                Slot(ModuleKind.PROPS, between(1.5f, 2.5f), 0f)
+                listOf(
+                    Slot(ModuleKind.WALL, between(4f, 7f), between(3.5f, 5f), stone),
+                    Slot(ModuleKind.TOWER, between(4.5f, 6f), between(15f, 22f), stone),
+                    Slot(ModuleKind.WALL, between(4f, 7f), between(3.5f, 5f), stone),
+                    Slot(ModuleKind.PROPS, between(1.5f, 2.5f), 0f)
+                )
             )
+
+            SiteKind.VILLAGE -> {
+                val groupes = ArrayList<List<Slot>>(4)
+                groupes += listOf(
+                    Slot(ModuleKind.PALISADE, between(5f, 9f), between(2.5f, 4f)),
+                    Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                )
+                groupes += listOf(
+                    Slot(ModuleKind.HOUSE, between(4.5f, 6.5f), between(6f, 9f)),
+                    Slot(ModuleKind.HOUSE, between(4f, 6f), between(5.5f, 8f))
+                )
+                groupes += listOf(Slot(ModuleKind.BARN, between(8f, 12f), between(5f, 7f)))
+                groupes += if (rng.nextBoolean()) {
+                    listOf(Slot(ModuleKind.GRANARY, between(4.5f, 6.5f), between(7f, 10f)))
+                } else {
+                    listOf(
+                        Slot(ModuleKind.HOUSE, between(4.5f, 6f), between(6f, 8f)),
+                        Slot(ModuleKind.PROPS, between(1.5f, 2.5f), 0f)
+                    )
+                }
+                groupes
+            }
+
+            SiteKind.MOULIN -> listOf(
+                listOf(
+                    Slot(ModuleKind.BARN, between(7f, 10f), between(5f, 6.5f)),
+                    Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                ),
+                listOf(Slot(ModuleKind.GRANARY, between(4.5f, 6f), between(7f, 9.5f))),
+                // Le moulin tout en haut : c'est la pièce à faire tomber, et de tous les
+                // modules du jeu c'est celui dont la chute se voit de plus loin.
+                listOf(Slot(ModuleKind.WINDMILL, between(4f, 5.5f), between(12f, 17f), stone))
+            )
+
+            SiteKind.BOURG -> {
+                // Le croquis, à la lettre : un bâtiment par palier, du plus bas au plus
+                // haut, et de moins en moins de bois à mesure qu'on monte.
+                val groupes = ArrayList<List<Slot>>(4)
+                groupes += listOf(
+                    Slot(ModuleKind.HOUSE, between(4f, 5.5f), between(7f, 10f)),
+                    Slot(ModuleKind.HOUSE, between(4f, 5.5f), between(7f, 10f))
+                )
+                groupes += listOf(Slot(ModuleKind.HOUSE, between(6f, 8f), between(8f, 11f)))
+                groupes += listOf(Slot(ModuleKind.GRANARY, between(5f, 7f), between(9f, 12f)))
+                groupes += listOf(
+                    Slot(ModuleKind.INSULA, between(3.5f, 5f), between(9f, 13f), Material.STONE),
+                    Slot(ModuleKind.INSULA, between(3.5f, 5f), between(9f, 13f), Material.STONE)
+                )
+                groupes
+            }
+
+            SiteKind.CITE_ANTIQUE -> {
+                val gres = if (rng.nextBoolean()) Material.SANDSTONE else Material.STONE
+                listOf(
+                    listOf(
+                        Slot(ModuleKind.AQUEDUCT, between(10f, 14f), between(9f, 13f), Material.STONE)
+                    ),
+                    listOf(
+                        Slot(ModuleKind.TEMPLE, between(9f, 13f), between(8f, 11f), gres),
+                        Slot(ModuleKind.PROPS, between(1.5f, 2.5f), 0f)
+                    ),
+                    listOf(
+                        Slot(ModuleKind.ARENA, between(13f, 18f), between(8f, 12f), Material.STONE)
+                    )
+                )
+            }
+
+            SiteKind.NECROPOLE -> {
+                val n = 2 + rng.nextInt(2)
+                val groupes = ArrayList<List<Slot>>(n + 1)
+                for (i in 0 until n) {
+                    val w = between(9f, 14f)
+                    groupes += listOf(
+                        Slot(ModuleKind.PYRAMID, w, w * between(0.6f, 0.78f), Material.SANDSTONE)
+                    )
+                }
+                groupes += listOf(
+                    Slot(ModuleKind.TEMPLE, between(8f, 11f), between(7f, 10f), Material.SANDSTONE),
+                    Slot(ModuleKind.PROPS, between(1.5f, 2.5f), 0f)
+                )
+                groupes
+            }
         }
     }
 
     /** Un nom lisible, pour l'écran de fin de niveau. */
-    fun label(level: TargetLevel): String = when (level.kind) {
-        SiteKind.HAMEAU -> "Hameau"
-        SiteKind.FERME -> "Ferme fortifiée"
-        SiteKind.CHATEAU -> "Château"
-        SiteKind.DONJON -> "Donjon"
-    } + " · ${level.distance.roundToInt()} m"
+    fun label(level: TargetLevel): String = buildString {
+        append(
+            when (level.kind) {
+                SiteKind.HAMEAU -> "Hameau"
+                SiteKind.FERME -> "Ferme fortifiée"
+                SiteKind.CHATEAU -> "Château"
+                SiteKind.DONJON -> "Donjon"
+                SiteKind.VILLAGE -> "Village"
+                SiteKind.MOULIN -> "Moulin"
+                SiteKind.BOURG -> "Bourg étagé"
+                SiteKind.CITE_ANTIQUE -> "Cité antique"
+                SiteKind.NECROPOLE -> "Nécropole"
+            }
+        )
+        // Le relief ne se dit que quand il change quelque chose au tir : annoncer « en
+        // plaine » à chaque niveau plat serait du bruit.
+        when (level.shape) {
+            TerrainShape.PLAINE -> Unit
+            TerrainShape.TERRASSES -> append(" en terrasses")
+            TerrainShape.GRADINS -> append(" en gradins")
+            TerrainShape.COLLINE -> append(" derrière la colline")
+            TerrainShape.MESA -> append(" sur la butte")
+            TerrainShape.VALLON -> append(" au fond du vallon")
+            TerrainShape.CRETE -> append(" derrière la crête")
+        }
+        append(" · ${level.distance.roundToInt()} m")
+    }
 }

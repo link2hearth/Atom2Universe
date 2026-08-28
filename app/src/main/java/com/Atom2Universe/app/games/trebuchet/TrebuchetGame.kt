@@ -527,6 +527,25 @@ class TrebuchetGame {
     var phase = Phase.BUILD
         private set
 
+    /**
+     * Le relief du niveau en cours : plat en bac à sable, dessiné par la graine sinon.
+     *
+     * Il n'appartient pas au monde physique — c'est une **description**, et c'est elle
+     * qui fait autorité. Le monde en tire ses corps immobiles à chaque remontage de la
+     * machine, la vue en tire sa ligne d'horizon, et le jeu lui demande où est le sol
+     * quand il veut savoir si le boulet a touché. Un seul profil, trois lecteurs, et
+     * aucun risque qu'ils racontent trois histoires différentes.
+     */
+    var terrain: Terrain = Terrain.FLAT
+        private set
+
+    /** Les corps immobiles qui portent le monde. Refaits à chaque remontage. */
+    private val groundBodies = ArrayList<PhysBody>(12)
+
+    /**
+     * Le sol sous le pied de la machine. Le tablier est toujours plat, et à zéro : la
+     * machine se règle sur un terrain qu'elle connaît, quel que soit le relief devant.
+     */
     lateinit var ground: PhysBody
         private set
     lateinit var beam: PhysBody
@@ -766,17 +785,13 @@ class TrebuchetGame {
         world.windX = wind.vx
         world.windY = wind.vy
 
-        val half = (TrebuchetRules.GROUND_RIGHT - TrebuchetRules.GROUND_LEFT) / 2f
-        ground = PhysBody(half, 1f, 0f).apply {
-            x = TrebuchetRules.GROUND_LEFT + half
-            y = -1f
-            lockPosition = true
-            lockRotation = true
-            friction = 0.55f
-            category = CAT_GROUND
-            refreshMass()
-        }
-        world.add(ground)
+        // Le relief, en corps immobiles. Une dalle par palier, une boîte tournée par
+        // talus, rien du tout pour une falaise — et sur un terrain plat, un seul corps,
+        // exactement comme avant que le relief n'existe.
+        groundBodies.clear()
+        groundBodies += terrain.bodies(friction = 0.55f)
+        for (b in groundBodies) world.add(b)
+        ground = groundBodies.first()
 
         // Le pied : un corps immobile qui sert d'axe. Le bâti dessiné en dessous est
         // décoratif, c'est ce petit corps-ci qui tient le bras.
@@ -934,6 +949,10 @@ class TrebuchetGame {
     fun loadLevel(seed: Long) {
         val lvl = TargetGenerator.generate(seed)
         level = lvl
+        // Le relief se pose **avant** le remontage : c'est lui qui décide des corps
+        // immobiles du monde, et [build] les fabrique.
+        terrain = lvl.terrain
+        effects.groundAt = { x -> lvl.terrain.heightAt(x) }
         build()
         targets.load(lvl.structure)
         shotCount = 0
@@ -946,6 +965,9 @@ class TrebuchetGame {
     fun clearLevel() {
         level = null
         targets.clear()
+        // Le bac à sable sert à mesurer une machine : on lui rend son terrain plat.
+        terrain = Terrain.FLAT
+        effects.groundAt = { 0f }
         build()
         // Pas de site, pas de vent : le bac à sable sert à mesurer une machine, et une
         // mesure ne se fait pas dans le courant d'air.
@@ -1140,8 +1162,11 @@ class TrebuchetGame {
         //
         // On n'attend pas non plus que la machine s'immobilise : le bras balance au
         // bout de sa chape pendant de longues secondes après le tir.
+        // « Touché » se lit par rapport au sol **de cet endroit-là**. Avec un relief,
+        // un boulet qui se pose sur un plateau à quinze mètres n'atteindra jamais
+        // l'altitude zéro, et le tir ne se terminerait pas.
         val landed = ballFree &&
-            ball.y <= ball.boundingRadius + 0.03f &&
+            ball.y <= terrain.heightAt(ball.x) + ball.boundingRadius + 0.03f &&
             ball.vy <= 0f
         if (landed && shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
 

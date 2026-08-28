@@ -29,17 +29,19 @@ class TrebuchetStyleTest {
         TargetRules.style = TargetStyle.ARCADE
     }
 
-    private fun world(): PhysWorld = PhysWorld().apply {
+    /**
+     * Un monde vide posé sur un relief — plat par défaut, celui du niveau quand on en
+     * charge un.
+     *
+     * Depuis que les sites s'étagent, charger une construction sur un sol plat n'est
+     * plus une simplification : c'est un contresens. Un bourg en terrasses bâti à
+     * quinze mètres d'altitude tomberait de quinze mètres au premier pas, et le test
+     * conclurait qu'il s'est affaissé tout seul — ce qui serait vrai, et n'aurait rien
+     * à voir avec ce qu'on voulait mesurer.
+     */
+    private fun world(terrain: Terrain = Terrain.FLAT): PhysWorld = PhysWorld().apply {
         iterations = 16
-        add(
-            PhysBody(400f, 1f, 0f).apply {
-                x = 0f; y = -1f
-                lockPosition = true; lockRotation = true
-                friction = 0.7f
-                category = TrebuchetCategory.GROUND
-                refreshMass()
-            }
-        )
+        for (b in terrain.bodies(friction = 0.7f)) add(b)
     }
 
     private fun PhysWorld.fireBall(x: Float, y: Float, speed: Float): PhysBody {
@@ -241,9 +243,12 @@ class TrebuchetStyleTest {
         for (seed in 1L..8L) {
             val lvl = TargetGenerator.generate(seed)
             // On rapproche le site de l'origine : un monde qui commence à cinq cents
-            // mètres ne prouve rien de plus et coûte de la précision.
-            val s = lvl.structure.translated(-lvl.distance + 20f)
-            val w = world()
+            // mètres ne prouve rien de plus et coûte de la précision. Le relief fait le
+            // même chemin — c'est lui qui porte la construction.
+            val dx = -lvl.distance + 20f
+            val s = lvl.structure.translated(dx)
+            val sol = lvl.terrain.translated(dx)
+            val w = world(sol)
             val f = TargetField(w)
             f.load(s)
             repeat(240) { w.stepFrame(1f / 60f); f.update(1f / 60f) }
@@ -252,7 +257,7 @@ class TrebuchetStyleTest {
                     "abîmé ${"%.1f".format(f.brokenRatio * 100)}%, crête " +
                     "${"%.2f".format(f.ruinHeight())} pour ${"%.2f".format(s.baseHeight)} m"
             )
-            assertTrue("graine $seed : ${s.problems()}", s.problems().isEmpty())
+            assertTrue("graine $seed : ${s.problems(sol)}", s.problems(sol).isEmpty())
             assertEquals(
                 "graine $seed : le site s'est abîmé tout seul",
                 0f, f.brokenRatio, 1e-4f

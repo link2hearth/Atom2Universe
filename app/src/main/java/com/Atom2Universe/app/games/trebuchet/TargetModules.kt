@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.trebuchet
 
+import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.ceil
 import kotlin.math.hypot
@@ -188,6 +189,66 @@ object Masonry {
         return out
     }
 
+    /**
+     * Une rangée de pierres d'appareil découpée en **exactement** [cols] morceaux.
+     *
+     * C'est le geste que [wall] ne sait pas faire, et il manquait dès qu'un module a
+     * besoin d'un nombre précis de pièces : un linteau d'arcade doit avoir une pierre
+     * par travée, un gradin de pyramide doit rétrécir avec elle. [wall] décide seule
+     * de son découpage à partir d'une taille de pierre, ce qui est exactement ce qu'on
+     * veut pour un mur et exactement ce qu'on ne veut pas ici.
+     *
+     * Une seule assise de haut : c'est un lit de pierres, pas un mur. Qui en veut
+     * plusieurs les empile.
+     */
+    fun band(
+        material: Material,
+        left: Float,
+        bottom: Float,
+        width: Float,
+        height: Float,
+        cols: Int = 1,
+        role: Role = Role.STRUCTURE
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 0.05f || height <= 0.05f) return out
+        val n = cols.coerceAtLeast(1)
+        val w = width / n
+        val j = TargetRules.JOINT
+        for (i in 0 until n) {
+            if (w <= 2f * j) continue
+            out += Block.laid(material, left + i * w + j / 2f, bottom, w - j, height, role)
+        }
+        return out
+    }
+
+    /**
+     * Une colonne : un fût d'un seul corps, mais **taillé en tambours**.
+     *
+     * C'est le bloc composé dans son meilleur emploi. Debout, la colonne est
+     * parfaitement rigide — elle ne tremble pas, ne se tasse pas, ne coûte qu'un corps
+     * au moteur. Le jour où elle prend un boulet, elle ne disparaît pas : elle
+     * s'égrène en ses tambours, qui roulent et s'entassent. Une colonne de temple
+     * abattue ressemble alors à une colonne de temple abattue, et ça n'a rien coûté.
+     */
+    fun column(
+        material: Material,
+        centerX: Float,
+        bottom: Float,
+        width: Float,
+        height: Float,
+        drums: Int = 3
+    ): Block {
+        val n = drums.coerceAtLeast(1)
+        val h = height / n
+        val j = TargetRules.JOINT
+        return Block.compound(material, centerX, bottom + height / 2f) {
+            for (k in 0 until n) {
+                box((width - j) / 2f, (h - j) / 2f, 0f, (k - (n - 1) / 2f) * h)
+            }
+        }
+    }
+
     /** Un poteau de charpente, debout. */
     fun post(material: Material, centerX: Float, bottom: Float, width: Float, height: Float): Block =
         Block.laid(material, centerX - width / 2f, bottom, width - TargetRules.JOINT, height)
@@ -247,6 +308,9 @@ object TargetModules {
      * lui-même quand il veut une pièce maîtresse plus détaillée que les autres.
      */
     const val DEFAULT_MODULE_BUDGET = 45
+
+    /** Un huitième de tour : l'inclinaison d'une aile de moulin. */
+    private val QUART = (PI / 4.0).toFloat()
 
     /**
      * **La courtine** : un rempart plein, couronné de merlons.
@@ -437,6 +501,517 @@ object TargetModules {
                 .coerceAtMost(step / 2f - TargetRules.JOINT)
                 .coerceAtLeast(TargetRules.MIN_HALF_THICKNESS)
             out += Block.circle(material, left + step * (i + 0.5f), bottom + r, r, Role.PROP)
+        }
+        return out
+    }
+
+    // ── Le second catalogue : ce qui n'est ni un mur, ni une tour, ni une maison ──
+    //
+    // Les quatre premières pièces suffisaient à faire un château, et pas grand-chose
+    // d'autre. Celles qui suivent existent pour que deux sites de suite ne se
+    // ressemblent pas, et chacune est arrivée avec sa propre façon de tomber — c'est
+    // le seul critère qui vaille : un module qui s'écroule comme un autre est du décor
+    // repeint, pas une pièce de plus.
+
+    /**
+     * **Le moulin à vent** : une tour tronconique, une galerie, et un chapeau qui porte
+     * les ailes.
+     *
+     * Tout l'intérêt tient dans le dernier bloc. Le chapeau et sa croix d'ailes sont
+     * **un seul corps**, simplement posé sur la tour : rien ne l'y attache, et sa
+     * masse est haut perchée. Un boulet qui passe à ras du sommet, ou une tour qu'on
+     * fait vibrer par le pied, et la croix part par-dessus bord en tournant — puis se
+     * rompt en trois morceaux, le chapeau et les deux ailes.
+     *
+     * C'est aussi le seul module dont la silhouette dépasse largement son emprise :
+     * les ailes débordent de la tour, et le plateau qui le porte doit en tenir compte.
+     */
+    fun windmill(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.STONE
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 0.5f || height <= 0.5f) return out
+        val galerieH = TargetRules.detail(0.5f)
+        // L'envergure des ailes se déduit de la tour, et la hauteur qu'elles réclament
+        // au-dessus du chapeau vaut leur demi-envergure. On la réserve d'abord : une
+        // tour qui mangerait toute la hauteur donnerait un moulin sans ailes.
+        val demiAile = width * 0.6f
+        val reserve = demiAile * 1.5f + galerieH
+        val futH = (height - reserve).coerceAtLeast(TargetRules.site(2.5f))
+
+        // Le fût, en trois sections qui rétrécissent : c'est ce qui fait lire « moulin »
+        // et non « tour ». Chaque section est un mur d'appareil ordinaire, plafonné à
+        // quatre corps de haut pour que les trois ensemble tiennent dans le budget de
+        // profondeur.
+        val sections = 3
+        val secH = futH / sections
+        for (i in 0 until sections) {
+            val t = i / sections.toFloat()
+            val w = width * (1f - 0.24f * t)
+            out += Masonry.wall(
+                material, left + (width - w) / 2f, i * secH, w, secH,
+                stoneWidth = 1.1f, stoneHeight = if (rng.nextBoolean()) 0.5f else 0.6f,
+                stackBudget = 4, bodyBudget = 14
+            )
+        }
+
+        // La galerie : un lit débordant, celui sur lequel le meunier fait le tour de sa
+        // machine. Il donne au chapeau une assise plus large que le sommet du fût.
+        val sommetW = width * (1f - 0.24f * (sections - 1) / sections.toFloat())
+        val galerieW = sommetW + TargetRules.detail(1.2f)
+        out += Masonry.band(
+            material, left + (width - galerieW) / 2f, futH, galerieW, galerieH, cols = 2
+        )
+
+        // Le chapeau et ses ailes, d'un seul tenant.
+        val chapeauW = sommetW * 0.95f
+        val chapeauH = TargetRules.detail(0.55f)
+        val epaisseur = TargetRules.detail(0.3f)
+        // Le moyeu est assez haut pour que les deux ailes du bas ne plongent pas dans
+        // le chapeau : elles sont dans le même corps, elles ne se repousseraient donc
+        // pas — elles feraient un moulin difforme, ce qui est pire.
+        val moyeu = chapeauH / 2f + demiAile * 0.75f
+        val cx = left + width / 2f
+        out += Block.compound(Material.WOOD, cx, futH + galerieH + chapeauH / 2f) {
+            box(chapeauW / 2f, chapeauH / 2f, 0f, 0f)
+            box(epaisseur / 2f, (moyeu - chapeauH / 2f) / 2f, 0f, (moyeu + chapeauH / 2f) / 2f)
+            box(demiAile, epaisseur / 2f, 0f, moyeu, QUART)
+            box(demiAile, epaisseur / 2f, 0f, moyeu, -QUART)
+        }
+        return out
+    }
+
+    /**
+     * **La pyramide de grès** : des gradins de moins en moins larges, et rien d'autre.
+     *
+     * C'est le module le plus stable du jeu, et c'est tout son propos : il n'y a rien à
+     * renverser. Une pyramide ne se gagne qu'en cassant, gradin par gradin, ce qui en
+     * fait le contraire exact de la courtine — laquelle se gagne d'un seul bon coup au
+     * pied. Un site qui mélange les deux demande deux façons de tirer.
+     */
+    fun pyramid(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.SANDSTONE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 0.5f || height <= 0.5f) return out
+        val gradins = (height / TargetRules.stone(1.3f)).roundToInt().coerceIn(4, 8)
+        val gradinH = height / gradins
+        // Ce que chaque gradin s'autorise en pierres, sachant qu'il y en a plusieurs et
+        // que les hauts sont plus étroits que les bas.
+        val parGradin = (bodyBudget / gradins).coerceIn(1, 5)
+        for (i in 0 until gradins) {
+            val t = i / gradins.toFloat()
+            val w = width * (1f - 0.84f * t)
+            val cols = (w / TargetRules.stone(2f)).roundToInt().coerceIn(1, parGradin)
+            out += Masonry.band(material, left + (width - w) / 2f, i * gradinH, w, gradinH, cols)
+        }
+        // Le pyramidion, une seule pierre : c'est ce qui donne la pointe, et c'est aussi
+        // ce qui tombe en premier.
+        val pointe = width * 0.16f + TargetRules.JOINT
+        out += Block.laid(
+            material, left + (width - pointe) / 2f, gradins * gradinH, pointe, gradinH * 0.9f
+        )
+        return out
+    }
+
+    /**
+     * **L'amphithéâtre** : deux ou trois étages d'arcades, chacun un peu en retrait du
+     * précédent.
+     *
+     * Il se détruit comme une maison en beaucoup plus grand : ce sont les piles qui
+     * portent tout, et une pile qui saute fait descendre l'arcade au-dessus d'elle, qui
+     * emporte l'étage suivant. Un tir bien placé au pied ouvre une brèche qui monte
+     * toute seule jusqu'en haut — le seul module du jeu où la ruine se propage vers le
+     * ciel.
+     */
+    fun arena(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.STONE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 1f || height <= 1f) return out
+        val etages = if (height > TargetRules.site(8f)) 3 else 2
+        val bandeH = TargetRules.detail(0.75f)
+        val etageH = height / etages
+        var y = 0f
+        var l = left
+        var w = width
+        for (e in 0 until etages) {
+            val travees = (w / TargetRules.site(3.4f)).roundToInt().coerceIn(2, 5)
+            val piles = travees + 1
+            // Une pile jamais deux fois plus haute que large : au-delà elle bascule
+            // toute seule avant que l'arcade ne soit posée dessus.
+            val pileW = (w / travees * 0.42f).coerceAtLeast(TargetRules.detail(0.5f))
+            val pileH = (etageH - bandeH).coerceAtLeast(TargetRules.site(1f))
+            out += arcade(material, l, y, w, pileH, bandeH, piles, pileW)
+            y += pileH + bandeH
+            val retrait = pileW * 0.6f
+            l += retrait
+            w -= 2f * retrait
+            if (w < TargetRules.site(2f)) break
+        }
+        // Le couronnement : un rang de merlons, qui s'égrène au premier tir un peu haut
+        // et dit au joueur qu'il a touché sans avoir encore percé.
+        if (w > TargetRules.site(1f)) {
+            out += Masonry.merlons(material, l, y, w, TargetRules.detail(0.7f))
+        }
+        return out
+    }
+
+    /**
+     * **Le temple** : un stylobate, une colonnade, une architrave et un fronton.
+     *
+     * Les colonnes sont des blocs composés en tambours ([Masonry.column]) : debout
+     * elles ne coûtent qu'un corps chacune et ne bronchent pas, abattues elles
+     * s'égrènent et roulent. C'est l'image qu'on cherchait, et elle est gratuite tant
+     * que le joueur ne l'a pas méritée.
+     *
+     * L'architrave ne va **que d'un axe de colonne au suivant**, et jamais jusqu'au
+     * bord : une pierre posée à cheval sur une seule colonne est une balance, et elle
+     * verse du côté où elle déborde avant même le premier tir.
+     */
+    fun temple(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.SANDSTONE
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 1f || height <= 1f) return out
+        val marcheH = TargetRules.detail(0.45f)
+        val archiH = TargetRules.detail(0.6f)
+        val nColonnes = (width / TargetRules.site(2.8f)).roundToInt().coerceIn(3, 7)
+
+        // Les deux marches du stylobate, la seconde en retrait.
+        val retrait = width * 0.04f
+        out += Masonry.band(material, left, 0f, width, marcheH, nColonnes - 1)
+        out += Masonry.band(
+            material, left + retrait, marcheH, width - 2f * retrait, marcheH, nColonnes - 1
+        )
+        val socle = 2f * marcheH
+
+        // Les colonnes. Leur élancement est plafonné : une colonne de temple réelle fait
+        // six diamètres de haut, et à ce compte-là elle tombe toute seule au tassement.
+        // Ce que la hauteur perd, le fronton le récupère.
+        val emprise = width - 2f * retrait
+        val pas = emprise / nColonnes
+        val colonneW = pas * 0.5f
+        val voulu = height - socle - archiH - width * 0.2f
+        val colonneH = voulu.coerceIn(TargetRules.site(1.5f), 3.2f * colonneW)
+        val axe0 = left + retrait + pas / 2f
+        for (i in 0 until nColonnes) {
+            out += Masonry.column(
+                material, axe0 + i * pas, socle, colonneW, colonneH,
+                drums = if (colonneH > TargetRules.site(3f)) 4 else 3
+            )
+        }
+
+        // L'architrave, d'axe en axe.
+        val hautColonnes = socle + colonneH
+        for (i in 0 until nColonnes - 1) {
+            val a = axe0 + i * pas
+            out += Block.laid(material, a, hautColonnes, pas - TargetRules.JOINT, archiH)
+        }
+        // Le fronton : une corniche horizontale et deux rampants, **d'un seul tenant**.
+        //
+        // La corniche n'est pas un ornement, c'est ce qui tient tout. Deux rampants
+        // seuls ne touchent l'architrave que par la pointe de leur pied, et ces deux
+        // pointes-là tombent hors de la colonnade — l'architrave s'arrête au dernier axe
+        // de colonne, le fronton déborde. Le premier temple bâti sans corniche perdait
+        // donc son fronton avant le premier tir : il n'était posé sur rien. Avec elle,
+        // il repose à plat sur toute la colonnade, et il se rompt en trois morceaux au
+        // lieu de deux.
+        val fronton = (height - hautColonnes - archiH)
+            .coerceIn(width * 0.12f, width * 0.32f)
+        val corniche = TargetRules.detail(0.32f)
+        val epaisseur = TargetRules.detail(0.3f)
+        val demi = width / 2f
+        val rampant = hypot(demi, fronton)
+        val pente = atan2(fronton, demi)
+        out += Block.compound(material, left + demi, hautColonnes + archiH + corniche / 2f) {
+            box(demi, corniche / 2f, 0f, 0f)
+            box(rampant / 2f, epaisseur / 2f, -demi / 2f, (corniche + fronton) / 2f, pente)
+            box(rampant / 2f, epaisseur / 2f, demi / 2f, (corniche + fronton) / 2f, -pente)
+        }
+        return out
+    }
+
+    /**
+     * **L'aqueduc** : un grand ordre d'arcades, un petit ordre par-dessus, et le canal
+     * tout en haut.
+     *
+     * Les deux ordres ne sont pas un ornement : **un seul rang d'arches se lit comme une
+     * colonnade**, et c'est ce qu'a donné la première version — quatre piles et un
+     * linteau, indiscernables d'un temple sans fronton. C'est le petit ordre, avec ses
+     * arches deux fois plus serrées, qui fait dire « aqueduc » d'un coup d'œil.
+     *
+     * C'est aussi le module qui profite le plus du relief : posé sur un plateau
+     * au-dessus d'un creux, il barre le ciel entre la machine et ce qu'il y a derrière,
+     * et le joueur doit décider s'il le perce ou s'il passe au-dessus.
+     */
+    fun aqueduct(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.STONE
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 1f || height <= 1f) return out
+        val travees = (width / TargetRules.site(4.5f)).roundToInt().coerceIn(2, 4)
+        val arcH = TargetRules.detail(0.7f)
+        val canalH = TargetRules.detail(0.6f)
+
+        // Le grand ordre prend les deux tiers de ce qui reste une fois le canal servi.
+        val utile = (height - canalH).coerceAtLeast(TargetRules.site(2f))
+        val petitH = (utile * 0.3f).coerceAtLeast(arcH + TargetRules.site(0.8f))
+        val grandH = (utile - petitH).coerceAtLeast(TargetRules.site(1.5f))
+
+        val grosPileW = (width / travees * 0.34f).coerceAtLeast(TargetRules.detail(0.7f))
+        out += arcade(material, left, 0f, width, grandH - arcH, arcH, travees + 1, grosPileW)
+
+        // Le petit ordre, en retrait de rien du tout : il porte le canal, il doit donc
+        // tomber d'aplomb sur le grand. Deux fois plus de travées, deux fois plus
+        // étroites, et des piles fines — c'est la seule chose que le joueur voie.
+        val menues = travees * 2
+        val petitePileW = (width / menues * 0.4f).coerceAtLeast(TargetRules.detail(0.45f))
+        out += arcade(
+            material, left, grandH, width, petitH - arcH, arcH, menues + 1, petitePileW
+        )
+
+        // Le canal : il repose sur les arcs, et il est **plein**. Un aqueduc percé perd
+        // son tablier d'un coup, ce qui est de très loin le plus bel effondrement du
+        // catalogue.
+        val axeG = left + petitePileW / 2f
+        val axeD = left + width - petitePileW / 2f
+        out += Masonry.band(material, axeG, grandH + petitH, axeD - axeG, canalH, cols = travees)
+        return out
+    }
+
+    /**
+     * **Le grenier sur pilotis** : une cave ouverte, un plancher épais, un étage clos,
+     * un toit.
+     *
+     * C'est le bâtiment du croquis, et c'est le plus fragile du lot : tout le poids de
+     * l'étage passe par quatre poteaux de bois. Un boulet dans les pilotis et la maison
+     * s'assied d'un bloc — c'est le seul module qu'on abat sans jamais toucher à ce
+     * qu'on veut détruire.
+     */
+    fun granary(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.WOOD
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 1f || height <= 1f) return out
+        val poteauW = TargetRules.detail(0.45f)
+        val plancherH = TargetRules.detail(0.5f)
+        val rise = (width * 0.34f).coerceIn(TargetRules.detail(0.9f), TargetRules.detail(2.4f))
+        val caveH = (height * 0.34f).coerceAtLeast(TargetRules.site(1.4f))
+        val etageH = (height - caveH - 2f * plancherH - rise).coerceAtLeast(TargetRules.site(1.2f))
+
+        // Les pilotis, et le coffre de la cave entre les deux du milieu.
+        val pilotis = if (width > TargetRules.detail(5f)) 4 else 3
+        for (i in 0 until pilotis) {
+            val cx = left + poteauW / 2f + i * (width - poteauW) / (pilotis - 1)
+            out += Masonry.post(material, cx, 0f, poteauW, caveH)
+        }
+        // Le coffre se pose **dans une travée**, entre deux pilotis voisins, et jamais
+        // à cheval sur ceux du milieu : deux corps qui se chevauchent à la pose se
+        // repoussent violemment dès la première image.
+        val travees = pilotis - 1
+        val pas = (width - poteauW) / travees
+        val coffreW = pas - poteauW - TargetRules.JOINT
+        if (rng.nextFloat() < 0.7f && coffreW > TargetRules.site(0.5f)) {
+            val travee = rng.nextInt(travees)
+            out += Block.laid(
+                Material.COB,
+                left + poteauW + travee * pas + TargetRules.JOINT, TargetRules.JOINT,
+                coffreW, (caveH * 0.65f).coerceAtMost(TargetRules.site(1.2f))
+            )
+        }
+        out += Masonry.beam(material, left, caveH, width, plancherH)
+
+        // L'étage : deux poteaux d'angle et un hourdis de torchis entre eux.
+        val basEtage = caveH + plancherH
+        out += Masonry.post(material, left + poteauW / 2f, basEtage, poteauW, etageH)
+        out += Masonry.post(material, left + width - poteauW / 2f, basEtage, poteauW, etageH)
+        val mur = width - 2f * poteauW
+        if (mur > TargetRules.site(0.6f)) {
+            out += Block.laid(
+                Material.COB, left + poteauW, basEtage + TargetRules.JOINT,
+                mur - TargetRules.JOINT, (etageH * 0.7f).coerceAtMost(1.3f)
+            )
+        }
+        out += Masonry.beam(material, left, basEtage + etageH, width, plancherH)
+        out += Masonry.roof(Material.THATCH, left, basEtage + etageH + plancherH, width, rise)
+        return out
+    }
+
+    /**
+     * **L'immeuble** : trois ou quatre lits de grosses pierres, et un toit.
+     *
+     * Le bâtiment de droite du croquis. Massif, sans poteau ni creux, il ne s'abat pas
+     * — il se **renverse**, d'un bloc, du côté d'où on l'a frappé, et ses lits
+     * dégringolent en escalier. C'est le module qui récompense le mieux un tir au pied,
+     * et celui qui pardonne le moins un tir au sommet : on n'y décoiffe qu'un toit.
+     */
+    fun insula(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.STONE
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 0.5f || height <= 0.5f) return out
+        val rise = (width * 0.42f).coerceIn(TargetRules.detail(0.9f), TargetRules.detail(2.6f))
+        val corps = (height - rise).coerceAtLeast(TargetRules.site(1.5f))
+        val lits = (corps / TargetRules.stone(1.5f)).roundToInt().coerceIn(2, 5)
+        val litH = corps / lits
+        val cols = if (width > TargetRules.stone(2.4f)) 2 else 1
+        for (i in 0 until lits) {
+            // Un lit sur deux en un seul morceau : c'est l'appareil, et sans lui le
+            // joint vertical courrait du sol au toit et l'immeuble se fendrait en deux.
+            out += Masonry.band(
+                material, left, i * litH, width, litH,
+                if (i % 2 == 1) maxOf(1, cols - 1) else cols
+            )
+        }
+        out += Masonry.roof(
+            if (rng.nextBoolean()) Material.THATCH else Material.WOOD,
+            left, corps, width, rise
+        )
+        return out
+    }
+
+    /**
+     * **La grange** : basse, large, et à peu près rien d'autre qu'un toit.
+     *
+     * Elle existe pour la silhouette. Un village fait de maisons toutes semblables se
+     * lit comme un peigne ; une grange couchée au milieu lui donne un profil. Et son
+     * toit immense, qui pèse plus que ce qui le porte, en fait la construction la plus
+     * rentable du jeu au boulet près : trois poteaux, et tout descend.
+     */
+    fun barn(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.WOOD
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 1f || height <= 1f) return out
+        val poteauW = TargetRules.detail(0.4f)
+        val beamH = TargetRules.detail(0.35f)
+        val rise = (width * 0.46f).coerceIn(TargetRules.detail(1.2f), height * 0.62f)
+        val murH = (height - rise - beamH).coerceAtLeast(TargetRules.site(1.2f))
+        val poteaux = (width / TargetRules.detail(3f)).roundToInt().coerceIn(3, 5)
+        for (i in 0 until poteaux) {
+            val cx = left + poteauW / 2f + i * (width - poteauW) / (poteaux - 1)
+            out += Masonry.post(material, cx, 0f, poteauW, murH)
+        }
+        // Un pignon de torchis dans une travée, tiré au sort : deux granges de suite ne
+        // se ressemblent pas, et ça donne au tir quelque chose à pulvériser.
+        val travees = poteaux - 1
+        val pas = (width - poteauW) / travees
+        val travee = rng.nextInt(travees)
+        val pignonW = pas - poteauW - TargetRules.JOINT
+        if (pignonW > TargetRules.site(0.5f)) {
+            out += Block.laid(
+                Material.COB,
+                left + poteauW + travee * pas + TargetRules.JOINT, TargetRules.JOINT,
+                pignonW, (murH * 0.75f).coerceAtMost(1.3f)
+            )
+        }
+        out += Masonry.beam(material, left, murH, width, beamH)
+        out += Masonry.roof(Material.THATCH, left, murH + beamH, width, rise)
+        return out
+    }
+
+    /**
+     * **La palissade** : des panneaux de pieux, plantés côte à côte.
+     *
+     * Un pieu isolé serait un domino de quatre mètres sur cinquante centimètres, et il
+     * tomberait tout seul avant le premier tir. Un **panneau** de six pieux est aussi
+     * large que haut, il tient sans broncher — et quand il rompt, il rompt en ses six
+     * pieux, ce qui est très exactement l'image qu'on voulait.
+     */
+    fun palisade(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.WOOD
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 0.5f) return out
+        val h = height.coerceAtLeast(TargetRules.site(1.5f))
+        val panneaux = (width / (h * 0.9f)).roundToInt().coerceAtLeast(1)
+        val panneauW = width / panneaux
+        val pieux = (panneauW / TargetRules.detail(0.55f)).roundToInt().coerceIn(3, 7)
+        val pieuW = panneauW / pieux
+        for (p in 0 until panneaux) {
+            val cx = left + (p + 0.5f) * panneauW
+            out += Block.compound(material, cx, h / 2f) {
+                for (k in 0 until pieux) {
+                    box(
+                        (pieuW - TargetRules.JOINT) / 2f, h / 2f,
+                        (k - (pieux - 1) / 2f) * pieuW, 0f
+                    )
+                }
+            }
+        }
+        return out
+    }
+
+    /**
+     * Une file de piles portant une file d'arcs, chaque arc allant **d'un axe de pile
+     * au suivant**.
+     *
+     * C'est le geste commun de l'amphithéâtre et de l'aqueduc, et il n'a l'air de rien
+     * jusqu'à ce qu'on le fasse de travers : un linteau qui déborde au-delà de la
+     * dernière pile est une balance qui verse dès la pose, et c'est la seule façon de
+     * rater une arcade.
+     */
+    private fun arcade(
+        material: Material,
+        left: Float,
+        bottom: Float,
+        width: Float,
+        pierHeight: Float,
+        bandHeight: Float,
+        piers: Int,
+        pierWidth: Float
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        val n = piers.coerceAtLeast(2)
+        val pas = (width - pierWidth) / (n - 1)
+        val axe0 = left + pierWidth / 2f
+        for (i in 0 until n) {
+            out += Masonry.post(material, axe0 + i * pas, bottom, pierWidth, pierHeight)
+        }
+        for (i in 0 until n - 1) {
+            out += Block.laid(
+                material, axe0 + i * pas, bottom + pierHeight,
+                pas - TargetRules.JOINT, bandHeight
+            )
         }
         return out
     }

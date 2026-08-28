@@ -81,28 +81,50 @@ class TrebuchetWindTest {
         assertTrue("le vent de face ne raccourcit pas le tir", face < calme - 5f)
     }
 
+    /**
+     * Ce qu'on mesure ici est une **dérive**, et il faut donc suivre chaque pierre et
+     * pas la place qu'elle occupait dans une liste : une pierre qui casse change tout
+     * l'ordre, et la comparaison rang par rang se met à mesurer la distance entre deux
+     * pierres différentes.
+     */
+    private fun derive(g: TrebuchetGame, vent: Float, seconds: Float): Float {
+        g.world.windX = vent
+        g.world.windY = 0f
+        val depart = g.targets.pieces.map { it.body to it.body.x }
+        g.release()
+        repeat((seconds * 60).toInt()) { g.step(1f / 60f) }
+        var pire = 0f
+        for ((corps, x0) in depart) pire = maxOf(pire, abs(corps.x - x0))
+        return pire
+    }
+
     @Test
     fun `un chateau ne s envole pas`() {
         TargetRules.style = TargetStyle.ARCADE
         val g = TrebuchetGame()
-        g.loadLevel(4L)
+        g.loadLevel(15L)
         // On force le pire vent possible, bien au-delà de ce que le jeu tire.
-        g.world.windX = 40f
-        g.world.windY = 0f
-        val f = g.targets
-        val avant = f.pieces.map { it.body.x }
-        g.release()
-        repeat(600) { g.step(1f / 60f) }
-        var pire = 0f
-        for ((i, p) in f.pieces.withIndex()) {
-            if (i >= avant.size) break
-            pire = maxOf(pire, abs(p.body.x - avant[i]))
-        }
+        val pire = derive(g, 40f, 10f)
         println("VENT château dans une tempête de 40 m/s : dérive maximale ${"%.2f".format(pire)} m")
         assertTrue("le château a pris le vent : $pire m", pire < 1f)
-        assertEquals("le château s'est abîmé tout seul", 0f, f.brokenRatio, 1e-4f)
+        assertEquals("le château s'est abîmé tout seul", 0f, g.targets.brokenRatio, 1e-4f)
     }
 
+    @Test
+    fun `un village de bois tient dans le vent que le jeu tire`() {
+        // La tempête de quarante mètres par seconde ci-dessus est un test de maçonnerie :
+        // elle vaut vingt fois la poussée du vent le plus fort que le jeu tire, et une
+        // charpente d'arcade — quatorze fois plus légère que le bois réel — s'envole
+        // pour de bon dedans. Ce qui doit tenir, c'est le vent **du jeu**, et c'est ce
+        // village-ci qui le vérifie : palissades, granges et toits de chaume compris.
+        TargetRules.style = TargetStyle.ARCADE
+        val g = TrebuchetGame()
+        g.loadLevel(4L)
+        val pire = derive(g, Wind.MAX_SPEED, 10f)
+        println("VENT village à ${Wind.MAX_SPEED} m/s : dérive maximale ${"%.2f".format(pire)} m")
+        assertTrue("le village a pris le vent : $pire m", pire < 1f)
+        assertEquals("le village s'est abîmé tout seul", 0f, g.targets.brokenRatio, 1e-4f)
+    }
     @Test
     fun `le vent emporte la fumee`() {
         val calme = TrebuchetEffects(4L)

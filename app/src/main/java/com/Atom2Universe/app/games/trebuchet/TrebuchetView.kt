@@ -312,6 +312,7 @@ class TrebuchetView @JvmOverloads constructor(
         "#7A6247".toColorInt(), // terre
         "#8B5E3C".toColorInt(), // bois
         "#9AA3AB".toColorInt(), // pierre
+        "#D3B076".toColorInt(), // grès
         "#54606B".toColorInt()  // fer
     ).map { c -> Paint(Paint.ANTI_ALIAS_FLAG).apply { color = c } }
 
@@ -322,6 +323,7 @@ class TrebuchetView @JvmOverloads constructor(
         "#584734".toColorInt(),
         "#5F3F28".toColorInt(),
         "#6E767D".toColorInt(),
+        "#A8874F".toColorInt(),
         "#39424A".toColorInt()
     ).map { c ->
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -446,6 +448,9 @@ class TrebuchetView @JvmOverloads constructor(
     private var bgShaderHeight = -1f
 
     private val tmpPath = Path()
+
+    /** Le profil du sol, refait à chaque image : il ne dépend que du cadrage. */
+    private val groundPath = Path()
 
     /** Un chemin par matériau, rempli à neuf à chaque image. */
     private val targetPaths = Array(targetFills.size) { Path() }
@@ -1261,33 +1266,66 @@ class TrebuchetView @JvmOverloads constructor(
         drawWindGauge(canvas, w)
     }
 
+    /**
+     * Le sol, du bord gauche de l'écran au bord droit.
+     *
+     * Sur un terrain plat, c'est le rectangle d'avant et rien d'autre. Sur un relief, on
+     * suit la ligne brisée du profil — **et seulement les nœuds visibles** : un terrain
+     * fait au plus une vingtaine de sommets, mais aucun n'a besoin d'être tracé s'il
+     * est à trois cents mètres hors du cadre. La ligne d'herbe se dessine par-dessus le
+     * même chemin, ce qui garantit qu'elle ne s'en décolle jamais.
+     */
     private fun drawGround(canvas: Canvas, w: Float, h: Float) {
-        val groundY = sy(0f)
-        if (groundY < h) {
-            canvas.drawRect(0f, groundY, w, h, pGround)
-            canvas.drawLine(0f, groundY, w, groundY, pGrass)
+        val terrain = game.terrain
+        val viewWidth = w / camScale
+        val leftWorld = camX - viewWidth / 2f
+        val rightWorld = camX + viewWidth / 2f
+
+        if (terrain.flat) {
+            val groundY = sy(terrain.heightAt(camX))
+            if (groundY < h) {
+                canvas.drawRect(0f, groundY, w, h, pGround)
+                canvas.drawLine(0f, groundY, w, groundY, pGrass)
+            }
+        } else {
+            groundPath.reset()
+            groundPath.moveTo(0f, sy(terrain.heightAt(leftWorld)))
+            for (n in terrain.nodes) {
+                if (n.x <= leftWorld || n.x >= rightWorld) continue
+                groundPath.lineTo(sx(n.x), sy(n.y))
+            }
+            groundPath.lineTo(w, sy(terrain.heightAt(rightWorld)))
+            // L'herbe d'abord, sur la ligne seule ; puis on referme le chemin vers le
+            // bas de l'écran pour le remplissage. Dans l'autre ordre, le trait d'herbe
+            // ferait le tour du remplissage et soulignerait les bords de l'écran.
+            canvas.drawPath(groundPath, pGrass)
+            groundPath.lineTo(w, h)
+            groundPath.lineTo(0f, h)
+            groundPath.close()
+            canvas.drawPath(groundPath, pGround)
+            canvas.drawPath(groundPath, pGrass)
         }
 
         // Graduations à partir du pied de la machine. Le pas s'élargit quand on
         // recule : à trois cents mètres, une borne tous les dix mètres serait une
         // bouillie de traits.
         pTickLabel.textSize = 11f * dp
-        val viewWidth = w / camScale
         val step = when {
             viewWidth > 180f -> 50f
             viewWidth > 70f -> 25f
             else -> 10f
         }
-        val leftWorld = camX - viewWidth / 2f
-        val rightWorld = camX + viewWidth / 2f
         var d = 0f
         while (TrebuchetRules.FIRING_LINE + d < rightWorld + step) {
             val x = TrebuchetRules.FIRING_LINE + d
             if (x > leftWorld - step) {
                 val px = sx(x)
-                canvas.drawLine(px, groundY, px, groundY + 10f * dp, pTick)
+                // Les bornes suivent le terrain : plantée à l'altitude zéro, une borne
+                // de trois cents mètres flotterait au milieu du flanc d'une colline.
+                val py = sy(terrain.heightAt(x))
+                canvas.drawLine(px, py, px, py + 10f * dp, pTick)
                 if (d > 0f) {
-                    canvas.drawText("${d.toInt()} m", px, groundY + 24f * dp, pTickLabel)
+                    canvas.drawText("${d.toInt()} m", px, py + 24f * dp, pTickLabel)
                 }
             }
             d += step
