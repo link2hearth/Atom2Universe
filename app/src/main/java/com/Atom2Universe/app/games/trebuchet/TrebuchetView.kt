@@ -229,12 +229,8 @@ class TrebuchetView @JvmOverloads constructor(
          */
         const val CLOUD_PAN = 0.3f
 
-        /** De combien les nuages suivent le zoom. Voir [drawClouds]. */
-        const val CLOUD_DEPTH = 0.55f
 
-        /** Bornes de l'échelle du calque de nuages, en pixels par mètre et par dp. */
-        const val CLOUD_PX_MIN = 0.9f
-        const val CLOUD_PX_MAX = 5.5f
+
 
 
         /** Nombre de paliers d'opacité pour le groupage des particules. */
@@ -1569,11 +1565,13 @@ class TrebuchetView @JvmOverloads constructor(
      * lettre.
      */
     private fun drawClouds(canvas: Canvas, w: Float, h: Float) {
-        // Pixels par mètre du calque, borné pour que les nuages restent des nuages aux
-        // deux bouts de la plage de zoom.
-        val s = (camScale * CLOUD_DEPTH).coerceIn(CLOUD_PX_MIN * dp, CLOUD_PX_MAX * dp)
         // Ils se comptent **au-dessus de l'horizon**, qui n'est pas toujours à zéro.
         val horizon = sy(camFloor)
+        // L'échelle du calque se règle sur **le ciel qu'on a**. La règle vit dans
+        // [CloudField.layerScale], avec son raisonnement et son banc d'essai : c'est elle
+        // qui décide si un nuage est dans le ciel ou sur le terrain, et ça ne se vérifie
+        // pas à l'œil sur un seul téléphone.
+        val s = CloudField.layerScale(camScale, horizon)
         val centre = camX * CLOUD_PAN
         val demi = w / 2f / s
 

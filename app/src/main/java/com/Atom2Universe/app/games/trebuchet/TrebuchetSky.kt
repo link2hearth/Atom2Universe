@@ -163,10 +163,64 @@ class CloudField(seed: Long = 7L, count: Int = 9) {
          */
         const val SPAN = 600f
 
-        const val MIN_ALTITUDE = 28f
-        const val MAX_ALTITUDE = 105f
+        /**
+         * Altitude des nuages, en mètres. De vrais chiffres de vrais nuages : un cumulus
+         * bas traîne vers cent cinquante mètres, un beau cumulus de beau temps monte à
+         * huit cents.
+         *
+         * Ce sont **les altitudes qui commandent**, et pas une part d'écran : un nuage
+         * est là où il est, et c'est au cadrage de s'y faire. Le rapport entre les deux
+         * bornes vaut plus de cinq, donc le ciel du jeu montre bien un étagement — les
+         * bas près de l'horizon, les hauts au-dessus de la tête.
+         */
+        const val MIN_ALTITUDE = 150f
+        const val MAX_ALTITUDE = 800f
+
+        /**
+         * Tranche d'air que le ciel visible représente, en mètres.
+         *
+         * Un peu plus que le plus haut des nuages, pour qu'il ne rase pas le bord de
+         * l'écran. C'est **la seule liberté que se donne le calque** : les altitudes sont
+         * vraies, mais le jeu n'a pas de modèle de caméra qui dirait à quel angle un
+         * nuage de huit cents mètres se voit. On décrète donc que le ciel montre cette
+         * tranche-là, et tout le reste en découle.
+         */
+        const val BAND = 900f
+
         const val MIN_SIZE = 11f
         const val MAX_SIZE = 26f
+
+        /** De combien les nuages suivent le zoom, avant d'être ramenés dans le ciel. */
+        const val DEPTH = 0.55f
+
+        /** Bornes de l'échelle du calque, en parts de l'échelle de référence. */
+        const val SCALE_MIN = 0.75f
+        const val SCALE_MAX = 1.05f
+
+        /**
+         * L'échelle du calque de nuages, en pixels par mètre.
+         *
+         * [skyPx] est la hauteur de ciel visible au-dessus de l'horizon. L'échelle de
+         * référence y pose exactement la tranche de [BAND] mètres ; le zoom la fait
+         * ensuite varier autour, dans une fourchette **serrée**.
+         *
+         * Serrée, parce que les deux exigences se contredisent. Les nuages doivent
+         * réagir au cadrage — collés à la dalle, ils font une vitre peinte — mais ils
+         * doivent rester dans le ciel, et le cadrage de ce jeu varie d'un facteur
+         * dix-neuf entre le réglage de la machine et l'écran de résultat. Suivi à la
+         * lettre, il les enverrait hors de l'écran d'un côté et sur le terrain de
+         * l'autre. C'est arrivé : la première version bornait en pixels par mètre écrits
+         * en dur, et sur un téléphone tenu à la verticale — où le ciel fait les quatre
+         * cinquièmes de l'écran — tous les nuages se retrouvaient sur la bande de
+         * terrain du bas.
+         *
+         * La parallaxe **horizontale**, qui n'a pas cette contrainte, porte donc
+         * l'essentiel de l'effet de profondeur.
+         */
+        fun layerScale(camScale: Float, skyPx: Float): Float {
+            val reference = skyPx.coerceAtLeast(1f) / BAND
+            return (camScale * DEPTH).coerceIn(reference * SCALE_MIN, reference * SCALE_MAX)
+        }
     }
 }
 

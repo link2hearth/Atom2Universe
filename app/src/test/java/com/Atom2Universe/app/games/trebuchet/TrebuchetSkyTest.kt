@@ -369,6 +369,57 @@ class TrebuchetSkyTest {
         assertTrue("les nuages filent ou se traînent : $traversee s", traversee in 60f..250f)
     }
 
+    /**
+     * **Les nuages sont dans le ciel, sur tous les écrans et à tous les zooms.**
+     *
+     * Le test qui manquait, et son absence a coûté une version entière : les bornes
+     * d'échelle du calque étaient des pixels par mètre écrits en dur, et sur un téléphone
+     * tenu à la verticale — où le ciel occupe les quatre cinquièmes de l'écran — tous les
+     * nuages se retrouvaient écrasés sur la bande de terrain du bas. Ça ne se voyait
+     * qu'en jouant, sur cet écran-là, dans cette orientation-là.
+     *
+     * On vérifie donc l'arithmétique du calque pour deux écrans et deux cadrages : le
+     * nuage le plus bas doit rester dans la moitié haute du ciel, et le plus haut ne doit
+     * pas s'envoler à des hauteurs d'écran de l'horizon.
+     */
+    @Test
+    fun `les nuages restent dans le ciel quel que soit l ecran`() {
+        // Portrait puis paysage, avec la hauteur de ciel qu'ils laissent, puis les deux
+        // cadrages extrêmes : la machine de près, et l'arc entier de loin.
+        val ecrans = listOf("portrait" to 2107f, "paysage" to 987f)
+        val cadrages = listOf("machine" to 36f, "arc entier" to 1.9f)
+
+        for ((nomEcran, ciel) in ecrans) {
+            for ((nomCadrage, camScale) in cadrages) {
+                val s = CloudField.layerScale(camScale, ciel)
+                val bas = CloudField.MIN_ALTITUDE * s
+                val haut = CloudField.MAX_ALTITUDE * s
+                println(
+                    "NUAGES $nomEcran / $nomCadrage : le plus bas à " +
+                        "${"%.0f".format(bas / ciel * 100)} % du ciel, le plus haut à " +
+                        "${"%.0f".format(haut / ciel * 100)} %"
+                )
+                assertTrue(
+                    "$nomEcran / $nomCadrage : le nuage le plus bas traîne sur le terrain " +
+                        "(${"%.0f".format(bas / ciel * 100)} % du ciel)",
+                    bas > ciel * 0.12f
+                )
+                assertTrue(
+                    "$nomEcran / $nomCadrage : le nuage le plus haut est hors de l'écran " +
+                        "(${"%.0f".format(haut / ciel * 100)} % du ciel)",
+                    haut < ciel * 1.15f
+                )
+                // Et l'étagement se voit : cent cinquante mètres et huit cents ne doivent
+                // pas finir à la même hauteur d'écran, sinon les vraies altitudes n'ont
+                // servi à rien.
+                assertTrue(
+                    "$nomEcran / $nomCadrage : les nuages sont tous à la même hauteur",
+                    haut - bas > ciel * 0.4f
+                )
+            }
+        }
+    }
+
     @Test
     fun `les nuages sont en l air, en metres, et ne se ressemblent pas`() {
         val champ = CloudField()
