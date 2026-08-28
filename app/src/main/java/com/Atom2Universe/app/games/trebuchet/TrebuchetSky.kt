@@ -6,6 +6,7 @@ import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 /**
  * L'heure qu'il est dans le jeu.
@@ -68,6 +69,90 @@ class SkyClock(startMillis: Long = System.currentTimeMillis()) {
             if (throwPx <= 1f) return 0f
             return (deltaX / throwPx).coerceIn(-1f, 1f) * MAX_SCRUB_RATE
         }
+    }
+}
+
+/**
+ * Les nuages : des paquets de boules molles qui traversent le ciel au fil du vent.
+ *
+ * **Ils ont remplacé des stries de vitesse, et pas seulement pour la beauté.** Les
+ * stries étaient inclinées selon l'angle du vent mais dérivaient toujours vers la
+ * droite : leur vitesse se calculait à partir de `Wind.speed`, qui est une **norme** et
+ * donc toujours positive. Par vent debout, elles pointaient à gauche et filaient à
+ * droite. Un nuage dérive ici avec `Wind.vx`, dont le signe est celui du vent — la
+ * question ne peut plus se poser.
+ *
+ * Chaque nuage est une poignée de boules de rayons et de décalages tirés une fois pour
+ * toutes : c'est ce qui donne le contour cotonneux, sans texture ni image à charger.
+ */
+class CloudField(seed: Long = 7L, count: Int = 9) {
+
+    /**
+     * Un nuage : sa bande de ciel, sa taille, sa profondeur, et ses boules.
+     *
+     * [x] tourne dans [0, 1[ et se rebouclé : un nuage qui sort par la droite rentre par
+     * la gauche, et le ciel n'a jamais de trou.
+     */
+    class Cloud internal constructor(
+        val y: Float,
+        val scale: Float,
+        /** De 0,5 (loin, lent) à 1 (près, rapide) : c'est ce qui donne de la profondeur. */
+        val depth: Float,
+        /** Les boules, par triplets : décalage x, décalage y, rayon — en unités de nuage. */
+        val puffs: FloatArray
+    ) {
+        var x = 0f
+            internal set
+    }
+
+    val clouds: List<Cloud> = run {
+        val rng = Random(seed)
+        List(count) { index ->
+            val n = 4 + rng.nextInt(3)
+            val puffs = FloatArray(n * 3)
+            for (i in 0 until n) {
+                // Les boules s'alignent en longueur et se chevauchent : un nuage est plus
+                // large que haut, et deux boules qui ne se touchent pas font deux nuages.
+                puffs[i * 3] = (i - (n - 1) / 2f) * 0.62f + (rng.nextFloat() - 0.5f) * 0.2f
+                puffs[i * 3 + 1] = (rng.nextFloat() - 0.5f) * 0.28f
+                puffs[i * 3 + 2] = 0.42f + rng.nextFloat() * 0.34f
+            }
+            Cloud(
+                y = 0.06f + rng.nextFloat() * 0.34f,
+                scale = 0.7f + rng.nextFloat() * 0.8f,
+                depth = 0.5f + rng.nextFloat() * 0.5f,
+                puffs = puffs
+            ).apply {
+                // Étalés d'emblée sur toute la largeur : sans ça, ils partiraient tous
+                // du même bord et le ciel mettrait une minute à se remplir.
+                x = (index + 0.5f) / count
+            }
+        }
+    }
+
+    /**
+     * Fait dériver les nuages. [windX] est la composante horizontale du vent, en m/s,
+     * **signe compris** : un vent debout les fait donc revenir vers la machine.
+     */
+    fun update(dt: Float, windX: Float) {
+        for (c in clouds) {
+            var x = c.x + windX * DRIFT * c.depth * dt
+            x -= kotlin.math.floor(x)
+            c.x = x
+        }
+    }
+
+    companion object {
+        /**
+         * Dérive d'un nuage, en fraction de ciel par seconde et par mètre par seconde de
+         * vent.
+         *
+         * Réglée pour qu'un nuage moyen traverse le ciel en une minute par vent fort, et
+         * y mette plusieurs minutes par brise. « Doucement au fil du vent » est une
+         * consigne de vitesse autant que de style : un nuage qui file se lit comme un
+         * décor qui défile, pas comme du temps qui passe.
+         */
+        const val DRIFT = 0.0024f
     }
 }
 

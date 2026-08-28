@@ -307,6 +307,70 @@ class TrebuchetSkyTest {
         assertEquals("une seconde à pleine vitesse ne fait pas une heure", heure, h.instant - minuit)
     }
 
+    /**
+     * **Les nuages vont dans le sens du vent.** C'est tout le bug qu'ils corrigent.
+     *
+     * Les stries qu'ils remplacent étaient inclinées selon l'angle du vent mais
+     * dérivaient toujours vers la droite : leur vitesse se calculait à partir de
+     * `Wind.speed`, qui est une norme et donc toujours positive. Par vent debout, elles
+     * pointaient à gauche et filaient à droite, et personne ne l'a vu pendant des mois
+     * parce qu'un trait fin qui bouge n'a pas de sens de lecture évident.
+     *
+     * On dérive donc avec `vx`, dont le signe est celui du vent, et ce test le dit.
+     */
+    @Test
+    fun `les nuages derivent dans le sens du vent`() {
+        fun apres(vx: Float): Float {
+            val champ = CloudField()
+            val depart = champ.clouds[0].x
+            champ.update(10f, vx)
+            // L'écart signé, rebouclé dans [-0,5 ; 0,5] : un nuage qui sort par la droite
+            // rentre par la gauche, et une soustraction naïve dirait qu'il a reculé.
+            var d = champ.clouds[0].x - depart
+            if (d > 0.5f) d -= 1f
+            if (d < -0.5f) d += 1f
+            return d
+        }
+
+        val arriere = apres(Wind.MAX_SPEED)
+        val debout = apres(-Wind.MAX_SPEED)
+        println(
+            "NUAGES vent arrière : ${"%.4f".format(arriere)} de ciel en 10 s ; " +
+                "vent debout : ${"%.4f".format(debout)}"
+        )
+        assertTrue("un vent arrière ne pousse pas les nuages vers la cible", arriere > 0f)
+        assertTrue("un vent debout ne les ramène pas", debout < 0f)
+        assertEquals("le vent n'est pas symétrique", arriere, -debout, 1e-5f)
+        assertEquals("un air calme fait bouger les nuages", 0f, apres(0f), 1e-6f)
+    }
+
+    @Test
+    fun `un nuage traverse le ciel en une minute par vent fort`() {
+        val champ = CloudField()
+        // Le plus rapide des nuages, celui du premier plan.
+        val proche = champ.clouds.maxByOrNull { it.depth }!!
+        val parSeconde = Wind.MAX_SPEED * CloudField.DRIFT * proche.depth
+        val traversee = 1f / parSeconde
+        println("NUAGES traversée du ciel par vent fort : ${"%.0f".format(traversee)} s")
+        assertTrue(
+            "les nuages filent comme un décor qui défile : $traversee s",
+            traversee in 30f..300f
+        )
+    }
+
+    @Test
+    fun `les nuages restent dans le ciel et ne se ressemblent pas`() {
+        val champ = CloudField()
+        for (c in champ.clouds) {
+            assertTrue("un nuage sous l'horizon", c.y in 0f..0.5f)
+            assertTrue("un nuage a moins de quatre boules", c.puffs.size >= 12)
+            assertTrue("un nuage sans épaisseur", c.scale > 0.5f)
+        }
+        // Deux nuages identiques feraient un motif : on vérifie qu'ils diffèrent.
+        val hauteurs = champ.clouds.map { it.y }.toSet()
+        assertTrue("les nuages sont tous à la même hauteur", hauteurs.size > 3)
+    }
+
     @Test
     fun `l horloge court soixante-douze fois plus vite que la vraie`() {
         val h = SkyClock(minuit)

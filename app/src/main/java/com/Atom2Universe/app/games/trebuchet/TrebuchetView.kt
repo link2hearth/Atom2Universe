@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.trebuchet
 
 import android.content.Context
+import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -213,11 +214,20 @@ class TrebuchetView @JvmOverloads constructor(
         /** Où, sur le bâti, se dessinent le repère et la poignée du pied. */
         const val POST_GRIP_HEIGHT = 0.4f
 
-        /** Part de la hauteur de l'écran où le vent se dessine : le ciel, pas le sol. */
-        const val WIND_SKY = 0.62f
+        /**
+         * Part de la hauteur de l'écran occupée par le ciel : le reste est du sol.
+         *
+         * Elle sert à poser les astres et les nuages, qui doivent partager la même
+         * bande — un nuage plus haut que le Soleil de midi se remarquerait.
+         */
+        const val SKY_BAND = 0.62f
 
-        /** Dérive des stries, en largeurs d'écran par seconde et par m/s de vent. */
-        const val WIND_DRIFT = 0.012f
+        /** Taille de référence d'un nuage, en dp. */
+        const val CLOUD_SIZE_DP = 46f
+
+        /** De combien le ciel glisse quand on traverse le terrain, en fraction. */
+        const val CLOUD_PARALLAX = 0.16f
+
 
         /** Nombre de paliers d'opacité pour le groupage des particules. */
         const val SPARK_ALPHAS = 4
@@ -287,6 +297,12 @@ class TrebuchetView @JvmOverloads constructor(
 
     /** La flamme d'un feu : un halo chaud, refait quand sa teinte change. */
     private val pFlame = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    /** Les nuages, et leur flou de coton. */
+    private val clouds = CloudField()
+    private val pCloud = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        maskFilter = BlurMaskFilter(10f * dp, BlurMaskFilter.Blur.NORMAL)
+    }
     private var flameTint = 0
     private var flameShaderR = 0f
 
@@ -459,19 +475,9 @@ class TrebuchetView @JvmOverloads constructor(
         pathEffect = DashPathEffect(floatArrayOf(7f * dp, 6f * dp), 0f)
     }
     /** Les stries du vent, et les tourbillons qu'il fait au-delà de la moitié. */
-    private val pWind = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
-        color = "#CFE3FF".toColorInt()
-    }
-    private val windArc = RectF()
     private val windBox = RectF()
-    private var windClock = 0f
 
     /** Les couloirs des stries : posés une fois, comme les étoiles du ciel. */
-    private val streakX = FloatArray(20)
-    private val streakY = FloatArray(20)
-    private val streakSpeed = FloatArray(20)
 
     private val pGaugeBed = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.argb(150, 16, 25, 50)
@@ -604,11 +610,6 @@ class TrebuchetView @JvmOverloads constructor(
             starsY[i] = r.nextFloat()
             starsR[i] = 0.6f + r.nextFloat() * 1.2f
         }
-        for (i in streakX.indices) {
-            streakX[i] = r.nextFloat()
-            streakY[i] = 0.08f + r.nextFloat() * 0.9f
-            streakSpeed[i] = r.nextFloat()
-        }
     }
 
     // ── Cycle de vie ─────────────────────────────────────────────────────────
@@ -670,6 +671,10 @@ class TrebuchetView @JvmOverloads constructor(
                 // il ne manquerait plus qu'elle avance pendant qu'il la fait reculer.
                 if (!timeMode) skyClock.advance(frameDt)
                 sky.update(skyClock.instant)
+                // La dérive suit **vx** et non la vitesse : c'est le signe qui manquait
+                // aux stries, lesquelles pointaient à gauche par vent debout tout en
+                // filant à droite.
+                clouds.update(frameDt, game.wind.vx)
                 updatePreview()
             }
             if (finished) post { listener?.onShotFinished() }
@@ -1388,7 +1393,6 @@ class TrebuchetView @JvmOverloads constructor(
 
         drawSky(canvas, w, h)
 
-        drawWindStreaks(canvas, w, h)
         // Les feux d'artifice passent **derrière** le terrain : ils montent au fond du
         // ciel, et le sol leur coupe les jambes quand leurs étoiles retombent, ce qui
         // est exactement ce qu'on voit dehors.
@@ -1527,6 +1531,58 @@ class TrebuchetView @JvmOverloads constructor(
         // serait un plafond peint, pas un ciel.
         drawMoon(canvas, w, h)
         drawSun(canvas, w, h)
+        // Les nuages passent **devant** les astres : c'est ce qui les met au ciel
+        // plutôt que sur un mur peint derrière lui.
+        drawClouds(canvas, w, h)
+    }
+
+    /**
+     * Les nuages : des paquets de boules floues qui traversent le ciel au fil du vent.
+     *
+     * Ils prennent **la couleur de l'horizon**, pas le blanc. C'est ce qui fait tout le
+     * travail : à midi ils sont d'un blanc bleuté, au couchant ils virent à l'orangé
+     * comme le ciel derrière eux, et la nuit ils ne sont plus qu'une ombre un peu plus
+     * claire que le fond. Un nuage blanc à minuit aurait l'air d'un trou dans l'écran.
+     *
+     * Le flou vient d'un `BlurMaskFilter` posé une fois pour toutes. C'est possible ici
+     * et pas partout : cette vue peint sur un `Canvas` **logiciel** — elle verrouille sa
+     * propre surface — là où un rendu matériel refuserait le filtre.
+     */
+    private fun drawClouds(canvas: Canvas, w: Float, h: Float) {
+        val ciel = h * SKY_BAND
+        // Le blanc n'entre que pour moitié : au-delà, un nuage de nuit redevient une
+        // tache claire, et l'illusion tombe.
+        pCloud.color = SkyState.mix(sky.horizon, 0xFFFFFFFF.toInt(), 0.5f)
+        pCloud.alpha = (0.55f * 255f).toInt()
+
+        // Une parallaxe légère : le ciel est loin, il ne défile pas comme le terrain,
+        // mais un ciel parfaitement immobile pendant qu'on traverse trois cents mètres
+        // se lit comme un décor collé à la vitre.
+        val parallaxe = -camX * CLOUD_PARALLAX / TrebuchetRules.GROUND_RIGHT
+
+        for (c in clouds.clouds) {
+            var fx = c.x + parallaxe * c.depth
+            fx -= kotlin.math.floor(fx)
+            val taille = c.scale * CLOUD_SIZE_DP * dp
+            // On dessine le nuage deux fois, décalé d'une largeur d'écran : celui qui
+            // sort par la droite doit déjà rentrer par la gauche, sinon le ciel clignote
+            // à chaque rebouclage.
+            for (tour in 0..1) {
+                val cx = (fx - tour) * (w + taille * 4f) - taille * 2f
+                if (cx < -taille * 3f || cx > w + taille * 3f) continue
+                val cy = c.y * ciel
+                var i = 0
+                while (i < c.puffs.size) {
+                    canvas.drawCircle(
+                        cx + c.puffs[i] * taille,
+                        cy + c.puffs[i + 1] * taille,
+                        c.puffs[i + 2] * taille,
+                        pCloud
+                    )
+                    i += 3
+                }
+            }
+        }
     }
 
     /** Le Soleil, et ce qu'il en reste quand la Lune passe devant. */
@@ -1722,7 +1778,7 @@ class TrebuchetView @JvmOverloads constructor(
 
     /** Son ordonnée : l'horizon en bas de la bande de ciel, le zénith en haut. */
     private fun skyY(altitude: Float, h: Float): Float {
-        val ciel = h * 0.62f
+        val ciel = h * SKY_BAND
         return ciel - altitude.coerceIn(-0.2f, 1f) * ciel * 0.86f
     }
 
@@ -1943,69 +1999,6 @@ class TrebuchetView @JvmOverloads constructor(
         drawPolyline(canvas, game.trail, game.trailCount, pTrail)
     }
 
-    /**
-     * Le vent, dessiné dans le ciel : des stries qui filent et des tourbillons qui
-     * tournent.
-     *
-     * Rien de tout ça n'est simulé, et rien ne doit l'être. Le vent est **une constante
-     * du niveau** ; ce qu'on dessine ici n'est pas une soufflerie, c'est le seul moyen
-     * de faire sentir au joueur, sans qu'il lise un chiffre, que l'air d'aujourd'hui
-     * n'est pas celui d'hier. Les stries sont posées une fois pour toutes, en
-     * coordonnées d'écran, et **dérivent** avec le temps : elles ne coûtent qu'une
-     * addition chacune, elles ne dépendent pas de la caméra, et elles ne se voient pas
-     * quand il n'y a pas de vent puisqu'elles s'effacent avec sa force.
-     *
-     * Les tourbillons ne sortent qu'au-delà de la moitié de l'échelle : un air qui
-     * tourne veut dire quelque chose, et il ne le dirait plus s'il tournait tout le
-     * temps.
-     */
-    private fun drawWindStreaks(canvas: Canvas, w: Float, h: Float) {
-        val wind = game.wind
-        if (wind.calm) return
-        val force = (wind.speed / Wind.MAX_SPEED).coerceIn(0f, 1f)
-        windClock += 1f / 60f
-
-        val dx = cos(wind.angle)
-        val dy = -sin(wind.angle)
-        // La dérive se compte en largeurs d'écran par seconde : c'est ce qui donne la
-        // même impression de vitesse sur un téléphone et sur une tablette.
-        val drift = windClock * wind.speed * WIND_DRIFT * w
-        val len = (18f + 40f * force) * dp
-        pWind.alpha = (24 + 70 * force).toInt()
-        pWind.strokeWidth = (1f + force) * dp
-
-        val n = (6 + 14f * force).toInt()
-        for (i in 0 until n) {
-            // Chaque strie a sa hauteur, sa longueur et sa vitesse propres, tirées une
-            // fois pour toutes : sans cet étalement, elles filent en peigne.
-            val lane = streakY[i % streakY.size]
-            val speed = 0.6f + streakSpeed[i % streakSpeed.size]
-            val span = w + 200f * dp
-            var x = (streakX[i % streakX.size] * span + drift * speed) % span
-            if (x < 0f) x += span
-            val px = x - 100f * dp
-            val py = lane * h * WIND_SKY
-            val l = len * (0.6f + streakSpeed[i % streakSpeed.size])
-            canvas.drawLine(px, py, px + dx * l, py + dy * l, pWind)
-        }
-
-        if (force < 0.5f) return
-        // Les tourbillons : deux arcs qui tournent lentement, là où l'air se froisse.
-        val swirl = (force - 0.5f) * 2f
-        pWind.alpha = (20 + 50 * swirl).toInt()
-        for (i in 0 until 3) {
-            val lane = streakY[(i + 3) % streakY.size]
-            val span = w + 200f * dp
-            var x = (streakX[(i + 5) % streakX.size] * span + drift * 0.45f) % span
-            if (x < 0f) x += span
-            val px = x - 100f * dp
-            val py = lane * h * WIND_SKY
-            val r = (10f + 16f * swirl) * dp
-            val a0 = windClock * (1f + i) * 40f
-            windArc.set(px - r, py - r, px + r, py + r)
-            canvas.drawArc(windArc, a0, 210f, false, pWind)
-        }
-    }
 
     /**
      * L'indicateur de vent : une flèche et un chiffre, en haut à droite.
