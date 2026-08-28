@@ -104,4 +104,93 @@ class TrebuchetApercuTest {
         }
         println("APERÇU écrit dans ${dir.absolutePath}")
     }
+
+    /** Dessine une bande de ciels : une colonne par heure, plus une éclipse. */
+    @Test
+    fun apercuDuCiel() {
+        val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
+        dir.mkdirs()
+        val minuit = 1767225600000L
+        val heure = 3_600_000L
+
+        val larg = 150
+        val haut = 260
+        val sb = StringBuilder()
+        val cols = 25
+        sb.append(
+            """<svg xmlns="http://www.w3.org/2000/svg" width="${larg * cols}" """ +
+                """height="${haut + 40}" viewBox="0 0 ${larg * cols} ${haut + 40}">"""
+        )
+
+        // Vingt-quatre heures, plus l'instant le plus éclipsé qu'on trouve en trois ans.
+        var eclipseAt = minuit
+        var pire = 0f
+        var t = minuit
+        while (t < minuit + 3L * 365 * 24 * heure) {
+            val c = SkyState().apply { update(t) }
+            if (c.eclipse > pire && c.sunAltitude > 0.3f) { pire = c.eclipse; eclipseAt = t }
+            t += heure / 2
+        }
+
+        for (col in 0 until cols) {
+            val instant = if (col < 24) minuit + col * heure else eclipseAt
+            val etiquette = if (col < 24) "${col}h" else "éclipse"
+            val c = SkyState().apply { update(instant) }
+            val x0 = col * larg
+            val id = "g$col"
+            sb.append(
+                """<defs><linearGradient id="$id" x1="0" y1="0" x2="0" y2="1">""" +
+                    """<stop offset="0" stop-color="${hex(c.zenith)}"/>""" +
+                    """<stop offset="1" stop-color="${hex(c.horizon)}"/></linearGradient></defs>"""
+            )
+            sb.append("""<rect x="$x0" y="0" width="$larg" height="$haut" fill="url(#$id)"/>""")
+
+            // Les étoiles.
+            if (c.starAlpha > 0.02f) {
+                val r = kotlin.random.Random(col * 7919)
+                repeat(18) {
+                    val sx = x0 + r.nextFloat() * larg
+                    val sy = r.nextFloat() * haut * 0.55f
+                    sb.append(
+                        """<circle cx="$sx" cy="$sy" r="1.3" fill="#fff" """ +
+                            """opacity="${"%.2f".format(c.starAlpha * 0.7f)}"/>"""
+                    )
+                }
+            }
+            // La Lune, avec sa phase, puis le Soleil.
+            if (c.moonAltitude > -0.12f) {
+                val mx = x0 + (0.08f + 0.84f * c.moonX) * larg
+                val my = haut * 0.62f - c.moonAltitude.coerceIn(-0.2f, 1f) * haut * 0.62f * 0.86f
+                sb.append("""<circle cx="$mx" cy="$my" r="13" fill="#F2EFE2"/>""")
+                if (c.moonPhase < 0.99f) {
+                    val d = 26f * (1f - c.moonPhase) * (if (c.moonWaxing) -1f else 1f)
+                    sb.append(
+                        """<circle cx="${mx + d}" cy="$my" r="13" fill="${hex(c.zenith)}"/>"""
+                    )
+                }
+            }
+            if (c.sunAltitude > -0.12f) {
+                val sx2 = x0 + (0.08f + 0.84f * c.sunX) * larg
+                val sy2 = haut * 0.62f - c.sunAltitude.coerceIn(-0.2f, 1f) * haut * 0.62f * 0.86f
+                sb.append("""<circle cx="$sx2" cy="$sy2" r="34" fill="#FFF3C4" opacity="0.25"/>""")
+                sb.append("""<circle cx="$sx2" cy="$sy2" r="11" fill="#FFE9A8"/>""")
+                if (c.eclipse > 0f) {
+                    val d = 22f * (1f - c.eclipse)
+                    sb.append("""<circle cx="${sx2 + d}" cy="$sy2" r="11" fill="#0A0A12"/>""")
+                }
+            }
+            // Le sol, pour l'échelle.
+            sb.append("""<rect x="$x0" y="${haut - 26}" width="$larg" height="26" fill="#1B2A1E"/>""")
+            sb.append(
+                """<text x="${x0 + 6}" y="${haut + 22}" fill="#dfe8f0" """ +
+                    """font-family="sans-serif" font-size="15">$etiquette · """ +
+                    """${(c.light * 100).toInt()}%</text>"""
+            )
+        }
+        sb.append("</svg>")
+        File(dir, "ciel.svg").writeText(sb.toString())
+        println("APERÇU du ciel écrit dans ${dir.absolutePath}")
+    }
+
+    private fun hex(argb: Int) = "#%06X".format(argb and 0xFFFFFF)
 }

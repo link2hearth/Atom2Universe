@@ -156,6 +156,18 @@ class TrebuchetView @JvmOverloads constructor(
          */
         const val GROUND_INSET_DP = 34f
 
+        /**
+         * Taille des astres, en dp.
+         *
+         * Ils sont **beaucoup trop gros**, et c'est délibéré : un Soleil à sa taille
+         * apparente ferait un demi-degré, soit trois pixels sur un téléphone, et la Lune
+         * autant. On peint un ciel, pas une carte du ciel. La Lune est un peu plus
+         * grande que le Soleil pour que sa phase se lise, et pour qu'une éclipse la
+         * montre en train de le manger.
+         */
+        const val SUN_RADIUS_DP = 13f
+        const val MOON_RADIUS_DP = 15f
+
         /** Deux appuis rapprochés rendent le cadrage à la caméra. */
         const val DOUBLE_TAP_MS = 300L
 
@@ -236,11 +248,28 @@ class TrebuchetView @JvmOverloads constructor(
 
     // ── Palette ──────────────────────────────────────────────────────────────
 
-    private val bgTop = "#0A1024".toColorInt()
-    private val bgBottom = "#16233F".toColorInt()
+    /**
+     * L'heure du jeu et le ciel qu'elle donne.
+     *
+     * Le ciel n'appartient pas à la partie : il n'est pas dans [TrebuchetGame], il ne se
+     * rejoue pas, il n'entre dans la graine d'aucun niveau. C'est de l'ambiance, et
+     * l'ambiance n'a pas à être reproductible — un tir doit donner la même portée à midi
+     * et à minuit.
+     */
+    private val skyClock = SkyClock()
+    private val sky = SkyState().apply { update(skyClock.instant) }
 
     private val pBg = Paint()
     private val pStar = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(140, 255, 255, 255) }
+
+    /** Les deux couleurs du nuancier en cours : on ne le refabrique que si elles bougent. */
+    private var bgZenith = 0
+    private var bgHorizon = 0
+
+    private val pSun = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pHalo = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pMoon = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFF2EFE2.toInt() }
+    private val pMoonDark = Paint(Paint.ANTI_ALIAS_FLAG)
     private val pGround = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#1B2A1E".toColorInt() }
     private val pGrass = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -577,6 +606,11 @@ class TrebuchetView @JvmOverloads constructor(
                 // l'altitude zéro : dans un vallon, les fusées calculées sur une hauteur
                 // absolue éclateraient dix mètres trop bas.
                 if (height > 0) game.skyTop = worldY(0f) - camFloor
+                // L'heure du jeu avance avec l'image réelle, comme les étincelles : le
+                // ciel ne décide de rien, personne ne le rejoue, et le figer entre deux
+                // pas de physique se verrait à la seconde près sur un crépuscule.
+                skyClock.advance(frameDt)
+                sky.update(skyClock.instant)
                 updatePreview()
             }
             if (finished) post { listener?.onShotFinished() }
@@ -1271,17 +1305,7 @@ class TrebuchetView @JvmOverloads constructor(
         val w = width.toFloat()
         val h = height.toFloat()
 
-        // Le dégradé du ciel ne dépend que de la hauteur de la vue : le refabriquer à
-        // chaque image, c'était une allocation et une construction de nuancier
-        // soixante fois par seconde pour un résultat toujours identique.
-        if (bgShaderHeight != h) {
-            pBg.shader = LinearGradient(0f, 0f, 0f, h, bgTop, bgBottom, Shader.TileMode.CLAMP)
-            bgShaderHeight = h
-        }
-        canvas.drawRect(0f, 0f, w, h, pBg)
-        for (i in starsX.indices) {
-            canvas.drawCircle(starsX[i] * w, starsY[i] * h * 0.55f, starsR[i] * dp, pStar)
-        }
+        drawSky(canvas, w, h)
 
         drawWindStreaks(canvas, w, h)
         // Les feux d'artifice passent **derrière** le terrain : ils montent au fond du
@@ -1376,6 +1400,100 @@ class TrebuchetView @JvmOverloads constructor(
             }
             d += step
         }
+    }
+
+    /**
+     * Le ciel : le dégradé de l'heure, les étoiles, le Soleil et la Lune.
+     *
+     * Le dégradé se refabrique quand **la couleur** change et pas seulement quand la
+     * hauteur change — c'est la seule différence avec le ciel fixe d'avant, et elle
+     * coûte un nuancier par palier de couleur au lieu d'un par redimensionnement. On
+     * compare donc les deux couleurs, sans quoi un crépuscule resterait bleu.
+     */
+    private fun drawSky(canvas: Canvas, w: Float, h: Float) {
+        if (bgShaderHeight != h || bgZenith != sky.zenith || bgHorizon != sky.horizon) {
+            pBg.shader = LinearGradient(
+                0f, 0f, 0f, h, sky.zenith, sky.horizon, Shader.TileMode.CLAMP
+            )
+            bgShaderHeight = h
+            bgZenith = sky.zenith
+            bgHorizon = sky.horizon
+        }
+        canvas.drawRect(0f, 0f, w, h, pBg)
+
+        if (sky.starAlpha > 0.02f) {
+            pStar.alpha = (sky.starAlpha * 170f).toInt().coerceIn(0, 255)
+            for (i in starsX.indices) {
+                canvas.drawCircle(starsX[i] * w, starsY[i] * h * 0.55f, starsR[i] * dp, pStar)
+            }
+        }
+
+        // Les astres se posent en **fractions d'écran** et pas en coordonnées du monde :
+        // le Soleil est à cent cinquante millions de kilomètres, il ne défile pas quand
+        // on fait glisser la vue de trois cents mètres. Un ciel qui suivrait le cadrage
+        // serait un plafond peint, pas un ciel.
+        drawMoon(canvas, w, h)
+        drawSun(canvas, w, h)
+    }
+
+    /** Le Soleil, et ce qu'il en reste quand la Lune passe devant. */
+    private fun drawSun(canvas: Canvas, w: Float, h: Float) {
+        if (sky.sunAltitude < -0.12f) return
+        val cx = skyX(sky.sunX, w)
+        val cy = skyY(sky.sunAltitude, h)
+        val r = SUN_RADIUS_DP * dp
+
+        // Le halo s'éteint quand le Soleil se couche : un disque nu à l'horizon fait
+        // autocollant, un halo à midi fait éblouissement.
+        pHalo.color = SkyState.mix(sky.horizon, 0xFFFFF3C4.toInt(), 0.75f)
+        pHalo.alpha = ((1f - sky.eclipse) * (0.25f + 0.45f * sky.sunAltitude.coerceIn(0f, 1f)) * 255f)
+            .toInt().coerceIn(0, 255)
+        canvas.drawCircle(cx, cy, r * 3.2f, pHalo)
+
+        pSun.color = SkyState.mix(0xFFFF9A3C.toInt(), 0xFFFFF6D0.toInt(), sky.sunAltitude.coerceIn(0f, 1f))
+        canvas.drawCircle(cx, cy, r, pSun)
+
+        // L'éclipse : on repose le disque de la Lune par-dessus, décalé de ce qui reste
+        // à couvrir. À couverture pleine il ne dépasse qu'un anneau de couronne.
+        if (sky.eclipse > 0f) {
+            val decalage = r * 2f * (1f - sky.eclipse)
+            pMoonDark.color = SkyState.mix(sky.zenith, 0xFF0A0A12.toInt(), 0.7f)
+            canvas.drawCircle(cx + decalage, cy, r, pMoonDark)
+        }
+    }
+
+    /**
+     * La Lune, et sa phase.
+     *
+     * Le terminateur est dessiné comme il se voit : un disque sombre décalé sur le
+     * disque clair. Le décalage vaut la part **non** éclairée, et son côté dit si la
+     * Lune croît ou décroît — un croissant qui pointerait du mauvais côté est le genre
+     * de faute que personne ne sait nommer mais que tout le monde sent.
+     */
+    private fun drawMoon(canvas: Canvas, w: Float, h: Float) {
+        if (sky.moonAltitude < -0.12f) return
+        val cx = skyX(sky.moonX, w)
+        val cy = skyY(sky.moonAltitude, h)
+        val r = MOON_RADIUS_DP * dp
+        // Une lune de plein jour est pâle, une lune de nuit est franche.
+        pMoon.alpha = ((0.35f + 0.65f * sky.starAlpha) * 255f).toInt().coerceIn(0, 255)
+        canvas.drawCircle(cx, cy, r, pMoon)
+
+        if (sky.moonPhase < 0.99f) {
+            pMoonDark.color = SkyState.mix(sky.zenith, sky.horizon, 0.35f)
+            pMoonDark.alpha = pMoon.alpha
+            val decalage = r * 2f * (1f - sky.moonPhase) * (if (sky.moonWaxing) -1f else 1f)
+            canvas.drawCircle(cx + decalage, cy, r, pMoonDark)
+        }
+    }
+
+    /** L'abscisse d'un astre : de l'est au bord gauche à l'ouest au bord droit. */
+    private fun skyX(fraction: Float, w: Float) = (0.08f + 0.84f * fraction) * w
+
+    /** Son ordonnée : l'horizon en bas de la bande de ciel, le zénith en haut. */
+    private fun skyY(altitude: Float, h: Float): Float {
+        val ciel = h * 0.62f
+        return ciel - altitude.coerceIn(-0.2f, 1f) * ciel * 0.86f
     }
 
     /**

@@ -1,0 +1,249 @@
+package com.Atom2Universe.app.games.trebuchet
+
+import com.Atom2Universe.app.crypto.AstronomyCalculator
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.asin
+import kotlin.math.cos
+import kotlin.math.sin
+
+/**
+ * L'heure qu'il est dans le jeu.
+ *
+ * Elle part de **l'heure réelle** et court soixante-douze fois plus vite : un jour entier
+ * en vingt minutes, dix de jour et dix de nuit. Deux conséquences, et les deux sont
+ * voulues. D'abord, la première partie d'un joueur commence sous le ciel qu'il a
+ * réellement au-dessus de la tête — même lune, même phase, et s'il joue le soir, il joue
+ * de nuit. Ensuite, une partie un peu longue voit le soleil se lever et se coucher
+ * plusieurs fois, ce qui est le seul moyen de rentabiliser un crépuscule.
+ *
+ * L'instant est un **millis epoch**, pas un compteur : c'est ce que réclame
+ * [AstronomyCalculator], et ça donne gratuitement une date, donc une position réelle de
+ * la Lune sur son orbite.
+ */
+class SkyClock(startMillis: Long = System.currentTimeMillis()) {
+
+    /** L'instant du jeu, en millisecondes depuis l'époque Unix. */
+    var instant: Long = startMillis
+        private set
+
+    /** Fait couler le temps. [dt] est en secondes **réelles**. */
+    fun advance(dt: Float) {
+        instant += (dt * SPEED * 1000f).toLong()
+    }
+
+    /** Avance ou recule d'un nombre d'heures : c'est ce que fait le doigt qui balaie. */
+    fun scrub(hours: Float) {
+        instant += (hours * 3_600_000f).toLong()
+    }
+
+    companion object {
+        /** Durée d'un jour de jeu, en secondes réelles : dix minutes de jour, dix de nuit. */
+        const val DAY_SECONDS = 1200f
+
+        /** De combien le temps du jeu court plus vite que le vrai. */
+        const val SPEED = 86_400f / DAY_SECONDS
+    }
+}
+
+/**
+ * Le ciel à un instant donné : où sont les astres, de quelle couleur est l'air, et
+ * combien il fait clair.
+ *
+ * **Rien ici ne connaît Android.** C'est une description — des fractions, des angles et
+ * des couleurs en entiers ARGB — que la vue se contente de peindre. C'est ce qui permet
+ * de vérifier au banc qu'une pleine lune éclaire, qu'un crépuscule passe par l'orange
+ * avant le violet, et qu'une éclipse assombrit, sans avoir jamais ouvert l'écran.
+ */
+class SkyState {
+
+    /** Position du Soleil : 0 à l'est, 1 à l'ouest ; hauteur de -1 (nadir) à 1 (zénith). */
+    var sunX = 0f; private set
+    var sunAltitude = 0f; private set
+
+    /** Idem pour la Lune, qui suit son propre horaire. */
+    var moonX = 0f; private set
+    var moonAltitude = 0f; private set
+
+    /**
+     * Part éclairée du disque lunaire, de 0 (nouvelle) à 1 (pleine).
+     *
+     * Elle sort des vraies éphémérides, pas d'un compteur : c'est la phase que la Lune
+     * a **ce jour-là**, celle qu'on verrait en levant les yeux.
+     */
+    var moonPhase = 0f; private set
+
+    /** Vrai quand la Lune croît — le croissant est éclairé à droite dans l'hémisphère nord. */
+    var moonWaxing = true; private set
+
+    /** Clarté ambiante, de 0 (nuit noire) à 1 (plein jour). */
+    var light = 1f; private set
+
+    /** Part du disque solaire masquée par la Lune, de 0 à 1. */
+    var eclipse = 0f; private set
+
+    /** Opacité des étoiles, de 0 (invisibles) à 1. */
+    var starAlpha = 0f; private set
+
+    /** Les deux couleurs du dégradé, du haut du ciel à l'horizon. */
+    var zenith = 0; private set
+    var horizon = 0; private set
+
+    /**
+     * Recalcule tout pour l'instant donné.
+     *
+     * L'objet est **réutilisé** d'une image à l'autre : soixante allocations par seconde
+     * pour un ciel qui bouge de trois millièmes de degré seraient un gaspillage
+     * caractérisé, et c'est le genre de détail que la vue paie en saccades.
+     */
+    fun update(utcMillis: Long) {
+        val astro = AstronomyCalculator.compute(utcMillis)
+
+        // L'heure solaire du jour, de 0 (minuit) à 1.
+        val jour = ((utcMillis % DAY_MS) + DAY_MS) % DAY_MS / DAY_MS.toFloat()
+
+        // Le Soleil : il passe au plus haut à midi, à l'horizon à six heures et à
+        // dix-huit. Une sinusoïde suffit — on ne joue pas à une latitude précise, et
+        // prétendre le contraire demanderait de choisir un endroit sur Terre.
+        sunAltitude = sin(TWO_PI * (jour - 0.25f))
+        sunX = arcX(jour)
+
+        // La Lune retarde sur le Soleil de son **élongation** : c'est ce qui fait qu'une
+        // pleine lune se lève au coucher du soleil, et qu'une nouvelle lune se couche
+        // avec lui. Le retard sort des éphémérides, donc la Lune est au bon endroit du
+        // ciel pour la phase qu'elle montre — c'est ce détail-là qu'on remarque quand il
+        // est faux, sans savoir le nommer.
+        val elongation = astro.moonPhaseRad.toFloat()
+        val heureLune = jour - elongation / TWO_PI
+        moonAltitude = sin(TWO_PI * (heureLune - 0.25f))
+        moonX = arcX(heureLune)
+        moonPhase = ((1f - cos(elongation)) / 2f).coerceIn(0f, 1f)
+        moonWaxing = sin(elongation) > 0f
+
+        eclipse = eclipseAmount(astro, elongation)
+
+        // La clarté, et le seuil de jouabilité. Le crépuscule s'étale sous l'horizon :
+        // il ne fait pas nuit noire à l'instant où le Soleil passe dessous.
+        val jourClair = ((sunAltitude + 0.18f) / 0.30f).coerceIn(0f, 1f)
+        // Une pleine lune haute éclaire assez pour qu'on distingue un château. C'est un
+        // choix de jeu autant que de physique — une nuit noire injouable serait une
+        // punition pour avoir joué trop longtemps.
+        val clairDeLune = (moonPhase * moonAltitude.coerceAtLeast(0f)) * 0.35f
+        light = (maxOf(jourClair, clairDeLune) * (1f - 0.75f * eclipse)).coerceIn(0f, 1f)
+        starAlpha = (1f - jourClair * 1.6f).coerceIn(0f, 1f)
+
+        paint()
+    }
+
+    /**
+     * Où l'astre se trouve en largeur, de 0 à 1.
+     *
+     * Le lever est à l'est, le coucher à l'ouest, et la course se poursuit **sous
+     * l'horizon** au lieu de sauter : un astre qui se téléporterait d'un bord à l'autre
+     * à minuit se ferait remarquer le jour où on balaie le temps à la main.
+     */
+    private fun arcX(fraction: Float): Float {
+        val f = ((fraction % 1f) + 1f) % 1f
+        // Le temps écoulé depuis le lever, de 0 à 1 sur la journée entière.
+        val t = (f - 0.25f + 1f) % 1f
+        // De 6 h à 18 h on traverse le ciel de gauche à droite ; de 18 h à 6 h on
+        // revient par le même chemin, sous l'horizon, où personne ne nous voit.
+        return if (t <= 0.5f) t * 2f else 1f - (t - 0.5f) * 2f
+    }
+
+    /**
+     * De combien la Lune mange le Soleil.
+     *
+     * Une éclipse demande deux choses en même temps : une **nouvelle lune** — la Lune est
+     * du même côté que le Soleil — et une Lune **près d'un nœud**, c'est-à-dire dans le
+     * plan de l'écliptique. Le reste du temps elle passe au-dessus ou en dessous, et
+     * c'est pour ça qu'il n'y a pas d'éclipse tous les mois.
+     *
+     * **Une tolérance est élargie, et il faut le dire.** Une éclipse réelle demande une
+     * latitude lunaire sous le demi-degré, et n'est visible que d'une bande étroite du
+     * globe : au rythme du jeu, personne n'en verrait jamais. On retient donc le degré et
+     * demi, et on ne se demande pas d'où on regarde — ce qui donne quelques éclipses par
+     * année de jeu au lieu de deux invisibles. C'est le seul nombre tordu de ce fichier,
+     * tout le reste sort des éphémérides.
+     */
+    private fun eclipseAmount(astro: AstronomyCalculator.AstroSnapshot, elongation: Float): Float {
+        // Nouvelle lune : l'élongation est proche de zéro (ou de 2π).
+        val depuisNouvelle = minOf(elongation, TWO_PI - elongation)
+        if (depuisNouvelle > NEW_MOON_WINDOW) return 0f
+
+        val r = astro.moonPos.length()
+        if (r <= 0.0) return 0f
+        val latitude = abs(asin(astro.moonPos.z / r)).toFloat()
+        if (latitude > NODE_WINDOW) return 0f
+
+        // Deux recouvrements qui se multiplient : l'un dans le temps, l'autre dans le
+        // ciel. Le produit donne une éclipse qui grandit puis décroît au lieu de
+        // s'allumer d'un coup.
+        val proximite = 1f - depuisNouvelle / NEW_MOON_WINDOW
+        val alignement = 1f - latitude / NODE_WINDOW
+        return (proximite * alignement).coerceIn(0f, 1f)
+    }
+
+    /** Les couleurs du ciel, interpolées entre les paliers de [PALETTE]. */
+    private fun paint() {
+        val a = sunAltitude
+        var i = 0
+        while (i < PALETTE.size - 1 && a > PALETTE[i + 1].altitude) i++
+        val bas = PALETTE[i]
+        val haut = PALETTE[minOf(i + 1, PALETTE.size - 1)]
+        val span = haut.altitude - bas.altitude
+        val t = if (span <= 1e-4f) 0f else ((a - bas.altitude) / span).coerceIn(0f, 1f)
+        zenith = mix(bas.zenith, haut.zenith, t)
+        horizon = mix(bas.horizon, haut.horizon, t)
+        if (eclipse > 0f) {
+            // Une éclipse ne fait pas la nuit : elle fait un jour **sale**, une lumière
+            // de fin du monde. On tire donc vers la couleur de nuit sans jamais
+            // l'atteindre, ce qui est bien plus inquiétant qu'un simple noir.
+            zenith = mix(zenith, PALETTE.first().zenith, eclipse * 0.8f)
+            horizon = mix(horizon, PALETTE.first().horizon, eclipse * 0.8f)
+        }
+    }
+
+    private class Step(val altitude: Float, val zenith: Int, val horizon: Int)
+
+    companion object {
+
+        private const val DAY_MS = 86_400_000L
+        private const val TWO_PI = (2.0 * PI).toFloat()
+
+        /** Écart à la nouvelle lune en deçà duquel une éclipse est possible, en radians. */
+        private const val NEW_MOON_WINDOW = 0.10f
+
+        /** Latitude lunaire en deçà de laquelle l'alignement suffit, en radians (≈ 1,5°). */
+        private const val NODE_WINDOW = 0.026f
+
+        /**
+         * Les couleurs du ciel, du plus bas soleil au plus haut.
+         *
+         * Cinq paliers et pas deux, parce que c'est **entre** le jour et la nuit que
+         * tout se passe : la nuit est bleue et sourde, le plein jour est bleu et clair,
+         * et si on interpole directement de l'un à l'autre on obtient un fondu gris qui
+         * n'a jamais fait pleurer personne. Les deux paliers du milieu sont là pour ça —
+         * le violet qui monte quand le Soleil est encore sous l'horizon, puis l'orange
+         * franc qui prend l'horizon au moment où il le franchit.
+         */
+        private val PALETTE = arrayOf(
+            Step(-1f, 0xFF050A18.toInt(), 0xFF0B1026.toInt()),      // nuit profonde
+            Step(-0.09f, 0xFF241A4A.toInt(), 0xFF6B2B5E.toInt()),   // crépuscule violet
+            Step(0.02f, 0xFF2E3A72.toInt(), 0xFFE4703A.toInt()),    // orange franc
+            Step(0.16f, 0xFF3E6FB0.toInt(), 0xFFF0B070.toInt()),    // heure dorée
+            Step(0.45f, 0xFF2C6FB5.toInt(), 0xFFA8D0E8.toInt())     // plein jour
+        )
+
+        /** Mélange deux couleurs ARGB, composante par composante. */
+        fun mix(a: Int, b: Int, t: Float): Int {
+            val k = t.coerceIn(0f, 1f)
+            fun c(shift: Int): Int {
+                val ca = (a shr shift) and 0xFF
+                val cb = (b shr shift) and 0xFF
+                return (ca + (cb - ca) * k).toInt().coerceIn(0, 255)
+            }
+            return (0xFF shl 24) or (c(16) shl 16) or (c(8) shl 8) or c(0)
+        }
+    }
+}
