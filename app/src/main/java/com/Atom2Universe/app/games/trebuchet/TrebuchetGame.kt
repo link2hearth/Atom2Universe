@@ -211,6 +211,16 @@ object TrebuchetRules {
      */
     const val BALL_DRAG = 0.023f
 
+    /**
+     * Nombre de tirs gardés en mémoire, le plus récent compris.
+     *
+     * Dix, et pas tous : au-delà, la nappe de traits devient une bouillie où le tir
+     * qu'on vient de faire ne se distingue plus, et c'est lui qui compte. Le coût, lui,
+     * n'entre pas en ligne de compte — une trajectoire pèse deux mille flottants et la
+     * vue ne dessine que ce qui tient à l'écran.
+     */
+    const val GHOST_HISTORY = 10
+
     /** Garde au sol de la pointe du bras quand la machine est bandée. */
     const val TIP_CLEARANCE = 0.35f
 
@@ -537,9 +547,24 @@ class TrebuchetGame {
         trailBuf[trailCount++] = y
     }
 
-    /** Trajectoire du tir précédent : le fantôme qui sert à corriger. */
-    var ghost: FloatArray? = null
-        private set
+    private val ghostList = ArrayList<FloatArray>(TrebuchetRules.GHOST_HISTORY)
+
+    /**
+     * Les trajectoires des tirs précédents, **du plus récent au plus ancien**.
+     *
+     * Un seul fantôme disait de combien on avait manqué ; une pile en dit bien plus. On
+     * y lit la **série** : trois tirs qui se resserrent sur la cible, ou trois tirs qui
+     * s'éloignent parce qu'on tourne le mauvais bouton. C'est la mémoire du joueur, et
+     * elle vaut mieux que la sienne.
+     *
+     * Les traces sont gardées telles quelles, en coordonnées monde : elles ne coûtent
+     * qu'un millier de flottants chacune, la vue les découpe déjà à ce qui tient à
+     * l'écran, et rien n'oblige à les redessiner quand la caméra ne bouge pas.
+     */
+    val ghosts: List<FloatArray> get() = ghostList
+
+    /** La trajectoire du dernier tir, ou nulle si personne n'a encore tiré. */
+    val ghost: FloatArray? get() = ghostList.firstOrNull()
 
     // Mesures du tir
     var shotDistance = 0f
@@ -825,11 +850,14 @@ class TrebuchetGame {
         build()
     }
 
-    /** Rejoue la pose avec les réglages actuels, en gardant le fantôme du tir précédent. */
+    /**
+     * Rejoue la pose avec les réglages actuels, en gardant l'historique des tirs.
+     *
+     * C'est [build] qui remonte la machine, et il ne touche pas aux fantômes : régler sa
+     * poutre entre deux tirs ne doit pas effacer ce qu'on vient d'apprendre.
+     */
     fun rebuild() {
-        val keep = ghost
         build()
-        ghost = keep
     }
 
     // ── Réglages ─────────────────────────────────────────────────────────────
@@ -856,7 +884,9 @@ class TrebuchetGame {
     fun reset() {
         config.copyFrom(MachineConfig())
         build()
-        ghost = null
+        // Machine neuve, mémoire neuve : les fantômes d'une autre machine
+        // n'apprendraient plus rien à personne.
+        ghostList.clear()
     }
 
     /** Règle la longueur de la fronde, en mètres. */
@@ -1203,7 +1233,11 @@ class TrebuchetGame {
         if (shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
         shotCount++
         if (shotDistance > bestDistance) bestDistance = shotDistance
-        ghost = trailBuf.copyOf(trailCount)
+        // Le plus récent en tête, et on oublie le plus vieux quand la pile déborde.
+        ghostList.add(0, trailBuf.copyOf(trailCount))
+        while (ghostList.size > TrebuchetRules.GHOST_HISTORY) {
+            ghostList.removeAt(ghostList.size - 1)
+        }
     }
 
     // ── Simulation sans affichage ────────────────────────────────────────────

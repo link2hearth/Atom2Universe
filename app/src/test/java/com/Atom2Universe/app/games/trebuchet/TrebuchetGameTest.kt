@@ -336,4 +336,45 @@ class TrebuchetGameTest {
             all.first().first > 150f
         )
     }
+
+    /**
+     * La mémoire des tirs : elle s'empile, elle se plafonne, et elle survit aux
+     * réglages.
+     *
+     * Ce dernier point est le seul qui ait jamais cassé : la machine se remonte
+     * entièrement à chaque réglage — le monde est vidé, les corps sont refaits — et il
+     * serait très facile d'emporter l'historique avec. Le joueur qui allonge sa poutre
+     * de dix centimètres entre deux tirs perdrait alors exactement ce qui lui servait
+     * à décider.
+     */
+    @Test
+    fun `l historique des tirs s empile et se plafonne`() {
+        val g = machine()
+        val n = TrebuchetRules.GHOST_HISTORY + 3
+        val portees = ArrayList<Float>(n)
+        repeat(n) {
+            // Un réglage entre deux tirs : c'est là que l'historique disparaissait.
+            g.setPinAngle(g.config.pinAngleDeg + 1f)
+            portees += g.simulateShot(1f / 60f)
+        }
+        println(
+            "HISTORIQUE $n tirs -> ${g.ghosts.size} fantômes gardés, " +
+                "le plus récent fait ${g.ghosts.first().size / 2} points"
+        )
+        assertTrue(
+            "l'historique n'est pas plafonné : ${g.ghosts.size} fantômes",
+            g.ghosts.size == TrebuchetRules.GHOST_HISTORY
+        )
+        assertTrue("aucun fantôme n'a de trace", g.ghosts.all { it.size >= 4 })
+        // Le premier de la pile est le dernier tiré : sa trace s'arrête là où le boulet
+        // s'est arrêté, puisque rien n'a été remonté depuis.
+        val fin = g.ghosts.first()
+        assertTrue(
+            "le fantôme de tête n'est pas le dernier tir : " +
+                "il finit en ${fin[fin.size - 2]} pour un boulet en ${g.ball.x}",
+            abs(fin[fin.size - 2] - g.ball.x) < 20f
+        )
+        g.reset()
+        assertTrue("une machine neuve garde les fantômes de l'ancienne", g.ghosts.isEmpty())
+    }
 }

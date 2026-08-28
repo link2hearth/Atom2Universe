@@ -322,6 +322,13 @@ class TrebuchetView @JvmOverloads constructor(
         color = Color.argb(150, 255, 209, 102)
         pathEffect = DashPathEffect(floatArrayOf(9f * dp, 7f * dp), 0f)
     }
+    /**
+     * Le pinceau des fantômes. Un seul, retouché entre deux traces.
+     *
+     * Dix pinceaux tout faits auraient été plus simples à lire, et plus bêtes : la
+     * couleur et l'épaisseur d'un fantôme se déduisent de son rang, et un `Paint` se
+     * modifie pour trois fois rien. Ce qui coûte, dans un tracé, c'est le tracé.
+     */
     private val pGhost = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2f * dp
@@ -1110,7 +1117,7 @@ class TrebuchetView @JvmOverloads constructor(
 
         drawGround(canvas, w, h)
         drawTargets(canvas, w)
-        drawGhost(canvas)
+        drawGhosts(canvas)
         drawStartCone(canvas)
         drawFrameAndPivot(canvas)
         drawStrap(canvas)
@@ -1425,12 +1432,34 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     /**
-     * Le fantôme du tir précédent. Sans lui, corriger sa machine relève de la
-     * superstition : avec, on voit de combien on a manqué.
+     * Les fantômes des tirs précédents. Sans eux, corriger sa machine relève de la
+     * superstition : avec, on voit de combien on a manqué — et, depuis qu'ils sont
+     * dix, **dans quel sens on se trompe**.
+     *
+     * Le dernier tir est blanc et franc ; les précédents s'éteignent vers le gris à
+     * mesure qu'ils vieillissent. C'est ce dégradé qui fait la lecture : trois traits
+     * de plus en plus pâles qui se resserrent sur la cible disent qu'on chauffe, trois
+     * qui s'écartent disent qu'on tourne le mauvais bouton, et le trait blanc dit
+     * toujours où l'on en est.
+     *
+     * Ils se dessinent du plus vieux au plus récent, pour que le blanc passe par-dessus
+     * le gris et non l'inverse.
      */
-    private fun drawGhost(canvas: Canvas) {
-        val g = game.ghost ?: return
-        drawPolyline(canvas, g, g.size, pGhost)
+    private fun drawGhosts(canvas: Canvas) {
+        val list = game.ghosts
+        if (list.isEmpty()) return
+        val last = list.size - 1
+        for (i in last downTo 0) {
+            // Zéro pour le tir qu'on vient de faire, un pour le plus ancien.
+            val age = if (last == 0) 0f else i / last.toFloat()
+            // Du blanc franc au gris bleuté, et de plus en plus fin : le vieux tir doit
+            // rester lisible sans jamais disputer la vedette au dernier.
+            val v = (255 - 90f * age).toInt()
+            val b = (255 - 70f * age).toInt()
+            pGhost.color = Color.argb((170 - 110f * age).toInt(), v, v, b)
+            pGhost.strokeWidth = (2.2f - 0.9f * age) * dp
+            drawPolyline(canvas, list[i], list[i].size, pGhost)
+        }
     }
 
     /**
