@@ -33,10 +33,10 @@ import kotlin.math.roundToInt
  * ratait pas seulement le geste — ça déplaçait la fenêtre entière. On a donc, du plus
  * grossier au plus fin :
  *
- *  - les **flèches**, de part et d'autre des chiffres : un appui vaut un cran naturel
- *    du réglage — cinquante centimètres de poutre, cent kilos de contrepoids, un degré
- *    de crochet. C'est le geste ordinaire, et il ne demande aucune précision. Maintenu,
- *    l'appui se répète ;
+ *  - les **flèches**, de part et d'autre des chiffres — celle de gauche monte, celle
+ *    de droite descend : un appui vaut un cran naturel du réglage, cinquante
+ *    centimètres de poutre, cent kilos de contrepoids, un degré de crochet. C'est le
+ *    geste ordinaire, et il ne demande aucune précision. Maintenu, l'appui se répète ;
  *  - l'**appui sur un chiffre** : il ajoute ou retranche une unité de cette
  *    colonne-là — moitié haute pour monter, basse pour descendre ;
  *  - le **glissement sur un chiffre** : la roulette suit le doigt, cran par cran, pour
@@ -92,7 +92,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         MASS(R.string.trebuchet_dial_mass, R.string.trebuchet_unit_kg, 5, 0, 100f),
         HANG(R.string.trebuchet_dial_hang, R.string.trebuchet_unit_m, 2, 1, 0.1f),
         PIN(R.string.trebuchet_dial_pin, R.string.trebuchet_unit_deg, 2, 0, 1f),
-        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 1, 0.5f),
+        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 1, 0.1f),
         SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 0, 1f, choice = true);
 
         val digits: Int get() = intDigits + decimals
@@ -342,8 +342,8 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 context.getString(d.label), PAD_DP * dp,
                 mid + pLabel.textSize * 0.36f, pLabel
             )
-            drawArrow(canvas, xLeftArrow, mid, left = true, row = row)
-            drawArrow(canvas, xRightArrow, mid, left = false, row = row)
+            drawArrow(canvas, xLeftArrow, mid, up = true, row = row)
+            drawArrow(canvas, xRightArrow, mid, up = false, row = row)
 
             var x = cellsLeft(d)
             if (d.choice) {
@@ -400,25 +400,31 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
      * Elle occupe toute la hauteur d'une cellule, et pas seulement celle du triangle :
      * ce qu'on voit est petit, ce qu'on peut toucher est grand, et c'est exactement ce
      * qu'il fallait corriger.
+     *
+     * **Elles montent et descendent, elles ne vont pas à gauche et à droite.** Une
+     * valeur n'a pas de gauche ni de droite : elle a un haut et un bas, et c'est déjà
+     * ce que disent les roulettes, où l'on pousse les chiffres vers le haut pour les
+     * faire croître. Celle de gauche pointe donc vers le haut et fait monter, celle de
+     * droite vers le bas et fait descendre.
      */
-    private fun drawArrow(canvas: Canvas, x: Float, mid: Float, left: Boolean, row: Int) {
+    private fun drawArrow(canvas: Canvas, x: Float, mid: Float, up: Boolean, row: Int) {
         val w = ARROW_W_DP * dp
         val h = CELL_H_DP * dp
-        val on = hit == Hit.ARROW && row == turnRow && (arrowDir < 0) == left
+        val on = hit == Hit.ARROW && row == turnRow && (arrowDir > 0) == up
         rect.set(x + 3f * dp, mid - h / 2f, x + w - 3f * dp, mid + h / 2f)
         canvas.drawRoundRect(rect, 6f * dp, 6f * dp, if (on) pArrowBedOn else pArrowBed)
 
         val cx = x + w / 2f
         val r = 7f * dp
         arrowPath.reset()
-        if (left) {
-            arrowPath.moveTo(cx + r * 0.6f, mid - r)
-            arrowPath.lineTo(cx + r * 0.6f, mid + r)
-            arrowPath.lineTo(cx - r * 0.7f, mid)
+        if (up) {
+            arrowPath.moveTo(cx - r, mid + r * 0.6f)
+            arrowPath.lineTo(cx + r, mid + r * 0.6f)
+            arrowPath.lineTo(cx, mid - r * 0.7f)
         } else {
-            arrowPath.moveTo(cx - r * 0.6f, mid - r)
-            arrowPath.lineTo(cx - r * 0.6f, mid + r)
-            arrowPath.lineTo(cx + r * 0.7f, mid)
+            arrowPath.moveTo(cx - r, mid - r * 0.6f)
+            arrowPath.lineTo(cx + r, mid - r * 0.6f)
+            arrowPath.lineTo(cx, mid + r * 0.7f)
         }
         arrowPath.close()
         canvas.drawPath(arrowPath, pArrow)
@@ -576,14 +582,15 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             if (y < top || y > top + ROW_DP * dp) continue
             turnRow = row
             val aw = ARROW_W_DP * dp
+            // À gauche on monte, à droite on descend : voir [drawArrow].
             if (x >= xLeftArrow && x <= xLeftArrow + aw) {
                 hit = Hit.ARROW
-                arrowDir = -1
+                arrowDir = +1
                 return
             }
             if (x >= xRightArrow && x <= xRightArrow + aw) {
                 hit = Hit.ARROW
-                arrowDir = +1
+                arrowDir = -1
                 return
             }
             var cx = cellsLeft(d)
