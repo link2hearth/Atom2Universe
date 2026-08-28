@@ -48,4 +48,14 @@
     <string name="trebuchet_level">%1$s · %2$d %% razed · %3$d shot(s)</string>
     <string name="trebuchet_level_cleared">%1$s — RAZED in %2$d shot(s)!</string>
     <string name="trebuchet_btn_next">Next site</string>
+    <string name="trebuchet_btn_machines">Machines ▾</string>
+    <string name="trebuchet_machine_default">Default machine</string>
+    <string name="trebuchet_machine_save_as">Save as…</string>
+    <string name="trebuchet_machine_delete">Delete…</string>
+    <string name="trebuchet_machine_name">Machine name</string>
+    <string name="trebuchet_machine_save">Save</string>
+    <string name="trebuchet_machine_loaded">%1$s loaded</string>
+    <string name="trebuchet_machine_saved">%1$s saved</string>
+    <string name="trebuchet_machine_deleted">%1$s deleted</string>
+    <string name="trebuchet_machine_noname">A machine needs a name</string>
 </resources>

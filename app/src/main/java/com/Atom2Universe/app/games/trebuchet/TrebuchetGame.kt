@@ -912,11 +912,20 @@ class TrebuchetGame {
     fun setPinAngle(deg: Float) = editSetting { config.pinAngleDeg = deg }
 
     /** Repart d'une machine neuve, fantôme compris. */
-    fun reset() {
-        config.copyFrom(MachineConfig())
+    fun reset() = loadConfig(MachineConfig())
+
+    /**
+     * Prend une machine toute faite : celle d'origine, ou une que le joueur a mise de
+     * côté.
+     *
+     * Les fantômes s'en vont avec l'ancienne machine, et c'est voulu : ils disent « ce
+     * réglage-là envoie le boulet ici », ce qui n'apprend plus rien dès que le réglage
+     * n'est plus celui-là. Les garder donnerait des traces qu'aucun bouton ne pourrait
+     * plus reproduire.
+     */
+    fun loadConfig(c: MachineConfig) {
+        config.copyFrom(c)
         build()
-        // Machine neuve, mémoire neuve : les fantômes d'une autre machine
-        // n'apprendraient plus rien à personne.
         ghostList.clear()
     }
 

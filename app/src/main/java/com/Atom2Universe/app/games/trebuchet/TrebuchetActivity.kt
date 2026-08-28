@@ -4,8 +4,12 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
@@ -23,6 +27,14 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         const val KEY_BEST = "best_distance"
         const val KEY_SEED = "level_seed"
         const val KEY_STYLE = "target_style"
+        const val KEY_MACHINES = "machines"
+
+        // Les entrées du menu des machines. Les machines enregistrées prennent les
+        // numéros suivants, dans l'ordre où elles s'affichent.
+        const val ID_DEFAULT = 0
+        const val ID_SAVE_AS = 1
+        const val ID_DELETE = 2
+        const val ID_FIRST_PRESET = 10
     }
 
     private lateinit var gameView: TrebuchetView
@@ -34,11 +46,18 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     private lateinit var infoTitle: TextView
     private lateinit var infoTip: TextView
     private lateinit var prefs: SharedPreferences
+    private lateinit var machinesButton: TextView
+
+    /** Les machines mises de côté par le joueur, la plus récente en tête. */
+    private var machines = emptyList<MachinePreset>()
 
     private var best = 0f
 
     /** La graine du site en cours. Tout le niveau tient dedans. */
     private var levelSeed = 1L
+
+    /** Le nom sous lequel on a chargé ou enregistré pour la dernière fois. */
+    private var lastMachineName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,12 +88,13 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         wheels.onValueChanged = { updateUi() }
 
         findViewById<ImageButton>(R.id.trebuchet_btn_back).setOnClickListener { finish() }
-        val reset = findViewById<TextView>(R.id.trebuchet_btn_reset)
-        reset.setOnClickListener { resetMachine() }
+        machines = MachineLibrary.decode(prefs.getString(KEY_MACHINES, "") ?: "")
+        machinesButton = findViewById(R.id.trebuchet_btn_machines)
+        machinesButton.setOnClickListener { showMachinesMenu() }
         // Appui long : on passe au site suivant sans l'avoir rasé. Indispensable pour
         // essayer, et sans doute à remplacer par un vrai bouton quand le mode aura
         // trouvé sa forme.
-        reset.setOnLongClickListener { nextLevel(); true }
+        machinesButton.setOnLongClickListener { nextLevel(); true }
         fireButton.setOnClickListener { onFireButton() }
         // Le bandeau du site sert aussi d'interrupteur entre arcade et réaliste. Le
         // site se refait au passage : la masse et la solidité d'une pierre sont fixées
@@ -120,11 +140,111 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     private fun styleLabel(): String =
         if (TargetRules.style == TargetStyle.ARCADE) "ARCADE" else "RÉALISTE"
 
-    private fun resetMachine() {
+    // ── L'atelier ─────────────────────────────────────────────────────────────
+
+    /**
+     * Le menu des machines : celle d'origine, celles qu'on a mises de côté, et de quoi
+     * ranger celle qu'on tient.
+     *
+     * Il a remplacé un bouton « Réinitialiser », lequel ne savait faire qu'une chose et
+     * la faisait brutalement : effacer une demi-heure de réglages. Le même bouton rend
+     * maintenant ce geste-là **et** son contraire — remettre la main sur une machine
+     * qu'on avait trouvée bonne.
+     */
+    private fun showMachinesMenu() {
+        val popup = PopupMenu(this, machinesButton)
+        val menu = popup.menu
+        menu.add(0, ID_DEFAULT, 0, getString(R.string.trebuchet_machine_default))
+        for ((i, m) in machines.withIndex()) menu.add(0, ID_FIRST_PRESET + i, i + 1, m.name)
+        menu.add(0, ID_SAVE_AS, machines.size + 1, getString(R.string.trebuchet_machine_save_as))
+        if (machines.isNotEmpty()) {
+            menu.add(0, ID_DELETE, machines.size + 2, getString(R.string.trebuchet_machine_delete))
+        }
+        popup.setOnMenuItemClickListener { item ->
+            when (val id = item.itemId) {
+                ID_DEFAULT -> {
+                    // On repart de zéro : le champ « enregistrer sous » aussi, sinon on
+                    // proposerait d'écraser une machine dont il ne reste rien.
+                    lastMachineName = ""
+                    loadMachine(MachineConfig(), getString(R.string.trebuchet_machine_default))
+                }
+                ID_SAVE_AS -> askMachineName()
+                ID_DELETE -> showDeleteMenu()
+                else -> machines.getOrNull(id - ID_FIRST_PRESET)?.let {
+                    // Charger une machine, c'est reprendre son nom : la prochaine
+                    // sauvegarde proposera de la mettre à jour, qui est ce qu'on veut
+                    // faire après l'avoir sortie pour la retoucher.
+                    lastMachineName = it.name
+                    loadMachine(it.config, it.name)
+                }
+            }
+            true
+        }
+        popup.show()
+    }
+
+    /** Pose une machine sur le terrain et le dit, parce que ça ne se voit pas toujours. */
+    private fun loadMachine(cfg: MachineConfig, name: String) {
         gameView.clearSelection()
-        synchronized(gameView.game) { gameView.game.reset() }
+        synchronized(gameView.game) { gameView.game.loadConfig(cfg) }
         gameView.syncPhase()
         updateUi()
+        toast(getString(R.string.trebuchet_machine_loaded, name))
+    }
+
+    /**
+     * Demande un nom et range la machine du moment.
+     *
+     * Le champ arrive **prérempli** avec le nom de la dernière machine chargée : neuf
+     * fois sur dix, on enregistre une machine qu'on vient d'améliorer, et réécrire son
+     * nom au clavier à chaque fois serait une punition. Reprendre le même nom remplace,
+     * ce qui est très exactement ce qu'on voulait faire.
+     */
+    private fun askMachineName() {
+        val field = EditText(this).apply {
+            setText(lastMachineName)
+            setSelection(text.length)
+            setSingleLine()
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.trebuchet_machine_name)
+            .setView(field)
+            .setPositiveButton(R.string.trebuchet_machine_save) { _, _ ->
+                saveMachine(field.text.toString())
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun saveMachine(rawName: String) {
+        val name = MachinePreset.clean(rawName)
+        if (name.isEmpty()) {
+            toast(getString(R.string.trebuchet_machine_noname))
+            return
+        }
+        machines = MachineLibrary.put(machines, MachinePreset(name, gameView.game.config))
+        prefs.edit { putString(KEY_MACHINES, MachineLibrary.encode(machines)) }
+        lastMachineName = name
+        toast(getString(R.string.trebuchet_machine_saved, name))
+    }
+
+    /** Le second menu : celui dont on ne sort rien, on y jette. */
+    private fun showDeleteMenu() {
+        val popup = PopupMenu(this, machinesButton)
+        for ((i, m) in machines.withIndex()) popup.menu.add(0, i, i, m.name)
+        popup.setOnMenuItemClickListener { item ->
+            machines.getOrNull(item.itemId)?.let { m ->
+                machines = MachineLibrary.remove(machines, m.name)
+                prefs.edit { putString(KEY_MACHINES, MachineLibrary.encode(machines)) }
+                toast(getString(R.string.trebuchet_machine_deleted, m.name))
+            }
+            true
+        }
+        popup.show()
+    }
+
+    private fun toast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     private fun onFireButton() {
