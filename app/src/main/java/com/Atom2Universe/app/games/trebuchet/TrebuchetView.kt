@@ -155,6 +155,17 @@ class TrebuchetView @JvmOverloads constructor(
          */
         const val PICK_REACH_MAX = 2f
 
+        /**
+         * Jusqu'où, en fraction de la hauteur du pivot, le bâti se laisse désigner.
+         *
+         * Le dernier tiers ne lui appartient pas : c'est là que pend le contrepoids,
+         * et c'est lui qu'on veut y attraper.
+         */
+        const val POST_PICK_TOP = 0.7f
+
+        /** Où, sur le bâti, se dessinent le repère et la poignée du pied. */
+        const val POST_GRIP_HEIGHT = 0.4f
+
         /** Longueur du départ prévisualisé, en mètres. Au-delà, il faudra tirer. */
         const val PREVIEW_METRES = 50f
 
@@ -833,9 +844,33 @@ class TrebuchetView @JvmOverloads constructor(
         val cw = game.counterweight
         val box = game.config.counterweightHalf + reach
         if (abs(wx - cw.x) < box && abs(wy - cw.y) < box) return Part.WEIGHT
-        if (hypot(wx - game.pivotX, wy - game.pivotY) < reach) return Part.POST
+        if (onPostFrame(wx, wy)) return Part.POST
         if (distanceToBeam(wx, wy) < reach) return Part.BEAM
         return Part.NONE
+    }
+
+    /**
+     * Vrai si le doigt est sur le **bâti** : le triangle des deux jambes, du sol
+     * jusqu'aux deux tiers de la hauteur du pivot.
+     *
+     * On ne prend pas le pied par son sommet, et c'est tout l'objet de cette fonction.
+     * Le sommet du bâti est le seul endroit de la machine où trois pièces se
+     * rencontrent : le pivot, la poutre qui tourne autour, et le contrepoids qui pend
+     * juste à côté à moins d'un mètre. Y viser le pied, c'était attraper le
+     * contrepoids une fois sur deux — et le contrepoids, lui, est testé en premier.
+     *
+     * Plus bas, le bâti est seul, et il s'élargit : ses jambes s'écartent de trente
+     * pour cent de sa hauteur de chaque côté, ce qui fait au ras du sol une cible de
+     * cinq mètres de large. On ne peut pas la rater.
+     */
+    private fun onPostFrame(wx: Float, wy: Float): Boolean {
+        val h = game.pivotY
+        if (h <= 0f) return false
+        val reach = pickReach()
+        if (wy < -reach || wy > h * POST_PICK_TOP) return false
+        // L'écartement des jambes à cette hauteur-là : nul au pivot, maximal au sol.
+        val spread = 0.30f * h * (1f - (wy / h).coerceIn(0f, 1f))
+        return abs(wx - game.pivotX) <= spread + reach
     }
 
     /**
@@ -853,7 +888,9 @@ class TrebuchetView @JvmOverloads constructor(
                 distanceToBeam(wx, wy) < reach -> Grip.BEAM_LENGTH
                 else -> Grip.NONE
             }
-            Part.POST -> if (onAxle) Grip.POST_HEIGHT else Grip.NONE
+            // Le pied s'étire par son bâti, mais aussi par son sommet : on a pris la
+            // peine de le sélectionner, autant ne plus être regardant sur la visée.
+            Part.POST -> if (onAxle || onPostFrame(wx, wy)) Grip.POST_HEIGHT else Grip.NONE
             Part.WEIGHT -> {
                 val cw = game.counterweight
                 val h = game.config.counterweightHalf
@@ -1453,7 +1490,10 @@ class TrebuchetView @JvmOverloads constructor(
         canvas.drawCircle(
             sx((tip[0] + game.pivotX) / 2f), sy((tip[1] + game.pivotY) / 2f), r, pSpot
         )
-        canvas.drawCircle(sx(game.pivotX), sy(game.pivotY), r, pSpot)
+        // Le repère du pied se pose **dans** le bâti, à mi-jambes, et non sur le
+        // pivot : c'est là qu'il se désigne désormais, et un repère qui ne montre pas
+        // la bonne cible est pire que pas de repère du tout.
+        canvas.drawCircle(sx(game.pivotX), sy(game.pivotY * POST_GRIP_HEIGHT), r, pSpot)
         canvas.drawCircle(sx(game.counterweight.x), sy(game.counterweight.y), r, pSpot)
         game.pinWorld(pin)
         canvas.drawCircle(sx(pin[0]), sy(pin[1]), r, pSpot)
@@ -1483,6 +1523,10 @@ class TrebuchetView @JvmOverloads constructor(
                 canvas.drawLine(
                     sx(game.pivotX), sy(0f), sx(game.pivotX), sy(game.pivotY), pSelect
                 )
+                // Deux poignées, parce qu'il y a deux endroits où le doigt marche : le
+                // bâti, où l'on a pris le pied, et le pivot, qui reste le geste naturel
+                // pour dire « monte l'axe jusque-là ».
+                drawGrip(canvas, game.pivotX, game.pivotY * POST_GRIP_HEIGHT)
                 drawGrip(canvas, game.pivotX, game.pivotY)
                 drawValue(canvas, game.pivotX, game.pivotY, "%.1f m".format(cfg.pivotHeight))
             }
