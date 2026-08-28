@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
@@ -26,8 +27,24 @@ import kotlin.math.roundToInt
  * Les deux sont disponibles en même temps et lisent la même machine : tourner une
  * roulette déplace la pièce à l'écran, tirer la pièce fait tourner les roulettes.
  *
- * La bulle flotte au-dessus de la scène et se déplace au doigt — sur un téléphone
- * couché, elle finirait sinon par cacher exactement ce qu'on est en train de régler.
+ * **Trois façons de changer une valeur, et c'est voulu.** Une bulle qui ne se
+ * manœuvrait qu'au glissement était pénible sur un vrai téléphone : un doigt fait cinq
+ * millimètres de large, une cellule de chiffre en faisait six, et rater sa cible ne
+ * ratait pas seulement le geste — ça déplaçait la fenêtre entière. On a donc, du plus
+ * grossier au plus fin :
+ *
+ *  - les **flèches**, de part et d'autre des chiffres : un appui vaut un cran naturel
+ *    du réglage — cinquante centimètres de poutre, cent kilos de contrepoids, un degré
+ *    de crochet. C'est le geste ordinaire, et il ne demande aucune précision. Maintenu,
+ *    l'appui se répète ;
+ *  - l'**appui sur un chiffre** : il ajoute ou retranche une unité de cette
+ *    colonne-là — moitié haute pour monter, basse pour descendre ;
+ *  - le **glissement sur un chiffre** : la roulette suit le doigt, cran par cran, pour
+ *    balayer une plage.
+ *
+ * Et la fenêtre ne se déplace plus que par son **bandeau**, en haut. Tout le reste de
+ * la bulle est inerte : un appui à côté d'une flèche ne fait rien du tout, ce qui est
+ * exactement ce qu'on attend d'un appui raté.
  */
 class TrebuchetWheelBubble @JvmOverloads constructor(
     ctx: Context,
@@ -51,26 +68,38 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val intDigits: Int,
         val decimals: Int,
         /**
+         * Le **cran naturel** du réglage : ce qu'une flèche ajoute ou retranche.
+         *
+         * Il n'a rien à voir avec la précision de l'affichage, et c'est tout l'intérêt.
+         * Le contrepoids s'affiche au kilo près mais se règle par cent : personne ne
+         * cherche 3 001 kg, et personne ne veut appuyer mille fois pour aller de trois
+         * tonnes à quatre. Le chiffre, lui, reste là pour qui veut poser une valeur
+         * exacte.
+         */
+        val step: Float,
+        /**
          * Vrai pour la roulette qui fait défiler des **mots** au lieu de chiffres.
          *
-         * Elle se manœuvre exactement comme les autres — on la pousse du doigt, un
-         * appui vaut un cran — et c'est tout l'intérêt : le joueur a déjà appris le
-         * geste sur les six premières lignes, il n'a rien de neuf à comprendre pour
-         * changer de projectile.
+         * Elle se manœuvre exactement comme les autres — flèches, appui, glissement —
+         * et c'est tout l'intérêt : le joueur a déjà appris le geste sur les lignes
+         * précédentes, il n'a rien de neuf à comprendre pour changer de projectile.
          */
         val choice: Boolean = false
     ) {
-        BEAM(R.string.trebuchet_dial_beam, R.string.trebuchet_unit_m, 2, 1),
-        LEVER(R.string.trebuchet_dial_lever, R.string.trebuchet_unit_ratio, 1, 1),
-        POST(R.string.trebuchet_dial_post, R.string.trebuchet_unit_m, 2, 1),
-        MASS(R.string.trebuchet_dial_mass, R.string.trebuchet_unit_kg, 5, 0),
-        HANG(R.string.trebuchet_dial_hang, R.string.trebuchet_unit_m, 2, 1),
-        PIN(R.string.trebuchet_dial_pin, R.string.trebuchet_unit_deg, 2, 0),
-        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 1),
-        SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 0, choice = true);
+        BEAM(R.string.trebuchet_dial_beam, R.string.trebuchet_unit_m, 2, 1, 0.5f),
+        LEVER(R.string.trebuchet_dial_lever, R.string.trebuchet_unit_ratio, 1, 1, 0.1f),
+        POST(R.string.trebuchet_dial_post, R.string.trebuchet_unit_m, 2, 1, 0.5f),
+        MASS(R.string.trebuchet_dial_mass, R.string.trebuchet_unit_kg, 5, 0, 100f),
+        HANG(R.string.trebuchet_dial_hang, R.string.trebuchet_unit_m, 2, 1, 0.1f),
+        PIN(R.string.trebuchet_dial_pin, R.string.trebuchet_unit_deg, 2, 0, 1f),
+        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 1, 0.5f),
+        SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 0, 1f, choice = true);
 
         val digits: Int get() = intDigits + decimals
     }
+
+    /** Ce que le doigt vient de toucher. */
+    private enum class Hit { NONE, HEADER, WHEEL, ARROW }
 
     /** Le nom court d'un projectile, tel qu'il défile dans la roulette. */
     private fun shotName(kind: Projectile): String = context.getString(
@@ -91,15 +120,27 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         /** En deçà, le doigt n'a pas glissé : c'est un appui, et il vaut un cran. */
         const val TAP_SLOP_DP = 8f
 
-        const val PAD_DP = 10f
-        const val ROW_DP = 46f
-        const val CELL_W_DP = 25f
-        const val CELL_H_DP = 38f
-        const val GAP_DP = 3f
-        const val DOT_W_DP = 9f
+        const val PAD_DP = 12f
+        const val ROW_DP = 56f
+        const val CELL_W_DP = 32f
+        const val CELL_H_DP = 46f
+        const val GAP_DP = 4f
+        const val DOT_W_DP = 10f
+
+        /** Hauteur du bandeau par lequel — et seulement par lequel — la bulle se déplace. */
+        const val HEADER_DP = 26f
+
+        /** Largeur d'une flèche. Généreuse : c'est la cible la plus visée de la bulle. */
+        const val ARROW_W_DP = 40f
 
         /** Marge de part et d'autre du mot le plus long, dans sa cellule. */
         const val CHOICE_PAD_DP = 10f
+
+        /** Attente avant qu'une flèche maintenue ne se mette à répéter, en ms. */
+        const val REPEAT_DELAY_MS = 400L
+
+        /** Intervalle entre deux crans d'une flèche maintenue, en ms. */
+        const val REPEAT_EVERY_MS = 80L
     }
 
     // ── Encres ────────────────────────────────────────────────────────────────
@@ -110,7 +151,14 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         strokeWidth = 1.5f * dp
         color = Color.argb(120, 255, 209, 102)
     }
+    private val pHeader = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(70, 143, 166, 200) }
+    private val pGrip = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(150, 255, 209, 102) }
     private val pCell = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(60, 143, 166, 200) }
+    private val pArrow = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#FFD166".toColorInt() }
+    private val pArrowBed = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(45, 143, 166, 200) }
+    private val pArrowBedOn = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(120, 255, 209, 102)
+    }
     private val pDigit = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
         color = "#FFD166".toColorInt()
@@ -140,6 +188,8 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     }
 
     private val rect = RectF()
+    private val arrowPath = Path()
+    private val clipPath = Path()
 
     // ── Contenu ───────────────────────────────────────────────────────────────
 
@@ -148,26 +198,42 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     private var unitWidth = 0f
     private var choiceWidth = 0f
 
+    /** Largeur réservée aux cellules : celle de la ligne la plus large. */
+    private var cellsSpan = 0f
+
     // ── Saisie ────────────────────────────────────────────────────────────────
 
-    /** La roulette tenue, ou (-1, -1) quand c'est la bulle entière qu'on déplace. */
+    private var hit = Hit.NONE
+
+    /** La ligne tenue, et la colonne si c'est une roulette de chiffres. */
     private var turnRow = -1
     private var turnCol = -1
+
+    /** Le sens de la flèche tenue : +1 à droite, -1 à gauche. */
+    private var arrowDir = 0
 
     /** Chemin parcouru depuis le dernier cran : sert aussi à faire rouler l'image. */
     private var turnOffset = 0f
     private var travel = 0f
     private var lastX = 0f
     private var lastY = 0f
-    private var movingPanel = false
+
+    /** La répétition d'une flèche maintenue. */
+    private val repeater = object : Runnable {
+        override fun run() {
+            if (hit != Hit.ARROW) return
+            nudge(arrowDir)
+            postDelayed(this, REPEAT_EVERY_MS)
+        }
+    }
 
     init {
-        pDigit.textSize = 20f * dp
-        pDigitDim.textSize = 20f * dp
-        pLabel.textSize = 12f * dp
-        pUnit.textSize = 12f * dp
-        pChoice.textSize = 14f * dp
-        pChoiceDim.textSize = 14f * dp
+        pDigit.textSize = 24f * dp
+        pDigitDim.textSize = 24f * dp
+        pLabel.textSize = 13f * dp
+        pUnit.textSize = 13f * dp
+        pChoice.textSize = 15f * dp
+        pChoiceDim.textSize = 15f * dp
     }
 
     /**
@@ -183,7 +249,15 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         }
         val show = wanted.isNotEmpty()
         if ((visibility == VISIBLE) != show) visibility = if (show) VISIBLE else GONE
+        // Une bulle qui disparaît sous un doigt encore posé laisserait sa flèche en
+        // train de se répéter dans le vide.
+        if (!show) release()
         if (show) invalidate()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        release()
     }
 
     private fun dialsFor(part: TrebuchetView.Part): List<Dial> = when (part) {
@@ -212,12 +286,30 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             }
             choiceWidth += 2f * CHOICE_PAD_DP * dp
         }
+        cellsSpan = 0f
+        for (d in dials) cellsSpan = maxOf(cellsSpan, cellsWidth(d))
     }
 
-    /** Largeur, en pixels, de la cellule d'une roulette : chiffres ou mots. */
+    /** Largeur, en pixels, des cellules d'une ligne : chiffres ou mots. */
     private fun cellsWidth(d: Dial): Float =
         if (d.choice) choiceWidth
         else d.digits * (CELL_W_DP + GAP_DP) * dp + (if (d.decimals > 0) DOT_W_DP * dp else 0f)
+
+    // ── La grille ─────────────────────────────────────────────────────────────
+    //
+    // Les colonnes se calculent ici, une fois pour toutes, et le dessin comme la saisie
+    // les relisent. C'est la seule façon d'être sûr qu'une flèche se touche là où elle
+    // se voit : deux calculs séparés finissent toujours par diverger d'un dp.
+
+    private val xLeftArrow: Float get() = PAD_DP * dp + labelWidth + 8f * dp
+    private val xCells: Float get() = xLeftArrow + ARROW_W_DP * dp
+    private val xRightArrow: Float get() = xCells + cellsSpan
+    private val xUnit: Float get() = xRightArrow + ARROW_W_DP * dp + 4f * dp
+
+    /** Le bord gauche des cellules d'une ligne, centrées dans la place réservée. */
+    private fun cellsLeft(d: Dial): Float = xCells + (cellsSpan - cellsWidth(d)) / 2f
+
+    private fun rowTop(row: Int): Float = (HEADER_DP + PAD_DP + row * ROW_DP) * dp
 
     // ── Mesure ────────────────────────────────────────────────────────────────
 
@@ -226,10 +318,8 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             setMeasuredDimension(0, 0)
             return
         }
-        var cells = 0f
-        for (d in dials) cells = maxOf(cells, cellsWidth(d))
-        val w = PAD_DP * 2f * dp + labelWidth + 8f * dp + cells + 8f * dp + unitWidth
-        val h = PAD_DP * 2f * dp + dials.size * ROW_DP * dp
+        val w = xUnit + unitWidth + PAD_DP * dp
+        val h = (HEADER_DP + PAD_DP * 2f + dials.size * ROW_DP) * dp
         setMeasuredDimension(w.roundToInt(), h.roundToInt())
     }
 
@@ -242,38 +332,96 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         rect.set(0f, 0f, width.toFloat(), height.toFloat())
         canvas.drawRoundRect(rect, 12f * dp, 12f * dp, pPanel)
         canvas.drawRoundRect(rect, 12f * dp, 12f * dp, pPanelEdge)
+        drawHeader(canvas)
 
         for (row in dials.indices) {
             val d = dials[row]
-            val top = (PAD_DP + row * ROW_DP) * dp
-            val mid = top + ROW_DP * dp / 2f
+            val mid = rowTop(row) + ROW_DP * dp / 2f
 
             canvas.drawText(
                 context.getString(d.label), PAD_DP * dp,
                 mid + pLabel.textSize * 0.36f, pLabel
             )
+            drawArrow(canvas, xLeftArrow, mid, left = true, row = row)
+            drawArrow(canvas, xRightArrow, mid, left = false, row = row)
 
-            var x = PAD_DP * dp + labelWidth + 8f * dp
+            var x = cellsLeft(d)
             if (d.choice) {
                 drawChoice(canvas, x, mid, row)
-                continue
-            }
-            val digits = digitsOf(d, value(g, d))
-            for (col in 0 until d.digits) {
-                // Le point décimal s'insère à sa place, sans roulette : il ne se règle
-                // pas, il se lit.
-                if (d.decimals > 0 && col == d.intDigits) {
-                    canvas.drawCircle(x + DOT_W_DP * dp / 2f, mid + 12f * dp, 2f * dp, pDot)
-                    x += DOT_W_DP * dp
+            } else {
+                val digits = digitsOf(d, value(g, d))
+                for (col in 0 until d.digits) {
+                    // Le point décimal s'insère à sa place, sans roulette : il ne se
+                    // règle pas, il se lit.
+                    if (d.decimals > 0 && col == d.intDigits) {
+                        canvas.drawCircle(x + DOT_W_DP * dp / 2f, mid + 14f * dp, 2.5f * dp, pDot)
+                        x += DOT_W_DP * dp
+                    }
+                    drawWheel(canvas, x, mid, digits[col], row, col)
+                    x += (CELL_W_DP + GAP_DP) * dp
                 }
-                drawWheel(canvas, x, mid, digits[col], row, col)
-                x += (CELL_W_DP + GAP_DP) * dp
             }
             canvas.drawText(
-                context.getString(d.unit), x + 4f * dp,
+                context.getString(d.unit), xUnit,
                 mid + pUnit.textSize * 0.36f, pUnit
             )
         }
+    }
+
+    /**
+     * Le bandeau de déplacement : la seule prise par laquelle la bulle se pousse.
+     *
+     * Il porte une poignée dessinée, et c'est tout ce qu'il porte. Il n'y a rien à y
+     * lire — le bandeau de l'écran dit déjà quelle pièce est en main — mais il y a
+     * quelque chose à y **voir** : sans poignée, personne ne devinerait que la fenêtre
+     * se déplace, et encore moins par où.
+     */
+    private fun drawHeader(canvas: Canvas) {
+        val h = HEADER_DP * dp
+        canvas.save()
+        rect.set(0f, 0f, width.toFloat(), height.toFloat())
+        clipPath.reset()
+        clipPath.addRoundRect(rect, 12f * dp, 12f * dp, Path.Direction.CW)
+        canvas.clipPath(clipPath)
+        canvas.drawRect(0f, 0f, width.toFloat(), h, pHeader)
+        canvas.restore()
+
+        val gw = 34f * dp
+        rect.set(
+            (width - gw) / 2f, h / 2f - 2f * dp,
+            (width + gw) / 2f, h / 2f + 2f * dp
+        )
+        canvas.drawRoundRect(rect, 2f * dp, 2f * dp, pGrip)
+    }
+
+    /**
+     * Une flèche : un triangle dans son lit, qui s'allume tant qu'on appuie dessus.
+     *
+     * Elle occupe toute la hauteur d'une cellule, et pas seulement celle du triangle :
+     * ce qu'on voit est petit, ce qu'on peut toucher est grand, et c'est exactement ce
+     * qu'il fallait corriger.
+     */
+    private fun drawArrow(canvas: Canvas, x: Float, mid: Float, left: Boolean, row: Int) {
+        val w = ARROW_W_DP * dp
+        val h = CELL_H_DP * dp
+        val on = hit == Hit.ARROW && row == turnRow && (arrowDir < 0) == left
+        rect.set(x + 3f * dp, mid - h / 2f, x + w - 3f * dp, mid + h / 2f)
+        canvas.drawRoundRect(rect, 6f * dp, 6f * dp, if (on) pArrowBedOn else pArrowBed)
+
+        val cx = x + w / 2f
+        val r = 7f * dp
+        arrowPath.reset()
+        if (left) {
+            arrowPath.moveTo(cx + r * 0.6f, mid - r)
+            arrowPath.lineTo(cx + r * 0.6f, mid + r)
+            arrowPath.lineTo(cx - r * 0.7f, mid)
+        } else {
+            arrowPath.moveTo(cx - r * 0.6f, mid - r)
+            arrowPath.lineTo(cx - r * 0.6f, mid + r)
+            arrowPath.lineTo(cx + r * 0.7f, mid)
+        }
+        arrowPath.close()
+        canvas.drawPath(arrowPath, pArrow)
     }
 
     /**
@@ -290,7 +438,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
 
         val kinds = Projectile.entries
         val cur = kinds.indexOf(game?.config?.projectile ?: Projectile.BOULET)
-        val rolling = row == turnRow && turnCol == 0
+        val rolling = hit == Hit.WHEEL && row == turnRow
         val offset = if (rolling) turnOffset else 0f
         val step = STEP_DP * dp
         val cx = x + choiceWidth / 2f
@@ -315,7 +463,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         rect.set(x, mid - h / 2f, x + w, mid + h / 2f)
         canvas.drawRoundRect(rect, 4f * dp, 4f * dp, pCell)
 
-        val rolling = row == turnRow && col == turnCol
+        val rolling = hit == Hit.WHEEL && row == turnRow && col == turnCol
         val offset = if (rolling) turnOffset else 0f
         val step = STEP_DP * dp
         val cx = x + w / 2f
@@ -343,10 +491,14 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 lastY = event.rawY
                 travel = 0f
                 turnOffset = 0f
-                val hit = wheelAt(event.x, event.y)
-                turnRow = hit shr 8
-                turnCol = hit and 0xFF
-                movingPanel = turnRow < 0
+                hitTest(event.x, event.y)
+                if (hit == Hit.ARROW) {
+                    // Le premier cran part à l'appui, pas au relâchement : une flèche
+                    // doit répondre tout de suite.
+                    nudge(arrowDir)
+                    postDelayed(repeater, REPEAT_DELAY_MS)
+                }
+                invalidate()
                 parent?.requestDisallowInterceptTouchEvent(true)
             }
             MotionEvent.ACTION_MOVE -> {
@@ -355,36 +507,107 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 lastX = event.rawX
                 lastY = event.rawY
                 travel += abs(dx) + abs(dy)
-                if (movingPanel) {
-                    dragPanel(dx, dy)
-                } else {
-                    // Glisser vers le haut fait monter les chiffres : on pousse la
-                    // roulette, comme sur un compteur.
-                    turnOffset -= dy
-                    val step = STEP_DP * dp
-                    while (turnOffset >= step) {
-                        turn(+1); turnOffset -= step
+                when (hit) {
+                    Hit.HEADER -> dragPanel(dx, dy)
+                    Hit.WHEEL -> {
+                        // Glisser vers le haut fait monter les chiffres : on pousse la
+                        // roulette, comme sur un compteur.
+                        turnOffset -= dy
+                        val step = STEP_DP * dp
+                        while (turnOffset >= step) {
+                            turn(+1); turnOffset -= step
+                        }
+                        while (turnOffset <= -step) {
+                            turn(-1); turnOffset += step
+                        }
+                        invalidate()
                     }
-                    while (turnOffset <= -step) {
-                        turn(-1); turnOffset += step
+                    Hit.ARROW -> {
+                        // Le doigt qui quitte la flèche arrête la répétition : c'est le
+                        // seul moyen d'annuler un appui maintenu par mégarde.
+                        if (travel > 2f * TAP_SLOP_DP * dp) release()
                     }
-                    invalidate()
+                    Hit.NONE -> Unit
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                // Un appui franc vaut un cran : moitié haute pour monter, basse pour
-                // descendre. Sans ça, corriger d'une unité demanderait de viser au dp.
-                if (!movingPanel && travel < TAP_SLOP_DP * dp) {
-                    turn(if (event.y < height / 2f) +1 else -1)
+                // Un appui franc sur un chiffre vaut un cran : moitié haute pour monter,
+                // basse pour descendre.
+                if (hit == Hit.WHEEL && travel < TAP_SLOP_DP * dp) {
+                    turn(if (event.y < rowTop(turnRow) + ROW_DP * dp / 2f) +1 else -1)
                 }
-                turnRow = -1
-                turnCol = -1
-                turnOffset = 0f
-                movingPanel = false
-                invalidate()
+                release()
             }
         }
         return true
+    }
+
+    /** Le doigt s'en va : plus rien n'est tenu, et plus rien ne se répète. */
+    private fun release() {
+        removeCallbacks(repeater)
+        hit = Hit.NONE
+        turnRow = -1
+        turnCol = -1
+        arrowDir = 0
+        turnOffset = 0f
+        invalidate()
+    }
+
+    /**
+     * Range le doigt dans une case : bandeau, flèche, roulette, ou rien.
+     *
+     * « Rien » est un résultat à part entière, et c'est le changement le plus utile de
+     * cette version : un appui à côté d'une flèche ne déplace plus la fenêtre, il ne
+     * fait rien. Rater sa cible ne doit jamais coûter plus cher que de recommencer.
+     */
+    private fun hitTest(x: Float, y: Float) {
+        hit = Hit.NONE
+        turnRow = -1
+        turnCol = -1
+        arrowDir = 0
+
+        if (y <= HEADER_DP * dp) {
+            hit = Hit.HEADER
+            return
+        }
+        for (row in dials.indices) {
+            val d = dials[row]
+            val top = rowTop(row)
+            if (y < top || y > top + ROW_DP * dp) continue
+            turnRow = row
+            val aw = ARROW_W_DP * dp
+            if (x >= xLeftArrow && x <= xLeftArrow + aw) {
+                hit = Hit.ARROW
+                arrowDir = -1
+                return
+            }
+            if (x >= xRightArrow && x <= xRightArrow + aw) {
+                hit = Hit.ARROW
+                arrowDir = +1
+                return
+            }
+            var cx = cellsLeft(d)
+            if (d.choice) {
+                if (x >= cx && x <= cx + choiceWidth) {
+                    hit = Hit.WHEEL
+                    turnCol = 0
+                } else {
+                    turnRow = -1
+                }
+                return
+            }
+            for (col in 0 until d.digits) {
+                if (d.decimals > 0 && col == d.intDigits) cx += DOT_W_DP * dp
+                if (x >= cx && x <= cx + CELL_W_DP * dp) {
+                    hit = Hit.WHEEL
+                    turnCol = col
+                    return
+                }
+                cx += (CELL_W_DP + GAP_DP) * dp
+            }
+            turnRow = -1
+            return
+        }
     }
 
     /** La bulle se pousse où on veut, mais reste entièrement dans la scène. */
@@ -396,24 +619,27 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         translationY = (translationY + dy).coerceIn(-top.toFloat(), maxY - top)
     }
 
-    /** La roulette sous le doigt, encodée ligne/colonne, ou -1 si c'est la bulle. */
-    private fun wheelAt(x: Float, y: Float): Int {
-        for (row in dials.indices) {
-            val d = dials[row]
-            val top = (PAD_DP + row * ROW_DP) * dp
-            if (y < top || y > top + ROW_DP * dp) continue
-            var cx = PAD_DP * dp + labelWidth + 8f * dp
-            if (d.choice) {
-                if (x >= cx && x <= cx + choiceWidth) return row shl 8
-                continue
-            }
-            for (col in 0 until d.digits) {
-                if (d.decimals > 0 && col == d.intDigits) cx += DOT_W_DP * dp
-                if (x >= cx && x <= cx + CELL_W_DP * dp) return (row shl 8) or col
-                cx += (CELL_W_DP + GAP_DP) * dp
-            }
+    /**
+     * Le cran d'une flèche : le réglage entier avance ou recule de son pas naturel.
+     *
+     * Contrairement à la roulette, qui travaille chiffre par chiffre, la flèche ne
+     * connaît que la valeur. Elle la ramène sur la grille de l'affichage — un
+     * contrepoids poussé de cent kilos depuis 3 050 tombe sur 3 150, jamais sur
+     * 3 149,97.
+     */
+    private fun nudge(delta: Int) {
+        val g = game ?: return
+        if (turnRow !in dials.indices) return
+        val d = dials[turnRow]
+        if (d.choice) {
+            cycleShot(g, delta)
+            return
         }
-        return -1 shl 8
+        val v = value(g, d) + delta * d.step
+        val p = pow10(d.decimals)
+        apply(g, d, (v * p).roundToInt().coerceAtLeast(0) / p)
+        onValueChanged?.invoke()
+        invalidate()
     }
 
     /**
@@ -429,13 +655,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         if (turnRow !in dials.indices) return
         val d = dials[turnRow]
         if (d.choice) {
-            // Les projectiles tournent en rond : après le dernier vient le premier.
-            val kinds = Projectile.entries
-            val i = kinds.indexOf(g.config.projectile)
-            val next = ((i + delta) % kinds.size + kinds.size) % kinds.size
-            synchronized(g) { g.setProjectile(kinds[next]) }
-            onValueChanged?.invoke()
-            invalidate()
+            cycleShot(g, delta)
             return
         }
         if (turnCol < 0 || turnCol >= d.digits) return
@@ -446,6 +666,16 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val scaled = (value(g, d) * pow10(d.decimals)).roundToInt() + delta * weight
 
         apply(g, d, scaled.coerceAtLeast(0) / pow10(d.decimals))
+        onValueChanged?.invoke()
+        invalidate()
+    }
+
+    /** Le projectile suivant ou le précédent : ils tournent en rond. */
+    private fun cycleShot(g: TrebuchetGame, delta: Int) {
+        val kinds = Projectile.entries
+        val i = kinds.indexOf(g.config.projectile)
+        val next = ((i + delta) % kinds.size + kinds.size) % kinds.size
+        synchronized(g) { g.setProjectile(kinds[next]) }
         onValueChanged?.invoke()
         invalidate()
     }
