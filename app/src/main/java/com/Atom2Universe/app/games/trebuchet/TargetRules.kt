@@ -658,4 +658,14 @@ object TargetRules {
 
     /** Taille en dessous de laquelle un débris immobile finit par être ramassé. */
     const val DEBRIS_SWEEP_HALF = 0.3f
+
+    /**
+     * Écart minimal entre deux feux d'un même site, en mètres de site.
+     *
+     * Un village en compte donc une poignée, un château une douzaine. Sans cet écart,
+     * une courtine de quarante assises allumerait une lumière par assise et ressemblerait
+     * à une vitrine ; avec, on obtient ce qu'on voulait — quelques points chauds dans le
+     * noir, et un site qui s'éteint à mesure qu'on le démolit.
+     */
+    const val LIGHT_SPACING = 7f
 }

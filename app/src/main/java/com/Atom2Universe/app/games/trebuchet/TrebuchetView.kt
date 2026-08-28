@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
+import android.graphics.LightingColorFilter
 import android.graphics.LinearGradient
+import android.graphics.RadialGradient
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Path
@@ -270,6 +272,32 @@ class TrebuchetView @JvmOverloads constructor(
     private val pHalo = Paint(Paint.ANTI_ALIAS_FLAG)
     private val pMoon = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFF2EFE2.toInt() }
     private val pMoonDark = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    /** La flamme d'un feu : un halo chaud, refait quand sa teinte change. */
+    private val pFlame = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var flameTint = 0
+    private var flameShaderR = 0f
+
+    /**
+     * Les peintures du **décor**, celles que la nuit assombrit.
+     *
+     * La machine n'en fait pas partie, et c'est un choix : c'est la pièce que le joueur
+     * manipule, elle doit rester lisible à trois heures du matin. Le sol, les
+     * constructions et leurs fêlures, eux, s'éteignent avec le jour.
+     *
+     * La liste se construit une fois. Un filtre posé sur une peinture oubliée donnerait
+     * un château dans le noir avec un toit en plein soleil, ce qui se remarque
+     * beaucoup plus qu'une nuit un peu claire.
+     */
+    private val worldPaints: List<Paint> by lazy {
+        ArrayList<Paint>().apply {
+            add(pGround); add(pGrass); add(pCrack)
+            addAll(targetFills); addAll(targetEdges)
+        }
+    }
+
+    private var tintLevel = -1f
+    private var tintFilter: LightingColorFilter? = null
     private val pGround = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#1B2A1E".toColorInt() }
     private val pGrass = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -1312,8 +1340,19 @@ class TrebuchetView @JvmOverloads constructor(
         // ciel, et le sol leur coupe les jambes quand leurs étoiles retombent, ce qui
         // est exactement ce qu'on voit dehors.
         drawSparks(canvas, background = true)
+
+        // La nuit tombe **sur le décor** et pas sur le ciel : le ciel a déjà ses propres
+        // couleurs d'heure, et le repeindre en sombre par-dessus écraserait justement
+        // les orangés qu'on est allé chercher. On teinte donc les peintures du sol et
+        // des constructions, ce qui ne coûte qu'un filtre partagé.
+        applyNight()
         drawGround(canvas, w, h)
         drawTargets(canvas, w)
+        // Les feux se posent **après** le décor qu'ils éclairent et avant la machine :
+        // une torche doit poser sa flaque de lumière sur le mur qui la porte, pas
+        // derrière lui.
+        drawLights(canvas, w)
+        clearNight()
         drawGhosts(canvas)
         drawStartCone(canvas)
         drawFrameAndPivot(canvas)
@@ -1484,6 +1523,87 @@ class TrebuchetView @JvmOverloads constructor(
             pMoonDark.alpha = pMoon.alpha
             val decalage = r * 2f * (1f - sky.moonPhase) * (if (sky.moonWaxing) -1f else 1f)
             canvas.drawCircle(cx + decalage, cy, r, pMoonDark)
+        }
+    }
+
+    /**
+     * Pose la teinte de nuit sur les peintures du décor.
+     *
+     * Un multiplicateur et non un voile : un rectangle sombre par-dessus tout aurait
+     * aussi couvert le ciel, dont les couleurs d'heure sont justement ce qu'on est allé
+     * chercher. Multiplier les couleurs du sol et des pierres donne la même obscurité
+     * sans toucher au reste, et coûte un seul filtre partagé.
+     *
+     * Le plancher est haut — on ne descend jamais sous le tiers — parce qu'un jeu où le
+     * joueur ne voit plus sa cible n'est pas un jeu d'ambiance, c'est un jeu cassé. Le
+     * bleu est un peu moins multiplié que le rouge : une nuit est froide.
+     */
+    private fun applyNight() {
+        val niveau = 0.34f + 0.66f * sky.light
+        if (niveau > 0.995f) {
+            clearNight()
+            return
+        }
+        if (abs(niveau - tintLevel) > 0.008f) {
+            val m = (niveau * 255f).toInt().coerceIn(0, 255)
+            val b = (niveau * 1.14f * 255f).toInt().coerceIn(0, 255)
+            tintFilter = LightingColorFilter(Color.rgb(m, m, b), 0)
+            tintLevel = niveau
+        }
+        for (p in worldPaints) p.colorFilter = tintFilter
+    }
+
+    private fun clearNight() {
+        for (p in worldPaints) p.colorFilter = null
+    }
+
+    /**
+     * Les feux du site : torches, bougies, fenêtres allumées.
+     *
+     * Chaque flamme appartient à une pierre — voir [TargetPiece.lightRadius] — donc elle
+     * suit ce que la pierre subit. Un mur qu'on renverse emporte ses torches en
+     * tournant, et un village rasé s'éteint. Il n'y a aucun code pour ça : c'est ce que
+     * signifie accrocher la lumière à la matière plutôt qu'à des coordonnées.
+     *
+     * On ne les dessine que quand il fait assez sombre pour qu'elles se voient : en
+     * plein jour, une torche est un rond orange sur un mur gris.
+     */
+    private fun drawLights(canvas: Canvas, w: Float) {
+        val nuit = (1f - sky.light).coerceIn(0f, 1f)
+        if (nuit < 0.12f) return
+        val field = game.targets
+        if (field.pieces.isEmpty()) return
+
+        val vue = w / camScale
+        val gauche = camX - vue / 2f - 10f
+        val droite = camX + vue / 2f + 10f
+
+        for (p in field.pieces) {
+            if (p.lightRadius <= 0f) continue
+            val b = p.body
+            if (b.x < gauche || b.x > droite) continue
+            val r = p.lightRadius * camScale
+            if (r < 2f * dp) continue
+
+            // Le nuancier radial se refabrique quand la teinte ou le rayon changent, et
+            // pas à chaque flamme : sur un château il y en a une douzaine, toutes de la
+            // même couleur, et bâtir douze nuanciers par image serait douze allocations
+            // par image pour un résultat identique.
+            if (p.lightTint != flameTint || abs(r - flameShaderR) > 0.5f) {
+                flameTint = p.lightTint
+                flameShaderR = r
+                pFlame.shader = RadialGradient(
+                    0f, 0f, r,
+                    intArrayOf(flameTint, flameTint and 0x00FFFFFF),
+                    floatArrayOf(0f, 1f),
+                    Shader.TileMode.CLAMP
+                )
+            }
+            pFlame.alpha = (nuit * 200f).toInt().coerceIn(0, 255)
+            canvas.save()
+            canvas.translate(sx(b.x), sy(b.y))
+            canvas.drawCircle(0f, 0f, r, pFlame)
+            canvas.restore()
         }
     }
 

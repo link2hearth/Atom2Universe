@@ -205,6 +205,64 @@ class TrebuchetSkyTest {
         assertTrue("l'éclipse fait la nuit noire", pendant.light > 0.05f)
     }
 
+    /**
+     * **Un site allumé s'éteint quand on le démolit.**
+     *
+     * C'est la promesse de la nuit, et elle ne tient à aucun code d'extinction : une
+     * flamme appartient à une pierre, donc casser la pierre emporte la flamme. Ce test
+     * vérifie les deux bouts — qu'un site s'allume, et qu'un site rasé est noir.
+     */
+    @Test
+    fun `un site rase n a plus de lumieres`() {
+        TargetRules.style = TargetStyle.ARCADE
+        val g = TrebuchetGame()
+        g.loadLevel(4L)
+        val f = g.targets
+        val allumees = f.pieces.count { it.lightRadius > 0f }
+        println(
+            "FEUX ${f.pieces.size} pierres, $allumees allumées, " +
+                "front de ${"%.0f".format(f.right - f.left)} m"
+        )
+        assertTrue("un village n'a aucune lumière", allumees >= 2)
+        assertTrue("le village est une vitrine : $allumees lumières", allumees <= f.pieces.size / 3)
+
+        // On rase tout, et le noir doit se faire tout seul.
+        repeat(14) {
+            val x = f.left + (it % 7) * (f.right - f.left) / 7f
+            f.blast(x, g.terrain.heightAt(x) + 2f, 900_000f, 30f)
+            repeat(60) { g.step(1f / 60f) }
+        }
+        val reste = f.pieces.count { it.lightRadius > 0f }
+        println("FEUX après la démolition : $reste allumées sur ${f.pieces.size} pierres")
+        assertTrue("le village brûle encore après avoir été rasé : $reste", reste < allumees)
+    }
+
+    /**
+     * Une lumière se pose **à hauteur d'homme**, au-dessus de son propre sol.
+     *
+     * Sur un site étagé, « à hauteur d'homme » ne veut rien dire dans l'absolu : une
+     * torche posée à quatre mètres d'altitude est à hauteur d'homme sur la terrasse du
+     * bas et au ras du sol sur celle du haut. C'est encore le zéro implicite, et c'est
+     * la raison pour laquelle la pose consulte le relief.
+     */
+    @Test
+    fun `les lumieres se posent au-dessus de leur propre sol`() {
+        TargetRules.style = TargetStyle.ARCADE
+        for (seed in longArrayOf(8L, 14L, 4L, 2L)) {
+            val g = TrebuchetGame()
+            g.loadLevel(seed)
+            for (p in g.targets.pieces) {
+                if (p.lightRadius <= 0f) continue
+                val hauteur = p.body.y - g.terrain.heightAt(p.body.x)
+                assertTrue(
+                    "graine $seed : une lumière flotte à ${"%.1f".format(hauteur)} m de son sol",
+                    hauteur >= TargetRules.site(1f) - 0.5f &&
+                        hauteur <= TargetRules.site(6f) + 0.5f
+                )
+            }
+        }
+    }
+
     @Test
     fun `l horloge court soixante-douze fois plus vite que la vraie`() {
         val h = SkyClock(minuit)

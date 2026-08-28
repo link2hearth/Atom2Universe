@@ -81,6 +81,23 @@ class TargetPiece internal constructor(
             return kotlin.math.abs(da) > TargetRules.TOPPLED_TURN
         }
 
+    /**
+     * Rayon de la flamme que cette pierre porte, en mètres, ou zéro si elle n'en porte
+     * pas.
+     *
+     * **Une lumière appartient à une pierre**, et c'est toute l'idée. Elle n'a pas de
+     * position à elle : elle est là où la pierre est, elle bascule quand la pierre
+     * bascule, elle tombe quand la pierre tombe, et elle disparaît quand la pierre
+     * disparaît. Éteindre les fenêtres d'un village en le démolissant n'a donc demandé
+     * aucun code d'extinction — c'est une conséquence, pas une règle.
+     */
+    var lightRadius = 0f
+        internal set
+
+    /** Teinte de la flamme, en ARGB : une bougie n'est pas une torche. */
+    var lightTint = 0
+        internal set
+
     /** Temps passé immobile, pour le ramassage des petits débris. */
     internal var restTimer = 0f
 
@@ -347,6 +364,41 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         calmTimer = 0f
         dormant = false
         for (b in structure.blocks) spawn(b, tier = 0)
+        lightUp()
+    }
+
+    /**
+     * Allume le site : quelques feux posés sur les pierres qui les porteraient.
+     *
+     * **Le choix se fait ici et pas à la génération**, parce qu'une lumière n'est pas
+     * une pièce d'architecture : elle ne pèse rien, ne porte rien, ne casse rien, et un
+     * plan de château n'a pas à savoir où le veilleur pose sa torche. Elle se pose donc
+     * au chargement, sur la construction déjà bâtie, à partir du tirage du champ — donc
+     * de façon reproductible.
+     *
+     * Deux règles, et elles suffisent. **À hauteur d'homme** : une lumière se pose entre
+     * un et six mètres au-dessus de son propre sol, là où vivent les gens et où le
+     * joueur regarde ; une torche au sommet d'une tour de vingt mètres serait une
+     * étoile de plus. Et **espacées** : une par tranche de front, sinon un mur de
+     * quarante assises s'allumerait comme une vitrine.
+     */
+    private fun lightUp() {
+        if (live.isEmpty()) return
+        val pas = TargetRules.site(TargetRules.LIGHT_SPACING)
+        var prochaine = left
+        for (p in live) {
+            val b = p.body
+            if (b.x < prochaine) continue
+            val sol = terrain.heightAt(b.x)
+            val hauteur = b.y - sol
+            if (hauteur < TargetRules.site(1f) || hauteur > TargetRules.site(6f)) continue
+            // Le bois s'éclaire à la bougie, la pierre à la torche : c'est la même
+            // flamme, mais on n'accroche pas une torche dans une chambre.
+            val bois = !p.material.masonry || p.material == Material.COB
+            p.lightRadius = TargetRules.site(if (bois) 2.2f else 3.4f)
+            p.lightTint = if (bois) 0xFFFFC46A.toInt() else 0xFFFF8A3C.toInt()
+            prochaine = b.x + pas
+        }
     }
 
     fun clear() {
