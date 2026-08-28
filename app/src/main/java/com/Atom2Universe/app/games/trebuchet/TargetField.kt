@@ -805,11 +805,20 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
     // ── L'objectif ────────────────────────────────────────────────────────────
 
     /**
-     * Hauteur de ce qui reste debout, dans l'emprise de la construction.
+     * Hauteur de ce qui reste debout dans l'emprise de la construction, **mesurée depuis
+     * le sol de chaque pierre**.
      *
      * Ce qui a été expédié hors de l'emprise ne compte plus : c'est un caillou dans un
      * champ, pas un morceau de château. Le compter reviendrait à punir le joueur d'avoir
      * trop bien tiré.
+     *
+     * La mesure se prend au-dessus du terrain et non au-dessus de l'altitude zéro. Sur
+     * un sol plat les deux sont la même chose, et c'est pour ça que la distinction a
+     * dormi longtemps ; sur un site étagé, la version absolue disait qu'un hameau rasé
+     * posé quinze mètres plus haut mesurait encore quinze mètres de haut. Rien ne s'en
+     * servait au moment où le relief est arrivé — cette fonction ne sert plus qu'aux
+     * bancs d'essai — mais un piège qui dort est un piège qui se referme le jour où on
+     * rebranche la ligne de ruine.
      */
     fun ruinHeight(): Float {
         var best = 0f
@@ -818,7 +827,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         for (p in live) {
             val b = p.body
             if (b.x < lo || b.x > hi) continue
-            val t = b.topY()
+            val t = b.topY() - terrain.heightAt(b.x)
             if (t > best) best = t
         }
         return best

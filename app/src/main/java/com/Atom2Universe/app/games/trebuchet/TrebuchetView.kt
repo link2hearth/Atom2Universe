@@ -573,7 +573,10 @@ class TrebuchetView @JvmOverloads constructor(
                 }
                 updateCamera(frameDt)
                 // Ce que l'écran montre du ciel : le feu d'artifice s'y règle.
-                if (height > 0) game.skyTop = worldY(0f)
+                // Le ciel se mesure **au-dessus du sol qu'on voit**, pas au-dessus de
+                // l'altitude zéro : dans un vallon, les fusées calculées sur une hauteur
+                // absolue éclateraient dix mètres trop bas.
+                if (height > 0) game.skyTop = worldY(0f) - camFloor
                 updatePreview()
             }
             if (finished) post { listener?.onShotFinished() }
@@ -648,7 +651,12 @@ class TrebuchetView @JvmOverloads constructor(
             // ne se règle plus qu'en **échelle** : la fenêtre s'ouvre à mesure que le
             // boulet monte, puis se referme quand il redescend. La largeur suit toute
             // seule, et c'est heureux — un tir haut est aussi un tir long.
-            val flightHeight = max(machineHeight, game.ball.y + FLIGHT_TOP_MARGIN)
+            // La hauteur à faire tenir se compte **depuis le plancher du cadrage**, qui
+            // n'est pas toujours zéro : au-dessus d'un vallon, le sol posé en bas de
+            // l'image est dix mètres plus bas, et une fenêtre réglée sur la seule
+            // altitude du boulet le laisserait sortir par le haut.
+            val flightHeight =
+                max(machineHeight, game.ball.y - camFloor + FLIGHT_TOP_MARGIN)
             targetScale = min(
                 width / max(machineWidth + FLIGHT_VIEW_MARGIN, FLIGHT_MIN_WIDTH),
                 (height - GROUND_INSET_DP * dp) / flightHeight
@@ -670,7 +678,7 @@ class TrebuchetView @JvmOverloads constructor(
                 // moment où le joueur juge sa machine.
                 targetWidth = max(machineWidth, abs(game.ball.x) + 30f)
                     .coerceAtMost(MAX_VIEW_WIDTH)
-                targetHeight = max(machineHeight, game.peakHeight + 12f)
+                targetHeight = max(machineHeight, game.peakHeight - camFloor + 12f)
                 tx = game.ball.x / 2f
                 follow = 3f
             } else {
@@ -1370,7 +1378,15 @@ class TrebuchetView @JvmOverloads constructor(
         }
     }
 
-    /** Le bâti : un A sous le pivot, purement décoratif mais il donne l'échelle. */
+    /**
+     * Le bâti : un A sous le pivot, purement décoratif mais il donne l'échelle.
+     *
+     * C'est l'un des deux seuls endroits de la vue où l'altitude zéro est écrite en dur,
+     * et c'est légitime : le tablier sous la machine est **plat à zéro quel que soit le
+     * relief**, et un test le garantit — voir `TrebuchetTerrainTest.le tablier de la
+     * machine reste plat`. Inutile de le repasser au crible au prochain audit des
+     * hauteurs.
+     */
     private fun drawFrameAndPivot(canvas: Canvas) {
         val px = sx(game.pivotX)
         val py = sy(game.pivotY)
