@@ -338,6 +338,60 @@ class TrebuchetGameTest {
     }
 
     /**
+     * Le largage doit tomber **là où le crochet le dit**, à quelques degrés près.
+     *
+     * C'est le garde-fou de la lisibilité de toute la machine. La boucle quitte le
+     * crochet quand la fronde croise son axe, et cette rencontre était cherchée une
+     * fois par image : à quarante radians par seconde, la fronde pouvait dépasser le
+     * crochet de trente-huit degrés avant qu'on ne s'en aperçoive — et le dépassement
+     * dépendait de la façon dont les images tombaient, donc de rien de compréhensible.
+     * Deux machines réglées à un cran l'une de l'autre partaient dans des directions
+     * sans rapport, et le joueur en concluait, à juste titre, que le réglage ne servait
+     * à rien.
+     *
+     * On mesure ici le dépassement lui-même, sur toute la plage du crochet et pour
+     * plusieurs frondes : c'est un chiffre, il doit rester petit, et aucun réglage ne
+     * doit le faire exploser.
+     */
+    @Test
+    fun `le largage tombe sur le crochet et pas apres`() {
+        var pire = 0f
+        var pireOu = ""
+        var comptes = 0
+        for (pin in 10..85 step 5) {
+            for (sling in intArrayOf(35, 50, 65, 80, 95)) {
+                val g = machine(pin = pin.toFloat(), sling = sling / 100f)
+                g.release()
+                var n = 0
+                while (n < 3000 && g.phase == TrebuchetGame.Phase.FLIGHT && !g.ballFree) {
+                    g.step(1f / 60f)
+                    n++
+                }
+                if (!g.ballFree) continue
+                // Le largage forcé — la fronde a fait le tour sans que le crochet lâche —
+                // ne se juge pas sur le crochet, puisqu'il ne vient pas de lui.
+                if (g.slingAngle <= -0.55f) continue
+                comptes++
+                val depassement = g.releaseAngle - g.slingAngle
+                if (depassement > pire) {
+                    pire = depassement
+                    pireOu = "crochet $pin°, fronde 0,$sling"
+                }
+            }
+        }
+        println(
+            "LARGAGE $comptes machines, dépassement maximal du crochet " +
+                "${"%.2f".format(Math.toDegrees(pire.toDouble()))}° ($pireOu)"
+        )
+        assertTrue("aucune machine n'a largué", comptes > 30)
+        assertTrue(
+            "le crochet est dépassé de %.1f° ($pireOu) : le largage n'est plus guetté"
+                .format(Math.toDegrees(pire.toDouble())),
+            pire < 0.08f
+        )
+    }
+
+    /**
      * La mémoire des tirs : elle s'empile, elle se plafonne, et elle survit aux
      * réglages.
      *

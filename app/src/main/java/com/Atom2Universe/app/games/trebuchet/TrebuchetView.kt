@@ -182,8 +182,17 @@ class TrebuchetView @JvmOverloads constructor(
          */
         const val PREVIEW_BUDGET = 60
 
-        /** Au-delà, la machine ne largue pas : inutile d'insister. */
-        const val PREVIEW_MAX_STEPS = 480
+        /**
+         * Au-delà, la machine ne largue pas : inutile d'insister.
+         *
+         * Le plafond ne se mesure pas en durée de vol mais en **pas de simulation**, et
+         * les deux ne vont pas ensemble. Un bloc lourd part à quarante-huit mètres par
+         * seconde sous soixante-seize degrés : il monte en cloche, et il lui faut mille
+         * pas pour couvrir les cinquante mètres que le cône affiche, là où un boulet
+         * tendu en demande quatre cents. À quatre cent quatre-vingts, le cône du bloc
+         * lourd s'arrêtait donc en pleine montée et ne montrait rien de son vol.
+         */
+        const val PREVIEW_MAX_STEPS = 1400
     }
 
     // ── Palette ──────────────────────────────────────────────────────────────
@@ -1094,6 +1103,11 @@ class TrebuchetView @JvmOverloads constructor(
         h = h * 31 + c.hangLength.toRawBits()
         h = h * 31 + c.pinAngleDeg.toRawBits()
         h = h * 31 + c.slingRatio.toRawBits()
+        // Le projectile change la masse lancée, donc tout le tir. L'oublier ici, c'est
+        // montrer au joueur le départ du boulet précédent : la machine avait beau être
+        // rejouée avec le bon, elle ne l'était jamais, faute d'avoir vu que ça avait
+        // changé.
+        h = h * 31 + c.projectile.ordinal
         return h
     }
 

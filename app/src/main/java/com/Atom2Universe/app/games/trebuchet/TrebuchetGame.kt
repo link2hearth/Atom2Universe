@@ -410,6 +410,34 @@ class TrebuchetGame {
          */
         const val RUNAWAY_SLING = 0.6f
 
+        /**
+         * Écart au crochet, en radians, en deçà duquel l'image se découpe en
+         * sous-pas pour chercher le largage.
+         *
+         * Un peu plus d'un demi-tour de sécurité : la fronde balaie jusqu'à quarante
+         * radians par seconde à cet instant-là, soit deux tiers de radian dans une
+         * image de soixantième. La fenêtre doit rester plus large que ce qu'une image
+         * peut franchir, sinon on la survole sans la voir.
+         */
+        const val RELEASE_WINDOW = 1.0f
+
+        /**
+         * En combien de tranches l'image se découpe dans cette fenêtre.
+         *
+         * **C'est le réglage qui rend la machine lisible.** Le crochet lâche quand la
+         * fronde croise son axe, et cette rencontre était cherchée une fois par image :
+         * à quarante radians par seconde, la fronde pouvait dépasser le crochet de
+         * trente-huit degrés avant qu'on ne s'en aperçoive, et l'écart dépendait de la
+         * façon dont les images tombaient. Deux machines réglées à un cran l'une de
+         * l'autre partaient donc dans des directions sans rapport — pas parce que la
+         * mécanique est chaotique, mais parce qu'on la regardait trop rarement.
+         *
+         * Seize tranches ramènent l'erreur sous trois degrés, et ne coûtent rien : la
+         * fenêtre ne couvre que les deux ou trois dernières images du fouet, sur les
+         * cent cinquante que dure un armement.
+         */
+        const val RELEASE_SUBSTEPS = 16
+
         /** Écart donné au dernier éclat d'un paquet qui se défait, en m/s. */
         const val SHARD_SPREAD = 2f
 
@@ -485,6 +513,9 @@ class TrebuchetGame {
         private set
 
     private var prevRawSlingAngle = 0f
+
+    /** Vitesse de balayage de la fronde, en radians par seconde. Sert à la guetter. */
+    private var slingRate = 0f
 
     /** Vrai dès que la boucle a quitté le crochet. */
     var ballFree = false
@@ -950,6 +981,7 @@ class TrebuchetGame {
         slingStartAngle = measureSlingAngle()
         slingAngle = slingStartAngle
         prevRawSlingAngle = slingStartAngle
+        slingRate = 0f
         world.clearImpacts()
         phase = Phase.FLIGHT
     }
@@ -977,7 +1009,7 @@ class TrebuchetGame {
         // est perdu, et c'est justement lui qu'on veut rendre au projectile qui casse.
         rememberMomentum()
 
-        world.stepFrame(dt)
+        stepUntilRelease(dt)
         // Le choc du projectile se lit **avant** la cible : c'est elle qui remet les
         // compteurs d'impact à zéro, une fois les dégâts appliqués.
         val hit = ballFree && ball.impactAccum > BLAST_TRIGGER
@@ -991,12 +1023,7 @@ class TrebuchetGame {
         val speed = hypot(ball.vx, ball.vy)
         if (speed > peakSpeed) peakSpeed = speed
         if (ball.y > peakHeight) peakHeight = ball.y
-
-        if (!ballFree) {
-            launchSpeed = speed
-            updateSlingAngle()
-            if (slingAngle <= releaseAngle || slingAngle <= -RUNAWAY_SLING) letGo()
-        }
+        if (!ballFree) launchSpeed = speed
 
         trailTimer += dt
         if (trailTimer > 0.02f && trailCount < 6000) {
@@ -1186,8 +1213,55 @@ class TrebuchetGame {
         }
     }
 
-    /** Suit l'angle de la fronde en le déroulant, pour qu'il ne saute pas à ±π. */
-    private fun updateSlingAngle() {
+    /**
+     * Simule l'image, en la découpant quand le largage approche.
+     *
+     * Tout le reste du vol se joue à l'image entière : le moteur découpe déjà de
+     * lui-même ce qu'il faut pour qu'un boulet rapide ne traverse rien. Ce qu'il ne
+     * peut pas deviner, c'est qu'on **guette un instant** — celui où la fronde croise
+     * le crochet — et qu'un instant guetté une fois par image est un instant manqué de
+     * peu, toujours, et jamais de la même quantité.
+     */
+    private fun stepUntilRelease(dt: Float) {
+        if (ballFree) {
+            world.stepFrame(dt)
+            return
+        }
+        // La fenêtre tient compte de la vitesse de balayage mesurée à l'image
+        // précédente : une fronde très rapide mérite qu'on la guette de plus loin.
+        val marge = slingAngle - releaseAngle
+        val fenetre = maxOf(RELEASE_WINDOW, 2f * abs(slingRate) * dt)
+        if (marge > fenetre) {
+            world.stepFrame(dt)
+            updateSlingAngle(dt)
+            checkRelease()
+            return
+        }
+        val h = dt / RELEASE_SUBSTEPS
+        for (i in 0 until RELEASE_SUBSTEPS) {
+            world.stepFrame(h)
+            updateSlingAngle(h)
+            checkRelease()
+            if (ballFree) {
+                // Le reste de l'image se joue normalement : le boulet est parti, il n'y
+                // a plus rien à guetter.
+                val reste = dt - (i + 1) * h
+                if (reste > 1e-5f) world.stepFrame(reste)
+                return
+            }
+        }
+    }
+
+    /** Le crochet lâche-t-il, à cet instant précis ? */
+    private fun checkRelease() {
+        if (slingAngle <= releaseAngle || slingAngle <= -RUNAWAY_SLING) letGo()
+    }
+
+    /**
+     * Suit l'angle de la fronde en le déroulant, pour qu'il ne saute pas à ±π, et
+     * mesure au passage sa vitesse de balayage.
+     */
+    private fun updateSlingAngle(dt: Float) {
         val raw = measureSlingAngle()
         var d = raw - prevRawSlingAngle
         val twoPi = 2f * PI.toFloat()
@@ -1195,6 +1269,7 @@ class TrebuchetGame {
         while (d < -PI) d += twoPi
         prevRawSlingAngle = raw
         slingAngle += d
+        if (dt > 1e-6f) slingRate = d / dt
     }
 
     /** La boucle quitte le crochet : le boulet n'appartient plus à la machine. */
