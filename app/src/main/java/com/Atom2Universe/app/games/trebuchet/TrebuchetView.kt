@@ -223,11 +223,6 @@ class TrebuchetView @JvmOverloads constructor(
          */
         const val SKY_BAND = 0.62f
 
-        /**
-         * De combien les nuages suivent le déplacement de la vue, de 0 (infiniment
-         * loin, immobiles) à 1 (dans le plan du château).
-         */
-        const val CLOUD_PAN = 0.3f
 
 
 
@@ -1541,58 +1536,38 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     /**
-     * Les nuages : un **calque de parallaxe**, pas un décor collé à l'écran.
+     * Les nuages : des objets du monde, à leur altitude.
      *
-     * Chaque nuage a une altitude et une taille en mètres ; c'est ici qu'on les projette.
-     * La première version les rangeait en fractions d'écran, si bien qu'ils restaient
-     * exactement au même endroit de la dalle quand on zoomait — l'œil le voit tout de
-     * suite, même sans savoir le nommer : le ciel devenait une vitre peinte au lieu d'un
-     * fond lointain.
+     * Mêmes abscisses et mêmes ordonnées que le château — [sx] et [sy], rien d'autre.
+     * Un nuage à trois cents mètres est donc **très largement hors de l'écran** quand la
+     * vue est serrée sur une machine de quinze mètres, et il apparaît quand on recule.
+     * C'est ce qu'on veut : un ciel qu'on découvre en prenant du champ.
      *
-     * Deux atténuations, et chacune dit quelque chose de différent.
-     *
-     * **[CLOUD_PAN]** est la réponse au déplacement : un nuage est loin, donc traverser
-     * trois cents mètres de terrain ne le balaie pas d'un bord à l'autre. À zéro il
-     * serait infiniment loin et ne bougerait jamais ; à un il serait dans le plan du
-     * château.
-     *
-     * **[CLOUD_DEPTH]** est la réponse au zoom, et elle est bornée. Un objet lointain
-     * grossit quand on zoome — c'est vrai, et ce serait faux de l'ignorer — mais le
-     * cadrage de ce jeu va d'une fenêtre de trente mètres à une de cinq cent soixante,
-     * soit un facteur dix-neuf. Suivi à la lettre, un nuage remplirait l'écran au réglage
-     * de la machine et deviendrait un point au résultat. La borne est donc un compromis
-     * assumé : les nuages **réagissent** au zoom, ils ne le suivent pas au pied de la
-     * lettre.
+     * Deux versions ont essayé d'éviter ça, avec un calque à l'échelle bornée qui
+     * « garantissait » qu'on voie toujours des nuages. Le résultat était exactement ce
+     * qu'on fuyait — des nuages recalés sur la dalle, immobiles au zoom. Il n'y a rien à
+     * garantir : quand on regarde ses pieds, on ne voit pas le ciel.
      */
     private fun drawClouds(canvas: Canvas, w: Float, h: Float) {
-        // Ils se comptent **au-dessus de l'horizon**, qui n'est pas toujours à zéro.
-        val horizon = sy(camFloor)
-        // L'échelle du calque se règle sur **le ciel qu'on a**. La règle vit dans
-        // [CloudField.layerScale], avec son raisonnement et son banc d'essai : c'est elle
-        // qui décide si un nuage est dans le ciel ou sur le terrain, et ça ne se vérifie
-        // pas à l'œil sur un seul téléphone.
-        val s = CloudField.layerScale(camScale, horizon)
-        val centre = camX * CLOUD_PAN
-        val demi = w / 2f / s
-
         // Le blanc n'entre que pour moitié : au-delà, un nuage de nuit redevient une
         // tache claire, et l'illusion tombe.
         pCloud.color = SkyState.mix(sky.horizon, 0xFFFFFFFF.toInt(), 0.5f)
         pCloud.alpha = (0.55f * 255f).toInt()
 
+        val demi = w / 2f / camScale
+
         for (c in clouds.clouds) {
             // Le nuage se répète tous les [CloudField.SPAN] mètres : on cherche la copie
             // qui tombe dans la fenêtre, s'il y en a une.
-            val marge = c.size * 3f
-            var rel = c.x - centre
-            rel -= floor((rel + CloudField.SPAN / 2f) / CloudField.SPAN) * CloudField.SPAN
-            if (rel < -demi - marge || rel > demi + marge) continue
+            var x = c.x
+            x -= floor((x - camX + CloudField.SPAN / 2f) / CloudField.SPAN) * CloudField.SPAN
+            if (x < camX - demi - c.size * 3f || x > camX + demi + c.size * 3f) continue
 
-            val cx = w / 2f + rel * s
-            val cy = horizon - c.altitude * s
-            val taille = c.size * s
-            if (cy > h + taille || cy < -taille * 3f) continue
+            val cy = sy(c.altitude)
+            val taille = c.size * camScale
+            if (cy > h + taille * 2f || cy < -taille * 3f) continue
 
+            val cx = sx(x)
             var i = 0
             while (i < c.puffs.size) {
                 canvas.drawCircle(

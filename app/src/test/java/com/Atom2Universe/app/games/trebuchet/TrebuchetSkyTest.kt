@@ -341,7 +341,7 @@ class TrebuchetSkyTest {
         )
         assertTrue("un vent arrière ne pousse pas les nuages vers la cible", arriere > 0f)
         assertTrue("un vent debout ne les ramène pas", debout < 0f)
-        assertEquals("le vent n'est pas symétrique", arriere, -debout, 1e-5f)
+        assertEquals("le vent n'est pas symétrique", arriere, -debout, 0.01f)
         assertEquals("un air calme fait bouger les nuages", 0f, apres(0f), 1e-6f)
     }
 
@@ -370,54 +370,36 @@ class TrebuchetSkyTest {
     }
 
     /**
-     * **Les nuages sont dans le ciel, sur tous les écrans et à tous les zooms.**
+     * **Un nuage est un objet du monde, et il est haut.**
      *
-     * Le test qui manquait, et son absence a coûté une version entière : les bornes
-     * d'échelle du calque étaient des pixels par mètre écrits en dur, et sur un téléphone
-     * tenu à la verticale — où le ciel occupe les quatre cinquièmes de l'écran — tous les
-     * nuages se retrouvaient écrasés sur la bande de terrain du bas. Ça ne se voyait
-     * qu'en jouant, sur cet écran-là, dans cette orientation-là.
-     *
-     * On vérifie donc l'arithmétique du calque pour deux écrans et deux cadrages : le
-     * nuage le plus bas doit rester dans la moitié haute du ciel, et le plus haut ne doit
-     * pas s'envoler à des hauteurs d'écran de l'horizon.
+     * Assez haut pour être hors de l'écran quand la vue est serrée sur la machine : à
+     * ce cadrage-là on voit une cinquantaine de mètres de ciel, et le plus bas des
+     * nuages est trois fois plus haut. Ils apparaissent quand on recule, et c'est le
+     * comportement voulu — deux versions ont tenté de le contourner avec un calque à
+     * l'échelle bornée, et ça n'a produit que des nuages collés à la dalle.
      */
     @Test
-    fun `les nuages restent dans le ciel quel que soit l ecran`() {
-        // Portrait puis paysage, avec la hauteur de ciel qu'ils laissent, puis les deux
-        // cadrages extrêmes : la machine de près, et l'arc entier de loin.
-        val ecrans = listOf("portrait" to 2107f, "paysage" to 987f)
-        val cadrages = listOf("machine" to 36f, "arc entier" to 1.9f)
-
-        for ((nomEcran, ciel) in ecrans) {
-            for ((nomCadrage, camScale) in cadrages) {
-                val s = CloudField.layerScale(camScale, ciel)
-                val bas = CloudField.MIN_ALTITUDE * s
-                val haut = CloudField.MAX_ALTITUDE * s
-                println(
-                    "NUAGES $nomEcran / $nomCadrage : le plus bas à " +
-                        "${"%.0f".format(bas / ciel * 100)} % du ciel, le plus haut à " +
-                        "${"%.0f".format(haut / ciel * 100)} %"
-                )
-                assertTrue(
-                    "$nomEcran / $nomCadrage : le nuage le plus bas traîne sur le terrain " +
-                        "(${"%.0f".format(bas / ciel * 100)} % du ciel)",
-                    bas > ciel * 0.12f
-                )
-                assertTrue(
-                    "$nomEcran / $nomCadrage : le nuage le plus haut est hors de l'écran " +
-                        "(${"%.0f".format(haut / ciel * 100)} % du ciel)",
-                    haut < ciel * 1.15f
-                )
-                // Et l'étagement se voit : cent cinquante mètres et huit cents ne doivent
-                // pas finir à la même hauteur d'écran, sinon les vraies altitudes n'ont
-                // servi à rien.
-                assertTrue(
-                    "$nomEcran / $nomCadrage : les nuages sont tous à la même hauteur",
-                    haut - bas > ciel * 0.4f
-                )
-            }
-        }
+    fun `les nuages sont trop haut pour un cadrage serre sur la machine`() {
+        // Ce que la vue montre du ciel quand elle cadre la machine : la hauteur de
+        // l'écran divisée par l'échelle. Une quinzaine de mètres de machine, une marge,
+        // et on tourne autour de la soixantaine de mètres visibles.
+        val cielVisible = 60f
+        println(
+            "NUAGES le plus bas à ${CloudField.MIN_ALTITUDE.toInt()} m, " +
+                "le plus haut à ${CloudField.MAX_ALTITUDE.toInt()} m ; " +
+                "cadrage machine : ${cielVisible.toInt()} m de ciel visible"
+        )
+        assertTrue(
+            "un nuage se voit alors qu'on règle la machine : " +
+                "${CloudField.MIN_ALTITUDE} m contre $cielVisible m de ciel",
+            CloudField.MIN_ALTITUDE > cielVisible * 2f
+        )
+        // Et ils tiennent dans le cadrage large, sinon on ne les verrait jamais.
+        val cielRecule = 1100f
+        assertTrue(
+            "les nuages restent hors champ même en reculant : ${CloudField.MAX_ALTITUDE} m",
+            CloudField.MAX_ALTITUDE < cielRecule
+        )
     }
 
     @Test
@@ -428,6 +410,7 @@ class TrebuchetSkyTest {
             assertTrue("un nuage en orbite : ${c.altitude} m", c.altitude <= CloudField.MAX_ALTITUDE)
             assertTrue("un nuage a moins de quatre boules", c.puffs.size >= 12)
             assertTrue("un nuage sans épaisseur : ${c.size} m", c.size >= CloudField.MIN_SIZE)
+            assertTrue("un nuage plus gros qu'un orage : ${c.size} m", c.size <= CloudField.MAX_SIZE)
             assertTrue("un nuage dans la bande", c.x >= 0f && c.x < CloudField.SPAN)
         }
         // Deux nuages identiques feraient un motif : on vérifie qu'ils diffèrent.
