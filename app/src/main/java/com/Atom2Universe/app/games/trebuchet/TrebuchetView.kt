@@ -1198,22 +1198,19 @@ class TrebuchetView @JvmOverloads constructor(
         }
     }
 
-    /** L'empreinte des réglages : deux machines identiques ont la même. */
+    /**
+     * L'empreinte de ce qui change le départ d'un tir.
+     *
+     * Les **réglages** sont l'affaire de [MachineConfig.signature] : la vue en tenait
+     * autrefois sa propre liste recopiée à la main, et elle a raté les deux réglages de
+     * masse le jour où ils sont apparus — l'aperçu montrait alors la trajectoire du
+     * projectile précédent, sans que rien ne le signale.
+     *
+     * Ne reste ici que le **vent**, qui ne fait pas partie des réglages mais change le
+     * vol : un site suivant plus venteux garderait sinon le cône du site précédent.
+     */
     private fun configSignature(c: MachineConfig): Int {
-        var h = c.beamLength.toRawBits()
-        h = h * 31 + c.pivotHeight.toRawBits()
-        h = h * 31 + c.leverRatio.toRawBits()
-        h = h * 31 + c.counterweightMass.toRawBits()
-        h = h * 31 + c.hangLength.toRawBits()
-        h = h * 31 + c.pinAngleDeg.toRawBits()
-        h = h * 31 + c.slingRatio.toRawBits()
-        // Le projectile change la masse lancée, donc tout le tir. L'oublier ici, c'est
-        // montrer au joueur le départ du boulet précédent : la machine avait beau être
-        // rejouée avec le bon, elle ne l'était jamais, faute d'avoir vu que ça avait
-        // changé.
-        h = h * 31 + c.projectile.ordinal
-        // Le vent ne fait pas partie des réglages, mais il change le vol : un site
-        // suivant plus venteux garderait sinon le cône du site précédent.
+        var h = c.signature()
         h = h * 31 + game.wind.speed.toRawBits()
         h = h * 31 + game.wind.angle.toRawBits()
         return h

@@ -418,6 +418,41 @@ class MachineConfig {
         bombSticks = o.bombSticks
         ballMass = o.ballMass
     }
+
+    /**
+     * L'empreinte des réglages : deux machines qui tirent pareil ont la même.
+     *
+     * Elle sert à l'aperçu du départ, que la vue ne recalcule que si elle a changé —
+     * rejouer un début de tir coûte quelques centaines de pas de solveur, et personne ne
+     * veut les payer soixante fois par seconde pour une machine qui n'a pas bougé.
+     *
+     * **Elle vit ici et pas dans la vue, et c'est le fruit d'une bêtise commise deux
+     * fois.** La vue en tenait sa propre liste, recopiée à la main ; le jour où le poids
+     * du boulet et la charge de la bombe sont devenus réglables, cette liste-là ne les a
+     * pas appris, et l'aperçu montrait tranquillement la trajectoire du projectile
+     * précédent. Le commentaire qui expliquait ce piège était juste au-dessus de la
+     * ligne fautive. Une empreinte des réglages appartient aux réglages : ajouter un
+     * champ ici sans l'ajouter là est encore possible, mais ça se voit, et un test le
+     * dit.
+     *
+     * On hache **la masse lancée** et non les deux boutons qui la décident : c'est elle
+     * qui change le vol, elle capte les deux d'un coup, et elle captera de la même façon
+     * ce qui viendra après.
+     */
+    fun signature(): Int {
+        var h = beamLength.toRawBits()
+        h = h * 31 + pivotHeight.toRawBits()
+        h = h * 31 + leverRatio.toRawBits()
+        h = h * 31 + counterweightMass.toRawBits()
+        h = h * 31 + hangLength.toRawBits()
+        h = h * 31 + pinAngleDeg.toRawBits()
+        h = h * 31 + slingRatio.toRawBits()
+        // Le projectile ne change pas que la masse : il se sépare en vol, il explose, il
+        // traverse. Son identité compte donc pour elle-même.
+        h = h * 31 + projectile.ordinal
+        h = h * 31 + shotMass.toRawBits()
+        return h
+    }
 }
 
 /**

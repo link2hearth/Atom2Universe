@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.trebuchet
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
@@ -449,5 +450,67 @@ class TrebuchetGameTest {
         // Un seul chemin les enlève, et c'est un bouton que le joueur presse exprès.
         g.clearGhosts()
         assertTrue("le ménage n'a rien effacé", g.ghosts.isEmpty())
+    }
+
+    /**
+     * **Tout réglage qui change le tir doit changer l'empreinte des réglages.**
+     *
+     * L'aperçu du départ — le cône que le joueur voit avant de décrocher — n'est
+     * recalculé que si [MachineConfig.signature] a bougé, parce que rejouer un début de
+     * tir coûte quelques centaines de pas de solveur. Un réglage absent de l'empreinte
+     * est donc un réglage dont l'aperçu ment : il montre la trajectoire d'avant.
+     *
+     * C'est arrivé deux fois d'affilée, avec la charge de la bombe puis le poids du
+     * boulet, et rien ne l'a signalé — ni le compilateur, ni les tests, ni la relecture,
+     * puisque le commentaire qui décrivait précisément ce piège se trouvait juste
+     * au-dessus de la ligne fautive. Ce test-ci est ce qui aurait parlé.
+     */
+    @Test
+    fun `chaque reglage change l empreinte des reglages`() {
+        fun empreinte(edit: MachineConfig.() -> Unit): Int =
+            MachineConfig().apply { edit(); clamp() }.signature()
+
+        val nu = empreinte { }
+        val reglages = listOf<Pair<String, MachineConfig.() -> Unit>>(
+            "poutre" to { beamLength += 2f },
+            "pied" to { pivotHeight += 0.5f },
+            "levier" to { leverRatio += 0.5f },
+            "contrepoids" to { counterweightMass += 500f },
+            "chape" to { hangLength += 0.3f },
+            "crochet" to { pinAngleDeg += 5f },
+            "fronde" to { slingRatio += 0.05f },
+            "projectile" to { projectile = Projectile.FRAGMENTATION }
+        )
+        for ((nom, edit) in reglages) {
+            assertTrue(
+                "changer « $nom » ne change pas l'empreinte : l'aperçu montrerait le tir d'avant",
+                empreinte(edit) != nu
+            )
+        }
+
+        // Les deux réglages de masse se comparent **à leur propre projectile**, et pas à
+        // la machine nue : les mêler au changement de projectile les rendrait faux —
+        // l'empreinte bougerait de toute façon, et le test passerait même si le poids
+        // était oublié. C'est exactement l'erreur qu'on est en train de garder.
+        val boulet = empreinte { projectile = Projectile.BOULET }
+        assertTrue(
+            "changer le poids du boulet ne change pas l'empreinte",
+            empreinte { projectile = Projectile.BOULET; ballMass = 50f } != boulet
+        )
+        val bombe = empreinte { projectile = Projectile.BOMBE }
+        assertTrue(
+            "changer la charge de la bombe ne change pas l'empreinte",
+            empreinte { projectile = Projectile.BOMBE; bombSticks = 90 } != bombe
+        )
+        // Et l'inverse, qui est la contrepartie honnête : la charge ne change rien au vol
+        // d'un boulet, l'aperçu n'a donc aucune raison d'être rejoué pour elle.
+        assertEquals(
+            "la charge de la bombe agite l'aperçu d'un boulet",
+            boulet, empreinte { projectile = Projectile.BOULET; bombSticks = 90 }
+        )
+
+        // Et deux machines réglées pareil se ressemblent : une empreinte qui changerait
+        // à chaque appel ferait recalculer l'aperçu soixante fois par seconde.
+        assertEquals(nu, empreinte { })
     }
 }
