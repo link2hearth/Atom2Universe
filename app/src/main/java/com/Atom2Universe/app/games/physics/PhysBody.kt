@@ -31,27 +31,31 @@ class BodyPart internal constructor(
     val localY: Float,
     val localAngle: Float
 ) {
+    // Ces quatre grandeurs ne dépendent que de la forme, qui ne change jamais après
+    // sa construction : elles se calculent une fois pour toutes. Ce n'étaient au
+    // départ que des accesseurs calculés, ce qui était juste et invisible — jusqu'à
+    // ce qu'un boulet rapide fasse découper l'image en trente-deux sous-pas et que
+    // la recherche des paires en contact réclame le rayon englobant de chaque corps
+    // à chaque fois : un million et demi de racines carrées par image.
     /** Sert à répartir la masse du corps entre ses formes. */
-    internal val area: Float
-        get() = if (shape == Shape.CIRCLE) {
-            (Math.PI * radius * radius).toFloat()
-        } else {
-            4f * halfW * halfH
-        }
+    internal val area: Float = if (shape == Shape.CIRCLE) {
+        (Math.PI * radius * radius).toFloat()
+    } else {
+        4f * halfW * halfH
+    }
 
     /** Inertie autour de son propre centre, pour une masse de 1 kg. */
-    internal val unitInertia: Float
-        get() = if (shape == Shape.CIRCLE) {
-            radius * radius / 2f
-        } else {
-            (4f * halfW * halfW + 4f * halfH * halfH) / 12f
-        }
+    internal val unitInertia: Float = if (shape == Shape.CIRCLE) {
+        radius * radius / 2f
+    } else {
+        (4f * halfW * halfW + 4f * halfH * halfH) / 12f
+    }
 
-    internal val boundingRadius: Float
-        get() = if (shape == Shape.CIRCLE) radius else sqrt(halfW * halfW + halfH * halfH)
+    internal val boundingRadius: Float =
+        if (shape == Shape.CIRCLE) radius else sqrt(halfW * halfW + halfH * halfH)
 
-    internal val smallestHalfExtent: Float
-        get() = if (shape == Shape.CIRCLE) radius else minOf(halfW, halfH)
+    internal val smallestHalfExtent: Float =
+        if (shape == Shape.CIRCLE) radius else minOf(halfW, halfH)
 }
 
 /** Assemble les formes d'un corps composé. */
@@ -177,6 +181,45 @@ class PhysBody private constructor(
     /** Corps ignoré par le moteur (poids encore dans le plateau, ou tenu par le doigt). */
     var inWorld = true
 
+    /**
+     * Le corps dort : le moteur ne l'intègre plus et ne cherche plus ses contacts.
+     *
+     * Voir [PhysWorld.sleepEnabled]. Un dormeur a toutes ses vitesses à zéro ; il se
+     * réveille dès qu'un corps éveillé le touche pour de bon, dès qu'on lui pose un
+     * couple, ou quand on appelle [wake] — ce que le jeu doit faire chaque fois qu'il
+     * change sa pose ou sa vitesse dans le dos du moteur.
+     */
+    var sleeping = false
+        internal set
+
+    /** Temps passé sans bouger, en secondes : c'est lui qui décide de l'endormissement. */
+    internal var restTime = 0f
+
+    /** Interdit le sommeil pour ce corps, quoi qu'il arrive. */
+    var allowSleep = true
+
+    /** Un corps que le moteur laisse tranquille : endormi, ou infiniment lourd. */
+    val frozen: Boolean get() = sleeping || immovable
+
+    /** Remet le corps dans la simulation, et repart de zéro sur son temps de repos. */
+    fun wake() {
+        sleeping = false
+        restTime = 0f
+    }
+
+    /**
+     * Endort le corps sur-le-champ, sans attendre le délai d'usage.
+     *
+     * À réserver aux corps qu'on sait immobiles : une cible qui attend son premier
+     * boulet n'a aucune raison de payer une demi-seconde de simulation pour prouver
+     * qu'elle ne bouge pas.
+     */
+    fun sleep() {
+        vx = 0f; vy = 0f; omega = 0f
+        restTime = 0f
+        sleeping = true
+    }
+
     /** Translation figée : le sol, et la planche qui ne fait que tourner sur son pivot. */
     var lockPosition = false
 
@@ -245,19 +288,21 @@ class PhysBody private constructor(
      * masse fois le carré de sa distance au centre — c'est le théorème de Huygens,
      * et c'est ce qui fait qu'une pièce excentrée est bien plus dure à faire tourner.
      */
-    val inertia: Float
-        get() {
-            if (mass <= 0f) return 0f
-            var totalArea = 0f
-            for (p in parts) totalArea += p.area
-            if (totalArea <= 0f) return 0f
-            var i = 0f
-            for (p in parts) {
-                val m = mass * p.area / totalArea
-                i += m * (p.unitInertia + p.localX * p.localX + p.localY * p.localY)
-            }
-            return i
+    var inertia: Float = 0f
+        private set
+
+    private fun computeInertia(): Float {
+        if (mass <= 0f) return 0f
+        var totalArea = 0f
+        for (p in parts) totalArea += p.area
+        if (totalArea <= 0f) return 0f
+        var i = 0f
+        for (p in parts) {
+            val m = mass * p.area / totalArea
+            i += m * (p.unitInertia + p.localX * p.localX + p.localY * p.localY)
         }
+        return i
+    }
 
     init {
         refreshMass()
@@ -266,33 +311,86 @@ class PhysBody private constructor(
     /** À rappeler après avoir changé [mass], [lockPosition] ou [lockRotation]. */
     fun refreshMass() {
         invMass = if (lockPosition || mass <= 0f) 0f else 1f / mass
-        val i = inertia
-        invI = if (lockRotation || i <= 0f) 0f else 1f / i
+        inertia = computeInertia()
+        invI = if (lockRotation || inertia <= 0f) 0f else 1f / inertia
     }
 
     val immovable: Boolean get() = invMass == 0f && invI == 0f
 
-    /** Rayon du cercle englobant tout le corps, pour éliminer vite les paires éloignées. */
-    val boundingRadius: Float
-        get() {
-            var best = 0f
-            for (p in parts) {
-                val r = hypot(p.localX, p.localY) + p.boundingRadius
-                if (r > best) best = r
-            }
-            return best
+    /**
+     * Rayon du cercle englobant tout le corps, pour éliminer vite les paires éloignées.
+     *
+     * Calculé une fois : la géométrie d'un corps ne change jamais après sa construction,
+     * et la recherche des paires réclame cette valeur des milliers de fois par image.
+     */
+    val boundingRadius: Float = run {
+        var best = 0f
+        for (p in parts) {
+            val r = hypot(p.localX, p.localY) + p.boundingRadius
+            if (r > best) best = r
         }
+        best
+    }
 
     /** La plus petite demi-épaisseur du corps : sert à régler les sous-pas. */
-    val smallestHalfExtent: Float
-        get() {
-            var best = Float.MAX_VALUE
-            for (p in parts) {
-                val e = p.smallestHalfExtent
-                if (e < best) best = e
-            }
-            return best
+    val smallestHalfExtent: Float = run {
+        var best = Float.MAX_VALUE
+        for (p in parts) {
+            val e = p.smallestHalfExtent
+            if (e < best) best = e
         }
+        best
+    }
+
+    // Boîte englobante du corps dans le monde, tenue par [updateAabb].
+    internal var aabbMinX = 0f
+    internal var aabbMaxX = 0f
+    internal var aabbMinY = 0f
+    internal var aabbMaxY = 0f
+
+    /**
+     * Recalcule la boîte englobante, formes tournées comprises.
+     *
+     * Elle est **exacte**, et c'est ce qui fait sa valeur devant le cercle englobant :
+     * un sol de six cents mètres de long a un cercle de trois cents mètres de rayon,
+     * si bien qu'au cercle tout le monde le touche, y compris un boulet à cent mètres
+     * d'altitude. Sa boîte, elle, s'arrête à deux mètres de haut.
+     *
+     * Le moteur ne l'appelle que pour les corps éveillés : un dormeur ne bouge pas,
+     * donc sa boîte est encore bonne. C'est aussi pourquoi tout déplacement décidé par
+     * le jeu doit passer par [wake].
+     */
+    internal fun updateAabb() {
+        val c = cos(angle)
+        val s = sin(angle)
+        var loX = Float.MAX_VALUE
+        var hiX = -Float.MAX_VALUE
+        var loY = Float.MAX_VALUE
+        var hiY = -Float.MAX_VALUE
+        for (k in parts.indices) {
+            val p = parts[k]
+            val px = x + p.localX * c - p.localY * s
+            val py = y + p.localX * s + p.localY * c
+            val hx: Float
+            val hy: Float
+            if (p.shape == Shape.CIRCLE) {
+                hx = p.radius
+                hy = p.radius
+            } else {
+                val pa = angle + p.localAngle
+                val ca = abs(cos(pa))
+                val sa = abs(sin(pa))
+                hx = p.halfW * ca + p.halfH * sa
+                hy = p.halfW * sa + p.halfH * ca
+            }
+            if (px - hx < loX) loX = px - hx
+            if (px + hx > hiX) hiX = px + hx
+            if (py - hy < loY) loY = py - hy
+            if (py + hy > hiY) hiY = py + hy
+        }
+        aabbMinX = loX; aabbMaxX = hiX
+        aabbMinY = loY; aabbMaxY = hiY
+    }
 
     /** Position locale d'une forme, après recentrage sur le centre de masse. */
     fun localOffsetX(part: Int): Float = parts[part].localX

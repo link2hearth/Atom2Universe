@@ -317,6 +317,8 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         val approche = somethingApproaching()
         if (dormant) {
             if (!approche) return
+            // Elles rentrent dans le monde **endormies** : rien ne les a touchées, et
+            // le premier contact venu les réveillera de lui-même, pierre par pierre.
             for (p in live) p.body.inWorld = true
             dormant = false
             return
@@ -325,7 +327,16 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         // On fige des corps déjà immobiles : on met quand même les vitesses à zéro,
         // pour qu'aucun reliquat ne les fasse dériver au réveil.
         for (p in live) {
-            p.body.vx = 0f; p.body.vy = 0f; p.body.omega = 0f
+            // Et on les endort **pour de bon**, pas seulement le temps de la veille.
+            //
+            // Sans cette ligne, la mise en veille était un cadeau empoisonné : la
+            // cible se réveille quarante mètres avant le boulet, soit un quart de
+            // seconde, et la mise en sommeil du moteur demande quatre dixièmes
+            // d'immobilité pour se déclencher. Les pierres n'avaient donc jamais le
+            // temps de se rendormir, et le quart de seconde qui précède l'impact —
+            // exactement celui que le joueur regarde — se jouait avec tout le château
+            // dans le solveur, à trente-deux sous-pas par image.
+            p.body.sleep()
             p.body.inWorld = false
             world.forgetContacts(p.body)
         }
@@ -347,7 +358,10 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
     /** Réveille la cible sur-le-champ : à appeler avant de lui faire quoi que ce soit. */
     fun wake() {
         if (!dormant) return
-        for (p in live) p.body.inWorld = true
+        for (p in live) {
+            p.body.inWorld = true
+            p.body.wake()
+        }
         dormant = false
     }
 
@@ -380,6 +394,9 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             val nx = if (d > 1e-3f) dx / d else 0f
             val ny = if (d > 1e-3f) dy / d else 1f
             val dv = minOf(sqrt(2f * e * p.body.invMass), TargetRules.MAX_BLAST_SPEED)
+            // Une pierre endormie ne serait pas intégrée : la poussée lui serait
+            // versée puis oubliée. Toute vitesse posée à la main réveille son corps.
+            p.body.wake()
             p.body.vx += nx * dv
             p.body.vy += ny * dv
 
@@ -599,7 +616,12 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         ): Structure {
             if (structure.blocks.isEmpty()) return structure
 
-            val w = PhysWorld().apply { iterations = 16 }
+            val w = PhysWorld().apply {
+                iterations = 16
+                // Le tassement s'arrête de lui-même : les pierres qui ont trouvé leur
+                // place s'endorment et ne coûtent plus rien aux secondes suivantes.
+                sleepEnabled = true
+            }
             val half = structure.width / 2f + 20f
             w.add(
                 PhysBody(half, 1f, 0f).apply {

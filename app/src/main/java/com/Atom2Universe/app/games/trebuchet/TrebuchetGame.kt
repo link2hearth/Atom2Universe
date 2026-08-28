@@ -389,6 +389,11 @@ class TrebuchetGame {
         // Trois liaisons et un contact au sol : le monde est bien plus simple
         // qu'avant, et n'a plus besoin de vingt-deux passes pour tenir.
         iterations = 16
+        // Une cible est faite de dizaines de pierres qui ne bougent pas. Sans la mise
+        // en sommeil, elles sont résolues à chacun des trente-deux sous-pas qu'impose
+        // un boulet rapide, et l'image devient injouable dès que le boulet approche —
+        // c'est-à-dire au seul moment où le joueur regarde.
+        sleepEnabled = true
     }
     val config = MachineConfig()
 
@@ -462,8 +467,31 @@ class TrebuchetGame {
     var launchAngleDeg = 0f
         private set
 
-    /** Trajectoire du tir en cours, en couples (x, y). */
-    val trail = ArrayList<Float>()
+    private var trailBuf = FloatArray(2048)
+
+    /**
+     * Trajectoire du tir en cours, en couples (x, y), à lire jusqu'à [trailCount].
+     *
+     * Un tableau de flottants et non une liste : une liste de `Float` emballe chaque
+     * nombre dans un objet, et la trace d'un tir en compte plusieurs centaines, relus
+     * à chaque image par la vue. C'est du travail pour le ramasse-miettes pendant le
+     * vol, c'est-à-dire au pire moment.
+     */
+    val trail: FloatArray get() = trailBuf
+
+    /** Nombre de flottants utiles dans [trail] (deux par point). */
+    var trailCount = 0
+        private set
+
+    private fun trailClear() {
+        trailCount = 0
+    }
+
+    private fun trailAdd(x: Float, y: Float) {
+        if (trailCount + 2 > trailBuf.size) trailBuf = trailBuf.copyOf(trailBuf.size * 2)
+        trailBuf[trailCount++] = x
+        trailBuf[trailCount++] = y
+    }
 
     /** Trajectoire du tir précédent : le fantôme qui sert à corriger. */
     var ghost: FloatArray? = null
@@ -557,7 +585,7 @@ class TrebuchetGame {
     fun build() {
         config.clamp()
         world.clear()
-        trail.clear()
+        trailClear()
         elapsed = 0f
         trailTimer = 0f
         ballFree = false
@@ -804,7 +832,10 @@ class TrebuchetGame {
     /** Décroche la détente : à partir de là, tout n'est plus que de la physique. */
     fun release() {
         if (phase != Phase.BUILD) return
-        trail.clear()
+        // La machine vient peut-être de passer plusieurs secondes à l'arrêt : on la
+        // réveille avant de la lâcher, sinon la détente ne déclencherait rien.
+        world.wakeAll()
+        trailClear()
         elapsed = 0f
         trailTimer = 0f
         ballFree = false
@@ -867,10 +898,9 @@ class TrebuchetGame {
         }
 
         trailTimer += dt
-        if (trailTimer > 0.02f && trail.size < 6000) {
+        if (trailTimer > 0.02f && trailCount < 6000) {
             trailTimer = 0f
-            trail.add(ball.x)
-            trail.add(ball.y)
+            trailAdd(ball.x, ball.y)
         }
 
         // Le tir se mesure au **point d'impact**, comme une portée d'artillerie : ce
@@ -912,7 +942,7 @@ class TrebuchetGame {
     private fun letGo() {
         ballFree = true
         // Tout ce qui est déjà dans la trace est la course au sol : le vol commence ici.
-        launchTrailIndex = trail.size
+        launchTrailIndex = trailCount
         sling.enabled = false
         // Le boulet n'appartient plus à la machine : c'est **maintenant** qu'il devient
         // capable de toucher une cible. Le rendre solide plus tôt reviendrait à le
@@ -942,7 +972,7 @@ class TrebuchetGame {
         if (shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
         shotCount++
         if (shotDistance > bestDistance) bestDistance = shotDistance
-        ghost = trail.toFloatArray()
+        ghost = trailBuf.copyOf(trailCount)
     }
 
     // ── Simulation sans affichage ────────────────────────────────────────────
@@ -999,9 +1029,7 @@ class TrebuchetGame {
      */
     fun startTrace(): FloatArray {
         val from = launchTrailIndex
-        if (from < 0 || trail.size - from < 6) return FloatArray(0)
-        val out = FloatArray(trail.size - from)
-        for (i in out.indices) out[i] = trail[from + i]
-        return out
+        if (from < 0 || trailCount - from < 6) return FloatArray(0)
+        return trailBuf.copyOfRange(from, trailCount)
     }
 }

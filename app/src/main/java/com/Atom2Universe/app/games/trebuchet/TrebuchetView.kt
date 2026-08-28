@@ -351,7 +351,15 @@ class TrebuchetView @JvmOverloads constructor(
         color = Color.argb(160, 220, 235, 255)
     }
 
+    /** Hauteur pour laquelle le dégradé du ciel a été fabriqué. */
+    private var bgShaderHeight = -1f
+
     private val tmpPath = Path()
+
+    /** Un chemin par matériau, rempli à neuf à chaque image. */
+    private val targetPaths = Array(targetFills.size) { Path() }
+    private val targetUsed = BooleanArray(targetFills.size)
+    private val crackPath = Path()
     private val corners = FloatArray(8)
     private val partPose = FloatArray(3)
     private val tip = FloatArray(2)
@@ -1023,7 +1031,13 @@ class TrebuchetView @JvmOverloads constructor(
         val w = width.toFloat()
         val h = height.toFloat()
 
-        pBg.shader = LinearGradient(0f, 0f, 0f, h, bgTop, bgBottom, Shader.TileMode.CLAMP)
+        // Le dégradé du ciel ne dépend que de la hauteur de la vue : le refabriquer à
+        // chaque image, c'était une allocation et une construction de nuancier
+        // soixante fois par seconde pour un résultat toujours identique.
+        if (bgShaderHeight != h) {
+            pBg.shader = LinearGradient(0f, 0f, 0f, h, bgTop, bgBottom, Shader.TileMode.CLAMP)
+            bgShaderHeight = h
+        }
         canvas.drawRect(0f, 0f, w, h, pBg)
         for (i in starsX.indices) {
             canvas.drawCircle(starsX[i] * w, starsY[i] * h * 0.55f, starsR[i] * dp, pStar)
@@ -1152,13 +1166,38 @@ class TrebuchetView @JvmOverloads constructor(
         val leftWorld = camX - viewWidth / 2f - 5f
         val rightWorld = camX + viewWidth / 2f + 5f
 
+        // Toutes les pierres d'un même matériau dans un seul chemin.
+        //
+        // Un site fait jusqu'à cent trente corps, souvent en plusieurs morceaux : les
+        // dessiner un par un, c'était trois cents appels de tracé par image, chacun
+        // avec sa mise en place d'anticrénelage, pour une surface totale qui tient
+        // dans un coin de l'écran. Regroupés par matériau, il en reste deux par
+        // matériau présent — le remplissage et le contour — et le dessin ne dépend
+        // plus du nombre de pierres mais de ce qu'elles couvrent.
+        for (path in targetPaths) path.reset()
+        java.util.Arrays.fill(targetUsed, false)
+        crackPath.reset()
+        var cracked = false
+
         for (p in field.pieces) {
             val b = p.body
             if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
             val i = p.material.ordinal
-            drawBody(canvas, b, targetFills[i], targetEdges[i])
-            if (p.crackLevel > 0) drawCracks(canvas, b, p.crackLevel)
+            val path = targetPaths[i]
+            for (k in b.parts.indices) appendPart(path, b, k)
+            targetUsed[i] = true
+            if (p.crackLevel > 0) {
+                appendCracks(crackPath, b, p.crackLevel)
+                cracked = true
+            }
         }
+
+        for (i in targetPaths.indices) {
+            if (!targetUsed[i]) continue
+            canvas.drawPath(targetPaths[i], targetFills[i])
+            canvas.drawPath(targetPaths[i], targetEdges[i])
+        }
+        if (cracked) canvas.drawPath(crackPath, pCrack)
 
         // La ligne de ruine, tracée d'un bout à l'autre de l'emprise.
         val y = sy(field.ruinLine)
@@ -1178,7 +1217,7 @@ class TrebuchetView @JvmOverloads constructor(
      * sans lui un tir qui enlève la moitié de la vie d'une assise ressemble exactement
      * à un tir qui n'a rien fait.
      */
-    private fun drawCracks(canvas: Canvas, b: PhysBody, level: Int) {
+    private fun appendCracks(path: Path, b: PhysBody, level: Int) {
         for (i in b.parts.indices) {
             val part = b.parts[i]
             if (part.shape == Shape.CIRCLE) continue
@@ -1188,17 +1227,53 @@ class TrebuchetView @JvmOverloads constructor(
             val hw = part.halfW * camScale * 0.8f
             val hh = part.halfH * camScale * 0.8f
             if (hw < 2f * dp || hh < 2f * dp) continue
+            // La rotation se fait à la main plutôt qu'avec la toile : c'est le prix à
+            // payer pour que toutes les fêlures tiennent dans un seul chemin, et donc
+            // dans un seul tracé.
             val a = -partPose[2]
-            canvas.save()
-            canvas.rotate(Math.toDegrees(a.toDouble()).toFloat(), cx, cy)
-            canvas.drawLine(cx - hw, cy - hh * 0.4f, cx + hw * 0.2f, cy + hh, pCrack)
-            if (level >= 2) canvas.drawLine(cx + hw, cy - hh, cx - hw * 0.3f, cy + hh * 0.5f, pCrack)
+            val ca = cos(a)
+            val sa = sin(a)
+            crackLine(path, cx, cy, ca, sa, -hw, -hh * 0.4f, hw * 0.2f, hh)
+            if (level >= 2) crackLine(path, cx, cy, ca, sa, hw, -hh, -hw * 0.3f, hh * 0.5f)
             if (level >= 3) {
-                canvas.drawLine(cx - hw, cy + hh * 0.6f, cx + hw, cy + hh * 0.2f, pCrack)
-                canvas.drawLine(cx - hw * 0.2f, cy - hh, cx + hw * 0.4f, cy + hh * 0.3f, pCrack)
+                crackLine(path, cx, cy, ca, sa, -hw, hh * 0.6f, hw, hh * 0.2f)
+                crackLine(path, cx, cy, ca, sa, -hw * 0.2f, -hh, hw * 0.4f, hh * 0.3f)
             }
-            canvas.restore()
         }
+    }
+
+    /** Un trait de fêlure, exprimé dans le repère de la pierre puis tourné. */
+    private fun crackLine(
+        path: Path, cx: Float, cy: Float, ca: Float, sa: Float,
+        x0: Float, y0: Float, x1: Float, y1: Float
+    ) {
+        path.moveTo(cx + x0 * ca - y0 * sa, cy + x0 * sa + y0 * ca)
+        path.lineTo(cx + x1 * ca - y1 * sa, cy + x1 * sa + y1 * ca)
+    }
+
+    /**
+     * Verse une forme dans un chemin, sans la dessiner.
+     *
+     * C'est ce qui permet de regrouper des dizaines de pierres en un tracé unique.
+     * Un segment n'a pas d'aire : le rayon d'un galet, ajouté au même chemin, ne
+     * change rien au remplissage et se voit au contour, exactement comme avant.
+     */
+    private fun appendPart(path: Path, b: PhysBody, part: Int) {
+        val p = b.parts[part]
+        if (p.shape == Shape.CIRCLE) {
+            b.partWorld(part, partPose)
+            val cx = sx(partPose[0])
+            val cy = sy(partPose[1])
+            val r = p.radius * camScale
+            path.addCircle(cx, cy, r, Path.Direction.CW)
+            path.moveTo(cx, cy)
+            path.lineTo(cx + r * cos(partPose[2]), cy - r * sin(partPose[2]))
+            return
+        }
+        b.partCorners(part, corners)
+        path.moveTo(sx(corners[0]), sy(corners[1]))
+        for (i in 1 until 4) path.lineTo(sx(corners[i * 2]), sy(corners[i * 2 + 1]))
+        path.close()
     }
 
     private fun drawBody(canvas: Canvas, b: PhysBody, fill: Paint, edge: Paint) {
@@ -1232,16 +1307,53 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     private fun drawTrail(canvas: Canvas) {
-        val t = game.trail
-        if (t.size < 4) return
+        drawPolyline(canvas, game.trail, game.trailCount, pTrail)
+    }
+
+    /**
+     * Trace une polyligne du monde, en n'envoyant à la toile que ce qui s'y voit.
+     *
+     * Une trajectoire de trébuchet fait quatre cents mètres et se retient à cinquante
+     * points par seconde : au bout d'un tir, la trace et le fantôme du tir précédent
+     * comptent chacun plusieurs centaines de points, dont la caméra n'en montre qu'une
+     * poignée puisqu'elle suit le boulet. Tout envoyer à la toile revenait à faire
+     * découper, à chaque image, des centaines de segments qui tombent à des kilomètres
+     * de l'écran — et le coût grandissait au fil du tir, ce qui donnait exactement le
+     * symptôme « ça rame de plus en plus ».
+     *
+     * Deux tris, donc : les segments hors champ sont abandonnés, et les points qui
+     * retombent sur le même pixel que le précédent aussi.
+     */
+    private fun drawPolyline(canvas: Canvas, pts: FloatArray, count: Int, paint: Paint) {
+        if (count < 4) return
+        val w = width.toFloat()
+        val h = height.toFloat()
         tmpPath.reset()
-        tmpPath.moveTo(sx(t[0]), sy(t[1]))
+        var px = sx(pts[0])
+        var py = sy(pts[1])
+        var lastX = Float.NaN
+        var lastY = Float.NaN
+        var drew = false
         var i = 2
-        while (i < t.size) {
-            tmpPath.lineTo(sx(t[i]), sy(t[i + 1]))
+        while (i < count) {
+            val cx = sx(pts[i])
+            val cy = sy(pts[i + 1])
             i += 2
+            // Deux points sur le même pixel ne dessinent rien de plus qu'un seul.
+            if (abs(cx - px) < 1f && abs(cy - py) < 1f) continue
+            val outside = (px < 0f && cx < 0f) || (px > w && cx > w) ||
+                (py < 0f && cy < 0f) || (py > h && cy > h)
+            if (!outside) {
+                if (px != lastX || py != lastY) tmpPath.moveTo(px, py)
+                tmpPath.lineTo(cx, cy)
+                lastX = cx
+                lastY = cy
+                drew = true
+            }
+            px = cx
+            py = cy
         }
-        canvas.drawPath(tmpPath, pTrail)
+        if (drew) canvas.drawPath(tmpPath, paint)
     }
 
     /**
@@ -1250,15 +1362,7 @@ class TrebuchetView @JvmOverloads constructor(
      */
     private fun drawGhost(canvas: Canvas) {
         val g = game.ghost ?: return
-        if (g.size < 4) return
-        tmpPath.reset()
-        tmpPath.moveTo(sx(g[0]), sy(g[1]))
-        var i = 2
-        while (i < g.size) {
-            tmpPath.lineTo(sx(g[i]), sy(g[i + 1]))
-            i += 2
-        }
-        canvas.drawPath(tmpPath, pGhost)
+        drawPolyline(canvas, g, g.size, pGhost)
     }
 
     /**
