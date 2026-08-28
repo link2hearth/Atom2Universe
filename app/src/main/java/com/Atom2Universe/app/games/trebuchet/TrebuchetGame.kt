@@ -918,14 +918,21 @@ class TrebuchetGame {
      * Prend une machine toute faite : celle d'origine, ou une que le joueur a mise de
      * côté.
      *
-     * Les fantômes s'en vont avec l'ancienne machine, et c'est voulu : ils disent « ce
-     * réglage-là envoie le boulet ici », ce qui n'apprend plus rien dès que le réglage
-     * n'est plus celui-là. Les garder donnerait des traces qu'aucun bouton ne pourrait
-     * plus reproduire.
+     * **Les fantômes restent**, et c'est le joueur qui a tranché. On les effaçait au
+     * motif qu'une trace ne dit plus rien dès que la machine n'est plus celle qui l'a
+     * faite. C'est vrai sur le papier et faux en jouant : ce qu'on regarde, ce n'est
+     * pas « quel réglage a fait ce trait », c'est « où tombaient mes boulets tout à
+     * l'heure ». Un joueur qui essaie trois machines sur la même cible veut justement
+     * voir les trois nappes ensemble. Ils ne s'en vont donc que sur commande, par
+     * [clearGhosts].
      */
     fun loadConfig(c: MachineConfig) {
         config.copyFrom(c)
         build()
+    }
+
+    /** Efface la mémoire des tirs. Le seul chemin qui les enlève. */
+    fun clearGhosts() {
         ghostList.clear()
     }
 

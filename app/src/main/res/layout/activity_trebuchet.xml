@@ -44,6 +44,17 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
+        <ImageButton
+            android:id="@+id/trebuchet_btn_settings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:padding="9dp"
+            android:src="@drawable/ic_settings_24"
+            app:tint="#94A3B8"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/trebuchet_settings" />
+
     </LinearLayout>
 
     <!-- La scène, et la bulle à roulettes qui flotte dessus -->

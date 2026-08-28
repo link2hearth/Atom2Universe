@@ -57,4 +57,9 @@
     <string name="trebuchet_machine_saved">%1$s enregistrée</string>
     <string name="trebuchet_machine_deleted">%1$s supprimée</string>
     <string name="trebuchet_machine_noname">Il faut un nom</string>
+    <string name="trebuchet_settings">Réglages</string>
+    <string name="trebuchet_style_arcade">Constructions arcade</string>
+    <string name="trebuchet_style_realistic">Constructions réalistes</string>
+    <string name="trebuchet_clean_ghosts">Effacer les tirs passés (%1$d)</string>
+    <string name="trebuchet_clean_done">Tirs passés effacés</string>
 </resources>

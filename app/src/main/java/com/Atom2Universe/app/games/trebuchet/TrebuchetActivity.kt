@@ -35,6 +35,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         const val ID_SAVE_AS = 1
         const val ID_DELETE = 2
         const val ID_FIRST_PRESET = 10
+
+        // Les entrées du menu des réglages.
+        const val ID_ARCADE = 0
+        const val ID_REALISTE = 1
+        const val ID_CLEAN = 2
     }
 
     private lateinit var gameView: TrebuchetView
@@ -96,10 +101,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         // trouvé sa forme.
         machinesButton.setOnLongClickListener { nextLevel(); true }
         fireButton.setOnClickListener { onFireButton() }
-        // Le bandeau du site sert aussi d'interrupteur entre arcade et réaliste. Le
-        // site se refait au passage : la masse et la solidité d'une pierre sont fixées
-        // à sa naissance, on ne les change pas sous les pieds du joueur.
-        bestText.setOnClickListener { toggleStyle() }
+        findViewById<ImageButton>(R.id.trebuchet_btn_settings)
+            .setOnClickListener { showSettingsMenu(it) }
 
         loadLevel(levelSeed)
     }
@@ -126,13 +129,56 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
     private fun nextLevel() = loadLevel(levelSeed + 1L)
 
-    /** Passe d'un tempérament à l'autre et refait le site avec. */
-    private fun toggleStyle() {
-        TargetRules.style = when (TargetRules.style) {
-            TargetStyle.ARCADE -> TargetStyle.REALISTE
-            TargetStyle.REALISTE -> TargetStyle.ARCADE
+    /**
+     * Les réglages du jeu — par opposition aux réglages de la machine, qui se font sur
+     * la machine elle-même.
+     *
+     * Il n'y en a que deux, et c'est bien ainsi : le tempérament des constructions, et
+     * l'effacement de la mémoire des tirs. Le second est ici précisément **parce qu'on
+     * ne s'en sert jamais** — c'est un ménage, pas un geste de jeu, et un ménage n'a
+     * rien à faire sur la barre du bas à côté du bouton de tir.
+     */
+    private fun showSettingsMenu(anchor: View) {
+        val popup = PopupMenu(this, anchor)
+        val menu = popup.menu
+        menu.add(1, ID_ARCADE, 0, getString(R.string.trebuchet_style_arcade))
+        menu.add(1, ID_REALISTE, 1, getString(R.string.trebuchet_style_realistic))
+        // Une case cochée dit lequel des deux est en cours ; deux entrées valent mieux
+        // qu'un interrupteur qui n'annonce pas ce qu'il va faire.
+        menu.setGroupCheckable(1, true, true)
+        menu.findItem(
+            if (TargetRules.style == TargetStyle.ARCADE) ID_ARCADE else ID_REALISTE
+        ).isChecked = true
+
+        val fantomes = gameView.game.ghosts.size
+        menu.add(0, ID_CLEAN, 2, getString(R.string.trebuchet_clean_ghosts, fantomes))
+            .isEnabled = fantomes > 0
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                ID_ARCADE -> setStyle(TargetStyle.ARCADE)
+                ID_REALISTE -> setStyle(TargetStyle.REALISTE)
+                ID_CLEAN -> {
+                    synchronized(gameView.game) { gameView.game.clearGhosts() }
+                    toast(getString(R.string.trebuchet_clean_done))
+                }
+            }
+            true
         }
-        prefs.edit { putString(KEY_STYLE, TargetRules.style.name) }
+        popup.show()
+    }
+
+    /**
+     * Change le tempérament et refait le site avec.
+     *
+     * Le site se refait, et il n'y a pas moyen de faire autrement : la masse et la
+     * solidité d'une pierre sont fixées à sa naissance. On ne les change pas sous les
+     * pieds du joueur.
+     */
+    private fun setStyle(style: TargetStyle) {
+        if (style == TargetRules.style) return
+        TargetRules.style = style
+        prefs.edit { putString(KEY_STYLE, style.name) }
         loadLevel(levelSeed)
     }
 

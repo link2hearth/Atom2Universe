@@ -428,7 +428,17 @@ class TrebuchetGameTest {
                 "il finit en ${fin[fin.size - 2]} pour un boulet en ${g.ball.x}",
             abs(fin[fin.size - 2] - g.ball.x) < 20f
         )
+        // Une machine neuve ne les efface pas : ce qu'on regarde n'est pas « quel
+        // réglage a fait ce trait » mais « où tombaient mes boulets tout à l'heure », et
+        // essayer trois machines sur la même cible demande justement de voir les trois
+        // nappes ensemble.
         g.reset()
-        assertTrue("une machine neuve garde les fantômes de l'ancienne", g.ghosts.isEmpty())
+        assertTrue(
+            "une machine neuve a effacé les fantômes de l'ancienne",
+            g.ghosts.size == TrebuchetRules.GHOST_HISTORY
+        )
+        // Un seul chemin les enlève, et c'est un bouton que le joueur presse exprès.
+        g.clearGhosts()
+        assertTrue("le ménage n'a rien effacé", g.ghosts.isEmpty())
     }
 }
