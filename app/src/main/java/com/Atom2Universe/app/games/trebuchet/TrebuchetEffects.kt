@@ -1,0 +1,493 @@
+package com.Atom2Universe.app.games.trebuchet
+
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.exp
+import kotlin.math.hypot
+import kotlin.math.sin
+import kotlin.math.sqrt
+import kotlin.random.Random
+
+/**
+ * Ce qu'une particule est venue faire, et donc comment elle vit.
+ *
+ * Ce n'est pas un habillage : la sorte décide de la physique. Une étincelle tombe et
+ * s'éteint, une fumée monte et gonfle, un éclat de bombe est lourd et file droit. Un
+ * seul intégrateur pour tout le monde, sept comportements.
+ */
+enum class Puff(
+    /** Ce que la pesanteur lui fait, en fraction de g. Négatif pour ce qui monte. */
+    val gravity: Float,
+    /** Freinage de l'air, par seconde. Zéro pour ce qui ne ralentit pas. */
+    val drag: Float,
+    /** De combien la particule grossit ou maigrit sur sa vie, en facteur. */
+    val growth: Float,
+    /** Vrai si elle laisse une traînée derrière elle. */
+    val trailing: Boolean = false
+) {
+    /** La fusée qui monte, avec sa queue de feu. Elle éclate en mourant. */
+    SHELL(1f, 0.15f, 1f, trailing = true),
+
+    /** L'étoile d'un bouquet : elle brûle, elle tombe, elle s'éteint. */
+    STAR(0.55f, 0.8f, 0.7f, trailing = true),
+
+    /** Le saule : lourd, lent, il retombe en pluie. */
+    WILLOW(0.9f, 0.35f, 0.8f, trailing = true),
+
+    /** Le crépitement : minuscule, vif, sans traînée. Il fait le bruit qu'on n'entend pas. */
+    CRACKLE(0.3f, 2.5f, 0.5f),
+
+    /** L'étincelle d'un choc : rapide, courte, elle meurt avant de tomber. */
+    SPARK(0.7f, 1.6f, 0.4f),
+
+    /** La boule de feu d'une explosion : elle gonfle, elle monte, elle pâlit. */
+    FIRE(-0.35f, 3.5f, 3.2f),
+
+    /**
+     * La fumée : elle monte, elle gonfle, elle traîne longtemps, et le vent l'emporte.
+     *
+     * Son gonflement est modéré — deux fois et demie, là où il valait cinq — parce
+     * qu'elle est maintenant nombreuse et petite : cinquante paquets qui triplent de
+     * taille font un panache, dix-huit qui quintuplent font une tache.
+     */
+    SMOKE(-0.12f, 1.6f, 2.5f)
+}
+
+/**
+ * Une particule. Rien qu'un point qui vole, mais un point qui vole **pour de vrai**.
+ *
+ * Les champs sont publics et modifiables, et l'objet ne meurt jamais : il retourne au
+ * bassin. Un feu d'artifice, c'est mille particules relues soixante fois par seconde —
+ * en allouer ne serait-ce qu'une par image donnerait du travail au ramasse-miettes
+ * exactement pendant qu'on regarde l'écran.
+ */
+class Spark internal constructor() {
+    var x = 0f
+    var y = 0f
+    var vx = 0f
+    var vy = 0f
+    var life = 0f
+    var maxLife = 1f
+    var size = 1f
+    var kind = Puff.SPARK
+    /** Indice dans la palette de [TrebuchetEffects], pas une couleur. */
+    var tint = 0
+    /** Vrai pour ce qui se dessine derrière le décor : les feux du fond. */
+    var background = false
+
+    /** Ce qu'il reste à vivre, de 1 (neuve) à 0 (éteinte). */
+    val fade: Float get() = if (maxLife <= 0f) 0f else (life / maxLife).coerceIn(0f, 1f)
+
+    val alive: Boolean get() = life > 0f
+
+    /** Taille au moment où on la regarde : elle grossit ou maigrit avec l'âge. */
+    val shownSize: Float get() = size * (1f + (kind.growth - 1f) * (1f - fade))
+
+    internal fun reset() {
+        life = 0f
+    }
+}
+
+/**
+ * Ce qu'une fusée fait en éclatant. Tiré au sort à chaque tir, et jamais deux fois
+ * pareil.
+ */
+enum class Burst {
+    /** La sphère classique : des étoiles partout, à la même vitesse. */
+    SPHERE,
+
+    /** L'anneau : les étoiles dans un plan, ce qui se voit de profil comme un trait. */
+    RING,
+
+    /** Le saule pleureur : lent, lourd, il retombe en rideau. */
+    WILLOW,
+
+    /** Le pissenlit : deux couronnes, une lente dedans, une rapide dehors. */
+    DOUBLE,
+
+    /** La comète : tout part du même côté, en gerbe. */
+    COMET,
+
+    /** Le pétard : beaucoup de petites, très vives, très courtes. */
+    CRACKLE
+}
+
+/**
+ * Les effets : feux d'artifice, explosions, étincelles.
+ *
+ * **Tout est simulé, rien n'est dessiné ici.** Ce fichier ne connaît ni la toile, ni les
+ * pixels, ni Android : il fait voler des points dans des mètres, et la vue les dessine.
+ * C'est ce qui permet de vérifier au banc qu'un feu d'artifice monte, éclate, retombe et
+ * finit par s'éteindre — trois choses qu'on ne saurait pas prouver en regardant l'écran.
+ *
+ * **Et rien n'est une image.** Un bouquet est un tirage : sa couleur, sa hauteur, sa
+ * puissance, son nombre d'étoiles, sa forme et sa traînée sortent tous du hasard, dans
+ * des bornes choisies. Deux victoires ne donneront jamais le même ciel, ce qui est très
+ * exactement l'intérêt d'un feu d'artifice.
+ *
+ * Le bassin est **fixe** : passé son plafond, les nouvelles particules remplacent les
+ * plus vieilles. Une explosion ne peut donc jamais faire tomber l'image, quel que soit
+ * ce qu'on lui demande.
+ */
+class TrebuchetEffects(seed: Long = 1L) {
+
+    private val rng = Random(seed)
+
+    companion object {
+        /**
+         * Nombre maximal de particules vivantes.
+         *
+         * Deux mille tiennent largement l'image : elles se dessinent en une poignée
+         * d'appels groupés par couleur, et l'essentiel du temps il y en a zéro. Le
+         * plafond n'est pas là pour l'affichage courant, il est là pour qu'un joueur qui
+         * enchaîne dix bouquets ne fasse pas ramer sa fin de partie.
+         */
+        const val MAX_SPARKS = 2000
+
+        /** Pesanteur des particules. La même que pour les boulets, forcément. */
+        const val GRAVITY = TrebuchetRules.GRAVITY
+
+        /** Palette : les teintes possibles, en ARGB opaque. */
+        val PALETTE = intArrayOf(
+            0xFFFFF3C4.toInt(), // or pâle
+            0xFFFF6B6B.toInt(), // rouge
+            0xFFFFA94D.toInt(), // orange
+            0xFFFFD166.toInt(), // ambre
+            0xFF7BE495.toInt(), // vert
+            0xFF4DABF7.toInt(), // bleu
+            0xFFB197FC.toInt(), // violet
+            0xFFFF8FD6.toInt(), // rose
+            0xFF9FE7FF.toInt(), // cyan
+            0xFFFFFFFF.toInt(), // blanc
+            0xFF8A8F9C.toInt(), // fumée
+            0xFFFF4D1A.toInt()  // feu
+        )
+
+        /** Les teintes qui servent à autre chose qu'à faire joli. */
+        const val TINT_SMOKE = 10
+        const val TINT_FIRE = 11
+
+        /** Les teintes vives, celles qu'un bouquet a le droit de tirer. */
+        val FESTIVE = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    }
+
+    private val pool = Array(MAX_SPARKS) { Spark() }
+    private var next = 0
+
+    /**
+     * La vitesse de l'air. Les particules y tendent au lieu de tendre vers l'arrêt.
+     *
+     * C'est toute la différence entre une fumée qui monte en colonne et une fumée qui
+     * part de côté en s'étirant : le freinage ne ramène pas une particule vers zéro, il
+     * la ramène vers **l'air qui l'entoure**. Sans vent, l'air est immobile et le calcul
+     * est exactement celui d'avant.
+     */
+    private var windX = 0f
+    private var windY = 0f
+
+    fun setWind(x: Float, y: Float) {
+        windX = x
+        windY = y
+    }
+
+    /** Toutes les particules du bassin, vivantes ou non. À filtrer sur [Spark.alive]. */
+    val sparks: Array<Spark> get() = pool
+
+    var aliveCount = 0
+        private set
+
+    // ── Les bouquets programmés ───────────────────────────────────────────────
+
+    private val pendingAt = FloatArray(64)
+    private val pendingX = FloatArray(64)
+    private var pendingCount = 0
+    private var showClock = 0f
+
+    /** Vrai tant qu'il reste quelque chose à voir : des particules ou des fusées à tirer. */
+    val busy: Boolean get() = aliveCount > 0 || pendingCount > 0
+
+    fun clear() {
+        for (p in pool) p.reset()
+        aliveCount = 0
+        pendingCount = 0
+        showClock = 0f
+    }
+
+    /**
+     * Prépare un feu d'artifice : une série de fusées tirées au hasard, étalées dans le
+     * temps, entre deux abscisses.
+     *
+     * Les fusées ne partent pas toutes ensemble et ne partent pas non plus en cadence :
+     * un intervalle régulier ferait métronome. On tire donc chaque départ dans une
+     * fourchette, ce qui donne au bouquet ce désordre qu'on ne remarque que quand il
+     * manque.
+     */
+    fun celebrate(xFrom: Float, xTo: Float, shots: Int = 14) {
+        pendingCount = 0
+        showClock = 0f
+        var t = 0.15f
+        val lo = minOf(xFrom, xTo)
+        val span = kotlin.math.abs(xTo - xFrom).coerceAtLeast(1f)
+        for (i in 0 until minOf(shots, pendingAt.size)) {
+            pendingAt[pendingCount] = t
+            pendingX[pendingCount] = lo + rng.nextFloat() * span
+            pendingCount++
+            t += 0.25f + rng.nextFloat() * 0.75f
+        }
+    }
+
+    // ── Les émetteurs ─────────────────────────────────────────────────────────
+
+    /**
+     * Tire une fusée depuis le sol, qui éclatera d'elle-même en haut de sa course.
+     *
+     * La hauteur n'est pas donnée : elle est **obtenue**. On tire une vitesse de départ
+     * et une durée de mèche, et la fusée monte ce que la physique lui permet — freinée
+     * par l'air, tirée par la pesanteur. C'est pour ça que deux fusées identiques
+     * n'éclatent pas à la même hauteur, et c'est très bien ainsi.
+     */
+    fun rocket(x: Float, ground: Float = 0f) {
+        val speed = 34f + rng.nextFloat() * 26f
+        val lean = (rng.nextFloat() - 0.5f) * 10f
+        val s = spawn(Puff.SHELL, x, ground, lean, speed, background = true) ?: return
+        s.tint = FESTIVE[rng.nextInt(FESTIVE.size)]
+        s.size = 0.7f
+        // La mèche : ce qui décide de la hauteur d'éclatement, avec la vitesse.
+        s.maxLife = 1.5f + rng.nextFloat() * 1.6f
+        s.life = s.maxLife
+    }
+
+    /**
+     * Le bouquet : une fusée qui meurt se transforme en étoiles.
+     *
+     * Chaque tirage change six choses à la fois — la forme, la couleur, le nombre
+     * d'étoiles, leur vitesse, leur durée et leur traînée. C'est ce qui fait qu'on ne
+     * reconnaît jamais deux fois le même.
+     */
+    private fun burst(x: Float, y: Float, tint: Int) {
+        val shape = Burst.entries[rng.nextInt(Burst.entries.size)]
+        val second = if (rng.nextFloat() < 0.35f) FESTIVE[rng.nextInt(FESTIVE.size)] else tint
+        // Un bouquet sur trois est bicolore étoile par étoile, et pas seulement par
+        // couronnes : c'est le seul moyen d'obtenir ces gerbes mêlées qu'on voit dans
+        // les vrais feux, et ça coûte un tirage.
+        val panache = rng.nextFloat() < 0.33f
+        val power = 9f + rng.nextFloat() * 14f
+        val count = when (shape) {
+            Burst.CRACKLE -> 70 + rng.nextInt(90)
+            Burst.DOUBLE -> 60 + rng.nextInt(60)
+            else -> 36 + rng.nextInt(60)
+        }
+        val life = 1.1f + rng.nextFloat() * 1.8f
+
+        for (i in 0 until count) {
+            val kind = when (shape) {
+                Burst.WILLOW -> Puff.WILLOW
+                Burst.CRACKLE -> Puff.CRACKLE
+                else -> Puff.STAR
+            }
+            // La direction, et surtout la **vitesse**, dépendent de la forme.
+            var a = rng.nextFloat() * 2f * PI.toFloat()
+            var v = power
+            when (shape) {
+                Burst.SPHERE ->
+                    // Une sphère vue de côté n'est pas un disque plein : les étoiles se
+                    // répartissent sur une sphère, donc leur vitesse projetée varie.
+                    v *= sqrt(rng.nextFloat())
+                Burst.RING -> {
+                    // L'anneau garde sa vitesse : c'est ce qui en fait un cercle net.
+                    v *= 0.95f + rng.nextFloat() * 0.1f
+                }
+                Burst.WILLOW -> {
+                    v *= 0.55f + 0.5f * rng.nextFloat()
+                    // Un saule pousse vers le haut avant de retomber.
+                    a = -PI.toFloat() / 2f + (rng.nextFloat() - 0.5f) * 2.2f
+                }
+                Burst.DOUBLE -> v *= if (i % 2 == 0) 0.45f else 1f
+                Burst.COMET -> {
+                    val dir = rng.nextFloat() * 2f * PI.toFloat()
+                    a = dir + (rng.nextFloat() - 0.5f) * 0.7f
+                    v *= 0.4f + rng.nextFloat() * 0.9f
+                }
+                Burst.CRACKLE -> v *= 0.3f + rng.nextFloat() * 0.9f
+            }
+            val s = spawn(kind, x, y, cos(a) * v, -sin(a) * v, background = true) ?: return
+            s.tint = when {
+                shape == Burst.DOUBLE && i % 2 == 0 -> second
+                panache && rng.nextFloat() < 0.5f -> second
+                else -> tint
+            }
+            s.size = if (kind == Puff.CRACKLE) 0.25f else 0.4f + rng.nextFloat() * 0.35f
+            s.maxLife = life * (0.6f + rng.nextFloat() * 0.7f)
+            s.life = s.maxLife
+        }
+    }
+
+    /**
+     * L'explosion d'une bombe : un éclair, une boule de feu, des éclats, de la fumée.
+     *
+     * Les quatre ne sont pas décoratives l'une par rapport à l'autre — elles ont des
+     * durées de vie très différentes, et c'est **ça** qui fait une explosion. L'éclair
+     * dure trois images, le feu un demi-tour de seconde, les éclats une seconde, la
+     * fumée cinq. Ce qu'on retient d'une explosion, c'est la fumée qui reste après que
+     * tout le reste a disparu.
+     */
+    fun explosion(x: Float, y: Float, radius: Float) {
+        val r = radius.coerceAtLeast(1f)
+
+        // La boule de feu : peu de particules, énormes, très courtes.
+        repeat(14) {
+            val a = rng.nextFloat() * 2f * PI.toFloat()
+            val v = r * (0.3f + rng.nextFloat() * 0.9f)
+            val s = spawn(Puff.FIRE, x, y, cos(a) * v, -sin(a) * v * 0.7f) ?: return@repeat
+            s.tint = TINT_FIRE
+            s.size = r * (0.16f + rng.nextFloat() * 0.14f)
+            s.maxLife = 0.25f + rng.nextFloat() * 0.3f
+            s.life = s.maxLife
+        }
+        // Les éclats : nombreux, rapides, ils partent en étoile et rebondissent nulle
+        // part — ce sont des étincelles, pas des débris. Les vrais débris, eux, sont
+        // des corps du moteur et c'est le souffle qui s'en occupe.
+        repeat(60) {
+            val a = rng.nextFloat() * 2f * PI.toFloat()
+            val v = r * (0.8f + rng.nextFloat() * 2.2f)
+            val s = spawn(Puff.SPARK, x, y, cos(a) * v, -sin(a) * v) ?: return@repeat
+            s.tint = if (rng.nextFloat() < 0.5f) 2 else 3
+            s.size = 0.18f + rng.nextFloat() * 0.22f
+            s.maxLife = 0.4f + rng.nextFloat() * 0.7f
+            s.life = s.maxLife
+        }
+        // La fumée : **beaucoup de petits paquets**, et pas trois gros ronds.
+        //
+        // C'est la deuxième version, et la première était l'erreur qu'on fait toujours :
+        // une explosion large avait de gros nuages, donc dix-huit disques gris de trois
+        // mètres qui se superposaient en une bouillie opaque, ronde, immobile. Une fumée
+        // ne se voit pas comme ça — elle se voit parce qu'elle est **inégale**. On en
+        // met donc trois fois plus, cinq fois plus petits, lâchés dans un rayon autour
+        // du point d'impact et non tous du même point, avec des durées très étalées : le
+        // panache se déchire tout seul, et le vent l'emporte en l'étirant.
+        repeat(52) {
+            val a = rng.nextFloat() * 2f * PI.toFloat()
+            val v = r * (0.08f + rng.nextFloat() * 0.45f)
+            // Chaque paquet naît un peu à côté des autres : c'est ce décalage, et rien
+            // d'autre, qui fait qu'un panache a une forme.
+            val ox = cos(a) * r * 0.35f * rng.nextFloat()
+            val oy = sin(a) * r * 0.25f * rng.nextFloat()
+            val s = spawn(Puff.SMOKE, x + ox, y + oy, cos(a) * v, -sin(a) * v * 0.5f)
+                ?: return@repeat
+            s.tint = TINT_SMOKE
+            s.size = r * (0.03f + rng.nextFloat() * 0.05f)
+            s.maxLife = 1.4f + rng.nextFloat() * 3.4f
+            s.life = s.maxLife
+        }
+    }
+
+    /** Une poignée d'étincelles au point d'impact : le boulet qui mord la pierre. */
+    fun impact(x: Float, y: Float, force: Float) {
+        val n = (4 + force * 12f).toInt().coerceIn(4, 26)
+        repeat(n) {
+            val a = rng.nextFloat() * 2f * PI.toFloat()
+            val v = 3f + rng.nextFloat() * 9f * (0.4f + force)
+            val s = spawn(Puff.SPARK, x, y, cos(a) * v, -sin(a) * v) ?: return@repeat
+            s.tint = 3
+            s.size = 0.1f + rng.nextFloat() * 0.15f
+            s.maxLife = 0.2f + rng.nextFloat() * 0.4f
+            s.life = s.maxLife
+        }
+    }
+
+    // ── La vie des particules ─────────────────────────────────────────────────
+
+    /**
+     * Fait vivre tout le monde d'une image.
+     *
+     * L'intégration est celle du moteur — une demi-implicite, vitesse d'abord — et le
+     * freinage est **exponentiel**, pas linéaire. C'est la même leçon que pour les
+     * corps : un freinage retranché par pas dépend de la durée du pas, et une image qui
+     * traîne ferait alors reculer les étincelles.
+     */
+    fun update(dt: Float) {
+        if (dt <= 0f) return
+        tickShow(dt)
+
+        var alive = 0
+        for (s in pool) {
+            if (!s.alive) continue
+            s.life -= dt
+            if (!s.alive) {
+                // Une fusée qui meurt éclate : c'est là, et nulle part ailleurs, que
+                // naissent les bouquets.
+                if (s.kind == Puff.SHELL) burst(s.x, s.y, s.tint)
+                continue
+            }
+            // Le freinage ramène la particule vers la vitesse de l'air, pas vers zéro.
+            val k = exp(-s.kind.drag * dt)
+            s.vx = windX + (s.vx - windX) * k
+            s.vy = windY + (s.vy - GRAVITY * s.kind.gravity * dt - windY) * k
+            s.x += s.vx * dt
+            s.y += s.vy * dt
+            alive++
+        }
+        aliveCount = alive
+    }
+
+    /** Tire les fusées programmées quand leur heure arrive. */
+    private fun tickShow(dt: Float) {
+        if (pendingCount == 0) return
+        showClock += dt
+        var kept = 0
+        for (i in 0 until pendingCount) {
+            if (pendingAt[i] <= showClock) {
+                rocket(pendingX[i])
+            } else {
+                pendingAt[kept] = pendingAt[i]
+                pendingX[kept] = pendingX[i]
+                kept++
+            }
+        }
+        pendingCount = kept
+    }
+
+    /**
+     * Prend une particule dans le bassin.
+     *
+     * Quand tout est occupé, on **recycle la plus proche de sa fin** plutôt que de
+     * refuser. Refuser ferait des bouquets tronqués — la moitié des étoiles manquantes,
+     * toujours du même côté, puisque la boucle d'émission tourne dans l'ordre. Voler sa
+     * place à une particule qui allait mourir ne se voit pas.
+     */
+    private fun spawn(
+        kind: Puff,
+        x: Float,
+        y: Float,
+        vx: Float,
+        vy: Float,
+        background: Boolean = false
+    ): Spark? {
+        var chosen: Spark? = null
+        var worst = Float.MAX_VALUE
+        for (i in 0 until MAX_SPARKS) {
+            val s = pool[(next + i) % MAX_SPARKS]
+            if (!s.alive) {
+                chosen = s
+                next = (next + i + 1) % MAX_SPARKS
+                break
+            }
+            if (s.life < worst) {
+                worst = s.life
+                chosen = s
+            }
+        }
+        val s = chosen ?: return null
+        s.kind = kind
+        s.x = x
+        s.y = y
+        s.vx = vx
+        s.vy = vy
+        s.size = 0.3f
+        s.tint = 0
+        s.background = background
+        s.maxLife = 1f
+        s.life = 1f
+        return s
+    }
+}

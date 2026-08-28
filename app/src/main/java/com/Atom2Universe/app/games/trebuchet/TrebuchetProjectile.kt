@@ -70,8 +70,15 @@ enum class Projectile(
      * L'énergie du souffle n'a rien à voir avec sa vitesse — c'est bien l'intérêt : un
      * tir mou qui touche juste vaut mieux qu'un tir tendu qui frôle. C'est le
      * projectile de celui qui sait viser mais dont la machine n'est pas accordée.
+     *
+     * Son souffle **renverse** plus qu'il ne pulvérise, et c'est ce qui a changé depuis
+     * la première version. Elle valait alors quatre-vingt-dix kilojoules de dégâts purs
+     * sur douze mètres : tout ce qui se trouvait dans le cercle disparaissait, ce qui
+     * était spectaculaire une fois et faux tout le temps. Une explosion, ça pousse — la
+     * moitié de l'énergie, donc, et une impulsion qui envoie la charpente en l'air
+     * pendant que la muraille se contente de basculer.
      */
-    BOMBE(14f, 0.21f, blastEnergy = 90_000f, blastRadiusBase = 6f);
+    BOMBE(14f, 0.21f, blastEnergy = 45_000f, blastRadiusBase = 6f);
 
     /**
      * Traînée, en kg/m : la moitié de ρ·Cx·S pour une sphère de ce rayon.

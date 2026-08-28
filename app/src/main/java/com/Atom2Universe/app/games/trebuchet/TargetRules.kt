@@ -112,28 +112,38 @@ enum class Material(
     val restitution: Float,
     /** Vitesse critique, en m/s. Voir la documentation de la classe. */
     val criticalSpeed: Float,
-    val rupture: Rupture
+    val rupture: Rupture,
+    /**
+     * Vrai pour la maçonnerie, faux pour ce qui se charpente.
+     *
+     * Ce n'est pas de la taxonomie : c'est ce qui décide de **l'objectif du niveau**.
+     * Un village de bois se démolit, une muraille de pierre se renverse — on n'en
+     * casse que les assises qu'on touche, le reste bascule intact. Demander la même
+     * part de pierres brisées aux deux, c'est rendre l'un facile et l'autre
+     * interminable. Voir [TargetRules.winRatio].
+     */
+    val masonry: Boolean
 ) {
     /** Le chaume d'un toit : ça ne pèse rien et ça ne tient rien. */
-    THATCH(120f, 0.70f, 0f, 3f, Rupture.POUSSIERE),
+    THATCH(120f, 0.70f, 0f, 3f, Rupture.POUSSIERE, masonry = false),
 
     /** La glace et le verre : lourds comme de l'eau, fragiles comme du sucre, et ça glisse. */
-    ICE(900f, 0.15f, 0f, 4f, Rupture.ECLATS),
+    ICE(900f, 0.15f, 0f, 4f, Rupture.ECLATS, masonry = true),
 
     /** Le torchis et la brique crue : le mur des pauvres, et ça se voit. */
-    COB(1500f, 0.70f, 0f, 6f, Rupture.POUSSIERE),
+    COB(1500f, 0.70f, 0f, 6f, Rupture.POUSSIERE, masonry = true),
 
     /** La terre d'un talus : elle n'éclate pas, elle s'affaisse, et elle adhère à tout. */
-    EARTH(1800f, 0.85f, 0f, 8f, Rupture.POUSSIERE),
+    EARTH(1800f, 0.85f, 0f, 8f, Rupture.POUSSIERE, masonry = true),
 
     /** Le bois de charpente : le vocabulaire des maisons, des portiques et des cartes. */
-    WOOD(700f, 0.55f, 0f, 9f, Rupture.ECLATS),
+    WOOD(700f, 0.55f, 0f, 9f, Rupture.ECLATS, masonry = false),
 
     /** La pierre de taille : le gros œuvre. Lourde, tenace, et c'est elle qui fait le tas. */
-    STONE(2400f, 0.65f, 0f, 12f, Rupture.ECLATS),
+    STONE(2400f, 0.65f, 0f, 12f, Rupture.ECLATS, masonry = true),
 
     /** Le fer : hors de prix, indestructible, et lourd au point d'écraser ce qu'il tient. */
-    IRON(7800f, 0.40f, 0f, 60f, Rupture.INCASSABLE)
+    IRON(7800f, 0.40f, 0f, 60f, Rupture.INCASSABLE, masonry = true)
 }
 
 /**
@@ -309,23 +319,106 @@ object TargetRules {
     const val SETTLE_TOLERANCE = 0.3f
 
     /**
-     * Ce qu'il doit rester debout pour que la construction compte pour rasée : un
-     * cinquième de sa hauteur d'origine.
+     * Part des pierres d'origine qu'il faut avoir brisées pour que le site compte
+     * pour rasé.
      *
-     * On ne demande pas de détruire tous les blocs — il resterait toujours un bout
-     * de fondation impossible à atteindre, et le joueur tirerait vingt coups pour
-     * rien. On demande de faire descendre la **silhouette** sous une ligne, ce qui
-     * se voit d'un coup d'œil et se dessine à l'écran.
+     * **Ce n'est pas la première règle qu'on a essayée, et l'histoire vaut d'être
+     * racontée.** La première demandait de faire descendre la *silhouette* sous une
+     * ligne, au cinquième de la hauteur d'origine. C'était joli sur le papier : ça se
+     * voyait d'un coup d'œil, ça se dessinait à l'écran, et ça mesurait quelque chose
+     * de vrai. Sauf que ce qui tombe ne disparaît pas — ça fait un tas. Une
+     * construction parfaitement rasée laisse des gravats de deux mètres de haut, et la
+     * ligne était à deux mètres cinquante : le joueur voyait un champ de ruines
+     * complet, et le jeu lui répondait « pas encore ». Une règle qui punit un tir
+     * parfait est une mauvaise règle, quelle que soit son élégance.
+     *
+     * On compte donc ce qui a **cassé**, ce que le joueur voit arriver et qu'il
+     * provoque, plutôt que la hauteur de ce que la gravité a laissé retomber.
+     * Quatre-vingt-cinq pour cent laissent la marge des deux ou trois pierres
+     * imprenables — une assise de fondation coincée derrière un tas, un poteau au fond
+     * d'une cour — sans jamais demander l'impossible.
      */
-    const val RUIN_RATIO = 0.20f
+    const val WIN_RATIO = 0.75f
+
+    /**
+     * Ce que vaut une pierre **renversée** mais entière, par rapport à une pierre
+     * brisée.
+     *
+     * Une demie, et pas une entière : renverser une pierre n'est pas la détruire, elle
+     * est toujours là, et on peut encore la casser. C'est aussi ce qui garde un intérêt
+     * au dernier tir dans un champ de ruines — chaque pierre couchée qu'on brise vaut
+     * une demi-pierre de plus, ce qui donne au joueur quelque chose à gagner là où il
+     * n'avait plus qu'à gratter.
+     *
+     * Elle répare surtout un défaut mesuré : le compteur plafonnait sur les hameaux
+     * d'arcade parce que les derniers poteaux, couchés au sol, se laissaient survoler.
+     * Le site était rasé à l'œil et le jeu répondait « pas encore », ce qui est
+     * exactement le reproche qui avait déjà fait tomber la ligne de ruine.
+     */
+    const val TOPPLED_WORTH = 0.5f
+
+    /**
+     * De combien une pierre doit avoir bougé pour compter pour renversée, en mètres et
+     * en fraction de sa propre taille.
+     *
+     * Les deux, parce qu'un site d'arcade a des pierres de six mètres et un site
+     * réaliste des planches de trente centimètres : une valeur en mètres seule
+     * déclarerait la planche renversée pour un frisson, une valeur en fractions seule
+     * laisserait la pierre glisser d'un mètre sans rien dire.
+     */
+    const val TOPPLED_SHIFT = 0.6f
+    const val TOPPLED_SHIFT_RATIO = 0.35f
+
+    /** Rotation, en radians, au-delà de laquelle une pierre a basculé. */
+    const val TOPPLED_TURN = 0.35f
+
+    /**
+     * Objectif en mode réaliste, sur un site **de charpente** : un village de bois.
+     *
+     * Le bois casse pour de bon — un poteau qui prend un boulet éclate — mais le
+     * réaliste ne pardonne pas la traversée : le boulet rebondit, et il faut un tir
+     * par pièce ou presque. Soixante pour cent est ce qu'un joueur patient obtient
+     * sans avoir l'impression de gratter.
+     */
+    const val WIN_RATIO_WOOD = 0.60f
+
+    /**
+     * Objectif en mode réaliste, sur un site **de maçonnerie**.
+     *
+     * Trente pour cent, et ce n'est pas de la générosité : **on ne détruit pas une
+     * muraille, on la renverse**. Un boulet de douze kilos casse l'assise qu'il touche
+     * et fait basculer les vingt autres, lesquelles atterrissent intactes. Le compteur
+     * de pierres brisées mesure donc très mal ce que le joueur a réellement fait à la
+     * construction, et lui demander quatre-vingt-cinq pour cent reviendrait à lui
+     * demander de viser une à une des pierres déjà couchées par terre.
+     *
+     * L'arcade n'a pas ce problème : ses pierres sont assez fragiles pour que tomber
+     * les casse, et le projectile traverse.
+     */
+    const val WIN_RATIO_STONE = 0.30f
+
+    /**
+     * L'objectif d'un site donné, d'après le tempérament du jeu et ce dont il est bâti.
+     *
+     * [masonryShare] est la part de pierres de maçonnerie, de 0 (tout en bois) à 1
+     * (tout en pierre). Entre les deux, on interpole : une ferme fortifiée est une
+     * maison au milieu d'un rempart, et son objectif doit tomber entre celui de l'une
+     * et celui de l'autre plutôt que de basculer d'un seuil arbitraire.
+     */
+    fun winRatio(masonryShare: Float): Float {
+        if (style == TargetStyle.ARCADE) return WIN_RATIO
+        val t = masonryShare.coerceIn(0f, 1f)
+        return WIN_RATIO_WOOD + (WIN_RATIO_STONE - WIN_RATIO_WOOD) * t
+    }
 
     /**
      * Marge de part et d'autre de l'emprise, en mètres, à l'intérieur de laquelle
-     * un morceau compte encore dans la ruine.
+     * un morceau compte encore dans la silhouette.
      *
-     * Un bloc expédié à trente mètres n'est plus la construction, c'est un caillou
-     * dans un champ : le compter reviendrait à interdire au joueur de gagner parce
-     * qu'il a trop bien tiré.
+     * Un bloc expédié à trente mètres n'est plus la construction, c'est un caillou dans
+     * un champ. Ne sert plus qu'à la **mesure** de la hauteur restante, dont les bancs
+     * d'essai se servent pour dire si une construction s'est écroulée toute seule ;
+     * l'objectif du joueur, lui, se compte en pierres brisées.
      */
     const val FOOTPRINT_MARGIN = 5f
 
@@ -352,6 +445,22 @@ object TargetRules {
 
     /** Vitesse maximale qu'un souffle peut donner à un bloc, en m/s. */
     const val MAX_BLAST_SPEED = 12f
+
+    /**
+     * Impulsion spécifique d'un souffle au point d'explosion, en pascals-secondes.
+     *
+     * **C'est ce qui a remplacé la poussée en énergie, et l'écart est tout le sujet.**
+     * L'ancienne donnait à chaque bloc la vitesse dont l'énergie cinétique valait ce que
+     * le souffle lui versait : une pierre de trois tonnes et un fétu de bois recevaient
+     * alors des vitesses dans un rapport de racine de leurs masses, c'est-à-dire presque
+     * la même chose. Une explosion ne fait pas ça. Elle pousse une **surface**, et ce
+     * qu'elle communique se divise par la masse : la charpente s'envole, la muraille
+     * bouge à peine, et c'est très exactement l'image qu'on a en tête.
+     *
+     * Neuf cents pascals-secondes donnent six mètres par seconde à une assise de
+     * rempart d'arcade et onze à un poteau de maison, ce qui se voit sans être absurde.
+     */
+    const val BLAST_IMPULSE = 900f
 
     /**
      * Budget de corps d'une construction, débris exclus.

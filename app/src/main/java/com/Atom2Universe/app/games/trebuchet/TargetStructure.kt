@@ -306,8 +306,17 @@ class Structure(val blocks: List<Block>, val name: String = "") {
 
     val totalMass: Float = blocks.sumOf { it.mass.toDouble() }.toFloat()
 
-    /** Ligne sous laquelle tout doit être descendu pour que ce soit rasé. */
-    val ruinLine: Float get() = TargetRules.RUIN_RATIO * baseHeight
+    /**
+     * Part de pierres de maçonnerie, de 0 (un village de bois) à 1 (une muraille).
+     *
+     * On compte les **pierres** et non les tonnes : une seule assise de rempart pèse
+     * plus lourd qu'un hameau entier, et un site se juge à ce qu'on y voit, pas à ce
+     * qu'il pèse. C'est cette part qui décide de l'objectif du niveau, voir
+     * [TargetRules.winRatio].
+     */
+    val masonryShare: Float =
+        if (blocks.isEmpty()) 1f else blocks.count { it.material.masonry } / blocks.size.toFloat()
+
 
     fun translated(dx: Float, dy: Float = 0f): Structure =
         Structure(blocks.map { it.translated(dx, dy) }, name)
@@ -358,34 +367,27 @@ class Structure(val blocks: List<Block>, val name: String = "") {
                 "regrouper des pierres en blocs composés"
         }
 
-        // Le cas où le niveau est **certainement** impossible : une seule pierre
-        // couchée à plat dépasse déjà la ligne de ruine, et rien ne pourra jamais la
-        // faire descendre.
+        // Le cas où le niveau est **certainement** impossible : il y a plus de pierres
+        // indestructibles que l'objectif n'en pardonne.
         //
-        // Ce garde-fou est volontairement minimal. La vraie question — « ce tas de
-        // gravats-là peut-il passer sous cette ligne-là » — dépend de la façon dont la
-        // construction s'écroule, donc d'une simulation, pas d'une formule. C'est au
-        // générateur de la trancher en rasant le niveau pour voir. Une formule plus
-        // ambitieuse a été essayée ici et refusait des courtines parfaitement jouables
-        // à cause d'un merlon un peu large.
-        //
-        // Seules les pierres qui **laissent** quelque chose comptent : ce qui tombe en
-        // poussière — le torchis d'un hourdis, le chaume d'un toit — disparaît sans
-        // rien poser au sol, et un hourdis d'arcade un peu haut faisait refuser des
-        // hameaux parfaitement jouables.
-        val thickest = blocks
-            .filter { it.material.rupture != Rupture.POUSSIERE }
-            .maxOfOrNull { it.rubbleThickness() } ?: 0f
-        if (ruinLine < thickest) {
-            out += "construction trop basse pour ses pierres : ligne de ruine à " +
-                "${"%.2f".format(ruinLine)} m, une seule pierre couchée en fait " +
-                "${"%.2f".format(thickest)}"
+        // Cet invariant-là a remplacé celui de la ligne de ruine, et il est bien plus
+        // simple à tenir. L'ancien demandait si un tas de gravats pouvait passer sous
+        // une ligne, question dont la réponse dépend de la façon dont la construction
+        // s'écroule, donc d'une simulation et pas d'une formule. Celui-ci est une
+        // soustraction : on ne peut pas casser ce qui ne casse pas, et si ce qui ne
+        // casse pas dépasse la marge de l'objectif, personne ne finira jamais le
+        // niveau.
+        val incassables = blocks.count {
+            it.role == Role.FOUNDATION || it.material.rupture == Rupture.INCASSABLE
+        }
+        val objectif = TargetRules.winRatio(masonryShare)
+        if (incassables > blocks.size * (1f - objectif)) {
+            out += "$incassables pierres sur ${blocks.size} sont incassables : " +
+                "l'objectif en demande ${"%.0f".format(objectif * 100)} %, " +
+                "le niveau serait impossible"
         }
         for ((i, b) in blocks.withIndex()) {
             if (b.bottom() < -0.05f) out += "bloc $i enterré"
-            if (b.role == Role.FOUNDATION && b.top() > ruinLine) {
-                out += "socle $i au-dessus de la ligne de ruine : le niveau serait impossible"
-            }
             for (p in b.parts) {
                 if (p.halfW < TargetRules.MIN_HALF_THICKNESS ||
                     p.halfH < TargetRules.MIN_HALF_THICKNESS

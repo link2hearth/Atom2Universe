@@ -29,6 +29,38 @@ class TargetPiece internal constructor(
     var hp: Float = block.hp
         internal set
 
+    /** Là où on l'a posée. C'est de là qu'on mesure si elle a été renversée. */
+    internal val poseX = block.x
+    internal val poseY = block.y
+    internal val poseAngle = block.angle
+
+    /**
+     * Vrai quand la pierre n'est plus où on l'avait mise : elle a glissé, basculé, ou
+     * dévalé la pente d'un tas.
+     *
+     * Deux mesures et non une, parce qu'une pierre se renverse de deux façons. Celle
+     * qui **part** franchit une distance ; celle qui **bascule sur place** ne bouge
+     * presque pas mais tourne. La première manquerait un monolithe tombé à la
+     * verticale, la seconde un merlon qui a roulé au bas du mur sans jamais se
+     * retourner.
+     */
+    val toppled: Boolean
+        get() {
+            if (debris) return false
+            val dx = body.x - poseX
+            val dy = body.y - poseY
+            val seuil = maxOf(
+                TargetRules.TOPPLED_SHIFT,
+                TargetRules.TOPPLED_SHIFT_RATIO * body.boundingRadius
+            )
+            if (dx * dx + dy * dy > seuil * seuil) return true
+            var da = body.angle - poseAngle
+            val twoPi = 2f * kotlin.math.PI.toFloat()
+            while (da > kotlin.math.PI) da -= twoPi
+            while (da < -kotlin.math.PI) da += twoPi
+            return kotlin.math.abs(da) > TargetRules.TOPPLED_TURN
+        }
+
     /** Temps passé immobile, pour le ramassage des petits débris. */
     internal var restTimer = 0f
 
@@ -103,8 +135,12 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
     var totalMass = 0f
         private set
 
-    /** Masse des blocs d'origine qui ont rompu, qu'ils aient laissé des débris ou non. */
-    var brokenMass = 0f
+    /** Nombre de pierres de la construction d'origine. Les débris n'en font pas partie. */
+    var pieceTotal = 0
+        private set
+
+    /** Nombre de pierres d'origine qui ont rompu, qu'elles aient laissé des débris ou non. */
+    var pieceBroken = 0
         private set
 
     private var debrisCount = 0
@@ -218,10 +254,38 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
      * La ligne de ruine : tout doit passer dessous. C'est elle que la vue dessine en
      * pointillé au travers de la construction, et c'est tout l'énoncé du niveau.
      */
-    val ruinLine: Float get() = TargetRules.RUIN_RATIO * baseHeight
+    /**
+     * Part des pierres d'origine qui ont rompu, de 0 à 1.
+     *
+     * On compte les **pierres**, pas les tonnes. Le joueur voit tomber des morceaux, il
+     * ne voit pas des kilos : une règle qui se vérifie du regard vaut mieux qu'une
+     * règle exacte qu'il faudrait croire sur parole.
+     */
+    val brokenRatio: Float
+        get() = if (pieceTotal > 0) (pieceBroken.toFloat() / pieceTotal).coerceIn(0f, 1f) else 0f
 
-    /** Part de la construction d'origine qui a rompu, de 0 à 1. Pour l'affichage. */
-    val brokenRatio: Float get() = if (totalMass > 0f) (brokenMass / totalMass).coerceIn(0f, 1f) else 0f
+    /** Nombre de pierres d'origine encore entières mais qui ne sont plus à leur place. */
+    var pieceToppled = 0
+        private set
+
+    /**
+     * Ce que vaut le travail accompli, de 0 à 1 : les pierres brisées, plus les pierres
+     * renversées comptées pour une demie.
+     *
+     * C'est **ce chiffre-là** que l'objectif regarde, et pas le seul compte des pierres
+     * brisées. Une muraille ne se détruit pas, elle se renverse : demander au joueur de
+     * briser une à une des assises déjà couchées par terre reviendrait à ne jamais
+     * récompenser le seul coup qui compte vraiment, celui qui fait tomber le mur.
+     *
+     * Et comme une pierre couchée peut encore être brisée, il reste toujours quelque
+     * chose à gagner dans un champ de ruines : une demi-pierre de plus à chaque fois.
+     */
+    val score: Float
+        get() {
+            if (pieceTotal <= 0) return 0f
+            val v = pieceBroken + TargetRules.TOPPLED_WORTH * pieceToppled
+            return (v / pieceTotal).coerceIn(0f, 1f)
+        }
 
     // ── Pose et dépose ────────────────────────────────────────────────────────
 
@@ -231,6 +295,10 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         left = structure.left
         right = structure.right
         totalMass = structure.totalMass
+        pieceTotal = structure.blocks.size
+        pieceBroken = 0
+        pieceToppled = 0
+        winRatio = TargetRules.winRatio(structure.masonryShare)
         armed = false
         armingTimer = 0f
         calmTimer = 0f
@@ -247,7 +315,9 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         armingTimer = 0f
         calmTimer = 0f
         dormant = false
-        brokenMass = 0f
+        pieceTotal = 0
+        pieceBroken = 0
+        pieceToppled = 0
         baseHeight = 0f
         totalMass = 0f
         left = 0f
@@ -346,6 +416,10 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             // La mise en veille se décide même avant l'armement : une cible qui attend
             // le premier boulet ne doit rien coûter non plus.
             updateDormancy()
+            // Le compte des renversées, lui, n'attend pas l'armement : une pierre
+            // poussée avant que les chocs ne comptent est renversée quand même, et un
+            // compteur qui ne la verrait pas mentirait jusqu'au tir suivant.
+            countToppled()
             return
         }
 
@@ -373,6 +447,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         world.clearImpacts()
 
         if (someBroke) breakDead()
+        countToppled()
         sweepDebris(dt)
     }
 
@@ -449,7 +524,13 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
      * [energy] est une énergie en joules, comme les points de vie ; elle décroît
      * linéairement jusqu'à [radius], et sert à la fois de dégât et de poussée.
      */
-    fun blast(x: Float, y: Float, energy: Float, radius: Float) {
+    fun blast(
+        x: Float,
+        y: Float,
+        energy: Float,
+        radius: Float,
+        impulse: Float = TargetRules.BLAST_IMPULSE
+    ) {
         if (radius <= 0f) return
         wake()
         var someBroke = false
@@ -461,12 +542,17 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             val falloff = 1f - d / radius
             val e = energy * falloff
 
-            // La poussée découle de l'énergie reçue, comme il se doit : la vitesse
-            // qu'elle donne est celle dont l'énergie cinétique vaut ce qu'on a versé.
+            // La poussée est une **impulsion sur une surface**, pas un versement
+            // d'énergie : le souffle communique tant de kilogrammes-mètres par seconde
+            // par mètre carré exposé, et la vitesse qui en sort se divise par la masse.
+            // C'est ce qui envoie voler une planche et laisse une assise sur place.
             // Elle est bornée, sinon un éclat léger partirait en orbite.
             val nx = if (d > 1e-3f) dx / d else 0f
             val ny = if (d > 1e-3f) dy / d else 1f
-            val dv = minOf(sqrt(2f * e * p.body.invMass), TargetRules.MAX_BLAST_SPEED)
+            val dv = minOf(
+                impulse * falloff * p.block.area * p.body.invMass,
+                TargetRules.MAX_BLAST_SPEED
+            )
             // Une pierre endormie ne serait pas intégrée : la poussée lui serait
             // versée puis oubliée. Toute vitesse posée à la main réveille son corps.
             p.body.wake()
@@ -478,6 +564,22 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             if (p.hp <= 0f) someBroke = true
         }
         if (someBroke) breakDead()
+        countToppled()
+    }
+
+    /**
+     * Recompte les pierres qui ne sont plus à leur place.
+     *
+     * Un balayage complet plutôt qu'un compteur entretenu au fil de l'eau, et c'est
+     * volontaire : une pierre peut se renverser **puis revenir** — un mur qui oscille,
+     * un bloc qui retombe dans son trou — et un compteur qu'on incrémente ne sait pas
+     * défaire. Cinquante pierres à mesurer par image ne coûtent rien à côté d'un seul
+     * contact du solveur.
+     */
+    private fun countToppled() {
+        var n = 0
+        for (p in live) if (p.toppled) n++
+        pieceToppled = n
     }
 
     // ── La rupture ────────────────────────────────────────────────────────────
@@ -486,7 +588,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         dead.clear()
         for (p in live) if (p.broken) dead.add(p)
         for (p in dead) {
-            if (!p.debris) brokenMass += p.block.mass
+            if (!p.debris) pieceBroken++
             val shards = if (p.material.rupture == Rupture.ECLATS) fragmentsOf(p) else emptyList()
             removePiece(p)
             // Le budget se vérifie **après** avoir retiré le bloc rompu : casser une
@@ -602,9 +704,11 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
     /**
      * Ramasse les petits débris endormis, et tout ce qui a quitté le terrain.
      *
-     * Le garde-fou est important : on ne ramasse **jamais** un morceau dont le sommet
-     * dépasse la ligne de ruine. Sinon le ménage gagnerait la partie à la place du
-     * joueur, en faisant disparaître le caillou qui tenait la silhouette en l'air.
+     * Il fallait autrefois épargner tout morceau dont le sommet dépassait la ligne de
+     * ruine, sans quoi le ménage gagnait la partie à la place du joueur en faisant
+     * disparaître le caillou qui tenait la silhouette en l'air. L'objectif ne se
+     * mesurant plus en hauteur, le ménage n'a plus aucune prise sur l'issue : il ne
+     * fait plus que ce pour quoi il est là, ramasser le gravier qui traîne.
      */
     private fun sweepDebris(dt: Float) {
         dead.clear()
@@ -616,7 +720,6 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             }
             if (!p.debris) continue
             if (b.boundingRadius > TargetRules.DEBRIS_SWEEP_HALF) continue
-            if (b.topY() > ruinLine) continue
             p.restTimer = if (b.atRest()) p.restTimer + dt else 0f
             if (p.restTimer > TargetRules.DEBRIS_LIFETIME) dead.add(p)
         }
@@ -646,20 +749,29 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         return best
     }
 
-    /** Vrai quand la silhouette est passée sous la ligne. */
-    val cleared: Boolean get() = baseHeight > 0f && ruinHeight() <= ruinLine
+    /**
+     * Part de pierres à briser pour que **ce site-ci** compte pour rasé.
+     *
+     * Elle est fixée au chargement et ne bouge plus : un objectif qui changerait à
+     * mesure que les pierres de bois disparaissent serait un objectif qui recule quand
+     * on avance.
+     */
+    var winRatio = TargetRules.WIN_RATIO
+        private set
+
+    /** Vrai quand le site a assez souffert. Voir [score] et [winRatio]. */
+    val cleared: Boolean get() = pieceTotal > 0 && score >= winRatio
 
     /**
-     * Ce qui a été accompli, de 0 (rien n'a bougé) à 1 (c'est rasé). Sert à la barre
-     * de progression : le joueur doit voir qu'un tir a servi même quand il ne gagne pas.
+     * Ce qui a été accompli, de 0 (rien n'a bougé) à 1 (c'est rasé), rapporté à
+     * **l'objectif** et non à la destruction totale.
+     *
+     * Le joueur doit voir qu'un tir a servi même quand il ne gagne pas, et il doit voir
+     * arriver la fin : une jauge qui plafonnerait à quatre-vingt-cinq pour cent au
+     * moment de la victoire serait une jauge qui ment.
      */
     val progress: Float
-        get() {
-            if (baseHeight <= 0f) return 0f
-            val span = baseHeight - ruinLine
-            if (span <= 0f) return 1f
-            return ((baseHeight - ruinHeight()) / span).coerceIn(0f, 1f)
-        }
+        get() = (score / winRatio).coerceIn(0f, 1f)
 
     companion object {
 

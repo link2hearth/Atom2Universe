@@ -44,7 +44,7 @@
     <string name="trebuchet_shot_bomb">Bombe</string>
     <string name="trebuchet_sel_sling_shot">Fronde &#8212; %1$s m &#183; %2$s</string>
 
-    <string name="trebuchet_level">%1$s · %2$d %% rasé · %3$d coup(s)</string>
+    <string name="trebuchet_level">%1$s · %2$d %% sur %3$d %% · %4$d coup(s)</string>
     <string name="trebuchet_level_cleared">%1$s — RASÉ en %2$d coup(s) !</string>
     <string name="trebuchet_btn_next">Site suivant</string>
     <string name="trebuchet_btn_machines">Machines ▾</string>
@@ -63,4 +63,5 @@
     <string name="trebuchet_clean_ghosts">Effacer les tirs passés (%1$d)</string>
     <string name="trebuchet_clean_done">Tirs passés effacés</string>
     <string name="trebuchet_ghost_limit">Tirs gardés : %1$d</string>
+    <string name="trebuchet_win">SITE RASÉ en %1$d coup(s) ! Appui long sur « %2$s » pour le site suivant.</string>
 </resources>

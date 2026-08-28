@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.Path
 import android.graphics.Shader
 import android.graphics.Typeface
@@ -22,6 +23,7 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.roundToInt
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
@@ -166,6 +168,24 @@ class TrebuchetView @JvmOverloads constructor(
         /** Où, sur le bâti, se dessinent le repère et la poignée du pied. */
         const val POST_GRIP_HEIGHT = 0.4f
 
+        /** Part de la hauteur de l'écran où le vent se dessine : le ciel, pas le sol. */
+        const val WIND_SKY = 0.62f
+
+        /** Dérive des stries, en largeurs d'écran par seconde et par m/s de vent. */
+        const val WIND_DRIFT = 0.012f
+
+        /** Nombre de paliers d'opacité pour le groupage des particules. */
+        const val SPARK_ALPHAS = 4
+
+        /** Nombre de classes de taille, la plus fine faisant [SPARK_STEP_DP]. */
+        const val SPARK_SIZES = 3
+
+        /** Épaisseur de la plus fine classe de particules, en dp. */
+        const val SPARK_STEP_DP = 2f
+
+        /** Au-delà, une particule se dessine en disque et non en point. */
+        const val BIG_SPARK_DP = 7f
+
         /** Longueur du départ prévisualisé, en mètres. Au-delà, il faudra tirer. */
         const val PREVIEW_METRES = 50f
 
@@ -306,18 +326,6 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     /** La ligne de ruine : l'énoncé du niveau, en pointillé rouge. */
-    private val pRuin = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = "#FF6B6B".toColorInt()
-        style = Paint.Style.STROKE
-        strokeWidth = 2f * dp
-        pathEffect = DashPathEffect(floatArrayOf(10f * dp, 8f * dp), 0f)
-    }
-
-    private val pRuinLabel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = "#FF9D9D".toColorInt()
-        textSize = 12f * dp
-    }
-
     private val pTrail = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2.5f * dp
@@ -344,6 +352,49 @@ class TrebuchetView @JvmOverloads constructor(
         color = Color.argb(90, 150, 190, 255)
         pathEffect = DashPathEffect(floatArrayOf(7f * dp, 6f * dp), 0f)
     }
+    /** Les stries du vent, et les tourbillons qu'il fait au-delà de la moitié. */
+    private val pWind = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+        color = "#CFE3FF".toColorInt()
+    }
+    private val windArc = RectF()
+    private val windBox = RectF()
+    private var windClock = 0f
+
+    /** Les couloirs des stries : posés une fois, comme les étoiles du ciel. */
+    private val streakX = FloatArray(20)
+    private val streakY = FloatArray(20)
+    private val streakSpeed = FloatArray(20)
+
+    private val pGaugeBed = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(150, 16, 25, 50)
+    }
+    private val pGaugeArrow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+        color = "#9FE7FF".toColorInt()
+    }
+    private val pGaugeText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.RIGHT
+        color = "#CFE3FF".toColorInt()
+        typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
+    }
+
+    /** Les points d'un seau : une teinte, une opacité, une épaisseur. */
+    private val pSpark = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+
+    /** Les grosses particules, celles qui méritent un vrai disque. */
+    private val pBigSpark = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private val bucketXY = arrayOfNulls<FloatArray>(
+        TrebuchetEffects.PALETTE.size * SPARK_ALPHAS * SPARK_SIZES
+    )
+    private val bucketCount = IntArray(bucketXY.size)
+
     private val pHandle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2f * dp
@@ -444,6 +495,11 @@ class TrebuchetView @JvmOverloads constructor(
             starsY[i] = r.nextFloat()
             starsR[i] = 0.6f + r.nextFloat() * 1.2f
         }
+        for (i in streakX.indices) {
+            streakX[i] = r.nextFloat()
+            streakY[i] = 0.08f + r.nextFloat() * 0.9f
+            streakSpeed[i] = r.nextFloat()
+        }
     }
 
     // ── Cycle de vie ─────────────────────────────────────────────────────────
@@ -483,6 +539,10 @@ class TrebuchetView @JvmOverloads constructor(
                     game.step(FIXED_DT)
                     accumulator -= FIXED_DT
                 }
+                // Les étincelles et les feux d'artifice tournent à l'image réelle et
+                // non au pas fixe : ils ne décident de rien, personne ne rejoue un
+                // bouquet, et les figer entre deux pas de physique se verrait.
+                game.stepEffects(frameDt)
                 if (game.phase != lastPhase) {
                     if (game.phase == TrebuchetGame.Phase.RESULT) finished = true
                     lastPhase = game.phase
@@ -1070,6 +1130,11 @@ class TrebuchetView @JvmOverloads constructor(
             previewAt = now
             previewSig = sig
             ghostMachine.config.copyFrom(game.config)
+            // Le fantôme doit voler dans le même air que le vrai boulet, sinon le cône
+            // du départ promet une trajectoire que le tir ne tiendra pas. C'est le genre
+            // de mensonge qu'un joueur met dix tirs à identifier et qui lui fait accuser
+            // la machine.
+            ghostMachine.applyWind(game.wind)
             ghostMachine.build()
             ghostMachine.release()
             previewSteps = 0
@@ -1108,6 +1173,10 @@ class TrebuchetView @JvmOverloads constructor(
         // rejouée avec le bon, elle ne l'était jamais, faute d'avoir vu que ça avait
         // changé.
         h = h * 31 + c.projectile.ordinal
+        // Le vent ne fait pas partie des réglages, mais il change le vol : un site
+        // suivant plus venteux garderait sinon le cône du site précédent.
+        h = h * 31 + game.wind.speed.toRawBits()
+        h = h * 31 + game.wind.angle.toRawBits()
         return h
     }
 
@@ -1129,6 +1198,11 @@ class TrebuchetView @JvmOverloads constructor(
             canvas.drawCircle(starsX[i] * w, starsY[i] * h * 0.55f, starsR[i] * dp, pStar)
         }
 
+        drawWindStreaks(canvas, w, h)
+        // Les feux d'artifice passent **derrière** le terrain : ils montent au fond du
+        // ciel, et le sol leur coupe les jambes quand leurs étoiles retombent, ce qui
+        // est exactement ce qu'on voit dehors.
+        drawSparks(canvas, background = true)
         drawGround(canvas, w, h)
         drawTargets(canvas, w)
         drawGhosts(canvas)
@@ -1144,9 +1218,13 @@ class TrebuchetView @JvmOverloads constructor(
         // sinon qu'ils sont plusieurs et plus petits.
         for (i in game.shards.indices) drawBody(canvas, game.shards[i], pBall, pBallEdge)
         drawTrail(canvas)
+        // Les explosions, elles, sont devant tout : une bombe qui souffle derrière le
+        // château qu'elle détruit n'aurait aucun sens.
+        drawSparks(canvas, background = false)
         drawGrabSpots(canvas)
         drawSelection(canvas)
         drawRecenterHint(canvas)
+        drawWindGauge(canvas, w)
     }
 
     private fun drawGround(canvas: Canvas, w: Float, h: Float) {
@@ -1288,14 +1366,6 @@ class TrebuchetView @JvmOverloads constructor(
         }
         if (cracked) canvas.drawPath(crackPath, pCrack)
 
-        // La ligne de ruine, tracée d'un bout à l'autre de l'emprise.
-        val y = sy(field.ruinLine)
-        val x0 = sx(field.left - 3f)
-        val x1 = sx(field.right + 3f)
-        if (x1 > 0f && x0 < w) {
-            canvas.drawLine(x0, y, x1, y, pRuin)
-            canvas.drawText("ligne de ruine", x0 + 4f * dp, y - 6f * dp, pRuinLabel)
-        }
     }
 
     /**
@@ -1397,6 +1467,188 @@ class TrebuchetView @JvmOverloads constructor(
 
     private fun drawTrail(canvas: Canvas) {
         drawPolyline(canvas, game.trail, game.trailCount, pTrail)
+    }
+
+    /**
+     * Le vent, dessiné dans le ciel : des stries qui filent et des tourbillons qui
+     * tournent.
+     *
+     * Rien de tout ça n'est simulé, et rien ne doit l'être. Le vent est **une constante
+     * du niveau** ; ce qu'on dessine ici n'est pas une soufflerie, c'est le seul moyen
+     * de faire sentir au joueur, sans qu'il lise un chiffre, que l'air d'aujourd'hui
+     * n'est pas celui d'hier. Les stries sont posées une fois pour toutes, en
+     * coordonnées d'écran, et **dérivent** avec le temps : elles ne coûtent qu'une
+     * addition chacune, elles ne dépendent pas de la caméra, et elles ne se voient pas
+     * quand il n'y a pas de vent puisqu'elles s'effacent avec sa force.
+     *
+     * Les tourbillons ne sortent qu'au-delà de la moitié de l'échelle : un air qui
+     * tourne veut dire quelque chose, et il ne le dirait plus s'il tournait tout le
+     * temps.
+     */
+    private fun drawWindStreaks(canvas: Canvas, w: Float, h: Float) {
+        val wind = game.wind
+        if (wind.calm) return
+        val force = (wind.speed / Wind.MAX_SPEED).coerceIn(0f, 1f)
+        windClock += 1f / 60f
+
+        val dx = cos(wind.angle)
+        val dy = -sin(wind.angle)
+        // La dérive se compte en largeurs d'écran par seconde : c'est ce qui donne la
+        // même impression de vitesse sur un téléphone et sur une tablette.
+        val drift = windClock * wind.speed * WIND_DRIFT * w
+        val len = (18f + 40f * force) * dp
+        pWind.alpha = (24 + 70 * force).toInt()
+        pWind.strokeWidth = (1f + force) * dp
+
+        val n = (6 + 14f * force).toInt()
+        for (i in 0 until n) {
+            // Chaque strie a sa hauteur, sa longueur et sa vitesse propres, tirées une
+            // fois pour toutes : sans cet étalement, elles filent en peigne.
+            val lane = streakY[i % streakY.size]
+            val speed = 0.6f + streakSpeed[i % streakSpeed.size]
+            val span = w + 200f * dp
+            var x = (streakX[i % streakX.size] * span + drift * speed) % span
+            if (x < 0f) x += span
+            val px = x - 100f * dp
+            val py = lane * h * WIND_SKY
+            val l = len * (0.6f + streakSpeed[i % streakSpeed.size])
+            canvas.drawLine(px, py, px + dx * l, py + dy * l, pWind)
+        }
+
+        if (force < 0.5f) return
+        // Les tourbillons : deux arcs qui tournent lentement, là où l'air se froisse.
+        val swirl = (force - 0.5f) * 2f
+        pWind.alpha = (20 + 50 * swirl).toInt()
+        for (i in 0 until 3) {
+            val lane = streakY[(i + 3) % streakY.size]
+            val span = w + 200f * dp
+            var x = (streakX[(i + 5) % streakX.size] * span + drift * 0.45f) % span
+            if (x < 0f) x += span
+            val px = x - 100f * dp
+            val py = lane * h * WIND_SKY
+            val r = (10f + 16f * swirl) * dp
+            val a0 = windClock * (1f + i) * 40f
+            windArc.set(px - r, py - r, px + r, py + r)
+            canvas.drawArc(windArc, a0, 210f, false, pWind)
+        }
+    }
+
+    /**
+     * L'indicateur de vent : une flèche et un chiffre, en haut à droite.
+     *
+     * Il est dessiné et non posé en vue Android, pour une raison simple : la flèche doit
+     * pointer **exactement** là où souffle l'air, pente comprise, et une image tournée
+     * de dix-sept degrés dans une mise en page est bien plus de travail que deux traits.
+     *
+     * Le fond ne s'affiche que quand il y a un vent : par temps calme, l'indicateur
+     * s'efface complètement plutôt que d'annoncer un zéro. Un cadran qui ne dit rien est
+     * un cadran qu'on apprend à ne plus regarder.
+     */
+    private fun drawWindGauge(canvas: Canvas, w: Float) {
+        val wind = game.wind
+        if (wind.calm) return
+        val force = (wind.speed / Wind.MAX_SPEED).coerceIn(0f, 1f)
+        val pad = 10f * dp
+        val boxW = 92f * dp
+        val boxH = 40f * dp
+        val left = w - boxW - pad
+        windBox.set(left, pad, left + boxW, pad + boxH)
+        canvas.drawRoundRect(windBox, 8f * dp, 8f * dp, pGaugeBed)
+
+        // La flèche, dans le sens du vent, longueur selon la force.
+        val cx = left + 26f * dp
+        val cy = pad + boxH / 2f
+        val len = (10f + 12f * force) * dp
+        val dx = cos(wind.angle)
+        val dy = -sin(wind.angle)
+        pGaugeArrow.strokeWidth = (2f + 1.5f * force) * dp
+        canvas.drawLine(cx - dx * len, cy - dy * len, cx + dx * len, cy + dy * len, pGaugeArrow)
+        // La pointe : deux barbes, tracées à la main plutôt qu'avec une rotation de
+        // toile — une flèche, c'est trois traits, et une matrice c'est une allocation.
+        val hx = cx + dx * len
+        val hy = cy + dy * len
+        val bx = -dx * 7f * dp
+        val by = -dy * 7f * dp
+        canvas.drawLine(hx, hy, hx + bx - by * 0.6f, hy + by + bx * 0.6f, pGaugeArrow)
+        canvas.drawLine(hx, hy, hx + bx + by * 0.6f, hy + by - bx * 0.6f, pGaugeArrow)
+
+        canvas.drawText(
+            "%d m/s".format(wind.speed.roundToInt()),
+            left + boxW - 8f * dp, cy + pGaugeText.textSize * 0.36f, pGaugeText
+        )
+    }
+
+    /**
+     * Dessine les particules d'une couche, **groupées par teinte et par taille**.
+     *
+     * Un bouquet compte un millier d'étoiles. Les dessiner une par une, c'est mille
+     * appels de tracé par image, chacun avec sa mise en place d'anticrénelage, pour des
+     * points de trois pixels : mesuré ailleurs dans ce fichier, c'est exactement le
+     * genre de chose qui fait tomber une image à trente. `drawPoints` en dessine autant
+     * qu'on veut d'un seul appel, à condition qu'ils partagent leur couleur et leur
+     * épaisseur — on range donc les particules dans des seaux (une teinte, un palier
+     * d'opacité, une classe de taille) et on vide chaque seau d'un trait. Un bouquet
+     * ordinaire tient dans une dizaine de seaux.
+     *
+     * Les grosses particules — boules de feu, fumée — sortent du lot : elles sont peu
+     * nombreuses et il leur faut un vrai disque, pas un point épais.
+     */
+    private fun drawSparks(canvas: Canvas, background: Boolean) {
+        val fx = game.effects
+        if (fx.aliveCount == 0) return
+        val w = width.toFloat()
+        val h = height.toFloat()
+        for (i in bucketCount.indices) bucketCount[i] = 0
+
+        for (sp in fx.sparks) {
+            if (!sp.alive || sp.background != background) continue
+            val px = sx(sp.x)
+            val py = sy(sp.y)
+            if (px < -40f || px > w + 40f || py < -40f || py > h + 40f) continue
+            val r = sp.shownSize * camScale
+            // Ce qui est gros se dessine rond ; ce qui est petit se dessine en points.
+            if (r > BIG_SPARK_DP * dp) {
+                pBigSpark.color = tinted(sp)
+                canvas.drawCircle(px, py, r, pBigSpark)
+                continue
+            }
+            val size = (r / (SPARK_STEP_DP * dp)).toInt().coerceIn(0, SPARK_SIZES - 1)
+            val alpha = (sp.fade * (SPARK_ALPHAS - 1)).toInt().coerceIn(0, SPARK_ALPHAS - 1)
+            val b = (sp.tint * SPARK_ALPHAS + alpha) * SPARK_SIZES + size
+            var arr = bucketXY[b]
+            if (arr == null) {
+                arr = FloatArray(256)
+                bucketXY[b] = arr
+            }
+            var n = bucketCount[b]
+            if (n + 2 > arr.size) {
+                arr = arr.copyOf(arr.size * 2)
+                bucketXY[b] = arr
+            }
+            arr[n++] = px
+            arr[n++] = py
+            bucketCount[b] = n
+        }
+
+        for (b in bucketCount.indices) {
+            val n = bucketCount[b]
+            if (n == 0) continue
+            val size = b % SPARK_SIZES
+            val rest = b / SPARK_SIZES
+            val alpha = rest % SPARK_ALPHAS
+            val tint = rest / SPARK_ALPHAS
+            pSpark.color = TrebuchetEffects.PALETTE[tint]
+            pSpark.alpha = 40 + 215 * alpha / (SPARK_ALPHAS - 1)
+            pSpark.strokeWidth = (size + 1) * SPARK_STEP_DP * dp
+            canvas.drawPoints(bucketXY[b]!!, 0, n, pSpark)
+        }
+    }
+
+    /** La couleur d'une particule, son extinction comprise. */
+    private fun tinted(sp: Spark): Int {
+        val c = TrebuchetEffects.PALETTE[sp.tint]
+        val a = (255 * sp.fade).toInt().coerceIn(0, 255)
+        return (c and 0x00FFFFFF) or (a shl 24)
     }
 
     /**
@@ -1562,6 +1814,7 @@ class TrebuchetView @JvmOverloads constructor(
      */
     private fun drawSelection(canvas: Canvas) {
         if (selected == Part.NONE) return
+        pGaugeText.textSize = 13f * dp
         pValue.textSize = 12f * dp
         drawGuide(canvas)
         val cfg = game.config
@@ -1613,7 +1866,7 @@ class TrebuchetView @JvmOverloads constructor(
                 game.tipWorld(tip)
                 drawValue(
                     canvas, (tip[0] + game.ball.x) / 2f, game.ball.y,
-                    "%.1f m".format(cfg.slingLength)
+                    "%.2f m".format(cfg.slingLength)
                 )
             }
             Part.NONE -> {}

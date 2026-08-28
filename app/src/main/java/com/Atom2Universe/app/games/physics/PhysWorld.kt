@@ -144,6 +144,17 @@ class PhysWorld {
     var sleepDelay = 0.4f
 
     /**
+     * Le vent, en mètres par seconde. Il ne pousse que ce qui a une traînée.
+     *
+     * Ce n'est pas une force appliquée aux corps : c'est **la vitesse de l'air**, et
+     * elle n'entre nulle part ailleurs que dans le calcul de la traînée. Une pierre de
+     * château, qui n'a pas de traînée parce qu'elle n'en a jamais eu besoin, ne sent
+     * donc rien — ce qui tombe bien, un château ne s'envole pas.
+     */
+    var windX = 0f
+    var windY = 0f
+
+    /**
      * Amortissement ambiant, en fraction de vitesse perdue **par seconde**.
      *
      * Il ne représente rien de physique : c'est une petite friction numérique qui
@@ -336,11 +347,22 @@ class PhysWorld {
                 // vitesse dans le pas : sinon un pas un peu long la renverserait et
                 // l'air pousserait le corps en arrière, ce qui créerait de l'énergie.
                 if (bd.dragFactor > 0f) {
-                    val v = sqrt(bd.speedSq)
+                    // La traînée se mesure sur la vitesse **relative à l'air**, et pas
+                    // sur la vitesse dans le monde. C'est la seule façon honnête de
+                    // faire du vent : un corps immobile dans un vent de dix mètres par
+                    // seconde subit exactement ce que subirait le même corps lancé à
+                    // dix mètres par seconde dans de l'air calme. Sans vent, les deux
+                    // vitesses sont la même et rien ne change.
+                    val rx = bd.vx - windX
+                    val ry = bd.vy - windY
+                    val v = sqrt(rx * rx + ry * ry)
                     if (v > 1e-4f) {
+                        // Bornée à ce qui annule exactement la vitesse relative : un pas
+                        // un peu long la renverserait sinon, et l'air pousserait le corps
+                        // plus vite que lui-même, ce qui créerait de l'énergie.
                         val dv = minOf(bd.dragFactor * v * v * bd.invMass * dt, v)
-                        bd.vx -= dv * bd.vx / v
-                        bd.vy -= dv * bd.vy / v
+                        bd.vx -= dv * rx / v
+                        bd.vy -= dv * ry / v
                     }
                 }
             }

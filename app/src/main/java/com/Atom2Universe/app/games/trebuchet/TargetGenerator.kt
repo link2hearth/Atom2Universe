@@ -31,11 +31,11 @@ class TargetLevel(
     val kind: SiteKind,
     /** Distance du pied de la construction au pied de la machine, en mètres. */
     val distance: Float,
+    /** Le vent qui souffle sur ce site-là. Il sort de la même graine. */
+    val wind: Wind,
     /** La construction, déjà tassée et posée à sa distance. */
     val structure: Structure
-) {
-    val ruinLine: Float get() = structure.ruinLine
-}
+)
 
 /**
  * Le générateur de niveaux.
@@ -93,7 +93,10 @@ object TargetGenerator {
             }
         }
         val site = best!!
-        return TargetLevel(seed, kind, distance, site.translated(distance - site.left))
+        return TargetLevel(
+            seed, kind, distance, Wind.forSeed(seed),
+            site.translated(distance - site.left)
+        )
     }
 
     /**

@@ -321,13 +321,17 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Le bouton de tir tire, et rien d'autre.
+     *
+     * Il se changeait en « site suivant » dès que le site était rasé, ce qui faisait de
+     * la victoire une porte qui se referme : le joueur voulait souvent retirer un coup
+     * dans les ruines pour finir le travail, ou simplement regarder. Un site rasé reste
+     * donc un site où l'on tire, et on n'en change que sur demande — appui long sur le
+     * bouton des machines.
+     */
     private fun onFireButton() {
         val game = gameView.game
-        // Site rasé : le bouton ne sert plus qu'à passer au suivant.
-        if (game.level != null && game.targets.cleared) {
-            nextLevel()
-            return
-        }
         gameView.clearSelection()
         when (game.phase) {
             TrebuchetGame.Phase.BUILD -> {
@@ -372,7 +376,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             R.string.trebuchet_specs,
             cfg.cockAngleDeg.toInt(),
             (cfg.storedEnergy / 1000f).toInt(),
-            fmt(cfg.slingLength)
+            fmt2(cfg.slingLength)
         )
         // La ligne du haut dit où on en est du site ; en bac à sable, elle garde le
         // record de portée.
@@ -385,7 +389,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             lvl != null -> getString(
                 R.string.trebuchet_level,
                 TargetGenerator.label(lvl),
-                (game.targets.progress * 100f).toInt(),
+                (game.targets.score * 100f).toInt(),
+                (game.targets.winRatio * 100f).toInt(),
                 game.shotCount
             ) + " · " + styleLabel()
             best > 0f -> getString(R.string.trebuchet_best, fmt(best))
@@ -393,17 +398,23 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         }
 
         val building = game.phase == TrebuchetGame.Phase.BUILD
-        val cleared = game.level != null && game.targets.cleared
         fireButton.text = getString(
-            when {
-                cleared -> R.string.trebuchet_btn_next
-                building -> R.string.trebuchet_btn_release
-                else -> R.string.trebuchet_btn_adjust
-            }
+            if (building) R.string.trebuchet_btn_release else R.string.trebuchet_btn_adjust
         )
 
         statusText.visibility =
             if (gameView.selected == TrebuchetView.Part.NONE) View.VISIBLE else View.GONE
+        // La victoire passe devant tout le reste, et elle dit quoi faire ensuite : rien
+        // ne se déclenche tout seul, et un joueur qui ne sait pas comment continuer est
+        // un joueur bloqué sur un écran de fête.
+        if (game.level != null && game.targets.cleared) {
+            statusText.text = getString(
+                R.string.trebuchet_win,
+                game.shotCount,
+                getString(R.string.trebuchet_btn_machines)
+            )
+            return
+        }
         statusText.text = when (game.phase) {
             TrebuchetGame.Phase.BUILD -> getString(R.string.trebuchet_status_build)
             TrebuchetGame.Phase.RESULT ->
@@ -448,7 +459,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             TrebuchetView.Part.SLING ->
                 getString(
                     R.string.trebuchet_sel_sling_shot,
-                    fmt(cfg.slingLength), getString(shotLabel(cfg.projectile))
+                    fmt2(cfg.slingLength), getString(shotLabel(cfg.projectile))
                 )
             TrebuchetView.Part.NONE -> ""
         }
@@ -465,6 +476,9 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     }
 
     private fun fmt(v: Float): String = String.format("%.1f", v)
+
+    /** La fronde s'affiche au centimètre : c'est à ce grain-là qu'elle se règle. */
+    private fun fmt2(v: Float): String = String.format("%.2f", v)
 
     /** Le nom du projectile chargé, tel qu'il s'affiche dans le bandeau. */
     private fun shotLabel(kind: Projectile): Int = when (kind) {

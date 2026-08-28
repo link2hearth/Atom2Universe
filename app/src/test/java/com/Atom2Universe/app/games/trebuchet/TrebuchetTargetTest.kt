@@ -265,17 +265,25 @@ class TrebuchetTargetTest {
 
     // ── L'objectif ────────────────────────────────────────────────────────────
 
+    /**
+     * L'objectif se compte en pierres brisées, et il se franchit quand on les a
+     * brisées.
+     *
+     * Il s'est longtemps compté en **hauteur restante**, et c'est ce qui a dû changer :
+     * ce qui tombe ne disparaît pas, ça fait un tas, et le tas d'une construction
+     * parfaitement rasée dépassait la ligne. Le joueur voyait un champ de ruines et le
+     * jeu lui répondait « pas encore ». On mesure donc ce qu'il casse, pas ce que la
+     * gravité laisse retomber.
+     */
     @Test
-    fun `la ligne de ruine se franchit quand tout est a terre`() {
+    fun `l objectif se franchit quand les pierres ont casse`() {
         val w = world()
         val f = TargetField(w)
-        // Douze assises : la ligne de ruine tombe alors à 1,19 m, au-dessus de la
-        // hauteur qu'un tas de pierres de cinquante centimètres peut atteindre.
         val s = wall(20f, 12)
         f.load(s)
 
         assertTrue("un mur intact serait déjà rasé", !f.cleared)
-        assertEquals("la ligne de ruine n'est pas le cinquième", 0.2f * s.baseHeight, f.ruinLine, 1e-3f)
+        assertEquals("un mur intact compte des pierres cassées", 0f, f.brokenRatio, 1e-3f)
         assertTrue("le mur part déjà gagné : ${f.progress}", f.progress < 0.05f)
 
         // On rase tout à l'explosif, faute de mieux dans un test.
@@ -285,9 +293,84 @@ class TrebuchetTargetTest {
         }
         run(w, f, 3f)
 
-        println("RUINE hauteur=${f.ruinHeight()} ligne=${f.ruinLine} rasé=${f.cleared}")
-        assertTrue("le mur n'est pas descendu sous la ligne : ${f.ruinHeight()} > ${f.ruinLine}", f.cleared)
+        println(
+            "RUINE ${f.pieceBroken}/${f.pieceTotal} pierres cassées " +
+                "(${(f.brokenRatio * 100).toInt()} %), rasé=${f.cleared}, " +
+                "il reste ${"%.1f".format(f.ruinHeight())} m debout"
+        )
+        assertTrue(
+            "le mur n'est pas rasé : ${f.pieceBroken} pierres sur ${f.pieceTotal}",
+            f.cleared
+        )
         assertEquals(1f, f.progress, 1e-3f)
+    }
+
+    /**
+     * Une pierre renversée compte pour une demie, et la casser ensuite rapporte
+     * l'autre moitié.
+     *
+     * C'est la réponse au dernier défaut du compteur : les sites de pierre ne se
+     * détruisent pas, ils se renversent. Un boulet casse l'assise qu'il touche et fait
+     * basculer les vingt autres, lesquelles atterrissent intactes — ne compter que les
+     * pierres brisées revenait à ignorer le seul coup qui compte vraiment. Une demie et
+     * pas une entière, parce qu'une pierre couchée est toujours là : il reste quelque
+     * chose à gagner dans un champ de ruines.
+     */
+    @Test
+    fun `une pierre renversee vaut la moitie d une pierre brisee`() {
+        val w = world()
+        val f = TargetField(w)
+        f.load(wall(20f, 4))
+        val total = f.pieceTotal
+        assertEquals("un mur intact compte déjà des points", 0f, f.score, 1e-4f)
+
+        // On pousse une pierre hors de sa place, sans rien casser.
+        val victime = f.pieces.first { !it.debris }
+        victime.body.x += 4f
+        victime.body.wake()
+        run(w, f, 0.1f)
+
+        println(
+            "RENVERSÉE ${f.pieceBroken} cassées + ${f.pieceToppled} renversées " +
+                "sur $total → score ${(f.score * 100).toInt()} %"
+        )
+        assertTrue("la pierre déplacée n'est pas comptée renversée", f.pieceToppled >= 1)
+        assertEquals(
+            "une pierre renversée ne vaut pas une demie",
+            TargetRules.TOPPLED_WORTH * f.pieceToppled / total, f.score, 1e-3f
+        )
+
+        // Puis on la casse : elle doit passer de la demie à l'entière.
+        val avant = f.score
+        f.blast(victime.body.x, victime.body.y, 5_000_000f, 2f)
+        run(w, f, 0.3f)
+        println("RENVERSÉE puis brisée → score ${(f.score * 100).toInt()} %")
+        assertTrue("casser une pierre déjà renversée ne rapporte rien", f.score > avant)
+    }
+
+    /**
+     * Le tas de gravats n'empêche plus de gagner, et c'est tout l'objet du changement.
+     *
+     * Le mur ci-dessous est rasé jusqu'à la dernière pierre, et pourtant il en reste
+     * un mètre et demi debout — c'est le tas. Sous l'ancienne règle, ce tas-là valait
+     * défaite.
+     */
+    @Test
+    fun `un tas de gravats ne vaut plus defaite`() {
+        val w = world()
+        val f = TargetField(w)
+        f.load(wall(20f, 12))
+        repeat(8) {
+            f.blast(21f, 2f, 600_000f, 30f)
+            run(w, f, 1f)
+        }
+        run(w, f, 3f)
+        println(
+            "GRAVATS ${"%.2f".format(f.ruinHeight())} m de tas, " +
+                "${f.pieces.count { it.debris }} morceaux au sol, rasé=${f.cleared}"
+        )
+        assertTrue("le tas a disparu, ce n'est pas ce qu'on teste", f.ruinHeight() > 0.3f)
+        assertTrue("le tas empêche encore de gagner", f.cleared)
     }
 
     @Test
@@ -370,18 +453,54 @@ class TrebuchetTargetTest {
 
     // ── La validation d'une construction ──────────────────────────────────────
 
+    /**
+     * La validation attrape ce qui rend un niveau injouable — et rien d'autre.
+     *
+     * Le garde-fou de l'impossible a changé de nature avec l'objectif. Il demandait
+     * autrefois si un tas de gravats pouvait passer sous une ligne, question dont la
+     * réponse dépend de la façon dont la construction s'écroule : c'était une formule
+     * là où il aurait fallu une simulation, et elle refusait des courtines parfaitement
+     * jouables. Il demande maintenant une soustraction : on ne peut pas casser ce qui
+     * ne casse pas, donc si les pierres incassables dépassent la marge que l'objectif
+     * pardonne, personne ne finira jamais.
+     */
     @Test
-    fun `la validation repere un socle trop haut et un chevauchement`() {
-        val haut = Structure(
+    fun `la validation repere l impossible et le chevauchement`() {
+        // Un socle sur deux, en arcade, où l'objectif demande quatre-vingt-cinq pour
+        // cent : la moitié du site est increvable, donc personne ne finira jamais.
+        //
+        // Le tempérament compte, et c'est le propre de cette règle : le même site passe
+        // en réaliste, où l'objectif tombe à trente pour cent sur de la maçonnerie. Ce
+        // n'est pas une inconséquence, c'est la définition — « impossible » veut dire
+        // « impossible pour l'objectif demandé », et l'objectif dépend du mode.
+        TargetRules.style = TargetStyle.ARCADE
+        val increvable = Structure(
             listOf(
                 Block.laid(Material.STONE, 0f, 0f, 1f, 3f, Role.FOUNDATION),
                 Block.laid(Material.STONE, 0f, 3f, 1f, 1f)
             ),
             "socle abusif"
         )
+        println("VALIDATION socle : ${increvable.problems()}")
         assertTrue(
-            "un socle au-dessus de la ligne de ruine passe la validation",
-            haut.problems().any { it.contains("socle") }
+            "un site à moitié increvable passe la validation",
+            increvable.problems().any { it.contains("incassables") }
+        )
+        TargetRules.style = TargetStyle.REALISTE
+        assertTrue(
+            "le même site est refusé en réaliste, où l'objectif est bien plus bas",
+            increvable.problems().isEmpty()
+        )
+
+        // Le fer non plus ne casse pas, et la règle ne regarde pas le rôle mais le
+        // résultat : ce qui ne peut pas être brisé compte contre l'objectif.
+        val ferraille = Structure(
+            List(4) { Block.laid(Material.IRON, it * 1.2f, 0f, 1f, 1f) },
+            "tout en fer"
+        )
+        assertTrue(
+            "un site tout en fer passe la validation",
+            ferraille.problems().any { it.contains("incassables") }
         )
 
         val melange = Structure(
@@ -396,15 +515,15 @@ class TrebuchetTargetTest {
             melange.problems().any { it.contains("chevauchent") }
         )
 
-        // Une seule pierre couchée à plat dépasse déjà la ligne de ruine : ce
-        // niveau-là ne peut être gagné par personne, quoi qu'on fasse.
-        val trop_bas = Structure(
+        // Et ce qui était refusé pour rien ne l'est plus : une borne trapue est une
+        // cible basse, pas un niveau impossible. Il suffit de la casser.
+        val trapue = Structure(
             listOf(Block.laid(Material.STONE, 20f, 0f, 2f, 1.2f)),
             "borne trapue"
         )
         assertTrue(
-            "un niveau impossible passe la validation : ${trop_bas.problems()}",
-            trop_bas.problems().any { it.contains("trop basse") }
+            "une cible basse est encore refusée : ${trapue.problems()}",
+            trapue.problems().isEmpty()
         )
 
         assertTrue("un mur honnête est refusé", wall(20f, 12).problems().isEmpty())

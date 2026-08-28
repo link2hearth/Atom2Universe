@@ -45,7 +45,7 @@
     <string name="trebuchet_sel_sling_shot">Sling &#8212; %1$s m &#183; %2$s</string>
 
     <!-- Target site. Other locales fall back here until they are translated. -->
-    <string name="trebuchet_level">%1$s · %2$d %% razed · %3$d shot(s)</string>
+    <string name="trebuchet_level">%1$s · %2$d %% of %3$d %% · %4$d shot(s)</string>
     <string name="trebuchet_level_cleared">%1$s — RAZED in %2$d shot(s)!</string>
     <string name="trebuchet_btn_next">Next site</string>
     <string name="trebuchet_btn_machines">Machines ▾</string>
@@ -64,4 +64,5 @@
     <string name="trebuchet_clean_ghosts">Clear past shots (%1$d)</string>
     <string name="trebuchet_clean_done">Past shots cleared</string>
     <string name="trebuchet_ghost_limit">Past shots kept: %1$d</string>
+    <string name="trebuchet_win">SITE RAZED in %1$d shot(s)! Long-press « %2$s » for the next site.</string>
 </resources>

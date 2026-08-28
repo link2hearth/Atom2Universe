@@ -482,7 +482,29 @@ class TrebuchetGame {
      * catégories de collision font que les deux ne se rencontrent jamais autrement que
      * par le boulet.
      */
+    /**
+     * Les étincelles, les explosions et les feux d'artifice.
+     *
+     * Ils vivent dans la machine et non dans la vue, pour la même raison que la cible :
+     * ce sont des choses qui bougent dans des mètres, elles se simulent, et ce qui se
+     * simule se vérifie au banc. La vue n'en fait que des pixels.
+     */
+    val effects = TrebuchetEffects()
+
+    /** Vrai quand le site en cours a déjà eu droit à son feu d'artifice. */
+    private var celebrated = false
+
     val targets = TargetField(world)
+
+    /**
+     * Le vent du moment. Il vient du niveau, donc de sa graine.
+     *
+     * Le poser ici le pose partout : le monde s'en sert pour la traînée du boulet, les
+     * effets pour emporter la fumée et les feux. Rien d'autre n'a besoin de le
+     * connaître.
+     */
+    var wind: Wind = Wind.CALM
+        private set
 
     /** Le niveau en cours, ou nul en bac à sable (record de portée, sans cible). */
     var level: TargetLevel? = null
@@ -725,6 +747,11 @@ class TrebuchetGame {
         // le château se reconstruire derrière lui.
         targets.reattach()
 
+        // Le monde vient d'être vidé, mais le vent n'est pas une pièce de la machine :
+        // il souffle sur le site, et il souffle encore quand on remonte le bras.
+        world.windX = wind.vx
+        world.windY = wind.vy
+
         val half = (TrebuchetRules.GROUND_RIGHT - TrebuchetRules.GROUND_LEFT) / 2f
         ground = PhysBody(half, 1f, 0f).apply {
             x = TrebuchetRules.GROUND_LEFT + half
@@ -896,6 +923,9 @@ class TrebuchetGame {
         build()
         targets.load(lvl.structure)
         shotCount = 0
+        celebrated = false
+        effects.clear()
+        applyWind(lvl.wind)
     }
 
     /** Repart en bac à sable : plus de cible, on ne mesure que la portée. */
@@ -903,6 +933,24 @@ class TrebuchetGame {
         level = null
         targets.clear()
         build()
+        // Pas de site, pas de vent : le bac à sable sert à mesurer une machine, et une
+        // mesure ne se fait pas dans le courant d'air.
+        applyWind(Wind.CALM)
+    }
+
+    /**
+     * Pose le vent, une fois, aux deux endroits qui s'en servent.
+     *
+     * Le monde ne connaît qu'une vitesse d'air, dont il se sert dans la traînée ; les
+     * effets s'en servent pour emporter la fumée et coucher les feux d'artifice. Passer
+     * par ici garantit que les deux racontent la même histoire — un vent qui souffle
+     * sur le boulet mais pas sur la fumée serait pire que pas de vent du tout.
+     */
+    fun applyWind(w: Wind) {
+        wind = w
+        world.windX = w.vx
+        world.windY = w.vy
+        effects.setWind(w.vx, w.vy)
     }
 
     /**
@@ -1186,7 +1234,9 @@ class TrebuchetGame {
         if (kind.blastEnergy <= 0f) return
         if (!hit && ball.y > kind.radius + 0.03f) return
         blown = true
-        targets.blast(ball.x, ball.y, kind.blastEnergy, kind.blastRadiusNow)
+        val r = kind.blastRadiusNow
+        targets.blast(ball.x, ball.y, kind.blastEnergy, r)
+        effects.explosion(ball.x, ball.y, r)
         ball.collidesWith = TrebuchetCategory.GROUND
         world.forgetContacts(ball)
     }
@@ -1292,6 +1342,17 @@ class TrebuchetGame {
         }
     }
 
+    /**
+     * Fait vivre les effets, et **seulement** eux.
+     *
+     * À appeler à chaque image, quelle que soit la phase : un feu d'artifice se tire
+     * après le tir, quand la machine est retombée au repos et que [step] ne fait plus
+     * rien. Les lier au pas de simulation aurait figé le bouquet en plein ciel.
+     */
+    fun stepEffects(dt: Float) {
+        effects.update(dt)
+    }
+
     /** Le crochet lâche-t-il, à cet instant précis ? */
     private fun checkRelease() {
         if (slingAngle <= releaseAngle || slingAngle <= -RUNAWAY_SLING) letGo()
@@ -1343,6 +1404,7 @@ class TrebuchetGame {
 
     private fun finishShot() {
         phase = Phase.RESULT
+        celebrate()
         // La portée est celle du **point d'impact**, mesurée à l'atterrissage : après,
         // le boulet roule, et où il finit sa course n'apprend rien.
         if (shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
@@ -1351,6 +1413,22 @@ class TrebuchetGame {
         // Le plus récent en tête, et on oublie le plus vieux quand la pile déborde.
         ghostList.add(0, trailBuf.copyOf(trailCount))
         while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)
+    }
+
+    /**
+     * Tire le feu d'artifice de la victoire, une fois par site.
+     *
+     * Il part **entre la machine et les ruines**, et pas au-dessus des ruines : la
+     * caméra prend tout le champ à la fin d'un tir, et un bouquet tiré à quatre cents
+     * mètres serait un confetti dans un coin de l'écran. Devant, il occupe l'arrière-
+     * plan sur toute la largeur, ce qui est la place d'un feu d'artifice.
+     */
+    private fun celebrate() {
+        if (celebrated || level == null || !targets.cleared) return
+        celebrated = true
+        val debut = TrebuchetRules.FIRING_LINE + 30f
+        val fin = (targets.left - 25f).coerceAtLeast(debut + 40f)
+        effects.celebrate(debut, fin)
     }
 
     // ── Simulation sans affichage ────────────────────────────────────────────
