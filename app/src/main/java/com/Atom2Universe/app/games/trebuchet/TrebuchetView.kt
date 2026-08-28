@@ -118,6 +118,19 @@ class TrebuchetView @JvmOverloads constructor(
         /** Fenêtre minimale en vol : un boulet rapide doit rester dedans. */
         const val FLIGHT_MIN_WIDTH = 90f
 
+        /**
+         * Ciel gardé au-dessus du boulet en vol, en mètres.
+         *
+         * Un boulet collé au bord haut de l'écran est un boulet qu'on croit sorti de
+         * l'image. Quinze mètres suffisent à ce qu'il ait toujours l'air d'avoir de la
+         * place — et comme c'est l'échelle qui s'ajuste, en donner davantage
+         * reviendrait à regarder le tir de plus loin pour rien.
+         */
+        const val FLIGHT_TOP_MARGIN = 15f
+
+        /** De combien le vol peut reculer au-delà du dézoom ordinaire. */
+        const val FLIGHT_ZOOM_OUT = 0.55f
+
         /** Au-delà, le cadrage automatique ne recule plus. */
         const val MAX_VIEW_WIDTH = 560f
 
@@ -548,6 +561,8 @@ class TrebuchetView @JvmOverloads constructor(
                     lastPhase = game.phase
                 }
                 updateCamera(frameDt)
+                // Ce que l'écran montre du ciel : le feu d'artifice s'y règle.
+                if (height > 0) game.skyTop = worldY(0f)
                 updatePreview()
             }
             if (finished) post { listener?.onShotFinished() }
@@ -610,13 +625,31 @@ class TrebuchetView @JvmOverloads constructor(
         val follow: Float
 
         if (game.phase == TrebuchetGame.Phase.FLIGHT) {
-            // En vol, la fenêtre doit être assez large pour qu'un boulet à cent
-            // mètres par seconde ne la traverse pas en une demi-seconde.
-            targetScale = width / max(machineWidth + FLIGHT_VIEW_MARGIN, FLIGHT_MIN_WIDTH)
+            // **Le sol reste à sa place, et c'est la vue qui recule.**
+            //
+            // La caméra centrait le boulet en hauteur comme en largeur, et l'horizon
+            // disparaissait dès que le tir montait : on voyait alors un caillou au
+            // milieu d'un ciel vide, sans rien pour dire s'il montait, s'il descendait,
+            // ni où il en était de sa course. Un tir de trébuchet se lit par rapport au
+            // sol — c'est même la seule chose qu'on regarde.
+            //
+            // Le sol est donc calé en bas, comme dans la vue de réglage, et le cadrage
+            // ne se règle plus qu'en **échelle** : la fenêtre s'ouvre à mesure que le
+            // boulet monte, puis se referme quand il redescend. La largeur suit toute
+            // seule, et c'est heureux — un tir haut est aussi un tir long.
+            val flightHeight = max(machineHeight, game.ball.y + FLIGHT_TOP_MARGIN)
+            targetScale = min(
+                width / max(machineWidth + FLIGHT_VIEW_MARGIN, FLIGHT_MIN_WIDTH),
+                (height - GROUND_INSET_DP * dp) / flightHeight
+                // Le dézoom du vol a le droit d'aller un peu plus loin que celui du
+                // cadrage libre : un tir très haut demande de reculer au-delà de la
+                // largeur du terrain, et mieux vaut un peu de vide sur les côtés qu'un
+                // boulet sorti par le haut de l'écran.
+            ).coerceIn(minScale() * FLIGHT_ZOOM_OUT, maxScale())
             // On vise devant le boulet, d'autant plus loin qu'il va vite : le
             // cadrage anticipe au lieu de courir après.
             tx = game.ball.x + game.ball.vx * 0.4f
-            ty = game.ball.y + game.ball.vy * 0.2f
+            ty = groundCamY(targetScale)
             follow = 8f
         } else {
             val targetWidth: Float
@@ -657,10 +690,11 @@ class TrebuchetView @JvmOverloads constructor(
         if (cameraFree) {
             clampCamera()
         } else {
-            // En vol, le boulet peut monter très haut et la caméra le suit : on
-            // interdit seulement de passer sous l'horizon.
-            val minY = -1f + height / 2f / camScale
-            if (camY < minY) camY = minY
+            // Le sol se recale sur l'échelle **réelle** et non sur celle qu'on visait :
+            // le zoom et le déplacement se rattrapent à des vitesses différentes, et
+            // l'écart, si petit soit-il, ferait respirer l'horizon à chaque image. Il
+            // n'y a rien de pire à regarder qu'un sol qui flotte.
+            camY = groundCamY(camScale)
         }
     }
 

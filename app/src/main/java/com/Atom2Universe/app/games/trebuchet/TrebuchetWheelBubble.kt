@@ -34,14 +34,14 @@ import kotlin.math.roundToInt
  * grossier au plus fin :
  *
  *  - les **flèches**, de part et d'autre des chiffres — celle de gauche monte, celle
- *    de droite descend : un appui vaut un cran naturel du réglage, cinquante
- *    centimètres de poutre, cent kilos de contrepoids, un degré de crochet. C'est le
- *    geste ordinaire, et il ne demande aucune précision. Maintenu, l'appui se répète ;
- *  - un **appui long sur un chiffre** le désigne : la colonne s'allume, et les flèches
- *    travaillent désormais **sur elle**. C'est ce qui transforme deux boutons fixes en
- *    un pas réglable — dix kilos ou mille, un centimètre ou un mètre — sans ajouter le
- *    moindre bouton. Un second appui long sur la même colonne rend aux flèches leur
- *    cran naturel ;
+ *    de droite descend : elles travaillent **toujours sur une colonne**, laquelle est
+ *    allumée en permanence. C'est le geste ordinaire, il ne demande aucune précision,
+ *    et maintenu il se répète ;
+ *  - un **appui long sur un chiffre** déplace cette colonne. C'est ce qui transforme
+ *    deux boutons fixes en un pas réglable — dix kilos ou mille, un centimètre ou un
+ *    mètre — sans ajouter le moindre bouton, et le choix se garde : on retrouve sa
+ *    colonne en revenant sur la pièce. Chaque réglage démarre sur la colonne qui lui
+ *    va, celle de son cran naturel ;
  *  - l'**appui bref sur un chiffre** : il ajoute ou retranche une unité de cette
  *    colonne-là — moitié haute pour monter, basse pour descendre ;
  *  - le **glissement sur un chiffre** : la roulette suit le doigt, cran par cran, pour
@@ -73,13 +73,17 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val intDigits: Int,
         val decimals: Int,
         /**
-         * Le **cran naturel** du réglage : ce qu'une flèche ajoute ou retranche.
+         * Le **cran naturel** du réglage : celui sur lequel les flèches démarrent.
          *
          * Il n'a rien à voir avec la précision de l'affichage, et c'est tout l'intérêt.
          * Le contrepoids s'affiche au kilo près mais se règle par cent : personne ne
          * cherche 3 001 kg, et personne ne veut appuyer mille fois pour aller de trois
-         * tonnes à quatre. Le chiffre, lui, reste là pour qui veut poser une valeur
-         * exacte.
+         * tonnes à quatre.
+         *
+         * Il ne sert plus à additionner quoi que ce soit — les flèches travaillent sur
+         * une colonne de chiffres — mais à **désigner laquelle** au départ : on prend
+         * celle dont le poids est le plus proche de ce cran-là. Le joueur déplace
+         * ensuite la colonne s'il veut un autre pas, et son choix reste.
          */
         val step: Float,
         /**
@@ -231,13 +235,45 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     private var arrowDir = 0
 
     /**
-     * La colonne désignée de chaque ligne, ou -1 quand aucune ne l'est.
+     * La colonne désignée de **chaque réglage**, et non de chaque ligne à l'écran.
      *
-     * À -1, les flèches appliquent le cran naturel du réglage. Désignée, elles
-     * appliquent le poids de cette colonne-là. C'est le même bouton qui fait les deux,
-     * et c'est le joueur qui décide ce qu'il veut dire par « un cran ».
+     * La nuance est tout l'intérêt : rangée par réglage, la colonne survit au fait de
+     * lâcher la poutre pour prendre le contrepoids et d'y revenir. Le joueur qui a
+     * décidé de régler sa masse au kilo la retrouve au kilo, sans avoir à le redire.
+     *
+     * Elle n'est jamais vide. Les flèches doivent être reliées à quelque chose en
+     * permanence, sans quoi on ne sait pas ce qu'un appui va faire — et une colonne
+     * allumée en permanence est justement ce qui le dit.
      */
-    private val pickedCol = IntArray(8) { -1 }
+    private val pickedCol = IntArray(Dial.entries.size) { -1 }
+
+    /**
+     * La colonne sur laquelle un réglage travaille : celle qu'on a choisie, ou celle de
+     * son cran naturel.
+     *
+     * Le défaut se **calcule** au lieu d'être recopié : on cherche la colonne dont le
+     * poids ressemble le plus au cran du réglage, en comparant les logarithmes plutôt
+     * que les écarts. Cinquante centimètres est aussi loin d'un mètre que de vingt-cinq
+     * centimètres, et pas de dix centimètres — c'est le rapport qui compte, pas la
+     * différence.
+     */
+    private fun columnOf(d: Dial): Int {
+        val known = pickedCol[d.ordinal]
+        if (known in 0 until d.digits) return known
+        var best = d.digits - 1
+        var bestGap = Float.MAX_VALUE
+        for (c in 0 until d.digits) {
+            var poids = 1f
+            repeat(d.digits - 1 - c) { poids *= 10f }
+            poids /= pow10(d.decimals)
+            val gap = kotlin.math.abs(kotlin.math.ln(poids / d.step))
+            if (gap < bestGap) {
+                bestGap = gap
+                best = c
+            }
+        }
+        return best
+    }
 
     /** Vrai quand l'appui en cours a déjà servi à autre chose qu'un appui bref. */
     private var consumed = false
@@ -245,9 +281,9 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     /** L'appui long qui désigne une colonne. */
     private val longPress = Runnable {
         if (hit == Hit.WHEEL && turnRow in dials.indices && !dials[turnRow].choice) {
-            // Redésigner la colonne déjà désignée la relâche : un interrupteur, pas un
-            // aller simple.
-            pickedCol[turnRow] = if (pickedCol[turnRow] == turnCol) -1 else turnCol
+            // On déplace la colonne, on ne l'éteint pas : les flèches doivent toujours
+            // savoir sur quoi elles tapent.
+            pickedCol[dials[turnRow].ordinal] = turnCol
             consumed = true
             invalidate()
         }
@@ -285,10 +321,6 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val wanted = dialsFor(part)
         if (wanted != dials) {
             dials = wanted
-            // Les colonnes désignées appartenaient aux réglages d'avant : les garder
-            // ferait travailler les flèches sur une colonne que le joueur n'a pas
-            // choisie pour cette pièce-ci.
-            pickedCol.fill(-1)
             measureLabels()
             requestLayout()
         }
@@ -402,7 +434,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                         canvas.drawCircle(x + DOT_W_DP * dp / 2f, mid + 14f * dp, 2.5f * dp, pDot)
                         x += DOT_W_DP * dp
                     }
-                    drawWheel(canvas, x, mid, digits[col], row, col, col == pickedCol[row])
+                    drawWheel(canvas, x, mid, digits[col], row, col, col == columnOf(d))
                     x += (CELL_W_DP + GAP_DP) * dp
                 }
             }
@@ -710,20 +742,13 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             cycleShot(g, delta)
             return
         }
+        // La flèche vaut une unité de la colonne désignée, avec la retenue d'un
+        // compteur : passer de 9 à 0 pousse la colonne de gauche.
         val p = pow10(d.decimals)
-        val col = pickedCol[turnRow]
-        if (col in 0 until d.digits) {
-            // Une colonne est désignée : la flèche vaut une unité de cette colonne, et
-            // la retenue se fait comme sur un compteur — passer de 9 à 0 pousse la
-            // colonne de gauche.
-            var poids = 1
-            repeat(d.digits - 1 - col) { poids *= 10 }
-            val scaled = (value(g, d) * p).roundToInt() + delta * poids
-            apply(g, d, scaled.coerceAtLeast(0) / p)
-        } else {
-            val v = value(g, d) + delta * d.step
-            apply(g, d, (v * p).roundToInt().coerceAtLeast(0) / p)
-        }
+        var poids = 1
+        repeat(d.digits - 1 - columnOf(d)) { poids *= 10 }
+        val scaled = (value(g, d) * p).roundToInt() + delta * poids
+        apply(g, d, scaled.coerceAtLeast(0) / p)
         onValueChanged?.invoke()
         invalidate()
     }

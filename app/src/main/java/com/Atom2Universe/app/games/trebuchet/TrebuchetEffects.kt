@@ -25,8 +25,15 @@ enum class Puff(
     /** Vrai si elle laisse une traînée derrière elle. */
     val trailing: Boolean = false
 ) {
-    /** La fusée qui monte, avec sa queue de feu. Elle éclate en mourant. */
-    SHELL(1f, 0.15f, 1f, trailing = true),
+    /**
+     * La fusée qui monte, avec sa queue de feu. Elle éclate en mourant.
+     *
+     * Elle traîne moins que ses étoiles, et c'est physique : un obus de feu d'artifice
+     * est dense et compact, là où une étoile est un grain de poudre qui brûle. Le
+     * freinage reste bien visible — une fusée ralentit franchement en haut de sa
+     * course — mais il ne lui mange plus la moitié de son altitude.
+     */
+    SHELL(1f, 0.08f, 1f, trailing = true),
 
     /** L'étoile d'un bouquet : elle brûle, elle tombe, elle s'éteint. */
     STAR(0.55f, 0.8f, 0.7f, trailing = true),
@@ -74,6 +81,14 @@ class Spark internal constructor() {
     var tint = 0
     /** Vrai pour ce qui se dessine derrière le décor : les feux du fond. */
     var background = false
+
+    /**
+     * Pour une fusée : de combien son bouquet s'ouvrira, en facteur.
+     *
+     * Il voyage avec elle parce que c'est elle qui sait de quelle hauteur elle vient,
+     * et que le bouquet n'existe qu'au moment où elle meurt.
+     */
+    var spread = 1f
 
     /** Ce qu'il reste à vivre, de 1 (neuve) à 0 (éteinte). */
     val fade: Float get() = if (maxLife <= 0f) 0f else (life / maxLife).coerceIn(0f, 1f)
@@ -200,6 +215,7 @@ class TrebuchetEffects(seed: Long = 1L) {
 
     private val pendingAt = FloatArray(64)
     private val pendingX = FloatArray(64)
+    private val pendingH = FloatArray(64)
     private var pendingCount = 0
     private var showClock = 0f
 
@@ -215,46 +231,146 @@ class TrebuchetEffects(seed: Long = 1L) {
 
     /**
      * Prépare un feu d'artifice : une série de fusées tirées au hasard, étalées dans le
-     * temps, entre deux abscisses.
+     * temps, entre deux abscisses, et **dans la hauteur de ciel qu'on voit**.
+     *
+     * Ce dernier point n'est pas un détail. Un bouquet éclate à quatre-vingts mètres,
+     * ce qui remplit joliment un écran couché ; le même écran debout montre huit cents
+     * mètres de ciel, et les mêmes fusées se retrouvent tassées dans le bas de l'image
+     * pendant que les trois quarts de l'écran restent noirs. La hauteur visée se
+     * mesure donc à ce que le joueur a sous les yeux, et le nombre de fusées suit :
+     * plus il y a de ciel, plus il en faut pour le remplir.
      *
      * Les fusées ne partent pas toutes ensemble et ne partent pas non plus en cadence :
      * un intervalle régulier ferait métronome. On tire donc chaque départ dans une
      * fourchette, ce qui donne au bouquet ce désordre qu'on ne remarque que quand il
      * manque.
      */
-    fun celebrate(xFrom: Float, xTo: Float, shots: Int = 14) {
+    fun celebrate(xFrom: Float, xTo: Float, shots: Int = 22) {
         pendingCount = 0
         showClock = 0f
-        var t = 0.15f
+        // La première part une demi-seconde plus tard qu'avant : la caméra recule à la
+        // fin d'un tir pour montrer tout l'arc, et une fusée tirée pendant ce
+        // mouvement-là viserait un ciel qui n'existe déjà plus.
+        var t = 0.6f
         val lo = minOf(xFrom, xTo)
         val span = kotlin.math.abs(xTo - xFrom).coerceAtLeast(1f)
         for (i in 0 until minOf(shots, pendingAt.size)) {
             pendingAt[pendingCount] = t
             pendingX[pendingCount] = lo + rng.nextFloat() * span
+            // On range une **part de ciel**, pas une hauteur en mètres : du tiers aux
+            // quatre cinquièmes de l'image, étalées pour qu'un bouquet à mi-hauteur et
+            // un autre tout en haut valent mieux que dix à la même altitude. On ne va
+            // pas jusqu'au bord : les étoiles montent encore après l'éclatement.
+            pendingH[pendingCount] = 0.33f + rng.nextFloat() * 0.47f
             pendingCount++
-            t += 0.25f + rng.nextFloat() * 0.75f
+            t += 0.22f + rng.nextFloat() * 0.62f
         }
     }
+
+    /**
+     * Hauteur de ciel visible, en mètres. Le jeu la pose à chaque image.
+     *
+     * **Elle se lit au moment où la fusée part, et jamais avant.** C'était tout le
+     * défaut : le feu d'artifice était réglé à l'instant de la victoire, c'est-à-dire
+     * pendant que la caméra était encore collée au boulet, puis celle-ci reculait pour
+     * montrer tout l'arc — et les fusées, calculées pour cent cinquante mètres de ciel,
+     * éclataient dans le bas d'une image qui en montrait six cents. On rangeait une
+     * hauteur là où il fallait ranger une **proportion**.
+     */
+    var skyTop = 150f
 
     // ── Les émetteurs ─────────────────────────────────────────────────────────
 
     /**
      * Tire une fusée depuis le sol, qui éclatera d'elle-même en haut de sa course.
      *
-     * La hauteur n'est pas donnée : elle est **obtenue**. On tire une vitesse de départ
-     * et une durée de mèche, et la fusée monte ce que la physique lui permet — freinée
-     * par l'air, tirée par la pesanteur. C'est pour ça que deux fusées identiques
-     * n'éclatent pas à la même hauteur, et c'est très bien ainsi.
+     * On lui donne une altitude à viser, et **on ne l'y pose pas** : on en déduit une
+     * vitesse de départ et une longueur de mèche, puis la fusée monte ce que la
+     * physique lui permet — freinée par l'air, tirée par la pesanteur, penchée par le
+     * vent. Elle éclate donc *à peu près* là où on voulait, et deux fusées lancées
+     * pareil n'éclatent pas à la même hauteur. C'est exactement ce qu'on veut : une
+     * altitude imposée ferait un alignement, un tirage complet ferait une bouillie.
+     *
+     * La vitesse sort de la balistique du collège — celle qu'il faut pour monter de
+     * tant — corrigée d'un dixième parce que l'air en mange une part, et la mèche est
+     * réglée sur le temps de montée. Voir [Puff.SHELL] pour le freinage.
      */
-    fun rocket(x: Float, ground: Float = 0f) {
-        val speed = 34f + rng.nextFloat() * 26f
-        val lean = (rng.nextFloat() - 0.5f) * 10f
+    fun rocket(x: Float, ground: Float = 0f, apex: Float = 55f + rng.nextFloat() * 35f) {
+        val h = apex.coerceIn(15f, 1200f)
+        val speed = speedFor(h)
+        val lean = (rng.nextFloat() - 0.5f) * 0.22f * speed
         val s = spawn(Puff.SHELL, x, ground, lean, speed, background = true) ?: return
         s.tint = FESTIVE[rng.nextInt(FESTIVE.size)]
-        s.size = 0.7f
-        // La mèche : ce qui décide de la hauteur d'éclatement, avec la vitesse.
-        s.maxLife = 1.5f + rng.nextFloat() * 1.6f
+        s.size = 0.7f + h / 400f
+        s.maxLife = fuseFor(speed, h) * (0.97f + rng.nextFloat() * 0.07f)
         s.life = s.maxLife
+        // Un bouquet haut doit être large, sinon il n'est qu'un point de plus dans le
+        // ciel. La racine, et pas la proportion : une fusée qui monte quatre fois plus
+        // haut s'ouvre deux fois plus, ce qui est ce que fait un vrai obus.
+        s.spread = sqrt(h / 70f).coerceIn(0.7f, 3.2f)
+    }
+
+    /**
+     * La vitesse de départ qu'il faut pour **atteindre** la hauteur voulue.
+     *
+     * Elle se cherche par dichotomie, et c'est la seule façon d'y arriver. La formule
+     * du collège — la vitesse vaut la racine de deux g h — ignore l'air ; la corriger
+     * d'un facteur ne marche que sur une plage, parce que la part que l'air prend
+     * grandit avec la hauteur. Mesuré : un facteur réglé pour soixante-dix mètres
+     * laissait une fusée visant cinq cents mètres s'arrêter à trois cent cinquante,
+     * soit la moitié de l'écran d'une tablette debout au lieu des trois quarts.
+     *
+     * Huit essais suffisent à tomber au mètre près, et chaque essai n'est qu'une montée
+     * simulée — quelques centaines de multiplications. Pour une vingtaine de fusées par
+     * bouquet, c'est gratuit.
+     */
+    private fun speedFor(height: Float): Float {
+        var lo = sqrt(2f * GRAVITY * height)
+        var hi = lo * 4f
+        repeat(8) {
+            val mid = (lo + hi) * 0.5f
+            if (apexOf(mid) < height) lo = mid else hi = mid
+        }
+        return hi.coerceAtMost(260f)
+    }
+
+    /** Le sommet qu'atteint une fusée lancée à cette vitesse-là. */
+    private fun apexOf(speed: Float): Float {
+        val dt = 0.02f
+        val k = exp(-Puff.SHELL.drag * dt)
+        var vy = speed
+        var y = 0f
+        var t = 0f
+        while (t < 30f && vy > 0f) {
+            vy = (vy - GRAVITY * Puff.SHELL.gravity * dt) * k
+            y += vy * dt
+            t += dt
+        }
+        return y
+    }
+
+    /**
+     * La longueur de mèche qu'il faut pour éclater à la hauteur voulue.
+     *
+     * Même méthode que [speedFor], et pour la même raison : on simule la montée au lieu
+     * de la calculer, avec exactement le même pas et le même freinage que [update]. La
+     * fusée sait donc monter là où on l'envoie **et** y couper sa mèche.
+     */
+    private fun fuseFor(speed: Float, height: Float): Float {
+        val dt = 0.02f
+        val k = exp(-Puff.SHELL.drag * dt)
+        var vy = speed
+        var y = 0f
+        var t = 0f
+        while (t < 20f) {
+            vy = (vy - GRAVITY * Puff.SHELL.gravity * dt) * k
+            y += vy * dt
+            t += dt
+            // Arrivée à hauteur, ou sommet atteint sans y parvenir : dans les deux cas
+            // c'est là qu'il faut éclater.
+            if (y >= height || vy <= 0f) break
+        }
+        return t
     }
 
     /**
@@ -264,20 +380,22 @@ class TrebuchetEffects(seed: Long = 1L) {
      * d'étoiles, leur vitesse, leur durée et leur traînée. C'est ce qui fait qu'on ne
      * reconnaît jamais deux fois le même.
      */
-    private fun burst(x: Float, y: Float, tint: Int) {
+    private fun burst(x: Float, y: Float, tint: Int, spread: Float = 1f) {
         val shape = Burst.entries[rng.nextInt(Burst.entries.size)]
         val second = if (rng.nextFloat() < 0.35f) FESTIVE[rng.nextInt(FESTIVE.size)] else tint
         // Un bouquet sur trois est bicolore étoile par étoile, et pas seulement par
         // couronnes : c'est le seul moyen d'obtenir ces gerbes mêlées qu'on voit dans
         // les vrais feux, et ça coûte un tirage.
         val panache = rng.nextFloat() < 0.33f
-        val power = 9f + rng.nextFloat() * 14f
+        val power = (9f + rng.nextFloat() * 14f) * spread
         val count = when (shape) {
             Burst.CRACKLE -> 70 + rng.nextInt(90)
             Burst.DOUBLE -> 60 + rng.nextInt(60)
             else -> 36 + rng.nextInt(60)
         }
-        val life = 1.1f + rng.nextFloat() * 1.8f
+        // Un bouquet large met plus longtemps à se déployer : ses étoiles vivent plus
+        // longtemps, sans quoi on ne verrait que le début de leur course.
+        val life = (1.1f + rng.nextFloat() * 1.8f) * (0.7f + 0.4f * spread)
 
         for (i in 0 until count) {
             val kind = when (shape) {
@@ -316,7 +434,7 @@ class TrebuchetEffects(seed: Long = 1L) {
                 panache && rng.nextFloat() < 0.5f -> second
                 else -> tint
             }
-            s.size = if (kind == Puff.CRACKLE) 0.25f else 0.4f + rng.nextFloat() * 0.35f
+            s.size = (if (kind == Puff.CRACKLE) 0.25f else 0.4f + rng.nextFloat() * 0.35f) * spread
             s.maxLife = life * (0.6f + rng.nextFloat() * 0.7f)
             s.life = s.maxLife
         }
@@ -416,7 +534,7 @@ class TrebuchetEffects(seed: Long = 1L) {
             if (!s.alive) {
                 // Une fusée qui meurt éclate : c'est là, et nulle part ailleurs, que
                 // naissent les bouquets.
-                if (s.kind == Puff.SHELL) burst(s.x, s.y, s.tint)
+                if (s.kind == Puff.SHELL) burst(s.x, s.y, s.tint, s.spread)
                 continue
             }
             // Le freinage ramène la particule vers la vitesse de l'air, pas vers zéro.
@@ -437,10 +555,12 @@ class TrebuchetEffects(seed: Long = 1L) {
         var kept = 0
         for (i in 0 until pendingCount) {
             if (pendingAt[i] <= showClock) {
-                rocket(pendingX[i])
+                // La part de ciel devient une hauteur ici, avec le cadrage du moment.
+                rocket(pendingX[i], apex = skyTop.coerceIn(40f, 700f) * pendingH[i])
             } else {
                 pendingAt[kept] = pendingAt[i]
                 pendingX[kept] = pendingX[i]
+                pendingH[kept] = pendingH[i]
                 kept++
             }
         }
@@ -485,6 +605,7 @@ class TrebuchetEffects(seed: Long = 1L) {
         s.vy = vy
         s.size = 0.3f
         s.tint = 0
+        s.spread = 1f
         s.background = background
         s.maxLife = 1f
         s.life = 1f

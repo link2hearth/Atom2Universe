@@ -57,13 +57,16 @@ class TrebuchetEffectsTest {
         repeat(6) {
             fx.clear()
             fx.rocket(50f)
-            avance(fx, 4f)
+            avance(fx, 7f)
             var max = 0
             val vues = HashSet<Int>()
             // On rejoue en comptant le maximum atteint : c'est la taille du bouquet.
             fx.clear()
             fx.rocket(50f)
-            repeat(240) {
+            // Sept secondes, et pas quatre : une fusée qui vise soixante-dix mètres met
+            // quatre secondes à y monter, comme une vraie. La fenêtre doit couvrir la
+            // montée **et** le bouquet, sinon on mesure un ciel encore vide.
+            repeat(420) {
                 fx.update(1f / 60f)
                 max = maxOf(max, vivantes(fx))
                 for (s in fx.sparks) if (s.alive) vues.add(s.tint)
@@ -112,6 +115,7 @@ class TrebuchetEffectsTest {
     @Test
     fun `le feu d artifice tire ses fusees les unes apres les autres`() {
         val fx = TrebuchetEffects(2L)
+        fx.skyTop = 130f
         fx.celebrate(30f, 120f, shots = 10)
         assertTrue("le spectacle n'est pas armé", fx.busy)
         assertEquals("des fusées sont parties trop tôt", 0, vivantes(fx))
@@ -119,14 +123,23 @@ class TrebuchetEffectsTest {
         var maxi = 0
         var t = 0f
         val xs = ArrayList<Float>()
-        while (t < 14f) {
+        var fusees = 0
+        while (t < 20f) {
+            val avant = fx.sparks.count { it.alive && it.kind == Puff.SHELL }
             fx.update(1f / 60f)
             t += 1f / 60f
             maxi = maxOf(maxi, vivantes(fx))
-            for (s in fx.sparks) if (s.alive && s.kind == Puff.SHELL) xs.add(s.x)
+            // On relève l'abscisse **au départ** et pas en vol : une fusée penche, et
+            // c'est voulu — celle qui part du bord du couloir en sort forcément un peu
+            // en montant, comme n'importe quelle fusée un jour de vent.
+            val apres = fx.sparks.filter { it.alive && it.kind == Puff.SHELL }
+            if (apres.size > avant) {
+                fusees++
+                xs.add(apres.last().x)
+            }
         }
         println(
-            "SPECTACLE pic à $maxi particules, fusées tirées entre " +
+            "SPECTACLE pic à $maxi particules, $fusees fusées tirées entre " +
                 "${"%.0f".format(xs.min())} et ${"%.0f".format(xs.max())} m"
         )
         assertTrue("le spectacle n'a rien tiré", maxi > 100)
@@ -181,6 +194,53 @@ class TrebuchetEffectsTest {
         // Et un site suivant repart d'un ciel noir.
         g.loadLevel(2L)
         assertEquals("le nouveau site hérite des étoiles du précédent", 0, vivantes(g.effects))
+    }
+
+    /**
+     * Le feu d'artifice occupe la hauteur qu'on lui donne.
+     *
+     * C'est le défaut qu'un écran debout a révélé : des fusées réglées pour un écran
+     * couché éclatent à quatre-vingts mètres, ce qui remplit joliment une image large
+     * et laisse les trois quarts d'une image haute au ciel étoilé. La hauteur visée
+     * suit donc ce que le joueur voit — et le nombre de fusées avec, parce qu'un grand
+     * ciel vide reste un ciel vide, même bien visé.
+     */
+    @Test
+    fun `le feu d artifice remplit le ciel qu on lui donne`() {
+        fun sommetEtFusees(ciel: Float): Pair<Float, Int> {
+            val fx = TrebuchetEffects(21L)
+            fx.skyTop = ciel
+            fx.celebrate(30f, 120f)
+            var haut = 0f
+            var fusees = 0
+            var vues = 0
+            var t = 0f
+            while (t < 30f && fx.busy) {
+                val avant = fx.sparks.count { it.alive && it.kind == Puff.SHELL }
+                fx.update(1f / 60f)
+                t += 1f / 60f
+                val apres = fx.sparks.count { it.alive && it.kind == Puff.SHELL }
+                if (apres > avant) fusees += apres - avant
+                for (s in fx.sparks) if (s.alive) haut = maxOf(haut, s.y)
+                vues++
+            }
+            return haut to fusees
+        }
+
+        val (basPlafond, peu) = sommetEtFusees(120f)
+        val (hautPlafond, beaucoup) = sommetEtFusees(700f)
+        println(
+            "CIEL 120 m → sommet ${"%.0f".format(basPlafond)} m, $peu fusées ; " +
+                "700 m → sommet ${"%.0f".format(hautPlafond)} m, $beaucoup fusées"
+        )
+        assertTrue(
+            "les fusées ignorent la hauteur de l'écran : $basPlafond puis $hautPlafond",
+            hautPlafond > 3f * basPlafond
+        )
+        assertTrue("le grand ciel n'a pas reçu ses fusées", beaucoup >= peu)
+        // Et elles restent dans l'image : un bouquet au-dessus de l'écran est perdu.
+        assertTrue("les fusées dépassent le haut de l'écran", hautPlafond < 700f * 1.2f)
+        assertTrue("les fusées se tassent en bas : $hautPlafond", hautPlafond > 700f * 0.75f)
     }
 
     @Test

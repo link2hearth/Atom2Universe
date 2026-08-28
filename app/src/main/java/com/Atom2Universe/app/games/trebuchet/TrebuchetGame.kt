@@ -494,6 +494,20 @@ class TrebuchetGame {
     /** Vrai quand le site en cours a déjà eu droit à son feu d'artifice. */
     private var celebrated = false
 
+    /**
+     * Hauteur de ciel visible à l'écran, en mètres. La vue la pose à chaque image.
+     *
+     * C'est la seule chose que la simulation sait de l'affichage, et elle ne sert qu'à
+     * une chose : dire au feu d'artifice jusqu'où monter. Un écran couché montre cent
+     * mètres de ciel, le même écran debout en montre huit cents — des fusées réglées
+     * pour l'un se tassent dans le bas de l'autre.
+     */
+    var skyTop = 150f
+        set(value) {
+            field = value
+            effects.skyTop = value
+        }
+
     val targets = TargetField(world)
 
     /**
