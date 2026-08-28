@@ -779,15 +779,28 @@ class TrebuchetView @JvmOverloads constructor(
         }
     }
 
-    /** Ce que le doigt désigne, dans la même unité que [gripValue]. */
+    /**
+     * Ce que le doigt désigne, dans la même unité que [gripValue].
+     *
+     * **Toute mesure se prend depuis un point qui ne bouge pas quand la valeur change**,
+     * et c'est une règle, pas une préférence. Le collier du levier se mesurait depuis le
+     * talon de la poutre — lequel recule justement quand le bras court s'allonge. Le
+     * réglage se nourrissait donc lui-même : le doigt écartait le collier de dix
+     * centimètres, la poutre glissait de dix centimètres, l'événement suivant relisait
+     * le même écart depuis un talon qui avait bougé d'autant, et en une poignée
+     * d'images le levier était collé à sa butée. Le joueur tirait pour allonger et
+     * voyait tout raccourcir d'un coup.
+     *
+     * Le pivot, lui, est planté dans le sol : c'est le seul repère honnête de cette
+     * machine, et c'est depuis lui que les deux réglages de la poutre se mesurent.
+     */
     private fun measureGrip(g: Grip, wx: Float, wy: Float): Float = when (g) {
         // Le long de la poutre depuis l'axe : c'est la longueur du bras long.
         Grip.BEAM_LENGTH -> alongBeam(game.pivotX, game.pivotY, wx, wy)
-        // Le long de la poutre depuis le talon : c'est la longueur du bras court.
-        Grip.LEVER -> {
-            game.buttWorld(pickTmp)
-            alongBeam(pickTmp[0], pickTmp[1], wx, wy)
-        }
+        // Le long de la poutre depuis l'axe, là aussi. Ce que le doigt désigne est
+        // l'endroit de la poutre qui doit venir se poser sur l'axe : l'écart au pivot
+        // est donc exactement ce dont le bras court doit croître.
+        Grip.LEVER -> alongBeam(game.pivotX, game.pivotY, wx, wy)
         Grip.POST_HEIGHT -> wy
         Grip.CW_MASS -> max(abs(wx - game.counterweight.x), abs(wy - game.counterweight.y))
         Grip.CW_HANG -> {
