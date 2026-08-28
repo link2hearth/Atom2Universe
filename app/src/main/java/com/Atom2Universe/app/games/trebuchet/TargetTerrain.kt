@@ -117,6 +117,29 @@ class Terrain(nodes: List<TerrainNode>) {
         return a.y + (b.y - a.y) * (x - a.x) / dx
     }
 
+    /**
+     * Le point le plus bas du sol entre [x0] et [x1].
+     *
+     * Exact et pas échantillonné : le profil est une ligne brisée, donc son minimum sur
+     * un intervalle est soit à l'un des deux bords, soit sur un nœud compris entre les
+     * deux. Il n'y a rien à balayer.
+     *
+     * C'est la vue qui s'en sert, à chaque image, pour savoir jusqu'où descendre son
+     * cadrage. D'où le soin : un balayage au mètre coûterait mille appels par image sur
+     * une vue large, pour un résultat moins juste.
+     */
+    fun lowestBetween(x0: Float, x1: Float): Float {
+        val lo = minOf(x0, x1)
+        val hi = maxOf(x0, x1)
+        var best = minOf(heightAt(lo), heightAt(hi))
+        for (n in nodes) {
+            if (n.x <= lo) continue
+            if (n.x >= hi) break
+            if (n.y < best) best = n.y
+        }
+        return best
+    }
+
     fun translated(dx: Float): Terrain =
         Terrain(nodes.map { TerrainNode(it.x + dx, it.y) })
 

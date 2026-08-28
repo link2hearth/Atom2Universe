@@ -63,6 +63,63 @@ class TrebuchetTerrainTest {
         assertEquals(8f, t.heightAt(10.1f), 1e-3f)
     }
 
+    /**
+     * **Le point le plus bas d'une portion de sol**, dont le cadrage a besoin à chaque
+     * image.
+     *
+     * La vue pose au bas de l'écran non pas l'altitude zéro mais le creux le plus
+     * profond de ce qu'elle montre. Sans ça, un site bâti au fond d'un vallon — huit
+     * mètres sous les pieds de la machine — tombait sous le bord inférieur de l'écran :
+     * le joueur voyait un pré vide et tirait sur une cible qu'il ne pouvait pas
+     * regarder.
+     *
+     * Le calcul est exact et pas échantillonné : sur une ligne brisée, le minimum d'un
+     * intervalle est soit à un bord, soit sur un nœud entre les deux.
+     */
+    @Test
+    fun `le creux d une portion se lit exactement`() {
+        val t = Terrain(
+            listOf(
+                TerrainNode(0f, 0f),
+                TerrainNode(10f, 0f),
+                TerrainNode(20f, -8f),
+                TerrainNode(30f, -8f),
+                TerrainNode(40f, 5f)
+            )
+        )
+        assertEquals("un plat n'a pas de creux", 0f, t.lowestBetween(0f, 10f), 1e-4f)
+        assertEquals("le creux du fond n'est pas vu", -8f, t.lowestBetween(0f, 40f), 1e-4f)
+        // Un nœud strictement compris dans l'intervalle compte, même si les deux bords
+        // sont plus hauts que lui : c'est tout l'intérêt de ne pas se contenter des bords.
+        assertEquals("le nœud du fond a été sauté", -8f, t.lowestBetween(15f, 35f), 1e-4f)
+        // Sur une pente qui descend, le minimum est au bord **droit**, et il s'interpole :
+        // le talus va de (10, 0) à (20, −8), donc −6,4 en x=18 et non −4 en x=15.
+        assertEquals("la pente n'est pas interpolée", -6.4f, t.lowestBetween(15f, 18f), 1e-4f)
+        // Loin du relief, on rend ce que rend le profil prolongé.
+        assertEquals(5f, t.lowestBetween(60f, 90f), 1e-4f)
+    }
+
+    @Test
+    fun `un site en contrebas reste au-dessus du plancher de cadrage`() {
+        // Ce que la vue calculerait : le creux visible autour du site. Il doit contenir
+        // le pied des constructions, sinon elles sont hors de l'écran par le bas.
+        for (seed in 1L..60L) {
+            val lvl = TargetGenerator.generate(seed)
+            if (lvl.shape != TerrainShape.VALLON) continue
+            val bas = lvl.structure.blocks.minOf { it.bottom() }
+            val plancher = lvl.terrain.lowestBetween(lvl.structure.left - 20f, lvl.structure.right + 20f)
+            println(
+                "VALLON graine $seed : plancher de cadrage ${"%.1f".format(plancher)} m, " +
+                    "pierre la plus basse ${"%.1f".format(bas)} m"
+            )
+            assertTrue(
+                "graine $seed : le plancher de cadrage passe au-dessus du site " +
+                    "($plancher contre $bas)",
+                plancher <= bas + 0.35f
+            )
+        }
+    }
+
     @Test
     fun `les noeuds alignes sont jetes`() {
         // Quatre nœuds pour une seule droite : le relief n'en garde que deux, donc un

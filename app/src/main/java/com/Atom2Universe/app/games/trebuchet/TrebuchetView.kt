@@ -97,6 +97,12 @@ class TrebuchetView @JvmOverloads constructor(
     private var camReady = false
 
     /**
+     * Jusqu'où le sol descend dans la portion regardée, en mètres, et jamais au-dessus
+     * de zéro. C'est ce que le cadrage pose au bas de l'image. Voir [groundCamY].
+     */
+    private var camFloor = 0f
+
+    /**
      * Le joueur tient le cadrage. Tant qu'il le tient, la caméra ne bouge plus
      * toute seule ; un changement de phase le lui reprend, parce qu'au départ d'un
      * tir c'est le boulet qui commande, et qu'à l'arrivée on veut voir tout l'arc.
@@ -683,7 +689,13 @@ class TrebuchetView @JvmOverloads constructor(
         }
 
         if (!camReady) {
-            camX = tx; camY = ty; camScale = targetScale; camReady = true
+            camX = tx; camScale = targetScale
+            // Le plancher se prend une fois la vue posée, sinon il se lisserait depuis
+            // un cadrage qui n'a jamais existé et le premier dixième de seconde du
+            // niveau se jouerait avec l'horizon en train de glisser.
+            updateFloor(dt)
+            camY = groundCamY(camScale)
+            camReady = true
             return
         }
         // Suivi souple : la caméra rattrape sa cible sans à-coups.
@@ -691,6 +703,10 @@ class TrebuchetView @JvmOverloads constructor(
         camX += (tx - camX) * k
         camY += (ty - camY) * k
         camScale += (targetScale - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
+        // Le plancher se relit **après** que le cadrage a bougé : c'est ce qu'on voit
+        // maintenant qui décide jusqu'où le sol descend, pas ce qu'on voyait à l'image
+        // précédente.
+        updateFloor(dt)
 
         if (cameraFree) {
             clampCamera()
@@ -727,10 +743,35 @@ class TrebuchetView @JvmOverloads constructor(
 
     /**
      * L'ordonnée de caméra qui pose le sol au bas de l'image, la bande de terre des
-     * bornes de distance gardée dessous. Elle ne dépend que de l'échelle : c'est ce
-     * qui fait qu'un pincement zoome sur le sol au lieu de le faire glisser.
+     * bornes de distance gardée dessous.
+     *
+     * **Le « sol », c'est le point le plus bas qu'on voie, et pas l'altitude zéro.** La
+     * première version calait le zéro sur le bas de l'écran, ce qui revenait à décréter
+     * que rien n'est jamais sous les pieds de la machine. C'était vrai tant que le
+     * terrain était une droite ; depuis qu'un site peut se bâtir au fond d'un vallon,
+     * huit mètres plus bas, ce site-là tombait purement et simplement **sous le bord
+     * inférieur de l'écran** — le joueur voyait un pré vide et tirait sur une cible
+     * qu'il ne pouvait pas regarder.
+     *
+     * Le plancher se prend donc sur **la portion visible**, et jamais au-dessus de zéro :
+     * une butte n'abaisse pas le cadrage, elle monte dans l'image comme il se doit, et un
+     * terrain plat se cadre exactement comme avant. On ne paie le décalage que lorsqu'un
+     * creux est réellement à l'écran.
      */
-    private fun groundCamY(scale: Float) = (height / 2f - GROUND_INSET_DP * dp) / scale
+    private fun groundCamY(scale: Float) = camFloor + (height / 2f - GROUND_INSET_DP * dp) / scale
+
+    /**
+     * Le plancher du cadrage : jusqu'où le sol descend dans ce qu'on regarde.
+     *
+     * Il est **lissé**, et pour la même raison que tout le reste du cadrage : il change
+     * quand un creux entre dans la vue, et un plancher qui sauterait ferait sauter
+     * l'horizon avec lui. Lissé, on descend dans le vallon comme on y marcherait.
+     */
+    private fun updateFloor(dt: Float) {
+        val halfW = width / 2f / camScale
+        val vise = min(0f, game.terrain.lowestBetween(camX - halfW, camX + halfW))
+        camFloor = if (!camReady) vise else camFloor + (vise - camFloor) * (dt * 4f).coerceIn(0f, 1f)
+    }
 
     /** Butée arrière : la pointe du bras bandé plonge de tout le bras long. */
     private fun panLeft(): Float = game.pivotX - game.config.longArm - PAN_BACK_MARGIN
