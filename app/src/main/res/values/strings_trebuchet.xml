@@ -63,4 +63,5 @@
     <string name="trebuchet_style_realistic">Realistic sites</string>
     <string name="trebuchet_clean_ghosts">Clear past shots (%1$d)</string>
     <string name="trebuchet_clean_done">Past shots cleared</string>
+    <string name="trebuchet_ghost_limit">Past shots kept: %1$d</string>
 </resources>

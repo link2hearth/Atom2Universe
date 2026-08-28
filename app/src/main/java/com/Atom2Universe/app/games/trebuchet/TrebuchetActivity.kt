@@ -28,6 +28,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         const val KEY_SEED = "level_seed"
         const val KEY_STYLE = "target_style"
         const val KEY_MACHINES = "machines"
+        const val KEY_GHOSTS = "ghost_limit"
 
         // Les entrées du menu des machines. Les machines enregistrées prennent les
         // numéros suivants, dans l'ordre où elles s'affichent.
@@ -40,6 +41,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         const val ID_ARCADE = 0
         const val ID_REALISTE = 1
         const val ID_CLEAN = 2
+        const val ID_GHOSTS = 3
+        const val ID_FIRST_GHOST_CHOICE = 20
     }
 
     private lateinit var gameView: TrebuchetView
@@ -86,6 +89,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         infoTip = findViewById(R.id.trebuchet_info_tip)
         wheels = findViewById(R.id.trebuchet_wheels)
 
+        gameView.game.ghostLimit = prefs.getInt(KEY_GHOSTS, TrebuchetRules.GHOST_HISTORY)
         gameView.listener = this
         // Les roulettes règlent la même machine que le doigt, et préviennent quand
         // elles tournent : les deux moyens restent en phase sans se connaître.
@@ -150,8 +154,21 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             if (TargetRules.style == TargetStyle.ARCADE) ID_ARCADE else ID_REALISTE
         ).isChecked = true
 
+        // La profondeur de mémoire, dans son propre tiroir : c'est un réglage qu'on
+        // pose une fois et qu'on ne rouvre plus.
+        val sous = menu.addSubMenu(
+            0, ID_GHOSTS, 2,
+            getString(R.string.trebuchet_ghost_limit, gameView.game.ghostLimit)
+        )
+        for ((i, n) in TrebuchetRules.GHOST_CHOICES.withIndex()) {
+            sous.add(2, ID_FIRST_GHOST_CHOICE + i, i, n.toString())
+        }
+        sous.setGroupCheckable(2, true, true)
+        val choisi = TrebuchetRules.GHOST_CHOICES.indexOf(gameView.game.ghostLimit)
+        if (choisi >= 0) sous.findItem(ID_FIRST_GHOST_CHOICE + choisi).isChecked = true
+
         val fantomes = gameView.game.ghosts.size
-        menu.add(0, ID_CLEAN, 2, getString(R.string.trebuchet_clean_ghosts, fantomes))
+        menu.add(0, ID_CLEAN, 3, getString(R.string.trebuchet_clean_ghosts, fantomes))
             .isEnabled = fantomes > 0
 
         popup.setOnMenuItemClickListener { item ->
@@ -162,10 +179,21 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
                     synchronized(gameView.game) { gameView.game.clearGhosts() }
                     toast(getString(R.string.trebuchet_clean_done))
                 }
+                else -> {
+                    val i = item.itemId - ID_FIRST_GHOST_CHOICE
+                    TrebuchetRules.GHOST_CHOICES.getOrNull(i)?.let { setGhostLimit(it) }
+                }
             }
             true
         }
         popup.show()
+    }
+
+    /** Combien de tirs le joueur veut garder à l'écran. */
+    private fun setGhostLimit(n: Int) {
+        synchronized(gameView.game) { gameView.game.ghostLimit = n }
+        prefs.edit { putInt(KEY_GHOSTS, n) }
+        toast(getString(R.string.trebuchet_ghost_limit, n))
     }
 
     /**

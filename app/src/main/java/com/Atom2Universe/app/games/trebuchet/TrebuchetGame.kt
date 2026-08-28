@@ -212,14 +212,25 @@ object TrebuchetRules {
     const val BALL_DRAG = 0.023f
 
     /**
-     * Nombre de tirs gardés en mémoire, le plus récent compris.
+     * Nombre de tirs gardés en mémoire par défaut, le plus récent compris.
      *
-     * Dix, et pas tous : au-delà, la nappe de traits devient une bouillie où le tir
-     * qu'on vient de faire ne se distingue plus, et c'est lui qui compte. Le coût, lui,
-     * n'entre pas en ligne de compte — une trajectoire pèse deux mille flottants et la
-     * vue ne dessine que ce qui tient à l'écran.
+     * Dix pour commencer, et pas tous : au-delà, la nappe de traits devient une
+     * bouillie où le tir qu'on vient de faire ne se distingue plus, et c'est lui qui
+     * compte. Mais c'est un jugement, pas une mesure — le coût, lui, n'entre pas en
+     * ligne de compte, une trajectoire pesant deux mille flottants et la vue ne
+     * dessinant que ce qui tient à l'écran. Le joueur peut donc en décider autrement,
+     * voir [GHOST_CHOICES].
      */
     const val GHOST_HISTORY = 10
+
+    /**
+     * Ce que le joueur peut choisir comme profondeur de mémoire.
+     *
+     * Cinquante est le maximum offert, et il n'a rien d'une limite technique : c'est le
+     * point où la nappe cesse d'être une information pour devenir un décor. Qui veut
+     * s'en servir comme décor a le droit.
+     */
+    val GHOST_CHOICES = intArrayOf(10, 20, 30, 40, 50)
 
     /** Garde au sol de la pointe du bras quand la machine est bandée. */
     const val TIP_CLEARANCE = 0.35f
@@ -579,6 +590,19 @@ class TrebuchetGame {
     }
 
     private val ghostList = ArrayList<FloatArray>(TrebuchetRules.GHOST_HISTORY)
+
+    /**
+     * Combien de tirs on garde. Le joueur le règle dans le menu des réglages.
+     *
+     * Baisser la limite taille la pile sur-le-champ : un réglage qui n'agirait qu'aux
+     * tirs suivants laisserait à l'écran des traces que le menu prétend avoir
+     * oubliées.
+     */
+    var ghostLimit: Int = TrebuchetRules.GHOST_HISTORY
+        set(value) {
+            field = value.coerceIn(1, TrebuchetRules.GHOST_CHOICES.last())
+            while (ghostList.size > field) ghostList.removeAt(ghostList.size - 1)
+        }
 
     /**
      * Les trajectoires des tirs précédents, **du plus récent au plus ancien**.
@@ -1326,9 +1350,7 @@ class TrebuchetGame {
         if (shotDistance > bestDistance) bestDistance = shotDistance
         // Le plus récent en tête, et on oublie le plus vieux quand la pile déborde.
         ghostList.add(0, trailBuf.copyOf(trailCount))
-        while (ghostList.size > TrebuchetRules.GHOST_HISTORY) {
-            ghostList.removeAt(ghostList.size - 1)
-        }
+        while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)
     }
 
     // ── Simulation sans affichage ────────────────────────────────────────────

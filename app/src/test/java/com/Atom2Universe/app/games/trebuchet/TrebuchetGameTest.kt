@@ -437,6 +437,15 @@ class TrebuchetGameTest {
             "une machine neuve a effacé les fantômes de l'ancienne",
             g.ghosts.size == TrebuchetRules.GHOST_HISTORY
         )
+        // Baisser la limite taille la pile sur-le-champ : un réglage qui n'agirait
+        // qu'aux tirs suivants laisserait à l'écran des traces que le menu prétend
+        // avoir oubliées.
+        g.ghostLimit = 3
+        assertTrue("la limite n'a pas taillé la pile : ${g.ghosts.size}", g.ghosts.size == 3)
+        // Et la remonter ne ressuscite personne : ce qui est oublié est oublié.
+        g.ghostLimit = TrebuchetRules.GHOST_CHOICES.last()
+        assertTrue("des fantômes sont revenus d'entre les morts", g.ghosts.size == 3)
+
         // Un seul chemin les enlève, et c'est un bouton que le joueur presse exprès.
         g.clearGhosts()
         assertTrue("le ménage n'a rien effacé", g.ghosts.isEmpty())

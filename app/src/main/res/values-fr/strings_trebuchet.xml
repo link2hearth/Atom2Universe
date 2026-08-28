@@ -62,4 +62,5 @@
     <string name="trebuchet_style_realistic">Constructions réalistes</string>
     <string name="trebuchet_clean_ghosts">Effacer les tirs passés (%1$d)</string>
     <string name="trebuchet_clean_done">Tirs passés effacés</string>
+    <string name="trebuchet_ghost_limit">Tirs gardés : %1$d</string>
 </resources>
