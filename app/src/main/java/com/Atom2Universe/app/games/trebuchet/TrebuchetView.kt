@@ -25,6 +25,7 @@ import com.Atom2Universe.app.games.physics.Shape
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 import kotlin.math.max
@@ -222,11 +223,18 @@ class TrebuchetView @JvmOverloads constructor(
          */
         const val SKY_BAND = 0.62f
 
-        /** Taille de référence d'un nuage, en dp. */
-        const val CLOUD_SIZE_DP = 46f
+        /**
+         * De combien les nuages suivent le déplacement de la vue, de 0 (infiniment
+         * loin, immobiles) à 1 (dans le plan du château).
+         */
+        const val CLOUD_PAN = 0.3f
 
-        /** De combien le ciel glisse quand on traverse le terrain, en fraction. */
-        const val CLOUD_PARALLAX = 0.16f
+        /** De combien les nuages suivent le zoom. Voir [drawClouds]. */
+        const val CLOUD_DEPTH = 0.55f
+
+        /** Bornes de l'échelle du calque de nuages, en pixels par mètre et par dp. */
+        const val CLOUD_PX_MIN = 0.9f
+        const val CLOUD_PX_MAX = 5.5f
 
 
         /** Nombre de paliers d'opacité pour le groupage des particules. */
@@ -1537,50 +1545,65 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     /**
-     * Les nuages : des paquets de boules floues qui traversent le ciel au fil du vent.
+     * Les nuages : un **calque de parallaxe**, pas un décor collé à l'écran.
      *
-     * Ils prennent **la couleur de l'horizon**, pas le blanc. C'est ce qui fait tout le
-     * travail : à midi ils sont d'un blanc bleuté, au couchant ils virent à l'orangé
-     * comme le ciel derrière eux, et la nuit ils ne sont plus qu'une ombre un peu plus
-     * claire que le fond. Un nuage blanc à minuit aurait l'air d'un trou dans l'écran.
+     * Chaque nuage a une altitude et une taille en mètres ; c'est ici qu'on les projette.
+     * La première version les rangeait en fractions d'écran, si bien qu'ils restaient
+     * exactement au même endroit de la dalle quand on zoomait — l'œil le voit tout de
+     * suite, même sans savoir le nommer : le ciel devenait une vitre peinte au lieu d'un
+     * fond lointain.
      *
-     * Le flou vient d'un `BlurMaskFilter` posé une fois pour toutes. C'est possible ici
-     * et pas partout : cette vue peint sur un `Canvas` **logiciel** — elle verrouille sa
-     * propre surface — là où un rendu matériel refuserait le filtre.
+     * Deux atténuations, et chacune dit quelque chose de différent.
+     *
+     * **[CLOUD_PAN]** est la réponse au déplacement : un nuage est loin, donc traverser
+     * trois cents mètres de terrain ne le balaie pas d'un bord à l'autre. À zéro il
+     * serait infiniment loin et ne bougerait jamais ; à un il serait dans le plan du
+     * château.
+     *
+     * **[CLOUD_DEPTH]** est la réponse au zoom, et elle est bornée. Un objet lointain
+     * grossit quand on zoome — c'est vrai, et ce serait faux de l'ignorer — mais le
+     * cadrage de ce jeu va d'une fenêtre de trente mètres à une de cinq cent soixante,
+     * soit un facteur dix-neuf. Suivi à la lettre, un nuage remplirait l'écran au réglage
+     * de la machine et deviendrait un point au résultat. La borne est donc un compromis
+     * assumé : les nuages **réagissent** au zoom, ils ne le suivent pas au pied de la
+     * lettre.
      */
     private fun drawClouds(canvas: Canvas, w: Float, h: Float) {
-        val ciel = h * SKY_BAND
+        // Pixels par mètre du calque, borné pour que les nuages restent des nuages aux
+        // deux bouts de la plage de zoom.
+        val s = (camScale * CLOUD_DEPTH).coerceIn(CLOUD_PX_MIN * dp, CLOUD_PX_MAX * dp)
+        // Ils se comptent **au-dessus de l'horizon**, qui n'est pas toujours à zéro.
+        val horizon = sy(camFloor)
+        val centre = camX * CLOUD_PAN
+        val demi = w / 2f / s
+
         // Le blanc n'entre que pour moitié : au-delà, un nuage de nuit redevient une
         // tache claire, et l'illusion tombe.
         pCloud.color = SkyState.mix(sky.horizon, 0xFFFFFFFF.toInt(), 0.5f)
         pCloud.alpha = (0.55f * 255f).toInt()
 
-        // Une parallaxe légère : le ciel est loin, il ne défile pas comme le terrain,
-        // mais un ciel parfaitement immobile pendant qu'on traverse trois cents mètres
-        // se lit comme un décor collé à la vitre.
-        val parallaxe = -camX * CLOUD_PARALLAX / TrebuchetRules.GROUND_RIGHT
-
         for (c in clouds.clouds) {
-            var fx = c.x + parallaxe * c.depth
-            fx -= kotlin.math.floor(fx)
-            val taille = c.scale * CLOUD_SIZE_DP * dp
-            // On dessine le nuage deux fois, décalé d'une largeur d'écran : celui qui
-            // sort par la droite doit déjà rentrer par la gauche, sinon le ciel clignote
-            // à chaque rebouclage.
-            for (tour in 0..1) {
-                val cx = (fx - tour) * (w + taille * 4f) - taille * 2f
-                if (cx < -taille * 3f || cx > w + taille * 3f) continue
-                val cy = c.y * ciel
-                var i = 0
-                while (i < c.puffs.size) {
-                    canvas.drawCircle(
-                        cx + c.puffs[i] * taille,
-                        cy + c.puffs[i + 1] * taille,
-                        c.puffs[i + 2] * taille,
-                        pCloud
-                    )
-                    i += 3
-                }
+            // Le nuage se répète tous les [CloudField.SPAN] mètres : on cherche la copie
+            // qui tombe dans la fenêtre, s'il y en a une.
+            val marge = c.size * 3f
+            var rel = c.x - centre
+            rel -= floor((rel + CloudField.SPAN / 2f) / CloudField.SPAN) * CloudField.SPAN
+            if (rel < -demi - marge || rel > demi + marge) continue
+
+            val cx = w / 2f + rel * s
+            val cy = horizon - c.altitude * s
+            val taille = c.size * s
+            if (cy > h + taille || cy < -taille * 3f) continue
+
+            var i = 0
+            while (i < c.puffs.size) {
+                canvas.drawCircle(
+                    cx + c.puffs[i] * taille,
+                    cy + c.puffs[i + 1] * taille,
+                    c.puffs[i + 2] * taille,
+                    pCloud
+                )
+                i += 3
             }
         }
     }

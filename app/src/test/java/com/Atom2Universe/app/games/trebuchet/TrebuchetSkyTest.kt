@@ -324,19 +324,20 @@ class TrebuchetSkyTest {
             val champ = CloudField()
             val depart = champ.clouds[0].x
             champ.update(10f, vx)
-            // L'écart signé, rebouclé dans [-0,5 ; 0,5] : un nuage qui sort par la droite
-            // rentre par la gauche, et une soustraction naïve dirait qu'il a reculé.
+            // L'écart signé, rebouclé sur la moitié de la bande : un nuage qui sort d'un
+            // côté rentre de l'autre, et une soustraction naïve dirait qu'il a reculé.
+            val demi = CloudField.SPAN / 2f
             var d = champ.clouds[0].x - depart
-            if (d > 0.5f) d -= 1f
-            if (d < -0.5f) d += 1f
+            if (d > demi) d -= CloudField.SPAN
+            if (d < -demi) d += CloudField.SPAN
             return d
         }
 
         val arriere = apres(Wind.MAX_SPEED)
         val debout = apres(-Wind.MAX_SPEED)
         println(
-            "NUAGES vent arrière : ${"%.4f".format(arriere)} de ciel en 10 s ; " +
-                "vent debout : ${"%.4f".format(debout)}"
+            "NUAGES vent arrière : ${"%.1f".format(arriere)} m en 10 s ; " +
+                "vent debout : ${"%.1f".format(debout)} m"
         )
         assertTrue("un vent arrière ne pousse pas les nuages vers la cible", arriere > 0f)
         assertTrue("un vent debout ne les ramène pas", debout < 0f)
@@ -344,31 +345,51 @@ class TrebuchetSkyTest {
         assertEquals("un air calme fait bouger les nuages", 0f, apres(0f), 1e-6f)
     }
 
+    /**
+     * **Un nuage va à la vitesse du vent**, puisqu'il est dedans.
+     *
+     * Ce n'est pas une coquetterie : c'est ce qui a remplacé un facteur de dérive
+     * inventé, du temps où les nuages vivaient en fractions d'écran et où « vite » ne
+     * voulait rien dire faute d'unité. En mètres par seconde, la question ne se pose
+     * plus — et le réglage se vérifie au lieu de se croire.
+     */
     @Test
-    fun `un nuage traverse le ciel en une minute par vent fort`() {
+    fun `un nuage va a la vitesse du vent`() {
         val champ = CloudField()
-        // Le plus rapide des nuages, celui du premier plan.
-        val proche = champ.clouds.maxByOrNull { it.depth }!!
-        val parSeconde = Wind.MAX_SPEED * CloudField.DRIFT * proche.depth
-        val traversee = 1f / parSeconde
-        println("NUAGES traversée du ciel par vent fort : ${"%.0f".format(traversee)} s")
-        assertTrue(
-            "les nuages filent comme un décor qui défile : $traversee s",
-            traversee in 30f..300f
+        val c = champ.clouds[0]
+        val depart = c.x
+        champ.update(1f, 5f)
+        assertEquals(
+            "un nuage ne suit pas le vent à sa profondeur près",
+            5f * c.depth, c.x - depart, 1e-3f
         )
+        // Et la traversée de la bande reste de l'ordre de la minute par vent fort.
+        val traversee = CloudField.SPAN / (Wind.MAX_SPEED * c.depth)
+        println("NUAGES traversée de la bande par vent fort : ${"%.0f".format(traversee)} s")
+        assertTrue("les nuages filent ou se traînent : $traversee s", traversee in 60f..250f)
     }
 
     @Test
-    fun `les nuages restent dans le ciel et ne se ressemblent pas`() {
+    fun `les nuages sont en l air, en metres, et ne se ressemblent pas`() {
         val champ = CloudField()
         for (c in champ.clouds) {
-            assertTrue("un nuage sous l'horizon", c.y in 0f..0.5f)
+            assertTrue("un nuage sous terre : ${c.altitude} m", c.altitude >= CloudField.MIN_ALTITUDE)
+            assertTrue("un nuage en orbite : ${c.altitude} m", c.altitude <= CloudField.MAX_ALTITUDE)
             assertTrue("un nuage a moins de quatre boules", c.puffs.size >= 12)
-            assertTrue("un nuage sans épaisseur", c.scale > 0.5f)
+            assertTrue("un nuage sans épaisseur : ${c.size} m", c.size >= CloudField.MIN_SIZE)
+            assertTrue("un nuage dans la bande", c.x >= 0f && c.x < CloudField.SPAN)
         }
         // Deux nuages identiques feraient un motif : on vérifie qu'ils diffèrent.
-        val hauteurs = champ.clouds.map { it.y }.toSet()
-        assertTrue("les nuages sont tous à la même hauteur", hauteurs.size > 3)
+        assertTrue(
+            "les nuages sont tous à la même altitude",
+            champ.clouds.map { it.altitude }.toSet().size > 3
+        )
+        // Et la bande dépasse la portée du jeu, sinon le joueur verrait deux fois le
+        // même nuage à l'écran.
+        assertTrue(
+            "la bande de ciel est plus courte que le terrain de tir",
+            CloudField.SPAN > TargetGenerator.MAX_DISTANCE
+        )
     }
 
     @Test

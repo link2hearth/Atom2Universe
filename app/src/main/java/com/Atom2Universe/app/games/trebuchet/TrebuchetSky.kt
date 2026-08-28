@@ -88,17 +88,24 @@ class SkyClock(startMillis: Long = System.currentTimeMillis()) {
 class CloudField(seed: Long = 7L, count: Int = 9) {
 
     /**
-     * Un nuage : sa bande de ciel, sa taille, sa profondeur, et ses boules.
+     * Un nuage : où il est **dans le monde**, à quelle altitude, et de quelle taille.
      *
-     * [x] tourne dans [0, 1[ et se rebouclé : un nuage qui sort par la droite rentre par
-     * la gauche, et le ciel n'a jamais de trou.
+     * Tout est en mètres, et c'est le point important. La première version rangeait les
+     * nuages en fractions d'écran : ils restaient donc collés à la vitre, immobiles
+     * quand on zoomait, comme un décor peint sur la dalle. Un nuage a une altitude et
+     * une taille, comme le château ; c'est à la vue de les projeter.
+     *
+     * [x] tourne dans [0, [SPAN][ et se reboucle : un nuage qui sort d'un côté rentre de
+     * l'autre, et le ciel n'a jamais de trou.
      */
     class Cloud internal constructor(
-        val y: Float,
-        val scale: Float,
-        /** De 0,5 (loin, lent) à 1 (près, rapide) : c'est ce qui donne de la profondeur. */
+        /** Altitude, en mètres au-dessus du sol. */
+        val altitude: Float,
+        /** Demi-largeur du nuage, en mètres. */
+        val size: Float,
+        /** De 0,6 (haut et lent) à 1 (bas et vif) : la profondeur du calque. */
         val depth: Float,
-        /** Les boules, par triplets : décalage x, décalage y, rayon — en unités de nuage. */
+        /** Les boules, par triplets : décalage x, décalage y, rayon — en parts de [size]. */
         val puffs: FloatArray
     ) {
         var x = 0f
@@ -118,14 +125,14 @@ class CloudField(seed: Long = 7L, count: Int = 9) {
                 puffs[i * 3 + 2] = 0.42f + rng.nextFloat() * 0.34f
             }
             Cloud(
-                y = 0.06f + rng.nextFloat() * 0.34f,
-                scale = 0.7f + rng.nextFloat() * 0.8f,
-                depth = 0.5f + rng.nextFloat() * 0.5f,
+                altitude = MIN_ALTITUDE + rng.nextFloat() * (MAX_ALTITUDE - MIN_ALTITUDE),
+                size = MIN_SIZE + rng.nextFloat() * (MAX_SIZE - MIN_SIZE),
+                depth = 0.6f + rng.nextFloat() * 0.4f,
                 puffs = puffs
             ).apply {
-                // Étalés d'emblée sur toute la largeur : sans ça, ils partiraient tous
-                // du même bord et le ciel mettrait une minute à se remplir.
-                x = (index + 0.5f) / count
+                // Étalés d'emblée sur toute la bande : sans ça, ils partiraient tous du
+                // même bord et le ciel mettrait une minute à se remplir.
+                x = (index + 0.5f) / count * SPAN
             }
         }
     }
@@ -133,26 +140,33 @@ class CloudField(seed: Long = 7L, count: Int = 9) {
     /**
      * Fait dériver les nuages. [windX] est la composante horizontale du vent, en m/s,
      * **signe compris** : un vent debout les fait donc revenir vers la machine.
+     *
+     * Ils vont **à la vitesse du vent**, tout simplement, puisqu'ils sont dedans. Il n'y
+     * a plus de facteur de dérive à régler : c'était un nombre inventé du temps où les
+     * nuages vivaient en fractions d'écran et où « vite » ne voulait rien dire.
      */
     fun update(dt: Float, windX: Float) {
         for (c in clouds) {
-            var x = c.x + windX * DRIFT * c.depth * dt
-            x -= kotlin.math.floor(x)
+            var x = c.x + windX * c.depth * dt
+            x -= kotlin.math.floor(x / SPAN) * SPAN
             c.x = x
         }
     }
 
     companion object {
         /**
-         * Dérive d'un nuage, en fraction de ciel par seconde et par mètre par seconde de
-         * vent.
+         * Largeur de la bande de ciel où les nuages tournent, en mètres.
          *
-         * Réglée pour qu'un nuage moyen traverse le ciel en une minute par vent fort, et
-         * y mette plusieurs minutes par brise. « Doucement au fil du vent » est une
-         * consigne de vitesse autant que de style : un nuage qui file se lit comme un
-         * décor qui défile, pas comme du temps qui passe.
+         * Six cents mètres, soit un peu plus que la portée du jeu : le joueur ne peut
+         * donc pas voir deux fois le même nuage à l'écran, ce qui serait le seul défaut
+         * visible d'un ciel qui se reboucle.
          */
-        const val DRIFT = 0.0024f
+        const val SPAN = 600f
+
+        const val MIN_ALTITUDE = 28f
+        const val MAX_ALTITUDE = 105f
+        const val MIN_SIZE = 11f
+        const val MAX_SIZE = 26f
     }
 }
 
