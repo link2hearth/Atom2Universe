@@ -40,8 +40,8 @@
     <string name="trebuchet_unit_none"></string>
     <string name="trebuchet_dial_charge">Charge</string>
     <string name="trebuchet_unit_sticks">bâtons</string>
+    <string name="trebuchet_dial_weight">Poids</string>
     <string name="trebuchet_shot_ball">Boulet</string>
-    <string name="trebuchet_shot_heavy">Bloc lourd</string>
     <string name="trebuchet_shot_cluster">Fragmentation</string>
     <string name="trebuchet_shot_bomb">Bombe</string>
     <string name="trebuchet_sel_sling_shot">Fronde &#8212; %1$s m &#183; %2$s</string>

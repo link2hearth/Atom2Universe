@@ -40,8 +40,8 @@
     <string name="trebuchet_unit_none"></string>
     <string name="trebuchet_dial_charge">Charge</string>
     <string name="trebuchet_unit_sticks">sticks</string>
+    <string name="trebuchet_dial_weight">Weight</string>
     <string name="trebuchet_shot_ball">Stone</string>
-    <string name="trebuchet_shot_heavy">Boulder</string>
     <string name="trebuchet_shot_cluster">Cluster</string>
     <string name="trebuchet_shot_bomb">Bomb</string>
     <string name="trebuchet_sel_sling_shot">Sling &#8212; %1$s m &#183; %2$s</string>

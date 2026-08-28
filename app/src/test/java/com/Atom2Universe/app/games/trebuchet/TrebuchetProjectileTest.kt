@@ -134,9 +134,13 @@ class TrebuchetProjectileTest {
     @Test
     fun `la traversee ne cree jamais d energie`() {
         TargetRules.style = TargetStyle.ARCADE
-        for (kind in listOf(Projectile.BOULET, Projectile.LOURD)) {
+        // Le boulet léger et le boulet lourd : le second remplace le « bloc lourd » qui
+        // était une entrée du catalogue avant que le poids ne se règle.
+        for (kg in listOf(Projectile.DEFAULT_BALL_MASS, 34f)) {
+            val kind = "boulet de ${kg.toInt()} kg"
             val g = TrebuchetGame()
-            g.config.projectile = kind
+            g.config.projectile = Projectile.BOULET
+            g.config.ballMass = kg
             g.loadLevel(1L)
             g.release()
             // On amène le projectile devant la cible, sinon il retombe dans un champ et
@@ -330,6 +334,95 @@ class TrebuchetProjectileTest {
                 f.score > 0.05f
             )
         }
+    }
+
+    /**
+     * **Le poids du boulet remplace les deux entrées du catalogue d'avant.**
+     *
+     * Un boulet de douze kilos et un « bloc lourd » de trente-quatre étaient deux points
+     * fixes sur un axe continu, dans un jeu dont la règle est que les réglages sont
+     * continus. Ce qu'on vérifie ici est que l'axe se comporte comme les deux points le
+     * faisaient : un caillou léger part vite, un bloc lourd part lentement, et le rayon
+     * suit la masse — c'est lui qui décide de la traînée, donc de ce que l'air mange du
+     * tir.
+     *
+     * On ne vérifie **pas** que le lourd va moins loin, et c'est délibéré : ce n'est pas
+     * vrai. Un projectile trop léger se fait manger par l'air avant d'arriver, un trop
+     * lourd ne part pas assez vite, et l'optimum est quelque part au milieu — il dépend
+     * de la machine, et le trouver est précisément ce que le jeu demande au joueur. Un
+     * test qui trancherait dans un sens ou dans l'autre figerait un réglage qui doit
+     * rester ouvert.
+     */
+    @Test
+    fun `le poids du boulet se regle et emmene le rayon avec lui`() {
+        TargetRules.style = TargetStyle.ARCADE
+        val boulet = Projectile.BOULET
+
+        // Le rayon suit la masse en racine cubique, et la loi est calée sur le catalogue
+        // d'avant : douze kilos faisaient seize centimètres, trente-quatre en faisaient
+        // vingt-quatre écrits à la main. La règle en rend vingt-deux et demi.
+        assertEquals(0.16f, boulet.radiusFor(12f), 1e-3f)
+        assertEquals(0.225f, boulet.radiusFor(34f), 0.01f)
+        assertTrue(
+            "un boulet léger devrait être plus petit",
+            boulet.radiusFor(Projectile.MIN_BALL_MASS) < boulet.radiusFor(12f)
+        )
+
+        fun tir(kg: Float): Triple<Float, Float, Float> {
+            val g = TrebuchetGame()
+            g.setProjectile(Projectile.BOULET)
+            g.setBallMass(kg)
+            g.clearLevel()
+            val portee = g.simulateShot()
+            return Triple(portee, g.peakSpeed, g.config.shotRadius)
+        }
+
+        val (porteeLeger, vitesseLeger, rLeger) = tir(Projectile.MIN_BALL_MASS)
+        val (porteeLourd, vitesseLourd, rLourd) = tir(Projectile.MAX_BALL_MASS)
+        println(
+            "POIDS ${Projectile.MIN_BALL_MASS.toInt()} kg : " +
+                "${"%.0f".format(vitesseLeger)} m/s, rayon ${"%.2f".format(rLeger)} m, " +
+                "${"%.0f".format(porteeLeger)} m ; " +
+                "${Projectile.MAX_BALL_MASS.toInt()} kg : ${"%.0f".format(vitesseLourd)} m/s, " +
+                "rayon ${"%.2f".format(rLourd)} m, ${"%.0f".format(porteeLourd)} m"
+        )
+        assertTrue("un boulet léger ne part pas plus vite", vitesseLeger > vitesseLourd)
+        assertTrue("le rayon ne suit pas la masse", rLourd > rLeger)
+        assertTrue("les deux poids donnent le même tir", porteeLeger != porteeLourd)
+
+        // Et le haut de la plage n'est pas mort. Sur la machine par défaut, accordée pour
+        // douze kilos, un boulet de quatre-vingt-dix-neuf part **en arrière** : le
+        // crochet lâche bien trop tôt pour cette masse-là, et le jeu a déjà un message
+        // pour le dire. C'est le comportement juste, pas un défaut — mais il faut qu'une
+        // machine réaccordée autour de lui existe, sinon la borne haute du réglage serait
+        // un piège plutôt qu'un choix. Douze tonnes pour quatre-vingt-dix-neuf kilos font
+        // un rapport de cent vingt, en plein dans la fourchette des vraies machines.
+        var meilleure = -Float.MAX_VALUE
+        var crochet = 0f
+        var pin = TrebuchetRules.PIN_MIN_DEG
+        while (pin <= TrebuchetRules.PIN_MAX_DEG) {
+            val g = TrebuchetGame()
+            g.setProjectile(Projectile.BOULET)
+            g.setBallMass(Projectile.MAX_BALL_MASS)
+            g.setCounterweightMass(TrebuchetRules.CW_MAX)
+            g.setPinAngle(pin)
+            g.clearLevel()
+            val p = g.simulateShot()
+            if (p > meilleure) {
+                meilleure = p
+                crochet = pin
+            }
+            pin += 10f
+        }
+        println(
+            "POIDS lourd réaccordé : ${Projectile.MAX_BALL_MASS.toInt()} kg sous " +
+                "${TrebuchetRules.CW_MAX.toInt()} kg de contrepoids, crochet ${crochet.toInt()}° " +
+                "→ ${"%.0f".format(meilleure)} m"
+        )
+        assertTrue(
+            "aucun réglage n'envoie le boulet le plus lourd vers l'avant : $meilleure m",
+            meilleure > 50f
+        )
     }
 
     /**

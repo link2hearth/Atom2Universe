@@ -483,7 +483,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     /** Le nom du projectile chargé, tel qu'il s'affiche dans le bandeau. */
     private fun shotLabel(kind: Projectile): Int = when (kind) {
         Projectile.BOULET -> R.string.trebuchet_shot_ball
-        Projectile.LOURD -> R.string.trebuchet_shot_heavy
         Projectile.FRAGMENTATION -> R.string.trebuchet_shot_cluster
         Projectile.BOMBE -> R.string.trebuchet_shot_bomb
     }

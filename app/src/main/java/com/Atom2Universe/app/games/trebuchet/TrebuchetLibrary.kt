@@ -61,6 +61,9 @@ object MachineLibrary {
 
     private const val SEP = '\t'
 
+    /** Ce que pesait le « bloc lourd » du catalogue d'avant, en kilogrammes. */
+    private const val LEGACY_HEAVY_MASS = 34f
+
     fun encode(list: List<MachinePreset>): String = buildString {
         for (p in list) {
             val c = p.config
@@ -73,7 +76,8 @@ object MachineLibrary {
             append(c.pinAngleDeg).append(SEP)
             append(c.slingRatio).append(SEP)
             append(c.projectile.name).append(SEP)
-            append(c.bombSticks)
+            append(c.bombSticks).append(SEP)
+            append(c.ballMass)
             append('\n')
         }
     }
@@ -104,9 +108,20 @@ object MachineLibrary {
             cfg.pinAngleDeg = f[6].toFloatOrNull() ?: continue
             cfg.slingRatio = f[7].toFloatOrNull() ?: continue
             cfg.projectile = runCatching { Projectile.valueOf(f[8]) }.getOrDefault(Projectile.BOULET)
-            // Le champ que les anciennes lignes n'ont pas : absent, il vaut la charge
-            // par défaut, celle qui redonne la bombe telle qu'elle était.
+            // Les champs que les anciennes lignes n'ont pas : absents, ils valent les
+            // réglages par défaut, choisis pour redonner exactement les projectiles tels
+            // qu'ils étaient avant qu'on puisse les régler.
             cfg.bombSticks = f.getOrNull(9)?.toIntOrNull() ?: Projectile.DEFAULT_STICKS
+            cfg.ballMass = f.getOrNull(10)?.toFloatOrNull() ?: Projectile.DEFAULT_BALL_MASS
+            // Le « bloc lourd » a quitté le catalogue le jour où le poids du boulet est
+            // devenu réglable : c'était deux points fixes sur un axe continu. Une machine
+            // qui en emportait un retrouve donc un boulet **de trente-quatre kilos**,
+            // c'est-à-dire exactement la même chose. Traduire plutôt que jeter est ce qui
+            // sépare un format qui évolue d'un format qui perd les données.
+            if (f[8] == "LOURD") {
+                cfg.projectile = Projectile.BOULET
+                cfg.ballMass = LEGACY_HEAVY_MASS
+            }
             // Une machine relue est bornée comme une machine réglée : rien ne garantit
             // que ce texte-là décrive quelque chose qui tienne debout.
             cfg.clamp()

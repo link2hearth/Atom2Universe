@@ -308,15 +308,30 @@ class MachineConfig {
      */
     var bombSticks = Projectile.DEFAULT_STICKS
 
+    /** Le poids du boulet, en kilogrammes. Sans effet sur les autres projectiles. */
+    var ballMass = Projectile.DEFAULT_BALL_MASS
+
     /**
-     * La masse réellement lancée : celle du projectile, sa charge comprise.
+     * La masse réellement lancée.
      *
-     * Tout ce qui a besoin de savoir ce que la machine soulève passe par ici, et par
-     * rien d'autre. La masse d'une bombe n'est plus une constante de la table, et un
-     * seul endroit qui l'aurait oublié suffirait à faire diverger la balistique de ce
-     * que le joueur voit.
+     * **Tout ce qui a besoin de savoir ce que la machine soulève passe par ici, et par
+     * rien d'autre.** Deux projectiles sur trois ont une masse qui n'est plus dans la
+     * table — le boulet parce qu'on le pèse, la bombe parce qu'on la charge — et un
+     * seul endroit du code qui l'aurait oublié suffirait à faire diverger la balistique
+     * de ce que le joueur voit à l'écran.
      */
-    val shotMass: Float get() = projectile.massFor(bombSticks)
+    val shotMass: Float
+        get() = when {
+            projectile.explosive -> projectile.massFor(bombSticks)
+            projectile.weighable -> ballMass
+            else -> projectile.mass
+        }
+
+    /** Le rayon qui va avec cette masse-là : un projectile lourd est un projectile gros. */
+    val shotRadius: Float get() = projectile.radiusFor(shotMass)
+
+    /** La traînée qui va avec ce rayon-là. */
+    val shotDrag: Float get() = projectile.dragFor(shotRadius)
 
     /** Longueur du bras court, du pivot à la chape du contrepoids. */
     val shortArm: Float get() = beamLength / (1f + leverRatio)
@@ -388,6 +403,7 @@ class MachineConfig {
             TrebuchetRules.SLING_MIN_RATIO, TrebuchetRules.SLING_MAX_RATIO
         )
         bombSticks = bombSticks.coerceIn(Projectile.MIN_STICKS, Projectile.MAX_STICKS)
+        ballMass = ballMass.coerceIn(Projectile.MIN_BALL_MASS, Projectile.MAX_BALL_MASS)
     }
 
     fun copyFrom(o: MachineConfig) {
@@ -400,6 +416,7 @@ class MachineConfig {
         slingRatio = o.slingRatio
         projectile = o.projectile
         bombSticks = o.bombSticks
+        ballMass = o.ballMass
     }
 }
 
@@ -886,12 +903,12 @@ class TrebuchetGame {
             world.addJoint(it)
         }
 
-        ball = PhysBody.circle(config.projectile.radius, config.shotMass).apply {
+        ball = PhysBody.circle(config.shotRadius, config.shotMass).apply {
             // Un vrai trébuchet fait rouler son boulet dans une auge lisse : le
             // traîner sur la terre battue mangerait une partie de la course.
             friction = 0.2f
             restitution = 0.1f
-            dragFactor = config.projectile.drag
+            dragFactor = config.shotDrag
             category = CAT_BALL
             // Le boulet ne connaît que le sol : la fronde le relie au bras, il n'a
             // aucune raison de venir cogner la machine.
@@ -956,11 +973,11 @@ class TrebuchetGame {
      */
     private fun placeBall() {
         tipWorld(probe)
-        val dy = probe[1] - config.projectile.radius
+        val dy = probe[1] - config.shotRadius
         val l = config.slingLength
         val dx = sqrt(maxOf(l * l - dy * dy, 0.01f))
         ball.x = probe[0] + dx
-        ball.y = config.projectile.radius
+        ball.y = config.shotRadius
         ball.angle = 0f
         ball.vx = 0f; ball.vy = 0f; ball.omega = 0f
         ball.collidesWith = CAT_GROUND
@@ -1088,6 +1105,11 @@ class TrebuchetGame {
     /** Combien de bâtons de poudre on met dans la bombe. */
     fun setBombSticks(n: Int) = editSetting {
         config.bombSticks = n.coerceIn(Projectile.MIN_STICKS, Projectile.MAX_STICKS)
+    }
+
+    /** Le poids du boulet, en kilogrammes. */
+    fun setBallMass(kg: Float) = editSetting {
+        config.ballMass = kg.coerceIn(Projectile.MIN_BALL_MASS, Projectile.MAX_BALL_MASS)
     }
 
     /**
@@ -1309,7 +1331,7 @@ class TrebuchetGame {
         // perché : la bombe roulait sur son plateau jusqu'à la fin du tir sans exploser.
         // C'est la même faute que celle de la détection d'atterrissage, au même endroit
         // du raisonnement.
-        if (!hit && ball.y > terrain.heightAt(ball.x) + kind.radius + 0.03f) return
+        if (!hit && ball.y > terrain.heightAt(ball.x) + config.shotRadius + 0.03f) return
         blown = true
         val r = kind.blastRadiusFor(config.bombSticks)
         targets.blast(ball.x, ball.y, kind.blastEnergyFor(config.bombSticks), r)
@@ -1337,7 +1359,7 @@ class TrebuchetGame {
         val kind = config.projectile
         if (kind.shards <= 1) return
         if (ball.vy > 0f) return
-        val floor = ball.y - kind.radius
+        val floor = ball.y - config.shotRadius
         if (floor > peakHeight * (1f - kind.splitFraction)) return
 
         split = true
@@ -1347,7 +1369,7 @@ class TrebuchetGame {
         val px = -ball.vy / v
         val py = ball.vx / v
         val m = kind.shardMass()
-        val r = kind.radius / sqrt(kind.shards.toFloat())
+        val r = config.shotRadius / sqrt(kind.shards.toFloat())
 
         val x0 = ball.x
         val y0 = ball.y
@@ -1370,7 +1392,7 @@ class TrebuchetGame {
                 vy = vy0 + py * spread
                 friction = 0.2f
                 restitution = 0.1f
-                dragFactor = kind.drag * (r / kind.radius) * (r / kind.radius)
+                dragFactor = kind.dragFor(r)
                 category = TrebuchetCategory.BALL
                 collidesWith = TrebuchetCategory.projectileMask()
             }

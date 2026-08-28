@@ -12,27 +12,34 @@ import kotlin.math.PI
  * part moins vite et tombe plus court, et il faut réaccorder la machine autour de lui :
  * c'est délibéré, c'est le seul choix du jeu qui oblige à tout revoir.
  *
- * Les quatre ne se distinguent pas par des dégâts en plus — ils se distinguent par la
+ * Les trois ne se distinguent pas par des dégâts en plus — ils se distinguent par la
  * **façon dont on s'en sert** :
  *
- *  - le [BOULET] perce : il entre par un endroit et ce qu'il traverse tombe ;
- *  - le [LOURD] enfonce : trop lent pour aller loin, mais rien ne l'arrête ;
+ *  - le [BOULET] perce : il entre par un endroit et ce qu'il traverse tombe. Son poids
+ *    se règle de un à quatre-vingt-dix-neuf kilos, et c'est tout le vocabulaire du tir
+ *    tendu ou du tir qui enfonce ;
  *  - la [FRAGMENTATION] arrose : un seul tir bien calé couvre tout un front, et c'est
  *    la seule façon d'abattre trois maisons d'un coup ;
  *  - la [BOMBE] creuse : elle ne compte pas sur sa vitesse, elle rend tout d'un coup à
  *    l'endroit où elle touche.
+ *
+ * **Il y en avait quatre.** Un « bloc lourd » de trente-quatre kilos figurait au
+ * catalogue à côté du boulet de douze, et c'était une entrée de trop : deux points fixes
+ * sur un axe continu, dans un jeu dont la règle est que les réglages sont « continus et
+ * toujours entièrement disponibles ». Le poids du boulet se règle donc, et le bloc lourd
+ * n'est plus qu'un boulet à trente-quatre — une machine enregistrée qui en emportait un
+ * le retrouve exactement, voir [MachineLibrary].
  */
 enum class Projectile(
     /**
-     * Masse, en kilogrammes — **pour ce qui n'emporte pas de charge**.
+     * Masse **de référence**, en kilogrammes : celle à laquelle [radius] est donné.
      *
-     * Elle vaut zéro pour la bombe, et ce n'est pas un oubli : sa masse dépend du nombre
-     * de bâtons qu'on y met, et rien ne peut la connaître sans le savoir. Tout ce qui
-     * veut la masse réellement lancée passe par [massFor] — ou mieux, par
-     * `MachineConfig.shotMass`, qui sait déjà combien de bâtons sont chargés.
+     * Ce n'est pas forcément la masse lancée. Le boulet se règle en poids, la bombe se
+     * règle en bâtons, et tout ce qui veut savoir ce que la machine soulève vraiment
+     * passe par `MachineConfig.shotMass` — jamais par ce champ-ci.
      */
     val mass: Float,
-    /** Rayon, en mètres. */
+    /** Rayon à la masse de référence, en mètres. Voir [radiusFor]. */
     val radius: Float,
     /** Nombre d'éclats, pour un projectile qui se sépare en vol. Un seul sinon. */
     val shards: Int = 1,
@@ -56,19 +63,26 @@ enum class Projectile(
      * Rayon de l'explosion à la charge de référence, en mètres **de site réaliste** —
      * voir [blastRadiusFor]. Zéro pour ce qui n'explose pas.
      */
-    private val blastRadiusBase: Float = 0f
-) {
-    /** La belle pierre de taille : l'étalon, et celui avec lequel on apprend la machine. */
-    BOULET(12f, 0.16f),
-
+    private val blastRadiusBase: Float = 0f,
     /**
-     * Le gros bloc : trois fois la masse, et la machine le sent passer.
+     * Vrai pour ce dont le joueur règle le poids directement, en kilos.
      *
-     * Il ne sert à rien contre du bois — il n'ira pas plus loin qu'un boulet dans une
-     * maison — mais son énergie ne s'épuise pas dans une courtine, là où le boulet
-     * s'arrête à la deuxième assise.
+     * Le boulet seul. Le paquet de fragmentation a une masse qui est celle de son
+     * paquet, la bombe une masse qui sort de sa charge : leur poids se règle par un
+     * autre bout, ou pas du tout.
      */
-    LOURD(34f, 0.24f),
+    val weighable: Boolean = false
+) {
+    /**
+     * La belle pierre de taille : l'étalon, et celui avec lequel on apprend la machine.
+     *
+     * **C'est celui dont on règle le poids**, de un à quatre-vingt-dix-neuf kilos, et ce
+     * seul réglage remplace les deux entrées d'avant. Un caillou d'un kilo part très
+     * vite et se fait manger par l'air ; un bloc de quatre-vingt-dix-neuf part lentement
+     * mais ne s'arrête plus. Entre les deux il y a un optimum, il dépend de la machine,
+     * et le trouver est exactement le genre de chose que ce jeu demande.
+     */
+    BOULET(12f, 0.16f, weighable = true),
 
     /**
      * Le paquet lié : il se défait en cinq pendant sa chute et arrose un front entier.
@@ -90,19 +104,40 @@ enum class Projectile(
      * charpente en l'air pendant que la muraille se contente de basculer, et une énergie
      * qui fend ce qui est trop lourd pour bouger.
      *
-     * C'est le seul projectile dont la **masse n'est pas écrite ici** : elle vaut
-     * l'enveloppe plus la poudre, et la poudre se règle en bâtons. Voir [massFor] et
-     * [DEFAULT_STICKS].
+     * Sa masse de référence — quatorze kilos — est celle de la charge par défaut. La
+     * masse réelle vaut l'enveloppe plus la poudre, et la poudre se règle en bâtons.
+     * Voir [massFor] et [DEFAULT_STICKS].
      */
-    BOMBE(0f, 0.21f, casing = 5f, blastRadiusBase = 6f);
+    BOMBE(14f, 0.21f, casing = 5f, blastRadiusBase = 6f);
 
     /**
-     * Traînée, en kg/m : la moitié de ρ·Cx·S pour une sphère de ce rayon.
+     * Traînée, en kg/m : la moitié de ρ·Cx·S pour une sphère de ce rayon-là.
      *
      * Elle sort du rayon et n'est pas recopiée à la main : un projectile plus gros
-     * freine davantage, et c'est une bonne part de ce qui distingue les quatre.
+     * freine davantage, et c'est une bonne part de ce qui distingue les trois.
      */
-    val drag: Float get() = (0.5f * 1.2f * 0.47f * PI * radius * radius).toFloat()
+    fun dragFor(r: Float): Float = (0.5f * 1.2f * 0.47f * PI * r * r).toFloat()
+
+    /**
+     * Rayon à la masse donnée : un projectile lourd est un projectile **gros**.
+     *
+     * En racine cubique, parce qu'une masse remplit un volume. Ce n'est pas de la
+     * coquetterie : le rayon décide de la traînée, donc de la façon dont l'air mange le
+     * tir. Un caillou d'un kilo a un rapport surface/masse quatre fois plus mauvais
+     * qu'un bloc de soixante-quatre, il part plus vite et arrive plus lentement — et
+     * c'est ce qui fait qu'il existe un poids optimal pour chaque machine.
+     *
+     * La loi est calée sur le catalogue d'avant : le boulet de douze kilos faisait
+     * seize centimètres et le bloc lourd de trente-quatre en faisait vingt-quatre. La
+     * racine cubique en donne vingt-deux et demi. Les deux entrées écrites à la main
+     * suivaient donc déjà cette règle sans le dire, ce qui est la meilleure raison de
+     * l'écrire.
+     */
+    fun radiusFor(m: Float): Float {
+        if (mass <= 0f) return radius
+        val part = (m.coerceAtLeast(0.01f) / mass).toDouble()
+        return radius * Math.cbrt(part).toFloat()
+    }
 
     /** Vrai pour ce qui porte une charge, et dont la masse dépend donc du réglage. */
     val explosive: Boolean get() = blastRadiusBase > 0f
@@ -194,5 +229,18 @@ enum class Projectile(
         /** Bornes de la charge : d'un pétard à un baril. */
         const val MIN_STICKS = 1
         const val MAX_STICKS = 120
+
+        /**
+         * Bornes du poids d'un boulet, en kilogrammes, et son poids par défaut.
+         *
+         * Quatre-vingt-dix-neuf et pas cent, pour que la roulette n'ait que **deux
+         * colonnes de chiffres** : une troisième colonne qui ne sert qu'à afficher un
+         * zéro coûte de la place à l'écran et une seconde de lecture à chaque coup
+         * d'œil. La borne haute d'un réglage doit tenir dans l'affichage qu'on lui
+         * donne, sinon c'est l'affichage qui commande.
+         */
+        const val MIN_BALL_MASS = 1f
+        const val MAX_BALL_MASS = 99f
+        const val DEFAULT_BALL_MASS = 12f
     }
 }

@@ -113,7 +113,13 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         // La charge de la bombe, en bâtons. Trois chiffres parce qu'on va jusqu'à cent
         // vingt, et un cran de cinq : le joueur cherche « un peu plus » ou « beaucoup
         // plus », jamais quarante-six bâtons plutôt que quarante-cinq.
-        CHARGE(R.string.trebuchet_dial_charge, R.string.trebuchet_unit_sticks, 3, 0, 5f);
+        CHARGE(R.string.trebuchet_dial_charge, R.string.trebuchet_unit_sticks, 3, 0, 5f),
+
+        // Le poids du boulet, en kilos. **Deux colonnes de chiffres et pas trois** : la
+        // borne haute est à quatre-vingt-dix-neuf pour cette raison-là, parce qu'une
+        // troisième colonne qui n'afficherait qu'un zéro coûterait de la place à l'écran
+        // et une seconde de lecture à chaque coup d'œil.
+        WEIGHT(R.string.trebuchet_dial_weight, R.string.trebuchet_unit_kg, 2, 0, 1f);
 
         val digits: Int get() = intDigits + decimals
     }
@@ -125,7 +131,6 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     private fun shotName(kind: Projectile): String = context.getString(
         when (kind) {
             Projectile.BOULET -> R.string.trebuchet_shot_ball
-            Projectile.LOURD -> R.string.trebuchet_shot_heavy
             Projectile.FRAGMENTATION -> R.string.trebuchet_shot_cluster
             Projectile.BOMBE -> R.string.trebuchet_shot_bomb
         }
@@ -350,16 +355,19 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         // La fronde et ce qu'on met dedans : c'est la même pièce sous le doigt, donc
         // c'est la même fenêtre.
         //
-        // La charge n'apparaît que si on a chargé une bombe, et c'est le seul réglage du
-        // jeu qui va et vient. Une ligne « bâtons » affichée en permanence serait une
-        // ligne morte trois fois sur quatre ; affichée au moment où elle veut dire
-        // quelque chose, elle se remarque et s'explique toute seule.
-        TrebuchetView.Part.SLING ->
-            if (game?.config?.projectile?.explosive == true) {
-                listOf(Dial.SLING, Dial.SHOT, Dial.CHARGE)
-            } else {
-                listOf(Dial.SLING, Dial.SHOT)
+        // La troisième ligne dépend de ce qu'on a chargé, et c'est le seul endroit du jeu
+        // où une ligne va et vient. Une bombe se règle en bâtons, un boulet en kilos, un
+        // paquet de fragmentation ne se règle pas. Afficher les deux en permanence
+        // donnerait une ligne morte les trois quarts du temps ; affichée au moment où
+        // elle veut dire quelque chose, elle se remarque et s'explique toute seule.
+        TrebuchetView.Part.SLING -> {
+            val kind = game?.config?.projectile
+            when {
+                kind?.explosive == true -> listOf(Dial.SLING, Dial.SHOT, Dial.CHARGE)
+                kind?.weighable == true -> listOf(Dial.SLING, Dial.SHOT, Dial.WEIGHT)
+                else -> listOf(Dial.SLING, Dial.SHOT)
             }
+        }
         TrebuchetView.Part.NONE -> emptyList()
     }
 
@@ -820,6 +828,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
             // Le projectile n'est pas un nombre : sa roulette ne passe jamais par ici.
             Dial.SHOT -> 0f
             Dial.CHARGE -> bombSticks.toFloat()
+            Dial.WEIGHT -> ballMass
         }
     }
 
@@ -835,6 +844,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
                 Dial.SLING -> g.setSlingLength(v)
                 Dial.SHOT -> Unit
                 Dial.CHARGE -> g.setBombSticks(v.roundToInt())
+                Dial.WEIGHT -> g.setBallMass(v)
             }
         }
     }

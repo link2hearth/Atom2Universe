@@ -80,10 +80,30 @@ class TrebuchetLibraryTest {
     }
 
     @Test
-    fun `la charge fait le tour de l enregistrement`() {
-        val cfg = machine().apply { bombSticks = 12 }
+    fun `la charge et le poids font le tour de l enregistrement`() {
+        val cfg = machine().apply { bombSticks = 12; ballMass = 77f }
         val relu = MachineLibrary.decode(MachineLibrary.encode(listOf(MachinePreset("Pétard", cfg))))
         assertEquals(12, relu[0].config.bombSticks)
+        assertEquals(77f, relu[0].config.ballMass, 1e-3f)
+    }
+
+    /**
+     * **Le « bloc lourd » se traduit, il ne se perd pas.**
+     *
+     * Il a quitté le catalogue le jour où le poids du boulet est devenu réglable : deux
+     * points fixes sur un axe continu, c'était une entrée de trop. Mais des machines
+     * enregistrées en emportaient, et un projectile inconnu repart avec le boulet par
+     * défaut — soit douze kilos au lieu de trente-quatre, et une machine accordée pour
+     * lui qui ne tire soudain plus au même endroit. On traduit donc, plutôt que de
+     * laisser le garde-fou faire le travail.
+     */
+    @Test
+    fun `le bloc lourd du catalogue d avant devient un boulet de trente-quatre kilos`() {
+        val ancienne = "Bertha\t14.0\t9.0\t5.0\t5400.0\t1.7\t38.0\t0.72\tLOURD\n"
+        val c = MachineLibrary.decode(ancienne)[0].config
+        assertEquals(Projectile.BOULET, c.projectile)
+        assertEquals("le bloc lourd n'a pas retrouvé son poids", 34f, c.ballMass, 1e-3f)
+        assertEquals("et donc pas sa masse lancée", 34f, c.shotMass, 1e-3f)
     }
 
     @Test
@@ -93,7 +113,7 @@ class TrebuchetLibraryTest {
         // Le joueur continue de régler sa machine : celle qu'il a mise de côté ne doit
         // pas suivre, sans quoi enregistrer ne servirait à rien.
         vivante.beamLength = 20f
-        vivante.projectile = Projectile.LOURD
+        vivante.projectile = Projectile.FRAGMENTATION
         assertEquals(14f, gardee.config.beamLength, 1e-3f)
         assertEquals(Projectile.BOMBE, gardee.config.projectile)
     }
