@@ -43,6 +43,31 @@ class SkyClock(startMillis: Long = System.currentTimeMillis()) {
 
         /** De combien le temps du jeu court plus vite que le vrai. */
         const val SPEED = 86_400f / DAY_SECONDS
+
+        /** Vitesse maximale du balayage à la main, en heures par seconde. */
+        const val MAX_SCRUB_RATE = 1f
+
+        /**
+         * À quelle vitesse le temps file quand le doigt s'est écarté de [deltaX] pixels
+         * de son point d'appui, [throwPx] étant la course qui donne la pleine vitesse.
+         *
+         * **La vitesse suit l'écart et non la position absolue du doigt.** Un appui près
+         * du bord droit partirait sinon à pleine vitesse avant d'avoir bougé, ce qui
+         * ferait sauter le ciel de plusieurs heures à chaque fois qu'on pose le doigt un
+         * peu à droite.
+         *
+         * Et au point d'appui la vitesse est **nulle**, pas normale : attraper l'heure
+         * l'arrête. C'est ce qui permet de retenir un crépuscule aussi longtemps qu'on
+         * veut le regarder, et c'est la moitié de l'intérêt du geste.
+         *
+         * La règle vit ici et pas dans la vue parce que c'en est une : elle décide de ce
+         * que le joueur peut faire, elle se mesure, et elle n'a pas besoin d'un écran
+         * pour être juste.
+         */
+        fun scrubRate(deltaX: Float, throwPx: Float): Float {
+            if (throwPx <= 1f) return 0f
+            return (deltaX / throwPx).coerceIn(-1f, 1f) * MAX_SCRUB_RATE
+        }
     }
 }
 

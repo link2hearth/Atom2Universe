@@ -170,6 +170,18 @@ class TrebuchetView @JvmOverloads constructor(
         const val SUN_RADIUS_DP = 13f
         const val MOON_RADIUS_DP = 15f
 
+        /** Durée de l'appui qui donne la main sur l'heure, en millisecondes. */
+        const val TIME_HOLD_MS = 420L
+
+        /**
+         * Part de la largeur de l'écran qu'il faut parcourir pour aller à pleine vitesse.
+         *
+         * Un tiers, et pas la moitié : le doigt part rarement du centre, et il faut que
+         * la pleine vitesse reste atteignable quand on a appuyé un peu de côté.
+         */
+        const val TIME_THROW = 0.33f
+
+
         /** Deux appuis rapprochés rendent le cadrage à la caméra. */
         const val DOUBLE_TAP_MS = 300L
 
@@ -298,6 +310,22 @@ class TrebuchetView @JvmOverloads constructor(
 
     private var tintLevel = -1f
     private var tintFilter: LightingColorFilter? = null
+
+    /**
+     * Le contrôle de l'heure : un appui long **dans le ciel**, puis on glisse.
+     *
+     * Le ciel et pas n'importe où : le doigt qui traîne sur la machine la règle, celui
+     * qui traîne sur le sol déplace la vue, et il n'était pas question d'ajouter un
+     * troisième sens au même geste. Au-dessus de l'horizon, en revanche, il n'y a rien
+     * d'autre à faire — c'est de la place libre, et c'est ce qui rend ce geste-là
+     * possible sans rien casser.
+     */
+    private var timePressAt = 0L
+    private var timePressX = 0f
+    private var timeFingerX = 0f
+    private var timeCandidate = false
+    private var timeMode = false
+    private var timeRate = 0f
     private val pGround = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#1B2A1E".toColorInt() }
     private val pGrass = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -637,7 +665,10 @@ class TrebuchetView @JvmOverloads constructor(
                 // L'heure du jeu avance avec l'image réelle, comme les étincelles : le
                 // ciel ne décide de rien, personne ne le rejoue, et le figer entre deux
                 // pas de physique se verrait à la seconde près sur un crépuscule.
-                skyClock.advance(frameDt)
+                updateTimeControl(frameDt)
+                // Tant que le joueur tient l'heure, elle ne coule plus toute seule :
+                // il ne manquerait plus qu'elle avance pendant qu'il la fait reculer.
+                if (!timeMode) skyClock.advance(frameDt)
                 sky.update(skyClock.instant)
                 updatePreview()
             }
@@ -892,6 +923,15 @@ class TrebuchetView @JvmOverloads constructor(
                 } else {
                     notify = grabAt(worldX(event.x), worldY(event.y))
                 }
+                // Un appui dans le ciel est candidat au contrôle de l'heure : rien
+                // d'autre ne se dispute cette zone-là. On ne décide pas tout de suite —
+                // c'est la durée qui tranchera, dans [updateTimeControl].
+                val wx = worldX(event.x)
+                timeCandidate = grip == Grip.NONE && !gestureLocked &&
+                    worldY(event.y) > game.terrain.heightAt(wx)
+                timePressAt = now
+                timePressX = event.x
+                timeFingerX = event.x
                 readPointers(event, -1)
             }
             // Un deuxième doigt, c'est toujours la caméra : on lâche le réglage en cours.
@@ -903,13 +943,22 @@ class TrebuchetView @JvmOverloads constructor(
                 // Et on lève le verrou posé par une sélection : le premier doigt vient
                 // peut-être de prendre une pièce, mais deux doigts veulent la caméra.
                 gestureLocked = false
+                // Deux doigts, c'est le zoom : le contrôle de l'heure rend la main.
+                stopTimeControl()
                 readPointers(event, -1)
             }
             MotionEvent.ACTION_MOVE -> synchronized(game) {
-                if (grip != Grip.NONE) {
+                timeFingerX = event.x
+                if (timeMode) {
+                    // En contrôle de l'heure, le doigt ne fait plus que ça : la vue ne
+                    // suit pas, sinon on balaierait le temps et le terrain à la fois.
+                } else if (grip != Grip.NONE) {
                     applyGrip(worldX(event.x), worldY(event.y))
                     notify = true
                 } else {
+                    // Un doigt qui part avant la fin de l'appui long voulait déplacer la
+                    // vue : ce n'est plus un candidat.
+                    if (abs(event.x - timePressX) > DRAG_SLOP_DP * dp) timeCandidate = false
                     dragCamera(event)
                 }
             }
@@ -927,6 +976,10 @@ class TrebuchetView @JvmOverloads constructor(
                 grip = Grip.NONE
                 tappedVoid = false
                 gestureCount = 0
+                // Lâcher le doigt sort du contrôle de l'heure : c'est un geste maintenu,
+                // pas un mode dans lequel on entre et dont on ressort par un autre
+                // chemin. Rien à désactiver, rien à oublier de désactiver.
+                stopTimeControl()
             }
         }
         // Hors du verrou : l'activité relit la machine pour son bandeau.
@@ -1372,6 +1425,7 @@ class TrebuchetView @JvmOverloads constructor(
         drawGrabSpots(canvas)
         drawSelection(canvas)
         drawRecenterHint(canvas)
+        drawTimeControl(canvas, w)
         drawWindGauge(canvas, w)
     }
 
@@ -1524,6 +1578,62 @@ class TrebuchetView @JvmOverloads constructor(
             val decalage = r * 2f * (1f - sky.moonPhase) * (if (sky.moonWaxing) -1f else 1f)
             canvas.drawCircle(cx + decalage, cy, r, pMoonDark)
         }
+    }
+
+    /**
+     * Fait vivre le contrôle de l'heure, une image à la fois.
+     *
+     * L'appui long ne se mesure pas dans le gestionnaire de toucher, et c'est délibéré :
+     * un doigt immobile n'envoie **aucun** événement, donc un appui long qui attendrait
+     * un `ACTION_MOVE` ne se déclencherait jamais. On regarde donc l'âge de l'appui à
+     * chaque image, là où le temps passe de toute façon.
+     *
+     * Une fois dedans, la vitesse suit **l'écart au point d'appui** et non la position
+     * absolue du doigt : sinon un appui près du bord droit partirait à pleine vitesse
+     * avant d'avoir bougé. Au point d'appui la vitesse est nulle — attraper l'heure
+     * l'arrête, et c'est le meilleur moyen de regarder un crépuscule aussi longtemps
+     * qu'on veut.
+     */
+    private fun updateTimeControl(dt: Float) {
+        if (!timeMode) {
+            if (timeCandidate && SystemClock.uptimeMillis() - timePressAt >= TIME_HOLD_MS) {
+                timeMode = true
+                timePressX = timeFingerX
+            }
+            return
+        }
+        timeRate = SkyClock.scrubRate(timeFingerX - timePressX, width * TIME_THROW)
+        skyClock.scrub(timeRate * dt)
+    }
+
+    private fun stopTimeControl() {
+        timeMode = false
+        timeCandidate = false
+        timeRate = 0f
+    }
+
+    /**
+     * Ce que le joueur lit pendant qu'il tient l'heure : l'heure qu'il est, et à quelle
+     * vitesse elle file.
+     *
+     * Sans ça le geste serait un secret : rien à l'écran ne dirait qu'on a quitté le
+     * cadrage pour le temps, et un ciel qui se met à défiler passerait pour un bug.
+     */
+    private fun drawTimeControl(canvas: Canvas, w: Float) {
+        if (!timeMode) return
+        val minutes = ((skyClock.instant % 86_400_000L) + 86_400_000L) % 86_400_000L / 60_000L
+        val heure = minutes / 60
+        val minute = minutes % 60
+        val sens = when {
+            timeRate > 0.02f -> "▶"
+            timeRate < -0.02f -> "◀"
+            else -> "■"
+        }
+        pHint.textSize = 20f * dp
+        canvas.drawText(
+            "%02d:%02d  %s %.1f h/s".format(heure, minute, sens, abs(timeRate)),
+            w / 2f, height * 0.18f, pHint
+        )
     }
 
     /**

@@ -263,6 +263,50 @@ class TrebuchetSkyTest {
         }
     }
 
+    /**
+     * Le balayage du temps à la main : ce que le doigt promet.
+     *
+     * Trois choses à tenir, et chacune s'est décidée pour une raison. Au point d'appui,
+     * **le temps s'arrête** — attraper l'heure la retient, ce qui est la moitié de
+     * l'intérêt du geste. À droite il avance, à gauche il recule. Et il ne dépasse jamais
+     * une heure par seconde, sinon un pouce qui dérape ferait sauter le ciel d'une
+     * journée.
+     */
+    @Test
+    fun `le balayage du temps va d une heure par seconde a rien du tout`() {
+        val course = 360f
+
+        assertEquals("au point d'appui le temps devrait s'arrêter", 0f, SkyClock.scrubRate(0f, course), 1e-4f)
+        assertEquals(
+            "à mi-course on devrait aller à mi-vitesse",
+            SkyClock.MAX_SCRUB_RATE / 2f, SkyClock.scrubRate(course / 2f, course), 1e-3f
+        )
+        assertEquals(
+            "à pleine course, une heure par seconde",
+            SkyClock.MAX_SCRUB_RATE, SkyClock.scrubRate(course, course), 1e-3f
+        )
+        assertEquals(
+            "vers la gauche, le temps devrait reculer",
+            -SkyClock.MAX_SCRUB_RATE, SkyClock.scrubRate(-course, course), 1e-3f
+        )
+        // Au-delà de la course, on ne va pas plus vite : le doigt sort de l'écran bien
+        // avant que le ciel ne devienne illisible.
+        assertEquals(
+            "le balayage s'emballe hors de la course",
+            SkyClock.MAX_SCRUB_RATE, SkyClock.scrubRate(course * 10f, course), 1e-3f
+        )
+        // Un écran de largeur nulle n'existe pas, mais une vue pas encore mesurée, si.
+        assertEquals(0f, SkyClock.scrubRate(100f, 0f), 1e-4f)
+    }
+
+    @Test
+    fun `une seconde de balayage a pleine vitesse avance d une heure`() {
+        val h = SkyClock(minuit)
+        val vitesse = SkyClock.scrubRate(500f, 500f)
+        h.scrub(vitesse * 1f)
+        assertEquals("une seconde à pleine vitesse ne fait pas une heure", heure, h.instant - minuit)
+    }
+
     @Test
     fun `l horloge court soixante-douze fois plus vite que la vraie`() {
         val h = SkyClock(minuit)
