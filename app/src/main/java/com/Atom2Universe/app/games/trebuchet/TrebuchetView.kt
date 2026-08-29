@@ -89,6 +89,9 @@ class TrebuchetView @JvmOverloads constructor(
 
     private var thread: Thread? = null
     @Volatile private var running = false
+
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
     private var lastNanos = 0L
     private var accumulator = 0f
     private var lastPhase = TrebuchetGame.Phase.BUILD
@@ -344,14 +347,17 @@ class TrebuchetView @JvmOverloads constructor(
     /**
      * Les nuages, et leur flou de coton.
      *
-     * **Pas de [BlurMaskFilter].** La surface se peint sur un canevas logiciel —
-     * [holder.lockCanvas][SurfaceHolder.lockCanvas] et non `lockHardwareCanvas` — et un
-     * flou gaussien y coûte une vraie convolution, pixel par pixel, à chacune des
-     * soixante boules dessinées par image. C'est ce qui faisait ramer le jeu pendant
-     * un tir, précisément quand la caméra recule et que les nuages grandissent à
-     * l'écran. Le contour cotonneux vient à la place d'un nuancier radial — le même
-     * principe que la flamme d'une torche, voir [drawLights] — qui dégrade en douceur
-     * du centre au bord sans jamais convoluer un seul pixel.
+     * **Pas de [BlurMaskFilter].** Le contour cotonneux vient d'un nuancier radial — le
+     * même principe que la flamme d'une torche, voir [drawLights] — qui dégrade en
+     * douceur du centre au bord sans jamais convoluer un seul pixel.
+     *
+     * Un flou gaussien coûtait une vraie convolution, pixel par pixel, à chacune des
+     * soixante boules dessinées par image, et c'est ce qui faisait ramer le jeu pendant un
+     * tir — précisément quand la caméra recule et que les nuages grandissent à l'écran. Le
+     * dessin passe depuis par la puce graphique (voir [lockFrame]), où un flou serait
+     * abordable ; le nuancier reste malgré tout la bonne réponse, parce qu'il donne le même
+     * coton pour une fraction du travail, et parce que la puce n'est pas une raison de
+     * redevenir dépensier.
      */
     private val clouds = CloudField()
     private val pCloud = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -797,7 +803,7 @@ class TrebuchetView @JvmOverloads constructor(
             }
             if (finished) post { listener?.onShotFinished() }
 
-            val canvas = holder.lockCanvas()
+            val canvas = lockFrame()
             if (canvas == null) {
                 Thread.sleep(16)
                 continue
@@ -809,6 +815,41 @@ class TrebuchetView @JvmOverloads constructor(
             }
             Thread.sleep(4)
         }
+    }
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : chaque pixel des
+     * quatre millions et demi de l'écran était calculé et écrit par le processeur, à
+     * chaque image. Mesuré à la tablette, ce seul fait coûtait quatre-vingt-huit pour
+     * cent du temps de calcul du jeu — dont quatre-vingt-deux pour le ciel seul, qui
+     * remplit l'écran d'un dégradé puis le recouvre de nuages translucides. Le moteur
+     * physique, les éphémérides et les couleurs de l'heure pesaient ensemble deux
+     * dixièmes de pour cent. Le jeu ne tenait que quarante images par seconde en gardant
+     * un cœur à quatre-vingts pour cent, ce qui se sent sous les doigts.
+     *
+     * Remplir des surfaces est précisément ce que la puce graphique fait pour rien.
+     * [SurfaceHolder.lockHardwareCanvas] existe depuis la version 26 d'Android, qui est
+     * justement le plancher du projet, et ne demande rien d'autre que **de tout
+     * redessiner à chaque image** — ce que cette vue faisait déjà, puisque le ciel repeint
+     * l'écran entier avant tout le reste.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser le
+     * canevas matériel, et le jeu doit alors continuer de tourner comme avant plutôt que
+     * de s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; un canevas nul, en revanche, veut seulement dire que la surface n'est pas
+     * prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (e: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
     }
 
     /** Repose la pièce tenue en main : un tir qui part n'a plus de réglage en cours. */
@@ -2891,7 +2932,15 @@ class TrebuchetView @JvmOverloads constructor(
             }
             Grip.NONE -> return
         }
-        canvas.drawLine(sx(ax), sy(ay), sx(bx), sy(by), pHandle)
+        // Un chemin et non un trait, pour un pinceau en pointillé : le canevas matériel
+        // n'applique un [DashPathEffect] à un `drawLine` qu'à partir d'Android 9, et le
+        // projet descend jusqu'à Android 8. Le même pointillé passé par un chemin est
+        // dessiné partout — c'est d'ailleurs par là que passent déjà les fantômes et le
+        // cône de départ, qui sont pointillés eux aussi.
+        tmpPath.reset()
+        tmpPath.moveTo(sx(ax), sy(ay))
+        tmpPath.lineTo(sx(bx), sy(by))
+        canvas.drawPath(tmpPath, pHandle)
     }
 
     /** Une poignée : un point qu'on peut tirer. */
