@@ -283,6 +283,12 @@ class Terrain(nodes: List<TerrainNode>) {
         private const val MIN_SEGMENT = 4f
 
         /**
+         * En dessous de cette dénivelée, un raccord n'est qu'un cran à peine visible :
+         * pas la peine de lui trouver la place d'un arrondi.
+         */
+        private const val ROUND_THRESHOLD = 1.5f
+
+        /**
          * Dessine un relief qui porte [padWidths] constructions, la première commençant
          * à l'abscisse zéro.
          *
@@ -302,6 +308,16 @@ class Terrain(nodes: List<TerrainNode>) {
         ): TerrainPlan {
             if (padWidths.isEmpty()) {
                 return TerrainPlan(flatBetween(-approach, 40f), emptyList())
+            }
+            // Le décor — bosses et creux — tire sur son propre flux, jamais sur [rng].
+            // La même graine doit bâtir le même village qu'on dessine ses talus bien
+            // droits ou qu'on les arrondisse : si le décor mangeait des tirages de
+            // [rng], chaque bosse de plus décalerait tout ce que [TargetGenerator]
+            // tire après coup — la forme des maisons y compris.
+            val deco = run {
+                var h = shape.ordinal.toLong() * 1_000_003L + approach.toRawBits()
+                for (w in padWidths) h = h * 31L + w.toRawBits()
+                Random(h)
             }
             val u = TargetRules.site(1f)
             val n = padWidths.size
@@ -329,13 +345,15 @@ class Terrain(nodes: List<TerrainNode>) {
             val pads = ArrayList<Pad>(n)
             val nodes = ArrayList<TerrainNode>()
             var x = -margin - liens[0]
-            nodes += approachNodes(rng, shape, -approcheUtile, x, u)
+            nodes += approachNodes(rng, deco, shape, -approcheUtile, x, u)
             nodes += TerrainNode(x, 0f)
             for (i in 0 until n) {
                 val y = ys[i]
+                val yAvant = if (i == 0) 0f else ys[i - 1]
+                val xAvant = x
                 // Le talus, ou la falaise : c'est le même geste, avec une longueur nulle.
                 x += liens[i]
-                nodes += TerrainNode(x, y)
+                nodes += smoothRamp(xAvant, yAvant, x, y)
                 // Le plateau : la marge, la construction, la marge.
                 val plateauLeft = x
                 pads += Pad(plateauLeft + margin, plateauLeft + margin + padWidths[i], y)
@@ -350,6 +368,63 @@ class Terrain(nodes: List<TerrainNode>) {
                 }
             }
             return TerrainPlan(Terrain(nodes), pads)
+        }
+
+        /**
+         * Remplace l'angle vif d'un talus par une courbe douce : un ou deux nœuds
+         * intermédiaires qui adoucissent les deux raccords à la fois — celui du bas et
+         * celui du haut — puisqu'un lissage en S a une dérivée nulle à ses deux bouts.
+         *
+         * **On allonge avant de courber, on ne subdivise jamais ce qu'on a.** Un talus
+         * pile à [MIN_SEGMENT] coupé en trois ferait des lamelles d'un mètre trente ;
+         * [linkLength] lui a donc déjà réservé deux fois cette longueur avant qu'on
+         * arrive ici. Ici, on se contente de vérifier qu'il y a la place, et de rendre
+         * le segment tel quel sinon — un petit cran reste un petit cran.
+         */
+        private fun smoothRamp(x0: Float, y0: Float, x1: Float, y1: Float): List<TerrainNode> {
+            val dx = x1 - x0
+            val dy = y1 - y0
+            if (dx < 2f * MIN_SEGMENT || abs(dy) < 1e-4f) return listOf(TerrainNode(x1, y1))
+            val n = if (dx >= 3f * MIN_SEGMENT) 3 else 2
+            return (1..n).map { i ->
+                val t = i / n.toFloat()
+                // Lissage en S (smoothstep) : plat aux deux bouts, penché au milieu.
+                val s = t * t * (3f - 2f * t)
+                TerrainNode(x0 + dx * t, y0 + dy * s)
+            }
+        }
+
+        /**
+         * Une bosse ou un creux léger sur un tronçon d'approche qui ne porte rien.
+         * Jamais sur un plateau, jamais derrière le site non plus : au-delà du dernier
+         * talus le boulet roule encore et longtemps une fois le site rasé, et une
+         * bosse sur son chemin déciderait où il s'arrête — donc combien de poussière
+         * elle soulève, donc jusqu'où le tirage du spectacle a dérivé au moment du feu
+         * d'artifice. Un décor ne doit jamais se voir dans le jeu qu'il habille.
+         *
+         * Un seul sommet, jamais plus : la ligne brisée n'a pas besoin de dix
+         * ondulations pour cesser d'être une droite, et chaque nœud de plus coûte une
+         * dalle. Il part toujours d'une marge d'au moins [MIN_SEGMENT] de chaque côté
+         * si la place le permet, et prend tout le tronçon sinon — jamais un bout plus
+         * court que la garde-fou.
+         */
+        private fun bumpyFlat(rng: Random, x0: Float, x1: Float, y: Float, u: Float): List<TerrainNode> {
+            val run = x1 - x0
+            if (run < 2f * MIN_SEGMENT) return emptyList()
+            if (rng.nextFloat() < 0.35f) return emptyList()
+            val rawMargin = (run - 2f * MIN_SEGMENT) / 2f
+            val margin = if (rawMargin >= MIN_SEGMENT) rawMargin.coerceAtMost(MIN_SEGMENT * 1.5f) else 0f
+            val start = x0 + margin
+            val end = x1 - margin
+            val span = end - start
+            val minFrac = (MIN_SEGMENT / span).coerceAtMost(0.5f)
+            val peakFrac = minFrac + rng.nextFloat() * (1f - 2f * minFrac)
+            val peak = start + span * peakFrac
+            val amp = (0.4f + rng.nextFloat() * 0.8f) * u * if (rng.nextBoolean()) 1f else -1f
+            val out = ArrayList<TerrainNode>(2)
+            if (margin > 1e-3f) out += TerrainNode(start, y)
+            out += TerrainNode(peak, y + amp)
+            return out
         }
 
         /**
@@ -434,7 +509,12 @@ class Terrain(nodes: List<TerrainNode>) {
             // court que [MIN_SEGMENT] : une marche de cinquante centimètres donnerait
             // une rampe d'un mètre de long, c'est-à-dire une lamelle. Elle se rattrape
             // en pente douce, ce qui ne se voit même pas.
-            return (dy / SLOPE).coerceAtLeast(MIN_SEGMENT)
+            val base = (dy / SLOPE).coerceAtLeast(MIN_SEGMENT)
+            // Une dénivelée qui se voit mérite un raccord arrondi ([smoothRamp]), et un
+            // arrondi a besoin de place : deux [MIN_SEGMENT] au moins, pour ne jamais
+            // avoir à subdiviser sous la garde-fou. En dessous du seuil, le cran reste
+            // un cran — ça ne vaut pas la peine de l'étirer pour si peu.
+            return if (dy >= ROUND_THRESHOLD) base.coerceAtLeast(2f * MIN_SEGMENT) else base
         }
 
         /**
@@ -446,6 +526,7 @@ class Terrain(nodes: List<TerrainNode>) {
          */
         private fun approachNodes(
             rng: Random,
+            deco: Random,
             shape: TerrainShape,
             from: Float,
             to: Float,
@@ -491,7 +572,9 @@ class Terrain(nodes: List<TerrainNode>) {
                     out += TerrainNode(pied, 0f)
                 }
 
-                else -> Unit
+                // Rien à dessiner : juste une bosse ou un creux léger, comme partout
+                // ailleurs où le terrain ne porte rien.
+                else -> out += bumpyFlat(deco, from, to, 0f, u)
             }
             return out
         }
