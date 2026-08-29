@@ -566,6 +566,12 @@ class TrebuchetGame {
      */
     val effects = TrebuchetEffects()
 
+    /**
+     * Prévient qu'une bombe vient d'exploser, pour qui voudrait en faire un bruit —
+     * la simulation reste du Kotlin pur, sans dépendance à l'audio Android.
+     */
+    var onExplosion: ((Float, Float, Float) -> Unit)? = null
+
     /** Vrai quand le site en cours a déjà eu droit à son feu d'artifice. */
     private var celebrated = false
 
@@ -1371,6 +1377,7 @@ class TrebuchetGame {
         val r = kind.blastRadiusFor(config.bombSticks)
         targets.blast(ball.x, ball.y, kind.blastEnergyFor(config.bombSticks), r)
         effects.explosion(ball.x, ball.y, r)
+        onExplosion?.invoke(ball.x, ball.y, r)
         ball.collidesWith = TrebuchetCategory.GROUND
         world.forgetContacts(ball)
     }

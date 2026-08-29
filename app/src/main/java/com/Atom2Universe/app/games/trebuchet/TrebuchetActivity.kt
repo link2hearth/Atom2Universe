@@ -29,6 +29,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         const val KEY_STYLE = "target_style"
         const val KEY_MACHINES = "machines"
         const val KEY_GHOSTS = "ghost_limit"
+        const val KEY_SOUND = "sound_enabled"
 
         // Les entrées du menu des machines. Les machines enregistrées prennent les
         // numéros suivants, dans l'ordre où elles s'affichent.
@@ -42,6 +43,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         const val ID_REALISTE = 1
         const val ID_CLEAN = 2
         const val ID_GHOSTS = 3
+        const val ID_SOUND = 4
         const val ID_FIRST_GHOST_CHOICE = 20
     }
 
@@ -90,11 +92,12 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         wheels = findViewById(R.id.trebuchet_wheels)
 
         gameView.game.ghostLimit = prefs.getInt(KEY_GHOSTS, TrebuchetRules.GHOST_HISTORY)
+        gameView.soundEnabled = prefs.getBoolean(KEY_SOUND, true)
         gameView.listener = this
         // Les roulettes règlent la même machine que le doigt, et préviennent quand
         // elles tournent : les deux moyens restent en phase sans se connaître.
         wheels.game = gameView.game
-        wheels.onValueChanged = { updateUi() }
+        wheels.onValueChanged = { gameView.playHammerTap(); updateUi() }
 
         findViewById<ImageButton>(R.id.trebuchet_btn_back).setOnClickListener { finish() }
         machines = MachineLibrary.decode(prefs.getString(KEY_MACHINES, "") ?: "")
@@ -171,6 +174,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         menu.add(0, ID_CLEAN, 3, getString(R.string.trebuchet_clean_ghosts, fantomes))
             .isEnabled = fantomes > 0
 
+        menu.add(0, ID_SOUND, 4, getString(R.string.trebuchet_sound)).apply {
+            isCheckable = true
+            isChecked = gameView.soundEnabled
+        }
+
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 ID_ARCADE -> setStyle(TargetStyle.ARCADE)
@@ -179,6 +187,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
                     synchronized(gameView.game) { gameView.game.clearGhosts() }
                     toast(getString(R.string.trebuchet_clean_done))
                 }
+                ID_SOUND -> setSoundEnabled(!gameView.soundEnabled)
                 else -> {
                     val i = item.itemId - ID_FIRST_GHOST_CHOICE
                     TrebuchetRules.GHOST_CHOICES.getOrNull(i)?.let { setGhostLimit(it) }
@@ -194,6 +203,12 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         synchronized(gameView.game) { gameView.game.ghostLimit = n }
         prefs.edit { putInt(KEY_GHOSTS, n) }
         toast(getString(R.string.trebuchet_ghost_limit, n))
+    }
+
+    /** Coupe ou rétablit les bruitages, et s'en souvient pour la prochaine partie. */
+    private fun setSoundEnabled(on: Boolean) {
+        gameView.soundEnabled = on
+        prefs.edit { putBoolean(KEY_SOUND, on) }
     }
 
     /**

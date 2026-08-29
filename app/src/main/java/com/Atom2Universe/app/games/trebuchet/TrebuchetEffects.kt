@@ -205,6 +205,14 @@ class TrebuchetEffects(seed: Long = 1L) {
         windY = y
     }
 
+    /**
+     * Préviennent qu'une fusée part ou qu'un bouquet éclate, pour qui voudrait en
+     * faire un bruit — les effets restent du Kotlin pur, sans dépendance à l'audio
+     * Android. Même patron que [TrebuchetGame.onExplosion].
+     */
+    var onRocketLaunch: ((Float, Float) -> Unit)? = null
+    var onBurst: ((Float, Float) -> Unit)? = null
+
     /** Toutes les particules du bassin, vivantes ou non. À filtrer sur [Spark.alive]. */
     val sparks: Array<Spark> get() = pool
 
@@ -317,6 +325,7 @@ class TrebuchetEffects(seed: Long = 1L) {
         // ciel. La racine, et pas la proportion : une fusée qui monte quatre fois plus
         // haut s'ouvre deux fois plus, ce qui est ce que fait un vrai obus.
         s.spread = sqrt(h / 70f).coerceIn(0.7f, 3.2f)
+        onRocketLaunch?.invoke(x, ground)
     }
 
     /**
@@ -568,7 +577,10 @@ class TrebuchetEffects(seed: Long = 1L) {
             if (!s.alive) {
                 // Une fusée qui meurt éclate : c'est là, et nulle part ailleurs, que
                 // naissent les bouquets.
-                if (s.kind == Puff.SHELL) burst(s.x, s.y, s.tint, s.spread)
+                if (s.kind == Puff.SHELL) {
+                    burst(s.x, s.y, s.tint, s.spread)
+                    onBurst?.invoke(s.x, s.y)
+                }
                 continue
             }
             // Le freinage ramène la particule vers la vitesse de l'air, pas vers zéro.

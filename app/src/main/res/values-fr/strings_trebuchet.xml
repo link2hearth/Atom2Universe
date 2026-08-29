@@ -65,5 +65,6 @@
     <string name="trebuchet_clean_ghosts">Effacer les tirs passés (%1$d)</string>
     <string name="trebuchet_clean_done">Tirs passés effacés</string>
     <string name="trebuchet_ghost_limit">Tirs gardés : %1$d</string>
+    <string name="trebuchet_sound">Bruitages</string>
     <string name="trebuchet_win">SITE RASÉ en %1$d coup(s) ! Appui long sur « %2$s » pour le site suivant.</string>
 </resources>
