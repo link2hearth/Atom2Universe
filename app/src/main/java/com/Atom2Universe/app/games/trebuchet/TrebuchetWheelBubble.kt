@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.trebuchet
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -288,6 +289,34 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     /** Vrai quand l'appui en cours a déjà servi à autre chose qu'un appui bref. */
     private var consumed = false
 
+    // ── La place de la bulle ──────────────────────────────────────────────────
+
+    /**
+     * Où le joueur a poussé la bulle — **une place par orientation**, et pas une seule
+     * pour les deux.
+     *
+     * Une place unique se perdait à chaque bascule d'écran. Le déplacement est un
+     * `translation` compté depuis le coin où le gabarit pose la bulle, en pixels : une
+     * bulle descendue de six cents pixels dans la hauteur du portrait sort par le bas
+     * d'un paysage qui n'en fait que quatre cents. La bulle disparaissait, et rien ne
+     * disait où elle était partie ni comment la faire revenir.
+     *
+     * Deux places réglent la chose et disent en même temps quelque chose de juste : on ne
+     * range pas une fenêtre au même endroit selon la forme de l'écran. Chacune se
+     * retrouve en revenant à son orientation.
+     *
+     * [Float.NaN] veut dire « jamais poussée dans cette orientation » : la bulle prend
+     * alors la place du gabarit, en haut au centre.
+     */
+    private val restX = FloatArray(2) { Float.NaN }
+    private val restY = FloatArray(2) { Float.NaN }
+
+    /** 1 en paysage, 0 sinon : le rang de l'orientation dans [restX] et [restY]. */
+    private val slot: Int
+        get() = if (
+            resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        ) 1 else 0
+
     /** L'appui long qui désigne une colonne. */
     private val longPress = Runnable {
         if (hit == Hit.WHEEL && turnRow in dials.indices && !dials[turnRow].choice) {
@@ -325,7 +354,8 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
 
     /**
      * Montre les réglages de la pièce tenue en main, ou disparaît. La position, elle,
-     * est conservée : une bulle qu'on a poussée de côté doit y rester.
+     * est conservée : une bulle qu'on a poussée de côté doit y rester — et il y en a une
+     * par orientation, voir [restX].
      */
     fun showFor(part: TrebuchetView.Part) {
         val wanted = dialsFor(part)
@@ -742,11 +772,51 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
 
     /** La bulle se pousse où on veut, mais reste entièrement dans la scène. */
     private fun dragPanel(dx: Float, dy: Float) {
-        val parentView = parent as? View ?: return
-        val maxX = (parentView.width - width).toFloat()
-        val maxY = (parentView.height - height).toFloat()
-        translationX = (translationX + dx).coerceIn(-left.toFloat(), maxX - left)
-        translationY = (translationY + dy).coerceIn(-top.toFloat(), maxY - top)
+        translationX = clampX(translationX + dx)
+        translationY = clampY(translationY + dy)
+        // La place est retenue pour cette orientation-là : voir [restX].
+        restX[slot] = translationX
+        restY[slot] = translationY
+    }
+
+    /**
+     * La scène a changé de forme : la bulle reprend la place de cette orientation.
+     *
+     * On passe **toujours** par ici, pas seulement à la bascule d'écran. La bulle change
+     * aussi de hauteur en cours de route — la fronde ajoute une ligne quand on charge une
+     * bombe — et une bulle poussée tout en bas dépasserait alors du cadre. Un seul chemin
+     * pour poser la bulle, donc un seul endroit où elle peut se tromper.
+     */
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        super.onLayout(changed, l, t, r, b)
+        val x = restX[slot]
+        val y = restY[slot]
+        // Jamais poussée dans cette orientation : le gabarit décide, en haut au centre.
+        translationX = if (x.isNaN()) 0f else clampX(x)
+        translationY = if (y.isNaN()) 0f else clampY(y)
+    }
+
+    /**
+     * Ramène un déplacement dans les bords de la scène.
+     *
+     * Les bornes se croisent quand la bulle est plus grande que ce qui l'accueille — trois
+     * lignes dans la hauteur d'un paysage étroit — et il ne faut surtout pas laisser
+     * `coerceIn` trancher : il lève une exception. On colle alors la bulle au bord haut ou
+     * gauche, qui est le morceau qu'il faut garder : c'est là que sont le bandeau et les
+     * premières lignes.
+     */
+    private fun clampX(v: Float): Float {
+        val parentView = parent as? View ?: return v
+        val min = -left.toFloat()
+        val max = (parentView.width - width - left).toFloat()
+        return if (max <= min) min else v.coerceIn(min, max)
+    }
+
+    private fun clampY(v: Float): Float {
+        val parentView = parent as? View ?: return v
+        val min = -top.toFloat()
+        val max = (parentView.height - height - top).toFloat()
+        return if (max <= min) min else v.coerceIn(min, max)
     }
 
     /**
