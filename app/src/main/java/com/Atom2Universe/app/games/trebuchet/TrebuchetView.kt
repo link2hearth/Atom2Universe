@@ -1739,7 +1739,8 @@ class TrebuchetView @JvmOverloads constructor(
         drawBody(canvas, game.beam, pBeam, pEdge)
         drawPin(canvas)
         drawSling(canvas)
-        drawBody(canvas, game.ball, pBall, pBallEdge)
+        // Une bombe qui a soufflé n'est plus là : voir [TrebuchetGame.ballGone].
+        if (!game.ballGone) drawBody(canvas, game.ball, pBall, pBallEdge)
         // Les éclats d'un paquet qui s'est défait : rien ne les distingue du boulet,
         // sinon qu'ils sont plusieurs et plus petits.
         for (i in game.shards.indices) drawBody(canvas, game.shards[i], pBall, pBallEdge)

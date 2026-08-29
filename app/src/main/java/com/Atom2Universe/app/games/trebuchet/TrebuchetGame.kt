@@ -711,6 +711,23 @@ class TrebuchetGame {
     private var blown = false
 
     /**
+     * Vrai quand le projectile n'existe plus : la bombe qui vient de souffler.
+     *
+     * Elle **cessait** de nuire sans cesser d'exister — un caillou inerte qui roulait
+     * jusqu'au bout du tir. C'était faux à regarder, et coûteux : la caméra suit le
+     * projectile pendant le vol, elle restait donc accrochée à un débris sans force qui
+     * dévalait le terrain, pendant que le château qu'on venait de souffler sortait de
+     * l'écran par le côté.
+     *
+     * Une bombe qui a rendu sa charge disparaît donc. Ce qu'il fallait garder d'elle est
+     * relevé au moment du souffle — la portée et l'heure de l'impact, voir
+     * [explodeOnImpact] — et le corps est retiré du monde. La vue ne dessine plus rien,
+     * et le tir se termine sur l'écroulement, qui est ce qu'on est venu voir.
+     */
+    var ballGone = false
+        private set
+
+    /**
      * [elapsed] au moment où le boulet a touché, ou -1 tant qu'il n'a pas encore
      * atterri. C'est de là, et pas du largage, que se compte [COLLAPSE_GRACE].
      */
@@ -907,6 +924,7 @@ class TrebuchetGame {
         shards.clear()
         split = false
         blown = false
+        ballGone = false
         landedAt = -1f
         settleCalm = 0f
         targets.forgetPiercers()
@@ -1258,6 +1276,7 @@ class TrebuchetGame {
         cwStartY = counterweight.y
         split = false
         blown = false
+        ballGone = false
         landedAt = -1f
         settleCalm = 0f
         targets.forgetPiercers()
@@ -1319,7 +1338,10 @@ class TrebuchetGame {
         if (!ballFree) launchSpeed = speed
 
         trailTimer += dt
-        if (trailTimer > 0.02f && trailCount < 6000) {
+        // Une bombe partie en fumée n'écrit plus : sans ça, la trace empilerait des
+        // centaines de points au même endroit pendant que la construction s'écroule, et
+        // le fantôme du tir garderait ce pâté-là.
+        if (trailTimer > 0.02f && trailCount < 6000 && !ballGone) {
             trailTimer = 0f
             trailAdd(ball.x, ball.y)
         }
@@ -1334,9 +1356,14 @@ class TrebuchetGame {
         // « Touché » se lit par rapport au sol **de cet endroit-là**. Avec un relief,
         // un boulet qui se pose sur un plateau à quinze mètres n'atteindra jamais
         // l'altitude zéro, et le tir ne se terminerait pas.
+        // Une bombe qui a soufflé a fini son voyage, où qu'elle l'ait fini : elle a pu
+        // partir contre un mur à dix mètres du sol, et attendre qu'elle « touche terre »
+        // serait attendre un corps qui n'existe plus. Son atterrissage est relevé au
+        // moment du souffle, voir [explodeOnImpact].
         val landed = ballFree &&
-            ball.y <= terrain.heightAt(ball.x) + ball.boundingRadius + 0.03f &&
-            ball.vy <= 0f
+            (ballGone ||
+                (ball.y <= terrain.heightAt(ball.x) + ball.boundingRadius + 0.03f &&
+                    ball.vy <= 0f))
         if (landed && shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
         if (landed && landedAt < 0f) landedAt = elapsed
 
@@ -1414,7 +1441,9 @@ class TrebuchetGame {
      * est précisément ce qu'on est venu voir.
      */
     private fun pierceThrough(dt: Float) {
-        if (!ballFree) return
+        // Rien à relancer quand le projectile n'est plus là : la bombe n'a pas d'éclats,
+        // et [ball] désigne alors un corps retiré du monde.
+        if (!ballFree || ballGone) return
         val refund = TargetRules.style.pierce
         if (refund <= 0f) return
         val n = 1 + shards.size
@@ -1448,9 +1477,14 @@ class TrebuchetGame {
      * autrement dit un vrai choc, et pas un frôlement. Le seuil est bas : une bombe
      * qui touche du chaume doit exploser aussi.
      *
-     * Elle ne disparaît pas ensuite, elle **s'éteint** : le tir se mesure au point
-     * d'impact du projectile, et le faire disparaître priverait le joueur de sa portée.
-     * Elle finit sa course comme un caillou, sans plus rien pouvoir toucher que le sol.
+     * **Et elle disparaît.** Elle s'éteignait, autrefois : le corps restait dans le monde,
+     * inerte, incapable de toucher autre chose que le sol, et il finissait sa course en
+     * roulant. La raison invoquée était la mesure — le tir se mesure au point d'impact, et
+     * un projectile évaporé ne dit plus où il a frappé. Elle ne tenait pas : le point
+     * d'impact, c'est **ici**, à l'instant du souffle, et rien n'empêche de le relever
+     * avant de retirer le corps. Ce qui restait était une bombe qui avait déjà tout donné,
+     * qui n'avait aucune raison d'exister, et qui gardait la caméra accrochée à elle
+     * pendant que le château soufflé s'écroulait hors du cadre.
      */
     private fun explodeOnImpact(hit: Boolean) {
         if (!ballFree) return
@@ -1468,8 +1502,24 @@ class TrebuchetGame {
         targets.blast(ball.x, ball.y, kind.blastEnergyFor(config.bombSticks), r)
         effects.explosion(ball.x, ball.y, r)
         onExplosion?.invoke(ball.x, ball.y, r)
-        ball.collidesWith = TrebuchetCategory.GROUND
-        world.forgetContacts(ball)
+
+        // Le tir se relève **avant** que la bombe ne s'en aille : c'est le dernier
+        // instant où elle sait où elle a frappé, et c'est cela, la portée.
+        if (shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
+        if (landedAt < 0f) landedAt = elapsed
+
+        // Le corps quitte le monde. On l'arrête aussi net qu'on le retire : la caméra
+        // vise devant le projectile, d'autant plus loin qu'il va vite, et une vitesse
+        // restée dans un corps que plus personne n'intègre décalerait le cadrage de
+        // plusieurs mètres pour toujours.
+        ball.vx = 0f
+        ball.vy = 0f
+        ball.omega = 0f
+        world.remove(ball)
+        // Le champ de cibles garde une liste de projectiles à qui il crédite ce qu'ils
+        // cassent ; il saute ceux qui ne sont plus du monde, à condition qu'on le dise.
+        ball.inWorld = false
+        ballGone = true
     }
 
     /**

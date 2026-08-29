@@ -280,6 +280,66 @@ class TrebuchetProjectileTest {
     }
 
     /**
+     * **Une bombe qui a soufflé cesse d'exister.**
+     *
+     * Elle s'éteignait sans disparaître : le corps restait dans le monde, incapable de
+     * toucher autre chose que le sol, et il finissait le tir en roulant sur le terrain.
+     * La caméra suit le projectile pendant le vol — elle restait donc accrochée à ce
+     * débris sans force pendant que la construction soufflée s'écroulait hors du cadre.
+     *
+     * Trois choses se vérifient ensemble, et il faut les trois : la bombe quitte le
+     * monde, elle ne bouge plus, et **la portée du tir est quand même relevée**. Cette
+     * dernière était la raison invoquée pour la garder ; elle se relève au moment du
+     * souffle, qui est justement le point d'impact.
+     */
+    @Test
+    fun `la bombe cesse d exister une fois qu elle a explose`() {
+        TargetRules.style = TargetStyle.ARCADE
+        val g = TrebuchetGame()
+        g.config.projectile = Projectile.BOMBE
+        g.loadLevel(1L)
+        g.release()
+        repeat(90) { g.step(1f / 60f) }
+
+        // Elle arrive lentement sur la construction, comme dans « la bombe souffle à
+        // l'impact » : c'est le souffle qu'on veut, pas le choc.
+        g.ball.x = g.targets.left + 4f
+        g.ball.y = g.targets.baseHeight * 0.5f
+        g.ball.vx = 20f
+        g.ball.vy = 0f
+        g.world.forgetContacts(g.ball)
+
+        var t = 0f
+        var xSouffle = Float.NaN
+        var xFin = 0f
+        while (g.phase == TrebuchetGame.Phase.FLIGHT && t < 20f) {
+            val avant = g.ballGone
+            g.step(1f / 60f)
+            t += 1f / 60f
+            if (!avant && g.ballGone) xSouffle = g.ball.x
+            xFin = g.ball.x
+        }
+
+        println(
+            "BOMBE soufflée en x=${"%.1f".format(xSouffle)} m, " +
+                "portée relevée ${"%.1f".format(g.shotDistance)} m, " +
+                "corps encore dans le monde : ${g.world.bodies.contains(g.ball)}"
+        )
+        assertTrue("la bombe n'a pas explosé, le test ne prouve rien", g.ballGone)
+        assertTrue(
+            "la bombe est restée dans le monde après avoir soufflé",
+            !g.world.bodies.contains(g.ball)
+        )
+        // Elle ne roule plus : le corps est retiré, donc plus rien ne l'intègre.
+        assertEquals("la bombe a continué sa route après le souffle", xSouffle, xFin, 1e-3f)
+        // Et le tir a bien une portée, relevée au point du souffle.
+        assertEquals(
+            "la portée n'est pas celle du point d'impact",
+            xSouffle - TrebuchetRules.FIRING_LINE, g.shotDistance, 0.5f
+        )
+    }
+
+    /**
      * **Une bombe fait quelque chose à un château de pierre, dans les deux modes.**
      *
      * Le test qui manquait, et son absence a coûté une panne que le joueur a trouvée
