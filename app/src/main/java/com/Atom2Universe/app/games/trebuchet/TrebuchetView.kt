@@ -819,6 +819,34 @@ class TrebuchetView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Prend une pièce en main sans passer par le doigt : c'est le menu du bas qui appelle.
+     *
+     * Le doigt ne sait choisir que ce qu'il voit assez gros pour le viser, ce qui obligeait
+     * à revenir zoomer sur la machine avant chaque réglage. La liste, elle, désigne la pièce
+     * par son nom, et **la caméra ne bouge pas d'un pouce** : c'est tout l'intérêt, on règle
+     * en gardant la cible à l'écran. Le contraire de [grabAt], qui recadre parce qu'un doigt
+     * posé sur une pièce est un joueur qui la regarde déjà.
+     *
+     * Le reste est identique à une pièce touchée : prendre une pièce après un tir rebande la
+     * machine, et le tir en cours se **termine** au lieu d'être jeté.
+     */
+    fun selectPart(part: Part) {
+        synchronized(game) {
+            grip = Grip.NONE
+            if (part != Part.NONE && game.phase != TrebuchetGame.Phase.BUILD) {
+                game.stopShot()
+                game.rebuild()
+                // La phase change, mais ni la vue ni la caméra ne doivent y voir un
+                // événement : sans ces deux lignes, le cadrage reprendrait la main et
+                // sauterait sur la machine, ce que ce menu existe précisément pour éviter.
+                lastPhase = game.phase
+                camPhase = game.phase
+            }
+            selected = part
+        }
+    }
+
     /** Remet le suivi de phase à zéro après un changement piloté par l'activité. */
     fun syncPhase() {
         synchronized(game) { lastPhase = game.phase }

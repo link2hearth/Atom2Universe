@@ -11,7 +11,7 @@
     <string name="trebuchet_btn_stop">Terminé</string>
     <string name="trebuchet_btn_reset">Réinitialiser</string>
 
-    <string name="trebuchet_status_build">Touche une pièce de la machine pour la régler : la poutre, l\'axe, le pied, le contrepoids, le crochet ou le boulet</string>
+    <string name="trebuchet_status_build">Touche une pièce de la machine pour la régler — ou choisis-la dans « Pièces », même de loin</string>
     <string name="trebuchet_status_flight">Tir en cours…</string>
     <string name="trebuchet_status_loading">Le site se bâtit…</string>
     <string name="trebuchet_status_stopped">Tir arrêté en plein vol — la traînée est gardée, les dégâts aussi. Touche une pièce pour rebander.</string>
@@ -53,6 +53,14 @@
     <string name="trebuchet_level_cleared">%1$s — RASÉ en %2$d coup(s) !</string>
     <string name="trebuchet_btn_next">Site suivant</string>
     <string name="trebuchet_btn_machines">Machines ▾</string>
+
+    <string name="trebuchet_btn_parts">Pièces ▾</string>
+    <string name="trebuchet_part_beam">Poutre</string>
+    <string name="trebuchet_part_post">Pied</string>
+    <string name="trebuchet_part_weight">Contrepoids</string>
+    <string name="trebuchet_part_pin">Crochet de largage</string>
+    <string name="trebuchet_part_sling">Fronde et projectile</string>
+
     <string name="trebuchet_machine_default">Machine par défaut</string>
     <string name="trebuchet_machine_save_as">Enregistrer sous…</string>
     <string name="trebuchet_machine_delete">Supprimer…</string>

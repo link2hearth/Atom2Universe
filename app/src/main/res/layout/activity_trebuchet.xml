@@ -78,81 +78,130 @@
 
     </FrameLayout>
 
-    <!-- Message d'état -->
-    <TextView
-        android:id="@+id/trebuchet_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:minLines="2"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="6dp"
-        android:textColor="#8FA6C8"
-        android:textSize="12sp" />
-
-    <!-- La pièce tenue en main : ce qu'elle vaut, et ce qu'elle échange -->
-    <TextView
-        android:id="@+id/trebuchet_info_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="6dp"
-        android:textColor="#FFD166"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/trebuchet_info_tip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:minLines="2"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="3dp"
-        android:textColor="#8FA6C8"
-        android:textSize="12sp"
-        android:visibility="gone" />
-
-    <!-- Boutons -->
+    <!--
+        Le bandeau du bas : le sol de l'aire de jeu qui continue sous la scène. Textes et
+        boutons sont posés dessus, ce qui les rattache au terrain au lieu d'en faire une
+        barre d'application collée en dessous.
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="10dp">
+        android:orientation="vertical"
+        android:background="@drawable/bg_trebuchet_ground">
 
+        <!-- Message d'état -->
         <TextView
-            android:id="@+id/trebuchet_btn_machines"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp"
+            android:id="@+id/trebuchet_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/trebuchet_btn_machines"
-            android:textColor="#94A3B8"
-            android:textSize="13sp"
-            android:background="@drawable/bg_widget_arrow"
-            android:clickable="true"
-            android:focusable="true" />
+            android:minLines="2"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:textColor="#A8BFA4"
+            android:textSize="12sp" />
 
+        <!-- La pièce tenue en main : ce qu'elle vaut, et ce qu'elle échange -->
         <TextView
-            android:id="@+id/trebuchet_btn_fire"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:layout_weight="2"
+            android:id="@+id/trebuchet_info_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/trebuchet_btn_release"
-            android:textColor="#E2E8F0"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:textColor="#FFD166"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:background="@drawable/bg_widget_arrow"
-            android:clickable="true"
-            android:focusable="true" />
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/trebuchet_info_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minLines="2"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="3dp"
+            android:textColor="#A8BFA4"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- Boutons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/trebuchet_btn_machines"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/trebuchet_btn_machines"
+                android:textColor="#C7D8C0"
+                android:textSize="13sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeMaxTextSize="13sp"
+                android:background="@drawable/bg_trebuchet_button"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Choisir une pièce par son nom : voir TrebuchetActivity.showPartsMenu -->
+            <TextView
+                android:id="@+id/trebuchet_btn_parts"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/trebuchet_btn_parts"
+                android:textColor="#C7D8C0"
+                android:textSize="13sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeMaxTextSize="13sp"
+                android:background="@drawable/bg_trebuchet_button"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/trebuchet_btn_fire"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:text="@string/trebuchet_btn_release"
+                android:textColor="#F1F7EC"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="11sp"
+                app:autoSizeMaxTextSize="14sp"
+                android:background="@drawable/bg_trebuchet_button_main"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

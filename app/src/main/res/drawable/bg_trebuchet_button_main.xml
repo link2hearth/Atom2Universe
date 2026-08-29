@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Le bouton d'action : même forme que les autres, mais éclairé. C'est le seul du bandeau
+    qui fait partir quelque chose, et il doit se voir sans qu'on le cherche.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#4DFFE3A3">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#4A6B3C"
+                android:endColor="#2E4526" />
+            <stroke
+                android:width="1dp"
+                android:color="#99A6C98A" />
+        </shape>
+    </item>
+</ripple>

@@ -42,6 +42,19 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         const val ID_DELETE = 2
         const val ID_FIRST_PRESET = 10
 
+        /**
+         * Les entrées du menu des pièces, dans l'ordre où elles s'affichent sur la
+         * machine : le pied, la poutre qui pose dessus, le contrepoids qui pend, puis
+         * le bout du bras — le crochet et la fronde.
+         */
+        val PARTS = listOf(
+            TrebuchetView.Part.POST to R.string.trebuchet_part_post,
+            TrebuchetView.Part.BEAM to R.string.trebuchet_part_beam,
+            TrebuchetView.Part.WEIGHT to R.string.trebuchet_part_weight,
+            TrebuchetView.Part.PIN to R.string.trebuchet_part_pin,
+            TrebuchetView.Part.SLING to R.string.trebuchet_part_sling
+        )
+
         // Les entrées du menu des réglages.
         const val ID_ARCADE = 0
         const val ID_REALISTE = 1
@@ -61,6 +74,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     private lateinit var infoTip: TextView
     private lateinit var prefs: SharedPreferences
     private lateinit var machinesButton: TextView
+    private lateinit var partsButton: TextView
 
     /** Les machines mises de côté par le joueur, la plus récente en tête. */
     private var machines = emptyList<MachinePreset>()
@@ -117,6 +131,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         // essayer, et sans doute à remplacer par un vrai bouton quand le mode aura
         // trouvé sa forme.
         machinesButton.setOnLongClickListener { nextLevel(); true }
+        partsButton = findViewById(R.id.trebuchet_btn_parts)
+        partsButton.setOnClickListener { showPartsMenu() }
         fireButton.setOnClickListener { onFireButton() }
         findViewById<ImageButton>(R.id.trebuchet_btn_settings)
             .setOnClickListener { showSettingsMenu(it) }
@@ -309,6 +325,34 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         popup.show()
     }
 
+    /**
+     * Le menu des pièces : la même sélection qu'au doigt, mais par le nom.
+     *
+     * Toucher une pièce reste le geste normal, et il ne va nulle part. Seulement il
+     * demande de voir la pièce assez gros pour la viser : dézoomé sur le site, la
+     * machine tient dans un ongle, et régler quoi que ce soit obligeait à revenir
+     * dessus, régler, puis reculer de nouveau pour voir où le coup tombe.
+     *
+     * La liste ne fait donc **que** désigner la pièce — ni cadrage, ni verrou. Rien n'est
+     * coché, parce qu'il n'y a rien à retenir : c'est une sélection, pas un mode. Un appui
+     * hors de la bulle la repose, exactement comme une pièce prise au doigt.
+     */
+    private fun showPartsMenu() {
+        val popup = PopupMenu(this, partsButton)
+        for ((i, p) in PARTS.withIndex()) popup.menu.add(0, i, i, getString(p.second))
+        popup.setOnMenuItemClickListener { item ->
+            PARTS.getOrNull(item.itemId)?.let { (part, _) ->
+                gameView.selectPart(part)
+                // La sélection sort la bulle à roulettes et le bandeau de la pièce : c'est
+                // updateUi qui les tient, et rien ne les rafraîchit tout seul ici puisque
+                // la vue n'a pas reçu de doigt.
+                updateUi()
+            }
+            true
+        }
+        popup.show()
+    }
+
     /** Pose une machine sur le terrain et le dit, parce que ça ne se voit pas toujours. */
     private fun loadMachine(cfg: MachineConfig, name: String) {
         gameView.clearSelection()
@@ -474,6 +518,9 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         // On ne décroche pas la détente sur un site qui n'est pas encore posé : le tir
         // partirait sur la cible précédente, et il serait remplacé une image plus tard.
         fireButton.isEnabled = !loading
+        // Le fond du bouton ne dit pas tout seul qu'il est éteint : on le fait pâlir,
+        // sinon un bouton qui ne répond pas passe pour un bouton cassé.
+        fireButton.alpha = if (loading) 0.45f else 1f
 
         statusText.visibility =
             if (gameView.selected == TrebuchetView.Part.NONE) View.VISIBLE else View.GONE
