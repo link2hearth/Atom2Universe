@@ -140,6 +140,25 @@ class TrebuchetView @JvmOverloads constructor(
         /** De combien le vol peut reculer au-delà du dézoom ordinaire. */
         const val FLIGHT_ZOOM_OUT = 0.55f
 
+        /**
+         * À partir de quelle fraction de la chute (depuis le sommet de l'arc) le
+         * cadrage resserre un peu, pour finir plus près au moment de l'impact.
+         */
+        const val FLIGHT_END_ZOOM_START = 0.65f
+
+        /** De combien le cadrage se resserre au tout dernier instant de la chute. */
+        const val FLIGHT_END_ZOOM_BOOST = 0.18f
+
+        /** Marge gardée autour de la construction quand la caméra y reste après un tir touché. */
+        const val RESULT_HIT_MARGIN = 10f
+
+        /** En dessous, la caméra ne se rapproche plus d'une construction trop petite. */
+        const val RESULT_HIT_MIN_WIDTH = 16f
+        const val RESULT_HIT_MIN_HEIGHT = 10f
+
+        /** Marge gardée devant le point d'impact (ou la construction) au dézoom de fin de tir. */
+        const val RESULT_VIEW_MARGIN = 30f
+
         /** Au-delà, le cadrage automatique ne recule plus. */
         const val MAX_VIEW_WIDTH = 560f
 
@@ -837,14 +856,24 @@ class TrebuchetView @JvmOverloads constructor(
             // altitude du boulet le laisserait sortir par le haut.
             val flightHeight =
                 max(machineHeight, game.ball.y - camFloor + FLIGHT_TOP_MARGIN)
-            targetScale = min(
+            // Les derniers mètres de la chute resserrent un peu le cadre : c'est là que
+            // l'impact se joue, et un tir qui redescend d'un arc bas franchit cette
+            // fraction-là bien avant de toucher le sol, donc sans à-coup à l'arrivée.
+            val descentFrac = if (game.ball.vy < 0f) {
+                val fallen = (game.peakHeight - game.ball.y).coerceAtLeast(0f)
+                val span = (game.peakHeight - camFloor).coerceAtLeast(1f)
+                (fallen / span).coerceIn(0f, 1f)
+            } else 0f
+            val endBoost = ((descentFrac - FLIGHT_END_ZOOM_START) / (1f - FLIGHT_END_ZOOM_START))
+                .coerceIn(0f, 1f)
+            targetScale = (min(
                 width / max(machineWidth + FLIGHT_VIEW_MARGIN, FLIGHT_MIN_WIDTH),
                 (height - GROUND_INSET_DP * dp) / flightHeight
                 // Le dézoom du vol a le droit d'aller un peu plus loin que celui du
                 // cadrage libre : un tir très haut demande de reculer au-delà de la
                 // largeur du terrain, et mieux vaut un peu de vide sur les côtés qu'un
                 // boulet sorti par le haut de l'écran.
-            ).coerceIn(minScale() * FLIGHT_ZOOM_OUT, maxScale())
+            ) * (1f + endBoost * FLIGHT_END_ZOOM_BOOST)).coerceIn(minScale() * FLIGHT_ZOOM_OUT, maxScale())
             // On vise devant le boulet, d'autant plus loin qu'il va vite : le
             // cadrage anticipe au lieu de courir après.
             tx = game.ball.x + game.ball.vx * 0.4f
@@ -854,12 +883,32 @@ class TrebuchetView @JvmOverloads constructor(
             val targetWidth: Float
             val targetHeight: Float
             if (game.phase == TrebuchetGame.Phase.RESULT) {
-                // Une fois retombé, on recule pour montrer tout l'arc : c'est le
-                // moment où le joueur juge sa machine.
-                targetWidth = max(machineWidth, abs(game.ball.x) + 30f)
-                    .coerceAtMost(MAX_VIEW_WIDTH)
-                targetHeight = max(machineHeight, game.peakHeight - camFloor + 12f)
-                tx = game.ball.x / 2f
+                if (game.level != null && game.targets.tookDamage && !game.targets.cleared) {
+                    // Touché, mais pas encore rasé : la caméra reste sur la
+                    // construction plutôt que de reculer montrer l'arc, c'est elle
+                    // qu'on veut regarder maintenant.
+                    val t = game.targets
+                    targetWidth = (t.right - t.left + RESULT_HIT_MARGIN)
+                        .coerceAtLeast(RESULT_HIT_MIN_WIDTH)
+                    targetHeight = (t.baseHeight - camFloor + RESULT_HIT_MARGIN)
+                        .coerceAtLeast(RESULT_HIT_MIN_HEIGHT)
+                    tx = (t.left + t.right) / 2f
+                } else {
+                    // Rien touché, ou le site est rasé : on recule pour montrer d'un
+                    // coup d'œil le trébuchet à gauche, la courbe, le point d'impact,
+                    // et la construction si elle est encore plus loin que ce point.
+                    // Rasé, c'est aussi ce plan large qu'il faut pour le feu
+                    // d'artifice : il part entre la machine et les ruines, et un
+                    // cadrage collé à la construction n'en montrerait pas grand-chose.
+                    val leftMost = panLeft()
+                    val impactX = TrebuchetRules.FIRING_LINE + game.shotDistance
+                    val cible = game.level?.takeIf { game.targets.right > impactX }
+                        ?.let { game.targets.right }
+                    val rightMost = (cible ?: impactX) + RESULT_VIEW_MARGIN
+                    targetWidth = max(machineWidth, rightMost - leftMost).coerceAtMost(MAX_VIEW_WIDTH)
+                    targetHeight = max(machineHeight, game.peakHeight - camFloor + 12f)
+                    tx = (leftMost + rightMost) / 2f
+                }
                 follow = 3f
             } else {
                 // Bandée, la machine s'étale côté arrière : pointe plongée derrière,

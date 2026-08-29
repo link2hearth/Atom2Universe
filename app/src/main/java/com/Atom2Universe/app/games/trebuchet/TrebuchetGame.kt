@@ -490,6 +490,29 @@ class TrebuchetGame {
         const val SHOT_TIMEOUT = 30f
 
         /**
+         * Grâce accordée à l'écroulement une fois le boulet posé, en secondes.
+         *
+         * Comptée depuis l'atterrissage et non depuis le largage : un tir en cloche
+         * passe déjà de longues secondes en l'air, et faire partir ce délai du
+         * largage aurait laissé un château presque plus de temps pour tomber qu'un
+         * tir tendu au même endroit.
+         */
+        const val COLLAPSE_GRACE = 10f
+
+        /**
+         * Combien de temps la construction doit être **restée** immobile avant
+         * qu'on la croie vraiment posée, en secondes.
+         *
+         * Une pierre qui vient de rompre lègue ses éclats à la vitesse qu'elle
+         * avait — souvent proche de zéro, si c'est la charge qui l'a lentement
+         * écrasée plutôt qu'un choc. Un seul relevé au repos, juste après la
+         * rupture, croirait donc l'écroulement fini avant que la gravité n'ait eu
+         * une image pour agir. Voir [TargetRules.ARM_CALM], la même idée à
+         * l'armement.
+         */
+        const val SETTLE_CALM = TargetRules.ARM_CALM
+
+        /**
          * Sécurité : passé ça, la fronde a dépassé l'axe du bras de l'autre côté
          * sans que le crochet ait lâché. Ça ne devrait pas arriver — mais un boulet
          * qui fait le tour du bras indéfiniment vaut mieux largué que gardé.
@@ -688,6 +711,19 @@ class TrebuchetGame {
     private var blown = false
 
     /**
+     * [elapsed] au moment où le boulet a touché, ou -1 tant qu'il n'a pas encore
+     * atterri. C'est de là, et pas du largage, que se compte [COLLAPSE_GRACE].
+     */
+    private var landedAt = -1f
+
+    /**
+     * Depuis combien de temps la construction est vue immobile, d'affilée. Remis à
+     * zéro dès qu'une pierre bouge encore, pour que [COLLAPSE_GRACE] ne se laisse
+     * pas tromper par un relevé au repos qui ne dure qu'une image.
+     */
+    private var settleCalm = 0f
+
+    /**
      * Où commence le vol libre dans [trail], ou -1 tant que la boucle n'a pas quitté
      * le crochet. Ce qui précède est la course du boulet traîné au sol : joli, mais
      * ce n'est pas la trajectoire.
@@ -858,12 +894,21 @@ class TrebuchetGame {
         shards.clear()
         split = false
         blown = false
+        landedAt = -1f
+        settleCalm = 0f
         targets.forgetPiercers()
+        targets.resetHitFlag()
 
         // Le monde vient d'être vidé pour remonter la machine. La cible, elle, garde
         // ses corps : le joueur qui allonge sa poutre entre deux tirs ne doit pas voir
         // le château se reconstruire derrière lui.
         targets.reattach()
+        // Le boulet qui vient de la toucher, lui, n'a pas survécu à ce vidage : c'est
+        // le moment de rendormir la cible si elle est prête, plutôt que d'attendre la
+        // prochaine image de vol pour s'en apercevoir — cette image-là est celle du
+        // bras qui prend de la vitesse, pas le bon moment pour découvrir que plus rien
+        // n'approche.
+        targets.trySleep()
 
         // Le monde vient d'être vidé, mais le vent n'est pas une pièce de la machine :
         // il souffle sur le site, et il souffle encore quand on remonte le bras.
@@ -1187,7 +1232,10 @@ class TrebuchetGame {
         cwStartY = counterweight.y
         split = false
         blown = false
+        landedAt = -1f
+        settleCalm = 0f
         targets.forgetPiercers()
+        targets.resetHitFlag()
 
         // Le bras n'est plus tenu que par son axe.
         beam.lockPosition = false
@@ -1264,12 +1312,28 @@ class TrebuchetGame {
             ball.y <= terrain.heightAt(ball.x) + ball.boundingRadius + 0.03f &&
             ball.vy <= 0f
         if (landed && shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
+        if (landed && landedAt < 0f) landedAt = elapsed
 
         // Le tir est fini quand le boulet a touché **et** que la cible a fini de
         // s'écrouler : un château met plusieurs secondes à s'effondrer, et rendre la
         // main avant reviendrait à cacher au joueur le résultat de son coup.
-        val settled = landed && (level == null || targets.piecesAtRest())
-        val stuck = landed && elapsed > SHOT_TIMEOUT * 0.5f
+        //
+        // « Fini » se lit sur une **immobilité tenue**, pas sur un relevé isolé : une
+        // pierre qui vient de rompre part parfois à vitesse quasi nulle, portée par la
+        // charge plutôt que par un choc, et le tour de veille suivant la verrait « au
+        // repos » une image entière avant que la gravité n'ait eu le temps d'agir. Sans
+        // ce délai tenu, ce relevé-là suffisait à clore le tir en pleine chute — la
+        // construction se figeait à mi-écroulement, debout sur un boulet qui, lui, avait
+        // bel et bien fini sa course.
+        if (level != null) {
+            settleCalm = if (landed && targets.piecesAtRest()) settleCalm + dt else 0f
+        }
+        val settled = landed && (level == null || settleCalm >= SETTLE_CALM)
+        // Le délai avant abandon se compte depuis l'atterrissage, pas depuis le
+        // largage : un tir en cloche passe déjà de longues secondes en l'air, et le
+        // faire courir depuis le départ aurait laissé un château presque plus de
+        // temps pour tomber qu'un tir tendu posé au même endroit.
+        val stuck = landed && landedAt >= 0f && elapsed - landedAt > COLLAPSE_GRACE
         if (settled || stuck || elapsed > SHOT_TIMEOUT ||
             ball.x > TrebuchetRules.GROUND_RIGHT - 4f
         ) {

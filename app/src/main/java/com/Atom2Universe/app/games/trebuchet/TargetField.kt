@@ -202,6 +202,18 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
     var pieceBroken = 0
         private set
 
+    /**
+     * Vrai si un choc a fait perdre de la vie à une pierre depuis [resetHitFlag] —
+     * c'est le signal que regarde la caméra de fin de tir pour savoir si elle reste
+     * sur la construction touchée ou si elle recule montrer l'arc parce que rien n'a
+     * été atteint.
+     */
+    var tookDamage = false
+        private set
+
+    /** Remet le signal de tir touché à zéro. À faire au départ de chaque tir. */
+    fun resetHitFlag() { tookDamage = false }
+
     private var debrisCount = 0
 
     /**
@@ -363,6 +375,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         armingTimer = 0f
         calmTimer = 0f
         dormant = false
+        tookDamage = false
         for (b in structure.blocks) spawn(b, tier = 0)
         lightUp()
     }
@@ -536,6 +549,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             // le projectile, et c'est tout le principe de la traversée.
             val reste = p.hp
             p.hp -= impact
+            tookDamage = true
             if (p.hp <= 0f) {
                 someBroke = true
                 creditPiercer(p, reste, dt)
@@ -568,7 +582,27 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             dormant = false
             return
         }
-        if (approche || !piecesAtRest()) return
+        if (approche) return
+        trySleep()
+    }
+
+    /**
+     * Rendort la cible sur-le-champ si elle est immobile et que rien n'approche.
+     *
+     * [updateDormancy] fait le même essai à chaque image de vol, mais seulement pendant
+     * le vol : entre deux tirs, [TrebuchetGame.step] rend la main dès sa première ligne
+     * et ne tourne plus du tout. Une cible qu'on vient de raser reste donc éveillée —
+     * cent corps et quelques dans le monde, leur épaisseur comptée dans le découpage en
+     * sous-pas — pendant tout le réglage du joueur, et jusque dans la bande du tir
+     * suivant s'il enchaîne vite : c'est *ce* sous-pas-là, celui du bras qui prend de la
+     * vitesse, qui se retrouvait taillé pour un château à l'autre bout du terrain.
+     *
+     * Appelée ici juste après que le boulet du tir précédent a quitté le monde —
+     * [PhysWorld.clear] l'a emporté avec lui — l'endormissement a lieu avant que la
+     * prochaine bande ne commence, pas pendant.
+     */
+    fun trySleep() {
+        if (dormant || somethingApproaching() || !piecesAtRest()) return
         // On fige des corps déjà immobiles : on met quand même les vitesses à zéro,
         // pour qu'aucun reliquat ne les fasse dériver au réveil.
         for (p in live) {
@@ -658,6 +692,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
 
             if (p.material.rupture == Rupture.INCASSABLE) continue
             p.hp -= e
+            tookDamage = true
             if (p.hp <= 0f) someBroke = true
         }
         if (someBroke) breakDead()
