@@ -117,12 +117,11 @@ class PhysWorld {
      * éveillé le touche pour de bon, ou qu'on le lui demande.
      *
      * C'est la seule façon de rendre une cible empilée abordable. Le coût d'une image
-     * vaut le nombre de corps **actifs** multiplié par le nombre de sous-pas, et le
-     * nombre de sous-pas est dicté par le corps le plus rapide du monde entier : un
-     * boulet à cent trente mètres par seconde force trente-deux sous-pas, et les
-     * soixante-dix pierres d'un château étaient résolues à chacun **alors qu'aucune
-     * ne bougeait**. Mesuré : 7,3 ms par image de simulation, contre 0,2 une fois les
-     * pierres endormies.
+     * vaut le nombre de corps **actifs** multiplié par le nombre de sous-pas : un boulet
+     * à cent trente mètres par seconde force trente-deux sous-pas au moment où il touche,
+     * et les soixante-dix pierres d'un château étaient résolues à chacun **alors
+     * qu'aucune ne bougeait**. Mesuré : 7,3 ms par image de simulation, contre 0,2 une
+     * fois les pierres endormies.
      *
      * Le réglage est volontairement à l'arrêt par défaut : un jeu où le joueur pose
      * des pièces à la main n'y gagnerait rien et pourrait s'y perdre.
@@ -283,17 +282,55 @@ class PhysWorld {
     }
 
     /**
-     * Durée pendant laquelle, à l'état actuel, rien ne peut franchir la plus petite
-     * épaisseur du monde.
+     * Marge de sécurité, en mètres, ajoutée à la portée d'un corps quand on cherche ce
+     * qu'il peut toucher pendant l'image.
+     *
+     * Elle couvre ce que la vitesse mesurée **au début** du pas ne dit pas : la
+     * pesanteur ajoute seize centimètres par seconde à chaque image, et surtout une
+     * impulsion peut accélérer un corps au milieu d'un sous-pas — le contrepoids qui
+     * frappe le bras fait passer celui-ci de zéro à trois tours par seconde. Un demi-
+     * mètre est deux ordres de grandeur au-dessus du premier effet, et [stepFrame]
+     * recalcule après chaque sous-pas, ce qui rattrape le second dès le pas suivant.
+     */
+    private val reachMargin = 0.5f
+
+    /**
+     * Durée pendant laquelle, à l'état actuel, rien ne peut franchir l'épaisseur de ce
+     * qu'il peut **réellement atteindre**.
      *
      * La vitesse retenue est celle du **point le plus rapide** de chaque corps,
      * rotation comprise : le centre d'un bras de douze mètres avance lentement
      * pendant que son extrémité file à vingt mètres par seconde.
+     *
+     * Et la finesse ne compte qu'**en fonction de la distance**. C'était le défaut de la
+     * version précédente, qui croisait bêtement le corps le plus rapide du monde avec le
+     * plus mince : une pierre de dix centimètres posée à l'autre bout du château comptait
+     * exactement autant qu'une pierre juste devant le boulet. Résultat, un château remis
+     * dans la simulation quarante mètres avant l'impact faisait tomber le pas à sa valeur
+     * plancher — trente-deux sous-pas par image, chacun rebalayant cent corps — pendant
+     * tout le quart de seconde que le joueur regarde, et **alors que rien ne pouvait
+     * encore se toucher**.
+     *
+     * La règle est maintenant celle de l'avancement conservatif : pour chaque corps qui
+     * bouge, on ne retient que ce qu'il peut joindre d'ici la fin de l'image, et le pas
+     * est taillé sur l'épaisseur de ceux-là seulement. Une paire écartée l'est parce que
+     * son écart dépasse ce que les deux corps peuvent combler en une image entière — donc
+     * *a fortiori* en un sous-pas, qui est toujours plus court. Et comme [stepFrame]
+     * refait ce calcul après chaque sous-pas, la contrainte revient d'elle-même dès que
+     * le boulet entre dans la portée des premières pierres.
+     *
+     * Une pierre endormie compte comme les autres : elle ne bouge pas, mais elle reste un
+     * obstacle, et l'ignorer serait exactement le bug qu'on ne veut pas — voir
+     * `PhysicsTunnelTest`.
      */
     private fun safeStep(frameDt: Float): Float {
-        var fastest = 0f
+        // 1. La plus petite épaisseur du monde, et le corps le plus rapide. Ni l'un ni
+        // l'autre ne décide du pas : ils ne servent qu'à écarter vite le travail inutile.
         var thinnest = Float.MAX_VALUE
-        for (bd in bodies) {
+        var fastest = -1
+        var fastestSpeed = 0f
+        for (i in bodies.indices) {
+            val bd = bodies[i]
             if (!bd.inWorld) continue
             // Un corps que personne ne peut toucher n'a pas à imposer son épaisseur :
             // l'axe d'une machine de jet fait huit centimètres et ne sert qu'à porter
@@ -302,18 +339,91 @@ class PhysWorld {
             if (bd.collidesWith != 0 && bd.smallestHalfExtent < thinnest) {
                 thinnest = bd.smallestHalfExtent
             }
-            if (!bd.sleeping && (bd.invMass > 0f || bd.invI > 0f)) {
-                val s = sqrt(bd.speedSq) + abs(bd.omega) * bd.boundingRadius
-                if (s > fastest) fastest = s
+            if (!bd.frozen) {
+                val s = speedOf(bd)
+                if (s > fastestSpeed) { fastestSpeed = s; fastest = i }
             }
         }
-        if (thinnest == Float.MAX_VALUE || fastest <= 0f) return frameDt
-        // Marge de deux : deux corps peuvent se croiser en sens contraire, et leur
-        // rapprochement vaut alors la somme de leurs vitesses.
-        val safe = thinnest * 0.5f / fastest
+        if (thinnest == Float.MAX_VALUE || fastest < 0 || fastestSpeed <= 0f) return frameDt
+
+        // 2. Le plus rapide d'abord : c'est lui qui abaisse la limite, et une limite
+        // basse permet d'écarter tous les autres d'une seule division. Sans ce
+        // passe-droit, l'élagage dépendrait de l'ordre des corps dans la liste.
+        var limit = frameDt
+        limit = narrowBy(bodies[fastest], fastestSpeed, frameDt, limit)
+        for (i in bodies.indices) {
+            if (i == fastest) continue
+            val a = bodies[i]
+            if (!a.inWorld || a.frozen) continue
+            val sa = speedOf(a)
+            if (sa <= 0f) continue
+            // Élagage : même contre la pièce la plus mince du monde, ce corps-ci ne
+            // peut pas abaisser la limite. Inutile de chercher ce qu'il pourrait
+            // toucher — et c'est ce qui garde le calcul linéaire pendant qu'un château
+            // s'effondre, où soixante pierres bougent en même temps mais où une seule
+            // décide du pas.
+            //
+            // La borne est honnête : toute paire vaut au moins deux fois la plus petite
+            // demi-épaisseur du monde, donc au moins `thinnest × 2 × 0,25 / sa`.
+            if (thinnest * 0.5f / sa >= limit) continue
+            limit = narrowBy(a, sa, frameDt, limit)
+        }
+
         // Le plancher garantit que l'image finit toujours par être consommée, même
         // face à une vitesse aberrante.
-        return safe.coerceIn(frameDt / maxSubSteps, frameDt)
+        return limit.coerceIn(frameDt / maxSubSteps, frameDt)
+    }
+
+    /** Vitesse du point le plus rapide d'un corps, rotation comprise. */
+    private fun speedOf(bd: PhysBody): Float =
+        sqrt(bd.speedSq) + abs(bd.omega) * bd.boundingRadius
+
+    /**
+     * Abaisse la limite de pas d'après ce que [a], lancé à [sa], peut atteindre.
+     *
+     * On divise par la seule vitesse de [a], et non par la vitesse de rapprochement de
+     * la paire. Ce n'est pas une approximation : chaque paire est examinée **des deux
+     * côtés**, une fois par corps mobile, et c'est le plus rapide des deux qui donne le
+     * pas le plus court. Le pas retenu vaut donc au pire `épaisseur / (4 × la plus grande
+     * des deux vitesses)`, et comme la somme de deux vitesses ne dépasse jamais deux fois
+     * la plus grande, les deux corps ne peuvent pas se rapprocher de plus de la moitié de
+     * cette épaisseur pendant le pas. C'est la marge de deux que retenait déjà l'ancienne
+     * version, à l'identique.
+     *
+     * **L'épaisseur en jeu est la somme des deux demi-épaisseurs, pas la plus petite.**
+     * C'est la géométrie qui le dit : deux corps se recouvrent tant que leurs centres
+     * sont distants de moins que la somme de leurs appuis, donc la fenêtre où la
+     * détection peut les voir se toucher est large de `2 × (ea + eb)` — un boulet de
+     * douze centimètres qui aborde une dalle de trois mètres a six mètres de fenêtre, et
+     * pas vingt-quatre centimètres. Retenir la plus petite des deux, comme le faisait
+     * la première version de cette règle, revenait à tailler les sous-pas sur le rayon
+     * du boulet lui-même : il rase le relief à deux mètres du sol pendant tout son vol,
+     * et l'image se découpait en quatorze sous-pas pour une dalle qu'aucun découpage ne
+     * lui fera jamais traverser.
+     *
+     * Le quart, lui, n'a pas bougé : le pas retenu laisse le déplacement relatif sous le
+     * quart de la fenêtre, soit quatre relevés à l'intérieur du recouvrement. C'est la
+     * marge exacte de l'ancienne règle, et ce n'est pas le moment de la rogner.
+     */
+    private fun narrowBy(a: PhysBody, sa: Float, frameDt: Float, current: Float): Float {
+        if (!a.inWorld || a.collidesWith == 0) return current
+        var limit = current
+        val ea = a.smallestHalfExtent
+        for (j in bodies.indices) {
+            val b = bodies[j]
+            if (b === a || !b.inWorld) continue
+            if (!a.collidesWith(b)) continue
+            // La vitesse du voisin entre dans la **portée** — c'est elle qui dit s'ils
+            // ont le temps de se joindre — mais pas dans la division : voir plus haut.
+            val sb = if (b.frozen) 0f else speedOf(b)
+            val reach = a.boundingRadius + b.boundingRadius + (sa + sb) * frameDt + reachMargin
+            val dx = b.x - a.x
+            val dy = b.y - a.y
+            if (dx * dx + dy * dy > reach * reach) continue
+            val safe = (ea + b.smallestHalfExtent) * 0.25f / sa
+            if (safe < limit) limit = safe
+        }
+        return limit
     }
 
     /** Nombre de sous-pas que [stepFrame] emploierait pour une image de [dt]. */

@@ -77,10 +77,11 @@ class TerrainPlan(val terrain: Terrain, val pads: List<Pad>) {
  * face latérale de la dalle du dessus.
  *
  * **Les dalles sont épaisses, et ce n'est pas de la coquetterie.** Le moteur règle ses
- * sous-pas sur la pièce la plus mince du monde ([PhysWorld.subStepsFor]) : un sol
- * découpé en lamelles de vingt centimètres ferait découper chaque image en trente
- * sous-pas, et le jeu ramerait sans que rien ne le dise. Elles descendent donc toutes
- * jusqu'à [DEPTH] mètres sous le point le plus bas du relief.
+ * sous-pas sur la pièce la plus mince qu'un corps rapide peut atteindre
+ * ([PhysWorld.subStepsFor]) : un sol découpé en lamelles de vingt centimètres ferait
+ * découper chaque image en trente sous-pas **pendant tout le vol**, puisque le boulet
+ * rase le relief d'un bout à l'autre du terrain. Elles descendent donc toutes jusqu'à
+ * [DEPTH] mètres sous le point le plus bas du relief.
  */
 class Terrain(nodes: List<TerrainNode>) {
 

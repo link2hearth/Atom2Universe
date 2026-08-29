@@ -132,6 +132,7 @@ class TrebuchetFlightCostTest {
         var approche = 0L
         var images = 0
         var actifs = 0
+        var sousPas = 0
         var touche = false
         repeat(120) {
             if (g.phase != TrebuchetGame.Phase.FLIGHT) return@repeat
@@ -145,6 +146,8 @@ class TrebuchetFlightCostTest {
                 images++
                 val n = g.world.bodies.count { it.inWorld && !it.frozen }
                 if (n > actifs) actifs = n
+                val s = g.world.subStepsFor(dt)
+                if (s > sousPas) sousPas = s
             }
         }
 
@@ -152,11 +155,29 @@ class TrebuchetFlightCostTest {
         assertTrue("la cible n'a jamais eu d'images d'approche", images > 3)
         println(
             "APPROCHE château : $images images entre le réveil et le choc, " +
-                "corps actifs=$actifs, image moyenne=${approche / images / 1000} µs"
+                "corps actifs=$actifs, sous-pas max=$sousPas, " +
+                "image moyenne=${approche / images / 1000} µs"
         )
         // Comme ailleurs dans ce fichier, on vérifie la **propriété** et non le chrono,
         // qui dépendrait de la machine : pendant l'approche, la construction entière
         // doit être hors du solveur.
         assertTrue("des pierres tournent dans le solveur avant le choc : $actifs corps", actifs < 12)
+        // Et surtout : elle ne doit pas non plus **découper l'image** de loin.
+        //
+        // C'est l'autre moitié du prix d'un château, et celle qui échappait à ce test.
+        // Les pierres avaient beau dormir, leur épaisseur entrait quand même dans le
+        // calcul des sous-pas — une pierre de dix centimètres à quarante mètres pesait
+        // autant qu'une pierre juste devant le boulet — et l'image d'approche se jouait
+        // en trente-deux sous-pas, chacun rebalayant les cent corps du monde. Mesuré :
+        // 130 µs l'image contre 35 depuis que le découpage regarde la distance.
+        //
+        // Le compte n'est pas retombé à un, et c'est normal : les toutes dernières
+        // images de l'approche voient le boulet entrer dans la portée des premières
+        // pierres, avant qu'aucune ne se soit encore réveillée. Celles-là méritent
+        // leurs sous-pas.
+        assertTrue(
+            "la cible taille encore les sous-pas de loin : $sousPas sous-pas",
+            sousPas <= 8
+        )
     }
 }

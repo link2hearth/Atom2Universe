@@ -290,9 +290,9 @@ object TargetRules {
      * Ce n'est **pas** une question de traversée — les sous-pas adaptatifs du moteur
      * empêchent déjà un boulet à 150 m/s de passer au travers d'une planche de 8 cm,
      * c'est mesuré. C'est une question de coût : [com.Atom2Universe.app.games.physics.PhysWorld]
-     * découpe l'image d'après la pièce **la plus mince du monde entier**, machine
-     * comprise. Une seule carte trop fine posée à trois cents mètres ralentit tout
-     * le reste.
+     * découpe l'image d'après la pièce la plus mince **que quelque chose de rapide peut
+     * atteindre**. Une carte à trois cents mètres ne coûte donc plus rien, mais la même
+     * carte devant le boulet fait tomber le pas au plancher pour toute la durée du choc.
      */
     const val MIN_HALF_THICKNESS = 0.05f
 
