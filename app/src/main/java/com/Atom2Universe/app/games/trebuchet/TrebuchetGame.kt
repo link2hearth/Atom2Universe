@@ -800,6 +800,18 @@ class TrebuchetGame {
     // Mesures du tir
     var shotDistance = 0f
         private set
+
+    /**
+     * Vrai quand le dernier tir a été **arrêté à la main en plein vol**.
+     *
+     * Il ne s'agit pas d'un tir raté mais d'un tir qu'on n'a pas laissé finir : le
+     * joueur a vu où ça allait et a repris la main. Ce qui a été fait est gardé — la
+     * traînée jusqu'au point d'arrêt, les dégâts déjà infligés — mais il n'y a **pas de
+     * portée** : le boulet n'a pas touché terre, et inscrire l'endroit où il volait
+     * encore comme un record serait un mensonge.
+     */
+    var shotStopped = false
+        private set
     var peakHeight = 0f
         private set
     var peakSpeed = 0f
@@ -890,6 +902,7 @@ class TrebuchetGame {
         trailTimer = 0f
         ballFree = false
         efficiency = 0f
+        shotStopped = false
         phase = Phase.BUILD
         shards.clear()
         split = false
@@ -1077,7 +1090,20 @@ class TrebuchetGame {
      * et sa distance. Le rejouer, c'est rappeler la même graine.
      */
     fun loadLevel(seed: Long) {
-        val lvl = TargetGenerator.generate(seed)
+        applyLevel(TargetGenerator.generate(seed))
+    }
+
+    /**
+     * Pose un niveau **déjà fabriqué**, et rebande la machine devant.
+     *
+     * La fabrication et la pose sont séparées parce qu'elles n'ont ni le même coût ni le
+     * même fil. [TargetGenerator.generate] bâtit le site et le tasse dans un monde
+     * jetable — trois millisecondes en moyenne, seize au pire, davantage sur un
+     * téléphone — sans toucher à quoi que ce soit du jeu en cours ; c'est du travail de
+     * fond. La pose, elle, remplace le monde sous les pieds du joueur : elle est
+     * immédiate, et elle doit se faire d'un bloc pendant que la simulation est à l'arrêt.
+     */
+    fun applyLevel(lvl: TargetLevel) {
         level = lvl
         // Le relief se pose **avant** le remontage : c'est lui qui décide des corps
         // immobiles du monde, et [build] les fabrique.
@@ -1607,14 +1633,33 @@ class TrebuchetGame {
         }
     }
 
+    /**
+     * Arrête le tir en cours sur-le-champ, et garde ce qu'il a fait.
+     *
+     * C'est le geste du joueur qui a compris avant la fin : le boulet part trop court,
+     * la construction est déjà par terre, ou il a simplement vu ce qu'il voulait voir.
+     * Rien n'est effacé — la traînée devient un fantôme arrêté au point où le boulet en
+     * était, et les dégâts restent puisqu'ils appartiennent aux pierres, pas au tir.
+     *
+     * Un boulet qui n'a pas encore touché terre ne laisse en revanche aucune portée :
+     * voir [shotStopped].
+     */
+    fun stopShot() {
+        if (phase != Phase.FLIGHT) return
+        shotStopped = landedAt < 0f
+        finishShot()
+    }
+
     private fun finishShot() {
         phase = Phase.RESULT
         celebrate()
         // La portée est celle du **point d'impact**, mesurée à l'atterrissage : après,
         // le boulet roule, et où il finit sa course n'apprend rien.
-        if (shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
+        if (!shotStopped) {
+            if (shotDistance == 0f) shotDistance = ball.x - TrebuchetRules.FIRING_LINE
+            if (shotDistance > bestDistance) bestDistance = shotDistance
+        }
         shotCount++
-        if (shotDistance > bestDistance) bestDistance = shotDistance
         // Le plus récent en tête, et on oublie le plus vieux quand la pile déborde.
         ghostList.add(0, trailBuf.copyOf(trailCount))
         while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)

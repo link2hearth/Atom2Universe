@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.physics
 
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -93,7 +94,20 @@ class PhysBody private constructor(
         this(listOf(BodyPart(Shape.BOX, halfW, halfH, 0f, 0f, 0f, 0f)), mass)
 
     companion object {
-        private var nextId = 1
+        /**
+         * Le compteur d'identifiants, **partagé par tous les mondes de l'application**.
+         *
+         * Il est atomique parce qu'un jeu peut bâtir un monde jetable sur un fil de fond
+         * pendant qu'un autre tourne à l'écran — c'est ce que fait le trébuchet, qui
+         * tasse la construction du niveau suivant pendant que le joueur règle sa machine.
+         * Un `nextId++` ordinaire est une lecture puis une écriture : deux fils peuvent
+         * lire la même valeur, et le compteur peut même **reculer** sous une valeur déjà
+         * distribuée. Deux corps du même monde se retrouveraient alors avec le même
+         * identifiant, donc la même clé de contact — leurs impulsions mémorisées se
+         * mélangeraient, et le mur s'écroulerait de travers une fois sur cent, sans que
+         * rien ne l'explique.
+         */
+        private val nextId = AtomicInteger(1)
 
         /** Construit un disque simple. */
         fun circle(radius: Float, mass: Float): PhysBody =
@@ -132,7 +146,7 @@ class PhysBody private constructor(
     }
 
     /** Identifiant unique, sert de clé pour retrouver les contacts d'une image à l'autre. */
-    val id: Int = nextId++
+    val id: Int = nextId.getAndIncrement()
 
     // État
     var x = 0f

@@ -513,4 +513,119 @@ class TrebuchetGameTest {
         // à chaque appel ferait recalculer l'aperçu soixante fois par seconde.
         assertEquals(nu, empreinte { })
     }
+
+    /**
+     * Arrêter un tir en route le **termine**, il ne l'annule pas.
+     *
+     * Le bouton principal rebandait la machine sur-le-champ pendant le vol, ce qui était
+     * la seule action offerte et jetait tout ce que le tir avait montré : la traînée
+     * disparaissait avec lui, et l'essai qu'on venait de faire ne laissait aucune trace.
+     * Un tir arrêté doit laisser exactement ce qu'un tir fini laisse — un fantôme — à
+     * ceci près qu'il s'arrête au point où le boulet en était.
+     */
+    @Test
+    fun `un tir arrete en plein vol garde sa trainee en fantome`() {
+        // La machine par défaut : elle envoie à cent quarante mètres, on l'arrête bien
+        // avant que le boulet ne retombe.
+        val g = TrebuchetGame()
+        g.release()
+        val dt = 1f / 120f
+        var t = 0
+        while (g.phase == TrebuchetGame.Phase.FLIGHT && !(g.ballFree && g.ball.x > 40f) && t < 3000) {
+            g.step(dt)
+            t++
+        }
+        assertTrue("le boulet n'est jamais parti : x=${g.ball.x}", g.ballFree && g.ball.x > 40f)
+        val x = g.ball.x
+        val y = g.ball.y
+
+        g.stopShot()
+
+        assertEquals("le tir n'est pas terminé", TrebuchetGame.Phase.RESULT, g.phase)
+        assertEquals("le tir n'a pas laissé de fantôme", 1, g.ghosts.size)
+        val trace = g.ghosts.first()
+        assertTrue("le fantôme est vide", trace.size >= 4)
+        // La trace s'arrête là où le boulet volait, et pas plus loin : c'est tout
+        // l'intérêt de l'arrêt, on garde ce qui a été vu et rien d'autre.
+        assertTrue(
+            "le fantôme continue sans le boulet : il finit en %.0f;%.0f pour un boulet en %.0f;%.0f"
+                .format(trace[trace.size - 2], trace[trace.size - 1], x, y),
+            abs(trace[trace.size - 2] - x) < 5f && abs(trace[trace.size - 1] - y) < 5f
+        )
+    }
+
+    /**
+     * Un tir arrêté en plein vol n'invente pas de portée.
+     *
+     * Le boulet n'a pas touché terre : l'endroit où il volait encore n'est pas un point
+     * d'impact, et l'inscrire au record serait un mensonge que le joueur pourrait
+     * répéter à volonté — il suffirait d'arrêter chaque tir au sommet de sa course.
+     */
+    @Test
+    fun `un tir arrete ne compte aucune portee`() {
+        val g = TrebuchetGame()
+        g.release()
+        var t = 0
+        while (g.phase == TrebuchetGame.Phase.FLIGHT && !(g.ballFree && g.ball.x > 40f) && t < 3000) {
+            g.step(1f / 120f)
+            t++
+        }
+        assertTrue("le boulet n'est jamais parti : x=${g.ball.x}", g.ballFree && g.ball.x > 40f)
+        g.stopShot()
+
+        assertTrue("un tir arrêté n'est pas marqué comme tel", g.shotStopped)
+        assertEquals("un tir arrêté en l'air compte une portée", 0f, g.shotDistance, 0.001f)
+        assertEquals("un tir arrêté en l'air bat un record", 0f, g.bestDistance, 0.001f)
+        // Il compte en revanche comme un tir : le joueur a bel et bien décroché sa
+        // détente, et le décompte du site n'a pas à l'oublier.
+        assertEquals("le tir arrêté n'est pas compté", 1, g.shotCount)
+
+        // Et le tir suivant repart propre.
+        g.rebuild()
+        assertTrue("la marque d'arrêt survit au remontage", !g.shotStopped)
+    }
+
+    /**
+     * Les dégâts appartiennent aux pierres, pas au tir : arrêter le tir ne les rend pas.
+     */
+    @Test
+    fun `un tir arrete garde les degats deja infliges`() {
+        val g = TrebuchetGame()
+        g.loadLevel(8L)
+        g.release()
+        var t = 0
+        while (!g.ballFree && t < 600) {
+            g.step(1f / 60f)
+            t++
+        }
+        assertTrue("le boulet n'a jamais été largué", g.ballFree)
+
+        // On amène le boulet sur la construction, comme le ferait un tir juste.
+        val f = g.targets
+        g.ball.x = f.left - 10f
+        var sol = g.terrain.heightAt(g.ball.x)
+        var scan = g.ball.x
+        while (scan <= f.left) {
+            sol = maxOf(sol, g.terrain.heightAt(scan))
+            scan += 1f
+        }
+        g.ball.y = sol + 2f
+        g.ball.vx = 130f
+        g.ball.vy = 0f
+        g.world.forgetContacts(g.ball)
+        g.ball.wake()
+
+        var n = 0
+        while (g.phase == TrebuchetGame.Phase.FLIGHT && f.score <= 0f && n < 600) {
+            g.step(1f / 60f)
+            n++
+        }
+        val abime = f.score
+        assertTrue("le boulet n'a rien abîmé : $abime", abime > 0f)
+
+        g.stopShot()
+        g.rebuild()
+
+        assertEquals("le remontage a réparé la construction", abime, g.targets.score, 0.001f)
+    }
 }

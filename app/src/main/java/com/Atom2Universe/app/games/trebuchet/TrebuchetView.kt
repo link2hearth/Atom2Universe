@@ -44,8 +44,11 @@ import kotlin.random.Random
  * cette courbe-là qu'on veut voir. Hors du vol, le joueur reprend la main : il
  * fait défiler la distance au doigt et pince pour zoomer, entre deux butées —
  * juste derrière la machine et cinq cents mètres devant. Le sol, lui, reste calé
- * en bas de l'image : on ne monte pas la vue, on dézoome. Un double-appui rend le
- * cadrage à la caméra.
+ * en bas de l'image : on ne monte pas la vue, on dézoome.
+ *
+ * Un **double-appui** bascule entre deux plans choisis : le terrain entier, machine et
+ * cible d'un seul coup d'œil, puis la machine seule. Il vaut à tout moment, y compris
+ * pendant le tir — voir [CamView].
  */
 class TrebuchetView @JvmOverloads constructor(
     ctx: Context,
@@ -112,6 +115,20 @@ class TrebuchetView @JvmOverloads constructor(
      */
     private var manualCam = false
     private var camPhase = TrebuchetGame.Phase.BUILD
+
+    /**
+     * Les cadrages que le joueur peut demander lui-même, au double-appui.
+     *
+     * [AUTO] est celui de la caméra : elle suit le boulet, puis montre l'arc, puis
+     * revient sur la machine. Les deux autres sont des réponses à une question que le
+     * joueur se pose souvent et à laquelle rien ne répondait — *où en suis-je par rapport
+     * à la cible ?* et *à quoi ressemble ma machine ?* — et le double-appui les fait
+     * alterner. Ils valent **même pendant le vol**, où le cadrage automatique colle au
+     * boulet : c'est le seul moyen de regarder ailleurs que lui.
+     */
+    private enum class CamView { AUTO, FULL, MACHINE }
+
+    private var camView = CamView.AUTO
 
     /** Le cadrage ne s'attrape pas en vol : pendant le tir, la caméra suit. */
     private val cameraFree: Boolean
@@ -817,20 +834,22 @@ class TrebuchetView @JvmOverloads constructor(
         if (game.phase != camPhase) {
             camPhase = game.phase
             manualCam = false
+            // Un cadrage choisi à la main ne survit pas au changement de phase : la
+            // caméra reprend la main pour montrer le départ du tir, puis son arc.
+            camView = CamView.AUTO
         }
         if (manualCam && cameraFree) {
             clampCamera()
             return
         }
+        if (camView != CamView.AUTO) {
+            applyChosenView(dt)
+            return
+        }
 
         val cfg = game.config
-        // Le cadrage suit la taille de la machine : un bras de 18 m ne tient pas
-        // dans la fenêtre qui suffisait à un bras de 8 m.
-        val machineWidth = cfg.beamLength + cfg.slingLength + BUILD_VIEW_MARGIN
-        // Et sa hauteur compte autant : couché, le téléphone n'a que deux cents
-        // pixels de haut, et un cadrage réglé sur la seule largeur décapiterait la
-        // machine. C'est là, et seulement là, que portrait et paysage diffèrent.
-        val machineHeight = game.pivotY + cfg.shortArm + cfg.hangLength + 4f
+        val machineWidth = machineViewWidth()
+        val machineHeight = machineViewHeight()
 
         val targetScale: Float
         val tx: Float
@@ -957,6 +976,79 @@ class TrebuchetView @JvmOverloads constructor(
     }
 
     /**
+     * Largeur du cadrage de la machine, en mètres : un bras de 18 m ne tient pas dans
+     * la fenêtre qui suffisait à un bras de 8 m.
+     */
+    private fun machineViewWidth(): Float =
+        game.config.beamLength + game.config.slingLength + BUILD_VIEW_MARGIN
+
+    /**
+     * Hauteur du cadrage de la machine, en mètres.
+     *
+     * Elle compte autant que la largeur : couché, le téléphone n'a que deux cents pixels
+     * de haut, et un cadrage réglé sur la seule largeur décapiterait la machine. C'est
+     * là, et seulement là, que portrait et paysage diffèrent.
+     */
+    private fun machineViewHeight(): Float =
+        game.pivotY + game.config.shortArm + game.config.hangLength + 4f
+
+    /**
+     * Pose l'un des deux cadrages demandés au double-appui.
+     *
+     * **Le terrain entier**, pour voir d'un coup d'œil la machine, la cible et ce qui
+     * les sépare : c'est le dézoom maximal, celui-là même que les butées autorisent, et
+     * il englobe la construction puisque [panRight] la prend en compte. Ou **la
+     * machine**, cadrée comme pendant le réglage.
+     *
+     * Le passage se fait en douceur, comme tout le reste du cadrage : une caméra qui
+     * saute d'un plan à l'autre fait perdre le fil de ce qu'on regardait.
+     */
+    private fun applyChosenView(dt: Float) {
+        val tx: Float
+        val targetScale: Float
+        if (camView == CamView.FULL) {
+            tx = (panLeft() + panRight()) / 2f
+            targetScale = minScale()
+        } else {
+            tx = game.pivotX - game.config.longArm * 0.15f
+            targetScale = min(
+                width / machineViewWidth(),
+                (height - GROUND_INSET_DP * dp) / machineViewHeight()
+            ).coerceIn(minScale(), maxScale())
+        }
+        if (!camReady) {
+            camX = tx
+            camScale = targetScale
+            updateFloor(dt)
+            camY = groundCamY(camScale)
+            camReady = true
+            return
+        }
+        camX += (tx - camX) * (dt * 4.5f).coerceIn(0f, 1f)
+        camScale += (targetScale - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
+        updateFloor(dt)
+        // Les butées et le calage du sol valent ici comme ailleurs — y compris en vol,
+        // où le cadrage automatique s'en passe parce qu'il suit un boulet qui, lui, a le
+        // droit de sortir du terrain.
+        clampCamera()
+    }
+
+    /**
+     * Fige le cadrage là où il est.
+     *
+     * Appelé quand le joueur arrête son tir en cours de route : il regardait quelque
+     * chose, et la caméra n'a aucune raison de reculer d'elle-même pour montrer un arc
+     * qu'il vient précisément d'interrompre.
+     */
+    fun freezeCamera() {
+        synchronized(game) {
+            camPhase = game.phase
+            camView = CamView.AUTO
+            manualCam = true
+        }
+    }
+
+    /**
      * Les butées du cadrage libre : juste derrière la machine d'un côté, la ligne
      * des cinq cents mètres de l'autre. La hauteur, elle, ne se règle pas : hors du
      * vol, le sol est calé en bas de l'image et n'en bouge plus, zoom compris. Une
@@ -1048,13 +1140,19 @@ class TrebuchetView @JvmOverloads constructor(
                 dragTravel = 0f
                 gestureLocked = false
                 if (doubleTap) {
-                    // Deux appuis rapprochés : on lâche la pièce et on reprend du recul.
+                    // Deux appuis rapprochés : on lâche la pièce et on change de plan.
                     // Un seul geste, un seul sens.
                     if (selected != Part.NONE) {
                         selected = Part.NONE
                         notify = true
                     }
+                    // Le premier double-appui recule pour montrer tout le terrain, le
+                    // suivant revient sur la machine, et ainsi de suite. Deux plans, une
+                    // bascule : c'est la question que le joueur se pose vraiment — *où
+                    // est la cible* puis *à quoi ressemble ma machine* — et elle se pose
+                    // à tout moment, tir en cours compris.
                     manualCam = false
+                    camView = if (camView == CamView.FULL) CamView.MACHINE else CamView.FULL
                     gestureLocked = true
                 } else {
                     notify = grabAt(worldX(event.x), worldY(event.y))
@@ -1157,9 +1255,17 @@ class TrebuchetView @JvmOverloads constructor(
         // le joueur veut dire. La caméra, elle, ne bouge pas d'un pouce — on ne déplace
         // pas la vue sous un doigt qui vient de se poser.
         if (game.phase != TrebuchetGame.Phase.BUILD) {
+            // En plein vol, on **termine** le tir avant de rebander : c'est le même
+            // geste que le bouton, et il doit garder les mêmes choses. Rebander tout de
+            // suite jetterait la traînée du tir en cours, qui est précisément ce que le
+            // joueur venait de regarder.
+            game.stopShot()
             game.rebuild()
             lastPhase = game.phase
             camPhase = game.phase
+            // Le joueur revient à sa machine : le plan choisi au double-appui n'a plus
+            // lieu d'être, la caméra reprend son cadrage de réglage.
+            camView = CamView.AUTO
         }
         selected = part
         // Le geste s'arrête là : ni réglage, ni glissement de vue. Un appui qui prend

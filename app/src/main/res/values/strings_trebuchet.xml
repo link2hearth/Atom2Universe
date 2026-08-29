@@ -8,10 +8,13 @@
 
     <string name="trebuchet_btn_release">Trip the trigger</string>
     <string name="trebuchet_btn_adjust">Adjust</string>
+    <string name="trebuchet_btn_stop">Done</string>
     <string name="trebuchet_btn_reset">Reset</string>
 
     <string name="trebuchet_status_build">Touch a part of the machine to set it: the beam, the axle, the post, the counterweight, the hook or the stone</string>
     <string name="trebuchet_status_flight">Firing…</string>
+    <string name="trebuchet_status_loading">Raising the site…</string>
+    <string name="trebuchet_status_stopped">Shot ended in mid-air — the trail is kept, and so is the damage. Touch a part to re-cock.</string>
     <string name="trebuchet_status_result">%1$s m — released at %2$s m/s, %3$d° above the ground, peaked at %4$s m · efficiency %5$d %%</string>
     <string name="trebuchet_status_backwards">It went backwards! The hook holds the sling too long — stand it up, or shorten the sling</string>
     <string name="trebuchet_specs">Cocked at %1$d° · stored %2$d kJ · sling %3$s m</string>

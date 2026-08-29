@@ -232,4 +232,31 @@ class PhysicsContactTest {
         assertTrue("une caisse posée s'abîme toute seule : $atRest", atRest < 0.01f)
         assertTrue("le choc du boulet n'est pas comptabilisé : $hit", hit > 5f)
     }
+
+    /**
+     * Deux fils qui bâtissent en même temps ne doivent jamais donner deux fois le même
+     * identifiant.
+     *
+     * L'identifiant d'un corps sert de **clé de contact** : deux corps qui la partagent
+     * mélangent leurs impulsions mémorisées, et une pile s'effondre de travers sans que
+     * rien ne l'explique. Le compteur est global à l'application, et le trébuchet bâtit
+     * désormais le site suivant sur un fil de fond pendant que la partie tourne — un
+     * `nextId++` ordinaire, qui lit puis écrit, peut alors reculer sous une valeur déjà
+     * distribuée.
+     */
+    @Test
+    fun `deux fils qui creent des corps ne partagent jamais un identifiant`() {
+        val lots = List(4) { ArrayList<Int>(500) }
+        val fils = lots.map { ids ->
+            Thread { repeat(500) { ids.add(box(0.1f, 0.1f, 1f, 0f, 0f).id) } }
+        }
+        fils.forEach { it.start() }
+        fils.forEach { it.join() }
+
+        val tous = lots.flatten()
+        assertTrue(
+            "identifiants dupliqués : ${tous.size - tous.toSet().size} sur ${tous.size}",
+            tous.size == tous.toSet().size
+        )
+    }
 }

@@ -11,9 +11,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
+import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Le trébuchet : on construit une machine de jet, on décroche la détente, et la
@@ -65,6 +69,12 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
 
     /** La graine du site en cours. Tout le niveau tient dedans. */
     private var levelSeed = 1L
+
+    /** Vrai tant qu'un site se fabrique en fond. */
+    private var loading = false
+
+    /** Le numéro de la dernière fabrication demandée : voir [loadLevel]. */
+    private var loadToken = 0
 
     /** Le nom sous lequel on a chargé ou enregistré pour la dernière fois. */
     private var lastMachineName = ""
@@ -124,14 +134,37 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         gameView.pause()
     }
 
-    /** Charge le site de cette graine et rebande la machine devant. */
+    /**
+     * Charge le site de cette graine et rebande la machine devant.
+     *
+     * **Le site se bâtit sur un fil de fond.** [TargetGenerator.generate] tire le plan,
+     * dessine la maçonnerie et la tasse dans un monde physique jetable : trois
+     * millisecondes en moyenne et seize au pire sur ordinateur, donc jusqu'à un dixième
+     * de seconde sur un téléphone. Fait ici même, ce travail bloquait deux fils d'un
+     * coup — celui de l'interface, et celui de la simulation, puisqu'il tenait le verrou
+     * du jeu pendant tout ce temps. L'écran se figeait à chaque changement de site.
+     *
+     * Le fil de fond ne touche à rien du jeu en cours : il ne fait que fabriquer un
+     * [TargetLevel], objet inerte, dans son propre monde. Seule la **pose** revient sur
+     * le fil de l'interface, et elle est immédiate.
+     */
     private fun loadLevel(seed: Long) {
         levelSeed = seed
         prefs.edit { putLong(KEY_SEED, seed) }
         gameView.clearSelection()
-        synchronized(gameView.game) { gameView.game.loadLevel(seed) }
-        gameView.syncPhase()
+        // Le jeton écarte les sites périmés : un joueur qui enchaîne les appuis longs
+        // lance plusieurs fabrications, et seule la dernière demandée doit se poser.
+        val token = ++loadToken
+        loading = true
         updateUi()
+        lifecycleScope.launch {
+            val level = withContext(Dispatchers.Default) { TargetGenerator.generate(seed) }
+            if (token != loadToken) return@launch
+            loading = false
+            synchronized(gameView.game) { gameView.game.applyLevel(level) }
+            gameView.syncPhase()
+            updateUi()
+        }
     }
 
     private fun nextLevel() = loadLevel(levelSeed + 1L)
@@ -220,6 +253,10 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
      */
     private fun setStyle(style: TargetStyle) {
         if (style == TargetRules.style) return
+        // Le tempérament se pose **avant** la fabrication, qui le lit pour dimensionner
+        // ses pierres. Le site d'avant tourne donc quelques dizaines de millisecondes
+        // avec les constantes du nouveau — sans conséquence, puisqu'il est sur le point
+        // d'être remplacé et que personne ne tire pendant qu'il choisit dans un menu.
         TargetRules.style = style
         prefs.edit { putString(KEY_STYLE, style.name) }
         loadLevel(levelSeed)
@@ -337,13 +374,21 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
     }
 
     /**
-     * Le bouton de tir tire, et rien d'autre.
+     * Le bouton principal, et les trois choses qu'il fait — une par phase.
      *
      * Il se changeait en « site suivant » dès que le site était rasé, ce qui faisait de
      * la victoire une porte qui se referme : le joueur voulait souvent retirer un coup
      * dans les ruines pour finir le travail, ou simplement regarder. Un site rasé reste
      * donc un site où l'on tire, et on n'en change que sur demande — appui long sur le
      * bouton des machines.
+     *
+     * **Pendant le vol, il termine le tir au lieu de l'annuler.** Il rebandait la
+     * machine sur-le-champ, ce qui était la seule action disponible et jetait tout ce
+     * que le tir avait montré : la traînée disparaissait, et avec elle la seule trace de
+     * l'essai qu'on venait de faire. Il clôt maintenant le tir comme s'il s'était
+     * terminé — le fantôme est gardé, arrêté à l'endroit exact où le boulet en était,
+     * les dégâts restent acquis — et la caméra s'arrête là où le joueur regardait. Pour
+     * rebander, il suffit d'appuyer une seconde fois, ou de toucher une pièce.
      */
     private fun onFireButton() {
         val game = gameView.game
@@ -353,9 +398,15 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
                 synchronized(game) { game.release() }
                 gameView.syncPhase()
             }
-            // Pendant le vol aussi : dès qu'on voit que c'est raté, on reprend la
-            // main sans attendre que tout soit retombé.
-            else -> {
+            TrebuchetGame.Phase.FLIGHT -> {
+                synchronized(game) { game.stopShot() }
+                // La caméra se fige avant que la vue n'ait vu le changement de phase :
+                // sans ça, elle reculerait d'elle-même pour montrer l'arc du tir qu'on
+                // vient justement d'interrompre.
+                gameView.freezeCamera()
+                gameView.syncPhase()
+            }
+            TrebuchetGame.Phase.RESULT -> {
                 synchronized(game) { game.rebuild() }
                 gameView.syncPhase()
             }
@@ -412,13 +463,28 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
             else -> ""
         }
 
-        val building = game.phase == TrebuchetGame.Phase.BUILD
         fireButton.text = getString(
-            if (building) R.string.trebuchet_btn_release else R.string.trebuchet_btn_adjust
+            when (game.phase) {
+                TrebuchetGame.Phase.BUILD -> R.string.trebuchet_btn_release
+                // En vol, le bouton clôt le tir sans rien perdre : voir [onFireButton].
+                TrebuchetGame.Phase.FLIGHT -> R.string.trebuchet_btn_stop
+                TrebuchetGame.Phase.RESULT -> R.string.trebuchet_btn_adjust
+            }
         )
+        // On ne décroche pas la détente sur un site qui n'est pas encore posé : le tir
+        // partirait sur la cible précédente, et il serait remplacé une image plus tard.
+        fireButton.isEnabled = !loading
 
         statusText.visibility =
             if (gameView.selected == TrebuchetView.Part.NONE) View.VISIBLE else View.GONE
+        // Le site en cours de fabrication passe avant tout le reste, victoire comprise :
+        // c'est la seule chose que le joueur attend, et le site rasé qu'annoncerait la
+        // ligne suivante est celui d'avant.
+        if (loading) {
+            statusText.visibility = View.VISIBLE
+            statusText.setText(R.string.trebuchet_status_loading)
+            return
+        }
         // La victoire passe devant tout le reste, et elle dit quoi faire ensuite : rien
         // ne se déclenche tout seul, et un joueur qui ne sait pas comment continuer est
         // un joueur bloqué sur un écran de fête.
@@ -433,7 +499,12 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener {
         statusText.text = when (game.phase) {
             TrebuchetGame.Phase.BUILD -> getString(R.string.trebuchet_status_build)
             TrebuchetGame.Phase.RESULT ->
-                if (game.shotDistance <= 0f) {
+                // Un tir arrêté en plein vol n'a pas de portée, et il ne faut surtout pas
+                // le confondre avec un tir parti en arrière : l'un est un choix, l'autre
+                // est une machine mal réglée.
+                if (game.shotStopped) {
+                    getString(R.string.trebuchet_status_stopped)
+                } else if (game.shotDistance <= 0f) {
                     getString(R.string.trebuchet_status_backwards)
                 } else {
                     getString(
