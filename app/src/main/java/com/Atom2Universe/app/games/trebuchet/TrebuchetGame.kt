@@ -76,7 +76,7 @@ object TrebuchetRules {
      * énormes mais pas infinies.
      */
     const val BEAM_MIN = 6f
-    const val BEAM_MAX = 20f
+    const val BEAM_MAX = 50f
 
     /**
      * Masse du bras par mètre : une poutre de chêne d'une vingtaine de centimètres.
@@ -121,7 +121,7 @@ object TrebuchetRules {
      * emporter, et la moitié de l'énergie reste dans la charpente.
      */
     const val CW_MIN = 300f
-    const val CW_MAX = 12000f
+    const val CW_MAX = 50000f
 
     /**
      * Longueur de la chape qui suspend le contrepoids. Elle se règle en mètres, et
