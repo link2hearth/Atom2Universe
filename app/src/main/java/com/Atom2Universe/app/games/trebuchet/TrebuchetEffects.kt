@@ -82,6 +82,9 @@ class Spark internal constructor() {
     /** Vrai pour ce qui se dessine derrière le décor : les feux du fond. */
     var background = false
 
+    /** Vrai pour une étoile qui se désagrège en petites braises crépitantes. */
+    var cracklesOnDeath = false
+
     /**
      * Pour une fusée : de combien son bouquet s'ouvrira, en facteur.
      *
@@ -124,7 +127,31 @@ enum class Burst {
     COMET,
 
     /** Le pétard : beaucoup de petites, très vives, très courtes. */
-    CRACKLE
+    CRACKLE,
+
+    /** Une étoile à cinq branches, lisible même au milieu d'un grand bouquet. */
+    STAR,
+
+    /** Un coeur avec sa pointe vers le bas, jamais retourné par le tirage. */
+    HEART,
+
+    /** Un visage souriant, droit : yeux en haut, sourire en bas. */
+    SMILEY,
+
+    /** Un croissant de lune, ouvert vers la droite. */
+    CRESCENT,
+
+    /** Un carré lumineux, aux côtés bien reconnaissables. */
+    SQUARE,
+
+    /** Un triangle, pointe vers le haut. */
+    TRIANGLE,
+
+    /** Une soucoupe : ovale, hublot et dôme. */
+    SAUCER,
+
+    /** Un saule dont chaque retombée finit en petites braises crépitantes. */
+    CRACKLING_WILLOW
 }
 
 /**
@@ -224,6 +251,7 @@ class TrebuchetEffects(seed: Long = 1L) {
     private val pendingAt = FloatArray(64)
     private val pendingX = FloatArray(64)
     private val pendingH = FloatArray(64)
+    private val pendingFountain = BooleanArray(64)
     private var pendingCount = 0
     private var showClock = 0f
 
@@ -270,6 +298,9 @@ class TrebuchetEffects(seed: Long = 1L) {
             // un autre tout en haut valent mieux que dix à la même altitude. On ne va
             // pas jusqu'au bord : les étoiles montent encore après l'éclatement.
             pendingH[pendingCount] = 0.33f + rng.nextFloat() * 0.47f
+            // Deux départs sur le spectacle deviennent aussi des fontaines au sol :
+            // elles encadrent les fusées sans les remplacer.
+            pendingFountain[pendingCount] = i == 1 || i == shots / 2
             pendingCount++
             t += 0.22f + rng.nextFloat() * 0.62f
         }
@@ -326,6 +357,28 @@ class TrebuchetEffects(seed: Long = 1L) {
         // haut s'ouvre deux fois plus, ce qui est ce que fait un vrai obus.
         s.spread = sqrt(h / 70f).coerceIn(0.7f, 3.2f)
         onRocketLaunch?.invoke(x, ground)
+    }
+
+    /**
+     * Fontaine au sol : une gerbe continue en éventail, qui se résout en braises.
+     *
+     * Les particules ne partent pas à l'horizontale par hasard : leur cône est centré
+     * sur le haut du monde. Une fontaine reste donc une fontaine, quel que soit le
+     * vent ou l'orientation de l'écran.
+     */
+    fun fountain(x: Float, ground: Float = groundAt(x)) {
+        val tint = FESTIVE[rng.nextInt(FESTIVE.size)]
+        repeat(58) {
+            val a = -PI.toFloat() / 2f + (rng.nextFloat() - 0.5f) * 1.05f
+            val v = 14f + rng.nextFloat() * 17f
+            val s = spawn(Puff.STAR, x, ground, cos(a) * v, -sin(a) * v, background = true)
+                ?: return@repeat
+            s.tint = if (rng.nextFloat() < 0.22f) 0 else tint
+            s.size = 0.22f + rng.nextFloat() * 0.2f
+            s.maxLife = 1.15f + rng.nextFloat() * 1.15f
+            s.life = s.maxLife
+            s.cracklesOnDeath = rng.nextFloat() < 0.38f
+        }
     }
 
     /**
@@ -415,9 +468,18 @@ class TrebuchetEffects(seed: Long = 1L) {
         // longtemps, sans quoi on ne verrait que le début de leur course.
         val life = (1.1f + rng.nextFloat() * 1.8f) * (0.7f + 0.4f * spread)
 
+        if (shape in setOf(
+                Burst.STAR, Burst.HEART, Burst.SMILEY, Burst.CRESCENT,
+                Burst.SQUARE, Burst.TRIANGLE, Burst.SAUCER
+            )
+        ) {
+            shapedBurst(shape, x, y, tint, second, spread, life)
+            return
+        }
+
         for (i in 0 until count) {
             val kind = when (shape) {
-                Burst.WILLOW -> Puff.WILLOW
+                Burst.WILLOW, Burst.CRACKLING_WILLOW -> Puff.WILLOW
                 Burst.CRACKLE -> Puff.CRACKLE
                 else -> Puff.STAR
             }
@@ -433,7 +495,7 @@ class TrebuchetEffects(seed: Long = 1L) {
                     // L'anneau garde sa vitesse : c'est ce qui en fait un cercle net.
                     v *= 0.95f + rng.nextFloat() * 0.1f
                 }
-                Burst.WILLOW -> {
+                Burst.WILLOW, Burst.CRACKLING_WILLOW -> {
                     v *= 0.55f + 0.5f * rng.nextFloat()
                     // Un saule pousse vers le haut avant de retomber.
                     a = -PI.toFloat() / 2f + (rng.nextFloat() - 0.5f) * 2.2f
@@ -445,6 +507,9 @@ class TrebuchetEffects(seed: Long = 1L) {
                     v *= 0.4f + rng.nextFloat() * 0.9f
                 }
                 Burst.CRACKLE -> v *= 0.3f + rng.nextFloat() * 0.9f
+                // Ces cas ont déjà été émis ci-dessus sous forme de dessin.
+                Burst.STAR, Burst.HEART, Burst.SMILEY, Burst.CRESCENT, Burst.SQUARE,
+                Burst.TRIANGLE, Burst.SAUCER -> Unit
             }
             val s = spawn(kind, x, y, cos(a) * v, -sin(a) * v, background = true) ?: return
             s.tint = when {
@@ -453,7 +518,131 @@ class TrebuchetEffects(seed: Long = 1L) {
                 else -> tint
             }
             s.size = (if (kind == Puff.CRACKLE) 0.25f else 0.4f + rng.nextFloat() * 0.35f) * spread
-            s.maxLife = life * (0.6f + rng.nextFloat() * 0.7f)
+            // Les braises du saule crépitant ne naissent qu'à la fin de la retombée.
+            val duration = if (shape == Burst.CRACKLING_WILLOW) 2.1f else 1f
+            s.maxLife = life * (0.6f + rng.nextFloat() * 0.7f) * duration
+            s.life = s.maxLife
+            s.cracklesOnDeath = shape == Burst.CRACKLING_WILLOW
+        }
+    }
+
+    /** Émet les points d'un dessin dans le repère du monde (y positif vers le haut). */
+    private fun shapedBurst(
+        shape: Burst, x: Float, y: Float, tint: Int, second: Int, spread: Float, life: Float
+    ) {
+        val points = ArrayList<Pair<Float, Float>>()
+        fun line(ax: Float, ay: Float, bx: Float, by: Float, n: Int) {
+            repeat(n) { i ->
+                val t = i / (n - 1f)
+                points += (ax + (bx - ax) * t) to (ay + (by - ay) * t)
+            }
+        }
+        when (shape) {
+            Burst.STAR -> {
+                val vertices = FloatArray(20)
+                for (i in 0 until 10) {
+                    val radius = if (i % 2 == 0) 1f else 0.42f
+                    // La pointe est en haut : l'étoile ne peut pas être à l'envers.
+                    val a = -PI.toFloat() / 2f + i * PI.toFloat() / 5f
+                    vertices[i * 2] = cos(a) * radius
+                    vertices[i * 2 + 1] = -sin(a) * radius
+                }
+                for (i in 0 until 10) line(
+                    vertices[i * 2], vertices[i * 2 + 1],
+                    vertices[(i * 2 + 2) % 20], vertices[(i * 2 + 3) % 20], 7
+                )
+            }
+            Burst.HEART -> repeat(76) { i ->
+                val a = 2f * PI.toFloat() * i / 75f
+                // Formule classique : lobes en haut, pointe en bas dans notre monde.
+                points += (sin(a) * sin(a) * sin(a) * 0.82f) to
+                    ((13f * cos(a) - 5f * cos(2f * a) - 2f * cos(3f * a) - cos(4f * a)) / 17f)
+            }
+            Burst.SMILEY -> {
+                repeat(56) { i ->
+                    val a = 2f * PI.toFloat() * i / 55f
+                    points += cos(a) to sin(a)
+                }
+                // Les yeux restent au-dessus de la bouche : aucun tirage ne les retourne.
+                repeat(8) { i ->
+                    val a = 2f * PI.toFloat() * i / 7f
+                    points += (-0.36f + cos(a) * 0.11f) to (0.30f + sin(a) * 0.14f)
+                    points += (0.36f + cos(a) * 0.11f) to (0.30f + sin(a) * 0.14f)
+                }
+                repeat(23) { i ->
+                    val a = PI.toFloat() * i / 22f
+                    points += (cos(a) * 0.50f) to (-0.16f - sin(a) * 0.36f)
+                }
+            }
+            Burst.CRESCENT -> {
+                // Contour extérieur à gauche, puis contour intérieur : un vrai C,
+                // plutôt qu'un disque auquel il manquerait seulement des points.
+                repeat(42) { i ->
+                    val a = PI.toFloat() / 2f + PI.toFloat() * i / 41f
+                    points += (-0.10f + cos(a) * 0.92f) to (sin(a) * 0.92f)
+                }
+                repeat(42) { i ->
+                    val a = 3f * PI.toFloat() / 2f - PI.toFloat() * i / 41f
+                    points += (0.30f + cos(a) * 0.58f) to (sin(a) * 0.78f)
+                }
+            }
+            Burst.SQUARE -> {
+                line(-0.85f, 0.85f, 0.85f, 0.85f, 18)
+                line(0.85f, 0.85f, 0.85f, -0.85f, 18)
+                line(0.85f, -0.85f, -0.85f, -0.85f, 18)
+                line(-0.85f, -0.85f, -0.85f, 0.85f, 18)
+            }
+            Burst.TRIANGLE -> {
+                // Cette pointe est construite vers le haut dans le repère du monde.
+                line(0f, 1f, -0.92f, -0.72f, 25)
+                line(-0.92f, -0.72f, 0.92f, -0.72f, 25)
+                line(0.92f, -0.72f, 0f, 1f, 25)
+            }
+            Burst.SAUCER -> {
+                repeat(58) { i ->
+                    val a = 2f * PI.toFloat() * i / 57f
+                    points += (cos(a) * 1.16f) to (sin(a) * 0.46f)
+                }
+                // Dôme supérieur et ligne lumineuse : l'ovale devient une soucoupe.
+                repeat(28) { i ->
+                    val a = PI.toFloat() * i / 27f
+                    points += (cos(a) * 0.46f) to (sin(a) * 0.62f + 0.10f)
+                }
+                line(-1.05f, 0f, 1.05f, 0f, 34)
+            }
+            else -> return
+        }
+        // Les formes orientées dansent un peu sans jamais faire un demi-tour : ±8°.
+        // À l'inverse, les formes géométriques gagnent à pouvoir surgir dans toutes
+        // les positions : une soucoupe renversée reste une soucoupe, un coeur non.
+        val tilt = when (shape) {
+            Burst.HEART, Burst.SMILEY ->
+                (rng.nextFloat() - 0.5f) * (16f * PI.toFloat() / 180f)
+            Burst.SQUARE, Burst.TRIANGLE, Burst.SAUCER ->
+                rng.nextFloat() * 2f * PI.toFloat()
+            else -> 0f
+        }
+        if (tilt != 0f) {
+            val c = cos(tilt)
+            val s = sin(tilt)
+            for (i in points.indices) {
+                val (px, py) = points[i]
+                points[i] = (px * c - py * s) to (px * s + py * c)
+            }
+        }
+        val reach = (8.5f + spread * 8f)
+        val formTime = (life * 0.52f).coerceIn(0.7f, 1.35f)
+        for ((i, point) in points.withIndex()) {
+            val dx = point.first * reach
+            val dy = point.second * reach
+            val s = spawn(
+                Puff.STAR, x, y, dx / formTime,
+                dy / formTime + GRAVITY * Puff.STAR.gravity * formTime * 0.5f,
+                background = true
+            ) ?: return
+            s.tint = if (i % 7 == 0) second else tint
+            s.size = 0.26f + (i % 3) * 0.06f
+            s.maxLife = life * (0.9f + rng.nextFloat() * 0.22f)
             s.life = s.maxLife
         }
     }
@@ -580,6 +769,8 @@ class TrebuchetEffects(seed: Long = 1L) {
                 if (s.kind == Puff.SHELL) {
                     burst(s.x, s.y, s.tint, s.spread)
                     onBurst?.invoke(s.x, s.y)
+                } else if (s.cracklesOnDeath) {
+                    crackle(s.x, s.y, s.tint, s.background)
                 }
                 continue
             }
@@ -607,10 +798,12 @@ class TrebuchetEffects(seed: Long = 1L) {
                     ground = groundAt(pendingX[i]),
                     apex = skyTop.coerceIn(40f, 700f) * pendingH[i]
                 )
+                if (pendingFountain[i]) fountain(pendingX[i], groundAt(pendingX[i]))
             } else {
                 pendingAt[kept] = pendingAt[i]
                 pendingX[kept] = pendingX[i]
                 pendingH[kept] = pendingH[i]
+                pendingFountain[kept] = pendingFountain[i]
                 kept++
             }
         }
@@ -657,8 +850,22 @@ class TrebuchetEffects(seed: Long = 1L) {
         s.tint = 0
         s.spread = 1f
         s.background = background
+        s.cracklesOnDeath = false
         s.maxLife = 1f
         s.life = 1f
         return s
+    }
+
+    /** Les petites braises secondaires d'une retombée crépitante. */
+    private fun crackle(x: Float, y: Float, tint: Int, background: Boolean) {
+        repeat(5 + rng.nextInt(6)) {
+            val a = rng.nextFloat() * 2f * PI.toFloat()
+            val v = 1.8f + rng.nextFloat() * 5.5f
+            val s = spawn(Puff.CRACKLE, x, y, cos(a) * v, -sin(a) * v, background) ?: return
+            s.tint = if (rng.nextFloat() < 0.45f) 0 else tint
+            s.size = 0.12f + rng.nextFloat() * 0.12f
+            s.maxLife = 0.28f + rng.nextFloat() * 0.42f
+            s.life = s.maxLife
+        }
     }
 }

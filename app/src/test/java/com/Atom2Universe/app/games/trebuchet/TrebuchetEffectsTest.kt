@@ -147,6 +147,19 @@ class TrebuchetEffectsTest {
         assertTrue("le spectacle ne finit jamais", !fx.busy)
     }
 
+    @Test
+    fun `une fontaine monte depuis le sol puis s eteint`() {
+        val fx = TrebuchetEffects(42L)
+        fx.fountain(35f, ground = 6f)
+        val depart = fx.sparks.filter { it.alive }
+        assertTrue("la fontaine n'a pas produit d'étincelles", depart.size >= 50)
+        assertTrue("la fontaine ne part pas vers le haut", depart.count { it.vy > 0f } > 45)
+        assertTrue("la fontaine ne part pas du sol", depart.all { it.y == 6f })
+
+        avance(fx, 6f)
+        assertEquals("la fontaine laisse des particules immortelles", 0, vivantes(fx))
+    }
+
     /**
      * Bout en bout : un site rasé déclenche son feu d'artifice, une fois et pas deux.
      *
