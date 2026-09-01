@@ -16,6 +16,7 @@ import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
+import kotlin.math.hypot
 
 class GearMachineTest {
 
@@ -191,9 +192,8 @@ class GearMachineTest {
 
     @Test
     fun `une edition de machine ne supprime pas le projectile en vol`() {
-        val game = GearMachineGame()
+        val game = flywheelGame()
         game.spinGear(1, 8f)
-        assertTrue(game.attachLauncher(3))
         assertTrue(game.launchProjectile())
         val shot = game.projectile!!
         val vx = shot.body.vx
@@ -309,9 +309,8 @@ class GearMachineTest {
 
     @Test
     fun `le lanceur ne donne jamais plus denergie que les roues nen perdent`() {
-        val game = GearMachineGame()
+        val game = flywheelGame()
         game.spinGear(1, 8f)
-        assertTrue(game.attachLauncher(3))
         val before = game.rotationalEnergy()
 
         assertTrue(game.launchProjectile())
@@ -322,14 +321,421 @@ class GearMachineTest {
 
         assertTrue(after + actualShotEnergy <= before + before * 1e-4f)
         assertEquals(game.lastLaunchEnergy, actualShotEnergy, game.lastLaunchEnergy * 1e-4f)
-        assertEquals(GearMachineRules.LAUNCH_EFFICIENCY, game.lastLaunchEfficiency, 1e-4f)
+        // Le rendement se mesure sur ce que les roues ont **réellement** perdu : le
+        // reste part en chaleur, et rien n'apparaît de nulle part.
+        assertEquals(
+            GearMachineRules.LAUNCH_EFFICIENCY, actualShotEnergy / (before - after), 1e-3f
+        )
+    }
+
+    @Test
+    fun `le boulet retombe sur le sol au lieu de le traverser`() {
+        val game = flywheelGame()
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+
+        // Assez long pour que n'importe quel tir de l'atelier ait touché terre.
+        repeat(120 * 60) { game.step(1f / 120f) }
+
+        val shot = game.projectile
+        assertTrue("le boulet ne doit pas disparaître après son vol", shot != null)
+        assertTrue("le tir doit être relevé comme posé", shot!!.landed)
+        assertTrue("la portée doit être positive : ${shot.distance}", shot.distance > 0f)
+        assertTrue("le boulet ne doit pas passer sous le sol", shot.body.y > -0.05f)
+        assertEquals(shot.distance, game.lastShotDistance, 1e-4f)
+        assertTrue(game.lastShotHeight > 0f)
+    }
+
+    @Test
+    fun `la portee est celle du premier contact et ne bouge plus`() {
+        val game = flywheelGame()
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+
+        var atLanding = 0f
+        repeat(120 * 60) {
+            game.step(1f / 120f)
+            val shot = game.projectile ?: return@repeat
+            if (shot.landed && atLanding == 0f) atLanding = shot.distance
+        }
+
+        assertTrue(atLanding > 0f)
+        // Le boulet roule et rebondit après avoir touché : la portée, elle, est figée.
+        assertEquals(atLanding, game.projectile!!.distance, 1e-5f)
+        assertEquals(atLanding, game.lastShotDistance, 1e-5f)
+    }
+
+    @Test
+    fun `un tir efface le precedent et repart sans resultat`() {
+        val game = flywheelGame()
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+        repeat(120 * 60) { game.step(1f / 120f) }
+        val first = game.projectile!!.body
+
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+
+        assertEquals(0f, game.lastShotDistance, 0f)
+        assertFalse(game.lastShotHitTarget)
+        assertFalse(game.projectile!!.landed)
+        assertTrue("l'ancien boulet doit être retiré", game.projectile!!.body !== first)
+        assertTrue(game.world.bodies.none { it === first })
+    }
+
+    /**
+     * Un atelier d'un seul volant. Il porte son bras de lancement, donc il tire —
+     * et [GearMachineConfig.clamp] le designe tout seul comme lanceur.
+     */
+    private fun flywheelGame(teeth: Int = 48): GearMachineGame = GearMachineGame(
+        GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 4f, teeth, kind = GearWheelKind.FLYWHEEL)
+        ))
+    )
+
+    /** Tire, puis laisse le temps au tir de se conclure de lui-même. */
+    private fun fireAndSettle(game: GearMachineGame, spin: Float = 8f) {
+        game.spinGear(1, spin)
+        assertTrue(game.launchProjectile())
+        repeat(120 * 40) {
+            if (game.phase == GearMachineGame.Phase.RESULT) return
+            game.step(1f / 120f)
+        }
+    }
+
+    @Test
+    fun `un tir finit tout seul et devient un fantome`() {
+        val game = flywheelGame()
+        assertEquals(1, game.config.launcherWheelId)
+        assertEquals(GearMachineGame.Phase.BUILD, game.phase)
+
+        fireAndSettle(game)
+
+        assertEquals(GearMachineGame.Phase.RESULT, game.phase)
+        assertEquals(1, game.shotCount)
+        assertEquals(1, game.ghosts.size)
+        assertTrue("le fantôme doit contenir la course", game.ghosts[0].size >= 6)
+        val shot = game.projectile!!
+        assertTrue(shot.landed)
+        // Le boulet posé quitte la simulation : il n'a plus rien à y faire.
+        assertTrue(game.world.bodies.none { it === shot.body })
+    }
+
+    @Test
+    fun `le boulet ne roule plus une fois le tir termine`() {
+        val game = flywheelGame()
+        fireAndSettle(game)
+        val restingX = game.projectile!!.body.x
+
+        repeat(120 * 5) { game.step(1f / 120f) }
+
+        assertEquals(restingX, game.projectile!!.body.x, 1e-5f)
+    }
+
+    @Test
+    fun `terminer un tir en plein vol le range quand meme`() {
+        val game = flywheelGame()
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+        repeat(60) { game.step(1f / 120f) }
+        assertEquals(GearMachineGame.Phase.FLIGHT, game.phase)
+
+        game.stopShot()
+
+        assertEquals(GearMachineGame.Phase.RESULT, game.phase)
+        assertEquals(1, game.ghosts.size)
+        assertFalse("le boulet n'avait pas touché", game.projectile!!.landed)
+    }
+
+    @Test
+    fun `rebander efface le boulet et garde le fantome`() {
+        val game = flywheelGame()
+        fireAndSettle(game)
+
+        game.newShot()
+
+        assertEquals(GearMachineGame.Phase.BUILD, game.phase)
+        assertEquals(null, game.projectile)
+        assertEquals(1, game.ghosts.size)
+    }
+
+    @Test
+    fun `la memoire des tirs est bornee et le plus recent vient en tete`() {
+        val game = flywheelGame()
+        game.ghostLimit = 2
+
+        repeat(3) {
+            game.newShot()
+            game.spinGear(1, 8f)
+            assertTrue(game.launchProjectile())
+            repeat(60) { game.step(1f / 120f) }
+            game.stopShot()
+        }
+
+        assertEquals(2, game.ghosts.size)
+        assertEquals(3, game.shotCount)
+        game.clearGhosts()
+        assertTrue(game.ghosts.isEmpty())
+    }
+
+    @Test
+    fun `le boulet part de la jante et non du moyeu`() {
+        val game = flywheelGame()
+        val wheel = game.config.wheels.single()
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+
+        val shot = game.projectile!!
+        val armX = shot.startX - wheel.x
+        val armY = shot.startY - wheel.y
+        assertEquals(
+            "le boulet doit naître dans la gorge",
+            wheel.launchRadius, hypot(armX, armY), 1e-3f
+        )
+        // La gorge est creusée **dans** la jante : le boulet court dedans, il n'est
+        // pas tenu au bout d'une perche qui dépasse.
+        assertTrue("la gorge doit rester sous la denture", wheel.launchRadius < wheel.outerRadius)
+        assertTrue("et loin du moyeu", wheel.launchRadius > wheel.outerRadius * 0.5f)
+    }
+
+    @Test
+    fun `la gorge est creusee dans la jante et le boulet y tient`() {
+        for (teeth in GearMachineRules.SIZES) {
+            val wheel = flywheelGame(teeth).config.wheels.single()
+            val inner = wheel.launchRadius - wheel.grooveWidth / 2f
+
+            assertTrue("la gorge sort de la denture ($teeth)", wheel.grooveOuterRadius < wheel.outerRadius)
+            assertTrue("la gorge mord sur le moyeu ($teeth)", inner > 0f)
+            // Le boulet ordinaire doit tenir entre les deux lèvres, sinon celui qu'on
+            // dessine en attente déborderait de la piste qui le retient.
+            val ball = GearMachineRules.projectileRadius(GearMachineRules.DEFAULT_PROJECTILE_MASS)
+            assertTrue("le boulet ne tient pas dans la gorge ($teeth)", wheel.grooveWidth >= ball * 2f)
+        }
+    }
+
+    @Test
+    fun `le boulet en attente est exactement celui qui part`() {
+        val game = flywheelGame()
+        game.setProjectileMass(40f)
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+
+        assertEquals(
+            GearMachineRules.projectileRadius(40f),
+            game.projectile!!.body.radius,
+            1e-6f
+        )
+        assertEquals(40f, game.projectile!!.body.mass, 1e-4f)
+    }
+
+    @Test
+    fun `le boulet se choisit par crans et reste dans la liste`() {
+        assertEquals(12f, GearMachineRules.nextProjectileMass(4f, 1), 1e-4f)
+        assertEquals(1f, GearMachineRules.nextProjectileMass(4f, -1), 1e-4f)
+        // Aux deux bouts, le cran suivant est le même : la liste ne boucle pas.
+        assertEquals(1f, GearMachineRules.nextProjectileMass(1f, -1), 1e-4f)
+        val heaviest = GearMachineRules.PROJECTILE_MASSES.last()
+        assertEquals(heaviest, GearMachineRules.nextProjectileMass(heaviest, 1), 1e-4f)
+    }
+
+    @Test
+    fun `a regime egal tous les boulets sortent a la vitesse de la jante`() {
+        fun fire(mass: Float): GearMachineGame {
+            val game = flywheelGame()
+            game.setProjectileMass(mass)
+            game.spinGear(1, 20f)
+            assertTrue(game.launchProjectile())
+            return game
+        }
+
+        val light = fire(4f)
+        val heavy = fire(1_200f)
+
+        // La gorge donne sa vitesse, pas son energie : une fronde lance le caillou et
+        // le bloc a la meme allure. C'est l'energie emportee qui change.
+        assertEquals(light.lastLaunchSpeed, heavy.lastLaunchSpeed, 1e-3f)
+        assertTrue(heavy.lastLaunchEnergy > light.lastLaunchEnergy * 100f)
+    }
+
+    @Test
+    fun `un boulet lourd va plus loin parce que lair le freine moins`() {
+        fun range(mass: Float): Float {
+            val game = flywheelGame()
+            game.setProjectileMass(mass)
+            game.spinGear(1, 20f)
+            assertTrue(game.launchProjectile())
+            repeat(120 * 40) {
+                if (game.phase == GearMachineGame.Phase.RESULT) return game.lastShotDistance
+                game.step(1f / 120f)
+            }
+            return game.lastShotDistance
+        }
+
+        val light = range(1f)
+        val heavy = range(1_200f)
+
+        assertTrue("le caillou doit retomber avant le bloc : $light vs $heavy", heavy > light)
+    }
+
+    @Test
+    fun `le boulet part sur la tranche et non dans laxe du bras`() {
+        val game = flywheelGame()
+        val wheel = game.config.wheels.single()
+        game.spinGear(1, 8f)
+        assertTrue(game.launchProjectile())
+
+        val shot = game.projectile!!
+        val armX = shot.startX - wheel.x
+        val armY = shot.startY - wheel.y
+        val speed = hypot(shot.body.vx, shot.body.vy)
+        // Tangentiel : la vitesse est perpendiculaire au bras.
+        val alignment = (armX * shot.body.vx + armY * shot.body.vy) /
+            (wheel.launchRadius * speed)
+        assertEquals("le tir doit être tangent au bras", 0f, alignment, 1e-3f)
+    }
+
+    @Test
+    fun `la vitesse du boulet est celle de la jante`() {
+        val game = flywheelGame()
+        val wheel = game.config.wheels.single()
+        val omega = 8f
+        game.spinGear(1, omega)
+        assertTrue(game.launchProjectile())
+
+        val expected = omega * wheel.launchRadius
+        assertEquals(expected, game.lastLaunchSpeed, expected * 1e-3f)
+        assertEquals(
+            expected, hypot(game.projectile!!.body.vx, game.projectile!!.body.vy),
+            expected * 1e-3f
+        )
+    }
+
+    @Test
+    fun `tourner deux fois plus vite double la vitesse de sortie`() {
+        val slow = flywheelGame()
+        slow.spinGear(1, 5f)
+        assertTrue(slow.launchProjectile())
+
+        val fast = flywheelGame()
+        fast.spinGear(1, 10f)
+        assertTrue(fast.launchProjectile())
+
+        assertEquals(2f, fast.lastLaunchSpeed / slow.lastLaunchSpeed, 1e-3f)
+    }
+
+    @Test
+    fun `un volant plus large tire plus loin a vitesse egale`() {
+        val small = flywheelGame(24)
+        small.spinGear(1, 8f)
+        assertTrue(small.launchProjectile())
+
+        val large = flywheelGame(96)
+        large.spinGear(1, 8f)
+        assertTrue(large.launchProjectile())
+
+        assertTrue(
+            "le bras plus long doit sortir plus vite",
+            large.lastLaunchSpeed > small.lastLaunchSpeed
+        )
+    }
+
+    @Test
+    fun `une roue immobile ou dentee ne lance rien`() {
+        val still = flywheelGame()
+        assertFalse("une jante à l'arrêt ne lance rien", still.launchProjectile())
+
+        // Un engrenage ne porte pas de bras : il ne peut pas être désigné lanceur.
+        val geared = GearMachineGame()
+        assertFalse(geared.attachLauncher(1))
+        assertEquals(null, geared.config.launcherWheelId)
+        geared.spinGear(1, 8f)
+        assertFalse(geared.launchProjectile())
+    }
+
+    @Test
+    fun `le sens de rotation decide du cote ou le bras lache`() {
+        val game = flywheelGame()
+        val wheel = game.config.wheels.single()
+        game.setLaunchAngle(1, 0f)
+
+        // À l'arrêt, le volant emprunte le sens du croquis : horaire.
+        assertEquals(GearMachineRules.DEFAULT_SPIN, game.launchSpin(1), 0f)
+        val clockwiseArm = game.launchPointAngle(wheel)
+
+        game.spinGear(1, 8f)
+        assertEquals(1f, game.launchSpin(1), 0f)
+        val counterArm = game.launchPointAngle(wheel)
+
+        // Un demi-tour sépare les deux : la roue lâche toujours du côté d'où elle vient.
+        val gap = abs(clockwiseArm - counterArm)
+        assertEquals(Math.PI.toFloat(), gap, 1e-4f)
+    }
+
+    @Test
+    fun `poser un volant en fait le lanceur sans rien monter`() {
+        val game = GearMachineGame()
+        assertEquals(null, game.config.launcherWheelId)
+
+        val id = game.addFlywheel(20f, 4f, 0)!!
+
+        assertEquals(id, game.config.launcherWheelId)
+        assertEquals(GearWheelKind.FLYWHEEL, game.config.wheels.first { it.id == id }.kind)
+    }
+
+    @Test
+    fun `le mannequin est releve meme traverse a grande vitesse`() {
+        val target = 60f
+        val radius = 0.12f
+        // Un bond d'une image entière à trois cents mètres par seconde : le point
+        // d'arrivée est loin derrière la cible, mais le trajet passe dedans.
+        assertTrue(
+            GearMachineRules.segmentHitsTarget(
+                target, radius,
+                target - 2.5f, GearMachineRules.TARGET_HEIGHT,
+                target + 2.5f, GearMachineRules.TARGET_HEIGHT
+            )
+        )
+        // Même trajet, mais un mètre trop haut : rien n'est touché.
+        assertFalse(
+            GearMachineRules.segmentHitsTarget(
+                target, radius,
+                target - 2.5f, GearMachineRules.TARGET_HEIGHT + 1f,
+                target + 2.5f, GearMachineRules.TARGET_HEIGHT + 1f
+            )
+        )
+        // Un tir qui s'arrête avant la cible ne la touche pas non plus.
+        assertFalse(
+            GearMachineRules.segmentHitsTarget(
+                target, radius,
+                target - 8f, GearMachineRules.TARGET_HEIGHT,
+                target - 4f, GearMachineRules.TARGET_HEIGHT
+            )
+        )
+    }
+
+    @Test
+    fun `le mannequin se plante devant le lanceur`() {
+        val game = flywheelGame()
+        val launcherX = game.gears.first { it.wheel.id == 1 }.body.x
+
+        assertEquals(launcherX + GearMachineRules.TARGET_DISTANCE, game.targetX(), 1e-4f)
+    }
+
+    @Test
+    fun `les roues ne touchent jamais le sol`() {
+        val game = GearMachineGame()
+        assertTrue(game.gears.none { it.body.collidesWith(game.ground) })
+        assertTrue(game.gears.none { it.support.collidesWith(game.ground) })
     }
 
     @Test
     fun `la sauvegarde conserve volant materiau et lanceur`() {
         val config = GearMachineConfig(mutableListOf(
-            GearWheelConfig(9, 4f, 5f, 48, 3, GearWheelKind.FLYWHEEL, GearWheelMaterial.TITANIUM)
-        ), launcherWheelId = 9, launcherAngleDeg = 55f, projectileMass = 12f)
+            GearWheelConfig(
+                9, 4f, 5f, 48, 3, GearWheelKind.FLYWHEEL, GearWheelMaterial.TITANIUM,
+                launchAngle = 55f
+            )
+        ), launcherWheelId = 9, projectileMass = 12f)
         val decoded = GearMachineLibrary.decode(
             GearMachineLibrary.encode(listOf(GearMachinePreset("Canon inertiel", config)))
         ).single().config
@@ -337,7 +743,7 @@ class GearMachineTest {
         assertEquals(GearWheelKind.FLYWHEEL, decoded.wheels.single().kind)
         assertEquals(GearWheelMaterial.TITANIUM, decoded.wheels.single().material)
         assertEquals(9, decoded.launcherWheelId)
-        assertEquals(55f, decoded.launcherAngleDeg, 1e-5f)
+        assertEquals(55f, decoded.wheels.single().launchAngle, 1e-5f)
         assertEquals(12f, decoded.projectileMass, 1e-5f)
     }
 
@@ -353,6 +759,41 @@ class GearMachineTest {
 
         assertTrue(afterFirst > 0f)
         assertTrue(afterSecond > afterFirst * 1.9f)
+    }
+
+    @Test
+    fun `la main entraine la roue sans jamais la freiner`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24)
+        )))
+
+        // Le doigt tourne : la roue le suit immédiatement, sans attendre le lâcher.
+        game.driveGear(1, 12f)
+        assertEquals(12f, game.gears.single().body.omega, 1e-4f)
+
+        // Un passage plus lent ne reprend rien de l'élan déjà donné…
+        game.driveGear(1, 5f)
+        assertEquals(12f, game.gears.single().body.omega, 1e-4f)
+        // …et un passage à contresens ne l'inverse pas non plus : la main patine.
+        game.driveGear(1, -30f)
+        assertEquals(12f, game.gears.single().body.omega, 1e-4f)
+        // Mais un passage plus rapide, lui, porte la roue plus haut.
+        game.driveGear(1, 20f)
+        assertEquals(20f, game.gears.single().body.omega, 1e-4f)
+
+        // La vitesse à la main reste bornée.
+        game.driveGear(1, GearMachineRules.MAX_MANUAL_SPEED * 10f)
+        assertEquals(GearMachineRules.MAX_MANUAL_SPEED, game.gears.single().body.omega, 1e-3f)
+    }
+
+    @Test
+    fun `une roue a larret peut etre lancee dans les deux sens`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24)
+        )))
+
+        game.driveGear(1, -9f)
+        assertEquals(-9f, game.gears.single().body.omega, 1e-4f)
     }
 
     @Test
@@ -442,7 +883,18 @@ class GearMachineTest {
         ).single().config
 
         assertEquals(1, decoded.wheels.size)
-        assertEquals(1, decoded.launcherWheelId)
+        // Un engrenage ne porte pas de bras : il ne peut plus etre le lanceur.
+        assertEquals(null, decoded.launcherWheelId)
         assertTrue(decoded.links.isEmpty())
+    }
+
+    @Test
+    fun `un ancien angle de tir global migre sur le volant`() {
+        val decoded = GearMachineLibrary.decode(
+            "G4\tAncienne\tL,1,40.0,4.0\t1,0.0,4.0,48,0,FLYWHEEL,STEEL,0.0\n"
+        ).single().config
+
+        assertEquals(1, decoded.launcherWheelId)
+        assertEquals(40f, decoded.wheels.single().launchAngle, 1e-5f)
     }
 }

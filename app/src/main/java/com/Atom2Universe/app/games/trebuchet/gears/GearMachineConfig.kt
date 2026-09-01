@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.trebuchet.gears
 import com.Atom2Universe.app.games.trebuchet.MachinePreset
 import com.Atom2Universe.app.games.physics.MachineMaterial
 import com.Atom2Universe.app.games.physics.MachineMaterials
+import kotlin.math.hypot
 
 enum class GearWheelKind { GEAR, FLYWHEEL }
 
@@ -36,12 +37,38 @@ data class GearWheelConfig(
     var kind: GearWheelKind = GearWheelKind.GEAR,
     var material: GearWheelMaterial = GearWheelMaterial.STEEL,
     /** Phase visuelle de la denture, en radians. */
-    var angle: Float = 0f
+    var angle: Float = 0f,
+    /**
+     * L'elevation du tir de ce volant, en degres.
+     *
+     * Un volant **porte toujours son bras de lancement** : c'est ce qui en fait autre
+     * chose qu'une masse qui tourne. Le boulet part de la jante, tangentiellement,
+     * et cet angle-la est la direction qu'il prend -- pas la position du bras, qui
+     * s'en deduit et depend du sens de rotation.
+     */
+    var launchAngle: Float = 35f
 ) {
     val pitchRadius: Float get() = teeth * GearMachineRules.MODULE / 2f
     val outerRadius: Float get() = pitchRadius + GearMachineRules.MODULE
 
-    fun copyWheel() = GearWheelConfig(id, x, y, teeth, layer, kind, material, angle)
+    /**
+     * La gorge de lancement : le chemin creuse dans la jante ou le boulet est loge.
+     *
+     * Le boulet n'est pas au bout d'une perche, il est **dans** le mecanisme. La gorge
+     * le retient contre la force centrifuge tout le temps que la roue prend de la
+     * vitesse, et le lache par son encoche quand elle passe au point de largage.
+     */
+    val grooveWidth: Float get() = maxOf(0.30f, outerRadius * 0.16f)
+
+    /** Le bord exterieur de la gorge, juste sous la denture. */
+    val grooveOuterRadius: Float get() = outerRadius - GearMachineRules.MODULE * 0.5f
+
+    /** Le rayon ou court le boulet : le milieu de la gorge. */
+    val launchRadius: Float
+        get() = (grooveOuterRadius - grooveWidth / 2f).coerceAtLeast(0.15f)
+
+    fun copyWheel() =
+        GearWheelConfig(id, x, y, teeth, layer, kind, material, angle, launchAngle)
 }
 
 object GearMachineRules {
@@ -61,18 +88,98 @@ object GearMachineRules {
     const val MAX_MANUAL_SPEED = 120f
     const val FLICK_TRANSFER = 0.55f
     const val FLYWHEEL_TEETH = 48
+
+    /** En dessous, la jante ne va pas assez vite pour lancer quoi que ce soit. */
+    const val MIN_LAUNCH_OMEGA = 0.25f
+
+    /** Le sens de rotation par defaut d'un volant a l'arret : horaire. */
+    const val DEFAULT_SPIN = -1f
     const val LAUNCH_EFFICIENCY = 0.72f
     const val DEFAULT_PROJECTILE_MASS = 4f
     const val MIN_PROJECTILE_MASS = 0.1f
     const val MAX_PROJECTILE_MASS = 2_000f
     val SIZES = intArrayOf(12, 24, 48, 96)
+
+    /** Les boulets proposés, du caillou au bloc de siège. */
+    val PROJECTILE_MASSES = floatArrayOf(1f, 4f, 12f, 40f, 120f, 400f, 1_200f)
+
+    /**
+     * Le rayon d'un boulet de cette masse, en metres.
+     *
+     * Il sert au tir **et** au dessin du boulet en attente dans sa gorge : les deux
+     * doivent donner exactement la meme bille, sinon celle qu'on voit charger n'est
+     * pas celle qui part.
+     */
+    fun projectileRadius(mass: Float): Float =
+        (0.075f * Math.cbrt(mass.toDouble())).toFloat().coerceIn(0.06f, 0.55f)
+
+    /** Le cran de masse suivant, en tournant dans la liste. */
+    fun nextProjectileMass(mass: Float, delta: Int): Float {
+        val index = PROJECTILE_MASSES.indexOfFirst { kotlin.math.abs(it - mass) < 1e-3f }
+        val from = if (index >= 0) index else PROJECTILE_MASSES.indexOfFirst { it >= mass }
+            .let { if (it < 0) PROJECTILE_MASSES.size - 1 else it }
+        return PROJECTILE_MASSES[(from + delta).coerceIn(0, PROJECTILE_MASSES.size - 1)]
+    }
+
+    /**
+     * Qui touche quoi. Les roues ne se heurtent jamais — leurs dents sont logiques,
+     * et deux roues d'un même train se recouvrent par construction. Le boulet, lui,
+     * ne connaît que le sol : le laisser cogner la machine qui vient de le lancer
+     * finirait toujours mal.
+     */
+    const val CATEGORY_WHEEL = 1
+    const val CATEGORY_GROUND = 2
+    const val CATEGORY_SHOT = 4
+
+    /**
+     * La dalle de sol : assez large pour porter le plus long des tirs, et **épaisse**,
+     * parce que le moteur taille ses sous-pas sur l'épaisseur de ce qu'un corps rapide
+     * peut atteindre. Une dalle mince hacherait chaque image en trente-deux sous-pas
+     * dès qu'un boulet file au ras du sol.
+     */
+    const val GROUND_HALF_WIDTH = 20_000f
+    const val GROUND_DEPTH = 30f
+
+    /** Le mannequin planté devant le lanceur : le seul but de l'atelier, pour l'instant. */
+    const val TARGET_DISTANCE = 60f
+    const val TARGET_HEIGHT = 1.72f
+    const val TARGET_RADIUS = 0.38f
+
+    /** L'elevation d'un tir : de l'horizontale au tir en cloche. */
+    const val MIN_LAUNCH_DEG = 0f
+    const val MAX_LAUNCH_DEG = 85f
+
+    /**
+     * Le trajet d'une image passe-t-il dans le mannequin planté en [targetX] ?
+     *
+     * On mesure la distance du **segment** parcouru au centre de la cible, et non
+     * celle du point d'arrivée : à trois cents mètres par seconde, un boulet saute
+     * plus de deux mètres par sous-pas et traverserait une cible de quarante
+     * centimètres sans jamais être relevé dedans.
+     */
+    fun segmentHitsTarget(
+        targetX: Float, ballRadius: Float,
+        x0: Float, y0: Float, x1: Float, y1: Float
+    ): Boolean {
+        val cy = TARGET_HEIGHT
+        val dx = x1 - x0
+        val dy = y1 - y0
+        val lengthSq = dx * dx + dy * dy
+        val t = if (lengthSq <= 1e-12f) {
+            0f
+        } else {
+            (((targetX - x0) * dx + (cy - y0) * dy) / lengthSq).coerceIn(0f, 1f)
+        }
+        val nearestX = x0 + dx * t
+        val nearestY = y0 + dy * t
+        return hypot(targetX - nearestX, cy - nearestY) <= TARGET_RADIUS + ballRadius
+    }
 }
 
 /** Configuration sauvegardable de l'atelier d'engrenages. */
 class GearMachineConfig(
     val wheels: MutableList<GearWheelConfig> = defaultWheels().toMutableList(),
     var launcherWheelId: Int? = null,
-    var launcherAngleDeg: Float = 35f,
     var projectileMass: Float = GearMachineRules.DEFAULT_PROJECTILE_MASS,
     val links: MutableList<GearLinkConfig> = mutableListOf()
 ) {
@@ -80,10 +187,13 @@ class GearMachineConfig(
 
     fun deepCopy(): GearMachineConfig = GearMachineConfig(
         wheels.map { it.copyWheel() }.toMutableList(), launcherWheelId,
-        launcherAngleDeg, projectileMass, links.map { it.copyLink() }.toMutableList()
+        projectileMass, links.map { it.copyLink() }.toMutableList()
     ).also {
         it.nextId = nextId
     }
+
+    /** Le volant qui tire, s'il y en a un. */
+    fun launcher(): GearWheelConfig? = wheels.firstOrNull { it.id == launcherWheelId }
 
     fun clamp() {
         val seen = HashSet<Int>()
@@ -99,6 +209,8 @@ class GearMachineConfig(
             wheel.teeth = wheel.teeth.coerceIn(GearMachineRules.MIN_TEETH, GearMachineRules.MAX_TEETH)
             wheel.layer = wheel.layer.coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER)
             wheel.angle = wheel.angle.takeIf { it.isFinite() } ?: 0f
+            wheel.launchAngle = wheel.launchAngle.takeIf { it.isFinite() }
+                ?.coerceIn(GearMachineRules.MIN_LAUNCH_DEG, GearMachineRules.MAX_LAUNCH_DEG) ?: 35f
         }
         while (wheels.size > GearMachineRules.MAX_GEARS) wheels.removeLast()
         val ids = wheels.mapTo(HashSet()) { it.id }
@@ -117,8 +229,11 @@ class GearMachineConfig(
                 invalidLayers || !linkPairs.add(key)
         }
         while (links.size > GearMachineRules.MAX_LINKS) links.removeLast()
-        if (launcherWheelId != null && wheels.none { it.id == launcherWheelId }) launcherWheelId = null
-        launcherAngleDeg = launcherAngleDeg.takeIf { it.isFinite() }?.coerceIn(0f, 85f) ?: 35f
+        // Seul un volant peut tirer, et le premier venu s'en charge : le bras de
+        // lancement fait partie du volant, il n'a pas a etre monte a part.
+        if (wheels.none { it.id == launcherWheelId && it.kind == GearWheelKind.FLYWHEEL }) {
+            launcherWheelId = wheels.firstOrNull { it.kind == GearWheelKind.FLYWHEEL }?.id
+        }
         projectileMass = projectileMass.takeIf { it.isFinite() }
             ?.coerceIn(GearMachineRules.MIN_PROJECTILE_MASS, GearMachineRules.MAX_PROJECTILE_MASS)
             ?: GearMachineRules.DEFAULT_PROJECTILE_MASS
@@ -150,7 +265,8 @@ class GearMachinePreset(name: String, config: GearMachineConfig) {
 /** Format tolérant et versionné des machines à engrenages. */
 object GearMachineLibrary {
     const val MAX_PRESETS = 30
-    private const val VERSION = "G4"
+    private const val VERSION = "G5"
+    private const val VERSION_G4 = "G4"
     private const val VERSION_G3 = "G3"
     private const val VERSION_G2 = "G2"
     private const val VERSION_G1 = "G1"
@@ -158,8 +274,11 @@ object GearMachineLibrary {
     fun encode(list: List<GearMachinePreset>): String = buildString {
         for (preset in list.take(MAX_PRESETS)) {
             append(VERSION).append('\t').append(preset.name)
+            // L'angle garde sa place dans l'entete pour que les versions anterieures
+            // relisent quelque chose de sense : c'est celui du volant qui tire.
             append('\t').append("L,").append(preset.config.launcherWheelId ?: -1).append(',')
-                .append(preset.config.launcherAngleDeg).append(',').append(preset.config.projectileMass)
+                .append(preset.config.launcher()?.launchAngle ?: 35f).append(',')
+                .append(preset.config.projectileMass)
             for (link in preset.config.links) {
                 append('\t').append("T,").append(link.kind.name).append(',')
                     .append(link.firstId).append(',').append(link.secondId).append(',')
@@ -170,7 +289,7 @@ object GearMachineLibrary {
                     .append(wheel.x).append(',').append(wheel.y).append(',')
                     .append(wheel.teeth).append(',').append(wheel.layer).append(',')
                     .append(wheel.kind.name).append(',').append(wheel.material.name).append(',')
-                    .append(wheel.angle)
+                    .append(wheel.angle).append(',').append(wheel.launchAngle)
             }
             append('\n')
         }
@@ -181,7 +300,9 @@ object GearMachineLibrary {
         for (line in text.lineSequence()) {
             if (out.size >= MAX_PRESETS) break
             val fields = line.split('\t')
-            if (fields.size < 2 || fields[0] !in setOf(VERSION, VERSION_G3, VERSION_G2, VERSION_G1)) continue
+            val version = fields.getOrNull(0) ?: continue
+            if (fields.size < 2 ||
+                version !in setOf(VERSION, VERSION_G4, VERSION_G3, VERSION_G2, VERSION_G1)) continue
             val name = MachinePreset.clean(fields[1])
             if (name.isEmpty()) continue
             val wheels = ArrayList<GearWheelConfig>()
@@ -205,7 +326,7 @@ object GearMachineLibrary {
                     links += GearLinkConfig(first, second, kind, direction)
                     continue
                 }
-                if (value.size != 5 && value.size != 7 && value.size != 8) continue
+                if (value.size !in 5..9 || value.size == 6) continue
                 val id = value[0].toIntOrNull() ?: continue
                 val x = value[1].toFloatOrNull() ?: continue
                 val y = value[2].toFloatOrNull() ?: continue
@@ -216,9 +337,12 @@ object GearMachineLibrary {
                 val material = value.getOrNull(6)?.let { runCatching { GearWheelMaterial.valueOf(it) }.getOrNull() }
                     ?: GearWheelMaterial.STEEL
                 val angle = value.getOrNull(7)?.toFloatOrNull() ?: 0f
-                wheels += GearWheelConfig(id, x, y, teeth, layer, kind, material, angle)
+                // Avant G5, l'angle de tir etait unique et vivait dans l'entete : il
+                // devient celui de chaque volant relu.
+                val launch = value.getOrNull(8)?.toFloatOrNull() ?: launcherAngle
+                wheels += GearWheelConfig(id, x, y, teeth, layer, kind, material, angle, launch)
             }
-            val config = GearMachineConfig(wheels, launcherId, launcherAngle, projectileMass, links)
+            val config = GearMachineConfig(wheels, launcherId, projectileMass, links)
             config.clamp()
             if (config.wheels.isNotEmpty()) out += GearMachinePreset(name, config)
         }

@@ -15,6 +15,7 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.trebuchet.SkyClock
 import com.Atom2Universe.app.games.trebuchet.SkyState
 import com.Atom2Universe.app.games.trebuchet.CloudField
@@ -36,6 +37,12 @@ class GearMachineView @JvmOverloads constructor(
     interface Listener {
         fun onGearMachineChanged()
         fun onGearSelectionChanged()
+
+        /**
+         * Une liaison a été refusée. Elle l'était jusqu'ici sans un mot : on touchait
+         * la seconde roue, rien ne se passait, et rien ne disait pourquoi.
+         */
+        fun onGearLinkRejected(kind: GearLinkKind)
     }
 
     enum class TouchMode { NONE, MOVE, STRUCTURE_MOVE, SPIN, LAYER_DOWN, LAYER_UP }
@@ -101,6 +108,21 @@ class GearMachineView @JvmOverloads constructor(
         color = Color.rgb(119, 239, 196); style = Paint.Style.STROKE; strokeWidth = 0.07f
         pathEffect = DashPathEffect(floatArrayOf(0.16f, 0.10f), 0f)
     }
+    private val pTrail = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(210, 255, 240, 205); style = Paint.Style.STROKE
+        strokeWidth = 2.4f * dp; strokeCap = Paint.Cap.ROUND
+    }
+    private val pGhost = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND
+    }
+    private val trailPath = Path()
+    private val spinRect = RectF()
+    private val pTrack = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND
+    }
+    private val pSpin = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 209, 102); style = Paint.Style.STROKE; strokeWidth = 0.07f
+    }
     private val pText = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textSize = 11f * dp; textAlign = Paint.Align.CENTER }
     private val pUpperLayer = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -141,6 +163,7 @@ class GearMachineView @JvmOverloads constructor(
     private var touchGearId: Int? = null
     private var lastPointerAngle = 0f
     private var gestureStartMillis = 0L
+    private var lastSpinMillis = 0L
     private var gestureAngle = 0f
     private var pointerDownRawX = 0f
     private var pointerDownRawY = 0f
@@ -155,6 +178,13 @@ class GearMachineView @JvmOverloads constructor(
     private var magnetPulseStarted = 0L
     private var magnetFeedbackUntil = 0L
     private var cameraView = CameraView.BUILD
+
+    /**
+     * Le joueur tient le cadrage. Tant qu'il le tient, la camera ne bouge plus d'elle
+     * meme -- et elle ne le reprend qu'au changement de phase, ou sur un double-appui.
+     */
+    private var manualCam = false
+    private var camPhase = GearMachineGame.Phase.BUILD
     private var lastTapAt = 0L
     private var gestureLocked = false
     private var pinching = false
@@ -197,7 +227,6 @@ class GearMachineView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun resetMachine() = loadConfig(GearMachineConfig())
     fun snapshot(): GearMachineConfig = game.config.deepCopy()
 
     fun armPlacement(teeth: Int) {
@@ -255,7 +284,6 @@ class GearMachineView @JvmOverloads constructor(
         if (removed) {
             layoutConflictIds = emptySet()
             selectedId = null
-            fitCamera()
             listener?.onGearMachineChanged()
             listener?.onGearSelectionChanged()
             invalidate()
@@ -268,7 +296,6 @@ class GearMachineView @JvmOverloads constructor(
         val result = game.resizeGearAndReflow(id, teeth) ?: return null
         layoutConflictIds = result.conflicts
         if (result.success) {
-            fitCamera()
             listener?.onGearMachineChanged()
         } else {
             listener?.onGearSelectionChanged()
@@ -302,16 +329,6 @@ class GearMachineView @JvmOverloads constructor(
         return layer
     }
 
-    fun cycleSelectedMaterial(): GearWheelMaterial? {
-        val id = selectedId ?: return null
-        val material = game.cycleMaterial(id) ?: return null
-        layoutConflictIds = emptySet()
-        listener?.onGearMachineChanged()
-        listener?.onGearSelectionChanged()
-        invalidate()
-        return material
-    }
-
     fun changeSelectedMaterial(delta: Int): GearWheelMaterial? {
         val id = selectedId ?: return null
         val material = game.changeMaterial(id, delta) ?: return null
@@ -332,10 +349,27 @@ class GearMachineView @JvmOverloads constructor(
         return attached
     }
 
-    fun adjustLauncherAngle(delta: Float): Float {
+    fun setProjectileMass(mass: Float): Float {
+        val applied = game.setProjectileMass(mass)
+        listener?.onGearMachineChanged()
+        listener?.onGearSelectionChanged()
+        invalidate()
+        return applied
+    }
+
+    fun adjustLauncherAngle(delta: Float): Float? {
         val angle = game.adjustLauncherAngle(delta)
         listener?.onGearMachineChanged()
         listener?.onGearSelectionChanged()
+        invalidate()
+        return angle
+    }
+
+    /** Regle l'elevation du tir de la roue selectionnee, si c'est un volant. */
+    fun setSelectedLaunchAngle(degrees: Float): Float? {
+        val id = selectedId ?: return null
+        val angle = game.setLaunchAngle(id, degrees) ?: return null
+        listener?.onGearMachineChanged()
         invalidate()
         return angle
     }
@@ -349,6 +383,27 @@ class GearMachineView @JvmOverloads constructor(
         }
         invalidate()
         return launched
+    }
+
+    fun clearGhosts() {
+        game.clearGhosts()
+        invalidate()
+    }
+
+    /** Termine le tir en cours sans attendre que le boulet se calme. */
+    fun stopShot() {
+        game.stopShot()
+        listener?.onGearMachineChanged()
+        listener?.onGearSelectionChanged()
+        invalidate()
+    }
+
+    /** Rebande : le boulet posé s'efface, son fantôme reste. */
+    fun newShot() {
+        game.newShot()
+        listener?.onGearMachineChanged()
+        listener?.onGearSelectionChanged()
+        invalidate()
     }
 
     fun setCurrentLayer(delta: Int): Int {
@@ -373,19 +428,131 @@ class GearMachineView @JvmOverloads constructor(
         fitCamera()
     }
 
+    /**
+     * Recadre sur la machine.
+     *
+     * Il ne se déclenche plus tout seul après chaque geste. Il le faisait, et c'était
+     * insupportable : on zoomait sur une prise pour la régler, on déplaçait une roue
+     * d'un centimètre, et la vue reculait d'un coup sur toute la machine. Un cran de
+     * denture au bouton « + » recadrait onze fois par seconde. Il ne reste donc que là
+     * où la pièce apparaît **ailleurs** que sous les yeux — la copie, une machine
+     * chargée — et sur le double-appui, qui est la demande explicite de recadrer.
+     */
     private fun fitCamera() {
         if (width <= 0 || height <= 0) return
-        val bounds = game.bounds()
-        // L'atelier se cadre comme le trébuchet : sol en bas, machine à gauche,
-        // grande réserve de terrain à droite pour étendre une transmission.
-        val spanX = (bounds[1] - bounds[0] + 8f).coerceAtLeast(30f)
-        val spanY = (bounds[3].coerceAtLeast(0f) + 4f).coerceAtLeast(14f)
-        camScale = min(width / spanX, (height - 34f * dp) / spanY).coerceAtLeast(0.01f)
-        val center = (bounds[0] + bounds[1]) / 2f
-        camX = center + spanX * 0.16f
-        camY = (height / 2f - 30f * dp) / camScale
+        val target = buildTarget()
+        camX = target[0]
+        camScale = target[1]
+        camY = groundCamY(camScale)
         clampCamera()
         cameraView = CameraView.BUILD
+        manualCam = false
+    }
+
+    /** Le sol pose en bas de l'image, quelle que soit l'echelle. */
+    private fun groundCamY(scale: Float) = (height / 2f - GROUND_INSET_DP * dp) / scale
+
+    /**
+     * Le cadrage de reglage : sol en bas, machine a gauche, et une grande reserve de
+     * terrain a droite pour etendre une transmission.
+     */
+    private fun buildTarget(): FloatArray {
+        val bounds = game.bounds()
+        val spanX = (bounds[1] - bounds[0] + 8f).coerceAtLeast(30f)
+        val spanY = (bounds[3].coerceAtLeast(0f) + 4f).coerceAtLeast(14f)
+        val scale = min(width / spanX, (height - 34f * dp) / spanY).coerceAtLeast(0.01f)
+        val center = (bounds[0] + bounds[1]) / 2f
+        return floatArrayOf(center + spanX * 0.16f, scale)
+    }
+
+    /**
+     * Le cadrage du vol.
+     *
+     * **Le sol reste pose en bas, et c'est la vue qui recule.** Un tir se lit par
+     * rapport au sol -- c'est meme la seule chose qu'on regarde -- et une camera qui
+     * centrerait le boulet en hauteur ne montrerait bientot qu'un caillou dans un ciel
+     * vide, sans rien pour dire s'il monte ou s'il descend. La fenetre s'ouvre donc a
+     * mesure que le boulet monte, et se referme quand il redescend.
+     *
+     * On vise **devant** le boulet, d'autant plus loin qu'il va vite : le cadrage
+     * anticipe au lieu de courir apres.
+     */
+    private fun flightTarget(shot: GearMachineGame.ProjectileState): FloatArray {
+        val bounds = game.bounds()
+        val spanX = (bounds[1] - bounds[0] + 8f).coerceAtLeast(FLIGHT_MIN_WIDTH)
+        val spanY = maxOf(bounds[3] + 4f, shot.body.y + FLIGHT_TOP_MARGIN).coerceAtLeast(14f)
+        val scale = min(
+            width / spanX,
+            (height - GROUND_INSET_DP * dp) / spanY
+        ).coerceAtLeast(0.01f)
+        return floatArrayOf(shot.body.x + shot.body.vx * 0.4f, scale)
+    }
+
+    /**
+     * Le cadrage du resultat : la machine a gauche, la courbe, le point de chute, et
+     * le mannequin s'il est encore plus loin. C'est le plan qui apprend quelque chose.
+     */
+    private fun resultTarget(shot: GearMachineGame.ProjectileState): FloatArray {
+        val bounds = game.bounds()
+        val left = bounds[0] - 6f
+        val right = maxOf(shot.body.x, shot.targetX) + RESULT_MARGIN
+        val spanX = (right - left).coerceAtLeast(30f)
+        val spanY = (maxOf(bounds[3], shot.peakY) + 6f).coerceAtLeast(14f)
+        val scale = min(
+            width / spanX, (height - GROUND_INSET_DP * dp) / spanY
+        ).coerceAtLeast(0.01f)
+        return floatArrayOf((left + right) / 2f, scale)
+    }
+
+    /** Le plan le plus large : de la machine jusqu'au mannequin. */
+    private fun fullTarget(): FloatArray {
+        val bounds = game.bounds()
+        val objective = objectiveX()
+        val left = minOf(bounds[0], objective)
+        val right = maxOf(bounds[1], objective)
+        val spanX = (right - left + 12f).coerceAtLeast(70f)
+        val spanY = (bounds[3].coerceAtLeast(2.2f) + 4f).coerceAtLeast(14f)
+        val scale = min(
+            width / spanX, (height - 34f * dp) / spanY
+        ).coerceAtLeast(0.01f)
+        return floatArrayOf((left + right) / 2f, scale)
+    }
+
+    /**
+     * Rattrape la cible de la phase, sans a-coups.
+     *
+     * Le joueur garde toujours la main : des qu'il pince ou fait defiler, la camera
+     * lache prise et ne la reprend qu'au changement de phase -- on veut voir partir son
+     * tir, puis voir son arc, sans avoir a toucher l'ecran -- ou sur un double-appui,
+     * qui est la demande explicite de rendre le cadrage.
+     */
+    private fun updateCamera(dt: Float) {
+        if (width <= 0 || height <= 0 || dt <= 0f) return
+        if (game.phase != camPhase) {
+            camPhase = game.phase
+            manualCam = false
+            cameraView = CameraView.BUILD
+        }
+        if (manualCam) {
+            clampCamera()
+            return
+        }
+        val shot = game.projectile
+        val follow: Float
+        val target = when {
+            cameraView == CameraView.FULL -> { follow = 3f; fullTarget() }
+            game.phase == GearMachineGame.Phase.FLIGHT && shot != null -> {
+                follow = 8f; flightTarget(shot)
+            }
+            game.phase == GearMachineGame.Phase.RESULT && shot != null -> {
+                follow = 3f; resultTarget(shot)
+            }
+            else -> { follow = 4.5f; buildTarget() }
+        }
+        camX += (target[0] - camX) * (dt * follow).coerceIn(0f, 1f)
+        camScale += (target[1] - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
+        camY = groundCamY(camScale)
+        clampCamera()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -406,16 +573,23 @@ class GearMachineView @JvmOverloads constructor(
             pMesh.alpha = layerAlpha(a.wheel.layer, 170, 80)
             canvas.drawLine(a.body.x, a.body.y, b.body.x, b.body.y, pMesh)
         }
-        drawLauncher(canvas)
         for (gear in game.gears.sortedBy { it.wheel.layer }) drawGear(canvas, gear)
+        // Le bras se pose par-dessus la roue : c'est une piece rapportee sur la jante,
+        // et le godet comme la fleche de sortie doivent rester lisibles.
+        drawLaunchers(canvas)
         drawAssemblySelection(canvas)
+        drawPendingLink(canvas)
         drawMagnetFeedback(canvas)
         game.projectile?.let { shot ->
+            drawShotMark(canvas, shot)
             pGear.color = Color.rgb(245, 240, 222)
             pGear.alpha = 255
             canvas.drawCircle(shot.body.x, shot.body.y, shot.body.radius, pGear)
         }
         canvas.restore()
+
+        drawGhosts(canvas)
+        drawTrail(canvas)
 
         for (gear in game.gears) {
             val x = sx(gear.body.x)
@@ -444,7 +618,7 @@ class GearMachineView @JvmOverloads constructor(
         lastFrameNanos = now
         val fixed = 1f / 120f
         var guard = 0
-        val hadProjectile = game.projectile != null
+        var consumed = 0f
         while (accumulator >= fixed && guard++ < 8) {
             game.step(fixed)
             updateTimeControl(fixed)
@@ -453,14 +627,10 @@ class GearMachineView @JvmOverloads constructor(
             clouds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
             birds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
             accumulator -= fixed
+            consumed += fixed
         }
         sky.update(skyClock.instant)
-        if (hadProjectile && game.projectile == null) fitCamera()
-        game.projectile?.let { shot ->
-            val visibleRight = camX + width / camScale * 0.38f
-            if (shot.body.x > visibleRight) camX += shot.body.x - visibleRight
-        }
-        clampCamera()
+        updateCamera(consumed)
         val nowMillis = now / 1_000_000L
         if (nowMillis - lastUiNotifyMillis >= 250L) {
             lastUiNotifyMillis = nowMillis
@@ -599,42 +769,55 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     /** L'objectif de tir donne un second point de repère au double-appui large. */
-    private fun objectiveX(): Float {
-        val launcher = game.config.launcherWheelId?.let { id ->
-            game.gears.firstOrNull { it.wheel.id == id }?.body?.x
-        }
-        return (launcher ?: game.bounds()[1]) + 60f
+    private fun objectiveX(): Float = if (game.projectile != null) {
+        // En vol, le mannequin reste là où il était au départ : sinon déplacer le
+        // lanceur pendant le tir ferait fuir la cible devant le boulet.
+        game.projectile!!.targetX
+    } else {
+        game.targetX()
     }
 
     private fun drawWorkshopObjective(canvas: Canvas) {
         val x = objectiveX()
-        pFrame.color = Color.rgb(239, 103, 79)
+        val hit = game.projectile?.hitTarget ?: false
+        pFrame.color = if (hit) Color.rgb(119, 239, 196) else Color.rgb(239, 103, 79)
         pFrame.alpha = 210
-        pFrame.strokeWidth = 0.10f
+        pFrame.strokeWidth = if (hit) 0.14f else 0.10f
         canvas.drawLine(x, 0f, x, 2.1f, pFrame)
-        canvas.drawCircle(x, 1.72f, 0.38f, pFrame)
+        canvas.drawCircle(x, GearMachineRules.TARGET_HEIGHT, GearMachineRules.TARGET_RADIUS, pFrame)
         canvas.drawLine(x - 0.27f, 1.45f, x + 0.27f, 1.99f, pFrame)
         canvas.drawLine(x - 0.27f, 1.99f, x + 0.27f, 1.45f, pFrame)
         pFrame.color = Color.rgb(66, 83, 112)
         pFrame.alpha = 255
     }
 
+    /** La marque du boulet posé : une portée qu'on lit sans quitter le terrain des yeux. */
+    private fun drawShotMark(canvas: Canvas, shot: GearMachineGame.ProjectileState) {
+        if (!shot.landed) return
+        pMesh.color = Color.rgb(255, 209, 102)
+        pMesh.alpha = 190
+        canvas.drawLine(shot.body.x, 0f, shot.body.x, 1.1f, pMesh)
+        canvas.drawLine(shot.body.x - 0.35f, 0.02f, shot.body.x + 0.35f, 0.02f, pMesh)
+        pMesh.alpha = 255
+    }
+
+    /**
+     * Le double-appui : il bascule entre le plan large et le cadrage automatique, et
+     * dans les deux cas il **rend la main a la camera**. C'est la sortie de secours
+     * d'un cadrage manuel dont on ne veut plus.
+     */
     private fun focusCamera(view: CameraView) {
         if (width <= 0 || height <= 0) return
         cameraView = view
-        if (view == CameraView.BUILD) {
+        manualCam = false
+        if (view == CameraView.BUILD && game.phase == GearMachineGame.Phase.BUILD) {
             fitCamera()
             return
         }
-        val bounds = game.bounds()
-        val target = objectiveX()
-        val left = minOf(bounds[0], target)
-        val right = maxOf(bounds[1], target)
-        val spanX = (right - left + 12f).coerceAtLeast(70f)
-        val spanY = (bounds[3].coerceAtLeast(2.2f) + 4f).coerceAtLeast(14f)
-        camScale = min(width / spanX, (height - 34f * dp) / spanY).coerceAtLeast(0.01f)
-        camX = (left + right) / 2f
-        camY = (height / 2f - 30f * dp) / camScale
+        val target = if (view == CameraView.FULL) fullTarget() else buildTarget()
+        camX = target[0]
+        camScale = target[1]
+        camY = groundCamY(camScale)
         clampCamera()
     }
 
@@ -644,17 +827,28 @@ class GearMachineView @JvmOverloads constructor(
         return leftmostPiece - maxOf(8f, abs(leftmostPiece) * 0.40f)
     }
 
+    /**
+     * La butée droite suit le tir. Elle était fixée à mille mètres, ce qui suffisait
+     * tant que rien n'allait plus loin — mais une bonne machine dépasse cette borne, et
+     * la caméra restait alors plantée à regarder un boulet déjà sorti du cadre.
+     */
+    private fun rightCameraLimit(): Float {
+        var right = maxOf(1_000f, objectiveX() + 40f)
+        game.projectile?.let { right = maxOf(right, it.body.x + 40f) }
+        return right
+    }
+
     private fun clampCamera() {
         if (width <= 0 || camScale <= 0f) return
         val left = leftCameraLimit()
-        val right = 1_000f
+        val right = rightCameraLimit()
         val halfWidth = width / camScale / 2f
         camX = if (right - left <= halfWidth * 2f) {
             (left + right) * 0.5f
         } else {
             camX.coerceIn(left + halfWidth, right - halfWidth)
         }
-        camY = (height / 2f - 30f * dp) / camScale
+        camY = groundCamY(camScale)
     }
 
     private fun updateTimeControl(dt: Float) {
@@ -772,23 +966,129 @@ class GearMachineView @JvmOverloads constructor(
         pChain.strokeWidth = 0.075f
     }
 
-    private fun drawLauncher(canvas: Canvas) {
-        val id = game.config.launcherWheelId ?: return
-        val gear = game.gears.firstOrNull { it.wheel.id == id } ?: return
-        val angle = Math.toRadians(game.config.launcherAngleDeg.toDouble()).toFloat()
-        val nx = cos(angle)
-        val ny = sin(angle)
-        val start = gear.wheel.outerRadius * 0.75f
-        val end = gear.wheel.outerRadius + 1.15f
-        pFrame.color = Color.rgb(230, 112, 82)
-        pFrame.alpha = layerAlpha(gear.wheel.layer, 180, 70)
-        pFrame.strokeWidth = 0.14f
-        canvas.drawLine(gear.body.x + nx * start, gear.body.y + ny * start,
-            gear.body.x + nx * end, gear.body.y + ny * end, pFrame)
-        canvas.drawLine(gear.body.x - ny * 0.22f + nx * end, gear.body.y + nx * 0.22f + ny * end,
-            gear.body.x + ny * 0.22f + nx * end, gear.body.y - nx * 0.22f + ny * end, pFrame)
-        pFrame.color = Color.rgb(66, 83, 112)
-        pFrame.alpha = 255
+    /**
+     * La gorge de lancement de chaque volant.
+     *
+     * Le boulet court **dans** la jante, dans une gorge annulaire, et il en sort
+     * tangentiellement -- jamais dans l'axe du rayon. Un canon plante au milieu de la
+     * roue ne lancerait rien du tout : au centre, la vitesse est nulle.
+     *
+     * Le volant qui tire montre son boulet et sa fleche ; les autres gardent une
+     * gorge plus discrete, parce qu'ils pourraient tirer eux aussi.
+     */
+    private fun drawLaunchers(canvas: Canvas) {
+        for (gear in game.gears) {
+            if (gear.wheel.kind != GearWheelKind.FLYWHEEL) continue
+            drawLaunchTrack(canvas, gear, gear.wheel.id == game.config.launcherWheelId)
+        }
+    }
+
+    /**
+     * La gorge de lancement d'un volant, son encoche, et le boulet qui l'attend.
+     *
+     * Le boulet est **dans** le mecanisme, pas au bout d'une perche : un anneau creuse
+     * dans la jante le tient contre la force centrifuge pendant que la roue monte en
+     * regime, et il s'echappe par l'encoche quand elle passe au point de largage. Le
+     * dessiner en attente dans sa gorge est ce qui donne son sens au tir -- sans lui,
+     * la fleche de sortie partait de nulle part.
+     */
+    private fun drawLaunchTrack(
+        canvas: Canvas,
+        gear: GearMachineGame.GearState,
+        active: Boolean
+    ) {
+        val wheel = gear.wheel
+        val point = game.launchPointAngle(wheel)
+        val aim = Math.toRadians(wheel.launchAngle.toDouble()).toFloat()
+        val alpha = layerAlpha(wheel.layer, if (active) 230 else 130, 70)
+        val cx = gear.body.x
+        val cy = gear.body.y
+
+        // Les deux levres de la gorge.
+        pTrack.color = if (active) Color.rgb(230, 112, 82) else Color.rgb(150, 122, 116)
+        pTrack.alpha = alpha
+        pTrack.strokeWidth = if (active) 0.075f else 0.05f
+        val inner = (wheel.launchRadius - wheel.grooveWidth / 2f).coerceAtLeast(0.05f)
+        canvas.drawCircle(cx, cy, wheel.grooveOuterRadius, pTrack)
+        canvas.drawCircle(cx, cy, inner, pTrack)
+
+        // L'encoche : la levre exterieure s'ouvre, et le boulet s'en va par la.
+        val px = cx + cos(point) * wheel.launchRadius
+        val py = cy + sin(point) * wheel.launchRadius
+        val outX = cx + cos(point) * (wheel.grooveOuterRadius + 0.10f)
+        val outY = cy + sin(point) * (wheel.grooveOuterRadius + 0.10f)
+        pTrack.strokeWidth = if (active) 0.10f else 0.06f
+        canvas.drawLine(px, py, outX, outY, pTrack)
+        val lipX = -sin(point) * wheel.grooveWidth * 0.55f
+        val lipY = cos(point) * wheel.grooveWidth * 0.55f
+        canvas.drawLine(px - lipX, py - lipY, px + lipX, py + lipY, pTrack)
+
+        if (!active) {
+            pTrack.alpha = 255
+            return
+        }
+
+        // Le boulet en attente, exactement celui qui partira.
+        if (game.phase == GearMachineGame.Phase.BUILD) {
+            val radius = GearMachineRules.projectileRadius(game.config.projectileMass)
+            pGear.color = Color.rgb(245, 240, 222)
+            pGear.alpha = alpha
+            canvas.drawCircle(px, py, radius, pGear)
+            pTrack.strokeWidth = 0.035f
+            canvas.drawCircle(px, py, radius, pTrack)
+        }
+
+        // La fleche de sortie : la direction du tir, la seule chose que l'on regle.
+        val from = wheel.grooveOuterRadius + 0.12f
+        val tipX = cx + cos(point) * from + cos(aim) * 0.2f
+        val tipY = cy + sin(point) * from + sin(aim) * 0.2f
+        // La fleche se mesure sur la roue : sur un petit volant, une fleche de deux
+        // metres cacherait la piece qu'elle est censee expliquer.
+        val reach = (wheel.outerRadius * 0.85f).coerceIn(1.1f, 3.2f)
+        val headX = tipX + cos(aim) * reach
+        val headY = tipY + sin(aim) * reach
+        pTrack.strokeWidth = 0.12f
+        canvas.drawLine(tipX, tipY, headX, headY, pTrack)
+        val wing = reach * 0.2f
+        canvas.drawLine(
+            headX, headY,
+            headX - cos(aim - 0.42f) * wing, headY - sin(aim - 0.42f) * wing, pTrack
+        )
+        canvas.drawLine(
+            headX, headY,
+            headX - cos(aim + 0.42f) * wing, headY - sin(aim + 0.42f) * wing, pTrack
+        )
+        pTrack.alpha = 255
+        drawSpinHint(canvas, gear, alpha)
+    }
+
+    /** Un arc flechee au centre : dans quel sens la roue lachera son boulet. */
+    private fun drawSpinHint(canvas: Canvas, gear: GearMachineGame.GearState, alpha: Int) {
+        val spin = game.launchSpin(gear.wheel.id)
+        val radius = gear.wheel.pitchRadius * 0.45f
+        if (radius < 0.2f) return
+        spinRect.set(
+            gear.body.x - radius, gear.body.y - radius,
+            gear.body.x + radius, gear.body.y + radius
+        )
+        pSpin.alpha = (alpha * 0.8f).toInt()
+        // Le canevas est retourne en Y : un balayage positif y tourne dans le sens
+        // horaire du monde, donc le signe suit directement le sens de rotation.
+        val sweep = 210f * spin
+        canvas.drawArc(spinRect, 150f, sweep, false, pSpin)
+        val endAngle = Math.toRadians((150f + sweep).toDouble()).toFloat()
+        val ex = gear.body.x + cos(endAngle) * radius
+        val ey = gear.body.y + sin(endAngle) * radius
+        // La pointe, posee le long de la tangente au bout de l'arc.
+        val tangent = endAngle + spin * (Math.PI / 2.0).toFloat()
+        val head = radius * 0.34f
+        canvas.drawLine(
+            ex, ey, ex - cos(tangent - 0.5f) * head, ey - sin(tangent - 0.5f) * head, pSpin
+        )
+        canvas.drawLine(
+            ex, ey, ex - cos(tangent + 0.5f) * head, ey - sin(tangent + 0.5f) * head, pSpin
+        )
+        pSpin.alpha = 255
     }
 
     private fun drawGear(canvas: Canvas, gear: GearMachineGame.GearState) {
@@ -915,9 +1215,24 @@ class GearMachineView @JvmOverloads constructor(
     private fun drawAssemblySelection(canvas: Canvas) {
         if (!structureTool) return
         val id = selectedId ?: return
-        for (member in game.gears) if (member.wheel.id in game.assemblyIds(id)) {
+        // Une seule fermeture transitive par image, et non une par roue dessinée.
+        val members = game.assemblyIds(id)
+        for (member in game.gears) if (member.wheel.id in members) {
             canvas.drawCircle(member.body.x, member.body.y, member.wheel.outerRadius + 0.18f, pAssembly)
         }
+    }
+
+    /**
+     * D'où part la liaison en attente.
+     *
+     * Le bandeau disait « touchez la seconde roue », mais rien ne montrait la
+     * première : sur une machine de vingt roues, on ne savait plus laquelle on avait
+     * choisie, et la seule issue était d'annuler pour recommencer.
+     */
+    private fun drawPendingLink(canvas: Canvas) {
+        val first = pendingLink?.firstId ?: return
+        val gear = game.gears.firstOrNull { it.wheel.id == first } ?: return
+        canvas.drawCircle(gear.body.x, gear.body.y, gear.wheel.outerRadius + 0.18f, pAssembly)
     }
 
     /** Une teinte stable et très distincte pour chaque étage voisin. */
@@ -971,13 +1286,71 @@ class GearMachineView @JvmOverloads constructor(
         magnetFeedbackUntil = SystemClock.uptimeMillis() + 650L
     }
 
+    /**
+     * Les fantômes des tirs précédents, du plus vieux au plus récent.
+     *
+     * Sans eux, corriger une machine relève de la superstition : avec, on voit de
+     * combien on a manqué et **dans quel sens** on se trompe. Le dernier tir est franc,
+     * les précédents s'éteignent — c'est ce dégradé qui fait toute la lecture.
+     */
+    private fun drawGhosts(canvas: Canvas) {
+        val list = game.ghosts
+        if (list.isEmpty()) return
+        val last = list.size - 1
+        for (i in last downTo 0) {
+            val age = if (last == 0) 0f else i / last.toFloat()
+            val v = (255 - 90f * age).toInt()
+            val b = (255 - 70f * age).toInt()
+            pGhost.color = Color.argb((170 - 110f * age).toInt(), v, v, b)
+            pGhost.strokeWidth = (2.2f - 0.9f * age) * dp
+            drawPolyline(canvas, list[i], list[i].size, pGhost)
+        }
+    }
+
+    private fun drawTrail(canvas: Canvas) {
+        drawPolyline(canvas, game.trail, game.trailCount, pTrail)
+    }
+
+    /** Une polyligne du monde, tracée en pixels et coupée hors de l'écran. */
+    private fun drawPolyline(canvas: Canvas, points: FloatArray, count: Int, paint: Paint) {
+        if (count < 4) return
+        val w = width.toFloat()
+        val h = height.toFloat()
+        trailPath.reset()
+        var px = sx(points[0])
+        var py = sy(points[1])
+        var lastX = Float.NaN
+        var lastY = Float.NaN
+        var drew = false
+        var i = 2
+        while (i < count) {
+            val cx = sx(points[i])
+            val cy = sy(points[i + 1])
+            i += 2
+            // Deux points sur le même pixel ne dessinent rien de plus qu'un seul.
+            if (abs(cx - px) < 1f && abs(cy - py) < 1f) continue
+            val outside = (px < 0f && cx < 0f) || (px > w && cx > w) ||
+                (py < 0f && cy < 0f) || (py > h && cy > h)
+            if (!outside) {
+                if (px != lastX || py != lastY) trailPath.moveTo(px, py)
+                trailPath.lineTo(cx, cy)
+                lastX = cx
+                lastY = cy
+                drew = true
+            }
+            px = cx
+            py = cy
+        }
+        if (drew) canvas.drawPath(trailPath, paint)
+    }
+
     /** Sélecteur d'étage fixe : il reste lisible quel que soit le zoom de la machine. */
     private fun drawLayerSelector(canvas: Canvas) {
-        val left = 10f * dp
-        val top = 10f * dp
-        val height = 44f * dp
-        val button = 44f * dp
-        val width = 152f * dp
+        val left = PANEL_LEFT_DP * dp
+        val top = PANEL_TOP_DP * dp
+        val height = PANEL_ROW_DP * dp
+        val button = PANEL_ROW_DP * dp
+        val width = PANEL_WIDTH_DP * dp
         screenRect.set(left, top, left + width, top + height)
         canvas.drawRoundRect(screenRect, 9f * dp, 9f * dp, pLayerPanel)
         screenRect.set(left, top, left + button, top + height)
@@ -998,11 +1371,11 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     private fun layerControlAt(x: Float, y: Float): Int {
-        val left = 10f * dp
-        val top = 10f * dp
-        val height = 44f * dp
-        val width = 152f * dp
-        val button = 44f * dp
+        val left = PANEL_LEFT_DP * dp
+        val top = PANEL_TOP_DP * dp
+        val height = PANEL_ROW_DP * dp
+        val width = PANEL_WIDTH_DP * dp
+        val button = PANEL_ROW_DP * dp
         if (y !in top..(top + height)) return 0
         return when {
             x in left..(left + button) -> -1
@@ -1012,10 +1385,10 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     private fun drawStructureTool(canvas: Canvas) {
-        val left = 10f * dp
-        val top = 60f * dp
-        val width = 152f * dp
-        val height = 38f * dp
+        val left = PANEL_LEFT_DP * dp
+        val top = TOOL_TOP_DP * dp
+        val width = PANEL_WIDTH_DP * dp
+        val height = TOOL_HEIGHT_DP * dp
         screenRect.set(left, top, left + width, top + height)
         pLayerPanel.color = if (structureTool) Color.argb(235, 21, 77, 78) else Color.argb(220, 16, 25, 50)
         canvas.drawRoundRect(screenRect, 9f * dp, 9f * dp, pLayerPanel)
@@ -1023,7 +1396,10 @@ class GearMachineView @JvmOverloads constructor(
         pLayerText.textSize = 12f * dp
         pLayerText.color = if (structureTool) Color.rgb(119, 239, 196) else Color.rgb(221, 230, 239)
         canvas.drawText(
-            if (structureTool) "BÂTI · DÉPLACER" else "OUTIL · PIÈCE",
+            context.getString(
+                if (structureTool) R.string.trebuchet_gear_tool_frame
+                else R.string.trebuchet_gear_tool_part
+            ),
             left + width / 2f,
             top + height / 2f - (pLayerText.ascent() + pLayerText.descent()) / 2f,
             pLayerText
@@ -1032,9 +1408,10 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     private fun structureControlAt(x: Float, y: Float): Boolean {
-        val left = 10f * dp
-        val top = 60f * dp
-        return x in left..(left + 152f * dp) && y in top..(top + 38f * dp)
+        val left = PANEL_LEFT_DP * dp
+        val top = TOOL_TOP_DP * dp
+        return x in left..(left + PANEL_WIDTH_DP * dp) &&
+            y in top..(top + TOOL_HEIGHT_DP * dp)
     }
 
     private fun beginPinch(event: MotionEvent) {
@@ -1046,6 +1423,7 @@ class GearMachineView @JvmOverloads constructor(
         pinchLastFocusX = (event.getX(0) + event.getX(1)) * 0.5f
         pinching = true
         gestureLocked = true
+        manualCam = true
         touchMode = TouchMode.NONE
         touchGearId = null
         stopTimeControl()
@@ -1060,21 +1438,24 @@ class GearMachineView @JvmOverloads constructor(
         // On garde le monde sous le centre *précédent* des deux doigts : si les
         // doigts voyagent ensemble, cela devient naturellement un pan horizontal.
         val worldX = wx(pinchLastFocusX)
-        val minScale = (width / (1_000f - leftCameraLimit())).coerceAtLeast(0.01f)
+        val minScale = (width / (rightCameraLimit() - leftCameraLimit())).coerceAtLeast(0.01f)
         val maxScale = 190f * dp
         camScale = (pinchStartScale * distance / pinchStartDistance).coerceIn(minScale, maxScale)
         camX = worldX - (focusX - width / 2f) / camScale
         pinchLastFocusX = focusX
         // Le sol ne suit jamais le doigt : il reste posé en bas de l'écran,
         // comme dans TrebuchetView, quelle que soit l'échelle choisie.
-        camY = (height / 2f - 30f * dp) / camScale
+        camY = groundCamY(camScale)
         clampCamera()
     }
 
     private fun panScene(event: MotionEvent) {
         val dx = event.x - panLastX
         val dy = event.y - panLastY
-        if (abs(dx) > 0.1f || abs(dy) > 0.1f) sceneDragging = true
+        if (abs(dx) > 0.1f || abs(dy) > 0.1f) {
+            sceneDragging = true
+            manualCam = true
+        }
         camX -= dx / camScale
         clampCamera()
         panLastX = event.x
@@ -1134,7 +1515,6 @@ class GearMachineView @JvmOverloads constructor(
                         selectedId = id
                         placementTeeth = null
                         placementKind = GearWheelKind.GEAR
-                        fitCamera()
                         listener?.onGearMachineChanged()
                     } else {
                         selectedId = null
@@ -1163,10 +1543,15 @@ class GearMachineView @JvmOverloads constructor(
                             invalidate()
                             return true
                         }
+                        listener?.onGearLinkRejected(pending.kind)
                     }
                 }
                 selectedId = hit.wheel.id
                 currentLayer = hit.wheel.layer
+                // Toucher une pièce annule une pose armée : sans ça elle restait
+                // tapie, et le prochain appui dans le vide lâchait une roue dont
+                // personne ne voulait plus.
+                cancelPlacement()
                 layoutConflictIds = emptySet()
                 game.captureWheelAngles()
                 magneticTargetId = null
@@ -1179,6 +1564,7 @@ class GearMachineView @JvmOverloads constructor(
                 touchGearId = hit.wheel.id
                 lastPointerAngle = atan2(y - hit.body.y, x - hit.body.x)
                 gestureStartMillis = event.eventTime
+                lastSpinMillis = event.eventTime
                 gestureAngle = 0f
                 listener?.onGearSelectionChanged()
                 invalidate()
@@ -1248,6 +1634,11 @@ class GearMachineView @JvmOverloads constructor(
                         while (delta < -PI.toFloat()) delta += (2.0 * PI).toFloat()
                         gestureAngle += delta
                         lastPointerAngle = angle
+                        // La roue suit le doigt tant qu'on la tient : c'est le seul
+                        // retour qui dise que la jante a été prise.
+                        val spinDt = ((event.eventTime - lastSpinMillis).coerceAtLeast(1L) / 1000f)
+                        lastSpinMillis = event.eventTime
+                        game.driveGear(id, delta / spinDt)
                     }
                     else -> Unit
                 }
@@ -1271,10 +1662,8 @@ class GearMachineView @JvmOverloads constructor(
                             magnetFeedbackUntil = magnetPulseStarted + 650L
                         }
                     }
-                    fitCamera()
                 } else if (touchMode == TouchMode.STRUCTURE_MOVE && manipulationStarted) {
                     touchGearId?.let { id -> game.moveAssembly(id, x, y) }
-                    fitCamera()
                 } else if (touchMode == TouchMode.SPIN && manipulationStarted &&
                     event.actionMasked == MotionEvent.ACTION_UP) {
                     touchGearId?.let { id ->
@@ -1301,6 +1690,34 @@ class GearMachineView @JvmOverloads constructor(
             }
         }
         return true
+    }
+
+    companion object {
+        /** De combien le sol est remonte depuis le bas de l'image. */
+        private const val GROUND_INSET_DP = 30f
+
+        /** L'air garde au-dessus du boulet pendant le vol, en metres. */
+        private const val FLIGHT_TOP_MARGIN = 6f
+
+        /** En dessous, le cadrage du vol ne se resserre plus. */
+        private const val FLIGHT_MIN_WIDTH = 40f
+
+        /** L'air garde apres le point de chute au plan de resultat. */
+        private const val RESULT_MARGIN = 14f
+        // La géométrie des deux panneaux fixes du coin haut gauche. Elle était
+        // recopiée dans les quatre méthodes qui les dessinent et les touchent, et
+        // la bulle d'édition doit maintenant savoir où ils s'arrêtent pour ne pas
+        // se poser dessus.
+        private const val PANEL_LEFT_DP = 10f
+        private const val PANEL_TOP_DP = 10f
+        private const val PANEL_WIDTH_DP = 152f
+        private const val PANEL_ROW_DP = 44f
+        private const val TOOL_TOP_DP = 60f
+        private const val TOOL_HEIGHT_DP = 38f
+
+        /** Le coin haut gauche que les panneaux occupent, en dp. */
+        const val HUD_RIGHT_DP = PANEL_LEFT_DP + PANEL_WIDTH_DP
+        const val HUD_BOTTOM_DP = TOOL_TOP_DP + TOOL_HEIGHT_DP
     }
 
     private fun sx(x: Float) = width / 2f + (x - camX) * camScale

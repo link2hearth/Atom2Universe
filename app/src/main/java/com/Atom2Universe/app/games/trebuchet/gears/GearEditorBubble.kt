@@ -32,7 +32,7 @@ class GearEditorBubble @JvmOverloads constructor(
     var gearView: GearMachineView? = null
     var onEdited: (() -> Unit)? = null
 
-    private enum class Row { TEETH, LAYER, MATERIAL }
+    private enum class Row { TEETH, LAYER, MATERIAL, LAUNCH, BALL }
     private enum class Hit { NONE, HEADER, MINUS, PLUS, VALUE, COUPLE, DUPLICATE, DELETE }
 
     private val dp = resources.displayMetrics.density
@@ -83,6 +83,9 @@ class GearEditorBubble @JvmOverloads constructor(
         const val WIDTH_DP = 306f
         const val HEADER_DP = 36f
         const val ROW_DP = 54f
+
+        /** En dessous, les boutons deviendraient trop plats pour etre vises au doigt. */
+        const val MIN_ROW_DP = 42f
         const val ACTION_DP = 52f
         const val PAD_DP = 10f
         const val LABEL_DP = 70f
@@ -104,6 +107,28 @@ class GearEditorBubble @JvmOverloads constructor(
     private val slot: Int
         get() = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0
 
+    /**
+     * Les lignes offertes pour la piece tenue.
+     *
+     * Un volant porte toujours son bras de lancement : c'est ce qui en fait un canon
+     * plutot qu'une masse qui tourne, et son elevation se regle donc **ici**, sur la
+     * piece elle-meme, sans passer par un menu.
+     */
+    private fun rows(): List<Row> =
+        if (gearView?.selectedWheel()?.kind == GearWheelKind.FLYWHEEL) Row.entries
+        else Row.entries.filter { it != Row.LAUNCH && it != Row.BALL }
+
+    private var laidOutRows = 0
+
+    /**
+     * La hauteur d'une ligne, en dp.
+     *
+     * Elle se resserre quand la place manque : un volant ouvre cinq lignes, et en
+     * paysage sur un telephone la bulle depasserait la scene -- la derniere ligne
+     * serait alors dessinee hors du panneau, donc invisible et intouchable.
+     */
+    private var rowDp = ROW_DP
+
     private val repeater = object : Runnable {
         override fun run() {
             if (hit != Hit.MINUS && hit != Hit.PLUS) return
@@ -117,13 +142,24 @@ class GearEditorBubble @JvmOverloads constructor(
         val show = gearView?.selectedWheel() != null
         visibility = if (show) VISIBLE else GONE
         if (!show) release()
+        // Passer d'un engrenage a un volant ajoute une ligne : la bulle doit se
+        // remesurer, sinon la derniere ligne serait dessinee hors du panneau.
+        if (show && rows().size != laidOutRows) requestLayout()
         invalidate()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        laidOutRows = rows().size
+        val fixed = (HEADER_DP + ACTION_DP + PAD_DP) * dp
+        val available = MeasureSpec.getSize(heightMeasureSpec).toFloat()
+        rowDp = if (available > fixed && laidOutRows > 0) {
+            ((available - fixed) / dp / laidOutRows).coerceIn(MIN_ROW_DP, ROW_DP)
+        } else {
+            ROW_DP
+        }
         setMeasuredDimension(
             (WIDTH_DP * dp).roundToInt(),
-            ((HEADER_DP + ROW_DP * Row.entries.size + ACTION_DP + PAD_DP) * dp).roundToInt()
+            ((HEADER_DP + rowDp * laidOutRows + ACTION_DP + PAD_DP) * dp).roundToInt()
         )
     }
 
@@ -136,6 +172,16 @@ class GearEditorBubble @JvmOverloads constructor(
         drawRow(canvas, Row.TEETH, context.getString(R.string.trebuchet_gear_edit_teeth), wheel.teeth.toString())
         drawRow(canvas, Row.LAYER, context.getString(R.string.trebuchet_gear_edit_layer), signed(wheel.layer))
         drawRow(canvas, Row.MATERIAL, context.getString(R.string.trebuchet_gear_edit_material), materialName(wheel.material))
+        if (Row.LAUNCH in rows()) {
+            drawRow(
+                canvas, Row.LAUNCH, context.getString(R.string.trebuchet_gear_edit_launch),
+                "${wheel.launchAngle.roundToInt()}°"
+            )
+            drawRow(
+                canvas, Row.BALL, context.getString(R.string.trebuchet_gear_edit_ball),
+                "${ballMass().roundToInt()} kg"
+            )
+        }
         drawActions(canvas)
     }
 
@@ -160,14 +206,14 @@ class GearEditorBubble @JvmOverloads constructor(
 
     private fun drawRow(canvas: Canvas, target: Row, label: String, value: String) {
         val top = rowTop(target)
-        val mid = top + ROW_DP * dp / 2f
+        val mid = top + rowDp * dp / 2f
         canvas.drawText(label, PAD_DP * dp, mid - (pLabel.ascent() + pLabel.descent()) / 2f, pLabel)
         drawStepButton(canvas, minusLeft(), top, false, hit == Hit.MINUS && row == target)
         drawStepButton(canvas, plusLeft(), top, true, hit == Hit.PLUS && row == target)
 
         val left = valueLeft()
         val right = plusLeft() - 4f * dp
-        panel.set(left, top + 5f * dp, right, top + (ROW_DP - 5f) * dp)
+        panel.set(left, top + 5f * dp, right, top + (rowDp - 5f) * dp)
         canvas.drawRoundRect(panel, 6f * dp, 6f * dp, if (hit == Hit.VALUE && row == target) pCellOn else pCell)
         val centerX = (left + right) / 2f
         val offset = if (hit == Hit.VALUE && row == target) wheelOffset else 0f
@@ -175,18 +221,18 @@ class GearEditorBubble @JvmOverloads constructor(
         canvas.clipRect(panel)
         canvas.drawText(value, centerX, mid - (pValue.ascent() + pValue.descent()) / 2f + offset, pValue)
         if (target != Row.MATERIAL) {
-            canvas.drawText(neighborValue(target, -1), centerX, mid - 26f * dp + offset, pValueDim)
-            canvas.drawText(neighborValue(target, +1), centerX, mid + 31f * dp + offset, pValueDim)
+            canvas.drawText(neighborValue(target, -1), centerX, mid - rowDp * 0.48f * dp + offset, pValueDim)
+            canvas.drawText(neighborValue(target, +1), centerX, mid + rowDp * 0.57f * dp + offset, pValueDim)
         }
         canvas.restore()
     }
 
     private fun drawStepButton(canvas: Canvas, left: Float, top: Float, plus: Boolean, pressed: Boolean) {
         val size = 44f * dp
-        panel.set(left, top + 5f * dp, left + size, top + (ROW_DP - 5f) * dp)
+        panel.set(left, top + 5f * dp, left + size, top + (rowDp - 5f) * dp)
         canvas.drawRoundRect(panel, 6f * dp, 6f * dp, if (pressed) pCellOn else pCell)
         val cx = left + size / 2f
-        val cy = top + ROW_DP * dp / 2f
+        val cy = top + rowDp * dp / 2f
         canvas.drawRect(cx - 7f * dp, cy - 1.4f * dp, cx + 7f * dp, cy + 1.4f * dp, pAccent)
         if (plus) canvas.drawRect(cx - 1.4f * dp, cy - 7f * dp, cx + 1.4f * dp, cy + 7f * dp, pAccent)
     }
@@ -243,7 +289,7 @@ class GearEditorBubble @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP -> {
                 if (travel < TAP_SLOP_DP * dp) when (hit) {
-                    Hit.VALUE -> change(if (event.y < rowTop(row) + ROW_DP * dp / 2f) +1 else -1)
+                    Hit.VALUE -> change(if (event.y < rowTop(row) + rowDp * dp / 2f) +1 else -1)
                     Hit.COUPLE -> gearView?.armLink(GearLinkKind.SHAFT_CLUTCH)
                     Hit.DUPLICATE -> gearView?.duplicateSelected()
                     Hit.DELETE -> gearView?.deleteSelected()
@@ -260,9 +306,9 @@ class GearEditorBubble @JvmOverloads constructor(
     private fun hitTest(x: Float, y: Float) {
         hit = Hit.NONE
         if (y <= HEADER_DP * dp) { hit = Hit.HEADER; return }
-        for (candidate in Row.entries) {
+        for (candidate in rows()) {
             val top = rowTop(candidate)
-            if (y !in top..(top + ROW_DP * dp)) continue
+            if (y !in top..(top + rowDp * dp)) continue
             row = candidate
             hit = when {
                 x in minusLeft()..(minusLeft() + 44f * dp) -> Hit.MINUS
@@ -290,6 +336,12 @@ class GearEditorBubble @JvmOverloads constructor(
             Row.TEETH -> view.setSelectedTeeth(wheel.teeth + delta)
             Row.LAYER -> view.changeSelectedLayer(delta)
             Row.MATERIAL -> view.changeSelectedMaterial(delta)
+            Row.LAUNCH -> view.setSelectedLaunchAngle(wheel.launchAngle + delta)
+            // Le boulet se choisit dans une liste : les crans sautent d'une taille a
+            // l'autre plutot que de compter les kilos un par un.
+            Row.BALL -> view.setProjectileMass(
+                GearMachineRules.nextProjectileMass(ballMass(), delta)
+            )
         }
         onEdited?.invoke()
         invalidate()
@@ -301,6 +353,13 @@ class GearEditorBubble @JvmOverloads constructor(
             Row.TEETH -> (wheel.teeth + delta).coerceIn(GearMachineRules.MIN_TEETH, GearMachineRules.MAX_TEETH).toString()
             Row.LAYER -> signed((wheel.layer + delta).coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER))
             Row.MATERIAL -> ""
+            Row.LAUNCH -> "${
+                (wheel.launchAngle + delta).coerceIn(
+                    GearMachineRules.MIN_LAUNCH_DEG, GearMachineRules.MAX_LAUNCH_DEG
+                ).roundToInt()
+            }°"
+            Row.BALL ->
+                "${GearMachineRules.nextProjectileMass(ballMass(), delta).roundToInt()} kg"
         }
     }
 
@@ -311,9 +370,21 @@ class GearEditorBubble @JvmOverloads constructor(
         GearWheelMaterial.TITANIUM -> R.string.trebuchet_gear_material_titanium
     })
 
+    /**
+     * La masse du boulet.
+     *
+     * Elle appartient a l'atelier et non a la roue -- il n'y a qu'un tir a la fois --
+     * mais elle se regle **ici**, sur le volant, parce que c'est la piece qui lance et
+     * que c'est la qu'on regarde en preparant un coup.
+     */
+    private fun ballMass(): Float =
+        gearView?.game?.config?.projectileMass ?: GearMachineRules.DEFAULT_PROJECTILE_MASS
+
     private fun signed(value: Int) = if (value > 0) "+$value" else value.toString()
-    private fun rowTop(row: Row) = (HEADER_DP + row.ordinal * ROW_DP) * dp
-    private fun actionTop() = (HEADER_DP + Row.entries.size * ROW_DP + 5f) * dp
+    private fun rowTop(row: Row) =
+        (HEADER_DP + rows().indexOf(row).coerceAtLeast(0) * rowDp) * dp
+
+    private fun actionTop() = (HEADER_DP + rows().size * rowDp + 5f) * dp
     private fun minusLeft() = (PAD_DP + LABEL_DP) * dp
     private fun valueLeft() = minusLeft() + 48f * dp
     private fun plusLeft() = width - (PAD_DP + 44f) * dp
@@ -328,7 +399,20 @@ class GearEditorBubble @JvmOverloads constructor(
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         translationX = restX[slot].takeUnless { it.isNaN() }?.let(::clampX) ?: 0f
-        translationY = restY[slot].takeUnless { it.isNaN() }?.let(::clampY) ?: 0f
+        translationY = restY[slot].takeUnless { it.isNaN() }?.let(::clampY) ?: clampY(restingY())
+    }
+
+    /**
+     * Où la bulle se pose quand personne ne l'a encore déplacée.
+     *
+     * Elle est centrée en haut, et elle est large : sur un téléphone elle recouvrait
+     * le sélecteur d'étage et le bouton d'outil, qui vivent dans le coin haut gauche
+     * de la scène. Quand elle passe devant, elle descend juste en dessous d'eux — sur
+     * une tablette, où elle démarre à leur droite, elle reste tout en haut.
+     */
+    private fun restingY(): Float {
+        if (left >= GearMachineView.HUD_RIGHT_DP * dp) return 0f
+        return (GearMachineView.HUD_BOTTOM_DP * dp + 10f * dp - top).coerceAtLeast(0f)
     }
 
     private fun clampX(value: Float): Float {

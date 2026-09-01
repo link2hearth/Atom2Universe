@@ -9,7 +9,9 @@ import com.Atom2Universe.app.games.physics.MachinePartFactory
 import com.Atom2Universe.app.games.physics.GearSpec
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.PhysWorld
+import com.Atom2Universe.app.games.physics.PhysicsConstants
 import com.Atom2Universe.app.games.physics.RevoluteJoint
+import com.Atom2Universe.app.games.trebuchet.TrebuchetRules
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -47,17 +49,35 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val uy: Float
     )
 
+    /**
+     * Un tir, du départ jusqu'à sa trace au sol.
+     *
+     * Le boulet **reste** une fois posé : c'est là tout le résultat du coup, et le
+     * faire disparaître trois secondes plus tard reviendrait à effacer la seule chose
+     * que le joueur voulait voir. Il n'est retiré qu'au tir suivant.
+     */
     data class ProjectileState(
         val body: PhysBody,
         val startX: Float,
         val startY: Float,
         val launchEnergy: Float,
-        var age: Float = 0f,
-        var peakY: Float = startY
+        /** Où était le mannequin au moment du départ : la cible ne bouge pas en vol. */
+        val targetX: Float,
+        var peakY: Float = startY,
+        /** Vrai dès le premier contact avec le sol. */
+        var landed: Boolean = false,
+        /** Portée relevée au **premier** contact, pas là où le boulet finit de rouler. */
+        var distance: Float = 0f,
+        var hitTarget: Boolean = false,
+        var previousX: Float = startX,
+        var previousY: Float = startY
     )
 
     val world = PhysWorld().apply {
-        gravity = -9.80665f
+        // Une magnitude, dirigée vers le bas : le monde intègre `vy -= gravity·dt`.
+        // Elle valait ici -9,8 depuis l'origine, donc le boulet **montait** — invisible
+        // tant qu'il n'y avait pas de sol pour le rattraper.
+        gravity = PhysicsConstants.STANDARD_GRAVITY
         linearDamping = 0.015f
         // Les pertes principales viennent désormais des paliers ; ceci ne représente
         // plus qu'une faible traînée de l'air sur les roues.
@@ -77,8 +97,59 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         private set
     var lastLaunchEnergy = 0f
         private set
-    var lastLaunchEfficiency = 0f
+
+
+    /**
+     * Le résultat du dernier tir **posé**. Il survit au boulet : c'est le score de
+     * l'atelier, et il doit rester lisible pendant qu'on retouche la machine.
+     */
+    var lastShotDistance = 0f
         private set
+    var lastShotHeight = 0f
+        private set
+    var lastShotHitTarget = false
+        private set
+
+    /** Le sol de l'atelier : une seule dalle plate, refaite à chaque reconstruction. */
+    lateinit var ground: PhysBody
+        private set
+
+    /**
+     * Les trois temps d'un tir, comme au trébuchet.
+     *
+     * L'atelier n'en avait aucun : on tirait, et c'était tout — le boulet roulait
+     * jusqu'à la fin des temps sans que rien ne dise que le coup était terminé. Un tir
+     * qui ne finit pas ne se lit pas, ne laisse pas de fantôme, et ne rend jamais la
+     * caméra à la machine.
+     */
+    enum class Phase { BUILD, FLIGHT, RESULT }
+
+    var phase = Phase.BUILD
+        private set
+    var shotCount = 0
+        private set
+
+    /** Trajectoire du tir en cours, en couples (x, y), à lire jusqu'à [trailCount]. */
+    private var trailBuf = FloatArray(1_024)
+    val trail: FloatArray get() = trailBuf
+    var trailCount = 0
+        private set
+
+    private val ghostList = ArrayList<FloatArray>()
+
+    /** Les tirs précédents, le plus récent en tête. */
+    val ghosts: List<FloatArray> get() = ghostList
+
+    /** Combien de fantômes on garde. Le réglage est celui du trébuchet. */
+    var ghostLimit: Int = TrebuchetRules.GHOST_HISTORY
+        set(value) {
+            field = value.coerceIn(1, TrebuchetRules.GHOST_CHOICES.last())
+            while (ghostList.size > field) ghostList.removeAt(ghostList.size - 1)
+        }
+
+    private var trailTimer = 0f
+    private var restCalm = 0f
+    private var sinceLanding = 0f
 
     private data class SavedMotion(val angle: Float, val omega: Float, val energy: Float)
 
@@ -88,8 +159,6 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         config = value.deepCopy().also { it.clamp() }
         rebuild(preserveMotion = false)
     }
-
-    fun reset() = loadConfig(GearMachineConfig())
 
     fun rebuild(
         preserveMotion: Boolean = true,
@@ -102,12 +171,16 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                 0.5f * state.body.inertia * state.body.omega * state.body.omega
             )
         } else emptyMap()
+        // Un boulet posé n'est plus un corps physique : il ne revient dans le monde
+        // que s'il est encore en vol.
         val savedProjectile = if (preserveMotion) projectile else null
+        val savedFlying = savedProjectile != null && phase == Phase.FLIGHT
         world.clear()
         gears.clear()
         meshes.clear()
         transmissions.clear()
         projectile = null
+        addGround()
         config.clamp()
         alignShaftCenters()
         for (wheel in config.wheels) {
@@ -137,7 +210,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                 } else {
                     savedMotion[wheel.id]?.angle ?: wheel.angle
                 }
-                category = 1
+                category = GearMachineRules.CATEGORY_WHEEL
                 collidesWith = 0 // les dents sont logiques ; aucune collision parasite.
                 collisionLayer = wheel.layer
             }
@@ -165,8 +238,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                 // jamais accélérer la roue ni inverser son sens.
                 motorEnabled = true
                 motorSpeed = 0f
-                maxMotorTorque = wheel.material.axleFriction * body.mass * 9.80665f *
-                    maxOf(0.04f, spec.boreRadius)
+                maxMotorTorque = wheel.material.axleFriction * body.mass *
+                    PhysicsConstants.STANDARD_GRAVITY * maxOf(0.04f, spec.boreRadius)
             }
             world.addJoint(axle)
             gears += GearState(wheel, body, support, axle)
@@ -175,10 +248,42 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         connectMeshes()
         savedProjectile?.let { shot ->
             if (shot.body.x.isFinite() && shot.body.y.isFinite()) {
-                world.add(shot.body)
+                if (savedFlying) world.add(shot.body)
                 projectile = shot
             }
         }
+    }
+
+    /**
+     * Pose la dalle de sol. Sa face supérieure est exactement à zéro, comme la ligne
+     * d'herbe que dessine la vue, et elle traverse toutes les couches : un boulet tiré
+     * depuis l'étage +3 retombe sur la même terre que les autres.
+     */
+    private fun addGround() {
+        ground = PhysBody(
+            GearMachineRules.GROUND_HALF_WIDTH, GearMachineRules.GROUND_DEPTH / 2f, 0f
+        ).apply {
+            x = 0f
+            y = -GearMachineRules.GROUND_DEPTH / 2f
+            lockPosition = true
+            lockRotation = true
+            friction = 0.62f
+            restitution = 0f
+            category = GearMachineRules.CATEGORY_GROUND
+            collidesWith = GearMachineRules.CATEGORY_SHOT
+            collisionLayer = GearMachineRules.MIN_LAYER
+            collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
+            refreshMass()
+        }
+        world.add(ground)
+    }
+
+    /** Où se dresse le mannequin : toujours à la même distance devant le lanceur. */
+    fun targetX(): Float {
+        val launcher = config.launcherWheelId?.let { id ->
+            gears.firstOrNull { it.wheel.id == id }?.body?.x
+        }
+        return (launcher ?: bounds()[1]) + GearMachineRules.TARGET_DISTANCE
     }
 
     private fun connectTransmissions() {
@@ -237,15 +342,139 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val h = dt.coerceIn(0f, 1f / 30f)
         updateProgressiveClutches(h)
         world.stepFrame(h)
-        projectile?.let {
-            it.age += h
-            it.peakY = maxOf(it.peakY, it.body.y)
-            if (it.age > 30f || it.body.y < -20f || !it.body.x.isFinite() || !it.body.y.isFinite()) {
-                world.remove(it.body)
-                projectile = null
+        if (phase == Phase.FLIGHT) projectile?.let { trackShot(it, h) }
+    }
+
+    private fun trailClear() { trailCount = 0 }
+
+    private fun trailAdd(x: Float, y: Float) {
+        if (trailCount + 2 > trailBuf.size) trailBuf = trailBuf.copyOf(trailBuf.size * 2)
+        trailBuf[trailCount++] = x
+        trailBuf[trailCount++] = y
+    }
+
+    /**
+     * Termine le tir sur demande, sans attendre que le boulet se calme.
+     *
+     * Le boulet est gardé là où il en était : la traînée devient un fantôme arrêté à
+     * ce point, et la portée déjà relevée reste acquise.
+     */
+    fun stopShot() {
+        if (phase != Phase.FLIGHT) return
+        finishShot()
+    }
+
+    /**
+     * Range le tir : il devient un fantôme, et le boulet quitte la simulation.
+     *
+     * **Le boulet sort du monde**, il n'est pas seulement immobilisé. Un corps qui
+     * reste dans le monde continue de rebondir, de rouler, de réveiller le solveur et
+     * de tailler les sous-pas, pour une bille dont plus personne n'attend rien. Ce
+     * qu'on veut garder est l'endroit où elle s'est arrêtée, et ça ne demande pas de
+     * physique.
+     */
+    private fun finishShot() {
+        phase = Phase.RESULT
+        shotCount++
+        projectile?.let { shot ->
+            trailAdd(shot.body.x, shot.body.y)
+            world.remove(shot.body)
+        }
+        ghostList.add(0, trailBuf.copyOf(trailCount))
+        while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)
+    }
+
+    /** Rebande l'atelier : le boulet posé disparaît, son fantôme reste. */
+    fun newShot() {
+        if (phase == Phase.BUILD) return
+        projectile?.let { world.remove(it.body) }
+        projectile = null
+        phase = Phase.BUILD
+    }
+
+    /** Efface la mémoire des tirs. */
+    fun clearGhosts() {
+        ghostList.clear()
+        trailClear()
+    }
+
+    /**
+     * Relève le vol : le passage sur la cible, puis le premier contact au sol.
+     *
+     * La portée est celle du **toucher**, pas celle où le boulet finit de rouler : un
+     * boulet qui frappe à quarante mètres par seconde rebondit et roule encore cent
+     * mètres, ce qui n'apprend rien sur la machine qui l'a lancé. C'est la règle du
+     * trébuchet, et les deux modes doivent se lire de la même façon.
+     */
+    private fun trackShot(shot: ProjectileState, dt: Float) {
+        val body = shot.body
+        if (!body.x.isFinite() || !body.y.isFinite() ||
+            abs(body.x) > GearMachineRules.GROUND_HALF_WIDTH) {
+            finishShot()
+            return
+        }
+        trailTimer += dt
+        if (trailTimer > TRAIL_INTERVAL && trailCount < MAX_TRAIL_FLOATS) {
+            trailTimer = 0f
+            trailAdd(body.x, body.y)
+        }
+        shot.peakY = maxOf(shot.peakY, body.y)
+        if (!shot.hitTarget && crossesTarget(shot)) {
+            shot.hitTarget = true
+            if (shot.landed) lastShotHitTarget = true
+        }
+        if (!shot.landed) {
+            // Trois façons de constater le toucher, parce qu'une seule ne suffit pas :
+            // le boulet est au sol maintenant, il l'était à l'image précédente, ou le
+            // moteur lui a compté un choc. Un boulet rapide frappe et **repart** en
+            // l'air dans la même image : sans le troisième relevé, sa portée serait
+            // celle de son deuxième rebond.
+            val touchLevel = body.radius + 0.03f
+            if (body.y <= touchLevel || shot.previousY <= touchLevel || body.impactAccum > 0f) {
+                shot.landed = true
+                shot.distance = groundContactX(shot, touchLevel) - shot.startX
+                lastShotDistance = shot.distance
+                lastShotHeight = shot.peakY - shot.startY
+                lastShotHitTarget = shot.hitTarget
             }
         }
+        shot.previousX = body.x
+        shot.previousY = body.y
+        if (shot.landed) endOfShot(shot, dt)
     }
+
+    /**
+     * Quand un tir est fini.
+     *
+     * Deux conditions, et il en suffit d'une. Le boulet **s'est calmé** — c'est le cas
+     * ordinaire, et le petit roulement qui suit l'impact fait partie du spectacle. Ou
+     * bien il roule depuis assez longtemps pour qu'on ait tout vu : une bille lancée à
+     * grande vitesse sur une plaine parfaitement plate rebondit et roule presque
+     * indéfiniment, et attendre son immobilité serait attendre pour rien.
+     */
+    private fun endOfShot(shot: ProjectileState, dt: Float) {
+        sinceLanding += dt
+        val body = shot.body
+        val calm = body.speedSq < REST_SPEED * REST_SPEED && abs(body.omega) < 1.5f
+        restCalm = if (calm) restCalm + dt else 0f
+        if (restCalm >= REST_CALM || sinceLanding >= MAX_ROLL) finishShot()
+    }
+
+    /** Où le vol a croisé le sol, interpolé sur l'image : la portée s'y lit. */
+    private fun groundContactX(shot: ProjectileState, level: Float): Float {
+        val y0 = shot.previousY
+        val y1 = shot.body.y
+        if (y0 <= level) return shot.previousX
+        if (y1 > level) return shot.body.x
+        val t = ((y0 - level) / (y0 - y1)).coerceIn(0f, 1f)
+        return shot.previousX + (shot.body.x - shot.previousX) * t
+    }
+
+    private fun crossesTarget(shot: ProjectileState): Boolean =
+        GearMachineRules.segmentHitsTarget(
+            shot.targetX, shot.body.radius,
+            shot.previousX, shot.previousY, shot.body.x, shot.body.y
+        )
 
     /**
      * Embrayage centrifuge simplifié : à grand écart de vitesse il patine et protège
@@ -342,7 +571,10 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val root = config.wheels.firstOrNull { it.id == id } ?: return
         val dx = x.coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD) - root.x
         val dy = y.coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD) - root.y
-        for (wheel in config.wheels) if (wheel.id in assemblyIds(id)) {
+        // La fermeture transitive se calcule **une** fois : elle était évaluée pour
+        // chaque roue de l'atelier, à chaque événement du doigt.
+        val members = assemblyIds(id)
+        for (wheel in config.wheels) if (wheel.id in members) {
             wheel.x = (wheel.x + dx).coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
             wheel.y = (wheel.y + dy).coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
         }
@@ -369,7 +601,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val ny = y.coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
         val dx = nx - wheel.x
         val dy = ny - wheel.y
-        for (member in config.wheels) if (member.id in coaxialIds(id)) {
+        val shaft = coaxialIds(id)
+        for (member in config.wheels) if (member.id in shaft) {
             member.x = (member.x + dx).coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
             member.y = (member.y + dy).coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
         }
@@ -378,7 +611,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     /** Après un cran magnétique, recolle le reste de l'arbre sur la roue manipulée. */
     private fun moveCoaxialFollowers(id: Int) {
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return
-        for (member in config.wheels) if (member.id in coaxialIds(id) && member.id != id) {
+        val shaft = coaxialIds(id)
+        for (member in config.wheels) if (member.id in shaft && member.id != id) {
             member.x = wheel.x
             member.y = wheel.y
         }
@@ -650,13 +884,6 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return wheel.layer
     }
 
-    fun cycleMaterial(id: Int): GearWheelMaterial? {
-        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
-        wheel.material = wheel.material.next()
-        rebuild()
-        return wheel.material
-    }
-
     fun changeMaterial(id: Int, delta: Int): GearWheelMaterial? {
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
         val materials = GearWheelMaterial.entries
@@ -666,15 +893,40 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return wheel.material
     }
 
+    /** Choisit le volant qui tire. Seul un volant porte un bras de lancement. */
     fun attachLauncher(id: Int): Boolean {
-        if (config.wheels.none { it.id == id }) return false
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return false
+        if (wheel.kind != GearWheelKind.FLYWHEEL) return false
         config.launcherWheelId = id
         return true
     }
 
-    fun adjustLauncherAngle(delta: Float): Float {
-        config.launcherAngleDeg = (config.launcherAngleDeg + delta).coerceIn(0f, 85f)
-        return config.launcherAngleDeg
+    /** Regle l'elevation du tir d'un volant. */
+    fun setLaunchAngle(id: Int, degrees: Float): Float? {
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
+        if (wheel.kind != GearWheelKind.FLYWHEEL) return null
+        wheel.launchAngle = degrees.coerceIn(
+            GearMachineRules.MIN_LAUNCH_DEG, GearMachineRules.MAX_LAUNCH_DEG
+        )
+        return wheel.launchAngle
+    }
+
+    /** Deplace l'elevation du volant qui tire, d'un cran. */
+    fun adjustLauncherAngle(delta: Float): Float? {
+        val wheel = config.launcher() ?: return null
+        return setLaunchAngle(wheel.id, wheel.launchAngle + delta)
+    }
+
+    /**
+     * La masse du boulet. C'est le réglage qui décide de tout le reste : à énergie
+     * donnée, `E = ½mv²` échange la vitesse contre la masse, et le même train envoie
+     * soit une bille très loin, soit un bloc très fort.
+     */
+    fun setProjectileMass(mass: Float): Float {
+        config.projectileMass = mass.coerceIn(
+            GearMachineRules.MIN_PROJECTILE_MASS, GearMachineRules.MAX_PROJECTILE_MASS
+        )
+        return config.projectileMass
     }
 
     fun addLink(firstId: Int, secondId: Int, kind: GearLinkKind, inputDirection: Int = 1): Boolean {
@@ -694,15 +946,6 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         config.links += GearLinkConfig(firstId, secondId, kind, if (inputDirection < 0) -1 else 1)
         rebuild()
         return true
-    }
-
-    fun removeLink(firstId: Int, secondId: Int): Boolean {
-        val removed = config.links.removeAll {
-            (it.firstId == firstId && it.secondId == secondId) ||
-                (it.firstId == secondId && it.secondId == firstId)
-        }
-        if (removed) rebuild()
-        return removed
     }
 
     fun removeLinksFor(id: Int): Int {
@@ -758,18 +1001,82 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * connecté en énergie de translation. Le solde est laissé dans les roues ; les
      * pertes du rendement disparaissent en chaleur, jamais en vitesse supplémentaire.
      */
+    /**
+     * La vitesse qu'aurait le boulet s'il partait maintenant, en m/s.
+     *
+     * C'est le seul chiffre qui compte pour tirer : la jante donne sa vitesse, et rien
+     * d'autre. Une machine pleine d'energie mais lente ne lance rien.
+     */
+    fun rimSpeed(): Float {
+        val wheel = config.launcher() ?: return 0f
+        val omega = gears.firstOrNull { it.wheel.id == wheel.id }?.body?.omega ?: return 0f
+        return abs(omega) * wheel.launchRadius
+    }
+
+    /**
+     * Le sens dans lequel un volant lachera son boulet.
+     *
+     * Un volant a l'arret n'a pas de sens : on lui en prete un, le meme que celui du
+     * croquis, pour que le bras ait toujours un cote ou se dessiner et que le reglage
+     * de l'angle reste lisible machine immobile.
+     */
+    fun launchSpin(wheelId: Int): Float {
+        val omega = gears.firstOrNull { it.wheel.id == wheelId }?.body?.omega ?: 0f
+        return when {
+            omega > 1e-4f -> 1f
+            omega < -1e-4f -> -1f
+            else -> GearMachineRules.DEFAULT_SPIN
+        }
+    }
+
+    /**
+     * Ou se trouve l'encoche de sortie sur la jante, en radians.
+     *
+     * Le boulet part **tangentiellement**, donc perpendiculairement au rayon : c'est la
+     * gorge qui lance, pas le moyeu. L'encoche se tient donc un quart de tour en
+     * arriere de la direction de tir, du cote d'ou la roue arrive -- a droite du tir
+     * quand elle tourne dans le sens horaire, a gauche quand elle tourne a l'envers.
+     */
+    fun launchPointAngle(wheel: GearWheelConfig): Float {
+        val aim = Math.toRadians(wheel.launchAngle.toDouble()).toFloat()
+        return aim - launchSpin(wheel.id) * (Math.PI / 2.0).toFloat()
+    }
+
+    /**
+     * Lache le boulet depuis la jante du volant.
+     *
+     * **La vitesse est celle du bout du bras, pas une conversion d'energie.** L'ancien
+     * lanceur prenait toute l'energie du train et en faisait de la vitesse : une roue
+     * d'acier de six metres pese vingt tonnes, et le moindre tour de main envoyait le
+     * boulet a cinq cents metres par seconde. Une machine reelle ne peut donner que la
+     * vitesse de sa gorge, `omega x rayon` -- pour tirer loin il faut tourner vite ou
+     * agrandir la roue, ce qui est tout l'interet d'un volant.
+     *
+     * L'energie du train reste la borne haute : on ne peut pas emporter plus que ce
+     * qu'il y a, et ce qu'on emporte lui est retire.
+     */
     fun launchProjectile(): Boolean {
         val launcherId = config.launcherWheelId ?: return false
         val launcher = gears.firstOrNull { it.wheel.id == launcherId } ?: return false
+        if (launcher.wheel.kind != GearWheelKind.FLYWHEEL) return false
+        val omega = launcher.body.omega
+        if (abs(omega) < GearMachineRules.MIN_LAUNCH_OMEGA) return false
+
         val connected = connectedTo(launcherId)
         val available = rotationalEnergy(connected)
-        if (available < 0.5f) return false
+        if (available <= 0f) return false
 
-        projectile?.let { world.remove(it.body) }
         val mass = config.projectileMass
+        val armRadius = launcher.wheel.launchRadius
+        val rimSpeed = (abs(omega) * armRadius).coerceAtMost(MAX_PROJECTILE_SPEED)
         val efficiency = GearMachineRules.LAUNCH_EFFICIENCY
-        val maximumProjectileEnergy = 0.5f * mass * MAX_PROJECTILE_SPEED * MAX_PROJECTILE_SPEED
-        val projectileEnergy = minOf(available * efficiency, maximumProjectileEnergy)
+        // Ce que la jante voudrait donner, et ce que le train peut reellement fournir.
+        val wanted = 0.5f * mass * rimSpeed * rimSpeed
+        val projectileEnergy = minOf(wanted, available * efficiency)
+        if (projectileEnergy <= 0f) return false
+        val speed = sqrt(2f * projectileEnergy / mass)
+
+        if (phase == Phase.FLIGHT) projectile?.let { world.remove(it.body) }
         val energyTaken = projectileEnergy / efficiency
         val remainingScale = sqrt(((available - energyTaken) / available).coerceIn(0f, 1f))
         for (gear in gears) if (gear.wheel.id in connected) {
@@ -779,34 +1086,71 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         for (mesh in meshes) mesh.joint.reset()
         for (transmission in transmissions) transmission.joint.reset()
 
-        val angle = Math.toRadians(config.launcherAngleDeg.toDouble()).toFloat()
-        val nx = cos(angle)
-        val ny = sin(angle)
-        val speed = sqrt(2f * projectileEnergy / mass)
+        // Le bras au moment du lacher, et la tangente qui en part.
+        val armAngle = launchPointAngle(launcher.wheel)
+        val aim = Math.toRadians(launcher.wheel.launchAngle.toDouble()).toFloat()
+        val nx = cos(aim)
+        val ny = sin(aim)
         val radius = (0.075f * kotlin.math.cbrt(mass.toDouble())).toFloat().coerceIn(0.06f, 0.55f)
-        val muzzleDistance = launcher.wheel.outerRadius + radius + 0.8f
+        val muzzleX = launcher.body.x + cos(armAngle) * armRadius
+        val muzzleY = launcher.body.y + sin(armAngle) * armRadius
         val shot = PhysBody.circle(radius, mass).apply {
-            x = launcher.body.x + nx * muzzleDistance
-            y = launcher.body.y + ny * muzzleDistance
+            x = muzzleX
+            // Un volant pose tres bas ferait naitre le boulet dans la terre, et le
+            // tir serait << pose >> avant d'avoir commence.
+            y = muzzleY.coerceAtLeast(radius + 0.05f)
             vx = nx * speed
             vy = ny * speed
             restitution = 0.18f
             friction = 0.55f
             dragFactor = 0.5f * 1.225f * 0.47f * Math.PI.toFloat() * radius * radius
-            collidesWith = 0
+            category = GearMachineRules.CATEGORY_SHOT
+            collidesWith = GearMachineRules.CATEGORY_GROUND
             collisionLayer = launcher.wheel.layer
         }
         world.add(shot)
-        projectile = ProjectileState(shot, shot.x, shot.y, projectileEnergy)
+        projectile = ProjectileState(shot, shot.x, shot.y, projectileEnergy, targetX())
+        phase = Phase.FLIGHT
+        trailClear()
+        trailAdd(shot.x, shot.y)
+        trailTimer = 0f
+        restCalm = 0f
+        sinceLanding = 0f
+        lastShotDistance = 0f
+        lastShotHeight = 0f
+        lastShotHitTarget = false
         lastLaunchSpeed = speed
         lastLaunchEnergy = projectileEnergy
-        lastLaunchEfficiency = projectileEnergy / energyTaken
         return true
     }
 
     fun spinGear(id: Int, angularSpeed: Float) {
         val state = gears.firstOrNull { it.wheel.id == id } ?: return
         state.body.omega = angularSpeed.coerceIn(-GearMachineRules.MAX_MANUAL_SPEED, GearMachineRules.MAX_MANUAL_SPEED)
+        state.body.wake()
+    }
+
+    /**
+     * Entraîne la roue **pendant** que le doigt la tourne.
+     *
+     * La main se comporte comme une roue libre : elle peut porter la roue jusqu'à la
+     * vitesse du doigt, jamais la freiner ni la faire reculer. C'est ce qui permet de
+     * pomper — chaque passage rend un peu de vitesse et rien n'en reprend — et c'est
+     * aussi la seule façon de voir la machine répondre tant qu'on la tient. Sans ça,
+     * un doigt posé sur la jante ne produisait rien du tout avant d'être relâché.
+     */
+    fun driveGear(id: Int, gestureAngularSpeed: Float) {
+        val state = gears.firstOrNull { it.wheel.id == id } ?: return
+        if (!gestureAngularSpeed.isFinite()) return
+        val target = gestureAngularSpeed.coerceIn(
+            -GearMachineRules.MAX_MANUAL_SPEED,
+            GearMachineRules.MAX_MANUAL_SPEED
+        )
+        val omega = state.body.omega
+        val drives = (target > 0f && omega >= 0f && target > omega) ||
+            (target < 0f && omega <= 0f && target < omega)
+        if (!drives) return
+        state.body.omega = target
         state.body.wake()
     }
 
@@ -856,5 +1200,18 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
 
     companion object {
         private const val MAX_PROJECTILE_SPEED = 1_500f
+
+        /** Un point de traînée toutes les vingt millisecondes, comme au trébuchet. */
+        private const val TRAIL_INTERVAL = 0.02f
+        private const val MAX_TRAIL_FLOATS = 6_000
+
+        /** En dessous, le boulet est considéré comme posé pour de bon. */
+        private const val REST_SPEED = 0.30f
+
+        /** Immobilité **tenue** : un rebond passe par zéro sans être arrêté. */
+        private const val REST_CALM = 0.35f
+
+        /** Au-delà, on arrête d'attendre : le boulet roule, on a tout vu. */
+        private const val MAX_ROLL = 4f
     }
 }
