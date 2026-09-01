@@ -75,6 +75,7 @@
     <string name="trebuchet_machine_group_trebuchet">Trebuchets</string>
     <string name="trebuchet_machine_group_gears">Gears &amp; pulleys</string>
     <string name="trebuchet_gear_default">Gear playground</string>
+    <string name="trebuchet_gear_add">Add a gear</string>
     <string name="trebuchet_gear_add_small">Add small gear (12 teeth)</string>
     <string name="trebuchet_gear_add_medium">Add medium gear (24 teeth)</string>
     <string name="trebuchet_gear_add_large">Add large gear (48 teeth)</string>
@@ -114,6 +115,16 @@
     <string name="trebuchet_gear_place">Tap an empty spot to place the %1$d-tooth gear on layer %2$d.</string>
     <string name="trebuchet_gear_place_flywheel">Tap an empty spot to place the flywheel on layer %1$d.</string>
     <string name="trebuchet_gear_shot_status">Shot: %1$.1f m/s · %2$.1f kJ · distance %3$.1f m · height %4$.1f m</string>
+    <string name="trebuchet_gear_edit_teeth">Teeth</string>
+    <string name="trebuchet_gear_edit_layer">Layer</string>
+    <string name="trebuchet_gear_edit_material">Material</string>
+    <string name="trebuchet_gear_size_header">Ø %1$d cm · circumference %2$d cm</string>
+    <string name="trebuchet_gear_duplicate">Duplicate</string>
+    <string name="trebuchet_gear_couple">Couple</string>
+    <string name="trebuchet_gear_delete_short">Delete</string>
+    <string name="trebuchet_gear_shaft_pick_second">Use the layer arrows, then tap the wheel to place on the same shaft.</string>
+    <string name="trebuchet_gear_shaft_pending_tip">Shaft coupling ready. Choose another layer and tap its wheel: it will be centred here and engaged progressively.</string>
+    <string name="trebuchet_gear_layout_conflict">Size change cancelled: the red wheels would collide, or the gear loop cannot keep every mesh aligned.</string>
     <string name="trebuchet_settings">Settings</string>
     <string name="trebuchet_style_arcade">Arcade sites</string>
     <string name="trebuchet_style_realistic">Realistic sites</string>

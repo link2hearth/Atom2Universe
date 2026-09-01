@@ -12,6 +12,7 @@ import com.Atom2Universe.app.games.trebuchet.gears.GearWheelMaterial
 import com.Atom2Universe.app.games.trebuchet.gears.GearWheelConfig
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
@@ -51,6 +52,161 @@ class GearMachineTest {
     }
 
     @Test
+    fun `laimant aligne la distance et la phase puis se libere sans arracher la roue`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24, 0)
+        )))
+        val id = game.addGear(24, 6f, 2f, 0)!!
+
+        val target = game.moveGearMagnetic(id, 2.96f, 2f, null)
+        val moved = game.config.wheels.first { it.id == id }
+        assertEquals(1, target)
+        assertEquals(2.88f, moved.x, 1e-4f)
+        assertTrue("la phase de denture doit être ajustée", abs(moved.angle) > 1e-4f)
+
+        val detached = game.moveGearMagnetic(id, 3.4f, 2f, target)
+        assertEquals(null, detached)
+        assertEquals(3.4f, game.config.wheels.first { it.id == id }.x, 1e-4f)
+    }
+
+    @Test
+    fun `redimensionner la roue centrale conserve toute la chaine`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, -2.88f, 2f, 24, 0),
+            GearWheelConfig(2, 0f, 2f, 24, 0),
+            GearWheelConfig(3, 2.88f, 2f, 24, 0)
+        )))
+
+        val result = game.resizeGearAndReflow(2, 48)!!
+        assertTrue(result.success)
+        assertEquals(0f, game.config.wheels.first { it.id == 2 }.x, 1e-5f)
+        assertEquals(-4.32f, game.config.wheels.first { it.id == 1 }.x, 1e-4f)
+        assertEquals(4.32f, game.config.wheels.first { it.id == 3 }.x, 1e-4f)
+        assertEquals(2, game.meshes.size)
+    }
+
+    @Test
+    fun `le reamenagement traverse les axes entre couches`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24, 0),
+            GearWheelConfig(2, 2.88f, 2f, 24, 0),
+            GearWheelConfig(3, 0f, 2f, 24, 1),
+            GearWheelConfig(4, 2.88f, 2f, 24, 1)
+        )))
+        assertTrue(game.addLink(1, 3, GearLinkKind.SHAFT_CLUTCH))
+
+        val result = game.resizeGearAndReflow(2, 48)!!
+        assertTrue(result.success)
+        assertEquals(-1.44f, game.config.wheels.first { it.id == 1 }.x, 1e-4f)
+        assertEquals(-1.44f, game.config.wheels.first { it.id == 3 }.x, 1e-4f)
+        assertEquals(1.44f, game.config.wheels.first { it.id == 4 }.x, 1e-4f)
+        assertEquals(2, game.meshes.size)
+    }
+
+    @Test
+    fun `une collision annule entierement le changement de taille`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24, 0),
+            GearWheelConfig(2, 2.88f, 2f, 24, 0),
+            GearWheelConfig(3, 7f, 2f, 24, 0)
+        )))
+
+        val result = game.resizeGearAndReflow(1, 48)!!
+        assertFalse(result.success)
+        assertTrue(result.conflicts.containsAll(setOf(1, 2, 3)))
+        assertEquals(24, game.config.wheels.first { it.id == 1 }.teeth)
+        assertEquals(2.88f, game.config.wheels.first { it.id == 2 }.x, 1e-5f)
+        assertEquals(1, game.meshes.size)
+    }
+
+    @Test
+    fun `redimensionner une roue isolee ignore les conflits exterieurs`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, -10f, 2f, 24, 0),
+            // Zone indépendante déjà trop serrée : elle n'est pas concernée par
+            // l'édition de la roue 1 et ne doit donc pas la bloquer.
+            GearWheelConfig(2, 8f, 2f, 24, 0),
+            GearWheelConfig(3, 8.5f, 2f, 24, 0)
+        )))
+
+        val result = game.resizeGearAndReflow(1, 48)!!
+
+        assertTrue(result.success)
+        assertEquals(48, game.config.wheels.first { it.id == 1 }.teeth)
+    }
+
+    @Test
+    fun `une copie reste libre et peut etre redimensionnee`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24, 0),
+            GearWheelConfig(2, -2.88f, 2f, 24, 0)
+        )))
+
+        val copyId = game.duplicateGear(1)!!
+
+        assertTrue(game.meshes.none { copyId == it.firstId || copyId == it.secondId })
+        val result = game.resizeGearAndReflow(copyId, 48)!!
+        assertTrue(result.success)
+        assertEquals(48, game.config.wheels.first { it.id == copyId }.teeth)
+    }
+
+    @Test
+    fun `deplacer un bati conserve les distances de son assemblage`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24, 0),
+            GearWheelConfig(2, 2.88f, 2f, 24, 0),
+            GearWheelConfig(3, 5.76f, 2f, 24, 0)
+        )))
+        val before = game.config.wheels.associate { it.id to floatArrayOf(it.x, it.y) }
+
+        game.moveAssembly(2, 6f, 5f)
+
+        assertEquals(setOf(1, 2, 3), game.assemblyIds(2))
+        for (wheel in game.config.wheels) {
+            assertEquals(6f - before[2]!![0], wheel.x - before[wheel.id]!![0], 1e-4f)
+            assertEquals(5f - before[2]!![1], wheel.y - before[wheel.id]!![1], 1e-4f)
+        }
+    }
+
+    @Test
+    fun `les editions a chaud conservent le mouvement des roues existantes`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24, 0)
+        )))
+        game.spinGear(1, 30f)
+        val initialEnergy = game.rotationalEnergy()
+
+        game.addGear(12, 12f, 2f, 0)
+        assertEquals(initialEnergy, game.rotationalEnergy(setOf(1)), initialEnergy * 1e-5f)
+        assertTrue(game.gears.first { it.wheel.id == 1 }.body.omega > 0f)
+
+        val resized = game.resizeGearAndReflow(1, 36)!!
+        assertTrue(resized.success)
+        assertEquals(initialEnergy, game.rotationalEnergy(setOf(1)), initialEnergy * 1e-5f)
+        assertTrue(game.gears.first { it.wheel.id == 1 }.body.omega > 0f)
+
+        game.changeMaterial(1, 1)
+        assertEquals(initialEnergy, game.rotationalEnergy(setOf(1)), initialEnergy * 1e-5f)
+    }
+
+    @Test
+    fun `une edition de machine ne supprime pas le projectile en vol`() {
+        val game = GearMachineGame()
+        game.spinGear(1, 8f)
+        assertTrue(game.attachLauncher(3))
+        assertTrue(game.launchProjectile())
+        val shot = game.projectile!!
+        val vx = shot.body.vx
+        val vy = shot.body.vy
+
+        game.addGear(12, 20f, 3f, 2)
+
+        assertSame(shot, game.projectile)
+        assertEquals(vx, game.projectile!!.body.vx, 1e-6f)
+        assertEquals(vy, game.projectile!!.body.vy, 1e-6f)
+    }
+
+    @Test
     fun `deux roues de couches differentes ne sengrenent pas`() {
         val config = GearMachineConfig(mutableListOf(
             GearWheelConfig(1, 0f, 2f, 24, 0),
@@ -85,6 +241,22 @@ class GearMachineTest {
         assertEquals(2, decoded[0].config.wheels.size)
         assertEquals(-12.5f, decoded[0].config.wheels[0].x, 1e-5f)
         assertEquals(-2, decoded[0].config.wheels[0].layer)
+    }
+
+    @Test
+    fun `la sauvegarde conserve la phase des dents et lit encore G3`() {
+        val config = GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 24, angle = 0.37f)
+        ))
+        val decoded = GearMachineLibrary.decode(
+            GearMachineLibrary.encode(listOf(GearMachinePreset("Phase", config)))
+        ).single().config
+        assertEquals(0.37f, decoded.wheels.single().angle, 1e-5f)
+
+        val old = GearMachineLibrary.decode(
+            "G3\tAncienne\t1,0.0,2.0,24,0,GEAR,STEEL\n"
+        ).single().config
+        assertEquals(0f, old.wheels.single().angle, 1e-5f)
     }
 
     @Test
@@ -200,6 +372,34 @@ class GearMachineTest {
         val crossed = run(GearLinkKind.BELT_CROSSED)
         assertTrue(open.first * open.second > 0f)
         assertTrue(crossed.first * crossed.second < 0f)
+    }
+
+    @Test
+    fun `lembrayage coaxial centre les couches et transmet un choc progressivement`() {
+        val game = GearMachineGame(GearMachineConfig(mutableListOf(
+            GearWheelConfig(1, 0f, 2f, 12, 0),
+            GearWheelConfig(2, 8f, 6f, 96, 1)
+        )))
+        assertTrue(game.addLink(1, 2, GearLinkKind.SHAFT_CLUTCH))
+        assertEquals(0f, game.config.wheels[1].x, 1e-5f)
+        assertEquals(2f, game.config.wheels[1].y, 1e-5f)
+
+        game.spinGear(1, 80f)
+        val energyBefore = game.rotationalEnergy()
+        game.step(1f / 120f)
+        val firstFrame = game.gears.first { it.wheel.id == 2 }.body.omega
+        val smallAfterShock = game.gears.first { it.wheel.id == 1 }.body.omega
+        assertTrue("la grande roue doit commencer à prendre le couple", firstFrame > 0f)
+        assertTrue("elle ne doit pas prendre instantanément la vitesse du pignon", firstFrame < smallAfterShock)
+
+        repeat(120) { game.step(1f / 120f) }
+        val afterOneSecond = game.gears.first { it.wheel.id == 2 }.body.omega
+        assertTrue("la prise doit continuer progressivement", afterOneSecond > firstFrame)
+        assertTrue("l'embrayage ne doit pas créer d'énergie", game.rotationalEnergy() <= energyBefore)
+
+        game.moveGear(1, 3f, 4f, snap = false)
+        assertEquals(3f, game.config.wheels.first { it.id == 2 }.x, 1e-5f)
+        assertEquals(4f, game.config.wheels.first { it.id == 2 }.y, 1e-5f)
     }
 
     @Test

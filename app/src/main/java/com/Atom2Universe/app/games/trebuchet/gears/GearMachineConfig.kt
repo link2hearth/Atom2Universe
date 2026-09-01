@@ -6,7 +6,7 @@ import com.Atom2Universe.app.games.physics.MachineMaterials
 
 enum class GearWheelKind { GEAR, FLYWHEEL }
 
-enum class GearLinkKind { BELT_OPEN, BELT_CROSSED, CHAIN_FREEWHEEL }
+enum class GearLinkKind { BELT_OPEN, BELT_CROSSED, CHAIN_FREEWHEEL, SHAFT_CLUTCH }
 
 data class GearLinkConfig(
     val firstId: Int,
@@ -34,12 +34,14 @@ data class GearWheelConfig(
     var teeth: Int,
     var layer: Int = 0,
     var kind: GearWheelKind = GearWheelKind.GEAR,
-    var material: GearWheelMaterial = GearWheelMaterial.STEEL
+    var material: GearWheelMaterial = GearWheelMaterial.STEEL,
+    /** Phase visuelle de la denture, en radians. */
+    var angle: Float = 0f
 ) {
     val pitchRadius: Float get() = teeth * GearMachineRules.MODULE / 2f
     val outerRadius: Float get() = pitchRadius + GearMachineRules.MODULE
 
-    fun copyWheel() = GearWheelConfig(id, x, y, teeth, layer, kind, material)
+    fun copyWheel() = GearWheelConfig(id, x, y, teeth, layer, kind, material, angle)
 }
 
 object GearMachineRules {
@@ -52,7 +54,10 @@ object GearMachineRules {
     const val MAX_COORD = 10_000f
     const val MIN_LAYER = -32
     const val MAX_LAYER = 32
-    const val SNAP_DISTANCE_MODULES = 1.4f
+    /** Portée courte de l'aimant : assez pour corriger un lâcher, pas pour attirer de loin. */
+    const val MAGNET_ENGAGE_MODULES = 1.05f
+    /** Hystérésis : une roue déjà prise se décolle dès un mouvement volontaire. */
+    const val MAGNET_RELEASE_MODULES = 2.2f
     const val MAX_MANUAL_SPEED = 120f
     const val FLICK_TRANSFER = 0.55f
     const val FLYWHEEL_TEETH = 48
@@ -93,13 +98,23 @@ class GearMachineConfig(
             wheel.y = wheel.y.coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
             wheel.teeth = wheel.teeth.coerceIn(GearMachineRules.MIN_TEETH, GearMachineRules.MAX_TEETH)
             wheel.layer = wheel.layer.coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER)
+            wheel.angle = wheel.angle.takeIf { it.isFinite() } ?: 0f
         }
         while (wheels.size > GearMachineRules.MAX_GEARS) wheels.removeLast()
         val ids = wheels.mapTo(HashSet()) { it.id }
+        val wheelById = wheels.associateBy { it.id }
         val linkPairs = HashSet<String>()
         links.removeAll { link ->
             val key = "${minOf(link.firstId, link.secondId)}:${maxOf(link.firstId, link.secondId)}"
-            link.firstId == link.secondId || link.firstId !in ids || link.secondId !in ids || !linkPairs.add(key)
+            val firstLayer = wheelById[link.firstId]?.layer
+            val secondLayer = wheelById[link.secondId]?.layer
+            val invalidLayers = if (link.kind == GearLinkKind.SHAFT_CLUTCH) {
+                firstLayer != null && firstLayer == secondLayer
+            } else {
+                firstLayer != null && secondLayer != null && firstLayer != secondLayer
+            }
+            link.firstId == link.secondId || link.firstId !in ids || link.secondId !in ids ||
+                invalidLayers || !linkPairs.add(key)
         }
         while (links.size > GearMachineRules.MAX_LINKS) links.removeLast()
         if (launcherWheelId != null && wheels.none { it.id == launcherWheelId }) launcherWheelId = null
@@ -135,7 +150,8 @@ class GearMachinePreset(name: String, config: GearMachineConfig) {
 /** Format tolérant et versionné des machines à engrenages. */
 object GearMachineLibrary {
     const val MAX_PRESETS = 30
-    private const val VERSION = "G3"
+    private const val VERSION = "G4"
+    private const val VERSION_G3 = "G3"
     private const val VERSION_G2 = "G2"
     private const val VERSION_G1 = "G1"
 
@@ -153,7 +169,8 @@ object GearMachineLibrary {
                 append('\t').append(wheel.id).append(',')
                     .append(wheel.x).append(',').append(wheel.y).append(',')
                     .append(wheel.teeth).append(',').append(wheel.layer).append(',')
-                    .append(wheel.kind.name).append(',').append(wheel.material.name)
+                    .append(wheel.kind.name).append(',').append(wheel.material.name).append(',')
+                    .append(wheel.angle)
             }
             append('\n')
         }
@@ -164,7 +181,7 @@ object GearMachineLibrary {
         for (line in text.lineSequence()) {
             if (out.size >= MAX_PRESETS) break
             val fields = line.split('\t')
-            if (fields.size < 2 || fields[0] !in setOf(VERSION, VERSION_G2, VERSION_G1)) continue
+            if (fields.size < 2 || fields[0] !in setOf(VERSION, VERSION_G3, VERSION_G2, VERSION_G1)) continue
             val name = MachinePreset.clean(fields[1])
             if (name.isEmpty()) continue
             val wheels = ArrayList<GearWheelConfig>()
@@ -188,7 +205,7 @@ object GearMachineLibrary {
                     links += GearLinkConfig(first, second, kind, direction)
                     continue
                 }
-                if (value.size != 5 && value.size != 7) continue
+                if (value.size != 5 && value.size != 7 && value.size != 8) continue
                 val id = value[0].toIntOrNull() ?: continue
                 val x = value[1].toFloatOrNull() ?: continue
                 val y = value[2].toFloatOrNull() ?: continue
@@ -198,7 +215,8 @@ object GearMachineLibrary {
                     ?: GearWheelKind.GEAR
                 val material = value.getOrNull(6)?.let { runCatching { GearWheelMaterial.valueOf(it) }.getOrNull() }
                     ?: GearWheelMaterial.STEEL
-                wheels += GearWheelConfig(id, x, y, teeth, layer, kind, material)
+                val angle = value.getOrNull(7)?.toFloatOrNull() ?: 0f
+                wheels += GearWheelConfig(id, x, y, teeth, layer, kind, material, angle)
             }
             val config = GearMachineConfig(wheels, launcherId, launcherAngle, projectileMass, links)
             config.clamp()

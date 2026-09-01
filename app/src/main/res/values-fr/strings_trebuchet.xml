@@ -73,6 +73,7 @@
     <string name="trebuchet_machine_group_trebuchet">Trébuchets</string>
     <string name="trebuchet_machine_group_gears">Engrenages et poulies</string>
     <string name="trebuchet_gear_default">Atelier d’engrenages</string>
+    <string name="trebuchet_gear_add">Ajouter un engrenage</string>
     <string name="trebuchet_gear_add_small">Ajouter un petit engrenage (12 dents)</string>
     <string name="trebuchet_gear_add_medium">Ajouter un engrenage moyen (24 dents)</string>
     <string name="trebuchet_gear_add_large">Ajouter un grand engrenage (48 dents)</string>
@@ -112,6 +113,16 @@
     <string name="trebuchet_gear_place">Touchez un emplacement vide pour poser l’engrenage de %1$d dents sur la couche %2$d.</string>
     <string name="trebuchet_gear_place_flywheel">Touchez un emplacement vide pour poser le volant d’inertie sur la couche %1$d.</string>
     <string name="trebuchet_gear_shot_status">Tir : %1$.1f m/s · %2$.1f kJ · distance %3$.1f m · hauteur %4$.1f m</string>
+    <string name="trebuchet_gear_edit_teeth">Dents</string>
+    <string name="trebuchet_gear_edit_layer">Couche</string>
+    <string name="trebuchet_gear_edit_material">Matière</string>
+    <string name="trebuchet_gear_size_header">Ø %1$d cm · circonférence %2$d cm</string>
+    <string name="trebuchet_gear_duplicate">Dupliquer</string>
+    <string name="trebuchet_gear_couple">Accoupler</string>
+    <string name="trebuchet_gear_delete_short">Supprimer</string>
+    <string name="trebuchet_gear_shaft_pick_second">Changez de couche avec les flèches, puis touchez la roue à placer sur le même axe.</string>
+    <string name="trebuchet_gear_shaft_pending_tip">Accouplement prêt. Choisissez une autre couche puis touchez sa roue : elle sera centrée ici et embrayée progressivement.</string>
+    <string name="trebuchet_gear_layout_conflict">Taille refusée : les roues rouges se chevaucheraient, ou la boucle d’engrenages ne peut plus garder toutes ses prises alignées.</string>
     <string name="trebuchet_settings">Réglages</string>
     <string name="trebuchet_style_arcade">Constructions arcade</string>
     <string name="trebuchet_style_realistic">Constructions réalistes</string>
