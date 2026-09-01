@@ -12,10 +12,10 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.BackgroundColorSpan
-import android.text.style.StyleSpan
 import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.Gravity
@@ -115,7 +115,8 @@ class BookReaderActivity : ThemedActivity() {
         val readingBg: Int, val wordBg: Int,
         val textColor: Int,
         val toolbarBg: Int, val toolbarText: Int, val bottomBg: Int,
-        val paletteColors: IntArray = intArrayOf()
+        val paletteColors: IntArray = intArrayOf(),
+        val paletteWordColors: IntArray = intArrayOf()
     ) {
         DARK(
             bg1 = 0xFF0D0D0D.toInt(), bg2 = 0xFF282828.toInt(),
@@ -176,12 +177,40 @@ class BookReaderActivity : ThemedActivity() {
                 0xFFE8FFE8.toInt(), // vert d'eau
                 0xFFFFE0F0.toInt(), // rose bonbon
                 0xFFEAF4FF.toInt()  // bleuet pâle
+            ),
+            paletteWordColors = intArrayOf(
+                0xFFF06292.toInt(), // rose framboise
+                0xFF66BB6A.toInt(), // vert herbe
+                0xFF9575CD.toInt(), // violet lavande
+                0xFFFDD835.toInt(), // jaune doré
+                0xFF29B6F6.toInt(), // bleu océan
+                0xFFFFB74D.toInt(), // orange pêche
+                0xFFBA68C8.toInt(), // mauve
+                0xFF4DB6AC.toInt(), // vert émeraude
+                0xFFEC407A.toInt(), // rose soutenu
+                0xFF64B5F6.toInt()  // bleu bleuet
             )
         );
 
         fun paragraphBg(paraIdx: Int): Int =
             if (paletteColors.isNotEmpty()) paletteColors[paraIdx % paletteColors.size]
             else if (paraIdx % 2 != 0) bg2 else bg1
+
+        fun activeParagraphBg(paraIdx: Int, useDistinction: Boolean): Int =
+            if (paletteColors.isNotEmpty()) {
+                if (useDistinction) paragraphBg(paraIdx) else bg1
+            } else readingBg
+
+        fun wordHighlightBg(paraIdx: Int): Int =
+            if (paletteWordColors.isNotEmpty()) {
+                // Une touche de couleur plus vive dans le pastel d'origine : le mot reste
+                // distinct, tout en gardant un excellent contraste avec le texte noir.
+                ColorUtils.blendARGB(
+                    paragraphBg(paraIdx),
+                    paletteWordColors[paraIdx % paletteWordColors.size],
+                    0.35f
+                )
+            } else wordBg
     }
 
     // ── TTS ───────────────────────────────────────────────────────────────────
@@ -196,8 +225,8 @@ class BookReaderActivity : ThemedActivity() {
     private var ttsPitch = 1.0f
     private var selectedVoiceName: String? = null
     private var paragraphs: List<String> = emptyList()
-    private var speakOffset = 0
     private var pausedCharOffset = 0
+    private var activeTtsSegment: TtsTextSegment? = null
 
 
     // ── Vues ──────────────────────────────────────────────────────────────────
@@ -638,23 +667,38 @@ class BookReaderActivity : ThemedActivity() {
                 }
                 tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                     override fun onStart(utteranceId: String) {
-                        val idx = utteranceId.toIntOrNull() ?: return
+                        val (idx, segment) = parseTtsUtteranceId(utteranceId) ?: return
                         runOnUiThread {
+                            if (activeTtsSegment != segment || idx != ttsCurrentParagraph) return@runOnUiThread
                             paragraphAdapter?.setReadingParagraph(idx)
                             autoScrollToReadingParagraph(idx)
                         }
                     }
                     override fun onDone(utteranceId: String) {
-                        val idx = utteranceId.toIntOrNull() ?: return
-                        if (ttsState == TtsState.PLAYING) {
-                            runOnUiThread { speakParagraph(idx + 1) }
+                        val (idx, segment) = parseTtsUtteranceId(utteranceId) ?: return
+                        runOnUiThread {
+                            if (ttsState != TtsState.PLAYING || activeTtsSegment != segment || idx != ttsCurrentParagraph) return@runOnUiThread
+                            val paragraph = paragraphs.getOrNull(idx)
+                            if (paragraph != null && segment.end < paragraph.length) speakParagraphFrom(idx, segment.end)
+                            else speakParagraph(idx + 1)
                         }
                     }
                     @Deprecated("Deprecated in Java")
-                    override fun onError(utteranceId: String) { runOnUiThread { stopReading() } }
+                    override fun onError(utteranceId: String) {
+                        val parsed = parseTtsUtteranceId(utteranceId) ?: return
+                        runOnUiThread {
+                            if (ttsState == TtsState.PLAYING && parsed.second == activeTtsSegment) stopReading()
+                        }
+                    }
                     override fun onRangeStart(utteranceId: String, start: Int, end: Int, frame: Int) {
-                        val idx = utteranceId.toIntOrNull() ?: return
-                        runOnUiThread { paragraphAdapter?.highlightWord(idx, start + speakOffset, end + speakOffset) }
+                        val (idx, segment) = parseTtsUtteranceId(utteranceId) ?: return
+                        runOnUiThread {
+                            if (activeTtsSegment != segment || idx != ttsCurrentParagraph) return@runOnUiThread
+                            val absoluteStart = start + segment.start
+                            val absoluteEnd = end + segment.start
+                            paragraphAdapter?.highlightWord(idx, absoluteStart, absoluteEnd)
+                            paragraphAdapter?.focusHighlight(idx, absoluteStart)
+                        }
                     }
                 })
             }
@@ -748,10 +792,8 @@ class BookReaderActivity : ThemedActivity() {
     }
 
     private fun restartCurrentParagraph() {
-        speakOffset = 0
         tts?.stop()
-        tts?.speak(paragraphs.getOrNull(ttsCurrentParagraph) ?: return,
-            TextToSpeech.QUEUE_FLUSH, null, ttsCurrentParagraph.toString())
+        speakParagraphFrom(ttsCurrentParagraph, 0)
     }
 
     private fun showSliderPopup(
@@ -826,33 +868,38 @@ class BookReaderActivity : ThemedActivity() {
     private fun speakParagraph(idx: Int) {
         if (idx >= paragraphs.size) { stopReading(); return }
         if (ttsState != TtsState.PLAYING) return
+        speakParagraphFrom(idx, 0)
+    }
+
+    private fun speakParagraphFrom(idx: Int, fromOffset: Int) {
+        if (ttsState != TtsState.PLAYING) return
+        val paragraph = paragraphs.getOrNull(idx) ?: run { stopReading(); return }
+        val maxChars = (TextToSpeech.getMaxSpeechInputLength() - 100).coerceAtMost(TtsTextSegmenter.DEFAULT_MAX_CHARS)
+        val segment = TtsTextSegmenter.next(paragraph, fromOffset, maxChars = maxChars)
+            ?: run { speakParagraph(idx + 1); return }
         ttsCurrentParagraph = idx
-        speakOffset = 0
-        tts?.speak(paragraphs[idx], TextToSpeech.QUEUE_FLUSH, null, idx.toString())
+        activeTtsSegment = segment
+        tts?.speak(segment.text, TextToSpeech.QUEUE_FLUSH, null, ttsUtteranceId(idx, segment))
     }
 
     private fun pauseReading() {
-        tts?.stop()
         pausedCharOffset = (paragraphAdapter?.getCurrentHighlightStart() ?: 0).coerceAtLeast(0)
         ttsState = TtsState.PAUSED
+        tts?.stop()
         updatePlayPauseBtn()
     }
 
     private fun resumeReading() {
         ttsState = TtsState.PLAYING
         updatePlayPauseBtn()
-        speakOffset = pausedCharOffset
-        val fullText = paragraphs.getOrNull(ttsCurrentParagraph) ?: run { stopReading(); return }
-        val text = if (pausedCharOffset > 0 && pausedCharOffset < fullText.length)
-            fullText.substring(pausedCharOffset) else fullText
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, ttsCurrentParagraph.toString())
+        speakParagraphFrom(ttsCurrentParagraph, pausedCharOffset)
     }
 
     private fun stopReading() {
         tts?.stop()
         ttsState = TtsState.IDLE
-        speakOffset = 0
         pausedCharOffset = 0
+        activeTtsSegment = null
         updatePlayPauseBtn()
         paragraphAdapter?.clearHighlight()
     }
@@ -870,6 +917,19 @@ class BookReaderActivity : ThemedActivity() {
         val last = lm.findLastVisibleItemPosition()
         val itemIdx = paragraphAdapter?.itemIndexForParagraph(idx) ?: idx
         if (itemIdx < first || itemIdx > last) txtRecycler.smoothScrollToPosition(itemIdx)
+    }
+
+    private fun ttsUtteranceId(idx: Int, segment: TtsTextSegment) = "$idx:${segment.start}:${segment.end}"
+
+    private fun parseTtsUtteranceId(id: String): Pair<Int, TtsTextSegment>? {
+        val parts = id.split(':')
+        if (parts.size != 3) return null
+        val idx = parts[0].toIntOrNull() ?: return null
+        val start = parts[1].toIntOrNull() ?: return null
+        val end = parts[2].toIntOrNull() ?: return null
+        val paragraph = paragraphs.getOrNull(idx) ?: return null
+        if (start !in 0..paragraph.length || end !in (start + 1)..paragraph.length) return null
+        return idx to TtsTextSegment(start, end, paragraph.substring(start, end))
     }
 
     // ── Ouverture de livre ────────────────────────────────────────────────────
@@ -947,8 +1007,10 @@ class BookReaderActivity : ThemedActivity() {
             pageIndicator.text = getString(R.string.book_reader_page_of, 1, paragraphs.size)
             txtRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val first = lm.findFirstVisibleItemPosition().coerceAtLeast(0) + 1
-                    pageIndicator.text = getString(R.string.book_reader_page_of, first, paragraphs.size)
+                    val firstItem = lm.findFirstVisibleItemPosition().coerceAtLeast(0)
+                    val paragraphNumber = (adapter.paragraphIndexAtOrAfter(firstItem) + 1)
+                        .coerceIn(1, paragraphs.size)
+                    pageIndicator.text = getString(R.string.book_reader_page_of, paragraphNumber, paragraphs.size)
                 }
             })
             restoreTxtPosition(uri)
@@ -989,8 +1051,10 @@ class BookReaderActivity : ThemedActivity() {
             pageIndicator.text = getString(R.string.book_reader_page_of, 1, paragraphs.size)
             txtRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val first = lm.findFirstVisibleItemPosition().coerceAtLeast(0) + 1
-                    pageIndicator.text = getString(R.string.book_reader_page_of, first, paragraphs.size)
+                    val firstItem = lm.findFirstVisibleItemPosition().coerceAtLeast(0)
+                    val paragraphNumber = (adapter.paragraphIndexAtOrAfter(firstItem) + 1)
+                        .coerceIn(1, paragraphs.size)
+                    pageIndicator.text = getString(R.string.book_reader_page_of, paragraphNumber, paragraphs.size)
                 }
             })
             restoreTxtPosition(uri)
@@ -1225,7 +1289,13 @@ class BookReaderActivity : ThemedActivity() {
                     putInt("${k}_idx", pos)
                     putInt("${k}_off", txtRecycler.getChildAt(0)?.top ?: 0)
                 }
-                BookLibraryActivity.updateProgress(prefs, uri.toString(), pos, paragraphs.size)
+                val paragraphNumber = (paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: pos) + 1
+                BookLibraryActivity.updateProgress(
+                    prefs,
+                    uri.toString(),
+                    paragraphNumber.coerceIn(0, paragraphs.size),
+                    paragraphs.size
+                )
             }
             ViewType.EMPTY -> {}
         }
@@ -1426,6 +1496,8 @@ class BookReaderActivity : ThemedActivity() {
         private var cursorParagraph = -1   // paragraph index
         private var highlightStart = -1
         private var highlightEnd = -1
+        private var focusedParagraph = -1
+        private var focusedLine = -1
         private var bookmarkedItems = setOf<Int>() // item indices
 
         private val TYPE_TEXT = 0; private val TYPE_IMAGE = 1; private val TYPE_CHAPTER = 2
@@ -1474,10 +1546,11 @@ class BookReaderActivity : ThemedActivity() {
                     val itemPos = holder.bindingAdapterPosition
                     if (itemPos == RecyclerView.NO_POSITION) return false
                     val paraIdx = itemToParagraphIdx[itemPos] ?: return false
-                    speakOffset = 0; pausedCharOffset = 0
                     ttsCurrentParagraph = paraIdx
-                    setCursorParagraph(paraIdx)
-                    autoScrollToReadingParagraph(paraIdx)
+                    pausedCharOffset = 0
+                    val firstWordStart = prepareParagraphForTts(paraIdx)
+                    showBarsTemporarily()
+                    txtRecycler.post { focusHighlight(paraIdx, firstWordStart) }
                     if (ttsState == TtsState.PLAYING) speakParagraph(paraIdx)
                     return true
                 }
@@ -1507,7 +1580,7 @@ class BookReaderActivity : ThemedActivity() {
                 is EpubItem.Image -> (holder as ImageHolder).iv.setImageBitmap(item.bitmap)
                 is EpubItem.Heading -> {
                     val h = holder as TextHolder
-                    itemToParagraphIdx[position] ?: 0
+                    val paraIdx = itemToParagraphIdx[position] ?: 0
                     val isBookmarked = bookmarkedItems.contains(position)
                     val scale = when (item.level) { 1 -> 1.75f; 2 -> 1.45f; 3 -> 1.25f; 4 -> 1.12f; else -> 1.05f }
                     val topPad = when (item.level) { 1 -> dp(20); 2 -> dp(16); else -> dp(12) }
@@ -1519,12 +1592,15 @@ class BookReaderActivity : ThemedActivity() {
                     val cursorItemIdx = textItemIndices.getOrElse(cursorParagraph) { -1 }
                     when {
                         position == readingItemIdx -> {
-                            h.tv.setBackgroundColor(theme.readingBg)
-                            applyWordHighlight(h.tv, item.text, highlightStart, highlightEnd)
+                            val activeBg = if (theme.paletteColors.isNotEmpty()) theme.bg1 else theme.readingBg
+                            h.tv.setBackgroundColor(activeBg)
+                            applyWordHighlight(h.tv, item.text, highlightStart, highlightEnd, paraIdx)
                         }
                         position == cursorItemIdx -> {
                             applyBookmarkPrefix(h.tv, item.text, isBookmarked)
-                            h.tv.setBackgroundColor(ColorUtils.blendARGB(theme.bg1, theme.readingBg, 0.35f))
+                            val cursorBg = if (theme.paletteColors.isNotEmpty()) theme.bg1
+                                else ColorUtils.blendARGB(theme.bg1, theme.readingBg, 0.35f)
+                            h.tv.setBackgroundColor(cursorBg)
                         }
                         else -> {
                             applyBookmarkPrefix(h.tv, item.text, isBookmarked)
@@ -1544,13 +1620,15 @@ class BookReaderActivity : ThemedActivity() {
                     val cursorItemIdx = textItemIndices.getOrElse(cursorParagraph) { -1 }
                     when {
                         position == readingItemIdx -> {
-                            h.tv.setBackgroundColor(theme.readingBg)
-                            applyWordHighlight(h.tv, item.text, highlightStart, highlightEnd)
+                            h.tv.setBackgroundColor(theme.activeParagraphBg(paraIdx, useDistinction))
+                            applyWordHighlight(h.tv, item.text, highlightStart, highlightEnd, paraIdx)
                         }
                         position == cursorItemIdx -> {
                             applyBookmarkPrefix(h.tv, item.text, isBookmarked)
                             val base = if (useDistinction) theme.paragraphBg(paraIdx) else theme.bg1
-                            h.tv.setBackgroundColor(ColorUtils.blendARGB(base, theme.readingBg, 0.35f))
+                            val cursorBg = if (theme.paletteColors.isNotEmpty()) base
+                                else ColorUtils.blendARGB(base, theme.readingBg, 0.35f)
+                            h.tv.setBackgroundColor(cursorBg)
                         }
                         else -> {
                             applyBookmarkPrefix(h.tv, item.text, isBookmarked)
@@ -1563,12 +1641,19 @@ class BookReaderActivity : ThemedActivity() {
 
         override fun getItemCount() = items.size
 
-        private fun applyWordHighlight(tv: TextView, text: String, start: Int, end: Int) {
+        private fun applyWordHighlight(tv: TextView, text: String, start: Int, end: Int, paraIdx: Int) {
             if (start >= 0 && end > start && end <= text.length) {
-                val s = SpannableString(text)
-                s.setSpan(BackgroundColorSpan(theme.wordBg), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                s.setSpan(StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                tv.text = s
+                val current = tv.text
+                val s = if (current is Spannable && current.toString() == text) {
+                    current
+                } else {
+                    SpannableString(text)
+                }
+                s.getSpans(0, s.length, BackgroundColorSpan::class.java)
+                    .forEach(s::removeSpan)
+                s.setSpan(BackgroundColorSpan(theme.wordHighlightBg(paraIdx)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                if (tv.text !== s) tv.setText(s, TextView.BufferType.SPANNABLE)
+                else tv.invalidate()
             } else { tv.text = text }
         }
 
@@ -1587,6 +1672,26 @@ class BookReaderActivity : ThemedActivity() {
             if (itemIdx >= 0 && itemIdx != readingItemIdx) notifyItemChanged(itemIdx)
         }
 
+        fun prepareParagraphForTts(idx: Int): Int {
+            val text = paragraphs.getOrNull(idx) ?: return 0
+            val firstWord = FIRST_WORD_REGEX.find(text)
+            val start = firstWord?.range?.first ?: 0
+            val end = firstWord?.let { it.range.last + 1 } ?: text.length.coerceAtMost(1)
+            val prevItemIdx = textItemIndices.getOrElse(readingParagraph) { -1 }
+            val itemIdx = textItemIndices.getOrElse(idx) { -1 }
+
+            readingParagraph = idx
+            cursorParagraph = idx
+            highlightStart = start
+            highlightEnd = end
+            focusedParagraph = -1
+            focusedLine = -1
+
+            if (prevItemIdx >= 0 && prevItemIdx != itemIdx) notifyItemChanged(prevItemIdx)
+            if (itemIdx >= 0) notifyItemChanged(itemIdx)
+            return start
+        }
+
         fun setReadingParagraph(idx: Int) {
             val prevItemIdx = textItemIndices.getOrElse(readingParagraph) { -1 }
             readingParagraph = idx; cursorParagraph = idx; highlightStart = -1; highlightEnd = -1
@@ -1603,14 +1708,55 @@ class BookReaderActivity : ThemedActivity() {
             val vh = this@BookReaderActivity.txtRecycler
                 .findViewHolderForAdapterPosition(itemIdx) as? TextHolder
             if (vh != null) {
-                vh.tv.setBackgroundColor(theme.readingBg)
-                applyWordHighlight(vh.tv, paragraphs[paragraphIndex], start, end)
+                val activeBg = if (items[itemIdx] is EpubItem.Heading && theme.paletteColors.isNotEmpty()) {
+                    theme.bg1
+                } else {
+                    theme.activeParagraphBg(paragraphIndex, useDistinction)
+                }
+                vh.tv.setBackgroundColor(activeBg)
+                applyWordHighlight(vh.tv, paragraphs[paragraphIndex], start, end, paragraphIndex)
             }
+        }
+
+        fun focusHighlight(paragraphIndex: Int, charOffset: Int) {
+            val itemIdx = textItemIndices.getOrElse(paragraphIndex) { -1 }
+            if (itemIdx < 0) return
+            val recycler = this@BookReaderActivity.txtRecycler
+            val holder = recycler.findViewHolderForAdapterPosition(itemIdx) as? TextHolder
+            if (holder == null) {
+                // Le défilement de paragraphe lancé par onStart est déjà animé. Ne pas
+                // le remplacer par un repositionnement instantané qui créerait un à-coup.
+                recycler.smoothScrollToPosition(itemIdx)
+                return
+            }
+            val layout = holder.tv.layout ?: return
+            val safeOffset = charOffset.coerceIn(0, (holder.tv.text.length - 1).coerceAtLeast(0))
+            val line = layout.getLineForOffset(safeOffset)
+            if (focusedParagraph == paragraphIndex && focusedLine == line) return
+            focusedParagraph = paragraphIndex
+            focusedLine = line
+
+            val lineCenter = holder.tv.top + holder.tv.totalPaddingTop +
+                (layout.getLineTop(line) + layout.getLineBottom(line)) / 2
+            val viewportTop = recycler.paddingTop
+            val viewportHeight = recycler.height - recycler.paddingTop - recycler.paddingBottom
+            val comfortTop = viewportTop + viewportHeight * 28 / 100
+            val comfortBottom = viewportTop + viewportHeight * 72 / 100
+
+            // Tant que la ligne lue reste dans la zone centrale, l'écran ne bouge pas.
+            // Quand elle en sort, un petit rattrapage animé lui redonne de l'avance.
+            val targetY = when {
+                lineCenter > comfortBottom -> viewportTop + viewportHeight * 58 / 100
+                lineCenter < comfortTop -> viewportTop + viewportHeight * 42 / 100
+                else -> return
+            }
+            recycler.smoothScrollBy(0, lineCenter - targetY)
         }
 
         fun clearHighlight() {
             val prevItemIdx = textItemIndices.getOrElse(readingParagraph) { -1 }
             readingParagraph = -1; highlightStart = -1; highlightEnd = -1
+            focusedParagraph = -1; focusedLine = -1
             if (prevItemIdx >= 0) notifyItemChanged(prevItemIdx)
         }
 
@@ -1646,6 +1792,8 @@ class BookReaderActivity : ThemedActivity() {
     }
 
 }
+
+private val FIRST_WORD_REGEX = Regex("[\\p{L}\\p{N}][\\p{L}\\p{M}\\p{N}'’\\-]*")
 
 private val HTML_NAMED_ENTITIES: Map<String, String> = mapOf(
     // Base

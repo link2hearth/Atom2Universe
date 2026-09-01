@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/book_reader_title" />
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/content_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <!-- État vide -->
         <LinearLayout
@@ -56,6 +47,9 @@
             android:id="@+id/pdf_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="?attr/actionBarSize"
+            android:paddingBottom="49dp"
             android:visibility="gone" />
 
         <!-- Visionneuse TXT -->
@@ -63,16 +57,33 @@
             android:id="@+id/txt_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="?attr/actionBarSize"
+            android:paddingBottom="49dp"
             android:visibility="gone" />
 
     </FrameLayout>
+
+    <!-- Les barres sont superposées au livre : leur apparition ne redimensionne
+         jamais la zone de texte et ne recalcule donc pas ses retours à la ligne. -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
+        android:elevation="8dp"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/book_reader_title" />
 
     <!-- Séparateur -->
     <View
         android:id="@+id/bottom_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="48dp"
         android:background="#33FFFFFF"
+        android:elevation="8dp"
         android:visibility="gone" />
 
     <!-- Barre inférieure : TTS + compteur -->
@@ -80,10 +91,12 @@
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="4dp"
         android:paddingEnd="12dp"
+        android:elevation="8dp"
         android:visibility="gone">
 
         <!-- Play / Pause -->
@@ -159,4 +172,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
