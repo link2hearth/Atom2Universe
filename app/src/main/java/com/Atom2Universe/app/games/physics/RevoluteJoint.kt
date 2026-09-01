@@ -14,6 +14,25 @@ import kotlin.math.sqrt
  */
 class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
 
+    /**
+     * Entraîne [b] par rapport à [a] à [motorSpeed] rad/s.
+     *
+     * Le couple reste borné par [maxMotorTorque] : le moteur peut donc caler sous
+     * une charge trop lourde. Avec une vitesse cible nulle, il devient un frein
+     * d'axe ou un frottement sec de palier, utile pour les roues et volants d'inertie.
+     */
+    var motorEnabled = false
+    var motorSpeed = 0f
+    var maxMotorTorque = 0f
+
+    /** Impulsion angulaire accumulée par le moteur pendant le pas, en N·m·s. */
+    var motorImpulse = 0f
+        private set
+
+    /** Couple effectivement demandé au dernier pas, en N·m. */
+    var motorTorque = 0f
+        private set
+
     /** Point d'ancrage dans le repère de [a]. */
     var localAnchorAX = 0f
     var localAnchorAY = 0f
@@ -47,6 +66,8 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
     private var errY = 0f
     private var posScale = 0f
     private var solvable = false
+    private var motorMass = 0f
+    private var maxMotorImpulse = 0f
 
     companion object {
         /** Part de l'écart rattrapée à chaque pas par la passe de position. */
@@ -116,6 +137,8 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         impulseY = 0f
         posImpulseX = 0f
         posImpulseY = 0f
+        motorImpulse = 0f
+        motorTorque = 0f
     }
 
     private var posImpulseX = 0f
@@ -125,6 +148,7 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         solvable = false
         posImpulseX = 0f
         posImpulseY = 0f
+        motorTorque = 0f
         if (!enabled || !a.inWorld || !b.inWorld) return
 
         val ca = cos(a.angle)
@@ -168,6 +192,20 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
         b.vy += b.invMass * impulseY
         b.omega += b.invI * (rbx * impulseY - rby * impulseX)
 
+        // Le moteur agit uniquement sur la rotation relative. Son impulsion est
+        // bornée par couple × durée : changer la fréquence de simulation ne change
+        // donc ni sa force ni sa puissance maximale.
+        val angularK = a.invI + b.invI
+        motorMass = if (angularK > 1e-12f) 1f / angularK else 0f
+        maxMotorImpulse = maxOf(maxMotorTorque, 0f) / invDt
+        if (!motorEnabled || motorMass == 0f || maxMotorImpulse == 0f) {
+            motorImpulse = 0f
+        } else {
+            motorImpulse = motorImpulse.coerceIn(-maxMotorImpulse, maxMotorImpulse)
+            a.omega -= a.invI * motorImpulse
+            b.omega += b.invI * motorImpulse
+        }
+
         solvable = true
     }
 
@@ -192,6 +230,18 @@ class RevoluteJoint(a: PhysBody, b: PhysBody) : Joint(a, b) {
 
         impulseX += px
         impulseY += py
+
+        if (motorEnabled && motorMass > 0f && maxMotorImpulse > 0f) {
+            val relativeSpeed = b.omega - a.omega
+            var dMotor = motorMass * (motorSpeed - relativeSpeed)
+            val oldMotor = motorImpulse
+            motorImpulse = (oldMotor + dMotor).coerceIn(-maxMotorImpulse, maxMotorImpulse)
+            dMotor = motorImpulse - oldMotor
+            a.omega -= a.invI * dMotor
+            b.omega += b.invI * dMotor
+            // maxMotorImpulse = maxMotorTorque / invDt.
+            motorTorque = motorImpulse * maxMotorTorque / maxMotorImpulse
+        }
     }
 
     override fun applyPositionImpulse() {

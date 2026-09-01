@@ -156,8 +156,65 @@ class PhysBody private constructor(
     var vy = 0f
     var omega = 0f
 
+    /** Force extérieure accumulée pour la prochaine image physique, en newtons. */
+    var forceX = 0f
+        private set
+    var forceY = 0f
+        private set
+
     /** Couple externe appliqué au prochain pas puis remis à zéro (ressort de la planche). */
     var torque = 0f
+
+    /**
+     * Applique une force au centre de masse pour toute la prochaine image.
+     *
+     * Les appels s'additionnent. [PhysWorld.stepFrame] conserve cette force pendant
+     * tous ses sous-pas puis l'efface : sa poussée ne dépend donc pas du découpage
+     * adaptatif choisi pour éviter les traversées.
+     */
+    fun applyForce(fx: Float, fy: Float) {
+        if (!fx.isFinite() || !fy.isFinite()) return
+        forceX += fx
+        forceY += fy
+        if (fx != 0f || fy != 0f) wake()
+    }
+
+    /** Applique une force en un point monde ; le bras de levier produit aussi un couple. */
+    fun applyForceAtWorldPoint(fx: Float, fy: Float, worldX: Float, worldY: Float) {
+        applyForce(fx, fy)
+        torque += (worldX - x) * fy - (worldY - y) * fx
+    }
+
+    /**
+     * Applique une impulsion instantanée, en kg·m/s, au centre de masse.
+     * Contrairement à une force, elle agit immédiatement et n'est pas liée à la durée du pas.
+     */
+    fun applyImpulse(ix: Float, iy: Float) {
+        if (!ix.isFinite() || !iy.isFinite()) return
+        vx += ix * invMass
+        vy += iy * invMass
+        if (ix != 0f || iy != 0f) wake()
+    }
+
+    /** Applique une impulsion en un point monde, translation et rotation comprises. */
+    fun applyImpulseAtWorldPoint(ix: Float, iy: Float, worldX: Float, worldY: Float) {
+        applyImpulse(ix, iy)
+        omega += invI * ((worldX - x) * iy - (worldY - y) * ix)
+    }
+
+    /** Couple extérieur, en N·m, accumulé pour la prochaine image physique. */
+    fun applyTorque(value: Float) {
+        if (!value.isFinite()) return
+        torque += value
+        if (value != 0f) wake()
+    }
+
+    /** Efface les forces persistées pendant les sous-pas de l'image courante. */
+    internal fun clearForces() {
+        forceX = 0f
+        forceY = 0f
+        torque = 0f
+    }
 
     /**
      * Vitesses « fantômes », qui servent uniquement à replacer les corps.
@@ -257,9 +314,39 @@ class PhysBody private constructor(
     /** Catégories que ce corps accepte de toucher. Par défaut, toutes. */
     var collidesWith = -1
 
+    /**
+     * Couche pseudo-3D du corps dans le monde 2D. Deux corps ne peuvent se toucher
+     * que si leurs plages de couches se recouvrent. La couche 0 et une profondeur
+     * de 1 conservent exactement le comportement historique.
+     */
+    var collisionLayer = 0
+        set(value) {
+            if (field == value) return
+            field = value
+            wake()
+        }
+
+    /** Nombre de couches consécutives occupées à partir de [collisionLayer]. */
+    var collisionLayerDepth = 1
+        set(value) {
+            require(value >= 1) { "un corps doit occuper au moins une couche" }
+            if (field == value) return
+            field = value
+            wake()
+        }
+
+    fun sharesCollisionLayer(other: PhysBody): Boolean {
+        val a0 = collisionLayer.toLong()
+        val a1 = a0 + collisionLayerDepth - 1L
+        val b0 = other.collisionLayer.toLong()
+        val b1 = b0 + other.collisionLayerDepth - 1L
+        return a0 <= b1 && b0 <= a1
+    }
+
     /** Vrai si les deux corps acceptent mutuellement de se toucher. */
     fun collidesWith(other: PhysBody): Boolean =
-        (category and other.collidesWith) != 0 && (other.category and collidesWith) != 0
+        sharesCollisionLayer(other) &&
+            (category and other.collidesWith) != 0 && (other.category and collidesWith) != 0
 
     /**
      * Énergie reçue lors de vrais chocs depuis la dernière remise à zéro, en joules.
@@ -305,6 +392,19 @@ class PhysBody private constructor(
     var inertia: Float = 0f
         private set
 
+    /**
+     * Corrige la répartition de masse sans changer la forme de collision.
+     *
+     * 1 représente un disque/une boîte pleins. Une roue évidée ou un volant annulaire
+     * place davantage de masse au bord et utilise une valeur supérieure à 1.
+     */
+    var inertiaScale = 1f
+        set(value) {
+            require(value.isFinite() && value > 0f) { "l'échelle d'inertie doit être positive" }
+            field = value
+            refreshMass()
+        }
+
     private fun computeInertia(): Float {
         if (mass <= 0f) return 0f
         var totalArea = 0f
@@ -315,7 +415,7 @@ class PhysBody private constructor(
             val m = mass * p.area / totalArea
             i += m * (p.unitInertia + p.localX * p.localX + p.localY * p.localY)
         }
-        return i
+        return i * inertiaScale
     }
 
     init {

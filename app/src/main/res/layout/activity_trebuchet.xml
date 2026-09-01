@@ -68,6 +68,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <com.Atom2Universe.app.games.trebuchet.gears.GearMachineView
+            android:id="@+id/trebuchet_gear_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
         <com.Atom2Universe.app.games.trebuchet.TrebuchetWheelBubble
             android:id="@+id/trebuchet_wheels"
             android:layout_width="wrap_content"

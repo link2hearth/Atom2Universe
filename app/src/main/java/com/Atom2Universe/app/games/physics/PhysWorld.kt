@@ -67,7 +67,7 @@ class PhysWorld {
     private var sweepKeys = LongArray(0)
     private var pairBuf = LongArray(64)
 
-    var gravity = 9.81f
+    var gravity = PhysicsConstants.STANDARD_GRAVITY
 
     /** Nombre de passes du solveur de vitesses : plus il y en a, plus les piles sont stables. */
     var iterations = 14
@@ -275,10 +275,11 @@ class PhysWorld {
         var guard = 0
         while (remaining > 1e-6f && guard < 4 * maxSubSteps) {
             val h = minOf(remaining, safeStep(dt))
-            step(h)
+            stepInternal(h, clearForces = false)
             remaining -= h
             guard++
         }
+        clearForces()
     }
 
     /**
@@ -430,7 +431,10 @@ class PhysWorld {
     fun subStepsFor(dt: Float): Int =
         ceil(dt / safeStep(dt)).toInt().coerceIn(1, maxSubSteps)
 
-    fun step(dt: Float) {
+    /** Simule un pas unique et consomme les forces extérieures accumulées. */
+    fun step(dt: Float) = stepInternal(dt, clearForces = true)
+
+    private fun stepInternal(dt: Float, clearForces: Boolean) {
         if (dt <= 0f) return
         val invDt = 1f / dt
         stamp++
@@ -448,10 +452,11 @@ class PhysWorld {
             if (!bd.inWorld) continue
             // Un couple posé de l'extérieur — le ressort d'une planche — est un ordre
             // de bouger : il réveille son corps, sans quoi il serait avalé sans effet.
-            if (bd.torque != 0f) bd.wake()
-            if (bd.sleeping) { bd.torque = 0f; continue }
+            if (bd.forceX != 0f || bd.forceY != 0f || bd.torque != 0f) bd.wake()
+            if (bd.sleeping) continue
             if (bd.invMass > 0f) {
-                bd.vy -= gravity * dt
+                bd.vx += bd.forceX * bd.invMass * dt
+                bd.vy += (bd.forceY * bd.invMass - gravity) * dt
                 // La traînée de l'air : elle s'oppose au mouvement et croît comme
                 // le carré de la vitesse. On la borne à ce qui annule exactement la
                 // vitesse dans le pas : sinon un pas un peu long la renverserait et
@@ -477,7 +482,6 @@ class PhysWorld {
                 }
             }
             if (bd.invI > 0f && bd.torque != 0f) bd.omega += bd.invI * bd.torque * dt
-            bd.torque = 0f
         }
 
         // 2. Vitesses : on empêche les corps de s'enfoncer davantage.
@@ -538,6 +542,11 @@ class PhysWorld {
 
         // 4. Qui peut s'endormir ?
         if (sleepEnabled) settleToSleep(dt)
+        if (clearForces) clearForces()
+    }
+
+    private fun clearForces() {
+        for (bd in bodies) bd.clearForces()
     }
 
     /**
@@ -778,6 +787,9 @@ class PhysWorld {
     /** Vrai si une liaison relie déjà ces deux corps et interdit leur collision. */
     private fun connectedByJoint(a: PhysBody, b: PhysBody): Boolean {
         for (j in joints) {
+            // Une liaison décrochée n'existe plus physiquement : elle ne doit pas
+            // rendre ses anciennes pièces fantômes l'une pour l'autre.
+            if (!j.enabled) continue
             if (j.collideConnected) continue
             if ((j.a === a && j.b === b) || (j.a === b && j.b === a)) return true
         }
