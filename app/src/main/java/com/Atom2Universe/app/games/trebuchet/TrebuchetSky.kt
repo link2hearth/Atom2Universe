@@ -28,9 +28,32 @@ class SkyClock(startMillis: Long = System.currentTimeMillis()) {
     var instant: Long = startMillis
         private set
 
-    /** Fait couler le temps. [dt] est en secondes **réelles**. */
+    /**
+     * Fait couler le temps. [dt] est en secondes **réelles**, celles de l'écran.
+     *
+     * Elles sont multipliées par [SPEED] en chemin : une seconde passée à regarder vaut
+     * soixante-douze secondes de monde, ce qui fait tenir un jour dans vingt minutes.
+     */
     fun advance(dt: Float) {
         instant += (dt * SPEED * 1000f).toLong()
+    }
+
+    /**
+     * Avance de [seconds] secondes **du monde**, telles quelles.
+     *
+     * C'est l'autre unité, et confondre les deux est exactement le bug que cette
+     * méthode répare. L'atelier d'engrenages fait tourner sa machine pendant une durée
+     * choisie — deux minutes, dix minutes — et ces secondes-là sont déjà des secondes de
+     * monde : la machine tourne vraiment deux minutes. Les passer à [advance] les
+     * multipliait une seconde fois par soixante-douze, et une charge de deux minutes
+     * faisait courir le Soleil sur **deux heures et demie**. Au maximum du réglage, une
+     * seule pression déroulait un jour et une nuit entiers.
+     *
+     * Deux méthodes plutôt qu'un facteur passé en paramètre : l'unité se lit alors sur
+     * le nom de l'appel, là où elle se choisit.
+     */
+    fun skip(seconds: Float) {
+        instant += (seconds * 1000f).toLong()
     }
 
     /** Avance ou recule d'un nombre d'heures : c'est ce que fait le doigt qui balaie. */

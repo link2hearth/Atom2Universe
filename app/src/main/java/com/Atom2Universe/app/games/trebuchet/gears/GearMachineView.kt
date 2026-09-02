@@ -717,11 +717,15 @@ class GearMachineView @JvmOverloads constructor(
             val steps = ceil(game.chargeTotal / fixed / CHARGE_FRAMES).toInt()
                 .coerceIn(CHARGE_MIN_STEPS, CHARGE_MAX_STEPS)
             consumed = game.advanceCharge(fixed, steps)
-            // Le ciel suit le temps **machine** : charger dix minutes deplace le soleil
-            // de dix minutes. Les nuages et les oiseaux, eux, restent a l'heure de
-            // l'ecran -- ce sont des habitants, pas des rouages. C'est cette distinction
-            // que les deux temps de `advance` portent.
-            backdrop.advance(elapsed, consumed, workshopBreeze())
+            // Le ciel suit le temps **machine** : charger deux minutes deplace le
+            // Soleil de deux minutes. Ces secondes-la sont deja des secondes de monde,
+            // donc elles passent par `skipSeconds` et non par `clockDt` — ce dernier les
+            // aurait multipliees par soixante-douze, et une charge ordinaire aurait fait
+            // basculer le ciel de deux heures et demie.
+            //
+            // Les nuages et les oiseaux, eux, restent a l'heure de l'ecran : ce sont des
+            // habitants, pas des rouages.
+            backdrop.advance(elapsed, 0f, workshopBreeze(), skipSeconds = consumed)
             accumulator = 0f
         } else {
             accumulator += elapsed

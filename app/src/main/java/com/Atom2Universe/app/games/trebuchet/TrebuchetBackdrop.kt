@@ -135,19 +135,27 @@ class SkyBackdrop(context: Context, private val skyBand: Float = SKY_BAND) {
     /**
      * Fait vivre le décor d'une image.
      *
-     * **Deux temps, et ils ne sont pas interchangeables.** [ambientDt] est le temps de
-     * l'écran : c'est lui qui fait battre les ailes et dériver les nuages. [clockDt] est
-     * le temps que le ciel doit avancer, qui n'est pas le même — le joueur peut tenir
-     * l'heure au doigt (`clockDt` vaut alors zéro), et l'atelier d'engrenages fait
-     * défiler le ciel à la vitesse de la **machine** pendant une charge, dix minutes de
-     * mécanisme déplaçant le Soleil de dix minutes, pendant que les oiseaux, eux,
-     * continuent de voler à l'heure normale. Ce sont des habitants, pas des rouages.
+     * **Trois temps, et aucun n'est interchangeable.** C'est la seule complication de
+     * cette classe, et elle est réelle : le décor est regardé à une vitesse et vécu à
+     * une autre.
+     *
+     * @param ambientDt secondes **d'écran**. Le battement d'aile et la dérive des
+     *   nuages : ce sont des habitants, pas des rouages, et ils volent à l'heure de
+     *   celui qui les regarde.
+     * @param clockDt secondes **d'écran** aussi, mais pour le ciel — multipliées par
+     *   [SkyClock.SPEED] en chemin, ce qui fait tenir un jour dans vingt minutes. Vaut
+     *   zéro quand le joueur tient l'heure au doigt.
+     * @param skipSeconds secondes **du monde**, avancées telles quelles. C'est l'avance
+     *   rapide de l'atelier : deux minutes de mécanisme déplacent le Soleil de deux
+     *   minutes, ni plus ni moins. Les passer par [clockDt] les multipliait une seconde
+     *   fois par soixante-douze — voir [SkyClock.skip].
      */
-    fun advance(ambientDt: Float, clockDt: Float, windVx: Float) {
+    fun advance(ambientDt: Float, clockDt: Float, windVx: Float, skipSeconds: Float = 0f) {
         ambientClock += ambientDt
         clouds.update(ambientDt, windVx)
         birds.update(ambientDt, windVx)
         if (clockDt != 0f) clock.advance(clockDt)
+        if (skipSeconds != 0f) clock.skip(skipSeconds)
         sky.update(clock.instant)
     }
 

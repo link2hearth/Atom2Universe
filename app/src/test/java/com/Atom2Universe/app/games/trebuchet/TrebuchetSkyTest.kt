@@ -592,6 +592,62 @@ class TrebuchetSkyTest {
         )
     }
 
+    /**
+     * **Une charge de deux minutes déplace le Soleil de deux minutes.**
+     *
+     * Les deux portes de [SkyClock] ne prennent pas la même unité, et les confondre est
+     * un bug qu'on a eu : l'avance rapide de l'atelier passait ses secondes **machine**
+     * par [SkyClock.advance], qui les multipliait par soixante-douze comme s'il
+     * s'agissait de secondes d'écran. Une charge ordinaire de deux minutes faisait donc
+     * basculer le ciel de **deux heures et demie**, et une charge au maximum du réglage
+     * déroulait un jour et une nuit entiers en une pression.
+     *
+     * La machine tourne vraiment deux minutes : deux minutes doivent passer.
+     */
+    @Test
+    fun `avancer le mecanisme ne fait pas courir le soleil`() {
+        val charge = 120f
+
+        val saut = SkyClock(minuit)
+        saut.skip(charge)
+        val ecoule = saut.instant - minuit
+        println(
+            "CHARGE ${charge.toInt()} s de mécanisme : le ciel avance de " +
+                "${"%.1f".format(ecoule / 1000f / 60f)} min de jeu"
+        )
+        assertEquals(
+            "la charge ne déplace pas le ciel de sa propre durée",
+            (charge * 1000f).toLong(), ecoule
+        )
+
+        // Et l'autre porte garde son facteur : une seconde regardée vaut toujours
+        // soixante-douze secondes de monde, sinon le jour ne tiendrait plus en vingt
+        // minutes.
+        val regarde = SkyClock(minuit)
+        regarde.advance(charge)
+        assertEquals(
+            "l'horloge d'écran a perdu son accélération",
+            (charge * SkyClock.SPEED * 1000f).toLong(), regarde.instant - minuit
+        )
+        assertTrue(
+            "les deux portes font la même chose : l'unité n'est plus distinguée",
+            regarde.instant - minuit > (saut.instant - minuit) * 70
+        )
+
+        // Le Soleil ne doit pas avoir le temps de se coucher pendant une charge : à
+        // midi, deux minutes plus tard, il est encore haut.
+        val midi = ciel(minuit + 12 * heure)
+        val apresCharge = ciel(minuit + 12 * heure + (charge * 1000f).toLong())
+        println(
+            "CHARGE hauteur du Soleil : ${"%.3f".format(midi.sunAltitude)} avant, " +
+                "${"%.3f".format(apresCharge.sunAltitude)} après"
+        )
+        assertEquals(
+            "le Soleil a bougé pendant une charge",
+            midi.sunAltitude, apresCharge.sunAltitude, 0.01f
+        )
+    }
+
     @Test
     fun `l horloge court soixante-douze fois plus vite que la vraie`() {
         val h = SkyClock(minuit)
