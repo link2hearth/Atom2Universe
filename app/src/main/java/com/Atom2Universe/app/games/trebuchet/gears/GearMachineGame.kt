@@ -17,6 +17,7 @@ import com.Atom2Universe.app.games.trebuchet.TargetGenerator
 import com.Atom2Universe.app.games.trebuchet.TargetLevel
 import com.Atom2Universe.app.games.trebuchet.Terrain
 import com.Atom2Universe.app.games.trebuchet.TrebuchetCategory
+import com.Atom2Universe.app.games.trebuchet.TargetRules
 import com.Atom2Universe.app.games.trebuchet.TrebuchetEffects
 import com.Atom2Universe.app.games.trebuchet.TrebuchetRules
 import kotlin.math.abs
@@ -173,6 +174,68 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
 
     /** Le feu d'artifice ne part qu'une fois par site. */
     private var celebrated = false
+
+    // ── La traversée ─────────────────────────────────────────────────────────
+    //
+    // L'élan du boulet avant le choc de l'image en cours. Une fois le pas simulé il est
+    // perdu, et c'est justement lui qu'on veut rendre à un projectile qui vient de
+    // casser quelque chose.
+    private var momentumVx = 0f
+    private var momentumVy = 0f
+    private var momentumEnergy = 0f
+
+    private fun rememberMomentum() {
+        val b = projectile?.body ?: return
+        momentumVx = b.vx
+        momentumVy = b.vy
+        momentumEnergy = 0.5f * b.mass * (b.vx * b.vx + b.vy * b.vy)
+    }
+
+    /**
+     * **Un projectile ne paie que ce qu'il a détruit.**
+     *
+     * C'est la moitié manquante du mode arcade dans l'atelier. Sans elle, la physique
+     * décide seule et elle est impitoyable : un boulet de vingt kilos qui percute une
+     * pierre de trois tonnes repart en arrière, **même si la pierre se brise**. C'est
+     * exact — l'impulsion de contact se calcule avant que la pierre ne meure, et elle ne
+     * sait pas que sa cible n'existera plus dans un dixième de seconde. C'est aussi tout
+     * ce qu'on ne veut pas voir en arcade, où un boulet doit entrer dans la construction
+     * et ressortir de l'autre côté.
+     *
+     * On le remet donc dans l'axe qu'il avait avant le choc, avec l'énergie qu'il avait
+     * **moins celle des points de vie qu'il vient d'emporter**. Trois garde-fous font
+     * que ce n'est pas de la triche :
+     *
+     *  - il ne récupère rien s'il n'a **rien cassé** : cogner sans casser rebondit, dans
+     *    les deux modes ;
+     *  - il ne dépasse jamais l'énergie qu'il avait au début de l'image, donc le moteur
+     *    ne crée pas d'énergie — la règle d'or de cette physique ;
+     *  - on ne le relance que si la physique l'a laissé **plus lent** que ça.
+     *
+     * Et le curseur [com.Atom2Universe.app.games.trebuchet.TargetStyle.pierce] vaut zéro
+     * en réaliste, où le rebond honnête est précisément ce qu'on est venu voir.
+     */
+    private fun pierceThrough() {
+        val refund = TargetRules.style.pierce
+        if (refund <= 0f) return
+        val b = projectile?.body ?: return
+        val cost = targets.pierceCost(b)
+        if (cost <= 0f) return
+        val v0 = hypot(momentumVx, momentumVy)
+        if (v0 < 1f) return
+        val left = (momentumEnergy - cost).coerceAtLeast(0f)
+        val voulu = sqrt(2f * left / b.mass)
+        val maintenant = hypot(b.vx, b.vy)
+        if (voulu <= maintenant) return
+        val v = maintenant + (voulu - maintenant) * refund
+        b.wake()
+        b.vx = momentumVx / v0 * v
+        b.vy = momentumVy / v0 * v
+        // Les contacts gardent leurs impulsions d'une image à l'autre : sans les
+        // oublier, le solveur retiendrait le boulet contre une pierre qui n'est déjà
+        // plus là.
+        world.forgetContacts(b)
+    }
 
     /**
      * Tire le feu d'artifice de la victoire, une fois par site.
@@ -533,14 +596,22 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val h = dt.coerceIn(0f, 1f / 30f)
         updateProgressiveClutches(h)
         applyBrake()
+        // L'élan d'avant le choc, gardé pour la traversée.
+        if (phase == Phase.FLIGHT) rememberMomentum()
         world.stepFrame(h)
         effects.update(h)
         celebrate()
         // Le site s'arme, encaisse et se rendort tout seul — c'est [TargetField.update]
         // qui le fait, et sans cet appel un chateau de quatre-vingts pierres serait
         // resolu a chaque sous-pas d'un boulet a trois cents metres de la.
+        //
+        // Il vient **avant** la traversée : c'est lui qui transforme les chocs en
+        // dégâts, et la traversée a besoin de savoir ce que le boulet vient de casser.
         targets.update(h)
-        if (phase == Phase.FLIGHT) projectile?.let { trackShot(it, h) }
+        if (phase == Phase.FLIGHT) {
+            pierceThrough()
+            projectile?.let { trackShot(it, h) }
+        }
     }
 
     /**
@@ -739,7 +810,16 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             // Le sol n'est plus a zero : sur une colline, un boulet << pose >> a
             // l'altitude zero serait deja trois metres sous terre.
             val touchLevel = terrain.heightAt(body.x) + body.radius + 0.03f
-            if (body.y <= touchLevel || shot.previousY <= touchLevel || body.impactAccum > 0f) {
+            val auSol = body.y <= touchLevel || shot.previousY <= touchLevel
+            // **Un choc en l'air est un mur, pas le sol.** Le troisième relevé existe
+            // pour les boulets rapides, qui frappent la terre et repartent dans la même
+            // image ; il comptait n'importe quel choc, ce qui était sans conséquence
+            // tant que l'atelier tirait sur une dalle nue. Depuis qu'il y a des
+            // bâtiments, le premier mur touché arrêtait le tir : la portée se lisait au
+            // pied du rempart, et en arcade le boulet est justement censé le traverser
+            // et retomber plus loin.
+            val chocAuSol = body.impactAccum > 0f && body.y <= touchLevel + 2f * body.radius
+            if (auSol || chocAuSol) {
                 shot.landed = true
                 shot.distance = groundContactX(shot, touchLevel) - shot.startX
                 lastShotDistance = shot.distance
@@ -1531,6 +1611,12 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
         }
         world.add(shot)
+        // À partir d'ici, le site saura ce que ce corps-là casse lui-même — c'est ce qui
+        // permet de ne lui faire payer que ça. Les compteurs du tir précédent s'oublient
+        // au même endroit, sinon un boulet hériterait des ruines d'un autre.
+        targets.forgetPiercers()
+        targets.resetHitFlag()
+        targets.trackPiercer(shot)
         projectile = ProjectileState(shot, shot.x, shot.y, projectileEnergy, targetX())
         phase = Phase.FLIGHT
         trailClear()
