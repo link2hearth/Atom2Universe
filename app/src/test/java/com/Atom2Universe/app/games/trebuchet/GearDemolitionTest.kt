@@ -217,4 +217,55 @@ class GearDemolitionTest {
             dernierMouvement > finAt
         )
     }
+
+    /**
+     * **Le chiffre affiché doit être celui qui se compare à l'objectif.**
+     *
+     * Le bandeau montrait `progress`, qui est déjà *rapporté* à l'objectif : il atteint
+     * cent au moment de la victoire, quel que soit l'objectif. Affiché à côté d'un
+     * « objectif 75 % », il faisait lire au joueur « j'ai 88, il m'en faut 75 » alors
+     * qu'il n'avait pas gagné — et il attendait un message de victoire qui ne pouvait
+     * pas venir.
+     *
+     * Le trébuchet montre `score`, le compte brut des pierres à terre. C'est le seul
+     * chiffre qui a un sens à côté de l'objectif, et c'est celui qu'on montre.
+     */
+    @Test
+    fun `le score se compare a l objectif, l avancement non`() {
+        val game = GearMachineGame()
+        armer(game)
+        val site = game.targets
+
+        // On démolit par paliers, en relevant les deux chiffres au passage.
+        var vus = 0
+        var garde = 0
+        while (!site.cleared && garde++ < 40) {
+            val x = site.left + (garde % 8) * (site.right - site.left) / 8f
+            site.blast(x, game.terrain.heightAt(x) + 3f, 300_000f, 14f)
+            repeat(120) { game.step(fixed) }
+            if (!site.cleared && site.score > 0f && vus < 3) {
+                vus++
+                println(
+                    "SCORE brut ${"%.0f".format(site.score * 100f)} %, " +
+                        "avancement ${"%.0f".format(site.progress * 100f)} %, " +
+                        "objectif ${"%.0f".format(site.winRatio * 100f)} %"
+                )
+                // L'avancement est toujours **au-dessus** du score tant que l'objectif
+                // n'est pas cent pour cent : c'est exactement le piège d'affichage.
+                assertTrue(
+                    "les deux chiffres sont sur la même échelle : rien n'aurait trompé",
+                    site.progress >= site.score
+                )
+            }
+        }
+        assertTrue("le site ne se laisse pas raser", site.cleared)
+        println(
+            "SCORE à la victoire : brut ${"%.0f".format(site.score * 100f)} %, " +
+                "objectif ${"%.0f".format(site.winRatio * 100f)} %"
+        )
+        // La victoire tombe quand le **score** atteint l'objectif, et à ce moment-là
+        // seulement l'avancement vaut cent.
+        assertTrue("la victoire n'est pas alignée sur le score", site.score >= site.winRatio)
+        assertEquals("l'avancement ne vaut pas cent à la victoire", 1f, site.progress, 1e-4f)
+    }
 }

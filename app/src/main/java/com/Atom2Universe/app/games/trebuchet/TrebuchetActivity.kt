@@ -200,7 +200,9 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         val ghostLimit = prefs.getInt(KEY_GHOSTS, TrebuchetRules.GHOST_HISTORY)
         gameView.game.ghostLimit = ghostLimit
         gearView.game.ghostLimit = ghostLimit
-        gameView.soundEnabled = prefs.getBoolean(KEY_SOUND, true)
+        val son = prefs.getBoolean(KEY_SOUND, true)
+        gameView.soundEnabled = son
+        gearView.soundEnabled = son
         gameView.listener = this
         gearView.listener = this
         // Les roulettes règlent la même machine que le doigt, et préviennent quand
@@ -411,6 +413,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     /** Coupe ou rétablit les bruitages, et s'en souvient pour la prochaine partie. */
     private fun setSoundEnabled(on: Boolean) {
         gameView.soundEnabled = on
+        gearView.soundEnabled = on
         prefs.edit { putBoolean(KEY_SOUND, on) }
     }
 
@@ -918,7 +921,12 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         } else {
             getString(
                 R.string.trebuchet_gear_site,
-                (site.progress * 100f).toInt(),
+                // **Le score brut, pas l'avancement.** `progress` est déjà rapporté à
+                // l'objectif : il atteint cent au moment de la victoire. L'afficher à
+                // côté d'un « objectif 75 % » faisait lire « j'ai 88, il m'en faut 75 »
+                // à un joueur qui n'avait pas encore gagné. Le trébuchet montre le score,
+                // et c'est le seul chiffre qui se compare à l'objectif.
+                (site.score * 100f).toInt(),
                 site.pieceBroken + site.pieceToppled,
                 site.pieceTotal,
                 (site.winRatio * 100f).toInt()

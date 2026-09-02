@@ -18,6 +18,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.trebuchet.LandScene
 import com.Atom2Universe.app.games.trebuchet.SkyBackdrop
 import com.Atom2Universe.app.games.trebuchet.SparkScene
+import com.Atom2Universe.app.games.trebuchet.TrebuchetSfx
 import com.Atom2Universe.app.games.trebuchet.SkyClock
 import com.Atom2Universe.app.games.trebuchet.SkyState
 import kotlin.math.PI
@@ -167,6 +168,22 @@ class GearMachineView @JvmOverloads constructor(
 
     /** Les particules : fumee, gravats, feu d'artifice. Voir [SparkScene]. */
     private val sparks = SparkScene(context)
+
+    /**
+     * L'ambiance sonore, la meme qu'au champ de tir.
+     *
+     * L'atelier n'en avait **aucune** : ni choc, ni cri, ni feu d'artifice. Ce n'etait
+     * pas genant tant qu'on y mesurait des portees sur une dalle nue ; depuis qu'on y
+     * demolit un village, le silence est ce qui manque le plus.
+     */
+    private val sfx = TrebuchetSfx()
+
+    /** Nombre de pierres brisees a la derniere image : sert a sonner les chocs. */
+    private var lastBroken = 0
+
+    var soundEnabled: Boolean
+        get() = sfx.enabled
+        set(value) { sfx.enabled = value }
     private val sky get() = backdrop.sky
     private val skyClock get() = backdrop.clock
     private val ambientClock get() = backdrop.ambientClock
@@ -229,12 +246,22 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     fun resume() {
+        // **Une seule fois.** `start()` ouvre un pilote MIDI et une portee de coroutines ;
+        // les rouvrir sur une vue deja en marche laisserait les premiers derriere.
+        if (running) return
+        sfx.start()
+        // Les fusees et leurs bouquets sonnent d'eux-memes : les effets previennent.
+        game.effects.onRocketLaunch = { _, _ -> sfx.fireworkLaunch() }
+        game.effects.onBurst = { _, _ -> sfx.fireworkBurst() }
         running = true
         lastFrameNanos = 0L
         postInvalidateOnAnimation()
     }
 
-    fun pause() { running = false }
+    fun pause() {
+        running = false
+        sfx.stop()
+    }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
@@ -579,10 +606,31 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     /**
-     * Le cadrage du resultat : la machine a gauche, la courbe, le point de chute, et
-     * le mannequin s'il est encore plus loin. C'est le plan qui apprend quelque chose.
+     * Le cadrage du resultat, en deux plans selon ce qui vient de se passer.
+     *
+     * **Touche mais pas rase : la camera reste sur les ruines.** C'est elle qu'on
+     * regarde, et un recul au moment ou le mur s'ecroule enleve au joueur la seule
+     * chose qu'il attendait. L'atelier reculait systematiquement pour montrer la
+     * courbe du tir — utile quand on mesurait des portees sur une dalle nue, absurde
+     * devant un village qui tombe.
+     *
+     * **Rien touche, ou site rase : on recule.** D'un cote il n'y a rien a regarder de
+     * pres, de l'autre c'est le plan large qu'il faut pour le feu d'artifice, qui part
+     * entre la machine et les ruines. Meme regle qu'au trebuchet.
      */
     private fun resultTarget(shot: GearMachineGame.ProjectileState): FloatArray {
+        val site = game.targets
+        if (game.level != null && site.tookDamage && !site.cleared) {
+            val left = site.left - RESULT_HIT_MARGIN
+            val right = site.right + RESULT_HIT_MARGIN
+            val spanX = (right - left).coerceAtLeast(RESULT_HIT_MIN_WIDTH)
+            val spanY = (site.baseHeight + RESULT_HIT_MARGIN)
+                .coerceAtLeast(RESULT_HIT_MIN_HEIGHT)
+            val echelle = min(
+                width / spanX, (height - GROUND_INSET_DP * dp) / spanY
+            ).coerceAtLeast(0.01f)
+            return floatArrayOf((left + right) / 2f, echelle)
+        }
         val bounds = game.bounds()
         val left = bounds[0] - 6f
         val right = maxOf(shot.body.x, shot.targetX) + RESULT_MARGIN
@@ -767,7 +815,14 @@ class GearMachineView @JvmOverloads constructor(
         }
         land.updateDecor(
             elapsed, game.level, game.terrain, game.targets, game.projectile?.body?.x ?: 0f
-        ) {}
+        ) { sfx.villagerCry() }
+
+        // Une pierre de plus a cede : ca s'entend. On compare le compteur d'une image a
+        // l'autre plutot que d'ecouter chaque poussiere — un mur qui s'effondre en fait
+        // des dizaines, et autant de sons superposes ne feraient qu'un bruit blanc.
+        val casse = game.targets.pieceBroken
+        if (casse > lastBroken) sfx.explosion()
+        lastBroken = casse
         // La camera vit a l'heure de l'ecran : lui donner le temps machine la ferait
         // sauter d'un bond a chaque image de charge.
         updateCamera(if (game.charging) elapsed else consumed)
@@ -1923,6 +1978,14 @@ class GearMachineView @JvmOverloads constructor(
 
         /** L'air garde apres le point de chute au plan de resultat. */
         private const val RESULT_MARGIN = 14f
+
+        /**
+         * Le cadrage colle aux ruines : marge autour du site, et ce qu'il faut voir au
+         * minimum pour qu'une maisonnette isolee ne remplisse pas l'ecran.
+         */
+        private const val RESULT_HIT_MARGIN = 10f
+        private const val RESULT_HIT_MIN_WIDTH = 16f
+        private const val RESULT_HIT_MIN_HEIGHT = 10f
         // La géométrie des deux panneaux fixes du coin haut gauche. Elle était
         // recopiée dans les quatre méthodes qui les dessinent et les touchent, et
         // la bulle d'édition doit maintenant savoir où ils s'arrêtent pour ne pas
