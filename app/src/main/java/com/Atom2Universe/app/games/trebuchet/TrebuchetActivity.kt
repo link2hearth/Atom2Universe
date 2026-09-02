@@ -182,6 +182,9 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         best = prefs.getFloat(KEY_BEST, 0f)
         levelSeed = prefs.getLong(KEY_SEED, 1L)
         gearSiteSeed = prefs.getLong(KEY_GEAR_SEED, GearMachineGame.DEFAULT_SITE_SEED)
+        // Le tempérament tel qu'il était quand la vue de l'atelier a bâti son premier
+        // site, c'est-à-dire pendant `setContentView`, juste avant cette ligne.
+        val styleAuDemarrage = TargetRules.style
         TargetRules.style = runCatching {
             TargetStyle.valueOf(prefs.getString(KEY_STYLE, null) ?: TargetStyle.ARCADE.name)
         }.getOrDefault(TargetStyle.ARCADE)
@@ -246,7 +249,15 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         // tempérament ne soit relu des préférences : son site naissait avec les
         // constantes par défaut, et un joueur en réaliste retrouvait un atelier en
         // arcade — ou l'inverse — sans que rien ne le dise.
-        gearView.loadSite(gearSiteSeed)
+        //
+        // Sauf si le tempérament n'a pas bougé **et** que c'est déjà la bonne graine :
+        // bâtir un site coûte quelques millisecondes, et en construire deux à chaque
+        // ouverture faisait apparaître l'un puis l'autre.
+        if (gearSiteSeed != GearMachineGame.DEFAULT_SITE_SEED ||
+            TargetRules.style != styleAuDemarrage
+        ) {
+            gearView.loadSite(gearSiteSeed)
+        }
     }
 
     /** Rouvre l'atelier là où on l'avait laissé : le même mode, la même machine. */

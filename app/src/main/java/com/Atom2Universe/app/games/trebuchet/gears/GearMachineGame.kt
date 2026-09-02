@@ -288,7 +288,13 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         rebuild()
         targets.load(lvl.structure, lvl.terrain)
         stampSite()
-        targets.reattach()
+        // **Pas de `reattach()` ici.** [TargetField.load] pose deja chaque pierre dans le
+        // monde en la fabriquant ; `reattach` ne sert qu'a les y remettre apres un
+        // `world.clear()`, ce que fait [rebuild]. Les deux enchaines mettaient **chaque
+        // pierre deux fois** dans la liste des corps — et rien ne s'en plaignait : le
+        // balayage large appariait alors un corps avec lui-meme, le solveur inventait des
+        // contacts entre ses propres morceaux, et une construction touchee se figeait ou
+        // partait de travers une fois sur deux.
     }
 
 

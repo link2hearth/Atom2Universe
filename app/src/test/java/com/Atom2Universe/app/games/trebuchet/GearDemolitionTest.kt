@@ -268,4 +268,58 @@ class GearDemolitionTest {
         assertTrue("la victoire n'est pas alignée sur le score", site.score >= site.winRatio)
         assertEquals("l'avancement ne vaut pas cent à la victoire", 1f, site.progress, 1e-4f)
     }
+
+    /**
+     * **Aucune pierre ne doit se trouver deux fois dans le monde.**
+     *
+     * Un corps présent en double est apparié **avec lui-même** par le balayage large :
+     * sa catégorie satisfait son propre masque, et le solveur invente alors des contacts
+     * entre les morceaux d'une seule et même pierre. La construction se fige ou part de
+     * travers au moment de l'impact, sans exception ni message — juste une simulation
+     * qui ne réagit pas comme elle devrait, une fois sur deux.
+     *
+     * C'est ce qui arrivait : deux appels légitimes pris séparément — celui qui fabrique
+     * les pierres et celui qui les remet dans le monde après un vidage — s'enchaînaient
+     * dans le chargement d'un site.
+     */
+    @Test
+    fun `le chargement d un site ne met aucune pierre en double`() {
+        val game = GearMachineGame()
+
+        fun verifier(quand: String) {
+            val vus = HashSet<Int>()
+            var doubles = 0
+            for (b in game.world.bodies) {
+                if (!vus.add(System.identityHashCode(b))) doubles++
+            }
+            println(
+                "MONDE $quand : ${game.world.bodies.size} corps, " +
+                    "${game.targets.pieceTotal} pierres, $doubles en double"
+            )
+            assertEquals("$quand : des corps sont dans le monde en double", 0, doubles)
+        }
+
+        verifier("à l'ouverture   ")
+        game.loadSite(31L)
+        verifier("après un site   ")
+        // Le remontage passe par `world.clear()` puis rattache : c'est l'autre moitié du
+        // piège, et elle doit rester sans doublon elle aussi.
+        game.rebuild()
+        verifier("après remontage ")
+        game.loadSite(4L)
+        game.rebuild()
+        verifier("après les deux  ")
+
+        // Et les pierres sont bien là : un monde sans doublon parce qu'il est vide ne
+        // prouverait rien.
+        assertTrue("le site a disparu du monde", game.world.bodies.count { it.tag is TargetPiece } > 5)
+
+        // Le garde-fou du moteur lui-même : reposer un corps déjà là ne l'ajoute pas.
+        val avant = game.world.bodies.size
+        game.world.add(game.world.bodies.first())
+        assertEquals(
+            "le moteur accepte deux fois le même corps",
+            avant, game.world.bodies.size
+        )
+    }
 }

@@ -176,7 +176,26 @@ class PhysWorld {
 
     private var stamp = 0
 
+    /**
+     * Ajoute un corps au monde, **une seule fois**.
+     *
+     * Le test d'appartenance coute un parcours de la liste, ce qui rendrait un
+     * chargement de cent pierres quadratique — quelques milliers de comparaisons, une
+     * fois, au moment ou l'on batit un site. C'est un prix derisoire a cote de ce qu'il
+     * evite.
+     *
+     * Un corps present deux fois dans la liste est apparie **avec lui-meme** par le
+     * balayage large : sa categorie satisfait son propre masque, et le solveur se met a
+     * inventer des contacts entre les morceaux d'une seule et meme pierre. La
+     * construction se fige ou part de travers, sans exception ni message. Et
+     * [remove] n'en retire qu'un exemplaire, laissant un fantome dans la simulation.
+     *
+     * On a paye ce piege une fois : deux appels legitimes pris separement — celui qui
+     * fabrique les pierres et celui qui les remet apres un vidage — s'enchainaient dans
+     * le chargement d'un site.
+     */
     fun add(body: PhysBody) {
+        if (bodies.contains(body)) return
         bodies.add(body)
     }
 
