@@ -39,6 +39,9 @@ class TrebuchetSfx {
     private var scope: CoroutineScope? = null
     private val rng = Random(System.nanoTime())
 
+    /** Les toms graves de la table de percussion : le registre d'un éboulement. */
+    private val TOMS = intArrayOf(41, 43, 45, 47)
+
     fun start() {
         scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         val d = MidiDriver.getInstance {
@@ -84,6 +87,25 @@ class TrebuchetSfx {
             noteOff(CH_VOICE, base)
             pitchBend(CH_VOICE, PITCH_CENTER)
         }
+    }
+
+    /**
+     * Une pierre qui cède : **un choc mat et grave, jamais une explosion**.
+     *
+     * La différence n'est pas cosmétique. Le premier essai employait [explosion] — grosse
+     * caisse, cymbale crash et craquement — pour sonner une assise qui se brise, et le
+     * joueur a cru à un bug de simulation : « le boulet est explosif on dirait, ça cogne
+     * et ça explose contre le bois ». La physique était juste ; c'est le son qui
+     * racontait autre chose.
+     *
+     * Ici, un tom grave tiré au sort et un craquement court. De la matière qui cède, pas
+     * de la poudre.
+     */
+    fun rubble() {
+        if (!enabled) return
+        val tom = TOMS[rng.nextInt(TOMS.size)]
+        note(CH_PERC, tom, 52 + rng.nextInt(34))
+        noteOnOffDelayed(CH_CRACK, 46 + rng.nextInt(6), 40 + rng.nextInt(26), 130L)
     }
 
     /** Le boulet — ou la bombe — qui rend tout d'un coup. */

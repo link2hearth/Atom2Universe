@@ -181,6 +181,9 @@ class GearMachineView @JvmOverloads constructor(
     /** Nombre de pierres brisees a la derniere image : sert a sonner les chocs. */
     private var lastBroken = 0
 
+    /** Quand la derniere pierre a sonne : un mur qui tombe ne doit pas mitrailler. */
+    private var lastRubbleAt = 0L
+
     var soundEnabled: Boolean
         get() = sfx.enabled
         set(value) { sfx.enabled = value }
@@ -821,7 +824,15 @@ class GearMachineView @JvmOverloads constructor(
         // l'autre plutot que d'ecouter chaque poussiere — un mur qui s'effondre en fait
         // des dizaines, et autant de sons superposes ne feraient qu'un bruit blanc.
         val casse = game.targets.pieceBroken
-        if (casse > lastBroken) sfx.explosion()
+        if (casse > lastBroken) {
+            // Un mur qui s'effondre casse une pierre par image pendant une seconde : sans
+            // ce delai, on entendrait une rafale au lieu d'un ecroulement.
+            val now = SystemClock.uptimeMillis()
+            if (now - lastRubbleAt >= RUBBLE_GAP_MS) {
+                sfx.rubble()
+                lastRubbleAt = now
+            }
+        }
         lastBroken = casse
         // La camera vit a l'heure de l'ecran : lui donner le temps machine la ferait
         // sauter d'un bond a chaque image de charge.
@@ -1983,6 +1994,9 @@ class GearMachineView @JvmOverloads constructor(
          * Le cadrage colle aux ruines : marge autour du site, et ce qu'il faut voir au
          * minimum pour qu'une maisonnette isolee ne remplisse pas l'ecran.
          */
+        /** Delai minimal entre deux bruits de pierre, en millisecondes. */
+        private const val RUBBLE_GAP_MS = 90L
+
         private const val RESULT_HIT_MARGIN = 10f
         private const val RESULT_HIT_MIN_WIDTH = 16f
         private const val RESULT_HIT_MIN_HEIGHT = 10f
