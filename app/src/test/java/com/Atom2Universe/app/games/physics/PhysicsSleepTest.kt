@@ -118,4 +118,59 @@ class PhysicsSleepTest {
             poids.speedSq < 0.25f
         )
     }
+
+    /**
+     * **Un corps endormi avant son premier pas reste touchable.**
+     *
+     * Le balayage ne recalcule pas la boîte englobante d'un dormeur : il n'a pas bougé,
+     * donc la sienne est encore bonne. Sauf s'il n'en a **jamais** eu. Un corps posé
+     * dans le monde puis endormi tout de suite gardait alors la boîte nulle de sa
+     * construction, se retrouvait à l'origine pour la détection, et **plus rien ne le
+     * touchait jamais**.
+     *
+     * Ça s'est vu en vrai : un village de vingt-deux pierres chargé puis endormi avant
+     * sa première image laissait les boulets le traverser de part en part. Rien ne le
+     * signale — pas d'exception, pas de forme manquante, un village bien peint — et on
+     * voit simplement un boulet passer au travers d'un mur.
+     *
+     * [PhysBody.sleep] rafraîchit donc la boîte avant d'endormir.
+     */
+    @Test
+    fun `un corps endormi des sa pose garde sa vraie boite`() {
+        val world = sleepyWorld()
+        val mur = PhysBody(1f, 3f, 5_000f).apply {
+            x = 8f
+            y = 3f
+            refreshMass()
+        }
+        world.add(mur)
+        // Endormi **avant** le moindre pas de simulation : le cas exact du village.
+        mur.sleep()
+        assertTrue("la boîte du dormeur est restée à l'origine", mur.aabbMaxX > 6f)
+
+        val bille = PhysBody.circle(0.3f, 40f).apply {
+            x = 0f
+            y = 3f
+            vx = 25f
+        }
+        world.add(bille)
+        var reveille = false
+        repeat(240) {
+            world.stepFrame(1f / 120f)
+            if (!mur.sleeping) reveille = true
+        }
+
+        println(
+            "SOMMEIL bille arrêtée à x=${"%.2f".format(bille.x)}, " +
+                "mur poussé à ${"%.4f".format(mur.x)}, réveillé=$reveille"
+        )
+        assertTrue(
+            "la bille a traversé un mur endormi : x=${"%.2f".format(bille.x)}",
+            bille.x < mur.x
+        )
+        // Le mur se rendort ensuite, et c'est très bien : cinq tonnes encaissent une
+        // bille de quarante kilos sans broncher. Ce qu'on vérifie, c'est qu'il s'est
+        // réveillé **au choc** — un dormeur qu'on traverse ne se réveille jamais.
+        assertTrue("le choc n'a jamais réveillé le mur", reveille)
+    }
 }

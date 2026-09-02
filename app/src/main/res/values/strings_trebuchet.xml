@@ -103,6 +103,10 @@
     <string name="trebuchet_gear_launch">RELEASE THE ARM</string>
     <string name="trebuchet_gear_new_shot">NEW SHOT</string>
     <string name="trebuchet_gear_not_enough_energy">Spin the flywheel first — the rim is what throws</string>
+    <!-- Etat du site en mode engrenages : ce qu'il reste a abattre. -->
+    <string name="trebuchet_gear_site">Site: %1$d%% razed · %2$d/%3$d stones down · target %4$d%%</string>
+    <string name="trebuchet_gear_site_none">No site — long-press “%1$s” to raise one</string>
+    <string name="trebuchet_gear_site_new">New site (seed %1$d)</string>
     <string name="trebuchet_gear_specs">%1$d wheels · %2$d meshes · L%3$d · %4$.1f kJ · %5$d slipping</string>
     <string name="trebuchet_gear_title">Gear machine</string>
     <string name="trebuchet_gear_selected">%1$s · %2$s · %3$.0f kg · layer %4$d · %5$.1f kJ</string>

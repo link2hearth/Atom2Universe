@@ -316,6 +316,9 @@ class TrebuchetView @JvmOverloads constructor(
      */
     private val land = LandScene(context).apply { firingLine = TrebuchetRules.FIRING_LINE }
 
+    /** Les particules — troisième peintre partagé, voir [SparkScene]. */
+    private val sparks = SparkScene(context)
+
     /** Raccourcis de lecture : le reste de la vue lit le ciel à longueur de dessin. */
     private val sky get() = backdrop.sky
     private val skyClock get() = backdrop.clock
@@ -447,19 +450,6 @@ class TrebuchetView @JvmOverloads constructor(
         typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
     }
 
-    /** Les points d'un seau : une teinte, une opacité, une épaisseur. */
-    private val pSpark = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
-    }
-
-    /** Les grosses particules, celles qui méritent un vrai disque. */
-    private val pBigSpark = Paint(Paint.ANTI_ALIAS_FLAG)
-
-    private val bucketXY = arrayOfNulls<FloatArray>(
-        TrebuchetEffects.PALETTE.size * SPARK_ALPHAS * SPARK_SIZES
-    )
-    private val bucketCount = IntArray(bucketXY.size)
 
     private val pHandle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -1544,7 +1534,7 @@ class TrebuchetView @JvmOverloads constructor(
         // Les feux d'artifice passent **derrière** le terrain : ils montent au fond du
         // ciel, et le sol leur coupe les jambes quand leurs étoiles retombent, ce qui
         // est exactement ce qu'on voit dehors.
-        drawSparks(canvas, background = true)
+        sparks.draw(canvas, game.effects, true, w, h, camX, camY, camScale)
 
         // Le paysage — sol, verdure, constructions, habitants, feux — et la nuit qui
         // se pose dessus. Tout est peint par [land], donc l'atelier d'engrenages en a
@@ -1569,7 +1559,7 @@ class TrebuchetView @JvmOverloads constructor(
         drawTrail(canvas)
         // Les explosions, elles, sont devant tout : une bombe qui souffle derrière le
         // château qu'elle détruit n'aurait aucun sens.
-        drawSparks(canvas, background = false)
+        sparks.draw(canvas, game.effects, false, w, h, camX, camY, camScale)
         drawGrabSpots(canvas)
         drawSelection(canvas)
         drawRecenterHint(canvas)
@@ -1787,79 +1777,6 @@ class TrebuchetView @JvmOverloads constructor(
             "%d m/s".format(wind.speed.roundToInt()),
             left + boxW - 8f * dp, cy + pGaugeText.textSize * 0.36f, pGaugeText
         )
-    }
-
-    /**
-     * Dessine les particules d'une couche, **groupées par teinte et par taille**.
-     *
-     * Un bouquet compte un millier d'étoiles. Les dessiner une par une, c'est mille
-     * appels de tracé par image, chacun avec sa mise en place d'anticrénelage, pour des
-     * points de trois pixels : mesuré ailleurs dans ce fichier, c'est exactement le
-     * genre de chose qui fait tomber une image à trente. `drawPoints` en dessine autant
-     * qu'on veut d'un seul appel, à condition qu'ils partagent leur couleur et leur
-     * épaisseur — on range donc les particules dans des seaux (une teinte, un palier
-     * d'opacité, une classe de taille) et on vide chaque seau d'un trait. Un bouquet
-     * ordinaire tient dans une dizaine de seaux.
-     *
-     * Les grosses particules — boules de feu, fumée — sortent du lot : elles sont peu
-     * nombreuses et il leur faut un vrai disque, pas un point épais.
-     */
-    private fun drawSparks(canvas: Canvas, background: Boolean) {
-        val fx = game.effects
-        if (fx.aliveCount == 0) return
-        val w = width.toFloat()
-        val h = height.toFloat()
-        for (i in bucketCount.indices) bucketCount[i] = 0
-
-        for (sp in fx.sparks) {
-            if (!sp.alive || sp.background != background) continue
-            val px = sx(sp.x)
-            val py = sy(sp.y)
-            if (px < -40f || px > w + 40f || py < -40f || py > h + 40f) continue
-            val r = sp.shownSize * camScale
-            // Ce qui est gros se dessine rond ; ce qui est petit se dessine en points.
-            if (r > BIG_SPARK_DP * dp) {
-                pBigSpark.color = tinted(sp)
-                canvas.drawCircle(px, py, r, pBigSpark)
-                continue
-            }
-            val size = (r / (SPARK_STEP_DP * dp)).toInt().coerceIn(0, SPARK_SIZES - 1)
-            val alpha = (sp.fade * (SPARK_ALPHAS - 1)).toInt().coerceIn(0, SPARK_ALPHAS - 1)
-            val b = (sp.tint * SPARK_ALPHAS + alpha) * SPARK_SIZES + size
-            var arr = bucketXY[b]
-            if (arr == null) {
-                arr = FloatArray(256)
-                bucketXY[b] = arr
-            }
-            var n = bucketCount[b]
-            if (n + 2 > arr.size) {
-                arr = arr.copyOf(arr.size * 2)
-                bucketXY[b] = arr
-            }
-            arr[n++] = px
-            arr[n++] = py
-            bucketCount[b] = n
-        }
-
-        for (b in bucketCount.indices) {
-            val n = bucketCount[b]
-            if (n == 0) continue
-            val size = b % SPARK_SIZES
-            val rest = b / SPARK_SIZES
-            val alpha = rest % SPARK_ALPHAS
-            val tint = rest / SPARK_ALPHAS
-            pSpark.color = TrebuchetEffects.PALETTE[tint]
-            pSpark.alpha = 40 + 215 * alpha / (SPARK_ALPHAS - 1)
-            pSpark.strokeWidth = (size + 1) * SPARK_STEP_DP * dp
-            canvas.drawPoints(bucketXY[b]!!, 0, n, pSpark)
-        }
-    }
-
-    /** La couleur d'une particule, son extinction comprise. */
-    private fun tinted(sp: Spark): Int {
-        val c = TrebuchetEffects.PALETTE[sp.tint]
-        val a = (255 * sp.fade).toInt().coerceIn(0, 255)
-        return (c and 0x00FFFFFF) or (a shl 24)
     }
 
     /**

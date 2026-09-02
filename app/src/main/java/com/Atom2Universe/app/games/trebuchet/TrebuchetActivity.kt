@@ -208,7 +208,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         // essayer, et sans doute à remplacer par un vrai bouton quand le mode aura
         // trouvé sa forme.
         machinesButton.setOnLongClickListener {
-            if (machineMode == MachineMode.TREBUCHET) nextLevel()
+            // Le meme geste dans les deux modes : « donne-moi un autre terrain ». Au
+            // trebuchet il enchaine les niveaux dans l'ordre ; a l'atelier il tire un
+            // site au hasard, parce qu'il n'y a pas de progression a suivre — on y
+            // essaie des machines, pas des niveaux.
+            if (machineMode == MachineMode.TREBUCHET) nextLevel() else nextGearSite()
             true
         }
         partsButton = findViewById(R.id.trebuchet_btn_parts)
@@ -294,6 +298,21 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     }
 
     private fun nextLevel() = loadLevel(levelSeed + 1L)
+
+    /**
+     * Dresse un site tire au hasard dans l'atelier.
+     *
+     * Au hasard et non a la suite : l'atelier n'a pas de progression, on y vient
+     * essayer une machine contre un obstacle quelconque. La graine est annoncee dans le
+     * message, ce qui permet de retomber sur le meme site en la notant.
+     */
+    private fun nextGearSite() {
+        val seed = kotlin.random.Random.nextLong(1L, 1_000_000L)
+        gearView.loadSite(seed)
+        gearEditor.closeTime()
+        updateUi()
+        toast(getString(R.string.trebuchet_gear_site_new, seed))
+    }
 
     /**
      * Les réglages du jeu — par opposition aux réglages de la machine, qui se font sur
@@ -862,7 +881,23 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             gearView.game.rotationalEnergy() / 1000f,
             gearView.game.slippingCount()
         )
-        bestText.setText(R.string.trebuchet_gear_title)
+        // L'etat du site prend la place du titre : tant qu'il y a quelque chose a
+        // abattre, c'est la seule chose qu'on veut lire.
+        val site = gearView.game.targets
+        bestText.text = if (site.pieceTotal == 0) {
+            getString(
+                R.string.trebuchet_gear_site_none,
+                getString(R.string.trebuchet_btn_machines)
+            )
+        } else {
+            getString(
+                R.string.trebuchet_gear_site,
+                (site.progress * 100f).toInt(),
+                site.pieceBroken + site.pieceToppled,
+                site.pieceTotal,
+                (site.winRatio * 100f).toInt()
+            )
+        }
         fireButton.setText(
             when (gearView.game.phase) {
                 GearMachineGame.Phase.FLIGHT -> R.string.trebuchet_btn_stop
@@ -875,7 +910,16 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         fireButton.isEnabled = true
         fireButton.alpha = 1f
         statusText.visibility = if (selected == null) View.VISIBLE else View.GONE
-        statusText.text = gearView.pendingLink?.let {
+        // La victoire passe devant tout le reste, et elle dit quoi faire ensuite : rien
+        // ne se declenche tout seul, et un joueur qui ne sait pas comment continuer est
+        // un joueur bloque sur un ecran de fete. Meme regle qu'au trebuchet.
+        statusText.text = if (site.cleared) {
+            getString(
+                R.string.trebuchet_win,
+                gearView.game.shotCount,
+                getString(R.string.trebuchet_btn_machines)
+            )
+        } else gearView.pendingLink?.let {
             getString(
                 if (it.kind == GearLinkKind.SHAFT_CLUTCH) R.string.trebuchet_gear_shaft_pick_second
                 else R.string.trebuchet_gear_link_pick_second
@@ -883,6 +927,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         } ?: gearView.placementTeeth?.let {
             getString(R.string.trebuchet_gear_place, it, gearView.currentLayer)
         }
+        if (site.cleared) statusText.visibility = View.VISIBLE
     }
 
     private fun gearMotorLabel(kind: GearMotorKind): String = getString(

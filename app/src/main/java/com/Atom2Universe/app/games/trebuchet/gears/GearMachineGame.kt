@@ -17,6 +17,7 @@ import com.Atom2Universe.app.games.trebuchet.TargetGenerator
 import com.Atom2Universe.app.games.trebuchet.TargetLevel
 import com.Atom2Universe.app.games.trebuchet.Terrain
 import com.Atom2Universe.app.games.trebuchet.TrebuchetCategory
+import com.Atom2Universe.app.games.trebuchet.TrebuchetEffects
 import com.Atom2Universe.app.games.trebuchet.TrebuchetRules
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -155,7 +156,38 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     var level: TargetLevel? = null
         private set
 
-    val targets = TargetField(world)
+    val targets = TargetField(world).apply {
+        // La poussiere d'une pierre qui cede : c'est le seul retour visible d'un coup
+        // qui a porte sans casser, et il ne coute rien puisque les effets tournent deja.
+        onDust = { x, y, r -> effects.dust(x, y, r) }
+    }
+
+    /**
+     * Fumee, gravats, poussiere et feu d'artifice.
+     *
+     * Les memes que le trebuchet, pour la meme raison que le decor : une explosion ne
+     * ressemble pas plus a un train d'engrenages qu'a un contrepoids. La vue les peint
+     * avec [com.Atom2Universe.app.games.trebuchet.SparkScene].
+     */
+    val effects = TrebuchetEffects()
+
+    /** Le feu d'artifice ne part qu'une fois par site. */
+    private var celebrated = false
+
+    /**
+     * Tire le feu d'artifice de la victoire, une fois par site.
+     *
+     * Il part **entre la machine et les ruines** et pas au-dessus d'elles : la camera
+     * prend tout le champ a la fin d'un tir, et un bouquet tire a cinq cents metres
+     * serait un confetti dans un coin de l'ecran.
+     */
+    private fun celebrate() {
+        if (celebrated || level == null || !targets.cleared) return
+        celebrated = true
+        val debut = bounds()[1] + 30f
+        val fin = (targets.left - 25f).coerceAtLeast(debut + 40f)
+        effects.celebrate(debut, fin)
+    }
 
     /**
      * Charge le site de la graine donnee, ou le retire si [seed] est nul.
@@ -184,14 +216,16 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val lvl = TargetGenerator.generate(seed)
         level = lvl
         terrain = lvl.terrain
+        // Les gravats retombent sur le relief, pas sur l'altitude zero.
+        effects.groundAt = { x -> lvl.terrain.heightAt(x) }
+        effects.clear()
+        celebrated = false
         rebuild()
         targets.load(lvl.structure, lvl.terrain)
         stampSite()
+        targets.reattach()
     }
 
-    init {
-        loadSite(DEFAULT_SITE_SEED)
-    }
 
     /**
      * Met les pierres du site sur **toutes** les couches de l'atelier.
@@ -256,7 +290,12 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
 
     private data class SavedMotion(val angle: Float, val omega: Float, val energy: Float)
 
-    init { rebuild(preserveMotion = false) }
+    init {
+        rebuild(preserveMotion = false)
+        // Le site **apres** la machine : il a besoin d'un monde deja monte, et
+        // [loadSite] le remonte de toute facon pour poser le relief.
+        loadSite(DEFAULT_SITE_SEED)
+    }
 
     fun loadConfig(value: GearMachineConfig) {
         // Ouvrir une machine est le seul moment ou l'on sait tenir un tout : c'est donc
@@ -370,6 +409,24 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                 projectile = shot
             }
         }
+
+        // **Le site rentre dans le monde ici, et nulle part ailleurs.**
+        //
+        // [TargetField.load] fabrique les pierres mais ne les pose pas : c'est
+        // [TargetField.reattach] qui le fait, et il faut le rappeler apres **chaque**
+        // `world.clear()`. C'est exactement ce qui manquait — les boulets traversaient
+        // le village sans le voir, filtres de collision parfaits et pierres absentes du
+        // monde. Le trebuchet fait la meme chose au meme endroit, dans son `build()`.
+        //
+        // La cible garde ses corps d'un remontage a l'autre : le joueur qui deplace un
+        // engrenage entre deux tirs ne doit pas voir le village se reconstruire derriere
+        // lui.
+        targets.reattach()
+        stampSite()
+        // Le boulet qui vient de la toucher n'a pas survecu au vidage : c'est le moment
+        // de rendormir la cible si elle est prete, plutot que d'attendre la prochaine
+        // image de vol pour s'en apercevoir.
+        targets.trySleep()
     }
 
     /**
@@ -477,6 +534,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         updateProgressiveClutches(h)
         applyBrake()
         world.stepFrame(h)
+        effects.update(h)
+        celebrate()
         // Le site s'arme, encaisse et se rendort tout seul — c'est [TargetField.update]
         // qui le fait, et sans cet appel un chateau de quatre-vingts pierres serait
         // resolu a chaque sous-pas d'un boulet a trois cents metres de la.

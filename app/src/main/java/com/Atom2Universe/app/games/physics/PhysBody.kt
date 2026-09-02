@@ -288,6 +288,17 @@ class PhysBody private constructor(
     fun sleep() {
         vx = 0f; vy = 0f; omega = 0f
         restTime = 0f
+        // **La boîte englobante d'abord.** Un dormeur garde la sienne — le balayage ne
+        // la recalcule pas, puisqu'il n'a pas bougé — et endormir un corps qui n'en a
+        // jamais eu le laisse avec la boîte nulle de sa construction : il se retrouve
+        // à l'origine du monde pour la détection, et **plus rien ne le touche jamais**.
+        //
+        // C'est un piège qui a coûté cher : un village de vingt-deux pierres chargé
+        // puis endormi avant son premier pas de simulation laissait les boulets le
+        // traverser de part en part, filtres de collision parfaits et pierres bien
+        // présentes dans le monde. Rien ne le signale, et rien ne le montre : on voit
+        // un boulet passer au travers d'un mur.
+        updateAabb()
         sleeping = true
     }
 

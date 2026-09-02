@@ -17,6 +17,7 @@ import android.view.View
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.trebuchet.LandScene
 import com.Atom2Universe.app.games.trebuchet.SkyBackdrop
+import com.Atom2Universe.app.games.trebuchet.SparkScene
 import com.Atom2Universe.app.games.trebuchet.SkyClock
 import com.Atom2Universe.app.games.trebuchet.SkyState
 import kotlin.math.PI
@@ -163,6 +164,9 @@ class GearMachineView @JvmOverloads constructor(
      * maintenant ses propres bornes, et elles suivent la pente.
      */
     private val land = LandScene(context)
+
+    /** Les particules : fumee, gravats, feu d'artifice. Voir [SparkScene]. */
+    private val sparks = SparkScene(context)
     private val sky get() = backdrop.sky
     private val skyClock get() = backdrop.clock
     private val ambientClock get() = backdrop.ambientClock
@@ -416,6 +420,20 @@ class GearMachineView @JvmOverloads constructor(
      * Lance ou interrompt une charge : les moteurs travaillent pendant la duree
      * reglee, et la machine monte en regime sous les yeux.
      */
+    /**
+     * Dresse un nouveau site : relief et batiments, tires d'une graine.
+     *
+     * Rien de la machine ne bouge — c'est le paysage qu'on change, pas l'atelier. Le
+     * cadrage recule pour montrer ce qui vient d'apparaitre, sinon le joueur ne saurait
+     * pas que quelque chose s'est passe a cinq cents metres de lui.
+     */
+    fun loadSite(seed: Long?) {
+        game.loadSite(seed)
+        cameraView = CameraView.FULL
+        manualCam = false
+        invalidate()
+    }
+
     fun toggleCharge(): Boolean {
         if (game.charging) {
             game.cancelCharge()
@@ -692,6 +710,12 @@ class GearMachineView @JvmOverloads constructor(
         pText.alpha = 255
         drawLayerSelector(canvas)
         drawStructureTool(canvas)
+        // Les explosions sont devant tout : une gerbe derriere le mur qu'elle demolit
+        // n'aurait aucun sens.
+        sparks.draw(
+            canvas, game.effects, false,
+            width.toFloat(), height.toFloat(), camX, camY, camScale
+        )
         drawLauncherPanel(canvas)
         drawTimeControl(canvas)
         drawChargeGauge(canvas)
@@ -766,6 +790,9 @@ class GearMachineView @JvmOverloads constructor(
     private fun drawWorkshopSky(canvas: Canvas) {
         val w = width.toFloat(); val h = height.toFloat()
         backdrop.draw(canvas, w, h, camX, camY, camScale)
+        // Le feu d'artifice monte au fond du ciel, et le sol lui coupe les jambes quand
+        // ses etoiles retombent : c'est ce qu'on voit dehors.
+        sparks.draw(canvas, game.effects, true, w, h, camX, camY, camScale)
         land.firingLine = game.bounds()[0]
         land.draw(
             canvas, w, h, camX, camY, camScale,
