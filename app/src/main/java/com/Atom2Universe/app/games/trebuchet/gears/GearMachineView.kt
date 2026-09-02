@@ -779,6 +779,13 @@ class GearMachineView @JvmOverloads constructor(
         // dépend, et il faut le savoir **avant** de le dessiner.
         cameraMoving = camX != prevCamX || camY != prevCamY || camScale != prevCamScale
         prevCamX = camX; prevCamY = camY; prevCamScale = camScale
+        // Ce que l'écran montre du ciel : le feu d'artifice s'y règle. Le cadrage pose
+        // l'altitude zéro en bas de l'image, à l'encoche près, donc la hauteur de ciel
+        // visible se lit d'un trait au bord supérieur. Elle se relit **à chaque image**
+        // et non au moment de la victoire : la caméra recule entre les deux, et des
+        // fusées réglées sur le cadrage d'avant éclateraient dans le bas de celui
+        // d'après. Voir [GearMachineGame.skyTop].
+        if (height > 0) game.skyTop = wy(0f)
         updateSimulation()
         drawWorkshopSky(canvas)
 

@@ -1732,17 +1732,32 @@ class TrebuchetGame {
     /**
      * Tire le feu d'artifice de la victoire, une fois par site.
      *
-     * Il part **entre la machine et les ruines**, et pas au-dessus des ruines : la
-     * caméra prend tout le champ à la fin d'un tir, et un bouquet tiré à quatre cents
-     * mètres serait un confetti dans un coin de l'écran. Devant, il occupe l'arrière-
-     * plan sur toute la largeur, ce qui est la place d'un feu d'artifice.
+     * Il part **de la machine jusqu'au bout des décombres**, et non plus seulement
+     * jusqu'au pied de la construction. La caméra prend tout le champ à la fin d'un
+     * tir : un bouquet qui s'arrête avant les ruines laisse noire la moitié droite de
+     * l'image, celle-là même où le joueur regarde ce qu'il vient d'abattre. On fête un
+     * site rasé, donc on éclaire le site entier.
+     *
+     * Le bout des décombres se lit sur les pierres et non sur l'empreinte d'origine :
+     * une construction qui s'effondre projette ses blocs plus loin qu'elle ne
+     * s'étendait, et c'est jusque-là que le terrain compte.
      */
     private fun celebrate() {
         if (celebrated || level == null || !targets.cleared) return
         celebrated = true
         val debut = TrebuchetRules.FIRING_LINE + 30f
-        val fin = (targets.left - 25f).coerceAtLeast(debut + 40f)
+        val fin = (rubbleRight() + 25f).coerceAtLeast(debut + 40f)
         effects.celebrate(debut, fin)
+    }
+
+    /**
+     * L'abscisse de la pierre la plus à droite, débris compris, ou le bord de
+     * l'empreinte s'il n'en reste aucune.
+     */
+    private fun rubbleRight(): Float {
+        var bout = targets.right
+        for (p in targets.pieces) if (p.body.x > bout) bout = p.body.x
+        return bout
     }
 
     // ── Simulation sans affichage ────────────────────────────────────────────

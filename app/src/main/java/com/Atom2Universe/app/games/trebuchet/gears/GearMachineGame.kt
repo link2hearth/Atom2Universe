@@ -177,6 +177,25 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     /** Le feu d'artifice ne part qu'une fois par site. */
     private var celebrated = false
 
+    /**
+     * Hauteur de ciel visible a l'ecran, en metres. La vue la pose a chaque image.
+     *
+     * **Personne ne la posait**, et le feu d'artifice de l'atelier tirait donc bas :
+     * les fusees visent une *part* de ciel — du tiers aux quatre cinquiemes de l'image
+     * — et cette part se calcule sur cette hauteur-la. Faute d'etre renseignee, elle
+     * restait a sa valeur par defaut de cent cinquante metres, si bien que les bouquets
+     * eclataient a quatre-vingts metres dans une image qui en montrait trois fois plus,
+     * tasses au ras du sol pendant que le ciel restait noir. Le trebuchet, lui, la pose
+     * depuis toujours : voir [TrebuchetGame.skyTop].
+     *
+     * C'est la seule chose que la simulation sait de l'affichage.
+     */
+    var skyTop = 150f
+        set(value) {
+            field = value
+            effects.skyTop = value
+        }
+
     // ── La traversée ─────────────────────────────────────────────────────────
     //
     // L'élan du boulet avant le choc de l'image en cours. Une fois le pas simulé il est
@@ -242,15 +261,23 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     /**
      * Tire le feu d'artifice de la victoire, une fois par site.
      *
-     * Il part **entre la machine et les ruines** et pas au-dessus d'elles : la camera
-     * prend tout le champ a la fin d'un tir, et un bouquet tire a cinq cents metres
-     * serait un confetti dans un coin de l'ecran.
+     * Il part **de la machine jusqu'au bout des decombres**, et non plus seulement
+     * jusqu'au pied de la construction — meme regle qu'au trebuchet, et pour la meme
+     * raison : la camera prend tout le champ a la fin d'un tir, et un bouquet qui
+     * s'arrete avant les ruines laisse noire la moitie de l'image ou le joueur regarde
+     * ce qu'il vient d'abattre.
+     *
+     * Le bout des decombres se lit sur les pierres et non sur l'empreinte d'origine :
+     * une construction qui s'effondre projette ses blocs plus loin qu'elle ne
+     * s'etendait.
      */
     private fun celebrate() {
         if (celebrated || level == null || !targets.cleared) return
         celebrated = true
         val debut = bounds()[1] + 30f
-        val fin = (targets.left - 25f).coerceAtLeast(debut + 40f)
+        var bout = targets.right
+        for (p in targets.pieces) if (p.body.x > bout) bout = p.body.x
+        val fin = (bout + 25f).coerceAtLeast(debut + 40f)
         effects.celebrate(debut, fin)
     }
 
