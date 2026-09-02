@@ -55,6 +55,10 @@
     <string name="trebuchet_btn_machines">Machines ▾</string>
 
     <string name="trebuchet_btn_parts">Pièces ▾</string>
+
+    <!-- Ouvre la bulle d'avance rapide : une duree, un bouton, rien d'autre. -->
+    <string name="trebuchet_btn_time">Temps ▾</string>
+    <string name="trebuchet_gear_time_header">Avance rapide</string>
     <string name="trebuchet_part_beam">Poutre</string>
     <string name="trebuchet_part_post">Pied</string>
     <string name="trebuchet_part_weight">Contrepoids</string>

@@ -57,6 +57,10 @@
 
     <!-- Picking a part from a list, for when the machine is too far away to touch -->
     <string name="trebuchet_btn_parts">Parts ▾</string>
+
+    <!-- Ouvre la bulle d'avance rapide : une duree, un bouton, rien d'autre. -->
+    <string name="trebuchet_btn_time">Time ▾</string>
+    <string name="trebuchet_gear_time_header">Fast forward</string>
     <string name="trebuchet_part_beam">Beam</string>
     <string name="trebuchet_part_post">Post</string>
     <string name="trebuchet_part_weight">Counterweight</string>

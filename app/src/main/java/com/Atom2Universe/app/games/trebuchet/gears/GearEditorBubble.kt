@@ -95,6 +95,23 @@ class GearEditorBubble @JvmOverloads constructor(
 
     private enum class Hit { NONE, HEADER, WHEEL, ARROW, ACTION }
 
+    /**
+     * Ce que la bulle montre.
+     *
+     * [WHEEL] est le panneau historique : il suit la piece tenue et disparait avec elle.
+     * [TIME] est **independant de la selection** — c'est l'avance rapide, qui ne
+     * concerne pas une roue mais toute la machine. Elle vivait dans la bulle du moteur,
+     * ou elle n'avait rien a faire : on chargeait « le moulin » alors qu'on charge le
+     * mecanisme entier, et il fallait selectionner une piece precise pour atteindre une
+     * commande qui ne lui appartenait pas.
+     */
+    private enum class Panel { WHEEL, TIME }
+
+    private var panel = Panel.WHEEL
+
+    /** La piece tenue au dernier rafraichissement : sert a voir la selection changer. */
+    private var lastWheelId: Int? = null
+
     /** Les boutons du bas. Ils dependent entierement de la piece tenue. */
     private enum class Action { MOTOR, CHARGE, COUPLE, DUPLICATE, DELETE }
 
@@ -274,7 +291,6 @@ class GearEditorBubble @JvmOverloads constructor(
             // ne servait qu'a defaire ce qu'on venait de poser n'apprenait rien.
             out += Dial.SPAN
             out += Dial.UNITS
-            out += Dial.DURATION
         }
         out += Dial.SPEED
         return out
@@ -297,7 +313,6 @@ class GearEditorBubble @JvmOverloads constructor(
         val out = ArrayList<Action>(3)
         if (wheel.motor != null) {
             out += Action.MOTOR
-            out += Action.CHARGE
             out += Action.COUPLE
             return out
         }
@@ -310,6 +325,19 @@ class GearEditorBubble @JvmOverloads constructor(
     /** Appelé avec chaque rafraîchissement de l'activité : la sélection pilote la bulle. */
     fun showForSelection() {
         val wheel = gearView?.selectedWheel()
+        if (panel == Panel.TIME) {
+            // Le panneau du temps ne repond pas a la selection — il s'ouvre et se ferme
+            // au bouton, pas au gre des pieces qu'on touche. Une seule exception :
+            // **prendre une nouvelle piece** le referme, parce qu'il n'y a qu'une bulle
+            // et qu'un joueur qui vient de designer un engrenage attend de le voir.
+            if (wheel == null || wheel.id == lastWheelId) {
+                lastWheelId = wheel?.id
+                invalidate()
+                return
+            }
+            panel = Panel.WHEEL
+        }
+        lastWheelId = wheel?.id
         val wanted = dialsFor(wheel)
         val wantedDeeds = actionsFor(wheel)
         if (wanted != dials || wantedDeeds != deeds) {
@@ -322,6 +350,37 @@ class GearEditorBubble @JvmOverloads constructor(
         visibility = if (show) VISIBLE else GONE
         if (!show) release()
         invalidate()
+    }
+
+    /** Vrai quand la bulle montre l'avance rapide. */
+    val showingTime: Boolean get() = panel == Panel.TIME && visibility == VISIBLE
+
+    /**
+     * Ouvre ou referme le panneau d'avance rapide.
+     *
+     * Une duree, un bouton, rien d'autre : c'est tout ce que la commande demande, et
+     * c'est pour ca qu'elle merite sa propre bulle plutot qu'une ligne perdue au milieu
+     * des reglages d'un moulin.
+     */
+    fun toggleTime() {
+        if (panel == Panel.TIME) {
+            panel = Panel.WHEEL
+            release()
+            showForSelection()
+            return
+        }
+        panel = Panel.TIME
+        dials = listOf(Dial.DURATION)
+        deeds = listOf(Action.CHARGE)
+        measureLabels()
+        requestLayout()
+        visibility = VISIBLE
+        invalidate()
+    }
+
+    /** Referme le panneau du temps sans rien decider d'autre. */
+    fun closeTime() {
+        if (panel == Panel.TIME) toggleTime()
     }
 
     override fun onDetachedFromWindow() {
@@ -389,7 +448,9 @@ class GearEditorBubble @JvmOverloads constructor(
     // ── Rendu ─────────────────────────────────────────────────────────────────
 
     override fun onDraw(canvas: Canvas) {
-        val wheel = gearView?.selectedWheel() ?: return
+        val wheel = gearView?.selectedWheel()
+        // Le panneau du temps se passe de roue : il parle de la machine entiere.
+        if (panel == Panel.WHEEL && wheel == null) return
         if (dials.isEmpty()) return
         rect.set(0f, 0f, width.toFloat(), height.toFloat())
         canvas.drawRoundRect(rect, 12f * dp, 12f * dp, pPanel)
@@ -439,7 +500,7 @@ class GearEditorBubble @JvmOverloads constructor(
         drawActions(canvas)
     }
 
-    private fun drawHeader(canvas: Canvas, wheel: GearWheelConfig) {
+    private fun drawHeader(canvas: Canvas, wheel: GearWheelConfig?) {
         val h = HEADER_DP * dp
         canvas.save()
         clipPath.reset()
@@ -448,11 +509,15 @@ class GearEditorBubble @JvmOverloads constructor(
         canvas.clipPath(clipPath)
         canvas.drawRect(0f, 0f, width.toFloat(), h, pHeader)
         canvas.restore()
-        val diameterCm = (wheel.outerRadius * 200f).roundToInt()
-        val circumferenceCm = (2f * PI.toFloat() * wheel.outerRadius * 100f).roundToInt()
+        val titre = if (wheel == null || panel == Panel.TIME) {
+            context.getString(R.string.trebuchet_gear_time_header)
+        } else {
+            val diameterCm = (wheel.outerRadius * 200f).roundToInt()
+            val circumferenceCm = (2f * PI.toFloat() * wheel.outerRadius * 100f).roundToInt()
+            context.getString(R.string.trebuchet_gear_size_header, diameterCm, circumferenceCm)
+        }
         canvas.drawText(
-            context.getString(R.string.trebuchet_gear_size_header, diameterCm, circumferenceCm),
-            width / 2f, h / 2f - (pTitle.ascent() + pTitle.descent()) / 2f, pTitle
+            titre, width / 2f, h / 2f - (pTitle.ascent() + pTitle.descent()) / 2f, pTitle
         )
         canvas.drawCircle(12f * dp, h / 2f, 2f * dp, pGrip)
         canvas.drawCircle(width - 12f * dp, h / 2f, 2f * dp, pGrip)
@@ -860,6 +925,9 @@ class GearEditorBubble @JvmOverloads constructor(
 
     private fun valueOf(d: Dial): Int {
         val view = gearView ?: return 0
+        // La duree appartient a la machine, pas a une piece : elle se lit meme quand
+        // rien n'est tenu, ce qui est precisement le cas dans le panneau du temps.
+        if (d == Dial.DURATION) return view.game.config.chargeSeconds.roundToInt()
         val wheel = view.selectedWheel() ?: return 0
         return when (d) {
             Dial.TEETH -> wheel.teeth

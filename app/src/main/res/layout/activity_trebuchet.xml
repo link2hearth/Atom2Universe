@@ -195,6 +195,28 @@
                 android:clickable="true"
                 android:focusable="true" />
 
+            <!-- Avance rapide : visible en mode engrenages seulement, voir
+                 TrebuchetActivity.applyMode. Le trébuchet n'a rien à charger. -->
+            <TextView
+                android:id="@+id/trebuchet_btn_time"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/trebuchet_btn_time"
+                android:textColor="#C7D8C0"
+                android:textSize="13sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeMaxTextSize="13sp"
+                android:background="@drawable/bg_trebuchet_button"
+                android:clickable="true"
+                android:focusable="true" />
+
             <TextView
                 android:id="@+id/trebuchet_btn_fire"
                 android:layout_width="0dp"

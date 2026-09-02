@@ -126,6 +126,14 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private lateinit var fireButton: TextView
     private lateinit var wheels: TrebuchetWheelBubble
     private lateinit var gearEditor: GearEditorBubble
+
+    /**
+     * Le bouton qui ouvre l'avance rapide.
+     *
+     * Il n'existe qu'en mode engrenages : un trebuchet n'a rien a charger, sa detente
+     * part quand on la lache.
+     */
+    private lateinit var timeButton: TextView
     private lateinit var infoTitle: TextView
     private lateinit var infoTip: TextView
     private lateinit var prefs: SharedPreferences
@@ -205,6 +213,11 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         }
         partsButton = findViewById(R.id.trebuchet_btn_parts)
         partsButton.setOnClickListener { showPartsMenu() }
+        timeButton = findViewById(R.id.trebuchet_btn_time)
+        timeButton.setOnClickListener {
+            gearEditor.toggleTime()
+            updateUi()
+        }
         fireButton.setOnClickListener { onFireButton() }
         findViewById<ImageButton>(R.id.trebuchet_btn_settings)
             .setOnClickListener { showSettingsMenu(it) }
@@ -742,7 +755,9 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             updateGearUi()
             return
         }
+        gearEditor.closeTime()
         gearEditor.visibility = View.GONE
+        timeButton.visibility = View.GONE
         val game = gameView.game
         val cfg = game.config
 
@@ -837,6 +852,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private fun updateGearUi() {
         val selected = gearView.selectedWheel()
         wheels.visibility = View.GONE
+        timeButton.visibility = View.VISIBLE
         gearEditor.showForSelection()
         specsText.text = getString(
             R.string.trebuchet_gear_specs,
