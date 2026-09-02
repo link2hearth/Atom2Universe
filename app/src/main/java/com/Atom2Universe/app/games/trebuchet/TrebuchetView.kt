@@ -478,12 +478,28 @@ class TrebuchetView @JvmOverloads constructor(
      * Dix pinceaux tout faits auraient été plus simples à lire, et plus bêtes : la
      * couleur et l'épaisseur d'un fantôme se déduisent de son rang, et un `Paint` se
      * modifie pour trois fois rien. Ce qui coûte, dans un tracé, c'est le tracé.
+     *
+     * **Trait plein, et non plus pointillé.** Le pointillé n'est pas un motif : c'est
+     * un calcul refait à chaque image, sur le fil de dessin, avant même que Skia ne
+     * commence. Il faut mesurer la longueur d'arc de toute la trajectoire segment par
+     * segment, puis la recouper en une centaine de tirets, chacun avec ses deux
+     * embouts. Sur dix fantômes redessinés pendant un vol, ce travail-là se refait dix
+     * fois par image — et il défaisait une partie de ce que la simplification en
+     * couloir venait de gagner, puisqu'elle réduit la trajectoire à quelques dizaines
+     * de points que le pointillé redécoupait aussitôt en centaines.
+     *
+     * Ce que le pointillé ne changeait pas, en revanche, c'est le masque : il occupe la
+     * même boîte, donc le même plein écran à effacer. Le gain est donc réel mais
+     * modeste, et il porte sur le fil de dessin plutôt que sur la rastérisation.
+     *
+     * L'atelier traçait déjà plein. Le fantôme reste distinct de la trace vive par ce
+     * qui le distinguait déjà : elle est jaune et franche, ils sont blancs puis gris,
+     * et de plus en plus fins avec l'âge.
      */
     private val pGhost = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 2f * dp
         color = Color.argb(90, 150, 190, 255)
-        pathEffect = DashPathEffect(floatArrayOf(7f * dp, 6f * dp), 0f)
     }
     /** Les stries du vent, et les tourbillons qu'il fait au-delà de la moitié. */
     private val windBox = RectF()
