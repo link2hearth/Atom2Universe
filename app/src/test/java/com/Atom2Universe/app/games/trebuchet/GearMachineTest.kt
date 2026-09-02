@@ -21,23 +21,34 @@ import kotlin.math.hypot
 class GearMachineTest {
 
     @Test
-    fun `la machine par defaut forme une cascade de trois engrenages`() {
+    fun `la machine par defaut a ses trois postes en ligne`() {
         val game = GearMachineGame()
         assertEquals(3, game.gears.size)
         assertEquals(2, game.meshes.size)
+        val motor = game.config.motorWheels().single()
+        val launcher = game.config.launcher()!!
+        val idler = game.config.wheels.first { it.id != motor.id && it.id != launcher.id }
 
-        game.spinGear(1, 8f)
+        // Le moteur a gauche, le renvoi au milieu, le pas de tir a droite, tous sur la
+        // meme ligne d'axes : celle qu'impose le volant pose sur son socle.
+        assertTrue("le moteur est a gauche", motor.x < idler.x)
+        assertTrue("le lanceur est a droite", idler.x < launcher.x)
+        assertEquals(launcher.y, idler.y, 1e-4f)
+        assertEquals(launcher.y, motor.y, 1e-4f)
+
+        game.spinGear(motor.id, 8f)
         repeat(120) { game.step(1f / 120f) }
+        val driver = game.gears.first { it.wheel.id == motor.id }.body.omega
+        val middle = game.gears.first { it.wheel.id == idler.id }.body.omega
+        val fired = game.gears.first { it.wheel.id == launcher.id }.body.omega
 
-        val large = game.gears.first { it.wheel.id == 1 }.body.omega
-        val medium = game.gears.first { it.wheel.id == 2 }.body.omega
-        val small = game.gears.first { it.wheel.id == 3 }.body.omega
-        assertTrue("la roue moyenne ne tourne pas en sens inverse", medium * large < 0f)
-        assertTrue("la petite ne revient pas dans le sens de la grande", small * large > 0f)
-        assertTrue(
-            "la cascade ne multiplie pas la vitesse : grande=$large petite=$small",
-            abs(small) > abs(large) * 3f
-        )
+        assertTrue("le renvoi ne tourne pas en sens inverse", middle * driver < 0f)
+        assertTrue("le volant revient dans le sens du moteur", fired * driver > 0f)
+        // **Un renvoi ne multiplie rien** : dans un train simple, seules la premiere et
+        // la derniere roue comptent. Les deux ont la meme denture, donc le volant
+        // tourne exactement a la vitesse du rouet moteur -- et c'est ce que le joueur
+        // doit decouvrir pour aller plus loin.
+        assertEquals(abs(driver), abs(fired), abs(driver) * 0.05f)
     }
 
     @Test
@@ -280,7 +291,7 @@ class GearMachineTest {
     }
 
     @Test
-    fun `un volant acier stocke plus quun engrenage de meme diametre`() {
+    fun `un volant stocke plus quun engrenage de meme diametre`() {
         val gear = GearMachineGame(GearMachineConfig(mutableListOf(
             GearWheelConfig(1, 0f, 2f, 48, kind = GearWheelKind.GEAR)
         )))
@@ -291,7 +302,9 @@ class GearMachineTest {
         flywheel.spinGear(1, 10f)
 
         assertTrue(flywheel.rotationalEnergy() > gear.rotationalEnergy())
-        assertEquals(GearWheelMaterial.STEEL, flywheel.config.wheels.single().material)
+        // Le bois est la matiere par defaut : c'est celle d'une machine qu'on batit
+        // avant d'avoir de quoi la forger, et elle rend les moteurs efficaces.
+        assertEquals(GearWheelMaterial.WOOD, flywheel.config.wheels.single().material)
     }
 
     @Test
@@ -389,7 +402,14 @@ class GearMachineTest {
      */
     private fun flywheelGame(teeth: Int = 48): GearMachineGame = GearMachineGame(
         GearMachineConfig(mutableListOf(
-            GearWheelConfig(1, 0f, 4f, teeth, kind = GearWheelKind.FLYWHEEL)
+            // En acier, et volontairement : ces essais mesurent la loi du lancer, et
+            // un volant de bois -- douze fois plus leger -- n'a pas toujours l'energie
+            // de payer la vitesse que sa jante offre. Le plafond serait alors celui de
+            // la matiere, pas celui qu'on veut lire.
+            GearWheelConfig(
+                1, 0f, 4f, teeth, kind = GearWheelKind.FLYWHEEL,
+                material = GearWheelMaterial.STEEL
+            )
         ))
     )
 
@@ -529,16 +549,6 @@ class GearMachineTest {
     }
 
     @Test
-    fun `le boulet se choisit par crans et reste dans la liste`() {
-        assertEquals(12f, GearMachineRules.nextProjectileMass(4f, 1), 1e-4f)
-        assertEquals(1f, GearMachineRules.nextProjectileMass(4f, -1), 1e-4f)
-        // Aux deux bouts, le cran suivant est le même : la liste ne boucle pas.
-        assertEquals(1f, GearMachineRules.nextProjectileMass(1f, -1), 1e-4f)
-        val heaviest = GearMachineRules.PROJECTILE_MASSES.last()
-        assertEquals(heaviest, GearMachineRules.nextProjectileMass(heaviest, 1), 1e-4f)
-    }
-
-    @Test
     fun `a regime egal tous les boulets sortent a la vitesse de la jante`() {
         fun fire(mass: Float): GearMachineGame {
             val game = flywheelGame()
@@ -645,7 +655,9 @@ class GearMachineTest {
         assertFalse("une jante à l'arrêt ne lance rien", still.launchProjectile())
 
         // Un engrenage ne porte pas de bras : il ne peut pas être désigné lanceur.
-        val geared = GearMachineGame()
+        val geared = GearMachineGame(
+            GearMachineConfig(mutableListOf(GearWheelConfig(1, 0f, 4f, 24)))
+        )
         assertFalse(geared.attachLauncher(1))
         assertEquals(null, geared.config.launcherWheelId)
         geared.spinGear(1, 8f)
@@ -672,14 +684,27 @@ class GearMachineTest {
     }
 
     @Test
-    fun `poser un volant en fait le lanceur sans rien monter`() {
+    fun `la machine de depart a son moteur et son pas de tir`() {
         val game = GearMachineGame()
-        assertEquals(null, game.config.launcherWheelId)
+        val launcher = game.config.launcher()
+        assertTrue("il faut un lanceur", launcher != null)
+        assertEquals(GearWheelKind.FLYWHEEL, launcher!!.kind)
+        // Plante sur son pas de tir, et pose sur son socle : sa hauteur suit sa taille.
+        assertEquals(GearMachineRules.LAUNCHER_X, launcher.x, 1e-4f)
+        assertEquals(GearMachineRules.launcherY(launcher), launcher.y, 1e-4f)
+        assertEquals(1, game.config.wheels.count { it.kind == GearWheelKind.FLYWHEEL })
+        assertEquals(1, game.config.motorWheels().size)
+    }
 
-        val id = game.addFlywheel(20f, 4f, 0)!!
-
-        assertEquals(id, game.config.launcherWheelId)
-        assertEquals(GearWheelKind.FLYWHEEL, game.config.wheels.first { it.id == id }.kind)
+    @Test
+    fun `une machine relue sans moteur ni volant en recoit`() {
+        val game = GearMachineGame()
+        game.loadConfig(
+            GearMachineConfig(mutableListOf(GearWheelConfig(1, 0f, 4f, 24)))
+        )
+        assertEquals(1, game.config.wheels.count { it.kind == GearWheelKind.FLYWHEEL })
+        assertEquals(1, game.config.motorWheels().size)
+        assertTrue("la roue d'origine reste", game.config.wheels.any { it.id == 1 })
     }
 
     @Test

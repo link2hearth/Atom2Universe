@@ -19,10 +19,15 @@ import kotlin.math.roundToInt
 /**
  * Éditeur flottant d'une roue sélectionnée.
  *
+ * Il se manœuvre **exactement comme la bulle du trébuchet** : chaque réglage est une
+ * ligne, chaque chiffre une roulette qu'on touche, glisse ou pousse aux flèches, et
+ * la colonne désignée décide de ce que valent les flèches. Un appui long change de
+ * colonne, et ce choix survit au passage d'une pièce à l'autre. C'était le seul
+ * endroit du jeu où les nombres se réglaient autrement, et il n'y avait aucune raison
+ * à ça : le joueur a déjà appris le geste sur la machine.
+ *
  * La denture est la dimension maîtresse : le module reste constant, donc changer le
  * nombre de dents recalcule automatiquement rayons, masse, inertie et engrènements.
- * La couche et la matière vivent au même endroit afin que toute l'identité de la pièce
- * soit modifiable sans retourner dans le menu Pièces.
  */
 class GearEditorBubble @JvmOverloads constructor(
     context: Context,
@@ -32,155 +37,404 @@ class GearEditorBubble @JvmOverloads constructor(
     var gearView: GearMachineView? = null
     var onEdited: (() -> Unit)? = null
 
-    private enum class Row { TEETH, LAYER, MATERIAL, LAUNCH, BALL }
-    private enum class Hit { NONE, HEADER, MINUS, PLUS, VALUE, COUPLE, DUPLICATE, DELETE }
+    /**
+     * Un réglage vu par les roulettes.
+     *
+     * [intDigits] fixe le nombre de colonnes ; [step] le **cran naturel**, celui sur
+     * lequel les flèches démarrent — on désigne la colonne dont le poids lui ressemble
+     * le plus. [signed] ajoute une case de signe devant les chiffres : c'est ce qui
+     * permet de régler un étage négatif ou le sens d'un attelage sans une ligne de
+     * plus. [choice] fait défiler des mots au lieu de chiffres, du même geste.
+     */
+    private enum class Dial(
+        val label: Int,
+        val unit: Int,
+        val intDigits: Int,
+        val step: Int,
+        val signed: Boolean = false,
+        val choice: Boolean = false
+    ) {
+        TEETH(R.string.trebuchet_gear_edit_teeth, R.string.trebuchet_gear_unit_teeth, 3, 1),
+        LAYER(R.string.trebuchet_gear_edit_layer, R.string.trebuchet_gear_unit_layer, 2, 1, signed = true),
+        MATERIAL(R.string.trebuchet_gear_edit_material, R.string.trebuchet_gear_unit_none, 0, 1, choice = true),
+
+        /**
+         * Le gabarit de la machine motrice, en mètres de rayon.
+         *
+         * C'est **le** levier d'un moteur, et il ne se lit pas sur l'engrenage : les
+         * ailes d'un moulin balaient une surface qui grandit comme le carré de leur
+         * envergure, une bête tire au bout d'un bras dont la longueur fait le couple.
+         */
+        SPAN(R.string.trebuchet_gear_edit_span, R.string.trebuchet_gear_unit_m, 2, 1),
+
+        /**
+         * L'attelage, et son signe pour le sens. Une seule colonne : on n'attelle pas
+         * douze bêtes, et le signe dit de quel côté elles tirent.
+         */
+        UNITS(R.string.trebuchet_gear_edit_units, R.string.trebuchet_gear_unit_none, 1, 1, signed = true),
+
+        /**
+         * La durée d'une charge, en secondes. Quatre colonnes parce qu'on va jusqu'à
+         * vingt minutes, et un cran de trente : personne ne cherche 301 secondes.
+         */
+        DURATION(R.string.trebuchet_gear_edit_duration, R.string.trebuchet_gear_unit_s, 4, 30),
+        LAUNCH(R.string.trebuchet_gear_edit_launch, R.string.trebuchet_gear_unit_deg, 2, 1),
+
+        /** Le boulet, en kilos. Quatre colonnes : le bloc de siège pèse une tonne. */
+        BALL(R.string.trebuchet_gear_edit_ball, R.string.trebuchet_gear_unit_kg, 4, 10),
+
+        /**
+         * Le régime, qui ne se règle pas : il se subit. Sa ligne emprunte la place des
+         * deux flèches pour y poser le frein et le stop — ce sont les seules commandes
+         * qu'une vitesse accepte.
+         */
+        SPEED(R.string.trebuchet_gear_edit_speed, R.string.trebuchet_gear_unit_rpm, 0, 1);
+
+        val digits: Int get() = intDigits + if (signed) 1 else 0
+    }
+
+    private enum class Hit { NONE, HEADER, WHEEL, ARROW, ACTION }
+
+    /** Les boutons du bas. Ils dependent entierement de la piece tenue. */
+    private enum class Action { MOTOR, CHARGE, COUPLE, DUPLICATE, DELETE }
 
     private val dp = resources.displayMetrics.density
-    private val panel = RectF()
-    private val path = Path()
+
+    private companion object {
+        const val HEADER_DP = 26f
+        const val PAD_DP = 12f
+        const val ROW_DP = 54f
+
+        /**
+         * En dessous, les roulettes deviendraient trop plates pour être visées au
+         * doigt. Une bulle de moteur ouvre six lignes plus le régime et les boutons ;
+         * en paysage sur un téléphone il faut bien qu'elles se resserrent, mais une
+         * ligne dessinée hors du panneau serait pire — invisible et intouchable.
+         */
+        const val MIN_ROW_DP = 38f
+        const val CELL_W_DP = 28f
+        const val GAP_DP = 3f
+        const val ARROW_W_DP = 36f
+        const val ACTION_DP = 46f
+        const val CHOICE_PAD_DP = 8f
+        const val STEP_DP = 24f
+        const val TAP_SLOP_DP = 8f
+        const val LONG_PRESS_MS = 400L
+        const val REPEAT_DELAY_MS = 400L
+        const val REPEAT_EVERY_MS = 80L
+
+        /** Une seconde par tour vaut soixante tours par minute. */
+        const val RAD_PER_S_TO_RPM = 60f / (2f * PI.toFloat())
+    }
+
+    // ── Peintures ─────────────────────────────────────────────────────────────
+
     private val pPanel = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(242, 16, 25, 50) }
-    private val pEdge = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val pPanelEdge = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.argb(150, 255, 209, 102)
         style = Paint.Style.STROKE
         strokeWidth = 1.5f * dp
     }
-    private val pHeader = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(80, 143, 166, 200) }
-    private val pCell = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(65, 143, 166, 200) }
-    private val pCellOn = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(120, 255, 209, 102) }
-    private val pDanger = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(65, 230, 112, 82) }
-    private val pAccent = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(255, 209, 102) }
-    private val pTitle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val pHeader = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(70, 143, 166, 200) }
+    private val pGrip = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(150, 255, 209, 102) }
+    private val pCell = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(60, 143, 166, 200) }
+    private val pCellOn = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(80, 255, 209, 102) }
+    private val pPicked = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(255, 209, 102) }
+    private val pArrow = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(255, 209, 102) }
+    private val pArrowBed = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(45, 143, 166, 200) }
+    private val pArrowBedOn = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(110, 255, 209, 102) }
+    private val pDanger = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(70, 230, 112, 82) }
+    private val pDigit = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(255, 209, 102)
         textAlign = Paint.Align.CENTER
-        textSize = 12f * dp
+        typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+    }
+    private val pDigitDim = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(70, 255, 209, 102)
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+    }
+    private val pChoice = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 209, 102)
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.DEFAULT_BOLD
+    }
+    private val pChoiceDim = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(70, 255, 209, 102)
+        textAlign = Paint.Align.CENTER
         typeface = Typeface.DEFAULT_BOLD
     }
     private val pLabel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(143, 166, 200)
-        textSize = 12f * dp
         typeface = Typeface.DEFAULT_BOLD
     }
-    private val pValue = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val pUnit = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(143, 166, 200) }
+    private val pTitle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(255, 209, 102)
         textAlign = Paint.Align.CENTER
-        textSize = 20f * dp
-        typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
-    }
-    private val pValueDim = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.argb(65, 255, 209, 102)
-        textAlign = Paint.Align.CENTER
-        textSize = 13f * dp
-        typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+        typeface = Typeface.DEFAULT_BOLD
     }
     private val pButton = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(205, 216, 224)
         textAlign = Paint.Align.CENTER
-        textSize = 13f * dp
         typeface = Typeface.DEFAULT_BOLD
     }
 
-    private companion object {
-        const val WIDTH_DP = 306f
-        const val HEADER_DP = 36f
-        const val ROW_DP = 54f
+    private val rect = RectF()
+    private val arrowPath = Path()
+    private val clipPath = Path()
 
-        /** En dessous, les boutons deviendraient trop plats pour etre vises au doigt. */
-        const val MIN_ROW_DP = 42f
-        const val ACTION_DP = 52f
-        const val PAD_DP = 10f
-        const val LABEL_DP = 70f
-        const val STEP_DP = 22f
-        const val TAP_SLOP_DP = 8f
-        const val REPEAT_DELAY_MS = 420L
-        const val REPEAT_EVERY_MS = 90L
+    init {
+        pDigit.textSize = 22f * dp
+        pDigitDim.textSize = 22f * dp
+        pChoice.textSize = 15f * dp
+        pChoiceDim.textSize = 15f * dp
+        pLabel.textSize = 13f * dp
+        pUnit.textSize = 12f * dp
+        pTitle.textSize = 12f * dp
+        pButton.textSize = 12f * dp
     }
 
+    // ── Contenu ───────────────────────────────────────────────────────────────
+
+    private var dials = emptyList<Dial>()
+    private var deeds = emptyList<Action>()
+    private var labelWidth = 0f
+    private var unitWidth = 0f
+    private var choiceWidth = 0f
+    private var cellsSpan = 0f
+    private var rowDp = ROW_DP
+
+    // ── Saisie ────────────────────────────────────────────────────────────────
+
     private var hit = Hit.NONE
-    private var row = Row.TEETH
-    private var direction = 0
-    private var lastRawX = 0f
-    private var lastRawY = 0f
+    private var turnRow = -1
+    private var turnCol = -1
+    private var arrowDir = 0
+    private var pressedAction: Action? = null
+
+    /** Vrai quand le doigt tient le frein : il se relâche au lever, jamais avant. */
+    private var braking = false
+
+    /**
+     * La colonne désignée de chaque réglage, et non de chaque ligne à l'écran : elle
+     * survit au fait de lâcher une roue pour en prendre une autre et d'y revenir.
+     */
+    private val pickedCol = IntArray(Dial.entries.size) { -1 }
+
+    private var consumed = false
+    private var turnOffset = 0f
     private var travel = 0f
-    private var wheelOffset = 0f
+    private var lastX = 0f
+    private var lastY = 0f
+
     private val restX = FloatArray(2) { Float.NaN }
     private val restY = FloatArray(2) { Float.NaN }
     private val slot: Int
         get() = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 1 else 0
 
-    /**
-     * Les lignes offertes pour la piece tenue.
-     *
-     * Un volant porte toujours son bras de lancement : c'est ce qui en fait un canon
-     * plutot qu'une masse qui tourne, et son elevation se regle donc **ici**, sur la
-     * piece elle-meme, sans passer par un menu.
-     */
-    private fun rows(): List<Row> =
-        if (gearView?.selectedWheel()?.kind == GearWheelKind.FLYWHEEL) Row.entries
-        else Row.entries.filter { it != Row.LAUNCH && it != Row.BALL }
-
-    private var laidOutRows = 0
-
-    /**
-     * La hauteur d'une ligne, en dp.
-     *
-     * Elle se resserre quand la place manque : un volant ouvre cinq lignes, et en
-     * paysage sur un telephone la bulle depasserait la scene -- la derniere ligne
-     * serait alors dessinee hors du panneau, donc invisible et intouchable.
-     */
-    private var rowDp = ROW_DP
+    private val longPress = Runnable {
+        if (hit == Hit.WHEEL && turnRow in dials.indices && !dials[turnRow].choice) {
+            pickedCol[dials[turnRow].ordinal] = turnCol
+            consumed = true
+            invalidate()
+        }
+    }
 
     private val repeater = object : Runnable {
         override fun run() {
-            if (hit != Hit.MINUS && hit != Hit.PLUS) return
-            change(direction)
+            if (hit != Hit.ARROW) return
+            nudge(arrowDir)
             postDelayed(this, REPEAT_EVERY_MS)
         }
     }
 
+    // ── Ce que la pièce tenue propose ─────────────────────────────────────────
+
+    /**
+     * Les lignes offertes pour la pièce tenue.
+     *
+     * Un volant porte toujours son bras de lancement : son élévation et son boulet se
+     * règlent donc **ici**, sur la pièce elle-même. Un engrenage, lui, peut recevoir un
+     * moteur — jamais un volant, dont le métier est de garder l'élan, pas de le
+     * produire — et son gabarit, son attelage et la durée n'existent qu'avec lui.
+     */
+    private fun dialsFor(wheel: GearWheelConfig?): List<Dial> {
+        if (wheel == null) return emptyList()
+        val out = ArrayList<Dial>(7)
+        out += Dial.TEETH
+        out += Dial.LAYER
+        out += Dial.MATERIAL
+        if (wheel.kind == GearWheelKind.FLYWHEEL) {
+            out += Dial.LAUNCH
+            out += Dial.BALL
+        } else if (wheel.motor != null) {
+            // Le genre du moteur ne se regle plus ici : il se choisit en posant la
+            // piece, comme on choisit un engrenage plutot qu'un volant. Une ligne qui
+            // ne servait qu'a defaire ce qu'on venait de poser n'apprenait rien.
+            out += Dial.SPAN
+            out += Dial.UNITS
+            out += Dial.DURATION
+        }
+        out += Dial.SPEED
+        return out
+    }
+
+    /**
+     * Les boutons du bas, selon la piece tenue.
+     *
+     * Le lanceur n'en a **aucun** : il ne se supprime pas, ne se duplique pas, et il
+     * n'y a rien a lui accoupler qu'on ne puisse amorcer depuis l'autre roue. Sa bulle
+     * ne sert qu'a le regler, ce qui est deja tout ce qu'on lui demande.
+     *
+     * La roue motrice, elle, gagne le bouton qui fait defiler les trois machines : il
+     * n'y a qu'un moteur dans l'atelier, donc on ne l'ajoute pas, on le remplace.
+     */
+    private fun actionsFor(wheel: GearWheelConfig?): List<Action> {
+        if (wheel == null) return emptyList()
+        val view = gearView ?: return emptyList()
+        if (view.game.config.isPinned(wheel.id)) return emptyList()
+        val out = ArrayList<Action>(3)
+        if (wheel.motor != null) {
+            out += Action.MOTOR
+            out += Action.CHARGE
+            out += Action.COUPLE
+            return out
+        }
+        out += Action.COUPLE
+        out += Action.DUPLICATE
+        out += Action.DELETE
+        return out
+    }
+
     /** Appelé avec chaque rafraîchissement de l'activité : la sélection pilote la bulle. */
     fun showForSelection() {
-        val show = gearView?.selectedWheel() != null
+        val wheel = gearView?.selectedWheel()
+        val wanted = dialsFor(wheel)
+        val wantedDeeds = actionsFor(wheel)
+        if (wanted != dials || wantedDeeds != deeds) {
+            dials = wanted
+            deeds = wantedDeeds
+            measureLabels()
+            requestLayout()
+        }
+        val show = wheel != null
         visibility = if (show) VISIBLE else GONE
         if (!show) release()
-        // Passer d'un engrenage a un volant ajoute une ligne : la bulle doit se
-        // remesurer, sinon la derniere ligne serait dessinee hors du panneau.
-        if (show && rows().size != laidOutRows) requestLayout()
         invalidate()
     }
 
+    override fun onDetachedFromWindow() {
+        release()
+        super.onDetachedFromWindow()
+    }
+
+    // ── La grille ─────────────────────────────────────────────────────────────
+    //
+    // Les colonnes se calculent ici, une fois pour toutes, et le dessin comme la saisie
+    // les relisent : deux calculs séparés finissent toujours par diverger d'un dp, et
+    // une flèche qui ne se touche pas là où elle se voit est indéfendable.
+
+    private fun measureLabels() {
+        labelWidth = 0f
+        unitWidth = 0f
+        choiceWidth = pChoice.measureText(context.getString(R.string.trebuchet_gear_brake)) * 1.4f
+        for (d in dials) {
+            labelWidth = maxOf(labelWidth, pLabel.measureText(context.getString(d.label)))
+            if (d.unit != R.string.trebuchet_gear_unit_none) {
+                unitWidth = maxOf(unitWidth, pUnit.measureText(context.getString(d.unit)))
+            }
+            if (!d.choice) continue
+            // La cellule des mots tient le plus long d'entre eux, sinon la bulle
+            // changerait de largeur à chaque cran tourné.
+            for (word in wordsOf(d)) {
+                choiceWidth = maxOf(choiceWidth, pChoice.measureText(word))
+            }
+        }
+        choiceWidth += 2f * CHOICE_PAD_DP * dp
+        cellsSpan = 0f
+        for (d in dials) cellsSpan = maxOf(cellsSpan, cellsWidth(d))
+    }
+
+    private fun cellsWidth(d: Dial): Float =
+        if (d.digits == 0) choiceWidth else d.digits * (CELL_W_DP + GAP_DP) * dp
+
+    private val xLeftArrow: Float get() = PAD_DP * dp + labelWidth + 8f * dp
+    private val xCells: Float get() = xLeftArrow + ARROW_W_DP * dp
+    private val xRightArrow: Float get() = xCells + cellsSpan
+    private val xUnit: Float get() = xRightArrow + ARROW_W_DP * dp + 4f * dp
+
+    private fun cellsLeft(d: Dial): Float = xCells + (cellsSpan - cellsWidth(d)) / 2f
+    private fun rowTop(row: Int): Float = (HEADER_DP + PAD_DP) * dp + row * rowDp * dp
+    private fun actionTop(): Float = rowTop(dials.size) + 4f * dp
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        laidOutRows = rows().size
-        val fixed = (HEADER_DP + ACTION_DP + PAD_DP) * dp
+        if (dials.isEmpty()) {
+            setMeasuredDimension(0, 0)
+            return
+        }
+        val actionBand = if (deeds.isEmpty()) 0f else (ACTION_DP + 4f) * dp
+        val fixed = (HEADER_DP + PAD_DP * 2f) * dp + actionBand
         val available = MeasureSpec.getSize(heightMeasureSpec).toFloat()
-        rowDp = if (available > fixed && laidOutRows > 0) {
-            ((available - fixed) / dp / laidOutRows).coerceIn(MIN_ROW_DP, ROW_DP)
+        rowDp = if (available > fixed) {
+            ((available - fixed) / dp / dials.size).coerceIn(MIN_ROW_DP, ROW_DP)
         } else {
             ROW_DP
         }
-        setMeasuredDimension(
-            (WIDTH_DP * dp).roundToInt(),
-            ((HEADER_DP + rowDp * laidOutRows + ACTION_DP + PAD_DP) * dp).roundToInt()
-        )
+        val w = xUnit + unitWidth + PAD_DP * dp
+        val h = fixed + dials.size * rowDp * dp
+        setMeasuredDimension(w.roundToInt(), h.roundToInt())
     }
+
+    // ── Rendu ─────────────────────────────────────────────────────────────────
 
     override fun onDraw(canvas: Canvas) {
         val wheel = gearView?.selectedWheel() ?: return
-        panel.set(0f, 0f, width.toFloat(), height.toFloat())
-        canvas.drawRoundRect(panel, 12f * dp, 12f * dp, pPanel)
-        canvas.drawRoundRect(panel, 12f * dp, 12f * dp, pEdge)
+        if (dials.isEmpty()) return
+        rect.set(0f, 0f, width.toFloat(), height.toFloat())
+        canvas.drawRoundRect(rect, 12f * dp, 12f * dp, pPanel)
+        canvas.drawRoundRect(rect, 12f * dp, 12f * dp, pPanelEdge)
         drawHeader(canvas, wheel)
-        drawRow(canvas, Row.TEETH, context.getString(R.string.trebuchet_gear_edit_teeth), wheel.teeth.toString())
-        drawRow(canvas, Row.LAYER, context.getString(R.string.trebuchet_gear_edit_layer), signed(wheel.layer))
-        drawRow(canvas, Row.MATERIAL, context.getString(R.string.trebuchet_gear_edit_material), materialName(wheel.material))
-        if (Row.LAUNCH in rows()) {
-            drawRow(
-                canvas, Row.LAUNCH, context.getString(R.string.trebuchet_gear_edit_launch),
-                "${wheel.launchAngle.roundToInt()}°"
+
+        val cellH = (rowDp - 8f) * dp
+        for (row in dials.indices) {
+            val d = dials[row]
+            val mid = rowTop(row) + rowDp * dp / 2f
+            canvas.drawText(
+                context.getString(d.label), PAD_DP * dp,
+                mid + pLabel.textSize * 0.36f, pLabel
             )
-            drawRow(
-                canvas, Row.BALL, context.getString(R.string.trebuchet_gear_edit_ball),
-                "${ballMass().roundToInt()} kg"
-            )
+            if (d == Dial.SPEED) {
+                drawTextButton(
+                    canvas, xLeftArrow, mid, cellH,
+                    context.getString(R.string.trebuchet_gear_brake),
+                    hit == Hit.ARROW && row == turnRow && arrowDir > 0
+                )
+                drawTextButton(
+                    canvas, xRightArrow, mid, cellH,
+                    context.getString(R.string.trebuchet_gear_stop_short),
+                    hit == Hit.ARROW && row == turnRow && arrowDir < 0
+                )
+                drawWordCell(canvas, cellsLeft(d), mid, cellH, speedText(), rolling = false)
+            } else {
+                drawArrow(canvas, xLeftArrow, mid, cellH, up = true, row = row)
+                drawArrow(canvas, xRightArrow, mid, cellH, up = false, row = row)
+                if (d.choice) {
+                    drawChoice(canvas, cellsLeft(d), mid, cellH, d, row)
+                } else {
+                    var x = cellsLeft(d)
+                    val digits = digitsOf(d)
+                    for (col in 0 until d.digits) {
+                        drawWheel(canvas, x, mid, cellH, digits[col], d, row, col)
+                        x += (CELL_W_DP + GAP_DP) * dp
+                    }
+                }
+            }
+            if (d.unit != R.string.trebuchet_gear_unit_none) {
+                canvas.drawText(
+                    context.getString(d.unit), xUnit, mid + pUnit.textSize * 0.36f, pUnit
+                )
+            }
         }
         drawActions(canvas)
     }
@@ -188,9 +442,10 @@ class GearEditorBubble @JvmOverloads constructor(
     private fun drawHeader(canvas: Canvas, wheel: GearWheelConfig) {
         val h = HEADER_DP * dp
         canvas.save()
-        path.reset()
-        path.addRoundRect(panel, 12f * dp, 12f * dp, Path.Direction.CW)
-        canvas.clipPath(path)
+        clipPath.reset()
+        rect.set(0f, 0f, width.toFloat(), height.toFloat())
+        clipPath.addRoundRect(rect, 12f * dp, 12f * dp, Path.Direction.CW)
+        canvas.clipPath(clipPath)
         canvas.drawRect(0f, 0f, width.toFloat(), h, pHeader)
         canvas.restore()
         val diameterCm = (wheel.outerRadius * 200f).roundToInt()
@@ -199,195 +454,489 @@ class GearEditorBubble @JvmOverloads constructor(
             context.getString(R.string.trebuchet_gear_size_header, diameterCm, circumferenceCm),
             width / 2f, h / 2f - (pTitle.ascent() + pTitle.descent()) / 2f, pTitle
         )
-        // Deux prises discrètes disent que le bandeau entier se déplace.
-        canvas.drawCircle(12f * dp, h / 2f, 2f * dp, pAccent)
-        canvas.drawCircle(width - 12f * dp, h / 2f, 2f * dp, pAccent)
+        canvas.drawCircle(12f * dp, h / 2f, 2f * dp, pGrip)
+        canvas.drawCircle(width - 12f * dp, h / 2f, 2f * dp, pGrip)
     }
 
-    private fun drawRow(canvas: Canvas, target: Row, label: String, value: String) {
-        val top = rowTop(target)
-        val mid = top + rowDp * dp / 2f
-        canvas.drawText(label, PAD_DP * dp, mid - (pLabel.ascent() + pLabel.descent()) / 2f, pLabel)
-        drawStepButton(canvas, minusLeft(), top, false, hit == Hit.MINUS && row == target)
-        drawStepButton(canvas, plusLeft(), top, true, hit == Hit.PLUS && row == target)
+    private fun drawArrow(
+        canvas: Canvas, x: Float, mid: Float, cellH: Float, up: Boolean, row: Int
+    ) {
+        val w = ARROW_W_DP * dp
+        val on = hit == Hit.ARROW && row == turnRow && (arrowDir > 0) == up
+        rect.set(x + 3f * dp, mid - cellH / 2f, x + w - 3f * dp, mid + cellH / 2f)
+        canvas.drawRoundRect(rect, 6f * dp, 6f * dp, if (on) pArrowBedOn else pArrowBed)
+        val cx = x + w / 2f
+        val r = 7f * dp
+        arrowPath.reset()
+        if (up) {
+            arrowPath.moveTo(cx - r, mid + r * 0.6f)
+            arrowPath.lineTo(cx + r, mid + r * 0.6f)
+            arrowPath.lineTo(cx, mid - r * 0.7f)
+        } else {
+            arrowPath.moveTo(cx - r, mid - r * 0.6f)
+            arrowPath.lineTo(cx + r, mid - r * 0.6f)
+            arrowPath.lineTo(cx, mid + r * 0.7f)
+        }
+        arrowPath.close()
+        canvas.drawPath(arrowPath, pArrow)
+    }
 
-        val left = valueLeft()
-        val right = plusLeft() - 4f * dp
-        panel.set(left, top + 5f * dp, right, top + (rowDp - 5f) * dp)
-        canvas.drawRoundRect(panel, 6f * dp, 6f * dp, if (hit == Hit.VALUE && row == target) pCellOn else pCell)
-        val centerX = (left + right) / 2f
-        val offset = if (hit == Hit.VALUE && row == target) wheelOffset else 0f
+    /** Le frein et le stop prennent la place des flèches : une vitesse ne se règle pas. */
+    private fun drawTextButton(
+        canvas: Canvas, x: Float, mid: Float, cellH: Float, text: String, pressed: Boolean
+    ) {
+        val w = ARROW_W_DP * dp
+        rect.set(x + 3f * dp, mid - cellH / 2f, x + w - 3f * dp, mid + cellH / 2f)
+        canvas.drawRoundRect(rect, 6f * dp, 6f * dp, if (pressed) pArrowBedOn else pArrowBed)
+        canvas.drawText(text, rect.centerX(), mid + pButton.textSize * 0.36f, pButton)
+    }
+
+    private fun drawWordCell(
+        canvas: Canvas, x: Float, mid: Float, cellH: Float, text: String, rolling: Boolean
+    ) {
+        rect.set(x, mid - cellH / 2f, x + choiceWidth, mid + cellH / 2f)
+        canvas.drawRoundRect(rect, 4f * dp, 4f * dp, if (rolling) pCellOn else pCell)
         canvas.save()
-        canvas.clipRect(panel)
-        canvas.drawText(value, centerX, mid - (pValue.ascent() + pValue.descent()) / 2f + offset, pValue)
-        if (target != Row.MATERIAL) {
-            canvas.drawText(neighborValue(target, -1), centerX, mid - rowDp * 0.48f * dp + offset, pValueDim)
-            canvas.drawText(neighborValue(target, +1), centerX, mid + rowDp * 0.57f * dp + offset, pValueDim)
+        canvas.clipRect(rect)
+        canvas.drawText(text, rect.centerX(), mid + pChoice.textSize * 0.36f, pChoice)
+        canvas.restore()
+    }
+
+    /**
+     * La roulette des mots : la valeur choisie et ses voisines qui arrivent.
+     *
+     * Elle est dessinée exactement comme une roulette de chiffres — même cellule, même
+     * défilement, même estompage — parce que c'en est une. Seul le contenu change.
+     */
+    private fun drawChoice(canvas: Canvas, x: Float, mid: Float, cellH: Float, d: Dial, row: Int) {
+        rect.set(x, mid - cellH / 2f, x + choiceWidth, mid + cellH / 2f)
+        canvas.drawRoundRect(rect, 4f * dp, 4f * dp, pCell)
+        val words = wordsOf(d)
+        if (words.isEmpty()) return
+        val cur = choiceIndex(d)
+        val rolling = hit == Hit.WHEEL && row == turnRow
+        val offset = if (rolling) turnOffset else 0f
+        val step = STEP_DP * dp
+        val base = mid + pChoice.textSize * 0.36f
+        canvas.save()
+        canvas.clipRect(rect)
+        for (k in -1..1) {
+            val i = ((cur + k) % words.size + words.size) % words.size
+            canvas.drawText(
+                words[i], rect.centerX(), base + k * step + offset,
+                if (k == 0 && abs(offset) < step / 2f) pChoice else pChoiceDim
+            )
         }
         canvas.restore()
     }
 
-    private fun drawStepButton(canvas: Canvas, left: Float, top: Float, plus: Boolean, pressed: Boolean) {
-        val size = 44f * dp
-        panel.set(left, top + 5f * dp, left + size, top + (rowDp - 5f) * dp)
-        canvas.drawRoundRect(panel, 6f * dp, 6f * dp, if (pressed) pCellOn else pCell)
-        val cx = left + size / 2f
-        val cy = top + rowDp * dp / 2f
-        canvas.drawRect(cx - 7f * dp, cy - 1.4f * dp, cx + 7f * dp, cy + 1.4f * dp, pAccent)
-        if (plus) canvas.drawRect(cx - 1.4f * dp, cy - 7f * dp, cx + 1.4f * dp, cy + 7f * dp, pAccent)
+    /** Une roulette : le chiffre tenu et ceux qui l'encadrent, coupés par la cellule. */
+    private fun drawWheel(
+        canvas: Canvas, x: Float, mid: Float, cellH: Float,
+        digit: Int, d: Dial, row: Int, col: Int
+    ) {
+        val w = CELL_W_DP * dp
+        val picked = col == columnOf(d)
+        rect.set(x, mid - cellH / 2f, x + w, mid + cellH / 2f)
+        canvas.drawRoundRect(rect, 4f * dp, 4f * dp, if (picked) pCellOn else pCell)
+        if (picked) {
+            // Un trait sous la colonne en plus du fond : le fond seul se perd au soleil,
+            // et c'est ce que les flèches vont changer, donc ça doit se voir.
+            canvas.drawRect(x, mid + cellH / 2f - 2.5f * dp, x + w, mid + cellH / 2f, pPicked)
+        }
+        val rolling = hit == Hit.WHEEL && row == turnRow && col == turnCol
+        val offset = if (rolling) turnOffset else 0f
+        val step = STEP_DP * dp
+        val base = mid + pDigit.textSize * 0.36f
+        val signCell = d.signed && col == 0
+        canvas.save()
+        canvas.clipRect(rect)
+        for (k in -1..1) {
+            val shown = if (signCell) {
+                // La case de signe ne compte que jusqu'à deux : elle bascule.
+                if ((digit + k) % 2 == 0) "+" else "−"
+            } else {
+                (((digit + k) % 10 + 10) % 10).toString()
+            }
+            canvas.drawText(
+                shown, rect.centerX(), base + k * step + offset,
+                if (k == 0 && abs(offset) < step / 2f) pDigit else pDigitDim
+            )
+        }
+        canvas.restore()
     }
 
     private fun drawActions(canvas: Canvas) {
+        if (deeds.isEmpty()) return
         val top = actionTop()
-        val gap = 6f * dp
+        val gap = 5f * dp
         val left = PAD_DP * dp
-        val buttonWidth = (width - left * 2f - gap * 2f) / 3f
-        panel.set(left, top, left + buttonWidth, top + 42f * dp)
-        canvas.drawRoundRect(panel, 7f * dp, 7f * dp, if (hit == Hit.COUPLE) pCellOn else pCell)
-        canvas.drawText(context.getString(R.string.trebuchet_gear_couple), panel.centerX(), panel.centerY() - (pButton.ascent() + pButton.descent()) / 2f, pButton)
-        panel.set(left + buttonWidth + gap, top, left + buttonWidth * 2f + gap, top + 42f * dp)
-        canvas.drawRoundRect(panel, 7f * dp, 7f * dp, if (hit == Hit.DUPLICATE) pCellOn else pCell)
-        canvas.drawText(context.getString(R.string.trebuchet_gear_duplicate), panel.centerX(), panel.centerY() - (pButton.ascent() + pButton.descent()) / 2f, pButton)
-        panel.set(left + buttonWidth * 2f + gap * 2f, top, width - left, top + 42f * dp)
-        canvas.drawRoundRect(panel, 7f * dp, 7f * dp, if (hit == Hit.DELETE) pCellOn else pDanger)
-        canvas.drawText(context.getString(R.string.trebuchet_gear_delete_short), panel.centerX(), panel.centerY() - (pButton.ascent() + pButton.descent()) / 2f, pButton)
+        val span = width - left * 2f
+        val buttonWidth = (span - gap * (deeds.size - 1)) / deeds.size
+        for ((index, action) in deeds.withIndex()) {
+            val x = left + (buttonWidth + gap) * index
+            rect.set(x, top, x + buttonWidth, top + ACTION_DP * dp - 4f * dp)
+            val background = when {
+                pressedAction == action -> pCellOn
+                action == Action.DELETE -> pDanger
+                else -> pCell
+            }
+            canvas.drawRoundRect(rect, 7f * dp, 7f * dp, background)
+            canvas.drawText(
+                actionLabel(action), rect.centerX(),
+                rect.centerY() - (pButton.ascent() + pButton.descent()) / 2f, pButton
+            )
+        }
     }
+
+    private fun actionLabel(action: Action): String = when (action) {
+        // Le bouton dit **quel** moteur est monte : c'est ce qu'on lit avant de le
+        // changer, et une etiquette « moteur » ne l'aurait pas dit.
+        Action.MOTOR -> motorName(gearView?.selectedWheel()?.motor?.kind ?: GearMotorKind.NONE)
+        Action.CHARGE -> context.getString(
+            if (gearView?.game?.charging == true) R.string.trebuchet_gear_charge_stop
+            else R.string.trebuchet_gear_charge
+        )
+        Action.COUPLE -> context.getString(R.string.trebuchet_gear_couple)
+        Action.DUPLICATE -> context.getString(R.string.trebuchet_gear_duplicate)
+        Action.DELETE -> context.getString(R.string.trebuchet_gear_delete_short)
+    }
+
+    private fun motorName(kind: GearMotorKind): String = context.getString(
+        when (kind) {
+            GearMotorKind.NONE -> R.string.trebuchet_gear_motor_none
+            GearMotorKind.CAROUSEL -> R.string.trebuchet_gear_motor_carousel
+            GearMotorKind.WINDMILL -> R.string.trebuchet_gear_motor_windmill
+            GearMotorKind.WATERWHEEL -> R.string.trebuchet_gear_motor_waterwheel
+        }
+    )
+
+    // ── Saisie ────────────────────────────────────────────────────────────────
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                lastRawX = event.rawX
-                lastRawY = event.rawY
+                lastX = event.rawX
+                lastY = event.rawY
                 travel = 0f
-                wheelOffset = 0f
+                turnOffset = 0f
+                consumed = false
                 hitTest(event.x, event.y)
-                if (hit == Hit.MINUS || hit == Hit.PLUS) {
-                    change(direction)
-                    postDelayed(repeater, REPEAT_DELAY_MS)
+                if (hit == Hit.WHEEL) postDelayed(longPress, LONG_PRESS_MS)
+                if (hit == Hit.ARROW) {
+                    if (dials.getOrNull(turnRow) == Dial.SPEED) {
+                        // Le frein se **tient** — pas de répétition à cadence, c'est la
+                        // pression du doigt qui dure. Le stop, lui, agit d'un coup.
+                        if (arrowDir > 0) {
+                            braking = true
+                            gearView?.setBrake(true)
+                        } else {
+                            gearView?.stopSelected()
+                        }
+                    } else {
+                        // Le premier cran part à l'appui : une flèche doit répondre.
+                        nudge(arrowDir)
+                        postDelayed(repeater, REPEAT_DELAY_MS)
+                    }
                 }
-                parent?.requestDisallowInterceptTouchEvent(true)
                 invalidate()
+                parent?.requestDisallowInterceptTouchEvent(true)
             }
             MotionEvent.ACTION_MOVE -> {
-                val dx = event.rawX - lastRawX
-                val dy = event.rawY - lastRawY
-                lastRawX = event.rawX
-                lastRawY = event.rawY
+                val dx = event.rawX - lastX
+                val dy = event.rawY - lastY
+                lastX = event.rawX
+                lastY = event.rawY
                 travel += abs(dx) + abs(dy)
                 when (hit) {
                     Hit.HEADER -> dragPanel(dx, dy)
-                    Hit.VALUE -> {
-                        wheelOffset += dy
+                    Hit.WHEEL -> {
+                        if (travel > TAP_SLOP_DP * dp) removeCallbacks(longPress)
+                        // Glisser vers le haut fait monter : on pousse la roulette.
+                        turnOffset -= dy
                         val step = STEP_DP * dp
-                        while (wheelOffset >= step) { change(-1); wheelOffset -= step }
-                        while (wheelOffset <= -step) { change(+1); wheelOffset += step }
+                        while (turnOffset >= step) { turn(+1); turnOffset -= step }
+                        while (turnOffset <= -step) { turn(-1); turnOffset += step }
+                        invalidate()
                     }
-                    Hit.MINUS, Hit.PLUS -> if (travel > 2f * TAP_SLOP_DP * dp) release()
-                    else -> Unit
+                    // Le doigt qui quitte la flèche arrête la répétition : c'est le seul
+                    // moyen d'annuler un appui maintenu par mégarde.
+                    Hit.ARROW -> if (travel > 2f * TAP_SLOP_DP * dp) release()
+                    Hit.ACTION -> if (travel > 2f * TAP_SLOP_DP * dp) {
+                        pressedAction = null
+                        invalidate()
+                    }
+                    Hit.NONE -> Unit
                 }
-                invalidate()
             }
-            MotionEvent.ACTION_UP -> {
-                if (travel < TAP_SLOP_DP * dp) when (hit) {
-                    Hit.VALUE -> change(if (event.y < rowTop(row) + rowDp * dp / 2f) +1 else -1)
-                    Hit.COUPLE -> gearView?.armLink(GearLinkKind.SHAFT_CLUTCH)
-                    Hit.DUPLICATE -> gearView?.duplicateSelected()
-                    Hit.DELETE -> gearView?.deleteSelected()
-                    else -> Unit
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                if (travel < TAP_SLOP_DP * dp && !consumed) {
+                    if (hit == Hit.WHEEL) {
+                        // Un appui franc vaut un cran : moitié haute pour monter.
+                        turn(if (event.y < rowTop(turnRow) + rowDp * dp / 2f) +1 else -1)
+                    }
+                    if (hit == Hit.ACTION && event.actionMasked == MotionEvent.ACTION_UP) {
+                        pressedAction?.let { runAction(it) }
+                    }
                 }
                 onEdited?.invoke()
                 release()
             }
-            MotionEvent.ACTION_CANCEL -> release()
         }
         return true
     }
 
-    private fun hitTest(x: Float, y: Float) {
-        hit = Hit.NONE
-        if (y <= HEADER_DP * dp) { hit = Hit.HEADER; return }
-        for (candidate in rows()) {
-            val top = rowTop(candidate)
-            if (y !in top..(top + rowDp * dp)) continue
-            row = candidate
-            hit = when {
-                x in minusLeft()..(minusLeft() + 44f * dp) -> Hit.MINUS
-                x in valueLeft()..(plusLeft() - 4f * dp) -> Hit.VALUE
-                x in plusLeft()..(plusLeft() + 44f * dp) -> Hit.PLUS
-                else -> Hit.NONE
-            }
-            direction = if (hit == Hit.MINUS) -1 else if (hit == Hit.PLUS) +1 else 0
-            return
-        }
-        if (y >= actionTop()) {
-            val third = width / 3f
-            hit = when {
-                x < third -> Hit.COUPLE
-                x < third * 2f -> Hit.DUPLICATE
-                else -> Hit.DELETE
-            }
+    private fun runAction(action: Action) {
+        val view = gearView ?: return
+        when (action) {
+            Action.MOTOR -> view.cycleSelectedMotor()
+            Action.CHARGE -> view.toggleCharge()
+            Action.COUPLE -> view.armLink(GearLinkKind.SHAFT_CLUTCH)
+            Action.DUPLICATE -> view.duplicateSelected()
+            Action.DELETE -> view.deleteSelected()
         }
     }
 
-    private fun change(delta: Int) {
-        val view = gearView ?: return
-        val wheel = view.selectedWheel() ?: return
-        when (row) {
-            Row.TEETH -> view.setSelectedTeeth(wheel.teeth + delta)
-            Row.LAYER -> view.changeSelectedLayer(delta)
-            Row.MATERIAL -> view.changeSelectedMaterial(delta)
-            Row.LAUNCH -> view.setSelectedLaunchAngle(wheel.launchAngle + delta)
-            // Le boulet se choisit dans une liste : les crans sautent d'une taille a
-            // l'autre plutot que de compter les kilos un par un.
-            Row.BALL -> view.setProjectileMass(
-                GearMachineRules.nextProjectileMass(ballMass(), delta)
-            )
+    private fun release() {
+        removeCallbacks(repeater)
+        removeCallbacks(longPress)
+        // Lever le doigt desserre toujours le frein : un frein resté serré parce qu'un
+        // geste s'est terminé ailleurs bloquerait la machine sans rien dire.
+        if (braking) {
+            braking = false
+            gearView?.setBrake(false)
         }
+        hit = Hit.NONE
+        turnRow = -1
+        turnCol = -1
+        arrowDir = 0
+        turnOffset = 0f
+        pressedAction = null
+        invalidate()
+    }
+
+    /**
+     * Range le doigt dans une case : bandeau, flèche, roulette, bouton, ou rien.
+     *
+     * « Rien » est un résultat à part entière : un appui à côté d'une flèche ne déplace
+     * pas la fenêtre, il ne fait rien. Rater sa cible ne doit jamais coûter plus cher
+     * que de recommencer.
+     */
+    private fun hitTest(x: Float, y: Float) {
+        hit = Hit.NONE
+        turnRow = -1
+        turnCol = -1
+        arrowDir = 0
+        pressedAction = null
+        if (y <= HEADER_DP * dp) {
+            hit = Hit.HEADER
+            return
+        }
+        for (row in dials.indices) {
+            val d = dials[row]
+            val top = rowTop(row)
+            if (y < top || y > top + rowDp * dp) continue
+            turnRow = row
+            val aw = ARROW_W_DP * dp
+            if (x >= xLeftArrow && x <= xLeftArrow + aw) {
+                hit = Hit.ARROW
+                arrowDir = +1
+                return
+            }
+            if (x >= xRightArrow && x <= xRightArrow + aw) {
+                hit = Hit.ARROW
+                arrowDir = -1
+                return
+            }
+            // Le régime n'a pas de roulette : entre ses deux commandes il n'y a qu'un
+            // afficheur, et le toucher ne doit rien faire.
+            if (d == Dial.SPEED) {
+                turnRow = -1
+                return
+            }
+            var cx = cellsLeft(d)
+            if (d.choice) {
+                if (x >= cx && x <= cx + choiceWidth) {
+                    hit = Hit.WHEEL
+                    turnCol = 0
+                } else {
+                    turnRow = -1
+                }
+                return
+            }
+            for (col in 0 until d.digits) {
+                if (x >= cx && x <= cx + CELL_W_DP * dp) {
+                    hit = Hit.WHEEL
+                    turnCol = col
+                    return
+                }
+                cx += (CELL_W_DP + GAP_DP) * dp
+            }
+            turnRow = -1
+            return
+        }
+        val top = actionTop()
+        if (deeds.isNotEmpty() && y >= top) {
+            val index = (x / width * deeds.size).toInt().coerceIn(0, deeds.size - 1)
+            hit = Hit.ACTION
+            pressedAction = deeds[index]
+        }
+    }
+
+    // ── Les crans ─────────────────────────────────────────────────────────────
+
+    /**
+     * La colonne sur laquelle un réglage travaille : celle qu'on a désignée, ou celle
+     * de son cran naturel.
+     *
+     * Le défaut se **calcule** : on cherche la colonne dont le poids ressemble le plus
+     * au cran du réglage, en comparant les logarithmes plutôt que les écarts. Trente
+     * est aussi loin de cent que de dix, et pas de soixante-dix — c'est le rapport qui
+     * compte, pas la différence.
+     */
+    private fun columnOf(d: Dial): Int {
+        if (d.intDigits <= 0) return 0
+        val known = pickedCol[d.ordinal]
+        if (known in 0 until d.digits) return known
+        var best = d.digits - 1
+        var bestGap = Float.MAX_VALUE
+        for (col in 0 until d.digits) {
+            if (d.signed && col == 0) continue
+            var weight = 1f
+            repeat(d.digits - 1 - col) { weight *= 10f }
+            val gap = abs(kotlin.math.ln(weight / d.step))
+            if (gap < bestGap) {
+                bestGap = gap
+                best = col
+            }
+        }
+        return best
+    }
+
+    /** Une flèche : un cran sur la colonne désignée, avec la retenue d'un compteur. */
+    private fun nudge(delta: Int) {
+        if (turnRow !in dials.indices) return
+        applyTurn(dials[turnRow], columnOf(dials[turnRow]), delta)
+    }
+
+    /**
+     * Fait tourner d'un cran la roulette tenue, avec la retenue d'un compteur
+     * kilométrique : passer de 9 à 0 pousse la roulette de gauche.
+     *
+     * La retenue ne descend jamais : bouger les dizaines laisse les unités où elles
+     * sont, et c'est tout l'intérêt — on traverse les centaines sans perdre le réglage
+     * fin qu'on venait de trouver.
+     */
+    private fun turn(delta: Int) {
+        if (turnRow !in dials.indices) return
+        applyTurn(dials[turnRow], turnCol, delta)
+    }
+
+    private fun applyTurn(d: Dial, col: Int, delta: Int) {
+        val view = gearView ?: return
+        if (d.choice) {
+            cycleChoice(d, delta)
+            onEdited?.invoke()
+            invalidate()
+            return
+        }
+        if (d == Dial.SPEED || col < 0 || col >= d.digits) return
+        val current = valueOf(d)
+        val next = if (d.signed && col == 0) {
+            // La case de signe bascule : elle ne s'additionne pas.
+            -current
+        } else {
+            var weight = 1
+            repeat(d.digits - 1 - col) { weight *= 10 }
+            val magnitude = abs(current) + delta * weight
+            if (current < 0) -magnitude else magnitude
+        }
+        apply(d, next)
         onEdited?.invoke()
         invalidate()
     }
 
-    private fun neighborValue(target: Row, delta: Int): String {
-        val wheel = gearView?.selectedWheel() ?: return ""
-        return when (target) {
-            Row.TEETH -> (wheel.teeth + delta).coerceIn(GearMachineRules.MIN_TEETH, GearMachineRules.MAX_TEETH).toString()
-            Row.LAYER -> signed((wheel.layer + delta).coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER))
-            Row.MATERIAL -> ""
-            Row.LAUNCH -> "${
-                (wheel.launchAngle + delta).coerceIn(
-                    GearMachineRules.MIN_LAUNCH_DEG, GearMachineRules.MAX_LAUNCH_DEG
-                ).roundToInt()
-            }°"
-            Row.BALL ->
-                "${GearMachineRules.nextProjectileMass(ballMass(), delta).roundToInt()} kg"
+    // ── La machine ────────────────────────────────────────────────────────────
+
+    private fun valueOf(d: Dial): Int {
+        val view = gearView ?: return 0
+        val wheel = view.selectedWheel() ?: return 0
+        return when (d) {
+            Dial.TEETH -> wheel.teeth
+            Dial.LAYER -> wheel.layer
+            Dial.SPAN -> (wheel.motor?.span ?: 0f).roundToInt()
+            Dial.UNITS -> wheel.motor?.let {
+                it.units * if (it.direction < 0) -1 else 1
+            } ?: 0
+            Dial.DURATION -> view.game.config.chargeSeconds.roundToInt()
+            Dial.LAUNCH -> wheel.launchAngle.roundToInt()
+            Dial.BALL -> view.game.config.projectileMass.roundToInt()
+            Dial.MATERIAL, Dial.SPEED -> 0
         }
     }
 
-    private fun materialName(material: GearWheelMaterial): String = context.getString(when (material) {
-        GearWheelMaterial.WOOD -> R.string.trebuchet_gear_material_wood
-        GearWheelMaterial.ALUMINUM -> R.string.trebuchet_gear_material_aluminum
-        GearWheelMaterial.STEEL -> R.string.trebuchet_gear_material_steel
-        GearWheelMaterial.TITANIUM -> R.string.trebuchet_gear_material_titanium
-    })
+    private fun apply(d: Dial, value: Int) {
+        val view = gearView ?: return
+        when (d) {
+            Dial.TEETH -> view.setSelectedTeeth(value)
+            Dial.LAYER -> view.setSelectedLayer(value)
+            Dial.SPAN -> view.setSelectedMotorSpan(value.toFloat())
+            Dial.UNITS -> view.setSelectedMotorUnits(value)
+            Dial.DURATION -> view.setChargeSeconds(value.toFloat())
+            Dial.LAUNCH -> view.setSelectedLaunchAngle(value.toFloat())
+            Dial.BALL -> view.setProjectileMass(value.toFloat())
+            Dial.MATERIAL, Dial.SPEED -> Unit
+        }
+    }
 
-    /**
-     * La masse du boulet.
-     *
-     * Elle appartient a l'atelier et non a la roue -- il n'y a qu'un tir a la fois --
-     * mais elle se regle **ici**, sur le volant, parce que c'est la piece qui lance et
-     * que c'est la qu'on regarde en preparant un coup.
-     */
-    private fun ballMass(): Float =
-        gearView?.game?.config?.projectileMass ?: GearMachineRules.DEFAULT_PROJECTILE_MASS
+    /** Les chiffres affichés, du plus fort au plus faible ; la case de signe d'abord. */
+    private fun digitsOf(d: Dial): IntArray {
+        val out = IntArray(d.digits)
+        val value = valueOf(d)
+        var magnitude = abs(value)
+        for (i in d.digits - 1 downTo if (d.signed) 1 else 0) {
+            out[i] = magnitude % 10
+            magnitude /= 10
+        }
+        // Zéro sur la case de signe vaut « + », un vaut « − » : voir [drawWheel].
+        if (d.signed) out[0] = if (value < 0) 1 else 0
+        return out
+    }
 
-    private fun signed(value: Int) = if (value > 0) "+$value" else value.toString()
-    private fun rowTop(row: Row) =
-        (HEADER_DP + rows().indexOf(row).coerceAtLeast(0) * rowDp) * dp
+    private fun wordsOf(d: Dial): List<String> = when (d) {
+        Dial.MATERIAL -> GearWheelMaterial.entries.map { materialName(it) }
+        else -> emptyList()
+    }
 
-    private fun actionTop() = (HEADER_DP + rows().size * rowDp + 5f) * dp
-    private fun minusLeft() = (PAD_DP + LABEL_DP) * dp
-    private fun valueLeft() = minusLeft() + 48f * dp
-    private fun plusLeft() = width - (PAD_DP + 44f) * dp
+    private fun choiceIndex(d: Dial): Int {
+        val wheel = gearView?.selectedWheel() ?: return 0
+        return when (d) {
+            Dial.MATERIAL -> wheel.material.ordinal
+            else -> 0
+        }
+    }
+
+    private fun cycleChoice(d: Dial, delta: Int) {
+        val view = gearView ?: return
+        when (d) {
+            Dial.MATERIAL -> view.changeSelectedMaterial(delta)
+            else -> Unit
+        }
+    }
+
+    private fun materialName(material: GearWheelMaterial): String = context.getString(
+        when (material) {
+            GearWheelMaterial.WOOD -> R.string.trebuchet_gear_material_wood
+            GearWheelMaterial.ALUMINUM -> R.string.trebuchet_gear_material_aluminum
+            GearWheelMaterial.STEEL -> R.string.trebuchet_gear_material_steel
+            GearWheelMaterial.TITANIUM -> R.string.trebuchet_gear_material_titanium
+        }
+    )
+
+    private fun speedText(): String =
+        ((gearView?.selectedOmega() ?: 0f) * RAD_PER_S_TO_RPM).roundToInt().toString()
+
+    // ── La place de la bulle ──────────────────────────────────────────────────
 
     private fun dragPanel(dx: Float, dy: Float) {
         translationX = clampX(translationX + dx)
@@ -405,10 +954,10 @@ class GearEditorBubble @JvmOverloads constructor(
     /**
      * Où la bulle se pose quand personne ne l'a encore déplacée.
      *
-     * Elle est centrée en haut, et elle est large : sur un téléphone elle recouvrait
-     * le sélecteur d'étage et le bouton d'outil, qui vivent dans le coin haut gauche
-     * de la scène. Quand elle passe devant, elle descend juste en dessous d'eux — sur
-     * une tablette, où elle démarre à leur droite, elle reste tout en haut.
+     * Elle est centrée en haut, et elle est large : sur un téléphone elle recouvrait le
+     * sélecteur d'étage et le bouton d'outil, qui vivent dans le coin haut gauche de la
+     * scène. Quand elle passe devant, elle descend juste en dessous d'eux — sur une
+     * tablette, où elle démarre à leur droite, elle reste tout en haut.
      */
     private fun restingY(): Float {
         if (left >= GearMachineView.HUD_RIGHT_DP * dp) return 0f
@@ -427,18 +976,5 @@ class GearEditorBubble @JvmOverloads constructor(
         val min = -top.toFloat()
         val max = (host.height - height - top).toFloat()
         return if (max <= min) min else value.coerceIn(min, max)
-    }
-
-    private fun release() {
-        removeCallbacks(repeater)
-        hit = Hit.NONE
-        direction = 0
-        wheelOffset = 0f
-        invalidate()
-    }
-
-    override fun onDetachedFromWindow() {
-        release()
-        super.onDetachedFromWindow()
     }
 }

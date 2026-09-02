@@ -11,6 +11,7 @@ import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.PhysWorld
 import com.Atom2Universe.app.games.physics.PhysicsConstants
 import com.Atom2Universe.app.games.physics.RevoluteJoint
+import com.Atom2Universe.app.games.physics.RotaryDriveJoint
 import com.Atom2Universe.app.games.trebuchet.TrebuchetRules
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -25,7 +26,15 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val wheel: GearWheelConfig,
         val body: PhysBody,
         val support: PhysBody,
-        val axle: RevoluteJoint
+        val axle: RevoluteJoint,
+        /** Le moteur attelé à cette roue, s'il y en a un. */
+        val drive: RotaryDriveJoint? = null,
+        /**
+         * Le frottement sec du palier, en N·m. Il est mis de côté parce que le frein
+         * emprunte le **même** moteur d'axe : freiner, c'est en relever le couple, et
+         * relâcher, c'est lui rendre cette valeur-là.
+         */
+        val bearingTorque: Float = 0f
     )
 
     data class Mesh(val firstId: Int, val secondId: Int, val joint: GearJoint)
@@ -79,9 +88,18 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // tant qu'il n'y avait pas de sol pour le rattraper.
         gravity = PhysicsConstants.STANDARD_GRAVITY
         linearDamping = 0.015f
-        // Les pertes principales viennent désormais des paliers ; ceci ne représente
-        // plus qu'une faible traînée de l'air sur les roues.
-        angularDamping = 0.002f
+        // Une faible traînée de l'air sur les roues — et **seulement** ça : les pertes
+        // qui comptent doivent venir des paliers, parce que ce sont les seules que le
+        // joueur peut travailler en changeant de matière.
+        //
+        // Elle valait 0,002, ce qui était sans conséquence tant qu'un doigt pouvait
+        // injecter quatre-vingts mégajoules d'un geste. Avec des moteurs réels elle
+        // devenait la perte dominante : sur un train de manège monté au soixante-
+        // quatrième, elle mangeait trois kilowatts quand les paliers en prenaient un
+        // demi, et le volant plafonnait à trente-cinq fois l'allure de la bête au lieu
+        // des soixante-quatre que le train promettait. À 0,0005 ce sont les paliers qui
+        // décident, et le plafond redevient celui qu'annonce le rapport de la cascade.
+        angularDamping = 0.0005f
         sleepEnabled = false
         iterations = 18
     }
@@ -151,12 +169,24 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     private var restCalm = 0f
     private var sinceLanding = 0f
 
+    /** La roue dont on serre le frein, s'il y en a une. */
+    private var brakingId: Int? = null
+
+    /** Temps machine encore à jouer en accéléré, et durée totale demandée. */
+    var chargeRemaining = 0f
+        private set
+    var chargeTotal = 0f
+        private set
+
     private data class SavedMotion(val angle: Float, val omega: Float, val energy: Float)
 
     init { rebuild(preserveMotion = false) }
 
     fun loadConfig(value: GearMachineConfig) {
-        config = value.deepCopy().also { it.clamp() }
+        // Ouvrir une machine est le seul moment ou l'on sait tenir un tout : c'est donc
+        // la qu'on lui rend les pieces qui lui manqueraient. Une sauvegarde d'avant les
+        // moteurs se reouvre ainsi avec son moulin et son pas de tir.
+        config = value.deepCopy().also { it.ensureCorePieces() }
         rebuild(preserveMotion = false)
     }
 
@@ -191,18 +221,19 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                 boreRadius = minOf(0.18f, wheel.pitchRadius * 0.25f),
                 material = MachineMaterials.STEEL
             )
-            val body = if (wheel.kind == GearWheelKind.FLYWHEEL) {
-                MachinePartFactory.flywheel(
-                    FlywheelSpec(
-                        outerRadius = wheel.outerRadius,
-                        innerRadius = wheel.pitchRadius * 0.55f,
-                        width = 0.35f,
-                        material = wheel.material.physics
-                    )
+            // Volant **comme** engrenage sont des jantes montées sur des rayons, et se
+            // fabriquent donc tous deux avec la même pièce : seules l'épaisseur et la
+            // largeur de la jante les séparent. `MachinePartFactory.gear` taille un
+            // disque plein — cinquante-six tonnes pour trois mètres de rayon — que
+            // plus aucun moteur de l'atelier ne saurait faire tourner.
+            val body = MachinePartFactory.flywheel(
+                FlywheelSpec(
+                    outerRadius = wheel.outerRadius,
+                    innerRadius = GearMachineRules.rimInnerRadius(wheel.kind, wheel.outerRadius),
+                    width = GearMachineRules.rimWidth(wheel.kind),
+                    material = wheel.material.physics
                 )
-            } else {
-                MachinePartFactory.gear(spec.copy(material = wheel.material.physics))
-            }.apply {
+            ).apply {
                 x = wheel.x
                 y = wheel.y
                 angle = if (wheel.id in useConfiguredAngleFor) {
@@ -233,16 +264,27 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                 }
                 body.wake()
             }
+            val bearingTorque = wheel.material.axleFriction * body.mass *
+                PhysicsConstants.STANDARD_GRAVITY * maxOf(0.04f, spec.boreRadius)
             val axle = RevoluteJoint.pin(support, body, wheel.x, wheel.y).apply {
                 // Frottement sec du palier : il dissipe jusqu'à l'arrêt mais ne peut
                 // jamais accélérer la roue ni inverser son sens.
                 motorEnabled = true
                 motorSpeed = 0f
-                maxMotorTorque = wheel.material.axleFriction * body.mass *
-                    PhysicsConstants.STANDARD_GRAVITY * maxOf(0.04f, spec.boreRadius)
+                maxMotorTorque = bearingTorque
             }
             world.addJoint(axle)
-            gears += GearState(wheel, body, support, axle)
+            val drive = wheel.motor
+                ?.takeIf { it.kind != GearMotorKind.NONE }
+                ?.let { motor ->
+                    RotaryDriveJoint(support, body).apply {
+                        val sign = if (motor.direction < 0) -1f else 1f
+                        targetOmega = sign * GearMotorRules.freeOmega(motor)
+                        maxTorque = GearMotorRules.maxTorque(motor)
+                    }
+                }
+            drive?.let { world.addJoint(it) }
+            gears += GearState(wheel, body, support, axle, drive, bearingTorque)
         }
         connectTransmissions()
         connectMeshes()
@@ -341,8 +383,118 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     fun step(dt: Float) {
         val h = dt.coerceIn(0f, 1f / 30f)
         updateProgressiveClutches(h)
+        applyBrake()
         world.stepFrame(h)
         if (phase == Phase.FLIGHT) projectile?.let { trackShot(it, h) }
+    }
+
+    /**
+     * Le frein d'axe de la roue tenue, s'il y en a une.
+     *
+     * Freiner n'est pas remettre une vitesse à zéro : c'est **serrer le palier**. On
+     * relève donc le couple du moteur d'axe qui portait déjà le frottement sec, et
+     * tout le reste suit tout seul — le train entier ralentit à travers ses dents, une
+     * prise trop chargée patine, et rien ne peut repartir en arrière puisque ce moteur
+     * ne sait que ramener la vitesse relative à zéro.
+     */
+    private fun applyBrake() {
+        for (gear in gears) {
+            val braking = gear.wheel.id == brakingId
+            gear.axle.maxMotorTorque = if (braking) {
+                gear.bearingTorque + gear.body.inertia * GearMachineRules.BRAKE_RATE
+            } else {
+                gear.bearingTorque
+            }
+        }
+    }
+
+    /** Serre ou desserre le frein d'une roue. Une seule roue est freinée à la fois. */
+    fun setBrake(id: Int?) {
+        brakingId = id?.takeIf { wanted -> gears.any { it.wheel.id == wanted } }
+    }
+
+    val braking: Boolean get() = brakingId != null
+
+    /**
+     * Arrête net la roue et tout ce qui lui est accroché.
+     *
+     * Il faut prendre **tout le train** : mettre une seule roue à zéro alors qu'elle
+     * est engrenée demanderait au solveur de résoudre une contradiction dans le pas
+     * suivant, et il la résoudrait par un à-coup.
+     */
+    fun stopConnected(id: Int) {
+        val connected = connectedTo(id)
+        for (gear in gears) if (gear.wheel.id in connected) {
+            gear.body.omega = 0f
+            gear.body.vx = 0f
+            gear.body.vy = 0f
+            gear.body.wake()
+        }
+        for (mesh in meshes) mesh.joint.reset()
+        for (transmission in transmissions) transmission.joint.reset()
+        for (gear in gears) gear.drive?.reset()
+    }
+
+    /**
+     * Lance une charge : la machine tourne pendant [seconds] secondes de son temps.
+     *
+     * **Rien n'est inventé.** C'est la même simulation, jouée en accéléré : les mêmes
+     * moteurs, les mêmes frottements, les mêmes patinages. Une machine laissée
+     * tourner très longtemps finit d'ailleurs sur un plateau, quand le frottement des
+     * paliers mange exactement ce que les moteurs fournissent — la durée décide
+     * seulement si on s'arrête avant d'y arriver.
+     */
+    fun startCharge(seconds: Float = config.chargeSeconds): Boolean {
+        if (phase == Phase.FLIGHT) return false
+        if (gears.none { it.drive != null }) return false
+        val total = seconds.takeIf { it.isFinite() }
+            ?.coerceIn(GearMachineRules.MIN_CHARGE, GearMachineRules.MAX_CHARGE) ?: return false
+        chargeTotal = total
+        chargeRemaining = total
+        return true
+    }
+
+    fun cancelCharge() {
+        chargeRemaining = 0f
+        chargeTotal = 0f
+    }
+
+    /**
+     * Avance la charge d'au plus [maxSteps] pas, et rend le temps machine consommé.
+     *
+     * La charge est découpée en tranches plutôt que jouée d'un bloc : la vue reste
+     * vivante, et on **voit** le train monter en régime au lieu d'attendre devant une
+     * image figée.
+     */
+    fun advanceCharge(fixed: Float, maxSteps: Int): Float {
+        if (chargeRemaining <= 0f) return 0f
+        var consumed = 0f
+        var steps = 0
+        while (chargeRemaining > 0f && steps < maxSteps) {
+            val h = minOf(fixed, chargeRemaining)
+            step(h)
+            chargeRemaining -= h
+            consumed += h
+            steps++
+        }
+        if (chargeRemaining <= 1e-4f) cancelCharge()
+        return consumed
+    }
+
+    val charging: Boolean get() = chargeRemaining > 0f
+
+    /** Où en est la charge, de 0 à 1. */
+    val chargeProgress: Float
+        get() = if (chargeTotal <= 0f) 0f else
+            (1f - chargeRemaining / chargeTotal).coerceIn(0f, 1f)
+
+    /** La puissance mécanique installée sur la machine, en watts. */
+    fun installedPower(): Float {
+        var total = 0f
+        for (gear in gears) {
+            total += GearMotorRules.power(gear.wheel.motor ?: continue)
+        }
+        return total
     }
 
     private fun trailClear() { trailCount = 0 }
@@ -511,14 +663,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return wheel.id
     }
 
-    fun addFlywheel(x: Float, y: Float, layer: Int): Int? {
-        val id = addGear(GearMachineRules.FLYWHEEL_TEETH, x, y, layer) ?: return null
-        config.wheels.firstOrNull { it.id == id }?.kind = GearWheelKind.FLYWHEEL
-        rebuild()
-        return id
-    }
-
     fun moveGear(id: Int, x: Float, y: Float, snap: Boolean) {
+        if (config.isPinned(id)) return
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return
         moveCoaxialGroup(id, x, y)
         val target = if (snap) {
@@ -533,6 +679,9 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * déjà engagée ; dès que le doigt s'en écarte franchement, la roue redevient libre.
      */
     fun moveGearMagnetic(id: Int, x: Float, y: Float, preferredTargetId: Int?): Int? {
+        // Le volant est planté sur son pas de tir : c'est l'origine de la mesure, et
+        // le laisser glisser rendrait deux essais incomparables.
+        if (config.isPinned(id)) return null
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
         moveCoaxialGroup(id, x, y)
         val held = preferredTargetId?.let {
@@ -574,7 +723,9 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // La fermeture transitive se calcule **une** fois : elle était évaluée pour
         // chaque roue de l'atelier, à chaque événement du doigt.
         val members = assemblyIds(id)
-        for (wheel in config.wheels) if (wheel.id in members) {
+        // Le lanceur reste sur son socle meme quand on tire tout le batî : la prise se
+        // defait alors d'elle-meme, ce qui est exactement ce que le geste demande.
+        for (wheel in config.wheels) if (wheel.id in members && !config.isPinned(wheel.id)) {
             wheel.x = (wheel.x + dx).coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
             wheel.y = (wheel.y + dy).coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
         }
@@ -596,6 +747,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     }
 
     private fun moveCoaxialGroup(id: Int, x: Float, y: Float) {
+        if (config.isPinned(id)) return
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return
         val nx = x.coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
         val ny = y.coerceIn(GearMachineRules.MIN_COORD, GearMachineRules.MAX_COORD)
@@ -613,6 +765,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return
         val shaft = coaxialIds(id)
         for (member in config.wheels) if (member.id in shaft && member.id != id) {
+            if (config.isPinned(member.id)) continue
             member.x = wheel.x
             member.y = wheel.y
         }
@@ -625,9 +778,11 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             val group = coaxialIds(root.id)
             visited += group
             if (group.size < 2) continue
-            for (member in config.wheels) if (member.id in group) {
-                member.x = root.x
-                member.y = root.y
+            // L'ancre est le lanceur s'il est du groupe : lui seul ne bouge pas.
+            val anchor = config.wheels.firstOrNull { it.id in group && config.isPinned(it.id) } ?: root
+            for (member in config.wheels) if (member.id in group && member.id != anchor.id) {
+                member.x = anchor.x
+                member.y = anchor.y
             }
         }
     }
@@ -678,7 +833,14 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         wheel.angle = centerAngle + Math.PI.toFloat() - complementaryPhase * tau / wheel.teeth
     }
 
+    /** Les pieces uniques ne se suppriment pas : la machine ne peut pas en manquer. */
+    fun isRemovable(id: Int): Boolean {
+        if (config.isPinned(id)) return false
+        return config.wheels.firstOrNull { it.id == id }?.motor == null
+    }
+
     fun deleteGear(id: Int): Boolean {
+        if (!isRemovable(id)) return false
         val removed = config.wheels.removeAll { it.id == id }
         config.links.removeAll { it.firstId == id || it.secondId == id }
         if (config.launcherWheelId == id) config.launcherWheelId = null
@@ -830,6 +992,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * immédiatement réglable avant que l'utilisateur choisisse de la raccorder.
      */
     fun duplicateGear(id: Int): Int? {
+        // Dupliquer une piece unique en ferait deux : c'est justement ce qu'on interdit.
+        if (!isRemovable(id)) return null
         if (config.wheels.size >= GearMachineRules.MAX_GEARS) return null
         val source = config.wheels.firstOrNull { it.id == id } ?: return null
         val position = findFreeDuplicatePosition(source) ?: return null
@@ -871,7 +1035,19 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
 
     fun changeLayer(id: Int, delta: Int): Int? {
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
-        wheel.layer = (wheel.layer + delta).coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER)
+        return setLayer(id, wheel.layer + delta)
+    }
+
+    /**
+     * Pose une roue sur une couche donnee.
+     *
+     * Un arbre coaxial relie deux couches **differentes** par definition : celui qui
+     * se retrouverait avec ses deux bouts au meme etage n'a plus de sens, et il part.
+     */
+    fun setLayer(id: Int, layer: Int): Int? {
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
+        wheel.layer = layer.coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER)
+        if (config.isPinned(id)) wheel.y = GearMachineRules.launcherY(wheel)
         config.links.removeAll { link ->
             if (link.kind != GearLinkKind.SHAFT_CLUTCH || (link.firstId != id && link.secondId != id)) {
                 false
@@ -911,12 +1087,6 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return wheel.launchAngle
     }
 
-    /** Deplace l'elevation du volant qui tire, d'un cran. */
-    fun adjustLauncherAngle(delta: Float): Float? {
-        val wheel = config.launcher() ?: return null
-        return setLaunchAngle(wheel.id, wheel.launchAngle + delta)
-    }
-
     /**
      * La masse du boulet. C'est le réglage qui décide de tout le reste : à énergie
      * donnée, `E = ½mv²` échange la vitesse contre la masse, et le même train envoie
@@ -927,6 +1097,94 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             GearMachineRules.MIN_PROJECTILE_MASS, GearMachineRules.MAX_PROJECTILE_MASS
         )
         return config.projectileMass
+    }
+
+    /**
+     * Change le moteur d'une roue, d'un cran dans la liste.
+     *
+     * L'ordre des crans est celui de l'énumération, « aucun » compris : on démonte
+     * donc un moteur par le même geste qui l'a posé.
+     */
+    /**
+     * Passe au moteur suivant, en tournant en rond sur les trois.
+     *
+     * Il n'y a pas de cran « aucun » : la machine a **toujours** un moteur, et une
+     * roue motrice qu'on viderait ne pourrait plus jamais en retrouver un.
+     */
+    fun cycleMotorKind(id: Int): GearMotorKind? {
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
+        val motor = wheel.motor ?: return null
+        val kinds = GearMotorKind.entries.filter { it != GearMotorKind.NONE }
+        val next = kinds[(kinds.indexOf(motor.kind) + 1).mod(kinds.size)]
+        // **Le gabarit ne bouge pas.** Une roue de cage de seize metres existe pour de
+        // bon -- les grues de cathedrale en avaient -- et repartir du gabarit normal a
+        // chaque changement effacerait un reglage que le joueur venait de trouver. Le
+        // genre change, la taille reste : c'est deux reglages, pas un.
+        motor.kind = next
+        rebuild()
+        return next
+    }
+
+
+    /**
+     * Change l'attelage d'un moteur : le nombre d'unités, et son signe le sens.
+     *
+     * Les crans traversent zéro : à une unité, un cran de plus vers le bas repasse de
+     * l'autre côté avec une unité. Le sens de rotation est donc au bout du même
+     * réglage, ce qui évite une ligne de plus dans une bulle déjà chargée.
+     */
+    fun changeMotorUnits(id: Int, delta: Int): Int? {
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
+        val motor = wheel.motor ?: return null
+        val signed = motor.units * if (motor.direction < 0) -1 else 1
+        // La suite des crans : -8..-1 puis 1..8, sans le zéro qui ne veut rien dire.
+        val next = when (val moved = signed + delta) {
+            0 -> if (delta > 0) 1 else -1
+            else -> moved
+        }
+        return setMotorUnits(id, next)
+    }
+
+    /**
+     * Regle l'attelage d'un coup : le nombre d'unites, et son signe le sens.
+     *
+     * Zero n'existe pas — un moteur sans bete attelee ne serait pas un moteur, ce
+     * serait l'absence de moteur, et ca se dit sur l'autre ligne.
+     */
+    fun setMotorUnits(id: Int, signedUnits: Int): Int? {
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
+        val motor = wheel.motor ?: return null
+        val clamped = signedUnits.coerceIn(-GearMotorRules.MAX_UNITS, GearMotorRules.MAX_UNITS)
+        motor.units = kotlin.math.abs(clamped)
+            .coerceIn(GearMotorRules.MIN_UNITS, GearMotorRules.MAX_UNITS)
+        motor.direction = if (clamped < 0) -1 else 1
+        rebuild()
+        return motor.units * motor.direction
+    }
+
+
+    /**
+     * Regle le gabarit d'une machine motrice, en metres de rayon.
+     *
+     * C'est **le** levier d'un moteur : la puissance d'un moulin suit le carre de son
+     * envergure, le couple d'un manege la longueur du bras, la chute d'une roue a eau
+     * son diametre. La denture du rouet, elle, ne change rien a la puissance.
+     */
+    fun setMotorSpan(id: Int, span: Float): Float? {
+        val motor = config.wheels.firstOrNull { it.id == id }?.motor ?: return null
+        motor.span = span.takeIf { it.isFinite() }
+            ?.coerceIn(GearMotorRules.MIN_SPAN, GearMotorRules.MAX_SPAN)
+            ?: return null
+        rebuild()
+        return motor.span
+    }
+
+    /** Règle la durée d'une charge, commune à toute la machine. */
+    fun setChargeSeconds(seconds: Float): Float {
+        config.chargeSeconds = seconds.coerceIn(
+            GearMachineRules.MIN_CHARGE, GearMachineRules.MAX_CHARGE
+        )
+        return config.chargeSeconds
     }
 
     fun addLink(firstId: Int, secondId: Int, kind: GearLinkKind, inputDirection: Int = 1): Boolean {
@@ -974,7 +1232,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return energy.coerceAtMost(Float.MAX_VALUE.toDouble()).toFloat()
     }
 
-    private fun connectedTo(startId: Int): Set<Int> {
+    fun connectedTo(startId: Int): Set<Int> {
         val found = linkedSetOf(startId)
         var changed = true
         while (changed) {
@@ -1056,6 +1314,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * qu'il y a, et ce qu'on emporte lui est retire.
      */
     fun launchProjectile(): Boolean {
+        // Tirer met fin a la charge : on ne remplit pas un volant pendant qu'il vide.
+        cancelCharge()
         val launcherId = config.launcherWheelId ?: return false
         val launcher = gears.firstOrNull { it.wheel.id == launcherId } ?: return false
         if (launcher.wheel.kind != GearWheelKind.FLYWHEEL) return false
@@ -1124,6 +1384,47 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return true
     }
 
+    /**
+     * La vitesse a laquelle le boulet partirait maintenant, en m/s.
+     *
+     * Ce n'est pas la vitesse de la jante : c'est **le plus petit** de ce que la jante
+     * offre et de ce que le train peut payer. Une machine lancee tres vite mais vide
+     * ne lancera pas plus loin qu'elle n'a d'energie, et l'afficher autrement serait
+     * promettre un tir qui ne partira pas.
+     */
+    fun launchSpeedNow(): Float {
+        val wheel = config.launcher() ?: return 0f
+        val rim = rimSpeed()
+        if (rim <= 0f) return 0f
+        val available = rotationalEnergy(connectedTo(wheel.id))
+        val mass = config.projectileMass
+        val payable = sqrt(2f * available * GearMachineRules.LAUNCH_EFFICIENCY / mass)
+        return minOf(rim, payable)
+    }
+
+    /**
+     * La portee qu'atteindrait le tir, en metres, si l'air n'existait pas.
+     *
+     * C'est une **borne haute** assumee : la trainee ne fait jamais que raccourcir, et
+     * un chiffre qui promet moins que le tir reel serait plus trompeur qu'utile. Le
+     * depart se fait a la hauteur de la gorge, qui compte pour beaucoup sur un volant
+     * de six metres de rayon.
+     */
+    fun estimatedRange(): Float {
+        val wheel = config.launcher() ?: return 0f
+        val v = launchSpeedNow()
+        if (v <= 0.01f) return 0f
+        val aim = Math.toRadians(wheel.launchAngle.toDouble()).toFloat()
+        val vx = v * cos(aim)
+        val vy = v * sin(aim)
+        val state = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
+        val armAngle = launchPointAngle(wheel)
+        val y0 = (state.body.y + sin(armAngle) * wheel.launchRadius).coerceAtLeast(0f)
+        val g = PhysicsConstants.STANDARD_GRAVITY
+        val fall = sqrt(vy * vy + 2f * g * y0)
+        return vx * (vy + fall) / g
+    }
+
     fun spinGear(id: Int, angularSpeed: Float) {
         val state = gears.firstOrNull { it.wheel.id == id } ?: return
         state.body.omega = angularSpeed.coerceIn(-GearMachineRules.MAX_MANUAL_SPEED, GearMachineRules.MAX_MANUAL_SPEED)
@@ -1169,11 +1470,13 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     }
 
     fun stopAll() {
+        cancelCharge()
         for (gear in gears) {
             gear.body.vx = 0f
             gear.body.vy = 0f
             gear.body.omega = 0f
             gear.body.wake()
+            gear.drive?.reset()
         }
         for (mesh in meshes) mesh.joint.reset()
         for (transmission in transmissions) transmission.joint.reset()
@@ -1194,6 +1497,17 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             maxX = maxOf(maxX, gear.wheel.x + r)
             minY = minOf(minY, gear.wheel.y - r)
             maxY = maxOf(maxY, gear.wheel.y + r)
+            // Une machine motrice se tient a gauche de son rouet et le depasse de
+            // beaucoup : sans elle dans le cadre, un moulin de seize metres sortirait
+            // de l'image des qu'on le pose.
+            val motor = gear.wheel.motor ?: continue
+            val cx = gear.wheel.x - GearMotorRules.offsetX(motor, r)
+            val hub = GearMotorRules.hubHeight(motor, gear.wheel.y)
+            minX = minOf(minX, cx - motor.span)
+            maxX = maxOf(maxX, cx + motor.span)
+            // La machine part du sol et monte jusqu'au bout de ses ailes.
+            minY = minOf(minY, 0f)
+            maxY = maxOf(maxY, hub + motor.span)
         }
         return floatArrayOf(minX, maxX, minY, maxY)
     }

@@ -21,6 +21,8 @@ import com.Atom2Universe.app.games.trebuchet.gears.GearMachineLibrary
 import com.Atom2Universe.app.games.trebuchet.gears.GearMachinePreset
 import com.Atom2Universe.app.games.trebuchet.gears.GearMachineRules
 import com.Atom2Universe.app.games.trebuchet.gears.GearMachineView
+import com.Atom2Universe.app.games.trebuchet.gears.GearMotorKind
+import com.Atom2Universe.app.games.trebuchet.gears.GearMotorRules
 import com.Atom2Universe.app.games.trebuchet.gears.GearLinkKind
 import com.Atom2Universe.app.games.trebuchet.gears.GearWheelKind
 import com.Atom2Universe.app.games.trebuchet.gears.GearWheelMaterial
@@ -77,15 +79,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
         const val ID_GROUP_GEAR_SIZES = 90
         const val ID_GROUP_TRANSMISSION = 91
-        const val ID_GROUP_LAUNCHER = 92
-        const val ID_GROUP_MASSES = 93
-        const val ID_GEAR_LAYER_DOWN = 110
-        const val ID_GEAR_LAYER_UP = 111
-        const val ID_GEAR_FLYWHEEL = 113
-        const val ID_GEAR_LAUNCHER = 115
-        const val ID_GEAR_ANGLE_DOWN = 116
-        const val ID_GEAR_ANGLE_UP = 117
-        const val ID_GEAR_STOP = 118
         const val ID_BELT_OPEN = 119
         const val ID_BELT_CROSSED = 120
         const val ID_CHAIN_CCW = 121
@@ -93,7 +86,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         const val ID_LINK_REMOVE = 123
         const val ID_LINK_CANCEL = 124
         const val ID_FIRST_GEAR_SIZE = 130
-        const val ID_FIRST_MASS = 140
         const val ID_GEAR_RESET = 126
 
         /** Un libellé par taille de roue, dans l'ordre de [GearMachineRules.SIZES]. */
@@ -496,75 +488,41 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         popup.show()
     }
 
+    /**
+     * Le menu des pieces : **uniquement ce qu'on ajoute a la machine**, et le retour a
+     * zero.
+     *
+     * Il portait aussi la navigation entre couches, les reglages du lanceur et l'arret
+     * des engrenages. Les trois avaient trouve une meilleure place ailleurs : les
+     * couches ont leur selecteur dans le coin haut gauche, l'angle de largage et le
+     * boulet se lisent et se reglent sur le volant lui-meme, et chaque roue porte son
+     * frein. Un menu qui refait ce qui existe deja ailleurs se contente d'ajouter un
+     * chemin de plus a apprendre.
+     */
     private fun showGearPartsMenu() {
         val popup = PopupMenu(this, partsButton)
-        // Les quatre tailles sont proposées d'emblée : elles étaient toutes prévues,
-        // mais une seule était atteignable, et la roue posée demandait ensuite d'être
-        // redimensionnée dent par dent depuis sa bulle.
         val sizes = popup.menu.addSubMenu(
             0, ID_GROUP_GEAR_SIZES, 0, getString(R.string.trebuchet_gear_add)
         )
         for ((i, teeth) in GearMachineRules.SIZES.withIndex()) {
             sizes.add(0, ID_FIRST_GEAR_SIZE + i, i, getString(GEAR_SIZE_LABELS[i], teeth))
         }
-        popup.menu.add(0, ID_GEAR_FLYWHEEL, 1, getString(R.string.trebuchet_gear_add_flywheel))
-        val selected = gearView.selectedWheel()
-        if (selected == null) {
-            popup.menu.add(0, ID_GEAR_LAYER_DOWN, 2, getString(R.string.trebuchet_gear_layer_down))
-            popup.menu.add(0, ID_GEAR_LAYER_UP, 3, getString(R.string.trebuchet_gear_layer_up))
-        } else {
-            // Un volant porte toujours son bras : il n'y a rien a monter ni a
-            // demonter, seulement a designer lequel tire quand il y en a plusieurs.
-            if (selected.kind == GearWheelKind.FLYWHEEL &&
-                gearView.game.config.launcherWheelId != selected.id
-            ) {
-                popup.menu.add(
-                    0, ID_GEAR_LAUNCHER, 8,
-                    getString(R.string.trebuchet_gear_attach_launcher)
-                )
-            }
-            val transmission = popup.menu.addSubMenu(
-                0, ID_GROUP_TRANSMISSION, 9, getString(R.string.trebuchet_gear_transmission)
+        // Une courroie ou une chaine s'ajoute aussi a la machine : il faut seulement
+        // avoir designe d'ou elle part, donc une roue tenue.
+        if (gearView.selectedWheel() != null || gearView.pendingLink != null) {
+            val link = popup.menu.addSubMenu(
+                0, ID_GROUP_TRANSMISSION, 3, getString(R.string.trebuchet_gear_add_link)
             )
-            transmission.add(0, ID_BELT_OPEN, 0, getString(R.string.trebuchet_gear_belt_open))
-            transmission.add(0, ID_BELT_CROSSED, 1, getString(R.string.trebuchet_gear_belt_crossed))
-            transmission.add(0, ID_CHAIN_CCW, 2, getString(R.string.trebuchet_gear_chain_ccw))
-            transmission.add(0, ID_CHAIN_CW, 3, getString(R.string.trebuchet_gear_chain_cw))
-            transmission.add(0, ID_LINK_REMOVE, 4, getString(R.string.trebuchet_gear_link_remove))
-        }
-        if (gearView.pendingLink != null) popup.menu.add(
-            0, ID_LINK_CANCEL, 11, getString(R.string.trebuchet_gear_link_cancel)
-        )
-        // Le lanceur a son propre tiroir : son angle et son boulet sont deux réglages
-        // du tir, pas des pièces de la machine.
-        if (gearView.game.config.launcherWheelId != null) {
-            val launcher = popup.menu.addSubMenu(
-                0, ID_GROUP_LAUNCHER, 10, getString(
-                    R.string.trebuchet_gear_launcher_menu,
-                    (gearView.game.config.launcher()?.launchAngle ?: 0f).toInt(),
-                    gearView.game.config.projectileMass
-                )
-            )
-            launcher.add(0, ID_GEAR_ANGLE_DOWN, 0, getString(R.string.trebuchet_gear_angle_down))
-            launcher.add(0, ID_GEAR_ANGLE_UP, 1, getString(R.string.trebuchet_gear_angle_up))
-            // Les boulets restent dans ce même tiroir : un menu contextuel ne garantit
-            // pas les sous-menus imbriqués, et deux niveaux suffisent largement.
-            for ((i, mass) in GearMachineRules.PROJECTILE_MASSES.withIndex()) {
-                launcher.add(
-                    ID_GROUP_MASSES, ID_FIRST_MASS + i, 2 + i,
-                    getString(R.string.trebuchet_gear_mass, mass)
-                )
+            link.add(0, ID_BELT_OPEN, 0, getString(R.string.trebuchet_gear_belt_open))
+            link.add(0, ID_BELT_CROSSED, 1, getString(R.string.trebuchet_gear_belt_crossed))
+            link.add(0, ID_CHAIN_CCW, 2, getString(R.string.trebuchet_gear_chain_ccw))
+            link.add(0, ID_CHAIN_CW, 3, getString(R.string.trebuchet_gear_chain_cw))
+            link.add(0, ID_LINK_REMOVE, 4, getString(R.string.trebuchet_gear_link_remove))
+            if (gearView.pendingLink != null) {
+                link.add(0, ID_LINK_CANCEL, 5, getString(R.string.trebuchet_gear_link_cancel))
             }
-            // Une case cochée dit lequel est monté : sans elle, ce menu ne saurait que
-            // changer le boulet, jamais dire lequel est là.
-            launcher.setGroupCheckable(ID_GROUP_MASSES, true, true)
-            val chosen = GearMachineRules.PROJECTILE_MASSES.indexOfFirst {
-                abs(it - gearView.game.config.projectileMass) < 1e-3f
-            }
-            if (chosen >= 0) launcher.findItem(ID_FIRST_MASS + chosen).isChecked = true
         }
-        popup.menu.add(0, ID_GEAR_STOP, 12, getString(R.string.trebuchet_gear_stop))
-        popup.menu.add(0, ID_GEAR_RESET, 13, getString(R.string.trebuchet_gear_reset))
+        popup.menu.add(0, ID_GEAR_RESET, 4, getString(R.string.trebuchet_gear_reset))
         popup.setOnMenuItemClickListener { item ->
             val id = item.itemId
             if (id in ID_FIRST_GEAR_SIZE until ID_FIRST_GEAR_SIZE + GearMachineRules.SIZES.size) {
@@ -572,25 +530,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
                 updateUi()
                 return@setOnMenuItemClickListener true
             }
-            if (id in ID_FIRST_MASS until ID_FIRST_MASS + GearMachineRules.PROJECTILE_MASSES.size) {
-                gearView.setProjectileMass(GearMachineRules.PROJECTILE_MASSES[id - ID_FIRST_MASS])
-                updateUi()
-                return@setOnMenuItemClickListener true
-            }
             when (id) {
-                ID_GEAR_FLYWHEEL -> gearView.armFlywheel()
-                ID_GEAR_LAYER_DOWN -> {
-                    if (gearView.selectedWheel() != null) gearView.changeSelectedLayer(-1)
-                    else gearView.setCurrentLayer(-1)
-                }
-                ID_GEAR_LAYER_UP -> {
-                    if (gearView.selectedWheel() != null) gearView.changeSelectedLayer(1)
-                    else gearView.setCurrentLayer(1)
-                }
-                ID_GEAR_LAUNCHER -> gearView.attachLauncher()
-                ID_GEAR_ANGLE_DOWN -> gearView.adjustLauncherAngle(-5f)
-                ID_GEAR_ANGLE_UP -> gearView.adjustLauncherAngle(5f)
-                ID_GEAR_STOP -> gearView.stopAll()
                 ID_GEAR_RESET -> {
                     lastGearMachineName = ""
                     loadGearMachine(GearMachineConfig(), getString(R.string.trebuchet_gear_default))
@@ -925,70 +865,18 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
                 else R.string.trebuchet_gear_link_pick_second
             )
         } ?: gearView.placementTeeth?.let {
-            if (gearView.placementKind == GearWheelKind.FLYWHEEL) {
-                getString(R.string.trebuchet_gear_place_flywheel, gearView.currentLayer)
-            } else {
-                getString(R.string.trebuchet_gear_place, it, gearView.currentLayer)
-            }
-        } ?: gearView.game.projectile?.let { shot ->
-            // Un tir posé garde son résultat sous les yeux : c'est ce qu'on vient de
-            // mesurer, et ça doit rester lisible pendant qu'on retouche la machine.
-            if (shot.landed) {
-                getString(
-                    if (shot.hitTarget) R.string.trebuchet_gear_shot_hit
-                    else R.string.trebuchet_gear_shot_landed,
-                    shot.distance,
-                    shot.peakY - shot.startY,
-                    shot.launchEnergy / 1000f
-                )
-            } else {
-                getString(
-                    R.string.trebuchet_gear_shot_status,
-                    gearView.game.lastLaunchSpeed,
-                    gearView.game.lastLaunchEnergy / 1000f,
-                    shot.body.x - shot.startX,
-                    shot.peakY - shot.startY
-                )
-            }
-        } ?: getString(R.string.trebuchet_gear_status)
-        if (selected != null) {
-            val state = gearView.game.gears.firstOrNull { it.wheel.id == selected.id }
-            infoTitle.visibility = View.VISIBLE
-            infoTip.visibility = View.VISIBLE
-            infoTitle.text = getString(
-                R.string.trebuchet_gear_selected,
-                if (selected.kind == GearWheelKind.FLYWHEEL)
-                    getString(R.string.trebuchet_gear_flywheel) else getString(R.string.trebuchet_gear_wheel, selected.teeth),
-                gearMaterialLabel(selected.material),
-                state?.body?.mass ?: 0f,
-                selected.layer,
-                if (state != null) 0.5f * state.body.inertia * state.body.omega * state.body.omega / 1000f else 0f
-            )
-            infoTip.text = when {
-                gearView.layoutConflictIds.isNotEmpty() ->
-                    getString(R.string.trebuchet_gear_layout_conflict)
-                gearView.pendingLink?.kind == GearLinkKind.SHAFT_CLUTCH ->
-                    getString(R.string.trebuchet_gear_shaft_pending_tip)
-                gearView.pendingLink != null ->
-                    getString(R.string.trebuchet_gear_link_pending_tip)
-                // La pièce montée dit son propre réglage : l'angle et le boulet sont
-                // ce qu'on relit entre deux tirs, et aller les chercher dans un menu
-                // pour les *lire* est une corvée.
-                gearView.game.config.launcherWheelId == selected.id -> getString(
-                    R.string.trebuchet_gear_launcher_tip,
-                    selected.launchAngle.toInt(),
-                    gearView.game.config.projectileMass,
-                    gearView.game.rimSpeed()
-                )
-                selected.kind == GearWheelKind.FLYWHEEL ->
-                    getString(R.string.trebuchet_gear_flywheel_tip, selected.launchAngle.toInt())
-                else -> getString(R.string.trebuchet_gear_tip)
-            }
-        } else {
-            infoTitle.visibility = View.GONE
-            infoTip.visibility = View.GONE
+            getString(R.string.trebuchet_gear_place, it, gearView.currentLayer)
         }
     }
+
+    private fun gearMotorLabel(kind: GearMotorKind): String = getString(
+        when (kind) {
+            GearMotorKind.NONE -> R.string.trebuchet_gear_motor_none
+            GearMotorKind.CAROUSEL -> R.string.trebuchet_gear_motor_carousel
+            GearMotorKind.WINDMILL -> R.string.trebuchet_gear_motor_windmill
+            GearMotorKind.WATERWHEEL -> R.string.trebuchet_gear_motor_waterwheel
+        }
+    )
 
     private fun gearMaterialLabel(material: GearWheelMaterial): String = getString(
         when (material) {

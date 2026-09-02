@@ -27,7 +27,9 @@ import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.min
 import kotlin.math.sin
+import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.roundToInt
 
 class GearMachineView @JvmOverloads constructor(
     context: Context,
@@ -54,8 +56,6 @@ class GearMachineView @JvmOverloads constructor(
     var selectedId: Int? = null
         private set
     var placementTeeth: Int? = null
-        private set
-    var placementKind = GearWheelKind.GEAR
         private set
     var currentLayer = 0
         private set
@@ -104,6 +104,7 @@ class GearMachineView @JvmOverloads constructor(
         strokeWidth = 0.10f
     }
     private val pTexture = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = 0.045f }
+    private val motorArt = GearMotorArt(dp)
     private val pAssembly = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(119, 239, 196); style = Paint.Style.STROKE; strokeWidth = 0.07f
         pathEffect = DashPathEffect(floatArrayOf(0.16f, 0.10f), 0f)
@@ -136,6 +137,18 @@ class GearMachineView @JvmOverloads constructor(
     }
     private val pLayerPanel = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(225, 16, 25, 50) }
     private val pLayerButton = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(85, 143, 166, 200) }
+    private val pPanelLabel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(143, 166, 200)
+        textSize = 11f * dp
+        typeface = android.graphics.Typeface.DEFAULT_BOLD
+    }
+    private val pPanelValue = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 209, 102)
+        textSize = 13f * dp
+        typeface = android.graphics.Typeface.create(
+            android.graphics.Typeface.MONOSPACE, android.graphics.Typeface.BOLD
+        )
+    }
     private val pLayerText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         textSize = 14f * dp
@@ -219,7 +232,6 @@ class GearMachineView @JvmOverloads constructor(
         game.loadConfig(config)
         selectedId = null
         placementTeeth = null
-        placementKind = GearWheelKind.GEAR
         pendingLink = null
         layoutConflictIds = emptySet()
         fitCamera()
@@ -231,20 +243,12 @@ class GearMachineView @JvmOverloads constructor(
 
     fun armPlacement(teeth: Int) {
         placementTeeth = teeth
-        placementKind = GearWheelKind.GEAR
         selectedId = null
         layoutConflictIds = emptySet()
         listener?.onGearSelectionChanged()
         invalidate()
     }
 
-    fun armFlywheel() {
-        placementTeeth = GearMachineRules.FLYWHEEL_TEETH
-        placementKind = GearWheelKind.FLYWHEEL
-        selectedId = null
-        listener?.onGearSelectionChanged()
-        invalidate()
-    }
 
     fun cancelPlacement() {
         placementTeeth = null
@@ -318,9 +322,9 @@ class GearMachineView @JvmOverloads constructor(
         return id
     }
 
-    fun changeSelectedLayer(delta: Int): Int? {
+    fun setSelectedLayer(value: Int): Int? {
         val id = selectedId ?: return null
-        val layer = game.changeLayer(id, delta) ?: return null
+        val layer = game.setLayer(id, value) ?: return null
         currentLayer = layer
         layoutConflictIds = emptySet()
         listener?.onGearMachineChanged()
@@ -338,31 +342,12 @@ class GearMachineView @JvmOverloads constructor(
         return material
     }
 
-    fun attachLauncher(): Boolean {
-        val id = selectedId ?: return false
-        val attached = game.attachLauncher(id)
-        if (attached) {
-            listener?.onGearMachineChanged()
-            listener?.onGearSelectionChanged()
-            invalidate()
-        }
-        return attached
-    }
-
     fun setProjectileMass(mass: Float): Float {
         val applied = game.setProjectileMass(mass)
         listener?.onGearMachineChanged()
         listener?.onGearSelectionChanged()
         invalidate()
         return applied
-    }
-
-    fun adjustLauncherAngle(delta: Float): Float? {
-        val angle = game.adjustLauncherAngle(delta)
-        listener?.onGearMachineChanged()
-        listener?.onGearSelectionChanged()
-        invalidate()
-        return angle
     }
 
     /** Regle l'elevation du tir de la roue selectionnee, si c'est un volant. */
@@ -413,6 +398,81 @@ class GearMachineView @JvmOverloads constructor(
         listener?.onGearSelectionChanged()
         invalidate()
         return currentLayer
+    }
+
+    /**
+     * Lance ou interrompt une charge : les moteurs travaillent pendant la duree
+     * reglee, et la machine monte en regime sous les yeux.
+     */
+    fun toggleCharge(): Boolean {
+        if (game.charging) {
+            game.cancelCharge()
+            invalidate()
+            return false
+        }
+        val started = game.startCharge()
+        invalidate()
+        return started
+    }
+
+    /**
+     * Serre ou desserre le frein de la roue tenue.
+     *
+     * Freiner est une action **tenue**, pas un cran : on garde le doigt dessus tant
+     * qu'on veut ralentir, exactement comme une main sur une jante.
+     */
+    fun setBrake(on: Boolean) {
+        game.setBrake(if (on) selectedId else null)
+        invalidate()
+    }
+
+    /** Arrete net la roue tenue et tout ce qui lui est accroche. */
+    fun stopSelected(): Boolean {
+        val id = selectedId ?: return false
+        game.cancelCharge()
+        game.stopConnected(id)
+        listener?.onGearMachineChanged()
+        invalidate()
+        return true
+    }
+
+    /** Fait defiler le genre du moteur : il n'y en a qu'un, on le remplace sur place. */
+    fun cycleSelectedMotor(): GearMotorKind? {
+        val id = selectedId ?: return null
+        val kind = game.cycleMotorKind(id) ?: return null
+        listener?.onGearMachineChanged()
+        listener?.onGearSelectionChanged()
+        invalidate()
+        return kind
+    }
+
+    fun setSelectedMotorSpan(span: Float): Float? {
+        val id = selectedId ?: return null
+        val value = game.setMotorSpan(id, span)
+        listener?.onGearMachineChanged()
+        invalidate()
+        return value
+    }
+
+    fun setSelectedMotorUnits(signedUnits: Int): Int? {
+        val id = selectedId ?: return null
+        val units = game.setMotorUnits(id, signedUnits)
+        listener?.onGearMachineChanged()
+        invalidate()
+        return units
+    }
+
+    fun setChargeSeconds(seconds: Float): Float {
+        val value = game.setChargeSeconds(seconds)
+        listener?.onGearMachineChanged()
+        invalidate()
+        return value
+    }
+
+    /** La vitesse de rotation de la roue tenue, en rad/s et signee. */
+    fun selectedOmega(): Float {
+        val id = selectedId ?: return 0f
+        return game.gears.firstOrNull { it.wheel.id == id }?.body?.omega ?: 0f
     }
 
     fun stopAll() {
@@ -573,6 +633,7 @@ class GearMachineView @JvmOverloads constructor(
             pMesh.alpha = layerAlpha(a.wheel.layer, 170, 80)
             canvas.drawLine(a.body.x, a.body.y, b.body.x, b.body.y, pMesh)
         }
+        drawMotors(canvas)
         for (gear in game.gears.sortedBy { it.wheel.layer }) drawGear(canvas, gear)
         // Le bras se pose par-dessus la roue : c'est une piece rapportee sur la jante,
         // et le godet comme la fleche de sortie doivent rester lisibles.
@@ -603,7 +664,9 @@ class GearMachineView @JvmOverloads constructor(
         pText.alpha = 255
         drawLayerSelector(canvas)
         drawStructureTool(canvas)
+        drawLauncherPanel(canvas)
         drawTimeControl(canvas)
+        drawChargeGauge(canvas)
         if (running) postInvalidateOnAnimation()
     }
 
@@ -614,23 +677,44 @@ class GearMachineView @JvmOverloads constructor(
             lastFrameNanos = now
             return
         }
-        accumulator += ((now - lastFrameNanos) / 1_000_000_000.0).toFloat().coerceAtMost(0.05f)
+        val elapsed = ((now - lastFrameNanos) / 1_000_000_000.0).toFloat().coerceAtMost(0.05f)
         lastFrameNanos = now
         val fixed = 1f / 120f
-        var guard = 0
         var consumed = 0f
-        while (accumulator >= fixed && guard++ < 8) {
-            game.step(fixed)
-            updateTimeControl(fixed)
-            if (!timeMode) skyClock.advance(fixed)
-            ambientClock += fixed
-            clouds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
-            birds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
-            accumulator -= fixed
-            consumed += fixed
+        if (game.charging) {
+            // La charge est la **meme** simulation, jouee en accelere. On la decoupe
+            // pour qu'elle tienne dans une seconde et demie d'ecran quelle que soit la
+            // duree demandee : on voit le train monter en regime au lieu d'attendre
+            // devant une image figee, et rien ne bloque une image entiere.
+            val steps = ceil(game.chargeTotal / fixed / CHARGE_FRAMES).toInt()
+                .coerceIn(CHARGE_MIN_STEPS, CHARGE_MAX_STEPS)
+            consumed = game.advanceCharge(fixed, steps)
+            accumulator = 0f
+            // Le ciel suit le temps **machine** : charger dix minutes deplace le soleil
+            // de dix minutes. Les nuages et les oiseaux, eux, restent a l'heure de
+            // l'ecran -- ce sont des habitants, pas des rouages.
+            skyClock.advance(consumed)
+            ambientClock += elapsed
+            clouds.update(elapsed, sin(ambientClock * 0.08f) * 2.2f)
+            birds.update(elapsed, sin(ambientClock * 0.08f) * 2.2f)
+        } else {
+            accumulator += elapsed
+            var guard = 0
+            while (accumulator >= fixed && guard++ < 8) {
+                game.step(fixed)
+                updateTimeControl(fixed)
+                if (!timeMode) skyClock.advance(fixed)
+                ambientClock += fixed
+                clouds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
+                birds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
+                accumulator -= fixed
+                consumed += fixed
+            }
         }
         sky.update(skyClock.instant)
-        updateCamera(consumed)
+        // La camera vit a l'heure de l'ecran : lui donner le temps machine la ferait
+        // sauter d'un bond a chaque image de charge.
+        updateCamera(if (game.charging) elapsed else consumed)
         val nowMillis = now / 1_000_000L
         if (nowMillis - lastUiNotifyMillis >= 250L) {
             lastUiNotifyMillis = nowMillis
@@ -884,6 +968,70 @@ class GearMachineView @JvmOverloads constructor(
         canvas.drawText("%02d:%02d  %s %.1f h/s".format(hour, minute, direction, abs(timeRate)), width / 2f, height * 0.18f, pHint)
     }
 
+    /**
+     * La jauge de charge : combien de temps machine il reste a jouer.
+     *
+     * Elle dit surtout que **rien n'est fige** : sans elle, une charge de dix minutes
+     * ressemblerait a un ecran bloque pendant que les roues s'emballent.
+     */
+    /**
+     * Ce que le lanceur vaut a l'instant, en haut a droite.
+     *
+     * Trois nombres, et pas un de plus : le regime qu'il tient, l'energie que le train
+     * relie lui offre, et la portee que ca donnerait. Sans eux, on chargeait a
+     * l'aveugle et on decouvrait le resultat une fois le boulet pose -- alors que tout
+     * se decide **avant** le tir, en regardant monter ces trois-la.
+     */
+    private fun drawLauncherPanel(canvas: Canvas) {
+        val wheel = game.config.launcher() ?: return
+        val state = game.gears.firstOrNull { it.wheel.id == wheel.id } ?: return
+        val rpm = (state.body.omega * 60f / (2f * PI.toFloat())).roundToInt()
+        val energy = game.rotationalEnergy(game.connectedTo(wheel.id)) / 1000f
+        val range = game.estimatedRange()
+
+        val w = 148f * dp
+        val rowH = 21f * dp
+        val h = 14f * dp + rowH * 3f
+        val left = width - w - 10f * dp
+        val top = 10f * dp
+        screenRect.set(left, top, left + w, top + h)
+        canvas.drawRoundRect(screenRect, 9f * dp, 9f * dp, pLayerPanel)
+
+        pPanelLabel.textAlign = Paint.Align.LEFT
+        pPanelValue.textAlign = Paint.Align.RIGHT
+        val rows = arrayOf(
+            context.getString(R.string.trebuchet_gear_panel_speed) to
+                context.getString(R.string.trebuchet_gear_panel_rpm, rpm),
+            context.getString(R.string.trebuchet_gear_panel_energy) to
+                context.getString(R.string.trebuchet_gear_panel_kj, energy),
+            context.getString(R.string.trebuchet_gear_panel_range) to
+                context.getString(R.string.trebuchet_gear_panel_m, range)
+        )
+        for ((index, row) in rows.withIndex()) {
+            val baseline = top + 7f * dp + rowH * (index + 0.5f) +
+                (pPanelValue.textSize * 0.36f)
+            canvas.drawText(row.first, left + 10f * dp, baseline, pPanelLabel)
+            canvas.drawText(row.second, left + w - 10f * dp, baseline, pPanelValue)
+        }
+    }
+
+    private fun drawChargeGauge(canvas: Canvas) {
+        if (!game.charging) return
+        val w = 200f * dp
+        val h = 26f * dp
+        val left = (width - w) / 2f
+        val top = height - h - 18f * dp
+        screenRect.set(left, top, left + w, top + h)
+        canvas.drawRoundRect(screenRect, 8f * dp, 8f * dp, pLayerPanel)
+        screenRect.set(left + 3f * dp, top + 3f * dp,
+            left + 3f * dp + (w - 6f * dp) * game.chargeProgress, top + h - 3f * dp)
+        canvas.drawRoundRect(screenRect, 6f * dp, 6f * dp, pLayerButton)
+        canvas.drawText(
+            context.getString(R.string.trebuchet_gear_charging, game.chargeRemaining.roundToInt()),
+            width / 2f, top + h / 2f - (pLayerText.ascent() + pLayerText.descent()) / 2f, pLayerText
+        )
+    }
+
     private fun drawAutomaticFrame(canvas: Canvas) {
         for (gear in game.gears) {
             drawGearSupport(canvas, gear)
@@ -1063,6 +1211,22 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     /** Un arc flechee au centre : dans quel sens la roue lachera son boulet. */
+    /**
+     * Les machines motrices, dessinees derriere les roues qu'elles entrainent.
+     *
+     * Le trace vit dans [GearMotorArt] : un moulin qui merite d'etre regarde fait deux
+     * cents lignes a lui seul, et la vue en compte deja mille sept cents.
+     */
+    private fun drawMotors(canvas: Canvas) {
+        for (gear in game.gears) {
+            if (gear.wheel.motor == null) continue
+            val relativeLayer = gear.wheel.layer - currentLayer
+            val alpha = if (relativeLayer == 0) 255
+                else (170 - abs(relativeLayer) * 30).coerceAtLeast(60)
+            motorArt.draw(canvas, gear, alpha)
+        }
+    }
+
     private fun drawSpinHint(canvas: Canvas, gear: GearMachineGame.GearState, alpha: Int) {
         val spin = game.launchSpin(gear.wheel.id)
         val radius = gear.wheel.pitchRadius * 0.45f
@@ -1125,12 +1289,30 @@ class GearMachineView @JvmOverloads constructor(
         canvas.drawPath(gearPath, pGear)
         drawMaterialTexture(canvas, gear, pitch, pGear.alpha)
         if (gear.wheel.kind == GearWheelKind.FLYWHEEL) {
+            // Un volant est une jante montée sur des rayons, et il faut le **voir** :
+            // c'est ce qui explique qu'il pèse une tonne et non cinquante-six, donc
+            // qu'un moteur puisse le lancer. On creuse le disque jusque sous la jante,
+            // puis on repose les rayons par-dessus le vide.
+            val hollow = GearMachineRules.rimInnerRadius(gear.wheel.kind, outer) -
+                GearMachineRules.MODULE * 0.4f
             pHub.color = Color.rgb(16, 24, 40)
             pHub.alpha = if (relativeLayer == 0) 255 else 150
-            canvas.drawCircle(gear.body.x, gear.body.y, pitch * 0.55f, pHub)
-            pEdge.strokeWidth = 0.10f
+            canvas.drawCircle(gear.body.x, gear.body.y, hollow, pHub)
+            pTexture.color = materialColor(gear.wheel.material, gear.wheel.layer, pastel = false)
+            pTexture.alpha = pGear.alpha
+            pTexture.strokeWidth = maxOf(0.05f, outer * 0.035f)
+            val boss = maxOf(0.10f, outer * 0.14f)
+            for (i in 0 until FLYWHEEL_SPOKES) {
+                val angle = gear.body.angle + i * (2f * PI.toFloat() / FLYWHEEL_SPOKES)
+                canvas.drawLine(
+                    gear.body.x + cos(angle) * boss, gear.body.y + sin(angle) * boss,
+                    gear.body.x + cos(angle) * hollow, gear.body.y + sin(angle) * hollow, pTexture
+                )
+            }
+            pTexture.alpha = 255
+            pEdge.strokeWidth = 0.08f
             pEdge.alpha = pGear.alpha
-            canvas.drawCircle(gear.body.x, gear.body.y, pitch * 0.82f, pEdge)
+            canvas.drawCircle(gear.body.x, gear.body.y, hollow, pEdge)
         }
         pEdge.strokeWidth = 0.035f
         pEdge.color = materialEdgeColor(gear.wheel.material, relativeLayer != 0)
@@ -1507,14 +1689,8 @@ class GearMachineView @JvmOverloads constructor(
                 if (hit == null) {
                     val teeth = placementTeeth
                     if (teeth != null) {
-                        val id = if (placementKind == GearWheelKind.FLYWHEEL) {
-                            game.addFlywheel(x, y, currentLayer)
-                        } else {
-                            game.addGear(teeth, x, y, currentLayer)
-                        }
-                        selectedId = id
+                        selectedId = game.addGear(teeth, x, y, currentLayer)
                         placementTeeth = null
-                        placementKind = GearWheelKind.GEAR
                         listener?.onGearMachineChanged()
                     } else {
                         selectedId = null
@@ -1557,6 +1733,11 @@ class GearMachineView @JvmOverloads constructor(
                 magneticTargetId = null
                 val distance = hypot(x - hit.body.x, y - hit.body.y)
                 touchMode = when {
+                    // Le lanceur est plante sur son pas de tir : on peut encore le
+                    // lancer a la main par la jante, mais pas le trainer ailleurs.
+                    game.config.isPinned(hit.wheel.id) ->
+                        if (distance > hit.wheel.pitchRadius * 0.55f) TouchMode.SPIN
+                        else TouchMode.NONE
                     structureTool -> TouchMode.STRUCTURE_MOVE
                     distance > hit.wheel.pitchRadius * 0.55f -> TouchMode.SPIN
                     else -> TouchMode.MOVE
@@ -1693,6 +1874,14 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     companion object {
+        /** Les rayons d'un volant : assez pour qu'on lise la rotation, pas plus. */
+        private const val FLYWHEEL_SPOKES = 6
+
+        /** En combien d'images une charge se joue, et les bornes du decoupage. */
+        private const val CHARGE_FRAMES = 90f
+        private const val CHARGE_MIN_STEPS = 20
+        private const val CHARGE_MAX_STEPS = 2_000
+
         /** De combien le sol est remonte depuis le bas de l'image. */
         private const val GROUND_INSET_DP = 30f
 
