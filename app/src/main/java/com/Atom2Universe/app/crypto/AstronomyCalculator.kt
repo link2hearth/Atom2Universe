@@ -38,7 +38,15 @@ object AstronomyCalculator {
         val moonAscendingNodeRad: Double,
         /** Inclinaison de l'orbite lunaire sur l'écliptique en radians ≈ 5.145°. */
         val moonInclinationRad: Double,
-        /** Phase lunaire : angle D (élongation Soleil-Terre-Lune). 0=nouvelle, π=pleine. */
+        /**
+         * Phase lunaire : élongation **apparente** Soleil-Terre-Lune, en radians.
+         * 0 = nouvelle, π = pleine.
+         *
+         * C'est la vraie différence de longitude Lune − Soleil, et non l'élongation
+         * *moyenne* D. Les deux se ressemblent de loin mais s'écartent de sept degrés au
+         * pire, soit une demi-journée de phase : assez pour qu'un croissant s'affiche à
+         * l'envers du calendrier deux jours par mois.
+         */
         val moonPhaseRad: Double
     )
 
@@ -96,6 +104,11 @@ object AstronomyCalculator {
             moonDist * sin(moonLat)
         )
 
+        // L'élongation apparente : la Lune vue depuis la Terre, moins le Soleil vu depuis
+        // la Terre. C'est elle qui décide de la phase — D n'en est que la moyenne, et une
+        // moyenne ne se lève pas dans le bon ciel.
+        val elongation = ((moonLon - sunLon) % TWO_PI + TWO_PI) % TWO_PI
+
         // === GMST ===
         // Formule propre : GMST° = 280.46061837 + 360.98564736629 × (JD - J2000)
         val gmstDeg = 280.46061837 + 360.98564736629 * (jd - 2451545.0)
@@ -112,10 +125,12 @@ object AstronomyCalculator {
             obliquityRad       = obliquityRad,
             moonAscendingNodeRad = Om,
             moonInclinationRad = Math.toRadians(5.1454),
-            moonPhaseRad       = D
+            moonPhaseRad       = elongation
         )
     }
 
     /** Convertit degrés → radians en normalisant à [0, 2π). */
     private fun rad(deg: Double) = Math.toRadians(((deg % 360.0) + 360.0) % 360.0)
+
+    private const val TWO_PI = 2.0 * PI
 }

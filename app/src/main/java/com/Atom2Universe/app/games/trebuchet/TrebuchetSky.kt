@@ -443,6 +443,25 @@ class SkyState {
         private const val DAY_MS = 86_400_000L
         private const val TWO_PI = (2.0 * PI).toFloat()
 
+        /**
+         * Le demi-axe du terminateur lunaire, en fraction du rayon, pour une part
+         * éclairée [lit].
+         *
+         * Le bord de la lumière sur la Lune n'est pas un cercle : c'est le **grand
+         * cercle** qui sépare le jour de la nuit, vu de biais, donc une ellipse. Son
+         * demi-axe horizontal vaut `2k − 1`, et le signe fait tout : positif, l'ellipse
+         * bombe du côté de l'ombre et la Lune est gibbeuse ; négatif, elle bombe du côté
+         * de la lumière et creuse un croissant ; nul, c'est le quartier et le
+         * terminateur est droit.
+         *
+         * La règle vit ici et pas dans la vue parce qu'elle se mesure : un demi-disque
+         * fermé par cette demi-ellipse a pour aire exactement `k` fois le disque, ce qui
+         * est la seule façon de vérifier qu'on affiche la phase et non son complément.
+         * Le dessin précédent superposait deux disques et affichait `1 − k` — une pleine
+         * lune noire et une nouvelle lune pleine, sans que le code ait l'air faux.
+         */
+        fun terminatorAxis(lit: Float): Float = 2f * lit - 1f
+
         /** Écart à la nouvelle lune en deçà duquel une éclipse est possible, en radians. */
         private const val NEW_MOON_WINDOW = 0.10f
 
