@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.trebuchet.gears
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -145,6 +146,40 @@ class GearMachineView @JvmOverloads constructor(
         typeface = android.graphics.Typeface.DEFAULT_BOLD
     }
     private val screenRect = RectF()
+
+    /**
+     * Les libellés du tableau de bord, **lus une fois**.
+     *
+     * `getString` n'est pas une lecture de champ : il traverse la table des ressources
+     * pour retrouver la chaîne, puis la met en forme. Ces six appels-là étaient dans
+     * `onDraw`, donc rejoués cent vingt fois par seconde pour afficher les trois mêmes
+     * mots. Mesuré à la tablette, ils pesaient sept pour cent du fil principal.
+     *
+     * Les libellés fixes deviennent des champs. Les trois valeurs changent, elles, mais
+     * pas à chaque image : le régime est un entier, l'énergie s'arrondit au dixième et
+     * la portée au mètre. On garde donc la dernière chaîne fabriquée et le nombre qui
+     * l'a produite, et on ne refait le travail que quand ce nombre a bougé. La mise en
+     * forme passe par la locale des ressources, exactement comme le faisait
+     * `getString(id, args)`.
+     */
+    private val fmtLocale = resources.configuration.locales[0]
+    private val labelSpeed = resources.getString(R.string.trebuchet_gear_panel_speed)
+    private val labelEnergy = resources.getString(R.string.trebuchet_gear_panel_energy)
+    private val labelRange = resources.getString(R.string.trebuchet_gear_panel_range)
+    private val fmtRpm = resources.getString(R.string.trebuchet_gear_panel_rpm)
+    private val fmtKj = resources.getString(R.string.trebuchet_gear_panel_kj)
+    private val fmtMetres = resources.getString(R.string.trebuchet_gear_panel_m)
+    private val fmtCharging = resources.getString(R.string.trebuchet_gear_charging)
+    private val labelToolPart = resources.getString(R.string.trebuchet_gear_tool_part)
+    private val labelToolFrame = resources.getString(R.string.trebuchet_gear_tool_frame)
+    private var shownRpm = Int.MIN_VALUE
+    private var textRpm = ""
+    private var shownEnergy = Float.NaN
+    private var textEnergy = ""
+    private var shownRange = Float.NaN
+    private var textRange = ""
+    private var shownCharge = Int.MIN_VALUE
+    private var textCharge = ""
     /**
      * Le décor : **exactement le même objet que dans la vue du trébuchet**.
      *
@@ -196,6 +231,26 @@ class GearMachineView @JvmOverloads constructor(
     private var camScale = 60f
     private var running = false
     private var lastFrameNanos = 0L
+
+    /**
+     * Le calque des fantômes, et de quoi savoir s'il est encore valable.
+     *
+     * `ghostReady` dit qu'il contient bien l'image des fantômes ; les trois `ghostCam*`
+     * et `ghostStamp` disent pour quelle vue et quelle liste de tirs. Les `prevCam*`
+     * servent à repérer une caméra **en train** de bouger, auquel cas refaire le calque
+     * serait du travail perdu : voir [drawGhosts].
+     */
+    private var ghostLayer: Bitmap? = null
+    private var ghostLayerCanvas: Canvas? = null
+    private var ghostReady = false
+    private var ghostCamX = Float.NaN
+    private var ghostCamY = Float.NaN
+    private var ghostCamScale = Float.NaN
+    private var ghostStamp = -1
+    private var prevCamX = Float.NaN
+    private var prevCamY = Float.NaN
+    private var prevCamScale = Float.NaN
+    private var cameraMoving = true
     private var accumulator = 0f
     private var touchMode = TouchMode.NONE
     private var touchGearId: Int? = null
@@ -264,6 +319,9 @@ class GearMachineView @JvmOverloads constructor(
     fun pause() {
         running = false
         sfx.stop()
+        // Vingt mégaoctets n'ont rien à faire en mémoire pendant qu'on est ailleurs. Au
+        // retour, la caméra n'aura pas bougé et le calque se refera en une image.
+        releaseGhostLayer()
     }
 
     override fun onDetachedFromWindow() {
@@ -272,6 +330,7 @@ class GearMachineView @JvmOverloads constructor(
         // tableaux de la vue, et rien d'autre ne les libererait.
         running = false
         backdrop.release()
+        releaseGhostLayer()
     }
 
     fun loadConfig(config: GearMachineConfig) {
@@ -715,6 +774,11 @@ class GearMachineView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        val frameStart = SystemClock.uptimeMillis()
+        // La caméra a-t-elle bougé depuis l'image précédente ? Le calque des fantômes en
+        // dépend, et il faut le savoir **avant** de le dessiner.
+        cameraMoving = camX != prevCamX || camY != prevCamY || camScale != prevCamScale
+        prevCamX = camX; prevCamY = camY; prevCamScale = camScale
         updateSimulation()
         drawWorkshopSky(canvas)
 
@@ -770,7 +834,33 @@ class GearMachineView @JvmOverloads constructor(
         drawLauncherPanel(canvas)
         drawTimeControl(canvas)
         drawChargeGauge(canvas)
-        if (running) postInvalidateOnAnimation()
+        if (running) scheduleNextFrame(frameStart)
+    }
+
+    /**
+     * L'atelier se contente de **soixante images par seconde**.
+     *
+     * L'écran de la tablette en affiche cent vingt, et `postInvalidateOnAnimation`
+     * redemandait une image à chaque battement : le jeu dessinait donc à cent vingt,
+     * sans jamais l'avoir décidé. Mesuré à la tablette, une image coûtait dix
+     * millisecondes pour un budget de huit — le compositeur absorbait le dépassement en
+     * empilant les images, si bien que rien ne sautait à l'œil, mais le processeur
+     * tournait au maximum en permanence et la puce montait à quarante-huit degrés.
+     *
+     * La physique n'est pas concernée : elle avance par pas fixes d'un cent-vingtième de
+     * seconde dans [updateSimulation], donc elle fait exactement le même travail qu'on
+     * l'affiche soixante ou cent vingt fois par seconde. C'est bien le **dessin** qu'on
+     * divise par deux, et lui seul.
+     *
+     * Le délai se mesure depuis le **début** de l'image et non depuis la fin du dessin :
+     * une image commence sur un battement d'écran, donc viser douze millisecondes après
+     * ce battement dépose l'invalidation avant celui des 16,7 ms, et l'image suivante
+     * part dessus. En comptant depuis la fin du dessin, une image un peu longue ferait
+     * manquer ce battement et la cadence tomberait à quarante.
+     */
+    private fun scheduleNextFrame(frameStart: Long) {
+        val wait = FRAME_POST_MS - (SystemClock.uptimeMillis() - frameStart)
+        if (wait <= 0L) postInvalidateOnAnimation() else postInvalidateDelayed(wait)
     }
 
     private fun updateSimulation() {
@@ -1023,20 +1113,31 @@ class GearMachineView @JvmOverloads constructor(
 
         pPanelLabel.textAlign = Paint.Align.LEFT
         pPanelValue.textAlign = Paint.Align.RIGHT
-        val rows = arrayOf(
-            context.getString(R.string.trebuchet_gear_panel_speed) to
-                context.getString(R.string.trebuchet_gear_panel_rpm, rpm),
-            context.getString(R.string.trebuchet_gear_panel_energy) to
-                context.getString(R.string.trebuchet_gear_panel_kj, energy),
-            context.getString(R.string.trebuchet_gear_panel_range) to
-                context.getString(R.string.trebuchet_gear_panel_m, range)
-        )
-        for ((index, row) in rows.withIndex()) {
-            val baseline = top + 7f * dp + rowH * (index + 0.5f) +
-                (pPanelValue.textSize * 0.36f)
-            canvas.drawText(row.first, left + 10f * dp, baseline, pPanelLabel)
-            canvas.drawText(row.second, left + w - 10f * dp, baseline, pPanelValue)
+        if (rpm != shownRpm) {
+            shownRpm = rpm
+            textRpm = String.format(fmtLocale, fmtRpm, rpm)
         }
+        if (energy != shownEnergy) {
+            shownEnergy = energy
+            textEnergy = String.format(fmtLocale, fmtKj, energy)
+        }
+        if (range != shownRange) {
+            shownRange = range
+            textRange = String.format(fmtLocale, fmtMetres, range)
+        }
+        labelRow(canvas, 0, left, w, top, rowH, labelSpeed, textRpm)
+        labelRow(canvas, 1, left, w, top, rowH, labelEnergy, textEnergy)
+        labelRow(canvas, 2, left, w, top, rowH, labelRange, textRange)
+    }
+
+    /** Une ligne du tableau de bord : le libellé à gauche, la valeur à droite. */
+    private fun labelRow(
+        canvas: Canvas, index: Int, left: Float, w: Float, top: Float, rowH: Float,
+        label: String, value: String
+    ) {
+        val baseline = top + 7f * dp + rowH * (index + 0.5f) + (pPanelValue.textSize * 0.36f)
+        canvas.drawText(label, left + 10f * dp, baseline, pPanelLabel)
+        canvas.drawText(value, left + w - 10f * dp, baseline, pPanelValue)
     }
 
     private fun drawChargeGauge(canvas: Canvas) {
@@ -1050,8 +1151,13 @@ class GearMachineView @JvmOverloads constructor(
         screenRect.set(left + 3f * dp, top + 3f * dp,
             left + 3f * dp + (w - 6f * dp) * game.chargeProgress, top + h - 3f * dp)
         canvas.drawRoundRect(screenRect, 6f * dp, 6f * dp, pLayerButton)
+        val secondes = game.chargeRemaining.roundToInt()
+        if (secondes != shownCharge) {
+            shownCharge = secondes
+            textCharge = String.format(fmtLocale, fmtCharging, secondes)
+        }
         canvas.drawText(
-            context.getString(R.string.trebuchet_gear_charging, game.chargeRemaining.roundToInt()),
+            textCharge,
             width / 2f, top + h / 2f - (pLayerText.ascent() + pLayerText.descent()) / 2f, pLayerText
         )
     }
@@ -1499,9 +1605,62 @@ class GearMachineView @JvmOverloads constructor(
      * combien on a manqué et **dans quel sens** on se trompe. Le dernier tir est franc,
      * les précédents s'éteignent — c'est ce dégradé qui fait toute la lecture.
      */
+    /**
+     * Les fantômes des tirs précédents, **peints une fois pour toutes**.
+     *
+     * Ce sont dix polylignes par défaut — jusqu'à cinquante — qui traversent l'écran de
+     * part en part. Redessinées à chaque image, Skia n'arrivait pas à les confier à la
+     * puce graphique : il les rastérisait sur le processeur, chacune dans un masque de
+     * la taille de l'écran, puis téléversait ces masques vers la carte. Mesuré à la
+     * tablette, ce seul travail occupait un quart du temps de calcul du jeu — pour une
+     * image qui **ne change pas** tant que la caméra est immobile et qu'aucun tir ne
+     * s'ajoute.
+     *
+     * On les peint donc dans un calque gardé de côté, et les images suivantes n'en
+     * recopient que le rectangle, ce qui est une seule texture à poser. Pendant un
+     * glissement ou un pincement, le calque serait refait à chaque image pour rien : on
+     * repasse alors au tracé direct, qui ne coûte pas plus cher qu'avant, et le calque
+     * se refait tout seul dès que le doigt s'arrête.
+     */
     private fun drawGhosts(canvas: Canvas) {
+        if (game.ghosts.isEmpty()) {
+            releaseGhostLayer()
+            return
+        }
+        if (width <= 0 || height <= 0) return
+
+        val stamp = game.ghostStamp
+        val layer = ghostLayer
+        if (layer != null && ghostReady &&
+            layer.width == width && layer.height == height &&
+            ghostCamX == camX && ghostCamY == camY && ghostCamScale == camScale &&
+            ghostStamp == stamp
+        ) {
+            canvas.drawBitmap(layer, 0f, 0f, null)
+            return
+        }
+        if (cameraMoving) {
+            ghostReady = false
+            paintGhosts(canvas)
+            return
+        }
+        val fresh = ensureGhostLayer()
+        if (fresh == null) {
+            paintGhosts(canvas)
+            return
+        }
+        fresh.eraseColor(Color.TRANSPARENT)
+        paintGhosts(ghostLayerCanvas ?: return)
+        ghostCamX = camX
+        ghostCamY = camY
+        ghostCamScale = camScale
+        ghostStamp = stamp
+        ghostReady = true
+        canvas.drawBitmap(fresh, 0f, 0f, null)
+    }
+
+    private fun paintGhosts(canvas: Canvas) {
         val list = game.ghosts
-        if (list.isEmpty()) return
         val last = list.size - 1
         for (i in last downTo 0) {
             val age = if (last == 0) 0f else i / last.toFloat()
@@ -1513,28 +1672,87 @@ class GearMachineView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Le calque à la taille de la vue, ou `null` s'il n'y a pas la place.
+     *
+     * Un plein écran en huit bits par couche pèse une vingtaine de mégaoctets. C'est
+     * assez pour manquer sur un appareil serré, et le jeu doit alors continuer sans le
+     * calque plutôt que de s'arrêter. L'ancien n'est jamais recyclé : la couche de rendu
+     * peut encore le tenir dans la liste d'affichage de l'image en cours, et dessiner
+     * une image recyclée ferait tomber l'application. Le ramasse-miettes s'en charge.
+     */
+    private fun ensureGhostLayer(): Bitmap? {
+        val current = ghostLayer
+        if (current != null && current.width == width && current.height == height) return current
+        releaseGhostLayer()
+        return try {
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also {
+                ghostLayer = it
+                ghostLayerCanvas = Canvas(it)
+            }
+        } catch (_: OutOfMemoryError) {
+            null
+        }
+    }
+
+    private fun releaseGhostLayer() {
+        ghostLayer = null
+        ghostLayerCanvas = null
+        ghostReady = false
+    }
+
     private fun drawTrail(canvas: Canvas) {
         drawPolyline(canvas, game.trail, game.trailCount, pTrail)
     }
 
-    /** Une polyligne du monde, tracée en pixels et coupée hors de l'écran. */
+    /**
+     * Une polyligne du monde, tracée en pixels, **simplifiée** et coupée hors de l'écran.
+     *
+     * Une trajectoire est relevée toutes les vingt millisecondes, ce qui fait jusqu'à
+     * trois mille points. Vue de loin, la quasi-totalité d'entre eux tombe sur la même
+     * droite au demi-pixel près : les garder ne changeait pas un pixel de l'image, mais
+     * donnait à Skia trois mille arêtes à trier et à remplir, par fantôme et par image.
+     *
+     * La méthode est celle du **couloir** : depuis le dernier point posé, on retient la
+     * direction du point suivant, et on laisse tomber tous ceux qui restent à moins de
+     * [SIMPLIFY_PX] de cette droite. Le premier qui en sort fait poser son prédécesseur
+     * et rouvre un couloir. Tous les points sautés sont donc bornés par rapport à la
+     * droite qu'on trace à leur place — c'est ce qui garantit le résultat.
+     *
+     * **Ce n'est pas la première version, et la première était fausse.** Elle ne
+     * comparait que le point en attente à la corde qui l'enjambait ; comme ce point est
+     * toujours le voisin immédiat du bout de la corde, son écart reste minuscule quelle
+     * que soit la courbure accumulée, si bien que le critère ne se déclenchait
+     * jamais. Sur une parabole de trois cents points elle en gardait **trois**, avec
+     * vingt et un pixels d'erreur là où elle en promettait un demi : les arcs de tir
+     * étaient rendus par des segments droits. Le couloir, mesuré sur la même parabole
+     * et sur un arc de cercle, retire quatre-vingt-douze pour cent des points pour un
+     * écart maximal de 0,16 px.
+     *
+     * Le seuil est en **pixels d'écran** et non en mètres : il se resserre tout seul
+     * quand on zoome, donc la courbe reste aussi lisse de près qu'avant. Un seuil en
+     * unités du monde aurait fait l'inverse — invisible de loin, taillé à la serpe une
+     * fois la loupe posée dessus.
+     */
     private fun drawPolyline(canvas: Canvas, points: FloatArray, count: Int, paint: Paint) {
         if (count < 4) return
         val w = width.toFloat()
         val h = height.toFloat()
         trailPath.reset()
+        // `px, py` : dernier point retenu. `hx, hy` : celui qu'on garde sous le coude, en
+        // attendant de savoir si le point suivant le rend inutile.
         var px = sx(points[0])
         var py = sy(points[1])
         var lastX = Float.NaN
         var lastY = Float.NaN
         var drew = false
-        var i = 2
-        while (i < count) {
-            val cx = sx(points[i])
-            val cy = sy(points[i + 1])
-            i += 2
-            // Deux points sur le même pixel ne dessinent rien de plus qu'un seul.
-            if (abs(cx - px) < 1f && abs(cy - py) < 1f) continue
+        var hx = Float.NaN
+        var hy = Float.NaN
+        var dirX = 0f
+        var dirY = 0f
+        var oriented = false
+
+        fun poser(cx: Float, cy: Float) {
             val outside = (px < 0f && cx < 0f) || (px > w && cx > w) ||
                 (py < 0f && cy < 0f) || (py > h && cy > h)
             if (!outside) {
@@ -1547,6 +1765,43 @@ class GearMachineView @JvmOverloads constructor(
             px = cx
             py = cy
         }
+
+        var i = 2
+        while (i < count) {
+            val cx = sx(points[i])
+            val cy = sy(points[i + 1])
+            i += 2
+            if (!oriented) {
+                // Deux points sur le même pixel ne dessinent rien de plus qu'un seul.
+                val ddx = cx - px
+                val ddy = cy - py
+                val len = hypot(ddx, ddy)
+                if (len < 1f) continue
+                dirX = ddx / len
+                dirY = ddy / len
+                oriented = true
+                hx = cx
+                hy = cy
+                continue
+            }
+            // Distance du point **à la droite du couloir**, celle qui part du dernier
+            // point posé dans la direction retenue.
+            if (abs((cx - px) * dirY - (cy - py) * dirX) > SIMPLIFY_PX) {
+                poser(hx, hy)
+                val ddx = cx - px
+                val ddy = cy - py
+                val len = hypot(ddx, ddy)
+                if (len < 1e-4f) {
+                    oriented = false
+                } else {
+                    dirX = ddx / len
+                    dirY = ddy / len
+                }
+            }
+            hx = cx
+            hy = cy
+        }
+        if (!hx.isNaN()) poser(hx, hy)
         if (drew) canvas.drawPath(trailPath, paint)
     }
 
@@ -1602,10 +1857,7 @@ class GearMachineView @JvmOverloads constructor(
         pLayerText.textSize = 12f * dp
         pLayerText.color = if (structureTool) Color.rgb(119, 239, 196) else Color.rgb(221, 230, 239)
         canvas.drawText(
-            context.getString(
-                if (structureTool) R.string.trebuchet_gear_tool_frame
-                else R.string.trebuchet_gear_tool_part
-            ),
+            if (structureTool) labelToolFrame else labelToolPart,
             left + width / 2f,
             top + height / 2f - (pLayerText.ascent() + pLayerText.descent()) / 2f,
             pLayerText
@@ -1945,6 +2197,20 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     companion object {
+        /**
+         * Quand redemander l'image suivante, en millisecondes après le début de l'image
+         * en cours. Douze vise les soixante images par seconde sur un écran qui en
+         * affiche cent vingt : voir [scheduleNextFrame].
+         */
+        private const val FRAME_POST_MS = 12L
+
+        /**
+         * De combien une polyligne a le droit de s'écarter de son tracé exact, en pixels
+         * d'écran. Sous le pixel, l'antialiassage rend l'écart invisible : voir
+         * [drawPolyline].
+         */
+        private const val SIMPLIFY_PX = 0.6f
+
         /**
          * Part de la hauteur d'ecran occupee par le ciel dans l'atelier.
          *

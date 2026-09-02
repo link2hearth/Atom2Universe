@@ -339,11 +339,23 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     /** Les tirs précédents, le plus récent en tête. */
     val ghosts: List<FloatArray> get() = ghostList
 
+    /**
+     * Change à chaque fois que la liste des fantômes change, et jamais autrement.
+     *
+     * La vue peint les fantômes dans un calque qu'elle garde d'une image à l'autre ;
+     * il lui faut donc savoir si la liste a bougé. Comparer les tableaux eux-mêmes
+     * voudrait dire relire dix fois trois mille nombres à chaque image, soit exactement
+     * le travail qu'on essaie d'éviter. Un compteur suffit.
+     */
+    var ghostStamp = 0
+        private set
+
     /** Combien de fantômes on garde. Le réglage est celui du trébuchet. */
     var ghostLimit: Int = TrebuchetRules.GHOST_HISTORY
         set(value) {
             field = value.coerceIn(1, TrebuchetRules.GHOST_CHOICES.last())
             while (ghostList.size > field) ghostList.removeAt(ghostList.size - 1)
+            ghostStamp++
         }
 
     private var trailTimer = 0f
@@ -768,6 +780,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         }
         ghostList.add(0, trailBuf.copyOf(trailCount))
         while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)
+        ghostStamp++
     }
 
     /** Rebande l'atelier : le boulet posé disparaît, son fantôme reste. */
@@ -782,6 +795,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     fun clearGhosts() {
         ghostList.clear()
         trailClear()
+        ghostStamp++
     }
 
     /**

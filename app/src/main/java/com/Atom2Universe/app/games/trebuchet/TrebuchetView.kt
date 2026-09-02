@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.trebuchet
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -105,6 +106,31 @@ class TrebuchetView @JvmOverloads constructor(
     private var camReady = false
 
     /**
+     * Le calque des traces — fantômes et cône de départ — et de quoi savoir s'il vaut
+     * encore : voir [drawTraces].
+     *
+     * Les `trace*` décrivent le calque déjà peint ; les `prev*` servent à reconnaître
+     * une caméra **en train** de bouger, pour ne pas refaire le calque à chaque image
+     * pendant un vol.
+     */
+    private var traceLayer: Bitmap? = null
+    private var traceCanvas: Canvas? = null
+    private var traceReady = false
+    private var traceCamX = 0f
+    private var traceCamY = 0f
+    private var traceCamScale = 0f
+    private var traceGhostStamp = -1
+    private var tracePreviewStamp = -1
+    private var tracePhase = TrebuchetGame.Phase.BUILD
+    private var prevCamX = Float.NaN
+    private var prevCamY = Float.NaN
+    private var prevCamScale = Float.NaN
+    private var cameraMoving = true
+
+    /** Change quand [previewPath] est remplacée : le cône dessiné doit alors se refaire. */
+    private var previewStamp = 0
+
+    /**
      * Jusqu'où le sol descend dans la portion regardée, en mètres, et jamais au-dessus
      * de zéro. C'est ce que le cadrage pose au bas de l'image. Voir [groundCamY].
      */
@@ -138,6 +164,34 @@ class TrebuchetView @JvmOverloads constructor(
 
     private companion object {
         const val FIXED_DT = 1f / 120f
+
+        /**
+         * Une image toutes les 16,7 ms, soit **soixante par seconde**.
+         *
+         * La boucle finissait sur un `Thread.sleep(4)` : elle tournait donc aussi vite
+         * que la file d'affichage l'acceptait, c'est-à-dire cent vingt fois par seconde
+         * sur cet écran, sans que personne l'ait décidé. Mesuré à la tablette pendant
+         * une partie, le trébuchet occupait 141 % d'un cœur, tirait un ampère en
+         * moyenne et atteignait la limitation thermique sévère en moins de trois
+         * minutes.
+         *
+         * La physique n'est pas concernée : elle avance par pas fixes de [FIXED_DT]
+         * dans un accumulateur, donc elle fait le même travail quelle que soit la
+         * cadence d'affichage. C'est le dessin seul qui est divisé par deux.
+         */
+        const val FRAME_NANOS = 1_000_000_000L / 60L
+
+        /**
+         * De combien une polyligne a le droit de s'écarter de son tracé exact, en
+         * pixels d'écran : voir [drawPolyline].
+         */
+        const val SIMPLIFY_PX = 0.6f
+
+        /**
+         * De combien le cadrage peut avoir glissé pour que le calque des traces reste
+         * valable, en pixels d'écran : voir [memeCadrage].
+         */
+        const val TRACE_SLOP_PX = 0.5f
 
         /** Marges autour de la machine, en mètres : la vue suit sa taille. */
         const val BUILD_VIEW_MARGIN = 8f
@@ -551,6 +605,9 @@ class TrebuchetView @JvmOverloads constructor(
         thread?.join(1500)
         thread = null
         sfx.stop()
+        // Vingt mégaoctets n'ont rien à faire en mémoire pendant qu'on est ailleurs. Le
+        // fil de dessin est arrêté au-dessus, donc plus personne n'y touche.
+        releaseTraceLayer()
     }
 
     override fun onDetachedFromWindow() {
@@ -629,7 +686,13 @@ class TrebuchetView @JvmOverloads constructor(
             } finally {
                 holder.unlockCanvasAndPost(canvas)
             }
-            Thread.sleep(4)
+            // On attend l'échéance de l'image, comptée depuis son **début** : c'est ce
+            // qui tient les soixante par seconde. Sans cette attente, la boucle repart
+            // aussitôt et ne s'arrête que lorsque la file d'affichage refuse une image
+            // de plus — soit cent vingt fois par seconde sur cet écran. Voir
+            // [FRAME_NANOS]. Une image qui a débordé ne rattrape rien : on repart.
+            val reste = FRAME_NANOS - (System.nanoTime() - now)
+            if (reste >= 1_000_000L) Thread.sleep(reste / 1_000_000L)
         }
     }
 
@@ -1502,6 +1565,7 @@ class TrebuchetView @JvmOverloads constructor(
         if (budget > 0 || previewSteps >= PREVIEW_MAX_STEPS) {
             previewPath = ghostMachine.startTrace()
             previewSteps = -1
+            previewStamp++
         }
     }
 
@@ -1529,6 +1593,16 @@ class TrebuchetView @JvmOverloads constructor(
         val w = width.toFloat()
         val h = height.toFloat()
 
+        // La caméra a-t-elle bougé depuis l'image précédente ? Le calque des traces en
+        // dépend, et il faut le savoir **avant** de le dessiner. Le suivi souple
+        // rattrape sa cible de façon asymptotique : la comparaison se fait donc au
+        // demi-pixel près et non à l'égalité stricte, sans quoi la caméra ne serait
+        // jamais déclarée immobile.
+        cameraMoving = !memeCadrage(prevCamX, prevCamY, prevCamScale)
+        prevCamX = camX
+        prevCamY = camY
+        prevCamScale = camScale
+
         drawSky(canvas, w, h)
 
         // Les feux d'artifice passent **derrière** le terrain : ils montent au fond du
@@ -1543,8 +1617,7 @@ class TrebuchetView @JvmOverloads constructor(
             canvas, w, h, camX, camY, camScale,
             game.terrain, game.targets, sky.light, game.wind.vx, ambientClock
         )
-        drawGhosts(canvas)
-        drawStartCone(canvas)
+        drawTraces(canvas)
         drawFrameAndPivot(canvas)
         drawStrap(canvas)
         drawBody(canvas, game.counterweight, pWeight, pWeightEdge)
@@ -1792,6 +1865,19 @@ class TrebuchetView @JvmOverloads constructor(
      *
      * Deux tris, donc : les segments hors champ sont abandonnés, et les points qui
      * retombent sur le même pixel que le précédent aussi.
+     *
+     * S'y ajoute la simplification **en couloir** : depuis le dernier point posé, on
+     * retient la direction du point suivant et on laisse tomber tous ceux qui restent à
+     * moins de [SIMPLIFY_PX] de cette droite ; le premier qui en sort fait poser son
+     * prédécesseur et rouvre un couloir. Tous les points sautés sont ainsi bornés par
+     * rapport à la droite tracée à leur place, ce qui est exactement la garantie qui
+     * manquait à une première version — laquelle ne comparait que le point en attente à
+     * la corde qui l'enjambait, ne se déclenchait donc quasiment jamais, et rendait les
+     * arcs de tir par des segments droits. Mesurée sur une parabole et sur un arc de
+     * cercle, la version en couloir retire 92 % des points pour 0,16 px d'écart.
+     *
+     * Le seuil est en **pixels d'écran** et non en mètres : il se resserre tout seul
+     * quand on zoome, donc la courbe reste aussi lisse de près que de loin.
      */
     private fun drawPolyline(canvas: Canvas, pts: FloatArray, count: Int, paint: Paint) {
         if (count < 4) return
@@ -1803,13 +1889,13 @@ class TrebuchetView @JvmOverloads constructor(
         var lastX = Float.NaN
         var lastY = Float.NaN
         var drew = false
-        var i = 2
-        while (i < count) {
-            val cx = sx(pts[i])
-            val cy = sy(pts[i + 1])
-            i += 2
-            // Deux points sur le même pixel ne dessinent rien de plus qu'un seul.
-            if (abs(cx - px) < 1f && abs(cy - py) < 1f) continue
+        var hx = Float.NaN
+        var hy = Float.NaN
+        var dirX = 0f
+        var dirY = 0f
+        var oriented = false
+
+        fun poser(cx: Float, cy: Float) {
             val outside = (px < 0f && cx < 0f) || (px > w && cx > w) ||
                 (py < 0f && cy < 0f) || (py > h && cy > h)
             if (!outside) {
@@ -1822,6 +1908,43 @@ class TrebuchetView @JvmOverloads constructor(
             px = cx
             py = cy
         }
+
+        var i = 2
+        while (i < count) {
+            val cx = sx(pts[i])
+            val cy = sy(pts[i + 1])
+            i += 2
+            if (!oriented) {
+                // Deux points sur le même pixel ne dessinent rien de plus qu'un seul.
+                val ddx = cx - px
+                val ddy = cy - py
+                val len = hypot(ddx, ddy)
+                if (len < 1f) continue
+                dirX = ddx / len
+                dirY = ddy / len
+                oriented = true
+                hx = cx
+                hy = cy
+                continue
+            }
+            // Distance du point **à la droite du couloir**, celle qui part du dernier
+            // point posé dans la direction retenue.
+            if (abs((cx - px) * dirY - (cy - py) * dirX) > SIMPLIFY_PX) {
+                poser(hx, hy)
+                val ddx = cx - px
+                val ddy = cy - py
+                val len = hypot(ddx, ddy)
+                if (len < 1e-4f) {
+                    oriented = false
+                } else {
+                    dirX = ddx / len
+                    dirY = ddy / len
+                }
+            }
+            hx = cx
+            hy = cy
+        }
+        if (!hx.isNaN()) poser(hx, hy)
         if (drew) canvas.drawPath(tmpPath, paint)
     }
 
@@ -1839,6 +1962,122 @@ class TrebuchetView @JvmOverloads constructor(
      * Ils se dessinent du plus vieux au plus récent, pour que le blanc passe par-dessus
      * le gris et non l'inverse.
      */
+    /**
+     * Les traces — fantômes et cône de départ — **peintes une fois pour toutes**.
+     *
+     * Il y a dix trajectoires par défaut, jusqu'à cinquante, chacune de trois mille
+     * points, plus la nappe du cône. Les redessiner à chaque image ne relève pas du
+     * détail : Skia n'arrive pas à confier ces grands chemins antialiasés à la puce
+     * graphique, il les rastérise **sur le processeur** dans des masques grands comme
+     * l'écran, puis les téléverse. Mesuré à la tablette pendant une partie, ce seul
+     * mécanisme occupait 43 % d'un cœur dans les fils `hwuiTask` et 46 % du fil de
+     * rendu — la moitié du calcul du jeu, pour une image qui ne change pas.
+     *
+     * Le calcul des trajectoires, lui, n'a jamais été en cause : il se fait une fois,
+     * au tir. C'est le **dessin** qui se rejouait cent vingt fois par seconde, et
+     * « juste un dessin » n'est pas gratuit quand c'est le processeur qui remplit les
+     * pixels.
+     *
+     * Elles vont donc dans un calque gardé, et les images suivantes n'en recopient que
+     * le rectangle. Le calque se refait quand le cadrage change, quand un tir s'ajoute
+     * ([TrebuchetGame.ghostStamp]), quand la prévisualisation est recalculée
+     * ([previewStamp]) ou quand la phase change. Pendant un vol, la caméra suit le
+     * boulet à chaque image : le refaire alors serait du travail perdu, on repasse au
+     * tracé direct — qui ne coûte pas plus cher qu'avant — et le calque se reprend dès
+     * que le cadrage se pose.
+     */
+    private fun drawTraces(canvas: Canvas) {
+        val vide = game.ghosts.isEmpty() &&
+            (game.phase != TrebuchetGame.Phase.BUILD || previewPath.size < 8)
+        if (vide) {
+            releaseTraceLayer()
+            return
+        }
+        if (width <= 0 || height <= 0) return
+
+        val layer = traceLayer
+        if (layer != null && traceReady &&
+            layer.width == width && layer.height == height &&
+            traceGhostStamp == game.ghostStamp &&
+            tracePreviewStamp == previewStamp &&
+            tracePhase == game.phase &&
+            memeCadrage(traceCamX, traceCamY, traceCamScale)
+        ) {
+            canvas.drawBitmap(layer, 0f, 0f, null)
+            return
+        }
+        if (cameraMoving) {
+            traceReady = false
+            peindreTraces(canvas)
+            return
+        }
+        val frais = ensureTraceLayer()
+        val dessus = traceCanvas
+        if (frais == null || dessus == null) {
+            peindreTraces(canvas)
+            return
+        }
+        frais.eraseColor(Color.TRANSPARENT)
+        peindreTraces(dessus)
+        traceCamX = camX
+        traceCamY = camY
+        traceCamScale = camScale
+        traceGhostStamp = game.ghostStamp
+        tracePreviewStamp = previewStamp
+        tracePhase = game.phase
+        traceReady = true
+        canvas.drawBitmap(frais, 0f, 0f, null)
+    }
+
+    private fun peindreTraces(canvas: Canvas) {
+        drawGhosts(canvas)
+        drawStartCone(canvas)
+    }
+
+    /**
+     * Deux cadrages donnent-ils la même image, au demi-pixel près ?
+     *
+     * L'écart d'échelle se mesure sur la demi-diagonale parce que c'est là qu'il
+     * déplace le plus : un zoom fait glisser les coins bien plus que le centre.
+     */
+    private fun memeCadrage(x: Float, y: Float, s: Float): Boolean {
+        if (s <= 0f || camScale <= 0f) return false
+        val demiDiagonale = hypot(width * 0.5f, height * 0.5f)
+        if (abs(s - camScale) / camScale * demiDiagonale > TRACE_SLOP_PX) return false
+        if (abs(x - camX) * camScale > TRACE_SLOP_PX) return false
+        if (abs(y - camY) * camScale > TRACE_SLOP_PX) return false
+        return true
+    }
+
+    /**
+     * Le calque à la taille de la vue, ou `null` s'il n'y a pas la place.
+     *
+     * Un plein écran pèse une vingtaine de mégaoctets : assez pour manquer sur un
+     * appareil serré, et le jeu doit alors continuer sans lui plutôt que de s'arrêter.
+     * L'ancien n'est jamais recyclé — la couche de rendu peut encore le tenir dans la
+     * liste d'affichage de l'image en cours, et dessiner un tableau recyclé ferait
+     * tomber l'application. Le ramasse-miettes s'en charge.
+     */
+    private fun ensureTraceLayer(): Bitmap? {
+        val actuel = traceLayer
+        if (actuel != null && actuel.width == width && actuel.height == height) return actuel
+        releaseTraceLayer()
+        return try {
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also {
+                traceLayer = it
+                traceCanvas = Canvas(it)
+            }
+        } catch (_: OutOfMemoryError) {
+            null
+        }
+    }
+
+    private fun releaseTraceLayer() {
+        traceLayer = null
+        traceCanvas = null
+        traceReady = false
+    }
+
     private fun drawGhosts(canvas: Canvas) {
         val list = game.ghosts
         if (list.isEmpty()) return

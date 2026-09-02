@@ -785,6 +785,17 @@ class TrebuchetGame {
     private val ghostList = ArrayList<FloatArray>(TrebuchetRules.GHOST_HISTORY)
 
     /**
+     * Change à chaque fois que la pile des fantômes change, et jamais autrement.
+     *
+     * La vue peint les fantômes dans un calque qu'elle garde d'une image à l'autre ; il
+     * lui faut donc un moyen de savoir si la pile a bougé. Comparer les tableaux
+     * eux-mêmes voudrait dire relire dix fois trois mille nombres à chaque image, soit
+     * exactement le travail qu'on cherche à éviter. Un compteur suffit.
+     */
+    var ghostStamp = 0
+        private set
+
+    /**
      * Combien de tirs on garde. Le joueur le règle dans le menu des réglages.
      *
      * Baisser la limite taille la pile sur-le-champ : un réglage qui n'agirait qu'aux
@@ -795,6 +806,7 @@ class TrebuchetGame {
         set(value) {
             field = value.coerceIn(1, TrebuchetRules.GHOST_CHOICES.last())
             while (ghostList.size > field) ghostList.removeAt(ghostList.size - 1)
+            ghostStamp++
         }
 
     /**
@@ -1216,6 +1228,7 @@ class TrebuchetGame {
     /** Efface la mémoire des tirs. Le seul chemin qui les enlève. */
     fun clearGhosts() {
         ghostList.clear()
+        ghostStamp++
     }
 
     /** Règle la longueur de la fronde, en mètres. */
@@ -1713,6 +1726,7 @@ class TrebuchetGame {
         // Le plus récent en tête, et on oublie le plus vieux quand la pile déborde.
         ghostList.add(0, trailBuf.copyOf(trailCount))
         while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)
+        ghostStamp++
     }
 
     /**
