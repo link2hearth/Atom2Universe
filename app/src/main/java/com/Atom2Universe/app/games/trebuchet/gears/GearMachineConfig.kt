@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.trebuchet.gears
 
+import com.Atom2Universe.app.games.trebuchet.TrebuchetCategory
+
 import com.Atom2Universe.app.games.trebuchet.MachinePreset
 import com.Atom2Universe.app.games.physics.MachineMaterial
 import com.Atom2Universe.app.games.physics.MachineMaterials
@@ -399,9 +401,23 @@ object GearMachineRules {
      * ne connaît que le sol : le laisser cogner la machine qui vient de le lancer
      * finirait toujours mal.
      */
-    const val CATEGORY_WHEEL = 1
-    const val CATEGORY_GROUND = 2
-    const val CATEGORY_SHOT = 4
+    /**
+     * Les categories de collision, **empruntees au trebuchet**.
+     *
+     * L'atelier tire desormais sur le meme genre de site que le champ de tir : relief,
+     * batiments qui s'effondrent, gravats. Or `TargetField` estampille lui-meme ses
+     * pierres avec [TrebuchetCategory] a chaque fois qu'une d'elles casse, et re-marquer
+     * cent corps par image pour les traduire dans un autre jeu de bits serait a la fois
+     * couteux et fragile. On adopte donc directement le sien.
+     *
+     * Les roues gardent un bit **hors** de ce jeu : elles n'entrent dans le masque de
+     * personne, ce qui garantit qu'aucune pierre, aucun gravat et aucun boulet ne vient
+     * cogner le mecanisme. De toute facon elles ne collisionnent avec rien
+     * (`collidesWith = 0`) : un engrenage engrene par le calcul, pas par le contact.
+     */
+    const val CATEGORY_WHEEL = 64
+    const val CATEGORY_GROUND = TrebuchetCategory.GROUND
+    const val CATEGORY_SHOT = TrebuchetCategory.BALL
 
     /**
      * La dalle de sol : assez large pour porter le plus long des tirs, et **épaisse**,

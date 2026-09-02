@@ -12,6 +12,11 @@ import com.Atom2Universe.app.games.physics.PhysWorld
 import com.Atom2Universe.app.games.physics.PhysicsConstants
 import com.Atom2Universe.app.games.physics.RevoluteJoint
 import com.Atom2Universe.app.games.physics.RotaryDriveJoint
+import com.Atom2Universe.app.games.trebuchet.TargetField
+import com.Atom2Universe.app.games.trebuchet.TargetGenerator
+import com.Atom2Universe.app.games.trebuchet.TargetLevel
+import com.Atom2Universe.app.games.trebuchet.Terrain
+import com.Atom2Universe.app.games.trebuchet.TrebuchetCategory
 import com.Atom2Universe.app.games.trebuchet.TrebuchetRules
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -131,6 +136,77 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     /** Le sol de l'atelier : une seule dalle plate, refaite à chaque reconstruction. */
     lateinit var ground: PhysBody
         private set
+
+    /**
+     * Le relief et le site, **les memes qu'au champ de tir**.
+     *
+     * L'atelier n'est plus une dalle nue : on y tire sur des collines et des batiments
+     * qui s'effondrent, parce qu'il n'y avait aucune raison qu'une machine a engrenages
+     * mesure ses coups sur un terrain moins vrai qu'un trebuchet. Le tout sort d'une
+     * graine, exactement comme un niveau du trebuchet.
+     *
+     * Le relief est **plat sous la machine** : c'est [TargetGenerator] qui le garantit,
+     * il batit le terrain autour des batiments et laisse la ligne de tir de niveau. Une
+     * colline sous l'atelier enterrerait les roues.
+     */
+    var terrain: Terrain = Terrain.FLAT
+        private set
+
+    var level: TargetLevel? = null
+        private set
+
+    val targets = TargetField(world)
+
+    /**
+     * Charge le site de la graine donnee, ou le retire si [seed] est nul.
+     *
+     * Le remontage passe par [rebuild] parce que le relief decide des corps immobiles du
+     * monde : changer de terrain sans refaire le sol laisserait la machine posee sur
+     * l'ancien.
+     */
+    fun loadSite(seed: Long?) {
+        if (seed == null) {
+            level = null
+            terrain = Terrain.FLAT
+            targets.clear()
+            rebuild()
+            return
+        }
+        // Le site se pose **exactement comme au trebuchet** : la ou le generateur l'a
+        // mis, avec son relief. C'est deja lui qui garantit un tablier plat a l'altitude
+        // zero sous la ligne de tir, sinon la machine s'enterrerait.
+        //
+        // On a essaye de le rapprocher, sur l'idee qu'un atelier tire moins loin qu'un
+        // trebuchet. C'est faux : la machine par defaut envoie deja son boulet a pres de
+        // trois cents metres. Rapprocher le village a la distance du mannequin — soixante
+        // metres — mettait un chateau en travers de chaque tir des la premiere image.
+        // La distance de visee resservira pour placer un site **choisi**, pas celui-ci.
+        val lvl = TargetGenerator.generate(seed)
+        level = lvl
+        terrain = lvl.terrain
+        rebuild()
+        targets.load(lvl.structure, lvl.terrain)
+        stampSite()
+    }
+
+    init {
+        loadSite(DEFAULT_SITE_SEED)
+    }
+
+    /**
+     * Met les pierres du site sur **toutes** les couches de l'atelier.
+     *
+     * [TargetField] ne connait pas les etages : il laisse ses corps sur la couche zero.
+     * Un boulet parti d'un lanceur monte au troisieme etage les traverserait donc sans
+     * les voir. On leur donne la meme envergure qu'au sol, qui traverse deja tout.
+     */
+    private fun stampSite() {
+        for (p in targets.pieces) {
+            p.body.collisionLayer = GearMachineRules.MIN_LAYER
+            p.body.collisionLayerDepth =
+                GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
+        }
+    }
 
     /**
      * Les trois temps d'un tir, comme au trébuchet.
@@ -311,13 +387,29 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             lockRotation = true
             friction = 0.62f
             restitution = 0f
-            category = GearMachineRules.CATEGORY_GROUND
-            collidesWith = GearMachineRules.CATEGORY_SHOT
-            collisionLayer = GearMachineRules.MIN_LAYER
-            collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
             refreshMass()
         }
+        stampGround(ground)
         world.add(ground)
+
+        // Le relief par-dessus la dalle, une fois qu'il y en a un. La dalle reste : elle
+        // porte la machine et ferme le monde de part et d'autre du terrain, qui ne
+        // s'etend que sur la longueur du site.
+        if (!terrain.flat) {
+            for (b in terrain.bodies()) {
+                stampGround(b)
+                world.add(b)
+            }
+        }
+    }
+
+    /** Ce qu'un morceau de sol rencontre : le boulet, les pierres, et leurs gravats. */
+    private fun stampGround(b: PhysBody) {
+        b.category = GearMachineRules.CATEGORY_GROUND
+        b.collidesWith =
+            TrebuchetCategory.BALL or TrebuchetCategory.TARGET or TrebuchetCategory.DEBRIS
+        b.collisionLayer = GearMachineRules.MIN_LAYER
+        b.collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
     }
 
     /** Où se dresse le mannequin : toujours à la même distance devant le lanceur. */
@@ -385,6 +477,10 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         updateProgressiveClutches(h)
         applyBrake()
         world.stepFrame(h)
+        // Le site s'arme, encaisse et se rendort tout seul — c'est [TargetField.update]
+        // qui le fait, et sans cet appel un chateau de quatre-vingts pierres serait
+        // resolu a chaque sous-pas d'un boulet a trois cents metres de la.
+        targets.update(h)
         if (phase == Phase.FLIGHT) projectile?.let { trackShot(it, h) }
     }
 
@@ -581,7 +677,9 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             // moteur lui a compté un choc. Un boulet rapide frappe et **repart** en
             // l'air dans la même image : sans le troisième relevé, sa portée serait
             // celle de son deuxième rebond.
-            val touchLevel = body.radius + 0.03f
+            // Le sol n'est plus a zero : sur une colline, un boulet << pose >> a
+            // l'altitude zero serait deja trois metres sous terre.
+            val touchLevel = terrain.heightAt(body.x) + body.radius + 0.03f
             if (body.y <= touchLevel || shot.previousY <= touchLevel || body.impactAccum > 0f) {
                 shot.landed = true
                 shot.distance = groundContactX(shot, touchLevel) - shot.startX
@@ -1365,8 +1463,13 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             friction = 0.55f
             dragFactor = 0.5f * 1.225f * 0.47f * Math.PI.toFloat() * radius * radius
             category = GearMachineRules.CATEGORY_SHOT
-            collidesWith = GearMachineRules.CATEGORY_GROUND
-            collisionLayer = launcher.wheel.layer
+            // Le sol, les pierres et les gravats — tout ce qui n'est pas le mecanisme.
+            collidesWith = TrebuchetCategory.BALL_FREE_MASK
+            // Sur toutes les couches : le boulet quitte l'etage du lanceur des la sortie
+            // du canon, et un site pose a la couche zero doit l'arreter quel que soit
+            // l'etage d'ou il est parti.
+            collisionLayer = GearMachineRules.MIN_LAYER
+            collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
         }
         world.add(shot)
         projectile = ProjectileState(shot, shot.x, shot.y, projectileEnergy, targetX())
@@ -1513,6 +1616,15 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     }
 
     companion object {
+        /**
+         * La graine du site que l'atelier montre par defaut.
+         *
+         * Un atelier vide serait une dalle grise : on y pose donc un village des
+         * l'ouverture, comme le trebuchet en pose un. La graine est fixe pour que le
+         * decor ne change pas sous les yeux du joueur d'une ouverture a l'autre.
+         */
+        const val DEFAULT_SITE_SEED = 7L
+
         private const val MAX_PROJECTILE_SPEED = 1_500f
 
         /** Un point de traînée toutes les vingt millisecondes, comme au trébuchet. */

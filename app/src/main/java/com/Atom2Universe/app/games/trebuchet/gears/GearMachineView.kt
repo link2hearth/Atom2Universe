@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.DashPathEffect
-import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RadialGradient
@@ -16,10 +15,10 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.trebuchet.LandScene
+import com.Atom2Universe.app.games.trebuchet.SkyBackdrop
 import com.Atom2Universe.app.games.trebuchet.SkyClock
 import com.Atom2Universe.app.games.trebuchet.SkyState
-import com.Atom2Universe.app.games.trebuchet.CloudField
-import com.Atom2Universe.app.games.trebuchet.BirdField
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -70,18 +69,6 @@ class GearMachineView @JvmOverloads constructor(
     private val dp = resources.displayMetrics.density
     private val gearPath = Path()
     private val pBackground = Paint().apply { color = Color.rgb(10, 16, 36) }
-    private val pSky = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val pGround = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(68, 83, 48) }
-    private val pGrass = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(159, 188, 100); strokeWidth = 2f * dp }
-    private val pSun = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val pMoon = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.rgb(235, 239, 246) }
-    private val pMoonDark = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val pStar = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE }
-    private val pCloud = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val pBird = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE; strokeWidth = 1.6f * dp; strokeCap = Paint.Cap.ROUND
-        color = Color.rgb(40, 38, 46)
-    }
     private val pTick = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE; strokeWidth = 1.5f * dp; color = Color.argb(90, 180, 220, 190)
     }
@@ -156,15 +143,29 @@ class GearMachineView @JvmOverloads constructor(
         typeface = android.graphics.Typeface.DEFAULT_BOLD
     }
     private val screenRect = RectF()
-    private val skyClock = SkyClock()
-    private val sky = SkyState().apply { update(skyClock.instant) }
-    private val clouds = CloudField()
-    private val birds = BirdField()
-    private var ambientClock = 0f
-    private var cloudTint = 0
-    private val starsX = FloatArray(56) { ((it * 83 + 31) % 997) / 997f }
-    private val starsY = FloatArray(56) { ((it * 149 + 17) % 503) / 503f }
-    private val starsR = FloatArray(56) { if (it % 5 == 0) 1.35f else 0.75f }
+    /**
+     * Le décor : **exactement le même objet que dans la vue du trébuchet**.
+     *
+     * L'atelier en avait sa propre copie, recopiée puis oubliée — d'où une pleine lune
+     * noire qui a survécu ici pendant que le champ de tir était corrigé. Voir
+     * [SkyBackdrop] pour ce qui est partagé et ce qui ne l'est pas.
+     *
+     * Il voit plus de ciel que le champ de tir parce que sa dalle est plus bas : c'est
+     * le seul réglage qui reste propre à l'atelier.
+     */
+    private val backdrop = SkyBackdrop(context, skyBand = WORKSHOP_SKY_BAND)
+
+    /**
+     * Le paysage : collines, batiments, verdure, habitants, feux.
+     *
+     * Le meme objet qu'au champ de tir, pour la meme raison que le ciel — voir
+     * [LandScene]. La dalle plate et sa regle graduee ont disparu avec : le relief porte
+     * maintenant ses propres bornes, et elles suivent la pente.
+     */
+    private val land = LandScene(context)
+    private val sky get() = backdrop.sky
+    private val skyClock get() = backdrop.clock
+    private val ambientClock get() = backdrop.ambientClock
 
     private var camX = 0f
     private var camY = 3f
@@ -200,6 +201,9 @@ class GearMachineView @JvmOverloads constructor(
     private var camPhase = GearMachineGame.Phase.BUILD
     private var lastTapAt = 0L
     private var gestureLocked = false
+
+    /** Le doigt s'est pose dans le vide : s'il ne glisse pas, il deselectionne. */
+    private var tappedVoid = false
     private var pinching = false
     private var pinchStartDistance = 0f
     private var pinchStartScale = 0f
@@ -227,6 +231,14 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     fun pause() { running = false }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        // Le decor tient l'image de la Lune et la carte lunaire : ce sont les seuls gros
+        // tableaux de la vue, et rien d'autre ne les libererait.
+        running = false
+        backdrop.release()
+    }
 
     fun loadConfig(config: GearMachineConfig) {
         game.loadConfig(config)
@@ -564,14 +576,27 @@ class GearMachineView @JvmOverloads constructor(
         return floatArrayOf((left + right) / 2f, scale)
     }
 
-    /** Le plan le plus large : de la machine jusqu'au mannequin. */
+    /**
+     * Le plan le plus large : **de la machine jusqu'au site**.
+     *
+     * Il s'arretait au mannequin, a soixante metres, ce qui suffisait tant que l'atelier
+     * tirait sur une dalle nue. Depuis qu'il y a un village a quelques centaines de
+     * metres, un double-appui qui montrerait un champ vide serait la seule chose que le
+     * joueur ne peut pas faire : aller voir ce qu'il est en train de detruire. C'est la
+     * regle du trebuchet, ou la butee avant englobe la cible pour la meme raison.
+     *
+     * La hauteur suit le relief : un village perche sur une colline de dix metres sortait
+     * du cadre par le haut.
+     */
     private fun fullTarget(): FloatArray {
         val bounds = game.bounds()
-        val objective = objectiveX()
-        val left = minOf(bounds[0], objective)
-        val right = maxOf(bounds[1], objective)
+        val site = game.targets
+        val loin = if (site.pieces.isEmpty()) objectiveX() else site.right + 40f
+        val left = minOf(bounds[0], objectiveX())
+        val right = maxOf(bounds[1], loin)
         val spanX = (right - left + 12f).coerceAtLeast(70f)
-        val spanY = (bounds[3].coerceAtLeast(2.2f) + 4f).coerceAtLeast(14f)
+        val haut = maxOf(bounds[3], game.terrain.highest + 12f)
+        val spanY = (haut.coerceAtLeast(2.2f) + 4f).coerceAtLeast(14f)
         val scale = min(
             width / spanX, (height - 34f * dp) / spanY
         ).coerceAtLeast(0.01f)
@@ -593,7 +618,11 @@ class GearMachineView @JvmOverloads constructor(
             manualCam = false
             cameraView = CameraView.BUILD
         }
-        if (manualCam) {
+        // Le cadrage ne s'attrape pas **en vol** : pendant le tir la camera suit son
+        // boulet, quoi qu'on ait choisi avant. C'est la regle du trebuchet, et elle
+        // existe parce qu'un tir qu'on rate parce qu'on regardait ailleurs est un tir a
+        // refaire. Hors vol, le choix du joueur prime.
+        if (manualCam && game.phase != GearMachineGame.Phase.FLIGHT) {
             clampCamera()
             return
         }
@@ -624,7 +653,6 @@ class GearMachineView @JvmOverloads constructor(
         canvas.translate(width / 2f - camX * camScale, height / 2f + camY * camScale)
         canvas.scale(camScale, -camScale)
         drawAutomaticFrame(canvas)
-        drawWorkshopObjective(canvas)
         drawTransmissions(canvas)
         for (mesh in game.meshes) {
             val a = game.gears.firstOrNull { it.wheel.id == mesh.firstId } ?: continue
@@ -689,29 +717,29 @@ class GearMachineView @JvmOverloads constructor(
             val steps = ceil(game.chargeTotal / fixed / CHARGE_FRAMES).toInt()
                 .coerceIn(CHARGE_MIN_STEPS, CHARGE_MAX_STEPS)
             consumed = game.advanceCharge(fixed, steps)
-            accumulator = 0f
             // Le ciel suit le temps **machine** : charger dix minutes deplace le soleil
             // de dix minutes. Les nuages et les oiseaux, eux, restent a l'heure de
-            // l'ecran -- ce sont des habitants, pas des rouages.
-            skyClock.advance(consumed)
-            ambientClock += elapsed
-            clouds.update(elapsed, sin(ambientClock * 0.08f) * 2.2f)
-            birds.update(elapsed, sin(ambientClock * 0.08f) * 2.2f)
+            // l'ecran -- ce sont des habitants, pas des rouages. C'est cette distinction
+            // que les deux temps de `advance` portent.
+            backdrop.advance(elapsed, consumed, workshopBreeze())
+            accumulator = 0f
         } else {
             accumulator += elapsed
             var guard = 0
             while (accumulator >= fixed && guard++ < 8) {
                 game.step(fixed)
                 updateTimeControl(fixed)
-                if (!timeMode) skyClock.advance(fixed)
-                ambientClock += fixed
-                clouds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
-                birds.update(fixed, sin(ambientClock * 0.08f) * 2.2f)
                 accumulator -= fixed
                 consumed += fixed
             }
+            // Le decor avance d'un coup du temps reellement simule : nuages et horloge
+            // sont lineaires en dt, donc sommer les sous-pas donne le meme resultat que
+            // les parcourir, pour un seul recalcul du ciel par image.
+            backdrop.advance(consumed, if (timeMode) 0f else consumed, workshopBreeze())
         }
-        sky.update(skyClock.instant)
+        land.updateDecor(
+            elapsed, game.level, game.terrain, game.targets, game.projectile?.body?.x ?: 0f
+        ) {}
         // La camera vit a l'heure de l'ecran : lui donner le temps machine la ferait
         // sauter d'un bond a chaque image de charge.
         updateCamera(if (game.charging) elapsed else consumed)
@@ -722,135 +750,27 @@ class GearMachineView @JvmOverloads constructor(
         }
     }
 
-    /** Même ciel vivant et mêmes repères de terrain que la vue du trébuchet. */
+    /**
+     * Le decor commun, puis ce qui n'appartient qu'a l'atelier : la dalle et sa regle.
+     *
+     * Le ciel, les astres, les nuages et les oiseaux sont peints par [backdrop], donc
+     * ils sont **les memes** qu'au champ de tir sans qu'une ligne soit recopiee. Le sol,
+     * lui, reste ici : une dalle plate graduee en metres n'a rien a voir avec un relief
+     * seme de cibles, et pretendre les partager reviendrait a refaire le melange qu'on
+     * vient de defaire.
+     */
     private fun drawWorkshopSky(canvas: Canvas) {
         val w = width.toFloat(); val h = height.toFloat()
-        pSky.shader = LinearGradient(0f, 0f, 0f, h, sky.zenith, sky.horizon, Shader.TileMode.CLAMP)
-        canvas.drawRect(0f, 0f, w, h, pSky)
-        pSky.shader = null
-        if (sky.starAlpha > 0.03f) {
-            pStar.alpha = (sky.starAlpha * 170f).toInt().coerceIn(0, 255)
-            for (i in starsX.indices) canvas.drawCircle(starsX[i] * w, starsY[i] * h * 0.55f, starsR[i] * dp, pStar)
-        }
-        drawMoon(canvas, w, h)
-        drawSun(canvas, w, h)
-        drawClouds(canvas, w, h)
-        drawBirds(canvas, w, h)
-
-        val groundY = sy(0f).coerceIn(0f, h)
-        val light = sky.light.coerceIn(0f, 1f)
-        pGround.color = Color.rgb((48 + light * 38).toInt(), (58 + light * 46).toInt(), (35 + light * 22).toInt())
-        canvas.drawRect(0f, groundY, w, h, pGround)
-        pGrass.alpha = (120 + light * 135).toInt()
-        canvas.drawLine(0f, groundY, w, groundY, pGrass)
-        pGrass.alpha = 255
-
-        val viewWidth = w / camScale
-        val left = camX - viewWidth / 2f
-        val right = camX + viewWidth / 2f
-        val step = when {
-            viewWidth > 180f -> 50f
-            viewWidth > 70f -> 25f
-            else -> 10f
-        }
-        pTickLabel.textSize = 11f * dp
-        var distance = 0f
-        val firingLine = game.bounds()[0]
-        while (firingLine + distance < right + step) {
-            val x = firingLine + distance
-            if (x > left - step) {
-                val px = sx(x)
-                canvas.drawLine(px, groundY, px, groundY + 10f * dp, pTick)
-                if (distance > 0f) canvas.drawText("${distance.toInt()} m", px, groundY + 24f * dp, pTickLabel)
-            }
-            distance += step
-        }
+        backdrop.draw(canvas, w, h, camX, camY, camScale)
+        land.firingLine = game.bounds()[0]
+        land.draw(
+            canvas, w, h, camX, camY, camScale,
+            game.terrain, game.targets, sky.light, 0f, backdrop.ambientClock
+        )
     }
 
-    private fun drawSun(canvas: Canvas, w: Float, h: Float) {
-        if (sky.sunAltitude < -0.12f) return
-        val cx = skyX(sky.sunX, w)
-        val cy = skyY(sky.sunAltitude, h)
-        val radius = 13f * dp
-        pSun.color = SkyState.mix(Color.rgb(255, 154, 60), Color.rgb(255, 246, 208), sky.sunAltitude.coerceIn(0f, 1f))
-        pSun.alpha = 70
-        canvas.drawCircle(cx, cy, radius * 3.2f, pSun)
-        pSun.alpha = 255
-        canvas.drawCircle(cx, cy, radius, pSun)
-        if (sky.eclipse > 0f) {
-            pMoonDark.color = SkyState.mix(sky.zenith, Color.rgb(10, 10, 18), 0.7f)
-            canvas.drawCircle(cx + radius * 2f * (1f - sky.eclipse), cy, radius, pMoonDark)
-        }
-    }
-
-    private fun drawMoon(canvas: Canvas, w: Float, h: Float) {
-        if (sky.moonAltitude < -0.12f) return
-        val cx = skyX(sky.moonX, w)
-        val cy = skyY(sky.moonAltitude, h)
-        val radius = 15f * dp
-        pMoon.alpha = ((0.35f + 0.65f * sky.starAlpha) * 255f).toInt().coerceIn(0, 255)
-        canvas.drawCircle(cx, cy, radius, pMoon)
-        if (sky.moonPhase < 0.99f) {
-            pMoonDark.color = SkyState.mix(sky.zenith, sky.horizon, 0.35f)
-            pMoonDark.alpha = pMoon.alpha
-            val offset = radius * 2f * (1f - sky.moonPhase) * if (sky.moonWaxing) -1f else 1f
-            canvas.drawCircle(cx + offset, cy, radius, pMoonDark)
-        }
-    }
-
-    private fun drawClouds(canvas: Canvas, w: Float, h: Float) {
-        val tint = SkyState.mix(sky.horizon, Color.WHITE, 0.5f)
-        if (tint != cloudTint) {
-            cloudTint = tint
-            pCloud.shader = RadialGradient(0f, 0f, 1f, intArrayOf(tint, tint and 0x00FFFFFF), floatArrayOf(0f, 1f), Shader.TileMode.CLAMP)
-        }
-        pCloud.alpha = 140
-        val half = w / 2f / camScale
-        for (cloud in clouds.clouds) {
-            var x = cloud.x
-            x -= floor((x - camX + CloudField.SPAN / 2f) / CloudField.SPAN) * CloudField.SPAN
-            if (x < camX - half - cloud.size * 3f || x > camX + half + cloud.size * 3f) continue
-            val cx = sx(x); val cy = sy(cloud.altitude); val size = cloud.size * camScale
-            if (cy !in (-size * 3f)..(h + size * 2f)) continue
-            var i = 0
-            while (i < cloud.puffs.size) {
-                val radius = cloud.puffs[i + 2] * size
-                if (radius >= 0.5f) {
-                    canvas.save()
-                    canvas.translate(cx + cloud.puffs[i] * size, cy + cloud.puffs[i + 1] * size)
-                    canvas.scale(radius, radius)
-                    canvas.drawCircle(0f, 0f, 1f, pCloud)
-                    canvas.restore()
-                }
-                i += 3
-            }
-        }
-    }
-
-    private fun drawBirds(canvas: Canvas, w: Float, h: Float) {
-        if (sky.light <= 0.02f) return
-        pBird.alpha = (sky.light * 200f).toInt().coerceIn(0, 255)
-        val half = w / 2f / camScale
-        for (bird in birds.birds) {
-            var x = bird.x
-            x -= floor((x - camX + BirdField.SPAN / 2f) / BirdField.SPAN) * BirdField.SPAN
-            if (x < camX - half - bird.span * 6f || x > camX + half + bird.span * 6f) continue
-            val span = bird.span * camScale
-            if (span < 1.5f) continue
-            val cy = sy(bird.altitude + sin(ambientClock * 0.9f + bird.bobPhase) * bird.span * 1.4f)
-            val cx = sx(x)
-            val lift = span * (0.15f + 0.55f * (sin(ambientClock * bird.flapRate * 6.2832f + bird.flapPhase) * 0.5f + 0.5f))
-            canvas.drawLine(cx, cy, cx - span, cy - lift, pBird)
-            canvas.drawLine(cx, cy, cx + span, cy - lift, pBird)
-        }
-        pBird.alpha = 255
-    }
-
-    private fun skyX(fraction: Float, w: Float) = (0.08f + 0.84f * fraction) * w
-    private fun skyY(altitude: Float, h: Float): Float {
-        val skyBand = h * 0.72f
-        return skyBand - altitude.coerceIn(-0.2f, 1f) * skyBand * 0.86f
-    }
+    /** La brise de l'atelier : de quoi faire deriver les nuages, rien de plus. */
+    private fun workshopBreeze() = sin(ambientClock * 0.08f) * 2.2f
 
     /** L'objectif de tir donne un second point de repère au double-appui large. */
     private fun objectiveX(): Float = if (game.projectile != null) {
@@ -861,6 +781,18 @@ class GearMachineView @JvmOverloads constructor(
         game.targetX()
     }
 
+    /**
+     * Le mannequin de visee, **garde mais plus dessine**.
+     *
+     * Il servait de cible quand l'atelier tirait sur une dalle nue ; depuis qu'il y a de
+     * vrais batiments a abattre, une barre rouge plantee au milieu du village ne dirait
+     * plus rien. Le code reste en place parce qu'il resservira : la distance du
+     * mannequin est exactement ce qui manque pour tirer une graine de terrain qui pose
+     * le site **la ou le joueur vise**, au lieu de la ou le generateur l'a mis.
+     *
+     * @suppress inutilise pour l'instant, et c'est voulu.
+     */
+    @Suppress("unused")
     private fun drawWorkshopObjective(canvas: Canvas) {
         val x = objectiveX()
         val hit = game.projectile?.hitTarget ?: false
@@ -893,16 +825,11 @@ class GearMachineView @JvmOverloads constructor(
     private fun focusCamera(view: CameraView) {
         if (width <= 0 || height <= 0) return
         cameraView = view
+        // **On ne saute pas d'un plan a l'autre.** On rend la main a [updateCamera], qui
+        // rattrape la cible en douceur — une camera qui se teleporte fait perdre le fil
+        // de ce qu'on regardait, et c'est encore plus vrai quand le plan large recule de
+        // cinq cents metres. Meme regle qu'au trebuchet.
         manualCam = false
-        if (view == CameraView.BUILD && game.phase == GearMachineGame.Phase.BUILD) {
-            fitCamera()
-            return
-        }
-        val target = if (view == CameraView.FULL) fullTarget() else buildTarget()
-        camX = target[0]
-        camScale = target[1]
-        camY = groundCamY(camScale)
-        clampCamera()
     }
 
     /** Même butées de terrain que le trébuchet, adaptées à l'atelier extensible. */
@@ -937,13 +864,13 @@ class GearMachineView @JvmOverloads constructor(
 
     private fun updateTimeControl(dt: Float) {
         if (!timeMode) {
-            if (timeCandidate && SystemClock.uptimeMillis() - timePressAt >= 420L) {
+            if (timeCandidate && SystemClock.uptimeMillis() - timePressAt >= TIME_HOLD_MS) {
                 timeMode = true
                 timePressX = timeFingerX
             }
             return
         }
-        timeRate = SkyClock.scrubRate(timeFingerX - timePressX, width * 0.33f)
+        timeRate = SkyClock.scrubRate(timeFingerX - timePressX, width * TIME_THROW)
         skyClock.scrub(timeRate * dt)
     }
 
@@ -1604,6 +1531,9 @@ class GearMachineView @JvmOverloads constructor(
         pinchStartScale = camScale
         pinchLastFocusX = (event.getX(0) + event.getX(1)) * 0.5f
         pinching = true
+        // Deux doigts ne deselectionnent pas : sans ca, un pincement qui ne bouge
+        // presque pas passerait pour un appui dans le vide et lacherait la piece tenue.
+        tappedVoid = false
         gestureLocked = true
         manualCam = true
         touchMode = TouchMode.NONE
@@ -1655,6 +1585,7 @@ class GearMachineView @JvmOverloads constructor(
                 lastGestureRawX = event.rawX
                 lastGestureRawY = event.rawY
                 pointerTravel = 0f
+                tappedVoid = false
                 manipulationStarted = false
                 gestureLocked = false
                 pinching = false
@@ -1673,7 +1604,7 @@ class GearMachineView @JvmOverloads constructor(
                     return true
                 }
                 val now = SystemClock.uptimeMillis()
-                val doubleTap = now - lastTapAt < 300L
+                val doubleTap = now - lastTapAt < DOUBLE_TAP_MS
                 lastTapAt = now
                 if (doubleTap && placementTeeth == null) {
                     selectedId = null
@@ -1693,8 +1624,16 @@ class GearMachineView @JvmOverloads constructor(
                         placementTeeth = null
                         listener?.onGearMachineChanged()
                     } else {
-                        selectedId = null
-                        timeCandidate = event.y < sy(0f)
+                        // **On ne deselectionne pas tout de suite.** Un doigt pose dans
+                        // le vide veut peut-etre faire glisser la vue, et perdre sa piece
+                        // a chaque fois qu'on regarde ailleurs etait une punition pour
+                        // avoir navigue. C'est le lever qui tranchera, selon que le doigt
+                        // a voyage ou non — meme regle qu'au trebuchet.
+                        tappedVoid = true
+                        // Le ciel commence **au-dessus du sol qu'on voit**, pas au-dessus
+                        // de l'altitude zero : depuis qu'il y a du relief, un doigt pose
+                        // sur le flanc d'une colline etait compte comme pose dans le ciel.
+                        timeCandidate = y > game.terrain.heightAt(x)
                         timePressAt = now
                         timePressX = event.x
                         timeFingerX = event.x
@@ -1722,6 +1661,17 @@ class GearMachineView @JvmOverloads constructor(
                         listener?.onGearLinkRejected(pending.kind)
                     }
                 }
+                // **Prendre une piece en main ne la deplace pas**, et c'est le point
+                // important. Le meme geste faisait les deux : on touchait un engrenage,
+                // et les quelques millimetres que le doigt parcourt toujours avant de se
+                // relever le trainaient deja ailleurs — ou le faisaient tourner. Le
+                // joueur voyait sa machine bouger avant d'avoir demande quoi que ce soit.
+                //
+                // Il faut desormais deux gestes, comme au trebuchet : le premier prend la
+                // piece, le second la deplace ou la lance. Le premier appui ne fait
+                // qu'eclairer la selection, ce qui est exactement ce qu'on attend d'un
+                // clic.
+                val dejaTenue = selectedId == hit.wheel.id
                 selectedId = hit.wheel.id
                 currentLayer = hit.wheel.layer
                 // Toucher une pièce annule une pose armée : sans ça elle restait
@@ -1729,6 +1679,16 @@ class GearMachineView @JvmOverloads constructor(
                 // personne ne voulait plus.
                 cancelPlacement()
                 layoutConflictIds = emptySet()
+                if (!dejaTenue) {
+                    // Le geste s'arrete la : ni deplacement, ni lancer, ni glissement de
+                    // vue, quoi que le doigt fasse ensuite avant de se relever.
+                    touchMode = TouchMode.NONE
+                    touchGearId = null
+                    gestureLocked = true
+                    listener?.onGearSelectionChanged()
+                    invalidate()
+                    return true
+                }
                 game.captureWheelAngles()
                 magneticTargetId = null
                 val distance = hypot(x - hit.body.x, y - hit.body.y)
@@ -1762,12 +1722,23 @@ class GearMachineView @JvmOverloads constructor(
                     return true
                 }
                 if (touchGearId == null) {
+                    // Le chemin parcouru, et non l'ecart au point de depart : un doigt
+                    // qui balaie le temps puis revient ou il etait a bel et bien glisse,
+                    // et ne doit pas passer pour un appui qui deselectionne.
+                    pointerTravel += hypot(
+                        event.rawX - lastGestureRawX,
+                        event.rawY - lastGestureRawY
+                    )
+                    lastGestureRawX = event.rawX
+                    lastGestureRawY = event.rawY
                     timeFingerX = event.x
                     if (timeMode) {
                         invalidate()
                         return true
                     }
-                    if (timeCandidate && abs(event.x - timePressX) > 8f * dp) timeCandidate = false
+                    if (timeCandidate && abs(event.x - timePressX) > DRAG_SLOP_DP * dp) {
+                        timeCandidate = false
+                    }
                     if (!gestureLocked) panScene(event)
                     invalidate()
                     return true
@@ -1834,6 +1805,9 @@ class GearMachineView @JvmOverloads constructor(
                 return true
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                // Un appui dans le vide qui n'a pas glisse : le joueur pose la piece.
+                if (tappedVoid && pointerTravel < DRAG_SLOP_DP * dp) selectedId = null
+                tappedVoid = false
                 if (touchMode == TouchMode.MOVE && manipulationStarted) {
                     touchGearId?.let { id ->
                         val target = game.moveGearMagnetic(id, x, y, magneticTargetId)
@@ -1874,6 +1848,31 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     companion object {
+        /**
+         * Part de la hauteur d'ecran occupee par le ciel dans l'atelier.
+         *
+         * Plus haute qu'au champ de tir (0,62) parce que la dalle est plus bas : les
+         * astres ont besoin de la meme place au-dessus d'elle.
+         */
+        private const val WORKSHOP_SKY_BAND = 0.72f
+
+        /** Ecart maximal entre deux appuis pour que ce soit un double-appui, en ms. */
+        private const val DOUBLE_TAP_MS = 300L
+
+        /**
+         * De combien le doigt peut voyager tout en restant un appui, en dp.
+         *
+         * Un doigt ne se leve jamais exactement ou il s'est pose ; sans cette tolerance,
+         * un appui franc passerait pour un glissement.
+         */
+        private const val DRAG_SLOP_DP = 9f
+
+        /** Duree de l'appui qui donne la main sur l'heure, en millisecondes. */
+        private const val TIME_HOLD_MS = 420L
+
+        /** Part de la largeur d'ecran a parcourir pour balayer le temps a pleine vitesse. */
+        private const val TIME_THROW = 0.33f
+
         /** Les rayons d'un volant : assez pour qu'on lise la rotation, pas plus. */
         private const val FLYWHEEL_SPOKES = 6
 
