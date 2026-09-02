@@ -5,6 +5,7 @@ import com.Atom2Universe.app.games.trebuchet.gears.GearMachineGame
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.hypot
 
 /**
  * **Les boulets de l'atelier abattent vraiment les murs.**
@@ -163,5 +164,57 @@ class GearDemolitionTest {
         game.loadSite(31L)
         assertTrue("aucun site ne se redresse", game.targets.pieceTotal > 0)
         assertTrue("le relief n'est pas revenu", !game.terrain.flat)
+    }
+
+    /**
+     * **Un boulet qui finit couché dans les ruines termine quand même son tir.**
+     *
+     * Les trois relevés de portée cherchaient tous **le sol**, ce qui suffisait quand
+     * l'atelier tirait sur une dalle nue. Depuis qu'il y a des bâtiments, un gros boulet
+     * laboure le village et s'arrête **sur ses gravats**, à deux mètres du sol : aucun
+     * relevé ne le voyait, le tir restait « en vol » indéfiniment, et le joueur ne
+     * pouvait plus tirer sans passer par le bouton d'arrêt.
+     *
+     * Mesuré avant correction : un boulet de deux cent cinquante kilos était toujours en
+     * vol au bout de quinze secondes, le village rasé à quatre-vingt-huit pour cent.
+     */
+    @Test
+    fun `un boulet arrete dans les ruines termine son tir`() {
+        val game = GearMachineGame()
+        game.setProjectileMass(250f)
+        armer(game)
+        val site = game.targets
+
+        game.startCharge(30f)
+        var g = 0
+        while (game.charging && g++ < 10_000) game.advanceCharge(1f / 120f, 2_000)
+        assertTrue("le lanceur n'a pas tiré", game.launchProjectile())
+        val b = game.projectile!!.body
+        b.x = site.left - 8f
+        b.y = game.terrain.heightAt(site.left) + 6f
+        b.vx = 160f
+        b.vy = 0f
+
+        var finAt = -1
+        var dernierMouvement = 0
+        repeat(1_800) { i ->
+            game.step(fixed)
+            if (finAt < 0 && game.phase != GearMachineGame.Phase.FLIGHT) finAt = i
+            if (site.pieces.any { hypot(it.body.vx, it.body.vy) > 0.15f }) dernierMouvement = i
+        }
+        println(
+            "RUINES tir terminé à " +
+                (if (finAt < 0) "jamais" else "${"%.1f".format(finAt / 120f)} s") +
+                ", le village bouge jusqu'à ${"%.1f".format(dernierMouvement / 120f)} s, " +
+                "${site.pieceBroken} cassées, ${"%.0f".format(site.progress * 100f)} % de l'objectif"
+        )
+        assertTrue("le tir n'a jamais pris fin : le joueur reste bloqué en vol", finAt >= 0)
+
+        // Et le village continue de s'écrouler **après** la fin du tir : le monde de
+        // l'atelier ne s'arrête pas avec le boulet, contrairement à celui du trébuchet.
+        assertTrue(
+            "l'effondrement s'est arrêté avec le tir",
+            dernierMouvement > finAt
+        )
     }
 }

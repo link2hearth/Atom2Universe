@@ -86,7 +86,9 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         var distance: Float = 0f,
         var hitTarget: Boolean = false,
         var previousX: Float = startX,
-        var previousY: Float = startY
+        var previousY: Float = startY,
+        /** Depuis combien de temps le boulet ne bouge plus. Voir le quatrième relevé. */
+        var stalled: Float = 0f
     )
 
     val world = PhysWorld().apply {
@@ -819,9 +821,22 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             // pied du rempart, et en arcade le boulet est justement censé le traverser
             // et retomber plus loin.
             val chocAuSol = body.impactAccum > 0f && body.y <= touchLevel + 2f * body.radius
-            if (auSol || chocAuSol) {
+
+            // **Quatrième relevé : un boulet arrêté a atterri**, où qu'il se soit
+            // arrêté. Les trois autres cherchent tous le *sol*, et c'était suffisant
+            // quand il n'y avait rien d'autre à toucher. Depuis qu'il y a des bâtiments,
+            // un gros boulet laboure le village et finit couché **sur ses gravats**, à
+            // deux mètres du sol : aucun des trois relevés ne le voyait, le tir restait
+            // « en vol » indéfiniment, et le joueur ne pouvait plus tirer. Mesuré : un
+            // boulet de deux cent cinquante kilos restait en vol au bout de quinze
+            // secondes, le village rasé à quatre-vingt-huit pour cent.
+            shot.stalled = if (hypot(body.vx, body.vy) < STALL_SPEED) shot.stalled + dt else 0f
+            val arrete = shot.stalled >= STALL_TIME
+            if (auSol || chocAuSol || arrete) {
                 shot.landed = true
-                shot.distance = groundContactX(shot, touchLevel) - shot.startX
+                // Un boulet arrêté est déjà là où il finit : rien à interpoler.
+                shot.distance =
+                    (if (arrete) body.x else groundContactX(shot, touchLevel)) - shot.startX
                 lastShotDistance = shot.distance
                 lastShotHeight = shot.peakY - shot.startY
                 lastShotHitTarget = shot.hitTarget
@@ -1769,6 +1784,17 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
          * decor ne change pas sous les yeux du joueur d'une ouverture a l'autre.
          */
         const val DEFAULT_SITE_SEED = 7L
+
+        /**
+         * En dessous de quoi un boulet est considéré comme arrêté, en m/s, et pendant
+         * combien de temps il doit l'être pour que le tir se termine.
+         *
+         * Six dixièmes de seconde : assez long pour qu'un tir presque vertical ne se
+         * termine pas à son apogée, assez court pour qu'un boulet couché dans les ruines
+         * ne fasse pas attendre.
+         */
+        const val STALL_SPEED = 0.5f
+        const val STALL_TIME = 0.6f
 
         private const val MAX_PROJECTILE_SPEED = 1_500f
 
