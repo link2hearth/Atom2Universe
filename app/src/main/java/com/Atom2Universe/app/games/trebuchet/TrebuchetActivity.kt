@@ -43,6 +43,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         const val PREFS_NAME = "trebuchet_game"
         const val KEY_BEST = "best_distance"
         const val KEY_SEED = "level_seed"
+        const val KEY_GEAR_SEED = "gear_site_seed"
         const val KEY_STYLE = "target_style"
         const val KEY_MACHINES = "machines"
         const val KEY_GEAR_MACHINES = "gear_machines"
@@ -158,6 +159,15 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     /** Le numéro de la dernière fabrication demandée : voir [loadLevel]. */
     private var loadToken = 0
 
+    /**
+     * La graine du site de l'atelier.
+     *
+     * Gardée ici et pas seulement dans le modèle, parce qu'il faut pouvoir **refaire le
+     * même site** : c'est ce que demande un changement de tempérament, qui ne peut pas
+     * se contenter de retoucher les pierres existantes.
+     */
+    private var gearSiteSeed = GearMachineGame.DEFAULT_SITE_SEED
+
     /** Le nom sous lequel on a chargé ou enregistré pour la dernière fois. */
     private var lastMachineName = ""
     private var lastGearMachineName = ""
@@ -171,6 +181,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         best = prefs.getFloat(KEY_BEST, 0f)
         levelSeed = prefs.getLong(KEY_SEED, 1L)
+        gearSiteSeed = prefs.getLong(KEY_GEAR_SEED, GearMachineGame.DEFAULT_SITE_SEED)
         TargetRules.style = runCatching {
             TargetStyle.valueOf(prefs.getString(KEY_STYLE, null) ?: TargetStyle.ARCADE.name)
         }.getOrDefault(TargetStyle.ARCADE)
@@ -228,6 +239,12 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
         restoreWorkshop()
         loadLevel(levelSeed)
+        // **Le site de l'atelier se refait ici**, et pas seulement à la construction de
+        // la vue. Celle-ci est montée par `setContentView`, donc **avant** que le
+        // tempérament ne soit relu des préférences : son site naissait avec les
+        // constantes par défaut, et un joueur en réaliste retrouvait un atelier en
+        // arcade — ou l'inverse — sans que rien ne le dise.
+        gearView.loadSite(gearSiteSeed)
     }
 
     /** Rouvre l'atelier là où on l'avait laissé : le même mode, la même machine. */
@@ -308,6 +325,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      */
     private fun nextGearSite() {
         val seed = kotlin.random.Random.nextLong(1L, 1_000_000L)
+        gearSiteSeed = seed
+        prefs.edit { putLong(KEY_GEAR_SEED, seed) }
         gearView.loadSite(seed)
         gearEditor.closeTime()
         updateUi()
@@ -411,6 +430,13 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         TargetRules.style = style
         prefs.edit { putString(KEY_STYLE, style.name) }
         loadLevel(levelSeed)
+        // **Les deux terrains, pas seulement celui du trébuchet.** L'atelier a des
+        // bâtiments depuis peu, et il gardait ceux d'avant : on passait en arcade et les
+        // murs restaient aussi durs qu'en réaliste, ce qui ne ressemblait à rien.
+        //
+        // On le refait sur sa propre graine, donc c'est le **même** site avec d'autres
+        // pierres — exactement ce que fait le champ de tir de son côté.
+        gearView.loadSite(gearSiteSeed)
     }
 
     /** Le nom du tempérament, tel qu'il s'affiche. */
