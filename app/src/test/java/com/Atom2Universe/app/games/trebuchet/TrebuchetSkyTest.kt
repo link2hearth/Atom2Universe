@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.trebuchet
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.PI
 
 /**
  * Le ciel : l'heure, les astres, les couleurs, et l'éclipse.
@@ -98,6 +99,171 @@ class TrebuchetSkyTest {
             "une nouvelle lune devrait accompagner le soleil",
             midiNouvelle.moonAltitude > 0.5f
         )
+    }
+
+    /**
+     * **La phase du jour est celle du calendrier.**
+     *
+     * Les quatre instants ci-dessous ne sortent pas de ce code : ce sont les nouvelles
+     * et pleines lunes d'août et septembre 2026 telles que les donnent les éphémérides
+     * (Meeus, chapitre 49). C'est le seul test qui puisse dire que la Lune du jeu est
+     * bien celle du ciel, et c'est celui qui manquait — les autres vérifiaient la
+     * cohérence interne, qui restait parfaite pendant que la phase se trompait d'une
+     * demi-journée.
+     *
+     * Elle se trompait parce que le code lisait l'élongation **moyenne** D au lieu de la
+     * vraie : treize heures d'écart au pire, soit un croissant visiblement en avance sur
+     * l'almanach deux semaines par mois.
+     */
+    @Test
+    fun `les nouvelles et pleines lunes tombent aux dates des ephemerides`() {
+        // Nouvelles lunes : 12 août 2026 17h38 UTC, 11 septembre 2026 03h28 UTC.
+        // Pleines lunes : 28 août 2026 04h19 UTC, 26 septembre 2026 16h50 UTC.
+        val nouvelles = longArrayOf(1_786_556_280_000L, 1_789_097_280_000L)
+        val pleines = longArrayOf(1_787_890_740_000L, 1_790_441_400_000L)
+
+        for (t in nouvelles) {
+            val p = ciel(t).moonPhase
+            println("LUNE nouvelle attendue : phase ${"%.4f".format(p)}")
+            assertTrue("la nouvelle lune de l'almanach est éclairée à ${"%.3f".format(p)}", p < 0.005f)
+        }
+        for (t in pleines) {
+            val p = ciel(t).moonPhase
+            println("LUNE pleine attendue : phase ${"%.4f".format(p)}")
+            assertTrue("la pleine lune de l'almanach n'est qu'à ${"%.3f".format(p)}", p > 0.995f)
+        }
+
+        // Et entre les deux elle croît, puis décroît — le sens du croissant en dépend.
+        val jour = 24L * heure
+        assertTrue("la lune ne croît pas après la nouvelle", ciel(nouvelles[1] + 3 * jour).moonWaxing)
+        assertTrue("la lune croît encore après la pleine", !ciel(pleines[1] + 3 * jour).moonWaxing)
+
+        // Au premier quartier, sept jours et demi après la nouvelle, la moitié du disque.
+        val quartier = ciel(nouvelles[1] + 7 * jour + 9 * heure).moonPhase
+        println("LUNE premier quartier : phase ${"%.3f".format(quartier)}")
+        assertEquals("le premier quartier n'est pas à moitié", 0.5f, quartier, 0.06f)
+    }
+
+    /**
+     * **La sphère éclairée montre exactement la part éclairée.**
+     *
+     * C'est le test qui remplace tous les autres depuis que la Lune est une vraie sphère
+     * texturée : on ne trace plus une forme censée valoir la phase, on éclaire un
+     * caillou rond et on compte les pixels qui voient le Soleil. Si le compte tombe
+     * juste pour vingt-et-une phases, il n'y a plus de place pour une inversion ni pour
+     * un terminateur qui bomberait du mauvais côté.
+     *
+     * L'intégration se fait à la main sur une grille de quatre cents points : c'est
+     * lourd pour un test, mais c'est la seule mesure qui ne suppose rien de la formule
+     * qu'elle vérifie.
+     */
+    @Test
+    fun `l eclairage de la sphere couvre exactement la part eclairee`() {
+        val n = 400
+        for (i in 0..20) {
+            val k = i / 20f
+            val sx = MoonLight.sunX(k, true)
+            val sz = MoonLight.sunZ(k)
+            var dedans = 0
+            var eclaire = 0
+            for (py in 0 until n) {
+                for (px in 0 until n) {
+                    val u = (px + 0.5f) / n * 2f - 1f
+                    val v = (py + 0.5f) / n * 2f - 1f
+                    if (u * u + v * v > 1f) continue
+                    dedans++
+                    if (MoonLight.incidence(u, v, sx, sz) > 0f) eclaire++
+                }
+            }
+            val part = eclaire.toFloat() / dedans
+            assertEquals("à k=$k la sphère montre ${"%.3f".format(part)}", k, part, 0.01f)
+        }
+    }
+
+    /**
+     * **Le croissant pointe du bon côté**, et le quartier est droit.
+     *
+     * Un croissant à l'envers est la faute que personne ne sait nommer mais que tout le
+     * monde sent. Elle tient à un seul signe, celui de la composante horizontale du
+     * Soleil vu depuis la Lune, d'où ce test qui ne vérifie que ça.
+     */
+    @Test
+    fun `la lune croissante est eclairee a droite`() {
+        // À demi-lune croissante, la droite du disque voit le Soleil et la gauche non.
+        val sx = MoonLight.sunX(0.5f, waxing = true)
+        val sz = MoonLight.sunZ(0.5f)
+        assertTrue("la droite du premier quartier est dans l'ombre", MoonLight.incidence(0.5f, 0f, sx, sz) > 0f)
+        assertTrue("la gauche du premier quartier est éclairée", MoonLight.incidence(-0.5f, 0f, sx, sz) < 0f)
+        // Et le terminateur passe pile par le centre : c'est ça, un quartier.
+        assertEquals("le quartier n'est pas droit", 0f, MoonLight.incidence(0f, 0.7f, sx, sz), 1e-6f)
+
+        // Décroissante, tout s'inverse.
+        val dx = MoonLight.sunX(0.5f, waxing = false)
+        assertTrue("le dernier quartier est éclairé à droite", MoonLight.incidence(0.5f, 0f, dx, sz) < 0f)
+        assertTrue("le dernier quartier est sombre à gauche", MoonLight.incidence(-0.5f, 0f, dx, sz) > 0f)
+
+        // Pleine lune : tout le disque voit le Soleil, jusqu'au limbe.
+        val px = MoonLight.sunX(1f, true)
+        val pz = MoonLight.sunZ(1f)
+        assertTrue("la pleine lune a une ombre", MoonLight.incidence(0.99f, 0f, px, pz) > 0f)
+    }
+
+    /**
+     * **La lumière cendrée se voit au croissant et pas ailleurs.**
+     *
+     * La face nocturne de la Lune est éclairée par la Terre, et la Terre vue de la Lune
+     * montre la phase complémentaire : elle est pleine quand la Lune est nouvelle. Le
+     * reste du disque se devine donc autour d'un croissant fin, et pas autour d'une
+     * gibbeuse — ce qui est exactement ce qu'on voit dans le ciel.
+     */
+    @Test
+    fun `la lumiere cendree ne se voit qu au croissant`() {
+        val fin = MoonLight.earthshine(0.05f)
+        val gibbeuse = MoonLight.earthshine(0.9f)
+        println("CENDRÉE croissant ${"%.3f".format(fin)}, gibbeuse ${"%.3f".format(gibbeuse)}")
+        assertTrue("un croissant n'a pas de cendre", fin > gibbeuse * 3f)
+        assertEquals("une pleine lune a une face nocturne", 0f, MoonLight.earthshine(1f), 1e-6f)
+
+        // Et la nuit lunaire reste franchement plus sombre que le jour, sinon la phase
+        // ne se lirait plus.
+        val jour = MoonLight.brightness(1f, fin)
+        val nuit = MoonLight.brightness(-0.5f, fin)
+        assertEquals("le plein soleil n'éclaire pas à fond", 1f, jour, 1e-4f)
+        assertTrue("la nuit lunaire est trop claire : $nuit", nuit < 0.15f)
+        // Le terminateur ne fait pas une marche : à incidence nulle on est déjà à la
+        // cendre, et ça monte continûment.
+        assertEquals("le terminateur est une marche", fin, MoonLight.brightness(0f, fin), 1e-6f)
+
+        // Et de jour, la face nocturne s'efface au lieu de faire un disque gris dans le
+        // bleu — c'est ce que le ciel fait vraiment à une lune de midi.
+        assertEquals("la nuit, la face sombre disparaît", 1f, MoonLight.opacity(nuit, 0f), 1e-6f)
+        assertEquals("de jour, la face sombre reste", nuit, MoonLight.opacity(nuit, 1f), 1e-6f)
+        assertEquals("le croissant s'efface de jour", 1f, MoonLight.opacity(1f, 1f), 1e-6f)
+    }
+
+    /**
+     * **Ce qu'on peint vaut la phase, et non son complément.**
+     *
+     * Le bord de la lumière est une demi-ellipse posée sur un demi-limbe, et l'aire de
+     * cette figure se calcule : `πr²/2 + πra/2`, avec `a` le demi-axe du terminateur.
+     * Elle doit valoir exactement `k` fois le disque. C'est la vérification qui aurait
+     * attrapé le bug d'origine — un second disque décalé de la part **non** éclairée,
+     * qui affichait une pleine lune noire et une nouvelle lune pleine.
+     */
+    @Test
+    fun `la figure du terminateur a l aire de la part eclairee`() {
+        for (i in 0..20) {
+            val k = i / 20f
+            val a = SkyState.terminatorAxis(k)   // en fraction du rayon
+            // Aire de la figure, rayon 1 : le demi-limbe plus la demi-ellipse signée.
+            val aire = (PI.toFloat() / 2f) + (PI.toFloat() * a / 2f)
+            val part = aire / PI.toFloat()
+            assertEquals("à k=$k on peint ${"%.3f".format(part)} du disque", k, part, 1e-5f)
+        }
+        // Et le sens du bombement : gibbeuse vers l'ombre, croissant vers la lumière.
+        assertTrue("une gibbeuse ne bombe pas du bon côté", SkyState.terminatorAxis(0.8f) > 0f)
+        assertTrue("un croissant ne se creuse pas", SkyState.terminatorAxis(0.2f) < 0f)
+        assertEquals("le quartier n'est pas droit", 0f, SkyState.terminatorAxis(0.5f), 1e-6f)
     }
 
     @Test
