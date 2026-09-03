@@ -151,6 +151,22 @@ class LandScene(context: Context) {
     private var flameTint = 0
     private var flameShaderR = 0f
 
+    /**
+     * Les deux pinceaux du **décor peint** : une petite scène — fenêtre, escalier,
+     * puits — sur le rectangle d'un bloc à [Decor], plutôt qu'une vraie géométrie.
+     *
+     * Un remplissage et un trait suffisent à tout le catalogue ; la couleur change
+     * par appel plutôt que d'avoir un pinceau par teinte, parce qu'il n'y a jamais
+     * plus qu'une poignée de blocs décorés sur un site — rien à voir avec les cent
+     * trente corps que [targetFills] doit tenir en deux tracés.
+     */
+    private val pDecorFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val pDecorLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val decorPath = Path()
+
     /** Le profil du sol, refait à chaque image : il ne dépend que du cadrage. */
     private val groundPath = Path()
 
@@ -174,6 +190,7 @@ class LandScene(context: Context) {
         ArrayList<Paint>().apply {
             add(pGround); add(pGrass); add(pCrack)
             addAll(targetFills); addAll(targetEdges)
+            add(pDecorFill); add(pDecorLine)
             // La végétation s'éteint avec le jour comme le reste du sol. Les oiseaux
             // et les fuyards, eux, restent des silhouettes nues : une teinte de nuit
             // sur un contour déjà sombre ne changerait rien qu'on puisse voir.
@@ -430,8 +447,157 @@ class LandScene(context: Context) {
             canvas.drawPath(targetPaths[i], targetFills[i])
             canvas.drawPath(targetPaths[i], targetEdges[i])
         }
+        // Le décor peint par-dessus, après le remplissage et avant les fêlures : une
+        // fenêtre doit se voir sur son mur, et une pierre fêlée doit garder sa fêlure
+        // visible même là où elle recouvre un décor.
+        for (p in field.pieces) {
+            if (p.decor == Decor.NONE) continue
+            val b = p.body
+            if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
+            appendDecor(canvas, p)
+        }
         if (cracked) canvas.drawPath(crackPath, pCrack)
 
+    }
+
+    /**
+     * Une petite scène peinte sur le rectangle d'un bloc à [Decor] : fenêtre,
+     * meurtrière, escalier, rambarde, puits, abri.
+     *
+     * **C'est de la peinture, pas de la géométrie.** Le bloc reste un seul corps
+     * plein aux yeux du moteur ; tout ce qui suit ne fait que dessiner par-dessus
+     * son rectangle, dans son propre repère local (X à droite, Y vers le haut,
+     * comme partout ailleurs dans la génération) avant de le tourner et de le
+     * poser à l'écran — exactement la même transformation que [appendPart] fait
+     * pour une boîte, appliquée ici à des traits plutôt qu'à un seul rectangle.
+     */
+    private fun appendDecor(canvas: Canvas, piece: TargetPiece) {
+        val b = piece.body
+        val part = b.parts.getOrNull(0) ?: return
+        if (part.shape == Shape.CIRCLE) return
+        val hw = part.halfW
+        val hh = part.halfH
+        if (hw * camScale < 4f * dp || hh * camScale < 4f * dp) return
+        val ca = cos(b.angle)
+        val sa = sin(b.angle)
+        fun sxd(lx: Float, ly: Float) = sx(b.x + lx * ca - ly * sa)
+        fun syd(lx: Float, ly: Float) = sy(b.y + lx * sa + ly * ca)
+        fun line(x0: Float, y0: Float, x1: Float, y1: Float, color: Int, width: Float) {
+            pDecorLine.color = color
+            pDecorLine.strokeWidth = width * dp
+            canvas.drawLine(sxd(x0, y0), syd(x0, y0), sxd(x1, y1), syd(x1, y1), pDecorLine)
+        }
+        fun poly(pts: List<Pair<Float, Float>>, fill: Int) {
+            pDecorFill.color = fill
+            decorPath.reset()
+            decorPath.moveTo(sxd(pts[0].first, pts[0].second), syd(pts[0].first, pts[0].second))
+            for (i in 1 until pts.size) {
+                decorPath.lineTo(sxd(pts[i].first, pts[i].second), syd(pts[i].first, pts[i].second))
+            }
+            decorPath.close()
+            canvas.drawPath(decorPath, pDecorFill)
+        }
+        when (piece.decor) {
+            Decor.WINDOW -> {
+                val fw = hw * 0.55f
+                val fh = hh * 0.55f
+                poly(listOf(-fw to -fh, fw to -fh, fw to fh, -fw to fh), "#BFE0EE".toColorInt())
+                line(0f, -fh, 0f, fh, "#3A2A1A".toColorInt(), 1.2f)
+                line(-fw, 0f, fw, 0f, "#3A2A1A".toColorInt(), 1.2f)
+                for (side in floatArrayOf(-1f, 1f)) {
+                    val x0 = side * fw
+                    val x1 = side * hw * 0.92f
+                    poly(listOf(x0 to -fh, x1 to -fh, x1 to fh, x0 to fh), "#5B3A22".toColorInt())
+                    for (k in 1..2) {
+                        val lx = x0 + (x1 - x0) * k / 3f
+                        line(lx, -fh * 0.9f, lx, fh * 0.9f, "#2A1A0E".toColorInt(), 1f)
+                    }
+                }
+            }
+
+            Decor.ARROW_SLIT -> {
+                poly(
+                    listOf(
+                        -hw * 0.28f to -hh * 0.7f, hw * 0.28f to -hh * 0.7f,
+                        hw * 0.28f to hh * 0.7f, -hw * 0.28f to hh * 0.7f
+                    ),
+                    "#0B0B0B".toColorInt()
+                )
+                poly(
+                    listOf(
+                        -hw * 0.22f to hh * 0.05f, hw * 0.22f to hh * 0.05f,
+                        hw * 0.22f to hh * 0.18f, -hw * 0.22f to hh * 0.18f
+                    ),
+                    "#000000".toColorInt()
+                )
+            }
+
+            Decor.STAIRCASE -> {
+                val steps = 6
+                var lastX = -hw * 0.85f
+                var lastY = -hh * 0.85f
+                for (k in 0 until steps) {
+                    val t = (k + 1) / steps.toFloat()
+                    val nx = -hw * 0.85f + t * hw * 1.7f
+                    val ny = -hh * 0.85f + t * hh * 1.7f
+                    line(lastX, ny, nx, ny, "#5A5A5A".toColorInt(), 2.2f)
+                    line(nx, lastY, nx, ny, "#5A5A5A".toColorInt(), 2.2f)
+                    lastX = nx
+                    lastY = ny
+                }
+                line(-hw * 0.85f, -hh * 0.7f, hw * 0.85f, hh * 1f, "#8A8A8A".toColorInt(), 1.2f)
+                for (k in 0..steps) {
+                    val t = k / steps.toFloat()
+                    val bx = -hw * 0.85f + t * hw * 1.7f
+                    val by = -hh * 0.7f + t * hh * 1.7f
+                    line(bx, by, bx, by + hh * 0.3f, "#8A8A8A".toColorInt(), 1.2f)
+                }
+            }
+
+            Decor.RAILING -> {
+                val top = hh * 0.6f
+                val bottom = -hh * 0.6f
+                line(-hw * 0.92f, top, hw * 0.92f, top, "#241608".toColorInt(), 2.4f)
+                line(-hw * 0.92f, bottom, hw * 0.92f, bottom, "#241608".toColorInt(), 1.6f)
+                val posts = 7
+                for (k in 0..posts) {
+                    val x = -hw * 0.92f + hw * 1.84f * k / posts
+                    line(x, bottom, x, top, "#241608".toColorInt(), 1.6f)
+                }
+            }
+
+            Decor.WELL -> {
+                val rimY = -hh * 0.35f
+                val rimR = hh * 0.5f
+                pDecorFill.color = "#8B8B93".toColorInt()
+                canvas.drawCircle(sxd(0f, rimY), syd(0f, rimY), rimR * camScale, pDecorFill)
+                pDecorLine.color = "#3A3A40".toColorInt()
+                pDecorLine.strokeWidth = 1.6f * dp
+                canvas.drawCircle(sxd(0f, rimY), syd(0f, rimY), rimR * camScale, pDecorLine)
+                val postY0 = rimY + rimR * 0.4f
+                val postY1 = hh * 0.35f
+                line(-hw * 0.5f, postY0, -hw * 0.5f, postY1, "#4A3A28".toColorInt(), 2.2f)
+                line(hw * 0.5f, postY0, hw * 0.5f, postY1, "#4A3A28".toColorInt(), 2.2f)
+                poly(
+                    listOf(-hw * 0.75f to postY1, hw * 0.75f to postY1, 0f to hh * 0.95f),
+                    "#7A4A2A".toColorInt()
+                )
+                line(0f, rimY + rimR * 0.3f, 0f, rimY, "#2A2A2A".toColorInt(), 1f)
+            }
+
+            Decor.SHELTER -> {
+                val eaveY = hh * 0.3f
+                poly(
+                    listOf(-hw * 0.95f to eaveY, hw * 0.95f to eaveY, 0f to hh * 0.95f),
+                    "#A85A3A".toColorInt()
+                )
+                line(-hw * 0.95f, eaveY, hw * 0.95f, eaveY, "#241608".toColorInt(), 1.6f)
+                line(-hw * 0.6f, -hh * 0.9f, -hw * 0.6f, eaveY, "#241608".toColorInt(), 3f)
+                line(hw * 0.6f, -hh * 0.9f, hw * 0.6f, eaveY, "#241608".toColorInt(), 3f)
+            }
+
+            Decor.NONE -> Unit
+        }
     }
 
     /**

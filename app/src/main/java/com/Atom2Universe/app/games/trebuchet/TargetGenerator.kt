@@ -30,7 +30,10 @@ enum class SiteKind {
     CITE_ANTIQUE,
 
     /** Des pyramides de grès. Rien ne bascule : tout se casse, gradin par gradin. */
-    NECROPOLE
+    NECROPOLE,
+
+    /** Une pyramide de tentes en planches, comme un vrai château de cartes géant. */
+    CHATEAU_CARTES
 }
 
 /**
@@ -168,7 +171,11 @@ object TargetGenerator {
             SiteKind.DONJON,
             SiteKind.NECROPOLE,
             SiteKind.BOURG,
-            SiteKind.CHATEAU
+            SiteKind.CHATEAU,
+            // Ajoutée en fin de liste, et pas mêlée aux autres : une graine désigne un
+            // niveau pour toujours, et glisser un nouveau genre au milieu aurait changé
+            // ce que chaque graine existante redonne.
+            SiteKind.CHATEAU_CARTES
         )
         val i = ((seed - 1L) % ladder.size).toInt()
         return ladder[if (i < 0) i + ladder.size else i]
@@ -230,6 +237,12 @@ object TargetGenerator {
             SiteKind.CHATEAU -> arrayOf(
                 TerrainShape.MESA, TerrainShape.CRETE,
                 TerrainShape.PLAINE, TerrainShape.COLLINE
+            )
+
+            // Un château de cartes n'a rien d'un site fortifié : on le pose bien en
+            // évidence, jamais caché par un relief qui masquerait sa silhouette absurde.
+            SiteKind.CHATEAU_CARTES -> arrayOf(
+                TerrainShape.PLAINE, TerrainShape.PLAINE, TerrainShape.MESA
             )
         }
         return choix[rng.nextInt(choix.size)]
@@ -318,11 +331,13 @@ object TargetGenerator {
         ModuleKind.INSULA -> TargetModules.insula(rng, x, w, h, slot.material)
         ModuleKind.BARN -> TargetModules.barn(rng, x, w, h)
         ModuleKind.PALISADE -> TargetModules.palisade(rng, x, w, h)
+        ModuleKind.CARD_CASTLE -> TargetModules.cardCastle(rng, x, w, h, slot.material)
     }
 
     private enum class ModuleKind {
         TOWER, WALL, HOUSE, PROPS,
-        WINDMILL, PYRAMID, ARENA, TEMPLE, AQUEDUCT, GRANARY, INSULA, BARN, PALISADE
+        WINDMILL, PYRAMID, ARENA, TEMPLE, AQUEDUCT, GRANARY, INSULA, BARN, PALISADE,
+        CARD_CASTLE
     }
 
     private class Slot(
@@ -350,6 +365,19 @@ object TargetGenerator {
         fun between(a: Float, b: Float) = a + rng.nextFloat() * (b - a)
         val stone = if (rng.nextFloat() < 0.25f) Material.COB else Material.STONE
 
+        // La hauteur d'une tour : la plupart du temps sa gamme habituelle, et de temps
+        // en temps un colosse. Ça ne coûte plus rien au moteur depuis que
+        // [TargetModules.tower] se coupe tout seul en sections passé un certain seuil
+        // ([[trebuchet-grands-batiments]]) — n'importe quelle tour du jeu peut donc se
+        // permettre d'être immense de temps en temps, pas seulement le donjon.
+        fun tourHauteur(
+            modMin: Float, modMax: Float,
+            geanteMin: Float, geanteMax: Float,
+            chanceGeante: Float = 0.15f
+        ): Float =
+            if (rng.nextFloat() < 1f - chanceGeante) between(modMin, modMax)
+            else between(geanteMin, geanteMax)
+
         return when (kind) {
             SiteKind.HAMEAU -> {
                 val n = 2 + rng.nextInt(3)
@@ -375,20 +403,34 @@ object TargetGenerator {
                     Slot(ModuleKind.BARN, between(7f, 10f), between(5f, 6.5f), Material.WOOD),
                     Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
                 ),
-                listOf(Slot(ModuleKind.TOWER, between(3f, 4f), between(8f, 12f), stone))
+                listOf(Slot(ModuleKind.TOWER, between(3f, 4f), tourHauteur(8f, 12f, 22f, 38f), stone))
             )
 
             SiteKind.CHATEAU -> {
                 val hauteurTours = between(11f, 16f)
                 val hauteurMurs = hauteurTours * between(0.5f, 0.68f)
                 // Un château est un seul bâtiment : un seul plateau. Ce qui varie, c'est
-                // ce qu'on lui met devant — une basse-cour, sur son propre palier.
+                // ce qu'on lui met devant — une basse-cour, sur son propre palier. Les
+                // deux tours tirent **chacune** leur colosse séparément : un château
+                // dissymétrique, une tour normale d'un côté et une immense de l'autre,
+                // est une bien meilleure surprise qu'un château uniformément géant.
                 val corps = listOf(
-                    Slot(ModuleKind.TOWER, between(3.5f, 4.5f), hauteurTours, stone),
+                    Slot(
+                        ModuleKind.TOWER, between(3.5f, 4.5f),
+                        tourHauteur(hauteurTours, hauteurTours, hauteurTours * 2.5f, hauteurTours * 4.5f, 0.12f),
+                        stone
+                    ),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
                     Slot(ModuleKind.HOUSE, between(4.5f, 6f), hauteurMurs + between(0f, 2f)),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
-                    Slot(ModuleKind.TOWER, between(4f, 5f), hauteurTours + between(1f, 4f), stone)
+                    Slot(
+                        ModuleKind.TOWER, between(4f, 5f),
+                        tourHauteur(
+                            hauteurTours + 1f, hauteurTours + 4f,
+                            hauteurTours * 2.5f, hauteurTours * 4.5f, 0.12f
+                        ),
+                        stone
+                    )
                 )
                 if (rng.nextFloat() < 0.6f) {
                     listOf(
@@ -406,11 +448,28 @@ object TargetGenerator {
             SiteKind.DONJON -> listOf(
                 listOf(
                     Slot(ModuleKind.WALL, between(4f, 7f), between(3.5f, 5f), stone),
-                    Slot(ModuleKind.TOWER, between(4.5f, 6f), between(15f, 22f), stone),
+                    // Le donjon reste le site le plus susceptible de rouler un colosse :
+                    // moitié-moitié, contre 12 à 15 % ailleurs — c'est thématiquement sa
+                    // raison d'être.
+                    Slot(ModuleKind.TOWER, between(5.5f, 8f), tourHauteur(15f, 24f, 30f, 55f, 0.5f), stone),
                     Slot(ModuleKind.WALL, between(4f, 7f), between(3.5f, 5f), stone),
                     Slot(ModuleKind.PROPS, between(1.5f, 2.5f), 0f)
                 )
             )
+
+            SiteKind.CHATEAU_CARTES -> {
+                // Plusieurs versions, comme demandé : la plupart du temps un château
+                // raisonnable, plus rarement un colosse deux à quatre fois plus haut.
+                // La largeur monte avec la hauteur pour que les versions géantes aient
+                // vraiment plus d'étages, et pas seulement des tentes plus grandes.
+                val tirage = rng.nextFloat()
+                val (largeur, hauteur) = when {
+                    tirage < 0.5f -> between(12f, 20f) to between(16f, 30f)
+                    tirage < 0.8f -> between(18f, 28f) to between(40f, 65f)
+                    else -> between(24f, 34f) to between(75f, 120f)
+                }
+                listOf(listOf(Slot(ModuleKind.CARD_CASTLE, largeur, hauteur, Material.CARDBOARD)))
+            }
 
             SiteKind.VILLAGE -> {
                 val groupes = ArrayList<List<Slot>>(4)
@@ -509,6 +568,7 @@ object TargetGenerator {
                 SiteKind.BOURG -> "Bourg étagé"
                 SiteKind.CITE_ANTIQUE -> "Cité antique"
                 SiteKind.NECROPOLE -> "Nécropole"
+                SiteKind.CHATEAU_CARTES -> "Château de cartes"
             }
         )
         // Le relief ne se dit que quand il change quelque chose au tir : annoncer « en

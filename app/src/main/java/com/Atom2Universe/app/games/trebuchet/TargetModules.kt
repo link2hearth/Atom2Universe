@@ -283,6 +283,44 @@ object Masonry {
             box(slope / 2f, thickness / 2f, halfW / 2f, 0f, -angle)
         }
     }
+
+    /**
+     * Un pan de mur à fenêtre : **un seul corps**, plein comme n'importe quel mur —
+     * la fenêtre, les volets et les carreaux ne sont qu'une peinture par-dessus
+     * ([Decor.WINDOW], voir `LandScene.appendDecor`).
+     *
+     * C'est le contraire du premier essai de ce module, qui perçait un vrai trou en
+     * assemblant piédroits, linteau et allège — quatre corps pour un motif que
+     * l'œil ne lisait même pas comme une fenêtre. Une fenêtre n'a pas besoin d'être
+     * simulée pour se reconnaître ; elle a besoin d'être **dessinée**.
+     */
+    fun windowedWall(
+        material: Material,
+        left: Float, bottom: Float, width: Float, height: Float,
+        role: Role = Role.STRUCTURE
+    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.WINDOW)
+
+    /** Un pan de mur à meurtrière : le vocabulaire d'un rempart plutôt que d'une maison. */
+    fun arrowSlitWall(
+        material: Material,
+        left: Float, bottom: Float, width: Float, height: Float,
+        role: Role = Role.STRUCTURE
+    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.ARROW_SLIT)
+
+    /** Un escalier extérieur, marches et rambarde peintes sur un seul corps. */
+    fun staircase(
+        material: Material,
+        left: Float, bottom: Float, width: Float, height: Float,
+        role: Role = Role.STRUCTURE
+    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.STAIRCASE)
+
+    /** Une rambarde : poteaux et lisse peints sur un seul corps mince. */
+    fun railing(
+        material: Material,
+        left: Float, bottom: Float, width: Float,
+        height: Float = TargetRules.detail(1f),
+        role: Role = Role.STRUCTURE
+    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.RAILING)
 }
 
 /**
@@ -355,6 +393,18 @@ object TargetModules {
      * L'encorbellement est un seul corps qui porte toute la largeur. Une couronne
      * débordante découpée en morceaux serait une rangée de pierres en porte-à-faux, et
      * elles tomberaient d'elles-mêmes avant le premier tir.
+     *
+     * **Passé une certaine hauteur, le fût se coupe en sections**, séparées par un
+     * léger anneau et un peu plus étroites à mesure qu'on monte — la même idée que le
+     * moulin ([windmill]), appliquée au donjon : un seul pan de mur de soixante mètres
+     * serait un poteau sans repère d'échelle. Une tour ordinaire ne dépasse jamais le
+     * premier palier et garde exactement son allure d'avant. Le budget de profondeur du
+     * fût se **partage** entre les sections plutôt que de se répéter pour chacune :
+     * sinon la somme des sections dépasserait la limite d'empilement même si chacune,
+     * prise seule, la respectait. Plus il y a de sections, plus chacune se contente de
+     * grosses pierres peu nombreuses — c'est le même geste que [Masonry.wall] pratiqué
+     * à l'échelle de l'étage plutôt que de l'assise, et c'est ce qui permet à une tour
+     * de grandir sans fin sans jamais dépasser [TargetRules.MAX_STACKED_BODIES].
      */
     fun tower(
         rng: Random,
@@ -368,33 +418,73 @@ object TargetModules {
         val plinthH = TargetRules.detail(0.6f)
         val corbelH = TargetRules.detail(0.45f)
         val merlonH = TargetRules.detail(0.9f)
-        val shaftH = (height - plinthH - corbelH - merlonH).coerceAtLeast(1.5f)
         val overhang = TargetRules.detail(0.22f)
+        val ringH = TargetRules.detail(0.4f)
+        val ringPitch = TargetRules.site(14f)
+
+        // L'anneau intermédiaire déborde plus largement qu'un simple socle, pour bien
+        // se lire comme un balcon et pas comme une reprise de maçonnerie. Pas de
+        // merlons dessus, en revanche : un rang de merlons a des créneaux **vides**,
+        // et la section du dessus a besoin d'une portée pleine pour se poser — un
+        // rang de merlons qui porterait un mur entier est un contresens architectural
+        // qui a coûté un effondrement partiel au banc d'essai (une pierre se fêlait
+        // toute seule au tassement, faute d'appui continu). Les merlons restent ce
+        // qu'ils sont ailleurs dans le jeu : un couronnement, jamais un plancher.
+        val ringOverhang = overhang * 1.6f
+
+        val budgetH = (height - plinthH - corbelH - merlonH).coerceAtLeast(1.5f)
+        val sections = (budgetH / ringPitch).roundToInt().coerceAtLeast(1)
+        val shaftH = (budgetH - (sections - 1) * ringH).coerceAtLeast(1.5f)
+        val secH = shaftH / sections
 
         // Le socle : une assise plus large, qui assied la tour.
         out += Masonry.wall(
             material, left - overhang, 0f, width + 2f * overhang, plinthH,
             stoneWidth = (width + 2f * overhang) / 2f, stoneHeight = plinthH
         )
-        // Le fût. Deux ou trois pierres de large selon la tour, ce qui change son allure.
-        val stoneW = width / (if (width > 3.5f) 3 else 2)
+
+        // Le socle, l'encorbellement, les merlons et les anneaux prennent chacun un
+        // corps de haut : on les réserve sur le budget de profondeur avant de répartir
+        // ce qui reste entre les sections du fût.
+        val reserve = 3 + (sections - 1)
+        val perSectionStack =
+            ((TargetRules.COMFORTABLE_STACK - reserve) / sections).coerceAtLeast(1)
+        val perSectionBodies = ((bodyBudget - 12) / sections).coerceAtLeast(4)
+
+        var y = plinthH
+        var w = width
+        for (i in 0 until sections) {
+            // Deux ou trois pierres de large selon la tour, ce qui change son allure.
+            val stoneW = w / (if (w > 3.5f) 3 else 2)
+            out += Masonry.wall(
+                material, left + (width - w) / 2f, y, w, secH,
+                stoneWidth = stoneW, stoneHeight = if (rng.nextBoolean()) 0.5f else 0.55f,
+                stackBudget = perSectionStack,
+                bodyBudget = perSectionBodies
+            )
+            y += secH
+            if (i < sections - 1) {
+                // Le balcon : un seul corps débordant, comme l'encorbellement final —
+                // découpé en morceaux, ce serait une rangée de pierres en porte-à-faux,
+                // et elles tomberaient d'elles-mêmes.
+                val ringLeft = left + (width - w) / 2f - ringOverhang
+                val ringW = w + 2f * ringOverhang
+                out += Masonry.wall(
+                    material, ringLeft, y, ringW, ringH,
+                    stoneWidth = ringW, stoneHeight = ringH
+                )
+                y += ringH
+                w *= 0.9f
+            }
+        }
+
+        // L'encorbellement final et ses merlons, à la largeur du dernier tronçon.
+        val topLeft = left + (width - w) / 2f
         out += Masonry.wall(
-            material, left, plinthH, width, shaftH,
-            stoneWidth = stoneW, stoneHeight = if (rng.nextBoolean()) 0.5f else 0.55f,
-            // Le socle, l'encorbellement et les merlons prennent trois corps de haut :
-            // on les réserve sur le budget de profondeur, et une douzaine sur celui des
-            // corps.
-            stackBudget = TargetRules.COMFORTABLE_STACK - 3,
-            bodyBudget = (bodyBudget - 12).coerceAtLeast(4)
+            material, topLeft - overhang, y, w + 2f * overhang, corbelH,
+            stoneWidth = w + 2f * overhang, stoneHeight = corbelH
         )
-        // L'encorbellement : un seul corps, sinon ses bords tombent tout seuls.
-        out += Masonry.wall(
-            material, left - overhang, plinthH + shaftH, width + 2f * overhang, corbelH,
-            stoneWidth = width + 2f * overhang, stoneHeight = corbelH
-        )
-        out += Masonry.merlons(
-            material, left - overhang, plinthH + shaftH + corbelH, width + 2f * overhang, merlonH
-        )
+        out += Masonry.merlons(material, topLeft - overhang, y + corbelH, w + 2f * overhang, merlonH)
         return out
     }
 
@@ -505,6 +595,36 @@ object TargetModules {
         return out
     }
 
+    /**
+     * **Le puits** : margelle, montants et toit peints sur un seul corps.
+     *
+     * Comme les tonneaux ([props]), c'est une pièce qu'on pose seule et pas qu'on
+     * assemble. La première version le construisait vraiment en pierres —
+     * margelle, montants, toit à deux pentes, cinq corps — et le résultat ne se
+     * lisait pas mieux qu'un tas de rectangles gris. Un puits se reconnaît à son
+     * dessin, pas à sa géométrie.
+     */
+    fun well(
+        centerX: Float,
+        bottom: Float,
+        radius: Float = TargetRules.detail(0.7f),
+        material: Material = Material.STONE
+    ): Block = Block.box(
+        material, centerX, bottom + radius, radius, radius,
+        role = Role.PROP, decor = Decor.WELL
+    )
+
+    /**
+     * **L'abri** : un toit et deux poteaux, peints sur un seul corps — le module
+     * le plus court du catalogue.
+     */
+    fun shelter(
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.WOOD
+    ): Block = Block.laid(material, left, 0f, width, height, Role.STRUCTURE, Decor.SHELTER)
+
     // ── Le second catalogue : ce qui n'est ni un mur, ni une tour, ni une maison ──
     //
     // Les quatre premières pièces suffisaient à faire un château, et pas grand-chose
@@ -581,6 +701,86 @@ object TargetModules {
             box(epaisseur / 2f, (moyeu - chapeauH / 2f) / 2f, 0f, (moyeu + chapeauH / 2f) / 2f)
             box(demiAile, epaisseur / 2f, 0f, moyeu, QUART)
             box(demiAile, epaisseur / 2f, 0f, moyeu, -QUART)
+        }
+        return out
+    }
+
+    /**
+     * **Le château de cartes** : des tentes de planches posées en pyramide, exactement
+     * comme un vrai château de cartes agrandi à l'échelle d'un bâtiment.
+     *
+     * Rien n'est réaliste ici, et c'est voulu — c'est un jeu de cartes, pas de la
+     * maçonnerie. Chaque tente est **un seul corps** (deux planches soudées à leur
+     * sommet, comme un toit, [Masonry.roof]), posée sur une carte à plat qui relie les
+     * sommets des deux tentes de l'étage du dessous. Un étage compte donc une tente de
+     * moins que celui d'en dessous, jusqu'à une tente unique au faîte — c'est ce
+     * rétrécissement, et lui seul, qui tient toute la pile debout : chaque tente porte
+     * son poids sur ses deux pieds, jamais en porte-à-faux.
+     *
+     * C'est aussi le module le plus spectaculaire à raser : une tente fauchée à un
+     * étage bas emporte tout ce qui reposait dessus, à l'identique d'un vrai château de
+     * cartes qu'on effleure du doigt.
+     */
+    fun cardCastle(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.CARDBOARD
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= 1f || height <= 1f) return out
+        // Le nombre de tentes du rez-de-chaussée décide de tout : la largeur du site,
+        // et le nombre d'étages puisque la pile se termine forcément à une seule tente
+        // au sommet. Plafonné à 7 : au-delà, la pile centrale (tente, carte, tente,
+        // carte...) dépasserait la profondeur d'empilement que le moteur peut tenir.
+        val base = (width / TargetRules.site(2.4f)).roundToInt().coerceIn(3, 7)
+        val tentH = (height / base).coerceAtLeast(TargetRules.site(0.8f))
+        val thickness = TargetRules.detail(0.1f)
+        val cardH = TargetRules.detail(0.08f)
+        val pitch = width / base
+        val halfSpan = (pitch * 0.46f).coerceAtLeast(TargetRules.MIN_HALF_THICKNESS * 4f)
+        val slope = hypot(halfSpan, tentH)
+        val angle = atan2(tentH, halfSpan)
+        // Un petit plat au faîte de chaque tente : sans lui, la carte du dessus se
+        // pose sur la pointe exacte où les deux planches se croisent, un contact
+        // aussi étroit qu'un fil et que le solveur ne sait pas tenir — la pile entière
+        // partait en glissade dès le tassement. Un vrai château de cartes ne tient pas
+        // sur des pointes non plus : les cartes se croisent sur une petite surface, et
+        // c'est elle qu'on donne ici au moteur.
+        val ridgeHalf = (thickness * 1.5f).coerceAtLeast(TargetRules.MIN_HALF_THICKNESS)
+
+        var count = base
+        var y = 0f
+        var xs = FloatArray(count) { left + pitch / 2f + it * pitch }
+        while (true) {
+            for (cx in xs) {
+                // Rôle MONUMENT : la tente s'allume à toute hauteur, façon tour Eiffel,
+                // au lieu de s'éteindre au-delà de six mètres comme une torche
+                // ordinaire — voir [TargetField.lightUp]. Les cartes à plat, elles,
+                // restent de simples pierres de structure : la lumière dessine la
+                // silhouette, pas les planchers.
+                out += Block.compound(material, cx, y + tentH / 2f, role = Role.MONUMENT) {
+                    box(slope / 2f, thickness / 2f, -halfSpan / 2f, 0f, angle)
+                    box(slope / 2f, thickness / 2f, halfSpan / 2f, 0f, -angle)
+                    box(ridgeHalf, thickness / 2f, 0f, tentH / 2f - thickness / 2f)
+                }
+            }
+            if (count == 1) break
+            // Les cartes à plat, une entre chaque paire de tentes voisines : c'est sur
+            // elles que se pose l'étage suivant.
+            val nextXs = FloatArray(count - 1)
+            for (i in 0 until count - 1) {
+                val cx = (xs[i] + xs[i + 1]) / 2f
+                out += Block.laid(
+                    material, cx - pitch / 2f + TargetRules.JOINT, y + tentH,
+                    pitch - 2f * TargetRules.JOINT, cardH
+                )
+                nextXs[i] = cx
+            }
+            xs = nextXs
+            count--
+            y += tentH + cardH
         }
         return out
     }

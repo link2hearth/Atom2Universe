@@ -172,7 +172,10 @@ class TrebuchetModulesTest {
             "courtine géante" to TargetModules.curtainWall(rng, 0f, 30f, 16f),
             "tour trapue" to TargetModules.tower(rng, 0f, 5f, 9f),
             "tour élancée" to TargetModules.tower(rng, 0f, 3.5f, 20f),
-            "maison" to TargetModules.house(rng, 0f, 6f, 9f)
+            "tour immense" to TargetModules.tower(rng, 0f, 7f, 60f),
+            "maison" to TargetModules.house(rng, 0f, 6f, 9f),
+            "château de cartes" to TargetModules.cardCastle(rng, 0f, 16f, 22f),
+            "château de cartes géant" to TargetModules.cardCastle(rng, 0f, 20f, 40f)
         )
         for ((name, blocks) in cas) {
             val s = Structure(blocks, name)
@@ -205,6 +208,67 @@ class TrebuchetModulesTest {
         )
         val partsHautes = haute.blocks.maxOf { it.parts.size }
         assertTrue("la tour haute n'a regroupé aucune assise", partsHautes > 1)
+    }
+
+    @Test
+    fun `une tour immense se coupe en sections et tient debout`() {
+        // Bien au-delà du premier palier ([TargetModules.tower] le fixe à 14 m de
+        // site) : trois ou quatre sections, chacune un tronçon un peu plus étroit que
+        // la précédente, séparées par un anneau. C'est ce qui doit rester debout sans
+        // dépasser la pile, quel que soit le budget de corps.
+        val s = Structure(TargetModules.tower(Random(21), 0f, 6f, 55f), "tour immense")
+        println(
+            "TOUR IMMENSE h=${"%.1f".format(s.baseHeight)}m corps=${s.blocks.size} " +
+                "pile=${s.deepestStack()}"
+        )
+        assertTrue(
+            "la tour immense dépasse la pile : ${s.deepestStack()}",
+            s.deepestStack() <= TargetRules.MAX_STACKED_BODIES
+        )
+        checkStands("tour immense", s)
+    }
+
+    @Test
+    fun `un chateau de cartes tient debout`() {
+        checkStands(
+            "château de cartes",
+            Structure(TargetModules.cardCastle(Random(22), 20f, 16f, 22f), "château de cartes")
+        )
+    }
+
+    @Test
+    fun `un chateau de cartes s illumine jusqu au faite, pas seulement a hauteur d homme`() {
+        // C'est l'inverse de la règle des torches ([TargetField.lightUp]) : un
+        // monument se donne à voir de loin, donc en hauteur, là où une torche
+        // ordinaire se serait déjà éteinte à six mètres.
+        val s = Structure(TargetModules.cardCastle(Random(24), 20f, 20f, 40f), "château de cartes")
+        val w = world()
+        val f = TargetField(w)
+        f.load(s)
+
+        val sommet = f.pieces.maxBy { it.body.y }
+        val pres_du_sol = f.pieces.filter { it.role == Role.MONUMENT }.minBy { it.body.y }
+        println(
+            "LUMIERES sommet y=${"%.1f".format(sommet.body.y)} allumé=${sommet.lightRadius > 0f}, " +
+                "tente basse y=${"%.1f".format(pres_du_sol.body.y)} allumée=${pres_du_sol.lightRadius > 0f}"
+        )
+        assertTrue("le sommet du château de cartes est resté éteint", sommet.lightRadius > 0f)
+        assertTrue("une tente marquée MONUMENT est restée éteinte", pres_du_sol.lightRadius > 0f)
+    }
+
+    @Test
+    fun `un chateau de cartes ne depasse jamais la pile quelle que soit sa taille`() {
+        for ((w, h) in listOf(10f to 12f, 16f to 22f, 20f to 40f, 24f to 55f, 34f to 120f)) {
+            val s = Structure(TargetModules.cardCastle(Random(23), 0f, w, h), "château $w x $h")
+            println(
+                "CHATEAU DE CARTES ${w}x${h} : corps=${s.blocks.size} pile=${s.deepestStack()} " +
+                    "hauteur réelle=${"%.1f".format(s.baseHeight)}"
+            )
+            assertTrue(
+                "château $w x $h : pile de ${s.deepestStack()}",
+                s.deepestStack() <= TargetRules.MAX_STACKED_BODIES
+            )
+        }
     }
 
     // ── Chacun se détruit à sa façon ──────────────────────────────────────────
@@ -428,5 +492,57 @@ class TrebuchetModulesTest {
                 "abîmé ${"%.0f".format(f.brokenRatio * 100)}%"
         )
         assertTrue("le temple n'a rien senti", f.brokenRatio > 0f)
+    }
+
+    // ── Le catalogue de détails au banc ───────────────────────────────────────
+    //
+    // Six pièces neuves, pensées pour habiller un site plutôt que pour en faire un
+    // à elles seules : un mur à fenêtre ou à meurtrière, un escalier, une rambarde,
+    // un puits, un abri. Chacune est **un seul corps plein** — la fenêtre, les
+    // marches, la margelle ne sont qu'une peinture par-dessus ([Decor]), jamais une
+    // vraie géométrie. Le banc vérifie donc deux choses : que le bloc tient
+    // debout comme n'importe quel autre, et qu'il porte le bon [Decor] pour que la
+    // vue sache quoi peindre dessus.
+
+    @Test
+    fun `un mur a fenetre tient debout et porte son decor`() {
+        val b = Masonry.windowedWall(Material.STONE, 20f, 0f, 6f, 4f)
+        assertEquals(Decor.WINDOW, b.decor)
+        checkStands("mur à fenêtre", Structure(listOf(b), "mur à fenêtre"))
+    }
+
+    @Test
+    fun `un mur a meurtriere tient debout et porte son decor`() {
+        val b = Masonry.arrowSlitWall(Material.STONE, 20f, 0f, 3f, 5f)
+        assertEquals(Decor.ARROW_SLIT, b.decor)
+        checkStands("mur à meurtrière", Structure(listOf(b), "mur à meurtrière"))
+    }
+
+    @Test
+    fun `un escalier tient debout et porte son decor`() {
+        val b = Masonry.staircase(Material.STONE, 20f, 0f, 4f, 3f)
+        assertEquals(Decor.STAIRCASE, b.decor)
+        checkStands("escalier", Structure(listOf(b), "escalier"))
+    }
+
+    @Test
+    fun `une rambarde tient debout et porte son decor`() {
+        val b = Masonry.railing(Material.WOOD, 20f, 0f, 4f)
+        assertEquals(Decor.RAILING, b.decor)
+        checkStands("rambarde", Structure(listOf(b), "rambarde"))
+    }
+
+    @Test
+    fun `un puits tient debout et porte son decor`() {
+        val b = TargetModules.well(20f, 0f)
+        assertEquals(Decor.WELL, b.decor)
+        checkStands("puits", Structure(listOf(b), "puits"))
+    }
+
+    @Test
+    fun `un abri tient debout et porte son decor`() {
+        val b = TargetModules.shelter(20f, 4f, 3.5f)
+        assertEquals(Decor.SHELTER, b.decor)
+        checkStands("abri", Structure(listOf(b), "abri"))
     }
 }

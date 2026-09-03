@@ -32,6 +32,7 @@ class TargetPiece internal constructor(
 ) {
     val material: Material get() = block.material
     val role: Role get() = block.role
+    val decor: Decor get() = block.decor
 
     /** Vrai si cette pierre est née d'une rupture, et non de la construction d'origine. */
     val debris: Boolean get() = tier > 0
@@ -400,6 +401,7 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         val pas = TargetRules.site(TargetRules.LIGHT_SPACING)
         var prochaine = left
         for (p in live) {
+            if (p.role == Role.MONUMENT) continue
             val b = p.body
             if (b.x < prochaine) continue
             val sol = terrain.heightAt(b.x)
@@ -411,6 +413,24 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             p.lightRadius = TargetRules.site(if (bois) 2.2f else 3.4f)
             p.lightTint = if (bois) 0xFFFFC46A.toInt() else 0xFFFF8A3C.toInt()
             prochaine = b.x + pas
+        }
+        lightMonuments()
+    }
+
+    /**
+     * Les monuments s'illuminent tout du long, façon tour Eiffel.
+     *
+     * C'est l'inverse exact de la règle « à hauteur d'homme » ci-dessus : un monument
+     * se donne à voir de loin, précisément par sa hauteur, et une lumière qui
+     * s'éteindrait à six mètres en laisserait tout le haut dans le noir. On allume donc
+     * chaque pièce marquée [Role.MONUMENT] — un château de cartes n'en compte jamais
+     * plus qu'une trentaine, ce n'est pas la vitrine que la règle des torches évite.
+     */
+    private fun lightMonuments() {
+        for (p in live) {
+            if (p.role != Role.MONUMENT) continue
+            p.lightRadius = TargetRules.site(1.8f)
+            p.lightTint = 0xFFFFE9A8.toInt()
         }
     }
 

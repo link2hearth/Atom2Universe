@@ -31,6 +31,7 @@ class TrebuchetApercuTest {
         Material.STONE -> "#9AA3AB"
         Material.SANDSTONE -> "#D3B076"
         Material.IRON -> "#54606B"
+        Material.CARDBOARD -> "#D9B26A"
     }
 
     private fun svg(lvl: TargetLevel, file: File) {
@@ -84,6 +85,7 @@ class TrebuchetApercuTest {
                     )
                 }
             }
+            appendDecorSvg(sb, b, ::px, ::py)
         }
         sb.append(
             """<text x="14" y="30" fill="#dfe8f0" font-family="sans-serif" font-size="22">""" +
@@ -94,15 +96,230 @@ class TrebuchetApercuTest {
         file.writeText(sb.toString())
     }
 
+    /**
+     * Le dessin d'un [Decor] : une petite scène peinte sur le rectangle du bloc,
+     * dans son propre repère local (X à droite, Y vers le haut, comme partout
+     * ailleurs dans la génération), tournée et posée comme n'importe quelle pièce.
+     *
+     * Volontairement séparé du remplissage uni des blocs juste au-dessus : c'est
+     * exactement le même partage que dans le vrai jeu (`LandScene.appendDecor`),
+     * pour que cet aperçu montre ce que le joueur verra et pas autre chose.
+     */
+    private fun appendDecorSvg(sb: StringBuilder, b: Block, px: (Float) -> Float, py: (Float) -> Float) {
+        if (b.decor == Decor.NONE) return
+        val p = b.parts[0]
+        val hw = p.halfW
+        val hh = p.halfH
+        val ca = cos(b.angle)
+        val sa = sin(b.angle)
+        fun sxy(lx: Float, ly: Float): Pair<Float, Float> {
+            val wx = b.x + lx * ca - ly * sa
+            val wy = b.y + lx * sa + ly * ca
+            return px(wx) to py(wy)
+        }
+        fun line(x0: Float, y0: Float, x1: Float, y1: Float, color: String, w: Float = 2f) {
+            val (sx0, sy0) = sxy(x0, y0)
+            val (sx1, sy1) = sxy(x1, y1)
+            sb.append(
+                """<line x1="$sx0" y1="$sy0" x2="$sx1" y2="$sy1" stroke="$color" """ +
+                    """stroke-width="$w" stroke-linecap="round"/>"""
+            )
+        }
+        fun poly(pts: List<Pair<Float, Float>>, fill: String, stroke: String = "none") {
+            val d = pts.joinToString(" ") { (lx, ly) -> val (x, y) = sxy(lx, ly); "$x,$y" }
+            sb.append("""<polygon points="$d" fill="$fill" stroke="$stroke" stroke-width="1.5"/>""")
+        }
+        when (b.decor) {
+            Decor.WINDOW -> {
+                val fw = hw * 0.55f
+                val fh = hh * 0.55f
+                poly(
+                    listOf(-fw to -fh, fw to -fh, fw to fh, -fw to fh),
+                    "#BFE0EE", "#3A2A1A"
+                )
+                line(0f, -fh, 0f, fh, "#3A2A1A", 1.5f)
+                line(-fw, 0f, fw, 0f, "#3A2A1A", 1.5f)
+                for (side in listOf(-1f, 1f)) {
+                    val x0 = side * fw
+                    val x1 = side * hw * 0.92f
+                    poly(
+                        listOf(x0 to -fh, x1 to -fh, x1 to fh, x0 to fh),
+                        "#5B3A22", "#2A1A0E"
+                    )
+                    for (k in 1..2) {
+                        val lx = x0 + (x1 - x0) * k / 3f
+                        line(lx, -fh * 0.9f, lx, fh * 0.9f, "#2A1A0E", 1f)
+                    }
+                }
+            }
+
+            Decor.ARROW_SLIT -> {
+                poly(
+                    listOf(
+                        -hw * 0.28f to -hh * 0.7f, hw * 0.28f to -hh * 0.7f,
+                        hw * 0.28f to hh * 0.7f, -hw * 0.28f to hh * 0.7f
+                    ),
+                    "#0B0B0B", "#000"
+                )
+                poly(
+                    listOf(
+                        -hw * 0.07f to -hh * 0.62f, hw * 0.07f to -hh * 0.62f,
+                        hw * 0.07f to hh * 0.62f, -hw * 0.07f to hh * 0.62f
+                    ),
+                    "#000"
+                )
+                poly(
+                    listOf(
+                        -hw * 0.22f to hh * 0.05f, hw * 0.22f to hh * 0.05f,
+                        hw * 0.22f to hh * 0.18f, -hw * 0.22f to hh * 0.18f
+                    ),
+                    "#000"
+                )
+            }
+
+            Decor.STAIRCASE -> {
+                val steps = 6
+                var px0 = -hw * 0.85f
+                var py0 = -hh * 0.85f
+                for (k in 0 until steps) {
+                    val t = (k + 1) / steps.toFloat()
+                    val nx = -hw * 0.85f + t * hw * 1.7f
+                    val ny = -hh * 0.85f + t * hh * 1.7f
+                    line(px0, ny, nx, ny, "#5A5A5A", 3f)
+                    line(nx, py0, nx, ny, "#5A5A5A", 3f)
+                    px0 = nx
+                    py0 = ny
+                }
+                line(-hw * 0.85f, -hh * 0.7f, hw * 0.85f, hh * 1f, "#8A8A8A", 1.5f)
+                for (k in 0..steps) {
+                    val t = k / steps.toFloat()
+                    val bx = -hw * 0.85f + t * hw * 1.7f
+                    val by = -hh * 0.7f + t * hh * 1.7f
+                    line(bx, by, bx, by + hh * 0.3f, "#8A8A8A", 1.5f)
+                }
+            }
+
+            Decor.RAILING -> {
+                val top = hh * 0.6f
+                val bottom = -hh * 0.6f
+                line(-hw * 0.92f, top, hw * 0.92f, top, "#241608", 3f)
+                line(-hw * 0.92f, bottom, hw * 0.92f, bottom, "#241608", 2f)
+                val posts = 7
+                for (k in 0..posts) {
+                    val x = -hw * 0.92f + hw * 1.84f * k / posts
+                    line(x, bottom, x, top, "#241608", 2f)
+                }
+            }
+
+            Decor.WELL -> {
+                val rimY = -hh * 0.35f
+                val rimR = hh * 0.5f
+                sb.append(
+                    run {
+                        val (cx, cy) = sxy(0f, rimY)
+                        """<circle cx="$cx" cy="$cy" r="${rimR * (px(1f) - px(0f))}" """ +
+                            """fill="#8B8B93" stroke="#3A3A40" stroke-width="2"/>"""
+                    }
+                )
+                val postY0 = rimY + rimR * 0.4f
+                val postY1 = hh * 0.35f
+                line(-hw * 0.5f, postY0, -hw * 0.5f, postY1, "#4A3A28", 2.5f)
+                line(hw * 0.5f, postY0, hw * 0.5f, postY1, "#4A3A28", 2.5f)
+                poly(
+                    listOf(-hw * 0.75f to postY1, hw * 0.75f to postY1, 0f to hh * 0.95f),
+                    "#7A4A2A", "#3A2313"
+                )
+                line(0f, rimY + rimR * 0.3f, 0f, rimY, "#2A2A2A", 1.2f)
+            }
+
+            Decor.SHELTER -> {
+                val eaveY = hh * 0.3f
+                poly(
+                    listOf(-hw * 0.95f to eaveY, hw * 0.95f to eaveY, 0f to hh * 0.95f),
+                    "#A85A3A", "#241608"
+                )
+                line(-hw * 0.95f, eaveY, hw * 0.95f, eaveY, "#241608", 2f)
+                line(-hw * 0.6f, -hh * 0.9f, -hw * 0.6f, eaveY, "#241608", 4f)
+                line(hw * 0.6f, -hh * 0.9f, hw * 0.6f, eaveY, "#241608", 4f)
+            }
+
+            Decor.NONE -> Unit
+        }
+    }
+
     @Test
     fun apercu() {
         TargetRules.style = TargetStyle.ARCADE
         val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
         dir.mkdirs()
-        for (seed in 1L..15L) {
+        for (seed in 1L..20L) {
             svg(TargetGenerator.generate(seed), File(dir, "niveau-$seed.svg"))
         }
         println("APERÇU écrit dans ${dir.absolutePath}")
+    }
+
+    /** Les six pièces du catalogue de détails, posées côte à côte pour les voir sans niveau. */
+    @Test
+    fun apercuDetails() {
+        TargetRules.style = TargetStyle.ARCADE
+        val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
+        dir.mkdirs()
+        val blocks = ArrayList<Block>()
+        var x = 0f
+        fun pose(piece: Block, gap: Float = 2f) {
+            blocks += piece
+            x = Structure(listOf(piece)).right + gap
+        }
+        pose(Masonry.windowedWall(Material.STONE, x, 0f, 5f, 4f))
+        pose(Masonry.arrowSlitWall(Material.STONE, x, 0f, 2.5f, 5f))
+        pose(Masonry.staircase(Material.STONE, x, 0f, 4f, 3f))
+        pose(Masonry.railing(Material.WOOD, x, 0f, 4f))
+        pose(TargetModules.well(x + 1f, 0f))
+        pose(TargetModules.shelter(x, 4f, 3.5f))
+        val structure = Structure(blocks, "détails")
+        val lvl = TargetLevel(0L, SiteKind.HAMEAU, 0f, Wind.CALM, structure, Terrain.FLAT, TerrainShape.PLAINE)
+        svg(lvl, File(dir, "details.svg"))
+        println("APERÇU détails écrit dans ${dir.absolutePath}")
+    }
+
+    /** Une pièce seule, en gros plan, pour juger un décor sans avoir à zoomer. */
+    private fun closeup(b: Block, file: File) {
+        val p = b.parts[0]
+        val margin = maxOf(p.halfW, p.halfH) * 0.6f
+        val w = 2f * p.halfW + 2f * margin
+        val h = 2f * p.halfH + 2f * margin
+        val ech = 500f / maxOf(w, h)
+        fun px(x: Float) = (x - b.x + w / 2f) * ech
+        fun py(y: Float) = (h / 2f - (y - b.y)) * ech
+        val sb = StringBuilder()
+        sb.append(
+            """<svg xmlns="http://www.w3.org/2000/svg" width="${(w * ech).toInt()}" """ +
+                """height="${(h * ech).toInt()}" viewBox="0 0 ${w * ech} ${h * ech}">"""
+        )
+        sb.append("""<rect width="100%" height="100%" fill="#3a4a3a"/>""")
+        val c = couleur(b.material)
+        sb.append(
+            """<rect x="${px(b.x - p.halfW)}" y="${py(b.y + p.halfH)}" """ +
+                """width="${2f * p.halfW * ech}" height="${2f * p.halfH * ech}" """ +
+                """fill="$c" stroke="#0009" stroke-width="2"/>"""
+        )
+        appendDecorSvg(sb, b, ::px, ::py)
+        sb.append("</svg>")
+        file.writeText(sb.toString())
+    }
+
+    @Test
+    fun apercuDetailsZoom() {
+        TargetRules.style = TargetStyle.ARCADE
+        val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
+        dir.mkdirs()
+        closeup(Masonry.windowedWall(Material.STONE, 0f, 0f, 5f, 4f), File(dir, "detail-fenetre.svg"))
+        closeup(Masonry.arrowSlitWall(Material.STONE, 0f, 0f, 2.5f, 5f), File(dir, "detail-meurtriere.svg"))
+        closeup(Masonry.staircase(Material.STONE, 0f, 0f, 4f, 3f), File(dir, "detail-escalier.svg"))
+        closeup(Masonry.railing(Material.WOOD, 0f, 0f, 4f), File(dir, "detail-rambarde.svg"))
+        closeup(TargetModules.well(0f, 0f), File(dir, "detail-puits.svg"))
+        closeup(TargetModules.shelter(0f, 4f, 3.5f), File(dir, "detail-abri.svg"))
+        println("APERÇU détails (gros plan) écrit dans ${dir.absolutePath}")
     }
 
     /** Dessine une bande de ciels : une colonne par heure, plus une éclipse. */

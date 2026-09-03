@@ -158,7 +158,19 @@ enum class Material(
     SANDSTONE(2200f, 0.72f, 0f, 10f, Rupture.ECLATS, masonry = true),
 
     /** Le fer : hors de prix, indestructible, et lourd au point d'écraser ce qu'il tient. */
-    IRON(7800f, 0.40f, 0f, 60f, Rupture.INCASSABLE, masonry = true)
+    IRON(7800f, 0.40f, 0f, 60f, Rupture.INCASSABLE, masonry = true),
+
+    /**
+     * Le carton d'un château de cartes géant : plus raide qu'une planche de charpente.
+     *
+     * Le bois de charpente ([WOOD]) est volontairement fragile — c'est ce qui fait
+     * qu'un seul poteau cède dans une maison — mais la même fragilité appliquée à un
+     * château de cartes de plusieurs étages faisait tout s'effondrer au premier coup,
+     * quel que soit l'étage visé, ce qui n'a rien d'un château à démolir étage par
+     * étage. Plutôt que de toucher au réglage du bois — testé et calé ailleurs — les
+     * cartes ont leur propre tenue, sensiblement supérieure.
+     */
+    CARDBOARD(600f, 0.80f, 0f, 15f, Rupture.ECLATS, masonry = false)
 }
 
 /**

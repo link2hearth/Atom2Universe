@@ -87,11 +87,11 @@ class TrebuchetWindTest {
      * l'ordre, et la comparaison rang par rang se met à mesurer la distance entre deux
      * pierres différentes.
      */
-    private fun derive(g: TrebuchetGame, vent: Float, seconds: Float): Float {
+    private fun derive(g: TrebuchetGame, vent: Float, seconds: Float, tirer: Boolean = true): Float {
         g.world.windX = vent
         g.world.windY = 0f
         val depart = g.targets.pieces.map { it.body to it.body.x }
-        g.release()
+        if (tirer) g.release()
         repeat((seconds * 60).toInt()) { g.step(1f / 60f) }
         var pire = 0f
         for ((corps, x0) in depart) pire = maxOf(pire, abs(corps.x - x0))
@@ -103,8 +103,13 @@ class TrebuchetWindTest {
         TargetRules.style = TargetStyle.ARCADE
         val g = TrebuchetGame()
         g.loadLevel(15L)
-        // On force le pire vent possible, bien au-delà de ce que le jeu tire.
-        val pire = derive(g, 40f, 10f)
+        // On force le pire vent possible, bien au-delà de ce que le jeu tire — et on ne
+        // tire justement pas : ce test isole l'effet du vent sur la construction, il ne
+        // doit pas dépendre de savoir si un boulet, poussé assez loin par une tempête
+        // hors barème, finit par atteindre une cible dont la distance n'a rien de
+        // spécial. Un vrai impact est un test à lui tout seul (`un boulet qui arrive sur
+        // la cible l abime`), pas un accident de tempête.
+        val pire = derive(g, 40f, 10f, tirer = false)
         println("VENT château dans une tempête de 40 m/s : dérive maximale ${"%.2f".format(pire)} m")
         assertTrue("le château a pris le vent : $pire m", pire < 1f)
         assertEquals("le château s'est abîmé tout seul", 0f, g.targets.brokenRatio, 1e-4f)

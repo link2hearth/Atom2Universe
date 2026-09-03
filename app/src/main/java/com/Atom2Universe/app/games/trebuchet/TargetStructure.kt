@@ -29,7 +29,30 @@ enum class Role {
     PROP,
 
     /** La pièce à abattre quand le niveau demande une cible précise. */
-    OBJECTIVE
+    OBJECTIVE,
+
+    /**
+     * Une pièce qui se donne à voir de loin, façon tour Eiffel.
+     *
+     * Ne change rien à la physique : c'est un signal pour `TargetField.lightUp`, qui
+     * l'illumine à **toute** hauteur au lieu de s'arrêter à hauteur d'homme comme les
+     * torches ordinaires. Voir `TargetModules.cardCastle`.
+     */
+    MONUMENT
+}
+
+/**
+ * Ce qu'on dessine par-dessus le remplissage uni d'un bloc.
+ *
+ * Ne change rien à la physique ni à la génération : c'est un signal pour la vue
+ * seule, qui sait dessiner une petite scène — fenêtre, meurtrière, escalier —
+ * directement sur le rectangle du bloc plutôt que d'avoir à démonter ce
+ * rectangle en plusieurs corps pour faire apparaître une silhouette. Un bloc à
+ * décor reste **un seul corps** aux yeux du moteur, avec ses points de vie et sa
+ * masse habituels ; seule la peinture change. Voir `LandScene.appendDecor`.
+ */
+enum class Decor {
+    NONE, WINDOW, ARROW_SLIT, STAIRCASE, RAILING, WELL, SHELTER
 }
 
 /**
@@ -116,7 +139,8 @@ class Block private constructor(
     val y: Float,
     val angle: Float,
     val material: Material,
-    val role: Role
+    val role: Role,
+    val decor: Decor = Decor.NONE
 ) {
 
     val area: Float = parts.sumOf { it.area.toDouble() }.toFloat()
@@ -184,11 +208,11 @@ class Block private constructor(
     }
 
     fun translated(dx: Float, dy: Float = 0f): Block =
-        Block(parts, x + dx, y + dy, angle, material, role)
+        Block(parts, x + dx, y + dy, angle, material, role, decor)
 
     /** La même pierre, posée ailleurs. Sert au tassement, qui réécrit toutes les poses. */
     fun posed(x: Float, y: Float, angle: Float): Block =
-        Block(parts, x, y, angle, material, role)
+        Block(parts, x, y, angle, material, role, decor)
 
     companion object {
 
@@ -220,7 +244,8 @@ class Block private constructor(
             halfW: Float,
             halfH: Float,
             angle: Float = 0f,
-            role: Role = Role.STRUCTURE
+            role: Role = Role.STRUCTURE,
+            decor: Decor = Decor.NONE
         ): Block = Block(
             listOf(
                 Piece(
@@ -230,7 +255,7 @@ class Block private constructor(
                     0f, 0f, 0f
                 )
             ),
-            cx, cy, angle, material, role
+            cx, cy, angle, material, role, decor
         )
 
         /** Une pierre posée par son **coin bas-gauche** : c'est ainsi qu'on maçonne. */
@@ -240,9 +265,10 @@ class Block private constructor(
             bottom: Float,
             width: Float,
             height: Float,
-            role: Role = Role.STRUCTURE
+            role: Role = Role.STRUCTURE,
+            decor: Decor = Decor.NONE
         ): Block =
-            box(material, left + width / 2f, bottom + height / 2f, width / 2f, height / 2f, 0f, role)
+            box(material, left + width / 2f, bottom + height / 2f, width / 2f, height / 2f, 0f, role, decor)
 
         fun circle(
             material: Material,
