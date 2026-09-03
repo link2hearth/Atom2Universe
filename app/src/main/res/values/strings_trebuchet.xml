@@ -128,6 +128,7 @@
     <string name="trebuchet_gear_unit_deg">\u00b0</string>
     <string name="trebuchet_gear_unit_kg">kg</string>
     <string name="trebuchet_gear_unit_rpm">rpm</string>
+    <string name="trebuchet_gear_unit_l">L</string>
     <string name="trebuchet_gear_panel_speed">Speed</string>
     <string name="trebuchet_gear_panel_energy">Stored</string>
     <string name="trebuchet_gear_panel_range">Range</string>
@@ -143,6 +144,8 @@
     <string name="trebuchet_gear_motor_carousel">Treadwheel</string>
     <string name="trebuchet_gear_motor_windmill">Windmill</string>
     <string name="trebuchet_gear_motor_waterwheel">Water wheel</string>
+    <string name="trebuchet_gear_launcher_flywheel">Flywheel</string>
+    <string name="trebuchet_gear_launcher_cannon">Cannon</string>
     <string name="trebuchet_gear_brake">BRAKE</string>
     <string name="trebuchet_gear_stop_short">STOP</string>
     <string name="trebuchet_gear_charge">RUN</string>
@@ -155,6 +158,7 @@
     <string name="trebuchet_gear_edit_layer">Layer</string>
     <string name="trebuchet_gear_edit_ball">Ball</string>
     <string name="trebuchet_gear_edit_launch">Launch</string>
+    <string name="trebuchet_gear_edit_tank">Tank</string>
     <string name="trebuchet_gear_edit_material">Material</string>
     <string name="trebuchet_gear_size_header">Ø %1$d cm · circumference %2$d cm</string>
     <string name="trebuchet_gear_tool_part">TOOL · PART</string>

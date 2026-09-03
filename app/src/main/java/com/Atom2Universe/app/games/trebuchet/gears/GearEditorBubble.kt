@@ -84,6 +84,12 @@ class GearEditorBubble @JvmOverloads constructor(
         BALL(R.string.trebuchet_gear_edit_ball, R.string.trebuchet_gear_unit_kg, 4, 10),
 
         /**
+         * Le réservoir d'un canon, en litres. Le deuxième levier de puissance, à côté
+         * de la denture de la manivelle — voir [GearWheelConfig.reservoirVolume].
+         */
+        TANK(R.string.trebuchet_gear_edit_tank, R.string.trebuchet_gear_unit_l, 4, 10),
+
+        /**
          * Le régime, qui ne se règle pas : il se subit. Sa ligne emprunte la place des
          * deux flèches pour y poser le frein et le stop — ce sont les seules commandes
          * qu'une vitesse accepte.
@@ -113,7 +119,7 @@ class GearEditorBubble @JvmOverloads constructor(
     private var lastWheelId: Int? = null
 
     /** Les boutons du bas. Ils dependent entierement de la piece tenue. */
-    private enum class Action { MOTOR, CHARGE, COUPLE, DUPLICATE, DELETE }
+    private enum class Action { MOTOR, LAUNCHER_KIND, CHARGE, COUPLE, DUPLICATE, DELETE }
 
     private val dp = resources.displayMetrics.density
 
@@ -282,8 +288,11 @@ class GearEditorBubble @JvmOverloads constructor(
         out += Dial.TEETH
         out += Dial.LAYER
         out += Dial.MATERIAL
-        if (wheel.kind == GearWheelKind.FLYWHEEL) {
+        if (wheel.kind in GearMachineRules.LAUNCHER_KINDS) {
             out += Dial.LAUNCH
+            // Le réservoir n'existe que pour un canon : un volant n'a rien à mettre
+            // sous pression.
+            if (wheel.kind == GearWheelKind.PUMP) out += Dial.TANK
             out += Dial.BALL
         } else if (wheel.motor != null) {
             // Le genre du moteur ne se regle plus ici : il se choisit en posant la
@@ -299,9 +308,10 @@ class GearEditorBubble @JvmOverloads constructor(
     /**
      * Les boutons du bas, selon la piece tenue.
      *
-     * Le lanceur n'en a **aucun** : il ne se supprime pas, ne se duplique pas, et il
-     * n'y a rien a lui accoupler qu'on ne puisse amorcer depuis l'autre roue. Sa bulle
-     * ne sert qu'a le regler, ce qui est deja tout ce qu'on lui demande.
+     * Le lanceur ne se supprime pas, ne se duplique pas, et il n'y a rien a lui
+     * accoupler qu'on ne puisse amorcer depuis l'autre roue — mais il gagne le
+     * bouton qui bascule sa forme, volant ou canon : deux lanceurs possibles sur la
+     * meme piece epinglee, le meme geste que le moteur qu'on remplace sans l'ajouter.
      *
      * La roue motrice, elle, gagne le bouton qui fait defiler les trois machines : il
      * n'y a qu'un moteur dans l'atelier, donc on ne l'ajoute pas, on le remplace.
@@ -309,7 +319,7 @@ class GearEditorBubble @JvmOverloads constructor(
     private fun actionsFor(wheel: GearWheelConfig?): List<Action> {
         if (wheel == null) return emptyList()
         val view = gearView ?: return emptyList()
-        if (view.game.config.isPinned(wheel.id)) return emptyList()
+        if (view.game.config.isPinned(wheel.id)) return listOf(Action.LAUNCHER_KIND)
         val out = ArrayList<Action>(3)
         if (wheel.motor != null) {
             out += Action.MOTOR
@@ -658,6 +668,11 @@ class GearEditorBubble @JvmOverloads constructor(
         // Le bouton dit **quel** moteur est monte : c'est ce qu'on lit avant de le
         // changer, et une etiquette « moteur » ne l'aurait pas dit.
         Action.MOTOR -> motorName(gearView?.selectedWheel()?.motor?.kind ?: GearMotorKind.NONE)
+        // Meme principe que le moteur : le bouton dit quelle forme le lanceur a
+        // aujourd'hui, avant qu'on la fasse basculer.
+        Action.LAUNCHER_KIND -> launcherKindName(
+            gearView?.selectedWheel()?.kind ?: GearWheelKind.FLYWHEEL
+        )
         Action.CHARGE -> context.getString(
             if (gearView?.game?.charging == true) R.string.trebuchet_gear_charge_stop
             else R.string.trebuchet_gear_charge
@@ -666,6 +681,11 @@ class GearEditorBubble @JvmOverloads constructor(
         Action.DUPLICATE -> context.getString(R.string.trebuchet_gear_duplicate)
         Action.DELETE -> context.getString(R.string.trebuchet_gear_delete_short)
     }
+
+    private fun launcherKindName(kind: GearWheelKind): String = context.getString(
+        if (kind == GearWheelKind.PUMP) R.string.trebuchet_gear_launcher_cannon
+        else R.string.trebuchet_gear_launcher_flywheel
+    )
 
     private fun motorName(kind: GearMotorKind): String = context.getString(
         when (kind) {
@@ -755,6 +775,7 @@ class GearEditorBubble @JvmOverloads constructor(
         val view = gearView ?: return
         when (action) {
             Action.MOTOR -> view.cycleSelectedMotor()
+            Action.LAUNCHER_KIND -> view.cycleSelectedLauncherKind()
             Action.CHARGE -> view.toggleCharge()
             Action.COUPLE -> view.armLink(GearLinkKind.SHAFT_CLUTCH)
             Action.DUPLICATE -> view.duplicateSelected()
@@ -939,6 +960,9 @@ class GearEditorBubble @JvmOverloads constructor(
             Dial.DURATION -> view.game.config.chargeSeconds.roundToInt()
             Dial.LAUNCH -> wheel.launchAngle.roundToInt()
             Dial.BALL -> view.game.config.projectileMass.roundToInt()
+            // Le modele garde le reservoir en m3 ; la roulette le montre en litres,
+            // plus lisible sur une piece qui va de dix a deux mille.
+            Dial.TANK -> (wheel.reservoirVolume * 1_000f).roundToInt()
             Dial.MATERIAL, Dial.SPEED -> 0
         }
     }
@@ -953,6 +977,7 @@ class GearEditorBubble @JvmOverloads constructor(
             Dial.DURATION -> view.setChargeSeconds(value.toFloat())
             Dial.LAUNCH -> view.setSelectedLaunchAngle(value.toFloat())
             Dial.BALL -> view.setProjectileMass(value.toFloat())
+            Dial.TANK -> view.setSelectedReservoirVolume(value / 1_000f)
             Dial.MATERIAL, Dial.SPEED -> Unit
         }
     }

@@ -8,7 +8,7 @@ import com.Atom2Universe.app.games.physics.MachineMaterials
 import com.Atom2Universe.app.games.physics.PhysicsConstants
 import kotlin.math.hypot
 
-enum class GearWheelKind { GEAR, FLYWHEEL }
+enum class GearWheelKind { GEAR, FLYWHEEL, PUMP }
 
 enum class GearLinkKind { BELT_OPEN, BELT_CROSSED, CHAIN_FREEWHEEL, SHAFT_CLUTCH }
 
@@ -236,7 +236,18 @@ data class GearWheelConfig(
      * rien de l'atelier n'a besoin d'apprendre un nouveau geste, et le moteur
      * entraîne le train par les dents qu'il avait déjà.
      */
-    var motor: GearMotorConfig? = null
+    var motor: GearMotorConfig? = null,
+    /**
+     * Le volume du réservoir d'un canon, en m³ — sans objet pour un volant.
+     *
+     * **C'est le deuxième levier de puissance, à côté du rapport de démultiplication.**
+     * Le rapport (via la denture) décide du plafond de pression, voir
+     * [GearMachineGame] ; le réservoir décide de l'énergie qu'on trouve *à* ce
+     * plafond, exactement comme la taille d'un volant décide de l'énergie cinétique
+     * qu'il emmagasine à sa vitesse limite. Un petit réservoir plafonne vite mais peu ;
+     * un grand met plus longtemps à se remplir et rend davantage une fois plein.
+     */
+    var reservoirVolume: Float = GearMachineRules.DEFAULT_RESERVOIR_VOLUME
 ) {
     val pitchRadius: Float get() = teeth * GearMachineRules.MODULE / 2f
     val outerRadius: Float get() = pitchRadius + GearMachineRules.MODULE
@@ -259,7 +270,8 @@ data class GearWheelConfig(
 
     fun copyWheel() =
         GearWheelConfig(
-            id, x, y, teeth, layer, kind, material, angle, launchAngle, motor?.copyMotor()
+            id, x, y, teeth, layer, kind, material, angle, launchAngle, motor?.copyMotor(),
+            reservoirVolume
         )
 }
 
@@ -287,6 +299,56 @@ object GearMachineRules {
      * portée.
      */
     const val FLYWHEEL_TEETH = 96
+
+    /**
+     * Les deux formes que peut prendre la pièce épinglée qui tire.
+     *
+     * Un volant ou un canon occupent le **même emplacement** — un seul lanceur, jamais
+     * déplacé, jamais dupliqué — et [GearMachineConfig.enforceSinglePieces] s'en sert
+     * pour reconnaître cette pièce quelle que soit sa forme du moment.
+     */
+    val LAUNCHER_KINDS = setOf(GearWheelKind.FLYWHEEL, GearWheelKind.PUMP)
+
+    /**
+     * Le canon à air comprimé, l'autre lanceur possible.
+     *
+     * **Le plafond de pression n'est pas une constante posée** : il sort du même
+     * équilibre de forces que le plafond de vitesse d'un volant. La manivelle du canon
+     * est une roue comme une autre — son rayon vient de sa denture, exactement comme un
+     * engrenage — et elle pousse contre une pression résistante appliquée sur son
+     * palier ([GearMachineGame] pose `loadTorque = pressure * PISTON_AREA * rayon` en
+     * plus du frottement sec). Passé le couple que le train peut vraiment fournir à
+     * cette roue, elle cale, et la pression n'y monte plus : aucune formule de plafond
+     * n'est écrite ailleurs que dans cet équilibre.
+     *
+     * La pression ne dépend donc jamais du volume du réservoir — seul le rapport de
+     * démultiplication et la section du piston en décident. Le réservoir ne change que
+     * la vitesse à laquelle on s'en approche, et l'énergie qu'on y trouve une fois
+     * plein : exactement le rôle que la taille du volant joue déjà pour la vitesse et
+     * l'énergie cinétique — c'est pour ça qu'il se règle comme un deuxième levier de
+     * puissance, à côté de la denture de la manivelle ([GearWheelConfig.reservoirVolume]).
+     */
+    const val ATMOSPHERIC_PRESSURE = 101_325f
+    const val PISTON_AREA = 2e-4f
+
+    /** Les bornes du réservoir, en m³, et sa taille de départ. */
+    const val DEFAULT_RESERVOIR_VOLUME = 0.08f
+    const val MIN_RESERVOIR_VOLUME = 0.01f
+    const val MAX_RESERVOIR_VOLUME = 2f
+
+    /**
+     * Géométrie du canon : la distance fixe du centre de la manivelle au tourillon
+     * (le point autour duquel le tube s'élève), puis la longueur du tube depuis ce
+     * tourillon jusqu'à la bouche.
+     *
+     * Le tourillon **ne suit pas l'angle de tir** — c'est le tube qui pivote autour de
+     * lui, comme un vrai affût — parce que les pistons et le réservoir se dressent
+     * entre la manivelle et lui, et doivent rester d'aplomb quelle que soit
+     * l'élévation. Le point de départ physique du boulet doit rester exactement celui
+     * que dessine [GearCannonArt] : les deux se lisent sur ces mêmes constantes.
+     */
+    const val CANNON_PIVOT_DISTANCE = 3.2f
+    const val CANNON_BARREL_LENGTH = 3.4f
 
     /**
      * Le pas de tir : l'abscisse où le volant est planté, et l'air sous sa jante.
@@ -336,11 +398,11 @@ object GearMachineRules {
 
     /** L'épaisseur de jante d'une roue, selon ce qu'elle est. */
     fun rimThickness(kind: GearWheelKind): Float =
-        if (kind == GearWheelKind.FLYWHEEL) FLYWHEEL_RIM else GEAR_RIM
+        if (kind in LAUNCHER_KINDS) FLYWHEEL_RIM else GEAR_RIM
 
     /** La largeur de jante d'une roue, selon ce qu'elle est. */
     fun rimWidth(kind: GearWheelKind): Float =
-        if (kind == GearWheelKind.FLYWHEEL) FLYWHEEL_WIDTH else GEAR_WIDTH
+        if (kind in LAUNCHER_KINDS) FLYWHEEL_WIDTH else GEAR_WIDTH
 
     /**
      * Le rayon intérieur de la jante : là où commencent les rayons, et le vide.
@@ -511,11 +573,15 @@ class GearMachineConfig(
             wheel.angle = wheel.angle.takeIf { it.isFinite() } ?: 0f
             wheel.launchAngle = wheel.launchAngle.takeIf { it.isFinite() }
                 ?.coerceIn(GearMachineRules.MIN_LAUNCH_DEG, GearMachineRules.MAX_LAUNCH_DEG) ?: 35f
-            // Un volant est ce qui **garde** l'élan ; l'atteler ferait de la pièce de
-            // stockage une pièce d'entraînement, et le train n'aurait plus rien à faire.
+            wheel.reservoirVolume = wheel.reservoirVolume.takeIf { it.isFinite() }
+                ?.coerceIn(GearMachineRules.MIN_RESERVOIR_VOLUME, GearMachineRules.MAX_RESERVOIR_VOLUME)
+                ?: GearMachineRules.DEFAULT_RESERVOIR_VOLUME
+            // Un lanceur (volant ou canon) est ce qui **garde** l'élan ; l'atteler
+            // ferait de la pièce de stockage une pièce d'entraînement, et le train
+            // n'aurait plus rien à faire.
             val motor = wheel.motor
             if (motor == null || motor.kind == GearMotorKind.NONE ||
-                wheel.kind == GearWheelKind.FLYWHEEL
+                wheel.kind in GearMachineRules.LAUNCHER_KINDS
             ) {
                 wheel.motor = null
             } else {
@@ -566,12 +632,14 @@ class GearMachineConfig(
      * toujours ressortir d'ici jouable.
      */
     private fun enforceSinglePieces() {
-        // Le lanceur : celui qui était désigné, sinon le premier volant venu.
-        val launcher = wheels.firstOrNull { it.id == launcherWheelId && it.kind == GearWheelKind.FLYWHEEL }
-            ?: wheels.firstOrNull { it.kind == GearWheelKind.FLYWHEEL }
+        // Le lanceur : celui qui était désigné, sinon le premier volant ou canon venu.
+        // Sa forme (volant ou canon) n'entre pour rien dans ce choix — les deux sont la
+        // même pièce épinglée, vue par [GearMachineRules.LAUNCHER_KINDS].
+        val launcher = wheels.firstOrNull { it.id == launcherWheelId && it.kind in GearMachineRules.LAUNCHER_KINDS }
+            ?: wheels.firstOrNull { it.kind in GearMachineRules.LAUNCHER_KINDS }
         launcherWheelId = launcher?.id
         for (wheel in wheels) {
-            if (wheel.kind == GearWheelKind.FLYWHEEL && wheel.id != launcherWheelId) {
+            if (wheel.kind in GearMachineRules.LAUNCHER_KINDS && wheel.id != launcherWheelId) {
                 wheel.kind = GearWheelKind.GEAR
             }
         }
@@ -601,7 +669,9 @@ class GearMachineConfig(
      * une machine finie et jouable.
      */
     fun ensureCorePieces() {
-        if (wheels.none { it.kind == GearWheelKind.FLYWHEEL } &&
+        // Il manque un lanceur seulement si la machine n'en a **aucune forme** : une
+        // sauvegarde qui tenait déjà un canon ne doit pas se retrouver avec les deux.
+        if (wheels.none { it.kind in GearMachineRules.LAUNCHER_KINDS } &&
             wheels.size < GearMachineRules.MAX_GEARS
         ) {
             val launcher = GearWheelConfig(
@@ -678,7 +748,8 @@ class GearMachinePreset(name: String, config: GearMachineConfig) {
 /** Format tolérant et versionné des machines à engrenages. */
 object GearMachineLibrary {
     const val MAX_PRESETS = 30
-    private const val VERSION = "G6"
+    private const val VERSION = "G7"
+    private const val VERSION_G6 = "G6"
     private const val VERSION_G5 = "G5"
     private const val VERSION_G4 = "G4"
     private const val VERSION_G3 = "G3"
@@ -708,7 +779,8 @@ object GearMachineLibrary {
                     .append(wheel.motor?.kind?.name ?: GearMotorKind.NONE.name).append(',')
                     .append(wheel.motor?.units ?: 0).append(',')
                     .append(wheel.motor?.direction ?: -1).append(',')
-                    .append(wheel.motor?.span ?: 0f)
+                    .append(wheel.motor?.span ?: 0f).append(',')
+                    .append(wheel.reservoirVolume)
             }
             append('\n')
         }
@@ -721,7 +793,7 @@ object GearMachineLibrary {
             val fields = line.split('\t')
             val version = fields.getOrNull(0) ?: continue
             if (fields.size < 2 || version !in setOf(
-                    VERSION, VERSION_G5, VERSION_G4, VERSION_G3, VERSION_G2, VERSION_G1
+                    VERSION, VERSION_G6, VERSION_G5, VERSION_G4, VERSION_G3, VERSION_G2, VERSION_G1
                 )
             ) continue
             val name = MachinePreset.clean(fields[1])
@@ -750,7 +822,7 @@ object GearMachineLibrary {
                     links += GearLinkConfig(first, second, kind, direction)
                     continue
                 }
-                if (value.size !in 5..13 || value.size == 6) continue
+                if (value.size !in 5..14 || value.size == 6) continue
                 val id = value[0].toIntOrNull() ?: continue
                 val x = value[1].toFloatOrNull() ?: continue
                 val y = value[2].toFloatOrNull() ?: continue
@@ -776,8 +848,12 @@ object GearMachineLibrary {
                     value.getOrNull(12)?.toFloatOrNull()?.takeIf { it > 0f }
                         ?: GearMotorRules.defaultSpan(motorKind)
                 )
+                // Avant G7 il n'y avait qu'un réservoir de taille fixe : la taille par
+                // défaut fait relire une machine ancienne exactement comme elle tirait.
+                val reservoirVolume = value.getOrNull(13)?.toFloatOrNull()?.takeIf { it > 0f }
+                    ?: GearMachineRules.DEFAULT_RESERVOIR_VOLUME
                 wheels += GearWheelConfig(
-                    id, x, y, teeth, layer, kind, material, angle, launch, motor
+                    id, x, y, teeth, layer, kind, material, angle, launch, motor, reservoirVolume
                 )
             }
             val config =

@@ -41,7 +41,13 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
          * emprunte le **même** moteur d'axe : freiner, c'est en relever le couple, et
          * relâcher, c'est lui rendre cette valeur-là.
          */
-        val bearingTorque: Float = 0f
+        val bearingTorque: Float = 0f,
+        /**
+         * Le réservoir d'un canon, en volume standard déjà pompé — voir
+         * [GearMachineGame.gasPressure]. Sans objet pour une roue qui n'est pas un
+         * canon en train de tirer : elle reste alors à zéro, inerte.
+         */
+        var reservoirStdVolume: Float = 0f
     )
 
     data class Mesh(val firstId: Int, val secondId: Int, val joint: GearJoint)
@@ -398,7 +404,12 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     var chargeTotal = 0f
         private set
 
-    private data class SavedMotion(val angle: Float, val omega: Float, val energy: Float)
+    private data class SavedMotion(
+        val angle: Float,
+        val omega: Float,
+        val energy: Float,
+        val reservoirStdVolume: Float = 0f
+    )
 
     init {
         rebuild(preserveMotion = false)
@@ -423,7 +434,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             state.wheel.id to SavedMotion(
                 state.body.angle,
                 state.body.omega,
-                0.5f * state.body.inertia * state.body.omega * state.body.omega
+                0.5f * state.body.inertia * state.body.omega * state.body.omega,
+                state.reservoirStdVolume
             )
         } else emptyMap()
         // Un boulet posé n'est plus un corps physique : il ne revient dans le monde
@@ -509,7 +521,10 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                     }
                 }
             drive?.let { world.addJoint(it) }
-            gears += GearState(wheel, body, support, axle, drive, bearingTorque)
+            gears += GearState(
+                wheel, body, support, axle, drive, bearingTorque,
+                reservoirStdVolume = savedMotion[wheel.id]?.reservoirStdVolume ?: 0f
+            )
         }
         connectTransmissions()
         connectMeshes()
@@ -646,6 +661,10 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // L'élan d'avant le choc, gardé pour la traversée.
         if (phase == Phase.FLIGHT) rememberMomentum()
         world.stepFrame(h)
+        // **Après**, jamais avant : c'est la vitesse que le solveur vient d'accorder à
+        // la manivelle une fois le couple résistant du réservoir pris en compte, pas
+        // celle d'avant qui l'ignorait encore.
+        updatePumpReservoir(h)
         effects.update(h)
         celebrate()
         // Le site s'arme, encaisse et se rendort tout seul — c'est [TargetField.update]
@@ -662,23 +681,113 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     }
 
     /**
-     * Le frein d'axe de la roue tenue, s'il y en a une.
+     * Le frein d'axe de la roue tenue, et la résistance du réservoir sur la manivelle
+     * d'un canon, s'il y en a une.
      *
-     * Freiner n'est pas remettre une vitesse à zéro : c'est **serrer le palier**. On
-     * relève donc le couple du moteur d'axe qui portait déjà le frottement sec, et
-     * tout le reste suit tout seul — le train entier ralentit à travers ses dents, une
-     * prise trop chargée patine, et rien ne peut repartir en arrière puisque ce moteur
-     * ne sait que ramener la vitesse relative à zéro.
+     * Les deux se posent au même endroit — le couple maximal du même moteur d'axe qui
+     * porte déjà le frottement sec — parce que ce sont deux résistances de même
+     * nature : elles ne font jamais qu'opposer un couple, jamais avancer. Freiner,
+     * c'est en relever le couple pour ramener la vitesse relative à zéro ; la
+     * résistance du réservoir fait le même geste sans jamais viser zéro, elle
+     * s'ajoute simplement au frottement sec tant qu'on ne serre pas le frein
+     * par-dessus.
      */
     private fun applyBrake() {
         for (gear in gears) {
             val braking = gear.wheel.id == brakingId
-            gear.axle.maxMotorTorque = if (braking) {
-                gear.bearingTorque + gear.body.inertia * GearMachineRules.BRAKE_RATE
-            } else {
-                gear.bearingTorque
+            gear.axle.maxMotorTorque = when {
+                braking -> gear.bearingTorque + gear.body.inertia * GearMachineRules.BRAKE_RATE
+                gear.wheel.kind == GearWheelKind.PUMP && gear.wheel.id == config.launcherWheelId ->
+                    gear.bearingTorque + pumpLoadTorque(gear)
+                else -> gear.bearingTorque
             }
         }
+    }
+
+    /**
+     * La pression qu'un volume standard [stdVolume] déjà pompé donne dans le
+     * réservoir, en pascals.
+     *
+     * Loi des gaz parfaits à température constante : le réservoir a un volume fixe
+     * (réglable, [GearWheelConfig.reservoirVolume]), et y ajouter de l'air pris à
+     * pression atmosphérique fait monter la pression **linéairement** avec le volume
+     * standard injecté. Elle ne dépend jamais de la vitesse de la manivelle — on
+     * peut donc la lire à l'arrêt, entre deux charges.
+     */
+    private fun gasPressure(stdVolume: Float, reservoirVolume: Float): Float =
+        GearMachineRules.ATMOSPHERIC_PRESSURE * (1f + stdVolume / reservoirVolume)
+
+    /**
+     * Ce que le réservoir résiste sur l'axe de la manivelle d'un canon, en N·m.
+     *
+     * **C'est tout le mécanisme du plafond, et il n'est écrit nulle part ailleurs.**
+     * Un piston de section fixe pousse contre cette pression avec une force
+     * `pression × section`, au bout d'un bras de levier qui est le rayon de la
+     * manivelle — la denture de la roue, exactement comme un engrenage ordinaire.
+     * Passé le couple que le train peut vraiment lui fournir, cette résistance
+     * l'emporte et la manivelle cale : c'est ça qui plafonne la pression, le même
+     * équilibre de forces que celui qui plafonne déjà la vitesse d'un volant via
+     * [GearMotorRules.freeOmega]/[GearMotorRules.maxTorque].
+     */
+    private fun pumpLoadTorque(gear: GearState): Float =
+        gasPressure(gear.reservoirStdVolume, gear.wheel.reservoirVolume) *
+            GearMachineRules.PISTON_AREA * gear.wheel.pitchRadius
+
+    /**
+     * L'énergie déjà emmagasinée dans un réservoir de volume [reservoirVolume] qui a
+     * reçu [stdVolume] de volume standard, en joules.
+     *
+     * Primitive de la pression sur le volume, `∫P·dV` : le travail de compression
+     * isotherme reçu jusqu'ici. C'est **exactement** l'énergie que
+     * [pumpLoadTorque] retire du train pas à pas (puissance = couple × oméga =
+     * pression × débit) — rien n'est compté séparément, donc rien ne peut créer
+     * d'énergie que le train n'a pas vraiment fournie.
+     */
+    private fun reservoirEnergy(stdVolume: Float, reservoirVolume: Float): Float {
+        val p0 = GearMachineRules.ATMOSPHERIC_PRESSURE
+        return p0 * stdVolume + p0 * stdVolume * stdVolume / (2f * reservoirVolume)
+    }
+
+    /**
+     * Ce que la manivelle du canon a réussi à pousser dans le réservoir ce pas-ci.
+     *
+     * Le débit d'un piston vaut sa section fois la vitesse à laquelle il file, et
+     * cette vitesse est celle de la manivelle, `rayon × oméga`. Appelée depuis
+     * [step], **après** `world.stepFrame` et jamais avant : c'est la vitesse que le
+     * solveur vient réellement d'accorder à la roue une fois [pumpLoadTorque] pris
+     * en compte, pas celle d'avant qui l'ignorait encore.
+     */
+    private fun updatePumpReservoir(dt: Float) {
+        val launcherId = config.launcherWheelId ?: return
+        val gear = gears.firstOrNull { it.wheel.id == launcherId } ?: return
+        if (gear.wheel.kind != GearWheelKind.PUMP) return
+        val flow = GearMachineRules.PISTON_AREA * gear.wheel.pitchRadius * abs(gear.body.omega)
+        gear.reservoirStdVolume += flow * dt
+    }
+
+    /**
+     * La pression courante du réservoir du lanceur, en pascals — zéro si le lanceur
+     * n'est pas un canon. Pendant de [rimSpeed] pour l'affichage.
+     */
+    fun launcherPressure(): Float {
+        val wheel = config.launcher()?.takeIf { it.kind == GearWheelKind.PUMP } ?: return 0f
+        val gear = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
+        return gasPressure(gear.reservoirStdVolume, wheel.reservoirVolume)
+    }
+
+    /**
+     * Le volume du réservoir d'un canon, en m³ — sans effet sur un volant.
+     *
+     * Deuxième levier de puissance à côté de la denture de la manivelle : voir
+     * [GearWheelConfig.reservoirVolume].
+     */
+    fun setReservoirVolume(id: Int, cubicMeters: Float): Float? {
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
+        if (wheel.kind != GearWheelKind.PUMP) return null
+        wheel.reservoirVolume = cubicMeters.coerceIn(
+            GearMachineRules.MIN_RESERVOIR_VOLUME, GearMachineRules.MAX_RESERVOIR_VOLUME
+        )
+        return wheel.reservoirVolume
     }
 
     /** Serre ou desserre le frein d'une roue. Une seule roue est freinée à la fois. */
@@ -1368,22 +1477,43 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return wheel.material
     }
 
-    /** Choisit le volant qui tire. Seul un volant porte un bras de lancement. */
+    /** Choisit le lanceur qui tire. Seuls un volant ou un canon portent une visée. */
     fun attachLauncher(id: Int): Boolean {
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return false
-        if (wheel.kind != GearWheelKind.FLYWHEEL) return false
+        if (wheel.kind !in GearMachineRules.LAUNCHER_KINDS) return false
         config.launcherWheelId = id
         return true
     }
 
-    /** Regle l'elevation du tir d'un volant. */
+    /** Regle l'elevation du tir d'un volant ou l'angle du tube d'un canon. */
     fun setLaunchAngle(id: Int, degrees: Float): Float? {
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
-        if (wheel.kind != GearWheelKind.FLYWHEEL) return null
+        if (wheel.kind !in GearMachineRules.LAUNCHER_KINDS) return null
         wheel.launchAngle = degrees.coerceIn(
             GearMachineRules.MIN_LAUNCH_DEG, GearMachineRules.MAX_LAUNCH_DEG
         )
         return wheel.launchAngle
+    }
+
+    /**
+     * Bascule la pièce épinglée entre volant et canon — même geste que
+     * [cycleMotorKind] pour un moteur, même bouton dans la bulle d'édition.
+     *
+     * Position, denture et matière restent : seule la **forme** du lanceur change.
+     * L'oméga et l'angle survivent au passage via [rebuild] comme pour tout
+     * remontage ; le réservoir d'un canon qu'on vient de démonter, lui, cesse
+     * simplement d'être lu tant qu'on ne rebascule pas dessus.
+     */
+    fun cycleLauncherKind(id: Int): GearWheelKind? {
+        if (id != config.launcherWheelId) return null
+        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
+        wheel.kind = if (wheel.kind == GearWheelKind.PUMP) {
+            GearWheelKind.FLYWHEEL
+        } else {
+            GearWheelKind.PUMP
+        }
+        rebuild()
+        return wheel.kind
     }
 
     /**
@@ -1617,42 +1747,75 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         cancelCharge()
         val launcherId = config.launcherWheelId ?: return false
         val launcher = gears.firstOrNull { it.wheel.id == launcherId } ?: return false
-        if (launcher.wheel.kind != GearWheelKind.FLYWHEEL) return false
-        val omega = launcher.body.omega
-        if (abs(omega) < GearMachineRules.MIN_LAUNCH_OMEGA) return false
-
-        val connected = connectedTo(launcherId)
-        val available = rotationalEnergy(connected)
-        if (available <= 0f) return false
-
         val mass = config.projectileMass
-        val armRadius = launcher.wheel.launchRadius
-        val rimSpeed = (abs(omega) * armRadius).coerceAtMost(MAX_PROJECTILE_SPEED)
         val efficiency = GearMachineRules.LAUNCH_EFFICIENCY
-        // Ce que la jante voudrait donner, et ce que le train peut reellement fournir.
-        val wanted = 0.5f * mass * rimSpeed * rimSpeed
-        val projectileEnergy = minOf(wanted, available * efficiency)
-        if (projectileEnergy <= 0f) return false
-        val speed = sqrt(2f * projectileEnergy / mass)
 
-        if (phase == Phase.FLIGHT) projectile?.let { world.remove(it.body) }
-        val energyTaken = projectileEnergy / efficiency
-        val remainingScale = sqrt(((available - energyTaken) / available).coerceIn(0f, 1f))
-        for (gear in gears) if (gear.wheel.id in connected) {
-            gear.body.omega *= remainingScale
-            gear.body.wake()
+        val projectileEnergy: Float
+        val muzzleX: Float
+        val muzzleY: Float
+        val nx: Float
+        val ny: Float
+
+        when (launcher.wheel.kind) {
+            GearWheelKind.FLYWHEEL -> {
+                val omega = launcher.body.omega
+                if (abs(omega) < GearMachineRules.MIN_LAUNCH_OMEGA) return false
+                val connected = connectedTo(launcherId)
+                val available = rotationalEnergy(connected)
+                if (available <= 0f) return false
+
+                val armRadius = launcher.wheel.launchRadius
+                val rimSpeed = (abs(omega) * armRadius).coerceAtMost(MAX_PROJECTILE_SPEED)
+                // Ce que la jante voudrait donner, et ce que le train peut reellement
+                // fournir.
+                val wanted = 0.5f * mass * rimSpeed * rimSpeed
+                projectileEnergy = minOf(wanted, available * efficiency)
+                if (projectileEnergy <= 0f) return false
+
+                val energyTaken = projectileEnergy / efficiency
+                val remainingScale = sqrt(((available - energyTaken) / available).coerceIn(0f, 1f))
+                for (gear in gears) if (gear.wheel.id in connected) {
+                    gear.body.omega *= remainingScale
+                    gear.body.wake()
+                }
+                for (mesh in meshes) mesh.joint.reset()
+                for (transmission in transmissions) transmission.joint.reset()
+
+                // Le bras au moment du lacher, et la tangente qui en part.
+                val armAngle = launchPointAngle(launcher.wheel)
+                val aim = Math.toRadians(launcher.wheel.launchAngle.toDouble()).toFloat()
+                nx = cos(aim)
+                ny = sin(aim)
+                muzzleX = launcher.body.x + cos(armAngle) * armRadius
+                muzzleY = launcher.body.y + sin(armAngle) * armRadius
+            }
+            GearWheelKind.PUMP -> {
+                // Un canon ne dose pas : la vanne s'ouvre en grand, le réservoir se
+                // vide entièrement d'un coup — pas de reliquat comme un volant qui
+                // continue de tourner après avoir cédé une part de son élan.
+                val available = reservoirEnergy(launcher.reservoirStdVolume, launcher.wheel.reservoirVolume)
+                if (available <= 0f) return false
+                projectileEnergy = available * efficiency
+                launcher.reservoirStdVolume = 0f
+
+                // Un tube ne lance pas tangentiellement : la vitesse part droit dans
+                // l'axe visé. La bouche est au bout du tube, monté sur un tourillon
+                // fixe planté à distance de la manivelle — les pistons et le réservoir
+                // se dressent entre les deux, voir [GearCannonArt] pour le même repère.
+                val aim = Math.toRadians(launcher.wheel.launchAngle.toDouble()).toFloat()
+                nx = cos(aim)
+                ny = sin(aim)
+                val pivotX = launcher.body.x + GearMachineRules.CANNON_PIVOT_DISTANCE
+                val pivotY = launcher.body.y
+                muzzleX = pivotX + nx * GearMachineRules.CANNON_BARREL_LENGTH
+                muzzleY = pivotY + ny * GearMachineRules.CANNON_BARREL_LENGTH
+            }
+            else -> return false
         }
-        for (mesh in meshes) mesh.joint.reset()
-        for (transmission in transmissions) transmission.joint.reset()
 
-        // Le bras au moment du lacher, et la tangente qui en part.
-        val armAngle = launchPointAngle(launcher.wheel)
-        val aim = Math.toRadians(launcher.wheel.launchAngle.toDouble()).toFloat()
-        val nx = cos(aim)
-        val ny = sin(aim)
+        val speed = sqrt(2f * projectileEnergy / mass).coerceAtMost(MAX_PROJECTILE_SPEED)
+        if (phase == Phase.FLIGHT) projectile?.let { world.remove(it.body) }
         val radius = (0.075f * kotlin.math.cbrt(mass.toDouble())).toFloat().coerceIn(0.06f, 0.55f)
-        val muzzleX = launcher.body.x + cos(armAngle) * armRadius
-        val muzzleY = launcher.body.y + sin(armAngle) * armRadius
         val shot = PhysBody.circle(radius, mass).apply {
             x = muzzleX
             // Un volant pose tres bas ferait naitre le boulet dans la terre, et le
@@ -1704,10 +1867,19 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      */
     fun launchSpeedNow(): Float {
         val wheel = config.launcher() ?: return 0f
+        val mass = config.projectileMass
+        if (wheel.kind == GearWheelKind.PUMP) {
+            // Un canon n'a pas de jante a comparer a un budget d'energie separe : le
+            // reservoir est la seule reserve, et un coup la prend en entier.
+            val gear = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
+            val available = reservoirEnergy(gear.reservoirStdVolume, wheel.reservoirVolume)
+            if (available <= 0f) return 0f
+            return sqrt(2f * available * GearMachineRules.LAUNCH_EFFICIENCY / mass)
+                .coerceAtMost(MAX_PROJECTILE_SPEED)
+        }
         val rim = rimSpeed()
         if (rim <= 0f) return 0f
         val available = rotationalEnergy(connectedTo(wheel.id))
-        val mass = config.projectileMass
         val payable = sqrt(2f * available * GearMachineRules.LAUNCH_EFFICIENCY / mass)
         return minOf(rim, payable)
     }
@@ -1728,8 +1900,14 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val vx = v * cos(aim)
         val vy = v * sin(aim)
         val state = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
-        val armAngle = launchPointAngle(wheel)
-        val y0 = (state.body.y + sin(armAngle) * wheel.launchRadius).coerceAtLeast(0f)
+        // La bouche part du bout du tube pour un canon, de la gorge pour un volant —
+        // le meme depart qu'au tir reel, voir [launchProjectile].
+        val y0 = if (wheel.kind == GearWheelKind.PUMP) {
+            (state.body.y + sin(aim) * GearMachineRules.CANNON_BARREL_LENGTH).coerceAtLeast(0f)
+        } else {
+            val armAngle = launchPointAngle(wheel)
+            (state.body.y + sin(armAngle) * wheel.launchRadius).coerceAtLeast(0f)
+        }
         val g = PhysicsConstants.STANDARD_GRAVITY
         val fall = sqrt(vy * vy + 2f * g * y0)
         return vx * (vy + fall) / g

@@ -126,6 +126,7 @@
     <string name="trebuchet_gear_unit_deg">\u00b0</string>
     <string name="trebuchet_gear_unit_kg">kg</string>
     <string name="trebuchet_gear_unit_rpm">tr/min</string>
+    <string name="trebuchet_gear_unit_l">L</string>
     <string name="trebuchet_gear_panel_speed">Régime</string>
     <string name="trebuchet_gear_panel_energy">Énergie</string>
     <string name="trebuchet_gear_panel_range">Portée</string>
@@ -141,6 +142,8 @@
     <string name="trebuchet_gear_motor_carousel">Manège</string>
     <string name="trebuchet_gear_motor_windmill">Moulin</string>
     <string name="trebuchet_gear_motor_waterwheel">Roue à eau</string>
+    <string name="trebuchet_gear_launcher_flywheel">Volant</string>
+    <string name="trebuchet_gear_launcher_cannon">Canon</string>
     <string name="trebuchet_gear_brake">FREIN</string>
     <string name="trebuchet_gear_stop_short">STOP</string>
     <string name="trebuchet_gear_charge">LANCER</string>
@@ -153,6 +156,7 @@
     <string name="trebuchet_gear_edit_layer">Couche</string>
     <string name="trebuchet_gear_edit_ball">Boulet</string>
     <string name="trebuchet_gear_edit_launch">Largage</string>
+    <string name="trebuchet_gear_edit_tank">Réservoir</string>
     <string name="trebuchet_gear_edit_material">Matière</string>
     <string name="trebuchet_gear_size_header">Ø %1$d cm · circonférence %2$d cm</string>
     <string name="trebuchet_gear_tool_part">OUTIL · PIÈCE</string>

@@ -95,6 +95,7 @@ class GearMachineView @JvmOverloads constructor(
     }
     private val pTexture = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = 0.045f }
     private val motorArt = GearMotorArt(dp)
+    private val cannonArt = GearCannonArt(dp)
     private val pAssembly = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(119, 239, 196); style = Paint.Style.STROKE; strokeWidth = 0.07f
         pathEffect = DashPathEffect(floatArrayOf(0.16f, 0.10f), 0f)
@@ -464,6 +465,14 @@ class GearMachineView @JvmOverloads constructor(
         return angle
     }
 
+    fun setSelectedReservoirVolume(cubicMeters: Float): Float? {
+        val id = selectedId ?: return null
+        val volume = game.setReservoirVolume(id, cubicMeters) ?: return null
+        listener?.onGearMachineChanged()
+        invalidate()
+        return volume
+    }
+
     fun launchProjectile(): Boolean {
         val launched = game.launchProjectile()
         if (launched) {
@@ -559,6 +568,16 @@ class GearMachineView @JvmOverloads constructor(
     fun cycleSelectedMotor(): GearMotorKind? {
         val id = selectedId ?: return null
         val kind = game.cycleMotorKind(id) ?: return null
+        listener?.onGearMachineChanged()
+        listener?.onGearSelectionChanged()
+        invalidate()
+        return kind
+    }
+
+    /** Bascule le lanceur tenu entre volant et canon, sur place — meme geste que le moteur. */
+    fun cycleSelectedLauncherKind(): GearWheelKind? {
+        val id = selectedId ?: return null
+        val kind = game.cycleLauncherKind(id) ?: return null
         listener?.onGearMachineChanged()
         listener?.onGearSelectionChanged()
         invalidate()
@@ -826,7 +845,11 @@ class GearMachineView @JvmOverloads constructor(
             pText.color = if (gear.wheel.id == selectedId) Color.rgb(255, 209, 102)
                 else layerColor(gear.wheel.layer, pastel = gear.wheel.layer < currentLayer)
             pText.alpha = layerAlpha(gear.wheel.layer, 210, 75)
-            val kind = if (gear.wheel.kind == GearWheelKind.FLYWHEEL) "V" else "${gear.wheel.teeth}T"
+            val kind = when (gear.wheel.kind) {
+                GearWheelKind.FLYWHEEL -> "V"
+                GearWheelKind.PUMP -> "C"
+                else -> "${gear.wheel.teeth}T"
+            }
             canvas.drawText("L${gear.wheel.layer} · $kind", x, y + 4f * dp, pText)
         }
         pText.alpha = 255
@@ -1263,8 +1286,17 @@ class GearMachineView @JvmOverloads constructor(
      */
     private fun drawLaunchers(canvas: Canvas) {
         for (gear in game.gears) {
-            if (gear.wheel.kind != GearWheelKind.FLYWHEEL) continue
-            drawLaunchTrack(canvas, gear, gear.wheel.id == game.config.launcherWheelId)
+            when (gear.wheel.kind) {
+                GearWheelKind.FLYWHEEL ->
+                    drawLaunchTrack(canvas, gear, gear.wheel.id == game.config.launcherWheelId)
+                GearWheelKind.PUMP -> {
+                    val relativeLayer = gear.wheel.layer - currentLayer
+                    val alpha = if (relativeLayer == 0) 255
+                        else (170 - abs(relativeLayer) * 30).coerceAtLeast(60)
+                    cannonArt.draw(canvas, game, gear, alpha)
+                }
+                else -> Unit
+            }
         }
     }
 
@@ -1425,11 +1457,12 @@ class GearMachineView @JvmOverloads constructor(
             else (175 - (-relativeLayer - 1) * 20).coerceAtLeast(75)
         canvas.drawPath(gearPath, pGear)
         drawMaterialTexture(canvas, gear, pitch, pGear.alpha)
-        if (gear.wheel.kind == GearWheelKind.FLYWHEEL) {
-            // Un volant est une jante montée sur des rayons, et il faut le **voir** :
-            // c'est ce qui explique qu'il pèse une tonne et non cinquante-six, donc
-            // qu'un moteur puisse le lancer. On creuse le disque jusque sous la jante,
-            // puis on repose les rayons par-dessus le vide.
+        if (gear.wheel.kind in GearMachineRules.LAUNCHER_KINDS) {
+            // Un volant ou une manivelle de canon sont une jante montée sur des
+            // rayons, et il faut le **voir** : c'est ce qui explique qu'il pèse une
+            // tonne et non cinquante-six, donc qu'un moteur puisse le faire tourner.
+            // On creuse le disque jusque sous la jante, puis on repose les rayons
+            // par-dessus le vide.
             val hollow = GearMachineRules.rimInnerRadius(gear.wheel.kind, outer) -
                 GearMachineRules.MODULE * 0.4f
             pHub.color = Color.rgb(16, 24, 40)
