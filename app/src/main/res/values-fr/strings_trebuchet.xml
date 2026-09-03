@@ -128,9 +128,11 @@
     <string name="trebuchet_gear_unit_rpm">tr/min</string>
     <string name="trebuchet_gear_unit_l">L</string>
     <string name="trebuchet_gear_panel_speed">Régime</string>
+    <string name="trebuchet_gear_panel_pressure">Pression</string>
     <string name="trebuchet_gear_panel_energy">Énergie</string>
     <string name="trebuchet_gear_panel_range">Portée</string>
     <string name="trebuchet_gear_panel_rpm">%1$d tr/min</string>
+    <string name="trebuchet_gear_panel_bar">%1$.1f bar</string>
     <string name="trebuchet_gear_panel_kj">%1$.1f kJ</string>
     <string name="trebuchet_gear_panel_m">%1$.0f m</string>
     <string name="trebuchet_gear_edit_span">Envergure</string>

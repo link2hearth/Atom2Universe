@@ -130,9 +130,11 @@
     <string name="trebuchet_gear_unit_rpm">rpm</string>
     <string name="trebuchet_gear_unit_l">L</string>
     <string name="trebuchet_gear_panel_speed">Speed</string>
+    <string name="trebuchet_gear_panel_pressure">Pressure</string>
     <string name="trebuchet_gear_panel_energy">Stored</string>
     <string name="trebuchet_gear_panel_range">Range</string>
     <string name="trebuchet_gear_panel_rpm">%1$d rpm</string>
+    <string name="trebuchet_gear_panel_bar">%1$.1f bar</string>
     <string name="trebuchet_gear_panel_kj">%1$.1f kJ</string>
     <string name="trebuchet_gear_panel_m">%1$.0f m</string>
     <string name="trebuchet_gear_edit_span">Span</string>

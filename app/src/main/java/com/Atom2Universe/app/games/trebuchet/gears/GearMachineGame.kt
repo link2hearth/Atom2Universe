@@ -1868,49 +1868,90 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     fun launchSpeedNow(): Float {
         val wheel = config.launcher() ?: return 0f
         val mass = config.projectileMass
-        if (wheel.kind == GearWheelKind.PUMP) {
-            // Un canon n'a pas de jante a comparer a un budget d'energie separe : le
-            // reservoir est la seule reserve, et un coup la prend en entier.
-            val gear = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
-            val available = reservoirEnergy(gear.reservoirStdVolume, wheel.reservoirVolume)
-            if (available <= 0f) return 0f
-            return sqrt(2f * available * GearMachineRules.LAUNCH_EFFICIENCY / mass)
-                .coerceAtMost(MAX_PROJECTILE_SPEED)
-        }
+        val available = launcherAvailableEnergy()
+        if (available <= 0f) return 0f
+        val payable = sqrt(2f * available * GearMachineRules.LAUNCH_EFFICIENCY / mass)
+            .coerceAtMost(MAX_PROJECTILE_SPEED)
+        if (wheel.kind == GearWheelKind.PUMP) return payable
+        // Un volant a en plus une jante : il ne peut jamais rendre plus vite qu'elle
+        // ne file, meme quand le train a de quoi payer davantage.
         val rim = rimSpeed()
         if (rim <= 0f) return 0f
-        val available = rotationalEnergy(connectedTo(wheel.id))
-        val payable = sqrt(2f * available * GearMachineRules.LAUNCH_EFFICIENCY / mass)
         return minOf(rim, payable)
     }
 
     /**
-     * La portee qu'atteindrait le tir, en metres, si l'air n'existait pas.
+     * L'énergie que le lanceur a sous la main **maintenant**, en joules.
      *
-     * C'est une **borne haute** assumee : la trainee ne fait jamais que raccourcir, et
-     * un chiffre qui promet moins que le tir reel serait plus trompeur qu'utile. Le
-     * depart se fait a la hauteur de la gorge, qui compte pour beaucoup sur un volant
-     * de six metres de rayon.
+     * L'énergie cinétique du train relié pour un volant ([rotationalEnergy]),
+     * celle déjà comprimée dans le réservoir pour un canon ([reservoirEnergy]).
+     * C'est la grandeur que le panneau « Stocké » affiche, et celle que
+     * [launchSpeedNow] convertit en vitesse de tir.
+     */
+    fun launcherAvailableEnergy(): Float {
+        val wheel = config.launcher() ?: return 0f
+        if (wheel.kind == GearWheelKind.PUMP) {
+            val gear = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
+            return reservoirEnergy(gear.reservoirStdVolume, wheel.reservoirVolume)
+        }
+        return rotationalEnergy(connectedTo(wheel.id))
+    }
+
+    /**
+     * La portee qu'atteindrait le tir, en metres, **trainee comprise**.
+     *
+     * Une formule de tir dans le vide surestimait la vraie portee d'assez loin pour
+     * ne plus servir a rien -- un boulet leger perd beaucoup a l'air, voir
+     * [GearMachineRules.PISTON_AREA] et la traînée posée dans [launchProjectile]. On
+     * rejoue donc la meme chute que le vrai tir, hors du monde physique : memes
+     * pas, memes formules de trainee et d'amortissement que [PhysWorld.stepFrame],
+     * juste sans corps ni collision a fabriquer pour un chiffre d'avant-tir.
      */
     fun estimatedRange(): Float {
         val wheel = config.launcher() ?: return 0f
         val v = launchSpeedNow()
         if (v <= 0.01f) return 0f
         val aim = Math.toRadians(wheel.launchAngle.toDouble()).toFloat()
-        val vx = v * cos(aim)
-        val vy = v * sin(aim)
+        var vx = v * cos(aim)
+        var vy = v * sin(aim)
         val state = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
         // La bouche part du bout du tube pour un canon, de la gorge pour un volant —
         // le meme depart qu'au tir reel, voir [launchProjectile].
-        val y0 = if (wheel.kind == GearWheelKind.PUMP) {
+        var x = 0f
+        var y = if (wheel.kind == GearWheelKind.PUMP) {
             (state.body.y + sin(aim) * GearMachineRules.CANNON_BARREL_LENGTH).coerceAtLeast(0f)
         } else {
             val armAngle = launchPointAngle(wheel)
             (state.body.y + sin(armAngle) * wheel.launchRadius).coerceAtLeast(0f)
         }
+
+        val mass = config.projectileMass
+        val radius = (0.075f * kotlin.math.cbrt(mass.toDouble())).toFloat().coerceIn(0.06f, 0.55f)
+        val dragFactor = 0.5f * PhysicsConstants.AIR_DENSITY * 0.47f * Math.PI.toFloat() * radius * radius
         val g = PhysicsConstants.STANDARD_GRAVITY
-        val fall = sqrt(vy * vy + 2f * g * y0)
-        return vx * (vy + fall) / g
+        // Un pas grossier suffit a une estimation -- ce n'est pas le tir qui se joue
+        // ici, seulement sa longueur -- et ca borne le cout d'un chiffre recalcule a
+        // chaque image du panneau.
+        val dt = 1f / 30f
+        val linearKeep = (1f - world.linearDamping * dt).coerceIn(0f, 1f)
+        var steps = 0
+        while (y > 0f && steps < 900) {
+            vy -= g * dt
+            if (dragFactor > 0f) {
+                val speed = hypot(vx, vy)
+                if (speed > 1e-4f) {
+                    val dv = minOf(dragFactor * speed * speed / mass * dt, speed)
+                    vx -= dv * vx / speed
+                    vy -= dv * vy / speed
+                }
+            }
+            x += vx * dt
+            y += vy * dt
+            vx *= linearKeep
+            vy *= linearKeep
+            steps++
+        }
+        return x
     }
 
     fun spinGear(id: Int, angularSpeed: Float) {

@@ -165,9 +165,11 @@ class GearMachineView @JvmOverloads constructor(
      */
     private val fmtLocale = resources.configuration.locales[0]
     private val labelSpeed = resources.getString(R.string.trebuchet_gear_panel_speed)
+    private val labelPressure = resources.getString(R.string.trebuchet_gear_panel_pressure)
     private val labelEnergy = resources.getString(R.string.trebuchet_gear_panel_energy)
     private val labelRange = resources.getString(R.string.trebuchet_gear_panel_range)
     private val fmtRpm = resources.getString(R.string.trebuchet_gear_panel_rpm)
+    private val fmtBar = resources.getString(R.string.trebuchet_gear_panel_bar)
     private val fmtKj = resources.getString(R.string.trebuchet_gear_panel_kj)
     private val fmtMetres = resources.getString(R.string.trebuchet_gear_panel_m)
     private val fmtCharging = resources.getString(R.string.trebuchet_gear_charging)
@@ -175,6 +177,8 @@ class GearMachineView @JvmOverloads constructor(
     private val labelToolFrame = resources.getString(R.string.trebuchet_gear_tool_frame)
     private var shownRpm = Int.MIN_VALUE
     private var textRpm = ""
+    private var shownPressure = Float.NaN
+    private var textPressure = ""
     private var shownEnergy = Float.NaN
     private var textEnergy = ""
     private var shownRange = Float.NaN
@@ -1121,16 +1125,17 @@ class GearMachineView @JvmOverloads constructor(
     /**
      * Ce que le lanceur vaut a l'instant, en haut a droite.
      *
-     * Trois nombres, et pas un de plus : le regime qu'il tient, l'energie que le train
-     * relie lui offre, et la portee que ca donnerait. Sans eux, on chargeait a
-     * l'aveugle et on decouvrait le resultat une fois le boulet pose -- alors que tout
-     * se decide **avant** le tir, en regardant monter ces trois-la.
+     * Trois nombres, et pas un de plus : la premiere ligne dit ou en est le lanceur --
+     * le regime d'un volant, la pression d'un canon, deux choses qui ne se lisent pas
+     * pareil -- puis l'energie qu'il a sous la main et la portee que ca donnerait.
+     * Sans eux, on chargeait a l'aveugle et on decouvrait le resultat une fois le
+     * boulet pose -- alors que tout se decide **avant** le tir, en regardant monter
+     * ces trois-la.
      */
     private fun drawLauncherPanel(canvas: Canvas) {
         val wheel = game.config.launcher() ?: return
         val state = game.gears.firstOrNull { it.wheel.id == wheel.id } ?: return
-        val rpm = (state.body.omega * 60f / (2f * PI.toFloat())).roundToInt()
-        val energy = game.rotationalEnergy(game.connectedTo(wheel.id)) / 1000f
+        val energy = game.launcherAvailableEnergy() / 1000f
         val range = game.estimatedRange()
 
         val w = 148f * dp
@@ -1143,9 +1148,24 @@ class GearMachineView @JvmOverloads constructor(
 
         pPanelLabel.textAlign = Paint.Align.LEFT
         pPanelValue.textAlign = Paint.Align.RIGHT
-        if (rpm != shownRpm) {
-            shownRpm = rpm
-            textRpm = String.format(fmtLocale, fmtRpm, rpm)
+        // Un volant se lit en regime : c'est ce qui monte vers son plafond. Un canon,
+        // a l'inverse, cale a mesure que sa pression grimpe -- lui montrer le meme
+        // chiffre en aurait fait un faux signe de panne. La pression dit directement
+        // ce que l'aiguille du reservoir montre deja sur la machine.
+        if (wheel.kind == GearWheelKind.PUMP) {
+            val bar = game.launcherPressure() / 100_000f
+            if (bar != shownPressure) {
+                shownPressure = bar
+                textPressure = String.format(fmtLocale, fmtBar, bar)
+            }
+            labelRow(canvas, 0, left, w, top, rowH, labelPressure, textPressure)
+        } else {
+            val rpm = (state.body.omega * 60f / (2f * PI.toFloat())).roundToInt()
+            if (rpm != shownRpm) {
+                shownRpm = rpm
+                textRpm = String.format(fmtLocale, fmtRpm, rpm)
+            }
+            labelRow(canvas, 0, left, w, top, rowH, labelSpeed, textRpm)
         }
         if (energy != shownEnergy) {
             shownEnergy = energy
@@ -1155,7 +1175,6 @@ class GearMachineView @JvmOverloads constructor(
             shownRange = range
             textRange = String.format(fmtLocale, fmtMetres, range)
         }
-        labelRow(canvas, 0, left, w, top, rowH, labelSpeed, textRpm)
         labelRow(canvas, 1, left, w, top, rowH, labelEnergy, textEnergy)
         labelRow(canvas, 2, left, w, top, rowH, labelRange, textRange)
     }

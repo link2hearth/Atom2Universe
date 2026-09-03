@@ -108,6 +108,30 @@ class GearPumpTest {
         )
     }
 
+    /**
+     * L'estimation d'avant-tir doit ressembler au tir reel. La formule dans le vide
+     * promettait bien plus loin que ce qui arrivait vraiment -- la trainee de l'air
+     * n'y comptait pour rien -- et l'ecart n'avait rien de fixe : il dependait de la
+     * masse du boulet, donc impossible a corriger en la lisant sur l'affichage.
+     */
+    @Test
+    fun `la portee estimee colle a la portee reelle`() {
+        val game = windmillCannon()
+        game.setLaunchAngle(2, 30f)
+        run(game, 1_200f)
+        val estimated = game.estimatedRange()
+        assertTrue(game.launchProjectile())
+        var guard = 0
+        while (game.phase != GearMachineGame.Phase.RESULT && guard++ < 120 * 40) {
+            game.step(1f / 120f)
+        }
+        val real = game.lastShotDistance
+        assertTrue(
+            "estimee $estimated m, reelle $real m",
+            estimated < real * 1.15f && estimated > real * 0.85f
+        )
+    }
+
     @Test
     fun `le canon tire droit dans l axe vise, pas tangentiellement`() {
         val game = windmillCannon()
