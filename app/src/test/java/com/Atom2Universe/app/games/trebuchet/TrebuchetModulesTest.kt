@@ -496,18 +496,13 @@ class TrebuchetModulesTest {
 
     // ── Le catalogue de détails au banc ───────────────────────────────────────
     //
-    // Six pièces neuves, pensées pour habiller un site plutôt que pour en faire un
-    // à elles seules : un mur à fenêtre ou à meurtrière, un escalier, une rambarde,
-    // un puits, un abri. Chacune est **un seul corps plein** — la fenêtre, les
-    // marches, la margelle ne sont qu'une peinture par-dessus ([Decor]), jamais une
-    // vraie géométrie. Le banc vérifie donc deux choses : que le bloc tient
-    // debout comme n'importe quel autre, et qu'il porte le bon [Decor] pour que la
-    // vue sache quoi peindre dessus.
+    // Les ouvertures sont des décors de façade. Les escaliers et petits édifices,
+    // eux, doivent avoir une silhouette composée qui correspond à leur collision.
 
     @Test
     fun `un mur a fenetre tient debout et porte son decor`() {
         val b = Masonry.windowedWall(Material.STONE, 20f, 0f, 6f, 4f)
-        assertEquals(Decor.WINDOW, b.decor)
+        assertEquals(Decor.WINDOW_SHUTTERS, b.decor)
         checkStands("mur à fenêtre", Structure(listOf(b), "mur à fenêtre"))
     }
 
@@ -519,30 +514,57 @@ class TrebuchetModulesTest {
     }
 
     @Test
-    fun `un escalier tient debout et porte son decor`() {
+    fun `les constructions generees emploient vraiment les nouvelles facades`() {
+        val maison = TargetModules.house(Random(31), 20f, 5f, 8f)
+        val panneaux = maison.filter { it.surface == Surface.TIMBER_FRAME || it.surface == Surface.PLANKS }
+        assertTrue("la maison est encore une charpente vide", panneaux.isNotEmpty())
+        assertTrue("la maison n'a pas de porte", panneaux.any { it.decor == Decor.DOOR })
+        assertTrue(
+            "la maison n'a pas de fenêtre",
+            panneaux.any { it.decor == Decor.WINDOW_SHUTTERS || it.decor == Decor.WINDOW_ARCHED }
+        )
+        assertTrue(
+            "le toit de maison est encore dessiné comme deux barres",
+            maison.any { it.silhouette == Silhouette.GABLE_ROOF }
+        )
+
+        val tour = TargetModules.tower(Random(32), 20f, 5f, 14f)
+        assertTrue("la tour n'a aucune ouverture", tour.any { it.decor != Decor.NONE })
+        assertTrue(
+            "la tour n'a pas reçu de parement",
+            tour.any { it.surface in setOf(Surface.BRICK, Surface.FIELDSTONE, Surface.CUT_STONE) }
+        )
+    }
+
+    @Test
+    fun `un escalier tient debout et possede de vraies marches`() {
         val b = Masonry.staircase(Material.STONE, 20f, 0f, 4f, 3f)
-        assertEquals(Decor.STAIRCASE, b.decor)
+        assertEquals(Decor.NONE, b.decor)
+        assertEquals(6, b.parts.size)
         checkStands("escalier", Structure(listOf(b), "escalier"))
     }
 
     @Test
-    fun `une rambarde tient debout et porte son decor`() {
+    fun `une rambarde tient debout et est ajouree`() {
         val b = Masonry.railing(Material.WOOD, 20f, 0f, 4f)
-        assertEquals(Decor.RAILING, b.decor)
+        assertEquals(Decor.NONE, b.decor)
+        assertTrue(b.parts.size > 2)
         checkStands("rambarde", Structure(listOf(b), "rambarde"))
     }
 
     @Test
-    fun `un puits tient debout et porte son decor`() {
+    fun `un puits tient debout et a une vraie silhouette`() {
         val b = TargetModules.well(20f, 0f)
-        assertEquals(Decor.WELL, b.decor)
+        assertEquals(Decor.NONE, b.decor)
+        assertTrue(b.parts.size >= 5)
         checkStands("puits", Structure(listOf(b), "puits"))
     }
 
     @Test
-    fun `un abri tient debout et porte son decor`() {
+    fun `un abri tient debout et a une vraie silhouette`() {
         val b = TargetModules.shelter(20f, 4f, 3.5f)
-        assertEquals(Decor.SHELTER, b.decor)
+        assertEquals(Decor.NONE, b.decor)
+        assertEquals(4, b.parts.size)
         checkStands("abri", Structure(listOf(b), "abri"))
     }
 }

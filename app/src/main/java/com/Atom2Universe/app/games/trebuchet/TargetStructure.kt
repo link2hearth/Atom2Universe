@@ -41,18 +41,35 @@ enum class Role {
     MONUMENT
 }
 
+/** L'habillage de matière, indépendant de la forme et de la résistance du bloc. */
+enum class Surface {
+    /** Choisie d'après [Material] par la vue. */
+    AUTO,
+
+    THATCH, SHINGLES, TILES, SLATE,
+    PLANKS, TIMBER_FRAME,
+    BRICK, FIELDSTONE, CUT_STONE,
+    CARDBOARD
+}
+
 /**
- * Ce qu'on dessine par-dessus le remplissage uni d'un bloc.
+ * Un détail de façade peint sur une **vraie surface porteuse**.
  *
- * Ne change rien à la physique ni à la génération : c'est un signal pour la vue
- * seule, qui sait dessiner une petite scène — fenêtre, meurtrière, escalier —
- * directement sur le rectangle du bloc plutôt que d'avoir à démonter ce
- * rectangle en plusieurs corps pour faire apparaître une silhouette. Un bloc à
- * décor reste **un seul corps** aux yeux du moteur, avec ses points de vie et sa
- * masse habituels ; seule la peinture change. Voir `LandScene.appendDecor`.
+ * Une fenêtre ou une porte appartient bien à un mur rectangulaire. Un escalier,
+ * un puits, un abri ou une toiture n'apparaissent pas ici : leur contour est leur
+ * géométrie et doit donc aussi être leur collision.
  */
 enum class Decor {
-    NONE, WINDOW, ARROW_SLIT, STAIRCASE, RAILING, WELL, SHELTER
+    NONE, WINDOW_SHUTTERS, WINDOW_ARCHED, DOOR, ARROW_SLIT
+}
+
+/** Contour graphique d'un bloc lorsque ses pièces physiques ne suffisent pas à le lire. */
+enum class Silhouette {
+    /** Chaque pièce physique est aussi dessinée telle quelle. */
+    PARTS,
+
+    /** Les deux versants physiques sont habillés comme un pignon triangulaire plein. */
+    GABLE_ROOF
 }
 
 /**
@@ -69,7 +86,9 @@ class Piece(
     val halfH: Float,
     val localX: Float,
     val localY: Float,
-    val localAngle: Float
+    val localAngle: Float,
+    /** Permet à un corps composé d'avoir, par exemple, des murs de pierre et un toit de bois. */
+    val surface: Surface = Surface.AUTO
 ) {
     val radius: Float get() = halfW
 
@@ -103,18 +122,22 @@ class Piece(
 class PieceBuilder internal constructor() {
     internal val pieces = ArrayList<Piece>()
 
-    fun box(halfW: Float, halfH: Float, x: Float = 0f, y: Float = 0f, angle: Float = 0f) {
+    fun box(
+        halfW: Float, halfH: Float,
+        x: Float = 0f, y: Float = 0f, angle: Float = 0f,
+        surface: Surface = Surface.AUTO
+    ) {
         pieces += Piece(
             Shape.BOX,
             halfW.coerceAtLeast(TargetRules.MIN_HALF_THICKNESS),
             halfH.coerceAtLeast(TargetRules.MIN_HALF_THICKNESS),
-            x, y, angle
+            x, y, angle, surface
         )
     }
 
-    fun circle(radius: Float, x: Float = 0f, y: Float = 0f) {
+    fun circle(radius: Float, x: Float = 0f, y: Float = 0f, surface: Surface = Surface.AUTO) {
         val r = radius.coerceAtLeast(TargetRules.MIN_HALF_THICKNESS)
-        pieces += Piece(Shape.CIRCLE, r, r, x, y, 0f)
+        pieces += Piece(Shape.CIRCLE, r, r, x, y, 0f, surface)
     }
 }
 
@@ -140,7 +163,13 @@ class Block private constructor(
     val angle: Float,
     val material: Material,
     val role: Role,
-    val decor: Decor = Decor.NONE
+    val decor: Decor = Decor.NONE,
+    val surface: Surface = Surface.AUTO,
+    /** Sous-pièce qui porte la porte ou la fenêtre d'un corps composé. */
+    val decorPart: Int = 0,
+    val silhouette: Silhouette = Silhouette.PARTS,
+    /** Variante stable choisie par le générateur ; jamais par image. */
+    val visualVariant: Int = 0
 ) {
 
     val area: Float = parts.sumOf { it.area.toDouble() }.toFloat()
@@ -208,11 +237,22 @@ class Block private constructor(
     }
 
     fun translated(dx: Float, dy: Float = 0f): Block =
-        Block(parts, x + dx, y + dy, angle, material, role, decor)
+        Block(parts, x + dx, y + dy, angle, material, role, decor, surface, decorPart, silhouette, visualVariant)
 
     /** La même pierre, posée ailleurs. Sert au tassement, qui réécrit toutes les poses. */
     fun posed(x: Float, y: Float, angle: Float): Block =
-        Block(parts, x, y, angle, material, role, decor)
+        Block(parts, x, y, angle, material, role, decor, surface, decorPart, silhouette, visualVariant)
+
+    /** Change seulement l'habillage : la géométrie, la masse et la pose restent identiques. */
+    fun dressed(
+        decor: Decor = this.decor,
+        surface: Surface = this.surface,
+        decorPart: Int = this.decorPart,
+        visualVariant: Int = this.visualVariant
+    ): Block = Block(
+        parts, x, y, angle, material, role, decor, surface,
+        decorPart.coerceIn(parts.indices), silhouette, visualVariant
+    )
 
     companion object {
 
@@ -231,7 +271,10 @@ class Block private constructor(
                 cy /= total
             }
             val moved = raw.map {
-                Piece(it.shape, it.halfW, it.halfH, it.localX - cx, it.localY - cy, it.localAngle)
+                Piece(
+                    it.shape, it.halfW, it.halfH,
+                    it.localX - cx, it.localY - cy, it.localAngle, it.surface
+                )
             }
             return Triple(moved, cx, cy)
         }
@@ -245,7 +288,11 @@ class Block private constructor(
             halfH: Float,
             angle: Float = 0f,
             role: Role = Role.STRUCTURE,
-            decor: Decor = Decor.NONE
+            decor: Decor = Decor.NONE,
+            surface: Surface = Surface.AUTO,
+            decorPart: Int = 0,
+            silhouette: Silhouette = Silhouette.PARTS,
+            visualVariant: Int = 0
         ): Block = Block(
             listOf(
                 Piece(
@@ -255,7 +302,7 @@ class Block private constructor(
                     0f, 0f, 0f
                 )
             ),
-            cx, cy, angle, material, role, decor
+            cx, cy, angle, material, role, decor, surface, decorPart, silhouette, visualVariant
         )
 
         /** Une pierre posée par son **coin bas-gauche** : c'est ainsi qu'on maçonne. */
@@ -266,26 +313,37 @@ class Block private constructor(
             width: Float,
             height: Float,
             role: Role = Role.STRUCTURE,
-            decor: Decor = Decor.NONE
+            decor: Decor = Decor.NONE,
+            surface: Surface = Surface.AUTO,
+            decorPart: Int = 0,
+            silhouette: Silhouette = Silhouette.PARTS,
+            visualVariant: Int = 0
         ): Block =
-            box(material, left + width / 2f, bottom + height / 2f, width / 2f, height / 2f, 0f, role, decor)
+            box(
+                material, left + width / 2f, bottom + height / 2f,
+                width / 2f, height / 2f, 0f, role, decor, surface,
+                decorPart, silhouette, visualVariant
+            )
 
         fun circle(
             material: Material,
             cx: Float,
             cy: Float,
             radius: Float,
-            role: Role = Role.PROP
+            role: Role = Role.PROP,
+            surface: Surface = Surface.AUTO,
+            visualVariant: Int = 0
         ): Block = Block(
             listOf(
                 Piece(
                     Shape.CIRCLE,
                     radius.coerceAtLeast(TargetRules.MIN_HALF_THICKNESS),
                     radius.coerceAtLeast(TargetRules.MIN_HALF_THICKNESS),
-                    0f, 0f, 0f
+                    0f, 0f, 0f, surface
                 )
             ),
-            cx, cy, 0f, material, role
+            cx, cy, 0f, material, role,
+            surface = surface, visualVariant = visualVariant
         )
 
         /**
@@ -299,6 +357,11 @@ class Block private constructor(
             cy: Float,
             angle: Float = 0f,
             role: Role = Role.STRUCTURE,
+            decor: Decor = Decor.NONE,
+            surface: Surface = Surface.AUTO,
+            decorPart: Int = 0,
+            silhouette: Silhouette = Silhouette.PARTS,
+            visualVariant: Int = 0,
             build: PieceBuilder.() -> Unit
         ): Block {
             val b = PieceBuilder().apply(build)
@@ -309,7 +372,11 @@ class Block private constructor(
             // atterrisse bien en (cx, cy).
             val c = cos(angle)
             val s = sin(angle)
-            return Block(moved, cx + ox * c - oy * s, cy + ox * s + oy * c, angle, material, role)
+            return Block(
+                moved, cx + ox * c - oy * s, cy + ox * s + oy * c,
+                angle, material, role, decor, surface,
+                decorPart.coerceIn(moved.indices), silhouette, visualVariant
+            )
         }
     }
 }

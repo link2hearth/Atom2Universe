@@ -34,6 +34,24 @@ class TrebuchetApercuTest {
         Material.CARDBOARD -> "#D9B26A"
     }
 
+    /** Palette des surfaces : l'aperçu garde ainsi la matière des blocs composés. */
+    private fun couleur(b: Block, p: Piece): String {
+        val s = if (p.surface != Surface.AUTO) p.surface else b.surface
+        return when (s) {
+            Surface.THATCH -> "#C9A84C"
+            Surface.SHINGLES -> "#81522F"
+            Surface.TILES -> "#B85C3D"
+            Surface.SLATE -> "#58636E"
+            Surface.PLANKS -> "#8B5E3C"
+            Surface.TIMBER_FRAME -> "#C6A879"
+            Surface.BRICK -> "#A94F37"
+            Surface.FIELDSTONE -> "#92999C"
+            Surface.CUT_STONE -> "#A4A9AA"
+            Surface.CARDBOARD -> "#D9B26A"
+            Surface.AUTO -> couleur(b.material)
+        }
+    }
+
     private fun svg(lvl: TargetLevel, file: File) {
         val marge = 25f
         val x0 = lvl.structure.left - 90f
@@ -64,27 +82,7 @@ class TrebuchetApercuTest {
         sb.append("""<polygon points="$pts" fill="#1B2A1E" stroke="#4E7A3A" stroke-width="2"/>""")
 
         for (b in lvl.structure.blocks) {
-            val c = couleur(b.material)
-            for (p in b.parts) {
-                val ca = cos(b.angle)
-                val sa = sin(b.angle)
-                val cx = b.x + p.localX * ca - p.localY * sa
-                val cy = b.y + p.localX * sa + p.localY * ca
-                if (p.shape == Shape.CIRCLE) {
-                    sb.append(
-                        """<circle cx="${px(cx)}" cy="${py(cy)}" r="${p.radius * ech}" """ +
-                            """fill="$c" stroke="#0008" stroke-width="1"/>"""
-                    )
-                } else {
-                    val deg = -(b.angle + p.localAngle) * 180f / Math.PI.toFloat()
-                    sb.append(
-                        """<g transform="translate(${px(cx)},${py(cy)}) rotate($deg)">""" +
-                            """<rect x="${-p.halfW * ech}" y="${-p.halfH * ech}" """ +
-                            """width="${2 * p.halfW * ech}" height="${2 * p.halfH * ech}" """ +
-                            """fill="$c" stroke="#0009" stroke-width="1"/></g>"""
-                    )
-                }
-            }
+            appendBlockSvg(sb, b, ::px, ::py, ech, 1f)
             appendDecorSvg(sb, b, ::px, ::py)
         }
         sb.append(
@@ -94,6 +92,73 @@ class TrebuchetApercuTest {
         )
         sb.append("</svg>")
         file.writeText(sb.toString())
+    }
+
+    /** Dessine le même contour que le jeu, notamment le triangle plein des toitures. */
+    private fun appendBlockSvg(
+        sb: StringBuilder,
+        b: Block,
+        px: (Float) -> Float,
+        py: (Float) -> Float,
+        scale: Float,
+        strokeWidth: Float
+    ) {
+        if (b.silhouette == Silhouette.GABLE_ROOF) {
+            val vertices = ArrayList<Pair<Float, Float>>()
+            for (p in b.parts) {
+                if (p.shape != Shape.BOX) continue
+                val c = cos(p.localAngle)
+                val s = sin(p.localAngle)
+                for ((dx, dy) in arrayOf(
+                    -p.halfW to -p.halfH, p.halfW to -p.halfH,
+                    p.halfW to p.halfH, -p.halfW to p.halfH
+                )) {
+                    vertices += (p.localX + dx * c - dy * s) to (p.localY + dx * s + dy * c)
+                }
+            }
+            if (vertices.isEmpty()) return
+            val minX = vertices.minOf { it.first }
+            val maxX = vertices.maxOf { it.first }
+            val minY = vertices.minOf { it.second }
+            val maxY = vertices.maxOf { it.second }
+            val tolerance = (maxY - minY) * 0.08f
+            val apexX = vertices.filter { maxY - it.second <= tolerance }.map { it.first }.average().toFloat()
+            val ca = cos(b.angle)
+            val sa = sin(b.angle)
+            fun screen(x: Float, y: Float): String {
+                val wx = b.x + x * ca - y * sa
+                val wy = b.y + x * sa + y * ca
+                return "${px(wx)},${py(wy)}"
+            }
+            val points = listOf(screen(minX, minY), screen(apexX, maxY), screen(maxX, minY)).joinToString(" ")
+            sb.append(
+                """<polygon points="$points" fill="${couleur(b, b.parts.first())}" """ +
+                    """stroke="#0009" stroke-width="$strokeWidth"/>"""
+            )
+            return
+        }
+
+        for (p in b.parts) {
+            val color = couleur(b, p)
+            val ca = cos(b.angle)
+            val sa = sin(b.angle)
+            val cx = b.x + p.localX * ca - p.localY * sa
+            val cy = b.y + p.localX * sa + p.localY * ca
+            if (p.shape == Shape.CIRCLE) {
+                sb.append(
+                    """<circle cx="${px(cx)}" cy="${py(cy)}" r="${p.radius * scale}" """ +
+                        """fill="$color" stroke="#0009" stroke-width="$strokeWidth"/>"""
+                )
+            } else {
+                val deg = -(b.angle + p.localAngle) * 180f / Math.PI.toFloat()
+                sb.append(
+                    """<g transform="translate(${px(cx)},${py(cy)}) rotate($deg)">""" +
+                        """<rect x="${-p.halfW * scale}" y="${-p.halfH * scale}" """ +
+                        """width="${2f * p.halfW * scale}" height="${2f * p.halfH * scale}" """ +
+                        """fill="$color" stroke="#0009" stroke-width="$strokeWidth"/></g>"""
+                )
+            }
+        }
     }
 
     /**
@@ -107,14 +172,27 @@ class TrebuchetApercuTest {
      */
     private fun appendDecorSvg(sb: StringBuilder, b: Block, px: (Float) -> Float, py: (Float) -> Float) {
         if (b.decor == Decor.NONE) return
-        val p = b.parts[0]
-        val hw = p.halfW
-        val hh = p.halfH
+        var minX = Float.MAX_VALUE
+        var maxX = -Float.MAX_VALUE
+        var minY = Float.MAX_VALUE
+        var maxY = -Float.MAX_VALUE
+        for (p in b.parts) {
+            if (p.shape != Shape.BOX || kotlin.math.abs(p.localAngle) > 0.001f) continue
+            minX = minOf(minX, p.localX - p.halfW)
+            maxX = maxOf(maxX, p.localX + p.halfW)
+            minY = minOf(minY, p.localY - p.halfH)
+            maxY = maxOf(maxY, p.localY + p.halfH)
+        }
+        if (minX == Float.MAX_VALUE) return
+        val anchorX = (minX + maxX) / 2f
+        val anchorY = (minY + maxY) / 2f
+        val hw = (maxX - minX) / 2f
+        val hh = (maxY - minY) / 2f
         val ca = cos(b.angle)
         val sa = sin(b.angle)
         fun sxy(lx: Float, ly: Float): Pair<Float, Float> {
-            val wx = b.x + lx * ca - ly * sa
-            val wy = b.y + lx * sa + ly * ca
+            val wx = b.x + (anchorX + lx) * ca - (anchorY + ly) * sa
+            val wy = b.y + (anchorX + lx) * sa + (anchorY + ly) * ca
             return px(wx) to py(wy)
         }
         fun line(x0: Float, y0: Float, x1: Float, y1: Float, color: String, w: Float = 2f) {
@@ -130,7 +208,7 @@ class TrebuchetApercuTest {
             sb.append("""<polygon points="$d" fill="$fill" stroke="$stroke" stroke-width="1.5"/>""")
         }
         when (b.decor) {
-            Decor.WINDOW -> {
+            Decor.WINDOW_SHUTTERS -> {
                 val fw = hw * 0.55f
                 val fh = hh * 0.55f
                 poly(
@@ -151,6 +229,36 @@ class TrebuchetApercuTest {
                         line(lx, -fh * 0.9f, lx, fh * 0.9f, "#2A1A0E", 1f)
                     }
                 }
+            }
+
+            Decor.WINDOW_ARCHED -> {
+                val fw = hw * 0.48f
+                val bottom = -hh * 0.62f
+                val shoulder = hh * 0.12f
+                // L'aperçu SVG se contente d'un arc polygonal : le jeu dessine la
+                // même ouverture avec une courbe de Bézier lissée.
+                poly(
+                    listOf(
+                        -fw to bottom, fw to bottom, fw to shoulder,
+                        fw * 0.7f to hh * 0.55f, 0f to hh * 0.78f,
+                        -fw * 0.7f to hh * 0.55f, -fw to shoulder
+                    ),
+                    "#8FC4D8", "#3A2A1A"
+                )
+                line(0f, bottom, 0f, hh * 0.68f, "#3A2A1A", 1.5f)
+                line(-fw, -hh * 0.02f, fw, -hh * 0.02f, "#3A2A1A", 1.5f)
+            }
+
+            Decor.DOOR -> {
+                val dw = hw * 0.58f
+                val bottom = -hh * 0.96f
+                val top = hh * 0.62f
+                poly(listOf(-dw to bottom, dw to bottom, dw to top, -dw to top), "#59371F", "#2D1A0F")
+                for (k in -1..1) {
+                    val x = dw * k / 1.5f
+                    line(x, bottom, x, top, "#2D1A0F", 1f)
+                }
+                line(-dw, -hh * 0.1f, dw, -hh * 0.1f, "#25282A", 2.5f)
             }
 
             Decor.ARROW_SLIT -> {
@@ -175,72 +283,6 @@ class TrebuchetApercuTest {
                     ),
                     "#000"
                 )
-            }
-
-            Decor.STAIRCASE -> {
-                val steps = 6
-                var px0 = -hw * 0.85f
-                var py0 = -hh * 0.85f
-                for (k in 0 until steps) {
-                    val t = (k + 1) / steps.toFloat()
-                    val nx = -hw * 0.85f + t * hw * 1.7f
-                    val ny = -hh * 0.85f + t * hh * 1.7f
-                    line(px0, ny, nx, ny, "#5A5A5A", 3f)
-                    line(nx, py0, nx, ny, "#5A5A5A", 3f)
-                    px0 = nx
-                    py0 = ny
-                }
-                line(-hw * 0.85f, -hh * 0.7f, hw * 0.85f, hh * 1f, "#8A8A8A", 1.5f)
-                for (k in 0..steps) {
-                    val t = k / steps.toFloat()
-                    val bx = -hw * 0.85f + t * hw * 1.7f
-                    val by = -hh * 0.7f + t * hh * 1.7f
-                    line(bx, by, bx, by + hh * 0.3f, "#8A8A8A", 1.5f)
-                }
-            }
-
-            Decor.RAILING -> {
-                val top = hh * 0.6f
-                val bottom = -hh * 0.6f
-                line(-hw * 0.92f, top, hw * 0.92f, top, "#241608", 3f)
-                line(-hw * 0.92f, bottom, hw * 0.92f, bottom, "#241608", 2f)
-                val posts = 7
-                for (k in 0..posts) {
-                    val x = -hw * 0.92f + hw * 1.84f * k / posts
-                    line(x, bottom, x, top, "#241608", 2f)
-                }
-            }
-
-            Decor.WELL -> {
-                val rimY = -hh * 0.35f
-                val rimR = hh * 0.5f
-                sb.append(
-                    run {
-                        val (cx, cy) = sxy(0f, rimY)
-                        """<circle cx="$cx" cy="$cy" r="${rimR * (px(1f) - px(0f))}" """ +
-                            """fill="#8B8B93" stroke="#3A3A40" stroke-width="2"/>"""
-                    }
-                )
-                val postY0 = rimY + rimR * 0.4f
-                val postY1 = hh * 0.35f
-                line(-hw * 0.5f, postY0, -hw * 0.5f, postY1, "#4A3A28", 2.5f)
-                line(hw * 0.5f, postY0, hw * 0.5f, postY1, "#4A3A28", 2.5f)
-                poly(
-                    listOf(-hw * 0.75f to postY1, hw * 0.75f to postY1, 0f to hh * 0.95f),
-                    "#7A4A2A", "#3A2313"
-                )
-                line(0f, rimY + rimR * 0.3f, 0f, rimY, "#2A2A2A", 1.2f)
-            }
-
-            Decor.SHELTER -> {
-                val eaveY = hh * 0.3f
-                poly(
-                    listOf(-hw * 0.95f to eaveY, hw * 0.95f to eaveY, 0f to hh * 0.95f),
-                    "#A85A3A", "#241608"
-                )
-                line(-hw * 0.95f, eaveY, hw * 0.95f, eaveY, "#241608", 2f)
-                line(-hw * 0.6f, -hh * 0.9f, -hw * 0.6f, eaveY, "#241608", 4f)
-                line(hw * 0.6f, -hh * 0.9f, hw * 0.6f, eaveY, "#241608", 4f)
             }
 
             Decor.NONE -> Unit
@@ -284,10 +326,11 @@ class TrebuchetApercuTest {
 
     /** Une pièce seule, en gros plan, pour juger un décor sans avoir à zoomer. */
     private fun closeup(b: Block, file: File) {
-        val p = b.parts[0]
-        val margin = maxOf(p.halfW, p.halfH) * 0.6f
-        val w = 2f * p.halfW + 2f * margin
-        val h = 2f * p.halfH + 2f * margin
+        val span = b.halfSpan()
+        val halfH = maxOf(b.top() - b.y, b.y - b.bottom())
+        val margin = maxOf(span, halfH) * 0.35f
+        val w = 2f * span + 2f * margin
+        val h = 2f * halfH + 2f * margin
         val ech = 500f / maxOf(w, h)
         fun px(x: Float) = (x - b.x + w / 2f) * ech
         fun py(y: Float) = (h / 2f - (y - b.y)) * ech
@@ -297,12 +340,7 @@ class TrebuchetApercuTest {
                 """height="${(h * ech).toInt()}" viewBox="0 0 ${w * ech} ${h * ech}">"""
         )
         sb.append("""<rect width="100%" height="100%" fill="#3a4a3a"/>""")
-        val c = couleur(b.material)
-        sb.append(
-            """<rect x="${px(b.x - p.halfW)}" y="${py(b.y + p.halfH)}" """ +
-                """width="${2f * p.halfW * ech}" height="${2f * p.halfH * ech}" """ +
-                """fill="$c" stroke="#0009" stroke-width="2"/>"""
-        )
+        appendBlockSvg(sb, b, ::px, ::py, ech, 2f)
         appendDecorSvg(sb, b, ::px, ::py)
         sb.append("</svg>")
         file.writeText(sb.toString())

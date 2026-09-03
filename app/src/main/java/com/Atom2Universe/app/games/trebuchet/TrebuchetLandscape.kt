@@ -63,6 +63,7 @@ class LandScene(context: Context) {
 
     /** Deux brouillons de geometrie, pour ne pas allouer a chaque pierre dessinee. */
     private val partPose = FloatArray(3)
+    private val gablePose = FloatArray(5)
     private val corners = FloatArray(8)
 
     private fun sx(x: Float) = (x - camX) * camScale + viewW / 2f
@@ -99,7 +100,8 @@ class LandScene(context: Context) {
         "#8B5E3C".toColorInt(), // bois
         "#9AA3AB".toColorInt(), // pierre
         "#D3B076".toColorInt(), // grès
-        "#54606B".toColorInt()  // fer
+        "#54606B".toColorInt(), // fer
+        "#D9B26A".toColorInt()  // carton
     ).map { c -> Paint(Paint.ANTI_ALIAS_FLAG).apply { color = c } }
 
     private val targetEdges = intArrayOf(
@@ -110,7 +112,8 @@ class LandScene(context: Context) {
         "#5F3F28".toColorInt(),
         "#6E767D".toColorInt(),
         "#A8874F".toColorInt(),
-        "#39424A".toColorInt()
+        "#39424A".toColorInt(),
+        "#A77C3F".toColorInt()
     ).map { c ->
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = c
@@ -160,10 +163,19 @@ class LandScene(context: Context) {
      * plus qu'une poignée de blocs décorés sur un site — rien à voir avec les cent
      * trente corps que [targetFills] doit tenir en deux tracés.
      */
-    private val pDecorFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
-    private val pDecorLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val pDecorFill = Paint().apply { style = Paint.Style.FILL }
+    private val pDecorLine = Paint().apply {
         style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
+        strokeCap = Paint.Cap.SQUARE
+    }
+    private val pSurfaceFill = Paint().apply { style = Paint.Style.FILL }
+    private val pSurfaceDark = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.SQUARE
+    }
+    private val pSurfaceLight = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.SQUARE
     }
     private val decorPath = Path()
 
@@ -191,6 +203,7 @@ class LandScene(context: Context) {
             add(pGround); add(pGrass); add(pCrack)
             addAll(targetFills); addAll(targetEdges)
             add(pDecorFill); add(pDecorLine)
+            add(pSurfaceFill); add(pSurfaceDark); add(pSurfaceLight)
             // La végétation s'éteint avec le jour comme le reste du sol. Les oiseaux
             // et les fuyards, eux, restent des silhouettes nues : une teinte de nuit
             // sur un contour déjà sombre ne changerait rien qu'on puisse voir.
@@ -434,7 +447,11 @@ class LandScene(context: Context) {
             if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
             val i = p.material.ordinal
             val path = targetPaths[i]
-            for (k in b.parts.indices) appendPart(path, b, k)
+            if (p.block.silhouette == Silhouette.GABLE_ROOF) {
+                appendGable(path, p)
+            } else {
+                for (k in b.parts.indices) appendPart(path, b, k)
+            }
             targetUsed[i] = true
             if (p.crackLevel > 0) {
                 appendCracks(crackPath, b, p.crackLevel)
@@ -445,6 +462,16 @@ class LandScene(context: Context) {
         for (i in targetPaths.indices) {
             if (!targetUsed[i]) continue
             canvas.drawPath(targetPaths[i], targetFills[i])
+        }
+        // Les matières sont peintes dans le repère de chaque pierre : les tuiles et
+        // les planches suivent donc un toit qui tombe au lieu de glisser à sa surface.
+        for (p in field.pieces) {
+            val b = p.body
+            if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
+            drawSurface(canvas, p)
+        }
+        for (i in targetPaths.indices) {
+            if (!targetUsed[i]) continue
             canvas.drawPath(targetPaths[i], targetEdges[i])
         }
         // Le décor peint par-dessus, après le remplissage et avant les fêlures : une
@@ -460,28 +487,262 @@ class LandScene(context: Context) {
 
     }
 
-    /**
-     * Une petite scène peinte sur le rectangle d'un bloc à [Decor] : fenêtre,
-     * meurtrière, escalier, rambarde, puits, abri.
-     *
-     * **C'est de la peinture, pas de la géométrie.** Le bloc reste un seul corps
-     * plein aux yeux du moteur ; tout ce qui suit ne fait que dessiner par-dessus
-     * son rectangle, dans son propre repère local (X à droite, Y vers le haut,
-     * comme partout ailleurs dans la génération) avant de le tourner et de le
-     * poser à l'écran — exactement la même transformation que [appendPart] fait
-     * pour une boîte, appliquée ici à des traits plutôt qu'à un seul rectangle.
-     */
+    /** Peint les joints, fibres et rangées qui font lire la matière au premier coup d'œil. */
+    private fun drawSurface(canvas: Canvas, piece: TargetPiece) {
+        if (piece.block.silhouette == Silhouette.GABLE_ROOF) {
+            drawGableSurface(canvas, piece)
+            return
+        }
+        val body = piece.body
+        for (i in body.parts.indices) {
+            val part = body.parts[i]
+            val partSurface = piece.block.parts.getOrNull(i)?.surface ?: Surface.AUTO
+            val requested = if (partSurface != Surface.AUTO) partSurface else piece.surface
+            val surface = if (requested != Surface.AUTO) requested else when (piece.material) {
+                Material.THATCH -> Surface.THATCH
+                Material.WOOD -> Surface.PLANKS
+                Material.STONE -> Surface.FIELDSTONE
+                Material.SANDSTONE -> Surface.CUT_STONE
+                Material.CARDBOARD -> Surface.CARDBOARD
+                else -> Surface.AUTO
+            }
+            body.partWorld(i, partPose)
+            val hw = part.halfW * camScale
+            val hh = part.halfH * camScale
+            if (minOf(hw, hh) < 2.2f * dp) continue
+
+            canvas.save()
+            canvas.translate(sx(partPose[0]), sy(partPose[1]))
+            canvas.rotate(-partPose[2] * 180f / kotlin.math.PI.toFloat())
+            decorPath.reset()
+            if (part.shape == Shape.CIRCLE) {
+                decorPath.addCircle(0f, 0f, hw, Path.Direction.CW)
+            } else {
+                decorPath.addRect(-hw, -hh, hw, hh, Path.Direction.CW)
+            }
+            canvas.clipPath(decorPath)
+
+            val colors = when (surface) {
+                Surface.THATCH -> intArrayOf(0xFFC9A84C.toInt(), 0xFF806329.toInt(), 0xFFE1C66E.toInt())
+                Surface.SHINGLES -> intArrayOf(0xFF81522F.toInt(), 0xFF4D2D19.toInt(), 0xFFB27A48.toInt())
+                Surface.TILES -> intArrayOf(0xFFB85C3D.toInt(), 0xFF713323.toInt(), 0xFFD9845E.toInt())
+                Surface.SLATE -> intArrayOf(0xFF58636E.toInt(), 0xFF303943.toInt(), 0xFF89949E.toInt())
+                Surface.PLANKS -> intArrayOf(0xFF8B5E3C.toInt(), 0xFF50331F.toInt(), 0xFFC08A58.toInt())
+                Surface.TIMBER_FRAME -> intArrayOf(0xFFC6A879.toInt(), 0xFF4B2D19.toInt(), 0xFFE0C99E.toInt())
+                Surface.BRICK -> intArrayOf(0xFFA94F37.toInt(), 0xFF663426.toInt(), 0xFFD07A5B.toInt())
+                Surface.FIELDSTONE -> intArrayOf(0xFF92999C.toInt(), 0xFF596064.toInt(), 0xFFC0C3BE.toInt())
+                Surface.CUT_STONE -> intArrayOf(0xFFA4A9AA.toInt(), 0xFF666D70.toInt(), 0xFFCED0CB.toInt())
+                Surface.CARDBOARD -> intArrayOf(0xFFD9B26A.toInt(), 0xFF9B7139.toInt(), 0xFFF0D18C.toInt())
+                Surface.AUTO -> when (piece.material) {
+                    Material.ICE -> intArrayOf(0xFFA8D8E8.toInt(), 0xFF6EAABD.toInt(), 0xFFD9F4FA.toInt())
+                    Material.COB -> intArrayOf(0xFFB8916A.toInt(), 0xFF806044.toInt(), 0xFFD4B38C.toInt())
+                    Material.EARTH -> intArrayOf(0xFF7A6247.toInt(), 0xFF4E3C2C.toInt(), 0xFFA48A69.toInt())
+                    Material.IRON -> intArrayOf(0xFF54606B.toInt(), 0xFF303942.toInt(), 0xFF87939D.toInt())
+                    else -> intArrayOf(targetFills[piece.material.ordinal].color, targetEdges[piece.material.ordinal].color, Color.WHITE)
+                }
+            }
+            pSurfaceFill.color = colors[0]
+            canvas.drawPath(decorPath, pSurfaceFill)
+            pSurfaceDark.color = colors[1]
+            pSurfaceDark.strokeWidth = maxOf(0.8f * dp, minOf(hw, hh) * 0.055f)
+            pSurfaceLight.color = colors[2]
+            pSurfaceLight.strokeWidth = maxOf(0.55f * dp, pSurfaceDark.strokeWidth * 0.55f)
+
+            when (surface) {
+                Surface.THATCH -> {
+                    val gap = maxOf(3f * dp, hh / 4f)
+                    var y = -hh + gap
+                    while (y < hh) {
+                        canvas.drawLine(-hw, y, hw, y + gap * 0.18f, pSurfaceDark)
+                        y += gap
+                    }
+                    val strands = (hw / (5f * dp)).toInt().coerceIn(2, 14)
+                    for (k in 0..strands) {
+                        val x = -hw + 2f * hw * k / strands
+                        canvas.drawLine(x, -hh, x + ((k + piece.visualVariant) % 3 - 1) * dp, hh, pSurfaceLight)
+                    }
+                }
+                Surface.SHINGLES, Surface.TILES, Surface.SLATE -> {
+                    val rows = 3
+                    for (row in 1 until rows) {
+                        val y = -hh + 2f * hh * row / rows
+                        canvas.drawLine(-hw, y, hw, y, pSurfaceDark)
+                    }
+                    val cell = maxOf(7f * dp, hw / 5f)
+                    for (row in 0 until rows) {
+                        val y0 = -hh + 2f * hh * row / rows
+                        val y1 = -hh + 2f * hh * (row + 1) / rows
+                        var x = -hw + if ((row + piece.visualVariant) % 2 == 0) 0f else cell / 2f
+                        while (x < hw) {
+                            canvas.drawLine(x, y0, x, y1, pSurfaceDark)
+                            x += cell
+                        }
+                        canvas.drawLine(-hw, y0 + pSurfaceLight.strokeWidth, hw, y0 + pSurfaceLight.strokeWidth, pSurfaceLight)
+                    }
+                }
+                Surface.PLANKS -> {
+                    val alongX = hw >= hh
+                    val count = ((if (alongX) hh else hw) / (7f * dp)).toInt().coerceIn(2, 8)
+                    for (k in 1 until count) {
+                        val t = k / count.toFloat()
+                        if (alongX) {
+                            val y = -hh + 2f * hh * t
+                            canvas.drawLine(-hw, y, hw, y, pSurfaceDark)
+                            canvas.drawLine(-hw, y + dp, hw, y + dp, pSurfaceLight)
+                        } else {
+                            val x = -hw + 2f * hw * t
+                            canvas.drawLine(x, -hh, x, hh, pSurfaceDark)
+                            canvas.drawLine(x + dp, -hh, x + dp, hh, pSurfaceLight)
+                        }
+                    }
+                }
+                Surface.TIMBER_FRAME -> {
+                    pSurfaceDark.strokeWidth = maxOf(2f * dp, minOf(hw, hh) * 0.13f)
+                    canvas.drawRect(-hw, -hh, hw, hh, pSurfaceDark)
+                    canvas.drawLine(-hw, -hh, hw, hh, pSurfaceDark)
+                    canvas.drawLine(hw, -hh, -hw, hh, pSurfaceDark)
+                    canvas.drawLine(-hw, 0f, hw, 0f, pSurfaceDark)
+                }
+                Surface.BRICK, Surface.FIELDSTONE, Surface.CUT_STONE -> {
+                    val rows = (hh / (7f * dp)).toInt().coerceIn(2, 7)
+                    val cell = maxOf(10f * dp, hw / 3.5f)
+                    for (row in 1 until rows) {
+                        val y = -hh + 2f * hh * row / rows
+                        canvas.drawLine(-hw, y, hw, y, pSurfaceDark)
+                    }
+                    for (row in 0 until rows) {
+                        val y0 = -hh + 2f * hh * row / rows
+                        val y1 = -hh + 2f * hh * (row + 1) / rows
+                        var x = -hw + if ((row + piece.visualVariant) % 2 == 0) cell / 2f else cell
+                        while (x < hw) {
+                            val wobble = if (surface == Surface.FIELDSTONE) ((row + x.toInt()) % 3 - 1) * dp else 0f
+                            canvas.drawLine(x + wobble, y0, x - wobble, y1, pSurfaceDark)
+                            x += cell
+                        }
+                    }
+                }
+                Surface.CARDBOARD -> {
+                    canvas.drawRect(-hw + 2f * dp, -hh + 2f * dp, hw - 2f * dp, hh - 2f * dp, pSurfaceDark)
+                    canvas.drawLine(-hw, 0f, hw, 0f, pSurfaceLight)
+                }
+                Surface.AUTO -> {
+                    when (piece.material) {
+                        Material.ICE -> canvas.drawLine(-hw * 0.75f, hh * 0.55f, hw * 0.55f, -hh * 0.7f, pSurfaceLight)
+                        Material.COB, Material.EARTH -> {
+                            canvas.drawLine(-hw, -hh * 0.35f, hw, -hh * 0.18f, pSurfaceDark)
+                            canvas.drawLine(-hw, hh * 0.42f, hw, hh * 0.28f, pSurfaceLight)
+                        }
+                        Material.IRON -> {
+                            canvas.drawCircle(-hw * 0.72f, -hh * 0.65f, 1.4f * dp, pSurfaceDark)
+                            canvas.drawCircle(hw * 0.72f, hh * 0.65f, 1.4f * dp, pSurfaceDark)
+                        }
+                        else -> Unit
+                    }
+                }
+            }
+            canvas.restore()
+        }
+    }
+
+    /** Un vrai pignon pixel-art par-dessus les deux versants qui assurent la collision. */
+    private fun drawGableSurface(canvas: Canvas, piece: TargetPiece) {
+        val b = piece.body
+        if (!gableBounds(piece.block, gablePose)) return
+        val bounds = gablePose
+        val minX = bounds[0] * camScale
+        val maxX = bounds[1] * camScale
+        val bottom = -bounds[2] * camScale
+        val apex = -bounds[3] * camScale
+        val apexX = bounds[4] * camScale
+        if (maxX - minX < 5f * dp || bottom - apex < 4f * dp) return
+
+        val surface = if (piece.surface != Surface.AUTO) piece.surface else when (piece.material) {
+            Material.THATCH -> Surface.THATCH
+            Material.STONE -> Surface.SLATE
+            Material.SANDSTONE -> Surface.TILES
+            else -> Surface.SHINGLES
+        }
+        val colors = when (surface) {
+            Surface.THATCH -> intArrayOf(0xFFC9A84C.toInt(), 0xFF806329.toInt(), 0xFFE1C66E.toInt())
+            Surface.TILES -> intArrayOf(0xFFB85C3D.toInt(), 0xFF713323.toInt(), 0xFFD9845E.toInt())
+            Surface.SLATE -> intArrayOf(0xFF58636E.toInt(), 0xFF303943.toInt(), 0xFF89949E.toInt())
+            else -> intArrayOf(0xFF81522F.toInt(), 0xFF4D2D19.toInt(), 0xFFB27A48.toInt())
+        }
+
+        canvas.save()
+        canvas.translate(sx(b.x), sy(b.y))
+        canvas.rotate(-b.angle * 180f / kotlin.math.PI.toFloat())
+        decorPath.reset()
+        decorPath.moveTo(minX, bottom)
+        decorPath.lineTo(apexX, apex)
+        decorPath.lineTo(maxX, bottom)
+        decorPath.close()
+        canvas.clipPath(decorPath)
+        pSurfaceFill.color = colors[0]
+        canvas.drawPath(decorPath, pSurfaceFill)
+        pSurfaceDark.color = colors[1]
+        pSurfaceDark.strokeWidth = maxOf(dp, 1.5f * dp)
+        pSurfaceLight.color = colors[2]
+        pSurfaceLight.strokeWidth = dp
+
+        val row = maxOf(5f * dp, (bottom - apex) / 5f)
+        var y = apex + row
+        var rowIndex = 0
+        while (y < bottom) {
+            canvas.drawLine(minX, y, maxX, y, pSurfaceDark)
+            if (surface == Surface.THATCH) {
+                val strand = maxOf(6f * dp, (maxX - minX) / 9f)
+                var x = minX + (rowIndex % 2) * strand / 2f
+                while (x < maxX) {
+                    canvas.drawLine(x, y - row, x + ((rowIndex + piece.visualVariant) % 3 - 1) * dp, y, pSurfaceLight)
+                    x += strand
+                }
+            } else {
+                val cell = maxOf(8f * dp, (maxX - minX) / 7f)
+                var x = minX + if ((rowIndex + piece.visualVariant) % 2 == 0) 0f else cell / 2f
+                while (x < maxX) {
+                    canvas.drawLine(x, y - row, x, y, pSurfaceDark)
+                    x += cell
+                }
+                canvas.drawLine(minX, y + dp, maxX, y + dp, pSurfaceLight)
+            }
+            y += row
+            rowIndex++
+        }
+        // Faîtage épais et clair : même réduit, le toit reste immédiatement lisible.
+        canvas.drawLine(apexX, apex, minX, bottom, pSurfaceLight)
+        canvas.drawLine(apexX, apex, maxX, bottom, pSurfaceLight)
+        canvas.restore()
+    }
+
+    /** Les ouvertures restent des détails de façade ; toutes les autres formes sont physiques. */
     private fun appendDecor(canvas: Canvas, piece: TargetPiece) {
         val b = piece.body
-        val part = b.parts.getOrNull(0) ?: return
+        val part = b.parts.getOrNull(piece.block.decorPart) ?: return
         if (part.shape == Shape.CIRCLE) return
-        val hw = part.halfW
-        val hh = part.halfH
+        // Une façade composée de plusieurs assises reçoit une seule baie cadrée sur
+        // leur enveloppe commune, pas une petite fenêtre écrasée sur l'assise n° 0.
+        var minX = Float.MAX_VALUE
+        var maxX = -Float.MAX_VALUE
+        var minY = Float.MAX_VALUE
+        var maxY = -Float.MAX_VALUE
+        for (p in piece.block.parts) {
+            if (p.shape != Shape.BOX || kotlin.math.abs(p.localAngle) > 0.001f) continue
+            minX = minOf(minX, p.localX - p.halfW)
+            maxX = maxOf(maxX, p.localX + p.halfW)
+            minY = minOf(minY, p.localY - p.halfH)
+            maxY = maxOf(maxY, p.localY + p.halfH)
+        }
+        if (minX == Float.MAX_VALUE) return
+        val anchorX = (minX + maxX) / 2f
+        val anchorY = (minY + maxY) / 2f
+        val hw = (maxX - minX) / 2f
+        val hh = (maxY - minY) / 2f
         if (hw * camScale < 4f * dp || hh * camScale < 4f * dp) return
         val ca = cos(b.angle)
         val sa = sin(b.angle)
-        fun sxd(lx: Float, ly: Float) = sx(b.x + lx * ca - ly * sa)
-        fun syd(lx: Float, ly: Float) = sy(b.y + lx * sa + ly * ca)
+        fun sxd(lx: Float, ly: Float) = sx(b.x + (anchorX + lx) * ca - (anchorY + ly) * sa)
+        fun syd(lx: Float, ly: Float) = sy(b.y + (anchorX + lx) * sa + (anchorY + ly) * ca)
         fun line(x0: Float, y0: Float, x1: Float, y1: Float, color: Int, width: Float) {
             pDecorLine.color = color
             pDecorLine.strokeWidth = width * dp
@@ -498,9 +759,9 @@ class LandScene(context: Context) {
             canvas.drawPath(decorPath, pDecorFill)
         }
         when (piece.decor) {
-            Decor.WINDOW -> {
-                val fw = hw * 0.55f
-                val fh = hh * 0.55f
+            Decor.WINDOW_SHUTTERS -> {
+                val fw = minOf(hw * 0.55f, TargetRules.detail(0.62f))
+                val fh = minOf(hh * 0.55f, TargetRules.detail(0.62f))
                 poly(listOf(-fw to -fh, fw to -fh, fw to fh, -fw to fh), "#BFE0EE".toColorInt())
                 line(0f, -fh, 0f, fh, "#3A2A1A".toColorInt(), 1.2f)
                 line(-fw, 0f, fw, 0f, "#3A2A1A".toColorInt(), 1.2f)
@@ -515,85 +776,55 @@ class LandScene(context: Context) {
                 }
             }
 
+            Decor.WINDOW_ARCHED -> {
+                val fw = minOf(hw * 0.48f, TargetRules.detail(0.58f))
+                val fh = minOf(hh * 0.68f, TargetRules.detail(0.78f))
+                val bottom = -fh
+                val shoulder = fh * 0.15f
+                pDecorFill.color = "#8FC4D8".toColorInt()
+                decorPath.reset()
+                decorPath.moveTo(sxd(-fw, bottom), syd(-fw, bottom))
+                decorPath.lineTo(sxd(-fw, shoulder), syd(-fw, shoulder))
+                decorPath.quadTo(sxd(0f, fh), syd(0f, fh), sxd(fw, shoulder), syd(fw, shoulder))
+                decorPath.lineTo(sxd(fw, bottom), syd(fw, bottom))
+                decorPath.close()
+                canvas.drawPath(decorPath, pDecorFill)
+                line(0f, bottom, 0f, fh * 0.78f, "#3A2A1A".toColorInt(), 1.2f)
+                line(-fw, 0f, fw, 0f, "#3A2A1A".toColorInt(), 1.2f)
+            }
+
+            Decor.DOOR -> {
+                val dw = minOf(hw * 0.58f, TargetRules.detail(0.62f))
+                val bottom = -hh * 0.96f
+                val top = minOf(hh * 0.62f, bottom + TargetRules.detail(2.05f))
+                poly(listOf(-dw to bottom, dw to bottom, dw to top, -dw to top), "#59371F".toColorInt())
+                for (k in -1..1) {
+                    val x = dw * k / 1.5f
+                    line(x, bottom, x, top, "#2D1A0F".toColorInt(), 1f)
+                }
+                line(-dw, -hh * 0.1f, dw, -hh * 0.1f, "#25282A".toColorInt(), 2.2f)
+                pDecorFill.color = "#C89B45".toColorInt()
+                canvas.drawCircle(sxd(dw * 0.62f, -hh * 0.12f), syd(dw * 0.62f, -hh * 0.12f), 2f * dp, pDecorFill)
+            }
+
             Decor.ARROW_SLIT -> {
+                val slitW = minOf(hw * 0.18f, TargetRules.detail(0.14f))
+                val slitH = minOf(hh * 0.68f, TargetRules.detail(0.58f))
+                val crossW = minOf(hw * 0.36f, TargetRules.detail(0.34f))
                 poly(
                     listOf(
-                        -hw * 0.28f to -hh * 0.7f, hw * 0.28f to -hh * 0.7f,
-                        hw * 0.28f to hh * 0.7f, -hw * 0.28f to hh * 0.7f
+                        -slitW to -slitH, slitW to -slitH,
+                        slitW to slitH, -slitW to slitH
                     ),
                     "#0B0B0B".toColorInt()
                 )
                 poly(
                     listOf(
-                        -hw * 0.22f to hh * 0.05f, hw * 0.22f to hh * 0.05f,
-                        hw * 0.22f to hh * 0.18f, -hw * 0.22f to hh * 0.18f
+                        -crossW to slitH * 0.05f, crossW to slitH * 0.05f,
+                        crossW to slitH * 0.2f, -crossW to slitH * 0.2f
                     ),
                     "#000000".toColorInt()
                 )
-            }
-
-            Decor.STAIRCASE -> {
-                val steps = 6
-                var lastX = -hw * 0.85f
-                var lastY = -hh * 0.85f
-                for (k in 0 until steps) {
-                    val t = (k + 1) / steps.toFloat()
-                    val nx = -hw * 0.85f + t * hw * 1.7f
-                    val ny = -hh * 0.85f + t * hh * 1.7f
-                    line(lastX, ny, nx, ny, "#5A5A5A".toColorInt(), 2.2f)
-                    line(nx, lastY, nx, ny, "#5A5A5A".toColorInt(), 2.2f)
-                    lastX = nx
-                    lastY = ny
-                }
-                line(-hw * 0.85f, -hh * 0.7f, hw * 0.85f, hh * 1f, "#8A8A8A".toColorInt(), 1.2f)
-                for (k in 0..steps) {
-                    val t = k / steps.toFloat()
-                    val bx = -hw * 0.85f + t * hw * 1.7f
-                    val by = -hh * 0.7f + t * hh * 1.7f
-                    line(bx, by, bx, by + hh * 0.3f, "#8A8A8A".toColorInt(), 1.2f)
-                }
-            }
-
-            Decor.RAILING -> {
-                val top = hh * 0.6f
-                val bottom = -hh * 0.6f
-                line(-hw * 0.92f, top, hw * 0.92f, top, "#241608".toColorInt(), 2.4f)
-                line(-hw * 0.92f, bottom, hw * 0.92f, bottom, "#241608".toColorInt(), 1.6f)
-                val posts = 7
-                for (k in 0..posts) {
-                    val x = -hw * 0.92f + hw * 1.84f * k / posts
-                    line(x, bottom, x, top, "#241608".toColorInt(), 1.6f)
-                }
-            }
-
-            Decor.WELL -> {
-                val rimY = -hh * 0.35f
-                val rimR = hh * 0.5f
-                pDecorFill.color = "#8B8B93".toColorInt()
-                canvas.drawCircle(sxd(0f, rimY), syd(0f, rimY), rimR * camScale, pDecorFill)
-                pDecorLine.color = "#3A3A40".toColorInt()
-                pDecorLine.strokeWidth = 1.6f * dp
-                canvas.drawCircle(sxd(0f, rimY), syd(0f, rimY), rimR * camScale, pDecorLine)
-                val postY0 = rimY + rimR * 0.4f
-                val postY1 = hh * 0.35f
-                line(-hw * 0.5f, postY0, -hw * 0.5f, postY1, "#4A3A28".toColorInt(), 2.2f)
-                line(hw * 0.5f, postY0, hw * 0.5f, postY1, "#4A3A28".toColorInt(), 2.2f)
-                poly(
-                    listOf(-hw * 0.75f to postY1, hw * 0.75f to postY1, 0f to hh * 0.95f),
-                    "#7A4A2A".toColorInt()
-                )
-                line(0f, rimY + rimR * 0.3f, 0f, rimY, "#2A2A2A".toColorInt(), 1f)
-            }
-
-            Decor.SHELTER -> {
-                val eaveY = hh * 0.3f
-                poly(
-                    listOf(-hw * 0.95f to eaveY, hw * 0.95f to eaveY, 0f to hh * 0.95f),
-                    "#A85A3A".toColorInt()
-                )
-                line(-hw * 0.95f, eaveY, hw * 0.95f, eaveY, "#241608".toColorInt(), 1.6f)
-                line(-hw * 0.6f, -hh * 0.9f, -hw * 0.6f, eaveY, "#241608".toColorInt(), 3f)
-                line(hw * 0.6f, -hh * 0.9f, hw * 0.6f, eaveY, "#241608".toColorInt(), 3f)
             }
 
             Decor.NONE -> Unit
@@ -664,6 +895,81 @@ class LandScene(context: Context) {
         b.partCorners(part, corners)
         path.moveTo(sx(corners[0]), sy(corners[1]))
         for (i in 1 until 4) path.lineTo(sx(corners[i * 2]), sy(corners[i * 2 + 1]))
+        path.close()
+    }
+
+    /**
+     * Enveloppe locale des deux versants : gauche, droite, égout, faîtage, axe du
+     * faîtage. Les coins tiennent compte de l'épaisseur réelle des versants.
+     */
+    private fun gableBounds(block: Block, out: FloatArray): Boolean {
+        var minX = Float.MAX_VALUE
+        var maxX = -Float.MAX_VALUE
+        var minY = Float.MAX_VALUE
+        var maxY = -Float.MAX_VALUE
+        for (part in block.parts) {
+            if (part.shape != Shape.BOX) continue
+            val c = cos(part.localAngle)
+            val s = sin(part.localAngle)
+            for (ix in 0..1) {
+                val dx = if (ix == 0) -part.halfW else part.halfW
+                for (iy in 0..1) {
+                    val dy = if (iy == 0) -part.halfH else part.halfH
+                    val x = part.localX + dx * c - dy * s
+                    val y = part.localY + dx * s + dy * c
+                    minX = minOf(minX, x)
+                    maxX = maxOf(maxX, x)
+                    minY = minOf(minY, y)
+                    maxY = maxOf(maxY, y)
+                }
+            }
+        }
+        if (minX == Float.MAX_VALUE) return false
+        val tolerance = maxOf(TargetRules.MIN_HALF_THICKNESS, (maxY - minY) * 0.08f)
+        var apexSum = 0f
+        var apexCount = 0
+        for (part in block.parts) {
+            if (part.shape != Shape.BOX) continue
+            val c = cos(part.localAngle)
+            val s = sin(part.localAngle)
+            for (ix in 0..1) {
+                val dx = if (ix == 0) -part.halfW else part.halfW
+                for (iy in 0..1) {
+                    val dy = if (iy == 0) -part.halfH else part.halfH
+                    val x = part.localX + dx * c - dy * s
+                    val y = part.localY + dx * s + dy * c
+                    if (maxY - y <= tolerance) {
+                        apexSum += x
+                        apexCount++
+                    }
+                }
+            }
+        }
+        out[0] = minX
+        out[1] = maxX
+        out[2] = minY
+        out[3] = maxY
+        out[4] = if (apexCount == 0) (minX + maxX) / 2f else apexSum / apexCount
+        return true
+    }
+
+    /** Ajoute le triangle visuel d'un toit au chemin groupé de son matériau. */
+    private fun appendGable(path: Path, piece: TargetPiece) {
+        if (!gableBounds(piece.block, gablePose)) return
+        val bounds = gablePose
+        val b = piece.body
+        val c = cos(b.angle)
+        val s = sin(b.angle)
+        fun wx(x: Float, y: Float) = b.x + x * c - y * s
+        fun wy(x: Float, y: Float) = b.y + x * s + y * c
+        val leftX = bounds[0]
+        val rightX = bounds[1]
+        val bottom = bounds[2]
+        val apexX = bounds[4]
+        val apexY = bounds[3]
+        path.moveTo(sx(wx(leftX, bottom)), sy(wy(leftX, bottom)))
+        path.lineTo(sx(wx(apexX, apexY)), sy(wy(apexX, apexY)))
+        path.lineTo(sx(wx(rightX, bottom)), sy(wy(rightX, bottom)))
         path.close()
     }
 

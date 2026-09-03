@@ -57,7 +57,8 @@ object Masonry {
         stoneHeight: Float = 0.5f,
         role: Role = Role.STRUCTURE,
         stackBudget: Int = TargetRules.COMFORTABLE_STACK,
-        bodyBudget: Int = TargetRules.BODY_BUDGET
+        bodyBudget: Int = TargetRules.BODY_BUDGET,
+        surface: Surface = Surface.AUTO
     ): List<Block> {
         val out = ArrayList<Block>()
         if (width <= 0.05f || height <= 0.05f) return out
@@ -106,7 +107,10 @@ object Masonry {
             val bodyH = n * courseH
             for ((sx, sw) in bondSpans(left, width, cols, staggered = r % 2 == 1)) {
                 if (sw <= 3f * j) continue
-                out += Block.compound(material, sx + sw / 2f, y0 + bodyH / 2f, role = role) {
+                out += Block.compound(
+                    material, sx + sw / 2f, y0 + bodyH / 2f,
+                    role = role, surface = surface
+                ) {
                     for (k in 0 until n) {
                         box(
                             (sw - j) / 2f,
@@ -273,12 +277,24 @@ object Masonry {
         bottom: Float,
         width: Float,
         rise: Float,
-        thickness: Float = TargetRules.detail(0.18f)
+        thickness: Float = TargetRules.detail(0.18f),
+        surface: Surface = when (material) {
+            Material.THATCH -> Surface.THATCH
+            Material.WOOD -> Surface.SHINGLES
+            Material.STONE -> Surface.SLATE
+            Material.SANDSTONE -> Surface.TILES
+            else -> Surface.AUTO
+        },
+        visualVariant: Int = 0
     ): Block {
         val halfW = width / 2f
         val slope = hypot(halfW, rise)
         val angle = atan2(rise, halfW)
-        return Block.compound(material, left + halfW, bottom + rise / 2f) {
+        return Block.compound(
+            material, left + halfW, bottom + rise / 2f,
+            surface = surface, silhouette = Silhouette.GABLE_ROOF,
+            visualVariant = visualVariant
+        ) {
             box(slope / 2f, thickness / 2f, -halfW / 2f, 0f, angle)
             box(slope / 2f, thickness / 2f, halfW / 2f, 0f, -angle)
         }
@@ -287,7 +303,7 @@ object Masonry {
     /**
      * Un pan de mur à fenêtre : **un seul corps**, plein comme n'importe quel mur —
      * la fenêtre, les volets et les carreaux ne sont qu'une peinture par-dessus
-     * ([Decor.WINDOW], voir `LandScene.appendDecor`).
+     * ([Decor.WINDOW_SHUTTERS], voir `LandScene.appendDecor`).
      *
      * C'est le contraire du premier essai de ce module, qui perçait un vrai trou en
      * assemblant piédroits, linteau et allège — quatre corps pour un motif que
@@ -297,30 +313,80 @@ object Masonry {
     fun windowedWall(
         material: Material,
         left: Float, bottom: Float, width: Float, height: Float,
-        role: Role = Role.STRUCTURE
-    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.WINDOW)
+        role: Role = Role.STRUCTURE,
+        arched: Boolean = false,
+        surface: Surface = Surface.AUTO,
+        visualVariant: Int = 0
+    ): Block = Block.laid(
+        material, left, bottom, width, height, role,
+        decor = if (arched) Decor.WINDOW_ARCHED else Decor.WINDOW_SHUTTERS,
+        surface = surface, visualVariant = visualVariant
+    )
+
+    /** Un grand pan de façade à porte ferrée. */
+    fun doorWall(
+        material: Material,
+        left: Float, bottom: Float, width: Float, height: Float,
+        role: Role = Role.STRUCTURE,
+        surface: Surface = Surface.AUTO,
+        visualVariant: Int = 0
+    ): Block = Block.laid(
+        material, left, bottom, width, height, role,
+        decor = Decor.DOOR, surface = surface, visualVariant = visualVariant
+    )
 
     /** Un pan de mur à meurtrière : le vocabulaire d'un rempart plutôt que d'une maison. */
     fun arrowSlitWall(
         material: Material,
         left: Float, bottom: Float, width: Float, height: Float,
         role: Role = Role.STRUCTURE
-    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.ARROW_SLIT)
+    ): Block = Block.laid(
+        material, left, bottom, width, height, role, Decor.ARROW_SLIT, Surface.CUT_STONE
+    )
 
-    /** Un escalier extérieur, marches et rambarde peintes sur un seul corps. */
+    /** Un escalier extérieur dont les six marches sont la vraie silhouette physique. */
     fun staircase(
         material: Material,
         left: Float, bottom: Float, width: Float, height: Float,
         role: Role = Role.STRUCTURE
-    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.STAIRCASE)
+    ): Block {
+        val steps = 6
+        val sw = width / steps
+        val sh = height / steps
+        return Block.compound(
+            material, left + width / 2f, bottom + height / 2f,
+            role = role, surface = Surface.CUT_STONE
+        ) {
+            for (k in 0 until steps) {
+                val h = sh * (k + 1)
+                box(
+                    sw / 2f, h / 2f,
+                    -width / 2f + sw * (k + 0.5f),
+                    -height / 2f + h / 2f
+                )
+            }
+        }
+    }
 
-    /** Une rambarde : poteaux et lisse peints sur un seul corps mince. */
+    /** Une rambarde ajourée : les poteaux et les deux lisses sont ses vraies formes. */
     fun railing(
         material: Material,
         left: Float, bottom: Float, width: Float,
         height: Float = TargetRules.detail(1f),
         role: Role = Role.STRUCTURE
-    ): Block = Block.laid(material, left, bottom, width, height, role, Decor.RAILING)
+    ): Block = Block.compound(
+        material, left + width / 2f, bottom + height / 2f,
+        role = role, surface = Surface.PLANKS
+    ) {
+        val thick = (height * 0.12f).coerceAtLeast(TargetRules.MIN_HALF_THICKNESS * 2f)
+        box(width / 2f, thick / 2f, 0f, height / 2f - thick / 2f)
+        box(width / 2f, thick / 2f, 0f, -height / 2f + thick / 2f)
+        val posts = 5
+        for (k in 0 until posts) {
+            val x = -width / 2f + width * k / (posts - 1)
+            box(thick / 2f, height / 2f, x, 0f)
+        }
+    }
 }
 
 /**
@@ -337,6 +403,107 @@ object Masonry {
  * ce qui est dessus.
  */
 object TargetModules {
+
+    /** Donne de la variété aux couvertures sans modifier leur masse ni leur casse. */
+    private fun roofSurface(rng: Random, material: Material): Surface = when (material) {
+        Material.THATCH -> when (rng.nextInt(10)) {
+            in 0..4 -> Surface.THATCH
+            in 5..7 -> Surface.SHINGLES
+            else -> Surface.TILES
+        }
+        Material.WOOD -> if (rng.nextInt(4) == 0) Surface.TILES else Surface.SHINGLES
+        Material.STONE -> Surface.SLATE
+        Material.SANDSTONE -> Surface.TILES
+        else -> Surface.AUTO
+    }
+
+    /** Palette de façade choisie une fois par bâtiment, pas une fois par pierre. */
+    private fun masonrySurface(rng: Random, material: Material): Surface = when (material) {
+        Material.STONE -> when (rng.nextInt(5)) {
+            0 -> Surface.BRICK
+            in 1..2 -> Surface.CUT_STONE
+            else -> Surface.FIELDSTONE
+        }
+        Material.SANDSTONE -> if (rng.nextBoolean()) Surface.CUT_STONE else Surface.BRICK
+        else -> Surface.AUTO
+    }
+
+    /** Largeur et hauteur visibles d'un bloc de façade composé d'assises superposées. */
+    private fun facadeSize(block: Block): Pair<Float, Float> {
+        var left = Float.MAX_VALUE
+        var right = -Float.MAX_VALUE
+        var bottom = Float.MAX_VALUE
+        var top = -Float.MAX_VALUE
+        for (part in block.parts) {
+            if (part.shape != com.Atom2Universe.app.games.physics.Shape.BOX) continue
+            left = minOf(left, part.localX - part.halfW)
+            right = maxOf(right, part.localX + part.halfW)
+            bottom = minOf(bottom, part.localY - part.halfH)
+            top = maxOf(top, part.localY + part.halfH)
+        }
+        return if (left == Float.MAX_VALUE) 0f to 0f else (right - left) to (top - bottom)
+    }
+
+    /**
+     * Transforme un mur structurel en vraie façade, sans ajouter de corps qui se
+     * chevaucheraient : une pierre basse reçoit la porte, les pierres hautes les baies.
+     */
+    private fun dressStoneFacade(
+        source: List<Block>,
+        rng: Random,
+        surface: Surface,
+        upperDecor: Decor,
+        includeDoor: Boolean = true,
+        maxOpenings: Int = 3
+    ): List<Block> {
+        if (source.isEmpty()) return source
+        val out = source.map { it.dressed(surface = surface, visualVariant = rng.nextInt(4)) }.toMutableList()
+        val usable = out.indices.filter { index ->
+            val (w, h) = facadeSize(out[index])
+            w >= TargetRules.detail(0.75f) && h >= TargetRules.detail(0.75f)
+        }
+        if (usable.isEmpty()) return out
+        val centre = (out.minOf { it.x - it.halfSpan() } + out.maxOf { it.x + it.halfSpan() }) / 2f
+        val doorIndex = if (includeDoor) usable.minWithOrNull(
+            compareBy<Int> { out[it].bottom() }.thenBy { kotlin.math.abs(out[it].x - centre) }
+        ) else null
+        if (doorIndex != null) out[doorIndex] = out[doorIndex].dressed(decor = Decor.DOOR)
+
+        usable.asSequence()
+            .filter { it != doorIndex }
+            .sortedWith(compareByDescending<Int> { out[it].y }.thenBy { kotlin.math.abs(out[it].x - centre) })
+            .take(maxOpenings)
+            .forEach { index -> out[index] = out[index].dressed(decor = upperDecor) }
+        return out
+    }
+
+    /**
+     * Un panneau plein mais friable, cassé en lattes horizontales pour que ses débris
+     * restent minces. Le décor est dessiné sur l'ensemble du panneau.
+     */
+    private fun facadePanel(
+        rng: Random,
+        left: Float,
+        bottom: Float,
+        width: Float,
+        height: Float,
+        decor: Decor,
+        surface: Surface
+    ): Block {
+        val rows = (height / TargetRules.detail(0.48f)).roundToInt().coerceIn(3, 6)
+        val rowH = height / rows
+        return Block.compound(
+            Material.COB, left + width / 2f, bottom + height / 2f,
+            decor = decor, surface = surface, visualVariant = rng.nextInt(4)
+        ) {
+            repeat(rows) { row ->
+                box(
+                    width / 2f, (rowH - TargetRules.JOINT) / 2f,
+                    0f, -height / 2f + rowH * (row + 0.5f)
+                )
+            }
+        }
+    }
 
     /**
      * Ce qu'un module s'autorise en corps, faute d'instruction contraire.
@@ -371,14 +538,19 @@ object TargetModules {
         // tempérament, et il ne faut surtout pas l'y mettre deux fois.
         val stoneH = if (rng.nextBoolean()) 0.5f else 0.6f
         val out = ArrayList<Block>()
+        val surface = masonrySurface(rng, material)
         // Les merlons se paient sur le budget : il en faut un par pas de merlon.
         val merlonCount = (width / TargetRules.stone(1.4f)).toInt() + 1
-        out += Masonry.wall(
+        val wall = Masonry.wall(
             material, left, 0f, width, walkway,
             stoneWidth = 1.2f, stoneHeight = stoneH,
-            bodyBudget = (bodyBudget - merlonCount).coerceAtLeast(4)
+            stackBudget = 3,
+            bodyBudget = (bodyBudget - merlonCount).coerceAtLeast(4),
+            surface = surface
         )
+        out += dressStoneFacade(wall, rng, surface, Decor.ARROW_SLIT, maxOpenings = 3)
         out += Masonry.merlons(material, left, walkway, width, merlonH)
+            .map { it.dressed(surface = surface, visualVariant = rng.nextInt(4)) }
         return out
     }
 
@@ -421,6 +593,7 @@ object TargetModules {
         val overhang = TargetRules.detail(0.22f)
         val ringH = TargetRules.detail(0.4f)
         val ringPitch = TargetRules.site(14f)
+        val surface = masonrySurface(rng, material)
 
         // L'anneau intermédiaire déborde plus largement qu'un simple socle, pour bien
         // se lire comme un balcon et pas comme une reprise de maçonnerie. Pas de
@@ -440,7 +613,8 @@ object TargetModules {
         // Le socle : une assise plus large, qui assied la tour.
         out += Masonry.wall(
             material, left - overhang, 0f, width + 2f * overhang, plinthH,
-            stoneWidth = (width + 2f * overhang) / 2f, stoneHeight = plinthH
+            stoneWidth = (width + 2f * overhang) / 2f, stoneHeight = plinthH,
+            surface = surface
         )
 
         // Le socle, l'encorbellement, les merlons et les anneaux prennent chacun un
@@ -456,11 +630,16 @@ object TargetModules {
         for (i in 0 until sections) {
             // Deux ou trois pierres de large selon la tour, ce qui change son allure.
             val stoneW = w / (if (w > 3.5f) 3 else 2)
-            out += Masonry.wall(
+            val section = Masonry.wall(
                 material, left + (width - w) / 2f, y, w, secH,
                 stoneWidth = stoneW, stoneHeight = if (rng.nextBoolean()) 0.5f else 0.55f,
                 stackBudget = perSectionStack,
-                bodyBudget = perSectionBodies
+                bodyBudget = perSectionBodies,
+                surface = surface
+            )
+            out += dressStoneFacade(
+                section, rng, surface, Decor.ARROW_SLIT,
+                includeDoor = i == 0, maxOpenings = 2
             )
             y += secH
             if (i < sections - 1) {
@@ -471,7 +650,7 @@ object TargetModules {
                 val ringW = w + 2f * ringOverhang
                 out += Masonry.wall(
                     material, ringLeft, y, ringW, ringH,
-                    stoneWidth = ringW, stoneHeight = ringH
+                    stoneWidth = ringW, stoneHeight = ringH, surface = surface
                 )
                 y += ringH
                 w *= 0.9f
@@ -482,9 +661,10 @@ object TargetModules {
         val topLeft = left + (width - w) / 2f
         out += Masonry.wall(
             material, topLeft - overhang, y, w + 2f * overhang, corbelH,
-            stoneWidth = w + 2f * overhang, stoneHeight = corbelH
+            stoneWidth = w + 2f * overhang, stoneHeight = corbelH, surface = surface
         )
         out += Masonry.merlons(material, topLeft - overhang, y + corbelH, w + 2f * overhang, merlonH)
+            .map { it.dressed(surface = surface, visualVariant = rng.nextInt(4)) }
         return out
     }
 
@@ -522,6 +702,7 @@ object TargetModules {
         // poteaux : en arcade ils portent seuls une façade que le mode réaliste doit
         // refendre.
         val middlePost = width > TargetRules.detail(4f)
+        val facadeSurface = if (rng.nextInt(3) == 0) Surface.PLANKS else Surface.TIMBER_FRAME
 
         var y = 0f
         repeat(storeys) { s ->
@@ -529,39 +710,35 @@ object TargetModules {
             out += Masonry.post(material, left + postW / 2f, y, postW, postH)
             out += Masonry.post(material, left + width - postW / 2f, y, postW, postH)
             if (middlePost) out += Masonry.post(material, left + width / 2f, y, postW, postH)
-            // Un hourdis de torchis entre deux poteaux : il casse en poussière et donne
-            // au tir un retour immédiat sans rien changer à la structure.
-            //
-            // Il repose **sur le plancher de son étage**. Posé en l'air, comme il l'a
-            // d'abord été, il tombait au chargement et venait s'allonger devant les
-            // poteaux, où il servait de bouclier : trois boulets dans la façade ne
-            // faisaient plus rien, et la maison passait pour solide alors qu'elle était
-            // simplement protégée par son propre mur tombé.
-            if (rng.nextFloat() < 0.5f) {
-                // Il se pose dans **une travée**, entre deux poteaux, et jamais à cheval
-                // sur celui du milieu : deux corps qui se chevauchent à la pose se
-                // repoussent violemment dès la première image.
-                val bays = if (middlePost) 2 else 1
-                val bay = rng.nextInt(bays)
-                val bayW = (width - (bays + 1) * postW) / bays
+            // Chaque travée est désormais réellement fermée. Les panneaux restent
+            // légers : ils se fracturent en petites lattes, tandis que les poteaux
+            // continuent à porter la maison et à commander son effondrement.
+            val bays = if (middlePost) 2 else 1
+            val bayW = (width - (bays + 1) * postW) / bays
+            for (bay in 0 until bays) {
                 val bayLeft = left + postW + bay * (bayW + postW)
-                //
-                // Sa hauteur est plafonnée court, et ce plafond ne suit **pas** le
-                // tempérament : l'épaisseur d'un gravat vaut le plus petit côté de sa
-                // pièce, et un hourdis aussi haut que large dépasserait à lui seul la
-                // ligne de ruine, rendant le hameau impossible à raser.
-                out += Block.laid(
-                    Material.COB,
+                val facade = when {
+                    s == 0 && bay == 0 -> Decor.DOOR
+                    rng.nextBoolean() -> Decor.WINDOW_SHUTTERS
+                    else -> Decor.WINDOW_ARCHED
+                }
+                out += facadePanel(
+                    rng,
                     bayLeft + TargetRules.JOINT,
                     y + TargetRules.JOINT,
                     bayW - 2f * TargetRules.JOINT,
-                    (postH * 0.6f).coerceAtMost(1.3f)
+                    postH - 2f * TargetRules.JOINT,
+                    facade,
+                    facadeSurface
                 )
             }
             out += Masonry.beam(material, left, y + postH, width, beamH)
             y += storeyH
         }
-        out += Masonry.roof(roofMaterial, left, y, width, rise)
+        out += Masonry.roof(
+            roofMaterial, left, y, width, rise,
+            surface = roofSurface(rng, roofMaterial), visualVariant = rng.nextInt(4)
+        )
         return out
     }
 
@@ -596,7 +773,7 @@ object TargetModules {
     }
 
     /**
-     * **Le puits** : margelle, montants et toit peints sur un seul corps.
+     * **Le puits** : margelle, montants et toit réunis dans un seul corps composé.
      *
      * Comme les tonneaux ([props]), c'est une pièce qu'on pose seule et pas qu'on
      * assemble. La première version le construisait vraiment en pierres —
@@ -609,21 +786,47 @@ object TargetModules {
         bottom: Float,
         radius: Float = TargetRules.detail(0.7f),
         material: Material = Material.STONE
-    ): Block = Block.box(
-        material, centerX, bottom + radius, radius, radius,
-        role = Role.PROP, decor = Decor.WELL
-    )
+    ): Block = Block.compound(
+        material, centerX, bottom + radius,
+        role = Role.PROP, surface = Surface.FIELDSTONE
+    ) {
+        circle(radius * 0.72f, 0f, -radius * 0.28f, Surface.FIELDSTONE)
+        box(radius * 0.09f, radius * 0.82f, -radius * 0.62f, radius * 0.55f, surface = Surface.PLANKS)
+        box(radius * 0.09f, radius * 0.82f, radius * 0.62f, radius * 0.55f, surface = Surface.PLANKS)
+        val roofHalf = radius * 0.86f
+        val rise = radius * 0.62f
+        val slope = hypot(roofHalf, rise)
+        val a = atan2(rise, roofHalf)
+        box(slope / 2f, radius * 0.09f, -roofHalf / 2f, radius * 1.48f, a, Surface.SHINGLES)
+        box(slope / 2f, radius * 0.09f, roofHalf / 2f, radius * 1.48f, -a, Surface.SHINGLES)
+    }
 
     /**
-     * **L'abri** : un toit et deux poteaux, peints sur un seul corps — le module
-     * le plus court du catalogue.
+     * **L'abri** : un toit et deux poteaux, réellement ajourés mais réunis dans un
+     * seul corps — le module le plus court du catalogue.
      */
     fun shelter(
         left: Float,
         width: Float,
         height: Float,
         material: Material = Material.WOOD
-    ): Block = Block.laid(material, left, 0f, width, height, Role.STRUCTURE, Decor.SHELTER)
+    ): Block {
+        val halfW = width / 2f
+        val rise = height * 0.4f
+        val eaveY = height * 0.1f
+        val slope = hypot(halfW, rise)
+        val a = atan2(rise, halfW)
+        val thick = TargetRules.detail(0.16f)
+        return Block.compound(
+            material, left + halfW, height / 2f,
+            surface = Surface.SHINGLES
+        ) {
+            box(thick / 2f, height * 0.3f, -width * 0.34f, -height * 0.2f, surface = Surface.PLANKS)
+            box(thick / 2f, height * 0.3f, width * 0.34f, -height * 0.2f, surface = Surface.PLANKS)
+            box(slope / 2f, thick / 2f, -halfW / 2f, eaveY, a, Surface.SHINGLES)
+            box(slope / 2f, thick / 2f, halfW / 2f, eaveY, -a, Surface.SHINGLES)
+        }
+    }
 
     // ── Le second catalogue : ce qui n'est ni un mur, ni une tour, ni une maison ──
     //
@@ -1048,19 +1251,27 @@ object TargetModules {
         }
         out += Masonry.beam(material, left, caveH, width, plancherH)
 
-        // L'étage : deux poteaux d'angle et un hourdis de torchis entre eux.
+        // L'étage : deux poteaux d'angle et une façade pleine entre eux.
         val basEtage = caveH + plancherH
         out += Masonry.post(material, left + poteauW / 2f, basEtage, poteauW, etageH)
         out += Masonry.post(material, left + width - poteauW / 2f, basEtage, poteauW, etageH)
         val mur = width - 2f * poteauW
         if (mur > TargetRules.site(0.6f)) {
-            out += Block.laid(
-                Material.COB, left + poteauW, basEtage + TargetRules.JOINT,
-                mur - TargetRules.JOINT, (etageH * 0.7f).coerceAtMost(1.3f)
+            out += facadePanel(
+                rng,
+                left + poteauW + TargetRules.JOINT,
+                basEtage + TargetRules.JOINT,
+                mur - 2f * TargetRules.JOINT,
+                etageH - 2f * TargetRules.JOINT,
+                if (rng.nextBoolean()) Decor.WINDOW_SHUTTERS else Decor.WINDOW_ARCHED,
+                if (rng.nextBoolean()) Surface.TIMBER_FRAME else Surface.PLANKS
             )
         }
         out += Masonry.beam(material, left, basEtage + etageH, width, plancherH)
-        out += Masonry.roof(Material.THATCH, left, basEtage + etageH + plancherH, width, rise)
+        out += Masonry.roof(
+            Material.THATCH, left, basEtage + etageH + plancherH, width, rise,
+            surface = roofSurface(rng, Material.THATCH), visualVariant = rng.nextInt(4)
+        )
         return out
     }
 
@@ -1086,17 +1297,24 @@ object TargetModules {
         val lits = (corps / TargetRules.stone(1.5f)).roundToInt().coerceIn(2, 5)
         val litH = corps / lits
         val cols = if (width > TargetRules.stone(2.4f)) 2 else 1
+        val masonrySurface = masonrySurface(rng, material)
+        val walls = ArrayList<Block>()
         for (i in 0 until lits) {
             // Un lit sur deux en un seul morceau : c'est l'appareil, et sans lui le
             // joint vertical courrait du sol au toit et l'immeuble se fendrait en deux.
-            out += Masonry.band(
+            walls += Masonry.band(
                 material, left, i * litH, width, litH,
                 if (i % 2 == 1) maxOf(1, cols - 1) else cols
             )
         }
+        out += dressStoneFacade(
+            walls, rng, masonrySurface, Decor.WINDOW_ARCHED,
+            includeDoor = true, maxOpenings = (lits - 1).coerceAtLeast(1)
+        )
+        val roofMaterial = if (rng.nextBoolean()) Material.THATCH else Material.WOOD
         out += Masonry.roof(
-            if (rng.nextBoolean()) Material.THATCH else Material.WOOD,
-            left, corps, width, rise
+            roofMaterial, left, corps, width, rise,
+            surface = roofSurface(rng, roofMaterial), visualVariant = rng.nextInt(4)
         )
         return out
     }
@@ -1127,21 +1345,29 @@ object TargetModules {
             val cx = left + poteauW / 2f + i * (width - poteauW) / (poteaux - 1)
             out += Masonry.post(material, cx, 0f, poteauW, murH)
         }
-        // Un pignon de torchis dans une travée, tiré au sort : deux granges de suite ne
-        // se ressemblent pas, et ça donne au tir quelque chose à pulvériser.
+        // Toutes les travées sont closes ; la grande porte reste le point de lecture.
         val travees = poteaux - 1
         val pas = (width - poteauW) / travees
-        val travee = rng.nextInt(travees)
+        val doorBay = rng.nextInt(travees)
         val pignonW = pas - poteauW - TargetRules.JOINT
         if (pignonW > TargetRules.site(0.5f)) {
-            out += Block.laid(
-                Material.COB,
-                left + poteauW + travee * pas + TargetRules.JOINT, TargetRules.JOINT,
-                pignonW, (murH * 0.75f).coerceAtMost(1.3f)
-            )
+            for (bay in 0 until travees) {
+                out += facadePanel(
+                    rng,
+                    left + poteauW + bay * pas + TargetRules.JOINT,
+                    TargetRules.JOINT,
+                    pignonW,
+                    murH - 2f * TargetRules.JOINT,
+                    if (bay == doorBay) Decor.DOOR else Decor.NONE,
+                    if ((bay + doorBay) % 3 == 0) Surface.TIMBER_FRAME else Surface.PLANKS
+                )
+            }
         }
         out += Masonry.beam(material, left, murH, width, beamH)
-        out += Masonry.roof(Material.THATCH, left, murH + beamH, width, rise)
+        out += Masonry.roof(
+            Material.THATCH, left, murH + beamH, width, rise,
+            surface = roofSurface(rng, Material.THATCH), visualVariant = rng.nextInt(4)
+        )
         return out
     }
 

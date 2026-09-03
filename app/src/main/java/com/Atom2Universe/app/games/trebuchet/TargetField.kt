@@ -33,6 +33,8 @@ class TargetPiece internal constructor(
     val material: Material get() = block.material
     val role: Role get() = block.role
     val decor: Decor get() = block.decor
+    val surface: Surface get() = block.surface
+    val visualVariant: Int get() = block.visualVariant
 
     /** Vrai si cette pierre est née d'une rupture, et non de la construction d'origine. */
     val debris: Boolean get() = tier > 0
@@ -826,10 +828,14 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
             for (i in parts.indices) {
                 p.body.partWorld(i, pose)
                 val q = parts[i]
+                val fragmentSurface = if (q.surface != Surface.AUTO) q.surface else p.surface
                 out += if (q.shape == Shape.CIRCLE) {
-                    Block.circle(mat, pose[0], pose[1], q.radius, Role.PROP)
+                    Block.circle(mat, pose[0], pose[1], q.radius, Role.PROP, fragmentSurface)
                 } else {
-                    Block.box(mat, pose[0], pose[1], q.halfW, q.halfH, pose[2], Role.PROP)
+                    Block.box(
+                        mat, pose[0], pose[1], q.halfW, q.halfH, pose[2], Role.PROP,
+                        surface = fragmentSurface
+                    )
                 }
             }
             return out

@@ -332,12 +332,15 @@ object TargetGenerator {
         ModuleKind.BARN -> TargetModules.barn(rng, x, w, h)
         ModuleKind.PALISADE -> TargetModules.palisade(rng, x, w, h)
         ModuleKind.CARD_CASTLE -> TargetModules.cardCastle(rng, x, w, h, slot.material)
+        ModuleKind.WELL -> listOf(TargetModules.well(x + w / 2f, 0f, minOf(w, h) * 0.28f))
+        ModuleKind.SHELTER -> listOf(TargetModules.shelter(x, w, h))
+        ModuleKind.STAIRCASE -> listOf(Masonry.staircase(slot.material, x, 0f, w, h))
     }
 
     private enum class ModuleKind {
         TOWER, WALL, HOUSE, PROPS,
         WINDMILL, PYRAMID, ARENA, TEMPLE, AQUEDUCT, GRANARY, INSULA, BARN, PALISADE,
-        CARD_CASTLE
+        CARD_CASTLE, WELL, SHELTER, STAIRCASE
     }
 
     private class Slot(
@@ -384,9 +387,13 @@ object TargetGenerator {
                 val groupes = ArrayList<List<Slot>>(n)
                 for (i in 0 until n) {
                     val maison = Slot(ModuleKind.HOUSE, between(4f, 7f), between(5.5f, 9f))
-                    // Le dernier hameau a ses tonneaux : c'est le seul du site à rouler.
+                    // Le dernier hameau a un petit élément de vie : tonneaux ou puits.
                     groupes += if (i == n - 1) {
-                        listOf(maison, Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f))
+                        listOf(
+                            maison,
+                            if (rng.nextBoolean()) Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                            else Slot(ModuleKind.WELL, between(2f, 2.8f), between(2.4f, 3.2f))
+                        )
                     } else {
                         listOf(maison)
                     }
@@ -401,7 +408,8 @@ object TargetGenerator {
                 ),
                 listOf(
                     Slot(ModuleKind.BARN, between(7f, 10f), between(5f, 6.5f), Material.WOOD),
-                    Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                    if (rng.nextBoolean()) Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
+                    else Slot(ModuleKind.SHELTER, between(3f, 4.5f), between(2.5f, 3.5f), Material.WOOD)
                 ),
                 listOf(Slot(ModuleKind.TOWER, between(3f, 4f), tourHauteur(8f, 12f, 22f, 38f), stone))
             )
@@ -421,6 +429,7 @@ object TargetGenerator {
                         stone
                     ),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
+                    Slot(ModuleKind.STAIRCASE, between(2.5f, 4f), between(1.8f, 3f), stone),
                     Slot(ModuleKind.HOUSE, between(4.5f, 6f), hauteurMurs + between(0f, 2f)),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
                     Slot(
