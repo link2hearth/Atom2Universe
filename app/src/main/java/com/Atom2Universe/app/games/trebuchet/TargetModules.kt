@@ -743,6 +743,171 @@ object TargetModules {
     }
 
     /**
+     * **La porte fortifiée** : deux piles de pierre, un passage fermé par des vantaux
+     * de bois, puis un corps de garde crénelé qui relie l'ensemble.
+     *
+     * Le portail est un corps composé de planches verticales : il paraît plein avant
+     * l'impact, mais se transforme en longues échardes au premier coup bien placé.
+     */
+    fun gatehouse(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.STONE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= TargetRules.site(3f) || height <= TargetRules.site(3f)) return out
+        val surface = masonrySurface(rng, material)
+        val merlonH = TargetRules.detail(0.8f)
+        val guardH = (height * 0.28f).coerceAtLeast(TargetRules.site(1.2f))
+        val passageH = (height - guardH - merlonH).coerceAtLeast(TargetRules.site(1.8f))
+        val pierW = (width * 0.23f).coerceIn(TargetRules.site(0.8f), width * 0.3f)
+        val openingLeft = left + pierW
+        val openingW = width - 2f * pierW
+        val perPierBudget = ((bodyBudget - 10) / 2).coerceAtLeast(4)
+
+        val leftPier = Masonry.wall(
+            material, left, 0f, pierW, passageH,
+            stoneWidth = pierW / 2f, stackBudget = 3,
+            bodyBudget = perPierBudget, surface = surface
+        )
+        val rightPier = Masonry.wall(
+            material, left + width - pierW, 0f, pierW, passageH,
+            stoneWidth = pierW / 2f, stackBudget = 3,
+            bodyBudget = perPierBudget, surface = surface
+        )
+        out += dressStoneFacade(leftPier, rng, surface, Decor.ARROW_SLIT, includeDoor = false, maxOpenings = 1)
+        out += dressStoneFacade(rightPier, rng, surface, Decor.ARROW_SLIT, includeDoor = false, maxOpenings = 1)
+
+        // Les vantaux ne chevauchent jamais les piles ; chaque planche devient un
+        // fragment mince, donc le portail ne forme pas un gravat infranchissable.
+        val gateH = passageH - TargetRules.JOINT
+        val planks = (openingW / TargetRules.detail(0.45f)).roundToInt().coerceIn(4, 9)
+        val plankW = openingW / planks
+        out += Block.compound(
+            Material.WOOD,
+            openingLeft + openingW / 2f,
+            gateH / 2f,
+            decor = Decor.DOOR,
+            surface = Surface.PLANKS,
+            visualVariant = rng.nextInt(4)
+        ) {
+            repeat(planks) { i ->
+                box(
+                    (plankW - TargetRules.JOINT) / 2f,
+                    gateH / 2f,
+                    -openingW / 2f + plankW * (i + 0.5f),
+                    0f
+                )
+            }
+        }
+
+        val guard = Masonry.wall(
+            material, left, passageH, width, guardH,
+            stoneWidth = width / 3f, stackBudget = 2,
+            bodyBudget = (bodyBudget - out.size - 5).coerceAtLeast(4), surface = surface
+        )
+        out += dressStoneFacade(guard, rng, surface, Decor.ARROW_SLIT, includeDoor = false, maxOpenings = 2)
+        out += Masonry.merlons(material, left, passageH + guardH, width, merlonH)
+            .map { it.dressed(surface = surface, visualVariant = rng.nextInt(4)) }
+        return out
+    }
+
+    /**
+     * **La chapelle** : une nef basse coiffée de tuiles et un clocher étroit qui ferme
+     * sa silhouette. Les fenêtres cintrées la distinguent immédiatement d'une maison.
+     */
+    fun chapel(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.STONE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= TargetRules.site(3f) || height <= TargetRules.site(4f)) return out
+        val surface = masonrySurface(rng, material)
+        // Le toit de la nef déborde légèrement de son emprise à cause de son
+        // épaisseur inclinée : un vrai intervalle évite qu'il morde dans le clocher.
+        val gap = TargetRules.detail(0.28f)
+        val towerW = (width * 0.28f).coerceAtLeast(TargetRules.site(1.25f))
+        val naveW = width - towerW - gap
+        val naveRise = (naveW * 0.3f).coerceIn(TargetRules.detail(0.8f), height * 0.25f)
+        val naveH = (height * 0.48f).coerceAtLeast(TargetRules.site(2f))
+        val towerRise = (towerW * 0.58f).coerceAtMost(height * 0.2f)
+        val towerH = (height - towerRise).coerceAtLeast(naveH + TargetRules.site(1f))
+        val wallBudget = (bodyBudget / 2).coerceAtLeast(6)
+
+        val nave = Masonry.wall(
+            material, left, 0f, naveW, naveH,
+            stoneWidth = 1.1f, stackBudget = 3,
+            bodyBudget = wallBudget, surface = surface
+        )
+        out += dressStoneFacade(
+            nave, rng, surface, Decor.WINDOW_ARCHED,
+            includeDoor = true, maxOpenings = 2
+        )
+        out += Masonry.roof(
+            if (rng.nextBoolean()) Material.WOOD else Material.SANDSTONE,
+            left, naveH, naveW, naveRise,
+            surface = if (rng.nextBoolean()) Surface.TILES else Surface.SLATE,
+            visualVariant = rng.nextInt(4)
+        )
+
+        val towerLeft = left + naveW + gap
+        val tower = Masonry.wall(
+            material, towerLeft, 0f, towerW, towerH,
+            stoneWidth = towerW / 2f, stackBudget = 4,
+            bodyBudget = wallBudget, surface = surface
+        )
+        out += dressStoneFacade(
+            tower, rng, surface, Decor.BELL,
+            includeDoor = false, maxOpenings = 1
+        )
+        out += Masonry.roof(
+            Material.WOOD, towerLeft, towerH, towerW, towerRise,
+            surface = Surface.SLATE, visualVariant = rng.nextInt(4)
+        )
+        return out
+    }
+
+    /**
+     * **La maison-tour** : un rez-de-chaussée maçonné et une maison de bois perchée
+     * dessus. Elle apporte de la hauteur aux bourgs sans devenir un ouvrage militaire.
+     */
+    fun towerHouse(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.STONE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= TargetRules.site(2.5f) || height <= TargetRules.site(5f)) return out
+        val baseH = (height * 0.36f).coerceAtLeast(TargetRules.site(2f))
+        val surface = masonrySurface(rng, material)
+        val base = Masonry.wall(
+            material, left, 0f, width, baseH,
+            stoneWidth = width / 2f, stackBudget = 3,
+            bodyBudget = (bodyBudget / 2).coerceAtLeast(5), surface = surface
+        )
+        out += dressStoneFacade(
+            base, rng, surface, Decor.WINDOW_ARCHED,
+            includeDoor = true, maxOpenings = 1
+        )
+        out += house(
+            rng, left, width, height - baseH,
+            material = Material.WOOD,
+            roofMaterial = if (rng.nextBoolean()) Material.WOOD else Material.THATCH
+        ).map { it.translated(0f, baseH) }
+        return out
+    }
+
+    /**
      * **Le lest** : tonneaux et rochers posés au pied ou sur une plate-forme.
      *
      * Ce sont des disques, et c'est tout leur intérêt : ça roule. Un effondrement qui

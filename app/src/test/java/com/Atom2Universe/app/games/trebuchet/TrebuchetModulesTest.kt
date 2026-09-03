@@ -433,6 +433,32 @@ class TrebuchetModulesTest {
     }
 
     @Test
+    fun `une porte fortifiee tient debout et possede un portail`() {
+        val blocks = TargetModules.gatehouse(Random(25), 20f, 7f, 8f)
+        assertTrue("la porte fortifiée n'a pas de vantaux", blocks.any { it.decor == Decor.DOOR })
+        assertTrue("la porte fortifiée n'a pas de créneaux", blocks.count { it.top() > 7f } >= 2)
+        checkStands("porte fortifiée", Structure(blocks, "porte fortifiée"))
+    }
+
+    @Test
+    fun `une chapelle tient debout avec une nef et un clocher`() {
+        val blocks = TargetModules.chapel(Random(26), 20f, 6f, 11f)
+        assertTrue("la chapelle n'a pas de fenêtres cintrées", blocks.any { it.decor == Decor.WINDOW_ARCHED })
+        assertTrue("le clocher n'a pas de cloche", blocks.any { it.decor == Decor.BELL })
+        assertTrue("la chapelle n'a pas deux toitures", blocks.count { it.silhouette == Silhouette.GABLE_ROOF } == 2)
+        checkStands("chapelle", Structure(blocks, "chapelle"))
+    }
+
+    @Test
+    fun `une maison tour tient debout et melange pierre et bois`() {
+        val blocks = TargetModules.towerHouse(Random(27), 20f, 5f, 13f)
+        assertTrue("la maison-tour n'a pas de soubassement", blocks.any { it.material.masonry })
+        assertTrue("la maison-tour n'a pas de charpente", blocks.any { it.material == Material.WOOD })
+        assertTrue("la maison-tour n'a pas de toit", blocks.any { it.silhouette == Silhouette.GABLE_ROOF })
+        checkStands("maison-tour", Structure(blocks, "maison-tour"))
+    }
+
+    @Test
     fun `une palissade tient debout`() {
         checkStands(
             "palissade",

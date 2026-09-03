@@ -59,6 +59,43 @@ class TrebuchetLevelTest {
     }
 
     @Test
+    fun `le chateau de cartes est reserve au mode arcade`() {
+        val arcade = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.ARCADE) }.toSet()
+        val realiste = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.REALISTE) }.toSet()
+        assertTrue("le château de cartes a disparu du mode arcade", SiteKind.CHATEAU_CARTES in arcade)
+        assertTrue("le château de cartes apparaît encore en réaliste", SiteKind.CHATEAU_CARTES !in realiste)
+        assertTrue("la seigneurie n'apparaît jamais en arcade", SiteKind.SEIGNEURIE in arcade)
+        assertTrue("la seigneurie n'apparaît jamais en réaliste", SiteKind.SEIGNEURIE in realiste)
+    }
+
+    @Test
+    fun `une seigneurie raconte tour village puis petit chateau`() {
+        val precedent = TargetRules.style
+        try {
+            TargetRules.style = TargetStyle.ARCADE
+            // La nouvelle famille est ajoutée après les seize graines historiques :
+            // la graine 17 la désigne sans changer les niveaux 1 à 16.
+            val lvl = TargetGenerator.generate(17L)
+            assertEquals(SiteKind.SEIGNEURIE, lvl.kind)
+            val s = lvl.structure
+            assertTrue("la seigneurie est trop courte : ${s.width} m", s.width > 100f)
+            assertTrue("la tour de garde n'est pas assez haute : ${s.baseHeight} m", s.baseHeight > 60f)
+
+            val firstLimit = s.left + s.width * 0.2f
+            val villageLeft = s.left + s.width * 0.2f
+            val villageRight = s.left + s.width * 0.72f
+            val front = s.blocks.filter { it.x < firstLimit }
+            val village = s.blocks.filter { it.x in villageLeft..villageRight }
+            val castle = s.blocks.filter { it.x > villageRight }
+            assertTrue("la grande tour n'est pas en première ligne", front.maxOf { it.top() } > 60f)
+            assertTrue("le village central manque de maisons", village.count { it.material == Material.WOOD } >= 8)
+            assertTrue("le petit château final manque de pierre", castle.count { it.material.masonry } >= 8)
+        } finally {
+            TargetRules.style = precedent
+        }
+    }
+
+    @Test
     fun `un niveau charge tient debout a cote de la machine`() {
         val g = TrebuchetGame()
         g.loadLevel(3L)

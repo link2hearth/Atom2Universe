@@ -5,6 +5,7 @@ import org.junit.Test
 import java.io.File
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 /**
  * L'outil qui **montre** un niveau, faute de pouvoir lancer l'application.
@@ -285,6 +286,26 @@ class TrebuchetApercuTest {
                 )
             }
 
+            Decor.BELL -> {
+                val ow = hw * 0.55f
+                val oh = hh * 0.72f
+                poly(
+                    listOf(
+                        -ow to -oh, ow to -oh, ow to oh * 0.25f,
+                        ow * 0.65f to oh * 0.72f, 0f to oh,
+                        -ow * 0.65f to oh * 0.72f, -ow to oh * 0.25f
+                    ),
+                    "#171512", "#080706"
+                )
+                poly(
+                    listOf(
+                        -ow * 0.2f to oh * 0.35f, ow * 0.2f to oh * 0.35f,
+                        ow * 0.58f to -oh * 0.38f, -ow * 0.58f to -oh * 0.38f
+                    ),
+                    "#C28B32", "#6E451B"
+                )
+            }
+
             Decor.NONE -> Unit
         }
     }
@@ -358,6 +379,35 @@ class TrebuchetApercuTest {
         closeup(TargetModules.well(0f, 0f), File(dir, "detail-puits.svg"))
         closeup(TargetModules.shelter(0f, 4f, 3.5f), File(dir, "detail-abri.svg"))
         println("APERÇU détails (gros plan) écrit dans ${dir.absolutePath}")
+    }
+
+    @Test
+    fun apercuNouveauxBatiments() {
+        TargetRules.style = TargetStyle.ARCADE
+        val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
+        dir.mkdirs()
+        val modules = listOf(
+            "batiment-porte-fortifiee.svg" to TargetModules.gatehouse(
+                Random(41), 0f, TargetRules.site(7f), TargetRules.site(8f)
+            ),
+            "batiment-chapelle.svg" to TargetModules.chapel(
+                Random(42), 0f, TargetRules.site(6f), TargetRules.site(11f)
+            ),
+            "batiment-maison-tour.svg" to TargetModules.towerHouse(
+                Random(43), 0f, TargetRules.site(5f), TargetRules.site(13f)
+            )
+        )
+        for ((name, blocks) in modules) {
+            val structure = Structure(blocks, name)
+            svg(
+                TargetLevel(
+                    0L, SiteKind.VILLAGE, 0f, Wind.CALM,
+                    structure, Terrain.FLAT, TerrainShape.PLAINE
+                ),
+                File(dir, name)
+            )
+        }
+        println("APERÇU nouveaux bâtiments écrit dans ${dir.absolutePath}")
     }
 
     /** Dessine une bande de ciels : une colonne par heure, plus une éclipse. */

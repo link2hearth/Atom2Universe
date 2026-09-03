@@ -33,7 +33,10 @@ enum class SiteKind {
     NECROPOLE,
 
     /** Une pyramide de tentes en planches, comme un vrai château de cartes géant. */
-    CHATEAU_CARTES
+    CHATEAU_CARTES,
+
+    /** Une haute tour de garde, un village sous sa protection, puis un petit château. */
+    SEIGNEURIE
 }
 
 /**
@@ -155,8 +158,8 @@ object TargetGenerator {
      * chaque tour donnant des sites différents puisque la graine, elle, continue
      * d'avancer.
      */
-    private fun kindFor(seed: Long): SiteKind {
-        val ladder = arrayOf(
+    internal fun kindFor(seed: Long, style: TargetStyle = TargetRules.style): SiteKind {
+        val arcadeLadder = arrayOf(
             SiteKind.HAMEAU,
             SiteKind.HAMEAU,
             SiteKind.FERME,
@@ -175,8 +178,14 @@ object TargetGenerator {
             // Ajoutée en fin de liste, et pas mêlée aux autres : une graine désigne un
             // niveau pour toujours, et glisser un nouveau genre au milieu aurait changé
             // ce que chaque graine existante redonne.
-            SiteKind.CHATEAU_CARTES
+            SiteKind.CHATEAU_CARTES,
+            SiteKind.SEIGNEURIE
         )
+        // Le château de cartes est une fantaisie d'arcade. En réaliste, la même place
+        // dans la progression donne la nouvelle seigneurie : une composition crédible,
+        // plus longue et plus haute, mais bâtie avec les modules ordinaires.
+        val ladder = if (style == TargetStyle.ARCADE) arcadeLadder else
+            arcadeLadder.filterNot { it == SiteKind.CHATEAU_CARTES }.toTypedArray()
         val i = ((seed - 1L) % ladder.size).toInt()
         return ladder[if (i < 0) i + ladder.size else i]
     }
@@ -237,6 +246,13 @@ object TargetGenerator {
             SiteKind.CHATEAU -> arrayOf(
                 TerrainShape.MESA, TerrainShape.CRETE,
                 TerrainShape.PLAINE, TerrainShape.COLLINE
+            )
+
+            SiteKind.SEIGNEURIE -> arrayOf(
+                // La lecture gauche-droite doit rester nette : la tour ouvre la scène,
+                // le village la prolonge, le château la ferme au fond.
+                TerrainShape.TERRASSES, TerrainShape.PLAINE,
+                TerrainShape.CRETE, TerrainShape.TERRASSES
             )
 
             // Un château de cartes n'a rien d'un site fortifié : on le pose bien en
@@ -335,12 +351,15 @@ object TargetGenerator {
         ModuleKind.WELL -> listOf(TargetModules.well(x + w / 2f, 0f, minOf(w, h) * 0.28f))
         ModuleKind.SHELTER -> listOf(TargetModules.shelter(x, w, h))
         ModuleKind.STAIRCASE -> listOf(Masonry.staircase(slot.material, x, 0f, w, h))
+        ModuleKind.GATEHOUSE -> TargetModules.gatehouse(rng, x, w, h, slot.material, budget)
+        ModuleKind.CHAPEL -> TargetModules.chapel(rng, x, w, h, slot.material, budget)
+        ModuleKind.TOWER_HOUSE -> TargetModules.towerHouse(rng, x, w, h, slot.material, budget)
     }
 
     private enum class ModuleKind {
         TOWER, WALL, HOUSE, PROPS,
         WINDMILL, PYRAMID, ARENA, TEMPLE, AQUEDUCT, GRANARY, INSULA, BARN, PALISADE,
-        CARD_CASTLE, WELL, SHELTER, STAIRCASE
+        CARD_CASTLE, WELL, SHELTER, STAIRCASE, GATEHOUSE, CHAPEL, TOWER_HOUSE
     }
 
     private class Slot(
@@ -366,7 +385,12 @@ object TargetGenerator {
      */
     private fun plan(rng: Random, kind: SiteKind): List<List<Slot>> {
         fun between(a: Float, b: Float) = a + rng.nextFloat() * (b - a)
-        val stone = if (rng.nextFloat() < 0.25f) Material.COB else Material.STONE
+        // Les fortifications de torchis géantes appartiennent au langage arcade. En
+        // réaliste, les plans militaires restent en pierre ; le torchis demeure sur
+        // les maisons, où il est architecturalement plausible.
+        val stone = if (
+            TargetRules.style == TargetStyle.ARCADE && rng.nextFloat() < 0.25f
+        ) Material.COB else Material.STONE
 
         // La hauteur d'une tour : la plupart du temps sa gamme habituelle, et de temps
         // en temps un colosse. Ça ne coûte plus rien au moteur depuis que
@@ -377,13 +401,19 @@ object TargetGenerator {
             modMin: Float, modMax: Float,
             geanteMin: Float, geanteMax: Float,
             chanceGeante: Float = 0.15f
-        ): Float =
-            if (rng.nextFloat() < 1f - chanceGeante) between(modMin, modMax)
-            else between(geanteMin, geanteMax)
+        ): Float = if (TargetRules.style == TargetStyle.REALISTE) {
+            between(modMin, modMax)
+        } else if (rng.nextFloat() < 1f - chanceGeante) {
+            between(modMin, modMax)
+        } else {
+            between(geanteMin, geanteMax)
+        }
 
         return when (kind) {
             SiteKind.HAMEAU -> {
-                val n = 2 + rng.nextInt(3)
+                // Un hameau doit désormais se lire comme un lieu habité, pas comme
+                // deux maisons isolées : trois à six bâtiments, avec un peu de vie.
+                val n = 3 + rng.nextInt(4)
                 val groupes = ArrayList<List<Slot>>(n)
                 for (i in 0 until n) {
                     val maison = Slot(ModuleKind.HOUSE, between(4f, 7f), between(5.5f, 9f))
@@ -398,13 +428,22 @@ object TargetGenerator {
                         listOf(maison)
                     }
                 }
+                if (n >= 5 && rng.nextFloat() < 0.45f) {
+                    groupes += listOf(
+                        Slot(ModuleKind.CHAPEL, between(4.5f, 6.5f), between(8f, 12f), Material.STONE)
+                    )
+                }
                 groupes
             }
 
             SiteKind.FERME -> listOf(
                 listOf(
                     Slot(ModuleKind.WALL, between(5f, 8f), between(4f, 6f), stone),
-                    Slot(ModuleKind.HOUSE, between(4.5f, 6.5f), between(6f, 8.5f))
+                    if (rng.nextFloat() < 0.35f) {
+                        Slot(ModuleKind.TOWER_HOUSE, between(4.5f, 6f), between(10f, 14f), stone)
+                    } else {
+                        Slot(ModuleKind.HOUSE, between(4.5f, 6.5f), between(6f, 8.5f))
+                    }
                 ),
                 listOf(
                     Slot(ModuleKind.BARN, between(7f, 10f), between(5f, 6.5f), Material.WOOD),
@@ -429,8 +468,7 @@ object TargetGenerator {
                         stone
                     ),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
-                    Slot(ModuleKind.STAIRCASE, between(2.5f, 4f), between(1.8f, 3f), stone),
-                    Slot(ModuleKind.HOUSE, between(4.5f, 6f), hauteurMurs + between(0f, 2f)),
+                    Slot(ModuleKind.GATEHOUSE, between(5.5f, 7.5f), hauteurMurs + between(1f, 3f), stone),
                     Slot(ModuleKind.WALL, between(6f, 10f), hauteurMurs, stone),
                     Slot(
                         ModuleKind.TOWER, between(4f, 5f),
@@ -480,8 +518,57 @@ object TargetGenerator {
                 listOf(listOf(Slot(ModuleKind.CARD_CASTLE, largeur, hauteur, Material.CARDBOARD)))
             }
 
+            SiteKind.SEIGNEURIE -> {
+                // L'ordre est le récit du site, puisque le trébuchet est à gauche :
+                // 1. la tour de garde prend le premier impact ;
+                // 2. plusieurs foyers occupent le terrain qu'elle protège ;
+                // 3. un petit château ferme l'horizon à droite.
+                val tourAvant = if (TargetRules.style == TargetStyle.ARCADE) {
+                    between(34f, 58f)
+                } else {
+                    between(20f, 29f)
+                }
+                val groupes = ArrayList<List<Slot>>()
+                groupes += listOf(
+                    Slot(ModuleKind.TOWER, between(5f, 7f), tourAvant, Material.STONE)
+                )
+
+                // Quatre maisons donnent un vrai village tout en laissant assez de
+                // corps au petit château final dans le budget physique global.
+                val maisons = 4
+                for (i in 0 until maisons) {
+                    val maison = Slot(
+                        ModuleKind.HOUSE,
+                        between(4.2f, 6.2f),
+                        between(6f, 9.5f),
+                        Material.WOOD
+                    )
+                    groupes += when {
+                        i == 1 -> listOf(
+                            maison,
+                            Slot(ModuleKind.WELL, between(2f, 2.8f), between(2.4f, 3.2f))
+                        )
+                        i == maisons - 1 -> listOf(
+                            Slot(ModuleKind.BARN, between(7f, 9f), between(5f, 6.5f), Material.WOOD),
+                            maison
+                        )
+                        else -> listOf(maison)
+                    }
+                }
+
+                val petiteTour = between(10f, 14f)
+                groupes += listOf(
+                    Slot(ModuleKind.TOWER, between(3.5f, 4.5f), petiteTour, Material.STONE),
+                    Slot(ModuleKind.WALL, between(5f, 7f), petiteTour * between(0.45f, 0.58f), Material.STONE),
+                    Slot(ModuleKind.GATEHOUSE, between(5f, 6.5f), between(7f, 9.5f), Material.STONE),
+                    Slot(ModuleKind.WALL, between(4f, 6f), petiteTour * between(0.42f, 0.55f), Material.STONE),
+                    Slot(ModuleKind.TOWER, between(3.5f, 4.5f), petiteTour + between(1f, 3f), Material.STONE)
+                )
+                groupes
+            }
+
             SiteKind.VILLAGE -> {
-                val groupes = ArrayList<List<Slot>>(4)
+                val groupes = ArrayList<List<Slot>>(7)
                 groupes += listOf(
                     Slot(ModuleKind.PALISADE, between(5f, 9f), between(2.5f, 4f)),
                     Slot(ModuleKind.PROPS, between(1.5f, 3f), 0f)
@@ -498,6 +585,21 @@ object TargetGenerator {
                         Slot(ModuleKind.HOUSE, between(4.5f, 6f), between(6f, 8f)),
                         Slot(ModuleKind.PROPS, between(1.5f, 2.5f), 0f)
                     )
+                }
+                groupes += listOf(
+                    Slot(ModuleKind.CHAPEL, between(5f, 7f), between(9f, 13f), Material.STONE)
+                )
+                // Deux à trois foyers supplémentaires donnent enfin la densité d'un
+                // village, sans répéter une rangée parfaitement régulière.
+                repeat(2 + rng.nextInt(2)) { i ->
+                    groupes += if (i == 1 && rng.nextBoolean()) {
+                        listOf(
+                            Slot(ModuleKind.HOUSE, between(4f, 6f), between(6f, 9f)),
+                            Slot(ModuleKind.WELL, between(2f, 2.8f), between(2.4f, 3.2f))
+                        )
+                    } else {
+                        listOf(Slot(ModuleKind.HOUSE, between(4f, 6.5f), between(6f, 9.5f)))
+                    }
                 }
                 groupes
             }
@@ -519,7 +621,7 @@ object TargetGenerator {
                 val groupes = ArrayList<List<Slot>>(4)
                 groupes += listOf(
                     Slot(ModuleKind.HOUSE, between(4f, 5.5f), between(7f, 10f)),
-                    Slot(ModuleKind.HOUSE, between(4f, 5.5f), between(7f, 10f))
+                    Slot(ModuleKind.TOWER_HOUSE, between(4f, 5.5f), between(11f, 16f), Material.STONE)
                 )
                 groupes += listOf(Slot(ModuleKind.HOUSE, between(6f, 8f), between(8f, 11f)))
                 groupes += listOf(Slot(ModuleKind.GRANARY, between(5f, 7f), between(9f, 12f)))
@@ -578,6 +680,7 @@ object TargetGenerator {
                 SiteKind.CITE_ANTIQUE -> "Cité antique"
                 SiteKind.NECROPOLE -> "Nécropole"
                 SiteKind.CHATEAU_CARTES -> "Château de cartes"
+                SiteKind.SEIGNEURIE -> "Seigneurie protégée"
             }
         )
         // Le relief ne se dit que quand il change quelque chose au tir : annoncer « en

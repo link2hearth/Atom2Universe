@@ -60,7 +60,7 @@ enum class Surface {
  * géométrie et doit donc aussi être leur collision.
  */
 enum class Decor {
-    NONE, WINDOW_SHUTTERS, WINDOW_ARCHED, DOOR, ARROW_SLIT
+    NONE, WINDOW_SHUTTERS, WINDOW_ARCHED, DOOR, ARROW_SLIT, BELL
 }
 
 /** Contour graphique d'un bloc lorsque ses pièces physiques ne suffisent pas à le lire. */

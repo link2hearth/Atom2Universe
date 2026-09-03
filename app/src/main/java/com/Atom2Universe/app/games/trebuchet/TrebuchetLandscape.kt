@@ -827,6 +827,37 @@ class LandScene(context: Context) {
                 )
             }
 
+            Decor.BELL -> {
+                val openingW = minOf(hw * 0.55f, TargetRules.detail(0.65f))
+                val openingH = minOf(hh * 0.72f, TargetRules.detail(0.82f))
+                poly(
+                    listOf(
+                        -openingW to -openingH,
+                        openingW to -openingH,
+                        openingW to openingH * 0.25f,
+                        openingW * 0.65f to openingH * 0.72f,
+                        0f to openingH,
+                        -openingW * 0.65f to openingH * 0.72f,
+                        -openingW to openingH * 0.25f
+                    ),
+                    "#171512".toColorInt()
+                )
+                val bellW = openingW * 0.58f
+                val bellTop = openingH * 0.35f
+                val bellBottom = -openingH * 0.38f
+                poly(
+                    listOf(
+                        -bellW * 0.35f to bellTop,
+                        bellW * 0.35f to bellTop,
+                        bellW to bellBottom,
+                        -bellW to bellBottom
+                    ),
+                    "#C28B32".toColorInt()
+                )
+                line(-bellW, bellBottom, bellW, bellBottom, "#6E451B".toColorInt(), 2f)
+                line(0f, bellBottom, 0f, -openingH * 0.62f, "#6E451B".toColorInt(), 1.4f)
+            }
+
             Decor.NONE -> Unit
         }
     }
