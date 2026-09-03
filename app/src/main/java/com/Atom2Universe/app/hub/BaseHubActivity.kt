@@ -125,9 +125,21 @@ abstract class BaseHubActivity : AppCompatActivity() {
         }
     }
 
+    /** Nombre de colonnes de la grille selon la largeur d'écran (téléphone/tablette). */
+    private fun calculateSpanCount(): Int {
+        val widthDp = resources.configuration.screenWidthDp
+        return when {
+            widthDp >= 840 -> 4
+            widthDp >= 600 -> 3
+            else -> 2
+        }
+    }
+
     private fun updateViewMode() {
         if (isGridMode) {
-            recyclerView.layoutManager = GridLayoutManager(this, 2)
+            val spanCount = calculateSpanCount()
+            recyclerView.layoutManager = GridLayoutManager(this, spanCount)
+            tilesAdapter.setSpanCount(spanCount)
             viewToggleButton.setImageResource(R.drawable.ic_view_list)
         } else {
             recyclerView.layoutManager = LinearLayoutManager(this)

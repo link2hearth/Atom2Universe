@@ -36,12 +36,17 @@ class HubTilesAdapter(
     private val onLongPressTile: ((HubTile) -> Unit)? = null
 ) : RecyclerView.Adapter<HubTilesAdapter.TileViewHolder>() {
 
+    companion object {
+        private const val MIN_GRID_TILE_HEIGHT_DP = 112
+    }
+
     private val tiles = mutableListOf<HubTile>()
     private var itemTouchHelper: ItemTouchHelper? = null
     private var recyclerViewHeight: Int = 0
     private var isEditMode: Boolean = false
     private var isGridMode: Boolean = true
     private var showQuickAccessButtons: Boolean = false
+    private var spanCount: Int = 2
 
     fun setTiles(newTiles: List<HubTile>) {
         tiles.clear()
@@ -76,6 +81,13 @@ class HubTilesAdapter(
     fun setGridMode(isGrid: Boolean) {
         if (isGridMode != isGrid) {
             isGridMode = isGrid
+            notifyDataSetChanged()
+        }
+    }
+
+    fun setSpanCount(count: Int) {
+        if (spanCount != count) {
+            spanCount = count
             notifyDataSetChanged()
         }
     }
@@ -123,11 +135,15 @@ class HubTilesAdapter(
         val tile = tiles[position]
 
         if (isGridMode && recyclerViewHeight > 0) {
+            val density = context.resources.displayMetrics.density
             val screenWidth = context.resources.displayMetrics.widthPixels
             val maxTileHeight = (screenWidth * 0.35).toInt()
-            val numRows = (tiles.size + 1) / 2
+            // Hauteur minimale pour que l'icône (48dp) et le titre ne soient jamais coupés.
+            val minTileHeight = (MIN_GRID_TILE_HEIGHT_DP * density).toInt()
+            val numRows = (tiles.size + spanCount - 1) / spanCount.coerceAtLeast(1)
             val calculatedHeight = recyclerViewHeight / numRows.coerceAtLeast(1)
-            val itemHeight = minOf(calculatedHeight, maxTileHeight)
+            // En dessous du minimum on préfère un léger scroll plutôt que d'écraser le contenu.
+            val itemHeight = calculatedHeight.coerceIn(minTileHeight, maxOf(maxTileHeight, minTileHeight))
             holder.itemView.layoutParams.height = itemHeight
         } else if (!isGridMode) {
             holder.itemView.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
