@@ -22,6 +22,41 @@ class HotPotatoView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : SurfaceView(context, attrs), SurfaceHolder.Callback, Runnable {
 
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
+     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
+     * à chaque image. Mesuré à la tablette sur le jeu Particules, qui souffrait du même
+     * mal, cela coûtait un cœur entier et un ampère pendant que la puce graphique
+     * restait à deux pour cent ; le basculement a ramené le jeu à trente pour cent d'un
+     * cœur et la puce de 53 à 36 degrés. Remplir des surfaces est précisément ce que la
+     * carte graphique fait pour rien.
+     *
+     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
+     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé — ce
+     * que cette vue fait déjà, son rendu commençant par repeindre l'écran entier.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
+     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
+     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
+     * pas prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
+    }
+
     // ── Canvas virtuel (plein écran, paysage ET portrait) ───────────────────────
     // En paysage on fixe la hauteur (REF_H_LANDSCAPE) et la largeur s'étire ;
     // en portrait on fixe la largeur (REF_W_PORTRAIT) et la hauteur s'étire.
@@ -66,7 +101,26 @@ class HotPotatoView @JvmOverloads constructor(
 
     // ── État ───────────────────────────────────────────────────────────────────
     private enum class Phase { READY, RUNNING, PAUSED, GAME_OVER }
-    private var phase = Phase.READY
+    /**
+     * Lue par le fil de jeu, écrite aussi par celui de l'interface : `@Volatile` pour
+     * que le premier voie ce que le second a écrit.
+     */
+    @Volatile private var phase = Phase.READY
+
+    /**
+     * Un changement de phase demandé par l'interface, joué par le fil de jeu.
+     *
+     * `startGame()` vide cinq listes — patates, garnitures, braises, points chauds,
+     * textes flottants — et il était appelé depuis `onTouchEvent`, donc sur le fil de
+     * l'interface, **pendant** que le fil de jeu les parcourait. Le défaut ne se voyait
+     * pas tant que le jeu tournait à quelques images par seconde sur canevas logiciel ;
+     * depuis le passage au canevas matériel, la fenêtre est bien plus large. Le même
+     * défaut a fait tomber FlappyCat.
+     *
+     * Les visées, elles, étaient déjà protégées par `synchronized(aims)` : c'est le
+     * seul chemin qui manquait.
+     */
+    @Volatile private var phaseTapPending = false
 
     private class Potato(var x: Float, var y: Float) {
         var vx = 0f
@@ -248,10 +302,27 @@ class HotPotatoView @JvmOverloads constructor(
             val dt = ((now - lastNano) / 1_000_000_000f).coerceIn(0.001f, 0.05f)
             lastNano = now
 
+            // Le changement de phase demandé par l'appui se joue ici, sur ce fil et pas
+            // sur celui de l'interface : voir [phaseTapPending].
+            if (phaseTapPending) {
+                phaseTapPending = false
+                when (phase) {
+                    Phase.READY -> startGame()
+                    Phase.PAUSED -> phase = Phase.RUNNING
+                    Phase.GAME_OVER -> phase = Phase.READY
+                    else -> {}
+                }
+            }
+
             if (phase == Phase.RUNNING) update(dt)
 
-            val c = holder.lockCanvas() ?: continue
-            try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            // Une toile nulle veut dire que la surface n'est pas prête. On attend quand
+            // même : le `continue` d'avant sautait le sommeil, et la boucle occupait un
+            // cœur à tourner à vide le temps d'un changement d'écran.
+            val c = lockFrame()
+            if (c != null) {
+                try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            }
 
             val remainMs = 16L - (System.nanoTime() - now) / 1_000_000L
             if (remainMs > 0) try { Thread.sleep(remainMs) } catch (_: InterruptedException) {}
@@ -502,12 +573,8 @@ class HotPotatoView @JvmOverloads constructor(
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 if (phase != Phase.RUNNING) {
-                    when (phase) {
-                        Phase.READY -> startGame()
-                        Phase.PAUSED -> phase = Phase.RUNNING
-                        Phase.GAME_OVER -> phase = Phase.READY
-                        else -> {}
-                    }
+                    // On note, on ne touche à rien : voir [phaseTapPending].
+                    phaseTapPending = true
                     return true
                 }
                 val idx = event.actionIndex

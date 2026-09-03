@@ -15,6 +15,41 @@ class StarsWarView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : SurfaceView(context, attrs), SurfaceHolder.Callback, Runnable {
 
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
+     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
+     * à chaque image. Mesuré à la tablette sur le jeu Particules, qui souffrait du même
+     * mal, cela coûtait un cœur entier et un ampère pendant que la puce graphique
+     * restait à deux pour cent ; le basculement a ramené le jeu à trente pour cent d'un
+     * cœur et la puce de 53 à 36 degrés. Remplir des surfaces est précisément ce que la
+     * carte graphique fait pour rien.
+     *
+     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
+     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé — ce
+     * que cette vue fait déjà, son rendu commençant par repeindre l'écran entier.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
+     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
+     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
+     * pas prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
+    }
+
     // ── Constants ─────────────────────────────────────────────────────────────
     companion object {
         const val VW = 480f
@@ -170,6 +205,26 @@ class StarsWarView @JvmOverloads constructor(
     // ── Phase & threading ─────────────────────────────────────────────────────
     @Volatile private var phase = Phase.READY
     @Volatile private var pendingReset = false
+
+    /**
+     * Les gestes qui **changent l'état du jeu**, notés par l'interface et joués par le
+     * fil de jeu.
+     *
+     * `pendingReset` suivait déjà ce principe ; deux chemins l'oubliaient. `launchNova`
+     * vide la liste des tirs ennemis et `handleUpgradeTap` applique une amélioration,
+     * tous deux appelés depuis `onTouchEvent`, donc sur le fil de l'interface, pendant
+     * que le fil de jeu parcourt ces mêmes listes. Le même défaut a fait tomber
+     * FlappyCat une fois la cadence rendue au jeu.
+     *
+     * Le second doigt ne transmet que son **intention** — simple ou double appui — et
+     * non sa conséquence : c'est au fil de jeu de décider si la nova est disponible ou
+     * si le champ magnétique est encore en attente, parce que lui seul lit cet état
+     * sans risquer de le lire à moitié écrit.
+     */
+    @Volatile private var pendingUpgradeTap = false
+    @Volatile private var pendingUpgradeX = 0f
+    @Volatile private var pendingUpgradeY = 0f
+    @Volatile private var pendingSecondFinger = 0
     private var gameThread: Thread? = null
     @Volatile private var running = false
 
@@ -546,6 +601,29 @@ class StarsWarView @JvmOverloads constructor(
             val dt = ((now - lastNano) / 1_000_000_000f).coerceIn(0.001f, 0.05f)
             lastNano = now
 
+            // Les gestes notés par l'interface se jouent ici, et **hors** du `when`
+            // ci-dessous : le choix d'amélioration se fait en phase UPGRADE, où aucun
+            // `update` ne tourne. Voir [pendingUpgradeTap].
+            if (pendingUpgradeTap) {
+                pendingUpgradeTap = false
+                if (phase == Phase.UPGRADE) handleUpgradeTap(pendingUpgradeX, pendingUpgradeY)
+            }
+            if (pendingSecondFinger != 0) {
+                val doubleAppui = pendingSecondFinger == 2
+                pendingSecondFinger = 0
+                if (phase == Phase.RUNNING || phase == Phase.METEOR) {
+                    if (doubleAppui && upgradeStacks[UPG_NOVA] > 0 && novaAvailable) {
+                        launchNova()
+                    } else if (!doubleAppui && upgradeStacks[UPG_MAGNET] > 0 &&
+                        !magnetActive && magnetCooldown <= 0f
+                    ) {
+                        magnetActive = true
+                        magnetTimer = magnetDuration()
+                        magnetCooldown = MAGNET_COOLDOWN_MAX
+                    }
+                }
+            }
+
             when (phase) {
                 Phase.RUNNING    -> update(dt)
                 Phase.WAVE_CLEAR -> updateWaveClear(dt)
@@ -553,8 +631,13 @@ class StarsWarView @JvmOverloads constructor(
                 else             -> {}
             }
 
-            val c = holder.lockCanvas() ?: continue
-            try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            // Une toile nulle veut dire que la surface n'est pas prête. On attend quand
+            // même : le `continue` d'avant sautait le sommeil, et la boucle occupait un
+            // cœur à tourner à vide le temps d'un changement d'écran.
+            val c = lockFrame()
+            if (c != null) {
+                try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            }
 
             val remainMs = 16L - (System.nanoTime() - now) / 1_000_000L
             if (remainMs > 0) Thread.sleep(remainMs)
@@ -1299,7 +1382,11 @@ class StarsWarView @JvmOverloads constructor(
                     }
                     Phase.GAME_OVER -> phase = Phase.READY
                     Phase.PAUSED    -> phase = Phase.RUNNING
-                    Phase.UPGRADE   -> handleUpgradeTap(toVx(event.x), toVy(event.y))
+                    Phase.UPGRADE   -> {
+                        // On note le point touché, le fil de jeu appliquera le choix.
+                        pendingUpgradeX = toVx(event.x); pendingUpgradeY = toVy(event.y)
+                        pendingUpgradeTap = true
+                    }
                     Phase.RUNNING, Phase.METEOR -> {
                         dragPointerId = event.getPointerId(0)
                         lastTouchX = toVx(event.x); lastTouchY = toVy(event.y)
@@ -1314,17 +1401,13 @@ class StarsWarView @JvmOverloads constructor(
                         dragPointerId = event.getPointerId(idx)
                         lastTouchX = toVx(event.getX(idx)); lastTouchY = toVy(event.getY(idx))
                     } else {
-                        // 2e doigt : double-tap < 500ms → nova, sinon → mag-field
+                        // 2e doigt : double-tap < 500ms → nova, sinon → mag-field.
+                        // On ne transmet que l'intention ; l'éligibilité et l'effet sont
+                        // décidés par le fil de jeu, seul à lire cet état sans risque.
                         val now = System.currentTimeMillis()
                         val isDoubleTap = (now - lastSecondFingerTapMs) < 500L
                         lastSecondFingerTapMs = now
-                        if (isDoubleTap && upgradeStacks[UPG_NOVA] > 0 && novaAvailable) {
-                            launchNova()
-                        } else if (!isDoubleTap && upgradeStacks[UPG_MAGNET] > 0 && !magnetActive && magnetCooldown <= 0f) {
-                            magnetActive = true
-                            magnetTimer = magnetDuration()
-                            magnetCooldown = MAGNET_COOLDOWN_MAX
-                        }
+                        pendingSecondFinger = if (isDoubleTap) 2 else 1
                     }
                 }
             }
@@ -1368,6 +1451,13 @@ class StarsWarView @JvmOverloads constructor(
 
     // ── Render ────────────────────────────────────────────────────────────────
     private fun drawFrame(canvas: Canvas) {
+        // Le jeu se dessine dans un cadre à ses proportions, centré : selon la forme de
+        // l'écran il reste des bandes en haut et en bas, ou à gauche et à droite, que
+        // **rien ne peint**. Sur canevas logiciel elles gardaient ce qu'il y avait ;
+        // sur canevas matériel le contenu de l'image précédente n'existe plus, et ces
+        // bandes montreraient n'importe quoi. On les noircit donc exprès, avant la
+        // transformation.
+        canvas.drawColor(Color.BLACK)
         canvas.save()
         canvas.translate(offX, offY)
         canvas.scale(scaleX, scaleY)

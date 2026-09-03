@@ -31,6 +31,41 @@ class CosmoRunView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : SurfaceView(context, attrs), SurfaceHolder.Callback, Runnable {
 
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
+     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
+     * à chaque image. Mesuré à la tablette sur le jeu Particules, qui souffrait du même
+     * mal, cela coûtait un cœur entier et un ampère pendant que la puce graphique
+     * restait à deux pour cent ; le basculement a ramené le jeu à trente pour cent d'un
+     * cœur et la puce de 53 à 36 degrés. Remplir des surfaces est précisément ce que la
+     * carte graphique fait pour rien.
+     *
+     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
+     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé — ce
+     * que cette vue fait déjà, son rendu commençant par repeindre l'écran entier.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
+     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
+     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
+     * pas prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
+    }
+
     companion object {
         private const val FRAME_TIME_NS = 1_000_000_000L / 60
         private const val Z_HALF = 9f          // contrôle la courbure de la perspective
@@ -139,7 +174,7 @@ class CosmoRunView @JvmOverloads constructor(
                 onGameOver?.invoke()
             }
 
-            val canvas = try { holder.lockCanvas() } catch (_: Exception) { null }
+            val canvas = try { lockFrame() } catch (_: Exception) { null }
             if (canvas != null) try { renderFrame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
 
             val sleep = FRAME_TIME_NS - (System.nanoTime() - now)

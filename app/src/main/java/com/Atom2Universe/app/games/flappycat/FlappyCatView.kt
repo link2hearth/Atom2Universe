@@ -16,6 +16,41 @@ class FlappyCatView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : SurfaceView(context, attrs), SurfaceHolder.Callback, Runnable {
 
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
+     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
+     * à chaque image. Mesuré à la tablette sur le jeu Particules, qui souffrait du même
+     * mal, cela coûtait un cœur entier et un ampère pendant que la puce graphique
+     * restait à deux pour cent ; le basculement a ramené le jeu à trente pour cent d'un
+     * cœur et la puce de 53 à 36 degrés. Remplir des surfaces est précisément ce que la
+     * carte graphique fait pour rien.
+     *
+     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
+     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé — ce
+     * que cette vue fait déjà, son rendu commençant par repeindre l'écran entier.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
+     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
+     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
+     * pas prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
+    }
+
     // ── Virtual canvas ──────────────────────────────────────────────────────
     private val VW = 420f
     private val VH = 560f
@@ -37,13 +72,95 @@ class FlappyCatView @JvmOverloads constructor(
     private val MAX_FALL = 1800f
     private val BG_SCROLL = 110f
 
+    /**
+     * La vitesse du monde. **C'est la seule molette de difficulté du jeu.**
+     *
+     * Elle existe à cause d'un accident. Cette vue dessinait sur canevas logiciel, et
+     * étirer une image de fond au format de l'écran coûtait si cher qu'elle tenait à
+     * peine cinq images par seconde. Or l'ancienne boucle plafonnait le temps écoulé à
+     * cinquante millisecondes : sous vingt images par seconde, le monde avançait donc
+     * moins vite que l'horloge, et à cinq images il tournait au **quart** de la vitesse
+     * décrite par les constantes ci-dessus. Le jeu a été équilibré à l'œil contre ce
+     * ralenti, et personne n'avait jamais vu sa vraie vitesse.
+     *
+     * Le passage au canevas matériel a rendu les cinquante images par seconde, donc la
+     * vitesse d'origine — injouable, puisque quatre fois celle qu'on connaissait. Plutôt
+     * que de retoucher gravité, vitesse des oiseaux et cadence d'apparition chacune dans
+     * leur coin, ce qui aurait changé le *caractère* du jeu et pas seulement son rythme,
+     * on remet un facteur global : c'est exactement ce que le ralenti faisait, et ça se
+     * règle avec un seul nombre.
+     *
+     * Le réglage s'est fait en deux temps, parce qu'un second défaut brouillait la
+     * mesure : deux fils de jeu tournaient en parallèle et alimentaient le **même**
+     * accumulateur, si bien que l'horloge du monde tournait au double de ce nombre. Les
+     * essais à 0,25 puis 0,5 ont donc été jugés à 0,5 et 1,0 réels. Une fois le fil en
+     * double supprimé, la valeur validée à l'oreille est **1,0**.
+     *
+     * Ce qui revient à dire que les constantes du dessus étaient justes depuis le début.
+     * Ce qui était faux, c'était la cadence — cinq images par seconde sur canevas
+     * logiciel, dont le plafond de temps écoulé faisait un ralenti de moitié — et le fil
+     * en double, qui la rattrapait par le mauvais bout. Les deux erreurs se
+     * compensaient au quart près, et le jeu était équilibré à l'œil contre leur somme.
+     *
+     * La molette reste : elle ne coûte rien, elle documente l'histoire, et elle donne un
+     * seul nombre à tourner le jour où la difficulté sera à revoir.
+     */
+    private val GAME_SPEED = 1.0f
+
+    /**
+     * Le pas de simulation, et combien on s'autorise à en rattraper d'un coup.
+     *
+     * Le monde n'avance plus « de ce que la dernière image a mis à se dessiner » mais
+     * par petits pas fixes, autant de fois qu'il en faut pour rejoindre l'horloge. Une
+     * image lente déclenche alors six petits pas plutôt qu'un gros pas tronqué : plus de
+     * ralenti, et pas de risque qu'un oiseau traverse le chat sans le toucher.
+     *
+     * Le garde-fou ne sert que si le jeu a vraiment décroché — une mise en veille, un
+     * blocage. Rattraper trente secondes en trois mille pas gèlerait l'appareil et
+     * ferait perdre la partie sans que le joueur ait touché l'écran ; on abandonne donc
+     * le retard au lieu de le rejouer.
+     *
+     * **Le pas se compte en temps du monde, pas en temps réel**, et c'est ce qui décide
+     * de sa taille. L'horloge du monde tourne à [GAME_SPEED] fois celle du mur : à 0,25
+     * et soixante images par seconde, une image ne fait avancer le monde que de quatre
+     * millisecondes. Un pas d'un cent-vingtième — huit millisecondes — ne serait donc
+     * franchi qu'une image sur deux, et une image sur deux serait la copie exacte de la
+     * précédente. À un quatre-cent-quatre-vingtième, il passe deux fois par image et le
+     * mouvement reste continu. Si tu montes [GAME_SPEED], la marge ne fait que grandir.
+     */
+    private val STEP = 1f / 480f
+    private val MAX_STEPS = 40
+    private var accumulator = 0f
+
     // ── Limites de jeu ───────────────────────────────────────────────────────
     private val ceilY  get() = CEIL_H                  // y du bord bas du plafond
     private val floorY get() = VH - GROUND_H           // y du bord haut du sol
 
     // ── État ─────────────────────────────────────────────────────────────────
     private enum class Phase { READY, RUNNING, PAUSED, GAME_OVER }
-    private var phase = Phase.READY
+    /**
+     * Lue par le fil de jeu, écrite aussi par celui de l'interface (pause, reprise) :
+     * `@Volatile` pour que le premier voie ce que le second a écrit.
+     */
+    @Volatile private var phase = Phase.READY
+
+    /**
+     * Un appui en attente, posé par l'interface et consommé par le fil de jeu.
+     *
+     * `onTouchEvent` s'exécute sur le fil de l'interface et modifiait l'état du jeu
+     * directement : `resetGame()` vide la liste des oiseaux **pendant** que le fil de
+     * jeu la parcourt dans `update`, ce qui la fait sortir de ses bornes. Le défaut
+     * existait depuis toujours, mais il ne se déclenchait jamais : à cinq images par
+     * seconde le fil de jeu ne passait presque aucun temps dans cette boucle. Depuis
+     * qu'il tourne à soixante images et quatre pas par image, la fenêtre s'est ouverte
+     * d'un facteur cinquante, et le jeu tombe.
+     *
+     * La correction n'est donc pas un verrou mais une frontière : l'interface **note**
+     * l'appui, et le fil de jeu est le seul à toucher l'état. Deux appuis dans la même
+     * image se confondent en un seul, ce qui est sans conséquence — le saut pose une
+     * vitesse, il ne l'ajoute pas.
+     */
+    @Volatile private var tapPending = false
 
     private var catX = VW * 0.25f
     private var catY = VH * 0.5f
@@ -149,6 +266,31 @@ class FlappyCatView @JvmOverloads constructor(
 
     // ── Surface callbacks ─────────────────────────────────────────────────────
     override fun surfaceCreated(holder: SurfaceHolder) {
+        startThread()
+    }
+
+    /**
+     * Démarre le fil de jeu, **et un seul**.
+     *
+     * Deux chemins y menaient : la création de la surface et la reprise de l'activité.
+     * Le second vérifiait qu'un fil ne tournait pas déjà, le premier démarrait sans rien
+     * demander. Quand les deux se suivaient — ce qui est le cas ordinaire au retour dans
+     * le jeu — **deux fils tournaient sur les mêmes listes** : l'un ajoutait et retirait
+     * des oiseaux pendant que l'autre les parcourait, et `birds.removeAll` sortait de
+     * ses bornes. Le second écrasait de surcroît la référence du premier, devenu
+     * orphelin et que [joinThread] n'attendrait jamais.
+     *
+     * C'est ce défaut-là qui faisait tomber le jeu, et non le toucher. Reporter les
+     * appuis sur le fil de jeu était juste et nécessaire — les deux fils y accédaient
+     * aussi — mais ça ne pouvait pas suffire.
+     */
+    private fun startThread() {
+        if (gameThread?.isAlive == true) {
+            // Déjà en marche : rien à faire. En train de s'arrêter : on l'attend avant
+            // d'en poser un autre, sinon les deux se croiseraient le temps de sa sortie.
+            if (running) return
+            joinThread()
+        }
         running = true
         gameThread = Thread(this, "FlappyCatThread").apply { start() }
     }
@@ -195,10 +337,7 @@ class FlappyCatView @JvmOverloads constructor(
     }
 
     fun resume() {
-        running = true
-        if (gameThread?.isAlive != true) {
-            gameThread = Thread(this, "FlappyCatThread").apply { start() }
-        }
+        startThread()
     }
 
     // ── Boucle principale ─────────────────────────────────────────────────────
@@ -206,13 +345,37 @@ class FlappyCatView @JvmOverloads constructor(
         var lastNano = System.nanoTime()
         while (running) {
             val now = System.nanoTime()
-            val dt = ((now - lastNano) / 1_000_000_000f).coerceIn(0.001f, 0.05f)
+            val reel = (now - lastNano) / 1_000_000_000f
             lastNano = now
 
-            if (phase == Phase.RUNNING) update(dt)
+            // L'appui se joue ici, avant la simulation, et jamais sur le fil de
+            // l'interface : voir [tapPending].
+            if (tapPending) {
+                tapPending = false
+                consumeTap()
+            }
 
-            val c = holder.lockCanvas() ?: continue
-            try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            if (phase == Phase.RUNNING) {
+                accumulator += reel * GAME_SPEED
+                var pas = 0
+                // Le pas s'arrête aussi dès que la phase change : `update` déclare la
+                // partie perdue en cours de route, et rejouer les pas suivants ferait
+                // avancer un monde qui n'existe plus.
+                while (accumulator >= STEP && pas < MAX_STEPS && phase == Phase.RUNNING) {
+                    update(STEP)
+                    accumulator -= STEP
+                    pas++
+                }
+                if (pas >= MAX_STEPS) accumulator = 0f
+            }
+
+            // Une toile nulle veut dire que la surface n'est pas prête. On attend quand
+            // même : le `continue` d'avant sautait le sommeil, et la boucle occupait un
+            // cœur à tourner à vide le temps d'un changement d'écran.
+            val c = lockFrame()
+            if (c != null) {
+                try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
+            }
 
             val remainMs = 16L - (System.nanoTime() - now) / 1_000_000L
             if (remainMs > 0) Thread.sleep(remainMs)
@@ -319,22 +482,36 @@ class FlappyCatView @JvmOverloads constructor(
         birds.clear()
         score = 0; elapsed = 0f; bgOffset = 0f; newBest = false
         nextBird = 1.5f
+        // Sans ça, le reliquat de la partie précédente serait rejoué au premier pas.
+        accumulator = 0f
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action != MotionEvent.ACTION_DOWN) return true
+        // On note, on ne touche à rien : voir [tapPending].
+        tapPending = true
+        return true
+    }
+
+    /** L'appui, joué par le fil de jeu et par lui seul. */
+    private fun consumeTap() {
         when (phase) {
             Phase.READY     -> { resetGame(); phase = Phase.RUNNING; catVY = -JUMP_IMPULSE }
             Phase.RUNNING   -> catVY = -JUMP_IMPULSE
             Phase.PAUSED    -> phase = Phase.RUNNING
             Phase.GAME_OVER -> { resetGame(); phase = Phase.READY }
         }
-        return true
     }
 
     // ── Rendu ─────────────────────────────────────────────────────────────────
     private fun drawFrame(canvas: Canvas) {
+        // Le jeu se dessine dans un cadre à ses proportions, centré : quand l'écran est
+        // plus large, il reste des bandes de part et d'autre que **rien ne peint**.
+        // Sur canevas logiciel elles gardaient ce qu'il y avait ; sur canevas matériel
+        // le contenu de l'image précédente n'existe plus, et ces bandes montreraient
+        // n'importe quoi. On les noircit donc exprès, avant la transformation.
+        canvas.drawColor(Color.BLACK)
         canvas.save()
         canvas.translate(offX, offY)
         canvas.scale(scaleX, scaleY)

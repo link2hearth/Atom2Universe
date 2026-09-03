@@ -12,6 +12,41 @@ class BiggerView @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null
 ) : SurfaceView(ctx, attrs), SurfaceHolder.Callback, Runnable {
 
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
+     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
+     * à chaque image. Mesuré à la tablette sur le jeu Particules, qui souffrait du même
+     * mal, cela coûtait un cœur entier et un ampère pendant que la puce graphique
+     * restait à deux pour cent ; le basculement a ramené le jeu à trente pour cent d'un
+     * cœur et la puce de 53 à 36 degrés. Remplir des surfaces est précisément ce que la
+     * carte graphique fait pour rien.
+     *
+     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
+     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé — ce
+     * que cette vue fait déjà, son rendu commençant par repeindre l'écran entier.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
+     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
+     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
+     * pas prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
+    }
+
     val game = BiggerGame()
 
     private var thread: Thread? = null
@@ -110,8 +145,31 @@ class BiggerView @JvmOverloads constructor(
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
+        startThread()
+    }
+
+    /**
+     * Démarre le fil de jeu, **et un seul**.
+     *
+     * La création de la surface le démarrait sans rien demander, alors que la reprise
+     * d'activité vérifiait d'abord. Quand les deux se suivaient, deux fils tournaient :
+     * la partie avançait à double vitesse, les deux se disputaient la toile, et la
+     * référence du premier était écrasée — il n'aurait donc jamais été attendu. L'état
+     * du jeu, ici, est protégé par `synchronized(game)`, donc rien ne se corrompait ;
+     * c'est le même défaut qui faisait tomber FlappyCat, où il ne l'était pas.
+     */
+    private fun startThread() {
+        if (thread?.isAlive == true) {
+            if (running) return
+            joinThread()
+        }
         running = true; lastNanos = System.nanoTime()
         thread = Thread(this, "BiggerPhysics").also { it.start() }
+    }
+
+    private fun joinThread() {
+        try { thread?.join(500) } catch (_: InterruptedException) {}
+        thread = null
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
@@ -132,19 +190,21 @@ class BiggerView @JvmOverloads constructor(
             val dt = ((now - lastNanos) / 1_000_000_000f).coerceAtMost(0.05f)
             lastNanos = now
             synchronized(game) { game.step(dt) }
-            val canvas = holder.lockCanvas() ?: continue
-            try { synchronized(game) { drawFrame(canvas) } }
-            finally { holder.unlockCanvasAndPost(canvas) }
+            // Une toile nulle veut dire que la surface n'est pas prête. On attend quand
+            // même : le `continue` d'avant sautait le sommeil, et la boucle occupait un
+            // cœur à tourner à vide le temps d'un changement d'écran.
+            val canvas = lockFrame()
+            if (canvas != null) {
+                try { synchronized(game) { drawFrame(canvas) } }
+                finally { holder.unlockCanvasAndPost(canvas) }
+            }
             Thread.sleep(5)
         }
     }
 
     fun pause()  { running = false; thread?.join(1500); thread = null }
     fun resume() {
-        if (!running) {
-            running = true; lastNanos = System.nanoTime()
-            thread = Thread(this, "BiggerPhysics").also { it.start() }
-        }
+        startThread()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

@@ -293,6 +293,9 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     @Volatile private var running = false
     private var thread: Thread? = null
 
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
+
     init {
         holder.addCallback(this)
         isFocusable = true
@@ -720,10 +723,18 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 val now   = System.currentTimeMillis()
                 val delta = minOf(now - last, MAX_DELTA_MS)
                 last = now
+                // Les appuis mis de côté se rejouent ici, avant la simulation, sur ce
+                // fil et pas sur celui de l'interface : voir [drainAppuis].
+                drainAppuis()
                 if (state == State.PLAYING) update(delta)
                 else updateAmbient(delta)
-                val canvas = holder.lockCanvas() ?: continue
-                try { drawFrame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
+                val canvas = lockFrame()
+                if (canvas != null) {
+                    try { drawFrame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
+                }
+                // Une toile nulle veut dire que la surface n'est pas prête. On attend
+                // quand même : sans ça, la boucle repartait aussitôt et occupait un
+                // cœur à tourner à vide le temps d'un changement d'écran.
                 val sleep = FRAME_MS - (System.currentTimeMillis() - now)
                 if (sleep > 0) try { Thread.sleep(sleep) } catch (_: InterruptedException) { break }
             }
@@ -735,6 +746,40 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         running = false
         thread?.join(500)
         thread = null
+    }
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
+     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
+     * à chaque image. Mesuré à la tablette, ce jeu occupait un cœur entier et tirait un
+     * ampère pendant que la puce graphique restait à **deux pour cent**, et il
+     * atteignait la limitation thermique en quelques minutes. Remplir des surfaces est
+     * précisément ce que la puce graphique fait pour rien.
+     *
+     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
+     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé.
+     * C'est déjà le cas ici — [drawFrame] commence par repeindre l'écran entier avec un
+     * dégradé opaque. Un jeu qui fabriquerait ses traînées en peignant un voile
+     * translucide par-dessus l'image d'avant, lui, ne pourrait pas basculer sans être
+     * réécrit.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
+     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
+     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
+     * pas prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
     }
 
     private fun updateAmbient(dt: Long) {
@@ -1356,60 +1401,99 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     }
 
     // ── Touch ─────────────────────────────────────────────────────
+    /**
+     * Un appui mis de côté, le temps que le fil de jeu vienne le chercher.
+     *
+     * `onTouchEvent` s'exécute sur le fil de l'interface, et celui-ci appelait
+     * directement `generateLevel`, `pickRelic`, `startGame`, `buyShopItem`,
+     * `launchBall`, `damageBrick`, et ajoutait aux listes d'ondes de choc et
+     * d'étincelles — le tout pendant que le fil de jeu parcourait ces mêmes listes. Le
+     * défaut ne se voyait pas tant que le jeu tenait cinq images par seconde sur canevas
+     * logiciel ; le même a fait tomber FlappyCat dès que la cadence lui a été rendue.
+     *
+     * Il y avait trop de chemins pour les protéger un par un : c'est donc l'événement
+     * entier qui est reporté, et **tout l'état du jeu redevient la propriété d'un seul
+     * fil**. Seules trois valeurs sont retenues — l'action, et le point touché — parce
+     * que ce sont les seules que la logique lisait.
+     *
+     * La file est bornée : si le fil de jeu décrochait, mieux vaut perdre des appuis que
+     * gonfler indéfiniment. Le retard ajouté vaut au plus une image, soit seize
+     * millisecondes, et la raquette lisse déjà sa course vers le doigt.
+     */
+    private class Appui(val action: Int, val x: Float, val y: Float)
+    private val appuis = ArrayList<Appui>(8)
+
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        fingerX = ev.x; fingerY = ev.y
-        when (ev.actionMasked) {
+        synchronized(appuis) {
+            if (appuis.size < 32) appuis.add(Appui(ev.actionMasked, ev.x, ev.y))
+        }
+        return true
+    }
+
+    /** Rejoue les appuis en attente. **Sur le fil de jeu, et lui seul.** */
+    private fun drainAppuis() {
+        while (true) {
+            val a = synchronized(appuis) {
+                if (appuis.isEmpty()) null else appuis.removeAt(0)
+            } ?: return
+            handleTouch(a.action, a.x, a.y)
+        }
+    }
+
+    private fun handleTouch(action: Int, evX: Float, evY: Float) {
+        fingerX = evX; fingerY = evY
+        when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 if (state == State.LEVEL_CLEAR && relicChoices.isNotEmpty()) {
-                    if (skipRelicRect.contains(ev.x, ev.y)) {
+                    if (skipRelicRect.contains(evX, evY)) {
                         generateLevel(); resetBallOnPaddle(); syncPaddleWidth()
                         relicChoices = emptyList(); state = State.READY
-                        return true
+                        return
                     }
                     for (i in relicChoices.indices) {
-                        if (choiceRects[i].contains(ev.x, ev.y)) {
+                        if (choiceRects[i].contains(evX, evY)) {
                             pickRelic(relicChoices[i])
-                            return true
+                            return
                         }
                     }
-                    return true
+                    return
                 }
-                paddleTarget = ev.x
+                paddleTarget = evX
                 when (state) {
                     State.READY, State.LIFE_LOST -> launchOnUp = true
                     State.PAUSED     -> state = State.PLAYING
                     State.LEVEL_CLEAR -> {}
                     State.GAME_OVER  -> { startGame(); launchOnUp = false }
                     State.SHOP -> {
-                        if (shopBackRect.contains(ev.x, ev.y)) {
+                        if (shopBackRect.contains(evX, evY)) {
                             generateLevel(); resetBallOnPaddle(); syncPaddleWidth()
-                            state = State.READY; return true
+                            state = State.READY; return
                         }
                         for (i in shopItems.indices) {
-                            if (shopRects[i].contains(ev.x, ev.y)) {
-                                buyShopItem(shopItems[i]); return true
+                            if (shopRects[i].contains(evX, evY)) {
+                                buyShopItem(shopItems[i]); return
                             }
                         }
-                        return true
+                        return
                     }
                     State.PLAYING    -> {
-                        if (balls.any { it.stuck }) { launchBall(); return true }
+                        if (balls.any { it.stuck }) { launchBall(); return }
                         // Panic mode: finger damage (1x toutes les 5s)
                         if (panicActive() && System.currentTimeMillis() >= fingerBreakReadyAtMs) {
                             val touch = 18f // tolérance de toucher en px
                             val hit = bricks.firstOrNull { b ->
                                 b.hits > 0 && b.type != BType.INDESTRUCTIBLE &&
-                                ev.x >= b.rect.left - touch && ev.x <= b.rect.right + touch &&
-                                ev.y >= b.rect.top  - touch && ev.y <= b.rect.bottom + touch
+                                evX >= b.rect.left - touch && evX <= b.rect.right + touch &&
+                                evY >= b.rect.top  - touch && evY <= b.rect.bottom + touch
                             }
                             if (hit != null) {
                                 damageBrick(hit)
                                 fingerBreakReadyAtMs = System.currentTimeMillis() + 5_000L
-                                shockwaves.add(Shockwave(ev.x, ev.y, 8f, W * 0.08f, 1f, 0xFFFFE066.toInt()))
+                                shockwaves.add(Shockwave(evX, evY, 8f, W * 0.08f, 1f, 0xFFFFE066.toInt()))
                                 repeat(8) {
                                     val a = Random.nextFloat() * 2f * PI.toFloat()
                                     val sp = Random.nextFloat() * 0.3f + 0.1f
-                                    sparks.add(Spark(ev.x, ev.y, cos(a) * sp, sin(a) * sp,
+                                    sparks.add(Spark(evX, evY, cos(a) * sp, sin(a) * sp,
                                         0.8f, 0xFFFFE066.toInt(), 1.3f))
                                 }
                             }
@@ -1417,7 +1501,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                     }
                 }
             }
-            MotionEvent.ACTION_MOVE -> if (state != State.LEVEL_CLEAR) paddleTarget = ev.x
+            MotionEvent.ACTION_MOVE -> if (state != State.LEVEL_CLEAR) paddleTarget = evX
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
                 fingerX = -1f; fingerY = -1f
                 if (launchOnUp && (state == State.READY || state == State.LIFE_LOST)) {
@@ -1431,7 +1515,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 launchOnUp = false
             }
         }
-        return true
+        return
     }
 
     // ── Draw ──────────────────────────────────────────────────────

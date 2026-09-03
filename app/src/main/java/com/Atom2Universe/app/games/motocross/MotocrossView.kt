@@ -42,6 +42,41 @@ class MotocrossView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : SurfaceView(context, attrs), SurfaceHolder.Callback, Runnable {
 
+    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
+    private var hardwareCanvas = true
+
+    /**
+     * Attrape l'image à venir — **sur le processeur graphique**.
+     *
+     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
+     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
+     * à chaque image. Mesuré à la tablette sur le jeu Particules, qui souffrait du même
+     * mal, cela coûtait un cœur entier et un ampère pendant que la puce graphique
+     * restait à deux pour cent ; le basculement a ramené le jeu à trente pour cent d'un
+     * cœur et la puce de 53 à 36 degrés. Remplir des surfaces est précisément ce que la
+     * carte graphique fait pour rien.
+     *
+     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
+     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé — ce
+     * que cette vue fait déjà, son rendu commençant par repeindre l'écran entier.
+     *
+     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
+     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
+     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
+     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
+     * pas prête, et c'est l'appelant qui patiente.
+     */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Throwable) {
+                hardwareCanvas = false
+            }
+        }
+        return holder.lockCanvas()
+    }
+
     // ── Terrain ────────────────────────────────────────────────────────────────
 
     private val points = ArrayList<FloatArray>()       // [x, y] en coords monde
@@ -422,7 +457,7 @@ class MotocrossView @JvmOverloads constructor(
             delta = delta.coerceAtMost(MAX_FRAME_STEP)
 
             if (segments.isEmpty()) {
-                val canvas0 = try { holder.lockCanvas() } catch (e: Exception) { null }
+                val canvas0 = try { lockFrame() } catch (e: Exception) { null }
                 if (canvas0 != null) try { drawBackground(canvas0) } finally { holder.unlockCanvasAndPost(canvas0) }
                 Thread.sleep(8); continue
             }
@@ -442,7 +477,7 @@ class MotocrossView @JvmOverloads constructor(
                 onStats?.invoke(maxDistM, spd)
             }
 
-            val canvas = try { holder.lockCanvas() } catch (e: Exception) { null }
+            val canvas = try { lockFrame() } catch (e: Exception) { null }
             if (canvas != null) try { renderFrame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
 
             val sleep = FRAME_NS - (System.nanoTime() - now)
@@ -793,6 +828,13 @@ class MotocrossView @JvmOverloads constructor(
     }
 
     private fun drawBackground(canvas: Canvas) {
+        // La tuile de fond est **centrée en hauteur** : si elle est plus courte que
+        // l'écran, il reste une bande en haut et une en bas que seul le voile
+        // d'assombrissement recouvre — et ce voile est translucide, donc il ne peint
+        // rien. Sur canevas matériel, où l'image précédente n'existe plus, ces bandes
+        // montreraient n'importe quoi. Un fond opaque d'abord, et la question ne se
+        // pose plus, quel que soit le chemin pris ensuite.
+        canvas.drawColor(Color.BLACK)
         ensureBgTile()
         val tile = bgTile
         if (tile != null) {
