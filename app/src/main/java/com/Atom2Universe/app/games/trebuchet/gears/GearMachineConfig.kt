@@ -329,7 +329,17 @@ object GearMachineRules {
      * puissance, à côté de la denture de la manivelle ([GearWheelConfig.reservoirVolume]).
      */
     const val ATMOSPHERIC_PRESSURE = 101_325f
-    const val PISTON_AREA = 2e-4f
+
+    /**
+     * Section du piston, en m².
+     *
+     * Calée pour que le couple d'une machine de départ (un moulin normal) plafonne
+     * autour d'une vingtaine de bars sur une manivelle de taille normale — voir le
+     * banc d'essai `GearPumpTest`. Le couple résistant croît en logarithme du
+     * rapport de compression ([GearMachineGame.pumpLoadTorque]), donc contrairement
+     * à une loi linéaire, une petite variation ici déplace beaucoup le plafond.
+     */
+    const val PISTON_AREA = 1e-3f
 
     /** Les bornes du réservoir, en m³, et sa taille de départ. */
     const val DEFAULT_RESERVOIR_VOLUME = 0.08f

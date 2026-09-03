@@ -24,6 +24,7 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.ln
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -721,31 +722,49 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * Ce que le réservoir résiste sur l'axe de la manivelle d'un canon, en N·m.
      *
      * **C'est tout le mécanisme du plafond, et il n'est écrit nulle part ailleurs.**
-     * Un piston de section fixe pousse contre cette pression avec une force
-     * `pression × section`, au bout d'un bras de levier qui est le rayon de la
-     * manivelle — la denture de la roue, exactement comme un engrenage ordinaire.
-     * Passé le couple que le train peut vraiment lui fournir, cette résistance
-     * l'emporte et la manivelle cale : c'est ça qui plafonne la pression, le même
-     * équilibre de forces que celui qui plafonne déjà la vitesse d'un volant via
+     * Ce n'est **pas** la pression du réservoir prise telle quelle : le piston ne
+     * pousse pas tout le volume balayé contre la pleine pression finale, il
+     * **comprime** chaque bouffée d'air prise à pression atmosphérique jusqu'à la
+     * rejoindre, et ce travail de compression isotherme est logarithmique —
+     * `P₀ · ln(pression / P₀)` — pas linéaire. Une charge trop tôt (`ln(1) = 0`)
+     * ne coûte donc rien, comme il se doit : on n'a encore rien comprimé.
+     *
+     * Passé le couple que le train peut vraiment fournir, cette résistance l'emporte
+     * et la manivelle cale : c'est ça qui plafonne la pression, le même équilibre de
+     * forces que celui qui plafonne déjà la vitesse d'un volant via
      * [GearMotorRules.freeOmega]/[GearMotorRules.maxTorque].
      */
-    private fun pumpLoadTorque(gear: GearState): Float =
-        gasPressure(gear.reservoirStdVolume, gear.wheel.reservoirVolume) *
-            GearMachineRules.PISTON_AREA * gear.wheel.pitchRadius
+    private fun pumpLoadTorque(gear: GearState): Float {
+        val pressure = gasPressure(gear.reservoirStdVolume, gear.wheel.reservoirVolume)
+        val ratio = pressure / GearMachineRules.ATMOSPHERIC_PRESSURE
+        if (ratio <= 1f) return 0f
+        val compressionWork = GearMachineRules.ATMOSPHERIC_PRESSURE * ln(ratio)
+        return compressionWork * GearMachineRules.PISTON_AREA * gear.wheel.pitchRadius
+    }
 
     /**
      * L'énergie déjà emmagasinée dans un réservoir de volume [reservoirVolume] qui a
      * reçu [stdVolume] de volume standard, en joules.
      *
-     * Primitive de la pression sur le volume, `∫P·dV` : le travail de compression
-     * isotherme reçu jusqu'ici. C'est **exactement** l'énergie que
-     * [pumpLoadTorque] retire du train pas à pas (puissance = couple × oméga =
-     * pression × débit) — rien n'est compté séparément, donc rien ne peut créer
-     * d'énergie que le train n'a pas vraiment fournie.
+     * Primitive du travail de compression isotherme sur le volume,
+     * `∫ P₀·ln(P/P₀) dV`, qui vaut `P₀·V·(r·ln(r) − r + 1)` avec `r = P/P₀`. C'est
+     * **exactement** l'énergie que [pumpLoadTorque] retire du train pas à pas
+     * (puissance = couple × oméga = travail de compression × débit) — rien n'est
+     * compté séparément, donc rien ne peut créer d'énergie que le train n'a pas
+     * vraiment fournie.
+     *
+     * **Vérifié contre une bouteille de plongée** (200 bar dans 12 L) : cette
+     * formule y trouve environ 1 MJ, l'ordre de grandeur publié pour une vraie
+     * bouteille. La première version, qui comptait `P·dV` au lieu de `P₀·ln(P/P₀)·dV`
+     * — comme si tout le volume était comprimé d'un coup à la pression finale —
+     * en trouvait 23 MJ, vingt fois trop : un canon à 7 bar suffisait à lancer un
+     * boulet de cinquante kilos à quatre cents mètres.
      */
     private fun reservoirEnergy(stdVolume: Float, reservoirVolume: Float): Float {
         val p0 = GearMachineRules.ATMOSPHERIC_PRESSURE
-        return p0 * stdVolume + p0 * stdVolume * stdVolume / (2f * reservoirVolume)
+        val ratio = 1f + stdVolume / reservoirVolume
+        if (ratio <= 1f) return 0f
+        return p0 * reservoirVolume * (ratio * ln(ratio) - ratio + 1f)
     }
 
     /**
